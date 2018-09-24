@@ -1,0 +1,13 @@
+--max-old-space-size=4096
+--expose-gc
+--check-leaks
+--full-trace
+--trace-warnings
+--exit
+--recursive
+--reporter dot
+--slow 75
+--timeout 3000
+
+--require ts-node/register
+--require test/bootstrap.ts
