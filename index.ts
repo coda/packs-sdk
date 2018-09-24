@@ -1,6 +1,7 @@
 // Pack related interfaces
 export {Authentication} from './types';
 export {AuthenticationType} from './types';
+export {DefaultConnectionType} from './types';
 export {OAuth2Authentication} from './types';
 export {Format} from './types';
 export {PackDefinition} from './types';

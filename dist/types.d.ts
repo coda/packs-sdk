@@ -66,6 +66,11 @@ export declare enum AuthenticationType {
     OAuth2 = "OAuth2",
     WebBasic = "WebBasic"
 }
+export declare enum DefaultConnectionType {
+    SharedDataOnly = 1,
+    Shared = 2,
+    ProxyActionsOnly = 3
+}
 /**
  * A pack or formula which uses no authentication mechanism
  */
@@ -74,6 +79,7 @@ export interface NoAuthentication {
 }
 interface BaseAuthentication {
     getConnectionNameFormula?: GetConnectionNameFormula;
+    defaultConnectionType?: DefaultConnectionType;
 }
 /**
  * A pack or formula which uses standard bearer token header authentication:

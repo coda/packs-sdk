@@ -71,6 +71,12 @@ export enum AuthenticationType {
   WebBasic = 'WebBasic',
 }
 
+export enum DefaultConnectionType {
+  SharedDataOnly = 1,
+  Shared,
+  ProxyActionsOnly,
+}
+
 /**
  * A pack or formula which uses no authentication mechanism
  */
@@ -80,6 +86,10 @@ export interface NoAuthentication {
 
 interface BaseAuthentication {
   getConnectionNameFormula?: GetConnectionNameFormula;
+
+  // Specifies a set of defaults for allowing pack authors to decide what the "normal"
+  // configuration of authentication for this pack should look like.
+  defaultConnectionType?: DefaultConnectionType;
 }
 
 /**

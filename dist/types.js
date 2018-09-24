@@ -70,3 +70,9 @@ var AuthenticationType;
     AuthenticationType["OAuth2"] = "OAuth2";
     AuthenticationType["WebBasic"] = "WebBasic";
 })(AuthenticationType = exports.AuthenticationType || (exports.AuthenticationType = {}));
+var DefaultConnectionType;
+(function (DefaultConnectionType) {
+    DefaultConnectionType[DefaultConnectionType["SharedDataOnly"] = 1] = "SharedDataOnly";
+    DefaultConnectionType[DefaultConnectionType["Shared"] = 2] = "Shared";
+    DefaultConnectionType[DefaultConnectionType["ProxyActionsOnly"] = 3] = "ProxyActionsOnly";
+})(DefaultConnectionType = exports.DefaultConnectionType || (exports.DefaultConnectionType = {}));
