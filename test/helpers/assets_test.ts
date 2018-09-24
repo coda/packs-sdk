@@ -1,0 +1,4 @@
+
+describe('Assets Helpers', () => {
+  // TBD
+});

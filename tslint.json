@@ -1,0 +1,51 @@
+{
+    "defaultSeverity": "error",
+    "extends": ["tslint:recommended"],
+    "rulesDirectory": ["./node_modules/tslint-microsoft-contrib"],
+    "rules": {
+      "no-empty": false,
+      "no-empty-interface": false,
+      "variable-name": [
+        true,
+        "ban-keywords",
+        "check-format",
+        "allow-leading-underscore",
+        "allow-trailing-underscore",
+        "allow-pascal-case"
+      ],
+      "max-line-length": [true, 120],
+      "quotemark": [true, "single", "avoid-escape", "jsx-double"],
+      "arrow-parens": [true, "ban-single-arg-parens"],
+      "ban-types": [
+        true,
+        ["Object", "Avoid using the `Object` type. Did you mean `object`?"],
+        // TODO(chris): Consider re-enabling this at some point.
+        // ["Function", "Avoid using the `Function` type. Prefer a specific function type, like `() => void`."],
+        ["Boolean", "Avoid using the `Boolean` type. Did you mean `boolean`?"],
+        ["Number", "Avoid using the `Number` type. Did you mean `number`?"],
+        ["String", "Avoid using the `String` type. Did you mean `string`?"],
+        ["Symbol", "Avoid using the `Symbol` type. Did you mean `symbol`?"]
+      ],
+      "ordered-imports": [
+        true,
+        {
+          "import-sources-order": "any",
+          "named-imports-order": "lowercase-last"
+        }
+      ],
+      "object-literal-sort-keys": false,
+      "object-literal-key-quotes": [true, "as-needed"],
+      "interface-name": [false],
+      "member-ordering": [false],
+      "member-access": [true, "no-public"],
+      "max-classes-per-file": [false],
+      "no-return-await": true,
+      "no-var-requires": false,
+      "no-namespace": [true, "allow-declarations"],
+      "prefer-for-of": true,
+
+      // Rules from tslint-microsoft-contrib
+      "mocha-unneeded-done": true,
+      "no-duplicate-switch-case": true
+    }
+  }
