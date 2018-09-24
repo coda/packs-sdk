@@ -7,6 +7,7 @@ export {PackDefinition} from './types';
 export {PackId} from './types';
 export {ProviderDefinition} from './types';
 export {ProviderId} from './types';
+export {getCreateAuthenticationDefaults} from './types';
 
 // Formula related interfaces
 export {ExecutionContext} from './api_types';

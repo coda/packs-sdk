@@ -70,3 +70,10 @@ var AuthenticationType;
     AuthenticationType["OAuth2"] = "OAuth2";
     AuthenticationType["WebBasic"] = "WebBasic";
 })(AuthenticationType = exports.AuthenticationType || (exports.AuthenticationType = {}));
+function getCreateAuthenticationDefaults(auth) {
+    if (auth.type === AuthenticationType.None) {
+        return;
+    }
+    return auth.creationDefaults;
+}
+exports.getCreateAuthenticationDefaults = getCreateAuthenticationDefaults;

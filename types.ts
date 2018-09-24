@@ -71,6 +71,11 @@ export enum AuthenticationType {
   WebBasic = 'WebBasic',
 }
 
+export interface CreateAuthenticationDefaults {
+  sharedConnection?: boolean;
+  allowActionsForSharedConnection?: boolean;
+}
+
 /**
  * A pack or formula which uses no authentication mechanism
  */
@@ -80,6 +85,10 @@ export interface NoAuthentication {
 
 interface BaseAuthentication {
   getConnectionNameFormula?: GetConnectionNameFormula;
+
+  // Specifies a set of defaults for allowing pack authors to decide what the "normal"
+  // configuration of authentication for this pack should look like.
+  creationDefaults?: CreateAuthenticationDefaults;
 }
 
 /**
@@ -181,4 +190,12 @@ export interface ProviderDefinition {
   id: ProviderId;
   name: string;
   logoPath: string;
+}
+
+export function getCreateAuthenticationDefaults(auth: Authentication): CreateAuthenticationDefaults | undefined {
+  if (auth.type === AuthenticationType.None) {
+    return;
+  }
+
+  return auth.creationDefaults;
 }

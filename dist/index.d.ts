@@ -6,6 +6,7 @@ export { PackDefinition } from './types';
 export { PackId } from './types';
 export { ProviderDefinition } from './types';
 export { ProviderId } from './types';
+export { getCreateAuthenticationDefaults } from './types';
 export { ExecutionContext } from './api_types';
 export { Fetcher } from './api_types';
 export { FetchRequest } from './api_types';
