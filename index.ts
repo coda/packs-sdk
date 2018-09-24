@@ -1,13 +1,13 @@
 // Pack related interfaces
 export {Authentication} from './types';
 export {AuthenticationType} from './types';
+export {DefaultConnectionType} from './types';
 export {OAuth2Authentication} from './types';
 export {Format} from './types';
 export {PackDefinition} from './types';
 export {PackId} from './types';
 export {ProviderDefinition} from './types';
 export {ProviderId} from './types';
-export {getCreateAuthenticationDefaults} from './types';
 
 // Formula related interfaces
 export {ExecutionContext} from './api_types';

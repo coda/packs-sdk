@@ -71,9 +71,10 @@ export enum AuthenticationType {
   WebBasic = 'WebBasic',
 }
 
-export interface CreateAuthenticationDefaults {
-  sharedConnection?: boolean;
-  allowActionsForSharedConnection?: boolean;
+export enum DefaultConnectionType {
+  SharedDataOnly = 1,
+  Shared,
+  ProxyActionsOnly,
 }
 
 /**
@@ -88,7 +89,7 @@ interface BaseAuthentication {
 
   // Specifies a set of defaults for allowing pack authors to decide what the "normal"
   // configuration of authentication for this pack should look like.
-  creationDefaults?: CreateAuthenticationDefaults;
+  defaultConnectionType?: DefaultConnectionType;
 }
 
 /**
@@ -190,12 +191,4 @@ export interface ProviderDefinition {
   id: ProviderId;
   name: string;
   logoPath: string;
-}
-
-export function getCreateAuthenticationDefaults(auth: Authentication): CreateAuthenticationDefaults | undefined {
-  if (auth.type === AuthenticationType.None) {
-    return;
-  }
-
-  return auth.creationDefaults;
 }
