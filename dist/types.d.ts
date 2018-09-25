@@ -87,6 +87,7 @@ interface BaseAuthentication {
  */
 export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
     type: AuthenticationType.HeaderBearerToken;
+    instructionsUrl?: string;
 }
 /**
  * A pack or formula which uses standard bearer token header authentication:
@@ -120,6 +121,7 @@ export interface OAuth2Authentication extends BaseAuthentication {
 }
 export interface WebBasicAuthentication extends BaseAuthentication {
     type: AuthenticationType.WebBasic;
+    instructionsUrl?: string;
 }
 export declare type Authentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication;
 export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication;

@@ -98,6 +98,7 @@ interface BaseAuthentication {
  */
 export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
   type: AuthenticationType.HeaderBearerToken;
+  instructionsUrl?: string;
 }
 
 /**
@@ -134,6 +135,7 @@ export interface OAuth2Authentication extends BaseAuthentication {
 
 export interface WebBasicAuthentication extends BaseAuthentication {
   type: AuthenticationType.WebBasic;
+  instructionsUrl?: string;
 }
 
 export type Authentication =
