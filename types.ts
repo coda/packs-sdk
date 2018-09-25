@@ -90,6 +90,9 @@ interface BaseAuthentication {
   // Specifies a set of defaults for allowing pack authors to decide what the "normal"
   // configuration of authentication for this pack should look like.
   defaultConnectionType?: DefaultConnectionType;
+
+  // link to help article, etc. if more instructions needed explaining how to install the pack
+  instructionsUrl?: string;
 }
 
 /**

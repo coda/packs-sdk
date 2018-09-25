@@ -80,6 +80,7 @@ export interface NoAuthentication {
 interface BaseAuthentication {
     getConnectionNameFormula?: GetConnectionNameFormula;
     defaultConnectionType?: DefaultConnectionType;
+    instructionsUrl?: string;
 }
 /**
  * A pack or formula which uses standard bearer token header authentication:
