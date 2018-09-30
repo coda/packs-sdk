@@ -1,11 +1,11 @@
 import {AuthenticationType} from '../types';
-import {FakePackDefinition} from 'helpers/sample_utils';
+import {FakePackDefinition} from '../helpers/sample_utils';
 import {PackCategory} from '../types';
 import {PackDefinition} from '../types';
 import {PackMetadata} from '../compiled_types';
 import {Type} from '../api_types';
-import {fakeDefinitionToDefinition} from 'helpers/sample_utils';
-import {fakeDefinitionToMetadata} from 'helpers/sample_utils';
+import {fakeDefinitionToDefinition} from '../helpers/sample_utils';
+import {fakeDefinitionToMetadata} from '../helpers/sample_utils';
 import {withQueryParams} from '../helpers/url';
 
 export const FakeNpmProviderId = 9011;
