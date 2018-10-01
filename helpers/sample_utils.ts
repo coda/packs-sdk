@@ -29,8 +29,8 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
   }
 
   const formats: PackFormatMetadata[] = [];
-  for (const {matchers, ...format} of formats || []) {
-    formats.push({...format, matchers: matchers.map(m => m.toString())});
+  for (const {matchers, ...format} of originalFormats || []) {
+    formats.push({...format, matchers: (matchers || []).map(m => m.toString())});
   }
 
   return {formulas, formats, ...packMetadata};

@@ -26,9 +26,9 @@ function fakeDefinitionToMetadata(def) {
         });
     }
     const formats = [];
-    for (let _a of formats || []) {
+    for (let _a of originalFormats || []) {
         const { matchers } = _a, format = __rest(_a, ["matchers"]);
-        formats.push(Object.assign({}, format, { matchers: matchers.map(m => m.toString()) }));
+        formats.push(Object.assign({}, format, { matchers: (matchers || []).map(m => m.toString()) }));
     }
     return Object.assign({ formulas, formats }, packMetadata);
 }
