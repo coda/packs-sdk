@@ -1,4 +1,4 @@
-import {Format} from './types';
+import {Authentication, Format} from './types';
 import {PackDefinition} from './types';
 import {TypedPackFormula} from './api';
 
@@ -12,7 +12,11 @@ export interface PackFormulasMetadata {
   [namespace: string]: PackFormulaMetadata[];
 }
 
-export type PackMetadata = $Omit<PackDefinition, 'formulas' | 'formats' | 'legacyFormulasLoader'> & {
+export type PackMetadata = $Omit<
+  PackDefinition,
+  'formulas' | 'formats' | 'defaultAuthentication' | 'legacyFormulasLoader'
+> & {
   formulas: PackFormulasMetadata;
   formats: PackFormatMetadata[];
+  defaultAuthentication?: $OmitNested<Authentication, 'getConnectionNameFormula', 'execute'>;
 };
