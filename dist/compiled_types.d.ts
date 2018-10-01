@@ -8,7 +8,7 @@ export interface PackFormatMetadata extends $Omit<Format, 'matchers'> {
 export interface PackFormulasMetadata {
     [namespace: string]: PackFormulaMetadata[];
 }
-export declare type PackMetadata = $Omit<PackDefinition, 'formulas' | 'formats'> & {
+export declare type PackMetadata = $Omit<PackDefinition, 'formulas' | 'formats' | 'legacyFormulasLoader'> & {
     formulas: PackFormulasMetadata;
     formats: PackFormatMetadata[];
 };

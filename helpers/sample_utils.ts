@@ -18,7 +18,7 @@ export function fakeDefinitionToDefinition(def: FakePackDefinition): PackDefinit
 }
 
 export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata {
-  const {formulas: originalFormulas, formats: originalFormats, ...packMetadata} = def;
+  const {formulas: originalFormulas, legacyFormulasLoader, formats: originalFormats, ...packMetadata} = def;
 
   const formulas: PackFormulasMetadata = {};
   for (const namespace of Object.keys(originalFormulas || {})) {

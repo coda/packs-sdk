@@ -17,7 +17,7 @@ function fakeDefinitionToDefinition(def) {
 }
 exports.fakeDefinitionToDefinition = fakeDefinitionToDefinition;
 function fakeDefinitionToMetadata(def) {
-    const { formulas: originalFormulas, formats: originalFormats } = def, packMetadata = __rest(def, ["formulas", "formats"]);
+    const { formulas: originalFormulas, legacyFormulasLoader, formats: originalFormats } = def, packMetadata = __rest(def, ["formulas", "legacyFormulasLoader", "formats"]);
     const formulas = {};
     for (const namespace of Object.keys(originalFormulas || {})) {
         formulas[namespace] = originalFormulas[namespace].map(formula => {
