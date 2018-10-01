@@ -18,7 +18,13 @@ export function fakeDefinitionToDefinition(def: FakePackDefinition): PackDefinit
 }
 
 export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata {
-  const {formulas: originalFormulas, legacyFormulasLoader, formats: originalFormats, ...packMetadata} = def;
+  const {
+    formulas: originalFormulas,
+    defaultAuthentication: originalDefaultAuthentication,
+    legacyFormulasLoader,
+    formats: originalFormats,
+    ...packMetadata // tslint:disable-line:trailing-comma
+  } = def;
 
   const formulas: PackFormulasMetadata = {};
   for (const namespace of Object.keys(originalFormulas || {})) {
@@ -33,5 +39,18 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
     formats.push({...format, matchers: (matchers || []).map(m => m.toString())});
   }
 
-  return {formulas, formats, ...packMetadata};
+  let defaultAuthentication: PackMetadata['defaultAuthentication'] = originalDefaultAuthentication;
+  if (
+    originalDefaultAuthentication &&
+    'getConnectionNameFormula' in originalDefaultAuthentication &&
+    originalDefaultAuthentication.getConnectionNameFormula
+  ) {
+    const {execute, ...connNameFormula} = originalDefaultAuthentication.getConnectionNameFormula;
+    defaultAuthentication = {
+      ...originalDefaultAuthentication,
+      getConnectionNameFormula: {...connNameFormula},
+    };
+  }
+
+  return {formulas, formats, defaultAuthentication, ...packMetadata};
 }

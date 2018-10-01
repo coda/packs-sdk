@@ -17,7 +17,8 @@ function fakeDefinitionToDefinition(def) {
 }
 exports.fakeDefinitionToDefinition = fakeDefinitionToDefinition;
 function fakeDefinitionToMetadata(def) {
-    const { formulas: originalFormulas, legacyFormulasLoader, formats: originalFormats } = def, packMetadata = __rest(def, ["formulas", "legacyFormulasLoader", "formats"]);
+    const { formulas: originalFormulas, defaultAuthentication: originalDefaultAuthentication, legacyFormulasLoader, formats: originalFormats } = def, packMetadata = __rest(def, ["formulas", "defaultAuthentication", "legacyFormulasLoader", "formats"]) // tslint:disable-line:trailing-comma
+    ;
     const formulas = {};
     for (const namespace of Object.keys(originalFormulas || {})) {
         formulas[namespace] = originalFormulas[namespace].map(formula => {
@@ -30,6 +31,13 @@ function fakeDefinitionToMetadata(def) {
         const { matchers } = _a, format = __rest(_a, ["matchers"]);
         formats.push(Object.assign({}, format, { matchers: (matchers || []).map(m => m.toString()) }));
     }
-    return Object.assign({ formulas, formats }, packMetadata);
+    let defaultAuthentication = originalDefaultAuthentication;
+    if (originalDefaultAuthentication &&
+        'getConnectionNameFormula' in originalDefaultAuthentication &&
+        originalDefaultAuthentication.getConnectionNameFormula) {
+        const _b = originalDefaultAuthentication.getConnectionNameFormula, { execute } = _b, connNameFormula = __rest(_b, ["execute"]);
+        defaultAuthentication = Object.assign({}, originalDefaultAuthentication, { getConnectionNameFormula: Object.assign({}, connNameFormula) });
+    }
+    return Object.assign({ formulas, formats, defaultAuthentication }, packMetadata);
 }
 exports.fakeDefinitionToMetadata = fakeDefinitionToMetadata;
