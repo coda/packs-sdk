@@ -31,7 +31,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
       formulaNamespace: 'NPM',
       formulaName: 'Package',
       hasNoConnection: true,
-      matchers: [/https:\/\/npmjs\.com\/package\/(w+)/],
+      matchers: [/https:\/\/npmjs\.com\/package\/(\w+)/],
     },
   ],
   formulas: {

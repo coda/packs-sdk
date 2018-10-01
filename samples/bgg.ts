@@ -30,7 +30,7 @@ const FakeBggDefinitionOldFake: FakePackDefinition = {
       name: 'BoardGame',
       formulaNamespace: 'BGG',
       formulaName: 'BoardGame',
-      matchers: [/https:\/\/boardgamegeek\.com\/boardgame\/(d+)/],
+      matchers: [/https:\/\/boardgamegeek\.com\/boardgame\/(\d+)/],
     },
   ],
   formulas: {
@@ -98,7 +98,7 @@ const FakeBggDefinitionFake: FakePackDefinition = {
       name: 'BoardGame',
       formulaNamespace: 'BGG',
       formulaName: 'BoardGame',
-      matchers: [/https:\/\/boardgamegeek\.com\/boardgame\/(d+)/],
+      matchers: [/https:\/\/boardgamegeek\.com\/boardgame\/(\d+)/],
     },
   ],
   formulas: {
