@@ -154,7 +154,7 @@ export type SystemAuthentication =
 
 export type AsyncFormulasLoader = () => Promise<PackFormulas>;
 
-export interface PackFormulasDefinition {
+export interface LegacyPackFormulasDefinition {
   loader: AsyncFormulasLoader;
 }
 
@@ -186,7 +186,19 @@ export interface PackDefinition {
   systemConnectionAuthentication?: SystemAuthentication;
 
   // User-facing components
-  formulas?: PackFormulasDefinition;
+  // TODO(Chris): Complete multi-phase deprecation for getting rid of async formula loaders:
+  // 1. Add a new place to hang the async loaders (done)
+  // 2. Migrate all packs to serve the async loader from both of these params.
+  // 3. Migrate experimental to load from `legacyFormulasLoader`.
+  // 4. Let 3 completely roll out to all environments.
+  // 5. Update the type of `formulas` to `PackFormulas`.
+  // 6. Migrate all packs to serve functions directly from `formulas`.
+  // 7. Update experimental to load formulas directly from `formulas`.
+  // 8. Let 7 completely roll out to all environments.
+  // 9. Remove `legacyFormulasLoader` from all packs.
+  // 10. Remove `legacyFormulasLoader` from this definition and push to packs & experimental.
+  formulas?: LegacyPackFormulasDefinition;
+  legacyFormulasLoader?: AsyncFormulasLoader;
   formats?: Format[];
 }
 
