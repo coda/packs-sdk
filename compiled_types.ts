@@ -12,7 +12,7 @@ export interface PackFormulasMetadata {
   [namespace: string]: PackFormulaMetadata[];
 }
 
-export type PackMetadata = $Omit<PackDefinition, 'formulas' | 'formats'> & {
+export type PackMetadata = $Omit<PackDefinition, 'formulas' | 'formats' | 'legacyFormulasLoader'> & {
   formulas: PackFormulasMetadata;
   formats: PackFormatMetadata[];
 };
