@@ -105,7 +105,7 @@ const FakeBggDefinitionFake = {
     formulas: {
         BGG: [
             {
-                resultType: api_types_1.Type.object,
+                resultType: api_types_1.Type.string,
                 name: 'BoardGame',
                 description: 'Retrieve a board game',
                 examples: [],

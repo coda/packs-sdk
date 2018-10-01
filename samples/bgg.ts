@@ -104,7 +104,7 @@ const FakeBggDefinitionFake: FakePackDefinition = {
   formulas: {
     BGG: [
       {
-        resultType: Type.object,
+        resultType: Type.string,
         name: 'BoardGame',
         description: 'Retrieve a board game',
         examples: [],
