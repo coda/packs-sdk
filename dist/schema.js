@@ -21,6 +21,12 @@ var ValueType;
     ValueType["Markdown"] = "markdown";
     ValueType["Html"] = "html";
 })(ValueType = exports.ValueType || (exports.ValueType = {}));
+var AttributionNodeType;
+(function (AttributionNodeType) {
+    AttributionNodeType[AttributionNodeType["Text"] = 1] = "Text";
+    AttributionNodeType[AttributionNodeType["Link"] = 2] = "Link";
+    AttributionNodeType[AttributionNodeType["Image"] = 3] = "Image";
+})(AttributionNodeType = exports.AttributionNodeType || (exports.AttributionNodeType = {}));
 function isObject(val) {
     return Boolean(val && val.type === ValueType.Object);
 }

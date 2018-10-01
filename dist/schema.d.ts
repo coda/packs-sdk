@@ -37,12 +37,32 @@ interface ObjectSchemaProperties {
         required?: boolean;
     };
 }
+export declare enum AttributionNodeType {
+    Text = 1,
+    Link = 2,
+    Image = 3
+}
+interface TextAttributionNode {
+    type: AttributionNodeType.Text;
+    text: string;
+}
+interface LinkAttributionNode {
+    type: AttributionNodeType.Link;
+    url: string;
+    anchorText: string;
+}
+interface ImageAttributionNode {
+    type: AttributionNodeType.Image;
+    url: string;
+}
+declare type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
 export interface ObjectSchema {
     type: ValueType.Object;
     properties: ObjectSchemaProperties;
     identity?: {
         packId: PackId;
         name: string;
+        attribution?: AttributionNode[];
     };
 }
 export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | ObjectSchema;

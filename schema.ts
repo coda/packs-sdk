@@ -19,12 +19,7 @@ export enum ValueType {
   Html = 'html',
 }
 
-export type StringHintTypes =
-  ValueType.Image |
-  ValueType.Date |
-  ValueType.Url |
-  ValueType.Markdown |
-  ValueType.Html;
+export type StringHintTypes = ValueType.Image | ValueType.Date | ValueType.Url | ValueType.Markdown | ValueType.Html;
 
 interface BaseSchema {
   description?: string;
@@ -57,12 +52,37 @@ interface ObjectSchemaProperties {
   };
 }
 
+export enum AttributionNodeType {
+  Text = 1,
+  Link,
+  Image,
+}
+
+interface TextAttributionNode {
+  type: AttributionNodeType.Text;
+  text: string;
+}
+
+interface LinkAttributionNode {
+  type: AttributionNodeType.Link;
+  url: string;
+  anchorText: string;
+}
+
+interface ImageAttributionNode {
+  type: AttributionNodeType.Image;
+  url: string;
+}
+
+type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
+
 export interface ObjectSchema {
   type: ValueType.Object;
   properties: ObjectSchemaProperties;
   identity?: {
     packId: PackId;
     name: string;
+    attribution?: AttributionNode[];
   };
 }
 
@@ -82,18 +102,18 @@ type UndefinedAsOptional<T extends object> = Partial<T> &
 export type SchemaType<T extends Schema> = T extends BooleanSchema
   ? boolean
   : (T extends NumberSchema
-    ? number
-    : (T extends StringSchema
-      ? (T['codaType'] extends ValueType.Date ? Date : string)
-      : (T extends ArraySchema ? ArraySchemaType<T> : (T extends ObjectSchema ? ObjectSchemaType<T> : never))));
+      ? number
+      : (T extends StringSchema
+          ? (T['codaType'] extends ValueType.Date ? Date : string)
+          : (T extends ArraySchema ? ArraySchemaType<T> : (T extends ObjectSchema ? ObjectSchemaType<T> : never))));
 interface ArraySchemaType<T extends ArraySchema> extends Array<SchemaType<T['items']>> {}
 type ObjectSchemaType<T extends ObjectSchema> = UndefinedAsOptional<
   {
     [K in keyof T['properties']]: T['properties'][K] extends {required: true}
-    ? (SchemaType<T['properties'][K]>)
-    : (SchemaType<T['properties'][K]> | undefined)
+      ? (SchemaType<T['properties'][K]>)
+      : (SchemaType<T['properties'][K]> | undefined)
   }
-  >;
+>;
 
 export type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
 export function generateSchema(obj: ValidTypes): Schema {
@@ -141,14 +161,11 @@ export function normalizeSchema(schema: Schema): Schema {
       const normalizedKey = pascalcase(key);
       const props = schema.properties[key];
       const {primary, required, fromKey} = props;
-      normalized[normalizedKey] = Object.assign(
-        normalizeSchema(props),
-        {
-          primary,
-          required,
-          fromKey: fromKey || (normalizedKey !== key ? key : undefined),
-        },
-      );
+      normalized[normalizedKey] = Object.assign(normalizeSchema(props), {
+        primary,
+        required,
+        fromKey: fromKey || (normalizedKey !== key ? key : undefined),
+      });
     }
     return {type: ValueType.Object, properties: normalized, identity: schema.identity};
   }
