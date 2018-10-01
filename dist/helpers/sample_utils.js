@@ -38,6 +38,6 @@ function fakeDefinitionToMetadata(def) {
         const _b = originalDefaultAuthentication.getConnectionNameFormula, { execute } = _b, connNameFormula = __rest(_b, ["execute"]);
         defaultAuthentication = Object.assign({}, originalDefaultAuthentication, { getConnectionNameFormula: Object.assign({}, connNameFormula) });
     }
-    return Object.assign({ formulas, formats, defaultAuthentication }, packMetadata);
+    return Object.assign({ formulas, formats }, (defaultAuthentication && { defaultAuthentication }), packMetadata);
 }
 exports.fakeDefinitionToMetadata = fakeDefinitionToMetadata;

@@ -65,10 +65,7 @@ function makeNumericFormula(definition) {
 exports.makeNumericFormula = makeNumericFormula;
 function makeStringFormula(definition) {
     const { response } = definition;
-    return Object.assign({}, definition, {
-        resultType: api_types_1.Type.string,
-        schema: response ? response.schema : undefined,
-    });
+    return Object.assign({}, definition, Object.assign({ resultType: api_types_1.Type.string }, (response && { schema: response.schema })));
 }
 exports.makeStringFormula = makeStringFormula;
 function makeGetConnectionNameFormula(execute) {

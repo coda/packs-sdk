@@ -145,7 +145,7 @@ export function makeStringFormula<ParamDefsT extends ParamDefs>(
   const {response} = definition;
   return Object.assign({}, definition, {
     resultType: Type.string as Type.string,
-    schema: response ? response.schema : undefined,
+    ...(response && {schema: response.schema}),
   }) as StringPackFormula<ParamDefsT>;
 }
 

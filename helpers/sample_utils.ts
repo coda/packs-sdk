@@ -52,5 +52,5 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
     };
   }
 
-  return {formulas, formats, defaultAuthentication, ...packMetadata};
+  return {formulas, formats, ...(defaultAuthentication && {defaultAuthentication}), ...packMetadata};
 }
