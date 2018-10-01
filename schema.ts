@@ -13,6 +13,7 @@ export enum ValueType {
   Object = 'object',
   // Synthetic types we will use to coerce values.
   Date = 'date',
+  Percent = 'percent',
   Image = 'image',
   Url = 'url',
   Markdown = 'markdown',
@@ -20,6 +21,7 @@ export enum ValueType {
 }
 
 export type StringHintTypes = ValueType.Image | ValueType.Date | ValueType.Url | ValueType.Markdown | ValueType.Html;
+export type NumberHintTypes = ValueType.Date | ValueType.Percent;
 
 interface BaseSchema {
   description?: string;
@@ -31,7 +33,7 @@ export interface BooleanSchema extends BaseSchema {
 
 export interface NumberSchema extends BaseSchema {
   type: ValueType.Number;
-  codaType?: ValueType.Date;
+  codaType?: NumberHintTypes;
 }
 
 export interface StringSchema extends BaseSchema {

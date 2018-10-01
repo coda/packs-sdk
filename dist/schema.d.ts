@@ -6,12 +6,14 @@ export declare enum ValueType {
     Array = "array",
     Object = "object",
     Date = "date",
+    Percent = "percent",
     Image = "image",
     Url = "url",
     Markdown = "markdown",
     Html = "html"
 }
 export declare type StringHintTypes = ValueType.Image | ValueType.Date | ValueType.Url | ValueType.Markdown | ValueType.Html;
+export declare type NumberHintTypes = ValueType.Date | ValueType.Percent;
 interface BaseSchema {
     description?: string;
 }
@@ -20,7 +22,7 @@ export interface BooleanSchema extends BaseSchema {
 }
 export interface NumberSchema extends BaseSchema {
     type: ValueType.Number;
-    codaType?: ValueType.Date;
+    codaType?: NumberHintTypes;
 }
 export interface StringSchema extends BaseSchema {
     type: ValueType.String;
