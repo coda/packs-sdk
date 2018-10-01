@@ -7,13 +7,14 @@ export declare enum ValueType {
     Object = "object",
     Date = "date",
     Percent = "percent",
+    Currency = "currency",
     Image = "image",
     Url = "url",
     Markdown = "markdown",
     Html = "html"
 }
 export declare type StringHintTypes = ValueType.Image | ValueType.Date | ValueType.Url | ValueType.Markdown | ValueType.Html;
-export declare type NumberHintTypes = ValueType.Date | ValueType.Percent;
+export declare type NumberHintTypes = ValueType.Date | ValueType.Percent | ValueType.Currency;
 interface BaseSchema {
     description?: string;
 }
