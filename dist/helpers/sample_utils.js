@@ -12,7 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 function fakeDefinitionToDefinition(def) {
     const { formulas: originalFormulas } = def, rest = __rest(def, ["formulas"]);
     const formulas = originalFormulas && { loader: () => Promise.resolve(originalFormulas) };
-    return Object.assign({ formulas }, rest);
+    const legacyFormulasLoader = originalFormulas && (() => Promise.resolve(originalFormulas));
+    return Object.assign({ formulas, legacyFormulasLoader }, rest);
 }
 exports.fakeDefinitionToDefinition = fakeDefinitionToDefinition;
 function fakeDefinitionToMetadata(def) {
