@@ -1,3 +1,5 @@
+import { $Omit } from './type_utils';
+import { $Values } from './type_utils';
 export declare enum Type {
     string = 0,
     number = 1,

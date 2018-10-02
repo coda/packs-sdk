@@ -32,7 +32,22 @@ export {UserVisibleError} from './api';
 export {isObjectPackFormula} from './api';
 export {isStringPackFormula} from './api';
 
+// Formula definition helpers
+export {makeEmptyFormula} from './api';
+export {makeGetConnectionNameFormula} from './api';
+export {makeTranslateObjectFormula} from './api';
+export {makeNumericFormula} from './api';
+export {makeObjectFormula} from './api';
+export {makeStringFormula} from './api';
+
+export {makeBooleanParameter} from './api';
+export {makeDateParameter} from './api';
+export {makeNumericParameter} from './api';
+export {makeStringParameter} from './api';
+
+export {StatusCodeError} from './api';
+export {makeUserVisibleError} from './api';
+
+// Object Schemas
 import * as schema from './schema';
 export {schema};
-
-export {getCanonicalAssetPath} from './helpers/assets';
