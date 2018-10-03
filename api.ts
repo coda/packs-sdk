@@ -1,4 +1,5 @@
 import {$Omit} from './type_utils';
+import {ArrayType} from './api_types';
 import {CommonPackFormulaDef} from './api_types';
 import {ExecutionContext} from './api_types';
 import {PackFormulaResult} from './api_types';
@@ -13,10 +14,14 @@ import {Type} from './api_types';
 import {TypeOf} from './api_types';
 import {RequestHandlerTemplate} from './handler_templates';
 import {ResponseHandlerTemplate} from './handler_templates';
+import {booleanArray} from './api_types';
+import {dateArray} from './api_types';
 import {ensureExists} from './helpers/ensure';
 import {generateRequestHandler} from './handler_templates';
 import {generateObjectResponseHandler} from './handler_templates';
 import {normalizeSchema} from './schema';
+import {numberArray} from './api_types';
+import {stringArray} from './api_types';
 
 export {ExecutionContext};
 export {FetchRequest} from './api_types';
@@ -43,12 +48,28 @@ export function makeStringParameter(
   return Object.freeze({...args, name, description, type: Type.string as Type.string});
 }
 
+export function makeStringArrayParameter(
+  name: string,
+  description: string,
+  args: ParamArgs<ArrayType<Type.string>> = {},
+): ParamDef<ArrayType<Type.string>> {
+  return Object.freeze({...args, name, description, type: stringArray});
+}
+
 export function makeNumericParameter(
   name: string,
   description: string,
   args: ParamArgs<Type.number> = {},
 ): ParamDef<Type.number> {
   return Object.freeze({...args, name, description, type: Type.number as Type.number});
+}
+
+export function makeNumericArrayParameter(
+  name: string,
+  description: string,
+  args: ParamArgs<ArrayType<Type.number>> = {},
+): ParamDef<ArrayType<Type.number>> {
+  return Object.freeze({...args, name, description, type: numberArray});
 }
 
 export function makeBooleanParameter(
@@ -59,12 +80,28 @@ export function makeBooleanParameter(
   return Object.freeze({...args, name, description, type: Type.boolean as Type.boolean});
 }
 
+export function makeBooleanArrayParameter(
+  name: string,
+  description: string,
+  args: ParamArgs<ArrayType<Type.boolean>> = {},
+): ParamDef<ArrayType<Type.boolean>> {
+  return Object.freeze({...args, name, description, type: booleanArray});
+}
+
 export function makeDateParameter(
   name: string,
   description: string,
   args: ParamArgs<Type.date> = {},
 ): ParamDef<Type.date> {
   return Object.freeze({...args, name, description, type: Type.date as Type.date});
+}
+
+export function makeDateArrayParameter(
+  name: string,
+  description: string,
+  args: ParamArgs<ArrayType<Type.date>> = {},
+): ParamDef<ArrayType<Type.date>> {
+  return Object.freeze({...args, name, description, type: dateArray});
 }
 
 export function makeUserVisibleError(msg: string): UserVisibleError {
