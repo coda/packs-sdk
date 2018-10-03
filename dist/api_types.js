@@ -8,3 +8,19 @@ var Type;
     Type[Type["boolean"] = 3] = "boolean";
     Type[Type["date"] = 4] = "date";
 })(Type = exports.Type || (exports.Type = {}));
+exports.stringArray = {
+    type: 'array',
+    items: Type.string,
+};
+exports.numberArray = {
+    type: 'array',
+    items: Type.number,
+};
+exports.booleanArray = {
+    type: 'array',
+    items: Type.boolean,
+};
+exports.dateArray = {
+    type: 'array',
+    items: Type.date,
+};

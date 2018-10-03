@@ -9,10 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const api_types_1 = require("./api_types");
+const api_types_2 = require("./api_types");
+const api_types_3 = require("./api_types");
 const ensure_1 = require("./helpers/ensure");
 const handler_templates_1 = require("./handler_templates");
 const handler_templates_2 = require("./handler_templates");
 const schema_1 = require("./schema");
+const api_types_4 = require("./api_types");
+const api_types_5 = require("./api_types");
 class UserVisibleError extends Error {
 }
 exports.UserVisibleError = UserVisibleError;
@@ -29,18 +33,34 @@ function makeStringParameter(name, description, args = {}) {
     return Object.freeze(Object.assign({}, args, { name, description, type: api_types_1.Type.string }));
 }
 exports.makeStringParameter = makeStringParameter;
+function makeStringArrayParameter(name, description, args = {}) {
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_5.stringArray }));
+}
+exports.makeStringArrayParameter = makeStringArrayParameter;
 function makeNumericParameter(name, description, args = {}) {
     return Object.freeze(Object.assign({}, args, { name, description, type: api_types_1.Type.number }));
 }
 exports.makeNumericParameter = makeNumericParameter;
+function makeNumericArrayParameter(name, description, args = {}) {
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_4.numberArray }));
+}
+exports.makeNumericArrayParameter = makeNumericArrayParameter;
 function makeBooleanParameter(name, description, args = {}) {
     return Object.freeze(Object.assign({}, args, { name, description, type: api_types_1.Type.boolean }));
 }
 exports.makeBooleanParameter = makeBooleanParameter;
+function makeBooleanArrayParameter(name, description, args = {}) {
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_2.booleanArray }));
+}
+exports.makeBooleanArrayParameter = makeBooleanArrayParameter;
 function makeDateParameter(name, description, args = {}) {
     return Object.freeze(Object.assign({}, args, { name, description, type: api_types_1.Type.date }));
 }
 exports.makeDateParameter = makeDateParameter;
+function makeDateArrayParameter(name, description, args = {}) {
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_3.dateArray }));
+}
+exports.makeDateArrayParameter = makeDateArrayParameter;
 function makeUserVisibleError(msg) {
     return new UserVisibleError(msg);
 }
