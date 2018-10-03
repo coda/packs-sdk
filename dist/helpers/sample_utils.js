@@ -10,9 +10,8 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 function fakeDefinitionToDefinition(def) {
-    const { formulas: originalFormulas } = def, rest = __rest(def, ["formulas"]);
-    const formulas = originalFormulas && { loader: () => Promise.resolve(originalFormulas) };
-    const legacyFormulasLoader = originalFormulas && (() => Promise.resolve(originalFormulas));
+    const { formulas } = def, rest = __rest(def, ["formulas"]);
+    const legacyFormulasLoader = formulas && (() => Promise.resolve(formulas));
     return Object.assign({ formulas, legacyFormulasLoader }, rest);
 }
 exports.fakeDefinitionToDefinition = fakeDefinitionToDefinition;

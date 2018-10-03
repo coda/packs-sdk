@@ -11,9 +11,8 @@ export interface FakePackDefinition extends $Omit<PackDefinition, 'formulas'> {
 }
 
 export function fakeDefinitionToDefinition(def: FakePackDefinition): PackDefinition {
-  const {formulas: originalFormulas, ...rest} = def;
-  const formulas = originalFormulas && {loader: () => Promise.resolve(originalFormulas)};
-  const legacyFormulasLoader = originalFormulas && (() => Promise.resolve(originalFormulas));
+  const {formulas, ...rest} = def;
+  const legacyFormulasLoader = formulas && (() => Promise.resolve(formulas));
 
   return {formulas, legacyFormulasLoader, ...rest};
 }
