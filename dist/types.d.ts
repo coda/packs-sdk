@@ -128,9 +128,6 @@ export interface WebBasicAuthentication extends BaseAuthentication {
 export declare type Authentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication;
 export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication;
 export declare type AsyncFormulasLoader = () => Promise<PackFormulas>;
-export interface LegacyPackFormulasDefinition {
-    loader: AsyncFormulasLoader;
-}
 export interface Format {
     name: string;
     formulaNamespace: string;
@@ -156,7 +153,7 @@ export interface PackDefinition {
      * explicit connection is specified by the user.
      */
     systemConnectionAuthentication?: SystemAuthentication;
-    formulas?: LegacyPackFormulasDefinition;
+    formulas?: PackFormulas;
     legacyFormulasLoader?: AsyncFormulasLoader;
     formats?: Format[];
 }
