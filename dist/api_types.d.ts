@@ -36,7 +36,7 @@ export interface ParamDef<T extends UnionType> {
     hidden?: boolean;
 }
 export declare type ParamArgs<T extends UnionType> = $Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
-export declare type ParamDefs = [ParamDef<any>, ...Array<ParamDef<any>>];
+export declare type ParamDefs = [ParamDef<any>, ...Array<ParamDef<any>>] | never[];
 export declare type ParamsList = Array<ParamDef<UnionType>>;
 declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : (T extends ArrayType<infer V> ? Array<TypeMap[V]> : never);
 export declare type ParamValues<ParamDefsT extends ParamDefs> = {

@@ -70,7 +70,7 @@ export interface ParamDef<T extends UnionType> {
 
 export type ParamArgs<T extends UnionType> = $Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
 
-export type ParamDefs = [ParamDef<any>, ...Array<ParamDef<any>>];
+export type ParamDefs = [ParamDef<any>, ...Array<ParamDef<any>>] | never[];
 
 export type ParamsList = Array<ParamDef<UnionType>>;
 
