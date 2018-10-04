@@ -3,10 +3,16 @@ import {FakePackDefinition} from '../helpers/sample_utils';
 import {PackCategory} from '../types';
 import {PackDefinition} from '../types';
 import {PackMetadata} from '../compiled_types';
-import {Type} from '../api_types';
+import {ValueType} from '../schema';
 import {fakeDefinitionToDefinition} from '../helpers/sample_utils';
 import {fakeDefinitionToMetadata} from '../helpers/sample_utils';
+import {makeBooleanParameter} from '../api';
+import {makeNumericFormula} from '../api';
+import {makeObjectFormula} from '../api';
+import {makeSchema} from '../schema';
 import {makeStringArrayParameter} from '../api';
+import {makeStringFormula} from '../api';
+import {makeStringParameter} from '../api';
 import {withQueryParams} from '../helpers/url';
 
 export const FakeNpmProviderId = 9011;
@@ -37,31 +43,23 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
   ],
   formulas: {
     NPM: [
-      {
-        resultType: Type.object,
-        schema: {
-          type: 'object',
-          properties: {
-            package: {type: 'string', primary: true},
-            url: {type: 'string'},
-            downloadCount: {type: 'number'},
-          },
+      makeObjectFormula({
+        response: {
+          schema: makeSchema({
+            type: ValueType.Object,
+            properties: {
+              package: {type: ValueType.String, primary: true},
+              url: {type: ValueType.String},
+              downloadCount: {type: ValueType.Number},
+            },
+          }),
         },
         name: 'Package',
         description: 'Retrieve a package',
         examples: [],
         parameters: [
-          {
-            name: 'name',
-            type: Type.string,
-            description: 'Package name',
-          },
-          {
-            name: 'monthly',
-            type: Type.boolean,
-            description: 'Show monthly download count instead of weekly',
-            optional: true,
-          },
+          makeStringParameter('name', 'Package name'),
+          makeBooleanParameter('monthly', 'Show monthly download count instead of weekly', {optional: true}),
         ],
         network: {hasSideEffect: false, hasConnection: false},
         execute: async ([name, monthly], context) => {
@@ -69,9 +67,8 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
           const result = await context.fetcher!.fetch({method: 'GET', url});
           return result.body;
         },
-      },
-      {
-        resultType: Type.string,
+      }),
+      makeStringFormula({
         name: 'FakeGetPackageUrls',
         description: 'Retrieve a list of packages URLs, comma separated',
         examples: [],
@@ -80,45 +77,31 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         execute: async ([names]: [string[]]) => {
           return names.map(name => `https://npmjs.com/api/packages/${name}`).join(',');
         },
-      },
-      {
-        resultType: Type.number,
+      }),
+      makeNumericFormula({
         name: 'FakeDownloadPackage',
         description: 'Initiate a download of the package, increasing its popularity (this action formula is for tests)',
         examples: [],
-        parameters: [
-          {
-            name: 'url',
-            type: Type.string,
-            description: 'Url to a package',
-          },
-        ],
+        parameters: [makeStringParameter('url', 'Url to a package')],
         network: {hasSideEffect: true, hasConnection: false, requiresConnection: false},
-        execute: async ([name, monthly], context) => {
-          const url = withQueryParams(`https://npmjs.com/api/packages/${name}/download`, {monthly: String(monthly)});
+        execute: async ([name], context) => {
+          const url = withQueryParams(`https://npmjs.com/api/packages/${name}/download`);
           const result = await context.fetcher!.fetch({method: 'POST', url});
           return result.body;
         },
-      },
-      {
-        resultType: Type.number,
+      }),
+      makeNumericFormula({
         name: 'FakeAddPackage',
         description: 'Adds a fake package',
         examples: [],
-        parameters: [
-          {
-            name: 'name',
-            type: Type.string,
-            description: 'Package name',
-          },
-        ],
+        parameters: [makeStringParameter('name', 'Package name')],
         network: {hasSideEffect: true, hasConnection: true, requiresConnection: true},
         execute: async ([name], context) => {
           const url = withQueryParams(`https://npmjs.com/api/packages`);
           const result = await context.fetcher!.fetch({method: 'POST', body: JSON.stringify({name}), url});
           return result.body;
         },
-      },
+      }),
     ],
   },
 };

@@ -70,7 +70,7 @@ export interface ParamDef<T extends UnionType> {
 
 export type ParamArgs<T extends UnionType> = $Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
 
-export type ParamDefs = [...Array<ParamDef<any>>];
+export type ParamDefs = [ParamDef<any>, ...Array<ParamDef<any>>];
 
 export type ParamsList = Array<ParamDef<UnionType>>;
 
@@ -79,8 +79,9 @@ type TypeOfMap<T extends UnionType> = T extends Type
   : (T extends ArrayType<infer V> ? Array<TypeMap[V]> : never);
 
 export type ParamValues<ParamDefsT extends ParamDefs> = {
-  [K in keyof ParamDefsT]: ParamDefsT extends ParamDef<infer T> ? TypeOfMap<T> : never
-};
+  [K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never
+} &
+  any[]; // NOTE(oleg): we need this to avoid "must have a '[Symbol.iterator]()' method that returns an iterator."
 
 export interface CommonPackFormulaDef<T extends ParamDefs> {
   readonly name: string;

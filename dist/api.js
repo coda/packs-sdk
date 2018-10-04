@@ -92,8 +92,7 @@ function makeGetConnectionNameFormula(execute) {
     return makeStringFormula({
         name: 'getConnectionName',
         description: 'Return name for new connection.',
-        execute(args, context) {
-            const [codaUserName, authParams] = args;
+        execute([codaUserName, authParams], context) {
             return execute(context, codaUserName, authParams);
         },
         parameters: [
