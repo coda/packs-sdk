@@ -19,6 +19,7 @@ export declare enum PackId {
     CodaDebug = 1009,
     CodaDoc = 1021,
     CodaTrigonometry = 1006,
+    Discourse = 1022,
     Figma = 1010,
     FullContact = 1019,
     Giphy = 1008,
@@ -44,6 +45,7 @@ export declare enum PackId {
 export declare enum ProviderId {
     Airtable = 2001,
     Coda = 2002,
+    Discourse = 2018,
     Figma = 2003,
     FullContact = 2015,
     Giphy = 2004,
@@ -66,6 +68,7 @@ export declare enum AuthenticationType {
     HeaderBearerToken = "HeaderBearerToken",
     CustomHeaderToken = "CustomHeaderToken",
     QueryParamToken = "QueryParamToken",
+    MultiQueryParamToken = "MultiQueryParamToken",
     OAuth2 = "OAuth2",
     WebBasic = "WebBasic"
 }
@@ -108,6 +111,17 @@ export interface QueryParamTokenAuthentication extends BaseAuthentication {
     type: AuthenticationType.QueryParamToken;
     paramName: string;
 }
+/**
+ * A pack or formula which includes multiple tokens in a query parameter (bad for security).
+ * https://foo.com/apis/dosomething?param1=<param1 value>&param2=<param2 value>
+ */
+export interface MultiQueryParamTokenAuthentication extends BaseAuthentication {
+    type: AuthenticationType.QueryParamToken;
+    params: Array<{
+        name: string;
+        description: string;
+    }>;
+}
 export interface OAuth2Authentication extends BaseAuthentication {
     type: AuthenticationType.OAuth2;
     authorizationUrl: string;
@@ -125,8 +139,8 @@ export interface OAuth2Authentication extends BaseAuthentication {
 export interface WebBasicAuthentication extends BaseAuthentication {
     type: AuthenticationType.WebBasic;
 }
-export declare type Authentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication;
-export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication;
+export declare type Authentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication;
+export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication;
 export declare type AsyncFormulasLoader = () => Promise<PackFormulas>;
 export interface Format {
     name: string;
