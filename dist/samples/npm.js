@@ -10,10 +10,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const types_1 = require("../types");
 const types_2 = require("../types");
-const api_types_1 = require("../api_types");
+const schema_1 = require("../schema");
 const sample_utils_1 = require("../helpers/sample_utils");
 const sample_utils_2 = require("../helpers/sample_utils");
 const api_1 = require("../api");
+const api_2 = require("../api");
+const api_3 = require("../api");
+const schema_2 = require("../schema");
+const api_4 = require("../api");
+const api_5 = require("../api");
+const api_6 = require("../api");
 const url_1 = require("../helpers/url");
 exports.FakeNpmProviderId = 9011;
 exports.FakeNpmPackId = 8003;
@@ -41,31 +47,23 @@ const FakeNpmDefinitionFake = {
     ],
     formulas: {
         NPM: [
-            {
-                resultType: api_types_1.Type.object,
-                schema: {
-                    type: 'object',
-                    properties: {
-                        package: { type: 'string', primary: true },
-                        url: { type: 'string' },
-                        downloadCount: { type: 'number' },
-                    },
+            api_3.makeObjectFormula({
+                response: {
+                    schema: schema_2.makeSchema({
+                        type: schema_1.ValueType.Object,
+                        properties: {
+                            package: { type: schema_1.ValueType.String, primary: true },
+                            url: { type: schema_1.ValueType.String },
+                            downloadCount: { type: schema_1.ValueType.Number },
+                        },
+                    }),
                 },
                 name: 'Package',
                 description: 'Retrieve a package',
                 examples: [],
                 parameters: [
-                    {
-                        name: 'name',
-                        type: api_types_1.Type.string,
-                        description: 'Package name',
-                    },
-                    {
-                        name: 'monthly',
-                        type: api_types_1.Type.boolean,
-                        description: 'Show monthly download count instead of weekly',
-                        optional: true,
-                    },
+                    api_6.makeStringParameter('name', 'Package name'),
+                    api_1.makeBooleanParameter('monthly', 'Show monthly download count instead of weekly', { optional: true }),
                 ],
                 network: { hasSideEffect: false, hasConnection: false },
                 execute: ([name, monthly], context) => __awaiter(this, void 0, void 0, function* () {
@@ -73,56 +71,41 @@ const FakeNpmDefinitionFake = {
                     const result = yield context.fetcher.fetch({ method: 'GET', url });
                     return result.body;
                 }),
-            },
-            {
-                resultType: api_types_1.Type.string,
+            }),
+            api_5.makeStringFormula({
                 name: 'FakeGetPackageUrls',
                 description: 'Retrieve a list of packages URLs, comma separated',
                 examples: [],
-                parameters: [api_1.makeStringArrayParameter('names', 'Names of packages to download')],
+                parameters: [api_4.makeStringArrayParameter('names', 'Names of packages to download')],
                 network: { hasSideEffect: false, hasConnection: false },
                 execute: ([names]) => __awaiter(this, void 0, void 0, function* () {
                     return names.map(name => `https://npmjs.com/api/packages/${name}`).join(',');
                 }),
-            },
-            {
-                resultType: api_types_1.Type.number,
+            }),
+            api_2.makeNumericFormula({
                 name: 'FakeDownloadPackage',
                 description: 'Initiate a download of the package, increasing its popularity (this action formula is for tests)',
                 examples: [],
-                parameters: [
-                    {
-                        name: 'url',
-                        type: api_types_1.Type.string,
-                        description: 'Url to a package',
-                    },
-                ],
+                parameters: [api_6.makeStringParameter('url', 'Url to a package')],
                 network: { hasSideEffect: true, hasConnection: false, requiresConnection: false },
-                execute: ([name, monthly], context) => __awaiter(this, void 0, void 0, function* () {
-                    const url = url_1.withQueryParams(`https://npmjs.com/api/packages/${name}/download`, { monthly: String(monthly) });
+                execute: ([name], context) => __awaiter(this, void 0, void 0, function* () {
+                    const url = url_1.withQueryParams(`https://npmjs.com/api/packages/${name}/download`);
                     const result = yield context.fetcher.fetch({ method: 'POST', url });
                     return result.body;
                 }),
-            },
-            {
-                resultType: api_types_1.Type.number,
+            }),
+            api_2.makeNumericFormula({
                 name: 'FakeAddPackage',
                 description: 'Adds a fake package',
                 examples: [],
-                parameters: [
-                    {
-                        name: 'name',
-                        type: api_types_1.Type.string,
-                        description: 'Package name',
-                    },
-                ],
+                parameters: [api_6.makeStringParameter('name', 'Package name')],
                 network: { hasSideEffect: true, hasConnection: true, requiresConnection: true },
                 execute: ([name], context) => __awaiter(this, void 0, void 0, function* () {
                     const url = url_1.withQueryParams(`https://npmjs.com/api/packages`);
                     const result = yield context.fetcher.fetch({ method: 'POST', body: JSON.stringify({ name }), url });
                     return result.body;
                 }),
-            },
+            }),
         ],
     },
 };

@@ -36,10 +36,12 @@ export interface ParamDef<T extends UnionType> {
     hidden?: boolean;
 }
 export declare type ParamArgs<T extends UnionType> = $Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
-export declare type ParamDefs = [] | [ParamDef<any>] | [ParamDef<any>, ParamDef<any>] | [ParamDef<any>, ParamDef<any>, ParamDef<any>] | [ParamDef<any>, ParamDef<any>, ParamDef<any>, ParamDef<any>] | [ParamDef<any>, ParamDef<any>, ParamDef<any>, ParamDef<any>, ParamDef<any>] | [ParamDef<any>, ParamDef<any>, ParamDef<any>, ParamDef<any>, ParamDef<any>, ParamDef<any>] | [ParamDef<any>, ParamDef<any>, ParamDef<any>, ParamDef<any>, ParamDef<any>, ParamDef<any>, ParamDef<any>] | never;
+export declare type ParamDefs = [ParamDef<any>, ...Array<ParamDef<any>>];
 export declare type ParamsList = Array<ParamDef<UnionType>>;
 declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : (T extends ArrayType<infer V> ? Array<TypeMap[V]> : never);
-export declare type ParamValues<ParamDefsT> = ParamDefsT extends [] ? [] : ParamDefsT extends [ParamDef<infer A1>] ? [TypeOfMap<A1>] : (ParamDefsT extends [ParamDef<infer A2>, ParamDef<infer B2>] ? [TypeOfMap<A2>, TypeOfMap<B2>] : (ParamDefsT extends [ParamDef<infer A3>, ParamDef<infer B3>, ParamDef<infer C3>] ? [TypeOfMap<A3>, TypeOfMap<B3>, TypeOfMap<C3>] : (ParamDefsT extends [ParamDef<infer A4>, ParamDef<infer B4>, ParamDef<infer C4>, ParamDef<infer D4>] ? [TypeOfMap<A4>, TypeOfMap<B4>, TypeOfMap<C4>, TypeOfMap<D4>] : (ParamDefsT extends [ParamDef<infer A5>, ParamDef<infer B5>, ParamDef<infer C5>, ParamDef<infer D5>, ParamDef<infer E5>] ? [TypeOfMap<A5>, TypeOfMap<B5>, TypeOfMap<C5>, TypeOfMap<D5>, TypeOfMap<E5>] : (ParamDefsT extends [ParamDef<infer A6>, ParamDef<infer B6>, ParamDef<infer C6>, ParamDef<infer D6>, ParamDef<infer E6>, ParamDef<infer F6>] ? [TypeOfMap<A6>, TypeOfMap<B6>, TypeOfMap<C6>, TypeOfMap<D6>, TypeOfMap<E6>, TypeOfMap<F6>] : (ParamDefsT extends [ParamDef<infer A7>, ParamDef<infer B7>, ParamDef<infer C7>, ParamDef<infer D7>, ParamDef<infer E7>, ParamDef<infer F7>, ParamDef<infer G7>] ? [TypeOfMap<A7>, TypeOfMap<B7>, TypeOfMap<C7>, TypeOfMap<D7>, TypeOfMap<E7>, TypeOfMap<F7>, TypeOfMap<G7>] : never[]))))));
+export declare type ParamValues<ParamDefsT extends ParamDefs> = {
+    [K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
+} & any[];
 export interface CommonPackFormulaDef<T extends ParamDefs> {
     readonly name: string;
     readonly description: string;

@@ -78,7 +78,7 @@ export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boo
 interface ArraySchemaType<T extends ArraySchema> extends Array<SchemaType<T['items']>> {
 }
 declare type ObjectSchemaType<T extends ObjectSchema> = UndefinedAsOptional<{
-    [K in keyof T['properties']]: T['properties'][K] extends {
+    [K in keyof T['properties']]: T['properties'][K] extends Schema & {
         required: true;
     } ? (SchemaType<T['properties'][K]>) : (SchemaType<T['properties'][K]> | undefined);
 }>;

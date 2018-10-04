@@ -5,10 +5,11 @@ import {FetchRequest} from '../api_types';
 import {PackCategory} from '../types';
 import {PackDefinition} from '../types';
 import {PackMetadata} from '../compiled_types';
-import {Type} from '../api_types';
 import {fakeDefinitionToDefinition} from '../helpers/sample_utils';
 import {fakeDefinitionToMetadata} from '../helpers/sample_utils';
 import {makeGetConnectionNameFormula} from '../api';
+import {makeStringFormula} from '../api';
+import {makeStringParameter} from '../api';
 
 export const FakeBggProviderId = 9010;
 
@@ -35,25 +36,18 @@ const FakeBggDefinitionOldFake: FakePackDefinition = {
   ],
   formulas: {
     BGG: [
-      {
-        resultType: Type.string,
+      makeStringFormula({
         name: 'BoardGame',
         description: 'Retrieve a board game.',
         examples: [],
-        parameters: [
-          {
-            name: 'id',
-            type: Type.string,
-            description: 'ID of a board game.',
-          },
-        ],
+        parameters: [makeStringParameter('id', 'ID of a board game.')],
         network: {hasSideEffect: false, hasConnection: true, requiresConnection: true},
         execute: async ([id], context) => {
           const url = `https://boardgamegeek.com/boardgame/${id}`;
           const result = await context.fetcher!.fetch({method: 'GET', url});
           return result.body;
         },
-      },
+      }),
     ],
   },
 };
@@ -103,25 +97,18 @@ const FakeBggDefinitionFake: FakePackDefinition = {
   ],
   formulas: {
     BGG: [
-      {
-        resultType: Type.string,
+      makeStringFormula({
         name: 'BoardGame',
         description: 'Retrieve a board game',
         examples: [],
-        parameters: [
-          {
-            name: 'url',
-            type: Type.string,
-            description: 'Url to a board game',
-          },
-        ],
+        parameters: [makeStringParameter('url', 'Url to a board game')],
         network: {hasSideEffect: false, hasConnection: true, requiresConnection: true},
         execute: async ([id], context) => {
           const url = `https://boardgamegeek.com/boardgame/${id}`;
           const result = await context.fetcher!.fetch({method: 'GET', url});
           return result.body;
         },
-      },
+      }),
     ],
   },
 };

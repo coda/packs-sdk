@@ -11,10 +11,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const types_1 = require("../types");
 const npm_1 = require("./npm");
 const types_2 = require("../types");
-const api_types_1 = require("../api_types");
 const sample_utils_1 = require("../helpers/sample_utils");
 const sample_utils_2 = require("../helpers/sample_utils");
 const api_1 = require("../api");
+const api_2 = require("../api");
+const api_3 = require("../api");
 exports.FakeBggProviderId = 9010;
 exports.FakeBggPackId = 8002;
 exports.FakeBggPackVersion = '0.2.3';
@@ -38,25 +39,18 @@ const FakeBggDefinitionOldFake = {
     ],
     formulas: {
         BGG: [
-            {
-                resultType: api_types_1.Type.string,
+            api_2.makeStringFormula({
                 name: 'BoardGame',
                 description: 'Retrieve a board game.',
                 examples: [],
-                parameters: [
-                    {
-                        name: 'id',
-                        type: api_types_1.Type.string,
-                        description: 'ID of a board game.',
-                    },
-                ],
+                parameters: [api_3.makeStringParameter('id', 'ID of a board game.')],
                 network: { hasSideEffect: false, hasConnection: true, requiresConnection: true },
                 execute: ([id], context) => __awaiter(this, void 0, void 0, function* () {
                     const url = `https://boardgamegeek.com/boardgame/${id}`;
                     const result = yield context.fetcher.fetch({ method: 'GET', url });
                     return result.body;
                 }),
-            },
+            }),
         ],
     },
 };
@@ -104,25 +98,18 @@ const FakeBggDefinitionFake = {
     ],
     formulas: {
         BGG: [
-            {
-                resultType: api_types_1.Type.string,
+            api_2.makeStringFormula({
                 name: 'BoardGame',
                 description: 'Retrieve a board game',
                 examples: [],
-                parameters: [
-                    {
-                        name: 'url',
-                        type: api_types_1.Type.string,
-                        description: 'Url to a board game',
-                    },
-                ],
+                parameters: [api_3.makeStringParameter('url', 'Url to a board game')],
                 network: { hasSideEffect: false, hasConnection: true, requiresConnection: true },
                 execute: ([id], context) => __awaiter(this, void 0, void 0, function* () {
                     const url = `https://boardgamegeek.com/boardgame/${id}`;
                     const result = yield context.fetcher.fetch({ method: 'GET', url });
                     return result.body;
                 }),
-            },
+            }),
         ],
     },
 };
