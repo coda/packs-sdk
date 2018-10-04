@@ -116,7 +116,7 @@ export interface QueryParamTokenAuthentication extends BaseAuthentication {
  * https://foo.com/apis/dosomething?param1=<param1 value>&param2=<param2 value>
  */
 export interface MultiQueryParamTokenAuthentication extends BaseAuthentication {
-    type: AuthenticationType.QueryParamToken;
+    type: AuthenticationType.MultiQueryParamToken;
     params: Array<{
         name: string;
         description: string;
