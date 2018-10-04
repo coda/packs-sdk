@@ -8,6 +8,10 @@ var Type;
     Type[Type["boolean"] = 3] = "boolean";
     Type[Type["date"] = 4] = "date";
 })(Type = exports.Type || (exports.Type = {}));
+function isArrayType(obj) {
+    return obj && obj.type === 'array' && typeof obj.items === 'number';
+}
+exports.isArrayType = isArrayType;
 exports.stringArray = {
     type: 'array',
     items: Type.string,
