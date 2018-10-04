@@ -13,6 +13,7 @@ const types_2 = require("../types");
 const api_types_1 = require("../api_types");
 const sample_utils_1 = require("../helpers/sample_utils");
 const sample_utils_2 = require("../helpers/sample_utils");
+const api_1 = require("../api");
 const url_1 = require("../helpers/url");
 exports.FakeNpmProviderId = 9011;
 exports.FakeNpmPackId = 8003;
@@ -71,6 +72,17 @@ const FakeNpmDefinitionFake = {
                     const url = url_1.withQueryParams(`https://npmjs.com/api/packages/${name}`, { monthly: String(monthly) });
                     const result = yield context.fetcher.fetch({ method: 'GET', url });
                     return result.body;
+                }),
+            },
+            {
+                resultType: api_types_1.Type.string,
+                name: 'FakeGetPackageUrls',
+                description: 'Retrieve a list of packages URLs, comma separated',
+                examples: [],
+                parameters: [api_1.makeStringArrayParameter('names', 'Names of packages to download')],
+                network: { hasSideEffect: false, hasConnection: false },
+                execute: ([names]) => __awaiter(this, void 0, void 0, function* () {
+                    return names.map(name => `https://npmjs.com/api/packages/${name}`).join(',');
                 }),
             },
             {

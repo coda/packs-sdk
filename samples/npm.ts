@@ -6,6 +6,7 @@ import {PackMetadata} from '../compiled_types';
 import {Type} from '../api_types';
 import {fakeDefinitionToDefinition} from '../helpers/sample_utils';
 import {fakeDefinitionToMetadata} from '../helpers/sample_utils';
+import {makeStringArrayParameter} from '../api';
 import {withQueryParams} from '../helpers/url';
 
 export const FakeNpmProviderId = 9011;
@@ -67,6 +68,17 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
           const url = withQueryParams(`https://npmjs.com/api/packages/${name}`, {monthly: String(monthly)});
           const result = await context.fetcher!.fetch({method: 'GET', url});
           return result.body;
+        },
+      },
+      {
+        resultType: Type.string,
+        name: 'FakeGetPackageUrls',
+        description: 'Retrieve a list of packages URLs, comma separated',
+        examples: [],
+        parameters: [makeStringArrayParameter('names', 'Names of packages to download')],
+        network: {hasSideEffect: false, hasConnection: false},
+        execute: async ([names]: [string[]]) => {
+          return names.map(name => `https://npmjs.com/api/packages/${name}`).join(',');
         },
       },
       {
