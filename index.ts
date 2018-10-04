@@ -17,6 +17,7 @@ export {PackFormulasMetadata} from './compiled_types';
 export {PackMetadata} from './compiled_types';
 
 // Formula related interfaces
+export {ArrayType} from './api_types';
 export {ExecutionContext} from './api_types';
 export {Fetcher} from './api_types';
 export {FetchRequest} from './api_types';
@@ -29,6 +30,7 @@ export {ParamsList} from './api_types';
 export {Type} from './api_types';
 export {TypedPackFormula} from './api';
 export {UserVisibleError} from './api';
+export {isArrayType} from './api_types';
 export {isObjectPackFormula} from './api';
 export {isStringPackFormula} from './api';
 

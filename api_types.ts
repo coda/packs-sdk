@@ -14,6 +14,10 @@ export interface ArrayType<T extends Type> {
   items: T;
 }
 
+export function isArrayType(obj: any): obj is ArrayType<any> {
+  return obj && obj.type === 'array' && typeof obj.items === 'number';
+}
+
 type UnionType = ArrayType<Type> | Type;
 
 export const stringArray: ArrayType<Type.string> = {
@@ -78,7 +82,7 @@ export type ParamDefs =
   | [ParamDef<any>, ParamDef<any>, ParamDef<any>, ParamDef<any>, ParamDef<any>, ParamDef<any>, ParamDef<any>]
   | never;
 
-export type ParamsList = Array<ParamDef<any>>;
+export type ParamsList = Array<ParamDef<UnionType>>;
 
 type TypeOfMap<T extends UnionType> = T extends Type
   ? TypeMap[T]
