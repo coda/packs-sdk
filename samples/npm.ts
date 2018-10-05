@@ -18,7 +18,7 @@ import {withQueryParams} from '../helpers/url';
 export const FakeNpmProviderId = 9011;
 
 export const FakeNpmPackId = 8003;
-export const FakeNpmPackVersion = '5.2.2';
+export const FakeNpmPackVersion = '5.2.3';
 
 const FakeNpmDefinitionFake: FakePackDefinition = {
   id: FakeNpmPackId,
