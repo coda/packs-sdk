@@ -21,7 +21,7 @@ export enum PackId {
   CodaDebug = 1009,
   CodaDoc = 1021,
   CodaTrigonometry = 1006,
-  Discourse = 1022,
+  Discourse = 1025,
   Figma = 1010,
   FullContact = 1019,
   Giphy = 1008,
