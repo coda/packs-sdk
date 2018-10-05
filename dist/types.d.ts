@@ -87,6 +87,7 @@ interface BaseAuthentication {
     getConnectionNameFormula?: GetConnectionNameFormula;
     defaultConnectionType?: DefaultConnectionType;
     instructionsUrl?: string;
+    requiresEndpointUrl?: boolean;
 }
 /**
  * A pack or formula which uses standard bearer token header authentication:
