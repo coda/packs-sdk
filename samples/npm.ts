@@ -47,6 +47,10 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         response: {
           schema: makeSchema({
             type: ValueType.Object,
+            identity: {
+              packId: FakeNpmPackId,
+              name: 'Package',
+            },
             properties: {
               package: {type: ValueType.String, primary: true},
               url: {type: ValueType.String},
