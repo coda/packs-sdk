@@ -21,7 +21,7 @@ var PackId;
     PackId[PackId["CodaDebug"] = 1009] = "CodaDebug";
     PackId[PackId["CodaDoc"] = 1021] = "CodaDoc";
     PackId[PackId["CodaTrigonometry"] = 1006] = "CodaTrigonometry";
-    PackId[PackId["Discourse"] = 1022] = "Discourse";
+    PackId[PackId["Discourse"] = 1025] = "Discourse";
     PackId[PackId["Figma"] = 1010] = "Figma";
     PackId[PackId["FullContact"] = 1019] = "FullContact";
     PackId[PackId["Giphy"] = 1008] = "Giphy";
