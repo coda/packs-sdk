@@ -23,7 +23,7 @@ const api_6 = require("../api");
 const url_1 = require("../helpers/url");
 exports.FakeNpmProviderId = 9011;
 exports.FakeNpmPackId = 8003;
-exports.FakeNpmPackVersion = '5.2.2';
+exports.FakeNpmPackVersion = '5.2.3';
 const FakeNpmDefinitionFake = {
     id: exports.FakeNpmPackId,
     name: 'NPM',
@@ -51,6 +51,10 @@ const FakeNpmDefinitionFake = {
                 response: {
                     schema: schema_2.makeSchema({
                         type: schema_1.ValueType.Object,
+                        identity: {
+                            packId: exports.FakeNpmPackId,
+                            name: 'Package',
+                        },
                         properties: {
                             package: { type: schema_1.ValueType.String, primary: true },
                             url: { type: schema_1.ValueType.String },
