@@ -99,6 +99,9 @@ interface BaseAuthentication {
 
   // link to help article, etc. if more instructions needed explaining how to install the pack
   instructionsUrl?: string;
+
+  // Does this authentication instance require a custom endpoint url?
+  requiresEndpointUrl?: boolean;
 }
 
 /**
