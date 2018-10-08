@@ -43,7 +43,7 @@ var PackId;
     PackId[PackId["Lob"] = 1023] = "Lob";
     PackId[PackId["Stocks"] = 1024] = "Stocks";
     PackId[PackId["Discourse"] = 1025] = "Discourse";
-    PackId[PackId["Amazon"] = 1026] = "Amazon";
+    PackId[PackId["WalmartShopping"] = 1026] = "WalmartShopping";
     PackId[PackId["GooglePlaces"] = 1027] = "GooglePlaces";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
@@ -67,7 +67,7 @@ var ProviderId;
     ProviderId[ProviderId["Lob"] = 2017] = "Lob";
     ProviderId[ProviderId["Stocks"] = 2018] = "Stocks";
     ProviderId[ProviderId["Discourse"] = 2019] = "Discourse";
-    ProviderId[ProviderId["Amazon"] = 2020] = "Amazon";
+    ProviderId[ProviderId["Walmart"] = 2020] = "Walmart";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {
