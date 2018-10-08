@@ -18,6 +18,7 @@ var PackCategory;
 var PackId;
 (function (PackId) {
     PackId[PackId["Airtable"] = 1001] = "Airtable";
+    PackId[PackId["Amazon"] = 1027] = "Amazon";
     PackId[PackId["CodaDebug"] = 1009] = "CodaDebug";
     PackId[PackId["CodaDoc"] = 1021] = "CodaDoc";
     PackId[PackId["CodaTrigonometry"] = 1006] = "CodaTrigonometry";
@@ -47,6 +48,7 @@ var PackId;
 var ProviderId;
 (function (ProviderId) {
     ProviderId[ProviderId["Airtable"] = 2001] = "Airtable";
+    ProviderId[ProviderId["Amazon"] = 2019] = "Amazon";
     ProviderId[ProviderId["Coda"] = 2002] = "Coda";
     ProviderId[ProviderId["Discourse"] = 2018] = "Discourse";
     ProviderId[ProviderId["Figma"] = 2003] = "Figma";
