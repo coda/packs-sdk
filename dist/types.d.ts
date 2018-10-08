@@ -16,6 +16,7 @@ export declare enum PackCategory {
 }
 export declare enum PackId {
     Airtable = 1001,
+    Amazon = 1027,
     CodaDebug = 1009,
     CodaDoc = 1021,
     CodaTrigonometry = 1006,
@@ -44,6 +45,7 @@ export declare enum PackId {
 }
 export declare enum ProviderId {
     Airtable = 2001,
+    Amazon = 2019,
     Coda = 2002,
     Discourse = 2018,
     Figma = 2003,
