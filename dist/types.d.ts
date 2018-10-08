@@ -27,9 +27,7 @@ export declare enum PackId {
     CodaDebug = 1009,
     Figma = 1010,
     GoogleContacts = 1011,
-    GoogleDirections = 1020,
     GoogleNaturalLanguage = 1014,
-    GooglePlaces = 1026,
     GoogleTasks = 1012,
     GitHub = 1013,
     Weather = 1015,
@@ -37,12 +35,14 @@ export declare enum PackId {
     Zoom = 1017,
     Spotify = 1018,
     FullContact = 1019,
+    GoogleDirections = 1020,
     CodaDoc = 1021,
     Greenhouse = 1022,
     Lob = 1023,
     Stocks = 1024,
     Discourse = 1025,
-    Amazon = 1026
+    Amazon = 1026,
+    GooglePlaces = 1027
 }
 export declare enum ProviderId {
     Airtable = 2001,
