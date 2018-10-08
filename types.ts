@@ -43,7 +43,7 @@ export enum PackId {
   Lob = 1023,
   Stocks = 1024,
   Discourse = 1025,
-  Amazon = 1026,
+  WalmartShopping = 1026,
   GooglePlaces = 1027,
 }
 
@@ -67,7 +67,7 @@ export enum ProviderId {
   Lob = 2017,
   Stocks = 2018,
   Discourse = 2019,
-  Amazon = 2020,
+  Walmart = 2020,
 }
 
 export enum AuthenticationType {
