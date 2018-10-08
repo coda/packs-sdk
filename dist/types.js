@@ -13,6 +13,7 @@ var PackCategory;
     PackCategory["Mathematics"] = "Mathematics";
     PackCategory["Organization"] = "Organization";
     PackCategory["Recruiting"] = "Recruiting";
+    PackCategory["Shopping"] = "Shopping";
     PackCategory["Weather"] = "Weather";
 })(PackCategory = exports.PackCategory || (exports.PackCategory = {}));
 var PackId;

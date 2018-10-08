@@ -12,6 +12,7 @@ export declare enum PackCategory {
     Mathematics = "Mathematics",
     Organization = "Organization",
     Recruiting = "Recruiting",
+    Shopping = "Shopping",
     Weather = "Weather"
 }
 export declare enum PackId {
