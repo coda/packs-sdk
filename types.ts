@@ -13,6 +13,7 @@ export enum PackCategory {
   Mathematics = 'Mathematics',
   Organization = 'Organization',
   Recruiting = 'Recruiting',
+  Shopping = 'Shopping',
   Weather = 'Weather',
 }
 
