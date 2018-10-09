@@ -13,6 +13,7 @@ export enum PackCategory {
   Mathematics = 'Mathematics',
   Organization = 'Organization',
   Recruiting = 'Recruiting',
+  Social = 'Social',
   Shopping = 'Shopping',
   Weather = 'Weather',
 }
@@ -46,14 +47,13 @@ export enum PackId {
   Discourse = 1025,
   WalmartShopping = 1026,
   GooglePlaces = 1027,
+  Instagram = 1029,
 }
 
 // This is for packs that have been deployed out of band of the master branch,
 // so that they don't get marked as deleted when running `make validate-version-changes`.
 // Don't reuse any of these ids in actual packs.
-export const HackathonPackIds = new Set([
-  1028,
-]);
+export const HackathonPackIds = new Set([1028]);
 
 export enum ProviderId {
   Airtable = 2001,
@@ -76,6 +76,7 @@ export enum ProviderId {
   Stocks = 2018,
   Discourse = 2019,
   Walmart = 2020,
+  Instagram = 2021,
 }
 
 export enum AuthenticationType {

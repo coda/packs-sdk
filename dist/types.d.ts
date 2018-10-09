@@ -12,6 +12,7 @@ export declare enum PackCategory {
     Mathematics = "Mathematics",
     Organization = "Organization",
     Recruiting = "Recruiting",
+    Social = "Social",
     Shopping = "Shopping",
     Weather = "Weather"
 }
@@ -43,7 +44,8 @@ export declare enum PackId {
     Stocks = 1024,
     Discourse = 1025,
     WalmartShopping = 1026,
-    GooglePlaces = 1027
+    GooglePlaces = 1027,
+    Instagram = 1029
 }
 export declare const HackathonPackIds: Set<number>;
 export declare enum ProviderId {
@@ -66,7 +68,8 @@ export declare enum ProviderId {
     Lob = 2017,
     Stocks = 2018,
     Discourse = 2019,
-    Walmart = 2020
+    Walmart = 2020,
+    Instagram = 2021
 }
 export declare enum AuthenticationType {
     None = "None",

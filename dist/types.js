@@ -13,6 +13,7 @@ var PackCategory;
     PackCategory["Mathematics"] = "Mathematics";
     PackCategory["Organization"] = "Organization";
     PackCategory["Recruiting"] = "Recruiting";
+    PackCategory["Social"] = "Social";
     PackCategory["Shopping"] = "Shopping";
     PackCategory["Weather"] = "Weather";
 })(PackCategory = exports.PackCategory || (exports.PackCategory = {}));
@@ -46,13 +47,12 @@ var PackId;
     PackId[PackId["Discourse"] = 1025] = "Discourse";
     PackId[PackId["WalmartShopping"] = 1026] = "WalmartShopping";
     PackId[PackId["GooglePlaces"] = 1027] = "GooglePlaces";
+    PackId[PackId["Instagram"] = 1029] = "Instagram";
 })(PackId = exports.PackId || (exports.PackId = {}));
 // This is for packs that have been deployed out of band of the master branch,
 // so that they don't get marked as deleted when running `make validate-version-changes`.
 // Don't reuse any of these ids in actual packs.
-exports.HackathonPackIds = new Set([
-    1028,
-]);
+exports.HackathonPackIds = new Set([1028]);
 var ProviderId;
 (function (ProviderId) {
     ProviderId[ProviderId["Airtable"] = 2001] = "Airtable";
@@ -75,6 +75,7 @@ var ProviderId;
     ProviderId[ProviderId["Stocks"] = 2018] = "Stocks";
     ProviderId[ProviderId["Discourse"] = 2019] = "Discourse";
     ProviderId[ProviderId["Walmart"] = 2020] = "Walmart";
+    ProviderId[ProviderId["Instagram"] = 2021] = "Instagram";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {
