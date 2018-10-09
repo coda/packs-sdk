@@ -35,6 +35,7 @@ export interface ArraySchema extends BaseSchema {
 }
 interface ObjectSchemaProperties {
     [key: string]: Schema & {
+        editable?: boolean;
         primary?: boolean;
         fromKey?: string;
         required?: boolean;
