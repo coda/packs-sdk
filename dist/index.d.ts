@@ -8,6 +8,7 @@ export { PackDefinition } from './types';
 export { PackId } from './types';
 export { ProviderDefinition } from './types';
 export { ProviderId } from './types';
+export { HackathonPackIds } from './types';
 export { PackFormatMetadata } from './compiled_types';
 export { PackFormulaMetadata } from './compiled_types';
 export { PackFormulasMetadata } from './compiled_types';
