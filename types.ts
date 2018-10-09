@@ -181,10 +181,13 @@ export type SystemAuthentication =
 
 export type AsyncFormulasLoader = () => Promise<PackFormulas>;
 
+export type DataSync = any;
+
 export interface Format {
   name: string;
   formulaNamespace: string;
   formulaName: string;
+  hackFormatMetadata?: any;
   hasNoConnection?: boolean;
   logoPath?: string;
   matchers?: RegExp[];
@@ -223,6 +226,7 @@ export interface PackDefinition {
   formulas?: PackFormulas;
   legacyFormulasLoader?: AsyncFormulasLoader;
   formats?: Format[];
+  dataSyncs?: DataSync[];
 }
 
 export interface ProviderDefinition {
