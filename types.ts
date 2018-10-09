@@ -46,6 +46,7 @@ export enum PackId {
   Discourse = 1025,
   WalmartShopping = 1026,
   GooglePlaces = 1027,
+  CodaHack = 1028,
 }
 
 export enum ProviderId {
@@ -69,6 +70,7 @@ export enum ProviderId {
   Stocks = 2018,
   Discourse = 2019,
   Walmart = 2020,
+  CodaHack = 2021,
 }
 
 export enum AuthenticationType {
