@@ -45,6 +45,9 @@ export declare enum PackId {
     WalmartShopping = 1026,
     GooglePlaces = 1027
 }
+export declare enum HackathonPackIds {
+    CodaHack = 1028
+}
 export declare enum ProviderId {
     Airtable = 2001,
     Coda = 2002,
