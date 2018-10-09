@@ -51,9 +51,9 @@ export enum PackId {
 // This is for packs that have been deployed out of band of the master branch,
 // so that they don't get marked as deleted when running `make validate-version-changes`.
 // Don't reuse any of these ids in actual packs.
-export enum HackathonPackIds {
-  CodaHack = 1028,
-}
+export const HackathonPackIds = new Set([
+  1028,
+]);
 
 export enum ProviderId {
   Airtable = 2001,

@@ -50,10 +50,9 @@ var PackId;
 // This is for packs that have been deployed out of band of the master branch,
 // so that they don't get marked as deleted when running `make validate-version-changes`.
 // Don't reuse any of these ids in actual packs.
-var HackathonPackIds;
-(function (HackathonPackIds) {
-    HackathonPackIds[HackathonPackIds["CodaHack"] = 1028] = "CodaHack";
-})(HackathonPackIds = exports.HackathonPackIds || (exports.HackathonPackIds = {}));
+exports.HackathonPackIds = new Set([
+    1028,
+]);
 var ProviderId;
 (function (ProviderId) {
     ProviderId[ProviderId["Airtable"] = 2001] = "Airtable";
