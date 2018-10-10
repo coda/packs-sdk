@@ -28,12 +28,15 @@ export {PackFormulas} from './api';
 export {PackFormulaValue} from './api_types';
 export {PackFormulaResult} from './api_types';
 export {ParamsList} from './api_types';
+export {StatusCodeError} from './api';
 export {Type} from './api_types';
 export {TypedPackFormula} from './api';
 export {UserVisibleError} from './api';
 export {isArrayType} from './api_types';
 export {isObjectPackFormula} from './api';
 export {isStringPackFormula} from './api';
+export {isUserVisibleError} from './api';
+export {makeUserVisibleError} from './api';
 
 // Formula definition helpers
 export {makeEmptyFormula} from './api';
@@ -51,9 +54,6 @@ export {makeNumericParameter} from './api';
 export {makeNumericArrayParameter} from './api';
 export {makeStringParameter} from './api';
 export {makeStringArrayParameter} from './api';
-
-export {StatusCodeError} from './api';
-export {makeUserVisibleError} from './api';
 
 // Object Schemas
 import * as schema from './schema';

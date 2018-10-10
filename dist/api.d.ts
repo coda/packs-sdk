@@ -17,11 +17,13 @@ import { ResponseHandlerTemplate } from './handler_templates';
 export { ExecutionContext };
 export { FetchRequest } from './api_types';
 export declare class UserVisibleError extends Error {
+    readonly isUserVisible = true;
 }
 export declare class StatusCodeError extends Error {
     statusCode: number;
     constructor(statusCode: number);
 }
+export declare function isUserVisibleError(error: Error): error is UserVisibleError;
 export declare const PARAM_DESCRIPTION_DOES_NOT_EXIST = "NO PARAMETER DESCRIPTION HAS BEEN ADDED. For guidance, see https://coda.link/param-docs";
 export declare function makeStringParameter(name: string, description: string, args?: ParamArgs<Type.string>): ParamDef<Type.string>;
 export declare function makeStringArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.string>>): ParamDef<ArrayType<Type.string>>;
