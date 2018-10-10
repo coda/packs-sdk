@@ -22,6 +22,7 @@ var ValueType;
     ValueType["Url"] = "url";
     ValueType["Markdown"] = "markdown";
     ValueType["Html"] = "html";
+    ValueType["Embed"] = "embed";
 })(ValueType = exports.ValueType || (exports.ValueType = {}));
 var AttributionNodeType;
 (function (AttributionNodeType) {

@@ -11,9 +11,10 @@ export declare enum ValueType {
     Image = "image",
     Url = "url",
     Markdown = "markdown",
-    Html = "html"
+    Html = "html",
+    Embed = "embed"
 }
-export declare type StringHintTypes = ValueType.Image | ValueType.Date | ValueType.Url | ValueType.Markdown | ValueType.Html;
+export declare type StringHintTypes = ValueType.Image | ValueType.Date | ValueType.Url | ValueType.Markdown | ValueType.Html | ValueType.Embed;
 export declare type NumberHintTypes = ValueType.Date | ValueType.Percent | ValueType.Currency;
 interface BaseSchema {
     description?: string;
