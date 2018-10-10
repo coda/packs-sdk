@@ -19,9 +19,16 @@ export enum ValueType {
   Url = 'url',
   Markdown = 'markdown',
   Html = 'html',
+  Embed = 'embed',
 }
 
-export type StringHintTypes = ValueType.Image | ValueType.Date | ValueType.Url | ValueType.Markdown | ValueType.Html;
+export type StringHintTypes =
+  | ValueType.Image
+  | ValueType.Date
+  | ValueType.Url
+  | ValueType.Markdown
+  | ValueType.Html
+  | ValueType.Embed;
 export type NumberHintTypes = ValueType.Date | ValueType.Percent | ValueType.Currency;
 
 interface BaseSchema {
