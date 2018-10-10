@@ -49,6 +49,7 @@ var PackId;
     PackId[PackId["GooglePlaces"] = 1027] = "GooglePlaces";
     PackId[PackId["Instagram"] = 1029] = "Instagram";
     PackId[PackId["YouTube"] = 1030] = "YouTube";
+    PackId[PackId["Wikipedia"] = 1031] = "Wikipedia";
 })(PackId = exports.PackId || (exports.PackId = {}));
 // This is for packs that have been deployed out of band of the master branch,
 // so that they don't get marked as deleted when running `make validate-version-changes`.
@@ -77,6 +78,7 @@ var ProviderId;
     ProviderId[ProviderId["Discourse"] = 2019] = "Discourse";
     ProviderId[ProviderId["Walmart"] = 2020] = "Walmart";
     ProviderId[ProviderId["Instagram"] = 2021] = "Instagram";
+    ProviderId[ProviderId["Wikipedia"] = 2022] = "Wikipedia";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {
