@@ -48,6 +48,7 @@ var PackId;
     PackId[PackId["WalmartShopping"] = 1026] = "WalmartShopping";
     PackId[PackId["GooglePlaces"] = 1027] = "GooglePlaces";
     PackId[PackId["Instagram"] = 1029] = "Instagram";
+    PackId[PackId["YouTube"] = 1030] = "YouTube";
 })(PackId = exports.PackId || (exports.PackId = {}));
 // This is for packs that have been deployed out of band of the master branch,
 // so that they don't get marked as deleted when running `make validate-version-changes`.

@@ -48,6 +48,7 @@ export enum PackId {
   WalmartShopping = 1026,
   GooglePlaces = 1027,
   Instagram = 1029,
+  YouTube = 1030,
 }
 
 // This is for packs that have been deployed out of band of the master branch,
