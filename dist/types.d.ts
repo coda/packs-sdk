@@ -46,7 +46,8 @@ export declare enum PackId {
     WalmartShopping = 1026,
     GooglePlaces = 1027,
     Instagram = 1029,
-    YouTube = 1030
+    YouTube = 1030,
+    Wikipedia = 1031
 }
 export declare const HackathonPackIds: Set<number>;
 export declare enum ProviderId {
@@ -70,7 +71,8 @@ export declare enum ProviderId {
     Stocks = 2018,
     Discourse = 2019,
     Walmart = 2020,
-    Instagram = 2021
+    Instagram = 2021,
+    Wikipedia = 2022
 }
 export declare enum AuthenticationType {
     None = "None",
