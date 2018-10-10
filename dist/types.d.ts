@@ -45,7 +45,8 @@ export declare enum PackId {
     Discourse = 1025,
     WalmartShopping = 1026,
     GooglePlaces = 1027,
-    Instagram = 1029
+    Instagram = 1029,
+    YouTube = 1030
 }
 export declare const HackathonPackIds: Set<number>;
 export declare enum ProviderId {
