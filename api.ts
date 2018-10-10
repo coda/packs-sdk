@@ -26,7 +26,9 @@ import {stringArray} from './api_types';
 export {ExecutionContext};
 export {FetchRequest} from './api_types';
 
-export class UserVisibleError extends Error {}
+export class UserVisibleError extends Error {
+  readonly isUserVisible = true;
+}
 
 export class StatusCodeError extends Error {
   statusCode: number;
@@ -34,6 +36,10 @@ export class StatusCodeError extends Error {
     super(`statusCode: ${statusCode}`);
     this.statusCode = statusCode;
   }
+}
+
+export function isUserVisibleError(error: Error): error is UserVisibleError {
+  return 'isUserVisible' in error && (error as any).isUserVisible;
 }
 
 // NOTE[roger] remove once not needed.

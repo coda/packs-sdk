@@ -18,6 +18,10 @@ const schema_1 = require("./schema");
 const api_types_4 = require("./api_types");
 const api_types_5 = require("./api_types");
 class UserVisibleError extends Error {
+    constructor() {
+        super(...arguments);
+        this.isUserVisible = true;
+    }
 }
 exports.UserVisibleError = UserVisibleError;
 class StatusCodeError extends Error {
@@ -27,6 +31,10 @@ class StatusCodeError extends Error {
     }
 }
 exports.StatusCodeError = StatusCodeError;
+function isUserVisibleError(error) {
+    return 'isUserVisible' in error && error.isUserVisible;
+}
+exports.isUserVisibleError = isUserVisibleError;
 // NOTE[roger] remove once not needed.
 exports.PARAM_DESCRIPTION_DOES_NOT_EXIST = 'NO PARAMETER DESCRIPTION HAS BEEN ADDED. For guidance, see https://coda.link/param-docs';
 function makeStringParameter(name, description, args = {}) {
