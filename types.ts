@@ -47,15 +47,16 @@ export enum PackId {
   Discourse = 1025,
   WalmartShopping = 1026,
   GooglePlaces = 1027,
+  Unused = 1028,
   Instagram = 1029,
   YouTube = 1030,
   Wikipedia = 1031,
+  Dropbox = 1032,
+  Quickbooks = 1033,
+  Shopify = 1034,
+  HubSpot = 1035,
+  Phabricator = 1036,
 }
-
-// This is for packs that have been deployed out of band of the master branch,
-// so that they don't get marked as deleted when running `make validate-version-changes`.
-// Don't reuse any of these ids in actual packs.
-export const HackathonPackIds = new Set([1028]);
 
 export enum ProviderId {
   Airtable = 2001,
@@ -80,6 +81,11 @@ export enum ProviderId {
   Walmart = 2020,
   Instagram = 2021,
   Wikipedia = 2022,
+  Dropbox = 2023,
+  Intuit = 2024,
+  Shopify = 2025,
+  HubSpot = 2026,
+  Phacility = 2027,
 }
 
 export enum AuthenticationType {

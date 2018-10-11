@@ -9,7 +9,6 @@ export {PackDefinition} from './types';
 export {PackId} from './types';
 export {ProviderDefinition} from './types';
 export {ProviderId} from './types';
-export {HackathonPackIds} from './types';
 
 // Compiler interfaces
 export {PackFormatMetadata} from './compiled_types';
