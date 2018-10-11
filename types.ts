@@ -50,6 +50,7 @@ export enum PackId {
   Instagram = 1029,
   YouTube = 1030,
   Wikipedia = 1031,
+  Dropbox = 1032,
 }
 
 // This is for packs that have been deployed out of band of the master branch,
@@ -80,6 +81,7 @@ export enum ProviderId {
   Walmart = 2020,
   Instagram = 2021,
   Wikipedia = 2022,
+  Dropbox = 2023,
 }
 
 export enum AuthenticationType {
