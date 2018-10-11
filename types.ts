@@ -56,6 +56,7 @@ export enum PackId {
   Shopify = 1034,
   HubSpot = 1035,
   Phabricator = 1036,
+  Stripe = 1037,
 }
 
 export enum ProviderId {
@@ -86,6 +87,7 @@ export enum ProviderId {
   Shopify = 2025,
   HubSpot = 2026,
   Phacility = 2027,
+  Stripe = 2028,
 }
 
 export enum AuthenticationType {
