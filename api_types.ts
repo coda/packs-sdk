@@ -110,6 +110,7 @@ export interface FetchRequest {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE';
   url: string;
   body?: string;
+  form?: {[key: string]: string};
   headers?: {[header: string]: string};
 }
 
