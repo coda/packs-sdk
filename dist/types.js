@@ -56,6 +56,7 @@ var PackId;
     PackId[PackId["Shopify"] = 1034] = "Shopify";
     PackId[PackId["HubSpot"] = 1035] = "HubSpot";
     PackId[PackId["Phabricator"] = 1036] = "Phabricator";
+    PackId[PackId["Stripe"] = 1037] = "Stripe";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
@@ -86,6 +87,7 @@ var ProviderId;
     ProviderId[ProviderId["Shopify"] = 2025] = "Shopify";
     ProviderId[ProviderId["HubSpot"] = 2026] = "HubSpot";
     ProviderId[ProviderId["Phacility"] = 2027] = "Phacility";
+    ProviderId[ProviderId["Stripe"] = 2028] = "Stripe";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {

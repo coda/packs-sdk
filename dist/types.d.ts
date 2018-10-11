@@ -53,7 +53,8 @@ export declare enum PackId {
     Quickbooks = 1033,
     Shopify = 1034,
     HubSpot = 1035,
-    Phabricator = 1036
+    Phabricator = 1036,
+    Stripe = 1037
 }
 export declare enum ProviderId {
     Airtable = 2001,
@@ -82,7 +83,8 @@ export declare enum ProviderId {
     Intuit = 2024,
     Shopify = 2025,
     HubSpot = 2026,
-    Phacility = 2027
+    Phacility = 2027,
+    Stripe = 2028
 }
 export declare enum AuthenticationType {
     None = "None",
