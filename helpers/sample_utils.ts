@@ -11,17 +11,13 @@ export interface FakePackDefinition extends $Omit<PackDefinition, 'formulas'> {
 }
 
 export function fakeDefinitionToDefinition(def: FakePackDefinition): PackDefinition {
-  const {formulas, ...rest} = def;
-  const legacyFormulasLoader = formulas && (() => Promise.resolve(formulas));
-
-  return {formulas, legacyFormulasLoader, ...rest};
+  return def;
 }
 
 export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata {
   const {
     formulas: originalFormulas,
     defaultAuthentication: originalDefaultAuthentication,
-    legacyFormulasLoader,
     formats: originalFormats,
     ...packMetadata // tslint:disable-line:trailing-comma
   } = def;
