@@ -45,11 +45,16 @@ export declare enum PackId {
     Discourse = 1025,
     WalmartShopping = 1026,
     GooglePlaces = 1027,
+    Unused = 1028,
     Instagram = 1029,
     YouTube = 1030,
-    Wikipedia = 1031
+    Wikipedia = 1031,
+    Dropbox = 1032,
+    Quickbooks = 1033,
+    Shopify = 1034,
+    HubSpot = 1035,
+    Phabricator = 1036
 }
-export declare const HackathonPackIds: Set<number>;
 export declare enum ProviderId {
     Airtable = 2001,
     Coda = 2002,
@@ -72,7 +77,12 @@ export declare enum ProviderId {
     Discourse = 2019,
     Walmart = 2020,
     Instagram = 2021,
-    Wikipedia = 2022
+    Wikipedia = 2022,
+    Dropbox = 2023,
+    Intuit = 2024,
+    Shopify = 2025,
+    HubSpot = 2026,
+    Phacility = 2027
 }
 export declare enum AuthenticationType {
     None = "None",
