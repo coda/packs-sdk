@@ -10,13 +10,11 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 function fakeDefinitionToDefinition(def) {
-    const { formulas } = def, rest = __rest(def, ["formulas"]);
-    const legacyFormulasLoader = formulas && (() => Promise.resolve(formulas));
-    return Object.assign({ formulas, legacyFormulasLoader }, rest);
+    return def;
 }
 exports.fakeDefinitionToDefinition = fakeDefinitionToDefinition;
 function fakeDefinitionToMetadata(def) {
-    const { formulas: originalFormulas, defaultAuthentication: originalDefaultAuthentication, legacyFormulasLoader, formats: originalFormats } = def, packMetadata = __rest(def, ["formulas", "defaultAuthentication", "legacyFormulasLoader", "formats"]) // tslint:disable-line:trailing-comma
+    const { formulas: originalFormulas, defaultAuthentication: originalDefaultAuthentication, formats: originalFormats } = def, packMetadata = __rest(def, ["formulas", "defaultAuthentication", "formats"]) // tslint:disable-line:trailing-comma
     ;
     const formulas = {};
     for (const namespace of Object.keys(originalFormulas || {})) {
