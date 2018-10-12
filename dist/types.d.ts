@@ -118,6 +118,7 @@ interface BaseAuthentication {
     defaultConnectionType?: DefaultConnectionType;
     instructionsUrl?: string;
     requiresEndpointUrl?: boolean;
+    endpointDomain?: string;
 }
 /**
  * A pack or formula which uses standard bearer token header authentication:
