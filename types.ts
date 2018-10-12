@@ -57,6 +57,9 @@ export enum PackId {
   HubSpot = 1035,
   Phabricator = 1036,
   Stripe = 1037,
+  Baseball = 1038,
+  Basketball = 1039,
+  Football = 1040,
 }
 
 export enum ProviderId {
@@ -88,6 +91,9 @@ export enum ProviderId {
   HubSpot = 2026,
   Phacility = 2027,
   Stripe = 2028,
+  Baseball = 2029,
+  Basketball = 2030,
+  Football = 2031,
 }
 
 export enum AuthenticationType {
