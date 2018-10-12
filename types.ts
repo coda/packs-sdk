@@ -132,6 +132,9 @@ interface BaseAuthentication {
 
   // Does this authentication instance require a custom endpoint url?
   requiresEndpointUrl?: boolean;
+
+  // Root endpoint domain for multi-tenant services - for example set to "example.com" for "https://mysite.example.com"
+  endpointDomain?: string;
 }
 
 /**
