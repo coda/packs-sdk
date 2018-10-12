@@ -12,8 +12,9 @@ export declare enum PackCategory {
     Mathematics = "Mathematics",
     Organization = "Organization",
     Recruiting = "Recruiting",
-    Social = "Social",
     Shopping = "Shopping",
+    Social = "Social",
+    Sports = "Sports",
     Weather = "Weather"
 }
 export declare enum PackId {
@@ -55,9 +56,9 @@ export declare enum PackId {
     HubSpot = 1035,
     Phabricator = 1036,
     Stripe = 1037,
-    Baseball = 1038,
-    Basketball = 1039,
-    Football = 1040
+    MLB = 1038,
+    NBA = 1039,
+    NFL = 1040
 }
 export declare enum ProviderId {
     Airtable = 2001,
@@ -88,9 +89,9 @@ export declare enum ProviderId {
     HubSpot = 2026,
     Phacility = 2027,
     Stripe = 2028,
-    Baseball = 2029,
-    Basketball = 2030,
-    Football = 2031
+    MLB = 2029,
+    NBA = 2030,
+    NFL = 2031
 }
 export declare enum AuthenticationType {
     None = "None",
