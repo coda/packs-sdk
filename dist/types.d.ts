@@ -54,7 +54,10 @@ export declare enum PackId {
     Shopify = 1034,
     HubSpot = 1035,
     Phabricator = 1036,
-    Stripe = 1037
+    Stripe = 1037,
+    Baseball = 1038,
+    Basketball = 1039,
+    Football = 1040
 }
 export declare enum ProviderId {
     Airtable = 2001,
@@ -84,7 +87,10 @@ export declare enum ProviderId {
     Shopify = 2025,
     HubSpot = 2026,
     Phacility = 2027,
-    Stripe = 2028
+    Stripe = 2028,
+    Baseball = 2029,
+    Basketball = 2030,
+    Football = 2031
 }
 export declare enum AuthenticationType {
     None = "None",

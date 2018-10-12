@@ -57,6 +57,9 @@ var PackId;
     PackId[PackId["HubSpot"] = 1035] = "HubSpot";
     PackId[PackId["Phabricator"] = 1036] = "Phabricator";
     PackId[PackId["Stripe"] = 1037] = "Stripe";
+    PackId[PackId["Baseball"] = 1038] = "Baseball";
+    PackId[PackId["Basketball"] = 1039] = "Basketball";
+    PackId[PackId["Football"] = 1040] = "Football";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
@@ -88,6 +91,9 @@ var ProviderId;
     ProviderId[ProviderId["HubSpot"] = 2026] = "HubSpot";
     ProviderId[ProviderId["Phacility"] = 2027] = "Phacility";
     ProviderId[ProviderId["Stripe"] = 2028] = "Stripe";
+    ProviderId[ProviderId["Baseball"] = 2029] = "Baseball";
+    ProviderId[ProviderId["Basketball"] = 2030] = "Basketball";
+    ProviderId[ProviderId["Football"] = 2031] = "Football";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {
