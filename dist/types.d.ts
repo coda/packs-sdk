@@ -193,6 +193,7 @@ export interface PackDefinition {
     enabledConfigName?: string;
     defaultAuthentication?: Authentication;
     exampleImages?: string[];
+    exampleVideoIds?: string[];
     /**
      * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
      * explicit connection is specified by the user.
