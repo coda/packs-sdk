@@ -61,6 +61,7 @@ var PackId;
     PackId[PackId["MLB"] = 1038] = "MLB";
     PackId[PackId["NBA"] = 1039] = "NBA";
     PackId[PackId["NFL"] = 1040] = "NFL";
+    PackId[PackId["GoogleMaps"] = 1041] = "GoogleMaps";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {

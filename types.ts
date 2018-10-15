@@ -61,6 +61,7 @@ export enum PackId {
   MLB = 1038,
   NBA = 1039,
   NFL = 1040,
+  GoogleMaps = 1041,
 }
 
 export enum ProviderId {
