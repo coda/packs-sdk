@@ -213,8 +213,10 @@ export interface Format {
   formulaNamespace: string;
   formulaName: string;
   hasNoConnection?: boolean;
+  instructions: string;
   logoPath?: string;
   matchers?: RegExp[];
+  placeholder: string;
 }
 
 export interface PackDefinition {
