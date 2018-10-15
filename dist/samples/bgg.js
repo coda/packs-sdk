@@ -32,9 +32,12 @@ const FakeBggDefinitionOldFake = {
     formats: [
         {
             name: 'BoardGame',
+            description: 'Get live data about a board game',
             formulaNamespace: 'BGG',
             formulaName: 'BoardGame',
+            instructions: 'Paste the URL of a board game into the column. For example, "https://boardgamegeek.com/boardgame/[id]/[name]"',
             matchers: [/https:\/\/boardgamegeek\.com\/boardgame\/(\d+)/],
+            placeholder: 'Link to board game',
         },
     ],
     formulas: {
@@ -91,9 +94,12 @@ const FakeBggDefinitionFake = {
     formats: [
         {
             name: 'BoardGame',
+            description: 'Get live data about a board game',
             formulaNamespace: 'BGG',
             formulaName: 'BoardGame',
+            instructions: 'Paste the URL of a board game into the column. For example, "https://boardgamegeek.com/boardgame/[id]/[name]"',
             matchers: [/https:\/\/boardgamegeek\.com\/boardgame\/(\d+)/],
+            placeholder: 'Link to board game',
         },
     ],
     formulas: {

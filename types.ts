@@ -210,11 +210,14 @@ export type SystemAuthentication =
 
 export interface Format {
   name: string;
+  description: string;
   formulaNamespace: string;
   formulaName: string;
   hasNoConnection?: boolean;
+  instructions: string;
   logoPath?: string;
   matchers?: RegExp[];
+  placeholder: string;
 }
 
 export interface PackDefinition {

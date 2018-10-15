@@ -39,10 +39,13 @@ const FakeNpmDefinitionFake = {
     formats: [
         {
             name: 'Package',
+            description: 'Get live data about a NPM package',
             formulaNamespace: 'NPM',
             formulaName: 'Package',
             hasNoConnection: true,
+            instructions: 'Paste the URL of a NPM package into the column. For example, "https://www.npmjs.com/package/[name]"',
             matchers: [/https:\/\/npmjs\.com\/package\/(\w+)/],
+            placeholder: 'Link to NPM package',
         },
     ],
     formulas: {
