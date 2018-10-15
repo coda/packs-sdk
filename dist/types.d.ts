@@ -175,7 +175,6 @@ export declare type Authentication = NoAuthentication | HeaderBearerTokenAuthent
 export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication;
 export interface Format {
     name: string;
-    description: string;
     formulaNamespace: string;
     formulaName: string;
     hasNoConnection?: boolean;

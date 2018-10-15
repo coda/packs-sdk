@@ -32,7 +32,6 @@ const FakeBggDefinitionOldFake = {
     formats: [
         {
             name: 'BoardGame',
-            description: 'Get live data about a board game',
             formulaNamespace: 'BGG',
             formulaName: 'BoardGame',
             instructions: 'Paste the URL of a board game into the column. For example, "https://boardgamegeek.com/boardgame/[id]/[name]"',
@@ -44,7 +43,7 @@ const FakeBggDefinitionOldFake = {
         BGG: [
             api_2.makeStringFormula({
                 name: 'BoardGame',
-                description: 'Retrieve a board game.',
+                description: 'Get live data about a board game.',
                 examples: [],
                 parameters: [api_3.makeStringParameter('id', 'ID of a board game.')],
                 network: { hasSideEffect: false, hasConnection: true, requiresConnection: true },
@@ -94,7 +93,6 @@ const FakeBggDefinitionFake = {
     formats: [
         {
             name: 'BoardGame',
-            description: 'Get live data about a board game',
             formulaNamespace: 'BGG',
             formulaName: 'BoardGame',
             instructions: 'Paste the URL of a board game into the column. For example, "https://boardgamegeek.com/boardgame/[id]/[name]"',
@@ -106,7 +104,7 @@ const FakeBggDefinitionFake = {
         BGG: [
             api_2.makeStringFormula({
                 name: 'BoardGame',
-                description: 'Retrieve a board game',
+                description: 'Get live data about a board game.',
                 examples: [],
                 parameters: [api_3.makeStringParameter('url', 'Url to a board game')],
                 network: { hasSideEffect: false, hasConnection: true, requiresConnection: true },

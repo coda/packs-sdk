@@ -210,7 +210,6 @@ export type SystemAuthentication =
 
 export interface Format {
   name: string;
-  description: string;
   formulaNamespace: string;
   formulaName: string;
   hasNoConnection?: boolean;

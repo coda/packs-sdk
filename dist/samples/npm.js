@@ -39,7 +39,6 @@ const FakeNpmDefinitionFake = {
     formats: [
         {
             name: 'Package',
-            description: 'Get live data about a NPM package',
             formulaNamespace: 'NPM',
             formulaName: 'Package',
             hasNoConnection: true,
@@ -66,7 +65,7 @@ const FakeNpmDefinitionFake = {
                     }),
                 },
                 name: 'Package',
-                description: 'Retrieve a package',
+                description: 'Get live data about a NPM package.',
                 examples: [],
                 parameters: [
                     api_6.makeStringParameter('name', 'Package name'),

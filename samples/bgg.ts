@@ -29,7 +29,6 @@ const FakeBggDefinitionOldFake: FakePackDefinition = {
   formats: [
     {
       name: 'BoardGame',
-      description: 'Get live data about a board game',
       formulaNamespace: 'BGG',
       formulaName: 'BoardGame',
       instructions:
@@ -42,7 +41,7 @@ const FakeBggDefinitionOldFake: FakePackDefinition = {
     BGG: [
       makeStringFormula({
         name: 'BoardGame',
-        description: 'Retrieve a board game.',
+        description: 'Get live data about a board game.',
         examples: [],
         parameters: [makeStringParameter('id', 'ID of a board game.')],
         network: {hasSideEffect: false, hasConnection: true, requiresConnection: true},
@@ -94,7 +93,6 @@ const FakeBggDefinitionFake: FakePackDefinition = {
   formats: [
     {
       name: 'BoardGame',
-      description: 'Get live data about a board game',
       formulaNamespace: 'BGG',
       formulaName: 'BoardGame',
       instructions:
@@ -107,7 +105,7 @@ const FakeBggDefinitionFake: FakePackDefinition = {
     BGG: [
       makeStringFormula({
         name: 'BoardGame',
-        description: 'Retrieve a board game',
+        description: 'Get live data about a board game.',
         examples: [],
         parameters: [makeStringParameter('url', 'Url to a board game')],
         network: {hasSideEffect: false, hasConnection: true, requiresConnection: true},
