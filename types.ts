@@ -206,7 +206,8 @@ export type SystemAuthentication =
   | HeaderBearerTokenAuthentication
   | CustomHeaderTokenAuthentication
   | QueryParamTokenAuthentication
-  | MultiQueryParamTokenAuthentication;
+  | MultiQueryParamTokenAuthentication
+  | WebBasicAuthentication;
 
 export interface Format {
   name: string;
