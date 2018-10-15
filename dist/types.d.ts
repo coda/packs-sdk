@@ -188,6 +188,7 @@ export interface PackDefinition {
     name: string;
     shortDescription: string;
     description: string;
+    permissionsDescription?: string;
     version: string;
     providerId: ProviderId;
     category: PackCategory;
