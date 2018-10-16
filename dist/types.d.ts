@@ -174,7 +174,7 @@ export interface WebBasicAuthentication extends BaseAuthentication {
     uxConfig?: {
         placeholderUsername?: string;
         placeholderPassword?: string;
-        usernameOnly: boolean;
+        usernameOnly?: boolean;
     };
 }
 export declare type Authentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication;
