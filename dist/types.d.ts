@@ -171,6 +171,11 @@ export interface OAuth2Authentication extends BaseAuthentication {
 }
 export interface WebBasicAuthentication extends BaseAuthentication {
     type: AuthenticationType.WebBasic;
+    uxConfig?: {
+        placeholderUsername?: string;
+        placeholderPassword?: string;
+        usernameOnly: boolean;
+    };
 }
 export declare type Authentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication;
 export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication;
