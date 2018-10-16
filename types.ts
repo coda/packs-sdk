@@ -192,6 +192,13 @@ export interface OAuth2Authentication extends BaseAuthentication {
 
 export interface WebBasicAuthentication extends BaseAuthentication {
   type: AuthenticationType.WebBasic;
+  uxConfig?: {
+    placeholderUsername?: string;
+    placeholderPassword?: string;
+
+    // Some auth providers pass apiKeys in the username and do not require a password
+    usernameOnly: boolean;
+  };
 }
 
 export type Authentication =
