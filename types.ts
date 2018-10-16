@@ -197,7 +197,7 @@ export interface WebBasicAuthentication extends BaseAuthentication {
     placeholderPassword?: string;
 
     // Some auth providers pass apiKeys in the username and do not require a password
-    usernameOnly: boolean;
+    usernameOnly?: boolean;
   };
 }
 
