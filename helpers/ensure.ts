@@ -18,6 +18,6 @@ export function ensureExists<T>(value: T | null | undefined, message?: string): 
   return value;
 }
 
-function getErrorConstructor(msg?: string): typeof Error | typeof UserVisibleError {
-  return msg ? UserVisibleError : Error;
+function getErrorConstructor(message?: string): typeof Error | typeof UserVisibleError {
+  return message ? UserVisibleError : Error;
 }

@@ -28,6 +28,9 @@ export {FetchRequest} from './api_types';
 
 export class UserVisibleError extends Error {
   readonly isUserVisible = true;
+  constructor(message?: string, public internalError?: Error) {
+    super(message);
+  }
 }
 
 export class StatusCodeError extends Error {

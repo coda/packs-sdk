@@ -18,8 +18,9 @@ const schema_1 = require("./schema");
 const api_types_4 = require("./api_types");
 const api_types_5 = require("./api_types");
 class UserVisibleError extends Error {
-    constructor() {
-        super(...arguments);
+    constructor(message, internalError) {
+        super(message);
+        this.internalError = internalError;
         this.isUserVisible = true;
     }
 }
