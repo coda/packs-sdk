@@ -86,6 +86,9 @@ interface ImageAttributionNode {
 }
 
 type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
+export function makeAttributionNode<T extends AttributionNode>(node: T): T {
+  return node;
+}
 
 export interface ObjectSchema {
   type: ValueType.Object;
