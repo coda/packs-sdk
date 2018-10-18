@@ -2,23 +2,24 @@ import {$Omit} from './type_utils';
 import {ArrayType} from './api_types';
 import {CommonPackFormulaDef} from './api_types';
 import {ExecutionContext} from './api_types';
+import {NumberSchema} from './schema';
 import {PackFormulaResult} from './api_types';
 import {ParamArgs} from './api_types';
-import {ParamDef} from './api_types';
 import {ParamDefs} from './api_types';
+import {ParamDef} from './api_types';
 import {ParamValues} from './api_types';
-import {Schema} from './schema';
+import {RequestHandlerTemplate} from './handler_templates';
+import {ResponseHandlerTemplate} from './handler_templates';
 import {SchemaType} from './schema';
+import {Schema} from './schema';
 import {StringSchema} from './schema';
 import {Type} from './api_types';
 import {TypeOf} from './api_types';
-import {RequestHandlerTemplate} from './handler_templates';
-import {ResponseHandlerTemplate} from './handler_templates';
 import {booleanArray} from './api_types';
 import {dateArray} from './api_types';
 import {ensureExists} from './helpers/ensure';
-import {generateRequestHandler} from './handler_templates';
 import {generateObjectResponseHandler} from './handler_templates';
+import {generateRequestHandler} from './handler_templates';
 import {normalizeSchema} from './schema';
 import {numberArray} from './api_types';
 import {stringArray} from './api_types';
@@ -158,7 +159,7 @@ type Formula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = 
   resultType: TypeOf<ResultT>;
 };
 
-type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number>;
+type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number> & {schema?: NumberSchema};
 type StringPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, string> & {
   schema?: StringSchema;
 };

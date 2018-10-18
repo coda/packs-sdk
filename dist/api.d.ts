@@ -2,18 +2,19 @@ import { $Omit } from './type_utils';
 import { ArrayType } from './api_types';
 import { CommonPackFormulaDef } from './api_types';
 import { ExecutionContext } from './api_types';
+import { NumberSchema } from './schema';
 import { PackFormulaResult } from './api_types';
 import { ParamArgs } from './api_types';
-import { ParamDef } from './api_types';
 import { ParamDefs } from './api_types';
+import { ParamDef } from './api_types';
 import { ParamValues } from './api_types';
-import { Schema } from './schema';
+import { RequestHandlerTemplate } from './handler_templates';
+import { ResponseHandlerTemplate } from './handler_templates';
 import { SchemaType } from './schema';
+import { Schema } from './schema';
 import { StringSchema } from './schema';
 import { Type } from './api_types';
 import { TypeOf } from './api_types';
-import { RequestHandlerTemplate } from './handler_templates';
-import { ResponseHandlerTemplate } from './handler_templates';
 export { ExecutionContext };
 export { FetchRequest } from './api_types';
 export declare class UserVisibleError extends Error {
@@ -62,7 +63,9 @@ interface EmptyFormulaDef<ParamsT extends ParamDefs> extends $Omit<PackFormulaDe
 declare type Formula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = PackFormulaDef<ParamDefsT, ResultT> & {
     resultType: TypeOf<ResultT>;
 };
-declare type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number>;
+declare type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number> & {
+    schema?: NumberSchema;
+};
 declare type StringPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, string> & {
     schema?: StringSchema;
 };

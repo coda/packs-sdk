@@ -140,7 +140,7 @@ function makeObjectFormula(definition) {
     if (isResponseHandlerTemplate(response)) {
         const { onError } = response;
         const wrappedExecute = execute;
-        const responseHandler = handler_templates_2.generateObjectResponseHandler(response);
+        const responseHandler = handler_templates_1.generateObjectResponseHandler(response);
         execute = function exec(params, context) {
             return __awaiter(this, void 0, void 0, function* () {
                 let result;
@@ -170,8 +170,8 @@ function makeTranslateObjectFormula(definition) {
     const { request, response, parameters } = definition;
     response.schema = schema_1.normalizeSchema(response.schema);
     const { onError } = response;
-    const requestHandler = handler_templates_1.generateRequestHandler(request, parameters);
-    const responseHandler = handler_templates_2.generateObjectResponseHandler(response);
+    const requestHandler = handler_templates_2.generateRequestHandler(request, parameters);
+    const responseHandler = handler_templates_1.generateObjectResponseHandler(response);
     function execute(params, context) {
         return context
             .fetcher.fetch(requestHandler(params))
@@ -192,7 +192,7 @@ function makeTranslateObjectFormula(definition) {
 exports.makeTranslateObjectFormula = makeTranslateObjectFormula;
 function makeEmptyFormula(definition) {
     const { request, parameters } = definition;
-    const requestHandler = handler_templates_1.generateRequestHandler(request, parameters);
+    const requestHandler = handler_templates_2.generateRequestHandler(request, parameters);
     function execute(params, context) {
         return context.fetcher.fetch(requestHandler(params)).then(() => '');
     }
