@@ -58,6 +58,7 @@ interface LinkAttributionNode {
 interface ImageAttributionNode {
     type: AttributionNodeType.Image;
     url: string;
+    link?: string;
 }
 declare type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
 export interface ObjectSchema {

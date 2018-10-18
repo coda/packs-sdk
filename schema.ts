@@ -82,6 +82,7 @@ interface LinkAttributionNode {
 interface ImageAttributionNode {
   type: AttributionNodeType.Image;
   url: string;
+  link?: string;
 }
 
 type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
