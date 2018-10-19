@@ -79,8 +79,21 @@ export declare function makeNumericFormula<ParamDefsT extends ParamDefs>(definit
 export declare function makeStringFormula<ParamDefsT extends ParamDefs>(definition: StringFormulaDef<ParamDefsT>): StringPackFormula<ParamDefsT>;
 export declare type GetConnectionNameFormula = StringPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>]>;
 export declare function makeGetConnectionNameFormula(execute: (context: ExecutionContext, codaUserName: string, authParams: string) => Promise<string> | string): GetConnectionNameFormula;
-export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>(definition: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
-export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>(definition: ObjectArrayFormulaDef<ParamDefsT, ResultT>): ObjectArrayFormulaDef<ParamDefsT, ResultT> & {
+export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
+export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
+    request: RequestHandlerTemplate;
+    description: string;
+    name: string;
+    examples: {
+        params: import("./api_types").PackFormulaValue[];
+        result: PackFormulaResult;
+    }[];
+    parameters: ParamDefsT;
+    varargParameters?: [ParamDef<any>, ...ParamDef<any>[]] | never[] | undefined;
+    network?: import("./api_types").Network | undefined;
+    cacheTtlSecs?: number | undefined;
+    isExperimental?: boolean | undefined;
+} & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<SchemaType<ResultT>>;
     resultType: Type;
     schema: ResultT;
