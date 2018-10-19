@@ -15,6 +15,7 @@ export declare enum PackCategory {
     Shopping = "Shopping",
     Social = "Social",
     Sports = "Sports",
+    Travel = "Travel",
     Weather = "Weather"
 }
 export declare enum PackId {
@@ -63,7 +64,9 @@ export declare enum PackId {
     Imgur = 1042,
     Fitbit = 1043,
     Pinterest = 1044,
-    Reddit = 1045
+    Reddit = 1045,
+    Flights = 1046,
+    Cryptocurrency = 1047
 }
 export declare enum ProviderId {
     Airtable = 2001,
@@ -100,7 +103,9 @@ export declare enum ProviderId {
     Imgur = 2032,
     Fitbit = 2033,
     Pinterest = 2034,
-    Reddit = 2035
+    Reddit = 2035,
+    Flights = 2036,
+    Cryptocurrency = 2037
 }
 export declare enum AuthenticationType {
     None = "None",
