@@ -31,14 +31,17 @@ const FakeBggDefinitionOldFake: FakePackDefinition = {
       name: 'BoardGame',
       formulaNamespace: 'BGG',
       formulaName: 'BoardGame',
+      instructions:
+        'Paste the URL of a board game into the column. For example, "https://boardgamegeek.com/boardgame/[id]/[name]"',
       matchers: [/https:\/\/boardgamegeek\.com\/boardgame\/(\d+)/],
+      placeholder: 'Link to board game',
     },
   ],
   formulas: {
     BGG: [
       makeStringFormula({
         name: 'BoardGame',
-        description: 'Retrieve a board game.',
+        description: 'Get live data about a board game.',
         examples: [],
         parameters: [makeStringParameter('id', 'ID of a board game.')],
         network: {hasSideEffect: false, hasConnection: true, requiresConnection: true},
@@ -92,14 +95,17 @@ const FakeBggDefinitionFake: FakePackDefinition = {
       name: 'BoardGame',
       formulaNamespace: 'BGG',
       formulaName: 'BoardGame',
+      instructions:
+        'Paste the URL of a board game into the column. For example, "https://boardgamegeek.com/boardgame/[id]/[name]"',
       matchers: [/https:\/\/boardgamegeek\.com\/boardgame\/(\d+)/],
+      placeholder: 'Link to board game',
     },
   ],
   formulas: {
     BGG: [
       makeStringFormula({
         name: 'BoardGame',
-        description: 'Retrieve a board game',
+        description: 'Get live data about a board game.',
         examples: [],
         parameters: [makeStringParameter('url', 'Url to a board game')],
         network: {hasSideEffect: false, hasConnection: true, requiresConnection: true},

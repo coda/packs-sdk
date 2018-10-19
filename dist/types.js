@@ -61,10 +61,11 @@ var PackId;
     PackId[PackId["MLB"] = 1038] = "MLB";
     PackId[PackId["NBA"] = 1039] = "NBA";
     PackId[PackId["NFL"] = 1040] = "NFL";
-    PackId[PackId["Imgur"] = 1041] = "Imgur";
-    PackId[PackId["Fitbit"] = 1042] = "Fitbit";
-    PackId[PackId["Pinterest"] = 1043] = "Pinterest";
-    PackId[PackId["Reddit"] = 1044] = "Reddit";
+    PackId[PackId["GoogleMaps"] = 1041] = "GoogleMaps";
+    PackId[PackId["Imgur"] = 1042] = "Imgur";
+    PackId[PackId["Fitbit"] = 1043] = "Fitbit";
+    PackId[PackId["Pinterest"] = 1044] = "Pinterest";
+    PackId[PackId["Reddit"] = 1045] = "Reddit";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {

@@ -30,6 +30,10 @@ var AttributionNodeType;
     AttributionNodeType[AttributionNodeType["Link"] = 2] = "Link";
     AttributionNodeType[AttributionNodeType["Image"] = 3] = "Image";
 })(AttributionNodeType = exports.AttributionNodeType || (exports.AttributionNodeType = {}));
+function makeAttributionNode(node) {
+    return node;
+}
+exports.makeAttributionNode = makeAttributionNode;
 function isObject(val) {
     return Boolean(val && val.type === ValueType.Object);
 }

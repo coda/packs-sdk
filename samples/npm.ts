@@ -38,7 +38,10 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
       formulaNamespace: 'NPM',
       formulaName: 'Package',
       hasNoConnection: true,
+      instructions:
+        'Paste the URL of a NPM package into the column. For example, "https://www.npmjs.com/package/[name]"',
       matchers: [/https:\/\/npmjs\.com\/package\/(\w+)/],
+      placeholder: 'Link to NPM package',
     },
   ],
   formulas: {
@@ -59,7 +62,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
           }),
         },
         name: 'Package',
-        description: 'Retrieve a package',
+        description: 'Get live data about a NPM package.',
         examples: [],
         parameters: [
           makeStringParameter('name', 'Package name'),

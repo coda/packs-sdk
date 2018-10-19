@@ -52,14 +52,18 @@ interface TextAttributionNode {
 }
 interface LinkAttributionNode {
     type: AttributionNodeType.Link;
+    anchorUrl: string;
     url: string;
     anchorText: string;
 }
 interface ImageAttributionNode {
     type: AttributionNodeType.Image;
     url: string;
+    anchorUrl: string;
+    imageUrl: string;
 }
 declare type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
+export declare function makeAttributionNode<T extends AttributionNode>(node: T): T;
 export interface ObjectSchema {
     type: ValueType.Object;
     properties: ObjectSchemaProperties;

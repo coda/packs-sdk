@@ -2,23 +2,24 @@ import {$Omit} from './type_utils';
 import {ArrayType} from './api_types';
 import {CommonPackFormulaDef} from './api_types';
 import {ExecutionContext} from './api_types';
+import {NumberSchema} from './schema';
 import {PackFormulaResult} from './api_types';
 import {ParamArgs} from './api_types';
-import {ParamDef} from './api_types';
 import {ParamDefs} from './api_types';
+import {ParamDef} from './api_types';
 import {ParamValues} from './api_types';
-import {Schema} from './schema';
+import {RequestHandlerTemplate} from './handler_templates';
+import {ResponseHandlerTemplate} from './handler_templates';
 import {SchemaType} from './schema';
+import {Schema} from './schema';
 import {StringSchema} from './schema';
 import {Type} from './api_types';
 import {TypeOf} from './api_types';
-import {RequestHandlerTemplate} from './handler_templates';
-import {ResponseHandlerTemplate} from './handler_templates';
 import {booleanArray} from './api_types';
 import {dateArray} from './api_types';
 import {ensureExists} from './helpers/ensure';
-import {generateRequestHandler} from './handler_templates';
 import {generateObjectResponseHandler} from './handler_templates';
+import {generateRequestHandler} from './handler_templates';
 import {normalizeSchema} from './schema';
 import {numberArray} from './api_types';
 import {stringArray} from './api_types';
@@ -28,6 +29,9 @@ export {FetchRequest} from './api_types';
 
 export class UserVisibleError extends Error {
   readonly isUserVisible = true;
+  constructor(message?: string, public internalError?: Error) {
+    super(message);
+  }
 }
 
 export class StatusCodeError extends Error {
@@ -155,7 +159,7 @@ type Formula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = 
   resultType: TypeOf<ResultT>;
 };
 
-type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number>;
+type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number> & {schema?: NumberSchema};
 type StringPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, string> & {
   schema?: StringSchema;
 };
@@ -224,10 +228,10 @@ function isResponseExampleTemplate(obj: any): obj is {example: SchemaType<any>} 
   return obj && obj.example;
 }
 
-export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>(
-  definition: ObjectResultFormulaDef<ParamDefsT, SchemaT>,
-): ObjectPackFormula<ParamDefsT, SchemaT> {
-  const {response} = definition;
+export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({
+  response,
+  ...definition // tslint:disable-line: trailing-comma
+}: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT> {
   let schema: Schema | undefined;
   if (response) {
     if (isResponseHandlerTemplate(response)) {
@@ -266,10 +270,11 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
   }) as ObjectPackFormula<ParamDefsT, SchemaT>;
 }
 
-export function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>(
-  definition: ObjectArrayFormulaDef<ParamDefsT, ResultT>,
-) {
-  const {request, response, parameters} = definition;
+export function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({
+  response,
+  ...definition // tslint:disable-line: trailing-comma
+}: ObjectArrayFormulaDef<ParamDefsT, ResultT>) {
+  const {request, parameters} = definition;
   response.schema = normalizeSchema(response.schema) as ResultT;
   const {onError} = response;
   const requestHandler = generateRequestHandler(request, parameters);

@@ -19,6 +19,6 @@ function ensureExists(value, message) {
     return value;
 }
 exports.ensureExists = ensureExists;
-function getErrorConstructor(msg) {
-    return msg ? api_1.UserVisibleError : Error;
+function getErrorConstructor(message) {
+    return message ? api_1.UserVisibleError : Error;
 }

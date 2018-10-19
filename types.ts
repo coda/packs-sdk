@@ -61,10 +61,11 @@ export enum PackId {
   MLB = 1038,
   NBA = 1039,
   NFL = 1040,
-  Imgur = 1041,
-  Fitbit = 1042,
-  Pinterest = 1043,
-  Reddit = 1044,
+  GoogleMaps = 1041,
+  Imgur = 1042,
+  Fitbit = 1043,
+  Pinterest = 1044,
+  Reddit = 1045,
 }
 
 export enum ProviderId {
@@ -199,6 +200,13 @@ export interface OAuth2Authentication extends BaseAuthentication {
 
 export interface WebBasicAuthentication extends BaseAuthentication {
   type: AuthenticationType.WebBasic;
+  uxConfig?: {
+    placeholderUsername?: string;
+    placeholderPassword?: string;
+
+    // Some auth providers pass apiKeys in the username and do not require a password
+    usernameOnly?: boolean;
+  };
 }
 
 export type Authentication =
@@ -214,15 +222,18 @@ export type SystemAuthentication =
   | HeaderBearerTokenAuthentication
   | CustomHeaderTokenAuthentication
   | QueryParamTokenAuthentication
-  | MultiQueryParamTokenAuthentication;
+  | MultiQueryParamTokenAuthentication
+  | WebBasicAuthentication;
 
 export interface Format {
   name: string;
   formulaNamespace: string;
   formulaName: string;
   hasNoConnection?: boolean;
+  instructions?: string;
   logoPath?: string;
   matchers?: RegExp[];
+  placeholder?: string;
 }
 
 export interface PackDefinition {
@@ -230,6 +241,7 @@ export interface PackDefinition {
   name: string;
   shortDescription: string;
   description: string;
+  permissionsDescription?: string;
   version: string;
   providerId: ProviderId;
   category: PackCategory;
@@ -237,6 +249,9 @@ export interface PackDefinition {
   enabledConfigName?: string;
   defaultAuthentication?: Authentication;
   exampleImages?: string[];
+  exampleVideoIds?: string[];
+  gettingStartedImage?: string;
+  gettingStartedText?: string;
   /**
    * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
    * explicit connection is specified by the user.

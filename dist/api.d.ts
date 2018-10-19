@@ -2,22 +2,25 @@ import { $Omit } from './type_utils';
 import { ArrayType } from './api_types';
 import { CommonPackFormulaDef } from './api_types';
 import { ExecutionContext } from './api_types';
+import { NumberSchema } from './schema';
 import { PackFormulaResult } from './api_types';
 import { ParamArgs } from './api_types';
-import { ParamDef } from './api_types';
 import { ParamDefs } from './api_types';
+import { ParamDef } from './api_types';
 import { ParamValues } from './api_types';
-import { Schema } from './schema';
+import { RequestHandlerTemplate } from './handler_templates';
+import { ResponseHandlerTemplate } from './handler_templates';
 import { SchemaType } from './schema';
+import { Schema } from './schema';
 import { StringSchema } from './schema';
 import { Type } from './api_types';
 import { TypeOf } from './api_types';
-import { RequestHandlerTemplate } from './handler_templates';
-import { ResponseHandlerTemplate } from './handler_templates';
 export { ExecutionContext };
 export { FetchRequest } from './api_types';
 export declare class UserVisibleError extends Error {
+    internalError?: Error | undefined;
     readonly isUserVisible = true;
+    constructor(message?: string, internalError?: Error | undefined);
 }
 export declare class StatusCodeError extends Error {
     statusCode: number;
@@ -60,7 +63,9 @@ interface EmptyFormulaDef<ParamsT extends ParamDefs> extends $Omit<PackFormulaDe
 declare type Formula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = PackFormulaDef<ParamDefsT, ResultT> & {
     resultType: TypeOf<ResultT>;
 };
-declare type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number>;
+declare type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number> & {
+    schema?: NumberSchema;
+};
 declare type StringPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, string> & {
     schema?: StringSchema;
 };
@@ -74,8 +79,21 @@ export declare function makeNumericFormula<ParamDefsT extends ParamDefs>(definit
 export declare function makeStringFormula<ParamDefsT extends ParamDefs>(definition: StringFormulaDef<ParamDefsT>): StringPackFormula<ParamDefsT>;
 export declare type GetConnectionNameFormula = StringPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>]>;
 export declare function makeGetConnectionNameFormula(execute: (context: ExecutionContext, codaUserName: string, authParams: string) => Promise<string> | string): GetConnectionNameFormula;
-export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>(definition: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
-export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>(definition: ObjectArrayFormulaDef<ParamDefsT, ResultT>): ObjectArrayFormulaDef<ParamDefsT, ResultT> & {
+export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
+export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
+    request: RequestHandlerTemplate;
+    description: string;
+    name: string;
+    examples: {
+        params: import("./api_types").PackFormulaValue[];
+        result: PackFormulaResult;
+    }[];
+    parameters: ParamDefsT;
+    varargParameters?: [ParamDef<any>, ...ParamDef<any>[]] | never[] | undefined;
+    network?: import("./api_types").Network | undefined;
+    cacheTtlSecs?: number | undefined;
+    isExperimental?: boolean | undefined;
+} & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<SchemaType<ResultT>>;
     resultType: Type;
     schema: ResultT;

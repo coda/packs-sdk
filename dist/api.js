@@ -7,6 +7,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const api_types_1 = require("./api_types");
 const api_types_2 = require("./api_types");
@@ -18,8 +27,9 @@ const schema_1 = require("./schema");
 const api_types_4 = require("./api_types");
 const api_types_5 = require("./api_types");
 class UserVisibleError extends Error {
-    constructor() {
-        super(...arguments);
+    constructor(message, internalError) {
+        super(message);
+        this.internalError = internalError;
         this.isUserVisible = true;
     }
 }
@@ -122,8 +132,9 @@ function isResponseHandlerTemplate(obj) {
 function isResponseExampleTemplate(obj) {
     return obj && obj.example;
 }
-function makeObjectFormula(definition) {
-    const { response } = definition;
+function makeObjectFormula(_a) {
+    var { response } = _a, definition = __rest(_a, ["response"]) // tslint:disable-line: trailing-comma
+    ;
     let schema;
     if (response) {
         if (isResponseHandlerTemplate(response)) {
@@ -139,7 +150,7 @@ function makeObjectFormula(definition) {
     if (isResponseHandlerTemplate(response)) {
         const { onError } = response;
         const wrappedExecute = execute;
-        const responseHandler = handler_templates_2.generateObjectResponseHandler(response);
+        const responseHandler = handler_templates_1.generateObjectResponseHandler(response);
         execute = function exec(params, context) {
             return __awaiter(this, void 0, void 0, function* () {
                 let result;
@@ -165,12 +176,14 @@ function makeObjectFormula(definition) {
     });
 }
 exports.makeObjectFormula = makeObjectFormula;
-function makeTranslateObjectFormula(definition) {
-    const { request, response, parameters } = definition;
+function makeTranslateObjectFormula(_a) {
+    var { response } = _a, definition = __rest(_a, ["response"]) // tslint:disable-line: trailing-comma
+    ;
+    const { request, parameters } = definition;
     response.schema = schema_1.normalizeSchema(response.schema);
     const { onError } = response;
-    const requestHandler = handler_templates_1.generateRequestHandler(request, parameters);
-    const responseHandler = handler_templates_2.generateObjectResponseHandler(response);
+    const requestHandler = handler_templates_2.generateRequestHandler(request, parameters);
+    const responseHandler = handler_templates_1.generateObjectResponseHandler(response);
     function execute(params, context) {
         return context
             .fetcher.fetch(requestHandler(params))
@@ -191,7 +204,7 @@ function makeTranslateObjectFormula(definition) {
 exports.makeTranslateObjectFormula = makeTranslateObjectFormula;
 function makeEmptyFormula(definition) {
     const { request, parameters } = definition;
-    const requestHandler = handler_templates_1.generateRequestHandler(request, parameters);
+    const requestHandler = handler_templates_2.generateRequestHandler(request, parameters);
     function execute(params, context) {
         return context.fetcher.fetch(requestHandler(params)).then(() => '');
     }
