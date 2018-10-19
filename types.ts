@@ -62,6 +62,10 @@ export enum PackId {
   NBA = 1039,
   NFL = 1040,
   GoogleMaps = 1041,
+  Imgur = 1042,
+  Fitbit = 1043,
+  Pinterest = 1044,
+  Reddit = 1045,
 }
 
 export enum ProviderId {
@@ -96,6 +100,10 @@ export enum ProviderId {
   MLB = 2029,
   NBA = 2030,
   NFL = 2031,
+  Imgur = 2032,
+  Fitbit = 2033,
+  Pinterest = 2034,
+  Reddit = 2035,
 }
 
 export enum AuthenticationType {

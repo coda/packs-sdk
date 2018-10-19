@@ -59,7 +59,11 @@ export declare enum PackId {
     MLB = 1038,
     NBA = 1039,
     NFL = 1040,
-    GoogleMaps = 1041
+    GoogleMaps = 1041,
+    Imgur = 1042,
+    Fitbit = 1043,
+    Pinterest = 1044,
+    Reddit = 1045
 }
 export declare enum ProviderId {
     Airtable = 2001,
@@ -92,7 +96,11 @@ export declare enum ProviderId {
     Stripe = 2028,
     MLB = 2029,
     NBA = 2030,
-    NFL = 2031
+    NFL = 2031,
+    Imgur = 2032,
+    Fitbit = 2033,
+    Pinterest = 2034,
+    Reddit = 2035
 }
 export declare enum AuthenticationType {
     None = "None",
