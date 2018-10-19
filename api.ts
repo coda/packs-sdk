@@ -228,10 +228,10 @@ function isResponseExampleTemplate(obj: any): obj is {example: SchemaType<any>} 
   return obj && obj.example;
 }
 
-export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>(
-  definition: ObjectResultFormulaDef<ParamDefsT, SchemaT>,
-): ObjectPackFormula<ParamDefsT, SchemaT> {
-  const {response} = definition;
+export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({
+  response,
+  ...definition // tslint:disable-line: trailing-comma
+}: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT> {
   let schema: Schema | undefined;
   if (response) {
     if (isResponseHandlerTemplate(response)) {
@@ -270,10 +270,11 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
   }) as ObjectPackFormula<ParamDefsT, SchemaT>;
 }
 
-export function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>(
-  definition: ObjectArrayFormulaDef<ParamDefsT, ResultT>,
-) {
-  const {request, response, parameters} = definition;
+export function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({
+  response,
+  ...definition // tslint:disable-line: trailing-comma
+}: ObjectArrayFormulaDef<ParamDefsT, ResultT>) {
+  const {request, parameters} = definition;
   response.schema = normalizeSchema(response.schema) as ResultT;
   const {onError} = response;
   const requestHandler = generateRequestHandler(request, parameters);

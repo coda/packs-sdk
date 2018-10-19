@@ -7,6 +7,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) if (e.indexOf(p[i]) < 0)
+            t[p[i]] = s[p[i]];
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const api_types_1 = require("./api_types");
 const api_types_2 = require("./api_types");
@@ -123,8 +132,9 @@ function isResponseHandlerTemplate(obj) {
 function isResponseExampleTemplate(obj) {
     return obj && obj.example;
 }
-function makeObjectFormula(definition) {
-    const { response } = definition;
+function makeObjectFormula(_a) {
+    var { response } = _a, definition = __rest(_a, ["response"]) // tslint:disable-line: trailing-comma
+    ;
     let schema;
     if (response) {
         if (isResponseHandlerTemplate(response)) {
@@ -166,8 +176,10 @@ function makeObjectFormula(definition) {
     });
 }
 exports.makeObjectFormula = makeObjectFormula;
-function makeTranslateObjectFormula(definition) {
-    const { request, response, parameters } = definition;
+function makeTranslateObjectFormula(_a) {
+    var { response } = _a, definition = __rest(_a, ["response"]) // tslint:disable-line: trailing-comma
+    ;
+    const { request, parameters } = definition;
     response.schema = schema_1.normalizeSchema(response.schema);
     const { onError } = response;
     const requestHandler = handler_templates_2.generateRequestHandler(request, parameters);
