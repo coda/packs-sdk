@@ -61,6 +61,7 @@ export enum PackId {
   MLB = 1038,
   NBA = 1039,
   NFL = 1040,
+  Imgur = 1041,
 }
 
 export enum ProviderId {
@@ -95,6 +96,7 @@ export enum ProviderId {
   MLB = 2029,
   NBA = 2030,
   NFL = 2031,
+  Imgur = 2032,
 }
 
 export enum AuthenticationType {
