@@ -64,6 +64,7 @@ export enum PackId {
   Imgur = 1041,
   Fitbit = 1042,
   Pinterest = 1043,
+  Reddit = 1044,
 }
 
 export enum ProviderId {
@@ -101,6 +102,7 @@ export enum ProviderId {
   Imgur = 2032,
   Fitbit = 2033,
   Pinterest = 2034,
+  Reddit = 2035,
 }
 
 export enum AuthenticationType {
