@@ -16,6 +16,7 @@ export enum PackCategory {
   Shopping = 'Shopping',
   Social = 'Social',
   Sports = 'Sports',
+  Travel = 'Travel',
   Weather = 'Weather',
 }
 
@@ -66,6 +67,8 @@ export enum PackId {
   Fitbit = 1043,
   Pinterest = 1044,
   Reddit = 1045,
+  Flights = 1046,
+  Cryptocurrency = 1047,
 }
 
 export enum ProviderId {
@@ -104,6 +107,8 @@ export enum ProviderId {
   Fitbit = 2033,
   Pinterest = 2034,
   Reddit = 2035,
+  Flights = 2036,
+  Cryptocurrency = 2037,
 }
 
 export enum AuthenticationType {

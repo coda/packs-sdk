@@ -16,6 +16,7 @@ var PackCategory;
     PackCategory["Shopping"] = "Shopping";
     PackCategory["Social"] = "Social";
     PackCategory["Sports"] = "Sports";
+    PackCategory["Travel"] = "Travel";
     PackCategory["Weather"] = "Weather";
 })(PackCategory = exports.PackCategory || (exports.PackCategory = {}));
 var PackId;
@@ -66,6 +67,8 @@ var PackId;
     PackId[PackId["Fitbit"] = 1043] = "Fitbit";
     PackId[PackId["Pinterest"] = 1044] = "Pinterest";
     PackId[PackId["Reddit"] = 1045] = "Reddit";
+    PackId[PackId["Flights"] = 1046] = "Flights";
+    PackId[PackId["Cryptocurrency"] = 1047] = "Cryptocurrency";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
@@ -104,6 +107,8 @@ var ProviderId;
     ProviderId[ProviderId["Fitbit"] = 2033] = "Fitbit";
     ProviderId[ProviderId["Pinterest"] = 2034] = "Pinterest";
     ProviderId[ProviderId["Reddit"] = 2035] = "Reddit";
+    ProviderId[ProviderId["Flights"] = 2036] = "Flights";
+    ProviderId[ProviderId["Cryptocurrency"] = 2037] = "Cryptocurrency";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {
