@@ -69,7 +69,7 @@ export enum PackId {
   Reddit = 1045,
   Flights = 1046,
   Cryptocurrency = 1047,
-  Facebook = 1048,
+  FacebookGraph = 1048,
 }
 
 export enum ProviderId {
@@ -110,7 +110,7 @@ export enum ProviderId {
   Reddit = 2035,
   Flights = 2036,
   Cryptocurrency = 2037,
-  Facebook = 2038,
+  FacebookGraph = 2038,
 }
 
 export enum AuthenticationType {
