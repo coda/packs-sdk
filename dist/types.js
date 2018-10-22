@@ -110,7 +110,7 @@ var ProviderId;
     ProviderId[ProviderId["Reddit"] = 2035] = "Reddit";
     ProviderId[ProviderId["Flights"] = 2036] = "Flights";
     ProviderId[ProviderId["Cryptocurrency"] = 2037] = "Cryptocurrency";
-    ProviderId[ProviderId["FacebookGraph"] = 2038] = "FacebookGraph";
+    ProviderId[ProviderId["Facebook"] = 2038] = "Facebook";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {

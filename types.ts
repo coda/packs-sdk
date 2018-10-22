@@ -110,7 +110,7 @@ export enum ProviderId {
   Reddit = 2035,
   Flights = 2036,
   Cryptocurrency = 2037,
-  FacebookGraph = 2038,
+  Facebook = 2038,
 }
 
 export enum AuthenticationType {
