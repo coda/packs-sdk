@@ -12,7 +12,8 @@ export declare enum ValueType {
     Url = "url",
     Markdown = "markdown",
     Html = "html",
-    Embed = "embed"
+    Embed = "embed",
+    Location = "location"
 }
 export declare type StringHintTypes = ValueType.Image | ValueType.Date | ValueType.Url | ValueType.Markdown | ValueType.Html | ValueType.Embed;
 export declare type NumberHintTypes = ValueType.Date | ValueType.Percent | ValueType.Currency;

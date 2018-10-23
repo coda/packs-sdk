@@ -20,6 +20,7 @@ export enum ValueType {
   Markdown = 'markdown',
   Html = 'html',
   Embed = 'embed',
+  Location = 'location',
 }
 
 export type StringHintTypes =
