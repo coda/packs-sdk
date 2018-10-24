@@ -202,6 +202,10 @@ export interface Format {
     matchers?: RegExp[];
     placeholder?: string;
 }
+export interface Policy {
+    name: string;
+    url: string;
+}
 export interface PackDefinition {
     id: PackId;
     name: string;
@@ -225,6 +229,7 @@ export interface PackDefinition {
     systemConnectionAuthentication?: SystemAuthentication;
     formulas?: PackFormulas;
     formats?: Format[];
+    policies?: Policy[];
 }
 export interface ProviderDefinition {
     id: ProviderId;
