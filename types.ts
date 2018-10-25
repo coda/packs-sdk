@@ -241,6 +241,11 @@ export interface Format {
   placeholder?: string;
 }
 
+export interface Policy {
+  name: string;
+  url: string;
+}
+
 export interface PackDefinition {
   id: PackId;
   name: string;
@@ -266,6 +271,7 @@ export interface PackDefinition {
   // User-facing components
   formulas?: PackFormulas;
   formats?: Format[];
+  policies?: Policy[];
 }
 
 export interface ProviderDefinition {
