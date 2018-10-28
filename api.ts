@@ -17,6 +17,7 @@ import {Type} from './api_types';
 import {TypeOf} from './api_types';
 import {booleanArray} from './api_types';
 import {dateArray} from './api_types';
+import {htmlArray} from './api_types';
 import {ensureExists} from './helpers/ensure';
 import {generateObjectResponseHandler} from './handler_templates';
 import {generateRequestHandler} from './handler_templates';
@@ -112,6 +113,22 @@ export function makeDateArrayParameter(
   args: ParamArgs<ArrayType<Type.date>> = {},
 ): ParamDef<ArrayType<Type.date>> {
   return Object.freeze({...args, name, description, type: dateArray});
+}
+
+export function makeHtmlParameter(
+  name: string,
+  description: string,
+  args: ParamArgs<Type.html> = {},
+): ParamDef<Type.html> {
+  return Object.freeze({...args, name, description, type: Type.html as Type.html});
+}
+
+export function makeHtmlArrayParameter(
+  name: string,
+  description: string,
+  args: ParamArgs<ArrayType<Type.html>> = {},
+): ParamDef<ArrayType<Type.html>> {
+  return Object.freeze({...args, name, description, type: htmlArray});
 }
 
 export function makeUserVisibleError(msg: string): UserVisibleError {

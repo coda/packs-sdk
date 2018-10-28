@@ -7,6 +7,7 @@ export enum Type {
   object,
   boolean,
   date,
+  html,
 }
 
 export interface ArrayType<T extends Type> {
@@ -40,6 +41,11 @@ export const dateArray: ArrayType<Type.date> = {
   items: Type.date,
 };
 
+export const htmlArray: ArrayType<Type.html> = {
+  type: 'array',
+  items: Type.html,
+};
+
 // Concrete versions of these ArrayTypes
 type ConcreteArrayTypes = string[] | number[] | boolean[] | Date[];
 
@@ -49,6 +55,7 @@ interface TypeMap {
   [Type.object]: object;
   [Type.boolean]: boolean;
   [Type.date]: Date;
+  [Type.html]: string;
 }
 
 export type PackFormulaValue = $Values<$Omit<TypeMap, Type.object>> | ConcreteArrayTypes;
