@@ -20,12 +20,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const api_types_1 = require("./api_types");
 const api_types_2 = require("./api_types");
 const api_types_3 = require("./api_types");
+const api_types_4 = require("./api_types");
 const ensure_1 = require("./helpers/ensure");
 const handler_templates_1 = require("./handler_templates");
 const handler_templates_2 = require("./handler_templates");
 const schema_1 = require("./schema");
-const api_types_4 = require("./api_types");
 const api_types_5 = require("./api_types");
+const api_types_6 = require("./api_types");
 class UserVisibleError extends Error {
     constructor(message, internalError) {
         super(message);
@@ -52,7 +53,7 @@ function makeStringParameter(name, description, args = {}) {
 }
 exports.makeStringParameter = makeStringParameter;
 function makeStringArrayParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_5.stringArray }));
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_6.stringArray }));
 }
 exports.makeStringArrayParameter = makeStringArrayParameter;
 function makeNumericParameter(name, description, args = {}) {
@@ -60,7 +61,7 @@ function makeNumericParameter(name, description, args = {}) {
 }
 exports.makeNumericParameter = makeNumericParameter;
 function makeNumericArrayParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_4.numberArray }));
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_5.numberArray }));
 }
 exports.makeNumericArrayParameter = makeNumericArrayParameter;
 function makeBooleanParameter(name, description, args = {}) {
@@ -79,6 +80,14 @@ function makeDateArrayParameter(name, description, args = {}) {
     return Object.freeze(Object.assign({}, args, { name, description, type: api_types_3.dateArray }));
 }
 exports.makeDateArrayParameter = makeDateArrayParameter;
+function makeHtmlParameter(name, description, args = {}) {
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_1.Type.html }));
+}
+exports.makeHtmlParameter = makeHtmlParameter;
+function makeHtmlArrayParameter(name, description, args = {}) {
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_4.htmlArray }));
+}
+exports.makeHtmlArrayParameter = makeHtmlArrayParameter;
 function makeUserVisibleError(msg) {
     return new UserVisibleError(msg);
 }

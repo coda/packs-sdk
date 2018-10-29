@@ -51,6 +51,8 @@ export {makeDateParameter} from './api';
 export {makeDateArrayParameter} from './api';
 export {makeNumericParameter} from './api';
 export {makeNumericArrayParameter} from './api';
+export {makeHtmlParameter} from './api';
+export {makeHtmlArrayParameter} from './api';
 export {makeStringParameter} from './api';
 export {makeStringArrayParameter} from './api';
 

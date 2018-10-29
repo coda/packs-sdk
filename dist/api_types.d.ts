@@ -5,7 +5,8 @@ export declare enum Type {
     number = 1,
     object = 2,
     boolean = 3,
-    date = 4
+    date = 4,
+    html = 5
 }
 export interface ArrayType<T extends Type> {
     type: 'array';
@@ -17,6 +18,7 @@ export declare const stringArray: ArrayType<Type.string>;
 export declare const numberArray: ArrayType<Type.number>;
 export declare const booleanArray: ArrayType<Type.boolean>;
 export declare const dateArray: ArrayType<Type.date>;
+export declare const htmlArray: ArrayType<Type.html>;
 declare type ConcreteArrayTypes = string[] | number[] | boolean[] | Date[];
 interface TypeMap {
     [Type.number]: number;
@@ -24,6 +26,7 @@ interface TypeMap {
     [Type.object]: object;
     [Type.boolean]: boolean;
     [Type.date]: Date;
+    [Type.html]: string;
 }
 export declare type PackFormulaValue = $Values<$Omit<TypeMap, Type.object>> | ConcreteArrayTypes;
 export declare type PackFormulaResult = $Values<TypeMap> | ConcreteArrayTypes;

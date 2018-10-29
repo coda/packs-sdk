@@ -59,9 +59,13 @@ exports.makeNumericParameter = api_17.makeNumericParameter;
 var api_18 = require("./api");
 exports.makeNumericArrayParameter = api_18.makeNumericArrayParameter;
 var api_19 = require("./api");
-exports.makeStringParameter = api_19.makeStringParameter;
+exports.makeHtmlParameter = api_19.makeHtmlParameter;
 var api_20 = require("./api");
-exports.makeStringArrayParameter = api_20.makeStringArrayParameter;
+exports.makeHtmlArrayParameter = api_20.makeHtmlArrayParameter;
+var api_21 = require("./api");
+exports.makeStringParameter = api_21.makeStringParameter;
+var api_22 = require("./api");
+exports.makeStringArrayParameter = api_22.makeStringArrayParameter;
 // Object Schemas
 const schema = __importStar(require("./schema"));
 exports.schema = schema;
