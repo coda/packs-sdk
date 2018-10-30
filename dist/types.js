@@ -69,6 +69,7 @@ var PackId;
     PackId[PackId["Reddit"] = 1045] = "Reddit";
     PackId[PackId["Flights"] = 1046] = "Flights";
     PackId[PackId["Cryptocurrency"] = 1047] = "Cryptocurrency";
+    PackId[PackId["AdafruitIO"] = 1048] = "AdafruitIO";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
@@ -109,6 +110,7 @@ var ProviderId;
     ProviderId[ProviderId["Reddit"] = 2035] = "Reddit";
     ProviderId[ProviderId["Flights"] = 2036] = "Flights";
     ProviderId[ProviderId["Cryptocurrency"] = 2037] = "Cryptocurrency";
+    ProviderId[ProviderId["Adafruit"] = 2038] = "Adafruit";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {
