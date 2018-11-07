@@ -90,7 +90,9 @@ export interface Fetcher {
 export interface ExecutionContext {
     readonly fetcher?: Fetcher;
     readonly endpoint?: string;
-    readonly protocolAndHost: string;
-    readonly docId?: string;
+    readonly invocationLocation: {
+        protocolAndHost: string;
+        docId?: string;
+    };
 }
 export {};
