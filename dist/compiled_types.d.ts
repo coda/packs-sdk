@@ -1,3 +1,4 @@
+import { $JsonSerialized } from './type_utils';
 import { $Omit } from './type_utils';
 import { $OmitNested } from './type_utils';
 import { Authentication } from './types';

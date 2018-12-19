@@ -1,3 +1,4 @@
+import {$JsonSerialized} from '../type_utils';
 import {ExternalPackFormat} from '../compiled_types';
 import {ExternalPackMetadata} from '../compiled_types';
 import {JsonExternalPackMetadata} from '../compiled_types';
