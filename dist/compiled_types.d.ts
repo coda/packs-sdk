@@ -38,4 +38,5 @@ export interface ExternalPackMetadata extends BasePackMetadata {
     formulas?: ExternalPackFormulas;
     formats?: ExternalPackFormat[];
 }
+export declare type JsonExternalPackMetadata = $JsonSerialized<ExternalPackMetadata>;
 export {};
