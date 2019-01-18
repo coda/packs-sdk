@@ -76,15 +76,11 @@ interface TextAttributionNode {
 interface LinkAttributionNode {
   type: AttributionNodeType.Link;
   anchorUrl: string;
-  // TODO(oleg): remove url after https://github.com/kr-project/experimental/pull/25890 hits prod and packs upgrade.
-  url: string;
   anchorText: string;
 }
 
 interface ImageAttributionNode {
   type: AttributionNodeType.Image;
-  // TODO(oleg): remove url after https://github.com/kr-project/experimental/pull/25890 hits prod and packs upgrade.
-  url: string; // NOTE: this should be the imageUrl until it's removed.
   anchorUrl: string;
   imageUrl: string;
 }
