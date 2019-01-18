@@ -53,12 +53,10 @@ interface TextAttributionNode {
 interface LinkAttributionNode {
     type: AttributionNodeType.Link;
     anchorUrl: string;
-    url: string;
     anchorText: string;
 }
 interface ImageAttributionNode {
     type: AttributionNodeType.Image;
-    url: string;
     anchorUrl: string;
     imageUrl: string;
 }
