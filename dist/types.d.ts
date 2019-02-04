@@ -66,7 +66,8 @@ export declare enum PackId {
     Pinterest = 1044,
     Reddit = 1045,
     Flights = 1046,
-    Cryptocurrency = 1047
+    Cryptocurrency = 1047,
+    S3 = 1048
 }
 export declare enum ProviderId {
     Airtable = 2001,
@@ -105,7 +106,8 @@ export declare enum ProviderId {
     Pinterest = 2034,
     Reddit = 2035,
     Flights = 2036,
-    Cryptocurrency = 2037
+    Cryptocurrency = 2037,
+    AWS = 2038
 }
 export declare enum AuthenticationType {
     None = "None",
@@ -114,7 +116,8 @@ export declare enum AuthenticationType {
     QueryParamToken = "QueryParamToken",
     MultiQueryParamToken = "MultiQueryParamToken",
     OAuth2 = "OAuth2",
-    WebBasic = "WebBasic"
+    WebBasic = "WebBasic",
+    AWSSignature4 = "AWSSignature4"
 }
 export declare enum DefaultConnectionType {
     SharedDataOnly = 1,

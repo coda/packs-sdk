@@ -69,6 +69,7 @@ export enum PackId {
   Reddit = 1045,
   Flights = 1046,
   Cryptocurrency = 1047,
+  S3 = 1048,
 }
 
 export enum ProviderId {
@@ -109,6 +110,7 @@ export enum ProviderId {
   Reddit = 2035,
   Flights = 2036,
   Cryptocurrency = 2037,
+  AWS = 2038,
 }
 
 export enum AuthenticationType {
@@ -119,6 +121,7 @@ export enum AuthenticationType {
   MultiQueryParamToken = 'MultiQueryParamToken',
   OAuth2 = 'OAuth2',
   WebBasic = 'WebBasic',
+  AWSSignature4 = 'AWSSignature4',
 }
 
 export enum DefaultConnectionType {
