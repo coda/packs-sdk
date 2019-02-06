@@ -217,6 +217,12 @@ export interface WebBasicAuthentication extends BaseAuthentication {
   };
 }
 
+export interface AWSSignature4Authentication extends BaseAuthentication {
+  type: AuthenticationType.AWSSignature4;
+  accessKeyId: string;
+  secretAccessKey: string;
+}
+
 export type Authentication =
   | NoAuthentication
   | HeaderBearerTokenAuthentication
@@ -224,14 +230,16 @@ export type Authentication =
   | QueryParamTokenAuthentication
   | MultiQueryParamTokenAuthentication
   | OAuth2Authentication
-  | WebBasicAuthentication;
+  | WebBasicAuthentication
+  | AWSSignature4Authentication;
 
 export type SystemAuthentication =
   | HeaderBearerTokenAuthentication
   | CustomHeaderTokenAuthentication
   | QueryParamTokenAuthentication
   | MultiQueryParamTokenAuthentication
-  | WebBasicAuthentication;
+  | WebBasicAuthentication
+  | AWSSignature4Authentication;
 
 export interface Format {
   name: string;
