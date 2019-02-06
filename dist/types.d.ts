@@ -193,8 +193,13 @@ export interface WebBasicAuthentication extends BaseAuthentication {
         usernameOnly?: boolean;
     };
 }
-export declare type Authentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication;
-export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication;
+export interface AWSSignature4Authentication extends BaseAuthentication {
+    type: AuthenticationType.AWSSignature4;
+    accessKeyId: string;
+    secretAccessKey: string;
+}
+export declare type Authentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSSignature4Authentication;
+export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSSignature4Authentication;
 export interface Format {
     name: string;
     formulaNamespace: string;
