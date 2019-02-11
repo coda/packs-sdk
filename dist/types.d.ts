@@ -195,8 +195,7 @@ export interface WebBasicAuthentication extends BaseAuthentication {
 }
 export interface AWSSignature4Authentication extends BaseAuthentication {
     type: AuthenticationType.AWSSignature4;
-    accessKeyId: string;
-    secretAccessKey: string;
+    service: string;
 }
 export declare type Authentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSSignature4Authentication;
 export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSSignature4Authentication;
