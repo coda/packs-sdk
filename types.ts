@@ -219,8 +219,7 @@ export interface WebBasicAuthentication extends BaseAuthentication {
 
 export interface AWSSignature4Authentication extends BaseAuthentication {
   type: AuthenticationType.AWSSignature4;
-  accessKeyId: string;
-  secretAccessKey: string;
+  service: string;
 }
 
 export type Authentication =
