@@ -70,6 +70,7 @@ export enum PackId {
   Flights = 1046,
   Cryptocurrency = 1047,
   S3 = 1048,
+  GoogleSearchConsole = 1049,
 }
 
 export enum ProviderId {

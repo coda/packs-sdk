@@ -67,7 +67,8 @@ export declare enum PackId {
     Reddit = 1045,
     Flights = 1046,
     Cryptocurrency = 1047,
-    S3 = 1048
+    S3 = 1048,
+    GoogleSearchConsole = 1049
 }
 export declare enum ProviderId {
     Airtable = 2001,
