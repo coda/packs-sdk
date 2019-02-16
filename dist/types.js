@@ -70,6 +70,7 @@ var PackId;
     PackId[PackId["Flights"] = 1046] = "Flights";
     PackId[PackId["Cryptocurrency"] = 1047] = "Cryptocurrency";
     PackId[PackId["S3"] = 1048] = "S3";
+    PackId[PackId["GoogleSearchConsole"] = 1049] = "GoogleSearchConsole";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
