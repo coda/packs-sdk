@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@types/chai@^4.1.5":
-  version "4.1.5"
-  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.1.5.tgz#6163dc60078d215ec46186dc76062ef6ed68d39c"
-  integrity sha512-nyzJ08qQMY4umgXD6SzbLflQucEnoAf2H5iUxPX5t0euDgXDV+bFTJlEmEepM35/2l07jYHdAfP6YEndeTWM0w==
+"@types/chai@^4.1.7":
+  version "4.1.7"
+  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.1.7.tgz#1b8e33b61a8c09cbe1f85133071baa0dbf9fa71a"
+  integrity sha512-2Y8uPt0/jwjhQ6EiluT0XCri1Dbplr0ZxfFXUz+ye13gaqE8u5gL5ppao1JrUYr9cIip5S6MvQzBS7Kke7U9VA==
 
 "@types/clone@^0.1.30":
   version "0.1.30"
