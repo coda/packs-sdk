@@ -71,6 +71,7 @@ export enum PackId {
   Cryptocurrency = 1047,
   S3 = 1048,
   GoogleSearchConsole = 1049,
+  OMDB = 1050,
 }
 
 export enum ProviderId {
@@ -112,6 +113,7 @@ export enum ProviderId {
   Flights = 2036,
   Cryptocurrency = 2037,
   AWS = 2038,
+  OMDB = 2039,
 }
 
 export enum AuthenticationType {
