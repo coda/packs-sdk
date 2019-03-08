@@ -71,6 +71,7 @@ var PackId;
     PackId[PackId["Cryptocurrency"] = 1047] = "Cryptocurrency";
     PackId[PackId["S3"] = 1048] = "S3";
     PackId[PackId["GoogleSearchConsole"] = 1049] = "GoogleSearchConsole";
+    PackId[PackId["OMDB"] = 1050] = "OMDB";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
@@ -112,6 +113,7 @@ var ProviderId;
     ProviderId[ProviderId["Flights"] = 2036] = "Flights";
     ProviderId[ProviderId["Cryptocurrency"] = 2037] = "Cryptocurrency";
     ProviderId[ProviderId["AWS"] = 2038] = "AWS";
+    ProviderId[ProviderId["OMDB"] = 2039] = "OMDB";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {
