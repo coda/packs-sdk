@@ -69,7 +69,8 @@ export declare enum PackId {
     Cryptocurrency = 1047,
     S3 = 1048,
     GoogleSearchConsole = 1049,
-    OMDB = 1050
+    OMDB = 1050,
+    PubNub = 1051
 }
 export declare enum ProviderId {
     Airtable = 2001,
@@ -110,7 +111,8 @@ export declare enum ProviderId {
     Flights = 2036,
     Cryptocurrency = 2037,
     AWS = 2038,
-    OMDB = 2039
+    OMDB = 2039,
+    PubNub = 2040
 }
 export declare enum AuthenticationType {
     None = "None",
