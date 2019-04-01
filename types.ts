@@ -69,6 +69,10 @@ export enum PackId {
   Reddit = 1045,
   Flights = 1046,
   Cryptocurrency = 1047,
+  S3 = 1048,
+  GoogleSearchConsole = 1049,
+  OMDB = 1050,
+  PubNub = 1051,
 }
 
 export enum ProviderId {
@@ -109,6 +113,9 @@ export enum ProviderId {
   Reddit = 2035,
   Flights = 2036,
   Cryptocurrency = 2037,
+  AWS = 2038,
+  OMDB = 2039,
+  PubNub = 2040,
 }
 
 export enum AuthenticationType {
@@ -119,6 +126,7 @@ export enum AuthenticationType {
   MultiQueryParamToken = 'MultiQueryParamToken',
   OAuth2 = 'OAuth2',
   WebBasic = 'WebBasic',
+  AWSSignature4 = 'AWSSignature4',
 }
 
 export enum DefaultConnectionType {
@@ -214,6 +222,11 @@ export interface WebBasicAuthentication extends BaseAuthentication {
   };
 }
 
+export interface AWSSignature4Authentication extends BaseAuthentication {
+  type: AuthenticationType.AWSSignature4;
+  service: string;
+}
+
 export type Authentication =
   | NoAuthentication
   | HeaderBearerTokenAuthentication
@@ -221,14 +234,16 @@ export type Authentication =
   | QueryParamTokenAuthentication
   | MultiQueryParamTokenAuthentication
   | OAuth2Authentication
-  | WebBasicAuthentication;
+  | WebBasicAuthentication
+  | AWSSignature4Authentication;
 
 export type SystemAuthentication =
   | HeaderBearerTokenAuthentication
   | CustomHeaderTokenAuthentication
   | QueryParamTokenAuthentication
   | MultiQueryParamTokenAuthentication
-  | WebBasicAuthentication;
+  | WebBasicAuthentication
+  | AWSSignature4Authentication;
 
 export interface Format {
   name: string;

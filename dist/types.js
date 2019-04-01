@@ -69,6 +69,10 @@ var PackId;
     PackId[PackId["Reddit"] = 1045] = "Reddit";
     PackId[PackId["Flights"] = 1046] = "Flights";
     PackId[PackId["Cryptocurrency"] = 1047] = "Cryptocurrency";
+    PackId[PackId["S3"] = 1048] = "S3";
+    PackId[PackId["GoogleSearchConsole"] = 1049] = "GoogleSearchConsole";
+    PackId[PackId["OMDB"] = 1050] = "OMDB";
+    PackId[PackId["PubNub"] = 1051] = "PubNub";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
@@ -109,6 +113,9 @@ var ProviderId;
     ProviderId[ProviderId["Reddit"] = 2035] = "Reddit";
     ProviderId[ProviderId["Flights"] = 2036] = "Flights";
     ProviderId[ProviderId["Cryptocurrency"] = 2037] = "Cryptocurrency";
+    ProviderId[ProviderId["AWS"] = 2038] = "AWS";
+    ProviderId[ProviderId["OMDB"] = 2039] = "OMDB";
+    ProviderId[ProviderId["PubNub"] = 2040] = "PubNub";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {
@@ -119,6 +126,7 @@ var AuthenticationType;
     AuthenticationType["MultiQueryParamToken"] = "MultiQueryParamToken";
     AuthenticationType["OAuth2"] = "OAuth2";
     AuthenticationType["WebBasic"] = "WebBasic";
+    AuthenticationType["AWSSignature4"] = "AWSSignature4";
 })(AuthenticationType = exports.AuthenticationType || (exports.AuthenticationType = {}));
 var DefaultConnectionType;
 (function (DefaultConnectionType) {

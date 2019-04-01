@@ -66,7 +66,11 @@ export declare enum PackId {
     Pinterest = 1044,
     Reddit = 1045,
     Flights = 1046,
-    Cryptocurrency = 1047
+    Cryptocurrency = 1047,
+    S3 = 1048,
+    GoogleSearchConsole = 1049,
+    OMDB = 1050,
+    PubNub = 1051
 }
 export declare enum ProviderId {
     Airtable = 2001,
@@ -105,7 +109,10 @@ export declare enum ProviderId {
     Pinterest = 2034,
     Reddit = 2035,
     Flights = 2036,
-    Cryptocurrency = 2037
+    Cryptocurrency = 2037,
+    AWS = 2038,
+    OMDB = 2039,
+    PubNub = 2040
 }
 export declare enum AuthenticationType {
     None = "None",
@@ -114,7 +121,8 @@ export declare enum AuthenticationType {
     QueryParamToken = "QueryParamToken",
     MultiQueryParamToken = "MultiQueryParamToken",
     OAuth2 = "OAuth2",
-    WebBasic = "WebBasic"
+    WebBasic = "WebBasic",
+    AWSSignature4 = "AWSSignature4"
 }
 export declare enum DefaultConnectionType {
     SharedDataOnly = 1,
@@ -190,8 +198,12 @@ export interface WebBasicAuthentication extends BaseAuthentication {
         usernameOnly?: boolean;
     };
 }
-export declare type Authentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication;
-export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication;
+export interface AWSSignature4Authentication extends BaseAuthentication {
+    type: AuthenticationType.AWSSignature4;
+    service: string;
+}
+export declare type Authentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSSignature4Authentication;
+export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSSignature4Authentication;
 export interface Format {
     name: string;
     formulaNamespace: string;
