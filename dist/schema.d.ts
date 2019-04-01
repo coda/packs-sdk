@@ -41,6 +41,15 @@ interface ObjectSchemaProperties {
         required?: boolean;
     };
 }
+export interface ObjectSchema extends BaseSchema {
+    type: ValueType.Object;
+    properties: ObjectSchemaProperties;
+    identity?: {
+        packId: PackId;
+        name: string;
+        attribution?: AttributionNode[];
+    };
+}
 export declare enum AttributionNodeType {
     Text = 1,
     Link = 2,
@@ -62,15 +71,6 @@ interface ImageAttributionNode {
 }
 declare type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
 export declare function makeAttributionNode<T extends AttributionNode>(node: T): T;
-export interface ObjectSchema {
-    type: ValueType.Object;
-    properties: ObjectSchemaProperties;
-    identity?: {
-        packId: PackId;
-        name: string;
-        attribution?: AttributionNode[];
-    };
-}
 export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | ObjectSchema;
 export declare function isObject(val?: Schema): val is ObjectSchema;
 export declare function isArray(val?: Schema): val is ArraySchema;

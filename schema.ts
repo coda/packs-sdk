@@ -62,6 +62,16 @@ interface ObjectSchemaProperties {
   };
 }
 
+export interface ObjectSchema extends BaseSchema {
+  type: ValueType.Object;
+  properties: ObjectSchemaProperties;
+  identity?: {
+    packId: PackId;
+    name: string;
+    attribution?: AttributionNode[];
+  };
+}
+
 export enum AttributionNodeType {
   Text = 1,
   Link,
@@ -88,16 +98,6 @@ interface ImageAttributionNode {
 type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
 export function makeAttributionNode<T extends AttributionNode>(node: T): T {
   return node;
-}
-
-export interface ObjectSchema {
-  type: ValueType.Object;
-  properties: ObjectSchemaProperties;
-  identity?: {
-    packId: PackId;
-    name: string;
-    attribution?: AttributionNode[];
-  };
 }
 
 export type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | ObjectSchema;
