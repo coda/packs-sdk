@@ -141,7 +141,8 @@ function generateObjectResponseHandler(response) {
         }
         if (schema_1.isArray(schema) && schema_2.isObject(schema.items)) {
             const objects = projectedBody;
-            return objects.map((obj) => mapKeys(obj, excludeExtraneous, schema.items));
+            const mappedObjs = objects.map((obj) => mapKeys(obj, excludeExtraneous, schema.items));
+            return mappedObjs;
         }
         if (schema_2.isObject(schema)) {
             return mapKeys(projectedBody, excludeExtraneous, schema);

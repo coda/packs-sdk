@@ -77,13 +77,14 @@ export declare function isArray(val?: Schema): val is ArraySchema;
 declare type UndefinedAsOptional<T extends object> = Partial<T> & Pick<T, {
     [K in keyof T]: undefined extends T[K] ? never : K;
 }[keyof T]>;
-export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : (T extends NumberSchema ? number : (T extends StringSchema ? (T['codaType'] extends ValueType.Date ? Date : string) : (T extends ArraySchema ? ArraySchemaType<T> : (T extends ObjectSchema ? ObjectSchemaType<T> : never))));
-interface ArraySchemaType<T extends ArraySchema> extends Array<SchemaType<T['items']>> {
-}
+export declare type SchemaType<T extends Schema> = T extends ArraySchema ? Array<TerminalSchemaType<T['items']>> : (T extends ObjectSchema ? ObjectSchemaType<T> : TerminalSchemaType<T>);
+declare type TerminalSchemaType<T extends Schema> = T extends BooleanSchema ? boolean : (T extends NumberSchema ? number : (T extends StringSchema ? (T['codaType'] extends ValueType.Date ? Date : string) : (T extends ArraySchema ? any[] : (T extends ObjectSchema ? {
+    [K in keyof T['properties']]: any;
+} : never))));
 declare type ObjectSchemaType<T extends ObjectSchema> = UndefinedAsOptional<{
     [K in keyof T['properties']]: T['properties'][K] extends Schema & {
         required: true;
-    } ? (SchemaType<T['properties'][K]>) : (SchemaType<T['properties'][K]> | undefined);
+    } ? (TerminalSchemaType<T['properties'][K]>) : (TerminalSchemaType<T['properties'][K]> | undefined);
 }>;
 export declare type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
 export declare function generateSchema(obj: ValidTypes): Schema;
