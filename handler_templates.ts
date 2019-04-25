@@ -202,7 +202,8 @@ export function generateObjectResponseHandler<T extends Schema>(
 
     if (isArray(schema) && isObject(schema.items)) {
       const objects = projectedBody as object[];
-      return objects.map((obj: {[key: string]: any}) => mapKeys(obj, excludeExtraneous, schema.items));
+      const mappedObjs = objects.map((obj: {[key: string]: any}) => mapKeys(obj, excludeExtraneous, schema.items));
+      return mappedObjs;
     }
 
     if (isObject(schema)) {

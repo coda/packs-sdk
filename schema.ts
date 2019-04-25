@@ -113,19 +113,23 @@ export function isArray(val?: Schema): val is ArraySchema {
 type UndefinedAsOptional<T extends object> = Partial<T> &
   Pick<T, {[K in keyof T]: undefined extends T[K] ? never : K}[keyof T]>;
 
-export type SchemaType<T extends Schema> = T extends BooleanSchema
+// NOTE(oleg): recursive types currently break due to https://github.com/Microsoft/TypeScript/issues/30188
+// so we don't support resolution of union types or arrays beyond the first layer.
+export type SchemaType<T extends Schema> = T extends ArraySchema
+  ? Array<TerminalSchemaType<T['items']>>
+  : (T extends ObjectSchema ? ObjectSchemaType<T> : TerminalSchemaType<T>);
+type TerminalSchemaType<T extends Schema> = T extends BooleanSchema
   ? boolean
   : (T extends NumberSchema
       ? number
       : (T extends StringSchema
           ? (T['codaType'] extends ValueType.Date ? Date : string)
-          : (T extends ArraySchema ? ArraySchemaType<T> : (T extends ObjectSchema ? ObjectSchemaType<T> : never))));
-interface ArraySchemaType<T extends ArraySchema> extends Array<SchemaType<T['items']>> {}
+          : (T extends ArraySchema ? any[] : (T extends ObjectSchema ? {[K in keyof T['properties']]: any} : never))));
 type ObjectSchemaType<T extends ObjectSchema> = UndefinedAsOptional<
   {
     [K in keyof T['properties']]: T['properties'][K] extends Schema & {required: true}
-      ? (SchemaType<T['properties'][K]>)
-      : (SchemaType<T['properties'][K]> | undefined)
+      ? (TerminalSchemaType<T['properties'][K]>)
+      : (TerminalSchemaType<T['properties'][K]> | undefined)
   }
 >;
 
