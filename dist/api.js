@@ -185,6 +185,14 @@ function makeObjectFormula(_a) {
     });
 }
 exports.makeObjectFormula = makeObjectFormula;
+function makeSyncTable(name, schema, definition) {
+    return {
+        name,
+        schema,
+        getter: Object.assign({}, definition, { resultType: api_types_1.Type.object }),
+    };
+}
+exports.makeSyncTable = makeSyncTable;
 function makeTranslateObjectFormula(_a) {
     var { response } = _a, definition = __rest(_a, ["response"]) // tslint:disable-line: trailing-comma
     ;

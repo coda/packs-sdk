@@ -20,10 +20,23 @@ const schema_2 = require("../schema");
 const api_4 = require("../api");
 const api_5 = require("../api");
 const api_6 = require("../api");
+const api_7 = require("../api");
 const url_1 = require("../helpers/url");
 exports.FakeNpmProviderId = 9011;
 exports.FakeNpmPackId = 8003;
 exports.FakeNpmPackVersion = '5.2.3';
+const packageSchema = schema_2.makeSchema({
+    type: schema_1.ValueType.Object,
+    identity: {
+        packId: exports.FakeNpmPackId,
+        name: 'Package',
+    },
+    properties: {
+        package: { type: schema_1.ValueType.String, primary: true },
+        url: { type: schema_1.ValueType.String },
+        downloadCount: { type: schema_1.ValueType.Number },
+    },
+});
 const FakeNpmDefinitionFake = {
     id: exports.FakeNpmPackId,
     name: 'NPM',
@@ -51,18 +64,7 @@ const FakeNpmDefinitionFake = {
         NPM: [
             api_3.makeObjectFormula({
                 response: {
-                    schema: schema_2.makeSchema({
-                        type: schema_1.ValueType.Object,
-                        identity: {
-                            packId: exports.FakeNpmPackId,
-                            name: 'Package',
-                        },
-                        properties: {
-                            package: { type: schema_1.ValueType.String, primary: true },
-                            url: { type: schema_1.ValueType.String },
-                            downloadCount: { type: schema_1.ValueType.Number },
-                        },
-                    }),
+                    schema: packageSchema,
                 },
                 name: 'Package',
                 description: 'Get live data about a NPM package.',
@@ -114,6 +116,21 @@ const FakeNpmDefinitionFake = {
             }),
         ],
     },
+    syncTables: [
+        api_7.makeSyncTable('Packages', packageSchema, {
+            name: 'SyncPackages',
+            description: 'Pull down NPM packages.',
+            examples: [],
+            parameters: [],
+            network: { hasSideEffect: false, hasConnection: false },
+            execute: ([name, monthly], context) => __awaiter(this, void 0, void 0, function* () {
+                const url = url_1.withQueryParams(`https://npmjs.com/api/packages/${name}`, { monthly: String(monthly) });
+                const result = yield context.fetcher.fetch({ method: 'GET', url });
+                return result.body;
+            }),
+            schema: packageSchema,
+        }),
+    ],
 };
 exports.FakeNpmDefinition = sample_utils_1.fakeDefinitionToDefinition(FakeNpmDefinitionFake);
 exports.FakeNpmMetadata = sample_utils_2.fakeDefinitionToMetadata(FakeNpmDefinitionFake);

@@ -3,6 +3,7 @@ import {ArrayType} from './api_types';
 import {CommonPackFormulaDef} from './api_types';
 import {ExecutionContext} from './api_types';
 import {NumberSchema} from './schema';
+import {ObjectSchema} from './schema';
 import {PackFormulaResult} from './api_types';
 import {ParamArgs} from './api_types';
 import {ParamDefs} from './api_types';
@@ -41,6 +42,12 @@ export class StatusCodeError extends Error {
     super(`statusCode: ${statusCode}`);
     this.statusCode = statusCode;
   }
+}
+
+export interface SyncTable<SchemaT extends ObjectSchema> {
+  name: string;
+  schema: SchemaT;
+  getter: SyncFormula<any, SchemaT>;
 }
 
 export function isUserVisibleError(error: Error): error is UserVisibleError {
@@ -198,6 +205,27 @@ export function isStringPackFormula(fn: Formula<any, any>): fn is StringPackForm
   return fn.resultType === Type.string;
 }
 
+interface SyncFormulaResult<ResultT extends object> {
+  result: ResultT[];
+  continuation?: object;
+}
+
+interface SyncFormulaDef<ParamsT extends ParamDefs, SchemaT extends ObjectSchema>
+  extends CommonPackFormulaDef<ParamsT> {
+  execute(
+    params: ParamValues<ParamsT>,
+    context: ExecutionContext,
+    continuation?: object,
+  ): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
+  schema: SchemaT;
+}
+
+export type SyncFormula<ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema> =
+  SyncFormulaDef<ParamDefsT, SchemaT> & {
+    resultType: TypeOf<SchemaType<SchemaT>>;
+    schema: SchemaT;
+  };
+
 export function makeNumericFormula<ParamDefsT extends ParamDefs>(
   definition: PackFormulaDef<ParamDefsT, number>,
 ): NumericPackFormula<ParamDefsT> {
@@ -285,6 +313,18 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
     execute,
     schema,
   }) as ObjectPackFormula<ParamDefsT, SchemaT>;
+}
+
+export function makeSyncTable<ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema>(
+  name: string, schema: SchemaT, definition: SyncFormulaDef<ParamDefsT, SchemaT>): SyncTable<SchemaT> {
+  return {
+    name,
+    schema,
+    getter: {
+      ...definition,
+      resultType: Type.object as any,
+    },
+  };
 }
 
 export function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({

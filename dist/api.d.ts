@@ -3,6 +3,7 @@ import { ArrayType } from './api_types';
 import { CommonPackFormulaDef } from './api_types';
 import { ExecutionContext } from './api_types';
 import { NumberSchema } from './schema';
+import { ObjectSchema } from './schema';
 import { PackFormulaResult } from './api_types';
 import { ParamArgs } from './api_types';
 import { ParamDefs } from './api_types';
@@ -25,6 +26,11 @@ export declare class UserVisibleError extends Error {
 export declare class StatusCodeError extends Error {
     statusCode: number;
     constructor(statusCode: number);
+}
+export interface SyncTable<SchemaT extends ObjectSchema> {
+    name: string;
+    schema: SchemaT;
+    getter: SyncFormula<any, SchemaT>;
 }
 export declare function isUserVisibleError(error: Error): error is UserVisibleError;
 export declare const PARAM_DESCRIPTION_DOES_NOT_EXIST = "NO PARAMETER DESCRIPTION HAS BEEN ADDED. For guidance, see https://coda.link/param-docs";
@@ -77,11 +83,24 @@ declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Sch
 export declare type TypedPackFormula = NumericPackFormula<any> | StringPackFormula<any> | ObjectPackFormula<any, any>;
 export declare function isObjectPackFormula(fn: Formula<any, any>): fn is ObjectPackFormula<any, any>;
 export declare function isStringPackFormula(fn: Formula<any, any>): fn is StringPackFormula<any>;
+interface SyncFormulaResult<ResultT extends object> {
+    result: ResultT[];
+    continuation?: object;
+}
+interface SyncFormulaDef<ParamsT extends ParamDefs, SchemaT extends ObjectSchema> extends CommonPackFormulaDef<ParamsT> {
+    execute(params: ParamValues<ParamsT>, context: ExecutionContext, continuation?: object): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
+    schema: SchemaT;
+}
+export declare type SyncFormula<ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema> = SyncFormulaDef<ParamDefsT, SchemaT> & {
+    resultType: TypeOf<SchemaType<SchemaT>>;
+    schema: SchemaT;
+};
 export declare function makeNumericFormula<ParamDefsT extends ParamDefs>(definition: PackFormulaDef<ParamDefsT, number>): NumericPackFormula<ParamDefsT>;
 export declare function makeStringFormula<ParamDefsT extends ParamDefs>(definition: StringFormulaDef<ParamDefsT>): StringPackFormula<ParamDefsT>;
 export declare type GetConnectionNameFormula = StringPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>]>;
 export declare function makeGetConnectionNameFormula(execute: (context: ExecutionContext, codaUserName: string, authParams: string) => Promise<string> | string): GetConnectionNameFormula;
 export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
+export declare function makeSyncTable<ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema>(name: string, schema: SchemaT, definition: SyncFormulaDef<ParamDefsT, SchemaT>): SyncTable<SchemaT>;
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
     request: RequestHandlerTemplate;
     description: string;

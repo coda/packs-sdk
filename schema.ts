@@ -56,6 +56,7 @@ export interface ArraySchema extends BaseSchema {
 
 interface ObjectSchemaProperties {
   [key: string]: Schema & {
+    id?: boolean;
     primary?: boolean;
     fromKey?: string;
     required?: boolean;
@@ -121,15 +122,15 @@ export type SchemaType<T extends Schema> = T extends ArraySchema
 type TerminalSchemaType<T extends Schema> = T extends BooleanSchema
   ? boolean
   : (T extends NumberSchema
-      ? number
-      : (T extends StringSchema
-          ? (T['codaType'] extends ValueType.Date ? Date : string)
-          : (T extends ArraySchema ? any[] : (T extends ObjectSchema ? {[K in keyof T['properties']]: any} : never))));
+    ? number
+    : (T extends StringSchema
+      ? (T['codaType'] extends ValueType.Date ? Date : string)
+      : (T extends ArraySchema ? any[] : (T extends ObjectSchema ? {[K in keyof T['properties']]: any} : never))));
 type ObjectSchemaType<T extends ObjectSchema> = UndefinedAsOptional<
   {
     [K in keyof T['properties']]: T['properties'][K] extends Schema & {required: true}
-      ? (TerminalSchemaType<T['properties'][K]>)
-      : (TerminalSchemaType<T['properties'][K]> | undefined)
+    ? (TerminalSchemaType<T['properties'][K]>)
+    : (TerminalSchemaType<T['properties'][K]> | undefined)
   }
 >;
 

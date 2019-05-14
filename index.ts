@@ -14,6 +14,7 @@ export {ProviderId} from './types';
 export {PackFormatMetadata} from './compiled_types';
 export {PackFormulaMetadata} from './compiled_types';
 export {PackFormulasMetadata} from './compiled_types';
+export {PackSyncTable} from './compiled_types';
 export {PackMetadata} from './compiled_types';
 
 // Formula related interfaces
@@ -28,6 +29,7 @@ export {PackFormulaValue} from './api_types';
 export {PackFormulaResult} from './api_types';
 export {ParamsList} from './api_types';
 export {StatusCodeError} from './api';
+export {SyncTable} from './api';
 export {Type} from './api_types';
 export {TypedPackFormula} from './api';
 export {UserVisibleError} from './api';
@@ -44,6 +46,7 @@ export {makeTranslateObjectFormula} from './api';
 export {makeNumericFormula} from './api';
 export {makeObjectFormula} from './api';
 export {makeStringFormula} from './api';
+export {makeSyncTable} from './api';
 
 export {makeBooleanParameter} from './api';
 export {makeBooleanArrayParameter} from './api';
