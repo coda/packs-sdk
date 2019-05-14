@@ -13,12 +13,26 @@ import {makeSchema} from '../schema';
 import {makeStringArrayParameter} from '../api';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
+import {makeSyncTable} from '../api';
 import {withQueryParams} from '../helpers/url';
 
 export const FakeNpmProviderId = 9011;
 
 export const FakeNpmPackId = 8003;
 export const FakeNpmPackVersion = '5.2.3';
+
+const packageSchema = makeSchema({
+  type: ValueType.Object,
+  identity: {
+    packId: FakeNpmPackId,
+    name: 'Package',
+  },
+  properties: {
+    package: {type: ValueType.String, primary: true},
+    url: {type: ValueType.String},
+    downloadCount: {type: ValueType.Number},
+  },
+});
 
 const FakeNpmDefinitionFake: FakePackDefinition = {
   id: FakeNpmPackId,
@@ -48,18 +62,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
     NPM: [
       makeObjectFormula({
         response: {
-          schema: makeSchema({
-            type: ValueType.Object,
-            identity: {
-              packId: FakeNpmPackId,
-              name: 'Package',
-            },
-            properties: {
-              package: {type: ValueType.String, primary: true},
-              url: {type: ValueType.String},
-              downloadCount: {type: ValueType.Number},
-            },
-          }),
+          schema: packageSchema,
         },
         name: 'Package',
         description: 'Get live data about a NPM package.',
@@ -111,6 +114,21 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
       }),
     ],
   },
+  syncTables: [
+    makeSyncTable('Packages', packageSchema, {
+      name: 'SyncPackages',
+      description: 'Pull down NPM packages.',
+      examples: [],
+      parameters: [],
+      network: {hasSideEffect: false, hasConnection: false},
+      execute: async ([name, monthly], context) => {
+        const url = withQueryParams(`https://npmjs.com/api/packages/${name}`, {monthly: String(monthly)});
+        const result = await context.fetcher!.fetch({method: 'GET', url});
+        return result.body;
+      },
+      schema: packageSchema,
+    }),
+  ],
 };
 
 export const FakeNpmDefinition: PackDefinition = fakeDefinitionToDefinition(FakeNpmDefinitionFake);

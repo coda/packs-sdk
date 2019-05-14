@@ -19,6 +19,7 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
     formulas: originalFormulas,
     defaultAuthentication: originalDefaultAuthentication,
     formats: originalFormats,
+    syncTables: originalSyncTables,
     ...packMetadata // tslint:disable-line:trailing-comma
   } = def;
 
@@ -48,5 +49,12 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
     };
   }
 
-  return {formulas, formats, ...(defaultAuthentication && {defaultAuthentication}), ...packMetadata};
+  return {
+    formulas,
+    formats,
+    syncTables:
+      (originalSyncTables || []).map(({getter, ...others}) => ({...others})),
+    ...(defaultAuthentication && {defaultAuthentication}),
+    ...packMetadata,
+  };
 }

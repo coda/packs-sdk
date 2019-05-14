@@ -14,7 +14,7 @@ function fakeDefinitionToDefinition(def) {
 }
 exports.fakeDefinitionToDefinition = fakeDefinitionToDefinition;
 function fakeDefinitionToMetadata(def) {
-    const { formulas: originalFormulas, defaultAuthentication: originalDefaultAuthentication, formats: originalFormats } = def, packMetadata = __rest(def, ["formulas", "defaultAuthentication", "formats"]) // tslint:disable-line:trailing-comma
+    const { formulas: originalFormulas, defaultAuthentication: originalDefaultAuthentication, formats: originalFormats, syncTables: originalSyncTables } = def, packMetadata = __rest(def, ["formulas", "defaultAuthentication", "formats", "syncTables"]) // tslint:disable-line:trailing-comma
     ;
     const formulas = {};
     for (const namespace of Object.keys(originalFormulas || {})) {
@@ -35,6 +35,10 @@ function fakeDefinitionToMetadata(def) {
         const _b = originalDefaultAuthentication.getConnectionNameFormula, { execute } = _b, connNameFormula = __rest(_b, ["execute"]);
         defaultAuthentication = Object.assign({}, originalDefaultAuthentication, { getConnectionNameFormula: Object.assign({}, connNameFormula) });
     }
-    return Object.assign({ formulas, formats }, (defaultAuthentication && { defaultAuthentication }), packMetadata);
+    return Object.assign({ formulas,
+        formats, syncTables: (originalSyncTables || []).map((_a) => {
+            var { getter } = _a, others = __rest(_a, ["getter"]);
+            return (Object.assign({}, others));
+        }) }, (defaultAuthentication && { defaultAuthentication }), packMetadata);
 }
 exports.fakeDefinitionToMetadata = fakeDefinitionToMetadata;

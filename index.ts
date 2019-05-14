@@ -14,6 +14,7 @@ export {ProviderId} from './types';
 export {PackFormatMetadata} from './compiled_types';
 export {PackFormulaMetadata} from './compiled_types';
 export {PackFormulasMetadata} from './compiled_types';
+export {PackSyncTable} from './compiled_types';
 export {PackMetadata} from './compiled_types';
 
 // Formula related interfaces
