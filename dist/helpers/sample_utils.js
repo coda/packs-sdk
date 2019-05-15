@@ -35,10 +35,14 @@ function fakeDefinitionToMetadata(def) {
         const _b = originalDefaultAuthentication.getConnectionNameFormula, { execute } = _b, connNameFormula = __rest(_b, ["execute"]);
         defaultAuthentication = Object.assign({}, originalDefaultAuthentication, { getConnectionNameFormula: Object.assign({}, connNameFormula) });
     }
+    const syncTables = [];
+    for (let _c of originalSyncTables || []) {
+        const { getter } = _c, others = __rest(_c, ["getter"]);
+        const { execute } = getter, otherGetter = __rest(getter, ["execute"]);
+        syncTables.push(Object.assign({ getter: Object.assign({}, otherGetter) }, others));
+    }
     return Object.assign({ formulas,
-        formats, syncTables: (originalSyncTables || []).map((_a) => {
-            var { getter } = _a, others = __rest(_a, ["getter"]);
-            return (Object.assign({}, others));
-        }) }, (defaultAuthentication && { defaultAuthentication }), packMetadata);
+        formats,
+        syncTables }, (defaultAuthentication && { defaultAuthentication }), packMetadata);
 }
 exports.fakeDefinitionToMetadata = fakeDefinitionToMetadata;

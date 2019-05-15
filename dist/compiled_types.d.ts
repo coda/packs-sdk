@@ -4,10 +4,12 @@ import { Authentication } from './types';
 import { AuthenticationType } from './types';
 import { Format } from './types';
 import { PackDefinition } from './types';
-import { SyncTable } from './api';
 import { TypedPackFormula } from './api';
+import { GenericSyncTable } from './api';
 export declare type PackFormulaMetadata = $Omit<TypedPackFormula, 'execute'>;
-export declare type PackSyncTable = $Omit<SyncTable<any>, 'getter'>;
+export declare type PackSyncTable = $Omit<GenericSyncTable, 'getter'> & {
+    getter: PackFormulaMetadata;
+};
 export interface PackFormatMetadata extends $Omit<Format, 'matchers'> {
     matchers: string[];
 }
@@ -25,6 +27,8 @@ export declare type ExternalPackAuthenticationType = AuthenticationType;
 export declare type ExternalPackFormulas = PackFormulasMetadata;
 export declare type ExternalPackFormula = PackFormulaMetadata;
 export declare type ExternalPackFormat = Format;
+export declare type ExternalPackFormatMetadata = PackFormatMetadata;
+export declare type ExternalSyncTable = PackSyncTable;
 declare type BasePackMetadata = $Omit<PackMetadata, 'enabledConfigName' | 'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables'>;
 /** Further stripped-down version of `PackMetadata` that contains only what the browser needs. */
 export interface ExternalPackMetadata extends BasePackMetadata {
@@ -40,6 +44,6 @@ export interface ExternalPackMetadata extends BasePackMetadata {
     instructionsUrl?: string;
     formulas?: ExternalPackFormulas;
     formats?: ExternalPackFormat[];
-    syncTables?: PackSyncTable[];
+    syncTables?: ExternalSyncTable[];
 }
 export {};

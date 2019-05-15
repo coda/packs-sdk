@@ -44,11 +44,13 @@ export class StatusCodeError extends Error {
   }
 }
 
-export interface SyncTable<SchemaT extends ObjectSchema> {
+interface SyncTable<SchemaT extends ObjectSchema> {
   name: string;
   schema: SchemaT;
   getter: SyncFormula<any, SchemaT>;
 }
+
+export type GenericSyncTable = SyncTable<any>;
 
 export function isUserVisibleError(error: Error): error is UserVisibleError {
   return 'isUserVisible' in error && (error as any).isUserVisible;
