@@ -32,7 +32,7 @@ interface SyncTable<SchemaT extends ObjectSchema> {
     schema: SchemaT;
     getter: SyncFormula<any, SchemaT>;
 }
-export declare type TypedSyncTable = SyncTable<any>;
+export declare type GenericSyncTable = SyncTable<any>;
 export declare function isUserVisibleError(error: Error): error is UserVisibleError;
 export declare const PARAM_DESCRIPTION_DOES_NOT_EXIST = "NO PARAMETER DESCRIPTION HAS BEEN ADDED. For guidance, see https://coda.link/param-docs";
 export declare function makeStringParameter(name: string, description: string, args?: ParamArgs<Type.string>): ParamDef<Type.string>;

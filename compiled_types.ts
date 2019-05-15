@@ -5,10 +5,10 @@ import {AuthenticationType} from './types';
 import {Format} from './types';
 import {PackDefinition} from './types';
 import {TypedPackFormula} from './api';
-import {TypedSyncTable} from './api';
+import {GenericSyncTable} from './api';
 
 export type PackFormulaMetadata = $Omit<TypedPackFormula, 'execute'>;
-export type PackSyncTable = $Omit<TypedSyncTable, 'getter'> & {
+export type PackSyncTable = $Omit<GenericSyncTable, 'getter'> & {
   getter: PackFormulaMetadata;
 };
 

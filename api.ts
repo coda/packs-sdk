@@ -50,7 +50,7 @@ interface SyncTable<SchemaT extends ObjectSchema> {
   getter: SyncFormula<any, SchemaT>;
 }
 
-export type TypedSyncTable = SyncTable<any>;
+export type GenericSyncTable = SyncTable<any>;
 
 export function isUserVisibleError(error: Error): error is UserVisibleError {
   return 'isUserVisible' in error && (error as any).isUserVisible;
