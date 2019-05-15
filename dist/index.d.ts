@@ -40,6 +40,7 @@ export { UserVisibleError } from './api';
 export { isArrayType } from './api_types';
 export { isObjectPackFormula } from './api';
 export { isStringPackFormula } from './api';
+export { isSyncPackFormula } from './api';
 export { isUserVisibleError } from './api';
 export { makeUserVisibleError } from './api';
 export { makeEmptyFormula } from './api';
