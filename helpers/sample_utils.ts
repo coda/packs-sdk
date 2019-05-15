@@ -4,6 +4,7 @@ import {PackFormatMetadata} from '../compiled_types';
 import {PackFormulasMetadata} from '../compiled_types';
 import {PackFormulas} from '../api';
 import {PackMetadata} from '../compiled_types';
+import {PackSyncTable} from '../compiled_types';
 
 // Used to avoid needing promises when exporting fake `PackMetadata`s.
 export interface FakePackDefinition extends $Omit<PackDefinition, 'formulas'> {
@@ -49,11 +50,15 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
     };
   }
 
+  const syncTables: PackSyncTable[] = [];
+  for (const {getter, ...others} of originalSyncTables || []) {
+    const {execute, ...otherGetter} = getter;
+    syncTables.push({getter: {...otherGetter}, ...others});
+  }
   return {
     formulas,
     formats,
-    syncTables:
-      (originalSyncTables || []).map(({getter, ...others}) => ({...others})),
+    syncTables,
     ...(defaultAuthentication && {defaultAuthentication}),
     ...packMetadata,
   };

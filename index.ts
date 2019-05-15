@@ -17,6 +17,14 @@ export {PackFormulasMetadata} from './compiled_types';
 export {PackSyncTable} from './compiled_types';
 export {PackMetadata} from './compiled_types';
 
+// Browser interfaces
+export {ExternalPackFormat} from './compiled_types';
+export {ExternalPackFormatMetadata} from './compiled_types';
+export {ExternalPackFormula} from './compiled_types';
+export {ExternalPackFormulas} from './compiled_types';
+export {ExternalSyncTable} from './compiled_types';
+export {ExternalPackMetadata} from './compiled_types';
+
 // Formula related interfaces
 export {ArrayType} from './api_types';
 export {ExecutionContext} from './api_types';
@@ -29,7 +37,7 @@ export {PackFormulaValue} from './api_types';
 export {PackFormulaResult} from './api_types';
 export {ParamsList} from './api_types';
 export {StatusCodeError} from './api';
-export {SyncTable} from './api';
+export {TypedSyncTable} from './api';
 export {Type} from './api_types';
 export {TypedPackFormula} from './api';
 export {UserVisibleError} from './api';

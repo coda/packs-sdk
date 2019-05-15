@@ -1,6 +1,6 @@
 import { GetConnectionNameFormula } from './api';
 import { PackFormulas } from './api';
-import { SyncTable } from './api';
+import { TypedSyncTable } from './api';
 export declare enum PackCategory {
     CRM = "CRM",
     Calendar = "Calendar",
@@ -243,7 +243,7 @@ export interface PackDefinition {
     formulas?: PackFormulas;
     formats?: Format[];
     policies?: Policy[];
-    syncTables?: Array<SyncTable<any>>;
+    syncTables?: TypedSyncTable[];
 }
 export interface ProviderDefinition {
     id: ProviderId;

@@ -4,11 +4,13 @@ import {Authentication} from './types';
 import {AuthenticationType} from './types';
 import {Format} from './types';
 import {PackDefinition} from './types';
-import {SyncTable} from './api';
 import {TypedPackFormula} from './api';
+import {TypedSyncTable} from './api';
 
 export type PackFormulaMetadata = $Omit<TypedPackFormula, 'execute'>;
-export type PackSyncTable = $Omit<SyncTable<any>, 'getter'>;
+export type PackSyncTable = $Omit<TypedSyncTable, 'getter'> & {
+  getter: PackFormulaMetadata;
+};
 
 export interface PackFormatMetadata extends $Omit<Format, 'matchers'> {
   matchers: string[];
@@ -32,6 +34,8 @@ export type ExternalPackAuthenticationType = AuthenticationType;
 export type ExternalPackFormulas = PackFormulasMetadata;
 export type ExternalPackFormula = PackFormulaMetadata;
 export type ExternalPackFormat = Format;
+export type ExternalPackFormatMetadata = PackFormatMetadata;
+export type ExternalSyncTable = PackSyncTable;
 
 type BasePackMetadata = $Omit<
   PackMetadata,
@@ -56,5 +60,5 @@ export interface ExternalPackMetadata extends BasePackMetadata {
   // User-facing components
   formulas?: ExternalPackFormulas;
   formats?: ExternalPackFormat[];
-  syncTables?: PackSyncTable[];
+  syncTables?: ExternalSyncTable[];
 }
