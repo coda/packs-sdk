@@ -106,6 +106,10 @@ function isStringPackFormula(fn) {
     return fn.resultType === api_types_1.Type.string;
 }
 exports.isStringPackFormula = isStringPackFormula;
+function isSyncPackFormula(fn) {
+    return Boolean(fn.isSyncFormula);
+}
+exports.isSyncPackFormula = isSyncPackFormula;
 function makeNumericFormula(definition) {
     return Object.assign({}, definition, { resultType: api_types_1.Type.number });
 }
@@ -189,7 +193,7 @@ function makeSyncTable(name, schema, definition) {
     return {
         name,
         schema,
-        getter: Object.assign({}, definition, { resultType: api_types_1.Type.object }),
+        getter: Object.assign({}, definition, { isSyncFormula: true, resultType: api_types_1.Type.object }),
     };
 }
 exports.makeSyncTable = makeSyncTable;
