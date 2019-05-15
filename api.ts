@@ -50,6 +50,11 @@ interface SyncTable<SchemaT extends ObjectSchema> {
   getter: SyncFormula<any, SchemaT>;
 }
 
+export interface Continuation {
+  [key: string]: string | number;
+}
+export type GenericSyncFormula = SyncFormula<any, any>;
+export type GenericSyncFormulaResult = SyncFormulaResult<any>;
 export type GenericSyncTable = SyncTable<any>;
 
 export function isUserVisibleError(error: Error): error is UserVisibleError {
@@ -207,9 +212,13 @@ export function isStringPackFormula(fn: Formula<any, any>): fn is StringPackForm
   return fn.resultType === Type.string;
 }
 
+export function isSyncPackFormula(fn: Formula<any, any>): fn is SyncFormula<any, any> {
+  return Boolean((fn as SyncFormula<any, any>).isSyncFormula);
+}
+
 interface SyncFormulaResult<ResultT extends object> {
   result: ResultT[];
-  continuation?: object;
+  continuation?: Continuation;
 }
 
 interface SyncFormulaDef<ParamsT extends ParamDefs, SchemaT extends ObjectSchema>
@@ -217,7 +226,7 @@ interface SyncFormulaDef<ParamsT extends ParamDefs, SchemaT extends ObjectSchema
   execute(
     params: ParamValues<ParamsT>,
     context: ExecutionContext,
-    continuation?: object,
+    continuation?: Continuation,
   ): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
   schema: SchemaT;
 }
@@ -226,6 +235,7 @@ export type SyncFormula<ParamDefsT extends ParamDefs, SchemaT extends ObjectSche
   SyncFormulaDef<ParamDefsT, SchemaT> & {
     resultType: TypeOf<SchemaType<SchemaT>>;
     schema: SchemaT;
+    isSyncFormula: true;
   };
 
 export function makeNumericFormula<ParamDefsT extends ParamDefs>(
@@ -324,6 +334,7 @@ export function makeSyncTable<ParamDefsT extends ParamDefs, SchemaT extends Obje
     schema,
     getter: {
       ...definition,
+      isSyncFormula: true,
       resultType: Type.object as any,
     },
   };

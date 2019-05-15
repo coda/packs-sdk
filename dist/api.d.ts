@@ -32,6 +32,11 @@ interface SyncTable<SchemaT extends ObjectSchema> {
     schema: SchemaT;
     getter: SyncFormula<any, SchemaT>;
 }
+export interface Continuation {
+    [key: string]: string | number;
+}
+export declare type GenericSyncFormula = SyncFormula<any, any>;
+export declare type GenericSyncFormulaResult = SyncFormulaResult<any>;
 export declare type GenericSyncTable = SyncTable<any>;
 export declare function isUserVisibleError(error: Error): error is UserVisibleError;
 export declare const PARAM_DESCRIPTION_DOES_NOT_EXIST = "NO PARAMETER DESCRIPTION HAS BEEN ADDED. For guidance, see https://coda.link/param-docs";
@@ -84,17 +89,19 @@ declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Sch
 export declare type TypedPackFormula = NumericPackFormula<any> | StringPackFormula<any> | ObjectPackFormula<any, any>;
 export declare function isObjectPackFormula(fn: Formula<any, any>): fn is ObjectPackFormula<any, any>;
 export declare function isStringPackFormula(fn: Formula<any, any>): fn is StringPackFormula<any>;
+export declare function isSyncPackFormula(fn: Formula<any, any>): fn is SyncFormula<any, any>;
 interface SyncFormulaResult<ResultT extends object> {
     result: ResultT[];
-    continuation?: object;
+    continuation?: Continuation;
 }
 interface SyncFormulaDef<ParamsT extends ParamDefs, SchemaT extends ObjectSchema> extends CommonPackFormulaDef<ParamsT> {
-    execute(params: ParamValues<ParamsT>, context: ExecutionContext, continuation?: object): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
+    execute(params: ParamValues<ParamsT>, context: ExecutionContext, continuation?: Continuation): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
     schema: SchemaT;
 }
 export declare type SyncFormula<ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema> = SyncFormulaDef<ParamDefsT, SchemaT> & {
     resultType: TypeOf<SchemaType<SchemaT>>;
     schema: SchemaT;
+    isSyncFormula: true;
 };
 export declare function makeNumericFormula<ParamDefsT extends ParamDefs>(definition: PackFormulaDef<ParamDefsT, number>): NumericPackFormula<ParamDefsT>;
 export declare function makeStringFormula<ParamDefsT extends ParamDefs>(definition: StringFormulaDef<ParamDefsT>): StringPackFormula<ParamDefsT>;

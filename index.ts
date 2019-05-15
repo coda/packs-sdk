@@ -27,17 +27,20 @@ export {ExternalPackMetadata} from './compiled_types';
 
 // Formula related interfaces
 export {ArrayType} from './api_types';
+export {Continuation} from './api';
 export {ExecutionContext} from './api_types';
 export {Fetcher} from './api_types';
 export {FetchRequest} from './api_types';
 export {FetchResponse} from './api_types';
+export {GenericSyncFormula} from './api';
+export {GenericSyncFormulaResult} from './api';
+export {GenericSyncTable} from './api';
 export {Network} from './api_types';
 export {PackFormulas} from './api';
 export {PackFormulaValue} from './api_types';
 export {PackFormulaResult} from './api_types';
 export {ParamsList} from './api_types';
 export {StatusCodeError} from './api';
-export {GenericSyncTable} from './api';
 export {Type} from './api_types';
 export {TypedPackFormula} from './api';
 export {UserVisibleError} from './api';
