@@ -15,6 +15,7 @@ import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
 import {makeSyncTable} from '../api';
 import {withQueryParams} from '../helpers/url';
+import {schema} from 'index';
 
 export const FakeNpmProviderId = 9011;
 
@@ -121,12 +122,15 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
       examples: [],
       parameters: [],
       network: {hasSideEffect: false, hasConnection: false},
-      execute: async ([name, monthly], context) => {
-        const url = withQueryParams(`https://npmjs.com/api/packages/${name}`, {monthly: String(monthly)});
+      execute: async ([], context, continuation) => {
+        const url = withQueryParams(`https://npmjs.com/api/packages/`, {continuation});
         const result = await context.fetcher!.fetch({method: 'GET', url});
         return result.body;
       },
-      schema: packageSchema,
+      schema: {
+        type: schema.ValueType.Array,
+        items: packageSchema,
+      },
     }),
   ],
 };

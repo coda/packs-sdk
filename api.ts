@@ -1,4 +1,5 @@
 import {$Omit} from './type_utils';
+import {ArraySchema} from './schema';
 import {ArrayType} from './api_types';
 import {CommonPackFormulaDef} from './api_types';
 import {ExecutionContext} from './api_types';
@@ -228,13 +229,13 @@ interface SyncFormulaDef<ParamsT extends ParamDefs, SchemaT extends ObjectSchema
     context: ExecutionContext,
     continuation?: Continuation,
   ): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
-  schema: SchemaT;
+  schema: ArraySchema;
 }
 
 export type SyncFormula<ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema> =
   SyncFormulaDef<ParamDefsT, SchemaT> & {
     resultType: TypeOf<SchemaType<SchemaT>>;
-    schema: SchemaT;
+    schema: ArraySchema;
     isSyncFormula: true;
   };
 
@@ -328,7 +329,10 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
 }
 
 export function makeSyncTable<ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema>(
-  name: string, schema: SchemaT, definition: SyncFormulaDef<ParamDefsT, SchemaT>): SyncTable<SchemaT> {
+  name: string,
+  schema: SchemaT,
+  definition: SyncFormulaDef<ParamDefsT, SchemaT>,
+): SyncTable<SchemaT> {
   return {
     name,
     schema,
