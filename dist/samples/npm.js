@@ -22,7 +22,6 @@ const api_5 = require("../api");
 const api_6 = require("../api");
 const api_7 = require("../api");
 const url_1 = require("../helpers/url");
-const index_1 = require("index");
 exports.FakeNpmProviderId = 9011;
 exports.FakeNpmPackId = 8003;
 exports.FakeNpmPackVersion = '5.2.3';
@@ -130,7 +129,7 @@ const FakeNpmDefinitionFake = {
                 return result.body;
             }),
             schema: {
-                type: index_1.schema.ValueType.Array,
+                type: schema_1.ValueType.Array,
                 items: packageSchema,
             },
         }),
