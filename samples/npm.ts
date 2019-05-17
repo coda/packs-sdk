@@ -29,7 +29,7 @@ const packageSchema = makeSchema({
   },
   properties: {
     package: {type: ValueType.String, primary: true},
-    url: {type: ValueType.String},
+    url: {type: ValueType.String, id: true},
     downloadCount: {type: ValueType.Number},
   },
 });

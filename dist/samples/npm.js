@@ -33,7 +33,7 @@ const packageSchema = schema_2.makeSchema({
     },
     properties: {
         package: { type: schema_1.ValueType.String, primary: true },
-        url: { type: schema_1.ValueType.String },
+        url: { type: schema_1.ValueType.String, id: true },
         downloadCount: { type: schema_1.ValueType.Number },
     },
 });
