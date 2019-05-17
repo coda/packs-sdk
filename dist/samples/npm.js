@@ -22,6 +22,7 @@ const api_5 = require("../api");
 const api_6 = require("../api");
 const api_7 = require("../api");
 const url_1 = require("../helpers/url");
+const index_1 = require("index");
 exports.FakeNpmProviderId = 9011;
 exports.FakeNpmPackId = 8003;
 exports.FakeNpmPackVersion = '5.2.3';
@@ -123,12 +124,15 @@ const FakeNpmDefinitionFake = {
             examples: [],
             parameters: [],
             network: { hasSideEffect: false, hasConnection: false },
-            execute: ([name, monthly], context) => __awaiter(this, void 0, void 0, function* () {
-                const url = url_1.withQueryParams(`https://npmjs.com/api/packages/${name}`, { monthly: String(monthly) });
+            execute: ([], context, continuation) => __awaiter(this, void 0, void 0, function* () {
+                const url = url_1.withQueryParams(`https://npmjs.com/api/packages/`, { continuation });
                 const result = yield context.fetcher.fetch({ method: 'GET', url });
                 return result.body;
             }),
-            schema: packageSchema,
+            schema: {
+                type: index_1.schema.ValueType.Array,
+                items: packageSchema,
+            },
         }),
     ],
 };

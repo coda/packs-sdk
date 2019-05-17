@@ -1,4 +1,5 @@
 import { $Omit } from './type_utils';
+import { ArraySchema } from './schema';
 import { ArrayType } from './api_types';
 import { CommonPackFormulaDef } from './api_types';
 import { ExecutionContext } from './api_types';
@@ -96,11 +97,11 @@ interface SyncFormulaResult<ResultT extends object> {
 }
 interface SyncFormulaDef<ParamsT extends ParamDefs, SchemaT extends ObjectSchema> extends CommonPackFormulaDef<ParamsT> {
     execute(params: ParamValues<ParamsT>, context: ExecutionContext, continuation?: Continuation): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
-    schema: SchemaT;
+    schema: ArraySchema;
 }
 export declare type SyncFormula<ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema> = SyncFormulaDef<ParamDefsT, SchemaT> & {
     resultType: TypeOf<SchemaType<SchemaT>>;
-    schema: SchemaT;
+    schema: ArraySchema;
     isSyncFormula: true;
 };
 export declare function makeNumericFormula<ParamDefsT extends ParamDefs>(definition: PackFormulaDef<ParamDefsT, number>): NumericPackFormula<ParamDefsT>;
