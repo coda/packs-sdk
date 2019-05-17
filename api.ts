@@ -331,13 +331,14 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
 export function makeSyncTable<ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema>(
   name: string,
   schema: SchemaT,
-  definition: SyncFormulaDef<ParamDefsT, SchemaT>,
+  {schema: formulaSchema, ...definition}: SyncFormulaDef<ParamDefsT, SchemaT>,
 ): SyncTable<SchemaT> {
   return {
     name,
-    schema,
+    schema: normalizeSchema(schema),
     getter: {
       ...definition,
+      schema: normalizeSchema(formulaSchema),
       isSyncFormula: true,
       resultType: Type.object as any,
     },

@@ -168,12 +168,12 @@ export function makeSchema<T extends Schema>(schema: T): T {
   return schema;
 }
 
-export function normalizeSchema(schema: Schema): Schema {
+export function normalizeSchema<T extends Schema>(schema: T): T {
   if (isArray(schema)) {
     return {
       type: ValueType.Array,
       items: normalizeSchema(schema.items),
-    };
+    } as T;
   } else if (isObject(schema)) {
     const normalized: ObjectSchemaProperties = {};
     for (const key of Object.keys(schema.properties)) {
@@ -186,7 +186,7 @@ export function normalizeSchema(schema: Schema): Schema {
         fromKey: fromKey || (normalizedKey !== key ? key : undefined),
       });
     }
-    return {type: ValueType.Object, properties: normalized, identity: schema.identity};
+    return {type: ValueType.Object, properties: normalized, identity: schema.identity} as T;
   }
   return schema;
 }

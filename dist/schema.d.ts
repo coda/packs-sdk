@@ -90,5 +90,5 @@ declare type ObjectSchemaType<T extends ObjectSchema> = UndefinedAsOptional<{
 export declare type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
 export declare function generateSchema(obj: ValidTypes): Schema;
 export declare function makeSchema<T extends Schema>(schema: T): T;
-export declare function normalizeSchema(schema: Schema): Schema;
+export declare function normalizeSchema<T extends Schema>(schema: T): T;
 export {};

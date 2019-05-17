@@ -189,11 +189,12 @@ function makeObjectFormula(_a) {
     });
 }
 exports.makeObjectFormula = makeObjectFormula;
-function makeSyncTable(name, schema, definition) {
+function makeSyncTable(name, schema, _a) {
+    var { schema: formulaSchema } = _a, definition = __rest(_a, ["schema"]);
     return {
         name,
-        schema,
-        getter: Object.assign({}, definition, { isSyncFormula: true, resultType: api_types_1.Type.object }),
+        schema: schema_1.normalizeSchema(schema),
+        getter: Object.assign({}, definition, { schema: schema_1.normalizeSchema(formulaSchema), isSyncFormula: true, resultType: api_types_1.Type.object }),
     };
 }
 exports.makeSyncTable = makeSyncTable;
