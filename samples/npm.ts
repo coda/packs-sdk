@@ -15,7 +15,6 @@ import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
 import {makeSyncTable} from '../api';
 import {withQueryParams} from '../helpers/url';
-import {schema} from 'index';
 
 export const FakeNpmProviderId = 9011;
 
@@ -128,7 +127,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         return result.body;
       },
       schema: {
-        type: schema.ValueType.Array,
+        type: ValueType.Array,
         items: packageSchema,
       },
     }),
