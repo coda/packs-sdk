@@ -4,7 +4,6 @@ import {ArrayType} from './api_types';
 import {CommonPackFormulaDef} from './api_types';
 import {ExecutionContext} from './api_types';
 import {NumberSchema} from './schema';
-import {ObjectSchema} from './schema';
 import {PackFormulaResult} from './api_types';
 import {ParamArgs} from './api_types';
 import {ParamDefs} from './api_types';
@@ -15,6 +14,7 @@ import {ResponseHandlerTemplate} from './handler_templates';
 import {SchemaType} from './schema';
 import {Schema} from './schema';
 import {StringSchema} from './schema';
+import {SyncObjectSchema} from './schema';
 import {Type} from './api_types';
 import {TypeOf} from './api_types';
 import {booleanArray} from './api_types';
@@ -45,18 +45,18 @@ export class StatusCodeError extends Error {
   }
 }
 
-interface SyncTable<SchemaT extends ObjectSchema> {
+interface SyncTable<K extends string, SchemaT extends SyncObjectSchema<K>> {
   name: string;
   schema: SchemaT;
-  getter: SyncFormula<any, SchemaT>;
+  getter: SyncFormula<K, any, SchemaT>;
 }
 
 export interface Continuation {
   [key: string]: string | number;
 }
-export type GenericSyncFormula = SyncFormula<any, any>;
+export type GenericSyncFormula = SyncFormula<any, any, any>;
 export type GenericSyncFormulaResult = SyncFormulaResult<any>;
-export type GenericSyncTable = SyncTable<any>;
+export type GenericSyncTable = SyncTable<any, any>;
 
 export function isUserVisibleError(error: Error): error is UserVisibleError {
   return 'isUserVisible' in error && (error as any).isUserVisible;
@@ -213,8 +213,8 @@ export function isStringPackFormula(fn: Formula<any, any>): fn is StringPackForm
   return fn.resultType === Type.string;
 }
 
-export function isSyncPackFormula(fn: Formula<any, any>): fn is SyncFormula<any, any> {
-  return Boolean((fn as SyncFormula<any, any>).isSyncFormula);
+export function isSyncPackFormula(fn: Formula<any, any>): fn is SyncFormula<any, any, any> {
+  return Boolean((fn as SyncFormula<any, any, any>).isSyncFormula);
 }
 
 interface SyncFormulaResult<ResultT extends object> {
@@ -222,7 +222,7 @@ interface SyncFormulaResult<ResultT extends object> {
   continuation?: Continuation;
 }
 
-interface SyncFormulaDef<ParamsT extends ParamDefs, SchemaT extends ObjectSchema>
+interface SyncFormulaDef<K extends string, ParamsT extends ParamDefs, SchemaT extends SyncObjectSchema<K>>
   extends CommonPackFormulaDef<ParamsT> {
   execute(
     params: ParamValues<ParamsT>,
@@ -232,8 +232,8 @@ interface SyncFormulaDef<ParamsT extends ParamDefs, SchemaT extends ObjectSchema
   schema: ArraySchema;
 }
 
-export type SyncFormula<ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema> =
-  SyncFormulaDef<ParamDefsT, SchemaT> & {
+export type SyncFormula<K extends string, ParamDefsT extends ParamDefs, SchemaT extends SyncObjectSchema<K>> =
+  SyncFormulaDef<K, ParamDefsT, SchemaT> & {
     resultType: TypeOf<SchemaType<SchemaT>>;
     schema: ArraySchema;
     isSyncFormula: true;
@@ -328,11 +328,11 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
   }) as ObjectPackFormula<ParamDefsT, SchemaT>;
 }
 
-export function makeSyncTable<ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema>(
+export function makeSyncTable<K extends string, ParamDefsT extends ParamDefs, SchemaT extends SyncObjectSchema<K>>(
   name: string,
   schema: SchemaT,
-  {schema: formulaSchema, ...definition}: SyncFormulaDef<ParamDefsT, SchemaT>,
-): SyncTable<SchemaT> {
+  {schema: formulaSchema, ...definition}: SyncFormulaDef<K, ParamDefsT, SchemaT>,
+): SyncTable<K, SchemaT> {
   return {
     name,
     schema: normalizeSchema(schema),

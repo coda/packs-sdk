@@ -9,10 +9,10 @@ import {fakeDefinitionToMetadata} from '../helpers/sample_utils';
 import {makeBooleanParameter} from '../api';
 import {makeNumericFormula} from '../api';
 import {makeObjectFormula} from '../api';
-import {makeSchema} from '../schema';
 import {makeStringArrayParameter} from '../api';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
+import {makeSyncObjectSchema} from '../schema';
 import {makeSyncTable} from '../api';
 import {withQueryParams} from '../helpers/url';
 
@@ -21,12 +21,14 @@ export const FakeNpmProviderId = 9011;
 export const FakeNpmPackId = 8003;
 export const FakeNpmPackVersion = '5.2.3';
 
-const packageSchema = makeSchema({
+const packageSchema = makeSyncObjectSchema({
   type: ValueType.Object,
   identity: {
     packId: FakeNpmPackId,
     name: 'Package',
   },
+  id: 'url',
+  primary: 'url',
   properties: {
     package: {type: ValueType.String, primary: true},
     url: {type: ValueType.String, id: true},
