@@ -42,20 +42,46 @@ describe('Schema', () => {
     });
   });
 
+  it('makeSyncObjectSchema', () => {
+    schema.makeSyncObjectSchema({
+      type: schema.ValueType.Object,
+      primary: 'boo',
+      id: 'boo',
+      properties: {
+        boo: {type: schema.ValueType.String},
+      },
+    });
+  });
+
   describe('normalizeSchema', () => {
     it('passes through object identity', () => {
-      const objectSchema: schema.GenericObjectSchema = {
+      const anotherSchema = schema.makeObjectSchema({
+        type: schema.ValueType.Object,
+        primary: 'boo',
+        properties: {
+          boo: {type: schema.ValueType.String},
+        },
+      });
+      const objectSchema = schema.makeObjectSchema({
         type: schema.ValueType.Object,
         id: 'name',
         primary: 'name',
         properties: {
           name: {type: schema.ValueType.String, primary: true},
+          another: anotherSchema,
+          yetAnother: schema.makeObjectSchema({
+            type: schema.ValueType.Object,
+            primary: 'boo',
+            properties: {
+              baz: {type: schema.ValueType.String},
+            },
+          }),
         },
         identity: {
           packId: PackId.CodaDebug,
           name: 'hello',
         },
-      };
+      });
       const normalized = schema.normalizeSchema(objectSchema);
       assert.deepEqual((normalized as any).identity, {
         packId: PackId.CodaDebug,

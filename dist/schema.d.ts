@@ -34,20 +34,20 @@ export interface ArraySchema extends BaseSchema {
     type: ValueType.Array;
     items: Schema;
 }
-interface ObjectSchemaProperty {
+export interface ObjectSchemaProperty {
     id?: boolean;
     primary?: boolean;
     fromKey?: string;
     required?: boolean;
 }
 interface ObjectSchemaProperties {
-    [key: string]: Schema & ObjectSchemaProperty;
+    [key: string]: Schema | (Schema & ObjectSchemaProperty);
 }
 export declare type GenericObjectSchema = ObjectSchema<string>;
 export interface ObjectSchema<K extends string> extends BaseSchema {
     type: ValueType.Object;
     properties: ObjectSchemaProperties & {
-        [k in K]: Schema & ObjectSchemaProperty;
+        [k in K]: Schema | (Schema & ObjectSchemaProperty);
     };
     id?: K;
     primary?: K;

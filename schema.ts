@@ -54,7 +54,7 @@ export interface ArraySchema extends BaseSchema {
   items: Schema;
 }
 
-interface ObjectSchemaProperty {
+export interface ObjectSchemaProperty {
   // TODO(alexd): Remove these once we've hoisted these up.
   id?: boolean;
   primary?: boolean;
@@ -63,14 +63,14 @@ interface ObjectSchemaProperty {
 }
 
 interface ObjectSchemaProperties {
-  [key: string]: Schema & ObjectSchemaProperty;
+  [key: string]: Schema | (Schema & ObjectSchemaProperty);
 }
 
 export type GenericObjectSchema = ObjectSchema<string>;
 
 export interface ObjectSchema<K extends string> extends BaseSchema {
   type: ValueType.Object;
-  properties: ObjectSchemaProperties & {[k in K]: Schema & ObjectSchemaProperty};
+  properties: ObjectSchemaProperties & {[k in K]: Schema | (Schema & ObjectSchemaProperty)};
   id?: K;
   primary?: K;
   identity?: {
@@ -202,7 +202,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     for (const key of Object.keys(schema.properties)) {
       const normalizedKey = pascalcase(key);
       const props = schema.properties[key];
-      const {primary: primaryKey, required, fromKey} = props;
+      const {primary: primaryKey, required, fromKey} = props as ObjectSchemaProperty;
       normalized[normalizedKey] = Object.assign(normalizeSchema(props), {
         primary: primaryKey,
         required,
