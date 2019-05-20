@@ -44,8 +44,10 @@ describe('Schema', () => {
 
   describe('normalizeSchema', () => {
     it('passes through object identity', () => {
-      const objectSchema: schema.ObjectSchema = {
+      const objectSchema: schema.GenericObjectSchema = {
         type: schema.ValueType.Object,
+        id: 'name',
+        primary: 'name',
         properties: {
           name: {type: schema.ValueType.String, primary: true},
         },
@@ -56,8 +58,8 @@ describe('Schema', () => {
       };
       const normalized = schema.normalizeSchema(objectSchema);
       assert.deepEqual((normalized as any).identity, {
-          packId: PackId.CodaDebug,
-          name: 'hello',
+        packId: PackId.CodaDebug,
+        name: 'hello',
       });
     });
   });

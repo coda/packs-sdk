@@ -43,6 +43,7 @@ interface ObjectSchemaProperty {
 interface ObjectSchemaProperties {
     [key: string]: Schema & ObjectSchemaProperty;
 }
+export declare type GenericObjectSchema = ObjectSchema<string>;
 export interface ObjectSchema<K extends string> extends BaseSchema {
     type: ValueType.Object;
     properties: ObjectSchemaProperties & {
