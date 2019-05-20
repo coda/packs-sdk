@@ -54,23 +54,33 @@ export interface ArraySchema extends BaseSchema {
   items: Schema;
 }
 
-interface ObjectSchemaProperties {
-  [key: string]: Schema & {
-    id?: boolean;
-    primary?: boolean;
-    fromKey?: string;
-    required?: boolean;
-  };
+interface ObjectSchemaProperty {
+  // TODO(alexd): Remove these once we've hoisted these up.
+  id?: boolean;
+  primary?: boolean;
+  fromKey?: string;
+  required?: boolean;
 }
 
-export interface ObjectSchema extends BaseSchema {
+interface ObjectSchemaProperties {
+  [key: string]: Schema & ObjectSchemaProperty;
+}
+
+export interface ObjectSchema<K extends string> extends BaseSchema {
   type: ValueType.Object;
-  properties: ObjectSchemaProperties;
+  properties: ObjectSchemaProperties & {[k in K]: Schema & ObjectSchemaProperty};
+  id?: K;
+  primary?: K;
   identity?: {
     packId: PackId;
     name: string;
     attribution?: AttributionNode[];
   };
+}
+
+export interface SyncObjectSchema<K extends string> extends ObjectSchema<K> {
+  id: K;
+  primary: K;
 }
 
 export enum AttributionNodeType {
@@ -101,9 +111,9 @@ export function makeAttributionNode<T extends AttributionNode>(node: T): T {
   return node;
 }
 
-export type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | ObjectSchema;
+export type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | ObjectSchema<string>;
 
-export function isObject(val?: Schema): val is ObjectSchema {
+export function isObject(val?: Schema): val is ObjectSchema<string> {
   return Boolean(val && val.type === ValueType.Object);
 }
 
@@ -118,15 +128,17 @@ type UndefinedAsOptional<T extends object> = Partial<T> &
 // so we don't support resolution of union types or arrays beyond the first layer.
 export type SchemaType<T extends Schema> = T extends ArraySchema
   ? Array<TerminalSchemaType<T['items']>>
-  : (T extends ObjectSchema ? ObjectSchemaType<T> : TerminalSchemaType<T>);
+  : (T extends ObjectSchema<string> ? ObjectSchemaType<T> : TerminalSchemaType<T>);
 type TerminalSchemaType<T extends Schema> = T extends BooleanSchema
   ? boolean
   : (T extends NumberSchema
     ? number
     : (T extends StringSchema
       ? (T['codaType'] extends ValueType.Date ? Date : string)
-      : (T extends ArraySchema ? any[] : (T extends ObjectSchema ? {[K in keyof T['properties']]: any} : never))));
-type ObjectSchemaType<T extends ObjectSchema> = UndefinedAsOptional<
+      : (T extends ArraySchema
+        ? any[]
+        : (T extends ObjectSchema<string> ? {[K in keyof T['properties']]: any} : never))));
+type ObjectSchemaType<T extends ObjectSchema<string>> = UndefinedAsOptional<
   {
     [K in keyof T['properties']]: T['properties'][K] extends Schema & {required: true}
     ? (TerminalSchemaType<T['properties'][K]>)
@@ -153,7 +165,7 @@ export function generateSchema(obj: ValidTypes): Schema {
         properties[key] = generateSchema((obj as any)[key]);
       }
     }
-    return {type: ValueType.Object, properties};
+    return {type: ValueType.Object, properties} as ObjectSchema<string>;
   } else if (typeof obj === 'string') {
     return {type: ValueType.String};
   } else if (typeof obj === 'boolean') {
@@ -168,6 +180,14 @@ export function makeSchema<T extends Schema>(schema: T): T {
   return schema;
 }
 
+export function makeObjectSchema<T extends string>(schema: ObjectSchema<T>): ObjectSchema<T> {
+  return schema;
+}
+
+export function makeSyncObjectSchema<T extends string>(schema: SyncObjectSchema<T>): SyncObjectSchema<T> {
+  return schema;
+}
+
 export function normalizeSchema<T extends Schema>(schema: T): T {
   if (isArray(schema)) {
     return {
@@ -176,17 +196,24 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     } as T;
   } else if (isObject(schema)) {
     const normalized: ObjectSchemaProperties = {};
+    const {id, primary} = schema;
     for (const key of Object.keys(schema.properties)) {
       const normalizedKey = pascalcase(key);
       const props = schema.properties[key];
-      const {primary, required, fromKey} = props;
+      const {primary: primaryKey, required, fromKey} = props;
       normalized[normalizedKey] = Object.assign(normalizeSchema(props), {
-        primary,
+        primary: primaryKey,
         required,
         fromKey: fromKey || (normalizedKey !== key ? key : undefined),
       });
     }
-    return {type: ValueType.Object, properties: normalized, identity: schema.identity} as T;
+    return {
+      type: ValueType.Object,
+      id: id ? pascalcase(id) : undefined,
+      primary: primary ? pascalcase(primary) : undefined,
+      properties: normalized,
+      identity: schema.identity,
+    } as T;
   }
   return schema;
 }

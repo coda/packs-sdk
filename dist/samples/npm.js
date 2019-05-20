@@ -16,21 +16,23 @@ const sample_utils_2 = require("../helpers/sample_utils");
 const api_1 = require("../api");
 const api_2 = require("../api");
 const api_3 = require("../api");
-const schema_2 = require("../schema");
 const api_4 = require("../api");
 const api_5 = require("../api");
 const api_6 = require("../api");
+const schema_2 = require("../schema");
 const api_7 = require("../api");
 const url_1 = require("../helpers/url");
 exports.FakeNpmProviderId = 9011;
 exports.FakeNpmPackId = 8003;
 exports.FakeNpmPackVersion = '5.2.3';
-const packageSchema = schema_2.makeSchema({
+const packageSchema = schema_2.makeSyncObjectSchema({
     type: schema_1.ValueType.Object,
     identity: {
         packId: exports.FakeNpmPackId,
         name: 'Package',
     },
+    id: 'url',
+    primary: 'url',
     properties: {
         package: { type: schema_1.ValueType.String, primary: true },
         url: { type: schema_1.ValueType.String, id: true },
