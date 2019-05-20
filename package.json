@@ -18,24 +18,24 @@
     "pascalcase": "^0.1.1",
     "qs": "^6.7.0",
     "string-template": "^1.0.0",
-    "url-parse": "^1.4.3"
+    "url-parse": "^1.4.7"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/clone": "^0.1.30",
-    "@types/lodash": "^4.14.126",
+    "@types/lodash": "^4.14.130",
     "@types/mocha": "^5.2.6",
-    "@types/node": "^12.0.1",
+    "@types/node": "^12.0.2",
     "@types/qs": "^6.5.3",
     "@types/string-template": "^1.0.2",
     "@types/url-parse": "^1.4.3",
     "chai": "^4.2.0",
     "mocha": "^6.1.4",
-    "ts-loader": "^6.0.0",
+    "ts-loader": "^6.0.1",
     "ts-node": "^8.1.0",
     "tslint": "^5.16.0",
     "tslint-microsoft-contrib": "^6.1.1",
     "typescript": "^3.4.5",
-    "yargs": "^12.0.2"
+    "yargs": "^13.2.4"
   }
 }
