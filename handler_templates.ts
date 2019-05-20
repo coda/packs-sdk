@@ -1,5 +1,6 @@
 import {FetchRequest} from './api_types';
 import {FetchResponse} from './api_types';
+import {ObjectSchemaProperty} from './schema';
 import {PackFormulaValue} from './api_types';
 import {ParamDef} from './api_types';
 import {ParamDefs} from './api_types';
@@ -158,8 +159,8 @@ function mapKeys(obj: {[key: string]: any}, excludeExtraneous?: boolean, schema?
   // Look at the properties of the schema and invert any keys if present.
   const remappedKeys: Map<string, string> = new Map();
   for (const key in properties) {
-    if (properties.hasOwnProperty(key) && properties[key].fromKey) {
-      remappedKeys.set(ensureExists(properties[key].fromKey), key);
+    if (properties.hasOwnProperty(key) && (properties[key] as ObjectSchemaProperty).fromKey) {
+      remappedKeys.set(ensureExists((properties[key] as ObjectSchemaProperty).fromKey), key);
     }
   }
 
