@@ -219,3 +219,17 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
   }
   return schema;
 }
+
+export enum SchemaIdPrefix {
+  Identity = 'I',
+}
+
+export type SchemaId = string;
+
+// Return a canonical ID for the schema
+export function getSchemaId(schema: Schema | undefined): SchemaId | undefined {
+  if (!(isObject(schema) && schema.identity)) {
+    return;
+  }
+  return `${SchemaIdPrefix.Identity}:${schema.identity.packId}:${schema.identity.name}`;
+}

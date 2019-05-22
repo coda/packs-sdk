@@ -116,3 +116,15 @@ function normalizeSchema(schema) {
     return schema;
 }
 exports.normalizeSchema = normalizeSchema;
+var SchemaIdPrefix;
+(function (SchemaIdPrefix) {
+    SchemaIdPrefix["Identity"] = "I";
+})(SchemaIdPrefix = exports.SchemaIdPrefix || (exports.SchemaIdPrefix = {}));
+// Return a canonical ID for the schema
+function getSchemaId(schema) {
+    if (!(isObject(schema) && schema.identity)) {
+        return;
+    }
+    return `${SchemaIdPrefix.Identity}:${schema.identity.packId}:${schema.identity.name}`;
+}
+exports.getSchemaId = getSchemaId;

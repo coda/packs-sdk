@@ -103,4 +103,9 @@ export declare function makeSchema<T extends Schema>(schema: T): T;
 export declare function makeObjectSchema<T extends string>(schema: ObjectSchema<T>): ObjectSchema<T>;
 export declare function makeSyncObjectSchema<T extends string>(schema: SyncObjectSchema<T>): SyncObjectSchema<T>;
 export declare function normalizeSchema<T extends Schema>(schema: T): T;
+export declare enum SchemaIdPrefix {
+    Identity = "I"
+}
+export declare type SchemaId = string;
+export declare function getSchemaId(schema: Schema | undefined): SchemaId | undefined;
 export {};
