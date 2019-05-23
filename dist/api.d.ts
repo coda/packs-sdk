@@ -112,8 +112,8 @@ export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT 
 export declare function makeSyncTable<K extends string, ParamDefsT extends ParamDefs, SchemaT extends SyncObjectSchema<K>>(name: string, schema: SchemaT, { schema: formulaSchema, ...definition }: SyncFormulaDef<K, ParamDefsT, SchemaT>): SyncTable<K, SchemaT>;
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
     request: RequestHandlerTemplate;
-    description: string;
     name: string;
+    description: string;
     examples: {
         params: import("./api_types").PackFormulaValue[];
         result: PackFormulaResult;

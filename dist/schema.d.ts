@@ -1,3 +1,4 @@
+import { $Omit } from './type_utils';
 import { PackId } from './types';
 export declare enum ValueType {
     Boolean = "boolean",
@@ -6,6 +7,7 @@ export declare enum ValueType {
     Array = "array",
     Object = "object",
     Date = "date",
+    Email = "email",
     Percent = "percent",
     Currency = "currency",
     Image = "image",
@@ -14,7 +16,7 @@ export declare enum ValueType {
     Html = "html",
     Embed = "embed"
 }
-export declare type StringHintTypes = ValueType.Image | ValueType.Date | ValueType.Url | ValueType.Markdown | ValueType.Html | ValueType.Embed;
+declare type StringHintTypes = ValueType.Date | ValueType.Email | ValueType.Embed | ValueType.Html | ValueType.Image | ValueType.Markdown | ValueType.Url;
 export declare type NumberHintTypes = ValueType.Date | ValueType.Percent | ValueType.Currency;
 interface BaseSchema {
     description?: string;
@@ -28,7 +30,7 @@ export interface NumberSchema extends BaseSchema {
 }
 export interface StringSchema extends BaseSchema {
     type: ValueType.String;
-    codaType?: StringHintTypes;
+    codaType?: StringHintTypes | $Omit<Identity, 'attribution'>;
 }
 export interface ArraySchema extends BaseSchema {
     type: ValueType.Array;
@@ -44,6 +46,11 @@ interface ObjectSchemaProperties {
     [key: string]: Schema | (Schema & ObjectSchemaProperty);
 }
 export declare type GenericObjectSchema = ObjectSchema<string>;
+export interface Identity {
+    packId: PackId;
+    name: string;
+    attribution?: AttributionNode[];
+}
 export interface ObjectSchema<K extends string> extends BaseSchema {
     type: ValueType.Object;
     properties: ObjectSchemaProperties & {
@@ -51,11 +58,7 @@ export interface ObjectSchema<K extends string> extends BaseSchema {
     };
     id?: K;
     primary?: K;
-    identity?: {
-        packId: PackId;
-        name: string;
-        attribution?: AttributionNode[];
-    };
+    identity?: Identity;
 }
 export interface SyncObjectSchema<K extends string> extends ObjectSchema<K> {
     id: K;
