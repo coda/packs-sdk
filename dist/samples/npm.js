@@ -54,7 +54,10 @@ const packageSchema = schema_2.makeSyncObjectSchema({
         downloadCount: { type: schema_1.ValueType.Number },
         versions: {
             type: schema_1.ValueType.Array,
-            items: Object.assign({ type: schema_1.ValueType.String }, versionSchema.identity),
+            items: {
+                type: schema_1.ValueType.String,
+                codaType: versionSchema.identity,
+            },
         },
     },
 });

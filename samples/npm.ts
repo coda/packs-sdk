@@ -53,7 +53,7 @@ const packageSchema = makeSyncObjectSchema({
       type: ValueType.Array,
       items: {
         type: ValueType.String,
-        ...versionSchema.identity,
+        codaType: versionSchema.identity,
       },
     },
   },
