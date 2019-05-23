@@ -1,3 +1,4 @@
+import {$Omit} from './type_utils';
 import {PackId} from './types';
 import {ensureUnreachable} from './helpers/ensure';
 import pascalcase from 'pascalcase';
@@ -13,6 +14,7 @@ export enum ValueType {
   Object = 'object',
   // Synthetic types we will use to coerce values.
   Date = 'date',
+  Email = 'email',
   Percent = 'percent',
   Currency = 'currency',
   Image = 'image',
@@ -22,13 +24,15 @@ export enum ValueType {
   Embed = 'embed',
 }
 
-export type StringHintTypes =
-  | ValueType.Image
+type StringHintTypes =
   | ValueType.Date
-  | ValueType.Url
-  | ValueType.Markdown
+  | ValueType.Email
+  | ValueType.Embed
   | ValueType.Html
-  | ValueType.Embed;
+  | ValueType.Image
+  | ValueType.Markdown
+  | ValueType.Url
+  ;
 export type NumberHintTypes = ValueType.Date | ValueType.Percent | ValueType.Currency;
 
 interface BaseSchema {
@@ -46,7 +50,7 @@ export interface NumberSchema extends BaseSchema {
 
 export interface StringSchema extends BaseSchema {
   type: ValueType.String;
-  codaType?: StringHintTypes;
+  codaType?: StringHintTypes | $Omit<Identity, 'attribution'>;
 }
 
 export interface ArraySchema extends BaseSchema {
@@ -68,16 +72,18 @@ interface ObjectSchemaProperties {
 
 export type GenericObjectSchema = ObjectSchema<string>;
 
+export interface Identity {
+  packId: PackId;
+  name: string;
+  attribution?: AttributionNode[];
+}
+
 export interface ObjectSchema<K extends string> extends BaseSchema {
   type: ValueType.Object;
   properties: ObjectSchemaProperties & {[k in K]: Schema | (Schema & ObjectSchemaProperty)};
   id?: K;
   primary?: K;
-  identity?: {
-    packId: PackId;
-    name: string;
-    attribution?: AttributionNode[];
-  };
+  identity?: Identity;
 }
 
 export interface SyncObjectSchema<K extends string> extends ObjectSchema<K> {
