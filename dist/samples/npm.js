@@ -25,6 +25,20 @@ const url_1 = require("../helpers/url");
 exports.FakeNpmProviderId = 9011;
 exports.FakeNpmPackId = 8003;
 exports.FakeNpmPackVersion = '5.2.3';
+const versionSchema = schema_2.makeSyncObjectSchema({
+    type: schema_1.ValueType.Object,
+    identity: {
+        packId: exports.FakeNpmPackId,
+        name: 'PackageVersion',
+    },
+    id: 'url',
+    primary: 'url',
+    properties: {
+        url: { type: schema_1.ValueType.String, id: true },
+        version: { type: schema_1.ValueType.String },
+        downloadCount: { type: schema_1.ValueType.Number },
+    },
+});
 const packageSchema = schema_2.makeSyncObjectSchema({
     type: schema_1.ValueType.Object,
     identity: {
@@ -36,7 +50,12 @@ const packageSchema = schema_2.makeSyncObjectSchema({
     properties: {
         package: { type: schema_1.ValueType.String, primary: true },
         url: { type: schema_1.ValueType.String, id: true },
+        author: { type: schema_1.ValueType.String, codaType: schema_1.ValueType.Email },
         downloadCount: { type: schema_1.ValueType.Number },
+        versions: {
+            type: schema_1.ValueType.Array,
+            items: Object.assign({ type: schema_1.ValueType.String }, versionSchema.identity),
+        },
     },
 });
 const FakeNpmDefinitionFake = {
@@ -133,6 +152,22 @@ const FakeNpmDefinitionFake = {
             schema: {
                 type: schema_1.ValueType.Array,
                 items: packageSchema,
+            },
+        }),
+        api_7.makeSyncTable('PackageVersions', versionSchema, {
+            name: 'SyncPackageVersions',
+            description: 'Pull down NPM versions for a package.',
+            examples: [],
+            parameters: [api_6.makeStringParameter('name', 'Package name')],
+            network: { hasSideEffect: false, hasConnection: false },
+            execute: ([pack], context, continuation) => __awaiter(this, void 0, void 0, function* () {
+                const url = url_1.withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, { continuation });
+                const result = yield context.fetcher.fetch({ method: 'GET', url });
+                return result.body;
+            }),
+            schema: {
+                type: schema_1.ValueType.Array,
+                items: versionSchema,
             },
         }),
     ],

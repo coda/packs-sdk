@@ -21,6 +21,21 @@ export const FakeNpmProviderId = 9011;
 export const FakeNpmPackId = 8003;
 export const FakeNpmPackVersion = '5.2.3';
 
+const versionSchema = makeSyncObjectSchema({
+  type: ValueType.Object,
+  identity: {
+    packId: FakeNpmPackId,
+    name: 'PackageVersion',
+  },
+  id: 'url',
+  primary: 'url',
+  properties: {
+    url: {type: ValueType.String, id: true},
+    version: {type: ValueType.String},
+    downloadCount: {type: ValueType.Number},
+  },
+});
+
 const packageSchema = makeSyncObjectSchema({
   type: ValueType.Object,
   identity: {
@@ -32,7 +47,15 @@ const packageSchema = makeSyncObjectSchema({
   properties: {
     package: {type: ValueType.String, primary: true},
     url: {type: ValueType.String, id: true},
+    author: {type: ValueType.String, codaType: ValueType.Email},
     downloadCount: {type: ValueType.Number},
+    versions: {
+      type: ValueType.Array,
+      items: {
+        type: ValueType.String,
+        ...versionSchema.identity,
+      },
+    },
   },
 });
 
@@ -131,6 +154,22 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
       schema: {
         type: ValueType.Array,
         items: packageSchema,
+      },
+    }),
+    makeSyncTable('PackageVersions', versionSchema, {
+      name: 'SyncPackageVersions',
+      description: 'Pull down NPM versions for a package.',
+      examples: [],
+      parameters: [makeStringParameter('name', 'Package name')],
+      network: {hasSideEffect: false, hasConnection: false},
+      execute: async ([pack], context, continuation) => {
+        const url = withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, {continuation});
+        const result = await context.fetcher!.fetch({method: 'GET', url});
+        return result.body;
+      },
+      schema: {
+        type: ValueType.Array,
+        items: versionSchema,
       },
     }),
   ],
