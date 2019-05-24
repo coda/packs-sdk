@@ -190,11 +190,22 @@ function makeObjectFormula(_a) {
 }
 exports.makeObjectFormula = makeObjectFormula;
 function makeSyncTable(name, schema, _a) {
-    var { schema: formulaSchema } = _a, definition = __rest(_a, ["schema"]);
+    var { schema: formulaSchema, execute: wrappedExecute } = _a, definition = __rest(_a, ["schema", "execute"]);
+    formulaSchema = schema_1.normalizeSchema(formulaSchema);
+    const responseHandler = handler_templates_1.generateObjectResponseHandler({ schema: formulaSchema, excludeExtraneous: true });
+    const execute = function exec(params, context) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { result, continuation } = yield wrappedExecute(params, context);
+            return {
+                result: responseHandler({ body: ensure_1.ensureExists(result), status: 200, headers: {} }),
+                continuation,
+            };
+        });
+    };
     return {
         name,
         schema: schema_1.normalizeSchema(schema),
-        getter: Object.assign({}, definition, { schema: schema_1.normalizeSchema(formulaSchema), isSyncFormula: true, resultType: api_types_1.Type.object }),
+        getter: Object.assign({}, definition, { execute, schema: formulaSchema, isSyncFormula: true, resultType: api_types_1.Type.object }),
     };
 }
 exports.makeSyncTable = makeSyncTable;

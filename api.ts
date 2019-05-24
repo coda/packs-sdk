@@ -331,14 +331,24 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
 export function makeSyncTable<K extends string, ParamDefsT extends ParamDefs, SchemaT extends SyncObjectSchema<K>>(
   name: string,
   schema: SchemaT,
-  {schema: formulaSchema, ...definition}: SyncFormulaDef<K, ParamDefsT, SchemaT>,
+  {schema: formulaSchema, execute: wrappedExecute, ...definition}: SyncFormulaDef<K, ParamDefsT, SchemaT>,
 ): SyncTable<K, SchemaT> {
+  formulaSchema = normalizeSchema(formulaSchema);
+  const responseHandler = generateObjectResponseHandler({schema: formulaSchema, excludeExtraneous: true});
+  const execute = async function exec(params: ParamValues<ParamDefsT>, context: ExecutionContext) {
+    const {result, continuation} = await wrappedExecute(params, context);
+    return {
+      result: responseHandler({body: ensureExists(result), status: 200, headers: {}}) as Array<SchemaType<SchemaT>>,
+      continuation,
+    };
+  };
   return {
     name,
     schema: normalizeSchema(schema),
     getter: {
       ...definition,
-      schema: normalizeSchema(formulaSchema),
+      execute,
+      schema: formulaSchema,
       isSyncFormula: true,
       resultType: Type.object as any,
     },
