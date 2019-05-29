@@ -58,6 +58,7 @@ export interface ObjectSchema<K extends string> extends BaseSchema {
     };
     id?: K;
     primary?: K;
+    featured?: K[];
     identity?: Identity;
 }
 export interface SyncObjectSchema<K extends string> extends ObjectSchema<K> {
