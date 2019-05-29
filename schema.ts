@@ -83,6 +83,7 @@ export interface ObjectSchema<K extends string> extends BaseSchema {
   properties: ObjectSchemaProperties & {[k in K]: Schema | (Schema & ObjectSchemaProperty)};
   id?: K;
   primary?: K;
+  featured?: K[];
   identity?: Identity;
 }
 
