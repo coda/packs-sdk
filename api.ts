@@ -335,8 +335,12 @@ export function makeSyncTable<K extends string, ParamDefsT extends ParamDefs, Sc
 ): SyncTable<K, SchemaT> {
   formulaSchema = normalizeSchema(formulaSchema);
   const responseHandler = generateObjectResponseHandler({schema: formulaSchema, excludeExtraneous: true});
-  const execute = async function exec(params: ParamValues<ParamDefsT>, context: ExecutionContext) {
-    const {result, continuation} = await wrappedExecute(params, context);
+  const execute = async function exec(
+    params: ParamValues<ParamDefsT>,
+    context: ExecutionContext,
+    input: Continuation | undefined,
+  ) {
+    const {result, continuation} = await wrappedExecute(params, context, input);
     return {
       result: responseHandler({body: ensureExists(result), status: 200, headers: {}}) as Array<SchemaType<SchemaT>>,
       continuation,
