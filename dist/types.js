@@ -73,6 +73,7 @@ var PackId;
     PackId[PackId["GoogleSearchConsole"] = 1049] = "GoogleSearchConsole";
     PackId[PackId["OMDB"] = 1050] = "OMDB";
     PackId[PackId["PubNub"] = 1051] = "PubNub";
+    PackId[PackId["Jira"] = 1052] = "Jira";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
@@ -116,6 +117,7 @@ var ProviderId;
     ProviderId[ProviderId["AWS"] = 2038] = "AWS";
     ProviderId[ProviderId["OMDB"] = 2039] = "OMDB";
     ProviderId[ProviderId["PubNub"] = 2040] = "PubNub";
+    ProviderId[ProviderId["Atlassian"] = 2041] = "Atlassian";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {
