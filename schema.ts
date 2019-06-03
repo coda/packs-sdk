@@ -205,7 +205,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     } as T;
   } else if (isObject(schema)) {
     const normalized: ObjectSchemaProperties = {};
-    const {id, primary} = schema;
+    const {id, primary, featured} = schema;
     for (const key of Object.keys(schema.properties)) {
       const normalizedKey = pascalcase(key);
       const props = schema.properties[key];
@@ -219,6 +219,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     return {
       type: ValueType.Object,
       id: id ? pascalcase(id) : undefined,
+      featured: featured ? featured.map(pascalcase) : undefined,
       primary: primary ? pascalcase(primary) : undefined,
       properties: normalized,
       identity: schema.identity,
