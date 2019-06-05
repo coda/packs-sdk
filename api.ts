@@ -351,6 +351,7 @@ export function makeSyncTable<K extends string, ParamDefsT extends ParamDefs, Sc
     schema: normalizeSchema(schema),
     getter: {
       ...definition,
+      cacheTtlSecs: 0,
       execute,
       schema: formulaSchema,
       isSyncFormula: true,

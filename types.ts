@@ -74,6 +74,7 @@ export enum PackId {
   GoogleSearchConsole = 1049,
   OMDB = 1050,
   PubNub = 1051,
+  Jira = 1052,
 }
 
 export enum ProviderId {
@@ -117,6 +118,7 @@ export enum ProviderId {
   AWS = 2038,
   OMDB = 2039,
   PubNub = 2040,
+  Atlassian = 2041,
 }
 
 export enum AuthenticationType {

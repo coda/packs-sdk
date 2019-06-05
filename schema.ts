@@ -1,4 +1,3 @@
-import {$Omit} from './type_utils';
 import {PackId} from './types';
 import {ensureUnreachable} from './helpers/ensure';
 import pascalcase from 'pascalcase';
@@ -14,7 +13,7 @@ export enum ValueType {
   Object = 'object',
   // Synthetic types we will use to coerce values.
   Date = 'date',
-  Email = 'email',
+  Person = 'person',
   Percent = 'percent',
   Currency = 'currency',
   Image = 'image',
@@ -26,7 +25,6 @@ export enum ValueType {
 
 type StringHintTypes =
   | ValueType.Date
-  | ValueType.Email
   | ValueType.Embed
   | ValueType.Html
   | ValueType.Image
@@ -34,6 +32,8 @@ type StringHintTypes =
   | ValueType.Url
   ;
 export type NumberHintTypes = ValueType.Date | ValueType.Percent | ValueType.Currency;
+
+export type ObjectHintTypes = ValueType.Person;
 
 interface BaseSchema {
   description?: string;
@@ -50,7 +50,7 @@ export interface NumberSchema extends BaseSchema {
 
 export interface StringSchema extends BaseSchema {
   type: ValueType.String;
-  codaType?: StringHintTypes | $Omit<Identity, 'attribution'>;
+  codaType?: StringHintTypes;
 }
 
 export interface ArraySchema extends BaseSchema {
@@ -88,6 +88,7 @@ export interface ObjectSchema<K extends string> extends BaseSchema {
 }
 
 export interface SyncObjectSchema<K extends string> extends ObjectSchema<K> {
+  codaType?: ObjectHintTypes;
   id: K;
   primary: K;
 }
@@ -205,7 +206,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     } as T;
   } else if (isObject(schema)) {
     const normalized: ObjectSchemaProperties = {};
-    const {id, primary} = schema;
+    const {id, primary, featured} = schema;
     for (const key of Object.keys(schema.properties)) {
       const normalizedKey = pascalcase(key);
       const props = schema.properties[key];
@@ -219,6 +220,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     return {
       type: ValueType.Object,
       id: id ? pascalcase(id) : undefined,
+      featured: featured ? featured.map(pascalcase) : undefined,
       primary: primary ? pascalcase(primary) : undefined,
       properties: normalized,
       identity: schema.identity,
