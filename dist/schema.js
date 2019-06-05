@@ -16,7 +16,7 @@ var ValueType;
     ValueType["Object"] = "object";
     // Synthetic types we will use to coerce values.
     ValueType["Date"] = "date";
-    ValueType["Email"] = "email";
+    ValueType["Person"] = "person";
     ValueType["Percent"] = "percent";
     ValueType["Currency"] = "currency";
     ValueType["Image"] = "image";
@@ -95,7 +95,7 @@ function normalizeSchema(schema) {
     }
     else if (isObject(schema)) {
         const normalized = {};
-        const { id, primary } = schema;
+        const { id, primary, featured } = schema;
         for (const key of Object.keys(schema.properties)) {
             const normalizedKey = pascalcase_1.default(key);
             const props = schema.properties[key];
@@ -109,6 +109,7 @@ function normalizeSchema(schema) {
         return {
             type: ValueType.Object,
             id: id ? pascalcase_1.default(id) : undefined,
+            featured: featured ? featured.map(pascalcase_1.default) : undefined,
             primary: primary ? pascalcase_1.default(primary) : undefined,
             properties: normalized,
             identity: schema.identity,

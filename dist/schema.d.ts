@@ -1,4 +1,3 @@
-import { $Omit } from './type_utils';
 import { PackId } from './types';
 export declare enum ValueType {
     Boolean = "boolean",
@@ -7,7 +6,7 @@ export declare enum ValueType {
     Array = "array",
     Object = "object",
     Date = "date",
-    Email = "email",
+    Person = "person",
     Percent = "percent",
     Currency = "currency",
     Image = "image",
@@ -16,8 +15,9 @@ export declare enum ValueType {
     Html = "html",
     Embed = "embed"
 }
-declare type StringHintTypes = ValueType.Date | ValueType.Email | ValueType.Embed | ValueType.Html | ValueType.Image | ValueType.Markdown | ValueType.Url;
+declare type StringHintTypes = ValueType.Date | ValueType.Embed | ValueType.Html | ValueType.Image | ValueType.Markdown | ValueType.Url;
 export declare type NumberHintTypes = ValueType.Date | ValueType.Percent | ValueType.Currency;
+export declare type ObjectHintTypes = ValueType.Person;
 interface BaseSchema {
     description?: string;
 }
@@ -30,7 +30,7 @@ export interface NumberSchema extends BaseSchema {
 }
 export interface StringSchema extends BaseSchema {
     type: ValueType.String;
-    codaType?: StringHintTypes | $Omit<Identity, 'attribution'>;
+    codaType?: StringHintTypes;
 }
 export interface ArraySchema extends BaseSchema {
     type: ValueType.Array;
@@ -62,6 +62,7 @@ export interface ObjectSchema<K extends string> extends BaseSchema {
     identity?: Identity;
 }
 export interface SyncObjectSchema<K extends string> extends ObjectSchema<K> {
+    codaType?: ObjectHintTypes;
     id: K;
     primary: K;
 }
