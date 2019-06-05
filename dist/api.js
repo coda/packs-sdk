@@ -205,7 +205,7 @@ function makeSyncTable(name, schema, _a) {
     return {
         name,
         schema: schema_1.normalizeSchema(schema),
-        getter: Object.assign({}, definition, { execute, schema: formulaSchema, isSyncFormula: true, resultType: api_types_1.Type.object }),
+        getter: Object.assign({}, definition, { cacheTtlSecs: 0, execute, schema: formulaSchema, isSyncFormula: true, resultType: api_types_1.Type.object }),
     };
 }
 exports.makeSyncTable = makeSyncTable;
