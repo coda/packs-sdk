@@ -16,7 +16,7 @@ var ValueType;
     ValueType["Object"] = "object";
     // Synthetic types we will use to coerce values.
     ValueType["Date"] = "date";
-    ValueType["Email"] = "email";
+    ValueType["Person"] = "person";
     ValueType["Percent"] = "percent";
     ValueType["Currency"] = "currency";
     ValueType["Image"] = "image";

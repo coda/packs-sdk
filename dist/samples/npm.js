@@ -25,7 +25,7 @@ const url_1 = require("../helpers/url");
 exports.FakeNpmProviderId = 9011;
 exports.FakeNpmPackId = 8003;
 exports.FakeNpmPackVersion = '5.2.3';
-const versionSchema = schema_2.makeSyncObjectSchema({
+exports.versionSchema = schema_2.makeSyncObjectSchema({
     type: schema_1.ValueType.Object,
     identity: {
         packId: exports.FakeNpmPackId,
@@ -39,7 +39,17 @@ const versionSchema = schema_2.makeSyncObjectSchema({
         downloadCount: { type: schema_1.ValueType.Number },
     },
 });
-const packageSchema = schema_2.makeSyncObjectSchema({
+exports.personSchema = schema_2.makeSyncObjectSchema({
+    type: schema_1.ValueType.Object,
+    codaType: schema_1.ValueType.Person,
+    id: 'email',
+    primary: 'name',
+    properties: {
+        email: { type: schema_1.ValueType.String },
+        name: { type: schema_1.ValueType.String },
+    },
+});
+exports.packageSchema = schema_2.makeSyncObjectSchema({
     type: schema_1.ValueType.Object,
     identity: {
         packId: exports.FakeNpmPackId,
@@ -51,14 +61,11 @@ const packageSchema = schema_2.makeSyncObjectSchema({
     properties: {
         package: { type: schema_1.ValueType.String, primary: true },
         url: { type: schema_1.ValueType.String, id: true },
-        author: { type: schema_1.ValueType.String, codaType: schema_1.ValueType.Email },
+        author: exports.personSchema,
         downloadCount: { type: schema_1.ValueType.Number },
         versions: {
             type: schema_1.ValueType.Array,
-            items: {
-                type: schema_1.ValueType.String,
-                codaType: versionSchema.identity,
-            },
+            items: exports.versionSchema,
         },
     },
 });
@@ -89,7 +96,7 @@ const FakeNpmDefinitionFake = {
         NPM: [
             api_3.makeObjectFormula({
                 response: {
-                    schema: packageSchema,
+                    schema: exports.packageSchema,
                 },
                 name: 'Package',
                 description: 'Get live data about a NPM package.',
@@ -142,7 +149,7 @@ const FakeNpmDefinitionFake = {
         ],
     },
     syncTables: [
-        api_7.makeSyncTable('Packages', packageSchema, {
+        api_7.makeSyncTable('Packages', exports.packageSchema, {
             name: 'SyncPackages',
             description: 'Pull down NPM packages.',
             examples: [],
@@ -155,10 +162,10 @@ const FakeNpmDefinitionFake = {
             }),
             schema: {
                 type: schema_1.ValueType.Array,
-                items: packageSchema,
+                items: exports.packageSchema,
             },
         }),
-        api_7.makeSyncTable('PackageVersions', versionSchema, {
+        api_7.makeSyncTable('PackageVersions', exports.versionSchema, {
             name: 'SyncPackageVersions',
             description: 'Pull down NPM versions for a package.',
             examples: [],
@@ -171,7 +178,7 @@ const FakeNpmDefinitionFake = {
             }),
             schema: {
                 type: schema_1.ValueType.Array,
-                items: versionSchema,
+                items: exports.versionSchema,
             },
         }),
     ],
