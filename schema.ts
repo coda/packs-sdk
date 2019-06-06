@@ -123,6 +123,10 @@ export function makeAttributionNode<T extends AttributionNode>(node: T): T {
 
 export type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | ObjectSchema<string>;
 
+export function isSyncObject(val?: Schema): val is SyncObjectSchema<string> {
+  return Boolean(val && val.type === ValueType.Object && val.id && val.primary);
+}
+
 export function isObject(val?: Schema): val is ObjectSchema<string> {
   return Boolean(val && val.type === ValueType.Object);
 }
@@ -217,7 +221,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
         fromKey: fromKey || (normalizedKey !== key ? key : undefined),
       });
     }
-    return {
+    let normalizedSchema = {
       type: ValueType.Object,
       id: id ? pascalcase(id) : undefined,
       featured: featured ? featured.map(pascalcase) : undefined,
@@ -225,6 +229,15 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
       properties: normalized,
       identity: schema.identity,
     } as T;
+
+    if (isSyncObject(schema)) {
+      normalizedSchema = {
+        ...normalizedSchema,
+        codaType: schema.codaType,
+      };
+    }
+
+    return normalizedSchema;
   }
   return schema;
 }

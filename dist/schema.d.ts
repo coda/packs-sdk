@@ -88,6 +88,7 @@ interface ImageAttributionNode {
 declare type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
 export declare function makeAttributionNode<T extends AttributionNode>(node: T): T;
 export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | ObjectSchema<string>;
+export declare function isSyncObject(val?: Schema): val is SyncObjectSchema<string>;
 export declare function isObject(val?: Schema): val is ObjectSchema<string>;
 export declare function isArray(val?: Schema): val is ArraySchema;
 declare type UndefinedAsOptional<T extends object> = Partial<T> & Pick<T, {
