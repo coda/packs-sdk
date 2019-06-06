@@ -35,6 +35,10 @@ function makeAttributionNode(node) {
     return node;
 }
 exports.makeAttributionNode = makeAttributionNode;
+function isSyncObject(val) {
+    return Boolean(val && val.type === ValueType.Object && val.id && val.primary);
+}
+exports.isSyncObject = isSyncObject;
 function isObject(val) {
     return Boolean(val && val.type === ValueType.Object);
 }
@@ -106,7 +110,7 @@ function normalizeSchema(schema) {
                 fromKey: fromKey || (normalizedKey !== key ? key : undefined),
             });
         }
-        return {
+        let normalizedSchema = {
             type: ValueType.Object,
             id: id ? pascalcase_1.default(id) : undefined,
             featured: featured ? featured.map(pascalcase_1.default) : undefined,
@@ -114,6 +118,10 @@ function normalizeSchema(schema) {
             properties: normalized,
             identity: schema.identity,
         };
+        if (isSyncObject(schema)) {
+            normalizedSchema = Object.assign({}, normalizedSchema, { codaType: schema.codaType });
+        }
+        return normalizedSchema;
     }
     return schema;
 }
