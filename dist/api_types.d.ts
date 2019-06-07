@@ -76,6 +76,7 @@ export interface FetchRequest {
     headers?: {
         [header: string]: string;
     };
+    cacheTtlSecs?: number;
 }
 export interface FetchResponse<T extends any = any> {
     status: number;
