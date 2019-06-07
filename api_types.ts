@@ -64,8 +64,8 @@ export type PackFormulaResult = $Values<TypeMap> | ConcreteArrayTypes;
 export type TypeOf<T extends PackFormulaResult> = T extends number
   ? Type.number
   : (T extends string
-      ? Type.string
-      : (T extends boolean ? Type.boolean : (T extends Date ? Type.date : (T extends object ? Type.object : never))));
+    ? Type.string
+    : (T extends boolean ? Type.boolean : (T extends Date ? Type.date : (T extends object ? Type.object : never))));
 
 export interface ParamDef<T extends UnionType> {
   name: string;
@@ -119,6 +119,8 @@ export interface FetchRequest {
   body?: string;
   form?: {[key: string]: string};
   headers?: {[header: string]: string};
+  // Allows explicit caching of the results of this request.
+  cacheTtlSecs?: number;
 }
 
 // Copied from https://developer.mozilla.org/en-US/docs/Web/API/Response
