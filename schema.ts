@@ -29,8 +29,7 @@ type StringHintTypes =
   | ValueType.Html
   | ValueType.Image
   | ValueType.Markdown
-  | ValueType.Url
-  ;
+  | ValueType.Url;
 export type NumberHintTypes = ValueType.Date | ValueType.Percent | ValueType.Currency;
 
 export type ObjectHintTypes = ValueType.Person;
@@ -61,7 +60,6 @@ export interface ArraySchema extends BaseSchema {
 export interface ObjectSchemaProperty {
   // TODO(alexd): Remove these once we've hoisted these up.
   id?: boolean;
-  primary?: boolean;
   fromKey?: string;
   required?: boolean;
 }
@@ -214,9 +212,8 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     for (const key of Object.keys(schema.properties)) {
       const normalizedKey = pascalcase(key);
       const props = schema.properties[key];
-      const {primary: primaryKey, required, fromKey} = props as ObjectSchemaProperty;
+      const {required, fromKey} = props as ObjectSchemaProperty;
       normalized[normalizedKey] = Object.assign(normalizeSchema(props), {
-        primary: primaryKey,
         required,
         fromKey: fromKey || (normalizedKey !== key ? key : undefined),
       });
