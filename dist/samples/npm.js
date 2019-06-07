@@ -59,7 +59,7 @@ exports.packageSchema = schema_2.makeSyncObjectSchema({
     primary: 'url',
     featured: ['package', 'downloadCount'],
     properties: {
-        package: { type: schema_1.ValueType.String, primary: true },
+        package: { type: schema_1.ValueType.String },
         url: { type: schema_1.ValueType.String, id: true },
         author: exports.personSchema,
         downloadCount: { type: schema_1.ValueType.Number },

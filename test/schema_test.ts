@@ -67,7 +67,7 @@ describe('Schema', () => {
         id: 'name',
         primary: 'name',
         properties: {
-          name: {type: schema.ValueType.String, primary: true},
+          name: {type: schema.ValueType.String},
           another: anotherSchema,
           yetAnother: schema.makeObjectSchema({
             type: schema.ValueType.Object,
