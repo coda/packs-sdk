@@ -57,7 +57,7 @@ export const packageSchema = makeSyncObjectSchema({
   primary: 'url',
   featured: ['package', 'downloadCount'],
   properties: {
-    package: {type: ValueType.String},
+    package: {type: ValueType.String, primary: true},
     url: {type: ValueType.String, id: true},
     author: personSchema,
     downloadCount: {type: ValueType.Number},

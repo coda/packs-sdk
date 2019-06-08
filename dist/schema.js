@@ -103,8 +103,9 @@ function normalizeSchema(schema) {
         for (const key of Object.keys(schema.properties)) {
             const normalizedKey = pascalcase_1.default(key);
             const props = schema.properties[key];
-            const { required, fromKey } = props;
+            const { primary: primaryKey, required, fromKey } = props;
             normalized[normalizedKey] = Object.assign(normalizeSchema(props), {
+                primary: primaryKey,
                 required,
                 fromKey: fromKey || (normalizedKey !== key ? key : undefined),
             });
