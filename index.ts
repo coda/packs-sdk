@@ -68,6 +68,8 @@ export {makeNumericParameter} from './api';
 export {makeNumericArrayParameter} from './api';
 export {makeHtmlParameter} from './api';
 export {makeHtmlArrayParameter} from './api';
+export {makeImageParameter} from './api';
+export {makeImageArrayParameter} from './api';
 export {makeStringParameter} from './api';
 export {makeStringArrayParameter} from './api';
 
