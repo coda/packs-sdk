@@ -19,10 +19,11 @@ import {Type} from './api_types';
 import {TypeOf} from './api_types';
 import {booleanArray} from './api_types';
 import {dateArray} from './api_types';
-import {htmlArray} from './api_types';
 import {ensureExists} from './helpers/ensure';
 import {generateObjectResponseHandler} from './handler_templates';
 import {generateRequestHandler} from './handler_templates';
+import {htmlArray} from './api_types';
+import {imageArray} from './api_types';
 import {normalizeSchema} from './schema';
 import {numberArray} from './api_types';
 import {stringArray} from './api_types';
@@ -146,6 +147,22 @@ export function makeHtmlArrayParameter(
   return Object.freeze({...args, name, description, type: htmlArray});
 }
 
+export function makeImageParameter(
+  name: string,
+  description: string,
+  args: ParamArgs<Type.html> = {},
+): ParamDef<Type.html> {
+  return Object.freeze({...args, name, description, type: Type.html as Type.html});
+}
+
+export function makeImageArrayParameter(
+  name: string,
+  description: string,
+  args: ParamArgs<ArrayType<Type.image>> = {},
+): ParamDef<ArrayType<Type.image>> {
+  return Object.freeze({...args, name, description, type: imageArray});
+}
+
 export function makeUserVisibleError(msg: string): UserVisibleError {
   return new UserVisibleError(msg);
 }
@@ -236,11 +253,11 @@ export type SyncFormula<
   K extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K>
-> = SyncFormulaDef<K, ParamDefsT, SchemaT> & {
-  resultType: TypeOf<SchemaType<SchemaT>>;
-  schema: ArraySchema;
-  isSyncFormula: true;
-};
+  > = SyncFormulaDef<K, ParamDefsT, SchemaT> & {
+    resultType: TypeOf<SchemaType<SchemaT>>;
+    schema: ArraySchema;
+    isSyncFormula: true;
+  };
 
 export function makeNumericFormula<ParamDefsT extends ParamDefs>(
   definition: PackFormulaDef<ParamDefsT, number>,
