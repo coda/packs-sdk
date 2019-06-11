@@ -277,17 +277,39 @@ export function makeStringFormula<ParamDefsT extends ParamDefs>(
 
 export type GetConnectionNameFormula = StringPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>]>;
 export function makeGetConnectionNameFormula(
-  execute: (context: ExecutionContext, codaUserName: string, authParams: string) => Promise<string> | string,
+  execute: (context: ExecutionContext, codaUserName: string) => Promise<string> | string,
 ): GetConnectionNameFormula {
   return makeStringFormula({
     name: 'getConnectionName',
     description: 'Return name for new connection.',
-    execute([codaUserName, authParams], context) {
-      return execute(context, codaUserName, authParams);
+    execute([codaUserName], context) {
+      return execute(context, codaUserName);
     },
     parameters: [
       makeStringParameter('codaUserName', 'The username of the Coda account to use.'),
       makeStringParameter('authParams', 'The parameters to use for this connection.'),
+    ],
+    examples: [],
+    network: {
+      hasSideEffect: false,
+      hasConnection: true,
+      requiresConnection: true,
+    },
+  });
+}
+
+export type ConnectionMetadataFormulaResultType = string | number | {id: string, value: string | number};
+export type ConnectionMetadataFormula = ObjectPackFormula<[ParamDef<Type.string>], any>;
+export function makeConnectionMetadataFormula(
+  execute: (context: ExecutionContext, params: string[]) =>
+    Promise<ConnectionMetadataFormulaResultType> | Promise<ConnectionMetadataFormulaResultType[]>,
+): ConnectionMetadataFormula {
+  return makeObjectFormula({
+    name: 'getConnectionMetadata',
+    description: 'Gets metadata from the connection',
+    execute: (params, context) => execute(context, params),
+    parameters: [
+      makeStringParameter('search', 'Metadata to search for', {optional: true}),
     ],
     examples: [],
     network: {

@@ -37,9 +37,15 @@ function fakeDefinitionToMetadata(def) {
         const _b = originalDefaultAuthentication.getConnectionNameFormula, { execute } = _b, connNameFormula = __rest(_b, ["execute"]);
         defaultAuthentication = Object.assign({}, originalDefaultAuthentication, { getConnectionNameFormula: Object.assign({}, connNameFormula) });
     }
+    if (originalDefaultAuthentication &&
+        'getConnectionName' in originalDefaultAuthentication &&
+        originalDefaultAuthentication.getConnectionName) {
+        const _c = originalDefaultAuthentication.getConnectionName, { execute } = _c, connNameFormula = __rest(_c, ["execute"]);
+        defaultAuthentication = Object.assign({}, originalDefaultAuthentication, { getConnectionName: Object.assign({}, connNameFormula) });
+    }
     const syncTables = [];
-    for (let _c of originalSyncTables || []) {
-        const { getter } = _c, others = __rest(_c, ["getter"]);
+    for (let _d of originalSyncTables || []) {
+        const { getter } = _d, others = __rest(_d, ["getter"]);
         const { execute } = getter, otherGetter = __rest(getter, ["execute"]);
         syncTables.push(Object.assign({ getter: Object.assign({}, otherGetter) }, others));
     }

@@ -134,8 +134,8 @@ function makeGetConnectionNameFormula(execute) {
     return makeStringFormula({
         name: 'getConnectionName',
         description: 'Return name for new connection.',
-        execute([codaUserName, authParams], context) {
-            return execute(context, codaUserName, authParams);
+        execute([codaUserName], context) {
+            return execute(context, codaUserName);
         },
         parameters: [
             makeStringParameter('codaUserName', 'The username of the Coda account to use.'),
@@ -150,6 +150,23 @@ function makeGetConnectionNameFormula(execute) {
     });
 }
 exports.makeGetConnectionNameFormula = makeGetConnectionNameFormula;
+function makeConnectionMetadataFormula(execute) {
+    return makeObjectFormula({
+        name: 'getConnectionMetadata',
+        description: 'Gets metadata from the connection',
+        execute: (params, context) => execute(context, params),
+        parameters: [
+            makeStringParameter('search', 'Metadata to search for', { optional: true }),
+        ],
+        examples: [],
+        network: {
+            hasSideEffect: false,
+            hasConnection: true,
+            requiresConnection: true,
+        },
+    });
+}
+exports.makeConnectionMetadataFormula = makeConnectionMetadataFormula;
 function isResponseHandlerTemplate(obj) {
     return obj && obj.schema;
 }

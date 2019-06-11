@@ -49,7 +49,17 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
       getConnectionNameFormula: {...connNameFormula},
     };
   }
-
+  if (
+    originalDefaultAuthentication &&
+    'getConnectionName' in originalDefaultAuthentication &&
+    originalDefaultAuthentication.getConnectionName
+  ) {
+    const {execute, ...connNameFormula} = originalDefaultAuthentication.getConnectionName;
+    defaultAuthentication = {
+      ...originalDefaultAuthentication,
+      getConnectionName: {...connNameFormula},
+    };
+  }
   const syncTables: PackSyncTable[] = [];
   for (const {getter, ...others} of originalSyncTables || []) {
     const {execute, ...otherGetter} = getter;

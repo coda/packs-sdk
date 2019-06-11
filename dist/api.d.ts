@@ -109,7 +109,13 @@ export declare type SyncFormula<K extends string, ParamDefsT extends ParamDefs, 
 export declare function makeNumericFormula<ParamDefsT extends ParamDefs>(definition: PackFormulaDef<ParamDefsT, number>): NumericPackFormula<ParamDefsT>;
 export declare function makeStringFormula<ParamDefsT extends ParamDefs>(definition: StringFormulaDef<ParamDefsT>): StringPackFormula<ParamDefsT>;
 export declare type GetConnectionNameFormula = StringPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>]>;
-export declare function makeGetConnectionNameFormula(execute: (context: ExecutionContext, codaUserName: string, authParams: string) => Promise<string> | string): GetConnectionNameFormula;
+export declare function makeGetConnectionNameFormula(execute: (context: ExecutionContext, codaUserName: string) => Promise<string> | string): GetConnectionNameFormula;
+export declare type ConnectionMetadataFormulaResultType = string | number | {
+    id: string;
+    value: string | number;
+};
+export declare type ConnectionMetadataFormula = ObjectPackFormula<[ParamDef<Type.string>], any>;
+export declare function makeConnectionMetadataFormula(execute: (context: ExecutionContext, params: string[]) => Promise<ConnectionMetadataFormulaResultType> | Promise<ConnectionMetadataFormulaResultType[]>): ConnectionMetadataFormula;
 export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
 export declare function makeSyncTable<K extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K>>(name: string, schema: SchemaT, { schema: formulaSchema, execute: wrappedExecute, ...definition }: SyncFormulaDef<K, ParamDefsT, SchemaT>): SyncTable<K, SchemaT>;
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
