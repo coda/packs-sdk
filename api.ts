@@ -14,7 +14,7 @@ import {ResponseHandlerTemplate} from './handler_templates';
 import {SchemaType} from './schema';
 import {Schema} from './schema';
 import {StringSchema} from './schema';
-import {SyncObjectSchema} from './schema';
+import {ObjectSchema} from './schema';
 import {Type} from './api_types';
 import {TypeOf} from './api_types';
 import {booleanArray} from './api_types';
@@ -45,7 +45,7 @@ export class StatusCodeError extends Error {
   }
 }
 
-interface SyncTable<K extends string, SchemaT extends SyncObjectSchema<K>> {
+interface SyncTable<K extends string, SchemaT extends ObjectSchema<K>> {
   name: string;
   schema: SchemaT;
   getter: SyncFormula<K, any, SchemaT>;
@@ -222,7 +222,7 @@ interface SyncFormulaResult<ResultT extends object> {
   continuation?: Continuation;
 }
 
-interface SyncFormulaDef<K extends string, ParamsT extends ParamDefs, SchemaT extends SyncObjectSchema<K>>
+interface SyncFormulaDef<K extends string, ParamsT extends ParamDefs, SchemaT extends ObjectSchema<K>>
   extends CommonPackFormulaDef<ParamsT> {
   execute(
     params: ParamValues<ParamsT>,
@@ -232,12 +232,15 @@ interface SyncFormulaDef<K extends string, ParamsT extends ParamDefs, SchemaT ex
   schema: ArraySchema;
 }
 
-export type SyncFormula<K extends string, ParamDefsT extends ParamDefs, SchemaT extends SyncObjectSchema<K>> =
-  SyncFormulaDef<K, ParamDefsT, SchemaT> & {
-    resultType: TypeOf<SchemaType<SchemaT>>;
-    schema: ArraySchema;
-    isSyncFormula: true;
-  };
+export type SyncFormula<
+  K extends string,
+  ParamDefsT extends ParamDefs,
+  SchemaT extends ObjectSchema<K>
+> = SyncFormulaDef<K, ParamDefsT, SchemaT> & {
+  resultType: TypeOf<SchemaType<SchemaT>>;
+  schema: ArraySchema;
+  isSyncFormula: true;
+};
 
 export function makeNumericFormula<ParamDefsT extends ParamDefs>(
   definition: PackFormulaDef<ParamDefsT, number>,
@@ -350,7 +353,7 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
   }) as ObjectPackFormula<ParamDefsT, SchemaT>;
 }
 
-export function makeSyncTable<K extends string, ParamDefsT extends ParamDefs, SchemaT extends SyncObjectSchema<K>>(
+export function makeSyncTable<K extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K>>(
   name: string,
   schema: SchemaT,
   {schema: formulaSchema, execute: wrappedExecute, ...definition}: SyncFormulaDef<K, ParamDefsT, SchemaT>,

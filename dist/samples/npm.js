@@ -26,7 +26,7 @@ const url_1 = require("../helpers/url");
 exports.FakeNpmProviderId = 9011;
 exports.FakeNpmPackId = 8003;
 exports.FakeNpmPackVersion = '5.2.3';
-exports.versionSchema = schema_2.makeSyncObjectSchema({
+exports.versionSchema = schema_2.makeObjectSchema({
     type: schema_1.ValueType.Object,
     identity: {
         packId: exports.FakeNpmPackId,
@@ -40,7 +40,7 @@ exports.versionSchema = schema_2.makeSyncObjectSchema({
         downloadCount: { type: schema_1.ValueType.Number },
     },
 });
-exports.personSchema = schema_2.makeSyncObjectSchema({
+exports.personSchema = schema_2.makeObjectSchema({
     type: schema_1.ValueType.Object,
     codaType: schema_1.ValueType.Person,
     id: 'email',
@@ -50,7 +50,7 @@ exports.personSchema = schema_2.makeSyncObjectSchema({
         name: { type: schema_1.ValueType.String },
     },
 });
-exports.packageSchema = schema_2.makeSyncObjectSchema({
+exports.packageSchema = schema_2.makeObjectSchema({
     type: schema_1.ValueType.Object,
     identity: {
         packId: exports.FakeNpmPackId,
