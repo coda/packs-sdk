@@ -58,13 +58,9 @@ export interface ObjectSchema<K extends string> extends BaseSchema {
     };
     id?: K;
     primary?: K;
+    codaType?: ObjectHintTypes;
     featured?: K[];
     identity?: Identity;
-}
-export interface SyncObjectSchema<K extends string> extends ObjectSchema<K> {
-    codaType?: ObjectHintTypes;
-    id: K;
-    primary: K;
 }
 export declare enum AttributionNodeType {
     Text = 1,
@@ -88,7 +84,6 @@ interface ImageAttributionNode {
 declare type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
 export declare function makeAttributionNode<T extends AttributionNode>(node: T): T;
 export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | ObjectSchema<string>;
-export declare function isSyncObject(val?: Schema): val is SyncObjectSchema<string>;
 export declare function isObject(val?: Schema): val is ObjectSchema<string>;
 export declare function isArray(val?: Schema): val is ArraySchema;
 declare type UndefinedAsOptional<T extends object> = Partial<T> & Pick<T, {
@@ -107,7 +102,6 @@ export declare type ValidTypes = boolean | number | string | object | boolean[] 
 export declare function generateSchema(obj: ValidTypes): Schema;
 export declare function makeSchema<T extends Schema>(schema: T): T;
 export declare function makeObjectSchema<T extends string>(schema: ObjectSchema<T>): ObjectSchema<T>;
-export declare function makeSyncObjectSchema<T extends string>(schema: SyncObjectSchema<T>): SyncObjectSchema<T>;
 export declare function normalizeSchema<T extends Schema>(schema: T): T;
 export declare enum SchemaIdPrefix {
     Identity = "I"

@@ -29,8 +29,7 @@ type StringHintTypes =
   | ValueType.Html
   | ValueType.Image
   | ValueType.Markdown
-  | ValueType.Url
-  ;
+  | ValueType.Url;
 export type NumberHintTypes = ValueType.Date | ValueType.Percent | ValueType.Currency;
 
 export type ObjectHintTypes = ValueType.Person;
@@ -83,14 +82,9 @@ export interface ObjectSchema<K extends string> extends BaseSchema {
   properties: ObjectSchemaProperties & {[k in K]: Schema | (Schema & ObjectSchemaProperty)};
   id?: K;
   primary?: K;
+  codaType?: ObjectHintTypes;
   featured?: K[];
   identity?: Identity;
-}
-
-export interface SyncObjectSchema<K extends string> extends ObjectSchema<K> {
-  codaType?: ObjectHintTypes;
-  id: K;
-  primary: K;
 }
 
 export enum AttributionNodeType {
@@ -123,10 +117,6 @@ export function makeAttributionNode<T extends AttributionNode>(node: T): T {
 
 export type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | ObjectSchema<string>;
 
-export function isSyncObject(val?: Schema): val is SyncObjectSchema<string> {
-  return Boolean(val && val.type === ValueType.Object && val.id && val.primary);
-}
-
 export function isObject(val?: Schema): val is ObjectSchema<string> {
   return Boolean(val && val.type === ValueType.Object);
 }
@@ -146,17 +136,17 @@ export type SchemaType<T extends Schema> = T extends ArraySchema
 type TerminalSchemaType<T extends Schema> = T extends BooleanSchema
   ? boolean
   : (T extends NumberSchema
-    ? number
-    : (T extends StringSchema
-      ? (T['codaType'] extends ValueType.Date ? Date : string)
-      : (T extends ArraySchema
-        ? any[]
-        : (T extends ObjectSchema<string> ? {[K in keyof T['properties']]: any} : never))));
+      ? number
+      : (T extends StringSchema
+          ? (T['codaType'] extends ValueType.Date ? Date : string)
+          : (T extends ArraySchema
+              ? any[]
+              : (T extends ObjectSchema<string> ? {[K in keyof T['properties']]: any} : never))));
 type ObjectSchemaType<T extends ObjectSchema<string>> = UndefinedAsOptional<
   {
     [K in keyof T['properties']]: T['properties'][K] extends Schema & {required: true}
-    ? (TerminalSchemaType<T['properties'][K]>)
-    : (TerminalSchemaType<T['properties'][K]> | undefined)
+      ? (TerminalSchemaType<T['properties'][K]>)
+      : (TerminalSchemaType<T['properties'][K]> | undefined)
   }
 >;
 
@@ -198,10 +188,6 @@ export function makeObjectSchema<T extends string>(schema: ObjectSchema<T>): Obj
   return schema;
 }
 
-export function makeSyncObjectSchema<T extends string>(schema: SyncObjectSchema<T>): SyncObjectSchema<T> {
-  return schema;
-}
-
 export function normalizeSchema<T extends Schema>(schema: T): T {
   if (isArray(schema)) {
     return {
@@ -221,21 +207,15 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
         fromKey: fromKey || (normalizedKey !== key ? key : undefined),
       });
     }
-    let normalizedSchema = {
+    const normalizedSchema = {
       type: ValueType.Object,
       id: id ? pascalcase(id) : undefined,
       featured: featured ? featured.map(pascalcase) : undefined,
       primary: primary ? pascalcase(primary) : undefined,
       properties: normalized,
       identity: schema.identity,
+      codaType: schema.codaType,
     } as T;
-
-    if (isSyncObject(schema)) {
-      normalizedSchema = {
-        ...normalizedSchema,
-        codaType: schema.codaType,
-      };
-    }
 
     return normalizedSchema;
   }
