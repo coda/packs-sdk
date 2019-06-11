@@ -48,7 +48,7 @@ export const personSchema = makeObjectSchema({
   },
 });
 
-export const packageSchema = makeObjectSchema<'package' | 'downloadCount' | 'url' | 'author' | 'versions'>({
+export const packageSchema = makeObjectSchema({
   type: ValueType.Object,
   identity: {
     packId: FakeNpmPackId,

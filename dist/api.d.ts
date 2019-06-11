@@ -28,17 +28,17 @@ export declare class StatusCodeError extends Error {
     statusCode: number;
     constructor(statusCode: number);
 }
-interface SyncTable<K extends string, SchemaT extends ObjectSchema<K>> {
+interface SyncTable<K extends string, L extends string, SchemaT extends ObjectSchema<K, L>> {
     name: string;
     schema: SchemaT;
-    getter: SyncFormula<K, any, SchemaT>;
+    getter: SyncFormula<K, L, any, SchemaT>;
 }
 export interface Continuation {
     [key: string]: string | number;
 }
-export declare type GenericSyncFormula = SyncFormula<any, any, any>;
+export declare type GenericSyncFormula = SyncFormula<any, any, any, any>;
 export declare type GenericSyncFormulaResult = SyncFormulaResult<any>;
-export declare type GenericSyncTable = SyncTable<any, any>;
+export declare type GenericSyncTable = SyncTable<any, any, any>;
 export declare function isUserVisibleError(error: Error): error is UserVisibleError;
 export declare const PARAM_DESCRIPTION_DOES_NOT_EXIST = "NO PARAMETER DESCRIPTION HAS BEEN ADDED. For guidance, see https://coda.link/param-docs";
 export declare function makeStringParameter(name: string, description: string, args?: ParamArgs<Type.string>): ParamDef<Type.string>;
@@ -92,16 +92,16 @@ declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Sch
 export declare type TypedPackFormula = NumericPackFormula<any> | StringPackFormula<any> | ObjectPackFormula<any, any>;
 export declare function isObjectPackFormula(fn: Formula<any, any>): fn is ObjectPackFormula<any, any>;
 export declare function isStringPackFormula(fn: Formula<any, any>): fn is StringPackFormula<any>;
-export declare function isSyncPackFormula(fn: Formula<any, any>): fn is SyncFormula<any, any, any>;
+export declare function isSyncPackFormula(fn: Formula<any, any>): fn is GenericSyncFormula;
 interface SyncFormulaResult<ResultT extends object> {
     result: ResultT[];
     continuation?: Continuation;
 }
-interface SyncFormulaDef<K extends string, ParamsT extends ParamDefs, SchemaT extends ObjectSchema<K>> extends CommonPackFormulaDef<ParamsT> {
+interface SyncFormulaDef<K extends string, L extends string, ParamsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> extends CommonPackFormulaDef<ParamsT> {
     execute(params: ParamValues<ParamsT>, context: ExecutionContext, continuation?: Continuation): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
     schema: ArraySchema;
 }
-export declare type SyncFormula<K extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K>> = SyncFormulaDef<K, ParamDefsT, SchemaT> & {
+export declare type SyncFormula<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
     resultType: TypeOf<SchemaType<SchemaT>>;
     schema: ArraySchema;
     isSyncFormula: true;
@@ -117,7 +117,7 @@ export declare type ConnectionMetadataFormulaResultType = string | number | {
 export declare type ConnectionMetadataFormula = ObjectPackFormula<[ParamDef<Type.string>], any>;
 export declare function makeConnectionMetadataFormula(execute: (context: ExecutionContext, params: string[]) => Promise<ConnectionMetadataFormulaResultType> | Promise<ConnectionMetadataFormulaResultType[]>): ConnectionMetadataFormula;
 export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
-export declare function makeSyncTable<K extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K>>(name: string, schema: SchemaT, { schema: formulaSchema, execute: wrappedExecute, ...definition }: SyncFormulaDef<K, ParamDefsT, SchemaT>): SyncTable<K, SchemaT>;
+export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, { schema: formulaSchema, execute: wrappedExecute, ...definition }: SyncFormulaDef<K, L, ParamDefsT, SchemaT>): SyncTable<K, L, SchemaT>;
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
     request: RequestHandlerTemplate;
     description: string;
