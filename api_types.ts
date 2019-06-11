@@ -1,5 +1,6 @@
 import {$Omit} from './type_utils';
 import {$Values} from './type_utils';
+import {ConnectionMetadataFormula} from './api';
 
 export enum Type {
   string,
@@ -73,6 +74,7 @@ export interface ParamDef<T extends UnionType> {
   description: string;
   optional?: boolean;
   hidden?: boolean;
+  autocomplete?: ConnectionMetadataFormula;
 }
 
 export type ParamArgs<T extends UnionType> = $Omit<ParamDef<T>, 'description' | 'name' | 'type'>;

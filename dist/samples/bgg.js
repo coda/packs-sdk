@@ -16,6 +16,7 @@ const sample_utils_2 = require("../helpers/sample_utils");
 const api_1 = require("../api");
 const api_2 = require("../api");
 const api_3 = require("../api");
+const api_4 = require("../api");
 exports.FakeBggProviderId = 9010;
 exports.FakeBggPackId = 8002;
 exports.FakeBggPackVersion = '0.2.3';
@@ -41,11 +42,11 @@ const FakeBggDefinitionOldFake = {
     ],
     formulas: {
         BGG: [
-            api_2.makeStringFormula({
+            api_3.makeStringFormula({
                 name: 'BoardGame',
                 description: 'Get live data about a board game.',
                 examples: [],
-                parameters: [api_3.makeStringParameter('id', 'ID of a board game.')],
+                parameters: [api_4.makeStringParameter('id', 'ID of a board game.')],
                 network: { hasSideEffect: false, hasConnection: true, requiresConnection: true },
                 execute: ([id], context) => __awaiter(this, void 0, void 0, function* () {
                     const url = `https://boardgamegeek.com/boardgame/${id}`;
@@ -85,6 +86,17 @@ const FakeBggDefinitionFake = {
             const response = yield context.fetcher.fetch(request);
             return response.body.profile.display_name;
         })),
+        getConnectionName: api_2.makeConnectionMetadataFormula((context) => __awaiter(this, void 0, void 0, function* () {
+            const request = {
+                method: 'GET',
+                url: 'https://boardgamegeek.com/me',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            };
+            const response = yield context.fetcher.fetch(request);
+            return response.body.profile.display_name;
+        })),
     },
     systemConnectionAuthentication: {
         type: types_1.AuthenticationType.QueryParamToken,
@@ -102,11 +114,11 @@ const FakeBggDefinitionFake = {
     ],
     formulas: {
         BGG: [
-            api_2.makeStringFormula({
+            api_3.makeStringFormula({
                 name: 'BoardGame',
                 description: 'Get live data about a board game.',
                 examples: [],
-                parameters: [api_3.makeStringParameter('url', 'Url to a board game')],
+                parameters: [api_4.makeStringParameter('url', 'Url to a board game')],
                 network: { hasSideEffect: false, hasConnection: true, requiresConnection: true },
                 execute: ([id], context) => __awaiter(this, void 0, void 0, function* () {
                     const url = `https://boardgamegeek.com/boardgame/${id}`;
