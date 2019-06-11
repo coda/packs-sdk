@@ -73,17 +73,17 @@ export type GenericObjectSchema = ObjectSchema<string>;
 
 export interface Identity {
   packId: PackId;
-  name: string;
+  name: string; ƒ;
   attribution?: AttributionNode[];
 }
 
 export interface ObjectSchema<K extends string> extends BaseSchema {
   type: ValueType.Object;
-  properties: ObjectSchemaProperties & {[k in K]: Schema | (Schema & ObjectSchemaProperty)};
+  properties: {[k in K]: Schema | (Schema & ObjectSchemaProperty)};
   id?: K;
   primary?: K;
   codaType?: ObjectHintTypes;
-  featured?: K[];
+  featured?: K | [K, K] | [K, K, K] | [K, K, K, K];
   identity?: Identity;
 }
 
