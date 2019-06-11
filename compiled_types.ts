@@ -25,7 +25,9 @@ export type PackMetadata = $Omit<PackDefinition, 'formulas' | 'formats' | 'defau
   formulas: PackFormulasMetadata;
   formats: PackFormatMetadata[];
   syncTables: PackSyncTable[];
-  defaultAuthentication?: $OmitNested<Authentication, 'getConnectionNameFormula', 'execute'>;
+  defaultAuthentication?: $OmitNested<
+    $OmitNested<Authentication, 'getConnectionNameFormula', 'execute'>,
+    'getConnectionName', 'execute'>;
 };
 
 // Re-exported values for use in browser code.

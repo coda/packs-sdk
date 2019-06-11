@@ -7,6 +7,7 @@ import {ValueType} from '../schema';
 import {fakeDefinitionToDefinition} from '../helpers/sample_utils';
 import {fakeDefinitionToMetadata} from '../helpers/sample_utils';
 import {makeBooleanParameter} from '../api';
+import {makeConnectionMetadataFormula} from '../api';
 import {makeNumericFormula} from '../api';
 import {makeObjectFormula} from '../api';
 import {makeStringArrayParameter} from '../api';
@@ -102,7 +103,13 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         description: 'Get live data about a NPM package.',
         examples: [],
         parameters: [
-          makeStringParameter('name', 'Package name'),
+          makeStringParameter('name', 'Package name', {
+            autocomplete: makeConnectionMetadataFormula(async (context, search) => {
+              const url = withQueryParams(`https://npmjs.com/api/packages/search`, {q: String(search || '')});
+              const result = await context.fetcher!.fetch({method: 'GET', url});
+              return result.body;
+            }),
+          }),
           makeBooleanParameter('monthly', 'Show monthly download count instead of weekly', {optional: true}),
         ],
         network: {hasSideEffect: false, hasConnection: false},
