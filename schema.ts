@@ -60,7 +60,6 @@ export interface ArraySchema extends BaseSchema {
 export interface ObjectSchemaProperty {
   // TODO(alexd): Remove these once we've hoisted these up.
   id?: boolean;
-  primary?: boolean;
   fromKey?: string;
   required?: boolean;
 }
@@ -80,8 +79,8 @@ export interface Identity {
 export interface ObjectSchema<K extends string, L extends string> extends BaseSchema {
   type: ValueType.Object;
   properties: ObjectSchemaProperties &
-  {[k in K]: Schema | (Schema & ObjectSchemaProperty)} &
-  {[k in L]: Schema | (Schema & ObjectSchemaProperty)};
+    {[k in K]: Schema | (Schema & ObjectSchemaProperty)} &
+    {[k in L]: Schema | (Schema & ObjectSchemaProperty)};
   id?: K;
   primary?: K;
   codaType?: ObjectHintTypes;
@@ -138,17 +137,17 @@ export type SchemaType<T extends Schema> = T extends ArraySchema
 type TerminalSchemaType<T extends Schema> = T extends BooleanSchema
   ? boolean
   : (T extends NumberSchema
-    ? number
-    : (T extends StringSchema
-      ? (T['codaType'] extends ValueType.Date ? Date : string)
-      : (T extends ArraySchema
-        ? any[]
-        : (T extends GenericObjectSchema ? {[K in keyof T['properties']]: any} : never))));
+      ? number
+      : (T extends StringSchema
+          ? (T['codaType'] extends ValueType.Date ? Date : string)
+          : (T extends ArraySchema
+              ? any[]
+              : (T extends GenericObjectSchema ? {[K in keyof T['properties']]: any} : never))));
 type ObjectSchemaType<T extends GenericObjectSchema> = UndefinedAsOptional<
   {
     [K in keyof T['properties']]: T['properties'][K] extends Schema & {required: true}
-    ? (TerminalSchemaType<T['properties'][K]>)
-    : (TerminalSchemaType<T['properties'][K]> | undefined)
+      ? (TerminalSchemaType<T['properties'][K]>)
+      : (TerminalSchemaType<T['properties'][K]> | undefined)
   }
 >;
 
@@ -186,9 +185,7 @@ export function makeSchema<T extends Schema>(schema: T): T {
   return schema;
 }
 
-export function makeObjectSchema<
-  K extends string,
-  L extends string>(schema: ObjectSchema<K, L>): ObjectSchema<K, L> {
+export function makeObjectSchema<K extends string, L extends string>(schema: ObjectSchema<K, L>): ObjectSchema<K, L> {
   return schema;
 }
 
@@ -204,9 +201,8 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     for (const key of Object.keys(schema.properties)) {
       const normalizedKey = pascalcase(key);
       const props = schema.properties[key];
-      const {primary: primaryKey, required, fromKey} = props as ObjectSchemaProperty;
+      const {required, fromKey} = props as ObjectSchemaProperty;
       normalized[normalizedKey] = Object.assign(normalizeSchema(props), {
-        primary: primaryKey,
         required,
         fromKey: fromKey || (normalizedKey !== key ? key : undefined),
       });
