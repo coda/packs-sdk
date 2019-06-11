@@ -14,7 +14,7 @@ import { ResponseHandlerTemplate } from './handler_templates';
 import { SchemaType } from './schema';
 import { Schema } from './schema';
 import { StringSchema } from './schema';
-import { SyncObjectSchema } from './schema';
+import { ObjectSchema } from './schema';
 import { Type } from './api_types';
 import { TypeOf } from './api_types';
 export { ExecutionContext };
@@ -28,7 +28,7 @@ export declare class StatusCodeError extends Error {
     statusCode: number;
     constructor(statusCode: number);
 }
-interface SyncTable<K extends string, SchemaT extends SyncObjectSchema<K>> {
+interface SyncTable<K extends string, SchemaT extends ObjectSchema<K>> {
     name: string;
     schema: SchemaT;
     getter: SyncFormula<K, any, SchemaT>;
@@ -95,11 +95,11 @@ interface SyncFormulaResult<ResultT extends object> {
     result: ResultT[];
     continuation?: Continuation;
 }
-interface SyncFormulaDef<K extends string, ParamsT extends ParamDefs, SchemaT extends SyncObjectSchema<K>> extends CommonPackFormulaDef<ParamsT> {
+interface SyncFormulaDef<K extends string, ParamsT extends ParamDefs, SchemaT extends ObjectSchema<K>> extends CommonPackFormulaDef<ParamsT> {
     execute(params: ParamValues<ParamsT>, context: ExecutionContext, continuation?: Continuation): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
     schema: ArraySchema;
 }
-export declare type SyncFormula<K extends string, ParamDefsT extends ParamDefs, SchemaT extends SyncObjectSchema<K>> = SyncFormulaDef<K, ParamDefsT, SchemaT> & {
+export declare type SyncFormula<K extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K>> = SyncFormulaDef<K, ParamDefsT, SchemaT> & {
     resultType: TypeOf<SchemaType<SchemaT>>;
     schema: ArraySchema;
     isSyncFormula: true;
@@ -109,7 +109,7 @@ export declare function makeStringFormula<ParamDefsT extends ParamDefs>(definiti
 export declare type GetConnectionNameFormula = StringPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>]>;
 export declare function makeGetConnectionNameFormula(execute: (context: ExecutionContext, codaUserName: string, authParams: string) => Promise<string> | string): GetConnectionNameFormula;
 export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
-export declare function makeSyncTable<K extends string, ParamDefsT extends ParamDefs, SchemaT extends SyncObjectSchema<K>>(name: string, schema: SchemaT, { schema: formulaSchema, execute: wrappedExecute, ...definition }: SyncFormulaDef<K, ParamDefsT, SchemaT>): SyncTable<K, SchemaT>;
+export declare function makeSyncTable<K extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K>>(name: string, schema: SchemaT, { schema: formulaSchema, execute: wrappedExecute, ...definition }: SyncFormulaDef<K, ParamDefsT, SchemaT>): SyncTable<K, SchemaT>;
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
     request: RequestHandlerTemplate;
     description: string;

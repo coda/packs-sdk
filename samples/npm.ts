@@ -12,7 +12,7 @@ import {makeObjectFormula} from '../api';
 import {makeStringArrayParameter} from '../api';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
-import {makeSyncObjectSchema} from '../schema';
+import {makeObjectSchema} from '../schema';
 import {makeSyncTable} from '../api';
 import {withQueryParams} from '../helpers/url';
 
@@ -21,7 +21,7 @@ export const FakeNpmProviderId = 9011;
 export const FakeNpmPackId = 8003;
 export const FakeNpmPackVersion = '5.2.3';
 
-export const versionSchema = makeSyncObjectSchema({
+export const versionSchema = makeObjectSchema({
   type: ValueType.Object,
   identity: {
     packId: FakeNpmPackId,
@@ -36,7 +36,7 @@ export const versionSchema = makeSyncObjectSchema({
   },
 });
 
-export const personSchema = makeSyncObjectSchema({
+export const personSchema = makeObjectSchema({
   type: ValueType.Object,
   codaType: ValueType.Person,
   id: 'email',
@@ -47,7 +47,7 @@ export const personSchema = makeSyncObjectSchema({
   },
 });
 
-export const packageSchema = makeSyncObjectSchema({
+export const packageSchema = makeObjectSchema<'package' | 'downloadCount' | 'url' | 'author' | 'versions'>({
   type: ValueType.Object,
   identity: {
     packId: FakeNpmPackId,
