@@ -80,6 +80,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
   logoPath: 'some/path',
   defaultAuthentication: {
     type: AuthenticationType.HeaderBearerToken,
+    getConnectionName: makeConnectionMetadataFormula(async (_ctx, [search]) => `FakeConnection ${search}`),
   },
   formats: [
     {
