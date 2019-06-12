@@ -21,6 +21,7 @@ export enum ValueType {
   Markdown = 'markdown',
   Html = 'html',
   Embed = 'embed',
+  Reference = 'reference',
 }
 
 type StringHintTypes =
@@ -32,7 +33,7 @@ type StringHintTypes =
   | ValueType.Url;
 export type NumberHintTypes = ValueType.Date | ValueType.Percent | ValueType.Currency;
 
-export type ObjectHintTypes = ValueType.Person;
+export type ObjectHintTypes = ValueType.Person | ValueType.Reference;
 
 interface BaseSchema {
   description?: string;
