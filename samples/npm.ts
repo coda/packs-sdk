@@ -135,9 +135,12 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         name: 'FakeDownloadPackage',
         description: 'Initiate a download of the package, increasing its popularity (this action formula is for tests)',
         examples: [],
-        parameters: [makeStringParameter('url', 'Url to a package')],
+        parameters: [
+          makeStringParameter('url', 'Url to a package'),
+          makeStringParameter('path', 'file path for download', {optional: true}),
+        ],
         network: {hasSideEffect: true, hasConnection: false, requiresConnection: false},
-        execute: async ([name], context) => {
+        execute: async ([name, path], context) => {
           const url = withQueryParams(`https://npmjs.com/api/packages/${name}/download`);
           const result = await context.fetcher!.fetch({method: 'POST', url});
           return result.body;
