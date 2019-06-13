@@ -21,6 +21,8 @@ export { ExternalSyncTable } from './compiled_types';
 export { ExternalPackMetadata } from './compiled_types';
 export { ArrayType } from './api_types';
 export { Continuation } from './api';
+export { ConnectionMetadataFormulaResultType } from './api';
+export { ConnectionMetadataFormula } from './api';
 export { ExecutionContext } from './api_types';
 export { Fetcher } from './api_types';
 export { FetchRequest } from './api_types';
