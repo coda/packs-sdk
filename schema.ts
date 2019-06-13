@@ -1,4 +1,5 @@
 import {PackId} from './types';
+import {ensureExists} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
 import pascalcase from 'pascalcase';
 
@@ -21,6 +22,7 @@ export enum ValueType {
   Markdown = 'markdown',
   Html = 'html',
   Embed = 'embed',
+  Reference = 'reference',
 }
 
 type StringHintTypes =
@@ -32,7 +34,7 @@ type StringHintTypes =
   | ValueType.Url;
 export type NumberHintTypes = ValueType.Date | ValueType.Percent | ValueType.Currency;
 
-export type ObjectHintTypes = ValueType.Person;
+export type ObjectHintTypes = ValueType.Person | ValueType.Reference;
 
 interface BaseSchema {
   description?: string;
@@ -220,6 +222,29 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     return normalizedSchema;
   }
   return schema;
+}
+
+// Convenience for creating a reference object schema from an existing schema for the
+// object. Copies over the identity, id, and primary from the schema, and the subset of
+// properties indicated by the id and primary.
+// A reference schema can always be defined directly, but if you already have an object
+// schema it provides better code reuse to derive a reference schema instead.
+export function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema): GenericObjectSchema {
+  const {type, id, primary, identity, properties} = schema;
+  ensureExists(identity);
+  const validId = ensureExists(id);
+  const referenceProperties: ObjectSchemaProperties = {[validId]: properties[validId]};
+  if (primary && primary !== id) {
+    referenceProperties[primary] = properties[primary];
+  }
+  return {
+    codaType: ValueType.Reference,
+    type,
+    id,
+    identity,
+    primary,
+    properties: referenceProperties,
+  };
 }
 
 export enum SchemaIdPrefix {

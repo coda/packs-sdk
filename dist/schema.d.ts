@@ -13,11 +13,12 @@ export declare enum ValueType {
     Url = "url",
     Markdown = "markdown",
     Html = "html",
-    Embed = "embed"
+    Embed = "embed",
+    Reference = "reference"
 }
 declare type StringHintTypes = ValueType.Date | ValueType.Embed | ValueType.Html | ValueType.Image | ValueType.Markdown | ValueType.Url;
 export declare type NumberHintTypes = ValueType.Date | ValueType.Percent | ValueType.Currency;
-export declare type ObjectHintTypes = ValueType.Person;
+export declare type ObjectHintTypes = ValueType.Person | ValueType.Reference;
 interface BaseSchema {
     description?: string;
 }
@@ -104,6 +105,7 @@ export declare function generateSchema(obj: ValidTypes): Schema;
 export declare function makeSchema<T extends Schema>(schema: T): T;
 export declare function makeObjectSchema<K extends string, L extends string>(schema: ObjectSchema<K, L>): ObjectSchema<K, L>;
 export declare function normalizeSchema<T extends Schema>(schema: T): T;
+export declare function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema): GenericObjectSchema;
 export declare enum SchemaIdPrefix {
     Identity = "I"
 }
