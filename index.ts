@@ -28,6 +28,8 @@ export {ExternalPackMetadata} from './compiled_types';
 // Formula related interfaces
 export {ArrayType} from './api_types';
 export {Continuation} from './api';
+export {ConnectionMetadataFormulaResultType} from './api';
+export {ConnectionMetadataFormula} from './api';
 export {ExecutionContext} from './api_types';
 export {Fetcher} from './api_types';
 export {FetchRequest} from './api_types';
