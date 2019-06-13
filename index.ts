@@ -52,13 +52,14 @@ export {isUserVisibleError} from './api';
 export {makeUserVisibleError} from './api';
 
 // Formula definition helpers
+export {makeConnectionMetadataFormula} from './api';
 export {makeEmptyFormula} from './api';
 export {makeGetConnectionNameFormula} from './api';
-export {makeTranslateObjectFormula} from './api';
 export {makeNumericFormula} from './api';
 export {makeObjectFormula} from './api';
 export {makeStringFormula} from './api';
 export {makeSyncTable} from './api';
+export {makeTranslateObjectFormula} from './api';
 
 export {makeBooleanParameter} from './api';
 export {makeBooleanArrayParameter} from './api';
