@@ -140,9 +140,9 @@ const FakeNpmDefinitionFake = {
                     api_7.makeStringParameter('path', 'file path for download', { optional: true }),
                 ],
                 network: { hasSideEffect: true, hasConnection: false, requiresConnection: false },
-                execute: ([name, path], context) => __awaiter(this, void 0, void 0, function* () {
-                    const url = url_1.withQueryParams(`https://npmjs.com/api/packages/${name}/download`);
-                    const result = yield context.fetcher.fetch({ method: 'POST', url });
+                execute: ([url, _path], context) => __awaiter(this, void 0, void 0, function* () {
+                    const fullUrl = url_1.withQueryParams(`https://npmjs.com/api/packages/${url}/download`);
+                    const result = yield context.fetcher.fetch({ method: 'POST', url: fullUrl });
                     return result.body;
                 }),
             }),

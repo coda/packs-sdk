@@ -140,9 +140,9 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
           makeStringParameter('path', 'file path for download', {optional: true}),
         ],
         network: {hasSideEffect: true, hasConnection: false, requiresConnection: false},
-        execute: async ([name, path], context) => {
-          const url = withQueryParams(`https://npmjs.com/api/packages/${name}/download`);
-          const result = await context.fetcher!.fetch({method: 'POST', url});
+        execute: async ([url, _path], context) => {
+          const fullUrl = withQueryParams(`https://npmjs.com/api/packages/${url}/download`);
+          const result = await context.fetcher!.fetch({method: 'POST', url: fullUrl});
           return result.body;
         },
       }),
