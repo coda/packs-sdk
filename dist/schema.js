@@ -116,6 +116,26 @@ function normalizeSchema(schema) {
     return schema;
 }
 exports.normalizeSchema = normalizeSchema;
+// Convenience for creating a reference object schema from an existing schema for the
+// object. Copies over the id and primary from the schema, and the subset of properties
+// specified that are required to form a valid reference.
+function makeReferenceSchemaFromObjectSchema(schema, referencePropertyNames) {
+    const { type, id, primary, properties } = schema;
+    const referenceProperties = {};
+    for (const key of Object.keys(properties)) {
+        if (referencePropertyNames.includes(key)) {
+            referenceProperties[key] = properties[key];
+        }
+    }
+    return {
+        codaType: ValueType.Reference,
+        type,
+        id,
+        primary,
+        properties: referenceProperties,
+    };
+}
+exports.makeReferenceSchemaFromObjectSchema = makeReferenceSchemaFromObjectSchema;
 var SchemaIdPrefix;
 (function (SchemaIdPrefix) {
     SchemaIdPrefix["Identity"] = "I";

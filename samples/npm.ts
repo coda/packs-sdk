@@ -10,6 +10,7 @@ import {makeBooleanParameter} from '../api';
 import {makeConnectionMetadataFormula} from '../api';
 import {makeNumericFormula} from '../api';
 import {makeObjectFormula} from '../api';
+import {makeReferenceSchemaFromObjectSchema} from '../schema';
 import {makeStringArrayParameter} from '../api';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
@@ -64,7 +65,7 @@ export const packageSchema = makeObjectSchema({
     downloadCount: {type: ValueType.Number},
     versions: {
       type: ValueType.Array,
-      items: versionSchema,
+      items: makeReferenceSchemaFromObjectSchema(versionSchema, ['url']),
     },
   },
 });

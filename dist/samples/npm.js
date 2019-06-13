@@ -17,16 +17,17 @@ const api_1 = require("../api");
 const api_2 = require("../api");
 const api_3 = require("../api");
 const api_4 = require("../api");
+const schema_2 = require("../schema");
 const api_5 = require("../api");
 const api_6 = require("../api");
 const api_7 = require("../api");
-const schema_2 = require("../schema");
+const schema_3 = require("../schema");
 const api_8 = require("../api");
 const url_1 = require("../helpers/url");
 exports.FakeNpmProviderId = 9011;
 exports.FakeNpmPackId = 8003;
 exports.FakeNpmPackVersion = '5.2.3';
-exports.versionSchema = schema_2.makeObjectSchema({
+exports.versionSchema = schema_3.makeObjectSchema({
     type: schema_1.ValueType.Object,
     identity: {
         packId: exports.FakeNpmPackId,
@@ -40,7 +41,7 @@ exports.versionSchema = schema_2.makeObjectSchema({
         downloadCount: { type: schema_1.ValueType.Number },
     },
 });
-exports.personSchema = schema_2.makeObjectSchema({
+exports.personSchema = schema_3.makeObjectSchema({
     type: schema_1.ValueType.Object,
     codaType: schema_1.ValueType.Person,
     id: 'email',
@@ -50,7 +51,7 @@ exports.personSchema = schema_2.makeObjectSchema({
         name: { type: schema_1.ValueType.String },
     },
 });
-exports.packageSchema = schema_2.makeObjectSchema({
+exports.packageSchema = schema_3.makeObjectSchema({
     type: schema_1.ValueType.Object,
     identity: {
         packId: exports.FakeNpmPackId,
@@ -66,7 +67,7 @@ exports.packageSchema = schema_2.makeObjectSchema({
         downloadCount: { type: schema_1.ValueType.Number },
         versions: {
             type: schema_1.ValueType.Array,
-            items: exports.versionSchema,
+            items: schema_2.makeReferenceSchemaFromObjectSchema(exports.versionSchema, ['url']),
         },
     },
 });

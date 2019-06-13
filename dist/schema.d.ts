@@ -105,6 +105,7 @@ export declare function generateSchema(obj: ValidTypes): Schema;
 export declare function makeSchema<T extends Schema>(schema: T): T;
 export declare function makeObjectSchema<K extends string, L extends string>(schema: ObjectSchema<K, L>): ObjectSchema<K, L>;
 export declare function normalizeSchema<T extends Schema>(schema: T): T;
+export declare function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema, referencePropertyNames: string[]): GenericObjectSchema;
 export declare enum SchemaIdPrefix {
     Identity = "I"
 }
