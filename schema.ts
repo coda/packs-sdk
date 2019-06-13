@@ -1,4 +1,5 @@
 import {PackId} from './types';
+import {ensureExists} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
 import pascalcase from 'pascalcase';
 
@@ -224,21 +225,23 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
 }
 
 // Convenience for creating a reference object schema from an existing schema for the
-// object. Copies over the id and primary from the schema, and the subset of properties
-// specified that are required to form a valid reference.
-export function makeReferenceSchemaFromObjectSchema(
-  schema: GenericObjectSchema, referencePropertyNames: string[]): GenericObjectSchema {
-  const {type, id, primary, properties} = schema;
-  const referenceProperties: ObjectSchemaProperties = {};
-  for (const key of Object.keys(properties)) {
-    if (referencePropertyNames.includes(key)) {
-      referenceProperties[key] = properties[key];
-    }
+// object. Copies over the identity, id, and primary from the schema, and the subset of
+// properties indicated by the id and primary.
+// A reference schema can always be defined directly, but if you already have an object
+// schema it provides better code reuse to derive a reference schema instead.
+export function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema): GenericObjectSchema {
+  const {type, id, primary, identity, properties} = schema;
+  ensureExists(identity);
+  const validId = ensureExists(id);
+  const referenceProperties: ObjectSchemaProperties = {[validId]: properties[validId]};
+  if (primary && primary !== id) {
+    referenceProperties[primary] = properties[primary];
   }
   return {
     codaType: ValueType.Reference,
     type,
     id,
+    identity,
     primary,
     properties: referenceProperties,
   };

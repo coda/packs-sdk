@@ -67,7 +67,7 @@ exports.packageSchema = schema_3.makeObjectSchema({
         downloadCount: { type: schema_1.ValueType.Number },
         versions: {
             type: schema_1.ValueType.Array,
-            items: schema_2.makeReferenceSchemaFromObjectSchema(exports.versionSchema, ['url']),
+            items: schema_2.makeReferenceSchemaFromObjectSchema(exports.versionSchema),
         },
     },
 });

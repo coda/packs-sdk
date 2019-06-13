@@ -65,7 +65,7 @@ export const packageSchema = makeObjectSchema({
     downloadCount: {type: ValueType.Number},
     versions: {
       type: ValueType.Array,
-      items: makeReferenceSchemaFromObjectSchema(versionSchema, ['url']),
+      items: makeReferenceSchemaFromObjectSchema(versionSchema),
     },
   },
 });
