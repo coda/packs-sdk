@@ -82,7 +82,7 @@ export interface ParamDef<T extends UnionType> {
   optional?: boolean;
   hidden?: boolean;
   autocomplete?: ConnectionMetadataFormula;
-  defaultValue?: TypeOfMap<T> | (() => TypeOfMap<T>);
+  defaultValue?: TypeOfMap<T>;
 }
 
 export type ParamArgs<T extends UnionType> = $Omit<ParamDef<T>, 'description' | 'name' | 'type'>;

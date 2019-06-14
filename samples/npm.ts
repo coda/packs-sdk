@@ -114,7 +114,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
           makeBooleanParameter(
             'monthly',
             'Show monthly download count instead of weekly',
-            {optional: true, defaultValue: () => false}),
+            {optional: true, defaultValue: true}),
         ],
         network: {hasSideEffect: false, hasConnection: false},
         execute: async ([name, monthly], context) => {
