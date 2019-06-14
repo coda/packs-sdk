@@ -111,7 +111,7 @@ const FakeNpmDefinitionFake = {
                             return result.body;
                         })),
                     }),
-                    api_1.makeBooleanParameter('monthly', 'Show monthly download count instead of weekly', { optional: true, defaultValue: () => false }),
+                    api_1.makeBooleanParameter('monthly', 'Show monthly download count instead of weekly', { optional: true, defaultValue: true }),
                 ],
                 network: { hasSideEffect: false, hasConnection: false },
                 execute: ([name, monthly], context) => __awaiter(this, void 0, void 0, function* () {
