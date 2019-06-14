@@ -302,7 +302,12 @@ export function makeGetConnectionNameFormula(
   });
 }
 
-export type ConnectionMetadataFormulaResultType = string | number | {id: string, value: string | number};
+export interface ConnectionMetadataFormulaObjectResultType {
+  display: string;
+  value: string | number;
+}
+
+export type ConnectionMetadataFormulaResultType = string | number | ConnectionMetadataFormulaObjectResultType;
 export type ConnectionMetadataFormula = ObjectPackFormula<[ParamDef<Type.string>], any>;
 export function makeConnectionMetadataFormula(
   execute: (context: ExecutionContext, params: string[]) =>

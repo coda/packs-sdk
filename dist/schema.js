@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ensure_1 = require("./helpers/ensure");
+const ensure_2 = require("./helpers/ensure");
 const pascalcase_1 = __importDefault(require("pascalcase"));
 // Defines a subset of the JSON Object schema for use in annotating API results.
 // http://json-schema.org/latest/json-schema-core.html#rfc.section.8.2
@@ -24,6 +25,7 @@ var ValueType;
     ValueType["Markdown"] = "markdown";
     ValueType["Html"] = "html";
     ValueType["Embed"] = "embed";
+    ValueType["Reference"] = "reference";
 })(ValueType = exports.ValueType || (exports.ValueType = {}));
 var AttributionNodeType;
 (function (AttributionNodeType) {
@@ -71,7 +73,7 @@ function generateSchema(obj) {
     else if (typeof obj === 'number') {
         return { type: ValueType.Number };
     }
-    return ensure_1.ensureUnreachable(obj);
+    return ensure_2.ensureUnreachable(obj);
 }
 exports.generateSchema = generateSchema;
 function makeSchema(schema) {
@@ -115,6 +117,29 @@ function normalizeSchema(schema) {
     return schema;
 }
 exports.normalizeSchema = normalizeSchema;
+// Convenience for creating a reference object schema from an existing schema for the
+// object. Copies over the identity, id, and primary from the schema, and the subset of
+// properties indicated by the id and primary.
+// A reference schema can always be defined directly, but if you already have an object
+// schema it provides better code reuse to derive a reference schema instead.
+function makeReferenceSchemaFromObjectSchema(schema) {
+    const { type, id, primary, identity, properties } = schema;
+    ensure_1.ensureExists(identity);
+    const validId = ensure_1.ensureExists(id);
+    const referenceProperties = { [validId]: properties[validId] };
+    if (primary && primary !== id) {
+        referenceProperties[primary] = properties[primary];
+    }
+    return {
+        codaType: ValueType.Reference,
+        type,
+        id,
+        identity,
+        primary,
+        properties: referenceProperties,
+    };
+}
+exports.makeReferenceSchemaFromObjectSchema = makeReferenceSchemaFromObjectSchema;
 var SchemaIdPrefix;
 (function (SchemaIdPrefix) {
     SchemaIdPrefix["Identity"] = "I";

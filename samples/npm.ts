@@ -10,6 +10,7 @@ import {makeBooleanParameter} from '../api';
 import {makeConnectionMetadataFormula} from '../api';
 import {makeNumericFormula} from '../api';
 import {makeObjectFormula} from '../api';
+import {makeReferenceSchemaFromObjectSchema} from '../schema';
 import {makeStringArrayParameter} from '../api';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
@@ -64,7 +65,7 @@ export const packageSchema = makeObjectSchema({
     downloadCount: {type: ValueType.Number},
     versions: {
       type: ValueType.Array,
-      items: versionSchema,
+      items: makeReferenceSchemaFromObjectSchema(versionSchema),
     },
   },
 });
@@ -137,11 +138,14 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         name: 'FakeDownloadPackage',
         description: 'Initiate a download of the package, increasing its popularity (this action formula is for tests)',
         examples: [],
-        parameters: [makeStringParameter('url', 'Url to a package')],
+        parameters: [
+          makeStringParameter('url', 'Url to a package'),
+          makeStringParameter('path', 'file path for download', {optional: true}),
+        ],
         network: {hasSideEffect: true, hasConnection: false, requiresConnection: false},
-        execute: async ([name], context) => {
-          const url = withQueryParams(`https://npmjs.com/api/packages/${name}/download`);
-          const result = await context.fetcher!.fetch({method: 'POST', url});
+        execute: async ([url, _path], context) => {
+          const fullUrl = withQueryParams(`https://npmjs.com/api/packages/${url}/download`);
+          const result = await context.fetcher!.fetch({method: 'POST', url: fullUrl});
           return result.body;
         },
       }),
