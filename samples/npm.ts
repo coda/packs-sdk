@@ -57,9 +57,9 @@ export const packageSchema = makeObjectSchema({
   },
   id: 'url',
   primary: 'url',
-  featured: ['package', 'downloadCount'],
+  featured: ['packageName', 'downloadCount'],
   properties: {
-    package: {type: ValueType.String},
+    packageName: {type: ValueType.String},
     url: {type: ValueType.String, id: true},
     author: personSchema,
     downloadCount: {type: ValueType.Number},
