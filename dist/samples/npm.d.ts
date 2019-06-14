@@ -5,6 +5,6 @@ export declare const FakeNpmPackId = 8003;
 export declare const FakeNpmPackVersion = "5.2.3";
 export declare const versionSchema: import("../schema").ObjectSchema<"url", "url" | "version" | "downloadCount">;
 export declare const personSchema: import("../schema").ObjectSchema<"name" | "email", "name" | "email">;
-export declare const packageSchema: import("../schema").ObjectSchema<"url", "downloadCount" | "package">;
+export declare const packageSchema: import("../schema").ObjectSchema<"url", "downloadCount" | "packageName">;
 export declare const FakeNpmDefinition: PackDefinition;
 export declare const FakeNpmMetadata: PackMetadata;

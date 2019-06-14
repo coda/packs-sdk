@@ -59,9 +59,9 @@ exports.packageSchema = schema_3.makeObjectSchema({
     },
     id: 'url',
     primary: 'url',
-    featured: ['package', 'downloadCount'],
+    featured: ['packageName', 'downloadCount'],
     properties: {
-        package: { type: schema_1.ValueType.String },
+        packageName: { type: schema_1.ValueType.String },
         url: { type: schema_1.ValueType.String, id: true },
         author: exports.personSchema,
         downloadCount: { type: schema_1.ValueType.Number },
