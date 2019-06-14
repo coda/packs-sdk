@@ -42,6 +42,7 @@ export interface ParamDef<T extends UnionType> {
     optional?: boolean;
     hidden?: boolean;
     autocomplete?: ConnectionMetadataFormula;
+    defaultValue?: TypeOfMap<T>;
 }
 export declare type ParamArgs<T extends UnionType> = $Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
 export declare type ParamDefs = [ParamDef<any>, ...Array<ParamDef<any>>] | never[];
