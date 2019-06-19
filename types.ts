@@ -163,6 +163,13 @@ interface BaseAuthentication {
 
   // Root endpoint domain for multi-tenant services - for example set to "example.com" for "https://mysite.example.com"
   endpointDomain?: string;
+
+  // Post auth completion steps
+  postSetup?: Array<{
+    name: string;
+    description: string;
+    getOptionsFormula: ConnectionMetadataFormula;
+  }>;
 }
 
 /**
