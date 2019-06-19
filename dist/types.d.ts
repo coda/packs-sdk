@@ -146,6 +146,11 @@ interface BaseAuthentication {
     instructionsUrl?: string;
     requiresEndpointUrl?: boolean;
     endpointDomain?: string;
+    postSetup?: Array<{
+        name: string;
+        description: string;
+        getOptionsFormula: ConnectionMetadataFormula;
+    }>;
 }
 /**
  * A pack or formula which uses standard bearer token header authentication:
