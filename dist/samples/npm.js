@@ -83,6 +83,15 @@ const FakeNpmDefinitionFake = {
     defaultAuthentication: {
         type: types_1.AuthenticationType.HeaderBearerToken,
         getConnectionName: api_2.makeConnectionMetadataFormula((_ctx, [search]) => __awaiter(this, void 0, void 0, function* () { return `FakeConnection ${search}`; })),
+        postSetup: [{
+                name: 'getDefaultOptions1',
+                description: 'Get default options',
+                getOptionsFormula: api_2.makeConnectionMetadataFormula(() => __awaiter(this, void 0, void 0, function* () { return `FakeConnection getDefaultOptions1`; })),
+            }, {
+                name: 'getDefaultOptions2',
+                description: 'Get default options - second',
+                getOptionsFormula: api_2.makeConnectionMetadataFormula(() => __awaiter(this, void 0, void 0, function* () { return `FakeConnection getDefaultOptions2`; })),
+            }],
     },
     formats: [
         {
