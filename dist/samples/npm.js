@@ -181,7 +181,15 @@ const FakeNpmDefinitionFake = {
             name: 'SyncPackageVersions',
             description: 'Pull down NPM versions for a package.',
             examples: [],
-            parameters: [api_7.makeStringParameter('name', 'Package name')],
+            parameters: [
+                api_7.makeStringParameter('name', 'Package name', {
+                    autocomplete: api_2.makeConnectionMetadataFormula((context, search) => __awaiter(this, void 0, void 0, function* () {
+                        const url = url_1.withQueryParams(`https://npmjs.com/api/packages/search`, { q: String(search || '') });
+                        const result = yield context.fetcher.fetch({ method: 'GET', url });
+                        return result.body;
+                    })),
+                }),
+            ],
             network: { hasSideEffect: false, hasConnection: false },
             execute: ([pack], context, continuation) => __awaiter(this, void 0, void 0, function* () {
                 const url = url_1.withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, { continuation });
