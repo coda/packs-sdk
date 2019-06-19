@@ -82,6 +82,15 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
   defaultAuthentication: {
     type: AuthenticationType.HeaderBearerToken,
     getConnectionName: makeConnectionMetadataFormula(async (_ctx, [search]) => `FakeConnection ${search}`),
+    postSetup: [{
+      name: 'getDefaultOptions1',
+      description: 'Get default options',
+      getOptionsFormula: makeConnectionMetadataFormula(async () => `FakeConnection getDefaultOptions1`),
+    }, {
+      name: 'getDefaultOptions2',
+      description: 'Get default options - second',
+      getOptionsFormula: makeConnectionMetadataFormula(async () => `FakeConnection getDefaultOptions2`),
+    }],
   },
   formats: [
     {
