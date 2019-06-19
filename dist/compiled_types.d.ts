@@ -40,6 +40,11 @@ export interface ExternalPackMetadata extends BasePackMetadata {
         }>;
         requiresEndpointUrl: boolean;
         endpointDomain?: string;
+        postSetup?: Array<{
+            name: string;
+            description: string;
+            getOptionsFormula: PackFormulaMetadata;
+        }>;
     };
     instructionsUrl?: string;
     formulas?: ExternalPackFormulas;
