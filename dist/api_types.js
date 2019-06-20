@@ -8,6 +8,7 @@ var Type;
     Type[Type["boolean"] = 3] = "boolean";
     Type[Type["date"] = 4] = "date";
     Type[Type["html"] = 5] = "html";
+    Type[Type["image"] = 6] = "image";
 })(Type = exports.Type || (exports.Type = {}));
 function isArrayType(obj) {
     return obj && obj.type === 'array' && typeof obj.items === 'number';
@@ -32,4 +33,8 @@ exports.dateArray = {
 exports.htmlArray = {
     type: 'array',
     items: Type.html,
+};
+exports.imageArray = {
+    type: 'array',
+    items: Type.image,
 };

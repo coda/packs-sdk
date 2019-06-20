@@ -25,7 +25,9 @@ export type PackMetadata = $Omit<PackDefinition, 'formulas' | 'formats' | 'defau
   formulas: PackFormulasMetadata;
   formats: PackFormatMetadata[];
   syncTables: PackSyncTable[];
-  defaultAuthentication?: $OmitNested<Authentication, 'getConnectionNameFormula', 'execute'>;
+  defaultAuthentication?: $OmitNested<
+    $OmitNested<Authentication, 'getConnectionNameFormula', 'execute'>,
+    'getConnectionName', 'execute'>;
 };
 
 // Re-exported values for use in browser code.
@@ -54,6 +56,11 @@ export interface ExternalPackMetadata extends BasePackMetadata {
     params?: Array<{name: string; description: string}>;
     requiresEndpointUrl: boolean;
     endpointDomain?: string;
+    postSetup?: Array<{
+      name: string;
+      description: string;
+      getOptionsFormula: PackFormulaMetadata;
+    }>;
   };
   instructionsUrl?: string;
 

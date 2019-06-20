@@ -16,40 +16,28 @@ describe('Schema', () => {
     });
 
     it('array of scalars', () => {
-      assert.deepEqual(
-        schema.generateSchema(['foobaz']),
-        {type: schema.ValueType.Array, items: {type: schema.ValueType.String}});
+      assert.deepEqual(schema.generateSchema(['foobaz']), {
+        type: schema.ValueType.Array,
+        items: {type: schema.ValueType.String},
+      });
     });
 
     it('nested objects', () => {
-      assert.deepEqual(
-        schema.generateSchema({a: 42, b: 'blah', c: [42], d: [{a: true}]}),
-        {
-          type: schema.ValueType.Object,
-          properties: {
-            a: {type: schema.ValueType.Number},
-            b: {type: schema.ValueType.String},
-            c: {type: schema.ValueType.Array, items: {type: schema.ValueType.Number}},
-            d: {
-              type: schema.ValueType.Array,
-              items: {
-                type: schema.ValueType.Object,
-                properties: {a: {type: schema.ValueType.Boolean}},
-              },
+      assert.deepEqual(schema.generateSchema({a: 42, b: 'blah', c: [42], d: [{a: true}]}), {
+        type: schema.ValueType.Object,
+        properties: {
+          a: {type: schema.ValueType.Number},
+          b: {type: schema.ValueType.String},
+          c: {type: schema.ValueType.Array, items: {type: schema.ValueType.Number}},
+          d: {
+            type: schema.ValueType.Array,
+            items: {
+              type: schema.ValueType.Object,
+              properties: {a: {type: schema.ValueType.Boolean}},
             },
           },
-        });
-    });
-  });
-
-  it('makeSyncObjectSchema', () => {
-    schema.makeSyncObjectSchema({
-      type: schema.ValueType.Object,
-      primary: 'boo',
-      id: 'boo',
-      properties: {
-        boo: {type: schema.ValueType.String},
-      },
+        },
+      });
     });
   });
 
@@ -67,7 +55,7 @@ describe('Schema', () => {
         id: 'name',
         primary: 'name',
         properties: {
-          name: {type: schema.ValueType.String, primary: true},
+          name: {type: schema.ValueType.String},
           another: anotherSchema,
           yetAnother: schema.makeObjectSchema({
             type: schema.ValueType.Object,

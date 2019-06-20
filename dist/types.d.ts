@@ -1,4 +1,5 @@
 import { GetConnectionNameFormula } from './api';
+import { ConnectionMetadataFormula } from './api';
 import { PackFormulas } from './api';
 import { GenericSyncTable } from './api';
 export declare enum PackCategory {
@@ -140,10 +141,16 @@ export interface NoAuthentication {
 }
 interface BaseAuthentication {
     getConnectionNameFormula?: GetConnectionNameFormula;
+    getConnectionName?: ConnectionMetadataFormula;
     defaultConnectionType?: DefaultConnectionType;
     instructionsUrl?: string;
     requiresEndpointUrl?: boolean;
     endpointDomain?: string;
+    postSetup?: Array<{
+        name: string;
+        description: string;
+        getOptionsFormula: ConnectionMetadataFormula;
+    }>;
 }
 /**
  * A pack or formula which uses standard bearer token header authentication:
