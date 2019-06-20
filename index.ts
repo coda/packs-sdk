@@ -28,6 +28,9 @@ export {ExternalPackMetadata} from './compiled_types';
 // Formula related interfaces
 export {ArrayType} from './api_types';
 export {Continuation} from './api';
+export {ConnectionMetadataFormulaObjectResultType} from './api';
+export {ConnectionMetadataFormulaResultType} from './api';
+export {ConnectionMetadataFormula} from './api';
 export {ExecutionContext} from './api_types';
 export {Fetcher} from './api_types';
 export {FetchRequest} from './api_types';
@@ -52,13 +55,14 @@ export {isUserVisibleError} from './api';
 export {makeUserVisibleError} from './api';
 
 // Formula definition helpers
+export {makeConnectionMetadataFormula} from './api';
 export {makeEmptyFormula} from './api';
 export {makeGetConnectionNameFormula} from './api';
-export {makeTranslateObjectFormula} from './api';
 export {makeNumericFormula} from './api';
 export {makeObjectFormula} from './api';
 export {makeStringFormula} from './api';
 export {makeSyncTable} from './api';
+export {makeTranslateObjectFormula} from './api';
 
 export {makeBooleanParameter} from './api';
 export {makeBooleanArrayParameter} from './api';

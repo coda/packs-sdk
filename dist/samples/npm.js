@@ -17,16 +17,17 @@ const api_1 = require("../api");
 const api_2 = require("../api");
 const api_3 = require("../api");
 const api_4 = require("../api");
+const schema_2 = require("../schema");
 const api_5 = require("../api");
 const api_6 = require("../api");
 const api_7 = require("../api");
-const schema_2 = require("../schema");
+const schema_3 = require("../schema");
 const api_8 = require("../api");
 const url_1 = require("../helpers/url");
 exports.FakeNpmProviderId = 9011;
 exports.FakeNpmPackId = 8003;
 exports.FakeNpmPackVersion = '5.2.3';
-exports.versionSchema = schema_2.makeObjectSchema({
+exports.versionSchema = schema_3.makeObjectSchema({
     type: schema_1.ValueType.Object,
     identity: {
         packId: exports.FakeNpmPackId,
@@ -40,7 +41,7 @@ exports.versionSchema = schema_2.makeObjectSchema({
         downloadCount: { type: schema_1.ValueType.Number },
     },
 });
-exports.personSchema = schema_2.makeObjectSchema({
+exports.personSchema = schema_3.makeObjectSchema({
     type: schema_1.ValueType.Object,
     codaType: schema_1.ValueType.Person,
     id: 'email',
@@ -50,7 +51,7 @@ exports.personSchema = schema_2.makeObjectSchema({
         name: { type: schema_1.ValueType.String },
     },
 });
-exports.packageSchema = schema_2.makeObjectSchema({
+exports.packageSchema = schema_3.makeObjectSchema({
     type: schema_1.ValueType.Object,
     identity: {
         packId: exports.FakeNpmPackId,
@@ -58,15 +59,15 @@ exports.packageSchema = schema_2.makeObjectSchema({
     },
     id: 'url',
     primary: 'url',
-    featured: ['package', 'downloadCount'],
+    featured: ['packageName', 'downloadCount'],
     properties: {
-        package: { type: schema_1.ValueType.String },
+        packageName: { type: schema_1.ValueType.String },
         url: { type: schema_1.ValueType.String, id: true },
         author: exports.personSchema,
         downloadCount: { type: schema_1.ValueType.Number },
         versions: {
             type: schema_1.ValueType.Array,
-            items: exports.versionSchema,
+            items: schema_2.makeReferenceSchemaFromObjectSchema(exports.versionSchema),
         },
     },
 });
@@ -81,6 +82,16 @@ const FakeNpmDefinitionFake = {
     logoPath: 'some/path',
     defaultAuthentication: {
         type: types_1.AuthenticationType.HeaderBearerToken,
+        getConnectionName: api_2.makeConnectionMetadataFormula((_ctx, [search]) => __awaiter(this, void 0, void 0, function* () { return `FakeConnection ${search}`; })),
+        postSetup: [{
+                name: 'getDefaultOptions1',
+                description: 'Get default options',
+                getOptionsFormula: api_2.makeConnectionMetadataFormula(() => __awaiter(this, void 0, void 0, function* () { return `FakeConnection getDefaultOptions1`; })),
+            }, {
+                name: 'getDefaultOptions2',
+                description: 'Get default options - second',
+                getOptionsFormula: api_2.makeConnectionMetadataFormula(() => __awaiter(this, void 0, void 0, function* () { return `FakeConnection getDefaultOptions2`; })),
+            }],
     },
     formats: [
         {
@@ -110,7 +121,7 @@ const FakeNpmDefinitionFake = {
                             return result.body;
                         })),
                     }),
-                    api_1.makeBooleanParameter('monthly', 'Show monthly download count instead of weekly', { optional: true }),
+                    api_1.makeBooleanParameter('monthly', 'Show monthly download count instead of weekly', { optional: true, defaultValue: true }),
                 ],
                 network: { hasSideEffect: false, hasConnection: false },
                 execute: ([name, monthly], context) => __awaiter(this, void 0, void 0, function* () {
@@ -133,11 +144,14 @@ const FakeNpmDefinitionFake = {
                 name: 'FakeDownloadPackage',
                 description: 'Initiate a download of the package, increasing its popularity (this action formula is for tests)',
                 examples: [],
-                parameters: [api_7.makeStringParameter('url', 'Url to a package')],
+                parameters: [
+                    api_7.makeStringParameter('url', 'Url to a package'),
+                    api_7.makeStringParameter('path', 'file path for download', { optional: true }),
+                ],
                 network: { hasSideEffect: true, hasConnection: false, requiresConnection: false },
-                execute: ([name], context) => __awaiter(this, void 0, void 0, function* () {
-                    const url = url_1.withQueryParams(`https://npmjs.com/api/packages/${name}/download`);
-                    const result = yield context.fetcher.fetch({ method: 'POST', url });
+                execute: ([url, _path], context) => __awaiter(this, void 0, void 0, function* () {
+                    const fullUrl = url_1.withQueryParams(`https://npmjs.com/api/packages/${url}/download`);
+                    const result = yield context.fetcher.fetch({ method: 'POST', url: fullUrl });
                     return result.body;
                 }),
             }),
@@ -176,7 +190,15 @@ const FakeNpmDefinitionFake = {
             name: 'SyncPackageVersions',
             description: 'Pull down NPM versions for a package.',
             examples: [],
-            parameters: [api_7.makeStringParameter('name', 'Package name')],
+            parameters: [
+                api_7.makeStringParameter('name', 'Package name', {
+                    autocomplete: api_2.makeConnectionMetadataFormula((context, search) => __awaiter(this, void 0, void 0, function* () {
+                        const url = url_1.withQueryParams(`https://npmjs.com/api/packages/search`, { q: String(search || '') });
+                        const result = yield context.fetcher.fetch({ method: 'GET', url });
+                        return result.body;
+                    })),
+                }),
+            ],
             network: { hasSideEffect: false, hasConnection: false },
             execute: ([pack], context, continuation) => __awaiter(this, void 0, void 0, function* () {
                 const url = url_1.withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, { continuation });
