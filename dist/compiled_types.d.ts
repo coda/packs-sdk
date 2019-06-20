@@ -21,7 +21,7 @@ export declare type PackMetadata = $Omit<PackDefinition, 'formulas' | 'formats' 
     formulas: PackFormulasMetadata;
     formats: PackFormatMetadata[];
     syncTables: PackSyncTable[];
-    defaultAuthentication?: $OmitNested<Authentication, 'getConnectionNameFormula', 'execute'>;
+    defaultAuthentication?: $OmitNested<$OmitNested<Authentication, 'getConnectionNameFormula', 'execute'>, 'getConnectionName', 'execute'>;
 };
 export declare type ExternalPackAuthenticationType = AuthenticationType;
 export declare type ExternalPackFormulas = PackFormulasMetadata;
@@ -40,6 +40,11 @@ export interface ExternalPackMetadata extends BasePackMetadata {
         }>;
         requiresEndpointUrl: boolean;
         endpointDomain?: string;
+        postSetup?: Array<{
+            name: string;
+            description: string;
+            getOptionsFormula: PackFormulaMetadata;
+        }>;
     };
     instructionsUrl?: string;
     formulas?: ExternalPackFormulas;

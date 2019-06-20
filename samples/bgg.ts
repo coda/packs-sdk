@@ -8,6 +8,7 @@ import {PackMetadata} from '../compiled_types';
 import {fakeDefinitionToDefinition} from '../helpers/sample_utils';
 import {fakeDefinitionToMetadata} from '../helpers/sample_utils';
 import {makeGetConnectionNameFormula} from '../api';
+import {makeConnectionMetadataFormula} from '../api';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
 
@@ -75,6 +76,17 @@ const FakeBggDefinitionFake: FakePackDefinition = {
     clientSecretEnvVarName: 'FAKE_BGG_CLIENT_SECRET',
     scopes: ['games', 'favorites'],
     getConnectionNameFormula: makeGetConnectionNameFormula(async context => {
+      const request: FetchRequest = {
+        method: 'GET',
+        url: 'https://boardgamegeek.com/me',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+      const response = await context.fetcher!.fetch(request);
+      return response.body.profile.display_name;
+    }),
+    getConnectionName: makeConnectionMetadataFormula(async context => {
       const request: FetchRequest = {
         method: 'GET',
         url: 'https://boardgamegeek.com/me',

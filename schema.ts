@@ -1,4 +1,5 @@
 import {PackId} from './types';
+import {ensureExists} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
 import pascalcase from 'pascalcase';
 
@@ -21,6 +22,7 @@ export enum ValueType {
   Markdown = 'markdown',
   Html = 'html',
   Embed = 'embed',
+  Reference = 'reference',
 }
 
 type StringHintTypes =
@@ -29,11 +31,10 @@ type StringHintTypes =
   | ValueType.Html
   | ValueType.Image
   | ValueType.Markdown
-  | ValueType.Url
-  ;
+  | ValueType.Url;
 export type NumberHintTypes = ValueType.Date | ValueType.Percent | ValueType.Currency;
 
-export type ObjectHintTypes = ValueType.Person;
+export type ObjectHintTypes = ValueType.Person | ValueType.Reference;
 
 interface BaseSchema {
   description?: string;
@@ -61,7 +62,6 @@ export interface ArraySchema extends BaseSchema {
 export interface ObjectSchemaProperty {
   // TODO(alexd): Remove these once we've hoisted these up.
   id?: boolean;
-  primary?: boolean;
   fromKey?: string;
   required?: boolean;
 }
@@ -70,7 +70,7 @@ interface ObjectSchemaProperties {
   [key: string]: Schema | (Schema & ObjectSchemaProperty);
 }
 
-export type GenericObjectSchema = ObjectSchema<string>;
+export type GenericObjectSchema = ObjectSchema<string, string>;
 
 export interface Identity {
   packId: PackId;
@@ -78,19 +78,16 @@ export interface Identity {
   attribution?: AttributionNode[];
 }
 
-export interface ObjectSchema<K extends string> extends BaseSchema {
+export interface ObjectSchema<K extends string, L extends string> extends BaseSchema {
   type: ValueType.Object;
-  properties: ObjectSchemaProperties & {[k in K]: Schema | (Schema & ObjectSchemaProperty)};
+  properties: ObjectSchemaProperties &
+    {[k in K]: Schema | (Schema & ObjectSchemaProperty)} &
+    {[k in L]: Schema | (Schema & ObjectSchemaProperty)};
   id?: K;
   primary?: K;
-  featured?: K[];
-  identity?: Identity;
-}
-
-export interface SyncObjectSchema<K extends string> extends ObjectSchema<K> {
   codaType?: ObjectHintTypes;
-  id: K;
-  primary: K;
+  featured?: L[];
+  identity?: Identity;
 }
 
 export enum AttributionNodeType {
@@ -121,13 +118,9 @@ export function makeAttributionNode<T extends AttributionNode>(node: T): T {
   return node;
 }
 
-export type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | ObjectSchema<string>;
+export type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
 
-export function isSyncObject(val?: Schema): val is SyncObjectSchema<string> {
-  return Boolean(val && val.type === ValueType.Object && val.id && val.primary);
-}
-
-export function isObject(val?: Schema): val is ObjectSchema<string> {
+export function isObject(val?: Schema): val is GenericObjectSchema {
   return Boolean(val && val.type === ValueType.Object);
 }
 
@@ -142,21 +135,21 @@ type UndefinedAsOptional<T extends object> = Partial<T> &
 // so we don't support resolution of union types or arrays beyond the first layer.
 export type SchemaType<T extends Schema> = T extends ArraySchema
   ? Array<TerminalSchemaType<T['items']>>
-  : (T extends ObjectSchema<string> ? ObjectSchemaType<T> : TerminalSchemaType<T>);
+  : (T extends GenericObjectSchema ? ObjectSchemaType<T> : TerminalSchemaType<T>);
 type TerminalSchemaType<T extends Schema> = T extends BooleanSchema
   ? boolean
   : (T extends NumberSchema
-    ? number
-    : (T extends StringSchema
-      ? (T['codaType'] extends ValueType.Date ? Date : string)
-      : (T extends ArraySchema
-        ? any[]
-        : (T extends ObjectSchema<string> ? {[K in keyof T['properties']]: any} : never))));
-type ObjectSchemaType<T extends ObjectSchema<string>> = UndefinedAsOptional<
+      ? number
+      : (T extends StringSchema
+          ? (T['codaType'] extends ValueType.Date ? Date : string)
+          : (T extends ArraySchema
+              ? any[]
+              : (T extends GenericObjectSchema ? {[K in keyof T['properties']]: any} : never))));
+type ObjectSchemaType<T extends GenericObjectSchema> = UndefinedAsOptional<
   {
     [K in keyof T['properties']]: T['properties'][K] extends Schema & {required: true}
-    ? (TerminalSchemaType<T['properties'][K]>)
-    : (TerminalSchemaType<T['properties'][K]> | undefined)
+      ? (TerminalSchemaType<T['properties'][K]>)
+      : (TerminalSchemaType<T['properties'][K]> | undefined)
   }
 >;
 
@@ -179,7 +172,7 @@ export function generateSchema(obj: ValidTypes): Schema {
         properties[key] = generateSchema((obj as any)[key]);
       }
     }
-    return {type: ValueType.Object, properties} as ObjectSchema<string>;
+    return {type: ValueType.Object, properties} as GenericObjectSchema;
   } else if (typeof obj === 'string') {
     return {type: ValueType.String};
   } else if (typeof obj === 'boolean') {
@@ -194,11 +187,7 @@ export function makeSchema<T extends Schema>(schema: T): T {
   return schema;
 }
 
-export function makeObjectSchema<T extends string>(schema: ObjectSchema<T>): ObjectSchema<T> {
-  return schema;
-}
-
-export function makeSyncObjectSchema<T extends string>(schema: SyncObjectSchema<T>): SyncObjectSchema<T> {
+export function makeObjectSchema<K extends string, L extends string>(schema: ObjectSchema<K, L>): ObjectSchema<K, L> {
   return schema;
 }
 
@@ -214,32 +203,48 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     for (const key of Object.keys(schema.properties)) {
       const normalizedKey = pascalcase(key);
       const props = schema.properties[key];
-      const {primary: primaryKey, required, fromKey} = props as ObjectSchemaProperty;
+      const {required, fromKey} = props as ObjectSchemaProperty;
       normalized[normalizedKey] = Object.assign(normalizeSchema(props), {
-        primary: primaryKey,
         required,
         fromKey: fromKey || (normalizedKey !== key ? key : undefined),
       });
     }
-    let normalizedSchema = {
+    const normalizedSchema = {
       type: ValueType.Object,
       id: id ? pascalcase(id) : undefined,
       featured: featured ? featured.map(pascalcase) : undefined,
       primary: primary ? pascalcase(primary) : undefined,
       properties: normalized,
       identity: schema.identity,
+      codaType: schema.codaType,
     } as T;
-
-    if (isSyncObject(schema)) {
-      normalizedSchema = {
-        ...normalizedSchema,
-        codaType: schema.codaType,
-      };
-    }
 
     return normalizedSchema;
   }
   return schema;
+}
+
+// Convenience for creating a reference object schema from an existing schema for the
+// object. Copies over the identity, id, and primary from the schema, and the subset of
+// properties indicated by the id and primary.
+// A reference schema can always be defined directly, but if you already have an object
+// schema it provides better code reuse to derive a reference schema instead.
+export function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema): GenericObjectSchema {
+  const {type, id, primary, identity, properties} = schema;
+  ensureExists(identity);
+  const validId = ensureExists(id);
+  const referenceProperties: ObjectSchemaProperties = {[validId]: properties[validId]};
+  if (primary && primary !== id) {
+    referenceProperties[primary] = properties[primary];
+  }
+  return {
+    codaType: ValueType.Reference,
+    type,
+    id,
+    identity,
+    primary,
+    properties: referenceProperties,
+  };
 }
 
 export enum SchemaIdPrefix {

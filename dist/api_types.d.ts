@@ -1,12 +1,14 @@
 import { $Omit } from './type_utils';
 import { $Values } from './type_utils';
+import { ConnectionMetadataFormula } from './api';
 export declare enum Type {
     string = 0,
     number = 1,
     object = 2,
     boolean = 3,
     date = 4,
-    html = 5
+    html = 5,
+    image = 6
 }
 export interface ArrayType<T extends Type> {
     type: 'array';
@@ -19,6 +21,7 @@ export declare const numberArray: ArrayType<Type.number>;
 export declare const booleanArray: ArrayType<Type.boolean>;
 export declare const dateArray: ArrayType<Type.date>;
 export declare const htmlArray: ArrayType<Type.html>;
+export declare const imageArray: ArrayType<Type.image>;
 declare type ConcreteArrayTypes = string[] | number[] | boolean[] | Date[];
 interface TypeMap {
     [Type.number]: number;
@@ -27,6 +30,7 @@ interface TypeMap {
     [Type.boolean]: boolean;
     [Type.date]: Date;
     [Type.html]: string;
+    [Type.image]: string;
 }
 export declare type PackFormulaValue = $Values<$Omit<TypeMap, Type.object>> | ConcreteArrayTypes;
 export declare type PackFormulaResult = $Values<TypeMap> | ConcreteArrayTypes;
@@ -37,6 +41,8 @@ export interface ParamDef<T extends UnionType> {
     description: string;
     optional?: boolean;
     hidden?: boolean;
+    autocomplete?: ConnectionMetadataFormula;
+    defaultValue?: TypeOfMap<T>;
 }
 export declare type ParamArgs<T extends UnionType> = $Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
 export declare type ParamDefs = [ParamDef<any>, ...Array<ParamDef<any>>] | never[];

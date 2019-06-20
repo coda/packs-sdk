@@ -7,12 +7,14 @@ import {ValueType} from '../schema';
 import {fakeDefinitionToDefinition} from '../helpers/sample_utils';
 import {fakeDefinitionToMetadata} from '../helpers/sample_utils';
 import {makeBooleanParameter} from '../api';
+import {makeConnectionMetadataFormula} from '../api';
 import {makeNumericFormula} from '../api';
 import {makeObjectFormula} from '../api';
+import {makeReferenceSchemaFromObjectSchema} from '../schema';
 import {makeStringArrayParameter} from '../api';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
-import {makeSyncObjectSchema} from '../schema';
+import {makeObjectSchema} from '../schema';
 import {makeSyncTable} from '../api';
 import {withQueryParams} from '../helpers/url';
 
@@ -21,7 +23,7 @@ export const FakeNpmProviderId = 9011;
 export const FakeNpmPackId = 8003;
 export const FakeNpmPackVersion = '5.2.3';
 
-export const versionSchema = makeSyncObjectSchema({
+export const versionSchema = makeObjectSchema({
   type: ValueType.Object,
   identity: {
     packId: FakeNpmPackId,
@@ -36,7 +38,7 @@ export const versionSchema = makeSyncObjectSchema({
   },
 });
 
-export const personSchema = makeSyncObjectSchema({
+export const personSchema = makeObjectSchema({
   type: ValueType.Object,
   codaType: ValueType.Person,
   id: 'email',
@@ -47,7 +49,7 @@ export const personSchema = makeSyncObjectSchema({
   },
 });
 
-export const packageSchema = makeSyncObjectSchema({
+export const packageSchema = makeObjectSchema({
   type: ValueType.Object,
   identity: {
     packId: FakeNpmPackId,
@@ -55,15 +57,15 @@ export const packageSchema = makeSyncObjectSchema({
   },
   id: 'url',
   primary: 'url',
-  featured: ['package', 'downloadCount'],
+  featured: ['packageName', 'downloadCount'],
   properties: {
-    package: {type: ValueType.String, primary: true},
+    packageName: {type: ValueType.String},
     url: {type: ValueType.String, id: true},
     author: personSchema,
     downloadCount: {type: ValueType.Number},
     versions: {
       type: ValueType.Array,
-      items: versionSchema,
+      items: makeReferenceSchemaFromObjectSchema(versionSchema),
     },
   },
 });
@@ -79,6 +81,16 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
   logoPath: 'some/path',
   defaultAuthentication: {
     type: AuthenticationType.HeaderBearerToken,
+    getConnectionName: makeConnectionMetadataFormula(async (_ctx, [search]) => `FakeConnection ${search}`),
+    postSetup: [{
+      name: 'getDefaultOptions1',
+      description: 'Get default options',
+      getOptionsFormula: makeConnectionMetadataFormula(async () => `FakeConnection getDefaultOptions1`),
+    }, {
+      name: 'getDefaultOptions2',
+      description: 'Get default options - second',
+      getOptionsFormula: makeConnectionMetadataFormula(async () => `FakeConnection getDefaultOptions2`),
+    }],
   },
   formats: [
     {
@@ -102,8 +114,17 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         description: 'Get live data about a NPM package.',
         examples: [],
         parameters: [
-          makeStringParameter('name', 'Package name'),
-          makeBooleanParameter('monthly', 'Show monthly download count instead of weekly', {optional: true}),
+          makeStringParameter('name', 'Package name', {
+            autocomplete: makeConnectionMetadataFormula(async (context, search) => {
+              const url = withQueryParams(`https://npmjs.com/api/packages/search`, {q: String(search || '')});
+              const result = await context.fetcher!.fetch({method: 'GET', url});
+              return result.body;
+            }),
+          }),
+          makeBooleanParameter(
+            'monthly',
+            'Show monthly download count instead of weekly',
+            {optional: true, defaultValue: true}),
         ],
         network: {hasSideEffect: false, hasConnection: false},
         execute: async ([name, monthly], context) => {
@@ -126,11 +147,14 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         name: 'FakeDownloadPackage',
         description: 'Initiate a download of the package, increasing its popularity (this action formula is for tests)',
         examples: [],
-        parameters: [makeStringParameter('url', 'Url to a package')],
+        parameters: [
+          makeStringParameter('url', 'Url to a package'),
+          makeStringParameter('path', 'file path for download', {optional: true}),
+        ],
         network: {hasSideEffect: true, hasConnection: false, requiresConnection: false},
-        execute: async ([name], context) => {
-          const url = withQueryParams(`https://npmjs.com/api/packages/${name}/download`);
-          const result = await context.fetcher!.fetch({method: 'POST', url});
+        execute: async ([url, _path], context) => {
+          const fullUrl = withQueryParams(`https://npmjs.com/api/packages/${url}/download`);
+          const result = await context.fetcher!.fetch({method: 'POST', url: fullUrl});
           return result.body;
         },
       }),
@@ -169,7 +193,15 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
       name: 'SyncPackageVersions',
       description: 'Pull down NPM versions for a package.',
       examples: [],
-      parameters: [makeStringParameter('name', 'Package name')],
+      parameters: [
+        makeStringParameter('name', 'Package name', {
+          autocomplete: makeConnectionMetadataFormula(async (context, search) => {
+            const url = withQueryParams(`https://npmjs.com/api/packages/search`, {q: String(search || '')});
+            const result = await context.fetcher!.fetch({method: 'GET', url});
+            return result.body;
+          }),
+        }),
+      ],
       network: {hasSideEffect: false, hasConnection: false},
       execute: async ([pack], context, continuation) => {
         const url = withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, {continuation});

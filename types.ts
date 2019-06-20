@@ -1,4 +1,5 @@
 import {GetConnectionNameFormula} from './api';
+import {ConnectionMetadataFormula} from './api';
 import {PackFormulas} from './api';
 import {GenericSyncTable} from './api';
 
@@ -146,7 +147,9 @@ export interface NoAuthentication {
 }
 
 interface BaseAuthentication {
+  // TODO(alexd): Remove this once we duplicate all the connection name stuff.
   getConnectionNameFormula?: GetConnectionNameFormula;
+  getConnectionName?: ConnectionMetadataFormula;
 
   // Specifies a set of defaults for allowing pack authors to decide what the "normal"
   // configuration of authentication for this pack should look like.
@@ -160,6 +163,13 @@ interface BaseAuthentication {
 
   // Root endpoint domain for multi-tenant services - for example set to "example.com" for "https://mysite.example.com"
   endpointDomain?: string;
+
+  // Post auth completion steps
+  postSetup?: Array<{
+    name: string;
+    description: string;
+    getOptionsFormula: ConnectionMetadataFormula;
+  }>;
 }
 
 /**

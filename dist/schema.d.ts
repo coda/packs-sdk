@@ -13,11 +13,12 @@ export declare enum ValueType {
     Url = "url",
     Markdown = "markdown",
     Html = "html",
-    Embed = "embed"
+    Embed = "embed",
+    Reference = "reference"
 }
 declare type StringHintTypes = ValueType.Date | ValueType.Embed | ValueType.Html | ValueType.Image | ValueType.Markdown | ValueType.Url;
 export declare type NumberHintTypes = ValueType.Date | ValueType.Percent | ValueType.Currency;
-export declare type ObjectHintTypes = ValueType.Person;
+export declare type ObjectHintTypes = ValueType.Person | ValueType.Reference;
 interface BaseSchema {
     description?: string;
 }
@@ -38,33 +39,30 @@ export interface ArraySchema extends BaseSchema {
 }
 export interface ObjectSchemaProperty {
     id?: boolean;
-    primary?: boolean;
     fromKey?: string;
     required?: boolean;
 }
 interface ObjectSchemaProperties {
     [key: string]: Schema | (Schema & ObjectSchemaProperty);
 }
-export declare type GenericObjectSchema = ObjectSchema<string>;
+export declare type GenericObjectSchema = ObjectSchema<string, string>;
 export interface Identity {
     packId: PackId;
     name: string;
     attribution?: AttributionNode[];
 }
-export interface ObjectSchema<K extends string> extends BaseSchema {
+export interface ObjectSchema<K extends string, L extends string> extends BaseSchema {
     type: ValueType.Object;
     properties: ObjectSchemaProperties & {
         [k in K]: Schema | (Schema & ObjectSchemaProperty);
+    } & {
+        [k in L]: Schema | (Schema & ObjectSchemaProperty);
     };
     id?: K;
     primary?: K;
-    featured?: K[];
-    identity?: Identity;
-}
-export interface SyncObjectSchema<K extends string> extends ObjectSchema<K> {
     codaType?: ObjectHintTypes;
-    id: K;
-    primary: K;
+    featured?: L[];
+    identity?: Identity;
 }
 export declare enum AttributionNodeType {
     Text = 1,
@@ -87,18 +85,17 @@ interface ImageAttributionNode {
 }
 declare type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
 export declare function makeAttributionNode<T extends AttributionNode>(node: T): T;
-export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | ObjectSchema<string>;
-export declare function isSyncObject(val?: Schema): val is SyncObjectSchema<string>;
-export declare function isObject(val?: Schema): val is ObjectSchema<string>;
+export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
+export declare function isObject(val?: Schema): val is GenericObjectSchema;
 export declare function isArray(val?: Schema): val is ArraySchema;
 declare type UndefinedAsOptional<T extends object> = Partial<T> & Pick<T, {
     [K in keyof T]: undefined extends T[K] ? never : K;
 }[keyof T]>;
-export declare type SchemaType<T extends Schema> = T extends ArraySchema ? Array<TerminalSchemaType<T['items']>> : (T extends ObjectSchema<string> ? ObjectSchemaType<T> : TerminalSchemaType<T>);
-declare type TerminalSchemaType<T extends Schema> = T extends BooleanSchema ? boolean : (T extends NumberSchema ? number : (T extends StringSchema ? (T['codaType'] extends ValueType.Date ? Date : string) : (T extends ArraySchema ? any[] : (T extends ObjectSchema<string> ? {
+export declare type SchemaType<T extends Schema> = T extends ArraySchema ? Array<TerminalSchemaType<T['items']>> : (T extends GenericObjectSchema ? ObjectSchemaType<T> : TerminalSchemaType<T>);
+declare type TerminalSchemaType<T extends Schema> = T extends BooleanSchema ? boolean : (T extends NumberSchema ? number : (T extends StringSchema ? (T['codaType'] extends ValueType.Date ? Date : string) : (T extends ArraySchema ? any[] : (T extends GenericObjectSchema ? {
     [K in keyof T['properties']]: any;
 } : never))));
-declare type ObjectSchemaType<T extends ObjectSchema<string>> = UndefinedAsOptional<{
+declare type ObjectSchemaType<T extends GenericObjectSchema> = UndefinedAsOptional<{
     [K in keyof T['properties']]: T['properties'][K] extends Schema & {
         required: true;
     } ? (TerminalSchemaType<T['properties'][K]>) : (TerminalSchemaType<T['properties'][K]> | undefined);
@@ -106,9 +103,9 @@ declare type ObjectSchemaType<T extends ObjectSchema<string>> = UndefinedAsOptio
 export declare type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
 export declare function generateSchema(obj: ValidTypes): Schema;
 export declare function makeSchema<T extends Schema>(schema: T): T;
-export declare function makeObjectSchema<T extends string>(schema: ObjectSchema<T>): ObjectSchema<T>;
-export declare function makeSyncObjectSchema<T extends string>(schema: SyncObjectSchema<T>): SyncObjectSchema<T>;
+export declare function makeObjectSchema<K extends string, L extends string>(schema: ObjectSchema<K, L>): ObjectSchema<K, L>;
 export declare function normalizeSchema<T extends Schema>(schema: T): T;
+export declare function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema): GenericObjectSchema;
 export declare enum SchemaIdPrefix {
     Identity = "I"
 }

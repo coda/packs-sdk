@@ -14,15 +14,16 @@ import {ResponseHandlerTemplate} from './handler_templates';
 import {SchemaType} from './schema';
 import {Schema} from './schema';
 import {StringSchema} from './schema';
-import {SyncObjectSchema} from './schema';
+import {ObjectSchema} from './schema';
 import {Type} from './api_types';
 import {TypeOf} from './api_types';
 import {booleanArray} from './api_types';
 import {dateArray} from './api_types';
-import {htmlArray} from './api_types';
 import {ensureExists} from './helpers/ensure';
 import {generateObjectResponseHandler} from './handler_templates';
 import {generateRequestHandler} from './handler_templates';
+import {htmlArray} from './api_types';
+import {imageArray} from './api_types';
 import {normalizeSchema} from './schema';
 import {numberArray} from './api_types';
 import {stringArray} from './api_types';
@@ -45,18 +46,18 @@ export class StatusCodeError extends Error {
   }
 }
 
-interface SyncTable<K extends string, SchemaT extends SyncObjectSchema<K>> {
+interface SyncTable<K extends string, L extends string, SchemaT extends ObjectSchema<K, L>> {
   name: string;
   schema: SchemaT;
-  getter: SyncFormula<K, any, SchemaT>;
+  getter: SyncFormula<K, L, any, SchemaT>;
 }
 
 export interface Continuation {
   [key: string]: string | number;
 }
-export type GenericSyncFormula = SyncFormula<any, any, any>;
+export type GenericSyncFormula = SyncFormula<any, any, any, any>;
 export type GenericSyncFormulaResult = SyncFormulaResult<any>;
-export type GenericSyncTable = SyncTable<any, any>;
+export type GenericSyncTable = SyncTable<any, any, any>;
 
 export function isUserVisibleError(error: Error): error is UserVisibleError {
   return 'isUserVisible' in error && (error as any).isUserVisible;
@@ -146,6 +147,22 @@ export function makeHtmlArrayParameter(
   return Object.freeze({...args, name, description, type: htmlArray});
 }
 
+export function makeImageParameter(
+  name: string,
+  description: string,
+  args: ParamArgs<Type.html> = {},
+): ParamDef<Type.html> {
+  return Object.freeze({...args, name, description, type: Type.html as Type.html});
+}
+
+export function makeImageArrayParameter(
+  name: string,
+  description: string,
+  args: ParamArgs<ArrayType<Type.image>> = {},
+): ParamDef<ArrayType<Type.image>> {
+  return Object.freeze({...args, name, description, type: imageArray});
+}
+
 export function makeUserVisibleError(msg: string): UserVisibleError {
   return new UserVisibleError(msg);
 }
@@ -213,8 +230,8 @@ export function isStringPackFormula(fn: Formula<any, any>): fn is StringPackForm
   return fn.resultType === Type.string;
 }
 
-export function isSyncPackFormula(fn: Formula<any, any>): fn is SyncFormula<any, any, any> {
-  return Boolean((fn as SyncFormula<any, any, any>).isSyncFormula);
+export function isSyncPackFormula(fn: Formula<any, any>): fn is GenericSyncFormula {
+  return Boolean((fn as GenericSyncFormula).isSyncFormula);
 }
 
 interface SyncFormulaResult<ResultT extends object> {
@@ -222,7 +239,10 @@ interface SyncFormulaResult<ResultT extends object> {
   continuation?: Continuation;
 }
 
-interface SyncFormulaDef<K extends string, ParamsT extends ParamDefs, SchemaT extends SyncObjectSchema<K>>
+interface SyncFormulaDef<
+  K extends string,
+  L extends string,
+  ParamsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>
   extends CommonPackFormulaDef<ParamsT> {
   execute(
     params: ParamValues<ParamsT>,
@@ -232,8 +252,12 @@ interface SyncFormulaDef<K extends string, ParamsT extends ParamDefs, SchemaT ex
   schema: ArraySchema;
 }
 
-export type SyncFormula<K extends string, ParamDefsT extends ParamDefs, SchemaT extends SyncObjectSchema<K>> =
-  SyncFormulaDef<K, ParamDefsT, SchemaT> & {
+export type SyncFormula<
+  K extends string,
+  L extends string,
+  ParamDefsT extends ParamDefs,
+  SchemaT extends ObjectSchema<K, L>
+  > = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
     resultType: TypeOf<SchemaType<SchemaT>>;
     schema: ArraySchema;
     isSyncFormula: true;
@@ -257,17 +281,44 @@ export function makeStringFormula<ParamDefsT extends ParamDefs>(
 
 export type GetConnectionNameFormula = StringPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>]>;
 export function makeGetConnectionNameFormula(
-  execute: (context: ExecutionContext, codaUserName: string, authParams: string) => Promise<string> | string,
+  execute: (context: ExecutionContext, codaUserName: string) => Promise<string> | string,
 ): GetConnectionNameFormula {
   return makeStringFormula({
     name: 'getConnectionName',
     description: 'Return name for new connection.',
-    execute([codaUserName, authParams], context) {
-      return execute(context, codaUserName, authParams);
+    execute([codaUserName], context) {
+      return execute(context, codaUserName);
     },
     parameters: [
       makeStringParameter('codaUserName', 'The username of the Coda account to use.'),
       makeStringParameter('authParams', 'The parameters to use for this connection.'),
+    ],
+    examples: [],
+    network: {
+      hasSideEffect: false,
+      hasConnection: true,
+      requiresConnection: true,
+    },
+  });
+}
+
+export interface ConnectionMetadataFormulaObjectResultType {
+  display: string;
+  value: string | number;
+}
+
+export type ConnectionMetadataFormulaResultType = string | number | ConnectionMetadataFormulaObjectResultType;
+export type ConnectionMetadataFormula = ObjectPackFormula<[ParamDef<Type.string>], any>;
+export function makeConnectionMetadataFormula(
+  execute: (context: ExecutionContext, params: string[]) =>
+    Promise<ConnectionMetadataFormulaResultType> | Promise<ConnectionMetadataFormulaResultType[]>,
+): ConnectionMetadataFormula {
+  return makeObjectFormula({
+    name: 'getConnectionMetadata',
+    description: 'Gets metadata from the connection',
+    execute: (params, context) => execute(context, params),
+    parameters: [
+      makeStringParameter('search', 'Metadata to search for', {optional: true}),
     ],
     examples: [],
     network: {
@@ -328,11 +379,15 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
   }) as ObjectPackFormula<ParamDefsT, SchemaT>;
 }
 
-export function makeSyncTable<K extends string, ParamDefsT extends ParamDefs, SchemaT extends SyncObjectSchema<K>>(
-  name: string,
-  schema: SchemaT,
-  {schema: formulaSchema, execute: wrappedExecute, ...definition}: SyncFormulaDef<K, ParamDefsT, SchemaT>,
-): SyncTable<K, SchemaT> {
+export function makeSyncTable<
+  K extends string,
+  L extends string,
+  ParamDefsT extends ParamDefs,
+  SchemaT extends ObjectSchema<K, L>>(
+    name: string,
+    schema: SchemaT,
+    {schema: formulaSchema, execute: wrappedExecute, ...definition}: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
+): SyncTable<K, L, SchemaT> {
   formulaSchema = normalizeSchema(formulaSchema);
   const responseHandler = generateObjectResponseHandler({schema: formulaSchema, excludeExtraneous: true});
   const execute = async function exec(
