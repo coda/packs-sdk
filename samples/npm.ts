@@ -57,9 +57,9 @@ export const packageSchema = makeObjectSchema({
   },
   id: 'url',
   primary: 'url',
-  featured: ['package', 'downloadCount'],
+  featured: ['packageName', 'downloadCount'],
   properties: {
-    package: {type: ValueType.String},
+    packageName: {type: ValueType.String},
     url: {type: ValueType.String, id: true},
     author: personSchema,
     downloadCount: {type: ValueType.Number},
@@ -82,6 +82,15 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
   defaultAuthentication: {
     type: AuthenticationType.HeaderBearerToken,
     getConnectionName: makeConnectionMetadataFormula(async (_ctx, [search]) => `FakeConnection ${search}`),
+    postSetup: [{
+      name: 'getDefaultOptions1',
+      description: 'Get default options',
+      getOptionsFormula: makeConnectionMetadataFormula(async () => `FakeConnection getDefaultOptions1`),
+    }, {
+      name: 'getDefaultOptions2',
+      description: 'Get default options - second',
+      getOptionsFormula: makeConnectionMetadataFormula(async () => `FakeConnection getDefaultOptions2`),
+    }],
   },
   formats: [
     {
@@ -112,7 +121,10 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
               return result.body;
             }),
           }),
-          makeBooleanParameter('monthly', 'Show monthly download count instead of weekly', {optional: true}),
+          makeBooleanParameter(
+            'monthly',
+            'Show monthly download count instead of weekly',
+            {optional: true, defaultValue: true}),
         ],
         network: {hasSideEffect: false, hasConnection: false},
         execute: async ([name, monthly], context) => {
@@ -181,7 +193,15 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
       name: 'SyncPackageVersions',
       description: 'Pull down NPM versions for a package.',
       examples: [],
-      parameters: [makeStringParameter('name', 'Package name')],
+      parameters: [
+        makeStringParameter('name', 'Package name', {
+          autocomplete: makeConnectionMetadataFormula(async (context, search) => {
+            const url = withQueryParams(`https://npmjs.com/api/packages/search`, {q: String(search || '')});
+            const result = await context.fetcher!.fetch({method: 'GET', url});
+            return result.body;
+          }),
+        }),
+      ],
       network: {hasSideEffect: false, hasConnection: false},
       execute: async ([pack], context, continuation) => {
         const url = withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, {continuation});

@@ -59,9 +59,9 @@ exports.packageSchema = schema_3.makeObjectSchema({
     },
     id: 'url',
     primary: 'url',
-    featured: ['package', 'downloadCount'],
+    featured: ['packageName', 'downloadCount'],
     properties: {
-        package: { type: schema_1.ValueType.String },
+        packageName: { type: schema_1.ValueType.String },
         url: { type: schema_1.ValueType.String, id: true },
         author: exports.personSchema,
         downloadCount: { type: schema_1.ValueType.Number },
@@ -83,6 +83,15 @@ const FakeNpmDefinitionFake = {
     defaultAuthentication: {
         type: types_1.AuthenticationType.HeaderBearerToken,
         getConnectionName: api_2.makeConnectionMetadataFormula((_ctx, [search]) => __awaiter(this, void 0, void 0, function* () { return `FakeConnection ${search}`; })),
+        postSetup: [{
+                name: 'getDefaultOptions1',
+                description: 'Get default options',
+                getOptionsFormula: api_2.makeConnectionMetadataFormula(() => __awaiter(this, void 0, void 0, function* () { return `FakeConnection getDefaultOptions1`; })),
+            }, {
+                name: 'getDefaultOptions2',
+                description: 'Get default options - second',
+                getOptionsFormula: api_2.makeConnectionMetadataFormula(() => __awaiter(this, void 0, void 0, function* () { return `FakeConnection getDefaultOptions2`; })),
+            }],
     },
     formats: [
         {
@@ -112,7 +121,7 @@ const FakeNpmDefinitionFake = {
                             return result.body;
                         })),
                     }),
-                    api_1.makeBooleanParameter('monthly', 'Show monthly download count instead of weekly', { optional: true }),
+                    api_1.makeBooleanParameter('monthly', 'Show monthly download count instead of weekly', { optional: true, defaultValue: true }),
                 ],
                 network: { hasSideEffect: false, hasConnection: false },
                 execute: ([name, monthly], context) => __awaiter(this, void 0, void 0, function* () {
@@ -181,7 +190,15 @@ const FakeNpmDefinitionFake = {
             name: 'SyncPackageVersions',
             description: 'Pull down NPM versions for a package.',
             examples: [],
-            parameters: [api_7.makeStringParameter('name', 'Package name')],
+            parameters: [
+                api_7.makeStringParameter('name', 'Package name', {
+                    autocomplete: api_2.makeConnectionMetadataFormula((context, search) => __awaiter(this, void 0, void 0, function* () {
+                        const url = url_1.withQueryParams(`https://npmjs.com/api/packages/search`, { q: String(search || '') });
+                        const result = yield context.fetcher.fetch({ method: 'GET', url });
+                        return result.body;
+                    })),
+                }),
+            ],
             network: { hasSideEffect: false, hasConnection: false },
             execute: ([pack], context, continuation) => __awaiter(this, void 0, void 0, function* () {
                 const url = url_1.withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, { continuation });
