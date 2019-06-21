@@ -229,8 +229,8 @@ export interface Policy {
     url: string;
 }
 export interface RateLimit {
-    operationsPerDuration: number;
-    durationSeconds: number;
+    operationsPerInterval: number;
+    intervalSeconds: number;
 }
 export interface RateLimits {
     overall?: RateLimit;

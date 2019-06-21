@@ -275,8 +275,8 @@ export interface Policy {
 }
 
 export interface RateLimit {
-  operationsPerDuration: number;
-  durationSeconds: number;
+  operationsPerInterval: number;
+  intervalSeconds: number;
 }
 
 export interface RateLimits {
