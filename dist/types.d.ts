@@ -228,6 +228,14 @@ export interface Policy {
     name: string;
     url: string;
 }
+export interface RateLimit {
+    operationsPerDuration: number;
+    durationSeconds: number;
+}
+export interface RateLimits {
+    overall?: RateLimit;
+    perConnection?: RateLimit;
+}
 export interface PackDefinition {
     id: PackId;
     name: string;
@@ -244,6 +252,7 @@ export interface PackDefinition {
     exampleVideoIds?: string[];
     gettingStartedImage?: string;
     gettingStartedText?: string;
+    rateLimits?: RateLimits;
     /**
      * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
      * explicit connection is specified by the user.
