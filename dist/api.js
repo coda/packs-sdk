@@ -220,6 +220,10 @@ exports.makeObjectFormula = makeObjectFormula;
 function makeSyncTable(name, schema, _a) {
     var { schema: formulaSchema, execute: wrappedExecute } = _a, definition = __rest(_a, ["schema", "execute"]);
     formulaSchema = schema_1.normalizeSchema(formulaSchema);
+    const { identity, id, primary } = schema;
+    if (!(primary && id && identity)) {
+        throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
+    }
     const responseHandler = handler_templates_1.generateObjectResponseHandler({ schema: formulaSchema, excludeExtraneous: true });
     const execute = function exec(params, context, input) {
         return __awaiter(this, void 0, void 0, function* () {
