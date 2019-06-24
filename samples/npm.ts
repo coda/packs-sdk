@@ -177,10 +177,10 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
       name: 'SyncPackages',
       description: 'Pull down NPM packages.',
       examples: [],
-      parameters: [],
+      parameters: [makeStringParameter('search', 'Search string', {defaultValue: 'oy-vey'})],
       network: {hasSideEffect: false, hasConnection: false},
-      execute: async ([], context, continuation) => {
-        const url = withQueryParams(`https://npmjs.com/api/packages/`, {continuation});
+      execute: async ([search], context, continuation) => {
+        const url = withQueryParams(`https://npmjs.com/api/packages/${search}`, {continuation});
         const result = await context.fetcher!.fetch({method: 'GET', url});
         return result.body;
       },

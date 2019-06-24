@@ -389,6 +389,10 @@ export function makeSyncTable<
     {schema: formulaSchema, execute: wrappedExecute, ...definition}: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
 ): SyncTable<K, L, SchemaT> {
   formulaSchema = normalizeSchema(formulaSchema);
+  const {identity, id, primary} = schema;
+  if (!(primary && id && identity)) {
+    throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
+  }
   const responseHandler = generateObjectResponseHandler({schema: formulaSchema, excludeExtraneous: true});
   const execute = async function exec(
     params: ParamValues<ParamDefsT>,
