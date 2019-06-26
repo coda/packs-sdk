@@ -139,6 +139,11 @@ export declare enum DefaultConnectionType {
 export interface NoAuthentication {
     type: AuthenticationType.None;
 }
+export interface PostSetup {
+    name: 'endpoint' | string;
+    description: string;
+    getOptionsFormula: ConnectionMetadataFormula;
+}
 interface BaseAuthentication {
     getConnectionNameFormula?: GetConnectionNameFormula;
     getConnectionName?: ConnectionMetadataFormula;
@@ -146,11 +151,7 @@ interface BaseAuthentication {
     instructionsUrl?: string;
     requiresEndpointUrl?: boolean;
     endpointDomain?: string;
-    postSetup?: Array<{
-        name: string;
-        description: string;
-        getOptionsFormula: ConnectionMetadataFormula;
-    }>;
+    postSetup?: PostSetup[];
 }
 /**
  * A pack or formula which uses standard bearer token header authentication:
