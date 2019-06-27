@@ -146,6 +146,12 @@ export interface NoAuthentication {
   type: AuthenticationType.None;
 }
 
+export interface PostSetup {
+  name: 'endpoint' | string;
+  description: string;
+  getOptionsFormula: ConnectionMetadataFormula;
+}
+
 interface BaseAuthentication {
   // TODO(alexd): Remove this once we duplicate all the connection name stuff.
   getConnectionNameFormula?: GetConnectionNameFormula;
@@ -165,11 +171,7 @@ interface BaseAuthentication {
   endpointDomain?: string;
 
   // Post auth completion steps
-  postSetup?: Array<{
-    name: string;
-    description: string;
-    getOptionsFormula: ConnectionMetadataFormula;
-  }>;
+  postSetup?: PostSetup[];
 }
 
 /**
@@ -274,6 +276,16 @@ export interface Policy {
   url: string;
 }
 
+export interface RateLimit {
+  operationsPerInterval: number;
+  intervalSeconds: number;
+}
+
+export interface RateLimits {
+  overall?: RateLimit;
+  perConnection?: RateLimit;
+}
+
 export interface PackDefinition {
   id: PackId;
   name: string;
@@ -290,6 +302,7 @@ export interface PackDefinition {
   exampleVideoIds?: string[];
   gettingStartedImage?: string;
   gettingStartedText?: string;
+  rateLimits?: RateLimits;
   /**
    * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
    * explicit connection is specified by the user.
