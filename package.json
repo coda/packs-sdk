@@ -4,7 +4,7 @@
   "license": "UNLICENSED",
   "private": true,
   "engines": {
-    "node": "<= 8.11.3"
+    "node": "10.16.0"
   },
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
