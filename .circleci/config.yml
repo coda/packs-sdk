@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:8.11
+      - image: circleci/node:10.16-stretch
 
     working_directory: ~/repo
 
@@ -18,7 +18,7 @@ jobs:
             - v1-dependencies-
 
       - run:
-          name: "Install deps"
+          name: 'Install deps'
           command: yarn install
 
       - save_cache:
@@ -27,13 +27,13 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - run:
-          name: "Lint"
+          name: 'Lint'
           command: make lint
 
       - run:
-          name: "Test"
+          name: 'Test'
           command: make test
 
       - run:
-          name: "Ensure clean dist diff"
+          name: 'Ensure clean dist diff'
           command: make validate-no-changes
