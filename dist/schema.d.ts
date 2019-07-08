@@ -42,7 +42,7 @@ export interface ObjectSchemaProperty {
     fromKey?: string;
     required?: boolean;
 }
-interface ObjectSchemaProperties {
+export interface ObjectSchemaProperties {
     [key: string]: Schema | (Schema & ObjectSchemaProperty);
 }
 export declare type GenericObjectSchema = ObjectSchema<string, string>;
