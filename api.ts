@@ -48,8 +48,9 @@ export class StatusCodeError extends Error {
 
 interface SyncTable<K extends string, L extends string, SchemaT extends ObjectSchema<K, L>> {
   name: string;
-  schema: SchemaT;
+  schema?: SchemaT;
   getter: SyncFormula<K, L, any, SchemaT>;
+  getSchema?: ConnectionMetadataFormula;
 }
 
 export interface Continuation {
@@ -249,7 +250,7 @@ interface SyncFormulaDef<
     context: ExecutionContext,
     continuation?: Continuation,
   ): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
-  schema: ArraySchema;
+  schema?: ArraySchema;
 }
 
 export type SyncFormula<
@@ -259,7 +260,6 @@ export type SyncFormula<
   SchemaT extends ObjectSchema<K, L>
   > = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
     resultType: TypeOf<SchemaType<SchemaT>>;
-    schema: ArraySchema;
     isSyncFormula: true;
   };
 
@@ -343,7 +343,7 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
 }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT> {
   let schema: Schema | undefined;
   if (response) {
-    if (isResponseHandlerTemplate(response)) {
+    if (isResponseHandlerTemplate(response) && response.schema) {
       response.schema = normalizeSchema(response.schema) as SchemaT;
       schema = response.schema;
     } else if (isResponseExampleTemplate(response)) {
@@ -385,13 +385,19 @@ export function makeSyncTable<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>>(
     name: string,
-    schema: SchemaT,
+    schema: SchemaT | undefined,
     {schema: formulaSchema, execute: wrappedExecute, ...definition}: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
+    getSchema?: ConnectionMetadataFormula,
 ): SyncTable<K, L, SchemaT> {
-  formulaSchema = normalizeSchema(formulaSchema);
-  const {identity, id, primary} = schema;
-  if (!(primary && id && identity)) {
-    throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
+  formulaSchema = formulaSchema ? normalizeSchema(formulaSchema) : undefined;
+  if (!schema && !getSchema) {
+    throw new Error('Sync table should either have schema defined or have a schema getter');
+  }
+  if (schema) {
+    const {identity, id, primary} = schema;
+    if (!(primary && id && identity)) {
+      throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
+    }
   }
   const responseHandler = generateObjectResponseHandler({schema: formulaSchema, excludeExtraneous: true});
   const execute = async function exec(
@@ -407,7 +413,7 @@ export function makeSyncTable<
   };
   return {
     name,
-    schema: normalizeSchema(schema),
+    schema: schema ? normalizeSchema(schema) : undefined,
     getter: {
       ...definition,
       cacheTtlSecs: 0,
@@ -416,6 +422,7 @@ export function makeSyncTable<
       isSyncFormula: true,
       resultType: Type.object as any,
     },
+    getSchema,
   };
 }
 
@@ -424,7 +431,7 @@ export function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT
   ...definition // tslint:disable-line: trailing-comma
 }: ObjectArrayFormulaDef<ParamDefsT, ResultT>) {
   const {request, parameters} = definition;
-  response.schema = normalizeSchema(response.schema) as ResultT;
+  response.schema = response.schema ? normalizeSchema(response.schema) as ResultT : undefined;
   const {onError} = response;
   const requestHandler = generateRequestHandler(request, parameters);
   const responseHandler = generateObjectResponseHandler(response);

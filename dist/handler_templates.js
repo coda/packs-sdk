@@ -139,6 +139,9 @@ function generateObjectResponseHandler(response) {
         if (!projectedBody) {
             throw new Error(`Empty value for body, projected ${projectKey}`);
         }
+        if (!schema) {
+            return projectedBody;
+        }
         if (schema_1.isArray(schema) && schema_2.isObject(schema.items)) {
             const objects = projectedBody;
             const mappedObjs = objects.map((obj) => mapKeys(obj, excludeExtraneous, schema.items));

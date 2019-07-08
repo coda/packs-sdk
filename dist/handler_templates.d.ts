@@ -22,7 +22,7 @@ export interface RequestHandlerTemplate {
     bodyParams?: string[];
 }
 export interface ResponseHandlerTemplate<T extends Schema> {
-    schema: T;
+    schema?: T;
     projectKey?: string;
     excludeExtraneous?: boolean;
     onError?(error: Error): any;

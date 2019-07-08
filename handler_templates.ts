@@ -27,7 +27,7 @@ export interface RequestHandlerTemplate {
 }
 
 export interface ResponseHandlerTemplate<T extends Schema> {
-  schema: T;
+  schema?: T;
   projectKey?: string;
   excludeExtraneous?: boolean;
   onError?(error: Error): any;
@@ -199,6 +199,10 @@ export function generateObjectResponseHandler<T extends Schema>(
     const projectedBody = projectKey ? body[projectKey] : body;
     if (!projectedBody) {
       throw new Error(`Empty value for body, projected ${projectKey}`);
+    }
+
+    if (!schema) {
+      return projectedBody;
     }
 
     if (isArray(schema) && isObject(schema.items)) {

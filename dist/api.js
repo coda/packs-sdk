@@ -178,7 +178,7 @@ function makeObjectFormula(_a) {
     ;
     let schema;
     if (response) {
-        if (isResponseHandlerTemplate(response)) {
+        if (isResponseHandlerTemplate(response) && response.schema) {
             response.schema = schema_1.normalizeSchema(response.schema);
             schema = response.schema;
         }
@@ -217,12 +217,17 @@ function makeObjectFormula(_a) {
     });
 }
 exports.makeObjectFormula = makeObjectFormula;
-function makeSyncTable(name, schema, _a) {
+function makeSyncTable(name, schema, _a, getSchema) {
     var { schema: formulaSchema, execute: wrappedExecute } = _a, definition = __rest(_a, ["schema", "execute"]);
-    formulaSchema = schema_1.normalizeSchema(formulaSchema);
-    const { identity, id, primary } = schema;
-    if (!(primary && id && identity)) {
-        throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
+    formulaSchema = formulaSchema ? schema_1.normalizeSchema(formulaSchema) : undefined;
+    if (!schema && !getSchema) {
+        throw new Error('Sync table should either have schema defined or have a schema getter');
+    }
+    if (schema) {
+        const { identity, id, primary } = schema;
+        if (!(primary && id && identity)) {
+            throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
+        }
     }
     const responseHandler = handler_templates_1.generateObjectResponseHandler({ schema: formulaSchema, excludeExtraneous: true });
     const execute = function exec(params, context, input) {
@@ -236,8 +241,9 @@ function makeSyncTable(name, schema, _a) {
     };
     return {
         name,
-        schema: schema_1.normalizeSchema(schema),
+        schema: schema ? schema_1.normalizeSchema(schema) : undefined,
         getter: Object.assign({}, definition, { cacheTtlSecs: 0, execute, schema: formulaSchema, isSyncFormula: true, resultType: api_types_1.Type.object }),
+        getSchema,
     };
 }
 exports.makeSyncTable = makeSyncTable;
@@ -245,7 +251,7 @@ function makeTranslateObjectFormula(_a) {
     var { response } = _a, definition = __rest(_a, ["response"]) // tslint:disable-line: trailing-comma
     ;
     const { request, parameters } = definition;
-    response.schema = schema_1.normalizeSchema(response.schema);
+    response.schema = response.schema ? schema_1.normalizeSchema(response.schema) : undefined;
     const { onError } = response;
     const requestHandler = handler_templates_2.generateRequestHandler(request, parameters);
     const responseHandler = handler_templates_1.generateObjectResponseHandler(response);
