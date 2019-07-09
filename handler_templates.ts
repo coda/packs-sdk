@@ -186,6 +186,20 @@ function mapKeys(obj: {[key: string]: any}, excludeExtraneous?: boolean, schema?
   return remappedObject;
 }
 
+export function getPackResponseWithSchema<T extends Schema>(body: any, schema: T, excludeExtraneous?: boolean) {
+  if (isArray(schema) && isObject(schema.items)) {
+    const objects = body as object[];
+    const mappedObjs = objects.map((obj: {[key: string]: any}) => mapKeys(obj, excludeExtraneous, schema.items));
+    return mappedObjs;
+  }
+
+  if (isObject(schema)) {
+    return mapKeys(body, excludeExtraneous, schema);
+  }
+
+  return body;
+}
+
 export function generateObjectResponseHandler<T extends Schema>(
   response: ResponseHandlerTemplate<T>,
 ): (response: FetchResponse) => SchemaType<T> {
@@ -205,16 +219,6 @@ export function generateObjectResponseHandler<T extends Schema>(
       return projectedBody;
     }
 
-    if (isArray(schema) && isObject(schema.items)) {
-      const objects = projectedBody as object[];
-      const mappedObjs = objects.map((obj: {[key: string]: any}) => mapKeys(obj, excludeExtraneous, schema.items));
-      return mappedObjs;
-    }
-
-    if (isObject(schema)) {
-      return mapKeys(projectedBody, excludeExtraneous, schema);
-    }
-
-    return projectedBody;
+    return getPackResponseWithSchema(projectedBody, schema, excludeExtraneous);
   };
 }
