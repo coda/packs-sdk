@@ -220,14 +220,9 @@ exports.makeObjectFormula = makeObjectFormula;
 function makeSyncTable(name, schema, _a, getSchema) {
     var { schema: formulaSchema, execute: wrappedExecute } = _a, definition = __rest(_a, ["schema", "execute"]);
     formulaSchema = formulaSchema ? schema_1.normalizeSchema(formulaSchema) : undefined;
-    if (!schema && !getSchema) {
-        throw new Error('Sync table should either have schema defined or have a schema getter');
-    }
-    if (schema) {
-        const { identity, id, primary } = schema;
-        if (!(primary && id && identity)) {
-            throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
-        }
+    const { identity, id, primary } = schema;
+    if (!(primary && id && identity)) {
+        throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
     }
     const responseHandler = handler_templates_1.generateObjectResponseHandler({ schema: formulaSchema, excludeExtraneous: true });
     const execute = function exec(params, context, input) {
@@ -241,7 +236,7 @@ function makeSyncTable(name, schema, _a, getSchema) {
     };
     return {
         name,
-        schema: schema ? schema_1.normalizeSchema(schema) : undefined,
+        schema: schema_1.normalizeSchema(schema),
         getter: Object.assign({}, definition, { cacheTtlSecs: 0, execute, schema: formulaSchema, isSyncFormula: true, resultType: api_types_1.Type.object }),
         getSchema,
     };
