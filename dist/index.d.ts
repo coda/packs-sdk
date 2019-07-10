@@ -70,3 +70,4 @@ export { makeStringParameter } from './api';
 export { makeStringArrayParameter } from './api';
 import * as schema from './schema';
 export { schema };
+export { transformBody } from './handler_templates';

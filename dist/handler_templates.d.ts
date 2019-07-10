@@ -22,11 +22,12 @@ export interface RequestHandlerTemplate {
     bodyParams?: string[];
 }
 export interface ResponseHandlerTemplate<T extends Schema> {
-    schema: T;
+    schema?: T;
     projectKey?: string;
     excludeExtraneous?: boolean;
     onError?(error: Error): any;
 }
 export declare function generateRequestHandler<ParamDefsT extends ParamDefs>(request: RequestHandlerTemplate, parameters: ParamDefsT): (params: PackFormulaValue[]) => FetchRequest;
+export declare function transformBody<T extends Schema>(body: any, schema: T, excludeExtraneous?: boolean): any;
 export declare function generateObjectResponseHandler<T extends Schema>(response: ResponseHandlerTemplate<T>): (response: FetchResponse) => SchemaType<T>;
 export {};

@@ -82,3 +82,6 @@ export {makeStringArrayParameter} from './api';
 // Object Schemas
 import * as schema from './schema';
 export {schema};
+
+// Pack response helpers
+export {transformBody} from './handler_templates';

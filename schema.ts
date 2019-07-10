@@ -66,7 +66,7 @@ export interface ObjectSchemaProperty {
   required?: boolean;
 }
 
-interface ObjectSchemaProperties {
+export interface ObjectSchemaProperties {
   [key: string]: Schema | (Schema & ObjectSchemaProperty);
 }
 

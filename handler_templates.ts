@@ -27,7 +27,7 @@ export interface RequestHandlerTemplate {
 }
 
 export interface ResponseHandlerTemplate<T extends Schema> {
-  schema: T;
+  schema?: T;
   projectKey?: string;
   excludeExtraneous?: boolean;
   onError?(error: Error): any;
@@ -186,6 +186,20 @@ function mapKeys(obj: {[key: string]: any}, excludeExtraneous?: boolean, schema?
   return remappedObject;
 }
 
+export function transformBody<T extends Schema>(body: any, schema: T, excludeExtraneous?: boolean): any {
+  if (isArray(schema) && isObject(schema.items)) {
+    const objects = body as Array<Record<string, any>>;
+    const mappedObjs = objects.map(obj => mapKeys(obj, excludeExtraneous, schema.items));
+    return mappedObjs;
+  }
+
+  if (isObject(schema)) {
+    return mapKeys(body, excludeExtraneous, schema);
+  }
+
+  return body;
+}
+
 export function generateObjectResponseHandler<T extends Schema>(
   response: ResponseHandlerTemplate<T>,
 ): (response: FetchResponse) => SchemaType<T> {
@@ -201,16 +215,10 @@ export function generateObjectResponseHandler<T extends Schema>(
       throw new Error(`Empty value for body, projected ${projectKey}`);
     }
 
-    if (isArray(schema) && isObject(schema.items)) {
-      const objects = projectedBody as object[];
-      const mappedObjs = objects.map((obj: {[key: string]: any}) => mapKeys(obj, excludeExtraneous, schema.items));
-      return mappedObjs;
+    if (!schema) {
+      return projectedBody;
     }
 
-    if (isObject(schema)) {
-      return mapKeys(projectedBody, excludeExtraneous, schema);
-    }
-
-    return projectedBody;
+    return transformBody(projectedBody, schema, excludeExtraneous);
   };
 }

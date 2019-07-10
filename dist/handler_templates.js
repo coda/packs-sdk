@@ -128,6 +128,18 @@ function mapKeys(obj, excludeExtraneous, schema) {
     }
     return remappedObject;
 }
+function transformBody(body, schema, excludeExtraneous) {
+    if (schema_1.isArray(schema) && schema_2.isObject(schema.items)) {
+        const objects = body;
+        const mappedObjs = objects.map(obj => mapKeys(obj, excludeExtraneous, schema.items));
+        return mappedObjs;
+    }
+    if (schema_2.isObject(schema)) {
+        return mapKeys(body, excludeExtraneous, schema);
+    }
+    return body;
+}
+exports.transformBody = transformBody;
 function generateObjectResponseHandler(response) {
     const { projectKey, schema, excludeExtraneous } = response;
     return function objectResponseHandler(resp) {
@@ -139,15 +151,10 @@ function generateObjectResponseHandler(response) {
         if (!projectedBody) {
             throw new Error(`Empty value for body, projected ${projectKey}`);
         }
-        if (schema_1.isArray(schema) && schema_2.isObject(schema.items)) {
-            const objects = projectedBody;
-            const mappedObjs = objects.map((obj) => mapKeys(obj, excludeExtraneous, schema.items));
-            return mappedObjs;
+        if (!schema) {
+            return projectedBody;
         }
-        if (schema_2.isObject(schema)) {
-            return mapKeys(projectedBody, excludeExtraneous, schema);
-        }
-        return projectedBody;
+        return transformBody(projectedBody, schema, excludeExtraneous);
     };
 }
 exports.generateObjectResponseHandler = generateObjectResponseHandler;

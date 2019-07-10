@@ -32,6 +32,7 @@ interface SyncTable<K extends string, L extends string, SchemaT extends ObjectSc
     name: string;
     schema: SchemaT;
     getter: SyncFormula<K, L, any, SchemaT>;
+    getSchema?: ConnectionMetadataFormula;
 }
 export interface Continuation {
     [key: string]: string | number;
@@ -99,11 +100,10 @@ interface SyncFormulaResult<ResultT extends object> {
 }
 interface SyncFormulaDef<K extends string, L extends string, ParamsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> extends CommonPackFormulaDef<ParamsT> {
     execute(params: ParamValues<ParamsT>, context: ExecutionContext, continuation?: Continuation): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
-    schema: ArraySchema;
+    schema?: ArraySchema;
 }
 export declare type SyncFormula<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
     resultType: TypeOf<SchemaType<SchemaT>>;
-    schema: ArraySchema;
     isSyncFormula: true;
 };
 export declare function makeNumericFormula<ParamDefsT extends ParamDefs>(definition: PackFormulaDef<ParamDefsT, number>): NumericPackFormula<ParamDefsT>;
@@ -118,7 +118,7 @@ export declare type ConnectionMetadataFormulaResultType = string | number | Conn
 export declare type ConnectionMetadataFormula = ObjectPackFormula<[ParamDef<Type.string>], any>;
 export declare function makeConnectionMetadataFormula(execute: (context: ExecutionContext, params: string[]) => Promise<ConnectionMetadataFormulaResultType> | Promise<ConnectionMetadataFormulaResultType[]>): ConnectionMetadataFormula;
 export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
-export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, { schema: formulaSchema, execute: wrappedExecute, ...definition }: SyncFormulaDef<K, L, ParamDefsT, SchemaT>): SyncTable<K, L, SchemaT>;
+export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, { schema: formulaSchema, execute: wrappedExecute, ...definition }: SyncFormulaDef<K, L, ParamDefsT, SchemaT>, getSchema?: ConnectionMetadataFormula): SyncTable<K, L, SchemaT>;
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
     request: RequestHandlerTemplate;
     description: string;
@@ -135,7 +135,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 } & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<SchemaType<ResultT>>;
     resultType: Type;
-    schema: ResultT;
+    schema: ResultT | undefined;
 };
 export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: EmptyFormulaDef<ParamDefsT>): EmptyFormulaDef<ParamDefsT> & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
