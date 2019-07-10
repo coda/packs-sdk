@@ -128,10 +128,10 @@ function mapKeys(obj, excludeExtraneous, schema) {
     }
     return remappedObject;
 }
-function getPackResponseWithSchema(body, schema, excludeExtraneous) {
+function transformBody(body, schema, excludeExtraneous) {
     if (schema_1.isArray(schema) && schema_2.isObject(schema.items)) {
         const objects = body;
-        const mappedObjs = objects.map((obj) => mapKeys(obj, excludeExtraneous, schema.items));
+        const mappedObjs = objects.map(obj => mapKeys(obj, excludeExtraneous, schema.items));
         return mappedObjs;
     }
     if (schema_2.isObject(schema)) {
@@ -139,7 +139,7 @@ function getPackResponseWithSchema(body, schema, excludeExtraneous) {
     }
     return body;
 }
-exports.getPackResponseWithSchema = getPackResponseWithSchema;
+exports.transformBody = transformBody;
 function generateObjectResponseHandler(response) {
     const { projectKey, schema, excludeExtraneous } = response;
     return function objectResponseHandler(resp) {
@@ -154,7 +154,7 @@ function generateObjectResponseHandler(response) {
         if (!schema) {
             return projectedBody;
         }
-        return getPackResponseWithSchema(projectedBody, schema, excludeExtraneous);
+        return transformBody(projectedBody, schema, excludeExtraneous);
     };
 }
 exports.generateObjectResponseHandler = generateObjectResponseHandler;

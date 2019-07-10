@@ -79,6 +79,6 @@ exports.makeStringArrayParameter = api_27.makeStringArrayParameter;
 // Object Schemas
 const schema = __importStar(require("./schema"));
 exports.schema = schema;
-// Pack repsonse helpers
+// Pack response helpers
 var handler_templates_1 = require("./handler_templates");
-exports.getPackResponseWithSchema = handler_templates_1.getPackResponseWithSchema;
+exports.transformBody = handler_templates_1.transformBody;
