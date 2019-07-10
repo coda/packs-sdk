@@ -225,9 +225,9 @@ function makeSyncTable(name, schema, _a, getSchema) {
         throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
     }
     const responseHandler = handler_templates_1.generateObjectResponseHandler({ schema: formulaSchema, excludeExtraneous: true });
-    const execute = function exec(params, context, input) {
+    const execute = function exec(params, context, continuationInput, schemaInput) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { result, continuation } = yield wrappedExecute(params, context, input);
+            const { result, continuation } = yield wrappedExecute(params, context, continuationInput, schemaInput);
             return {
                 result: responseHandler({ body: ensure_1.ensureExists(result), status: 200, headers: {} }),
                 continuation,
