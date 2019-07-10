@@ -249,6 +249,7 @@ interface SyncFormulaDef<
     params: ParamValues<ParamsT>,
     context: ExecutionContext,
     continuation?: Continuation,
+    schema?: string,
   ): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
   schema?: ArraySchema;
 }
@@ -399,9 +400,10 @@ export function makeSyncTable<
   const execute = async function exec(
     params: ParamValues<ParamDefsT>,
     context: ExecutionContext,
-    input: Continuation | undefined,
+    continuationInput: Continuation | undefined,
+    schemaInput: string | undefined,
   ) {
-    const {result, continuation} = await wrappedExecute(params, context, input);
+    const {result, continuation} = await wrappedExecute(params, context, continuationInput, schemaInput);
     return {
       result: responseHandler({body: ensureExists(result), status: 200, headers: {}}) as Array<SchemaType<SchemaT>>,
       continuation,
