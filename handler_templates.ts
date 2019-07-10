@@ -186,10 +186,10 @@ function mapKeys(obj: {[key: string]: any}, excludeExtraneous?: boolean, schema?
   return remappedObject;
 }
 
-export function getPackResponseWithSchema<T extends Schema>(body: any, schema: T, excludeExtraneous?: boolean) {
+export function transformBody<T extends Schema>(body: any, schema: T, excludeExtraneous?: boolean): any {
   if (isArray(schema) && isObject(schema.items)) {
-    const objects = body as object[];
-    const mappedObjs = objects.map((obj: {[key: string]: any}) => mapKeys(obj, excludeExtraneous, schema.items));
+    const objects = body as Array<Record<string, any>>;
+    const mappedObjs = objects.map(obj => mapKeys(obj, excludeExtraneous, schema.items));
     return mappedObjs;
   }
 
@@ -219,6 +219,6 @@ export function generateObjectResponseHandler<T extends Schema>(
       return projectedBody;
     }
 
-    return getPackResponseWithSchema(projectedBody, schema, excludeExtraneous);
+    return transformBody(projectedBody, schema, excludeExtraneous);
   };
 }
