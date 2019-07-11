@@ -402,10 +402,10 @@ export function makeSyncTable<
   const execute = async function exec(
     params: ParamValues<ParamDefsT>,
     context: ExecutionContext,
-    continuationInput: Continuation | undefined,
+    input: Continuation | undefined,
     runtimeSchema: string | undefined,
   ) {
-    const {result, continuation} = await wrappedExecute(params, context, continuationInput);
+    const {result, continuation} = await wrappedExecute(params, context, input);
     return {
       result: responseHandler(
         {body: ensureExists(result), status: 200, headers: {}},
