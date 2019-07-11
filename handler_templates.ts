@@ -202,9 +202,9 @@ export function transformBody<T extends Schema>(body: any, schema: T, excludeExt
 
 export function generateObjectResponseHandler<T extends Schema>(
   response: ResponseHandlerTemplate<T>,
-): (response: FetchResponse) => SchemaType<T> {
+): (response: FetchResponse, runtimeSchema?: T) => SchemaType<T> {
   const {projectKey, schema, excludeExtraneous} = response;
-  return function objectResponseHandler(resp: FetchResponse) {
+  return function objectResponseHandler(resp: FetchResponse, runtimeSchema?: T) {
     const {body} = resp;
     if (typeof body !== 'object') {
       throw new Error(`Invalid response type ${typeof body} for ${body}`);
@@ -215,10 +215,12 @@ export function generateObjectResponseHandler<T extends Schema>(
       throw new Error(`Empty value for body, projected ${projectKey}`);
     }
 
-    if (!schema) {
+    // Give precedence to runtime provided schema
+    const finalSchema = runtimeSchema || schema;
+    if (!finalSchema) {
       return projectedBody;
     }
 
-    return transformBody(projectedBody, schema, excludeExtraneous);
+    return transformBody(projectedBody, finalSchema, excludeExtraneous);
   };
 }
