@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "clone": "^2.1.2",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.14",
     "pascalcase": "^0.1.1",
     "qs": "^6.7.0",
     "string-template": "^1.0.0",
