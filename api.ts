@@ -243,12 +243,14 @@ interface SyncFormulaResult<ResultT extends object> {
 interface SyncFormulaDef<
   K extends string,
   L extends string,
-  ParamsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>
-  extends CommonPackFormulaDef<ParamsT> {
+  ParamsT extends ParamDefs,
+  SchemaT extends ObjectSchema<K, L>
+> extends CommonPackFormulaDef<ParamsT> {
   execute(
     params: ParamValues<ParamsT>,
     context: ExecutionContext,
     continuation?: Continuation,
+    schema?: string,
   ): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
   schema?: ArraySchema;
 }
@@ -258,10 +260,10 @@ export type SyncFormula<
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>
-  > = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
-    resultType: TypeOf<SchemaType<SchemaT>>;
-    isSyncFormula: true;
-  };
+> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
+  resultType: TypeOf<SchemaType<SchemaT>>;
+  isSyncFormula: true;
+};
 
 export function makeNumericFormula<ParamDefsT extends ParamDefs>(
   definition: PackFormulaDef<ParamDefsT, number>,
@@ -310,16 +312,16 @@ export interface ConnectionMetadataFormulaObjectResultType {
 export type ConnectionMetadataFormulaResultType = string | number | ConnectionMetadataFormulaObjectResultType;
 export type ConnectionMetadataFormula = ObjectPackFormula<[ParamDef<Type.string>], any>;
 export function makeConnectionMetadataFormula(
-  execute: (context: ExecutionContext, params: string[]) =>
-    Promise<ConnectionMetadataFormulaResultType> | Promise<ConnectionMetadataFormulaResultType[]>,
+  execute: (
+    context: ExecutionContext,
+    params: string[],
+  ) => Promise<ConnectionMetadataFormulaResultType> | Promise<ConnectionMetadataFormulaResultType[]>,
 ): ConnectionMetadataFormula {
   return makeObjectFormula({
     name: 'getConnectionMetadata',
     description: 'Gets metadata from the connection',
     execute: (params, context) => execute(context, params),
-    parameters: [
-      makeStringParameter('search', 'Metadata to search for', {optional: true}),
-    ],
+    parameters: [makeStringParameter('search', 'Metadata to search for', {optional: true})],
     examples: [],
     network: {
       hasSideEffect: false,
@@ -383,11 +385,12 @@ export function makeSyncTable<
   K extends string,
   L extends string,
   ParamDefsT extends ParamDefs,
-  SchemaT extends ObjectSchema<K, L>>(
-    name: string,
-    schema: SchemaT,
-    {schema: formulaSchema, execute: wrappedExecute, ...definition}: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
-    getSchema?: ConnectionMetadataFormula,
+  SchemaT extends ObjectSchema<K, L>
+>(
+  name: string,
+  schema: SchemaT,
+  {schema: formulaSchema, execute: wrappedExecute, ...definition}: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
+  getSchema?: ConnectionMetadataFormula,
 ): SyncTable<K, L, SchemaT> {
   formulaSchema = formulaSchema ? normalizeSchema(formulaSchema) : undefined;
   const {identity, id, primary} = schema;
@@ -400,10 +403,14 @@ export function makeSyncTable<
     params: ParamValues<ParamDefsT>,
     context: ExecutionContext,
     input: Continuation | undefined,
+    runtimeSchema: string | undefined,
   ) {
     const {result, continuation} = await wrappedExecute(params, context, input);
     return {
-      result: responseHandler({body: ensureExists(result), status: 200, headers: {}}) as Array<SchemaType<SchemaT>>,
+      result: responseHandler(
+        {body: ensureExists(result), status: 200, headers: {}},
+        runtimeSchema ? JSON.parse(runtimeSchema) : undefined,
+      ) as Array<SchemaType<SchemaT>>,
       continuation,
     };
   };
@@ -427,7 +434,7 @@ export function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT
   ...definition // tslint:disable-line: trailing-comma
 }: ObjectArrayFormulaDef<ParamDefsT, ResultT>) {
   const {request, parameters} = definition;
-  response.schema = response.schema ? normalizeSchema(response.schema) as ResultT : undefined;
+  response.schema = response.schema ? (normalizeSchema(response.schema) as ResultT) : undefined;
   const {onError} = response;
   const requestHandler = generateRequestHandler(request, parameters);
   const responseHandler = generateObjectResponseHandler(response);
