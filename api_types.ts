@@ -151,4 +151,5 @@ export interface ExecutionContext {
     protocolAndHost: string;
     docId?: string;
   };
+  readonly timezone: string;
 }
