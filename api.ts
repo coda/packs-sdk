@@ -393,8 +393,7 @@ export function makeSyncTable<
   {schema: _deprecated, execute: wrappedExecute, ...definition}: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
   getSchema?: ConnectionMetadataFormula,
 ): SyncTable<K, L, SchemaT> {
-
-  const formulaSchema = getSchema ? normalizeSchema({ type: ValueType.Array, items: schema }) : undefined;
+  const formulaSchema = getSchema ? undefined : normalizeSchema({ type: ValueType.Array, items: schema });
   const {identity, id, primary} = schema;
   if (!(primary && id && identity)) {
     throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);

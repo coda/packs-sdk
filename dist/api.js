@@ -218,7 +218,7 @@ function makeObjectFormula(_a) {
 exports.makeObjectFormula = makeObjectFormula;
 function makeSyncTable(name, schema, _a, getSchema) {
     var { schema: _deprecated, execute: wrappedExecute } = _a, definition = __rest(_a, ["schema", "execute"]);
-    const formulaSchema = getSchema ? schema_2.normalizeSchema({ type: schema_1.ValueType.Array, items: schema }) : undefined;
+    const formulaSchema = getSchema ? undefined : schema_2.normalizeSchema({ type: schema_1.ValueType.Array, items: schema });
     const { identity, id, primary } = schema;
     if (!(primary && id && identity)) {
         throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
