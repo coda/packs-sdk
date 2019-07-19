@@ -30,7 +30,7 @@
     "@types/string-template": "^1.0.2",
     "@types/url-parse": "^1.4.3",
     "chai": "^4.2.0",
-    "mocha": "^6.1.4",
+    "mocha": "^6.2.0",
     "ts-loader": "^6.0.4",
     "ts-node": "^8.3.0",
     "tslint": "^5.18.0",
