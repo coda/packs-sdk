@@ -20,6 +20,7 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const api_types_1 = require("./api_types");
+const schema_1 = require("./schema");
 const api_types_2 = require("./api_types");
 const api_types_3 = require("./api_types");
 const ensure_1 = require("./helpers/ensure");
@@ -27,7 +28,7 @@ const handler_templates_1 = require("./handler_templates");
 const handler_templates_2 = require("./handler_templates");
 const api_types_4 = require("./api_types");
 const api_types_5 = require("./api_types");
-const schema_1 = require("./schema");
+const schema_2 = require("./schema");
 const api_types_6 = require("./api_types");
 const api_types_7 = require("./api_types");
 class UserVisibleError extends Error {
@@ -177,7 +178,7 @@ function makeObjectFormula(_a) {
     let schema;
     if (response) {
         if (isResponseHandlerTemplate(response) && response.schema) {
-            response.schema = schema_1.normalizeSchema(response.schema);
+            response.schema = schema_2.normalizeSchema(response.schema);
             schema = response.schema;
         }
         else if (isResponseExampleTemplate(response)) {
@@ -216,8 +217,8 @@ function makeObjectFormula(_a) {
 }
 exports.makeObjectFormula = makeObjectFormula;
 function makeSyncTable(name, schema, _a, getSchema) {
-    var { schema: formulaSchema, execute: wrappedExecute } = _a, definition = __rest(_a, ["schema", "execute"]);
-    formulaSchema = formulaSchema ? schema_1.normalizeSchema(formulaSchema) : undefined;
+    var { schema: _deprecated, execute: wrappedExecute } = _a, definition = __rest(_a, ["schema", "execute"]);
+    const formulaSchema = getSchema ? schema_2.normalizeSchema({ type: schema_1.ValueType.Array, items: schema }) : undefined;
     const { identity, id, primary } = schema;
     if (!(primary && id && identity)) {
         throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
@@ -234,7 +235,7 @@ function makeSyncTable(name, schema, _a, getSchema) {
     };
     return {
         name,
-        schema: schema_1.normalizeSchema(schema),
+        schema: schema_2.normalizeSchema(schema),
         getter: Object.assign({}, definition, { cacheTtlSecs: 0, execute, schema: formulaSchema, isSyncFormula: true, resultType: api_types_1.Type.object }),
         getSchema,
     };
@@ -244,7 +245,7 @@ function makeTranslateObjectFormula(_a) {
     var { response } = _a, definition = __rest(_a, ["response"]) // tslint:disable-line: trailing-comma
     ;
     const { request, parameters } = definition;
-    response.schema = response.schema ? schema_1.normalizeSchema(response.schema) : undefined;
+    response.schema = response.schema ? schema_2.normalizeSchema(response.schema) : undefined;
     const { onError } = response;
     const requestHandler = handler_templates_2.generateRequestHandler(request, parameters);
     const responseHandler = handler_templates_1.generateObjectResponseHandler(response);
