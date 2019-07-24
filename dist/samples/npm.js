@@ -181,10 +181,6 @@ const FakeNpmDefinitionFake = {
                 const result = yield context.fetcher.fetch({ method: 'GET', url });
                 return result.body;
             }),
-            schema: {
-                type: schema_1.ValueType.Array,
-                items: exports.packageSchema,
-            },
         }),
         api_8.makeSyncTable('PackageVersions', exports.versionSchema, {
             name: 'SyncPackageVersions',
@@ -205,10 +201,6 @@ const FakeNpmDefinitionFake = {
                 const result = yield context.fetcher.fetch({ method: 'GET', url });
                 return result.body;
             }),
-            schema: {
-                type: schema_1.ValueType.Array,
-                items: exports.versionSchema,
-            },
         }),
     ],
 };

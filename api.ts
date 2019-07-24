@@ -17,6 +17,7 @@ import {StringSchema} from './schema';
 import {ObjectSchema} from './schema';
 import {Type} from './api_types';
 import {TypeOf} from './api_types';
+import {ValueType} from './schema';
 import {booleanArray} from './api_types';
 import {dateArray} from './api_types';
 import {ensureExists} from './helpers/ensure';
@@ -252,7 +253,6 @@ interface SyncFormulaDef<
     continuation?: Continuation,
     schema?: string,
   ): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
-  schema?: ArraySchema;
 }
 
 export type SyncFormula<
@@ -263,6 +263,7 @@ export type SyncFormula<
 > = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
   resultType: TypeOf<SchemaType<SchemaT>>;
   isSyncFormula: true;
+  schema?: ArraySchema;
 };
 
 export function makeNumericFormula<ParamDefsT extends ParamDefs>(
@@ -389,10 +390,10 @@ export function makeSyncTable<
 >(
   name: string,
   schema: SchemaT,
-  {schema: formulaSchema, execute: wrappedExecute, ...definition}: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
+  {execute: wrappedExecute, ...definition}: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
   getSchema?: ConnectionMetadataFormula,
 ): SyncTable<K, L, SchemaT> {
-  formulaSchema = formulaSchema ? normalizeSchema(formulaSchema) : undefined;
+  const formulaSchema = getSchema ? undefined : normalizeSchema({ type: ValueType.Array, items: schema });
   const {identity, id, primary} = schema;
   if (!(primary && id && identity)) {
     throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
