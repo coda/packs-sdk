@@ -184,10 +184,6 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         const result = await context.fetcher!.fetch({method: 'GET', url});
         return result.body;
       },
-      schema: {
-        type: ValueType.Array,
-        items: packageSchema,
-      },
     }),
     makeSyncTable('PackageVersions', versionSchema, {
       name: 'SyncPackageVersions',
@@ -207,10 +203,6 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         const url = withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, {continuation});
         const result = await context.fetcher!.fetch({method: 'GET', url});
         return result.body;
-      },
-      schema: {
-        type: ValueType.Array,
-        items: versionSchema,
       },
     }),
   ],

@@ -253,7 +253,6 @@ interface SyncFormulaDef<
     continuation?: Continuation,
     schema?: string,
   ): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
-  schema?: ArraySchema;
 }
 
 export type SyncFormula<
@@ -264,6 +263,7 @@ export type SyncFormula<
 > = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
   resultType: TypeOf<SchemaType<SchemaT>>;
   isSyncFormula: true;
+  schema?: ArraySchema;
 };
 
 export function makeNumericFormula<ParamDefsT extends ParamDefs>(
@@ -390,7 +390,7 @@ export function makeSyncTable<
 >(
   name: string,
   schema: SchemaT,
-  {schema: _deprecated, execute: wrappedExecute, ...definition}: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
+  {execute: wrappedExecute, ...definition}: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
   getSchema?: ConnectionMetadataFormula,
 ): SyncTable<K, L, SchemaT> {
   const formulaSchema = getSchema ? undefined : normalizeSchema({ type: ValueType.Array, items: schema });

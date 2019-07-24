@@ -217,7 +217,7 @@ function makeObjectFormula(_a) {
 }
 exports.makeObjectFormula = makeObjectFormula;
 function makeSyncTable(name, schema, _a, getSchema) {
-    var { schema: _deprecated, execute: wrappedExecute } = _a, definition = __rest(_a, ["schema", "execute"]);
+    var { execute: wrappedExecute } = _a, definition = __rest(_a, ["execute"]);
     const formulaSchema = getSchema ? undefined : schema_2.normalizeSchema({ type: schema_1.ValueType.Array, items: schema });
     const { identity, id, primary } = schema;
     if (!(primary && id && identity)) {
