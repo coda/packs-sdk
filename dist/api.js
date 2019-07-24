@@ -93,7 +93,7 @@ function makeHtmlArrayParameter(name, description, args = {}) {
 }
 exports.makeHtmlArrayParameter = makeHtmlArrayParameter;
 function makeImageParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_1.Type.html }));
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_1.Type.image }));
 }
 exports.makeImageParameter = makeImageParameter;
 function makeImageArrayParameter(name, description, args = {}) {
