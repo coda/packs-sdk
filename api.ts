@@ -152,9 +152,9 @@ export function makeHtmlArrayParameter(
 export function makeImageParameter(
   name: string,
   description: string,
-  args: ParamArgs<Type.html> = {},
-): ParamDef<Type.html> {
-  return Object.freeze({...args, name, description, type: Type.html as Type.html});
+  args: ParamArgs<Type.image> = {},
+): ParamDef<Type.image> {
+  return Object.freeze({...args, name, description, type: Type.image as Type.image});
 }
 
 export function makeImageArrayParameter(
@@ -246,7 +246,7 @@ interface SyncFormulaDef<
   L extends string,
   ParamsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>
-> extends CommonPackFormulaDef<ParamsT> {
+  > extends CommonPackFormulaDef<ParamsT> {
   execute(
     params: ParamValues<ParamsT>,
     context: ExecutionContext,
@@ -260,11 +260,11 @@ export type SyncFormula<
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>
-> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
-  resultType: TypeOf<SchemaType<SchemaT>>;
-  isSyncFormula: true;
-  schema?: ArraySchema;
-};
+  > = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
+    resultType: TypeOf<SchemaType<SchemaT>>;
+    isSyncFormula: true;
+    schema?: ArraySchema;
+  };
 
 export function makeNumericFormula<ParamDefsT extends ParamDefs>(
   definition: PackFormulaDef<ParamDefsT, number>,
@@ -393,7 +393,7 @@ export function makeSyncTable<
   {execute: wrappedExecute, ...definition}: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
   getSchema?: ConnectionMetadataFormula,
 ): SyncTable<K, L, SchemaT> {
-  const formulaSchema = getSchema ? undefined : normalizeSchema({ type: ValueType.Array, items: schema });
+  const formulaSchema = getSchema ? undefined : normalizeSchema({type: ValueType.Array, items: schema});
   const {identity, id, primary} = schema;
   if (!(primary && id && identity)) {
     throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
