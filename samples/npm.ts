@@ -181,7 +181,10 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
       name: 'SyncPackages',
       description: 'Pull down NPM packages.',
       examples: [],
-      parameters: [makeStringParameter('search', 'Search string', {defaultValue: 'oy-vey'})],
+      parameters: [
+        makeStringParameter('search', 'Search string', {defaultValue: 'oy-vey'}),
+        makeDateArrayParameter('dateRange', 'Date range', {optional: true}),
+      ],
       network: {hasSideEffect: false, hasConnection: false},
       execute: async ([search], context, continuation) => {
         const url = withQueryParams(`https://npmjs.com/api/packages/${search}`, {continuation});
@@ -201,7 +204,6 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
             return result.body;
           }),
         }),
-        makeDateArrayParameter('dateRange', 'Date range', {optional: true}),
       ],
       network: {hasSideEffect: false, hasConnection: false},
       execute: async ([pack], context, continuation) => {
