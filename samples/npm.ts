@@ -8,6 +8,7 @@ import {fakeDefinitionToDefinition} from '../helpers/sample_utils';
 import {fakeDefinitionToMetadata} from '../helpers/sample_utils';
 import {makeBooleanParameter} from '../api';
 import {makeConnectionMetadataFormula} from '../api';
+import {makeDateArrayParameter} from '../api';
 import {makeNumericFormula} from '../api';
 import {makeObjectFormula} from '../api';
 import {makeReferenceSchemaFromObjectSchema} from '../schema';
@@ -82,15 +83,18 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
   defaultAuthentication: {
     type: AuthenticationType.HeaderBearerToken,
     getConnectionName: makeConnectionMetadataFormula(async (_ctx, [search]) => `FakeConnection ${search}`),
-    postSetup: [{
-      name: 'getDefaultOptions1',
-      description: 'Get default options',
-      getOptionsFormula: makeConnectionMetadataFormula(async () => `FakeConnection getDefaultOptions1`),
-    }, {
-      name: 'getDefaultOptions2',
-      description: 'Get default options - second',
-      getOptionsFormula: makeConnectionMetadataFormula(async () => `FakeConnection getDefaultOptions2`),
-    }],
+    postSetup: [
+      {
+        name: 'getDefaultOptions1',
+        description: 'Get default options',
+        getOptionsFormula: makeConnectionMetadataFormula(async () => `FakeConnection getDefaultOptions1`),
+      },
+      {
+        name: 'getDefaultOptions2',
+        description: 'Get default options - second',
+        getOptionsFormula: makeConnectionMetadataFormula(async () => `FakeConnection getDefaultOptions2`),
+      },
+    ],
   },
   formats: [
     {
@@ -121,10 +125,10 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
               return result.body;
             }),
           }),
-          makeBooleanParameter(
-            'monthly',
-            'Show monthly download count instead of weekly',
-            {optional: true, defaultValue: true}),
+          makeBooleanParameter('monthly', 'Show monthly download count instead of weekly', {
+            optional: true,
+            defaultValue: true,
+          }),
         ],
         network: {hasSideEffect: false, hasConnection: false},
         execute: async ([name, monthly], context) => {
@@ -177,7 +181,10 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
       name: 'SyncPackages',
       description: 'Pull down NPM packages.',
       examples: [],
-      parameters: [makeStringParameter('search', 'Search string', {defaultValue: 'oy-vey'})],
+      parameters: [
+        makeStringParameter('search', 'Search string', {defaultValue: 'oy-vey'}),
+        makeDateArrayParameter('dateRange', 'Date range', {optional: true}),
+      ],
       network: {hasSideEffect: false, hasConnection: false},
       execute: async ([search], context, continuation) => {
         const url = withQueryParams(`https://npmjs.com/api/packages/${search}`, {continuation});
