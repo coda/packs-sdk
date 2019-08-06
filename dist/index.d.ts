@@ -30,7 +30,7 @@ export { ExecutionContext } from './api_types';
 export { Fetcher } from './api_types';
 export { FetchRequest } from './api_types';
 export { FetchResponse } from './api_types';
-export { Formula } from './api_types';
+export { FormulaValue } from './api_types';
 export { GenericSyncFormula } from './api';
 export { GenericSyncFormulaResult } from './api';
 export { GenericSyncTable } from './api';

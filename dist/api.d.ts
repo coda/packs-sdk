@@ -3,6 +3,7 @@ import { ArraySchema } from './schema';
 import { ArrayType } from './api_types';
 import { CommonPackFormulaDef } from './api_types';
 import { ExecutionContext } from './api_types';
+import { FormulaValue } from './api_types';
 import { NumberSchema } from './schema';
 import { PackFormulaResult } from './api_types';
 import { ParamArgs } from './api_types';
@@ -141,3 +142,4 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
     resultType: Type;
 };
+export declare function makeFormulaValue(formula: string): FormulaValue;

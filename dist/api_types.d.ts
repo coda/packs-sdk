@@ -42,7 +42,7 @@ export interface ParamDef<T extends UnionType> {
     optional?: boolean;
     hidden?: boolean;
     autocomplete?: ConnectionMetadataFormula;
-    defaultValue?: TypeOfMap<T> | Formula;
+    defaultValue?: TypeOfMap<T> | FormulaValue;
 }
 export declare type ParamArgs<T extends UnionType> = $Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
 export declare type ParamDefs = [ParamDef<any>, ...Array<ParamDef<any>>] | never[];
@@ -54,7 +54,7 @@ export declare type ParamValues<ParamDefsT extends ParamDefs> = {
 export declare enum MarkerType {
     Formula = "formula"
 }
-export interface Formula {
+export interface FormulaValue {
     type: MarkerType.Formula;
     value: string;
 }

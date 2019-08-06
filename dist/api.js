@@ -20,17 +20,18 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const api_types_1 = require("./api_types");
-const schema_1 = require("./schema");
 const api_types_2 = require("./api_types");
+const schema_1 = require("./schema");
 const api_types_3 = require("./api_types");
+const api_types_4 = require("./api_types");
 const ensure_1 = require("./helpers/ensure");
 const handler_templates_1 = require("./handler_templates");
 const handler_templates_2 = require("./handler_templates");
-const api_types_4 = require("./api_types");
 const api_types_5 = require("./api_types");
-const schema_2 = require("./schema");
 const api_types_6 = require("./api_types");
+const schema_2 = require("./schema");
 const api_types_7 = require("./api_types");
+const api_types_8 = require("./api_types");
 class UserVisibleError extends Error {
     constructor(message, internalError) {
         super(message);
@@ -53,51 +54,51 @@ exports.isUserVisibleError = isUserVisibleError;
 // NOTE[roger] remove once not needed.
 exports.PARAM_DESCRIPTION_DOES_NOT_EXIST = 'NO PARAMETER DESCRIPTION HAS BEEN ADDED. For guidance, see https://coda.link/param-docs';
 function makeStringParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_1.Type.string }));
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_2.Type.string }));
 }
 exports.makeStringParameter = makeStringParameter;
 function makeStringArrayParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_7.stringArray }));
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_8.stringArray }));
 }
 exports.makeStringArrayParameter = makeStringArrayParameter;
 function makeNumericParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_1.Type.number }));
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_2.Type.number }));
 }
 exports.makeNumericParameter = makeNumericParameter;
 function makeNumericArrayParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_6.numberArray }));
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_7.numberArray }));
 }
 exports.makeNumericArrayParameter = makeNumericArrayParameter;
 function makeBooleanParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_1.Type.boolean }));
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_2.Type.boolean }));
 }
 exports.makeBooleanParameter = makeBooleanParameter;
 function makeBooleanArrayParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_2.booleanArray }));
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_3.booleanArray }));
 }
 exports.makeBooleanArrayParameter = makeBooleanArrayParameter;
 function makeDateParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_1.Type.date }));
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_2.Type.date }));
 }
 exports.makeDateParameter = makeDateParameter;
 function makeDateArrayParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_3.dateArray }));
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_4.dateArray }));
 }
 exports.makeDateArrayParameter = makeDateArrayParameter;
 function makeHtmlParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_1.Type.html }));
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_2.Type.html }));
 }
 exports.makeHtmlParameter = makeHtmlParameter;
 function makeHtmlArrayParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_4.htmlArray }));
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_5.htmlArray }));
 }
 exports.makeHtmlArrayParameter = makeHtmlArrayParameter;
 function makeImageParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_1.Type.image }));
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_2.Type.image }));
 }
 exports.makeImageParameter = makeImageParameter;
 function makeImageArrayParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_5.imageArray }));
+    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_6.imageArray }));
 }
 exports.makeImageArrayParameter = makeImageArrayParameter;
 function makeUserVisibleError(msg) {
@@ -111,11 +112,11 @@ function check(condition, msg) {
 }
 exports.check = check;
 function isObjectPackFormula(fn) {
-    return fn.resultType === api_types_1.Type.object;
+    return fn.resultType === api_types_2.Type.object;
 }
 exports.isObjectPackFormula = isObjectPackFormula;
 function isStringPackFormula(fn) {
-    return fn.resultType === api_types_1.Type.string;
+    return fn.resultType === api_types_2.Type.string;
 }
 exports.isStringPackFormula = isStringPackFormula;
 function isSyncPackFormula(fn) {
@@ -123,12 +124,12 @@ function isSyncPackFormula(fn) {
 }
 exports.isSyncPackFormula = isSyncPackFormula;
 function makeNumericFormula(definition) {
-    return Object.assign({}, definition, { resultType: api_types_1.Type.number });
+    return Object.assign({}, definition, { resultType: api_types_2.Type.number });
 }
 exports.makeNumericFormula = makeNumericFormula;
 function makeStringFormula(definition) {
     const { response } = definition;
-    return Object.assign({}, definition, Object.assign({ resultType: api_types_1.Type.string }, (response && { schema: response.schema })));
+    return Object.assign({}, definition, Object.assign({ resultType: api_types_2.Type.string }, (response && { schema: response.schema })));
 }
 exports.makeStringFormula = makeStringFormula;
 function makeGetConnectionNameFormula(execute) {
@@ -210,7 +211,7 @@ function makeObjectFormula(_a) {
         };
     }
     return Object.assign({}, definition, {
-        resultType: api_types_1.Type.object,
+        resultType: api_types_2.Type.object,
         execute,
         schema,
     });
@@ -236,7 +237,7 @@ function makeSyncTable(name, schema, _a, getSchema) {
     return {
         name,
         schema: schema_2.normalizeSchema(schema),
-        getter: Object.assign({}, definition, { cacheTtlSecs: 0, execute, schema: formulaSchema, isSyncFormula: true, resultType: api_types_1.Type.object }),
+        getter: Object.assign({}, definition, { cacheTtlSecs: 0, execute, schema: formulaSchema, isSyncFormula: true, resultType: api_types_2.Type.object }),
         getSchema,
     };
 }
@@ -262,7 +263,7 @@ function makeTranslateObjectFormula(_a) {
     }
     return Object.assign({}, definition, {
         execute,
-        resultType: api_types_1.Type.object,
+        resultType: api_types_2.Type.object,
         schema: response.schema,
     });
 }
@@ -275,7 +276,13 @@ function makeEmptyFormula(definition) {
     }
     return Object.assign({}, definition, {
         execute,
-        resultType: api_types_1.Type.string,
+        resultType: api_types_2.Type.string,
     });
 }
 exports.makeEmptyFormula = makeEmptyFormula;
+// This has nothing to do with pack formula definitions. This is just used when creating a string
+// that is intended to represent a Coda formula.
+function makeFormulaValue(formula) {
+    return { type: api_types_1.MarkerType.Formula, value: formula };
+}
+exports.makeFormulaValue = makeFormulaValue;

@@ -3,6 +3,8 @@ import {ArraySchema} from './schema';
 import {ArrayType} from './api_types';
 import {CommonPackFormulaDef} from './api_types';
 import {ExecutionContext} from './api_types';
+import {FormulaValue} from './api_types';
+import {MarkerType} from './api_types';
 import {NumberSchema} from './schema';
 import {PackFormulaResult} from './api_types';
 import {ParamArgs} from './api_types';
@@ -246,7 +248,7 @@ interface SyncFormulaDef<
   L extends string,
   ParamsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>
-  > extends CommonPackFormulaDef<ParamsT> {
+> extends CommonPackFormulaDef<ParamsT> {
   execute(
     params: ParamValues<ParamsT>,
     context: ExecutionContext,
@@ -260,11 +262,11 @@ export type SyncFormula<
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>
-  > = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
-    resultType: TypeOf<SchemaType<SchemaT>>;
-    isSyncFormula: true;
-    schema?: ArraySchema;
-  };
+> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
+  resultType: TypeOf<SchemaType<SchemaT>>;
+  isSyncFormula: true;
+  schema?: ArraySchema;
+};
 
 export function makeNumericFormula<ParamDefsT extends ParamDefs>(
   definition: PackFormulaDef<ParamDefsT, number>,
@@ -471,4 +473,10 @@ export function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: Empty
     execute,
     resultType: Type.string,
   });
+}
+
+// This has nothing to do with pack formula definitions. This is just used when creating a string
+// that is intended to represent a Coda formula.
+export function makeFormulaValue(formula: string): FormulaValue {
+  return {type: MarkerType.Formula, value: formula};
 }

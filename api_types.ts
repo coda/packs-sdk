@@ -83,7 +83,7 @@ export interface ParamDef<T extends UnionType> {
   optional?: boolean;
   hidden?: boolean;
   autocomplete?: ConnectionMetadataFormula;
-  defaultValue?: TypeOfMap<T> | Formula;
+  defaultValue?: TypeOfMap<T> | FormulaValue;
 }
 
 export type ParamArgs<T extends UnionType> = $Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
@@ -107,7 +107,8 @@ export enum MarkerType {
   Formula = 'formula',
 }
 
-export interface Formula {
+// A string value that represents a formula, as distinguished from string literals.
+export interface FormulaValue {
   type: MarkerType.Formula;
   value: string;
 }
