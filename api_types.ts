@@ -73,8 +73,8 @@ export type PackFormulaResult = $Values<TypeMap> | ConcreteArrayTypes;
 export type TypeOf<T extends PackFormulaResult> = T extends number
   ? Type.number
   : (T extends string
-    ? Type.string
-    : (T extends boolean ? Type.boolean : (T extends Date ? Type.date : (T extends object ? Type.object : never))));
+      ? Type.string
+      : (T extends boolean ? Type.boolean : (T extends Date ? Type.date : (T extends object ? Type.object : never))));
 
 export interface ParamDef<T extends UnionType> {
   name: string;
@@ -83,7 +83,7 @@ export interface ParamDef<T extends UnionType> {
   optional?: boolean;
   hidden?: boolean;
   autocomplete?: ConnectionMetadataFormula;
-  defaultValue?: TypeOfMap<T>;
+  defaultValue?: DefaultValueType<T>;
 }
 
 export type ParamArgs<T extends UnionType> = $Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
@@ -100,6 +100,10 @@ export type ParamValues<ParamDefsT extends ParamDefs> = {
   [K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never
 } &
   any[]; // NOTE(oleg): we need this to avoid "must have a '[Symbol.iterator]()' method that returns an iterator."
+
+export type DefaultValueType<T extends UnionType> = T extends ArrayType<Type.date>
+  ? TypeOfMap<T> | PrecannedDateRange
+  : TypeOfMap<T>;
 
 export interface CommonPackFormulaDef<T extends ParamDefs> {
   readonly name: string;
@@ -153,4 +157,40 @@ export interface ExecutionContext {
     docId?: string;
   };
   readonly timezone: string;
+}
+
+// A mapping exists in experimental that allows these to show up in the UI.
+// If adding new values here, add them to that mapping and vice versa.
+export enum PrecannedDateRange {
+  // Past
+  Yesterday = 'yesterday',
+  Last7Days = 'last_7_days',
+  Last30Days = 'last_30_days',
+  LastWeek = 'last_week',
+  LastMonth = 'last_month',
+  Last3Months = 'last_3_months',
+  Last6Months = 'last_6_months',
+  LastYear = 'last_year',
+
+  // Present
+  Today = 'today',
+  ThisWeek = 'this_week',
+  ThisWeekStart = 'this_week_start',
+  ThisMonth = 'this_month',
+  ThisMonthStart = 'this_month_start',
+  ThisYearStart = 'this_year_start',
+  YearToDate = 'year_to_date',
+  ThisYear = 'this_year',
+
+  // Future
+  Tomorrow = 'tomorrow',
+  Next7Days = 'next_7_days',
+  Next30Days = 'next_30_days',
+  NextWeek = 'next_week',
+  NextMonth = 'next_month',
+  Next3Months = 'next_3_months',
+  Next6Months = 'next_6_months',
+  NextYear = 'next_year',
+
+  Everything = 'everything',
 }
