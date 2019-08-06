@@ -26,6 +26,7 @@ export { Continuation } from './api';
 export { ConnectionMetadataFormulaObjectResultType } from './api';
 export { ConnectionMetadataFormulaResultType } from './api';
 export { ConnectionMetadataFormula } from './api';
+export { DefaultValueType } from './api_types';
 export { ExecutionContext } from './api_types';
 export { Fetcher } from './api_types';
 export { FetchRequest } from './api_types';
