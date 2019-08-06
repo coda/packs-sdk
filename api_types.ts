@@ -102,7 +102,7 @@ export type ParamValues<ParamDefsT extends ParamDefs> = {
   any[]; // NOTE(oleg): we need this to avoid "must have a '[Symbol.iterator]()' method that returns an iterator."
 
 export type DefaultValueType<T extends UnionType> = T extends ArrayType<Type.date>
-  ? TypeOfMap<T> | PrecannedDateRange
+  ? TypeOfMap<T> | string
   : TypeOfMap<T>;
 
 export interface CommonPackFormulaDef<T extends ParamDefs> {
@@ -157,39 +157,4 @@ export interface ExecutionContext {
     docId?: string;
   };
   readonly timezone: string;
-}
-
-// The values here should match those in LiveRangesState in experimental. The names can be arbitrary.
-export enum PrecannedDateRange {
-  // Past
-  Yesterday = 'yesterday',
-  Last7Days = 'last_7_days',
-  Last30Days = 'last_30_days',
-  LastWeek = 'last_week',
-  LastMonth = 'last_month',
-  Last3Months = 'last_3_months',
-  Last6Months = 'last_6_months',
-  LastYear = 'last_year',
-
-  // Present
-  Today = 'today',
-  ThisWeek = 'this_week',
-  ThisWeekStart = 'this_week_start',
-  ThisMonth = 'this_month',
-  ThisMonthStart = 'this_month_start',
-  ThisYearStart = 'this_year_start',
-  YearToDate = 'year_to_date',
-  ThisYear = 'this_year',
-
-  // Future
-  Tomorrow = 'tomorrow',
-  Next7Days = 'next_7_days',
-  Next30Days = 'next_30_days',
-  NextWeek = 'next_week',
-  NextMonth = 'next_month',
-  Next3Months = 'next_3_months',
-  Next6Months = 'next_6_months',
-  NextYear = 'next_year',
-
-  Everything = 'everything',
 }

@@ -45,7 +45,6 @@ export {PackFormulas} from './api';
 export {PackFormulaValue} from './api_types';
 export {PackFormulaResult} from './api_types';
 export {ParamsList} from './api_types';
-export {PrecannedDateRange} from './api_types';
 export {StatusCodeError} from './api';
 export {Type} from './api_types';
 export {TypedPackFormula} from './api';

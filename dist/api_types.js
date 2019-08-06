@@ -38,35 +38,3 @@ exports.imageArray = {
     type: 'array',
     items: Type.image,
 };
-// The values here should match those in LiveRangesState in experimental. The names can be arbitrary.
-var PrecannedDateRange;
-(function (PrecannedDateRange) {
-    // Past
-    PrecannedDateRange["Yesterday"] = "yesterday";
-    PrecannedDateRange["Last7Days"] = "last_7_days";
-    PrecannedDateRange["Last30Days"] = "last_30_days";
-    PrecannedDateRange["LastWeek"] = "last_week";
-    PrecannedDateRange["LastMonth"] = "last_month";
-    PrecannedDateRange["Last3Months"] = "last_3_months";
-    PrecannedDateRange["Last6Months"] = "last_6_months";
-    PrecannedDateRange["LastYear"] = "last_year";
-    // Present
-    PrecannedDateRange["Today"] = "today";
-    PrecannedDateRange["ThisWeek"] = "this_week";
-    PrecannedDateRange["ThisWeekStart"] = "this_week_start";
-    PrecannedDateRange["ThisMonth"] = "this_month";
-    PrecannedDateRange["ThisMonthStart"] = "this_month_start";
-    PrecannedDateRange["ThisYearStart"] = "this_year_start";
-    PrecannedDateRange["YearToDate"] = "year_to_date";
-    PrecannedDateRange["ThisYear"] = "this_year";
-    // Future
-    PrecannedDateRange["Tomorrow"] = "tomorrow";
-    PrecannedDateRange["Next7Days"] = "next_7_days";
-    PrecannedDateRange["Next30Days"] = "next_30_days";
-    PrecannedDateRange["NextWeek"] = "next_week";
-    PrecannedDateRange["NextMonth"] = "next_month";
-    PrecannedDateRange["Next3Months"] = "next_3_months";
-    PrecannedDateRange["Next6Months"] = "next_6_months";
-    PrecannedDateRange["NextYear"] = "next_year";
-    PrecannedDateRange["Everything"] = "everything";
-})(PrecannedDateRange = exports.PrecannedDateRange || (exports.PrecannedDateRange = {}));
