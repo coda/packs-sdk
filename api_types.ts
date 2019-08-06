@@ -83,7 +83,7 @@ export interface ParamDef<T extends UnionType> {
   optional?: boolean;
   hidden?: boolean;
   autocomplete?: ConnectionMetadataFormula;
-  defaultValue?: DefaultValueType<T>;
+  defaultValue?: TypeOfMap<T> | Formula;
 }
 
 export type ParamArgs<T extends UnionType> = $Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
@@ -101,9 +101,16 @@ export type ParamValues<ParamDefsT extends ParamDefs> = {
 } &
   any[]; // NOTE(oleg): we need this to avoid "must have a '[Symbol.iterator]()' method that returns an iterator."
 
-export type DefaultValueType<T extends UnionType> = T extends ArrayType<Type.date>
-  ? TypeOfMap<T> | string
-  : TypeOfMap<T>;
+// Used for distinguishing specific types of values in configs that we don't necessarily want to declare
+// as acceptable value types.
+export enum MarkerType {
+  Formula = 'formula',
+}
+
+export interface Formula {
+  type: MarkerType.Formula;
+  value: string;
+}
 
 export interface CommonPackFormulaDef<T extends ParamDefs> {
   readonly name: string;

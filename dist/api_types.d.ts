@@ -42,7 +42,7 @@ export interface ParamDef<T extends UnionType> {
     optional?: boolean;
     hidden?: boolean;
     autocomplete?: ConnectionMetadataFormula;
-    defaultValue?: DefaultValueType<T>;
+    defaultValue?: TypeOfMap<T> | Formula;
 }
 export declare type ParamArgs<T extends UnionType> = $Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
 export declare type ParamDefs = [ParamDef<any>, ...Array<ParamDef<any>>] | never[];
@@ -51,7 +51,13 @@ declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : (T e
 export declare type ParamValues<ParamDefsT extends ParamDefs> = {
     [K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
 } & any[];
-export declare type DefaultValueType<T extends UnionType> = T extends ArrayType<Type.date> ? TypeOfMap<T> | string : TypeOfMap<T>;
+export declare enum MarkerType {
+    Formula = "formula"
+}
+export interface Formula {
+    type: MarkerType.Formula;
+    value: string;
+}
 export interface CommonPackFormulaDef<T extends ParamDefs> {
     readonly name: string;
     readonly description: string;

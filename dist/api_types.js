@@ -38,3 +38,9 @@ exports.imageArray = {
     type: 'array',
     items: Type.image,
 };
+// Used for distinguishing specific types of values in configs that we don't necessarily want to declare
+// as acceptable value types.
+var MarkerType;
+(function (MarkerType) {
+    MarkerType["Formula"] = "formula";
+})(MarkerType = exports.MarkerType || (exports.MarkerType = {}));
