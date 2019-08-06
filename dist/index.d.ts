@@ -52,6 +52,7 @@ export { isUserVisibleError } from './api';
 export { makeUserVisibleError } from './api';
 export { makeConnectionMetadataFormula } from './api';
 export { makeEmptyFormula } from './api';
+export { makeFormulaValue } from './api';
 export { makeGetConnectionNameFormula } from './api';
 export { makeNumericFormula } from './api';
 export { makeObjectFormula } from './api';
