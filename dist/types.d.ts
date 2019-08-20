@@ -229,6 +229,23 @@ export interface Policy {
     name: string;
     url: string;
 }
+export declare enum FeatureSet {
+    Basic = "Basic",
+    Pro = "Pro",
+    Team = "Team",
+    Enterprise = "Enterprise"
+}
+export declare enum QuotaType {
+    Action = "Action",
+    Getter = "Getter",
+    Sync = "Sync",
+    Metadata = "Metadata"
+}
+export interface Quota {
+    quotaType: QuotaType;
+    featureSet: FeatureSet;
+    monthlyCount: number;
+}
 export interface RateLimit {
     operationsPerInterval: number;
     intervalSeconds: number;
@@ -251,6 +268,10 @@ export interface PackDefinition {
     defaultAuthentication?: Authentication;
     exampleImages?: string[];
     exampleVideoIds?: string[];
+    gettingStartedImage?: string;
+    gettingStartedText?: string;
+    minimumFeatureSet?: FeatureSet;
+    quotas?: Quota[];
     rateLimits?: RateLimits;
     /**
      * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
