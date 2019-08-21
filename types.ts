@@ -302,7 +302,6 @@ export enum SyncInterval {
 }
 
 export interface Quota {
-  featureSet: FeatureSet;
   limits?: QuotaLimit[];
   maximumSyncInterval?: SyncInterval;
 }

@@ -251,7 +251,6 @@ export declare enum SyncInterval {
     Hourly = "Hourly"
 }
 export interface Quota {
-    featureSet: FeatureSet;
     limits?: QuotaLimit[];
     maximumSyncInterval?: SyncInterval;
 }
