@@ -143,10 +143,16 @@ var FeatureSet;
     FeatureSet["Team"] = "Team";
     FeatureSet["Enterprise"] = "Enterprise";
 })(FeatureSet = exports.FeatureSet || (exports.FeatureSet = {}));
-var QuotaType;
-(function (QuotaType) {
-    QuotaType["Action"] = "Action";
-    QuotaType["Getter"] = "Getter";
-    QuotaType["Sync"] = "Sync";
-    QuotaType["Metadata"] = "Metadata";
-})(QuotaType = exports.QuotaType || (exports.QuotaType = {}));
+var QuotaLimitType;
+(function (QuotaLimitType) {
+    QuotaLimitType["Action"] = "Action";
+    QuotaLimitType["Getter"] = "Getter";
+    QuotaLimitType["Sync"] = "Sync";
+    QuotaLimitType["Metadata"] = "Metadata";
+})(QuotaLimitType = exports.QuotaLimitType || (exports.QuotaLimitType = {}));
+var SyncInterval;
+(function (SyncInterval) {
+    SyncInterval["Manual"] = "Manual";
+    SyncInterval["Daily"] = "Daily";
+    SyncInterval["Hourly"] = "Hourly";
+})(SyncInterval = exports.SyncInterval || (exports.SyncInterval = {}));

@@ -283,17 +283,28 @@ export enum FeatureSet {
   Enterprise = 'Enterprise',
 }
 
-export enum QuotaType {
+export enum QuotaLimitType {
   Action = 'Action',
   Getter = 'Getter',
   Sync = 'Sync',
   Metadata = 'Metadata',
 }
 
-export interface Quota {
-  quotaType: QuotaType;
-  featureSet: FeatureSet;
+export interface QuotaLimit {
+  type: QuotaLimitType;
   monthlyCount: number;
+}
+
+export enum SyncInterval {
+  Manual = 'Manual',
+  Daily = 'Daily',
+  Hourly = 'Hourly',
+}
+
+export interface Quota {
+  featureSet: FeatureSet;
+  limits?: QuotaLimit[];
+  maximumSyncInterval?: SyncInterval;
 }
 
 export interface RateLimit {
