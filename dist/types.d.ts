@@ -280,7 +280,9 @@ export interface PackDefinition {
     gettingStartedImage?: string;
     gettingStartedText?: string;
     minimumFeatureSet?: FeatureSet;
-    quotas?: Quota[];
+    quotas?: {
+        [featureSetId in FeatureSet]: Quota;
+    };
     rateLimits?: RateLimits;
     /**
      * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
