@@ -251,8 +251,6 @@ export interface PackDefinition {
     defaultAuthentication?: Authentication;
     exampleImages?: string[];
     exampleVideoIds?: string[];
-    gettingStartedImage?: string;
-    gettingStartedText?: string;
     rateLimits?: RateLimits;
     /**
      * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
