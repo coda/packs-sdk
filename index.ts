@@ -11,7 +11,6 @@ export {PackId} from './types';
 export {ProviderDefinition} from './types';
 export {ProviderId} from './types';
 export {Quota} from './types';
-export {QuotaLimit} from './types';
 export {QuotaLimitType} from './types';
 export {RateLimit} from './types';
 export {RateLimits} from './types';

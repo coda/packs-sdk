@@ -241,17 +241,15 @@ export declare enum QuotaLimitType {
     Sync = "Sync",
     Metadata = "Metadata"
 }
-export interface QuotaLimit {
-    type: QuotaLimitType;
-    monthlyCount: number;
-}
 export declare enum SyncInterval {
     Manual = "Manual",
     Daily = "Daily",
     Hourly = "Hourly"
 }
 export interface Quota {
-    limits?: QuotaLimit[];
+    monthlyLimits?: Partial<{
+        [featureSetId in QuotaLimitType]: number;
+    }>;
     maximumSyncInterval?: SyncInterval;
 }
 export interface RateLimit {
