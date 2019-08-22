@@ -278,7 +278,7 @@ export interface PackDefinition {
     gettingStartedText?: string;
     minimumFeatureSet?: FeatureSet;
     quotas?: Partial<{
-        [featureSetId in FeatureSet]: Quota;
+        [featureSet in FeatureSet]: Quota;
     }>;
     rateLimits?: RateLimits;
     /**
