@@ -136,3 +136,23 @@ var DefaultConnectionType;
     DefaultConnectionType[DefaultConnectionType["Shared"] = 2] = "Shared";
     DefaultConnectionType[DefaultConnectionType["ProxyActionsOnly"] = 3] = "ProxyActionsOnly";
 })(DefaultConnectionType = exports.DefaultConnectionType || (exports.DefaultConnectionType = {}));
+var FeatureSet;
+(function (FeatureSet) {
+    FeatureSet["Basic"] = "Basic";
+    FeatureSet["Pro"] = "Pro";
+    FeatureSet["Team"] = "Team";
+    FeatureSet["Enterprise"] = "Enterprise";
+})(FeatureSet = exports.FeatureSet || (exports.FeatureSet = {}));
+var QuotaLimitType;
+(function (QuotaLimitType) {
+    QuotaLimitType["Action"] = "Action";
+    QuotaLimitType["Getter"] = "Getter";
+    QuotaLimitType["Sync"] = "Sync";
+    QuotaLimitType["Metadata"] = "Metadata";
+})(QuotaLimitType = exports.QuotaLimitType || (exports.QuotaLimitType = {}));
+var SyncInterval;
+(function (SyncInterval) {
+    SyncInterval["Manual"] = "Manual";
+    SyncInterval["Daily"] = "Daily";
+    SyncInterval["Hourly"] = "Hourly";
+})(SyncInterval = exports.SyncInterval || (exports.SyncInterval = {}));

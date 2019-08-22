@@ -1,6 +1,7 @@
 // Pack related interfaces
 export {Authentication} from './types';
 export {AuthenticationType} from './types';
+export {FeatureSet} from './types';
 export {DefaultConnectionType} from './types';
 export {OAuth2Authentication} from './types';
 export {Format} from './types';
@@ -9,8 +10,11 @@ export {PackDefinition} from './types';
 export {PackId} from './types';
 export {ProviderDefinition} from './types';
 export {ProviderId} from './types';
+export {Quota} from './types';
+export {QuotaLimitType} from './types';
 export {RateLimit} from './types';
 export {RateLimits} from './types';
+export {SyncInterval} from './types';
 
 // Compiler interfaces
 export {PackFormatMetadata} from './compiled_types';
