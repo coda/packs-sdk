@@ -297,7 +297,7 @@ export enum SyncInterval {
 }
 
 export interface Quota {
-  monthlyLimits?: Partial<{[featureSetId in QuotaLimitType]: number}>;
+  monthlyLimits?: Partial<{[quotaLimitType in QuotaLimitType]: number}>;
   maximumSyncInterval?: SyncInterval;
 }
 
