@@ -274,8 +274,6 @@ export interface PackDefinition {
     defaultAuthentication?: Authentication;
     exampleImages?: string[];
     exampleVideoIds?: string[];
-    gettingStartedImage?: string;
-    gettingStartedText?: string;
     minimumFeatureSet?: FeatureSet;
     quotas?: Partial<{
         [featureSet in FeatureSet]: Quota;
