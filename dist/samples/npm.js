@@ -10,6 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const types_1 = require("../types");
 const types_2 = require("../types");
+const types_3 = require("../types");
+const types_4 = require("../types");
 const schema_1 = require("../schema");
 const sample_utils_1 = require("../helpers/sample_utils");
 const sample_utils_2 = require("../helpers/sample_utils");
@@ -79,7 +81,7 @@ const FakeNpmDefinitionFake = {
     description: 'Node module repository',
     version: exports.FakeNpmPackVersion,
     providerId: exports.FakeNpmProviderId,
-    category: types_2.PackCategory.Communication,
+    category: types_3.PackCategory.Communication,
     logoPath: 'some/path',
     defaultAuthentication: {
         type: types_1.AuthenticationType.HeaderBearerToken,
@@ -96,6 +98,15 @@ const FakeNpmDefinitionFake = {
                 getOptionsFormula: api_2.makeConnectionMetadataFormula(() => __awaiter(this, void 0, void 0, function* () { return `FakeConnection getDefaultOptions2`; })),
             },
         ],
+    },
+    minimumFeatureSet: types_2.FeatureSet.Pro,
+    quotas: {
+        [types_2.FeatureSet.Basic]: {
+            monthlyLimits: {
+                [types_4.QuotaLimitType.Action]: 10,
+                [types_4.QuotaLimitType.Getter]: 100,
+            },
+        },
     },
     formats: [
         {

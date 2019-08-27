@@ -1,8 +1,10 @@
 import {AuthenticationType} from '../types';
 import {FakePackDefinition} from '../helpers/sample_utils';
+import {FeatureSet} from '../types';
 import {PackCategory} from '../types';
 import {PackDefinition} from '../types';
 import {PackMetadata} from '../compiled_types';
+import {QuotaLimitType} from '../types';
 import {ValueType} from '../schema';
 import {fakeDefinitionToDefinition} from '../helpers/sample_utils';
 import {fakeDefinitionToMetadata} from '../helpers/sample_utils';
@@ -95,6 +97,15 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         getOptionsFormula: makeConnectionMetadataFormula(async () => `FakeConnection getDefaultOptions2`),
       },
     ],
+  },
+  minimumFeatureSet: FeatureSet.Pro,
+  quotas: {
+    [FeatureSet.Basic]: {
+      monthlyLimits: {
+        [QuotaLimitType.Action]: 10,
+        [QuotaLimitType.Getter]: 100,
+      },
+    },
   },
   formats: [
     {
