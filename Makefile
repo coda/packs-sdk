@@ -2,6 +2,10 @@ MAKEFLAGS = -s ${MAX_PARALLEL_MAKEFLAG}
 SHELL = /bin/bash
 ROOTDIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
+### YARN
+# CircleCI yarn cache directory may also need to be updated in sync with this
+YARN_CACHE_DIR=~/.yarncache
+
 # Aliases
 bs: bootstrap
 
@@ -10,6 +14,8 @@ bs: bootstrap
 
 .PHONY: _bootstrap-node
 _bootstrap-node:
+	mkdir -p ${YARN_CACHE_DIR}
+	yarn config set cache-folder ${YARN_CACHE_DIR}
 	yarn install
 
 .PHONY: bootstrap
