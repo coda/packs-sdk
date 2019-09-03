@@ -74,6 +74,7 @@ var PackId;
     PackId[PackId["OMDB"] = 1050] = "OMDB";
     PackId[PackId["PubNub"] = 1051] = "PubNub";
     PackId[PackId["Jira"] = 1052] = "Jira";
+    PackId[PackId["Barcode"] = 1053] = "Barcode";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
@@ -118,6 +119,7 @@ var ProviderId;
     ProviderId[ProviderId["OMDB"] = 2039] = "OMDB";
     ProviderId[ProviderId["PubNub"] = 2040] = "PubNub";
     ProviderId[ProviderId["Atlassian"] = 2041] = "Atlassian";
+    ProviderId[ProviderId["Barcode"] = 2042] = "Barcode";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {
