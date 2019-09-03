@@ -73,7 +73,8 @@ export declare enum PackId {
     GoogleSearchConsole = 1049,
     OMDB = 1050,
     PubNub = 1051,
-    Jira = 1052
+    Jira = 1052,
+    Barcode = 1053
 }
 export declare enum ProviderId {
     Airtable = 2001,
@@ -116,7 +117,8 @@ export declare enum ProviderId {
     AWS = 2038,
     OMDB = 2039,
     PubNub = 2040,
-    Atlassian = 2041
+    Atlassian = 2041,
+    Barcode = 2042
 }
 export declare enum AuthenticationType {
     None = "None",
