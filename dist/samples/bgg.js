@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -48,7 +49,7 @@ const FakeBggDefinitionOldFake = {
                 examples: [],
                 parameters: [api_4.makeStringParameter('id', 'ID of a board game.')],
                 network: { hasSideEffect: false, hasConnection: true, requiresConnection: true },
-                execute: ([id], context) => __awaiter(this, void 0, void 0, function* () {
+                execute: ([id], context) => __awaiter(void 0, void 0, void 0, function* () {
                     const url = `https://boardgamegeek.com/boardgame/${id}`;
                     const result = yield context.fetcher.fetch({ method: 'GET', url });
                     return result.body;
@@ -75,7 +76,7 @@ const FakeBggDefinitionFake = {
         clientIdEnvVarName: 'FAKE_BGG_CLIENT_ID',
         clientSecretEnvVarName: 'FAKE_BGG_CLIENT_SECRET',
         scopes: ['games', 'favorites'],
-        getConnectionNameFormula: api_1.makeGetConnectionNameFormula((context) => __awaiter(this, void 0, void 0, function* () {
+        getConnectionNameFormula: api_1.makeGetConnectionNameFormula((context) => __awaiter(void 0, void 0, void 0, function* () {
             const request = {
                 method: 'GET',
                 url: 'https://boardgamegeek.com/me',
@@ -86,7 +87,7 @@ const FakeBggDefinitionFake = {
             const response = yield context.fetcher.fetch(request);
             return response.body.profile.display_name;
         })),
-        getConnectionName: api_2.makeConnectionMetadataFormula((context) => __awaiter(this, void 0, void 0, function* () {
+        getConnectionName: api_2.makeConnectionMetadataFormula((context) => __awaiter(void 0, void 0, void 0, function* () {
             const request = {
                 method: 'GET',
                 url: 'https://boardgamegeek.com/me',
@@ -120,7 +121,7 @@ const FakeBggDefinitionFake = {
                 examples: [],
                 parameters: [api_4.makeStringParameter('url', 'Url to a board game')],
                 network: { hasSideEffect: false, hasConnection: true, requiresConnection: true },
-                execute: ([id], context) => __awaiter(this, void 0, void 0, function* () {
+                execute: ([id], context) => __awaiter(void 0, void 0, void 0, function* () {
                     const url = `https://boardgamegeek.com/boardgame/${id}`;
                     const result = yield context.fetcher.fetch({ method: 'GET', url });
                     return result.body;
