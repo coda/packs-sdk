@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -53,51 +54,51 @@ exports.isUserVisibleError = isUserVisibleError;
 // NOTE[roger] remove once not needed.
 exports.PARAM_DESCRIPTION_DOES_NOT_EXIST = 'NO PARAMETER DESCRIPTION HAS BEEN ADDED. For guidance, see https://coda.link/param-docs';
 function makeStringParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_1.Type.string }));
+    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_1.Type.string }));
 }
 exports.makeStringParameter = makeStringParameter;
 function makeStringArrayParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_7.stringArray }));
+    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_7.stringArray }));
 }
 exports.makeStringArrayParameter = makeStringArrayParameter;
 function makeNumericParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_1.Type.number }));
+    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_1.Type.number }));
 }
 exports.makeNumericParameter = makeNumericParameter;
 function makeNumericArrayParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_6.numberArray }));
+    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_6.numberArray }));
 }
 exports.makeNumericArrayParameter = makeNumericArrayParameter;
 function makeBooleanParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_1.Type.boolean }));
+    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_1.Type.boolean }));
 }
 exports.makeBooleanParameter = makeBooleanParameter;
 function makeBooleanArrayParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_2.booleanArray }));
+    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_2.booleanArray }));
 }
 exports.makeBooleanArrayParameter = makeBooleanArrayParameter;
 function makeDateParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_1.Type.date }));
+    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_1.Type.date }));
 }
 exports.makeDateParameter = makeDateParameter;
 function makeDateArrayParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_3.dateArray }));
+    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_3.dateArray }));
 }
 exports.makeDateArrayParameter = makeDateArrayParameter;
 function makeHtmlParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_1.Type.html }));
+    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_1.Type.html }));
 }
 exports.makeHtmlParameter = makeHtmlParameter;
 function makeHtmlArrayParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_4.htmlArray }));
+    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_4.htmlArray }));
 }
 exports.makeHtmlArrayParameter = makeHtmlArrayParameter;
 function makeImageParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_1.Type.image }));
+    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_1.Type.image }));
 }
 exports.makeImageParameter = makeImageParameter;
 function makeImageArrayParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign({}, args, { name, description, type: api_types_5.imageArray }));
+    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_5.imageArray }));
 }
 exports.makeImageArrayParameter = makeImageArrayParameter;
 function makeUserVisibleError(msg) {
@@ -236,7 +237,7 @@ function makeSyncTable(name, schema, _a, getSchema) {
     return {
         name,
         schema: schema_2.normalizeSchema(schema),
-        getter: Object.assign({}, definition, { cacheTtlSecs: 0, execute, schema: formulaSchema, isSyncFormula: true, resultType: api_types_1.Type.object }),
+        getter: Object.assign(Object.assign({}, definition), { cacheTtlSecs: 0, execute, schema: formulaSchema, isSyncFormula: true, resultType: api_types_1.Type.object }),
         getSchema,
     };
 }

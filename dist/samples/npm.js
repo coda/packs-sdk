@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -85,17 +86,17 @@ const FakeNpmDefinitionFake = {
     logoPath: 'some/path',
     defaultAuthentication: {
         type: types_1.AuthenticationType.HeaderBearerToken,
-        getConnectionName: api_2.makeConnectionMetadataFormula((_ctx, [search]) => __awaiter(this, void 0, void 0, function* () { return `FakeConnection ${search}`; })),
+        getConnectionName: api_2.makeConnectionMetadataFormula((_ctx, [search]) => __awaiter(void 0, void 0, void 0, function* () { return `FakeConnection ${search}`; })),
         postSetup: [
             {
                 name: 'getDefaultOptions1',
                 description: 'Get default options',
-                getOptionsFormula: api_2.makeConnectionMetadataFormula(() => __awaiter(this, void 0, void 0, function* () { return `FakeConnection getDefaultOptions1`; })),
+                getOptionsFormula: api_2.makeConnectionMetadataFormula(() => __awaiter(void 0, void 0, void 0, function* () { return `FakeConnection getDefaultOptions1`; })),
             },
             {
                 name: 'getDefaultOptions2',
                 description: 'Get default options - second',
-                getOptionsFormula: api_2.makeConnectionMetadataFormula(() => __awaiter(this, void 0, void 0, function* () { return `FakeConnection getDefaultOptions2`; })),
+                getOptionsFormula: api_2.makeConnectionMetadataFormula(() => __awaiter(void 0, void 0, void 0, function* () { return `FakeConnection getDefaultOptions2`; })),
             },
         ],
     },
@@ -130,7 +131,7 @@ const FakeNpmDefinitionFake = {
                 examples: [],
                 parameters: [
                     api_8.makeStringParameter('name', 'Package name', {
-                        autocomplete: api_2.makeConnectionMetadataFormula((context, search) => __awaiter(this, void 0, void 0, function* () {
+                        autocomplete: api_2.makeConnectionMetadataFormula((context, search) => __awaiter(void 0, void 0, void 0, function* () {
                             const url = url_1.withQueryParams(`https://npmjs.com/api/packages/search`, { q: String(search || '') });
                             const result = yield context.fetcher.fetch({ method: 'GET', url });
                             return result.body;
@@ -142,7 +143,7 @@ const FakeNpmDefinitionFake = {
                     }),
                 ],
                 network: { hasSideEffect: false, hasConnection: false },
-                execute: ([name, monthly], context) => __awaiter(this, void 0, void 0, function* () {
+                execute: ([name, monthly], context) => __awaiter(void 0, void 0, void 0, function* () {
                     const url = url_1.withQueryParams(`https://npmjs.com/api/packages/${name}`, { monthly: String(monthly) });
                     const result = yield context.fetcher.fetch({ method: 'GET', url });
                     return result.body;
@@ -154,7 +155,7 @@ const FakeNpmDefinitionFake = {
                 examples: [],
                 parameters: [api_6.makeStringArrayParameter('names', 'Names of packages to download')],
                 network: { hasSideEffect: false, hasConnection: false },
-                execute: ([names]) => __awaiter(this, void 0, void 0, function* () {
+                execute: ([names]) => __awaiter(void 0, void 0, void 0, function* () {
                     return names.map(name => `https://npmjs.com/api/packages/${name}`).join(',');
                 }),
             }),
@@ -167,7 +168,7 @@ const FakeNpmDefinitionFake = {
                     api_8.makeStringParameter('path', 'file path for download', { optional: true }),
                 ],
                 network: { hasSideEffect: true, hasConnection: false, requiresConnection: false },
-                execute: ([url, _path], context) => __awaiter(this, void 0, void 0, function* () {
+                execute: ([url, _path], context) => __awaiter(void 0, void 0, void 0, function* () {
                     const fullUrl = url_1.withQueryParams(`https://npmjs.com/api/packages/${url}/download`);
                     const result = yield context.fetcher.fetch({ method: 'POST', url: fullUrl });
                     return result.body;
@@ -179,7 +180,7 @@ const FakeNpmDefinitionFake = {
                 examples: [],
                 parameters: [api_8.makeStringParameter('name', 'Package name')],
                 network: { hasSideEffect: true, hasConnection: true, requiresConnection: true },
-                execute: ([name], context) => __awaiter(this, void 0, void 0, function* () {
+                execute: ([name], context) => __awaiter(void 0, void 0, void 0, function* () {
                     const url = url_1.withQueryParams(`https://npmjs.com/api/packages`);
                     const result = yield context.fetcher.fetch({ method: 'POST', body: JSON.stringify({ name }), url });
                     return result.body;
@@ -197,7 +198,7 @@ const FakeNpmDefinitionFake = {
                 api_3.makeDateArrayParameter('dateRange', 'Date range', { optional: true }),
             ],
             network: { hasSideEffect: false, hasConnection: false },
-            execute: ([search], context, continuation) => __awaiter(this, void 0, void 0, function* () {
+            execute: ([search], context, continuation) => __awaiter(void 0, void 0, void 0, function* () {
                 const url = url_1.withQueryParams(`https://npmjs.com/api/packages/${search}`, { continuation });
                 const result = yield context.fetcher.fetch({ method: 'GET', url });
                 return result.body;
@@ -209,7 +210,7 @@ const FakeNpmDefinitionFake = {
             examples: [],
             parameters: [
                 api_8.makeStringParameter('name', 'Package name', {
-                    autocomplete: api_2.makeConnectionMetadataFormula((context, search) => __awaiter(this, void 0, void 0, function* () {
+                    autocomplete: api_2.makeConnectionMetadataFormula((context, search) => __awaiter(void 0, void 0, void 0, function* () {
                         const url = url_1.withQueryParams(`https://npmjs.com/api/packages/search`, { q: String(search || '') });
                         const result = yield context.fetcher.fetch({ method: 'GET', url });
                         return result.body;
@@ -217,7 +218,7 @@ const FakeNpmDefinitionFake = {
                 }),
             ],
             network: { hasSideEffect: false, hasConnection: false },
-            execute: ([pack], context, continuation) => __awaiter(this, void 0, void 0, function* () {
+            execute: ([pack], context, continuation) => __awaiter(void 0, void 0, void 0, function* () {
                 const url = url_1.withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, { continuation });
                 const result = yield context.fetcher.fetch({ method: 'GET', url });
                 return result.body;

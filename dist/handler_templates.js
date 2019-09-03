@@ -84,7 +84,7 @@ function generateRequestHandler(request, parameters) {
         if (hasBodyParams) {
             const currentBodyParams = generateParamMap(ensure_1.ensureExists(bodyParams), nameMapping);
             // Merge the param if needed.
-            body = body ? Object.assign({}, body, currentBodyParams) : currentBodyParams;
+            body = body ? Object.assign(Object.assign({}, body), currentBodyParams) : currentBodyParams;
         }
         return {
             url: fullUrl,

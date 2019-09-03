@@ -28,20 +28,20 @@ function fakeDefinitionToMetadata(def) {
     const formats = [];
     for (let _a of originalFormats || []) {
         const { matchers } = _a, format = __rest(_a, ["matchers"]);
-        formats.push(Object.assign({}, format, { matchers: (matchers || []).map(m => m.toString()) }));
+        formats.push(Object.assign(Object.assign({}, format), { matchers: (matchers || []).map(m => m.toString()) }));
     }
     let defaultAuthentication = originalDefaultAuthentication;
     if (originalDefaultAuthentication &&
         'getConnectionNameFormula' in originalDefaultAuthentication &&
         originalDefaultAuthentication.getConnectionNameFormula) {
         const _b = originalDefaultAuthentication.getConnectionNameFormula, { execute } = _b, connNameFormula = __rest(_b, ["execute"]);
-        defaultAuthentication = Object.assign({}, originalDefaultAuthentication, { getConnectionNameFormula: Object.assign({}, connNameFormula) });
+        defaultAuthentication = Object.assign(Object.assign({}, originalDefaultAuthentication), { getConnectionNameFormula: Object.assign({}, connNameFormula) });
     }
     if (originalDefaultAuthentication &&
         'getConnectionName' in originalDefaultAuthentication &&
         originalDefaultAuthentication.getConnectionName) {
         const _c = originalDefaultAuthentication.getConnectionName, { execute } = _c, connNameFormula = __rest(_c, ["execute"]);
-        defaultAuthentication = Object.assign({}, originalDefaultAuthentication, { getConnectionName: Object.assign({}, connNameFormula) });
+        defaultAuthentication = Object.assign(Object.assign({}, originalDefaultAuthentication), { getConnectionName: Object.assign({}, connNameFormula) });
     }
     const syncTables = [];
     for (let _d of originalSyncTables || []) {
@@ -49,8 +49,8 @@ function fakeDefinitionToMetadata(def) {
         const { execute } = getter, otherGetter = __rest(getter, ["execute"]);
         syncTables.push(Object.assign({ getter: Object.assign({}, otherGetter) }, others));
     }
-    return Object.assign({ formulas,
+    return Object.assign(Object.assign({ formulas,
         formats,
-        syncTables }, (defaultAuthentication && { defaultAuthentication }), packMetadata);
+        syncTables }, (defaultAuthentication && { defaultAuthentication })), packMetadata);
 }
 exports.fakeDefinitionToMetadata = fakeDefinitionToMetadata;
