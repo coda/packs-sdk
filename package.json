@@ -16,12 +16,12 @@
     "clone": "^2.1.2",
     "lodash": "^4.17.15",
     "pascalcase": "^0.1.1",
-    "qs": "^6.7.0",
+    "qs": "^6.8.0",
     "string-template": "^1.0.0",
     "url-parse": "^1.4.7"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.7",
+    "@types/chai": "^4.2.0",
     "@types/clone": "^0.1.30",
     "@types/lodash": "^4.14.138",
     "@types/mocha": "^5.2.7",
@@ -33,7 +33,7 @@
     "mocha": "^6.2.0",
     "ts-loader": "^6.0.4",
     "ts-node": "^8.3.0",
-    "tslint": "^5.18.0",
+    "tslint": "^5.19.0",
     "tslint-microsoft-contrib": "^6.2.0",
     "typescript": "^3.6.2",
     "yargs": "^13.3.0"
