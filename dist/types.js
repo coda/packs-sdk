@@ -42,7 +42,7 @@ var PackId;
     PackId[PackId["Spotify"] = 1018] = "Spotify";
     PackId[PackId["FullContact"] = 1019] = "FullContact";
     PackId[PackId["GoogleDirections"] = 1020] = "GoogleDirections";
-    PackId[PackId["CodaDoc"] = 1021] = "CodaDoc";
+    PackId[PackId["Coda"] = 1021] = "Coda";
     PackId[PackId["Greenhouse"] = 1022] = "Greenhouse";
     PackId[PackId["Lob"] = 1023] = "Lob";
     PackId[PackId["Stocks"] = 1024] = "Stocks";
@@ -75,6 +75,7 @@ var PackId;
     PackId[PackId["PubNub"] = 1051] = "PubNub";
     PackId[PackId["Jira"] = 1052] = "Jira";
     PackId[PackId["Barcode"] = 1053] = "Barcode";
+    PackId[PackId["CodaDoc"] = 1054] = "CodaDoc";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {

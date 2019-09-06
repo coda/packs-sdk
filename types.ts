@@ -44,7 +44,7 @@ export enum PackId {
   Spotify = 1018,
   FullContact = 1019,
   GoogleDirections = 1020,
-  CodaDoc = 1021,
+  Coda = 1021,
   Greenhouse = 1022,
   Lob = 1023,
   Stocks = 1024,
@@ -77,6 +77,7 @@ export enum PackId {
   PubNub = 1051,
   Jira = 1052,
   Barcode = 1053,
+  CodaDoc = 1054,
 }
 
 export enum ProviderId {
