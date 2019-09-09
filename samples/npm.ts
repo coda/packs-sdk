@@ -6,20 +6,23 @@ import {PackDefinition} from '../types';
 import {PackMetadata} from '../compiled_types';
 import {QuotaLimitType} from '../types';
 import {ValueType} from '../schema';
+import {getQueryParams} from '../helpers/url';
 import {fakeDefinitionToDefinition} from '../helpers/sample_utils';
 import {fakeDefinitionToMetadata} from '../helpers/sample_utils';
 import {makeBooleanParameter} from '../api';
 import {makeConnectionMetadataFormula} from '../api';
 import {makeDateArrayParameter} from '../api';
+import {makeDynamicSyncTable} from '../api';
 import {makeNumericFormula} from '../api';
 import {makeObjectFormula} from '../api';
+import {makeObjectSchema} from '../schema';
 import {makeReferenceSchemaFromObjectSchema} from '../schema';
 import {makeStringArrayParameter} from '../api';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
-import {makeObjectSchema} from '../schema';
 import {makeSyncTable} from '../api';
 import {withQueryParams} from '../helpers/url';
+import {schema} from 'index';
 
 export const FakeNpmProviderId = 9011;
 
@@ -224,6 +227,49 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
       },
     }),
   ],
+  dynamicSyncTable: async packageUrl => {
+    const query = getQueryParams(packageUrl);
+    if (!query.param) {
+      throw new Error(`${packageUrl} requires a "param" option`);
+    }
+    return makeDynamicSyncTable(
+      'DynamicPackageVersions',
+      packageUrl,
+      makeConnectionMetadataFormula(async (_context, _search) => {
+        // Generate some dynamic schema here.
+        return schema.makeObjectSchema({
+          ...versionSchema,
+          properties: {
+            ...versionSchema.properties,
+            [query.param]: {type: ValueType.Number},
+          },
+        });
+
+      }),
+      {
+        name: 'SyncDynamicPackageVersions',
+        description: 'Pull down NPM versions for a package.',
+        examples: [],
+        parameters: [
+          makeStringParameter('name', 'Package name', {
+            autocomplete: makeConnectionMetadataFormula(async (context, search) => {
+              const url = withQueryParams(`https://npmjs.com/api/packages/search`, {q: String(search || '')});
+              const result = await context.fetcher!.fetch({method: 'GET', url});
+              return result.body;
+            }),
+          }),
+        ],
+        network: {hasSideEffect: false, hasConnection: false},
+        execute: async ([pack], context, continuation) => {
+          const url = withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, {continuation});
+          const result = await context.fetcher!.fetch({method: 'GET', url});
+          return {
+            result: (result.body as any[]).map((val, i) => ({...val, [query.param]: i})),
+          };
+        },
+      },
+    );
+  },
 };
 
 export const FakeNpmDefinition: PackDefinition = fakeDefinitionToDefinition(FakeNpmDefinitionFake);

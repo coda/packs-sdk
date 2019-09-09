@@ -1,10 +1,11 @@
 import { PackDefinition } from '../types';
 import { PackMetadata } from '../compiled_types';
+import { schema } from 'index';
 export declare const FakeNpmProviderId = 9011;
 export declare const FakeNpmPackId = 8003;
 export declare const FakeNpmPackVersion = "5.2.3";
-export declare const versionSchema: import("../schema").ObjectSchema<"url", "url" | "version" | "downloadCount">;
-export declare const personSchema: import("../schema").ObjectSchema<"name" | "email", "name" | "email">;
-export declare const packageSchema: import("../schema").ObjectSchema<"url", "downloadCount" | "packageName">;
+export declare const versionSchema: schema.ObjectSchema<"url", "url" | "version" | "downloadCount">;
+export declare const personSchema: schema.ObjectSchema<"name" | "email", "name" | "email">;
+export declare const packageSchema: schema.ObjectSchema<"url", "downloadCount" | "packageName">;
 export declare const FakeNpmDefinition: PackDefinition;
 export declare const FakeNpmMetadata: PackMetadata;

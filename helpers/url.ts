@@ -2,6 +2,12 @@ import qs from 'qs';
 import urlParse from 'url-parse';
 import {ensureNonEmptyString} from './ensure';
 
+export function getQueryParams(url: string): {[key: string]: any} {
+  const parsedUrl = urlParse(url);
+  // Merge the params together
+  return qs.parse(parsedUrl.query as any, {ignoreQueryPrefix: true});
+}
+
 export function withQueryParams(url: string, params?: {[key: string]: any}): string {
   if (!params) {
     return url;

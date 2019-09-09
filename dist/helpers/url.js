@@ -6,6 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const qs_1 = __importDefault(require("qs"));
 const url_parse_1 = __importDefault(require("url-parse"));
 const ensure_1 = require("./ensure");
+function getQueryParams(url) {
+    const parsedUrl = url_parse_1.default(url);
+    // Merge the params together
+    return qs_1.default.parse(parsedUrl.query, { ignoreQueryPrefix: true });
+}
+exports.getQueryParams = getQueryParams;
 function withQueryParams(url, params) {
     if (!params) {
         return url;

@@ -1,3 +1,6 @@
+export declare function getQueryParams(url: string): {
+    [key: string]: any;
+};
 export declare function withQueryParams(url: string, params?: {
     [key: string]: any;
 }): string;
