@@ -1,6 +1,7 @@
 import { $Omit } from './type_utils';
 import { $Values } from './type_utils';
 import { ConnectionMetadataFormula } from './api';
+import { schema } from 'index';
 export declare enum Type {
     string = 0,
     number = 1,
@@ -95,6 +96,14 @@ export interface FetchResponse<T extends any = any> {
 export interface Fetcher {
     fetch<T = any>(request: FetchRequest): Promise<FetchResponse<T>>;
 }
+export interface Continuation {
+    [key: string]: string | number;
+}
+export interface SyncContext {
+    readonly continuation?: Continuation;
+    readonly schema?: schema.ArraySchema;
+    readonly dynamic?: string;
+}
 export interface ExecutionContext {
     readonly fetcher?: Fetcher;
     readonly endpoint?: string;
@@ -103,6 +112,9 @@ export interface ExecutionContext {
         docId?: string;
     };
     readonly timezone: string;
+}
+export interface SyncExecutionContext extends ExecutionContext {
+    readonly sync: SyncContext;
 }
 export declare enum PrecannedDateRange {
     Yesterday = "yesterday",

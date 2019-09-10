@@ -20,9 +20,8 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const schema_1 = require("./schema");
 const api_types_1 = require("./api_types");
-const schema_2 = require("./schema");
+const schema_1 = require("./schema");
 const api_types_2 = require("./api_types");
 const api_types_3 = require("./api_types");
 const ensure_1 = require("./helpers/ensure");
@@ -30,6 +29,7 @@ const handler_templates_1 = require("./handler_templates");
 const handler_templates_2 = require("./handler_templates");
 const api_types_4 = require("./api_types");
 const api_types_5 = require("./api_types");
+const schema_2 = require("./schema");
 const schema_3 = require("./schema");
 const api_types_6 = require("./api_types");
 const api_types_7 = require("./api_types");
@@ -52,6 +52,10 @@ function isUserVisibleError(error) {
     return 'isUserVisible' in error && error.isUserVisible;
 }
 exports.isUserVisibleError = isUserVisibleError;
+function isDynamicSyncTable(syncTable) {
+    return 'isDynamic' in syncTable && syncTable.isDynamic;
+}
+exports.isDynamicSyncTable = isDynamicSyncTable;
 // NOTE[roger] remove once not needed.
 exports.PARAM_DESCRIPTION_DOES_NOT_EXIST = 'NO PARAMETER DESCRIPTION HAS BEEN ADDED. For guidance, see https://coda.link/param-docs';
 function makeStringParameter(name, description, args = {}) {
@@ -218,44 +222,45 @@ function makeObjectFormula(_a) {
     });
 }
 exports.makeObjectFormula = makeObjectFormula;
-function makeSyncTable(name, schema, _a, getSchema, id) {
+function makeSyncTable(name, schema, _a, getSchema) {
     var { execute: wrappedExecute } = _a, definition = __rest(_a, ["execute"]);
-    const formulaSchema = getSchema ? undefined : schema_3.normalizeSchema({ type: schema_2.ValueType.Array, items: schema });
+    const formulaSchema = getSchema ? undefined : schema_3.normalizeSchema({ type: schema_1.ValueType.Array, items: schema });
     const { identity, id: schemaId, primary } = schema;
     if (!(primary && schemaId && identity)) {
         throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
     }
     const responseHandler = handler_templates_1.generateObjectResponseHandler({ schema: formulaSchema, excludeExtraneous: true });
-    const execute = function exec(params, context, input, runtimeSchema) {
+    const execute = function exec(params, context) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { result, continuation } = yield wrappedExecute(params, context, input);
+            const { result, continuation } = yield wrappedExecute(params, context);
+            const { schema: syncSchema } = context.sync;
             return {
-                result: responseHandler({ body: ensure_1.ensureExists(result), status: 200, headers: {} }, runtimeSchema ? JSON.parse(runtimeSchema) : undefined),
+                result: responseHandler({ body: ensure_1.ensureExists(result), status: 200, headers: {} }, syncSchema ? syncSchema : undefined),
                 continuation,
             };
         });
     };
     return {
         name,
-        id,
         schema: schema_3.normalizeSchema(schema),
         getter: Object.assign(Object.assign({}, definition), { cacheTtlSecs: 0, execute, schema: formulaSchema, isSyncFormula: true, resultType: api_types_1.Type.object }),
         getSchema,
     };
 }
 exports.makeSyncTable = makeSyncTable;
-function makeDynamicSyncTable(name, id, getSchema, formula) {
-    const fakeSchema = schema_1.makeObjectSchema({
+function makeDynamicSyncTable(name, getName, getSchema, formula) {
+    const fakeSchema = schema_2.makeObjectSchema({
         // This schema is useless... just creating a stub here but the client will use
         // the dynamic one.
-        type: schema_2.ValueType.Object,
+        type: schema_1.ValueType.Object,
         id: 'id',
         primary: 'id',
         properties: {
-            id: { type: schema_2.ValueType.String },
+            id: { type: schema_1.ValueType.String },
         },
     });
-    return makeSyncTable(name, fakeSchema, formula, getSchema, id);
+    const table = makeSyncTable(name, fakeSchema, formula, getSchema);
+    return Object.assign(Object.assign({}, table), { isDynamic: true, getName });
 }
 exports.makeDynamicSyncTable = makeDynamicSyncTable;
 function makeTranslateObjectFormula(_a) {

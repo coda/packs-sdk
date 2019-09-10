@@ -1,6 +1,7 @@
 import {$Omit} from './type_utils';
 import {$Values} from './type_utils';
 import {ConnectionMetadataFormula} from './api';
+import {schema} from 'index';
 
 export enum Type {
   string,
@@ -73,8 +74,8 @@ export type PackFormulaResult = $Values<TypeMap> | ConcreteArrayTypes;
 export type TypeOf<T extends PackFormulaResult> = T extends number
   ? Type.number
   : (T extends string
-      ? Type.string
-      : (T extends boolean ? Type.boolean : (T extends Date ? Type.date : (T extends object ? Type.object : never))));
+    ? Type.string
+    : (T extends boolean ? Type.boolean : (T extends Date ? Type.date : (T extends object ? Type.object : never))));
 
 export interface ParamDef<T extends UnionType> {
   name: string;
@@ -149,6 +150,16 @@ export interface Fetcher {
   fetch<T = any>(request: FetchRequest): Promise<FetchResponse<T>>;
 }
 
+export interface Continuation {
+  [key: string]: string | number;
+}
+
+export interface SyncContext {
+  readonly continuation?: Continuation;
+  readonly schema?: schema.ArraySchema;
+  readonly dynamic?: string;
+}
+
 export interface ExecutionContext {
   readonly fetcher?: Fetcher;
   readonly endpoint?: string;
@@ -157,6 +168,10 @@ export interface ExecutionContext {
     docId?: string;
   };
   readonly timezone: string;
+}
+
+export interface SyncExecutionContext extends ExecutionContext {
+  readonly sync: SyncContext;
 }
 
 // A mapping exists in experimental that allows these to show up in the UI.

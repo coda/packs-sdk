@@ -1,7 +1,6 @@
 import {GetConnectionNameFormula} from './api';
 import {ConnectionMetadataFormula} from './api';
-import {GenericSyncTable} from './api';
-import {GetDynamicSyncTable} from './api';
+import {SyncTable} from './api';
 import {PackFormulas} from './api';
 
 export enum PackCategory {
@@ -342,8 +341,7 @@ export interface PackDefinition {
   formulas?: PackFormulas;
   formats?: Format[];
   policies?: Policy[];
-  syncTables?: GenericSyncTable[];
-  dynamicSyncTable?: GetDynamicSyncTable;
+  syncTables?: SyncTable[];
 }
 
 export interface ProviderDefinition {

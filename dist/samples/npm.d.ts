@@ -4,7 +4,7 @@ import { schema } from 'index';
 export declare const FakeNpmProviderId = 9011;
 export declare const FakeNpmPackId = 8003;
 export declare const FakeNpmPackVersion = "5.2.3";
-export declare const versionSchema: schema.ObjectSchema<"url", "url" | "version" | "downloadCount">;
+export declare const versionSchema: schema.ObjectSchema<"url", "version" | "url" | "downloadCount">;
 export declare const personSchema: schema.ObjectSchema<"name" | "email", "name" | "email">;
 export declare const packageSchema: schema.ObjectSchema<"url", "downloadCount" | "packageName">;
 export declare const FakeNpmDefinition: PackDefinition;

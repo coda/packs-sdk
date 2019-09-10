@@ -33,7 +33,7 @@ export {ExternalPackMetadata} from './compiled_types';
 
 // Formula related interfaces
 export {ArrayType} from './api_types';
-export {Continuation} from './api';
+export {Continuation} from './api_types';
 export {ConnectionMetadataFormulaObjectResultType} from './api';
 export {ConnectionMetadataFormulaResultType} from './api';
 export {ConnectionMetadataFormula} from './api';

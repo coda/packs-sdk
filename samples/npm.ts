@@ -23,6 +23,7 @@ import {makeStringParameter} from '../api';
 import {makeSyncTable} from '../api';
 import {withQueryParams} from '../helpers/url';
 import {schema} from 'index';
+import {ensureExists} from 'helpers/ensure';
 
 export const FakeNpmProviderId = 9011;
 
@@ -200,7 +201,8 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         makeDateArrayParameter('dateRange', 'Date range', {optional: true}),
       ],
       network: {hasSideEffect: false, hasConnection: false},
-      execute: async ([search], context, continuation) => {
+      execute: async ([search], context) => {
+        const {continuation} = context.sync;
         const url = withQueryParams(`https://npmjs.com/api/packages/${search}`, {continuation});
         const result = await context.fetcher!.fetch({method: 'GET', url});
         return result.body;
@@ -220,31 +222,31 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         }),
       ],
       network: {hasSideEffect: false, hasConnection: false},
-      execute: async ([pack], context, continuation) => {
+      execute: async ([pack], context) => {
+        const {continuation} = context.sync;
         const url = withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, {continuation});
         const result = await context.fetcher!.fetch({method: 'GET', url});
         return result.body;
       },
     }),
-  ],
-  dynamicSyncTable: async packageUrl => {
-    const query = getQueryParams(packageUrl);
-    if (!query.param) {
-      throw new Error(`${packageUrl} requires a "param" option`);
-    }
-    return makeDynamicSyncTable(
+    makeDynamicSyncTable(
       'DynamicPackageVersions',
-      packageUrl,
-      makeConnectionMetadataFormula(async (_context, _search) => {
+      makeConnectionMetadataFormula(async (_context, [url]) => {
+        // Get a dynamic name.
+        const query = getQueryParams(url);
+        return ensureExists(query.param);
+      }),
+      makeConnectionMetadataFormula(async (_ctx, [url]) => {
         // Generate some dynamic schema here.
+        const query = getQueryParams(url);
+        const param = ensureExists(query.param);
         return schema.makeObjectSchema({
           ...versionSchema,
           properties: {
             ...versionSchema.properties,
-            [query.param]: {type: ValueType.Number},
+            [param]: {type: ValueType.Number},
           },
         });
-
       }),
       {
         name: 'SyncDynamicPackageVersions',
@@ -260,16 +262,19 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
           }),
         ],
         network: {hasSideEffect: false, hasConnection: false},
-        execute: async ([pack], context, continuation) => {
+        execute: async ([pack], context) => {
+          const {continuation, dynamic} = context.sync;
+          const query = getQueryParams(dynamic!);
+          const param = ensureExists(query.param);
           const url = withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, {continuation});
           const result = await context.fetcher!.fetch({method: 'GET', url});
           return {
-            result: (result.body as any[]).map((val, i) => ({...val, [query.param]: i})),
+            result: (result.body as any[]).map((val, i) => ({...val, [param]: i})),
           };
         },
       },
-    );
-  },
+    ),
+  ],
 };
 
 export const FakeNpmDefinition: PackDefinition = fakeDefinitionToDefinition(FakeNpmDefinitionFake);

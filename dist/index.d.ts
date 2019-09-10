@@ -26,7 +26,7 @@ export { ExternalPackFormulas } from './compiled_types';
 export { ExternalSyncTable } from './compiled_types';
 export { ExternalPackMetadata } from './compiled_types';
 export { ArrayType } from './api_types';
-export { Continuation } from './api';
+export { Continuation } from './api_types';
 export { ConnectionMetadataFormulaObjectResultType } from './api';
 export { ConnectionMetadataFormulaResultType } from './api';
 export { ConnectionMetadataFormula } from './api';

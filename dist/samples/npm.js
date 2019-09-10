@@ -31,6 +31,7 @@ const api_9 = require("../api");
 const api_10 = require("../api");
 const url_2 = require("../helpers/url");
 const index_1 = require("index");
+const ensure_1 = require("helpers/ensure");
 exports.FakeNpmProviderId = 9011;
 exports.FakeNpmPackId = 8003;
 exports.FakeNpmPackVersion = '5.2.3';
@@ -201,7 +202,8 @@ const FakeNpmDefinitionFake = {
                 api_3.makeDateArrayParameter('dateRange', 'Date range', { optional: true }),
             ],
             network: { hasSideEffect: false, hasConnection: false },
-            execute: ([search], context, continuation) => __awaiter(void 0, void 0, void 0, function* () {
+            execute: ([search], context) => __awaiter(void 0, void 0, void 0, function* () {
+                const { continuation } = context.sync;
                 const url = url_2.withQueryParams(`https://npmjs.com/api/packages/${search}`, { continuation });
                 const result = yield context.fetcher.fetch({ method: 'GET', url });
                 return result.body;
@@ -221,21 +223,22 @@ const FakeNpmDefinitionFake = {
                 }),
             ],
             network: { hasSideEffect: false, hasConnection: false },
-            execute: ([pack], context, continuation) => __awaiter(void 0, void 0, void 0, function* () {
+            execute: ([pack], context) => __awaiter(void 0, void 0, void 0, function* () {
+                const { continuation } = context.sync;
                 const url = url_2.withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, { continuation });
                 const result = yield context.fetcher.fetch({ method: 'GET', url });
                 return result.body;
             }),
         }),
-    ],
-    dynamicSyncTable: (packageUrl) => __awaiter(void 0, void 0, void 0, function* () {
-        const query = url_1.getQueryParams(packageUrl);
-        if (!query.param) {
-            throw new Error(`${packageUrl} requires a "param" option`);
-        }
-        return api_4.makeDynamicSyncTable('DynamicPackageVersions', packageUrl, api_2.makeConnectionMetadataFormula((_context, _search) => __awaiter(void 0, void 0, void 0, function* () {
+        api_4.makeDynamicSyncTable('DynamicPackageVersions', api_2.makeConnectionMetadataFormula((_context, [url]) => __awaiter(void 0, void 0, void 0, function* () {
+            // Get a dynamic name.
+            const query = url_1.getQueryParams(url);
+            return ensure_1.ensureExists(query.param);
+        })), api_2.makeConnectionMetadataFormula((_ctx, [url]) => __awaiter(void 0, void 0, void 0, function* () {
             // Generate some dynamic schema here.
-            return index_1.schema.makeObjectSchema(Object.assign(Object.assign({}, exports.versionSchema), { properties: Object.assign(Object.assign({}, exports.versionSchema.properties), { [query.param]: { type: schema_1.ValueType.Number } }) }));
+            const query = url_1.getQueryParams(url);
+            const param = ensure_1.ensureExists(query.param);
+            return index_1.schema.makeObjectSchema(Object.assign(Object.assign({}, exports.versionSchema), { properties: Object.assign(Object.assign({}, exports.versionSchema.properties), { [param]: { type: schema_1.ValueType.Number } }) }));
         })), {
             name: 'SyncDynamicPackageVersions',
             description: 'Pull down NPM versions for a package.',
@@ -250,15 +253,18 @@ const FakeNpmDefinitionFake = {
                 }),
             ],
             network: { hasSideEffect: false, hasConnection: false },
-            execute: ([pack], context, continuation) => __awaiter(void 0, void 0, void 0, function* () {
+            execute: ([pack], context) => __awaiter(void 0, void 0, void 0, function* () {
+                const { continuation, dynamic } = context.sync;
+                const query = url_1.getQueryParams(dynamic);
+                const param = ensure_1.ensureExists(query.param);
                 const url = url_2.withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, { continuation });
                 const result = yield context.fetcher.fetch({ method: 'GET', url });
                 return {
-                    result: result.body.map((val, i) => (Object.assign(Object.assign({}, val), { [query.param]: i }))),
+                    result: result.body.map((val, i) => (Object.assign(Object.assign({}, val), { [param]: i }))),
                 };
             }),
-        });
-    }),
+        }),
+    ],
 };
 exports.FakeNpmDefinition = sample_utils_1.fakeDefinitionToDefinition(FakeNpmDefinitionFake);
 exports.FakeNpmMetadata = sample_utils_2.fakeDefinitionToMetadata(FakeNpmDefinitionFake);
