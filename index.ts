@@ -56,6 +56,7 @@ export {Type} from './api_types';
 export {TypedPackFormula} from './api';
 export {UserVisibleError} from './api';
 export {isArrayType} from './api_types';
+export {isDynamicSyncTable} from './api';
 export {isObjectPackFormula} from './api';
 export {isStringPackFormula} from './api';
 export {isSyncPackFormula} from './api';
