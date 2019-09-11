@@ -10,6 +10,7 @@ import {SyncTable} from './api';
 export type PackFormulaMetadata = $Omit<TypedPackFormula, 'execute'>;
 export type PackSyncTable = $Omit<SyncTable, 'getter' | 'getSchema' | 'getName'> & {
   getter: PackFormulaMetadata;
+  hasDynamicSchema?: boolean;
   isDynamic?: boolean;
 };
 
