@@ -13,6 +13,7 @@ const types_1 = require("../types");
 const types_2 = require("../types");
 const types_3 = require("../types");
 const types_4 = require("../types");
+const types_5 = require("../types");
 const schema_1 = require("../schema");
 const sample_utils_1 = require("../helpers/sample_utils");
 const sample_utils_2 = require("../helpers/sample_utils");
@@ -107,6 +108,10 @@ const FakeNpmDefinitionFake = {
                 [types_4.QuotaLimitType.Action]: 10,
                 [types_4.QuotaLimitType.Getter]: 100,
             },
+            maximumSyncInterval: types_5.SyncInterval.Manual,
+        },
+        [types_2.FeatureSet.Pro]: {
+            maximumSyncInterval: types_5.SyncInterval.Manual,
         },
     },
     formats: [
