@@ -458,6 +458,10 @@ export function makeDynamicSyncTable<
     type: ValueType.Object,
     id: 'id',
     primary: 'id',
+    identity: {
+      packId: 0,
+      name: 'Fake',
+    },
     properties: {
       id: {type: ValueType.String},
     },

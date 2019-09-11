@@ -255,6 +255,10 @@ function makeDynamicSyncTable(name, getName, getSchema, formula) {
         type: schema_1.ValueType.Object,
         id: 'id',
         primary: 'id',
+        identity: {
+            packId: 0,
+            name: 'Fake',
+        },
         properties: {
             id: { type: schema_1.ValueType.String },
         },
