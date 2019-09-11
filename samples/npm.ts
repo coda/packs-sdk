@@ -5,6 +5,7 @@ import {PackCategory} from '../types';
 import {PackDefinition} from '../types';
 import {PackMetadata} from '../compiled_types';
 import {QuotaLimitType} from '../types';
+import {SyncInterval} from '../types';
 import {ValueType} from '../schema';
 import {fakeDefinitionToDefinition} from '../helpers/sample_utils';
 import {fakeDefinitionToMetadata} from '../helpers/sample_utils';
@@ -105,6 +106,10 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         [QuotaLimitType.Action]: 10,
         [QuotaLimitType.Getter]: 100,
       },
+      maximumSyncInterval: SyncInterval.Manual,
+    },
+    [FeatureSet.Pro]: {
+      maximumSyncInterval: SyncInterval.Manual,
     },
   },
   formats: [
