@@ -56,6 +56,7 @@ export { isSyncPackFormula } from './api';
 export { isUserVisibleError } from './api';
 export { makeUserVisibleError } from './api';
 export { makeConnectionMetadataFormula } from './api';
+export { makeDynamicSyncTable } from './api';
 export { makeEmptyFormula } from './api';
 export { makeGetConnectionNameFormula } from './api';
 export { makeNumericFormula } from './api';

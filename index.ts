@@ -65,6 +65,7 @@ export {makeUserVisibleError} from './api';
 
 // Formula definition helpers
 export {makeConnectionMetadataFormula} from './api';
+export {makeDynamicSyncTable} from './api';
 export {makeEmptyFormula} from './api';
 export {makeGetConnectionNameFormula} from './api';
 export {makeNumericFormula} from './api';
