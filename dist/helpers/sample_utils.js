@@ -45,9 +45,9 @@ function fakeDefinitionToMetadata(def) {
     }
     const syncTables = [];
     for (let _d of originalSyncTables || []) {
-        const { getter } = _d, others = __rest(_d, ["getter"]);
+        const { getter, getSchema } = _d, others = __rest(_d, ["getter", "getSchema"]);
         const { execute } = getter, otherGetter = __rest(getter, ["execute"]);
-        syncTables.push(Object.assign({ getter: Object.assign({}, otherGetter) }, others));
+        syncTables.push(Object.assign({ getter: Object.assign({}, otherGetter), hasDynamicSchema: Boolean(getSchema) }, others));
     }
     return Object.assign(Object.assign({ formulas,
         formats,

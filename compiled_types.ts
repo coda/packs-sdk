@@ -8,8 +8,10 @@ import {TypedPackFormula} from './api';
 import {GenericSyncTable} from './api';
 
 export type PackFormulaMetadata = $Omit<TypedPackFormula, 'execute'>;
-export type PackSyncTable = $Omit<GenericSyncTable, 'getter'> & {
+// TODO(alexd): Uncomment the getSchema stripping.
+export type PackSyncTable = $Omit<GenericSyncTable, 'getter' /* | 'getSchema' */> & {
   getter: PackFormulaMetadata;
+  hasDynamicSchema?: boolean;
 };
 
 export interface PackFormatMetadata extends $Omit<Format, 'matchers'> {

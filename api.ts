@@ -3,6 +3,7 @@ import {ArraySchema} from './schema';
 import {ArrayType} from './api_types';
 import {CommonPackFormulaDef} from './api_types';
 import {ExecutionContext} from './api_types';
+import {GenericObjectSchema} from './schema';
 import {NumberSchema} from './schema';
 import {PackFormulaResult} from './api_types';
 import {ParamArgs} from './api_types';
@@ -14,6 +15,7 @@ import {ResponseHandlerTemplate} from './handler_templates';
 import {SchemaType} from './schema';
 import {Schema} from './schema';
 import {StringSchema} from './schema';
+import {SyncExecutionContext} from './api_types';
 import {ObjectSchema} from './schema';
 import {Type} from './api_types';
 import {TypeOf} from './api_types';
@@ -249,7 +251,7 @@ interface SyncFormulaDef<
   > extends CommonPackFormulaDef<ParamsT> {
   execute(
     params: ParamValues<ParamsT>,
-    context: ExecutionContext,
+    context: SyncExecutionContext,
     continuation?: Continuation,
     schema?: string,
   ): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
@@ -316,7 +318,7 @@ export function makeConnectionMetadataFormula(
   execute: (
     context: ExecutionContext,
     params: string[],
-  ) => Promise<ConnectionMetadataFormulaResultType> | Promise<ConnectionMetadataFormulaResultType[]>,
+  ) => Promise<ConnectionMetadataFormulaResultType | ConnectionMetadataFormulaResultType[] | GenericObjectSchema>,
 ): ConnectionMetadataFormula {
   return makeObjectFormula({
     name: 'getConnectionMetadata',
@@ -402,15 +404,16 @@ export function makeSyncTable<
   const responseHandler = generateObjectResponseHandler({schema: formulaSchema, excludeExtraneous: true});
   const execute = async function exec(
     params: ParamValues<ParamDefsT>,
-    context: ExecutionContext,
-    input: Continuation | undefined,
-    runtimeSchema: string | undefined,
+    context: SyncExecutionContext,
+    input: Continuation | undefined, // TODO(alexd): Remove
+    runtimeSchema: string | undefined,  // TODO(alexd): Remove
   ) {
     const {result, continuation} = await wrappedExecute(params, context, input);
+    const appliedSchema = (context.sync && context.sync.schema) || (runtimeSchema && JSON.parse(runtimeSchema));
     return {
       result: responseHandler(
         {body: ensureExists(result), status: 200, headers: {}},
-        runtimeSchema ? JSON.parse(runtimeSchema) : undefined,
+        appliedSchema,
       ) as Array<SchemaType<SchemaT>>,
       continuation,
     };

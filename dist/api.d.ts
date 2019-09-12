@@ -3,6 +3,7 @@ import { ArraySchema } from './schema';
 import { ArrayType } from './api_types';
 import { CommonPackFormulaDef } from './api_types';
 import { ExecutionContext } from './api_types';
+import { GenericObjectSchema } from './schema';
 import { NumberSchema } from './schema';
 import { PackFormulaResult } from './api_types';
 import { ParamArgs } from './api_types';
@@ -14,6 +15,7 @@ import { ResponseHandlerTemplate } from './handler_templates';
 import { SchemaType } from './schema';
 import { Schema } from './schema';
 import { StringSchema } from './schema';
+import { SyncExecutionContext } from './api_types';
 import { ObjectSchema } from './schema';
 import { Type } from './api_types';
 import { TypeOf } from './api_types';
@@ -99,7 +101,7 @@ interface SyncFormulaResult<ResultT extends object> {
     continuation?: Continuation;
 }
 interface SyncFormulaDef<K extends string, L extends string, ParamsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> extends CommonPackFormulaDef<ParamsT> {
-    execute(params: ParamValues<ParamsT>, context: ExecutionContext, continuation?: Continuation, schema?: string): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
+    execute(params: ParamValues<ParamsT>, context: SyncExecutionContext, continuation?: Continuation, schema?: string): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
 }
 export declare type SyncFormula<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
     resultType: TypeOf<SchemaType<SchemaT>>;
@@ -116,7 +118,7 @@ export interface ConnectionMetadataFormulaObjectResultType {
 }
 export declare type ConnectionMetadataFormulaResultType = string | number | ConnectionMetadataFormulaObjectResultType;
 export declare type ConnectionMetadataFormula = ObjectPackFormula<[ParamDef<Type.string>], any>;
-export declare function makeConnectionMetadataFormula(execute: (context: ExecutionContext, params: string[]) => Promise<ConnectionMetadataFormulaResultType> | Promise<ConnectionMetadataFormulaResultType[]>): ConnectionMetadataFormula;
+export declare function makeConnectionMetadataFormula(execute: (context: ExecutionContext, params: string[]) => Promise<ConnectionMetadataFormulaResultType | ConnectionMetadataFormulaResultType[] | GenericObjectSchema>): ConnectionMetadataFormula;
 export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, { execute: wrappedExecute, ...definition }: SyncFormulaDef<K, L, ParamDefsT, SchemaT>, getSchema?: ConnectionMetadataFormula): SyncTable<K, L, SchemaT>;
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
