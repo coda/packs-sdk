@@ -61,9 +61,9 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
     };
   }
   const syncTables: PackSyncTable[] = [];
-  for (const {getter, ...others} of originalSyncTables || []) {
+  for (const {getter, getSchema, ...others} of originalSyncTables || []) {
     const {execute, ...otherGetter} = getter;
-    syncTables.push({getter: {...otherGetter}, ...others});
+    syncTables.push({getter: {...otherGetter}, hasDynamicSchema: Boolean(getSchema), ...others});
   }
   return {
     formulas,
