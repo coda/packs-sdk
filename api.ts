@@ -3,7 +3,6 @@ import {ArraySchema} from './schema';
 import {ArrayType} from './api_types';
 import {CommonPackFormulaDef} from './api_types';
 import {ExecutionContext} from './api_types';
-import {GenericObjectSchema} from './schema';
 import {NumberSchema} from './schema';
 import {PackFormulaResult} from './api_types';
 import {ParamArgs} from './api_types';
@@ -318,7 +317,7 @@ export function makeConnectionMetadataFormula(
   execute: (
     context: ExecutionContext,
     params: string[],
-  ) => Promise<ConnectionMetadataFormulaResultType | ConnectionMetadataFormulaResultType[] | GenericObjectSchema>,
+  ) => Promise<ConnectionMetadataFormulaResultType | ConnectionMetadataFormulaResultType[] | ArraySchema>,
 ): ConnectionMetadataFormula {
   return makeObjectFormula({
     name: 'getConnectionMetadata',
