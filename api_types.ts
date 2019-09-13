@@ -154,6 +154,7 @@ export interface Fetcher {
 export interface Sync {
   continuation?: Continuation;
   schema?: ArraySchema;
+  dynamicUrl?: string;
 }
 
 export interface ExecutionContext {

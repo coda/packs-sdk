@@ -42,6 +42,7 @@ export {ExecutionContext} from './api_types';
 export {Fetcher} from './api_types';
 export {FetchRequest} from './api_types';
 export {FetchResponse} from './api_types';
+export {GenericDynamicSyncTable} from './api';
 export {GenericSyncFormula} from './api';
 export {GenericSyncFormulaResult} from './api';
 export {GenericSyncTable} from './api';
@@ -56,6 +57,7 @@ export {Type} from './api_types';
 export {TypedPackFormula} from './api';
 export {UserVisibleError} from './api';
 export {isArrayType} from './api_types';
+export {isDynamicSyncTable} from './api';
 export {isObjectPackFormula} from './api';
 export {isStringPackFormula} from './api';
 export {isSyncPackFormula} from './api';
@@ -64,6 +66,7 @@ export {makeUserVisibleError} from './api';
 
 // Formula definition helpers
 export {makeConnectionMetadataFormula} from './api';
+export {makeDynamicSyncTable} from './api';
 export {makeEmptyFormula} from './api';
 export {makeGetConnectionNameFormula} from './api';
 export {makeNumericFormula} from './api';

@@ -5,12 +5,13 @@ import {AuthenticationType} from './types';
 import {Format} from './types';
 import {PackDefinition} from './types';
 import {TypedPackFormula} from './api';
-import {GenericSyncTable} from './api';
+import {SyncTable} from './api';
 
 export type PackFormulaMetadata = $Omit<TypedPackFormula, 'execute'>;
 // TODO(alexd): Uncomment the getSchema stripping.
-export type PackSyncTable = $Omit<GenericSyncTable, 'getter' /* | 'getSchema' */> & {
+export type PackSyncTable = $Omit<SyncTable, 'getter' | 'getName' /* | 'getSchema' */> & {
   getter: PackFormulaMetadata;
+  isDynamic?: boolean;
   hasDynamicSchema?: boolean;
 };
 

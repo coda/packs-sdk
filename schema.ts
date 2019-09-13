@@ -75,14 +75,15 @@ export type GenericObjectSchema = ObjectSchema<string, string>;
 export interface Identity {
   packId: PackId;
   name: string;
+  dynamicUrl?: string;
   attribution?: AttributionNode[];
 }
 
 export interface ObjectSchema<K extends string, L extends string> extends BaseSchema {
   type: ValueType.Object;
   properties: ObjectSchemaProperties &
-    {[k in K]: Schema | (Schema & ObjectSchemaProperty)} &
-    {[k in L]: Schema | (Schema & ObjectSchemaProperty)};
+  {[k in K]: Schema | (Schema & ObjectSchemaProperty)} &
+  {[k in L]: Schema | (Schema & ObjectSchemaProperty)};
   id?: K;
   primary?: K;
   codaType?: ObjectHintTypes;
@@ -139,17 +140,17 @@ export type SchemaType<T extends Schema> = T extends ArraySchema
 type TerminalSchemaType<T extends Schema> = T extends BooleanSchema
   ? boolean
   : (T extends NumberSchema
-      ? number
-      : (T extends StringSchema
-          ? (T['codaType'] extends ValueType.Date ? Date : string)
-          : (T extends ArraySchema
-              ? any[]
-              : (T extends GenericObjectSchema ? {[K in keyof T['properties']]: any} : never))));
+    ? number
+    : (T extends StringSchema
+      ? (T['codaType'] extends ValueType.Date ? Date : string)
+      : (T extends ArraySchema
+        ? any[]
+        : (T extends GenericObjectSchema ? {[K in keyof T['properties']]: any} : never))));
 type ObjectSchemaType<T extends GenericObjectSchema> = UndefinedAsOptional<
   {
     [K in keyof T['properties']]: T['properties'][K] extends Schema & {required: true}
-      ? (TerminalSchemaType<T['properties'][K]>)
-      : (TerminalSchemaType<T['properties'][K]> | undefined)
+    ? (TerminalSchemaType<T['properties'][K]>)
+    : (TerminalSchemaType<T['properties'][K]> | undefined)
   }
 >;
 

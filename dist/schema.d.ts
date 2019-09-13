@@ -49,6 +49,7 @@ export declare type GenericObjectSchema = ObjectSchema<string, string>;
 export interface Identity {
     packId: PackId;
     name: string;
+    dynamicUrl?: string;
     attribution?: AttributionNode[];
 }
 export interface ObjectSchema<K extends string, L extends string> extends BaseSchema {

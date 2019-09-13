@@ -15,24 +15,28 @@ const types_3 = require("../types");
 const types_4 = require("../types");
 const types_5 = require("../types");
 const schema_1 = require("../schema");
+const ensure_1 = require("helpers/ensure");
 const sample_utils_1 = require("../helpers/sample_utils");
 const sample_utils_2 = require("../helpers/sample_utils");
+const url_1 = require("../helpers/url");
 const api_1 = require("../api");
 const api_2 = require("../api");
 const api_3 = require("../api");
 const api_4 = require("../api");
 const api_5 = require("../api");
-const schema_2 = require("../schema");
 const api_6 = require("../api");
+const schema_2 = require("../schema");
+const schema_3 = require("../schema");
+const schema_4 = require("../schema");
 const api_7 = require("../api");
 const api_8 = require("../api");
-const schema_3 = require("../schema");
 const api_9 = require("../api");
-const url_1 = require("../helpers/url");
+const api_10 = require("../api");
+const url_2 = require("../helpers/url");
 exports.FakeNpmProviderId = 9011;
 exports.FakeNpmPackId = 8003;
 exports.FakeNpmPackVersion = '5.2.3';
-exports.versionSchema = schema_3.makeObjectSchema({
+exports.versionSchema = schema_2.makeObjectSchema({
     type: schema_1.ValueType.Object,
     identity: {
         packId: exports.FakeNpmPackId,
@@ -46,7 +50,7 @@ exports.versionSchema = schema_3.makeObjectSchema({
         downloadCount: { type: schema_1.ValueType.Number },
     },
 });
-exports.personSchema = schema_3.makeObjectSchema({
+exports.personSchema = schema_2.makeObjectSchema({
     type: schema_1.ValueType.Object,
     codaType: schema_1.ValueType.Person,
     id: 'email',
@@ -56,7 +60,7 @@ exports.personSchema = schema_3.makeObjectSchema({
         name: { type: schema_1.ValueType.String },
     },
 });
-exports.packageSchema = schema_3.makeObjectSchema({
+exports.packageSchema = schema_2.makeObjectSchema({
     type: schema_1.ValueType.Object,
     identity: {
         packId: exports.FakeNpmPackId,
@@ -72,7 +76,7 @@ exports.packageSchema = schema_3.makeObjectSchema({
         downloadCount: { type: schema_1.ValueType.Number },
         versions: {
             type: schema_1.ValueType.Array,
-            items: schema_2.makeReferenceSchemaFromObjectSchema(exports.versionSchema),
+            items: schema_3.makeReferenceSchemaFromObjectSchema(exports.versionSchema),
         },
     },
 });
@@ -127,7 +131,7 @@ const FakeNpmDefinitionFake = {
     ],
     formulas: {
         NPM: [
-            api_5.makeObjectFormula({
+            api_6.makeObjectFormula({
                 response: {
                     schema: exports.packageSchema,
                 },
@@ -135,9 +139,9 @@ const FakeNpmDefinitionFake = {
                 description: 'Get live data about a NPM package.',
                 examples: [],
                 parameters: [
-                    api_8.makeStringParameter('name', 'Package name', {
+                    api_9.makeStringParameter('name', 'Package name', {
                         autocomplete: api_2.makeConnectionMetadataFormula((context, search) => __awaiter(void 0, void 0, void 0, function* () {
-                            const url = url_1.withQueryParams(`https://npmjs.com/api/packages/search`, { q: String(search || '') });
+                            const url = url_2.withQueryParams(`https://npmjs.com/api/packages/search`, { q: String(search || '') });
                             const result = yield context.fetcher.fetch({ method: 'GET', url });
                             return result.body;
                         })),
@@ -149,44 +153,44 @@ const FakeNpmDefinitionFake = {
                 ],
                 network: { hasSideEffect: false, hasConnection: false },
                 execute: ([name, monthly], context) => __awaiter(void 0, void 0, void 0, function* () {
-                    const url = url_1.withQueryParams(`https://npmjs.com/api/packages/${name}`, { monthly: String(monthly) });
+                    const url = url_2.withQueryParams(`https://npmjs.com/api/packages/${name}`, { monthly: String(monthly) });
                     const result = yield context.fetcher.fetch({ method: 'GET', url });
                     return result.body;
                 }),
             }),
-            api_7.makeStringFormula({
+            api_8.makeStringFormula({
                 name: 'FakeGetPackageUrls',
                 description: 'Retrieve a list of packages URLs, comma separated',
                 examples: [],
-                parameters: [api_6.makeStringArrayParameter('names', 'Names of packages to download')],
+                parameters: [api_7.makeStringArrayParameter('names', 'Names of packages to download')],
                 network: { hasSideEffect: false, hasConnection: false },
                 execute: ([names]) => __awaiter(void 0, void 0, void 0, function* () {
                     return names.map(name => `https://npmjs.com/api/packages/${name}`).join(',');
                 }),
             }),
-            api_4.makeNumericFormula({
+            api_5.makeNumericFormula({
                 name: 'FakeDownloadPackage',
                 description: 'Initiate a download of the package, increasing its popularity (this action formula is for tests)',
                 examples: [],
                 parameters: [
-                    api_8.makeStringParameter('url', 'Url to a package'),
-                    api_8.makeStringParameter('path', 'file path for download', { optional: true }),
+                    api_9.makeStringParameter('url', 'Url to a package'),
+                    api_9.makeStringParameter('path', 'file path for download', { optional: true }),
                 ],
                 network: { hasSideEffect: true, hasConnection: false, requiresConnection: false },
                 execute: ([url, _path], context) => __awaiter(void 0, void 0, void 0, function* () {
-                    const fullUrl = url_1.withQueryParams(`https://npmjs.com/api/packages/${url}/download`);
+                    const fullUrl = url_2.withQueryParams(`https://npmjs.com/api/packages/${url}/download`);
                     const result = yield context.fetcher.fetch({ method: 'POST', url: fullUrl });
                     return result.body;
                 }),
             }),
-            api_4.makeNumericFormula({
+            api_5.makeNumericFormula({
                 name: 'FakeAddPackage',
                 description: 'Adds a fake package',
                 examples: [],
-                parameters: [api_8.makeStringParameter('name', 'Package name')],
+                parameters: [api_9.makeStringParameter('name', 'Package name')],
                 network: { hasSideEffect: true, hasConnection: true, requiresConnection: true },
                 execute: ([name], context) => __awaiter(void 0, void 0, void 0, function* () {
-                    const url = url_1.withQueryParams(`https://npmjs.com/api/packages`);
+                    const url = url_2.withQueryParams(`https://npmjs.com/api/packages`);
                     const result = yield context.fetcher.fetch({ method: 'POST', body: JSON.stringify({ name }), url });
                     return result.body;
                 }),
@@ -194,39 +198,78 @@ const FakeNpmDefinitionFake = {
         ],
     },
     syncTables: [
-        api_9.makeSyncTable('Packages', exports.packageSchema, {
+        api_10.makeSyncTable('Packages', exports.packageSchema, {
             name: 'SyncPackages',
             description: 'Pull down NPM packages.',
             examples: [],
             parameters: [
-                api_8.makeStringParameter('search', 'Search string', { defaultValue: 'oy-vey' }),
+                api_9.makeStringParameter('search', 'Search string', { defaultValue: 'oy-vey' }),
                 api_3.makeDateArrayParameter('dateRange', 'Date range', { optional: true }),
             ],
             network: { hasSideEffect: false, hasConnection: false },
-            execute: ([search], context, continuation) => __awaiter(void 0, void 0, void 0, function* () {
-                const url = url_1.withQueryParams(`https://npmjs.com/api/packages/${search}`, { continuation });
+            execute: ([search], context) => __awaiter(void 0, void 0, void 0, function* () {
+                const { continuation } = context.sync;
+                const url = url_2.withQueryParams(`https://npmjs.com/api/packages/${search}`, { continuation });
                 const result = yield context.fetcher.fetch({ method: 'GET', url });
                 return result.body;
             }),
         }),
-        api_9.makeSyncTable('PackageVersions', exports.versionSchema, {
+        api_10.makeSyncTable('PackageVersions', exports.versionSchema, {
             name: 'SyncPackageVersions',
             description: 'Pull down NPM versions for a package.',
             examples: [],
             parameters: [
-                api_8.makeStringParameter('name', 'Package name', {
+                api_9.makeStringParameter('name', 'Package name', {
                     autocomplete: api_2.makeConnectionMetadataFormula((context, search) => __awaiter(void 0, void 0, void 0, function* () {
-                        const url = url_1.withQueryParams(`https://npmjs.com/api/packages/search`, { q: String(search || '') });
+                        const url = url_2.withQueryParams(`https://npmjs.com/api/packages/search`, { q: String(search || '') });
                         const result = yield context.fetcher.fetch({ method: 'GET', url });
                         return result.body;
                     })),
                 }),
             ],
             network: { hasSideEffect: false, hasConnection: false },
-            execute: ([pack], context, continuation) => __awaiter(void 0, void 0, void 0, function* () {
-                const url = url_1.withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, { continuation });
+            execute: ([pack], context) => __awaiter(void 0, void 0, void 0, function* () {
+                const { continuation } = context.sync;
+                const url = url_2.withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, { continuation });
                 const result = yield context.fetcher.fetch({ method: 'GET', url });
                 return result.body;
+            }),
+        }),
+        api_4.makeDynamicSyncTable('DynamicPackageVersions', api_2.makeConnectionMetadataFormula((context) => __awaiter(void 0, void 0, void 0, function* () {
+            const { dynamicUrl } = context.sync;
+            const query = url_1.getQueryParams(dynamicUrl);
+            return query.name;
+        })), api_2.makeConnectionMetadataFormula((context) => __awaiter(void 0, void 0, void 0, function* () {
+            const { dynamicUrl } = context.sync;
+            const query = url_1.getQueryParams(dynamicUrl);
+            const name = ensure_1.ensureExists(query.name);
+            return schema_4.makeSchema({
+                type: schema_1.ValueType.Array,
+                items: schema_2.makeObjectSchema(Object.assign(Object.assign({}, exports.versionSchema), { properties: Object.assign(Object.assign({}, exports.versionSchema.properties), { [name]: { type: schema_1.ValueType.Number } }) })),
+            });
+        })), {
+            name: 'SyncDynamicPackageVersions',
+            description: 'Pull down NPM versions for a package.',
+            examples: [],
+            parameters: [
+                api_9.makeStringParameter('name', 'Package name', {
+                    autocomplete: api_2.makeConnectionMetadataFormula((context, search) => __awaiter(void 0, void 0, void 0, function* () {
+                        const url = url_2.withQueryParams(`https://npmjs.com/api/packages/search`, { q: String(search || '') });
+                        const result = yield context.fetcher.fetch({ method: 'GET', url });
+                        return result.body;
+                    })),
+                }),
+            ],
+            network: { hasSideEffect: false, hasConnection: false },
+            execute: ([pack], context) => __awaiter(void 0, void 0, void 0, function* () {
+                const { continuation, dynamicUrl } = context.sync;
+                const query = url_1.getQueryParams(dynamicUrl);
+                const name = ensure_1.ensureExists(query.name);
+                const url = url_2.withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, { continuation });
+                const result = yield context.fetcher.fetch({ method: 'GET', url });
+                return {
+                    result: result.body.map((val, i) => (Object.assign(Object.assign({}, val), { [name]: i }))),
+                };
             }),
         }),
     ],
