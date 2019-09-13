@@ -7,7 +7,7 @@ import {PackMetadata} from '../compiled_types';
 import {QuotaLimitType} from '../types';
 import {SyncInterval} from '../types';
 import {ValueType} from '../schema';
-import {ensureExists} from 'helpers/ensure';
+import {ensureExists} from '../helpers/ensure';
 import {fakeDefinitionToDefinition} from '../helpers/sample_utils';
 import {fakeDefinitionToMetadata} from '../helpers/sample_utils';
 import {getQueryParams} from '../helpers/url';
