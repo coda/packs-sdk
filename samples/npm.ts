@@ -7,18 +7,22 @@ import {PackMetadata} from '../compiled_types';
 import {QuotaLimitType} from '../types';
 import {SyncInterval} from '../types';
 import {ValueType} from '../schema';
+import {ensureExists} from 'helpers/ensure';
 import {fakeDefinitionToDefinition} from '../helpers/sample_utils';
 import {fakeDefinitionToMetadata} from '../helpers/sample_utils';
+import {getQueryParams} from '../helpers/url';
 import {makeBooleanParameter} from '../api';
 import {makeConnectionMetadataFormula} from '../api';
 import {makeDateArrayParameter} from '../api';
+import {makeDynamicSyncTable} from '../api';
 import {makeNumericFormula} from '../api';
 import {makeObjectFormula} from '../api';
+import {makeObjectSchema} from '../schema';
 import {makeReferenceSchemaFromObjectSchema} from '../schema';
+import {makeSchema} from '../schema';
 import {makeStringArrayParameter} from '../api';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
-import {makeObjectSchema} from '../schema';
 import {makeSyncTable} from '../api';
 import {withQueryParams} from '../helpers/url';
 
@@ -202,7 +206,8 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         makeDateArrayParameter('dateRange', 'Date range', {optional: true}),
       ],
       network: {hasSideEffect: false, hasConnection: false},
-      execute: async ([search], context, continuation) => {
+      execute: async ([search], context) => {
+        const {continuation} = context.sync;
         const url = withQueryParams(`https://npmjs.com/api/packages/${search}`, {continuation});
         const result = await context.fetcher!.fetch({method: 'GET', url});
         return result.body;
@@ -222,12 +227,61 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         }),
       ],
       network: {hasSideEffect: false, hasConnection: false},
-      execute: async ([pack], context, continuation) => {
+      execute: async ([pack], context) => {
+        const {continuation} = context.sync;
         const url = withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, {continuation});
         const result = await context.fetcher!.fetch({method: 'GET', url});
         return result.body;
       },
     }),
+    makeDynamicSyncTable(
+      'DynamicPackageVersions',
+      makeConnectionMetadataFormula(async context => {
+        const {dynamicUrl} = context.sync!;
+        const query = getQueryParams(dynamicUrl!);
+        return query.name;
+      }),
+      makeConnectionMetadataFormula(async context => {
+        const {dynamicUrl} = context.sync!;
+        const query = getQueryParams(dynamicUrl!);
+        const name = ensureExists(query.name);
+        return makeSchema({
+          type: ValueType.Array,
+          items: makeObjectSchema({
+            ...versionSchema,
+            properties: {
+              ...versionSchema.properties,
+              [name]: {type: ValueType.Number},
+            },
+          }),
+        });
+      }),
+      {
+        name: 'SyncDynamicPackageVersions',
+        description: 'Pull down NPM versions for a package.',
+        examples: [],
+        parameters: [
+          makeStringParameter('name', 'Package name', {
+            autocomplete: makeConnectionMetadataFormula(async (context, search) => {
+              const url = withQueryParams(`https://npmjs.com/api/packages/search`, {q: String(search || '')});
+              const result = await context.fetcher!.fetch({method: 'GET', url});
+              return result.body;
+            }),
+          }),
+        ],
+        network: {hasSideEffect: false, hasConnection: false},
+        execute: async ([pack], context) => {
+          const {continuation, dynamicUrl} = context.sync;
+          const query = getQueryParams(dynamicUrl!);
+          const name = ensureExists(query.name);
+          const url = withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, {continuation});
+          const result = await context.fetcher!.fetch({method: 'GET', url});
+          return {
+            result: (result.body as any[]).map((val, i) => ({...val, [name]: i})),
+          };
+        },
+      },
+    ),
   ],
 };
 

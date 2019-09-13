@@ -17,6 +17,12 @@ function withQueryParams(url, params) {
     return parsedUrl.toString();
 }
 exports.withQueryParams = withQueryParams;
+function getQueryParams(url) {
+    const parsedUrl = url_parse_1.default(url);
+    // Merge the params together
+    return qs_1.default.parse(parsedUrl.query, { ignoreQueryPrefix: true });
+}
+exports.getQueryParams = getQueryParams;
 /**
  * Joins all the tokens into a single URL string separated by '/'. Zero length tokens cause errors.
  * @param tokens Zero or more tokens to be combined. If token doesn't end with '/', one will be added as the separator
