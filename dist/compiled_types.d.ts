@@ -47,6 +47,7 @@ export interface ExternalPackMetadata extends BasePackMetadata {
             description: string;
             getOptionsFormula: PackFormulaMetadata;
         }>;
+        deferConnectionSetup?: boolean;
     };
     instructionsUrl?: string;
     formulas?: ExternalPackFormulas;
