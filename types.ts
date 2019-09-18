@@ -134,6 +134,7 @@ export enum AuthenticationType {
   OAuth2 = 'OAuth2',
   WebBasic = 'WebBasic',
   AWSSignature4 = 'AWSSignature4',
+  CodaApiHeaderBearerToken = 'CodaApiHeaderBearerToken',
 }
 
 export enum DefaultConnectionType {
@@ -183,6 +184,18 @@ interface BaseAuthentication {
  */
 export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
   type: AuthenticationType.HeaderBearerToken;
+}
+
+/**
+ * A pack or formula that uses the Coda API bearer token. We will
+ * use this to provide a better authentication experience.
+ * {"Authorization": "Bearer <token here>"}
+ */
+export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
+  type: AuthenticationType.CodaApiHeaderBearerToken;
+  // If specified, does not require a connection to be configured in
+  // order to install the pack.
+  deferConnectionSetup?: boolean;
 }
 
 /**
@@ -248,6 +261,7 @@ export interface AWSSignature4Authentication extends BaseAuthentication {
 export type Authentication =
   | NoAuthentication
   | HeaderBearerTokenAuthentication
+  | CodaApiBearerTokenAuthentication
   | CustomHeaderTokenAuthentication
   | QueryParamTokenAuthentication
   | MultiQueryParamTokenAuthentication

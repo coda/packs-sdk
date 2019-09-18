@@ -132,6 +132,7 @@ var AuthenticationType;
     AuthenticationType["OAuth2"] = "OAuth2";
     AuthenticationType["WebBasic"] = "WebBasic";
     AuthenticationType["AWSSignature4"] = "AWSSignature4";
+    AuthenticationType["CodaApiHeaderBearerToken"] = "CodaApiHeaderBearerToken";
 })(AuthenticationType = exports.AuthenticationType || (exports.AuthenticationType = {}));
 var DefaultConnectionType;
 (function (DefaultConnectionType) {

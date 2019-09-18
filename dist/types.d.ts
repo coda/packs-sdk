@@ -129,7 +129,8 @@ export declare enum AuthenticationType {
     MultiQueryParamToken = "MultiQueryParamToken",
     OAuth2 = "OAuth2",
     WebBasic = "WebBasic",
-    AWSSignature4 = "AWSSignature4"
+    AWSSignature4 = "AWSSignature4",
+    CodaApiHeaderBearerToken = "CodaApiHeaderBearerToken"
 }
 export declare enum DefaultConnectionType {
     SharedDataOnly = 1,
@@ -162,6 +163,15 @@ interface BaseAuthentication {
  */
 export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
     type: AuthenticationType.HeaderBearerToken;
+}
+/**
+ * A pack or formula that uses the Coda API bearer token. We will
+ * use this to provide a better authentication experience.
+ * {"Authorization": "Bearer <token here>"}
+ */
+export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
+    type: AuthenticationType.CodaApiHeaderBearerToken;
+    deferConnectionSetup?: boolean;
 }
 /**
  * A pack or formula which uses standard bearer token header authentication:
@@ -216,7 +226,7 @@ export interface AWSSignature4Authentication extends BaseAuthentication {
     type: AuthenticationType.AWSSignature4;
     service: string;
 }
-export declare type Authentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSSignature4Authentication;
+export declare type Authentication = NoAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSSignature4Authentication;
 export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSSignature4Authentication;
 export interface Format {
     name: string;
