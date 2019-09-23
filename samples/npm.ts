@@ -249,6 +249,11 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
           type: ValueType.Array,
           items: makeObjectSchema({
             ...versionSchema,
+            identity: {
+              packId: FakeNpmPackId,
+              name: 'DynamicPackageVersion',
+              dynamicUrl,
+            },
             properties: {
               ...versionSchema.properties,
               [name]: {type: ValueType.Number},

@@ -245,7 +245,11 @@ const FakeNpmDefinitionFake = {
             const name = ensure_1.ensureExists(query.name);
             return schema_4.makeSchema({
                 type: schema_1.ValueType.Array,
-                items: schema_2.makeObjectSchema(Object.assign(Object.assign({}, exports.versionSchema), { properties: Object.assign(Object.assign({}, exports.versionSchema.properties), { [name]: { type: schema_1.ValueType.Number } }) })),
+                items: schema_2.makeObjectSchema(Object.assign(Object.assign({}, exports.versionSchema), { identity: {
+                        packId: exports.FakeNpmPackId,
+                        name: 'DynamicPackageVersion',
+                        dynamicUrl,
+                    }, properties: Object.assign(Object.assign({}, exports.versionSchema.properties), { [name]: { type: schema_1.ValueType.Number } }) })),
             });
         })), {
             name: 'SyncDynamicPackageVersions',
