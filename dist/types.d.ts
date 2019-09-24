@@ -75,7 +75,9 @@ export declare enum PackId {
     PubNub = 1051,
     Jira = 1052,
     Barcode = 1053,
-    CodaDoc = 1054
+    CodaDoc = 1054,
+    GoogleSheets = 1055,
+    GoogleDocs = 1056
 }
 export declare enum ProviderId {
     Airtable = 2001,

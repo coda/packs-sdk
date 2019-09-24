@@ -76,6 +76,8 @@ var PackId;
     PackId[PackId["Jira"] = 1052] = "Jira";
     PackId[PackId["Barcode"] = 1053] = "Barcode";
     PackId[PackId["CodaDoc"] = 1054] = "CodaDoc";
+    PackId[PackId["GoogleSheets"] = 1055] = "GoogleSheets";
+    PackId[PackId["GoogleDocs"] = 1056] = "GoogleDocs";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
