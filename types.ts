@@ -78,6 +78,8 @@ export enum PackId {
   Jira = 1052,
   Barcode = 1053,
   CodaDoc = 1054,
+  GoogleSheets = 1055,
+  GoogleDocs = 1056,
 }
 
 export enum ProviderId {
