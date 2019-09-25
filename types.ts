@@ -80,6 +80,7 @@ export enum PackId {
   CodaDoc = 1054,
   GoogleSheets = 1055,
   GoogleDocs = 1056,
+  ModeAnalytics = 1057,
 }
 
 export enum ProviderId {
@@ -125,6 +126,7 @@ export enum ProviderId {
   PubNub = 2040,
   Atlassian = 2041,
   Barcode = 2042,
+  ModeAnalytics = 2043,
 }
 
 export enum AuthenticationType {
