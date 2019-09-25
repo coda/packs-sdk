@@ -78,6 +78,7 @@ var PackId;
     PackId[PackId["CodaDoc"] = 1054] = "CodaDoc";
     PackId[PackId["GoogleSheets"] = 1055] = "GoogleSheets";
     PackId[PackId["GoogleDocs"] = 1056] = "GoogleDocs";
+    PackId[PackId["Mode"] = 1057] = "Mode";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
@@ -123,6 +124,7 @@ var ProviderId;
     ProviderId[ProviderId["PubNub"] = 2040] = "PubNub";
     ProviderId[ProviderId["Atlassian"] = 2041] = "Atlassian";
     ProviderId[ProviderId["Barcode"] = 2042] = "Barcode";
+    ProviderId[ProviderId["Mode"] = 2043] = "Mode";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {
