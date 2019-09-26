@@ -192,6 +192,11 @@ export function makeObjectSchema<K extends string, L extends string>(schema: Obj
   return schema;
 }
 
+function normalizeKey(key: string): string {
+  // Colons cause problems in our formula handling.
+  return pascalcase(key).replace(/:/g, '_');
+}
+
 export function normalizeSchema<T extends Schema>(schema: T): T {
   if (isArray(schema)) {
     return {
@@ -202,7 +207,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     const normalized: ObjectSchemaProperties = {};
     const {id, primary, featured} = schema;
     for (const key of Object.keys(schema.properties)) {
-      const normalizedKey = pascalcase(key);
+      const normalizedKey = normalizeKey(key);
       const props = schema.properties[key];
       const {required, fromKey} = props as ObjectSchemaProperty;
       normalized[normalizedKey] = Object.assign(normalizeSchema(props), {
@@ -212,9 +217,9 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     }
     const normalizedSchema = {
       type: ValueType.Object,
-      id: id ? pascalcase(id) : undefined,
-      featured: featured ? featured.map(pascalcase) : undefined,
-      primary: primary ? pascalcase(primary) : undefined,
+      id: id ? normalizeKey(id) : undefined,
+      featured: featured ? featured.map(normalizeKey) : undefined,
+      primary: primary ? normalizeKey(primary) : undefined,
       properties: normalized,
       identity: schema.identity,
       codaType: schema.codaType,
