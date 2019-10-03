@@ -14,9 +14,10 @@ export declare enum ValueType {
     Markdown = "markdown",
     Html = "html",
     Embed = "embed",
-    Reference = "reference"
+    Reference = "reference",
+    Attachment = "attachment"
 }
-declare type StringHintTypes = ValueType.Date | ValueType.Embed | ValueType.Html | ValueType.Image | ValueType.Markdown | ValueType.Url;
+declare type StringHintTypes = ValueType.Attachment | ValueType.Date | ValueType.Embed | ValueType.Html | ValueType.Image | ValueType.Markdown | ValueType.Url;
 export declare type NumberHintTypes = ValueType.Date | ValueType.Percent | ValueType.Currency;
 export declare type ObjectHintTypes = ValueType.Person | ValueType.Reference;
 interface BaseSchema {
