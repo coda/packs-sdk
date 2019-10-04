@@ -235,6 +235,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
       },
     }),
     makeDynamicSyncTable(
+      FakeNpmPackId,
       'DynamicPackageVersions',
       makeConnectionMetadataFormula(async context => {
         const {dynamicUrl} = context.sync!;
