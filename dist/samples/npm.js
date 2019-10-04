@@ -235,7 +235,7 @@ const FakeNpmDefinitionFake = {
                 return result.body;
             }),
         }),
-        api_4.makeDynamicSyncTable('DynamicPackageVersions', api_2.makeConnectionMetadataFormula((context) => __awaiter(void 0, void 0, void 0, function* () {
+        api_4.makeDynamicSyncTable(exports.FakeNpmPackId, 'DynamicPackageVersions', api_2.makeConnectionMetadataFormula((context) => __awaiter(void 0, void 0, void 0, function* () {
             const { dynamicUrl } = context.sync;
             const query = url_1.getQueryParams(dynamicUrl);
             return query.name;
