@@ -78,7 +78,8 @@ export declare enum PackId {
     CodaDoc = 1054,
     GoogleSheets = 1055,
     GoogleDocs = 1056,
-    Mode = 1057
+    Mode = 1057,
+    LaTeX = 1058
 }
 export declare enum ProviderId {
     Airtable = 2001,
@@ -123,7 +124,8 @@ export declare enum ProviderId {
     PubNub = 2040,
     Atlassian = 2041,
     Barcode = 2042,
-    Mode = 2043
+    Mode = 2043,
+    LaTeX = 2044
 }
 export declare enum AuthenticationType {
     None = "None",

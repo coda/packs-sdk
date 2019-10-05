@@ -79,6 +79,7 @@ var PackId;
     PackId[PackId["GoogleSheets"] = 1055] = "GoogleSheets";
     PackId[PackId["GoogleDocs"] = 1056] = "GoogleDocs";
     PackId[PackId["Mode"] = 1057] = "Mode";
+    PackId[PackId["LaTeX"] = 1058] = "LaTeX";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
@@ -125,6 +126,7 @@ var ProviderId;
     ProviderId[ProviderId["Atlassian"] = 2041] = "Atlassian";
     ProviderId[ProviderId["Barcode"] = 2042] = "Barcode";
     ProviderId[ProviderId["Mode"] = 2043] = "Mode";
+    ProviderId[ProviderId["LaTeX"] = 2044] = "LaTeX";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {
