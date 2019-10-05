@@ -81,6 +81,7 @@ export enum PackId {
   GoogleSheets = 1055,
   GoogleDocs = 1056,
   Mode = 1057,
+  LaTeX = 1058,
 }
 
 export enum ProviderId {
@@ -127,6 +128,7 @@ export enum ProviderId {
   Atlassian = 2041,
   Barcode = 2042,
   Mode = 2043,
+  LaTeX = 2044,
 }
 
 export enum AuthenticationType {
