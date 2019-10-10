@@ -54,6 +54,7 @@ interface SyncTableDef<K extends string, L extends string, SchemaT extends Objec
   schema: SchemaT;
   getter: SyncFormula<K, L, any, SchemaT>;
   getSchema?: ConnectionMetadataFormula;
+  entityName?: string;
 }
 
 interface DynamicSyncTableDef<
@@ -410,6 +411,7 @@ export function makeSyncTable<
   schema: SchemaT,
   {execute: wrappedExecute, ...definition}: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
   getSchema?: ConnectionMetadataFormula,
+  entityName?: string,
 ): SyncTableDef<K, L, SchemaT> {
   const formulaSchema = getSchema ? undefined : normalizeSchema({type: ValueType.Array, items: schema});
   const {identity, id, primary} = schema;
@@ -446,6 +448,7 @@ export function makeSyncTable<
       resultType: Type.object as any,
     },
     getSchema,
+    entityName,
   };
 }
 
@@ -459,6 +462,7 @@ export function makeDynamicSyncTable<
     getName: ConnectionMetadataFormula,
     getSchema: ConnectionMetadataFormula,
     formula: SyncFormulaDef<K, L, ParamDefsT, any>,
+    entityName?: string,
 ): DynamicSyncTableDef<K, L, any> {
   const fakeSchema = makeObjectSchema({
     // This schema is useless... just creating a stub here but the client will use
@@ -474,7 +478,7 @@ export function makeDynamicSyncTable<
       id: {type: ValueType.String},
     },
   });
-  const table = makeSyncTable(name, fakeSchema, formula, getSchema);
+  const table = makeSyncTable(name, fakeSchema, formula, getSchema, entityName);
   return {
     ...table,
     isDynamic: true,
