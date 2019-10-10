@@ -28,6 +28,12 @@ var ValueType;
     ValueType["Reference"] = "reference";
     ValueType["Attachment"] = "attachment";
 })(ValueType = exports.ValueType || (exports.ValueType = {}));
+var CurrencyFormat;
+(function (CurrencyFormat) {
+    CurrencyFormat["Currency"] = "currency";
+    CurrencyFormat["Accounting"] = "accounting";
+    CurrencyFormat["Financial"] = "financial";
+})(CurrencyFormat = exports.CurrencyFormat || (exports.CurrencyFormat = {}));
 var AttributionNodeType;
 (function (AttributionNodeType) {
     AttributionNodeType[AttributionNodeType["Text"] = 1] = "Text";

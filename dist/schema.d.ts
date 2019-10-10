@@ -30,6 +30,25 @@ export interface NumberSchema extends BaseSchema {
     type: ValueType.Number;
     codaType?: NumberHintTypes;
 }
+export interface NumericSchema extends NumberSchema {
+    codaType?: ValueType.Percent;
+    precision?: number;
+    useThousandsSeparator?: boolean;
+}
+export declare enum CurrencyFormat {
+    Currency = "currency",
+    Accounting = "accounting",
+    Financial = "financial"
+}
+export interface CurrencySchema extends NumberSchema {
+    codaType: ValueType.Currency;
+    precision?: number;
+    currencyCode?: string;
+    format?: CurrencyFormat;
+}
+export interface DateSchema extends NumberSchema {
+    codaType: ValueType.Date;
+}
 export interface StringSchema extends BaseSchema {
     type: ValueType.String;
     codaType?: StringHintTypes;
