@@ -222,7 +222,7 @@ function makeObjectFormula(_a) {
     });
 }
 exports.makeObjectFormula = makeObjectFormula;
-function makeSyncTable(name, schema, _a, getSchema) {
+function makeSyncTable(name, schema, _a, getSchema, entityName) {
     var { execute: wrappedExecute } = _a, definition = __rest(_a, ["execute"]);
     const formulaSchema = getSchema ? undefined : schema_3.normalizeSchema({ type: schema_1.ValueType.Array, items: schema });
     const { identity, id, primary } = schema;
@@ -246,10 +246,11 @@ function makeSyncTable(name, schema, _a, getSchema) {
         schema: schema_3.normalizeSchema(schema),
         getter: Object.assign(Object.assign({}, definition), { cacheTtlSecs: 0, execute, schema: formulaSchema, isSyncFormula: true, resultType: api_types_1.Type.object }),
         getSchema,
+        entityName,
     };
 }
 exports.makeSyncTable = makeSyncTable;
-function makeDynamicSyncTable(packId, name, getName, getSchema, formula) {
+function makeDynamicSyncTable(packId, name, getName, getSchema, formula, entityName) {
     const fakeSchema = schema_2.makeObjectSchema({
         // This schema is useless... just creating a stub here but the client will use
         // the dynamic one.
@@ -264,7 +265,7 @@ function makeDynamicSyncTable(packId, name, getName, getSchema, formula) {
             id: { type: schema_1.ValueType.String },
         },
     });
-    const table = makeSyncTable(name, fakeSchema, formula, getSchema);
+    const table = makeSyncTable(name, fakeSchema, formula, getSchema, entityName);
     return Object.assign(Object.assign({}, table), { isDynamic: true, getName });
 }
 exports.makeDynamicSyncTable = makeDynamicSyncTable;
