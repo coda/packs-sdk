@@ -17,6 +17,9 @@ var ValueType;
     ValueType["Object"] = "object";
     // Synthetic types we will use to coerce values.
     ValueType["Date"] = "date";
+    ValueType["Time"] = "time";
+    ValueType["DateTime"] = "datetime";
+    ValueType["Duration"] = "duration";
     ValueType["Person"] = "person";
     ValueType["Percent"] = "percent";
     ValueType["Currency"] = "currency";
@@ -34,6 +37,13 @@ var CurrencyFormat;
     CurrencyFormat["Accounting"] = "accounting";
     CurrencyFormat["Financial"] = "financial";
 })(CurrencyFormat = exports.CurrencyFormat || (exports.CurrencyFormat = {}));
+var DurationUnit;
+(function (DurationUnit) {
+    DurationUnit["Days"] = "days";
+    DurationUnit["Hours"] = "hours";
+    DurationUnit["Minutes"] = "minutes";
+    DurationUnit["Seconds"] = "seconds";
+})(DurationUnit = exports.DurationUnit || (exports.DurationUnit = {}));
 var AttributionNodeType;
 (function (AttributionNodeType) {
     AttributionNodeType[AttributionNodeType["Text"] = 1] = "Text";

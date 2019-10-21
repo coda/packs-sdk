@@ -6,6 +6,9 @@ export declare enum ValueType {
     Array = "array",
     Object = "object",
     Date = "date",
+    Time = "time",
+    DateTime = "datetime",
+    Duration = "duration",
     Person = "person",
     Percent = "percent",
     Currency = "currency",
@@ -18,7 +21,7 @@ export declare enum ValueType {
     Attachment = "attachment"
 }
 declare type StringHintTypes = ValueType.Attachment | ValueType.Date | ValueType.Embed | ValueType.Html | ValueType.Image | ValueType.Markdown | ValueType.Url;
-export declare type NumberHintTypes = ValueType.Date | ValueType.Percent | ValueType.Currency;
+export declare type NumberHintTypes = ValueType.Date | ValueType.Time | ValueType.DateTime | ValueType.Duration | ValueType.Percent | ValueType.Currency;
 export declare type ObjectHintTypes = ValueType.Person | ValueType.Reference;
 interface BaseSchema {
     description?: string;
@@ -48,6 +51,26 @@ export interface CurrencySchema extends NumberSchema {
 }
 export interface DateSchema extends NumberSchema {
     codaType: ValueType.Date;
+    format: string;
+}
+export interface TimeSchema extends NumberSchema {
+    codaType: ValueType.Time;
+    format: string;
+}
+export interface DateTimeSchema extends NumberSchema {
+    codaType: ValueType.DateTime;
+    dateFormat: string;
+    timeFormat: string;
+}
+export declare enum DurationUnit {
+    Days = "days",
+    Hours = "hours",
+    Minutes = "minutes",
+    Seconds = "seconds"
+}
+export interface DurationSchema extends NumberSchema {
+    codaType: ValueType.Duration;
+    maxUnit: DurationUnit;
 }
 export interface StringSchema extends BaseSchema {
     type: ValueType.String;
