@@ -32,6 +32,9 @@ export enum ValueType {
 type StringHintTypes =
   | ValueType.Attachment
   | ValueType.Date
+  | ValueType.Time
+  | ValueType.DateTime
+  | ValueType.Duration
   | ValueType.Embed
   | ValueType.Html
   | ValueType.Image
@@ -41,7 +44,6 @@ export type NumberHintTypes =
   | ValueType.Date
   | ValueType.Time
   | ValueType.DateTime
-  | ValueType.Duration
   | ValueType.Percent
   | ValueType.Currency;
 export type ObjectHintTypes = ValueType.Person | ValueType.Reference;
@@ -101,8 +103,9 @@ export enum DurationUnit {
   Seconds = 'seconds',
 }
 
-export interface DurationSchema extends NumberSchema {
+export interface DurationSchema extends StringSchema {
   codaType: ValueType.Duration;
+  precision?: number;
   maxUnit?: DurationUnit;
 }
 

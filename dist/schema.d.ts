@@ -20,8 +20,8 @@ export declare enum ValueType {
     Reference = "reference",
     Attachment = "attachment"
 }
-declare type StringHintTypes = ValueType.Attachment | ValueType.Date | ValueType.Embed | ValueType.Html | ValueType.Image | ValueType.Markdown | ValueType.Url;
-export declare type NumberHintTypes = ValueType.Date | ValueType.Time | ValueType.DateTime | ValueType.Duration | ValueType.Percent | ValueType.Currency;
+declare type StringHintTypes = ValueType.Attachment | ValueType.Date | ValueType.Time | ValueType.DateTime | ValueType.Duration | ValueType.Embed | ValueType.Html | ValueType.Image | ValueType.Markdown | ValueType.Url;
+export declare type NumberHintTypes = ValueType.Date | ValueType.Time | ValueType.DateTime | ValueType.Percent | ValueType.Currency;
 export declare type ObjectHintTypes = ValueType.Person | ValueType.Reference;
 interface BaseSchema {
     description?: string;
@@ -68,8 +68,9 @@ export declare enum DurationUnit {
     Minutes = "minutes",
     Seconds = "seconds"
 }
-export interface DurationSchema extends NumberSchema {
+export interface DurationSchema extends StringSchema {
     codaType: ValueType.Duration;
+    precision?: number;
     maxUnit?: DurationUnit;
 }
 export interface StringSchema extends BaseSchema {
