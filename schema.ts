@@ -80,18 +80,18 @@ export interface CurrencySchema extends NumberSchema {
 
 export interface DateSchema extends NumberSchema {
   codaType: ValueType.Date;
-  format: string;
+  format?: string;
 }
 
 export interface TimeSchema extends NumberSchema {
   codaType: ValueType.Time;
-  format: string;
+  format?: string;
 }
 
 export interface DateTimeSchema extends NumberSchema {
   codaType: ValueType.DateTime;
-  dateFormat: string;
-  timeFormat: string;
+  dateFormat?: string;
+  timeFormat?: string;
 }
 
 export enum DurationUnit {
@@ -103,7 +103,7 @@ export enum DurationUnit {
 
 export interface DurationSchema extends NumberSchema {
   codaType: ValueType.Duration;
-  maxUnit: DurationUnit;
+  maxUnit?: DurationUnit;
 }
 
 export interface StringSchema extends BaseSchema {
