@@ -49,15 +49,18 @@ export interface CurrencySchema extends NumberSchema {
     currencyCode?: string;
     format?: CurrencyFormat;
 }
-export interface DateSchema extends NumberSchema {
+interface BaseDateSchema extends BaseSchema {
+    type: ValueType.Number | ValueType.String;
+}
+export interface DateSchema extends BaseDateSchema {
     codaType: ValueType.Date;
     format?: string;
 }
-export interface TimeSchema extends NumberSchema {
+export interface TimeSchema extends BaseDateSchema {
     codaType: ValueType.Time;
     format?: string;
 }
-export interface DateTimeSchema extends NumberSchema {
+export interface DateTimeSchema extends BaseDateSchema {
     codaType: ValueType.DateTime;
     dateFormat?: string;
     timeFormat?: string;
