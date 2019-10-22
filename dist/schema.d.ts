@@ -6,6 +6,9 @@ export declare enum ValueType {
     Array = "array",
     Object = "object",
     Date = "date",
+    Time = "time",
+    DateTime = "datetime",
+    Duration = "duration",
     Person = "person",
     Percent = "percent",
     Currency = "currency",
@@ -17,8 +20,8 @@ export declare enum ValueType {
     Reference = "reference",
     Attachment = "attachment"
 }
-declare type StringHintTypes = ValueType.Attachment | ValueType.Date | ValueType.Embed | ValueType.Html | ValueType.Image | ValueType.Markdown | ValueType.Url;
-export declare type NumberHintTypes = ValueType.Date | ValueType.Percent | ValueType.Currency;
+declare type StringHintTypes = ValueType.Attachment | ValueType.Date | ValueType.Time | ValueType.DateTime | ValueType.Duration | ValueType.Embed | ValueType.Html | ValueType.Image | ValueType.Markdown | ValueType.Url;
+export declare type NumberHintTypes = ValueType.Date | ValueType.Time | ValueType.DateTime | ValueType.Percent | ValueType.Currency;
 export declare type ObjectHintTypes = ValueType.Person | ValueType.Reference;
 interface BaseSchema {
     description?: string;
@@ -46,8 +49,32 @@ export interface CurrencySchema extends NumberSchema {
     currencyCode?: string;
     format?: CurrencyFormat;
 }
-export interface DateSchema extends NumberSchema {
+interface BaseDateSchema extends BaseSchema {
+    type: ValueType.Number | ValueType.String;
+}
+export interface DateSchema extends BaseDateSchema {
     codaType: ValueType.Date;
+    format?: string;
+}
+export interface TimeSchema extends BaseDateSchema {
+    codaType: ValueType.Time;
+    format?: string;
+}
+export interface DateTimeSchema extends BaseDateSchema {
+    codaType: ValueType.DateTime;
+    dateFormat?: string;
+    timeFormat?: string;
+}
+export declare enum DurationUnit {
+    Days = "days",
+    Hours = "hours",
+    Minutes = "minutes",
+    Seconds = "seconds"
+}
+export interface DurationSchema extends StringSchema {
+    codaType: ValueType.Duration;
+    precision?: number;
+    maxUnit?: DurationUnit;
 }
 export interface StringSchema extends BaseSchema {
     type: ValueType.String;
