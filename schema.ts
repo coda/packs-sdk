@@ -86,17 +86,21 @@ interface BaseDateSchema extends BaseSchema {
 
 export interface DateSchema extends BaseDateSchema {
   codaType: ValueType.Date;
+  // A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
   format?: string;
 }
 
 export interface TimeSchema extends BaseDateSchema {
   codaType: ValueType.Time;
+  // A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
   format?: string;
 }
 
 export interface DateTimeSchema extends BaseDateSchema {
   codaType: ValueType.DateTime;
+  // A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
   dateFormat?: string;
+  // A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
   timeFormat?: string;
 }
 
