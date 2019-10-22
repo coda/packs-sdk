@@ -80,6 +80,7 @@ var PackId;
     PackId[PackId["GoogleDocs"] = 1056] = "GoogleDocs";
     PackId[PackId["Mode"] = 1057] = "Mode";
     PackId[PackId["LaTeX"] = 1058] = "LaTeX";
+    PackId[PackId["GoogleDrive"] = 1059] = "GoogleDrive";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {

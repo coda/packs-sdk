@@ -79,7 +79,8 @@ export declare enum PackId {
     GoogleSheets = 1055,
     GoogleDocs = 1056,
     Mode = 1057,
-    LaTeX = 1058
+    LaTeX = 1058,
+    GoogleDrive = 1059
 }
 export declare enum ProviderId {
     Airtable = 2001,

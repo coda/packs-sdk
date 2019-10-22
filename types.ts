@@ -82,6 +82,7 @@ export enum PackId {
   GoogleDocs = 1056,
   Mode = 1057,
   LaTeX = 1058,
+  GoogleDrive = 1059,
 }
 
 export enum ProviderId {
