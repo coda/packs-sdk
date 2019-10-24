@@ -86,7 +86,7 @@ export interface CurrencySchema extends NumberSchema {
 
 export interface SliderSchema extends NumberSchema {
   minimum?: number | string;
-  maxiumum?: number | string;
+  maximum?: number | string;
   step?: number | string;
 }
 
