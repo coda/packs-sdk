@@ -52,11 +52,13 @@ export interface CurrencySchema extends NumberSchema {
     format?: CurrencyFormat;
 }
 export interface SliderSchema extends NumberSchema {
+    codaType: ValueType.Slider;
     minimum?: number | string;
     maximum?: number | string;
     step?: number | string;
 }
 export interface ScaleSchema extends NumberSchema {
+    codaType: ValueType.Scale;
     maximum: number;
     icon: string;
 }
