@@ -27,6 +27,8 @@ export enum ValueType {
   Embed = 'embed',
   Reference = 'reference',
   Attachment = 'attachment',
+  Slider = 'slider',
+  Scale = 'scale',
 }
 
 type StringHintTypes =
@@ -45,7 +47,9 @@ export type NumberHintTypes =
   | ValueType.Time
   | ValueType.DateTime
   | ValueType.Percent
-  | ValueType.Currency;
+  | ValueType.Currency
+  | ValueType.Slider
+  | ValueType.Scale;
 export type ObjectHintTypes = ValueType.Person | ValueType.Reference;
 
 interface BaseSchema {
@@ -78,6 +82,19 @@ export interface CurrencySchema extends NumberSchema {
   precision?: number;
   currencyCode?: string;
   format?: CurrencyFormat;
+}
+
+export interface SliderSchema extends NumberSchema {
+  codaType: ValueType.Slider;
+  minimum?: number | string;
+  maximum?: number | string;
+  step?: number | string;
+}
+
+export interface ScaleSchema extends NumberSchema {
+  codaType: ValueType.Scale;
+  maximum: number;
+  icon: string;
 }
 
 interface BaseDateSchema extends BaseSchema {
