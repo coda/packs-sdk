@@ -18,10 +18,12 @@ export declare enum ValueType {
     Html = "html",
     Embed = "embed",
     Reference = "reference",
-    Attachment = "attachment"
+    Attachment = "attachment",
+    Slider = "slider",
+    Scale = "scale"
 }
 declare type StringHintTypes = ValueType.Attachment | ValueType.Date | ValueType.Time | ValueType.DateTime | ValueType.Duration | ValueType.Embed | ValueType.Html | ValueType.Image | ValueType.Markdown | ValueType.Url;
-export declare type NumberHintTypes = ValueType.Date | ValueType.Time | ValueType.DateTime | ValueType.Percent | ValueType.Currency;
+export declare type NumberHintTypes = ValueType.Date | ValueType.Time | ValueType.DateTime | ValueType.Percent | ValueType.Currency | ValueType.Slider | ValueType.Scale;
 export declare type ObjectHintTypes = ValueType.Person | ValueType.Reference;
 interface BaseSchema {
     description?: string;
@@ -48,6 +50,15 @@ export interface CurrencySchema extends NumberSchema {
     precision?: number;
     currencyCode?: string;
     format?: CurrencyFormat;
+}
+export interface SliderSchema extends NumberSchema {
+    minimum?: number | string;
+    maxiumum?: number | string;
+    step?: number | string;
+}
+export interface ScaleSchema extends NumberSchema {
+    maximum: number;
+    icon: string;
 }
 interface BaseDateSchema extends BaseSchema {
     type: ValueType.Number | ValueType.String;

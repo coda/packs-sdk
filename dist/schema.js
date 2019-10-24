@@ -30,6 +30,8 @@ var ValueType;
     ValueType["Embed"] = "embed";
     ValueType["Reference"] = "reference";
     ValueType["Attachment"] = "attachment";
+    ValueType["Slider"] = "slider";
+    ValueType["Scale"] = "scale";
 })(ValueType = exports.ValueType || (exports.ValueType = {}));
 var CurrencyFormat;
 (function (CurrencyFormat) {
