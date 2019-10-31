@@ -25,7 +25,7 @@
     "@types/clone": "^0.1.30",
     "@types/lodash": "^4.14.144",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^12.11.5",
+    "@types/node": "^12.12.3",
     "@types/qs": "^6.5.3",
     "@types/string-template": "^1.0.2",
     "@types/url-parse": "^1.4.3",
