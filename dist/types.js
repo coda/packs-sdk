@@ -81,6 +81,8 @@ var PackId;
     PackId[PackId["Mode"] = 1057] = "Mode";
     PackId[PackId["LaTeX"] = 1058] = "LaTeX";
     PackId[PackId["GoogleDrive"] = 1059] = "GoogleDrive";
+    PackId[PackId["Lever"] = 1060] = "Lever";
+    PackId[PackId["Unsplash"] = 1061] = "Unsplash";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
@@ -128,6 +130,8 @@ var ProviderId;
     ProviderId[ProviderId["Barcode"] = 2042] = "Barcode";
     ProviderId[ProviderId["Mode"] = 2043] = "Mode";
     ProviderId[ProviderId["LaTeX"] = 2044] = "LaTeX";
+    ProviderId[ProviderId["Lever"] = 2045] = "Lever";
+    ProviderId[ProviderId["Unsplash"] = 2046] = "Unsplash";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {
