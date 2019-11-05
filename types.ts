@@ -83,6 +83,8 @@ export enum PackId {
   Mode = 1057,
   LaTeX = 1058,
   GoogleDrive = 1059,
+  Lever = 1060,
+  Unsplash = 1061,
 }
 
 export enum ProviderId {
@@ -130,6 +132,8 @@ export enum ProviderId {
   Barcode = 2042,
   Mode = 2043,
   LaTeX = 2044,
+  Lever = 2045,
+  Unsplash = 2046,
 }
 
 export enum AuthenticationType {
