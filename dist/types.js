@@ -83,6 +83,8 @@ var PackId;
     PackId[PackId["GoogleDrive"] = 1059] = "GoogleDrive";
     PackId[PackId["Lever"] = 1060] = "Lever";
     PackId[PackId["Unsplash"] = 1061] = "Unsplash";
+    PackId[PackId["Typeform"] = 1062] = "Typeform";
+    PackId[PackId["GoogleTranslate"] = 1063] = "GoogleTranslate";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
@@ -132,6 +134,7 @@ var ProviderId;
     ProviderId[ProviderId["LaTeX"] = 2044] = "LaTeX";
     ProviderId[ProviderId["Lever"] = 2045] = "Lever";
     ProviderId[ProviderId["Unsplash"] = 2046] = "Unsplash";
+    ProviderId[ProviderId["Typeform"] = 2047] = "Typeform";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {

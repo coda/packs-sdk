@@ -85,6 +85,8 @@ export enum PackId {
   GoogleDrive = 1059,
   Lever = 1060,
   Unsplash = 1061,
+  Typeform = 1062,
+  GoogleTranslate = 1063,
 }
 
 export enum ProviderId {
@@ -134,6 +136,7 @@ export enum ProviderId {
   LaTeX = 2044,
   Lever = 2045,
   Unsplash = 2046,
+  Typeform = 2047,
 }
 
 export enum AuthenticationType {
