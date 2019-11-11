@@ -112,10 +112,16 @@ const FakeNpmDefinitionFake = {
                 [types_4.QuotaLimitType.Action]: 10,
                 [types_4.QuotaLimitType.Getter]: 100,
             },
-            maximumSyncInterval: types_5.SyncInterval.Manual,
+            sync: {
+                maximumInterval: types_5.SyncInterval.Manual,
+                maximumRowCount: 100,
+            },
         },
         [types_2.FeatureSet.Pro]: {
-            maximumSyncInterval: types_5.SyncInterval.Manual,
+            sync: {
+                maximumInterval: types_5.SyncInterval.Manual,
+                maximumRowCount: 1000,
+            },
         },
     },
     formats: [

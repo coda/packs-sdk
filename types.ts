@@ -327,9 +327,16 @@ export enum SyncInterval {
   Hourly = 'Hourly',
 }
 
+export interface SyncQuota {
+  maximumInterval?: SyncInterval;
+  maximumRowCount?: number;
+}
+
 export interface Quota {
   monthlyLimits?: Partial<{[quotaLimitType in QuotaLimitType]: number}>;
+  // TODO(alexd): Deprecate
   maximumSyncInterval?: SyncInterval;
+  sync?: SyncQuota;
 }
 
 export interface RateLimit {

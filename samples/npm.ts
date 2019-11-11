@@ -110,10 +110,16 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         [QuotaLimitType.Action]: 10,
         [QuotaLimitType.Getter]: 100,
       },
-      maximumSyncInterval: SyncInterval.Manual,
+      sync: {
+        maximumInterval: SyncInterval.Manual,
+        maximumRowCount: 100,
+      },
     },
     [FeatureSet.Pro]: {
-      maximumSyncInterval: SyncInterval.Manual,
+      sync: {
+        maximumInterval: SyncInterval.Manual,
+        maximumRowCount: 1000,
+      },
     },
   },
   formats: [

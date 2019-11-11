@@ -14,6 +14,7 @@ export { QuotaLimitType } from './types';
 export { RateLimit } from './types';
 export { RateLimits } from './types';
 export { SyncInterval } from './types';
+export { SyncQuota } from './types';
 export { PackFormatMetadata } from './compiled_types';
 export { PackFormulaMetadata } from './compiled_types';
 export { PackFormulasMetadata } from './compiled_types';
