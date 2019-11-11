@@ -273,11 +273,16 @@ export declare enum SyncInterval {
     Daily = "Daily",
     Hourly = "Hourly"
 }
+export interface SyncQuota {
+    maximumInterval?: SyncInterval;
+    maximumRowCount?: number;
+}
 export interface Quota {
     monthlyLimits?: Partial<{
         [quotaLimitType in QuotaLimitType]: number;
     }>;
     maximumSyncInterval?: SyncInterval;
+    sync?: SyncQuota;
 }
 export interface RateLimit {
     operationsPerInterval: number;
