@@ -201,6 +201,19 @@ const FakeNpmDefinitionFake = {
                     return result.body;
                 }),
             }),
+            api_5.makeNumericFormula({
+                name: 'FakeAddPackages',
+                description: 'Adds some fake packages',
+                examples: [],
+                parameters: [],
+                varargParameters: [api_9.makeStringParameter('name', 'Package name')],
+                network: { hasSideEffect: true, hasConnection: true, requiresConnection: true },
+                execute: (names, context) => __awaiter(void 0, void 0, void 0, function* () {
+                    const url = url_2.withQueryParams(`https://npmjs.com/api/packages`);
+                    const result = yield context.fetcher.fetch({ method: 'POST', body: JSON.stringify({ names }), url });
+                    return result.body;
+                }),
+            }),
         ],
     },
     syncTables: [
