@@ -351,6 +351,55 @@ export function makeConnectionMetadataFormula(
   });
 }
 
+export interface SimpleAutocompleteOption {
+  display: string;
+  value: string | number;
+}
+
+export function simpleAutocomplete(
+  search: string,
+  options: Array<string | SimpleAutocompleteOption>,
+): Promise<ConnectionMetadataFormulaObjectResultType[]> {
+  const normalizedSearch = search.toLowerCase();
+  const filtered = options.filter(option => {
+    const display = typeof option === 'string' ? option : option.display;
+    return display.toLowerCase().includes(normalizedSearch);
+  });
+  const metadataResults = filtered.map(option => {
+    if (typeof option === 'string') {
+      return {
+        value: option,
+        display: option,
+      };
+    }
+    return option;
+  });
+  return Promise.resolve(metadataResults);
+}
+
+export function autocompleteSearchObjects<T>(
+  search: string,
+  objs: T[],
+  displayKey: keyof T,
+  valueKey: keyof T,
+): Promise<ConnectionMetadataFormulaObjectResultType[]> {
+  const normalizedSearch = search.toLowerCase();
+  const filtered = objs.filter(o => (o[displayKey] as any).toLowerCase().includes(normalizedSearch));
+  const metadataResults = filtered.map(o => {
+    return {
+      value: o[valueKey],
+      display: o[displayKey],
+    };
+  });
+  return Promise.resolve(metadataResults as any[]);
+}
+
+export function makeSimpleAutocompleteMetadataFormula(
+  options: Array<string | SimpleAutocompleteOption>,
+): ConnectionMetadataFormula {
+  return makeConnectionMetadataFormula((context, [search]) => simpleAutocomplete(search, options));
+}
+
 function isResponseHandlerTemplate(obj: any): obj is ResponseHandlerTemplate<any> {
   return obj && obj.schema;
 }
