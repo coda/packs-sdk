@@ -76,6 +76,12 @@ export {makeStringFormula} from './api';
 export {makeSyncTable} from './api';
 export {makeTranslateObjectFormula} from './api';
 
+// Autocomplete helpers.
+export {SimpleAutocompleteOption} from './api';
+export {autocompleteSearchObjects} from './api';
+export {makeSimpleAutocompleteMetadataFormula} from './api';
+export {simpleAutocomplete} from './api';
+
 export {makeBooleanParameter} from './api';
 export {makeBooleanArrayParameter} from './api';
 export {makeDateParameter} from './api';

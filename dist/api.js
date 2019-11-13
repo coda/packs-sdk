@@ -172,6 +172,40 @@ function makeConnectionMetadataFormula(execute) {
     });
 }
 exports.makeConnectionMetadataFormula = makeConnectionMetadataFormula;
+function simpleAutocomplete(search, options) {
+    const normalizedSearch = search.toLowerCase();
+    const filtered = options.filter(option => {
+        const display = typeof option === 'string' ? option : option.display;
+        return display.toLowerCase().includes(normalizedSearch);
+    });
+    const metadataResults = filtered.map(option => {
+        if (typeof option === 'string') {
+            return {
+                value: option,
+                display: option,
+            };
+        }
+        return option;
+    });
+    return Promise.resolve(metadataResults);
+}
+exports.simpleAutocomplete = simpleAutocomplete;
+function autocompleteSearchObjects(search, objs, displayKey, valueKey) {
+    const normalizedSearch = search.toLowerCase();
+    const filtered = objs.filter(o => o[displayKey].toLowerCase().includes(normalizedSearch));
+    const metadataResults = filtered.map(o => {
+        return {
+            value: o[valueKey],
+            display: o[displayKey],
+        };
+    });
+    return Promise.resolve(metadataResults);
+}
+exports.autocompleteSearchObjects = autocompleteSearchObjects;
+function makeSimpleAutocompleteMetadataFormula(options) {
+    return makeConnectionMetadataFormula((context, [search]) => simpleAutocomplete(search, options));
+}
+exports.makeSimpleAutocompleteMetadataFormula = makeSimpleAutocompleteMetadataFormula;
 function isResponseHandlerTemplate(obj) {
     return obj && obj.schema;
 }
