@@ -1,5 +1,5 @@
 import { GetConnectionNameFormula } from './api';
-import { ConnectionMetadataFormula } from './api';
+import { MetadataFormula } from './api';
 import { PackFormulas } from './api';
 import { SyncTable } from './api';
 export declare enum PackCategory {
@@ -160,11 +160,11 @@ export interface NoAuthentication {
 export interface PostSetup {
     name: 'endpoint' | string;
     description: string;
-    getOptionsFormula: ConnectionMetadataFormula;
+    getOptionsFormula: MetadataFormula;
 }
 interface BaseAuthentication {
     getConnectionNameFormula?: GetConnectionNameFormula;
-    getConnectionName?: ConnectionMetadataFormula;
+    getConnectionName?: MetadataFormula;
     defaultConnectionType?: DefaultConnectionType;
     instructionsUrl?: string;
     requiresEndpointUrl?: boolean;

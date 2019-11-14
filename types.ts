@@ -1,5 +1,5 @@
 import {GetConnectionNameFormula} from './api';
-import {ConnectionMetadataFormula} from './api';
+import {MetadataFormula} from './api';
 import {PackFormulas} from './api';
 import {SyncTable} from './api';
 
@@ -167,13 +167,13 @@ export interface NoAuthentication {
 export interface PostSetup {
   name: 'endpoint' | string;
   description: string;
-  getOptionsFormula: ConnectionMetadataFormula;
+  getOptionsFormula: MetadataFormula;
 }
 
 interface BaseAuthentication {
   // TODO(alexd): Remove this once we duplicate all the connection name stuff.
   getConnectionNameFormula?: GetConnectionNameFormula;
-  getConnectionName?: ConnectionMetadataFormula;
+  getConnectionName?: MetadataFormula;
 
   // Specifies a set of defaults for allowing pack authors to decide what the "normal"
   // configuration of authentication for this pack should look like.

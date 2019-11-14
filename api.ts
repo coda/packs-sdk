@@ -53,7 +53,7 @@ interface SyncTableDef<K extends string, L extends string, SchemaT extends Objec
   name: string;
   schema: SchemaT;
   getter: SyncFormula<K, L, any, SchemaT>;
-  getSchema?: ConnectionMetadataFormula;
+  getSchema?: MetadataFormula;
   entityName?: string;
 }
 
@@ -63,8 +63,8 @@ interface DynamicSyncTableDef<
   SchemaT extends ObjectSchema<K, L>
   > extends SyncTableDef<K, L, SchemaT> {
   isDynamic: true;
-  getSchema: ConnectionMetadataFormula;
-  getName: ConnectionMetadataFormula;
+  getSchema: MetadataFormula;
+  getName: MetadataFormula;
 }
 
 export interface Continuation {
@@ -324,24 +324,40 @@ export function makeGetConnectionNameFormula(
   });
 }
 
-export interface ConnectionMetadataFormulaObjectResultType {
+export interface MetadataFormulaObjectResultType {
   display: string;
   value: string | number;
 }
 
-export type ConnectionMetadataFormulaResultType = string | number | ConnectionMetadataFormulaObjectResultType;
-export type ConnectionMetadataFormula = ObjectPackFormula<[ParamDef<Type.string>], any>;
-export function makeConnectionMetadataFormula(
+export type MetadataContext = object;
+
+export type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
+export type MetadataFormula = ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any>;
+export function makeMetadataFormula(
   execute: (
     context: ExecutionContext,
-    params: string[],
-  ) => Promise<ConnectionMetadataFormulaResultType | ConnectionMetadataFormulaResultType[] | ArraySchema>,
-): ConnectionMetadataFormula {
+    search: string,
+    formulaContext?: MetadataContext,
+  ) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>,
+): MetadataFormula {
   return makeObjectFormula({
-    name: 'getConnectionMetadata',
-    description: 'Gets metadata from the connection',
-    execute: (params, context) => execute(context, params),
-    parameters: [makeStringParameter('search', 'Metadata to search for', {optional: true})],
+    name: 'getMetadata',
+    description: 'Gets metadata',
+    // Formula context is serialized here because we do not want to pass objects into
+    // regular pack functions (which this is)
+    execute([search, serializedFormulaContext], context) {
+      let formulaContext = {};
+      try {
+        formulaContext = JSON.parse(serializedFormulaContext);
+      } catch (err) {
+        //  Ignore.
+      }
+      return execute(context, search, formulaContext);
+    },
+    parameters: [
+      makeStringParameter('search', 'Metadata to search for', {optional: true}),
+      makeStringParameter('formulaContext', 'Serialized JSON for metadata', {optional: true}),
+    ],
     examples: [],
     network: {
       hasSideEffect: false,
@@ -359,7 +375,7 @@ export interface SimpleAutocompleteOption {
 export function simpleAutocomplete(
   search: string,
   options: Array<string | SimpleAutocompleteOption>,
-): Promise<ConnectionMetadataFormulaObjectResultType[]> {
+): Promise<MetadataFormulaObjectResultType[]> {
   const normalizedSearch = search.toLowerCase();
   const filtered = options.filter(option => {
     const display = typeof option === 'string' ? option : option.display;
@@ -382,7 +398,7 @@ export function autocompleteSearchObjects<T>(
   objs: T[],
   displayKey: keyof T,
   valueKey: keyof T,
-): Promise<ConnectionMetadataFormulaObjectResultType[]> {
+): Promise<MetadataFormulaObjectResultType[]> {
   const normalizedSearch = search.toLowerCase();
   const filtered = objs.filter(o => (o[displayKey] as any).toLowerCase().includes(normalizedSearch));
   const metadataResults = filtered.map(o => {
@@ -396,8 +412,8 @@ export function autocompleteSearchObjects<T>(
 
 export function makeSimpleAutocompleteMetadataFormula(
   options: Array<string | SimpleAutocompleteOption>,
-): ConnectionMetadataFormula {
-  return makeConnectionMetadataFormula((context, [search]) => simpleAutocomplete(search, options));
+): MetadataFormula {
+  return makeMetadataFormula((context, [search]) => simpleAutocomplete(search, options));
 }
 
 function isResponseHandlerTemplate(obj: any): obj is ResponseHandlerTemplate<any> {
@@ -459,7 +475,7 @@ export function makeSyncTable<
   name: string,
   schema: SchemaT,
   {execute: wrappedExecute, ...definition}: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
-  getSchema?: ConnectionMetadataFormula,
+  getSchema?: MetadataFormula,
   entityName?: string,
 ): SyncTableDef<K, L, SchemaT> {
   const formulaSchema = getSchema ? undefined : normalizeSchema({type: ValueType.Array, items: schema});
@@ -508,8 +524,8 @@ export function makeDynamicSyncTable<
   >(
     packId: number,
     name: string,
-    getName: ConnectionMetadataFormula,
-    getSchema: ConnectionMetadataFormula,
+    getName: MetadataFormula,
+    getSchema: MetadataFormula,
     formula: SyncFormulaDef<K, L, ParamDefsT, any>,
     entityName?: string,
 ): DynamicSyncTableDef<K, L, any> {

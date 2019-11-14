@@ -91,17 +91,17 @@ const FakeNpmDefinitionFake = {
     logoPath: 'some/path',
     defaultAuthentication: {
         type: types_1.AuthenticationType.HeaderBearerToken,
-        getConnectionName: api_2.makeConnectionMetadataFormula((_ctx, [search]) => __awaiter(void 0, void 0, void 0, function* () { return `FakeConnection ${search}`; })),
+        getConnectionName: api_2.makeMetadataFormula((_ctx, [search]) => __awaiter(void 0, void 0, void 0, function* () { return `FakeConnection ${search}`; })),
         postSetup: [
             {
                 name: 'getDefaultOptions1',
                 description: 'Get default options',
-                getOptionsFormula: api_2.makeConnectionMetadataFormula(() => __awaiter(void 0, void 0, void 0, function* () { return `FakeConnection getDefaultOptions1`; })),
+                getOptionsFormula: api_2.makeMetadataFormula(() => __awaiter(void 0, void 0, void 0, function* () { return `FakeConnection getDefaultOptions1`; })),
             },
             {
                 name: 'getDefaultOptions2',
                 description: 'Get default options - second',
-                getOptionsFormula: api_2.makeConnectionMetadataFormula(() => __awaiter(void 0, void 0, void 0, function* () { return `FakeConnection getDefaultOptions2`; })),
+                getOptionsFormula: api_2.makeMetadataFormula(() => __awaiter(void 0, void 0, void 0, function* () { return `FakeConnection getDefaultOptions2`; })),
             },
         ],
     },
@@ -146,7 +146,7 @@ const FakeNpmDefinitionFake = {
                 examples: [],
                 parameters: [
                     api_9.makeStringParameter('name', 'Package name', {
-                        autocomplete: api_2.makeConnectionMetadataFormula((context, search) => __awaiter(void 0, void 0, void 0, function* () {
+                        autocomplete: api_2.makeMetadataFormula((context, search) => __awaiter(void 0, void 0, void 0, function* () {
                             const url = url_2.withQueryParams(`https://npmjs.com/api/packages/search`, { q: String(search || '') });
                             const result = yield context.fetcher.fetch({ method: 'GET', url });
                             return result.body;
@@ -226,7 +226,7 @@ const FakeNpmDefinitionFake = {
             examples: [],
             parameters: [
                 api_9.makeStringParameter('name', 'Package name', {
-                    autocomplete: api_2.makeConnectionMetadataFormula((context, search) => __awaiter(void 0, void 0, void 0, function* () {
+                    autocomplete: api_2.makeMetadataFormula((context, search) => __awaiter(void 0, void 0, void 0, function* () {
                         const url = url_2.withQueryParams(`https://npmjs.com/api/packages/search`, { q: String(search || '') });
                         const result = yield context.fetcher.fetch({ method: 'GET', url });
                         return result.body;
@@ -241,11 +241,11 @@ const FakeNpmDefinitionFake = {
                 return result.body;
             }),
         }),
-        api_4.makeDynamicSyncTable(exports.FakeNpmPackId, 'DynamicPackageVersions', api_2.makeConnectionMetadataFormula((context) => __awaiter(void 0, void 0, void 0, function* () {
+        api_4.makeDynamicSyncTable(exports.FakeNpmPackId, 'DynamicPackageVersions', api_2.makeMetadataFormula((context) => __awaiter(void 0, void 0, void 0, function* () {
             const { dynamicUrl } = context.sync;
             const query = url_1.getQueryParams(dynamicUrl);
             return query.name;
-        })), api_2.makeConnectionMetadataFormula((context) => __awaiter(void 0, void 0, void 0, function* () {
+        })), api_2.makeMetadataFormula((context) => __awaiter(void 0, void 0, void 0, function* () {
             const { dynamicUrl } = context.sync;
             const query = url_1.getQueryParams(dynamicUrl);
             const name = ensure_1.ensureExists(query.name);
@@ -259,7 +259,7 @@ const FakeNpmDefinitionFake = {
             examples: [],
             parameters: [
                 api_9.makeStringParameter('name', 'Package name', {
-                    autocomplete: api_2.makeConnectionMetadataFormula((context, search) => __awaiter(void 0, void 0, void 0, function* () {
+                    autocomplete: api_2.makeMetadataFormula((context, search) => __awaiter(void 0, void 0, void 0, function* () {
                         const url = url_2.withQueryParams(`https://npmjs.com/api/packages/search`, { q: String(search || '') });
                         const result = yield context.fetcher.fetch({ method: 'GET', url });
                         return result.body;
