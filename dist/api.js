@@ -157,12 +157,24 @@ function makeGetConnectionNameFormula(execute) {
     });
 }
 exports.makeGetConnectionNameFormula = makeGetConnectionNameFormula;
-function makeConnectionMetadataFormula(execute) {
+function makeMetadataFormula(execute) {
     return makeObjectFormula({
-        name: 'getConnectionMetadata',
-        description: 'Gets metadata from the connection',
-        execute: (params, context) => execute(context, params),
-        parameters: [makeStringParameter('search', 'Metadata to search for', { optional: true })],
+        name: 'getMetadata',
+        description: 'Gets metadata',
+        execute([search, serializedFormulaContext], context) {
+            let formulaContext = {};
+            try {
+                formulaContext = JSON.parse(serializedFormulaContext);
+            }
+            catch (err) {
+                //  Ignore.
+            }
+            return execute(context, search, formulaContext);
+        },
+        parameters: [
+            makeStringParameter('search', 'Metadata to search for', { optional: true }),
+            makeStringParameter('formulaContext', 'Serialized JSON for metadata', { optional: true }),
+        ],
         examples: [],
         network: {
             hasSideEffect: false,
@@ -171,7 +183,7 @@ function makeConnectionMetadataFormula(execute) {
         },
     });
 }
-exports.makeConnectionMetadataFormula = makeConnectionMetadataFormula;
+exports.makeMetadataFormula = makeMetadataFormula;
 function simpleAutocomplete(search, options) {
     const normalizedSearch = search.toLowerCase();
     const filtered = options.filter(option => {
@@ -203,7 +215,7 @@ function autocompleteSearchObjects(search, objs, displayKey, valueKey) {
 }
 exports.autocompleteSearchObjects = autocompleteSearchObjects;
 function makeSimpleAutocompleteMetadataFormula(options) {
-    return makeConnectionMetadataFormula((context, [search]) => simpleAutocomplete(search, options));
+    return makeMetadataFormula((context, [search]) => simpleAutocomplete(search, options));
 }
 exports.makeSimpleAutocompleteMetadataFormula = makeSimpleAutocompleteMetadataFormula;
 function isResponseHandlerTemplate(obj) {

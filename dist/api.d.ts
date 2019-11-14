@@ -33,13 +33,13 @@ interface SyncTableDef<K extends string, L extends string, SchemaT extends Objec
     name: string;
     schema: SchemaT;
     getter: SyncFormula<K, L, any, SchemaT>;
-    getSchema?: ConnectionMetadataFormula;
+    getSchema?: MetadataFormula;
     entityName?: string;
 }
 interface DynamicSyncTableDef<K extends string, L extends string, SchemaT extends ObjectSchema<K, L>> extends SyncTableDef<K, L, SchemaT> {
     isDynamic: true;
-    getSchema: ConnectionMetadataFormula;
-    getName: ConnectionMetadataFormula;
+    getSchema: MetadataFormula;
+    getName: MetadataFormula;
 }
 export interface Continuation {
     [key: string]: string | number;
@@ -120,23 +120,24 @@ export declare function makeNumericFormula<ParamDefsT extends ParamDefs>(definit
 export declare function makeStringFormula<ParamDefsT extends ParamDefs>(definition: StringFormulaDef<ParamDefsT>): StringPackFormula<ParamDefsT>;
 export declare type GetConnectionNameFormula = StringPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>]>;
 export declare function makeGetConnectionNameFormula(execute: (context: ExecutionContext, codaUserName: string) => Promise<string> | string): GetConnectionNameFormula;
-export interface ConnectionMetadataFormulaObjectResultType {
+export interface MetadataFormulaObjectResultType {
     display: string;
     value: string | number;
 }
-export declare type ConnectionMetadataFormulaResultType = string | number | ConnectionMetadataFormulaObjectResultType;
-export declare type ConnectionMetadataFormula = ObjectPackFormula<[ParamDef<Type.string>], any>;
-export declare function makeConnectionMetadataFormula(execute: (context: ExecutionContext, params: string[]) => Promise<ConnectionMetadataFormulaResultType | ConnectionMetadataFormulaResultType[] | ArraySchema>): ConnectionMetadataFormula;
+export declare type MetadataContext = object;
+export declare type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
+export declare type MetadataFormula = ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any>;
+export declare function makeMetadataFormula(execute: (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>): MetadataFormula;
 export interface SimpleAutocompleteOption {
     display: string;
     value: string | number;
 }
-export declare function simpleAutocomplete(search: string, options: Array<string | SimpleAutocompleteOption>): Promise<ConnectionMetadataFormulaObjectResultType[]>;
-export declare function autocompleteSearchObjects<T>(search: string, objs: T[], displayKey: keyof T, valueKey: keyof T): Promise<ConnectionMetadataFormulaObjectResultType[]>;
-export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | SimpleAutocompleteOption>): ConnectionMetadataFormula;
+export declare function simpleAutocomplete(search: string, options: Array<string | SimpleAutocompleteOption>): Promise<MetadataFormulaObjectResultType[]>;
+export declare function autocompleteSearchObjects<T>(search: string, objs: T[], displayKey: keyof T, valueKey: keyof T): Promise<MetadataFormulaObjectResultType[]>;
+export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | SimpleAutocompleteOption>): MetadataFormula;
 export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
-export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, { execute: wrappedExecute, ...definition }: SyncFormulaDef<K, L, ParamDefsT, SchemaT>, getSchema?: ConnectionMetadataFormula, entityName?: string): SyncTableDef<K, L, SchemaT>;
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>(packId: number, name: string, getName: ConnectionMetadataFormula, getSchema: ConnectionMetadataFormula, formula: SyncFormulaDef<K, L, ParamDefsT, any>, entityName?: string): DynamicSyncTableDef<K, L, any>;
+export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, { execute: wrappedExecute, ...definition }: SyncFormulaDef<K, L, ParamDefsT, SchemaT>, getSchema?: MetadataFormula, entityName?: string): SyncTableDef<K, L, SchemaT>;
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>(packId: number, name: string, getName: MetadataFormula, getSchema: MetadataFormula, formula: SyncFormulaDef<K, L, ParamDefsT, any>, entityName?: string): DynamicSyncTableDef<K, L, any>;
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
     request: RequestHandlerTemplate;
     description: string;

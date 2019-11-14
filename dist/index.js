@@ -47,7 +47,7 @@ var api_8 = require("./api");
 exports.makeUserVisibleError = api_8.makeUserVisibleError;
 // Formula definition helpers
 var api_9 = require("./api");
-exports.makeConnectionMetadataFormula = api_9.makeConnectionMetadataFormula;
+exports.makeMetadataFormula = api_9.makeMetadataFormula;
 var api_10 = require("./api");
 exports.makeDynamicSyncTable = api_10.makeDynamicSyncTable;
 var api_11 = require("./api");

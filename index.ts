@@ -35,9 +35,9 @@ export {ExternalPackMetadata} from './compiled_types';
 // Formula related interfaces
 export {ArrayType} from './api_types';
 export {Continuation} from './api';
-export {ConnectionMetadataFormulaObjectResultType} from './api';
-export {ConnectionMetadataFormulaResultType} from './api';
-export {ConnectionMetadataFormula} from './api';
+export {MetadataFormulaObjectResultType} from './api';
+export {MetadataFormulaResultType} from './api';
+export {MetadataFormula} from './api';
 export {DefaultValueType} from './api_types';
 export {ExecutionContext} from './api_types';
 export {Fetcher} from './api_types';
@@ -66,7 +66,7 @@ export {isUserVisibleError} from './api';
 export {makeUserVisibleError} from './api';
 
 // Formula definition helpers
-export {makeConnectionMetadataFormula} from './api';
+export {makeMetadataFormula} from './api';
 export {makeDynamicSyncTable} from './api';
 export {makeEmptyFormula} from './api';
 export {makeGetConnectionNameFormula} from './api';

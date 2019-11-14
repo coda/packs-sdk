@@ -12,7 +12,7 @@ import {fakeDefinitionToDefinition} from '../helpers/sample_utils';
 import {fakeDefinitionToMetadata} from '../helpers/sample_utils';
 import {getQueryParams} from '../helpers/url';
 import {makeBooleanParameter} from '../api';
-import {makeConnectionMetadataFormula} from '../api';
+import {makeMetadataFormula} from '../api';
 import {makeDateArrayParameter} from '../api';
 import {makeDynamicSyncTable} from '../api';
 import {makeNumericFormula} from '../api';
@@ -89,17 +89,17 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
   logoPath: 'some/path',
   defaultAuthentication: {
     type: AuthenticationType.HeaderBearerToken,
-    getConnectionName: makeConnectionMetadataFormula(async (_ctx, [search]) => `FakeConnection ${search}`),
+    getConnectionName: makeMetadataFormula(async (_ctx, [search]) => `FakeConnection ${search}`),
     postSetup: [
       {
         name: 'getDefaultOptions1',
         description: 'Get default options',
-        getOptionsFormula: makeConnectionMetadataFormula(async () => `FakeConnection getDefaultOptions1`),
+        getOptionsFormula: makeMetadataFormula(async () => `FakeConnection getDefaultOptions1`),
       },
       {
         name: 'getDefaultOptions2',
         description: 'Get default options - second',
-        getOptionsFormula: makeConnectionMetadataFormula(async () => `FakeConnection getDefaultOptions2`),
+        getOptionsFormula: makeMetadataFormula(async () => `FakeConnection getDefaultOptions2`),
       },
     ],
   },
@@ -145,7 +145,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         examples: [],
         parameters: [
           makeStringParameter('name', 'Package name', {
-            autocomplete: makeConnectionMetadataFormula(async (context, search) => {
+            autocomplete: makeMetadataFormula(async (context, search) => {
               const url = withQueryParams(`https://npmjs.com/api/packages/search`, {q: String(search || '')});
               const result = await context.fetcher!.fetch({method: 'GET', url});
               return result.body;
@@ -225,7 +225,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
       examples: [],
       parameters: [
         makeStringParameter('name', 'Package name', {
-          autocomplete: makeConnectionMetadataFormula(async (context, search) => {
+          autocomplete: makeMetadataFormula(async (context, search) => {
             const url = withQueryParams(`https://npmjs.com/api/packages/search`, {q: String(search || '')});
             const result = await context.fetcher!.fetch({method: 'GET', url});
             return result.body;
@@ -243,12 +243,12 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
     makeDynamicSyncTable(
       FakeNpmPackId,
       'DynamicPackageVersions',
-      makeConnectionMetadataFormula(async context => {
+      makeMetadataFormula(async context => {
         const {dynamicUrl} = context.sync!;
         const query = getQueryParams(dynamicUrl!);
         return query.name;
       }),
-      makeConnectionMetadataFormula(async context => {
+      makeMetadataFormula(async context => {
         const {dynamicUrl} = context.sync!;
         const query = getQueryParams(dynamicUrl!);
         const name = ensureExists(query.name);
@@ -269,7 +269,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         examples: [],
         parameters: [
           makeStringParameter('name', 'Package name', {
-            autocomplete: makeConnectionMetadataFormula(async (context, search) => {
+            autocomplete: makeMetadataFormula(async (context, search) => {
               const url = withQueryParams(`https://npmjs.com/api/packages/search`, {q: String(search || '')});
               const result = await context.fetcher!.fetch({method: 'GET', url});
               return result.body;

@@ -87,7 +87,7 @@ const FakeBggDefinitionFake = {
             const response = yield context.fetcher.fetch(request);
             return response.body.profile.display_name;
         })),
-        getConnectionName: api_2.makeConnectionMetadataFormula((context) => __awaiter(void 0, void 0, void 0, function* () {
+        getConnectionName: api_2.makeMetadataFormula((context) => __awaiter(void 0, void 0, void 0, function* () {
             const request = {
                 method: 'GET',
                 url: 'https://boardgamegeek.com/me',
