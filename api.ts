@@ -343,6 +343,8 @@ export function makeMetadataFormula(
   return makeObjectFormula({
     name: 'getMetadata',
     description: 'Gets metadata',
+    // Formula context is serialized here because we do not want to pass objects into
+    // regular pack functions (which this is)
     execute([search, serializedFormulaContext], context) {
       let formulaContext = {};
       try {
