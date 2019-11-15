@@ -138,6 +138,7 @@ export interface FetchRequest {
   headers?: {[header: string]: string};
   // Allows explicit caching of the results of this request.
   cacheTtlSecs?: number;
+  dangerouslyCacheNonGet?: boolean;
 }
 
 // Copied from https://developer.mozilla.org/en-US/docs/Web/API/Response
