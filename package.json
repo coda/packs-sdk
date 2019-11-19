@@ -36,6 +36,6 @@
     "tslint": "^5.20.1",
     "tslint-microsoft-contrib": "^6.2.0",
     "typescript": "^3.6.4",
-    "yargs": "^14.2.0"
+    "yargs": "^15.0.2"
   }
 }
