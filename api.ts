@@ -57,11 +57,8 @@ interface SyncTableDef<K extends string, L extends string, SchemaT extends Objec
   entityName?: string;
 }
 
-interface DynamicSyncTableDef<
-  K extends string,
-  L extends string,
-  SchemaT extends ObjectSchema<K, L>
-  > extends SyncTableDef<K, L, SchemaT> {
+interface DynamicSyncTableDef<K extends string, L extends string, SchemaT extends ObjectSchema<K, L>>
+  extends SyncTableDef<K, L, SchemaT> {
   isDynamic: true;
   getSchema: MetadataFormula;
   getName: MetadataFormula;
@@ -265,7 +262,7 @@ interface SyncFormulaDef<
   L extends string,
   ParamsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>
-  > extends CommonPackFormulaDef<ParamsT> {
+> extends CommonPackFormulaDef<ParamsT> {
   execute(
     params: ParamValues<ParamsT>,
     context: SyncExecutionContext,
@@ -279,11 +276,11 @@ export type SyncFormula<
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>
-  > = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
-    resultType: TypeOf<SchemaType<SchemaT>>;
-    isSyncFormula: true;
-    schema?: ArraySchema;
-  };
+> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
+  resultType: TypeOf<SchemaType<SchemaT>>;
+  isSyncFormula: true;
+  schema?: ArraySchema;
+};
 
 export function makeNumericFormula<ParamDefsT extends ParamDefs>(
   definition: PackFormulaDef<ParamDefsT, number>,
@@ -329,7 +326,7 @@ export interface MetadataFormulaObjectResultType {
   value: string | number;
 }
 
-export type MetadataContext = object;
+export type MetadataContext = Record<string, string>;
 
 export type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
 export type MetadataFormula = ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any>;
@@ -489,15 +486,14 @@ export function makeSyncTable<
     params: ParamValues<ParamDefsT>,
     context: SyncExecutionContext,
     input: Continuation | undefined, // TODO(alexd): Remove
-    runtimeSchema: string | undefined,  // TODO(alexd): Remove
+    runtimeSchema: string | undefined, // TODO(alexd): Remove
   ) {
     const {result, continuation} = await wrappedExecute(params, context, input);
     const appliedSchema = (context.sync && context.sync.schema) || (runtimeSchema && JSON.parse(runtimeSchema));
     return {
-      result: responseHandler(
-        {body: ensureExists(result), status: 200, headers: {}},
-        appliedSchema,
-      ) as Array<SchemaType<SchemaT>>,
+      result: responseHandler({body: ensureExists(result), status: 200, headers: {}}, appliedSchema) as Array<
+        SchemaType<SchemaT>
+      >,
       continuation,
     };
   };
@@ -517,17 +513,13 @@ export function makeSyncTable<
   };
 }
 
-export function makeDynamicSyncTable<
-  K extends string,
-  L extends string,
-  ParamDefsT extends ParamDefs,
-  >(
-    packId: number,
-    name: string,
-    getName: MetadataFormula,
-    getSchema: MetadataFormula,
-    formula: SyncFormulaDef<K, L, ParamDefsT, any>,
-    entityName?: string,
+export function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>(
+  packId: number,
+  name: string,
+  getName: MetadataFormula,
+  getSchema: MetadataFormula,
+  formula: SyncFormulaDef<K, L, ParamDefsT, any>,
+  entityName?: string,
 ): DynamicSyncTableDef<K, L, any> {
   const fakeSchema = makeObjectSchema({
     // This schema is useless... just creating a stub here but the client will use
