@@ -326,7 +326,7 @@ export interface MetadataFormulaObjectResultType {
   value: string | number;
 }
 
-export type MetadataContext = Record<string, string>;
+export type MetadataContext = Record<string, any>;
 
 export type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
 export type MetadataFormula = ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any>;

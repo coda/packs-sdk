@@ -124,7 +124,7 @@ export interface MetadataFormulaObjectResultType {
     display: string;
     value: string | number;
 }
-export declare type MetadataContext = Record<string, string>;
+export declare type MetadataContext = Record<string, any>;
 export declare type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
 export declare type MetadataFormula = ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any>;
 export declare function makeMetadataFormula(execute: (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>): MetadataFormula;
