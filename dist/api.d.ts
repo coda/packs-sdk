@@ -151,6 +151,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     network?: import("./api_types").Network | undefined;
     cacheTtlSecs?: number | undefined;
     isExperimental?: boolean | undefined;
+    isSystem?: boolean | undefined;
 } & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<SchemaType<ResultT>>;
     resultType: Type;

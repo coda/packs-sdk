@@ -74,9 +74,15 @@ export type PackFormulaResult = $Values<TypeMap> | ConcreteArrayTypes;
 
 export type TypeOf<T extends PackFormulaResult> = T extends number
   ? Type.number
-  : (T extends string
-    ? Type.string
-    : (T extends boolean ? Type.boolean : (T extends Date ? Type.date : (T extends object ? Type.object : never))));
+  : T extends string
+  ? Type.string
+  : T extends boolean
+  ? Type.boolean
+  : T extends Date
+  ? Type.date
+  : T extends object
+  ? Type.object
+  : never;
 
 export interface ParamDef<T extends UnionType> {
   name: string;
@@ -96,10 +102,12 @@ export type ParamsList = Array<ParamDef<UnionType>>;
 
 type TypeOfMap<T extends UnionType> = T extends Type
   ? TypeMap[T]
-  : (T extends ArrayType<infer V> ? Array<TypeMap[V]> : never);
+  : T extends ArrayType<infer V>
+  ? Array<TypeMap[V]>
+  : never;
 
 export type ParamValues<ParamDefsT extends ParamDefs> = {
-  [K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never
+  [K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
 } &
   any[]; // NOTE(oleg): we need this to avoid "must have a '[Symbol.iterator]()' method that returns an iterator."
 
@@ -119,6 +127,10 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
    */
   readonly cacheTtlSecs?: number;
   readonly isExperimental?: boolean;
+  /**
+   * Whether this is a formula that will be used by Coda internally and not exposed directly to users.
+   */
+  readonly isSystem?: boolean;
 }
 
 export interface Network {
