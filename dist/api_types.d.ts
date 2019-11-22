@@ -36,7 +36,7 @@ interface TypeMap {
 }
 export declare type PackFormulaValue = $Values<$Omit<TypeMap, Type.object>> | ConcreteArrayTypes;
 export declare type PackFormulaResult = $Values<TypeMap> | ConcreteArrayTypes;
-export declare type TypeOf<T extends PackFormulaResult> = T extends number ? Type.number : (T extends string ? Type.string : (T extends boolean ? Type.boolean : (T extends Date ? Type.date : (T extends object ? Type.object : never))));
+export declare type TypeOf<T extends PackFormulaResult> = T extends number ? Type.number : T extends string ? Type.string : T extends boolean ? Type.boolean : T extends Date ? Type.date : T extends object ? Type.object : never;
 export interface ParamDef<T extends UnionType> {
     name: string;
     type: T;
@@ -49,7 +49,7 @@ export interface ParamDef<T extends UnionType> {
 export declare type ParamArgs<T extends UnionType> = $Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
 export declare type ParamDefs = [ParamDef<any>, ...Array<ParamDef<any>>] | never[];
 export declare type ParamsList = Array<ParamDef<UnionType>>;
-declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : (T extends ArrayType<infer V> ? Array<TypeMap[V]> : never);
+declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : T extends ArrayType<infer V> ? Array<TypeMap[V]> : never;
 export declare type ParamValues<ParamDefsT extends ParamDefs> = {
     [K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
 } & any[];
@@ -69,6 +69,10 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
      */
     readonly cacheTtlSecs?: number;
     readonly isExperimental?: boolean;
+    /**
+     * Whether this is a formula that will be used by Coda internally and not exposed directly to users.
+     */
+    readonly isSystem?: boolean;
 }
 export interface Network {
     readonly hasSideEffect: boolean;
