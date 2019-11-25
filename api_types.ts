@@ -150,6 +150,8 @@ export interface FetchRequest {
   headers?: {[header: string]: string};
   // Allows explicit caching of the results of this request.
   cacheTtlSecs?: number;
+  // Allows binary responses.
+  isBinaryResponse?: boolean;
 }
 
 // Copied from https://developer.mozilla.org/en-US/docs/Web/API/Response

@@ -90,6 +90,7 @@ export interface FetchRequest {
         [header: string]: string;
     };
     cacheTtlSecs?: number;
+    isBinaryResponse?: boolean;
 }
 export interface FetchResponse<T extends any = any> {
     status: number;
