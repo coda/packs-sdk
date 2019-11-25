@@ -23,7 +23,7 @@
   "devDependencies": {
     "@types/chai": "^4.2.5",
     "@types/clone": "^0.1.30",
-    "@types/lodash": "^4.14.146",
+    "@types/lodash": "^4.14.149",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.12",
     "@types/qs": "^6.5.3",
