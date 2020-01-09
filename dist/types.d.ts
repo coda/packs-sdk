@@ -85,7 +85,8 @@ export declare enum PackId {
     Unsplash = 1061,
     Typeform = 1062,
     GoogleTranslate = 1063,
-    CodaStats = 1064
+    CodaStats = 1064,
+    Wix = 1065
 }
 export declare enum ProviderId {
     Airtable = 2001,
@@ -134,7 +135,8 @@ export declare enum ProviderId {
     LaTeX = 2044,
     Lever = 2045,
     Unsplash = 2046,
-    Typeform = 2047
+    Typeform = 2047,
+    Wix = 2048
 }
 export declare enum AuthenticationType {
     None = "None",
