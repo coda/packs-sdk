@@ -87,6 +87,7 @@ export enum PackId {
   Unsplash = 1061,
   Typeform = 1062,
   GoogleTranslate = 1063,
+  CodaStats = 1064,
 }
 
 export enum ProviderId {

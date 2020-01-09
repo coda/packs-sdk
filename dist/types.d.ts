@@ -84,7 +84,8 @@ export declare enum PackId {
     Lever = 1060,
     Unsplash = 1061,
     Typeform = 1062,
-    GoogleTranslate = 1063
+    GoogleTranslate = 1063,
+    CodaStats = 1064
 }
 export declare enum ProviderId {
     Airtable = 2001,

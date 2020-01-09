@@ -85,6 +85,7 @@ var PackId;
     PackId[PackId["Unsplash"] = 1061] = "Unsplash";
     PackId[PackId["Typeform"] = 1062] = "Typeform";
     PackId[PackId["GoogleTranslate"] = 1063] = "GoogleTranslate";
+    PackId[PackId["CodaStats"] = 1064] = "CodaStats";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
