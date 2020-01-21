@@ -378,6 +378,10 @@ export interface PackDefinition {
   formats?: Format[];
   policies?: Policy[];
   syncTables?: SyncTable[];
+  /**
+   * Whether this is a pack that will be used by Coda internally and not exposed directly to users.
+   */
+  isSystem?: boolean;
 }
 
 export interface ProviderDefinition {
