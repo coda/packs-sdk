@@ -21,7 +21,7 @@
     "url-parse": "^1.4.7"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.8",
+    "@types/chai": "^4.2.9",
     "@types/clone": "^0.1.30",
     "@types/lodash": "^4.14.149",
     "@types/mocha": "^7.0.1",
