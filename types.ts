@@ -88,6 +88,7 @@ export enum PackId {
   Typeform = 1062,
   GoogleTranslate = 1063,
   CodaStats = 1064,
+  Trello = 1065,
 }
 
 export enum ProviderId {
@@ -138,6 +139,7 @@ export enum ProviderId {
   Lever = 2045,
   Unsplash = 2046,
   Typeform = 2047,
+  Trello = 2048,
 }
 
 export enum AuthenticationType {
