@@ -262,7 +262,7 @@ interface SyncFormulaDef<
   L extends string,
   ParamsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>
-> extends CommonPackFormulaDef<ParamsT> {
+  > extends CommonPackFormulaDef<ParamsT> {
   execute(
     params: ParamValues<ParamsT>,
     context: SyncExecutionContext,
@@ -276,11 +276,11 @@ export type SyncFormula<
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>
-> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
-  resultType: TypeOf<SchemaType<SchemaT>>;
-  isSyncFormula: true;
-  schema?: ArraySchema;
-};
+  > = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
+    resultType: TypeOf<SchemaType<SchemaT>>;
+    isSyncFormula: true;
+    schema?: ArraySchema;
+  };
 
 export function makeNumericFormula<ParamDefsT extends ParamDefs>(
   definition: PackFormulaDef<ParamDefsT, number>,
@@ -370,10 +370,10 @@ export interface SimpleAutocompleteOption {
 }
 
 export function simpleAutocomplete(
-  search: string,
+  search: string | undefined,
   options: Array<string | SimpleAutocompleteOption>,
 ): Promise<MetadataFormulaObjectResultType[]> {
-  const normalizedSearch = search.toLowerCase();
+  const normalizedSearch = (search || '').toLowerCase();
   const filtered = options.filter(option => {
     const display = typeof option === 'string' ? option : option.display;
     return display.toLowerCase().includes(normalizedSearch);

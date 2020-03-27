@@ -187,7 +187,7 @@ function makeMetadataFormula(execute) {
 }
 exports.makeMetadataFormula = makeMetadataFormula;
 function simpleAutocomplete(search, options) {
-    const normalizedSearch = search.toLowerCase();
+    const normalizedSearch = (search || '').toLowerCase();
     const filtered = options.filter(option => {
         const display = typeof option === 'string' ? option : option.display;
         return display.toLowerCase().includes(normalizedSearch);
