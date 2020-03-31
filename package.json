@@ -16,7 +16,7 @@
     "clone": "^2.1.2",
     "lodash": "^4.17.15",
     "pascalcase": "^1.0.0",
-    "qs": "^6.9.2",
+    "qs": "^6.9.3",
     "string-template": "^1.0.0",
     "url-parse": "^1.4.7"
   },
