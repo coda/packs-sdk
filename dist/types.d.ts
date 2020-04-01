@@ -276,7 +276,8 @@ export declare enum QuotaLimitType {
 export declare enum SyncInterval {
     Manual = "Manual",
     Daily = "Daily",
-    Hourly = "Hourly"
+    Hourly = "Hourly",
+    EveryTenMinutes = "EveryTenMinutes"
 }
 export interface SyncQuota {
     maximumInterval?: SyncInterval;

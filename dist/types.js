@@ -178,4 +178,5 @@ var SyncInterval;
     SyncInterval["Manual"] = "Manual";
     SyncInterval["Daily"] = "Daily";
     SyncInterval["Hourly"] = "Hourly";
+    SyncInterval["EveryTenMinutes"] = "EveryTenMinutes";
 })(SyncInterval = exports.SyncInterval || (exports.SyncInterval = {}));
