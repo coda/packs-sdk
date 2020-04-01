@@ -330,6 +330,7 @@ export enum SyncInterval {
   Manual = 'Manual',
   Daily = 'Daily',
   Hourly = 'Hourly',
+  EveryTenMins = 'EveryTenMins',
 }
 
 export interface SyncQuota {
