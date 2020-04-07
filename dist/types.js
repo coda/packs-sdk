@@ -88,6 +88,7 @@ var PackId;
     PackId[PackId["CodaStats"] = 1064] = "CodaStats";
     PackId[PackId["Trello"] = 1065] = "Trello";
     PackId[PackId["Asana"] = 1066] = "Asana";
+    PackId[PackId["GoogleGroups"] = 1067] = "GoogleGroups";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
