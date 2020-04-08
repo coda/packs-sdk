@@ -87,7 +87,8 @@ export declare enum PackId {
     GoogleTranslate = 1063,
     CodaStats = 1064,
     Trello = 1065,
-    Asana = 1066
+    Asana = 1066,
+    GoogleGroups = 1067
 }
 export declare enum ProviderId {
     Airtable = 2001,
