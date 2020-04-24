@@ -141,6 +141,7 @@ var ProviderId;
     ProviderId[ProviderId["Typeform"] = 2047] = "Typeform";
     ProviderId[ProviderId["Trello"] = 2048] = "Trello";
     ProviderId[ProviderId["Asana"] = 2049] = "Asana";
+    ProviderId[ProviderId["YouTube"] = 2050] = "YouTube";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {

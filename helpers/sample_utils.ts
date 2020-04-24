@@ -1,4 +1,3 @@
-import {$Omit} from '../type_utils';
 import {PackDefinition} from '../types';
 import {PackFormatMetadata} from '../compiled_types';
 import {PackFormulasMetadata} from '../compiled_types';
@@ -7,7 +6,7 @@ import {PackMetadata} from '../compiled_types';
 import {PackSyncTable} from '../compiled_types';
 
 // Used to avoid needing promises when exporting fake `PackMetadata`s.
-export interface FakePackDefinition extends $Omit<PackDefinition, 'formulas'> {
+export interface FakePackDefinition extends Omit<PackDefinition, 'formulas'> {
   formulas?: PackFormulas;
 }
 

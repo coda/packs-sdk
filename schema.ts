@@ -217,29 +217,28 @@ export function isArray(val?: Schema): val is ArraySchema {
 type UndefinedAsOptional<T extends object> = Partial<T> &
   Pick<T, {[K in keyof T]: undefined extends T[K] ? never : K}[keyof T]>;
 
-// NOTE(oleg): recursive types currently break due to https://github.com/Microsoft/TypeScript/issues/30188
-// so we don't support resolution of union types or arrays beyond the first layer.
-export type SchemaType<T extends Schema> = T extends ArraySchema
-  ? Array<TerminalSchemaType<T['items']>>
-  : (T extends GenericObjectSchema ? ObjectSchemaType<T> : TerminalSchemaType<T>);
-type TerminalSchemaType<T extends Schema> = T extends BooleanSchema
+export type SchemaType<T extends Schema> = T extends BooleanSchema
   ? boolean
-  : (T extends NumberSchema
-      ? number
-      : (T extends StringSchema
-          ? (T['codaType'] extends ValueType.Date ? Date : string)
-          : (T extends ArraySchema
-              ? any[]
-              : (T extends GenericObjectSchema ? {[K in keyof T['properties']]: any} : never))));
-type ObjectSchemaType<T extends GenericObjectSchema> = UndefinedAsOptional<
-  {
-    [K in keyof T['properties']]: T['properties'][K] extends Schema & {required: true}
-      ? (TerminalSchemaType<T['properties'][K]>)
-      : (TerminalSchemaType<T['properties'][K]> | undefined);
-  }
->;
+  : T extends NumberSchema
+  ? number
+  : T extends StringSchema
+  ? T['codaType'] extends ValueType.Date
+    ? Date
+    : string
+  : T extends ArraySchema
+  ? Array<SchemaType<T['items']>>
+  : T extends GenericObjectSchema
+  ? UndefinedAsOptional<
+      {
+        [K in keyof T['properties']]: T['properties'][K] extends Schema & {required: true}
+          ? SchemaType<T['properties'][K]>
+          : SchemaType<T['properties'][K]> | undefined;
+      }
+    >
+  : never;
 
 export type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
+
 export function generateSchema(obj: ValidTypes): Schema {
   if (Array.isArray(obj)) {
     if (obj.length === 0) {
@@ -273,7 +272,7 @@ export function makeSchema<T extends Schema>(schema: T): T {
   return schema;
 }
 
-export function makeObjectSchema<K extends string, L extends string>(schema: ObjectSchema<K, L>): ObjectSchema<K, L> {
+export function makeObjectSchema<K extends string, L extends string, T extends ObjectSchema<K, L>>(schema: T): T {
   return schema;
 }
 

@@ -1,4 +1,3 @@
-import {$Omit} from './type_utils';
 import {$Values} from './type_utils';
 import {MetadataFormula} from './api';
 import {Continuation} from './api';
@@ -69,7 +68,7 @@ interface TypeMap {
   [Type.image]: string;
 }
 
-export type PackFormulaValue = $Values<$Omit<TypeMap, Type.object>> | ConcreteArrayTypes;
+export type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | ConcreteArrayTypes;
 export type PackFormulaResult = $Values<TypeMap> | ConcreteArrayTypes;
 
 export type TypeOf<T extends PackFormulaResult> = T extends number
@@ -94,9 +93,9 @@ export interface ParamDef<T extends UnionType> {
   defaultValue?: DefaultValueType<T>;
 }
 
-export type ParamArgs<T extends UnionType> = $Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
+export type ParamArgs<T extends UnionType> = Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
 
-export type ParamDefs = [ParamDef<any>, ...Array<ParamDef<any>>] | never[];
+export type ParamDefs = [ParamDef<any>, ...Array<ParamDef<any>>] | [];
 
 export type ParamsList = Array<ParamDef<UnionType>>;
 

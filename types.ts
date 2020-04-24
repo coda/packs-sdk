@@ -143,6 +143,7 @@ export enum ProviderId {
   Typeform = 2047,
   Trello = 2048,
   Asana = 2049,
+  YouTube = 2050,
 }
 
 export enum AuthenticationType {

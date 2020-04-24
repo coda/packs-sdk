@@ -1,4 +1,3 @@
-import {$Omit} from './type_utils';
 import {$OmitNested} from './type_utils';
 import {Authentication} from './types';
 import {AuthenticationType} from './types';
@@ -7,15 +6,15 @@ import {PackDefinition} from './types';
 import {TypedPackFormula} from './api';
 import {SyncTable} from './api';
 
-export type PackFormulaMetadata = $Omit<TypedPackFormula, 'execute'>;
+export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
 // TODO(alexd): Uncomment the getSchema stripping.
-export type PackSyncTable = $Omit<SyncTable, 'getter' | 'getName' /* | 'getSchema' */> & {
+export type PackSyncTable = Omit<SyncTable, 'getter' | 'getName' /* | 'getSchema' */> & {
   getter: PackFormulaMetadata;
   isDynamic?: boolean;
   hasDynamicSchema?: boolean;
 };
 
-export interface PackFormatMetadata extends $Omit<Format, 'matchers'> {
+export interface PackFormatMetadata extends Omit<Format, 'matchers'> {
   matchers: string[];
 }
 
@@ -24,7 +23,7 @@ export interface PackFormulasMetadata {
 }
 
 /** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
-export type PackMetadata = $Omit<PackDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {
+export type PackMetadata = Omit<PackDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {
   formulas: PackFormulasMetadata;
   formats: PackFormatMetadata[];
   syncTables: PackSyncTable[];
@@ -42,7 +41,7 @@ export type ExternalPackFormat = Format;
 export type ExternalPackFormatMetadata = PackFormatMetadata;
 export type ExternalSyncTable = PackSyncTable;
 
-type BasePackMetadata = $Omit<
+type BasePackMetadata = Omit<
   PackMetadata,
   'enabledConfigName'
   | 'defaultAuthentication'

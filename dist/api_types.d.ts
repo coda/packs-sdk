@@ -1,4 +1,3 @@
-import { $Omit } from './type_utils';
 import { $Values } from './type_utils';
 import { MetadataFormula } from './api';
 import { Continuation } from './api';
@@ -34,7 +33,7 @@ interface TypeMap {
     [Type.html]: string;
     [Type.image]: string;
 }
-export declare type PackFormulaValue = $Values<$Omit<TypeMap, Type.object>> | ConcreteArrayTypes;
+export declare type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | ConcreteArrayTypes;
 export declare type PackFormulaResult = $Values<TypeMap> | ConcreteArrayTypes;
 export declare type TypeOf<T extends PackFormulaResult> = T extends number ? Type.number : T extends string ? Type.string : T extends boolean ? Type.boolean : T extends Date ? Type.date : T extends object ? Type.object : never;
 export interface ParamDef<T extends UnionType> {
@@ -46,8 +45,8 @@ export interface ParamDef<T extends UnionType> {
     autocomplete?: MetadataFormula;
     defaultValue?: DefaultValueType<T>;
 }
-export declare type ParamArgs<T extends UnionType> = $Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
-export declare type ParamDefs = [ParamDef<any>, ...Array<ParamDef<any>>] | never[];
+export declare type ParamArgs<T extends UnionType> = Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
+export declare type ParamDefs = [ParamDef<any>, ...Array<ParamDef<any>>] | [];
 export declare type ParamsList = Array<ParamDef<UnionType>>;
 declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : T extends ArrayType<infer V> ? Array<TypeMap[V]> : never;
 export declare type ParamValues<ParamDefsT extends ParamDefs> = {
