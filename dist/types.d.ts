@@ -197,11 +197,12 @@ export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
 }
 /**
  * A pack or formula which uses standard bearer token header authentication:
- * {"Authorization": "Bearer <token here>"}
+ * {"HeaderNameHere": "OptionalTokenPrefixHere <token here>"}
  */
 export interface CustomHeaderTokenAuthentication extends BaseAuthentication {
     type: AuthenticationType.CustomHeaderToken;
     headerName: string;
+    tokenPrefix?: string;
 }
 /**
  * A pack or formula which includes a token in a query parameter (bad for security).
