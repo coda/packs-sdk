@@ -139,7 +139,8 @@ export declare enum ProviderId {
     Unsplash = 2046,
     Typeform = 2047,
     Trello = 2048,
-    Asana = 2049
+    Asana = 2049,
+    YouTube = 2050
 }
 export declare enum AuthenticationType {
     None = "None",

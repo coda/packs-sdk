@@ -1,4 +1,3 @@
-import {$Omit} from './type_utils';
 import {ArraySchema} from './schema';
 import {ArrayType} from './api_types';
 import {CommonPackFormulaDef} from './api_types';
@@ -67,7 +66,7 @@ interface DynamicSyncTableDef<K extends string, L extends string, SchemaT extend
 export interface Continuation {
   [key: string]: string | number;
 }
-export type GenericSyncFormula = SyncFormula<any, any, any, any>;
+export type GenericSyncFormula = SyncFormula<any, any, ParamDefs, any>;
 export type GenericSyncFormulaResult = SyncFormulaResult<any>;
 export type GenericSyncTable = SyncTableDef<any, any, any>;
 export type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, any>;
@@ -195,7 +194,7 @@ export interface PackFormulas {
   readonly [namespace: string]: TypedPackFormula[];
 }
 
-interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult>
+export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult>
   extends CommonPackFormulaDef<ParamsT> {
   execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
 }
@@ -208,17 +207,17 @@ interface StringFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaD
 }
 
 interface ObjectResultFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema>
-  extends PackFormulaDef<ParamsT, SchemaType<SchemaT>> {
+  extends PackFormulaDef<ParamsT, SchemaType<SchemaT> | Array<SchemaType<SchemaT>>> {
   response?: ResponseHandlerTemplate<SchemaT>;
 }
 
 interface ObjectArrayFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema>
-  extends $Omit<PackFormulaDef<ParamsT, SchemaType<SchemaT>>, 'execute'> {
+  extends Omit<PackFormulaDef<ParamsT, SchemaType<SchemaT>>, 'execute'> {
   request: RequestHandlerTemplate;
   response: ResponseHandlerTemplate<SchemaT>;
 }
 
-interface EmptyFormulaDef<ParamsT extends ParamDefs> extends $Omit<PackFormulaDef<ParamsT, string>, 'execute'> {
+export interface EmptyFormulaDef<ParamsT extends ParamDefs> extends Omit<PackFormulaDef<ParamsT, string>, 'execute'> {
   request: RequestHandlerTemplate;
 }
 
@@ -238,17 +237,17 @@ type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = F
   schema?: SchemaT;
 };
 
-export type TypedPackFormula = NumericPackFormula<any> | StringPackFormula<any> | ObjectPackFormula<any, any>;
+export type TypedPackFormula = NumericPackFormula<any> | StringPackFormula<any> | ObjectPackFormula<ParamDefs, any>;
 
-export function isObjectPackFormula(fn: Formula<any, any>): fn is ObjectPackFormula<any, any> {
+export function isObjectPackFormula(fn: Formula<ParamDefs, any>): fn is ObjectPackFormula<ParamDefs, any> {
   return fn.resultType === Type.object;
 }
 
-export function isStringPackFormula(fn: Formula<any, any>): fn is StringPackFormula<any> {
+export function isStringPackFormula(fn: Formula<ParamDefs, any>): fn is StringPackFormula<any> {
   return fn.resultType === Type.string;
 }
 
-export function isSyncPackFormula(fn: Formula<any, any>): fn is GenericSyncFormula {
+export function isSyncPackFormula(fn: Formula<ParamDefs, any>): fn is GenericSyncFormula {
   return Boolean((fn as GenericSyncFormula).isSyncFormula);
 }
 
@@ -262,7 +261,7 @@ interface SyncFormulaDef<
   L extends string,
   ParamsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>
-  > extends CommonPackFormulaDef<ParamsT> {
+> extends CommonPackFormulaDef<ParamsT> {
   execute(
     params: ParamValues<ParamsT>,
     context: SyncExecutionContext,
@@ -276,11 +275,11 @@ export type SyncFormula<
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>
-  > = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
-    resultType: TypeOf<SchemaType<SchemaT>>;
-    isSyncFormula: true;
-    schema?: ArraySchema;
-  };
+> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
+  resultType: TypeOf<SchemaType<SchemaT>>;
+  isSyncFormula: true;
+  schema?: ArraySchema;
+};
 
 export function makeNumericFormula<ParamDefsT extends ParamDefs>(
   definition: PackFormulaDef<ParamDefsT, number>,
@@ -349,7 +348,7 @@ export function makeMetadataFormula(
       } catch (err) {
         //  Ignore.
       }
-      return execute(context, search, formulaContext);
+      return execute(context, search, formulaContext) as any;
     },
     parameters: [
       makeStringParameter('search', 'Metadata to search for', {optional: true}),
@@ -442,7 +441,7 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
     const wrappedExecute = execute;
     const responseHandler = generateObjectResponseHandler(response);
     execute = async function exec(params: ParamValues<ParamDefsT>, context: ExecutionContext) {
-      let result: SchemaType<SchemaT>;
+      let result: SchemaType<SchemaT> | Array<SchemaType<SchemaT>>;
       try {
         result = await wrappedExecute(params, context);
       } catch (err) {
@@ -567,7 +566,7 @@ export function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT
 
   return Object.assign({}, definition, {
     execute,
-    resultType: Type.object,
+    resultType: Type.object as const,
     schema: response.schema,
   });
 }
@@ -582,6 +581,6 @@ export function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: Empty
 
   return Object.assign({}, definition, {
     execute,
-    resultType: Type.string,
+    resultType: Type.string as const,
   });
 }

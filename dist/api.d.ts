@@ -1,4 +1,3 @@
-import { $Omit } from './type_utils';
 import { ArraySchema } from './schema';
 import { ArrayType } from './api_types';
 import { CommonPackFormulaDef } from './api_types';
@@ -44,7 +43,7 @@ interface DynamicSyncTableDef<K extends string, L extends string, SchemaT extend
 export interface Continuation {
     [key: string]: string | number;
 }
-export declare type GenericSyncFormula = SyncFormula<any, any, any, any>;
+export declare type GenericSyncFormula = SyncFormula<any, any, ParamDefs, any>;
 export declare type GenericSyncFormulaResult = SyncFormulaResult<any>;
 export declare type GenericSyncTable = SyncTableDef<any, any, any>;
 export declare type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, any>;
@@ -69,7 +68,7 @@ export declare function check(condition: boolean, msg: string): void;
 export interface PackFormulas {
     readonly [namespace: string]: TypedPackFormula[];
 }
-interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult> extends CommonPackFormulaDef<ParamsT> {
+export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult> extends CommonPackFormulaDef<ParamsT> {
     execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
 }
 interface StringFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaDef<ParamsT> {
@@ -78,14 +77,14 @@ interface StringFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaD
         schema: StringSchema;
     };
 }
-interface ObjectResultFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema> extends PackFormulaDef<ParamsT, SchemaType<SchemaT>> {
+interface ObjectResultFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema> extends PackFormulaDef<ParamsT, SchemaType<SchemaT> | Array<SchemaType<SchemaT>>> {
     response?: ResponseHandlerTemplate<SchemaT>;
 }
-interface ObjectArrayFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema> extends $Omit<PackFormulaDef<ParamsT, SchemaType<SchemaT>>, 'execute'> {
+interface ObjectArrayFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema> extends Omit<PackFormulaDef<ParamsT, SchemaType<SchemaT>>, 'execute'> {
     request: RequestHandlerTemplate;
     response: ResponseHandlerTemplate<SchemaT>;
 }
-interface EmptyFormulaDef<ParamsT extends ParamDefs> extends $Omit<PackFormulaDef<ParamsT, string>, 'execute'> {
+export interface EmptyFormulaDef<ParamsT extends ParamDefs> extends Omit<PackFormulaDef<ParamsT, string>, 'execute'> {
     request: RequestHandlerTemplate;
 }
 declare type Formula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = PackFormulaDef<ParamDefsT, ResultT> & {
@@ -100,10 +99,10 @@ declare type StringPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefs
 declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Formula<ParamDefsT, SchemaType<SchemaT>> & {
     schema?: SchemaT;
 };
-export declare type TypedPackFormula = NumericPackFormula<any> | StringPackFormula<any> | ObjectPackFormula<any, any>;
-export declare function isObjectPackFormula(fn: Formula<any, any>): fn is ObjectPackFormula<any, any>;
-export declare function isStringPackFormula(fn: Formula<any, any>): fn is StringPackFormula<any>;
-export declare function isSyncPackFormula(fn: Formula<any, any>): fn is GenericSyncFormula;
+export declare type TypedPackFormula = NumericPackFormula<any> | StringPackFormula<any> | ObjectPackFormula<ParamDefs, any>;
+export declare function isObjectPackFormula(fn: Formula<ParamDefs, any>): fn is ObjectPackFormula<ParamDefs, any>;
+export declare function isStringPackFormula(fn: Formula<ParamDefs, any>): fn is StringPackFormula<any>;
+export declare function isSyncPackFormula(fn: Formula<ParamDefs, any>): fn is GenericSyncFormula;
 interface SyncFormulaResult<ResultT extends object> {
     result: ResultT[];
     continuation?: Continuation;
@@ -147,17 +146,17 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
         result: PackFormulaResult;
     }[];
     parameters: ParamDefsT;
-    varargParameters?: [ParamDef<any>, ...ParamDef<any>[]] | never[] | undefined;
+    varargParameters?: [] | [ParamDef<any>, ...ParamDef<any>[]] | undefined;
     network?: import("./api_types").Network | undefined;
     cacheTtlSecs?: number | undefined;
     isExperimental?: boolean | undefined;
     isSystem?: boolean | undefined;
 } & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<SchemaType<ResultT>>;
-    resultType: Type;
+    resultType: Type.object;
     schema: ResultT | undefined;
 };
 export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: EmptyFormulaDef<ParamDefsT>): EmptyFormulaDef<ParamDefsT> & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
-    resultType: Type;
+    resultType: Type.string;
 };

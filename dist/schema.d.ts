@@ -152,19 +152,15 @@ export declare function isArray(val?: Schema): val is ArraySchema;
 declare type UndefinedAsOptional<T extends object> = Partial<T> & Pick<T, {
     [K in keyof T]: undefined extends T[K] ? never : K;
 }[keyof T]>;
-export declare type SchemaType<T extends Schema> = T extends ArraySchema ? Array<TerminalSchemaType<T['items']>> : (T extends GenericObjectSchema ? ObjectSchemaType<T> : TerminalSchemaType<T>);
-declare type TerminalSchemaType<T extends Schema> = T extends BooleanSchema ? boolean : (T extends NumberSchema ? number : (T extends StringSchema ? (T['codaType'] extends ValueType.Date ? Date : string) : (T extends ArraySchema ? any[] : (T extends GenericObjectSchema ? {
-    [K in keyof T['properties']]: any;
-} : never))));
-declare type ObjectSchemaType<T extends GenericObjectSchema> = UndefinedAsOptional<{
+export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? T['codaType'] extends ValueType.Date ? Date : string : T extends ArraySchema ? Array<SchemaType<T['items']>> : T extends GenericObjectSchema ? UndefinedAsOptional<{
     [K in keyof T['properties']]: T['properties'][K] extends Schema & {
         required: true;
-    } ? (TerminalSchemaType<T['properties'][K]>) : (TerminalSchemaType<T['properties'][K]> | undefined);
-}>;
+    } ? SchemaType<T['properties'][K]> : SchemaType<T['properties'][K]> | undefined;
+}> : never;
 export declare type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
 export declare function generateSchema(obj: ValidTypes): Schema;
 export declare function makeSchema<T extends Schema>(schema: T): T;
-export declare function makeObjectSchema<K extends string, L extends string>(schema: ObjectSchema<K, L>): ObjectSchema<K, L>;
+export declare function makeObjectSchema<K extends string, L extends string, T extends ObjectSchema<K, L>>(schema: T): T;
 export declare function normalizeSchema<T extends Schema>(schema: T): T;
 export declare function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema): GenericObjectSchema;
 export declare enum SchemaIdPrefix {
