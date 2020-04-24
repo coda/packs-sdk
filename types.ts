@@ -91,6 +91,7 @@ export enum PackId {
   Trello = 1065,
   Asana = 1066,
   GoogleGroups = 1067,
+  OpsGenie = 1068,
 }
 
 export enum ProviderId {
