@@ -54,9 +54,6 @@ export const imageArray: ArrayType<Type.image> = {
   items: Type.image,
 };
 
-// Concrete versions of these ArrayTypes
-type ConcreteArrayTypes = string[] | number[] | boolean[] | Date[];
-
 // Mapping from our type enum to the JS types they are manifested as.
 interface TypeMap {
   [Type.number]: number;
@@ -68,8 +65,8 @@ interface TypeMap {
   [Type.image]: string;
 }
 
-export type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | ConcreteArrayTypes;
-export type PackFormulaResult = $Values<TypeMap> | ConcreteArrayTypes;
+export type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | PackFormulaValue[];
+export type PackFormulaResult = $Values<TypeMap> | PackFormulaResult[];
 
 export type TypeOf<T extends PackFormulaResult> = T extends number
   ? Type.number
@@ -130,6 +127,10 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
    * Whether this is a formula that will be used by Coda internally and not exposed directly to users.
    */
   readonly isSystem?: boolean;
+  /**
+   * Whether this is a formula that can be run by a user without specific document context.
+   */
+  readonly allowsUnscopedAccess?: boolean;
 }
 
 export interface Network {

@@ -99,7 +99,7 @@ declare type StringPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefs
 declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Formula<ParamDefsT, SchemaType<SchemaT>> & {
     schema?: SchemaT;
 };
-export declare type TypedPackFormula = NumericPackFormula<any> | StringPackFormula<any> | ObjectPackFormula<ParamDefs, any>;
+export declare type TypedPackFormula = NumericPackFormula<any> | StringPackFormula<any> | ObjectPackFormula<ParamDefs, any> | GenericSyncFormula;
 export declare function isObjectPackFormula(fn: Formula<ParamDefs, any>): fn is ObjectPackFormula<ParamDefs, any>;
 export declare function isStringPackFormula(fn: Formula<ParamDefs, any>): fn is StringPackFormula<any>;
 export declare function isSyncPackFormula(fn: Formula<ParamDefs, any>): fn is GenericSyncFormula;
@@ -151,6 +151,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     cacheTtlSecs?: number | undefined;
     isExperimental?: boolean | undefined;
     isSystem?: boolean | undefined;
+    allowsUnscopedAccess?: boolean | undefined;
 } & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<SchemaType<ResultT>>;
     resultType: Type.object;

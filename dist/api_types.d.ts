@@ -23,7 +23,6 @@ export declare const booleanArray: ArrayType<Type.boolean>;
 export declare const dateArray: ArrayType<Type.date>;
 export declare const htmlArray: ArrayType<Type.html>;
 export declare const imageArray: ArrayType<Type.image>;
-declare type ConcreteArrayTypes = string[] | number[] | boolean[] | Date[];
 interface TypeMap {
     [Type.number]: number;
     [Type.string]: string;
@@ -33,8 +32,8 @@ interface TypeMap {
     [Type.html]: string;
     [Type.image]: string;
 }
-export declare type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | ConcreteArrayTypes;
-export declare type PackFormulaResult = $Values<TypeMap> | ConcreteArrayTypes;
+export declare type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | PackFormulaValue[];
+export declare type PackFormulaResult = $Values<TypeMap> | PackFormulaResult[];
 export declare type TypeOf<T extends PackFormulaResult> = T extends number ? Type.number : T extends string ? Type.string : T extends boolean ? Type.boolean : T extends Date ? Type.date : T extends object ? Type.object : never;
 export interface ParamDef<T extends UnionType> {
     name: string;
@@ -72,6 +71,10 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
      * Whether this is a formula that will be used by Coda internally and not exposed directly to users.
      */
     readonly isSystem?: boolean;
+    /**
+     * Whether this is a formula that can be run by a user without specific document context.
+     */
+    readonly allowsUnscopedAccess?: boolean;
 }
 export interface Network {
     readonly hasSideEffect: boolean;
