@@ -127,10 +127,6 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
    * Whether this is a formula that will be used by Coda internally and not exposed directly to users.
    */
   readonly isSystem?: boolean;
-  /**
-   * Whether this is a formula that can be run by a user without specific document context.
-   */
-  readonly allowsUnscopedAccess?: boolean;
 }
 
 export interface Network {
