@@ -237,7 +237,11 @@ type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = F
   schema?: SchemaT;
 };
 
-export type TypedPackFormula = NumericPackFormula<any> | StringPackFormula<any> | ObjectPackFormula<ParamDefs, any>;
+export type TypedPackFormula =
+  | NumericPackFormula<any>
+  | StringPackFormula<any>
+  | ObjectPackFormula<ParamDefs, any>
+  | GenericSyncFormula;
 
 export function isObjectPackFormula(fn: Formula<ParamDefs, any>): fn is ObjectPackFormula<ParamDefs, any> {
   return fn.resultType === Type.object;
