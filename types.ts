@@ -92,6 +92,7 @@ export enum PackId {
   Asana = 1066,
   GoogleGroups = 1067,
   OpsGenie = 1068,
+  BoardGameGeek = 1069,
 }
 
 export enum ProviderId {
@@ -145,6 +146,7 @@ export enum ProviderId {
   Trello = 2048,
   Asana = 2049,
   YouTube = 2050,
+  BoardGameGeek = 2051,
 }
 
 export enum AuthenticationType {

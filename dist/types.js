@@ -90,6 +90,7 @@ var PackId;
     PackId[PackId["Asana"] = 1066] = "Asana";
     PackId[PackId["GoogleGroups"] = 1067] = "GoogleGroups";
     PackId[PackId["OpsGenie"] = 1068] = "OpsGenie";
+    PackId[PackId["BoardGameGeek"] = 1069] = "BoardGameGeek";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
@@ -143,6 +144,7 @@ var ProviderId;
     ProviderId[ProviderId["Trello"] = 2048] = "Trello";
     ProviderId[ProviderId["Asana"] = 2049] = "Asana";
     ProviderId[ProviderId["YouTube"] = 2050] = "YouTube";
+    ProviderId[ProviderId["BoardGameGeek"] = 2051] = "BoardGameGeek";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {

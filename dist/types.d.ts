@@ -89,7 +89,8 @@ export declare enum PackId {
     Trello = 1065,
     Asana = 1066,
     GoogleGroups = 1067,
-    OpsGenie = 1068
+    OpsGenie = 1068,
+    BoardGameGeek = 1069
 }
 export declare enum ProviderId {
     Airtable = 2001,
@@ -141,7 +142,8 @@ export declare enum ProviderId {
     Typeform = 2047,
     Trello = 2048,
     Asana = 2049,
-    YouTube = 2050
+    YouTube = 2050,
+    BoardGameGeek = 2051
 }
 export declare enum AuthenticationType {
     None = "None",
