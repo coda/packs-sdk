@@ -91,6 +91,8 @@ var PackId;
     PackId[PackId["GoogleGroups"] = 1067] = "GoogleGroups";
     PackId[PackId["OpsGenie"] = 1068] = "OpsGenie";
     PackId[PackId["Crypto"] = 1069] = "Crypto";
+    PackId[PackId["FedEx"] = 1070] = "FedEx";
+    PackId[PackId["UPS"] = 1071] = "UPS";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
@@ -144,6 +146,8 @@ var ProviderId;
     ProviderId[ProviderId["Trello"] = 2048] = "Trello";
     ProviderId[ProviderId["Asana"] = 2049] = "Asana";
     ProviderId[ProviderId["YouTube"] = 2050] = "YouTube";
+    ProviderId[ProviderId["FedEx"] = 2051] = "FedEx";
+    ProviderId[ProviderId["UPS"] = 2052] = "UPS";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {
