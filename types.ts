@@ -92,6 +92,7 @@ export enum PackId {
   Asana = 1066,
   GoogleGroups = 1067,
   OpsGenie = 1068,
+  Crypto = 1069,
 }
 
 export enum ProviderId {

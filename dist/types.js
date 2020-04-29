@@ -90,6 +90,7 @@ var PackId;
     PackId[PackId["Asana"] = 1066] = "Asana";
     PackId[PackId["GoogleGroups"] = 1067] = "GoogleGroups";
     PackId[PackId["OpsGenie"] = 1068] = "OpsGenie";
+    PackId[PackId["Crypto"] = 1069] = "Crypto";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
