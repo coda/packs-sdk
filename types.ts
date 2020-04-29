@@ -93,6 +93,8 @@ export enum PackId {
   GoogleGroups = 1067,
   OpsGenie = 1068,
   Crypto = 1069,
+  FedEx = 1070,
+  UPS = 1071,
 }
 
 export enum ProviderId {
@@ -146,6 +148,8 @@ export enum ProviderId {
   Trello = 2048,
   Asana = 2049,
   YouTube = 2050,
+  FedEx = 2051,
+  UPS = 2052,
 }
 
 export enum AuthenticationType {
