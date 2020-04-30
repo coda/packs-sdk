@@ -95,6 +95,7 @@ export enum PackId {
   Crypto = 1069,
   FedEx = 1070,
   UPS = 1071,
+  SlackChannels = 1072,
 }
 
 export enum ProviderId {
