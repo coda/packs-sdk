@@ -92,7 +92,8 @@ export declare enum PackId {
     OpsGenie = 1068,
     Crypto = 1069,
     FedEx = 1070,
-    UPS = 1071
+    UPS = 1071,
+    SlackChannels = 1072
 }
 export declare enum ProviderId {
     Airtable = 2001,

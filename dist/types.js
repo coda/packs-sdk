@@ -93,6 +93,7 @@ var PackId;
     PackId[PackId["Crypto"] = 1069] = "Crypto";
     PackId[PackId["FedEx"] = 1070] = "FedEx";
     PackId[PackId["UPS"] = 1071] = "UPS";
+    PackId[PackId["SlackChannels"] = 1072] = "SlackChannels";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
