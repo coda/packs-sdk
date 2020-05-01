@@ -175,6 +175,10 @@ export interface ExecutionContext {
     docId?: string;
   };
   readonly timezone: string;
+  // An arbitrary token scoped to only this request invocation.readonly.
+  // Used for things like naming template parameters that will be replaced
+  // by the fetcher in secure way to prevent parameter injection attacks.
+  readonly invocationToken: string;
   readonly sync?: Sync;
 }
 

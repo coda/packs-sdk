@@ -113,6 +113,7 @@ export interface ExecutionContext {
         docId?: string;
     };
     readonly timezone: string;
+    readonly invocationToken: string;
     readonly sync?: Sync;
 }
 export interface SyncExecutionContext extends ExecutionContext {
