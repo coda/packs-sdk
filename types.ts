@@ -96,6 +96,7 @@ export enum PackId {
   FedEx = 1070,
   UPS = 1071,
   SlackChannels = 1072,
+  USPS = 1073,
 }
 
 export enum ProviderId {
@@ -151,6 +152,7 @@ export enum ProviderId {
   YouTube = 2050,
   FedEx = 2051,
   UPS = 2052,
+  USPS = 2053,
 }
 
 export enum AuthenticationType {

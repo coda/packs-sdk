@@ -93,7 +93,8 @@ export declare enum PackId {
     Crypto = 1069,
     FedEx = 1070,
     UPS = 1071,
-    SlackChannels = 1072
+    SlackChannels = 1072,
+    USPS = 1073
 }
 export declare enum ProviderId {
     Airtable = 2001,
@@ -147,7 +148,8 @@ export declare enum ProviderId {
     Asana = 2049,
     YouTube = 2050,
     FedEx = 2051,
-    UPS = 2052
+    UPS = 2052,
+    USPS = 2053
 }
 export declare enum AuthenticationType {
     None = "None",
