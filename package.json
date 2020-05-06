@@ -26,7 +26,7 @@
     "@types/lodash": "^4.14.150",
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.13.4",
-    "@types/qs": "^6.9.1",
+    "@types/qs": "^6.9.2",
     "@types/string-template": "^1.0.2",
     "@types/url-parse": "^1.4.3",
     "chai": "^4.2.0",
