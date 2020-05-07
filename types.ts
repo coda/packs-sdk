@@ -97,6 +97,7 @@ export enum PackId {
   UPS = 1071,
   SlackChannels = 1072,
   USPS = 1073,
+  Snowflake = 1074,
 }
 
 export enum ProviderId {
@@ -153,6 +154,7 @@ export enum ProviderId {
   FedEx = 2051,
   UPS = 2052,
   USPS = 2053,
+  Snowflake = 2054,
 }
 
 export enum AuthenticationType {
