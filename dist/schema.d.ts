@@ -141,13 +141,18 @@ interface ImageAttributionNode {
 }
 declare type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
 export declare function makeAttributionNode<T extends AttributionNode>(node: T): T;
-export declare type Schema = BooleanSchema | NumberSchema | StringSchema | StringSchema<any> | ArraySchema | GenericObjectSchema;
+export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
 export declare function isObject(val?: Schema): val is GenericObjectSchema;
 export declare function isArray(val?: Schema): val is ArraySchema;
 declare type PickOptional<T, K extends keyof T> = Partial<T> & {
     [P in K]: T[P];
 };
-export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? T['codaType'] extends ValueType.Date ? Date : string : T extends ArraySchema ? Array<SchemaType<T['items']>> : T extends GenericObjectSchema ? PickOptional<{
+interface StringHintTypeToSchemaTypeMap {
+    [ValueType.Date]: Date;
+    [ValueType.DateTime]: Date;
+}
+declare type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T extends keyof StringHintTypeToSchemaTypeMap ? StringHintTypeToSchemaTypeMap[T] : string;
+export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? StringHintTypeToSchemaType<T['codaType']> : T extends ArraySchema ? Array<SchemaType<T['items']>> : T extends GenericObjectSchema ? PickOptional<{
     [K in keyof T['properties']]: SchemaType<T['properties'][K]>;
 }, $Values<{
     [K in keyof T['properties']]: T['properties'][K] extends {

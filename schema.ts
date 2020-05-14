@@ -200,13 +200,7 @@ export function makeAttributionNode<T extends AttributionNode>(node: T): T {
   return node;
 }
 
-export type Schema =
-  | BooleanSchema
-  | NumberSchema
-  | StringSchema
-  | StringSchema<any>
-  | ArraySchema
-  | GenericObjectSchema;
+export type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
 
 export function isObject(val?: Schema): val is GenericObjectSchema {
   return Boolean(val && val.type === ValueType.Object);
@@ -218,14 +212,20 @@ export function isArray(val?: Schema): val is ArraySchema {
 
 type PickOptional<T, K extends keyof T> = Partial<T> & {[P in K]: T[P]};
 
+interface StringHintTypeToSchemaTypeMap {
+  [ValueType.Date]: Date;
+  [ValueType.DateTime]: Date;
+}
+type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T extends keyof StringHintTypeToSchemaTypeMap
+  ? StringHintTypeToSchemaTypeMap[T]
+  : string;
+
 export type SchemaType<T extends Schema> = T extends BooleanSchema
   ? boolean
   : T extends NumberSchema
   ? number
   : T extends StringSchema
-  ? T['codaType'] extends ValueType.Date
-    ? Date
-    : string
+  ? StringHintTypeToSchemaType<T['codaType']>
   : T extends ArraySchema
   ? Array<SchemaType<T['items']>>
   : T extends GenericObjectSchema
