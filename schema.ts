@@ -32,7 +32,7 @@ export enum ValueType {
   Scale = 'scale',
 }
 
-type StringHintTypes =
+export type StringHintTypes =
   | ValueType.Attachment
   | ValueType.Date
   | ValueType.Time
@@ -129,15 +129,14 @@ export enum DurationUnit {
   Seconds = 'seconds',
 }
 
-export interface DurationSchema extends StringSchema {
-  codaType: ValueType.Duration;
+export interface DurationSchema extends StringSchema<ValueType.Duration> {
   precision?: number;
   maxUnit?: DurationUnit;
 }
 
-export interface StringSchema extends BaseSchema {
+export interface StringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
   type: ValueType.String;
-  codaType?: StringHintTypes;
+  codaType?: T;
 }
 
 export interface ArraySchema extends BaseSchema {
@@ -201,7 +200,13 @@ export function makeAttributionNode<T extends AttributionNode>(node: T): T {
   return node;
 }
 
-export type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
+export type Schema =
+  | BooleanSchema
+  | NumberSchema
+  | StringSchema
+  | StringSchema<any>
+  | ArraySchema
+  | GenericObjectSchema;
 
 export function isObject(val?: Schema): val is GenericObjectSchema {
   return Boolean(val && val.type === ValueType.Object);
@@ -210,6 +215,8 @@ export function isObject(val?: Schema): val is GenericObjectSchema {
 export function isArray(val?: Schema): val is ArraySchema {
   return Boolean(val && val.type === ValueType.Array);
 }
+
+type PickOptional<T, K extends keyof T> = Partial<T> & {[P in K]: T[P]};
 
 export type SchemaType<T extends Schema> = T extends BooleanSchema
   ? boolean
@@ -222,11 +229,10 @@ export type SchemaType<T extends Schema> = T extends BooleanSchema
   : T extends ArraySchema
   ? Array<SchemaType<T['items']>>
   : T extends GenericObjectSchema
-  ? Partial<T['properties']> &
-      Pick<
-        T['properties'],
-        $Values<{[K in keyof T['properties']]: T['properties'][K] extends {required: true} ? K : never}>
-      >
+  ? PickOptional<
+      {[K in keyof T['properties']]: SchemaType<T['properties'][K]>},
+      $Values<{[K in keyof T['properties']]: T['properties'][K] extends {required: true} ? K : never}>
+    >
   : never;
 
 export type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];

@@ -23,7 +23,7 @@ export declare enum ValueType {
     Slider = "slider",
     Scale = "scale"
 }
-declare type StringHintTypes = ValueType.Attachment | ValueType.Date | ValueType.Time | ValueType.DateTime | ValueType.Duration | ValueType.Embed | ValueType.Html | ValueType.Image | ValueType.Markdown | ValueType.Url;
+export declare type StringHintTypes = ValueType.Attachment | ValueType.Date | ValueType.Time | ValueType.DateTime | ValueType.Duration | ValueType.Embed | ValueType.Html | ValueType.Image | ValueType.Markdown | ValueType.Url;
 export declare type NumberHintTypes = ValueType.Date | ValueType.Time | ValueType.DateTime | ValueType.Percent | ValueType.Currency | ValueType.Slider | ValueType.Scale;
 export declare type ObjectHintTypes = ValueType.Person | ValueType.Reference;
 interface BaseSchema {
@@ -85,14 +85,13 @@ export declare enum DurationUnit {
     Minutes = "minutes",
     Seconds = "seconds"
 }
-export interface DurationSchema extends StringSchema {
-    codaType: ValueType.Duration;
+export interface DurationSchema extends StringSchema<ValueType.Duration> {
     precision?: number;
     maxUnit?: DurationUnit;
 }
-export interface StringSchema extends BaseSchema {
+export interface StringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
     type: ValueType.String;
-    codaType?: StringHintTypes;
+    codaType?: T;
 }
 export interface ArraySchema extends BaseSchema {
     type: ValueType.Array;
@@ -142,10 +141,15 @@ interface ImageAttributionNode {
 }
 declare type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
 export declare function makeAttributionNode<T extends AttributionNode>(node: T): T;
-export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
+export declare type Schema = BooleanSchema | NumberSchema | StringSchema | StringSchema<any> | ArraySchema | GenericObjectSchema;
 export declare function isObject(val?: Schema): val is GenericObjectSchema;
 export declare function isArray(val?: Schema): val is ArraySchema;
-export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? T['codaType'] extends ValueType.Date ? Date : string : T extends ArraySchema ? Array<SchemaType<T['items']>> : T extends GenericObjectSchema ? Partial<T['properties']> & Pick<T['properties'], $Values<{
+declare type PickOptional<T, K extends keyof T> = Partial<T> & {
+    [P in K]: T[P];
+};
+export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? T['codaType'] extends ValueType.Date ? Date : string : T extends ArraySchema ? Array<SchemaType<T['items']>> : T extends GenericObjectSchema ? PickOptional<{
+    [K in keyof T['properties']]: SchemaType<T['properties'][K]>;
+}, $Values<{
     [K in keyof T['properties']]: T['properties'][K] extends {
         required: true;
     } ? K : never;

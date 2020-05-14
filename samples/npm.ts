@@ -160,7 +160,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         execute: async ([name, monthly], context) => {
           const url = withQueryParams(`https://npmjs.com/api/packages/${name}`, {monthly: String(monthly)});
           const result = await context.fetcher!.fetch({method: 'GET', url});
-          return result.body;
+          return result.body as any;
         },
       }),
       makeStringFormula({
