@@ -247,7 +247,7 @@ export function isObjectPackFormula(fn: Formula<ParamDefs, any>): fn is ObjectPa
   return fn.resultType === Type.object;
 }
 
-export function isStringPackFormula(fn: Formula<ParamDefs, any>): fn is StringPackFormula<any> {
+export function isStringPackFormula(fn: Formula<ParamDefs, any>): fn is StringPackFormula<ParamDefs> {
   return fn.resultType === Type.string;
 }
 
