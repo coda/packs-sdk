@@ -11,6 +11,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.fakeDefinitionToMetadata = exports.fakeDefinitionToDefinition = void 0;
 function fakeDefinitionToDefinition(def) {
     return def;
 }

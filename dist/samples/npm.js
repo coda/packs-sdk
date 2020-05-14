@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.FakeNpmMetadata = exports.FakeNpmDefinition = exports.packageSchema = exports.personSchema = exports.versionSchema = exports.FakeNpmPackVersion = exports.FakeNpmPackId = exports.FakeNpmProviderId = void 0;
 const types_1 = require("../types");
 const types_2 = require("../types");
 const types_3 = require("../types");
@@ -45,7 +46,7 @@ exports.versionSchema = schema_2.makeObjectSchema({
     id: 'url',
     primary: 'url',
     properties: {
-        url: { type: schema_1.ValueType.String, id: true },
+        url: { type: schema_1.ValueType.String },
         version: { type: schema_1.ValueType.String },
         downloadCount: { type: schema_1.ValueType.Number },
     },
@@ -71,7 +72,7 @@ exports.packageSchema = schema_2.makeObjectSchema({
     featured: ['packageName', 'downloadCount'],
     properties: {
         packageName: { type: schema_1.ValueType.String },
-        url: { type: schema_1.ValueType.String, id: true },
+        url: { type: schema_1.ValueType.String },
         author: exports.personSchema,
         downloadCount: { type: schema_1.ValueType.Number },
         versions: {

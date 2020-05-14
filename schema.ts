@@ -1,4 +1,5 @@
 import {PackId} from './types';
+import {$Values} from './type_utils';
 import {ensureExists} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
 import pascalcase from 'pascalcase';
@@ -145,15 +146,13 @@ export interface ArraySchema extends BaseSchema {
 }
 
 export interface ObjectSchemaProperty {
-  // TODO(alexd): Remove these once we've hoisted these up.
-  id?: boolean;
   fromKey?: string;
   required?: boolean;
 }
 
-export interface ObjectSchemaProperties {
-  [key: string]: Schema | (Schema & ObjectSchemaProperty);
-}
+export type ObjectSchemaProperties<K extends string = never> = {
+  [K2 in K | string]: Schema & ObjectSchemaProperty;
+};
 
 export type GenericObjectSchema = ObjectSchema<string, string>;
 
@@ -166,9 +165,7 @@ export interface Identity {
 
 export interface ObjectSchema<K extends string, L extends string> extends BaseSchema {
   type: ValueType.Object;
-  properties: ObjectSchemaProperties &
-    {[k in K]: Schema | (Schema & ObjectSchemaProperty)} &
-    {[k in L]: Schema | (Schema & ObjectSchemaProperty)};
+  properties: ObjectSchemaProperties<K | L>;
   id?: K;
   primary?: K;
   codaType?: ObjectHintTypes;
@@ -214,9 +211,6 @@ export function isArray(val?: Schema): val is ArraySchema {
   return Boolean(val && val.type === ValueType.Array);
 }
 
-type UndefinedAsOptional<T extends object> = Partial<T> &
-  Pick<T, {[K in keyof T]: undefined extends T[K] ? never : K}[keyof T]>;
-
 export type SchemaType<T extends Schema> = T extends BooleanSchema
   ? boolean
   : T extends NumberSchema
@@ -228,13 +222,11 @@ export type SchemaType<T extends Schema> = T extends BooleanSchema
   : T extends ArraySchema
   ? Array<SchemaType<T['items']>>
   : T extends GenericObjectSchema
-  ? UndefinedAsOptional<
-      {
-        [K in keyof T['properties']]: T['properties'][K] extends Schema & {required: true}
-          ? SchemaType<T['properties'][K]>
-          : SchemaType<T['properties'][K]> | undefined;
-      }
-    >
+  ? Partial<T['properties']> &
+      Pick<
+        T['properties'],
+        $Values<{[K in keyof T['properties']]: T['properties'][K] extends {required: true} ? K : never}>
+      >
   : never;
 
 export type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];

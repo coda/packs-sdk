@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.DefaultConnectionType = exports.AuthenticationType = exports.ProviderId = exports.PackId = exports.PackCategory = void 0;
 var PackCategory;
 (function (PackCategory) {
     PackCategory["CRM"] = "CRM";

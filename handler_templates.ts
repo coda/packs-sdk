@@ -186,7 +186,7 @@ function mapKeys(obj: {[key: string]: any}, excludeExtraneous?: boolean, schema?
   return remappedObject;
 }
 
-export function transformBody<T extends Schema>(body: any, schema: T, excludeExtraneous?: boolean): any {
+export function transformBody(body: any, schema: Schema, excludeExtraneous?: boolean): any {
   if (isArray(schema) && isObject(schema.items)) {
     const objects = body as Array<Record<string, any>>;
     const mappedObjs = objects.map(obj => mapKeys(obj, excludeExtraneous, schema.items));

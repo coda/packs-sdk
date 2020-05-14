@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.FakeBggMetadata = exports.FakeBggDefinition = exports.FakeBggMetadataOld = exports.FakeBggDefinitionOld = exports.FakeBggPackVersionOld = exports.FakeBggPackVersion = exports.FakeBggPackId = exports.FakeBggProviderId = void 0;
 const types_1 = require("../types");
 const npm_1 = require("./npm");
 const types_2 = require("../types");

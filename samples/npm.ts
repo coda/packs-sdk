@@ -40,7 +40,7 @@ export const versionSchema = makeObjectSchema({
   id: 'url',
   primary: 'url',
   properties: {
-    url: {type: ValueType.String, id: true},
+    url: {type: ValueType.String},
     version: {type: ValueType.String},
     downloadCount: {type: ValueType.Number},
   },
@@ -68,7 +68,7 @@ export const packageSchema = makeObjectSchema({
   featured: ['packageName', 'downloadCount'],
   properties: {
     packageName: {type: ValueType.String},
-    url: {type: ValueType.String, id: true},
+    url: {type: ValueType.String},
     author: personSchema,
     downloadCount: {type: ValueType.Number},
     versions: {

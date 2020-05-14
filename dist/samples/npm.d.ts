@@ -15,7 +15,6 @@ export declare const versionSchema: {
     properties: {
         url: {
             type: ValueType.String;
-            id: true;
         };
         version: {
             type: ValueType.String;
@@ -54,7 +53,6 @@ export declare const packageSchema: {
         };
         url: {
             type: ValueType.String;
-            id: true;
         };
         author: {
             type: ValueType.Object;

@@ -1,4 +1,5 @@
 import { PackId } from './types';
+import { $Values } from './type_utils';
 export declare enum ValueType {
     Boolean = "boolean",
     Number = "number",
@@ -98,13 +99,12 @@ export interface ArraySchema extends BaseSchema {
     items: Schema;
 }
 export interface ObjectSchemaProperty {
-    id?: boolean;
     fromKey?: string;
     required?: boolean;
 }
-export interface ObjectSchemaProperties {
-    [key: string]: Schema | (Schema & ObjectSchemaProperty);
-}
+export declare type ObjectSchemaProperties<K extends string = never> = {
+    [K2 in K | string]: Schema & ObjectSchemaProperty;
+};
 export declare type GenericObjectSchema = ObjectSchema<string, string>;
 export interface Identity {
     packId: PackId;
@@ -114,11 +114,7 @@ export interface Identity {
 }
 export interface ObjectSchema<K extends string, L extends string> extends BaseSchema {
     type: ValueType.Object;
-    properties: ObjectSchemaProperties & {
-        [k in K]: Schema | (Schema & ObjectSchemaProperty);
-    } & {
-        [k in L]: Schema | (Schema & ObjectSchemaProperty);
-    };
+    properties: ObjectSchemaProperties<K | L>;
     id?: K;
     primary?: K;
     codaType?: ObjectHintTypes;
@@ -149,14 +145,11 @@ export declare function makeAttributionNode<T extends AttributionNode>(node: T):
 export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
 export declare function isObject(val?: Schema): val is GenericObjectSchema;
 export declare function isArray(val?: Schema): val is ArraySchema;
-declare type UndefinedAsOptional<T extends object> = Partial<T> & Pick<T, {
-    [K in keyof T]: undefined extends T[K] ? never : K;
-}[keyof T]>;
-export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? T['codaType'] extends ValueType.Date ? Date : string : T extends ArraySchema ? Array<SchemaType<T['items']>> : T extends GenericObjectSchema ? UndefinedAsOptional<{
-    [K in keyof T['properties']]: T['properties'][K] extends Schema & {
+export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? T['codaType'] extends ValueType.Date ? Date : string : T extends ArraySchema ? Array<SchemaType<T['items']>> : T extends GenericObjectSchema ? Partial<T['properties']> & Pick<T['properties'], $Values<{
+    [K in keyof T['properties']]: T['properties'][K] extends {
         required: true;
-    } ? SchemaType<T['properties'][K]> : SchemaType<T['properties'][K]> | undefined;
-}> : never;
+    } ? K : never;
+}>> : never;
 export declare type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
 export declare function generateSchema(obj: ValidTypes): Schema;
 export declare function makeSchema<T extends Schema>(schema: T): T;

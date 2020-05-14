@@ -101,7 +101,7 @@ declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Sch
 };
 export declare type TypedPackFormula = NumericPackFormula<any> | StringPackFormula<any> | ObjectPackFormula<ParamDefs, any> | GenericSyncFormula;
 export declare function isObjectPackFormula(fn: Formula<ParamDefs, any>): fn is ObjectPackFormula<ParamDefs, any>;
-export declare function isStringPackFormula(fn: Formula<ParamDefs, any>): fn is StringPackFormula<any>;
+export declare function isStringPackFormula(fn: Formula<ParamDefs, any>): fn is StringPackFormula<ParamDefs>;
 export declare function isSyncPackFormula(fn: Formula<ParamDefs, any>): fn is GenericSyncFormula;
 interface SyncFormulaResult<ResultT extends object> {
     result: ResultT[];
