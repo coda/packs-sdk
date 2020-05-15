@@ -149,7 +149,6 @@ declare type PickOptional<T, K extends keyof T> = Partial<T> & {
 };
 interface StringHintTypeToSchemaTypeMap {
     [ValueType.Date]: Date;
-    [ValueType.DateTime]: Date;
 }
 declare type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T extends keyof StringHintTypeToSchemaTypeMap ? StringHintTypeToSchemaTypeMap[T] : string;
 export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? StringHintTypeToSchemaType<T['codaType']> : T extends ArraySchema ? Array<SchemaType<T['items']>> : T extends GenericObjectSchema ? PickOptional<{

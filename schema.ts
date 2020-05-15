@@ -214,7 +214,6 @@ type PickOptional<T, K extends keyof T> = Partial<T> & {[P in K]: T[P]};
 
 interface StringHintTypeToSchemaTypeMap {
   [ValueType.Date]: Date;
-  [ValueType.DateTime]: Date;
 }
 type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T extends keyof StringHintTypeToSchemaTypeMap
   ? StringHintTypeToSchemaTypeMap[T]
