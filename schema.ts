@@ -1,4 +1,5 @@
 import {PackId} from './types';
+import {$Values} from './type_utils';
 import {ensureExists} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
 import pascalcase from 'pascalcase';
@@ -31,7 +32,7 @@ export enum ValueType {
   Scale = 'scale',
 }
 
-type StringHintTypes =
+export type StringHintTypes =
   | ValueType.Attachment
   | ValueType.Date
   | ValueType.Time
@@ -128,15 +129,14 @@ export enum DurationUnit {
   Seconds = 'seconds',
 }
 
-export interface DurationSchema extends StringSchema {
-  codaType: ValueType.Duration;
+export interface DurationSchema extends StringSchema<ValueType.Duration> {
   precision?: number;
   maxUnit?: DurationUnit;
 }
 
-export interface StringSchema extends BaseSchema {
+export interface StringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
   type: ValueType.String;
-  codaType?: StringHintTypes;
+  codaType?: T;
 }
 
 export interface ArraySchema extends BaseSchema {
@@ -145,15 +145,13 @@ export interface ArraySchema extends BaseSchema {
 }
 
 export interface ObjectSchemaProperty {
-  // TODO(alexd): Remove these once we've hoisted these up.
-  id?: boolean;
   fromKey?: string;
   required?: boolean;
 }
 
-export interface ObjectSchemaProperties {
-  [key: string]: Schema | (Schema & ObjectSchemaProperty);
-}
+export type ObjectSchemaProperties<K extends string = never> = {
+  [K2 in K | string]: Schema & ObjectSchemaProperty;
+};
 
 export type GenericObjectSchema = ObjectSchema<string, string>;
 
@@ -166,9 +164,7 @@ export interface Identity {
 
 export interface ObjectSchema<K extends string, L extends string> extends BaseSchema {
   type: ValueType.Object;
-  properties: ObjectSchemaProperties &
-    {[k in K]: Schema | (Schema & ObjectSchemaProperty)} &
-    {[k in L]: Schema | (Schema & ObjectSchemaProperty)};
+  properties: ObjectSchemaProperties<K | L>;
   id?: K;
   primary?: K;
   codaType?: ObjectHintTypes;
@@ -214,26 +210,27 @@ export function isArray(val?: Schema): val is ArraySchema {
   return Boolean(val && val.type === ValueType.Array);
 }
 
-type UndefinedAsOptional<T extends object> = Partial<T> &
-  Pick<T, {[K in keyof T]: undefined extends T[K] ? never : K}[keyof T]>;
+type PickOptional<T, K extends keyof T> = Partial<T> & {[P in K]: T[P]};
+
+interface StringHintTypeToSchemaTypeMap {
+  [ValueType.Date]: Date;
+}
+type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T extends keyof StringHintTypeToSchemaTypeMap
+  ? StringHintTypeToSchemaTypeMap[T]
+  : string;
 
 export type SchemaType<T extends Schema> = T extends BooleanSchema
   ? boolean
   : T extends NumberSchema
   ? number
   : T extends StringSchema
-  ? T['codaType'] extends ValueType.Date
-    ? Date
-    : string
+  ? StringHintTypeToSchemaType<T['codaType']>
   : T extends ArraySchema
   ? Array<SchemaType<T['items']>>
   : T extends GenericObjectSchema
-  ? UndefinedAsOptional<
-      {
-        [K in keyof T['properties']]: T['properties'][K] extends Schema & {required: true}
-          ? SchemaType<T['properties'][K]>
-          : SchemaType<T['properties'][K]> | undefined;
-      }
+  ? PickOptional<
+      {[K in keyof T['properties']]: SchemaType<T['properties'][K]>},
+      $Values<{[K in keyof T['properties']]: T['properties'][K] extends {required: true} ? K : never}>
     >
   : never;
 

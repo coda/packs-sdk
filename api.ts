@@ -1,4 +1,4 @@
-import {ArraySchema} from './schema';
+import {ArraySchema, StringHintTypes} from './schema';
 import {ArrayType} from './api_types';
 import {CommonPackFormulaDef} from './api_types';
 import {ExecutionContext} from './api_types';
@@ -226,8 +226,11 @@ type Formula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = 
 };
 
 type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number> & {schema?: NumberSchema};
-type StringPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, string> & {
-  schema?: StringSchema;
+type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> = Formula<
+  ParamDefsT,
+  SchemaType<StringSchema<ResultT>>
+> & {
+  schema?: StringSchema<ResultT>;
 };
 
 type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Formula<
@@ -239,15 +242,15 @@ type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = F
 
 export type TypedPackFormula =
   | NumericPackFormula<any>
-  | StringPackFormula<any>
-  | ObjectPackFormula<ParamDefs, any>
+  | StringPackFormula<any, any>
+  | ObjectPackFormula<ParamDefs, Schema>
   | GenericSyncFormula;
 
-export function isObjectPackFormula(fn: Formula<ParamDefs, any>): fn is ObjectPackFormula<ParamDefs, any> {
+export function isObjectPackFormula(fn: Formula<ParamDefs, any>): fn is ObjectPackFormula<ParamDefs, Schema> {
   return fn.resultType === Type.object;
 }
 
-export function isStringPackFormula(fn: Formula<ParamDefs, any>): fn is StringPackFormula<any> {
+export function isStringPackFormula(fn: Formula<ParamDefs, any>): fn is StringPackFormula<ParamDefs> {
   return fn.resultType === Type.string;
 }
 
