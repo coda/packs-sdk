@@ -190,6 +190,7 @@ interface BaseAuthentication {
   // TODO(alexd): Remove this once we duplicate all the connection name stuff.
   getConnectionNameFormula?: GetConnectionNameFormula;
   getConnectionName?: MetadataFormula;
+  getConnectionUserId?: MetadataFormula;
 
   // Specifies a set of defaults for allowing pack authors to decide what the "normal"
   // configuration of authentication for this pack should look like.

@@ -181,6 +181,7 @@ export interface PostSetup {
 interface BaseAuthentication {
     getConnectionNameFormula?: GetConnectionNameFormula;
     getConnectionName?: MetadataFormula;
+    getConnectionUserId?: MetadataFormula;
     defaultConnectionType?: DefaultConnectionType;
     instructionsUrl?: string;
     requiresEndpointUrl?: boolean;
