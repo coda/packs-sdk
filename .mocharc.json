@@ -1,0 +1,16 @@
+{
+  "max-old-space-size": 4096,
+  "v8-expose-gc": true,
+  "check-leaks": true,
+  "full-trace": true,
+  "v8-trace-warnings": true,
+  "exit": true,
+  "recursive": true,
+  "reporter": "dot",
+  "slow": 75,
+  "timeout": 3000,
+  "require": [
+    "ts-node/register",
+    "test/bootstrap.ts"
+  ]
+}
