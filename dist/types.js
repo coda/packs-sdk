@@ -96,6 +96,7 @@ var PackId;
     PackId[PackId["UPS"] = 1071] = "UPS";
     PackId[PackId["SlackChannels"] = 1072] = "SlackChannels";
     PackId[PackId["USPS"] = 1073] = "USPS";
+    PackId[PackId["Shutterstock"] = 1074] = "Shutterstock";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
@@ -152,6 +153,7 @@ var ProviderId;
     ProviderId[ProviderId["FedEx"] = 2051] = "FedEx";
     ProviderId[ProviderId["UPS"] = 2052] = "UPS";
     ProviderId[ProviderId["USPS"] = 2053] = "USPS";
+    ProviderId[ProviderId["Shutterstock"] = 2054] = "Shutterstock";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {
