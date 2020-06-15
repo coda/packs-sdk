@@ -97,7 +97,7 @@ var PackId;
     PackId[PackId["SlackChannels"] = 1072] = "SlackChannels";
     PackId[PackId["USPS"] = 1073] = "USPS";
     PackId[PackId["Shutterstock"] = 1074] = "Shutterstock";
-    PackId[PackId["GoogleDirectory"] = 1075] = "GoogleDirectory";
+    PackId[PackId["GSuiteDirectory"] = 1075] = "GSuiteDirectory";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
