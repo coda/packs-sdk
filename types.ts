@@ -98,6 +98,7 @@ export enum PackId {
   SlackChannels = 1072,
   USPS = 1073,
   Shutterstock = 1074,
+  GoogleDirectory = 1075,
 }
 
 export enum ProviderId {
