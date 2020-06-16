@@ -95,7 +95,8 @@ export declare enum PackId {
     UPS = 1071,
     SlackChannels = 1072,
     USPS = 1073,
-    Shutterstock = 1074
+    Shutterstock = 1074,
+    GSuiteDirectory = 1075
 }
 export declare enum ProviderId {
     Airtable = 2001,
