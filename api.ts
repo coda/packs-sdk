@@ -54,6 +54,7 @@ interface SyncTableDef<K extends string, L extends string, SchemaT extends Objec
   getter: SyncFormula<K, L, any, SchemaT>;
   getSchema?: MetadataFormula;
   entityName?: string;
+  listDynamicUrls?: MetadataFormula;
 }
 
 interface DynamicSyncTableDef<K extends string, L extends string, SchemaT extends ObjectSchema<K, L>>
@@ -61,6 +62,7 @@ interface DynamicSyncTableDef<K extends string, L extends string, SchemaT extend
   isDynamic: true;
   getSchema: MetadataFormula;
   getName: MetadataFormula;
+  listDynamicUrls?: MetadataFormula;
 }
 
 export interface Continuation {
@@ -480,6 +482,7 @@ export function makeSyncTable<
   {execute: wrappedExecute, ...definition}: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
   getSchema?: MetadataFormula,
   entityName?: string,
+  listDynamicUrls?: MetadataFormula,
 ): SyncTableDef<K, L, SchemaT> {
   const formulaSchema = getSchema ? undefined : normalizeSchema({type: ValueType.Array, items: schema});
   const {identity, id, primary} = schema;
@@ -516,6 +519,7 @@ export function makeSyncTable<
     },
     getSchema,
     entityName,
+    listDynamicUrls,
   };
 }
 
@@ -526,6 +530,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   getSchema: MetadataFormula,
   formula: SyncFormulaDef<K, L, ParamDefsT, any>,
   entityName?: string,
+  listDynamicUrls?: MetadataFormula,
 ): DynamicSyncTableDef<K, L, any> {
   const fakeSchema = makeObjectSchema({
     // This schema is useless... just creating a stub here but the client will use
@@ -541,7 +546,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
       id: {type: ValueType.String},
     },
   });
-  const table = makeSyncTable(name, fakeSchema, formula, getSchema, entityName);
+  const table = makeSyncTable(name, fakeSchema, formula, getSchema, entityName, listDynamicUrls);
   return {
     ...table,
     isDynamic: true,
