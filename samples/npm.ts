@@ -243,6 +243,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
     makeDynamicSyncTable(
       FakeNpmPackId,
       'DynamicPackageVersions',
+      makeMetadataFormula(async () => [{display: 'coda-js', value: 'https://www.npmjs.com/package/coda-js'}]),
       makeMetadataFormula(async context => {
         const {dynamicUrl} = context.sync!;
         const query = getQueryParams(dynamicUrl!);

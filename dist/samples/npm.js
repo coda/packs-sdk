@@ -242,7 +242,7 @@ const FakeNpmDefinitionFake = {
                 return result.body;
             }),
         }),
-        api_4.makeDynamicSyncTable(exports.FakeNpmPackId, 'DynamicPackageVersions', api_2.makeMetadataFormula((context) => __awaiter(void 0, void 0, void 0, function* () {
+        api_4.makeDynamicSyncTable(exports.FakeNpmPackId, 'DynamicPackageVersions', api_2.makeMetadataFormula(() => __awaiter(void 0, void 0, void 0, function* () { return [{ display: 'coda-js', value: 'https://www.npmjs.com/package/coda-js' }]; })), api_2.makeMetadataFormula((context) => __awaiter(void 0, void 0, void 0, function* () {
             const { dynamicUrl } = context.sync;
             const query = url_1.getQueryParams(dynamicUrl);
             return query.name;

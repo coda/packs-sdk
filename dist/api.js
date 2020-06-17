@@ -300,7 +300,7 @@ function makeSyncTable(name, schema, _a, getSchema, entityName, listDynamicUrls)
     };
 }
 exports.makeSyncTable = makeSyncTable;
-function makeDynamicSyncTable(packId, name, getName, getSchema, formula, entityName, listDynamicUrls) {
+function makeDynamicSyncTable(packId, name, listDynamicUrls, getName, getSchema, formula, entityName) {
     const fakeSchema = schema_2.makeObjectSchema({
         // This schema is useless... just creating a stub here but the client will use
         // the dynamic one.
