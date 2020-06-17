@@ -11,6 +11,7 @@ var PackCategory;
     PackCategory["Financial"] = "Financial";
     PackCategory["Fun"] = "Fun";
     PackCategory["Geo"] = "Geo";
+    PackCategory["IT"] = "IT";
     PackCategory["Mathematics"] = "Mathematics";
     PackCategory["Organization"] = "Organization";
     PackCategory["Recruiting"] = "Recruiting";
@@ -98,6 +99,7 @@ var PackId;
     PackId[PackId["USPS"] = 1073] = "USPS";
     PackId[PackId["Shutterstock"] = 1074] = "Shutterstock";
     PackId[PackId["GSuiteDirectory"] = 1075] = "GSuiteDirectory";
+    PackId[PackId["Okta"] = 1076] = "Okta";
 })(PackId = exports.PackId || (exports.PackId = {}));
 var ProviderId;
 (function (ProviderId) {
@@ -155,6 +157,7 @@ var ProviderId;
     ProviderId[ProviderId["UPS"] = 2052] = "UPS";
     ProviderId[ProviderId["USPS"] = 2053] = "USPS";
     ProviderId[ProviderId["Shutterstock"] = 2054] = "Shutterstock";
+    ProviderId[ProviderId["Okta"] = 2055] = "Okta";
 })(ProviderId = exports.ProviderId || (exports.ProviderId = {}));
 var AuthenticationType;
 (function (AuthenticationType) {

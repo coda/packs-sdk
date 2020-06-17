@@ -11,6 +11,7 @@ export declare enum PackCategory {
     Financial = "Financial",
     Fun = "Fun",
     Geo = "Geo",
+    IT = "IT",
     Mathematics = "Mathematics",
     Organization = "Organization",
     Recruiting = "Recruiting",
@@ -96,7 +97,8 @@ export declare enum PackId {
     SlackChannels = 1072,
     USPS = 1073,
     Shutterstock = 1074,
-    GSuiteDirectory = 1075
+    GSuiteDirectory = 1075,
+    Okta = 1076
 }
 export declare enum ProviderId {
     Airtable = 2001,
@@ -152,7 +154,8 @@ export declare enum ProviderId {
     FedEx = 2051,
     UPS = 2052,
     USPS = 2053,
-    Shutterstock = 2054
+    Shutterstock = 2054,
+    Okta = 2055
 }
 export declare enum AuthenticationType {
     None = "None",

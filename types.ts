@@ -12,6 +12,7 @@ export enum PackCategory {
   Financial = 'Financial',
   Fun = 'Fun',
   Geo = 'Geo',
+  IT = 'IT',
   Mathematics = 'Mathematics',
   Organization = 'Organization',
   Recruiting = 'Recruiting',
@@ -99,6 +100,7 @@ export enum PackId {
   USPS = 1073,
   Shutterstock = 1074,
   GSuiteDirectory = 1075,
+  Okta = 1076,
 }
 
 export enum ProviderId {
@@ -156,6 +158,7 @@ export enum ProviderId {
   UPS = 2052,
   USPS = 2053,
   Shutterstock = 2054,
+  Okta = 2055,
 }
 
 export enum AuthenticationType {
