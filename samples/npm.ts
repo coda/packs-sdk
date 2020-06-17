@@ -240,15 +240,18 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         return result.body;
       },
     }),
-    makeDynamicSyncTable(
-      FakeNpmPackId,
-      'DynamicPackageVersions',
-      makeMetadataFormula(async context => {
+    makeDynamicSyncTable({
+      packId: FakeNpmPackId,
+      name: 'DynamicPackageVersions',
+      listDynamicUrls: makeMetadataFormula(async () => [
+        {display: 'coda-js', value: 'https://www.npmjs.com/package/coda-js'},
+      ]),
+      getName: makeMetadataFormula(async context => {
         const {dynamicUrl} = context.sync!;
         const query = getQueryParams(dynamicUrl!);
         return query.name;
       }),
-      makeMetadataFormula(async context => {
+      getSchema: makeMetadataFormula(async context => {
         const {dynamicUrl} = context.sync!;
         const query = getQueryParams(dynamicUrl!);
         const name = ensureExists(query.name);
@@ -263,7 +266,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
           }),
         });
       }),
-      {
+      formula: {
         name: 'SyncDynamicPackageVersions',
         description: 'Pull down NPM versions for a package.',
         examples: [],
@@ -288,7 +291,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
           };
         },
       },
-    ),
+    }),
   ],
 };
 

@@ -39,6 +39,7 @@ interface DynamicSyncTableDef<K extends string, L extends string, SchemaT extend
     isDynamic: true;
     getSchema: MetadataFormula;
     getName: MetadataFormula;
+    listDynamicUrls: MetadataFormula;
 }
 export interface Continuation {
     [key: string]: string | number;
@@ -136,7 +137,15 @@ export declare function autocompleteSearchObjects<T>(search: string, objs: T[], 
 export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | SimpleAutocompleteOption>): MetadataFormula;
 export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, { execute: wrappedExecute, ...definition }: SyncFormulaDef<K, L, ParamDefsT, SchemaT>, getSchema?: MetadataFormula, entityName?: string): SyncTableDef<K, L, SchemaT>;
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>(packId: number, name: string, getName: MetadataFormula, getSchema: MetadataFormula, formula: SyncFormulaDef<K, L, ParamDefsT, any>, entityName?: string): DynamicSyncTableDef<K, L, any>;
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ packId, name, listDynamicUrls, getName, getSchema, formula, entityName, }: {
+    packId: number;
+    name: string;
+    listDynamicUrls: MetadataFormula;
+    getName: MetadataFormula;
+    getSchema: MetadataFormula;
+    formula: SyncFormulaDef<K, L, ParamDefsT, any>;
+    entityName?: string;
+}): DynamicSyncTableDef<K, L, any>;
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
     request: RequestHandlerTemplate;
     description: string;

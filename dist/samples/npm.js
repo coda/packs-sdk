@@ -242,42 +242,53 @@ const FakeNpmDefinitionFake = {
                 return result.body;
             }),
         }),
-        api_4.makeDynamicSyncTable(exports.FakeNpmPackId, 'DynamicPackageVersions', api_2.makeMetadataFormula((context) => __awaiter(void 0, void 0, void 0, function* () {
-            const { dynamicUrl } = context.sync;
-            const query = url_1.getQueryParams(dynamicUrl);
-            return query.name;
-        })), api_2.makeMetadataFormula((context) => __awaiter(void 0, void 0, void 0, function* () {
-            const { dynamicUrl } = context.sync;
-            const query = url_1.getQueryParams(dynamicUrl);
-            const name = ensure_1.ensureExists(query.name);
-            return schema_4.makeSchema({
-                type: schema_1.ValueType.Array,
-                items: schema_2.makeObjectSchema(Object.assign(Object.assign({}, exports.versionSchema), { properties: Object.assign(Object.assign({}, exports.versionSchema.properties), { [name]: { type: schema_1.ValueType.Number } }) })),
-            });
-        })), {
-            name: 'SyncDynamicPackageVersions',
-            description: 'Pull down NPM versions for a package.',
-            examples: [],
-            parameters: [
-                api_9.makeStringParameter('name', 'Package name', {
-                    autocomplete: api_2.makeMetadataFormula((context, search) => __awaiter(void 0, void 0, void 0, function* () {
-                        const url = url_2.withQueryParams(`https://npmjs.com/api/packages/search`, { q: String(search || '') });
-                        const result = yield context.fetcher.fetch({ method: 'GET', url });
-                        return result.body;
-                    })),
-                }),
-            ],
-            network: { hasSideEffect: false, hasConnection: false },
-            execute: ([pack], context) => __awaiter(void 0, void 0, void 0, function* () {
-                const { continuation, dynamicUrl } = context.sync;
+        api_4.makeDynamicSyncTable({
+            packId: exports.FakeNpmPackId,
+            name: 'DynamicPackageVersions',
+            listDynamicUrls: api_2.makeMetadataFormula(() => __awaiter(void 0, void 0, void 0, function* () {
+                return [
+                    { display: 'coda-js', value: 'https://www.npmjs.com/package/coda-js' },
+                ];
+            })),
+            getName: api_2.makeMetadataFormula((context) => __awaiter(void 0, void 0, void 0, function* () {
+                const { dynamicUrl } = context.sync;
+                const query = url_1.getQueryParams(dynamicUrl);
+                return query.name;
+            })),
+            getSchema: api_2.makeMetadataFormula((context) => __awaiter(void 0, void 0, void 0, function* () {
+                const { dynamicUrl } = context.sync;
                 const query = url_1.getQueryParams(dynamicUrl);
                 const name = ensure_1.ensureExists(query.name);
-                const url = url_2.withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, { continuation });
-                const result = yield context.fetcher.fetch({ method: 'GET', url });
-                return {
-                    result: result.body.map((val, i) => (Object.assign(Object.assign({}, val), { [name]: i }))),
-                };
-            }),
+                return schema_4.makeSchema({
+                    type: schema_1.ValueType.Array,
+                    items: schema_2.makeObjectSchema(Object.assign(Object.assign({}, exports.versionSchema), { properties: Object.assign(Object.assign({}, exports.versionSchema.properties), { [name]: { type: schema_1.ValueType.Number } }) })),
+                });
+            })),
+            formula: {
+                name: 'SyncDynamicPackageVersions',
+                description: 'Pull down NPM versions for a package.',
+                examples: [],
+                parameters: [
+                    api_9.makeStringParameter('name', 'Package name', {
+                        autocomplete: api_2.makeMetadataFormula((context, search) => __awaiter(void 0, void 0, void 0, function* () {
+                            const url = url_2.withQueryParams(`https://npmjs.com/api/packages/search`, { q: String(search || '') });
+                            const result = yield context.fetcher.fetch({ method: 'GET', url });
+                            return result.body;
+                        })),
+                    }),
+                ],
+                network: { hasSideEffect: false, hasConnection: false },
+                execute: ([pack], context) => __awaiter(void 0, void 0, void 0, function* () {
+                    const { continuation, dynamicUrl } = context.sync;
+                    const query = url_1.getQueryParams(dynamicUrl);
+                    const name = ensure_1.ensureExists(query.name);
+                    const url = url_2.withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, { continuation });
+                    const result = yield context.fetcher.fetch({ method: 'GET', url });
+                    return {
+                        result: result.body.map((val, i) => (Object.assign(Object.assign({}, val), { [name]: i }))),
+                    };
+                }),
+            },
         }),
     ],
 };

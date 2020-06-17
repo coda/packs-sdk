@@ -61,6 +61,7 @@ interface DynamicSyncTableDef<K extends string, L extends string, SchemaT extend
   isDynamic: true;
   getSchema: MetadataFormula;
   getName: MetadataFormula;
+  listDynamicUrls: MetadataFormula;
 }
 
 export interface Continuation {
@@ -519,14 +520,23 @@ export function makeSyncTable<
   };
 }
 
-export function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>(
-  packId: number,
-  name: string,
-  getName: MetadataFormula,
-  getSchema: MetadataFormula,
-  formula: SyncFormulaDef<K, L, ParamDefsT, any>,
-  entityName?: string,
-): DynamicSyncTableDef<K, L, any> {
+export function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({
+  packId,
+  name,
+  listDynamicUrls,
+  getName,
+  getSchema,
+  formula,
+  entityName,
+}: {
+  packId: number;
+  name: string;
+  listDynamicUrls: MetadataFormula;
+  getName: MetadataFormula;
+  getSchema: MetadataFormula;
+  formula: SyncFormulaDef<K, L, ParamDefsT, any>;
+  entityName?: string;
+}): DynamicSyncTableDef<K, L, any> {
   const fakeSchema = makeObjectSchema({
     // This schema is useless... just creating a stub here but the client will use
     // the dynamic one.
@@ -545,6 +555,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   return {
     ...table,
     isDynamic: true,
+    listDynamicUrls,
     getName,
   } as DynamicSyncTableDef<K, L, any>;
 }
