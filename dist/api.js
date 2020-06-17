@@ -271,7 +271,7 @@ function makeObjectFormula(_a) {
     });
 }
 exports.makeObjectFormula = makeObjectFormula;
-function makeSyncTable(name, schema, _a, getSchema, entityName, listDynamicUrls) {
+function makeSyncTable(name, schema, _a, getSchema, entityName) {
     var { execute: wrappedExecute } = _a, definition = __rest(_a, ["execute"]);
     const formulaSchema = getSchema ? undefined : schema_3.normalizeSchema({ type: schema_1.ValueType.Array, items: schema });
     const { identity, id, primary } = schema;
@@ -296,7 +296,6 @@ function makeSyncTable(name, schema, _a, getSchema, entityName, listDynamicUrls)
         getter: Object.assign(Object.assign({}, definition), { cacheTtlSecs: 0, execute, schema: formulaSchema, isSyncFormula: true, resultType: api_types_1.Type.object }),
         getSchema,
         entityName,
-        listDynamicUrls,
     };
 }
 exports.makeSyncTable = makeSyncTable;
@@ -315,8 +314,9 @@ function makeDynamicSyncTable(packId, name, listDynamicUrls, getName, getSchema,
             id: { type: schema_1.ValueType.String },
         },
     });
-    const table = makeSyncTable(name, fakeSchema, formula, getSchema, entityName, listDynamicUrls);
-    return Object.assign(Object.assign({}, table), { isDynamic: true, getName });
+    const table = makeSyncTable(name, fakeSchema, formula, getSchema, entityName);
+    return Object.assign(Object.assign({}, table), { isDynamic: true, listDynamicUrls,
+        getName });
 }
 exports.makeDynamicSyncTable = makeDynamicSyncTable;
 function makeTranslateObjectFormula(_a) {
