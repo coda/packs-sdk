@@ -520,15 +520,23 @@ export function makeSyncTable<
   };
 }
 
-export function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>(
-  packId: number,
-  name: string,
-  listDynamicUrls: MetadataFormula,
-  getName: MetadataFormula,
-  getSchema: MetadataFormula,
-  formula: SyncFormulaDef<K, L, ParamDefsT, any>,
-  entityName?: string,
-): DynamicSyncTableDef<K, L, any> {
+export function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({
+  packId,
+  name,
+  listDynamicUrls,
+  getName,
+  getSchema,
+  formula,
+  entityName,
+}: {
+  packId: number;
+  name: string;
+  listDynamicUrls: MetadataFormula;
+  getName: MetadataFormula;
+  getSchema: MetadataFormula;
+  formula: SyncFormulaDef<K, L, ParamDefsT, any>;
+  entityName?: string;
+}): DynamicSyncTableDef<K, L, any> {
   const fakeSchema = makeObjectSchema({
     // This schema is useless... just creating a stub here but the client will use
     // the dynamic one.
