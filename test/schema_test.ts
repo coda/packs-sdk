@@ -1,6 +1,8 @@
 import {PackId} from '../types';
 import {schema} from '../index';
 
+const CODA_DEBUG_PACK_ID = 1009;
+
 describe('Schema', () => {
   describe('generateSchema', () => {
     it('number', () => {
@@ -66,13 +68,13 @@ describe('Schema', () => {
           }),
         },
         identity: {
-          packId: PackId.CodaDebug,
+          packId: CODA_DEBUG_PACK_ID,
           name: 'hello',
         },
       });
       const normalized = schema.normalizeSchema(objectSchema);
       assert.deepEqual((normalized as any).identity, {
-        packId: PackId.CodaDebug,
+        packId: CODA_DEBUG_PACK_ID,
         name: 'hello',
       });
     });

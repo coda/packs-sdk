@@ -29,13 +29,9 @@ Object.defineProperty(exports, "DefaultConnectionType", { enumerable: true, get:
 var types_4 = require("./types");
 Object.defineProperty(exports, "PackCategory", { enumerable: true, get: function () { return types_4.PackCategory; } });
 var types_5 = require("./types");
-Object.defineProperty(exports, "PackId", { enumerable: true, get: function () { return types_5.PackId; } });
+Object.defineProperty(exports, "QuotaLimitType", { enumerable: true, get: function () { return types_5.QuotaLimitType; } });
 var types_6 = require("./types");
-Object.defineProperty(exports, "ProviderId", { enumerable: true, get: function () { return types_6.ProviderId; } });
-var types_7 = require("./types");
-Object.defineProperty(exports, "QuotaLimitType", { enumerable: true, get: function () { return types_7.QuotaLimitType; } });
-var types_8 = require("./types");
-Object.defineProperty(exports, "SyncInterval", { enumerable: true, get: function () { return types_8.SyncInterval; } });
+Object.defineProperty(exports, "SyncInterval", { enumerable: true, get: function () { return types_6.SyncInterval; } });
 var api_types_1 = require("./api_types");
 Object.defineProperty(exports, "PrecannedDateRange", { enumerable: true, get: function () { return api_types_1.PrecannedDateRange; } });
 var api_1 = require("./api");

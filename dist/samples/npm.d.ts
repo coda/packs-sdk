@@ -7,7 +7,7 @@ export declare const FakeNpmPackVersion = "5.2.3";
 export declare const versionSchema: {
     type: ValueType.Object;
     identity: {
-        packId: 8003;
+        packId: number;
         name: string;
     };
     id: "url";
@@ -41,7 +41,7 @@ export declare const personSchema: {
 export declare const packageSchema: {
     type: ValueType.Object;
     identity: {
-        packId: 8003;
+        packId: number;
         name: string;
     };
     id: "url";
