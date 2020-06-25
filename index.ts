@@ -57,6 +57,7 @@ export {PackFormulaResult} from './api_types';
 export {ParamsList} from './api_types';
 export {PrecannedDateRange} from './api_types';
 export {StatusCodeError} from './api';
+export {TemporaryBlobStorage} from './api_types';
 export {Type} from './api_types';
 export {TypedPackFormula} from './api';
 export {UserVisibleError} from './api';
