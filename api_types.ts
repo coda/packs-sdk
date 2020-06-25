@@ -162,8 +162,8 @@ export interface Fetcher {
 }
 
 export interface TemporaryBlobStorage {
-  storeUrl(url: string, expiryMs?: number): Promise<string>;
-  storeBlob(blobData: Buffer, contentType: string, expiryMs?: number): Promise<string>;
+  storeUrl(url: string, opts?: {expiryMs?: number}): Promise<string>;
+  storeBlob(blobData: Buffer, contentType: string, opts?: {expiryMs?: number}): Promise<string>;
 }
 
 export interface Sync {

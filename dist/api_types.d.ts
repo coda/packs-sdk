@@ -102,8 +102,12 @@ export interface Fetcher {
     fetch<T = any>(request: FetchRequest): Promise<FetchResponse<T>>;
 }
 export interface TemporaryBlobStorage {
-    storeUrl(url: string, expiryMs?: number): Promise<string>;
-    storeBlob(blobData: Buffer, contentType: string, expiryMs?: number): Promise<string>;
+    storeUrl(url: string, opts?: {
+        expiryMs?: number;
+    }): Promise<string>;
+    storeBlob(blobData: Buffer, contentType: string, opts?: {
+        expiryMs?: number;
+    }): Promise<string>;
 }
 export interface Sync {
     continuation?: Continuation;
