@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { $Values } from './type_utils';
 import { MetadataFormula } from './api';
 import { Continuation } from './api';
@@ -100,6 +101,14 @@ export interface FetchResponse<T extends any = any> {
 export interface Fetcher {
     fetch<T = any>(request: FetchRequest): Promise<FetchResponse<T>>;
 }
+export interface TemporaryBlobStorage {
+    storeUrl(url: string, opts?: {
+        expiryMs?: number;
+    }): Promise<string>;
+    storeBlob(blobData: Buffer, contentType: string, opts?: {
+        expiryMs?: number;
+    }): Promise<string>;
+}
 export interface Sync {
     continuation?: Continuation;
     schema?: ArraySchema;
@@ -107,6 +116,7 @@ export interface Sync {
 }
 export interface ExecutionContext {
     readonly fetcher?: Fetcher;
+    readonly temporaryBlobStorage?: TemporaryBlobStorage;
     readonly endpoint?: string;
     readonly invocationLocation: {
         protocolAndHost: string;
