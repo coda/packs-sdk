@@ -173,8 +173,8 @@ export interface Sync {
 }
 
 export interface ExecutionContext {
-  readonly fetcher?: Fetcher;
-  readonly temporaryBlobStorage?: TemporaryBlobStorage;
+  readonly fetcher: Fetcher;
+  readonly temporaryBlobStorage: TemporaryBlobStorage;
   readonly endpoint?: string;
   readonly invocationLocation: {
     protocolAndHost: string;
