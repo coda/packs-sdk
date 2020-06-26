@@ -8,6 +8,7 @@ export {Format} from './types';
 export {PackCategory} from './types';
 export {PackDefinition} from './types';
 export {PackId} from './types';
+export {Policy} from './types';
 export {ProviderDefinition} from './types';
 export {ProviderId} from './types';
 export {Quota} from './types';
@@ -16,6 +17,8 @@ export {RateLimit} from './types';
 export {RateLimits} from './types';
 export {SyncInterval} from './types';
 export {SyncQuota} from './types';
+export {SystemAuthentication} from './types';
+export {WebBasicAuthentication} from './types';
 
 // Compiler interfaces
 export {PackFormatMetadata} from './compiled_types';
@@ -54,6 +57,8 @@ export {PackFormulaDef} from './api';
 export {PackFormulas} from './api';
 export {PackFormulaValue} from './api_types';
 export {PackFormulaResult} from './api_types';
+export {ParamDefs} from './api_types';
+export {ParamValues} from './api_types';
 export {ParamsList} from './api_types';
 export {PrecannedDateRange} from './api_types';
 export {StatusCodeError} from './api';
@@ -99,9 +104,36 @@ export {makeImageArrayParameter} from './api';
 export {makeStringParameter} from './api';
 export {makeStringArrayParameter} from './api';
 
+// Execution helpers.
+export {withQueryParams} from './helpers/url';
+
 // Object Schemas
 import * as schema from './schema';
 export {schema};
+export {ArraySchema} from './schema';
+export {GenericObjectSchema} from './schema';
+export {Identity} from './schema';
+export {ValueType} from './schema';
+export {makeObjectSchema} from './schema';
+export {makeSchema} from './schema';
 
 // Pack response helpers
 export {transformBody} from './handler_templates';
+
+// Testing
+export {fakeDefinitionToMetadata} from './helpers/sample_utils';
+
+export {FakeBggProviderId} from './samples/bgg';
+export {FakeBggPackId} from './samples/bgg';
+export {FakeBggPackVersion} from './samples/bgg';
+export {FakeBggPackVersionOld} from './samples/bgg';
+export {FakeBggMetadata} from './samples/bgg';
+export {FakeBggMetadataOld} from './samples/bgg';
+export {FakeBggDefinition} from './samples/bgg';
+export {FakeBggDefinitionOld} from './samples/bgg';
+
+export {FakeNpmProviderId} from './samples/npm';
+export {FakeNpmPackId} from './samples/npm';
+export {FakeNpmPackVersion} from './samples/npm';
+export {FakeNpmMetadata} from './samples/npm';
+export {FakeNpmDefinition} from './samples/npm';
