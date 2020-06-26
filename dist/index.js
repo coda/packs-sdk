@@ -103,9 +103,47 @@ var api_31 = require("./api");
 Object.defineProperty(exports, "makeStringParameter", { enumerable: true, get: function () { return api_31.makeStringParameter; } });
 var api_32 = require("./api");
 Object.defineProperty(exports, "makeStringArrayParameter", { enumerable: true, get: function () { return api_32.makeStringArrayParameter; } });
+// Execution helpers.
+var url_1 = require("./helpers/url");
+Object.defineProperty(exports, "withQueryParams", { enumerable: true, get: function () { return url_1.withQueryParams; } });
 // Object Schemas
 const schema = __importStar(require("./schema"));
 exports.schema = schema;
+var schema_1 = require("./schema");
+Object.defineProperty(exports, "ValueType", { enumerable: true, get: function () { return schema_1.ValueType; } });
+var schema_2 = require("./schema");
+Object.defineProperty(exports, "makeObjectSchema", { enumerable: true, get: function () { return schema_2.makeObjectSchema; } });
+var schema_3 = require("./schema");
+Object.defineProperty(exports, "makeSchema", { enumerable: true, get: function () { return schema_3.makeSchema; } });
 // Pack response helpers
 var handler_templates_1 = require("./handler_templates");
 Object.defineProperty(exports, "transformBody", { enumerable: true, get: function () { return handler_templates_1.transformBody; } });
+// Testing
+var sample_utils_1 = require("./helpers/sample_utils");
+Object.defineProperty(exports, "fakeDefinitionToMetadata", { enumerable: true, get: function () { return sample_utils_1.fakeDefinitionToMetadata; } });
+var bgg_1 = require("./samples/bgg");
+Object.defineProperty(exports, "FakeBggProviderId", { enumerable: true, get: function () { return bgg_1.FakeBggProviderId; } });
+var bgg_2 = require("./samples/bgg");
+Object.defineProperty(exports, "FakeBggPackId", { enumerable: true, get: function () { return bgg_2.FakeBggPackId; } });
+var bgg_3 = require("./samples/bgg");
+Object.defineProperty(exports, "FakeBggPackVersion", { enumerable: true, get: function () { return bgg_3.FakeBggPackVersion; } });
+var bgg_4 = require("./samples/bgg");
+Object.defineProperty(exports, "FakeBggPackVersionOld", { enumerable: true, get: function () { return bgg_4.FakeBggPackVersionOld; } });
+var bgg_5 = require("./samples/bgg");
+Object.defineProperty(exports, "FakeBggMetadata", { enumerable: true, get: function () { return bgg_5.FakeBggMetadata; } });
+var bgg_6 = require("./samples/bgg");
+Object.defineProperty(exports, "FakeBggMetadataOld", { enumerable: true, get: function () { return bgg_6.FakeBggMetadataOld; } });
+var bgg_7 = require("./samples/bgg");
+Object.defineProperty(exports, "FakeBggDefinition", { enumerable: true, get: function () { return bgg_7.FakeBggDefinition; } });
+var bgg_8 = require("./samples/bgg");
+Object.defineProperty(exports, "FakeBggDefinitionOld", { enumerable: true, get: function () { return bgg_8.FakeBggDefinitionOld; } });
+var npm_1 = require("./samples/npm");
+Object.defineProperty(exports, "FakeNpmProviderId", { enumerable: true, get: function () { return npm_1.FakeNpmProviderId; } });
+var npm_2 = require("./samples/npm");
+Object.defineProperty(exports, "FakeNpmPackId", { enumerable: true, get: function () { return npm_2.FakeNpmPackId; } });
+var npm_3 = require("./samples/npm");
+Object.defineProperty(exports, "FakeNpmPackVersion", { enumerable: true, get: function () { return npm_3.FakeNpmPackVersion; } });
+var npm_4 = require("./samples/npm");
+Object.defineProperty(exports, "FakeNpmMetadata", { enumerable: true, get: function () { return npm_4.FakeNpmMetadata; } });
+var npm_5 = require("./samples/npm");
+Object.defineProperty(exports, "FakeNpmDefinition", { enumerable: true, get: function () { return npm_5.FakeNpmDefinition; } });
