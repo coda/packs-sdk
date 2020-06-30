@@ -48,16 +48,25 @@ export class StatusCodeError extends Error {
   }
 }
 
-interface SyncTableDef<K extends string, L extends string, SchemaT extends ObjectSchema<K, L>> {
+export interface SyncTableDef<
+  K extends string,
+  L extends string,
+  ParamDefsT extends ParamDefs,
+  SchemaT extends ObjectSchema<K, L>
+> {
   name: string;
   schema: SchemaT;
-  getter: SyncFormula<K, L, any, SchemaT>;
+  getter: SyncFormula<K, L, ParamDefsT, SchemaT>;
   getSchema?: MetadataFormula;
   entityName?: string;
 }
 
-interface DynamicSyncTableDef<K extends string, L extends string, SchemaT extends ObjectSchema<K, L>>
-  extends SyncTableDef<K, L, SchemaT> {
+export interface DynamicSyncTableDef<
+  K extends string,
+  L extends string,
+  ParamDefsT extends ParamDefs,
+  SchemaT extends ObjectSchema<K, L>
+> extends SyncTableDef<K, L, ParamDefsT, SchemaT> {
   isDynamic: true;
   getSchema: MetadataFormula;
   getName: MetadataFormula;
@@ -69,8 +78,8 @@ export interface Continuation {
 }
 export type GenericSyncFormula = SyncFormula<any, any, ParamDefs, any>;
 export type GenericSyncFormulaResult = SyncFormulaResult<any>;
-export type GenericSyncTable = SyncTableDef<any, any, any>;
-export type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, any>;
+export type GenericSyncTable = SyncTableDef<any, any, ParamDefs, any>;
+export type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, ParamDefs, any>;
 export type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
 
 export function isUserVisibleError(error: Error): error is UserVisibleError {
@@ -242,8 +251,8 @@ type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = F
 };
 
 export type TypedPackFormula =
-  | NumericPackFormula<any>
-  | StringPackFormula<any, any>
+  | NumericPackFormula<ParamDefs>
+  | StringPackFormula<ParamDefs, any>
   | ObjectPackFormula<ParamDefs, Schema>
   | GenericSyncFormula;
 
@@ -481,7 +490,7 @@ export function makeSyncTable<
   {execute: wrappedExecute, ...definition}: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
   getSchema?: MetadataFormula,
   entityName?: string,
-): SyncTableDef<K, L, SchemaT> {
+): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const formulaSchema = getSchema ? undefined : normalizeSchema({type: ValueType.Array, items: schema});
   const {identity, id, primary} = schema;
   if (!(primary && id && identity)) {
@@ -536,7 +545,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   getSchema: MetadataFormula;
   formula: SyncFormulaDef<K, L, ParamDefsT, any>;
   entityName?: string;
-}): DynamicSyncTableDef<K, L, any> {
+}): DynamicSyncTableDef<K, L, ParamDefsT, any> {
   const fakeSchema = makeObjectSchema({
     // This schema is useless... just creating a stub here but the client will use
     // the dynamic one.
@@ -557,7 +566,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
     isDynamic: true,
     listDynamicUrls,
     getName,
-  } as DynamicSyncTableDef<K, L, any>;
+  } as DynamicSyncTableDef<K, L, ParamDefsT, any>;
 }
 
 export function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({

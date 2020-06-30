@@ -139,9 +139,9 @@ export interface StringSchema<T extends StringHintTypes = StringHintTypes> exten
   codaType?: T;
 }
 
-export interface ArraySchema extends BaseSchema {
+export interface ArraySchema<T extends Schema = Schema> extends BaseSchema {
   type: ValueType.Array;
-  items: Schema;
+  items: T;
 }
 
 export interface ObjectSchemaProperty {
