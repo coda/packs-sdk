@@ -2,6 +2,7 @@ import { $OmitNested } from './type_utils';
 import { Authentication } from './types';
 import { AuthenticationType } from './types';
 import { Format } from './types';
+import { MetadataFormula } from './api';
 import { PackDefinition } from './types';
 import { TypedPackFormula } from './api';
 import { SyncTable } from './api';
@@ -10,6 +11,7 @@ export declare type PackSyncTable = Omit<SyncTable, 'getter' | 'getName'> & {
     getter: PackFormulaMetadata;
     isDynamic?: boolean;
     hasDynamicSchema?: boolean;
+    listDynamicUrls?: MetadataFormula;
 };
 export interface PackFormatMetadata extends Omit<Format, 'matchers'> {
     matchers: string[];
