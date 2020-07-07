@@ -2,6 +2,7 @@ import {$OmitNested} from './type_utils';
 import {Authentication} from './types';
 import {AuthenticationType} from './types';
 import {Format} from './types';
+import {MetadataFormula} from './api';
 import {PackDefinition} from './types';
 import {TypedPackFormula} from './api';
 import {SyncTable} from './api';
@@ -12,6 +13,7 @@ export type PackSyncTable = Omit<SyncTable, 'getter' | 'getName' /* | 'getSchema
   getter: PackFormulaMetadata;
   isDynamic?: boolean;
   hasDynamicSchema?: boolean;
+  listDynamicUrls?: MetadataFormula;
 };
 
 export interface PackFormatMetadata extends Omit<Format, 'matchers'> {
@@ -29,7 +31,9 @@ export type PackMetadata = Omit<PackDefinition, 'formulas' | 'formats' | 'defaul
   syncTables: PackSyncTable[];
   defaultAuthentication?: $OmitNested<
     $OmitNested<Authentication, 'getConnectionNameFormula', 'execute'>,
-    'getConnectionName', 'execute'>;
+    'getConnectionName',
+    'execute'
+  >;
 };
 
 // Re-exported values for use in browser code.
@@ -43,7 +47,7 @@ export type ExternalSyncTable = PackSyncTable;
 
 type BasePackMetadata = Omit<
   PackMetadata,
-  'enabledConfigName'
+  | 'enabledConfigName'
   | 'defaultAuthentication'
   | 'systemConnectionAuthentication'
   | 'formulas'
