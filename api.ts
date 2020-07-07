@@ -70,7 +70,7 @@ export interface DynamicSyncTableDef<
   isDynamic: true;
   getSchema: MetadataFormula;
   getName: MetadataFormula;
-  listDynamicUrls: MetadataFormula;
+  listDynamicUrls?: MetadataFormula;
 }
 
 export interface Continuation {
@@ -532,18 +532,18 @@ export function makeSyncTable<
 export function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({
   packId,
   name,
-  listDynamicUrls,
   getName,
   getSchema,
   formula,
+  listDynamicUrls,
   entityName,
 }: {
   packId: number;
   name: string;
-  listDynamicUrls: MetadataFormula;
   getName: MetadataFormula;
   getSchema: MetadataFormula;
   formula: SyncFormulaDef<K, L, ParamDefsT, any>;
+  listDynamicUrls?: MetadataFormula;
   entityName?: string;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any> {
   const fakeSchema = makeObjectSchema({
