@@ -264,6 +264,7 @@ const FakeNpmDefinitionFake = {
                     items: schema_2.makeObjectSchema(Object.assign(Object.assign({}, exports.versionSchema), { properties: Object.assign(Object.assign({}, exports.versionSchema.properties), { [name]: { type: schema_1.ValueType.Number } }) })),
                 });
             })),
+            getDisplayUrl: api_2.makeMetadataFormula((context) => __awaiter(void 0, void 0, void 0, function* () { return context.sync.dynamicUrl; })),
             formula: {
                 name: 'SyncDynamicPackageVersions',
                 description: 'Pull down NPM versions for a package.',

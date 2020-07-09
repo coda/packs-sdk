@@ -39,6 +39,7 @@ export interface DynamicSyncTableDef<K extends string, L extends string, ParamDe
     isDynamic: true;
     getSchema: MetadataFormula;
     getName: MetadataFormula;
+    getDisplayUrl: MetadataFormula;
     listDynamicUrls?: MetadataFormula;
 }
 export interface Continuation {
@@ -137,12 +138,13 @@ export declare function autocompleteSearchObjects<T>(search: string, objs: T[], 
 export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | SimpleAutocompleteOption>): MetadataFormula;
 export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, { execute: wrappedExecute, ...definition }: SyncFormulaDef<K, L, ParamDefsT, SchemaT>, getSchema?: MetadataFormula, entityName?: string): SyncTableDef<K, L, ParamDefsT, SchemaT>;
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ packId, name, getName, getSchema, formula, listDynamicUrls, entityName, }: {
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ packId, name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, }: {
     packId: number;
     name: string;
     getName: MetadataFormula;
     getSchema: MetadataFormula;
     formula: SyncFormulaDef<K, L, ParamDefsT, any>;
+    getDisplayUrl: MetadataFormula;
     listDynamicUrls?: MetadataFormula;
     entityName?: string;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any>;

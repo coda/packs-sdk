@@ -266,6 +266,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
           }),
         });
       }),
+      getDisplayUrl: makeMetadataFormula(async context => context.sync!.dynamicUrl!),
       formula: {
         name: 'SyncDynamicPackageVersions',
         description: 'Pull down NPM versions for a package.',
