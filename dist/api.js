@@ -299,7 +299,7 @@ function makeSyncTable(name, schema, _a, getSchema, entityName) {
     };
 }
 exports.makeSyncTable = makeSyncTable;
-function makeDynamicSyncTable({ packId, name, getName, getSchema, formula, listDynamicUrls, entityName, }) {
+function makeDynamicSyncTable({ packId, name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, }) {
     const fakeSchema = schema_2.makeObjectSchema({
         // This schema is useless... just creating a stub here but the client will use
         // the dynamic one.
@@ -315,7 +315,8 @@ function makeDynamicSyncTable({ packId, name, getName, getSchema, formula, listD
         },
     });
     const table = makeSyncTable(name, fakeSchema, formula, getSchema, entityName);
-    return Object.assign(Object.assign({}, table), { isDynamic: true, listDynamicUrls,
+    return Object.assign(Object.assign({}, table), { isDynamic: true, getDisplayUrl,
+        listDynamicUrls,
         getName });
 }
 exports.makeDynamicSyncTable = makeDynamicSyncTable;

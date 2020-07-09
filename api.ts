@@ -70,6 +70,7 @@ export interface DynamicSyncTableDef<
   isDynamic: true;
   getSchema: MetadataFormula;
   getName: MetadataFormula;
+  getDisplayUrl: MetadataFormula;
   listDynamicUrls?: MetadataFormula;
 }
 
@@ -534,6 +535,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   name,
   getName,
   getSchema,
+  getDisplayUrl,
   formula,
   listDynamicUrls,
   entityName,
@@ -543,6 +545,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   getName: MetadataFormula;
   getSchema: MetadataFormula;
   formula: SyncFormulaDef<K, L, ParamDefsT, any>;
+  getDisplayUrl: MetadataFormula;
   listDynamicUrls?: MetadataFormula;
   entityName?: string;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any> {
@@ -564,6 +567,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   return {
     ...table,
     isDynamic: true,
+    getDisplayUrl,
     listDynamicUrls,
     getName,
   } as DynamicSyncTableDef<K, L, ParamDefsT, any>;

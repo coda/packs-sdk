@@ -11,6 +11,7 @@ export declare type PackSyncTable = Omit<SyncTable, 'getter' | 'getName'> & {
     getter: PackFormulaMetadata;
     isDynamic?: boolean;
     hasDynamicSchema?: boolean;
+    getDisplayUrl?: MetadataFormula;
     listDynamicUrls?: MetadataFormula;
 };
 export interface PackFormatMetadata extends Omit<Format, 'matchers'> {

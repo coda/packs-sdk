@@ -13,6 +13,7 @@ export type PackSyncTable = Omit<SyncTable, 'getter' | 'getName' /* | 'getSchema
   getter: PackFormulaMetadata;
   isDynamic?: boolean;
   hasDynamicSchema?: boolean;
+  getDisplayUrl?: MetadataFormula;
   listDynamicUrls?: MetadataFormula;
 };
 
