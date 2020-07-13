@@ -187,6 +187,8 @@ function mapKeys(obj: {[key: string]: any}, excludeExtraneous?: boolean, schema?
 }
 
 export function transformBody(body: any, schema: Schema, excludeExtraneous?: boolean): any {
+  let a = Date.now();
+  console.log('in transformbody');
   if (isArray(schema) && isObject(schema.items)) {
     const objects = body as Array<Record<string, any>>;
     const mappedObjs = objects.map(obj => mapKeys(obj, excludeExtraneous, schema.items));
@@ -196,13 +198,15 @@ export function transformBody(body: any, schema: Schema, excludeExtraneous?: boo
   if (isObject(schema)) {
     return mapKeys(body, excludeExtraneous, schema);
   }
-
+  console.log('done transformbody');
+  console.log(Date.now() - a);
   return body;
 }
 
 export function generateObjectResponseHandler<T extends Schema>(
   response: ResponseHandlerTemplate<T>,
 ): (response: FetchResponse, runtimeSchema?: T) => SchemaType<T> {
+  console.log('in resp handler');
   const {projectKey, schema, excludeExtraneous} = response;
   return function objectResponseHandler(resp: FetchResponse, runtimeSchema?: T) {
     const {body} = resp;
