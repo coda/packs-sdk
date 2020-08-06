@@ -124,6 +124,7 @@ export declare function makeGetConnectionNameFormula(execute: (context: Executio
 export interface MetadataFormulaObjectResultType {
     display: string;
     value: string | number;
+    hasChildren?: boolean;
 }
 export declare type MetadataContext = Record<string, any>;
 export declare type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;

@@ -341,6 +341,7 @@ export function makeGetConnectionNameFormula(
 export interface MetadataFormulaObjectResultType {
   display: string;
   value: string | number;
+  hasChildren?: boolean;
 }
 
 export type MetadataContext = Record<string, any>;
