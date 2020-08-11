@@ -38,10 +38,10 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.159.tgz#61089719dc6fdd9c5cb46efc827f2571d1517065"
   integrity sha512-gF7A72f7WQN33DpqOWw9geApQPh4M3PxluMtaHxWHXEGSN12/WbcEk/eNSqWNQcQhF66VSZ06vCF94CrHwXJDg==
 
-"@types/mocha@^8.0.1":
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-8.0.1.tgz#813b4ff8dd9920d652e1e6b451ff1e371a4561d2"
-  integrity sha512-TBZ6YdX7IZz4U9/mBoB8zCMRN1vXw8QdihRcZxD3I0Cv/r8XF8RggZ8WiXFws4aj5atzRR5hJrYer7g8nXwpnQ==
+"@types/mocha@^8.0.2":
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-8.0.2.tgz#cdd160767c5a445bedef94ea8cfc8ab760fff42b"
+  integrity sha512-5cv8rmqT3KX9XtWDvSgGYfS4OwrKM2eei90GWLnTYz+AXRiBv5uYcKBjnkQ4katNvfYk3+o2bHGZUsDhdcoUyg==
 
 "@types/node@^14.0.27":
   version "14.0.27"
