@@ -10,10 +10,18 @@ const ensure_1 = require("./helpers/ensure");
 const schema_1 = require("./schema");
 const schema_2 = require("./schema");
 const url_1 = require("./helpers/url");
-function generateParamMap(keys, nameToValueMap) {
+function generateParamMap(keys, nameToValueMap, optionalNames) {
     const map = {};
     keys.forEach(key => {
-        map[key] = nameToValueMap[key] || '';
+        let val = nameToValueMap[key];
+        if (typeof val === 'undefined') {
+            if (optionalNames && optionalNames.has(key)) {
+                return;
+            }
+            // Never pass undefined;
+            val = '';
+        }
+        map[key] = val;
     });
     return map;
 }
@@ -83,7 +91,7 @@ function generateRequestHandler(request, parameters) {
             body = clone_1.default(bodyTemplate);
         }
         if (hasBodyParams) {
-            const currentBodyParams = generateParamMap(ensure_1.ensureExists(bodyParams), nameMapping);
+            const currentBodyParams = generateParamMap(ensure_1.ensureExists(bodyParams), nameMapping, optionalNames);
             // Merge the param if needed.
             body = body ? Object.assign(Object.assign({}, body), currentBodyParams) : currentBodyParams;
         }
