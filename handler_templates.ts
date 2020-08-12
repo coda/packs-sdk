@@ -37,10 +37,18 @@ interface ParamMap {
   [name: string]: PackFormulaValue;
 }
 
-function generateParamMap(keys: string[], nameToValueMap: ParamMap): ParamMap {
+function generateParamMap(keys: string[], nameToValueMap: ParamMap, optionalNames?: Set<string>): ParamMap {
   const map: ParamMap = {};
   keys.forEach(key => {
-    map[key] = nameToValueMap[key] || '';
+    let val = nameToValueMap[key];
+    if (typeof val === 'undefined') {
+      if (optionalNames && optionalNames.has(key)) {
+        return;
+      }
+      // Never pass undefined;
+      val = '';
+    }
+    map[key] = val;
   });
   return map;
 }
@@ -132,7 +140,7 @@ export function generateRequestHandler<ParamDefsT extends ParamDefs>(
       body = clone(bodyTemplate);
     }
     if (hasBodyParams) {
-      const currentBodyParams = generateParamMap(ensureExists(bodyParams), nameMapping);
+      const currentBodyParams = generateParamMap(ensureExists(bodyParams), nameMapping, optionalNames);
       // Merge the param if needed.
       body = body ? {...body, ...currentBodyParams} : currentBodyParams;
     }
