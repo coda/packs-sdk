@@ -236,7 +236,7 @@ type Formula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = 
   resultType: TypeOf<ResultT>;
 };
 
-type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number> & {schema?: NumberSchema};
+export type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number> & {schema?: NumberSchema};
 type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> = Formula<
   ParamDefsT,
   SchemaType<StringSchema<ResultT>>
@@ -244,7 +244,7 @@ type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintT
   schema?: StringSchema<ResultT>;
 };
 
-type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Formula<
+export type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Formula<
   ParamDefsT,
   SchemaType<SchemaT>
 > & {

@@ -1,8 +1,10 @@
 /// <reference types="node" />
 import { $Values } from './type_utils';
+import { ObjectPackFormula } from './api';
 import { MetadataFormula } from './api';
+import { NumericPackFormula } from './api';
 import { Continuation } from './api';
-import { ArraySchema, Schema, SchemaType } from './schema';
+import { ArraySchema, Schema } from './schema';
 export declare enum Type {
     string = 0,
     number = 1,
@@ -160,20 +162,24 @@ export declare enum TriggerConfigurationType {
     Automatic = "automatic",
     Manual = "manual"
 }
+export declare type TransformPayloadFormula = ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>, ParamDef<Type.string>], any>;
+export declare type WebhookResponseFormula = ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>, ParamDef<Type.string>], any>;
+export declare type RegisterTriggerFormula<ParamDefsT extends ParamDefs> = NumericPackFormula<ParamDefsT>;
+export declare type UnregisterTriggerFormula<ParamDefsT extends ParamDefs> = NumericPackFormula<ParamDefsT>;
 interface BaseTrigger<T extends TriggerConfigurationType, SchemaT extends Schema> {
     readonly name: string;
     readonly description: string;
     readonly configurationType: T;
     readonly payloadSchema: SchemaT;
-    transformPayload(originalPayload: any): Promise<SchemaType<SchemaT>>;
-    respond?(originalPayload: any): Promise<any>;
+    transformPayload?: TransformPayloadFormula;
+    webhookResponse?: WebhookResponseFormula;
 }
 interface ManualConfigurationTrigger<SchemaT extends Schema> extends BaseTrigger<TriggerConfigurationType.Manual, SchemaT> {
 }
 interface AutomaticConfigurationTrigger<SchemaT extends Schema, ParamsT extends ParamDefs> extends BaseTrigger<TriggerConfigurationType.Automatic, SchemaT> {
     readonly registerParams: ParamsT;
-    register(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<void>;
-    unregister(webhookUrl: string, context: ExecutionContext): Promise<void>;
+    register: RegisterTriggerFormula<ParamsT>;
+    unregister: UnregisterTriggerFormula<ParamsT>;
 }
 export declare type Trigger<SchemaT extends Schema> = ManualConfigurationTrigger<SchemaT> | AutomaticConfigurationTrigger<SchemaT, ParamDefs>;
 export {};

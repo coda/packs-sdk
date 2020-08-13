@@ -92,13 +92,13 @@ export interface EmptyFormulaDef<ParamsT extends ParamDefs> extends Omit<PackFor
 declare type Formula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = PackFormulaDef<ParamDefsT, ResultT> & {
     resultType: TypeOf<ResultT>;
 };
-declare type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number> & {
+export declare type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number> & {
     schema?: NumberSchema;
 };
 declare type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> = Formula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
     schema?: StringSchema<ResultT>;
 };
-declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Formula<ParamDefsT, SchemaType<SchemaT>> & {
+export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Formula<ParamDefsT, SchemaType<SchemaT>> & {
     schema?: SchemaT;
 };
 export declare type TypedPackFormula = NumericPackFormula<ParamDefs> | StringPackFormula<ParamDefs, any> | ObjectPackFormula<ParamDefs, Schema> | GenericSyncFormula;

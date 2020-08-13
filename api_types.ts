@@ -1,7 +1,9 @@
 import {$Values} from './type_utils';
+import {ObjectPackFormula} from './api';
 import {MetadataFormula} from './api';
+import {NumericPackFormula} from './api';
 import {Continuation} from './api';
-import {ArraySchema, Schema, SchemaType} from './schema';
+import {ArraySchema, Schema} from './schema';
 
 export enum Type {
   string,
@@ -233,13 +235,20 @@ export enum TriggerConfigurationType {
   Manual = 'manual',
 }
 
+export type TransformPayloadFormula =
+  ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>, ParamDef<Type.string>], any>;
+export type WebhookResponseFormula =
+  ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>, ParamDef<Type.string>], any>;
+export type RegisterTriggerFormula<ParamDefsT extends ParamDefs> = NumericPackFormula<ParamDefsT>;
+export type UnregisterTriggerFormula<ParamDefsT extends ParamDefs> = NumericPackFormula<ParamDefsT>;
+
 interface BaseTrigger<T extends TriggerConfigurationType, SchemaT extends Schema> {
   readonly name: string;
   readonly description: string;
   readonly configurationType: T;
   readonly payloadSchema: SchemaT;
-  transformPayload(originalPayload: any): Promise<SchemaType<SchemaT>>;
-  respond?(originalPayload: any): Promise<any>;
+  transformPayload?: TransformPayloadFormula;
+  webhookResponse?: WebhookResponseFormula;
 }
 
 interface ManualConfigurationTrigger<SchemaT extends Schema>
@@ -248,9 +257,8 @@ interface ManualConfigurationTrigger<SchemaT extends Schema>
 interface AutomaticConfigurationTrigger<SchemaT extends Schema, ParamsT extends ParamDefs>
   extends BaseTrigger<TriggerConfigurationType.Automatic, SchemaT> {
   readonly registerParams: ParamsT;
-  register(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<void>;
-  // TODO(oleg): what's needed here?
-  unregister(webhookUrl: string, context: ExecutionContext): Promise<void>;
+  register: RegisterTriggerFormula<ParamsT>;
+  unregister: UnregisterTriggerFormula<ParamsT>;
 }
 
 export type Trigger<SchemaT extends Schema> =
