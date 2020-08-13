@@ -1,7 +1,7 @@
 import {$Values} from './type_utils';
 import {MetadataFormula} from './api';
 import {Continuation} from './api';
-import {ArraySchema, Schema} from './schema';
+import {ArraySchema, Schema, SchemaType} from './schema';
 
 export enum Type {
   string,
@@ -233,18 +233,26 @@ export enum TriggerConfigurationType {
   Manual = 'manual',
 }
 
-interface BaseTrigger<T extends TriggerConfigurationType> {
-  name: string;
-  description: string;
-  configurationType: T;
-  payloadSchema: Schema;
+interface BaseTrigger<T extends TriggerConfigurationType, SchemaT extends Schema> {
+  readonly name: string;
+  readonly description: string;
+  readonly configurationType: T;
+  readonly payloadSchema: SchemaT;
+  transformPayload(originalPayload: any): Promise<SchemaType<SchemaT>>;
+  respond?(originalPayload: any): Promise<any>;
 }
 
-interface ManualConfigurationTrigger extends BaseTrigger<TriggerConfigurationType.Manual> {}
+interface ManualConfigurationTrigger<SchemaT extends Schema>
+  extends BaseTrigger<TriggerConfigurationType.Manual, SchemaT> {}
 
-interface AutomaticConfigurationTrigger extends BaseTrigger<TriggerConfigurationType.Automatic> {
-  register(params: ParamValues<ParamDefs>, context: ExecutionContext): Promise<void>;
-  unregister(params: ParamValues<ParamDefs>, context: ExecutionContext): Promise<void>;
+interface AutomaticConfigurationTrigger<SchemaT extends Schema, ParamsT extends ParamDefs>
+  extends BaseTrigger<TriggerConfigurationType.Automatic, SchemaT> {
+  readonly registerParams: ParamsT;
+  register(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<void>;
+  // TODO(oleg): what's needed here?
+  unregister(webhookUrl: string, context: ExecutionContext): Promise<void>;
 }
 
-export type Trigger = ManualConfigurationTrigger | AutomaticConfigurationTrigger;
+export type Trigger<SchemaT extends Schema> =
+  | ManualConfigurationTrigger<SchemaT>
+  | AutomaticConfigurationTrigger<SchemaT, ParamDefs>;

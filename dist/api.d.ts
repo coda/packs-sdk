@@ -138,9 +138,9 @@ export declare function simpleAutocomplete(search: string | undefined, options: 
 export declare function autocompleteSearchObjects<T>(search: string, objs: T[], displayKey: keyof T, valueKey: keyof T): Promise<MetadataFormulaObjectResultType[]>;
 export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | SimpleAutocompleteOption>): MetadataFormula;
 export interface PackTriggers {
-    readonly [namespace: string]: Trigger[];
+    readonly [namespace: string]: Array<Trigger<Schema>>;
 }
-export declare function makeTrigger<T extends Trigger>(trigger: T): T;
+export declare function makeTrigger<T extends Trigger<Schema>>(trigger: T): T;
 export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, { execute: wrappedExecute, ...definition }: SyncFormulaDef<K, L, ParamDefsT, SchemaT>, getSchema?: MetadataFormula, entityName?: string): SyncTableDef<K, L, ParamDefsT, SchemaT>;
 export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ packId, name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, }: {
@@ -162,7 +162,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
         result: PackFormulaResult;
     }[];
     parameters: ParamDefsT;
-    varargParameters?: [ParamDef<any>, ...ParamDef<any>[]] | [] | undefined;
+    varargParameters?: [] | [ParamDef<any>, ...ParamDef<any>[]] | undefined;
     network?: import("./api_types").Network | undefined;
     cacheTtlSecs?: number | undefined;
     isExperimental?: boolean | undefined;

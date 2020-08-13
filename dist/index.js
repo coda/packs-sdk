@@ -37,11 +37,13 @@ Object.defineProperty(exports, "PrecannedDateRange", { enumerable: true, get: fu
 var api_1 = require("./api");
 Object.defineProperty(exports, "StatusCodeError", { enumerable: true, get: function () { return api_1.StatusCodeError; } });
 var api_types_2 = require("./api_types");
-Object.defineProperty(exports, "Type", { enumerable: true, get: function () { return api_types_2.Type; } });
+Object.defineProperty(exports, "TriggerConfigurationType", { enumerable: true, get: function () { return api_types_2.TriggerConfigurationType; } });
+var api_types_3 = require("./api_types");
+Object.defineProperty(exports, "Type", { enumerable: true, get: function () { return api_types_3.Type; } });
 var api_2 = require("./api");
 Object.defineProperty(exports, "UserVisibleError", { enumerable: true, get: function () { return api_2.UserVisibleError; } });
-var api_types_3 = require("./api_types");
-Object.defineProperty(exports, "isArrayType", { enumerable: true, get: function () { return api_types_3.isArrayType; } });
+var api_types_4 = require("./api_types");
+Object.defineProperty(exports, "isArrayType", { enumerable: true, get: function () { return api_types_4.isArrayType; } });
 var api_3 = require("./api");
 Object.defineProperty(exports, "isDynamicSyncTable", { enumerable: true, get: function () { return api_3.isDynamicSyncTable; } });
 var api_4 = require("./api");

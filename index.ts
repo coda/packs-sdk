@@ -66,6 +66,7 @@ export {StatusCodeError} from './api';
 export {SyncTableDef} from './api';
 export {TemporaryBlobStorage} from './api_types';
 export {Trigger} from './api_types';
+export {TriggerConfigurationType} from './api_types';
 export {Type} from './api_types';
 export {TypedPackFormula} from './api';
 export {UserVisibleError} from './api';

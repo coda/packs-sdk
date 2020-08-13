@@ -432,10 +432,10 @@ export function makeSimpleAutocompleteMetadataFormula(
 }
 
 export interface PackTriggers {
-  readonly [namespace: string]: Trigger[];
+  readonly [namespace: string]: Array<Trigger<Schema>>;
 }
 
-export function makeTrigger<T extends Trigger>(trigger: T): T {
+export function makeTrigger<T extends Trigger<Schema>>(trigger: T): T {
   return trigger;
 }
 
