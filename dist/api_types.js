@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PrecannedDateRange = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.TriggerConfigurationType = exports.PrecannedDateRange = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 var Type;
 (function (Type) {
     Type[Type["string"] = 0] = "string";
@@ -72,3 +72,8 @@ var PrecannedDateRange;
     PrecannedDateRange["NextYear"] = "next_year";
     PrecannedDateRange["Everything"] = "everything";
 })(PrecannedDateRange = exports.PrecannedDateRange || (exports.PrecannedDateRange = {}));
+var TriggerConfigurationType;
+(function (TriggerConfigurationType) {
+    TriggerConfigurationType["Automatic"] = "automatic";
+    TriggerConfigurationType["Manual"] = "manual";
+})(TriggerConfigurationType = exports.TriggerConfigurationType || (exports.TriggerConfigurationType = {}));

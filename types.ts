@@ -1,4 +1,5 @@
 import {GetConnectionNameFormula} from './api';
+import {Trigger} from './api_types';
 import {MetadataFormula} from './api';
 import {PackFormulas} from './api';
 import {SyncTable} from './api';
@@ -267,6 +268,7 @@ export interface PackDefinition {
   formats?: Format[];
   policies?: Policy[];
   syncTables?: SyncTable[];
+  triggers?: Trigger[];
   /**
    * Whether this is a pack that will be used by Coda internally and not exposed directly to users.
    */

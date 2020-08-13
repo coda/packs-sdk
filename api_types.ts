@@ -1,7 +1,7 @@
 import {$Values} from './type_utils';
 import {MetadataFormula} from './api';
 import {Continuation} from './api';
-import {ArraySchema} from './schema';
+import {ArraySchema, Schema} from './schema';
 
 export enum Type {
   string,
@@ -227,3 +227,24 @@ export enum PrecannedDateRange {
 
   Everything = 'everything',
 }
+
+export enum TriggerConfigurationType {
+  Automatic = 'automatic',
+  Manual = 'manual',
+}
+
+interface BaseTrigger<T extends TriggerConfigurationType> {
+  name: string;
+  description: string;
+  configurationType: T;
+  payloadSchema: Schema;
+}
+
+interface ManualConfigurationTrigger extends BaseTrigger<TriggerConfigurationType.Manual> {}
+
+interface AutomaticConfigurationTrigger extends BaseTrigger<TriggerConfigurationType.Automatic> {
+  register(params: ParamValues<ParamDefs>, context: ExecutionContext): Promise<void>;
+  unregister(params: ParamValues<ParamDefs>, context: ExecutionContext): Promise<void>;
+}
+
+export type Trigger = ManualConfigurationTrigger | AutomaticConfigurationTrigger;

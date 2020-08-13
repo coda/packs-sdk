@@ -1,5 +1,5 @@
 import {ArraySchema, StringHintTypes} from './schema';
-import {ArrayType} from './api_types';
+import {ArrayType, Trigger} from './api_types';
 import {CommonPackFormulaDef} from './api_types';
 import {ExecutionContext} from './api_types';
 import {NumberSchema} from './schema';
@@ -429,6 +429,14 @@ export function makeSimpleAutocompleteMetadataFormula(
   options: Array<string | SimpleAutocompleteOption>,
 ): MetadataFormula {
   return makeMetadataFormula((context, [search]) => simpleAutocomplete(search, options));
+}
+
+export interface PackTriggers {
+  readonly [namespace: string]: Trigger[];
+}
+
+export function makeTrigger<T extends Trigger>(trigger: T): T {
+  return trigger;
 }
 
 function isResponseHandlerTemplate(obj: any): obj is ResponseHandlerTemplate<any> {

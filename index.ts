@@ -65,6 +65,7 @@ export {PrecannedDateRange} from './api_types';
 export {StatusCodeError} from './api';
 export {SyncTableDef} from './api';
 export {TemporaryBlobStorage} from './api_types';
+export {Trigger} from './api_types';
 export {Type} from './api_types';
 export {TypedPackFormula} from './api';
 export {UserVisibleError} from './api';
@@ -86,6 +87,7 @@ export {makeObjectFormula} from './api';
 export {makeStringFormula} from './api';
 export {makeSyncTable} from './api';
 export {makeTranslateObjectFormula} from './api';
+export {makeTrigger} from './api';
 
 // Autocomplete helpers.
 export {SimpleAutocompleteOption} from './api';
