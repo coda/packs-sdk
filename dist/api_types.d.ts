@@ -179,10 +179,9 @@ interface BaseTrigger<T extends TriggerConfigurationType, SchemaT extends Generi
 }
 interface ManualConfigurationTrigger<SchemaT extends GenericObjectSchema> extends BaseTrigger<TriggerConfigurationType.Manual, SchemaT> {
 }
-interface AutomaticConfigurationTrigger<SchemaT extends GenericObjectSchema, ParamsT extends ParamDefs> extends BaseTrigger<TriggerConfigurationType.Automatic, SchemaT> {
-    readonly registerParams: ParamsT;
-    register: RegisterTriggerFormula<ParamsT>;
-    unregister: UnregisterTriggerFormula<ParamsT>;
+interface AutomaticConfigurationTrigger<SchemaT extends GenericObjectSchema, RegisterParamsT extends ParamDefs> extends BaseTrigger<TriggerConfigurationType.Automatic, SchemaT> {
+    register: RegisterTriggerFormula<RegisterParamsT>;
+    unregister: UnregisterTriggerFormula<[ParamDef<Type.string>]>;
 }
 export declare type Trigger<SchemaT extends GenericObjectSchema = GenericObjectSchema> = ManualConfigurationTrigger<SchemaT> | AutomaticConfigurationTrigger<SchemaT, ParamDefs>;
 export {};

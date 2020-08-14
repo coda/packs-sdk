@@ -236,10 +236,14 @@ export enum TriggerConfigurationType {
   Manual = 'manual',
 }
 
-export type TransformPayloadFormula<SchemaT extends GenericObjectSchema> =
-  ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>, ParamDef<Type.string>], SchemaT>;
-export type WebhookResponseFormula =
-  ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>, ParamDef<Type.string>], any>;
+export type TransformPayloadFormula<SchemaT extends GenericObjectSchema> = ObjectPackFormula<
+  [ParamDef<Type.string>, ParamDef<Type.string>, ParamDef<Type.string>],
+  SchemaT
+>;
+export type WebhookResponseFormula = ObjectPackFormula<
+  [ParamDef<Type.string>, ParamDef<Type.string>, ParamDef<Type.string>],
+  any
+>;
 export type RegisterTriggerFormula<ParamDefsT extends ParamDefs> = NumericPackFormula<ParamDefsT>;
 export type UnregisterTriggerFormula<ParamDefsT extends ParamDefs> = NumericPackFormula<ParamDefsT>;
 
@@ -257,11 +261,10 @@ interface BaseTrigger<T extends TriggerConfigurationType, SchemaT extends Generi
 interface ManualConfigurationTrigger<SchemaT extends GenericObjectSchema>
   extends BaseTrigger<TriggerConfigurationType.Manual, SchemaT> {}
 
-interface AutomaticConfigurationTrigger<SchemaT extends GenericObjectSchema, ParamsT extends ParamDefs>
+interface AutomaticConfigurationTrigger<SchemaT extends GenericObjectSchema, RegisterParamsT extends ParamDefs>
   extends BaseTrigger<TriggerConfigurationType.Automatic, SchemaT> {
-  readonly registerParams: ParamsT;
-  register: RegisterTriggerFormula<ParamsT>;
-  unregister: UnregisterTriggerFormula<ParamsT>;
+  register: RegisterTriggerFormula<RegisterParamsT>;
+  unregister: UnregisterTriggerFormula<[ParamDef<Type.string>]>;
 }
 
 export type Trigger<SchemaT extends GenericObjectSchema = GenericObjectSchema> =
