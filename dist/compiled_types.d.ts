@@ -5,7 +5,9 @@ import { Format } from './types';
 import { MetadataFormula } from './api';
 import { PackDefinition } from './types';
 import { TypedPackFormula } from './api';
+import { Schema } from './schema';
 import { SyncTable } from './api';
+import { Trigger } from './api_types';
 export declare type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
 export declare type PackSyncTable = Omit<SyncTable, 'getter' | 'getName'> & {
     getter: PackFormulaMetadata;
@@ -32,6 +34,7 @@ export declare type ExternalPackFormulas = PackFormulasMetadata;
 export declare type ExternalPackFormula = PackFormulaMetadata;
 export declare type ExternalPackFormat = Format;
 export declare type ExternalPackFormatMetadata = PackFormatMetadata;
+export declare type ExternalPackTrigger = Trigger<Schema>;
 export declare type ExternalSyncTable = PackSyncTable;
 declare type BasePackMetadata = Omit<PackMetadata, 'enabledConfigName' | 'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'triggers' | 'syncTables'>;
 /** Further stripped-down version of `PackMetadata` that contains only what the browser needs. */
@@ -54,6 +57,7 @@ export interface ExternalPackMetadata extends BasePackMetadata {
     instructionsUrl?: string;
     formulas?: ExternalPackFormulas;
     formats?: ExternalPackFormat[];
+    triggers?: ExternalPackTrigger[];
     syncTables?: ExternalSyncTable[];
 }
 export {};

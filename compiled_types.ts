@@ -5,7 +5,9 @@ import {Format} from './types';
 import {MetadataFormula} from './api';
 import {PackDefinition} from './types';
 import {TypedPackFormula} from './api';
+import {Schema} from './schema';
 import {SyncTable} from './api';
+import {Trigger} from './api_types';
 
 export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
 // TODO(alexd): Uncomment the getSchema stripping.
@@ -44,6 +46,7 @@ export type ExternalPackFormulas = PackFormulasMetadata;
 export type ExternalPackFormula = PackFormulaMetadata;
 export type ExternalPackFormat = Format;
 export type ExternalPackFormatMetadata = PackFormatMetadata;
+export type ExternalPackTrigger = Trigger<Schema>;
 export type ExternalSyncTable = PackSyncTable;
 
 type BasePackMetadata = Omit<
@@ -76,5 +79,6 @@ export interface ExternalPackMetadata extends BasePackMetadata {
   // User-facing components
   formulas?: ExternalPackFormulas;
   formats?: ExternalPackFormat[];
+  triggers?: ExternalPackTrigger[];
   syncTables?: ExternalSyncTable[];
 }
