@@ -235,8 +235,8 @@ export enum TriggerConfigurationType {
   Manual = 'manual',
 }
 
-export type TransformPayloadFormula =
-  ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>, ParamDef<Type.string>], any>;
+export type TransformPayloadFormula<SchemaT extends Schema> =
+  ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>, ParamDef<Type.string>], SchemaT>;
 export type WebhookResponseFormula =
   ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>, ParamDef<Type.string>], any>;
 export type RegisterTriggerFormula<ParamDefsT extends ParamDefs> = NumericPackFormula<ParamDefsT>;
@@ -247,10 +247,9 @@ interface BaseTrigger<T extends TriggerConfigurationType, SchemaT extends Schema
   readonly displayName: string;
   readonly description: string;
   readonly configurationType: T;
-  readonly payloadSchema: SchemaT;
   readonly logoPath?: string;
   readonly instructions?: string;
-  transformPayload?: TransformPayloadFormula;
+  transformPayload: TransformPayloadFormula<SchemaT>;
   webhookResponse?: WebhookResponseFormula;
 }
 

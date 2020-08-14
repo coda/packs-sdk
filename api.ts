@@ -488,19 +488,19 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
   }) as ObjectPackFormula<ParamDefsT, SchemaT>;
 }
 
-export function makeTriggerTransformPayloadObjectFormula(
-  execute: TransformPayloadFormula['execute'],
-): TransformPayloadFormula {
+export function makeTriggerTransformPayloadObjectFormula<SchemaT extends Schema>(
+  def: Pick<TransformPayloadFormula<SchemaT>, 'execute' | 'schema'>,
+): TransformPayloadFormula<SchemaT> {
   return makeObjectFormula({
     name: 'Execute',
-    description: 'No one will see this',
+    description: 'Transforms raw input from the webhook to the desired type.',
     examples: [],
     parameters: [
-      makeStringParameter('body', 'Serialized body of the response.'),
-      makeStringParameter('query', 'Serialized query params of the response.'),
-      makeStringParameter('headers', 'Serialized headers of the response.'),
+      makeStringParameter('body', 'Stringified body of the response.'),
+      makeStringParameter('query', 'Stringified query params of the response.'),
+      makeStringParameter('headers', 'Stringified headers of the response.'),
     ],
-    execute,
+    ...def,
   });
 }
 

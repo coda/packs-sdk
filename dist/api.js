@@ -275,18 +275,12 @@ function makeObjectFormula(_a) {
     });
 }
 exports.makeObjectFormula = makeObjectFormula;
-function makeTriggerTransformPayloadObjectFormula(execute) {
-    return makeObjectFormula({
-        name: 'Execute',
-        description: 'No one will see this',
-        examples: [],
-        parameters: [
-            makeStringParameter('body', 'Serialized body of the response.'),
-            makeStringParameter('query', 'Serialized query params of the response.'),
-            makeStringParameter('headers', 'Serialized headers of the response.'),
-        ],
-        execute,
-    });
+function makeTriggerTransformPayloadObjectFormula(def) {
+    return makeObjectFormula(Object.assign({ name: 'Execute', description: 'Transforms raw input from the webhook to the desired type.', examples: [], parameters: [
+            makeStringParameter('body', 'Stringified body of the response.'),
+            makeStringParameter('query', 'Stringified query params of the response.'),
+            makeStringParameter('headers', 'Stringified headers of the response.'),
+        ] }, def));
 }
 exports.makeTriggerTransformPayloadObjectFormula = makeTriggerTransformPayloadObjectFormula;
 function makeSyncTable(name, schema, _a, getSchema, entityName) {

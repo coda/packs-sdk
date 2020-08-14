@@ -162,7 +162,7 @@ export declare enum TriggerConfigurationType {
     Automatic = "automatic",
     Manual = "manual"
 }
-export declare type TransformPayloadFormula = ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>, ParamDef<Type.string>], any>;
+export declare type TransformPayloadFormula<SchemaT extends Schema> = ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>, ParamDef<Type.string>], SchemaT>;
 export declare type WebhookResponseFormula = ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>, ParamDef<Type.string>], any>;
 export declare type RegisterTriggerFormula<ParamDefsT extends ParamDefs> = NumericPackFormula<ParamDefsT>;
 export declare type UnregisterTriggerFormula<ParamDefsT extends ParamDefs> = NumericPackFormula<ParamDefsT>;
@@ -171,10 +171,9 @@ interface BaseTrigger<T extends TriggerConfigurationType, SchemaT extends Schema
     readonly displayName: string;
     readonly description: string;
     readonly configurationType: T;
-    readonly payloadSchema: SchemaT;
     readonly logoPath?: string;
     readonly instructions?: string;
-    transformPayload?: TransformPayloadFormula;
+    transformPayload: TransformPayloadFormula<SchemaT>;
     webhookResponse?: WebhookResponseFormula;
 }
 interface ManualConfigurationTrigger<SchemaT extends Schema> extends BaseTrigger<TriggerConfigurationType.Manual, SchemaT> {

@@ -142,7 +142,7 @@ export declare function autocompleteSearchObjects<T>(search: string, objs: T[], 
 export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | SimpleAutocompleteOption>): MetadataFormula;
 export declare function makeTrigger<T extends Trigger>(trigger: T): T;
 export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
-export declare function makeTriggerTransformPayloadObjectFormula(execute: TransformPayloadFormula['execute']): TransformPayloadFormula;
+export declare function makeTriggerTransformPayloadObjectFormula<SchemaT extends Schema>(def: Pick<TransformPayloadFormula<SchemaT>, 'execute' | 'schema'>): TransformPayloadFormula<SchemaT>;
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, { execute: wrappedExecute, ...definition }: SyncFormulaDef<K, L, ParamDefsT, SchemaT>, getSchema?: MetadataFormula, entityName?: string): SyncTableDef<K, L, ParamDefsT, SchemaT>;
 export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ packId, name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, }: {
     packId: number;
