@@ -89,6 +89,7 @@ export {makeStringFormula} from './api';
 export {makeSyncTable} from './api';
 export {makeTranslateObjectFormula} from './api';
 export {makeTrigger} from './api';
+export {makeTriggerTransformPayloadObjectFormula} from './api';
 
 // Autocomplete helpers.
 export {SimpleAutocompleteOption} from './api';

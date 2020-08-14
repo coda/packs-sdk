@@ -1,8 +1,9 @@
-import {ArraySchema, StringHintTypes} from './schema';
-import {ArrayType, Trigger} from './api_types';
+import {ArraySchema} from './schema';
+import {ArrayType} from './api_types';
 import {CommonPackFormulaDef} from './api_types';
 import {ExecutionContext} from './api_types';
 import {NumberSchema} from './schema';
+import {ObjectSchema} from './schema';
 import {PackFormulaResult} from './api_types';
 import {ParamArgs} from './api_types';
 import {ParamDefs} from './api_types';
@@ -12,11 +13,13 @@ import {RequestHandlerTemplate} from './handler_templates';
 import {ResponseHandlerTemplate} from './handler_templates';
 import {SchemaType} from './schema';
 import {Schema} from './schema';
+import {StringHintTypes} from './schema';
 import {StringSchema} from './schema';
 import {SyncExecutionContext} from './api_types';
-import {ObjectSchema} from './schema';
-import {Type} from './api_types';
+import {TransformPayloadFormula} from './api_types';
+import {Trigger} from './api_types';
 import {TypeOf} from './api_types';
+import {Type} from './api_types';
 import {ValueType} from './schema';
 import {booleanArray} from './api_types';
 import {dateArray} from './api_types';
@@ -483,6 +486,22 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
     execute,
     schema,
   }) as ObjectPackFormula<ParamDefsT, SchemaT>;
+}
+
+export function makeTriggerTransformPayloadObjectFormula(
+  execute: TransformPayloadFormula['execute'],
+): TransformPayloadFormula {
+  return makeObjectFormula({
+    name: 'Execute',
+    description: 'No one will see this',
+    examples: [],
+    parameters: [
+      makeStringParameter('body', 'Serialized body of the response.'),
+      makeStringParameter('query', 'Serialized query params of the response.'),
+      makeStringParameter('headers', 'Serialized headers of the response.'),
+    ],
+    execute,
+  });
 }
 
 export function makeSyncTable<

@@ -1,8 +1,9 @@
-import { ArraySchema, StringHintTypes } from './schema';
-import { ArrayType, Trigger } from './api_types';
+import { ArraySchema } from './schema';
+import { ArrayType } from './api_types';
 import { CommonPackFormulaDef } from './api_types';
 import { ExecutionContext } from './api_types';
 import { NumberSchema } from './schema';
+import { ObjectSchema } from './schema';
 import { PackFormulaResult } from './api_types';
 import { ParamArgs } from './api_types';
 import { ParamDefs } from './api_types';
@@ -12,11 +13,13 @@ import { RequestHandlerTemplate } from './handler_templates';
 import { ResponseHandlerTemplate } from './handler_templates';
 import { SchemaType } from './schema';
 import { Schema } from './schema';
+import { StringHintTypes } from './schema';
 import { StringSchema } from './schema';
 import { SyncExecutionContext } from './api_types';
-import { ObjectSchema } from './schema';
-import { Type } from './api_types';
+import { TransformPayloadFormula } from './api_types';
+import { Trigger } from './api_types';
 import { TypeOf } from './api_types';
+import { Type } from './api_types';
 export { ExecutionContext };
 export { FetchRequest } from './api_types';
 export declare class UserVisibleError extends Error {
@@ -139,6 +142,7 @@ export declare function autocompleteSearchObjects<T>(search: string, objs: T[], 
 export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | SimpleAutocompleteOption>): MetadataFormula;
 export declare function makeTrigger<T extends Trigger>(trigger: T): T;
 export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
+export declare function makeTriggerTransformPayloadObjectFormula(execute: TransformPayloadFormula['execute']): TransformPayloadFormula;
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, { execute: wrappedExecute, ...definition }: SyncFormulaDef<K, L, ParamDefsT, SchemaT>, getSchema?: MetadataFormula, entityName?: string): SyncTableDef<K, L, ParamDefsT, SchemaT>;
 export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ packId, name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, }: {
     packId: number;

@@ -80,6 +80,7 @@ export { makeStringFormula } from './api';
 export { makeSyncTable } from './api';
 export { makeTranslateObjectFormula } from './api';
 export { makeTrigger } from './api';
+export { makeTriggerTransformPayloadObjectFormula } from './api';
 export { SimpleAutocompleteOption } from './api';
 export { autocompleteSearchObjects } from './api';
 export { makeSimpleAutocompleteMetadataFormula } from './api';
