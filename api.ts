@@ -501,7 +501,10 @@ export function makeTriggerTransformPayloadObjectFormula<SchemaT extends Generic
       makeStringParameter('query', 'Stringified query params of the response.'),
       makeStringParameter('headers', 'Stringified headers of the response.'),
     ],
-    ...def,
+    response: {
+      schema: def.schema,
+    },
+    execute: def.execute,
   });
 }
 
