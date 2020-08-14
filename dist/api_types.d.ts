@@ -54,6 +54,7 @@ export declare type ParamValues<ParamDefsT extends ParamDefs> = {
 } & any[];
 export declare type DefaultValueType<T extends UnionType> = T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
 export interface CommonPackFormulaDef<T extends ParamDefs> {
+    readonly cflDefinition?: string;
     readonly name: string;
     readonly description: string;
     readonly examples: Array<{

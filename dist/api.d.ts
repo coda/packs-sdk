@@ -153,6 +153,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     request: RequestHandlerTemplate;
     description: string;
     name: string;
+    cflDefinition?: string | undefined;
     examples: {
         params: import("./api_types").PackFormulaValue[];
         result: PackFormulaResult;

@@ -112,6 +112,7 @@ export type DefaultValueType<T extends UnionType> = T extends ArrayType<Type.dat
   : TypeOfMap<T>;
 
 export interface CommonPackFormulaDef<T extends ParamDefs> {
+  readonly cflDefinition?: string;
   readonly name: string;
   readonly description: string;
   readonly examples: Array<{params: PackFormulaValue[]; result: PackFormulaResult}>;
