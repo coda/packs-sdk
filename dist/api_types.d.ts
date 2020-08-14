@@ -1,10 +1,11 @@
 /// <reference types="node" />
 import { $Values } from './type_utils';
-import { ObjectPackFormula } from './api';
+import { ArraySchema } from './schema';
+import { Continuation } from './api';
+import { GenericObjectSchema } from './schema';
 import { MetadataFormula } from './api';
 import { NumericPackFormula } from './api';
-import { Continuation } from './api';
-import { ArraySchema, Schema } from './schema';
+import { ObjectPackFormula } from './api';
 export declare enum Type {
     string = 0,
     number = 1,
@@ -162,11 +163,11 @@ export declare enum TriggerConfigurationType {
     Automatic = "automatic",
     Manual = "manual"
 }
-export declare type TransformPayloadFormula<SchemaT extends Schema> = ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>, ParamDef<Type.string>], SchemaT>;
+export declare type TransformPayloadFormula<SchemaT extends GenericObjectSchema> = ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>, ParamDef<Type.string>], SchemaT>;
 export declare type WebhookResponseFormula = ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>, ParamDef<Type.string>], any>;
 export declare type RegisterTriggerFormula<ParamDefsT extends ParamDefs> = NumericPackFormula<ParamDefsT>;
 export declare type UnregisterTriggerFormula<ParamDefsT extends ParamDefs> = NumericPackFormula<ParamDefsT>;
-interface BaseTrigger<T extends TriggerConfigurationType, SchemaT extends Schema> {
+interface BaseTrigger<T extends TriggerConfigurationType, SchemaT extends GenericObjectSchema> {
     readonly name: string;
     readonly displayName: string;
     readonly description: string;
@@ -176,12 +177,12 @@ interface BaseTrigger<T extends TriggerConfigurationType, SchemaT extends Schema
     transformPayload: TransformPayloadFormula<SchemaT>;
     webhookResponse?: WebhookResponseFormula;
 }
-interface ManualConfigurationTrigger<SchemaT extends Schema> extends BaseTrigger<TriggerConfigurationType.Manual, SchemaT> {
+interface ManualConfigurationTrigger<SchemaT extends GenericObjectSchema> extends BaseTrigger<TriggerConfigurationType.Manual, SchemaT> {
 }
-interface AutomaticConfigurationTrigger<SchemaT extends Schema, ParamsT extends ParamDefs> extends BaseTrigger<TriggerConfigurationType.Automatic, SchemaT> {
+interface AutomaticConfigurationTrigger<SchemaT extends GenericObjectSchema, ParamsT extends ParamDefs> extends BaseTrigger<TriggerConfigurationType.Automatic, SchemaT> {
     readonly registerParams: ParamsT;
     register: RegisterTriggerFormula<ParamsT>;
     unregister: UnregisterTriggerFormula<ParamsT>;
 }
-export declare type Trigger<SchemaT extends Schema = Schema> = ManualConfigurationTrigger<SchemaT> | AutomaticConfigurationTrigger<SchemaT, ParamDefs>;
+export declare type Trigger<SchemaT extends GenericObjectSchema = GenericObjectSchema> = ManualConfigurationTrigger<SchemaT> | AutomaticConfigurationTrigger<SchemaT, ParamDefs>;
 export {};

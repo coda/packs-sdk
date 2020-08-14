@@ -2,10 +2,10 @@ import {$OmitNested} from './type_utils';
 import {Authentication} from './types';
 import {AuthenticationType} from './types';
 import {Format} from './types';
+import {GenericObjectSchema} from './schema';
 import {MetadataFormula} from './api';
 import {PackDefinition} from './types';
 import {TypedPackFormula} from './api';
-import {Schema} from './schema';
 import {SyncTable} from './api';
 import {Trigger} from './api_types';
 
@@ -46,7 +46,7 @@ export type ExternalPackFormulas = PackFormulasMetadata;
 export type ExternalPackFormula = PackFormulaMetadata;
 export type ExternalPackFormat = Format;
 export type ExternalPackFormatMetadata = PackFormatMetadata;
-export type ExternalPackTrigger = Trigger<Schema>;
+export type ExternalPackTrigger = Trigger<GenericObjectSchema>;
 export type ExternalSyncTable = PackSyncTable;
 
 type BasePackMetadata = Omit<

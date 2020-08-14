@@ -2,6 +2,7 @@ import {ArraySchema} from './schema';
 import {ArrayType} from './api_types';
 import {CommonPackFormulaDef} from './api_types';
 import {ExecutionContext} from './api_types';
+import {GenericObjectSchema} from './schema';
 import {NumberSchema} from './schema';
 import {ObjectSchema} from './schema';
 import {PackFormulaResult} from './api_types';
@@ -488,7 +489,7 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
   }) as ObjectPackFormula<ParamDefsT, SchemaT>;
 }
 
-export function makeTriggerTransformPayloadObjectFormula<SchemaT extends Schema>(
+export function makeTriggerTransformPayloadObjectFormula<SchemaT extends GenericObjectSchema>(
   def: Pick<TransformPayloadFormula<SchemaT>, 'execute' | 'schema'>,
 ): TransformPayloadFormula<SchemaT> {
   return makeObjectFormula({
