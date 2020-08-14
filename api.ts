@@ -431,11 +431,7 @@ export function makeSimpleAutocompleteMetadataFormula(
   return makeMetadataFormula((context, [search]) => simpleAutocomplete(search, options));
 }
 
-export interface PackTriggers {
-  readonly [namespace: string]: Array<Trigger<Schema>>;
-}
-
-export function makeTrigger<T extends Trigger<Schema>>(trigger: T): T {
+export function makeTrigger<T extends Trigger>(trigger: T): T {
   return trigger;
 }
 

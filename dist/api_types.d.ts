@@ -168,9 +168,12 @@ export declare type RegisterTriggerFormula<ParamDefsT extends ParamDefs> = Numer
 export declare type UnregisterTriggerFormula<ParamDefsT extends ParamDefs> = NumericPackFormula<ParamDefsT>;
 interface BaseTrigger<T extends TriggerConfigurationType, SchemaT extends Schema> {
     readonly name: string;
+    readonly displayName: string;
     readonly description: string;
     readonly configurationType: T;
     readonly payloadSchema: SchemaT;
+    readonly logoPath?: string;
+    readonly instructions?: string;
     transformPayload?: TransformPayloadFormula;
     webhookResponse?: WebhookResponseFormula;
 }
@@ -181,5 +184,5 @@ interface AutomaticConfigurationTrigger<SchemaT extends Schema, ParamsT extends 
     register: RegisterTriggerFormula<ParamsT>;
     unregister: UnregisterTriggerFormula<ParamsT>;
 }
-export declare type Trigger<SchemaT extends Schema> = ManualConfigurationTrigger<SchemaT> | AutomaticConfigurationTrigger<SchemaT, ParamDefs>;
+export declare type Trigger<SchemaT extends Schema = Schema> = ManualConfigurationTrigger<SchemaT> | AutomaticConfigurationTrigger<SchemaT, ParamDefs>;
 export {};
