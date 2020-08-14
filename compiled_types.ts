@@ -53,6 +53,7 @@ type BasePackMetadata = Omit<
   | 'systemConnectionAuthentication'
   | 'formulas'
   | 'formats'
+  | 'triggers'
   | 'syncTables'
 >;
 

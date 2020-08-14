@@ -33,7 +33,7 @@ export declare type ExternalPackFormula = PackFormulaMetadata;
 export declare type ExternalPackFormat = Format;
 export declare type ExternalPackFormatMetadata = PackFormatMetadata;
 export declare type ExternalSyncTable = PackSyncTable;
-declare type BasePackMetadata = Omit<PackMetadata, 'enabledConfigName' | 'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables'>;
+declare type BasePackMetadata = Omit<PackMetadata, 'enabledConfigName' | 'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'triggers' | 'syncTables'>;
 /** Further stripped-down version of `PackMetadata` that contains only what the browser needs. */
 export interface ExternalPackMetadata extends BasePackMetadata {
     authentication: {
