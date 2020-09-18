@@ -2,12 +2,10 @@ import {$OmitNested} from './type_utils';
 import {Authentication} from './types';
 import {AuthenticationType} from './types';
 import {Format} from './types';
-import {MetadataFormula} from './api';
+import {MetadataFormula, PackFormulaMetadata, ObjectPackFormulaMetadata} from './api';
 import {PackDefinition} from './types';
-import {TypedPackFormula} from './api';
 import {SyncTable} from './api';
 
-export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
 // TODO(alexd): Uncomment the getSchema stripping.
 export type PackSyncTable = Omit<SyncTable, 'getter' | 'getName' /* | 'getSchema' */> & {
   getter: PackFormulaMetadata;
@@ -41,6 +39,7 @@ export type PackMetadata = Omit<PackDefinition, 'formulas' | 'formats' | 'defaul
 
 export type ExternalPackAuthenticationType = AuthenticationType;
 export type ExternalPackFormulas = PackFormulasMetadata;
+export type ExternalObjectPackFormulas = ObjectPackFormulaMetadata;
 export type ExternalPackFormula = PackFormulaMetadata;
 export type ExternalPackFormat = Format;
 export type ExternalPackFormatMetadata = PackFormatMetadata;
