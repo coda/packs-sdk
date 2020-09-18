@@ -2,8 +2,10 @@ import {$OmitNested} from './type_utils';
 import {Authentication} from './types';
 import {AuthenticationType} from './types';
 import {Format} from './types';
-import {MetadataFormula, PackFormulaMetadata, ObjectPackFormulaMetadata} from './api';
+import {MetadataFormula} from './api';
 import {PackDefinition} from './types';
+import {PackFormulaMetadata} from './api';
+import {ObjectPackFormulaMetadata} from './api';
 import {SyncTable} from './api';
 
 // TODO(alexd): Uncomment the getSchema stripping.
