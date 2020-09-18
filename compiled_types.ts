@@ -41,7 +41,7 @@ export type PackMetadata = Omit<PackDefinition, 'formulas' | 'formats' | 'defaul
 
 export type ExternalPackAuthenticationType = AuthenticationType;
 export type ExternalPackFormulas = PackFormulasMetadata;
-export type ExternalObjectPackFormulas = ObjectPackFormulaMetadata;
+export type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
 export type ExternalPackFormula = PackFormulaMetadata;
 export type ExternalPackFormat = Format;
 export type ExternalPackFormatMetadata = PackFormatMetadata;

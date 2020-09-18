@@ -22,7 +22,6 @@ export {WebBasicAuthentication} from './types';
 
 // Compiler interfaces
 export {PackFormatMetadata} from './compiled_types';
-export {PackFormulaMetadata} from './compiled_types';
 export {PackFormulasMetadata} from './compiled_types';
 export {PackSyncTable} from './compiled_types';
 export {PackMetadata} from './compiled_types';
@@ -30,6 +29,7 @@ export {PackMetadata} from './compiled_types';
 // Browser interfaces
 export {ExternalPackFormat} from './compiled_types';
 export {ExternalPackFormatMetadata} from './compiled_types';
+export {ExternalObjectPackFormula} from './compiled_types';
 export {ExternalPackFormula} from './compiled_types';
 export {ExternalPackFormulas} from './compiled_types';
 export {ExternalSyncTable} from './compiled_types';
@@ -56,6 +56,7 @@ export {MetadataFormula} from './api';
 export {Network} from './api_types';
 export {PackFormulaDef} from './api';
 export {PackFormulas} from './api';
+export {PackFormulaMetadata} from './api';
 export {PackFormulaValue} from './api_types';
 export {PackFormulaResult} from './api_types';
 export {ParamDefs} from './api_types';

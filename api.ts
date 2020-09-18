@@ -442,7 +442,7 @@ function isResponseExampleTemplate(obj: any): obj is {example: SchemaType<any>} 
   return obj && obj.example;
 }
 
-export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({
+export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends GenericObjectSchema>({
   response,
   ...definition // tslint:disable-line: trailing-comma
 }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT> {

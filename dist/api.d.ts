@@ -1,4 +1,4 @@
-import { ArraySchema, StringHintTypes } from './schema';
+import { ArraySchema, GenericObjectSchema, StringHintTypes } from './schema';
 import { ArrayType } from './api_types';
 import { CommonPackFormulaDef } from './api_types';
 import { ExecutionContext } from './api_types';
@@ -98,11 +98,14 @@ declare type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDef
 declare type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> = Formula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
     schema?: StringSchema<ResultT>;
 };
-declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Formula<ParamDefsT, SchemaType<SchemaT>> & {
+export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends GenericObjectSchema> = Formula<ParamDefsT, SchemaType<SchemaT>> & {
     schema?: SchemaT;
 };
-export declare type TypedPackFormula = NumericPackFormula<ParamDefs> | StringPackFormula<ParamDefs, any> | ObjectPackFormula<ParamDefs, Schema> | GenericSyncFormula;
-export declare function isObjectPackFormula(fn: Formula<ParamDefs, any>): fn is ObjectPackFormula<ParamDefs, Schema>;
+export declare type TypedPackFormula = NumericPackFormula<ParamDefs> | StringPackFormula<ParamDefs, any> | ObjectPackFormula<ParamDefs, GenericObjectSchema> | GenericSyncFormula;
+export declare type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, GenericObjectSchema>;
+export declare type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
+export declare type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
+export declare function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata;
 export declare function isStringPackFormula(fn: Formula<ParamDefs, any>): fn is StringPackFormula<ParamDefs>;
 export declare function isSyncPackFormula(fn: Formula<ParamDefs, any>): fn is GenericSyncFormula;
 interface SyncFormulaResult<ResultT extends object> {
@@ -137,7 +140,7 @@ export interface SimpleAutocompleteOption {
 export declare function simpleAutocomplete(search: string | undefined, options: Array<string | SimpleAutocompleteOption>): Promise<MetadataFormulaObjectResultType[]>;
 export declare function autocompleteSearchObjects<T>(search: string, objs: T[], displayKey: keyof T, valueKey: keyof T): Promise<MetadataFormulaObjectResultType[]>;
 export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | SimpleAutocompleteOption>): MetadataFormula;
-export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
+export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends GenericObjectSchema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, { execute: wrappedExecute, ...definition }: SyncFormulaDef<K, L, ParamDefsT, SchemaT>, getSchema?: MetadataFormula, entityName?: string): SyncTableDef<K, L, ParamDefsT, SchemaT>;
 export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ packId, name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, }: {
     packId: number;
