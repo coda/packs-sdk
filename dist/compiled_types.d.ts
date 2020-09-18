@@ -4,9 +4,9 @@ import { AuthenticationType } from './types';
 import { Format } from './types';
 import { MetadataFormula } from './api';
 import { PackDefinition } from './types';
-import { TypedPackFormula } from './api';
+import { PackFormulaMetadata } from './api';
+import { ObjectPackFormulaMetadata } from './api';
 import { SyncTable } from './api';
-export declare type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
 export declare type PackSyncTable = Omit<SyncTable, 'getter' | 'getName'> & {
     getter: PackFormulaMetadata;
     isDynamic?: boolean;
@@ -29,6 +29,7 @@ export declare type PackMetadata = Omit<PackDefinition, 'formulas' | 'formats' |
 };
 export declare type ExternalPackAuthenticationType = AuthenticationType;
 export declare type ExternalPackFormulas = PackFormulasMetadata;
+export declare type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
 export declare type ExternalPackFormula = PackFormulaMetadata;
 export declare type ExternalPackFormat = Format;
 export declare type ExternalPackFormatMetadata = PackFormatMetadata;

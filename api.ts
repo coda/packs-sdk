@@ -1,4 +1,4 @@
-import {ArraySchema, StringHintTypes} from './schema';
+import {ArraySchema, GenericObjectSchema, StringHintTypes} from './schema';
 import {ArrayType} from './api_types';
 import {CommonPackFormulaDef} from './api_types';
 import {ExecutionContext} from './api_types';
@@ -244,7 +244,7 @@ type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintT
   schema?: StringSchema<ResultT>;
 };
 
-type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Formula<
+export type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends GenericObjectSchema> = Formula<
   ParamDefsT,
   SchemaType<SchemaT>
 > & {
@@ -254,10 +254,13 @@ type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = F
 export type TypedPackFormula =
   | NumericPackFormula<ParamDefs>
   | StringPackFormula<ParamDefs, any>
-  | ObjectPackFormula<ParamDefs, Schema>
+  | ObjectPackFormula<ParamDefs, GenericObjectSchema>
   | GenericSyncFormula;
 
-export function isObjectPackFormula(fn: Formula<ParamDefs, any>): fn is ObjectPackFormula<ParamDefs, Schema> {
+type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, GenericObjectSchema>;
+export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
+export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
+export function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata {
   return fn.resultType === Type.object;
 }
 
@@ -439,7 +442,7 @@ function isResponseExampleTemplate(obj: any): obj is {example: SchemaType<any>} 
   return obj && obj.example;
 }
 
-export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({
+export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends GenericObjectSchema>({
   response,
   ...definition // tslint:disable-line: trailing-comma
 }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT> {
