@@ -102,7 +102,7 @@ export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT exte
     schema?: SchemaT;
 };
 export declare type TypedPackFormula = NumericPackFormula<ParamDefs> | StringPackFormula<ParamDefs, any> | ObjectPackFormula<ParamDefs, GenericObjectSchema> | GenericSyncFormula;
-export declare type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, GenericObjectSchema>;
+declare type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, GenericObjectSchema>;
 export declare type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
 export declare type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
 export declare function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata;

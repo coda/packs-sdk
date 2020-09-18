@@ -257,7 +257,7 @@ export type TypedPackFormula =
   | ObjectPackFormula<ParamDefs, GenericObjectSchema>
   | GenericSyncFormula;
 
-export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, GenericObjectSchema>;
+type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, GenericObjectSchema>;
 export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
 export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
 export function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata {
