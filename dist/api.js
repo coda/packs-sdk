@@ -20,7 +20,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeGetConnectionNameFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.PARAM_DESCRIPTION_DOES_NOT_EXIST = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.StatusCodeError = exports.UserVisibleError = void 0;
+exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTable = exports.makeArrayFormula = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeGetConnectionNameFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isArrayPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.PARAM_DESCRIPTION_DOES_NOT_EXIST = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.StatusCodeError = exports.UserVisibleError = void 0;
 const api_types_1 = require("./api_types");
 const schema_1 = require("./schema");
 const api_types_2 = require("./api_types");
@@ -121,6 +121,10 @@ function isObjectPackFormula(fn) {
     return fn.resultType === api_types_1.Type.object;
 }
 exports.isObjectPackFormula = isObjectPackFormula;
+function isArrayPackFormula(fn) {
+    return fn.resultType === 'array';
+}
+exports.isArrayPackFormula = isArrayPackFormula;
 function isStringPackFormula(fn) {
     return fn.resultType === api_types_1.Type.string;
 }
@@ -271,6 +275,50 @@ function makeObjectFormula(_a) {
     });
 }
 exports.makeObjectFormula = makeObjectFormula;
+function makeArrayFormula(_a) {
+    var { response } = _a, definition = __rest(_a, ["response"]) // tslint:disable-line: trailing-comma
+    ;
+    let schema;
+    if (response) {
+        if (isResponseHandlerTemplate(response) && response.schema) {
+            response.schema = schema_3.normalizeSchema(response.schema);
+            schema = response.schema;
+        }
+        else if (isResponseExampleTemplate(response)) {
+            // TODO(alexd): Figure out what to do with examples.
+            // schema = generateSchema(response.example);
+        }
+    }
+    let execute = definition.execute;
+    if (isResponseHandlerTemplate(response)) {
+        const { onError } = response;
+        const wrappedExecute = execute;
+        const responseHandler = handler_templates_1.generateObjectResponseHandler(response);
+        execute = function exec(params, context) {
+            return __awaiter(this, void 0, void 0, function* () {
+                let result;
+                try {
+                    result = yield wrappedExecute(params, context);
+                }
+                catch (err) {
+                    if (onError) {
+                        result = onError(err);
+                    }
+                    else {
+                        throw err;
+                    }
+                }
+                return responseHandler({ body: ensure_1.ensureExists(result), status: 200, headers: {} });
+            });
+        };
+    }
+    return Object.assign({}, definition, {
+        resultType: 'array',
+        execute,
+        schema,
+    });
+}
+exports.makeArrayFormula = makeArrayFormula;
 function makeSyncTable(name, schema, _a, getSchema, entityName) {
     var { execute: wrappedExecute } = _a, definition = __rest(_a, ["execute"]);
     const formulaSchema = getSchema ? undefined : schema_3.normalizeSchema({ type: schema_1.ValueType.Array, items: schema });

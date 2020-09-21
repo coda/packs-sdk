@@ -12,6 +12,7 @@ export declare enum Type {
     html = 5,
     image = 6
 }
+export declare type AllTypes = Type | 'array';
 export interface ArrayType<T extends Type> {
     type: 'array';
     items: T;
@@ -35,7 +36,7 @@ interface TypeMap {
 }
 export declare type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | PackFormulaValue[];
 export declare type PackFormulaResult = $Values<TypeMap> | PackFormulaResult[];
-export declare type TypeOf<T extends PackFormulaResult> = T extends number ? Type.number : T extends string ? Type.string : T extends boolean ? Type.boolean : T extends Date ? Type.date : T extends object ? Type.object : never;
+export declare type TypeOf<T extends PackFormulaResult> = T extends number ? Type.number : T extends string ? Type.string : T extends boolean ? Type.boolean : T extends Date ? Type.date : T extends object ? Type.object : T extends any[] ? 'array' : never;
 export interface ParamDef<T extends UnionType> {
     name: string;
     type: T;
