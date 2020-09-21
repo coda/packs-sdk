@@ -65,6 +65,7 @@ interface TypeMap {
   [Type.date]: Date;
   [Type.html]: string;
   [Type.image]: string;
+  array: Array<any>;
 }
 
 export type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | PackFormulaValue[];

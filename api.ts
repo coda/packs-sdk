@@ -277,6 +277,8 @@ export function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFo
   return fn.resultType === Type.object;
 }
 
+type TypedArrayPackFormula = ArrayPackFormula<ParamDefs, ArraySchema>;
+type ArrayPackFormulaMetadata = Omit<TypedArrayPackFormula, 'execute'>;
 export function isArrayPackFormula(fn: PackFormulaMetadata): fn is ArrayPackFormulaMetadata {
   return fn.resultType === 'array';
 }
