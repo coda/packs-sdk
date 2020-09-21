@@ -217,12 +217,24 @@ interface StringFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaD
   };
 }
 
-interface ObjectResultFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema>
+interface ArrayResultFormulaDef<ParamsT extends ParamDefs, SchemaT extends ArraySchema>
+  extends PackFormulaDef<ParamsT, SchemaType<SchemaT>> {
+  response?: ResponseHandlerTemplate<SchemaT>;
+}
+
+export type ArrayPackFormula<ParamDefsT extends ParamDefs, SchemaT extends ArraySchema> = Formula<
+  ParamDefsT,
+  SchemaType<SchemaT>
+> & {
+  schema?: SchemaT;
+};
+
+interface ObjectResultFormulaDef<ParamsT extends ParamDefs, SchemaT extends GenericObjectSchema>
   extends PackFormulaDef<ParamsT, SchemaType<SchemaT> | Array<SchemaType<SchemaT>>> {
   response?: ResponseHandlerTemplate<SchemaT>;
 }
 
-interface ObjectArrayFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema>
+interface ObjectArrayFormulaDef<ParamsT extends ParamDefs, SchemaT extends GenericObjectSchema>
   extends Omit<PackFormulaDef<ParamsT, SchemaType<SchemaT>>, 'execute'> {
   request: RequestHandlerTemplate;
   response: ResponseHandlerTemplate<SchemaT>;
@@ -255,6 +267,7 @@ export type TypedPackFormula =
   | NumericPackFormula<ParamDefs>
   | StringPackFormula<ParamDefs, any>
   | ObjectPackFormula<ParamDefs, GenericObjectSchema>
+  | ArrayPackFormula<ParamDefs, ArraySchema>
   | GenericSyncFormula;
 
 type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, GenericObjectSchema>;
@@ -262,6 +275,10 @@ export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
 export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
 export function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata {
   return fn.resultType === Type.object;
+}
+
+export function isArrayPackFormula(fn: PackFormulaMetadata): fn is ArrayPackFormulaMetadata {
+  return fn.resultType === 'array';
 }
 
 export function isStringPackFormula(fn: Formula<ParamDefs, any>): fn is StringPackFormula<ParamDefs> {
@@ -484,6 +501,48 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
   }) as ObjectPackFormula<ParamDefsT, SchemaT>;
 }
 
+export function makeArrayFormula<ParamDefsT extends ParamDefs, SchemaT extends ArraySchema>({
+  response,
+  ...definition // tslint:disable-line: trailing-comma
+}: ArrayResultFormulaDef<ParamDefsT, SchemaT>): ArrayPackFormula<ParamDefsT, SchemaT> {
+  let schema: Schema | undefined;
+  if (response) {
+    if (isResponseHandlerTemplate(response) && response.schema) {
+      response.schema = normalizeSchema(response.schema) as SchemaT;
+      schema = response.schema;
+    } else if (isResponseExampleTemplate(response)) {
+      // TODO(alexd): Figure out what to do with examples.
+      // schema = generateSchema(response.example);
+    }
+  }
+
+  let execute = definition.execute;
+  if (isResponseHandlerTemplate(response)) {
+    const {onError} = response;
+    const wrappedExecute = execute;
+    const responseHandler = generateObjectResponseHandler(response);
+    execute = async function exec(params: ParamValues<ParamDefsT>, context: ExecutionContext) {
+      let result: SchemaType<SchemaT>;
+      try {
+        result = await wrappedExecute(params, context);
+      } catch (err) {
+        if (onError) {
+          result = onError(err);
+        } else {
+          throw err;
+        }
+      }
+      return responseHandler({body: ensureExists(result), status: 200, headers: {}});
+    };
+  }
+
+  return Object.assign({}, definition, {
+    resultType: 'array',
+    execute,
+    schema,
+  }) as ArrayPackFormula<ParamDefsT, SchemaT>;
+}
+
 export function makeSyncTable<
   K extends string,
   L extends string,
@@ -577,7 +636,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   } as DynamicSyncTableDef<K, L, ParamDefsT, any>;
 }
 
-export function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({
+export function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends GenericObjectSchema>({
   response,
   ...definition // tslint:disable-line: trailing-comma
 }: ObjectArrayFormulaDef<ParamDefsT, ResultT>) {

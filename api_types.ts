@@ -13,6 +13,8 @@ export enum Type {
   image,
 }
 
+export type AllTypes = Type | 'array';
+
 export interface ArrayType<T extends Type> {
   type: 'array';
   items: T;
@@ -78,6 +80,8 @@ export type TypeOf<T extends PackFormulaResult> = T extends number
   ? Type.date
   : T extends object
   ? Type.object
+  : T extends any[]
+  ? 'array'
   : never;
 
 export interface ParamDef<T extends UnionType> {
