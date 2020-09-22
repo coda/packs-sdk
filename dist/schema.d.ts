@@ -19,11 +19,12 @@ export declare enum ValueType {
     Html = "html",
     Embed = "embed",
     Reference = "reference",
+    ImageAttachment = "imageAttachment",
     Attachment = "attachment",
     Slider = "slider",
     Scale = "scale"
 }
-export declare type StringHintTypes = ValueType.Attachment | ValueType.Date | ValueType.Time | ValueType.DateTime | ValueType.Duration | ValueType.Embed | ValueType.Html | ValueType.Image | ValueType.Markdown | ValueType.Url;
+export declare type StringHintTypes = ValueType.Attachment | ValueType.Date | ValueType.Time | ValueType.DateTime | ValueType.Duration | ValueType.Embed | ValueType.Html | ValueType.Image | ValueType.ImageAttachment | ValueType.Markdown | ValueType.Url;
 export declare type NumberHintTypes = ValueType.Date | ValueType.Time | ValueType.DateTime | ValueType.Percent | ValueType.Currency | ValueType.Slider | ValueType.Scale;
 export declare type ObjectHintTypes = ValueType.Person | ValueType.Reference;
 interface BaseSchema {
