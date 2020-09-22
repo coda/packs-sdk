@@ -27,6 +27,7 @@ export enum ValueType {
   Html = 'html',
   Embed = 'embed',
   Reference = 'reference',
+  ImageAttachment = 'imageAttachment',
   Attachment = 'attachment',
   Slider = 'slider',
   Scale = 'scale',
@@ -41,6 +42,7 @@ export type StringHintTypes =
   | ValueType.Embed
   | ValueType.Html
   | ValueType.Image
+  | ValueType.ImageAttachment
   | ValueType.Markdown
   | ValueType.Url;
 export type NumberHintTypes =

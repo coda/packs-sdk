@@ -30,6 +30,7 @@ var ValueType;
     ValueType["Html"] = "html";
     ValueType["Embed"] = "embed";
     ValueType["Reference"] = "reference";
+    ValueType["ImageAttachment"] = "imageAttachment";
     ValueType["Attachment"] = "attachment";
     ValueType["Slider"] = "slider";
     ValueType["Scale"] = "scale";
