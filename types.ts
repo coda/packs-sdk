@@ -98,8 +98,8 @@ export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
   // If specified, does not require a connection to be configured in
   // order to install the pack.
   deferConnectionSetup?: boolean;
-  // If specified, auto configures the connection (full access token, shared, and allowing actions)
-  // and installs the pack
+  // If specified, auto configures the connection (full access token, shared, and allowing actions) when
+  // installing the pack
   shouldAutoAuthSetup?: boolean;
 }
 

@@ -75,6 +75,7 @@ export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
 export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
     type: AuthenticationType.CodaApiHeaderBearerToken;
     deferConnectionSetup?: boolean;
+    shouldAutoAuthSetup?: boolean;
 }
 /**
  * A pack or formula which uses standard bearer token header authentication:
