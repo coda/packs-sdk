@@ -146,6 +146,10 @@ export interface OAuth2Authentication extends BaseAuthentication {
   clientIdEnvVarName: string;
   clientSecretEnvVarName: string;
   signingSecretEnvVarName?: string;
+
+  // Some OAuth providers will return the API domain with the OAuth response.
+  // This is the key in the OAuth response json body that points to the endpoint.
+  endpointKey?: string;
 }
 
 export interface WebBasicAuthentication extends BaseAuthentication {
