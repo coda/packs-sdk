@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:12.17-buster
+      - image: circleci/node:14.13-buster
 
     working_directory: ~/repo
 
@@ -24,7 +24,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: v2-dependencies-{{ checksum "package.json" }}
+          key: v-dependencies-{{ checksum "package.json" }}
 
       - run:
           name: 'Lint'
