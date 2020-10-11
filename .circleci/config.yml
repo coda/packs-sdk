@@ -24,7 +24,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: v-dependencies-{{ checksum "package.json" }}
+          key: v2-dependencies-{{ checksum "package.json" }}
 
       - run:
           name: 'Lint'
