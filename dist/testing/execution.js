@@ -16,13 +16,12 @@ const validation_1 = require("./validation");
 const validation_2 = require("./validation");
 const uuid_1 = require("uuid");
 // TODO(alan/jonathan): Write a comparable function that handles syncs.
-function executeFormula(formula, params, context = newExecutionContext(), { coerceParams: shouldCoerceParams, validateParams: shouldValidateParams, validateResult: shouldValidateResult, } = {}) {
+function executeFormula(formula, params, context = newExecutionContext(), { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true } = {}) {
     return __awaiter(this, void 0, void 0, function* () {
-        const paramsToUse = shouldCoerceParams ? coercion_1.coerceParams(formula, params) : params;
         if (shouldValidateParams) {
-            validation_1.validateParams(formula, paramsToUse);
+            validation_1.validateParams(formula, params);
         }
-        const result = yield formula.execute(paramsToUse, context);
+        const result = yield formula.execute(params, context);
         if (shouldValidateResult) {
             validation_2.validateResult(formula, result);
         }
@@ -38,17 +37,14 @@ exports.executeFormulaFromPackDef = executeFormulaFromPackDef;
 function executeFormulaFromCLI(args, module) {
     return __awaiter(this, void 0, void 0, function* () {
         const formulaNameWithNamespace = args[0];
-        const params = args.slice(1);
         if (!module.manifest) {
             console.log('Manifest file must export a variable called "manifest" that refers to a PackDefinition.');
             return process.exit(1);
         }
         try {
-            const result = yield executeFormulaFromPackDef(module.manifest, formulaNameWithNamespace, params, undefined, {
-                coerceParams: true,
-                validateParams: true,
-                validateResult: true,
-            });
+            const formula = findFormula(module.manifest, formulaNameWithNamespace);
+            const params = coercion_1.coerceParams(formula, args.slice(1));
+            const result = yield executeFormula(formula, params);
             console.log(result);
         }
         catch (err) {
