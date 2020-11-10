@@ -11,7 +11,6 @@ import {validateResult} from './validation';
 import {v4} from 'uuid';
 
 export interface ExecuteOptions {
-  coerceParams?: boolean;
   validateParams?: boolean;
   validateResult?: boolean;
 }
@@ -21,17 +20,12 @@ export async function executeFormula(
   formula: TypedStandardFormula,
   params: ParamValues<ParamDefs>,
   context: ExecutionContext = newExecutionContext(),
-  {
-    coerceParams: shouldCoerceParams,
-    validateParams: shouldValidateParams,
-    validateResult: shouldValidateResult,
-  }: ExecuteOptions = {},
+  {validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true}: ExecuteOptions = {},
 ) {
-  const paramsToUse = shouldCoerceParams ? coerceParams(formula, params) : params;
   if (shouldValidateParams) {
-    validateParams(formula, paramsToUse);
+    validateParams(formula, params);
   }
-  const result = await formula.execute(paramsToUse, context);
+  const result = await formula.execute(params, context);
   if (shouldValidateResult) {
     validateResult(formula, result);
   }
@@ -51,23 +45,15 @@ export function executeFormulaFromPackDef(
 
 export async function executeFormulaFromCLI(args: string[], module: any) {
   const formulaNameWithNamespace = args[0];
-  const params = args.slice(1);
   if (!module.manifest) {
     console.log('Manifest file must export a variable called "manifest" that refers to a PackDefinition.');
     return process.exit(1);
   }
+
   try {
-    const result = await executeFormulaFromPackDef(
-      module.manifest,
-      formulaNameWithNamespace,
-      params as any,
-      undefined,
-      {
-        coerceParams: true,
-        validateParams: true,
-        validateResult: true,
-      },
-    );
+    const formula = findFormula(module.manifest, formulaNameWithNamespace);
+    const params = coerceParams(formula, args.slice(1) as any);
+    const result = await executeFormula(formula, params);
     console.log(result);
   } catch (err) {
     console.log(err);
