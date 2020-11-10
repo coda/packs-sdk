@@ -1,3 +1,4 @@
+import './test_helper';
 import {ValueType} from '../schema';
 import {generateObjectResponseHandler} from '../handler_templates';
 import {generateRequestHandler} from '../handler_templates';
@@ -109,8 +110,18 @@ describe('handler templates', () => {
         },
       });
       assert.deepEqual(
-        handler({headers: {}, body: [{some_thing: 42, cool_thing: 123}, {cool: 456, some_thing: 321}], status: 200}),
-        [{someThing: 42, cool_thing: 123}, {cool: 456, someThing: 321}] as any,
+        handler({
+          headers: {},
+          body: [
+            {some_thing: 42, cool_thing: 123},
+            {cool: 456, some_thing: 321},
+          ],
+          status: 200,
+        }),
+        [
+          {someThing: 42, cool_thing: 123},
+          {cool: 456, someThing: 321},
+        ] as any,
       );
     });
 
