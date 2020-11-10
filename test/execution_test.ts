@@ -24,9 +24,4 @@ describe('Execution', () => {
     const result = await executeFormulaFromPackDef(fakePack, 'Fake::Square', [5]);
     assert.equal(result, 25);
   });
-
-  it('coerces parameter values', async () => {
-    const result = await executeFormulaFromPackDef(fakePack, 'Fake::Square', ['5'], undefined, {coerceParams: true});
-    assert.equal(result, 25);
-  });
 });
