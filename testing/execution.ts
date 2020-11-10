@@ -32,7 +32,7 @@ export async function executeFormula(
   return result;
 }
 
-export function executeFormulaFromPackDef(
+export async function executeFormulaFromPackDef(
   packDef: PackDefinition,
   formulaNameWithNamespace: string,
   params: ParamValues<ParamDefs>,
@@ -79,7 +79,7 @@ function findFormula(packDef: PackDefinition, formulaNameWithNamespace: string):
   const [namespace, name] = formulaNameWithNamespace.split('::');
   if (!(namespace && name)) {
     throw new Error(
-      `Formula names must be specified as FormulaNamespace::FormulaName, but got ${formulaNameWithNamespace}.`,
+      `Formula names must be specified as FormulaNamespace::FormulaName, but got "${formulaNameWithNamespace}".`,
     );
   }
   const formulas = packDef.formulas[namespace];
