@@ -7,6 +7,9 @@
     "node": "14.x"
   },
   "main": "dist/index.js",
+  "bin": {
+    "coda": "dist/cli/coda.js"
+  },
   "typings": "dist/index.d.ts",
   "repository": {
     "type": "git",
@@ -30,6 +33,7 @@
     "@types/string-template": "^1.0.2",
     "@types/url-parse": "^1.4.3",
     "@types/uuid": "^8.3.0",
+    "@types/yargs": "^15.0.9",
     "chai": "^4.2.0",
     "mocha": "^8.2.1",
     "ts-loader": "^8.0.9",

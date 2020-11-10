@@ -124,6 +124,9 @@ export {makeSchema} from './schema';
 export {transformBody} from './handler_templates';
 
 // Testing
+export {executeFormulaFromCLI} from './testing/execution';
+export {executeFormulaFromPackDef} from './testing/execution';
+
 export {fakeDefinitionToMetadata} from './helpers/sample_utils';
 
 export {FakeBggProviderId} from './samples/bgg';
