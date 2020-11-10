@@ -68,7 +68,7 @@ export declare function makeImageArrayParameter(name: string, description: strin
 export declare function makeUserVisibleError(msg: string): UserVisibleError;
 export declare function check(condition: boolean, msg: string): void;
 export interface PackFormulas {
-    readonly [namespace: string]: TypedPackFormula[];
+    readonly [namespace: string]: TypedStandardFormula[];
 }
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult> extends CommonPackFormulaDef<ParamsT> {
     execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
@@ -101,7 +101,8 @@ declare type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends Str
 export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Formula<ParamDefsT, SchemaType<SchemaT>> & {
     schema?: SchemaT;
 };
-export declare type TypedPackFormula = NumericPackFormula<ParamDefs> | StringPackFormula<ParamDefs, any> | ObjectPackFormula<ParamDefs, Schema> | GenericSyncFormula;
+export declare type TypedStandardFormula = NumericPackFormula<ParamDefs> | StringPackFormula<ParamDefs, any> | ObjectPackFormula<ParamDefs, Schema>;
+export declare type TypedPackFormula = TypedStandardFormula | GenericSyncFormula;
 declare type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 export declare type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
 export declare type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;

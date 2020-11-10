@@ -202,7 +202,7 @@ export function check(condition: boolean, msg: string) {
 }
 
 export interface PackFormulas {
-  readonly [namespace: string]: TypedPackFormula[];
+  readonly [namespace: string]: TypedStandardFormula[];
 }
 
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult>
@@ -251,11 +251,12 @@ export type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Sche
   schema?: SchemaT;
 };
 
-export type TypedPackFormula =
+export type TypedStandardFormula =
   | NumericPackFormula<ParamDefs>
   | StringPackFormula<ParamDefs, any>
-  | ObjectPackFormula<ParamDefs, Schema>
-  | GenericSyncFormula;
+  | ObjectPackFormula<ParamDefs, Schema>;
+
+export type TypedPackFormula = TypedStandardFormula | GenericSyncFormula;
 
 type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
