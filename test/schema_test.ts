@@ -1,4 +1,4 @@
-import {PackId} from '../types';
+import './test_helper';
 import {schema} from '../index';
 
 const CODA_DEBUG_PACK_ID = 1009;

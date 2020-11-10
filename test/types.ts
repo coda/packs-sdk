@@ -1,5 +1,4 @@
 import 'chai';
-import 'sinon';
 
 declare global {
   const assert: Chai.AssertStatic;
