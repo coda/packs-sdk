@@ -30,8 +30,10 @@ function executeFormula(formula, params, context = newExecutionContext(), { vali
 }
 exports.executeFormula = executeFormula;
 function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, params, context, options) {
-    const formula = findFormula(packDef, formulaNameWithNamespace);
-    return executeFormula(formula, params, context, options);
+    return __awaiter(this, void 0, void 0, function* () {
+        const formula = findFormula(packDef, formulaNameWithNamespace);
+        return executeFormula(formula, params, context, options);
+    });
 }
 exports.executeFormulaFromPackDef = executeFormulaFromPackDef;
 function executeFormulaFromCLI(args, module) {
@@ -71,7 +73,7 @@ function findFormula(packDef, formulaNameWithNamespace) {
     }
     const [namespace, name] = formulaNameWithNamespace.split('::');
     if (!(namespace && name)) {
-        throw new Error(`Formula names must be specified as FormulaNamespace::FormulaName, but got ${formulaNameWithNamespace}.`);
+        throw new Error(`Formula names must be specified as FormulaNamespace::FormulaName, but got "${formulaNameWithNamespace}".`);
     }
     const formulas = packDef.formulas[namespace];
     if (!formulas || !formulas.length) {
