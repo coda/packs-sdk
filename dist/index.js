@@ -14,12 +14,12 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.schema = void 0;
+exports.FakeNpmDefinition = exports.FakeNpmMetadata = exports.FakeNpmPackVersion = exports.FakeNpmPackId = exports.FakeNpmProviderId = exports.FakeBggDefinitionOld = exports.FakeBggDefinition = exports.FakeBggMetadataOld = exports.FakeBggMetadata = exports.FakeBggPackVersionOld = exports.FakeBggPackVersion = exports.FakeBggPackId = exports.FakeBggProviderId = exports.fakeDefinitionToMetadata = exports.transformBody = exports.makeSchema = exports.makeObjectSchema = exports.ValueType = exports.schema = exports.withQueryParams = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeStringFormula = exports.makeObjectFormula = exports.makeNumericFormula = exports.makeGetConnectionNameFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makeMetadataFormula = exports.makeUserVisibleError = exports.isUserVisibleError = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.isDynamicSyncTable = exports.isArrayType = exports.UserVisibleError = exports.Type = exports.StatusCodeError = exports.PrecannedDateRange = exports.SyncInterval = exports.QuotaLimitType = exports.PackCategory = exports.DefaultConnectionType = exports.FeatureSet = exports.AuthenticationType = void 0;
 var types_1 = require("./types");
 Object.defineProperty(exports, "AuthenticationType", { enumerable: true, get: function () { return types_1.AuthenticationType; } });
 var types_2 = require("./types");
