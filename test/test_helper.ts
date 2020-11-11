@@ -1,6 +1,6 @@
 import './types';
 
-export const customAssert = {
+export const testHelper = {
   /**
    * Asserts that the provided promise is rejected by wrapping it with another and rejecting if it's fulfilled. A
    * subsequent {@code then} block can be used to perform assertions on the original promise's rejection error.
@@ -30,7 +30,7 @@ export const customAssert = {
    *   with an unmatched error).
    */
   async willBeRejectedWith<T, ErrorT = any>(promise: Promise<T>, matcher?: RegExp): Promise<ErrorT> {
-    const error = await customAssert.willBeRejected(promise);
+    const error = await this.willBeRejected(promise);
     if (matcher) {
       assert.match(error, matcher, 'Promise was rejected with unexpected error.');
     }
