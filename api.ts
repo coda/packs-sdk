@@ -35,8 +35,11 @@ export {FetchRequest} from './api_types';
 
 export class UserVisibleError extends Error {
   readonly isUserVisible = true;
-  constructor(message?: string) {
+  readonly internalError: Error | undefined;
+
+  constructor(message?: string, internalError?: Error) {
     super(message);
+    this.internalError = internalError;
   }
 }
 

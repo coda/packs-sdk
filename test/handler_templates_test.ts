@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 import './test_helper';
 import {ValueType} from '../schema';
 import {generateObjectResponseHandler} from '../handler_templates';

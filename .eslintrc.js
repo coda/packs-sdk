@@ -18,10 +18,6 @@ module.exports = {
   settings: {},
   rules: {
     '@typescript-eslint/restrict-plus-operands': 'error',
-
-    // TODO(jonathan): Figure out if we ever want to enable this and use exemptions.
-    // camelcase: ['error', {ignoreDestructuring: true, allow: ['drive_v?', 'auth_session', 'utm_.*']}],
-    camelcase: 'off',
   },
   overrides: [
     {
