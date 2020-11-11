@@ -104,8 +104,6 @@ export { ValueType } from './schema';
 export { makeObjectSchema } from './schema';
 export { makeSchema } from './schema';
 export { transformBody } from './handler_templates';
-export { executeFormulaFromCLI } from './testing/execution';
-export { executeFormulaFromPackDef } from './testing/execution';
 export { fakeDefinitionToMetadata } from './helpers/sample_utils';
 export { FakeBggProviderId } from './samples/bgg';
 export { FakeBggPackId } from './samples/bgg';

@@ -8,7 +8,7 @@ const path_1 = __importDefault(require("path"));
 const child_process_1 = require("child_process");
 const yargs_1 = __importDefault(require("yargs"));
 const EXECUTE_BOOTSTRAP_CODE = `
-import {executeFormulaFromCLI} from 'packs-sdk';
+import {executeFormulaFromCLI} from 'packs-sdk/dist/testing/execution';
 
 async function main() {
   const manifestPath = process.argv[4];

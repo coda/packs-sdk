@@ -11,7 +11,7 @@ interface ExecuteArgs {
 }
 
 const EXECUTE_BOOTSTRAP_CODE = `
-import {executeFormulaFromCLI} from 'packs-sdk';
+import {executeFormulaFromCLI} from 'packs-sdk/dist/testing/execution';
 
 async function main() {
   const manifestPath = process.argv[4];
