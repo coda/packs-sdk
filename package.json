@@ -32,7 +32,7 @@
     "chai": "^4.2.0",
     "mocha": "^8.2.1",
     "sinon": "9.2.1",
-    "ts-loader": "^8.0.9",
+    "ts-loader": "^8.0.10",
     "ts-node": "^9.0.0",
     "tslint": "^5.20.1",
     "tslint-microsoft-contrib": "^6.2.0",
