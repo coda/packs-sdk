@@ -64,6 +64,19 @@ function newExecutionContext() {
         },
         timezone: 'America/Los_Angeles',
         invocationToken: uuid_1.v4(),
+        fetcher: {
+            fetch: (request) => {
+                throw new Error('Not yet implemented');
+            },
+        },
+        temporaryBlobStorage: {
+            storeUrl: (url, opts) => {
+                throw new Error('Not yet implemented');
+            },
+            storeBlob: (blobData, contentType, opts) => {
+                throw new Error('Not yet implemented');
+            },
+        },
     };
 }
 exports.newExecutionContext = newExecutionContext;

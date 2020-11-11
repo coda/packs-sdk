@@ -1,6 +1,7 @@
 // tslint:disable:no-console
 
 import type {ExecutionContext} from '../api_types';
+import type {FetchRequest} from '../api_types';
 import type {PackDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
@@ -69,6 +70,19 @@ export function newExecutionContext(): ExecutionContext {
     },
     timezone: 'America/Los_Angeles',
     invocationToken: v4(),
+    fetcher: {
+      fetch: (request: FetchRequest) => {
+        throw new Error('Not yet implemented');
+      },
+    },
+    temporaryBlobStorage: {
+      storeUrl: (url: string, opts?: {expiryMs?: number}) => {
+        throw new Error('Not yet implemented');
+      },
+      storeBlob: (blobData: Buffer, contentType: string, opts?: {expiryMs?: number}) => {
+        throw new Error('Not yet implemented');
+      },
+    },
   };
 }
 
