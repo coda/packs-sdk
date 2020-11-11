@@ -10,4 +10,3 @@ export interface ExecuteOptions {
 export declare function executeFormula(formula: TypedStandardFormula, params: ParamValues<ParamDefs>, context?: ExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult }?: ExecuteOptions): Promise<any>;
 export declare function executeFormulaFromPackDef(packDef: PackDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, options?: ExecuteOptions): Promise<any>;
 export declare function executeFormulaFromCLI(args: string[], module: any): Promise<undefined>;
-export declare function newExecutionContext(): ExecutionContext;
