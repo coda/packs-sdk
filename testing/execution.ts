@@ -117,7 +117,7 @@ export function newExecutionContext(): ExecutionContext {
 }
 
 export function newSyncExecutionContext(): SyncExecutionContext {
-  return {...newExecutionContext(), sync: {}}
+  return {...newExecutionContext(), sync: {}};
 }
 
 function findFormula(packDef: PackDefinition, formulaNameWithNamespace: string): TypedStandardFormula {
@@ -153,7 +153,7 @@ function findSyncFormula(packDef: PackDefinition, syncFormulaName: string): Gene
 
   for (const syncTable of packDef.syncTables) {
     const syncFormula = syncTable.getter;
-    if (syncFormula.name == syncFormulaName) {
+    if (syncFormula.name === syncFormulaName) {
       return syncFormula;
     }
   }
