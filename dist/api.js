@@ -37,8 +37,8 @@ const api_types_7 = require("./api_types");
 class UserVisibleError extends Error {
     constructor(message, internalError) {
         super(message);
-        this.internalError = internalError;
         this.isUserVisible = true;
+        this.internalError = internalError;
     }
 }
 exports.UserVisibleError = UserVisibleError;
@@ -228,8 +228,7 @@ function isResponseExampleTemplate(obj) {
     return obj && obj.example;
 }
 function makeObjectFormula(_a) {
-    var { response } = _a, definition = __rest(_a, ["response"]) // tslint:disable-line: trailing-comma
-    ;
+    var { response } = _a, definition = __rest(_a, ["response"]);
     let schema;
     if (response) {
         if (isResponseHandlerTemplate(response) && response.schema) {
@@ -321,8 +320,7 @@ function makeDynamicSyncTable({ packId, name, getName, getSchema, getDisplayUrl,
 }
 exports.makeDynamicSyncTable = makeDynamicSyncTable;
 function makeTranslateObjectFormula(_a) {
-    var { response } = _a, definition = __rest(_a, ["response"]) // tslint:disable-line: trailing-comma
-    ;
+    var { response } = _a, definition = __rest(_a, ["response"]);
     const { request, parameters } = definition;
     response.schema = response.schema ? schema_3.normalizeSchema(response.schema) : undefined;
     const { onError } = response;

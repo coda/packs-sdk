@@ -20,9 +20,9 @@ import { TypeOf } from './api_types';
 export { ExecutionContext };
 export { FetchRequest } from './api_types';
 export declare class UserVisibleError extends Error {
-    internalError?: Error | undefined;
     readonly isUserVisible = true;
-    constructor(message?: string, internalError?: Error | undefined);
+    readonly internalError: Error | undefined;
+    constructor(message?: string, internalError?: Error);
 }
 export declare class StatusCodeError extends Error {
     statusCode: number;

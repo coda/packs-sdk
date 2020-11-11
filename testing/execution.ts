@@ -1,5 +1,3 @@
-// tslint:disable:no-console
-
 import type {ExecutionContext} from '../api_types';
 import type {PackDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
@@ -46,6 +44,7 @@ export async function executeFormulaFromPackDef(
 export async function executeFormulaFromCLI(args: string[], module: any) {
   const formulaNameWithNamespace = args[0];
   if (!module.manifest) {
+    // eslint-disable-next-line no-console
     console.log('Manifest file must export a variable called "manifest" that refers to a PackDefinition.');
     return process.exit(1);
   }
@@ -54,8 +53,10 @@ export async function executeFormulaFromCLI(args: string[], module: any) {
     const formula = findFormula(module.manifest, formulaNameWithNamespace);
     const params = coerceParams(formula, args.slice(1) as any);
     const result = await executeFormula(formula, params);
+    // eslint-disable-next-line no-console
     console.log(result);
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.log(err);
     process.exit(1);
   }

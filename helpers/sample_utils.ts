@@ -20,7 +20,7 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
     defaultAuthentication: originalDefaultAuthentication,
     formats: originalFormats,
     syncTables: originalSyncTables,
-    ...packMetadata // tslint:disable-line:trailing-comma
+    ...packMetadata
   } = def;
 
   const formulas: PackFormulasMetadata = {};

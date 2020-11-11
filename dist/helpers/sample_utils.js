@@ -17,8 +17,7 @@ function fakeDefinitionToDefinition(def) {
 }
 exports.fakeDefinitionToDefinition = fakeDefinitionToDefinition;
 function fakeDefinitionToMetadata(def) {
-    const { formulas: originalFormulas, defaultAuthentication: originalDefaultAuthentication, formats: originalFormats, syncTables: originalSyncTables } = def, packMetadata = __rest(def, ["formulas", "defaultAuthentication", "formats", "syncTables"]) // tslint:disable-line:trailing-comma
-    ;
+    const { formulas: originalFormulas, defaultAuthentication: originalDefaultAuthentication, formats: originalFormats, syncTables: originalSyncTables } = def, packMetadata = __rest(def, ["formulas", "defaultAuthentication", "formats", "syncTables"]);
     const formulas = {};
     for (const namespace of Object.keys(originalFormulas || {})) {
         formulas[namespace] = originalFormulas[namespace].map(formula => {

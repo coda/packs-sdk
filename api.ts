@@ -35,8 +35,11 @@ export {FetchRequest} from './api_types';
 
 export class UserVisibleError extends Error {
   readonly isUserVisible = true;
-  constructor(message?: string, public internalError?: Error) {
+  readonly internalError: Error | undefined;
+
+  constructor(message?: string, internalError?: Error) {
     super(message);
+    this.internalError = internalError;
   }
 }
 
@@ -445,7 +448,7 @@ function isResponseExampleTemplate(obj: any): obj is {example: SchemaType<any>} 
 
 export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({
   response,
-  ...definition // tslint:disable-line: trailing-comma
+  ...definition
 }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT> {
   let schema: Schema | undefined;
   if (response) {
@@ -580,7 +583,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
 
 export function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({
   response,
-  ...definition // tslint:disable-line: trailing-comma
+  ...definition
 }: ObjectArrayFormulaDef<ParamDefsT, ResultT>) {
   const {request, parameters} = definition;
   response.schema = response.schema ? (normalizeSchema(response.schema) as ResultT) : undefined;
