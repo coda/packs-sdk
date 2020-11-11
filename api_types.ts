@@ -58,7 +58,7 @@ export const imageArray: ArrayType<Type.image> = {
 interface TypeMap {
   [Type.number]: number;
   [Type.string]: string;
-  [Type.object]: Record<string, unknown>;
+  [Type.object]: object;
   [Type.boolean]: boolean;
   [Type.date]: Date;
   [Type.html]: string;
@@ -76,7 +76,7 @@ export type TypeOf<T extends PackFormulaResult> = T extends number
   ? Type.boolean
   : T extends Date
   ? Type.date
-  : T extends Record<string, unknown>
+  : T extends object
   ? Type.object
   : never;
 

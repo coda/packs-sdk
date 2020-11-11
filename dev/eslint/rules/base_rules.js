@@ -13,6 +13,7 @@ module.exports = {
           String: 'Avoid using the `String` type. Did you mean `string`?',
           Symbol: 'Avoid using the `Symbol` type. Did you mean `symbol`?',
         },
+        extendDefaults: false,
       },
     ],
     '@typescript-eslint/explicit-member-accessibility': [

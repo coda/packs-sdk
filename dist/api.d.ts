@@ -108,7 +108,7 @@ export declare type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'ex
 export declare function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata;
 export declare function isStringPackFormula(fn: Formula<ParamDefs, any>): fn is StringPackFormula<ParamDefs>;
 export declare function isSyncPackFormula(fn: Formula<ParamDefs, any>): fn is GenericSyncFormula;
-interface SyncFormulaResult<ResultT extends Record<string, unknown>> {
+interface SyncFormulaResult<ResultT extends object> {
     result: ResultT[];
     continuation?: Continuation;
 }

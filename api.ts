@@ -273,7 +273,7 @@ export function isSyncPackFormula(fn: Formula<ParamDefs, any>): fn is GenericSyn
   return Boolean((fn as GenericSyncFormula).isSyncFormula);
 }
 
-interface SyncFormulaResult<ResultT extends Record<string, unknown>> {
+interface SyncFormulaResult<ResultT extends object> {
   result: ResultT[];
   continuation?: Continuation;
 }

@@ -18,7 +18,7 @@ export interface RequestHandlerTemplate {
         [name: string]: ParamMapper<any>;
     };
     queryParams?: string[];
-    bodyTemplate?: Record<string, unknown>;
+    bodyTemplate?: object;
     bodyParams?: string[];
 }
 export interface ResponseHandlerTemplate<T extends Schema> {
