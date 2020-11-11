@@ -37,34 +37,16 @@ module.exports = {
     ],
     '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
     '@typescript-eslint/naming-convention': [
-      // TODO: re-enable once violations are fixed or we figure out how to correctly configure naming-conventions.
-      'off',
+      'error',
       {
-        "selector": "default",
-        "format": ["camelCase"]
-      },
-
-      {
-        "selector": "variable",
-        "format": ["camelCase", "UPPER_CASE"]
+        selector: 'variable',
+        format: ['camelCase', 'UPPER_CASE', 'PascalCase'],
+        leadingUnderscore: 'allow',
       },
       {
-        "selector": "parameter",
-        "format": ["camelCase"],
-        "leadingUnderscore": "allow"
+        selector: 'class',
+        format: ['PascalCase'],
       },
-
-      {
-        "selector": "memberLike",
-        "modifiers": ["private"],
-        "format": ["camelCase"],
-        "leadingUnderscore": "require"
-      },
-
-      {
-        "selector": "typeLike",
-        "format": ["PascalCase"]
-      }
     ],
     '@typescript-eslint/no-empty-interface': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
@@ -114,10 +96,8 @@ module.exports = {
     'filenames/match-regex': ['error', '^[a-z][a-z0-9_.]+$', true],
 
     // ESLint Built-ins
-    // TODO(Chris): Consider turning this one back on
-    'arrow-body-style': 'off',
     'arrow-parens': ['error', 'as-needed'],
-    camelcase: ['error', {ignoreDestructuring: true, allow: ['drive_v?', 'auth_session', 'utm_.*']}],
+    camelcase: ['error', {ignoreDestructuring: true, properties: 'never'}],
     complexity: 'off',
     'constructor-super': 'error',
     curly: 'error',
@@ -167,8 +147,6 @@ module.exports = {
     'object-shorthand': 'error',
     'one-var': ['error', 'never'],
     'prefer-arrow-callback': 'error',
-    // TODO(Chris): Re-enable this rule later, too many errors at the moment as part of the eslint migration.
-    'prefer-const': 'off',
     'quote-props': ['error', 'as-needed'],
     quotes: ['error', 'single', {avoidEscape: true, allowTemplateLiterals: true}],
     radix: 'error',
