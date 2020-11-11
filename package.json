@@ -1,5 +1,5 @@
 {
-  "name": "coda-packs-sdk",
+  "name": "packs-sdk",
   "version": "0.0.1",
   "license": "UNLICENSED",
   "private": true,
@@ -21,9 +21,12 @@
     "pascalcase": "^1.0.0",
     "qs": "^6.9.4",
     "string-template": "^1.0.0",
-    "url-parse": "^1.4.7"
-  },
-  "devDependencies": {
+    "url-parse": "^1.4.7",
+    "@types/uuid": "^8.3.0",
+    "@types/yargs": "^15.0.9",
+    "uuid": "^7.0.3",
+    "yargs": "^16.1.0",
+    "typescript": "^4.0.5",
     "@types/chai": "^4.2.14",
     "@types/clone": "^2.1.0",
     "@types/lodash": "^4.14.165",
@@ -32,16 +35,14 @@
     "@types/qs": "^6.9.5",
     "@types/string-template": "^1.0.2",
     "@types/url-parse": "^1.4.3",
-    "@types/uuid": "^8.3.0",
-    "@types/yargs": "^15.0.9",
     "chai": "^4.2.0",
     "mocha": "^8.2.1",
     "ts-loader": "^8.0.9",
     "ts-node": "^9.0.0",
     "tslint": "^5.20.1",
-    "tslint-microsoft-contrib": "^6.2.0",
-    "typescript": "^4.0.5",
-    "uuid": "^7.0.3",
-    "yargs": "^16.1.0"
+    "tslint-microsoft-contrib": "^6.2.0"
+  },
+  "devDependencies": {
+
   }
 }

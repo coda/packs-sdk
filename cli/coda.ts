@@ -1,7 +1,7 @@
-#!/usr/bin/env node
+#!/usr/bin/env ts-node
 import {Arguments} from 'yargs';
+import {executeFormulaFromCLI} from '../index';
 import path from 'path';
-import {spawnSync} from 'child_process';
 import yargs from 'yargs';
 
 interface ExecuteArgs {
@@ -10,23 +10,10 @@ interface ExecuteArgs {
   params: string[];
 }
 
-const EXECUTE_BOOTSTRAP_CODE = `
-import {executeFormulaFromCLI} from 'packs-sdk';
-
-async function main() {
-  const manifestPath = process.argv[4];
-  const module = await import(manifestPath);
-  await executeFormulaFromCLI(process.argv.slice(5), module);
-}
-
-void main();`;
-
-function handleExecute({manifestPath, formulaName, params}: Arguments<ExecuteArgs>) {
+async function handleExecute({manifestPath, formulaName, params}: Arguments<ExecuteArgs>) {
   const manifestFullPath = manifestPath.startsWith('/') ? manifestPath : path.join(process.cwd(), manifestPath);
-  spawnSync(`ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${manifestFullPath} ${formulaName} ${params.join(' ')}`, {
-    shell: true,
-    stdio: 'inherit',
-  });
+  const module = await import(manifestFullPath);
+  await executeFormulaFromCLI([formulaName, ...params], module);
 }
 
 // tslint:disable-next-line:no-unused-expression
