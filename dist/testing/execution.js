@@ -9,11 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.executeFormulaFromCLI = exports.executeFormulaFromPackDef = exports.executeFormula = void 0;
+exports.newSyncExecutionContext = exports.newExecutionContext = exports.executeSyncFormulaFromPackDef = exports.executeSyncFormula = exports.executeFormulaFromCLI = exports.executeFormulaFromPackDef = exports.executeFormula = void 0;
 const coercion_1 = require("./coercion");
 const mocks_1 = require("./mocks");
 const validation_1 = require("./validation");
 const validation_2 = require("./validation");
+const uuid_1 = require("uuid");
 // TODO(alan/jonathan): Write a comparable function that handles syncs.
 function executeFormula(formula, params, context = mocks_1.newMockExecutionContext(), { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true } = {}) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -58,6 +59,54 @@ function executeFormulaFromCLI(args, module) {
     });
 }
 exports.executeFormulaFromCLI = executeFormulaFromCLI;
+function executeSyncFormula(formula, params, context = newSyncExecutionContext(), { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true } = {}) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (shouldValidateParams) {
+            validation_1.validateParams(formula, params);
+        }
+        const result = yield formula.execute(params, context);
+        if (shouldValidateResult) {
+            validation_2.validateResult(formula, result);
+        }
+        return result;
+    });
+}
+exports.executeSyncFormula = executeSyncFormula;
+function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, context, options) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const formula = findSyncFormula(packDef, syncFormulaName);
+        return executeSyncFormula(formula, params, context, options);
+    });
+}
+exports.executeSyncFormulaFromPackDef = executeSyncFormulaFromPackDef;
+function newExecutionContext() {
+    // TODO(jonathan): Add a mock fetcher.
+    return {
+        invocationLocation: {
+            protocolAndHost: 'https://coda.io',
+        },
+        timezone: 'America/Los_Angeles',
+        invocationToken: uuid_1.v4(),
+        fetcher: {
+            fetch: (request) => {
+                throw new Error('Not yet implemented');
+            },
+        },
+        temporaryBlobStorage: {
+            storeUrl: (url, opts) => {
+                throw new Error('Not yet implemented');
+            },
+            storeBlob: (blobData, contentType, opts) => {
+                throw new Error('Not yet implemented');
+            },
+        },
+    };
+}
+exports.newExecutionContext = newExecutionContext;
+function newSyncExecutionContext() {
+    return Object.assign(Object.assign({}, newExecutionContext()), { sync: {} });
+}
+exports.newSyncExecutionContext = newSyncExecutionContext;
 function findFormula(packDef, formulaNameWithNamespace) {
     if (!packDef.formulas) {
         throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);
@@ -76,4 +125,16 @@ function findFormula(packDef, formulaNameWithNamespace) {
         }
     }
     throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formula "${name}" in namespace "${namespace}".`);
+}
+function findSyncFormula(packDef, syncFormulaName) {
+    if (!packDef.syncTables) {
+        throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no sync tables.`);
+    }
+    for (const syncTable of packDef.syncTables) {
+        const syncFormula = syncTable.getter;
+        if (syncFormula.name === syncFormulaName) {
+            return syncFormula;
+        }
+    }
+    throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no sync formula "${syncFormulaName}" in its sync tables.`);
 }

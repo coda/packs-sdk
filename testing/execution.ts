@@ -10,6 +10,7 @@ import {coerceParams} from './coercion';
 import {newMockExecutionContext} from './mocks';
 import {validateParams} from './validation';
 import {validateResult} from './validation';
+import {v4} from 'uuid';
 
 export interface ExecuteOptions {
   validateParams?: boolean;
