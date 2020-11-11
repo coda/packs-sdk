@@ -147,6 +147,7 @@ module.exports = {
     'object-shorthand': 'error',
     'one-var': ['error', 'never'],
     'prefer-arrow-callback': 'error',
+    'prefer-const': 'error',
     'quote-props': ['error', 'as-needed'],
     quotes: ['error', 'single', {avoidEscape: true, allowTemplateLiterals: true}],
     radix: 'error',
