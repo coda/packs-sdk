@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "clone": "^2.1.2",
-    "lodash": "^4.17.20",
     "pascalcase": "^1.0.0",
     "qs": "^6.9.4",
     "string-template": "^1.0.0",
@@ -23,7 +22,6 @@
   "devDependencies": {
     "@types/chai": "^4.2.14",
     "@types/clone": "^2.1.0",
-    "@types/lodash": "^4.14.165",
     "@types/mocha": "^8.0.3",
     "@types/node": "^14.14.6",
     "@types/qs": "^6.9.5",
