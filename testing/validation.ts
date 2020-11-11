@@ -29,6 +29,6 @@ export function validateParams(formula: TypedStandardFormula, params: ParamDefs)
   }
 }
 
-export function validateResult<ResultT extends any>(formula: TypedStandardFormula, result: ResultT): void {
+export function validateResult<ResultT extends any>(_formula: TypedStandardFormula, _result: ResultT): void {
   // TODO
 }

@@ -20,9 +20,8 @@ import { TypeOf } from './api_types';
 export { ExecutionContext };
 export { FetchRequest } from './api_types';
 export declare class UserVisibleError extends Error {
-    internalError?: Error | undefined;
     readonly isUserVisible = true;
-    constructor(message?: string, internalError?: Error | undefined);
+    constructor(message?: string);
 }
 export declare class StatusCodeError extends Error {
     statusCode: number;
@@ -109,7 +108,7 @@ export declare type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'ex
 export declare function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata;
 export declare function isStringPackFormula(fn: Formula<ParamDefs, any>): fn is StringPackFormula<ParamDefs>;
 export declare function isSyncPackFormula(fn: Formula<ParamDefs, any>): fn is GenericSyncFormula;
-interface SyncFormulaResult<ResultT extends object> {
+interface SyncFormulaResult<ResultT extends Record<string, unknown>> {
     result: ResultT[];
     continuation?: Continuation;
 }

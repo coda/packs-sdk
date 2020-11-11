@@ -22,7 +22,7 @@ export interface RequestHandlerTemplate {
   nameMapping?: {[functionParamName: string]: string};
   transforms?: {[name: string]: ParamMapper<any>};
   queryParams?: string[];
-  bodyTemplate?: object;
+  bodyTemplate?: Record<string, unknown>;
   bodyParams?: string[];
 }
 
@@ -135,7 +135,7 @@ export function generateRequestHandler<ParamDefsT extends ParamDefs>(
     const fullUrl = hasQueryParams
       ? withQueryParams(baseUrl, generateQueryParamMap(ensureExists(queryParams), nameMapping, optionalNames))
       : baseUrl;
-    let body: object | undefined;
+    let body: Record<string, unknown> | undefined;
     if (bodyTemplate) {
       body = clone(bodyTemplate);
     }
@@ -157,7 +157,7 @@ export function generateRequestHandler<ParamDefsT extends ParamDefs>(
   };
 }
 
-function mapKeys(obj: {[key: string]: any}, excludeExtraneous?: boolean, schema?: Schema): object {
+function mapKeys(obj: {[key: string]: any}, excludeExtraneous?: boolean, schema?: Schema): Record<string, unknown> {
   if (!(schema && isObject(schema))) {
     return obj;
   }

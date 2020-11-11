@@ -1,5 +1,4 @@
 "use strict";
-// tslint:disable:no-console
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -40,6 +39,7 @@ function executeFormulaFromCLI(args, module) {
     return __awaiter(this, void 0, void 0, function* () {
         const formulaNameWithNamespace = args[0];
         if (!module.manifest) {
+            // eslint-disable-next-line no-console
             console.log('Manifest file must export a variable called "manifest" that refers to a PackDefinition.');
             return process.exit(1);
         }
@@ -47,9 +47,11 @@ function executeFormulaFromCLI(args, module) {
             const formula = findFormula(module.manifest, formulaNameWithNamespace);
             const params = coercion_1.coerceParams(formula, args.slice(1));
             const result = yield executeFormula(formula, params);
+            // eslint-disable-next-line no-console
             console.log(result);
         }
         catch (err) {
+            // eslint-disable-next-line no-console
             console.log(err);
             process.exit(1);
         }

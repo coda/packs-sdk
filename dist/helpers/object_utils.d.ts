@@ -1,4 +1,4 @@
-export declare function deepFreeze<T extends {}>(obj: T): Readonly<T>;
+export declare function deepFreeze<T extends Record<string, unknown>>(obj: T): Readonly<T>;
 /**
  * Returns whether the value is actually defined, i.e. is anything other than null or undefined.
  */

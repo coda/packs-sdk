@@ -159,7 +159,7 @@ export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boo
         required: true;
     } ? K : never;
 }>> : never;
-export declare type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
+export declare type ValidTypes = boolean | number | string | Record<string, unknown> | boolean[] | number[] | string[] | Array<Record<string, unknown>>;
 export declare function generateSchema(obj: ValidTypes): Schema;
 export declare function makeSchema<T extends Schema>(schema: T): T;
 export declare function makeObjectSchema<K extends string, L extends string, T extends ObjectSchema<K, L>>(schema: T): T;

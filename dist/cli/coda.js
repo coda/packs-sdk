@@ -24,11 +24,13 @@ function handleExecute({ manifestPath, formulaName, params }) {
         stdio: 'inherit',
     });
 }
-// tslint:disable-next-line:no-unused-expression
-yargs_1.default
-    .command({
-    command: 'execute <manifestPath> <formulaName> [params..]',
-    describe: 'Execute a formula',
-    handler: handleExecute,
-})
-    .help().argv;
+if (require.main === module) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    yargs_1.default
+        .command({
+        command: 'execute <manifestPath> <formulaName> [params..]',
+        describe: 'Execute a formula',
+        handler: handleExecute,
+    })
+        .help().argv;
+}

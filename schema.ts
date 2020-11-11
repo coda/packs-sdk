@@ -236,7 +236,15 @@ export type SchemaType<T extends Schema> = T extends BooleanSchema
     >
   : never;
 
-export type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
+export type ValidTypes =
+  | boolean
+  | number
+  | string
+  | Record<string, unknown>
+  | boolean[]
+  | number[]
+  | string[]
+  | Array<Record<string, unknown>>;
 
 export function generateSchema(obj: ValidTypes): Schema {
   if (Array.isArray(obj)) {

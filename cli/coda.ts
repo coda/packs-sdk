@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 import {Arguments} from 'yargs';
 import path from 'path';
 import {spawnSync} from 'child_process';
@@ -29,11 +30,13 @@ function handleExecute({manifestPath, formulaName, params}: Arguments<ExecuteArg
   });
 }
 
-// tslint:disable-next-line:no-unused-expression
-yargs
-  .command({
-    command: 'execute <manifestPath> <formulaName> [params..]',
-    describe: 'Execute a formula',
-    handler: handleExecute,
-  })
-  .help().argv;
+if (require.main === module) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  yargs
+    .command({
+      command: 'execute <manifestPath> <formulaName> [params..]',
+      describe: 'Execute a formula',
+      handler: handleExecute,
+    })
+    .help().argv;
+}
