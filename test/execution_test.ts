@@ -1,7 +1,7 @@
 import {testHelper} from './test_helper';
 import {createFakePack} from './test_utils';
-import {executeFormulaFromPackDef} from '../testing/execution';
-import {makeNumericFormula} from '../api';
+import {executeFormulaFromPackDef, executeSyncFormulaFromPackDef} from '../testing/execution';
+import {makeNumericArrayParameter, makeNumericFormula} from '../api';
 import {makeNumericParameter} from '../api';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
@@ -9,6 +9,8 @@ import {newJsonFetchResponse} from '../testing/mocks';
 import {newMockExecutionContext} from '../testing/mocks';
 import {withQueryParams} from '../helpers/url';
 import sinon from 'sinon';
+import {makeSyncTable} from '../api';
+import {makeSchema, ObjectSchema, ValueType} from '../schema';
 
 describe('Execution', () => {
   const fakePack = createFakePack({
@@ -36,11 +38,49 @@ describe('Execution', () => {
         }),
       ],
     },
+    syncTables: [
+      makeSyncTable('Squares', makeSchema({
+        type: ValueType.Object,
+        primary: 'Value',
+        id: 'Value',
+        properties: {
+          Value: {type: ValueType.Number},
+        },
+        identity: {packId: 1, name: 'Fake'},
+      } as ObjectSchema<any, any>), {
+        name: 'Squares',
+        description: 'Syncs squared numbers',
+        execute: async ([values]) => {
+          return {
+            result: values.map(value => ({
+              Value: value ** 2,
+            })) as any,
+          };
+        },
+        network: {hasSideEffect: false},
+        parameters: [makeNumericArrayParameter('Values', 'List of values to square')],
+        examples: [],
+      }),
+    ]
   });
 
   it('executes a formula by name', async () => {
     const result = await executeFormulaFromPackDef(fakePack, 'Fake::Square', [5]);
     assert.equal(result, 25);
+  });
+
+  it('executes a sync formula by name', async () => {
+    const result = await executeSyncFormulaFromPackDef(fakePack, 'Squares', [[1, 2, 3, 4, 5]]);
+    assert.deepEqual(result, {
+      result: [
+        { Value: 1 },
+        { Value: 4 },
+        { Value: 9 },
+        { Value: 16 },
+        { Value: 25 }
+      ],
+      continuation: undefined
+    });
   });
 
   describe('execution errors', () => {
@@ -93,6 +133,22 @@ describe('Execution', () => {
         method: 'GET',
         url: 'https://example.com/lookup?query=foo',
       });
+    });
+  });
+
+  describe('errors resolving sync formulas', () => {
+    it('no sync tables', async () => {
+      await testHelper.willBeRejectedWith(
+        executeSyncFormulaFromPackDef(createFakePack({formulas: undefined, syncTables: undefined}), 'Bar', []),
+        /Pack definition for Fake Pack \(id 424242\) has no sync tables./,
+      );
+    });
+
+    it('non-existent sync formula', async () => {
+      await testHelper.willBeRejectedWith(
+        executeSyncFormulaFromPackDef(fakePack, 'Foo', []),
+        /Pack definition for Fake Pack \(id 424242\) has no sync formula "Foo" in its sync tables./,
+      );
     });
   });
 });
