@@ -10,13 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newExecutionContext = exports.executeFormulaFromCLI = exports.executeFormulaFromPackDef = exports.executeFormula = void 0;
+exports.executeFormulaFromCLI = exports.executeFormulaFromPackDef = exports.executeFormula = void 0;
 const coercion_1 = require("./coercion");
+const mocks_1 = require("./mocks");
 const validation_1 = require("./validation");
 const validation_2 = require("./validation");
-const uuid_1 = require("uuid");
 // TODO(alan/jonathan): Write a comparable function that handles syncs.
-function executeFormula(formula, params, context = newExecutionContext(), { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true } = {}) {
+function executeFormula(formula, params, context = mocks_1.newMockExecutionContext(), { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true } = {}) {
     return __awaiter(this, void 0, void 0, function* () {
         if (shouldValidateParams) {
             validation_1.validateParams(formula, params);
@@ -56,30 +56,6 @@ function executeFormulaFromCLI(args, module) {
     });
 }
 exports.executeFormulaFromCLI = executeFormulaFromCLI;
-function newExecutionContext() {
-    // TODO(jonathan): Add a mock fetcher.
-    return {
-        invocationLocation: {
-            protocolAndHost: 'https://coda.io',
-        },
-        timezone: 'America/Los_Angeles',
-        invocationToken: uuid_1.v4(),
-        fetcher: {
-            fetch: (request) => {
-                throw new Error('Not yet implemented');
-            },
-        },
-        temporaryBlobStorage: {
-            storeUrl: (url, opts) => {
-                throw new Error('Not yet implemented');
-            },
-            storeBlob: (blobData, contentType, opts) => {
-                throw new Error('Not yet implemented');
-            },
-        },
-    };
-}
-exports.newExecutionContext = newExecutionContext;
 function findFormula(packDef, formulaNameWithNamespace) {
     if (!packDef.formulas) {
         throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);

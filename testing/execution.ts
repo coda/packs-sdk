@@ -1,15 +1,14 @@
 // tslint:disable:no-console
 
 import type {ExecutionContext} from '../api_types';
-import type {FetchRequest} from '../api_types';
 import type {PackDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
 import type {TypedStandardFormula} from '../api';
 import {coerceParams} from './coercion';
+import {newMockExecutionContext} from './mocks';
 import {validateParams} from './validation';
 import {validateResult} from './validation';
-import {v4} from 'uuid';
 
 export interface ExecuteOptions {
   validateParams?: boolean;
@@ -20,7 +19,7 @@ export interface ExecuteOptions {
 export async function executeFormula(
   formula: TypedStandardFormula,
   params: ParamValues<ParamDefs>,
-  context: ExecutionContext = newExecutionContext(),
+  context: ExecutionContext = newMockExecutionContext(),
   {validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true}: ExecuteOptions = {},
 ) {
   if (shouldValidateParams) {
@@ -60,30 +59,6 @@ export async function executeFormulaFromCLI(args: string[], module: any) {
     console.log(err);
     process.exit(1);
   }
-}
-
-export function newExecutionContext(): ExecutionContext {
-  // TODO(jonathan): Add a mock fetcher.
-  return {
-    invocationLocation: {
-      protocolAndHost: 'https://coda.io',
-    },
-    timezone: 'America/Los_Angeles',
-    invocationToken: v4(),
-    fetcher: {
-      fetch: (request: FetchRequest) => {
-        throw new Error('Not yet implemented');
-      },
-    },
-    temporaryBlobStorage: {
-      storeUrl: (url: string, opts?: {expiryMs?: number}) => {
-        throw new Error('Not yet implemented');
-      },
-      storeBlob: (blobData: Buffer, contentType: string, opts?: {expiryMs?: number}) => {
-        throw new Error('Not yet implemented');
-      },
-    },
-  };
 }
 
 function findFormula(packDef: PackDefinition, formulaNameWithNamespace: string): TypedStandardFormula {

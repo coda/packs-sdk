@@ -3,6 +3,12 @@ import {createFakePack} from './test_utils';
 import {executeFormulaFromPackDef} from '../testing/execution';
 import {makeNumericFormula} from '../api';
 import {makeNumericParameter} from '../api';
+import {makeStringFormula} from '../api';
+import {makeStringParameter} from '../api';
+import {newJsonFetchResponse} from '../testing/mocks';
+import {newMockExecutionContext} from '../testing/mocks';
+import {withQueryParams} from '../helpers/url';
+import sinon from 'sinon';
 
 describe('Execution', () => {
   const fakePack = createFakePack({
@@ -15,6 +21,17 @@ describe('Execution', () => {
           parameters: [makeNumericParameter('value', 'A value to square.')],
           execute: ([value]) => {
             return value ** 2;
+          },
+        }),
+        makeStringFormula({
+          name: 'Lookup',
+          description: 'Lookup a value from a remote service',
+          examples: [],
+          parameters: [makeStringParameter('query', 'A query to look up.')],
+          execute: async ([query], context) => {
+            const url = withQueryParams('https://example.com/lookup', {query});
+            const response = await context.fetcher!.fetch({method: 'GET', url});
+            return response.body.result;
           },
         }),
       ],
@@ -62,6 +79,20 @@ describe('Execution', () => {
         executeFormulaFromPackDef(fakePack, 'Fake::Foo', []),
         /Pack definition for Fake Pack \(id 424242\) has no formula "Foo" in namespace "Fake"./,
       );
+    });
+  });
+
+  describe('fetcher mocks', () => {
+    it('fetch calls are mocked', async () => {
+      const context = newMockExecutionContext();
+      context.fetcher.fetch.returns(newJsonFetchResponse({result: 'hello'}));
+      const result = await executeFormulaFromPackDef(fakePack, 'Fake::Lookup', ['foo'], context);
+      assert.equal(result, 'hello');
+
+      sinon.assert.calledOnceWithExactly(context.fetcher.fetch, {
+        method: 'GET',
+        url: 'https://example.com/lookup?query=foo',
+      });
     });
   });
 });
