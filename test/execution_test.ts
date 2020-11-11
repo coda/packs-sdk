@@ -1,4 +1,4 @@
-import * as testHelper from './test_helper';
+import {testHelper} from './test_helper';
 import {createFakePack} from './test_utils';
 import {executeFormulaFromPackDef} from '../testing/execution';
 import {makeNumericFormula} from '../api';
@@ -28,7 +28,7 @@ describe('Execution', () => {
 
   describe('execution errors', () => {
     it('not enough params', async () => {
-      await testHelper.customAssert.willBeRejectedWith(
+      await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(fakePack, 'Fake::Square', []),
         /Expected at least 1 parameter but only 0 were provided./,
       );
@@ -37,28 +37,28 @@ describe('Execution', () => {
 
   describe('errors resolving formulas', () => {
     it('no formulas', async () => {
-      await testHelper.customAssert.willBeRejectedWith(
+      await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(createFakePack({formulas: undefined}), 'Foo::Bar', []),
         /Pack definition for Fake Pack \(id 424242\) has no formulas./,
       );
     });
 
     it('malformed formula name', async () => {
-      await testHelper.customAssert.willBeRejectedWith(
+      await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(fakePack, 'malformed', []),
         /Formula names must be specified as FormulaNamespace::FormulaName, but got "malformed"./,
       );
     });
 
     it('bad namespace', async () => {
-      await testHelper.customAssert.willBeRejectedWith(
+      await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(fakePack, 'Foo::Bar', []),
         /Pack definition for Fake Pack \(id 424242\) has no formulas for namespace "Foo"./,
       );
     });
 
     it('non-existent formula', async () => {
-      await testHelper.customAssert.willBeRejectedWith(
+      await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(fakePack, 'Fake::Foo', []),
         /Pack definition for Fake Pack \(id 424242\) has no formula "Foo" in namespace "Fake"./,
       );
