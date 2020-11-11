@@ -1,5 +1,5 @@
 import {testHelper} from './test_helper';
-import {createFakePack} from './test_utils';
+import {createFakePack, FakePack} from './test_utils';
 import {executeFormulaFromPackDef, executeSyncFormulaFromPackDef} from '../testing/execution';
 import {makeNumericArrayParameter, makeNumericFormula} from '../api';
 import {makeNumericParameter} from '../api';
@@ -46,7 +46,7 @@ describe('Execution', () => {
         properties: {
           Value: {type: ValueType.Number},
         },
-        identity: {packId: 1, name: 'Fake'},
+        identity: {packId: FakePack.id, name: FakePack.name},
       } as ObjectSchema<any, any>), {
         name: 'Squares',
         description: 'Syncs squared numbers',
