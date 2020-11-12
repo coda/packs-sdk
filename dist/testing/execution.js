@@ -9,13 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newSyncExecutionContext = exports.newExecutionContext = exports.executeSyncFormulaFromPackDef = exports.executeSyncFormula = exports.executeFormulaFromCLI = exports.executeFormulaFromPackDef = exports.executeFormula = void 0;
+exports.newExecutionContext = exports.executeSyncFormulaFromPackDef = exports.executeSyncFormula = exports.executeFormulaFromCLI = exports.executeFormulaFromPackDef = exports.executeFormula = void 0;
 const coercion_1 = require("./coercion");
 const mocks_1 = require("./mocks");
+const mocks_2 = require("./mocks");
 const validation_1 = require("./validation");
 const validation_2 = require("./validation");
 const uuid_1 = require("uuid");
-// TODO(alan/jonathan): Write a comparable function that handles syncs.
 function executeFormula(formula, params, context = mocks_1.newMockExecutionContext(), { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true } = {}) {
     return __awaiter(this, void 0, void 0, function* () {
         if (shouldValidateParams) {
@@ -59,12 +59,19 @@ function executeFormulaFromCLI(args, module) {
     });
 }
 exports.executeFormulaFromCLI = executeFormulaFromCLI;
-function executeSyncFormula(formula, params, context = newSyncExecutionContext(), { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true } = {}) {
+function executeSyncFormula(formula, params, context = mocks_2.newSyncExecutionContext(), { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, maxIterations: maxIterations = 1000, } = {}) {
     return __awaiter(this, void 0, void 0, function* () {
         if (shouldValidateParams) {
             validation_1.validateParams(formula, params);
         }
-        const result = yield formula.execute(params, context);
+        const result = [];
+        let iterations = 1;
+        do {
+            const response = yield formula.execute(params, context);
+            result.push(...response.result);
+            context.sync.continuation = response.continuation;
+            iterations++;
+        } while (context.sync.continuation && iterations <= maxIterations);
         if (shouldValidateResult) {
             validation_2.validateResult(formula, result);
         }
@@ -103,10 +110,6 @@ function newExecutionContext() {
     };
 }
 exports.newExecutionContext = newExecutionContext;
-function newSyncExecutionContext() {
-    return Object.assign(Object.assign({}, newExecutionContext()), { sync: {} });
-}
-exports.newSyncExecutionContext = newSyncExecutionContext;
 function findFormula(packDef, formulaNameWithNamespace) {
     if (!packDef.formulas) {
         throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);
