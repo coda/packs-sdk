@@ -1,6 +1,6 @@
 import type {ExecutionContext} from '../api_types';
 import type {FetchRequest} from '../api_types';
-import type {GenericSyncFormula} from '../api';
+import type {Continuation, GenericSyncFormula} from '../api';
 import type {PackDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
@@ -15,6 +15,7 @@ import {v4} from 'uuid';
 export interface ExecuteOptions {
   validateParams?: boolean;
   validateResult?: boolean;
+  maxIterations?: number;
 }
 
 // TODO(alan/jonathan): Write a comparable function that handles syncs.
@@ -70,12 +71,21 @@ export async function executeSyncFormula(
   formula: GenericSyncFormula,
   params: ParamValues<ParamDefs>,
   context: SyncExecutionContext = newSyncExecutionContext(),
-  {validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true}: ExecuteOptions = {},
+  {validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, maxIterations: maxIterations = 1000}: ExecuteOptions = {},
 ) {
   if (shouldValidateParams) {
     validateParams(formula, params);
   }
-  const result = await formula.execute(params, context);
+
+  const result = [];
+  let iterations = 1;
+  do {
+    const response = await formula.execute(params, context);
+    result.push(...response.result);
+    context.sync.continuation = response.continuation;
+    iterations++;
+  } while (context.sync.continuation && iterations <= maxIterations);
+  
   if (shouldValidateResult) {
     validateResult(formula, result);
   }

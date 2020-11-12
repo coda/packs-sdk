@@ -10,9 +10,20 @@ import {newMockExecutionContext} from '../testing/mocks';
 import {withQueryParams} from '../helpers/url';
 import sinon from 'sinon';
 import {makeSyncTable} from '../api';
-import {makeSchema, ObjectSchema, ValueType} from '../schema';
+import {makeObjectSchema, makeSchema, ObjectSchema, ValueType} from '../schema';
+import { ensureUnreachable } from '../helpers/ensure';
 
 describe('Execution', () => {
+  const fakeSchema = makeObjectSchema({
+    type: ValueType.Object,
+    primary: 'name',
+    id: 'name',
+    properties: {
+      name: {type: ValueType.String},
+    },
+    identity: {packId: FakePack.id, name: FakePack.name},
+  });
+
   const fakePack = createFakePack({
     formulas: {
       Fake: [
@@ -39,26 +50,41 @@ describe('Execution', () => {
       ],
     },
     syncTables: [
-      makeSyncTable('Squares', makeSchema({
-        type: ValueType.Object,
-        primary: 'Value',
-        id: 'Value',
-        properties: {
-          Value: {type: ValueType.Number},
-        },
-        identity: {packId: FakePack.id, name: FakePack.name},
-      } as ObjectSchema<any, any>), {
-        name: 'Squares',
-        description: 'Syncs squared numbers',
-        execute: async ([values]) => {
-          return {
-            result: values.map(value => ({
-              Value: value ** 2,
-            })) as any,
-          };
+      makeSyncTable('Classes', fakeSchema, {
+        name: 'Students',
+        description: 'Gets students in a teacher\'s class',
+        execute: async ([teacher], context) => {
+          const {continuation} = context.sync;
+          const page = continuation?.page;
+          switch (teacher) {
+            case 'Smith':
+              if (!page || page == 1) {
+                return {
+                  result: [{name: 'Alice'}, {name: 'Bob'}],
+                  continuation: {page: 2},
+                };
+              } if (page == 2) {
+                return {
+                  result: [{name: 'Chris'}, {name: 'Diana'}],
+                };
+              }
+            case 'Brown':
+              if (!page || page == 1) {
+                return {
+                  result: [{name: 'Annie'}, {name: 'Bryan'}],
+                  continuation: {page: 2},
+                };
+              } if (page == 2) {
+                return {
+                  result: [{name: 'Christina'}, {name: 'Donald'}],
+                };
+              }
+            default:
+              return {} as any;
+          }
         },
         network: {hasSideEffect: false},
-        parameters: [makeNumericArrayParameter('Values', 'List of values to square')],
+        parameters: [makeStringParameter('teacher', 'teacher name')],
         examples: [],
       }),
     ]
@@ -70,17 +96,14 @@ describe('Execution', () => {
   });
 
   it('executes a sync formula by name', async () => {
-    const result = await executeSyncFormulaFromPackDef(fakePack, 'Squares', [[1, 2, 3, 4, 5]]);
-    assert.deepEqual(result, {
-      result: [
-        { Value: 1 },
-        { Value: 4 },
-        { Value: 9 },
-        { Value: 16 },
-        { Value: 25 }
+    const result = await executeSyncFormulaFromPackDef(fakePack, 'Students', ['Smith']);
+    assert.deepEqual(result, [
+        { Name: 'Alice' },
+        { Name: 'Bob' },
+        { Name: 'Chris' },
+        { Name: 'Diana' }
       ],
-      continuation: undefined
-    });
+    ); 
   });
 
   describe('execution errors', () => {
