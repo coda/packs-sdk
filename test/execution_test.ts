@@ -1,7 +1,7 @@
 import {testHelper} from './test_helper';
 import {createFakePack, FakePack} from './test_utils';
 import {executeFormulaFromPackDef, executeSyncFormulaFromPackDef} from '../testing/execution';
-import {makeNumericArrayParameter, makeNumericFormula} from '../api';
+import {makeNumericFormula} from '../api';
 import {makeNumericParameter} from '../api';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
@@ -10,8 +10,7 @@ import {newMockExecutionContext} from '../testing/mocks';
 import {withQueryParams} from '../helpers/url';
 import sinon from 'sinon';
 import {makeSyncTable} from '../api';
-import {makeObjectSchema, makeSchema, ObjectSchema, ValueType} from '../schema';
-import { ensureUnreachable } from '../helpers/ensure';
+import {makeObjectSchema, ValueType} from '../schema';
 
 describe('Execution', () => {
   const fakeSchema = makeObjectSchema({

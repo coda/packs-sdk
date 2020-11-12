@@ -1,13 +1,13 @@
 import type {ExecutionContext} from '../api_types';
 import type {FetchRequest} from '../api_types';
-import type {Continuation, GenericSyncFormula} from '../api';
+import type {GenericSyncFormula} from '../api';
 import type {PackDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
 import type {SyncExecutionContext} from '../api_types';
 import type {TypedStandardFormula} from '../api';
 import {coerceParams} from './coercion';
-import {newMockExecutionContext} from './mocks';
+import {newMockExecutionContext, newSyncExecutionContext} from './mocks';
 import {validateParams} from './validation';
 import {validateResult} from './validation';
 import {v4} from 'uuid';
@@ -125,10 +125,6 @@ export function newExecutionContext(): ExecutionContext {
       },
     },
   };
-}
-
-export function newSyncExecutionContext(): SyncExecutionContext {
-  return {...newExecutionContext(), sync: {}};
 }
 
 function findFormula(packDef: PackDefinition, formulaNameWithNamespace: string): TypedStandardFormula {
