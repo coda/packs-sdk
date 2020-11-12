@@ -14,7 +14,7 @@ export interface MockExecutionContext extends ExecutionContext {
 }
 
 export function newSyncExecutionContext(): SyncExecutionContext {
-  return {...newExecutionContext(), sync: {}};
+  return {...newMockExecutionContext(), sync: {}};
 }
 
 export function newMockExecutionContext(): MockExecutionContext {
