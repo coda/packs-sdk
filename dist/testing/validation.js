@@ -25,7 +25,7 @@ function validateParams(formula, params) {
     }
 }
 exports.validateParams = validateParams;
-function validateResult(formula, result) {
+function validateResult(_formula, _result) {
     // TODO
 }
 exports.validateResult = validateResult;

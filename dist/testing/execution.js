@@ -9,13 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newExecutionContext = exports.executeSyncFormulaFromPackDef = exports.executeSyncFormula = exports.executeFormulaFromCLI = exports.executeFormulaFromPackDef = exports.executeFormula = void 0;
+exports.executeSyncFormulaFromPackDef = exports.executeSyncFormula = exports.executeFormulaFromCLI = exports.executeFormulaFromPackDef = exports.executeFormula = void 0;
 const coercion_1 = require("./coercion");
 const mocks_1 = require("./mocks");
 const mocks_2 = require("./mocks");
 const validation_1 = require("./validation");
 const validation_2 = require("./validation");
-const uuid_1 = require("uuid");
 function executeFormula(formula, params, context = mocks_1.newMockExecutionContext(), { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true } = {}) {
     return __awaiter(this, void 0, void 0, function* () {
         if (shouldValidateParams) {
@@ -67,11 +66,14 @@ function executeSyncFormula(formula, params, context = mocks_2.newSyncExecutionC
         const result = [];
         let iterations = 1;
         do {
+            if (iterations > maxIterations) {
+                throw new Error(`Sync is still running after ${maxIterations} iterations, this is likely due to an infinite loop. If more iterations are needed, use the maxIterations option.`);
+            }
             const response = yield formula.execute(params, context);
             result.push(...response.result);
             context.sync.continuation = response.continuation;
             iterations++;
-        } while (context.sync.continuation && iterations <= maxIterations);
+        } while (context.sync.continuation);
         if (shouldValidateResult) {
             validation_2.validateResult(formula, result);
         }
@@ -86,30 +88,6 @@ function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, context
     });
 }
 exports.executeSyncFormulaFromPackDef = executeSyncFormulaFromPackDef;
-function newExecutionContext() {
-    // TODO(jonathan): Add a mock fetcher.
-    return {
-        invocationLocation: {
-            protocolAndHost: 'https://coda.io',
-        },
-        timezone: 'America/Los_Angeles',
-        invocationToken: uuid_1.v4(),
-        fetcher: {
-            fetch: (request) => {
-                throw new Error('Not yet implemented');
-            },
-        },
-        temporaryBlobStorage: {
-            storeUrl: (url, opts) => {
-                throw new Error('Not yet implemented');
-            },
-            storeBlob: (blobData, contentType, opts) => {
-                throw new Error('Not yet implemented');
-            },
-        },
-    };
-}
-exports.newExecutionContext = newExecutionContext;
 function findFormula(packDef, formulaNameWithNamespace) {
     if (!packDef.formulas) {
         throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);
