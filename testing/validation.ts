@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type {ParamDefs} from '../api_types';
 import {ParameterError} from './types';
 import {ParameterException} from './types';

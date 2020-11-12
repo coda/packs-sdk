@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type {ExecutionContext} from '../api_types';
 import type {FetchRequest} from '../api_types';
 import type {GenericSyncFormula} from '../api';
