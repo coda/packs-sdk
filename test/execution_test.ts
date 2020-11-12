@@ -15,15 +15,14 @@ import {makeSyncTable} from '../api';
 import {makeObjectSchema} from '../schema';
 
 describe('Execution', () => {
-  const fakePersonSchema = 'person';
-  const fakeSchema = makeObjectSchema({
+  const fakePersonSchema = makeObjectSchema({
     type: ValueType.Object,
     primary: 'name',
     id: 'name',
     properties: {
       name: {type: ValueType.String},
     },
-    identity: {packId: FakePack.id, name: fakePersonSchema},
+    identity: {packId: FakePack.id, name: 'Person'},
   });
 
   const fakePack = createFakePack({
@@ -52,7 +51,7 @@ describe('Execution', () => {
       ],
     },
     syncTables: [
-      makeSyncTable('Classes', fakeSchema, {
+      makeSyncTable('Classes', fakePersonSchema, {
         name: 'Students',
         description: 'Gets students in a teacher\'s class',
         execute: async ([teacher], context) => {
