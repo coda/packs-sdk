@@ -8,6 +8,7 @@ const api_1 = require("../api");
 const object_utils_1 = require("../helpers/object_utils");
 const ensure_1 = require("../helpers/ensure");
 const schema_1 = require("../schema");
+const schema_2 = require("../schema");
 // TODO: Handle varargs.
 function validateParams(formula, params) {
     const numRequiredParams = formula.parameters.filter(param => !param.optional).length;
@@ -76,8 +77,12 @@ function validateObjectResult(formula, result) {
     if (!schema) {
         return;
     }
-    if (!schema_1.isObject(schema)) {
-        const error = { message: `Expect an object schema, but found ${JSON.stringify(schema)}.` };
+    if (schema_1.isArray(schema)) {
+        // TODO(jonathan): Validate object arrays.
+        return;
+    }
+    if (!schema_2.isObject(schema)) {
+        const error = { message: `Expected an object schema, but found ${JSON.stringify(schema)}.` };
         throw types_2.ResultValidationException.fromErrors(formula.name, [error]);
     }
     const errors = [];

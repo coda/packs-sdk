@@ -9,6 +9,7 @@ import {Type} from '../api_types';
 import {isObjectPackFormula} from '../api';
 import {isDefined} from '../helpers/object_utils';
 import {ensureUnreachable} from '../helpers/ensure';
+import {isArray} from '../schema';
 import {isObject} from '../schema';
 
 // TODO: Handle varargs.
@@ -91,8 +92,14 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
   if (!schema) {
     return;
   }
+
+  if (isArray(schema)) {
+    // TODO(jonathan): Validate object arrays.
+    return;
+  }
+
   if (!isObject(schema)) {
-    const error: ResultValidationError = {message: `Expect an object schema, but found ${JSON.stringify(schema)}.`};
+    const error: ResultValidationError = {message: `Expected an object schema, but found ${JSON.stringify(schema)}.`};
     throw ResultValidationException.fromErrors(formula.name, [error]);
   }
   const errors: ResultValidationError[] = [];

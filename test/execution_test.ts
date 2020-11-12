@@ -304,7 +304,7 @@ describe('Execution', () => {
         });
         await testHelper.willBeRejectedWith(
           executeFormulaFromPackDef(pack, 'Fake::ObjectFormula', [JSON.stringify({})]),
-          /Expect an object schema, but found {"type":"string"}/,
+          /Expected an object schema, but found {"type":"string"}/,
         );
       });
 
