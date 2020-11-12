@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type {ParamDefs} from '../api_types';
 import {ParameterError} from './types';
 import {ParameterException} from './types';
@@ -30,6 +29,6 @@ export function validateParams(formula: TypedPackFormula, params: ParamDefs): vo
   }
 }
 
-export function validateResult<ResultT extends any>(formula: TypedPackFormula, result: ResultT): void {
+export function validateResult<ResultT extends any>(_formula: TypedPackFormula, _result: ResultT): void {
   // TODO
 }

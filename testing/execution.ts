@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type {ExecutionContext} from '../api_types';
-import type {FetchRequest} from '../api_types';
 import type {GenericSyncFormula} from '../api';
 import type {PackDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
@@ -12,11 +11,13 @@ import {newMockExecutionContext} from './mocks';
 import {newSyncExecutionContext} from './mocks';
 import {validateParams} from './validation';
 import {validateResult} from './validation';
-import {v4} from 'uuid';
 
 export interface ExecuteOptions {
   validateParams?: boolean;
   validateResult?: boolean;
+}
+
+export interface ExecuteSyncOptions extends ExecuteOptions {
   maxIterations?: number;
 }
 
@@ -76,7 +77,7 @@ export async function executeSyncFormula(
     validateParams: shouldValidateParams = true, 
     validateResult: shouldValidateResult = true, 
     maxIterations: maxIterations = 1000,
-  }: ExecuteOptions = {})
+  }: ExecuteSyncOptions = {})
 {
   if (shouldValidateParams) {
     validateParams(formula, params);
@@ -85,11 +86,14 @@ export async function executeSyncFormula(
   const result = [];
   let iterations = 1;
   do {
+    if (iterations > maxIterations) {
+      throw new Error(`Sync is still running after ${maxIterations} iterations, this is likely due to an infinite loop. If more iterations are needed, use the maxIterations option.`);
+    }
     const response = await formula.execute(params, context);
     result.push(...response.result);
     context.sync.continuation = response.continuation;
     iterations++;
-  } while (context.sync.continuation && iterations <= maxIterations);
+  } while (context.sync.continuation);
   
   if (shouldValidateResult) {
     validateResult(formula, result);
@@ -102,34 +106,10 @@ export async function executeSyncFormulaFromPackDef(
   syncFormulaName: string,
   params: ParamValues<ParamDefs>,
   context?: SyncExecutionContext,
-  options?: ExecuteOptions,
+  options?: ExecuteSyncOptions,
 ) {
   const formula = findSyncFormula(packDef, syncFormulaName);
   return executeSyncFormula(formula, params, context, options);
-}
-
-export function newExecutionContext(): ExecutionContext {
-  // TODO(jonathan): Add a mock fetcher.
-  return {
-    invocationLocation: {
-      protocolAndHost: 'https://coda.io',
-    },
-    timezone: 'America/Los_Angeles',
-    invocationToken: v4(),
-    fetcher: {
-      fetch: (request: FetchRequest) => {
-        throw new Error('Not yet implemented');
-      },
-    },
-    temporaryBlobStorage: {
-      storeUrl: (url: string, opts?: {expiryMs?: number}) => {
-        throw new Error('Not yet implemented');
-      },
-      storeBlob: (blobData: Buffer, contentType: string, opts?: {expiryMs?: number}) => {
-        throw new Error('Not yet implemented');
-      },
-    },
-  };
 }
 
 function findFormula(packDef: PackDefinition, formulaNameWithNamespace: string): TypedStandardFormula {

@@ -15,6 +15,7 @@ import {makeSyncTable} from '../api';
 import {makeObjectSchema} from '../schema';
 
 describe('Execution', () => {
+  const fakePersonSchema = 'person';
   const fakeSchema = makeObjectSchema({
     type: ValueType.Object,
     primary: 'name',
@@ -22,7 +23,7 @@ describe('Execution', () => {
     properties: {
       name: {type: ValueType.String},
     },
-    identity: {packId: FakePack.id, name: FakePack.name},
+    identity: {packId: FakePack.id, name: fakePersonSchema},
   });
 
   const fakePack = createFakePack({
@@ -105,6 +106,13 @@ describe('Execution', () => {
         { Name: 'Diana' }
       ],
     ); 
+  });
+
+  it('error when maxIterations exceeded', async () => {
+    await testHelper.willBeRejectedWith(
+      executeSyncFormulaFromPackDef(fakePack, 'Students', ['Smith'], undefined, {maxIterations: 1}),
+      /Sync is still running after 1 iterations, this is likely due to an infinite loop. If more iterations are needed, use the maxIterations option./,
+    );
   });
 
   describe('execution errors', () => {
