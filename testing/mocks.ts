@@ -1,4 +1,4 @@
-import type {ExecutionContext} from '../api_types';
+import type {ExecutionContext, SyncExecutionContext} from '../api_types';
 import type {FetchResponse} from '../api_types';
 import {v4} from 'uuid';
 import sinon from 'sinon';
@@ -11,6 +11,10 @@ export interface MockExecutionContext extends ExecutionContext {
     storeUrl: sinon.SinonStub;
     storeBlob: sinon.SinonStub;
   };
+}
+
+export function newSyncExecutionContext(): SyncExecutionContext {
+  return {...newMockExecutionContext(), sync: {}};
 }
 
 export function newMockExecutionContext(): MockExecutionContext {

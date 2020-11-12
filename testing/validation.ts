@@ -1,11 +1,11 @@
 import type {ParamDefs} from '../api_types';
 import {ParameterError} from './types';
 import {ParameterException} from './types';
-import type {TypedStandardFormula} from '../api';
+import type {TypedPackFormula} from '../api';
 import {isDefined} from '../helpers/object_utils';
 
 // TODO: Handle varargs.
-export function validateParams(formula: TypedStandardFormula, params: ParamDefs): void {
+export function validateParams(formula: TypedPackFormula, params: ParamDefs): void {
   const numRequiredParams = formula.parameters.filter(param => !param.optional).length;
   if (params.length < numRequiredParams) {
     throw new ParameterException(
@@ -29,6 +29,6 @@ export function validateParams(formula: TypedStandardFormula, params: ParamDefs)
   }
 }
 
-export function validateResult<ResultT extends any>(_formula: TypedStandardFormula, _result: ResultT): void {
+export function validateResult<ResultT extends any>(_formula: TypedPackFormula, _result: ResultT): void {
   // TODO
 }

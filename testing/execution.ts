@@ -1,10 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type {ExecutionContext} from '../api_types';
+import type {GenericSyncFormula} from '../api';
 import type {PackDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
+import type {SyncExecutionContext} from '../api_types';
 import type {TypedStandardFormula} from '../api';
 import {coerceParams} from './coercion';
 import {newMockExecutionContext} from './mocks';
+import {newSyncExecutionContext} from './mocks';
 import {validateParams} from './validation';
 import {validateResult} from './validation';
 
@@ -13,7 +17,10 @@ export interface ExecuteOptions {
   validateResult?: boolean;
 }
 
-// TODO(alan/jonathan): Write a comparable function that handles syncs.
+export interface ExecuteSyncOptions extends ExecuteOptions {
+  maxIterations?: number;
+}
+
 export async function executeFormula(
   formula: TypedStandardFormula,
   params: ParamValues<ParamDefs>,
@@ -62,6 +69,49 @@ export async function executeFormulaFromCLI(args: string[], module: any) {
   }
 }
 
+export async function executeSyncFormula(
+  formula: GenericSyncFormula,
+  params: ParamValues<ParamDefs>,
+  context: SyncExecutionContext = newSyncExecutionContext(),
+  {
+    validateParams: shouldValidateParams = true, 
+    validateResult: shouldValidateResult = true, 
+    maxIterations: maxIterations = 1000,
+  }: ExecuteSyncOptions = {})
+{
+  if (shouldValidateParams) {
+    validateParams(formula, params);
+  }
+
+  const result = [];
+  let iterations = 1;
+  do {
+    if (iterations > maxIterations) {
+      throw new Error(`Sync is still running after ${maxIterations} iterations, this is likely due to an infinite loop. If more iterations are needed, use the maxIterations option.`);
+    }
+    const response = await formula.execute(params, context);
+    result.push(...response.result);
+    context.sync.continuation = response.continuation;
+    iterations++;
+  } while (context.sync.continuation);
+  
+  if (shouldValidateResult) {
+    validateResult(formula, result);
+  }
+  return result;
+}
+
+export async function executeSyncFormulaFromPackDef(
+  packDef: PackDefinition,
+  syncFormulaName: string,
+  params: ParamValues<ParamDefs>,
+  context?: SyncExecutionContext,
+  options?: ExecuteSyncOptions,
+) {
+  const formula = findSyncFormula(packDef, syncFormulaName);
+  return executeSyncFormula(formula, params, context, options);
+}
+
 function findFormula(packDef: PackDefinition, formulaNameWithNamespace: string): TypedStandardFormula {
   if (!packDef.formulas) {
     throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);
@@ -85,5 +135,22 @@ function findFormula(packDef: PackDefinition, formulaNameWithNamespace: string):
   }
   throw new Error(
     `Pack definition for ${packDef.name} (id ${packDef.id}) has no formula "${name}" in namespace "${namespace}".`,
+  );
+}
+
+function findSyncFormula(packDef: PackDefinition, syncFormulaName: string): GenericSyncFormula {
+  if (!packDef.syncTables) {
+    throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no sync tables.`);
+  }
+
+  for (const syncTable of packDef.syncTables) {
+    const syncFormula = syncTable.getter;
+    if (syncFormula.name === syncFormulaName) {
+      return syncFormula;
+    }
+  }
+
+  throw new Error(
+    `Pack definition for ${packDef.name} (id ${packDef.id}) has no sync formula "${syncFormulaName}" in its sync tables.`,
   );
 }

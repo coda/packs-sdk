@@ -9,12 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.executeFormulaFromCLI = exports.executeFormulaFromPackDef = exports.executeFormula = void 0;
+exports.executeSyncFormulaFromPackDef = exports.executeSyncFormula = exports.executeFormulaFromCLI = exports.executeFormulaFromPackDef = exports.executeFormula = void 0;
 const coercion_1 = require("./coercion");
 const mocks_1 = require("./mocks");
+const mocks_2 = require("./mocks");
 const validation_1 = require("./validation");
 const validation_2 = require("./validation");
-// TODO(alan/jonathan): Write a comparable function that handles syncs.
 function executeFormula(formula, params, context = mocks_1.newMockExecutionContext(), { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true } = {}) {
     return __awaiter(this, void 0, void 0, function* () {
         if (shouldValidateParams) {
@@ -58,6 +58,36 @@ function executeFormulaFromCLI(args, module) {
     });
 }
 exports.executeFormulaFromCLI = executeFormulaFromCLI;
+function executeSyncFormula(formula, params, context = mocks_2.newSyncExecutionContext(), { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, maxIterations: maxIterations = 1000, } = {}) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (shouldValidateParams) {
+            validation_1.validateParams(formula, params);
+        }
+        const result = [];
+        let iterations = 1;
+        do {
+            if (iterations > maxIterations) {
+                throw new Error(`Sync is still running after ${maxIterations} iterations, this is likely due to an infinite loop. If more iterations are needed, use the maxIterations option.`);
+            }
+            const response = yield formula.execute(params, context);
+            result.push(...response.result);
+            context.sync.continuation = response.continuation;
+            iterations++;
+        } while (context.sync.continuation);
+        if (shouldValidateResult) {
+            validation_2.validateResult(formula, result);
+        }
+        return result;
+    });
+}
+exports.executeSyncFormula = executeSyncFormula;
+function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, context, options) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const formula = findSyncFormula(packDef, syncFormulaName);
+        return executeSyncFormula(formula, params, context, options);
+    });
+}
+exports.executeSyncFormulaFromPackDef = executeSyncFormulaFromPackDef;
 function findFormula(packDef, formulaNameWithNamespace) {
     if (!packDef.formulas) {
         throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);
@@ -76,4 +106,16 @@ function findFormula(packDef, formulaNameWithNamespace) {
         }
     }
     throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formula "${name}" in namespace "${namespace}".`);
+}
+function findSyncFormula(packDef, syncFormulaName) {
+    if (!packDef.syncTables) {
+        throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no sync tables.`);
+    }
+    for (const syncTable of packDef.syncTables) {
+        const syncFormula = syncTable.getter;
+        if (syncFormula.name === syncFormulaName) {
+            return syncFormula;
+        }
+    }
+    throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no sync formula "${syncFormulaName}" in its sync tables.`);
 }
