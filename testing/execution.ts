@@ -7,7 +7,8 @@ import type {ParamValues} from '../api_types';
 import type {SyncExecutionContext} from '../api_types';
 import type {TypedStandardFormula} from '../api';
 import {coerceParams} from './coercion';
-import {newMockExecutionContext, newSyncExecutionContext} from './mocks';
+import {newMockExecutionContext} from './mocks';
+import {newSyncExecutionContext} from './mocks';
 import {validateParams} from './validation';
 import {validateResult} from './validation';
 import {v4} from 'uuid';
@@ -18,7 +19,6 @@ export interface ExecuteOptions {
   maxIterations?: number;
 }
 
-// TODO(alan/jonathan): Write a comparable function that handles syncs.
 export async function executeFormula(
   formula: TypedStandardFormula,
   params: ParamValues<ParamDefs>,
@@ -71,8 +71,12 @@ export async function executeSyncFormula(
   formula: GenericSyncFormula,
   params: ParamValues<ParamDefs>,
   context: SyncExecutionContext = newSyncExecutionContext(),
-  {validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, maxIterations: maxIterations = 1000}: ExecuteOptions = {},
-) {
+  {
+    validateParams: shouldValidateParams = true, 
+    validateResult: shouldValidateResult = true, 
+    maxIterations: maxIterations = 1000,
+  }: ExecuteOptions = {})
+{
   if (shouldValidateParams) {
     validateParams(formula, params);
   }

@@ -1,6 +1,8 @@
+import {ValueType} from '../schema';
 import {testHelper} from './test_helper';
 import {createFakePack, FakePack} from './test_utils';
-import {executeFormulaFromPackDef, executeSyncFormulaFromPackDef} from '../testing/execution';
+import {executeFormulaFromPackDef} from '../testing/execution';
+import {executeSyncFormulaFromPackDef} from '../testing/execution';
 import {makeNumericFormula} from '../api';
 import {makeNumericParameter} from '../api';
 import {makeStringFormula} from '../api';
@@ -10,7 +12,7 @@ import {newMockExecutionContext} from '../testing/mocks';
 import {withQueryParams} from '../helpers/url';
 import sinon from 'sinon';
 import {makeSyncTable} from '../api';
-import {makeObjectSchema, ValueType} from '../schema';
+import {makeObjectSchema} from '../schema';
 
 describe('Execution', () => {
   const fakeSchema = makeObjectSchema({
@@ -57,23 +59,23 @@ describe('Execution', () => {
           const page = continuation?.page;
           switch (teacher) {
             case 'Smith':
-              if (!page || page == 1) {
+              if (!page || page === 1) {
                 return {
                   result: [{name: 'Alice'}, {name: 'Bob'}],
                   continuation: {page: 2},
                 };
-              } if (page == 2) {
+              } if (page === 2) {
                 return {
                   result: [{name: 'Chris'}, {name: 'Diana'}],
                 };
               }
             case 'Brown':
-              if (!page || page == 1) {
+              if (!page || page === 1) {
                 return {
                   result: [{name: 'Annie'}, {name: 'Bryan'}],
                   continuation: {page: 2},
                 };
-              } if (page == 2) {
+              } if (page === 2) {
                 return {
                   result: [{name: 'Christina'}, {name: 'Donald'}],
                 };
