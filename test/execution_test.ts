@@ -1,18 +1,23 @@
+import {FakePack} from './test_utils';
+import type {ResponseHandlerTemplate} from '../handler_templates';
+import type {Schema} from '../schema';
 import {ValueType} from '../schema';
 import {testHelper} from './test_helper';
-import {createFakePack, FakePack} from './test_utils';
+import {createFakePack} from './test_utils';
 import {executeFormulaFromPackDef} from '../testing/execution';
 import {executeSyncFormulaFromPackDef} from '../testing/execution';
+import {makeBooleanParameter} from '../api';
 import {makeNumericFormula} from '../api';
 import {makeNumericParameter} from '../api';
+import {makeObjectFormula} from '../api';
+import {makeObjectSchema} from '../schema';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
+import {makeSyncTable} from '../api';
 import {newJsonFetchResponse} from '../testing/mocks';
 import {newMockExecutionContext} from '../testing/mocks';
 import {withQueryParams} from '../helpers/url';
 import sinon from 'sinon';
-import {makeSyncTable} from '../api';
-import {makeObjectSchema} from '../schema';
 
 describe('Execution', () => {
   const fakePersonSchema = makeObjectSchema({
@@ -44,7 +49,7 @@ describe('Execution', () => {
           parameters: [makeStringParameter('query', 'A query to look up.')],
           execute: async ([query], context) => {
             const url = withQueryParams('https://example.com/lookup', {query});
-            const response = await context.fetcher!.fetch({method: 'GET', url});
+            const response = await context.fetcher.fetch({method: 'GET', url});
             return response.body.result;
           },
         }),
@@ -53,7 +58,7 @@ describe('Execution', () => {
     syncTables: [
       makeSyncTable('Classes', fakePersonSchema, {
         name: 'Students',
-        description: 'Gets students in a teacher\'s class',
+        description: "Gets students in a teacher's class",
         execute: async ([teacher], context) => {
           const {continuation} = context.sync;
           const page = continuation?.page;
@@ -64,7 +69,8 @@ describe('Execution', () => {
                   result: [{name: 'Alice'}, {name: 'Bob'}],
                   continuation: {page: 2},
                 };
-              } if (page === 2) {
+              }
+              if (page === 2) {
                 return {
                   result: [{name: 'Chris'}, {name: 'Diana'}],
                 };
@@ -75,7 +81,8 @@ describe('Execution', () => {
                   result: [{name: 'Annie'}, {name: 'Bryan'}],
                   continuation: {page: 2},
                 };
-              } if (page === 2) {
+              }
+              if (page === 2) {
                 return {
                   result: [{name: 'Christina'}, {name: 'Donald'}],
                 };
@@ -88,7 +95,7 @@ describe('Execution', () => {
         parameters: [makeStringParameter('teacher', 'teacher name')],
         examples: [],
       }),
-    ]
+    ],
   });
 
   it('executes a formula by name', async () => {
@@ -98,13 +105,7 @@ describe('Execution', () => {
 
   it('executes a sync formula by name', async () => {
     const result = await executeSyncFormulaFromPackDef(fakePack, 'Students', ['Smith']);
-    assert.deepEqual(result, [
-        { Name: 'Alice' },
-        { Name: 'Bob' },
-        { Name: 'Chris' },
-        { Name: 'Diana' }
-      ],
-    ); 
+    assert.deepEqual(result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
   });
 
   it('error when maxIterations exceeded', async () => {
@@ -163,6 +164,167 @@ describe('Execution', () => {
       sinon.assert.calledOnceWithExactly(context.fetcher.fetch, {
         method: 'GET',
         url: 'https://example.com/lookup?query=foo',
+      });
+    });
+
+    it('temporary blob storage calls are mocked', async () => {
+      const fakeBlobPack = createFakePack({
+        formulas: {
+          Fake: [
+            makeStringFormula({
+              name: 'Blobs',
+              description: 'Store some blobs',
+              examples: [],
+              parameters: [],
+              execute: async ([], context) => {
+                const response1 = await context.temporaryBlobStorage.storeBlob(Buffer.from('asdf'), 'image/png');
+                const response2 = await context.temporaryBlobStorage.storeUrl('url-to-store');
+                return `${response1},${response2}`;
+              },
+            }),
+          ],
+        },
+      });
+
+      const context = newMockExecutionContext();
+      context.temporaryBlobStorage.storeBlob.returns('blob-url-1');
+      context.temporaryBlobStorage.storeUrl.returns('blob-url-2');
+      const result = await executeFormulaFromPackDef(fakeBlobPack, 'Fake::Blobs', [], context);
+      assert.equal(result, 'blob-url-1,blob-url-2');
+
+      sinon.assert.calledOnceWithExactly(context.temporaryBlobStorage.storeBlob, Buffer.from('asdf'), 'image/png');
+      sinon.assert.calledOnceWithExactly(context.temporaryBlobStorage.storeUrl, 'url-to-store');
+    });
+  });
+
+  describe('result value validation', () => {
+    describe('result types', () => {
+      const pack = createFakePack({
+        formulas: {
+          Fake: [
+            makeStringFormula({
+              name: 'StringFoo',
+              description: '',
+              examples: [],
+              parameters: [makeBooleanParameter('valid', 'Whether or not to return a valid value type.')],
+              execute: async ([valid]) => {
+                return valid ? 'foo' : (123 as any);
+              },
+            }),
+            makeNumericFormula({
+              name: 'NumberFoo',
+              description: '',
+              examples: [],
+              parameters: [makeBooleanParameter('valid', 'Whether or not to return a valid value type.')],
+              execute: async ([valid]) => {
+                return valid ? 123 : ('blah' as any);
+              },
+            }),
+            makeObjectFormula({
+              name: 'ObjectFoo',
+              description: '',
+              examples: [],
+              parameters: [makeBooleanParameter('valid', 'Whether or not to return a valid value type.')],
+              response: {
+                schema: makeObjectSchema({
+                  type: ValueType.Object,
+                  properties: {
+                    foo: {type: ValueType.String},
+                  },
+                }),
+              },
+              execute: async ([valid]) => {
+                return valid ? {foo: 'blah'} : 'blah';
+              },
+            }),
+          ],
+        },
+      });
+
+      it('string', async () => {
+        await executeFormulaFromPackDef(pack, 'Fake::StringFoo', [true]);
+        await testHelper.willBeRejectedWith(
+          executeFormulaFromPackDef(pack, 'Fake::StringFoo', [false]),
+          /The following errors were found when validating the result of the formula "StringFoo":\nExpected a string result but got 123./,
+        );
+      });
+
+      it('number', async () => {
+        await executeFormulaFromPackDef(pack, 'Fake::NumberFoo', [true]);
+        await testHelper.willBeRejectedWith(
+          executeFormulaFromPackDef(pack, 'Fake::NumberFoo', [false]),
+          /The following errors were found when validating the result of the formula "NumberFoo":\nExpected a number result but got "blah"./,
+        );
+      });
+
+      it('object', async () => {
+        await executeFormulaFromPackDef(pack, 'Fake::ObjectFoo', [true]);
+        await testHelper.willBeRejectedWith(
+          executeFormulaFromPackDef(pack, 'Fake::ObjectFoo', [false]),
+          /The following errors were found when validating the result of the formula "ObjectFoo":\nExpected a object result but got "blah"./,
+        );
+      });
+    });
+
+    describe('objects', () => {
+      function makeFakePackWithResponseDef<T extends Schema = Schema>(response: ResponseHandlerTemplate<T>) {
+        return createFakePack({
+          formulas: {
+            Fake: [
+              makeObjectFormula({
+                name: 'ObjectFormula',
+                description: '',
+                examples: [],
+                parameters: [makeStringParameter('value', 'Pass-through value to return.')],
+                response,
+                execute: async ([value]) => {
+                  return JSON.parse(value);
+                },
+              }),
+            ],
+          },
+        });
+      }
+
+      const defaultPack = makeFakePackWithResponseDef({
+        schema: makeObjectSchema({
+          type: ValueType.Object,
+          id: 'stringVal',
+          feature: ['stringVal', 'numberVal'],
+          properties: {
+            stringVal: {type: ValueType.String},
+            numberVal: {type: ValueType.Number},
+          },
+        }),
+      });
+
+      it('not an object schema', async () => {
+        const pack = makeFakePackWithResponseDef({
+          schema: {type: ValueType.String},
+        });
+        await testHelper.willBeRejectedWith(
+          executeFormulaFromPackDef(pack, 'Fake::ObjectFormula', [JSON.stringify({})]),
+          /Expect an object schema, but found {"type":"string"}/,
+        );
+      });
+
+      it('incomplete return value', async () => {
+        await testHelper.willBeRejectedWith(
+          executeFormulaFromPackDef(defaultPack, 'Fake::ObjectFormula', [JSON.stringify({})]),
+          new RegExp(
+            'Schema declares property "StringVal" but no such attribute was included in result.\n' +
+              'Schema declares property "NumberVal" but no such attribute was included in result.',
+          ),
+        );
+      });
+
+      it('empty id value', async () => {
+        await testHelper.willBeRejectedWith(
+          executeFormulaFromPackDef(defaultPack, 'Fake::ObjectFormula', [
+            JSON.stringify({stringVal: '', numberVal: 0}),
+          ]),
+          /Schema declares "StringVal" as an id property but an empty value was found in result./,
+        );
       });
     });
   });

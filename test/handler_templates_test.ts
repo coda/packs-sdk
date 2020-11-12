@@ -86,9 +86,9 @@ describe('handler templates', () => {
   });
 
   describe('generateObjectResponseHandler', () => {
-    it('throws on undefined projection', () => {
+    it('returns an undefined projection', () => {
       const handler = generateObjectResponseHandler({projectKey: 'FOOBAZ', schema: undefined as any});
-      assert.throws(() => handler({headers: {}, body: {foobaz: []}, status: 200}));
+      assert.equal(undefined, handler({headers: {}, body: {foobaz: []}, status: 200}));
     });
 
     it('projects out a key from the response', () => {
