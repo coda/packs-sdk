@@ -86,10 +86,11 @@ function validateObjectResult(formula, result) {
         throw types_2.ResultValidationException.fromErrors(formula.name, [error]);
     }
     const errors = [];
-    const resultKeys = new Set(Object.keys(result));
-    for (const propertyKey of Object.keys(schema.properties)) {
-        if (!resultKeys.has(propertyKey)) {
-            errors.push({ message: `Schema declares property "${propertyKey}" but no such attribute was included in result.` });
+    for (const [propertyKey, propertySchema] of Object.entries(schema.properties)) {
+        if (propertySchema.required && !result[propertyKey]) {
+            errors.push({
+                message: `Schema declares required property "${propertyKey}" but this attribute is missing or empty.`,
+            });
         }
     }
     if (schema.id && schema.id in result && !result[schema.id]) {
