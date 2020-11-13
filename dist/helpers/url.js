@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.join = exports.getQueryParams = exports.withQueryParams = void 0;
+const ensure_1 = require("./ensure");
 const qs_1 = __importDefault(require("qs"));
 const url_parse_1 = __importDefault(require("url-parse"));
-const ensure_1 = require("./ensure");
 function withQueryParams(url, params) {
     if (!params) {
         return url;

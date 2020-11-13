@@ -4,11 +4,11 @@ exports.validateResult = exports.validateParams = void 0;
 const types_1 = require("./types");
 const types_2 = require("./types");
 const api_types_1 = require("../api_types");
-const api_1 = require("../api");
-const object_utils_1 = require("../helpers/object_utils");
 const ensure_1 = require("../helpers/ensure");
 const schema_1 = require("../schema");
+const object_utils_1 = require("../helpers/object_utils");
 const schema_2 = require("../schema");
+const api_1 = require("../api");
 // TODO: Handle varargs.
 function validateParams(formula, params) {
     const numRequiredParams = formula.parameters.filter(param => !param.optional).length;
