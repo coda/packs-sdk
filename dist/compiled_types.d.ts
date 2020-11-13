@@ -3,9 +3,9 @@ import { Authentication } from './types';
 import { AuthenticationType } from './types';
 import { Format } from './types';
 import { MetadataFormula } from './api';
+import { ObjectPackFormulaMetadata } from './api';
 import { PackDefinition } from './types';
 import { PackFormulaMetadata } from './api';
-import { ObjectPackFormulaMetadata } from './api';
 import { SyncTable } from './api';
 export declare type PackSyncTable = Omit<SyncTable, 'getter' | 'getName'> & {
     getter: PackFormulaMetadata;

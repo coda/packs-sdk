@@ -2,15 +2,15 @@ import type {ObjectPackFormulaMetadata} from '../api';
 import type {ParamDefs} from '../api_types';
 import type {ParameterError} from './types';
 import {ParameterException} from './types';
-import type {TypedPackFormula} from '../api';
 import type {ResultValidationError} from './types';
 import {ResultValidationException} from './types';
 import {Type} from '../api_types';
-import {isObjectPackFormula} from '../api';
-import {isDefined} from '../helpers/object_utils';
+import type {TypedPackFormula} from '../api';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
+import {isDefined} from '../helpers/object_utils';
 import {isObject} from '../schema';
+import {isObjectPackFormula} from '../api';
 
 // TODO: Handle varargs.
 export function validateParams(formula: TypedPackFormula, params: ParamDefs): void {

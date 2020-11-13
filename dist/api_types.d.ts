@@ -1,8 +1,8 @@
 /// <reference types="node" />
 import { $Values } from './type_utils';
-import { MetadataFormula } from './api';
-import { Continuation } from './api';
 import { ArraySchema } from './schema';
+import { Continuation } from './api';
+import { MetadataFormula } from './api';
 export declare enum Type {
     string = 0,
     number = 1,

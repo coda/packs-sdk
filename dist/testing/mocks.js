@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.newJsonFetchResponse = exports.newMockExecutionContext = exports.newSyncExecutionContext = void 0;
-const uuid_1 = require("uuid");
 const sinon_1 = __importDefault(require("sinon"));
+const uuid_1 = require("uuid");
 function newSyncExecutionContext() {
     return Object.assign(Object.assign({}, newMockExecutionContext()), { sync: {} });
 }

@@ -1,7 +1,8 @@
-import type {ExecutionContext, SyncExecutionContext} from '../api_types';
+import {ExecutionContext} from '../api_types';
 import type {FetchResponse} from '../api_types';
-import {v4} from 'uuid';
+import {SyncExecutionContext} from '../api_types';
 import sinon from 'sinon';
+import {v4} from 'uuid';
 
 export interface MockExecutionContext extends ExecutionContext {
   fetcher: {
