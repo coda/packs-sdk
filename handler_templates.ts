@@ -215,12 +215,14 @@ export function generateObjectResponseHandler<T extends Schema>(
   return function objectResponseHandler(resp: FetchResponse, runtimeSchema?: T) {
     const {body} = resp;
     if (typeof body !== 'object') {
-      throw new Error(`Invalid response type ${typeof body} for ${body}`);
+      // This is an error, we'll flag it during validation.
+      return body;
     }
 
     const projectedBody = projectKey ? body[projectKey] : body;
     if (!projectedBody) {
-      throw new Error(`Empty value for body, projected ${projectKey}`);
+      // Also an error, we'll flag it during validation.
+      return projectedBody;
     }
 
     // Give precedence to runtime provided schema

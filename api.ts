@@ -592,8 +592,8 @@ export function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT
   const responseHandler = generateObjectResponseHandler(response);
 
   function execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<SchemaType<ResultT>> {
-    return context
-      .fetcher!.fetch(requestHandler(params))
+    return context.fetcher
+      .fetch(requestHandler(params))
       .catch(err => {
         if (onError) {
           return onError(err);

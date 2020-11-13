@@ -327,8 +327,8 @@ function makeTranslateObjectFormula(_a) {
     const requestHandler = handler_templates_2.generateRequestHandler(request, parameters);
     const responseHandler = handler_templates_1.generateObjectResponseHandler(response);
     function execute(params, context) {
-        return context
-            .fetcher.fetch(requestHandler(params))
+        return context.fetcher
+            .fetch(requestHandler(params))
             .catch(err => {
             if (onError) {
                 return onError(err);
