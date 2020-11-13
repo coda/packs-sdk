@@ -1,0 +1,13 @@
+{
+  "name": "@kr-modules/eslint-plugin-coda-rules",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.js",
+  "description": "Lint rules for ESLint.",
+  "directories": {
+    "src": "src",
+    "test": "test"
+  },
+  "author": "Stephen Marquis <steve@coda.io>",
+  "license": "./LICENSE"
+}

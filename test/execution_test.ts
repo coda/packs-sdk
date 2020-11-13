@@ -1,8 +1,8 @@
+import {testHelper} from './test_helper';
 import {FakePack} from './test_utils';
 import type {ResponseHandlerTemplate} from '../handler_templates';
 import type {Schema} from '../schema';
 import {ValueType} from '../schema';
-import {testHelper} from './test_helper';
 import {createFakePack} from './test_utils';
 import {executeFormulaFromPackDef} from '../testing/execution';
 import {executeSyncFormulaFromPackDef} from '../testing/execution';
@@ -16,8 +16,8 @@ import {makeStringParameter} from '../api';
 import {makeSyncTable} from '../api';
 import {newJsonFetchResponse} from '../testing/mocks';
 import {newMockExecutionContext} from '../testing/mocks';
-import {withQueryParams} from '../helpers/url';
 import sinon from 'sinon';
+import {withQueryParams} from '../helpers/url';
 
 describe('Execution', () => {
   const fakePersonSchema = makeObjectSchema({

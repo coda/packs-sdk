@@ -14,7 +14,7 @@ module.exports = {
     project: ['./tsconfig.json'],
     sourceType: 'module',
   },
-  plugins: ['ban', 'filenames', '@typescript-eslint'],
+  plugins: ['ban', 'filenames', 'local', '@typescript-eslint'],
   settings: {},
   rules: {
     '@typescript-eslint/restrict-plus-operands': 'error',
