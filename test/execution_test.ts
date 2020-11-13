@@ -326,6 +326,12 @@ describe('Execution', () => {
           /Schema declares "StringVal" as an id property but an empty value was found in result./,
         );
       });
+
+      it('valid return value', async () => {
+        await executeFormulaFromPackDef(defaultPack, 'Fake::ObjectFormula', [
+          JSON.stringify({stringVal: 'foo', numberVal: 1}),
+        ]);
+      });
     });
   });
 
