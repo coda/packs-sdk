@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type {ExecutionContext} from '../api_types';
 import type {GenericSyncFormula} from '../api';
 import type {PackDefinition} from '../types';
@@ -74,11 +73,11 @@ export async function executeSyncFormula(
   params: ParamValues<ParamDefs>,
   context: SyncExecutionContext = newSyncExecutionContext(),
   {
-    validateParams: shouldValidateParams = true, 
-    validateResult: shouldValidateResult = true, 
+    validateParams: shouldValidateParams = true,
+    validateResult: shouldValidateResult = true,
     maxIterations: maxIterations = 1000,
-  }: ExecuteSyncOptions = {})
-{
+  }: ExecuteSyncOptions = {},
+) {
   if (shouldValidateParams) {
     validateParams(formula, params);
   }
@@ -87,14 +86,16 @@ export async function executeSyncFormula(
   let iterations = 1;
   do {
     if (iterations > maxIterations) {
-      throw new Error(`Sync is still running after ${maxIterations} iterations, this is likely due to an infinite loop. If more iterations are needed, use the maxIterations option.`);
+      throw new Error(
+        `Sync is still running after ${maxIterations} iterations, this is likely due to an infinite loop. If more iterations are needed, use the maxIterations option.`,
+      );
     }
     const response = await formula.execute(params, context);
     result.push(...response.result);
     context.sync.continuation = response.continuation;
     iterations++;
   } while (context.sync.continuation);
-  
+
   if (shouldValidateResult) {
     validateResult(formula, result);
   }
