@@ -292,8 +292,9 @@ describe('Execution', () => {
           id: 'stringVal',
           feature: ['stringVal', 'numberVal'],
           properties: {
-            stringVal: {type: ValueType.String},
-            numberVal: {type: ValueType.Number},
+            stringVal: {type: ValueType.String, required: true},
+            numberVal: {type: ValueType.Number, required: true},
+            optionalVal: {type: ValueType.String},
           },
         }),
       });
@@ -312,8 +313,8 @@ describe('Execution', () => {
         await testHelper.willBeRejectedWith(
           executeFormulaFromPackDef(defaultPack, 'Fake::ObjectFormula', [JSON.stringify({})]),
           new RegExp(
-            'Schema declares property "StringVal" but no such attribute was included in result.\n' +
-              'Schema declares property "NumberVal" but no such attribute was included in result.',
+            'Schema declares required property "StringVal" but this attribute is missing or empty.\n' +
+              'Schema declares required property "NumberVal" but this attribute is missing or empty.',
           ),
         );
       });

@@ -103,11 +103,12 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
     throw ResultValidationException.fromErrors(formula.name, [error]);
   }
   const errors: ResultValidationError[] = [];
-  const resultKeys = new Set(Object.keys(result));
 
-  for (const propertyKey of Object.keys(schema.properties)) {
-    if (!resultKeys.has(propertyKey)) {
-      errors.push({message: `Schema declares property "${propertyKey}" but no such attribute was included in result.`});
+  for (const [propertyKey, propertySchema] of Object.entries(schema.properties)) {
+    if (propertySchema.required && !result[propertyKey]) {
+      errors.push({
+        message: `Schema declares required property "${propertyKey}" but this attribute is missing or empty.`,
+      });
     }
   }
 
