@@ -6,6 +6,7 @@ import type {ParamValues} from '../api_types';
 import type {SyncExecutionContext} from '../api_types';
 import type {TypedStandardFormula} from '../api';
 import {coerceParams} from './coercion';
+import {getManifestFromModule} from './helpers';
 import {newMockExecutionContext} from './mocks';
 import {newSyncExecutionContext} from './mocks';
 import {validateParams} from './validation';
@@ -49,14 +50,10 @@ export async function executeFormulaFromPackDef(
 
 export async function executeFormulaFromCLI(args: string[], module: any) {
   const formulaNameWithNamespace = args[0];
-  if (!module.manifest) {
-    // eslint-disable-next-line no-console
-    console.log('Manifest file must export a variable called "manifest" that refers to a PackDefinition.');
-    return process.exit(1);
-  }
+  const manifest = getManifestFromModule(module);
 
   try {
-    const formula = findFormula(module.manifest, formulaNameWithNamespace);
+    const formula = findFormula(manifest, formulaNameWithNamespace);
     const params = coerceParams(formula, args.slice(1) as any);
     const result = await executeFormula(formula, params);
     // eslint-disable-next-line no-console

@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.executeSyncFormulaFromPackDef = exports.executeSyncFormula = exports.executeFormulaFromCLI = exports.executeFormulaFromPackDef = exports.executeFormula = void 0;
 const coercion_1 = require("./coercion");
+const helpers_1 = require("./helpers");
 const mocks_1 = require("./mocks");
 const mocks_2 = require("./mocks");
 const validation_1 = require("./validation");
@@ -38,13 +39,9 @@ exports.executeFormulaFromPackDef = executeFormulaFromPackDef;
 function executeFormulaFromCLI(args, module) {
     return __awaiter(this, void 0, void 0, function* () {
         const formulaNameWithNamespace = args[0];
-        if (!module.manifest) {
-            // eslint-disable-next-line no-console
-            console.log('Manifest file must export a variable called "manifest" that refers to a PackDefinition.');
-            return process.exit(1);
-        }
+        const manifest = helpers_1.getManifestFromModule(module);
         try {
-            const formula = findFormula(module.manifest, formulaNameWithNamespace);
+            const formula = findFormula(manifest, formulaNameWithNamespace);
             const params = coercion_1.coerceParams(formula, args.slice(1));
             const result = yield executeFormula(formula, params);
             // eslint-disable-next-line no-console

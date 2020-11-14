@@ -17,9 +17,27 @@ async function main() {
 }
 
 void main();`;
+const AUTH_BOOTSTRAP_CODE = `
+import {setupAuth} from 'packs-sdk/dist/testing/auth';
+
+async function main() {
+  const manifestPath = process.argv[4];
+  const module = await import(manifestPath);
+  await setupAuth(module);
+}
+
+void main();`;
+function makeManifestFullPath(manifestPath) {
+    return manifestPath.startsWith('/') ? manifestPath : path_1.default.join(process.cwd(), manifestPath);
+}
 function handleExecute({ manifestPath, formulaName, params }) {
-    const manifestFullPath = manifestPath.startsWith('/') ? manifestPath : path_1.default.join(process.cwd(), manifestPath);
-    child_process_1.spawnSync(`ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${manifestFullPath} ${formulaName} ${params.join(' ')}`, {
+    child_process_1.spawnSync(`ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)} ${formulaName} ${params.join(' ')}`, {
+        shell: true,
+        stdio: 'inherit',
+    });
+}
+function handleAuth({ manifestPath }) {
+    child_process_1.spawnSync(`ts-node -e "${AUTH_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)}`, {
         shell: true,
         stdio: 'inherit',
     });
@@ -31,6 +49,11 @@ if (require.main === module) {
         command: 'execute <manifestPath> <formulaName> [params..]',
         describe: 'Execute a formula',
         handler: handleExecute,
+    })
+        .command({
+        command: 'auth <manifestPath>',
+        describe: 'Set up authentication for a pack',
+        handler: handleAuth,
     })
         .help().argv;
 }
