@@ -84,6 +84,18 @@ function checkType<ResultT extends any>(
   }
 }
 
+function checkPropertyType<ResultT extends any>(
+  typeMatches: boolean,
+  expectedPropertyTypeName: string,
+  propertyValue: unknown,
+  propertyKey: string,
+): ResultValidationError | undefined {
+  if (checkType(typeMatches, expectedPropertyTypeName, propertyValue)) {
+    const property = typeof propertyValue === 'string' ? `"${propertyValue}"` : propertyValue;
+    return {message: `Expected a ${expectedPropertyTypeName} property for key ${propertyKey} but got ${property}.`};
+  }
+}
+
 function validateObjectResult<ResultT extends Record<string, unknown>>(
   formula: ObjectPackFormulaMetadata,
   result: ResultT,
@@ -105,10 +117,16 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
   const errors: ResultValidationError[] = [];
 
   for (const [propertyKey, propertySchema] of Object.entries(schema.properties)) {
-    if (propertySchema.required && !result[propertyKey]) {
+    const value = result[propertyKey];
+    if (propertySchema.required && !value) {
       errors.push({
         message: `Schema declares required property "${propertyKey}" but this attribute is missing or empty.`,
       });
+    }
+
+    const typeCheck = value && checkPropertyType(typeof value === propertySchema.type, propertySchema.type, value, propertyKey);
+    if (typeCheck) {
+      errors.push(typeCheck);
     }
   }
 

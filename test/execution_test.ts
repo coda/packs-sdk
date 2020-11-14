@@ -237,6 +237,23 @@ describe('Execution', () => {
                 return valid ? {foo: 'blah'} : 'blah';
               },
             }),
+            makeObjectFormula({
+              name: 'ObjectFoo2',
+              description: '',
+              examples: [],
+              parameters: [makeBooleanParameter('valid', 'Whether or not to return a valid property type.')],
+              response: {
+                schema: makeObjectSchema({
+                  type: ValueType.Object,
+                  properties: {
+                    foo: {type: ValueType.String},
+                  },
+                }),
+              },
+              execute: async ([valid]) => {
+                return valid ? {foo: 'blah'} : {foo: 123};
+              },
+            }),
           ],
         },
       });
@@ -262,6 +279,14 @@ describe('Execution', () => {
         await testHelper.willBeRejectedWith(
           executeFormulaFromPackDef(pack, 'Fake::ObjectFoo', [false]),
           /The following errors were found when validating the result of the formula "ObjectFoo":\nExpected a object result but got "blah"./,
+        );
+      });
+
+      it('object property', async () => {
+        await executeFormulaFromPackDef(pack, 'Fake::ObjectFoo2', [true]);
+        await testHelper.willBeRejectedWith(
+          executeFormulaFromPackDef(pack, 'Fake::ObjectFoo2', [false]),
+          /The following errors were found when validating the result of the formula "ObjectFoo2":\nExpected a string property for key Foo but got 123./,
         );
       });
     });
