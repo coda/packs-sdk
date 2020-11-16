@@ -190,6 +190,7 @@ function newFetcherExecutionContext(packName, authDef, credentialsFile) {
         },
         timezone: 'America/Los_Angeles',
         invocationToken: uuid_1.v4(),
+        endpoint: credentials === null || credentials === void 0 ? void 0 : credentials.endpointUrl,
         fetcher: new AuthenticatingFetcher(authDef, credentials),
         temporaryBlobStorage: new DummyBlobStorage(),
     };

@@ -220,6 +220,7 @@ export function newFetcherExecutionContext(
     },
     timezone: 'America/Los_Angeles',
     invocationToken: v4(),
+    endpoint: credentials?.endpointUrl,
     fetcher: new AuthenticatingFetcher(authDef, credentials),
     temporaryBlobStorage: new DummyBlobStorage(),
   };
