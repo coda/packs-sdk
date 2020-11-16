@@ -1907,6 +1907,18 @@ strip-json-comments@3.1.1, strip-json-comments@^3.1.0, strip-json-comments@^3.1.
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-3.1.1.tgz#31f1281b3832630434831c310c01cccda8cbe006"
   integrity sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==
 
+sugar-core@^2.0.0:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/sugar-core/-/sugar-core-2.0.6.tgz#785e0cd64aa7302ea54d47bc1213efe52c006270"
+  integrity sha512-YmLFysR3Si6RImqL1+aB6JH81EXxvXn5iXhPf2PsjfoUYEwCxFDYCQY+zC3WqviuGWzxFaSkkJvkUE05Y03L5Q==
+
+sugar-date@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/sugar-date/-/sugar-date-2.0.6.tgz#cbfb25e1e1e5cfeec551aa9f302ed763a3778b02"
+  integrity sha512-5aPXcTl9pIgae3j8wOieRZOEbaowHHpL+MPgZwHHjXdhZz3FjzpacjzM+Aq7rZTjDsWyWuKHzkIALx2uUhnmyg==
+  dependencies:
+    sugar-core "^2.0.0"
+
 supports-color@7.2.0, supports-color@^7.1.0:
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-7.2.0.tgz#1b7dcdcb32b8138801b3e478ba6a51caa89648da"

@@ -1,10 +1,36 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateResult = exports.validateParams = void 0;
 const types_1 = require("./types");
 const types_2 = require("./types");
 const api_types_1 = require("../api_types");
+<<<<<<< HEAD
 const ensure_1 = require("../helpers/ensure");
+=======
+const date = __importStar(require("../helpers/date"));
+const ensure_1 = require("../helpers/ensure");
+const api_1 = require("../api");
+const object_utils_1 = require("../helpers/object_utils");
+>>>>>>> 64b3e8d (add skeleton for result codaType validation)
 const schema_1 = require("../schema");
 const object_utils_1 = require("../helpers/object_utils");
 const schema_2 = require("../schema");
@@ -66,10 +92,56 @@ function validateResultType(resultType, result) {
             return ensure_1.ensureUnreachable(resultType);
     }
 }
+function _checkCodaType(resultCodaType, result) {
+    if (!object_utils_1.isDefined(result)) {
+        return { message: `Expected a ${resultCodaType} result but got ${result}.` };
+    }
+    switch (resultCodaType) {
+        case schema_1.ValueType.Date:
+            if (!date.parseDate(result, date.DEFAULT_TIMEZONE)) {
+                return { message: `Failed to parse ${result} as a ${schema_1.ValueType.Date}` };
+            }
+            break;
+        case schema_1.ValueType.Time:
+            break;
+        case schema_1.ValueType.DateTime:
+            break;
+        case schema_1.ValueType.Duration:
+            break;
+        case schema_1.ValueType.Person:
+            break;
+        case schema_1.ValueType.Percent:
+            if (result < 0 || result > 100) {
+                // error
+            }
+            break;
+        case schema_1.ValueType.Markdown:
+            break;
+        case schema_1.ValueType.Html:
+            break;
+        case schema_1.ValueType.Embed:
+            break;
+        case schema_1.ValueType.Reference:
+            break;
+        case schema_1.ValueType.Slider:
+            break;
+        case schema_1.ValueType.Scale:
+            break;
+        default:
+            // no need to coerce current result type
+            break;
+    }
+}
 function checkType(typeMatches, expectedResultTypeName, result) {
     if (!typeMatches) {
         const resultValue = typeof result === 'string' ? `"${result}"` : result;
         return { message: `Expected a ${expectedResultTypeName} result but got ${resultValue}.` };
+    }
+}
+function checkPropertyType(typeMatches, expectedPropertyTypeName, propertyValue, propertyKey) {
+    if (checkType(typeMatches, expectedPropertyTypeName, propertyValue)) {
+        const property = typeof propertyValue === 'string' ? `"${propertyValue}"` : propertyValue;
+        return { message: `Expected a ${expectedPropertyTypeName} property for key ${propertyKey} but got ${property}.` };
     }
 }
 function validateObjectResult(formula, result) {
@@ -87,10 +159,16 @@ function validateObjectResult(formula, result) {
     }
     const errors = [];
     for (const [propertyKey, propertySchema] of Object.entries(schema.properties)) {
-        if (propertySchema.required && !result[propertyKey]) {
+        const value = result[propertyKey];
+        if (propertySchema.required && !value) {
             errors.push({
                 message: `Schema declares required property "${propertyKey}" but this attribute is missing or empty.`,
             });
+        }
+        const typeCheck = value &&
+            checkPropertyType(typeof value === propertySchema.type, propertySchema.type, value, propertyKey);
+        if (typeCheck) {
+            errors.push(typeCheck);
         }
     }
     if (schema.id && schema.id in result && !result[schema.id]) {

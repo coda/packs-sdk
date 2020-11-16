@@ -5,7 +5,8 @@ import {ParameterException} from './types';
 import type {ResultValidationError} from './types';
 import {ResultValidationException} from './types';
 import {Type} from '../api_types';
-import type {TypedPackFormula} from '../api';
+import {ValueType} from '../schema';
+import * as date from '../helpers/date';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
 import {isDefined} from '../helpers/object_utils';
@@ -73,6 +74,48 @@ function validateResultType<ResultT extends any>(resultType: Type, result: Resul
   }
 }
 
+function _checkCodaType<ResultT extends any>
+    (resultCodaType: ValueType, result: ResultT): ResultValidationError | undefined {
+  if (!isDefined(result)) {
+    return {message: `Expected a ${resultCodaType} result but got ${result}.`};
+  }
+  switch (resultCodaType) {
+    case ValueType.Date:
+      if (!date.parseDate(result as string, date.DEFAULT_TIMEZONE)) {
+        return {message: `Failed to parse ${result} as a ${ValueType.Date}`};
+      }
+      break;
+    case ValueType.Time:
+      break;
+    case ValueType.DateTime:
+      break;
+    case ValueType.Duration:
+      break;
+    case ValueType.Person:
+      break;
+    case ValueType.Percent:
+      if (result < 0 || result > 100) {
+        // error
+      }
+      break;
+    case ValueType.Markdown:
+      break;
+    case ValueType.Html:
+      break;
+    case ValueType.Embed:
+      break;
+    case ValueType.Reference:
+      break;
+    case ValueType.Slider:
+      break;
+    case ValueType.Scale:
+      break;
+    default:
+      // no need to coerce current result type
+      break;
+  }
+}
+
 function checkType<ResultT extends any>(
   typeMatches: boolean,
   expectedResultTypeName: string,
@@ -87,7 +130,7 @@ function checkType<ResultT extends any>(
 function checkPropertyType<ResultT extends any>(
   typeMatches: boolean,
   expectedPropertyTypeName: string,
-  propertyValue: unknown,
+  propertyValue: ResultT,
   propertyKey: string,
 ): ResultValidationError | undefined {
   if (checkType(typeMatches, expectedPropertyTypeName, propertyValue)) {
@@ -124,7 +167,8 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
       });
     }
 
-    const typeCheck = value && checkPropertyType(typeof value === propertySchema.type, propertySchema.type, value, propertyKey);
+    const typeCheck = value && 
+      checkPropertyType(typeof value === propertySchema.type, propertySchema.type, value, propertyKey);
     if (typeCheck) {
       errors.push(typeCheck);
     }
@@ -139,4 +183,4 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
   if (errors.length) {
     throw ResultValidationException.fromErrors(formula.name, errors);
   }
-}
+} 
