@@ -13,6 +13,7 @@ exports.executeSyncFormulaFromPackDef = exports.executeSyncFormula = exports.exe
 const coercion_1 = require("./coercion");
 const helpers_1 = require("./helpers");
 const fetcher_1 = require("./fetcher");
+const fetcher_2 = require("./fetcher");
 const mocks_1 = require("./mocks");
 const mocks_2 = require("./mocks");
 const validation_1 = require("./validation");
@@ -60,7 +61,7 @@ function executeFormulaFromCLI(args, module) {
     });
 }
 exports.executeFormulaFromCLI = executeFormulaFromCLI;
-function executeSyncFormula(formula, params, context = mocks_2.newSyncExecutionContext(), { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, maxIterations: maxIterations = 1000, } = {}) {
+function executeSyncFormula(formula, params, context = mocks_2.newMockSyncExecutionContext(), { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, maxIterations: maxIterations = 1000, } = {}) {
     return __awaiter(this, void 0, void 0, function* () {
         if (shouldValidateParams) {
             validation_1.validateParams(formula, params);
@@ -83,10 +84,14 @@ function executeSyncFormula(formula, params, context = mocks_2.newSyncExecutionC
     });
 }
 exports.executeSyncFormula = executeSyncFormula;
-function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, context, options) {
+function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, context, options, { useRealFetcher, credentialsFile } = {}) {
     return __awaiter(this, void 0, void 0, function* () {
+        let executionContext = context;
+        if (!executionContext && useRealFetcher) {
+            executionContext = fetcher_2.newFetcherSyncExecutionContext(packDef.name, packDef.defaultAuthentication, credentialsFile);
+        }
         const formula = findSyncFormula(packDef, syncFormulaName);
-        return executeSyncFormula(formula, params, context, options);
+        return executeSyncFormula(formula, params, executionContext, options);
     });
 }
 exports.executeSyncFormulaFromPackDef = executeSyncFormulaFromPackDef;

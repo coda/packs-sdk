@@ -8,6 +8,7 @@ import type {Fetcher} from '../api_types';
 import type {MultiQueryParamCredentials} from './auth_types';
 import type {QueryParamCredentials} from './auth_types';
 import type {Response} from 'request';
+import type {SyncExecutionContext} from '../api_types';
 import type {TemporaryBlobStorage} from '../api_types';
 import type {TokenCredentials} from './auth_types';
 import {URL} from 'url';
@@ -177,4 +178,13 @@ export function newFetcherExecutionContext(
     fetcher: new AuthenticatingFetcher(authDef, credentials),
     temporaryBlobStorage: new DummyBlobStorage(),
   };
+}
+
+export function newFetcherSyncExecutionContext(
+  packName: string,
+  authDef: Authentication | undefined,
+  credentialsFile?: string,
+): SyncExecutionContext {
+  const context = newFetcherExecutionContext(packName, authDef, credentialsFile);
+  return {...context, sync: {}};
 }

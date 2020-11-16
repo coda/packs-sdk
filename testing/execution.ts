@@ -8,8 +8,9 @@ import type {TypedStandardFormula} from '../api';
 import {coerceParams} from './coercion';
 import {getManifestFromModule} from './helpers';
 import {newFetcherExecutionContext} from './fetcher';
+import {newFetcherSyncExecutionContext} from './fetcher';
 import {newMockExecutionContext} from './mocks';
-import {newSyncExecutionContext} from './mocks';
+import {newMockSyncExecutionContext} from './mocks';
 import {validateParams} from './validation';
 import {validateResult} from './validation';
 
@@ -80,7 +81,7 @@ export async function executeFormulaFromCLI(args: string[], module: any) {
 export async function executeSyncFormula(
   formula: GenericSyncFormula,
   params: ParamValues<ParamDefs>,
-  context: SyncExecutionContext = newSyncExecutionContext(),
+  context: SyncExecutionContext = newMockSyncExecutionContext(),
   {
     validateParams: shouldValidateParams = true,
     validateResult: shouldValidateResult = true,
@@ -117,9 +118,15 @@ export async function executeSyncFormulaFromPackDef(
   params: ParamValues<ParamDefs>,
   context?: SyncExecutionContext,
   options?: ExecuteSyncOptions,
+  {useRealFetcher, credentialsFile}: ContextOptions = {},
 ) {
+  let executionContext = context;
+  if (!executionContext && useRealFetcher) {
+    executionContext = newFetcherSyncExecutionContext(packDef.name, packDef.defaultAuthentication, credentialsFile);
+  }
+
   const formula = findSyncFormula(packDef, syncFormulaName);
-  return executeSyncFormula(formula, params, context, options);
+  return executeSyncFormula(formula, params, executionContext, options);
 }
 
 function findFormula(packDef: PackDefinition, formulaNameWithNamespace: string): TypedStandardFormula {

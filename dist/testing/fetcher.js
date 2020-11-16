@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newFetcherExecutionContext = exports.DummyBlobStorage = exports.AuthenticatingFetcher = void 0;
+exports.newFetcherSyncExecutionContext = exports.newFetcherExecutionContext = exports.DummyBlobStorage = exports.AuthenticatingFetcher = void 0;
 const types_1 = require("../types");
 const url_1 = require("url");
 const ensure_1 = require("../helpers/ensure");
@@ -160,3 +160,8 @@ function newFetcherExecutionContext(packName, authDef, credentialsFile) {
     };
 }
 exports.newFetcherExecutionContext = newFetcherExecutionContext;
+function newFetcherSyncExecutionContext(packName, authDef, credentialsFile) {
+    const context = newFetcherExecutionContext(packName, authDef, credentialsFile);
+    return Object.assign(Object.assign({}, context), { sync: {} });
+}
+exports.newFetcherSyncExecutionContext = newFetcherSyncExecutionContext;
