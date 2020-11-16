@@ -1,4 +1,4 @@
-import { AllCredentials } from './auth_types';
+import type { AllCredentials } from './auth_types';
 interface SetupAuthOptions {
     credentialsFile?: string;
 }

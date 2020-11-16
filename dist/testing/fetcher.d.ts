@@ -1,10 +1,10 @@
-import { Authentication } from '../types';
-import { Credentials } from './auth_types';
-import { ExecutionContext } from '../api';
-import { FetchRequest } from '../api_types';
-import { FetchResponse } from '../api_types';
-import { Fetcher } from '../api_types';
-import { TemporaryBlobStorage } from '../api_types';
+import type { Authentication } from '../types';
+import type { Credentials } from './auth_types';
+import type { ExecutionContext } from '../api';
+import type { FetchRequest } from '../api_types';
+import type { FetchResponse } from '../api_types';
+import type { Fetcher } from '../api_types';
+import type { TemporaryBlobStorage } from '../api_types';
 export declare class AuthenticatingFetcher implements Fetcher {
     private readonly _authDef;
     private readonly _credentials;

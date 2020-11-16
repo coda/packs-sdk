@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.newFetcherExecutionContext = exports.DummyBlobStorage = exports.AuthenticatingFetcher = void 0;
 const types_1 = require("../types");
 const url_1 = require("url");
-const ensure_1 = require("helpers/ensure");
+const ensure_1 = require("../helpers/ensure");
 const auth_1 = require("./auth");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
 const uuid_1 = require("uuid");

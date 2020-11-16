@@ -1,7 +1,7 @@
-import {AllCredentials} from './auth_types';
+import type {AllCredentials} from './auth_types';
 import {AuthenticationType} from '../types';
-import {Credentials} from './auth_types';
-import {MultiQueryParamCredentials} from './auth_types';
+import type {Credentials} from './auth_types';
+import type {MultiQueryParamCredentials} from './auth_types';
 import {ensureUnreachable} from '../helpers/ensure';
 import fs from 'fs';
 import {getManifestFromModule} from './helpers';
