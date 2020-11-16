@@ -1,9 +1,9 @@
-import { FetchRequest } from './api_types';
-import { FetchResponse } from './api_types';
-import { PackFormulaValue } from './api_types';
-import { ParamDefs } from './api_types';
-import { Schema } from './schema';
-import { SchemaType } from './schema';
+import type { FetchRequest } from './api_types';
+import type { FetchResponse } from './api_types';
+import type { PackFormulaValue } from './api_types';
+import type { ParamDefs } from './api_types';
+import type { Schema } from './schema';
+import type { SchemaType } from './schema';
 declare type ParamMapper<T> = (val: T) => T;
 export interface RequestHandlerTemplate {
     url: string;

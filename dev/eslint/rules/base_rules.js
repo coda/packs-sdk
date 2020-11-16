@@ -16,6 +16,7 @@ module.exports = {
         extendDefaults: false,
       },
     ],
+    '@typescript-eslint/consistent-type-imports': 'error',
     '@typescript-eslint/explicit-member-accessibility': [
       'error',
       {

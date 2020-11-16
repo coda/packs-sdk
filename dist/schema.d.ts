@@ -1,5 +1,5 @@
-import { $Values } from './type_utils';
-import { PackId } from './types';
+import type { $Values } from './type_utils';
+import type { PackId } from './types';
 export declare enum ValueType {
     Boolean = "boolean",
     Number = "number",
