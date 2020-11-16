@@ -18,6 +18,7 @@ const url_1 = require("url");
 const ensure_1 = require("../helpers/ensure");
 const auth_1 = require("./auth");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
+const url_parse_1 = __importDefault(require("url-parse"));
 const uuid_1 = require("uuid");
 const xml2js_1 = __importDefault(require("xml2js"));
 const FetcherUserAgent = 'Coda-Server-Fetcher';
@@ -151,7 +152,7 @@ class AuthenticatingFetcher {
                 throw new Error(`The endpoint ${endpointUrl} is not authorized. The domain must match the domain ${endpointDomain} provided in the pack definition.`);
             }
         }
-        const parsedUrl = new url_1.URL(rawUrl);
+        const parsedUrl = url_parse_1.default(rawUrl, {});
         if (parsedUrl.hostname) {
             if (parsedUrl.hostname !== parsedEndpointUrl.hostname) {
                 throw new Error(`The url ${rawUrl} is not authorized. The host must match the host ${parsedEndpointUrl.hostname} that was specified with the auth credentials. ` +

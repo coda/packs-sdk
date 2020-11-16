@@ -16,6 +16,7 @@ import type {WebBasicCredentials} from './auth_types';
 import {ensureUnreachable} from '../helpers/ensure';
 import {readCredentialsFile} from './auth';
 import requestPromise from 'request-promise-native';
+import urlParse from 'url-parse';
 import {v4} from 'uuid';
 import xml2js from 'xml2js';
 
@@ -179,7 +180,7 @@ export class AuthenticatingFetcher implements Fetcher {
       }
     }
 
-    const parsedUrl = new URL(rawUrl);
+    const parsedUrl = urlParse(rawUrl, {});
     if (parsedUrl.hostname) {
       if (parsedUrl.hostname !== parsedEndpointUrl.hostname) {
         throw new Error(
