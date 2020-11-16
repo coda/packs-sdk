@@ -12,7 +12,7 @@ export interface TokenCredentials extends BaseCredentials {
 
 export interface WebBasicCredentials extends BaseCredentials {
   username: string;
-  password: string;
+  password?: string;
 }
 
 export interface QueryParamCredentials extends BaseCredentials {

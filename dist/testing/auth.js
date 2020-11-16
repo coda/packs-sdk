@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.readCredentialsFile = exports.setupAuth = void 0;
 const types_1 = require("../types");
 const ensure_1 = require("../helpers/ensure");
+const ensure_2 = require("../helpers/ensure");
 const fs_1 = __importDefault(require("fs"));
 const helpers_1 = require("./helpers");
 const path_1 = __importDefault(require("path"));
@@ -47,22 +48,22 @@ function setupAuth(module, opts = {}) {
             case types_1.AuthenticationType.OAuth2:
                 throw new Error('Not yet implemented');
             default:
-                return ensure_1.ensureUnreachable(defaultAuthentication);
+                return ensure_2.ensureUnreachable(defaultAuthentication);
         }
     });
 }
 exports.setupAuth = setupAuth;
 class CredentialHandler {
     constructor(packName, authDef, { credentialsFile = DEFAULT_CREDENTIALS_FILE }) {
-        this.packName = packName;
-        this.authDef = authDef;
-        this.credentialsFile = credentialsFile;
+        this._packName = packName;
+        this._authDef = authDef;
+        this._credentialsFile = credentialsFile;
     }
     checkForExistingCredential() {
         return __awaiter(this, void 0, void 0, function* () {
-            const existingCredentials = readCredentialsFile(this.credentialsFile);
-            if (existingCredentials && existingCredentials[this.packName]) {
-                const input = yield this.promptForInput(`Credentials already exist for ${this.packName}, press "y" to overwrite or "n" to cancel: `);
+            const existingCredentials = readCredentialsFile(this._credentialsFile);
+            if (existingCredentials && existingCredentials[this._packName]) {
+                const input = yield this.promptForInput(`Credentials already exist for ${this._packName}, press "y" to overwrite or "n" to cancel: `);
                 if (input.toLocaleLowerCase() !== 'y') {
                     return process.exit(1);
                 }
@@ -73,17 +74,25 @@ class CredentialHandler {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.checkForExistingCredential();
             const endpointUrl = yield this.maybePromptForEndpointUrl();
-            const input = yield this.promptForInput(`Paste the token or API key to use for ${this.packName}:\n`);
+            const input = yield this.promptForInput(`Paste the token or API key to use for ${this._packName}:\n`);
             this.storeCredential({ endpointUrl, token: input });
             helpers_2.print('Credentials updated!');
         });
     }
     handleWebBasic() {
+        var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
+            ensure_1.assertCondition(this._authDef.type === types_1.AuthenticationType.WebBasic);
             yield this.checkForExistingCredential();
             const endpointUrl = yield this.maybePromptForEndpointUrl();
-            const username = yield this.promptForInput(`Enter the username for ${this.packName}:\n`);
-            const password = yield this.promptForInput(`Enter the password for ${this.packName} (if any):\n`);
+            const usernamePlaceholder = ((_a = this._authDef.uxConfig) === null || _a === void 0 ? void 0 : _a.placeholderUsername) || 'username';
+            const passwordPlaceholder = ((_b = this._authDef.uxConfig) === null || _b === void 0 ? void 0 : _b.placeholderPassword) || 'password';
+            const usernameOnly = (_c = this._authDef.uxConfig) === null || _c === void 0 ? void 0 : _c.usernameOnly;
+            const username = yield this.promptForInput(`Enter the ${usernamePlaceholder} for ${this._packName}:\n`);
+            let password;
+            if (!usernameOnly) {
+                password = yield this.promptForInput(`Enter the ${passwordPlaceholder} for ${this._packName}:\n`);
+            }
             this.storeCredential({ endpointUrl, username, password });
             helpers_2.print('Credentials updated!');
         });
@@ -91,11 +100,11 @@ class CredentialHandler {
     handleQueryParam(paramName) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!paramName) {
-                helpers_3.printAndExit(`Please provide a paramName attribute in the defaultAuthentication section of the ${this.packName} pack definition.`);
+                helpers_3.printAndExit(`Please provide a paramName attribute in the defaultAuthentication section of the ${this._packName} pack definition.`);
             }
             yield this.checkForExistingCredential();
             const endpointUrl = yield this.maybePromptForEndpointUrl();
-            const input = yield this.promptForInput(`Enter the token to use for the "${paramName}" url param for ${this.packName}:\n`);
+            const input = yield this.promptForInput(`Enter the token to use for the "${paramName}" url param for ${this._packName}:\n`);
             this.storeCredential({ endpointUrl, token: input });
             helpers_2.print('Credentials updated!');
         });
@@ -103,13 +112,13 @@ class CredentialHandler {
     handleMultiQueryParams(paramDefs) {
         return __awaiter(this, void 0, void 0, function* () {
             if (paramDefs.length === 0) {
-                helpers_3.printAndExit(`Please define one or more entries for "params" in the defaultAuthentication section of the ${this.packName} pack definition.`);
+                helpers_3.printAndExit(`Please define one or more entries for "params" in the defaultAuthentication section of the ${this._packName} pack definition.`);
             }
             yield this.checkForExistingCredential();
             const endpointUrl = yield this.maybePromptForEndpointUrl();
             const credentials = { endpointUrl, params: {} };
             for (const paramDef of paramDefs) {
-                const paramValue = yield this.promptForInput(`Enter the token to use for the "${paramDef.name}" url param for ${this.packName}:\n`);
+                const paramValue = yield this.promptForInput(`Enter the token to use for the "${paramDef.name}" url param for ${this._packName}:\n`);
                 credentials.params[paramDef.name] = paramValue;
             }
             this.storeCredential(credentials);
@@ -118,21 +127,21 @@ class CredentialHandler {
     }
     maybePromptForEndpointUrl() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (this.authDef.type === types_1.AuthenticationType.None) {
+            if (this._authDef.type === types_1.AuthenticationType.None) {
                 return;
             }
-            const { requiresEndpointUrl, endpointDomain } = this.authDef;
+            const { requiresEndpointUrl, endpointDomain } = this._authDef;
             if (!requiresEndpointUrl) {
                 return;
             }
             const placeholder = endpointDomain
                 ? `https://my-site.${endpointDomain}`
-                : `https://${this.packName.toLowerCase()}.example.com`;
-            return this.promptForInput(`Enter the endpoint url for ${this.packName} (for example, ${placeholder}):\n`);
+                : `https://${this._packName.toLowerCase()}.example.com`;
+            return this.promptForInput(`Enter the endpoint url for ${this._packName} (for example, ${placeholder}):\n`);
         });
     }
     storeCredential(credentials) {
-        storeCredential(this.credentialsFile, this.packName, credentials);
+        storeCredential(this._credentialsFile, this._packName, credentials);
     }
     promptForInput(prompt) {
         return __awaiter(this, void 0, void 0, function* () {
