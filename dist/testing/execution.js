@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.executeSyncFormulaFromPackDef = exports.executeSyncFormula = exports.executeFormulaFromCLI = exports.executeFormulaFromPackDef = exports.executeFormula = void 0;
 const coercion_1 = require("./coercion");
 const helpers_1 = require("./helpers");
+const fetcher_1 = require("./fetcher");
 const mocks_1 = require("./mocks");
 const mocks_2 = require("./mocks");
 const validation_1 = require("./validation");
@@ -29,8 +30,12 @@ function executeFormula(formula, params, context = mocks_1.newMockExecutionConte
     });
 }
 exports.executeFormula = executeFormula;
-function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, params, context, options) {
+function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, params, context, options, { useRealFetcher, credentialsFile } = {}) {
     return __awaiter(this, void 0, void 0, function* () {
+        let executionContext = context;
+        if (!executionContext && useRealFetcher) {
+            executionContext = fetcher_1.newFetcherExecutionContext(packDef.name, packDef.defaultAuthentication, credentialsFile);
+        }
         const formula = findFormula(packDef, formulaNameWithNamespace);
         return executeFormula(formula, params, context, options);
     });

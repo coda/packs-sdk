@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setupAuth = void 0;
+exports.readCredentialsFile = exports.setupAuth = void 0;
 const types_1 = require("../types");
 const ensure_1 = require("../helpers/ensure");
 const fs_1 = __importDefault(require("fs"));
@@ -21,6 +21,7 @@ const path_1 = __importDefault(require("path"));
 const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
 const readline_1 = __importDefault(require("readline"));
+const DEFAULT_CREDENTIALS_FILE = '.coda/credentials.json';
 function setupAuth(module, opts = {}) {
     return __awaiter(this, void 0, void 0, function* () {
         const { name, defaultAuthentication } = helpers_1.getManifestFromModule(module);
@@ -32,20 +33,19 @@ function setupAuth(module, opts = {}) {
             case types_1.AuthenticationType.None:
                 return helpers_3.printAndExit(`The pack ${name} declares AuthenticationType.None and so does not require authentication. ` +
                     `Please declare another AuthenticationType to use authentication with this pack.`);
-            case types_1.AuthenticationType.AWSSignature4:
-                return handler.handleAWSSignature4();
             case types_1.AuthenticationType.CodaApiHeaderBearerToken:
             case types_1.AuthenticationType.CustomHeaderToken:
             case types_1.AuthenticationType.HeaderBearerToken:
                 return handler.handleToken();
             case types_1.AuthenticationType.MultiQueryParamToken:
                 return handler.handleMultiQueryParams(defaultAuthentication.params);
-            case types_1.AuthenticationType.OAuth2:
-                throw new Error('Not yet implemented');
             case types_1.AuthenticationType.QueryParamToken:
                 return handler.handleQueryParam(defaultAuthentication.paramName);
             case types_1.AuthenticationType.WebBasic:
                 return handler.handleWebBasic();
+            case types_1.AuthenticationType.AWSSignature4:
+            case types_1.AuthenticationType.OAuth2:
+                throw new Error('Not yet implemented');
             default:
                 return ensure_1.ensureUnreachable(defaultAuthentication);
         }
@@ -53,7 +53,7 @@ function setupAuth(module, opts = {}) {
 }
 exports.setupAuth = setupAuth;
 class CredentialHandler {
-    constructor(packName, { credentialsFile = '.coda/credentials.json' }) {
+    constructor(packName, { credentialsFile = DEFAULT_CREDENTIALS_FILE }) {
         this.packName = packName;
         this.credentialsFile = credentialsFile;
     }
@@ -73,15 +73,6 @@ class CredentialHandler {
             yield this.checkForExistingCredential();
             const input = yield this.promptForInput(`Paste the token or API key to use for ${this.packName}:\n`);
             this.storeCredential({ token: input });
-            helpers_2.print('Credentials updated!');
-        });
-    }
-    handleAWSSignature4() {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.checkForExistingCredential();
-            const accessKeyId = yield this.promptForInput(`Paste the access key id for ${this.packName}:\n`);
-            const secretAccessKey = yield this.promptForInput(`Paste the secret access key for ${this.packName}:\n`);
-            this.storeCredential({ accessKeyId, secretAccessKey });
             helpers_2.print('Credentials updated!');
         });
     }
@@ -138,7 +129,7 @@ function storeCredential(credentialsFile, packName, credentials) {
     allCredentials[packName] = credentials;
     writeCredentialsFile(credentialsFile, allCredentials);
 }
-function readCredentialsFile(credentialsFile) {
+function readCredentialsFile(credentialsFile = DEFAULT_CREDENTIALS_FILE) {
     let file;
     try {
         file = fs_1.default.readFileSync(credentialsFile);
@@ -151,6 +142,7 @@ function readCredentialsFile(credentialsFile) {
     }
     return JSON.parse(file.toString());
 }
+exports.readCredentialsFile = readCredentialsFile;
 function writeCredentialsFile(credentialsFile, allCredentials) {
     const dirname = path_1.default.dirname(credentialsFile);
     if (!fs_1.default.existsSync(dirname)) {

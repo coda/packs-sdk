@@ -7,6 +7,7 @@ import type {SyncExecutionContext} from '../api_types';
 import type {TypedStandardFormula} from '../api';
 import {coerceParams} from './coercion';
 import {getManifestFromModule} from './helpers';
+import {newFetcherExecutionContext} from './fetcher';
 import {newMockExecutionContext} from './mocks';
 import {newSyncExecutionContext} from './mocks';
 import {validateParams} from './validation';
@@ -15,6 +16,11 @@ import {validateResult} from './validation';
 export interface ExecuteOptions {
   validateParams?: boolean;
   validateResult?: boolean;
+}
+
+export interface ContextOptions {
+  useRealFetcher?: boolean;
+  credentialsFile?: string;
 }
 
 export interface ExecuteSyncOptions extends ExecuteOptions {
@@ -43,7 +49,13 @@ export async function executeFormulaFromPackDef(
   params: ParamValues<ParamDefs>,
   context?: ExecutionContext,
   options?: ExecuteOptions,
+  {useRealFetcher, credentialsFile}: ContextOptions = {},
 ) {
+  let executionContext = context;
+  if (!executionContext && useRealFetcher) {
+    executionContext = newFetcherExecutionContext(packDef.name, packDef.defaultAuthentication, credentialsFile);
+  }
+
   const formula = findFormula(packDef, formulaNameWithNamespace);
   return executeFormula(formula, params, context, options);
 }

@@ -14,6 +14,8 @@ interface SetupAuthOptions {
   credentialsFile?: string;
 }
 
+const DEFAULT_CREDENTIALS_FILE = '.coda/credentials.json';
+
 export async function setupAuth(module: any, opts: SetupAuthOptions = {}): Promise<void> {
   const {name, defaultAuthentication} = getManifestFromModule(module);
   if (!defaultAuthentication) {
@@ -28,20 +30,19 @@ export async function setupAuth(module: any, opts: SetupAuthOptions = {}): Promi
         `The pack ${name} declares AuthenticationType.None and so does not require authentication. ` +
           `Please declare another AuthenticationType to use authentication with this pack.`,
       );
-    case AuthenticationType.AWSSignature4:
-      return handler.handleAWSSignature4();
     case AuthenticationType.CodaApiHeaderBearerToken:
     case AuthenticationType.CustomHeaderToken:
     case AuthenticationType.HeaderBearerToken:
       return handler.handleToken();
     case AuthenticationType.MultiQueryParamToken:
       return handler.handleMultiQueryParams(defaultAuthentication.params);
-    case AuthenticationType.OAuth2:
-      throw new Error('Not yet implemented');
     case AuthenticationType.QueryParamToken:
       return handler.handleQueryParam(defaultAuthentication.paramName);
     case AuthenticationType.WebBasic:
       return handler.handleWebBasic();
+    case AuthenticationType.AWSSignature4:
+    case AuthenticationType.OAuth2:
+      throw new Error('Not yet implemented');
     default:
       return ensureUnreachable(defaultAuthentication);
   }
@@ -51,7 +52,7 @@ class CredentialHandler {
   private readonly packName: string;
   private readonly credentialsFile: string;
 
-  constructor(packName: string, {credentialsFile = '.coda/credentials.json'}: SetupAuthOptions) {
+  constructor(packName: string, {credentialsFile = DEFAULT_CREDENTIALS_FILE}: SetupAuthOptions) {
     this.packName = packName;
     this.credentialsFile = credentialsFile;
   }
@@ -72,14 +73,6 @@ class CredentialHandler {
     await this.checkForExistingCredential();
     const input = await this.promptForInput(`Paste the token or API key to use for ${this.packName}:\n`);
     this.storeCredential({token: input});
-    print('Credentials updated!');
-  }
-
-  async handleAWSSignature4() {
-    await this.checkForExistingCredential();
-    const accessKeyId = await this.promptForInput(`Paste the access key id for ${this.packName}:\n`);
-    const secretAccessKey = await this.promptForInput(`Paste the secret access key for ${this.packName}:\n`);
-    this.storeCredential({accessKeyId, secretAccessKey});
     print('Credentials updated!');
   }
 
@@ -150,7 +143,7 @@ function storeCredential(credentialsFile: string, packName: string, credentials:
   writeCredentialsFile(credentialsFile, allCredentials);
 }
 
-function readCredentialsFile(credentialsFile: string): AllCredentials | undefined {
+export function readCredentialsFile(credentialsFile: string = DEFAULT_CREDENTIALS_FILE): AllCredentials | undefined {
   let file: Buffer;
   try {
     file = fs.readFileSync(credentialsFile);
