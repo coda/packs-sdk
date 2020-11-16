@@ -17,7 +17,7 @@ import type { StringHintTypes } from './schema';
 import type { StringSchema } from './schema';
 import type { SyncExecutionContext } from './api_types';
 import { Type } from './api_types';
-import { TypeOf } from './api_types';
+import type { TypeOf } from './api_types';
 export { ExecutionContext };
 export { FetchRequest } from './api_types';
 export declare class UserVisibleError extends Error {

@@ -1,10 +1,10 @@
 import {AuthenticationType} from '../types';
 import {FakeNpmProviderId} from './npm';
-import {FakePackDefinition} from '../helpers/sample_utils';
-import {FetchRequest} from '../api_types';
+import type {FakePackDefinition} from '../helpers/sample_utils';
+import type {FetchRequest} from '../api_types';
 import {PackCategory} from '../types';
-import {PackDefinition} from '../types';
-import {PackMetadata} from '../compiled_types';
+import type {PackDefinition} from '../types';
+import type {PackMetadata} from '../compiled_types';
 import {fakeDefinitionToDefinition} from '../helpers/sample_utils';
 import {fakeDefinitionToMetadata} from '../helpers/sample_utils';
 import {makeGetConnectionNameFormula} from '../api';

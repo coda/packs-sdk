@@ -1,6 +1,6 @@
-import { PackDefinition } from '../types';
-import { PackFormulas } from '../api';
-import { PackMetadata } from '../compiled_types';
+import type { PackDefinition } from '../types';
+import type { PackFormulas } from '../api';
+import type { PackMetadata } from '../compiled_types';
 export interface FakePackDefinition extends Omit<PackDefinition, 'formulas'> {
     formulas?: PackFormulas;
 }

@@ -1,6 +1,6 @@
-import { ExecutionContext } from '../api_types';
+import type { ExecutionContext } from '../api_types';
 import type { FetchResponse } from '../api_types';
-import { SyncExecutionContext } from '../api_types';
+import type { SyncExecutionContext } from '../api_types';
 import sinon from 'sinon';
 export interface MockExecutionContext extends ExecutionContext {
     fetcher: {

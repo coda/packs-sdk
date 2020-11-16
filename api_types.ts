@@ -1,7 +1,7 @@
-import {$Values} from './type_utils';
-import {ArraySchema} from './schema';
-import {Continuation} from './api';
-import {MetadataFormula} from './api';
+import type {$Values} from './type_utils';
+import type {ArraySchema} from './schema';
+import type {Continuation} from './api';
+import type {MetadataFormula} from './api';
 
 export enum Type {
   string,

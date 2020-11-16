@@ -1,12 +1,12 @@
-import { $OmitNested } from './type_utils';
-import { Authentication } from './types';
-import { AuthenticationType } from './types';
-import { Format } from './types';
-import { MetadataFormula } from './api';
-import { ObjectPackFormulaMetadata } from './api';
-import { PackDefinition } from './types';
-import { PackFormulaMetadata } from './api';
-import { SyncTable } from './api';
+import type { $OmitNested } from './type_utils';
+import type { Authentication } from './types';
+import type { AuthenticationType } from './types';
+import type { Format } from './types';
+import type { MetadataFormula } from './api';
+import type { ObjectPackFormulaMetadata } from './api';
+import type { PackDefinition } from './types';
+import type { PackFormulaMetadata } from './api';
+import type { SyncTable } from './api';
 export declare type PackSyncTable = Omit<SyncTable, 'getter' | 'getName'> & {
     getter: PackFormulaMetadata;
     isDynamic?: boolean;

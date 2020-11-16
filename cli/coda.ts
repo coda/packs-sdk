@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import {Arguments} from 'yargs';
+import type {Arguments} from 'yargs';
 import path from 'path';
 import {spawnSync} from 'child_process';
 import yargs from 'yargs';

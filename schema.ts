@@ -1,5 +1,5 @@
-import {$Values} from './type_utils';
-import {PackId} from './types';
+import type {$Values} from './type_utils';
+import type {PackId} from './types';
 import {ensureExists} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
 import pascalcase from 'pascalcase';

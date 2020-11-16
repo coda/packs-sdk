@@ -17,7 +17,7 @@ import type {StringHintTypes} from './schema';
 import type {StringSchema} from './schema';
 import type {SyncExecutionContext} from './api_types';
 import {Type} from './api_types';
-import {TypeOf} from './api_types';
+import type {TypeOf} from './api_types';
 import {ValueType} from './schema';
 import {booleanArray} from './api_types';
 import {dateArray} from './api_types';
