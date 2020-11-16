@@ -74,14 +74,15 @@ class AuthenticatingFetcher {
             };
         });
     }
-    _applyAuthentication({ url, headers, body, form, }) {
+    _applyAuthentication({ url: rawUrl, headers, body, form, }) {
         if (!this._authDef) {
-            return { url, headers, body, form };
+            return { url: rawUrl, headers, body, form };
         }
         if (!this._credentials) {
             throw new Error(`${this._authDef.type} authentication is required for this pack, but no local credentials were found. ` +
                 'Run "coda auth path/to/pack/manifest to set up credentials."');
         }
+        const url = this._applyAndValidateEndpoint(rawUrl);
         switch (this._authDef.type) {
             case types_1.AuthenticationType.None:
                 return { url, headers, body, form };
@@ -103,7 +104,7 @@ class AuthenticatingFetcher {
                 return { headers, body, form, url: parsedUrl.href };
             }
             case types_1.AuthenticationType.MultiQueryParamToken: {
-                const paramDict = this._credentials;
+                const { params: paramDict } = this._credentials;
                 const parsedUrl = new url_1.URL(url);
                 for (const [paramName, paramValue] of Object.entries(paramDict)) {
                     if (!paramValue) {
@@ -129,6 +130,39 @@ class AuthenticatingFetcher {
                 throw new Error('Not yet implemented');
             default:
                 return ensure_1.ensureUnreachable(this._authDef);
+        }
+    }
+    _applyAndValidateEndpoint(rawUrl) {
+        var _a;
+        if (!this._authDef || this._authDef.type === types_1.AuthenticationType.None) {
+            return rawUrl;
+        }
+        const endpointUrl = (_a = this._credentials) === null || _a === void 0 ? void 0 : _a.endpointUrl;
+        if (!endpointUrl) {
+            return rawUrl;
+        }
+        const parsedEndpointUrl = new url_1.URL(endpointUrl);
+        const { endpointDomain } = this._authDef;
+        if (endpointUrl) {
+            if (parsedEndpointUrl.protocol !== 'https:') {
+                throw new Error(`Only https urls are supported, but pack is configured to use ${endpointUrl}.`);
+            }
+            if (!(parsedEndpointUrl.hostname === endpointDomain || parsedEndpointUrl.hostname.endsWith(`.${endpointDomain}`))) {
+                throw new Error(`The endpoint ${endpointUrl} is not authorized. The domain must match the domain ${endpointDomain} provided in the pack definition.`);
+            }
+        }
+        const parsedUrl = new url_1.URL(rawUrl);
+        if (parsedUrl.hostname) {
+            if (parsedUrl.hostname !== parsedEndpointUrl.hostname) {
+                throw new Error(`The url ${rawUrl} is not authorized. The host must match the host ${parsedEndpointUrl.hostname} that was specified with the auth credentials. ` +
+                    'Or leave the host blank and the host will be filled in automatically from the credenetials.');
+            }
+            return rawUrl;
+        }
+        else {
+            const prefixUrl = endpointUrl.endsWith('/') ? endpointUrl : endpointUrl + '/';
+            const path = rawUrl.startsWith('/') ? rawUrl.slice(1) : rawUrl;
+            return prefixUrl + path;
         }
     }
 }

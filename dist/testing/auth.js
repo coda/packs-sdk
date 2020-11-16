@@ -28,7 +28,7 @@ function setupAuth(module, opts = {}) {
         if (!defaultAuthentication) {
             return helpers_3.printAndExit(`The pack ${name} has no declared authentication. Provide a value for defaultAuthentication in the pack definition.`);
         }
-        const handler = new CredentialHandler(name, opts);
+        const handler = new CredentialHandler(name, defaultAuthentication, opts);
         switch (defaultAuthentication.type) {
             case types_1.AuthenticationType.None:
                 return helpers_3.printAndExit(`The pack ${name} declares AuthenticationType.None and so does not require authentication. ` +
@@ -53,8 +53,9 @@ function setupAuth(module, opts = {}) {
 }
 exports.setupAuth = setupAuth;
 class CredentialHandler {
-    constructor(packName, { credentialsFile = DEFAULT_CREDENTIALS_FILE }) {
+    constructor(packName, authDef, { credentialsFile = DEFAULT_CREDENTIALS_FILE }) {
         this.packName = packName;
+        this.authDef = authDef;
         this.credentialsFile = credentialsFile;
     }
     checkForExistingCredential() {
@@ -71,17 +72,19 @@ class CredentialHandler {
     handleToken() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.checkForExistingCredential();
+            const endpointUrl = yield this.maybePromptForEndpointUrl();
             const input = yield this.promptForInput(`Paste the token or API key to use for ${this.packName}:\n`);
-            this.storeCredential({ token: input });
+            this.storeCredential({ endpointUrl, token: input });
             helpers_2.print('Credentials updated!');
         });
     }
     handleWebBasic() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.checkForExistingCredential();
+            const endpointUrl = yield this.maybePromptForEndpointUrl();
             const username = yield this.promptForInput(`Enter the username for ${this.packName}:\n`);
             const password = yield this.promptForInput(`Enter the password for ${this.packName} (if any):\n`);
-            this.storeCredential({ username, password });
+            this.storeCredential({ endpointUrl, username, password });
             helpers_2.print('Credentials updated!');
         });
     }
@@ -91,8 +94,9 @@ class CredentialHandler {
                 helpers_3.printAndExit(`Please provide a paramName attribute in the defaultAuthentication section of the ${this.packName} pack definition.`);
             }
             yield this.checkForExistingCredential();
+            const endpointUrl = yield this.maybePromptForEndpointUrl();
             const input = yield this.promptForInput(`Enter the token to use for the "${paramName}" url param for ${this.packName}:\n`);
-            this.storeCredential({ token: input });
+            this.storeCredential({ endpointUrl, token: input });
             helpers_2.print('Credentials updated!');
         });
     }
@@ -102,13 +106,29 @@ class CredentialHandler {
                 helpers_3.printAndExit(`Please define one or more entries for "params" in the defaultAuthentication section of the ${this.packName} pack definition.`);
             }
             yield this.checkForExistingCredential();
-            const credentials = {};
+            const endpointUrl = yield this.maybePromptForEndpointUrl();
+            const credentials = { endpointUrl, params: {} };
             for (const paramDef of paramDefs) {
                 const paramValue = yield this.promptForInput(`Enter the token to use for the "${paramDef.name}" url param for ${this.packName}:\n`);
-                credentials[paramDef.name] = paramValue;
+                credentials.params[paramDef.name] = paramValue;
             }
             this.storeCredential(credentials);
             helpers_2.print('Credentials updated!');
+        });
+    }
+    maybePromptForEndpointUrl() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.authDef.type === types_1.AuthenticationType.None) {
+                return;
+            }
+            const { requiresEndpointUrl, endpointDomain } = this.authDef;
+            if (!requiresEndpointUrl) {
+                return;
+            }
+            const placeholder = endpointDomain
+                ? `https://my-site.${endpointDomain}`
+                : `https://${this.packName.toLowerCase()}.example.com`;
+            return this.promptForInput(`Enter the endpoint url for ${this.packName} (for example, ${placeholder}):\n`);
         });
     }
     storeCredential(credentials) {

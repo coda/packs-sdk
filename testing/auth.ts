@@ -1,4 +1,5 @@
 import type {AllCredentials} from './auth_types';
+import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
 import type {Credentials} from './auth_types';
 import type {MultiQueryParamCredentials} from './auth_types';
@@ -23,7 +24,7 @@ export async function setupAuth(module: any, opts: SetupAuthOptions = {}): Promi
       `The pack ${name} has no declared authentication. Provide a value for defaultAuthentication in the pack definition.`,
     );
   }
-  const handler = new CredentialHandler(name, opts);
+  const handler = new CredentialHandler(name, defaultAuthentication, opts);
   switch (defaultAuthentication.type) {
     case AuthenticationType.None:
       return printAndExit(
@@ -49,11 +50,18 @@ export async function setupAuth(module: any, opts: SetupAuthOptions = {}): Promi
 }
 
 class CredentialHandler {
+  // TODO: Rename with underscores
   private readonly packName: string;
+  private readonly authDef: Authentication;
   private readonly credentialsFile: string;
 
-  constructor(packName: string, {credentialsFile = DEFAULT_CREDENTIALS_FILE}: SetupAuthOptions) {
+  constructor(
+    packName: string,
+    authDef: Authentication,
+    {credentialsFile = DEFAULT_CREDENTIALS_FILE}: SetupAuthOptions,
+  ) {
     this.packName = packName;
+    this.authDef = authDef;
     this.credentialsFile = credentialsFile;
   }
 
@@ -71,16 +79,18 @@ class CredentialHandler {
 
   async handleToken() {
     await this.checkForExistingCredential();
+    const endpointUrl = await this.maybePromptForEndpointUrl();
     const input = await this.promptForInput(`Paste the token or API key to use for ${this.packName}:\n`);
-    this.storeCredential({token: input});
+    this.storeCredential({endpointUrl, token: input});
     print('Credentials updated!');
   }
 
   async handleWebBasic() {
     await this.checkForExistingCredential();
+    const endpointUrl = await this.maybePromptForEndpointUrl();
     const username = await this.promptForInput(`Enter the username for ${this.packName}:\n`);
     const password = await this.promptForInput(`Enter the password for ${this.packName} (if any):\n`);
-    this.storeCredential({username, password});
+    this.storeCredential({endpointUrl, username, password});
     print('Credentials updated!');
   }
 
@@ -91,10 +101,11 @@ class CredentialHandler {
       );
     }
     await this.checkForExistingCredential();
+    const endpointUrl = await this.maybePromptForEndpointUrl();
     const input = await this.promptForInput(
       `Enter the token to use for the "${paramName}" url param for ${this.packName}:\n`,
     );
-    this.storeCredential({token: input});
+    this.storeCredential({endpointUrl, token: input});
     print('Credentials updated!');
   }
 
@@ -111,15 +122,30 @@ class CredentialHandler {
     }
 
     await this.checkForExistingCredential();
-    const credentials: MultiQueryParamCredentials = {};
+    const endpointUrl = await this.maybePromptForEndpointUrl();
+    const credentials: MultiQueryParamCredentials = {endpointUrl, params: {}};
     for (const paramDef of paramDefs) {
       const paramValue = await this.promptForInput(
         `Enter the token to use for the "${paramDef.name}" url param for ${this.packName}:\n`,
       );
-      credentials[paramDef.name] = paramValue;
+      credentials.params[paramDef.name] = paramValue;
     }
     this.storeCredential(credentials);
     print('Credentials updated!');
+  }
+
+  async maybePromptForEndpointUrl() {
+    if (this.authDef.type === AuthenticationType.None) {
+      return;
+    }
+    const {requiresEndpointUrl, endpointDomain} = this.authDef;
+    if (!requiresEndpointUrl) {
+      return;
+    }
+    const placeholder = endpointDomain
+      ? `https://my-site.${endpointDomain}`
+      : `https://${this.packName.toLowerCase()}.example.com`;
+    return this.promptForInput(`Enter the endpoint url for ${this.packName} (for example, ${placeholder}):\n`);
   }
 
   storeCredential(credentials: Credentials): void {

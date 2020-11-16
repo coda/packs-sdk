@@ -12,6 +12,7 @@ export declare class AuthenticatingFetcher implements Fetcher {
     constructor(authDef: Authentication | undefined, credentials: Credentials | undefined);
     fetch<T = any>(request: FetchRequest): Promise<FetchResponse<T>>;
     private _applyAuthentication;
+    private _applyAndValidateEndpoint;
 }
 export declare class DummyBlobStorage implements TemporaryBlobStorage {
     storeUrl(): Promise<string>;
