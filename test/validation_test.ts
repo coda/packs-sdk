@@ -33,7 +33,7 @@ describe('Validation', () => {
   })
 
   it('correctly validates date object', async () => {
-    await executeFormulaFromPackDef(fakePack, 'Fake::Date', ['1/1/2020']);
+    await executeFormulaFromPackDef(fakePack, 'Fake::Date', ['Wed, 02 Oct 2002 15:00:00 +0200']);
   });
 
   it('correctly throws on malformed date object', async () => {

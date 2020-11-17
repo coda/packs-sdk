@@ -92,14 +92,14 @@ function validateResultType(resultType, result) {
             return ensure_1.ensureUnreachable(resultType);
     }
 }
-function _checkCodaType(resultCodaType, result) {
+function checkCodaType(resultCodaType, result) {
     if (!object_utils_1.isDefined(result)) {
         return { message: `Expected a ${resultCodaType} result but got ${result}.` };
     }
     switch (resultCodaType) {
         case schema_1.ValueType.Date:
             if (!date.parseDate(result, date.DEFAULT_TIMEZONE)) {
-                return { message: `Failed to parse ${result} as a ${schema_1.ValueType.Date}` };
+                return { message: `Failed to parse ${result} as a ${schema_1.ValueType.Date}.` };
             }
             break;
         case schema_1.ValueType.Time:
@@ -169,6 +169,12 @@ function validateObjectResult(formula, result) {
             checkPropertyType(typeof value === propertySchema.type, propertySchema.type, value, propertyKey);
         if (typeCheck) {
             errors.push(typeCheck);
+        }
+        if (propertySchema.codaType) {
+            const codaTypeCheck = value && checkCodaType(propertySchema.codaType, value);
+            if (codaTypeCheck) {
+                errors.push(codaTypeCheck);
+            }
         }
     }
     if (schema.id && schema.id in result && !result[schema.id]) {

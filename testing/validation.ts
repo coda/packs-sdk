@@ -6,7 +6,6 @@ import type {ResultValidationError} from './types';
 import {ResultValidationException} from './types';
 import {Type} from '../api_types';
 import {ValueType} from '../schema';
-import * as date from '../helpers/date';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
 import {isDefined} from '../helpers/object_utils';
@@ -81,7 +80,7 @@ function checkCodaType<ResultT extends any>
   }
   switch (resultCodaType) {
     case ValueType.Date:
-      if (!date.parseDate(result as string, date.DEFAULT_TIMEZONE)) {
+      if (isNaN(Date.parse(result as string))) {
         return {message: `Failed to parse ${result} as a ${ValueType.Date}.`};
       }
       break;
@@ -92,11 +91,6 @@ function checkCodaType<ResultT extends any>
     case ValueType.Duration:
       break;
     case ValueType.Person:
-      break;
-    case ValueType.Percent:
-      if (result < 0 || result > 100) {
-        // error
-      }
       break;
     case ValueType.Markdown:
       break;
