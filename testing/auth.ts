@@ -70,7 +70,7 @@ class CredentialHandler {
     this._credentialsFile = credentialsFile;
   }
 
-  async checkForExistingCredential() {
+  private async checkForExistingCredential() {
     const existingCredentials = readCredentialsFile(this._credentialsFile);
     if (existingCredentials && existingCredentials[this._packName]) {
       const input = await this.promptForInput(
@@ -146,7 +146,7 @@ class CredentialHandler {
     print('Credentials updated!');
   }
 
-  async maybePromptForEndpointUrl() {
+  private async maybePromptForEndpointUrl() {
     if (this._authDef.type === AuthenticationType.None) {
       return;
     }
