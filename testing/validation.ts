@@ -74,7 +74,7 @@ function validateResultType<ResultT extends any>(resultType: Type, result: Resul
   }
 }
 
-function _checkCodaType<ResultT extends any>
+function checkCodaType<ResultT extends any>
     (resultCodaType: ValueType, result: ResultT): ResultValidationError | undefined {
   if (!isDefined(result)) {
     return {message: `Expected a ${resultCodaType} result but got ${result}.`};
@@ -82,7 +82,7 @@ function _checkCodaType<ResultT extends any>
   switch (resultCodaType) {
     case ValueType.Date:
       if (!date.parseDate(result as string, date.DEFAULT_TIMEZONE)) {
-        return {message: `Failed to parse ${result} as a ${ValueType.Date}`};
+        return {message: `Failed to parse ${result} as a ${ValueType.Date}.`};
       }
       break;
     case ValueType.Time:
@@ -171,6 +171,13 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
       checkPropertyType(typeof value === propertySchema.type, propertySchema.type, value, propertyKey);
     if (typeCheck) {
       errors.push(typeCheck);
+    }
+
+    if (propertySchema.codaType) {
+      const codaTypeCheck = value && checkCodaType(propertySchema.codaType, value);
+      if (codaTypeCheck) {
+        errors.push(codaTypeCheck);
+      }
     }
   }
 
