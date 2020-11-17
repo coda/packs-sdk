@@ -42,14 +42,14 @@ function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, params, co
     });
 }
 exports.executeFormulaFromPackDef = executeFormulaFromPackDef;
-function executeFormulaFromCLI(args, module) {
+function executeFormulaFromCLI(args, module, contextOptions = {}) {
     return __awaiter(this, void 0, void 0, function* () {
         const formulaNameWithNamespace = args[0];
         const manifest = helpers_1.getManifestFromModule(module);
         try {
             const formula = findFormula(manifest, formulaNameWithNamespace);
             const params = coercion_1.coerceParams(formula, args.slice(1));
-            const result = yield executeFormula(formula, params);
+            const result = yield executeFormulaFromPackDef(manifest, formulaNameWithNamespace, params, undefined, undefined, contextOptions);
             // eslint-disable-next-line no-console
             console.log(result);
         }

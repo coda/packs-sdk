@@ -20,8 +20,9 @@ import urlParse from 'url-parse';
 import {v4} from 'uuid';
 import xml2js from 'xml2js';
 
-const FetcherUserAgent = 'Coda-Server-Fetcher';
-const MAX_CONTENT_LENGTH_BYTES = 25 * 1024 * 1024;
+const FetcherUserAgent = 'Coda-Test-Server-Fetcher';
+const MaxContentLengthBytes = 25 * 1024 * 1024;
+const HeadersToStrip = ['authorization'];
 
 export class AuthenticatingFetcher implements Fetcher {
   private readonly _authDef: Authentication | undefined;
@@ -47,7 +48,7 @@ export class AuthenticatingFetcher implements Fetcher {
     });
 
     let responseBody = response.body;
-    if (responseBody && responseBody.length >= MAX_CONTENT_LENGTH_BYTES) {
+    if (responseBody && responseBody.length >= MaxContentLengthBytes) {
       throw new Error(`Response body is too large for Coda. Body is ${responseBody.length} bytes.`);
     }
 
@@ -69,7 +70,8 @@ export class AuthenticatingFetcher implements Fetcher {
 
     const responseHeaders = {...response.headers};
     for (const key of Object.keys(responseHeaders)) {
-      if (key.toLocaleLowerCase() === 'authorization') {
+      if (HeadersToStrip.includes(key.toLocaleLowerCase())) {
+        // In case any services echo back sensitive headers, remove them so pack code can't see them.
         delete responseHeaders[key];
       }
     }

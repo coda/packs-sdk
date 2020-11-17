@@ -61,14 +61,21 @@ export async function executeFormulaFromPackDef(
   return executeFormula(formula, params, executionContext, options);
 }
 
-export async function executeFormulaFromCLI(args: string[], module: any) {
+export async function executeFormulaFromCLI(args: string[], module: any, contextOptions: ContextOptions = {}) {
   const formulaNameWithNamespace = args[0];
   const manifest = getManifestFromModule(module);
 
   try {
     const formula = findFormula(manifest, formulaNameWithNamespace);
     const params = coerceParams(formula, args.slice(1) as any);
-    const result = await executeFormula(formula, params);
+    const result = await executeFormulaFromPackDef(
+      manifest,
+      formulaNameWithNamespace,
+      params,
+      undefined,
+      undefined,
+      contextOptions,
+    );
     // eslint-disable-next-line no-console
     console.log(result);
   } catch (err) {

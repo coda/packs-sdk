@@ -21,8 +21,9 @@ const request_promise_native_1 = __importDefault(require("request-promise-native
 const url_parse_1 = __importDefault(require("url-parse"));
 const uuid_1 = require("uuid");
 const xml2js_1 = __importDefault(require("xml2js"));
-const FetcherUserAgent = 'Coda-Server-Fetcher';
-const MAX_CONTENT_LENGTH_BYTES = 25 * 1024 * 1024;
+const FetcherUserAgent = 'Coda-Test-Server-Fetcher';
+const MaxContentLengthBytes = 25 * 1024 * 1024;
+const HeadersToStrip = ['authorization'];
 class AuthenticatingFetcher {
     constructor(authDef, credentials) {
         this._authDef = authDef;
@@ -39,7 +40,7 @@ class AuthenticatingFetcher {
                 form,
             });
             let responseBody = response.body;
-            if (responseBody && responseBody.length >= MAX_CONTENT_LENGTH_BYTES) {
+            if (responseBody && responseBody.length >= MaxContentLengthBytes) {
                 throw new Error(`Response body is too large for Coda. Body is ${responseBody.length} bytes.`);
             }
             try {
@@ -60,7 +61,8 @@ class AuthenticatingFetcher {
             }
             const responseHeaders = Object.assign({}, response.headers);
             for (const key of Object.keys(responseHeaders)) {
-                if (key.toLocaleLowerCase() === 'authorization') {
+                if (HeadersToStrip.includes(key.toLocaleLowerCase())) {
+                    // In case any services echo back sensitive headers, remove them so pack code can't see them.
                     delete responseHeaders[key];
                 }
             }
