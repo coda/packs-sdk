@@ -12,8 +12,10 @@ import {executeFormulaFromCLI} from 'packs-sdk/dist/testing/execution';
 
 async function main() {
   const manifestPath = process.argv[4];
+  const useRealFetcher = process.argv[5] === 'true';
+  const credentialsFile = process.argv[6] || undefined;
   const module = await import(manifestPath);
-  await executeFormulaFromCLI(process.argv.slice(5), module);
+  await executeFormulaFromCLI(process.argv.slice(7), module, {useRealFetcher, credentialsFile});
 }
 
 void main();`;
@@ -22,22 +24,23 @@ import {setupAuthFromModule} from 'packs-sdk/dist/testing/auth';
 
 async function main() {
   const manifestPath = process.argv[4];
+  const credentialsFile = process.argv[5] || undefined;
   const module = await import(manifestPath);
-  await setupAuthFromModule(module);
+  await setupAuthFromModule(module, {credentialsFile});
 }
 
 void main();`;
 function makeManifestFullPath(manifestPath) {
     return manifestPath.startsWith('/') ? manifestPath : path_1.default.join(process.cwd(), manifestPath);
 }
-function handleExecute({ manifestPath, formulaName, params }) {
-    child_process_1.spawnSync(`ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)} ${formulaName} ${params.join(' ')}`, {
+function handleExecute({ manifestPath, formulaName, params, realFetcher, credentialsFile }) {
+    child_process_1.spawnSync(`ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)} ${formulaName} ${Boolean(realFetcher)} ${credentialsFile || '""'} ${params.join(' ')}`, {
         shell: true,
         stdio: 'inherit',
     });
 }
-function handleAuth({ manifestPath }) {
-    child_process_1.spawnSync(`ts-node -e "${AUTH_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)}`, {
+function handleAuth({ manifestPath, credentialsFile }) {
+    child_process_1.spawnSync(`ts-node -e "${AUTH_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)} ${credentialsFile}`, {
         shell: true,
         stdio: 'inherit',
     });
@@ -49,11 +52,31 @@ if (require.main === module) {
         command: 'execute <manifestPath> <formulaName> [params..]',
         describe: 'Execute a formula',
         handler: handleExecute,
+        builder: {
+            realFetcher: {
+                alias: 'real_fetcher',
+                boolean: true,
+                desc: 'Use a real fetcher for http requests instead of a mock fetcher. Run "coda auth" first to set up credentials.',
+            },
+            credentialsFile: {
+                alias: 'credentials_file',
+                string: true,
+                desc: 'Path to the credentials file, if different than .coda/credentials.json',
+            },
+        },
     })
         .command({
         command: 'auth <manifestPath>',
         describe: 'Set up authentication for a pack',
         handler: handleAuth,
+        builder: {
+            credentialsFile: {
+                alias: 'credentials_file',
+                string: true,
+                desc: 'Path to the credentials file, if different than .coda/credentials.json',
+            },
+        },
     })
+        .demandCommand()
         .help().argv;
 }
