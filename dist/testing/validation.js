@@ -1,32 +1,16 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateResult = exports.validateParams = void 0;
 const types_1 = require("./types");
 const types_2 = require("./types");
 const api_types_1 = require("../api_types");
 <<<<<<< HEAD
+<<<<<<< HEAD
 const ensure_1 = require("../helpers/ensure");
 =======
 const date = __importStar(require("../helpers/date"));
+=======
+>>>>>>> 6c2cd46 (make build)
 const ensure_1 = require("../helpers/ensure");
 const api_1 = require("../api");
 const object_utils_1 = require("../helpers/object_utils");
@@ -98,7 +82,7 @@ function checkCodaType(resultCodaType, result) {
     }
     switch (resultCodaType) {
         case schema_1.ValueType.Date:
-            if (!date.parseDate(result, date.DEFAULT_TIMEZONE)) {
+            if (isNaN(Date.parse(result))) {
                 return { message: `Failed to parse ${result} as a ${schema_1.ValueType.Date}.` };
             }
             break;
@@ -109,11 +93,6 @@ function checkCodaType(resultCodaType, result) {
         case schema_1.ValueType.Duration:
             break;
         case schema_1.ValueType.Person:
-            break;
-        case schema_1.ValueType.Percent:
-            if (result < 0 || result > 100) {
-                // error
-            }
             break;
         case schema_1.ValueType.Markdown:
             break;
