@@ -11,6 +11,10 @@ interface ExecuteArgs {
   params: string[];
 }
 
+interface AuthArgs {
+  manifestPath: string;
+}
+
 const EXECUTE_BOOTSTRAP_CODE = `
 import {executeFormulaFromCLI} from 'packs-sdk/dist/testing/execution';
 
@@ -22,9 +26,33 @@ async function main() {
 
 void main();`;
 
+const AUTH_BOOTSTRAP_CODE = `
+import {setupAuthFromModule} from 'packs-sdk/dist/testing/auth';
+
+async function main() {
+  const manifestPath = process.argv[4];
+  const module = await import(manifestPath);
+  await setupAuthFromModule(module);
+}
+
+void main();`;
+
+function makeManifestFullPath(manifestPath: string): string {
+  return manifestPath.startsWith('/') ? manifestPath : path.join(process.cwd(), manifestPath);
+}
+
 function handleExecute({manifestPath, formulaName, params}: Arguments<ExecuteArgs>) {
-  const manifestFullPath = manifestPath.startsWith('/') ? manifestPath : path.join(process.cwd(), manifestPath);
-  spawnSync(`ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${manifestFullPath} ${formulaName} ${params.join(' ')}`, {
+  spawnSync(
+    `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)} ${formulaName} ${params.join(' ')}`,
+    {
+      shell: true,
+      stdio: 'inherit',
+    },
+  );
+}
+
+function handleAuth({manifestPath}: Arguments<AuthArgs>) {
+  spawnSync(`ts-node -e "${AUTH_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)}`, {
     shell: true,
     stdio: 'inherit',
   });
@@ -38,5 +66,11 @@ if (require.main === module) {
       describe: 'Execute a formula',
       handler: handleExecute,
     })
+    .command({
+      command: 'auth <manifestPath>',
+      describe: 'Set up authentication for a pack',
+      handler: handleAuth,
+    })
+
     .help().argv;
 }

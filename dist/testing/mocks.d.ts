@@ -11,7 +11,7 @@ export interface MockExecutionContext extends ExecutionContext {
         storeBlob: sinon.SinonStub;
     };
 }
-export declare function newSyncExecutionContext(): SyncExecutionContext;
+export declare function newMockSyncExecutionContext(): SyncExecutionContext;
 export declare function newMockExecutionContext(): MockExecutionContext;
 export declare function newJsonFetchResponse<T>(body: T, status?: number, headers?: {
     [header: string]: string | string[] | undefined;

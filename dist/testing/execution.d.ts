@@ -9,11 +9,15 @@ export interface ExecuteOptions {
     validateParams?: boolean;
     validateResult?: boolean;
 }
+export interface ContextOptions {
+    useRealFetcher?: boolean;
+    credentialsFile?: string;
+}
 export interface ExecuteSyncOptions extends ExecuteOptions {
     maxIterations?: number;
 }
 export declare function executeFormula(formula: TypedStandardFormula, params: ParamValues<ParamDefs>, context?: ExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult }?: ExecuteOptions): Promise<any>;
-export declare function executeFormulaFromPackDef(packDef: PackDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, options?: ExecuteOptions): Promise<any>;
-export declare function executeFormulaFromCLI(args: string[], module: any): Promise<undefined>;
+export declare function executeFormulaFromPackDef(packDef: PackDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, options?: ExecuteOptions, { useRealFetcher, credentialsFile }?: ContextOptions): Promise<any>;
+export declare function executeFormulaFromCLI(args: string[], module: any, contextOptions?: ContextOptions): Promise<void>;
 export declare function executeSyncFormula(formula: GenericSyncFormula, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult, maxIterations: maxIterations, }?: ExecuteSyncOptions): Promise<any[]>;
-export declare function executeSyncFormulaFromPackDef(packDef: PackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, options?: ExecuteSyncOptions): Promise<any[]>;
+export declare function executeSyncFormulaFromPackDef(packDef: PackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, options?: ExecuteSyncOptions, { useRealFetcher, credentialsFile }?: ContextOptions): Promise<any[]>;

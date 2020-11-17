@@ -11,6 +11,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.executeSyncFormulaFromPackDef = exports.executeSyncFormula = exports.executeFormulaFromCLI = exports.executeFormulaFromPackDef = exports.executeFormula = void 0;
 const coercion_1 = require("./coercion");
+const helpers_1 = require("./helpers");
+const fetcher_1 = require("./fetcher");
+const fetcher_2 = require("./fetcher");
 const mocks_1 = require("./mocks");
 const mocks_2 = require("./mocks");
 const validation_1 = require("./validation");
@@ -28,25 +31,25 @@ function executeFormula(formula, params, context = mocks_1.newMockExecutionConte
     });
 }
 exports.executeFormula = executeFormula;
-function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, params, context, options) {
+function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, params, context, options, { useRealFetcher, credentialsFile } = {}) {
     return __awaiter(this, void 0, void 0, function* () {
+        let executionContext = context;
+        if (!executionContext && useRealFetcher) {
+            executionContext = fetcher_1.newFetcherExecutionContext(packDef.name, packDef.defaultAuthentication, credentialsFile);
+        }
         const formula = findFormula(packDef, formulaNameWithNamespace);
-        return executeFormula(formula, params, context, options);
+        return executeFormula(formula, params, executionContext, options);
     });
 }
 exports.executeFormulaFromPackDef = executeFormulaFromPackDef;
-function executeFormulaFromCLI(args, module) {
+function executeFormulaFromCLI(args, module, contextOptions = {}) {
     return __awaiter(this, void 0, void 0, function* () {
         const formulaNameWithNamespace = args[0];
-        if (!module.manifest) {
-            // eslint-disable-next-line no-console
-            console.log('Manifest file must export a variable called "manifest" that refers to a PackDefinition.');
-            return process.exit(1);
-        }
+        const manifest = helpers_1.getManifestFromModule(module);
         try {
-            const formula = findFormula(module.manifest, formulaNameWithNamespace);
+            const formula = findFormula(manifest, formulaNameWithNamespace);
             const params = coercion_1.coerceParams(formula, args.slice(1));
-            const result = yield executeFormula(formula, params);
+            const result = yield executeFormulaFromPackDef(manifest, formulaNameWithNamespace, params, undefined, undefined, contextOptions);
             // eslint-disable-next-line no-console
             console.log(result);
         }
@@ -58,7 +61,7 @@ function executeFormulaFromCLI(args, module) {
     });
 }
 exports.executeFormulaFromCLI = executeFormulaFromCLI;
-function executeSyncFormula(formula, params, context = mocks_2.newSyncExecutionContext(), { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, maxIterations: maxIterations = 1000, } = {}) {
+function executeSyncFormula(formula, params, context = mocks_2.newMockSyncExecutionContext(), { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, maxIterations: maxIterations = 1000, } = {}) {
     return __awaiter(this, void 0, void 0, function* () {
         if (shouldValidateParams) {
             validation_1.validateParams(formula, params);
@@ -81,10 +84,14 @@ function executeSyncFormula(formula, params, context = mocks_2.newSyncExecutionC
     });
 }
 exports.executeSyncFormula = executeSyncFormula;
-function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, context, options) {
+function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, context, options, { useRealFetcher, credentialsFile } = {}) {
     return __awaiter(this, void 0, void 0, function* () {
+        let executionContext = context;
+        if (!executionContext && useRealFetcher) {
+            executionContext = fetcher_2.newFetcherSyncExecutionContext(packDef.name, packDef.defaultAuthentication, credentialsFile);
+        }
         const formula = findSyncFormula(packDef, syncFormulaName);
-        return executeSyncFormula(formula, params, context, options);
+        return executeSyncFormula(formula, params, executionContext, options);
     });
 }
 exports.executeSyncFormulaFromPackDef = executeSyncFormulaFromPackDef;

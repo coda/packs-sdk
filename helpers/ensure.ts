@@ -21,3 +21,9 @@ export function ensureExists<T>(value: T | null | undefined, message?: string): 
 function getErrorConstructor(message?: string): typeof Error | typeof UserVisibleError {
   return message ? UserVisibleError : Error;
 }
+
+export function assertCondition(condition: any, message?: string): asserts condition {
+  if (!condition) {
+    throw new (getErrorConstructor(message))(message || 'Assertion failed');
+  }
+}

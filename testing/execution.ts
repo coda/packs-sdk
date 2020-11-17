@@ -6,14 +6,22 @@ import type {ParamValues} from '../api_types';
 import type {SyncExecutionContext} from '../api_types';
 import type {TypedStandardFormula} from '../api';
 import {coerceParams} from './coercion';
+import {getManifestFromModule} from './helpers';
+import {newFetcherExecutionContext} from './fetcher';
+import {newFetcherSyncExecutionContext} from './fetcher';
 import {newMockExecutionContext} from './mocks';
-import {newSyncExecutionContext} from './mocks';
+import {newMockSyncExecutionContext} from './mocks';
 import {validateParams} from './validation';
 import {validateResult} from './validation';
 
 export interface ExecuteOptions {
   validateParams?: boolean;
   validateResult?: boolean;
+}
+
+export interface ContextOptions {
+  useRealFetcher?: boolean;
+  credentialsFile?: string;
 }
 
 export interface ExecuteSyncOptions extends ExecuteOptions {
@@ -42,23 +50,32 @@ export async function executeFormulaFromPackDef(
   params: ParamValues<ParamDefs>,
   context?: ExecutionContext,
   options?: ExecuteOptions,
+  {useRealFetcher, credentialsFile}: ContextOptions = {},
 ) {
-  const formula = findFormula(packDef, formulaNameWithNamespace);
-  return executeFormula(formula, params, context, options);
-}
-
-export async function executeFormulaFromCLI(args: string[], module: any) {
-  const formulaNameWithNamespace = args[0];
-  if (!module.manifest) {
-    // eslint-disable-next-line no-console
-    console.log('Manifest file must export a variable called "manifest" that refers to a PackDefinition.');
-    return process.exit(1);
+  let executionContext = context;
+  if (!executionContext && useRealFetcher) {
+    executionContext = newFetcherExecutionContext(packDef.name, packDef.defaultAuthentication, credentialsFile);
   }
 
+  const formula = findFormula(packDef, formulaNameWithNamespace);
+  return executeFormula(formula, params, executionContext, options);
+}
+
+export async function executeFormulaFromCLI(args: string[], module: any, contextOptions: ContextOptions = {}) {
+  const formulaNameWithNamespace = args[0];
+  const manifest = getManifestFromModule(module);
+
   try {
-    const formula = findFormula(module.manifest, formulaNameWithNamespace);
+    const formula = findFormula(manifest, formulaNameWithNamespace);
     const params = coerceParams(formula, args.slice(1) as any);
-    const result = await executeFormula(formula, params);
+    const result = await executeFormulaFromPackDef(
+      manifest,
+      formulaNameWithNamespace,
+      params,
+      undefined,
+      undefined,
+      contextOptions,
+    );
     // eslint-disable-next-line no-console
     console.log(result);
   } catch (err) {
@@ -71,7 +88,7 @@ export async function executeFormulaFromCLI(args: string[], module: any) {
 export async function executeSyncFormula(
   formula: GenericSyncFormula,
   params: ParamValues<ParamDefs>,
-  context: SyncExecutionContext = newSyncExecutionContext(),
+  context: SyncExecutionContext = newMockSyncExecutionContext(),
   {
     validateParams: shouldValidateParams = true,
     validateResult: shouldValidateResult = true,
@@ -108,9 +125,15 @@ export async function executeSyncFormulaFromPackDef(
   params: ParamValues<ParamDefs>,
   context?: SyncExecutionContext,
   options?: ExecuteSyncOptions,
+  {useRealFetcher, credentialsFile}: ContextOptions = {},
 ) {
+  let executionContext = context;
+  if (!executionContext && useRealFetcher) {
+    executionContext = newFetcherSyncExecutionContext(packDef.name, packDef.defaultAuthentication, credentialsFile);
+  }
+
   const formula = findSyncFormula(packDef, syncFormulaName);
-  return executeSyncFormula(formula, params, context, options);
+  return executeSyncFormula(formula, params, executionContext, options);
 }
 
 function findFormula(packDef: PackDefinition, formulaNameWithNamespace: string): TypedStandardFormula {
