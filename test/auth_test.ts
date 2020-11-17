@@ -379,7 +379,7 @@ describe('Auth', () => {
       sinon.assert.calledOnceWithExactly(mockMakeRequest, {
         body: undefined,
         form: undefined,
-        headers: {'User-Agent': 'Coda-Server-Fetcher'},
+        headers: {'User-Agent': 'Coda-Test-Server-Fetcher'},
         method: 'GET',
         url: 'https://example.com',
       });
@@ -395,7 +395,7 @@ describe('Auth', () => {
       sinon.assert.calledOnceWithExactly(mockMakeRequest, {
         body: undefined,
         form: undefined,
-        headers: {'User-Agent': 'Coda-Server-Fetcher'},
+        headers: {'User-Agent': 'Coda-Test-Server-Fetcher'},
         method: 'GET',
         url: 'https://example.com',
       });
@@ -413,7 +413,7 @@ describe('Auth', () => {
       sinon.assert.calledOnceWithExactly(mockMakeRequest, {
         body: undefined,
         form: undefined,
-        headers: {Authorization: 'Bearer some-token', 'User-Agent': 'Coda-Server-Fetcher'},
+        headers: {Authorization: 'Bearer some-token', 'User-Agent': 'Coda-Test-Server-Fetcher'},
         method: 'GET',
         url: 'https://example.com',
       });
@@ -432,7 +432,7 @@ describe('Auth', () => {
       sinon.assert.calledOnceWithExactly(mockMakeRequest, {
         body: undefined,
         form: undefined,
-        headers: {Authorization: 'Bearer some-token', 'User-Agent': 'Coda-Server-Fetcher'},
+        headers: {Authorization: 'Bearer some-token', 'User-Agent': 'Coda-Test-Server-Fetcher'},
         method: 'GET',
         url: 'https://some-endpoint-url.com/foo',
       });
@@ -451,7 +451,7 @@ describe('Auth', () => {
       sinon.assert.calledOnceWithExactly(mockMakeRequest, {
         body: undefined,
         form: undefined,
-        headers: {Authorization: 'Bearer some-token', 'User-Agent': 'Coda-Server-Fetcher'},
+        headers: {Authorization: 'Bearer some-token', 'User-Agent': 'Coda-Test-Server-Fetcher'},
         method: 'GET',
         url: 'https://some-endpoint-url.com/foo',
       });
@@ -489,7 +489,7 @@ describe('Auth', () => {
       sinon.assert.calledOnceWithExactly(mockMakeRequest, {
         body: undefined,
         form: undefined,
-        headers: {Authorization: 'Bearer some-token', 'User-Agent': 'Coda-Server-Fetcher'},
+        headers: {Authorization: 'Bearer some-token', 'User-Agent': 'Coda-Test-Server-Fetcher'},
         method: 'GET',
         url: 'https://example.com',
       });
@@ -508,7 +508,7 @@ describe('Auth', () => {
       sinon.assert.calledOnceWithExactly(mockMakeRequest, {
         body: undefined,
         form: undefined,
-        headers: {MyHeader: 'some-token', 'User-Agent': 'Coda-Server-Fetcher'},
+        headers: {MyHeader: 'some-token', 'User-Agent': 'Coda-Test-Server-Fetcher'},
         method: 'GET',
         url: 'https://example.com',
       });
@@ -528,7 +528,7 @@ describe('Auth', () => {
       sinon.assert.calledOnceWithExactly(mockMakeRequest, {
         body: undefined,
         form: undefined,
-        headers: {MyHeader: 'MyPrefix some-token', 'User-Agent': 'Coda-Server-Fetcher'},
+        headers: {MyHeader: 'MyPrefix some-token', 'User-Agent': 'Coda-Test-Server-Fetcher'},
         method: 'GET',
         url: 'https://example.com',
       });
@@ -547,7 +547,7 @@ describe('Auth', () => {
       sinon.assert.calledOnceWithExactly(mockMakeRequest, {
         body: undefined,
         form: undefined,
-        headers: {'User-Agent': 'Coda-Server-Fetcher'},
+        headers: {'User-Agent': 'Coda-Test-Server-Fetcher'},
         method: 'GET',
         url: 'https://example.com/foo?myParam=some-param-value&blah=123',
       });
@@ -569,7 +569,7 @@ describe('Auth', () => {
       sinon.assert.calledOnceWithExactly(mockMakeRequest, {
         body: undefined,
         form: undefined,
-        headers: {'User-Agent': 'Coda-Server-Fetcher'},
+        headers: {'User-Agent': 'Coda-Test-Server-Fetcher'},
         method: 'GET',
         url: 'https://example.com/foo?blah=123&param1=param-value-1&param2=param-value-2',
       });
@@ -587,7 +587,10 @@ describe('Auth', () => {
       sinon.assert.calledOnceWithExactly(mockMakeRequest, {
         body: undefined,
         form: undefined,
-        headers: {Authorization: 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk', 'User-Agent': 'Coda-Server-Fetcher'},
+        headers: {
+          Authorization: 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk',
+          'User-Agent': 'Coda-Test-Server-Fetcher',
+        },
         method: 'GET',
         url: 'https://example.com',
       });
@@ -608,7 +611,7 @@ describe('Auth', () => {
       sinon.assert.calledOnceWithExactly(mockMakeRequest, {
         body: undefined,
         form: undefined,
-        headers: {Authorization: 'Basic c29tZS11c2VybmFtZTp1bmRlZmluZWQ=', 'User-Agent': 'Coda-Server-Fetcher'},
+        headers: {Authorization: 'Basic c29tZS11c2VybmFtZTp1bmRlZmluZWQ=', 'User-Agent': 'Coda-Test-Server-Fetcher'},
         method: 'GET',
         url: 'https://example.com',
       });
@@ -627,7 +630,10 @@ describe('Auth', () => {
       sinon.assert.calledOnceWithExactly(mockMakeRequest, {
         body: undefined,
         form: undefined,
-        headers: {Authorization: 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk', 'User-Agent': 'Coda-Server-Fetcher'},
+        headers: {
+          Authorization: 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk',
+          'User-Agent': 'Coda-Test-Server-Fetcher',
+        },
         method: 'GET',
         url: 'https://some-endpoint-url.com/foo?bar=blah',
       });
