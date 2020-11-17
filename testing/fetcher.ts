@@ -35,7 +35,7 @@ export class AuthenticatingFetcher implements Fetcher {
   async fetch<T = any>(request: FetchRequest): Promise<FetchResponse<T>> {
     const {url, headers, body, form} = this._applyAuthentication(request);
 
-    const response: Response = await requestPromise({
+    const response: Response = await requestHelper.makeRequest({
       url,
       method: request.method,
       headers: {
@@ -44,10 +44,6 @@ export class AuthenticatingFetcher implements Fetcher {
       },
       body,
       form,
-      encoding: request.isBinaryResponse ? null : undefined,
-      resolveWithFullResponse: true,
-      timeout: 60000, // msec
-      forever: true, // keep alive connections as long as possible.
     });
 
     let responseBody = response.body;
@@ -91,7 +87,7 @@ export class AuthenticatingFetcher implements Fetcher {
     body,
     form,
   }: FetchRequest): Pick<FetchRequest, 'url' | 'headers' | 'body' | 'form'> {
-    if (!this._authDef) {
+    if (!this._authDef || this._authDef.type === AuthenticationType.None) {
       return {url: rawUrl, headers, body, form};
     }
     if (!this._credentials) {
@@ -104,8 +100,6 @@ export class AuthenticatingFetcher implements Fetcher {
     const url = this._applyAndValidateEndpoint(rawUrl);
 
     switch (this._authDef.type) {
-      case AuthenticationType.None:
-        return {url, headers, body, form};
       case AuthenticationType.WebBasic: {
         const {username, password} = this._credentials as WebBasicCredentials;
         const encodedAuth = Buffer.from(`${username}:${password}`).toString('base64');
@@ -172,6 +166,7 @@ export class AuthenticatingFetcher implements Fetcher {
         throw new Error(`Only https urls are supported, but pack is configured to use ${endpointUrl}.`);
       }
       if (
+        endpointDomain &&
         !(parsedEndpointUrl.hostname === endpointDomain || parsedEndpointUrl.hostname.endsWith(`.${endpointDomain}`))
       ) {
         throw new Error(
@@ -185,7 +180,7 @@ export class AuthenticatingFetcher implements Fetcher {
       if (parsedUrl.hostname !== parsedEndpointUrl.hostname) {
         throw new Error(
           `The url ${rawUrl} is not authorized. The host must match the host ${parsedEndpointUrl.hostname} that was specified with the auth credentials. ` +
-            'Or leave the host blank and the host will be filled in automatically from the credenetials.',
+            'Or leave the host blank and the host will be filled in automatically from the credentials.',
         );
       }
       return rawUrl;
@@ -196,6 +191,19 @@ export class AuthenticatingFetcher implements Fetcher {
     }
   }
 }
+
+// Namespaced object that can be mocked for testing.
+export const requestHelper = {
+  makeRequest: async (request: FetchRequest): Promise<Response> => {
+    return requestPromise({
+      ...request,
+      encoding: request.isBinaryResponse ? null : undefined,
+      resolveWithFullResponse: true,
+      timeout: 60000, // msec
+      forever: true, // keep alive connections as long as possible.
+    });
+  },
+};
 
 export class DummyBlobStorage implements TemporaryBlobStorage {
   async storeUrl(): Promise<string> {

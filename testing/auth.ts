@@ -117,7 +117,7 @@ class CredentialHandler {
     const input = await this.promptForInput(
       `Enter the token to use for the "${paramName}" url param for ${this._packName}:\n`,
     );
-    this.storeCredential({endpointUrl, token: input});
+    this.storeCredential({endpointUrl, paramValue: input});
     print('Credentials updated!');
   }
 

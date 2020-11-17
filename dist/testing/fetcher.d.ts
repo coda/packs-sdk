@@ -4,6 +4,7 @@ import type { ExecutionContext } from '../api';
 import type { FetchRequest } from '../api_types';
 import type { FetchResponse } from '../api_types';
 import type { Fetcher } from '../api_types';
+import type { Response } from 'request';
 import type { SyncExecutionContext } from '../api_types';
 import type { TemporaryBlobStorage } from '../api_types';
 export declare class AuthenticatingFetcher implements Fetcher {
@@ -14,6 +15,9 @@ export declare class AuthenticatingFetcher implements Fetcher {
     private _applyAuthentication;
     private _applyAndValidateEndpoint;
 }
+export declare const requestHelper: {
+    makeRequest: (request: FetchRequest) => Promise<Response>;
+};
 export declare class DummyBlobStorage implements TemporaryBlobStorage {
     storeUrl(): Promise<string>;
     storeBlob(): Promise<string>;

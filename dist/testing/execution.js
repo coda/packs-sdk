@@ -38,7 +38,7 @@ function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, params, co
             executionContext = fetcher_1.newFetcherExecutionContext(packDef.name, packDef.defaultAuthentication, credentialsFile);
         }
         const formula = findFormula(packDef, formulaNameWithNamespace);
-        return executeFormula(formula, params, context, options);
+        return executeFormula(formula, params, executionContext, options);
     });
 }
 exports.executeFormulaFromPackDef = executeFormulaFromPackDef;

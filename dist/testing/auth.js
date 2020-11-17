@@ -111,7 +111,7 @@ class CredentialHandler {
             yield this.checkForExistingCredential();
             const endpointUrl = yield this.maybePromptForEndpointUrl();
             const input = yield this.promptForInput(`Enter the token to use for the "${paramName}" url param for ${this._packName}:\n`);
-            this.storeCredential({ endpointUrl, token: input });
+            this.storeCredential({ endpointUrl, paramValue: input });
             helpers_2.print('Credentials updated!');
         });
     }

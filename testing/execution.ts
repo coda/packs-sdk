@@ -58,7 +58,7 @@ export async function executeFormulaFromPackDef(
   }
 
   const formula = findFormula(packDef, formulaNameWithNamespace);
-  return executeFormula(formula, params, context, options);
+  return executeFormula(formula, params, executionContext, options);
 }
 
 export async function executeFormulaFromCLI(args: string[], module: any) {

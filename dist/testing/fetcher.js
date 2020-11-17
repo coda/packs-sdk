@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newFetcherSyncExecutionContext = exports.newFetcherExecutionContext = exports.DummyBlobStorage = exports.AuthenticatingFetcher = void 0;
+exports.newFetcherSyncExecutionContext = exports.newFetcherExecutionContext = exports.DummyBlobStorage = exports.requestHelper = exports.AuthenticatingFetcher = void 0;
 const types_1 = require("../types");
 const url_1 = require("url");
 const ensure_1 = require("../helpers/ensure");
@@ -31,16 +31,12 @@ class AuthenticatingFetcher {
     fetch(request) {
         return __awaiter(this, void 0, void 0, function* () {
             const { url, headers, body, form } = this._applyAuthentication(request);
-            const response = yield request_promise_native_1.default({
+            const response = yield exports.requestHelper.makeRequest({
                 url,
                 method: request.method,
                 headers: Object.assign(Object.assign({}, headers), { 'User-Agent': FetcherUserAgent }),
                 body,
                 form,
-                encoding: request.isBinaryResponse ? null : undefined,
-                resolveWithFullResponse: true,
-                timeout: 60000,
-                forever: true,
             });
             let responseBody = response.body;
             if (responseBody && responseBody.length >= MAX_CONTENT_LENGTH_BYTES) {
@@ -76,7 +72,7 @@ class AuthenticatingFetcher {
         });
     }
     _applyAuthentication({ url: rawUrl, headers, body, form, }) {
-        if (!this._authDef) {
+        if (!this._authDef || this._authDef.type === types_1.AuthenticationType.None) {
             return { url: rawUrl, headers, body, form };
         }
         if (!this._credentials) {
@@ -85,8 +81,6 @@ class AuthenticatingFetcher {
         }
         const url = this._applyAndValidateEndpoint(rawUrl);
         switch (this._authDef.type) {
-            case types_1.AuthenticationType.None:
-                return { url, headers, body, form };
             case types_1.AuthenticationType.WebBasic: {
                 const { username, password } = this._credentials;
                 const encodedAuth = Buffer.from(`${username}:${password}`).toString('base64');
@@ -148,7 +142,8 @@ class AuthenticatingFetcher {
             if (parsedEndpointUrl.protocol !== 'https:') {
                 throw new Error(`Only https urls are supported, but pack is configured to use ${endpointUrl}.`);
             }
-            if (!(parsedEndpointUrl.hostname === endpointDomain || parsedEndpointUrl.hostname.endsWith(`.${endpointDomain}`))) {
+            if (endpointDomain &&
+                !(parsedEndpointUrl.hostname === endpointDomain || parsedEndpointUrl.hostname.endsWith(`.${endpointDomain}`))) {
                 throw new Error(`The endpoint ${endpointUrl} is not authorized. The domain must match the domain ${endpointDomain} provided in the pack definition.`);
             }
         }
@@ -156,7 +151,7 @@ class AuthenticatingFetcher {
         if (parsedUrl.hostname) {
             if (parsedUrl.hostname !== parsedEndpointUrl.hostname) {
                 throw new Error(`The url ${rawUrl} is not authorized. The host must match the host ${parsedEndpointUrl.hostname} that was specified with the auth credentials. ` +
-                    'Or leave the host blank and the host will be filled in automatically from the credenetials.');
+                    'Or leave the host blank and the host will be filled in automatically from the credentials.');
             }
             return rawUrl;
         }
@@ -168,6 +163,12 @@ class AuthenticatingFetcher {
     }
 }
 exports.AuthenticatingFetcher = AuthenticatingFetcher;
+// Namespaced object that can be mocked for testing.
+exports.requestHelper = {
+    makeRequest: (request) => __awaiter(void 0, void 0, void 0, function* () {
+        return request_promise_native_1.default(Object.assign(Object.assign({}, request), { encoding: request.isBinaryResponse ? null : undefined, resolveWithFullResponse: true, timeout: 60000, forever: true }));
+    }),
+};
 class DummyBlobStorage {
     storeUrl() {
         return __awaiter(this, void 0, void 0, function* () {

@@ -1,10 +1,17 @@
+import {testHelper} from './test_helper';
 import type {AllCredentials} from '../testing/auth_types';
+import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
+import type {PackDefinition} from '../types';
 import {createFakePack} from './test_utils';
+import {executeFormulaFromPackDef} from '../testing/execution';
 import * as helpers from '../testing/helpers';
+import {makeStringFormula} from '../api';
+import {makeStringParameter} from '../api';
 import mockFs from 'mock-fs';
 import {readCredentialsFile} from '../testing/auth';
 import readline from 'readline';
+import {requestHelper} from '../testing/fetcher';
 import {setupAuth} from '../testing/auth';
 import sinon from 'sinon';
 
@@ -31,12 +38,14 @@ describe('Auth', () => {
   let mockPrintAndExit: sinon.SinonStub;
   let mockReadlineCreateInterface: sinon.SinonStub;
   let fakeReadlineInterface: FakeReadlineInterface;
+  let mockMakeRequest: sinon.SinonStub;
 
   beforeEach(() => {
     mockFs();
     mockPrint = sinon.stub(helpers, 'print');
     mockPrintAndExit = sinon.stub(helpers, 'printAndExit');
     mockReadlineCreateInterface = sinon.stub(readline, 'createInterface');
+    mockMakeRequest = sinon.stub(requestHelper, 'makeRequest');
   });
 
   afterEach(() => {
@@ -184,7 +193,7 @@ describe('Auth', () => {
       );
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({'Fake Pack': {token: 'some-param-value'}});
+      assertCredentialsFileExactly({'Fake Pack': {paramValue: 'some-param-value'}});
     });
 
     it(`${AuthenticationType.MultiQueryParamToken}`, async () => {
@@ -326,6 +335,318 @@ describe('Auth', () => {
           password: 'some-password',
         },
       });
+    });
+  });
+
+  describe('authenticated fetching', () => {
+    function createPackWithAuth(authDef: Authentication | undefined) {
+      return createFakePack({
+        defaultAuthentication: authDef,
+        formulas: {
+          Fake: [
+            makeStringFormula({
+              name: 'Fetch',
+              description: 'Fetch a url',
+              examples: [],
+              parameters: [makeStringParameter('url', 'An example url to fetch.')],
+              execute: async ([url], context) => {
+                const response = await context.fetcher.fetch({method: 'GET', url});
+                return response.body.result;
+              },
+            }),
+          ],
+        },
+      });
+    }
+
+    async function executeFetch(packDef: PackDefinition, url: string, jsonResponse: object) {
+      mockMakeRequest.returns({
+        statusCode: 200,
+        body: JSON.stringify(jsonResponse),
+        headers: {
+          'content-type': 'application/json',
+        },
+      });
+      return executeFormulaFromPackDef(packDef, 'Fake::Fetch', [url], undefined, undefined, {useRealFetcher: true});
+    }
+
+    it(`no authentication`, async () => {
+      const pack = createPackWithAuth(undefined);
+
+      const result = await executeFetch(pack, 'https://example.com', {result: 'hello'});
+      assert.equal(result, 'hello');
+
+      sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+        body: undefined,
+        form: undefined,
+        headers: {'User-Agent': 'Coda-Server-Fetcher'},
+        method: 'GET',
+        url: 'https://example.com',
+      });
+    });
+
+    it(`${AuthenticationType.None}`, async () => {
+      const pack = createPackWithAuth({
+        type: AuthenticationType.None,
+      });
+      const result = await executeFetch(pack, 'https://example.com', {result: 'hello'});
+      assert.equal(result, 'hello');
+
+      sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+        body: undefined,
+        form: undefined,
+        headers: {'User-Agent': 'Coda-Server-Fetcher'},
+        method: 'GET',
+        url: 'https://example.com',
+      });
+    });
+
+    it(`${AuthenticationType.HeaderBearerToken}`, async () => {
+      const pack = createPackWithAuth({
+        type: AuthenticationType.HeaderBearerToken,
+      });
+      setupReadline('some-token');
+      await setupAuth(pack);
+
+      await executeFetch(pack, 'https://example.com', {result: 'hello'});
+
+      sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+        body: undefined,
+        form: undefined,
+        headers: {Authorization: 'Bearer some-token', 'User-Agent': 'Coda-Server-Fetcher'},
+        method: 'GET',
+        url: 'https://example.com',
+      });
+    });
+
+    it(`${AuthenticationType.HeaderBearerToken}, endpoint url specified in auth config`, async () => {
+      const pack = createPackWithAuth({
+        type: AuthenticationType.HeaderBearerToken,
+        requiresEndpointUrl: true,
+      });
+      setupReadline(['https://some-endpoint-url.com', 'some-token']);
+      await setupAuth(pack);
+
+      await executeFetch(pack, '/foo', {result: 'hello'});
+
+      sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+        body: undefined,
+        form: undefined,
+        headers: {Authorization: 'Bearer some-token', 'User-Agent': 'Coda-Server-Fetcher'},
+        method: 'GET',
+        url: 'https://some-endpoint-url.com/foo',
+      });
+    });
+
+    it(`${AuthenticationType.HeaderBearerToken}, endpoint url specified in auth config and also hardcoded`, async () => {
+      const pack = createPackWithAuth({
+        type: AuthenticationType.HeaderBearerToken,
+        requiresEndpointUrl: true,
+      });
+      setupReadline(['https://some-endpoint-url.com', 'some-token']);
+      await setupAuth(pack);
+
+      await executeFetch(pack, 'https://some-endpoint-url.com/foo', {result: 'hello'});
+
+      sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+        body: undefined,
+        form: undefined,
+        headers: {Authorization: 'Bearer some-token', 'User-Agent': 'Coda-Server-Fetcher'},
+        method: 'GET',
+        url: 'https://some-endpoint-url.com/foo',
+      });
+    });
+
+    it(`${AuthenticationType.HeaderBearerToken}, hardcoded domain doesn't match configured endpoint`, async () => {
+      const pack = createPackWithAuth({
+        type: AuthenticationType.HeaderBearerToken,
+        requiresEndpointUrl: true,
+      });
+      setupReadline(['https://some-endpoint-url.com', 'some-token']);
+      await setupAuth(pack);
+
+      await testHelper.willBeRejectedWith(
+        executeFetch(pack, 'https://example.com/foo', {result: 'hello'}),
+        new RegExp(
+          'The url https://example.com/foo is not authorized. The host must match the host some-endpoint-url.com ' +
+            'that was specified with the auth credentials. Or leave the host blank and the host will be filled in ' +
+            'automatically from the credentials.',
+        ),
+      );
+
+      sinon.assert.notCalled(mockMakeRequest);
+    });
+
+    it(`${AuthenticationType.CodaApiHeaderBearerToken}`, async () => {
+      const pack = createPackWithAuth({
+        type: AuthenticationType.CodaApiHeaderBearerToken,
+      });
+      setupReadline('some-token');
+      await setupAuth(pack);
+
+      await executeFetch(pack, 'https://example.com', {result: 'hello'});
+
+      sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+        body: undefined,
+        form: undefined,
+        headers: {Authorization: 'Bearer some-token', 'User-Agent': 'Coda-Server-Fetcher'},
+        method: 'GET',
+        url: 'https://example.com',
+      });
+    });
+
+    it(`${AuthenticationType.CustomHeaderToken}`, async () => {
+      const pack = createPackWithAuth({
+        type: AuthenticationType.CustomHeaderToken,
+        headerName: 'MyHeader',
+      });
+      setupReadline('some-token');
+      await setupAuth(pack);
+
+      await executeFetch(pack, 'https://example.com', {result: 'hello'});
+
+      sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+        body: undefined,
+        form: undefined,
+        headers: {MyHeader: 'some-token', 'User-Agent': 'Coda-Server-Fetcher'},
+        method: 'GET',
+        url: 'https://example.com',
+      });
+    });
+
+    it(`${AuthenticationType.CustomHeaderToken} with token prefix`, async () => {
+      const pack = createPackWithAuth({
+        type: AuthenticationType.CustomHeaderToken,
+        headerName: 'MyHeader',
+        tokenPrefix: 'MyPrefix',
+      });
+      setupReadline('some-token');
+      await setupAuth(pack);
+
+      await executeFetch(pack, 'https://example.com', {result: 'hello'});
+
+      sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+        body: undefined,
+        form: undefined,
+        headers: {MyHeader: 'MyPrefix some-token', 'User-Agent': 'Coda-Server-Fetcher'},
+        method: 'GET',
+        url: 'https://example.com',
+      });
+    });
+
+    it(`${AuthenticationType.QueryParamToken}`, async () => {
+      const pack = createPackWithAuth({
+        type: AuthenticationType.QueryParamToken,
+        paramName: 'myParam',
+      });
+      setupReadline('some-param-value');
+      await setupAuth(pack);
+
+      await executeFetch(pack, 'https://example.com/foo?blah=123', {result: 'hello'});
+
+      sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+        body: undefined,
+        form: undefined,
+        headers: {'User-Agent': 'Coda-Server-Fetcher'},
+        method: 'GET',
+        url: 'https://example.com/foo?myParam=some-param-value&blah=123',
+      });
+    });
+
+    it(`${AuthenticationType.MultiQueryParamToken}`, async () => {
+      const pack = createPackWithAuth({
+        type: AuthenticationType.MultiQueryParamToken,
+        params: [
+          {name: 'param1', description: 'Description for param1'},
+          {name: 'param2', description: 'Description for param2'},
+        ],
+      });
+      setupReadline(['param-value-1', 'param-value-2']);
+      await setupAuth(pack);
+
+      await executeFetch(pack, 'https://example.com/foo?blah=123', {result: 'hello'});
+
+      sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+        body: undefined,
+        form: undefined,
+        headers: {'User-Agent': 'Coda-Server-Fetcher'},
+        method: 'GET',
+        url: 'https://example.com/foo?blah=123&param1=param-value-1&param2=param-value-2',
+      });
+    });
+
+    it(`${AuthenticationType.WebBasic}`, async () => {
+      const pack = createPackWithAuth({
+        type: AuthenticationType.WebBasic,
+      });
+      setupReadline(['some-username', 'some-password']);
+      await setupAuth(pack);
+
+      await executeFetch(pack, 'https://example.com', {result: 'hello'});
+
+      sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+        body: undefined,
+        form: undefined,
+        headers: {Authorization: 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk', 'User-Agent': 'Coda-Server-Fetcher'},
+        method: 'GET',
+        url: 'https://example.com',
+      });
+    });
+
+    it(`${AuthenticationType.WebBasic}, username only`, async () => {
+      const pack = createPackWithAuth({
+        type: AuthenticationType.WebBasic,
+        uxConfig: {
+          usernameOnly: true,
+        },
+      });
+      setupReadline(['some-username']);
+      await setupAuth(pack);
+
+      await executeFetch(pack, 'https://example.com', {result: 'hello'});
+
+      sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+        body: undefined,
+        form: undefined,
+        headers: {Authorization: 'Basic c29tZS11c2VybmFtZTp1bmRlZmluZWQ=', 'User-Agent': 'Coda-Server-Fetcher'},
+        method: 'GET',
+        url: 'https://example.com',
+      });
+    });
+
+    it(`${AuthenticationType.WebBasic}, applies host automatially`, async () => {
+      const pack = createPackWithAuth({
+        type: AuthenticationType.WebBasic,
+        requiresEndpointUrl: true,
+      });
+      setupReadline(['https://some-endpoint-url.com', 'some-username', 'some-password']);
+      await setupAuth(pack);
+
+      await executeFetch(pack, '/foo?bar=blah', {result: 'hello'});
+
+      sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+        body: undefined,
+        form: undefined,
+        headers: {Authorization: 'Basic c29tZS11c2VybmFtZTpzb21lLXBhc3N3b3Jk', 'User-Agent': 'Coda-Server-Fetcher'},
+        method: 'GET',
+        url: 'https://some-endpoint-url.com/foo?bar=blah',
+      });
+    });
+
+    it(`${AuthenticationType.WebBasic}, no auth configured`, async () => {
+      const pack = createPackWithAuth({
+        type: AuthenticationType.WebBasic,
+      });
+
+      await testHelper.willBeRejectedWith(
+        executeFetch(pack, '/foo?bar=blah', {result: 'hello'}),
+        new RegExp(
+          'WebBasic authentication is required for this pack, but no local credentials were found. ' +
+            'Run "coda auth path/to/pack/manifest to set up credentials.',
+        ),
+      );
+
+      sinon.assert.notCalled(mockMakeRequest);
     });
   });
 });
