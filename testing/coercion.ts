@@ -3,11 +3,11 @@ import type {ParamDef} from '../api_types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
 import {Type} from '../api_types';
-import type {TypedStandardFormula} from '../api';
+import type {TypedPackFormula} from '../api';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isDefined} from '../helpers/object_utils';
 
-export function coerceParams(formula: TypedStandardFormula, params: ParamValues<ParamDefs>): ParamValues<ParamDefs> {
+export function coerceParams(formula: TypedPackFormula, params: ParamValues<ParamDefs>): ParamValues<ParamDefs> {
   const coerced: ParamValues<ParamDefs> = [];
   for (let i = 0; i < params.length; i++) {
     coerced.push(coerceParamValue(formula.parameters[i], params[i]));

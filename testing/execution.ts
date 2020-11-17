@@ -61,23 +61,42 @@ export async function executeFormulaFromPackDef(
   return executeFormula(formula, params, executionContext, options);
 }
 
-export async function executeFormulaFromCLI(args: string[], module: any, contextOptions: ContextOptions = {}) {
-  const formulaNameWithNamespace = args[0];
+export async function executeFormulaOrSyncFromCLI(args: string[], module: any, contextOptions: ContextOptions = {}) {
+  const formulaName = args[0];
   const manifest = getManifestFromModule(module);
 
   try {
-    const formula = findFormula(manifest, formulaNameWithNamespace);
-    const params = coerceParams(formula, args.slice(1) as any);
-    const result = await executeFormulaFromPackDef(
-      manifest,
-      formulaNameWithNamespace,
-      params,
-      undefined,
-      undefined,
-      contextOptions,
-    );
-    // eslint-disable-next-line no-console
-    console.log(result);
+    const formula = tryFindFormula(manifest, formulaName);
+    if (formula) {
+      const params = coerceParams(formula, args.slice(1) as any);
+      const result = await executeFormulaFromPackDef(
+        manifest,
+        formulaName,
+        params,
+        undefined,
+        undefined,
+        contextOptions,
+      );
+      // eslint-disable-next-line no-console
+      console.log(result);
+      return;
+    }
+    const syncFormula = tryFindSyncFormula(manifest, formulaName);
+    if (syncFormula) {
+      const params = coerceParams(syncFormula, args.slice(1) as any);
+      const result = await executeSyncFormulaFromPackDef(
+        manifest,
+        formulaName,
+        params,
+        undefined,
+        undefined,
+        contextOptions,
+      );
+      // eslint-disable-next-line no-console
+      console.log(result);
+      return;
+    }
+    throw new Error(`Pack definition for ${manifest.name} has no formula or sync called ${formulaName}.`);
   } catch (err) {
     // eslint-disable-next-line no-console
     console.log(err);
@@ -162,6 +181,12 @@ function findFormula(packDef: PackDefinition, formulaNameWithNamespace: string):
   );
 }
 
+function tryFindFormula(packDef: PackDefinition, formulaNameWithNamespace: string): TypedStandardFormula | undefined {
+  try {
+    return findFormula(packDef, formulaNameWithNamespace);
+  } catch (_err) {}
+}
+
 function findSyncFormula(packDef: PackDefinition, syncFormulaName: string): GenericSyncFormula {
   if (!packDef.syncTables) {
     throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no sync tables.`);
@@ -177,4 +202,10 @@ function findSyncFormula(packDef: PackDefinition, syncFormulaName: string): Gene
   throw new Error(
     `Pack definition for ${packDef.name} (id ${packDef.id}) has no sync formula "${syncFormulaName}" in its sync tables.`,
   );
+}
+
+function tryFindSyncFormula(packDef: PackDefinition, syncFormulaName: string): GenericSyncFormula | undefined {
+  try {
+    return findSyncFormula(packDef, syncFormulaName);
+  } catch (_err) {}
 }

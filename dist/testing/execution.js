@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.executeSyncFormulaFromPackDef = exports.executeSyncFormula = exports.executeFormulaFromCLI = exports.executeFormulaFromPackDef = exports.executeFormula = void 0;
+exports.executeSyncFormulaFromPackDef = exports.executeSyncFormula = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.executeFormula = void 0;
 const coercion_1 = require("./coercion");
 const helpers_1 = require("./helpers");
 const fetcher_1 = require("./fetcher");
@@ -42,16 +42,28 @@ function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, params, co
     });
 }
 exports.executeFormulaFromPackDef = executeFormulaFromPackDef;
-function executeFormulaFromCLI(args, module, contextOptions = {}) {
+function executeFormulaOrSyncFromCLI(args, module, contextOptions = {}) {
     return __awaiter(this, void 0, void 0, function* () {
-        const formulaNameWithNamespace = args[0];
+        const formulaName = args[0];
         const manifest = helpers_1.getManifestFromModule(module);
         try {
-            const formula = findFormula(manifest, formulaNameWithNamespace);
-            const params = coercion_1.coerceParams(formula, args.slice(1));
-            const result = yield executeFormulaFromPackDef(manifest, formulaNameWithNamespace, params, undefined, undefined, contextOptions);
-            // eslint-disable-next-line no-console
-            console.log(result);
+            const formula = tryFindFormula(manifest, formulaName);
+            if (formula) {
+                const params = coercion_1.coerceParams(formula, args.slice(1));
+                const result = yield executeFormulaFromPackDef(manifest, formulaName, params, undefined, undefined, contextOptions);
+                // eslint-disable-next-line no-console
+                console.log(result);
+                return;
+            }
+            const syncFormula = tryFindSyncFormula(manifest, formulaName);
+            if (syncFormula) {
+                const params = coercion_1.coerceParams(syncFormula, args.slice(1));
+                const result = yield executeSyncFormulaFromPackDef(manifest, formulaName, params, undefined, undefined, contextOptions);
+                // eslint-disable-next-line no-console
+                console.log(result);
+                return;
+            }
+            throw new Error(`Pack definition for ${manifest.name} has no formula or sync called ${formulaName}.`);
         }
         catch (err) {
             // eslint-disable-next-line no-console
@@ -60,7 +72,7 @@ function executeFormulaFromCLI(args, module, contextOptions = {}) {
         }
     });
 }
-exports.executeFormulaFromCLI = executeFormulaFromCLI;
+exports.executeFormulaOrSyncFromCLI = executeFormulaOrSyncFromCLI;
 function executeSyncFormula(formula, params, context = mocks_2.newMockSyncExecutionContext(), { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, maxIterations: maxIterations = 1000, } = {}) {
     return __awaiter(this, void 0, void 0, function* () {
         if (shouldValidateParams) {
@@ -114,6 +126,12 @@ function findFormula(packDef, formulaNameWithNamespace) {
     }
     throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formula "${name}" in namespace "${namespace}".`);
 }
+function tryFindFormula(packDef, formulaNameWithNamespace) {
+    try {
+        return findFormula(packDef, formulaNameWithNamespace);
+    }
+    catch (_err) { }
+}
 function findSyncFormula(packDef, syncFormulaName) {
     if (!packDef.syncTables) {
         throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no sync tables.`);
@@ -125,4 +143,10 @@ function findSyncFormula(packDef, syncFormulaName) {
         }
     }
     throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no sync formula "${syncFormulaName}" in its sync tables.`);
+}
+function tryFindSyncFormula(packDef, syncFormulaName) {
+    try {
+        return findSyncFormula(packDef, syncFormulaName);
+    }
+    catch (_err) { }
 }

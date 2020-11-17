@@ -8,14 +8,14 @@ const path_1 = __importDefault(require("path"));
 const child_process_1 = require("child_process");
 const yargs_1 = __importDefault(require("yargs"));
 const EXECUTE_BOOTSTRAP_CODE = `
-import {executeFormulaFromCLI} from 'packs-sdk/dist/testing/execution';
+import {executeFormulaOrSyncFromCLI} from 'packs-sdk/dist/testing/execution';
 
 async function main() {
   const manifestPath = process.argv[4];
   const useRealFetcher = process.argv[5] === 'true';
   const credentialsFile = process.argv[6] || undefined;
   const module = await import(manifestPath);
-  await executeFormulaFromCLI(process.argv.slice(7), module, {useRealFetcher, credentialsFile});
+  await executeFormulaOrSyncFromCLI(process.argv.slice(7), module, {useRealFetcher, credentialsFile});
 }
 
 void main();`;
