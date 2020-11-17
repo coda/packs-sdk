@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.readCredentialsFile = exports.setupAuth = void 0;
+exports.readCredentialsFile = exports.setupAuth = exports.setupAuthFromModule = void 0;
 const types_1 = require("../types");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
@@ -23,9 +23,15 @@ const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
 const readline_1 = __importDefault(require("readline"));
 const DEFAULT_CREDENTIALS_FILE = '.coda/credentials.json';
-function setupAuth(module, opts = {}) {
+function setupAuthFromModule(module, opts = {}) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { name, defaultAuthentication } = helpers_1.getManifestFromModule(module);
+        return setupAuth(yield helpers_1.getManifestFromModule(module), opts);
+    });
+}
+exports.setupAuthFromModule = setupAuthFromModule;
+function setupAuth(packDef, opts = {}) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { name, defaultAuthentication } = packDef;
         if (!defaultAuthentication) {
             return helpers_3.printAndExit(`The pack ${name} has no declared authentication. Provide a value for defaultAuthentication in the pack definition.`);
         }

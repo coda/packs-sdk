@@ -3,6 +3,7 @@ import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
 import type {Credentials} from './auth_types';
 import type {MultiQueryParamCredentials} from './auth_types';
+import type {PackDefinition} from '../types';
 import {assertCondition} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import fs from 'fs';
@@ -18,8 +19,12 @@ interface SetupAuthOptions {
 
 const DEFAULT_CREDENTIALS_FILE = '.coda/credentials.json';
 
-export async function setupAuth(module: any, opts: SetupAuthOptions = {}): Promise<void> {
-  const {name, defaultAuthentication} = getManifestFromModule(module);
+export async function setupAuthFromModule(module: any, opts: SetupAuthOptions = {}): Promise<void> {
+  return setupAuth(await getManifestFromModule(module), opts);
+}
+
+export async function setupAuth(packDef: PackDefinition, opts: SetupAuthOptions = {}): Promise<void> {
+  const {name, defaultAuthentication} = packDef;
   if (!defaultAuthentication) {
     return printAndExit(
       `The pack ${name} has no declared authentication. Provide a value for defaultAuthentication in the pack definition.`,

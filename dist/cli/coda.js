@@ -18,12 +18,12 @@ async function main() {
 
 void main();`;
 const AUTH_BOOTSTRAP_CODE = `
-import {setupAuth} from 'packs-sdk/dist/testing/auth';
+import {setupAuthFromModule} from 'packs-sdk/dist/testing/auth';
 
 async function main() {
   const manifestPath = process.argv[4];
   const module = await import(manifestPath);
-  await setupAuth(module);
+  await setupAuthFromModule(module);
 }
 
 void main();`;
