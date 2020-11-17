@@ -67,35 +67,50 @@ function validateResultType(resultType, result) {
             return ensure_1.ensureUnreachable(resultType);
     }
 }
-function checkCodaType(resultCodaType, result) {
-    if (!object_utils_1.isDefined(result)) {
-        return { message: `Expected a ${resultCodaType} result but got ${result}.` };
-    }
-    switch (resultCodaType) {
+function checkCodaType(schema, result) {
+    switch (schema.codaType) {
         case schema_1.ValueType.Date:
+        case schema_1.ValueType.DateTime:
             if (isNaN(Date.parse(result))) {
                 return { message: `Failed to parse ${result} as a ${schema_1.ValueType.Date}.` };
             }
             break;
         case schema_1.ValueType.Time:
-            break;
-        case schema_1.ValueType.DateTime:
+            // TODO: needs js-core/utils/time
             break;
         case schema_1.ValueType.Duration:
+            // TODO: needs common/formulas/private/duration
             break;
         case schema_1.ValueType.Person:
             break;
         case schema_1.ValueType.Markdown:
-            break;
-        case schema_1.ValueType.Html:
+            // TODO: needs MarkdownRangesParser
             break;
         case schema_1.ValueType.Embed:
+            // TODO: needs modules/common/structured-value/index
             break;
         case schema_1.ValueType.Reference:
+            // TODO: needs modules/common/structured-value/index
+            break;
+        case schema_1.ValueType.Image:
+        case schema_1.ValueType.ImageAttachment:
+        case schema_1.ValueType.Attachment:
+            // TODO: needs modules/common/structured-value/index
             break;
         case schema_1.ValueType.Slider:
+            const { minimum, maximum } = schema;
+            if ((minimum && result < minimum) || (maximum && result > maximum)) {
+                return { message: `Failed to parse ${result} as a ${schema_1.ValueType.Slider}.` };
+            }
             break;
         case schema_1.ValueType.Scale:
+            const { maximum: sliderMax } = schema;
+            if (result > sliderMax) {
+                return { message: `Failed to parse ${result} as a ${schema_1.ValueType.Scale}.` };
+            }
+            break;
+        case schema_1.ValueType.Currency:
+            // TODO: needs js-core/utils/currency
             break;
         default:
             // no need to coerce current result type
@@ -141,7 +156,7 @@ function validateObjectResult(formula, result) {
             errors.push(typeCheck);
         }
         if (propertySchema.codaType) {
-            const codaTypeCheck = value && checkCodaType(propertySchema.codaType, value);
+            const codaTypeCheck = value && checkCodaType(propertySchema, value);
             if (codaTypeCheck) {
                 errors.push(codaTypeCheck);
             }

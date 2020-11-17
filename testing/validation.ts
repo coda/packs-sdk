@@ -1,24 +1,21 @@
 import type {ObjectPackFormulaMetadata} from '../api';
-import {ObjectSchemaProperty} from '../schema';
+import type {ObjectSchemaProperty} from '../schema';
 import type {ParamDefs} from '../api_types';
 import type {ParameterError} from './types';
 import {ParameterException} from './types';
 import type {ResultValidationError} from './types';
 import {ResultValidationException} from './types';
-import {ScaleSchema} from '../schema';
-import {Schema} from '../schema';
-import {SliderSchema} from '../schema';
+import type {ScaleSchema} from '../schema';
+import type {Schema} from '../schema';
+import type {SliderSchema} from '../schema';
 import {Type} from '../api_types';
 import type {TypedPackFormula} from '../api';
 import {ValueType} from '../schema';
-import {ensure} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
 import {isDefined} from '../helpers/object_utils';
 import {isObject} from '../schema';
 import {isObjectPackFormula} from '../api';
-import {makeReferenceSchemaFromObjectSchema} from '../schema';
-import * as schemaHelpers from './helpers/schema';
 
 // TODO: Handle varargs.
 export function validateParams(formula: TypedPackFormula, params: ParamDefs): void {
