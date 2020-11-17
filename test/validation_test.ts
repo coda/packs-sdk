@@ -40,7 +40,6 @@ describe('Validation', () => {
   });
 
   it('correctly throws on malformed date object', async () => {
-    // await executeFormulaFromPackDef(fakePack, 'Fake::Date', ['asdfdasf']);
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::Date', ['asdfdasf']),
       /The following errors were found when validating the result of the formula "Date":\nFailed to parse asdfdasf as a date./,
