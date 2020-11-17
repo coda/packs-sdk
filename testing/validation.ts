@@ -1,17 +1,24 @@
 import type {ObjectPackFormulaMetadata} from '../api';
+import {ObjectSchemaProperty} from '../schema';
 import type {ParamDefs} from '../api_types';
 import type {ParameterError} from './types';
 import {ParameterException} from './types';
 import type {ResultValidationError} from './types';
 import {ResultValidationException} from './types';
+import {ScaleSchema} from '../schema';
+import {Schema} from '../schema';
+import {SliderSchema} from '../schema';
 import {Type} from '../api_types';
 import type {TypedPackFormula} from '../api';
 import {ValueType} from '../schema';
+import {ensure} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
 import {isDefined} from '../helpers/object_utils';
 import {isObject} from '../schema';
 import {isObjectPackFormula} from '../api';
+import {makeReferenceSchemaFromObjectSchema} from '../schema';
+import * as schemaHelpers from './helpers/schema';
 
 // TODO: Handle varargs.
 export function validateParams(formula: TypedPackFormula, params: ParamDefs): void {
@@ -75,36 +82,51 @@ function validateResultType<ResultT extends any>(resultType: Type, result: Resul
 }
 
 function checkCodaType<ResultT extends any>
-    (resultCodaType: ValueType, result: ResultT): ResultValidationError | undefined {
-  if (!isDefined(result)) {
-    return {message: `Expected a ${resultCodaType} result but got ${result}.`};
-  }
-  switch (resultCodaType) {
+    (schema: Schema & ObjectSchemaProperty, result: ResultT): ResultValidationError | undefined {
+  switch (schema.codaType) {
     case ValueType.Date:
+    case ValueType.DateTime:
       if (isNaN(Date.parse(result as string))) {
         return {message: `Failed to parse ${result} as a ${ValueType.Date}.`};
       }
       break;
     case ValueType.Time:
-      break;
-    case ValueType.DateTime:
+      // TODO: needs js-core/utils/time
       break;
     case ValueType.Duration:
+      // TODO: needs common/formulas/private/duration
       break;
     case ValueType.Person:
       break;
     case ValueType.Markdown:
-      break;
-    case ValueType.Html:
+      // TODO: needs MarkdownRangesParser
       break;
     case ValueType.Embed:
+      // TODO: needs modules/common/structured-value/index
       break;
     case ValueType.Reference:
+      // TODO: needs modules/common/structured-value/index
+      break;
+    case ValueType.Image:
+    case ValueType.ImageAttachment:
+    case ValueType.Attachment:
+      // TODO: needs modules/common/structured-value/index
       break;
     case ValueType.Slider:
+      const {minimum, maximum} = schema as SliderSchema;
+      if ((minimum && result < minimum) || (maximum && result > maximum)) {
+        return {message: `Failed to parse ${result} as a ${ValueType.Slider}.`};
+      }
       break;
     case ValueType.Scale:
+      const {maximum: sliderMax} = schema as ScaleSchema;
+      if (result > sliderMax) {
+        return {message: `Failed to parse ${result} as a ${ValueType.Scale}.`};
+      }
       break;
+    case ValueType.Currency:
+       // TODO: needs js-core/utils/currency
+       break;
     default:
       // no need to coerce current result type
       break;
@@ -169,7 +191,7 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
     }
 
     if (propertySchema.codaType) {
-      const codaTypeCheck = value && checkCodaType(propertySchema.codaType, value);
+      const codaTypeCheck = value && checkCodaType(propertySchema, value);
       if (codaTypeCheck) {
         errors.push(codaTypeCheck);
       }
