@@ -34,13 +34,13 @@ function makeManifestFullPath(manifestPath) {
     return manifestPath.startsWith('/') ? manifestPath : path_1.default.join(process.cwd(), manifestPath);
 }
 function handleExecute({ manifestPath, formulaName, params, realFetcher, credentialsFile }) {
-    child_process_1.spawnSync(`ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)} ${formulaName} ${Boolean(realFetcher)} ${credentialsFile || '""'} ${params.join(' ')}`, {
+    child_process_1.spawnSync(`ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)} ${Boolean(realFetcher)} ${credentialsFile || '""'} ${formulaName} ${params.join(' ')}`, {
         shell: true,
         stdio: 'inherit',
     });
 }
 function handleAuth({ manifestPath, credentialsFile }) {
-    child_process_1.spawnSync(`ts-node -e "${AUTH_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)} ${credentialsFile}`, {
+    child_process_1.spawnSync(`ts-node -e "${AUTH_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)} ${credentialsFile || '""'}`, {
         shell: true,
         stdio: 'inherit',
     });

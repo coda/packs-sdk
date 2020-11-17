@@ -50,9 +50,9 @@ function makeManifestFullPath(manifestPath: string): string {
 
 function handleExecute({manifestPath, formulaName, params, realFetcher, credentialsFile}: Arguments<ExecuteArgs>) {
   spawnSync(
-    `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)} ${formulaName} ${Boolean(
-      realFetcher,
-    )} ${credentialsFile || '""'} ${params.join(' ')}`,
+    `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)} ${Boolean(realFetcher)} ${
+      credentialsFile || '""'
+    } ${formulaName} ${params.join(' ')}`,
     {
       shell: true,
       stdio: 'inherit',
@@ -61,7 +61,7 @@ function handleExecute({manifestPath, formulaName, params, realFetcher, credenti
 }
 
 function handleAuth({manifestPath, credentialsFile}: Arguments<AuthArgs>) {
-  spawnSync(`ts-node -e "${AUTH_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)} ${credentialsFile}`, {
+  spawnSync(`ts-node -e "${AUTH_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)} ${credentialsFile || '""'}`, {
     shell: true,
     stdio: 'inherit',
   });
