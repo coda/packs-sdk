@@ -1,8 +1,11 @@
-import { makeObjectFormula, makeStringParameter } from '../api';
-import { makeObjectSchema, ValueType } from '../schema';
-import { executeFormulaFromPackDef } from '../testing/execution';
-import { createFakePack, FakePack } from './test_utils';
 import {testHelper} from './test_helper';
+import {FakePack} from './test_utils';
+import {ValueType} from '../schema';
+import {createFakePack} from './test_utils';
+import { executeFormulaFromPackDef } from '../testing/execution';
+import {makeObjectFormula} from '../api';
+import {makeObjectSchema} from '../schema';
+import {makeStringParameter} from '../api';
 
 describe('Validation', () => {
   const fakeEventsSchema = makeObjectSchema({

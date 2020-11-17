@@ -4,20 +4,11 @@ exports.validateResult = exports.validateParams = void 0;
 const types_1 = require("./types");
 const types_2 = require("./types");
 const api_types_1 = require("../api_types");
-<<<<<<< HEAD
-<<<<<<< HEAD
-const ensure_1 = require("../helpers/ensure");
-=======
-const date = __importStar(require("../helpers/date"));
-=======
->>>>>>> 6c2cd46 (make build)
-const ensure_1 = require("../helpers/ensure");
-const api_1 = require("../api");
-const object_utils_1 = require("../helpers/object_utils");
->>>>>>> 64b3e8d (add skeleton for result codaType validation)
 const schema_1 = require("../schema");
-const object_utils_1 = require("../helpers/object_utils");
+const ensure_1 = require("../helpers/ensure");
 const schema_2 = require("../schema");
+const object_utils_1 = require("../helpers/object_utils");
+const schema_3 = require("../schema");
 const api_1 = require("../api");
 // TODO: Handle varargs.
 function validateParams(formula, params) {
@@ -128,11 +119,11 @@ function validateObjectResult(formula, result) {
     if (!schema) {
         return;
     }
-    if (schema_1.isArray(schema)) {
+    if (schema_2.isArray(schema)) {
         // TODO(jonathan): Validate object arrays.
         return;
     }
-    if (!schema_2.isObject(schema)) {
+    if (!schema_3.isObject(schema)) {
         const error = { message: `Expected an object schema, but found ${JSON.stringify(schema)}.` };
         throw types_2.ResultValidationException.fromErrors(formula.name, [error]);
     }

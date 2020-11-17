@@ -5,6 +5,7 @@ import {ParameterException} from './types';
 import type {ResultValidationError} from './types';
 import {ResultValidationException} from './types';
 import {Type} from '../api_types';
+import type {TypedPackFormula} from '../api';
 import {ValueType} from '../schema';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
