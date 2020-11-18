@@ -10,7 +10,9 @@ import type {Schema} from '../schema';
 import type {SliderSchema} from '../schema';
 import {Type} from '../api_types';
 import type {TypedPackFormula} from '../api';
+import { URL } from 'url';
 import {ValueType} from '../schema';
+import {ensure} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
 import {isDefined} from '../helpers/object_utils';
@@ -83,50 +85,66 @@ function checkCodaType<ResultT extends any>
   switch (schema.codaType) {
     case ValueType.Date:
     case ValueType.DateTime:
-      if (isNaN(Date.parse(result as string))) {
-        return {message: `Failed to parse ${result} as a ${ValueType.Date}.`};
-      }
-      break;
+      return tryParseDateOrDateTime(result as string, schema);
     case ValueType.Time:
-      // TODO: needs js-core/utils/time
-      break;
     case ValueType.Duration:
-      // TODO: needs common/formulas/private/duration
+      // TODO: investigate how to possibly parse time/duration without experimental
       break;
     case ValueType.Person:
-      break;
-    case ValueType.Markdown:
-      // TODO: needs MarkdownRangesParser
-      break;
-    case ValueType.Embed:
-      // TODO: needs modules/common/structured-value/index
-      break;
     case ValueType.Reference:
-      // TODO: needs modules/common/structured-value/index
+      // TODO: handle in followup
       break;
+    case ValueType.Embed: 
     case ValueType.Image:
     case ValueType.ImageAttachment:
     case ValueType.Attachment:
-      // TODO: needs modules/common/structured-value/index
-      break;
+    case ValueType.Url:
+      return tryParseUrl(result as string, schema);
     case ValueType.Slider:
-      const {minimum, maximum} = schema as SliderSchema;
-      if ((minimum && result < minimum) || (maximum && result > maximum)) {
-        return {message: `Failed to parse ${result} as a ${ValueType.Slider}.`};
-      }
-      break;
+      return tryParseSlider(result, schema);
     case ValueType.Scale:
-      const {maximum: sliderMax} = schema as ScaleSchema;
-      if (result > sliderMax) {
-        return {message: `Failed to parse ${result} as a ${ValueType.Scale}.`};
-      }
-      break;
-    case ValueType.Currency:
-       // TODO: needs js-core/utils/currency
-       break;
+      return tryParseScale(result, schema);
     default:
       // no need to coerce current result type
       break;
+  }
+}
+
+function tryParseDateOrDateTime(dateTimeString: string, schema: Schema) {
+  if (isNaN(Date.parse(dateTimeString))) {
+    return {message: `Failed to parse ${dateTimeString} as a ${schema.codaType}.`};
+  }
+}
+
+function tryParseUrl(urlString: string, schema: Schema) {
+  if (!urlString.startsWith('http')) {
+    return {message: `Failed to parse ${urlString} as a ${schema.codaType}.`};
+  }
+}
+
+function tryParseSlider(result: unknown, schema: Schema) {
+  ensure(!validateResultType(Type.number, result), `${result} must be a number`);
+  const value = result as number;
+  const {minimum, maximum} = schema as SliderSchema;
+  if (value < (minimum ?? 0)) {
+    return {message: `Slider value ${result} is below the specified minimum value of ${minimum ?? 0}.`};
+  }
+  if (maximum && value > maximum) {
+    return {message: `Slider value ${result} is greater than the specified maximum value of ${maximum}.`};
+  }
+}
+
+function tryParseScale(result: unknown, schema: Schema) {
+  const {maximum} = schema as ScaleSchema;
+  const value = result as number;
+  if (!Number.isInteger(result)) {
+    return {message: `Scale value ${result} must be an integer.`};
+  }
+  if (value < 0) {
+    return {message: `Scale value ${result} is below 0.`};
+  }
+  if (value > maximum) {
+    return {message: `Scale value ${result} is greater than the specified maximum value of ${maximum}.`};
   }
 }
 

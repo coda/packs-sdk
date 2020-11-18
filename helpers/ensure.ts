@@ -1,5 +1,12 @@
 import {UserVisibleError} from '../api';
 
+export function ensure<T>(condition: T | false | null | undefined, message?: string): T {
+  if (!condition) {
+    throw new Error(message || 'ensure() failed');
+  }
+  return condition;
+}
+
 export function ensureUnreachable(value: never, message?: string): never {
   throw new Error(message || `Unreachable code hit with value ${String(value)}`);
 }
