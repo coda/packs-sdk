@@ -277,6 +277,9 @@ function makeSyncTable(name, schema, _a, getSchema, entityName) {
     if (!(primary && id && identity)) {
         throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
     }
+    if (name.includes(' ')) {
+        throw new Error('Sync table name should not include spaces');
+    }
     const responseHandler = handler_templates_1.generateObjectResponseHandler({ schema: formulaSchema, excludeExtraneous: true });
     const execute = function exec(params, context, input, // TODO(alexd): Remove
     runtimeSchema) {

@@ -507,6 +507,10 @@ export function makeSyncTable<
     throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
   }
 
+  if (name.includes(' ')) {
+    throw new Error('Sync table name should not include spaces');
+  }
+
   const responseHandler = generateObjectResponseHandler({schema: formulaSchema, excludeExtraneous: true});
   const execute = async function exec(
     params: ParamValues<ParamDefsT>,
