@@ -118,7 +118,7 @@ function tryParseDateOrDateTime(dateTimeString: string, schema: Schema) {
 
 function tryParseUrl(urlString: string, schema: Schema) {
   if (!urlString.startsWith('http')) {
-    return {message: `Failed to parse ${urlString} as a ${schema.codaType}.`};
+    return {message: `${urlString} must be a url-like string and use HTTP/HTTPS for type ${schema.codaType}.`};
   }
 }
 
@@ -141,7 +141,7 @@ function tryParseScale(result: unknown, schema: Schema) {
     return {message: `Scale value ${result} must be an integer.`};
   }
   if (value < 0) {
-    return {message: `Scale value ${result} is below 0.`};
+    return {message: `Scale value ${result} cannot be below 0.`};
   }
   if (value > maximum) {
     return {message: `Scale value ${result} is greater than the specified maximum value of ${maximum}.`};
