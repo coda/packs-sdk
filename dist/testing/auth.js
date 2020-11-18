@@ -19,6 +19,8 @@ const ensure_2 = require("../helpers/ensure");
 const ensure_3 = require("../helpers/ensure");
 const fs_1 = __importDefault(require("fs"));
 const helpers_1 = require("./helpers");
+const oauth_server_1 = require("./oauth_server");
+const oauth_server_2 = require("./oauth_server");
 const path_1 = __importDefault(require("path"));
 const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
@@ -52,8 +54,9 @@ function setupAuth(packDef, opts = {}) {
             case types_1.AuthenticationType.WebBasic:
                 return handler.handleWebBasic();
             case types_1.AuthenticationType.AWSSignature4:
-            case types_1.AuthenticationType.OAuth2:
                 throw new Error('Not yet implemented');
+            case types_1.AuthenticationType.OAuth2:
+                return handler.handleOAuth2();
             default:
                 return ensure_3.ensureUnreachable(defaultAuthentication);
         }
@@ -74,6 +77,7 @@ class CredentialHandler {
                 if (input.toLocaleLowerCase() !== 'y') {
                     return process.exit(1);
                 }
+                return existingCredentials[this._packName];
             }
         });
     }
@@ -130,6 +134,47 @@ class CredentialHandler {
             }
             this.storeCredential(credentials);
             helpers_2.print('Credentials updated!');
+        });
+    }
+    handleOAuth2() {
+        return __awaiter(this, void 0, void 0, function* () {
+            ensure_1.assertCondition(this._authDef.type === types_1.AuthenticationType.OAuth2);
+            const existingCredentials = (yield this.checkForExistingCredential());
+            helpers_2.print(`*** Your application must have ${oauth_server_2.makeRedirectUrl()} whitelisted as an OAuth redirect url ` +
+                'in order for this tool to work. ***');
+            const clientIdPrompt = existingCredentials
+                ? `Enter the OAuth client id for ${this._packName} (or Enter to skip and use existing):\n`
+                : `Enter the OAuth client id for ${this._packName}:\n`;
+            const newClientId = yield this.promptForInput(clientIdPrompt);
+            const clientSecretPrompt = existingCredentials
+                ? `Enter the OAuth client secret for ${this._packName} (or Enter to skip and use existing):\n`
+                : `Enter the OAuth client secret for ${this._packName}:\n`;
+            const newClientSecret = yield this.promptForInput(clientSecretPrompt);
+            const clientId = ensure_2.ensureNonEmptyString(newClientId || (existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.clientId));
+            const clientSecret = ensure_2.ensureNonEmptyString(newClientSecret || (existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.clientSecret));
+            const credentials = {
+                clientId,
+                clientSecret,
+                accessToken: existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.accessToken,
+                refreshToken: existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.refreshToken,
+            };
+            this.storeCredential(credentials);
+            helpers_2.print('Credential secrets updated! Launching OAuth handshake in browser...\n');
+            oauth_server_1.launchOAuthServerFlow({
+                clientId,
+                clientSecret,
+                authDef: this._authDef,
+                afterTokenExchange: ({ accessToken, refreshToken }) => {
+                    const credentials = {
+                        clientId,
+                        clientSecret,
+                        accessToken,
+                        refreshToken,
+                    };
+                    this.storeCredential(credentials);
+                    helpers_2.print('Access token saved! Shutting down OAuth server and exiting...');
+                },
+            });
         });
     }
     maybePromptForEndpointUrl() {
