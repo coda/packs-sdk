@@ -37,7 +37,7 @@ async function main() {
     formulaName,
     params,
     module,
-    contextOptions: {useRealFetcher: fetch, credentialsFile},
+    contextOptions: {useRealFetcher, credentialsFile},
   });
 }
 
