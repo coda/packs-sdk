@@ -62,14 +62,23 @@ export async function executeFormulaFromPackDef(
   return executeFormula(formula, params, executionContext, options);
 }
 
-export async function executeFormulaOrSyncFromCLI(args: string[], module: any, contextOptions: ContextOptions = {}) {
-  const formulaName = args[0];
+export async function executeFormulaOrSyncFromCLI({
+  formulaName,
+  params: rawParams,
+  module,
+  contextOptions = {},
+}: {
+  formulaName: string;
+  params: string[];
+  module: any;
+  contextOptions?: ContextOptions;
+}) {
   const manifest = getManifestFromModule(module);
 
   try {
     const formula = tryFindFormula(manifest, formulaName);
     if (formula) {
-      const params = coerceParams(formula, args.slice(1) as any);
+      const params = coerceParams(formula, rawParams as any);
       const result = await executeFormulaFromPackDef(
         manifest,
         formulaName,
@@ -83,7 +92,7 @@ export async function executeFormulaOrSyncFromCLI(args: string[], module: any, c
     }
     const syncFormula = tryFindSyncFormula(manifest, formulaName);
     if (syncFormula) {
-      const params = coerceParams(syncFormula, args.slice(1) as any);
+      const params = coerceParams(syncFormula, rawParams as any);
       const result = await executeSyncFormulaFromPackDef(
         manifest,
         formulaName,
