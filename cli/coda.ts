@@ -2,6 +2,7 @@
 
 import type {Arguments} from 'yargs';
 import type {Options} from 'yargs';
+import {executeFormulaOrSyncFromCLI} from '../testing/execution';
 import path from 'path';
 import {spawnSync} from 'child_process';
 import yargs from 'yargs';
@@ -48,20 +49,32 @@ function makeManifestFullPath(manifestPath: string): string {
   return manifestPath.startsWith('/') ? manifestPath : path.join(process.cwd(), manifestPath);
 }
 
-function handleExecute({manifestPath, formulaName, params, fetch, credentialsFile}: Arguments<ExecuteArgs>) {
-  spawnSync(
-    `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)} ${Boolean(fetch)} ${
+async function handleExecute({manifestPath, formulaName, params, fetch, credentialsFile}: Arguments<ExecuteArgs>) {
+  const fullManifestPath = makeManifestFullPath(manifestPath);
+  if (isTypescript(manifestPath)) {
+    const tsCommand = `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${fullManifestPath} ${Boolean(fetch)} ${
       credentialsFile || '""'
-    } ${formulaName} ${params.join(' ')}`,
-    {
-      shell: true,
-      stdio: 'inherit',
-    },
-  );
+    } ${formulaName} ${params.join(' ')}`;
+    spawnProcess(tsCommand);
+  } else {
+    const packModule = await import(fullManifestPath);
+    await executeFormulaOrSyncFromCLI([formulaName, ...params], packModule, {useRealFetcher: fetch, credentialsFile});
+  }
 }
 
 function handleAuth({manifestPath, credentialsFile}: Arguments<AuthArgs>) {
   spawnSync(`ts-node -e "${AUTH_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)} ${credentialsFile || '""'}`, {
+    shell: true,
+    stdio: 'inherit',
+  });
+}
+
+function isTypescript(path: string): boolean {
+  return path.toLowerCase().endsWith('.ts');
+}
+
+function spawnProcess(command: string) {
+  spawnSync(command, {
     shell: true,
     stdio: 'inherit',
   });
