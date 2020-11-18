@@ -5,6 +5,7 @@ import type {Credentials} from './auth_types';
 import type {MultiQueryParamCredentials} from './auth_types';
 import type {PackDefinition} from '../types';
 import {assertCondition} from '../helpers/ensure';
+import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import fs from 'fs';
 import {getManifestFromModule} from './helpers';
@@ -60,14 +61,10 @@ class CredentialHandler {
   private readonly _authDef: Authentication;
   private readonly _credentialsFile: string;
 
-  constructor(
-    packName: string,
-    authDef: Authentication,
-    {credentialsFile = DEFAULT_CREDENTIALS_FILE}: SetupAuthOptions,
-  ) {
+  constructor(packName: string, authDef: Authentication, {credentialsFile}: SetupAuthOptions = {}) {
     this._packName = packName;
     this._authDef = authDef;
-    this._credentialsFile = credentialsFile;
+    this._credentialsFile = credentialsFile || DEFAULT_CREDENTIALS_FILE;
   }
 
   private async checkForExistingCredential() {
@@ -182,6 +179,7 @@ function storeCredential(credentialsFile: string, packName: string, credentials:
 }
 
 export function readCredentialsFile(credentialsFile: string = DEFAULT_CREDENTIALS_FILE): AllCredentials | undefined {
+  ensureNonEmptyString(credentialsFile);
   let file: Buffer;
   try {
     file = fs.readFileSync(credentialsFile);
@@ -195,6 +193,7 @@ export function readCredentialsFile(credentialsFile: string = DEFAULT_CREDENTIAL
 }
 
 function writeCredentialsFile(credentialsFile: string, allCredentials: AllCredentials): void {
+  ensureNonEmptyString(credentialsFile);
   const dirname = path.dirname(credentialsFile);
   if (!fs.existsSync(dirname)) {
     fs.mkdirSync(dirname);

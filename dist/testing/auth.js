@@ -16,6 +16,7 @@ exports.readCredentialsFile = exports.setupAuth = exports.setupAuthFromModule = 
 const types_1 = require("../types");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
+const ensure_3 = require("../helpers/ensure");
 const fs_1 = __importDefault(require("fs"));
 const helpers_1 = require("./helpers");
 const path_1 = __importDefault(require("path"));
@@ -54,16 +55,16 @@ function setupAuth(packDef, opts = {}) {
             case types_1.AuthenticationType.OAuth2:
                 throw new Error('Not yet implemented');
             default:
-                return ensure_2.ensureUnreachable(defaultAuthentication);
+                return ensure_3.ensureUnreachable(defaultAuthentication);
         }
     });
 }
 exports.setupAuth = setupAuth;
 class CredentialHandler {
-    constructor(packName, authDef, { credentialsFile = DEFAULT_CREDENTIALS_FILE }) {
+    constructor(packName, authDef, { credentialsFile } = {}) {
         this._packName = packName;
         this._authDef = authDef;
-        this._credentialsFile = credentialsFile;
+        this._credentialsFile = credentialsFile || DEFAULT_CREDENTIALS_FILE;
     }
     checkForExistingCredential() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -165,6 +166,7 @@ function storeCredential(credentialsFile, packName, credentials) {
     writeCredentialsFile(credentialsFile, allCredentials);
 }
 function readCredentialsFile(credentialsFile = DEFAULT_CREDENTIALS_FILE) {
+    ensure_2.ensureNonEmptyString(credentialsFile);
     let file;
     try {
         file = fs_1.default.readFileSync(credentialsFile);
@@ -179,6 +181,7 @@ function readCredentialsFile(credentialsFile = DEFAULT_CREDENTIALS_FILE) {
 }
 exports.readCredentialsFile = readCredentialsFile;
 function writeCredentialsFile(credentialsFile, allCredentials) {
+    ensure_2.ensureNonEmptyString(credentialsFile);
     const dirname = path_1.default.dirname(credentialsFile);
     if (!fs_1.default.existsSync(dirname)) {
         fs_1.default.mkdirSync(dirname);
