@@ -81,7 +81,8 @@ function validateResultType<ResultT extends any>(resultType: Type, result: Resul
 
 function checkPropertyTypeAndCodaType<ResultT extends any>
     (schema: Schema & ObjectSchemaProperty, key: string, result: ResultT): ResultValidationError | undefined {
-  const typeValidationError = {message: `Expected a ${schema.type} property for key ${key} but got ${result}.`};
+  const resultValue = typeof result === 'string' ? `"${result}"` : result;
+  const typeValidationError = {message: `Expected a ${schema.type} property for key ${key} but got ${resultValue}.`};
   switch (schema.type) {
     case ValueType.Boolean:
       return checkType(typeof result === 'boolean', 'boolean', result);

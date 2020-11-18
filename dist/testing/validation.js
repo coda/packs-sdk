@@ -68,7 +68,9 @@ function validateResultType(resultType, result) {
             return ensure_2.ensureUnreachable(resultType);
     }
 }
-function checkPropertyTypeAndCodaType(schema, result) {
+function checkPropertyTypeAndCodaType(schema, key, result) {
+    const resultValue = typeof result === 'string' ? `"${result}"` : result;
+    const typeValidationError = { message: `Expected a ${schema.type} property for key ${key} but got ${resultValue}.` };
     switch (schema.type) {
         case schema_1.ValueType.Boolean:
             return checkType(typeof result === 'boolean', 'boolean', result);
@@ -76,7 +78,7 @@ function checkPropertyTypeAndCodaType(schema, result) {
             {
                 const resultValidationError = checkType(typeof result === 'number', 'number', result);
                 if (resultValidationError) {
-                    return resultValidationError;
+                    return typeValidationError;
                 }
                 switch (schema.codaType) {
                     case schema_1.ValueType.Slider:
@@ -99,7 +101,7 @@ function checkPropertyTypeAndCodaType(schema, result) {
             {
                 const resultValidationError = checkType(typeof result === 'string', 'string', result);
                 if (resultValidationError) {
-                    return resultValidationError;
+                    return typeValidationError;
                 }
                 switch (schema.codaType) {
                     case schema_1.ValueType.Attachment:
@@ -131,12 +133,12 @@ function checkPropertyTypeAndCodaType(schema, result) {
             {
                 const resultValidationError = checkType(typeof result === 'object', 'object', result);
                 if (resultValidationError) {
-                    return resultValidationError;
+                    return typeValidationError;
                 }
                 switch (schema.codaType) {
                     case schema_1.ValueType.Person:
                     case schema_1.ValueType.Reference:
-                    // TODO: fill these in after adding in type defs for persons and atrefs.
+                    // TODO: fill these in after adding in type defs for persons and references.
                     case undefined:
                         // no need to coerce current result type
                         return;
@@ -212,7 +214,7 @@ function validateObjectResult(formula, result) {
             });
         }
         if (value) {
-            const propertyLevelError = checkPropertyTypeAndCodaType(schema, result);
+            const propertyLevelError = checkPropertyTypeAndCodaType(propertySchema, propertyKey, value);
             if (propertyLevelError) {
                 errors.push(propertyLevelError);
             }
