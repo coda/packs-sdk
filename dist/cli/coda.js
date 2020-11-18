@@ -75,6 +75,10 @@ function makeManifestFullPath(manifestPath) {
 function handleExecute({ manifestPath, formulaName, params, fetch, credentialsFile }) {
     return __awaiter(this, void 0, void 0, function* () {
         const fullManifestPath = makeManifestFullPath(manifestPath);
+        // If the given manifest source file is a .ts file, we need to evalute it using ts-node in the user's environment.
+        // We can reasonably assume the user has ts-node if they have built a pack definition using a .ts file.
+        // Otherwise, the given manifest is most likely a plain .js file or a post-build .js dist file from a TS build.
+        // In the latter case, we can import the given file as a regular node (non-TS) import without any bootstrapping.
         if (isTypescript(manifestPath)) {
             const tsCommand = `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${fullManifestPath} ${Boolean(fetch)} ${credentialsFile || '""'} ${formulaName} ${params.join(' ')}`;
             spawnProcess(tsCommand);
