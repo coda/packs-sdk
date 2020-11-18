@@ -43,21 +43,20 @@ function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, params, co
     });
 }
 exports.executeFormulaFromPackDef = executeFormulaFromPackDef;
-function executeFormulaOrSyncFromCLI(args, module, contextOptions = {}) {
+function executeFormulaOrSyncFromCLI({ formulaName, params: rawParams, module, contextOptions = {}, }) {
     return __awaiter(this, void 0, void 0, function* () {
-        const formulaName = args[0];
         const manifest = helpers_1.getManifestFromModule(module);
         try {
             const formula = tryFindFormula(manifest, formulaName);
             if (formula) {
-                const params = coercion_1.coerceParams(formula, args.slice(1));
+                const params = coercion_1.coerceParams(formula, rawParams);
                 const result = yield executeFormulaFromPackDef(manifest, formulaName, params, undefined, undefined, contextOptions);
                 helpers_2.print(result);
                 return;
             }
             const syncFormula = tryFindSyncFormula(manifest, formulaName);
             if (syncFormula) {
-                const params = coercion_1.coerceParams(syncFormula, args.slice(1));
+                const params = coercion_1.coerceParams(syncFormula, rawParams);
                 const result = yield executeSyncFormulaFromPackDef(manifest, formulaName, params, undefined, undefined, contextOptions);
                 helpers_2.print(result);
                 return;

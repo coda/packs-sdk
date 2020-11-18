@@ -18,6 +18,11 @@ export interface ExecuteSyncOptions extends ExecuteOptions {
 }
 export declare function executeFormula(formula: TypedStandardFormula, params: ParamValues<ParamDefs>, context?: ExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult }?: ExecuteOptions): Promise<any>;
 export declare function executeFormulaFromPackDef(packDef: PackDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, options?: ExecuteOptions, { useRealFetcher, credentialsFile }?: ContextOptions): Promise<any>;
-export declare function executeFormulaOrSyncFromCLI(args: string[], module: any, contextOptions?: ContextOptions): Promise<void>;
+export declare function executeFormulaOrSyncFromCLI({ formulaName, params: rawParams, module, contextOptions, }: {
+    formulaName: string;
+    params: string[];
+    module: any;
+    contextOptions?: ContextOptions;
+}): Promise<void>;
 export declare function executeSyncFormula(formula: GenericSyncFormula, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult, maxIterations: maxIterations, }?: ExecuteSyncOptions): Promise<any[]>;
 export declare function executeSyncFormulaFromPackDef(packDef: PackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, options?: ExecuteSyncOptions, { useRealFetcher, credentialsFile }?: ContextOptions): Promise<any[]>;

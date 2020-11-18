@@ -34,6 +34,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const execution_1 = require("../testing/execution");
 const path_1 = __importDefault(require("path"));
+const auth_1 = require("../testing/auth");
 const child_process_1 = require("child_process");
 const yargs_1 = __importDefault(require("yargs"));
 const EXECUTE_BOOTSTRAP_CODE = `
@@ -43,8 +44,17 @@ async function main() {
   const manifestPath = process.argv[4];
   const useRealFetcher = process.argv[5] === 'true';
   const credentialsFile = process.argv[6] || undefined;
+  const formulaName = process.argv[7];
+  const params = process.argv.slice(8);
+
   const module = await import(manifestPath);
-  await executeFormulaOrSyncFromCLI(process.argv.slice(7), module, {useRealFetcher, credentialsFile});
+
+  await executeFormulaOrSyncFromCLI({
+    formulaName,
+    params,
+    module,
+    contextOptions: {useRealFetcher: fetch, credentialsFile},
+  });
 }
 
 void main();`;
@@ -70,15 +80,27 @@ function handleExecute({ manifestPath, formulaName, params, fetch, credentialsFi
             spawnProcess(tsCommand);
         }
         else {
-            const packModule = yield Promise.resolve().then(() => __importStar(require(fullManifestPath)));
-            yield execution_1.executeFormulaOrSyncFromCLI([formulaName, ...params], packModule, { useRealFetcher: fetch, credentialsFile });
+            const module = yield Promise.resolve().then(() => __importStar(require(fullManifestPath)));
+            yield execution_1.executeFormulaOrSyncFromCLI({
+                formulaName,
+                params,
+                module,
+                contextOptions: { useRealFetcher: fetch, credentialsFile },
+            });
         }
     });
 }
 function handleAuth({ manifestPath, credentialsFile }) {
-    child_process_1.spawnSync(`ts-node -e "${AUTH_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)} ${credentialsFile || '""'}`, {
-        shell: true,
-        stdio: 'inherit',
+    return __awaiter(this, void 0, void 0, function* () {
+        const fullManifestPath = makeManifestFullPath(manifestPath);
+        if (isTypescript(manifestPath)) {
+            const tsCommand = `ts-node -e "${AUTH_BOOTSTRAP_CODE}" ${fullManifestPath} ${credentialsFile || '""'}`;
+            spawnProcess(tsCommand);
+        }
+        else {
+            const module = yield Promise.resolve().then(() => __importStar(require(fullManifestPath)));
+            yield auth_1.setupAuthFromModule(module, { credentialsFile });
+        }
     });
 }
 function isTypescript(path) {
