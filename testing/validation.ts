@@ -10,7 +10,6 @@ import type {Schema} from '../schema';
 import type {SliderSchema} from '../schema';
 import {Type} from '../api_types';
 import type {TypedPackFormula} from '../api';
-import { URL } from 'url';
 import {ValueType} from '../schema';
 import {ensure} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
@@ -80,45 +79,100 @@ function validateResultType<ResultT extends any>(resultType: Type, result: Resul
   }
 }
 
-function checkCodaType<ResultT extends any>
-    (schema: Schema & ObjectSchemaProperty, result: ResultT): ResultValidationError | undefined {
-  switch (schema.codaType) {
-    case ValueType.Date:
-    case ValueType.DateTime:
-      return tryParseDateOrDateTime(result as string, schema);
-    case ValueType.Time:
-    case ValueType.Duration:
-      // TODO: investigate how to possibly parse time/duration without experimental
+function checkPropertyTypeAndCodaType<ResultT extends any>
+    (schema: Schema & ObjectSchemaProperty, key: string, result: ResultT): ResultValidationError | undefined {
+  const typeValidationError = {message: `Expected a ${schema.type} property for key ${key} but got ${result}.`};
+  switch (schema.type) {
+    case ValueType.Boolean:
+      return checkType(typeof result === 'boolean', 'boolean', result);
+    case ValueType.Number:
+      {
+        const resultValidationError = checkType(typeof result === 'number', 'number', result);
+        if (resultValidationError) {
+          return typeValidationError;
+        }
+        switch (schema.codaType) {
+          case ValueType.Slider:
+            return tryParseSlider(result, schema);
+          case ValueType.Scale:
+            return tryParseScale(result, schema);
+          case ValueType.Date:
+          case ValueType.DateTime:
+          case ValueType.Time:
+          case ValueType.Percent:
+          case ValueType.Currency:
+          case undefined:
+            // no need to coerce current result type
+            return;
+          default:
+            return ensureUnreachable(schema);
+        }
+      }
+    case ValueType.String:
+      {
+        const resultValidationError = checkType(typeof result === 'string', 'string', result);
+        if (resultValidationError) {
+          return typeValidationError;
+        }
+        switch (schema.codaType) {
+          case ValueType.Attachment:
+          case ValueType.Embed:
+          case ValueType.Image:
+          case ValueType.ImageAttachment:
+          case ValueType.Url:
+            return tryParseUrl(result, schema);
+          case ValueType.Date:
+          case ValueType.DateTime:
+            return tryParseDateTimeString(result, schema);
+          case ValueType.Duration:
+          case ValueType.Time:
+            // TODO: investigate how to do this in a lightweight fashion.
+            return;
+          case ValueType.Html:
+          case ValueType.Markdown:
+          case undefined:
+            // no need to coerce current result type
+            return;
+        default:
+          ensureUnreachable(schema);
+        }
+      }
+    case ValueType.Array:
+      // TODO: handle array
       break;
-    case ValueType.Person:
-    case ValueType.Reference:
-      // TODO: handle in followup
-      break;
-    case ValueType.Embed: 
-    case ValueType.Image:
-    case ValueType.ImageAttachment:
-    case ValueType.Attachment:
-    case ValueType.Url:
-      return tryParseUrl(result as string, schema);
-    case ValueType.Slider:
-      return tryParseSlider(result, schema);
-    case ValueType.Scale:
-      return tryParseScale(result, schema);
+    case ValueType.Object:
+      {
+        const resultValidationError = checkType(typeof result === 'object', 'object', result);
+        if (resultValidationError) {
+          return typeValidationError;
+        }
+        switch (schema.codaType) {
+          case ValueType.Person:
+          case ValueType.Reference:
+            // TODO: fill these in after adding in type defs for persons and references.
+          case undefined:
+            // no need to coerce current result type
+            return;
+          default:
+            ensureUnreachable(schema);
+        }
+      }
     default:
-      // no need to coerce current result type
-      break;
+      return ensureUnreachable(schema);
   }
 }
 
-function tryParseDateOrDateTime(dateTimeString: string, schema: Schema) {
-  if (isNaN(Date.parse(dateTimeString))) {
-    return {message: `Failed to parse ${dateTimeString} as a ${schema.codaType}.`};
+function tryParseDateTimeString(result: unknown, schema: Schema) {
+  const dateTime = result as string;
+  if (isNaN(Date.parse(dateTime))) {
+    return {message: `Failed to parse ${dateTime} as a ${schema.codaType}.`};
   }
 }
 
-function tryParseUrl(urlString: string, schema: Schema) {
-  if (!urlString.startsWith('http')) {
-    return {message: `${urlString} must be a url-like string and use HTTP/HTTPS for type ${schema.codaType}.`};
+function tryParseUrl(result: unknown, schema: Schema) {
+  const url = result as string;
+  if (!url.startsWith('http')) {
+    return {message: `${url} must be a url-like string and use HTTP/HTTPS for type ${schema.codaType}.`};
   }
 }
 
@@ -159,18 +213,6 @@ function checkType<ResultT extends any>(
   }
 }
 
-function checkPropertyType<ResultT extends any>(
-  typeMatches: boolean,
-  expectedPropertyTypeName: string,
-  propertyValue: ResultT,
-  propertyKey: string,
-): ResultValidationError | undefined {
-  if (checkType(typeMatches, expectedPropertyTypeName, propertyValue)) {
-    const property = typeof propertyValue === 'string' ? `"${propertyValue}"` : propertyValue;
-    return {message: `Expected a ${expectedPropertyTypeName} property for key ${propertyKey} but got ${property}.`};
-  }
-}
-
 function validateObjectResult<ResultT extends Record<string, unknown>>(
   formula: ObjectPackFormulaMetadata,
   result: ResultT,
@@ -198,17 +240,10 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
         message: `Schema declares required property "${propertyKey}" but this attribute is missing or empty.`,
       });
     }
-
-    const typeCheck = value && 
-      checkPropertyType(typeof value === propertySchema.type, propertySchema.type, value, propertyKey);
-    if (typeCheck) {
-      errors.push(typeCheck);
-    }
-
-    if (propertySchema.codaType) {
-      const codaTypeCheck = value && checkCodaType(propertySchema, value);
-      if (codaTypeCheck) {
-        errors.push(codaTypeCheck);
+    if (value) {
+      const propertyLevelError = checkPropertyTypeAndCodaType(propertySchema, propertyKey, value);
+      if (propertyLevelError) {
+        errors.push(propertyLevelError);
       }
     }
   }

@@ -6,6 +6,7 @@ const types_2 = require("./types");
 const api_types_1 = require("../api_types");
 const schema_1 = require("../schema");
 const ensure_1 = require("../helpers/ensure");
+const ensure_2 = require("../helpers/ensure");
 const schema_2 = require("../schema");
 const object_utils_1 = require("../helpers/object_utils");
 const schema_3 = require("../schema");
@@ -64,69 +65,129 @@ function validateResultType(resultType, result) {
         case api_types_1.Type.string:
             return checkType(typeOfResult === 'string', 'string', result);
         default:
-            return ensure_1.ensureUnreachable(resultType);
+            return ensure_2.ensureUnreachable(resultType);
     }
 }
-function checkCodaType(schema, result) {
-    switch (schema.codaType) {
-        case schema_1.ValueType.Date:
-        case schema_1.ValueType.DateTime:
-            if (isNaN(Date.parse(result))) {
-                return { message: `Failed to parse ${result} as a ${schema_1.ValueType.Date}.` };
+function checkPropertyTypeAndCodaType(schema, result) {
+    switch (schema.type) {
+        case schema_1.ValueType.Boolean:
+            return checkType(typeof result === 'boolean', 'boolean', result);
+        case schema_1.ValueType.Number:
+            {
+                const resultValidationError = checkType(typeof result === 'number', 'number', result);
+                if (resultValidationError) {
+                    return resultValidationError;
+                }
+                switch (schema.codaType) {
+                    case schema_1.ValueType.Slider:
+                        return tryParseSlider(result, schema);
+                    case schema_1.ValueType.Scale:
+                        return tryParseScale(result, schema);
+                    case schema_1.ValueType.Date:
+                    case schema_1.ValueType.DateTime:
+                    case schema_1.ValueType.Time:
+                    case schema_1.ValueType.Percent:
+                    case schema_1.ValueType.Currency:
+                    case undefined:
+                        // no need to coerce current result type
+                        return;
+                    default:
+                        return ensure_2.ensureUnreachable(schema);
+                }
             }
-            break;
-        case schema_1.ValueType.Time:
-            // TODO: needs js-core/utils/time
-            break;
-        case schema_1.ValueType.Duration:
-            // TODO: needs common/formulas/private/duration
-            break;
-        case schema_1.ValueType.Person:
-            break;
-        case schema_1.ValueType.Markdown:
-            // TODO: needs MarkdownRangesParser
-            break;
-        case schema_1.ValueType.Embed:
-            // TODO: needs modules/common/structured-value/index
-            break;
-        case schema_1.ValueType.Reference:
-            // TODO: needs modules/common/structured-value/index
-            break;
-        case schema_1.ValueType.Image:
-        case schema_1.ValueType.ImageAttachment:
-        case schema_1.ValueType.Attachment:
-            // TODO: needs modules/common/structured-value/index
-            break;
-        case schema_1.ValueType.Slider:
-            const { minimum, maximum } = schema;
-            if ((minimum && result < minimum) || (maximum && result > maximum)) {
-                return { message: `Failed to parse ${result} as a ${schema_1.ValueType.Slider}.` };
+        case schema_1.ValueType.String:
+            {
+                const resultValidationError = checkType(typeof result === 'string', 'string', result);
+                if (resultValidationError) {
+                    return resultValidationError;
+                }
+                switch (schema.codaType) {
+                    case schema_1.ValueType.Attachment:
+                    case schema_1.ValueType.Embed:
+                    case schema_1.ValueType.Image:
+                    case schema_1.ValueType.ImageAttachment:
+                    case schema_1.ValueType.Url:
+                        return tryParseUrl(result, schema);
+                    case schema_1.ValueType.Date:
+                    case schema_1.ValueType.DateTime:
+                        return tryParseDateTimeString(result, schema);
+                    case schema_1.ValueType.Duration:
+                    case schema_1.ValueType.Time:
+                        // TODO: investigate how to do this in a lightweight fashion.
+                        return;
+                    case schema_1.ValueType.Html:
+                    case schema_1.ValueType.Markdown:
+                    case undefined:
+                        // no need to coerce current result type
+                        return;
+                    default:
+                        ensure_2.ensureUnreachable(schema);
+                }
             }
+        case schema_1.ValueType.Array:
+            // TODO: handle array
             break;
-        case schema_1.ValueType.Scale:
-            const { maximum: sliderMax } = schema;
-            if (result > sliderMax) {
-                return { message: `Failed to parse ${result} as a ${schema_1.ValueType.Scale}.` };
+        case schema_1.ValueType.Object:
+            {
+                const resultValidationError = checkType(typeof result === 'object', 'object', result);
+                if (resultValidationError) {
+                    return resultValidationError;
+                }
+                switch (schema.codaType) {
+                    case schema_1.ValueType.Person:
+                    case schema_1.ValueType.Reference:
+                    // TODO: fill these in after adding in type defs for persons and atrefs.
+                    case undefined:
+                        // no need to coerce current result type
+                        return;
+                    default:
+                        ensure_2.ensureUnreachable(schema);
+                }
             }
-            break;
-        case schema_1.ValueType.Currency:
-            // TODO: needs js-core/utils/currency
-            break;
         default:
-            // no need to coerce current result type
-            break;
+            return ensure_2.ensureUnreachable(schema);
+    }
+}
+function tryParseDateTimeString(result, schema) {
+    const dateTime = result;
+    if (isNaN(Date.parse(dateTime))) {
+        return { message: `Failed to parse ${dateTime} as a ${schema.codaType}.` };
+    }
+}
+function tryParseUrl(result, schema) {
+    const url = result;
+    if (!url.startsWith('http')) {
+        return { message: `${url} must be a url-like string and use HTTP/HTTPS for type ${schema.codaType}.` };
+    }
+}
+function tryParseSlider(result, schema) {
+    ensure_1.ensure(!validateResultType(api_types_1.Type.number, result), `${result} must be a number`);
+    const value = result;
+    const { minimum, maximum } = schema;
+    if (value < (minimum !== null && minimum !== void 0 ? minimum : 0)) {
+        return { message: `Slider value ${result} is below the specified minimum value of ${minimum !== null && minimum !== void 0 ? minimum : 0}.` };
+    }
+    if (maximum && value > maximum) {
+        return { message: `Slider value ${result} is greater than the specified maximum value of ${maximum}.` };
+    }
+}
+function tryParseScale(result, schema) {
+    const { maximum } = schema;
+    const value = result;
+    if (!Number.isInteger(result)) {
+        return { message: `Scale value ${result} must be an integer.` };
+    }
+    if (value < 0) {
+        return { message: `Scale value ${result} cannot be below 0.` };
+    }
+    if (value > maximum) {
+        return { message: `Scale value ${result} is greater than the specified maximum value of ${maximum}.` };
     }
 }
 function checkType(typeMatches, expectedResultTypeName, result) {
     if (!typeMatches) {
         const resultValue = typeof result === 'string' ? `"${result}"` : result;
         return { message: `Expected a ${expectedResultTypeName} result but got ${resultValue}.` };
-    }
-}
-function checkPropertyType(typeMatches, expectedPropertyTypeName, propertyValue, propertyKey) {
-    if (checkType(typeMatches, expectedPropertyTypeName, propertyValue)) {
-        const property = typeof propertyValue === 'string' ? `"${propertyValue}"` : propertyValue;
-        return { message: `Expected a ${expectedPropertyTypeName} property for key ${propertyKey} but got ${property}.` };
     }
 }
 function validateObjectResult(formula, result) {
@@ -150,15 +211,10 @@ function validateObjectResult(formula, result) {
                 message: `Schema declares required property "${propertyKey}" but this attribute is missing or empty.`,
             });
         }
-        const typeCheck = value &&
-            checkPropertyType(typeof value === propertySchema.type, propertySchema.type, value, propertyKey);
-        if (typeCheck) {
-            errors.push(typeCheck);
-        }
-        if (propertySchema.codaType) {
-            const codaTypeCheck = value && checkCodaType(propertySchema, value);
-            if (codaTypeCheck) {
-                errors.push(codaTypeCheck);
+        if (value) {
+            const propertyLevelError = checkPropertyTypeAndCodaType(schema, result);
+            if (propertyLevelError) {
+                errors.push(propertyLevelError);
             }
         }
     }

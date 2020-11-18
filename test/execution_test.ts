@@ -286,7 +286,7 @@ describe('Execution', () => {
         await executeFormulaFromPackDef(pack, 'Fake::ObjectPropertyFoo', [true]);
         await testHelper.willBeRejectedWith(
           executeFormulaFromPackDef(pack, 'Fake::ObjectPropertyFoo', [false]),
-          /The following errors were found when validating the result of the formula "ObjectFoo2":\nExpected a string property for key Foo but got 123./,
+          /The following errors were found when validating the result of the formula "ObjectPropertyFoo":\nExpected a string property for key Foo but got 123./,
         );
       });
     });
