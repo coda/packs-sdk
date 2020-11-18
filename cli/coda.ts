@@ -10,7 +10,7 @@ interface ExecuteArgs {
   manifestPath: string;
   formulaName: string;
   params: string[];
-  realFetcher?: boolean;
+  fetch?: boolean;
   credentialsFile?: string;
 }
 
@@ -48,9 +48,9 @@ function makeManifestFullPath(manifestPath: string): string {
   return manifestPath.startsWith('/') ? manifestPath : path.join(process.cwd(), manifestPath);
 }
 
-function handleExecute({manifestPath, formulaName, params, realFetcher, credentialsFile}: Arguments<ExecuteArgs>) {
+function handleExecute({manifestPath, formulaName, params, fetch, credentialsFile}: Arguments<ExecuteArgs>) {
   spawnSync(
-    `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)} ${Boolean(realFetcher)} ${
+    `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)} ${Boolean(fetch)} ${
       credentialsFile || '""'
     } ${formulaName} ${params.join(' ')}`,
     {
@@ -75,11 +75,9 @@ if (require.main === module) {
       describe: 'Execute a formula',
       handler: handleExecute,
       builder: {
-        realFetcher: {
-          alias: 'real_fetcher',
+        fetch: {
           boolean: true,
-          desc:
-            'Use a real fetcher for http requests instead of a mock fetcher. Run "coda auth" first to set up credentials.',
+          desc: 'Actually fetch http requests instead of using mocks. Run "coda auth" first to set up credentials.',
         } as Options,
         credentialsFile: {
           alias: 'credentials_file',

@@ -33,8 +33,8 @@ void main();`;
 function makeManifestFullPath(manifestPath) {
     return manifestPath.startsWith('/') ? manifestPath : path_1.default.join(process.cwd(), manifestPath);
 }
-function handleExecute({ manifestPath, formulaName, params, realFetcher, credentialsFile }) {
-    child_process_1.spawnSync(`ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)} ${Boolean(realFetcher)} ${credentialsFile || '""'} ${formulaName} ${params.join(' ')}`, {
+function handleExecute({ manifestPath, formulaName, params, fetch, credentialsFile }) {
+    child_process_1.spawnSync(`ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${makeManifestFullPath(manifestPath)} ${Boolean(fetch)} ${credentialsFile || '""'} ${formulaName} ${params.join(' ')}`, {
         shell: true,
         stdio: 'inherit',
     });
@@ -53,10 +53,9 @@ if (require.main === module) {
         describe: 'Execute a formula',
         handler: handleExecute,
         builder: {
-            realFetcher: {
-                alias: 'real_fetcher',
+            fetch: {
                 boolean: true,
-                desc: 'Use a real fetcher for http requests instead of a mock fetcher. Run "coda auth" first to set up credentials.',
+                desc: 'Actually fetch http requests instead of using mocks. Run "coda auth" first to set up credentials.',
             },
             credentialsFile: {
                 alias: 'credentials_file',

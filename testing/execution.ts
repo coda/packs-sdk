@@ -11,6 +11,7 @@ import {newFetcherExecutionContext} from './fetcher';
 import {newFetcherSyncExecutionContext} from './fetcher';
 import {newMockExecutionContext} from './mocks';
 import {newMockSyncExecutionContext} from './mocks';
+import {print} from './helpers';
 import {validateParams} from './validation';
 import {validateResult} from './validation';
 
@@ -77,8 +78,7 @@ export async function executeFormulaOrSyncFromCLI(args: string[], module: any, c
         undefined,
         contextOptions,
       );
-      // eslint-disable-next-line no-console
-      console.log(result);
+      print(result);
       return;
     }
     const syncFormula = tryFindSyncFormula(manifest, formulaName);
@@ -92,14 +92,12 @@ export async function executeFormulaOrSyncFromCLI(args: string[], module: any, c
         undefined,
         contextOptions,
       );
-      // eslint-disable-next-line no-console
-      console.log(result);
+      print(result);
       return;
     }
     throw new Error(`Pack definition for ${manifest.name} has no formula or sync called ${formulaName}.`);
   } catch (err) {
-    // eslint-disable-next-line no-console
-    console.log(err);
+    print(err);
     process.exit(1);
   }
 }

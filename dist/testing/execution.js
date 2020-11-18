@@ -16,6 +16,7 @@ const fetcher_1 = require("./fetcher");
 const fetcher_2 = require("./fetcher");
 const mocks_1 = require("./mocks");
 const mocks_2 = require("./mocks");
+const helpers_2 = require("./helpers");
 const validation_1 = require("./validation");
 const validation_2 = require("./validation");
 function executeFormula(formula, params, context = mocks_1.newMockExecutionContext(), { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true } = {}) {
@@ -51,23 +52,20 @@ function executeFormulaOrSyncFromCLI(args, module, contextOptions = {}) {
             if (formula) {
                 const params = coercion_1.coerceParams(formula, args.slice(1));
                 const result = yield executeFormulaFromPackDef(manifest, formulaName, params, undefined, undefined, contextOptions);
-                // eslint-disable-next-line no-console
-                console.log(result);
+                helpers_2.print(result);
                 return;
             }
             const syncFormula = tryFindSyncFormula(manifest, formulaName);
             if (syncFormula) {
                 const params = coercion_1.coerceParams(syncFormula, args.slice(1));
                 const result = yield executeSyncFormulaFromPackDef(manifest, formulaName, params, undefined, undefined, contextOptions);
-                // eslint-disable-next-line no-console
-                console.log(result);
+                helpers_2.print(result);
                 return;
             }
             throw new Error(`Pack definition for ${manifest.name} has no formula or sync called ${formulaName}.`);
         }
         catch (err) {
-            // eslint-disable-next-line no-console
-            console.log(err);
+            helpers_2.print(err);
             process.exit(1);
         }
     });
