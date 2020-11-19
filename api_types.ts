@@ -148,6 +148,8 @@ export interface FetchRequest {
   cacheTtlSecs?: number;
   // Allows binary responses.
   isBinaryResponse?: boolean;
+  // Disable authentication
+  disableAuthentication?: boolean;
 }
 
 // Copied from https://developer.mozilla.org/en-US/docs/Web/API/Response
