@@ -97,7 +97,14 @@ function isTypescript(path: string): boolean {
 }
 
 function spawnProcess(command: string) {
-  spawnSync(command, {
+  let cmd = command;
+  // Hack to allow us to run this CLI tool for testing purposes from within this repo, without
+  // needing it installed as an npm package.
+  if (process.argv[1].endsWith('coda.ts')) {
+    cmd = command.replace('packs-sdk/dist', '.');
+  }
+
+  spawnSync(cmd, {
     shell: true,
     stdio: 'inherit',
   });
