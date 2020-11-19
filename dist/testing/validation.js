@@ -17,6 +17,9 @@ function validateParams(formula, params) {
     if (params.length < numRequiredParams) {
         throw new types_1.ParameterException(`Expected at least ${numRequiredParams} parameter but only ${params.length} were provided.`);
     }
+    if (params.length > formula.parameters.length && !formula.varargParameters) {
+        throw new types_1.ParameterException(`Formula only accepts ${formula.parameters.length} parameters but ${params.length} were provided.`);
+    }
     const errors = [];
     for (let i = 0; i < params.length; i++) {
         const param = params[i];
@@ -74,81 +77,78 @@ function checkPropertyTypeAndCodaType(schema, key, result) {
     switch (schema.type) {
         case schema_1.ValueType.Boolean:
             return checkType(typeof result === 'boolean', 'boolean', result);
-        case schema_1.ValueType.Number:
-            {
-                const resultValidationError = checkType(typeof result === 'number', 'number', result);
-                if (resultValidationError) {
-                    return typeValidationError;
-                }
-                if (!('codaType' in schema)) {
+        case schema_1.ValueType.Number: {
+            const resultValidationError = checkType(typeof result === 'number', 'number', result);
+            if (resultValidationError) {
+                return typeValidationError;
+            }
+            if (!('codaType' in schema)) {
+                return;
+            }
+            switch (schema.codaType) {
+                case schema_1.ValueType.Slider:
+                    return tryParseSlider(result, schema);
+                case schema_1.ValueType.Scale:
+                    return tryParseScale(result, schema);
+                case schema_1.ValueType.Date:
+                case schema_1.ValueType.DateTime:
+                case schema_1.ValueType.Time:
+                case schema_1.ValueType.Percent:
+                case schema_1.ValueType.Currency:
+                case undefined:
+                    // no need to coerce current result type
                     return;
-                }
-                switch (schema.codaType) {
-                    case schema_1.ValueType.Slider:
-                        return tryParseSlider(result, schema);
-                    case schema_1.ValueType.Scale:
-                        return tryParseScale(result, schema);
-                    case schema_1.ValueType.Date:
-                    case schema_1.ValueType.DateTime:
-                    case schema_1.ValueType.Time:
-                    case schema_1.ValueType.Percent:
-                    case schema_1.ValueType.Currency:
-                    case undefined:
-                        // no need to coerce current result type
-                        return;
-                    default:
-                        return ensure_1.ensureUnreachable(schema);
-                }
+                default:
+                    return ensure_1.ensureUnreachable(schema);
             }
-        case schema_1.ValueType.String:
-            {
-                const resultValidationError = checkType(typeof result === 'string', 'string', result);
-                if (resultValidationError) {
-                    return typeValidationError;
-                }
-                switch (schema.codaType) {
-                    case schema_1.ValueType.Attachment:
-                    case schema_1.ValueType.Embed:
-                    case schema_1.ValueType.Image:
-                    case schema_1.ValueType.ImageAttachment:
-                    case schema_1.ValueType.Url:
-                        return tryParseUrl(result, schema);
-                    case schema_1.ValueType.Date:
-                    case schema_1.ValueType.DateTime:
-                        return tryParseDateTimeString(result, schema);
-                    case schema_1.ValueType.Duration:
-                    case schema_1.ValueType.Time:
-                        // TODO: investigate how to do this in a lightweight fashion.
-                        return;
-                    case schema_1.ValueType.Html:
-                    case schema_1.ValueType.Markdown:
-                    case undefined:
-                        // no need to coerce current result type
-                        return;
-                    default:
-                        ensure_1.ensureUnreachable(schema);
-                }
+        }
+        case schema_1.ValueType.String: {
+            const resultValidationError = checkType(typeof result === 'string', 'string', result);
+            if (resultValidationError) {
+                return typeValidationError;
             }
+            switch (schema.codaType) {
+                case schema_1.ValueType.Attachment:
+                case schema_1.ValueType.Embed:
+                case schema_1.ValueType.Image:
+                case schema_1.ValueType.ImageAttachment:
+                case schema_1.ValueType.Url:
+                    return tryParseUrl(result, schema);
+                case schema_1.ValueType.Date:
+                case schema_1.ValueType.DateTime:
+                    return tryParseDateTimeString(result, schema);
+                case schema_1.ValueType.Duration:
+                case schema_1.ValueType.Time:
+                    // TODO: investigate how to do this in a lightweight fashion.
+                    return;
+                case schema_1.ValueType.Html:
+                case schema_1.ValueType.Markdown:
+                case undefined:
+                    // no need to coerce current result type
+                    return;
+                default:
+                    ensure_1.ensureUnreachable(schema);
+            }
+        }
         case schema_1.ValueType.Array:
             // TODO: handle array
             break;
-        case schema_1.ValueType.Object:
-            {
-                const resultValidationError = checkType(typeof result === 'object', 'object', result);
-                if (resultValidationError) {
-                    return typeValidationError;
-                }
-                switch (schema.codaType) {
-                    case schema_1.ValueType.Person:
-                    case schema_1.ValueType.Reference:
-                    // TODO: fill these in after adding in type defs for persons and references.
-                    case undefined:
-                        // no need to coerce current result type
-                        return;
-                    default:
-                        ensure_1.ensureUnreachable(schema);
-                }
+        case schema_1.ValueType.Object: {
+            const resultValidationError = checkType(typeof result === 'object', 'object', result);
+            if (resultValidationError) {
+                return typeValidationError;
             }
+            switch (schema.codaType) {
+                case schema_1.ValueType.Person:
+                case schema_1.ValueType.Reference:
+                // TODO: fill these in after adding in type defs for persons and references.
+                case undefined:
+                    // no need to coerce current result type
+                    return;
+                default:
+                    ensure_1.ensureUnreachable(schema);
+            }
+        }
         default:
             return ensure_1.ensureUnreachable(schema);
     }
@@ -160,7 +160,9 @@ function tryParseDateTimeString(result, schema) {
     }
 }
 function tryParseUrl(result, schema) {
-    const invalidUrlError = { message: `Property with codaType "${schema.codaType}" must be a valid HTTP(S) url, but got "${result}".` };
+    const invalidUrlError = {
+        message: `Property with codaType "${schema.codaType}" must be a valid HTTP(S) url, but got "${result}".`,
+    };
     try {
         const url = new url_1.URL(result);
         if (!(url.protocol === 'http:' || url.protocol === 'https:')) {

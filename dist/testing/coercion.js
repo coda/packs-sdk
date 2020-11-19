@@ -4,10 +4,18 @@ exports.coerceParams = void 0;
 const api_types_1 = require("../api_types");
 const ensure_1 = require("../helpers/ensure");
 const object_utils_1 = require("../helpers/object_utils");
+// TODO: Handle varargs.
 function coerceParams(formula, params) {
     const coerced = [];
     for (let i = 0; i < params.length; i++) {
-        coerced.push(coerceParamValue(formula.parameters[i], params[i]));
+        const paramDef = formula.parameters[i];
+        if (paramDef) {
+            coerced.push(coerceParamValue(paramDef, params[i]));
+        }
+        else {
+            // More params given that are defined.
+            coerced.push(params[i]);
+        }
     }
     return coerced;
 }

@@ -7,10 +7,17 @@ import type {TypedPackFormula} from '../api';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isDefined} from '../helpers/object_utils';
 
+// TODO: Handle varargs.
 export function coerceParams(formula: TypedPackFormula, params: ParamValues<ParamDefs>): ParamValues<ParamDefs> {
   const coerced: ParamValues<ParamDefs> = [];
   for (let i = 0; i < params.length; i++) {
-    coerced.push(coerceParamValue(formula.parameters[i], params[i]));
+    const paramDef = formula.parameters[i];
+    if (paramDef) {
+      coerced.push(coerceParamValue(paramDef, params[i]));
+    } else {
+      // More params given that are defined.
+      coerced.push(params[i]);
+    }
   }
   return coerced;
 }

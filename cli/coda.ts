@@ -68,7 +68,7 @@ async function handleExecute({manifestPath, formulaName, params, fetch, credenti
   if (isTypescript(manifestPath)) {
     const tsCommand = `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${fullManifestPath} ${Boolean(fetch)} ${
       credentialsFile || '""'
-    } ${formulaName} ${params.join(' ')}`;
+    } ${formulaName} ${params.map(escapeShellArg).join(' ')}`;
     spawnProcess(tsCommand);
   } else {
     const module = await import(fullManifestPath);
@@ -108,6 +108,10 @@ function spawnProcess(command: string) {
     shell: true,
     stdio: 'inherit',
   });
+}
+
+function escapeShellArg(arg: string): string {
+  return `"${arg.replace(/(["'$`\\])/g, '\\$1')}"`;
 }
 
 if (require.main === module) {
