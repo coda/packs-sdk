@@ -12,6 +12,7 @@ import type {SliderSchema} from '../schema';
 import type {StringSchema} from '../schema';
 import {Type} from '../api_types';
 import type {TypedPackFormula} from '../api';
+import { URL } from 'url';
 import {ValueType} from '../schema';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
@@ -175,10 +176,18 @@ function tryParseDateTimeString(result: unknown, schema: StringSchema) {
 }
 
 function tryParseUrl(result: unknown, schema: StringSchema) {
-  const url = result as string;
-  if (!url.startsWith('http')) {
-    return {message: `${url} must be a url-like string and use HTTP/HTTPS for type ${schema.codaType}.`};
+  const invalidUrlError = {message: `Property with codaType "${schema.codaType}" must be a valid HTTP(S) url, but got "${result}".`};
+  // const invalidUrlError = {message: result as string};
+  try {
+    const url = new URL(result as string);
+
+    if (!(url.protocol === 'http:' || url.protocol === 'https:')) {
+      return invalidUrlError;
+    }
+  } catch (error) {
+    return invalidUrlError;
   }
+  
 }
 
 function tryParseSlider(result: unknown, schema: NumberSchema) {
