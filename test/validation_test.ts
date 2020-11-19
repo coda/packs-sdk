@@ -1,11 +1,13 @@
 import {testHelper} from './test_helper';
 import {FakePack} from './test_utils';
+import {StringSchema} from '../schema';
 import {ValueType} from '../schema';
 import {createFakePack} from './test_utils';
 import { executeFormulaFromPackDef } from '../testing/execution';
 import {makeNumericParameter} from '../api';
 import {makeObjectFormula} from '../api';
 import {makeObjectSchema} from '../schema';
+import {makeStringArrayParameter} from '../api';
 import {makeStringParameter} from '../api';
 
 describe('Property validation in objects', () => {
@@ -28,6 +30,7 @@ describe('Property validation in objects', () => {
         codaType: ValueType.Scale,
         maximum: 5,
       },
+      names: {type: ValueType.Array, items: {type: ValueType.String} as StringSchema},
     },
     identity: {packId: FakePack.id, name: 'Events'},
   });
@@ -84,8 +87,21 @@ describe('Property validation in objects', () => {
     }
   });
 
+  const fakeArrayFormula = makeObjectFormula({
+    name: 'Names',
+    description: 'Returns the names you passed in.',
+    examples: [],
+    parameters: [makeStringArrayParameter('string', 'Pass in an array of strings')],
+    execute: async ([stringArray]) => {
+      return {names: stringArray};
+    },
+    response: {
+      schema: fakeSchema,
+    }
+  })
+
   const fakePack = createFakePack({
-    formulas: {Fake: [fakeDateFormula, fakeSliderFormula, fakeScaleFormula, fakeUrlFormula]}
+    formulas: {Fake: [fakeDateFormula, fakeSliderFormula, fakeScaleFormula, fakeUrlFormula, fakeArrayFormula]}
   })
 
   it('validates correct date string', async () => {
@@ -157,6 +173,24 @@ describe('Property validation in objects', () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::Url', ['jasiofjsdofjiaof']),
       /The following errors were found when validating the result of the formula "Url":\nProperty with codaType "url" must be a valid HTTP\(S\) url, but got "jasiofjsdofjiaof"./,
+    );
+  });
+
+  it('validates string array', async () => {
+    await executeFormulaFromPackDef(fakePack, 'Fake::Names', [['Jack', 'Jill', 'Hill']]);
+  });
+
+  it('rejects non array', async () => {
+    await testHelper.willBeRejectedWith(
+      executeFormulaFromPackDef(fakePack, 'Fake::Names', ['Jack']),
+      /The following errors were found when validating the result of the formula "Names":\nExpected an array result but got Jack./,
+    );
+  });
+
+  it('rejects bad array items', async () => {
+    await testHelper.willBeRejectedWith(
+      executeFormulaFromPackDef(fakePack, 'Fake::Names', [['Jack', 'Jill', 123]]),
+      /The following errors were found when validating the result of the formula "Names":\nExpected a string result but got 123./,
     );
   });
 });
