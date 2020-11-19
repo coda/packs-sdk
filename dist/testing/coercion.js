@@ -13,7 +13,7 @@ function coerceParams(formula, params) {
             coerced.push(coerceParamValue(paramDef, params[i]));
         }
         else {
-            // More params given that are defined.
+            // More params given than are defined.
             coerced.push(params[i]);
         }
     }

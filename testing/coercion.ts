@@ -15,7 +15,7 @@ export function coerceParams(formula: TypedPackFormula, params: ParamValues<Para
     if (paramDef) {
       coerced.push(coerceParamValue(paramDef, params[i]));
     } else {
-      // More params given that are defined.
+      // More params given than are defined.
       coerced.push(params[i]);
     }
   }
