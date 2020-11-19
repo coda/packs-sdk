@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 import type {Arguments} from 'yargs';
+import {DEFAULT_CREDENTIALS_FILE} from '../testing/auth';
+import {DEFAULT_OAUTH_SERVER_PORT} from '../testing/auth';
 import type {Options} from 'yargs';
 import {executeFormulaOrSyncFromCLI} from '../testing/execution';
 import path from 'path';
@@ -19,6 +21,7 @@ interface ExecuteArgs {
 interface AuthArgs {
   manifestPath: string;
   credentialsFile?: string;
+  oauthServerPort?: number;
 }
 
 const EXECUTE_BOOTSTRAP_CODE = `
@@ -49,8 +52,9 @@ import {setupAuthFromModule} from 'packs-sdk/dist/testing/auth';
 async function main() {
   const manifestPath = process.argv[4];
   const credentialsFile = process.argv[5] || undefined;
+  const oauthServerPort = process.argv[6] ? parseInt(process.argv[6]) : undefined;
   const module = await import(manifestPath);
-  await setupAuthFromModule(module, {credentialsFile});
+  await setupAuthFromModule(module, {credentialsFile, oauthServerPort});
 }
 
 void main();`;
@@ -81,14 +85,16 @@ async function handleExecute({manifestPath, formulaName, params, fetch, credenti
   }
 }
 
-async function handleAuth({manifestPath, credentialsFile}: Arguments<AuthArgs>) {
+async function handleAuth({manifestPath, credentialsFile, oauthServerPort}: Arguments<AuthArgs>) {
   const fullManifestPath = makeManifestFullPath(manifestPath);
   if (isTypescript(manifestPath)) {
-    const tsCommand = `ts-node -e "${AUTH_BOOTSTRAP_CODE}" ${fullManifestPath} ${credentialsFile || '""'}`;
+    const tsCommand = `ts-node -e "${AUTH_BOOTSTRAP_CODE}" ${fullManifestPath} ${credentialsFile || '""'} ${
+      oauthServerPort || '""'
+    }`;
     spawnProcess(tsCommand);
   } else {
     const module = await import(fullManifestPath);
-    await setupAuthFromModule(module, {credentialsFile});
+    await setupAuthFromModule(module, {credentialsFile, oauthServerPort});
   }
 }
 
@@ -129,7 +135,8 @@ if (require.main === module) {
         credentialsFile: {
           alias: 'credentials_file',
           string: true,
-          desc: 'Path to the credentials file, if different than .coda/credentials.json',
+          default: DEFAULT_CREDENTIALS_FILE,
+          desc: 'Path to the credentials file.',
         } as Options,
       },
     })
@@ -141,7 +148,14 @@ if (require.main === module) {
         credentialsFile: {
           alias: 'credentials_file',
           string: true,
-          desc: 'Path to the credentials file, if different than .coda/credentials.json',
+          default: DEFAULT_CREDENTIALS_FILE,
+          desc: 'Path to the credentials file.',
+        } as Options,
+        oauthServerPort: {
+          alias: 'oauth_server_port',
+          number: true,
+          default: DEFAULT_OAUTH_SERVER_PORT,
+          desc: 'Port to use for the local server that handles OAuth setup.',
         } as Options,
       },
     })

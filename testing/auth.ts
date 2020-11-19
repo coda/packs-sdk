@@ -22,8 +22,8 @@ interface SetupAuthOptions {
   oauthServerPort?: number;
 }
 
-const DEFAULT_CREDENTIALS_FILE = '.coda/credentials.json';
-const DEFAULT_OAUTH_SERVER_PORT = 3000;
+export const DEFAULT_CREDENTIALS_FILE = '.coda/credentials.json';
+export const DEFAULT_OAUTH_SERVER_PORT = 3000;
 
 export async function setupAuthFromModule(module: any, opts: SetupAuthOptions = {}): Promise<void> {
   return setupAuth(await getManifestFromModule(module), opts);
