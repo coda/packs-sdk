@@ -3,12 +3,15 @@ import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
 import type {Credentials} from './auth_types';
 import type {MultiQueryParamCredentials} from './auth_types';
+import type {OAuth2Credentials} from './auth_types';
 import type {PackDefinition} from '../types';
 import {assertCondition} from '../helpers/ensure';
 import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import fs from 'fs';
 import {getManifestFromModule} from './helpers';
+import {launchOAuthServerFlow} from './oauth_server';
+import {makeRedirectUrl} from './oauth_server';
 import path from 'path';
 import {print} from './helpers';
 import {printAndExit} from './helpers';
@@ -16,9 +19,11 @@ import readline from 'readline';
 
 interface SetupAuthOptions {
   credentialsFile?: string;
+  oauthServerPort?: number;
 }
 
 const DEFAULT_CREDENTIALS_FILE = '.coda/credentials.json';
+const DEFAULT_OAUTH_SERVER_PORT = 3000;
 
 export async function setupAuthFromModule(module: any, opts: SetupAuthOptions = {}): Promise<void> {
   return setupAuth(await getManifestFromModule(module), opts);
@@ -49,8 +54,9 @@ export async function setupAuth(packDef: PackDefinition, opts: SetupAuthOptions 
     case AuthenticationType.WebBasic:
       return handler.handleWebBasic();
     case AuthenticationType.AWSSignature4:
-    case AuthenticationType.OAuth2:
       throw new Error('Not yet implemented');
+    case AuthenticationType.OAuth2:
+      return handler.handleOAuth2();
     default:
       return ensureUnreachable(defaultAuthentication);
   }
@@ -60,14 +66,16 @@ class CredentialHandler {
   private readonly _packName: string;
   private readonly _authDef: Authentication;
   private readonly _credentialsFile: string;
+  private readonly _oauthServerPort: number;
 
-  constructor(packName: string, authDef: Authentication, {credentialsFile}: SetupAuthOptions = {}) {
+  constructor(packName: string, authDef: Authentication, {credentialsFile, oauthServerPort}: SetupAuthOptions = {}) {
     this._packName = packName;
     this._authDef = authDef;
     this._credentialsFile = credentialsFile || DEFAULT_CREDENTIALS_FILE;
+    this._oauthServerPort = oauthServerPort || DEFAULT_OAUTH_SERVER_PORT;
   }
 
-  private async checkForExistingCredential() {
+  private async checkForExistingCredential(): Promise<Credentials | undefined> {
     const existingCredentials = readCredentialsFile(this._credentialsFile);
     if (existingCredentials && existingCredentials[this._packName]) {
       const input = await this.promptForInput(
@@ -76,6 +84,7 @@ class CredentialHandler {
       if (input.toLocaleLowerCase() !== 'y') {
         return process.exit(1);
       }
+      return existingCredentials[this._packName];
     }
   }
 
@@ -141,6 +150,52 @@ class CredentialHandler {
     }
     this.storeCredential(credentials);
     print('Credentials updated!');
+  }
+
+  async handleOAuth2() {
+    assertCondition(this._authDef.type === AuthenticationType.OAuth2);
+    const existingCredentials = (await this.checkForExistingCredential()) as OAuth2Credentials | undefined;
+    print(
+      `*** Your application must have ${makeRedirectUrl(this._oauthServerPort)} whitelisted as an OAuth redirect url ` +
+        'in order for this tool to work. ***',
+    );
+    const clientIdPrompt = existingCredentials
+      ? `Enter the OAuth client id for ${this._packName} (or Enter to skip and use existing):\n`
+      : `Enter the OAuth client id for ${this._packName}:\n`;
+    const newClientId = await this.promptForInput(clientIdPrompt);
+    const clientSecretPrompt = existingCredentials
+      ? `Enter the OAuth client secret for ${this._packName} (or Enter to skip and use existing):\n`
+      : `Enter the OAuth client secret for ${this._packName}:\n`;
+    const newClientSecret = await this.promptForInput(clientSecretPrompt);
+
+    const clientId = ensureNonEmptyString(newClientId || existingCredentials?.clientId);
+    const clientSecret = ensureNonEmptyString(newClientSecret || existingCredentials?.clientSecret);
+
+    const credentials: OAuth2Credentials = {
+      clientId,
+      clientSecret,
+      accessToken: existingCredentials?.accessToken,
+      refreshToken: existingCredentials?.refreshToken,
+    };
+    this.storeCredential(credentials);
+    print('Credential secrets updated! Launching OAuth handshake in browser...\n');
+
+    launchOAuthServerFlow({
+      clientId,
+      clientSecret,
+      authDef: this._authDef,
+      port: this._oauthServerPort,
+      afterTokenExchange: ({accessToken, refreshToken}) => {
+        const credentials: OAuth2Credentials = {
+          clientId,
+          clientSecret,
+          accessToken,
+          refreshToken,
+        };
+        this.storeCredential(credentials);
+        print('Access token saved! Shutting down OAuth server and exiting...');
+      },
+    });
   }
 
   private async maybePromptForEndpointUrl() {

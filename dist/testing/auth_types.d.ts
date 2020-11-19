@@ -19,5 +19,11 @@ export interface MultiQueryParamCredentials extends BaseCredentials {
         [paramName: string]: string;
     };
 }
-export declare type Credentials = TokenCredentials | WebBasicCredentials | QueryParamCredentials | MultiQueryParamCredentials;
+export interface OAuth2Credentials extends BaseCredentials {
+    clientId: string;
+    clientSecret: string;
+    accessToken?: string;
+    refreshToken?: string;
+}
+export declare type Credentials = TokenCredentials | WebBasicCredentials | QueryParamCredentials | MultiQueryParamCredentials | OAuth2Credentials;
 export {};

@@ -6,6 +6,7 @@ import type {FetchRequest} from '../api_types';
 import type {FetchResponse} from '../api_types';
 import type {Fetcher} from '../api_types';
 import type {MultiQueryParamCredentials} from './auth_types';
+import type {OAuth2Credentials} from './auth_types';
 import type {QueryParamCredentials} from './auth_types';
 import type {Response} from 'request';
 import type {SyncExecutionContext} from '../api_types';
@@ -13,6 +14,7 @@ import type {TemporaryBlobStorage} from '../api_types';
 import type {TokenCredentials} from './auth_types';
 import {URL} from 'url';
 import type {WebBasicCredentials} from './auth_types';
+import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {readCredentialsFile} from './auth';
 import requestPromise from 'request-promise-native';
@@ -144,8 +146,17 @@ export class AuthenticatingFetcher implements Fetcher {
       }
       case AuthenticationType.AWSSignature4:
         throw new Error('Not yet implemented');
-      case AuthenticationType.OAuth2:
-        throw new Error('Not yet implemented');
+      case AuthenticationType.OAuth2: {
+        const {accessToken} = this._credentials as OAuth2Credentials;
+        const prefix = this._authDef.tokenPrefix || 'Bearer';
+        return {
+          url,
+          body,
+          form,
+          headers: {...headers, Authorization: `${prefix} ${ensureNonEmptyString(accessToken)}`},
+        };
+      }
+
       default:
         return ensureUnreachable(this._authDef);
     }

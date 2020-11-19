@@ -16,6 +16,7 @@ exports.newFetcherSyncExecutionContext = exports.newFetcherExecutionContext = ex
 const types_1 = require("../types");
 const url_1 = require("url");
 const ensure_1 = require("../helpers/ensure");
+const ensure_2 = require("../helpers/ensure");
 const auth_1 = require("./auth");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
 const url_parse_1 = __importDefault(require("url-parse"));
@@ -123,10 +124,18 @@ class AuthenticatingFetcher {
             }
             case types_1.AuthenticationType.AWSSignature4:
                 throw new Error('Not yet implemented');
-            case types_1.AuthenticationType.OAuth2:
-                throw new Error('Not yet implemented');
+            case types_1.AuthenticationType.OAuth2: {
+                const { accessToken } = this._credentials;
+                const prefix = this._authDef.tokenPrefix || 'Bearer';
+                return {
+                    url,
+                    body,
+                    form,
+                    headers: Object.assign(Object.assign({}, headers), { Authorization: `${prefix} ${ensure_1.ensureNonEmptyString(accessToken)}` }),
+                };
+            }
             default:
-                return ensure_1.ensureUnreachable(this._authDef);
+                return ensure_2.ensureUnreachable(this._authDef);
         }
     }
     _applyAndValidateEndpoint(rawUrl) {
