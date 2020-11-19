@@ -1,5 +1,6 @@
+import {NumberSchema} from '../schema';
 import type {ObjectPackFormulaMetadata} from '../api';
-import type {ObjectSchemaProperty} from '../schema';
+import {ObjectSchemaProperty} from '../schema';
 import type {ParamDefs} from '../api_types';
 import type {ParameterError} from './types';
 import {ParameterException} from './types';
@@ -8,6 +9,7 @@ import {ResultValidationException} from './types';
 import type {ScaleSchema} from '../schema';
 import type {Schema} from '../schema';
 import type {SliderSchema} from '../schema';
+import {StringSchema} from '../schema';
 import {Type} from '../api_types';
 import type {TypedPackFormula} from '../api';
 import {ValueType} from '../schema';
@@ -91,6 +93,9 @@ function checkPropertyTypeAndCodaType<ResultT extends any>
         if (resultValidationError) {
           return typeValidationError;
         }
+        if(!('codaType' in schema)) {
+          return;
+        }
         switch (schema.codaType) {
           case ValueType.Slider:
             return tryParseSlider(result, schema);
@@ -162,21 +167,21 @@ function checkPropertyTypeAndCodaType<ResultT extends any>
   }
 }
 
-function tryParseDateTimeString(result: unknown, schema: Schema) {
+function tryParseDateTimeString(result: unknown, schema: StringSchema) {
   const dateTime = result as string;
   if (isNaN(Date.parse(dateTime))) {
     return {message: `Failed to parse ${dateTime} as a ${schema.codaType}.`};
   }
 }
 
-function tryParseUrl(result: unknown, schema: Schema) {
+function tryParseUrl(result: unknown, schema: StringSchema) {
   const url = result as string;
   if (!url.startsWith('http')) {
     return {message: `${url} must be a url-like string and use HTTP/HTTPS for type ${schema.codaType}.`};
   }
 }
 
-function tryParseSlider(result: unknown, schema: Schema) {
+function tryParseSlider(result: unknown, schema: NumberSchema) {
   const value = result as number;
   const {minimum, maximum} = schema as SliderSchema;
   if (value < (minimum ?? 0)) {
@@ -187,7 +192,7 @@ function tryParseSlider(result: unknown, schema: Schema) {
   }
 }
 
-function tryParseScale(result: unknown, schema: Schema) {
+function tryParseScale(result: unknown, schema: NumberSchema) {
   const {maximum} = schema as ScaleSchema;
   const value = result as number;
   if (!Number.isInteger(result)) {

@@ -61,7 +61,6 @@ interface BaseSchema {
 
 export interface BooleanSchema extends BaseSchema {
   type: ValueType.Boolean;
-  codaType?: ValueType.Boolean;
 }
 
 export interface NumberSchema extends BaseSchema {
@@ -144,7 +143,6 @@ export interface StringSchema<T extends StringHintTypes = StringHintTypes> exten
 
 export interface ArraySchema<T extends Schema = Schema> extends BaseSchema {
   type: ValueType.Array;
-  codaType?: ValueType.Array;
   items: T;
 }
 
