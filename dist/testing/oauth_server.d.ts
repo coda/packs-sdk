@@ -8,8 +8,8 @@ export declare function launchOAuthServerFlow({ clientId, clientSecret, authDef,
     clientId: string;
     clientSecret: string;
     authDef: OAuth2Authentication;
-    port?: number;
+    port: number;
     afterTokenExchange: AfterTokenExchangeCallback;
 }): void;
-export declare function makeRedirectUrl(port?: number): string;
+export declare function makeRedirectUrl(port: number): string;
 export {};

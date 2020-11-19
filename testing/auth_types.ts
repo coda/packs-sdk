@@ -26,8 +26,6 @@ export interface MultiQueryParamCredentials extends BaseCredentials {
 export interface OAuth2Credentials extends BaseCredentials {
   clientId: string;
   clientSecret: string;
-  // TODO: See if we can make this an array of stored access tokens so developers can
-  // store creds for multiple user accounts at the same time.
   accessToken?: string;
   refreshToken?: string;
 }

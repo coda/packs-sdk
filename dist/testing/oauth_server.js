@@ -17,8 +17,7 @@ const client_oauth2_1 = __importDefault(require("client-oauth2"));
 const child_process_1 = require("child_process");
 const express_1 = __importDefault(require("express"));
 const helpers_1 = require("./helpers");
-const DefaultPort = 3000;
-function launchOAuthServerFlow({ clientId, clientSecret, authDef, port = DefaultPort, afterTokenExchange, }) {
+function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTokenExchange, }) {
     // TODO: Handle endpointKey.
     const { authorizationUrl, tokenUrl, scopes, additionalParams } = authDef;
     const oauth2Client = new client_oauth2_1.default({
@@ -37,23 +36,22 @@ function launchOAuthServerFlow({ clientId, clientSecret, authDef, port = Default
             `Complete the auth flow in your browser. If it does not open automatically, visit ${authUrl}`);
         child_process_1.exec(`open "${authUrl}"`);
     };
-    serverContainer.configureServer();
-    serverContainer.startServer(launchCallback);
+    serverContainer.start(launchCallback);
 }
 exports.launchOAuthServerFlow = launchOAuthServerFlow;
-function makeRedirectUrl(port = DefaultPort) {
+function makeRedirectUrl(port) {
     return `http://localhost:${port}/oauth`;
 }
 exports.makeRedirectUrl = makeRedirectUrl;
 class OAuthServerContainer {
     constructor(oauth2Client, afterTokenExchange, port) {
-        this._app = express_1.default();
         this._port = port;
         this._oauth2Client = oauth2Client;
         this._afterTokenExchange = afterTokenExchange;
     }
-    configureServer() {
-        this._app.get('/oauth', (req, res) => __awaiter(this, void 0, void 0, function* () {
+    start(launchCallback) {
+        const app = express_1.default();
+        app.get('/oauth', (req, res) => __awaiter(this, void 0, void 0, function* () {
             // TODO: Figure out how to get refresh tokens, maybe including grant_type: 'authorization_code'.
             const tokenData = yield this._oauth2Client.code.getToken(req.originalUrl);
             const { accessToken, refreshToken } = tokenData;
@@ -61,10 +59,7 @@ class OAuthServerContainer {
             setTimeout(() => this.shutDown(), 10);
             return res.send('OAuth authentication is complete! You can close this browser tab.');
         }));
-    }
-    startServer(callback) {
-        const port = this._port;
-        this._server = this._app.listen(port, callback);
+        this._server = app.listen(this._port, launchCallback);
     }
     shutDown() {
         var _a;

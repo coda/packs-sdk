@@ -19,9 +19,11 @@ import readline from 'readline';
 
 interface SetupAuthOptions {
   credentialsFile?: string;
+  oauthServerPort?: number;
 }
 
 const DEFAULT_CREDENTIALS_FILE = '.coda/credentials.json';
+const DEFAULT_OAUTH_SERVER_PORT = 3000;
 
 export async function setupAuthFromModule(module: any, opts: SetupAuthOptions = {}): Promise<void> {
   return setupAuth(await getManifestFromModule(module), opts);
@@ -64,11 +66,13 @@ class CredentialHandler {
   private readonly _packName: string;
   private readonly _authDef: Authentication;
   private readonly _credentialsFile: string;
+  private readonly _oauthServerPort: number;
 
-  constructor(packName: string, authDef: Authentication, {credentialsFile}: SetupAuthOptions = {}) {
+  constructor(packName: string, authDef: Authentication, {credentialsFile, oauthServerPort}: SetupAuthOptions = {}) {
     this._packName = packName;
     this._authDef = authDef;
     this._credentialsFile = credentialsFile || DEFAULT_CREDENTIALS_FILE;
+    this._oauthServerPort = oauthServerPort || DEFAULT_OAUTH_SERVER_PORT;
   }
 
   private async checkForExistingCredential(): Promise<Credentials | undefined> {
@@ -152,7 +156,7 @@ class CredentialHandler {
     assertCondition(this._authDef.type === AuthenticationType.OAuth2);
     const existingCredentials = (await this.checkForExistingCredential()) as OAuth2Credentials | undefined;
     print(
-      `*** Your application must have ${makeRedirectUrl()} whitelisted as an OAuth redirect url ` +
+      `*** Your application must have ${makeRedirectUrl(this._oauthServerPort)} whitelisted as an OAuth redirect url ` +
         'in order for this tool to work. ***',
     );
     const clientIdPrompt = existingCredentials
@@ -180,6 +184,7 @@ class CredentialHandler {
       clientId,
       clientSecret,
       authDef: this._authDef,
+      port: this._oauthServerPort,
       afterTokenExchange: ({accessToken, refreshToken}) => {
         const credentials: OAuth2Credentials = {
           clientId,

@@ -26,6 +26,7 @@ const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
 const readline_1 = __importDefault(require("readline"));
 const DEFAULT_CREDENTIALS_FILE = '.coda/credentials.json';
+const DEFAULT_OAUTH_SERVER_PORT = 3000;
 function setupAuthFromModule(module, opts = {}) {
     return __awaiter(this, void 0, void 0, function* () {
         return setupAuth(yield helpers_1.getManifestFromModule(module), opts);
@@ -64,10 +65,11 @@ function setupAuth(packDef, opts = {}) {
 }
 exports.setupAuth = setupAuth;
 class CredentialHandler {
-    constructor(packName, authDef, { credentialsFile } = {}) {
+    constructor(packName, authDef, { credentialsFile, oauthServerPort } = {}) {
         this._packName = packName;
         this._authDef = authDef;
         this._credentialsFile = credentialsFile || DEFAULT_CREDENTIALS_FILE;
+        this._oauthServerPort = oauthServerPort || DEFAULT_OAUTH_SERVER_PORT;
     }
     checkForExistingCredential() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -140,7 +142,7 @@ class CredentialHandler {
         return __awaiter(this, void 0, void 0, function* () {
             ensure_1.assertCondition(this._authDef.type === types_1.AuthenticationType.OAuth2);
             const existingCredentials = (yield this.checkForExistingCredential());
-            helpers_2.print(`*** Your application must have ${oauth_server_2.makeRedirectUrl()} whitelisted as an OAuth redirect url ` +
+            helpers_2.print(`*** Your application must have ${oauth_server_2.makeRedirectUrl(this._oauthServerPort)} whitelisted as an OAuth redirect url ` +
                 'in order for this tool to work. ***');
             const clientIdPrompt = existingCredentials
                 ? `Enter the OAuth client id for ${this._packName} (or Enter to skip and use existing):\n`
@@ -164,6 +166,7 @@ class CredentialHandler {
                 clientId,
                 clientSecret,
                 authDef: this._authDef,
+                port: this._oauthServerPort,
                 afterTokenExchange: ({ accessToken, refreshToken }) => {
                     const credentials = {
                         clientId,
