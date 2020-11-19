@@ -6,7 +6,6 @@ const types_2 = require("./types");
 const api_types_1 = require("../api_types");
 const schema_1 = require("../schema");
 const ensure_1 = require("../helpers/ensure");
-const ensure_2 = require("../helpers/ensure");
 const schema_2 = require("../schema");
 const object_utils_1 = require("../helpers/object_utils");
 const schema_3 = require("../schema");
@@ -65,7 +64,7 @@ function validateResultType(resultType, result) {
         case api_types_1.Type.string:
             return checkType(typeOfResult === 'string', 'string', result);
         default:
-            return ensure_2.ensureUnreachable(resultType);
+            return ensure_1.ensureUnreachable(resultType);
     }
 }
 function checkPropertyTypeAndCodaType(schema, key, result) {
@@ -79,6 +78,9 @@ function checkPropertyTypeAndCodaType(schema, key, result) {
                 const resultValidationError = checkType(typeof result === 'number', 'number', result);
                 if (resultValidationError) {
                     return typeValidationError;
+                }
+                if (!('codaType' in schema)) {
+                    return;
                 }
                 switch (schema.codaType) {
                     case schema_1.ValueType.Slider:
@@ -94,7 +96,7 @@ function checkPropertyTypeAndCodaType(schema, key, result) {
                         // no need to coerce current result type
                         return;
                     default:
-                        return ensure_2.ensureUnreachable(schema);
+                        return ensure_1.ensureUnreachable(schema);
                 }
             }
         case schema_1.ValueType.String:
@@ -123,7 +125,7 @@ function checkPropertyTypeAndCodaType(schema, key, result) {
                         // no need to coerce current result type
                         return;
                     default:
-                        ensure_2.ensureUnreachable(schema);
+                        ensure_1.ensureUnreachable(schema);
                 }
             }
         case schema_1.ValueType.Array:
@@ -143,11 +145,11 @@ function checkPropertyTypeAndCodaType(schema, key, result) {
                         // no need to coerce current result type
                         return;
                     default:
-                        ensure_2.ensureUnreachable(schema);
+                        ensure_1.ensureUnreachable(schema);
                 }
             }
         default:
-            return ensure_2.ensureUnreachable(schema);
+            return ensure_1.ensureUnreachable(schema);
     }
 }
 function tryParseDateTimeString(result, schema) {
@@ -163,7 +165,6 @@ function tryParseUrl(result, schema) {
     }
 }
 function tryParseSlider(result, schema) {
-    ensure_1.ensure(!validateResultType(api_types_1.Type.number, result), `${result} must be a number`);
     const value = result;
     const { minimum, maximum } = schema;
     if (value < (minimum !== null && minimum !== void 0 ? minimum : 0)) {

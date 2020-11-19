@@ -1,6 +1,6 @@
-import {NumberSchema} from '../schema';
+import type {NumberSchema} from '../schema';
 import type {ObjectPackFormulaMetadata} from '../api';
-import {ObjectSchemaProperty} from '../schema';
+import type {ObjectSchemaProperty} from '../schema';
 import type {ParamDefs} from '../api_types';
 import type {ParameterError} from './types';
 import {ParameterException} from './types';
@@ -9,7 +9,7 @@ import {ResultValidationException} from './types';
 import type {ScaleSchema} from '../schema';
 import type {Schema} from '../schema';
 import type {SliderSchema} from '../schema';
-import {StringSchema} from '../schema';
+import type {StringSchema} from '../schema';
 import {Type} from '../api_types';
 import type {TypedPackFormula} from '../api';
 import {ValueType} from '../schema';

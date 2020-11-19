@@ -1,14 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ensureExists = exports.ensureNonEmptyString = exports.ensureUnreachable = exports.ensure = void 0;
+exports.assertCondition = exports.ensureExists = exports.ensureNonEmptyString = exports.ensureUnreachable = void 0;
 const api_1 = require("../api");
-function ensure(condition, message) {
-    if (!condition) {
-        throw new Error(message || 'ensure() failed');
-    }
-    return condition;
-}
-exports.ensure = ensure;
 function ensureUnreachable(value, message) {
     throw new Error(message || `Unreachable code hit with value ${String(value)}`);
 }
