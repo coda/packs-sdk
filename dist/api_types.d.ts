@@ -90,6 +90,7 @@ export interface FetchRequest {
     };
     cacheTtlSecs?: number;
     isBinaryResponse?: boolean;
+    disableAuthentication?: boolean;
 }
 export interface FetchResponse<T extends any = any> {
     status: number;
