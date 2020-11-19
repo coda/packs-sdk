@@ -111,7 +111,13 @@ function isTypescript(path) {
     return path.toLowerCase().endsWith('.ts');
 }
 function spawnProcess(command) {
-    child_process_1.spawnSync(command, {
+    let cmd = command;
+    // Hack to allow us to run this CLI tool for testing purposes from within this repo, without
+    // needing it installed as an npm package.
+    if (process.argv[1].endsWith('coda.ts')) {
+        cmd = command.replace('packs-sdk/dist', '.');
+    }
+    child_process_1.spawnSync(cmd, {
         shell: true,
         stdio: 'inherit',
     });
