@@ -10,7 +10,7 @@ interface AfterTokenExchangeParams {
   refreshToken?: string;
 }
 
-type AfterTokenExchangeCallback = (params: AfterTokenExchangeParams) => void;
+export type AfterTokenExchangeCallback = (params: AfterTokenExchangeParams) => void;
 
 export function launchOAuthServerFlow({
   clientId,

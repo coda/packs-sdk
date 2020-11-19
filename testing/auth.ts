@@ -227,7 +227,7 @@ class CredentialHandler {
   }
 }
 
-function storeCredential(credentialsFile: string, packName: string, credentials: Credentials): void {
+export function storeCredential(credentialsFile: string, packName: string, credentials: Credentials): void {
   const allCredentials: AllCredentials = readCredentialsFile(credentialsFile) || {};
   allCredentials[packName] = credentials;
   writeCredentialsFile(credentialsFile, allCredentials);

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.readCredentialsFile = exports.setupAuth = exports.setupAuthFromModule = void 0;
+exports.readCredentialsFile = exports.storeCredential = exports.setupAuth = exports.setupAuthFromModule = void 0;
 const types_1 = require("../types");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
@@ -213,6 +213,7 @@ function storeCredential(credentialsFile, packName, credentials) {
     allCredentials[packName] = credentials;
     writeCredentialsFile(credentialsFile, allCredentials);
 }
+exports.storeCredential = storeCredential;
 function readCredentialsFile(credentialsFile = DEFAULT_CREDENTIALS_FILE) {
     ensure_2.ensureNonEmptyString(credentialsFile);
     let file;
