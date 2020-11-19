@@ -149,7 +149,14 @@ describe('Property validation in objects', () => {
   it('rejects improperly formatted url', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::Url', ['mailto:http://google.com']),
-      new RegExp('The following errors were found when validating the result of the formula "Url":\nProperty with codaType "url" must be a valid HTTP[(]S[)] url, but got "mailto:http://google.com".'),
+      /The following errors were found when validating the result of the formula "Url":\nProperty with codaType "url" must be a valid HTTP\(S\) url, but got "mailto:http:\/\/google.com"./,
+    );
+  });
+
+  it('rejects garbage url', async () => {
+    await testHelper.willBeRejectedWith(
+      executeFormulaFromPackDef(fakePack, 'Fake::Url', ['jasiofjsdofjiaof']),
+      /The following errors were found when validating the result of the formula "Url":\nProperty with codaType "url" must be a valid HTTP\(S\) url, but got "jasiofjsdofjiaof"./,
     );
   });
 });

@@ -177,7 +177,6 @@ function tryParseDateTimeString(result: unknown, schema: StringSchema) {
 
 function tryParseUrl(result: unknown, schema: StringSchema) {
   const invalidUrlError = {message: `Property with codaType "${schema.codaType}" must be a valid HTTP(S) url, but got "${result}".`};
-  // const invalidUrlError = {message: result as string};
   try {
     const url = new URL(result as string);
 
