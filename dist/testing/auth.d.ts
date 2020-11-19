@@ -1,4 +1,5 @@
 import type { AllCredentials } from './auth_types';
+import type { Credentials } from './auth_types';
 import type { PackDefinition } from '../types';
 interface SetupAuthOptions {
     credentialsFile?: string;
@@ -6,5 +7,6 @@ interface SetupAuthOptions {
 }
 export declare function setupAuthFromModule(module: any, opts?: SetupAuthOptions): Promise<void>;
 export declare function setupAuth(packDef: PackDefinition, opts?: SetupAuthOptions): Promise<void>;
+export declare function storeCredential(credentialsFile: string, packName: string, credentials: Credentials): void;
 export declare function readCredentialsFile(credentialsFile?: string): AllCredentials | undefined;
 export {};
