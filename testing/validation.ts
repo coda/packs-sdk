@@ -178,7 +178,6 @@ function tryParseUrl(result: unknown, schema: Schema) {
 }
 
 function tryParseSlider(result: unknown, schema: Schema) {
-  ensure(!validateResultType(Type.number, result), `${result} must be a number`);
   const value = result as number;
   const {minimum, maximum} = schema as SliderSchema;
   if (value < (minimum ?? 0)) {
@@ -258,4 +257,4 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
   if (errors.length) {
     throw ResultValidationException.fromErrors(formula.name, errors);
   }
-} 
+}
