@@ -4,6 +4,7 @@ exports.validateResult = exports.validateParams = void 0;
 const types_1 = require("./types");
 const types_2 = require("./types");
 const api_types_1 = require("../api_types");
+const url_1 = require("url");
 const schema_1 = require("../schema");
 const ensure_1 = require("../helpers/ensure");
 const schema_2 = require("../schema");
@@ -159,9 +160,16 @@ function tryParseDateTimeString(result, schema) {
     }
 }
 function tryParseUrl(result, schema) {
-    const url = result;
-    if (!url.startsWith('http')) {
-        return { message: `${url} must be a url-like string and use HTTP/HTTPS for type ${schema.codaType}.` };
+    const invalidUrlError = { message: `Property with codaType "${schema.codaType}" must be a valid HTTP(S) url, but got "${result}".` };
+    // const invalidUrlError = {message: result as string};
+    try {
+        const url = new url_1.URL(result);
+        if (!(url.protocol === 'http:' || url.protocol === 'https:')) {
+            return invalidUrlError;
+        }
+    }
+    catch (error) {
+        return invalidUrlError;
     }
 }
 function tryParseSlider(result, schema) {
