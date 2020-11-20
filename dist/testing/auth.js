@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.readCredentialsFile = exports.storeCredential = exports.setupAuth = exports.setupAuthFromModule = void 0;
+exports.readCredentialsFile = exports.storeCredential = exports.setupAuth = exports.setupAuthFromModule = exports.DEFAULT_OAUTH_SERVER_PORT = exports.DEFAULT_CREDENTIALS_FILE = void 0;
 const types_1 = require("../types");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
@@ -25,8 +25,8 @@ const path_1 = __importDefault(require("path"));
 const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
 const readline_1 = __importDefault(require("readline"));
-const DEFAULT_CREDENTIALS_FILE = '.coda/credentials.json';
-const DEFAULT_OAUTH_SERVER_PORT = 3000;
+exports.DEFAULT_CREDENTIALS_FILE = '.coda/credentials.json';
+exports.DEFAULT_OAUTH_SERVER_PORT = 3000;
 function setupAuthFromModule(module, opts = {}) {
     return __awaiter(this, void 0, void 0, function* () {
         return setupAuth(yield helpers_1.getManifestFromModule(module), opts);
@@ -68,8 +68,8 @@ class CredentialHandler {
     constructor(packName, authDef, { credentialsFile, oauthServerPort } = {}) {
         this._packName = packName;
         this._authDef = authDef;
-        this._credentialsFile = credentialsFile || DEFAULT_CREDENTIALS_FILE;
-        this._oauthServerPort = oauthServerPort || DEFAULT_OAUTH_SERVER_PORT;
+        this._credentialsFile = credentialsFile || exports.DEFAULT_CREDENTIALS_FILE;
+        this._oauthServerPort = oauthServerPort || exports.DEFAULT_OAUTH_SERVER_PORT;
     }
     checkForExistingCredential() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -214,7 +214,7 @@ function storeCredential(credentialsFile, packName, credentials) {
     writeCredentialsFile(credentialsFile, allCredentials);
 }
 exports.storeCredential = storeCredential;
-function readCredentialsFile(credentialsFile = DEFAULT_CREDENTIALS_FILE) {
+function readCredentialsFile(credentialsFile = exports.DEFAULT_CREDENTIALS_FILE) {
     ensure_2.ensureNonEmptyString(credentialsFile);
     let file;
     try {

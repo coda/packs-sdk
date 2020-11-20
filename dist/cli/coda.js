@@ -32,9 +32,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const auth_1 = require("../testing/auth");
+const auth_2 = require("../testing/auth");
 const execution_1 = require("../testing/execution");
 const path_1 = __importDefault(require("path"));
-const auth_1 = require("../testing/auth");
+const auth_3 = require("../testing/auth");
 const child_process_1 = require("child_process");
 const yargs_1 = __importDefault(require("yargs"));
 const EXECUTE_BOOTSTRAP_CODE = `
@@ -64,8 +66,9 @@ import {setupAuthFromModule} from 'packs-sdk/dist/testing/auth';
 async function main() {
   const manifestPath = process.argv[4];
   const credentialsFile = process.argv[5] || undefined;
+  const oauthServerPort = process.argv[6] ? parseInt(process.argv[6]) : undefined;
   const module = await import(manifestPath);
-  await setupAuthFromModule(module, {credentialsFile});
+  await setupAuthFromModule(module, {credentialsFile, oauthServerPort});
 }
 
 void main();`;
@@ -94,16 +97,16 @@ function handleExecute({ manifestPath, formulaName, params, fetch, credentialsFi
         }
     });
 }
-function handleAuth({ manifestPath, credentialsFile }) {
+function handleAuth({ manifestPath, credentialsFile, oauthServerPort }) {
     return __awaiter(this, void 0, void 0, function* () {
         const fullManifestPath = makeManifestFullPath(manifestPath);
         if (isTypescript(manifestPath)) {
-            const tsCommand = `ts-node -e "${AUTH_BOOTSTRAP_CODE}" ${fullManifestPath} ${credentialsFile || '""'}`;
+            const tsCommand = `ts-node -e "${AUTH_BOOTSTRAP_CODE}" ${fullManifestPath} ${credentialsFile || '""'} ${oauthServerPort || '""'}`;
             spawnProcess(tsCommand);
         }
         else {
             const module = yield Promise.resolve().then(() => __importStar(require(fullManifestPath)));
-            yield auth_1.setupAuthFromModule(module, { credentialsFile });
+            yield auth_3.setupAuthFromModule(module, { credentialsFile, oauthServerPort });
         }
     });
 }
@@ -140,7 +143,8 @@ if (require.main === module) {
             credentialsFile: {
                 alias: 'credentials_file',
                 string: true,
-                desc: 'Path to the credentials file, if different than .coda/credentials.json',
+                default: auth_1.DEFAULT_CREDENTIALS_FILE,
+                desc: 'Path to the credentials file.',
             },
         },
     })
@@ -152,7 +156,14 @@ if (require.main === module) {
             credentialsFile: {
                 alias: 'credentials_file',
                 string: true,
-                desc: 'Path to the credentials file, if different than .coda/credentials.json',
+                default: auth_1.DEFAULT_CREDENTIALS_FILE,
+                desc: 'Path to the credentials file.',
+            },
+            oauthServerPort: {
+                alias: 'oauth_server_port',
+                number: true,
+                default: auth_2.DEFAULT_OAUTH_SERVER_PORT,
+                desc: 'Port to use for the local server that handles OAuth setup.',
             },
         },
     })
