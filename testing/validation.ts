@@ -1,5 +1,5 @@
-import {ArraySchema} from '../schema';
-import {NumberSchema} from '../schema';
+import type {ArraySchema} from '../schema';
+import type {NumberSchema} from '../schema';
 import type {ObjectPackFormulaMetadata} from '../api';
 import type {ObjectSchemaProperty} from '../schema';
 import type {ParamDefs} from '../api_types';
@@ -89,11 +89,16 @@ function validateResultType<ResultT extends any>(resultType: Type, result: Resul
   }
 }
 
-function checkPropertyTypeAndCodaType<ResultT extends any>
-    (schema: Schema & ObjectSchemaProperty, result: ResultT, key?: string): ResultValidationError | undefined {
+function checkPropertyTypeAndCodaType<ResultT extends any>(
+  schema: Schema & ObjectSchemaProperty,
+  result: ResultT,
+  key?: string,
+): ResultValidationError | undefined {
   const resultValue = typeof result === 'string' ? `"${result}"` : result;
 
-  const objectPropertyValidationError = {message: `Expected a ${schema.type} property for key ${key} but got ${resultValue}.`};
+  const objectPropertyValidationError = {
+    message: `Expected a ${schema.type} property for key ${key} but got ${resultValue}.`,
+  };
 
   switch (schema.type) {
     case ValueType.Boolean:
@@ -154,23 +159,22 @@ function checkPropertyTypeAndCodaType<ResultT extends any>
     case ValueType.Array:
       // TODO: handle array
       return validateArray(result, schema);
-    case ValueType.Object:
-      {
-        const resultValidationError = checkType(typeof result === 'object', 'object', result);
-        if (resultValidationError) {
-          return key ? objectPropertyValidationError : resultValidationError;
-        }
-        switch (schema.codaType) {
-          case ValueType.Person:
-          case ValueType.Reference:
-            // TODO: fill these in after adding in type defs for persons and references.
-          case undefined:
-            // no need to coerce current result type
-            return;
-          default:
-            ensureUnreachable(schema);
-        }
+    case ValueType.Object: {
+      const resultValidationError = checkType(typeof result === 'object', 'object', result);
+      if (resultValidationError) {
+        return key ? objectPropertyValidationError : resultValidationError;
       }
+      switch (schema.codaType) {
+        case ValueType.Person:
+        case ValueType.Reference:
+        // TODO: fill these in after adding in type defs for persons and references.
+        case undefined:
+          // no need to coerce current result type
+          return;
+        default:
+          ensureUnreachable(schema);
+      }
+    }
     default:
       return ensureUnreachable(schema);
   }
@@ -283,7 +287,10 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
   }
 }
 
-function validateArray<ResultT extends any>(result: ResultT, schema: ArraySchema<Schema>): ResultValidationError | undefined {
+function validateArray<ResultT extends any>(
+  result: ResultT,
+  schema: ArraySchema<Schema>,
+): ResultValidationError | undefined {
   if (!Array.isArray(result)) {
     const error: ResultValidationError = {message: `Expected an ${schema.type} result but got ${result}.`};
     return error;

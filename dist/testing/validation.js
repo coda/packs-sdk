@@ -71,16 +71,16 @@ function validateResultType(resultType, result) {
             return ensure_1.ensureUnreachable(resultType);
     }
 }
-function checkPropertyTypeAndCodaType(schema, key, result) {
+function checkPropertyTypeAndCodaType(schema, result, key) {
     const resultValue = typeof result === 'string' ? `"${result}"` : result;
-    const typeValidationError = { message: `Expected a ${schema.type} property for key ${key} but got ${resultValue}.` };
+    const objectPropertyValidationError = { message: `Expected a ${schema.type} property for key ${key} but got ${resultValue}.` };
     switch (schema.type) {
         case schema_1.ValueType.Boolean:
             return checkType(typeof result === 'boolean', 'boolean', result);
         case schema_1.ValueType.Number: {
             const resultValidationError = checkType(typeof result === 'number', 'number', result);
             if (resultValidationError) {
-                return typeValidationError;
+                return key ? objectPropertyValidationError : resultValidationError;
             }
             if (!('codaType' in schema)) {
                 return;
@@ -105,7 +105,7 @@ function checkPropertyTypeAndCodaType(schema, key, result) {
         case schema_1.ValueType.String: {
             const resultValidationError = checkType(typeof result === 'string', 'string', result);
             if (resultValidationError) {
-                return typeValidationError;
+                return key ? objectPropertyValidationError : resultValidationError;
             }
             switch (schema.codaType) {
                 case schema_1.ValueType.Attachment:
@@ -132,23 +132,24 @@ function checkPropertyTypeAndCodaType(schema, key, result) {
         }
         case schema_1.ValueType.Array:
             // TODO: handle array
-            break;
-        case schema_1.ValueType.Object: {
-            const resultValidationError = checkType(typeof result === 'object', 'object', result);
-            if (resultValidationError) {
-                return typeValidationError;
+            return validateArray(result, schema);
+        case schema_1.ValueType.Object:
+            {
+                const resultValidationError = checkType(typeof result === 'object', 'object', result);
+                if (resultValidationError) {
+                    return key ? objectPropertyValidationError : resultValidationError;
+                }
+                switch (schema.codaType) {
+                    case schema_1.ValueType.Person:
+                    case schema_1.ValueType.Reference:
+                    // TODO: fill these in after adding in type defs for persons and references.
+                    case undefined:
+                        // no need to coerce current result type
+                        return;
+                    default:
+                        ensure_1.ensureUnreachable(schema);
+                }
             }
-            switch (schema.codaType) {
-                case schema_1.ValueType.Person:
-                case schema_1.ValueType.Reference:
-                // TODO: fill these in after adding in type defs for persons and references.
-                case undefined:
-                    // no need to coerce current result type
-                    return;
-                default:
-                    ensure_1.ensureUnreachable(schema);
-            }
-        }
         default:
             return ensure_1.ensureUnreachable(schema);
     }
@@ -208,7 +209,10 @@ function validateObjectResult(formula, result) {
         return;
     }
     if (schema_2.isArray(schema)) {
-        // TODO(jonathan): Validate object arrays.
+        const arrayValidationError = validateArray(result, schema);
+        if (arrayValidationError) {
+            throw types_2.ResultValidationException.fromErrors(formula.name, [arrayValidationError]);
+        }
         return;
     }
     if (!schema_3.isObject(schema)) {
@@ -224,7 +228,7 @@ function validateObjectResult(formula, result) {
             });
         }
         if (value) {
-            const propertyLevelError = checkPropertyTypeAndCodaType(propertySchema, propertyKey, value);
+            const propertyLevelError = checkPropertyTypeAndCodaType(propertySchema, value, propertyKey);
             if (propertyLevelError) {
                 errors.push(propertyLevelError);
             }
@@ -237,5 +241,18 @@ function validateObjectResult(formula, result) {
     }
     if (errors.length) {
         throw types_2.ResultValidationException.fromErrors(formula.name, errors);
+    }
+}
+function validateArray(result, schema) {
+    if (!Array.isArray(result)) {
+        const error = { message: `Expected an ${schema.type} result but got ${result}.` };
+        return error;
+    }
+    const itemType = schema.items;
+    for (const item of result) {
+        const propertyLevelError = checkPropertyTypeAndCodaType(itemType, item);
+        if (propertyLevelError) {
+            return propertyLevelError;
+        }
     }
 }

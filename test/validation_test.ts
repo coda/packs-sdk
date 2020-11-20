@@ -1,6 +1,6 @@
 import {testHelper} from './test_helper';
 import {FakePack} from './test_utils';
-import {StringSchema} from '../schema';
+import type {StringSchema} from '../schema';
 import {ValueType} from '../schema';
 import {createFakePack} from './test_utils';
 import { executeFormulaFromPackDef } from '../testing/execution';
