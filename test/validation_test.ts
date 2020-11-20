@@ -3,7 +3,7 @@ import {FakePack} from './test_utils';
 import type {StringSchema} from '../schema';
 import {ValueType} from '../schema';
 import {createFakePack} from './test_utils';
-import { executeFormulaFromPackDef } from '../testing/execution';
+import {executeFormulaFromPackDef} from '../testing/execution';
 import {makeNumericParameter} from '../api';
 import {makeObjectFormula} from '../api';
 import {makeObjectSchema} from '../schema';
@@ -45,7 +45,7 @@ describe('Property validation in objects', () => {
     },
     response: {
       schema: fakeSchema,
-    }
+    },
   });
 
   const fakeSliderFormula = makeObjectFormula({
@@ -58,7 +58,7 @@ describe('Property validation in objects', () => {
     },
     response: {
       schema: fakeSchema,
-    }
+    },
   });
 
   const fakeScaleFormula = makeObjectFormula({
@@ -71,7 +71,7 @@ describe('Property validation in objects', () => {
     },
     response: {
       schema: fakeSchema,
-    }
+    },
   });
 
   const fakeUrlFormula = makeObjectFormula({
@@ -84,11 +84,11 @@ describe('Property validation in objects', () => {
     },
     response: {
       schema: fakeSchema,
-    }
+    },
   });
 
   const fakeArrayFormula = makeObjectFormula({
-    name: 'Names',
+    name: 'GetNames',
     description: 'Returns the names you passed in.',
     examples: [],
     parameters: [makeStringArrayParameter('string', 'Pass in an array of strings')],
@@ -97,12 +97,12 @@ describe('Property validation in objects', () => {
     },
     response: {
       schema: fakeSchema,
-    }
-  })
+    },
+  });
 
   const fakePack = createFakePack({
-    formulas: {Fake: [fakeDateFormula, fakeSliderFormula, fakeScaleFormula, fakeUrlFormula, fakeArrayFormula]}
-  })
+    formulas: {Fake: [fakeDateFormula, fakeSliderFormula, fakeScaleFormula, fakeUrlFormula, fakeArrayFormula]},
+  });
 
   it('validates correct date string', async () => {
     await executeFormulaFromPackDef(fakePack, 'Fake::Date', ['Wed, 02 Oct 2002 15:00:00 +0200']);
@@ -112,7 +112,7 @@ describe('Property validation in objects', () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::Date', ['asdfdasf']),
       /The following errors were found when validating the result of the formula "Date":\nFailed to parse asdfdasf as a date./,
-    )
+    );
   });
 
   it('validates correct slider value', async () => {
@@ -123,21 +123,21 @@ describe('Property validation in objects', () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::Slider', ['9']),
       /The following errors were found when validating the result of the formula "Slider":\nExpected a number property for key Slider but got "9"./,
-    )
+    );
   });
 
   it('rejects slider value below minimum', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::Slider', [9]),
       /The following errors were found when validating the result of the formula "Slider":\nSlider value 9 is below the specified minimum value of 12./,
-    )
+    );
   });
 
   it('rejects slider value above maximum', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::Slider', [32]),
       /The following errors were found when validating the result of the formula "Slider":\nSlider value 32 is greater than the specified maximum value of 30./,
-    )
+    );
   });
 
   it('validates correct scale value', async () => {
@@ -148,14 +148,14 @@ describe('Property validation in objects', () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::Scale', [-1]),
       /The following errors were found when validating the result of the formula "Scale":\nScale value -1 cannot be below 0./,
-    )
+    );
   });
 
   it('rejects scale value above maximum', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::Scale', [6]),
       /The following errors were found when validating the result of the formula "Scale":\nScale value 6 is greater than the specified maximum value of 5./,
-    )
+    );
   });
 
   it('validates properly formatted url', async () => {
@@ -177,20 +177,20 @@ describe('Property validation in objects', () => {
   });
 
   it('validates string array', async () => {
-    await executeFormulaFromPackDef(fakePack, 'Fake::Names', [['Jack', 'Jill', 'Hill']]);
+    await executeFormulaFromPackDef(fakePack, 'Fake::GetNames', [['Jack', 'Jill', 'Hill']]);
   });
 
   it('rejects non array', async () => {
     await testHelper.willBeRejectedWith(
-      executeFormulaFromPackDef(fakePack, 'Fake::Names', ['Jack']),
-      /The following errors were found when validating the result of the formula "Names":\nExpected an array result but got Jack./,
+      executeFormulaFromPackDef(fakePack, 'Fake::GetNames', ['Jack']),
+      /The following errors were found when validating the result of the formula "GetNames":\nExpected an array result but got Jack./,
     );
   });
 
   it('rejects bad array items', async () => {
     await testHelper.willBeRejectedWith(
-      executeFormulaFromPackDef(fakePack, 'Fake::Names', [['Jack', 'Jill', 123]]),
-      /The following errors were found when validating the result of the formula "Names":\nExpected a string result but got 123./,
+      executeFormulaFromPackDef(fakePack, 'Fake::GetNames', [['Jack', 'Jill', 123]]),
+      /The following errors were found when validating the result of the formula "GetNames":\nExpected a string property for array item Names\[2\] but got 123./,
     );
   });
 });

@@ -8,6 +8,11 @@ export interface ResultValidationError {
   message: string;
 }
 
+export interface ValidationContext {
+  propertyKey?: string;
+  arrayIndex?: number;
+}
+
 export class ResultValidationException extends Error {
   errors: ResultValidationError[];
 
