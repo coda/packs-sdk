@@ -131,6 +131,7 @@ function escapeShellArg(arg) {
 if (require.main === module) {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     yargs_1.default
+        .parserConfiguration({ 'parse-numbers': false })
         .command({
         command: 'execute <manifestPath> <formulaName> [params..]',
         describe: 'Execute a formula',
