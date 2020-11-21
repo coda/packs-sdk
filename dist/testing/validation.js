@@ -163,6 +163,7 @@ function checkPropertyTypeAndCodaType(schema, result, validationContext) {
             // TODO: handle array
             return validateArray(result, schema, { propertyKey: validationContext === null || validationContext === void 0 ? void 0 : validationContext.propertyKey });
         case schema_1.ValueType.Object: {
+            // TODO: handle nested object validation.
             const resultValidationError = checkType(typeof result === 'object', 'object', result);
             if (resultValidationError) {
                 return errorMessage;

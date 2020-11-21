@@ -189,8 +189,8 @@ describe('Property validation in objects', () => {
 
   it('rejects bad array items', async () => {
     await testHelper.willBeRejectedWith(
-      executeFormulaFromPackDef(fakePack, 'Fake::GetNames', [['Jack', 'Jill', 123]]),
-      /The following errors were found when validating the result of the formula "GetNames":\nExpected a string property for array item Names\[2\] but got 123./,
+      executeFormulaFromPackDef(fakePack, 'Fake::GetNames', [['Jack', 'Jill', 123, true]]),
+      /The following errors were found when validating the result of the formula "GetNames":\nExpected a string property for array item Names\[2\] but got 123.\nExpected a string property for array item Names\[3\] but got true./,
     );
   });
 });

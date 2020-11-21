@@ -127,7 +127,6 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
   validationContext: ValidationContext,
 ): ResultValidationError[] {
   const errorMessage = [generateErrorFromValidationContext(validationContext, schema, result)];
-
   switch (schema.type) {
     case ValueType.Boolean: {
       const resultValidationError = checkType(typeof result === 'boolean', 'boolean', result);
@@ -196,6 +195,7 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
       // TODO: handle array
       return validateArray(result, schema, {propertyKey: validationContext?.propertyKey});
     case ValueType.Object: {
+      // TODO: handle nested object validation.
       const resultValidationError = checkType(typeof result === 'object', 'object', result);
       if (resultValidationError) {
         return errorMessage;
