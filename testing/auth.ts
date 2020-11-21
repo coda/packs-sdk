@@ -15,7 +15,7 @@ import {makeRedirectUrl} from './oauth_server';
 import path from 'path';
 import {print} from './helpers';
 import {printAndExit} from './helpers';
-import readline from 'readline';
+import {promptForInput} from './helpers';
 
 interface SetupAuthOptions {
   credentialsFile?: string;
@@ -29,7 +29,7 @@ export async function setupAuthFromModule(module: any, opts: SetupAuthOptions = 
   return setupAuth(await getManifestFromModule(module), opts);
 }
 
-export async function setupAuth(packDef: PackDefinition, opts: SetupAuthOptions = {}): Promise<void> {
+export function setupAuth(packDef: PackDefinition, opts: SetupAuthOptions = {}): void {
   const {name, defaultAuthentication} = packDef;
   if (!defaultAuthentication) {
     return printAndExit(
@@ -75,10 +75,10 @@ class CredentialHandler {
     this._oauthServerPort = oauthServerPort || DEFAULT_OAUTH_SERVER_PORT;
   }
 
-  private async checkForExistingCredential(): Promise<Credentials | undefined> {
+  private checkForExistingCredential(): Credentials | undefined {
     const existingCredentials = readCredentialsFile(this._credentialsFile);
     if (existingCredentials && existingCredentials[this._packName]) {
-      const input = await this.promptForInput(
+      const input = promptForInput(
         `Credentials already exist for ${this._packName}, press "y" to overwrite or "n" to cancel: `,
       );
       if (input.toLocaleLowerCase() !== 'y') {
@@ -88,46 +88,46 @@ class CredentialHandler {
     }
   }
 
-  async handleToken() {
-    await this.checkForExistingCredential();
-    const endpointUrl = await this.maybePromptForEndpointUrl();
-    const input = await this.promptForInput(`Paste the token or API key to use for ${this._packName}:\n`);
+  handleToken() {
+    this.checkForExistingCredential();
+    const endpointUrl = this.maybePromptForEndpointUrl();
+    const input = promptForInput(`Paste the token or API key to use for ${this._packName}:\n`, {mask: true});
     this.storeCredential({endpointUrl, token: input});
     print('Credentials updated!');
   }
 
-  async handleWebBasic() {
+  handleWebBasic() {
     assertCondition(this._authDef.type === AuthenticationType.WebBasic);
-    await this.checkForExistingCredential();
-    const endpointUrl = await this.maybePromptForEndpointUrl();
+    this.checkForExistingCredential();
+    const endpointUrl = this.maybePromptForEndpointUrl();
     const usernamePlaceholder = this._authDef.uxConfig?.placeholderUsername || 'username';
     const passwordPlaceholder = this._authDef.uxConfig?.placeholderPassword || 'password';
     const usernameOnly = this._authDef.uxConfig?.usernameOnly;
-    const username = await this.promptForInput(`Enter the ${usernamePlaceholder} for ${this._packName}:\n`);
+    const username = promptForInput(`Enter the ${usernamePlaceholder} for ${this._packName}:\n`);
     let password: string | undefined;
     if (!usernameOnly) {
-      password = await this.promptForInput(`Enter the ${passwordPlaceholder} for ${this._packName}:\n`);
+      password = promptForInput(`Enter the ${passwordPlaceholder} for ${this._packName}:\n`, {mask: true});
     }
     this.storeCredential({endpointUrl, username, password});
     print('Credentials updated!');
   }
 
-  async handleQueryParam(paramName: string) {
+  handleQueryParam(paramName: string) {
     if (!paramName) {
       printAndExit(
         `Please provide a paramName attribute in the defaultAuthentication section of the ${this._packName} pack definition.`,
       );
     }
-    await this.checkForExistingCredential();
-    const endpointUrl = await this.maybePromptForEndpointUrl();
-    const input = await this.promptForInput(
-      `Enter the token to use for the "${paramName}" url param for ${this._packName}:\n`,
-    );
+    this.checkForExistingCredential();
+    const endpointUrl = this.maybePromptForEndpointUrl();
+    const input = promptForInput(`Enter the token to use for the "${paramName}" url param for ${this._packName}:\n`, {
+      mask: true,
+    });
     this.storeCredential({endpointUrl, paramValue: input});
     print('Credentials updated!');
   }
 
-  async handleMultiQueryParams(
+  handleMultiQueryParams(
     paramDefs: Array<{
       name: string;
       description: string;
@@ -139,12 +139,13 @@ class CredentialHandler {
       );
     }
 
-    await this.checkForExistingCredential();
-    const endpointUrl = await this.maybePromptForEndpointUrl();
+    this.checkForExistingCredential();
+    const endpointUrl = this.maybePromptForEndpointUrl();
     const credentials: MultiQueryParamCredentials = {endpointUrl, params: {}};
     for (const paramDef of paramDefs) {
-      const paramValue = await this.promptForInput(
+      const paramValue = promptForInput(
         `Enter the token to use for the "${paramDef.name}" url param for ${this._packName}:\n`,
+        {mask: true},
       );
       credentials.params[paramDef.name] = paramValue;
     }
@@ -152,9 +153,9 @@ class CredentialHandler {
     print('Credentials updated!');
   }
 
-  async handleOAuth2() {
+  handleOAuth2() {
     assertCondition(this._authDef.type === AuthenticationType.OAuth2);
-    const existingCredentials = (await this.checkForExistingCredential()) as OAuth2Credentials | undefined;
+    const existingCredentials = this.checkForExistingCredential() as OAuth2Credentials | undefined;
     print(
       `*** Your application must have ${makeRedirectUrl(this._oauthServerPort)} whitelisted as an OAuth redirect url ` +
         'in order for this tool to work. ***',
@@ -162,11 +163,11 @@ class CredentialHandler {
     const clientIdPrompt = existingCredentials
       ? `Enter the OAuth client id for ${this._packName} (or Enter to skip and use existing):\n`
       : `Enter the OAuth client id for ${this._packName}:\n`;
-    const newClientId = await this.promptForInput(clientIdPrompt);
+    const newClientId = promptForInput(clientIdPrompt);
     const clientSecretPrompt = existingCredentials
       ? `Enter the OAuth client secret for ${this._packName} (or Enter to skip and use existing):\n`
       : `Enter the OAuth client secret for ${this._packName}:\n`;
-    const newClientSecret = await this.promptForInput(clientSecretPrompt);
+    const newClientSecret = promptForInput(clientSecretPrompt, {mask: true});
 
     const clientId = ensureNonEmptyString(newClientId || existingCredentials?.clientId);
     const clientSecret = ensureNonEmptyString(newClientSecret || existingCredentials?.clientSecret);
@@ -198,7 +199,7 @@ class CredentialHandler {
     });
   }
 
-  private async maybePromptForEndpointUrl() {
+  private maybePromptForEndpointUrl() {
     if (this._authDef.type === AuthenticationType.None) {
       return;
     }
@@ -209,21 +210,11 @@ class CredentialHandler {
     const placeholder = endpointDomain
       ? `https://my-site.${endpointDomain}`
       : `https://${this._packName.toLowerCase()}.example.com`;
-    return this.promptForInput(`Enter the endpoint url for ${this._packName} (for example, ${placeholder}):\n`);
+    return promptForInput(`Enter the endpoint url for ${this._packName} (for example, ${placeholder}):\n`);
   }
 
   storeCredential(credentials: Credentials): void {
     storeCredential(this._credentialsFile, this._packName, credentials);
-  }
-
-  async promptForInput(prompt: string): Promise<string> {
-    const rl = readlineInterface();
-    return new Promise(resolve =>
-      rl.question(prompt, input => {
-        rl.close();
-        resolve(input);
-      }),
-    );
   }
 }
 
@@ -259,12 +250,4 @@ function writeCredentialsFile(credentialsFile: string, allCredentials: AllCreden
     // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
     fs.chmodSync(credentialsFile, 0o600);
   }
-}
-
-function readlineInterface() {
-  return readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-    terminal: false,
-  });
 }
