@@ -108,6 +108,7 @@ function generateErrorFromValidationContext(
       message: `Expected a ${schema.type} property for array item ${propertyKey}[${arrayIndex}] but got ${resultValue}.`,
     };
   }
+
   // Validating property of an objectSchema
   if (propertyKey) {
     return {
@@ -116,6 +117,7 @@ function generateErrorFromValidationContext(
   }
 
   // Validating item within an array of objects (sync formula)
+  // We don't currently do nested object validation within arrays.
   return {
     message: `Expected a ${schema.type} property for array item at index ${arrayIndex} but got ${resultValue}.`,
   };
@@ -284,9 +286,9 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
   }
 
   if (isArray(schema)) {
-    const arrayValidationError = validateArray(result, schema);
-    if (arrayValidationError.length) {
-      throw ResultValidationException.fromErrors(formula.name, arrayValidationError);
+    const arrayValidationErrors = validateArray(result, schema);
+    if (arrayValidationErrors.length) {
+      throw ResultValidationException.fromErrors(formula.name, arrayValidationErrors);
     }
     return;
   }
