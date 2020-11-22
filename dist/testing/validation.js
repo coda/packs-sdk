@@ -89,6 +89,7 @@ function generateErrorFromValidationContext(context, schema, result) {
         };
     }
     // Validating item within an array of objects (sync formula)
+    // We don't currently do nested object validation within arrays.
     return {
         message: `Expected a ${schema.type} property for array item at index ${arrayIndex} but got ${resultValue}.`,
     };
@@ -238,9 +239,9 @@ function validateObjectResult(formula, result) {
         return;
     }
     if (schema_2.isArray(schema)) {
-        const arrayValidationError = validateArray(result, schema);
-        if (arrayValidationError.length) {
-            throw types_2.ResultValidationException.fromErrors(formula.name, arrayValidationError);
+        const arrayValidationErrors = validateArray(result, schema);
+        if (arrayValidationErrors.length) {
+            throw types_2.ResultValidationException.fromErrors(formula.name, arrayValidationErrors);
         }
         return;
     }
