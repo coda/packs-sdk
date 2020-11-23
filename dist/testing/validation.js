@@ -259,9 +259,7 @@ function validateObjectResult(formula, result) {
         }
         if (value) {
             const propertyLevelErrors = checkPropertyTypeAndCodaType(propertySchema, value, { propertyKey });
-            if (propertyLevelErrors.length) {
-                errors.push(...propertyLevelErrors);
-            }
+            errors.push(...propertyLevelErrors);
         }
     }
     if (schema.id && schema.id in result && !result[schema.id]) {

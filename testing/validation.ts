@@ -308,9 +308,7 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
     }
     if (value) {
       const propertyLevelErrors = checkPropertyTypeAndCodaType(propertySchema, value, {propertyKey});
-      if (propertyLevelErrors.length) {
-        errors.push(...propertyLevelErrors);
-      }
+      errors.push(...propertyLevelErrors);
     }
   }
 
