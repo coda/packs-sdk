@@ -95,18 +95,18 @@ function generateErrorFromValidationContext(context, schema, result) {
     };
 }
 function checkPropertyTypeAndCodaType(schema, result, validationContext) {
-    const errorMessage = [generateErrorFromValidationContext(validationContext, schema, result)];
+    const errors = [generateErrorFromValidationContext(validationContext, schema, result)];
     switch (schema.type) {
         case schema_1.ValueType.Boolean: {
             const resultValidationError = checkType(typeof result === 'boolean', 'boolean', result);
             if (resultValidationError) {
-                return errorMessage;
+                return errors;
             }
         }
         case schema_1.ValueType.Number: {
             const resultValidationError = checkType(typeof result === 'number', 'number', result);
             if (resultValidationError) {
-                return errorMessage;
+                return errors;
             }
             if (!('codaType' in schema)) {
                 return [];
@@ -133,7 +133,7 @@ function checkPropertyTypeAndCodaType(schema, result, validationContext) {
         case schema_1.ValueType.String: {
             const resultValidationError = checkType(typeof result === 'string', 'string', result);
             if (resultValidationError) {
-                return errorMessage;
+                return errors;
             }
             switch (schema.codaType) {
                 case schema_1.ValueType.Attachment:
@@ -167,7 +167,7 @@ function checkPropertyTypeAndCodaType(schema, result, validationContext) {
             // TODO: handle nested object validation.
             const resultValidationError = checkType(typeof result === 'object', 'object', result);
             if (resultValidationError) {
-                return errorMessage;
+                return errors;
             }
             switch (schema.codaType) {
                 case schema_1.ValueType.Person:
@@ -286,9 +286,7 @@ function validateArray(result, schema, context) {
             propertyKey: context === null || context === void 0 ? void 0 : context.propertyKey,
             arrayIndex: i,
         });
-        if (propertyLevelErrors.length) {
-            arrayItemErrors.push(...propertyLevelErrors);
-        }
+        arrayItemErrors.push(...propertyLevelErrors);
     }
     return arrayItemErrors;
 }
