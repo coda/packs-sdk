@@ -237,7 +237,7 @@ class AuthenticatingBlobStorage implements TemporaryBlobStorage {
   }
 
   async storeUrl(url: string, _opts?: {expiryMs?: number}): Promise<string> {
-    await this._fetcher.fetch({method: 'GET', url});
+    await this._fetcher.fetch({method: 'GET', url, isBinaryResponse: true});
     return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${v4()}`;
   }
 

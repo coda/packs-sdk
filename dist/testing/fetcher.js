@@ -199,7 +199,7 @@ class AuthenticatingBlobStorage {
     }
     storeUrl(url, _opts) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this._fetcher.fetch({ method: 'GET', url });
+            yield this._fetcher.fetch({ method: 'GET', url, isBinaryResponse: true });
             return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${uuid_1.v4()}`;
         });
     }
