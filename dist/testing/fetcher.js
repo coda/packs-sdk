@@ -74,8 +74,8 @@ class AuthenticatingFetcher {
             };
         });
     }
-    _applyAuthentication({ url: rawUrl, headers, body, form, }) {
-        if (!this._authDef || this._authDef.type === types_1.AuthenticationType.None) {
+    _applyAuthentication({ url: rawUrl, headers, body, form, disableAuthentication, }) {
+        if (!this._authDef || this._authDef.type === types_1.AuthenticationType.None || disableAuthentication) {
             return { url: rawUrl, headers, body, form };
         }
         if (!this._credentials) {
@@ -193,9 +193,26 @@ class DummyBlobStorage {
     }
 }
 exports.DummyBlobStorage = DummyBlobStorage;
+class AuthenticatingBlobStorage {
+    constructor(fetcher) {
+        this._fetcher = fetcher;
+    }
+    storeUrl(url, _opts) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this._fetcher.fetch({ method: 'GET', url });
+            return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${uuid_1.v4()}`;
+        });
+    }
+    storeBlob(_blobData, _contentType, _opts) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${uuid_1.v4()}`;
+        });
+    }
+}
 function newFetcherExecutionContext(packName, authDef, credentialsFile) {
     const allCredentials = auth_1.readCredentialsFile(credentialsFile);
     const credentials = allCredentials === null || allCredentials === void 0 ? void 0 : allCredentials[packName];
+    const fetcher = new AuthenticatingFetcher(authDef, credentials);
     return {
         invocationLocation: {
             protocolAndHost: 'https://coda.io',
@@ -203,8 +220,8 @@ function newFetcherExecutionContext(packName, authDef, credentialsFile) {
         timezone: 'America/Los_Angeles',
         invocationToken: uuid_1.v4(),
         endpoint: credentials === null || credentials === void 0 ? void 0 : credentials.endpointUrl,
-        fetcher: new AuthenticatingFetcher(authDef, credentials),
-        temporaryBlobStorage: new DummyBlobStorage(),
+        fetcher,
+        temporaryBlobStorage: new AuthenticatingBlobStorage(fetcher),
     };
 }
 exports.newFetcherExecutionContext = newFetcherExecutionContext;

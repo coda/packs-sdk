@@ -351,7 +351,12 @@ describe('Auth', () => {
       });
     }
 
-    async function executeFetch(packDef: PackDefinition, url: string, jsonResponse: object) {
+    async function executeFetch(
+      packDef: PackDefinition,
+      url: string,
+      jsonResponse: object,
+      formulaName: string = 'Fake::Fetch',
+    ) {
       mockMakeRequest.returns({
         statusCode: 200,
         body: JSON.stringify(jsonResponse),
@@ -359,7 +364,7 @@ describe('Auth', () => {
           'content-type': 'application/json',
         },
       });
-      return executeFormulaFromPackDef(packDef, 'Fake::Fetch', [url], undefined, undefined, {useRealFetcher: true});
+      return executeFormulaFromPackDef(packDef, formulaName, [url], undefined, undefined, {useRealFetcher: true});
     }
 
     it(`no authentication`, async () => {
@@ -645,6 +650,75 @@ describe('Auth', () => {
       );
 
       sinon.assert.notCalled(mockMakeRequest);
+    });
+
+    it('disableAuthentication forces auth headers not to be applied', async () => {
+      const pack = createFakePack({
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+        },
+        formulas: {
+          Fake: [
+            makeStringFormula({
+              name: 'FetchNoAuth',
+              description: 'Fetch a url without authentication',
+              examples: [],
+              parameters: [makeStringParameter('url', 'An example url to fetch.')],
+              execute: async ([url], context) => {
+                const response = await context.fetcher.fetch({method: 'GET', url, disableAuthentication: true});
+                return response.body.result;
+              },
+            }),
+          ],
+        },
+      });
+
+      setupReadline('some-token');
+      setupAuth(pack);
+
+      await executeFetch(pack, 'https://example.com', {result: 'hello'}, 'Fake::FetchNoAuth');
+
+      sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+        body: undefined,
+        form: undefined,
+        headers: {'User-Agent': 'Coda-Test-Server-Fetcher'},
+        method: 'GET',
+        url: 'https://example.com',
+      });
+    });
+
+    it(`authentication is applied to temporary blob storage`, async () => {
+      const pack = createFakePack({
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+        },
+        formulas: {
+          Fake: [
+            makeStringFormula({
+              name: 'StoreBlob',
+              description: 'Fetch a url without authentication',
+              examples: [],
+              parameters: [makeStringParameter('url', 'An example url to fetch.')],
+              execute: async ([url], context) => {
+                return context.temporaryBlobStorage.storeUrl(url);
+              },
+            }),
+          ],
+        },
+      });
+
+      setupReadline('some-token');
+      setupAuth(pack);
+
+      await executeFetch(pack, 'https://example.com/some-blob.jpg', {result: 'hello'}, 'Fake::StoreBlob');
+
+      sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+        body: undefined,
+        form: undefined,
+        headers: {Authorization: 'Bearer some-token', 'User-Agent': 'Coda-Test-Server-Fetcher'},
+        method: 'GET',
+        url: 'https://example.com/some-blob.jpg',
+      });
     });
 
     describe('OAuth', () => {
