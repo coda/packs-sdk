@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newFetcherSyncExecutionContext = exports.newFetcherExecutionContext = exports.DummyBlobStorage = exports.requestHelper = exports.AuthenticatingFetcher = void 0;
+exports.newFetcherSyncExecutionContext = exports.newFetcherExecutionContext = exports.requestHelper = exports.AuthenticatingFetcher = void 0;
 const types_1 = require("../types");
 const url_1 = require("url");
 const ensure_1 = require("../helpers/ensure");
@@ -180,19 +180,6 @@ exports.requestHelper = {
         return request_promise_native_1.default(Object.assign(Object.assign({}, request), { encoding: request.isBinaryResponse ? null : undefined, resolveWithFullResponse: true, timeout: 60000, forever: true }));
     }),
 };
-class DummyBlobStorage {
-    storeUrl() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return `https://example.com/temporaryBlob/${uuid_1.v4()}`;
-        });
-    }
-    storeBlob() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return `https://example.com/temporaryBlob/${uuid_1.v4()}`;
-        });
-    }
-}
-exports.DummyBlobStorage = DummyBlobStorage;
 class AuthenticatingBlobStorage {
     constructor(fetcher) {
         this._fetcher = fetcher;

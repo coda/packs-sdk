@@ -219,16 +219,6 @@ export const requestHelper = {
   },
 };
 
-export class DummyBlobStorage implements TemporaryBlobStorage {
-  async storeUrl(): Promise<string> {
-    return `https://example.com/temporaryBlob/${v4()}`;
-  }
-
-  async storeBlob(): Promise<string> {
-    return `https://example.com/temporaryBlob/${v4()}`;
-  }
-}
-
 class AuthenticatingBlobStorage implements TemporaryBlobStorage {
   private readonly _fetcher: Fetcher;
 
