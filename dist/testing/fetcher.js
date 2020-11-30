@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newFetcherSyncExecutionContext = exports.newFetcherExecutionContext = exports.DummyBlobStorage = exports.requestHelper = exports.AuthenticatingFetcher = void 0;
+exports.newFetcherSyncExecutionContext = exports.newFetcherExecutionContext = exports.requestHelper = exports.AuthenticatingFetcher = void 0;
 const types_1 = require("../types");
 const url_1 = require("url");
 const ensure_1 = require("../helpers/ensure");
@@ -74,8 +74,8 @@ class AuthenticatingFetcher {
             };
         });
     }
-    _applyAuthentication({ url: rawUrl, headers, body, form, }) {
-        if (!this._authDef || this._authDef.type === types_1.AuthenticationType.None) {
+    _applyAuthentication({ url: rawUrl, headers, body, form, disableAuthentication, }) {
+        if (!this._authDef || this._authDef.type === types_1.AuthenticationType.None || disableAuthentication) {
             return { url: rawUrl, headers, body, form };
         }
         if (!this._credentials) {
@@ -180,22 +180,26 @@ exports.requestHelper = {
         return request_promise_native_1.default(Object.assign(Object.assign({}, request), { encoding: request.isBinaryResponse ? null : undefined, resolveWithFullResponse: true, timeout: 60000, forever: true }));
     }),
 };
-class DummyBlobStorage {
-    storeUrl() {
+class AuthenticatingBlobStorage {
+    constructor(fetcher) {
+        this._fetcher = fetcher;
+    }
+    storeUrl(url, _opts) {
         return __awaiter(this, void 0, void 0, function* () {
-            return `https://example.com/temporaryBlob/${uuid_1.v4()}`;
+            yield this._fetcher.fetch({ method: 'GET', url, isBinaryResponse: true });
+            return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${uuid_1.v4()}`;
         });
     }
-    storeBlob() {
+    storeBlob(_blobData, _contentType, _opts) {
         return __awaiter(this, void 0, void 0, function* () {
-            return `https://example.com/temporaryBlob/${uuid_1.v4()}`;
+            return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${uuid_1.v4()}`;
         });
     }
 }
-exports.DummyBlobStorage = DummyBlobStorage;
 function newFetcherExecutionContext(packName, authDef, credentialsFile) {
     const allCredentials = auth_1.readCredentialsFile(credentialsFile);
     const credentials = allCredentials === null || allCredentials === void 0 ? void 0 : allCredentials[packName];
+    const fetcher = new AuthenticatingFetcher(authDef, credentials);
     return {
         invocationLocation: {
             protocolAndHost: 'https://coda.io',
@@ -203,8 +207,8 @@ function newFetcherExecutionContext(packName, authDef, credentialsFile) {
         timezone: 'America/Los_Angeles',
         invocationToken: uuid_1.v4(),
         endpoint: credentials === null || credentials === void 0 ? void 0 : credentials.endpointUrl,
-        fetcher: new AuthenticatingFetcher(authDef, credentials),
-        temporaryBlobStorage: new DummyBlobStorage(),
+        fetcher,
+        temporaryBlobStorage: new AuthenticatingBlobStorage(fetcher),
     };
 }
 exports.newFetcherExecutionContext = newFetcherExecutionContext;
