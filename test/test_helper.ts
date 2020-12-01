@@ -1,5 +1,3 @@
-import './types';
-
 export const testHelper = {
   /**
    * Asserts that the provided promise is rejected by wrapping it with another and rejecting if it's fulfilled. A
