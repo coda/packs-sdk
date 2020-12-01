@@ -16,6 +16,7 @@
     "url": "https://github.com/kr-project/packs-sdk"
   },
   "dependencies": {
+    "@types/sinon": "^9.0.9",
     "client-oauth2": "^4.3.3",
     "clone": "^2.1.2",
     "express": "4.17.1",
@@ -44,7 +45,6 @@
     "@types/readline-sync": "1.4.3",
     "@types/request": "^2.48.5",
     "@types/request-promise-native": "^1.0.17",
-    "@types/sinon": "^9.0.9",
     "@types/string-template": "^1.0.2",
     "@types/url-parse": "^1.4.3",
     "@types/uuid": "^8.3.0",
