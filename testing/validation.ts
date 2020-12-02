@@ -1,5 +1,8 @@
 import type {ArraySchema} from '../schema';
+import type {GenericObjectSchema} from '../schema';
+import type {NumberHintTypes} from '../schema';
 import type {NumberSchema} from '../schema';
+import type {ObjectHintTypes} from '../schema';
 import type {ObjectPackFormulaMetadata} from '../api';
 import type {ObjectSchemaProperty} from '../schema';
 import type {ParamDefs} from '../api_types';
@@ -10,6 +13,7 @@ import {ResultValidationException} from './types';
 import type {ScaleSchema} from '../schema';
 import type {Schema} from '../schema';
 import type {SliderSchema} from '../schema';
+import type {StringHintTypes} from '../schema';
 import type {StringSchema} from '../schema';
 import {Type} from '../api_types';
 import type {TypedPackFormula} from '../api';
@@ -20,6 +24,7 @@ import {ensureExists} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
 import {isDefined} from '../helpers/object_utils';
+import {isEmail} from '../helpers/string';
 import {isObject} from '../schema';
 import {isObjectPackFormula} from '../api';
 
@@ -194,19 +199,21 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
       }
     }
     case ValueType.Array:
-      // TODO: handle array
       return validateArray(result, schema, {propertyKey: validationContext?.propertyKey});
     case ValueType.Object: {
-      // TODO: handle nested object validation.
       const resultValidationError = checkType(typeof result === 'object', 'object', result);
       if (resultValidationError) {
         return errors;
       }
       switch (schema.codaType) {
         case ValueType.Person:
+          const personErrorMessage = tryParsePerson(result);
+          return personErrorMessage ? [personErrorMessage] : [];
         case ValueType.Reference:
-        // TODO: fill these in after adding in type defs for persons and references.
+          const referenceErrorMessage = tryParseReference(result);
+          return referenceErrorMessage ?? [];
         case undefined:
+          // TODO: handle nested object validation.
           // no need to coerce current result type
           return [];
         default:
@@ -265,6 +272,36 @@ function tryParseScale(result: unknown, schema: NumberSchema) {
   }
 }
 
+function tryParsePerson(result: any) {
+  const resultMissingIdError = checkFieldIsPresent(result, 'id', ValueType.Person);
+  if (resultMissingIdError) {
+    return resultMissingIdError;
+  }
+
+  if (!isEmail(result.id as string)) {
+    return {message: `The person id must be an email string, but got "${result.id}".`};
+  }
+}
+
+function tryParseReference(result: any) {
+  const missingFieldErrors = [
+    checkFieldIsPresent(result, 'objectId', ValueType.Reference),
+    checkFieldIsPresent(result, 'identifier', ValueType.Reference),
+    checkFieldIsPresent(result, 'name', ValueType.Reference),
+  ];
+  return missingFieldErrors.filter(error => error !== undefined) as ResultValidationError[];
+}
+
+function checkFieldIsPresent(
+  result: any,
+  field: string,
+  codaType: NumberHintTypes | StringHintTypes | ObjectHintTypes,
+) {
+  if (!(field in result) || !result[field]) {
+    return {message: `Codatype ${codaType} must have a non-null ${field} field.`};
+  }
+}
+
 function checkType<ResultT extends any>(
   typeMatches: boolean,
   expectedResultTypeName: string,
@@ -297,6 +334,17 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
     const error: ResultValidationError = {message: `Expected an object schema, but found ${JSON.stringify(schema)}.`};
     throw ResultValidationException.fromErrors(formula.name, [error]);
   }
+  const errors = validateObject(result, schema);
+
+  if (errors.length) {
+    throw ResultValidationException.fromErrors(formula.name, errors);
+  }
+}
+
+function validateObject<ResultT extends Record<string, unknown>>(
+  result: ResultT,
+  schema: GenericObjectSchema,
+): ResultValidationError[] {
   const errors: ResultValidationError[] = [];
 
   for (const [propertyKey, propertySchema] of Object.entries(schema.properties)) {
@@ -317,10 +365,7 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
       message: `Schema declares "${schema.id}" as an id property but an empty value was found in result.`,
     });
   }
-
-  if (errors.length) {
-    throw ResultValidationException.fromErrors(formula.name, errors);
-  }
+  return errors;
 }
 
 function validateArray<ResultT extends any>(
