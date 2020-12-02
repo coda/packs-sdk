@@ -170,10 +170,10 @@ function checkPropertyTypeAndCodaType(schema, result, validationContext) {
             }
             switch (schema.codaType) {
                 case schema_1.ValueType.Person:
-                    const personErrorMessage = tryParsePerson(result);
+                    const personErrorMessage = tryParsePerson(result, schema);
                     return personErrorMessage ? [personErrorMessage] : [];
                 case schema_1.ValueType.Reference:
-                    const referenceErrorMessages = tryParseReference(result);
+                    const referenceErrorMessages = tryParseReference(result, schema);
                     return referenceErrorMessages !== null && referenceErrorMessages !== void 0 ? referenceErrorMessages : [];
                 case undefined:
                     // TODO: handle nested object validation.
@@ -230,26 +230,37 @@ function tryParseScale(result, schema) {
         return { message: `Scale value ${result} is greater than the specified maximum value of ${maximum}.` };
     }
 }
-function tryParsePerson(result) {
-    const resultMissingIdError = checkFieldIsPresent(result, 'id', schema_1.ValueType.Person);
+function tryParsePerson(result, schema) {
+    const { id } = schema;
+    if (!id) {
+        return { message: `Missing "id" field in schema.` };
+    }
+    const resultMissingIdError = checkFieldIsPresent(result, id, schema_1.ValueType.Person);
     if (resultMissingIdError) {
         return resultMissingIdError;
     }
-    if (!string_1.isEmail(result.id)) {
-        return { message: `The person id must be an email string, but got "${result.id}".` };
+    if (!string_1.isEmail(result[id])) {
+        return { message: `The id field for the person result must be an email string, but got "${result[id]}".` };
     }
 }
-function tryParseReference(result) {
-    const missingFieldErrors = [
-        checkFieldIsPresent(result, 'objectId', schema_1.ValueType.Reference),
-        checkFieldIsPresent(result, 'identifier', schema_1.ValueType.Reference),
-        checkFieldIsPresent(result, 'name', schema_1.ValueType.Reference),
-    ];
-    return missingFieldErrors.filter(error => error !== undefined);
+function tryParseReference(_result, _schema) {
+    // TODO: @alan-fang figure out references
+    // const {id} = schema;
+    // if (!id) {
+    //   return [{message: `Missing "id" field in schema.`}];
+    // }
+    // const reference = result[id];
+    // const missingFieldErrors = [
+    //   checkFieldIsPresent(reference, 'objectId', ValueType.Reference),
+    //   checkFieldIsPresent(reference, 'identifier', ValueType.Reference),
+    //   checkFieldIsPresent(reference, 'name', ValueType.Reference),
+    // ];
+    // return missingFieldErrors.filter(error => error !== undefined) as ResultValidationError[];
+    return [];
 }
 function checkFieldIsPresent(result, field, codaType) {
     if (!(field in result) || !result[field]) {
-        return { message: `Codatype ${codaType} is missing required field ${field}.` };
+        return { message: `Codatype ${codaType} is missing required field "${field}".` };
     }
 }
 function checkType(typeMatches, expectedResultTypeName, result) {
