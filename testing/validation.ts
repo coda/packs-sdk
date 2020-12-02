@@ -298,7 +298,7 @@ function checkFieldIsPresent(
   codaType: NumberHintTypes | StringHintTypes | ObjectHintTypes,
 ) {
   if (!(field in result) || !result[field]) {
-    return {message: `Codatype ${codaType} must have a non-null ${field} field.`};
+    return {message: `Codatype ${codaType} is missing required field ${field}.`};
   }
 }
 

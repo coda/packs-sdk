@@ -228,7 +228,7 @@ describe('Property validation in objects', () => {
   it('rejects person with no id field', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::GetPerson', ['test@coda.io', true]),
-      /The following errors were found when validating the result of the formula "GetPerson":\nCodatype person must have a non-null id field./,
+      /The following errors were found when validating the result of the formula "GetPerson":\nCodatype person is missing required field id./,
     );
   });
 
@@ -246,7 +246,7 @@ describe('Property validation in objects', () => {
   it('rejects reference with missing required fields', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::GetReference', [['objectId', 'name']]),
-      /The following errors were found when validating the result of the formula "GetReference":\nCodatype reference must have a non-null objectId field.\nCodatype reference must have a non-null name field./,
+      /The following errors were found when validating the result of the formula "GetReference":\nCodatype reference is missing required field objectId.\nCodatype reference is missing required field name./,
     );
   });
 
