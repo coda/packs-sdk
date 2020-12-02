@@ -173,8 +173,8 @@ function checkPropertyTypeAndCodaType(schema, result, validationContext) {
                     const personErrorMessage = tryParsePerson(result);
                     return personErrorMessage ? [personErrorMessage] : [];
                 case schema_1.ValueType.Reference:
-                    const referenceErrorMessage = tryParseReference(result);
-                    return referenceErrorMessage !== null && referenceErrorMessage !== void 0 ? referenceErrorMessage : [];
+                    const referenceErrorMessages = tryParseReference(result);
+                    return referenceErrorMessages !== null && referenceErrorMessages !== void 0 ? referenceErrorMessages : [];
                 case undefined:
                     // TODO: handle nested object validation.
                     // no need to coerce current result type

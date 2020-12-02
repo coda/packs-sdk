@@ -210,8 +210,8 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
           const personErrorMessage = tryParsePerson(result);
           return personErrorMessage ? [personErrorMessage] : [];
         case ValueType.Reference:
-          const referenceErrorMessage = tryParseReference(result);
-          return referenceErrorMessage ?? [];
+          const referenceErrorMessages = tryParseReference(result);
+          return referenceErrorMessages ?? [];
         case undefined:
           // TODO: handle nested object validation.
           // no need to coerce current result type
