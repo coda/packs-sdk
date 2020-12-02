@@ -32,8 +32,27 @@ describe('Property validation in objects', () => {
         maximum: 5,
       },
       names: {type: ValueType.Array, items: {type: ValueType.String} as StringSchema},
-      person: {type: ValueType.Object, codaType: ValueType.Person, properties: {}},
-      reference: {type: ValueType.Object, codaType: ValueType.Reference, properties: {}},
+      person: {
+        type: ValueType.Object,
+        codaType: ValueType.Person,
+        id: 'email',
+        properties: {email: {type: ValueType.String}},
+      },
+      ref: {
+        type: ValueType.Object,
+        codaType: ValueType.Reference,
+        id: 'reference',
+        properties: {
+          reference: {
+            type: ValueType.Object,
+            properties: {
+              objectId: {type: ValueType.String},
+              identifier: {type: ValueType.String},
+              name: {type: ValueType.String},
+            },
+          },
+        },
+      },
     },
     identity: {packId: FakePack.id, name: 'Events'},
   });
@@ -112,44 +131,37 @@ describe('Property validation in objects', () => {
       makeBooleanParameter('returnMalformed', 'whether or not to return a malformed response'),
     ],
     execute: async ([email, malformed]) => {
-      return malformed ? {person: {emailAddress: email}} : {person: {id: email}};
+      return malformed ? {person: {emailAddress: email}} : {person: {email}};
     },
     response: {
       schema: fakeSchema,
     },
   });
 
-  const referenceFormula = makeObjectFormula({
-    name: 'GetReference',
-    description: 'Returns a (possibly busted) reference.',
-    examples: [],
-    parameters: [makeStringArrayParameter('omittedFields', 'Fields to omit')],
-    execute: async ([omittedFields]) => {
-      const referenceValue = {objectId: 'codaObject', name: 'name', identifier: 'identifier'};
-      let field: keyof typeof referenceValue;
-      for (field in referenceValue) {
-        if (omittedFields.includes(field)) {
-          delete referenceValue[field];
-        }
-      }
-      return {reference: referenceValue};
-    },
-    response: {
-      schema: fakeSchema,
-    },
-  });
+  // TODO: @alan-fang figure out referenceFormulas.
+  // const referenceFormula = makeObjectFormula({
+  //   name: 'GetReference',
+  //   description: 'Returns a (possibly busted) reference.',
+  //   examples: [],
+  //   parameters: [makeStringArrayParameter('omittedFields', 'Fields to omit')],
+  //   execute: async ([omittedFields]) => {
+  //     const referenceValue = {objectId: 'codaObject', name: 'name', identifier: 'identifier'};
+  //     let field: keyof typeof referenceValue;
+  //     for (field in referenceValue) {
+  //       if (omittedFields.includes(field)) {
+  //         delete referenceValue[field];
+  //       }
+  //     }
+  //     return {ref: {reference: referenceValue}};
+  //   },
+  //   response: {
+  //     schema: fakeSchema,
+  //   },
+  // });
 
   const fakePack = createFakePack({
     formulas: {
-      Fake: [
-        fakeDateFormula,
-        fakeSliderFormula,
-        fakeScaleFormula,
-        fakeUrlFormula,
-        fakeArrayFormula,
-        fakePeopleFormula,
-        referenceFormula,
-      ],
+      Fake: [fakeDateFormula, fakeSliderFormula, fakeScaleFormula, fakeUrlFormula, fakeArrayFormula, fakePeopleFormula],
     },
   });
 
@@ -228,14 +240,14 @@ describe('Property validation in objects', () => {
   it('rejects person with no id field', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::GetPerson', ['test@coda.io', true]),
-      /The following errors were found when validating the result of the formula "GetPerson":\nCodatype person is missing required field id./,
+      /The following errors were found when validating the result of the formula "GetPerson":\nCodatype person is missing required field "Email"./,
     );
   });
 
   it('rejects person with non-email id', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::GetPerson', ['notanemail', false]),
-      /The following errors were found when validating the result of the formula "GetPerson":\nThe person id must be an email string, but got "notanemail"./,
+      /The following errors were found when validating the result of the formula "GetPerson":\nThe id field for the person result must be an email string, but got "notanemail"./,
     );
   });
 
@@ -243,16 +255,18 @@ describe('Property validation in objects', () => {
     await executeFormulaFromPackDef(fakePack, 'Fake::GetPerson', ['test@coda.io', false]);
   });
 
-  it('rejects reference with missing required fields', async () => {
-    await testHelper.willBeRejectedWith(
-      executeFormulaFromPackDef(fakePack, 'Fake::GetReference', [['objectId', 'name']]),
-      /The following errors were found when validating the result of the formula "GetReference":\nCodatype reference is missing required field objectId.\nCodatype reference is missing required field name./,
-    );
-  });
+  // it('rejects reference with missing required fields', async () => {
+  //   await testHelper.willBeRejectedWith(
+  //     executeFormulaFromPackDef(fakePack, 'Fake::GetReference', [['objectId', 'name']]),
+  //     /The following errors were found when validating the result of the formula "GetReference":\n
+  //     Codatype reference is missing required field "objectId".\n
+  //     Codatype reference is missing required field "name"./,
+  //   );
+  // });
 
-  it('validates correct reference', async () => {
-    await executeFormulaFromPackDef(fakePack, 'Fake::GetReference', [[]]); // no required fields have been omitted
-  });
+  // it('validates correct reference', async () => {
+  //   await executeFormulaFromPackDef(fakePack, 'Fake::GetReference', [[]]); // no required fields have been omitted
+  // });
 
   it('validates string array', async () => {
     await executeFormulaFromPackDef(fakePack, 'Fake::GetNames', [['Jack', 'Jill', 'Hill']]);
