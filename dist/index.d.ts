@@ -94,6 +94,8 @@ export { makeImageParameter } from './api';
 export { makeImageArrayParameter } from './api';
 export { makeStringParameter } from './api';
 export { makeStringArrayParameter } from './api';
+export { getQueryParams } from './helpers/url';
+export { join as joinUrl } from './helpers/url';
 export { withQueryParams } from './helpers/url';
 export { assertCondition } from './helpers/ensure';
 export { ensureExists } from './helpers/ensure';

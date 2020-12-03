@@ -108,6 +108,8 @@ export {makeStringParameter} from './api';
 export {makeStringArrayParameter} from './api';
 
 // Execution helpers.
+export {getQueryParams} from './helpers/url';
+export {join as joinUrl} from './helpers/url';
 export {withQueryParams} from './helpers/url';
 
 // General Utilities
