@@ -10,6 +10,7 @@ const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
 const schema_2 = require("../schema");
 const object_utils_1 = require("../helpers/object_utils");
+const string_1 = require("../helpers/string");
 const schema_3 = require("../schema");
 const api_1 = require("../api");
 // TODO: Handle varargs.
@@ -161,19 +162,21 @@ function checkPropertyTypeAndCodaType(schema, result, validationContext) {
             }
         }
         case schema_1.ValueType.Array:
-            // TODO: handle array
             return validateArray(result, schema, { propertyKey: validationContext === null || validationContext === void 0 ? void 0 : validationContext.propertyKey });
         case schema_1.ValueType.Object: {
-            // TODO: handle nested object validation.
             const resultValidationError = checkType(typeof result === 'object', 'object', result);
             if (resultValidationError) {
                 return errors;
             }
             switch (schema.codaType) {
                 case schema_1.ValueType.Person:
+                    const personErrorMessage = tryParsePerson(result, schema);
+                    return personErrorMessage ? [personErrorMessage] : [];
                 case schema_1.ValueType.Reference:
-                // TODO: fill these in after adding in type defs for persons and references.
+                    const referenceErrorMessages = tryParseReference(result, schema);
+                    return referenceErrorMessages !== null && referenceErrorMessages !== void 0 ? referenceErrorMessages : [];
                 case undefined:
+                    // TODO: handle nested object validation.
                     // no need to coerce current result type
                     return [];
                 default:
@@ -227,6 +230,28 @@ function tryParseScale(result, schema) {
         return { message: `Scale value ${result} is greater than the specified maximum value of ${maximum}.` };
     }
 }
+function tryParsePerson(result, schema) {
+    const { id } = schema;
+    if (!id) {
+        return { message: `Missing "id" field in schema.` };
+    }
+    const resultMissingIdError = checkFieldIsPresent(result, id, schema_1.ValueType.Person);
+    if (resultMissingIdError) {
+        return resultMissingIdError;
+    }
+    if (!string_1.isEmail(result[id])) {
+        return { message: `The id field for the person result must be an email string, but got "${result[id]}".` };
+    }
+}
+function tryParseReference(_result, _schema) {
+    // TODO: @alan-fang figure out references
+    return [];
+}
+function checkFieldIsPresent(result, field, codaType) {
+    if (!(field in result) || !result[field]) {
+        return { message: `Codatype ${codaType} is missing required field "${field}".` };
+    }
+}
 function checkType(typeMatches, expectedResultTypeName, result) {
     if (!typeMatches) {
         const resultValue = typeof result === 'string' ? `"${result}"` : result;
@@ -249,6 +274,12 @@ function validateObjectResult(formula, result) {
         const error = { message: `Expected an object schema, but found ${JSON.stringify(schema)}.` };
         throw types_2.ResultValidationException.fromErrors(formula.name, [error]);
     }
+    const errors = validateObject(result, schema);
+    if (errors.length) {
+        throw types_2.ResultValidationException.fromErrors(formula.name, errors);
+    }
+}
+function validateObject(result, schema) {
     const errors = [];
     for (const [propertyKey, propertySchema] of Object.entries(schema.properties)) {
         const value = result[propertyKey];
@@ -267,9 +298,7 @@ function validateObjectResult(formula, result) {
             message: `Schema declares "${schema.id}" as an id property but an empty value was found in result.`,
         });
     }
-    if (errors.length) {
-        throw types_2.ResultValidationException.fromErrors(formula.name, errors);
-    }
+    return errors;
 }
 function validateArray(result, schema, context) {
     if (!Array.isArray(result)) {

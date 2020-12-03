@@ -4,6 +4,7 @@ import type {StringSchema} from '../schema';
 import {ValueType} from '../schema';
 import {createFakePack} from './test_utils';
 import {executeFormulaFromPackDef} from '../testing/execution';
+import {makeBooleanParameter} from '../api';
 import {makeNumericParameter} from '../api';
 import {makeObjectFormula} from '../api';
 import {makeObjectSchema} from '../schema';
@@ -31,6 +32,27 @@ describe('Property validation in objects', () => {
         maximum: 5,
       },
       names: {type: ValueType.Array, items: {type: ValueType.String} as StringSchema},
+      person: {
+        type: ValueType.Object,
+        codaType: ValueType.Person,
+        id: 'email',
+        properties: {email: {type: ValueType.String}},
+      },
+      ref: {
+        type: ValueType.Object,
+        codaType: ValueType.Reference,
+        id: 'reference',
+        properties: {
+          reference: {
+            type: ValueType.Object,
+            properties: {
+              objectId: {type: ValueType.String},
+              identifier: {type: ValueType.String},
+              name: {type: ValueType.String},
+            },
+          },
+        },
+      },
     },
     identity: {packId: FakePack.id, name: 'Events'},
   });
@@ -100,8 +122,26 @@ describe('Property validation in objects', () => {
     },
   });
 
+  const fakePeopleFormula = makeObjectFormula({
+    name: 'GetPerson',
+    description: 'Returns the person you passed in.',
+    examples: [],
+    parameters: [
+      makeStringParameter('email', 'Pass in a string'),
+      makeBooleanParameter('returnMalformed', 'whether or not to return a malformed response'),
+    ],
+    execute: async ([email, malformed]) => {
+      return malformed ? {person: {emailAddress: email}} : {person: {email}};
+    },
+    response: {
+      schema: fakeSchema,
+    },
+  });
+
   const fakePack = createFakePack({
-    formulas: {Fake: [fakeDateFormula, fakeSliderFormula, fakeScaleFormula, fakeUrlFormula, fakeArrayFormula]},
+    formulas: {
+      Fake: [fakeDateFormula, fakeSliderFormula, fakeScaleFormula, fakeUrlFormula, fakeArrayFormula, fakePeopleFormula],
+    },
   });
 
   it('validates correct date string', async () => {
@@ -174,6 +214,24 @@ describe('Property validation in objects', () => {
       executeFormulaFromPackDef(fakePack, 'Fake::Url', ['jasiofjsdofjiaof']),
       /The following errors were found when validating the result of the formula "Url":\nProperty with codaType "url" must be a valid HTTP\(S\) url, but got "jasiofjsdofjiaof"./,
     );
+  });
+
+  it('rejects person with no id field', async () => {
+    await testHelper.willBeRejectedWith(
+      executeFormulaFromPackDef(fakePack, 'Fake::GetPerson', ['test@coda.io', true]),
+      /The following errors were found when validating the result of the formula "GetPerson":\nCodatype person is missing required field "Email"./,
+    );
+  });
+
+  it('rejects person with non-email id', async () => {
+    await testHelper.willBeRejectedWith(
+      executeFormulaFromPackDef(fakePack, 'Fake::GetPerson', ['notanemail', false]),
+      /The following errors were found when validating the result of the formula "GetPerson":\nThe id field for the person result must be an email string, but got "notanemail"./,
+    );
+  });
+
+  it('validates correct person reference', async () => {
+    await executeFormulaFromPackDef(fakePack, 'Fake::GetPerson', ['test@coda.io', false]);
   });
 
   it('validates string array', async () => {
