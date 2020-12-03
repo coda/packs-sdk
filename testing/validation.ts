@@ -290,17 +290,6 @@ function tryParsePerson(result: any, schema: GenericObjectSchema) {
 
 function tryParseReference(_result: any, _schema: GenericObjectSchema): ResultValidationError[] {
   // TODO: @alan-fang figure out references
-  // const {id} = schema;
-  // if (!id) {
-  //   return [{message: `Missing "id" field in schema.`}];
-  // }
-  // const reference = result[id];
-  // const missingFieldErrors = [
-  //   checkFieldIsPresent(reference, 'objectId', ValueType.Reference),
-  //   checkFieldIsPresent(reference, 'identifier', ValueType.Reference),
-  //   checkFieldIsPresent(reference, 'name', ValueType.Reference),
-  // ];
-  // return missingFieldErrors.filter(error => error !== undefined) as ResultValidationError[];
   return [];
 }
 

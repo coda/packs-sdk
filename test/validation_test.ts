@@ -138,27 +138,6 @@ describe('Property validation in objects', () => {
     },
   });
 
-  // TODO: @alan-fang figure out referenceFormulas.
-  // const referenceFormula = makeObjectFormula({
-  //   name: 'GetReference',
-  //   description: 'Returns a (possibly busted) reference.',
-  //   examples: [],
-  //   parameters: [makeStringArrayParameter('omittedFields', 'Fields to omit')],
-  //   execute: async ([omittedFields]) => {
-  //     const referenceValue = {objectId: 'codaObject', name: 'name', identifier: 'identifier'};
-  //     let field: keyof typeof referenceValue;
-  //     for (field in referenceValue) {
-  //       if (omittedFields.includes(field)) {
-  //         delete referenceValue[field];
-  //       }
-  //     }
-  //     return {ref: {reference: referenceValue}};
-  //   },
-  //   response: {
-  //     schema: fakeSchema,
-  //   },
-  // });
-
   const fakePack = createFakePack({
     formulas: {
       Fake: [fakeDateFormula, fakeSliderFormula, fakeScaleFormula, fakeUrlFormula, fakeArrayFormula, fakePeopleFormula],
@@ -254,19 +233,6 @@ describe('Property validation in objects', () => {
   it('validates correct person reference', async () => {
     await executeFormulaFromPackDef(fakePack, 'Fake::GetPerson', ['test@coda.io', false]);
   });
-
-  // it('rejects reference with missing required fields', async () => {
-  //   await testHelper.willBeRejectedWith(
-  //     executeFormulaFromPackDef(fakePack, 'Fake::GetReference', [['objectId', 'name']]),
-  //     /The following errors were found when validating the result of the formula "GetReference":\n
-  //     Codatype reference is missing required field "objectId".\n
-  //     Codatype reference is missing required field "name"./,
-  //   );
-  // });
-
-  // it('validates correct reference', async () => {
-  //   await executeFormulaFromPackDef(fakePack, 'Fake::GetReference', [[]]); // no required fields have been omitted
-  // });
 
   it('validates string array', async () => {
     await executeFormulaFromPackDef(fakePack, 'Fake::GetNames', [['Jack', 'Jill', 'Hill']]);
