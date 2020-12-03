@@ -17,6 +17,7 @@ describe('Property validation in objects', () => {
     primary: 'date',
     id: 'date',
     properties: {
+      bool: {type: ValueType.Boolean},
       date: {type: ValueType.String, codaType: ValueType.Date},
       url: {type: ValueType.String, codaType: ValueType.Url},
       slider: {
@@ -55,6 +56,19 @@ describe('Property validation in objects', () => {
       },
     },
     identity: {packId: FakePack.id, name: 'Events'},
+  });
+
+  const fakeBooleanFormula = makeObjectFormula({
+    name: 'Boolean',
+    description: 'Returns the boolean you passed in.',
+    examples: [],
+    parameters: [makeBooleanParameter('boolParam', 'Pass in a boolean (malformed is ok)')],
+    execute: async ([boolParam]) => {
+      return {bool: boolParam};
+    },
+    response: {
+      schema: fakeSchema,
+    },
   });
 
   const fakeDateFormula = makeObjectFormula({
@@ -140,8 +154,20 @@ describe('Property validation in objects', () => {
 
   const fakePack = createFakePack({
     formulas: {
-      Fake: [fakeDateFormula, fakeSliderFormula, fakeScaleFormula, fakeUrlFormula, fakeArrayFormula, fakePeopleFormula],
+      Fake: [
+        fakeBooleanFormula,
+        fakeDateFormula,
+        fakeSliderFormula,
+        fakeScaleFormula,
+        fakeUrlFormula,
+        fakeArrayFormula,
+        fakePeopleFormula,
+      ],
     },
+  });
+
+  it('validates boolean', async () => {
+    await executeFormulaFromPackDef(fakePack, 'Fake::Boolean', [true]);
   });
 
   it('validates correct date string', async () => {
