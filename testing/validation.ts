@@ -137,9 +137,7 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
   switch (schema.type) {
     case ValueType.Boolean: {
       const resultValidationError = checkType(typeof result === 'boolean', 'boolean', result);
-      if (resultValidationError) {
-        return errors;
-      }
+      return resultValidationError ? errors : [];
     }
     case ValueType.Number: {
       const resultValidationError = checkType(typeof result === 'number', 'number', result);

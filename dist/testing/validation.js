@@ -100,9 +100,7 @@ function checkPropertyTypeAndCodaType(schema, result, validationContext) {
     switch (schema.type) {
         case schema_1.ValueType.Boolean: {
             const resultValidationError = checkType(typeof result === 'boolean', 'boolean', result);
-            if (resultValidationError) {
-                return errors;
-            }
+            return resultValidationError ? errors : [];
         }
         case schema_1.ValueType.Number: {
             const resultValidationError = checkType(typeof result === 'number', 'number', result);
