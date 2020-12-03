@@ -95,10 +95,6 @@ export function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDy
   return 'isDynamic' in syncTable;
 }
 
-// NOTE[roger] remove once not needed.
-export const PARAM_DESCRIPTION_DOES_NOT_EXIST =
-  'NO PARAMETER DESCRIPTION HAS BEEN ADDED. For guidance, see https://coda.link/param-docs';
-
 export function makeStringParameter(
   name: string,
   description: string,

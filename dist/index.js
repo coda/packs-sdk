@@ -19,8 +19,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FakeBggPackId = exports.FakeBggProviderId = exports.fakeDefinitionToMetadata = exports.transformBody = exports.makeSchema = exports.makeObjectSchema = exports.ValueType = exports.schema = exports.withQueryParams = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeStringFormula = exports.makeObjectFormula = exports.makeNumericFormula = exports.makeGetConnectionNameFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makeMetadataFormula = exports.makeUserVisibleError = exports.isUserVisibleError = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.isDynamicSyncTable = exports.isArrayType = exports.UserVisibleError = exports.Type = exports.StatusCodeError = exports.PrecannedDateRange = exports.SyncInterval = exports.QuotaLimitType = exports.PackCategory = exports.DefaultConnectionType = exports.FeatureSet = exports.AuthenticationType = void 0;
-exports.FakeNpmDefinition = exports.FakeNpmMetadata = exports.FakeNpmPackVersion = exports.FakeNpmPackId = exports.FakeNpmProviderId = exports.FakeBggDefinitionOld = exports.FakeBggDefinition = exports.FakeBggMetadataOld = exports.FakeBggMetadata = exports.FakeBggPackVersionOld = exports.FakeBggPackVersion = void 0;
+exports.CurrencyFormat = exports.schema = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeStringFormula = exports.makeObjectFormula = exports.makeNumericFormula = exports.makeGetConnectionNameFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makeMetadataFormula = exports.makeUserVisibleError = exports.isUserVisibleError = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.isDynamicSyncTable = exports.isArrayType = exports.UserVisibleError = exports.Type = exports.StatusCodeError = exports.PrecannedDateRange = exports.SyncInterval = exports.QuotaLimitType = exports.PackCategory = exports.DefaultConnectionType = exports.FeatureSet = exports.AuthenticationType = void 0;
+exports.FakeNpmDefinition = exports.FakeNpmMetadata = exports.FakeNpmPackVersion = exports.FakeNpmPackId = exports.FakeNpmProviderId = exports.FakeBggDefinitionOld = exports.FakeBggDefinition = exports.FakeBggMetadataOld = exports.FakeBggMetadata = exports.FakeBggPackVersionOld = exports.FakeBggPackVersion = exports.FakeBggPackId = exports.FakeBggProviderId = exports.fakeDefinitionToMetadata = exports.transformBody = exports.makeSchema = exports.makeObjectSchema = exports.ValueType = exports.DurationUnit = void 0;
 var types_1 = require("./types");
 Object.defineProperty(exports, "AuthenticationType", { enumerable: true, get: function () { return types_1.AuthenticationType; } });
 var types_2 = require("./types");
@@ -106,16 +106,33 @@ var api_32 = require("./api");
 Object.defineProperty(exports, "makeStringArrayParameter", { enumerable: true, get: function () { return api_32.makeStringArrayParameter; } });
 // Execution helpers.
 var url_1 = require("./helpers/url");
-Object.defineProperty(exports, "withQueryParams", { enumerable: true, get: function () { return url_1.withQueryParams; } });
+Object.defineProperty(exports, "getQueryParams", { enumerable: true, get: function () { return url_1.getQueryParams; } });
+var url_2 = require("./helpers/url");
+Object.defineProperty(exports, "joinUrl", { enumerable: true, get: function () { return url_2.join; } });
+var url_3 = require("./helpers/url");
+Object.defineProperty(exports, "withQueryParams", { enumerable: true, get: function () { return url_3.withQueryParams; } });
+// General Utilities
+var ensure_1 = require("./helpers/ensure");
+Object.defineProperty(exports, "assertCondition", { enumerable: true, get: function () { return ensure_1.assertCondition; } });
+var ensure_2 = require("./helpers/ensure");
+Object.defineProperty(exports, "ensureExists", { enumerable: true, get: function () { return ensure_2.ensureExists; } });
+var ensure_3 = require("./helpers/ensure");
+Object.defineProperty(exports, "ensureNonEmptyString", { enumerable: true, get: function () { return ensure_3.ensureNonEmptyString; } });
+var ensure_4 = require("./helpers/ensure");
+Object.defineProperty(exports, "ensureUnreachable", { enumerable: true, get: function () { return ensure_4.ensureUnreachable; } });
 // Object Schemas
 const schema = __importStar(require("./schema"));
 exports.schema = schema;
 var schema_1 = require("./schema");
-Object.defineProperty(exports, "ValueType", { enumerable: true, get: function () { return schema_1.ValueType; } });
+Object.defineProperty(exports, "CurrencyFormat", { enumerable: true, get: function () { return schema_1.CurrencyFormat; } });
 var schema_2 = require("./schema");
-Object.defineProperty(exports, "makeObjectSchema", { enumerable: true, get: function () { return schema_2.makeObjectSchema; } });
+Object.defineProperty(exports, "DurationUnit", { enumerable: true, get: function () { return schema_2.DurationUnit; } });
 var schema_3 = require("./schema");
-Object.defineProperty(exports, "makeSchema", { enumerable: true, get: function () { return schema_3.makeSchema; } });
+Object.defineProperty(exports, "ValueType", { enumerable: true, get: function () { return schema_3.ValueType; } });
+var schema_4 = require("./schema");
+Object.defineProperty(exports, "makeObjectSchema", { enumerable: true, get: function () { return schema_4.makeObjectSchema; } });
+var schema_5 = require("./schema");
+Object.defineProperty(exports, "makeSchema", { enumerable: true, get: function () { return schema_5.makeSchema; } });
 // Pack response helpers
 var handler_templates_1 = require("./handler_templates");
 Object.defineProperty(exports, "transformBody", { enumerable: true, get: function () { return handler_templates_1.transformBody; } });
