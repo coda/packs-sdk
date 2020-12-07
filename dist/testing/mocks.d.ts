@@ -14,8 +14,8 @@ export interface MockExecutionContext extends ExecutionContext {
 export interface MockSyncExecutionContext extends MockExecutionContext {
     readonly sync: Sync;
 }
-export declare function newMockSyncExecutionContext(): MockSyncExecutionContext;
-export declare function newMockExecutionContext(): MockExecutionContext;
+export declare function newMockSyncExecutionContext(endpoint?: string): MockSyncExecutionContext;
+export declare function newMockExecutionContext(endpoint?: string): MockExecutionContext;
 export declare function newJsonFetchResponse<T>(body: T, status?: number, headers?: {
     [header: string]: string | string[] | undefined;
 }): FetchResponse<T>;

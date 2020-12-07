@@ -6,11 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.newJsonFetchResponse = exports.newMockExecutionContext = exports.newMockSyncExecutionContext = void 0;
 const sinon_1 = __importDefault(require("sinon"));
 const uuid_1 = require("uuid");
-function newMockSyncExecutionContext() {
-    return Object.assign(Object.assign({}, newMockExecutionContext()), { sync: {} });
+function newMockSyncExecutionContext(endpoint) {
+    return Object.assign(Object.assign({}, newMockExecutionContext(endpoint)), { sync: {} });
 }
 exports.newMockSyncExecutionContext = newMockSyncExecutionContext;
-function newMockExecutionContext() {
+function newMockExecutionContext(endpoint) {
     return {
         invocationLocation: {
             protocolAndHost: 'https://coda.io',
@@ -24,6 +24,7 @@ function newMockExecutionContext() {
             storeUrl: sinon_1.default.stub(),
             storeBlob: sinon_1.default.stub(),
         },
+        endpoint,
     };
 }
 exports.newMockExecutionContext = newMockExecutionContext;
