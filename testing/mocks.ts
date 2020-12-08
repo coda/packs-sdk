@@ -18,11 +18,11 @@ export interface MockSyncExecutionContext extends MockExecutionContext {
   readonly sync: Sync;
 }
 
-export function newMockSyncExecutionContext(): MockSyncExecutionContext {
-  return {...newMockExecutionContext(), sync: {}};
+export function newMockSyncExecutionContext(overrides?: Partial<MockSyncExecutionContext>): MockSyncExecutionContext {
+  return {...newMockExecutionContext(), sync: {}, ...overrides};
 }
 
-export function newMockExecutionContext(): MockExecutionContext {
+export function newMockExecutionContext(overrides?: Partial<MockExecutionContext>): MockExecutionContext {
   return {
     invocationLocation: {
       protocolAndHost: 'https://coda.io',
@@ -36,6 +36,7 @@ export function newMockExecutionContext(): MockExecutionContext {
       storeUrl: sinon.stub(),
       storeBlob: sinon.stub(),
     },
+    ...overrides,
   };
 }
 
