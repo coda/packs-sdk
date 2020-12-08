@@ -270,7 +270,9 @@ function makeObjectFormula(_a) {
 exports.makeObjectFormula = makeObjectFormula;
 function makeSyncTable(name, schema, _a, getSchema, entityName) {
     var { execute: wrappedExecute } = _a, definition = __rest(_a, ["execute"]);
-    const formulaSchema = getSchema ? undefined : schema_3.normalizeSchema({ type: schema_1.ValueType.Array, items: schema });
+    const formulaSchema = getSchema
+        ? undefined
+        : schema_3.normalizeSchema({ type: schema_1.ValueType.Array, items: schema });
     const { identity, id, primary } = schema;
     if (!(primary && id && identity)) {
         throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
@@ -279,11 +281,10 @@ function makeSyncTable(name, schema, _a, getSchema, entityName) {
         throw new Error('Sync table name should not include spaces');
     }
     const responseHandler = handler_templates_1.generateObjectResponseHandler({ schema: formulaSchema, excludeExtraneous: true });
-    const execute = function exec(params, context, input, // TODO(alexd): Remove
-    runtimeSchema) {
+    const execute = function exec(params, context) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { result, continuation } = yield wrappedExecute(params, context, input);
-            const appliedSchema = (context.sync && context.sync.schema) || (runtimeSchema && JSON.parse(runtimeSchema));
+            const { result, continuation } = yield wrappedExecute(params, context);
+            const appliedSchema = context.sync.schema;
             return {
                 result: responseHandler({ body: ensure_1.ensureExists(result), status: 200, headers: {} }, appliedSchema),
                 continuation,
