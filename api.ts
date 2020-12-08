@@ -284,12 +284,7 @@ interface SyncFormulaDef<
   ParamsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>
 > extends CommonPackFormulaDef<ParamsT> {
-  execute(
-    params: ParamValues<ParamsT>,
-    context: SyncExecutionContext,
-    continuation?: Continuation,
-    schema?: string,
-  ): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
+  execute(params: ParamValues<ParamsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
 }
 
 export type SyncFormula<
@@ -497,7 +492,9 @@ export function makeSyncTable<
   getSchema?: MetadataFormula,
   entityName?: string,
 ): SyncTableDef<K, L, ParamDefsT, SchemaT> {
-  const formulaSchema = getSchema ? undefined : normalizeSchema({type: ValueType.Array, items: schema});
+  const formulaSchema = getSchema
+    ? undefined
+    : normalizeSchema<ArraySchema<Schema>>({type: ValueType.Array, items: schema});
   const {identity, id, primary} = schema;
   if (!(primary && id && identity)) {
     throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
@@ -508,14 +505,9 @@ export function makeSyncTable<
   }
 
   const responseHandler = generateObjectResponseHandler({schema: formulaSchema, excludeExtraneous: true});
-  const execute = async function exec(
-    params: ParamValues<ParamDefsT>,
-    context: SyncExecutionContext,
-    input: Continuation | undefined, // TODO(alexd): Remove
-    runtimeSchema: string | undefined, // TODO(alexd): Remove
-  ) {
-    const {result, continuation} = await wrappedExecute(params, context, input);
-    const appliedSchema = (context.sync && context.sync.schema) || (runtimeSchema && JSON.parse(runtimeSchema));
+  const execute = async function exec(params: ParamValues<ParamDefsT>, context: SyncExecutionContext) {
+    const {result, continuation} = await wrappedExecute(params, context);
+    const appliedSchema = context.sync.schema;
     return {
       result: responseHandler({body: ensureExists(result), status: 200, headers: {}}, appliedSchema) as Array<
         SchemaType<SchemaT>
