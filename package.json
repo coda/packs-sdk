@@ -28,7 +28,7 @@
     "sinon": "9.2.1",
     "string-template": "^1.0.0",
     "url-parse": "^1.4.7",
-    "uuid": "^8.3.1",
+    "uuid": "^8.3.2",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
