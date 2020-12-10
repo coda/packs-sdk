@@ -1,16 +1,21 @@
 import {testHelper} from './test_helper';
+import {AuthenticationType} from '../types';
 import {FakePack} from './test_utils';
 import type {ResponseHandlerTemplate} from '../handler_templates';
 import type {Schema} from '../schema';
 import {ValueType} from '../schema';
+import {assertCondition} from '../helpers/ensure';
 import {createFakePack} from './test_utils';
 import {executeFormulaFromPackDef} from '../testing/execution';
+import {executeMetadataFormula} from '../testing/execution';
 import {executeSyncFormulaFromPackDef} from '../testing/execution';
 import {makeBooleanParameter} from '../api';
+import {makeMetadataFormula} from '../api';
 import {makeNumericFormula} from '../api';
 import {makeNumericParameter} from '../api';
 import {makeObjectFormula} from '../api';
 import {makeObjectSchema} from '../schema';
+import {makeSimpleAutocompleteMetadataFormula} from '../api';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
 import {makeSyncTable} from '../api';
@@ -374,6 +379,63 @@ describe('Execution', () => {
         executeSyncFormulaFromPackDef(fakePack, 'Foo', []),
         /Pack definition for Fake Pack \(id 424242\) has no sync formula "Foo" in its sync tables./,
       );
+    });
+  });
+
+  describe('execute metadata formula', () => {
+    const fakePackWithMetadata = createFakePack({
+      defaultAuthentication: {
+        type: AuthenticationType.HeaderBearerToken,
+        getConnectionName: makeMetadataFormula(async context => {
+          const response = await context.fetcher.fetch({method: 'GET', url: 'https://example.com/whoami'});
+          return response.body.username;
+        }),
+      },
+      formulas: {
+        Fake: [
+          makeStringFormula({
+            name: 'Foo',
+            description: '',
+            examples: [],
+            parameters: [
+              makeStringParameter('value', 'Pass-through value to return.', {
+                autocomplete: makeSimpleAutocompleteMetadataFormula(['foo', 'bar', 'baz']),
+              }),
+            ],
+            execute: async ([value]) => {
+              return value;
+            },
+          }),
+        ],
+      },
+    });
+
+    it('executes getConnectionName formula', async () => {
+      assertCondition(fakePackWithMetadata.defaultAuthentication?.type === AuthenticationType.HeaderBearerToken);
+      const context = newMockExecutionContext();
+      context.fetcher.fetch.returns(newJsonFetchResponse({username: 'some-user'}));
+
+      const result = await executeMetadataFormula(
+        fakePackWithMetadata.defaultAuthentication.getConnectionName!,
+        undefined,
+        context,
+      );
+      assert.equal(result, 'some-user');
+    });
+
+    it('executes simple autocomplete formula', async () => {
+      const formula = fakePackWithMetadata.formulas!.Fake[0];
+      const result = await executeMetadataFormula(formula.parameters[0]?.autocomplete!, {search: 'ba'});
+      assert.deepEqual(result, [
+        {
+          display: 'bar',
+          value: 'bar',
+        },
+        {
+          display: 'baz',
+          value: 'baz',
+        },
+      ]);
     });
   });
 });
