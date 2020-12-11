@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.executeSyncFormulaFromPackDef = exports.executeSyncFormula = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.executeFormula = void 0;
+exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDef = exports.executeSyncFormula = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.executeFormula = void 0;
 const coercion_1 = require("./coercion");
 const helpers_1 = require("./helpers");
 const fetcher_1 = require("./fetcher");
@@ -104,6 +104,13 @@ function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, context
     });
 }
 exports.executeSyncFormulaFromPackDef = executeSyncFormulaFromPackDef;
+function executeMetadataFormula(formula, metadataParams = {}, context = mocks_1.newMockExecutionContext()) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { search, formulaContext } = metadataParams;
+        return formula.execute([search || '', formulaContext ? JSON.stringify(formulaContext) : ''], context);
+    });
+}
+exports.executeMetadataFormula = executeMetadataFormula;
 function findFormula(packDef, formulaNameWithNamespace) {
     if (!packDef.formulas) {
         throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);

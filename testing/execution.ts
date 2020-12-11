@@ -1,5 +1,7 @@
 import type {ExecutionContext} from '../api_types';
 import type {GenericSyncFormula} from '../api';
+import type {MetadataContext} from '../api';
+import type {MetadataFormula} from '../api';
 import type {PackDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
@@ -160,6 +162,18 @@ export async function executeSyncFormulaFromPackDef(
 
   const formula = findSyncFormula(packDef, syncFormulaName);
   return executeSyncFormula(formula, params, executionContext, options);
+}
+
+export async function executeMetadataFormula(
+  formula: MetadataFormula,
+  metadataParams: {
+    search?: string;
+    formulaContext?: MetadataContext;
+  } = {},
+  context: ExecutionContext = newMockExecutionContext(),
+) {
+  const {search, formulaContext} = metadataParams;
+  return formula.execute([search || '', formulaContext ? JSON.stringify(formulaContext) : ''], context);
 }
 
 function findFormula(packDef: PackDefinition, formulaNameWithNamespace: string): TypedStandardFormula {

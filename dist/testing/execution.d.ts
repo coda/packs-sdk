@@ -1,5 +1,7 @@
 import type { ExecutionContext } from '../api_types';
 import type { GenericSyncFormula } from '../api';
+import type { MetadataContext } from '../api';
+import type { MetadataFormula } from '../api';
 import type { PackDefinition } from '../types';
 import type { ParamDefs } from '../api_types';
 import type { ParamValues } from '../api_types';
@@ -26,3 +28,7 @@ export declare function executeFormulaOrSyncFromCLI({ formulaName, params: rawPa
 }): Promise<void>;
 export declare function executeSyncFormula(formula: GenericSyncFormula, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult, maxIterations: maxIterations, }?: ExecuteSyncOptions): Promise<any[]>;
 export declare function executeSyncFormulaFromPackDef(packDef: PackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, options?: ExecuteSyncOptions, { useRealFetcher, credentialsFile }?: ContextOptions): Promise<any[]>;
+export declare function executeMetadataFormula(formula: MetadataFormula, metadataParams?: {
+    search?: string;
+    formulaContext?: MetadataContext;
+}, context?: ExecutionContext): Promise<any>;
