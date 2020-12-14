@@ -11,6 +11,7 @@ export interface ResultValidationError {
 export interface ValidationContext {
   propertyKey?: string;
   arrayIndex?: number;
+  child?: ValidationContext;
 }
 
 export class ResultValidationException extends Error {

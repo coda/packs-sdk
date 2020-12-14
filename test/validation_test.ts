@@ -54,6 +54,14 @@ describe('Property validation in objects', () => {
           },
         },
       },
+      nested: {
+        type: ValueType.Object,
+        id: 'string',
+        properties: {
+          string: {type: ValueType.String},
+          number: {type: ValueType.Number},
+        },
+      },
     },
     identity: {packId: FakePack.id, name: 'Events'},
   });
@@ -152,6 +160,19 @@ describe('Property validation in objects', () => {
     },
   });
 
+  const fakeNestedObjectFormula = makeObjectFormula({
+    name: 'GetNestedObject',
+    description: 'Returns an object with an object inside.',
+    examples: [],
+    parameters: [makeBooleanParameter('returnMalformed', 'whether or not to return a malformed response')],
+    execute: async ([malformed]) => {
+      return {nested: {string: 'foo', number: malformed ? '123' : 123}};
+    },
+    response: {
+      schema: fakeSchema,
+    },
+  });
+
   const fakePack = createFakePack({
     formulas: {
       Fake: [
@@ -162,6 +183,7 @@ describe('Property validation in objects', () => {
         fakeUrlFormula,
         fakeArrayFormula,
         fakePeopleFormula,
+        fakeNestedObjectFormula,
       ],
     },
   });
@@ -258,6 +280,13 @@ describe('Property validation in objects', () => {
 
   it('validates correct person reference', async () => {
     await executeFormulaFromPackDef(fakePack, 'Fake::GetPerson', ['test@coda.io', false]);
+  });
+
+  it('rejects nested object with incorrect nested type', async () => {
+    await testHelper.willBeRejectedWith(
+      executeFormulaFromPackDef(fakePack, 'Fake::GetNestedObject', [true]),
+      /The following errors were found when validating the result of the formula "GetPerson":\nExpected a number property for key nested.Number but got "123"./,
+    );
   });
 
   it('validates string array', async () => {

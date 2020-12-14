@@ -107,25 +107,40 @@ function generateErrorFromValidationContext(
     'Must provide at least one of propertyKey, arrayIndex to ValidationContext',
   );
   const resultValue = typeof result === 'string' ? `"${result}"` : result;
+  const objectTrace = generateObjectTraceFromValidationContext(context);
   // Validating item within an array property of an objectSchema
   if (propertyKey && arrayIndex) {
     return {
-      message: `Expected a ${schema.type} property for array item ${propertyKey}[${arrayIndex}] but got ${resultValue}.`,
+      message: `Expected a ${schema.type} property for array item ${objectTrace} but got ${resultValue}.`,
     };
   }
 
   // Validating property of an objectSchema
   if (propertyKey) {
     return {
-      message: `Expected a ${schema.type} property for key ${propertyKey} but got ${resultValue}.`,
+      message: `Expected a ${schema.type} property for key ${objectTrace} but got ${resultValue}.`,
     };
   }
 
   // Validating item within an array of objects (sync formula)
-  // We don't currently do nested object validation within arrays.
   return {
     message: `Expected a ${schema.type} property for array item at index ${arrayIndex} but got ${resultValue}.`,
   };
+}
+
+function generateObjectTraceFromValidationContext(context: ValidationContext): string {
+  const {propertyKey, arrayIndex, child} = context;
+  if (propertyKey && arrayIndex) {
+    return child
+      ? `${propertyKey}[${arrayIndex}].${generateObjectTraceFromValidationContext(child)}`
+      : `${propertyKey}[${arrayIndex}]`;
+  } else if (propertyKey) {
+    return child ? `${propertyKey}.${generateObjectTraceFromValidationContext(child)}` : `${propertyKey}`;
+  } else if (arrayIndex) {
+    return child ? `[${arrayIndex}].${generateObjectTraceFromValidationContext(child)}` : `[${arrayIndex}]`;
+  }
+
+  return '';
 }
 
 function checkPropertyTypeAndCodaType<ResultT extends any>(
@@ -211,9 +226,7 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
           const referenceErrorMessages = tryParseReference(result, schema);
           return referenceErrorMessages ?? [];
         case undefined:
-          // TODO: handle nested object validation.
-          // no need to coerce current result type
-          return [];
+          return validateObject(result as Record<string, unknown>, schema);
         default:
           ensureUnreachable(schema);
       }
@@ -343,6 +356,7 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
 function validateObject<ResultT extends Record<string, unknown>>(
   result: ResultT,
   schema: GenericObjectSchema,
+  _context?: ValidationContext,
 ): ResultValidationError[] {
   const errors: ResultValidationError[] = [];
 
