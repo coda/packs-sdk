@@ -4,12 +4,14 @@ import type {StringSchema} from '../schema';
 import {ValueType} from '../schema';
 import {createFakePack} from './test_utils';
 import {executeFormulaFromPackDef} from '../testing/execution';
+import {executeSyncFormulaFromPackDef} from '../testing/execution';
 import {makeBooleanParameter} from '../api';
 import {makeNumericParameter} from '../api';
 import {makeObjectFormula} from '../api';
 import {makeObjectSchema} from '../schema';
 import {makeStringArrayParameter} from '../api';
 import {makeStringParameter} from '../api';
+import {makeSyncTable} from '../api';
 
 describe('Property validation in objects', () => {
   const fakeSchema = makeObjectSchema({
@@ -210,7 +212,7 @@ describe('Property validation in objects', () => {
   it('rejects non-numeric slider value', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::Slider', ['9']),
-      /The following errors were found when validating the result of the formula "Slider":\nExpected a number property for key Slider but got "9"./,
+      /The following errors were found when validating the result of the formula "Slider":\nExpected a number property for Slider but got "9"./,
     );
   });
 
@@ -285,7 +287,7 @@ describe('Property validation in objects', () => {
   it('rejects nested object with incorrect nested type', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::GetNestedObject', [true]),
-      /The following errors were found when validating the result of the formula "GetNestedObject":\nExpected a number property for key Nested.Number but got "123"./,
+      /The following errors were found when validating the result of the formula "GetNestedObject":\nExpected a number property for Nested.Number but got "123"./,
     );
   });
 
@@ -303,7 +305,75 @@ describe('Property validation in objects', () => {
   it('rejects bad array items', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::GetNames', [['Jack', 'Jill', 123, true]]),
-      /The following errors were found when validating the result of the formula "GetNames":\nExpected a string property for array item Names\[2\] but got 123.\nExpected a string property for array item Names\[3\] but got true./,
+      /The following errors were found when validating the result of the formula "GetNames":\nExpected a string property for Names\[2\] but got 123.\nExpected a string property for Names\[3\] but got true./,
     );
+  });
+});
+
+describe('validation in sync tables', () => {
+  const fakePersonSchema = makeObjectSchema({
+    type: ValueType.Object,
+    primary: 'name',
+    id: 'name',
+    properties: {
+      name: {type: ValueType.String},
+      info: {
+        type: ValueType.Object,
+        properties: {
+          age: {type: ValueType.Number},
+          grade: {type: ValueType.Number},
+        },
+      },
+    },
+    identity: {packId: FakePack.id, name: 'Person'},
+  });
+
+  const fakePack = createFakePack({
+    syncTables: [
+      makeSyncTable('Classes', fakePersonSchema, {
+        name: 'Students',
+        description: 'Gets students in a class',
+        execute: async ([malformed], context) => {
+          const {continuation} = context.sync;
+          const page = continuation?.page;
+          switch (page) {
+            case 1:
+            case undefined:
+              return {
+                result: [
+                  {name: 'Alice', info: {age: malformed ? '100' : 100, grade: 1}},
+                  {name: 'Bob', info: {age: 100, grade: 1}},
+                ],
+                continuation: {page: 2},
+              } as any;
+            case 2:
+              return {
+                result: [
+                  {name: 'Chris', info: {age: 100, grade: 1}},
+                  {name: 'Diana', info: {age: 100, grade: 1}},
+                ],
+              };
+            default:
+              return {
+                result: [],
+              };
+          }
+        },
+        network: {hasSideEffect: false},
+        parameters: [makeBooleanParameter('malformed', 'whether or not to return a malformed response')],
+        examples: [],
+      }),
+    ],
+  });
+
+  it('rejects bad nested object property for item in sync formula', async () => {
+    await testHelper.willBeRejectedWith(
+      executeSyncFormulaFromPackDef(fakePack, 'Students', [true]),
+      /Expected a number property for Students\[0\].Info.Age but got "100"./,
+    );
+  });
+
+  it('validates correct items in sync formula', async () => {
+    await executeSyncFormulaFromPackDef(fakePack, 'Students', [false]);
   });
 });
