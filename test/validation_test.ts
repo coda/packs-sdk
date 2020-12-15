@@ -1,7 +1,9 @@
 import {testHelper} from './test_helper';
 import {FakePack} from './test_utils';
+import type {ParamDefs} from 'api_types';
 import type {StringSchema} from '../schema';
 import {ValueType} from '../schema';
+import {coerceParams} from '../testing/coercion';
 import {createFakePack} from './test_utils';
 import {executeFormulaFromPackDef} from '../testing/execution';
 import {makeBooleanParameter} from '../api';
@@ -9,6 +11,7 @@ import {makeNumericParameter} from '../api';
 import {makeObjectFormula} from '../api';
 import {makeObjectSchema} from '../schema';
 import {makeStringArrayParameter} from '../api';
+import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
 
 describe('Property validation in objects', () => {
@@ -276,5 +279,51 @@ describe('Property validation in objects', () => {
       executeFormulaFromPackDef(fakePack, 'Fake::GetNames', [['Jack', 'Jill', 123, true]]),
       /The following errors were found when validating the result of the formula "GetNames":\nExpected a string property for array item Names\[2\] but got 123.\nExpected a string property for array item Names\[3\] but got true./,
     );
+  });
+});
+
+describe('param validation', () => {
+  function makeFormula(parameters: ParamDefs, varargParameters?: ParamDefs) {
+    return makeStringFormula({
+      name: 'Fake',
+      description: '',
+      examples: [],
+      execute: async _params => {
+        return 'ok';
+      },
+      parameters,
+      varargParameters,
+    });
+  }
+
+  describe('coercion', () => {
+    it('basic', () => {
+      const formula = makeFormula([
+        makeNumericParameter('num', ''),
+        makeBooleanParameter('bool', ''),
+        makeStringParameter('string', ''),
+      ]);
+      const coerced = coerceParams(formula, ['-5', 'true', '123']);
+      assert.deepEqual(coerced, [-5, true, '123']);
+    });
+
+    it('excess params tolerated', () => {
+      const formula = makeFormula([
+        makeNumericParameter('num', ''),
+        makeBooleanParameter('bool', ''),
+        makeStringParameter('string', ''),
+      ]);
+      const coerced = coerceParams(formula, ['-5', 'true', '123', 'foo', 'bar']);
+      assert.deepEqual(coerced, [-5, true, '123', 'foo', 'bar']);
+    });
+
+    it('varargs', () => {
+      const formula = makeFormula(
+        [makeBooleanParameter('bool', '')],
+        [makeNumericParameter('num', ''), makeStringParameter('string', '')],
+      );
+      const coerced = coerceParams(formula, ['false', '2.2', 'foo', '-18', '123']);
+      assert.deepEqual(coerced, [false, 2.2, 'foo', -18, '123']);
+    });
   });
 });

@@ -4,17 +4,25 @@ exports.coerceParams = void 0;
 const api_types_1 = require("../api_types");
 const ensure_1 = require("../helpers/ensure");
 const object_utils_1 = require("../helpers/object_utils");
-// TODO: Handle varargs.
-function coerceParams(formula, params) {
+function coerceParams(formula, args) {
+    const { parameters, varargParameters } = formula;
     const coerced = [];
-    for (let i = 0; i < params.length; i++) {
-        const paramDef = formula.parameters[i];
+    let varargIndex = 0;
+    for (let i = 0; i < args.length; i++) {
+        const paramDef = parameters[i];
         if (paramDef) {
-            coerced.push(coerceParamValue(paramDef, params[i]));
+            coerced.push(coerceParamValue(paramDef, args[i]));
         }
         else {
-            // More params given than are defined.
-            coerced.push(params[i]);
+            if (varargParameters) {
+                const varargDef = varargParameters[varargIndex];
+                coerced.push(coerceParamValue(varargDef, args[i]));
+                varargIndex = (varargIndex + 1) % varargParameters.length;
+            }
+            else {
+                // More args given than are defined, just return them as-is, we'll validate later.
+                coerced.push(args[i]);
+            }
         }
     }
     return coerced;
@@ -34,7 +42,7 @@ function coerceParamValue(paramDef, paramValue) {
 function coerceParam(type, value) {
     switch (type) {
         case api_types_1.Type.boolean:
-            return Boolean(value);
+            return (value || '').toLowerCase() === 'true';
         case api_types_1.Type.date:
             return new Date(value);
         case api_types_1.Type.number:

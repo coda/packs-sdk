@@ -7,16 +7,23 @@ import type {TypedPackFormula} from '../api';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isDefined} from '../helpers/object_utils';
 
-// TODO: Handle varargs.
-export function coerceParams(formula: TypedPackFormula, params: ParamValues<ParamDefs>): ParamValues<ParamDefs> {
+export function coerceParams(formula: TypedPackFormula, args: ParamValues<ParamDefs>): ParamValues<ParamDefs> {
+  const {parameters, varargParameters} = formula;
   const coerced: ParamValues<ParamDefs> = [];
-  for (let i = 0; i < params.length; i++) {
-    const paramDef = formula.parameters[i];
+  let varargIndex = 0;
+  for (let i = 0; i < args.length; i++) {
+    const paramDef = parameters[i];
     if (paramDef) {
-      coerced.push(coerceParamValue(paramDef, params[i]));
+      coerced.push(coerceParamValue(paramDef, args[i]));
     } else {
-      // More params given than are defined.
-      coerced.push(params[i]);
+      if (varargParameters) {
+        const varargDef = varargParameters[varargIndex];
+        coerced.push(coerceParamValue(varargDef, args[i]));
+        varargIndex = (varargIndex + 1) % varargParameters.length;
+      } else {
+        // More args given than are defined, just return them as-is, we'll validate later.
+        coerced.push(args[i]);
+      }
     }
   }
   return coerced;
@@ -37,7 +44,7 @@ function coerceParamValue(paramDef: ParamDef<any>, paramValue: any): any {
 function coerceParam(type: Type, value: any): any {
   switch (type) {
     case Type.boolean:
-      return Boolean(value);
+      return (value || '').toLowerCase() === 'true';
     case Type.date:
       return new Date(value);
     case Type.number:
