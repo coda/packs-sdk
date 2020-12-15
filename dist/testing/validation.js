@@ -13,19 +13,19 @@ const object_utils_1 = require("../helpers/object_utils");
 const string_1 = require("../helpers/string");
 const schema_3 = require("../schema");
 const api_1 = require("../api");
-// TODO: Handle varargs.
-function validateParams(formula, params) {
-    const numRequiredParams = formula.parameters.filter(param => !param.optional).length;
-    if (params.length < numRequiredParams) {
-        throw new types_1.ParameterException(`Expected at least ${numRequiredParams} parameter but only ${params.length} were provided.`);
+function validateParams(formula, args) {
+    const { parameters, varargParameters } = formula;
+    const numRequiredParams = parameters.filter(param => !param.optional).length;
+    if (args.length < numRequiredParams) {
+        throw new types_1.ParameterException(`Expected at least ${numRequiredParams} parameter but only ${args.length} were provided.`);
     }
-    if (params.length > formula.parameters.length && !formula.varargParameters) {
-        throw new types_1.ParameterException(`Formula only accepts ${formula.parameters.length} parameters but ${params.length} were provided.`);
+    if (args.length > parameters.length && !varargParameters) {
+        throw new types_1.ParameterException(`Formula only accepts ${parameters.length} parameters but ${args.length} were provided.`);
     }
     const errors = [];
-    for (let i = 0; i < params.length; i++) {
-        const param = params[i];
-        const paramDef = formula.parameters[i];
+    for (let i = 0; i < parameters.length; i++) {
+        const param = args[i];
+        const paramDef = parameters[i];
         if (!paramDef.optional && !object_utils_1.isDefined(param)) {
             errors.push({
                 message: `Param ${i} "${paramDef.name}" is required but a value was not provided.`,

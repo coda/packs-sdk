@@ -6,6 +6,7 @@ import type {ObjectHintTypes} from '../schema';
 import type {ObjectPackFormulaMetadata} from '../api';
 import type {ObjectSchemaProperty} from '../schema';
 import type {ParamDefs} from '../api_types';
+import type {ParamValues} from '../api_types';
 import type {ParameterError} from './types';
 import {ParameterException} from './types';
 import type {ResultValidationError} from './types';
@@ -28,25 +29,25 @@ import {isEmail} from '../helpers/string';
 import {isObject} from '../schema';
 import {isObjectPackFormula} from '../api';
 
-// TODO: Handle varargs.
-export function validateParams(formula: TypedPackFormula, params: ParamDefs): void {
-  const numRequiredParams = formula.parameters.filter(param => !param.optional).length;
-  if (params.length < numRequiredParams) {
+export function validateParams(formula: TypedPackFormula, args: ParamValues<ParamDefs>): void {
+  const {parameters, varargParameters} = formula;
+  const numRequiredParams = parameters.filter(param => !param.optional).length;
+  if (args.length < numRequiredParams) {
     throw new ParameterException(
-      `Expected at least ${numRequiredParams} parameter but only ${params.length} were provided.`,
+      `Expected at least ${numRequiredParams} parameter but only ${args.length} were provided.`,
     );
   }
 
-  if (params.length > formula.parameters.length && !formula.varargParameters) {
+  if (args.length > parameters.length && !varargParameters) {
     throw new ParameterException(
-      `Formula only accepts ${formula.parameters.length} parameters but ${params.length} were provided.`,
+      `Formula only accepts ${parameters.length} parameters but ${args.length} were provided.`,
     );
   }
 
   const errors: ParameterError[] = [];
-  for (let i = 0; i < params.length; i++) {
-    const param = params[i];
-    const paramDef = formula.parameters[i];
+  for (let i = 0; i < parameters.length; i++) {
+    const param = args[i];
+    const paramDef = parameters[i];
     if (!paramDef.optional && !isDefined(param)) {
       errors.push({
         message: `Param ${i} "${paramDef.name}" is required but a value was not provided.`,
