@@ -293,7 +293,7 @@ function validateObject(result, schema, context) {
             });
         }
         if (value) {
-            const propertyLevelErrors = checkPropertyTypeAndCodaType(propertySchema, value, new types_2.ResultValidationContext([...context.fieldContexts, { propertyKey }]));
+            const propertyLevelErrors = checkPropertyTypeAndCodaType(propertySchema, value, context.extend({ propertyKey }));
             errors.push(...propertyLevelErrors);
         }
     }
@@ -313,7 +313,7 @@ function validateArray(result, schema, context) {
     const itemType = schema.items;
     for (let i = 0; i < result.length; i++) {
         const item = result[i];
-        const propertyLevelErrors = checkPropertyTypeAndCodaType(itemType, item, new types_2.ResultValidationContext([...context.fieldContexts, { arrayIndex: i }]));
+        const propertyLevelErrors = checkPropertyTypeAndCodaType(itemType, item, context.extend({ arrayIndex: i }));
         arrayItemErrors.push(...propertyLevelErrors);
     }
     return arrayItemErrors;

@@ -13,6 +13,7 @@ export interface ValidationContext {
 export declare class ResultValidationContext {
     fieldContexts: ValidationContext[];
     constructor(contexts?: ValidationContext[]);
+    extend(context: ValidationContext): ResultValidationContext;
 }
 export declare class ResultValidationException extends Error {
     errors: ResultValidationError[];

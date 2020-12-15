@@ -369,11 +369,7 @@ function validateObject<ResultT extends Record<string, unknown>>(
       });
     }
     if (value) {
-      const propertyLevelErrors = checkPropertyTypeAndCodaType(
-        propertySchema,
-        value,
-        new ResultValidationContext([...context.fieldContexts, {propertyKey}]),
-      );
+      const propertyLevelErrors = checkPropertyTypeAndCodaType(propertySchema, value, context.extend({propertyKey}));
       errors.push(...propertyLevelErrors);
     }
   }
@@ -400,11 +396,7 @@ function validateArray<ResultT extends any>(
   for (let i = 0; i < result.length; i++) {
     const item = result[i];
 
-    const propertyLevelErrors = checkPropertyTypeAndCodaType(
-      itemType,
-      item,
-      new ResultValidationContext([...context.fieldContexts, {arrayIndex: i}]),
-    );
+    const propertyLevelErrors = checkPropertyTypeAndCodaType(itemType, item, context.extend({arrayIndex: i}));
     arrayItemErrors.push(...propertyLevelErrors);
   }
 

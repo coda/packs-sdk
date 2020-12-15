@@ -19,6 +19,10 @@ export class ResultValidationContext {
   constructor(contexts?: ValidationContext[]) {
     this.fieldContexts = contexts ?? [];
   }
+
+  extend(context: ValidationContext) {
+    return new ResultValidationContext([...this.fieldContexts, context]);
+  }
 }
 
 export class ResultValidationException extends Error {

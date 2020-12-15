@@ -8,6 +8,9 @@ class ResultValidationContext {
     constructor(contexts) {
         this.fieldContexts = contexts !== null && contexts !== void 0 ? contexts : [];
     }
+    extend(context) {
+        return new ResultValidationContext([...this.fieldContexts, context]);
+    }
 }
 exports.ResultValidationContext = ResultValidationContext;
 class ResultValidationException extends Error {
