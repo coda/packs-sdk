@@ -13,6 +13,14 @@ export interface ValidationContext {
   arrayIndex?: number;
 }
 
+export class ResultValidationContext {
+  fieldContexts: ValidationContext[];
+
+  constructor(contexts?: ValidationContext[]) {
+    this.fieldContexts = contexts ?? [];
+  }
+}
+
 export class ResultValidationException extends Error {
   errors: ResultValidationError[];
 

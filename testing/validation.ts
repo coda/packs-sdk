@@ -8,6 +8,7 @@ import type {ObjectSchemaProperty} from '../schema';
 import type {ParamDefs} from '../api_types';
 import type {ParameterError} from './types';
 import {ParameterException} from './types';
+import {ResultValidationContext} from './types';
 import type {ResultValidationError} from './types';
 import {ResultValidationException} from './types';
 import type {ScaleSchema} from '../schema';
@@ -96,22 +97,22 @@ function validateResultType<ResultT extends any>(resultType: Type, result: Resul
   }
 }
 
-function generateErrorFromValidationContexts(
-  contexts: ValidationContext[],
+function generateErrorFromValidationContext(
+  context: ResultValidationContext,
   schema: Schema,
   result: any,
 ): ResultValidationError {
   const resultValue = typeof result === 'string' ? `"${result}"` : result;
-  const objectTrace = generateFieldPath(contexts);
+  const objectTrace = generateFieldPath(context);
 
   return {
     message: `Expected a ${schema.type} property for ${objectTrace} but got ${resultValue}.`,
   };
 }
 
-function generateFieldPath(contexts: ValidationContext[]): string {
+function generateFieldPath(context: ResultValidationContext): string {
   let path = '';
-  const fieldPath = contexts.map(context => generateFieldPathFromValidationContext(context));
+  const fieldPath = context.fieldContexts.map(context => generateFieldPathFromValidationContext(context));
 
   for (let i = 0; i < fieldPath.length; i++) {
     const field = fieldPath[i];
@@ -142,9 +143,9 @@ function generateFieldPathFromValidationContext(context: ValidationContext): str
 function checkPropertyTypeAndCodaType<ResultT extends any>(
   schema: Schema & ObjectSchemaProperty,
   result: ResultT,
-  contexts: ValidationContext[],
+  context: ResultValidationContext,
 ): ResultValidationError[] {
-  const errors = [generateErrorFromValidationContexts(contexts, schema, result)];
+  const errors = [generateErrorFromValidationContext(context, schema, result)];
   switch (schema.type) {
     case ValueType.Boolean: {
       const resultValidationError = checkType(typeof result === 'boolean', 'boolean', result);
@@ -208,7 +209,7 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
       }
     }
     case ValueType.Array:
-      return validateArray(result, schema, contexts);
+      return validateArray(result, schema, context);
     case ValueType.Object: {
       const resultValidationError = checkType(typeof result === 'object', 'object', result);
       if (resultValidationError) {
@@ -222,7 +223,7 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
           const referenceErrorMessages = tryParseReference(result, schema);
           return referenceErrorMessages ?? [];
         case undefined:
-          return validateObject(result as Record<string, unknown>, schema, contexts);
+          return validateObject(result as Record<string, unknown>, schema, context);
         default:
           ensureUnreachable(schema);
       }
@@ -331,7 +332,11 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
   }
 
   if (isArray(schema)) {
-    const arrayValidationErrors = validateArray(result, schema, [{propertyKey: formula.name}]);
+    const arrayValidationErrors = validateArray(
+      result,
+      schema,
+      new ResultValidationContext([{propertyKey: formula.name}]),
+    );
     if (arrayValidationErrors.length) {
       throw ResultValidationException.fromErrors(formula.name, arrayValidationErrors);
     }
@@ -342,7 +347,7 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
     const error: ResultValidationError = {message: `Expected an object schema, but found ${JSON.stringify(schema)}.`};
     throw ResultValidationException.fromErrors(formula.name, [error]);
   }
-  const errors = validateObject(result, schema, []);
+  const errors = validateObject(result, schema, new ResultValidationContext());
 
   if (errors.length) {
     throw ResultValidationException.fromErrors(formula.name, errors);
@@ -352,7 +357,7 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
 function validateObject<ResultT extends Record<string, unknown>>(
   result: ResultT,
   schema: GenericObjectSchema,
-  contexts: ValidationContext[],
+  context: ResultValidationContext,
 ): ResultValidationError[] {
   const errors: ResultValidationError[] = [];
 
@@ -364,7 +369,11 @@ function validateObject<ResultT extends Record<string, unknown>>(
       });
     }
     if (value) {
-      const propertyLevelErrors = checkPropertyTypeAndCodaType(propertySchema, value, [...contexts, {propertyKey}]);
+      const propertyLevelErrors = checkPropertyTypeAndCodaType(
+        propertySchema,
+        value,
+        new ResultValidationContext([...context.fieldContexts, {propertyKey}]),
+      );
       errors.push(...propertyLevelErrors);
     }
   }
@@ -380,7 +389,7 @@ function validateObject<ResultT extends Record<string, unknown>>(
 function validateArray<ResultT extends any>(
   result: ResultT,
   schema: ArraySchema<Schema>,
-  contexts: ValidationContext[],
+  context: ResultValidationContext,
 ): ResultValidationError[] {
   if (!Array.isArray(result)) {
     const error: ResultValidationError = {message: `Expected an ${schema.type} result but got ${result}.`};
@@ -391,7 +400,11 @@ function validateArray<ResultT extends any>(
   for (let i = 0; i < result.length; i++) {
     const item = result[i];
 
-    const propertyLevelErrors = checkPropertyTypeAndCodaType(itemType, item, [...contexts, {arrayIndex: i}]);
+    const propertyLevelErrors = checkPropertyTypeAndCodaType(
+      itemType,
+      item,
+      new ResultValidationContext([...context.fieldContexts, {arrayIndex: i}]),
+    );
     arrayItemErrors.push(...propertyLevelErrors);
   }
 

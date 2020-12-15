@@ -1,9 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ResultValidationException = exports.ParameterException = void 0;
+exports.ResultValidationException = exports.ResultValidationContext = exports.ParameterException = void 0;
 class ParameterException extends Error {
 }
 exports.ParameterException = ParameterException;
+class ResultValidationContext {
+    constructor(contexts) {
+        this.fieldContexts = contexts !== null && contexts !== void 0 ? contexts : [];
+    }
+}
+exports.ResultValidationContext = ResultValidationContext;
 class ResultValidationException extends Error {
     constructor(message, errors) {
         super(message);
