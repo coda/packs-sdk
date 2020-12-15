@@ -101,7 +101,7 @@ function generateErrorFromValidationContexts(
   schema: Schema,
   result: any,
 ): ResultValidationError {
-  const context = getCurrentContext(contexts);
+  const context = ensureExists(getCurrentContext(contexts));
   const {propertyKey, arrayIndex} = context;
 
   const resultValue = typeof result === 'string' ? `"${result}"` : result;
@@ -122,7 +122,7 @@ function generateErrorFromValidationContexts(
 
   // Validating item within an array of objects (sync formula)
   return {
-    message: `Expected a ${schema.type} property for array item at index ${arrayIndex} but got ${resultValue}.`,
+    message: `Expected a ${schema.type} property for array item at index ${objectTrace} but got ${resultValue}.`,
   };
 }
 
@@ -358,7 +358,7 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
   }
 }
 
-function getCurrentContext(contexts: ValidationContext[]) {
+function getCurrentContext(contexts: ValidationContext[]): ValidationContext | undefined {
   return contexts[contexts.length - 1];
 }
 
@@ -395,18 +395,25 @@ function validateArray<ResultT extends any>(
   schema: ArraySchema<Schema>,
   contexts: ValidationContext[],
 ): ResultValidationError[] {
+  const currentContext = getCurrentContext(contexts);
   if (!Array.isArray(result)) {
     const error: ResultValidationError = {message: `Expected an ${schema.type} result but got ${result}.`};
     return [error];
   }
-
   const arrayItemErrors: ResultValidationError[] = [];
   const itemType = schema.items;
   for (let i = 0; i < result.length; i++) {
     const item = result[i];
 
-    // TODO: @alan-fang change this
-    const propertyLevelErrors = checkPropertyTypeAndCodaType(itemType, item, [...contexts, {arrayIndex: i}]);
+    if (currentContext) {
+      currentContext.arrayIndex = i;
+    }
+
+    const propertyLevelErrors = checkPropertyTypeAndCodaType(
+      itemType,
+      item,
+      currentContext ? contexts : [{arrayIndex: i}],
+    );
     arrayItemErrors.push(...propertyLevelErrors);
   }
 

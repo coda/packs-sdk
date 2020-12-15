@@ -73,30 +73,47 @@ function validateResultType(resultType, result) {
             return ensure_2.ensureUnreachable(resultType);
     }
 }
-function generateErrorFromValidationContext(context, schema, result) {
+function generateErrorFromValidationContexts(contexts, schema, result) {
+    const context = ensure_1.ensureExists(getCurrentContext(contexts));
     const { propertyKey, arrayIndex } = context;
-    ensure_1.ensureExists([propertyKey, arrayIndex].some(value => value), 'Must provide at least one of propertyKey, arrayIndex to ValidationContext');
     const resultValue = typeof result === 'string' ? `"${result}"` : result;
+    const objectTrace = generateObjectTrace(contexts);
     // Validating item within an array property of an objectSchema
     if (propertyKey && arrayIndex) {
         return {
-            message: `Expected a ${schema.type} property for array item ${propertyKey}[${arrayIndex}] but got ${resultValue}.`,
+            message: `Expected a ${schema.type} property for array item ${objectTrace} but got ${resultValue}.`,
         };
     }
     // Validating property of an objectSchema
     if (propertyKey) {
         return {
-            message: `Expected a ${schema.type} property for key ${propertyKey} but got ${resultValue}.`,
+            message: `Expected a ${schema.type} property for key ${objectTrace} but got ${resultValue}.`,
         };
     }
     // Validating item within an array of objects (sync formula)
-    // We don't currently do nested object validation within arrays.
     return {
-        message: `Expected a ${schema.type} property for array item at index ${arrayIndex} but got ${resultValue}.`,
+        message: `Expected a ${schema.type} property for array item at index ${objectTrace} but got ${resultValue}.`,
     };
 }
-function checkPropertyTypeAndCodaType(schema, result, validationContext) {
-    const errors = [generateErrorFromValidationContext(validationContext, schema, result)];
+function generateObjectTrace(contexts) {
+    return contexts.map(context => generateObjectTraceFromValidationContext(context)).join('.');
+}
+function generateObjectTraceFromValidationContext(context) {
+    const { propertyKey, arrayIndex } = context;
+    ensure_1.ensureExists([propertyKey, arrayIndex].some(value => value), 'Must provide at least one of propertyKey, arrayIndex to ValidationContext');
+    if (propertyKey && arrayIndex) {
+        return `${propertyKey}[${arrayIndex}]`;
+    }
+    else if (propertyKey) {
+        return `${propertyKey}`;
+    }
+    else if (arrayIndex) {
+        return `[${arrayIndex}]`;
+    }
+    return '';
+}
+function checkPropertyTypeAndCodaType(schema, result, contexts) {
+    const errors = [generateErrorFromValidationContexts(contexts, schema, result)];
     switch (schema.type) {
         case schema_1.ValueType.Boolean: {
             const resultValidationError = checkType(typeof result === 'boolean', 'boolean', result);
@@ -160,7 +177,7 @@ function checkPropertyTypeAndCodaType(schema, result, validationContext) {
             }
         }
         case schema_1.ValueType.Array:
-            return validateArray(result, schema, { propertyKey: validationContext === null || validationContext === void 0 ? void 0 : validationContext.propertyKey });
+            return validateArray(result, schema, contexts);
         case schema_1.ValueType.Object: {
             const resultValidationError = checkType(typeof result === 'object', 'object', result);
             if (resultValidationError) {
@@ -174,9 +191,7 @@ function checkPropertyTypeAndCodaType(schema, result, validationContext) {
                     const referenceErrorMessages = tryParseReference(result, schema);
                     return referenceErrorMessages !== null && referenceErrorMessages !== void 0 ? referenceErrorMessages : [];
                 case undefined:
-                    // TODO: handle nested object validation.
-                    // no need to coerce current result type
-                    return [];
+                    return validateObject(result, schema, contexts);
                 default:
                     ensure_2.ensureUnreachable(schema);
             }
@@ -262,7 +277,7 @@ function validateObjectResult(formula, result) {
         return;
     }
     if (schema_2.isArray(schema)) {
-        const arrayValidationErrors = validateArray(result, schema);
+        const arrayValidationErrors = validateArray(result, schema, []);
         if (arrayValidationErrors.length) {
             throw types_2.ResultValidationException.fromErrors(formula.name, arrayValidationErrors);
         }
@@ -272,12 +287,15 @@ function validateObjectResult(formula, result) {
         const error = { message: `Expected an object schema, but found ${JSON.stringify(schema)}.` };
         throw types_2.ResultValidationException.fromErrors(formula.name, [error]);
     }
-    const errors = validateObject(result, schema);
+    const errors = validateObject(result, schema, []);
     if (errors.length) {
         throw types_2.ResultValidationException.fromErrors(formula.name, errors);
     }
 }
-function validateObject(result, schema) {
+function getCurrentContext(contexts) {
+    return contexts[contexts.length - 1];
+}
+function validateObject(result, schema, contexts) {
     const errors = [];
     for (const [propertyKey, propertySchema] of Object.entries(schema.properties)) {
         const value = result[propertyKey];
@@ -287,7 +305,7 @@ function validateObject(result, schema) {
             });
         }
         if (value) {
-            const propertyLevelErrors = checkPropertyTypeAndCodaType(propertySchema, value, { propertyKey });
+            const propertyLevelErrors = checkPropertyTypeAndCodaType(propertySchema, value, [...contexts, { propertyKey }]);
             errors.push(...propertyLevelErrors);
         }
     }
@@ -298,7 +316,8 @@ function validateObject(result, schema) {
     }
     return errors;
 }
-function validateArray(result, schema, context) {
+function validateArray(result, schema, contexts) {
+    const currentContext = getCurrentContext(contexts);
     if (!Array.isArray(result)) {
         const error = { message: `Expected an ${schema.type} result but got ${result}.` };
         return [error];
@@ -307,10 +326,10 @@ function validateArray(result, schema, context) {
     const itemType = schema.items;
     for (let i = 0; i < result.length; i++) {
         const item = result[i];
-        const propertyLevelErrors = checkPropertyTypeAndCodaType(itemType, item, {
-            propertyKey: context === null || context === void 0 ? void 0 : context.propertyKey,
-            arrayIndex: i,
-        });
+        if (currentContext) {
+            currentContext.arrayIndex = i;
+        }
+        const propertyLevelErrors = checkPropertyTypeAndCodaType(itemType, item, currentContext ? contexts : [{ arrayIndex: i }]);
         arrayItemErrors.push(...propertyLevelErrors);
     }
     return arrayItemErrors;
