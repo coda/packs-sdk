@@ -96,18 +96,16 @@ function validateResultType<ResultT extends any>(resultType: Type, result: Resul
   }
 }
 
-function generateErrorFromValidationContext(
-  context: ValidationContext,
+function generateErrorFromValidationContexts(
+  contexts: ValidationContext[],
   schema: Schema,
   result: any,
 ): ResultValidationError {
+  const context = getCurrentContext(contexts);
   const {propertyKey, arrayIndex} = context;
-  ensureExists(
-    [propertyKey, arrayIndex].some(value => value),
-    'Must provide at least one of propertyKey, arrayIndex to ValidationContext',
-  );
+
   const resultValue = typeof result === 'string' ? `"${result}"` : result;
-  const objectTrace = generateObjectTraceFromValidationContext(context);
+  const objectTrace = generateObjectTrace(contexts);
   // Validating item within an array property of an objectSchema
   if (propertyKey && arrayIndex) {
     return {
@@ -128,16 +126,23 @@ function generateErrorFromValidationContext(
   };
 }
 
+function generateObjectTrace(contexts: ValidationContext[]): string {
+  return contexts.map(context => generateObjectTraceFromValidationContext(context)).join('.');
+}
+
 function generateObjectTraceFromValidationContext(context: ValidationContext): string {
-  const {propertyKey, arrayIndex, child} = context;
+  const {propertyKey, arrayIndex} = context;
+  ensureExists(
+    [propertyKey, arrayIndex].some(value => value),
+    'Must provide at least one of propertyKey, arrayIndex to ValidationContext',
+  );
+
   if (propertyKey && arrayIndex) {
-    return child
-      ? `${propertyKey}[${arrayIndex}].${generateObjectTraceFromValidationContext(child)}`
-      : `${propertyKey}[${arrayIndex}]`;
+    return `${propertyKey}[${arrayIndex}]`;
   } else if (propertyKey) {
-    return child ? `${propertyKey}.${generateObjectTraceFromValidationContext(child)}` : `${propertyKey}`;
+    return `${propertyKey}`;
   } else if (arrayIndex) {
-    return child ? `[${arrayIndex}].${generateObjectTraceFromValidationContext(child)}` : `[${arrayIndex}]`;
+    return `[${arrayIndex}]`;
   }
 
   return '';
@@ -146,9 +151,9 @@ function generateObjectTraceFromValidationContext(context: ValidationContext): s
 function checkPropertyTypeAndCodaType<ResultT extends any>(
   schema: Schema & ObjectSchemaProperty,
   result: ResultT,
-  validationContext: ValidationContext,
+  contexts: ValidationContext[],
 ): ResultValidationError[] {
-  const errors = [generateErrorFromValidationContext(validationContext, schema, result)];
+  const errors = [generateErrorFromValidationContexts(contexts, schema, result)];
   switch (schema.type) {
     case ValueType.Boolean: {
       const resultValidationError = checkType(typeof result === 'boolean', 'boolean', result);
@@ -212,7 +217,7 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
       }
     }
     case ValueType.Array:
-      return validateArray(result, schema, {propertyKey: validationContext?.propertyKey});
+      return validateArray(result, schema, contexts);
     case ValueType.Object: {
       const resultValidationError = checkType(typeof result === 'object', 'object', result);
       if (resultValidationError) {
@@ -226,7 +231,7 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
           const referenceErrorMessages = tryParseReference(result, schema);
           return referenceErrorMessages ?? [];
         case undefined:
-          return validateObject(result as Record<string, unknown>, schema);
+          return validateObject(result as Record<string, unknown>, schema, contexts);
         default:
           ensureUnreachable(schema);
       }
@@ -335,7 +340,7 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
   }
 
   if (isArray(schema)) {
-    const arrayValidationErrors = validateArray(result, schema);
+    const arrayValidationErrors = validateArray(result, schema, []);
     if (arrayValidationErrors.length) {
       throw ResultValidationException.fromErrors(formula.name, arrayValidationErrors);
     }
@@ -346,17 +351,21 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
     const error: ResultValidationError = {message: `Expected an object schema, but found ${JSON.stringify(schema)}.`};
     throw ResultValidationException.fromErrors(formula.name, [error]);
   }
-  const errors = validateObject(result, schema);
+  const errors = validateObject(result, schema, []);
 
   if (errors.length) {
     throw ResultValidationException.fromErrors(formula.name, errors);
   }
 }
 
+function getCurrentContext(contexts: ValidationContext[]) {
+  return contexts[contexts.length - 1];
+}
+
 function validateObject<ResultT extends Record<string, unknown>>(
   result: ResultT,
   schema: GenericObjectSchema,
-  _context?: ValidationContext,
+  contexts: ValidationContext[],
 ): ResultValidationError[] {
   const errors: ResultValidationError[] = [];
 
@@ -368,7 +377,7 @@ function validateObject<ResultT extends Record<string, unknown>>(
       });
     }
     if (value) {
-      const propertyLevelErrors = checkPropertyTypeAndCodaType(propertySchema, value, {propertyKey});
+      const propertyLevelErrors = checkPropertyTypeAndCodaType(propertySchema, value, [...contexts, {propertyKey}]);
       errors.push(...propertyLevelErrors);
     }
   }
@@ -384,7 +393,7 @@ function validateObject<ResultT extends Record<string, unknown>>(
 function validateArray<ResultT extends any>(
   result: ResultT,
   schema: ArraySchema<Schema>,
-  context?: ValidationContext,
+  contexts: ValidationContext[],
 ): ResultValidationError[] {
   if (!Array.isArray(result)) {
     const error: ResultValidationError = {message: `Expected an ${schema.type} result but got ${result}.`};
@@ -395,10 +404,9 @@ function validateArray<ResultT extends any>(
   const itemType = schema.items;
   for (let i = 0; i < result.length; i++) {
     const item = result[i];
-    const propertyLevelErrors = checkPropertyTypeAndCodaType(itemType, item, {
-      propertyKey: context?.propertyKey,
-      arrayIndex: i,
-    });
+
+    // TODO: @alan-fang change this
+    const propertyLevelErrors = checkPropertyTypeAndCodaType(itemType, item, [...contexts, {arrayIndex: i}]);
     arrayItemErrors.push(...propertyLevelErrors);
   }
 

@@ -285,7 +285,7 @@ describe('Property validation in objects', () => {
   it('rejects nested object with incorrect nested type', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::GetNestedObject', [true]),
-      /The following errors were found when validating the result of the formula "GetPerson":\nExpected a number property for key nested.Number but got "123"./,
+      /The following errors were found when validating the result of the formula "GetPerson":\nExpected a number property for key Nested.Number but got "123"./,
     );
   });
 
