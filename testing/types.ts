@@ -1,4 +1,4 @@
-const cloneDeep = require('lodash/cloneDeep');
+import {deepCopy} from '../helpers/object_utils';
 
 export interface ParameterError {
   message: string;
@@ -19,7 +19,7 @@ export class ResultValidationContext {
   fieldContexts: ValidationContext[];
 
   constructor(contexts?: ValidationContext[]) {
-    this.fieldContexts = contexts ? cloneDeep(contexts) : [];
+    this.fieldContexts = contexts ? deepCopy(contexts) : [];
   }
 
   extendForProperty(propertyKey: string) {

@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResultValidationException = exports.ResultValidationContext = exports.ParameterException = void 0;
-const cloneDeep = require('lodash/cloneDeep');
+const object_utils_1 = require("../helpers/object_utils");
 class ParameterException extends Error {
 }
 exports.ParameterException = ParameterException;
 class ResultValidationContext {
     constructor(contexts) {
-        this.fieldContexts = contexts ? cloneDeep(contexts) : [];
+        this.fieldContexts = contexts ? object_utils_1.deepCopy(contexts) : [];
     }
     extendForProperty(propertyKey) {
         const newContext = { propertyKey, arrayIndices: [] };

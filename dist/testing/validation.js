@@ -246,7 +246,7 @@ function validateObjectResult(formula, result) {
     }
     const validationContext = new types_2.ResultValidationContext();
     if (schema_2.isArray(schema)) {
-        const arrayValidationErrors = validateArray(result, schema, new types_2.ResultValidationContext([{ propertyKey: formula.name, arrayIndices: [] }]));
+        const arrayValidationErrors = validateArray(result, schema, new types_2.ResultValidationContext().extendForProperty(formula.name));
         if (arrayValidationErrors.length) {
             throw types_3.ResultValidationException.fromErrors(formula.name, arrayValidationErrors);
         }

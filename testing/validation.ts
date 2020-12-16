@@ -304,7 +304,7 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
     const arrayValidationErrors = validateArray(
       result,
       schema,
-      new ResultValidationContext([{propertyKey: formula.name, arrayIndices: []}]),
+      new ResultValidationContext().extendForProperty(formula.name),
     );
     if (arrayValidationErrors.length) {
       throw ResultValidationException.fromErrors(formula.name, arrayValidationErrors);
