@@ -94,12 +94,12 @@ export const manifest: PackDefinition = {
 ```
 
 Now change the pack name and description and formula name, description, and implementation to your own,
-and you now have a valid pack. See [TODO: Running Your Code](#Running-Your-Code) to start executing
+and you now have a valid pack. See [Running Your Code](#running-your-code) to start executing
 your formulas.
 
 NOTE: This example includes a formula definition inline in the pack definition for the sake of a simple
 example, but we highly recommend splitting your formula definitions and supporting code into separate
-files for ease of understanding and maintenance. See [TODO: Best Practices](#Best-Practices) for tips
+files for ease of understanding and maintenance. See [Best Practices](#best-practices) for tips
 and examples of well-structured packs.
 
 ## Running Your Code
@@ -151,7 +151,7 @@ coda execute path/to/manifest.ts Items 2020-12-15
 ```
 
 This will execute your sync formula repeatedly until there are no more results, and print
-the output array of all result objects to the terminal. See [TODO: Syncs](#Syncs)] for more
+the output array of all result objects to the terminal. See [Syncs](#syncs)] for more
 information about how and why sync formulas are invoked repeatedly for paginated results.
 
 ### Fetching
@@ -164,7 +164,7 @@ coda execute --fetch src/manifest.ts MyPack::MyFormula some-arg
 ```
 
 Your http requests will commonly require authentication in order to succeed, which the `coda execute` utility supports.
-See the [TODO: Authentication](#Authentication)] section about how to set this up.
+See the [Authentication](#authentication) section about how to set this up.
 
 ## Core Concepts
 
@@ -194,6 +194,71 @@ short period of time, which may affect the service you are fetching from.
 ### Authentication
 
 ### Syncs
+
+A sync is a specific kind of **formula**, with the goal of populating a Coda table with data from a
+third-party data source. A sync formula returns an array of objects, with each object representing
+a row of data in the resulting table.
+
+Syncs assume that pagination will be necessary in most cases. One invocation of a sync formula
+is not meant to return all of the applicable results, but only one **page** of results of a reasonable
+size. For example, if you are fetching items from an API that returns 100 items per API request,
+it would be very reasonable for your sync formula to return 100 results per invocation.
+
+The 2nd parameter to a sync formula is a `SyncContext`, which has all the fields of the `Context` object
+used with regular formulas, but also includes a property called `sync`, which is a `Sync` object
+containing a property called `continuation`. A `Continuation` is a simple representation that you define
+of where you are in the overall sync process. Conceptually, the continuation is just a page number,
+but it can represent more if you need it.
+
+The first time your sync formula is invoked, the continuation will be undefined. Your formula then
+returns its array of results for that invocation, and optionally a continuation to use the next time
+the sync formula is invoked. If a continuation is not returned, the sync terminates. If a continuation is
+returned, that same continuation is passed as an input in `context.sync.continuation` the next time
+the formula is invoked. The formula is invoked repeatedly with each subsequent continuation until
+no continuation is returned.
+
+A `Continuation` is just a JavaScript object mapping one or more arbitrary key names to a string or number.
+It's up to you what you want to include to help you keep track of where you are in the overall sync.
+Typically, if you're calling an API, the continuation closely matches what the API uses for pagination.
+
+Suppose the API you're using allowed you pass a page number in url parameter to filte results just to that
+page. You could return `{page: 2}` as your continuation. You could then look at `context.sync.continuation.page`
+in your sync formula to determine which page of results you should request in that particular invocation.
+
+If the API you're using instead returns a complete, opaque url of the next page of results in response metadata,
+you might structure your continuation like `{nextUrl: 'https://myapi.com/results?pageToken=asdf123'}`.
+
+#### Examples
+
+If your sync formula returns:
+
+```typescript
+return {
+  result: [...one page of results...],
+  continuation: {page: 2},
+};
+```
+
+Your formula will be called again immediately with `{page: 2}` as the value of `context.sync.continuation`.
+
+If your sync formula returns:
+
+```typescript
+return {
+  result: [...last page of results...],
+};
+
+// or
+
+return {
+  result: [...last page of results...],
+  continuation: undefined,
+};
+```
+
+your sync will be assumed to be complete and your formula will not be invoked any further.
+
+The arrays of partial results from each sync formula invocation will be merged together and inserted into the doc.
 
 ### Execution Environment
 
