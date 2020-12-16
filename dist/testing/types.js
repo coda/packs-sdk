@@ -1,15 +1,31 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResultValidationException = exports.ResultValidationContext = exports.ParameterException = void 0;
+const cloneDeep = require('lodash/cloneDeep');
 class ParameterException extends Error {
 }
 exports.ParameterException = ParameterException;
 class ResultValidationContext {
     constructor(contexts) {
-        this.fieldContexts = contexts !== null && contexts !== void 0 ? contexts : [];
+        this.fieldContexts = contexts ? cloneDeep(contexts) : [];
     }
-    extend(context) {
-        return new ResultValidationContext([...this.fieldContexts, context]);
+    extendForProperty(propertyKey) {
+        const newContext = { propertyKey, arrayIndices: [] };
+        return new ResultValidationContext([...this.fieldContexts, newContext]);
+    }
+    extendForIndex(arrayIndex) {
+        const newContext = new ResultValidationContext(this.fieldContexts);
+        const currentContext = newContext.fieldContexts[newContext.fieldContexts.length - 1];
+        currentContext.arrayIndices.push(arrayIndex);
+        return newContext;
+    }
+    generateFieldPath() {
+        const fieldPath = this.fieldContexts.map(context => this.generateFieldPathFromValidationContext(context));
+        return fieldPath.join('.');
+    }
+    generateFieldPathFromValidationContext(context) {
+        const { propertyKey, arrayIndices } = context;
+        return `${propertyKey}${arrayIndices.map(idx => `[${idx}]`)}`;
     }
 }
 exports.ResultValidationContext = ResultValidationContext;

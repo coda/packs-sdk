@@ -7,13 +7,16 @@ export interface ResultValidationError {
     message: string;
 }
 export interface ValidationContext {
-    propertyKey?: string;
-    arrayIndex?: number;
+    propertyKey: string;
+    arrayIndices: number[];
 }
 export declare class ResultValidationContext {
     fieldContexts: ValidationContext[];
     constructor(contexts?: ValidationContext[]);
-    extend(context: ValidationContext): ResultValidationContext;
+    extendForProperty(propertyKey: string): ResultValidationContext;
+    extendForIndex(arrayIndex: number): ResultValidationContext;
+    generateFieldPath(): string;
+    generateFieldPathFromValidationContext(context: ValidationContext): string;
 }
 export declare class ResultValidationException extends Error {
     errors: ResultValidationError[];

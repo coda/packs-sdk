@@ -1,3 +1,5 @@
+const cloneDeep = require('lodash/cloneDeep');
+
 export interface ParameterError {
   message: string;
 }
@@ -9,19 +11,37 @@ export interface ResultValidationError {
 }
 
 export interface ValidationContext {
-  propertyKey?: string;
-  arrayIndex?: number;
+  propertyKey: string;
+  arrayIndices: number[];
 }
 
 export class ResultValidationContext {
   fieldContexts: ValidationContext[];
 
   constructor(contexts?: ValidationContext[]) {
-    this.fieldContexts = contexts ?? [];
+    this.fieldContexts = contexts ? cloneDeep(contexts) : [];
   }
 
-  extend(context: ValidationContext) {
-    return new ResultValidationContext([...this.fieldContexts, context]);
+  extendForProperty(propertyKey: string) {
+    const newContext: ValidationContext = {propertyKey, arrayIndices: []};
+    return new ResultValidationContext([...this.fieldContexts, newContext]);
+  }
+
+  extendForIndex(arrayIndex: number) {
+    const newContext: ResultValidationContext = new ResultValidationContext(this.fieldContexts);
+    const currentContext: ValidationContext = newContext.fieldContexts[newContext.fieldContexts.length - 1];
+    currentContext.arrayIndices.push(arrayIndex);
+    return newContext;
+  }
+
+  generateFieldPath(): string {
+    const fieldPath = this.fieldContexts.map(context => this.generateFieldPathFromValidationContext(context));
+    return fieldPath.join('.');
+  }
+
+  generateFieldPathFromValidationContext(context: ValidationContext): string {
+    const {propertyKey, arrayIndices} = context;
+    return `${propertyKey}${arrayIndices.map(idx => `[${idx}]`)}`;
   }
 }
 

@@ -8,7 +8,6 @@ const api_types_1 = require("../api_types");
 const url_1 = require("url");
 const schema_1 = require("../schema");
 const ensure_1 = require("../helpers/ensure");
-const ensure_2 = require("../helpers/ensure");
 const schema_2 = require("../schema");
 const object_utils_1 = require("../helpers/object_utils");
 const string_1 = require("../helpers/string");
@@ -71,37 +70,15 @@ function validateResultType(resultType, result) {
         case api_types_1.Type.string:
             return checkType(typeOfResult === 'string', 'string', result);
         default:
-            return ensure_2.ensureUnreachable(resultType);
+            return ensure_1.ensureUnreachable(resultType);
     }
 }
 function generateErrorFromValidationContext(context, schema, result) {
     const resultValue = typeof result === 'string' ? `"${result}"` : result;
-    const objectTrace = generateFieldPath(context);
+    const objectTrace = context.generateFieldPath();
     return {
         message: `Expected a ${schema.type} property for ${objectTrace} but got ${resultValue}.`,
     };
-}
-function generateFieldPath(context) {
-    let path = '';
-    const fieldPath = context.fieldContexts.map(context => generateFieldPathFromValidationContext(context));
-    for (let i = 0; i < fieldPath.length; i++) {
-        const field = fieldPath[i];
-        const nextField = fieldPath[i + 1];
-        const isNextFieldObjectProperty = nextField && !(nextField.slice(-1) === ']');
-        path += field + (isNextFieldObjectProperty ? '.' : '');
-    }
-    return path;
-}
-function generateFieldPathFromValidationContext(context) {
-    const { propertyKey, arrayIndex } = context;
-    ensure_1.ensureExists([propertyKey, arrayIndex].some(value => value), 'Must provide at least one of propertyKey, arrayIndex to ValidationContext');
-    if (propertyKey && arrayIndex) {
-        return `${propertyKey}[${arrayIndex}]`;
-    }
-    else if (propertyKey) {
-        return `${propertyKey}`;
-    }
-    return `[${arrayIndex}]`;
 }
 function checkPropertyTypeAndCodaType(schema, result, context) {
     const errors = [generateErrorFromValidationContext(context, schema, result)];
@@ -134,7 +111,7 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                     // no need to coerce current result type
                     return [];
                 default:
-                    return ensure_2.ensureUnreachable(schema);
+                    return ensure_1.ensureUnreachable(schema);
             }
         }
         case schema_1.ValueType.String: {
@@ -164,7 +141,7 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                     // no need to coerce current result type
                     return [];
                 default:
-                    ensure_2.ensureUnreachable(schema);
+                    ensure_1.ensureUnreachable(schema);
             }
         }
         case schema_1.ValueType.Array:
@@ -184,11 +161,11 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                 case undefined:
                     return validateObject(result, schema, context);
                 default:
-                    ensure_2.ensureUnreachable(schema);
+                    ensure_1.ensureUnreachable(schema);
             }
         }
         default:
-            return ensure_2.ensureUnreachable(schema);
+            return ensure_1.ensureUnreachable(schema);
     }
 }
 function tryParseDateTimeString(result, schema) {
@@ -267,8 +244,9 @@ function validateObjectResult(formula, result) {
     if (!schema) {
         return;
     }
+    const validationContext = new types_2.ResultValidationContext();
     if (schema_2.isArray(schema)) {
-        const arrayValidationErrors = validateArray(result, schema, new types_2.ResultValidationContext([{ propertyKey: formula.name }]));
+        const arrayValidationErrors = validateArray(result, schema, new types_2.ResultValidationContext([{ propertyKey: formula.name, arrayIndices: [] }]));
         if (arrayValidationErrors.length) {
             throw types_3.ResultValidationException.fromErrors(formula.name, arrayValidationErrors);
         }
@@ -278,7 +256,7 @@ function validateObjectResult(formula, result) {
         const error = { message: `Expected an object schema, but found ${JSON.stringify(schema)}.` };
         throw types_3.ResultValidationException.fromErrors(formula.name, [error]);
     }
-    const errors = validateObject(result, schema, new types_2.ResultValidationContext());
+    const errors = validateObject(result, schema, validationContext);
     if (errors.length) {
         throw types_3.ResultValidationException.fromErrors(formula.name, errors);
     }
@@ -293,7 +271,7 @@ function validateObject(result, schema, context) {
             });
         }
         if (value) {
-            const propertyLevelErrors = checkPropertyTypeAndCodaType(propertySchema, value, context.extend({ propertyKey }));
+            const propertyLevelErrors = checkPropertyTypeAndCodaType(propertySchema, value, context.extendForProperty(propertyKey));
             errors.push(...propertyLevelErrors);
         }
     }
@@ -313,7 +291,7 @@ function validateArray(result, schema, context) {
     const itemType = schema.items;
     for (let i = 0; i < result.length; i++) {
         const item = result[i];
-        const propertyLevelErrors = checkPropertyTypeAndCodaType(itemType, item, context.extend({ arrayIndex: i }));
+        const propertyLevelErrors = checkPropertyTypeAndCodaType(itemType, item, context.extendForIndex(i));
         arrayItemErrors.push(...propertyLevelErrors);
     }
     return arrayItemErrors;
