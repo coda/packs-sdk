@@ -28,3 +28,7 @@ export function isDefined<T>(obj: T | null | undefined): obj is T {
 export function isNil<T>(obj: T | null | undefined): obj is null | undefined {
   return typeof obj === 'undefined' || obj === null;
 }
+
+export function deepCopy<T>(obj: T): T {
+  return JSON.parse(JSON.stringify(obj));
+}
