@@ -189,8 +189,6 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
           const personErrorMessage = tryParsePerson(result, schema);
           return personErrorMessage ? [personErrorMessage] : [];
         case ValueType.Reference:
-          const referenceErrorMessages = tryParseReference(result, schema);
-          return referenceErrorMessages ?? [];
         case undefined:
           return validateObject(result as Record<string, unknown>, schema, context);
         default:
@@ -263,11 +261,6 @@ function tryParsePerson(result: any, schema: GenericObjectSchema) {
   if (!isEmail(result[id] as string)) {
     return {message: `The id field for the person result must be an email string, but got "${result[id]}".`};
   }
-}
-
-function tryParseReference(_result: any, _schema: GenericObjectSchema): ResultValidationError[] {
-  // TODO: @alan-fang figure out references
-  return [];
 }
 
 function checkFieldIsPresent(
