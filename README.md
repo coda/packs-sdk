@@ -260,6 +260,8 @@ your sync will be assumed to be complete and your formula will not be invoked an
 
 The arrays of partial results from each sync formula invocation will be merged together and inserted into the doc.
 
+### Normalization
+
 ### Execution Environment
 
 Coda packs execute on the server side in a special isolated node environment. They do not execute in the browser

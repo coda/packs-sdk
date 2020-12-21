@@ -40,12 +40,16 @@ lint-fix:
 compile:
 	${ROOTDIR}/node_modules/.bin/tsc
 
+.PHONY: docs
+docs:
+	${ROOTDIR}/node_modules/.bin/typedoc
+
 .PHONY: test
 test:
 	TS_NODE_TRANSPILE_ONLY=1 ${ROOTDIR}/node_modules/.bin/mocha test/*_test.ts
 
 .PHONY: build
-build: lint compile
+build: lint compile docs
 
 .PHONY: validate-no-changes
 validate-no-changes: compile

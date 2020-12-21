@@ -34,6 +34,12 @@ import {stringArray} from './api_types';
 export {ExecutionContext};
 export {FetchRequest} from './api_types';
 
+/**
+ * An error whose message will be shown to the end user in the UI when it occurs.
+ * If an error is encountered in a formula and you want to describe the error
+ * to the end user, throw a UserVisibleError with a user-friendly message
+ * and the Coda UI will display the message.
+ */
 export class UserVisibleError extends Error {
   readonly isUserVisible = true;
   readonly internalError: Error | undefined;
@@ -52,6 +58,10 @@ export class StatusCodeError extends Error {
   }
 }
 
+/**
+ * Type definition for a Sync Table. Should not be necessary to use directly,
+ * instead, define sync tables using {@link makeSyncTable}.
+ */
 export interface SyncTableDef<
   K extends string,
   L extends string,
@@ -65,6 +75,10 @@ export interface SyncTableDef<
   entityName?: string;
 }
 
+/**
+ * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
+ * instead, define dynamic sync tables using {@link makeDynamicSyncTable}.
+ */
 export interface DynamicSyncTableDef<
   K extends string,
   L extends string,
@@ -78,15 +92,69 @@ export interface DynamicSyncTableDef<
   listDynamicUrls?: MetadataFormula;
 }
 
+/**
+ * Container for arbitrary data about which page of data to retrieve in this sync invocation.
+ *
+ * Sync formulas fetch one reasonable size "page" of data per invocation such that the formula
+ * can be invoked quickly. The end result of a sync is the concatenation of the results from
+ * each individual invocation.
+ *
+ * To instruct the syncer to fetch a subsequent result page, return a `Continuation` that
+ * describes which page of results to fetch next. The continuation will be passed verbatim
+ * as an input to the subsequent invocation of the sync formula.
+ *
+ * The contents of this object are entirely up to the pack author.
+ *
+ * Examples:
+ *
+ * ```
+ * {nextPage: 3}
+ * ```
+ *
+ * ```
+ * {nextPageUrl: 'https://someapi.com/api/items?pageToken=asdf123'}
+ * ```
+ */
 export interface Continuation {
   [key: string]: string | number;
 }
+
+/**
+ * Type definition for the formula that implements a sync table.
+ * Should not be necessary to use directly, see {@link makeSyncTable}
+ * for defining a sync table.
+ */
 export type GenericSyncFormula = SyncFormula<any, any, ParamDefs, any>;
+/**
+ * Type definition for the return value of a sync table.
+ * Should not be necessary to use directly, see {@link makeSyncTable}
+ * for defining a sync table.
+ */
 export type GenericSyncFormulaResult = SyncFormulaResult<any>;
+/**
+ * Type definition for a static (non-dynamic) sync table.
+ * Should not be necessary to use directly, see {@link makeSyncTable}
+ * for defining a sync table.
+ */
 export type GenericSyncTable = SyncTableDef<any, any, ParamDefs, any>;
+/**
+ * Type definition for a dynamic sync table.
+ * Should not be necessary to use directly, see {@link makeDynamicSyncTable}
+ * for defining a sync table.
+ */
 export type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, ParamDefs, any>;
+/**
+ * Union of type definitions for sync tables..
+ * Should not be necessary to use directly, see {@link makeSyncTable} or {@link makeDynamicSyncTable}
+ * for defining a sync table.
+ */
 export type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
 
+/**
+ * Helper to determine if an error is considered user-visible and can be shown in the UI.
+ * See {@link UserVisibleError}.
+ * @param error Any error object.
+ */
 export function isUserVisibleError(error: Error): error is UserVisibleError {
   return 'isUserVisible' in error && (error as any).isUserVisible;
 }
@@ -298,12 +366,24 @@ export type SyncFormula<
   schema?: ArraySchema;
 };
 
+/**
+ * Helper for returning the definition of a formula that returns a number. Adds result type information
+ * to a generic formula definition.
+ *
+ * @param definition The definition of a formula that returns a number.
+ */
 export function makeNumericFormula<ParamDefsT extends ParamDefs>(
   definition: PackFormulaDef<ParamDefsT, number>,
 ): NumericPackFormula<ParamDefsT> {
   return Object.assign({}, definition, {resultType: Type.number as Type.number}) as NumericPackFormula<ParamDefsT>;
 }
 
+/**
+ * Helper for returning the definition of a formula that returns a string. Adds result type information
+ * to a generic formula definition.
+ *
+ * @param definition The definition of a formula that returns a string.
+ */
 export function makeStringFormula<ParamDefsT extends ParamDefs>(
   definition: StringFormulaDef<ParamDefsT>,
 ): StringPackFormula<ParamDefsT> {
@@ -314,7 +394,18 @@ export function makeStringFormula<ParamDefsT extends ParamDefs>(
   }) as StringPackFormula<ParamDefsT>;
 }
 
+/**
+ * @hidden
+ *
+ * DEPRECATED. Use MetadataFormula and makeMetadataFormula instead.
+ */
 export type GetConnectionNameFormula = StringPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>]>;
+
+/**
+ * @hidden
+ *
+ * DEPRECATED. Use makeMetadataFormula instead.
+ */
 export function makeGetConnectionNameFormula(
   execute: (context: ExecutionContext, codaUserName: string) => Promise<string> | string,
 ): GetConnectionNameFormula {
@@ -337,12 +428,22 @@ export function makeGetConnectionNameFormula(
   });
 }
 
+/**
+ * The return type for a metadata formula that should return a different dispaly to the user
+ * than is used internally.
+ */
 export interface MetadataFormulaObjectResultType {
   display: string;
   value: string | number;
   hasChildren?: boolean;
 }
 
+/**
+ * A context object that is provided to a metadata formula at execution time.
+ * For example, an autocomplete metadata formula for a parameter value may need
+ * to know the value of parameters that have already been selected. Those parameter
+ * values are provided in this context object.
+ */
 export type MetadataContext = Record<string, any>;
 
 export type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
@@ -480,6 +581,29 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
   }) as ObjectPackFormula<ParamDefsT, SchemaT>;
 }
 
+/**
+ * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
+ * using this wrapper rather than declaring a sync table definition objec directly.
+ *
+ * This wrapper does a variety of helpful things, including
+ * * Doing basic validation of the provided definition.
+ * * Normalizing the schema definition to conform to Coda-recommended syntax.
+ * * Wrapping the execute formula to normalize return values to match the normalized schema.
+ *
+ * See [Normalization](/index.html#normalization) for more information about schema normalization.
+ *
+ * @param name The name of the sync table. This should describe the entities being synced. For example,
+ * a sync table that syncs products from an e-commerce platform should be called 'Products'. This name
+ * must not contain spaces.
+ * @param schema The definition of the schema that describes a single response object. For example, the
+ * schema for a single product. The sync formula will return an array of objects that fit this schema.
+ * @param formula The definition of the formula that implements this sync. This is a Coda packs formula
+ * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
+ * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
+ * These will eventually be consolidated.)
+ * @param getSchema Only used internally by {@link makeDynamicSyncTable}, see there for more details.
+ * @param entityName Only used internally by {@link makeDynamicSyncTable}, see there for more details.
+ */
 export function makeSyncTable<
   K extends string,
   L extends string,
@@ -488,10 +612,11 @@ export function makeSyncTable<
 >(
   name: string,
   schema: SchemaT,
-  {execute: wrappedExecute, ...definition}: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
+  formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
   getSchema?: MetadataFormula,
   entityName?: string,
 ): SyncTableDef<K, L, ParamDefsT, SchemaT> {
+  const {execute: wrappedExecute, ...definition} = formula;
   const formulaSchema = getSchema
     ? undefined
     : normalizeSchema<ArraySchema<Schema>>({type: ValueType.Array, items: schema});
