@@ -37,24 +37,37 @@ in which case, make sure that you have TypeScript and **ts-node** installed.
 
 ### One-time Setup
 
+#### Global Install (Quick)
+
+The simplest way to get started with the SDK is to install it globally:
+
+```console
+npm install --global https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basic@github.com/kr-project/packs-sdk#e79bbd196bf080b266f038ddd2bceb83b45e1270
+```
+
+#### Single-Project Install (Recommended)
+
+It's easier to manage dependencies and avoid version conflicts across projects
+if you create an npm project for your pack and install the SDK and other dependencies
+locally.
+
 Create a new project directory if you haven't already and initialize your project:
 
 ```console
 # Initialize npm and follow prompts.
 npm init
-# Install the Coda Packs SDK.
+# Install the Coda Packs SDK locally in your project
 npm install --save https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basic@github.com/kr-project/packs-sdk#e79bbd196bf080b266f038ddd2bceb83b45e1270
 ```
 
-### Setup Your Path
-
-When working with the Coda Packs SDK, you'll frequently use the `coda` commandline (CLI) utility that is included
-with the npm package. That utility lives at `./node_modules/.bin/coda`, but it's more convenient to reference it
-directly as `coda`, so we recommend running:
+Update your path so you can easily use the `coda` commandline (CLI) that ships with the SDK:
 
 ```console
 export PATH=./node_modules/.bin:$PATH
 ```
+
+(Globally-installed npm packages link CLI scripts into your system path. Locally installed packages
+live in `./node_modules/.bin` and so are more easily used by updating your path.)
 
 ### Setup Your Pack Definition
 
