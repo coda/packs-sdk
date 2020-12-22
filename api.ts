@@ -429,7 +429,7 @@ export function makeGetConnectionNameFormula(
 }
 
 /**
- * The return type for a metadata formula that should return a different dispaly to the user
+ * The return type for a metadata formula that should return a different display to the user
  * than is used internally.
  */
 export interface MetadataFormulaObjectResultType {
@@ -583,7 +583,7 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
 
 /**
  * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
- * using this wrapper rather than declaring a sync table definition objec directly.
+ * using this wrapper rather than declaring a sync table definition object directly.
  *
  * This wrapper does a variety of helpful things, including
  * * Doing basic validation of the provided definition.

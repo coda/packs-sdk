@@ -7,7 +7,7 @@ These extensions can communicate with third-party APIs, with or without user aut
 
 Packs are a combination of **formulas**, **sync tables**, and **column formats**.
 
-A **formula** is a JavaScript function what will be exposed as a Coda formula, that you can use anywhere in a
+A **formula** is a JavaScript function that will be exposed as a Coda formula, that you can use anywhere in a
 Coda doc that you can use any normal formula. Formulas take basic Coda types as input, like strings, numbers,
 dates, booleans, and arrays of these types, and return any of these types or objects whose properties are any
 of these types.
@@ -174,7 +174,7 @@ One of the main reason packs are useful is that they can fetch data from a remot
 The Coda Packs API permits you to make http requests to third-parties via the `Fetcher` objects. This is the **only**
 way to make http requests in a pack, direct use of a a different http client is not permitted.
 
-All pack formulas including sync formulas have a `Context` object as their 2nd parameter. This contet contains
+All pack formulas including sync formulas have a `Context` object as their 2nd parameter. This context contains
 a property called `fetcher` that is a `Fetcher` object, exposing a single method, `fetch`. This method allows
 you to specify common information for an http request, including the http method, url, headers, and body:
 
@@ -262,6 +262,132 @@ The arrays of partial results from each sync formula invocation will be merged t
 
 ### Normalization
 
+Syncs and formulas that return objects get **normalized**, which simply means that their property names get
+rewritten to a standardized format. So long as you use the wrapper methods like `makeObjectFormula()` or
+`makeSyncTable()`, which are the only supported ways of creating the entities, this will happen automatically
+on your behalf so you don't need to worry about implementing normalization. However, it will affect
+the return values of object formulas and syncs so it's good to be aware of what's happening in order
+to understand the output when testing your formulas and avoid being surprised.
+
+There are a few reasons that object property names are normalized. One is to remove any punctuation from
+property names that would affect the Coda formula builder and cause a user to be unable to access
+a field in an object due to a bad name. Another reason is to standarize all property names across
+all the different packs which have different authors, so that working with pack values is consistent
+for Coda users.
+
+Normalization simply removes punctuation and rewrites strings into Pascal case. That is, property names
+like `fooBar`, `foo_bar`, and `foo bar` will all be normalized to `FooBar`.
+
+The SDK will normalize both the schema as well as the return values from object formulas. Coda cares
+that pack objects get normalized but we will do it on your behalf. So for example, if you're working with an API that returns a User object that looks like `{id: '...', name: '...'}`, you can define the schema for the object as
+
+```typescript
+const userSchema = makeObjectSchema({
+  type: ValueType.Object,
+  id: 'id',
+  primary: 'name',
+  properties: {
+    id: {type: ValueType.String},
+    name: {type: ValueType.String},
+  },
+});
+```
+
+And your formula can return objects you get from the API that look like ``{id: '...', name: '...'}` as-is. Coda will normalize the schema so that it looks like
+
+```typescript
+{
+  type: ValueType.Object,
+  id: 'Id',
+  primary: 'Name',
+  properties: {
+    Id: {type: ValueType.String, fromKey: 'id'},
+    Name: {type: ValueType.String, fromKey: 'name'},
+  },
+}
+```
+
+And it will convert your return value into `{Id: '...', Name: '...'}` to match the schema.
+
+When testing your code using `coda execute` or the testing helpers provided by the SDK like
+`executeFormulaFromPackDef`, you'll notice that the return values are normalized as above.
+
+### Type Hints
+
+The SDK intentionally provides only a few value types for object properties to keep things
+simple, but the Coda application is able to understand many more types of values.
+The SDK allows you to optionally provide a `codaType` when declaring a property in an object
+schema which tells Coda how to interpret a value that is otherwise one of the basic value types.
+
+For example, suppose the API you're using provides a created-at timestamp as a numeric Unix time value.
+You can simply declare your field as `{type: ValueType.Number, codaType: ValueType.DateTime}` and
+Coda will parse the timestamp into a proper DateTime value on your behalf.
+
+Or perhaps you want to return an object that has an image associated with it, and your pack
+and the API it integrates with specify that image as a url. Your schema can declare that
+property as `{type: ValueType.String, codaType: ValueType.Image}` and that url will be
+downloaded to be hosted on Coda and presented as an image in the Coda UI.
+
+TODO: Link to full reference on hint types.
+
+### Key Mapping and Extraneous Properties
+
+The SDK assumes that it will be common to write packs that mostly fetch and return data from
+third-party API, and that massaging that data to conform to an SDK schema might be tedious,
+so the SDK supports ways to pass through third-party data as-is or with minimal massaging.
+
+The `response` property of an object formula has an optional property `excludeExtraneous` which
+if true, strips all fields from your return values if they are not declared in schema.
+For example, if you're working with an API that returns a User object with a bunch of fields
+you don't care about, like `createdAt` and `updatedAt`, you can just declare your formula using
+
+```typescript
+makeObjectFormula({
+  ...,
+  response: {
+    excludeExtraneous: true,
+    schema: makeObjectSchema({
+      type: ValueType.Object,
+      properties: {
+        name: {type: ValueType.String},
+      },
+    }),
+  },
+})
+```
+
+and then you can return the full user object that you get back from the API, and all fields
+other than `name` will be stripped away with your code needing to do this explicitly.
+
+Note that `excludeExtraneous` is automatically true for sync table formulas.
+
+To make parsing an API object and massing it to match your schema easier, you can use the
+`fromKey` property of a schema property definition. This instructs the SDK to convert
+properties with whatever name you specified in the `fromKey` property to the name that you
+gave to that property in the schema.
+
+So suppose that the API you're working with returns a User object that looks like
+`{userId: '...', userName: '...'}` but you want your pack to return a value that has the
+friendlier property names `id` and `name`. You can define your schema as
+
+```typescript
+const userSchema = makeObjectSchema({
+  type: ValueType.Object,
+  id: 'id',
+  primary: 'name',
+  properties: {
+    id: {type: ValueType.String, fromKey: 'userId'},
+    name: {type: ValueType.String, fromKey: 'userName'},
+  },
+});
+```
+
+You can then return the user object from the API as-is, and the `userId` and `userName` fields
+will be remapped to `id` and `name` (and then those fields will be normalized, too).
+
+The combination of `fromKey` and `excludeExtraneous` should generally mean that you needn't
+write any code to remove or remap fields to make an API object conform to your desired schema.
+
 ### Execution Environment
 
 Coda packs execute on the server side in a special isolated node environment. They do not execute in the browser
@@ -274,3 +400,5 @@ and don't have access to any browser resources or user information other than wh
 ## Assets
 
 ## Reference
+
+### Hint Types

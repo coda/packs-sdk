@@ -298,7 +298,7 @@ function makeObjectFormula(_a) {
 exports.makeObjectFormula = makeObjectFormula;
 /**
  * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
- * using this wrapper rather than declaring a sync table definition objec directly.
+ * using this wrapper rather than declaring a sync table definition object directly.
  *
  * This wrapper does a variety of helpful things, including
  * * Doing basic validation of the provided definition.

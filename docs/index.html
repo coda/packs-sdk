@@ -73,7 +73,7 @@
 				<p>Coda Packs allow you to extend the functionality of Coda with extensions that you write in JavaScript/TypeScript.
 				These extensions can communicate with third-party APIs, with or without user authentication, if desired.</p>
 				<p>Packs are a combination of <strong>formulas</strong>, <strong>sync tables</strong>, and <strong>column formats</strong>.</p>
-				<p>A <strong>formula</strong> is a JavaScript function what will be exposed as a Coda formula, that you can use anywhere in a
+				<p>A <strong>formula</strong> is a JavaScript function that will be exposed as a Coda formula, that you can use anywhere in a
 					Coda doc that you can use any normal formula. Formulas take basic Coda types as input, like strings, numbers,
 					dates, booleans, and arrays of these types, and return any of these types or objects whose properties are any
 				of these types.</p>
@@ -206,7 +206,7 @@ npm install --save https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basi
 				<p>One of the main reason packs are useful is that they can fetch data from a remote server or API and return it Coda.
 					The Coda Packs API permits you to make http requests to third-parties via the <code>Fetcher</code> objects. This is the <strong>only</strong>
 				way to make http requests in a pack, direct use of a a different http client is not permitted.</p>
-				<p>All pack formulas including sync formulas have a <code>Context</code> object as their 2nd parameter. This contet contains
+				<p>All pack formulas including sync formulas have a <code>Context</code> object as their 2nd parameter. This context contains
 					a property called <code>fetcher</code> that is a <code>Fetcher</code> object, exposing a single method, <code>fetch</code>. This method allows
 				you to specify common information for an http request, including the http method, url, headers, and body:</p>
 				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> response = <span class="hljs-keyword">await</span> context.fetcher.fetch({<span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;GET&#x27;</span>, <span class="hljs-attr">url</span>: <span class="hljs-string">&#x27;https://myservice.com/api&#x27;</span>});</code></pre>
@@ -273,6 +273,103 @@ npm install --save https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basi
 				<a href="#normalization" id="normalization" style="color: inherit; text-decoration: none;">
 					<h3>Normalization</h3>
 				</a>
+				<p>Syncs and formulas that return objects get <strong>normalized</strong>, which simply means that their property names get
+					rewritten to a standardized format. So long as you use the wrapper methods like <code>makeObjectFormula()</code> or
+					<code>makeSyncTable()</code>, which are the only supported ways of creating the entities, this will happen automatically
+					on your behalf so you don&#39;t need to worry about implementing normalization. However, it will affect
+					the return values of object formulas and syncs so it&#39;s good to be aware of what&#39;s happening in order
+				to understand the output when testing your formulas and avoid being surprised.</p>
+				<p>There are a few reasons that object property names are normalized. One is to remove any punctuation from
+					property names that would affect the Coda formula builder and cause a user to be unable to access
+					a field in an object due to a bad name. Another reason is to standarize all property names across
+					all the different packs which have different authors, so that working with pack values is consistent
+				for Coda users.</p>
+				<p>Normalization simply removes punctuation and rewrites strings into Pascal case. That is, property names
+				like <code>fooBar</code>, <code>foo_bar</code>, and <code>foo bar</code> will all be normalized to <code>FooBar</code>.</p>
+				<p>The SDK will normalize both the schema as well as the return values from object formulas. Coda cares
+				that pack objects get normalized but we will do it on your behalf. So for example, if you&#39;re working with an API that returns a User object that looks like <code>{id: &#39;...&#39;, name: &#39;...&#39;}</code>, you can define the schema for the object as</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> userSchema = makeObjectSchema({
+  <span class="hljs-attr">type</span>: ValueType.Object,
+  <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;id&#x27;</span>,
+  <span class="hljs-attr">primary</span>: <span class="hljs-string">&#x27;name&#x27;</span>,
+  <span class="hljs-attr">properties</span>: {
+    <span class="hljs-attr">id</span>: {<span class="hljs-attr">type</span>: ValueType.String},
+    <span class="hljs-attr">name</span>: {<span class="hljs-attr">type</span>: ValueType.String},
+  },
+});</code></pre>
+				<p>And your formula can return objects you get from the API that look like ``{id: &#39;...&#39;, name: &#39;...&#39;}` as-is. Coda will normalize the schema so that it looks like</p>
+				<pre><code class="language-typescript">{
+  <span class="hljs-attr">type</span>: ValueType.Object,
+  <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;Id&#x27;</span>,
+  <span class="hljs-attr">primary</span>: <span class="hljs-string">&#x27;Name&#x27;</span>,
+  <span class="hljs-attr">properties</span>: {
+    <span class="hljs-attr">Id</span>: {<span class="hljs-attr">type</span>: ValueType.String, <span class="hljs-attr">fromKey</span>: <span class="hljs-string">&#x27;id&#x27;</span>},
+    <span class="hljs-attr">Name</span>: {<span class="hljs-attr">type</span>: ValueType.String, <span class="hljs-attr">fromKey</span>: <span class="hljs-string">&#x27;name&#x27;</span>},
+  },
+}</code></pre>
+				<p>And it will convert your return value into <code>{Id: &#39;...&#39;, Name: &#39;...&#39;}</code> to match the schema.</p>
+				<p>When testing your code using <code>coda execute</code> or the testing helpers provided by the SDK like
+				<code>executeFormulaFromPackDef</code>, you&#39;ll notice that the return values are normalized as above.</p>
+				<a href="#type-hints" id="type-hints" style="color: inherit; text-decoration: none;">
+					<h3>Type Hints</h3>
+				</a>
+				<p>The SDK intentionally provides only a few value types for object properties to keep things
+					simple, but the Coda application is able to understand many more types of values.
+					The SDK allows you to optionally provide a <code>codaType</code> when declaring a property in an object
+				schema which tells Coda how to interpret a value that is otherwise one of the basic value types.</p>
+				<p>For example, suppose the API you&#39;re using provides a created-at timestamp as a numeric Unix time value.
+					You can simply declare your field as <code>{type: ValueType.Number, codaType: ValueType.DateTime}</code> and
+				Coda will parse the timestamp into a proper DateTime value on your behalf.</p>
+				<p>Or perhaps you want to return an object that has an image associated with it, and your pack
+					and the API it integrates with specify that image as a url. Your schema can declare that
+					property as <code>{type: ValueType.String, codaType: ValueType.Image}</code> and that url will be
+				downloaded to be hosted on Coda and presented as an image in the Coda UI.</p>
+				<p>TODO: Link to full reference on hint types.</p>
+				<a href="#key-mapping-and-extraneous-properties" id="key-mapping-and-extraneous-properties" style="color: inherit; text-decoration: none;">
+					<h3>Key Mapping and Extraneous Properties</h3>
+				</a>
+				<p>The SDK assumes that it will be common to write packs that mostly fetch and return data from
+					third-party API, and that massaging that data to conform to an SDK schema might be tedious,
+				so the SDK supports ways to pass through third-party data as-is or with minimal massaging.</p>
+				<p>The <code>response</code> property of an object formula has an optional property <code>excludeExtraneous</code> which
+					if true, strips all fields from your return values if they are not declared in schema.
+					For example, if you&#39;re working with an API that returns a User object with a bunch of fields
+				you don&#39;t care about, like <code>createdAt</code> and <code>updatedAt</code>, you can just declare your formula using</p>
+				<pre><code class="language-typescript">makeObjectFormula({
+  ...,
+  <span class="hljs-attr">response</span>: {
+    <span class="hljs-attr">excludeExtraneous</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">schema</span>: makeObjectSchema({
+      <span class="hljs-attr">type</span>: ValueType.Object,
+      <span class="hljs-attr">properties</span>: {
+        <span class="hljs-attr">name</span>: {<span class="hljs-attr">type</span>: ValueType.String},
+      },
+    }),
+  },
+})</code></pre>
+				<p>and then you can return the full user object that you get back from the API, and all fields
+				other than <code>name</code> will be stripped away with your code needing to do this explicitly.</p>
+				<p>Note that <code>excludeExtraneous</code> is automatically true for sync table formulas.</p>
+				<p>To make parsing an API object and massing it to match your schema easier, you can use the
+					<code>fromKey</code> property of a schema property definition. This instructs the SDK to convert
+					properties with whatever name you specified in the <code>fromKey</code> property to the name that you
+				gave to that property in the schema.</p>
+				<p>So suppose that the API you&#39;re working with returns a User object that looks like
+					<code>{userId: &#39;...&#39;, userName: &#39;...&#39;}</code> but you want your pack to return a value that has the
+				friendlier property names <code>id</code> and <code>name</code>. You can define your schema as</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> userSchema = makeObjectSchema({
+  <span class="hljs-attr">type</span>: ValueType.Object,
+  <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;id&#x27;</span>,
+  <span class="hljs-attr">primary</span>: <span class="hljs-string">&#x27;name&#x27;</span>,
+  <span class="hljs-attr">properties</span>: {
+    <span class="hljs-attr">id</span>: {<span class="hljs-attr">type</span>: ValueType.String, <span class="hljs-attr">fromKey</span>: <span class="hljs-string">&#x27;userId&#x27;</span>},
+    <span class="hljs-attr">name</span>: {<span class="hljs-attr">type</span>: ValueType.String, <span class="hljs-attr">fromKey</span>: <span class="hljs-string">&#x27;userName&#x27;</span>},
+  },
+});</code></pre>
+				<p>You can then return the user object from the API as-is, and the <code>userId</code> and <code>userName</code> fields
+				will be remapped to <code>id</code> and <code>name</code> (and then those fields will be normalized, too).</p>
+				<p>The combination of <code>fromKey</code> and <code>excludeExtraneous</code> should generally mean that you needn&#39;t
+				write any code to remove or remap fields to make an API object conform to your desired schema.</p>
 				<a href="#execution-environment" id="execution-environment" style="color: inherit; text-decoration: none;">
 					<h3>Execution Environment</h3>
 				</a>
@@ -289,6 +386,9 @@ npm install --save https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basi
 				</a>
 				<a href="#reference" id="reference" style="color: inherit; text-decoration: none;">
 					<h2>Reference</h2>
+				</a>
+				<a href="#hint-types" id="hint-types" style="color: inherit; text-decoration: none;">
+					<h3>Hint Types</h3>
 				</a>
 			</div>
 		</div>
