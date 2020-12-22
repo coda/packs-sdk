@@ -189,6 +189,10 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
           const personErrorMessage = tryParsePerson(result, schema);
           return personErrorMessage ? [personErrorMessage] : [];
         case ValueType.Reference:
+          const referenceErrorMessages = tryParseReference(result, schema);
+          if (referenceErrorMessages) {
+            return referenceErrorMessages;
+          }
         case undefined:
           return validateObject(result as Record<string, unknown>, schema, context);
         default:
@@ -261,6 +265,22 @@ function tryParsePerson(result: any, schema: GenericObjectSchema) {
   if (!isEmail(result[id] as string)) {
     return {message: `The id field for the person result must be an email string, but got "${result[id]}".`};
   }
+}
+
+function tryParseReference(result: any, schema: GenericObjectSchema): ResultValidationError[] {
+  const {id, identity, primary} = schema;
+
+  const identityError = identity ? undefined : {message: `Missing "identity" field in schema.`};
+  const idError = id
+    ? checkFieldIsPresent(result, id, ValueType.Reference)
+    : {message: `Missing "id" field in schema.`};
+  const primaryError = primary
+    ? checkFieldIsPresent(result, primary, ValueType.Reference)
+    : {message: `Missing "primary" field in schema.`};
+
+  // filter out undefined from errors
+  const errors = [identityError, primaryError, idError].filter(error => error !== undefined);
+  return errors as ResultValidationError[];
 }
 
 function checkFieldIsPresent(
