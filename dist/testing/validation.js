@@ -8,6 +8,7 @@ const api_types_1 = require("../api_types");
 const url_1 = require("url");
 const schema_1 = require("../schema");
 const ensure_1 = require("../helpers/ensure");
+const ensure_2 = require("../helpers/ensure");
 const schema_2 = require("../schema");
 const object_utils_1 = require("../helpers/object_utils");
 const string_1 = require("../helpers/string");
@@ -70,7 +71,7 @@ function validateResultType(resultType, result) {
         case api_types_1.Type.string:
             return checkType(typeOfResult === 'string', 'string', result);
         default:
-            return ensure_1.ensureUnreachable(resultType);
+            return ensure_2.ensureUnreachable(resultType);
     }
 }
 function generateErrorFromValidationContext(context, schema, result) {
@@ -111,7 +112,7 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                     // no need to coerce current result type
                     return [];
                 default:
-                    return ensure_1.ensureUnreachable(schema);
+                    return ensure_2.ensureUnreachable(schema);
             }
         }
         case schema_1.ValueType.String: {
@@ -141,7 +142,7 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                     // no need to coerce current result type
                     return [];
                 default:
-                    ensure_1.ensureUnreachable(schema);
+                    ensure_2.ensureUnreachable(schema);
             }
         }
         case schema_1.ValueType.Array:
@@ -163,11 +164,11 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                 case undefined:
                     return validateObject(result, schema, context);
                 default:
-                    ensure_1.ensureUnreachable(schema);
+                    ensure_2.ensureUnreachable(schema);
             }
         }
         default:
-            return ensure_1.ensureUnreachable(schema);
+            return ensure_2.ensureUnreachable(schema);
     }
 }
 function tryParseDateTimeString(result, schema) {
@@ -215,28 +216,21 @@ function tryParseScale(result, schema) {
 }
 function tryParsePerson(result, schema) {
     const { id } = schema;
-    if (!id) {
-        return { message: `Missing "id" field in schema.` };
+    const validId = ensure_1.ensureExists(id);
+    const idError = checkFieldIsPresent(result, validId, schema_1.ValueType.Person);
+    if (idError) {
+        return idError;
     }
-    const resultMissingIdError = checkFieldIsPresent(result, id, schema_1.ValueType.Person);
-    if (resultMissingIdError) {
-        return resultMissingIdError;
-    }
-    if (!string_1.isEmail(result[id])) {
-        return { message: `The id field for the person result must be an email string, but got "${result[id]}".` };
+    if (!string_1.isEmail(result[validId])) {
+        return { message: `The id field for the person result must be an email string, but got "${result[validId]}".` };
     }
 }
 function tryParseReference(result, schema) {
-    const { id, identity, primary } = schema;
-    const identityError = identity ? undefined : { message: `Missing "identity" field in schema.` };
-    const idError = id
-        ? checkFieldIsPresent(result, id, schema_1.ValueType.Reference)
-        : { message: `Missing "id" field in schema.` };
-    const primaryError = primary
-        ? checkFieldIsPresent(result, primary, schema_1.ValueType.Reference)
-        : { message: `Missing "primary" field in schema.` };
+    const { id, primary } = schema;
+    const idError = checkFieldIsPresent(result, ensure_1.ensureExists(id), schema_1.ValueType.Reference);
+    const primaryError = checkFieldIsPresent(result, ensure_1.ensureExists(primary), schema_1.ValueType.Reference);
     // filter out undefined from errors
-    const errors = [identityError, primaryError, idError].filter(error => error !== undefined);
+    const errors = [primaryError, idError].filter(error => error !== undefined);
     return errors;
 }
 function checkFieldIsPresent(result, field, codaType) {

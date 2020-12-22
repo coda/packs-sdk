@@ -102,9 +102,37 @@ function makeSchema(schema) {
 }
 exports.makeSchema = makeSchema;
 function makeObjectSchema(schema) {
+    validateObjectSchema(schema);
     return schema;
 }
 exports.makeObjectSchema = makeObjectSchema;
+function validateObjectSchema(schema) {
+    if (schema.codaType === ValueType.Reference) {
+        const { id, identity, primary } = schema;
+        checkRequiredFieldInObjectSchema(id, 'id', schema.codaType);
+        checkRequiredFieldInObjectSchema(identity, 'identity', schema.codaType);
+        checkRequiredFieldInObjectSchema(primary, 'primary', schema.codaType);
+        checkSchemaPropertyIsRequired(ensure_1.ensureExists(id), schema);
+        checkSchemaPropertyIsRequired(ensure_1.ensureExists(primary), schema);
+    }
+    if (schema.codaType === ValueType.Person) {
+        const { id } = schema;
+        checkRequiredFieldInObjectSchema(id, 'id', schema.codaType);
+        checkSchemaPropertyIsRequired(ensure_1.ensureExists(id), schema);
+    }
+    for (const [_propertyKey, propertySchema] of Object.entries(schema.properties)) {
+        if (propertySchema.type === ValueType.Object) {
+            validateObjectSchema(propertySchema);
+        }
+    }
+}
+function checkRequiredFieldInObjectSchema(field, fieldName, codaType) {
+    ensure_1.ensureExists(field, `Objects with codaType ${codaType} require an "${fieldName}" property in the schema definition.`);
+}
+function checkSchemaPropertyIsRequired(field, schema) {
+    const { properties } = schema;
+    assert(properties[field].required, `Field ${field} must be marked as required in schema.`);
+}
 function normalizeKey(key) {
     // Colons cause problems in our formula handling.
     return pascalcase_1.default(key).replace(/:/g, '_');

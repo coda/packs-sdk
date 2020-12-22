@@ -21,6 +21,7 @@ import {Type} from '../api_types';
 import type {TypedPackFormula} from '../api';
 import {URL} from 'url';
 import {ValueType} from '../schema';
+import {ensureExists} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
 import {isDefined} from '../helpers/object_utils';
@@ -253,33 +254,25 @@ function tryParseScale(result: unknown, schema: NumberSchema) {
 
 function tryParsePerson(result: any, schema: GenericObjectSchema) {
   const {id} = schema;
-  if (!id) {
-    return {message: `Missing "id" field in schema.`};
+  const validId = ensureExists(id);
+  const idError = checkFieldIsPresent(result, validId, ValueType.Person);
+  if (idError) {
+    return idError;
   }
 
-  const resultMissingIdError = checkFieldIsPresent(result, id, ValueType.Person);
-  if (resultMissingIdError) {
-    return resultMissingIdError;
-  }
-
-  if (!isEmail(result[id] as string)) {
-    return {message: `The id field for the person result must be an email string, but got "${result[id]}".`};
+  if (!isEmail(result[validId] as string)) {
+    return {message: `The id field for the person result must be an email string, but got "${result[validId]}".`};
   }
 }
 
 function tryParseReference(result: any, schema: GenericObjectSchema): ResultValidationError[] {
-  const {id, identity, primary} = schema;
+  const {id, primary} = schema;
 
-  const identityError = identity ? undefined : {message: `Missing "identity" field in schema.`};
-  const idError = id
-    ? checkFieldIsPresent(result, id, ValueType.Reference)
-    : {message: `Missing "id" field in schema.`};
-  const primaryError = primary
-    ? checkFieldIsPresent(result, primary, ValueType.Reference)
-    : {message: `Missing "primary" field in schema.`};
+  const idError = checkFieldIsPresent(result, ensureExists(id), ValueType.Reference);
+  const primaryError = checkFieldIsPresent(result, ensureExists(primary), ValueType.Reference);
 
   // filter out undefined from errors
-  const errors = [identityError, primaryError, idError].filter(error => error !== undefined);
+  const errors = [primaryError, idError].filter(error => error !== undefined);
   return errors as ResultValidationError[];
 }
 
