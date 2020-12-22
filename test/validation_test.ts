@@ -41,13 +41,16 @@ describe('Property validation in objects', () => {
       person: {
         type: ValueType.Object,
         codaType: ValueType.Person,
+        primary: 'email',
         id: 'email',
-        properties: {email: {type: ValueType.String}},
+        properties: {email: {type: ValueType.String, required: true}},
       },
       ref: {
         type: ValueType.Object,
         codaType: ValueType.Reference,
         id: 'reference',
+        primary: 'reference',
+        identity: {packId: FakePack.id, name: ''},
         properties: {
           reference: {
             type: ValueType.Object,
@@ -56,6 +59,7 @@ describe('Property validation in objects', () => {
               identifier: {type: ValueType.String},
               name: {type: ValueType.String},
             },
+            required: true,
           },
         },
       },

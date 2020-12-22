@@ -32,9 +32,11 @@ export declare const personSchema: {
     properties: {
         email: {
             type: ValueType.String;
+            required: true;
         };
         name: {
             type: ValueType.String;
+            required: true;
         };
     };
 };
@@ -62,9 +64,11 @@ export declare const packageSchema: {
             properties: {
                 email: {
                     type: ValueType.String;
+                    required: true;
                 };
                 name: {
                     type: ValueType.String;
+                    required: true;
                 };
             };
         };

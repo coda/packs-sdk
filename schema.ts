@@ -279,6 +279,7 @@ export function makeObjectSchema<K extends string, L extends string, T extends O
 function validateObjectSchema<K extends string, L extends string, T extends ObjectSchema<K, L>>(schema: T) {
   if (schema.codaType === ValueType.Reference) {
     const {id, identity, primary} = schema;
+
     checkRequiredFieldInObjectSchema(id, 'id', schema.codaType);
     checkRequiredFieldInObjectSchema(identity, 'identity', schema.codaType);
     checkRequiredFieldInObjectSchema(primary, 'primary', schema.codaType);
