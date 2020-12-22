@@ -193,6 +193,116 @@ short period of time, which may affect the service you are fetching from.
 
 ### Authentication
 
+Packs that use third-party APIs and particularly those that fetch user-specific data will almost
+always require authentication. The SDK supports many kinds of authentication, you simply declare
+what kind of authentication your pack uses and some configuration data in your pack definition,
+and Coda will facilitate getting authentication information from the user when they use your pack,
+and the necessary authentication data will be applied to each fetcher request that you make from
+your pack code.
+
+#### User (Default) Authentication vs System Authentication
+
+The SDK broadly divides authentication into two categories: authentication that is tied to
+the user of the pack vs authentication that is managed by the system, aka the pack author.
+In the pack definition the former is known as `defaultAuthentication` and the latter
+`systemAuthentication`. You will typically specify one or the other in your pack definition,
+or neither if your pack does not make http requests or those requests do not require authentication.
+In rare cases you could specify both authentication types if system credentials are meant
+to serve as a fallback if a user has not registered their own credentials, but this is not common
+or recommended.
+
+Default authentication is the most common. Specify this if each user of your pack
+should log in with OAuth, or have their own API key, or whatever user-specific token
+is necessary for the pack to be able to retrieve data that is specific to that user.
+
+Use system authentication if you as the pack author will provide the necessary tokens
+to make http requests within your pack succeed. An example would be if your pack returns
+weather forecasts and the API involved requires an API key, but individual users need
+not provide their own API key. You as the pack author will register an API key and provide
+it to Coda, and Coda will apply it to all pack requests regardless of the user.
+
+#### Security
+
+The SDK applies authentication info to fetcher requests automatically so you as the pack
+author don't need to worry about doing so and about how to do so, making authoring packs
+easier. But critically the SDK does this in a way so that packs code never has access
+to any authentication information at all, so that users and pack authors are protected
+from inadvertent or intentional mishandling of credentials.
+
+Your packs code will invoke `context.fetcher.fetch()` without any authentication info;
+in the process of executing the fetch request, Coda will automatically append credentials
+to the headers or url of the request, as appropriate, and then fulfill the request.
+Packs code will never access to the request after authentication credentials have been applied.
+
+#### Authentication Types
+
+- **OAuth2**: The user will be prompted to go through an OAuth2 authentication flow in
+  the browser with a third-party service. The access token that the third-party service
+  provides to Coda at the end of this flow will be applied to each fetcher request
+  in the `Authorization` header, in the form `Authorization: Bearer <access-token>`.
+  A custom token prefix other than `Bearer` may be provided by the pack author if necessary.
+  The pack author provides OAuth2 configuration information including the third-party urls
+  to use for the token creation flow and token exchange, the scopes needed by the pack.
+  The pack author must also provide a client id and client secret for the third-party service,
+  which are typically obtained when registering a new application in the third-party
+  service's developer portal.
+- **HeaderBearerToken**: The user (or pack author, if using system authentication) provides an API token
+  which is applied to the `Authorization` header of each fetcher request, in the form
+  `Authorization: Bearer <token>`.
+- **CustomHeaderToken**: The user provides an API token, which is applied to a custom API
+  header as specified by the pack author, in the form `<custom-header>: <custom-prefix> <token>`.
+- **QueryParamToken**: The user provides an API token, which is applied to the url of each
+  fetcher request in url parameter specified by the pack author. Using url params for authentication
+  is not recommended if there are other alternatives.
+- **MultiQueryParamToken**: The user provides multiple tokens, which are applied to the url of
+  each fetcher request in url parameters specified by the pack author. This is not common.
+  Using url params for authentication is not recommended if there are other alternatives.
+- **WebBasic**: The user provides a username and typically a password, which are base64-encoded
+  and applied to the `Authorization` header of each fetcher request, in the form
+  `Authorization: Basic <base64encode(username:password)>`, as outlined in
+  [Basic access authentication](https://en.wikipedia.org/wiki/Basic_access_authentication).
+  Web basic authentication sends passwords in cleartext so is not recommended if there are
+  alternatives.
+- **CodaApiHeaderBearerToken**: Internally the same as `HeaderBearerToken` but for cases
+  where a pack is going to make requests to Coda's own API. The UI will assist the user
+  in creating and configuring an API token without the user needing to do this manually.
+  This is mostly for use by Coda-internal packs.
+
+`OAuth2` and `CodaApiHeaderBearerToken` are not available for system authentication.
+
+### Testing Authenticated Requests
+
+The SDK will help you set up authentication in your development environment so that you can
+execute pack formulas with authentication applied to them, allowing you to run your code
+end-to-end including making fetcher requests to third-party services.
+
+The `coda auth` utility is used to set up authentication for a pack. Run `coda auth --help` at
+any time for a refresher on how to use the utility. Mostly, it's as simple as running
+
+```console
+coda auth path/to/manifest.ts
+```
+
+The utility will inspect your pack definition to see what kind of authentication you
+have defined, and then it will prompt you to provide in the console the necessary
+token(s) or other parameters required by your authorization type.
+If you are using `OAuth2`, after you provide the necessary configuration info,
+it will launch an OAuth flow in your browser.
+
+The credentials you provide will be stored in a file `.coda/credentials.json`.
+When you execute a pack formula using `coda execute --fetch ...`, the credentials
+in this file will be applied to your fetcher requests automatically.
+
+Similarly, if you are writing an integration test for your pack,
+you can pass `useRealFetcher: true` in the `ContextOptions` argument
+when calling `executeFormulaFromPackDef()` or `executeSyncFormulaFromPackDef()`,
+and a real (non-mock) http fetcher will be used, and any credentials that you
+have registered will be applied to those requests automatically.
+
+The credentials file can hold credentials for multiple packs simultaneously. So if you
+are authoring multiple packs in the same directory/repo, so long as those packs have
+different names, you can register and use credentials for all of them.
+
 ### Syncs
 
 A sync is a specific kind of **formula**, with the goal of populating a Coda table with data from a
