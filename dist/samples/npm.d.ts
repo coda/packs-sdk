@@ -36,7 +36,6 @@ export declare const personSchema: {
         };
         name: {
             type: ValueType.String;
-            required: true;
         };
     };
 };
@@ -68,7 +67,6 @@ export declare const packageSchema: {
                 };
                 name: {
                     type: ValueType.String;
-                    required: true;
                 };
             };
         };

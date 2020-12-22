@@ -301,15 +301,15 @@ function validateObjectSchema<K extends string, L extends string, T extends Obje
 }
 
 function checkRequiredFieldInObjectSchema(field: any, fieldName: string, codaType: ObjectHintTypes) {
-  ensureExists(field, `Objects with codaType ${codaType} require an "${fieldName}" property in the schema definition.`);
+  ensureExists(field, `Objects with codaType ${codaType} require a "${fieldName}" property in the schema definition.`);
 }
 
 function checkSchemaPropertyIsRequired<K extends string, L extends string, T extends ObjectSchema<K, L>>(
   field: string,
   schema: T,
 ) {
-  const {properties} = schema;
-  assert(properties[field].required, `Field ${field} must be marked as required in schema.`);
+  const {properties, codaType} = schema;
+  assert(properties[field].required, `Field ${field} must be marked as required in schema with codaType ${codaType}.`);
 }
 
 function normalizeKey(key: string): string {

@@ -58,7 +58,7 @@ exports.personSchema = schema_2.makeObjectSchema({
     primary: 'name',
     properties: {
         email: { type: schema_1.ValueType.String, required: true },
-        name: { type: schema_1.ValueType.String, required: true },
+        name: { type: schema_1.ValueType.String },
     },
 });
 exports.packageSchema = schema_2.makeObjectSchema({
