@@ -12,7 +12,7 @@ Coda doc that you can use any normal formula. Formulas take basic Coda types as 
 dates, booleans, and arrays of these types, and return any of these types or objects whose properties are any
 of these types.
 
-A **sync table** is how to bring structured data from a third-party into Coda. A sync table is table that
+A **sync table** is how to bring structured data from a third-party into Coda. A sync table is a table that
 you can add to a Coda doc that gets its rows from a third-party data source, that can be refreshed regularly
 to pull in new or updated data. A sync table is powered by a **formula** that takes parameters that represent
 sync options and returns an array of objects representing row data. A sync table also includes a **schema**
@@ -151,7 +151,7 @@ coda execute path/to/manifest.ts Items 2020-12-15
 ```
 
 This will execute your sync formula repeatedly until there are no more results, and print
-the output array of all result objects to the terminal. See [Syncs](#syncs)] for more
+the output array of all result objects to the terminal. See [Syncs](#syncs) for more
 information about how and why sync formulas are invoked repeatedly for paginated results.
 
 ### Fetching
@@ -207,16 +207,13 @@ the user of the pack vs authentication that is managed by the system, aka the pa
 In the pack definition the former is known as `defaultAuthentication` and the latter
 `systemAuthentication`. You will typically specify one or the other in your pack definition,
 or neither if your pack does not make http requests or those requests do not require authentication.
-In rare cases you could specify both authentication types if system credentials are meant
-to serve as a fallback if a user has not registered their own credentials, but this is not common
-or recommended.
 
 Default authentication is the most common. Specify this if each user of your pack
 should log in with OAuth, or have their own API key, or whatever user-specific token
 is necessary for the pack to be able to retrieve data that is specific to that user.
 
 Use system authentication if you as the pack author will provide the necessary tokens
-to make http requests within your pack succeed. An example would be if your pack returns
+to successfully make http requests within your pack. An example would be if your pack returns
 weather forecasts and the API involved requires an API key, but individual users need
 not provide their own API key. You as the pack author will register an API key and provide
 it to Coda, and Coda will apply it to all pack requests regardless of the user.
@@ -232,7 +229,7 @@ from inadvertent or intentional mishandling of credentials.
 Your packs code will invoke `context.fetcher.fetch()` without any authentication info;
 in the process of executing the fetch request, Coda will automatically append credentials
 to the headers or url of the request, as appropriate, and then fulfill the request.
-Packs code will never access to the request after authentication credentials have been applied.
+Packs code will never have access to the request after authentication credentials have been applied.
 
 #### Authentication Types
 
@@ -252,7 +249,7 @@ Packs code will never access to the request after authentication credentials hav
 - **CustomHeaderToken**: The user provides an API token, which is applied to a custom API
   header as specified by the pack author, in the form `<custom-header>: <custom-prefix> <token>`.
 - **QueryParamToken**: The user provides an API token, which is applied to the url of each
-  fetcher request in url parameter specified by the pack author. Using url params for authentication
+  fetcher request in a url parameter specified by the pack author. Using url params for authentication
   is not recommended if there are other alternatives.
 - **MultiQueryParamToken**: The user provides multiple tokens, which are applied to the url of
   each fetcher request in url parameters specified by the pack author. This is not common.
@@ -331,12 +328,14 @@ A `Continuation` is just a JavaScript object mapping one or more arbitrary key n
 It's up to you what you want to include to help you keep track of where you are in the overall sync.
 Typically, if you're calling an API, the continuation closely matches what the API uses for pagination.
 
-Suppose the API you're using allowed you pass a page number in url parameter to filte results just to that
-page. You could return `{page: 2}` as your continuation. You could then look at `context.sync.continuation.page`
-in your sync formula to determine which page of results you should request in that particular invocation.
+Suppose the API you're using allows you to pass a page number in a url parameter to filter results just
+to that page. You could return `{page: 2}` as your continuation. You could then look at
+`context.sync.continuation.page` in your sync formula to determine which page of results you
+should request in that particular invocation.
 
-If the API you're using instead returns a complete, opaque url of the next page of results in response metadata,
-you might structure your continuation like `{nextUrl: 'https://myapi.com/results?pageToken=asdf123'}`.
+If the API you're using instead returns a complete, opaque url of the next page of results in
+response metadata, you might structure your continuation like
+`{nextUrl: 'https://myapi.com/results?pageToken=asdf123'}`.
 
 #### Examples
 
@@ -374,7 +373,7 @@ The arrays of partial results from each sync formula invocation will be merged t
 
 Syncs and formulas that return objects get **normalized**, which simply means that their property names get
 rewritten to a standardized format. So long as you use the wrapper methods like `makeObjectFormula()` or
-`makeSyncTable()`, which are the only supported ways of creating the entities, this will happen automatically
+`makeSyncTable()`, which we require as a best practice, this will happen automatically
 on your behalf so you don't need to worry about implementing normalization. However, it will affect
 the return values of object formulas and syncs so it's good to be aware of what's happening in order
 to understand the output when testing your formulas and avoid being surprised.
@@ -388,8 +387,7 @@ for Coda users.
 Normalization simply removes punctuation and rewrites strings into Pascal case. That is, property names
 like `fooBar`, `foo_bar`, and `foo bar` will all be normalized to `FooBar`.
 
-The SDK will normalize both the schema as well as the return values from object formulas. Coda cares
-that pack objects get normalized but we will do it on your behalf. So for example, if you're working with an API that returns a User object that looks like `{id: '...', name: '...'}`, you can define the schema for the object as
+The SDK will normalize both the schema as well as the return values from object formulas. So for example, if you're working with an API that returns a User object that looks like `{id: '...', name: '...'}`, you can define the schema for the object as
 
 ```typescript
 const userSchema = makeObjectSchema({
@@ -447,9 +445,10 @@ third-party API, and that massaging that data to conform to an SDK schema might 
 so the SDK supports ways to pass through third-party data as-is or with minimal massaging.
 
 The `response` property of an object formula has an optional property `excludeExtraneous` which
-if true, strips all fields from your return values if they are not declared in schema.
+if true, strips all fields from your return values if they are not declared in the schema.
 For example, if you're working with an API that returns a User object with a bunch of fields
-you don't care about, like `createdAt` and `updatedAt`, you can just declare your formula using
+you don't care about, like `createdAt` and `updatedAt`, you can just define your formula using
+a schema like
 
 ```typescript
 makeObjectFormula({
@@ -471,7 +470,7 @@ other than `name` will be stripped away with your code needing to do this explic
 
 Note that `excludeExtraneous` is automatically true for sync table formulas.
 
-To make parsing an API object and massing it to match your schema easier, you can use the
+To make parsing an API object and massaging it to match your schema easier, you can use the
 `fromKey` property of a schema property definition. This instructs the SDK to convert
 properties with whatever name you specified in the `fromKey` property to the name that you
 gave to that property in the schema.
@@ -496,7 +495,7 @@ You can then return the user object from the API as-is, and the `userId` and `us
 will be remapped to `id` and `name` (and then those fields will be normalized, too).
 
 The combination of `fromKey` and `excludeExtraneous` should generally mean that you needn't
-write any code to remove or remap fields to make an API object conform to your desired schema.
+write any custom code to remove or remap fields to make an API object conform to your desired schema.
 
 ### Execution Environment
 

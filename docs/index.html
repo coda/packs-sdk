@@ -77,7 +77,7 @@
 					Coda doc that you can use any normal formula. Formulas take basic Coda types as input, like strings, numbers,
 					dates, booleans, and arrays of these types, and return any of these types or objects whose properties are any
 				of these types.</p>
-				<p>A <strong>sync table</strong> is how to bring structured data from a third-party into Coda. A sync table is table that
+				<p>A <strong>sync table</strong> is how to bring structured data from a third-party into Coda. A sync table is a table that
 					you can add to a Coda doc that gets its rows from a third-party data source, that can be refreshed regularly
 					to pull in new or updated data. A sync table is powered by a <strong>formula</strong> that takes parameters that represent
 					sync options and returns an array of objects representing row data. A sync table also includes a <strong>schema</strong>
@@ -187,7 +187,7 @@ npm install --save https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basi
 				you would execute this as:</p>
 				<pre><code class="language-console">coda execute path/to/manifest.ts Items 2020-12-15</code></pre>
 				<p>This will execute your sync formula repeatedly until there are no more results, and print
-					the output array of all result objects to the terminal. See <a href="#syncs">Syncs</a>] for more
+					the output array of all result objects to the terminal. See <a href="#syncs">Syncs</a> for more
 				information about how and why sync formulas are invoked repeatedly for paginated results.</p>
 				<a href="#fetching" id="fetching" style="color: inherit; text-decoration: none;">
 					<h3>Fetching</h3>
@@ -232,15 +232,12 @@ npm install --save https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basi
 					the user of the pack vs authentication that is managed by the system, aka the pack author.
 					In the pack definition the former is known as <code>defaultAuthentication</code> and the latter
 					<code>systemAuthentication</code>. You will typically specify one or the other in your pack definition,
-					or neither if your pack does not make http requests or those requests do not require authentication.
-					In rare cases you could specify both authentication types if system credentials are meant
-					to serve as a fallback if a user has not registered their own credentials, but this is not common
-				or recommended.</p>
+				or neither if your pack does not make http requests or those requests do not require authentication.</p>
 				<p>Default authentication is the most common. Specify this if each user of your pack
 					should log in with OAuth, or have their own API key, or whatever user-specific token
 				is necessary for the pack to be able to retrieve data that is specific to that user.</p>
 				<p>Use system authentication if you as the pack author will provide the necessary tokens
-					to make http requests within your pack succeed. An example would be if your pack returns
+					to successfully make http requests within your pack. An example would be if your pack returns
 					weather forecasts and the API involved requires an API key, but individual users need
 					not provide their own API key. You as the pack author will register an API key and provide
 				it to Coda, and Coda will apply it to all pack requests regardless of the user.</p>
@@ -255,7 +252,7 @@ npm install --save https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basi
 				<p>Your packs code will invoke <code>context.fetcher.fetch()</code> without any authentication info;
 					in the process of executing the fetch request, Coda will automatically append credentials
 					to the headers or url of the request, as appropriate, and then fulfill the request.
-				Packs code will never access to the request after authentication credentials have been applied.</p>
+				Packs code will never have access to the request after authentication credentials have been applied.</p>
 				<a href="#authentication-types" id="authentication-types" style="color: inherit; text-decoration: none;">
 					<h4>Authentication Types</h4>
 				</a>
@@ -276,7 +273,7 @@ npm install --save https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basi
 					<li><strong>CustomHeaderToken</strong>: The user provides an API token, which is applied to a custom API
 					header as specified by the pack author, in the form <code>&lt;custom-header&gt;: &lt;custom-prefix&gt; &lt;token&gt;</code>.</li>
 					<li><strong>QueryParamToken</strong>: The user provides an API token, which is applied to the url of each
-						fetcher request in url parameter specified by the pack author. Using url params for authentication
+						fetcher request in a url parameter specified by the pack author. Using url params for authentication
 					is not recommended if there are other alternatives.</li>
 					<li><strong>MultiQueryParamToken</strong>: The user provides multiple tokens, which are applied to the url of
 						each fetcher request in url parameters specified by the pack author. This is not common.
@@ -342,11 +339,13 @@ npm install --save https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basi
 				<p>A <code>Continuation</code> is just a JavaScript object mapping one or more arbitrary key names to a string or number.
 					It&#39;s up to you what you want to include to help you keep track of where you are in the overall sync.
 				Typically, if you&#39;re calling an API, the continuation closely matches what the API uses for pagination.</p>
-				<p>Suppose the API you&#39;re using allowed you pass a page number in url parameter to filte results just to that
-					page. You could return <code>{page: 2}</code> as your continuation. You could then look at <code>context.sync.continuation.page</code>
-				in your sync formula to determine which page of results you should request in that particular invocation.</p>
-				<p>If the API you&#39;re using instead returns a complete, opaque url of the next page of results in response metadata,
-				you might structure your continuation like <code>{nextUrl: &#39;https://myapi.com/results?pageToken=asdf123&#39;}</code>.</p>
+				<p>Suppose the API you&#39;re using allows you to pass a page number in a url parameter to filter results just
+					to that page. You could return <code>{page: 2}</code> as your continuation. You could then look at
+					<code>context.sync.continuation.page</code> in your sync formula to determine which page of results you
+				should request in that particular invocation.</p>
+				<p>If the API you&#39;re using instead returns a complete, opaque url of the next page of results in
+					response metadata, you might structure your continuation like
+				<code>{nextUrl: &#39;https://myapi.com/results?pageToken=asdf123&#39;}</code>.</p>
 				<a href="#examples" id="examples" style="color: inherit; text-decoration: none;">
 					<h4>Examples</h4>
 				</a>
@@ -374,7 +373,7 @@ npm install --save https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basi
 				</a>
 				<p>Syncs and formulas that return objects get <strong>normalized</strong>, which simply means that their property names get
 					rewritten to a standardized format. So long as you use the wrapper methods like <code>makeObjectFormula()</code> or
-					<code>makeSyncTable()</code>, which are the only supported ways of creating the entities, this will happen automatically
+					<code>makeSyncTable()</code>, which we require as a best practice, this will happen automatically
 					on your behalf so you don&#39;t need to worry about implementing normalization. However, it will affect
 					the return values of object formulas and syncs so it&#39;s good to be aware of what&#39;s happening in order
 				to understand the output when testing your formulas and avoid being surprised.</p>
@@ -385,8 +384,7 @@ npm install --save https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basi
 				for Coda users.</p>
 				<p>Normalization simply removes punctuation and rewrites strings into Pascal case. That is, property names
 				like <code>fooBar</code>, <code>foo_bar</code>, and <code>foo bar</code> will all be normalized to <code>FooBar</code>.</p>
-				<p>The SDK will normalize both the schema as well as the return values from object formulas. Coda cares
-				that pack objects get normalized but we will do it on your behalf. So for example, if you&#39;re working with an API that returns a User object that looks like <code>{id: &#39;...&#39;, name: &#39;...&#39;}</code>, you can define the schema for the object as</p>
+				<p>The SDK will normalize both the schema as well as the return values from object formulas. So for example, if you&#39;re working with an API that returns a User object that looks like <code>{id: &#39;...&#39;, name: &#39;...&#39;}</code>, you can define the schema for the object as</p>
 				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> userSchema = makeObjectSchema({
   <span class="hljs-attr">type</span>: ValueType.Object,
   <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;id&#x27;</span>,
@@ -431,9 +429,10 @@ npm install --save https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basi
 					third-party API, and that massaging that data to conform to an SDK schema might be tedious,
 				so the SDK supports ways to pass through third-party data as-is or with minimal massaging.</p>
 				<p>The <code>response</code> property of an object formula has an optional property <code>excludeExtraneous</code> which
-					if true, strips all fields from your return values if they are not declared in schema.
+					if true, strips all fields from your return values if they are not declared in the schema.
 					For example, if you&#39;re working with an API that returns a User object with a bunch of fields
-				you don&#39;t care about, like <code>createdAt</code> and <code>updatedAt</code>, you can just declare your formula using</p>
+					you don&#39;t care about, like <code>createdAt</code> and <code>updatedAt</code>, you can just define your formula using
+				a schema like</p>
 				<pre><code class="language-typescript">makeObjectFormula({
   ...,
   <span class="hljs-attr">response</span>: {
@@ -449,7 +448,7 @@ npm install --save https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basi
 				<p>and then you can return the full user object that you get back from the API, and all fields
 				other than <code>name</code> will be stripped away with your code needing to do this explicitly.</p>
 				<p>Note that <code>excludeExtraneous</code> is automatically true for sync table formulas.</p>
-				<p>To make parsing an API object and massing it to match your schema easier, you can use the
+				<p>To make parsing an API object and massaging it to match your schema easier, you can use the
 					<code>fromKey</code> property of a schema property definition. This instructs the SDK to convert
 					properties with whatever name you specified in the <code>fromKey</code> property to the name that you
 				gave to that property in the schema.</p>
@@ -468,7 +467,7 @@ npm install --save https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basi
 				<p>You can then return the user object from the API as-is, and the <code>userId</code> and <code>userName</code> fields
 				will be remapped to <code>id</code> and <code>name</code> (and then those fields will be normalized, too).</p>
 				<p>The combination of <code>fromKey</code> and <code>excludeExtraneous</code> should generally mean that you needn&#39;t
-				write any code to remove or remap fields to make an API object conform to your desired schema.</p>
+				write any custom code to remove or remap fields to make an API object conform to your desired schema.</p>
 				<a href="#execution-environment" id="execution-environment" style="color: inherit; text-decoration: none;">
 					<h3>Execution Environment</h3>
 				</a>
