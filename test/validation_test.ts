@@ -49,16 +49,15 @@ describe('Property validation in objects', () => {
         type: ValueType.Object,
         codaType: ValueType.Reference,
         id: 'reference',
-        primary: 'reference',
+        primary: 'name',
         identity: {packId: FakePack.id, name: ''},
         properties: {
+          name: {
+            type: ValueType.String,
+            required: true,
+          },
           reference: {
-            type: ValueType.Object,
-            properties: {
-              objectId: {type: ValueType.String},
-              identifier: {type: ValueType.String},
-              name: {type: ValueType.String},
-            },
+            type: ValueType.String,
             required: true,
           },
         },
@@ -169,6 +168,19 @@ describe('Property validation in objects', () => {
     },
   });
 
+  const fakeReferenceFormula = makeObjectFormula({
+    name: 'GetReference',
+    description: 'Returns a single reference.',
+    examples: [],
+    parameters: [makeBooleanParameter('returnMalformed', 'whether or not to return a malformed response')],
+    execute: async ([malformed]) => {
+      return malformed ? {ref: {name: 'Test'}} : {ref: {reference: 'foobar', name: 'Test'}};
+    },
+    response: {
+      schema: fakeSchema,
+    },
+  });
+
   const fakeNestedObjectFormula = makeObjectFormula({
     name: 'GetNestedObject',
     description: 'Returns an object with an object inside.',
@@ -192,6 +204,7 @@ describe('Property validation in objects', () => {
         fakeUrlFormula,
         fakeArrayFormula,
         fakePeopleFormula,
+        fakeReferenceFormula,
         fakeNestedObjectFormula,
       ],
     },
@@ -289,6 +302,15 @@ describe('Property validation in objects', () => {
 
   it('validates correct person reference', async () => {
     await executeFormulaFromPackDef(fakePack, 'Fake::GetPerson', ['test@coda.io', false]);
+  });
+
+  it('handles references', async () => {
+    await testHelper.willBeRejectedWith(
+      executeFormulaFromPackDef(fakePack, 'Fake::GetReference', [true]),
+      /The following errors were found when validating the result of the formula "GetReference":\nCodatype reference is missing required field "Reference"./,
+    );
+
+    await executeFormulaFromPackDef(fakePack, 'Fake::GetReference', [false]);
   });
 
   it('rejects nested object with incorrect nested type', async () => {
