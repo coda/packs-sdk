@@ -1,5 +1,44 @@
 # Coda Packs SDK
 
+- [Coda Packs SDK](#coda-packs-sdk)
+  - [Basic Concepts](#basic-concepts)
+  - [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [One-time Setup](#one-time-setup)
+      - [Global Install (Quick)](#global-install-quick)
+      - [Single-Project Install (Recommended)](#single-project-install-recommended)
+    - [Setup Your Pack Definition](#setup-your-pack-definition)
+  - [Running Your Code](#running-your-code)
+    - [Running Formulas](#running-formulas)
+    - [Running Syncs](#running-syncs)
+    - [Fetching](#fetching)
+  - [Core Concepts](#core-concepts)
+    - [Fetching Remote Data](#fetching-remote-data)
+    - [Authentication](#authentication)
+      - [User (Default) Authentication vs System Authentication](#user-default-authentication-vs-system-authentication)
+      - [Security](#security)
+      - [Authentication Types](#authentication-types)
+    - [Testing Authenticated Requests](#testing-authenticated-requests)
+    - [Syncs](#syncs)
+      - [Examples](#examples)
+      - [Dynamic Sync Tables](#dynamic-sync-tables)
+    - [Normalization](#normalization)
+    - [Type Hints](#type-hints)
+    - [Key Mapping and Extraneous Properties](#key-mapping-and-extraneous-properties)
+    - [Formula Namespaces](#formula-namespaces)
+    - [Metadata Formulas](#metadata-formulas)
+    - [Execution Environment](#execution-environment)
+  - [Testing Your Code](#testing-your-code)
+    - [Basic Formula Unittest](#basic-formula-unittest)
+    - [Formula Unittest With Mock Fetcher](#formula-unittest-with-mock-fetcher)
+    - [Sync Unittest](#sync-unittest)
+    - [Integration Test](#integration-test)
+    - [Return Value Validation](#return-value-validation)
+  - [Best Practices](#best-practices)
+    - [File Structure](#file-structure)
+  - [Assets](#assets)
+  - [Reference](#reference)
+
 ## Basic Concepts
 
 Coda Packs allow you to extend the functionality of Coda with extensions that you write in JavaScript/TypeScript.
@@ -382,6 +421,29 @@ your sync will be assumed to be complete and your formula will not be invoked an
 
 The arrays of partial results from each sync formula invocation will be merged together and inserted into the doc.
 
+#### Dynamic Sync Tables
+
+Most sync tables have schemas that can be statically defined. For example, if you're writing
+a sync of a user's Google Calendar events, the structure of an Event from the Google Calendar
+API is well-known and you can write a schema for what your table should contain.
+
+In certain cases, you may want to sync data whose structure is not known in advance
+and my depend on the user doing the sync. For example, Coda's Jira pack allows users
+to sync data from their Jira instance, but Jira lets users create arbitrary custom fields
+for their Issue objects. So the schema of the Issues sync table is not known in advance;
+it depends on Jira account that the user is syncing from.
+
+Coda supports "dynamic" sync tables for cases like these. Instead of including a static
+schema in your sync table definition, you include a formula that returns a schema.
+This formula can use the fetcher to make authenticated http requests to your pack's API
+so that you may retrieve any necessary info from that third-party service needed
+to construct an appropriate schema.
+
+To define a dynamic schema, use the `makeDynamicSyncTable()` wrapper function.
+You will provide a `getSchema` formula that returns a schema definition. You'll
+also provide some supporting formulas like `getName`, to return a name in the UI
+for the table, in case even the name of the entities being synced is dynamic.
+
 ### Normalization
 
 Syncs and formulas that return objects get **normalized**, which simply means that their property names get
@@ -510,6 +572,71 @@ will be remapped to `id` and `name` (and then those fields will be normalized, t
 The combination of `fromKey` and `excludeExtraneous` should generally mean that you needn't
 write any custom code to remove or remap fields to make an API object conform to your desired schema.
 
+### Formula Namespaces
+
+When defining the formulas included in your pack, you must place them in a **namespace**.
+When users invoke your formula in the Coda UI (or you invoke them when testing your pack)
+the formula will be prefixed by its namespace.
+
+The namespace exists so that formulas can be nicely grouped together by the pack they
+originated from, to make it easier to work with docs that have lots of formulas and
+avoid collisions when multiple unrelated packs may define formulas with the same name.
+Generally, the name of your namespace can just be the name of your pack (without any
+spaces or punctuation).
+
+So if you're writing a pack that integrates with Slack, you'd probably want to choose `Slack`
+as your formula namespace. If you wrote a formula that sends a Slack message, you would
+invoke that formula using `Slack::SendMessage(...)`. When users are writing formulas in their
+docs, they can type `slack` and autocomplete will show them all of the formulas in the `Slack`
+namespace. If the user also used the Gmail pack and that pack also defined a `SendMessage`
+formula, it would be easy for the user to differentiate between the two because they
+have separate and clear namespaces: `Slack::SendMessage` vs `Gmail::SendMessage`.
+
+While the structure of a pack definition allows you to specify multiple namespaces
+(since formula definitions are a dictionary mapping a namespace to a list of formulas)
+the SDK currently only allows you one namespace per pack. This may change in the future.
+
+While sync tables are implemented using formulas, sync formulas do not have a namespace,
+since these formulas are not called directly by users and are not exposed to users.
+As a pack author, you only need to be aware of this because when you use `coda execute`
+to run one of your syncs, you needn't prefix your sync table name with a namespace.
+
+### Metadata Formulas
+
+While **formulas** and **sync tables** are the backbone of your pack, sometimes you will
+want or need to provide **metadata formulas** to help with the usability of your pack.
+
+For example, if your pack uses authentication, you should provide a `getConnectionName`
+metadata formula, which should return a user-friendly label for the credentials the user has
+provided. If the user provides your pack with an API key, you can implement a
+`getConnectionName` formula that hits your API's `/whoami` endpoint to get the name of
+the account that the API token belongs to and returns that name. Coda will display that
+name in the UI to help the user understand which underlying account(s) they're using with
+your pack.
+
+Another common use of metadata formulas is for **parameter autocomplete**. You may
+define a formula parameter that should only accept a specific set of enumerated values.
+Suppose that your formula accepts a `country` parameter that should only be one of the
+20 country codes that your API supports. You would probably want to include
+an `autocomplete` option in your parameter definition, which would be a metadata formula
+that returns those 20 valid values. The user would be able to select value from a dropdown
+instead of having to type a value directly. Your autocomplete formula can either return
+static values directly (in which chase the `makeSimpleAutocompleteMetadataFormula` helper
+should make this trivial to write) but it can also use the fetcher to request values
+from an API.
+
+A metadata formula is structurally similar to a regular pack formula, in that it is
+given an `ExecutionContext` and may make fetcher requests.
+
+For parameter autocomplete metadata formulas, a `search` string is passed, indicating a
+full or partial search query that the user has entered. An autocomplete formula will
+be passed a `formulaContext` argument, which consists of key-value pairs representing
+any other parameters the user has already selecting when configuring their formula or sync.
+For example, your formula may accept parameters for both a country and a state/province.
+The state/province options offered will depend on which country was selected, so your
+metadata formula invocation for the state/province parameter will want to look at the
+`formulaContext` to see which country has been selected.
+
 ### Execution Environment
 
 Coda packs execute on the server side in a special isolated node environment. They do not execute in the browser
@@ -517,10 +644,310 @@ and don't have access to any browser resources or user information other than wh
 
 ## Testing Your Code
 
+The SDK includes some utilities to help you write unittests and integration tests for your pack.
+These utilities include:
+
+- Helper functions to execute a specific formula or sync from your pack definition.
+- Mock fetchers (using `sinon`) to simulate http requests and responses.
+- Validation of formula inputs and return values to help catch bugs both in your test code
+  and your formula logic.
+- Hooks to apply authentication to http requests for integration tests.
+
+You'll find testing and development utilities in `packs-sdk/dist/development`.
+
+The primary testing utilities are `executeFormulaFromPackDef` and `executeSyncFormulaFromPackDef`.
+You provide the name of a formula, a reference to your pack definition, and a parameter list,
+and the utility will execute the formula for you, validate the return value, and return it to you
+for further assertions. These utilities provide sane default execution contexts, and in the case of
+a sync, will execute your sync formula repeatedly for each page of results, simulating what a
+real Coda sync will do.
+
+By default, these utilities will use an execution environment that includes a mock fetcher
+that will not actually make http requests. You can pass your own mock fetcher if you wish
+to configure and inspect the mock requests.
+
+### Basic Formula Unittest
+
+Here's a very simple example test, using Mocha, for a formula that doesn't make any
+fetcher requests:
+
+```typescript
+import {executeFormulaFromPackDef} from 'packs-sdk/dist/development';
+import {manifest} from '../manifest';
+
+describe('Simple Formula', () => {
+  it('executes a formula', async () => {
+    const result = await executeFormulaFromPackDef(manifest, 'MyNamespace::MyFormula', ['my-param']);
+    assert.equal(result, 'my-return-value');
+  });
+});
+```
+
+### Formula Unittest With Mock Fetcher
+
+A more interesting example is for a pack that does make some kind of http request using the fetcher.
+Here we set up a mock execution context, register a fake response on it, and pass our pre-configured
+mock fetcher when executing our formula.
+
+```typescript
+import {MockExecutionContext} from 'packs-sdk/dist/development';
+import {executeFormulaFromPackDef} from 'packs-sdk/dist/development';
+import {manifest} from '../manifest';
+import {newJsonFetchResponse} from 'packs-sdk/dist/development';
+import {newMockExecutionContext} from 'packs-sdk/dist/development';
+import sinon from 'sinon';
+
+describe('Formula with Fetcher', () => {
+  let context: MockExecutionContext;
+
+  beforeEach(() => {
+    context = newMockExecutionContext();
+  });
+
+  it('basic fetch', async () => {
+    const fakeResponse = {
+      id: 123,
+      name: 'Alice',
+    };
+    context.fetcher.fetch.returns(newJsonFetchResponse(fakeResponse));
+
+    const result = await executeFormulaFromPackDef(manifest, 'MyNamespace::MyFormula', ['my-param'], context);
+
+    assert.equal(result.Name, 'Alice');
+    sinon.assert.calledOnce(context.fetcher.fetch);
+  });
+});
+```
+
+### Sync Unittest
+
+Testing a sync is very similar to testing a regular formula. However, you want to create
+a `MockSyncExecutionContext` instead of a vanilla execution context, and you can test that
+your sync handles pagination properly by setting up mock fetcher responses that will result
+in your sync formula return a `Continuation` at least once.
+
+```typescript
+import {MockSyncExecutionContext} from 'packs-sdk/dist/development';
+import {executeSyncFormulaFromPackDef} from 'packs-sdk/dist/development';
+import {manifest} from '../manifest';
+import {newJsonFetchResponse} from 'packs-sdk/dist/development';
+import {newMockSyncExecutionContext} from 'packs-sdk/dist/development';
+import sinon from 'sinon';
+
+describe('Sync Formula', () => {
+  let syncContext: MockSyncExecutionContext;
+
+  beforeEach(() => {
+    syncContext = newMockSyncExecutionContext();
+  });
+
+  it('sync with pagination', async () => {
+    const page1Response = newJsonFetchResponse({
+      users: [{id: 123, name: 'Alice'}],
+      nextPageNumber: 2,
+    });
+    const page2Response = newJsonFetchResponse({
+      users: [{id: 456, name: 'Bob'}],
+      nextPageNumber: undefined,
+    });
+    syncContext.fetcher.fetch
+      .withArgs('/api/users')
+      .returns(page1Response)
+      .withArgs('/api/users?page=2')
+      .returns(page2Response);
+
+    const result = await executeSyncFormulaFromPackDef(manifest, 'MySync', [], syncContext);
+
+    assert.equal(result.length, 2);
+    assert.equal(result[0].Id, 123);
+    assert.equal(result[1].Id, 456);
+    sinon.assert.calledTwice(syncContext.fetcher.fetch);
+  });
+});
+```
+
+### Integration Test
+
+If you wish to write an end-to-end integration test that actually hits the third-party API
+that you pack interacts with, you can simply pass `useRealFetcher: true` when using these
+test utilities. The execution context will include a fetcher that will make real http
+requests to whatever urls they are given, and will apply authentication to these requests
+if you have configured authentication locally using `coda auth`. For example:
+
+```typescript
+const result = await executeFormulaFromPackDef(manifest, 'MyNamespace::MyFormula', ['my-param'], undefined, undefined, {
+  useRealFetcher: true,
+});
+```
+
+### Return Value Validation
+
+By default, these testing utility functions will validate return values after executing your pack
+functions. This validation checks that the values you actually return from your formula implementations
+match the schema you have written. This helps find bugs in your code and also helps catch subtle
+issues in how your values might be interpreted in the Coda application when you pack is executed
+for real.
+
+This validation can also help ensure that your test code correctly simulates responses from
+the API that you're integrating with. For instance, while developing our pack, you may have
+been regularly exercising your formula code by running `coda execute --fetch` frequently
+and you're confident that your code works correctly when run against the real API. Then you
+go to write unittests for you pack and you define some fake response objects, but you forget
+some required fields or you specified a field as an array when it should be a comma-separated list.
+If your fake response result in your pack returning a value that doesn't match the schema you,
+the validator will catch these and notify you and you can fix your test code.
+
+The validator will check for things like:
+
+- Does the type of the return value match the type declared in the schema? For example, if you
+  declared that your formula returns a number but it returns a string.
+- If your formula returns an object (like all sync formulas), do all of the child properties
+  in that object match the types declared in the schema?
+- Are all properties that are declared as `required` in the schema present and non-empty?
+- If the schema for a property declares a `codaType` type hint, can the value actually be
+  interpreted as the hinted type? For example, if you declare a property as a string and give
+  a hint type of `ValueType.DateTime`, the validator will try to parse the value as a datetime
+  and give an error if that fails.
+
+The validator does not perfectly represent how Coda will process your return values
+at runtime but is intended to help catch the most common bugs so that you can fix them
+before uploading your pack to Coda.
+
+If desired, you can disable return value validation by passing `validateResult: false` in the
+`ExecuteOptions` argument of these testing utilities.
+
 ## Best Practices
+
+You are free to structure your pack code however works best to you, but we have a few
+suggested best practices after having developed dozens of packs internally at Coda.
+
+### File Structure
+
+Your pack will likely grow over time and it can be easier to understand and maintain
+with a clear file structure. We recommend splitting out your manifest, your formulas,
+your schemas, and your types, each into separate files.
+
+**manifest.ts**
+
+This is the top-level definition of your pack. It's easiest to refer to if it's in
+file by itself containing nothing but the definition itself, importing the nuts
+and bolts of your pack from other files.
+
+```typescript
+import {PackDefinition} from 'packs-sdk';
+import {formulas} from './formulas';
+import {syncTables} from './formulas';
+
+export const manifest: PackDefinition = {
+  name: 'MyPack',
+  description: 'My description',
+  version: '2.3.1',
+  defaultAuthentication: {
+    ...
+  },
+  ...,
+  formulas,
+  syncTables,
+};
+```
+
+**formulas.ts**
+
+Most of your pack implementation goes here.
+
+```typescript
+import type {Format} from 'packs-sdk';
+import type {PackFormulas} from 'packs-sdk';
+import type {SyncTable} from 'packs-sdk';
+
+export const formulas: PackFormulas = {
+  MyPack: [
+    // Formula defintions go here, e.g.
+    // makeStringFormula({ ... }),
+  ],
+};
+
+export const syncTables: SyncTable[] = [
+  // Sync table definitions go here, e.g.
+  // makeSyncTable({...}),
+];
+
+export const formats: Format[] = [
+  // Column formats go here, e.g.
+  // {name: 'MyFormat', formulaNamespace: 'MyPack', formulaName: 'MyFormula'}
+];
+```
+
+**schemas.ts**
+
+The schema definitions for your object formulas and sync tables go here.
+Your `formulas.ts` file will import those schemas. This creates a clear separation
+between schema and implementation and allows you to refer back to your schemas
+without wading through long formula implementations.
+
+```typescript
+import {ValueType} from 'packs-sdk';
+import {makeObjectSchema} from 'packs-sdk';
+
+export const personSchema = makeObjectSchema({
+  type: ValueType.Object,
+  id: 'email',
+  primary: 'name',
+  properties: {
+    email: {type: ValueType.String},
+    name: {type: ValueType.String},
+    dateOfBirth: {type: ValueType.String, codaType: ValueType.Date, fromKey: 'dob'},
+  },
+});
+```
+
+**types.ts**
+
+Types are optional (and only applicable if you're using TypeScript) but we find that they
+make packs code much more robust, understandable, and testable. Your types file
+can include types for both the request and response objects for the third-party API
+you may be working with, as well as for your own return values (which should match your schemas).
+If there is an existing library or SDK for the API you're working with, it may already have
+type definitions for API objects and you needn't write them yourself.
+
+If your pack has code to transform or massage and API response into a custom object
+structure that you've defined, having types for both objects makes it very easy to
+see if you're correctly handled all fields.
+
+If you're writing tests that simulate API responses, having types for those API responses
+makes it trivial to construct fake responses that include the appropriate fields.
+
+```typescript
+/*
+ * Types for third-party API objects, if any, go here, e.g.
+ */
+
+interface FooAPIResponse {
+  id: number;
+  first_name: string;
+  last_name: string;
+  created_at: string;
+}
+
+/*
+ * Types for objects that your formulas return, if any, go here, e.g.
+ */
+
+interface MyFormulaResponse {
+  id: number;
+  fullName: string;
+  createdAt: string;
+}
+```
 
 ## Assets
 
+The `PackDefinition` asks you to specify a `logoPath` to a logo image for your pack.
+This should be a `png` or `svg` in a subdirectory called `assets`.
+
+This should be a square image ideally at least 200 pixels per side and with
+a transparent background.
+
 ## Reference
 
-### Hint Types
+TODO: Link to full SDK reference docs.

@@ -67,6 +67,64 @@
 				<a href="#coda-packs-sdk" id="coda-packs-sdk" style="color: inherit; text-decoration: none;">
 					<h1>Coda Packs SDK</h1>
 				</a>
+				<ul>
+					<li><a href="#coda-packs-sdk">Coda Packs SDK</a><ul>
+							<li><a href="#basic-concepts">Basic Concepts</a></li>
+							<li><a href="#getting-started">Getting Started</a><ul>
+									<li><a href="#prerequisites">Prerequisites</a></li>
+									<li><a href="#one-time-setup">One-time Setup</a><ul>
+											<li><a href="#global-install-quick">Global Install (Quick)</a></li>
+											<li><a href="#single-project-install-recommended">Single-Project Install (Recommended)</a></li>
+										</ul>
+									</li>
+									<li><a href="#setup-your-pack-definition">Setup Your Pack Definition</a></li>
+								</ul>
+							</li>
+							<li><a href="#running-your-code">Running Your Code</a><ul>
+									<li><a href="#running-formulas">Running Formulas</a></li>
+									<li><a href="#running-syncs">Running Syncs</a></li>
+									<li><a href="#fetching">Fetching</a></li>
+								</ul>
+							</li>
+							<li><a href="#core-concepts">Core Concepts</a><ul>
+									<li><a href="#fetching-remote-data">Fetching Remote Data</a></li>
+									<li><a href="#authentication">Authentication</a><ul>
+											<li><a href="#user-default-authentication-vs-system-authentication">User (Default) Authentication vs System Authentication</a></li>
+											<li><a href="#security">Security</a></li>
+											<li><a href="#authentication-types">Authentication Types</a></li>
+										</ul>
+									</li>
+									<li><a href="#testing-authenticated-requests">Testing Authenticated Requests</a></li>
+									<li><a href="#syncs">Syncs</a><ul>
+											<li><a href="#examples">Examples</a></li>
+											<li><a href="#dynamic-sync-tables">Dynamic Sync Tables</a></li>
+										</ul>
+									</li>
+									<li><a href="#normalization">Normalization</a></li>
+									<li><a href="#type-hints">Type Hints</a></li>
+									<li><a href="#key-mapping-and-extraneous-properties">Key Mapping and Extraneous Properties</a></li>
+									<li><a href="#formula-namespaces">Formula Namespaces</a></li>
+									<li><a href="#metadata-formulas">Metadata Formulas</a></li>
+									<li><a href="#execution-environment">Execution Environment</a></li>
+								</ul>
+							</li>
+							<li><a href="#testing-your-code">Testing Your Code</a><ul>
+									<li><a href="#basic-formula-unittest">Basic Formula Unittest</a></li>
+									<li><a href="#formula-unittest-with-mock-fetcher">Formula Unittest With Mock Fetcher</a></li>
+									<li><a href="#sync-unittest">Sync Unittest</a></li>
+									<li><a href="#integration-test">Integration Test</a></li>
+									<li><a href="#return-value-validation">Return Value Validation</a></li>
+								</ul>
+							</li>
+							<li><a href="#best-practices">Best Practices</a><ul>
+									<li><a href="#file-structure">File Structure</a></li>
+								</ul>
+							</li>
+							<li><a href="#assets">Assets</a></li>
+							<li><a href="#reference">Reference</a></li>
+						</ul>
+					</li>
+				</ul>
 				<a href="#basic-concepts" id="basic-concepts" style="color: inherit; text-decoration: none;">
 					<h2>Basic Concepts</h2>
 				</a>
@@ -101,18 +159,26 @@
 				<a href="#one-time-setup" id="one-time-setup" style="color: inherit; text-decoration: none;">
 					<h3>One-time Setup</h3>
 				</a>
+				<a href="#global-install-quick" id="global-install-quick" style="color: inherit; text-decoration: none;">
+					<h4>Global Install (Quick)</h4>
+				</a>
+				<p>The simplest way to get started with the SDK is to install it globally:</p>
+				<pre><code class="language-console">npm install --global https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basic@github.com/kr-project/packs-sdk#e79bbd196bf080b266f038ddd2bceb83b45e1270</code></pre>
+				<a href="#single-project-install-recommended" id="single-project-install-recommended" style="color: inherit; text-decoration: none;">
+					<h4>Single-Project Install (Recommended)</h4>
+				</a>
+				<p>It&#39;s easier to manage dependencies and avoid version conflicts across projects
+					if you create an npm project for your pack and install the SDK and other dependencies
+				locally.</p>
 				<p>Create a new project directory if you haven&#39;t already and initialize your project:</p>
 				<pre><code class="language-console"><span class="hljs-meta">#</span><span class="bash"> Initialize npm and follow prompts.</span>
 npm init
-<span class="hljs-meta">#</span><span class="bash"> Install the Coda Packs SDK.</span>
+<span class="hljs-meta">#</span><span class="bash"> Install the Coda Packs SDK locally <span class="hljs-keyword">in</span> your project</span>
 npm install --save https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basic@github.com/kr-project/packs-sdk#e79bbd196bf080b266f038ddd2bceb83b45e1270</code></pre>
-				<a href="#setup-your-path" id="setup-your-path" style="color: inherit; text-decoration: none;">
-					<h3>Setup Your Path</h3>
-				</a>
-				<p>When working with the Coda Packs SDK, you&#39;ll frequently use the <code>coda</code> commandline (CLI) utility that is included
-					with the npm package. That utility lives at <code>./node_modules/.bin/coda</code>, but it&#39;s more convenient to reference it
-				directly as <code>coda</code>, so we recommend running:</p>
+				<p>Update your path so you can easily use the <code>coda</code> commandline (CLI) that ships with the SDK:</p>
 				<pre><code class="language-console">export PATH=./node_modules/.bin:$PATH</code></pre>
+				<p>(Globally-installed npm packages link CLI scripts into your system path. Locally installed packages
+				live in <code>./node_modules/.bin</code> and so are more easily used by updating your path.)</p>
 				<a href="#setup-your-pack-definition" id="setup-your-pack-definition" style="color: inherit; text-decoration: none;">
 					<h3>Setup Your Pack Definition</h3>
 				</a>
@@ -368,6 +434,26 @@ npm install --save https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basi
 };</code></pre>
 				<p>your sync will be assumed to be complete and your formula will not be invoked any further.</p>
 				<p>The arrays of partial results from each sync formula invocation will be merged together and inserted into the doc.</p>
+				<a href="#dynamic-sync-tables" id="dynamic-sync-tables" style="color: inherit; text-decoration: none;">
+					<h4>Dynamic Sync Tables</h4>
+				</a>
+				<p>Most sync tables have schemas that can be statically defined. For example, if you&#39;re writing
+					a sync of a user&#39;s Google Calendar events, the structure of an Event from the Google Calendar
+				API is well-known and you can write a schema for what your table should contain.</p>
+				<p>In certain cases, you may want to sync data whose structure is not known in advance
+					and my depend on the user doing the sync. For example, Coda&#39;s Jira pack allows users
+					to sync data from their Jira instance, but Jira lets users create arbitrary custom fields
+					for their Issue objects. So the schema of the Issues sync table is not known in advance;
+				it depends on Jira account that the user is syncing from.</p>
+				<p>Coda supports &quot;dynamic&quot; sync tables for cases like these. Instead of including a static
+					schema in your sync table definition, you include a formula that returns a schema.
+					This formula can use the fetcher to make authenticated http requests to your pack&#39;s API
+					so that you may retrieve any necessary info from that third-party service needed
+				to construct an appropriate schema.</p>
+				<p>To define a dynamic schema, use the <code>makeDynamicSyncTable()</code> wrapper function.
+					You will provide a <code>getSchema</code> formula that returns a schema definition. You&#39;ll
+					also provide some supporting formulas like <code>getName</code>, to return a name in the UI
+				for the table, in case even the name of the entities being synced is dynamic.</p>
 				<a href="#normalization" id="normalization" style="color: inherit; text-decoration: none;">
 					<h3>Normalization</h3>
 				</a>
@@ -468,6 +554,63 @@ npm install --save https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basi
 				will be remapped to <code>id</code> and <code>name</code> (and then those fields will be normalized, too).</p>
 				<p>The combination of <code>fromKey</code> and <code>excludeExtraneous</code> should generally mean that you needn&#39;t
 				write any custom code to remove or remap fields to make an API object conform to your desired schema.</p>
+				<a href="#formula-namespaces" id="formula-namespaces" style="color: inherit; text-decoration: none;">
+					<h3>Formula Namespaces</h3>
+				</a>
+				<p>When defining the formulas included in your pack, you must place them in a <strong>namespace</strong>.
+					When users invoke your formula in the Coda UI (or you invoke them when testing your pack)
+				the formula will be prefixed by its namespace.</p>
+				<p>The namespace exists so that formulas can be nicely grouped together by the pack they
+					originated from, to make it easier to work with docs that have lots of formulas and
+					avoid collisions when multiple unrelated packs may define formulas with the same name.
+					Generally, the name of your namespace can just be the name of your pack (without any
+				spaces or punctuation).</p>
+				<p>So if you&#39;re writing a pack that integrates with Slack, you&#39;d probably want to choose <code>Slack</code>
+					as your formula namespace. If you wrote a formula that sends a Slack message, you would
+					invoke that formula using <code>Slack::SendMessage(...)</code>. When users are writing formulas in their
+					docs, they can type <code>slack</code> and autocomplete will show them all of the formulas in the <code>Slack</code>
+					namespace. If the user also used the Gmail pack and that pack also defined a <code>SendMessage</code>
+					formula, it would be easy for the user to differentiate between the two because they
+				have separate and clear namespaces: <code>Slack::SendMessage</code> vs <code>Gmail::SendMessage</code>.</p>
+				<p>While the structure of a pack definition allows you to specify multiple namespaces
+					(since formula definitions are a dictionary mapping a namespace to a list of formulas)
+				the SDK currently only allows you one namespace per pack. This may change in the future.</p>
+				<p>While sync tables are implemented using formulas, sync formulas do not have a namespace,
+					since these formulas are not called directly by users and are not exposed to users.
+					As a pack author, you only need to be aware of this because when you use <code>coda execute</code>
+				to run one of your syncs, you needn&#39;t prefix your sync table name with a namespace.</p>
+				<a href="#metadata-formulas" id="metadata-formulas" style="color: inherit; text-decoration: none;">
+					<h3>Metadata Formulas</h3>
+				</a>
+				<p>While <strong>formulas</strong> and <strong>sync tables</strong> are the backbone of your pack, sometimes you will
+				want or need to provide <strong>metadata formulas</strong> to help with the usability of your pack.</p>
+				<p>For example, if your pack uses authentication, you should provide a <code>getConnectionName</code>
+					metadata formula, which should return a user-friendly label for the credentials the user has
+					provided. If the user provides your pack with an API key, you can implement a
+					<code>getConnectionName</code> formula that hits your API&#39;s <code>/whoami</code> endpoint to get the name of
+					the account that the API token belongs to and returns that name. Coda will display that
+					name in the UI to help the user understand which underlying account(s) they&#39;re using with
+				your pack.</p>
+				<p>Another common use of metadata formulas is for <strong>parameter autocomplete</strong>. You may
+					define a formula parameter that should only accept a specific set of enumerated values.
+					Suppose that your formula accepts a <code>country</code> parameter that should only be one of the
+					20 country codes that your API supports. You would probably want to include
+					an <code>autocomplete</code> option in your parameter definition, which would be a metadata formula
+					that returns those 20 valid values. The user would be able to select value from a dropdown
+					instead of having to type a value directly. Your autocomplete formula can either return
+					static values directly (in which chase the <code>makeSimpleAutocompleteMetadataFormula</code> helper
+					should make this trivial to write) but it can also use the fetcher to request values
+				from an API.</p>
+				<p>A metadata formula is structurally similar to a regular pack formula, in that it is
+				given an <code>ExecutionContext</code> and may make fetcher requests.</p>
+				<p>For parameter autocomplete metadata formulas, a <code>search</code> string is passed, indicating a
+					full or partial search query that the user has entered. An autocomplete formula will
+					be passed a <code>formulaContext</code> argument, which consists of key-value pairs representing
+					any other parameters the user has already selecting when configuring their formula or sync.
+					For example, your formula may accept parameters for both a country and a state/province.
+					The state/province options offered will depend on which country was selected, so your
+					metadata formula invocation for the state/province parameter will want to look at the
+				<code>formulaContext</code> to see which country has been selected.</p>
 				<a href="#execution-environment" id="execution-environment" style="color: inherit; text-decoration: none;">
 					<h3>Execution Environment</h3>
 				</a>
@@ -476,18 +619,273 @@ npm install --save https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basi
 				<a href="#testing-your-code" id="testing-your-code" style="color: inherit; text-decoration: none;">
 					<h2>Testing Your Code</h2>
 				</a>
+				<p>The SDK includes some utilities to help you write unittests and integration tests for your pack.
+				These utilities include:</p>
+				<ul>
+					<li>Helper functions to execute a specific formula or sync from your pack definition.</li>
+					<li>Mock fetchers (using <code>sinon</code>) to simulate http requests and responses.</li>
+					<li>Validation of formula inputs and return values to help catch bugs both in your test code
+					and your formula logic.</li>
+					<li>Hooks to apply authentication to http requests for integration tests.</li>
+				</ul>
+				<p>You&#39;ll find testing and development utilities in <code>packs-sdk/dist/development</code>.</p>
+				<p>The primary testing utilities are <code>executeFormulaFromPackDef</code> and <code>executeSyncFormulaFromPackDef</code>.
+					You provide the name of a formula, a reference to your pack definition, and a parameter list,
+					and the utility will execute the formula for you, validate the return value, and return it to you
+					for further assertions. These utilities provide sane default execution contexts, and in the case of
+					a sync, will execute your sync formula repeatedly for each page of results, simulating what a
+				real Coda sync will do.</p>
+				<p>By default, these utilities will use an execution environment that includes a mock fetcher
+					that will not actually make http requests. You can pass your own mock fetcher if you wish
+				to configure and inspect the mock requests.</p>
+				<a href="#basic-formula-unittest" id="basic-formula-unittest" style="color: inherit; text-decoration: none;">
+					<h3>Basic Formula Unittest</h3>
+				</a>
+				<p>Here&#39;s a very simple example test, using Mocha, for a formula that doesn&#39;t make any
+				fetcher requests:</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {executeFormulaFromPackDef} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;packs-sdk/dist/development&#x27;</span>;
+<span class="hljs-keyword">import</span> {manifest} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../manifest&#x27;</span>;
+
+describe(<span class="hljs-string">&#x27;Simple Formula&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+  it(<span class="hljs-string">&#x27;executes a formula&#x27;</span>, <span class="hljs-keyword">async</span> () =&gt; {
+    <span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> executeFormulaFromPackDef(manifest, <span class="hljs-string">&#x27;MyNamespace::MyFormula&#x27;</span>, [<span class="hljs-string">&#x27;my-param&#x27;</span>]);
+    assert.equal(result, <span class="hljs-string">&#x27;my-return-value&#x27;</span>);
+  });
+});</code></pre>
+				<a href="#formula-unittest-with-mock-fetcher" id="formula-unittest-with-mock-fetcher" style="color: inherit; text-decoration: none;">
+					<h3>Formula Unittest With Mock Fetcher</h3>
+				</a>
+				<p>A more interesting example is for a pack that does make some kind of http request using the fetcher.
+					Here we set up a mock execution context, register a fake response on it, and pass our pre-configured
+				mock fetcher when executing our formula.</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {MockExecutionContext} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;packs-sdk/dist/development&#x27;</span>;
+<span class="hljs-keyword">import</span> {executeFormulaFromPackDef} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;packs-sdk/dist/development&#x27;</span>;
+<span class="hljs-keyword">import</span> {manifest} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../manifest&#x27;</span>;
+<span class="hljs-keyword">import</span> {newJsonFetchResponse} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;packs-sdk/dist/development&#x27;</span>;
+<span class="hljs-keyword">import</span> {newMockExecutionContext} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;packs-sdk/dist/development&#x27;</span>;
+<span class="hljs-keyword">import</span> sinon <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;sinon&#x27;</span>;
+
+describe(<span class="hljs-string">&#x27;Formula with Fetcher&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-keyword">let</span> context: MockExecutionContext;
+
+  beforeEach(<span class="hljs-function">() =&gt;</span> {
+    context = newMockExecutionContext();
+  });
+
+  it(<span class="hljs-string">&#x27;basic fetch&#x27;</span>, <span class="hljs-keyword">async</span> () =&gt; {
+    <span class="hljs-keyword">const</span> fakeResponse = {
+      <span class="hljs-attr">id</span>: <span class="hljs-number">123</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Alice&#x27;</span>,
+    };
+    context.fetcher.fetch.returns(newJsonFetchResponse(fakeResponse));
+
+    <span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> executeFormulaFromPackDef(manifest, <span class="hljs-string">&#x27;MyNamespace::MyFormula&#x27;</span>, [<span class="hljs-string">&#x27;my-param&#x27;</span>], context);
+
+    assert.equal(result.Name, <span class="hljs-string">&#x27;Alice&#x27;</span>);
+    sinon.assert.calledOnce(context.fetcher.fetch);
+  });
+});</code></pre>
+				<a href="#sync-unittest" id="sync-unittest" style="color: inherit; text-decoration: none;">
+					<h3>Sync Unittest</h3>
+				</a>
+				<p>Testing a sync is very similar to testing a regular formula. However, you want to create
+					a <code>MockSyncExecutionContext</code> instead of a vanilla execution context, and you can test that
+					your sync handles pagination properly by setting up mock fetcher responses that will result
+				in your sync formula return a <code>Continuation</code> at least once.</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {MockSyncExecutionContext} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;packs-sdk/dist/development&#x27;</span>;
+<span class="hljs-keyword">import</span> {executeSyncFormulaFromPackDef} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;packs-sdk/dist/development&#x27;</span>;
+<span class="hljs-keyword">import</span> {manifest} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../manifest&#x27;</span>;
+<span class="hljs-keyword">import</span> {newJsonFetchResponse} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;packs-sdk/dist/development&#x27;</span>;
+<span class="hljs-keyword">import</span> {newMockSyncExecutionContext} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;packs-sdk/dist/development&#x27;</span>;
+<span class="hljs-keyword">import</span> sinon <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;sinon&#x27;</span>;
+
+describe(<span class="hljs-string">&#x27;Sync Formula&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-keyword">let</span> syncContext: MockSyncExecutionContext;
+
+  beforeEach(<span class="hljs-function">() =&gt;</span> {
+    syncContext = newMockSyncExecutionContext();
+  });
+
+  it(<span class="hljs-string">&#x27;sync with pagination&#x27;</span>, <span class="hljs-keyword">async</span> () =&gt; {
+    <span class="hljs-keyword">const</span> page1Response = newJsonFetchResponse({
+      <span class="hljs-attr">users</span>: [{<span class="hljs-attr">id</span>: <span class="hljs-number">123</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Alice&#x27;</span>}],
+      <span class="hljs-attr">nextPageNumber</span>: <span class="hljs-number">2</span>,
+    });
+    <span class="hljs-keyword">const</span> page2Response = newJsonFetchResponse({
+      <span class="hljs-attr">users</span>: [{<span class="hljs-attr">id</span>: <span class="hljs-number">456</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Bob&#x27;</span>}],
+      <span class="hljs-attr">nextPageNumber</span>: <span class="hljs-literal">undefined</span>,
+    });
+    syncContext.fetcher.fetch
+      .withArgs(<span class="hljs-string">&#x27;/api/users&#x27;</span>)
+      .returns(page1Response)
+      .withArgs(<span class="hljs-string">&#x27;/api/users?page=2&#x27;</span>)
+      .returns(page2Response);
+
+    <span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> executeSyncFormulaFromPackDef(manifest, <span class="hljs-string">&#x27;MySync&#x27;</span>, [], syncContext);
+
+    assert.equal(result.length, <span class="hljs-number">2</span>);
+    assert.equal(result[<span class="hljs-number">0</span>].Id, <span class="hljs-number">123</span>);
+    assert.equal(result[<span class="hljs-number">1</span>].Id, <span class="hljs-number">456</span>);
+    sinon.assert.calledTwice(syncContext.fetcher.fetch);
+  });
+});</code></pre>
+				<a href="#integration-test" id="integration-test" style="color: inherit; text-decoration: none;">
+					<h3>Integration Test</h3>
+				</a>
+				<p>If you wish to write an end-to-end integration test that actually hits the third-party API
+					that you pack interacts with, you can simply pass <code>useRealFetcher: true</code> when using these
+					test utilities. The execution context will include a fetcher that will make real http
+					requests to whatever urls they are given, and will apply authentication to these requests
+				if you have configured authentication locally using <code>coda auth</code>. For example:</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> executeFormulaFromPackDef(manifest, <span class="hljs-string">&#x27;MyNamespace::MyFormula&#x27;</span>, [<span class="hljs-string">&#x27;my-param&#x27;</span>], <span class="hljs-literal">undefined</span>, <span class="hljs-literal">undefined</span>, {
+  <span class="hljs-attr">useRealFetcher</span>: <span class="hljs-literal">true</span>,
+});</code></pre>
+				<a href="#return-value-validation" id="return-value-validation" style="color: inherit; text-decoration: none;">
+					<h3>Return Value Validation</h3>
+				</a>
+				<p>By default, these testing utility functions will validate return values after executing your pack
+					functions. This validation checks that the values you actually return from your formula implementations
+					match the schema you have written. This helps find bugs in your code and also helps catch subtle
+					issues in how your values might be interpreted in the Coda application when you pack is executed
+				for real.</p>
+				<p>This validation can also help ensure that your test code correctly simulates responses from
+					the API that you&#39;re integrating with. For instance, while developing our pack, you may have
+					been regularly exercising your formula code by running <code>coda execute --fetch</code> frequently
+					and you&#39;re confident that your code works correctly when run against the real API. Then you
+					go to write unittests for you pack and you define some fake response objects, but you forget
+					some required fields or you specified a field as an array when it should be a comma-separated list.
+					If your fake response result in your pack returning a value that doesn&#39;t match the schema you,
+				the validator will catch these and notify you and you can fix your test code.</p>
+				<p>The validator will check for things like:</p>
+				<ul>
+					<li>Does the type of the return value match the type declared in the schema? For example, if you
+					declared that your formula returns a number but it returns a string.</li>
+					<li>If your formula returns an object (like all sync formulas), do all of the child properties
+					in that object match the types declared in the schema?</li>
+					<li>Are all properties that are declared as <code>required</code> in the schema present and non-empty?</li>
+					<li>If the schema for a property declares a <code>codaType</code> type hint, can the value actually be
+						interpreted as the hinted type? For example, if you declare a property as a string and give
+						a hint type of <code>ValueType.DateTime</code>, the validator will try to parse the value as a datetime
+					and give an error if that fails.</li>
+				</ul>
+				<p>The validator does not perfectly represent how Coda will process your return values
+					at runtime but is intended to help catch the most common bugs so that you can fix them
+				before uploading your pack to Coda.</p>
+				<p>If desired, you can disable return value validation by passing <code>validateResult: false</code> in the
+				<code>ExecuteOptions</code> argument of these testing utilities.</p>
 				<a href="#best-practices" id="best-practices" style="color: inherit; text-decoration: none;">
 					<h2>Best Practices</h2>
 				</a>
+				<p>You are free to structure your pack code however works best to you, but we have a few
+				suggested best practices after having developed dozens of packs internally at Coda.</p>
+				<a href="#file-structure" id="file-structure" style="color: inherit; text-decoration: none;">
+					<h3>File Structure</h3>
+				</a>
+				<p>Your pack will likely grow over time and it can be easier to understand and maintain
+					with a clear file structure. We recommend splitting out your manifest, your formulas,
+				your schemas, and your types, each into separate files.</p>
+				<p><strong>manifest.ts</strong></p>
+				<p>This is the top-level definition of your pack. It&#39;s easiest to refer to if it&#39;s in
+					file by itself containing nothing but the definition itself, importing the nuts
+				and bolts of your pack from other files.</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {PackDefinition} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;packs-sdk&#x27;</span>;
+<span class="hljs-keyword">import</span> {formulas} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./formulas&#x27;</span>;
+<span class="hljs-keyword">import</span> {syncTables} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./formulas&#x27;</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> manifest: PackDefinition = {
+  <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;MyPack&#x27;</span>,
+  <span class="hljs-attr">description</span>: <span class="hljs-string">&#x27;My description&#x27;</span>,
+  <span class="hljs-attr">version</span>: <span class="hljs-string">&#x27;2.3.1&#x27;</span>,
+  <span class="hljs-attr">defaultAuthentication</span>: {
+    ...
+  },
+  ...,
+  formulas,
+  syncTables,
+};</code></pre>
+				<p><strong>formulas.ts</strong></p>
+				<p>Most of your pack implementation goes here.</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> <span class="hljs-keyword">type</span> {Format} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;packs-sdk&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-keyword">type</span> {PackFormulas} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;packs-sdk&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-keyword">type</span> {SyncTable} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;packs-sdk&#x27;</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> formulas: PackFormulas = {
+  <span class="hljs-attr">MyPack</span>: [
+    <span class="hljs-comment">// Formula defintions go here, e.g.</span>
+    <span class="hljs-comment">// makeStringFormula({ ... }),</span>
+  ],
+};
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> syncTables: SyncTable[] = [
+  <span class="hljs-comment">// Sync table definitions go here, e.g.</span>
+  <span class="hljs-comment">// makeSyncTable({...}),</span>
+];
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> formats: Format[] = [
+  <span class="hljs-comment">// Column formats go here, e.g.</span>
+  <span class="hljs-comment">// {name: &#x27;MyFormat&#x27;, formulaNamespace: &#x27;MyPack&#x27;, formulaName: &#x27;MyFormula&#x27;}</span>
+];</code></pre>
+				<p><strong>schemas.ts</strong></p>
+				<p>The schema definitions for your object formulas and sync tables go here.
+					Your <code>formulas.ts</code> file will import those schemas. This creates a clear separation
+					between schema and implementation and allows you to refer back to your schemas
+				without wading through long formula implementations.</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {ValueType} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;packs-sdk&#x27;</span>;
+<span class="hljs-keyword">import</span> {makeObjectSchema} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;packs-sdk&#x27;</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> personSchema = makeObjectSchema({
+  <span class="hljs-attr">type</span>: ValueType.Object,
+  <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;email&#x27;</span>,
+  <span class="hljs-attr">primary</span>: <span class="hljs-string">&#x27;name&#x27;</span>,
+  <span class="hljs-attr">properties</span>: {
+    <span class="hljs-attr">email</span>: {<span class="hljs-attr">type</span>: ValueType.String},
+    <span class="hljs-attr">name</span>: {<span class="hljs-attr">type</span>: ValueType.String},
+    <span class="hljs-attr">dateOfBirth</span>: {<span class="hljs-attr">type</span>: ValueType.String, <span class="hljs-attr">codaType</span>: ValueType.Date, <span class="hljs-attr">fromKey</span>: <span class="hljs-string">&#x27;dob&#x27;</span>},
+  },
+});</code></pre>
+				<p><strong>types.ts</strong></p>
+				<p>Types are optional (and only applicable if you&#39;re using TypeScript) but we find that they
+					make packs code much more robust, understandable, and testable. Your types file
+					can include types for both the request and response objects for the third-party API
+					you may be working with, as well as for your own return values (which should match your schemas).
+					If there is an existing library or SDK for the API you&#39;re working with, it may already have
+				type definitions for API objects and you needn&#39;t write them yourself.</p>
+				<p>If your pack has code to transform or massage and API response into a custom object
+					structure that you&#39;ve defined, having types for both objects makes it very easy to
+				see if you&#39;re correctly handled all fields.</p>
+				<p>If you&#39;re writing tests that simulate API responses, having types for those API responses
+				makes it trivial to construct fake responses that include the appropriate fields.</p>
+				<pre><code class="language-typescript"><span class="hljs-comment">/*
+ * Types for third-party API objects, if any, go here, e.g.
+ */</span>
+
+<span class="hljs-keyword">interface</span> FooAPIResponse {
+  <span class="hljs-attr">id</span>: <span class="hljs-built_in">number</span>;
+  first_name: <span class="hljs-built_in">string</span>;
+  last_name: <span class="hljs-built_in">string</span>;
+  created_at: <span class="hljs-built_in">string</span>;
+}
+
+<span class="hljs-comment">/*
+ * Types for objects that your formulas return, if any, go here, e.g.
+ */</span>
+
+<span class="hljs-keyword">interface</span> MyFormulaResponse {
+  <span class="hljs-attr">id</span>: <span class="hljs-built_in">number</span>;
+  fullName: <span class="hljs-built_in">string</span>;
+  createdAt: <span class="hljs-built_in">string</span>;
+}</code></pre>
 				<a href="#assets" id="assets" style="color: inherit; text-decoration: none;">
 					<h2>Assets</h2>
 				</a>
+				<p>The <code>PackDefinition</code> asks you to specify a <code>logoPath</code> to a logo image for your pack.
+				This should be a <code>png</code> or <code>svg</code> in a subdirectory called <code>assets</code>.</p>
+				<p>This should be a square image ideally at least 200 pixels per side and with
+				a transparent background.</p>
 				<a href="#reference" id="reference" style="color: inherit; text-decoration: none;">
 					<h2>Reference</h2>
 				</a>
-				<a href="#hint-types" id="hint-types" style="color: inherit; text-decoration: none;">
-					<h3>Hint Types</h3>
-				</a>
+				<p>TODO: Link to full SDK reference docs.</p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
