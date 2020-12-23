@@ -307,7 +307,7 @@ describe('Property validation in objects', () => {
   it('handles references', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::GetReference', [true]),
-      /The following errors were found when validating the result of the formula "GetReference":\nCodatype reference is missing required field "Reference"./,
+      /The following errors were found when validating the result of the formula "GetReference":\nCodatype reference is missing required field "Reference" in result {"Name":"Test"}./,
     );
 
     await executeFormulaFromPackDef(fakePack, 'Fake::GetReference', [false]);

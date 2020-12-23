@@ -217,7 +217,7 @@ function tryParseScale(result, schema) {
 function tryParsePerson(result, schema) {
     const { id } = schema;
     const validId = ensure_1.ensureExists(id);
-    const idError = checkFieldIsPresent(result, validId, schema_1.ValueType.Person);
+    const idError = checkFieldInResult(result, validId, schema_1.ValueType.Person);
     if (idError) {
         return idError;
     }
@@ -227,15 +227,15 @@ function tryParsePerson(result, schema) {
 }
 function tryParseReference(result, schema) {
     const { id, primary } = schema;
-    const idError = checkFieldIsPresent(result, ensure_1.ensureExists(id), schema_1.ValueType.Reference);
-    const primaryError = checkFieldIsPresent(result, ensure_1.ensureExists(primary), schema_1.ValueType.Reference);
+    const idError = checkFieldInResult(result, ensure_1.ensureExists(id), schema_1.ValueType.Reference);
+    const primaryError = checkFieldInResult(result, ensure_1.ensureExists(primary), schema_1.ValueType.Reference);
     // filter out undefined from errors
     const errors = [primaryError, idError].filter(error => error !== undefined);
     return errors;
 }
-function checkFieldIsPresent(result, field, codaType) {
+function checkFieldInResult(result, field, codaType) {
     if (!(field in result) || !result[field]) {
-        return { message: `Codatype ${codaType} is missing required field "${field}".` };
+        return { message: `Codatype ${codaType} is missing required field "${field}" in result ${JSON.stringify(result)}.` };
     }
 }
 function checkType(typeMatches, expectedResultTypeName, result) {
