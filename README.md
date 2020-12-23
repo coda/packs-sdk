@@ -79,7 +79,7 @@ in which case, make sure that you have TypeScript and **ts-node** installed.
 
 The simplest way to get started with the SDK is to install it globally:
 
-```console
+```bash
 npm install --global https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basic@github.com/kr-project/packs-sdk#e79bbd196bf080b266f038ddd2bceb83b45e1270
 ```
 
@@ -91,7 +91,7 @@ locally.
 
 Create a new project directory if you haven't already and initialize your project:
 
-```console
+```bash
 # Initialize npm and follow prompts.
 npm init
 # Install the Coda Packs SDK locally in your project
@@ -100,7 +100,7 @@ npm install --save https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basi
 
 Update your path so you can easily use the `coda` commandline (CLI) that ships with the SDK:
 
-```console
+```bash
 export PATH=./node_modules/.bin:$PATH
 ```
 
@@ -165,14 +165,14 @@ to Coda and run it in a real doc to verify it works as intended.
 The `coda` CLI utility helps you execute formulas, via the `coda execute` sub-command. You can run
 `coda execute --help` at any time to refresh yourself on usage. The syntax is:
 
-```console
+```bash
 coda execute path/to/manifest.ts <namespace>:<formula> [params..]
 ```
 
 So for example, if your pack definition was in `src/manifest.ts` and you wanted to call a function
 in namespace `MyPack` called `MyFormula` that takes one argument, you'd run:
 
-```console
+```bash
 coda execute src/manifest.ts MyPack::MyFormula some-arg
 ```
 
@@ -190,14 +190,14 @@ takes a number, it will interpret `123` as a number before executing the formula
 The above example shows how to execute a regular pack **formula**. Executing a **sync** is almost
 identical:
 
-```console
+```bash
 coda execute path/to/manifest.ts <sync name> [params..]
 ```
 
 So for example, if you had a sync called `Items`, that took a start date as a parameter,
 you would execute this as:
 
-```console
+```bash
 coda execute path/to/manifest.ts Items 2020-12-15
 ```
 
@@ -210,7 +210,7 @@ information about how and why sync formulas are invoked repeatedly for paginated
 By default, `coda execute` will use a mock fetcher for any http requests that your formulas make.
 If you wish to actually make http requests, use the `--fetch` flag, for example:
 
-```console
+```bash
 coda execute --fetch src/manifest.ts MyPack::MyFormula some-arg
 ```
 
@@ -327,7 +327,7 @@ end-to-end including making fetcher requests to third-party services.
 The `coda auth` utility is used to set up authentication for a pack. Run `coda auth --help` at
 any time for a refresher on how to use the utility. Mostly, it's as simple as running
 
-```console
+```bash
 coda auth path/to/manifest.ts
 ```
 
