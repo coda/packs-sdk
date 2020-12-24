@@ -289,7 +289,7 @@ describe('Property validation in objects', () => {
   it('rejects person with no id field', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::GetPerson', ['test@coda.io', true]),
-      /The following errors were found when validating the result of the formula "GetPerson":\nCodatype person is missing required field "Email"./,
+      /The following errors were found when validating the result of the formula "GetPerson":\nSchema declares required property "Email" but this attribute is missing or empty./,
     );
   });
 
@@ -307,7 +307,7 @@ describe('Property validation in objects', () => {
   it('handles references', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::GetReference', [true]),
-      /The following errors were found when validating the result of the formula "GetReference":\nCodatype reference is missing required field "Reference" in result {"Name":"Test"}./,
+      /The following errors were found when validating the result of the formula "GetReference":\nSchema declares required property "Reference" but this attribute is missing or empty./,
     );
 
     await executeFormulaFromPackDef(fakePack, 'Fake::GetReference', [false]);

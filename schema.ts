@@ -309,7 +309,10 @@ function checkSchemaPropertyIsRequired<K extends string, L extends string, T ext
   schema: T,
 ) {
   const {properties, codaType} = schema;
-  assert(properties[field].required, `Field ${field} must be marked as required in schema with codaType ${codaType}.`);
+  assert(
+    properties[field].required,
+    `Field "${field}" must be marked as required in schema with codaType "${codaType}".`,
+  );
 }
 
 function normalizeKey(key: string): string {

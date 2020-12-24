@@ -1,8 +1,6 @@
 import type {ArraySchema} from '../schema';
 import type {GenericObjectSchema} from '../schema';
-import type {NumberHintTypes} from '../schema';
 import type {NumberSchema} from '../schema';
-import type {ObjectHintTypes} from '../schema';
 import type {ObjectPackFormulaMetadata} from '../api';
 import type {ObjectSchemaProperty} from '../schema';
 import type {ParamDefs} from '../api_types';
@@ -15,7 +13,6 @@ import {ResultValidationException} from './types';
 import type {ScaleSchema} from '../schema';
 import type {Schema} from '../schema';
 import type {SliderSchema} from '../schema';
-import type {StringHintTypes} from '../schema';
 import type {StringSchema} from '../schema';
 import {Type} from '../api_types';
 import type {TypedPackFormula} from '../api';
@@ -190,10 +187,7 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
           const personErrorMessage = tryParsePerson(result, schema);
           return personErrorMessage ? [personErrorMessage] : [];
         case ValueType.Reference:
-          const referenceErrorMessages = tryParseReference(result, schema);
-          if (referenceErrorMessages) {
-            return referenceErrorMessages;
-          }
+        // these are validated in the schema creation.
         case undefined:
           return validateObject(result as Record<string, unknown>, schema, context);
         default:
@@ -255,7 +249,7 @@ function tryParseScale(result: unknown, schema: NumberSchema) {
 function tryParsePerson(result: any, schema: GenericObjectSchema) {
   const {id} = schema;
   const validId = ensureExists(id);
-  const idError = checkFieldInResult(result, validId, ValueType.Person);
+  const idError = checkFieldInResult(result, validId);
   if (idError) {
     return idError;
   }
@@ -265,20 +259,11 @@ function tryParsePerson(result: any, schema: GenericObjectSchema) {
   }
 }
 
-function tryParseReference(result: any, schema: GenericObjectSchema): ResultValidationError[] {
-  const {id, primary} = schema;
-
-  const idError = checkFieldInResult(result, ensureExists(id), ValueType.Reference);
-  const primaryError = checkFieldInResult(result, ensureExists(primary), ValueType.Reference);
-
-  // filter out undefined from errors
-  const errors = [primaryError, idError].filter(error => error !== undefined);
-  return errors as ResultValidationError[];
-}
-
-function checkFieldInResult(result: any, field: string, codaType: NumberHintTypes | StringHintTypes | ObjectHintTypes) {
-  if (!(field in result) || !result[field]) {
-    return {message: `Codatype ${codaType} is missing required field "${field}" in result ${JSON.stringify(result)}.`};
+function checkFieldInResult(result: any, property: string) {
+  if (!(property in result) || !result[property]) {
+    return {
+      message: `Schema declares required property "${property}" but this attribute is missing or empty.`,
+    };
   }
 }
 

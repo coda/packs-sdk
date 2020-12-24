@@ -65,7 +65,7 @@ describe('Schema', () => {
         const missingIdSchema: any = {
           ...baseReferenceSchema,
           primary: 'reference',
-          identity: {packId: 1, name: 'Test'},
+          identity: {packId: CODA_DEBUG_PACK_ID, name: 'Test'},
         };
         makeObjectSchema(missingIdSchema);
       }).to.throw('Objects with codaType reference require a "id" property in the schema definition.');
@@ -74,7 +74,7 @@ describe('Schema', () => {
         const missingPrimarySchema: any = {
           ...baseReferenceSchema,
           id: 'reference',
-          identity: {packId: 1, name: 'Test'},
+          identity: {packId: CODA_DEBUG_PACK_ID, name: 'Test'},
         };
         makeObjectSchema(missingPrimarySchema);
       }).to.throw('Objects with codaType reference require a "primary" property in the schema definition.');
@@ -93,18 +93,18 @@ describe('Schema', () => {
           ...baseReferenceSchema,
           id: 'reference',
           primary: 'reference',
-          identity: {packId: 1, name: 'Test'},
+          identity: {packId: CODA_DEBUG_PACK_ID, name: 'Test'},
           properties: {...baseReferenceSchema.properties, required: false},
         };
         makeObjectSchema(referenceNotRequiredSchema);
-      }).to.throw('Field reference must be marked as required in schema with codaType reference.');
+      }).to.throw('Field "reference" must be marked as required in schema with codaType "reference".');
 
       makeObjectSchema({
         type: ValueType.Object,
         codaType: ValueType.Reference,
         id: 'reference',
         primary: 'reference',
-        identity: {packId: 1, name: 'Test'},
+        identity: {packId: CODA_DEBUG_PACK_ID, name: 'Test'},
         properties: {
           reference: {
             type: ValueType.Object,
@@ -143,7 +143,7 @@ describe('Schema', () => {
             name: {type: ValueType.String, required: true},
           },
         });
-      }).to.throw('Field email must be marked as required in schema with codaType person.');
+      }).to.throw('Field "email" must be marked as required in schema with codaType "person".');
 
       makeObjectSchema({
         type: ValueType.Object,

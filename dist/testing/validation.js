@@ -157,10 +157,7 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                     const personErrorMessage = tryParsePerson(result, schema);
                     return personErrorMessage ? [personErrorMessage] : [];
                 case schema_1.ValueType.Reference:
-                    const referenceErrorMessages = tryParseReference(result, schema);
-                    if (referenceErrorMessages) {
-                        return referenceErrorMessages;
-                    }
+                // these are validated in the schema creation.
                 case undefined:
                     return validateObject(result, schema, context);
                 default:
@@ -217,7 +214,7 @@ function tryParseScale(result, schema) {
 function tryParsePerson(result, schema) {
     const { id } = schema;
     const validId = ensure_1.ensureExists(id);
-    const idError = checkFieldInResult(result, validId, schema_1.ValueType.Person);
+    const idError = checkFieldInResult(result, validId);
     if (idError) {
         return idError;
     }
@@ -225,17 +222,11 @@ function tryParsePerson(result, schema) {
         return { message: `The id field for the person result must be an email string, but got "${result[validId]}".` };
     }
 }
-function tryParseReference(result, schema) {
-    const { id, primary } = schema;
-    const idError = checkFieldInResult(result, ensure_1.ensureExists(id), schema_1.ValueType.Reference);
-    const primaryError = checkFieldInResult(result, ensure_1.ensureExists(primary), schema_1.ValueType.Reference);
-    // filter out undefined from errors
-    const errors = [primaryError, idError].filter(error => error !== undefined);
-    return errors;
-}
-function checkFieldInResult(result, field, codaType) {
-    if (!(field in result) || !result[field]) {
-        return { message: `Codatype ${codaType} is missing required field "${field}" in result ${JSON.stringify(result)}.` };
+function checkFieldInResult(result, property) {
+    if (!(property in result) || !result[property]) {
+        return {
+            message: `Schema declares required property "${property}" but this attribute is missing or empty.`,
+        };
     }
 }
 function checkType(typeMatches, expectedResultTypeName, result) {

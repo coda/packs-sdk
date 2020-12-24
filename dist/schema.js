@@ -131,7 +131,7 @@ function checkRequiredFieldInObjectSchema(field, fieldName, codaType) {
 }
 function checkSchemaPropertyIsRequired(field, schema) {
     const { properties, codaType } = schema;
-    assert(properties[field].required, `Field ${field} must be marked as required in schema with codaType ${codaType}.`);
+    assert(properties[field].required, `Field "${field}" must be marked as required in schema with codaType "${codaType}".`);
 }
 function normalizeKey(key) {
     // Colons cause problems in our formula handling.
