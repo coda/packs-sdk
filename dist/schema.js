@@ -127,7 +127,7 @@ function validateObjectSchema(schema) {
     }
 }
 function checkRequiredFieldInObjectSchema(field, fieldName, codaType) {
-    ensure_1.ensureExists(field, `Objects with codaType ${codaType} require a "${fieldName}" property in the schema definition.`);
+    ensure_1.ensureExists(field, `Objects with codaType "${codaType}" require a "${fieldName}" property in the schema definition.`);
 }
 function checkSchemaPropertyIsRequired(field, schema) {
     const { properties, codaType } = schema;

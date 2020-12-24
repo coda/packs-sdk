@@ -68,7 +68,7 @@ describe('Schema', () => {
           identity: {packId: CODA_DEBUG_PACK_ID, name: 'Test'},
         };
         makeObjectSchema(missingIdSchema);
-      }).to.throw('Objects with codaType reference require a "id" property in the schema definition.');
+      }).to.throw('Objects with codaType "reference" require a "id" property in the schema definition.');
 
       expect(() => {
         const missingPrimarySchema: any = {
@@ -77,7 +77,7 @@ describe('Schema', () => {
           identity: {packId: CODA_DEBUG_PACK_ID, name: 'Test'},
         };
         makeObjectSchema(missingPrimarySchema);
-      }).to.throw('Objects with codaType reference require a "primary" property in the schema definition.');
+      }).to.throw('Objects with codaType "reference" require a "primary" property in the schema definition.');
 
       expect(() => {
         const missingIdentitySchema: any = {
@@ -86,7 +86,7 @@ describe('Schema', () => {
           primary: 'reference',
         };
         makeObjectSchema(missingIdentitySchema);
-      }).to.throw('Objects with codaType reference require a "identity" property in the schema definition.');
+      }).to.throw('Objects with codaType "reference" require a "identity" property in the schema definition.');
 
       expect(() => {
         const referenceNotRequiredSchema: any = {
@@ -130,7 +130,7 @@ describe('Schema', () => {
             name: {type: ValueType.String, required: true},
           },
         });
-      }).to.throw('Objects with codaType person require a "id" property in the schema definition.');
+      }).to.throw('Objects with codaType "person" require a "id" property in the schema definition.');
 
       expect(() => {
         makeObjectSchema({
