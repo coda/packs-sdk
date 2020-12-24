@@ -1,8 +1,6 @@
 import type {ArraySchema} from '../schema';
 import type {GenericObjectSchema} from '../schema';
-import type {NumberHintTypes} from '../schema';
 import type {NumberSchema} from '../schema';
-import type {ObjectHintTypes} from '../schema';
 import type {ObjectPackFormulaMetadata} from '../api';
 import type {ObjectSchemaProperty} from '../schema';
 import type {ParamDefs} from '../api_types';
@@ -15,12 +13,12 @@ import {ResultValidationException} from './types';
 import type {ScaleSchema} from '../schema';
 import type {Schema} from '../schema';
 import type {SliderSchema} from '../schema';
-import type {StringHintTypes} from '../schema';
 import type {StringSchema} from '../schema';
 import {Type} from '../api_types';
 import type {TypedPackFormula} from '../api';
 import {URL} from 'url';
 import {ValueType} from '../schema';
+import {ensureExists} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
 import {isDefined} from '../helpers/object_utils';
@@ -189,8 +187,7 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
           const personErrorMessage = tryParsePerson(result, schema);
           return personErrorMessage ? [personErrorMessage] : [];
         case ValueType.Reference:
-          const referenceErrorMessages = tryParseReference(result, schema);
-          return referenceErrorMessages ?? [];
+        // these are validated in the schema creation.
         case undefined:
           return validateObject(result as Record<string, unknown>, schema, context);
         default:
@@ -251,32 +248,22 @@ function tryParseScale(result: unknown, schema: NumberSchema) {
 
 function tryParsePerson(result: any, schema: GenericObjectSchema) {
   const {id} = schema;
-  if (!id) {
-    return {message: `Missing "id" field in schema.`};
+  const validId = ensureExists(id);
+  const idError = checkFieldInResult(result, validId);
+  if (idError) {
+    return idError;
   }
 
-  const resultMissingIdError = checkFieldIsPresent(result, id, ValueType.Person);
-  if (resultMissingIdError) {
-    return resultMissingIdError;
-  }
-
-  if (!isEmail(result[id] as string)) {
-    return {message: `The id field for the person result must be an email string, but got "${result[id]}".`};
+  if (!isEmail(result[validId] as string)) {
+    return {message: `The id field for the person result must be an email string, but got "${result[validId]}".`};
   }
 }
 
-function tryParseReference(_result: any, _schema: GenericObjectSchema): ResultValidationError[] {
-  // TODO: @alan-fang figure out references
-  return [];
-}
-
-function checkFieldIsPresent(
-  result: any,
-  field: string,
-  codaType: NumberHintTypes | StringHintTypes | ObjectHintTypes,
-) {
-  if (!(field in result) || !result[field]) {
-    return {message: `Codatype ${codaType} is missing required field "${field}".`};
+function checkFieldInResult(result: any, property: string) {
+  if (!(property in result) || !result[property]) {
+    return {
+      message: `Schema declares required property "${property}" but this attribute is missing or empty.`,
+    };
   }
 }
 

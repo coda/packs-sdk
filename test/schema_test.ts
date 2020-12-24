@@ -1,4 +1,5 @@
-import './test_helper';
+import {ValueType} from '../index';
+import {makeObjectSchema} from '../index';
 import {schema} from '../index';
 
 const CODA_DEBUG_PACK_ID = 1009;
@@ -38,6 +39,120 @@ describe('Schema', () => {
               properties: {a: {type: schema.ValueType.Boolean}},
             },
           },
+        },
+      });
+    });
+  });
+
+  describe('makeObjectSchema', () => {
+    it('requires for codaType.Reference', async () => {
+      const baseReferenceSchema = {
+        type: ValueType.Object,
+        codaType: ValueType.Reference,
+        properties: {
+          reference: {
+            type: ValueType.Object,
+            properties: {
+              objectId: {type: ValueType.String},
+              identifier: {type: ValueType.String},
+              name: {type: ValueType.String},
+            },
+          },
+          required: true,
+        },
+      };
+      expect(() => {
+        const missingIdSchema: any = {
+          ...baseReferenceSchema,
+          primary: 'reference',
+          identity: {packId: CODA_DEBUG_PACK_ID, name: 'Test'},
+        };
+        makeObjectSchema(missingIdSchema);
+      }).to.throw('Objects with codaType "reference" require a "id" property in the schema definition.');
+
+      expect(() => {
+        const missingPrimarySchema: any = {
+          ...baseReferenceSchema,
+          id: 'reference',
+          identity: {packId: CODA_DEBUG_PACK_ID, name: 'Test'},
+        };
+        makeObjectSchema(missingPrimarySchema);
+      }).to.throw('Objects with codaType "reference" require a "primary" property in the schema definition.');
+
+      expect(() => {
+        const missingIdentitySchema: any = {
+          ...baseReferenceSchema,
+          id: 'reference',
+          primary: 'reference',
+        };
+        makeObjectSchema(missingIdentitySchema);
+      }).to.throw('Objects with codaType "reference" require a "identity" property in the schema definition.');
+
+      expect(() => {
+        const referenceNotRequiredSchema: any = {
+          ...baseReferenceSchema,
+          id: 'reference',
+          primary: 'reference',
+          identity: {packId: CODA_DEBUG_PACK_ID, name: 'Test'},
+          properties: {...baseReferenceSchema.properties, required: false},
+        };
+        makeObjectSchema(referenceNotRequiredSchema);
+      }).to.throw('Field "reference" must be marked as required in schema with codaType "reference".');
+
+      makeObjectSchema({
+        type: ValueType.Object,
+        codaType: ValueType.Reference,
+        id: 'reference',
+        primary: 'reference',
+        identity: {packId: CODA_DEBUG_PACK_ID, name: 'Test'},
+        properties: {
+          reference: {
+            type: ValueType.Object,
+            properties: {
+              objectId: {type: ValueType.String},
+              identifier: {type: ValueType.String},
+              name: {type: ValueType.String},
+            },
+            required: true,
+          },
+        },
+      });
+    });
+
+    it('requires for codaType.Person', async () => {
+      expect(() => {
+        makeObjectSchema({
+          type: ValueType.Object,
+          codaType: ValueType.Person,
+          primary: 'name',
+          properties: {
+            email: {type: ValueType.String, required: true},
+            name: {type: ValueType.String, required: true},
+          },
+        });
+      }).to.throw('Objects with codaType "person" require a "id" property in the schema definition.');
+
+      expect(() => {
+        makeObjectSchema({
+          type: ValueType.Object,
+          codaType: ValueType.Person,
+          id: 'email',
+          primary: 'name',
+          properties: {
+            email: {type: ValueType.String},
+            name: {type: ValueType.String, required: true},
+          },
+        });
+      }).to.throw('Field "email" must be marked as required in schema with codaType "person".');
+
+      makeObjectSchema({
+        type: ValueType.Object,
+        codaType: ValueType.Person,
+        id: 'email',
+        primary: 'name',
+        properties: {
+          email: {type: ValueType.String, required: true},
+          name: {type: ValueType.String, required: true},
         },
       });
     });

@@ -32,6 +32,7 @@ export declare const personSchema: {
     properties: {
         email: {
             type: ValueType.String;
+            required: true;
         };
         name: {
             type: ValueType.String;
@@ -62,6 +63,7 @@ export declare const packageSchema: {
             properties: {
                 email: {
                     type: ValueType.String;
+                    required: true;
                 };
                 name: {
                     type: ValueType.String;

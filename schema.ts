@@ -272,7 +272,50 @@ export function makeSchema<T extends Schema>(schema: T): T {
 }
 
 export function makeObjectSchema<K extends string, L extends string, T extends ObjectSchema<K, L>>(schema: T): T {
+  validateObjectSchema(schema);
   return schema;
+}
+
+function validateObjectSchema<K extends string, L extends string, T extends ObjectSchema<K, L>>(schema: T) {
+  if (schema.codaType === ValueType.Reference) {
+    const {id, identity, primary} = schema;
+
+    checkRequiredFieldInObjectSchema(id, 'id', schema.codaType);
+    checkRequiredFieldInObjectSchema(identity, 'identity', schema.codaType);
+    checkRequiredFieldInObjectSchema(primary, 'primary', schema.codaType);
+
+    checkSchemaPropertyIsRequired(ensureExists(id), schema);
+    checkSchemaPropertyIsRequired(ensureExists(primary), schema);
+  }
+  if (schema.codaType === ValueType.Person) {
+    const {id} = schema;
+    checkRequiredFieldInObjectSchema(id, 'id', schema.codaType);
+    checkSchemaPropertyIsRequired(ensureExists(id), schema);
+  }
+
+  for (const [_propertyKey, propertySchema] of Object.entries(schema.properties)) {
+    if (propertySchema.type === ValueType.Object) {
+      validateObjectSchema(propertySchema);
+    }
+  }
+}
+
+function checkRequiredFieldInObjectSchema(field: any, fieldName: string, codaType: ObjectHintTypes) {
+  ensureExists(
+    field,
+    `Objects with codaType "${codaType}" require a "${fieldName}" property in the schema definition.`,
+  );
+}
+
+function checkSchemaPropertyIsRequired<K extends string, L extends string, T extends ObjectSchema<K, L>>(
+  field: string,
+  schema: T,
+) {
+  const {properties, codaType} = schema;
+  assert(
+    properties[field].required,
+    `Field "${field}" must be marked as required in schema with codaType "${codaType}".`,
+  );
 }
 
 function normalizeKey(key: string): string {

@@ -41,21 +41,24 @@ describe('Property validation in objects', () => {
       person: {
         type: ValueType.Object,
         codaType: ValueType.Person,
+        primary: 'email',
         id: 'email',
-        properties: {email: {type: ValueType.String}},
+        properties: {email: {type: ValueType.String, required: true}},
       },
       ref: {
         type: ValueType.Object,
         codaType: ValueType.Reference,
         id: 'reference',
+        primary: 'name',
+        identity: {packId: FakePack.id, name: ''},
         properties: {
+          name: {
+            type: ValueType.String,
+            required: true,
+          },
           reference: {
-            type: ValueType.Object,
-            properties: {
-              objectId: {type: ValueType.String},
-              identifier: {type: ValueType.String},
-              name: {type: ValueType.String},
-            },
+            type: ValueType.String,
+            required: true,
           },
         },
       },
@@ -165,6 +168,19 @@ describe('Property validation in objects', () => {
     },
   });
 
+  const fakeReferenceFormula = makeObjectFormula({
+    name: 'GetReference',
+    description: 'Returns a single reference.',
+    examples: [],
+    parameters: [makeBooleanParameter('returnMalformed', 'whether or not to return a malformed response')],
+    execute: async ([malformed]) => {
+      return malformed ? {ref: {name: 'Test'}} : {ref: {reference: 'foobar', name: 'Test'}};
+    },
+    response: {
+      schema: fakeSchema,
+    },
+  });
+
   const fakeNestedObjectFormula = makeObjectFormula({
     name: 'GetNestedObject',
     description: 'Returns an object with an object inside.',
@@ -188,6 +204,7 @@ describe('Property validation in objects', () => {
         fakeUrlFormula,
         fakeArrayFormula,
         fakePeopleFormula,
+        fakeReferenceFormula,
         fakeNestedObjectFormula,
       ],
     },
@@ -272,7 +289,7 @@ describe('Property validation in objects', () => {
   it('rejects person with no id field', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Fake::GetPerson', ['test@coda.io', true]),
-      /The following errors were found when validating the result of the formula "GetPerson":\nCodatype person is missing required field "Email"./,
+      /The following errors were found when validating the result of the formula "GetPerson":\nSchema declares required property "Email" but this attribute is missing or empty./,
     );
   });
 
@@ -285,6 +302,15 @@ describe('Property validation in objects', () => {
 
   it('validates correct person reference', async () => {
     await executeFormulaFromPackDef(fakePack, 'Fake::GetPerson', ['test@coda.io', false]);
+  });
+
+  it('handles references', async () => {
+    await testHelper.willBeRejectedWith(
+      executeFormulaFromPackDef(fakePack, 'Fake::GetReference', [true]),
+      /The following errors were found when validating the result of the formula "GetReference":\nSchema declares required property "Reference" but this attribute is missing or empty./,
+    );
+
+    await executeFormulaFromPackDef(fakePack, 'Fake::GetReference', [false]);
   });
 
   it('rejects nested object with incorrect nested type', async () => {

@@ -52,7 +52,7 @@ export const personSchema = makeObjectSchema({
   id: 'email',
   primary: 'name',
   properties: {
-    email: {type: ValueType.String},
+    email: {type: ValueType.String, required: true},
     name: {type: ValueType.String},
   },
 });
