@@ -40,6 +40,10 @@ lint-fix:
 compile:
 	${ROOTDIR}/node_modules/.bin/tsc
 
+.PHONY: docs
+docs:
+	${ROOTDIR}/node_modules/.bin/typedoc index.ts --excludeExternals --excludePrivate --excludeProtected
+
 .PHONY: test
 test:
 	TS_NODE_TRANSPILE_ONLY=1 ${ROOTDIR}/node_modules/.bin/mocha test/*_test.ts
