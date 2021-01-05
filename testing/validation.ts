@@ -320,7 +320,7 @@ function validateObject<ResultT extends Record<string, unknown>>(
 
   for (const [propertyKey, propertySchema] of Object.entries(schema.properties)) {
     const value = result[propertyKey];
-    if (propertySchema.required && !value) {
+    if (propertySchema.required && (value === undefined || value === null)) {
       errors.push({
         message: `Schema declares required property "${propertyKey}" but this attribute is missing or empty.`,
       });
