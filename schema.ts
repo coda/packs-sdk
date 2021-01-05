@@ -1,5 +1,6 @@
 import type {$Values} from './type_utils';
 import type {PackId} from './types';
+import {assertCondition} from './helpers/ensure';
 import {ensureExists} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
 import pascalcase from 'pascalcase';
@@ -312,7 +313,7 @@ function checkSchemaPropertyIsRequired<K extends string, L extends string, T ext
   schema: T,
 ) {
   const {properties, codaType} = schema;
-  assert(
+  assertCondition(
     properties[field].required,
     `Field "${field}" must be marked as required in schema with codaType "${codaType}".`,
   );
