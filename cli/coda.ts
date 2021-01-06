@@ -98,6 +98,29 @@ async function handleAuth({manifestPath, credentialsFile, oauthServerPort}: Argu
   }
 }
 
+async function handleInit() {
+  let isPacksExamplesInstalled;
+  try {
+    const command = spawnProcess('npm list coda-packs-examples');
+    isPacksExamplesInstalled = command.status === 0;
+  } catch (error) {
+    isPacksExamplesInstalled = false;
+  }
+
+  if (!isPacksExamplesInstalled) {
+    const installCommand = `npm install https://<coda-packs-examples-cli-token>:x-oauth-basic@github.com/kr-project/packs-examples`;
+    spawnProcess(installCommand);
+  }
+
+  const copyCommand = `cp -r node_modules/coda-packs-examples/examples/template ${process.cwd()}`;
+  spawnProcess(copyCommand);
+
+  if (!isPacksExamplesInstalled) {
+    const uninstallCommand = `npm uninstall coda-packs-examples`;
+    spawnProcess(uninstallCommand);
+  }
+}
+
 function isTypescript(path: string): boolean {
   return path.toLowerCase().endsWith('.ts');
 }
@@ -110,7 +133,7 @@ function spawnProcess(command: string) {
     cmd = command.replace('packs-sdk/dist', '.');
   }
 
-  spawnSync(cmd, {
+  return spawnSync(cmd, {
     shell: true,
     stdio: 'inherit',
   });
@@ -159,6 +182,11 @@ if (require.main === module) {
           desc: 'Port to use for the local server that handles OAuth setup.',
         } as Options,
       },
+    })
+    .command({
+      command: 'init',
+      describe: 'Initialize an empty pack',
+      handler: handleInit,
     })
     .demandCommand()
     .help().argv;
