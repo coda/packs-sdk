@@ -99,7 +99,7 @@ async function handleAuth({manifestPath, credentialsFile, oauthServerPort}: Argu
 }
 
 async function handleInit() {
-  let isPacksExamplesInstalled;
+  let isPacksExamplesInstalled: boolean;
   try {
     const listNpmPackages = spawnProcess('npm list coda-packs-examples');
     isPacksExamplesInstalled = listNpmPackages.status === 0;
@@ -108,7 +108,8 @@ async function handleInit() {
   }
 
   if (!isPacksExamplesInstalled) {
-    const installCommand = `npm install https://<coda-packs-examples-cli-token>:x-oauth-basic@github.com/kr-project/packs-examples`;
+    // TODO: @alan-fang remove and deprecate app token when making packs-examples public
+    const installCommand = `npm install https://74a1ea8b58ba756a7173dd2e0a2fbee9be66151a:x-oauth-basic@github.com/kr-project/packs-examples`;
     spawnProcess(installCommand);
   }
 
