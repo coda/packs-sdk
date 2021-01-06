@@ -101,8 +101,8 @@ async function handleAuth({manifestPath, credentialsFile, oauthServerPort}: Argu
 async function handleInit() {
   let isPacksExamplesInstalled;
   try {
-    const command = spawnProcess('npm list coda-packs-examples');
-    isPacksExamplesInstalled = command.status === 0;
+    const listNpmPackages = spawnProcess('npm list coda-packs-examples');
+    isPacksExamplesInstalled = listNpmPackages.status === 0;
   } catch (error) {
     isPacksExamplesInstalled = false;
   }

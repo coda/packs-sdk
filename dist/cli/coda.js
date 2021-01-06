@@ -114,8 +114,8 @@ function handleInit() {
     return __awaiter(this, void 0, void 0, function* () {
         let isPacksExamplesInstalled;
         try {
-            const command = spawnProcess('npm list coda-packs-examples');
-            isPacksExamplesInstalled = command.status === 0;
+            const listNpmPackages = spawnProcess('npm list coda-packs-examples');
+            isPacksExamplesInstalled = listNpmPackages.status === 0;
         }
         catch (error) {
             isPacksExamplesInstalled = false;
