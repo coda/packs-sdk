@@ -43,11 +43,11 @@ const EXECUTE_BOOTSTRAP_CODE = `
 import {executeFormulaOrSyncFromCLI} from 'packs-sdk/dist/testing/execution';
 
 async function main() {
-  const manifestPath = process.argv[4];
-  const useRealFetcher = process.argv[5] === 'true';
-  const credentialsFile = process.argv[6] || undefined;
-  const formulaName = process.argv[7];
-  const params = process.argv.slice(8);
+  const manifestPath = process.argv[1];
+  const useRealFetcher = process.argv[2] === 'true';
+  const credentialsFile = process.argv[3] || undefined;
+  const formulaName = process.argv[4];
+  const params = process.argv.slice(5);
 
   const module = await import(manifestPath);
 
@@ -64,9 +64,9 @@ const AUTH_BOOTSTRAP_CODE = `
 import {setupAuthFromModule} from 'packs-sdk/dist/testing/auth';
 
 async function main() {
-  const manifestPath = process.argv[4];
-  const credentialsFile = process.argv[5] || undefined;
-  const oauthServerPort = process.argv[6] ? parseInt(process.argv[6]) : undefined;
+  const manifestPath = process.argv[1];
+  const credentialsFile = process.argv[2] || undefined;
+  const oauthServerPort = process.argv[3] ? parseInt(process.argv[3]) : undefined;
   const module = await import(manifestPath);
   await setupAuthFromModule(module, {credentialsFile, oauthServerPort});
 }
