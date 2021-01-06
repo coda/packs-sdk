@@ -66,6 +66,7 @@ describe('Property validation in objects', () => {
         type: ValueType.Object,
         id: 'string',
         properties: {
+          bool: {type: ValueType.Boolean, required: true},
           string: {type: ValueType.String},
           number: {type: ValueType.Number},
         },
@@ -187,7 +188,7 @@ describe('Property validation in objects', () => {
     examples: [],
     parameters: [makeBooleanParameter('returnMalformed', 'whether or not to return a malformed response')],
     execute: async ([malformed]) => {
-      return {nested: {string: 'foo', number: malformed ? '123' : 123}};
+      return {nested: {string: 'foo', number: malformed ? '123' : 123, bool: false}};
     },
     response: {
       schema: fakeSchema,
@@ -212,6 +213,7 @@ describe('Property validation in objects', () => {
 
   it('validates boolean', async () => {
     await executeFormulaFromPackDef(fakePack, 'Fake::Boolean', [true]);
+    await executeFormulaFromPackDef(fakePack, 'Fake::Boolean', [false]);
   });
 
   it('validates correct date string', async () => {

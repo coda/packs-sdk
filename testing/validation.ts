@@ -25,6 +25,7 @@ import {isDefined} from '../helpers/object_utils';
 import {isEmail} from '../helpers/string';
 import {isObject} from '../schema';
 import {isObjectPackFormula} from '../api';
+import * as objectUtils from '../helpers/object_utils';
 
 export function validateParams(formula: TypedPackFormula, args: ParamValues<ParamDefs>): void {
   const {parameters, varargParameters} = formula;
@@ -320,7 +321,7 @@ function validateObject<ResultT extends Record<string, unknown>>(
 
   for (const [propertyKey, propertySchema] of Object.entries(schema.properties)) {
     const value = result[propertyKey];
-    if (propertySchema.required && !value) {
+    if (propertySchema.required && objectUtils.isNil(value)) {
       errors.push({
         message: `Schema declares required property "${propertyKey}" but this attribute is missing or empty.`,
       });
