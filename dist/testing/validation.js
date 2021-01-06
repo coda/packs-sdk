@@ -1,4 +1,23 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateResult = exports.validateParams = void 0;
 const types_1 = require("./types");
@@ -14,6 +33,7 @@ const object_utils_1 = require("../helpers/object_utils");
 const string_1 = require("../helpers/string");
 const schema_3 = require("../schema");
 const api_1 = require("../api");
+const objectUtils = __importStar(require("../helpers/object_utils"));
 function validateParams(formula, args) {
     const { parameters, varargParameters } = formula;
     const numRequiredParams = parameters.filter(param => !param.optional).length;
@@ -261,7 +281,7 @@ function validateObject(result, schema, context) {
     const errors = [];
     for (const [propertyKey, propertySchema] of Object.entries(schema.properties)) {
         const value = result[propertyKey];
-        if (propertySchema.required && (value === undefined || value === null)) {
+        if (propertySchema.required && objectUtils.isNil(value)) {
             errors.push({
                 message: `Schema declares required property "${propertyKey}" but this attribute is missing or empty.`,
             });
