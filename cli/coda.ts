@@ -5,6 +5,7 @@ import {DEFAULT_CREDENTIALS_FILE} from '../testing/auth';
 import {DEFAULT_OAUTH_SERVER_PORT} from '../testing/auth';
 import type {Options} from 'yargs';
 import {executeFormulaOrSyncFromCLI} from '../testing/execution';
+import fs from 'fs';
 import path from 'path';
 import {setupAuthFromModule} from '../testing/auth';
 import {spawnSync} from 'child_process';
@@ -58,6 +59,8 @@ async function main() {
 }
 
 void main();`;
+
+const PACKS_EXAMPLES_DIRECTORY = 'node_modules/coda-packs-examples';
 
 function makeManifestFullPath(manifestPath: string): string {
   return manifestPath.startsWith('/') ? manifestPath : path.join(process.cwd(), manifestPath);
@@ -113,10 +116,14 @@ async function handleInit() {
     spawnProcess(installCommand);
   }
 
-  const installDevDependenciesCommand = `npm install --save-dev @types/chai @types/mocha @types/node @types/sinon chai mocha sinon ts-node typescript`;
-  spawnProcess(installDevDependenciesCommand);
+  const packageJson = JSON.parse(fs.readFileSync(`${PACKS_EXAMPLES_DIRECTORY}/package.json`, 'utf-8'));
+  const devDependencies = packageJson.devDependencies;
+  const devDependencyPackages = Object.keys(devDependencies)
+    .map(dependency => `${dependency}@${devDependencies[dependency]}`)
+    .join(' ');
+  spawnProcess(`npm install --save-dev ${devDependencyPackages}`);
 
-  const copyCommand = `cp -r node_modules/coda-packs-examples/examples/template/* ${process.cwd()}`;
+  const copyCommand = `cp -r ${PACKS_EXAMPLES_DIRECTORY}/examples/template/* ${process.cwd()}`;
   spawnProcess(copyCommand);
 
   if (!isPacksExamplesInstalled) {

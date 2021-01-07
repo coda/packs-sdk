@@ -35,6 +35,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const auth_1 = require("../testing/auth");
 const auth_2 = require("../testing/auth");
 const execution_1 = require("../testing/execution");
+const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const auth_3 = require("../testing/auth");
 const child_process_1 = require("child_process");
@@ -72,6 +73,7 @@ async function main() {
 }
 
 void main();`;
+const PACKS_EXAMPLES_DIRECTORY = 'node_modules/coda-packs-examples';
 function makeManifestFullPath(manifestPath) {
     return manifestPath.startsWith('/') ? manifestPath : path_1.default.join(process.cwd(), manifestPath);
 }
@@ -125,9 +127,13 @@ function handleInit() {
             const installCommand = `npm install https://74a1ea8b58ba756a7173dd2e0a2fbee9be66151a:x-oauth-basic@github.com/kr-project/packs-examples`;
             spawnProcess(installCommand);
         }
-        const installDevDependenciesCommand = `npm install --save-dev @types/chai @types/mocha @types/node @types/sinon chai mocha sinon ts-node typescript`;
-        spawnProcess(installDevDependenciesCommand);
-        const copyCommand = `cp -r node_modules/coda-packs-examples/examples/template/* ${process.cwd()}`;
+        const packageJson = JSON.parse(fs_1.default.readFileSync(`${PACKS_EXAMPLES_DIRECTORY}/package.json`, 'utf-8'));
+        const devDependencies = packageJson.devDependencies;
+        const devDependencyPackages = Object.keys(devDependencies)
+            .map(dependency => `${dependency}@${devDependencies[dependency]}`)
+            .join(' ');
+        spawnProcess(`npm install --save-dev ${devDependencyPackages}`);
+        const copyCommand = `cp -r ${PACKS_EXAMPLES_DIRECTORY}/examples/template/* ${process.cwd()}`;
         spawnProcess(copyCommand);
         if (!isPacksExamplesInstalled) {
             const uninstallCommand = `npm uninstall coda-packs-examples`;
