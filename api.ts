@@ -289,6 +289,10 @@ export type SyncFormula<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>
 > = SyncFormulaDef<ParamDefsT> & {
+  execute(
+    params: ParamValues<ParamDefsT>,
+    context: SyncExecutionContext,
+  ): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
   resultType: TypeOf<SchemaType<SchemaT>>;
   isSyncFormula: true;
   schema?: ArraySchema;

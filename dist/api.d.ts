@@ -118,6 +118,7 @@ interface SyncFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaDef
     execute(params: ParamValues<ParamsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<object>>;
 }
 export declare type SyncFormula<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> = SyncFormulaDef<ParamDefsT> & {
+    execute(params: ParamValues<ParamDefsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
     resultType: TypeOf<SchemaType<SchemaT>>;
     isSyncFormula: true;
     schema?: ArraySchema;
