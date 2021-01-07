@@ -288,7 +288,7 @@ export type SyncFormula<
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>
-> = SyncFormulaDef<ParamDefsT> & {
+> = Omit<SyncFormulaDef<ParamDefsT>, 'execute'> & {
   execute(
     params: ParamValues<ParamDefsT>,
     context: SyncExecutionContext,
