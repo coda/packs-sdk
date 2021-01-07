@@ -150,7 +150,6 @@ function makeGetConnectionNameFormula(execute) {
         examples: [],
         network: {
             hasSideEffect: false,
-            hasConnection: true,
             requiresConnection: true,
         },
     });
@@ -179,7 +178,6 @@ function makeMetadataFormula(execute) {
         examples: [],
         network: {
             hasSideEffect: false,
-            hasConnection: true,
             requiresConnection: true,
         },
     });

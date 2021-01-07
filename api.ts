@@ -331,7 +331,6 @@ export function makeGetConnectionNameFormula(
     examples: [],
     network: {
       hasSideEffect: false,
-      hasConnection: true,
       requiresConnection: true,
     },
   });
@@ -375,7 +374,6 @@ export function makeMetadataFormula(
     examples: [],
     network: {
       hasSideEffect: false,
-      hasConnection: true,
       requiresConnection: true,
     },
   });
