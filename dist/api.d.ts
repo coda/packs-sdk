@@ -79,7 +79,8 @@ interface StringFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaD
         schema: StringSchema;
     };
 }
-interface ObjectResultFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema> extends PackFormulaDef<ParamsT, SchemaType<SchemaT> | Array<SchemaType<SchemaT>>> {
+interface ObjectResultFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema> extends PackFormulaDef<ParamsT, object | object[]> {
+    execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<object> | object;
     response?: ResponseHandlerTemplate<SchemaT>;
 }
 interface ObjectArrayFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema> extends Omit<PackFormulaDef<ParamsT, SchemaType<SchemaT>>, 'execute'> {

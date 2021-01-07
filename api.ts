@@ -218,7 +218,8 @@ interface StringFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaD
 }
 
 interface ObjectResultFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema>
-  extends PackFormulaDef<ParamsT, SchemaType<SchemaT> | Array<SchemaType<SchemaT>>> {
+  extends PackFormulaDef<ParamsT, object | object[]> {
+  execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<object> | object;
   response?: ResponseHandlerTemplate<SchemaT>;
 }
 
@@ -457,7 +458,7 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
     const wrappedExecute = execute;
     const responseHandler = generateObjectResponseHandler(response);
     execute = async function exec(params: ParamValues<ParamDefsT>, context: ExecutionContext) {
-      let result: SchemaType<SchemaT> | Array<SchemaType<SchemaT>>;
+      let result: object;
       try {
         result = await wrappedExecute(params, context);
       } catch (err) {
@@ -467,7 +468,9 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
           throw err;
         }
       }
-      return responseHandler({body: ensureExists(result), status: 200, headers: {}});
+      return responseHandler({body: ensureExists(result), status: 200, headers: {}}) as
+        | SchemaType<SchemaT>
+        | Array<SchemaType<SchemaT>>;
     };
   }
 
