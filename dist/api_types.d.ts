@@ -74,8 +74,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
     readonly isSystem?: boolean;
 }
 export interface Network {
-    readonly hasSideEffect: boolean;
-    readonly hasConnection?: boolean;
+    readonly hasSideEffect?: boolean;
     readonly requiresConnection?: boolean;
 }
 export interface FetchRequest {

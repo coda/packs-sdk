@@ -130,8 +130,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 }
 
 export interface Network {
-  readonly hasSideEffect: boolean;
-  readonly hasConnection?: boolean;
+  readonly hasSideEffect?: boolean;
   readonly requiresConnection?: boolean;
 }
 

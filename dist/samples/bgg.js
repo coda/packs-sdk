@@ -49,7 +49,7 @@ const FakeBggDefinitionOldFake = {
                 description: 'Get live data about a board game.',
                 examples: [],
                 parameters: [api_4.makeStringParameter('id', 'ID of a board game.')],
-                network: { hasSideEffect: false, hasConnection: true, requiresConnection: true },
+                network: { hasSideEffect: false, requiresConnection: true },
                 execute: ([id], context) => __awaiter(void 0, void 0, void 0, function* () {
                     const url = `https://boardgamegeek.com/boardgame/${id}`;
                     const result = yield context.fetcher.fetch({ method: 'GET', url });
@@ -121,7 +121,7 @@ const FakeBggDefinitionFake = {
                 description: 'Get live data about a board game.',
                 examples: [],
                 parameters: [api_4.makeStringParameter('url', 'Url to a board game')],
-                network: { hasSideEffect: false, hasConnection: true, requiresConnection: true },
+                network: { hasSideEffect: false, requiresConnection: true },
                 execute: ([id], context) => __awaiter(void 0, void 0, void 0, function* () {
                     const url = `https://boardgamegeek.com/boardgame/${id}`;
                     const result = yield context.fetcher.fetch({ method: 'GET', url });

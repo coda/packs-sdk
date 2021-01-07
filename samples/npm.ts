@@ -156,7 +156,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
             defaultValue: true,
           }),
         ],
-        network: {hasSideEffect: false, hasConnection: false},
+        network: {hasSideEffect: false},
         execute: async ([name, monthly], context) => {
           const url = withQueryParams(`https://npmjs.com/api/packages/${name}`, {monthly: String(monthly)});
           const result = await context.fetcher!.fetch({method: 'GET', url});
@@ -168,7 +168,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         description: 'Retrieve a list of packages URLs, comma separated',
         examples: [],
         parameters: [makeStringArrayParameter('names', 'Names of packages to download')],
-        network: {hasSideEffect: false, hasConnection: false},
+        network: {hasSideEffect: false},
         execute: async ([names]: [string[]]) => {
           return names.map(name => `https://npmjs.com/api/packages/${name}`).join(',');
         },
@@ -181,7 +181,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
           makeStringParameter('url', 'Url to a package'),
           makeStringParameter('path', 'file path for download', {optional: true}),
         ],
-        network: {hasSideEffect: true, hasConnection: false, requiresConnection: false},
+        network: {hasSideEffect: true, requiresConnection: false},
         execute: async ([url, _path], context) => {
           const fullUrl = withQueryParams(`https://npmjs.com/api/packages/${url}/download`);
           const result = await context.fetcher!.fetch({method: 'POST', url: fullUrl});
@@ -193,7 +193,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         description: 'Adds a fake package',
         examples: [],
         parameters: [makeStringParameter('name', 'Package name')],
-        network: {hasSideEffect: true, hasConnection: true, requiresConnection: true},
+        network: {hasSideEffect: true, requiresConnection: true},
         execute: async ([name], context) => {
           const url = withQueryParams(`https://npmjs.com/api/packages`);
           const result = await context.fetcher!.fetch({method: 'POST', body: JSON.stringify({name}), url});
@@ -211,7 +211,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
         makeStringParameter('search', 'Search string', {defaultValue: 'oy-vey'}),
         makeDateArrayParameter('dateRange', 'Date range', {optional: true}),
       ],
-      network: {hasSideEffect: false, hasConnection: false},
+      network: {hasSideEffect: false},
       execute: async ([search], context) => {
         const {continuation} = context.sync;
         const url = withQueryParams(`https://npmjs.com/api/packages/${search}`, {continuation});
@@ -232,7 +232,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
           }),
         }),
       ],
-      network: {hasSideEffect: false, hasConnection: false},
+      network: {hasSideEffect: false},
       execute: async ([pack], context) => {
         const {continuation} = context.sync;
         const url = withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, {continuation});
@@ -280,7 +280,7 @@ const FakeNpmDefinitionFake: FakePackDefinition = {
             }),
           }),
         ],
-        network: {hasSideEffect: false, hasConnection: false},
+        network: {hasSideEffect: false},
         execute: async ([pack], context) => {
           const {continuation, dynamicUrl} = context.sync;
           const query = getQueryParams(dynamicUrl!);

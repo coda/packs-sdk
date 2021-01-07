@@ -45,7 +45,7 @@ const FakeBggDefinitionOldFake: FakePackDefinition = {
         description: 'Get live data about a board game.',
         examples: [],
         parameters: [makeStringParameter('id', 'ID of a board game.')],
-        network: {hasSideEffect: false, hasConnection: true, requiresConnection: true},
+        network: {hasSideEffect: false, requiresConnection: true},
         execute: async ([id], context) => {
           const url = `https://boardgamegeek.com/boardgame/${id}`;
           const result = await context.fetcher!.fetch({method: 'GET', url});
@@ -120,7 +120,7 @@ const FakeBggDefinitionFake: FakePackDefinition = {
         description: 'Get live data about a board game.',
         examples: [],
         parameters: [makeStringParameter('url', 'Url to a board game')],
-        network: {hasSideEffect: false, hasConnection: true, requiresConnection: true},
+        network: {hasSideEffect: false, requiresConnection: true},
         execute: async ([id], context) => {
           const url = `https://boardgamegeek.com/boardgame/${id}`;
           const result = await context.fetcher!.fetch({method: 'GET', url});

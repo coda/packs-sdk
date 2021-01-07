@@ -158,7 +158,7 @@ const FakeNpmDefinitionFake = {
                         defaultValue: true,
                     }),
                 ],
-                network: { hasSideEffect: false, hasConnection: false },
+                network: { hasSideEffect: false },
                 execute: ([name, monthly], context) => __awaiter(void 0, void 0, void 0, function* () {
                     const url = url_2.withQueryParams(`https://npmjs.com/api/packages/${name}`, { monthly: String(monthly) });
                     const result = yield context.fetcher.fetch({ method: 'GET', url });
@@ -170,7 +170,7 @@ const FakeNpmDefinitionFake = {
                 description: 'Retrieve a list of packages URLs, comma separated',
                 examples: [],
                 parameters: [api_7.makeStringArrayParameter('names', 'Names of packages to download')],
-                network: { hasSideEffect: false, hasConnection: false },
+                network: { hasSideEffect: false },
                 execute: ([names]) => __awaiter(void 0, void 0, void 0, function* () {
                     return names.map(name => `https://npmjs.com/api/packages/${name}`).join(',');
                 }),
@@ -183,7 +183,7 @@ const FakeNpmDefinitionFake = {
                     api_9.makeStringParameter('url', 'Url to a package'),
                     api_9.makeStringParameter('path', 'file path for download', { optional: true }),
                 ],
-                network: { hasSideEffect: true, hasConnection: false, requiresConnection: false },
+                network: { hasSideEffect: true, requiresConnection: false },
                 execute: ([url, _path], context) => __awaiter(void 0, void 0, void 0, function* () {
                     const fullUrl = url_2.withQueryParams(`https://npmjs.com/api/packages/${url}/download`);
                     const result = yield context.fetcher.fetch({ method: 'POST', url: fullUrl });
@@ -195,7 +195,7 @@ const FakeNpmDefinitionFake = {
                 description: 'Adds a fake package',
                 examples: [],
                 parameters: [api_9.makeStringParameter('name', 'Package name')],
-                network: { hasSideEffect: true, hasConnection: true, requiresConnection: true },
+                network: { hasSideEffect: true, requiresConnection: true },
                 execute: ([name], context) => __awaiter(void 0, void 0, void 0, function* () {
                     const url = url_2.withQueryParams(`https://npmjs.com/api/packages`);
                     const result = yield context.fetcher.fetch({ method: 'POST', body: JSON.stringify({ name }), url });
@@ -213,7 +213,7 @@ const FakeNpmDefinitionFake = {
                 api_9.makeStringParameter('search', 'Search string', { defaultValue: 'oy-vey' }),
                 api_2.makeDateArrayParameter('dateRange', 'Date range', { optional: true }),
             ],
-            network: { hasSideEffect: false, hasConnection: false },
+            network: { hasSideEffect: false },
             execute: ([search], context) => __awaiter(void 0, void 0, void 0, function* () {
                 const { continuation } = context.sync;
                 const url = url_2.withQueryParams(`https://npmjs.com/api/packages/${search}`, { continuation });
@@ -234,7 +234,7 @@ const FakeNpmDefinitionFake = {
                     })),
                 }),
             ],
-            network: { hasSideEffect: false, hasConnection: false },
+            network: { hasSideEffect: false },
             execute: ([pack], context) => __awaiter(void 0, void 0, void 0, function* () {
                 const { continuation } = context.sync;
                 const url = url_2.withQueryParams(`https://npmjs.com/api/packages/${pack}/versions`, { continuation });
@@ -278,7 +278,7 @@ const FakeNpmDefinitionFake = {
                         })),
                     }),
                 ],
-                network: { hasSideEffect: false, hasConnection: false },
+                network: { hasSideEffect: false },
                 execute: ([pack], context) => __awaiter(void 0, void 0, void 0, function* () {
                     const { continuation, dynamicUrl } = context.sync;
                     const query = url_1.getQueryParams(dynamicUrl);
