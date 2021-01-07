@@ -279,13 +279,8 @@ export interface SyncFormulaResult<ResultT extends object> {
   continuation?: Continuation;
 }
 
-interface SyncFormulaDef<
-  K extends string,
-  L extends string,
-  ParamsT extends ParamDefs,
-  SchemaT extends ObjectSchema<K, L>
-> extends CommonPackFormulaDef<ParamsT> {
-  execute(params: ParamValues<ParamsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
+interface SyncFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaDef<ParamsT> {
+  execute(params: ParamValues<ParamsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<object>>;
 }
 
 export type SyncFormula<
@@ -293,7 +288,7 @@ export type SyncFormula<
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>
-> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
+> = SyncFormulaDef<ParamDefsT> & {
   resultType: TypeOf<SchemaType<SchemaT>>;
   isSyncFormula: true;
   schema?: ArraySchema;
@@ -489,7 +484,7 @@ export function makeSyncTable<
 >(
   name: string,
   schema: SchemaT,
-  {execute: wrappedExecute, ...definition}: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
+  {execute: wrappedExecute, ...definition}: SyncFormulaDef<ParamDefsT>,
   getSchema?: MetadataFormula,
   entityName?: string,
 ): SyncTableDef<K, L, ParamDefsT, SchemaT> {
@@ -546,7 +541,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   name: string;
   getName: MetadataFormula;
   getSchema: MetadataFormula;
-  formula: SyncFormulaDef<K, L, ParamDefsT, any>;
+  formula: SyncFormulaDef<ParamDefsT>;
   getDisplayUrl: MetadataFormula;
   listDynamicUrls?: MetadataFormula;
   entityName?: string;
