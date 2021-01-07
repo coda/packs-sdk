@@ -125,7 +125,9 @@ function handleInit() {
             const installCommand = `npm install https://74a1ea8b58ba756a7173dd2e0a2fbee9be66151a:x-oauth-basic@github.com/kr-project/packs-examples`;
             spawnProcess(installCommand);
         }
-        const copyCommand = `cp -r node_modules/coda-packs-examples/examples/template ${process.cwd()}`;
+        const installDevDependenciesCommand = `npm install --save-dev @types/chai @types/mocha @types/node @types/sinon chai mocha sinon ts-node typescript`;
+        spawnProcess(installDevDependenciesCommand);
+        const copyCommand = `cp -r node_modules/coda-packs-examples/examples/template/* ${process.cwd()}`;
         spawnProcess(copyCommand);
         if (!isPacksExamplesInstalled) {
             const uninstallCommand = `npm uninstall coda-packs-examples`;

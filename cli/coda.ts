@@ -113,7 +113,10 @@ async function handleInit() {
     spawnProcess(installCommand);
   }
 
-  const copyCommand = `cp -r node_modules/coda-packs-examples/examples/template ${process.cwd()}`;
+  const installDevDependenciesCommand = `npm install --save-dev @types/chai @types/mocha @types/node @types/sinon chai mocha sinon ts-node typescript`;
+  spawnProcess(installDevDependenciesCommand);
+
+  const copyCommand = `cp -r node_modules/coda-packs-examples/examples/template/* ${process.cwd()}`;
   spawnProcess(copyCommand);
 
   if (!isPacksExamplesInstalled) {
