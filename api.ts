@@ -218,7 +218,8 @@ interface StringFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaD
 }
 
 interface ObjectResultFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema>
-  extends PackFormulaDef<ParamsT, SchemaType<SchemaT> | Array<SchemaType<SchemaT>>> {
+  extends PackFormulaDef<ParamsT, object | object[]> {
+  execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<object> | object;
   response?: ResponseHandlerTemplate<SchemaT>;
 }
 
@@ -278,13 +279,8 @@ export interface SyncFormulaResult<ResultT extends object> {
   continuation?: Continuation;
 }
 
-interface SyncFormulaDef<
-  K extends string,
-  L extends string,
-  ParamsT extends ParamDefs,
-  SchemaT extends ObjectSchema<K, L>
-> extends CommonPackFormulaDef<ParamsT> {
-  execute(params: ParamValues<ParamsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
+interface SyncFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaDef<ParamsT> {
+  execute(params: ParamValues<ParamsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<object>>;
 }
 
 export type SyncFormula<
@@ -292,7 +288,11 @@ export type SyncFormula<
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>
-> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
+> = Omit<SyncFormulaDef<ParamDefsT>, 'execute'> & {
+  execute(
+    params: ParamValues<ParamDefsT>,
+    context: SyncExecutionContext,
+  ): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
   resultType: TypeOf<SchemaType<SchemaT>>;
   isSyncFormula: true;
   schema?: ArraySchema;
@@ -457,7 +457,7 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
     const wrappedExecute = execute;
     const responseHandler = generateObjectResponseHandler(response);
     execute = async function exec(params: ParamValues<ParamDefsT>, context: ExecutionContext) {
-      let result: SchemaType<SchemaT> | Array<SchemaType<SchemaT>>;
+      let result: object;
       try {
         result = await wrappedExecute(params, context);
       } catch (err) {
@@ -467,7 +467,9 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
           throw err;
         }
       }
-      return responseHandler({body: ensureExists(result), status: 200, headers: {}});
+      return responseHandler({body: ensureExists(result), status: 200, headers: {}}) as
+        | SchemaType<SchemaT>
+        | Array<SchemaType<SchemaT>>;
     };
   }
 
@@ -486,7 +488,7 @@ export function makeSyncTable<
 >(
   name: string,
   schema: SchemaT,
-  {execute: wrappedExecute, ...definition}: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
+  {execute: wrappedExecute, ...definition}: SyncFormulaDef<ParamDefsT>,
   getSchema?: MetadataFormula,
   entityName?: string,
 ): SyncTableDef<K, L, ParamDefsT, SchemaT> {
@@ -543,7 +545,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   name: string;
   getName: MetadataFormula;
   getSchema: MetadataFormula;
-  formula: SyncFormulaDef<K, L, ParamDefsT, any>;
+  formula: SyncFormulaDef<ParamDefsT>;
   getDisplayUrl: MetadataFormula;
   listDynamicUrls?: MetadataFormula;
   entityName?: string;
