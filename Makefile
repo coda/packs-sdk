@@ -42,7 +42,11 @@ compile:
 
 .PHONY: docs
 docs:
-	${ROOTDIR}/node_modules/.bin/typedoc index.ts --excludeExternals --excludePrivate --excludeProtected
+	${ROOTDIR}/node_modules/.bin/typedoc index.ts --out ${ROOTDIR}/local-docs --excludeExternals --excludePrivate --excludeProtected
+
+.PHONY: view-docs
+view-docs: docs
+	open ${ROOTDIR}/local-docs/index.html
 
 .PHONY: test
 test:
