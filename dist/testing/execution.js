@@ -112,14 +112,15 @@ function executeMetadataFormula(formula, metadataParams = {}, context = mocks_1.
 }
 exports.executeMetadataFormula = executeMetadataFormula;
 function findFormula(packDef, formulaNameWithNamespace) {
-    if (!packDef.formulas) {
+    const packFormulas = packDef.formulas;
+    if (!packFormulas) {
         throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);
     }
     const [namespace, name] = formulaNameWithNamespace.split('::');
     if (!(namespace && name)) {
         throw new Error(`Formula names must be specified as FormulaNamespace::FormulaName, but got "${formulaNameWithNamespace}".`);
     }
-    const formulas = packDef.formulas[namespace];
+    const formulas = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
     if (!formulas || !formulas.length) {
         throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas for namespace "${namespace}".`);
     }

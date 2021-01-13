@@ -3,6 +3,7 @@ import {AuthenticationType} from '../types';
 import {FakePack} from './test_utils';
 import type {ResponseHandlerTemplate} from '../handler_templates';
 import type {Schema} from '../schema';
+import type {TypedStandardFormula} from '../api';
 import {ValueType} from '../schema';
 import {assertCondition} from '../helpers/ensure';
 import {createFakePack} from './test_utils';
@@ -36,30 +37,29 @@ describe('Execution', () => {
   });
 
   const fakePack = createFakePack({
-    formulas: {
-      Fake: [
-        makeNumericFormula({
-          name: 'Square',
-          description: 'Square a number',
-          examples: [],
-          parameters: [makeNumericParameter('value', 'A value to square.')],
-          execute: ([value]) => {
-            return value ** 2;
-          },
-        }),
-        makeStringFormula({
-          name: 'Lookup',
-          description: 'Lookup a value from a remote service',
-          examples: [],
-          parameters: [makeStringParameter('query', 'A query to look up.')],
-          execute: async ([query], context) => {
-            const url = withQueryParams('https://example.com/lookup', {query});
-            const response = await context.fetcher.fetch({method: 'GET', url});
-            return response.body.result;
-          },
-        }),
-      ],
-    },
+    formulaNamespace: 'Fake',
+    formulas: [
+      makeNumericFormula({
+        name: 'Square',
+        description: 'Square a number',
+        examples: [],
+        parameters: [makeNumericParameter('value', 'A value to square.')],
+        execute: ([value]) => {
+          return value ** 2;
+        },
+      }),
+      makeStringFormula({
+        name: 'Lookup',
+        description: 'Lookup a value from a remote service',
+        examples: [],
+        parameters: [makeStringParameter('query', 'A query to look up.')],
+        execute: async ([query], context) => {
+          const url = withQueryParams('https://example.com/lookup', {query});
+          const response = await context.fetcher.fetch({method: 'GET', url});
+          return response.body.result;
+        },
+      }),
+    ],
     syncTables: [
       makeSyncTable('Classes', fakePersonSchema, {
         name: 'Students',
@@ -147,7 +147,7 @@ describe('Execution', () => {
     it('bad namespace', async () => {
       await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(fakePack, 'Foo::Bar', []),
-        /Pack definition for Fake Pack \(id 424242\) has no formulas for namespace "Foo"./,
+        /Pack definition for Fake Pack \(id 424242\) has no formula "Bar" in namespace "Foo"./,
       );
     });
 
@@ -391,23 +391,22 @@ describe('Execution', () => {
           return response.body.username;
         }),
       },
-      formulas: {
-        Fake: [
-          makeStringFormula({
-            name: 'Foo',
-            description: '',
-            examples: [],
-            parameters: [
-              makeStringParameter('value', 'Pass-through value to return.', {
-                autocomplete: makeSimpleAutocompleteMetadataFormula(['foo', 'bar', 'baz']),
-              }),
-            ],
-            execute: async ([value]) => {
-              return value;
-            },
-          }),
-        ],
-      },
+      formulaNamespace: 'Fake',
+      formulas: [
+        makeStringFormula({
+          name: 'Foo',
+          description: '',
+          examples: [],
+          parameters: [
+            makeStringParameter('value', 'Pass-through value to return.', {
+              autocomplete: makeSimpleAutocompleteMetadataFormula(['foo', 'bar', 'baz']),
+            }),
+          ],
+          execute: async ([value]) => {
+            return value;
+          },
+        }),
+      ],
     });
 
     it('executes getConnectionName formula', async () => {
@@ -424,7 +423,7 @@ describe('Execution', () => {
     });
 
     it('executes simple autocomplete formula', async () => {
-      const formula = fakePackWithMetadata.formulas!.Fake[0];
+      const formula = (fakePackWithMetadata.formulas as TypedStandardFormula[])![0];
       const result = await executeMetadataFormula(formula.parameters[0]?.autocomplete!, {search: 'ba'});
       assert.deepEqual(result, [
         {
