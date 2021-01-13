@@ -2,6 +2,7 @@ import type { GetConnectionNameFormula } from './api';
 import type { MetadataFormula } from './api';
 import type { PackFormulas } from './api';
 import type { SyncTable } from './api';
+import type { TypedStandardFormula } from './api';
 export declare type PackId = number;
 export declare type ProviderId = number;
 export declare enum PackCategory {
@@ -210,7 +211,7 @@ export interface PackDefinition {
      * explicit connection is specified by the user.
      */
     systemConnectionAuthentication?: SystemAuthentication;
-    formulas?: PackFormulas;
+    formulas?: PackFormulas | TypedStandardFormula[];
     formats?: Format[];
     policies?: Policy[];
     syncTables?: SyncTable[];

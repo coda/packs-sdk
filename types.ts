@@ -2,6 +2,7 @@ import type {GetConnectionNameFormula} from './api';
 import type {MetadataFormula} from './api';
 import type {PackFormulas} from './api';
 import type {SyncTable} from './api';
+import type {TypedStandardFormula} from './api';
 
 export type PackId = number;
 export type ProviderId = number;
@@ -271,7 +272,7 @@ export interface PackDefinition {
   systemConnectionAuthentication?: SystemAuthentication;
 
   // User-facing components
-  formulas?: PackFormulas;
+  formulas?: PackFormulas | TypedStandardFormula[];
   formats?: Format[];
   policies?: Policy[];
   syncTables?: SyncTable[];
