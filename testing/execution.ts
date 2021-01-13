@@ -181,6 +181,8 @@ function findFormula(packDef: PackDefinition, formulaNameWithNamespace: string):
   if (!packFormulas) {
     throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);
   }
+
+  // TODO: @alan-fang remove namespace requirement
   const [namespace, name] = formulaNameWithNamespace.split('::');
   if (!(namespace && name)) {
     throw new Error(
