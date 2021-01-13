@@ -21,6 +21,7 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
     defaultAuthentication: originalDefaultAuthentication,
     formats: originalFormats,
     syncTables: originalSyncTables,
+    formulaNamespace,
     ...packMetadata
   } = def;
 
