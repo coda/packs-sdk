@@ -1,4 +1,3 @@
-import type { GetConnectionNameFormula } from './api';
 import type { MetadataFormula } from './api';
 import type { PackFormulas } from './api';
 import type { SyncTable } from './api';
@@ -52,7 +51,6 @@ export interface PostSetup {
     getOptionsFormula: MetadataFormula;
 }
 interface BaseAuthentication {
-    getConnectionNameFormula?: GetConnectionNameFormula;
     getConnectionName?: MetadataFormula;
     getConnectionUserId?: MetadataFormula;
     defaultConnectionType?: DefaultConnectionType;

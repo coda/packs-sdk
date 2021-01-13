@@ -25,7 +25,7 @@ export declare type PackMetadata = Omit<PackDefinition, 'formulas' | 'formats' |
     formulas: PackFormulasMetadata | PackFormulaMetadata[];
     formats: PackFormatMetadata[];
     syncTables: PackSyncTable[];
-    defaultAuthentication?: $OmitNested<$OmitNested<Authentication, 'getConnectionNameFormula', 'execute'>, 'getConnectionName', 'execute'>;
+    defaultAuthentication?: $OmitNested<Authentication, 'getConnectionName', 'execute'>;
 };
 export declare type ExternalPackAuthenticationType = AuthenticationType;
 export declare type ExternalPackFormulas = PackFormulasMetadata | PackFormulaMetadata[];

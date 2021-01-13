@@ -42,20 +42,14 @@ function fakeDefinitionToMetadata(def) {
     }
     let defaultAuthentication = originalDefaultAuthentication;
     if (originalDefaultAuthentication &&
-        'getConnectionNameFormula' in originalDefaultAuthentication &&
-        originalDefaultAuthentication.getConnectionNameFormula) {
-        const _b = originalDefaultAuthentication.getConnectionNameFormula, { execute } = _b, connNameFormula = __rest(_b, ["execute"]);
-        defaultAuthentication = Object.assign(Object.assign({}, originalDefaultAuthentication), { getConnectionNameFormula: Object.assign({}, connNameFormula) });
-    }
-    if (originalDefaultAuthentication &&
         'getConnectionName' in originalDefaultAuthentication &&
         originalDefaultAuthentication.getConnectionName) {
-        const _c = originalDefaultAuthentication.getConnectionName, { execute } = _c, connNameFormula = __rest(_c, ["execute"]);
+        const _b = originalDefaultAuthentication.getConnectionName, { execute } = _b, connNameFormula = __rest(_b, ["execute"]);
         defaultAuthentication = Object.assign(Object.assign({}, originalDefaultAuthentication), { getConnectionName: Object.assign({}, connNameFormula) });
     }
     const syncTables = [];
-    for (let _d of originalSyncTables || []) {
-        const { getter, getSchema } = _d, others = __rest(_d, ["getter", "getSchema"]);
+    for (let _c of originalSyncTables || []) {
+        const { getter, getSchema } = _c, others = __rest(_c, ["getter", "getSchema"]);
         const { execute } = getter, otherGetter = __rest(getter, ["execute"]);
         syncTables.push(Object.assign({ getter: Object.assign({}, otherGetter), hasDynamicSchema: Boolean(getSchema) }, others));
     }

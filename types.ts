@@ -1,4 +1,3 @@
-import type {GetConnectionNameFormula} from './api';
 import type {MetadataFormula} from './api';
 import type {PackFormulas} from './api';
 import type {SyncTable} from './api';
@@ -59,8 +58,6 @@ export interface PostSetup {
 }
 
 interface BaseAuthentication {
-  // TODO(alexd): Remove this once we duplicate all the connection name stuff.
-  getConnectionNameFormula?: GetConnectionNameFormula;
   getConnectionName?: MetadataFormula;
   getConnectionUserId?: MetadataFormula;
 
