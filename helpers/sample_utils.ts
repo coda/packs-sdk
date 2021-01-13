@@ -1,13 +1,13 @@
 import type {PackDefinition} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
-import type {PackFormulas} from '../api';
-import type {PackFormulasMetadata} from '../compiled_types';
+import type {PackFormulaMetadata} from '../api';
 import type {PackMetadata} from '../compiled_types';
 import type {PackSyncTable} from '../compiled_types';
+import type {TypedStandardFormula} from '../api';
 
 // Used to avoid needing promises when exporting fake `PackMetadata`s.
 export interface FakePackDefinition extends Omit<PackDefinition, 'formulas'> {
-  formulas?: PackFormulas;
+  formulas?: TypedStandardFormula[];
 }
 
 export function fakeDefinitionToDefinition(def: FakePackDefinition): PackDefinition {
@@ -23,13 +23,10 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
     ...packMetadata
   } = def;
 
-  const formulas: PackFormulasMetadata = {};
-  for (const namespace of Object.keys(originalFormulas || {})) {
-    formulas[namespace] = originalFormulas![namespace]!.map(formula => {
-      const {execute, ...formulaMetadata} = formula;
-      return formulaMetadata;
-    });
-  }
+  const formulas: PackFormulaMetadata[] = originalFormulas!.map(formula => {
+    const {execute, ...formulaMetadata} = formula;
+    return formulaMetadata;
+  });
 
   const formats: PackFormatMetadata[] = [];
   for (const {matchers, ...format} of originalFormats || []) {

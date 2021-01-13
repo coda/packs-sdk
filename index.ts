@@ -22,7 +22,6 @@ export type {WebBasicAuthentication} from './types';
 
 // Compiler interfaces
 export type {PackFormatMetadata} from './compiled_types';
-export type {PackFormulasMetadata} from './compiled_types';
 export type {PackSyncTable} from './compiled_types';
 export type {PackMetadata} from './compiled_types';
 
