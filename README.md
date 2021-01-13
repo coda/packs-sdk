@@ -949,4 +949,7 @@ a transparent background.
 
 ## Reference
 
-TODO: Link to full SDK reference docs.
+Run `make view-docs` to generate detailed reference documentation from the source code
+and open it in your browser.
+
+This will eventually be published on a documentation website.

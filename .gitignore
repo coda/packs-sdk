@@ -5,3 +5,4 @@ node_modules
 artifacts
 dist/test
 yarn-error.log
+local-docs

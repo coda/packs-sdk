@@ -34,6 +34,12 @@ const schema_2 = require("./schema");
 const schema_3 = require("./schema");
 const api_types_6 = require("./api_types");
 const api_types_7 = require("./api_types");
+/**
+ * An error whose message will be shown to the end user in the UI when it occurs.
+ * If an error is encountered in a formula and you want to describe the error
+ * to the end user, throw a UserVisibleError with a user-friendly message
+ * and the Coda UI will display the message.
+ */
 class UserVisibleError extends Error {
     constructor(message, internalError) {
         super(message);
@@ -49,6 +55,11 @@ class StatusCodeError extends Error {
     }
 }
 exports.StatusCodeError = StatusCodeError;
+/**
+ * Helper to determine if an error is considered user-visible and can be shown in the UI.
+ * See {@link UserVisibleError}.
+ * @param error Any error object.
+ */
 function isUserVisibleError(error) {
     return 'isUserVisible' in error && error.isUserVisible;
 }
@@ -127,15 +138,32 @@ function isSyncPackFormula(fn) {
     return Boolean(fn.isSyncFormula);
 }
 exports.isSyncPackFormula = isSyncPackFormula;
+/**
+ * Helper for returning the definition of a formula that returns a number. Adds result type information
+ * to a generic formula definition.
+ *
+ * @param definition The definition of a formula that returns a number.
+ */
 function makeNumericFormula(definition) {
     return Object.assign({}, definition, { resultType: api_types_1.Type.number });
 }
 exports.makeNumericFormula = makeNumericFormula;
+/**
+ * Helper for returning the definition of a formula that returns a string. Adds result type information
+ * to a generic formula definition.
+ *
+ * @param definition The definition of a formula that returns a string.
+ */
 function makeStringFormula(definition) {
     const { response } = definition;
     return Object.assign({}, definition, Object.assign({ resultType: api_types_1.Type.string }, (response && { schema: response.schema })));
 }
 exports.makeStringFormula = makeStringFormula;
+/**
+ * @hidden
+ *
+ * DEPRECATED. Use makeMetadataFormula instead.
+ */
 function makeGetConnectionNameFormula(execute) {
     return makeStringFormula({
         name: 'getConnectionName',
@@ -266,8 +294,31 @@ function makeObjectFormula(_a) {
     });
 }
 exports.makeObjectFormula = makeObjectFormula;
-function makeSyncTable(name, schema, _a, getSchema, entityName) {
-    var { execute: wrappedExecute } = _a, definition = __rest(_a, ["execute"]);
+/**
+ * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
+ * using this wrapper rather than declaring a sync table definition object directly.
+ *
+ * This wrapper does a variety of helpful things, including
+ * * Doing basic validation of the provided definition.
+ * * Normalizing the schema definition to conform to Coda-recommended syntax.
+ * * Wrapping the execute formula to normalize return values to match the normalized schema.
+ *
+ * See [Normalization](/index.html#normalization) for more information about schema normalization.
+ *
+ * @param name The name of the sync table. This should describe the entities being synced. For example,
+ * a sync table that syncs products from an e-commerce platform should be called 'Products'. This name
+ * must not contain spaces.
+ * @param schema The definition of the schema that describes a single response object. For example, the
+ * schema for a single product. The sync formula will return an array of objects that fit this schema.
+ * @param formula The definition of the formula that implements this sync. This is a Coda packs formula
+ * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
+ * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
+ * These will eventually be consolidated.)
+ * @param getSchema Only used internally by {@link makeDynamicSyncTable}, see there for more details.
+ * @param entityName Only used internally by {@link makeDynamicSyncTable}, see there for more details.
+ */
+function makeSyncTable(name, schema, formula, getSchema, entityName) {
+    const { execute: wrappedExecute } = formula, definition = __rest(formula, ["execute"]);
     const formulaSchema = getSchema
         ? undefined
         : schema_3.normalizeSchema({ type: schema_1.ValueType.Array, items: schema });
