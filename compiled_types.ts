@@ -27,6 +27,7 @@ export interface PackFormulasMetadata {
 
 /** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
 export type PackMetadata = Omit<PackDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {
+  // TODO: @alan-fang once all packs are using formulaNamespace, delete PackFormulasMetadata.
   formulas: PackFormulasMetadata | PackFormulaMetadata[];
   formats: PackFormatMetadata[];
   syncTables: PackSyncTable[];
