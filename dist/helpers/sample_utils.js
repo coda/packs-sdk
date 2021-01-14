@@ -12,23 +12,15 @@ var __rest = (this && this.__rest) || function (s, e) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fakeDefinitionToMetadata = exports.fakeDefinitionToDefinition = void 0;
-const ensure_1 = require("./ensure");
 function fakeDefinitionToDefinition(def) {
     return def;
 }
 exports.fakeDefinitionToDefinition = fakeDefinitionToDefinition;
 function fakeDefinitionToMetadata(def) {
-<<<<<<< HEAD
-    const { formulas: originalFormulas, defaultAuthentication: originalDefaultAuthentication, formats: originalFormats, syncTables: originalSyncTables } = def, packMetadata = __rest(def, ["formulas", "defaultAuthentication", "formats", "syncTables"]);
+    const { formulas: originalFormulas, defaultAuthentication: originalDefaultAuthentication, formats: originalFormats, syncTables: originalSyncTables, formulaNamespace } = def, packMetadata = __rest(def, ["formulas", "defaultAuthentication", "formats", "syncTables", "formulaNamespace"]);
     const formulas = [];
     if (Array.isArray(originalFormulas)) {
         formulas.push(...originalFormulas.map(formula => {
-=======
-    const { formulas: originalFormulas, defaultAuthentication: originalDefaultAuthentication, formats: originalFormats, syncTables: originalSyncTables, formulaNamespace } = def, packMetadata = __rest(def, ["formulas", "defaultAuthentication", "formats", "syncTables", "formulaNamespace"]);
-    const formulas = {};
-    if (Array.isArray(originalFormulas)) {
-        formulas[ensure_1.ensureExists(formulaNamespace)] = originalFormulas.map(formula => {
->>>>>>> f8c4f22 (Update sample-utils to accept formulas: TypedStandardFormula[])
             const { execute } = formula, formulaMetadata = __rest(formula, ["execute"]);
             return formulaMetadata;
         }));
@@ -40,14 +32,6 @@ function fakeDefinitionToMetadata(def) {
                 const { execute } = formula, formulaMetadata = __rest(formula, ["execute"]);
                 return formulaMetadata;
             }));
-        }
-    }
-    else {
-        for (const namespace of Object.keys(originalFormulas || {})) {
-            formulas[namespace] = originalFormulas[namespace].map(formula => {
-                const { execute } = formula, formulaMetadata = __rest(formula, ["execute"]);
-                return formulaMetadata;
-            });
         }
     }
     const formats = [];
