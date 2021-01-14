@@ -22,6 +22,7 @@ export interface PackFormulasMetadata {
 }
 /** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
 export declare type PackMetadata = Omit<PackDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {
+    formulaNamespace?: string;
     formulas: PackFormulasMetadata | PackFormulaMetadata[];
     formats: PackFormatMetadata[];
     syncTables: PackSyncTable[];
