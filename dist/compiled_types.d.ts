@@ -22,13 +22,13 @@ export interface PackFormulasMetadata {
 }
 /** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
 export declare type PackMetadata = Omit<PackDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {
-    formulas: PackFormulasMetadata;
+    formulas: PackFormulasMetadata | PackFormulaMetadata[];
     formats: PackFormatMetadata[];
     syncTables: PackSyncTable[];
     defaultAuthentication?: $OmitNested<$OmitNested<Authentication, 'getConnectionNameFormula', 'execute'>, 'getConnectionName', 'execute'>;
 };
 export declare type ExternalPackAuthenticationType = AuthenticationType;
-export declare type ExternalPackFormulas = PackFormulasMetadata;
+export declare type ExternalPackFormulas = PackFormulasMetadata | PackFormulaMetadata[];
 export declare type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
 export declare type ExternalPackFormula = PackFormulaMetadata;
 export declare type ExternalPackFormat = Format;
