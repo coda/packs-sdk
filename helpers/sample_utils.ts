@@ -24,23 +24,19 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
     ...packMetadata
   } = def;
 
-  const formulas: PackFormulaMetadata[] = [];
+  let formulas: any;
   if (Array.isArray(originalFormulas)) {
-    formulas.push(
-      ...originalFormulas!.map(formula => {
-        const {execute, ...formulaMetadata} = formula;
-        return formulaMetadata;
-      }),
-    );
+    formulas = originalFormulas!.map(formula => {
+      const {execute, ...formulaMetadata} = formula;
+      return formulaMetadata;
+    });
   } else {
     // TODO: @alan-fang delete once all packs have been migrated to use formulaNamespace
     for (const namespace of Object.keys(originalFormulas || {})) {
-      formulas.push(
-        ...originalFormulas![namespace]!.map(formula => {
-          const {execute, ...formulaMetadata} = formula;
-          return formulaMetadata;
-        }),
-      );
+      formulas[namespace] = originalFormulas![namespace]!.map(formula => {
+        const {execute, ...formulaMetadata} = formula;
+        return formulaMetadata;
+      });
     }
   }
 
