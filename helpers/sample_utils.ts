@@ -1,6 +1,5 @@
 import type {PackDefinition} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
-import type {PackFormulaMetadata} from '../api';
 import type {PackFormulas} from '../api';
 import type {PackMetadata} from '../compiled_types';
 import type {PackSyncTable} from '../compiled_types';
