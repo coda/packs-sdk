@@ -1,6 +1,5 @@
 import type {GetConnectionNameFormula} from './api';
 import type {MetadataFormula} from './api';
-import type {PackFormulas} from './api';
 import type {SyncTable} from './api';
 import type {TypedStandardFormula} from './api';
 
@@ -264,7 +263,7 @@ export interface PackDefinition {
   minimumFeatureSet?: FeatureSet;
   quotas?: Partial<{[featureSet in FeatureSet]: Quota}>;
   rateLimits?: RateLimits;
-  formulaNamespace?: string; // TODO: @alan-fang make required
+  formulaNamespace: string;
   /**
    * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
    * explicit connection is specified by the user.
@@ -272,7 +271,7 @@ export interface PackDefinition {
   systemConnectionAuthentication?: SystemAuthentication;
 
   // User-facing components
-  formulas?: PackFormulas | TypedStandardFormula[];
+  formulas?: TypedStandardFormula[];
   formats?: Format[];
   policies?: Policy[];
   syncTables?: SyncTable[];

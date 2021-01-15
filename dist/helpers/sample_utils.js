@@ -18,23 +18,10 @@ function fakeDefinitionToDefinition(def) {
 exports.fakeDefinitionToDefinition = fakeDefinitionToDefinition;
 function fakeDefinitionToMetadata(def) {
     const { formulas: originalFormulas, defaultAuthentication: originalDefaultAuthentication, formats: originalFormats, syncTables: originalSyncTables } = def, packMetadata = __rest(def, ["formulas", "defaultAuthentication", "formats", "syncTables"]);
-    let formulas;
-    if (Array.isArray(originalFormulas)) {
-        formulas = originalFormulas.map(formula => {
-            const { execute } = formula, formulaMetadata = __rest(formula, ["execute"]);
-            return formulaMetadata;
-        });
-    }
-    else {
-        // TODO: @alan-fang delete once all packs have been migrated to use formulaNamespace
-        formulas = {};
-        for (const namespace of Object.keys(originalFormulas || {})) {
-            formulas[namespace] = originalFormulas[namespace].map(formula => {
-                const { execute } = formula, formulaMetadata = __rest(formula, ["execute"]);
-                return formulaMetadata;
-            });
-        }
-    }
+    const formulas = originalFormulas.map(formula => {
+        const { execute } = formula, formulaMetadata = __rest(formula, ["execute"]);
+        return formulaMetadata;
+    });
     const formats = [];
     for (let _a of originalFormats || []) {
         const { matchers } = _a, format = __rest(_a, ["matchers"]);
