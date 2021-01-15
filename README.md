@@ -11,6 +11,7 @@
   - [Running Formulas](#running-formulas)
   - [Running Syncs](#running-syncs)
   - [Fetching](#fetching)
+- [Examples](#examples)
 - [Core Concepts](#core-concepts)
   - [Fetching Remote Data](#fetching-remote-data)
   - [Authentication](#authentication)
@@ -19,7 +20,7 @@
     - [Authentication Types](#authentication-types)
   - [Testing Authenticated Requests](#testing-authenticated-requests)
   - [Syncs](#syncs)
-    - [Examples](#examples)
+    - [Continuation Examples](#continuation-examples)
     - [Dynamic Sync Tables](#dynamic-sync-tables)
   - [Normalization](#normalization)
   - [Type Hints](#type-hints)
@@ -109,49 +110,8 @@ live in `./node_modules/.bin` and so are more easily used by updating your path.
 
 ### Setup Your Pack Definition
 
-Create a file called `manifest.ts`. Use this boilerplate pack definition to get started:
-
-```typescript
-import {PackCategory} from 'packs-sdk';
-import type {PackDefinition} from 'packs-sdk';
-import {makeStringFormula} from 'packs-sdk';
-import {makeStringParameter} from 'packs-sdk';
-
-export const manifest: PackDefinition = {
-  id: 123,
-  name: 'MyPack',
-  shortDescription: '',
-  description: '',
-  version: '0.0.1',
-  exampleImages: [],
-  providerId: 456,
-  category: PackCategory.Fun,
-  logoPath: 'logo.png',
-
-  formulas: {
-    MyPack: [
-      makeStringFormula({
-        name: 'Hello',
-        description: 'Greet somebody by name.',
-        parameters: [makeStringParameter('name', 'A name to greet.')],
-        examples: [],
-        execute: async ([name], context) => {
-          return `Hello ${name}!`;
-        },
-      }),
-    ],
-  },
-};
-```
-
-Now change the pack name and description and formula name, description, and implementation to your own,
-and you now have a valid pack. See [Running Your Code](#running-your-code) to start executing
-your formulas.
-
-NOTE: This example includes a formula definition inline in the pack definition for the sake of a simple
-example, but we highly recommend splitting your formula definitions and supporting code into separate
-files for ease of understanding and maintenance. See [Best Practices](#best-practices) for tips
-and examples of well-structured packs.
+Run `coda init` to initialize an empty project with the recommended file structure
+and install the suggested npm dependencies.
 
 ## Running Your Code
 
@@ -216,6 +176,11 @@ coda execute --fetch src/manifest.ts MyPack::MyFormula some-arg
 
 Your http requests will commonly require authentication in order to succeed, which the `coda execute` utility supports.
 See the [Authentication](#authentication) section about how to set this up.
+
+## Examples
+
+See our examples repo https://github.com/kr-project/packs-examples for several examples of complete
+pack definitions of various levels of complexity.
 
 ## Core Concepts
 
@@ -388,7 +353,7 @@ If the API you're using instead returns a complete, opaque url of the next page 
 response metadata, you might structure your continuation like
 `{nextUrl: 'https://myapi.com/results?pageToken=asdf123'}`.
 
-#### Examples
+#### Continuation Examples
 
 If your sync formula returns:
 
