@@ -1,6 +1,5 @@
 import type { $Values } from './type_utils';
 import type { MetadataFormula } from './api';
-import type { PackFormulas } from './api';
 import type { SyncTable } from './api';
 import type { TypedStandardFormula } from './api';
 export declare type PackId = number;
@@ -207,7 +206,7 @@ export interface PackVersionDefinition {
     systemConnectionAuthentication?: SystemAuthentication;
     networkDomains?: string[];
     formulaNamespace?: string;
-    formulas?: PackFormulas | TypedStandardFormula[];
+    formulas?: TypedStandardFormula[];
     formats?: Format[];
     syncTables?: SyncTable[];
 }

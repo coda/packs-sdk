@@ -21,9 +21,6 @@ export declare type PackSyncTable = Omit<SyncTable, 'getter' | 'getName' | 'getS
 export interface PackFormatMetadata extends Omit<Format, 'matchers'> {
     matchers: string[];
 }
-export interface PackFormulasMetadata {
-    [namespace: string]: PackFormulaMetadata[];
-}
 export declare type PostSetupMetadata = Omit<PostSetup, 'getOptionsFormula'> & {
     getOptionsFormula: MetadataFormulaMetadata;
 };
@@ -34,7 +31,7 @@ export declare type AuthenticationMetadata = DistributiveOmit<Authentication, 'g
 };
 /** Stripped-down version of `PackVersionDefinition` that doesn't contain formula definitions. */
 export declare type PackVersionMetadata = Omit<PackVersionDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {
-    formulas: PackFormulasMetadata | PackFormulaMetadata[];
+    formulas: PackFormulaMetadata[];
     formats: PackFormatMetadata[];
     syncTables: PackSyncTable[];
     defaultAuthentication?: AuthenticationMetadata;
@@ -42,7 +39,7 @@ export declare type PackVersionMetadata = Omit<PackVersionDefinition, 'formulas'
 /** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
 export declare type PackMetadata = PackVersionMetadata & Pick<PackDefinition, 'id' | 'name' | 'shortDescription' | 'description' | 'permissionsDescription' | 'category' | 'logoPath' | 'exampleImages' | 'exampleVideoIds' | 'minimumFeatureSet' | 'quotas' | 'rateLimits' | 'enabledConfigName' | 'isSystem'>;
 export declare type ExternalPackAuthenticationType = AuthenticationType;
-export declare type ExternalPackFormulas = PackFormulasMetadata | PackFormulaMetadata[];
+export declare type ExternalPackFormulas = PackFormulaMetadata[];
 export declare type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
 export declare type ExternalPackFormula = PackFormulaMetadata;
 export declare type ExternalPackFormat = Format;

@@ -7,23 +7,10 @@ function fakeDefinitionToDefinition(def) {
 exports.fakeDefinitionToDefinition = fakeDefinitionToDefinition;
 function fakeDefinitionToMetadata(def) {
     const { formulas: originalFormulas, defaultAuthentication: originalDefaultAuthentication, formats: originalFormats, syncTables: originalSyncTables, ...packMetadata } = def;
-    let formulas;
-    if (Array.isArray(originalFormulas)) {
-        formulas = originalFormulas.map(formula => {
-            const { execute, ...formulaMetadata } = formula;
-            return formulaMetadata;
-        });
-    }
-    else {
-        // TODO: @alan-fang delete once all packs have been migrated to use formulaNamespace
-        formulas = {};
-        for (const namespace of Object.keys(originalFormulas || {})) {
-            formulas[namespace] = originalFormulas[namespace].map(formula => {
-                const { execute, ...formulaMetadata } = formula;
-                return formulaMetadata;
-            });
-        }
-    }
+    const formulas = originalFormulas.map(formula => {
+        const { execute, ...formulaMetadata } = formula;
+        return formulaMetadata;
+    });
     const formats = [];
     for (const { matchers, ...format } of originalFormats || []) {
         formats.push({ ...format, matchers: (matchers || []).map(m => m.toString()) });

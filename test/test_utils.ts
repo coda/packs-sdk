@@ -25,6 +25,7 @@ export const FakePack: PackDefinition = deepFreeze({
   shortDescription: 'This is the default fake pack description',
   syncTables: [],
   version: '42.42.42',
+  formulaNamespace: 'Fake',
 });
 
 export const FakePackVersionMetadata: PackVersionMetadata = deepFreeze({

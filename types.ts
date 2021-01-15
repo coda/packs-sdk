@@ -1,6 +1,5 @@
 import type {$Values} from './type_utils';
 import type {MetadataFormula} from './api';
-import type {PackFormulas} from './api';
 import type {SyncTable} from './api';
 import type {TypedStandardFormula} from './api';
 
@@ -283,7 +282,7 @@ export interface PackVersionDefinition {
 
   // User-facing components
   formulaNamespace?: string; // TODO: @alan-fang remove
-  formulas?: PackFormulas | TypedStandardFormula[];
+  formulas?: TypedStandardFormula[];
   formats?: Format[];
   syncTables?: SyncTable[];
 }

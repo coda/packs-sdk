@@ -8,8 +8,6 @@ import type {MetadataFormulaMetadata} from '../api';
 import type {PackDefinition} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
 import type {PackFormulaMetadata} from '../api';
-import type {PackFormulas} from '../api';
-import type {PackFormulasMetadata} from '../compiled_types';
 import type {PackMetadata} from '../compiled_types';
 import type {PackSyncTable} from '../compiled_types';
 import type {PackVersionDefinition} from '../types';
@@ -26,7 +24,7 @@ export function compilePackMetadata(manifest: PackDefinition): PackMetadata;
 export function compilePackMetadata(manifest: PackVersionDefinition): PackVersionMetadata {
   const {formats, formulas, formulaNamespace, syncTables, defaultAuthentication, ...definition} = manifest;
   const compiledFormats = compileFormatsMetadata(formats || []);
-  const compiledFormulas = (formulas && compileFormulasMetadata(formulas)) || (Array.isArray(formulas) ? [] : {});
+  const compiledFormulas = compileFormulasMetadata(formulas || []);
   const defaultAuthenticationMetadata = compileDefaultAuthenticationMetadata(defaultAuthentication);
   const metadata: PackVersionMetadata = {
     ...definition,
@@ -49,19 +47,8 @@ function compileFormatsMetadata(formats: Format[]): PackFormatMetadata[] {
   });
 }
 
-function compileFormulasMetadata(
-  formulas: PackFormulas | TypedStandardFormula[],
-): PackFormulasMetadata | PackFormulaMetadata[] {
-  const formulasMetadata: PackFormulaMetadata[] | PackFormulasMetadata = Array.isArray(formulas) ? [] : {};
-  // TODO: @alan-fang delete once we move packs off of PackFormulas
-  if (Array.isArray(formulas)) {
-    (formulasMetadata as PackFormulaMetadata[]).push(...formulas.map(compileFormulaMetadata));
-  } else {
-    for (const namespace of Object.keys(formulas)) {
-      (formulasMetadata as PackFormulasMetadata)[namespace] = formulas[namespace].map(compileFormulaMetadata);
-    }
-  }
-
+function compileFormulasMetadata(formulas: TypedStandardFormula[]): PackFormulaMetadata[] {
+  const formulasMetadata: PackFormulaMetadata[] = formulas.map(compileFormulaMetadata);
   return formulasMetadata;
 }
 
