@@ -27,6 +27,7 @@ function fakeDefinitionToMetadata(def) {
     }
     else {
         // TODO: @alan-fang delete once all packs have been migrated to use formulaNamespace
+        formulas = {};
         for (const namespace of Object.keys(originalFormulas || {})) {
             formulas[namespace] = originalFormulas[namespace].map(formula => {
                 const { execute } = formula, formulaMetadata = __rest(formula, ["execute"]);
