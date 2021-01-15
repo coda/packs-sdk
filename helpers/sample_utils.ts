@@ -2,6 +2,7 @@ import type {PackDefinition} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
 import type {PackFormulaMetadata} from '../api';
 import type {PackFormulas} from '../api';
+import type {PackFormulasMetadata} from '../compiled_types';
 import type {PackMetadata} from '../compiled_types';
 import type {PackSyncTable} from '../compiled_types';
 import type {TypedStandardFormula} from '../api';
@@ -24,23 +25,20 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
     ...packMetadata
   } = def;
 
-  const formulas: PackFormulaMetadata[] = [];
+  let formulas: PackFormulasMetadata | PackFormulaMetadata[];
   if (Array.isArray(originalFormulas)) {
-    formulas.push(
-      ...originalFormulas!.map(formula => {
-        const {execute, ...formulaMetadata} = formula;
-        return formulaMetadata;
-      }),
-    );
+    formulas = originalFormulas!.map(formula => {
+      const {execute, ...formulaMetadata} = formula;
+      return formulaMetadata;
+    });
   } else {
     // TODO: @alan-fang delete once all packs have been migrated to use formulaNamespace
+    formulas = {};
     for (const namespace of Object.keys(originalFormulas || {})) {
-      formulas.push(
-        ...originalFormulas![namespace]!.map(formula => {
-          const {execute, ...formulaMetadata} = formula;
-          return formulaMetadata;
-        }),
-      );
+      formulas[namespace] = originalFormulas![namespace]!.map(formula => {
+        const {execute, ...formulaMetadata} = formula;
+        return formulaMetadata;
+      });
     }
   }
 

@@ -38,22 +38,21 @@ const FakeBggDefinitionOldFake: FakePackDefinition = {
       placeholder: 'Link to board game',
     },
   ],
-  formulas: {
-    BGG: [
-      makeStringFormula({
-        name: 'BoardGame',
-        description: 'Get live data about a board game.',
-        examples: [],
-        parameters: [makeStringParameter('id', 'ID of a board game.')],
-        network: {hasSideEffect: false, requiresConnection: true},
-        execute: async ([id], context) => {
-          const url = `https://boardgamegeek.com/boardgame/${id}`;
-          const result = await context.fetcher!.fetch({method: 'GET', url});
-          return result.body;
-        },
-      }),
-    ],
-  },
+  formulaNamespace: 'BGG',
+  formulas: [
+    makeStringFormula({
+      name: 'BoardGame',
+      description: 'Get live data about a board game.',
+      examples: [],
+      parameters: [makeStringParameter('id', 'ID of a board game.')],
+      network: {hasSideEffect: false, requiresConnection: true},
+      execute: async ([id], context) => {
+        const url = `https://boardgamegeek.com/boardgame/${id}`;
+        const result = await context.fetcher!.fetch({method: 'GET', url});
+        return result.body;
+      },
+    }),
+  ],
 };
 
 export const FakeBggDefinitionOld: PackDefinition = fakeDefinitionToDefinition(FakeBggDefinitionOldFake);
@@ -113,22 +112,21 @@ const FakeBggDefinitionFake: FakePackDefinition = {
       placeholder: 'Link to board game',
     },
   ],
-  formulas: {
-    BGG: [
-      makeStringFormula({
-        name: 'BoardGame',
-        description: 'Get live data about a board game.',
-        examples: [],
-        parameters: [makeStringParameter('url', 'Url to a board game')],
-        network: {hasSideEffect: false, requiresConnection: true},
-        execute: async ([id], context) => {
-          const url = `https://boardgamegeek.com/boardgame/${id}`;
-          const result = await context.fetcher!.fetch({method: 'GET', url});
-          return result.body;
-        },
-      }),
-    ],
-  },
+  formulaNamespace: 'BGG',
+  formulas: [
+    makeStringFormula({
+      name: 'BoardGame',
+      description: 'Get live data about a board game.',
+      examples: [],
+      parameters: [makeStringParameter('url', 'Url to a board game')],
+      network: {hasSideEffect: false, requiresConnection: true},
+      execute: async ([id], context) => {
+        const url = `https://boardgamegeek.com/boardgame/${id}`;
+        const result = await context.fetcher!.fetch({method: 'GET', url});
+        return result.body;
+      },
+    }),
+  ],
 };
 
 export const FakeBggDefinition: PackDefinition = fakeDefinitionToDefinition(FakeBggDefinitionFake);

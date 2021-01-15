@@ -42,22 +42,21 @@ const FakeBggDefinitionOldFake = {
             placeholder: 'Link to board game',
         },
     ],
-    formulas: {
-        BGG: [
-            api_3.makeStringFormula({
-                name: 'BoardGame',
-                description: 'Get live data about a board game.',
-                examples: [],
-                parameters: [api_4.makeStringParameter('id', 'ID of a board game.')],
-                network: { hasSideEffect: false, requiresConnection: true },
-                execute: ([id], context) => __awaiter(void 0, void 0, void 0, function* () {
-                    const url = `https://boardgamegeek.com/boardgame/${id}`;
-                    const result = yield context.fetcher.fetch({ method: 'GET', url });
-                    return result.body;
-                }),
+    formulaNamespace: 'BGG',
+    formulas: [
+        api_3.makeStringFormula({
+            name: 'BoardGame',
+            description: 'Get live data about a board game.',
+            examples: [],
+            parameters: [api_4.makeStringParameter('id', 'ID of a board game.')],
+            network: { hasSideEffect: false, requiresConnection: true },
+            execute: ([id], context) => __awaiter(void 0, void 0, void 0, function* () {
+                const url = `https://boardgamegeek.com/boardgame/${id}`;
+                const result = yield context.fetcher.fetch({ method: 'GET', url });
+                return result.body;
             }),
-        ],
-    },
+        }),
+    ],
 };
 exports.FakeBggDefinitionOld = sample_utils_1.fakeDefinitionToDefinition(FakeBggDefinitionOldFake);
 exports.FakeBggMetadataOld = sample_utils_2.fakeDefinitionToMetadata(FakeBggDefinitionOldFake);
@@ -114,22 +113,21 @@ const FakeBggDefinitionFake = {
             placeholder: 'Link to board game',
         },
     ],
-    formulas: {
-        BGG: [
-            api_3.makeStringFormula({
-                name: 'BoardGame',
-                description: 'Get live data about a board game.',
-                examples: [],
-                parameters: [api_4.makeStringParameter('url', 'Url to a board game')],
-                network: { hasSideEffect: false, requiresConnection: true },
-                execute: ([id], context) => __awaiter(void 0, void 0, void 0, function* () {
-                    const url = `https://boardgamegeek.com/boardgame/${id}`;
-                    const result = yield context.fetcher.fetch({ method: 'GET', url });
-                    return result.body;
-                }),
+    formulaNamespace: 'BGG',
+    formulas: [
+        api_3.makeStringFormula({
+            name: 'BoardGame',
+            description: 'Get live data about a board game.',
+            examples: [],
+            parameters: [api_4.makeStringParameter('url', 'Url to a board game')],
+            network: { hasSideEffect: false, requiresConnection: true },
+            execute: ([id], context) => __awaiter(void 0, void 0, void 0, function* () {
+                const url = `https://boardgamegeek.com/boardgame/${id}`;
+                const result = yield context.fetcher.fetch({ method: 'GET', url });
+                return result.body;
             }),
-        ],
-    },
+        }),
+    ],
 };
 exports.FakeBggDefinition = sample_utils_1.fakeDefinitionToDefinition(FakeBggDefinitionFake);
 exports.FakeBggMetadata = sample_utils_2.fakeDefinitionToMetadata(FakeBggDefinitionFake);

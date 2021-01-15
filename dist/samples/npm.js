@@ -136,74 +136,73 @@ const FakeNpmDefinitionFake = {
             placeholder: 'Link to NPM package',
         },
     ],
-    formulas: {
-        NPM: [
-            api_6.makeObjectFormula({
-                response: {
-                    schema: exports.packageSchema,
-                },
-                name: 'Package',
-                description: 'Get live data about a NPM package.',
-                examples: [],
-                parameters: [
-                    api_9.makeStringParameter('name', 'Package name', {
-                        autocomplete: api_4.makeMetadataFormula((context, search) => __awaiter(void 0, void 0, void 0, function* () {
-                            const url = url_2.withQueryParams(`https://npmjs.com/api/packages/search`, { q: String(search || '') });
-                            const result = yield context.fetcher.fetch({ method: 'GET', url });
-                            return result.body;
-                        })),
-                    }),
-                    api_1.makeBooleanParameter('monthly', 'Show monthly download count instead of weekly', {
-                        optional: true,
-                        defaultValue: true,
-                    }),
-                ],
-                network: { hasSideEffect: false },
-                execute: ([name, monthly], context) => __awaiter(void 0, void 0, void 0, function* () {
-                    const url = url_2.withQueryParams(`https://npmjs.com/api/packages/${name}`, { monthly: String(monthly) });
-                    const result = yield context.fetcher.fetch({ method: 'GET', url });
-                    return result.body;
+    formulaNamespace: 'NPM',
+    formulas: [
+        api_6.makeObjectFormula({
+            response: {
+                schema: exports.packageSchema,
+            },
+            name: 'Package',
+            description: 'Get live data about a NPM package.',
+            examples: [],
+            parameters: [
+                api_9.makeStringParameter('name', 'Package name', {
+                    autocomplete: api_4.makeMetadataFormula((context, search) => __awaiter(void 0, void 0, void 0, function* () {
+                        const url = url_2.withQueryParams(`https://npmjs.com/api/packages/search`, { q: String(search || '') });
+                        const result = yield context.fetcher.fetch({ method: 'GET', url });
+                        return result.body;
+                    })),
                 }),
-            }),
-            api_8.makeStringFormula({
-                name: 'FakeGetPackageUrls',
-                description: 'Retrieve a list of packages URLs, comma separated',
-                examples: [],
-                parameters: [api_7.makeStringArrayParameter('names', 'Names of packages to download')],
-                network: { hasSideEffect: false },
-                execute: ([names]) => __awaiter(void 0, void 0, void 0, function* () {
-                    return names.map(name => `https://npmjs.com/api/packages/${name}`).join(',');
+                api_1.makeBooleanParameter('monthly', 'Show monthly download count instead of weekly', {
+                    optional: true,
+                    defaultValue: true,
                 }),
+            ],
+            network: { hasSideEffect: false },
+            execute: ([name, monthly], context) => __awaiter(void 0, void 0, void 0, function* () {
+                const url = url_2.withQueryParams(`https://npmjs.com/api/packages/${name}`, { monthly: String(monthly) });
+                const result = yield context.fetcher.fetch({ method: 'GET', url });
+                return result.body;
             }),
-            api_5.makeNumericFormula({
-                name: 'FakeDownloadPackage',
-                description: 'Initiate a download of the package, increasing its popularity (this action formula is for tests)',
-                examples: [],
-                parameters: [
-                    api_9.makeStringParameter('url', 'Url to a package'),
-                    api_9.makeStringParameter('path', 'file path for download', { optional: true }),
-                ],
-                network: { hasSideEffect: true, requiresConnection: false },
-                execute: ([url, _path], context) => __awaiter(void 0, void 0, void 0, function* () {
-                    const fullUrl = url_2.withQueryParams(`https://npmjs.com/api/packages/${url}/download`);
-                    const result = yield context.fetcher.fetch({ method: 'POST', url: fullUrl });
-                    return result.body;
-                }),
+        }),
+        api_8.makeStringFormula({
+            name: 'FakeGetPackageUrls',
+            description: 'Retrieve a list of packages URLs, comma separated',
+            examples: [],
+            parameters: [api_7.makeStringArrayParameter('names', 'Names of packages to download')],
+            network: { hasSideEffect: false },
+            execute: ([names]) => __awaiter(void 0, void 0, void 0, function* () {
+                return names.map(name => `https://npmjs.com/api/packages/${name}`).join(',');
             }),
-            api_5.makeNumericFormula({
-                name: 'FakeAddPackage',
-                description: 'Adds a fake package',
-                examples: [],
-                parameters: [api_9.makeStringParameter('name', 'Package name')],
-                network: { hasSideEffect: true, requiresConnection: true },
-                execute: ([name], context) => __awaiter(void 0, void 0, void 0, function* () {
-                    const url = url_2.withQueryParams(`https://npmjs.com/api/packages`);
-                    const result = yield context.fetcher.fetch({ method: 'POST', body: JSON.stringify({ name }), url });
-                    return result.body;
-                }),
+        }),
+        api_5.makeNumericFormula({
+            name: 'FakeDownloadPackage',
+            description: 'Initiate a download of the package, increasing its popularity (this action formula is for tests)',
+            examples: [],
+            parameters: [
+                api_9.makeStringParameter('url', 'Url to a package'),
+                api_9.makeStringParameter('path', 'file path for download', { optional: true }),
+            ],
+            network: { hasSideEffect: true, requiresConnection: false },
+            execute: ([url, _path], context) => __awaiter(void 0, void 0, void 0, function* () {
+                const fullUrl = url_2.withQueryParams(`https://npmjs.com/api/packages/${url}/download`);
+                const result = yield context.fetcher.fetch({ method: 'POST', url: fullUrl });
+                return result.body;
             }),
-        ],
-    },
+        }),
+        api_5.makeNumericFormula({
+            name: 'FakeAddPackage',
+            description: 'Adds a fake package',
+            examples: [],
+            parameters: [api_9.makeStringParameter('name', 'Package name')],
+            network: { hasSideEffect: true, requiresConnection: true },
+            execute: ([name], context) => __awaiter(void 0, void 0, void 0, function* () {
+                const url = url_2.withQueryParams(`https://npmjs.com/api/packages`);
+                const result = yield context.fetcher.fetch({ method: 'POST', body: JSON.stringify({ name }), url });
+                return result.body;
+            }),
+        }),
+    ],
     syncTables: [
         api_10.makeSyncTable('Packages', exports.packageSchema, {
             name: 'SyncPackages',
