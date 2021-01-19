@@ -21,7 +21,7 @@
     "clone": "^2.1.2",
     "express": "4.17.1",
     "pascalcase": "^1.0.0",
-    "qs": "^6.9.4",
+    "qs": "^6.9.6",
     "readline-sync": "1.4.10",
     "request": "2.88.2",
     "request-promise-native": "^1.0.9",
