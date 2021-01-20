@@ -395,39 +395,6 @@ export function makeStringFormula<ParamDefsT extends ParamDefs>(
 }
 
 /**
- * @hidden
- *
- * DEPRECATED. Use MetadataFormula and makeMetadataFormula instead.
- */
-export type GetConnectionNameFormula = StringPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>]>;
-
-/**
- * @hidden
- *
- * DEPRECATED. Use makeMetadataFormula instead.
- */
-export function makeGetConnectionNameFormula(
-  execute: (context: ExecutionContext, codaUserName: string) => Promise<string> | string,
-): GetConnectionNameFormula {
-  return makeStringFormula({
-    name: 'getConnectionName',
-    description: 'Return name for new connection.',
-    execute([codaUserName], context) {
-      return execute(context, codaUserName);
-    },
-    parameters: [
-      makeStringParameter('codaUserName', 'The username of the Coda account to use.'),
-      makeStringParameter('authParams', 'The parameters to use for this connection.'),
-    ],
-    examples: [],
-    network: {
-      hasSideEffect: false,
-      requiresConnection: true,
-    },
-  });
-}
-
-/**
  * The return type for a metadata formula that should return a different display to the user
  * than is used internally.
  */

@@ -50,17 +50,6 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
   let defaultAuthentication: PackMetadata['defaultAuthentication'] = originalDefaultAuthentication;
   if (
     originalDefaultAuthentication &&
-    'getConnectionNameFormula' in originalDefaultAuthentication &&
-    originalDefaultAuthentication.getConnectionNameFormula
-  ) {
-    const {execute, ...connNameFormula} = originalDefaultAuthentication.getConnectionNameFormula;
-    defaultAuthentication = {
-      ...originalDefaultAuthentication,
-      getConnectionNameFormula: {...connNameFormula},
-    };
-  }
-  if (
-    originalDefaultAuthentication &&
     'getConnectionName' in originalDefaultAuthentication &&
     originalDefaultAuthentication.getConnectionName
   ) {

@@ -75,7 +75,6 @@ export { makeUserVisibleError } from './api';
 export { makeMetadataFormula } from './api';
 export { makeDynamicSyncTable } from './api';
 export { makeEmptyFormula } from './api';
-export { makeGetConnectionNameFormula } from './api';
 export { makeNumericFormula } from './api';
 export { makeObjectFormula } from './api';
 export { makeStringFormula } from './api';

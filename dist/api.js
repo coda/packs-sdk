@@ -20,7 +20,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeGetConnectionNameFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.StatusCodeError = exports.UserVisibleError = void 0;
+exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.StatusCodeError = exports.UserVisibleError = void 0;
 const api_types_1 = require("./api_types");
 const schema_1 = require("./schema");
 const api_types_2 = require("./api_types");
@@ -159,30 +159,6 @@ function makeStringFormula(definition) {
     return Object.assign({}, definition, Object.assign({ resultType: api_types_1.Type.string }, (response && { schema: response.schema })));
 }
 exports.makeStringFormula = makeStringFormula;
-/**
- * @hidden
- *
- * DEPRECATED. Use makeMetadataFormula instead.
- */
-function makeGetConnectionNameFormula(execute) {
-    return makeStringFormula({
-        name: 'getConnectionName',
-        description: 'Return name for new connection.',
-        execute([codaUserName], context) {
-            return execute(context, codaUserName);
-        },
-        parameters: [
-            makeStringParameter('codaUserName', 'The username of the Coda account to use.'),
-            makeStringParameter('authParams', 'The parameters to use for this connection.'),
-        ],
-        examples: [],
-        network: {
-            hasSideEffect: false,
-            requiresConnection: true,
-        },
-    });
-}
-exports.makeGetConnectionNameFormula = makeGetConnectionNameFormula;
 function makeMetadataFormula(execute) {
     return makeObjectFormula({
         name: 'getMetadata',

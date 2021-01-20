@@ -205,18 +205,6 @@ export declare function makeNumericFormula<ParamDefsT extends ParamDefs>(definit
  */
 export declare function makeStringFormula<ParamDefsT extends ParamDefs>(definition: StringFormulaDef<ParamDefsT>): StringPackFormula<ParamDefsT>;
 /**
- * @hidden
- *
- * DEPRECATED. Use MetadataFormula and makeMetadataFormula instead.
- */
-export declare type GetConnectionNameFormula = StringPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>]>;
-/**
- * @hidden
- *
- * DEPRECATED. Use makeMetadataFormula instead.
- */
-export declare function makeGetConnectionNameFormula(execute: (context: ExecutionContext, codaUserName: string) => Promise<string> | string): GetConnectionNameFormula;
-/**
  * The return type for a metadata formula that should return a different display to the user
  * than is used internally.
  */
