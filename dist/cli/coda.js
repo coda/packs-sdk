@@ -123,8 +123,8 @@ function handleInit() {
             isPacksExamplesInstalled = false;
         }
         if (!isPacksExamplesInstalled) {
-            // TODO: @alan-fang remove and deprecate app token when making packs-examples public
-            const installCommand = `npm install https://74a1ea8b58ba756a7173dd2e0a2fbee9be66151a:x-oauth-basic@github.com/kr-project/packs-examples`;
+            // TODO(jonathan): Switch this to a regular https repo url when the repo becomes public.
+            const installCommand = `npm install git+ssh://github.com/kr-project/packs-examples.git`;
             spawnProcess(installCommand);
         }
         const packageJson = JSON.parse(fs_1.default.readFileSync(`${PACKS_EXAMPLES_DIRECTORY}/package.json`, 'utf-8'));
