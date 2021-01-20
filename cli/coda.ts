@@ -111,8 +111,7 @@ async function handleInit() {
   }
 
   if (!isPacksExamplesInstalled) {
-    // TODO: @alan-fang remove and deprecate app token when making packs-examples public
-    const installCommand = `npm install https://74a1ea8b58ba756a7173dd2e0a2fbee9be66151a:x-oauth-basic@github.com/kr-project/packs-examples`;
+    const installCommand = `npm install git+ssh://github.com/kr-project/packs-examples.git`;
     spawnProcess(installCommand);
   }
 
