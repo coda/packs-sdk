@@ -81,7 +81,7 @@ in which case, make sure that you have TypeScript and **ts-node** installed.
 The simplest way to get started with the SDK is to install it globally:
 
 ```bash
-npm install --global https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basic@github.com/kr-project/packs-sdk#e79bbd196bf080b266f038ddd2bceb83b45e1270
+npm install --global git+ssh://github.com/kr-project/packs-sdk.git
 ```
 
 #### Single-Project Install (Recommended)
@@ -96,7 +96,7 @@ Create a new project directory if you haven't already and initialize your projec
 # Initialize npm and follow prompts.
 npm init
 # Install the Coda Packs SDK locally in your project
-npm install --save https://266b5c97c3bef1359cc7094b4726e2da447538e0:x-oauth-basic@github.com/kr-project/packs-sdk#e79bbd196bf080b266f038ddd2bceb83b45e1270
+npm install --save git+ssh://github.com/kr-project/packs-sdk.git
 ```
 
 Update your path so you can easily use the `coda` commandline (CLI) that ships with the SDK:
