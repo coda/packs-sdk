@@ -511,8 +511,8 @@ const userSchema = makeObjectSchema({
 You can then return the user object from the API as-is, and the `userId` and `userName` fields
 will be remapped to `id` and `name` (and then those fields will be normalized, too).
 
-With the use of the schema declaration (including `fromKey`), you generally can avoid witing any 
-custom code to remove or remap fields to make an API object conform to your desired schema.
+With the use of the schema declaration (including `fromKey`), you generally can avoid writing 
+any custom code to remove or remap fields to make an API object conform to your desired schema.
 
 ### Formula Namespaces
 
