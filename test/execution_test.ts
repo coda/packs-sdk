@@ -102,6 +102,13 @@ describe('Execution', () => {
       );
     });
 
+    it('bad namespace', async () => {
+      await testHelper.willBeRejectedWith(
+        executeFormulaFromPackDef(fakePack, 'Foo::Bar', []),
+        /Pack definition for Fake Pack \(id 424242\) has no namespace "Foo"./,
+      );
+    });
+
     it('non-existent formula', async () => {
       await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(fakePack, 'Foo', []),

@@ -132,14 +132,21 @@ to Coda and run it in a real doc to verify it works as intended.
 ### Running Formulas
 
 The `coda` CLI utility helps you execute formulas, via the `coda execute` sub-command. You can run
-`coda execute --help` at any time to refresh yourself on usage. The syntax is:
+`coda execute --help` at any time to refresh yourself on usage. The syntax can be one of the two formats
+specified below:
 
 ```bash
 coda execute path/to/manifest.ts <formula> [params..]
 ```
 
 So for example, if your pack definition was in `src/manifest.ts` and you wanted to call a function
-named `MyFormula` that takes one argument, you'd run:
+called `MyFormula` that takes one argument, you'd run:
+
+```bash
+coda execute src/manifest.ts MyFormula some-arg
+```
+
+If you want to include the formula namespace `MyPack` in your formula execution call, you'd run:
 
 ```bash
 coda execute src/manifest.ts MyFormula some-arg
@@ -763,7 +770,7 @@ any custom code to remove or remap fields to make an API object conform to your 
 
 ### Formula Namespaces
 
-When defining the formulas included in your pack, you must place them in a **namespace**.
+If your pack has formulas, you must also define a **formulaNamespace** in your pack manifest.
 When users invoke your formula in the Coda UI (or you invoke them when testing your pack)
 the formula will be prefixed by its namespace.
 
@@ -781,8 +788,16 @@ namespace. If the user also used the Gmail pack and that pack also defined a `Se
 formula, it would be easy for the user to differentiate between the two because they
 have separate and clear namespaces: `Slack::SendMessage` vs `Gmail::SendMessage`.
 
+<<<<<<< HEAD
 (You'll note that you needn't use a namespace with `coda execute` because the CLI can
 infer the namespace from the manifest file you specify in that command.)
+=======
+While sync tables are implemented using formulas, sync formulas do not have a namespace,
+since these formulas are not called directly by users and are not exposed to users.
+As a pack author, you only need to be aware of this because when you use `coda execute`
+to run one of your syncs, you needn't prefix your sync table name with a namespace.
+
+> > > > > > > 696834e (update documentation and execution)
 
 ### Metadata Formulas
 
