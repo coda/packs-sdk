@@ -7,7 +7,7 @@ import type { SchemaType } from './schema';
 declare type ParamMapper<T> = (val: T) => T;
 export interface RequestHandlerTemplate {
     url: string;
-    method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+    method: 'GET' | 'PATCH' | 'POST' | 'PUT' | 'DELETE';
     headers?: {
         [header: string]: string;
     };
