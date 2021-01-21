@@ -1,5 +1,4 @@
 import type { MetadataFormula } from './api';
-import type { PackFormulas } from './api';
 import type { SyncTable } from './api';
 import type { TypedStandardFormula } from './api';
 export declare type PackId = number;
@@ -203,13 +202,13 @@ export interface PackDefinition {
         [featureSet in FeatureSet]: Quota;
     }>;
     rateLimits?: RateLimits;
-    formulaNamespace?: string;
+    formulaNamespace: string;
     /**
      * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
      * explicit connection is specified by the user.
      */
     systemConnectionAuthentication?: SystemAuthentication;
-    formulas?: PackFormulas | TypedStandardFormula[];
+    formulas?: TypedStandardFormula[];
     formats?: Format[];
     policies?: Policy[];
     syncTables?: SyncTable[];

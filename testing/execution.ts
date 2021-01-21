@@ -176,33 +176,32 @@ export async function executeMetadataFormula(
   return formula.execute([search || '', formulaContext ? JSON.stringify(formulaContext) : ''], context);
 }
 
-function findFormula(packDef: PackDefinition, formulaNameWithNamespace: string): TypedStandardFormula {
-  const packFormulas = packDef.formulas;
-  if (!packFormulas) {
+function findFormula(packDef: PackDefinition, formula: string): TypedStandardFormula {
+  const {formulas, formulaNamespace} = packDef;
+  let formulaName = formula;
+  if (!formulas) {
     throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);
   }
 
-  // TODO: @alan-fang remove namespace requirement
-  const [namespace, name] = formulaNameWithNamespace.split('::');
-  if (!(namespace && name)) {
-    throw new Error(
-      `Formula names must be specified as FormulaNamespace::FormulaName, but got "${formulaNameWithNamespace}".`,
-    );
+  if (!formulas || !formulas.length) {
+    throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);
   }
 
-  const formulas: TypedStandardFormula[] = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
-  if (!formulas || !formulas.length) {
-    throw new Error(
-      `Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas for namespace "${namespace}".`,
-    );
+  if (formula.includes('::')) {
+    const [namespace, name] = formula.split('::');
+    formulaName = name;
+    if (namespace !== formulaNamespace) {
+      throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no namespace "${namespace}".`);
+    }
   }
+
   for (const formula of formulas) {
-    if (formula.name === name) {
+    if (formula.name === formulaName) {
       return formula;
     }
   }
   throw new Error(
-    `Pack definition for ${packDef.name} (id ${packDef.id}) has no formula "${name}" in namespace "${namespace}".`,
+    `Pack definition for ${packDef.name} (id ${packDef.id}) has no formula "${formulaName}" in namespace "${formulaNamespace}".`,
   );
 }
 

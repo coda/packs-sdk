@@ -14,7 +14,7 @@ export const FakePack: PackDefinition = deepFreeze({
   exampleImages: [],
   exampleVideoIds: [],
   formats: [],
-  formulas: {},
+  formulas: [],
   logoPath: 'logo.png',
   name: 'Fake Pack',
   permissionsDescription: 'Some description about permissions',
@@ -22,6 +22,7 @@ export const FakePack: PackDefinition = deepFreeze({
   shortDescription: 'This is the default fake pack description',
   syncTables: [],
   version: '42.42.42',
+  formulaNamespace: 'Fake',
 });
 
 export function createFakePack(opts: Partial<PackDefinition> = {}): PackDefinition {

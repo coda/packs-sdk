@@ -21,14 +21,10 @@ export interface PackFormatMetadata extends Omit<Format, 'matchers'> {
   matchers: string[];
 }
 
-export interface PackFormulasMetadata {
-  [namespace: string]: PackFormulaMetadata[];
-}
-
 /** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
 export type PackMetadata = Omit<PackDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {
   // TODO: @alan-fang once all packs are using formulaNamespace, delete PackFormulasMetadata.
-  formulas: PackFormulasMetadata | PackFormulaMetadata[];
+  formulas: PackFormulaMetadata[];
   formats: PackFormatMetadata[];
   syncTables: PackSyncTable[];
   defaultAuthentication?: $OmitNested<Authentication, 'getConnectionName', 'execute'>;
@@ -37,7 +33,7 @@ export type PackMetadata = Omit<PackDefinition, 'formulas' | 'formats' | 'defaul
 // Re-exported values for use in browser code.
 
 export type ExternalPackAuthenticationType = AuthenticationType;
-export type ExternalPackFormulas = PackFormulasMetadata | PackFormulaMetadata[];
+export type ExternalPackFormulas = PackFormulaMetadata[];
 export type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
 export type ExternalPackFormula = PackFormulaMetadata;
 export type ExternalPackFormat = Format;
