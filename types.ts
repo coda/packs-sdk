@@ -690,12 +690,6 @@ export interface Format {
    * The name of this column format. This will show to users in the column type chooser.
    */
   name: string;
-  /** @deprecated Namespaces are being removed from the product. */
-  formulaNamespace: string;
-  /**
-   * The name of the formula to invoke for values in columns using this format.
-   * This must correspond to the name of a regular, public formula defined in this pack.
-   */
   formulaName: string;
   /** @deprecated No longer needed, will be inferred from the referenced formula. */
   hasNoConnection?: boolean;
