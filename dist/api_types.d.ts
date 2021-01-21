@@ -78,7 +78,7 @@ export interface Network {
     readonly requiresConnection?: boolean;
 }
 export interface FetchRequest {
-    method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+    method: 'GET' | 'PATCH' | 'POST' | 'PUT' | 'DELETE';
     url: string;
     body?: string;
     form?: {

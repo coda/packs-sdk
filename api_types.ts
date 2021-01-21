@@ -138,7 +138,7 @@ export interface Network {
 
 // Copied from https://developer.mozilla.org/en-US/docs/Web/API/Request
 export interface FetchRequest {
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  method: 'GET' | 'PATCH' | 'POST' | 'PUT' | 'DELETE';
   url: string;
   body?: string;
   form?: {[key: string]: string};

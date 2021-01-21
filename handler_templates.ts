@@ -17,7 +17,7 @@ type ParamMapper<T> = (val: T) => T;
 
 export interface RequestHandlerTemplate {
   url: string;
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  method: 'GET' | 'PATCH' | 'POST' | 'PUT' | 'DELETE';
   headers?: {[header: string]: string};
   nameMapping?: {[functionParamName: string]: string};
   transforms?: {[name: string]: ParamMapper<any>};

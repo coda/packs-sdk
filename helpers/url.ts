@@ -32,7 +32,13 @@ export function join(...tokens: string[]): string {
   const combinedTokens: string[] = [];
   for (const token of tokens) {
     ensureNonEmptyString(token);
-    combinedTokens.push(token);
+
+    if (combinedTokens.length === 0) {
+      combinedTokens.push(token);
+    } else {
+      // Ensure tokens (other than the first) don't have leading slashes
+      combinedTokens.push(token.replace(/^\/+/, ''));
+    }
 
     if (!token.endsWith('/')) {
       combinedTokens.push('/');
