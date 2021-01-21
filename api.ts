@@ -596,7 +596,7 @@ export function makeSyncTable<
     throw new Error('Sync table name should not include spaces');
   }
 
-  const responseHandler = generateObjectResponseHandler({schema: formulaSchema, excludeExtraneous: true});
+  const responseHandler = generateObjectResponseHandler({schema: formulaSchema});
   const execute = async function exec(params: ParamValues<ParamDefsT>, context: SyncExecutionContext) {
     const {result, continuation} = await wrappedExecute(params, context);
     const appliedSchema = context.sync.schema;

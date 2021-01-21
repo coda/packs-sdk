@@ -305,7 +305,7 @@ function makeSyncTable(name, schema, formula, getSchema, entityName) {
     if (name.includes(' ')) {
         throw new Error('Sync table name should not include spaces');
     }
-    const responseHandler = handler_templates_1.generateObjectResponseHandler({ schema: formulaSchema, excludeExtraneous: true });
+    const responseHandler = handler_templates_1.generateObjectResponseHandler({ schema: formulaSchema });
     const execute = function exec(params, context) {
         return __awaiter(this, void 0, void 0, function* () {
             const { result, continuation } = yield wrappedExecute(params, context);

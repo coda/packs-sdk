@@ -483,31 +483,9 @@ The SDK assumes that it will be common to write packs that mostly fetch and retu
 third-party API, and that massaging that data to conform to an SDK schema might be tedious,
 so the SDK supports ways to pass through third-party data as-is or with minimal massaging.
 
-The `response` property of an object formula has an optional property `excludeExtraneous` which
-if true, strips all fields from your return values if they are not declared in the schema.
-For example, if you're working with an API that returns a User object with a bunch of fields
-you don't care about, like `createdAt` and `updatedAt`, you can just define your formula using
-a schema like
-
-```typescript
-makeObjectFormula({
-  ...,
-  response: {
-    excludeExtraneous: true,
-    schema: makeObjectSchema({
-      type: ValueType.Object,
-      properties: {
-        name: {type: ValueType.String},
-      },
-    }),
-  },
-})
-```
-
-and then you can return the full user object that you get back from the API, and all fields
-other than `name` will be stripped away with your code needing to do this explicitly.
-
-Note that `excludeExtraneous` is automatically true for sync table formulas.
+The SDK will automatically remove properties that are not declared within the schema. So if 
+your API returns properties not useful to the end user, you can just leave them out of the 
+object scehma and they will be automatically elided.
 
 To make parsing an API object and massaging it to match your schema easier, you can use the
 `fromKey` property of a schema property definition. This instructs the SDK to convert
@@ -533,8 +511,8 @@ const userSchema = makeObjectSchema({
 You can then return the user object from the API as-is, and the `userId` and `userName` fields
 will be remapped to `id` and `name` (and then those fields will be normalized, too).
 
-The combination of `fromKey` and `excludeExtraneous` should generally mean that you needn't
-write any custom code to remove or remap fields to make an API object conform to your desired schema.
+With the use of the schema declaration (including `fromKey`), you generally can avoid witing any 
+custom code to remove or remap fields to make an API object conform to your desired schema.
 
 ### Formula Namespaces
 

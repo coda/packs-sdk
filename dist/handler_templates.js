@@ -104,7 +104,7 @@ function generateRequestHandler(request, parameters) {
     };
 }
 exports.generateRequestHandler = generateRequestHandler;
-function mapKeys(obj, excludeExtraneous, schema) {
+function mapKeys(obj, schema) {
     if (!(schema && schema_2.isObject(schema))) {
         return obj;
     }
@@ -122,35 +122,35 @@ function mapKeys(obj, excludeExtraneous, schema) {
             continue;
         }
         const newKey = remappedKeys.get(key) || key;
-        if (excludeExtraneous && !schema.properties[newKey]) {
+        if (!schema.properties[newKey]) {
             continue;
         }
         remappedObject[newKey] = obj[key];
         const keySchema = schema.properties[newKey];
         const currentValue = remappedObject[newKey];
         if (Array.isArray(currentValue) && schema_1.isArray(keySchema) && schema_2.isObject(keySchema.items)) {
-            remappedObject[newKey] = currentValue.map(val => mapKeys(val, excludeExtraneous, keySchema.items));
+            remappedObject[newKey] = currentValue.map(val => mapKeys(val, keySchema.items));
         }
         else if (typeof currentValue === 'object' && schema_2.isObject(keySchema)) {
-            remappedObject[newKey] = mapKeys(currentValue, excludeExtraneous, keySchema);
+            remappedObject[newKey] = mapKeys(currentValue, keySchema);
         }
     }
     return remappedObject;
 }
-function transformBody(body, schema, excludeExtraneous) {
+function transformBody(body, schema) {
     if (schema_1.isArray(schema) && schema_2.isObject(schema.items)) {
         const objects = body;
-        const mappedObjs = objects.map(obj => mapKeys(obj, excludeExtraneous, schema.items));
+        const mappedObjs = objects.map(obj => mapKeys(obj, schema.items));
         return mappedObjs;
     }
     if (schema_2.isObject(schema)) {
-        return mapKeys(body, excludeExtraneous, schema);
+        return mapKeys(body, schema);
     }
     return body;
 }
 exports.transformBody = transformBody;
 function generateObjectResponseHandler(response) {
-    const { projectKey, schema, excludeExtraneous } = response;
+    const { projectKey, schema } = response;
     return function objectResponseHandler(resp, runtimeSchema) {
         const { body } = resp;
         if (typeof body !== 'object') {
@@ -167,7 +167,7 @@ function generateObjectResponseHandler(response) {
         if (!finalSchema) {
             return projectedBody;
         }
-        return transformBody(projectedBody, finalSchema, excludeExtraneous);
+        return transformBody(projectedBody, finalSchema);
     };
 }
 exports.generateObjectResponseHandler = generateObjectResponseHandler;

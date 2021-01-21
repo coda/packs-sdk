@@ -143,7 +143,6 @@ describe('handler templates', () => {
 
     it('removes extraneous keys', () => {
       const handler = generateObjectResponseHandler({
-        excludeExtraneous: true,
         schema: {
           type: ValueType.Object,
           properties: {
