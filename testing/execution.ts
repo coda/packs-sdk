@@ -176,25 +176,32 @@ export async function executeMetadataFormula(
   return formula.execute([search || '', formulaContext ? JSON.stringify(formulaContext) : ''], context);
 }
 
-function findFormula(packDef: PackDefinition, formulaName: string): TypedStandardFormula {
-  const packFormulas = packDef.formulas;
-  if (!packFormulas) {
+function findFormula(packDef: PackDefinition, formula: string): TypedStandardFormula {
+  const {formulas, formulaNamespace} = packDef;
+  let formulaName = formula;
+  if (!formulas) {
     throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);
   }
 
-  const formulas: TypedStandardFormula[] = packFormulas;
   if (!formulas || !formulas.length) {
-    throw new Error(
-      `Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas for namespace "${packDef.formulaNamespace}".`,
-    );
+    throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);
   }
+
+  if (formula.includes('::')) {
+    const [namespace, name] = formula.split('::');
+    formulaName = name;
+    if (namespace !== formulaNamespace) {
+      throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no namespace "${namespace}".`);
+    }
+  }
+
   for (const formula of formulas) {
     if (formula.name === formulaName) {
       return formula;
     }
   }
   throw new Error(
-    `Pack definition for ${packDef.name} (id ${packDef.id}) has no formula "${formulaName}" in namespace "${packDef.formulaNamespace}".`,
+    `Pack definition for ${packDef.name} (id ${packDef.id}) has no formula "${formulaName}" in namespace "${formulaNamespace}".`,
   );
 }
 
