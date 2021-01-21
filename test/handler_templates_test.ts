@@ -120,7 +120,7 @@ describe('handler templates', () => {
         }),
         [
           {someThing: 42, cool_thing: 123},
-          {cool: 456, someThing: 321},
+          {someThing: 321},
         ] as any,
       );
     });
@@ -175,7 +175,7 @@ describe('handler templates', () => {
         },
       });
       assert.deepEqual(handler({headers: {}, body: [{some_thing: {this_thing: 12}, cool_thing: 123}], status: 200}), [
-        {some_thing: {somethingElse: 12}, cool_thing: 123},
+        {some_thing: {somethingElse: 12}},
       ] as any);
     });
 
@@ -198,7 +198,7 @@ describe('handler templates', () => {
         },
       });
       assert.deepEqual(handler({headers: {}, body: [{some_thing: {this_thing: 12}, cool_thing: 123}], status: 200}), [
-        {aThing: {somethingElse: 12}, cool_thing: 123},
+        {aThing: {somethingElse: 12}},
       ] as any);
     });
   });
