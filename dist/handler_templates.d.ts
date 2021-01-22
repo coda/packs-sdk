@@ -24,10 +24,9 @@ export interface RequestHandlerTemplate {
 export interface ResponseHandlerTemplate<T extends Schema> {
     schema?: T;
     projectKey?: string;
-    excludeExtraneous?: boolean;
     onError?(error: Error): any;
 }
 export declare function generateRequestHandler<ParamDefsT extends ParamDefs>(request: RequestHandlerTemplate, parameters: ParamDefsT): (params: PackFormulaValue[]) => FetchRequest;
-export declare function transformBody(body: any, schema: Schema, excludeExtraneous?: boolean): any;
+export declare function transformBody(body: any, schema: Schema): any;
 export declare function generateObjectResponseHandler<T extends Schema>(response: ResponseHandlerTemplate<T>): (response: FetchResponse, runtimeSchema?: T) => SchemaType<T>;
 export {};
