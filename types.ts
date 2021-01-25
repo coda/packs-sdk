@@ -195,11 +195,6 @@ export interface Format {
   placeholder?: string;
 }
 
-export interface Policy {
-  name: string;
-  url: string;
-}
-
 export enum FeatureSet {
   Basic = 'Basic',
   Pro = 'Pro',
@@ -274,7 +269,6 @@ export interface PackDefinition {
   // User-facing components
   formulas?: TypedStandardFormula[];
   formats?: Format[];
-  policies?: Policy[];
   syncTables?: SyncTable[];
   /**
    * Whether this is a pack that will be used by Coda internally and not exposed directly to users.
