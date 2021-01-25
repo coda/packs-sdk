@@ -81,7 +81,7 @@ in which case, make sure that you have TypeScript and **ts-node** installed.
 The simplest way to get started with the SDK is to install it globally:
 
 ```bash
-npm install --global git+ssh://github.com/kr-project/packs-sdk.git
+npm install --global packs-sdk@git+ssh://github.com/kr-project/packs-sdk.git
 ```
 
 #### Single-Project Install (Recommended)
@@ -96,7 +96,7 @@ Create a new project directory if you haven't already and initialize your projec
 # Initialize npm and follow prompts.
 npm init
 # Install the Coda Packs SDK locally in your project
-npm install --save git+ssh://github.com/kr-project/packs-sdk.git
+npm install --save packs-sdk@git+ssh://github.com/kr-project/packs-sdk.git
 ```
 
 Update your path so you can easily use the `coda` commandline (CLI) that ships with the SDK:
@@ -491,8 +491,8 @@ The SDK assumes that it will be common to write packs that mostly fetch and retu
 third-party API, and that massaging that data to conform to an SDK schema might be tedious,
 so the SDK supports ways to pass through third-party data as-is or with minimal massaging.
 
-The SDK will automatically remove properties that are not declared within the schema. So if 
-your API returns properties not useful to the end user, you can just leave them out of the 
+The SDK will automatically remove properties that are not declared within the schema. So if
+your API returns properties not useful to the end user, you can just leave them out of the
 object scehma and they will be automatically elided.
 
 To make parsing an API object and massaging it to match your schema easier, you can use the
@@ -519,7 +519,7 @@ const userSchema = makeObjectSchema({
 You can then return the user object from the API as-is, and the `userId` and `userName` fields
 will be remapped to `id` and `name` (and then those fields will be normalized, too).
 
-With the use of the schema declaration (including `fromKey`), you generally can avoid writing 
+With the use of the schema declaration (including `fromKey`), you generally can avoid writing
 any custom code to remove or remap fields to make an API object conform to your desired schema.
 
 ### Formula Namespaces
@@ -803,15 +803,13 @@ Most of your pack implementation goes here.
 
 ```typescript
 import type {Format} from 'packs-sdk';
-import type {PackFormulas} from 'packs-sdk';
 import type {SyncTable} from 'packs-sdk';
+import type {TypedStandardFormula} from 'packs-sdk';
 
-export const formulas: PackFormulas = {
-  MyPack: [
-    // Formula defintions go here, e.g.
-    // makeStringFormula({ ... }),
-  ],
-};
+export const formulas: TypedStandardFormula[] = [
+  // Formula defintions go here, e.g.
+  // makeStringFormula({ ... }),
+];
 
 export const syncTables: SyncTable[] = [
   // Sync table definitions go here, e.g.
