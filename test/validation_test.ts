@@ -196,144 +196,146 @@ describe('Property validation in objects', () => {
   });
 
   const fakePack = createFakePack({
-    formulas: [
-      fakeBooleanFormula,
-      fakeDateFormula,
-      fakeSliderFormula,
-      fakeScaleFormula,
-      fakeUrlFormula,
-      fakeArrayFormula,
-      fakePeopleFormula,
-      fakeReferenceFormula,
-      fakeNestedObjectFormula,
-    ],
+    formulas: {
+      Fake: [
+        fakeBooleanFormula,
+        fakeDateFormula,
+        fakeSliderFormula,
+        fakeScaleFormula,
+        fakeUrlFormula,
+        fakeArrayFormula,
+        fakePeopleFormula,
+        fakeReferenceFormula,
+        fakeNestedObjectFormula,
+      ],
+    },
   });
 
   it('validates boolean', async () => {
-    await executeFormulaFromPackDef(fakePack, 'Boolean', [true]);
-    await executeFormulaFromPackDef(fakePack, 'Boolean', [false]);
+    await executeFormulaFromPackDef(fakePack, 'Fake::Boolean', [true]);
+    await executeFormulaFromPackDef(fakePack, 'Fake::Boolean', [false]);
   });
 
   it('validates correct date string', async () => {
-    await executeFormulaFromPackDef(fakePack, 'Date', ['Wed, 02 Oct 2002 15:00:00 +0200']);
+    await executeFormulaFromPackDef(fakePack, 'Fake::Date', ['Wed, 02 Oct 2002 15:00:00 +0200']);
   });
 
   it('throws on malformed date string', async () => {
     await testHelper.willBeRejectedWith(
-      executeFormulaFromPackDef(fakePack, 'Date', ['asdfdasf']),
+      executeFormulaFromPackDef(fakePack, 'Fake::Date', ['asdfdasf']),
       /The following errors were found when validating the result of the formula "Date":\nFailed to parse asdfdasf as a date./,
     );
   });
 
   it('validates correct slider value', async () => {
-    await executeFormulaFromPackDef(fakePack, 'Slider', [15]);
+    await executeFormulaFromPackDef(fakePack, 'Fake::Slider', [15]);
   });
 
   it('rejects non-numeric slider value', async () => {
     await testHelper.willBeRejectedWith(
-      executeFormulaFromPackDef(fakePack, 'Slider', ['9']),
+      executeFormulaFromPackDef(fakePack, 'Fake::Slider', ['9']),
       /The following errors were found when validating the result of the formula "Slider":\nExpected a number property for Slider but got "9"./,
     );
   });
 
   it('rejects slider value below minimum', async () => {
     await testHelper.willBeRejectedWith(
-      executeFormulaFromPackDef(fakePack, 'Slider', [9]),
+      executeFormulaFromPackDef(fakePack, 'Fake::Slider', [9]),
       /The following errors were found when validating the result of the formula "Slider":\nSlider value 9 is below the specified minimum value of 12./,
     );
   });
 
   it('rejects slider value above maximum', async () => {
     await testHelper.willBeRejectedWith(
-      executeFormulaFromPackDef(fakePack, 'Slider', [32]),
+      executeFormulaFromPackDef(fakePack, 'Fake::Slider', [32]),
       /The following errors were found when validating the result of the formula "Slider":\nSlider value 32 is greater than the specified maximum value of 30./,
     );
   });
 
   it('validates correct scale value', async () => {
-    await executeFormulaFromPackDef(fakePack, 'Scale', [4]);
+    await executeFormulaFromPackDef(fakePack, 'Fake::Scale', [4]);
   });
 
   it('rejects scale value below 0', async () => {
     await testHelper.willBeRejectedWith(
-      executeFormulaFromPackDef(fakePack, 'Scale', [-1]),
+      executeFormulaFromPackDef(fakePack, 'Fake::Scale', [-1]),
       /The following errors were found when validating the result of the formula "Scale":\nScale value -1 cannot be below 0./,
     );
   });
 
   it('rejects scale value above maximum', async () => {
     await testHelper.willBeRejectedWith(
-      executeFormulaFromPackDef(fakePack, 'Scale', [6]),
+      executeFormulaFromPackDef(fakePack, 'Fake::Scale', [6]),
       /The following errors were found when validating the result of the formula "Scale":\nScale value 6 is greater than the specified maximum value of 5./,
     );
   });
 
   it('validates properly formatted url', async () => {
-    await executeFormulaFromPackDef(fakePack, 'Url', ['http://google.com']);
+    await executeFormulaFromPackDef(fakePack, 'Fake::Url', ['http://google.com']);
   });
 
   it('rejects improperly formatted url', async () => {
     await testHelper.willBeRejectedWith(
-      executeFormulaFromPackDef(fakePack, 'Url', ['mailto:http://google.com']),
+      executeFormulaFromPackDef(fakePack, 'Fake::Url', ['mailto:http://google.com']),
       /The following errors were found when validating the result of the formula "Url":\nProperty with codaType "url" must be a valid HTTP\(S\) url, but got "mailto:http:\/\/google.com"./,
     );
   });
 
   it('rejects garbage url', async () => {
     await testHelper.willBeRejectedWith(
-      executeFormulaFromPackDef(fakePack, 'Url', ['jasiofjsdofjiaof']),
+      executeFormulaFromPackDef(fakePack, 'Fake::Url', ['jasiofjsdofjiaof']),
       /The following errors were found when validating the result of the formula "Url":\nProperty with codaType "url" must be a valid HTTP\(S\) url, but got "jasiofjsdofjiaof"./,
     );
   });
 
   it('rejects person with no id field', async () => {
     await testHelper.willBeRejectedWith(
-      executeFormulaFromPackDef(fakePack, 'GetPerson', ['test@coda.io', true]),
+      executeFormulaFromPackDef(fakePack, 'Fake::GetPerson', ['test@coda.io', true]),
       /The following errors were found when validating the result of the formula "GetPerson":\nSchema declares required property "Email" but this attribute is missing or empty./,
     );
   });
 
   it('rejects person with non-email id', async () => {
     await testHelper.willBeRejectedWith(
-      executeFormulaFromPackDef(fakePack, 'GetPerson', ['notanemail', false]),
+      executeFormulaFromPackDef(fakePack, 'Fake::GetPerson', ['notanemail', false]),
       /The following errors were found when validating the result of the formula "GetPerson":\nThe id field for the person result must be an email string, but got "notanemail"./,
     );
   });
 
   it('validates correct person reference', async () => {
-    await executeFormulaFromPackDef(fakePack, 'GetPerson', ['test@coda.io', false]);
+    await executeFormulaFromPackDef(fakePack, 'Fake::GetPerson', ['test@coda.io', false]);
   });
 
   it('handles references', async () => {
     await testHelper.willBeRejectedWith(
-      executeFormulaFromPackDef(fakePack, 'GetReference', [true]),
+      executeFormulaFromPackDef(fakePack, 'Fake::GetReference', [true]),
       /The following errors were found when validating the result of the formula "GetReference":\nSchema declares required property "Reference" but this attribute is missing or empty./,
     );
 
-    await executeFormulaFromPackDef(fakePack, 'GetReference', [false]);
+    await executeFormulaFromPackDef(fakePack, 'Fake::GetReference', [false]);
   });
 
   it('rejects nested object with incorrect nested type', async () => {
     await testHelper.willBeRejectedWith(
-      executeFormulaFromPackDef(fakePack, 'GetNestedObject', [true]),
+      executeFormulaFromPackDef(fakePack, 'Fake::GetNestedObject', [true]),
       /The following errors were found when validating the result of the formula "GetNestedObject":\nExpected a number property for Nested.Number but got "123"./,
     );
   });
 
   it('validates string array', async () => {
-    await executeFormulaFromPackDef(fakePack, 'GetNames', [['Jack', 'Jill', 'Hill']]);
+    await executeFormulaFromPackDef(fakePack, 'Fake::GetNames', [['Jack', 'Jill', 'Hill']]);
   });
 
   it('rejects non array', async () => {
     await testHelper.willBeRejectedWith(
-      executeFormulaFromPackDef(fakePack, 'GetNames', ['Jack']),
+      executeFormulaFromPackDef(fakePack, 'Fake::GetNames', ['Jack']),
       /The following errors were found when validating the result of the formula "GetNames":\nExpected an array result but got Jack./,
     );
   });
 
   it('rejects bad array items', async () => {
     await testHelper.willBeRejectedWith(
-      executeFormulaFromPackDef(fakePack, 'GetNames', [['Jack', 'Jill', 123, true]]),
+      executeFormulaFromPackDef(fakePack, 'Fake::GetNames', [['Jack', 'Jill', 123, true]]),
       /The following errors were found when validating the result of the formula "GetNames":\nExpected a string property for Names\[2\] but got 123.\nExpected a string property for Names\[3\] but got true./,
     );
   });

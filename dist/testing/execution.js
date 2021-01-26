@@ -111,28 +111,26 @@ function executeMetadataFormula(formula, metadataParams = {}, context = mocks_1.
     });
 }
 exports.executeMetadataFormula = executeMetadataFormula;
-function findFormula(packDef, formula) {
-    const { formulas, formulaNamespace } = packDef;
-    let formulaName = formula;
-    if (!formulas) {
+function findFormula(packDef, formulaNameWithNamespace) {
+    const packFormulas = packDef.formulas;
+    if (!packFormulas) {
         throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);
     }
+    // TODO: @alan-fang remove namespace requirement
+    const [namespace, name] = formulaNameWithNamespace.split('::');
+    if (!(namespace && name)) {
+        throw new Error(`Formula names must be specified as FormulaNamespace::FormulaName, but got "${formulaNameWithNamespace}".`);
+    }
+    const formulas = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
     if (!formulas || !formulas.length) {
-        throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);
-    }
-    if (formula.includes('::')) {
-        const [namespace, name] = formula.split('::');
-        formulaName = name;
-        if (namespace !== formulaNamespace) {
-            throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no namespace "${namespace}".`);
-        }
+        throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas for namespace "${namespace}".`);
     }
     for (const formula of formulas) {
-        if (formula.name === formulaName) {
+        if (formula.name === name) {
             return formula;
         }
     }
-    throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formula "${formulaName}" in namespace "${formulaNamespace}".`);
+    throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formula "${name}" in namespace "${namespace}".`);
 }
 function tryFindFormula(packDef, formulaNameWithNamespace) {
     try {

@@ -135,6 +135,9 @@ export declare function makeImageParameter(name: string, description: string, ar
 export declare function makeImageArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.image>>): ParamDef<ArrayType<Type.image>>;
 export declare function makeUserVisibleError(msg: string): UserVisibleError;
 export declare function check(condition: boolean, msg: string): void;
+export interface PackFormulas {
+    readonly [namespace: string]: TypedStandardFormula[];
+}
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult> extends CommonPackFormulaDef<ParamsT> {
     execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
 }
