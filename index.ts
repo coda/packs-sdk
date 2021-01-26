@@ -47,6 +47,8 @@ export type {GenericDynamicSyncTable} from './api';
 export type {GenericSyncFormula} from './api';
 export type {GenericSyncFormulaResult} from './api';
 export type {GenericSyncTable} from './api';
+export type {Logger} from './api_types';
+export type {LoggerParamType} from './api_types';
 export type {MetadataContext} from './api';
 export type {MetadataFormulaObjectResultType} from './api';
 export type {MetadataFormulaResultType} from './api';
