@@ -588,6 +588,23 @@ metadata formula invocation for the state/province parameter will want to look a
 Coda packs execute on the server side in a special isolated node environment. They do not execute in the browser
 and don't have access to any browser resources or user information other than what the packs infrastructure explicitly provides.
 
+### Logging
+`ExecutionContext` provides a `Logger` interface that allows you to log messages 
+that you can view in your Pack's development console. This can be useful for debugging during development 
+as well as in production.
+
+```typescript
+    const result = context.fetcher.fetch('http://my/api');
+    if (result.body.foo !== 42) {
+      context.logger.warn('Did not receive foo as expected, got %s', result.body.foo);
+    }
+```
+
+The format of the `message` parameter to the `Logger` method is (documented here)[https://nodejs.org/api/util.html#util_util_format_format_args].
+
+### Temporary Blob Storage
+TODO: Write
+
 ## Testing Your Code
 
 The SDK includes some utilities to help you write unittests and integration tests for your pack.
