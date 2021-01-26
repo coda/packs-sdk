@@ -123,22 +123,14 @@ to Coda and run it in a real doc to verify it works as intended.
 ### Running Formulas
 
 The `coda` CLI utility helps you execute formulas, via the `coda execute` sub-command. You can run
-`coda execute --help` at any time to refresh yourself on usage. The syntax can be one of the two formats
-specified below:
+`coda execute --help` at any time to refresh yourself on usage. The syntax is:
 
 ```bash
-coda execute path/to/manifest.ts <formula> [params..]
 coda execute path/to/manifest.ts <namespace>:<formula> [params..]
 ```
 
 So for example, if your pack definition was in `src/manifest.ts` and you wanted to call a function
-called `MyFormula` that takes one argument, you'd run:
-
-```bash
-coda execute src/manifest.ts MyFormula some-arg
-```
-
-If you want to include the formula namespace `MyPack` in your formula execution call, you'd run:
+in namespace `MyPack` called `MyFormula` that takes one argument, you'd run:
 
 ```bash
 coda execute src/manifest.ts MyPack::MyFormula some-arg
@@ -179,7 +171,7 @@ By default, `coda execute` will use a mock fetcher for any http requests that yo
 If you wish to actually make http requests, use the `--fetch` flag, for example:
 
 ```bash
-coda execute --fetch src/manifest.ts MyFormula some-arg
+coda execute --fetch src/manifest.ts MyPack::MyFormula some-arg
 ```
 
 Your http requests will commonly require authentication in order to succeed, which the `coda execute` utility supports.
@@ -524,7 +516,7 @@ any custom code to remove or remap fields to make an API object conform to your 
 
 ### Formula Namespaces
 
-If your pack has formulas, you must also define a **formulaNamespace** in your pack manifest.
+When defining the formulas included in your pack, you must place them in a **namespace**.
 When users invoke your formula in the Coda UI (or you invoke them when testing your pack)
 the formula will be prefixed by its namespace.
 
@@ -541,6 +533,10 @@ docs, they can type `slack` and autocomplete will show them all of the formulas 
 namespace. If the user also used the Gmail pack and that pack also defined a `SendMessage`
 formula, it would be easy for the user to differentiate between the two because they
 have separate and clear namespaces: `Slack::SendMessage` vs `Gmail::SendMessage`.
+
+While the structure of a pack definition allows you to specify multiple namespaces
+(since formula definitions are a dictionary mapping a namespace to a list of formulas)
+the SDK currently only allows you one namespace per pack. This may change in the future.
 
 While sync tables are implemented using formulas, sync formulas do not have a namespace,
 since these formulas are not called directly by users and are not exposed to users.
@@ -640,7 +636,7 @@ import {manifest} from '../manifest';
 
 describe('Simple Formula', () => {
   it('executes a formula', async () => {
-    const result = await executeFormulaFromPackDef(manifest, 'MyFormula', ['my-param']);
+    const result = await executeFormulaFromPackDef(manifest, 'MyNamespace::MyFormula', ['my-param']);
     assert.equal(result, 'my-return-value');
   });
 });
@@ -674,7 +670,7 @@ describe('Formula with Fetcher', () => {
     };
     context.fetcher.fetch.returns(newJsonFetchResponse(fakeResponse));
 
-    const result = await executeFormulaFromPackDef(manifest, 'MyFormula', ['my-param'], context);
+    const result = await executeFormulaFromPackDef(manifest, 'MyNamespace::MyFormula', ['my-param'], context);
 
     assert.equal(result.Name, 'Alice');
     sinon.assert.calledOnce(context.fetcher.fetch);
@@ -738,7 +734,7 @@ requests to whatever urls they are given, and will apply authentication to these
 if you have configured authentication locally using `coda auth`. For example:
 
 ```typescript
-const result = await executeFormulaFromPackDef(manifest, 'MyFormula', ['my-param'], undefined, undefined, {
+const result = await executeFormulaFromPackDef(manifest, 'MyNamespace::MyFormula', ['my-param'], undefined, undefined, {
   useRealFetcher: true,
 });
 ```

@@ -270,6 +270,10 @@ export function check(condition: boolean, msg: string) {
   }
 }
 
+export interface PackFormulas {
+  readonly [namespace: string]: TypedStandardFormula[];
+}
+
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult>
   extends CommonPackFormulaDef<ParamsT> {
   execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
