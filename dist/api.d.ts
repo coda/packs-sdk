@@ -20,6 +20,7 @@ import { Type } from './api_types';
 import type { TypeOf } from './api_types';
 export { ExecutionContext };
 export { FetchRequest } from './api_types';
+export { Logger } from './api_types';
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
  * If an error is encountered in a formula and you want to describe the error

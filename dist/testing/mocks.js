@@ -18,6 +18,12 @@ function newMockExecutionContext(overrides) {
         }, temporaryBlobStorage: {
             storeUrl: sinon_1.default.stub(),
             storeBlob: sinon_1.default.stub(),
+        }, logger: {
+            trace: sinon_1.default.stub(),
+            debug: sinon_1.default.stub(),
+            info: sinon_1.default.stub(),
+            warn: sinon_1.default.stub(),
+            error: sinon_1.default.stub(),
         } }, overrides);
 }
 exports.newMockExecutionContext = newMockExecutionContext;
