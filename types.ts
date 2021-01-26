@@ -255,11 +255,7 @@ export interface PackDefinition {
   minimumFeatureSet?: FeatureSet;
   quotas?: Partial<{[featureSet in FeatureSet]: Quota}>;
   rateLimits?: RateLimits;
-  /**
-   * Required if formulas is specified.
-   */
-  formulaNamespace?: string;
-
+  formulaNamespace: string;
   /**
    * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
    * explicit connection is specified by the user.
