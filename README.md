@@ -594,9 +594,9 @@ that you can view in your Pack's development console. This can be useful for deb
 as well as in production.
 
 ```typescript
-    const result = context.fetcher.fetch('http://my/api);
+    const result = context.fetcher.fetch('http://my/api');
     if (result.body.foo !== 42) {
-      log.warn('Did not receive foo as expected, got %s', result.body.foo);
+      context.logger.warn('Did not receive foo as expected, got %s', result.body.foo);
     }
 ```
 
