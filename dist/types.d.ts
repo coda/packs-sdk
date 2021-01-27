@@ -143,6 +143,10 @@ export interface Format {
     matchers?: RegExp[];
     placeholder?: string;
 }
+export interface Policy {
+    name: string;
+    url: string;
+}
 export declare enum FeatureSet {
     Basic = "Basic",
     Pro = "Pro",
@@ -207,6 +211,7 @@ export interface PackDefinition {
     systemConnectionAuthentication?: SystemAuthentication;
     formulas?: PackFormulas | TypedStandardFormula[];
     formats?: Format[];
+    policies?: Policy[];
     syncTables?: SyncTable[];
     /**
      * Whether this is a pack that will be used by Coda internally and not exposed directly to users.

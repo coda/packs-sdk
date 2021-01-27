@@ -7,6 +7,7 @@ export type { Format } from './types';
 export { PackCategory } from './types';
 export type { PackDefinition } from './types';
 export type { PackId } from './types';
+export type { Policy } from './types';
 export type { ProviderDefinition } from './types';
 export type { ProviderId } from './types';
 export type { Quota } from './types';
