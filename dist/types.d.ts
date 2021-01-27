@@ -135,7 +135,7 @@ export declare type Authentication = NoAuthentication | HeaderBearerTokenAuthent
 export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSSignature4Authentication;
 export interface Format {
     name: string;
-    formulaNamespace?: string;
+    formulaNamespace: string;
     formulaName: string;
     hasNoConnection?: boolean;
     instructions?: string;
