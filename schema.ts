@@ -319,7 +319,7 @@ function checkSchemaPropertyIsRequired<K extends string, L extends string, T ext
   );
 }
 
-export function normalizeKey(key: string): string {
+export function normalizeSchemaKey(key: string): string {
   // Colons cause problems in our formula handling.
   return pascalcase(key).replace(/:/g, '_');
 }
@@ -334,7 +334,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     const normalized: ObjectSchemaProperties = {};
     const {id, primary, featured} = schema;
     for (const key of Object.keys(schema.properties)) {
-      const normalizedKey = normalizeKey(key);
+      const normalizedKey = normalizeSchemaKey(key);
       const props = schema.properties[key];
       const {required, fromKey} = props as ObjectSchemaProperty;
       normalized[normalizedKey] = Object.assign(normalizeSchema(props), {
@@ -344,9 +344,9 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     }
     const normalizedSchema = {
       type: ValueType.Object,
-      id: id ? normalizeKey(id) : undefined,
-      featured: featured ? featured.map(normalizeKey) : undefined,
-      primary: primary ? normalizeKey(primary) : undefined,
+      id: id ? normalizeSchemaKey(id) : undefined,
+      featured: featured ? featured.map(normalizeSchemaKey) : undefined,
+      primary: primary ? normalizeSchemaKey(primary) : undefined,
       properties: normalized,
       identity: schema.identity,
       codaType: schema.codaType,

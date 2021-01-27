@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSchemaId = exports.SchemaIdPrefix = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.DurationUnit = exports.CurrencyFormat = exports.ValueType = void 0;
+exports.getSchemaId = exports.SchemaIdPrefix = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.DurationUnit = exports.CurrencyFormat = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const ensure_2 = require("./helpers/ensure");
 const ensure_3 = require("./helpers/ensure");
@@ -134,11 +134,11 @@ function checkSchemaPropertyIsRequired(field, schema) {
     const { properties, codaType } = schema;
     ensure_1.assertCondition(properties[field].required, `Field "${field}" must be marked as required in schema with codaType "${codaType}".`);
 }
-function normalizeKey(key) {
+function normalizeSchemaKey(key) {
     // Colons cause problems in our formula handling.
     return pascalcase_1.default(key).replace(/:/g, '_');
 }
-exports.normalizeKey = normalizeKey;
+exports.normalizeSchemaKey = normalizeSchemaKey;
 function normalizeSchema(schema) {
     if (isArray(schema)) {
         return {
@@ -150,7 +150,7 @@ function normalizeSchema(schema) {
         const normalized = {};
         const { id, primary, featured } = schema;
         for (const key of Object.keys(schema.properties)) {
-            const normalizedKey = normalizeKey(key);
+            const normalizedKey = normalizeSchemaKey(key);
             const props = schema.properties[key];
             const { required, fromKey } = props;
             normalized[normalizedKey] = Object.assign(normalizeSchema(props), {
@@ -160,9 +160,9 @@ function normalizeSchema(schema) {
         }
         const normalizedSchema = {
             type: ValueType.Object,
-            id: id ? normalizeKey(id) : undefined,
-            featured: featured ? featured.map(normalizeKey) : undefined,
-            primary: primary ? normalizeKey(primary) : undefined,
+            id: id ? normalizeSchemaKey(id) : undefined,
+            featured: featured ? featured.map(normalizeSchemaKey) : undefined,
+            primary: primary ? normalizeSchemaKey(primary) : undefined,
             properties: normalized,
             identity: schema.identity,
             codaType: schema.codaType,
