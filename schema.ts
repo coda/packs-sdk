@@ -319,7 +319,7 @@ function checkSchemaPropertyIsRequired<K extends string, L extends string, T ext
   );
 }
 
-function normalizeKey(key: string): string {
+export function normalizeKey(key: string): string {
   // Colons cause problems in our formula handling.
   return pascalcase(key).replace(/:/g, '_');
 }
