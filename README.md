@@ -585,20 +585,22 @@ Coda packs execute on the server side in a special isolated node environment. Th
 and don't have access to any browser resources or user information other than what the packs infrastructure explicitly provides.
 
 ### Logging
-`ExecutionContext` provides a `Logger` interface that allows you to log messages 
-that you can view in your Pack's development console. This can be useful for debugging during development 
+
+`ExecutionContext` provides a `Logger` interface that allows you to log messages
+that you can view in your Pack's development console. This can be useful for debugging during development
 as well as in production.
 
 ```typescript
-    const result = context.fetcher.fetch('http://my/api');
-    if (result.body.foo !== 42) {
-      context.logger.warn('Did not receive foo as expected, got %s', result.body.foo);
-    }
+const result = context.fetcher.fetch('http://my/api');
+if (result.body.foo !== 42) {
+  context.logger.warn('Did not receive foo as expected, got %s', result.body.foo);
+}
 ```
 
 The format of the `message` parameter to the `Logger` method is (documented here)[https://nodejs.org/api/util.html#util_util_format_format_args].
 
 ### Temporary Blob Storage
+
 TODO: Write
 
 ## Testing Your Code
@@ -631,7 +633,7 @@ Here's a very simple example test, using Mocha, for a formula that doesn't make 
 fetcher requests:
 
 ```typescript
-import {executeFormulaFromPackDef} from 'packs-sdk/dist/development';
+import {executeFormulaFromPackDef} from 'coda-packs-sdk/dist/development';
 import {manifest} from '../manifest';
 
 describe('Simple Formula', () => {
@@ -649,11 +651,11 @@ Here we set up a mock execution context, register a fake response on it, and pas
 mock fetcher when executing our formula.
 
 ```typescript
-import {MockExecutionContext} from 'packs-sdk/dist/development';
-import {executeFormulaFromPackDef} from 'packs-sdk/dist/development';
+import {MockExecutionContext} from 'coda-packs-sdk/dist/development';
+import {executeFormulaFromPackDef} from 'coda-packs-sdk/dist/development';
 import {manifest} from '../manifest';
-import {newJsonFetchResponse} from 'packs-sdk/dist/development';
-import {newMockExecutionContext} from 'packs-sdk/dist/development';
+import {newJsonFetchResponse} from 'coda-packs-sdk/dist/development';
+import {newMockExecutionContext} from 'coda-packs-sdk/dist/development';
 import sinon from 'sinon';
 
 describe('Formula with Fetcher', () => {
@@ -686,11 +688,11 @@ your sync handles pagination properly by setting up mock fetcher responses that 
 in your sync formula return a `Continuation` at least once.
 
 ```typescript
-import {MockSyncExecutionContext} from 'packs-sdk/dist/development';
-import {executeSyncFormulaFromPackDef} from 'packs-sdk/dist/development';
+import {MockSyncExecutionContext} from 'coda-packs-sdk/dist/development';
+import {executeSyncFormulaFromPackDef} from 'coda-packs-sdk/dist/development';
 import {manifest} from '../manifest';
-import {newJsonFetchResponse} from 'packs-sdk/dist/development';
-import {newMockSyncExecutionContext} from 'packs-sdk/dist/development';
+import {newJsonFetchResponse} from 'coda-packs-sdk/dist/development';
+import {newMockSyncExecutionContext} from 'coda-packs-sdk/dist/development';
 import sinon from 'sinon';
 
 describe('Sync Formula', () => {
@@ -793,7 +795,7 @@ file by itself containing nothing but the definition itself, importing the nuts
 and bolts of your pack from other files.
 
 ```typescript
-import {PackDefinition} from 'packs-sdk';
+import {PackDefinition} from 'coda-packs-sdk';
 import {formulas} from './formulas';
 import {syncTables} from './formulas';
 
@@ -815,9 +817,9 @@ export const manifest: PackDefinition = {
 Most of your pack implementation goes here.
 
 ```typescript
-import type {Format} from 'packs-sdk';
-import type {SyncTable} from 'packs-sdk';
-import type {TypedStandardFormula} from 'packs-sdk';
+import type {Format} from 'coda-packs-sdk';
+import type {SyncTable} from 'coda-packs-sdk';
+import type {TypedStandardFormula} from 'coda-packs-sdk';
 
 export const formulas: TypedStandardFormula[] = [
   // Formula defintions go here, e.g.
@@ -843,8 +845,8 @@ between schema and implementation and allows you to refer back to your schemas
 without wading through long formula implementations.
 
 ```typescript
-import {ValueType} from 'packs-sdk';
-import {makeObjectSchema} from 'packs-sdk';
+import {ValueType} from 'coda-packs-sdk';
+import {makeObjectSchema} from 'coda-packs-sdk';
 
 export const personSchema = makeObjectSchema({
   type: ValueType.Object,
