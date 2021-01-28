@@ -41,7 +41,7 @@ const auth_3 = require("../testing/auth");
 const child_process_1 = require("child_process");
 const yargs_1 = __importDefault(require("yargs"));
 const EXECUTE_BOOTSTRAP_CODE = `
-import {executeFormulaOrSyncFromCLI} from 'packs-sdk/dist/testing/execution';
+import {executeFormulaOrSyncFromCLI} from 'coda-packs-sdk/dist/testing/execution';
 
 async function main() {
   const manifestPath = process.argv[1];
@@ -62,7 +62,7 @@ async function main() {
 
 void main();`;
 const AUTH_BOOTSTRAP_CODE = `
-import {setupAuthFromModule} from 'packs-sdk/dist/testing/auth';
+import {setupAuthFromModule} from 'coda-packs-sdk/dist/testing/auth';
 
 async function main() {
   const manifestPath = process.argv[1];
@@ -149,7 +149,7 @@ function spawnProcess(command) {
     // Hack to allow us to run this CLI tool for testing purposes from within this repo, without
     // needing it installed as an npm package.
     if (process.argv[1].endsWith('coda.ts')) {
-        cmd = command.replace('packs-sdk/dist', '.');
+        cmd = command.replace('coda-packs-sdk/dist', '.');
     }
     return child_process_1.spawnSync(cmd, {
         shell: true,
