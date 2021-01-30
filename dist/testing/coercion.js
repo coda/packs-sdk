@@ -32,9 +32,10 @@ function coerceParamValue(paramDef, paramValue) {
     if (!object_utils_1.isDefined(paramValue)) {
         return paramValue;
     }
-    if (paramDef.type === 'array') {
+    const { type } = paramDef.type;
+    if (type === 'array') {
         const type = paramDef.type;
-        const value = paramValue;
+        const value = paramValue.split(',');
         return value.map(item => coerceParam(type.items, item));
     }
     return coerceParam(paramDef.type, paramValue);
