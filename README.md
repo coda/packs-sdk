@@ -145,6 +145,13 @@ and will interpret your arguments accordingly. For example, if your formula take
 `123` as an argument on the commandline, it will know to interpret that as a string, but if your formula
 takes a number, it will interpret `123` as a number before executing the formula.
 
+To pass array parameters to `coda execute`, use a comma separated string. For example, [1,2,3] should be
+passed with this format:
+
+```bash
+coda execute src/manifest.ts MyPack::MyFormula 1,2,3
+```
+
 ### Running Syncs
 
 The above example shows how to execute a regular pack **formula**. Executing a **sync** is almost
