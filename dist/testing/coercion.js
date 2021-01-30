@@ -34,7 +34,6 @@ function coerceParamValue(paramDef, paramValue) {
     }
     const { type } = paramDef.type;
     if (type === 'array') {
-        const type = paramDef.type;
         const value = paramValue.split(',');
         return value.map(item => coerceParam(type.items, item));
     }
