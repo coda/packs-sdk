@@ -113,10 +113,8 @@ export interface OAuth2Authentication extends BaseAuthentication {
     additionalParams?: {
         [key: string]: any;
     };
-    appIdEnvVarName?: string;
     clientIdEnvVarName: string;
     clientSecretEnvVarName: string;
-    signingSecretEnvVarName?: string;
     endpointKey?: string;
 }
 export interface WebBasicAuthentication extends BaseAuthentication {

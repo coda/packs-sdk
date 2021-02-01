@@ -140,10 +140,8 @@ export interface OAuth2Authentication extends BaseAuthentication {
   tokenPrefix?: string;
   additionalParams?: {[key: string]: any};
   // TODO(oleg): store secrets somewhere better, like in AWS Secrets Manager.
-  appIdEnvVarName?: string;
   clientIdEnvVarName: string;
   clientSecretEnvVarName: string;
-  signingSecretEnvVarName?: string;
 
   // Some OAuth providers will return the API domain with the OAuth response.
   // This is the key in the OAuth response json body that points to the endpoint.
