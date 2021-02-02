@@ -10,7 +10,7 @@
   "typings": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kr-project/packs-sdk"
+    "url": "https://github.com/coda-hq/packs-sdk"
   },
   "dependencies": {
     "clone": "^2.1.2",

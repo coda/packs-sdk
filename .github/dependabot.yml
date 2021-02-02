@@ -8,4 +8,4 @@ updates:
       interval: "daily"
     open-pull-requests-limit: 50
     reviewers:
-      - "kr-project/ecosystem"
+      - "coda-hq/ecosystem"
