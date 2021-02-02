@@ -36,9 +36,9 @@ function coerceParamValue(paramDef: ParamDef<any>, paramValue: any): any {
   }
 
   if (isArrayType(paramDef.type)) {
-    const valuesString = (paramValue as string).slice(1, -1);
+    const valuesString = paramValue as string;
     const value = valuesString.length ? valuesString.split(',') : [];
-    return value.map(item => coerceParam((paramDef.type as ArrayType<Type>).items, item));
+    return value.map(item => coerceParam((paramDef.type as ArrayType<Type>).items, item.trim()));
   }
   return coerceParam(paramDef.type, paramValue);
 }

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.coerceParams = void 0;
 const api_types_1 = require("../api_types");
 const ensure_1 = require("../helpers/ensure");
+const api_types_2 = require("../api_types");
 const object_utils_1 = require("../helpers/object_utils");
 function coerceParams(formula, args) {
     const { parameters, varargParameters } = formula;
@@ -32,8 +33,7 @@ function coerceParamValue(paramDef, paramValue) {
     if (!object_utils_1.isDefined(paramValue)) {
         return paramValue;
     }
-    const { type } = paramDef.type;
-    if (type === 'array') {
+    if (api_types_2.isArrayType(paramDef.type)) {
         const valuesString = paramValue.slice(1, -1);
         const value = valuesString.length ? valuesString.split(',') : [];
         return value.map(item => coerceParam(paramDef.type.items, item));
