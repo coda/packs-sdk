@@ -34,9 +34,9 @@ function coerceParamValue(paramDef, paramValue) {
         return paramValue;
     }
     if (api_types_2.isArrayType(paramDef.type)) {
-        const valuesString = paramValue.slice(1, -1);
+        const valuesString = paramValue;
         const value = valuesString.length ? valuesString.split(',') : [];
-        return value.map(item => coerceParam(paramDef.type.items, item));
+        return value.map(item => coerceParam(paramDef.type.items, item.trim()));
     }
     return coerceParam(paramDef.type, paramValue);
 }
