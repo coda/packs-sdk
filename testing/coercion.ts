@@ -5,6 +5,7 @@ import type {ParamValues} from '../api_types';
 import {Type} from '../api_types';
 import type {TypedPackFormula} from '../api';
 import {ensureUnreachable} from '../helpers/ensure';
+import {isArrayType} from '../api_types';
 import {isDefined} from '../helpers/object_utils';
 
 export function coerceParams(formula: TypedPackFormula, args: ParamValues<ParamDefs>): ParamValues<ParamDefs> {
@@ -33,10 +34,11 @@ function coerceParamValue(paramDef: ParamDef<any>, paramValue: any): any {
   if (!isDefined(paramValue)) {
     return paramValue;
   }
-  if (paramDef.type === 'array') {
-    const type = paramDef.type as ArrayType<Type>;
-    const value = paramValue as any[];
-    return value.map(item => coerceParam(type.items, item));
+
+  if (isArrayType(paramDef.type)) {
+    const valuesString = paramValue as string;
+    const value = valuesString.length ? valuesString.split(',') : [];
+    return value.map(item => coerceParam((paramDef.type as ArrayType<Type>).items, item.trim()));
   }
   return coerceParam(paramDef.type, paramValue);
 }
