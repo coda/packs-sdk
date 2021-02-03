@@ -1,13 +1,15 @@
-import {PackDefinition} from '../types';
-import {PackFormatMetadata} from '../compiled_types';
-import {PackFormulasMetadata} from '../compiled_types';
-import {PackFormulas} from '../api';
-import {PackMetadata} from '../compiled_types';
-import {PackSyncTable} from '../compiled_types';
+import type {PackDefinition} from '../types';
+import type {PackFormatMetadata} from '../compiled_types';
+import type {PackFormulaMetadata} from '../api';
+import type {PackFormulas} from '../api';
+import type {PackFormulasMetadata} from '../compiled_types';
+import type {PackMetadata} from '../compiled_types';
+import type {PackSyncTable} from '../compiled_types';
+import type {TypedStandardFormula} from '../api';
 
 // Used to avoid needing promises when exporting fake `PackMetadata`s.
 export interface FakePackDefinition extends Omit<PackDefinition, 'formulas'> {
-  formulas?: PackFormulas;
+  formulas?: PackFormulas | TypedStandardFormula[];
 }
 
 export function fakeDefinitionToDefinition(def: FakePackDefinition): PackDefinition {
@@ -20,15 +22,24 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
     defaultAuthentication: originalDefaultAuthentication,
     formats: originalFormats,
     syncTables: originalSyncTables,
-    ...packMetadata // tslint:disable-line:trailing-comma
+    ...packMetadata
   } = def;
 
-  const formulas: PackFormulasMetadata = {};
-  for (const namespace of Object.keys(originalFormulas || {})) {
-    formulas[namespace] = originalFormulas![namespace]!.map(formula => {
+  let formulas: PackFormulasMetadata | PackFormulaMetadata[];
+  if (Array.isArray(originalFormulas)) {
+    formulas = originalFormulas!.map(formula => {
       const {execute, ...formulaMetadata} = formula;
       return formulaMetadata;
     });
+  } else {
+    // TODO: @alan-fang delete once all packs have been migrated to use formulaNamespace
+    formulas = {};
+    for (const namespace of Object.keys(originalFormulas || {})) {
+      formulas[namespace] = originalFormulas![namespace]!.map(formula => {
+        const {execute, ...formulaMetadata} = formula;
+        return formulaMetadata;
+      });
+    }
   }
 
   const formats: PackFormatMetadata[] = [];
@@ -37,17 +48,6 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
   }
 
   let defaultAuthentication: PackMetadata['defaultAuthentication'] = originalDefaultAuthentication;
-  if (
-    originalDefaultAuthentication &&
-    'getConnectionNameFormula' in originalDefaultAuthentication &&
-    originalDefaultAuthentication.getConnectionNameFormula
-  ) {
-    const {execute, ...connNameFormula} = originalDefaultAuthentication.getConnectionNameFormula;
-    defaultAuthentication = {
-      ...originalDefaultAuthentication,
-      getConnectionNameFormula: {...connNameFormula},
-    };
-  }
   if (
     originalDefaultAuthentication &&
     'getConnectionName' in originalDefaultAuthentication &&

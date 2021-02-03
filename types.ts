@@ -1,7 +1,7 @@
-import {GetConnectionNameFormula} from './api';
-import {MetadataFormula} from './api';
-import {PackFormulas} from './api';
-import {SyncTable} from './api';
+import type {MetadataFormula} from './api';
+import type {PackFormulas} from './api';
+import type {SyncTable} from './api';
+import type {TypedStandardFormula} from './api';
 
 export type PackId = number;
 export type ProviderId = number;
@@ -58,8 +58,6 @@ export interface PostSetup {
 }
 
 interface BaseAuthentication {
-  // TODO(alexd): Remove this once we duplicate all the connection name stuff.
-  getConnectionNameFormula?: GetConnectionNameFormula;
   getConnectionName?: MetadataFormula;
   getConnectionUserId?: MetadataFormula;
 
@@ -142,10 +140,8 @@ export interface OAuth2Authentication extends BaseAuthentication {
   tokenPrefix?: string;
   additionalParams?: {[key: string]: any};
   // TODO(oleg): store secrets somewhere better, like in AWS Secrets Manager.
-  appIdEnvVarName?: string;
   clientIdEnvVarName: string;
   clientSecretEnvVarName: string;
-  signingSecretEnvVarName?: string;
 
   // Some OAuth providers will return the API domain with the OAuth response.
   // This is the key in the OAuth response json body that points to the endpoint.
@@ -196,11 +192,6 @@ export interface Format {
   logoPath?: string;
   matchers?: RegExp[];
   placeholder?: string;
-}
-
-export interface Policy {
-  name: string;
-  url: string;
 }
 
 export enum FeatureSet {
@@ -263,6 +254,7 @@ export interface PackDefinition {
   minimumFeatureSet?: FeatureSet;
   quotas?: Partial<{[featureSet in FeatureSet]: Quota}>;
   rateLimits?: RateLimits;
+  formulaNamespace?: string; // TODO: @alan-fang make required
   /**
    * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
    * explicit connection is specified by the user.
@@ -270,9 +262,8 @@ export interface PackDefinition {
   systemConnectionAuthentication?: SystemAuthentication;
 
   // User-facing components
-  formulas?: PackFormulas;
+  formulas?: PackFormulas | TypedStandardFormula[];
   formats?: Format[];
-  policies?: Policy[];
   syncTables?: SyncTable[];
   /**
    * Whether this is a pack that will be used by Coda internally and not exposed directly to users.

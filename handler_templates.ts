@@ -1,11 +1,11 @@
-import {FetchRequest} from './api_types';
-import {FetchResponse} from './api_types';
-import {ObjectSchemaProperty} from './schema';
-import {PackFormulaValue} from './api_types';
-import {ParamDef} from './api_types';
-import {ParamDefs} from './api_types';
-import {Schema} from './schema';
-import {SchemaType} from './schema';
+import type {FetchRequest} from './api_types';
+import type {FetchResponse} from './api_types';
+import type {ObjectSchemaProperty} from './schema';
+import type {PackFormulaValue} from './api_types';
+import type {ParamDef} from './api_types';
+import type {ParamDefs} from './api_types';
+import type {Schema} from './schema';
+import type {SchemaType} from './schema';
 import clone from 'clone';
 import compileTemplate from 'string-template/compile';
 import {ensureExists} from './helpers/ensure';
@@ -17,7 +17,7 @@ type ParamMapper<T> = (val: T) => T;
 
 export interface RequestHandlerTemplate {
   url: string;
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  method: 'GET' | 'PATCH' | 'POST' | 'PUT' | 'DELETE';
   headers?: {[header: string]: string};
   nameMapping?: {[functionParamName: string]: string};
   transforms?: {[name: string]: ParamMapper<any>};
@@ -29,7 +29,6 @@ export interface RequestHandlerTemplate {
 export interface ResponseHandlerTemplate<T extends Schema> {
   schema?: T;
   projectKey?: string;
-  excludeExtraneous?: boolean;
   onError?(error: Error): any;
 }
 
@@ -157,7 +156,7 @@ export function generateRequestHandler<ParamDefsT extends ParamDefs>(
   };
 }
 
-function mapKeys(obj: {[key: string]: any}, excludeExtraneous?: boolean, schema?: Schema): object {
+function mapKeys(obj: {[key: string]: any}, schema?: Schema): object {
   if (!(schema && isObject(schema))) {
     return obj;
   }
@@ -179,30 +178,30 @@ function mapKeys(obj: {[key: string]: any}, excludeExtraneous?: boolean, schema?
     }
 
     const newKey = remappedKeys.get(key) || key;
-    if (excludeExtraneous && !schema.properties[newKey]) {
+    if (!schema.properties[newKey]) {
       continue;
     }
     remappedObject[newKey] = obj[key];
     const keySchema = schema.properties[newKey];
     const currentValue = remappedObject[newKey];
     if (Array.isArray(currentValue) && isArray(keySchema) && isObject(keySchema.items)) {
-      remappedObject[newKey] = currentValue.map(val => mapKeys(val, excludeExtraneous, keySchema.items));
+      remappedObject[newKey] = currentValue.map(val => mapKeys(val, keySchema.items));
     } else if (typeof currentValue === 'object' && isObject(keySchema)) {
-      remappedObject[newKey] = mapKeys(currentValue, excludeExtraneous, keySchema);
+      remappedObject[newKey] = mapKeys(currentValue, keySchema);
     }
   }
   return remappedObject;
 }
 
-export function transformBody(body: any, schema: Schema, excludeExtraneous?: boolean): any {
+export function transformBody(body: any, schema: Schema): any {
   if (isArray(schema) && isObject(schema.items)) {
     const objects = body as Array<Record<string, any>>;
-    const mappedObjs = objects.map(obj => mapKeys(obj, excludeExtraneous, schema.items));
+    const mappedObjs = objects.map(obj => mapKeys(obj, schema.items));
     return mappedObjs;
   }
 
   if (isObject(schema)) {
-    return mapKeys(body, excludeExtraneous, schema);
+    return mapKeys(body, schema);
   }
 
   return body;
@@ -211,16 +210,18 @@ export function transformBody(body: any, schema: Schema, excludeExtraneous?: boo
 export function generateObjectResponseHandler<T extends Schema>(
   response: ResponseHandlerTemplate<T>,
 ): (response: FetchResponse, runtimeSchema?: T) => SchemaType<T> {
-  const {projectKey, schema, excludeExtraneous} = response;
+  const {projectKey, schema} = response;
   return function objectResponseHandler(resp: FetchResponse, runtimeSchema?: T) {
     const {body} = resp;
     if (typeof body !== 'object') {
-      throw new Error(`Invalid response type ${typeof body} for ${body}`);
+      // This is an error, we'll flag it during validation.
+      return body;
     }
 
     const projectedBody = projectKey ? body[projectKey] : body;
     if (!projectedBody) {
-      throw new Error(`Empty value for body, projected ${projectKey}`);
+      // Also an error, we'll flag it during validation.
+      return projectedBody;
     }
 
     // Give precedence to runtime provided schema
@@ -229,6 +230,6 @@ export function generateObjectResponseHandler<T extends Schema>(
       return projectedBody;
     }
 
-    return transformBody(projectedBody, finalSchema, excludeExtraneous);
+    return transformBody(projectedBody, finalSchema);
   };
 }

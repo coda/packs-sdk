@@ -1,5 +1,5 @@
-import { PackId } from './types';
-import { $Values } from './type_utils';
+import type { $Values } from './type_utils';
+import type { PackId } from './types';
 export declare enum ValueType {
     Boolean = "boolean",
     Number = "number",
@@ -163,6 +163,7 @@ export declare type ValidTypes = boolean | number | string | object | boolean[] 
 export declare function generateSchema(obj: ValidTypes): Schema;
 export declare function makeSchema<T extends Schema>(schema: T): T;
 export declare function makeObjectSchema<K extends string, L extends string, T extends ObjectSchema<K, L>>(schema: T): T;
+export declare function normalizeSchemaKey(key: string): string;
 export declare function normalizeSchema<T extends Schema>(schema: T): T;
 export declare function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema): GenericObjectSchema;
 export declare enum SchemaIdPrefix {

@@ -1,5 +1,6 @@
-import {PackId} from './types';
-import {$Values} from './type_utils';
+import type {$Values} from './type_utils';
+import type {PackId} from './types';
+import {assertCondition} from './helpers/ensure';
 import {ensureExists} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
 import pascalcase from 'pascalcase';
@@ -272,10 +273,53 @@ export function makeSchema<T extends Schema>(schema: T): T {
 }
 
 export function makeObjectSchema<K extends string, L extends string, T extends ObjectSchema<K, L>>(schema: T): T {
+  validateObjectSchema(schema);
   return schema;
 }
 
-function normalizeKey(key: string): string {
+function validateObjectSchema<K extends string, L extends string, T extends ObjectSchema<K, L>>(schema: T) {
+  if (schema.codaType === ValueType.Reference) {
+    const {id, identity, primary} = schema;
+
+    checkRequiredFieldInObjectSchema(id, 'id', schema.codaType);
+    checkRequiredFieldInObjectSchema(identity, 'identity', schema.codaType);
+    checkRequiredFieldInObjectSchema(primary, 'primary', schema.codaType);
+
+    checkSchemaPropertyIsRequired(ensureExists(id), schema);
+    checkSchemaPropertyIsRequired(ensureExists(primary), schema);
+  }
+  if (schema.codaType === ValueType.Person) {
+    const {id} = schema;
+    checkRequiredFieldInObjectSchema(id, 'id', schema.codaType);
+    checkSchemaPropertyIsRequired(ensureExists(id), schema);
+  }
+
+  for (const [_propertyKey, propertySchema] of Object.entries(schema.properties)) {
+    if (propertySchema.type === ValueType.Object) {
+      validateObjectSchema(propertySchema);
+    }
+  }
+}
+
+function checkRequiredFieldInObjectSchema(field: any, fieldName: string, codaType: ObjectHintTypes) {
+  ensureExists(
+    field,
+    `Objects with codaType "${codaType}" require a "${fieldName}" property in the schema definition.`,
+  );
+}
+
+function checkSchemaPropertyIsRequired<K extends string, L extends string, T extends ObjectSchema<K, L>>(
+  field: string,
+  schema: T,
+) {
+  const {properties, codaType} = schema;
+  assertCondition(
+    properties[field].required,
+    `Field "${field}" must be marked as required in schema with codaType "${codaType}".`,
+  );
+}
+
+export function normalizeSchemaKey(key: string): string {
   // Colons cause problems in our formula handling.
   return pascalcase(key).replace(/:/g, '_');
 }
@@ -290,7 +334,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     const normalized: ObjectSchemaProperties = {};
     const {id, primary, featured} = schema;
     for (const key of Object.keys(schema.properties)) {
-      const normalizedKey = normalizeKey(key);
+      const normalizedKey = normalizeSchemaKey(key);
       const props = schema.properties[key];
       const {required, fromKey} = props as ObjectSchemaProperty;
       normalized[normalizedKey] = Object.assign(normalizeSchema(props), {
@@ -300,9 +344,9 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     }
     const normalizedSchema = {
       type: ValueType.Object,
-      id: id ? normalizeKey(id) : undefined,
-      featured: featured ? featured.map(normalizeKey) : undefined,
-      primary: primary ? normalizeKey(primary) : undefined,
+      id: id ? normalizeSchemaKey(id) : undefined,
+      featured: featured ? featured.map(normalizeSchemaKey) : undefined,
+      primary: primary ? normalizeSchemaKey(primary) : undefined,
       properties: normalized,
       identity: schema.identity,
       codaType: schema.codaType,

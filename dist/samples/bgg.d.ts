@@ -1,5 +1,5 @@
-import { PackDefinition } from '../types';
-import { PackMetadata } from '../compiled_types';
+import type { PackDefinition } from '../types';
+import type { PackMetadata } from '../compiled_types';
 export declare const FakeBggProviderId = 9010;
 export declare const FakeBggPackId = 8002;
 export declare const FakeBggPackVersion = "0.2.3";

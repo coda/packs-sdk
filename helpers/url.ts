@@ -1,6 +1,6 @@
+import {ensureNonEmptyString} from './ensure';
 import qs from 'qs';
 import urlParse from 'url-parse';
-import {ensureNonEmptyString} from './ensure';
 
 export function withQueryParams(url: string, params?: {[key: string]: any}): string {
   if (!params) {
@@ -32,7 +32,13 @@ export function join(...tokens: string[]): string {
   const combinedTokens: string[] = [];
   for (const token of tokens) {
     ensureNonEmptyString(token);
-    combinedTokens.push(token);
+
+    if (combinedTokens.length === 0) {
+      combinedTokens.push(token);
+    } else {
+      // Ensure tokens (other than the first) don't have leading slashes
+      combinedTokens.push(token.replace(/^\/+/, ''));
+    }
 
     if (!token.endsWith('/')) {
       combinedTokens.push('/');

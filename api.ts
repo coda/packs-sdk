@@ -1,22 +1,23 @@
-import {ArraySchema, StringHintTypes} from './schema';
-import {ArrayType} from './api_types';
-import {CommonPackFormulaDef} from './api_types';
-import {ExecutionContext} from './api_types';
-import {NumberSchema} from './schema';
-import {PackFormulaResult} from './api_types';
-import {ParamArgs} from './api_types';
-import {ParamDefs} from './api_types';
-import {ParamDef} from './api_types';
-import {ParamValues} from './api_types';
-import {RequestHandlerTemplate} from './handler_templates';
-import {ResponseHandlerTemplate} from './handler_templates';
-import {SchemaType} from './schema';
-import {Schema} from './schema';
-import {StringSchema} from './schema';
-import {SyncExecutionContext} from './api_types';
-import {ObjectSchema} from './schema';
+import type {ArraySchema} from './schema';
+import type {ArrayType} from './api_types';
+import type {CommonPackFormulaDef} from './api_types';
+import type {ExecutionContext} from './api_types';
+import type {NumberSchema} from './schema';
+import type {ObjectSchema} from './schema';
+import type {PackFormulaResult} from './api_types';
+import type {ParamArgs} from './api_types';
+import type {ParamDef} from './api_types';
+import type {ParamDefs} from './api_types';
+import type {ParamValues} from './api_types';
+import type {RequestHandlerTemplate} from './handler_templates';
+import type {ResponseHandlerTemplate} from './handler_templates';
+import type {Schema} from './schema';
+import type {SchemaType} from './schema';
+import type {StringHintTypes} from './schema';
+import type {StringSchema} from './schema';
+import type {SyncExecutionContext} from './api_types';
 import {Type} from './api_types';
-import {TypeOf} from './api_types';
+import type {TypeOf} from './api_types';
 import {ValueType} from './schema';
 import {booleanArray} from './api_types';
 import {dateArray} from './api_types';
@@ -32,11 +33,21 @@ import {stringArray} from './api_types';
 
 export {ExecutionContext};
 export {FetchRequest} from './api_types';
+export {Logger} from './api_types';
 
+/**
+ * An error whose message will be shown to the end user in the UI when it occurs.
+ * If an error is encountered in a formula and you want to describe the error
+ * to the end user, throw a UserVisibleError with a user-friendly message
+ * and the Coda UI will display the message.
+ */
 export class UserVisibleError extends Error {
   readonly isUserVisible = true;
-  constructor(message?: string, public internalError?: Error) {
+  readonly internalError: Error | undefined;
+
+  constructor(message?: string, internalError?: Error) {
     super(message);
+    this.internalError = internalError;
   }
 }
 
@@ -48,6 +59,10 @@ export class StatusCodeError extends Error {
   }
 }
 
+/**
+ * Type definition for a Sync Table. Should not be necessary to use directly,
+ * instead, define sync tables using {@link makeSyncTable}.
+ */
 export interface SyncTableDef<
   K extends string,
   L extends string,
@@ -61,6 +76,10 @@ export interface SyncTableDef<
   entityName?: string;
 }
 
+/**
+ * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
+ * instead, define dynamic sync tables using {@link makeDynamicSyncTable}.
+ */
 export interface DynamicSyncTableDef<
   K extends string,
   L extends string,
@@ -74,15 +93,69 @@ export interface DynamicSyncTableDef<
   listDynamicUrls?: MetadataFormula;
 }
 
+/**
+ * Container for arbitrary data about which page of data to retrieve in this sync invocation.
+ *
+ * Sync formulas fetch one reasonable size "page" of data per invocation such that the formula
+ * can be invoked quickly. The end result of a sync is the concatenation of the results from
+ * each individual invocation.
+ *
+ * To instruct the syncer to fetch a subsequent result page, return a `Continuation` that
+ * describes which page of results to fetch next. The continuation will be passed verbatim
+ * as an input to the subsequent invocation of the sync formula.
+ *
+ * The contents of this object are entirely up to the pack author.
+ *
+ * Examples:
+ *
+ * ```
+ * {nextPage: 3}
+ * ```
+ *
+ * ```
+ * {nextPageUrl: 'https://someapi.com/api/items?pageToken=asdf123'}
+ * ```
+ */
 export interface Continuation {
   [key: string]: string | number;
 }
+
+/**
+ * Type definition for the formula that implements a sync table.
+ * Should not be necessary to use directly, see {@link makeSyncTable}
+ * for defining a sync table.
+ */
 export type GenericSyncFormula = SyncFormula<any, any, ParamDefs, any>;
+/**
+ * Type definition for the return value of a sync table.
+ * Should not be necessary to use directly, see {@link makeSyncTable}
+ * for defining a sync table.
+ */
 export type GenericSyncFormulaResult = SyncFormulaResult<any>;
+/**
+ * Type definition for a static (non-dynamic) sync table.
+ * Should not be necessary to use directly, see {@link makeSyncTable}
+ * for defining a sync table.
+ */
 export type GenericSyncTable = SyncTableDef<any, any, ParamDefs, any>;
+/**
+ * Type definition for a dynamic sync table.
+ * Should not be necessary to use directly, see {@link makeDynamicSyncTable}
+ * for defining a sync table.
+ */
 export type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, ParamDefs, any>;
+/**
+ * Union of type definitions for sync tables..
+ * Should not be necessary to use directly, see {@link makeSyncTable} or {@link makeDynamicSyncTable}
+ * for defining a sync table.
+ */
 export type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
 
+/**
+ * Helper to determine if an error is considered user-visible and can be shown in the UI.
+ * See {@link UserVisibleError}.
+ * @param error Any error object.
+ */
 export function isUserVisibleError(error: Error): error is UserVisibleError {
   return 'isUserVisible' in error && (error as any).isUserVisible;
 }
@@ -90,10 +163,6 @@ export function isUserVisibleError(error: Error): error is UserVisibleError {
 export function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDynamicSyncTable {
   return 'isDynamic' in syncTable;
 }
-
-// NOTE[roger] remove once not needed.
-export const PARAM_DESCRIPTION_DOES_NOT_EXIST =
-  'NO PARAMETER DESCRIPTION HAS BEEN ADDED. For guidance, see https://coda.link/param-docs';
 
 export function makeStringParameter(
   name: string,
@@ -202,7 +271,7 @@ export function check(condition: boolean, msg: string) {
 }
 
 export interface PackFormulas {
-  readonly [namespace: string]: TypedPackFormula[];
+  readonly [namespace: string]: TypedStandardFormula[];
 }
 
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult>
@@ -218,7 +287,8 @@ interface StringFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaD
 }
 
 interface ObjectResultFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema>
-  extends PackFormulaDef<ParamsT, SchemaType<SchemaT> | Array<SchemaType<SchemaT>>> {
+  extends PackFormulaDef<ParamsT, object | object[]> {
+  execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<object> | object;
   response?: ResponseHandlerTemplate<SchemaT>;
 }
 
@@ -251,11 +321,12 @@ export type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Sche
   schema?: SchemaT;
 };
 
-export type TypedPackFormula =
+export type TypedStandardFormula =
   | NumericPackFormula<ParamDefs>
   | StringPackFormula<ParamDefs, any>
-  | ObjectPackFormula<ParamDefs, Schema>
-  | GenericSyncFormula;
+  | ObjectPackFormula<ParamDefs, Schema>;
+
+export type TypedPackFormula = TypedStandardFormula | GenericSyncFormula;
 
 type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
@@ -272,23 +343,13 @@ export function isSyncPackFormula(fn: Formula<ParamDefs, any>): fn is GenericSyn
   return Boolean((fn as GenericSyncFormula).isSyncFormula);
 }
 
-interface SyncFormulaResult<ResultT extends object> {
+export interface SyncFormulaResult<ResultT extends object> {
   result: ResultT[];
   continuation?: Continuation;
 }
 
-interface SyncFormulaDef<
-  K extends string,
-  L extends string,
-  ParamsT extends ParamDefs,
-  SchemaT extends ObjectSchema<K, L>
-> extends CommonPackFormulaDef<ParamsT> {
-  execute(
-    params: ParamValues<ParamsT>,
-    context: SyncExecutionContext,
-    continuation?: Continuation,
-    schema?: string,
-  ): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
+interface SyncFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaDef<ParamsT> {
+  execute(params: ParamValues<ParamsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<object>>;
 }
 
 export type SyncFormula<
@@ -296,18 +357,34 @@ export type SyncFormula<
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>
-> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
+> = Omit<SyncFormulaDef<ParamDefsT>, 'execute'> & {
+  execute(
+    params: ParamValues<ParamDefsT>,
+    context: SyncExecutionContext,
+  ): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
   resultType: TypeOf<SchemaType<SchemaT>>;
   isSyncFormula: true;
   schema?: ArraySchema;
 };
 
+/**
+ * Helper for returning the definition of a formula that returns a number. Adds result type information
+ * to a generic formula definition.
+ *
+ * @param definition The definition of a formula that returns a number.
+ */
 export function makeNumericFormula<ParamDefsT extends ParamDefs>(
   definition: PackFormulaDef<ParamDefsT, number>,
 ): NumericPackFormula<ParamDefsT> {
   return Object.assign({}, definition, {resultType: Type.number as Type.number}) as NumericPackFormula<ParamDefsT>;
 }
 
+/**
+ * Helper for returning the definition of a formula that returns a string. Adds result type information
+ * to a generic formula definition.
+ *
+ * @param definition The definition of a formula that returns a string.
+ */
 export function makeStringFormula<ParamDefsT extends ParamDefs>(
   definition: StringFormulaDef<ParamDefsT>,
 ): StringPackFormula<ParamDefsT> {
@@ -318,35 +395,22 @@ export function makeStringFormula<ParamDefsT extends ParamDefs>(
   }) as StringPackFormula<ParamDefsT>;
 }
 
-export type GetConnectionNameFormula = StringPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>]>;
-export function makeGetConnectionNameFormula(
-  execute: (context: ExecutionContext, codaUserName: string) => Promise<string> | string,
-): GetConnectionNameFormula {
-  return makeStringFormula({
-    name: 'getConnectionName',
-    description: 'Return name for new connection.',
-    execute([codaUserName], context) {
-      return execute(context, codaUserName);
-    },
-    parameters: [
-      makeStringParameter('codaUserName', 'The username of the Coda account to use.'),
-      makeStringParameter('authParams', 'The parameters to use for this connection.'),
-    ],
-    examples: [],
-    network: {
-      hasSideEffect: false,
-      hasConnection: true,
-      requiresConnection: true,
-    },
-  });
-}
-
+/**
+ * The return type for a metadata formula that should return a different display to the user
+ * than is used internally.
+ */
 export interface MetadataFormulaObjectResultType {
   display: string;
   value: string | number;
   hasChildren?: boolean;
 }
 
+/**
+ * A context object that is provided to a metadata formula at execution time.
+ * For example, an autocomplete metadata formula for a parameter value may need
+ * to know the value of parameters that have already been selected. Those parameter
+ * values are provided in this context object.
+ */
 export type MetadataContext = Record<string, any>;
 
 export type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
@@ -379,7 +443,6 @@ export function makeMetadataFormula(
     examples: [],
     network: {
       hasSideEffect: false,
-      hasConnection: true,
       requiresConnection: true,
     },
   });
@@ -444,7 +507,7 @@ function isResponseExampleTemplate(obj: any): obj is {example: SchemaType<any>} 
 
 export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({
   response,
-  ...definition // tslint:disable-line: trailing-comma
+  ...definition
 }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT> {
   let schema: Schema | undefined;
   if (response) {
@@ -463,7 +526,7 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
     const wrappedExecute = execute;
     const responseHandler = generateObjectResponseHandler(response);
     execute = async function exec(params: ParamValues<ParamDefsT>, context: ExecutionContext) {
-      let result: SchemaType<SchemaT> | Array<SchemaType<SchemaT>>;
+      let result: object;
       try {
         result = await wrappedExecute(params, context);
       } catch (err) {
@@ -473,7 +536,9 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
           throw err;
         }
       }
-      return responseHandler({body: ensureExists(result), status: 200, headers: {}});
+      return responseHandler({body: ensureExists(result), status: 200, headers: {}}) as
+        | SchemaType<SchemaT>
+        | Array<SchemaType<SchemaT>>;
     };
   }
 
@@ -484,6 +549,29 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
   }) as ObjectPackFormula<ParamDefsT, SchemaT>;
 }
 
+/**
+ * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
+ * using this wrapper rather than declaring a sync table definition object directly.
+ *
+ * This wrapper does a variety of helpful things, including
+ * * Doing basic validation of the provided definition.
+ * * Normalizing the schema definition to conform to Coda-recommended syntax.
+ * * Wrapping the execute formula to normalize return values to match the normalized schema.
+ *
+ * See [Normalization](/index.html#normalization) for more information about schema normalization.
+ *
+ * @param name The name of the sync table. This should describe the entities being synced. For example,
+ * a sync table that syncs products from an e-commerce platform should be called 'Products'. This name
+ * must not contain spaces.
+ * @param schema The definition of the schema that describes a single response object. For example, the
+ * schema for a single product. The sync formula will return an array of objects that fit this schema.
+ * @param formula The definition of the formula that implements this sync. This is a Coda packs formula
+ * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
+ * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
+ * These will eventually be consolidated.)
+ * @param getSchema Only used internally by {@link makeDynamicSyncTable}, see there for more details.
+ * @param entityName Only used internally by {@link makeDynamicSyncTable}, see there for more details.
+ */
 export function makeSyncTable<
   K extends string,
   L extends string,
@@ -492,25 +580,27 @@ export function makeSyncTable<
 >(
   name: string,
   schema: SchemaT,
-  {execute: wrappedExecute, ...definition}: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
+  formula: SyncFormulaDef<ParamDefsT>,
   getSchema?: MetadataFormula,
   entityName?: string,
 ): SyncTableDef<K, L, ParamDefsT, SchemaT> {
-  const formulaSchema = getSchema ? undefined : normalizeSchema({type: ValueType.Array, items: schema});
+  const {execute: wrappedExecute, ...definition} = formula;
+  const formulaSchema = getSchema
+    ? undefined
+    : normalizeSchema<ArraySchema<Schema>>({type: ValueType.Array, items: schema});
   const {identity, id, primary} = schema;
   if (!(primary && id && identity)) {
     throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
   }
 
-  const responseHandler = generateObjectResponseHandler({schema: formulaSchema, excludeExtraneous: true});
-  const execute = async function exec(
-    params: ParamValues<ParamDefsT>,
-    context: SyncExecutionContext,
-    input: Continuation | undefined, // TODO(alexd): Remove
-    runtimeSchema: string | undefined, // TODO(alexd): Remove
-  ) {
-    const {result, continuation} = await wrappedExecute(params, context, input);
-    const appliedSchema = (context.sync && context.sync.schema) || (runtimeSchema && JSON.parse(runtimeSchema));
+  if (name.includes(' ')) {
+    throw new Error('Sync table name should not include spaces');
+  }
+
+  const responseHandler = generateObjectResponseHandler({schema: formulaSchema});
+  const execute = async function exec(params: ParamValues<ParamDefsT>, context: SyncExecutionContext) {
+    const {result, continuation} = await wrappedExecute(params, context);
+    const appliedSchema = context.sync.schema;
     return {
       result: responseHandler({body: ensureExists(result), status: 200, headers: {}}, appliedSchema) as Array<
         SchemaType<SchemaT>
@@ -548,7 +638,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   name: string;
   getName: MetadataFormula;
   getSchema: MetadataFormula;
-  formula: SyncFormulaDef<K, L, ParamDefsT, any>;
+  formula: SyncFormulaDef<ParamDefsT>;
   getDisplayUrl: MetadataFormula;
   listDynamicUrls?: MetadataFormula;
   entityName?: string;
@@ -579,7 +669,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
 
 export function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({
   response,
-  ...definition // tslint:disable-line: trailing-comma
+  ...definition
 }: ObjectArrayFormulaDef<ParamDefsT, ResultT>) {
   const {request, parameters} = definition;
   response.schema = response.schema ? (normalizeSchema(response.schema) as ResultT) : undefined;
@@ -588,8 +678,8 @@ export function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT
   const responseHandler = generateObjectResponseHandler(response);
 
   function execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<SchemaType<ResultT>> {
-    return context
-      .fetcher!.fetch(requestHandler(params))
+    return context.fetcher
+      .fetch(requestHandler(params))
       .catch(err => {
         if (onError) {
           return onError(err);

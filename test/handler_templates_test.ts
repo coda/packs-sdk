@@ -1,3 +1,4 @@
+import './test_helper';
 import {ValueType} from '../schema';
 import {generateObjectResponseHandler} from '../handler_templates';
 import {generateRequestHandler} from '../handler_templates';
@@ -85,9 +86,9 @@ describe('handler templates', () => {
   });
 
   describe('generateObjectResponseHandler', () => {
-    it('throws on undefined projection', () => {
+    it('returns an undefined projection', () => {
       const handler = generateObjectResponseHandler({projectKey: 'FOOBAZ', schema: undefined as any});
-      assert.throws(() => handler({headers: {}, body: {foobaz: []}, status: 200}));
+      assert.equal(undefined, handler({headers: {}, body: {foobaz: []}, status: 200}));
     });
 
     it('projects out a key from the response', () => {
@@ -109,8 +110,18 @@ describe('handler templates', () => {
         },
       });
       assert.deepEqual(
-        handler({headers: {}, body: [{some_thing: 42, cool_thing: 123}, {cool: 456, some_thing: 321}], status: 200}),
-        [{someThing: 42, cool_thing: 123}, {cool: 456, someThing: 321}] as any,
+        handler({
+          headers: {},
+          body: [
+            {some_thing: 42, cool_thing: 123},
+            {cool: 456, some_thing: 321},
+          ],
+          status: 200,
+        }),
+        [
+          {someThing: 42, cool_thing: 123},
+          {someThing: 321},
+        ] as any,
       );
     });
 
@@ -132,7 +143,6 @@ describe('handler templates', () => {
 
     it('removes extraneous keys', () => {
       const handler = generateObjectResponseHandler({
-        excludeExtraneous: true,
         schema: {
           type: ValueType.Object,
           properties: {
@@ -165,7 +175,7 @@ describe('handler templates', () => {
         },
       });
       assert.deepEqual(handler({headers: {}, body: [{some_thing: {this_thing: 12}, cool_thing: 123}], status: 200}), [
-        {some_thing: {somethingElse: 12}, cool_thing: 123},
+        {some_thing: {somethingElse: 12}},
       ] as any);
     });
 
@@ -188,7 +198,7 @@ describe('handler templates', () => {
         },
       });
       assert.deepEqual(handler({headers: {}, body: [{some_thing: {this_thing: 12}, cool_thing: 123}], status: 200}), [
-        {aThing: {somethingElse: 12}, cool_thing: 123},
+        {aThing: {somethingElse: 12}},
       ] as any);
     });
   });

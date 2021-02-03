@@ -2,10 +2,11 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "daily"
+      interval: 'weekly'
+      day: 'tuesday'
     open-pull-requests-limit: 50
     reviewers:
       - "coda-hq/ecosystem"

@@ -30,11 +30,23 @@ bootstrap:
 
 .PHONY: lint
 lint:
-	${ROOTDIR}/node_modules/.bin/tslint --project tsconfig.json
+	find . -name "*.ts" | grep -v /dist/ | grep -v /node_modules/ | grep -v .d.ts | xargs ${ROOTDIR}/node_modules/.bin/eslint
+
+.PHONY: lint-fix
+lint-fix:
+	find . -name "*.ts" | grep -v /dist/ | grep -v /node_modules/ | grep -v .d.ts | xargs ${ROOTDIR}/node_modules/.bin/eslint --fix
 
 .PHONY: compile
 compile:
 	${ROOTDIR}/node_modules/.bin/tsc
+
+.PHONY: docs
+docs:
+	${ROOTDIR}/node_modules/.bin/typedoc index.ts --out ${ROOTDIR}/local-docs --excludeExternals --excludePrivate --excludeProtected
+
+.PHONY: view-docs
+view-docs: docs
+	open ${ROOTDIR}/local-docs/index.html
 
 .PHONY: test
 test:

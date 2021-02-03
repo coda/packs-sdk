@@ -20,7 +20,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeGetConnectionNameFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.PARAM_DESCRIPTION_DOES_NOT_EXIST = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.StatusCodeError = exports.UserVisibleError = void 0;
+exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.StatusCodeError = exports.UserVisibleError = void 0;
 const api_types_1 = require("./api_types");
 const schema_1 = require("./schema");
 const api_types_2 = require("./api_types");
@@ -34,11 +34,17 @@ const schema_2 = require("./schema");
 const schema_3 = require("./schema");
 const api_types_6 = require("./api_types");
 const api_types_7 = require("./api_types");
+/**
+ * An error whose message will be shown to the end user in the UI when it occurs.
+ * If an error is encountered in a formula and you want to describe the error
+ * to the end user, throw a UserVisibleError with a user-friendly message
+ * and the Coda UI will display the message.
+ */
 class UserVisibleError extends Error {
     constructor(message, internalError) {
         super(message);
-        this.internalError = internalError;
         this.isUserVisible = true;
+        this.internalError = internalError;
     }
 }
 exports.UserVisibleError = UserVisibleError;
@@ -49,6 +55,11 @@ class StatusCodeError extends Error {
     }
 }
 exports.StatusCodeError = StatusCodeError;
+/**
+ * Helper to determine if an error is considered user-visible and can be shown in the UI.
+ * See {@link UserVisibleError}.
+ * @param error Any error object.
+ */
 function isUserVisibleError(error) {
     return 'isUserVisible' in error && error.isUserVisible;
 }
@@ -57,8 +68,6 @@ function isDynamicSyncTable(syncTable) {
     return 'isDynamic' in syncTable;
 }
 exports.isDynamicSyncTable = isDynamicSyncTable;
-// NOTE[roger] remove once not needed.
-exports.PARAM_DESCRIPTION_DOES_NOT_EXIST = 'NO PARAMETER DESCRIPTION HAS BEEN ADDED. For guidance, see https://coda.link/param-docs';
 function makeStringParameter(name, description, args = {}) {
     return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_1.Type.string }));
 }
@@ -129,35 +138,27 @@ function isSyncPackFormula(fn) {
     return Boolean(fn.isSyncFormula);
 }
 exports.isSyncPackFormula = isSyncPackFormula;
+/**
+ * Helper for returning the definition of a formula that returns a number. Adds result type information
+ * to a generic formula definition.
+ *
+ * @param definition The definition of a formula that returns a number.
+ */
 function makeNumericFormula(definition) {
     return Object.assign({}, definition, { resultType: api_types_1.Type.number });
 }
 exports.makeNumericFormula = makeNumericFormula;
+/**
+ * Helper for returning the definition of a formula that returns a string. Adds result type information
+ * to a generic formula definition.
+ *
+ * @param definition The definition of a formula that returns a string.
+ */
 function makeStringFormula(definition) {
     const { response } = definition;
     return Object.assign({}, definition, Object.assign({ resultType: api_types_1.Type.string }, (response && { schema: response.schema })));
 }
 exports.makeStringFormula = makeStringFormula;
-function makeGetConnectionNameFormula(execute) {
-    return makeStringFormula({
-        name: 'getConnectionName',
-        description: 'Return name for new connection.',
-        execute([codaUserName], context) {
-            return execute(context, codaUserName);
-        },
-        parameters: [
-            makeStringParameter('codaUserName', 'The username of the Coda account to use.'),
-            makeStringParameter('authParams', 'The parameters to use for this connection.'),
-        ],
-        examples: [],
-        network: {
-            hasSideEffect: false,
-            hasConnection: true,
-            requiresConnection: true,
-        },
-    });
-}
-exports.makeGetConnectionNameFormula = makeGetConnectionNameFormula;
 function makeMetadataFormula(execute) {
     return makeObjectFormula({
         name: 'getMetadata',
@@ -181,7 +182,6 @@ function makeMetadataFormula(execute) {
         examples: [],
         network: {
             hasSideEffect: false,
-            hasConnection: true,
             requiresConnection: true,
         },
     });
@@ -228,8 +228,7 @@ function isResponseExampleTemplate(obj) {
     return obj && obj.example;
 }
 function makeObjectFormula(_a) {
-    var { response } = _a, definition = __rest(_a, ["response"]) // tslint:disable-line: trailing-comma
-    ;
+    var { response } = _a, definition = __rest(_a, ["response"]);
     let schema;
     if (response) {
         if (isResponseHandlerTemplate(response) && response.schema) {
@@ -271,19 +270,46 @@ function makeObjectFormula(_a) {
     });
 }
 exports.makeObjectFormula = makeObjectFormula;
-function makeSyncTable(name, schema, _a, getSchema, entityName) {
-    var { execute: wrappedExecute } = _a, definition = __rest(_a, ["execute"]);
-    const formulaSchema = getSchema ? undefined : schema_3.normalizeSchema({ type: schema_1.ValueType.Array, items: schema });
+/**
+ * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
+ * using this wrapper rather than declaring a sync table definition object directly.
+ *
+ * This wrapper does a variety of helpful things, including
+ * * Doing basic validation of the provided definition.
+ * * Normalizing the schema definition to conform to Coda-recommended syntax.
+ * * Wrapping the execute formula to normalize return values to match the normalized schema.
+ *
+ * See [Normalization](/index.html#normalization) for more information about schema normalization.
+ *
+ * @param name The name of the sync table. This should describe the entities being synced. For example,
+ * a sync table that syncs products from an e-commerce platform should be called 'Products'. This name
+ * must not contain spaces.
+ * @param schema The definition of the schema that describes a single response object. For example, the
+ * schema for a single product. The sync formula will return an array of objects that fit this schema.
+ * @param formula The definition of the formula that implements this sync. This is a Coda packs formula
+ * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
+ * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
+ * These will eventually be consolidated.)
+ * @param getSchema Only used internally by {@link makeDynamicSyncTable}, see there for more details.
+ * @param entityName Only used internally by {@link makeDynamicSyncTable}, see there for more details.
+ */
+function makeSyncTable(name, schema, formula, getSchema, entityName) {
+    const { execute: wrappedExecute } = formula, definition = __rest(formula, ["execute"]);
+    const formulaSchema = getSchema
+        ? undefined
+        : schema_3.normalizeSchema({ type: schema_1.ValueType.Array, items: schema });
     const { identity, id, primary } = schema;
     if (!(primary && id && identity)) {
         throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
     }
-    const responseHandler = handler_templates_1.generateObjectResponseHandler({ schema: formulaSchema, excludeExtraneous: true });
-    const execute = function exec(params, context, input, // TODO(alexd): Remove
-    runtimeSchema) {
+    if (name.includes(' ')) {
+        throw new Error('Sync table name should not include spaces');
+    }
+    const responseHandler = handler_templates_1.generateObjectResponseHandler({ schema: formulaSchema });
+    const execute = function exec(params, context) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { result, continuation } = yield wrappedExecute(params, context, input);
-            const appliedSchema = (context.sync && context.sync.schema) || (runtimeSchema && JSON.parse(runtimeSchema));
+            const { result, continuation } = yield wrappedExecute(params, context);
+            const appliedSchema = context.sync.schema;
             return {
                 result: responseHandler({ body: ensure_1.ensureExists(result), status: 200, headers: {} }, appliedSchema),
                 continuation,
@@ -321,16 +347,15 @@ function makeDynamicSyncTable({ packId, name, getName, getSchema, getDisplayUrl,
 }
 exports.makeDynamicSyncTable = makeDynamicSyncTable;
 function makeTranslateObjectFormula(_a) {
-    var { response } = _a, definition = __rest(_a, ["response"]) // tslint:disable-line: trailing-comma
-    ;
+    var { response } = _a, definition = __rest(_a, ["response"]);
     const { request, parameters } = definition;
     response.schema = response.schema ? schema_3.normalizeSchema(response.schema) : undefined;
     const { onError } = response;
     const requestHandler = handler_templates_2.generateRequestHandler(request, parameters);
     const responseHandler = handler_templates_1.generateObjectResponseHandler(response);
     function execute(params, context) {
-        return context
-            .fetcher.fetch(requestHandler(params))
+        return context.fetcher
+            .fetch(requestHandler(params))
             .catch(err => {
             if (onError) {
                 return onError(err);

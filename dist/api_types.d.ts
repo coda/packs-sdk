@@ -1,8 +1,8 @@
 /// <reference types="node" />
-import { $Values } from './type_utils';
-import { MetadataFormula } from './api';
-import { Continuation } from './api';
-import { ArraySchema } from './schema';
+import type { $Values } from './type_utils';
+import type { ArraySchema } from './schema';
+import type { Continuation } from './api';
+import type { MetadataFormula } from './api';
 export declare enum Type {
     string = 0,
     number = 1,
@@ -74,12 +74,11 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
     readonly isSystem?: boolean;
 }
 export interface Network {
-    readonly hasSideEffect: boolean;
-    readonly hasConnection?: boolean;
+    readonly hasSideEffect?: boolean;
     readonly requiresConnection?: boolean;
 }
 export interface FetchRequest {
-    method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+    method: 'GET' | 'PATCH' | 'POST' | 'PUT' | 'DELETE';
     url: string;
     body?: string;
     form?: {
@@ -90,6 +89,7 @@ export interface FetchRequest {
     };
     cacheTtlSecs?: number;
     isBinaryResponse?: boolean;
+    disableAuthentication?: boolean;
 }
 export interface FetchResponse<T extends any = any> {
     status: number;
@@ -114,9 +114,18 @@ export interface Sync {
     schema?: ArraySchema;
     dynamicUrl?: string;
 }
+export declare type LoggerParamType = string | number | boolean | Record<any, any>;
+export interface Logger {
+    trace(message: string, ...args: LoggerParamType[]): void;
+    debug(message: string, ...args: LoggerParamType[]): void;
+    info(message: string, ...args: LoggerParamType[]): void;
+    warn(message: string, ...args: LoggerParamType[]): void;
+    error(message: string, ...args: LoggerParamType[]): void;
+}
 export interface ExecutionContext {
-    readonly fetcher?: Fetcher;
-    readonly temporaryBlobStorage?: TemporaryBlobStorage;
+    readonly fetcher: Fetcher;
+    readonly temporaryBlobStorage: TemporaryBlobStorage;
+    readonly logger: Logger;
     readonly endpoint?: string;
     readonly invocationLocation: {
         protocolAndHost: string;

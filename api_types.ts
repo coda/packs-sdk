@@ -1,7 +1,7 @@
-import {$Values} from './type_utils';
-import {MetadataFormula} from './api';
-import {Continuation} from './api';
-import {ArraySchema} from './schema';
+import type {$Values} from './type_utils';
+import type {ArraySchema} from './schema';
+import type {Continuation} from './api';
+import type {MetadataFormula} from './api';
 
 export enum Type {
   string,
@@ -130,8 +130,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 }
 
 export interface Network {
-  readonly hasSideEffect: boolean;
-  readonly hasConnection?: boolean;
+  readonly hasSideEffect?: boolean;
   readonly requiresConnection?: boolean;
 }
 
@@ -139,7 +138,7 @@ export interface Network {
 
 // Copied from https://developer.mozilla.org/en-US/docs/Web/API/Request
 export interface FetchRequest {
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  method: 'GET' | 'PATCH' | 'POST' | 'PUT' | 'DELETE';
   url: string;
   body?: string;
   form?: {[key: string]: string};
@@ -148,6 +147,8 @@ export interface FetchRequest {
   cacheTtlSecs?: number;
   // Allows binary responses.
   isBinaryResponse?: boolean;
+  // Disable authentication
+  disableAuthentication?: boolean;
 }
 
 // Copied from https://developer.mozilla.org/en-US/docs/Web/API/Response
@@ -172,9 +173,20 @@ export interface Sync {
   dynamicUrl?: string;
 }
 
+export type LoggerParamType = string | number | boolean | Record<any, any>;
+
+export interface Logger {
+  trace(message: string, ...args: LoggerParamType[]): void;
+  debug(message: string, ...args: LoggerParamType[]): void;
+  info(message: string, ...args: LoggerParamType[]): void;
+  warn(message: string, ...args: LoggerParamType[]): void;
+  error(message: string, ...args: LoggerParamType[]): void;
+}
+
 export interface ExecutionContext {
-  readonly fetcher?: Fetcher;
-  readonly temporaryBlobStorage?: TemporaryBlobStorage;
+  readonly fetcher: Fetcher;
+  readonly temporaryBlobStorage: TemporaryBlobStorage;
+  readonly logger: Logger;
   readonly endpoint?: string;
   readonly invocationLocation: {
     protocolAndHost: string;

@@ -1,5 +1,5 @@
-import { PackDefinition } from '../types';
-import { PackMetadata } from '../compiled_types';
+import type { PackDefinition } from '../types';
+import type { PackMetadata } from '../compiled_types';
 import { ValueType } from '../schema';
 export declare const FakeNpmProviderId = 9011;
 export declare const FakeNpmPackId = 8003;
@@ -32,6 +32,7 @@ export declare const personSchema: {
     properties: {
         email: {
             type: ValueType.String;
+            required: true;
         };
         name: {
             type: ValueType.String;
@@ -62,6 +63,7 @@ export declare const packageSchema: {
             properties: {
                 email: {
                     type: ValueType.String;
+                    required: true;
                 };
                 name: {
                     type: ValueType.String;

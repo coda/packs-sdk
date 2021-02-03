@@ -17,14 +17,23 @@ function fakeDefinitionToDefinition(def) {
 }
 exports.fakeDefinitionToDefinition = fakeDefinitionToDefinition;
 function fakeDefinitionToMetadata(def) {
-    const { formulas: originalFormulas, defaultAuthentication: originalDefaultAuthentication, formats: originalFormats, syncTables: originalSyncTables } = def, packMetadata = __rest(def, ["formulas", "defaultAuthentication", "formats", "syncTables"]) // tslint:disable-line:trailing-comma
-    ;
-    const formulas = {};
-    for (const namespace of Object.keys(originalFormulas || {})) {
-        formulas[namespace] = originalFormulas[namespace].map(formula => {
+    const { formulas: originalFormulas, defaultAuthentication: originalDefaultAuthentication, formats: originalFormats, syncTables: originalSyncTables } = def, packMetadata = __rest(def, ["formulas", "defaultAuthentication", "formats", "syncTables"]);
+    let formulas;
+    if (Array.isArray(originalFormulas)) {
+        formulas = originalFormulas.map(formula => {
             const { execute } = formula, formulaMetadata = __rest(formula, ["execute"]);
             return formulaMetadata;
         });
+    }
+    else {
+        // TODO: @alan-fang delete once all packs have been migrated to use formulaNamespace
+        formulas = {};
+        for (const namespace of Object.keys(originalFormulas || {})) {
+            formulas[namespace] = originalFormulas[namespace].map(formula => {
+                const { execute } = formula, formulaMetadata = __rest(formula, ["execute"]);
+                return formulaMetadata;
+            });
+        }
     }
     const formats = [];
     for (let _a of originalFormats || []) {
@@ -33,20 +42,14 @@ function fakeDefinitionToMetadata(def) {
     }
     let defaultAuthentication = originalDefaultAuthentication;
     if (originalDefaultAuthentication &&
-        'getConnectionNameFormula' in originalDefaultAuthentication &&
-        originalDefaultAuthentication.getConnectionNameFormula) {
-        const _b = originalDefaultAuthentication.getConnectionNameFormula, { execute } = _b, connNameFormula = __rest(_b, ["execute"]);
-        defaultAuthentication = Object.assign(Object.assign({}, originalDefaultAuthentication), { getConnectionNameFormula: Object.assign({}, connNameFormula) });
-    }
-    if (originalDefaultAuthentication &&
         'getConnectionName' in originalDefaultAuthentication &&
         originalDefaultAuthentication.getConnectionName) {
-        const _c = originalDefaultAuthentication.getConnectionName, { execute } = _c, connNameFormula = __rest(_c, ["execute"]);
+        const _b = originalDefaultAuthentication.getConnectionName, { execute } = _b, connNameFormula = __rest(_b, ["execute"]);
         defaultAuthentication = Object.assign(Object.assign({}, originalDefaultAuthentication), { getConnectionName: Object.assign({}, connNameFormula) });
     }
     const syncTables = [];
-    for (let _d of originalSyncTables || []) {
-        const { getter, getSchema } = _d, others = __rest(_d, ["getter", "getSchema"]);
+    for (let _c of originalSyncTables || []) {
+        const { getter, getSchema } = _c, others = __rest(_c, ["getter", "getSchema"]);
         const { execute } = getter, otherGetter = __rest(getter, ["execute"]);
         syncTables.push(Object.assign({ getter: Object.assign({}, otherGetter), hasDynamicSchema: Boolean(getSchema) }, others));
     }

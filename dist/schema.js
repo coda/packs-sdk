@@ -3,9 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSchemaId = exports.SchemaIdPrefix = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.DurationUnit = exports.CurrencyFormat = exports.ValueType = void 0;
+exports.getSchemaId = exports.SchemaIdPrefix = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.DurationUnit = exports.CurrencyFormat = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const ensure_2 = require("./helpers/ensure");
+const ensure_3 = require("./helpers/ensure");
 const pascalcase_1 = __importDefault(require("pascalcase"));
 // Defines a subset of the JSON Object schema for use in annotating API results.
 // http://json-schema.org/latest/json-schema-core.html#rfc.section.8.2
@@ -94,7 +95,7 @@ function generateSchema(obj) {
     else if (typeof obj === 'number') {
         return { type: ValueType.Number };
     }
-    return ensure_2.ensureUnreachable(obj);
+    return ensure_3.ensureUnreachable(obj);
 }
 exports.generateSchema = generateSchema;
 function makeSchema(schema) {
@@ -102,13 +103,42 @@ function makeSchema(schema) {
 }
 exports.makeSchema = makeSchema;
 function makeObjectSchema(schema) {
+    validateObjectSchema(schema);
     return schema;
 }
 exports.makeObjectSchema = makeObjectSchema;
-function normalizeKey(key) {
+function validateObjectSchema(schema) {
+    if (schema.codaType === ValueType.Reference) {
+        const { id, identity, primary } = schema;
+        checkRequiredFieldInObjectSchema(id, 'id', schema.codaType);
+        checkRequiredFieldInObjectSchema(identity, 'identity', schema.codaType);
+        checkRequiredFieldInObjectSchema(primary, 'primary', schema.codaType);
+        checkSchemaPropertyIsRequired(ensure_2.ensureExists(id), schema);
+        checkSchemaPropertyIsRequired(ensure_2.ensureExists(primary), schema);
+    }
+    if (schema.codaType === ValueType.Person) {
+        const { id } = schema;
+        checkRequiredFieldInObjectSchema(id, 'id', schema.codaType);
+        checkSchemaPropertyIsRequired(ensure_2.ensureExists(id), schema);
+    }
+    for (const [_propertyKey, propertySchema] of Object.entries(schema.properties)) {
+        if (propertySchema.type === ValueType.Object) {
+            validateObjectSchema(propertySchema);
+        }
+    }
+}
+function checkRequiredFieldInObjectSchema(field, fieldName, codaType) {
+    ensure_2.ensureExists(field, `Objects with codaType "${codaType}" require a "${fieldName}" property in the schema definition.`);
+}
+function checkSchemaPropertyIsRequired(field, schema) {
+    const { properties, codaType } = schema;
+    ensure_1.assertCondition(properties[field].required, `Field "${field}" must be marked as required in schema with codaType "${codaType}".`);
+}
+function normalizeSchemaKey(key) {
     // Colons cause problems in our formula handling.
     return pascalcase_1.default(key).replace(/:/g, '_');
 }
+exports.normalizeSchemaKey = normalizeSchemaKey;
 function normalizeSchema(schema) {
     if (isArray(schema)) {
         return {
@@ -120,7 +150,7 @@ function normalizeSchema(schema) {
         const normalized = {};
         const { id, primary, featured } = schema;
         for (const key of Object.keys(schema.properties)) {
-            const normalizedKey = normalizeKey(key);
+            const normalizedKey = normalizeSchemaKey(key);
             const props = schema.properties[key];
             const { required, fromKey } = props;
             normalized[normalizedKey] = Object.assign(normalizeSchema(props), {
@@ -130,9 +160,9 @@ function normalizeSchema(schema) {
         }
         const normalizedSchema = {
             type: ValueType.Object,
-            id: id ? normalizeKey(id) : undefined,
-            featured: featured ? featured.map(normalizeKey) : undefined,
-            primary: primary ? normalizeKey(primary) : undefined,
+            id: id ? normalizeSchemaKey(id) : undefined,
+            featured: featured ? featured.map(normalizeSchemaKey) : undefined,
+            primary: primary ? normalizeSchemaKey(primary) : undefined,
             properties: normalized,
             identity: schema.identity,
             codaType: schema.codaType,
@@ -149,8 +179,8 @@ exports.normalizeSchema = normalizeSchema;
 // schema it provides better code reuse to derive a reference schema instead.
 function makeReferenceSchemaFromObjectSchema(schema) {
     const { type, id, primary, identity, properties } = schema;
-    ensure_1.ensureExists(identity);
-    const validId = ensure_1.ensureExists(id);
+    ensure_2.ensureExists(identity);
+    const validId = ensure_2.ensureExists(id);
     const referenceProperties = { [validId]: properties[validId] };
     if (primary && primary !== id) {
         referenceProperties[primary] = properties[primary];

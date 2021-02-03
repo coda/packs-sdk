@@ -1,7 +1,7 @@
-import { GetConnectionNameFormula } from './api';
-import { MetadataFormula } from './api';
-import { PackFormulas } from './api';
-import { SyncTable } from './api';
+import type { MetadataFormula } from './api';
+import type { PackFormulas } from './api';
+import type { SyncTable } from './api';
+import type { TypedStandardFormula } from './api';
 export declare type PackId = number;
 export declare type ProviderId = number;
 export declare enum PackCategory {
@@ -51,7 +51,6 @@ export interface PostSetup {
     getOptionsFormula: MetadataFormula;
 }
 interface BaseAuthentication {
-    getConnectionNameFormula?: GetConnectionNameFormula;
     getConnectionName?: MetadataFormula;
     getConnectionUserId?: MetadataFormula;
     defaultConnectionType?: DefaultConnectionType;
@@ -114,10 +113,8 @@ export interface OAuth2Authentication extends BaseAuthentication {
     additionalParams?: {
         [key: string]: any;
     };
-    appIdEnvVarName?: string;
     clientIdEnvVarName: string;
     clientSecretEnvVarName: string;
-    signingSecretEnvVarName?: string;
     endpointKey?: string;
 }
 export interface WebBasicAuthentication extends BaseAuthentication {
@@ -143,10 +140,6 @@ export interface Format {
     logoPath?: string;
     matchers?: RegExp[];
     placeholder?: string;
-}
-export interface Policy {
-    name: string;
-    url: string;
 }
 export declare enum FeatureSet {
     Basic = "Basic",
@@ -204,14 +197,14 @@ export interface PackDefinition {
         [featureSet in FeatureSet]: Quota;
     }>;
     rateLimits?: RateLimits;
+    formulaNamespace?: string;
     /**
      * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
      * explicit connection is specified by the user.
      */
     systemConnectionAuthentication?: SystemAuthentication;
-    formulas?: PackFormulas;
+    formulas?: PackFormulas | TypedStandardFormula[];
     formats?: Format[];
-    policies?: Policy[];
     syncTables?: SyncTable[];
     /**
      * Whether this is a pack that will be used by Coda internally and not exposed directly to users.
