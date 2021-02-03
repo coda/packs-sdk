@@ -50,7 +50,10 @@ export interface SetEndpoint {
     description: string;
     getOptionsFormula: MetadataFormula;
 }
-export declare type PostSetup = SetEndpoint;
+export declare enum PostSetupType {
+    SetEndpoint = 0
+}
+export declare type PostSetup = PostSetupType;
 interface BaseAuthentication {
     getConnectionName?: MetadataFormula;
     getConnectionUserId?: MetadataFormula;
