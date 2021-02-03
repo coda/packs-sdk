@@ -45,11 +45,12 @@ export declare enum DefaultConnectionType {
 export interface NoAuthentication {
     type: AuthenticationType.None;
 }
-export interface PostSetup {
-    name: 'endpoint' | string;
+export interface SetEndpoint {
+    name: 'endpoint';
     description: string;
     getOptionsFormula: MetadataFormula;
 }
+export declare type PostSetup = SetEndpoint;
 interface BaseAuthentication {
     getConnectionName?: MetadataFormula;
     getConnectionUserId?: MetadataFormula;
