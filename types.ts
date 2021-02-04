@@ -52,16 +52,18 @@ export interface NoAuthentication {
 }
 
 export interface SetEndpoint {
+  type: PostSetupType.SetEndpoint;
+  // TODO: Remove after experimental uses `type`.
   name: 'endpoint';
   description: string;
   getOptionsFormula: MetadataFormula;
 }
 
 export enum PostSetupType {
-  SetEndpoint,
+  SetEndpoint = 'SetEndPoint',
 }
 
-export type PostSetup = PostSetupType;
+export type PostSetup = SetEndpoint;
 
 interface BaseAuthentication {
   getConnectionName?: MetadataFormula;

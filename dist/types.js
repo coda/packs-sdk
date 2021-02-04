@@ -41,7 +41,7 @@ var DefaultConnectionType;
 })(DefaultConnectionType = exports.DefaultConnectionType || (exports.DefaultConnectionType = {}));
 var PostSetupType;
 (function (PostSetupType) {
-    PostSetupType[PostSetupType["SetEndpoint"] = 0] = "SetEndpoint";
+    PostSetupType["SetEndpoint"] = "SetEndPoint";
 })(PostSetupType = exports.PostSetupType || (exports.PostSetupType = {}));
 var FeatureSet;
 (function (FeatureSet) {
