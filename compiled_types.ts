@@ -6,6 +6,7 @@ import type {MetadataFormula} from './api';
 import type {ObjectPackFormulaMetadata} from './api';
 import type {PackDefinition} from './types';
 import type {PackFormulaMetadata} from './api';
+import type {PostSetup} from './types';
 import type {SyncTable} from './api';
 
 // TODO(alexd): Uncomment the getSchema stripping.
@@ -61,11 +62,7 @@ export interface ExternalPackMetadata extends BasePackMetadata {
     params?: Array<{name: string; description: string}>;
     requiresEndpointUrl: boolean;
     endpointDomain?: string;
-    postSetup?: Array<{
-      name: string;
-      description: string;
-      getOptionsFormula: PackFormulaMetadata;
-    }>;
+    postSetup?: PostSetup[];
     deferConnectionSetup?: boolean;
     shouldAutoAuthSetup?: boolean;
   };
