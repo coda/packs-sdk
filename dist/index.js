@@ -19,8 +19,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DurationUnit = exports.CurrencyFormat = exports.schema = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeStringFormula = exports.makeObjectFormula = exports.makeNumericFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makeMetadataFormula = exports.makeUserVisibleError = exports.isUserVisibleError = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.isDynamicSyncTable = exports.isArrayType = exports.UserVisibleError = exports.Type = exports.StatusCodeError = exports.PrecannedDateRange = exports.SyncInterval = exports.QuotaLimitType = exports.PackCategory = exports.DefaultConnectionType = exports.FeatureSet = exports.AuthenticationType = void 0;
-exports.makeSchema = exports.makeObjectSchema = exports.ValueType = void 0;
+exports.CurrencyFormat = exports.schema = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeStringFormula = exports.makeObjectFormula = exports.makeNumericFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makeMetadataFormula = exports.makeUserVisibleError = exports.isUserVisibleError = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.isDynamicSyncTable = exports.isArrayType = exports.UserVisibleError = exports.Type = exports.StatusCodeError = exports.PrecannedDateRange = exports.SyncInterval = exports.QuotaLimitType = exports.PostSetupType = exports.PackCategory = exports.DefaultConnectionType = exports.FeatureSet = exports.AuthenticationType = void 0;
+exports.makeSchema = exports.makeObjectSchema = exports.ValueType = exports.DurationUnit = void 0;
 var types_1 = require("./types");
 Object.defineProperty(exports, "AuthenticationType", { enumerable: true, get: function () { return types_1.AuthenticationType; } });
 var types_2 = require("./types");
@@ -30,9 +30,11 @@ Object.defineProperty(exports, "DefaultConnectionType", { enumerable: true, get:
 var types_4 = require("./types");
 Object.defineProperty(exports, "PackCategory", { enumerable: true, get: function () { return types_4.PackCategory; } });
 var types_5 = require("./types");
-Object.defineProperty(exports, "QuotaLimitType", { enumerable: true, get: function () { return types_5.QuotaLimitType; } });
+Object.defineProperty(exports, "PostSetupType", { enumerable: true, get: function () { return types_5.PostSetupType; } });
 var types_6 = require("./types");
-Object.defineProperty(exports, "SyncInterval", { enumerable: true, get: function () { return types_6.SyncInterval; } });
+Object.defineProperty(exports, "QuotaLimitType", { enumerable: true, get: function () { return types_6.QuotaLimitType; } });
+var types_7 = require("./types");
+Object.defineProperty(exports, "SyncInterval", { enumerable: true, get: function () { return types_7.SyncInterval; } });
 var api_types_1 = require("./api_types");
 Object.defineProperty(exports, "PrecannedDateRange", { enumerable: true, get: function () { return api_types_1.PrecannedDateRange; } });
 var api_1 = require("./api");
