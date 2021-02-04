@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.DefaultConnectionType = exports.AuthenticationType = exports.PackCategory = void 0;
+exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.PostSetupType = exports.DefaultConnectionType = exports.AuthenticationType = exports.PackCategory = void 0;
 var PackCategory;
 (function (PackCategory) {
     PackCategory["CRM"] = "CRM";
@@ -39,6 +39,10 @@ var DefaultConnectionType;
     DefaultConnectionType[DefaultConnectionType["Shared"] = 2] = "Shared";
     DefaultConnectionType[DefaultConnectionType["ProxyActionsOnly"] = 3] = "ProxyActionsOnly";
 })(DefaultConnectionType = exports.DefaultConnectionType || (exports.DefaultConnectionType = {}));
+var PostSetupType;
+(function (PostSetupType) {
+    PostSetupType["SetEndpoint"] = "SetEndPoint";
+})(PostSetupType = exports.PostSetupType || (exports.PostSetupType = {}));
 var FeatureSet;
 (function (FeatureSet) {
     FeatureSet["Basic"] = "Basic";
