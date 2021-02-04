@@ -204,7 +204,7 @@ export interface SyncExecutionContext extends ExecutionContext {
   readonly sync: Sync;
 }
 
-// A mapping exists in experimental that allows these to show up in the UI.
+// A mapping exists in coda that allows these to show up in the UI.
 // If adding new values here, add them to that mapping and vice versa.
 export enum PrecannedDateRange {
   // Past
