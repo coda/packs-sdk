@@ -47,7 +47,7 @@ export interface NoAuthentication {
 }
 export interface SetEndpoint {
     type: PostSetupType.SetEndpoint;
-    name: 'endpoint';
+    name: string;
     description: string;
     getOptionsFormula: MetadataFormula;
 }

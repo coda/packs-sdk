@@ -53,8 +53,7 @@ export interface NoAuthentication {
 
 export interface SetEndpoint {
   type: PostSetupType.SetEndpoint;
-  // TODO: Remove after experimental uses `type`.
-  name: 'endpoint';
+  name: string;
   description: string;
   getOptionsFormula: MetadataFormula;
 }
