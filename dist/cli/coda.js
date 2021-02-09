@@ -205,5 +205,6 @@ if (require.main === module) {
         handler: handleInit,
     })
         .demandCommand()
+        .strict()
         .help().argv;
 }
