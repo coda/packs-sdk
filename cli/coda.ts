@@ -148,11 +148,12 @@ async function handleInit() {
 
 async function handleRegister({apiToken}: Arguments<RegisterArgs>) {
   if (!apiToken) {
+    const shouldOpenBrowser = promptForInput('No API token provided. Do you want to visit Coda to create one? ');
+    if (shouldOpenBrowser.toLocaleLowerCase() !== 'y') {
+      return process.exit(1);
+    }
     await open('https://coda.io/account');
-    apiToken = promptForInput(
-      'No API token provided. Please visit coda.io/account to create one and paste the token here: ',
-      {mask: true},
-    );
+    apiToken = promptForInput('Please paste the token here: ', {mask: true});
   }
 
   const auth: CodaApiBearerTokenAuthentication = {
@@ -251,7 +252,7 @@ if (require.main === module) {
       handler: handleInit,
     })
     .command({
-      command: 'register',
+      command: 'register [apiToken]',
       describe: 'Register API token to publish a pack',
       handler: handleRegister,
     })
