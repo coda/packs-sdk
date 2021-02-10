@@ -6,6 +6,7 @@ import type {PackDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
 import type {SyncExecutionContext} from '../api_types';
+import type {SyncFormulaResult} from '../api';
 import type {TypedStandardFormula} from '../api';
 import {coerceParams} from './coercion';
 import {getManifestFromModule} from './helpers';
@@ -40,7 +41,12 @@ export async function executeFormula(
   if (shouldValidateParams) {
     validateParams(formula, params);
   }
-  const result = await formula.execute(params, context);
+  let result: any;
+  try {
+    result = await formula.execute(params, context);
+  } catch (err) {
+    throw wrapError(err);
+  }
   if (shouldValidateResult) {
     validateResult(formula, result);
   }
@@ -135,7 +141,12 @@ export async function executeSyncFormula(
         `Sync is still running after ${maxIterations} iterations, this is likely due to an infinite loop. If more iterations are needed, use the maxIterations option.`,
       );
     }
-    const response = await formula.execute(params, context);
+    let response: SyncFormulaResult<any>;
+    try {
+      response = await formula.execute(params, context);
+    } catch (err) {
+      return wrapError(err);
+    }
     result.push(...response.result);
     context.sync.continuation = response.continuation;
     iterations++;
@@ -233,4 +244,14 @@ function tryFindSyncFormula(packDef: PackDefinition, syncFormulaName: string): G
   try {
     return findSyncFormula(packDef, syncFormulaName);
   } catch (_err) {}
+}
+
+function wrapError(err: Error): Error {
+  if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
+    err.message +=
+      '\nThis means your formula was invoked with a mock fetcher that had no response configured.' +
+      '\nThis usually means you invoked your formula from the commandline with `coda execute` but forgot to add the --fetch flag ' +
+      'to actually fetch from the remote API.';
+  }
+  return err;
 }
