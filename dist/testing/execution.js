@@ -24,7 +24,13 @@ function executeFormula(formula, params, context = mocks_1.newMockExecutionConte
         if (shouldValidateParams) {
             validation_1.validateParams(formula, params);
         }
-        const result = yield formula.execute(params, context);
+        let result;
+        try {
+            result = yield formula.execute(params, context);
+        }
+        catch (err) {
+            throw wrapError(err);
+        }
         if (shouldValidateResult) {
             validation_2.validateResult(formula, result);
         }
@@ -81,7 +87,13 @@ function executeSyncFormula(formula, params, context = mocks_2.newMockSyncExecut
             if (iterations > maxIterations) {
                 throw new Error(`Sync is still running after ${maxIterations} iterations, this is likely due to an infinite loop. If more iterations are needed, use the maxIterations option.`);
             }
-            const response = yield formula.execute(params, context);
+            let response;
+            try {
+                response = yield formula.execute(params, context);
+            }
+            catch (err) {
+                return wrapError(err);
+            }
             result.push(...response.result);
             context.sync.continuation = response.continuation;
             iterations++;
@@ -155,4 +167,13 @@ function tryFindSyncFormula(packDef, syncFormulaName) {
         return findSyncFormula(packDef, syncFormulaName);
     }
     catch (_err) { }
+}
+function wrapError(err) {
+    if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
+        err.message +=
+            '\nThis means your formula was invoked with a mock fetcher that had no response configured.' +
+                '\nThis usually means you invoked your formula from the commandline with `coda execute` but forgot to add the --fetch flag ' +
+                'to actually fetch from the remote API.';
+    }
+    return err;
 }
