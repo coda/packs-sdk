@@ -238,7 +238,7 @@ export function readCredentialsFile(credentialsFile: string = DEFAULT_CREDENTIAL
   return JSON.parse(file.toString());
 }
 
-function writeCredentialsFile(credentialsFile: string, allCredentials: AllCredentials): void {
+export function writeCredentialsFile(credentialsFile: string, allCredentials: AllCredentials): void {
   ensureNonEmptyString(credentialsFile);
   const dirname = path.dirname(credentialsFile);
   if (!fs.existsSync(dirname)) {

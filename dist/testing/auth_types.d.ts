@@ -1,5 +1,5 @@
 export interface AllCredentials {
-    [packName: string]: Credentials;
+    [name: string]: Credentials;
 }
 interface BaseCredentials {
     endpointUrl?: string;

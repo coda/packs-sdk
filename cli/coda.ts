@@ -1,14 +1,22 @@
 #!/usr/bin/env node
 
 import type {Arguments} from 'yargs';
+import {AuthenticatingFetcher} from '../testing/fetcher';
+import {AuthenticationType} from '../types';
+import type {CodaApiBearerTokenAuthentication} from '../types';
 import {DEFAULT_CREDENTIALS_FILE} from '../testing/auth';
 import {DEFAULT_OAUTH_SERVER_PORT} from '../testing/auth';
+import type {FetchRequest} from 'api';
 import type {Options} from 'yargs';
 import {executeFormulaOrSyncFromCLI} from '../testing/execution';
 import fs from 'fs';
 import path from 'path';
+import {printAndExit} from '../testing/helpers';
+import {promptForInput} from '../testing/helpers';
+import {readCredentialsFile} from '../testing/auth';
 import {setupAuthFromModule} from '../testing/auth';
 import {spawnSync} from 'child_process';
+import {writeCredentialsFile} from '../testing/auth';
 import yargs from 'yargs';
 
 interface ExecuteArgs {
@@ -23,6 +31,10 @@ interface AuthArgs {
   manifestPath: string;
   credentialsFile?: string;
   oauthServerPort?: number;
+}
+
+interface RegisterArgs {
+  apiToken?: string;
 }
 
 const EXECUTE_BOOTSTRAP_CODE = `
@@ -132,6 +144,40 @@ async function handleInit() {
   }
 }
 
+async function handleRegister({apiToken}: Arguments<RegisterArgs>) {
+  const API_TOKEN_FILE_PATH = '.coda/credentials.json';
+  if (!apiToken) {
+    apiToken = promptForInput(
+      'No API token provided. Please visit coda.io/account to create one and paste the token here: ',
+      {mask: true},
+    );
+  }
+
+  const auth: CodaApiBearerTokenAuthentication = {
+    type: AuthenticationType.CodaApiHeaderBearerToken,
+  };
+  const fetcher = new AuthenticatingFetcher(auth, {token: apiToken});
+  const request: FetchRequest = {
+    method: 'GET',
+    url: 'https://coda.io/apis/v1/whoami',
+  };
+  const resp = await fetcher.fetch(request);
+  if (resp.status === 401) {
+    printAndExit('Invalid API token provided.');
+  }
+
+  const existingCredentials = readCredentialsFile(API_TOKEN_FILE_PATH);
+  if (existingCredentials) {
+    const input = promptForInput(
+      `API token file ${API_TOKEN_FILE_PATH} already exists, press "y" to overwrite or "n" to cancel: `,
+    );
+    if (input.toLocaleLowerCase() !== 'y') {
+      return process.exit(1);
+    }
+  }
+  writeCredentialsFile(API_TOKEN_FILE_PATH, {Coda: {token: apiToken}});
+}
+
 function isTypescript(path: string): boolean {
   return path.toLowerCase().endsWith('.ts');
 }
@@ -198,6 +244,11 @@ if (require.main === module) {
       command: 'init',
       describe: 'Initialize an empty pack',
       handler: handleInit,
+    })
+    .command({
+      command: 'register',
+      describe: 'Register API token to publish a pack',
+      handler: handleRegister,
     })
     .demandCommand()
     .strict()
