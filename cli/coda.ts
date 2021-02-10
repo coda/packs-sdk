@@ -10,6 +10,7 @@ import type {FetchRequest} from 'api';
 import type {Options} from 'yargs';
 import {executeFormulaOrSyncFromCLI} from '../testing/execution';
 import fs from 'fs';
+import open from 'open';
 import path from 'path';
 import {printAndExit} from '../testing/helpers';
 import {promptForInput} from '../testing/helpers';
@@ -73,6 +74,7 @@ async function main() {
 void main();`;
 
 const PACKS_EXAMPLES_DIRECTORY = 'node_modules/coda-packs-examples';
+const API_TOKEN_FILE_PATH = '.coda/credentials.json';
 
 function makeManifestFullPath(manifestPath: string): string {
   return manifestPath.startsWith('/') ? manifestPath : path.join(process.cwd(), manifestPath);
@@ -145,8 +147,8 @@ async function handleInit() {
 }
 
 async function handleRegister({apiToken}: Arguments<RegisterArgs>) {
-  const API_TOKEN_FILE_PATH = '.coda/credentials.json';
   if (!apiToken) {
+    await open('https://coda.io/account');
     apiToken = promptForInput(
       'No API token provided. Please visit coda.io/account to create one and paste the token here: ',
       {mask: true},
@@ -161,9 +163,12 @@ async function handleRegister({apiToken}: Arguments<RegisterArgs>) {
     method: 'GET',
     url: 'https://coda.io/apis/v1/whoami',
   };
-  const resp = await fetcher.fetch(request);
-  if (resp.status === 401) {
-    printAndExit('Invalid API token provided.');
+
+  try {
+    await fetcher.fetch(request);
+  } catch (err) {
+    const {statusCode, message} = JSON.parse(err.error);
+    printAndExit(`Invalid API token provided: ${statusCode} ${message}`);
   }
 
   const existingCredentials = readCredentialsFile(API_TOKEN_FILE_PATH);

@@ -38,6 +38,7 @@ const auth_1 = require("../testing/auth");
 const auth_2 = require("../testing/auth");
 const execution_1 = require("../testing/execution");
 const fs_1 = __importDefault(require("fs"));
+const open_1 = __importDefault(require("open"));
 const path_1 = __importDefault(require("path"));
 const helpers_1 = require("../testing/helpers");
 const helpers_2 = require("../testing/helpers");
@@ -80,6 +81,7 @@ async function main() {
 
 void main();`;
 const PACKS_EXAMPLES_DIRECTORY = 'node_modules/coda-packs-examples';
+const API_TOKEN_FILE_PATH = '.coda/credentials.json';
 function makeManifestFullPath(manifestPath) {
     return manifestPath.startsWith('/') ? manifestPath : path_1.default.join(process.cwd(), manifestPath);
 }
@@ -149,8 +151,8 @@ function handleInit() {
 }
 function handleRegister({ apiToken }) {
     return __awaiter(this, void 0, void 0, function* () {
-        const API_TOKEN_FILE_PATH = '.coda/credentials.json';
         if (!apiToken) {
+            yield open_1.default('https://coda.io/account');
             apiToken = helpers_2.promptForInput('No API token provided. Please visit coda.io/account to create one and paste the token here: ', { mask: true });
         }
         const auth = {
@@ -161,9 +163,12 @@ function handleRegister({ apiToken }) {
             method: 'GET',
             url: 'https://coda.io/apis/v1/whoami',
         };
-        const resp = yield fetcher.fetch(request);
-        if (resp.status === 401) {
-            helpers_1.printAndExit('Invalid API token provided.');
+        try {
+            yield fetcher.fetch(request);
+        }
+        catch (err) {
+            const { statusCode, message } = JSON.parse(err.error);
+            helpers_1.printAndExit(`Invalid API token provided: ${statusCode} ${message}`);
         }
         const existingCredentials = auth_3.readCredentialsFile(API_TOKEN_FILE_PATH);
         if (existingCredentials) {
