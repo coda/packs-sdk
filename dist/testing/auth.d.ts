@@ -12,5 +12,4 @@ export declare function setupAuth(packDef: PackDefinition, opts?: SetupAuthOptio
 export declare function storeCredential(credentialsFile: string, packName: string, credentials: Credentials): void;
 export declare function storeCodaApiKey(apiKey: string, credentialsFile?: string): void;
 export declare function readCredentialsFile(credentialsFile?: string): AllCredentials | undefined;
-export declare function writeCredentialsFile(credentialsFile: string, allCredentials: AllCredentials): void;
 export {};
