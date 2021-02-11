@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.writeCredentialsFile = exports.readCredentialsFile = exports.storeCredential = exports.setupAuth = exports.setupAuthFromModule = exports.DEFAULT_OAUTH_SERVER_PORT = exports.DEFAULT_CREDENTIALS_FILE = void 0;
+exports.writeCredentialsFile = exports.readCredentialsFile = exports.storeCodaApiKey = exports.storeCredential = exports.setupAuth = exports.setupAuthFromModule = exports.DEFAULT_OAUTH_SERVER_PORT = exports.DEFAULT_CREDENTIALS_FILE = void 0;
 const types_1 = require("../types");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
@@ -191,6 +191,12 @@ function storeCredential(credentialsFile, packName, credentials) {
     writeCredentialsFile(credentialsFile, allCredentials);
 }
 exports.storeCredential = storeCredential;
+function storeCodaApiKey(apiKey, credentialsFile = exports.DEFAULT_CREDENTIALS_FILE) {
+    const allCredentials = readCredentialsFile(credentialsFile) || {};
+    allCredentials.coda = { apiKey };
+    writeCredentialsFile(credentialsFile, allCredentials);
+}
+exports.storeCodaApiKey = storeCodaApiKey;
 function readCredentialsFile(credentialsFile = exports.DEFAULT_CREDENTIALS_FILE) {
     ensure_2.ensureNonEmptyString(credentialsFile);
     let file;

@@ -1,23 +1,15 @@
 #!/usr/bin/env node
 
 import type {Arguments} from 'yargs';
-import {AuthenticatingFetcher} from '../testing/fetcher';
-import {AuthenticationType} from '../types';
-import type {CodaApiBearerTokenAuthentication} from '../types';
 import {DEFAULT_CREDENTIALS_FILE} from '../testing/auth';
 import {DEFAULT_OAUTH_SERVER_PORT} from '../testing/auth';
-import type {FetchRequest} from 'api';
 import type {Options} from 'yargs';
 import {executeFormulaOrSyncFromCLI} from '../testing/execution';
 import fs from 'fs';
-import open from 'open';
+import {handleRegister} from './register';
 import path from 'path';
-import {printAndExit} from '../testing/helpers';
-import {promptForInput} from '../testing/helpers';
-import {readCredentialsFile} from '../testing/auth';
 import {setupAuthFromModule} from '../testing/auth';
 import {spawnSync} from 'child_process';
-import {writeCredentialsFile} from '../testing/auth';
 import yargs from 'yargs';
 
 interface ExecuteArgs {
@@ -32,10 +24,6 @@ interface AuthArgs {
   manifestPath: string;
   credentialsFile?: string;
   oauthServerPort?: number;
-}
-
-interface RegisterArgs {
-  apiToken?: string;
 }
 
 const EXECUTE_BOOTSTRAP_CODE = `
@@ -74,7 +62,6 @@ async function main() {
 void main();`;
 
 const PACKS_EXAMPLES_DIRECTORY = 'node_modules/coda-packs-examples';
-const API_TOKEN_FILE_PATH = '.coda/credentials.json';
 
 function makeManifestFullPath(manifestPath: string): string {
   return manifestPath.startsWith('/') ? manifestPath : path.join(process.cwd(), manifestPath);
@@ -144,44 +131,6 @@ async function handleInit() {
     const uninstallCommand = `npm uninstall coda-packs-examples`;
     spawnProcess(uninstallCommand);
   }
-}
-
-async function handleRegister({apiToken}: Arguments<RegisterArgs>) {
-  if (!apiToken) {
-    const shouldOpenBrowser = promptForInput('No API token provided. Do you want to visit Coda to create one? ');
-    if (shouldOpenBrowser.toLocaleLowerCase() !== 'y') {
-      return process.exit(1);
-    }
-    await open('https://coda.io/account');
-    apiToken = promptForInput('Please paste the token here: ', {mask: true});
-  }
-
-  const auth: CodaApiBearerTokenAuthentication = {
-    type: AuthenticationType.CodaApiHeaderBearerToken,
-  };
-  const fetcher = new AuthenticatingFetcher(auth, {token: apiToken});
-  const request: FetchRequest = {
-    method: 'GET',
-    url: 'https://coda.io/apis/v1/whoami',
-  };
-
-  try {
-    await fetcher.fetch(request);
-  } catch (err) {
-    const {statusCode, message} = JSON.parse(err.error);
-    printAndExit(`Invalid API token provided: ${statusCode} ${message}`);
-  }
-
-  const existingCredentials = readCredentialsFile(API_TOKEN_FILE_PATH);
-  if (existingCredentials) {
-    const input = promptForInput(
-      `API token file ${API_TOKEN_FILE_PATH} already exists, press "y" to overwrite or "n" to cancel: `,
-    );
-    if (input.toLocaleLowerCase() !== 'y') {
-      return process.exit(1);
-    }
-  }
-  writeCredentialsFile(API_TOKEN_FILE_PATH, {Coda: {token: apiToken}});
 }
 
 function isTypescript(path: string): boolean {

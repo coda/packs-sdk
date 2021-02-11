@@ -32,20 +32,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const fetcher_1 = require("../testing/fetcher");
-const types_1 = require("../types");
 const auth_1 = require("../testing/auth");
 const auth_2 = require("../testing/auth");
 const execution_1 = require("../testing/execution");
 const fs_1 = __importDefault(require("fs"));
-const open_1 = __importDefault(require("open"));
+const register_1 = require("./register");
 const path_1 = __importDefault(require("path"));
-const helpers_1 = require("../testing/helpers");
-const helpers_2 = require("../testing/helpers");
 const auth_3 = require("../testing/auth");
-const auth_4 = require("../testing/auth");
 const child_process_1 = require("child_process");
-const auth_5 = require("../testing/auth");
 const yargs_1 = __importDefault(require("yargs"));
 const EXECUTE_BOOTSTRAP_CODE = `
 import {executeFormulaOrSyncFromCLI} from 'coda-packs-sdk/dist/testing/execution';
@@ -81,7 +75,6 @@ async function main() {
 
 void main();`;
 const PACKS_EXAMPLES_DIRECTORY = 'node_modules/coda-packs-examples';
-const API_TOKEN_FILE_PATH = '.coda/credentials.json';
 function makeManifestFullPath(manifestPath) {
     return manifestPath.startsWith('/') ? manifestPath : path_1.default.join(process.cwd(), manifestPath);
 }
@@ -116,7 +109,7 @@ function handleAuth({ manifestPath, credentialsFile, oauthServerPort }) {
         }
         else {
             const module = yield Promise.resolve().then(() => __importStar(require(fullManifestPath)));
-            yield auth_4.setupAuthFromModule(module, { credentialsFile, oauthServerPort });
+            yield auth_3.setupAuthFromModule(module, { credentialsFile, oauthServerPort });
         }
     });
 }
@@ -147,41 +140,6 @@ function handleInit() {
             const uninstallCommand = `npm uninstall coda-packs-examples`;
             spawnProcess(uninstallCommand);
         }
-    });
-}
-function handleRegister({ apiToken }) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (!apiToken) {
-            const shouldOpenBrowser = helpers_2.promptForInput('No API token provided. Do you want to visit Coda to create one? ');
-            if (shouldOpenBrowser.toLocaleLowerCase() !== 'y') {
-                return process.exit(1);
-            }
-            yield open_1.default('https://coda.io/account');
-            apiToken = helpers_2.promptForInput('Please paste the token here: ', { mask: true });
-        }
-        const auth = {
-            type: types_1.AuthenticationType.CodaApiHeaderBearerToken,
-        };
-        const fetcher = new fetcher_1.AuthenticatingFetcher(auth, { token: apiToken });
-        const request = {
-            method: 'GET',
-            url: 'https://coda.io/apis/v1/whoami',
-        };
-        try {
-            yield fetcher.fetch(request);
-        }
-        catch (err) {
-            const { statusCode, message } = JSON.parse(err.error);
-            helpers_1.printAndExit(`Invalid API token provided: ${statusCode} ${message}`);
-        }
-        const existingCredentials = auth_3.readCredentialsFile(API_TOKEN_FILE_PATH);
-        if (existingCredentials) {
-            const input = helpers_2.promptForInput(`API token file ${API_TOKEN_FILE_PATH} already exists, press "y" to overwrite or "n" to cancel: `);
-            if (input.toLocaleLowerCase() !== 'y') {
-                return process.exit(1);
-            }
-        }
-        auth_5.writeCredentialsFile(API_TOKEN_FILE_PATH, { Coda: { token: apiToken } });
     });
 }
 function isTypescript(path) {
@@ -250,7 +208,7 @@ if (require.main === module) {
         .command({
         command: 'register [apiToken]',
         describe: 'Register API token to publish a pack',
-        handler: handleRegister,
+        handler: register_1.handleRegister,
     })
         .demandCommand()
         .strict()

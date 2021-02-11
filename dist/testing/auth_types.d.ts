@@ -1,6 +1,10 @@
-export interface AllCredentials {
+export declare type AllCredentials = {
+    coda?: {
+        apiKey: string;
+    };
+} & {
     [name: string]: Credentials;
-}
+};
 interface BaseCredentials {
     endpointUrl?: string;
 }

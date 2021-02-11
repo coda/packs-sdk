@@ -224,6 +224,12 @@ export function storeCredential(credentialsFile: string, packName: string, crede
   writeCredentialsFile(credentialsFile, allCredentials);
 }
 
+export function storeCodaApiKey(apiKey: string, credentialsFile: string = DEFAULT_CREDENTIALS_FILE) {
+  const allCredentials: AllCredentials = readCredentialsFile(credentialsFile) || {};
+  allCredentials.coda = {apiKey};
+  writeCredentialsFile(credentialsFile, allCredentials);
+}
+
 export function readCredentialsFile(credentialsFile: string = DEFAULT_CREDENTIALS_FILE): AllCredentials | undefined {
   ensureNonEmptyString(credentialsFile);
   let file: Buffer;
