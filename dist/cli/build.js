@@ -32,7 +32,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleBuild = void 0;
-const fetcher_1 = require("../testing/fetcher");
+const logging_1 = require("../helpers/logging");
 const path_1 = __importDefault(require("path"));
 const webpack_1 = __importDefault(require("webpack"));
 function handleBuild({ manifestFile }) {
@@ -41,7 +41,7 @@ function handleBuild({ manifestFile }) {
         const versionDirPart = `${manifest.id}/${manifest.version}`;
         const baseDir = path_1.default.normalize(path_1.default.join(__dirname, '..', '..'));
         const bundleFilename = path_1.default.join(baseDir, `dist`, versionDirPart, 'bundle.js');
-        yield compilePackBundleWebpack(bundleFilename, manifestFile, new fetcher_1.ConsoleLogger());
+        yield compilePackBundleWebpack(bundleFilename, manifestFile, new logging_1.ConsoleLogger());
     });
 }
 exports.handleBuild = handleBuild;

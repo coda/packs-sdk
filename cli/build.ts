@@ -1,5 +1,5 @@
 import type {Arguments} from 'yargs';
-import {ConsoleLogger} from '../testing/fetcher';
+import {ConsoleLogger} from '../helpers/logging';
 import type {Logger} from '../api_types';
 import path from 'path';
 import webpack from 'webpack';

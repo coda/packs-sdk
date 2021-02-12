@@ -4,8 +4,6 @@ import type { ExecutionContext } from '../api';
 import type { FetchRequest } from '../api_types';
 import type { FetchResponse } from '../api_types';
 import type { Fetcher } from '../api_types';
-import type { Logger } from '../api_types';
-import type { LoggerParamType } from '../api_types';
 import type { Response } from 'request';
 import type { SyncExecutionContext } from '../api_types';
 export declare class AuthenticatingFetcher implements Fetcher {
@@ -19,13 +17,5 @@ export declare class AuthenticatingFetcher implements Fetcher {
 export declare const requestHelper: {
     makeRequest: (request: FetchRequest) => Promise<Response>;
 };
-export declare class ConsoleLogger implements Logger {
-    private _logMessage;
-    trace(message: string, ...args: LoggerParamType[]): void;
-    debug(message: string, ...args: LoggerParamType[]): void;
-    info(message: string, ...args: LoggerParamType[]): void;
-    warn(message: string, ...args: LoggerParamType[]): void;
-    error(message: string, ...args: LoggerParamType[]): void;
-}
 export declare function newFetcherExecutionContext(packName: string, authDef: Authentication | undefined, credentialsFile?: string): ExecutionContext;
 export declare function newFetcherSyncExecutionContext(packName: string, authDef: Authentication | undefined, credentialsFile?: string): SyncExecutionContext;
