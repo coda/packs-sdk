@@ -40,7 +40,7 @@ function handleBuild({ manifestFile }) {
         const { manifest } = yield Promise.resolve().then(() => __importStar(require(manifestFile)));
         const versionDirPart = `${manifest.id}/${manifest.version}`;
         const baseDir = path_1.default.normalize(path_1.default.join(__dirname, '..', '..'));
-        const bundleFilename = path_1.default.join(baseDir, `dist`, versionDirPart, 'bundle.js');
+        const bundleFilename = path_1.default.join(baseDir, `.tmp`, versionDirPart, 'bundle.js');
         yield compilePackBundleWebpack(bundleFilename, manifestFile, new logging_1.ConsoleLogger());
     });
 }
