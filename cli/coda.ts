@@ -6,6 +6,7 @@ import {DEFAULT_OAUTH_SERVER_PORT} from '../testing/auth';
 import type {Options} from 'yargs';
 import {executeFormulaOrSyncFromCLI} from '../testing/execution';
 import fs from 'fs';
+import {handleBuild} from './build';
 import {handleRegister} from './register';
 import path from 'path';
 import {setupAuthFromModule} from '../testing/auth';
@@ -204,6 +205,11 @@ if (require.main === module) {
       command: 'register [apiToken]',
       describe: 'Register API token to publish a pack',
       handler: handleRegister,
+    })
+    .command({
+      command: 'build [manifestFile]',
+      describe: 'Generate a webpack bundle for your pack',
+      handler: handleBuild,
     })
     .demandCommand()
     .strict()

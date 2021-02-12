@@ -1,14 +1,23 @@
-import type {Logger} from './api_types';
+import type {Arguments} from 'yargs';
+import {ConsoleLogger} from '../testing/fetcher';
+import type {Logger} from '../api_types';
 import path from 'path';
 import webpack from 'webpack';
 
-export async function compilePackBundleWebpack(
-  bundleFilename: string,
-  packDirectory: string,
-  logger: Logger,
-): Promise<any> {
-  const entrypoint = `${packDirectory}/manifest.ts`;
+interface BuildArgs {
+  manifestFile: string;
+}
 
+export async function handleBuild({manifestFile}: Arguments<BuildArgs>) {
+  const {manifest} = await import(manifestFile);
+  const versionDirPart = `${manifest.id}/${manifest.version}`;
+  const baseDir = path.normalize(path.join(__dirname, '..', '..'));
+  const bundleFilename = path.join(baseDir, `dist`, versionDirPart, 'bundle.js');
+  await compilePackBundleWebpack(bundleFilename, manifestFile, new ConsoleLogger());
+}
+
+async function compilePackBundleWebpack(bundleFilename: string, entrypoint: string, logger: Logger): Promise<any> {
+  logger.info(`... Bundle -> ${bundleFilename}`);
   const config: webpack.Configuration = {
     devtool: 'source-map',
     entry: entrypoint,
@@ -46,6 +55,7 @@ export async function compilePackBundleWebpack(
         logger.warn(err.stack || err.message || err.toString());
         return reject(err);
       }
+      // console.log(stats);
       return resolve(stats);
     });
   });

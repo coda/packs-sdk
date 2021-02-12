@@ -239,7 +239,7 @@ class AuthenticatingBlobStorage implements TemporaryBlobStorage {
   }
 }
 
-class ConsoleLogger implements Logger {
+export class ConsoleLogger implements Logger {
   private _logMessage(level: string, message: string, args: LoggerParamType[]) {
     // eslint-disable-next-line no-console
     console.log(`[${level}/${new Date().toISOString()}]: ${format(message, args)}`);
