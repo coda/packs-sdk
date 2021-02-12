@@ -219,14 +219,14 @@ class CredentialHandler {
 }
 
 export function storeCredential(credentialsFile: string, packName: string, credentials: Credentials): void {
-  const allCredentials: AllCredentials = readCredentialsFile(credentialsFile) || {};
-  allCredentials[packName] = credentials;
+  const allCredentials: AllCredentials = readCredentialsFile(credentialsFile) || {packs: {}};
+  allCredentials.packs[packName] = credentials;
   writeCredentialsFile(credentialsFile, allCredentials);
 }
 
 export function storeCodaApiKey(apiKey: string, credentialsFile: string = DEFAULT_CREDENTIALS_FILE) {
-  const allCredentials: AllCredentials = readCredentialsFile(credentialsFile) || {};
-  allCredentials.coda = {apiKey};
+  const allCredentials: AllCredentials = readCredentialsFile(credentialsFile) || {packs: {}};
+  allCredentials.__coda__ = {apiKey};
   writeCredentialsFile(credentialsFile, allCredentials);
 }
 
