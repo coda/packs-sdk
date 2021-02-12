@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newFetcherSyncExecutionContext = exports.newFetcherExecutionContext = exports.requestHelper = exports.AuthenticatingFetcher = void 0;
+exports.newFetcherSyncExecutionContext = exports.newFetcherExecutionContext = exports.ConsoleLogger = exports.requestHelper = exports.AuthenticatingFetcher = void 0;
 const types_1 = require("../types");
 const url_1 = require("url");
 const ensure_1 = require("../helpers/ensure");
@@ -218,6 +218,7 @@ class ConsoleLogger {
         this._logMessage('error', message, args);
     }
 }
+exports.ConsoleLogger = ConsoleLogger;
 function newFetcherExecutionContext(packName, authDef, credentialsFile) {
     const allCredentials = auth_1.readCredentialsFile(credentialsFile);
     const credentials = allCredentials === null || allCredentials === void 0 ? void 0 : allCredentials.packs[packName];

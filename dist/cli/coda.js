@@ -36,6 +36,7 @@ const auth_1 = require("../testing/auth");
 const auth_2 = require("../testing/auth");
 const execution_1 = require("../testing/execution");
 const fs_1 = __importDefault(require("fs"));
+const build_1 = require("./build");
 const register_1 = require("./register");
 const path_1 = __importDefault(require("path"));
 const auth_3 = require("../testing/auth");
@@ -209,6 +210,11 @@ if (require.main === module) {
         command: 'register [apiToken]',
         describe: 'Register API token to publish a pack',
         handler: register_1.handleRegister,
+    })
+        .command({
+        command: 'build [manifestFile]',
+        describe: 'Generate a webpack bundle for your pack',
+        handler: build_1.handleBuild,
     })
         .demandCommand()
         .strict()
