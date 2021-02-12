@@ -6,6 +6,7 @@ import {DEFAULT_OAUTH_SERVER_PORT} from '../testing/auth';
 import type {Options} from 'yargs';
 import {executeFormulaOrSyncFromCLI} from '../testing/execution';
 import fs from 'fs';
+import {handleRegister} from './register';
 import path from 'path';
 import {setupAuthFromModule} from '../testing/auth';
 import {spawnSync} from 'child_process';
@@ -198,6 +199,11 @@ if (require.main === module) {
       command: 'init',
       describe: 'Initialize an empty pack',
       handler: handleInit,
+    })
+    .command({
+      command: 'register [apiToken]',
+      describe: 'Register API token to publish a pack',
+      handler: handleRegister,
     })
     .demandCommand()
     .strict()

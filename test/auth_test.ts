@@ -101,7 +101,7 @@ describe('Auth', () => {
       });
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({'Fake Pack': {token: 'some-token'}});
+      assertCredentialsFileExactly({packs: {'Fake Pack': {token: 'some-token'}}});
     });
 
     it(`${AuthenticationType.HeaderBearerToken}, requires endpoint url`, () => {
@@ -124,7 +124,9 @@ describe('Auth', () => {
       });
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({'Fake Pack': {endpointUrl: 'https://some-endpoint-url.com', token: 'some-token'}});
+      assertCredentialsFileExactly({
+        packs: {'Fake Pack': {endpointUrl: 'https://some-endpoint-url.com', token: 'some-token'}},
+      });
     });
 
     it(`${AuthenticationType.CodaApiHeaderBearerToken}`, () => {
@@ -142,7 +144,7 @@ describe('Auth', () => {
       });
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({'Fake Pack': {token: 'some-token'}});
+      assertCredentialsFileExactly({packs: {'Fake Pack': {token: 'some-token'}}});
     });
 
     it(`${AuthenticationType.CustomHeaderToken}`, () => {
@@ -161,7 +163,7 @@ describe('Auth', () => {
       });
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({'Fake Pack': {token: 'some-token'}});
+      assertCredentialsFileExactly({packs: {'Fake Pack': {token: 'some-token'}}});
     });
 
     it(`${AuthenticationType.QueryParamToken}`, () => {
@@ -182,7 +184,7 @@ describe('Auth', () => {
       );
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({'Fake Pack': {paramValue: 'some-param-value'}});
+      assertCredentialsFileExactly({packs: {'Fake Pack': {paramValue: 'some-param-value'}}});
     });
 
     it(`${AuthenticationType.MultiQueryParamToken}`, () => {
@@ -211,7 +213,9 @@ describe('Auth', () => {
       );
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({'Fake Pack': {params: {param1: 'param-value-1', param2: 'param-value-2'}}});
+      assertCredentialsFileExactly({
+        packs: {'Fake Pack': {params: {param1: 'param-value-1', param2: 'param-value-2'}}},
+      });
     });
 
     it(`${AuthenticationType.WebBasic}`, () => {
@@ -228,7 +232,7 @@ describe('Auth', () => {
       sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the password for Fake Pack:\n', {mask: true});
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({'Fake Pack': {username: 'some-username', password: 'some-password'}});
+      assertCredentialsFileExactly({packs: {'Fake Pack': {username: 'some-username', password: 'some-password'}}});
     });
 
     it(`${AuthenticationType.WebBasic}, username only`, () => {
@@ -247,7 +251,7 @@ describe('Auth', () => {
       sinon.assert.calledOnceWithExactly(mockPromptForInput, 'Enter the username for Fake Pack:\n');
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({'Fake Pack': {username: 'some-username'}});
+      assertCredentialsFileExactly({packs: {'Fake Pack': {username: 'some-username'}}});
     });
 
     it(`${AuthenticationType.WebBasic}, custom field names`, () => {
@@ -268,7 +272,7 @@ describe('Auth', () => {
       sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the API Password for Fake Pack:\n', {mask: true});
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({'Fake Pack': {username: 'some-username', password: 'some-password'}});
+      assertCredentialsFileExactly({packs: {'Fake Pack': {username: 'some-username', password: 'some-password'}}});
     });
 
     it(`${AuthenticationType.WebBasic}, requires endpoint url`, () => {
@@ -291,10 +295,12 @@ describe('Auth', () => {
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
       assertCredentialsFileExactly({
-        'Fake Pack': {
-          endpointUrl: 'https://some-endpoint-url.com',
-          username: 'some-username',
-          password: 'some-password',
+        packs: {
+          'Fake Pack': {
+            endpointUrl: 'https://some-endpoint-url.com',
+            username: 'some-username',
+            password: 'some-password',
+          },
         },
       });
     });
@@ -320,10 +326,12 @@ describe('Auth', () => {
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
       assertCredentialsFileExactly({
-        'Fake Pack': {
-          endpointUrl: 'https://some-endpoint-url.com',
-          username: 'some-username',
-          password: 'some-password',
+        packs: {
+          'Fake Pack': {
+            endpointUrl: 'https://some-endpoint-url.com',
+            username: 'some-username',
+            password: 'some-password',
+          },
         },
       });
     });
@@ -845,11 +853,13 @@ describe('Auth', () => {
 
         assertCredentialsFileExactly(
           {
-            'Fake Pack': {
-              clientId: 'existing-client-id',
-              clientSecret: 'existing-client-secret',
-              accessToken: 'some-access-token',
-              refreshToken: 'some-refresh-token',
+            packs: {
+              'Fake Pack': {
+                clientId: 'existing-client-id',
+                clientSecret: 'existing-client-secret',
+                accessToken: 'some-access-token',
+                refreshToken: 'some-refresh-token',
+              },
             },
           },
           credentialsFile,

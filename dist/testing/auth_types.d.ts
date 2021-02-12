@@ -1,5 +1,10 @@
 export interface AllCredentials {
-    [packName: string]: Credentials;
+    __coda__?: {
+        apiKey: string;
+    };
+    packs: {
+        [name: string]: Credentials;
+    };
 }
 interface BaseCredentials {
     endpointUrl?: string;

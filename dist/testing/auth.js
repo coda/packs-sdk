@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.readCredentialsFile = exports.storeCredential = exports.setupAuth = exports.setupAuthFromModule = exports.DEFAULT_OAUTH_SERVER_PORT = exports.DEFAULT_CREDENTIALS_FILE = void 0;
+exports.readCredentialsFile = exports.storeCodaApiKey = exports.storeCredential = exports.setupAuth = exports.setupAuthFromModule = exports.DEFAULT_OAUTH_SERVER_PORT = exports.DEFAULT_CREDENTIALS_FILE = void 0;
 const types_1 = require("../types");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
@@ -71,12 +71,12 @@ class CredentialHandler {
     }
     checkForExistingCredential() {
         const existingCredentials = readCredentialsFile(this._credentialsFile);
-        if (existingCredentials && existingCredentials[this._packName]) {
+        if (existingCredentials && existingCredentials.packs[this._packName]) {
             const input = helpers_4.promptForInput(`Credentials already exist for ${this._packName}, press "y" to overwrite or "n" to cancel: `);
             if (input.toLocaleLowerCase() !== 'y') {
                 return process.exit(1);
             }
-            return existingCredentials[this._packName];
+            return existingCredentials.packs[this._packName];
         }
     }
     handleToken() {
@@ -186,11 +186,17 @@ class CredentialHandler {
     }
 }
 function storeCredential(credentialsFile, packName, credentials) {
-    const allCredentials = readCredentialsFile(credentialsFile) || {};
-    allCredentials[packName] = credentials;
+    const allCredentials = readCredentialsFile(credentialsFile) || { packs: {} };
+    allCredentials.packs[packName] = credentials;
     writeCredentialsFile(credentialsFile, allCredentials);
 }
 exports.storeCredential = storeCredential;
+function storeCodaApiKey(apiKey, credentialsFile = exports.DEFAULT_CREDENTIALS_FILE) {
+    const allCredentials = readCredentialsFile(credentialsFile) || { packs: {} };
+    allCredentials.__coda__ = { apiKey };
+    writeCredentialsFile(credentialsFile, allCredentials);
+}
+exports.storeCodaApiKey = storeCodaApiKey;
 function readCredentialsFile(credentialsFile = exports.DEFAULT_CREDENTIALS_FILE) {
     ensure_2.ensureNonEmptyString(credentialsFile);
     let file;

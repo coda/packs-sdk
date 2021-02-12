@@ -272,7 +272,7 @@ export function newFetcherExecutionContext(
   credentialsFile?: string,
 ): ExecutionContext {
   const allCredentials = readCredentialsFile(credentialsFile);
-  const credentials = allCredentials?.[packName];
+  const credentials = allCredentials?.packs[packName];
   const fetcher = new AuthenticatingFetcher(authDef, credentials);
   return {
     invocationLocation: {
