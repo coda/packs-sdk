@@ -71,12 +71,12 @@ class CredentialHandler {
     }
     checkForExistingCredential() {
         const existingCredentials = readCredentialsFile(this._credentialsFile);
-        if (existingCredentials && existingCredentials[this._packName]) {
+        if (existingCredentials && existingCredentials.packs[this._packName]) {
             const input = helpers_4.promptForInput(`Credentials already exist for ${this._packName}, press "y" to overwrite or "n" to cancel: `);
             if (input.toLocaleLowerCase() !== 'y') {
                 return process.exit(1);
             }
-            return existingCredentials[this._packName];
+            return existingCredentials.packs[this._packName];
         }
     }
     handleToken() {
@@ -186,14 +186,14 @@ class CredentialHandler {
     }
 }
 function storeCredential(credentialsFile, packName, credentials) {
-    const allCredentials = readCredentialsFile(credentialsFile) || {};
-    allCredentials[packName] = credentials;
+    const allCredentials = readCredentialsFile(credentialsFile) || { packs: {} };
+    allCredentials.packs[packName] = credentials;
     writeCredentialsFile(credentialsFile, allCredentials);
 }
 exports.storeCredential = storeCredential;
 function storeCodaApiKey(apiKey, credentialsFile = exports.DEFAULT_CREDENTIALS_FILE) {
-    const allCredentials = readCredentialsFile(credentialsFile) || {};
-    allCredentials.coda = { apiKey };
+    const allCredentials = readCredentialsFile(credentialsFile) || { packs: {} };
+    allCredentials.__coda__ = { apiKey };
     writeCredentialsFile(credentialsFile, allCredentials);
 }
 exports.storeCodaApiKey = storeCodaApiKey;

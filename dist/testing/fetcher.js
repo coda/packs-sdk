@@ -220,7 +220,7 @@ class ConsoleLogger {
 }
 function newFetcherExecutionContext(packName, authDef, credentialsFile) {
     const allCredentials = auth_1.readCredentialsFile(credentialsFile);
-    const credentials = allCredentials === null || allCredentials === void 0 ? void 0 : allCredentials[packName];
+    const credentials = allCredentials === null || allCredentials === void 0 ? void 0 : allCredentials.packs[packName];
     const fetcher = new AuthenticatingFetcher(authDef, credentials);
     return {
         invocationLocation: {

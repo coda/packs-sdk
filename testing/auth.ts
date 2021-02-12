@@ -77,14 +77,14 @@ class CredentialHandler {
 
   private checkForExistingCredential(): Credentials | undefined {
     const existingCredentials = readCredentialsFile(this._credentialsFile);
-    if (existingCredentials && existingCredentials[this._packName]) {
+    if (existingCredentials && existingCredentials.packs[this._packName]) {
       const input = promptForInput(
         `Credentials already exist for ${this._packName}, press "y" to overwrite or "n" to cancel: `,
       );
       if (input.toLocaleLowerCase() !== 'y') {
         return process.exit(1);
       }
-      return existingCredentials[this._packName];
+      return existingCredentials.packs[this._packName];
     }
   }
 
