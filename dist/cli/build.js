@@ -33,13 +33,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleBuild = void 0;
 const logging_1 = require("../helpers/logging");
+const fs_1 = __importDefault(require("fs"));
+const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
 const webpack_1 = __importDefault(require("webpack"));
 function handleBuild({ manifestFile }) {
     return __awaiter(this, void 0, void 0, function* () {
         const { manifest } = yield Promise.resolve().then(() => __importStar(require(manifestFile)));
-        const baseDir = path_1.default.normalize(path_1.default.join(__dirname, '..', '..'));
-        const bundleFilename = path_1.default.join(baseDir, `.tmp`, `bundle-${manifest.id}-${manifest.version}.js`);
+        const tempDir = fs_1.default.mkdtempSync(path_1.default.join(os_1.default.tmpdir(), 'coda-packs-'));
+        const bundleFilename = path_1.default.join(tempDir, `bundle-${manifest.id}-${manifest.version}.js`);
         yield compilePackBundleWebpack(bundleFilename, manifestFile, new logging_1.ConsoleLogger());
     });
 }
