@@ -10,9 +10,8 @@ interface BuildArgs {
 
 export async function handleBuild({manifestFile}: Arguments<BuildArgs>) {
   const {manifest} = await import(manifestFile);
-  const versionDirPart = `${manifest.id}/${manifest.version}`;
   const baseDir = path.normalize(path.join(__dirname, '..', '..'));
-  const bundleFilename = path.join(baseDir, `.tmp`, versionDirPart, 'bundle.js');
+  const bundleFilename = path.join(baseDir, `.tmp`, `bundle-${manifest.id}-${manifest.version}.js`);
   await compilePackBundleWebpack(bundleFilename, manifestFile, new ConsoleLogger());
 }
 
