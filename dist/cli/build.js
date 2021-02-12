@@ -84,7 +84,6 @@ function compilePackBundleWebpack(bundleFilename, entrypoint, logger) {
                     logger.warn(err.stack || err.message || err.toString());
                     return reject(err);
                 }
-                // console.log(stats);
                 return resolve(stats);
             });
         });
