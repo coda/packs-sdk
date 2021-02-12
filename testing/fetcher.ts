@@ -1,6 +1,6 @@
 import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
-import {ConsoleLogger} from 'helpers/logging';
+import {ConsoleLogger} from '../helpers/logging';
 import type {Credentials} from './auth_types';
 import type {ExecutionContext} from '../api';
 import type {FetchRequest} from '../api_types';

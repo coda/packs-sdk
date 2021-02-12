@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.newFetcherSyncExecutionContext = exports.newFetcherExecutionContext = exports.requestHelper = exports.AuthenticatingFetcher = void 0;
 const types_1 = require("../types");
-const logging_1 = require("helpers/logging");
+const logging_1 = require("../helpers/logging");
 const url_1 = require("url");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
