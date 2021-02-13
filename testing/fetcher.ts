@@ -1,12 +1,11 @@
 import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
+import {ConsoleLogger} from '../helpers/logging';
 import type {Credentials} from './auth_types';
 import type {ExecutionContext} from '../api';
 import type {FetchRequest} from '../api_types';
 import type {FetchResponse} from '../api_types';
 import type {Fetcher} from '../api_types';
-import type {Logger} from '../api_types';
-import type {LoggerParamType} from '../api_types';
 import type {MultiQueryParamCredentials} from './auth_types';
 import type {OAuth2Credentials} from './auth_types';
 import type {QueryParamCredentials} from './auth_types';
@@ -18,7 +17,6 @@ import {URL} from 'url';
 import type {WebBasicCredentials} from './auth_types';
 import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
-import {format} from 'util';
 import {readCredentialsFile} from './auth';
 import requestPromise from 'request-promise-native';
 import urlParse from 'url-parse';
@@ -236,33 +234,6 @@ class AuthenticatingBlobStorage implements TemporaryBlobStorage {
 
   async storeBlob(_blobData: Buffer, _contentType: string, _opts?: {expiryMs?: number}): Promise<string> {
     return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${v4()}`;
-  }
-}
-
-class ConsoleLogger implements Logger {
-  private _logMessage(level: string, message: string, args: LoggerParamType[]) {
-    // eslint-disable-next-line no-console
-    console.log(`[${level}/${new Date().toISOString()}]: ${format(message, args)}`);
-  }
-
-  trace(message: string, ...args: LoggerParamType[]): void {
-    this._logMessage('trace', message, args);
-  }
-
-  debug(message: string, ...args: LoggerParamType[]): void {
-    this._logMessage('debug', message, args);
-  }
-
-  info(message: string, ...args: LoggerParamType[]): void {
-    this._logMessage('info', message, args);
-  }
-
-  warn(message: string, ...args: LoggerParamType[]): void {
-    this._logMessage('warn', message, args);
-  }
-
-  error(message: string, ...args: LoggerParamType[]): void {
-    this._logMessage('error', message, args);
   }
 }
 

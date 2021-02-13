@@ -14,10 +14,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.newFetcherSyncExecutionContext = exports.newFetcherExecutionContext = exports.requestHelper = exports.AuthenticatingFetcher = void 0;
 const types_1 = require("../types");
+const logging_1 = require("../helpers/logging");
 const url_1 = require("url");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
-const util_1 = require("util");
 const auth_1 = require("./auth");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
 const url_parse_1 = __importDefault(require("url-parse"));
@@ -197,27 +197,6 @@ class AuthenticatingBlobStorage {
         });
     }
 }
-class ConsoleLogger {
-    _logMessage(level, message, args) {
-        // eslint-disable-next-line no-console
-        console.log(`[${level}/${new Date().toISOString()}]: ${util_1.format(message, args)}`);
-    }
-    trace(message, ...args) {
-        this._logMessage('trace', message, args);
-    }
-    debug(message, ...args) {
-        this._logMessage('debug', message, args);
-    }
-    info(message, ...args) {
-        this._logMessage('info', message, args);
-    }
-    warn(message, ...args) {
-        this._logMessage('warn', message, args);
-    }
-    error(message, ...args) {
-        this._logMessage('error', message, args);
-    }
-}
 function newFetcherExecutionContext(packName, authDef, credentialsFile) {
     const allCredentials = auth_1.readCredentialsFile(credentialsFile);
     const credentials = allCredentials === null || allCredentials === void 0 ? void 0 : allCredentials.packs[packName];
@@ -231,7 +210,7 @@ function newFetcherExecutionContext(packName, authDef, credentialsFile) {
         endpoint: credentials === null || credentials === void 0 ? void 0 : credentials.endpointUrl,
         fetcher,
         temporaryBlobStorage: new AuthenticatingBlobStorage(fetcher),
-        logger: new ConsoleLogger(),
+        logger: new logging_1.ConsoleLogger(),
     };
 }
 exports.newFetcherExecutionContext = newFetcherExecutionContext;
