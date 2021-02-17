@@ -74,6 +74,9 @@ into a `PackDefinition` object which forms the complete specification of your pa
 Make sure you have **node** and **npm** installed. We also recommend developing using TypeScript,
 in which case, make sure that you have TypeScript and **ts-node** installed.
 
+To download the SDK using the commands provided below, you'll need GitHub SSH keys setup, which should take
+less than five minutes. See instructions [here](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh).
+
 ### One-time Setup
 
 #### Global Install (Quick)
@@ -127,7 +130,7 @@ The `coda` CLI utility helps you execute formulas, via the `coda execute` sub-co
 `coda execute --help` at any time to refresh yourself on usage. The syntax is:
 
 ```bash
-coda execute path/to/manifest.ts <namespace>:<formula> [params..]
+coda execute path/to/manifest.ts <namespace>::<formula> [params..]
 ```
 
 So for example, if your pack definition was in `src/manifest.ts` and you wanted to call a function
