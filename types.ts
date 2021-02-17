@@ -153,6 +153,9 @@ export interface OAuth2Authentication extends BaseAuthentication {
   // Some OAuth providers will return the API domain with the OAuth response.
   // This is the key in the OAuth response json body that points to the endpoint.
   endpointKey?: string;
+
+  // Some OAuth providers require passing the token as a URL param.
+  tokenQueryParam?: string;
 }
 
 export interface WebBasicAuthentication extends BaseAuthentication {

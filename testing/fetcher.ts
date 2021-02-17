@@ -113,15 +113,7 @@ export class AuthenticatingFetcher implements Fetcher {
       }
       case AuthenticationType.QueryParamToken: {
         const {paramValue} = this._credentials as QueryParamCredentials;
-        const parsedUrl = new URL(url);
-        // Put the key at the beginning, as some APIs expect it at the beginning.
-        const entries = [...parsedUrl.searchParams.entries()];
-        parsedUrl.searchParams.set(this._authDef.paramName, paramValue);
-        for (const [key, value] of entries) {
-          parsedUrl.searchParams.delete(key);
-          parsedUrl.searchParams.set(key, value);
-        }
-        return {headers, body, form, url: parsedUrl.href};
+        return {headers, body, form, url: addQueryParam(url, this._authDef.paramName, paramValue)};
       }
       case AuthenticationType.MultiQueryParamToken: {
         const {params: paramDict} = this._credentials as MultiQueryParamCredentials;
@@ -151,11 +143,18 @@ export class AuthenticatingFetcher implements Fetcher {
       case AuthenticationType.OAuth2: {
         const {accessToken} = this._credentials as OAuth2Credentials;
         const prefix = this._authDef.tokenPrefix || 'Bearer';
+        const requestHeaders: {[header: string]: string} = headers || {};
+        let requestUrl = url;
+        if (this._authDef.tokenQueryParam) {
+          requestUrl = addQueryParam(url, this._authDef.tokenQueryParam, ensureNonEmptyString(accessToken));
+        } else {
+          requestHeaders.Authorization = `${prefix} ${ensureNonEmptyString(accessToken)}`;
+        }
         return {
-          url,
+          url: requestUrl,
           body,
           form,
-          headers: {...headers, Authorization: `${prefix} ${ensureNonEmptyString(accessToken)}`},
+          headers: requestHeaders,
         };
       }
 
@@ -265,4 +264,16 @@ export function newFetcherSyncExecutionContext(
 ): SyncExecutionContext {
   const context = newFetcherExecutionContext(packName, authDef, credentialsFile);
   return {...context, sync: {}};
+}
+
+function addQueryParam(url: string, param: string, value: string): string {
+  const parsedUrl = new URL(url);
+  // Put the key at the beginning, as some APIs expect it at the beginning.
+  const entries = [...parsedUrl.searchParams.entries()];
+  parsedUrl.searchParams.set(param, value);
+  for (const [key, entryValue] of entries) {
+    parsedUrl.searchParams.delete(key);
+    parsedUrl.searchParams.set(key, entryValue);
+  }
+  return parsedUrl.href;
 }
