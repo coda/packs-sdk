@@ -121,6 +121,7 @@ export interface OAuth2Authentication extends BaseAuthentication {
     clientIdEnvVarName: string;
     clientSecretEnvVarName: string;
     endpointKey?: string;
+    tokenQueryParam?: string;
 }
 export interface WebBasicAuthentication extends BaseAuthentication {
     type: AuthenticationType.WebBasic;

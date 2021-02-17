@@ -92,15 +92,7 @@ class AuthenticatingFetcher {
             }
             case types_1.AuthenticationType.QueryParamToken: {
                 const { paramValue } = this._credentials;
-                const parsedUrl = new url_1.URL(url);
-                // Put the key at the beginning, as some APIs expect it at the beginning.
-                const entries = [...parsedUrl.searchParams.entries()];
-                parsedUrl.searchParams.set(this._authDef.paramName, paramValue);
-                for (const [key, value] of entries) {
-                    parsedUrl.searchParams.delete(key);
-                    parsedUrl.searchParams.set(key, value);
-                }
-                return { headers, body, form, url: parsedUrl.href };
+                return { headers, body, form, url: addQueryParam(url, this._authDef.paramName, paramValue) };
             }
             case types_1.AuthenticationType.MultiQueryParamToken: {
                 const { params: paramDict } = this._credentials;
@@ -128,11 +120,19 @@ class AuthenticatingFetcher {
             case types_1.AuthenticationType.OAuth2: {
                 const { accessToken } = this._credentials;
                 const prefix = this._authDef.tokenPrefix || 'Bearer';
+                const requestHeaders = headers || {};
+                let requestUrl = url;
+                if (this._authDef.tokenQueryParam) {
+                    requestUrl = addQueryParam(url, this._authDef.tokenQueryParam, ensure_1.ensureNonEmptyString(accessToken));
+                }
+                else {
+                    requestHeaders.Authorization = `${prefix} ${ensure_1.ensureNonEmptyString(accessToken)}`;
+                }
                 return {
-                    url,
+                    url: requestUrl,
                     body,
                     form,
-                    headers: Object.assign(Object.assign({}, headers), { Authorization: `${prefix} ${ensure_1.ensureNonEmptyString(accessToken)}` }),
+                    headers: requestHeaders,
                 };
             }
             default:
@@ -219,3 +219,14 @@ function newFetcherSyncExecutionContext(packName, authDef, credentialsFile) {
     return Object.assign(Object.assign({}, context), { sync: {} });
 }
 exports.newFetcherSyncExecutionContext = newFetcherSyncExecutionContext;
+function addQueryParam(url, param, value) {
+    const parsedUrl = new url_1.URL(url);
+    // Put the key at the beginning, as some APIs expect it at the beginning.
+    const entries = [...parsedUrl.searchParams.entries()];
+    parsedUrl.searchParams.set(param, value);
+    for (const [key, entryValue] of entries) {
+        parsedUrl.searchParams.delete(key);
+        parsedUrl.searchParams.set(key, entryValue);
+    }
+    return parsedUrl.href;
+}
