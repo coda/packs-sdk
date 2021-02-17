@@ -921,6 +921,7 @@ a transparent background.
 ## Reference
 
 Run `make view-docs` to generate detailed reference documentation from the source code
-and open it in your browser.
+and open it in your browser. You need to have run `npm install` at the root of the repo
+for this to run.
 
 This will eventually be published on a documentation website.
