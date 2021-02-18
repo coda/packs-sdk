@@ -9,4 +9,10 @@ updates:
       day: 'tuesday'
     open-pull-requests-limit: 50
     reviewers:
-      - "coda-hq/ecosystem"
+      - 'coda-hq/ecosystem'
+    ignore:
+      # This version broke parsing of relative urls without a base, removing the leading slash.
+      # This breaks the implementation of withQueryParams() if used with a relative url.
+      # We suspect they will need to undo these behavior in a future version.
+      - dependency-name: 'url-parse'
+        versions: ['1.5.0']

@@ -28,7 +28,7 @@
     "request-promise-native": "^1.0.9",
     "sinon": "9.2.4",
     "string-template": "^1.0.0",
-    "url-parse": "^1.4.7",
+    "url-parse": "~1.4.7",
     "uuid": "^8.3.2",
     "webpack": "^5.22.0",
     "xml2js": "^0.4.23",
