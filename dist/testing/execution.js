@@ -92,7 +92,7 @@ function executeSyncFormula(formula, params, context = mocks_2.newMockSyncExecut
                 response = yield formula.execute(params, context);
             }
             catch (err) {
-                return wrapError(err);
+                throw wrapError(err);
             }
             result.push(...response.result);
             context.sync.continuation = response.continuation;

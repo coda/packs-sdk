@@ -145,7 +145,7 @@ export async function executeSyncFormula(
     try {
       response = await formula.execute(params, context);
     } catch (err) {
-      return wrapError(err);
+      throw wrapError(err);
     }
     result.push(...response.result);
     context.sync.continuation = response.continuation;
