@@ -61,6 +61,7 @@ export type { ParamsList } from './api_types';
 export { PrecannedDateRange } from './api_types';
 export { StatusCodeError } from './api';
 export type { SyncExecutionContext } from './api_types';
+export type { SyncFormulaResult } from './api';
 export type { SyncTableDef } from './api';
 export type { TemporaryBlobStorage } from './api_types';
 export { Type } from './api_types';
