@@ -45,7 +45,7 @@ function handleBuild({ manifestFile }) {
         const bundleFilename = path_1.default.join(tempDir, `bundle-${manifest.id}-${manifest.version}.js`);
         const logger = new logging_1.ConsoleLogger();
         try {
-            compilePackBundleESBuild(bundleFilename, manifestFile);
+            yield compilePackBundleESBuild(bundleFilename, manifestFile);
         }
         catch (err) {
             logger.warn('Error while trying to bundle pack using esbuild. Falling back to webpack...', err);

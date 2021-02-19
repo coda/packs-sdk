@@ -18,7 +18,7 @@ export async function handleBuild({manifestFile}: Arguments<BuildArgs>) {
   const bundleFilename = path.join(tempDir, `bundle-${manifest.id}-${manifest.version}.js`);
   const logger = new ConsoleLogger();
   try {
-    compilePackBundleESBuild(bundleFilename, manifestFile);
+    await compilePackBundleESBuild(bundleFilename, manifestFile);
   } catch (err) {
     logger.warn('Error while trying to bundle pack using esbuild. Falling back to webpack...', err);
     await compilePackBundleWebpack(bundleFilename, manifestFile, logger);
