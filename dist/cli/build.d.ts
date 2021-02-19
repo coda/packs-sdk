@@ -3,4 +3,5 @@ interface BuildArgs {
     manifestFile: string;
 }
 export declare function handleBuild({ manifestFile }: Arguments<BuildArgs>): Promise<void>;
+export declare function compilePackBundleESBuild(bundleFilename: string, entrypoint: string): Promise<void>;
 export {};

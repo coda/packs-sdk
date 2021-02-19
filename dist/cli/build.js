@@ -31,8 +31,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleBuild = void 0;
+exports.compilePackBundleESBuild = exports.handleBuild = void 0;
 const logging_1 = require("../helpers/logging");
+const esbuild = __importStar(require("esbuild"));
 const fs_1 = __importDefault(require("fs"));
 const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
@@ -42,10 +43,31 @@ function handleBuild({ manifestFile }) {
         const { manifest } = yield Promise.resolve().then(() => __importStar(require(manifestFile)));
         const tempDir = fs_1.default.mkdtempSync(path_1.default.join(os_1.default.tmpdir(), 'coda-packs-'));
         const bundleFilename = path_1.default.join(tempDir, `bundle-${manifest.id}-${manifest.version}.js`);
-        yield compilePackBundleWebpack(bundleFilename, manifestFile, new logging_1.ConsoleLogger());
+        const logger = new logging_1.ConsoleLogger();
+        try {
+            compilePackBundleESBuild(bundleFilename, manifestFile);
+        }
+        catch (err) {
+            logger.warn('Error while trying to bundle pack using esbuild. Falling back to webpack...', err);
+            yield compilePackBundleWebpack(bundleFilename, manifestFile, logger);
+        }
     });
 }
 exports.handleBuild = handleBuild;
+function compilePackBundleESBuild(bundleFilename, entrypoint) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const options = {
+            bundle: true,
+            entryPoints: [entrypoint],
+            outfile: bundleFilename,
+            platform: 'node',
+            external: ['canvas'],
+            minify: true,
+        };
+        yield esbuild.build(options);
+    });
+}
+exports.compilePackBundleESBuild = compilePackBundleESBuild;
 function compilePackBundleWebpack(bundleFilename, entrypoint, logger) {
     return __awaiter(this, void 0, void 0, function* () {
         logger.info(`... Bundle -> ${bundleFilename}`);
