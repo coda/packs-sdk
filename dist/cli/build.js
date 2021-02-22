@@ -65,11 +65,11 @@ exports.handleBuild = handleBuild;
 function compilePackBundleESBuild(bundleFilename, entrypoint) {
     return __awaiter(this, void 0, void 0, function* () {
         const options = {
+            banner: "'use strict';",
             bundle: true,
             entryPoints: [entrypoint],
             outfile: bundleFilename,
             platform: 'node',
-            external: ['canvas'],
             minify: true,
         };
         yield esbuild.build(options);

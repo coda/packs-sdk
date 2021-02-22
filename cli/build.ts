@@ -38,11 +38,11 @@ export async function handleBuild({manifestFile, compiler}: Arguments<BuildArgs>
 
 export async function compilePackBundleESBuild(bundleFilename: string, entrypoint: string) {
   const options: esbuild.BuildOptions = {
+    banner: "'use strict';",
     bundle: true,
     entryPoints: [entrypoint],
     outfile: bundleFilename,
     platform: 'node',
-    external: ['canvas'],
     minify: true,
   };
   await esbuild.build(options);
