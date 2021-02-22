@@ -37,10 +37,11 @@ const auth_2 = require("../testing/auth");
 const execution_1 = require("../testing/execution");
 const fs_1 = __importDefault(require("fs"));
 const build_1 = require("./build");
+const publish_1 = require("./publish");
 const register_1 = require("./register");
 const path_1 = __importDefault(require("path"));
 const auth_3 = require("../testing/auth");
-const child_process_1 = require("child_process");
+const helpers_1 = require("./helpers");
 const yargs_1 = __importDefault(require("yargs"));
 const EXECUTE_BOOTSTRAP_CODE = `
 import {executeFormulaOrSyncFromCLI} from 'coda-packs-sdk/dist/testing/execution';
@@ -88,7 +89,7 @@ function handleExecute({ manifestPath, formulaName, params, fetch, credentialsFi
         // In the latter case, we can import the given file as a regular node (non-TS) import without any bootstrapping.
         if (isTypescript(manifestPath)) {
             const tsCommand = `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${fullManifestPath} ${Boolean(fetch)} ${credentialsFile || '""'} ${formulaName} ${params.map(escapeShellArg).join(' ')}`;
-            spawnProcess(tsCommand);
+            helpers_1.spawnProcess(tsCommand);
         }
         else {
             const module = yield Promise.resolve().then(() => __importStar(require(fullManifestPath)));
@@ -106,7 +107,7 @@ function handleAuth({ manifestPath, credentialsFile, oauthServerPort }) {
         const fullManifestPath = makeManifestFullPath(manifestPath);
         if (isTypescript(manifestPath)) {
             const tsCommand = `ts-node -e "${AUTH_BOOTSTRAP_CODE}" ${fullManifestPath} ${credentialsFile || '""'} ${oauthServerPort || '""'}`;
-            spawnProcess(tsCommand);
+            helpers_1.spawnProcess(tsCommand);
         }
         else {
             const module = yield Promise.resolve().then(() => __importStar(require(fullManifestPath)));
@@ -118,7 +119,7 @@ function handleInit() {
     return __awaiter(this, void 0, void 0, function* () {
         let isPacksExamplesInstalled;
         try {
-            const listNpmPackages = spawnProcess('npm list coda-packs-examples');
+            const listNpmPackages = helpers_1.spawnProcess('npm list coda-packs-examples');
             isPacksExamplesInstalled = listNpmPackages.status === 0;
         }
         catch (error) {
@@ -127,36 +128,24 @@ function handleInit() {
         if (!isPacksExamplesInstalled) {
             // TODO(jonathan): Switch this to a regular https repo url when the repo becomes public.
             const installCommand = `npm install git+ssh://github.com/kr-project/packs-examples.git`;
-            spawnProcess(installCommand);
+            helpers_1.spawnProcess(installCommand);
         }
         const packageJson = JSON.parse(fs_1.default.readFileSync(`${PACKS_EXAMPLES_DIRECTORY}/package.json`, 'utf-8'));
         const devDependencies = packageJson.devDependencies;
         const devDependencyPackages = Object.keys(devDependencies)
             .map(dependency => `${dependency}@${devDependencies[dependency]}`)
             .join(' ');
-        spawnProcess(`npm install --save-dev ${devDependencyPackages}`);
+        helpers_1.spawnProcess(`npm install --save-dev ${devDependencyPackages}`);
         const copyCommand = `cp -r ${PACKS_EXAMPLES_DIRECTORY}/examples/template/* ${process.cwd()}`;
-        spawnProcess(copyCommand);
+        helpers_1.spawnProcess(copyCommand);
         if (!isPacksExamplesInstalled) {
             const uninstallCommand = `npm uninstall coda-packs-examples`;
-            spawnProcess(uninstallCommand);
+            helpers_1.spawnProcess(uninstallCommand);
         }
     });
 }
 function isTypescript(path) {
     return path.toLowerCase().endsWith('.ts');
-}
-function spawnProcess(command) {
-    let cmd = command;
-    // Hack to allow us to run this CLI tool for testing purposes from within this repo, without
-    // needing it installed as an npm package.
-    if (process.argv[1].endsWith('coda.ts')) {
-        cmd = command.replace('coda-packs-sdk/dist', process.env.PWD);
-    }
-    return child_process_1.spawnSync(cmd, {
-        shell: true,
-        stdio: 'inherit',
-    });
 }
 function escapeShellArg(arg) {
     return `"${arg.replace(/(["'$`\\])/g, '\\$1')}"`;
@@ -217,6 +206,11 @@ if (require.main === module) {
             required: false,
         });
     }, build_1.handleBuild)
+        .command({
+        command: 'publish [manifestFile]',
+        describe: 'Upload your pack to Coda',
+        handler: publish_1.handlePublish,
+    })
         .demandCommand()
         .strict()
         .help().argv;

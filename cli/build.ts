@@ -18,6 +18,10 @@ enum Compiler {
 }
 
 export async function handleBuild({manifestFile, compiler}: Arguments<BuildArgs>) {
+  await build(manifestFile, compiler);
+}
+
+export async function build(manifestFile: string, compiler?: string) {
   // TODO(alan): surface more helpful error messages when import manifestFile fails.
   const {manifest} = await import(manifestFile);
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'coda-packs-'));
@@ -28,12 +32,13 @@ export async function handleBuild({manifestFile, compiler}: Arguments<BuildArgs>
   switch (compiler) {
     case Compiler.webpack:
       await compilePackBundleWebpack(bundleFilename, manifestFile, logger);
-      return;
+      break;
     case Compiler.esbuild:
     default:
       await compilePackBundleESBuild(bundleFilename, manifestFile);
-      return;
   }
+
+  return bundleFilename;
 }
 
 export async function compilePackBundleESBuild(bundleFilename: string, entrypoint: string) {

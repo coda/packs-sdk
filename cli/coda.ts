@@ -7,10 +7,11 @@ import type {Options} from 'yargs';
 import {executeFormulaOrSyncFromCLI} from '../testing/execution';
 import fs from 'fs';
 import {handleBuild} from './build';
+import {handlePublish} from './publish';
 import {handleRegister} from './register';
 import path from 'path';
 import {setupAuthFromModule} from '../testing/auth';
-import {spawnSync} from 'child_process';
+import {spawnProcess} from './helpers';
 import yargs from 'yargs';
 
 interface ExecuteArgs {
@@ -138,20 +139,6 @@ function isTypescript(path: string): boolean {
   return path.toLowerCase().endsWith('.ts');
 }
 
-function spawnProcess(command: string) {
-  let cmd = command;
-  // Hack to allow us to run this CLI tool for testing purposes from within this repo, without
-  // needing it installed as an npm package.
-  if (process.argv[1].endsWith('coda.ts')) {
-    cmd = command.replace('coda-packs-sdk/dist', process.env.PWD!);
-  }
-
-  return spawnSync(cmd, {
-    shell: true,
-    stdio: 'inherit',
-  });
-}
-
 function escapeShellArg(arg: string): string {
   return `"${arg.replace(/(["'$`\\])/g, '\\$1')}"`;
 }
@@ -217,6 +204,11 @@ if (require.main === module) {
       },
       handleBuild,
     )
+    .command({
+      command: 'publish [manifestFile]',
+      describe: 'Upload your pack to Coda',
+      handler: handlePublish,
+    })
     .demandCommand()
     .strict()
     .help().argv;
