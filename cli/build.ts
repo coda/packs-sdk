@@ -1,6 +1,7 @@
 import type {Arguments} from 'yargs';
 import {ConsoleLogger} from '../helpers/logging';
 import type {Logger} from '../api_types';
+import * as esbuild from 'esbuild';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -8,14 +9,43 @@ import webpack from 'webpack';
 
 interface BuildArgs {
   manifestFile: string;
+  compiler?: Compiler;
 }
 
-export async function handleBuild({manifestFile}: Arguments<BuildArgs>) {
+enum Compiler {
+  esbuild = 'esbuild',
+  webpack = 'webpack',
+}
+
+export async function handleBuild({manifestFile, compiler}: Arguments<BuildArgs>) {
+  // TODO(alan): surface more helpful error messages when import manifestFile fails.
   const {manifest} = await import(manifestFile);
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'coda-packs-'));
 
   const bundleFilename = path.join(tempDir, `bundle-${manifest.id}-${manifest.version}.js`);
-  await compilePackBundleWebpack(bundleFilename, manifestFile, new ConsoleLogger());
+  const logger = new ConsoleLogger();
+
+  switch (compiler) {
+    case Compiler.webpack:
+      await compilePackBundleWebpack(bundleFilename, manifestFile, logger);
+      return;
+    case Compiler.esbuild:
+    default:
+      await compilePackBundleESBuild(bundleFilename, manifestFile);
+      return;
+  }
+}
+
+export async function compilePackBundleESBuild(bundleFilename: string, entrypoint: string) {
+  const options: esbuild.BuildOptions = {
+    bundle: true,
+    entryPoints: [entrypoint],
+    outfile: bundleFilename,
+    platform: 'node',
+    external: ['canvas'],
+    minify: true,
+  };
+  await esbuild.build(options);
 }
 
 async function compilePackBundleWebpack(bundleFilename: string, entrypoint: string, logger: Logger): Promise<any> {
