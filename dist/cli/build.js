@@ -38,18 +38,26 @@ const fs_1 = __importDefault(require("fs"));
 const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
 const webpack_1 = __importDefault(require("webpack"));
-function handleBuild({ manifestFile }) {
+var Compiler;
+(function (Compiler) {
+    Compiler["esbuild"] = "esbuild";
+    Compiler["webpack"] = "webpack";
+})(Compiler || (Compiler = {}));
+function handleBuild({ manifestFile, compiler }) {
     return __awaiter(this, void 0, void 0, function* () {
+        // TODO(alan): surface more helpful error messages when import manifestFile fails.
         const { manifest } = yield Promise.resolve().then(() => __importStar(require(manifestFile)));
         const tempDir = fs_1.default.mkdtempSync(path_1.default.join(os_1.default.tmpdir(), 'coda-packs-'));
         const bundleFilename = path_1.default.join(tempDir, `bundle-${manifest.id}-${manifest.version}.js`);
         const logger = new logging_1.ConsoleLogger();
-        try {
-            yield compilePackBundleESBuild(bundleFilename, manifestFile);
-        }
-        catch (err) {
-            logger.warn('Error while trying to bundle pack using esbuild. Falling back to webpack...', err);
-            yield compilePackBundleWebpack(bundleFilename, manifestFile, logger);
+        switch (compiler) {
+            case Compiler.webpack:
+                yield compilePackBundleWebpack(bundleFilename, manifestFile, logger);
+                return;
+            case Compiler.esbuild:
+            default:
+                yield compilePackBundleESBuild(bundleFilename, manifestFile);
+                return;
         }
     });
 }

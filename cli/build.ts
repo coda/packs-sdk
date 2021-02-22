@@ -9,19 +9,30 @@ import webpack from 'webpack';
 
 interface BuildArgs {
   manifestFile: string;
+  compiler?: Compiler;
 }
 
-export async function handleBuild({manifestFile}: Arguments<BuildArgs>) {
+enum Compiler {
+  esbuild = 'esbuild',
+  webpack = 'webpack',
+}
+
+export async function handleBuild({manifestFile, compiler}: Arguments<BuildArgs>) {
+  // TODO(alan): surface more helpful error messages when import manifestFile fails.
   const {manifest} = await import(manifestFile);
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'coda-packs-'));
 
   const bundleFilename = path.join(tempDir, `bundle-${manifest.id}-${manifest.version}.js`);
   const logger = new ConsoleLogger();
-  try {
-    await compilePackBundleESBuild(bundleFilename, manifestFile);
-  } catch (err) {
-    logger.warn('Error while trying to bundle pack using esbuild. Falling back to webpack...', err);
-    await compilePackBundleWebpack(bundleFilename, manifestFile, logger);
+
+  switch (compiler) {
+    case Compiler.webpack:
+      await compilePackBundleWebpack(bundleFilename, manifestFile, logger);
+      return;
+    case Compiler.esbuild:
+    default:
+      await compilePackBundleESBuild(bundleFilename, manifestFile);
+      return;
   }
 }
 

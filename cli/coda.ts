@@ -206,11 +206,17 @@ if (require.main === module) {
       describe: 'Register API token to publish a pack',
       handler: handleRegister,
     })
-    .command({
-      command: 'build [manifestFile]',
-      describe: 'Generate a webpack bundle for your pack',
-      handler: handleBuild,
-    })
+    .command(
+      'build [manifestFile]',
+      'Generate a webpack bundle for your pack',
+      y => {
+        return y.option('compiler', {
+          description: '`esbuild` or `webpack`',
+          required: false,
+        });
+      },
+      handleBuild,
+    )
     .demandCommand()
     .strict()
     .help().argv;
