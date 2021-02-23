@@ -19,7 +19,7 @@
     "@types/sinon": "^9.0.10",
     "client-oauth2": "^4.3.3",
     "clone": "^2.1.2",
-    "esbuild": "^0.8.49",
+    "esbuild": "^0.8.50",
     "express": "4.17.1",
     "open": "^7.4.2",
     "pascalcase": "^1.0.0",
