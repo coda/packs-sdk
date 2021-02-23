@@ -31,7 +31,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.compilePackBundleESBuild = exports.handleBuild = void 0;
+exports.compilePackBundleESBuild = exports.build = exports.handleBuild = void 0;
 const logging_1 = require("../helpers/logging");
 const esbuild = __importStar(require("esbuild"));
 const fs_1 = __importDefault(require("fs"));
@@ -45,6 +45,12 @@ var Compiler;
 })(Compiler || (Compiler = {}));
 function handleBuild({ manifestFile, compiler }) {
     return __awaiter(this, void 0, void 0, function* () {
+        yield build(manifestFile, compiler);
+    });
+}
+exports.handleBuild = handleBuild;
+function build(manifestFile, compiler) {
+    return __awaiter(this, void 0, void 0, function* () {
         // TODO(alan): surface more helpful error messages when import manifestFile fails.
         const { manifest } = yield Promise.resolve().then(() => __importStar(require(manifestFile)));
         const tempDir = fs_1.default.mkdtempSync(path_1.default.join(os_1.default.tmpdir(), 'coda-packs-'));
@@ -53,15 +59,15 @@ function handleBuild({ manifestFile, compiler }) {
         switch (compiler) {
             case Compiler.webpack:
                 yield compilePackBundleWebpack(bundleFilename, manifestFile, logger);
-                return;
+                break;
             case Compiler.esbuild:
             default:
                 yield compilePackBundleESBuild(bundleFilename, manifestFile);
-                return;
         }
+        return bundleFilename;
     });
 }
-exports.handleBuild = handleBuild;
+exports.build = build;
 function compilePackBundleESBuild(bundleFilename, entrypoint) {
     return __awaiter(this, void 0, void 0, function* () {
         const options = {
