@@ -1,7 +1,6 @@
 import type {Arguments} from 'yargs';
 import {build} from './build';
 import path from 'path';
-import {spawnProcess} from './helpers';
 
 interface PublishArgs {
   manifestFile: string;
@@ -10,8 +9,9 @@ interface PublishArgs {
 export async function handlePublish({manifestFile}: Arguments<PublishArgs>) {
   const bundleFile = await build(manifestFile);
   bundleFile!;
-  const packsSDKVersion = spawnProcess(`cd ${path.dirname(manifestFile)} && npm -v coda-packs-sdk`);
-  packsSDKVersion!;
+  const packageJson = await import(path.join(path.dirname(manifestFile), 'package.json'));
+  const codaPacksSDKVersion = packageJson.dependencies['coda-packs-sdk'];
+  codaPacksSDKVersion!;
 
   // TODO(alan): when the storage work is complete, upload the file located at bundleFile
   // to hit the /publish API.
