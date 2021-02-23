@@ -89,7 +89,7 @@ function handleExecute({ manifestPath, formulaName, params, fetch, credentialsFi
         // In the latter case, we can import the given file as a regular node (non-TS) import without any bootstrapping.
         if (isTypescript(manifestPath)) {
             const tsCommand = `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${fullManifestPath} ${Boolean(fetch)} ${credentialsFile || '""'} ${formulaName} ${params.map(escapeShellArg).join(' ')}`;
-            helpers_1.spawnProcess(tsCommand);
+            spawnBootstrapCommand(tsCommand);
         }
         else {
             const module = yield Promise.resolve().then(() => __importStar(require(fullManifestPath)));
@@ -107,13 +107,23 @@ function handleAuth({ manifestPath, credentialsFile, oauthServerPort }) {
         const fullManifestPath = makeManifestFullPath(manifestPath);
         if (isTypescript(manifestPath)) {
             const tsCommand = `ts-node -e "${AUTH_BOOTSTRAP_CODE}" ${fullManifestPath} ${credentialsFile || '""'} ${oauthServerPort || '""'}`;
-            helpers_1.spawnProcess(tsCommand);
+            spawnBootstrapCommand(tsCommand);
         }
         else {
             const module = yield Promise.resolve().then(() => __importStar(require(fullManifestPath)));
             yield auth_3.setupAuthFromModule(module, { credentialsFile, oauthServerPort });
         }
     });
+}
+function spawnBootstrapCommand(command) {
+    var _a;
+    let cmd = command;
+    // Hack to allow us to run this CLI tool for testing purposes from within this repo, without
+    // needing it installed as an npm package.
+    if ((_a = process.argv[1]) === null || _a === void 0 ? void 0 : _a.endsWith('coda.ts')) {
+        cmd = command.replace('coda-packs-sdk/dist', process.env.PWD);
+    }
+    helpers_1.spawnProcess(cmd);
 }
 function handleInit() {
     return __awaiter(this, void 0, void 0, function* () {

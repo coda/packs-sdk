@@ -21,7 +21,7 @@ export async function handleBuild({manifestFile, compiler}: Arguments<BuildArgs>
   await build(manifestFile, compiler);
 }
 
-export async function build(manifestFile: string, compiler?: string) {
+export async function build(manifestFile: string, compiler?: string): Promise<string> {
   // TODO(alan): surface more helpful error messages when import manifestFile fails.
   const {manifest} = await import(manifestFile);
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'coda-packs-'));

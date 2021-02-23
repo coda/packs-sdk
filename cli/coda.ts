@@ -79,7 +79,7 @@ async function handleExecute({manifestPath, formulaName, params, fetch, credenti
     const tsCommand = `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${fullManifestPath} ${Boolean(fetch)} ${
       credentialsFile || '""'
     } ${formulaName} ${params.map(escapeShellArg).join(' ')}`;
-    spawnProcess(tsCommand);
+    spawnBootstrapCommand(tsCommand);
   } else {
     const module = await import(fullManifestPath);
     await executeFormulaOrSyncFromCLI({
@@ -97,11 +97,21 @@ async function handleAuth({manifestPath, credentialsFile, oauthServerPort}: Argu
     const tsCommand = `ts-node -e "${AUTH_BOOTSTRAP_CODE}" ${fullManifestPath} ${credentialsFile || '""'} ${
       oauthServerPort || '""'
     }`;
-    spawnProcess(tsCommand);
+    spawnBootstrapCommand(tsCommand);
   } else {
     const module = await import(fullManifestPath);
     await setupAuthFromModule(module, {credentialsFile, oauthServerPort});
   }
+}
+
+function spawnBootstrapCommand(command: string) {
+  let cmd = command;
+  // Hack to allow us to run this CLI tool for testing purposes from within this repo, without
+  // needing it installed as an npm package.
+  if (process.argv[1]?.endsWith('coda.ts')) {
+    cmd = command.replace('coda-packs-sdk/dist', process.env.PWD!);
+  }
+  spawnProcess(cmd);
 }
 
 async function handleInit() {

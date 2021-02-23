@@ -19,9 +19,9 @@ const helpers_1 = require("./helpers");
 function handlePublish({ manifestFile }) {
     return __awaiter(this, void 0, void 0, function* () {
         const bundleFile = yield build_1.build(manifestFile);
+        bundleFile;
         const packsSDKVersion = helpers_1.spawnProcess(`cd ${path_1.default.dirname(manifestFile)} && npm -v coda-packs-sdk`);
-        // eslint-disable-next-line no-console
-        console.log(bundleFile, packsSDKVersion);
+        packsSDKVersion;
         // TODO(alan): when the storage work is complete, upload the file located at bundleFile
         // to hit the /publish API.
     });

@@ -9,10 +9,9 @@ interface PublishArgs {
 
 export async function handlePublish({manifestFile}: Arguments<PublishArgs>) {
   const bundleFile = await build(manifestFile);
+  bundleFile!;
   const packsSDKVersion = spawnProcess(`cd ${path.dirname(manifestFile)} && npm -v coda-packs-sdk`);
-
-  // eslint-disable-next-line no-console
-  console.log(bundleFile, packsSDKVersion);
+  packsSDKVersion!;
 
   // TODO(alan): when the storage work is complete, upload the file located at bundleFile
   // to hit the /publish API.
