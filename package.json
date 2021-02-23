@@ -31,7 +31,7 @@
     "string-template": "^1.0.0",
     "url-parse": "^1.4.7",
     "uuid": "^8.3.2",
-    "webpack": "^5.22.0",
+    "webpack": "^5.24.0",
     "xml2js": "^0.4.23",
     "yargs": "^16.2.0"
   },
