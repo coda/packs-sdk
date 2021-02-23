@@ -27,19 +27,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handlePublish = void 0;
 const build_1 = require("./build");
-const path_1 = __importDefault(require("path"));
 function handlePublish({ manifestFile }) {
     return __awaiter(this, void 0, void 0, function* () {
         const bundleFile = yield build_1.build(manifestFile);
         bundleFile;
-        const packageJson = yield Promise.resolve().then(() => __importStar(require(path_1.default.join(path_1.default.dirname(manifestFile), 'package.json'))));
-        const codaPacksSDKVersion = packageJson.dependencies['coda-packs-sdk'];
+        const packageJson = yield Promise.resolve().then(() => __importStar(require('../package.json')));
+        const codaPacksSDKVersion = packageJson.version;
         codaPacksSDKVersion;
         // TODO(alan): when the storage work is complete, upload the file located at bundleFile
         // to hit the /publish API.
