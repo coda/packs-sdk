@@ -13,11 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.readPacksFile = exports.storePack = exports.createPack = exports.handleCreate = void 0;
-const auth_1 = require("../testing/auth");
 const helpers_1 = require("../testing/helpers");
-const request_promise_native_1 = __importDefault(require("request-promise-native"));
+const auth_1 = require("../testing/auth");
 const helpers_2 = require("../testing/helpers");
-const DEFAULT_PACKS_FILE = '.coda-packs.json';
+const request_promise_native_1 = __importDefault(require("request-promise-native"));
+const helpers_3 = require("../testing/helpers");
+const PACK_IDS_FILE = '.coda-packs.json';
 function handleCreate({ packName }) {
     return __awaiter(this, void 0, void 0, function* () {
         yield createPack(packName);
@@ -29,9 +30,17 @@ function createPack(packName) {
         // TODO(alan): we probably want to redirect them to the `coda register`
         // flow if they don't have a Coda API token.
         const credentialsFile = auth_1.readCredentialsFile();
-        const { packId } = JSON.parse(yield request_promise_native_1.default.post(`https://coda.io/apis/v1/packs`, {
-            headers: { Authorization: `Bearer ${credentialsFile === null || credentialsFile === void 0 ? void 0 : credentialsFile.__coda__}` },
-        }));
+        let packId;
+        try {
+            const res = JSON.parse(yield request_promise_native_1.default.post(`https://coda.io/apis/v1/packs`, {
+                headers: { Authorization: `Bearer ${credentialsFile === null || credentialsFile === void 0 ? void 0 : credentialsFile.__coda__}` },
+            }));
+            packId = res.packId;
+        }
+        catch (err) {
+            const error = JSON.parse(err.error);
+            helpers_1.printAndExit(`Unable to create your pack, received error message ${error.message} (status code ${error.statusCode})`);
+        }
         storePack(packName, packId);
     });
 }
@@ -43,9 +52,9 @@ function storePack(packName, packId) {
 }
 exports.storePack = storePack;
 function readPacksFile() {
-    return helpers_1.readFile(DEFAULT_PACKS_FILE);
+    return helpers_2.readJSONFile(PACK_IDS_FILE);
 }
 exports.readPacksFile = readPacksFile;
 function writePacksFile(allPacks) {
-    helpers_2.writeFile(DEFAULT_PACKS_FILE, allPacks);
+    helpers_3.writeJSONFile(PACK_IDS_FILE, allPacks);
 }

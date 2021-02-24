@@ -23,7 +23,7 @@ export function promptForInput(prompt: string, {mask}: {mask?: boolean} = {}): s
   return readlineSync.question(prompt, {mask: mask ? '*' : undefined, hideEchoBack: mask});
 }
 
-export function readFile(fileName: string): any | undefined {
+export function readJSONFile(fileName: string): any | undefined {
   ensureNonEmptyString(fileName);
   let file: Buffer;
   try {
@@ -37,16 +37,11 @@ export function readFile(fileName: string): any | undefined {
   return JSON.parse(file.toString());
 }
 
-export function writeFile(fileName: string, payload: any): void {
+export function writeJSONFile(fileName: string, payload: any): void {
   ensureNonEmptyString(fileName);
   const dirname = path.dirname(fileName);
   if (!fs.existsSync(dirname)) {
     fs.mkdirSync(dirname);
   }
-  const fileExisted = fs.existsSync(fileName);
   fs.writeFileSync(fileName, JSON.stringify(payload, undefined, 2));
-  if (!fileExisted) {
-    // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
-    fs.chmodSync(fileName, 0o600);
-  }
 }

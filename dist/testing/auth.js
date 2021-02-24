@@ -8,12 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.readCredentialsFile = exports.storeCodaApiKey = exports.storeCredential = exports.setupAuth = exports.setupAuthFromModule = exports.DEFAULT_OAUTH_SERVER_PORT = exports.DEFAULT_CREDENTIALS_FILE = void 0;
 const types_1 = require("../types");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
 const ensure_3 = require("../helpers/ensure");
+const fs_1 = __importDefault(require("fs"));
 const helpers_1 = require("./helpers");
 const oauth_server_1 = require("./oauth_server");
 const oauth_server_2 = require("./oauth_server");
@@ -195,9 +199,14 @@ function storeCodaApiKey(apiKey, credentialsFile = exports.DEFAULT_CREDENTIALS_F
 }
 exports.storeCodaApiKey = storeCodaApiKey;
 function readCredentialsFile(credentialsFile = exports.DEFAULT_CREDENTIALS_FILE) {
-    return helpers_5.readFile(credentialsFile);
+    return helpers_5.readJSONFile(credentialsFile);
 }
 exports.readCredentialsFile = readCredentialsFile;
 function writeCredentialsFile(credentialsFile, allCredentials) {
-    return helpers_6.writeFile(credentialsFile, allCredentials);
+    const fileExisted = fs_1.default.existsSync(credentialsFile);
+    helpers_6.writeJSONFile(credentialsFile, allCredentials);
+    if (!fileExisted) {
+        // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
+        fs_1.default.chmodSync(credentialsFile, 0o600);
+    }
 }

@@ -22,7 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.writeFile = exports.readFile = exports.promptForInput = exports.printAndExit = exports.print = exports.getManifestFromModule = void 0;
+exports.writeJSONFile = exports.readJSONFile = exports.promptForInput = exports.printAndExit = exports.print = exports.getManifestFromModule = void 0;
 const ensure_1 = require("../helpers/ensure");
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
@@ -45,7 +45,7 @@ function promptForInput(prompt, { mask } = {}) {
     return readlineSync.question(prompt, { mask: mask ? '*' : undefined, hideEchoBack: mask });
 }
 exports.promptForInput = promptForInput;
-function readFile(fileName) {
+function readJSONFile(fileName) {
     ensure_1.ensureNonEmptyString(fileName);
     let file;
     try {
@@ -59,18 +59,13 @@ function readFile(fileName) {
     }
     return JSON.parse(file.toString());
 }
-exports.readFile = readFile;
-function writeFile(fileName, payload) {
+exports.readJSONFile = readJSONFile;
+function writeJSONFile(fileName, payload) {
     ensure_1.ensureNonEmptyString(fileName);
     const dirname = path_1.default.dirname(fileName);
     if (!fs_1.default.existsSync(dirname)) {
         fs_1.default.mkdirSync(dirname);
     }
-    const fileExisted = fs_1.default.existsSync(fileName);
     fs_1.default.writeFileSync(fileName, JSON.stringify(payload, undefined, 2));
-    if (!fileExisted) {
-        // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
-        fs_1.default.chmodSync(fileName, 0o600);
-    }
 }
-exports.writeFile = writeFile;
+exports.writeJSONFile = writeJSONFile;

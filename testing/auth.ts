@@ -8,14 +8,15 @@ import type {PackDefinition} from '../types';
 import {assertCondition} from '../helpers/ensure';
 import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
+import fs from 'fs';
 import {getManifestFromModule} from './helpers';
 import {launchOAuthServerFlow} from './oauth_server';
 import {makeRedirectUrl} from './oauth_server';
 import {print} from './helpers';
 import {printAndExit} from './helpers';
 import {promptForInput} from './helpers';
-import {readFile} from './helpers';
-import {writeFile} from './helpers';
+import {readJSONFile} from './helpers';
+import {writeJSONFile} from './helpers';
 
 interface SetupAuthOptions {
   credentialsFile?: string;
@@ -231,9 +232,14 @@ export function storeCodaApiKey(apiKey: string, credentialsFile: string = DEFAUL
 }
 
 export function readCredentialsFile(credentialsFile: string = DEFAULT_CREDENTIALS_FILE): AllCredentials | undefined {
-  return readFile(credentialsFile);
+  return readJSONFile(credentialsFile);
 }
 
 function writeCredentialsFile(credentialsFile: string, allCredentials: AllCredentials): void {
-  return writeFile(credentialsFile, allCredentials);
+  const fileExisted = fs.existsSync(credentialsFile);
+  writeJSONFile(credentialsFile, allCredentials);
+  if (!fileExisted) {
+    // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
+    fs.chmodSync(credentialsFile, 0o600);
+  }
 }
