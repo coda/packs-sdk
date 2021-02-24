@@ -13,10 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleRegister = void 0;
+const coda_1 = require("../helpers/external-api/coda");
 const open_1 = __importDefault(require("open"));
 const helpers_1 = require("../testing/helpers");
 const helpers_2 = require("../testing/helpers");
-const request_promise_native_1 = __importDefault(require("request-promise-native"));
 const auth_1 = require("../testing/auth");
 function handleRegister({ apiToken }) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -30,10 +30,9 @@ function handleRegister({ apiToken }) {
             yield open_1.default('https://coda.io/account');
             apiToken = helpers_2.promptForInput('Please paste the token here: ', { mask: true });
         }
+        const client = new coda_1.Client('https://dev.coda.io:8080', apiToken);
         try {
-            yield request_promise_native_1.default.get(`https://coda.io/apis/v1/whoami`, {
-                headers: { Authorization: `Bearer ${apiToken}` },
-            });
+            yield client.whoami();
         }
         catch (err) {
             const { statusCode, message } = JSON.parse(err.error);

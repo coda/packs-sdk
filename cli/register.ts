@@ -1,8 +1,8 @@
 import type {Arguments} from 'yargs';
+import {Client} from '../helpers/external-api/coda';
 import open from 'open';
 import {printAndExit} from '../testing/helpers';
 import {promptForInput} from '../testing/helpers';
-import requestPromise from 'request-promise-native';
 import {storeCodaApiKey} from '../testing/auth';
 
 interface RegisterArgs {
@@ -21,10 +21,10 @@ export async function handleRegister({apiToken}: Arguments<RegisterArgs>) {
     apiToken = promptForInput('Please paste the token here: ', {mask: true});
   }
 
+  const client = new Client('https://dev.coda.io:8080', apiToken);
+
   try {
-    await requestPromise.get(`https://coda.io/apis/v1/whoami`, {
-      headers: {Authorization: `Bearer ${apiToken}`},
-    });
+    await client.whoami();
   } catch (err) {
     const {statusCode, message} = JSON.parse(err.error);
     printAndExit(`Invalid API token provided: ${statusCode} ${message}`);

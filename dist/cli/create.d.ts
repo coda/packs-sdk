@@ -2,7 +2,7 @@ import type { Arguments } from 'yargs';
 interface CreateArgs {
     packName: string;
 }
-interface AllPacks {
+export interface AllPacks {
     [name: string]: number;
 }
 export declare function handleCreate({ packName }: Arguments<CreateArgs>): Promise<void>;

@@ -19,8 +19,10 @@
         "@types/sinon": "^9.0.10",
         "client-oauth2": "^4.3.3",
         "clone": "^2.1.2",
+        "es6-promise": "^4.2.8",
         "esbuild": "^0.8.51",
         "express": "4.17.1",
+        "isomorphic-fetch": "^3.0.0",
         "open": "^7.4.2",
         "pascalcase": "^1.0.0",
         "qs": "^6.9.6",
@@ -29,6 +31,7 @@
         "request-promise-native": "^1.0.9",
         "sinon": "9.2.4",
         "string-template": "^1.0.0",
+        "typescript": "^4.1.5",
         "url-parse": "^1.5.1",
         "uuid": "^8.3.2",
         "webpack": "^5.24.0",
@@ -64,8 +67,7 @@
         "mock-fs": "^4.13.0",
         "ts-loader": "^8.0.17",
         "ts-node": "^9.1.1",
-        "typedoc": "^0.20.28",
-        "typescript": "^4.1.5"
+        "typedoc": "^0.20.28"
     },
     "resolutions": {
         "marked": "^2.0.0"

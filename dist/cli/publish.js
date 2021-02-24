@@ -29,16 +29,51 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handlePublish = void 0;
+const coda_1 = require("../helpers/external-api/coda");
 const build_1 = require("./build");
+const helpers_1 = require("../testing/helpers");
+const auth_1 = require("../testing/auth");
+const helpers_2 = require("../testing/helpers");
+const create_1 = require("./create");
 function handlePublish({ manifestFile }) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        const bundleFile = yield build_1.build(manifestFile);
-        bundleFile;
+        const manifest = yield Promise.resolve().then(() => __importStar(require(manifestFile)));
+        const bundleFilename = yield build_1.build(manifestFile);
         const packageJson = yield Promise.resolve().then(() => __importStar(require('../package.json')));
         const codaPacksSDKVersion = packageJson.version;
         codaPacksSDKVersion;
-        // TODO(alan): when the storage work is complete, upload the file located at bundleFile
-        // to hit the /publish API.
+        const credentials = auth_1.readCredentialsFile();
+        if (!((_a = credentials === null || credentials === void 0 ? void 0 : credentials.__coda__) === null || _a === void 0 ? void 0 : _a.apiKey)) {
+            helpers_1.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
+        }
+        const client = new coda_1.Client('https://dev.coda.io:8080', credentials.__coda__.apiKey);
+        const packs = create_1.readPacksFile();
+        if (!packs) {
+            return;
+        }
+        const packId = packs[manifest.name];
+        const packVersion = manifest.version;
+        const { uploadUrl } = yield client.registerPackVersion(packId, packVersion);
+        yield uploadPackToSignedUrl(bundleFilename, uploadUrl);
+        yield client.packVersionUploadComplete(packId, packVersion);
     });
 }
 exports.handlePublish = handlePublish;
+function uploadPackToSignedUrl(bundleFilename, uploadUrl) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const payload = helpers_2.readFile(bundleFilename);
+        try {
+            yield fetch(uploadUrl, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+                body: payload,
+            });
+        }
+        catch (err) {
+            helpers_1.printAndExit(`Error in uploading pack to signed url: ${err}`);
+        }
+    });
+}
