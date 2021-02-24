@@ -5,3 +5,5 @@ export declare function printAndExit(msg: string, exitCode?: number): never;
 export declare function promptForInput(prompt: string, { mask }?: {
     mask?: boolean;
 }): string;
+export declare function readFile(fileName: string): any | undefined;
+export declare function writeFile(fileName: string, payload: any): void;

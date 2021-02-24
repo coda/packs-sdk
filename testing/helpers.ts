@@ -1,4 +1,7 @@
 import type {PackDefinition} from '../types';
+import {ensureNonEmptyString} from '../helpers/ensure';
+import fs from 'fs';
+import path from 'path';
 import * as readlineSync from 'readline-sync';
 
 export function getManifestFromModule(module: any): PackDefinition {
@@ -18,4 +21,32 @@ export function printAndExit(msg: string, exitCode: number = 1): never {
 
 export function promptForInput(prompt: string, {mask}: {mask?: boolean} = {}): string {
   return readlineSync.question(prompt, {mask: mask ? '*' : undefined, hideEchoBack: mask});
+}
+
+export function readFile(fileName: string): any | undefined {
+  ensureNonEmptyString(fileName);
+  let file: Buffer;
+  try {
+    file = fs.readFileSync(fileName);
+  } catch (err) {
+    if (err.message && err.message.includes('no such file or directory')) {
+      return;
+    }
+    throw err;
+  }
+  return JSON.parse(file.toString());
+}
+
+export function writeFile(fileName: string, payload: any): void {
+  ensureNonEmptyString(fileName);
+  const dirname = path.dirname(fileName);
+  if (!fs.existsSync(dirname)) {
+    fs.mkdirSync(dirname);
+  }
+  const fileExisted = fs.existsSync(fileName);
+  fs.writeFileSync(fileName, JSON.stringify(payload, undefined, 2));
+  if (!fileExisted) {
+    // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
+    fs.chmodSync(fileName, 0o600);
+  }
 }

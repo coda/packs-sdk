@@ -1,8 +1,8 @@
 import type {Arguments} from 'yargs';
-import fs from 'fs';
-import path from 'path';
 import {readCredentialsFile} from 'testing/auth';
+import {readFile} from 'testing/helpers';
 import requestPromise from 'request-promise-native';
+import {writeFile} from 'testing/helpers';
 
 interface CreateArgs {
   packName: string;
@@ -37,27 +37,9 @@ export function storePack(packName: string, packId: number): void {
 }
 
 export function readPacksFile(): AllPacks | undefined {
-  let file: Buffer;
-  try {
-    file = fs.readFileSync(DEFAULT_PACKS_FILE);
-  } catch (err) {
-    if (err.message && err.message.includes('no such file or directory')) {
-      return;
-    }
-    throw err;
-  }
-  return JSON.parse(file.toString());
+  return readFile(DEFAULT_PACKS_FILE);
 }
 
 function writePacksFile(allPacks: AllPacks): void {
-  const dirname = path.dirname(DEFAULT_PACKS_FILE);
-  if (!fs.existsSync(dirname)) {
-    fs.mkdirSync(dirname);
-  }
-  const fileExisted = fs.existsSync(DEFAULT_PACKS_FILE);
-  fs.writeFileSync(DEFAULT_PACKS_FILE, JSON.stringify(allPacks, undefined, 2));
-  if (!fileExisted) {
-    // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
-    fs.chmodSync(DEFAULT_PACKS_FILE, 0o600);
-  }
+  writeFile(DEFAULT_PACKS_FILE, allPacks);
 }

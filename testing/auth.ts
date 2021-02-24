@@ -8,14 +8,14 @@ import type {PackDefinition} from '../types';
 import {assertCondition} from '../helpers/ensure';
 import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
-import fs from 'fs';
 import {getManifestFromModule} from './helpers';
 import {launchOAuthServerFlow} from './oauth_server';
 import {makeRedirectUrl} from './oauth_server';
-import path from 'path';
 import {print} from './helpers';
 import {printAndExit} from './helpers';
 import {promptForInput} from './helpers';
+import {readFile} from './helpers';
+import {writeFile} from './helpers';
 
 interface SetupAuthOptions {
   credentialsFile?: string;
@@ -231,29 +231,9 @@ export function storeCodaApiKey(apiKey: string, credentialsFile: string = DEFAUL
 }
 
 export function readCredentialsFile(credentialsFile: string = DEFAULT_CREDENTIALS_FILE): AllCredentials | undefined {
-  ensureNonEmptyString(credentialsFile);
-  let file: Buffer;
-  try {
-    file = fs.readFileSync(credentialsFile);
-  } catch (err) {
-    if (err.message && err.message.includes('no such file or directory')) {
-      return;
-    }
-    throw err;
-  }
-  return JSON.parse(file.toString());
+  return readFile(credentialsFile);
 }
 
 function writeCredentialsFile(credentialsFile: string, allCredentials: AllCredentials): void {
-  ensureNonEmptyString(credentialsFile);
-  const dirname = path.dirname(credentialsFile);
-  if (!fs.existsSync(dirname)) {
-    fs.mkdirSync(dirname);
-  }
-  const fileExisted = fs.existsSync(credentialsFile);
-  fs.writeFileSync(credentialsFile, JSON.stringify(allCredentials, undefined, 2));
-  if (!fileExisted) {
-    // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
-    fs.chmodSync(credentialsFile, 0o600);
-  }
+  return writeFile(credentialsFile, allCredentials);
 }

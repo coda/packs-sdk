@@ -13,10 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.readPacksFile = exports.storePack = exports.createPack = exports.handleCreate = void 0;
-const fs_1 = __importDefault(require("fs"));
-const path_1 = __importDefault(require("path"));
 const auth_1 = require("testing/auth");
+const helpers_1 = require("testing/helpers");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
+const helpers_2 = require("testing/helpers");
 const DEFAULT_PACKS_FILE = '.coda-packs.json';
 function handleCreate({ packName }) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -43,28 +43,9 @@ function storePack(packName, packId) {
 }
 exports.storePack = storePack;
 function readPacksFile() {
-    let file;
-    try {
-        file = fs_1.default.readFileSync(DEFAULT_PACKS_FILE);
-    }
-    catch (err) {
-        if (err.message && err.message.includes('no such file or directory')) {
-            return;
-        }
-        throw err;
-    }
-    return JSON.parse(file.toString());
+    return helpers_1.readFile(DEFAULT_PACKS_FILE);
 }
 exports.readPacksFile = readPacksFile;
 function writePacksFile(allPacks) {
-    const dirname = path_1.default.dirname(DEFAULT_PACKS_FILE);
-    if (!fs_1.default.existsSync(dirname)) {
-        fs_1.default.mkdirSync(dirname);
-    }
-    const fileExisted = fs_1.default.existsSync(DEFAULT_PACKS_FILE);
-    fs_1.default.writeFileSync(DEFAULT_PACKS_FILE, JSON.stringify(allPacks, undefined, 2));
-    if (!fileExisted) {
-        // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
-        fs_1.default.chmodSync(DEFAULT_PACKS_FILE, 0o600);
-    }
+    helpers_2.writeFile(DEFAULT_PACKS_FILE, allPacks);
 }

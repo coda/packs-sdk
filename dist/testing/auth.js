@@ -8,23 +8,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.readCredentialsFile = exports.storeCodaApiKey = exports.storeCredential = exports.setupAuth = exports.setupAuthFromModule = exports.DEFAULT_OAUTH_SERVER_PORT = exports.DEFAULT_CREDENTIALS_FILE = void 0;
 const types_1 = require("../types");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
 const ensure_3 = require("../helpers/ensure");
-const fs_1 = __importDefault(require("fs"));
 const helpers_1 = require("./helpers");
 const oauth_server_1 = require("./oauth_server");
 const oauth_server_2 = require("./oauth_server");
-const path_1 = __importDefault(require("path"));
 const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
 const helpers_4 = require("./helpers");
+const helpers_5 = require("./helpers");
+const helpers_6 = require("./helpers");
 exports.DEFAULT_CREDENTIALS_FILE = '.coda/credentials.json';
 exports.DEFAULT_OAUTH_SERVER_PORT = 3000;
 function setupAuthFromModule(module, opts = {}) {
@@ -198,30 +195,9 @@ function storeCodaApiKey(apiKey, credentialsFile = exports.DEFAULT_CREDENTIALS_F
 }
 exports.storeCodaApiKey = storeCodaApiKey;
 function readCredentialsFile(credentialsFile = exports.DEFAULT_CREDENTIALS_FILE) {
-    ensure_2.ensureNonEmptyString(credentialsFile);
-    let file;
-    try {
-        file = fs_1.default.readFileSync(credentialsFile);
-    }
-    catch (err) {
-        if (err.message && err.message.includes('no such file or directory')) {
-            return;
-        }
-        throw err;
-    }
-    return JSON.parse(file.toString());
+    return helpers_5.readFile(credentialsFile);
 }
 exports.readCredentialsFile = readCredentialsFile;
 function writeCredentialsFile(credentialsFile, allCredentials) {
-    ensure_2.ensureNonEmptyString(credentialsFile);
-    const dirname = path_1.default.dirname(credentialsFile);
-    if (!fs_1.default.existsSync(dirname)) {
-        fs_1.default.mkdirSync(dirname);
-    }
-    const fileExisted = fs_1.default.existsSync(credentialsFile);
-    fs_1.default.writeFileSync(credentialsFile, JSON.stringify(allCredentials, undefined, 2));
-    if (!fileExisted) {
-        // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
-        fs_1.default.chmodSync(credentialsFile, 0o600);
-    }
+    return helpers_6.writeFile(credentialsFile, allCredentials);
 }
