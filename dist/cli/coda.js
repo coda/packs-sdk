@@ -218,12 +218,12 @@ if (require.main === module) {
         });
     }, build_1.handleBuild)
         .command({
-        command: 'publish [manifestFile]',
+        command: 'publish <manifestFile>',
         describe: 'Upload your pack to Coda',
         handler: publish_1.handlePublish,
     })
         .command({
-        command: 'create [packName]',
+        command: 'create <packName>',
         describe: "Register a new pack with Coda's servers",
         handler: create_1.handleCreate,
     })

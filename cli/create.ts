@@ -1,8 +1,8 @@
 import type {Arguments} from 'yargs';
-import {readCredentialsFile} from 'testing/auth';
-import {readFile} from 'testing/helpers';
+import {readCredentialsFile} from '../testing/auth';
+import {readFile} from '../testing/helpers';
 import requestPromise from 'request-promise-native';
-import {writeFile} from 'testing/helpers';
+import {writeFile} from '../testing/helpers';
 
 interface CreateArgs {
   packName: string;
@@ -22,11 +22,11 @@ export async function createPack(packName: string) {
   // TODO(alan): we probably want to redirect them to the `coda register`
   // flow if they don't have a Coda API token.
   const credentialsFile = readCredentialsFile();
-  const {packId} = (
-    await requestPromise.get(`https://coda.io/apis/v1/packs`, {
+  const {packId} = JSON.parse(
+    await requestPromise.post(`https://coda.io/apis/v1/packs`, {
       headers: {Authorization: `Bearer ${credentialsFile?.__coda__}`},
-    })
-  ).json();
+    }),
+  );
   storePack(packName, packId);
 }
 

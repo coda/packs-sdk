@@ -13,10 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.readPacksFile = exports.storePack = exports.createPack = exports.handleCreate = void 0;
-const auth_1 = require("testing/auth");
-const helpers_1 = require("testing/helpers");
+const auth_1 = require("../testing/auth");
+const helpers_1 = require("../testing/helpers");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
-const helpers_2 = require("testing/helpers");
+const helpers_2 = require("../testing/helpers");
 const DEFAULT_PACKS_FILE = '.coda-packs.json';
 function handleCreate({ packName }) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -29,9 +29,9 @@ function createPack(packName) {
         // TODO(alan): we probably want to redirect them to the `coda register`
         // flow if they don't have a Coda API token.
         const credentialsFile = auth_1.readCredentialsFile();
-        const { packId } = (yield request_promise_native_1.default.get(`https://coda.io/apis/v1/packs`, {
+        const { packId } = JSON.parse(yield request_promise_native_1.default.post(`https://coda.io/apis/v1/packs`, {
             headers: { Authorization: `Bearer ${credentialsFile === null || credentialsFile === void 0 ? void 0 : credentialsFile.__coda__}` },
-        })).json();
+        }));
         storePack(packName, packId);
     });
 }
