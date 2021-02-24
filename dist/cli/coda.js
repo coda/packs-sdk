@@ -37,6 +37,7 @@ const auth_2 = require("../testing/auth");
 const execution_1 = require("../testing/execution");
 const fs_1 = __importDefault(require("fs"));
 const build_1 = require("./build");
+const create_1 = require("./create");
 const publish_1 = require("./publish");
 const register_1 = require("./register");
 const path_1 = __importDefault(require("path"));
@@ -220,6 +221,11 @@ if (require.main === module) {
         command: 'publish [manifestFile]',
         describe: 'Upload your pack to Coda',
         handler: publish_1.handlePublish,
+    })
+        .command({
+        command: 'create [packName]',
+        describe: "Register a new pack with Coda's servers",
+        handler: create_1.handleCreate,
     })
         .demandCommand()
         .strict()
