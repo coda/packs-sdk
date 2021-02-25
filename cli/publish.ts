@@ -38,6 +38,7 @@ export async function handlePublish({manifestFile}: Arguments<PublishArgs>) {
 }
 
 async function uploadPackToSignedUrl(bundleFilename: string, uploadUrl: string) {
+  // TODO: create JSON from metadata and payload.
   const payload = readFile(bundleFilename);
   try {
     await fetch(uploadUrl, {
