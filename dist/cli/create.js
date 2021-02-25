@@ -26,6 +26,7 @@ function handleCreate({ packName }) {
 }
 exports.handleCreate = handleCreate;
 function createPack(packName) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         // TODO(alan): we probably want to redirect them to the `coda register`
         // flow if they don't have a Coda API token.
@@ -33,13 +34,14 @@ function createPack(packName) {
         let packId;
         try {
             const res = JSON.parse(yield request_promise_native_1.default.post(`https://coda.io/apis/v1/packs`, {
-                headers: { Authorization: `Bearer ${credentialsFile === null || credentialsFile === void 0 ? void 0 : credentialsFile.__coda__}` },
+                headers: { Authorization: `Bearer ${(_a = credentialsFile === null || credentialsFile === void 0 ? void 0 : credentialsFile.__coda__) === null || _a === void 0 ? void 0 : _a.apiKey}` },
             }));
             packId = res.packId;
         }
         catch (err) {
+            // TODO(alan): pressure test with errors
             const error = JSON.parse(err.error);
-            helpers_1.printAndExit(`Unable to create your pack, received error message ${error.message} (status code ${error.statusCode})`);
+            helpers_1.printAndExit(`Unable to create your pack, received error message ${error.message} (status code ${err.statusCode})`);
         }
         storePack(packName, packId);
     });

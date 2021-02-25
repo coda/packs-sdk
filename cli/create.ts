@@ -27,15 +27,14 @@ export async function createPack(packName: string) {
   try {
     const res = JSON.parse(
       await requestPromise.post(`https://coda.io/apis/v1/packs`, {
-        headers: {Authorization: `Bearer ${credentialsFile?.__coda__}`},
+        headers: {Authorization: `Bearer ${credentialsFile?.__coda__?.apiKey}`},
       }),
     );
     packId = res.packId;
   } catch (err) {
+    // TODO(alan): pressure test with errors
     const error = JSON.parse(err.error);
-    printAndExit(
-      `Unable to create your pack, received error message ${error.message} (status code ${error.statusCode})`,
-    );
+    printAndExit(`Unable to create your pack, received error message ${error.message} (status code ${err.statusCode})`);
   }
 
   storePack(packName, packId);
