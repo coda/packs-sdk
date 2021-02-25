@@ -279,20 +279,20 @@ export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackF
   execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
 }
 
-interface StringFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaDef<ParamsT> {
+export interface StringFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaDef<ParamsT> {
   execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<string> | string;
   response?: {
     schema: StringSchema;
   };
 }
 
-interface ObjectResultFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema>
+export interface ObjectResultFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema>
   extends PackFormulaDef<ParamsT, object | object[]> {
   execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<object> | object;
   response?: ResponseHandlerTemplate<SchemaT>;
 }
 
-interface ObjectArrayFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema>
+export interface ObjectArrayFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema>
   extends Omit<PackFormulaDef<ParamsT, SchemaType<SchemaT>>, 'execute'> {
   request: RequestHandlerTemplate;
   response: ResponseHandlerTemplate<SchemaT>;
@@ -302,15 +302,19 @@ export interface EmptyFormulaDef<ParamsT extends ParamDefs> extends Omit<PackFor
   request: RequestHandlerTemplate;
 }
 
-type Formula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = PackFormulaDef<ParamDefsT, ResultT> & {
+export type Formula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = PackFormulaDef<
+  ParamDefsT,
+  ResultT
+> & {
   resultType: TypeOf<ResultT>;
 };
 
-type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number> & {schema?: NumberSchema};
-type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> = Formula<
-  ParamDefsT,
-  SchemaType<StringSchema<ResultT>>
-> & {
+export type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number> & {schema?: NumberSchema};
+
+export type StringPackFormula<
+  ParamDefsT extends ParamDefs,
+  ResultT extends StringHintTypes = StringHintTypes
+> = Formula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
   schema?: StringSchema<ResultT>;
 };
 
@@ -328,7 +332,7 @@ export type TypedStandardFormula =
 
 export type TypedPackFormula = TypedStandardFormula | GenericSyncFormula;
 
-type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
+export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
 export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
 export function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata {
