@@ -7,6 +7,7 @@ import type {Options} from 'yargs';
 import {executeFormulaOrSyncFromCLI} from '../testing/execution';
 import fs from 'fs';
 import {handleBuild} from './build';
+import {handleCreate} from './create';
 import {handlePublish} from './publish';
 import {handleRegister} from './register';
 import path from 'path';
@@ -215,9 +216,14 @@ if (require.main === module) {
       handleBuild,
     )
     .command({
-      command: 'publish [manifestFile]',
+      command: 'publish <manifestFile>',
       describe: 'Upload your pack to Coda',
       handler: handlePublish,
+    })
+    .command({
+      command: 'create <packName>',
+      describe: "Register a new pack with Coda's servers",
+      handler: handleCreate,
     })
     .demandCommand()
     .strict()

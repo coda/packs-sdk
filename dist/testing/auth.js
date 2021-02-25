@@ -21,10 +21,11 @@ const fs_1 = __importDefault(require("fs"));
 const helpers_1 = require("./helpers");
 const oauth_server_1 = require("./oauth_server");
 const oauth_server_2 = require("./oauth_server");
-const path_1 = __importDefault(require("path"));
 const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
 const helpers_4 = require("./helpers");
+const helpers_5 = require("./helpers");
+const helpers_6 = require("./helpers");
 exports.DEFAULT_CREDENTIALS_FILE = '.coda/credentials.json';
 exports.DEFAULT_OAUTH_SERVER_PORT = 3000;
 function setupAuthFromModule(module, opts = {}) {
@@ -198,28 +199,12 @@ function storeCodaApiKey(apiKey, credentialsFile = exports.DEFAULT_CREDENTIALS_F
 }
 exports.storeCodaApiKey = storeCodaApiKey;
 function readCredentialsFile(credentialsFile = exports.DEFAULT_CREDENTIALS_FILE) {
-    ensure_2.ensureNonEmptyString(credentialsFile);
-    let file;
-    try {
-        file = fs_1.default.readFileSync(credentialsFile);
-    }
-    catch (err) {
-        if (err.message && err.message.includes('no such file or directory')) {
-            return;
-        }
-        throw err;
-    }
-    return JSON.parse(file.toString());
+    return helpers_5.readJSONFile(credentialsFile);
 }
 exports.readCredentialsFile = readCredentialsFile;
 function writeCredentialsFile(credentialsFile, allCredentials) {
-    ensure_2.ensureNonEmptyString(credentialsFile);
-    const dirname = path_1.default.dirname(credentialsFile);
-    if (!fs_1.default.existsSync(dirname)) {
-        fs_1.default.mkdirSync(dirname);
-    }
     const fileExisted = fs_1.default.existsSync(credentialsFile);
-    fs_1.default.writeFileSync(credentialsFile, JSON.stringify(allCredentials, undefined, 2));
+    helpers_6.writeJSONFile(credentialsFile, allCredentials);
     if (!fileExisted) {
         // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
         fs_1.default.chmodSync(credentialsFile, 0o600);

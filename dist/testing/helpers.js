@@ -18,8 +18,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.promptForInput = exports.printAndExit = exports.print = exports.getManifestFromModule = void 0;
+exports.writeJSONFile = exports.readJSONFile = exports.promptForInput = exports.printAndExit = exports.print = exports.getManifestFromModule = void 0;
+const ensure_1 = require("../helpers/ensure");
+const fs_1 = __importDefault(require("fs"));
+const path_1 = __importDefault(require("path"));
 const readlineSync = __importStar(require("readline-sync"));
 function getManifestFromModule(module) {
     if (!module.manifest) {
@@ -39,3 +45,27 @@ function promptForInput(prompt, { mask } = {}) {
     return readlineSync.question(prompt, { mask: mask ? '*' : undefined, hideEchoBack: mask });
 }
 exports.promptForInput = promptForInput;
+function readJSONFile(fileName) {
+    ensure_1.ensureNonEmptyString(fileName);
+    let file;
+    try {
+        file = fs_1.default.readFileSync(fileName);
+    }
+    catch (err) {
+        if (err.message && err.message.includes('no such file or directory')) {
+            return;
+        }
+        throw err;
+    }
+    return JSON.parse(file.toString());
+}
+exports.readJSONFile = readJSONFile;
+function writeJSONFile(fileName, payload) {
+    ensure_1.ensureNonEmptyString(fileName);
+    const dirname = path_1.default.dirname(fileName);
+    if (!fs_1.default.existsSync(dirname)) {
+        fs_1.default.mkdirSync(dirname);
+    }
+    fs_1.default.writeFileSync(fileName, JSON.stringify(payload, undefined, 2));
+}
+exports.writeJSONFile = writeJSONFile;
