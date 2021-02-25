@@ -31,6 +31,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handlePublish = void 0;
 const coda_1 = require("../helpers/external-api/coda");
 const build_1 = require("./build");
+const ensure_1 = require("../helpers/ensure");
 const helpers_1 = require("../testing/helpers");
 const auth_1 = require("../testing/auth");
 const helpers_2 = require("../testing/helpers");
@@ -38,7 +39,7 @@ const create_1 = require("./create");
 function handlePublish({ manifestFile }) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        const manifest = yield Promise.resolve().then(() => __importStar(require(manifestFile)));
+        const { manifest } = yield Promise.resolve().then(() => __importStar(require(manifestFile)));
         const bundleFilename = yield build_1.build(manifestFile);
         const packageJson = yield Promise.resolve().then(() => __importStar(require('../package.json')));
         const codaPacksSDKVersion = packageJson.version;
@@ -55,21 +56,24 @@ function handlePublish({ manifestFile }) {
         const packId = packs[manifest.name];
         const packVersion = manifest.version;
         const { uploadUrl } = yield client.registerPackVersion(packId, packVersion);
-        yield uploadPackToSignedUrl(bundleFilename, uploadUrl);
+        yield uploadPackToSignedUrl(bundleFilename, manifest, uploadUrl);
         yield client.packVersionUploadComplete(packId, packVersion);
     });
 }
 exports.handlePublish = handlePublish;
-function uploadPackToSignedUrl(bundleFilename, uploadUrl) {
+function uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl) {
     return __awaiter(this, void 0, void 0, function* () {
-        const payload = helpers_2.readFile(bundleFilename);
+        const bundle = ensure_1.ensureExists(helpers_2.readFile(bundleFilename), `Could not find bundle file at path ${bundleFilename}`);
+        const body = new FormData();
+        body.append('bundle', new Blob([bundle]));
+        body.append('metadata', JSON.stringify(metadata));
         try {
             yield fetch(uploadUrl, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 method: 'POST',
-                body: payload,
+                body,
             });
         }
         catch (err) {
