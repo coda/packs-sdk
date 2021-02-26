@@ -21,7 +21,7 @@ export async function handleRegister({apiToken}: Arguments<RegisterArgs>) {
     apiToken = promptForInput('Please paste the token here: ', {mask: true});
   }
 
-  const client = new Client('https://dev.coda.io:8080', apiToken);
+  const client = new Client('https://coda.io', apiToken);
 
   try {
     await client.whoami();

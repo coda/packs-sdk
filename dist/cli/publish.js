@@ -51,7 +51,7 @@ function handlePublish({ manifestFile }) {
         if (!((_a = credentials === null || credentials === void 0 ? void 0 : credentials.__coda__) === null || _a === void 0 ? void 0 : _a.apiKey)) {
             helpers_1.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
         }
-        const client = new coda_1.Client('https://dev.coda.io:8080', credentials.__coda__.apiKey);
+        const client = new coda_1.Client('https://coda.io', credentials.__coda__.apiKey);
         const packs = create_1.readPacksFile();
         if (!packs) {
             // TODO(alan): probably add a command to regenerate the file if it is missing.

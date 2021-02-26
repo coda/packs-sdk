@@ -30,7 +30,7 @@ function handleRegister({ apiToken }) {
             yield open_1.default('https://coda.io/account');
             apiToken = helpers_2.promptForInput('Please paste the token here: ', { mask: true });
         }
-        const client = new coda_1.Client('https://dev.coda.io:8080', apiToken);
+        const client = new coda_1.Client('https://coda.io', apiToken);
         try {
             yield client.whoami();
         }

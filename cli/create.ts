@@ -27,7 +27,7 @@ export async function createPack(packName: string) {
     printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
   }
 
-  const codaClient = new Client(`https://dev.coda.io:8080`, credentials.__coda__.apiKey);
+  const codaClient = new Client(`https://coda.io`, credentials.__coda__.apiKey);
   let packId: number;
   try {
     const response = await codaClient.createPack();

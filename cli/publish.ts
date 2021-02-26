@@ -26,7 +26,7 @@ export async function handlePublish({manifestFile}: Arguments<PublishArgs>) {
     printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
   }
 
-  const client = new Client('https://dev.coda.io:8080', credentials.__coda__.apiKey);
+  const client = new Client('https://coda.io', credentials.__coda__.apiKey);
 
   const packs: AllPacks | undefined = readPacksFile();
   if (!packs) {
