@@ -27,15 +27,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handlePublish = void 0;
 const coda_1 = require("../helpers/external-api/coda");
 const build_1 = require("./build");
-const ensure_1 = require("../helpers/ensure");
 const helpers_1 = require("../testing/helpers");
 const auth_1 = require("../testing/auth");
 const helpers_2 = require("../testing/helpers");
 const create_1 = require("./create");
+const request_promise_native_1 = __importDefault(require("request-promise-native"));
 function handlePublish({ manifestFile }) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
@@ -51,10 +54,18 @@ function handlePublish({ manifestFile }) {
         const client = new coda_1.Client('https://dev.coda.io:8080', credentials.__coda__.apiKey);
         const packs = create_1.readPacksFile();
         if (!packs) {
-            return;
+            // TODO(alan): probably add a command to regenerate the file if it is missing.
+            helpers_1.printAndExit(`Could not find your packs file.`);
         }
         const packId = packs[manifest.name];
+        if (!packId) {
+            helpers_1.printAndExit(`Could not find a pack id registered to pack "${manifest.name}"`);
+        }
         const packVersion = manifest.version;
+        if (!packVersion) {
+            helpers_1.printAndExit(`No pack version found for your pack "${manifest.name}"`);
+        }
+        //  TODO(alan): error testing
         const { uploadUrl } = yield client.registerPackVersion(packId, packVersion);
         yield uploadPackToSignedUrl(bundleFilename, manifest, uploadUrl);
         yield client.packVersionUploadComplete(packId, packVersion);
@@ -63,17 +74,19 @@ function handlePublish({ manifestFile }) {
 exports.handlePublish = handlePublish;
 function uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl) {
     return __awaiter(this, void 0, void 0, function* () {
-        const bundle = ensure_1.ensureExists(helpers_2.readFile(bundleFilename), `Could not find bundle file at path ${bundleFilename}`);
-        const body = new FormData();
-        body.append('bundle', new Blob([bundle]));
-        body.append('metadata', JSON.stringify(metadata));
+        const bundle = helpers_2.readFile(bundleFilename);
+        if (!bundle) {
+            helpers_1.printAndExit(`Could not find bundle file at path ${bundleFilename}`);
+        }
         try {
-            yield fetch(uploadUrl, {
+            yield request_promise_native_1.default.put(uploadUrl, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                method: 'POST',
-                body,
+                json: {
+                    metadata,
+                    bundle: bundle.toString(),
+                },
             });
         }
         catch (err) {
