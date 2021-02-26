@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSchemaId = exports.SchemaIdPrefix = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.DurationUnit = exports.CurrencyFormat = exports.ValueType = void 0;
+exports.getSchemaId = exports.SchemaIdPrefix = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.DurationUnit = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const ensure_2 = require("./helpers/ensure");
 const ensure_3 = require("./helpers/ensure");
@@ -36,6 +36,29 @@ var ValueType;
     ValueType["Slider"] = "slider";
     ValueType["Scale"] = "scale";
 })(ValueType = exports.ValueType || (exports.ValueType = {}));
+exports.StringHintValueTypes = [
+    ValueType.Attachment,
+    ValueType.Date,
+    ValueType.Time,
+    ValueType.DateTime,
+    ValueType.Duration,
+    ValueType.Embed,
+    ValueType.Html,
+    ValueType.Image,
+    ValueType.ImageAttachment,
+    ValueType.Markdown,
+    ValueType.Url,
+];
+exports.NumberHintValueTypes = [
+    ValueType.Date,
+    ValueType.Time,
+    ValueType.DateTime,
+    ValueType.Percent,
+    ValueType.Currency,
+    ValueType.Slider,
+    ValueType.Scale,
+];
+exports.ObjectHintValueTypes = [ValueType.Person, ValueType.Reference];
 var CurrencyFormat;
 (function (CurrencyFormat) {
     CurrencyFormat["Currency"] = "currency";

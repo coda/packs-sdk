@@ -24,9 +24,12 @@ export declare enum ValueType {
     Slider = "slider",
     Scale = "scale"
 }
-export declare type StringHintTypes = ValueType.Attachment | ValueType.Date | ValueType.Time | ValueType.DateTime | ValueType.Duration | ValueType.Embed | ValueType.Html | ValueType.Image | ValueType.ImageAttachment | ValueType.Markdown | ValueType.Url;
-export declare type NumberHintTypes = ValueType.Date | ValueType.Time | ValueType.DateTime | ValueType.Percent | ValueType.Currency | ValueType.Slider | ValueType.Scale;
-export declare type ObjectHintTypes = ValueType.Person | ValueType.Reference;
+export declare const StringHintValueTypes: readonly [ValueType.Attachment, ValueType.Date, ValueType.Time, ValueType.DateTime, ValueType.Duration, ValueType.Embed, ValueType.Html, ValueType.Image, ValueType.ImageAttachment, ValueType.Markdown, ValueType.Url];
+export declare const NumberHintValueTypes: readonly [ValueType.Date, ValueType.Time, ValueType.DateTime, ValueType.Percent, ValueType.Currency, ValueType.Slider, ValueType.Scale];
+export declare const ObjectHintValueTypes: readonly [ValueType.Person, ValueType.Reference];
+export declare type StringHintTypes = typeof StringHintValueTypes[number];
+export declare type NumberHintTypes = typeof NumberHintValueTypes[number];
+export declare type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 interface BaseSchema {
     description?: string;
 }

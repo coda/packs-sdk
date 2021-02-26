@@ -55,4 +55,8 @@ export interface ExternalPackMetadata extends BasePackMetadata {
     formats?: ExternalPackFormat[];
     syncTables?: ExternalSyncTable[];
 }
+export interface PackUpload {
+    metadata: PackMetadata;
+    bundle: string;
+}
 export {};

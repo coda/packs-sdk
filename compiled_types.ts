@@ -32,6 +32,8 @@ export type PackMetadata = Omit<PackDefinition, 'formulas' | 'formats' | 'defaul
   formulas: PackFormulasMetadata | PackFormulaMetadata[];
   formats: PackFormatMetadata[];
   syncTables: PackSyncTable[];
+  // TODO(jonathan): Make a proper metadata type for Authentication, that removes `execute` from
+  // all the metadata formulas, including the on PostSetup.
   defaultAuthentication?: $OmitNested<Authentication, 'getConnectionName', 'execute'>;
 };
 
@@ -72,4 +74,9 @@ export interface ExternalPackMetadata extends BasePackMetadata {
   formulas?: ExternalPackFormulas;
   formats?: ExternalPackFormat[];
   syncTables?: ExternalSyncTable[];
+}
+
+export interface PackUpload {
+  metadata: PackMetadata;
+  bundle: string;
 }
