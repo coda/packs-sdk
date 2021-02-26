@@ -34,27 +34,33 @@ export enum ValueType {
   Scale = 'scale',
 }
 
-export type StringHintTypes =
-  | ValueType.Attachment
-  | ValueType.Date
-  | ValueType.Time
-  | ValueType.DateTime
-  | ValueType.Duration
-  | ValueType.Embed
-  | ValueType.Html
-  | ValueType.Image
-  | ValueType.ImageAttachment
-  | ValueType.Markdown
-  | ValueType.Url;
-export type NumberHintTypes =
-  | ValueType.Date
-  | ValueType.Time
-  | ValueType.DateTime
-  | ValueType.Percent
-  | ValueType.Currency
-  | ValueType.Slider
-  | ValueType.Scale;
-export type ObjectHintTypes = ValueType.Person | ValueType.Reference;
+export const StringHintValueTypes = [
+  ValueType.Attachment,
+  ValueType.Date,
+  ValueType.Time,
+  ValueType.DateTime,
+  ValueType.Duration,
+  ValueType.Embed,
+  ValueType.Html,
+  ValueType.Image,
+  ValueType.ImageAttachment,
+  ValueType.Markdown,
+  ValueType.Url,
+] as const;
+export const NumberHintValueTypes = [
+  ValueType.Date,
+  ValueType.Time,
+  ValueType.DateTime,
+  ValueType.Percent,
+  ValueType.Currency,
+  ValueType.Slider,
+  ValueType.Scale,
+] as const;
+export const ObjectHintValueTypes = [ValueType.Person, ValueType.Reference] as const;
+
+export type StringHintTypes = typeof StringHintValueTypes[number];
+export type NumberHintTypes = typeof NumberHintValueTypes[number];
+export type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 
 interface BaseSchema {
   description?: string;
