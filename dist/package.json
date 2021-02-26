@@ -22,7 +22,6 @@
         "es6-promise": "^4.2.8",
         "esbuild": "^0.8.51",
         "express": "4.17.1",
-        "form-data": "^4.0.0",
         "isomorphic-fetch": "^3.0.0",
         "open": "^7.4.2",
         "pascalcase": "^1.0.0",
