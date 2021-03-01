@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getApiKey = exports.spawnProcess = void 0;
+exports.createCodaClient = exports.getApiKey = exports.spawnProcess = void 0;
+const coda_1 = require("../helpers/external-api/coda");
 const auth_1 = require("../testing/auth");
 const child_process_1 = require("child_process");
 function spawnProcess(command) {
@@ -16,3 +17,7 @@ function getApiKey() {
     return (_a = credentials === null || credentials === void 0 ? void 0 : credentials.__coda__) === null || _a === void 0 ? void 0 : _a.apiKey;
 }
 exports.getApiKey = getApiKey;
+function createCodaClient(apiKey, dev) {
+    return new coda_1.Client(dev ? 'https//: dev.coda.io:8080' : 'https://coda.io', apiKey);
+}
+exports.createCodaClient = createCodaClient;

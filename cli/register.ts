@@ -1,5 +1,5 @@
 import type {Arguments} from 'yargs';
-import {Client} from '../helpers/external-api/coda';
+import {createCodaClient} from './helpers';
 import open from 'open';
 import {printAndExit} from '../testing/helpers';
 import {promptForInput} from '../testing/helpers';
@@ -7,9 +7,10 @@ import {storeCodaApiKey} from '../testing/auth';
 
 interface RegisterArgs {
   apiToken?: string;
+  dev?: boolean;
 }
 
-export async function handleRegister({apiToken}: Arguments<RegisterArgs>) {
+export async function handleRegister({apiToken, dev}: Arguments<RegisterArgs>) {
   if (!apiToken) {
     // TODO: deal with auto-open on devbox setups
     const shouldOpenBrowser = promptForInput('No API token provided. Do you want to visit Coda to create one? ');
@@ -21,7 +22,7 @@ export async function handleRegister({apiToken}: Arguments<RegisterArgs>) {
     apiToken = promptForInput('Please paste the token here: ', {mask: true});
   }
 
-  const client = new Client('https://coda.io', apiToken);
+  const client = createCodaClient(apiToken, dev);
 
   try {
     await client.whoami();

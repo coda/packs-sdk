@@ -1,9 +1,9 @@
 import type {AllPacks} from './create';
 import type {Arguments} from 'yargs';
-import {Client} from '../helpers/external-api/coda';
 import {ConsoleLogger} from '../helpers/logging';
 import type {PackMetadata} from '../compiled_types';
 import {build} from './build';
+import {createCodaClient} from './helpers';
 import {getApiKey} from './helpers';
 import {printAndExit} from '../testing/helpers';
 import {readFile} from '../testing/helpers';
@@ -12,9 +12,10 @@ import requestPromise from 'request-promise-native';
 
 interface PublishArgs {
   manifestFile: string;
+  dev?: boolean;
 }
 
-export async function handlePublish({manifestFile}: Arguments<PublishArgs>) {
+export async function handlePublish({manifestFile, dev}: Arguments<PublishArgs>) {
   const logger = new ConsoleLogger();
   const {manifest} = await import(manifestFile);
   logger.info('Building pack bundle...');
@@ -28,7 +29,7 @@ export async function handlePublish({manifestFile}: Arguments<PublishArgs>) {
     printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
   }
 
-  const client = new Client('https://coda.io', apiKey);
+  const client = createCodaClient(apiKey, dev);
 
   const packs: AllPacks | undefined = readPacksFile();
   const packId = packs && packs[manifest.name];

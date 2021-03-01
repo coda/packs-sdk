@@ -202,27 +202,50 @@ if (require.main === module) {
     .command({
       command: 'register [apiToken]',
       describe: 'Register API token to publish a pack',
+      builder: {
+        dev: {
+          boolean: true,
+          default: false,
+          hidden: true,
+        } as Options,
+      },
       handler: handleRegister,
     })
-    .command(
-      'build [manifestFile]',
-      'Generate a webpack bundle for your pack',
-      y => {
-        return y.option('compiler', {
-          description: '`esbuild` or `webpack`',
-          required: false,
-        });
+    .command({
+      command: 'build <manifestFile>',
+      describe: 'Generate a bundle for your pack',
+      builder: {
+        compiler: {
+          string: true,
+          default: 'esbuild',
+          desc: '`esbuild` or `webpack`',
+          demandOption: false,
+        } as Options,
       },
-      handleBuild,
-    )
+      handler: handleBuild,
+    })
     .command({
       command: 'publish <manifestFile>',
       describe: 'Upload your pack to Coda',
+      builder: {
+        dev: {
+          boolean: true,
+          default: false,
+          hidden: true,
+        } as Options,
+      },
       handler: handlePublish,
     })
     .command({
       command: 'create <packName>',
       describe: "Register a new pack with Coda's servers",
+      builder: {
+        dev: {
+          boolean: true,
+          default: false,
+          hidden: true,
+        } as Options,
+      },
       handler: handleCreate,
     })
     .demandCommand()

@@ -32,15 +32,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handlePublish = void 0;
-const coda_1 = require("../helpers/external-api/coda");
 const logging_1 = require("../helpers/logging");
 const build_1 = require("./build");
 const helpers_1 = require("./helpers");
-const helpers_2 = require("../testing/helpers");
+const helpers_2 = require("./helpers");
 const helpers_3 = require("../testing/helpers");
+const helpers_4 = require("../testing/helpers");
 const create_1 = require("./create");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
-function handlePublish({ manifestFile }) {
+function handlePublish({ manifestFile, dev }) {
     return __awaiter(this, void 0, void 0, function* () {
         const logger = new logging_1.ConsoleLogger();
         const { manifest } = yield Promise.resolve().then(() => __importStar(require(manifestFile)));
@@ -49,19 +49,19 @@ function handlePublish({ manifestFile }) {
         const packageJson = yield Promise.resolve().then(() => __importStar(require('../package.json')));
         const codaPacksSDKVersion = packageJson.version;
         codaPacksSDKVersion;
-        const apiKey = helpers_1.getApiKey();
+        const apiKey = helpers_2.getApiKey();
         if (!apiKey) {
-            helpers_2.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
+            helpers_3.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
         }
-        const client = new coda_1.Client('https://coda.io', apiKey);
+        const client = helpers_1.createCodaClient(apiKey, dev);
         const packs = create_1.readPacksFile();
         const packId = packs && packs[manifest.name];
         if (!packId) {
-            helpers_2.printAndExit(`Could not find a pack id registered to pack "${manifest.name}"`);
+            helpers_3.printAndExit(`Could not find a pack id registered to pack "${manifest.name}"`);
         }
         const packVersion = manifest.version;
         if (!packVersion) {
-            helpers_2.printAndExit(`No pack version found for your pack "${manifest.name}"`);
+            helpers_3.printAndExit(`No pack version found for your pack "${manifest.name}"`);
         }
         //  TODO(alan): error testing
         try {
@@ -73,7 +73,7 @@ function handlePublish({ manifestFile }) {
             yield client.packVersionUploadComplete(packId, packVersion);
         }
         catch (err) {
-            helpers_2.printAndExit(`Error: ${err}`);
+            helpers_3.printAndExit(`Error: ${err}`);
         }
         logger.info('Done!');
     });
@@ -81,9 +81,9 @@ function handlePublish({ manifestFile }) {
 exports.handlePublish = handlePublish;
 function uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl) {
     return __awaiter(this, void 0, void 0, function* () {
-        const bundle = helpers_3.readFile(bundleFilename);
+        const bundle = helpers_4.readFile(bundleFilename);
         if (!bundle) {
-            helpers_2.printAndExit(`Could not find bundle file at path ${bundleFilename}`);
+            helpers_3.printAndExit(`Could not find bundle file at path ${bundleFilename}`);
         }
         try {
             yield request_promise_native_1.default.put(uploadUrl, {
@@ -97,7 +97,7 @@ function uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl) {
             });
         }
         catch (err) {
-            helpers_2.printAndExit(`Error in uploading pack to signed url: ${err}`);
+            helpers_3.printAndExit(`Error in uploading pack to signed url: ${err}`);
         }
     });
 }

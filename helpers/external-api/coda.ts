@@ -10,7 +10,7 @@
 import 'es6-promise/auto';
 import 'isomorphic-fetch';
 import {withQueryParams} from '../url';
-import * as types from './gen-types/v1';
+import * as types from './v1';
 
 export class Client {
   private readonly protocolAndHost: string;
