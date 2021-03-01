@@ -15,5 +15,5 @@ export function getApiKey() {
 }
 
 export function createCodaClient(apiKey: string, dev?: boolean) {
-  return new Client(dev ? 'https//: dev.coda.io:8080' : 'https://coda.io', apiKey);
+  return new Client(dev ? 'https://dev.coda.io:8080' : 'https://coda.io', apiKey);
 }

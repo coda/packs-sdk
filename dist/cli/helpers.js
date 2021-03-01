@@ -18,6 +18,6 @@ function getApiKey() {
 }
 exports.getApiKey = getApiKey;
 function createCodaClient(apiKey, dev) {
-    return new coda_1.Client(dev ? 'https//: dev.coda.io:8080' : 'https://coda.io', apiKey);
+    return new coda_1.Client(dev ? 'https://dev.coda.io:8080' : 'https://coda.io', apiKey);
 }
 exports.createCodaClient = createCodaClient;
