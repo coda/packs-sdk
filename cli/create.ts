@@ -1,7 +1,7 @@
 import type {Arguments} from 'yargs';
 import {Client} from '../helpers/external-api/coda';
+import {getApiKey} from './helpers';
 import {printAndExit} from '../testing/helpers';
-import {readCredentialsFile} from '../testing/auth';
 import {readJSONFile} from '../testing/helpers';
 import {writeJSONFile} from '../testing/helpers';
 
@@ -22,12 +22,12 @@ export async function handleCreate({packName}: Arguments<CreateArgs>) {
 export async function createPack(packName: string) {
   // TODO(alan): we probably want to redirect them to the `coda register`
   // flow if they don't have a Coda API token.
-  const credentials = readCredentialsFile();
-  if (!credentials?.__coda__?.apiKey) {
+  const apiKey = getApiKey();
+  if (!apiKey) {
     printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
   }
 
-  const codaClient = new Client(`https://coda.io`, credentials.__coda__.apiKey);
+  const codaClient = new Client(`https://coda.io`, apiKey);
   let packId: number;
   try {
     const response = await codaClient.createPack();

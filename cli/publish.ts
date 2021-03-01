@@ -1,11 +1,11 @@
-import type {AllCredentials} from '../testing/auth_types';
 import type {AllPacks} from './create';
 import type {Arguments} from 'yargs';
 import {Client} from '../helpers/external-api/coda';
+import {ConsoleLogger} from '../helpers/logging';
 import type {PackMetadata} from '../compiled_types';
 import {build} from './build';
+import {getApiKey} from './helpers';
 import {printAndExit} from '../testing/helpers';
-import {readCredentialsFile} from '../testing/auth';
 import {readFile} from '../testing/helpers';
 import {readPacksFile} from './create';
 import requestPromise from 'request-promise-native';
@@ -15,26 +15,23 @@ interface PublishArgs {
 }
 
 export async function handlePublish({manifestFile}: Arguments<PublishArgs>) {
+  const logger = new ConsoleLogger();
   const {manifest} = await import(manifestFile);
+  logger.info('Building pack bundle...');
   const bundleFilename = await build(manifestFile);
   const packageJson = await import('../package.json');
   const codaPacksSDKVersion = packageJson.version;
   codaPacksSDKVersion!;
 
-  const credentials: AllCredentials | undefined = readCredentialsFile();
-  if (!credentials?.__coda__?.apiKey) {
+  const apiKey = getApiKey();
+  if (!apiKey) {
     printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
   }
 
-  const client = new Client('https://coda.io', credentials.__coda__.apiKey);
+  const client = new Client('https://coda.io', apiKey);
 
   const packs: AllPacks | undefined = readPacksFile();
-  if (!packs) {
-    // TODO(alan): probably add a command to regenerate the file if it is missing.
-    printAndExit(`Could not find your packs file.`);
-  }
-
-  const packId = packs[manifest.name];
+  const packId = packs && packs[manifest.name];
   if (!packId) {
     printAndExit(`Could not find a pack id registered to pack "${manifest.name}"`);
   }
@@ -45,9 +42,20 @@ export async function handlePublish({manifestFile}: Arguments<PublishArgs>) {
   }
 
   //  TODO(alan): error testing
-  const {uploadUrl} = await client.registerPackVersion(packId, packVersion);
-  await uploadPackToSignedUrl(bundleFilename, manifest, uploadUrl);
-  await client.packVersionUploadComplete(packId, packVersion);
+  try {
+    logger.info('Registering new pack version...');
+    const {uploadUrl} = await client.registerPackVersion(packId, packVersion);
+
+    logger.info('Uploading pack...');
+    await uploadPackToSignedUrl(bundleFilename, manifest, uploadUrl);
+
+    logger.info('Validating upload...');
+    await client.packVersionUploadComplete(packId, packVersion);
+  } catch (err) {
+    printAndExit(`Error: ${err}`);
+  }
+
+  logger.info('Done!');
 }
 
 async function uploadPackToSignedUrl(bundleFilename: string, metadata: PackMetadata, uploadUrl: string) {

@@ -4,8 +4,14 @@ exports.ConsoleLogger = void 0;
 const util_1 = require("util");
 class ConsoleLogger {
     _logMessage(level, message, args) {
-        // eslint-disable-next-line no-console
-        console.log(`[${level}/${new Date().toISOString()}]: ${util_1.format(message, args)}`);
+        if (args.length) {
+            // eslint-disable-next-line no-console
+            console.log(`[${level}/${new Date().toISOString()}]: ${util_1.format(message, args)}`);
+        }
+        else {
+            // eslint-disable-next-line no-console
+            console.log(`[${level}/${new Date().toISOString()}]: ${message}`);
+        }
     }
     trace(message, ...args) {
         this._logMessage('trace', message, args);

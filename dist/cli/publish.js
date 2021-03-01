@@ -33,50 +33,57 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handlePublish = void 0;
 const coda_1 = require("../helpers/external-api/coda");
+const logging_1 = require("../helpers/logging");
 const build_1 = require("./build");
-const helpers_1 = require("../testing/helpers");
-const auth_1 = require("../testing/auth");
+const helpers_1 = require("./helpers");
 const helpers_2 = require("../testing/helpers");
+const helpers_3 = require("../testing/helpers");
 const create_1 = require("./create");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
 function handlePublish({ manifestFile }) {
-    var _a;
     return __awaiter(this, void 0, void 0, function* () {
+        const logger = new logging_1.ConsoleLogger();
         const { manifest } = yield Promise.resolve().then(() => __importStar(require(manifestFile)));
+        logger.info('Building pack bundle...');
         const bundleFilename = yield build_1.build(manifestFile);
         const packageJson = yield Promise.resolve().then(() => __importStar(require('../package.json')));
         const codaPacksSDKVersion = packageJson.version;
         codaPacksSDKVersion;
-        const credentials = auth_1.readCredentialsFile();
-        if (!((_a = credentials === null || credentials === void 0 ? void 0 : credentials.__coda__) === null || _a === void 0 ? void 0 : _a.apiKey)) {
-            helpers_1.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
+        const apiKey = helpers_1.getApiKey();
+        if (!apiKey) {
+            helpers_2.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
         }
-        const client = new coda_1.Client('https://coda.io', credentials.__coda__.apiKey);
+        const client = new coda_1.Client('https://coda.io', apiKey);
         const packs = create_1.readPacksFile();
-        if (!packs) {
-            // TODO(alan): probably add a command to regenerate the file if it is missing.
-            helpers_1.printAndExit(`Could not find your packs file.`);
-        }
-        const packId = packs[manifest.name];
+        const packId = packs && packs[manifest.name];
         if (!packId) {
-            helpers_1.printAndExit(`Could not find a pack id registered to pack "${manifest.name}"`);
+            helpers_2.printAndExit(`Could not find a pack id registered to pack "${manifest.name}"`);
         }
         const packVersion = manifest.version;
         if (!packVersion) {
-            helpers_1.printAndExit(`No pack version found for your pack "${manifest.name}"`);
+            helpers_2.printAndExit(`No pack version found for your pack "${manifest.name}"`);
         }
         //  TODO(alan): error testing
-        const { uploadUrl } = yield client.registerPackVersion(packId, packVersion);
-        yield uploadPackToSignedUrl(bundleFilename, manifest, uploadUrl);
-        yield client.packVersionUploadComplete(packId, packVersion);
+        try {
+            logger.info('Registering new pack version...');
+            const { uploadUrl } = yield client.registerPackVersion(packId, packVersion);
+            logger.info('Uploading pack...');
+            yield uploadPackToSignedUrl(bundleFilename, manifest, uploadUrl);
+            logger.info('Validating upload...');
+            yield client.packVersionUploadComplete(packId, packVersion);
+        }
+        catch (err) {
+            helpers_2.printAndExit(`Error: ${err}`);
+        }
+        logger.info('Done!');
     });
 }
 exports.handlePublish = handlePublish;
 function uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl) {
     return __awaiter(this, void 0, void 0, function* () {
-        const bundle = helpers_2.readFile(bundleFilename);
+        const bundle = helpers_3.readFile(bundleFilename);
         if (!bundle) {
-            helpers_1.printAndExit(`Could not find bundle file at path ${bundleFilename}`);
+            helpers_2.printAndExit(`Could not find bundle file at path ${bundleFilename}`);
         }
         try {
             yield request_promise_native_1.default.put(uploadUrl, {
@@ -90,7 +97,7 @@ function uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl) {
             });
         }
         catch (err) {
-            helpers_1.printAndExit(`Error in uploading pack to signed url: ${err}`);
+            helpers_2.printAndExit(`Error in uploading pack to signed url: ${err}`);
         }
     });
 }

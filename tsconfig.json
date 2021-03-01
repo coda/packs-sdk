@@ -6,8 +6,7 @@
     "lib": [
       /* Specify library files to be included in the compilation:  */
       "dom",
-      "es2017",
-      "es2020.promise"
+      "es2017"
     ],
     // "allowJs": true,                          /* Allow javascript files to be compiled. */
     // "checkJs": true,                         /* Report errors in .js files. */

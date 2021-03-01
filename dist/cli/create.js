@@ -11,10 +11,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.readPacksFile = exports.storePack = exports.createPack = exports.handleCreate = void 0;
 const coda_1 = require("../helpers/external-api/coda");
-const helpers_1 = require("../testing/helpers");
-const auth_1 = require("../testing/auth");
+const helpers_1 = require("./helpers");
 const helpers_2 = require("../testing/helpers");
 const helpers_3 = require("../testing/helpers");
+const helpers_4 = require("../testing/helpers");
 const PACK_IDS_FILE = '.coda-packs.json';
 function handleCreate({ packName }) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -23,15 +23,14 @@ function handleCreate({ packName }) {
 }
 exports.handleCreate = handleCreate;
 function createPack(packName) {
-    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         // TODO(alan): we probably want to redirect them to the `coda register`
         // flow if they don't have a Coda API token.
-        const credentials = auth_1.readCredentialsFile();
-        if (!((_a = credentials === null || credentials === void 0 ? void 0 : credentials.__coda__) === null || _a === void 0 ? void 0 : _a.apiKey)) {
-            helpers_1.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
+        const apiKey = helpers_1.getApiKey();
+        if (!apiKey) {
+            helpers_2.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
         }
-        const codaClient = new coda_1.Client(`https://coda.io`, credentials.__coda__.apiKey);
+        const codaClient = new coda_1.Client(`https://coda.io`, apiKey);
         let packId;
         try {
             const response = yield codaClient.createPack();
@@ -40,7 +39,7 @@ function createPack(packName) {
         catch (err) {
             // TODO(alan): pressure test with errors
             const error = JSON.parse(err.error);
-            helpers_1.printAndExit(`Unable to create your pack, received error message ${error.message} (status code ${err.statusCode})`);
+            helpers_2.printAndExit(`Unable to create your pack, received error message ${error.message} (status code ${err.statusCode})`);
         }
         storePack(packName, packId);
     });
@@ -53,9 +52,9 @@ function storePack(packName, packId) {
 }
 exports.storePack = storePack;
 function readPacksFile() {
-    return helpers_2.readJSONFile(PACK_IDS_FILE);
+    return helpers_3.readJSONFile(PACK_IDS_FILE);
 }
 exports.readPacksFile = readPacksFile;
 function writePacksFile(allPacks) {
-    helpers_3.writeJSONFile(PACK_IDS_FILE, allPacks);
+    helpers_4.writeJSONFile(PACK_IDS_FILE, allPacks);
 }
