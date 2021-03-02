@@ -10,6 +10,7 @@ import {handleBuild} from './build';
 import {handleCreate} from './create';
 import {handlePublish} from './publish';
 import {handleRegister} from './register';
+import {isTestCommand} from './helpers';
 import path from 'path';
 import {setupAuthFromModule} from '../testing/auth';
 import {spawnProcess} from './helpers';
@@ -109,7 +110,7 @@ function spawnBootstrapCommand(command: string) {
   let cmd = command;
   // Hack to allow us to run this CLI tool for testing purposes from within this repo, without
   // needing it installed as an npm package.
-  if (process.argv[1]?.endsWith('coda.ts')) {
+  if (isTestCommand()) {
     cmd = command.replace('coda-packs-sdk/dist', process.env.PWD!);
   }
   spawnProcess(cmd);

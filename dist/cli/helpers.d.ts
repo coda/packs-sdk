@@ -4,3 +4,4 @@ export declare function spawnProcess(command: string): import("child_process").S
 export declare function getApiKey(): string | undefined;
 export declare function createCodaClient(apiKey: string, protocolAndHost?: string): Client;
 export declare function formatEndpoint(endpoint: string): string;
+export declare function isTestCommand(): boolean;

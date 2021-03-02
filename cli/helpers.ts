@@ -21,3 +21,7 @@ export function createCodaClient(apiKey: string, protocolAndHost?: string) {
 export function formatEndpoint(endpoint: string) {
   return endpoint.startsWith('https://') ? endpoint : `https://${endpoint}`;
 }
+
+export function isTestCommand() {
+  return process.argv[1]?.endsWith('coda.ts');
+}
