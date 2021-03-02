@@ -40,9 +40,10 @@ const build_1 = require("./build");
 const create_1 = require("./create");
 const publish_1 = require("./publish");
 const register_1 = require("./register");
+const helpers_1 = require("./helpers");
 const path_1 = __importDefault(require("path"));
 const auth_3 = require("../testing/auth");
-const helpers_1 = require("./helpers");
+const helpers_2 = require("./helpers");
 const yargs_1 = __importDefault(require("yargs"));
 const EXECUTE_BOOTSTRAP_CODE = `
 import {executeFormulaOrSyncFromCLI} from 'coda-packs-sdk/dist/testing/execution';
@@ -117,20 +118,19 @@ function handleAuth({ manifestPath, credentialsFile, oauthServerPort }) {
     });
 }
 function spawnBootstrapCommand(command) {
-    var _a;
     let cmd = command;
     // Hack to allow us to run this CLI tool for testing purposes from within this repo, without
     // needing it installed as an npm package.
-    if ((_a = process.argv[1]) === null || _a === void 0 ? void 0 : _a.endsWith('coda.ts')) {
+    if (helpers_1.isTestCommand()) {
         cmd = command.replace('coda-packs-sdk/dist', process.env.PWD);
     }
-    helpers_1.spawnProcess(cmd);
+    helpers_2.spawnProcess(cmd);
 }
 function handleInit() {
     return __awaiter(this, void 0, void 0, function* () {
         let isPacksExamplesInstalled;
         try {
-            const listNpmPackages = helpers_1.spawnProcess('npm list coda-packs-examples');
+            const listNpmPackages = helpers_2.spawnProcess('npm list coda-packs-examples');
             isPacksExamplesInstalled = listNpmPackages.status === 0;
         }
         catch (error) {
@@ -139,19 +139,19 @@ function handleInit() {
         if (!isPacksExamplesInstalled) {
             // TODO(jonathan): Switch this to a regular https repo url when the repo becomes public.
             const installCommand = `npm install git+ssh://github.com/kr-project/packs-examples.git`;
-            helpers_1.spawnProcess(installCommand);
+            helpers_2.spawnProcess(installCommand);
         }
         const packageJson = JSON.parse(fs_1.default.readFileSync(`${PACKS_EXAMPLES_DIRECTORY}/package.json`, 'utf-8'));
         const devDependencies = packageJson.devDependencies;
         const devDependencyPackages = Object.keys(devDependencies)
             .map(dependency => `${dependency}@${devDependencies[dependency]}`)
             .join(' ');
-        helpers_1.spawnProcess(`npm install --save-dev ${devDependencyPackages}`);
+        helpers_2.spawnProcess(`npm install --save-dev ${devDependencyPackages}`);
         const copyCommand = `cp -r ${PACKS_EXAMPLES_DIRECTORY}/examples/template/* ${process.cwd()}`;
-        helpers_1.spawnProcess(copyCommand);
+        helpers_2.spawnProcess(copyCommand);
         if (!isPacksExamplesInstalled) {
             const uninstallCommand = `npm uninstall coda-packs-examples`;
-            helpers_1.spawnProcess(uninstallCommand);
+            helpers_2.spawnProcess(uninstallCommand);
         }
     });
 }

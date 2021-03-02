@@ -6,6 +6,7 @@ import {build} from './build';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {getApiKey} from './helpers';
+import {isTestCommand} from './helpers';
 import {printAndExit} from '../testing/helpers';
 import {readFile} from '../testing/helpers';
 import {readPacksFile} from './create';
@@ -22,7 +23,9 @@ export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<P
   const {manifest} = await import(manifestFile);
   logger.info('Building pack bundle...');
   const bundleFilename = await build(manifestFile);
-  const packageJson = await import('../../' + 'package.json');
+
+  // Since package.json isn't in dist, we grab it from the root directory instead.
+  const packageJson = await import(isTestCommand() ? '../package.json' : '../../package.json');
   const codaPacksSDKVersion = packageJson.version;
   codaPacksSDKVersion!;
 
