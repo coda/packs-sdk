@@ -22,7 +22,7 @@ export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<P
   const {manifest} = await import(manifestFile);
   logger.info('Building pack bundle...');
   const bundleFilename = await build(manifestFile);
-  const packageJson = await import('../package.json');
+  const packageJson = await import('../../' + 'package.json');
   const codaPacksSDKVersion = packageJson.version;
   codaPacksSDKVersion!;
 

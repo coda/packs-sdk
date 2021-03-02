@@ -48,7 +48,7 @@ function handlePublish({ manifestFile, codaApiEndpoint }) {
         const { manifest } = yield Promise.resolve().then(() => __importStar(require(manifestFile)));
         logger.info('Building pack bundle...');
         const bundleFilename = yield build_1.build(manifestFile);
-        const packageJson = yield Promise.resolve().then(() => __importStar(require('../package.json')));
+        const packageJson = yield Promise.resolve().then(() => __importStar(require('../../' + 'package.json')));
         const codaPacksSDKVersion = packageJson.version;
         codaPacksSDKVersion;
         const apiKey = helpers_3.getApiKey();
