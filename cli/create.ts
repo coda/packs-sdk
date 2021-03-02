@@ -1,36 +1,40 @@
 import type {Arguments} from 'yargs';
+import {createCodaClient} from './helpers';
+import {formatEndpoint} from './helpers';
+import {getApiKey} from './helpers';
 import {printAndExit} from '../testing/helpers';
-import {readCredentialsFile} from '../testing/auth';
 import {readJSONFile} from '../testing/helpers';
-import requestPromise from 'request-promise-native';
 import {writeJSONFile} from '../testing/helpers';
 
 interface CreateArgs {
   packName: string;
+  codaApiEndpoint: string;
 }
 
-interface AllPacks {
+export interface AllPacks {
   [name: string]: number;
 }
 
 const PACK_IDS_FILE = '.coda-packs.json';
 
-export async function handleCreate({packName}: Arguments<CreateArgs>) {
-  await createPack(packName);
+export async function handleCreate({packName, codaApiEndpoint}: Arguments<CreateArgs>) {
+  await createPack(packName, codaApiEndpoint);
 }
 
-export async function createPack(packName: string) {
+export async function createPack(packName: string, codaApiEndpoint: string) {
+  const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   // TODO(alan): we probably want to redirect them to the `coda register`
   // flow if they don't have a Coda API token.
-  const credentialsFile = readCredentialsFile();
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
+  }
+
+  const codaClient = createCodaClient(apiKey, formattedEndpoint);
   let packId: number;
   try {
-    const res = JSON.parse(
-      await requestPromise.post(`https://coda.io/apis/v1/packs`, {
-        headers: {Authorization: `Bearer ${credentialsFile?.__coda__?.apiKey}`},
-      }),
-    );
-    packId = res.packId;
+    const response = await codaClient.createPack();
+    packId = response.packId;
   } catch (err) {
     // TODO(alan): pressure test with errors
     const error = JSON.parse(err.error);

@@ -1,6 +1,7 @@
 import type { Arguments } from 'yargs';
 interface RegisterArgs {
     apiToken?: string;
+    codaApiEndpoint: string;
 }
-export declare function handleRegister({ apiToken }: Arguments<RegisterArgs>): Promise<undefined>;
+export declare function handleRegister({ apiToken, codaApiEndpoint }: Arguments<RegisterArgs>): Promise<undefined>;
 export {};

@@ -23,7 +23,7 @@ export function promptForInput(prompt: string, {mask}: {mask?: boolean} = {}): s
   return readlineSync.question(prompt, {mask: mask ? '*' : undefined, hideEchoBack: mask});
 }
 
-export function readJSONFile(fileName: string): any | undefined {
+export function readFile(fileName: string): Buffer | undefined {
   ensureNonEmptyString(fileName);
   let file: Buffer;
   try {
@@ -34,7 +34,12 @@ export function readJSONFile(fileName: string): any | undefined {
     }
     throw err;
   }
-  return JSON.parse(file.toString());
+  return file;
+}
+
+export function readJSONFile(fileName: string): any | undefined {
+  const file = readFile(fileName);
+  return file ? JSON.parse(file.toString()) : undefined;
 }
 
 export function writeJSONFile(fileName: string, payload: any): void {
