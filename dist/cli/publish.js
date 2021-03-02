@@ -40,7 +40,7 @@ const helpers_3 = require("../testing/helpers");
 const helpers_4 = require("../testing/helpers");
 const create_1 = require("./create");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
-function handlePublish({ manifestFile, dev }) {
+function handlePublish({ manifestFile, codaApiEndpoint }) {
     return __awaiter(this, void 0, void 0, function* () {
         const logger = new logging_1.ConsoleLogger();
         const { manifest } = yield Promise.resolve().then(() => __importStar(require(manifestFile)));
@@ -53,7 +53,7 @@ function handlePublish({ manifestFile, dev }) {
         if (!apiKey) {
             helpers_3.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
         }
-        const client = helpers_1.createCodaClient(apiKey, dev);
+        const client = helpers_1.createCodaClient(apiKey, codaApiEndpoint);
         const packs = create_1.readPacksFile();
         const packId = packs && packs[manifest.name];
         if (!packId) {

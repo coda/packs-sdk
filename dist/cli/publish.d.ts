@@ -1,7 +1,7 @@
 import type { Arguments } from 'yargs';
 interface PublishArgs {
     manifestFile: string;
-    dev?: boolean;
+    codaApiEndpoint: string;
 }
-export declare function handlePublish({ manifestFile, dev }: Arguments<PublishArgs>): Promise<void>;
+export declare function handlePublish({ manifestFile, codaApiEndpoint }: Arguments<PublishArgs>): Promise<void>;
 export {};

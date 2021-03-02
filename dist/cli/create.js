@@ -16,13 +16,13 @@ const helpers_3 = require("../testing/helpers");
 const helpers_4 = require("../testing/helpers");
 const helpers_5 = require("../testing/helpers");
 const PACK_IDS_FILE = '.coda-packs.json';
-function handleCreate({ packName, dev }) {
+function handleCreate({ packName, codaApiEndpoint }) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield createPack(packName, dev);
+        yield createPack(packName, codaApiEndpoint);
     });
 }
 exports.handleCreate = handleCreate;
-function createPack(packName, dev) {
+function createPack(packName, codaApiEndpoint) {
     return __awaiter(this, void 0, void 0, function* () {
         // TODO(alan): we probably want to redirect them to the `coda register`
         // flow if they don't have a Coda API token.
@@ -30,7 +30,7 @@ function createPack(packName, dev) {
         if (!apiKey) {
             helpers_3.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
         }
-        const codaClient = helpers_1.createCodaClient(apiKey, dev);
+        const codaClient = helpers_1.createCodaClient(apiKey, codaApiEndpoint);
         let packId;
         try {
             const response = yield codaClient.createPack();

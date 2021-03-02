@@ -17,7 +17,7 @@ function getApiKey() {
     return (_a = credentials === null || credentials === void 0 ? void 0 : credentials.__coda__) === null || _a === void 0 ? void 0 : _a.apiKey;
 }
 exports.getApiKey = getApiKey;
-function createCodaClient(apiKey, dev) {
-    return new coda_1.Client(dev ? 'https://dev.coda.io:8080' : 'https://coda.io', apiKey);
+function createCodaClient(apiKey, protocolAndHost) {
+    return new coda_1.Client(protocolAndHost !== null && protocolAndHost !== void 0 ? protocolAndHost : 'https://coda.io', apiKey);
 }
 exports.createCodaClient = createCodaClient;

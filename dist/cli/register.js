@@ -18,7 +18,7 @@ const open_1 = __importDefault(require("open"));
 const helpers_2 = require("../testing/helpers");
 const helpers_3 = require("../testing/helpers");
 const auth_1 = require("../testing/auth");
-function handleRegister({ apiToken, dev }) {
+function handleRegister({ apiToken, codaApiEndpoint }) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!apiToken) {
             // TODO: deal with auto-open on devbox setups
@@ -27,10 +27,10 @@ function handleRegister({ apiToken, dev }) {
                 return process.exit(1);
             }
             // TODO: figure out how to deep-link to the API tokens section of account settings
-            yield open_1.default('https://coda.io/account');
+            yield open_1.default(`${codaApiEndpoint}/account`);
             apiToken = helpers_3.promptForInput('Please paste the token here: ', { mask: true });
         }
-        const client = helpers_1.createCodaClient(apiToken, dev);
+        const client = helpers_1.createCodaClient(apiToken, codaApiEndpoint);
         try {
             yield client.whoami();
         }

@@ -4,6 +4,7 @@ import {ConsoleLogger} from '../helpers/logging';
 import type {PackMetadata} from '../compiled_types';
 import {build} from './build';
 import {createCodaClient} from './helpers';
+import {formatEndpoint} from './helpers';
 import {getApiKey} from './helpers';
 import {printAndExit} from '../testing/helpers';
 import {readFile} from '../testing/helpers';
@@ -12,10 +13,11 @@ import requestPromise from 'request-promise-native';
 
 interface PublishArgs {
   manifestFile: string;
-  dev?: boolean;
+  codaApiEndpoint: string;
 }
 
-export async function handlePublish({manifestFile, dev}: Arguments<PublishArgs>) {
+export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<PublishArgs>) {
+  const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   const logger = new ConsoleLogger();
   const {manifest} = await import(manifestFile);
   logger.info('Building pack bundle...');
@@ -29,7 +31,7 @@ export async function handlePublish({manifestFile, dev}: Arguments<PublishArgs>)
     printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
   }
 
-  const client = createCodaClient(apiKey, dev);
+  const client = createCodaClient(apiKey, formattedEndpoint);
 
   const packs: AllPacks | undefined = readPacksFile();
   const packId = packs && packs[manifest.name];

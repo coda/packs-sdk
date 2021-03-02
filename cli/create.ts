@@ -1,5 +1,6 @@
 import type {Arguments} from 'yargs';
 import {createCodaClient} from './helpers';
+import {formatEndpoint} from './helpers';
 import {getApiKey} from './helpers';
 import {printAndExit} from '../testing/helpers';
 import {readJSONFile} from '../testing/helpers';
@@ -7,7 +8,7 @@ import {writeJSONFile} from '../testing/helpers';
 
 interface CreateArgs {
   packName: string;
-  dev?: boolean;
+  codaApiEndpoint: string;
 }
 
 export interface AllPacks {
@@ -16,11 +17,12 @@ export interface AllPacks {
 
 const PACK_IDS_FILE = '.coda-packs.json';
 
-export async function handleCreate({packName, dev}: Arguments<CreateArgs>) {
-  await createPack(packName, dev);
+export async function handleCreate({packName, codaApiEndpoint}: Arguments<CreateArgs>) {
+  await createPack(packName, codaApiEndpoint);
 }
 
-export async function createPack(packName: string, dev?: boolean) {
+export async function createPack(packName: string, codaApiEndpoint: string) {
+  const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   // TODO(alan): we probably want to redirect them to the `coda register`
   // flow if they don't have a Coda API token.
   const apiKey = getApiKey();
@@ -28,7 +30,7 @@ export async function createPack(packName: string, dev?: boolean) {
     printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
   }
 
-  const codaClient = createCodaClient(apiKey, dev);
+  const codaClient = createCodaClient(apiKey, formattedEndpoint);
   let packId: number;
   try {
     const response = await codaClient.createPack();

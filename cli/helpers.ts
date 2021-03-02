@@ -14,6 +14,10 @@ export function getApiKey() {
   return credentials?.__coda__?.apiKey;
 }
 
-export function createCodaClient(apiKey: string, dev?: boolean) {
-  return new Client(dev ? 'https://dev.coda.io:8080' : 'https://coda.io', apiKey);
+export function createCodaClient(apiKey: string, protocolAndHost?: string) {
+  return new Client(protocolAndHost ?? 'https://coda.io', apiKey);
+}
+
+export function formatEndpoint(endpoint: string) {
+  return endpoint.startsWith('https://') ? endpoint : `https://${endpoint}`;
 }

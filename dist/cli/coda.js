@@ -210,10 +210,10 @@ if (require.main === module) {
         command: 'register [apiToken]',
         describe: 'Register API token to publish a pack',
         builder: {
-            dev: {
-                boolean: true,
-                default: false,
+            codaApiEndpoint: {
+                string: true,
                 hidden: true,
+                default: 'https://coda.io',
             },
         },
         handler: register_1.handleRegister,
@@ -226,7 +226,6 @@ if (require.main === module) {
                 string: true,
                 default: 'esbuild',
                 desc: '`esbuild` or `webpack`',
-                demandOption: false,
             },
         },
         handler: build_1.handleBuild,
@@ -235,10 +234,10 @@ if (require.main === module) {
         command: 'publish <manifestFile>',
         describe: 'Upload your pack to Coda',
         builder: {
-            dev: {
-                boolean: true,
-                default: false,
+            codaApiEndpoint: {
+                string: true,
                 hidden: true,
+                default: 'https://coda.io',
             },
         },
         handler: publish_1.handlePublish,
@@ -247,10 +246,10 @@ if (require.main === module) {
         command: 'create <packName>',
         describe: "Register a new pack with Coda's servers",
         builder: {
-            dev: {
-                boolean: true,
-                default: false,
+            codaApiEndpoint: {
+                string: true,
                 hidden: true,
+                default: 'https://coda.io',
             },
         },
         handler: create_1.handleCreate,
