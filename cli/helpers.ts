@@ -1,4 +1,5 @@
 import {Client} from '../helpers/external-api/coda';
+import path from 'path';
 import {readCredentialsFile} from '../testing/auth';
 import {spawnSync} from 'child_process';
 
@@ -24,4 +25,26 @@ export function formatEndpoint(endpoint: string) {
 
 export function isTestCommand() {
   return process.argv[1]?.endsWith('coda.ts');
+}
+
+export function makeManifestFullPath(manifestPath: string): string {
+  return manifestPath.startsWith('/') ? manifestPath : path.join(process.cwd(), manifestPath);
+}
+
+export function isTypescript(path: string): boolean {
+  return path.toLowerCase().endsWith('.ts');
+}
+
+export function escapeShellArg(arg: string): string {
+  return `"${arg.replace(/(["'$`\\])/g, '\\$1')}"`;
+}
+
+export function spawnBootstrapCommand(command: string) {
+  let cmd = command;
+  // Hack to allow us to run this CLI tool for testing purposes from within this repo, without
+  // needing it installed as an npm package.
+  if (isTestCommand()) {
+    cmd = command.replace('coda-packs-sdk/dist', process.env.PWD!);
+  }
+  spawnProcess(cmd);
 }
