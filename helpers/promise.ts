@@ -1,6 +1,6 @@
 export interface Deferrable<R> {
   promise: Promise<R>;
-  fulfill(result?: R): void; // (stowe): result as optional here since TS doesn't treat R as any to support undefined
+  fulfill(result?: R): void; // result as optional here since TS doesn't treat R as any to support undefined
   reject(err: Error): void;
   isPending(): boolean;
   isFulfilled(): boolean;
