@@ -18,15 +18,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleExecute = void 0;
 const helpers_1 = require("./helpers");
@@ -55,26 +46,24 @@ async function main() {
 }
 
 void main();`;
-function handleExecute({ manifestPath, formulaName, params, fetch, credentialsFile, }) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const fullManifestPath = helpers_3.makeManifestFullPath(manifestPath);
-        // If the given manifest source file is a .ts file, we need to evaluate it using ts-node in the user's environment.
-        // We can reasonably assume the user has ts-node if they have built a pack definition using a .ts file.
-        // Otherwise, the given manifest is most likely a plain .js file or a post-build .js dist file from a TS build.
-        // In the latter case, we can import the given file as a regular node (non-TS) import without any bootstrapping.
-        if (helpers_2.isTypescript(manifestPath)) {
-            const tsCommand = `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${fullManifestPath} ${Boolean(fetch)} ${credentialsFile || '""'} ${formulaName} ${params.map(helpers_1.escapeShellArg).join(' ')}`;
-            helpers_4.spawnBootstrapCommand(tsCommand);
-        }
-        else {
-            const module = yield Promise.resolve().then(() => __importStar(require(fullManifestPath)));
-            yield execution_1.executeFormulaOrSyncFromCLI({
-                formulaName,
-                params,
-                module,
-                contextOptions: { useRealFetcher: fetch, credentialsFile },
-            });
-        }
-    });
+async function handleExecute({ manifestPath, formulaName, params, fetch, credentialsFile, }) {
+    const fullManifestPath = helpers_3.makeManifestFullPath(manifestPath);
+    // If the given manifest source file is a .ts file, we need to evaluate it using ts-node in the user's environment.
+    // We can reasonably assume the user has ts-node if they have built a pack definition using a .ts file.
+    // Otherwise, the given manifest is most likely a plain .js file or a post-build .js dist file from a TS build.
+    // In the latter case, we can import the given file as a regular node (non-TS) import without any bootstrapping.
+    if (helpers_2.isTypescript(manifestPath)) {
+        const tsCommand = `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${fullManifestPath} ${Boolean(fetch)} ${credentialsFile || '""'} ${formulaName} ${params.map(helpers_1.escapeShellArg).join(' ')}`;
+        helpers_4.spawnBootstrapCommand(tsCommand);
+    }
+    else {
+        const module = await Promise.resolve().then(() => __importStar(require(fullManifestPath)));
+        await execution_1.executeFormulaOrSyncFromCLI({
+            formulaName,
+            params,
+            module,
+            contextOptions: { useRealFetcher: fetch, credentialsFile },
+        });
+    }
 }
 exports.handleExecute = handleExecute;

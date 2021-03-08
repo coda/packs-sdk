@@ -3,8 +3,9 @@ export interface ParameterError {
 }
 export declare class ParameterException extends Error {
 }
-export interface ResultValidationError {
+export interface ValidationError {
     message: string;
+    path?: string;
 }
 export interface ValidationContext {
     propertyKey: string;
@@ -19,7 +20,7 @@ export declare class ResultValidationContext {
     generateFieldPathFromValidationContext(context: ValidationContext): string;
 }
 export declare class ResultValidationException extends Error {
-    errors: ResultValidationError[];
-    constructor(message: string, errors: ResultValidationError[]);
-    static fromErrors(formulaName: string, errors: ResultValidationError[]): ResultValidationException;
+    errors: ValidationError[];
+    constructor(message: string, errors: ValidationError[]);
+    static fromErrors(formulaName: string, errors: ValidationError[]): ResultValidationException;
 }

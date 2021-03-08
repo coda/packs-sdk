@@ -1,24 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.StatusCodeError = exports.UserVisibleError = void 0;
 const api_types_1 = require("./api_types");
@@ -69,51 +49,51 @@ function isDynamicSyncTable(syncTable) {
 }
 exports.isDynamicSyncTable = isDynamicSyncTable;
 function makeStringParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_1.Type.string }));
+    return Object.freeze({ ...args, name, description, type: api_types_1.Type.string });
 }
 exports.makeStringParameter = makeStringParameter;
 function makeStringArrayParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_7.stringArray }));
+    return Object.freeze({ ...args, name, description, type: api_types_7.stringArray });
 }
 exports.makeStringArrayParameter = makeStringArrayParameter;
 function makeNumericParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_1.Type.number }));
+    return Object.freeze({ ...args, name, description, type: api_types_1.Type.number });
 }
 exports.makeNumericParameter = makeNumericParameter;
 function makeNumericArrayParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_6.numberArray }));
+    return Object.freeze({ ...args, name, description, type: api_types_6.numberArray });
 }
 exports.makeNumericArrayParameter = makeNumericArrayParameter;
 function makeBooleanParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_1.Type.boolean }));
+    return Object.freeze({ ...args, name, description, type: api_types_1.Type.boolean });
 }
 exports.makeBooleanParameter = makeBooleanParameter;
 function makeBooleanArrayParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_2.booleanArray }));
+    return Object.freeze({ ...args, name, description, type: api_types_2.booleanArray });
 }
 exports.makeBooleanArrayParameter = makeBooleanArrayParameter;
 function makeDateParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_1.Type.date }));
+    return Object.freeze({ ...args, name, description, type: api_types_1.Type.date });
 }
 exports.makeDateParameter = makeDateParameter;
 function makeDateArrayParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_3.dateArray }));
+    return Object.freeze({ ...args, name, description, type: api_types_3.dateArray });
 }
 exports.makeDateArrayParameter = makeDateArrayParameter;
 function makeHtmlParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_1.Type.html }));
+    return Object.freeze({ ...args, name, description, type: api_types_1.Type.html });
 }
 exports.makeHtmlParameter = makeHtmlParameter;
 function makeHtmlArrayParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_4.htmlArray }));
+    return Object.freeze({ ...args, name, description, type: api_types_4.htmlArray });
 }
 exports.makeHtmlArrayParameter = makeHtmlArrayParameter;
 function makeImageParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_1.Type.image }));
+    return Object.freeze({ ...args, name, description, type: api_types_1.Type.image });
 }
 exports.makeImageParameter = makeImageParameter;
 function makeImageArrayParameter(name, description, args = {}) {
-    return Object.freeze(Object.assign(Object.assign({}, args), { name, description, type: api_types_5.imageArray }));
+    return Object.freeze({ ...args, name, description, type: api_types_5.imageArray });
 }
 exports.makeImageArrayParameter = makeImageArrayParameter;
 function makeUserVisibleError(msg) {
@@ -156,7 +136,10 @@ exports.makeNumericFormula = makeNumericFormula;
  */
 function makeStringFormula(definition) {
     const { response } = definition;
-    return Object.assign({}, definition, Object.assign({ resultType: api_types_1.Type.string }, (response && { schema: response.schema })));
+    return Object.assign({}, definition, {
+        resultType: api_types_1.Type.string,
+        ...(response && { schema: response.schema }),
+    });
 }
 exports.makeStringFormula = makeStringFormula;
 function makeMetadataFormula(execute) {
@@ -227,8 +210,7 @@ function isResponseHandlerTemplate(obj) {
 function isResponseExampleTemplate(obj) {
     return obj && obj.example;
 }
-function makeObjectFormula(_a) {
-    var { response } = _a, definition = __rest(_a, ["response"]);
+function makeObjectFormula({ response, ...definition }) {
     let schema;
     if (response) {
         if (isResponseHandlerTemplate(response) && response.schema) {
@@ -245,22 +227,20 @@ function makeObjectFormula(_a) {
         const { onError } = response;
         const wrappedExecute = execute;
         const responseHandler = handler_templates_1.generateObjectResponseHandler(response);
-        execute = function exec(params, context) {
-            return __awaiter(this, void 0, void 0, function* () {
-                let result;
-                try {
-                    result = yield wrappedExecute(params, context);
+        execute = async function exec(params, context) {
+            let result;
+            try {
+                result = await wrappedExecute(params, context);
+            }
+            catch (err) {
+                if (onError) {
+                    result = onError(err);
                 }
-                catch (err) {
-                    if (onError) {
-                        result = onError(err);
-                    }
-                    else {
-                        throw err;
-                    }
+                else {
+                    throw err;
                 }
-                return responseHandler({ body: ensure_1.ensureExists(result), status: 200, headers: {} });
-            });
+            }
+            return responseHandler({ body: ensure_1.ensureExists(result), status: 200, headers: {} });
         };
     }
     return Object.assign({}, definition, {
@@ -294,7 +274,7 @@ exports.makeObjectFormula = makeObjectFormula;
  * @param entityName Only used internally by {@link makeDynamicSyncTable}, see there for more details.
  */
 function makeSyncTable(name, schema, formula, getSchema, entityName) {
-    const { execute: wrappedExecute } = formula, definition = __rest(formula, ["execute"]);
+    const { execute: wrappedExecute, ...definition } = formula;
     const formulaSchema = getSchema
         ? undefined
         : schema_3.normalizeSchema({ type: schema_1.ValueType.Array, items: schema });
@@ -306,20 +286,25 @@ function makeSyncTable(name, schema, formula, getSchema, entityName) {
         throw new Error('Sync table name should not include spaces');
     }
     const responseHandler = handler_templates_1.generateObjectResponseHandler({ schema: formulaSchema });
-    const execute = function exec(params, context) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { result, continuation } = yield wrappedExecute(params, context);
-            const appliedSchema = context.sync.schema;
-            return {
-                result: responseHandler({ body: ensure_1.ensureExists(result), status: 200, headers: {} }, appliedSchema),
-                continuation,
-            };
-        });
+    const execute = async function exec(params, context) {
+        const { result, continuation } = await wrappedExecute(params, context);
+        const appliedSchema = context.sync.schema;
+        return {
+            result: responseHandler({ body: ensure_1.ensureExists(result), status: 200, headers: {} }, appliedSchema),
+            continuation,
+        };
     };
     return {
         name,
         schema: schema_3.normalizeSchema(schema),
-        getter: Object.assign(Object.assign({}, definition), { cacheTtlSecs: 0, execute, schema: formulaSchema, isSyncFormula: true, resultType: api_types_1.Type.object }),
+        getter: {
+            ...definition,
+            cacheTtlSecs: 0,
+            execute,
+            schema: formulaSchema,
+            isSyncFormula: true,
+            resultType: api_types_1.Type.object,
+        },
         getSchema,
         entityName,
     };
@@ -341,13 +326,16 @@ function makeDynamicSyncTable({ packId, name, getName, getSchema, getDisplayUrl,
         },
     });
     const table = makeSyncTable(name, fakeSchema, formula, getSchema, entityName);
-    return Object.assign(Object.assign({}, table), { isDynamic: true, getDisplayUrl,
+    return {
+        ...table,
+        isDynamic: true,
+        getDisplayUrl,
         listDynamicUrls,
-        getName });
+        getName,
+    };
 }
 exports.makeDynamicSyncTable = makeDynamicSyncTable;
-function makeTranslateObjectFormula(_a) {
-    var { response } = _a, definition = __rest(_a, ["response"]);
+function makeTranslateObjectFormula({ response, ...definition }) {
     const { request, parameters } = definition;
     response.schema = response.schema ? schema_3.normalizeSchema(response.schema) : undefined;
     const { onError } = response;

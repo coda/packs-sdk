@@ -93,12 +93,16 @@ function generateRequestHandler(request, parameters) {
         if (hasBodyParams) {
             const currentBodyParams = generateParamMap(ensure_1.ensureExists(bodyParams), nameMapping, optionalNames);
             // Merge the param if needed.
-            body = body ? Object.assign(Object.assign({}, body), currentBodyParams) : currentBodyParams;
+            body = body ? { ...body, ...currentBodyParams } : currentBodyParams;
         }
         return {
             url: fullUrl,
             method,
-            headers: Object.assign({ Accept: 'application/json', 'Content-Type': 'application/json' }, headers),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                ...headers,
+            },
             body: body ? JSON.stringify(body) : undefined,
         };
     };

@@ -21,6 +21,8 @@ import {printAndExit} from '../testing/helpers';
 import {readFile} from '../testing/helpers';
 import {readPacksFile} from './create';
 import requestPromise from 'request-promise-native';
+import stream from 'stream';
+import {validateAndParseUpload} from 'testing/upload_validation';
 
 interface PublishArgs {
   manifestFile: string;
@@ -81,15 +83,19 @@ async function uploadPackToSignedUrl(bundleFilename: string, metadata: PackMetad
     printAndExit(`Could not find bundle file at path ${bundleFilename}`);
   }
 
+  const upload = {
+    metadata,
+    bundle: bundle.toString(),
+  };
+
+  await validateAndParseUpload(stream.Readable.from(JSON.stringify(upload)));
+
   try {
     await requestPromise.put(uploadUrl, {
       headers: {
         'Content-Type': 'application/json',
       },
-      json: {
-        metadata,
-        bundle: bundle.toString(),
-      },
+      json: upload,
     });
   } catch (err) {
     printAndExit(`Error in uploading pack to signed url: ${err}`);

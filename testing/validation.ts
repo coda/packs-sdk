@@ -8,7 +8,6 @@ import type {ParamValues} from '../api_types';
 import type {ParameterError} from './types';
 import {ParameterException} from './types';
 import {ResultValidationContext} from './types';
-import type {ResultValidationError} from './types';
 import {ResultValidationException} from './types';
 import type {ScaleSchema} from '../schema';
 import type {Schema} from '../schema';
@@ -17,6 +16,7 @@ import type {StringSchema} from '../schema';
 import {Type} from '../api_types';
 import type {TypedPackFormula} from '../api';
 import {URL} from 'url';
+import type {ValidationError} from './types';
 import {ValueType} from '../schema';
 import {ensureExists} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
@@ -70,7 +70,7 @@ export function validateResult<ResultT extends any>(formula: TypedPackFormula, r
   }
 }
 
-function validateResultType<ResultT extends any>(resultType: Type, result: ResultT): ResultValidationError | undefined {
+function validateResultType<ResultT extends any>(resultType: Type, result: ResultT): ValidationError | undefined {
   if (!isDefined(result)) {
     return {message: `Expected a ${resultType} result but got ${result}.`};
   }
@@ -99,7 +99,7 @@ function generateErrorFromValidationContext(
   context: ResultValidationContext,
   schema: Schema,
   result: any,
-): ResultValidationError {
+): ValidationError {
   const resultValue = typeof result === 'string' ? `"${result}"` : result;
   const objectTrace = context.generateFieldPath();
 
@@ -112,7 +112,7 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
   schema: Schema & ObjectSchemaProperty,
   result: ResultT,
   context: ResultValidationContext,
-): ResultValidationError[] {
+): ValidationError[] {
   const errors = [generateErrorFromValidationContext(context, schema, result)];
   switch (schema.type) {
     case ValueType.Boolean: {
@@ -272,7 +272,7 @@ function checkType<ResultT extends any>(
   typeMatches: boolean,
   expectedResultTypeName: string,
   result: ResultT,
-): ResultValidationError | undefined {
+): ValidationError | undefined {
   if (!typeMatches) {
     const resultValue = typeof result === 'string' ? `"${result}"` : result;
     return {message: `Expected a ${expectedResultTypeName} result but got ${resultValue}.`};
@@ -302,7 +302,7 @@ function validateObjectResult<ResultT extends Record<string, unknown>>(
   }
 
   if (!isObject(schema)) {
-    const error: ResultValidationError = {message: `Expected an object schema, but found ${JSON.stringify(schema)}.`};
+    const error: ValidationError = {message: `Expected an object schema, but found ${JSON.stringify(schema)}.`};
     throw ResultValidationException.fromErrors(formula.name, [error]);
   }
   const errors = validateObject(result, schema, validationContext);
@@ -316,8 +316,8 @@ function validateObject<ResultT extends Record<string, unknown>>(
   result: ResultT,
   schema: GenericObjectSchema,
   context: ResultValidationContext,
-): ResultValidationError[] {
-  const errors: ResultValidationError[] = [];
+): ValidationError[] {
+  const errors: ValidationError[] = [];
 
   for (const [propertyKey, propertySchema] of Object.entries(schema.properties)) {
     const value = result[propertyKey];
@@ -348,12 +348,12 @@ function validateArray<ResultT extends any>(
   result: ResultT,
   schema: ArraySchema<Schema>,
   context: ResultValidationContext,
-): ResultValidationError[] {
+): ValidationError[] {
   if (!Array.isArray(result)) {
-    const error: ResultValidationError = {message: `Expected an ${schema.type} result but got ${result}.`};
+    const error: ValidationError = {message: `Expected an ${schema.type} result but got ${result}.`};
     return [error];
   }
-  const arrayItemErrors: ResultValidationError[] = [];
+  const arrayItemErrors: ValidationError[] = [];
   const itemType = schema.items;
   for (let i = 0; i < result.length; i++) {
     const item = result[i];
