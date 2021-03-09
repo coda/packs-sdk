@@ -96,7 +96,7 @@ async function uploadPackToSignedUrl(bundleFilename: string, metadata: PackMetad
   }
 }
 
-function compilePackMetadata(manifest: PackDefinition) {
+function compilePackMetadata(manifest: PackDefinition): PackMetadata {
   const {formats, formulas, formulaNamespace, syncTables, ...definition} = manifest;
   const compiledFormats = compileFormatsMetadata(formats || []);
   const compiledFormulas = (formulas && compileFormulasMetadata(formulas)) || (Array.isArray(formulas) ? [] : {});
