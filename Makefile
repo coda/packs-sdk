@@ -52,10 +52,12 @@ view-docs: docs
 test:
 	TS_NODE_TRANSPILE_ONLY=1 ${ROOTDIR}/node_modules/.bin/mocha test/*_test.ts
 
-.PHONY: build
-build: clean lint compile
+.PHONY: clean
 clean:
 	rm -rf ${ROOTDIR}/dist
+
+.PHONY: build
+build: clean lint compile
 
 .PHONY: validate-no-changes
 validate-no-changes: compile
