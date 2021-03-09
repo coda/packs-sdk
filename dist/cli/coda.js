@@ -10,6 +10,7 @@ const auth_3 = require("./auth");
 const build_1 = require("./build");
 const create_1 = require("./create");
 const execute_1 = require("./execute");
+const execute_bundle_1 = require("./execute_bundle");
 const init_1 = require("./init");
 const publish_1 = require("./publish");
 const register_1 = require("./register");
@@ -23,6 +24,23 @@ if (require.main === module) {
         command: 'execute <manifestPath> <formulaName> [params..]',
         describe: 'Execute a formula',
         handler: execute_1.handleExecute,
+        builder: {
+            fetch: {
+                boolean: true,
+                desc: 'Actually fetch http requests instead of using mocks. Run "coda auth" first to set up credentials.',
+            },
+            credentialsFile: {
+                alias: 'credentials_file',
+                string: true,
+                default: auth_1.DEFAULT_CREDENTIALS_FILE,
+                desc: 'Path to the credentials file.',
+            },
+        },
+    })
+        .command({
+        command: 'execute-bundle <bundlePath> <formulaName> [params..]',
+        describe: 'Execute a formula with the bundle file with isolated-vm',
+        handler: execute_bundle_1.handleExecuteBundle,
         builder: {
             fetch: {
                 boolean: true,

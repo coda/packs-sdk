@@ -6,6 +6,7 @@ export { executeFormulaFromPackDef } from './testing/execution';
 export { executeMetadataFormula } from './testing/execution';
 export { executeSyncFormula } from './testing/execution';
 export { executeSyncFormulaFromPackDef } from './testing/execution';
+export { executeFormulaOrSyncFromBundle } from './testing/bundle_execution';
 export type { MockExecutionContext } from './testing/mocks';
 export type { MockSyncExecutionContext } from './testing/mocks';
 export { newJsonFetchResponse } from './testing/mocks';
