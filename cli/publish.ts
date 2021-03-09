@@ -10,6 +10,7 @@ import type {PackFormulas} from 'api';
 import type {PackFormulasMetadata} from '../compiled_types';
 import type {PackMetadata} from '../compiled_types';
 import type {PackSyncTable} from '../compiled_types';
+import type {PackUpload} from '../compiled_types';
 import type {TypedPackFormula} from 'api';
 import type {TypedStandardFormula} from 'api';
 import {build} from './build';
@@ -86,7 +87,7 @@ async function uploadPackToSignedUrl(bundleFilename: string, metadata: PackMetad
     printAndExit(`Could not find bundle file at path ${bundleFilename}`);
   }
 
-  const upload = {
+  const upload: PackUpload = {
     metadata,
     bundle: bundle.toString(),
   };

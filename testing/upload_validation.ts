@@ -37,13 +37,7 @@ import type {WebBasicAuthentication} from '../types';
 import {ZodParsedType} from 'zod/lib/cjs/ZodParsedType';
 import {assertCondition} from '../index';
 import {isNil} from '../helpers/object_utils';
-import type stream from 'stream';
 import * as z from 'zod';
-
-export interface ParsedUpload {
-  metadata: PackMetadata;
-  rawBundleStream: stream.Readable;
-}
 
 export class PackMetadataValidationError extends Error {
   readonly originalError: Error | undefined;
@@ -56,7 +50,7 @@ export class PackMetadataValidationError extends Error {
   }
 }
 
-export async function validatePackMetadata(metadata: Record<string, any>): Promise<void> {
+export async function validatePackMetadata(metadata: Record<string, any>): Promise<PackMetadata> {
   const validated = packMetadataSchema.safeParse(metadata);
   if (!validated.success) {
     throw new PackMetadataValidationError(
@@ -65,6 +59,8 @@ export async function validatePackMetadata(metadata: Record<string, any>): Promi
       validated.error.errors.flatMap(zodErrorDetailToValidationError),
     );
   }
+
+  return validated.data as PackMetadata;
 }
 
 function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError | ValidationError[] {

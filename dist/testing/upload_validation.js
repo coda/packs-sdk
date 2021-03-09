@@ -48,6 +48,7 @@ async function validatePackMetadata(metadata) {
     if (!validated.success) {
         throw new PackMetadataValidationError('Pack metadata failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
     }
+    return validated.data;
 }
 exports.validatePackMetadata = validatePackMetadata;
 function zodErrorDetailToValidationError(subError) {
