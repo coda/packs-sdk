@@ -21,8 +21,7 @@ import {printAndExit} from '../testing/helpers';
 import {readFile} from '../testing/helpers';
 import {readPacksFile} from './create';
 import requestPromise from 'request-promise-native';
-import stream from 'stream';
-import {validateAndParseUpload} from 'testing/upload_validation';
+import {validateMetadata} from './validate';
 
 interface PublishArgs {
   manifestFile: string;
@@ -64,6 +63,10 @@ export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<P
     logger.info('Registering new pack version...');
     const {uploadUrl} = await client.registerPackVersion(packId, packVersion);
 
+    // TODO(alan): only grab metadata from manifest.
+    logger.info('Validating pack metadata...');
+    await validateMetadata(manifest);
+
     logger.info('Uploading pack...');
     const metadata = compilePackMetadata(manifest);
     await uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl);
@@ -87,8 +90,6 @@ async function uploadPackToSignedUrl(bundleFilename: string, metadata: PackMetad
     metadata,
     bundle: bundle.toString(),
   };
-
-  await validateAndParseUpload(stream.Readable.from(JSON.stringify(upload)));
 
   try {
     await requestPromise.put(uploadUrl, {

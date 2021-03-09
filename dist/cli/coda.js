@@ -13,6 +13,7 @@ const execute_1 = require("./execute");
 const init_1 = require("./init");
 const publish_1 = require("./publish");
 const register_1 = require("./register");
+const validate_1 = require("./validate");
 const yargs_1 = __importDefault(require("yargs"));
 if (require.main === module) {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -106,6 +107,11 @@ if (require.main === module) {
             },
         },
         handler: create_1.handleCreate,
+    })
+        .command({
+        command: 'validate <manifestFile>',
+        describe: 'Validate your pack metadata',
+        handler: validate_1.handleValidate,
     })
         .demandCommand()
         .strict()

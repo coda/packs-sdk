@@ -23,7 +23,6 @@ import type {ObjectSchemaProperty} from '../schema';
 import {PackCategory} from '../types';
 import type {PackFormatMetadata} from 'index';
 import type {PackMetadata} from 'index';
-import type {PackUpload} from 'compiled_types';
 import type {ParamDef} from 'index';
 import {PostSetupType} from '../types';
 import type {QueryParamTokenAuthentication} from '../types';
@@ -31,17 +30,14 @@ import type {SetEndpoint} from '../types';
 import {StringHintValueTypes} from '../schema';
 import type {StringPackFormula} from 'api';
 import type {StringSchema} from '../schema';
-import {Type} from 'index';
+import {Type} from '../index';
 import type {ValidationError} from './types';
-// import type {ValidationError} from '@kr-modules/common/server-api/types/coda_http_errors';
 import {ValueType} from '../schema';
 import type {WebBasicAuthentication} from '../types';
-import {assertCondition} from 'index';
-import {isNil} from 'helpers/object_utils';
-// import {assertCondition} from '@kr-modules/js-core/ensure/ensure';
-// import {isNil} from '@kr-modules/js-core/utils/object_utils';
-import stream from 'stream';
-import * as streamHelper from '../helpers/stream_helper';
+import {ZodParsedType} from 'zod/lib/cjs/ZodParsedType';
+import {assertCondition} from '../index';
+import {isNil} from '../helpers/object_utils';
+import type stream from 'stream';
 import * as z from 'zod';
 
 export interface ParsedUpload {
@@ -49,7 +45,7 @@ export interface ParsedUpload {
   rawBundleStream: stream.Readable;
 }
 
-export class PackUploadValidationError extends Error {
+export class PackMetadataValidationError extends Error {
   readonly originalError: Error | undefined;
   readonly validationErrors: ValidationError[] | undefined;
 
@@ -60,35 +56,15 @@ export class PackUploadValidationError extends Error {
   }
 }
 
-export async function validateAndParseUpload(untrustedUploadStream: stream.Readable): Promise<ParsedUpload> {
-  const untrustedUploadStr = (await streamHelper.toBuffer(untrustedUploadStream)).toString();
-  let rawUpload: any;
-  try {
-    rawUpload = JSON.parse(untrustedUploadStr);
-  } catch (err) {
-    throw new PackUploadValidationError(`Pack upload is not valid JSON.`, err);
-  }
-  if (typeof rawUpload !== 'object') {
-    throw new PackUploadValidationError(`Pack upload is a ${typeof rawUpload} but should be a JSON object.`);
-  }
-
-  const validated = validateUpload(rawUpload);
+export async function validatePackMetadata(metadata: Record<string, any>): Promise<void> {
+  const validated = packMetadataSchema.safeParse(metadata);
   if (!validated.success) {
-    throw new PackUploadValidationError(
-      'Pack upload failed validation',
+    throw new PackMetadataValidationError(
+      'Pack metadata failed validation',
       validated.error,
       validated.error.errors.flatMap(zodErrorDetailToValidationError),
     );
   }
-
-  return {
-    metadata: validated.data.metadata,
-    rawBundleStream: stream.Readable.from(validated.data.bundle),
-  };
-}
-
-function validateUpload(obj: Record<string, any>) {
-  return uploadSchema.safeParse(obj);
 }
 
 function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError | ValidationError[] {
@@ -122,7 +98,16 @@ function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError 
   }
 
   const {path: zodPath, message} = subError;
-  return {path: zodPathToPathString(zodPath), message};
+  const path = zodPathToPathString(zodPath);
+  const isMissingRequiredFieldError =
+    subError.code === z.ZodIssueCode.invalid_type &&
+    subError.received === ZodParsedType.undefined &&
+    subError.expected.toString() !== ZodParsedType.undefined;
+
+  return {
+    path,
+    message: isMissingRequiredFieldError ? `Missing required field ${path}.` : message,
+  };
 }
 
 function zodPathToPathString(zodPath: Array<string | number>): string {
@@ -473,8 +458,3 @@ const packMetadataSchema = zodCompleteObject<PackMetadata>({
       path: ['formats'],
     },
   );
-
-const uploadSchema = zodCompleteObject<PackUpload>({
-  metadata: packMetadataSchema,
-  bundle: z.string().nonempty(),
-});

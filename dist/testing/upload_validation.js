@@ -18,11 +18,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateAndParseUpload = exports.PackUploadValidationError = void 0;
+exports.validatePackMetadata = exports.PackMetadataValidationError = void 0;
 const schema_1 = require("../schema");
 const types_1 = require("../types");
 const types_2 = require("../types");
@@ -32,49 +29,27 @@ const schema_3 = require("../schema");
 const types_4 = require("../types");
 const types_5 = require("../types");
 const schema_4 = require("../schema");
-const index_1 = require("index");
-// import type {ValidationError} from '@kr-modules/common/server-api/types/coda_http_errors';
+const index_1 = require("../index");
 const schema_5 = require("../schema");
-const index_2 = require("index");
-const object_utils_1 = require("helpers/object_utils");
-// import {assertCondition} from '@kr-modules/js-core/ensure/ensure';
-// import {isNil} from '@kr-modules/js-core/utils/object_utils';
-const stream_1 = __importDefault(require("stream"));
-const streamHelper = __importStar(require("../helpers/stream_helper"));
+const ZodParsedType_1 = require("zod/lib/cjs/ZodParsedType");
+const index_2 = require("../index");
+const object_utils_1 = require("../helpers/object_utils");
 const z = __importStar(require("zod"));
-class PackUploadValidationError extends Error {
+class PackMetadataValidationError extends Error {
     constructor(message, originalError, validationErrors) {
         super(message);
         this.originalError = originalError;
         this.validationErrors = validationErrors;
     }
 }
-exports.PackUploadValidationError = PackUploadValidationError;
-async function validateAndParseUpload(untrustedUploadStream) {
-    const untrustedUploadStr = (await streamHelper.toBuffer(untrustedUploadStream)).toString();
-    let rawUpload;
-    try {
-        rawUpload = JSON.parse(untrustedUploadStr);
-    }
-    catch (err) {
-        throw new PackUploadValidationError(`Pack upload is not valid JSON.`, err);
-    }
-    if (typeof rawUpload !== 'object') {
-        throw new PackUploadValidationError(`Pack upload is a ${typeof rawUpload} but should be a JSON object.`);
-    }
-    const validated = validateUpload(rawUpload);
+exports.PackMetadataValidationError = PackMetadataValidationError;
+async function validatePackMetadata(metadata) {
+    const validated = packMetadataSchema.safeParse(metadata);
     if (!validated.success) {
-        throw new PackUploadValidationError('Pack upload failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
+        throw new PackMetadataValidationError('Pack metadata failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
     }
-    return {
-        metadata: validated.data.metadata,
-        rawBundleStream: stream_1.default.Readable.from(validated.data.bundle),
-    };
 }
-exports.validateAndParseUpload = validateAndParseUpload;
-function validateUpload(obj) {
-    return uploadSchema.safeParse(obj);
-}
+exports.validatePackMetadata = validatePackMetadata;
 function zodErrorDetailToValidationError(subError) {
     // Top-level errors for union types are totally useless, they just say "invalid input",
     // but they do record all of the specific errors when trying each element of the union,
@@ -103,7 +78,14 @@ function zodErrorDetailToValidationError(subError) {
         return underlyingErrors;
     }
     const { path: zodPath, message } = subError;
-    return { path: zodPathToPathString(zodPath), message };
+    const path = zodPathToPathString(zodPath);
+    const isMissingRequiredFieldError = subError.code === z.ZodIssueCode.invalid_type &&
+        subError.received === ZodParsedType_1.ZodParsedType.undefined &&
+        subError.expected.toString() !== ZodParsedType_1.ZodParsedType.undefined;
+    return {
+        path,
+        message: isMissingRequiredFieldError ? `Missing required field ${path}.` : message,
+    };
 }
 function zodPathToPathString(zodPath) {
     const parts = [];
@@ -396,8 +378,4 @@ const packMetadataSchema = zodCompleteObject({
     message: 'Could not find a formula for one or more matchers. Check that the "formulaName" for each matcher ' +
         'matches the name of a formula defined in this pack.',
     path: ['formats'],
-});
-const uploadSchema = zodCompleteObject({
-    metadata: packMetadataSchema,
-    bundle: z.string().nonempty(),
 });

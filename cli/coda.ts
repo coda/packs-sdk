@@ -10,6 +10,7 @@ import {handleExecute} from './execute';
 import {handleInit} from './init';
 import {handlePublish} from './publish';
 import {handleRegister} from './register';
+import {handleValidate} from './validate';
 import yargs from 'yargs';
 
 if (require.main === module) {
@@ -104,6 +105,11 @@ if (require.main === module) {
         } as Options,
       },
       handler: handleCreate,
+    })
+    .command({
+      command: 'validate <manifestFile>',
+      describe: 'Validate your pack metadata',
+      handler: handleValidate,
     })
     .demandCommand()
     .strict()

@@ -33,8 +33,7 @@ const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
 const create_1 = require("./create");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
-const stream_1 = __importDefault(require("stream"));
-const upload_validation_1 = require("testing/upload_validation");
+const validate_1 = require("./validate");
 async function handlePublish({ manifestFile, codaApiEndpoint }) {
     const formattedEndpoint = helpers_2.formatEndpoint(codaApiEndpoint);
     const logger = new logging_1.ConsoleLogger();
@@ -63,6 +62,9 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
     try {
         logger.info('Registering new pack version...');
         const { uploadUrl } = await client.registerPackVersion(packId, packVersion);
+        // TODO(alan): only grab metadata from manifest.
+        logger.info('Validating pack metadata...');
+        await validate_1.validateMetadata(manifest);
         logger.info('Uploading pack...');
         const metadata = compilePackMetadata(manifest);
         await uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl);
@@ -84,7 +86,6 @@ async function uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl) {
         metadata,
         bundle: bundle.toString(),
     };
-    await upload_validation_1.validateAndParseUpload(stream_1.default.Readable.from(JSON.stringify(upload)));
     try {
         await request_promise_native_1.default.put(uploadUrl, {
             headers: {
