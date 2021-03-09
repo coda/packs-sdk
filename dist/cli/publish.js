@@ -38,7 +38,7 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
     const formattedEndpoint = helpers_2.formatEndpoint(codaApiEndpoint);
     const logger = new logging_1.ConsoleLogger();
     const { manifest } = await Promise.resolve().then(() => __importStar(require(manifestFile)));
-    logger.info('Building pack bundle...');
+    logger.info('Building Pack bundle...');
     const bundleFilename = await build_1.build(manifestFile);
     // Since package.json isn't in dist, we grab it from the root directory instead.
     const packageJson = await Promise.resolve().then(() => __importStar(require(helpers_4.isTestCommand() ? '../package.json' : '../../package.json')));
@@ -52,20 +52,20 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
     const packs = create_1.readPacksFile();
     const packId = packs && packs[manifest.name];
     if (!packId) {
-        helpers_5.printAndExit(`Could not find a pack id registered to pack "${manifest.name}"`);
+        helpers_5.printAndExit(`Could not find a Pack id registered to Pack "${manifest.name}"`);
     }
     const packVersion = manifest.version;
     if (!packVersion) {
-        helpers_5.printAndExit(`No pack version found for your pack "${manifest.name}"`);
+        helpers_5.printAndExit(`No Pack version found for your Pack "${manifest.name}"`);
     }
     //  TODO(alan): error testing
     try {
-        logger.info('Registering new pack version...');
+        logger.info('Registering new Pack version...');
         const { uploadUrl } = await client.registerPackVersion(packId, packVersion);
         // TODO(alan): only grab metadata from manifest.
-        logger.info('Validating pack metadata...');
+        logger.info('Validating Pack metadata...');
         await validate_1.validateMetadata(manifest);
-        logger.info('Uploading pack...');
+        logger.info('Uploading Pack...');
         const metadata = compilePackMetadata(manifest);
         await uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl);
         logger.info('Validating upload...');
@@ -95,7 +95,7 @@ async function uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl) {
         });
     }
     catch (err) {
-        helpers_5.printAndExit(`Error in uploading pack to signed url: ${err}`);
+        helpers_5.printAndExit(`Error in uploading Pack to signed url: ${err}`);
     }
 }
 function compilePackMetadata(manifest) {

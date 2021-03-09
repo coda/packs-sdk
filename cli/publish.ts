@@ -33,7 +33,7 @@ export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<P
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   const logger = new ConsoleLogger();
   const {manifest} = await import(manifestFile);
-  logger.info('Building pack bundle...');
+  logger.info('Building Pack bundle...');
   const bundleFilename = await build(manifestFile);
 
   // Since package.json isn't in dist, we grab it from the root directory instead.
@@ -51,24 +51,24 @@ export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<P
   const packs: AllPacks | undefined = readPacksFile();
   const packId = packs && packs[manifest.name];
   if (!packId) {
-    printAndExit(`Could not find a pack id registered to pack "${manifest.name}"`);
+    printAndExit(`Could not find a Pack id registered to Pack "${manifest.name}"`);
   }
 
   const packVersion = manifest.version;
   if (!packVersion) {
-    printAndExit(`No pack version found for your pack "${manifest.name}"`);
+    printAndExit(`No Pack version found for your Pack "${manifest.name}"`);
   }
 
   //  TODO(alan): error testing
   try {
-    logger.info('Registering new pack version...');
+    logger.info('Registering new Pack version...');
     const {uploadUrl} = await client.registerPackVersion(packId, packVersion);
 
     // TODO(alan): only grab metadata from manifest.
-    logger.info('Validating pack metadata...');
+    logger.info('Validating Pack metadata...');
     await validateMetadata(manifest);
 
-    logger.info('Uploading pack...');
+    logger.info('Uploading Pack...');
     const metadata = compilePackMetadata(manifest);
     await uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl);
 
@@ -100,7 +100,7 @@ async function uploadPackToSignedUrl(bundleFilename: string, metadata: PackMetad
       json: upload,
     });
   } catch (err) {
-    printAndExit(`Error in uploading pack to signed url: ${err}`);
+    printAndExit(`Error in uploading Pack to signed url: ${err}`);
   }
 }
 
