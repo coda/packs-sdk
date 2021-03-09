@@ -23,7 +23,7 @@
     "esbuild": "^0.8.57",
     "express": "4.17.1",
     "isomorphic-fetch": "^3.0.0",
-    "open": "^7.4.2",
+    "open": "^8.0.2",
     "pascalcase": "^1.0.0",
     "qs": "^6.9.6",
     "readline-sync": "1.4.10",
