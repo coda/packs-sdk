@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -51,14 +42,14 @@ class OAuthServerContainer {
     }
     start(launchCallback) {
         const app = express_1.default();
-        app.get('/oauth', (req, res) => __awaiter(this, void 0, void 0, function* () {
+        app.get('/oauth', async (req, res) => {
             // TODO: Figure out how to get refresh tokens, maybe including grant_type: 'authorization_code'.
-            const tokenData = yield this._oauth2Client.code.getToken(req.originalUrl);
+            const tokenData = await this._oauth2Client.code.getToken(req.originalUrl);
             const { accessToken, refreshToken } = tokenData;
             this._afterTokenExchange({ accessToken, refreshToken });
             setTimeout(() => this.shutDown(), 10);
             return res.send('OAuth authentication is complete! You can close this browser tab.');
-        }));
+        });
         this._server = app.listen(this._port, launchCallback);
     }
     shutDown() {

@@ -10,6 +10,7 @@ import {handleExecute} from './execute';
 import {handleInit} from './init';
 import {handlePublish} from './publish';
 import {handleRegister} from './register';
+import {handleValidate} from './validate';
 import yargs from 'yargs';
 
 if (require.main === module) {
@@ -35,7 +36,7 @@ if (require.main === module) {
     })
     .command({
       command: 'auth <manifestPath>',
-      describe: 'Set up authentication for a pack',
+      describe: 'Set up authentication for a Pack',
       handler: handleAuth,
       builder: {
         credentialsFile: {
@@ -54,12 +55,12 @@ if (require.main === module) {
     })
     .command({
       command: 'init',
-      describe: 'Initialize an empty pack',
+      describe: 'Initialize an empty Pack',
       handler: handleInit,
     })
     .command({
       command: 'register [apiToken]',
-      describe: 'Register API token to publish a pack',
+      describe: 'Register API token to publish a Pack',
       builder: {
         codaApiEndpoint: {
           string: true,
@@ -71,7 +72,7 @@ if (require.main === module) {
     })
     .command({
       command: 'build <manifestFile>',
-      describe: 'Generate a bundle for your pack',
+      describe: 'Generate a bundle for your Pack',
       builder: {
         compiler: {
           string: true,
@@ -83,7 +84,7 @@ if (require.main === module) {
     })
     .command({
       command: 'publish <manifestFile>',
-      describe: 'Upload your pack to Coda',
+      describe: 'Upload your Pack to Coda',
       builder: {
         codaApiEndpoint: {
           string: true,
@@ -95,7 +96,7 @@ if (require.main === module) {
     })
     .command({
       command: 'create <packName>',
-      describe: "Register a new pack with Coda's servers",
+      describe: "Register a new Pack with Coda's servers",
       builder: {
         codaApiEndpoint: {
           string: true,
@@ -104,6 +105,11 @@ if (require.main === module) {
         } as Options,
       },
       handler: handleCreate,
+    })
+    .command({
+      command: 'validate <manifestFile>',
+      describe: 'Validate your Pack definition',
+      handler: handleValidate,
     })
     .demandCommand()
     .strict()

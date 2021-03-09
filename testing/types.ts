@@ -6,8 +6,9 @@ export interface ParameterError {
 
 export class ParameterException extends Error {}
 
-export interface ResultValidationError {
+export interface ValidationError {
   message: string;
+  path?: string;
 }
 
 export interface ValidationContext {
@@ -46,14 +47,14 @@ export class ResultValidationContext {
 }
 
 export class ResultValidationException extends Error {
-  errors: ResultValidationError[];
+  errors: ValidationError[];
 
-  constructor(message: string, errors: ResultValidationError[]) {
+  constructor(message: string, errors: ValidationError[]) {
     super(message);
     this.errors = errors;
   }
 
-  static fromErrors(formulaName: string, errors: ResultValidationError[]): ResultValidationException {
+  static fromErrors(formulaName: string, errors: ValidationError[]): ResultValidationException {
     const messages = errors.map(err => err.message).join('\n');
     const message = `The following errors were found when validating the result of the formula "${formulaName}":\n${messages}`;
     return new ResultValidationException(message, errors);
