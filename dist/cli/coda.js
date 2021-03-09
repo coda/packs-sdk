@@ -38,7 +38,7 @@ if (require.main === module) {
     })
         .command({
         command: 'auth <manifestPath>',
-        describe: 'Set up authentication for a pack',
+        describe: 'Set up authentication for a Pack',
         handler: auth_3.handleAuth,
         builder: {
             credentialsFile: {
@@ -57,12 +57,12 @@ if (require.main === module) {
     })
         .command({
         command: 'init',
-        describe: 'Initialize an empty pack',
+        describe: 'Initialize an empty Pack',
         handler: init_1.handleInit,
     })
         .command({
         command: 'register [apiToken]',
-        describe: 'Register API token to publish a pack',
+        describe: 'Register API token to publish a Pack',
         builder: {
             codaApiEndpoint: {
                 string: true,
@@ -74,7 +74,7 @@ if (require.main === module) {
     })
         .command({
         command: 'build <manifestFile>',
-        describe: 'Generate a bundle for your pack',
+        describe: 'Generate a bundle for your Pack',
         builder: {
             compiler: {
                 string: true,
@@ -86,7 +86,7 @@ if (require.main === module) {
     })
         .command({
         command: 'publish <manifestFile>',
-        describe: 'Upload your pack to Coda',
+        describe: 'Upload your Pack to Coda',
         builder: {
             codaApiEndpoint: {
                 string: true,
@@ -98,7 +98,7 @@ if (require.main === module) {
     })
         .command({
         command: 'create <packName>',
-        describe: "Register a new pack with Coda's servers",
+        describe: "Register a new Pack with Coda's servers",
         builder: {
             codaApiEndpoint: {
                 string: true,
@@ -110,7 +110,7 @@ if (require.main === module) {
     })
         .command({
         command: 'validate <manifestFile>',
-        describe: 'Validate your pack metadata',
+        describe: 'Validate your Pack definition',
         handler: validate_1.handleValidate,
     })
         .demandCommand()
