@@ -1,7 +1,17 @@
 import type {AllPacks} from './create';
 import type {Arguments} from 'yargs';
 import {ConsoleLogger} from '../helpers/logging';
+import type {Format} from 'types';
+import type {GenericSyncTable} from 'api';
+import type {PackDefinition} from 'types';
+import type {PackFormatMetadata} from '../compiled_types';
+import type {PackFormulaMetadata} from 'api';
+import type {PackFormulas} from 'api';
+import type {PackFormulasMetadata} from '../compiled_types';
 import type {PackMetadata} from '../compiled_types';
+import type {PackSyncTable} from '../compiled_types';
+import type {TypedPackFormula} from 'api';
+import type {TypedStandardFormula} from 'api';
 import {build} from './build';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
@@ -53,7 +63,8 @@ export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<P
     const {uploadUrl} = await client.registerPackVersion(packId, packVersion);
 
     logger.info('Uploading pack...');
-    await uploadPackToSignedUrl(bundleFilename, manifest, uploadUrl);
+    const metadata = compilePackMetadata(manifest);
+    await uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl);
 
     logger.info('Validating upload...');
     await client.packVersionUploadComplete(packId, packVersion);
@@ -83,4 +94,58 @@ async function uploadPackToSignedUrl(bundleFilename: string, metadata: PackMetad
   } catch (err) {
     printAndExit(`Error in uploading pack to signed url: ${err}`);
   }
+}
+
+function compilePackMetadata(manifest: PackDefinition): PackMetadata {
+  const {formats, formulas, formulaNamespace, syncTables, ...definition} = manifest;
+  const compiledFormats = compileFormatsMetadata(formats || []);
+  const compiledFormulas = (formulas && compileFormulasMetadata(formulas)) || (Array.isArray(formulas) ? [] : {});
+  const metadata: PackMetadata = {
+    ...definition,
+    formulaNamespace,
+    formats: compiledFormats,
+    formulas: compiledFormulas,
+    syncTables: (syncTables || []).map(compileSyncTable),
+  };
+
+  return metadata;
+}
+
+function compileFormatsMetadata(formats: Format[]): PackFormatMetadata[] {
+  return formats.map(format => {
+    return {
+      ...format,
+      matchers: (format.matchers || []).map(matcher => matcher.toString()),
+    };
+  });
+}
+
+function compileFormulasMetadata(
+  formulas: PackFormulas | TypedStandardFormula[],
+): PackFormulasMetadata | PackFormulaMetadata[] {
+  const formulasMetadata: PackFormulaMetadata[] | PackFormulasMetadata = Array.isArray(formulas) ? [] : {};
+  // TODO: @alan-fang delete once we move packs off of PackFormulas
+  if (Array.isArray(formulas)) {
+    (formulasMetadata as PackFormulaMetadata[]).push(...formulas.map(compileFormulaMetadata));
+  } else {
+    for (const namespace of Object.keys(formulas)) {
+      (formulasMetadata as PackFormulasMetadata)[namespace] = formulas[namespace].map(compileFormulaMetadata);
+    }
+  }
+
+  return formulasMetadata;
+}
+
+function compileFormulaMetadata(formula: TypedPackFormula): PackFormulaMetadata {
+  const {execute, ...rest} = formula;
+  return rest;
+}
+
+function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
+  const {getter, ...rest} = syncTable;
+  const {execute, ...getterRest} = getter;
+  return {
+    ...rest,
+    getter: getterRest,
+  };
 }
