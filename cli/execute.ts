@@ -5,7 +5,7 @@ import {isTypescript} from './helpers';
 import {makeManifestFullPath} from './helpers';
 import {spawnBootstrapCommand} from './helpers';
 
-interface ExecuteArgs {
+export interface ExecuteArgs {
   manifestPath: string;
   formulaName: string;
   params: string[];

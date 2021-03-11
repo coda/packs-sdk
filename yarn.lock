@@ -1792,6 +1792,11 @@ isexe@^2.0.0:
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha1-6PvzdNxVb/iUehDcsFctYz8s+hA=
 
+isolated-vm@^3.3.10:
+  version "3.3.10"
+  resolved "https://registry.yarnpkg.com/isolated-vm/-/isolated-vm-3.3.10.tgz#18a8caef536ecc6bf685a00fbd526acdd06e75ef"
+  integrity sha512-COaInZ05+9lKCeJtsqUTGDdvGRHVWkhZAQr+vExVTSyVWUNoulXJop46zSIPPHSb78uscHVrpzCYhBYSP+wYDQ==
+
 isomorphic-fetch@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/isomorphic-fetch/-/isomorphic-fetch-3.0.0.tgz#0267b005049046d2421207215d45d6a262b8b8b4"

@@ -1,5 +1,5 @@
 import type { Arguments } from 'yargs';
-interface ExecuteArgs {
+export interface ExecuteArgs {
     manifestPath: string;
     formulaName: string;
     params: string[];
@@ -7,4 +7,3 @@ interface ExecuteArgs {
     credentialsFile?: string;
 }
 export declare function handleExecute({ manifestPath, formulaName, params, fetch, credentialsFile, }: Arguments<ExecuteArgs>): Promise<void>;
-export {};
