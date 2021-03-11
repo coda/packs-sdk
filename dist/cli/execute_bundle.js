@@ -7,7 +7,7 @@ async function handleExecuteBundle({ bundlePath, formulaName, params, fetch, cre
         bundlePath,
         formulaName,
         params,
-        _contextOptions: { useRealFetcher: fetch, credentialsFile },
+        contextOptions: { useRealFetcher: fetch, credentialsFile },
     });
 }
 exports.handleExecuteBundle = handleExecuteBundle;
