@@ -1,14 +1,14 @@
 import {testHelper} from './test_helper';
 import {AuthenticationType} from '../types';
 import {DefaultConnectionType} from '../types';
-import type {GenericObjectSchema} from '../index';
-import type {Network} from '../index';
+import type {GenericObjectSchema} from '../schema';
+import type {Network} from '../api_types';
 import type {PackFormulaMetadata} from '../api';
-import type {PackMetadata} from '../index';
+import type {PackMetadata} from '../compiled_types';
 import type {PackMetadataValidationError} from '../testing/upload_validation';
 import {PostSetupType} from '../types';
 import type {TypedStandardFormula} from '../api';
-import {ValueType} from '../index';
+import {ValueType} from '../schema';
 import {createFakePackFormulaMetadata} from './test_utils';
 import {createFakePackMetadata} from './test_utils';
 import {makeNumericFormula} from '../api';
