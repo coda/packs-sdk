@@ -29,10 +29,10 @@ const schema_3 = require("../schema");
 const types_4 = require("../types");
 const types_5 = require("../types");
 const schema_4 = require("../schema");
-const index_1 = require("../index");
+const api_types_1 = require("../api_types");
 const schema_5 = require("../schema");
 const ZodParsedType_1 = require("zod/lib/cjs/ZodParsedType");
-const index_2 = require("../index");
+const ensure_1 = require("../helpers/ensure");
 const object_utils_1 = require("../helpers/object_utils");
 const z = __importStar(require("zod"));
 class PackMetadataValidationError extends Error {
@@ -104,7 +104,7 @@ function zodCompleteObject(shape) {
     return z.object(shape);
 }
 function zodUnionInput(schemas) {
-    index_2.assertCondition(schemas.length >= 2, 'A zod union type requires at least 2 options.');
+    ensure_1.assertCondition(schemas.length >= 2, 'A zod union type requires at least 2 options.');
     return schemas;
 }
 const setEndpointPostSetupValidator = zodCompleteObject({
@@ -187,7 +187,6 @@ const defaultAuthenticationValidators = {
         ...baseAuthenticationValidators,
     }),
 };
-// TODO(jonathan): Consider putting this in the SDK.
 const systemAuthenticationTypes = Object.values(types_1.AuthenticationType).filter(authType => ![types_1.AuthenticationType.None, types_1.AuthenticationType.CodaApiHeaderBearerToken, types_1.AuthenticationType.OAuth2].includes(authType));
 const systemAuthenticationValidators = Object.entries(defaultAuthenticationValidators)
     .filter(([authType]) => systemAuthenticationTypes.includes(authType))
@@ -195,7 +194,7 @@ const systemAuthenticationValidators = Object.entries(defaultAuthenticationValid
 const primitiveUnion = z.union([z.number(), z.string(), z.boolean(), z.date()]);
 const paramDefValidator = zodCompleteObject({
     name: z.string(),
-    type: z.union([z.nativeEnum(index_1.Type), z.object({ type: z.literal('array'), items: z.nativeEnum(index_1.Type) })]),
+    type: z.union([z.nativeEnum(api_types_1.Type), z.object({ type: z.literal('array'), items: z.nativeEnum(api_types_1.Type) })]),
     description: z.string(),
     optional: z.boolean().optional(),
     hidden: z.boolean().optional(),
@@ -221,7 +220,7 @@ const commonPackFormulaSchema = {
 };
 const numericPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: z.literal(index_1.Type.number),
+    resultType: z.literal(api_types_1.Type.number),
     schema: zodCompleteObject({
         type: z.literal(schema_5.ValueType.Number),
         codaType: z.enum([...schema_2.NumberHintValueTypes]).optional(),
@@ -230,7 +229,7 @@ const numericPackFormulaSchema = zodCompleteObject({
 });
 const stringPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: z.literal(index_1.Type.string),
+    resultType: z.literal(api_types_1.Type.string),
     schema: zodCompleteObject({
         type: z.literal(schema_5.ValueType.String),
         codaType: z.enum([...schema_4.StringHintValueTypes]).optional(),
@@ -318,7 +317,7 @@ const objectPropertyUnionSchema = z.union([
 ]);
 const objectPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: z.literal(index_1.Type.object),
+    resultType: z.literal(api_types_1.Type.object),
     // TODO(jonathan): See if we should really allow this. The SDK right now explicitly tolerates an undefined
     // schema for objects, but that doesn't seem like a use case we actually want to support.
     schema: genericObjectSchema.optional(),

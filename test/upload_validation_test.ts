@@ -1,14 +1,14 @@
 import {testHelper} from './test_helper';
 import {AuthenticationType} from '../types';
 import {DefaultConnectionType} from '../types';
-import type {GenericObjectSchema} from '../index';
-import type {Network} from '../index';
+import type {GenericObjectSchema} from '../schema';
+import type {Network} from '../api_types';
 import type {PackFormulaMetadata} from '../api';
-import type {PackMetadata} from '../index';
+import type {PackMetadata} from '../compiled_types';
 import type {PackMetadataValidationError} from '../testing/upload_validation';
 import {PostSetupType} from '../types';
 import type {TypedStandardFormula} from '../api';
-import {ValueType} from '../index';
+import {ValueType} from '../schema';
 import {createFakePackFormulaMetadata} from './test_utils';
 import {createFakePackMetadata} from './test_utils';
 import {makeNumericFormula} from '../api';
@@ -28,13 +28,32 @@ describe('Pack metadata Validation', () => {
     return err as PackMetadataValidationError;
   }
 
-  // it('empty upload JSON object', async () => {
-  //   const err = await validateJsonAndAssertFails({});
-  //   assert.deepEqual(err.validationErrors, [
-  //     {path: 'metadata', message: 'Required'},
-  //     {path: 'bundle', message: 'Required'},
-  //   ]);
-  // });
+  it('empty upload JSON object', async () => {
+    const err = await validateJsonAndAssertFails({});
+    assert.deepEqual(err.validationErrors, [
+      {
+        message: 'Missing required field name.',
+        path: 'name',
+      },
+      {
+        message: 'Missing required field shortDescription.',
+        path: 'shortDescription',
+      },
+      {
+        message: 'Missing required field description.',
+        path: 'description',
+      },
+      {
+        message: 'Missing required field version.',
+        path: 'version',
+      },
+      {
+        message:
+          'Input must be one of these values: CRM, Calendar, Communication, DataStorage, Design, Financial, Fun, Geo, IT, Mathematics, Organization, Recruiting, Shopping, Social, Sports, Travel, Weather',
+        path: 'category',
+      },
+    ]);
+  });
 
   it('wrong top-level types', async () => {
     const metadata = 'asdf';
