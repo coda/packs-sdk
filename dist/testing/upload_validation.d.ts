@@ -1,4 +1,4 @@
-import type { PackMetadata } from 'index';
+import type { PackMetadata } from '../index';
 import type { ValidationError } from './types';
 export declare class PackMetadataValidationError extends Error {
     readonly originalError: Error | undefined;

@@ -187,7 +187,6 @@ const defaultAuthenticationValidators = {
         ...baseAuthenticationValidators,
     }),
 };
-// TODO(jonathan): Consider putting this in the SDK.
 const systemAuthenticationTypes = Object.values(types_1.AuthenticationType).filter(authType => ![types_1.AuthenticationType.None, types_1.AuthenticationType.CodaApiHeaderBearerToken, types_1.AuthenticationType.OAuth2].includes(authType));
 const systemAuthenticationValidators = Object.entries(defaultAuthenticationValidators)
     .filter(([authType]) => systemAuthenticationTypes.includes(authType))

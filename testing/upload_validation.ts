@@ -10,7 +10,7 @@ import {FeatureSet} from '../types';
 import type {HeaderBearerTokenAuthentication} from '../types';
 import type {Identity} from '../schema';
 import type {MultiQueryParamTokenAuthentication} from '../types';
-import type {Network} from 'index';
+import type {Network} from '../index';
 import type {NoAuthentication} from '../types';
 import {NumberHintValueTypes} from '../schema';
 import type {NumberSchema} from '../schema';
@@ -21,9 +21,9 @@ import type {ObjectPackFormula} from 'api';
 import type {ObjectSchema} from '../schema';
 import type {ObjectSchemaProperty} from '../schema';
 import {PackCategory} from '../types';
-import type {PackFormatMetadata} from 'index';
-import type {PackMetadata} from 'index';
-import type {ParamDef} from 'index';
+import type {PackFormatMetadata} from '../index';
+import type {PackMetadata} from '../index';
+import type {ParamDef} from '../index';
 import {PostSetupType} from '../types';
 import type {QueryParamTokenAuthentication} from '../types';
 import type {SetEndpoint} from '../types';
@@ -219,7 +219,6 @@ const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> 
   }),
 };
 
-// TODO(jonathan): Consider putting this in the SDK.
 const systemAuthenticationTypes = Object.values(AuthenticationType).filter(
   authType =>
     ![AuthenticationType.None, AuthenticationType.CodaApiHeaderBearerToken, AuthenticationType.OAuth2].includes(

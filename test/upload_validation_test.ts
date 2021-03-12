@@ -28,13 +28,32 @@ describe('Pack metadata Validation', () => {
     return err as PackMetadataValidationError;
   }
 
-  // it('empty upload JSON object', async () => {
-  //   const err = await validateJsonAndAssertFails({});
-  //   assert.deepEqual(err.validationErrors, [
-  //     {path: 'metadata', message: 'Required'},
-  //     {path: 'bundle', message: 'Required'},
-  //   ]);
-  // });
+  it('empty upload JSON object', async () => {
+    const err = await validateJsonAndAssertFails({});
+    assert.deepEqual(err.validationErrors, [
+      {
+        message: 'Missing required field name.',
+        path: 'name',
+      },
+      {
+        message: 'Missing required field shortDescription.',
+        path: 'shortDescription',
+      },
+      {
+        message: 'Missing required field description.',
+        path: 'description',
+      },
+      {
+        message: 'Missing required field version.',
+        path: 'version',
+      },
+      {
+        message:
+          'Input must be one of these values: CRM, Calendar, Communication, DataStorage, Design, Financial, Fun, Geo, IT, Mathematics, Organization, Recruiting, Shopping, Social, Sports, Travel, Weather',
+        path: 'category',
+      },
+    ]);
+  });
 
   it('wrong top-level types', async () => {
     const metadata = 'asdf';
