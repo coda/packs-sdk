@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.executeFormulaOrSyncFromBundle = exports.registerBundle = void 0;
 const fs_1 = __importDefault(require("fs"));
 const isolated_vm_1 = __importDefault(require("isolated-vm"));
+const fetcher_1 = require("./fetcher");
 const path_1 = __importDefault(require("path"));
 const helpers_1 = require("./helpers");
 const IsolateMemoryLimit = 128;
@@ -13,10 +14,23 @@ const CodaRuntime = '__coda__runtime__';
 // bundle_execution_helper_bundle.js is built by esbuild (see Makefile) 
 // which puts it into the same directory: dist/testing/
 const CompiledHelperBundlePath = `${__dirname}/bundle_execution_helper_bundle.js`;
-// Maps a local function into the ivm context global function as a callback.
+// Maps a local function into the ivm context.
 async function mapCallbackFunction(context, stubName, method) {
     await context.evalClosure(`${stubName} = function(...args) {
        $0.applyIgnored(undefined, args, { arguments: { copy: true } });} `, [(...args) => method(...args)], { arguments: { reference: true }, result: { copy: true } });
+}
+// Maps a local async function into the ivm context.
+async function mapAsyncFunction(context, stubName, method) {
+    await context.evalClosure(`${stubName} = async function(...args) {
+      return $0.apply(
+        undefined, 
+        args, 
+        { 
+          arguments: {copy: true}, 
+          result: {copy: true, promise: true},
+        },
+      );
+    }`, [(...args) => method(...args)], { arguments: { reference: true } });
 }
 async function registerBundle(isolate, context, path, stubName) {
     // init / reset global.exports for import. Assuming the bundle is following commonJS format.
@@ -32,8 +46,34 @@ exports.registerBundle = registerBundle;
 function getStubName(name) {
     return `${CodaRuntime}.${name}`;
 }
+async function setupExecutionContext(ivmContext, { credentialsFile } = {}) {
+    const runtimeContext = await ivmContext.global.get(CodaRuntime, { reference: true });
+    // defaultAuthentication has a few function methods and can't be copied without being serialized first.
+    const authJSON = await ivmContext.eval(`JSON.stringify(${getStubName('pack.manifest.defaultAuthentication')})`, { copy: true });
+    const auth = JSON.parse(authJSON.result || '');
+    const name = (await ivmContext.eval(`${getStubName('pack.manifest.name')}`, { copy: true })).result;
+    const executionContext = fetcher_1.newFetcherSyncExecutionContext(name, auth, credentialsFile);
+    // set up a stub to be copied into the ivm context. we are not copying executionContext directly since
+    // part of the object is not transferrable. 
+    const executionContextStub = {
+        ...executionContext,
+        // override the non-transferrable fields to empty stubs. 
+        fetcher: {},
+        temporaryBlobStorage: {},
+        logger: {},
+    };
+    await runtimeContext.set('executionContext', executionContextStub, { copy: true });
+    await mapAsyncFunction(ivmContext, getStubName('executionContext.fetcher.fetch'), executionContext.fetcher.fetch.bind(executionContext.fetcher));
+    await mapAsyncFunction(ivmContext, getStubName('executionContext.temporaryBlobStorage.storeUrl'), executionContext.temporaryBlobStorage.storeUrl.bind(executionContext.temporaryBlobStorage));
+    await mapAsyncFunction(ivmContext, getStubName('executionContext.temporaryBlobStorage.storeBlob'), executionContext.temporaryBlobStorage.storeBlob.bind(executionContext.temporaryBlobStorage));
+    await mapCallbackFunction(ivmContext, getStubName('executionContext.logger.trace'), executionContext.logger.trace.bind(executionContext.logger));
+    await mapCallbackFunction(ivmContext, getStubName('executionContext.logger.debug'), executionContext.logger.debug.bind(executionContext.logger));
+    await mapCallbackFunction(ivmContext, getStubName('executionContext.logger.info'), executionContext.logger.info.bind(executionContext.logger));
+    await mapCallbackFunction(ivmContext, getStubName('executionContext.logger.warn'), executionContext.logger.warn.bind(executionContext.logger));
+    await mapCallbackFunction(ivmContext, getStubName('executionContext.logger.error'), executionContext.logger.error.bind(executionContext.logger));
+}
 // TODO(huayang): support sync table, format, etc.
-async function executeFormulaOrSyncFromBundle({ bundlePath, formulaName, params: rawParams, _contextOptions = {}, }) {
+async function executeFormulaOrSyncFromBundle({ bundlePath, formulaName, params: rawParams, contextOptions: executionContextOptions = {}, }) {
     let isolate = null;
     try {
         // creating an isolate with 128M memory limit.    
@@ -51,17 +91,16 @@ async function executeFormulaOrSyncFromBundle({ bundlePath, formulaName, params:
         await ivmContext.global.set('console', {}, { copy: true });
         // eslint-disable-next-line no-console
         await mapCallbackFunction(ivmContext, 'console.log', console.log);
-        // TODO(huayang): set up fetcher stub. we need to revisit every thing we have in the execution context 
-        // since everything there needs to be explicitly passed in, using a callback.
         const bundleFullPath = bundlePath.startsWith('/') ? bundlePath : path_1.default.join(process.cwd(), bundlePath);
         await registerBundle(isolate, ivmContext, bundleFullPath, getStubName('pack'));
         await registerBundle(isolate, ivmContext, CompiledHelperBundlePath, getStubName('bundleExecutionHelper'));
+        await setupExecutionContext(ivmContext, executionContextOptions);
         // run the formula and redirect result/error.
         const resultPromise = await ivmContext.evalClosure(`return ${getStubName('bundleExecutionHelper')}.executeFormulaWithRawParams(
         ${getStubName('pack.manifest')}, 
         $0, 
         $1, 
-        {}
+        ${getStubName('executionContext')}
       )`, [formulaName, rawParams], { arguments: { copy: true }, result: { copy: true, promise: true } });
         const result = await resultPromise.result;
         helpers_1.print(result);
