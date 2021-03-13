@@ -20,6 +20,7 @@ export enum ValueType {
   DateTime = 'datetime',
   Duration = 'duration',
   Person = 'person',
+  Email = 'email',
   Percent = 'percent',
   Currency = 'currency',
   Image = 'image',
@@ -46,6 +47,7 @@ export const StringHintValueTypes = [
   ValueType.ImageAttachment,
   ValueType.Markdown,
   ValueType.Url,
+  ValueType.Email,
 ] as const;
 export const NumberHintValueTypes = [
   ValueType.Date,
@@ -79,6 +81,12 @@ export interface NumericSchema extends NumberSchema {
   codaType?: ValueType.Percent; // Can also be undefined if it's a vanilla number
   precision?: number;
   useThousandsSeparator?: boolean;
+}
+
+export interface EmailSchema extends StringSchema<ValueType.Email> {
+  codaType: ValueType.Email;
+  iconOnly?: boolean;
+  suggestedDomains?: string;
 }
 
 export enum CurrencyFormat {

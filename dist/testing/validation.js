@@ -152,6 +152,9 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                 case schema_1.ValueType.DateTime:
                     const dateTimeErrorMessage = tryParseDateTimeString(result, schema);
                     return dateTimeErrorMessage ? [dateTimeErrorMessage] : [];
+                case schema_1.ValueType.Email:
+                    const emailErrorMessage = tryParseEmail(result, schema);
+                    return emailErrorMessage ? [emailErrorMessage] : [];
                 case schema_1.ValueType.Duration:
                 case schema_1.ValueType.Time:
                     // TODO: investigate how to do this in a lightweight fashion.
@@ -207,6 +210,9 @@ function tryParseUrl(result, schema) {
     catch (error) {
         return invalidUrlError;
     }
+}
+function tryParseEmail(_result, _schema) {
+    return undefined;
 }
 function tryParseSlider(result, schema) {
     const value = result;

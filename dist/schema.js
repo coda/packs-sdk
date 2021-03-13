@@ -23,6 +23,7 @@ var ValueType;
     ValueType["DateTime"] = "datetime";
     ValueType["Duration"] = "duration";
     ValueType["Person"] = "person";
+    ValueType["Email"] = "email";
     ValueType["Percent"] = "percent";
     ValueType["Currency"] = "currency";
     ValueType["Image"] = "image";
@@ -48,6 +49,7 @@ exports.StringHintValueTypes = [
     ValueType.ImageAttachment,
     ValueType.Markdown,
     ValueType.Url,
+    ValueType.Email,
 ];
 exports.NumberHintValueTypes = [
     ValueType.Date,

@@ -1388,6 +1388,7 @@ var ValueType;
   ValueType2["DateTime"] = "datetime";
   ValueType2["Duration"] = "duration";
   ValueType2["Person"] = "person";
+  ValueType2["Email"] = "email";
   ValueType2["Percent"] = "percent";
   ValueType2["Currency"] = "currency";
   ValueType2["Image"] = "image";
@@ -1412,7 +1413,8 @@ var StringHintValueTypes = [
   ValueType.Image,
   ValueType.ImageAttachment,
   ValueType.Markdown,
-  ValueType.Url
+  ValueType.Url,
+  ValueType.Email
 ];
 var NumberHintValueTypes = [
   ValueType.Date,
