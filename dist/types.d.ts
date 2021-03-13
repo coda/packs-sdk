@@ -196,6 +196,7 @@ export interface PackDefinition {
     logoPath: string;
     enabledConfigName?: string;
     defaultAuthentication?: Authentication;
+    networkDomains?: string[];
     exampleImages?: string[];
     exampleVideoIds?: string[];
     minimumFeatureSet?: FeatureSet;
