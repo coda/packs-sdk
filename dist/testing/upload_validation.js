@@ -345,6 +345,7 @@ const packMetadataSchema = zodCompleteObject({
     logoPath: z.string().optional(),
     enabledConfigName: z.string().optional(),
     defaultAuthentication: z.union(zodUnionInput(Object.values(defaultAuthenticationValidators))).optional(),
+    networkDomains: z.array(z.string()).optional(),
     exampleImages: z.array(z.string()).optional(),
     exampleVideoIds: z.array(z.string()).optional(),
     minimumFeatureSet: z.nativeEnum(types_3.FeatureSet).optional(),
