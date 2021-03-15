@@ -77,8 +77,10 @@ export interface Network {
     readonly hasSideEffect?: boolean;
     readonly requiresConnection?: boolean;
 }
+declare const ValidFetchMethods: readonly ["GET", "PATCH", "POST", "PUT", "DELETE"];
+export declare type FetchMethodType = typeof ValidFetchMethods[number];
 export interface FetchRequest {
-    method: 'GET' | 'PATCH' | 'POST' | 'PUT' | 'DELETE';
+    method: FetchMethodType;
     url: string;
     body?: string;
     form?: {
