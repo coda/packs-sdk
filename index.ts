@@ -43,6 +43,7 @@ export type {DynamicSyncTableDef} from './api';
 export type {EmptyFormulaDef} from './api';
 export type {ExecutionContext} from './api_types';
 export type {Fetcher} from './api_types';
+export type {FetchMethodType} from './api_types';
 export type {FetchRequest} from './api_types';
 export type {FetchResponse} from './api_types';
 export type {GenericDynamicSyncTable} from './api';

@@ -135,10 +135,18 @@ export interface Network {
 }
 
 // Fetcher APIs
+const ValidFetchMethods = [
+  'GET',
+  'PATCH',
+  'POST',
+  'PUT',
+  'DELETE',
+] as const;
+export type FetchMethodType = typeof ValidFetchMethods[number];
 
 // Copied from https://developer.mozilla.org/en-US/docs/Web/API/Request
 export interface FetchRequest {
-  method: 'GET' | 'PATCH' | 'POST' | 'PUT' | 'DELETE';
+  method: FetchMethodType;
   url: string;
   body?: string;
   form?: {[key: string]: string};

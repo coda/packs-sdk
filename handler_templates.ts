@@ -1,3 +1,4 @@
+import type {FetchMethodType} from './api_types';
 import type {FetchRequest} from './api_types';
 import type {FetchResponse} from './api_types';
 import type {ObjectSchemaProperty} from './schema';
@@ -17,7 +18,7 @@ type ParamMapper<T> = (val: T) => T;
 
 export interface RequestHandlerTemplate {
   url: string;
-  method: 'GET' | 'PATCH' | 'POST' | 'PUT' | 'DELETE';
+  method: FetchMethodType;
   headers?: {[header: string]: string};
   nameMapping?: {[functionParamName: string]: string};
   transforms?: {[name: string]: ParamMapper<any>};
