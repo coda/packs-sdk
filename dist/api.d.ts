@@ -275,7 +275,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
         result: PackFormulaResult;
     }[];
     parameters: ParamDefsT;
-    varargParameters?: [ParamDef<any>, ...ParamDef<any>[]] | [] | undefined;
+    varargParameters?: ParamDefs | undefined;
     network?: import("./api_types").Network | undefined;
     cacheTtlSecs?: number | undefined;
     isExperimental?: boolean | undefined;
