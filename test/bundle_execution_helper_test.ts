@@ -18,7 +18,7 @@ describe('Bundle Execution Helper', () => {
   it('should bundle and run in an IVM context', async () => {
     const outputFilePath = 'dist/test/bundle_execution_helper_bundle.js';
     const options: esbuild.BuildOptions = {
-      banner: "'use strict';",
+      banner: {js: "'use strict';"},
       bundle: true,
       entryPoints: [`./testing/bundle_execution_helper.js`],
       outfile: outputFilePath,

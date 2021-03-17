@@ -57,7 +57,7 @@ async function build(manifestFile, compiler) {
 exports.build = build;
 async function compilePackBundleESBuild(bundleFilename, entrypoint) {
     const options = {
-        banner: "'use strict';",
+        banner: { js: "'use strict';" },
         bundle: true,
         entryPoints: [entrypoint],
         outfile: bundleFilename,
