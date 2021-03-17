@@ -356,7 +356,7 @@ const packMetadataSchema = zodCompleteObject({
     formulas: z.array(formulaMetadataSchema).optional().default([]),
     formats: z.array(formatMetadataSchema).optional().default([]),
     syncTables: z.array(z.unknown()).optional().default([]),
-    isSystem: z.boolean().optional(),
+    isSystem: z.boolean().optional(), // Moving to UI/admin
 })
     .refine(data => {
     if (data.formulas && data.formulas.length > 0) {

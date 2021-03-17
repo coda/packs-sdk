@@ -32,7 +32,7 @@
     "request-promise-native": "^1.0.9",
     "sinon": "9.2.4",
     "string-template": "^1.0.0",
-    "typescript": "^4.1.5",
+    "typescript": "^4.2.3",
     "url-parse": "^1.5.1",
     "uuid": "^8.3.2",
     "webpack": "^5.26.0",

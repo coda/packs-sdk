@@ -175,7 +175,7 @@ exports.requestHelper = {
             encoding: request.isBinaryResponse ? null : undefined,
             resolveWithFullResponse: true,
             timeout: 60000,
-            forever: true,
+            forever: true, // keep alive connections as long as possible.
         });
     },
 };
