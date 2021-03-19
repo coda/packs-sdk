@@ -1326,8 +1326,12 @@ var require_url_parse = __commonJS((exports2, module2) => {
 // testing/bundle_execution_helper.ts
 __markAsModule(exports);
 __export(exports, {
-  executeFormulaWithRawParams: () => executeFormulaWithRawParams,
+  executeFormulaOrSyncWithRawParams: () => executeFormulaOrSyncWithRawParams,
+  executeSyncFormulaWithoutValidation: () => executeSyncFormulaWithoutValidation,
   findFormula: () => findFormula,
+  findSyncFormula: () => findSyncFormula,
+  tryFindFormula: () => tryFindFormula,
+  tryFindSyncFormula: () => tryFindSyncFormula,
   wrapError: () => wrapError
 });
 
@@ -1521,16 +1525,40 @@ function coerceParam(type, value) {
 }
 
 // testing/bundle_execution_helper.ts
-async function executeFormulaWithRawParams(manifest, formulaName, rawParams, context) {
-  const formula = findFormula(manifest, formulaName);
-  const params = coerceParams(formula, rawParams);
-  let result;
+async function executeSyncFormulaWithoutValidation(formula, params, context, maxIterations) {
+  const result = [];
+  let iterations = 1;
+  do {
+    if (iterations > maxIterations) {
+      throw new Error(`Sync is still running after ${maxIterations} iterations, this is likely due to an infinite loop. If more iterations are needed, use the maxIterations option.`);
+    }
+    let response;
+    try {
+      response = await formula.execute(params, context);
+    } catch (err) {
+      throw wrapError(err);
+    }
+    result.push(...response.result);
+    context.sync.continuation = response.continuation;
+    iterations++;
+  } while (context.sync.continuation);
+  return result;
+}
+async function executeFormulaOrSyncWithRawParams(manifest, formulaName, rawParams, context) {
   try {
-    result = await formula.execute(params, context);
+    const formula = tryFindFormula(manifest, formulaName);
+    if (formula) {
+      const params = coerceParams(formula, rawParams);
+      return await formula.execute(params, context);
+    }
+    const syncFormula = tryFindSyncFormula(manifest, formulaName);
+    if (syncFormula) {
+      const params = coerceParams(syncFormula, rawParams);
+      return await executeSyncFormulaWithoutValidation(syncFormula, params, context, 100);
+    }
   } catch (err) {
     throw wrapError(err);
   }
-  return result;
 }
 function findFormula(packDef, formulaNameWithNamespace) {
   const packFormulas = packDef.formulas;
@@ -1551,6 +1579,30 @@ function findFormula(packDef, formulaNameWithNamespace) {
     }
   }
   throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formula "${name}" in namespace "${namespace}".`);
+}
+function findSyncFormula(packDef, syncFormulaName) {
+  if (!packDef.syncTables) {
+    throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no sync tables.`);
+  }
+  for (const syncTable of packDef.syncTables) {
+    const syncFormula = syncTable.getter;
+    if (syncFormula.name === syncFormulaName) {
+      return syncFormula;
+    }
+  }
+  throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no sync formula "${syncFormulaName}" in its sync tables.`);
+}
+function tryFindFormula(packDef, formulaNameWithNamespace) {
+  try {
+    return findFormula(packDef, formulaNameWithNamespace);
+  } catch (_err) {
+  }
+}
+function tryFindSyncFormula(packDef, syncFormulaName) {
+  try {
+    return findSyncFormula(packDef, syncFormulaName);
+  } catch (_err) {
+  }
 }
 function wrapError(err) {
   if (err.name === "TypeError" && err.message === `Cannot read property 'body' of undefined`) {

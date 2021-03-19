@@ -6,16 +6,19 @@ import type {PackDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
 import type {SyncExecutionContext} from '../api_types';
-import type {SyncFormulaResult} from '../api';
 import type {TypedStandardFormula} from '../api';
 import {coerceParams} from './coercion';
+import {executeSyncFormulaWithoutValidation} from './bundle_execution_helper';
 import {findFormula} from './bundle_execution_helper';
+import {findSyncFormula} from './bundle_execution_helper';
 import {getManifestFromModule} from './helpers';
 import {newFetcherExecutionContext} from './fetcher';
 import {newFetcherSyncExecutionContext} from './fetcher';
 import {newMockExecutionContext} from './mocks';
 import {newMockSyncExecutionContext} from './mocks';
 import {print} from './helpers';
+import {tryFindFormula} from './bundle_execution_helper';
+import {tryFindSyncFormula} from './bundle_execution_helper';
 import {validateParams} from './validation';
 import {validateResult} from './validation';
 import {wrapError} from './bundle_execution_helper';
@@ -135,24 +138,7 @@ export async function executeSyncFormula(
     validateParams(formula, params);
   }
 
-  const result = [];
-  let iterations = 1;
-  do {
-    if (iterations > maxIterations) {
-      throw new Error(
-        `Sync is still running after ${maxIterations} iterations, this is likely due to an infinite loop. If more iterations are needed, use the maxIterations option.`,
-      );
-    }
-    let response: SyncFormulaResult<any>;
-    try {
-      response = await formula.execute(params, context);
-    } catch (err) {
-      throw wrapError(err);
-    }
-    result.push(...response.result);
-    context.sync.continuation = response.continuation;
-    iterations++;
-  } while (context.sync.continuation);
+  const result = await executeSyncFormulaWithoutValidation(formula, params, context, maxIterations);
 
   if (shouldValidateResult) {
     validateResult(formula, result);
@@ -187,33 +173,4 @@ export async function executeMetadataFormula(
 ) {
   const {search, formulaContext} = metadataParams;
   return formula.execute([search || '', formulaContext ? JSON.stringify(formulaContext) : ''], context);
-}
-
-function tryFindFormula(packDef: PackDefinition, formulaNameWithNamespace: string): TypedStandardFormula | undefined {
-  try {
-    return findFormula(packDef, formulaNameWithNamespace);
-  } catch (_err) {}
-}
-
-function findSyncFormula(packDef: PackDefinition, syncFormulaName: string): GenericSyncFormula {
-  if (!packDef.syncTables) {
-    throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no sync tables.`);
-  }
-
-  for (const syncTable of packDef.syncTables) {
-    const syncFormula = syncTable.getter;
-    if (syncFormula.name === syncFormulaName) {
-      return syncFormula;
-    }
-  }
-
-  throw new Error(
-    `Pack definition for ${packDef.name} (id ${packDef.id}) has no sync formula "${syncFormulaName}" in its sync tables.`,
-  );
-}
-
-function tryFindSyncFormula(packDef: PackDefinition, syncFormulaName: string): GenericSyncFormula | undefined {
-  try {
-    return findSyncFormula(packDef, syncFormulaName);
-  } catch (_err) {}
 }

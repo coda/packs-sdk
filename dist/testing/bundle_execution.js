@@ -96,7 +96,7 @@ async function executeFormulaOrSyncFromBundle({ bundlePath, formulaName, params:
         await registerBundle(isolate, ivmContext, CompiledHelperBundlePath, getStubName('bundleExecutionHelper'));
         await setupExecutionContext(ivmContext, executionContextOptions);
         // run the formula and redirect result/error.
-        const resultPromise = await ivmContext.evalClosure(`return ${getStubName('bundleExecutionHelper')}.executeFormulaWithRawParams(
+        const resultPromise = await ivmContext.evalClosure(`return ${getStubName('bundleExecutionHelper')}.executeFormulaOrSyncWithRawParams(
         ${getStubName('pack.manifest')}, 
         $0, 
         $1, 
