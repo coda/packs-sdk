@@ -34,7 +34,6 @@ import {Type} from '../api_types';
 import type {ValidationError} from './types';
 import {ValueType} from '../schema';
 import type {WebBasicAuthentication} from '../types';
-import {ZodParsedType} from 'zod/lib/cjs/ZodParsedType';
 import {assertCondition} from '../helpers/ensure';
 import {isNil} from '../helpers/object_utils';
 import * as z from 'zod';
@@ -97,8 +96,8 @@ function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError 
   const path = zodPathToPathString(zodPath);
   const isMissingRequiredFieldError =
     subError.code === z.ZodIssueCode.invalid_type &&
-    subError.received === ZodParsedType.undefined &&
-    subError.expected.toString() !== ZodParsedType.undefined;
+    subError.received === 'undefined' &&
+    subError.expected.toString() !== 'undefined';
 
   return {
     path,

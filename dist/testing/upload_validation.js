@@ -31,7 +31,6 @@ const types_5 = require("../types");
 const schema_4 = require("../schema");
 const api_types_1 = require("../api_types");
 const schema_5 = require("../schema");
-const ZodParsedType_1 = require("zod/lib/cjs/ZodParsedType");
 const ensure_1 = require("../helpers/ensure");
 const object_utils_1 = require("../helpers/object_utils");
 const z = __importStar(require("zod"));
@@ -81,8 +80,8 @@ function zodErrorDetailToValidationError(subError) {
     const { path: zodPath, message } = subError;
     const path = zodPathToPathString(zodPath);
     const isMissingRequiredFieldError = subError.code === z.ZodIssueCode.invalid_type &&
-        subError.received === ZodParsedType_1.ZodParsedType.undefined &&
-        subError.expected.toString() !== ZodParsedType_1.ZodParsedType.undefined;
+        subError.received === 'undefined' &&
+        subError.expected.toString() !== 'undefined';
     return {
         path,
         message: isMissingRequiredFieldError ? `Missing required field ${path}.` : message,
