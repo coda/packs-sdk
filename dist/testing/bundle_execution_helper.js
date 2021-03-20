@@ -1,23 +1,47 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.wrapError = exports.findFormula = exports.executeFormulaWithRawParams = void 0;
+exports.wrapError = exports.tryFindSyncFormula = exports.tryFindFormula = exports.findSyncFormula = exports.findFormula = exports.executeFormulaOrSyncWithRawParams = exports.executeSyncFormulaWithoutValidation = void 0;
 const coercion_1 = require("./coercion");
-async function executeFormulaWithRawParams(manifest, formulaName, rawParams, context) {
-    const formula = findFormula(manifest, formulaName);
-    const params = coercion_1.coerceParams(formula, rawParams);
-    // can't do validation for now due to the dependency of 'url' package (node), see tryParseUrl.
-    // validateParams(formula, params);
-    let result;
+async function executeSyncFormulaWithoutValidation(formula, params, context, maxIterations) {
+    const result = [];
+    let iterations = 1;
+    do {
+        if (iterations > maxIterations) {
+            throw new Error(`Sync is still running after ${maxIterations} iterations, this is likely due to an infinite loop. If more iterations are needed, use the maxIterations option.`);
+        }
+        let response;
+        try {
+            response = await formula.execute(params, context);
+        }
+        catch (err) {
+            throw wrapError(err);
+        }
+        result.push(...response.result);
+        context.sync.continuation = response.continuation;
+        iterations++;
+    } while (context.sync.continuation);
+    return result;
+}
+exports.executeSyncFormulaWithoutValidation = executeSyncFormulaWithoutValidation;
+async function executeFormulaOrSyncWithRawParams(manifest, formulaName, rawParams, context) {
+    // TODO(huayang): maybe do validating params / results. need to address the url dependency first.
     try {
-        result = await formula.execute(params, context);
+        const formula = tryFindFormula(manifest, formulaName);
+        if (formula) {
+            const params = coercion_1.coerceParams(formula, rawParams);
+            return await formula.execute(params, context);
+        }
+        const syncFormula = tryFindSyncFormula(manifest, formulaName);
+        if (syncFormula) {
+            const params = coercion_1.coerceParams(syncFormula, rawParams);
+            return await executeSyncFormulaWithoutValidation(syncFormula, params, context, 100);
+        }
     }
     catch (err) {
         throw wrapError(err);
     }
-    // validateResult(formula, result);
-    return result;
 }
-exports.executeFormulaWithRawParams = executeFormulaWithRawParams;
+exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
 function findFormula(packDef, formulaNameWithNamespace) {
     const packFormulas = packDef.formulas;
     if (!packFormulas) {
@@ -40,6 +64,33 @@ function findFormula(packDef, formulaNameWithNamespace) {
     throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formula "${name}" in namespace "${namespace}".`);
 }
 exports.findFormula = findFormula;
+function findSyncFormula(packDef, syncFormulaName) {
+    if (!packDef.syncTables) {
+        throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no sync tables.`);
+    }
+    for (const syncTable of packDef.syncTables) {
+        const syncFormula = syncTable.getter;
+        if (syncFormula.name === syncFormulaName) {
+            return syncFormula;
+        }
+    }
+    throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no sync formula "${syncFormulaName}" in its sync tables.`);
+}
+exports.findSyncFormula = findSyncFormula;
+function tryFindFormula(packDef, formulaNameWithNamespace) {
+    try {
+        return findFormula(packDef, formulaNameWithNamespace);
+    }
+    catch (_err) { }
+}
+exports.tryFindFormula = tryFindFormula;
+function tryFindSyncFormula(packDef, syncFormulaName) {
+    try {
+        return findSyncFormula(packDef, syncFormulaName);
+    }
+    catch (_err) { }
+}
+exports.tryFindSyncFormula = tryFindSyncFormula;
 function wrapError(err) {
     if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
         err.message +=

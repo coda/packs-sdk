@@ -148,7 +148,7 @@ export async function executeFormulaOrSyncFromBundle({
 
     // run the formula and redirect result/error.
     const resultPromise = await ivmContext.evalClosure(
-      `return ${getStubName('bundleExecutionHelper')}.executeFormulaWithRawParams(
+      `return ${getStubName('bundleExecutionHelper')}.executeFormulaOrSyncWithRawParams(
         ${getStubName('pack.manifest')}, 
         $0, 
         $1, 
