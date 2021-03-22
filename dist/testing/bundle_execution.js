@@ -72,25 +72,31 @@ async function setupExecutionContext(ivmContext, { credentialsFile } = {}) {
     await mapCallbackFunction(ivmContext, getStubName('executionContext.logger.warn'), executionContext.logger.warn.bind(executionContext.logger));
     await mapCallbackFunction(ivmContext, getStubName('executionContext.logger.error'), executionContext.logger.error.bind(executionContext.logger));
 }
-// TODO(huayang): support sync table, format, etc.
+async function createIvmContext(isolate) {
+    // context is like a container in ivm concept.
+    const ivmContext = await isolate.createContext();
+    // create global for the context. Otherwise it's going to be a reference object.
+    const jail = ivmContext.global;
+    await jail.set('global', jail.derefInto());
+    // security protection
+    await jail.set('eval', undefined, { copy: true });
+    await jail.set('Function', undefined, { copy: true });
+    // coda runtime is used to store all the variables that we need to run the formula. 
+    // it avoids the risk of conflict if putting those variables under global.
+    await ivmContext.global.set(CodaRuntime, {}, { copy: true });
+    // for debugging purpose, map console.log into the ivm context. it should be removed once we 
+    // hook logger into the execution context.
+    await ivmContext.global.set('console', {}, { copy: true });
+    // eslint-disable-next-line no-console
+    await mapCallbackFunction(ivmContext, 'console.log', console.log);
+    return ivmContext;
+}
 async function executeFormulaOrSyncFromBundle({ bundlePath, formulaName, params: rawParams, contextOptions: executionContextOptions = {}, }) {
     let isolate = null;
     try {
         // creating an isolate with 128M memory limit.    
         isolate = new isolated_vm_1.default.Isolate({ memoryLimit: IsolateMemoryLimit });
-        // context is like a container in ivm concept.
-        const ivmContext = await isolate.createContext();
-        // create global for the context. Otherwise it's going to be a reference object.
-        const jail = ivmContext.global;
-        await jail.set('global', jail.derefInto());
-        // coda runtime is used to store all the variables that we need to run the formula. 
-        // it avoids the risk of conflict if putting those variables under global.
-        await ivmContext.global.set(CodaRuntime, {}, { copy: true });
-        // for debugging purpose, map console.log into the ivm context. it should be removed once we 
-        // hook logger into the execution context.
-        await ivmContext.global.set('console', {}, { copy: true });
-        // eslint-disable-next-line no-console
-        await mapCallbackFunction(ivmContext, 'console.log', console.log);
+        const ivmContext = await createIvmContext(isolate);
         const bundleFullPath = bundlePath.startsWith('/') ? bundlePath : path_1.default.join(process.cwd(), bundlePath);
         await registerBundle(isolate, ivmContext, bundleFullPath, getStubName('pack'));
         await registerBundle(isolate, ivmContext, CompiledHelperBundlePath, getStubName('bundleExecutionHelper'));
