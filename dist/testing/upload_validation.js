@@ -34,6 +34,10 @@ const schema_5 = require("../schema");
 const ensure_1 = require("../helpers/ensure");
 const object_utils_1 = require("../helpers/object_utils");
 const z = __importStar(require("zod"));
+var CustomErrorCode;
+(function (CustomErrorCode) {
+    CustomErrorCode["NonMatchingDiscriminant"] = "nonMatchingDiscriminant";
+})(CustomErrorCode || (CustomErrorCode = {}));
 class PackMetadataValidationError extends Error {
     constructor(message, originalError, validationErrors) {
         super(message);
@@ -51,6 +55,7 @@ async function validatePackMetadata(metadata) {
 }
 exports.validatePackMetadata = validatePackMetadata;
 function zodErrorDetailToValidationError(subError) {
+    var _a;
     // Top-level errors for union types are totally useless, they just say "invalid input",
     // but they do record all of the specific errors when trying each element of the union,
     // so we filter out the errors that were just due to non-matches of the discriminant
@@ -58,7 +63,11 @@ function zodErrorDetailToValidationError(subError) {
     if (subError.code === z.ZodIssueCode.invalid_union) {
         const underlyingErrors = [];
         for (const unionError of subError.unionErrors) {
-            const isNonmatchedUnionMember = unionError.issues.some(issue => issue.code === z.ZodIssueCode.invalid_literal_value);
+            const isNonmatchedUnionMember = unionError.issues.some(issue => {
+                var _a;
+                return (issue.code === z.ZodIssueCode.custom &&
+                    ((_a = issue.params) === null || _a === void 0 ? void 0 : _a.customErrorCode) === CustomErrorCode.NonMatchingDiscriminant);
+            });
             // Skip any errors that are nested with an "invalid literal" error that is usually
             // a failed discriminant match; we don't care about reporting any errors from this union
             // member if the discriminant didn't match.
@@ -66,7 +75,9 @@ function zodErrorDetailToValidationError(subError) {
                 continue;
             }
             for (const unionIssue of unionError.issues) {
-                if (unionIssue.code !== z.ZodIssueCode.invalid_literal_value) {
+                const isDiscriminantError = unionIssue.code === z.ZodIssueCode.custom &&
+                    ((_a = unionIssue.params) === null || _a === void 0 ? void 0 : _a.customErrorCode) === CustomErrorCode.NonMatchingDiscriminant;
+                if (!isDiscriminantError) {
                     const error = {
                         path: zodPathToPathString(unionIssue.path),
                         message: unionIssue.message,
@@ -102,12 +113,18 @@ function zodPathToPathString(zodPath) {
 function zodCompleteObject(shape) {
     return z.object(shape);
 }
+function zodDiscriminant(value) {
+    return z.union([z.string(), z.number()]).refine(data => data === value, {
+        message: 'Non-matching discriminant',
+        params: { customErrorCode: CustomErrorCode.NonMatchingDiscriminant },
+    });
+}
 function zodUnionInput(schemas) {
     ensure_1.assertCondition(schemas.length >= 2, 'A zod union type requires at least 2 options.');
     return schemas;
 }
 const setEndpointPostSetupValidator = zodCompleteObject({
-    type: z.literal(types_5.PostSetupType.SetEndpoint),
+    type: zodDiscriminant(types_5.PostSetupType.SetEndpoint),
     name: z.string(),
     description: z.string(),
     // TODO(jonathan): Remove this from the metadata object, only needs to be present in the full bundle.
@@ -127,31 +144,31 @@ const baseAuthenticationValidators = {
 };
 const defaultAuthenticationValidators = {
     [types_1.AuthenticationType.None]: zodCompleteObject({
-        type: z.literal(types_1.AuthenticationType.None),
+        type: zodDiscriminant(types_1.AuthenticationType.None),
     }),
     [types_1.AuthenticationType.HeaderBearerToken]: zodCompleteObject({
-        type: z.literal(types_1.AuthenticationType.HeaderBearerToken),
+        type: zodDiscriminant(types_1.AuthenticationType.HeaderBearerToken),
         ...baseAuthenticationValidators,
     }),
     [types_1.AuthenticationType.CodaApiHeaderBearerToken]: zodCompleteObject({
-        type: z.literal(types_1.AuthenticationType.CodaApiHeaderBearerToken),
+        type: zodDiscriminant(types_1.AuthenticationType.CodaApiHeaderBearerToken),
         deferConnectionSetup: z.boolean().optional(),
         shouldAutoAuthSetup: z.boolean().optional(),
         ...baseAuthenticationValidators,
     }),
     [types_1.AuthenticationType.CustomHeaderToken]: zodCompleteObject({
-        type: z.literal(types_1.AuthenticationType.CustomHeaderToken),
+        type: zodDiscriminant(types_1.AuthenticationType.CustomHeaderToken),
         headerName: z.string(),
         tokenPrefix: z.string().optional(),
         ...baseAuthenticationValidators,
     }),
     [types_1.AuthenticationType.QueryParamToken]: zodCompleteObject({
-        type: z.literal(types_1.AuthenticationType.QueryParamToken),
+        type: zodDiscriminant(types_1.AuthenticationType.QueryParamToken),
         paramName: z.string(),
         ...baseAuthenticationValidators,
     }),
     [types_1.AuthenticationType.MultiQueryParamToken]: zodCompleteObject({
-        type: z.literal(types_1.AuthenticationType.MultiQueryParamToken),
+        type: zodDiscriminant(types_1.AuthenticationType.MultiQueryParamToken),
         params: z.array(zodCompleteObject({
             name: z.string(),
             description: z.string(),
@@ -159,7 +176,7 @@ const defaultAuthenticationValidators = {
         ...baseAuthenticationValidators,
     }),
     [types_1.AuthenticationType.OAuth2]: zodCompleteObject({
-        type: z.literal(types_1.AuthenticationType.OAuth2),
+        type: zodDiscriminant(types_1.AuthenticationType.OAuth2),
         authorizationUrl: z.string(),
         tokenUrl: z.string(),
         scopes: z.array(z.string()).optional(),
@@ -172,7 +189,7 @@ const defaultAuthenticationValidators = {
         ...baseAuthenticationValidators,
     }),
     [types_1.AuthenticationType.WebBasic]: zodCompleteObject({
-        type: z.literal(types_1.AuthenticationType.WebBasic),
+        type: zodDiscriminant(types_1.AuthenticationType.WebBasic),
         uxConfig: zodCompleteObject({
             placeholderUsername: z.string().optional(),
             placeholderPassword: z.string().optional(),
@@ -181,7 +198,7 @@ const defaultAuthenticationValidators = {
         ...baseAuthenticationValidators,
     }),
     [types_1.AuthenticationType.AWSSignature4]: zodCompleteObject({
-        type: z.literal(types_1.AuthenticationType.AWSSignature4),
+        type: zodDiscriminant(types_1.AuthenticationType.AWSSignature4),
         service: z.string(),
         ...baseAuthenticationValidators,
     }),
@@ -193,7 +210,7 @@ const systemAuthenticationValidators = Object.entries(defaultAuthenticationValid
 const primitiveUnion = z.union([z.number(), z.string(), z.boolean(), z.date()]);
 const paramDefValidator = zodCompleteObject({
     name: z.string(),
-    type: z.union([z.nativeEnum(api_types_1.Type), z.object({ type: z.literal('array'), items: z.nativeEnum(api_types_1.Type) })]),
+    type: z.union([z.nativeEnum(api_types_1.Type), z.object({ type: zodDiscriminant('array'), items: z.nativeEnum(api_types_1.Type) })]),
     description: z.string(),
     optional: z.boolean().optional(),
     hidden: z.boolean().optional(),
@@ -219,34 +236,34 @@ const commonPackFormulaSchema = {
 };
 const numericPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: z.literal(api_types_1.Type.number),
+    resultType: zodDiscriminant(api_types_1.Type.number),
     schema: zodCompleteObject({
-        type: z.literal(schema_5.ValueType.Number),
+        type: zodDiscriminant(schema_5.ValueType.Number),
         codaType: z.enum([...schema_2.NumberHintValueTypes]).optional(),
         description: z.string().optional(),
     }).optional(),
 });
 const stringPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: z.literal(api_types_1.Type.string),
+    resultType: zodDiscriminant(api_types_1.Type.string),
     schema: zodCompleteObject({
-        type: z.literal(schema_5.ValueType.String),
+        type: zodDiscriminant(schema_5.ValueType.String),
         codaType: z.enum([...schema_4.StringHintValueTypes]).optional(),
         description: z.string().optional(),
     }).optional(),
 });
 // TODO(jonathan): Use zodCompleteObject on these after exporting these types.
 const textAttributionNodeSchema = z.object({
-    type: z.literal(schema_1.AttributionNodeType.Text),
+    type: zodDiscriminant(schema_1.AttributionNodeType.Text),
     text: z.string(),
 });
 const linkAttributionNodeSchema = z.object({
-    type: z.literal(schema_1.AttributionNodeType.Link),
+    type: zodDiscriminant(schema_1.AttributionNodeType.Link),
     anchorUrl: z.string(),
     anchorText: z.string(),
 });
 const imageAttributionNodeSchema = z.object({
-    type: z.literal(schema_1.AttributionNodeType.Image),
+    type: zodDiscriminant(schema_1.AttributionNodeType.Image),
     anchorUrl: z.string(),
     imageUrl: z.string(),
 });
@@ -256,28 +273,28 @@ const basePropertyValidators = {
     required: z.boolean().optional(),
 };
 const booleanPropertySchema = zodCompleteObject({
-    type: z.literal(schema_5.ValueType.Boolean),
+    type: zodDiscriminant(schema_5.ValueType.Boolean),
     ...basePropertyValidators,
 });
 const numberPropertySchema = zodCompleteObject({
-    type: z.literal(schema_5.ValueType.Number),
+    type: zodDiscriminant(schema_5.ValueType.Number),
     codaType: z.enum([...schema_2.NumberHintValueTypes]).optional(),
     ...basePropertyValidators,
 });
 const stringPropertySchema = zodCompleteObject({
-    type: z.literal(schema_5.ValueType.String),
+    type: zodDiscriminant(schema_5.ValueType.String),
     codaType: z.enum([...schema_4.StringHintValueTypes]).optional(),
     ...basePropertyValidators,
 });
 // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
 // recurise typing better.
 const arrayPropertySchema = z.lazy(() => zodCompleteObject({
-    type: z.literal(schema_5.ValueType.Array),
+    type: zodDiscriminant(schema_5.ValueType.Array),
     items: objectPropertyUnionSchema,
     ...basePropertyValidators,
 }));
 const genericObjectSchema = z.lazy(() => zodCompleteObject({
-    type: z.literal(schema_5.ValueType.Object),
+    type: zodDiscriminant(schema_5.ValueType.Object),
     description: z.string().optional(),
     id: z.string().optional(),
     primary: z.string().optional(),
@@ -316,7 +333,7 @@ const objectPropertyUnionSchema = z.union([
 ]);
 const objectPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: z.literal(api_types_1.Type.object),
+    resultType: zodDiscriminant(api_types_1.Type.object),
     // TODO(jonathan): See if we should really allow this. The SDK right now explicitly tolerates an undefined
     // schema for objects, but that doesn't seem like a use case we actually want to support.
     schema: genericObjectSchema.optional(),
