@@ -58,21 +58,12 @@ function zodErrorDetailToValidationError(subError) {
     if (subError.code === z.ZodIssueCode.invalid_union) {
         const underlyingErrors = [];
         for (const unionError of subError.unionErrors) {
-            const isNonmatchedUnionMember = unionError.issues.some(issue => issue.code === z.ZodIssueCode.invalid_literal_value);
-            // Skip any errors that are nested with an "invalid literal" error that is usually
-            // a failed discriminant match; we don't care about reporting any errors from this union
-            // member if the discriminant didn't match.
-            if (isNonmatchedUnionMember) {
-                continue;
-            }
             for (const unionIssue of unionError.issues) {
-                if (unionIssue.code !== z.ZodIssueCode.invalid_literal_value) {
-                    const error = {
-                        path: zodPathToPathString(unionIssue.path),
-                        message: unionIssue.message,
-                    };
-                    underlyingErrors.push(error);
-                }
+                const error = {
+                    path: zodPathToPathString(unionIssue.path),
+                    message: unionIssue.message,
+                };
+                underlyingErrors.push(error);
             }
         }
         return underlyingErrors;
