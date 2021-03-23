@@ -49,7 +49,7 @@ describe('Pack metadata Validation', () => {
       },
       {
         message:
-          'Input must be one of these values: CRM, Calendar, Communication, DataStorage, Design, Financial, Fun, Geo, IT, Mathematics, Organization, Recruiting, Shopping, Social, Sports, Travel, Weather',
+          "Invalid enum value. Expected 'CRM' | 'Calendar' | 'Communication' | 'DataStorage' | 'Design' | 'Financial' | 'Fun' | 'Geo' | 'IT' | 'Mathematics' | 'Organization' | 'Recruiting' | 'Shopping' | 'Social' | 'Sports' | 'Travel' | 'Weather', received undefined",
         path: 'category',
       },
     ]);
