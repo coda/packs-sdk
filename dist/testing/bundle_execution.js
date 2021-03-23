@@ -32,18 +32,15 @@ async function mapAsyncFunction(context, stubName, method) {
       );
     }`, [(...args) => method(...args)], { arguments: { reference: true } });
 }
-async function registerBundle(context, path, stubName) {
+async function registerBundle(isolate, context, path, stubName) {
     // init / reset global.exports for import. Assuming the bundle is following commonJS format.
     // be aware that we don't support commonJS2 (one of webpack's output format).
     await context.global.set('exports', {}, { copy: true });
     // compiling the bundle allows IVM to map the stack trace.
     const bundle = fs_1.default.readFileSync(path).toString();
-    await context.evalClosure(`${bundle}; ${stubName} = exports`);
-    // compiling the bundle using a script will nicely give us the stack information. 
-    // however ivm doesn't have an API to run script in a closure. instead all the
-    // registries will leak to global scope and possibly override each other.
-    // const script = await isolate.compileScript(bundle, {filename: `file:///${path}`});
-    // await script.run(context);
+    // bundle needs to be converted into a closure to avoid leaking variables to global scope.
+    const script = await isolate.compileScript(`(() => { ${bundle}; ${stubName} = exports })()`, { filename: `file:///${path}` });
+    await script.run(context);
 }
 exports.registerBundle = registerBundle;
 function getStubName(name) {
@@ -101,8 +98,8 @@ async function executeFormulaOrSyncFromBundle({ bundlePath, formulaName, params:
         isolate = new isolated_vm_1.default.Isolate({ memoryLimit: IsolateMemoryLimit });
         const ivmContext = await createIvmContext(isolate);
         const bundleFullPath = bundlePath.startsWith('/') ? bundlePath : path_1.default.join(process.cwd(), bundlePath);
-        await registerBundle(ivmContext, bundleFullPath, getStubName('pack'));
-        await registerBundle(ivmContext, CompiledHelperBundlePath, getStubName('bundleExecutionHelper'));
+        await registerBundle(isolate, ivmContext, bundleFullPath, getStubName('pack'));
+        await registerBundle(isolate, ivmContext, CompiledHelperBundlePath, getStubName('bundleExecutionHelper'));
         await setupExecutionContext(ivmContext, executionContextOptions);
         // run the formula and redirect result/error.
         const resultPromise = await ivmContext.evalClosure(`return ${getStubName('bundleExecutionHelper')}.executeFormulaOrSyncWithRawParams(

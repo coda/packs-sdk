@@ -34,6 +34,6 @@ describe('Bundle Execution Helper', () => {
     const jail = ivmContext.global;
     await jail.set('test', undefined, {copy: true});
   
-    await registerBundle(ivmContext, outputFilePath, 'test');
+    await registerBundle(isolate, ivmContext, outputFilePath, 'test');
   });
 });

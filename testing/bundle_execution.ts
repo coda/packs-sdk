@@ -50,20 +50,18 @@ async function mapAsyncFunction(
   );
 }
 
-export async function registerBundle(context: IVMContext, path: string, stubName: string): Promise<void> {
+export async function registerBundle(
+  isolate: ivm.Isolate, context: IVMContext, path: string, stubName: string): Promise<void> {
   // init / reset global.exports for import. Assuming the bundle is following commonJS format.
   // be aware that we don't support commonJS2 (one of webpack's output format).
   await context.global.set('exports', {}, {copy: true});
 
   // compiling the bundle allows IVM to map the stack trace.
   const bundle = fs.readFileSync(path).toString();
-  await context.evalClosure(`${bundle}; ${stubName} = exports`);
 
-  // compiling the bundle using a script will nicely give us the stack information. 
-  // however ivm doesn't have an API to run script in a closure. instead all the
-  // registries will leak to global scope and possibly override each other.
-  // const script = await isolate.compileScript(bundle, {filename: `file:///${path}`});
-  // await script.run(context);
+  // bundle needs to be converted into a closure to avoid leaking variables to global scope.
+  const script = await isolate.compileScript(`(() => { ${bundle}; ${stubName} = exports })()`, {filename: `file:///${path}`});
+  await script.run(context);
 }
 
 function getStubName(name: string): string {
@@ -150,8 +148,8 @@ export async function executeFormulaOrSyncFromBundle({
     const ivmContext = await createIvmContext(isolate);
 
     const bundleFullPath = bundlePath.startsWith('/') ? bundlePath : path.join(process.cwd(), bundlePath);
-    await registerBundle(ivmContext, bundleFullPath, getStubName('pack'));
-    await registerBundle(ivmContext, CompiledHelperBundlePath, getStubName('bundleExecutionHelper'));
+    await registerBundle(isolate, ivmContext, bundleFullPath, getStubName('pack'));
+    await registerBundle(isolate, ivmContext, CompiledHelperBundlePath, getStubName('bundleExecutionHelper'));
     await setupExecutionContext(ivmContext, executionContextOptions);
 
     // run the formula and redirect result/error.
