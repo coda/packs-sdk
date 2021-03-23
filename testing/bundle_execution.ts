@@ -50,6 +50,8 @@ async function mapAsyncFunction(
   );
 }
 
+let isolate: ivm.Isolate | null = null;
+
 export async function registerBundle(context: IVMContext, path: string, stubName: string): Promise<void> {
   // init / reset global.exports for import. Assuming the bundle is following commonJS format.
   // be aware that we don't support commonJS2 (one of webpack's output format).
@@ -57,13 +59,14 @@ export async function registerBundle(context: IVMContext, path: string, stubName
 
   // compiling the bundle allows IVM to map the stack trace.
   const bundle = fs.readFileSync(path).toString();
-  await context.evalClosure(`${bundle}; ${stubName} = exports`);
+  // await context.evalClosure(`${bundle}; ${stubName} = exports`);
 
   // compiling the bundle using a script will nicely give us the stack information. 
   // however ivm doesn't have an API to run script in a closure. instead all the
   // registries will leak to global scope and possibly override each other.
-  // const script = await isolate.compileScript(bundle, {filename: `file:///${path}`});
-  // await script.run(context);
+  const script = await isolate!.compileScript(bundle, {filename: `file:///${path}`});
+  await script.run(context);
+  await context.evalClosure(`${stubName} = exports`);
 }
 
 function getStubName(name: string): string {
@@ -118,7 +121,7 @@ async function createIvmContext(isolate: ivm.Isolate): Promise<IVMContext> {
 
   // security protection
   await jail.set('eval', undefined, {copy: true});
-  await jail.set('Function', undefined, {copy: true});
+  // await jail.set('Function', undefined, {copy: true});
 
   // coda runtime is used to store all the variables that we need to run the formula. 
   // it avoids the risk of conflict if putting those variables under global.
@@ -129,6 +132,8 @@ async function createIvmContext(isolate: ivm.Isolate): Promise<IVMContext> {
   await ivmContext.global.set('console', {}, {copy: true});
   // eslint-disable-next-line no-console
   await mapCallbackFunction(ivmContext, 'console.log', console.log);
+  // eslint-disable-next-line no-console
+  await mapCallbackFunction(ivmContext, 'console.error', console.error);
   return ivmContext;
 }
 
@@ -143,7 +148,6 @@ export async function executeFormulaOrSyncFromBundle({
   params: string[];
   contextOptions?: ContextOptions;
 }) {
-  let isolate: ivm.Isolate | null = null;
   try {
     // creating an isolate with 128M memory limit.    
     isolate = new ivm.Isolate({ memoryLimit: IsolateMemoryLimit });

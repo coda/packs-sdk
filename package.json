@@ -15,8 +15,12 @@
     "type": "git",
     "url": "https://github.com/coda-hq/packs-sdk"
   },
+  "browser": {
+    "url": "whatwg-url"
+  },
   "dependencies": {
     "@types/sinon": "^9.0.11",
+    "buffer": "^6.0.3",
     "client-oauth2": "^4.3.3",
     "clone": "^2.1.2",
     "es6-promise": "^4.2.8",
@@ -36,6 +40,7 @@
     "url-parse": "^1.5.1",
     "uuid": "^8.3.2",
     "webpack": "^5.26.0",
+    "whatwg-url": "7.1.0",
     "xml2js": "^0.4.23",
     "yargs": "^16.2.0",
     "zod": "^3.0.0-alpha.4"

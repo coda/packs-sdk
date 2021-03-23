@@ -43,7 +43,7 @@ compile:
 		--bundle \
 		--outfile=${ROOTDIR}/dist/testing/bundle_execution_helper_bundle.js \
 		--format=cjs \
-		--minify \
+		--inject:./shim.js \
 		--banner:js="'use strict';"
 
 .PHONY: docs

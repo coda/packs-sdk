@@ -34,6 +34,7 @@ const string_1 = require("../helpers/string");
 const schema_3 = require("../schema");
 const api_1 = require("../api");
 const objectUtils = __importStar(require("../helpers/object_utils"));
+// import urlParse from 'url-parse';
 function validateParams(formula, args) {
     const { parameters, varargParameters } = formula;
     const numRequiredParams = parameters.filter(param => !param.optional).length;
@@ -205,6 +206,8 @@ function tryParseUrl(result, schema) {
         }
     }
     catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error.toString());
         return invalidUrlError;
     }
 }

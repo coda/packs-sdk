@@ -26,6 +26,7 @@ import {isEmail} from '../helpers/string';
 import {isObject} from '../schema';
 import {isObjectPackFormula} from '../api';
 import * as objectUtils from '../helpers/object_utils';
+// import urlParse from 'url-parse';
 
 export function validateParams(formula: TypedPackFormula, args: ParamValues<ParamDefs>): void {
   const {parameters, varargParameters} = formula;
@@ -218,6 +219,8 @@ function tryParseUrl(result: unknown, schema: StringSchema) {
       return invalidUrlError;
     }
   } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(error.toString());
     return invalidUrlError;
   }
 }
