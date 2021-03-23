@@ -6,12 +6,14 @@ import type {SyncExecutionContext} from 'api_types';
 import type {SyncFormulaResult} from '../api';
 import type {TypedStandardFormula} from '../api';
 import  { coerceParams } from './coercion';
+import {validateParams} from './validation';
+import {validateResult} from './validation';
 
 export async function executeSyncFormulaWithoutValidation(
   formula: GenericSyncFormula,
   params: ParamValues<ParamDefs>,
   context: SyncExecutionContext,
-  maxIterations: number,
+  maxIterations: number = 3,
 ) {
   const result = [];
   let iterations = 1;
@@ -41,18 +43,23 @@ export async function executeFormulaOrSyncWithRawParams(
   rawParams: string[],
   context: SyncExecutionContext,
 ) {
-  // TODO(huayang): maybe do validating params / results. need to address the url dependency first.
   try {
     const formula = tryFindFormula(manifest, formulaName);
     if (formula) {
       const params = coerceParams(formula, rawParams as any);
-      return await formula.execute(params, context);
+      validateParams(formula, params);
+      const result = await formula.execute(params, context);
+      validateResult(formula, result);
+      return result;
     }
 
     const syncFormula = tryFindSyncFormula(manifest, formulaName);
     if (syncFormula) {
       const params = coerceParams(syncFormula, rawParams as any);
-      return await executeSyncFormulaWithoutValidation(syncFormula, params, context, 100);
+      validateParams(syncFormula, params);
+      const result = await executeSyncFormulaWithoutValidation(syncFormula, params, context);
+      validateResult(syncFormula, result);
+      return result;
     }
   } catch (err) {
     throw wrapError(err);

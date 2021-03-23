@@ -2,7 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.wrapError = exports.tryFindSyncFormula = exports.tryFindFormula = exports.findSyncFormula = exports.findFormula = exports.executeFormulaOrSyncWithRawParams = exports.executeSyncFormulaWithoutValidation = void 0;
 const coercion_1 = require("./coercion");
-async function executeSyncFormulaWithoutValidation(formula, params, context, maxIterations) {
+const validation_1 = require("./validation");
+const validation_2 = require("./validation");
+async function executeSyncFormulaWithoutValidation(formula, params, context, maxIterations = 3) {
     const result = [];
     let iterations = 1;
     do {
@@ -24,17 +26,22 @@ async function executeSyncFormulaWithoutValidation(formula, params, context, max
 }
 exports.executeSyncFormulaWithoutValidation = executeSyncFormulaWithoutValidation;
 async function executeFormulaOrSyncWithRawParams(manifest, formulaName, rawParams, context) {
-    // TODO(huayang): maybe do validating params / results. need to address the url dependency first.
     try {
         const formula = tryFindFormula(manifest, formulaName);
         if (formula) {
             const params = coercion_1.coerceParams(formula, rawParams);
-            return await formula.execute(params, context);
+            validation_1.validateParams(formula, params);
+            const result = await formula.execute(params, context);
+            validation_2.validateResult(formula, result);
+            return result;
         }
         const syncFormula = tryFindSyncFormula(manifest, formulaName);
         if (syncFormula) {
             const params = coercion_1.coerceParams(syncFormula, rawParams);
-            return await executeSyncFormulaWithoutValidation(syncFormula, params, context, 100);
+            validation_1.validateParams(syncFormula, params);
+            const result = await executeSyncFormulaWithoutValidation(syncFormula, params, context);
+            validation_2.validateResult(syncFormula, result);
+            return result;
         }
     }
     catch (err) {

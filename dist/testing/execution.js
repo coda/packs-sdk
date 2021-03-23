@@ -67,7 +67,7 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params: rawParams, mod
     }
 }
 exports.executeFormulaOrSyncFromCLI = executeFormulaOrSyncFromCLI;
-async function executeSyncFormula(formula, params, context = mocks_2.newMockSyncExecutionContext(), { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, maxIterations: maxIterations = 1000, } = {}) {
+async function executeSyncFormula(formula, params, context = mocks_2.newMockSyncExecutionContext(), { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, maxIterations: maxIterations = 3, } = {}) {
     if (shouldValidateParams) {
         validation_1.validateParams(formula, params);
     }

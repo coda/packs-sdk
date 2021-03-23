@@ -15,7 +15,6 @@ import type {SliderSchema} from '../schema';
 import type {StringSchema} from '../schema';
 import {Type} from '../api_types';
 import type {TypedPackFormula} from '../api';
-import {URL} from 'url';
 import type {ValidationError} from './types';
 import {ValueType} from '../schema';
 import {ensureExists} from '../helpers/ensure';
@@ -26,6 +25,7 @@ import {isEmail} from '../helpers/string';
 import {isObject} from '../schema';
 import {isObjectPackFormula} from '../api';
 import * as objectUtils from '../helpers/object_utils';
+import urlParse from 'url-parse';
 
 export function validateParams(formula: TypedPackFormula, args: ParamValues<ParamDefs>): void {
   const {parameters, varargParameters} = formula;
@@ -212,7 +212,7 @@ function tryParseUrl(result: unknown, schema: StringSchema) {
     message: `Property with codaType "${schema.codaType}" must be a valid HTTP(S) url, but got "${result}".`,
   };
   try {
-    const url = new URL(result as string);
+    const url = urlParse(result as string);
 
     if (!(url.protocol === 'http:' || url.protocol === 'https:')) {
       return invalidUrlError;

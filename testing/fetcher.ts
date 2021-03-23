@@ -54,7 +54,7 @@ export class AuthenticatingFetcher implements Fetcher {
     if (responseBody && responseBody.length >= MaxContentLengthBytes) {
       throw new Error(`Response body is too large for Coda. Body is ${responseBody.length} bytes.`);
     }
-
+        
     try {
       const contentType = response.headers['content-type'];
       if (contentType && contentType.includes('text/xml')) {

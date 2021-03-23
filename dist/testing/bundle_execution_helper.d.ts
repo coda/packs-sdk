@@ -4,7 +4,7 @@ import type { ParamDefs } from 'api_types';
 import type { ParamValues } from 'api_types';
 import type { SyncExecutionContext } from 'api_types';
 import type { TypedStandardFormula } from '../api';
-export declare function executeSyncFormulaWithoutValidation(formula: GenericSyncFormula, params: ParamValues<ParamDefs>, context: SyncExecutionContext, maxIterations: number): Promise<any[]>;
+export declare function executeSyncFormulaWithoutValidation(formula: GenericSyncFormula, params: ParamValues<ParamDefs>, context: SyncExecutionContext, maxIterations?: number): Promise<any[]>;
 export declare function executeFormulaOrSyncWithRawParams(manifest: PackDefinition, formulaName: string, rawParams: string[], context: SyncExecutionContext): Promise<any>;
 export declare function findFormula(packDef: PackDefinition, formulaNameWithNamespace: string): TypedStandardFormula;
 export declare function findSyncFormula(packDef: PackDefinition, syncFormulaName: string): GenericSyncFormula;
