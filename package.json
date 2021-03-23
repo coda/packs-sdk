@@ -24,7 +24,7 @@
     "express": "4.17.1",
     "isolated-vm": "^3.3.10",
     "isomorphic-fetch": "^3.0.0",
-    "open": "^8.0.2",
+    "open": "^8.0.4",
     "pascalcase": "^1.0.0",
     "qs": "^6.9.6",
     "readline-sync": "1.4.10",
