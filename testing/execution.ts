@@ -131,7 +131,7 @@ export async function executeSyncFormula(
   {
     validateParams: shouldValidateParams = true,
     validateResult: shouldValidateResult = true,
-    maxIterations: maxIterations = 1000,
+    maxIterations: maxIterations = 3,
   }: ExecuteSyncOptions = {},
 ) {
   if (shouldValidateParams) {

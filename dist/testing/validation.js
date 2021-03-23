@@ -18,13 +18,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateResult = exports.validateParams = void 0;
 const types_1 = require("./types");
 const types_2 = require("./types");
 const types_3 = require("./types");
 const api_types_1 = require("../api_types");
-const url_1 = require("url");
 const schema_1 = require("../schema");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
@@ -34,6 +36,7 @@ const string_1 = require("../helpers/string");
 const schema_3 = require("../schema");
 const api_1 = require("../api");
 const objectUtils = __importStar(require("../helpers/object_utils"));
+const url_parse_1 = __importDefault(require("url-parse"));
 function validateParams(formula, args) {
     const { parameters, varargParameters } = formula;
     const numRequiredParams = parameters.filter(param => !param.optional).length;
@@ -199,7 +202,7 @@ function tryParseUrl(result, schema) {
         message: `Property with codaType "${schema.codaType}" must be a valid HTTP(S) url, but got "${result}".`,
     };
     try {
-        const url = new url_1.URL(result);
+        const url = url_parse_1.default(result);
         if (!(url.protocol === 'http:' || url.protocol === 'https:')) {
             return invalidUrlError;
         }
