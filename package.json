@@ -30,7 +30,7 @@
     "readline-sync": "1.4.10",
     "request": "2.88.2",
     "request-promise-native": "^1.0.9",
-    "sinon": "9.2.4",
+    "sinon": "10.0.0",
     "string-template": "^1.0.0",
     "typescript": "^4.2.3",
     "url-parse": "^1.5.1",
