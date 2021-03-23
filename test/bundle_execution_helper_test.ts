@@ -31,7 +31,9 @@ describe('Bundle Execution Helper', () => {
 
     // context is like a container in ivm concept.
     const ivmContext = await isolate.createContext();
-
-    await registerBundle(isolate, ivmContext, outputFilePath, 'test');
+    const jail = ivmContext.global;
+    await jail.set('test', undefined, {copy: true});
+  
+    await registerBundle(ivmContext, outputFilePath, 'test');
   });
 });
