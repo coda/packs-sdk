@@ -22,11 +22,9 @@ export async function handleBuild({manifestFile, compiler}: Arguments<BuildArgs>
 }
 
 export async function build(manifestFile: string, compiler?: string): Promise<string> {
-  // TODO(alan): surface more helpful error messages when import manifestFile fails.
-  const {manifest} = await import(manifestFile);
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'coda-packs-'));
 
-  const bundleFilename = path.join(tempDir, `bundle-${manifest.id}-${manifest.version}.js`);
+  const bundleFilename = path.join(tempDir, `bundle.js`);
   const logger = new ConsoleLogger();
 
   switch (compiler) {
