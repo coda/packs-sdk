@@ -39,10 +39,8 @@ async function handleBuild({ manifestFile, compiler }) {
 }
 exports.handleBuild = handleBuild;
 async function build(manifestFile, compiler) {
-    // TODO(alan): surface more helpful error messages when import manifestFile fails.
-    const { manifest } = await Promise.resolve().then(() => __importStar(require(manifestFile)));
     const tempDir = fs_1.default.mkdtempSync(path_1.default.join(os_1.default.tmpdir(), 'coda-packs-'));
-    const bundleFilename = path_1.default.join(tempDir, `bundle-${manifest.id}-${manifest.version}.js`);
+    const bundleFilename = path_1.default.join(tempDir, `bundle.js`);
     const logger = new logging_1.ConsoleLogger();
     switch (compiler) {
         case Compiler.webpack:
