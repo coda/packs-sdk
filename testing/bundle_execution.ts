@@ -76,8 +76,8 @@ async function setupExecutionContext(
 
   // defaultAuthentication has a few function methods and can't be copied without being serialized first.
   const authJSON = await ivmContext.eval(`JSON.stringify(${getStubName('pack.manifest.defaultAuthentication')})`, {copy: true});
-  const auth = authJSON && authJSON.result ? JSON.parse(authJSON.result) : undefined;
-  const name = (await ivmContext.eval(`${getStubName('pack.manifest.name')}`, {copy: true})).result as string;
+  const auth = authJSON ? JSON.parse(authJSON) : undefined;
+  const name = (await ivmContext.eval(`${getStubName('pack.manifest.name')}`, {copy: true})) as string;
   const executionContext = newFetcherSyncExecutionContext(
     name,
     auth,
