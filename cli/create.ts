@@ -33,7 +33,7 @@ export async function createPack(packName: string, codaApiEndpoint: string) {
   const codaClient = createCodaClient(apiKey, formattedEndpoint);
   let packId: number;
   try {
-    const response = await codaClient.createPack();
+    const response = await codaClient.createPack({}, {});
     packId = response.packId;
   } catch (err) {
     // TODO(alan): pressure test with errors

@@ -10,6 +10,7 @@ import {handleExecute} from './execute';
 import {handleInit} from './init';
 import {handlePublish} from './publish';
 import {handleRegister} from './register';
+import {handleSetLive} from './set_live';
 import {handleValidate} from './validate';
 import yargs from 'yargs';
 
@@ -28,7 +29,8 @@ if (require.main === module) {
         } as Options,
         vm: {
           boolean: true,
-          desc: 'Execute the requested command in a virtual machine that mimics the environment Coda uses to execute Packs.',
+          desc:
+            'Execute the requested command in a virtual machine that mimics the environment Coda uses to execute Packs.',
         } as Options,
         credentialsFile: {
           alias: 'credentials_file',
@@ -114,6 +116,18 @@ if (require.main === module) {
       command: 'validate <manifestFile>',
       describe: 'Validate your Pack definition',
       handler: handleValidate,
+    })
+    .command({
+      command: 'setLive <packId> <packVersion>',
+      describe: 'Set the Pack version that is installable for users.',
+      builder: {
+        codaApiEndpoint: {
+          string: true,
+          hidden: true,
+          default: 'https://coda.io',
+        } as Options,
+      },
+      handler: handleSetLive,
     })
     .demandCommand()
     .strict()

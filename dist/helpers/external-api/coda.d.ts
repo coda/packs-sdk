@@ -3,7 +3,7 @@
  * available at https://coda.io/developers/apis/v1
  *
  * Version: v1
- * Hash: d7c3f53287ba26554cc58614e4870ec5bfd5328139ef564e67517bd0411267a6
+ * Hash: c6876c1f07a4e420a1a6542ebec6cff3a9be3c4e3a9bf481065fa87d7893d5f5
  */
 import 'es6-promise/auto';
 import 'isomorphic-fetch';
@@ -59,6 +59,7 @@ export declare class Client {
         useColumnNames?: boolean;
         valueFormat?: types.PublicApiValueFormat;
         visibleOnly?: boolean;
+        syncToken?: string;
         limit?: number;
         pageToken?: string;
     }): Promise<types.PublicApiRowList>;
@@ -111,7 +112,11 @@ export declare class Client {
         limit?: number;
         pageToken?: string;
     }): Promise<types.PublicApiGetWorkspaceRoleActivity>;
-    createPack(params?: {}): Promise<types.PublicApiCreatePackResponse>;
+    createPack(params: {} | undefined, payload: types.PublicApiCreatePackRequest): Promise<types.PublicApiCreatePackResponse>;
+    updatePack(packId: number, params: {} | undefined, payload: types.PublicApiUpdatePackRequest): Promise<types.PublicApiPack>;
     registerPackVersion(packId: number, packVersion: string, params?: {}): Promise<types.PublicApiPackVersionUploadInfo>;
     packVersionUploadComplete(packId: number, packVersion: string, params?: {}): Promise<types.PublicApiCreatePackVersionResponse>;
+    setPackLiveVersion(packId: number, params: {} | undefined, payload: types.PublicApiSetPackLiveVersion): Promise<types.PublicApiSetPackLiveVersionResponse>;
+    addPackPermission(packId: number, params: {} | undefined, payload: types.PublicApiAddPackPermissionRequest): Promise<types.PublicApiAddPackPermissionResponse>;
+    deletePackPermission(packId: number, permissionId: string, params?: {}): Promise<types.PublicApiDeletePackPermissionResponse>;
 }
