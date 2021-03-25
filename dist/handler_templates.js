@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateObjectResponseHandler = exports.transformBody = exports.generateRequestHandler = void 0;
 const clone_1 = __importDefault(require("clone"));
-const compile_1 = __importDefault(require("string-template/compile"));
 const ensure_1 = require("./helpers/ensure");
 const schema_1 = require("./schema");
 const schema_2 = require("./schema");
@@ -40,6 +39,15 @@ function generateQueryParamMap(keys, nameToValueMap, optionalNames) {
     });
     return map;
 }
+// A quick implemenation of string-template. Need to remove the package because it uses the 
+// `new Function(<code>)` syntax.
+function formatString(template, params) {
+    let result = template;
+    for (const [key, value] of Object.entries(params)) {
+        result = result.replace(`{${key}}`, value);
+    }
+    return result;
+}
 function generateRequestHandler(request, parameters) {
     const { url, queryParams, nameMapping: paramNameMapping, bodyTemplate, bodyParams, method, headers, transforms, } = request;
     // Generate a map from index to name that we will use to bind args to the appropriate spots.
@@ -59,7 +67,6 @@ function generateRequestHandler(request, parameters) {
         }
         indexToNameMap.set(index, name);
     });
-    const urlTemplate = compile_1.default(url);
     const hasQueryParams = Boolean(queryParams && queryParams.length);
     const hasBodyParams = Boolean(bodyParams && bodyParams.length);
     return function requestHandler(params) {
@@ -82,7 +89,7 @@ function generateRequestHandler(request, parameters) {
             }
         });
         // We don't know a priori which params are used within the URL, so generate a map for all of them.
-        const baseUrl = urlTemplate(generateQueryParamMap(Object.keys(nameMapping), nameMapping));
+        const baseUrl = formatString(url, generateQueryParamMap(Object.keys(nameMapping), nameMapping));
         const fullUrl = hasQueryParams
             ? url_1.withQueryParams(baseUrl, generateQueryParamMap(ensure_1.ensureExists(queryParams), nameMapping, optionalNames))
             : baseUrl;
