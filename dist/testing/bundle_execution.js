@@ -50,7 +50,7 @@ async function setupExecutionContext(ivmContext, { credentialsFile } = {}) {
     const runtimeContext = await ivmContext.global.get(CodaRuntime, { reference: true });
     // defaultAuthentication has a few function methods and can't be copied without being serialized first.
     const authJSON = await ivmContext.eval(`JSON.stringify(${getStubName('pack.manifest.defaultAuthentication')})`, { copy: true });
-    const auth = JSON.parse(authJSON.result || '');
+    const auth = authJSON && authJSON.result ? JSON.parse(authJSON.result) : undefined;
     const name = (await ivmContext.eval(`${getStubName('pack.manifest.name')}`, { copy: true })).result;
     const executionContext = fetcher_1.newFetcherSyncExecutionContext(name, auth, credentialsFile);
     // set up a stub to be copied into the ivm context. we are not copying executionContext directly since
@@ -80,7 +80,8 @@ async function createIvmContext(isolate) {
     await jail.set('global', jail.derefInto());
     // security protection
     await jail.set('eval', undefined, { copy: true });
-    await jail.set('Function', undefined, { copy: true });
+    await ivmContext.eval('Function.constructor = undefined');
+    await ivmContext.eval('Function.prototype.constructor = undefined');
     // coda runtime is used to store all the variables that we need to run the formula. 
     // it avoids the risk of conflict if putting those variables under global.
     await ivmContext.global.set(CodaRuntime, {}, { copy: true });
@@ -102,13 +103,12 @@ async function executeFormulaOrSyncFromBundle({ bundlePath, formulaName, params:
         await registerBundle(isolate, ivmContext, CompiledHelperBundlePath, getStubName('bundleExecutionHelper'));
         await setupExecutionContext(ivmContext, executionContextOptions);
         // run the formula and redirect result/error.
-        const resultPromise = await ivmContext.evalClosure(`return ${getStubName('bundleExecutionHelper')}.executeFormulaOrSyncWithRawParams(
+        const result = await ivmContext.evalClosure(`return ${getStubName('bundleExecutionHelper')}.executeFormulaOrSyncWithRawParams(
         ${getStubName('pack.manifest')}, 
         $0, 
         $1, 
         ${getStubName('executionContext')}
       )`, [formulaName, rawParams], { arguments: { copy: true }, result: { copy: true, promise: true } });
-        const result = await resultPromise.result;
         helpers_1.print(result);
     }
     catch (err) {

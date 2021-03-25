@@ -43,7 +43,6 @@ compile:
 		--bundle \
 		--outfile=${ROOTDIR}/dist/testing/bundle_execution_helper_bundle.js \
 		--format=cjs \
-		--minify \
 		--banner:js="'use strict';"
 
 .PHONY: docs
@@ -64,6 +63,11 @@ clean:
 
 .PHONY: build
 build: clean lint compile
+
+# allow debugging packs sdk with local packs repo.
+.PHONY: publish-local
+publish-local: build
+	cp -r dist/* ../packs/node_modules/coda-packs-sdk/dist/
 
 .PHONY: validate-no-changes
 validate-no-changes: compile

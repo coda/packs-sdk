@@ -8,7 +8,6 @@ import type {ParamDefs} from './api_types';
 import type {Schema} from './schema';
 import type {SchemaType} from './schema';
 import clone from 'clone';
-import compileTemplate from 'string-template/compile';
 import {ensureExists} from './helpers/ensure';
 import {isArray} from './schema';
 import {isObject} from './schema';
@@ -73,6 +72,16 @@ function generateQueryParamMap(
   return map;
 }
 
+// A quick implemenation of string-template. Need to remove the package because it uses the 
+// `new Function(<code>)` syntax.
+function formatString(template: string, params: {[key: string]: string}): string {
+  let result = template;
+  for (const [key, value] of Object.entries(params)) {
+    result = result.replace(`{${key}}`, value);
+  }
+  return result;
+}
+
 export function generateRequestHandler<ParamDefsT extends ParamDefs>(
   request: RequestHandlerTemplate,
   parameters: ParamDefsT,
@@ -106,8 +115,6 @@ export function generateRequestHandler<ParamDefsT extends ParamDefs>(
     indexToNameMap.set(index, name);
   });
 
-  const urlTemplate = compileTemplate(url);
-
   const hasQueryParams = Boolean(queryParams && queryParams.length);
   const hasBodyParams = Boolean(bodyParams && bodyParams.length);
 
@@ -131,7 +138,7 @@ export function generateRequestHandler<ParamDefsT extends ParamDefs>(
     });
 
     // We don't know a priori which params are used within the URL, so generate a map for all of them.
-    const baseUrl = urlTemplate(generateQueryParamMap(Object.keys(nameMapping), nameMapping));
+    const baseUrl = formatString(url, generateQueryParamMap(Object.keys(nameMapping), nameMapping));
     const fullUrl = hasQueryParams
       ? withQueryParams(baseUrl, generateQueryParamMap(ensureExists(queryParams), nameMapping, optionalNames))
       : baseUrl;

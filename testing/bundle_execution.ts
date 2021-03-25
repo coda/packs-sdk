@@ -76,7 +76,7 @@ async function setupExecutionContext(
 
   // defaultAuthentication has a few function methods and can't be copied without being serialized first.
   const authJSON = await ivmContext.eval(`JSON.stringify(${getStubName('pack.manifest.defaultAuthentication')})`, {copy: true});
-  const auth = JSON.parse(authJSON.result || '');
+  const auth = authJSON && authJSON.result ? JSON.parse(authJSON.result) : undefined;
   const name = (await ivmContext.eval(`${getStubName('pack.manifest.name')}`, {copy: true})).result as string;
   const executionContext = newFetcherSyncExecutionContext(
     name,
@@ -116,7 +116,8 @@ async function createIvmContext(isolate: ivm.Isolate): Promise<IVMContext> {
 
   // security protection
   await jail.set('eval', undefined, {copy: true});
-  await jail.set('Function', undefined, {copy: true});
+  await ivmContext.eval('Function.constructor = undefined');
+  await ivmContext.eval('Function.prototype.constructor = undefined');
 
   // coda runtime is used to store all the variables that we need to run the formula. 
   // it avoids the risk of conflict if putting those variables under global.
@@ -153,7 +154,7 @@ export async function executeFormulaOrSyncFromBundle({
     await setupExecutionContext(ivmContext, executionContextOptions);
 
     // run the formula and redirect result/error.
-    const resultPromise = await ivmContext.evalClosure(
+    const result = await ivmContext.evalClosure(
       `return ${getStubName('bundleExecutionHelper')}.executeFormulaOrSyncWithRawParams(
         ${getStubName('pack.manifest')}, 
         $0, 
@@ -163,7 +164,6 @@ export async function executeFormulaOrSyncFromBundle({
       [formulaName, rawParams],
       {arguments: {copy: true}, result: {copy: true, promise: true}},
     );
-    const result = await resultPromise.result;
     print(result);
   } catch (err) {
     print(err);
