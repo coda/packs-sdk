@@ -50,8 +50,8 @@ async function setupExecutionContext(ivmContext, { credentialsFile } = {}) {
     const runtimeContext = await ivmContext.global.get(CodaRuntime, { reference: true });
     // defaultAuthentication has a few function methods and can't be copied without being serialized first.
     const authJSON = await ivmContext.eval(`JSON.stringify(${getStubName('pack.manifest.defaultAuthentication')})`, { copy: true });
-    const auth = authJSON && authJSON.result ? JSON.parse(authJSON.result) : undefined;
-    const name = (await ivmContext.eval(`${getStubName('pack.manifest.name')}`, { copy: true })).result;
+    const auth = authJSON ? JSON.parse(authJSON) : undefined;
+    const name = (await ivmContext.eval(`${getStubName('pack.manifest.name')}`, { copy: true }));
     const executionContext = fetcher_1.newFetcherSyncExecutionContext(name, auth, credentialsFile);
     // set up a stub to be copied into the ivm context. we are not copying executionContext directly since
     // part of the object is not transferrable. 
