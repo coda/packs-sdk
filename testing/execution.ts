@@ -1,61 +1,28 @@
+import type {ExecuteOptions} from './execution_helper';
+import type {ExecuteSyncOptions} from './execution_helper';
 import type {ExecutionContext} from '../api_types';
-import type {GenericSyncFormula} from '../api';
 import type {MetadataContext} from '../api';
 import type {MetadataFormula} from '../api';
 import type {PackDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
 import type {SyncExecutionContext} from '../api_types';
-import type {TypedStandardFormula} from '../api';
-import {coerceParams} from './coercion';
-import {executeSyncFormulaWithoutValidation} from './bundle_execution_helper';
-import {findFormula} from './bundle_execution_helper';
-import {findSyncFormula} from './bundle_execution_helper';
+import { build as buildBundle } from '../cli/build';
 import {getManifestFromModule} from './helpers';
+import * as helper from './execution_helper';
+import * as ivmHelper from './ivm_helper';
 import {newFetcherExecutionContext} from './fetcher';
 import {newFetcherSyncExecutionContext} from './fetcher';
 import {newMockExecutionContext} from './mocks';
 import {newMockSyncExecutionContext} from './mocks';
 import {print} from './helpers';
-import {tryFindFormula} from './bundle_execution_helper';
-import {tryFindSyncFormula} from './bundle_execution_helper';
-import {validateParams} from './validation';
-import {validateResult} from './validation';
-import {wrapError} from './bundle_execution_helper';
 
-export interface ExecuteOptions {
-  validateParams?: boolean;
-  validateResult?: boolean;
-}
+export {ExecuteOptions} from './execution_helper';
+export {ExecuteSyncOptions} from './execution_helper';
 
 export interface ContextOptions {
   useRealFetcher?: boolean;
   credentialsFile?: string;
-}
-
-export interface ExecuteSyncOptions extends ExecuteOptions {
-  maxIterations?: number;
-}
-
-export async function executeFormula(
-  formula: TypedStandardFormula,
-  params: ParamValues<ParamDefs>,
-  context: ExecutionContext = newMockExecutionContext(),
-  {validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true}: ExecuteOptions = {},
-) {
-  if (shouldValidateParams) {
-    validateParams(formula, params);
-  }
-  let result: any;
-  try {
-    result = await formula.execute(params, context);
-  } catch (err) {
-    throw wrapError(err);
-  }
-  if (shouldValidateResult) {
-    validateResult(formula, result);
-  }
-  return result;
 }
 
 export async function executeFormulaFromPackDef(
@@ -71,79 +38,99 @@ export async function executeFormulaFromPackDef(
     executionContext = newFetcherExecutionContext(packDef.name, packDef.defaultAuthentication, credentialsFile);
   }
 
-  const formula = findFormula(packDef, formulaNameWithNamespace);
-  return executeFormula(formula, params, executionContext, options);
+  const formula = helper.findFormula(packDef, formulaNameWithNamespace);
+  return helper.executeFormula(formula, params, executionContext || newMockExecutionContext(), options);
 }
 
 export async function executeFormulaOrSyncFromCLI({
   formulaName,
-  params: rawParams,
-  module,
+  params,
+  manifestPath,
+  vm,
   contextOptions = {},
 }: {
   formulaName: string;
   params: string[];
-  module: any;
+  manifestPath: string;
+  vm?: boolean;
   contextOptions?: ContextOptions;
 }) {
-  const manifest = getManifestFromModule(module);
+  try {    
+    const module = await import(manifestPath);
+    const manifest = getManifestFromModule(module);
+    const {useRealFetcher, credentialsFile} = contextOptions;
 
-  try {
-    const formula = tryFindFormula(manifest, formulaName);
-    if (formula) {
-      const params = coerceParams(formula, rawParams as any);
-      const result = await executeFormulaFromPackDef(
-        manifest,
-        formulaName,
-        params,
-        undefined,
-        undefined,
-        contextOptions,
-      );
-      print(result);
-      return;
-    }
-    const syncFormula = tryFindSyncFormula(manifest, formulaName);
-    if (syncFormula) {
-      const params = coerceParams(syncFormula, rawParams as any);
-      const result = await executeSyncFormulaFromPackDef(
-        manifest,
-        formulaName,
-        params,
-        undefined,
-        undefined,
-        contextOptions,
-      );
-      print(result);
-      return;
-    }
-    throw new Error(`Pack definition for ${manifest.name} has no formula or sync called ${formulaName}.`);
+    // A sync context would work for both formula / syncFormula execution for now.
+    const executionContext = useRealFetcher 
+      ? newFetcherSyncExecutionContext(manifest.name, manifest.defaultAuthentication, credentialsFile) 
+      : newMockSyncExecutionContext();
+
+    const result = vm
+      ? await executeFormulaOrSyncWithRawParamsInVM({formulaName, params, manifestPath, executionContext})
+      : await executeFormulaOrSyncWithRawParams({formulaName, params, module, executionContext});
+    print(result);
   } catch (err) {
     print(err);
     process.exit(1);
   }
 }
 
-export async function executeSyncFormula(
-  formula: GenericSyncFormula,
-  params: ParamValues<ParamDefs>,
-  context: SyncExecutionContext = newMockSyncExecutionContext(),
-  {
-    validateParams: shouldValidateParams = true,
-    validateResult: shouldValidateResult = true,
-    maxIterations: maxIterations = 3,
-  }: ExecuteSyncOptions = {},
-) {
-  if (shouldValidateParams) {
-    validateParams(formula, params);
-  }
+export async function executeFormulaOrSyncWithVM({
+  formulaName,
+  params,
+  manifestPath,
+  executionContext = newMockSyncExecutionContext(),
+}: {
+  formulaName: string;
+  params: ParamValues<ParamDefs>;
+  manifestPath: string;
+  executionContext?: SyncExecutionContext;
+}) {
+  const bundlePath = await buildBundle(manifestPath, 'esbuild');
 
-  const result = await executeSyncFormulaWithoutValidation(formula, params, context, maxIterations);
+  const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
 
-  if (shouldValidateResult) {
-    validateResult(formula, result);
-  }
-  return result;
+  return ivmHelper.executeFormulaOrSync(ivmContext, formulaName, params);
+}
+
+export async function executeFormulaOrSyncWithRawParamsInVM({
+  formulaName,
+  params: rawParams,
+  manifestPath,
+  executionContext = newMockSyncExecutionContext(),
+}: {
+  formulaName: string;
+  params: string[];
+  manifestPath: string;
+  executionContext?: SyncExecutionContext;
+}) {  
+  const bundlePath = await buildBundle(manifestPath, 'esbuild');
+
+  const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
+
+  return ivmHelper.executeFormulaOrSyncWithRawParams(ivmContext, formulaName, rawParams);
+}
+
+export async function executeFormulaOrSyncWithRawParams({
+  formulaName,
+  params: rawParams,
+  module,
+  executionContext,
+}: {
+  formulaName: string;
+  params: string[];
+  module: any;
+  vm?: boolean;
+  executionContext: SyncExecutionContext;
+}) {
+  const manifest = getManifestFromModule(module);
+
+  return helper.executeFormulaOrSyncWithRawParams(
+    manifest,
+    formulaName,
+    rawParams,
+    executionContext,
+  );  
 }
 
 export async function executeSyncFormulaFromPackDef(
@@ -159,8 +146,8 @@ export async function executeSyncFormulaFromPackDef(
     executionContext = newFetcherSyncExecutionContext(packDef.name, packDef.defaultAuthentication, credentialsFile);
   }
 
-  const formula = findSyncFormula(packDef, syncFormulaName);
-  return executeSyncFormula(formula, params, executionContext, options);
+  const formula = helper.findSyncFormula(packDef, syncFormulaName);
+  return helper.executeSyncFormula(formula, params, executionContext || newMockSyncExecutionContext(), options);
 }
 
 export async function executeMetadataFormula(

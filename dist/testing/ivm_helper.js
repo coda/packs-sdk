@@ -3,17 +3,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.executeFormulaOrSyncFromBundle = exports.registerBundle = void 0;
+exports.executeFormulaOrSync = exports.executeFormulaOrSyncWithRawParams = exports.setupIvmContext = exports.registerBundle = void 0;
+const build_1 = require("../cli/build");
 const fs_1 = __importDefault(require("fs"));
 const isolated_vm_1 = __importDefault(require("isolated-vm"));
-const fetcher_1 = require("./fetcher");
 const path_1 = __importDefault(require("path"));
-const helpers_1 = require("./helpers");
 const IsolateMemoryLimit = 128;
 const CodaRuntime = '__coda__runtime__';
-// bundle_execution_helper_bundle.js is built by esbuild (see Makefile) 
+// execution_helper_bundle.js is built by esbuild (see Makefile) 
 // which puts it into the same directory: dist/testing/
-const CompiledHelperBundlePath = `${__dirname}/bundle_execution_helper_bundle.js`;
+const CompiledHelperBundlePath = `${__dirname}/execution_helper_bundle.js`;
+const HelperTsSourceFile = `${__dirname}/execution_helper.ts`;
 // Maps a local function into the ivm context.
 async function mapCallbackFunction(context, stubName, method) {
     await context.evalClosure(`${stubName} = function(...args) {
@@ -46,13 +46,8 @@ exports.registerBundle = registerBundle;
 function getStubName(name) {
     return `${CodaRuntime}.${name}`;
 }
-async function setupExecutionContext(ivmContext, { credentialsFile } = {}) {
+async function setupExecutionContext(ivmContext, executionContext) {
     const runtimeContext = await ivmContext.global.get(CodaRuntime, { reference: true });
-    // defaultAuthentication has a few function methods and can't be copied without being serialized first.
-    const authJSON = await ivmContext.eval(`JSON.stringify(${getStubName('pack.manifest.defaultAuthentication')})`, { copy: true });
-    const auth = authJSON ? JSON.parse(authJSON) : undefined;
-    const name = (await ivmContext.eval(`${getStubName('pack.manifest.name')}`, { copy: true }));
-    const executionContext = fetcher_1.newFetcherSyncExecutionContext(name, auth, credentialsFile);
     // set up a stub to be copied into the ivm context. we are not copying executionContext directly since
     // part of the object is not transferrable. 
     const executionContextStub = {
@@ -92,33 +87,47 @@ async function createIvmContext(isolate) {
     await mapCallbackFunction(ivmContext, 'console.log', console.log);
     return ivmContext;
 }
-async function executeFormulaOrSyncFromBundle({ bundlePath, formulaName, params: rawParams, contextOptions: executionContextOptions = {}, }) {
-    let isolate = null;
-    try {
-        // creating an isolate with 128M memory limit.    
-        isolate = new isolated_vm_1.default.Isolate({ memoryLimit: IsolateMemoryLimit });
-        const ivmContext = await createIvmContext(isolate);
-        const bundleFullPath = bundlePath.startsWith('/') ? bundlePath : path_1.default.join(process.cwd(), bundlePath);
-        await registerBundle(isolate, ivmContext, bundleFullPath, getStubName('pack'));
+async function setupIvmContext(bundlePath, executionContext) {
+    // creating an isolate with 128M memory limit.    
+    const isolate = new isolated_vm_1.default.Isolate({ memoryLimit: IsolateMemoryLimit });
+    const ivmContext = await createIvmContext(isolate);
+    const bundleFullPath = bundlePath.startsWith('/') ? bundlePath : path_1.default.join(process.cwd(), bundlePath);
+    await registerBundle(isolate, ivmContext, bundleFullPath, getStubName('pack'));
+    // If the ivm helper is running by node, the compiled execution_helper bundle should be ready at the 
+    // dist/ directory described by CompiledHelperBundlePath. If the ivm helper is running by mocha, the 
+    // bundle file may not be available or update-to-date, so we'd always compile it first from 
+    // HelperTsSourceFile.
+    //
+    // TODO(huayang): this is not efficient enough and needs optimization if to be used widely in testing.
+    if (fs_1.default.existsSync(CompiledHelperBundlePath)) {
         await registerBundle(isolate, ivmContext, CompiledHelperBundlePath, getStubName('bundleExecutionHelper'));
-        await setupExecutionContext(ivmContext, executionContextOptions);
-        // run the formula and redirect result/error.
-        const result = await ivmContext.evalClosure(`return ${getStubName('bundleExecutionHelper')}.executeFormulaOrSyncWithRawParams(
-        ${getStubName('pack.manifest')}, 
-        $0, 
-        $1, 
-        ${getStubName('executionContext')}
-      )`, [formulaName, rawParams], { arguments: { copy: true }, result: { copy: true, promise: true } });
-        helpers_1.print(result);
     }
-    catch (err) {
-        helpers_1.print(err);
-        process.exit(1);
+    else if (fs_1.default.existsSync(HelperTsSourceFile)) {
+        const bundlePath = await build_1.build(HelperTsSourceFile, 'esbuild');
+        await registerBundle(isolate, ivmContext, bundlePath, getStubName('bundleExecutionHelper'));
     }
-    finally {
-        if (isolate) {
-            isolate.dispose();
-        }
+    else {
+        throw new Error('cannot find the execution helper');
     }
+    await setupExecutionContext(ivmContext, executionContext);
+    return ivmContext;
 }
-exports.executeFormulaOrSyncFromBundle = executeFormulaOrSyncFromBundle;
+exports.setupIvmContext = setupIvmContext;
+async function executeFormulaOrSyncWithRawParams(ivmContext, formulaName, rawParams) {
+    return ivmContext.evalClosure(`return ${getStubName('bundleExecutionHelper')}.executeFormulaOrSyncWithRawParams(
+      ${getStubName('pack.manifest')}, 
+      $0, 
+      $1, 
+      ${getStubName('executionContext')}
+    )`, [formulaName, rawParams], { arguments: { copy: true }, result: { copy: true, promise: true } });
+}
+exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
+async function executeFormulaOrSync(ivmContext, formulaName, params) {
+    return ivmContext.evalClosure(`return ${getStubName('bundleExecutionHelper')}.executeFormulaOrSync(
+      ${getStubName('pack.manifest')}, 
+      $0, 
+      $1, 
+      ${getStubName('executionContext')}
+    )`, [formulaName, params], { arguments: { copy: true }, result: { copy: true, promise: true } });
+}
+exports.executeFormulaOrSync = executeFormulaOrSync;
