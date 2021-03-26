@@ -2781,7 +2781,7 @@ function findFormula(packDef, formulaNameWithNamespace) {
   if (!packFormulas) {
     throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);
   }
-  const [namespace, name] = formulaNameWithNamespace.split("::");
+  const [namespace, name] = formulaNameWithNamespace.includes("::") ? formulaNameWithNamespace.split("::") : [ensureExists(packDef.formulaNamespace), formulaNameWithNamespace];
   if (!(namespace && name)) {
     throw new Error(`Formula names must be specified as FormulaNamespace::FormulaName, but got "${formulaNameWithNamespace}".`);
   }

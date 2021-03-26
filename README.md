@@ -1,43 +1,46 @@
 # Coda Packs SDK
 
-- [Basic Concepts](#basic-concepts)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [One-time Setup](#one-time-setup)
-    - [Global Install (Quick)](#global-install-quick)
-    - [Single-Project Install (Recommended)](#single-project-install-recommended)
-  - [Setup Your Pack Definition](#setup-your-pack-definition)
-- [Running Your Code](#running-your-code)
-  - [Running Formulas](#running-formulas)
-  - [Running Syncs](#running-syncs)
-  - [Fetching](#fetching)
-- [Examples](#examples)
-- [Core Concepts](#core-concepts)
-  - [Fetching Remote Data](#fetching-remote-data)
-  - [Authentication](#authentication)
-    - [User (Default) Authentication vs System Authentication](#user-default-authentication-vs-system-authentication)
-    - [Security](#security)
-    - [Authentication Types](#authentication-types)
-  - [Testing Authenticated Requests](#testing-authenticated-requests)
-  - [Syncs](#syncs)
-    - [Continuation Examples](#continuation-examples)
-    - [Dynamic Sync Tables](#dynamic-sync-tables)
-  - [Normalization](#normalization)
-  - [Type Hints](#type-hints)
-  - [Key Mapping and Extraneous Properties](#key-mapping-and-extraneous-properties)
-  - [Formula Namespaces](#formula-namespaces)
-  - [Metadata Formulas](#metadata-formulas)
-  - [Execution Environment](#execution-environment)
-- [Testing Your Code](#testing-your-code)
-  - [Basic Formula Unittest](#basic-formula-unittest)
-  - [Formula Unittest With Mock Fetcher](#formula-unittest-with-mock-fetcher)
-  - [Sync Unittest](#sync-unittest)
-  - [Integration Test](#integration-test)
-  - [Return Value Validation](#return-value-validation)
-- [Best Practices](#best-practices)
-  - [File Structure](#file-structure)
-- [Assets](#assets)
-- [Reference](#reference)
+- [Coda Packs SDK](#coda-packs-sdk)
+  - [Basic Concepts](#basic-concepts)
+  - [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [One-time Setup](#one-time-setup)
+      - [Global Install (Quick)](#global-install-quick)
+      - [Single-Project Install (Recommended)](#single-project-install-recommended)
+    - [Setup Your Pack Definition](#setup-your-pack-definition)
+  - [Running Your Code](#running-your-code)
+    - [Running Formulas](#running-formulas)
+    - [Running Syncs](#running-syncs)
+    - [Fetching](#fetching)
+  - [Examples](#examples)
+  - [Core Concepts](#core-concepts)
+    - [Fetching Remote Data](#fetching-remote-data)
+    - [Authentication](#authentication)
+      - [User (Default) Authentication vs System Authentication](#user-default-authentication-vs-system-authentication)
+      - [Security](#security)
+      - [Authentication Types](#authentication-types)
+    - [Testing Authenticated Requests](#testing-authenticated-requests)
+    - [Syncs](#syncs)
+      - [Continuation Examples](#continuation-examples)
+      - [Dynamic Sync Tables](#dynamic-sync-tables)
+    - [Normalization](#normalization)
+    - [Type Hints](#type-hints)
+    - [Key Mapping and Extraneous Properties](#key-mapping-and-extraneous-properties)
+    - [Formula Namespaces](#formula-namespaces)
+    - [Metadata Formulas](#metadata-formulas)
+    - [Execution Environment](#execution-environment)
+    - [Logging](#logging)
+    - [Temporary Blob Storage](#temporary-blob-storage)
+  - [Testing Your Code](#testing-your-code)
+    - [Basic Formula Unittest](#basic-formula-unittest)
+    - [Formula Unittest With Mock Fetcher](#formula-unittest-with-mock-fetcher)
+    - [Sync Unittest](#sync-unittest)
+    - [Integration Test](#integration-test)
+    - [Return Value Validation](#return-value-validation)
+  - [Best Practices](#best-practices)
+    - [File Structure](#file-structure)
+  - [Assets](#assets)
+  - [Reference](#reference)
 
 ## Basic Concepts
 
@@ -134,7 +137,7 @@ So for example, if your pack definition was in `src/manifest.ts` and you wanted 
 in namespace `MyPack` called `MyFormula` that takes one argument, you'd run:
 
 ```bash
-coda execute src/manifest.ts MyPack::MyFormula some-arg
+coda execute src/manifest.ts MyFormula some-arg
 ```
 
 This will execute the formula and print the output to the terminal. (A quick reminder, if your arguments
@@ -150,7 +153,7 @@ To pass array parameters to `coda execute`, use a comma separated string. For ex
 passed with this format:
 
 ```bash
-coda execute src/manifest.ts MyPack::MyFormula "1,2,3"
+coda execute src/manifest.ts MyFormula "1,2,3"
 ```
 
 ### Running Syncs
@@ -179,7 +182,7 @@ By default, `coda execute` will use a mock fetcher for any http requests that yo
 If you wish to actually make http requests, use the `--fetch` flag, for example:
 
 ```bash
-coda execute --fetch src/manifest.ts MyPack::MyFormula some-arg
+coda execute --fetch src/manifest.ts MyFormula some-arg
 ```
 
 Your http requests will commonly require authentication in order to succeed, which the `coda execute` utility supports.
@@ -646,7 +649,7 @@ import {manifest} from '../manifest';
 
 describe('Simple Formula', () => {
   it('executes a formula', async () => {
-    const result = await executeFormulaFromPackDef(manifest, 'MyNamespace::MyFormula', ['my-param']);
+    const result = await executeFormulaFromPackDef(manifest, 'MyFormula', ['my-param']);
     assert.equal(result, 'my-return-value');
   });
 });
@@ -680,7 +683,7 @@ describe('Formula with Fetcher', () => {
     };
     context.fetcher.fetch.returns(newJsonFetchResponse(fakeResponse));
 
-    const result = await executeFormulaFromPackDef(manifest, 'MyNamespace::MyFormula', ['my-param'], context);
+    const result = await executeFormulaFromPackDef(manifest, 'MyFormula', ['my-param'], context);
 
     assert.equal(result.Name, 'Alice');
     sinon.assert.calledOnce(context.fetcher.fetch);
@@ -744,7 +747,7 @@ requests to whatever urls they are given, and will apply authentication to these
 if you have configured authentication locally using `coda auth`. For example:
 
 ```typescript
-const result = await executeFormulaFromPackDef(manifest, 'MyNamespace::MyFormula', ['my-param'], undefined, undefined, {
+const result = await executeFormulaFromPackDef(manifest, 'MyFormula', ['my-param'], undefined, undefined, {
   useRealFetcher: true,
 });
 ```
