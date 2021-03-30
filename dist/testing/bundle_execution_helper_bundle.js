@@ -6,13 +6,7 @@ var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __markAsModule = (target) => __defProp(target, "__esModule", {value: true});
-var __commonJS = (callback, module2) => () => {
-  if (!module2) {
-    module2 = {exports: {}};
-    callback(module2.exports, module2);
-  }
-  return module2.exports;
-};
+var __commonJS = (cb, mod) => () => (mod || cb((mod = {exports: {}}).exports, mod), mod.exports);
 var __export = (target, all) => {
   for (var name in all)
     __defProp(target, name, {get: all[name], enumerable: true});
@@ -30,7 +24,7 @@ var __toModule = (module2) => {
 };
 
 // node_modules/pascalcase/index.js
-var require_pascalcase = __commonJS((exports2, module2) => {
+var require_pascalcase = __commonJS((exports, module2) => {
   /*!
    * pascalcase <https://github.com/jonschlinkert/pascalcase>
    *
@@ -57,7 +51,7 @@ var require_pascalcase = __commonJS((exports2, module2) => {
 });
 
 // node_modules/clone/clone.js
-var require_clone = __commonJS((exports2, module2) => {
+var require_clone = __commonJS((exports, module2) => {
   var clone2 = function() {
     "use strict";
     function _instanceof(obj, type) {
@@ -255,7 +249,7 @@ var require_clone = __commonJS((exports2, module2) => {
 });
 
 // node_modules/has-symbols/shams.js
-var require_shams = __commonJS((exports2, module2) => {
+var require_shams = __commonJS((exports, module2) => {
   "use strict";
   module2.exports = function hasSymbols() {
     if (typeof Symbol !== "function" || typeof Object.getOwnPropertySymbols !== "function") {
@@ -305,7 +299,7 @@ var require_shams = __commonJS((exports2, module2) => {
 });
 
 // node_modules/has-symbols/index.js
-var require_has_symbols = __commonJS((exports2, module2) => {
+var require_has_symbols = __commonJS((exports, module2) => {
   "use strict";
   var origSymbol = typeof Symbol !== "undefined" && Symbol;
   var hasSymbolSham = require_shams();
@@ -327,7 +321,7 @@ var require_has_symbols = __commonJS((exports2, module2) => {
 });
 
 // node_modules/function-bind/implementation.js
-var require_implementation = __commonJS((exports2, module2) => {
+var require_implementation = __commonJS((exports, module2) => {
   "use strict";
   var ERROR_MESSAGE = "Function.prototype.bind called on incompatible ";
   var slice = Array.prototype.slice;
@@ -369,21 +363,21 @@ var require_implementation = __commonJS((exports2, module2) => {
 });
 
 // node_modules/function-bind/index.js
-var require_function_bind = __commonJS((exports2, module2) => {
+var require_function_bind = __commonJS((exports, module2) => {
   "use strict";
   var implementation = require_implementation();
   module2.exports = Function.prototype.bind || implementation;
 });
 
 // node_modules/has/src/index.js
-var require_src = __commonJS((exports2, module2) => {
+var require_src = __commonJS((exports, module2) => {
   "use strict";
   var bind = require_function_bind();
   module2.exports = bind.call(Function.call, Object.prototype.hasOwnProperty);
 });
 
 // node_modules/get-intrinsic/index.js
-var require_get_intrinsic = __commonJS((exports2, module2) => {
+var require_get_intrinsic = __commonJS((exports, module2) => {
   "use strict";
   var undefined2;
   var $SyntaxError = SyntaxError;
@@ -671,7 +665,7 @@ var require_get_intrinsic = __commonJS((exports2, module2) => {
 });
 
 // node_modules/call-bind/index.js
-var require_call_bind = __commonJS((exports2, module2) => {
+var require_call_bind = __commonJS((exports, module2) => {
   "use strict";
   var bind = require_function_bind();
   var GetIntrinsic = require_get_intrinsic();
@@ -709,7 +703,7 @@ var require_call_bind = __commonJS((exports2, module2) => {
 });
 
 // node_modules/call-bind/callBound.js
-var require_callBound = __commonJS((exports2, module2) => {
+var require_callBound = __commonJS((exports, module2) => {
   "use strict";
   var GetIntrinsic = require_get_intrinsic();
   var callBind = require_call_bind();
@@ -728,7 +722,7 @@ var require_util_inspect = __commonJS(() => {
 });
 
 // node_modules/object-inspect/index.js
-var require_object_inspect = __commonJS((exports2, module2) => {
+var require_object_inspect = __commonJS((exports, module2) => {
   var hasMap = typeof Map === "function" && Map.prototype;
   var mapSizeDescriptor = Object.getOwnPropertyDescriptor && hasMap ? Object.getOwnPropertyDescriptor(Map.prototype, "size") : null;
   var mapSize = hasMap && mapSizeDescriptor && typeof mapSizeDescriptor.get === "function" ? mapSizeDescriptor.get : null;
@@ -1140,7 +1134,7 @@ var require_object_inspect = __commonJS((exports2, module2) => {
 });
 
 // node_modules/side-channel/index.js
-var require_side_channel = __commonJS((exports2, module2) => {
+var require_side_channel = __commonJS((exports, module2) => {
   "use strict";
   var GetIntrinsic = require_get_intrinsic();
   var callBound = require_callBound();
@@ -1248,7 +1242,7 @@ var require_side_channel = __commonJS((exports2, module2) => {
 });
 
 // node_modules/qs/lib/formats.js
-var require_formats = __commonJS((exports2, module2) => {
+var require_formats = __commonJS((exports, module2) => {
   "use strict";
   var replace = String.prototype.replace;
   var percentTwenties = /%20/g;
@@ -1272,7 +1266,7 @@ var require_formats = __commonJS((exports2, module2) => {
 });
 
 // node_modules/qs/lib/utils.js
-var require_utils = __commonJS((exports2, module2) => {
+var require_utils = __commonJS((exports, module2) => {
   "use strict";
   var formats = require_formats();
   var has = Object.prototype.hasOwnProperty;
@@ -1469,7 +1463,7 @@ var require_utils = __commonJS((exports2, module2) => {
 });
 
 // node_modules/qs/lib/stringify.js
-var require_stringify = __commonJS((exports2, module2) => {
+var require_stringify = __commonJS((exports, module2) => {
   "use strict";
   var getSideChannel = require_side_channel();
   var utils = require_utils();
@@ -1665,7 +1659,7 @@ var require_stringify = __commonJS((exports2, module2) => {
 });
 
 // node_modules/qs/lib/parse.js
-var require_parse = __commonJS((exports2, module2) => {
+var require_parse = __commonJS((exports, module2) => {
   "use strict";
   var utils = require_utils();
   var has = Object.prototype.hasOwnProperty;
@@ -1861,7 +1855,7 @@ var require_parse = __commonJS((exports2, module2) => {
 });
 
 // node_modules/qs/lib/index.js
-var require_lib = __commonJS((exports2, module2) => {
+var require_lib = __commonJS((exports, module2) => {
   "use strict";
   var stringify = require_stringify();
   var parse = require_parse();
@@ -1874,7 +1868,7 @@ var require_lib = __commonJS((exports2, module2) => {
 });
 
 // node_modules/requires-port/index.js
-var require_requires_port = __commonJS((exports2, module2) => {
+var require_requires_port = __commonJS((exports, module2) => {
   "use strict";
   module2.exports = function required(port, protocol) {
     protocol = protocol.split(":")[0];
@@ -1900,7 +1894,7 @@ var require_requires_port = __commonJS((exports2, module2) => {
 });
 
 // node_modules/querystringify/index.js
-var require_querystringify = __commonJS((exports2) => {
+var require_querystringify = __commonJS((exports) => {
   "use strict";
   var has = Object.prototype.hasOwnProperty;
   var undef;
@@ -1941,12 +1935,12 @@ var require_querystringify = __commonJS((exports2) => {
     }
     return pairs.length ? prefix + pairs.join("&") : "";
   }
-  exports2.stringify = querystringify;
-  exports2.parse = querystring;
+  exports.stringify = querystringify;
+  exports.parse = querystring;
 });
 
 // node_modules/url-parse/index.js
-var require_url_parse = __commonJS((exports2, module2) => {
+var require_url_parse = __commonJS((exports, module2) => {
   "use strict";
   var required = require_requires_port();
   var qs2 = require_querystringify();
