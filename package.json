@@ -20,7 +20,7 @@
     "client-oauth2": "^4.3.3",
     "clone": "^2.1.2",
     "es6-promise": "^4.2.8",
-    "esbuild": "^0.9.6",
+    "esbuild": "^0.11.1",
     "express": "4.17.1",
     "isolated-vm": "^4.0.0",
     "isomorphic-fetch": "^3.0.0",
