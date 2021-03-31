@@ -33,6 +33,7 @@ import type {StringSchema} from '../schema';
 import {Type} from '../api_types';
 import type {ValidationError} from './types';
 import {ValueType} from '../schema';
+import type {VariousAuthentication} from '../types';
 import type {WebBasicAuthentication} from '../types';
 import {assertCondition} from '../helpers/ensure';
 import {isNil} from '../helpers/object_utils';
@@ -232,6 +233,9 @@ const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> 
     type: zodDiscriminant(AuthenticationType.AWSSignature4),
     service: z.string(),
     ...baseAuthenticationValidators,
+  }),
+  [AuthenticationType.Various]: zodCompleteObject<VariousAuthentication>({
+    type: zodDiscriminant(AuthenticationType.Various),
   }),
 };
 

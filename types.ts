@@ -36,6 +36,7 @@ export enum AuthenticationType {
   WebBasic = 'WebBasic',
   AWSSignature4 = 'AWSSignature4',
   CodaApiHeaderBearerToken = 'CodaApiHeaderBearerToken',
+  Various = 'Various',
 }
 
 export enum DefaultConnectionType {
@@ -174,6 +175,10 @@ export interface AWSSignature4Authentication extends BaseAuthentication {
   service: string;
 }
 
+export interface VariousAuthentication {
+  type: AuthenticationType.Various;
+}
+
 export type Authentication =
   | NoAuthentication
   | HeaderBearerTokenAuthentication
@@ -183,7 +188,8 @@ export type Authentication =
   | MultiQueryParamTokenAuthentication
   | OAuth2Authentication
   | WebBasicAuthentication
-  | AWSSignature4Authentication;
+  | AWSSignature4Authentication
+  | VariousAuthentication;
 
 export type SystemAuthentication =
   | HeaderBearerTokenAuthentication
@@ -192,6 +198,14 @@ export type SystemAuthentication =
   | MultiQueryParamTokenAuthentication
   | WebBasicAuthentication
   | AWSSignature4Authentication;
+
+export type VariousSupportedAuthentication =
+  | NoAuthentication
+  | HeaderBearerTokenAuthentication
+  | CustomHeaderTokenAuthentication
+  | QueryParamTokenAuthentication
+  | MultiQueryParamTokenAuthentication
+  | WebBasicAuthentication;
 
 export interface Format {
   name: string;

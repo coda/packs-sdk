@@ -54,10 +54,11 @@ export function setupAuth(packDef: PackDefinition, opts: SetupAuthOptions = {}):
       return handler.handleQueryParam(defaultAuthentication.paramName);
     case AuthenticationType.WebBasic:
       return handler.handleWebBasic();
-    case AuthenticationType.AWSSignature4:
-      throw new Error('Not yet implemented');
     case AuthenticationType.OAuth2:
       return handler.handleOAuth2();
+    case AuthenticationType.AWSSignature4:
+    case AuthenticationType.Various:
+      throw new Error('Not yet implemented');
     default:
       return ensureUnreachable(defaultAuthentication);
   }
@@ -201,7 +202,7 @@ class CredentialHandler {
   }
 
   private maybePromptForEndpointUrl() {
-    if (this._authDef.type === AuthenticationType.None) {
+    if (this._authDef.type === AuthenticationType.None || this._authDef.type === AuthenticationType.Various) {
       return;
     }
     const {requiresEndpointUrl, endpointDomain} = this._authDef;
