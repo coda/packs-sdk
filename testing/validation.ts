@@ -60,7 +60,7 @@ export function validateParams(formula: TypedPackFormula, args: ParamValues<Para
 }
 
 export function validateResult<ResultT extends any>(formula: TypedPackFormula, result: ResultT): void {
-  const maybeError = validateResultType(formula.resultType, result);
+  const maybeError = 'isCodaFormula' in formula ? undefined : validateResultType(formula.resultType, result);
   if (maybeError) {
     throw ResultValidationException.fromErrors(formula.name, [maybeError]);
   }

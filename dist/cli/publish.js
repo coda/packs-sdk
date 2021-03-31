@@ -133,6 +133,9 @@ function compileFormulasMetadata(formulas) {
     return formulasMetadata;
 }
 function compileFormulaMetadata(formula) {
+    if ('isCodaFormula' in formula) {
+        return Object.assign({}, formula);
+    }
     const { execute, ...rest } = formula;
     return rest;
 }

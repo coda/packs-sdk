@@ -53,7 +53,7 @@ export declare type ParamValues<ParamDefsT extends ParamDefs> = {
     [K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
 } & any[];
 export declare type DefaultValueType<T extends UnionType> = T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
-export interface CommonPackFormulaDef<T extends ParamDefs> {
+export interface CommonFormulaDef<T extends ParamDefs> {
     readonly name: string;
     readonly description: string;
     readonly examples: Array<{
@@ -62,16 +62,18 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
     }>;
     readonly parameters: T;
     readonly varargParameters?: ParamDefs;
-    readonly network?: Network;
-    /**
-     * How long formulas running with the same values should cache their results for. By default, 1 second.
-     */
-    readonly cacheTtlSecs?: number;
     readonly isExperimental?: boolean;
     /**
      * Whether this is a formula that will be used by Coda internally and not exposed directly to users.
      */
     readonly isSystem?: boolean;
+}
+export interface CommonPackFormulaDef<T extends ParamDefs> extends CommonFormulaDef<T> {
+    readonly network?: Network;
+    /**
+     * How long formulas running with the same values should cache their results for. By default, 1 second.
+     */
+    readonly cacheTtlSecs?: number;
 }
 export interface Network {
     readonly hasSideEffect?: boolean;

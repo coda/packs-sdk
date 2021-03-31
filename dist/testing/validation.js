@@ -63,7 +63,7 @@ function validateParams(formula, args) {
 }
 exports.validateParams = validateParams;
 function validateResult(formula, result) {
-    const maybeError = validateResultType(formula.resultType, result);
+    const maybeError = 'isCodaFormula' in formula ? undefined : validateResultType(formula.resultType, result);
     if (maybeError) {
         throw types_3.ResultValidationException.fromErrors(formula.name, [maybeError]);
     }

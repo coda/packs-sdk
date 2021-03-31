@@ -2488,7 +2488,7 @@ ${errorMsgs.join("\n")}`);
   }
 }
 function validateResult(formula, result) {
-  const maybeError = validateResultType(formula.resultType, result);
+  const maybeError = "isCodaFormula" in formula ? void 0 : validateResultType(formula.resultType, result);
   if (maybeError) {
     throw ResultValidationException.fromErrors(formula.name, [maybeError]);
   }

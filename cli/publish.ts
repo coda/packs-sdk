@@ -145,6 +145,9 @@ function compileFormulasMetadata(
 }
 
 function compileFormulaMetadata(formula: TypedPackFormula): PackFormulaMetadata {
+  if ('isCodaFormula' in formula) {
+    return Object.assign({}, formula);
+  }
   const {execute, ...rest} = formula;
   return rest;
 }

@@ -274,6 +274,10 @@ export interface PackFormulas {
   readonly [namespace: string]: TypedStandardFormula[];
 }
 
+export interface CodaFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaDef<ParamsT> {
+  formula: string;
+}
+
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult>
   extends CommonPackFormulaDef<ParamsT> {
   execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
@@ -330,13 +334,19 @@ export type TypedStandardFormula =
   | StringPackFormula<ParamDefs, any>
   | ObjectPackFormula<ParamDefs, Schema>;
 
-export type TypedPackFormula = TypedStandardFormula | GenericSyncFormula;
+export type CodaFormula = CodaFormulaDef<ParamDefs> & {isCodaFormula: true};
+
+export type TypedPackFormula = TypedStandardFormula | GenericSyncFormula | CodaFormula;
 
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
 export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
 export function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata {
-  return fn.resultType === Type.object;
+  return (fn as TypedStandardFormula | GenericSyncFormula).resultType === Type.object;
+}
+
+export function isCodaFormula(fn: PackFormulaMetadata): fn is CodaFormula {
+  return (fn as CodaFormula).isCodaFormula;
 }
 
 export function isStringPackFormula(fn: Formula<ParamDefs, any>): fn is StringPackFormula<ParamDefs> {
@@ -712,4 +722,11 @@ export function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: Empty
     execute,
     resultType: Type.string as const,
   });
+}
+
+export function makeCodaFormula<ParamDefsT extends ParamDefs>(definition: CodaFormulaDef<ParamDefsT>): CodaFormula {
+  return {
+    ...definition,
+    isCodaFormula: true,
+  };
 }

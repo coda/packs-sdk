@@ -111,22 +111,26 @@ export type DefaultValueType<T extends UnionType> = T extends ArrayType<Type.dat
   ? TypeOfMap<T> | PrecannedDateRange
   : TypeOfMap<T>;
 
-export interface CommonPackFormulaDef<T extends ParamDefs> {
+export interface CommonFormulaDef<T extends ParamDefs> {
   readonly name: string;
   readonly description: string;
   readonly examples: Array<{params: PackFormulaValue[]; result: PackFormulaResult}>;
   readonly parameters: T;
   readonly varargParameters?: ParamDefs;
-  readonly network?: Network;
-  /**
-   * How long formulas running with the same values should cache their results for. By default, 1 second.
-   */
-  readonly cacheTtlSecs?: number;
+
   readonly isExperimental?: boolean;
   /**
    * Whether this is a formula that will be used by Coda internally and not exposed directly to users.
    */
   readonly isSystem?: boolean;
+}
+
+export interface CommonPackFormulaDef<T extends ParamDefs> extends CommonFormulaDef<T> {
+  readonly network?: Network;
+  /**
+   * How long formulas running with the same values should cache their results for. By default, 1 second.
+   */
+  readonly cacheTtlSecs?: number;
 }
 
 export interface Network {

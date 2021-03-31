@@ -138,6 +138,9 @@ export declare function check(condition: boolean, msg: string): void;
 export interface PackFormulas {
     readonly [namespace: string]: TypedStandardFormula[];
 }
+export interface CodaFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaDef<ParamsT> {
+    formula: string;
+}
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult> extends CommonPackFormulaDef<ParamsT> {
     execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
 }
@@ -171,11 +174,15 @@ export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT exte
     schema?: SchemaT;
 };
 export declare type TypedStandardFormula = NumericPackFormula<ParamDefs> | StringPackFormula<ParamDefs, any> | ObjectPackFormula<ParamDefs, Schema>;
-export declare type TypedPackFormula = TypedStandardFormula | GenericSyncFormula;
+export declare type CodaFormula = CodaFormulaDef<ParamDefs> & {
+    isCodaFormula: true;
+};
+export declare type TypedPackFormula = TypedStandardFormula | GenericSyncFormula | CodaFormula;
 export declare type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 export declare type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
 export declare type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
 export declare function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata;
+export declare function isCodaFormula(fn: PackFormulaMetadata): fn is CodaFormula;
 export declare function isStringPackFormula(fn: Formula<ParamDefs, any>): fn is StringPackFormula<ParamDefs>;
 export declare function isSyncPackFormula(fn: Formula<ParamDefs, any>): fn is GenericSyncFormula;
 export interface SyncFormulaResult<ResultT extends object> {
@@ -270,14 +277,14 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     request: RequestHandlerTemplate;
     description: string;
     name: string;
+    network?: import("./api_types").Network | undefined;
+    cacheTtlSecs?: number | undefined;
     examples: {
         params: import("./api_types").PackFormulaValue[];
         result: PackFormulaResult;
     }[];
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
-    network?: import("./api_types").Network | undefined;
-    cacheTtlSecs?: number | undefined;
     isExperimental?: boolean | undefined;
     isSystem?: boolean | undefined;
 } & {
@@ -289,3 +296,4 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
     resultType: Type.string;
 };
+export declare function makeCodaFormula<ParamDefsT extends ParamDefs>(definition: CodaFormulaDef<ParamDefsT>): CodaFormula;

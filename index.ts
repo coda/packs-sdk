@@ -77,6 +77,7 @@ export type {TypedPackFormula} from './api';
 export type {TypedStandardFormula} from './api';
 export {UserVisibleError} from './api';
 export {isArrayType} from './api_types';
+export {isCodaFormula} from './api';
 export {isDynamicSyncTable} from './api';
 export {isObjectPackFormula} from './api';
 export {isStringPackFormula} from './api';
@@ -85,6 +86,7 @@ export {isUserVisibleError} from './api';
 export {makeUserVisibleError} from './api';
 
 // Formula definition helpers
+export {makeCodaFormula} from './api';
 export {makeMetadataFormula} from './api';
 export {makeDynamicSyncTable} from './api';
 export {makeEmptyFormula} from './api';
