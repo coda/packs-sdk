@@ -137,8 +137,6 @@ export class AuthenticatingFetcher implements Fetcher {
         const valuePrefix = this._authDef.tokenPrefix ? `${this._authDef.tokenPrefix} ` : '';
         return {url, body, form, headers: {...headers, [this._authDef.headerName]: `${valuePrefix}${token}`}};
       }
-      case AuthenticationType.AWSSignature4:
-        throw new Error('Not yet implemented');
       case AuthenticationType.OAuth2: {
         const {accessToken} = this._credentials as OAuth2Credentials;
         const prefix = this._authDef.tokenPrefix || 'Bearer';
@@ -156,6 +154,9 @@ export class AuthenticatingFetcher implements Fetcher {
           headers: requestHeaders,
         };
       }
+      case AuthenticationType.AWSSignature4:
+      case AuthenticationType.Various:
+        throw new Error('Not yet implemented');
 
       default:
         return ensureUnreachable(this._authDef);
@@ -163,7 +164,11 @@ export class AuthenticatingFetcher implements Fetcher {
   }
 
   private _applyAndValidateEndpoint(rawUrl: string): string {
-    if (!this._authDef || this._authDef.type === AuthenticationType.None) {
+    if (
+      !this._authDef ||
+      this._authDef.type === AuthenticationType.None ||
+      this._authDef.type === AuthenticationType.Various
+    ) {
       return rawUrl;
     }
 
