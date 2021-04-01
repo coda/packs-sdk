@@ -1,6 +1,5 @@
 import type { $Values } from './type_utils';
 import type { PackId } from './types';
-import type { TypedStandardFormula } from './index';
 export declare enum ValueType {
     Boolean = "boolean",
     Number = "number",
@@ -33,7 +32,6 @@ export declare type NumberHintTypes = typeof NumberHintValueTypes[number];
 export declare type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 interface BaseSchema {
     description?: string;
-    onColumnUpdate?: TypedStandardFormula;
 }
 export interface BooleanSchema extends BaseSchema {
     type: ValueType.Boolean;
