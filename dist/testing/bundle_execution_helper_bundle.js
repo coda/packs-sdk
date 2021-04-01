@@ -2338,6 +2338,9 @@ var UserVisibleError = class extends Error {
 function isObjectPackFormula(fn) {
   return fn.resultType === Type.object;
 }
+function isCodaFormula(fn) {
+  return fn.isCodaFormula;
+}
 
 // helpers/ensure.ts
 function ensureUnreachable(value, message) {
@@ -2790,7 +2793,7 @@ function findFormula(packDef, formulaNameWithNamespace) {
     throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas for namespace "${namespace}".`);
   }
   for (const formula of formulas) {
-    if (formula.name === name) {
+    if (formula.name === name && !isCodaFormula(formula)) {
       return formula;
     }
   }

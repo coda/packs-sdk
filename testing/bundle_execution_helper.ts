@@ -1,3 +1,4 @@
+import type {CodaFormula} from '../api';
 import type {GenericSyncFormula} from '../api';
 import type {PackDefinition} from '../types';
 import type {ParamDefs} from 'api_types';
@@ -6,6 +7,7 @@ import type {SyncExecutionContext} from 'api_types';
 import type {SyncFormulaResult} from '../api';
 import type {TypedStandardFormula} from '../api';
 import  { coerceParams } from './coercion';
+import {isCodaFormula} from '../api';
 import {validateParams} from './validation';
 import {validateResult} from './validation';
 
@@ -80,14 +82,15 @@ export function findFormula(packDef: PackDefinition, formulaNameWithNamespace: s
     );
   }
 
-  const formulas: TypedStandardFormula[] = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
+  const formulas: Array<CodaFormula | TypedStandardFormula> = 
+    Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
   if (!formulas || !formulas.length) {
     throw new Error(
       `Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas for namespace "${namespace}".`,
     );
   }
   for (const formula of formulas) {
-    if (formula.name === name) {
+    if (formula.name === name && !isCodaFormula(formula)) {
       return formula;
     }
   }

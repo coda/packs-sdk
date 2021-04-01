@@ -1,3 +1,4 @@
+import type { CodaFormula } from './api';
 import type { MetadataFormula } from './api';
 import type { PackFormulas } from './api';
 import type { SyncTable } from './api';
@@ -215,7 +216,7 @@ export interface PackDefinition {
      * explicit connection is specified by the user.
      */
     systemConnectionAuthentication?: SystemAuthentication;
-    formulas?: PackFormulas | TypedStandardFormula[];
+    formulas?: PackFormulas | Array<TypedStandardFormula | CodaFormula>;
     formats?: Format[];
     syncTables?: SyncTable[];
     /**

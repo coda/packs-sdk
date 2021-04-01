@@ -1,3 +1,4 @@
+import type {CodaFormula} from './api';
 import type {MetadataFormula} from './api';
 import type {PackFormulas} from './api';
 import type {SyncTable} from './api';
@@ -287,7 +288,7 @@ export interface PackDefinition {
   systemConnectionAuthentication?: SystemAuthentication;
 
   // User-facing components
-  formulas?: PackFormulas | TypedStandardFormula[];
+  formulas?: PackFormulas | Array<TypedStandardFormula | CodaFormula> ;
   formats?: Format[];
   syncTables?: SyncTable[];
   /**

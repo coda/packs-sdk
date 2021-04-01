@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.wrapError = exports.tryFindSyncFormula = exports.tryFindFormula = exports.findSyncFormula = exports.findFormula = exports.executeFormulaOrSyncWithRawParams = exports.executeSyncFormulaWithoutValidation = void 0;
 const coercion_1 = require("./coercion");
+const api_1 = require("../api");
 const validation_1 = require("./validation");
 const validation_2 = require("./validation");
 async function executeSyncFormulaWithoutValidation(formula, params, context, maxIterations = 3) {
@@ -64,7 +65,7 @@ function findFormula(packDef, formulaNameWithNamespace) {
         throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas for namespace "${namespace}".`);
     }
     for (const formula of formulas) {
-        if (formula.name === name) {
+        if (formula.name === name && !api_1.isCodaFormula(formula)) {
             return formula;
         }
     }

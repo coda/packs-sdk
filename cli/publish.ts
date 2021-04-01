@@ -1,5 +1,6 @@
 import type {AllPacks} from './create';
 import type {Arguments} from 'yargs';
+import type {CodaFormula} from 'api';
 import {ConsoleLogger} from '../helpers/logging';
 import type {Format} from 'types';
 import type {GenericSyncTable} from 'api';
@@ -129,7 +130,7 @@ function compileFormatsMetadata(formats: Format[]): PackFormatMetadata[] {
 }
 
 function compileFormulasMetadata(
-  formulas: PackFormulas | TypedStandardFormula[],
+  formulas: PackFormulas | Array<CodaFormula | TypedStandardFormula>,
 ): PackFormulasMetadata | PackFormulaMetadata[] {
   const formulasMetadata: PackFormulaMetadata[] | PackFormulasMetadata = Array.isArray(formulas) ? [] : {};
   // TODO: @alan-fang delete once we move packs off of PackFormulas
