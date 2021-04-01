@@ -16,6 +16,7 @@ export type PackSyncTable = Omit<SyncTable, 'getter' | 'getName' /* | 'getSchema
   hasDynamicSchema?: boolean;
   getDisplayUrl?: MetadataFormula;
   listDynamicUrls?: MetadataFormula;
+  endpoint?: string;
 };
 
 export interface PackFormatMetadata extends Omit<Format, 'matchers'> {
