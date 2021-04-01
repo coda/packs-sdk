@@ -46,7 +46,6 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
     getter: SyncFormula<K, L, ParamDefsT, SchemaT>;
     getSchema?: MetadataFormula;
     entityName?: string;
-    onColumnUpdate?: TypedStandardFormula;
 }
 /**
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
@@ -256,7 +255,7 @@ export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT 
  * @param getSchema Only used internally by {@link makeDynamicSyncTable}, see there for more details.
  * @param entityName Only used internally by {@link makeDynamicSyncTable}, see there for more details.
  */
-export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, formula: SyncFormulaDef<ParamDefsT>, getSchema?: MetadataFormula, entityName?: string, onColumnUpdate?: TypedStandardFormula): SyncTableDef<K, L, ParamDefsT, SchemaT>;
+export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, formula: SyncFormulaDef<ParamDefsT>, getSchema?: MetadataFormula, entityName?: string): SyncTableDef<K, L, ParamDefsT, SchemaT>;
 export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ packId, name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, }: {
     packId: number;
     name: string;
