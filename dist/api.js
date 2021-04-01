@@ -273,7 +273,7 @@ exports.makeObjectFormula = makeObjectFormula;
  * @param getSchema Only used internally by {@link makeDynamicSyncTable}, see there for more details.
  * @param entityName Only used internally by {@link makeDynamicSyncTable}, see there for more details.
  */
-function makeSyncTable(name, schema, formula, getSchema, entityName) {
+function makeSyncTable(name, schema, formula, getSchema, entityName, endpoint) {
     const { execute: wrappedExecute, ...definition } = formula;
     const formulaSchema = getSchema
         ? undefined
@@ -307,6 +307,7 @@ function makeSyncTable(name, schema, formula, getSchema, entityName) {
         },
         getSchema,
         entityName,
+        endpoint,
     };
 }
 exports.makeSyncTable = makeSyncTable;

@@ -64,6 +64,7 @@ export type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 
 interface BaseSchema {
   description?: string;
+  isEditable?: boolean;
 }
 
 export interface BooleanSchema extends BaseSchema {

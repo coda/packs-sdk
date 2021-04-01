@@ -241,6 +241,7 @@ const numericPackFormulaSchema = zodCompleteObject({
         type: zodDiscriminant(schema_5.ValueType.Number),
         codaType: z.enum([...schema_2.NumberHintValueTypes]).optional(),
         description: z.string().optional(),
+        isEditable: z.boolean().optional(),
     }).optional(),
 });
 const stringPackFormulaSchema = zodCompleteObject({
@@ -250,6 +251,7 @@ const stringPackFormulaSchema = zodCompleteObject({
         type: zodDiscriminant(schema_5.ValueType.String),
         codaType: z.enum([...schema_4.StringHintValueTypes]).optional(),
         description: z.string().optional(),
+        isEditable: z.boolean().optional(),
     }).optional(),
 });
 // TODO(jonathan): Use zodCompleteObject on these after exporting these types.
@@ -271,6 +273,7 @@ const basePropertyValidators = {
     description: z.string().optional(),
     fromKey: z.string().optional(),
     required: z.boolean().optional(),
+    isEditable: z.boolean().optional(),
 };
 const booleanPropertySchema = zodCompleteObject({
     type: zodDiscriminant(schema_5.ValueType.Boolean),
@@ -309,6 +312,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
             .optional(),
     }).optional(),
     properties: z.record(objectPropertyUnionSchema),
+    isEditable: z.boolean().optional(),
 })
     .refine(data => object_utils_1.isNil(data.id) || data.id in data.properties, {
     message: 'The "id" property must appear as a key in the "properties" object.',

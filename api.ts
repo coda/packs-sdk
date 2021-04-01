@@ -74,6 +74,7 @@ export interface SyncTableDef<
   getter: SyncFormula<K, L, ParamDefsT, SchemaT>;
   getSchema?: MetadataFormula;
   entityName?: string;
+  endpoint?: string; // API endpoint to propogate upserts/deletes to.
 }
 
 /**
@@ -587,6 +588,7 @@ export function makeSyncTable<
   formula: SyncFormulaDef<ParamDefsT>,
   getSchema?: MetadataFormula,
   entityName?: string,
+  endpoint?: string,
 ): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {execute: wrappedExecute, ...definition} = formula;
   const formulaSchema = getSchema
@@ -625,6 +627,7 @@ export function makeSyncTable<
     },
     getSchema,
     entityName,
+    endpoint,
   };
 }
 

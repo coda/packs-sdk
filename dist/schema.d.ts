@@ -32,6 +32,7 @@ export declare type NumberHintTypes = typeof NumberHintValueTypes[number];
 export declare type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 interface BaseSchema {
     description?: string;
+    isEditable?: boolean;
 }
 export interface BooleanSchema extends BaseSchema {
     type: ValueType.Boolean;
