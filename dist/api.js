@@ -273,7 +273,7 @@ exports.makeObjectFormula = makeObjectFormula;
  * @param getSchema Only used internally by {@link makeDynamicSyncTable}, see there for more details.
  * @param entityName Only used internally by {@link makeDynamicSyncTable}, see there for more details.
  */
-function makeSyncTable(name, schema, formula, getSchema, entityName) {
+function makeSyncTable(name, schema, formula, getSchema, entityName, onColumnUpdate) {
     const { execute: wrappedExecute, ...definition } = formula;
     const formulaSchema = getSchema
         ? undefined
@@ -307,10 +307,11 @@ function makeSyncTable(name, schema, formula, getSchema, entityName) {
         },
         getSchema,
         entityName,
+        onColumnUpdate,
     };
 }
 exports.makeSyncTable = makeSyncTable;
-function makeDynamicSyncTable({ packId, name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, }) {
+function makeDynamicSyncTable({ packId, name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, onColumnUpdate, }) {
     const fakeSchema = schema_2.makeObjectSchema({
         // This schema is useless... just creating a stub here but the client will use
         // the dynamic one.
@@ -325,7 +326,7 @@ function makeDynamicSyncTable({ packId, name, getName, getSchema, getDisplayUrl,
             id: { type: schema_1.ValueType.String },
         },
     });
-    const table = makeSyncTable(name, fakeSchema, formula, getSchema, entityName);
+    const table = makeSyncTable(name, fakeSchema, formula, getSchema, entityName, onColumnUpdate);
     return {
         ...table,
         isDynamic: true,

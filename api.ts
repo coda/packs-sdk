@@ -628,6 +628,7 @@ export function makeSyncTable<
     },
     getSchema,
     entityName,
+    onColumnUpdate,
   };
 }
 
