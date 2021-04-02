@@ -46,7 +46,7 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
     getter: SyncFormula<K, L, ParamDefsT, SchemaT>;
     getSchema?: MetadataFormula;
     entityName?: string;
-    onColumnUpdate?: TypedStandardFormula;
+    onColumnUpdate?: string;
 }
 /**
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
@@ -58,7 +58,7 @@ export interface DynamicSyncTableDef<K extends string, L extends string, ParamDe
     getName: MetadataFormula;
     getDisplayUrl: MetadataFormula;
     listDynamicUrls?: MetadataFormula;
-    onColumnUpdate?: TypedStandardFormula;
+    onColumnUpdate?: string;
 }
 /**
  * Container for arbitrary data about which page of data to retrieve in this sync invocation.
@@ -257,7 +257,7 @@ export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT 
  * @param getSchema Only used internally by {@link makeDynamicSyncTable}, see there for more details.
  * @param entityName Only used internally by {@link makeDynamicSyncTable}, see there for more details.
  */
-export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, formula: SyncFormulaDef<ParamDefsT>, getSchema?: MetadataFormula, entityName?: string, onColumnUpdate?: TypedStandardFormula): SyncTableDef<K, L, ParamDefsT, SchemaT>;
+export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, formula: SyncFormulaDef<ParamDefsT>, getSchema?: MetadataFormula, entityName?: string, onColumnUpdate?: string): SyncTableDef<K, L, ParamDefsT, SchemaT>;
 export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ packId, name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, onColumnUpdate, }: {
     packId: number;
     name: string;
@@ -267,7 +267,7 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
     getDisplayUrl: MetadataFormula;
     listDynamicUrls?: MetadataFormula;
     entityName?: string;
-    onColumnUpdate?: TypedStandardFormula;
+    onColumnUpdate?: string;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any>;
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
     request: RequestHandlerTemplate;

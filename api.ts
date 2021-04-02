@@ -74,7 +74,7 @@ export interface SyncTableDef<
   getter: SyncFormula<K, L, ParamDefsT, SchemaT>;
   getSchema?: MetadataFormula;
   entityName?: string;
-  onColumnUpdate?: TypedStandardFormula;
+  onColumnUpdate?: string; // Formula name of action to propogate updates.
 }
 
 /**
@@ -92,7 +92,7 @@ export interface DynamicSyncTableDef<
   getName: MetadataFormula;
   getDisplayUrl: MetadataFormula;
   listDynamicUrls?: MetadataFormula;
-  onColumnUpdate?: TypedStandardFormula; // Action to propogate updates.
+  onColumnUpdate?: string; // Formula name of action to propogate updates.
 }
 
 /**
@@ -589,7 +589,7 @@ export function makeSyncTable<
   formula: SyncFormulaDef<ParamDefsT>,
   getSchema?: MetadataFormula,
   entityName?: string,
-  onColumnUpdate?: TypedStandardFormula,
+  onColumnUpdate?: string,
 ): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {execute: wrappedExecute, ...definition} = formula;
   const formulaSchema = getSchema
@@ -651,7 +651,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   getDisplayUrl: MetadataFormula;
   listDynamicUrls?: MetadataFormula;
   entityName?: string;
-  onColumnUpdate?: TypedStandardFormula;
+  onColumnUpdate?: string;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any> {
   const fakeSchema = makeObjectSchema({
     // This schema is useless... just creating a stub here but the client will use

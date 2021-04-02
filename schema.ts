@@ -1,6 +1,5 @@
 import type {$Values} from './type_utils';
 import type {PackId} from './types';
-import type {TypedStandardFormula} from './index';
 import {assertCondition} from './helpers/ensure';
 import {ensureExists} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
@@ -65,7 +64,7 @@ export type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 
 interface BaseSchema {
   description?: string;
-  onColumnUpdate?: TypedStandardFormula;
+  onColumnUpdate?: string; // the formula name of the executed formula.
 }
 
 export interface BooleanSchema extends BaseSchema {
