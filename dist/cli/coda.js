@@ -13,6 +13,7 @@ const execute_1 = require("./execute");
 const init_1 = require("./init");
 const publish_1 = require("./publish");
 const register_1 = require("./register");
+const set_live_1 = require("./set_live");
 const validate_1 = require("./validate");
 const yargs_1 = __importDefault(require("yargs"));
 if (require.main === module) {
@@ -116,6 +117,18 @@ if (require.main === module) {
         command: 'validate <manifestFile>',
         describe: 'Validate your Pack definition',
         handler: validate_1.handleValidate,
+    })
+        .command({
+        command: 'setLive <packId> <packVersion>',
+        describe: 'Set the Pack version that is installable for users.',
+        builder: {
+            codaApiEndpoint: {
+                string: true,
+                hidden: true,
+                default: 'https://coda.io',
+            },
+        },
+        handler: set_live_1.handleSetLive,
     })
         .demandCommand()
         .strict()

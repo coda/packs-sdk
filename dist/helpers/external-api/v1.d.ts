@@ -1,8 +1,8 @@
 /**
  * This file is auto-generated from OpenAPI definitions by `make build-openapi`. Do not edit manually.
  */
-export declare const OpenApiSpecHash = "d7c3f53287ba26554cc58614e4870ec5bfd5328139ef564e67517bd0411267a6";
-export declare const OpenApiSpecVersion = "1.1.0";
+export declare const OpenApiSpecHash = "c6876c1f07a4e420a1a6542ebec6cff3a9be3c4e3a9bf481065fa87d7893d5f5";
+export declare const OpenApiSpecVersion = "1.2.0";
 /**
  * A constant identifying the type of the resource.
  */
@@ -22,7 +22,8 @@ export declare enum PublicApiType {
     MutationStatus = "mutationStatus",
     Workspace = "workspace",
     Pack = "pack",
-    PackVersion = "packVersion"
+    PackVersion = "packVersion",
+    PackAclPermissions = "packAclPermissions"
 }
 /**
  * Type of principal.
@@ -549,6 +550,19 @@ export interface PublicApiDocumentMutateResponse {
     requestId: string;
 }
 /**
+ * Detail about why a particular field failed request validation.
+ */
+export interface PublicApiValidationError {
+    /**
+     * A path indicating the affected field, in OGNL notation.
+     */
+    path: string;
+    /**
+     * An error message.
+     */
+    message: string;
+}
+/**
  * Reference to a table or view.
  */
 export interface PublicApiTableReference {
@@ -773,6 +787,13 @@ export declare type PublicApiDateColumnFormat = PublicApiSimpleColumnFormat & {
     format?: string;
 };
 /**
+ * Format of an email column.
+ */
+export declare type PublicApiEmailColumnFormat = PublicApiSimpleColumnFormat & {
+    iconOnly?: boolean;
+    suggestedDomains?: string;
+};
+/**
  * Format of a time column.
  */
 export declare type PublicApiTimeColumnFormat = PublicApiSimpleColumnFormat & {
@@ -860,7 +881,7 @@ export declare type PublicApiScaleColumnFormat = PublicApiSimpleColumnFormat & {
 /**
  * Format of a column.
  */
-export declare type PublicApiColumnFormat = PublicApiDateColumnFormat | PublicApiDateTimeColumnFormat | PublicApiDurationColumnFormat | PublicApiCurrencyColumnFormat | PublicApiNumericColumnFormat | PublicApiReferenceColumnFormat | PublicApiSimpleColumnFormat | PublicApiScaleColumnFormat | PublicApiSliderColumnFormat | PublicApiTimeColumnFormat;
+export declare type PublicApiColumnFormat = PublicApiDateColumnFormat | PublicApiDateTimeColumnFormat | PublicApiDurationColumnFormat | PublicApiEmailColumnFormat | PublicApiCurrencyColumnFormat | PublicApiNumericColumnFormat | PublicApiReferenceColumnFormat | PublicApiSimpleColumnFormat | PublicApiScaleColumnFormat | PublicApiSliderColumnFormat | PublicApiTimeColumnFormat;
 /**
  * Format type of the column
  */
@@ -875,6 +896,7 @@ export declare enum PublicApiColumnFormatType {
     DateTime = "dateTime",
     Time = "time",
     Duration = "duration",
+    Email = "email",
     Slider = "slider",
     Scale = "scale",
     Image = "image",
@@ -883,6 +905,7 @@ export declare enum PublicApiColumnFormatType {
     Checkbox = "checkbox",
     Select = "select",
     PackObject = "packObject",
+    Reaction = "reaction",
     Other = "other"
 }
 /**
@@ -997,6 +1020,7 @@ export interface PublicApiRowList {
     href?: string;
     nextPageToken?: PublicApiNextPageToken;
     nextPageLink?: PublicApiNextPageLink & string;
+    nextSyncToken?: PublicApiNextSyncToken;
 }
 /**
  * A Coda result or entity expressed as a primitive type.
@@ -1220,7 +1244,12 @@ export interface PublicApiRowsUpsert {
 /**
  * The result of a rows insert/upsert operation.
  */
-export declare type PublicApiRowsUpsertResult = PublicApiDocumentMutateResponse;
+export declare type PublicApiRowsUpsertResult = PublicApiDocumentMutateResponse & {
+    /**
+     * Row IDs for rows that will be added. Only applicable when keyColumns is not set or empty.
+     */
+    addedRowIds?: string[];
+};
 /**
  * The result of a row deletion.
  */
@@ -1235,7 +1264,8 @@ export declare type PublicApiRowDeleteResult = PublicApiDocumentMutateResponse &
  */
 export declare enum PublicApiRowsSortBy {
     CreatedAt = "createdAt",
-    Natural = "natural"
+    Natural = "natural",
+    UpdatedAt = "updatedAt"
 }
 /**
  * The format that cell values are returned as.
@@ -1372,7 +1402,8 @@ export declare enum PublicApiControlType {
     Multiselect = "multiselect",
     Select = "select",
     Scale = "scale",
-    Slider = "slider"
+    Slider = "slider",
+    Reaction = "reaction"
 }
 /**
  * Info about the user.
@@ -1416,6 +1447,11 @@ export declare type PublicApiNextPageToken = string;
  * If specified, a link that can be used to fetch the next page of results.
  */
 export declare type PublicApiNextPageLink = string;
+/**
+ * If specified, an opaque token that can be passed back later to retrieve new results that match the parameters specified when the sync token was created.
+ *
+ */
+export declare type PublicApiNextSyncToken = string;
 /**
  * Info about a resolved link to an API resource.
  */
@@ -1738,39 +1774,151 @@ export interface PublicApiDocAnalyticsCollection {
     nextPageLink?: PublicApiNextPageLink & string;
 }
 /**
- * Info about a pack that was just created.
+ * Payload for creating a Pack.
+ */
+export interface PublicApiCreatePackRequest {
+    /**
+     * The parent workspace for the Pack. If unspecified, the user's default workspace will be used.
+     */
+    workspaceId?: string;
+}
+/**
+ * Info about a Pack that was just created.
  */
 export interface PublicApiCreatePackResponse {
     /**
-     * The id assigned to the newly-created pack.
+     * The ID assigned to the newly-created Pack.
      */
     packId: number;
 }
 /**
- * Information indicating where to upload the pack version definition.
+ * Payload for updating a Pack.
+ */
+export interface PublicApiUpdatePackRequest {
+    /**
+     * Rate limit in Pack settings.
+     */
+    overallRateLimit?: {
+        /**
+         * The rate limit interval in seconds.
+         */
+        intervalSeconds: number;
+        /**
+         * The maximum number of Pack operations that can be performed in a given interval.
+         */
+        operationsPerInterval: number;
+    } | null;
+    /**
+     * Rate limit in Pack settings.
+     */
+    perConnectionRateLimit?: {
+        /**
+         * The rate limit interval in seconds.
+         */
+        intervalSeconds: number;
+        /**
+         * The maximum number of Pack operations that can be performed in a given interval.
+         */
+        operationsPerInterval: number;
+    } | null;
+}
+/**
+ * Metadata of a Pack.
+ */
+export interface PublicApiPack {
+    /**
+     * ID of the Pack.
+     */
+    id: number;
+    overallRateLimit?: PublicApiPackRateLimit;
+    perConnectionRateLimit?: PublicApiPackRateLimit;
+}
+/**
+ * Rate limit in Pack settings.
+ */
+export interface PublicApiPackRateLimit {
+    /**
+     * The rate limit interval in seconds.
+     */
+    intervalSeconds: number;
+    /**
+     * The maximum number of Pack operations that can be performed in a given interval.
+     */
+    operationsPerInterval: number;
+}
+/**
+ * Information indicating where to upload the Pack version definition.
  */
 export interface PublicApiPackVersionUploadInfo {
     /**
-     * A signed url to be used for uploading a pack version definition.
+     * A signed url to be used for uploading a Pack version definition.
      */
     uploadUrl: string;
 }
 /**
- * Confirmation of successful pack version creation.
+ * Payload for setting a Pack version live.
+ */
+export interface PublicApiSetPackLiveVersion {
+    /**
+     * The version of the Pack.
+     */
+    packVersion: string;
+}
+/**
+ * Confirmation of successful Pack version creation.
  */
 export interface PublicApiCreatePackVersionResponse {
 }
 /**
- * An error when trying to create a new pack version.
+ * Confirmation of successfully setting a Pack version live.
  */
-export declare type PublicApiCreatePackVersionError = PublicApiInvalidMetadataError | PublicApiInvalidSemanticVersionError;
-/**
- * An error indicating that the pack version contained unparseable or invalid metadata.
- */
-export interface PublicApiInvalidMetadataError {
+export interface PublicApiSetPackLiveVersionResponse {
 }
 /**
- * An error indicating that the new semantic version is incompatible with the changes in the new pack definition.
+ * Type of Pack permissions.
  */
-export interface PublicApiInvalidSemanticVersionError {
+export declare enum PublicApiPackAclType {
+    User = "user",
+    Workspace = "workspace",
+    Anyone = "anyone"
+}
+/**
+ * Access type for a Pack.
+ */
+export declare enum PublicApiPackAcl {
+    View = "view",
+    Test = "test",
+    Edit = "edit"
+}
+export interface PublicApiPackUserAcl {
+    type: 'user';
+    packAcl: PublicApiPackAcl;
+    email: string;
+}
+export interface PublicApiPackWorkspaceAcl {
+    type: 'workspace';
+    packAcl: PublicApiPackAcl;
+    workspaceId: string;
+}
+export interface PublicApiPackGlobalAcl {
+    type: 'anyone';
+    packAcl: PublicApiPackAcl;
+}
+/**
+ * Payload for upserting Pack permissions.
+ */
+export declare type PublicApiAddPackPermissionRequest = PublicApiPackUserAcl | PublicApiPackWorkspaceAcl | PublicApiPackGlobalAcl;
+/**
+ * Confirmation of successfully upserting a Pack permission.
+ */
+export interface PublicApiAddPackPermissionResponse {
+    /**
+     * The ID of the permission created or updated.
+     */
+    permissionId: string;
+}
+/**
+ * Confirmation of successfully deleting a Pack permission.
+ */
+export interface PublicApiDeletePackPermissionResponse {
 }

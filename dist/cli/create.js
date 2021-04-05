@@ -23,7 +23,7 @@ async function createPack(packName, codaApiEndpoint) {
     const codaClient = helpers_1.createCodaClient(apiKey, formattedEndpoint);
     let packId;
     try {
-        const response = await codaClient.createPack();
+        const response = await codaClient.createPack({}, {});
         packId = response.packId;
     }
     catch (err) {
