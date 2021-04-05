@@ -10,6 +10,7 @@ export interface ExecuteArgs {
   formulaName: string;
   params: string[];
   fetch?: boolean;
+  vm?: boolean;
   credentialsFile?: string;
 }
 
@@ -19,16 +20,16 @@ import {executeFormulaOrSyncFromCLI} from 'coda-packs-sdk/dist/testing/execution
 async function main() {
   const manifestPath = process.argv[1];
   const useRealFetcher = process.argv[2] === 'true';
-  const credentialsFile = process.argv[3] || undefined;
-  const formulaName = process.argv[4];
-  const params = process.argv.slice(5);
-
-  const module = await import(manifestPath);
+  const vm = process.argv[3] === 'true';
+  const credentialsFile = process.argv[4] || undefined;
+  const formulaName = process.argv[5];
+  const params = process.argv.slice(6);
 
   await executeFormulaOrSyncFromCLI({
     formulaName,
     params,
-    module,
+    manifestPath,
+    vm,
     contextOptions: {useRealFetcher, credentialsFile},
   });
 }
@@ -41,6 +42,7 @@ export async function handleExecute({
   params,
   fetch,
   credentialsFile,
+  vm,
 }: Arguments<ExecuteArgs>) {
   const fullManifestPath = makeManifestFullPath(manifestPath);
   // If the given manifest source file is a .ts file, we need to evaluate it using ts-node in the user's environment.
@@ -48,16 +50,16 @@ export async function handleExecute({
   // Otherwise, the given manifest is most likely a plain .js file or a post-build .js dist file from a TS build.
   // In the latter case, we can import the given file as a regular node (non-TS) import without any bootstrapping.
   if (isTypescript(manifestPath)) {
-    const tsCommand = `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${fullManifestPath} ${Boolean(fetch)} ${
+    const tsCommand = `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${fullManifestPath} ${Boolean(fetch)} ${Boolean(vm)} ${
       credentialsFile || '""'
     } ${formulaName} ${params.map(escapeShellArg).join(' ')}`;
     spawnBootstrapCommand(tsCommand);
   } else {
-    const module = await import(fullManifestPath);
     await executeFormulaOrSyncFromCLI({
       formulaName,
       params,
-      module,
+      manifestPath,
+      vm,
       contextOptions: {useRealFetcher: fetch, credentialsFile},
     });
   }

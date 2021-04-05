@@ -7,7 +7,6 @@ import {handleAuth} from './auth';
 import {handleBuild} from './build';
 import {handleCreate} from './create';
 import {handleExecute} from './execute';
-import { handleExecuteBundle } from './execute_bundle';
 import {handleInit} from './init';
 import {handlePublish} from './publish';
 import {handleRegister} from './register';
@@ -27,22 +26,9 @@ if (require.main === module) {
           boolean: true,
           desc: 'Actually fetch http requests instead of using mocks. Run "coda auth" first to set up credentials.',
         } as Options,
-        credentialsFile: {
-          alias: 'credentials_file',
-          string: true,
-          default: DEFAULT_CREDENTIALS_FILE,
-          desc: 'Path to the credentials file.',
-        } as Options,
-      },
-    })
-    .command({
-      command: 'execute-bundle <bundlePath> <formulaName> [params..]',
-      describe: 'Execute a formula with the bundle file with isolated-vm',
-      handler: handleExecuteBundle,
-      builder: {
-        fetch: {
+        vm: {
           boolean: true,
-          desc: 'Actually fetch http requests instead of using mocks. Run "coda auth" first to set up credentials.',
+          desc: 'Execute the requested command in a virtual machine that mimics the environment Coda uses to execute Packs.',
         } as Options,
         credentialsFile: {
           alias: 'credentials_file',

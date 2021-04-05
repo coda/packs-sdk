@@ -1,3 +1,4 @@
+import type {ExecutionContext} from 'api_types';
 import type {GenericSyncFormula} from '../api';
 import type {PackDefinition} from '../types';
 import type {ParamDefs} from 'api_types';
@@ -9,6 +10,15 @@ import  { coerceParams } from './coercion';
 import { ensureExists } from '../helpers/ensure';
 import {validateParams} from './validation';
 import {validateResult} from './validation';
+
+export interface ExecuteOptions {
+  validateParams?: boolean;
+  validateResult?: boolean;
+}
+
+export interface ExecuteSyncOptions extends ExecuteOptions {
+  maxIterations?: number;
+}
 
 export async function executeSyncFormulaWithoutValidation(
   formula: GenericSyncFormula,
@@ -48,23 +58,83 @@ export async function executeFormulaOrSyncWithRawParams(
     const formula = tryFindFormula(manifest, formulaName);
     if (formula) {
       const params = coerceParams(formula, rawParams as any);
-      validateParams(formula, params);
-      const result = await formula.execute(params, context);
-      validateResult(formula, result);
-      return result;
+      return await executeFormula(formula, params, context);
     }
 
     const syncFormula = tryFindSyncFormula(manifest, formulaName);
     if (syncFormula) {
       const params = coerceParams(syncFormula, rawParams as any);
-      validateParams(syncFormula, params);
-      const result = await executeSyncFormulaWithoutValidation(syncFormula, params, context);
-      validateResult(syncFormula, result);
-      return result;
+      return await executeSyncFormula(syncFormula, params, context);
     }
+    throw new Error(`Pack definition for ${manifest.name} has no formula or sync called ${formulaName}.`);
   } catch (err) {
     throw wrapError(err);
   }
+}
+
+export async function executeFormulaOrSync(
+  manifest: PackDefinition,
+  formulaName: string,
+  params: ParamValues<ParamDefs>,
+  context: SyncExecutionContext,
+) {
+  try {
+    const formula = tryFindFormula(manifest, formulaName);
+    if (formula) {
+      return await executeFormula(formula, params, context);
+    }
+
+    const syncFormula = tryFindSyncFormula(manifest, formulaName);
+    if (syncFormula) {
+      return await executeSyncFormula(syncFormula, params, context);
+    }
+    throw new Error(`Pack definition for ${manifest.name} has no formula or sync called ${formulaName}.`);
+  } catch (err) {
+    throw wrapError(err);
+  }
+}
+
+export async function executeFormula(
+  formula: TypedStandardFormula,
+  params: ParamValues<ParamDefs>,
+  context: ExecutionContext,
+  {validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true}: ExecuteOptions = {},
+) {
+  if (shouldValidateParams) {
+    validateParams(formula, params);
+  }
+  let result: any;
+  try {
+    result = await formula.execute(params, context);
+  } catch (err) {
+    throw wrapError(err);
+  }
+  if (shouldValidateResult) {
+    validateResult(formula, result);
+  }
+  return result;
+}
+
+export async function executeSyncFormula(
+  formula: GenericSyncFormula,
+  params: ParamValues<ParamDefs>,
+  context: SyncExecutionContext,
+  {
+    validateParams: shouldValidateParams = true,
+    validateResult: shouldValidateResult = true,
+    maxIterations: maxIterations = 3,
+  }: ExecuteSyncOptions = {},
+) {
+  if (shouldValidateParams) {
+    validateParams(formula, params);
+  }
+
+  const result = await executeSyncFormulaWithoutValidation(formula, params, context, maxIterations);
+
+  if (shouldValidateResult) {
+    validateResult(formula, result);
+  }
+  return result;
 }
 
 export function findFormula(packDef: PackDefinition, formulaNameWithNamespace: string): TypedStandardFormula {

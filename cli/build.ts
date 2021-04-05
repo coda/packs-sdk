@@ -45,8 +45,8 @@ export async function compilePackBundleESBuild(bundleFilename: string, entrypoin
     bundle: true,
     entryPoints: [entrypoint],
     outfile: bundleFilename,
-    platform: 'node',
-    minify: true,
+    format: 'cjs',
+    minify: false,
   };
   await esbuild.build(options);
 }
