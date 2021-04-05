@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.wrapError = exports.tryFindSyncFormula = exports.tryFindFormula = exports.findSyncFormula = exports.findFormula = exports.executeFormulaOrSyncWithRawParams = exports.executeSyncFormulaWithoutValidation = void 0;
 const coercion_1 = require("./coercion");
+const ensure_1 = require("../helpers/ensure");
 const validation_1 = require("./validation");
 const validation_2 = require("./validation");
 async function executeSyncFormulaWithoutValidation(formula, params, context, maxIterations = 3) {
@@ -54,8 +55,9 @@ function findFormula(packDef, formulaNameWithNamespace) {
     if (!packFormulas) {
         throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);
     }
-    // TODO: @alan-fang remove namespace requirement
-    const [namespace, name] = formulaNameWithNamespace.split('::');
+    const [namespace, name] = formulaNameWithNamespace.includes('::')
+        ? formulaNameWithNamespace.split('::')
+        : [ensure_1.ensureExists(packDef.formulaNamespace), formulaNameWithNamespace];
     if (!(namespace && name)) {
         throw new Error(`Formula names must be specified as FormulaNamespace::FormulaName, but got "${formulaNameWithNamespace}".`);
     }

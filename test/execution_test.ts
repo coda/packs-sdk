@@ -108,6 +108,11 @@ describe('Execution', () => {
     assert.equal(result, 25);
   });
 
+  it('executes a formula by name w/o namespace', async () => {
+    const result = await executeFormulaFromPackDef(fakePack, 'Square', [5]);
+    assert.equal(result, 25);
+  });
+
   it('executes a sync formula by name', async () => {
     const result = await executeSyncFormulaFromPackDef(fakePack, 'Students', ['Smith']);
     assert.deepEqual(result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
@@ -140,7 +145,7 @@ describe('Execution', () => {
     it('malformed formula name', async () => {
       await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(fakePack, 'malformed', []),
-        /Formula names must be specified as FormulaNamespace::FormulaName, but got "malformed"./,
+        /Pack definition for Fake Pack \(id 424242\) has no formula "malformed" in namespace "Fake"./,
       );
     });
 

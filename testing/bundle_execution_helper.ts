@@ -6,6 +6,7 @@ import type {SyncExecutionContext} from 'api_types';
 import type {SyncFormulaResult} from '../api';
 import type {TypedStandardFormula} from '../api';
 import  { coerceParams } from './coercion';
+import { ensureExists } from '../helpers/ensure';
 import {validateParams} from './validation';
 import {validateResult} from './validation';
 
@@ -72,8 +73,9 @@ export function findFormula(packDef: PackDefinition, formulaNameWithNamespace: s
     throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);
   }
 
-  // TODO: @alan-fang remove namespace requirement
-  const [namespace, name] = formulaNameWithNamespace.split('::');
+  const [namespace, name] = formulaNameWithNamespace.includes('::') 
+    ? formulaNameWithNamespace.split('::')
+    : [ensureExists(packDef.formulaNamespace), formulaNameWithNamespace];
   if (!(namespace && name)) {
     throw new Error(
       `Formula names must be specified as FormulaNamespace::FormulaName, but got "${formulaNameWithNamespace}".`,
