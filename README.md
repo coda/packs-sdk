@@ -130,11 +130,11 @@ The `coda` CLI utility helps you execute formulas, via the `coda execute` sub-co
 `coda execute --help` at any time to refresh yourself on usage. The syntax is:
 
 ```bash
-coda execute path/to/manifest.ts <namespace>:<formula> [params..]
+coda execute path/to/manifest.ts <formula> [params..]
 ```
 
 So for example, if your pack definition was in `src/manifest.ts` and you wanted to call a function
-in namespace `MyPack` called `MyFormula` that takes one argument, you'd run:
+named `MyFormula` that takes one argument, you'd run:
 
 ```bash
 coda execute src/manifest.ts MyFormula some-arg
@@ -539,20 +539,14 @@ spaces or punctuation).
 
 So if you're writing a pack that integrates with Slack, you'd probably want to choose `Slack`
 as your formula namespace. If you wrote a formula that sends a Slack message, you would
-invoke that formula using `Slack::SendMessage(...)`. When users are writing formulas in their
+invoke that formula in a doc using `Slack::SendMessage(...)`. When users are writing formulas in their
 docs, they can type `slack` and autocomplete will show them all of the formulas in the `Slack`
 namespace. If the user also used the Gmail pack and that pack also defined a `SendMessage`
 formula, it would be easy for the user to differentiate between the two because they
 have separate and clear namespaces: `Slack::SendMessage` vs `Gmail::SendMessage`.
 
-While the structure of a pack definition allows you to specify multiple namespaces
-(since formula definitions are a dictionary mapping a namespace to a list of formulas)
-the SDK currently only allows you one namespace per pack. This may change in the future.
-
-While sync tables are implemented using formulas, sync formulas do not have a namespace,
-since these formulas are not called directly by users and are not exposed to users.
-As a pack author, you only need to be aware of this because when you use `coda execute`
-to run one of your syncs, you needn't prefix your sync table name with a namespace.
+(You'll note that you needn't use a namespace with `coda execute` because the CLI can
+infer the namespace from the manifest file you specify in that command.)
 
 ### Metadata Formulas
 
