@@ -1,6 +1,6 @@
 import {testHelper} from './test_helper';
 import {FakePack} from './test_utils';
-import type {ParamDefs} from 'api_types';
+import type {ParamDefs} from '../api_types';
 import type {StringSchema} from '../schema';
 import {ValueType} from '../schema';
 import {coerceParams} from '../testing/coercion';

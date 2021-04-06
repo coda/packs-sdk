@@ -1,5 +1,5 @@
-import type {Logger} from 'api';
-import type {LoggerParamType} from 'index';
+import type {Logger} from '../api';
+import type {LoggerParamType} from '../index';
 import {format} from 'util';
 
 export class ConsoleLogger implements Logger {
