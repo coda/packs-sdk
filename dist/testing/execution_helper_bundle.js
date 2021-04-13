@@ -717,8 +717,8 @@ var require_callBound = __commonJS((exports, module2) => {
   };
 });
 
-// (disabled):node_modules/object-inspect/util.inspect.js
-var require_util_inspect = __commonJS(() => {
+// (disabled):node_modules/object-inspect/util.inspect
+var require_util = __commonJS(() => {
 });
 
 // node_modules/object-inspect/index.js
@@ -743,7 +743,7 @@ var require_object_inspect = __commonJS((exports, module2) => {
   var gOPS = Object.getOwnPropertySymbols;
   var symToString = typeof Symbol === "function" ? Symbol.prototype.toString : null;
   var isEnumerable = Object.prototype.propertyIsEnumerable;
-  var inspectCustom = require_util_inspect().custom;
+  var inspectCustom = require_util().custom;
   var inspectSymbol = inspectCustom && isSymbol(inspectCustom) ? inspectCustom : null;
   module2.exports = function inspect_(obj, options, depth, seen) {
     var opts = options || {};
