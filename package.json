@@ -31,7 +31,7 @@
     "request": "2.88.2",
     "request-promise-native": "^1.0.9",
     "sinon": "10.0.0",
-    "typescript": "^4.2.3",
+    "typescript": "^4.2.4",
     "url-parse": "^1.5.1",
     "uuid": "^8.3.2",
     "webpack": "^5.32.0",
