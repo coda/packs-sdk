@@ -23,9 +23,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handlePublish = void 0;
+const types_1 = require("../types");
 const logging_1 = require("../helpers/logging");
 const build_1 = require("./build");
 const helpers_1 = require("./helpers");
+const ensure_1 = require("../helpers/ensure");
 const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
 const helpers_4 = require("./helpers");
@@ -99,11 +101,13 @@ async function uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl) {
     }
 }
 function compilePackMetadata(manifest) {
-    const { formats, formulas, formulaNamespace, syncTables, ...definition } = manifest;
+    const { formats, formulas, formulaNamespace, syncTables, defaultAuthentication, ...definition } = manifest;
     const compiledFormats = compileFormatsMetadata(formats || []);
     const compiledFormulas = (formulas && compileFormulasMetadata(formulas)) || (Array.isArray(formulas) ? [] : {});
+    const defaultAuthenticationMetadata = compileDefaultAuthenticationMetadata(defaultAuthentication);
     const metadata = {
         ...definition,
+        defaultAuthentication: defaultAuthenticationMetadata,
         formulaNamespace,
         formats: compiledFormats,
         formulas: compiledFormulas,
@@ -142,5 +146,34 @@ function compileSyncTable(syncTable) {
     return {
         ...rest,
         getter: getterRest,
+    };
+}
+function compileDefaultAuthenticationMetadata(authentication) {
+    if (!authentication) {
+        return;
+    }
+    if (authentication.type === types_1.AuthenticationType.None) {
+        return authentication;
+    }
+    const { getConnectionName, getConnectionUserId, postSetup, ...rest } = authentication;
+    return {
+        ...rest,
+        getConnectionName: compileMetadataFormulaMetadata(getConnectionName),
+        getConnectionUserId: compileMetadataFormulaMetadata(getConnectionUserId),
+        postSetup: postSetup ? postSetup.map(compilePostSetupStepMetadata) : undefined,
+    };
+}
+function compileMetadataFormulaMetadata(formula) {
+    if (!formula) {
+        return;
+    }
+    const { execute, ...rest } = formula;
+    return rest;
+}
+function compilePostSetupStepMetadata(step) {
+    const { getOptionsFormula, ...rest } = step;
+    return {
+        ...rest,
+        getOptionsFormula: ensure_1.ensureExists(compileMetadataFormulaMetadata(getOptionsFormula)),
     };
 }

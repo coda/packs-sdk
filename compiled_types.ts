@@ -1,5 +1,6 @@
 import type {Authentication} from './types';
 import type {AuthenticationType} from './types';
+import type {DistributiveOmit} from './type_utils';
 import type {Format} from './types';
 import type {MetadataFormula} from './api';
 import type {MetadataFormulaMetadata} from './api';
@@ -30,7 +31,10 @@ export type PostSetupMetadata = Omit<PostSetup, 'getOptionsFormula'> & {
   getOptionsFormula: MetadataFormulaMetadata;
 };
 
-export type AuthenticationMetadata = Omit<Authentication, 'getConnectionName' | 'getConnectionUserId' | 'postSetp'> & {
+export type AuthenticationMetadata = DistributiveOmit<
+  Authentication,
+  'getConnectionName' | 'getConnectionUserId' | 'postSetup'
+> & {
   getConnectionName?: MetadataFormulaMetadata;
   getConnectionUserId?: MetadataFormulaMetadata;
   postSetup?: PostSetupMetadata[];
