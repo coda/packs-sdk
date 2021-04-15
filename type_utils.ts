@@ -1,7 +1,5 @@
 /** Returns the codomain for a map-like type. */
 export type $Values<S> = S[keyof S];
 
-/** Omits subproperties K2 within properties K of T. */
-export type $OmitNested<T, K extends string | number | symbol, K2 extends string | number | symbol> = {
-  [P in keyof T]: P extends K ? Omit<T[P], K2> : T[P]
-};
+/** Omits properties over a union type, only if the union member has that property. */
+export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never;

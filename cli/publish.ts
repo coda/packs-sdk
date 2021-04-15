@@ -1,8 +1,13 @@
 import type {AllPacks} from './create';
 import type {Arguments} from 'yargs';
+import type {Authentication} from '../types';
+import type {AuthenticationMetadata} from '../compiled_types';
+import {AuthenticationType} from '../types';
 import {ConsoleLogger} from '../helpers/logging';
 import type {Format} from '../types';
 import type {GenericSyncTable} from '../api';
+import type {MetadataFormula} from '../api';
+import type {MetadataFormulaMetadata} from '../api';
 import type {PackDefinition} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
 import type {PackFormulaMetadata} from '../api';
@@ -11,10 +16,13 @@ import type {PackFormulasMetadata} from '../compiled_types';
 import type {PackMetadata} from '../compiled_types';
 import type {PackSyncTable} from '../compiled_types';
 import type {PackUpload} from '../compiled_types';
+import type {PostSetup} from '../types';
+import type {PostSetupMetadata} from '../compiled_types';
 import type {TypedPackFormula} from '../api';
 import type {TypedStandardFormula} from '../api';
 import {build} from './build';
 import {createCodaClient} from './helpers';
+import {ensureExists} from '../helpers/ensure';
 import {formatEndpoint} from './helpers';
 import {getApiKey} from './helpers';
 import {isTestCommand} from './helpers';
@@ -105,11 +113,13 @@ async function uploadPackToSignedUrl(bundleFilename: string, metadata: PackMetad
 }
 
 function compilePackMetadata(manifest: PackDefinition): PackMetadata {
-  const {formats, formulas, formulaNamespace, syncTables, ...definition} = manifest;
+  const {formats, formulas, formulaNamespace, syncTables, defaultAuthentication, ...definition} = manifest;
   const compiledFormats = compileFormatsMetadata(formats || []);
   const compiledFormulas = (formulas && compileFormulasMetadata(formulas)) || (Array.isArray(formulas) ? [] : {});
+  const defaultAuthenticationMetadata = compileDefaultAuthenticationMetadata(defaultAuthentication);
   const metadata: PackMetadata = {
     ...definition,
+    defaultAuthentication: defaultAuthenticationMetadata,
     formulaNamespace,
     formats: compiledFormats,
     formulas: compiledFormulas,
@@ -155,5 +165,39 @@ function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
   return {
     ...rest,
     getter: getterRest,
+  };
+}
+
+function compileDefaultAuthenticationMetadata(
+  authentication: Authentication | undefined,
+): AuthenticationMetadata | undefined {
+  if (!authentication) {
+    return;
+  }
+  if (authentication.type === AuthenticationType.None) {
+    return authentication;
+  }
+  const {getConnectionName, getConnectionUserId, postSetup, ...rest} = authentication;
+  return {
+    ...rest,
+    getConnectionName: compileMetadataFormulaMetadata(getConnectionName),
+    getConnectionUserId: compileMetadataFormulaMetadata(getConnectionUserId),
+    postSetup: postSetup ? postSetup.map(compilePostSetupStepMetadata) : undefined,
+  };
+}
+
+function compileMetadataFormulaMetadata(formula: MetadataFormula | undefined): MetadataFormulaMetadata | undefined {
+  if (!formula) {
+    return;
+  }
+  const {execute, ...rest} = formula;
+  return rest;
+}
+
+function compilePostSetupStepMetadata(step: PostSetup): PostSetupMetadata {
+  const {getOptionsFormula, ...rest} = step;
+  return {
+    ...rest,
+    getOptionsFormula: ensureExists(compileMetadataFormulaMetadata(getOptionsFormula)),
   };
 }

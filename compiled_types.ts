@@ -1,8 +1,9 @@
-import type {$OmitNested} from './type_utils';
 import type {Authentication} from './types';
 import type {AuthenticationType} from './types';
+import type {DistributiveOmit} from './type_utils';
 import type {Format} from './types';
 import type {MetadataFormula} from './api';
+import type {MetadataFormulaMetadata} from './api';
 import type {ObjectPackFormulaMetadata} from './api';
 import type {PackDefinition} from './types';
 import type {PackFormulaMetadata} from './api';
@@ -26,15 +27,26 @@ export interface PackFormulasMetadata {
   [namespace: string]: PackFormulaMetadata[];
 }
 
+export type PostSetupMetadata = Omit<PostSetup, 'getOptionsFormula'> & {
+  getOptionsFormula: MetadataFormulaMetadata;
+};
+
+export type AuthenticationMetadata = DistributiveOmit<
+  Authentication,
+  'getConnectionName' | 'getConnectionUserId' | 'postSetup'
+> & {
+  getConnectionName?: MetadataFormulaMetadata;
+  getConnectionUserId?: MetadataFormulaMetadata;
+  postSetup?: PostSetupMetadata[];
+};
+
 /** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
 export type PackMetadata = Omit<PackDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {
   // TODO: @alan-fang once all packs are using formulaNamespace, delete PackFormulasMetadata.
   formulas: PackFormulasMetadata | PackFormulaMetadata[];
   formats: PackFormatMetadata[];
   syncTables: PackSyncTable[];
-  // TODO(jonathan): Make a proper metadata type for Authentication, that removes `execute` from
-  // all the metadata formulas, including the on PostSetup.
-  defaultAuthentication?: $OmitNested<Authentication, 'getConnectionName', 'execute'>;
+  defaultAuthentication?: AuthenticationMetadata;
 };
 
 // Re-exported values for use in browser code.
@@ -64,7 +76,7 @@ export interface ExternalPackMetadata extends BasePackMetadata {
     params?: Array<{name: string; description: string}>;
     requiresEndpointUrl: boolean;
     endpointDomain?: string;
-    postSetup?: PostSetup[];
+    postSetup?: PostSetupMetadata[];
     deferConnectionSetup?: boolean;
     shouldAutoAuthSetup?: boolean;
   };
