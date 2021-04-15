@@ -1,8 +1,8 @@
-import type { $OmitNested } from './type_utils';
 import type { Authentication } from './types';
 import type { AuthenticationType } from './types';
 import type { Format } from './types';
 import type { MetadataFormula } from './api';
+import type { MetadataFormulaMetadata } from './api';
 import type { ObjectPackFormulaMetadata } from './api';
 import type { PackDefinition } from './types';
 import type { PackFormulaMetadata } from './api';
@@ -21,12 +21,20 @@ export interface PackFormatMetadata extends Omit<Format, 'matchers'> {
 export interface PackFormulasMetadata {
     [namespace: string]: PackFormulaMetadata[];
 }
+export declare type PostSetupMetadata = Omit<PostSetup, 'getOptionsFormula'> & {
+    getOptionsFormula: MetadataFormulaMetadata;
+};
+export declare type AuthenticationMetadata = Omit<Authentication, 'getConnectionName' | 'getConnectionUserId' | 'postSetp'> & {
+    getConnectionName?: MetadataFormulaMetadata;
+    getConnectionUserId?: MetadataFormulaMetadata;
+    postSetup?: PostSetupMetadata[];
+};
 /** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
 export declare type PackMetadata = Omit<PackDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {
     formulas: PackFormulasMetadata | PackFormulaMetadata[];
     formats: PackFormatMetadata[];
     syncTables: PackSyncTable[];
-    defaultAuthentication?: $OmitNested<Authentication, 'getConnectionName', 'execute'>;
+    defaultAuthentication?: AuthenticationMetadata;
 };
 export declare type ExternalPackAuthenticationType = AuthenticationType;
 export declare type ExternalPackFormulas = PackFormulasMetadata | PackFormulaMetadata[];
