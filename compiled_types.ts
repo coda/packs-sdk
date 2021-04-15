@@ -76,7 +76,7 @@ export interface ExternalPackMetadata extends BasePackMetadata {
     params?: Array<{name: string; description: string}>;
     requiresEndpointUrl: boolean;
     endpointDomain?: string;
-    postSetup?: PostSetup[];
+    postSetup?: PostSetupMetadata[];
     deferConnectionSetup?: boolean;
     shouldAutoAuthSetup?: boolean;
   };
