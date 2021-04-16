@@ -2,19 +2,20 @@ import type { Authentication } from './types';
 import type { AuthenticationType } from './types';
 import type { DistributiveOmit } from './type_utils';
 import type { Format } from './types';
-import type { MetadataFormula } from './api';
 import type { MetadataFormulaMetadata } from './api';
 import type { ObjectPackFormulaMetadata } from './api';
 import type { PackDefinition } from './types';
 import type { PackFormulaMetadata } from './api';
 import type { PostSetup } from './types';
 import type { SyncTable } from './api';
-export declare type PackSyncTable = Omit<SyncTable, 'getter' | 'getName'> & {
+export declare type PackSyncTable = Omit<SyncTable, 'getter' | 'getName' | 'getSchema' | 'listDynamicUrls' | 'getDisplayUrl'> & {
     getter: PackFormulaMetadata;
     isDynamic?: boolean;
     hasDynamicSchema?: boolean;
-    getDisplayUrl?: MetadataFormula;
-    listDynamicUrls?: MetadataFormula;
+    getSchema?: MetadataFormulaMetadata;
+    getName?: MetadataFormulaMetadata;
+    getDisplayUrl?: MetadataFormulaMetadata;
+    listDynamicUrls?: MetadataFormulaMetadata;
 };
 export interface PackFormatMetadata extends Omit<Format, 'matchers'> {
     matchers: string[];
