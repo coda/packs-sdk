@@ -30,6 +30,7 @@ const helpers_1 = require("./helpers");
 const ensure_1 = require("../helpers/ensure");
 const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
+const api_1 = require("../api");
 const helpers_4 = require("./helpers");
 const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
@@ -141,6 +142,18 @@ function compileFormulaMetadata(formula) {
     return rest;
 }
 function compileSyncTable(syncTable) {
+    if (api_1.isDynamicSyncTable(syncTable)) {
+        const { getter, getName, getSchema, getDisplayUrl, listDynamicUrls, ...rest } = syncTable;
+        const { execute, ...getterRest } = getter;
+        return {
+            ...rest,
+            getName: compileMetadataFormulaMetadata(getName),
+            getSchema: compileMetadataFormulaMetadata(getSchema),
+            getDisplayUrl: compileMetadataFormulaMetadata(getDisplayUrl),
+            listDynamicUrls: compileMetadataFormulaMetadata(listDynamicUrls),
+            getter: getterRest,
+        };
+    }
     const { getter, ...rest } = syncTable;
     const { execute, ...getterRest } = getter;
     return {
