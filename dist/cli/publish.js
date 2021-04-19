@@ -23,14 +23,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handlePublish = void 0;
-const types_1 = require("../types");
 const logging_1 = require("../helpers/logging");
 const build_1 = require("./build");
+const cli_1 = require("../helpers/cli");
 const helpers_1 = require("./helpers");
-const ensure_1 = require("../helpers/ensure");
 const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
-const api_1 = require("../api");
 const helpers_4 = require("./helpers");
 const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
@@ -69,7 +67,7 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
         logger.info('Validating Pack metadata...');
         await validate_1.validateMetadata(manifest);
         logger.info('Uploading Pack...');
-        const metadata = compilePackMetadata(manifest);
+        const metadata = cli_1.compilePackMetadata(manifest);
         await uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl);
         logger.info('Validating upload...');
         await client.packVersionUploadComplete(packId, packVersion);
@@ -100,93 +98,4 @@ async function uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl) {
     catch (err) {
         helpers_5.printAndExit(`Error in uploading Pack to signed url: ${err}`);
     }
-}
-function compilePackMetadata(manifest) {
-    const { formats, formulas, formulaNamespace, syncTables, defaultAuthentication, ...definition } = manifest;
-    const compiledFormats = compileFormatsMetadata(formats || []);
-    const compiledFormulas = (formulas && compileFormulasMetadata(formulas)) || (Array.isArray(formulas) ? [] : {});
-    const defaultAuthenticationMetadata = compileDefaultAuthenticationMetadata(defaultAuthentication);
-    const metadata = {
-        ...definition,
-        defaultAuthentication: defaultAuthenticationMetadata,
-        formulaNamespace,
-        formats: compiledFormats,
-        formulas: compiledFormulas,
-        syncTables: (syncTables || []).map(compileSyncTable),
-    };
-    return metadata;
-}
-function compileFormatsMetadata(formats) {
-    return formats.map(format => {
-        return {
-            ...format,
-            matchers: (format.matchers || []).map(matcher => matcher.toString()),
-        };
-    });
-}
-function compileFormulasMetadata(formulas) {
-    const formulasMetadata = Array.isArray(formulas) ? [] : {};
-    // TODO: @alan-fang delete once we move packs off of PackFormulas
-    if (Array.isArray(formulas)) {
-        formulasMetadata.push(...formulas.map(compileFormulaMetadata));
-    }
-    else {
-        for (const namespace of Object.keys(formulas)) {
-            formulasMetadata[namespace] = formulas[namespace].map(compileFormulaMetadata);
-        }
-    }
-    return formulasMetadata;
-}
-function compileFormulaMetadata(formula) {
-    const { execute, ...rest } = formula;
-    return rest;
-}
-function compileSyncTable(syncTable) {
-    if (api_1.isDynamicSyncTable(syncTable)) {
-        const { getter, getName, getSchema, getDisplayUrl, listDynamicUrls, ...rest } = syncTable;
-        const { execute, ...getterRest } = getter;
-        return {
-            ...rest,
-            getName: compileMetadataFormulaMetadata(getName),
-            getSchema: compileMetadataFormulaMetadata(getSchema),
-            getDisplayUrl: compileMetadataFormulaMetadata(getDisplayUrl),
-            listDynamicUrls: compileMetadataFormulaMetadata(listDynamicUrls),
-            getter: getterRest,
-        };
-    }
-    const { getter, ...rest } = syncTable;
-    const { execute, ...getterRest } = getter;
-    return {
-        ...rest,
-        getter: getterRest,
-    };
-}
-function compileDefaultAuthenticationMetadata(authentication) {
-    if (!authentication) {
-        return;
-    }
-    if (authentication.type === types_1.AuthenticationType.None) {
-        return authentication;
-    }
-    const { getConnectionName, getConnectionUserId, postSetup, ...rest } = authentication;
-    return {
-        ...rest,
-        getConnectionName: compileMetadataFormulaMetadata(getConnectionName),
-        getConnectionUserId: compileMetadataFormulaMetadata(getConnectionUserId),
-        postSetup: postSetup ? postSetup.map(compilePostSetupStepMetadata) : undefined,
-    };
-}
-function compileMetadataFormulaMetadata(formula) {
-    if (!formula) {
-        return;
-    }
-    const { execute, ...rest } = formula;
-    return rest;
-}
-function compilePostSetupStepMetadata(step) {
-    const { getOptionsFormula, ...rest } = step;
-    return {
-        ...rest,
-        getOptionsFormula: ensure_1.ensureExists(compileMetadataFormulaMetadata(getOptionsFormula)),
-    };
 }

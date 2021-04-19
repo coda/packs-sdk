@@ -107,6 +107,7 @@ export { assertCondition } from './helpers/ensure';
 export { ensureExists } from './helpers/ensure';
 export { ensureNonEmptyString } from './helpers/ensure';
 export { ensureUnreachable } from './helpers/ensure';
+export { compilePackMetadata } from './helpers/cli';
 import * as schema from './schema';
 export { schema };
 export type { ArraySchema } from './schema';
