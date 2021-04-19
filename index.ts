@@ -124,6 +124,9 @@ export {ensureExists} from './helpers/ensure';
 export {ensureNonEmptyString} from './helpers/ensure';
 export {ensureUnreachable} from './helpers/ensure';
 
+// Cli helpers
+export {compilePackMetadata} from './helpers/cli';
+
 // Object Schemas
 import * as schema from './schema';
 export {schema};
