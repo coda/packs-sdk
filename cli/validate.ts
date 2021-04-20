@@ -1,4 +1,5 @@
 import type {Arguments} from 'yargs';
+import type {PackDefinition} from '../types';
 import type {PackMetadataValidationError} from '../testing/upload_validation';
 import {printAndExit} from '../testing/helpers';
 import {validatePackMetadata} from '../testing/upload_validation';
@@ -8,11 +9,11 @@ interface ValidateArgs {
 }
 
 export async function handleValidate({manifestFile}: Arguments<ValidateArgs>) {
-  return validateMetadata(manifestFile);
+  const {manifest} = await import(manifestFile);
+  return validateMetadata(manifest);
 }
 
-export async function validateMetadata(manifestFile: string) {
-  const {manifest} = await import(manifestFile);
+export async function validateMetadata(manifest: PackDefinition) {
   try {
     await validatePackMetadata(manifest);
   } catch (e: any) {

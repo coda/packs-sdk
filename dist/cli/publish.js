@@ -38,9 +38,9 @@ const validate_1 = require("./validate");
 async function handlePublish({ manifestFile, codaApiEndpoint }) {
     const formattedEndpoint = helpers_2.formatEndpoint(codaApiEndpoint);
     const logger = new logging_1.ConsoleLogger();
-    const { manifest } = await Promise.resolve().then(() => __importStar(require(manifestFile)));
     logger.info('Building Pack bundle...');
     const bundleFilename = await build_1.build(manifestFile);
+    const { manifest } = await Promise.resolve().then(() => __importStar(require(bundleFilename)));
     // Since package.json isn't in dist, we grab it from the root directory instead.
     const packageJson = await Promise.resolve().then(() => __importStar(require(helpers_4.isTestCommand() ? '../package.json' : '../../package.json')));
     const codaPacksSDKVersion = packageJson.version;

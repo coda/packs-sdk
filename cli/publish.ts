@@ -23,9 +23,9 @@ interface PublishArgs {
 export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<PublishArgs>) {
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   const logger = new ConsoleLogger();
-  const {manifest} = await import(manifestFile);
   logger.info('Building Pack bundle...');
   const bundleFilename = await build(manifestFile);
+  const {manifest} = await import(bundleFilename);
 
   // Since package.json isn't in dist, we grab it from the root directory instead.
   const packageJson = await import(isTestCommand() ? '../package.json' : '../../package.json');
