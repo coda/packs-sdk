@@ -46,7 +46,7 @@ compile:
 		--banner:js="'use strict';"
 	${ROOTDIR}/node_modules/.bin/esbuild ${ROOTDIR}/index.ts \
 		--bundle \
-		--outfile=${ROOTDIR}/dist/bundle.txt \
+		--outfile=${ROOTDIR}/dist/bundle.js \
 		--format=cjs \
 		--minify \
 		--banner:js="'use strict';"
