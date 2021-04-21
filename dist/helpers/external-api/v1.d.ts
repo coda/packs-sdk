@@ -1,7 +1,7 @@
 /**
  * This file is auto-generated from OpenAPI definitions by `make build-openapi`. Do not edit manually.
  */
-export declare const OpenApiSpecHash = "f8add6150a7f3f82764b7a86daa95e3b755b50df7f6c15b58d3ec472ea0acfa5";
+export declare const OpenApiSpecHash = "9344cda812f318da6169c839fbb51a2f289a9fe2e404d1c869df0c69f0f286c6";
 export declare const OpenApiSpecVersion = "1.2.0";
 /**
  * A constant identifying the type of the resource.
@@ -1806,6 +1806,15 @@ export interface PublicApiCreatePackResponse {
      * The ID assigned to the newly-created Pack.
      */
     packId: number;
+}
+/**
+ * Payload for registering a Pack version.
+ */
+export interface PublicApiRegisterPackVersionRequest {
+    /**
+     * The SHA-256 hash of the file to be uploaded.
+     */
+    bundleHash: string;
 }
 /**
  * Payload for updating a Pack.

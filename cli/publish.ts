@@ -5,6 +5,7 @@ import type {PackMetadata} from '../compiled_types';
 import type {PackUpload} from '../compiled_types';
 import {build} from './build';
 import {compilePackMetadata} from '../helpers/cli';
+import {computeSha256} from '../helpers/crypto';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {getApiKey} from './helpers';
@@ -53,7 +54,8 @@ export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<P
   //  TODO(alan): error testing
   try {
     logger.info('Registering new Pack version...');
-    const {uploadUrl, headers} = await client.registerPackVersion(packId, packVersion);
+    const bundleHash = computeBundleHash(bundleFilename);
+    const {uploadUrl, headers} = await client.registerPackVersion(packId, packVersion, {}, {bundleHash});
 
     // TODO(alan): only grab metadata from manifest.
     logger.info('Validating Pack metadata...');
@@ -96,4 +98,12 @@ async function uploadPack(
   } catch (err) {
     printAndExit(`Error in uploading Pack to signed url: ${err}`);
   }
+}
+
+function computeBundleHash(bundleFilename: string): string {
+  const bundle = readFile(bundleFilename);
+  if (!bundle) {
+    printAndExit(`Could not find bundle file at path ${bundleFilename}`);
+  }
+  return computeSha256(bundle, false);
 }

@@ -5,7 +5,7 @@
  * available at https://coda.io/developers/apis/v1
  *
  * Version: v1
- * Hash: f8add6150a7f3f82764b7a86daa95e3b755b50df7f6c15b58d3ec472ea0acfa5
+ * Hash: 9344cda812f318da6169c839fbb51a2f289a9fe2e404d1c869df0c69f0f286c6
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Client = void 0;
@@ -640,7 +640,7 @@ class Client {
         });
         return response.json();
     }
-    async registerPackVersion(packId, packVersion, params = {}) {
+    async registerPackVersion(packId, packVersion, params = {}, payload) {
         const allParams = {
             ...params,
         };
@@ -652,6 +652,7 @@ class Client {
                 'User-Agent': this.userAgent,
             },
             method: 'POST',
+            body: JSON.stringify(payload),
         });
         return response.json();
     }

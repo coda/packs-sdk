@@ -26,6 +26,7 @@ exports.handlePublish = void 0;
 const logging_1 = require("../helpers/logging");
 const build_1 = require("./build");
 const cli_1 = require("../helpers/cli");
+const crypto_1 = require("../helpers/crypto");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
@@ -62,7 +63,8 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
     //  TODO(alan): error testing
     try {
         logger.info('Registering new Pack version...');
-        const { uploadUrl, headers } = await client.registerPackVersion(packId, packVersion);
+        const bundleHash = computeBundleHash(bundleFilename);
+        const { uploadUrl, headers } = await client.registerPackVersion(packId, packVersion, {}, { bundleHash });
         // TODO(alan): only grab metadata from manifest.
         logger.info('Validating Pack metadata...');
         await validate_1.validateMetadata(manifest);
@@ -96,4 +98,11 @@ async function uploadPack(bundleFilename, metadata, uploadUrl, headers) {
     catch (err) {
         helpers_5.printAndExit(`Error in uploading Pack to signed url: ${err}`);
     }
+}
+function computeBundleHash(bundleFilename) {
+    const bundle = helpers_6.readFile(bundleFilename);
+    if (!bundle) {
+        helpers_5.printAndExit(`Could not find bundle file at path ${bundleFilename}`);
+    }
+    return crypto_1.computeSha256(bundle, false);
 }
