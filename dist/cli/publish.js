@@ -63,14 +63,23 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
     //  TODO(alan): error testing
     try {
         logger.info('Registering new Pack version...');
-        const bundleHash = computeBundleHash(bundleFilename);
+        const bundle = helpers_6.readFile(bundleFilename);
+        if (!bundle) {
+            helpers_5.printAndExit(`Could not find bundle file at path ${bundleFilename}`);
+        }
+        const metadata = cli_1.compilePackMetadata(manifest);
+        const upload = {
+            metadata,
+            bundle: bundle.toString(),
+        };
+        const uploadPayload = JSON.stringify(upload);
+        const bundleHash = crypto_1.computeSha256(uploadPayload);
         const { uploadUrl, headers } = await client.registerPackVersion(packId, packVersion, {}, { bundleHash });
         // TODO(alan): only grab metadata from manifest.
         logger.info('Validating Pack metadata...');
         await validate_1.validateMetadata(manifest);
         logger.info('Uploading Pack...');
-        const metadata = cli_1.compilePackMetadata(manifest);
-        await uploadPack(bundleFilename, metadata, uploadUrl, headers);
+        await uploadPack(uploadUrl, uploadPayload, headers);
         logger.info('Validating upload...');
         await client.packVersionUploadComplete(packId, packVersion);
     }
@@ -80,29 +89,14 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
     logger.info('Done!');
 }
 exports.handlePublish = handlePublish;
-async function uploadPack(bundleFilename, metadata, uploadUrl, headers) {
-    const bundle = helpers_6.readFile(bundleFilename);
-    if (!bundle) {
-        helpers_5.printAndExit(`Could not find bundle file at path ${bundleFilename}`);
-    }
-    const upload = {
-        metadata,
-        bundle: bundle.toString(),
-    };
+async function uploadPack(uploadUrl, uploadPayload, headers) {
     try {
         await request_promise_native_1.default.put(uploadUrl, {
             headers,
-            json: upload,
+            body: uploadPayload,
         });
     }
     catch (err) {
         helpers_5.printAndExit(`Error in uploading Pack to signed url: ${err}`);
     }
-}
-function computeBundleHash(bundleFilename) {
-    const bundle = helpers_6.readFile(bundleFilename);
-    if (!bundle) {
-        helpers_5.printAndExit(`Could not find bundle file at path ${bundleFilename}`);
-    }
-    return crypto_1.computeSha256(bundle, false);
 }
