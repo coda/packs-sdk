@@ -62,13 +62,13 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
     //  TODO(alan): error testing
     try {
         logger.info('Registering new Pack version...');
-        const { uploadUrl } = await client.registerPackVersion(packId, packVersion);
+        const { uploadUrl, headers } = await client.registerPackVersion(packId, packVersion);
         // TODO(alan): only grab metadata from manifest.
         logger.info('Validating Pack metadata...');
         await validate_1.validateMetadata(manifest);
         logger.info('Uploading Pack...');
         const metadata = cli_1.compilePackMetadata(manifest);
-        await uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl);
+        await uploadPack(bundleFilename, metadata, uploadUrl, headers);
         logger.info('Validating upload...');
         await client.packVersionUploadComplete(packId, packVersion);
     }
@@ -78,7 +78,7 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
     logger.info('Done!');
 }
 exports.handlePublish = handlePublish;
-async function uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl) {
+async function uploadPack(bundleFilename, metadata, uploadUrl, headers) {
     const bundle = helpers_6.readFile(bundleFilename);
     if (!bundle) {
         helpers_5.printAndExit(`Could not find bundle file at path ${bundleFilename}`);
@@ -89,9 +89,7 @@ async function uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl) {
     };
     try {
         await request_promise_native_1.default.put(uploadUrl, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers,
             json: upload,
         });
     }
