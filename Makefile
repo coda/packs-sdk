@@ -44,6 +44,12 @@ compile:
 		--outfile=${ROOTDIR}/dist/testing/execution_helper_bundle.js \
 		--format=cjs \
 		--banner:js="'use strict';"
+	${ROOTDIR}/node_modules/.bin/esbuild ${ROOTDIR}/index.ts \
+		--bundle \
+		--outfile=${ROOTDIR}/dist/bundle.js \
+		--format=cjs \
+		--minify \
+		--banner:js="'use strict';"
 
 .PHONY: docs
 docs:
