@@ -2,7 +2,7 @@ import type {Arguments} from 'yargs';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
-import {getApiKey} from './helpers';
+import {getApiKey} from '../testing/auth';
 import {isCodaError} from './errors';
 import {printAndExit} from '../testing/helpers';
 
@@ -13,7 +13,7 @@ interface SetLiveArgs {
 }
 
 export async function handleSetLive({packId, packVersion, codaApiEndpoint}: Arguments<SetLiveArgs>) {
-  const apiKey = getApiKey();
+  const apiKey = getApiKey(codaApiEndpoint);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
 
   if (!apiKey) {

@@ -4,11 +4,11 @@ exports.readPacksFile = exports.storePack = exports.createPack = exports.handleC
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const errors_1 = require("./errors");
-const helpers_3 = require("./helpers");
+const auth_1 = require("../testing/auth");
 const errors_2 = require("./errors");
+const helpers_3 = require("../testing/helpers");
 const helpers_4 = require("../testing/helpers");
 const helpers_5 = require("../testing/helpers");
-const helpers_6 = require("../testing/helpers");
 const PACK_IDS_FILE = '.coda-packs.json';
 async function handleCreate({ packName, codaApiEndpoint }) {
     await createPack(packName, codaApiEndpoint);
@@ -18,15 +18,15 @@ async function createPack(packName, codaApiEndpoint) {
     const formattedEndpoint = helpers_2.formatEndpoint(codaApiEndpoint);
     // TODO(alan): we probably want to redirect them to the `coda register`
     // flow if they don't have a Coda API token.
-    const apiKey = helpers_3.getApiKey();
+    const apiKey = auth_1.getApiKey(codaApiEndpoint);
     if (!apiKey) {
-        helpers_4.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
+        helpers_3.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
     }
     const codaClient = helpers_1.createCodaClient(apiKey, formattedEndpoint);
     try {
         const response = await codaClient.createPack({}, {});
         if (errors_2.isCodaError(response)) {
-            helpers_4.printAndExit(`Unable to create your pack, received error: ${errors_1.formatError(response)}`);
+            helpers_3.printAndExit(`Unable to create your pack, received error: ${errors_1.formatError(response)}`);
         }
         else {
             const packId = response.packId;
@@ -34,7 +34,7 @@ async function createPack(packName, codaApiEndpoint) {
         }
     }
     catch (err) {
-        helpers_4.printAndExit(`Unable to create your pack, received error: ${errors_1.formatError(err)}`);
+        helpers_3.printAndExit(`Unable to create your pack, received error: ${errors_1.formatError(err)}`);
     }
 }
 exports.createPack = createPack;
@@ -45,9 +45,9 @@ function storePack(packName, packId) {
 }
 exports.storePack = storePack;
 function readPacksFile() {
-    return helpers_5.readJSONFile(PACK_IDS_FILE);
+    return helpers_4.readJSONFile(PACK_IDS_FILE);
 }
 exports.readPacksFile = readPacksFile;
 function writePacksFile(allPacks) {
-    helpers_6.writeJSONFile(PACK_IDS_FILE, allPacks);
+    helpers_5.writeJSONFile(PACK_IDS_FILE, allPacks);
 }

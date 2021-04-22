@@ -11,9 +11,9 @@ export { ExecuteOptions } from './execution_helper';
 export { ExecuteSyncOptions } from './execution_helper';
 export interface ContextOptions {
     useRealFetcher?: boolean;
-    credentialsFile?: string;
+    manifestPath?: string;
 }
-export declare function executeFormulaFromPackDef(packDef: PackDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, options?: ExecuteOptions, { useRealFetcher, credentialsFile }?: ContextOptions): Promise<any>;
+export declare function executeFormulaFromPackDef(packDef: PackDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<any>;
 export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manifestPath, vm, contextOptions, }: {
     formulaName: string;
     params: string[];
@@ -40,7 +40,7 @@ export declare function executeFormulaOrSyncWithRawParams({ formulaName, params:
     vm?: boolean;
     executionContext: SyncExecutionContext;
 }): Promise<any>;
-export declare function executeSyncFormulaFromPackDef(packDef: PackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, options?: ExecuteSyncOptions, { useRealFetcher, credentialsFile }?: ContextOptions): Promise<any[]>;
+export declare function executeSyncFormulaFromPackDef(packDef: PackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, options?: ExecuteSyncOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<any[]>;
 export declare function executeMetadataFormula(formula: MetadataFormula, metadataParams?: {
     search?: string;
     formulaContext?: MetadataContext;

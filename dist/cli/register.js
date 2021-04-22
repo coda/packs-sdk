@@ -30,6 +30,6 @@ async function handleRegister({ apiToken, codaApiEndpoint }) {
         const { statusCode, message } = JSON.parse(err.error);
         helpers_3.printAndExit(`Invalid API token provided: ${statusCode} ${message}`);
     }
-    auth_1.storeCodaApiKey(apiToken);
+    auth_1.storeCodaApiKey(apiToken, process.env.PWD, codaApiEndpoint);
 }
 exports.handleRegister = handleRegister;

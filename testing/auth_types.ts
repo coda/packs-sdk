@@ -1,8 +1,11 @@
-export interface AllCredentials {
-  __coda__?: {apiKey: string};
-  packs: {
-    [name: string]: Credentials;
-  };
+export interface CredentialsFile {
+  credentials: Credentials;
+}
+
+export interface ApiKeyFile {
+  apiKey: string;
+  // Codan-only overrides for storing API keys for other environments.
+  environmentApiKeys?: {[host: string]: string};
 }
 
 interface BaseCredentials {

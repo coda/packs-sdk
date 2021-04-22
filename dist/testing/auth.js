@@ -1,9 +1,28 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.readCredentialsFile = exports.storeCodaApiKey = exports.storeCredential = exports.setupAuth = exports.setupAuthFromModule = exports.DEFAULT_OAUTH_SERVER_PORT = exports.DEFAULT_CREDENTIALS_FILE = void 0;
+exports.readCredentialsFile = exports.storeCodaApiKey = exports.getApiKey = exports.storeCredential = exports.setupAuth = exports.setupAuthFromModule = exports.DEFAULT_OAUTH_SERVER_PORT = void 0;
 const types_1 = require("../types");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
@@ -12,23 +31,27 @@ const fs_1 = __importDefault(require("fs"));
 const helpers_1 = require("./helpers");
 const oauth_server_1 = require("./oauth_server");
 const oauth_server_2 = require("./oauth_server");
+const path = __importStar(require("path"));
 const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
 const helpers_4 = require("./helpers");
 const helpers_5 = require("./helpers");
+const url_parse_1 = __importDefault(require("url-parse"));
 const helpers_6 = require("./helpers");
-exports.DEFAULT_CREDENTIALS_FILE = '.coda/credentials.json';
+const CREDENTIALS_FILE_NAME = '.coda-credentials.json';
+const API_KEY_FILE_NAME = '.coda.json';
 exports.DEFAULT_OAUTH_SERVER_PORT = 3000;
-async function setupAuthFromModule(module, opts = {}) {
-    return setupAuth(await helpers_1.getManifestFromModule(module), opts);
+async function setupAuthFromModule(manifestPath, module, opts = {}) {
+    const manifestDir = path.dirname(manifestPath);
+    return setupAuth(manifestDir, helpers_1.getManifestFromModule(module), opts);
 }
 exports.setupAuthFromModule = setupAuthFromModule;
-function setupAuth(packDef, opts = {}) {
+function setupAuth(manifestDir, packDef, opts = {}) {
     const { name, defaultAuthentication } = packDef;
     if (!defaultAuthentication) {
         return helpers_3.printAndExit(`The pack ${name} has no declared authentication. Provide a value for defaultAuthentication in the pack definition.`);
     }
-    const handler = new CredentialHandler(name, defaultAuthentication, opts);
+    const handler = new CredentialHandler(manifestDir, name, defaultAuthentication, opts);
     switch (defaultAuthentication.type) {
         case types_1.AuthenticationType.None:
             return helpers_3.printAndExit(`The pack ${name} declares AuthenticationType.None and so does not require authentication. ` +
@@ -53,20 +76,20 @@ function setupAuth(packDef, opts = {}) {
 }
 exports.setupAuth = setupAuth;
 class CredentialHandler {
-    constructor(packName, authDef, { credentialsFile, oauthServerPort } = {}) {
+    constructor(manifestDir, packName, authDef, { oauthServerPort } = {}) {
         this._packName = packName;
         this._authDef = authDef;
-        this._credentialsFile = credentialsFile || exports.DEFAULT_CREDENTIALS_FILE;
+        this._manifestDir = manifestDir;
         this._oauthServerPort = oauthServerPort || exports.DEFAULT_OAUTH_SERVER_PORT;
     }
     checkForExistingCredential() {
-        const existingCredentials = readCredentialsFile(this._credentialsFile);
-        if (existingCredentials && existingCredentials.packs[this._packName]) {
+        const existingCredentials = readCredentialsFile(this._manifestDir);
+        if (existingCredentials) {
             const input = helpers_4.promptForInput(`Credentials already exist for ${this._packName}, press "y" to overwrite or "n" to cancel: `);
             if (input.toLocaleLowerCase() !== 'y') {
                 return process.exit(1);
             }
-            return existingCredentials.packs[this._packName];
+            return existingCredentials;
         }
     }
     handleToken() {
@@ -172,30 +195,69 @@ class CredentialHandler {
         return helpers_4.promptForInput(`Enter the endpoint url for ${this._packName} (for example, ${placeholder}):\n`);
     }
     storeCredential(credentials) {
-        storeCredential(this._credentialsFile, this._packName, credentials);
+        storeCredential(this._manifestDir, credentials);
     }
 }
-function storeCredential(credentialsFile, packName, credentials) {
-    const allCredentials = readCredentialsFile(credentialsFile) || { packs: {} };
-    allCredentials.packs[packName] = credentials;
-    writeCredentialsFile(credentialsFile, allCredentials);
+function storeCredential(manifestDir, credentials) {
+    const filename = path.join(manifestDir, CREDENTIALS_FILE_NAME);
+    writeCredentialsFile(filename, credentials);
 }
 exports.storeCredential = storeCredential;
-function storeCodaApiKey(apiKey, credentialsFile = exports.DEFAULT_CREDENTIALS_FILE) {
-    const allCredentials = readCredentialsFile(credentialsFile) || { packs: {} };
-    allCredentials.__coda__ = { apiKey };
-    writeCredentialsFile(credentialsFile, allCredentials);
+function getApiKey(codaApiEndpoint) {
+    var _a;
+    const baseFilename = path.join(process.env.PWD || '.', API_KEY_FILE_NAME);
+    // Traverse up from the current directory for a while to see if we can find an API key file.
+    // Usually it will be in the current directory, but if the user has cd'ed deeper into their
+    // project it may be higher up.
+    for (let i = 0; i < 10; i++) {
+        const filename = path.join(`..${path.sep}`.repeat(i), baseFilename);
+        const apiKeyFile = readApiKeyFile(filename);
+        if (apiKeyFile) {
+            if (codaApiEndpoint) {
+                return (_a = apiKeyFile.environmentApiKeys) === null || _a === void 0 ? void 0 : _a[codaApiEndpoint];
+            }
+            return apiKeyFile.apiKey;
+        }
+    }
+}
+exports.getApiKey = getApiKey;
+function storeCodaApiKey(apiKey, projectDir = '.', codaApiEndpoint) {
+    const filename = path.join(projectDir, API_KEY_FILE_NAME);
+    const apiKeyFile = readApiKeyFile(filename) || { apiKey: '' };
+    if (codaApiEndpoint) {
+        apiKeyFile.environmentApiKeys = apiKeyFile.environmentApiKeys || {};
+        const { host } = url_parse_1.default(codaApiEndpoint);
+        apiKeyFile.environmentApiKeys[host] = apiKey;
+    }
+    else {
+        apiKeyFile.apiKey = apiKey;
+    }
+    writeApiKeyFile(filename, apiKeyFile);
 }
 exports.storeCodaApiKey = storeCodaApiKey;
-function readCredentialsFile(credentialsFile = exports.DEFAULT_CREDENTIALS_FILE) {
-    return helpers_5.readJSONFile(credentialsFile);
+function readCredentialsFile(manifestPath) {
+    const filename = path.join(manifestPath, CREDENTIALS_FILE_NAME);
+    const fileContents = helpers_5.readJSONFile(filename);
+    return fileContents === null || fileContents === void 0 ? void 0 : fileContents.credentials;
 }
 exports.readCredentialsFile = readCredentialsFile;
-function writeCredentialsFile(credentialsFile, allCredentials) {
+function writeCredentialsFile(credentialsFile, credentials) {
     const fileExisted = fs_1.default.existsSync(credentialsFile);
-    helpers_6.writeJSONFile(credentialsFile, allCredentials);
+    const fileContents = { credentials };
+    helpers_6.writeJSONFile(credentialsFile, fileContents);
     if (!fileExisted) {
         // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
         fs_1.default.chmodSync(credentialsFile, 0o600);
+    }
+}
+function readApiKeyFile(filename) {
+    return helpers_5.readJSONFile(filename);
+}
+function writeApiKeyFile(filename, fileContents) {
+    const fileExisted = fs_1.default.existsSync(filename);
+    helpers_6.writeJSONFile(filename, fileContents);
+    if (!fileExisted) {
+        // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
+        fs_1.default.chmodSync(filename, 0o600);
     }
 }

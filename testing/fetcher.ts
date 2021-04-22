@@ -17,7 +17,6 @@ import {URL} from 'url';
 import type {WebBasicCredentials} from './auth_types';
 import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
-import {readCredentialsFile} from './auth';
 import requestPromise from 'request-promise-native';
 import urlParse from 'url-parse';
 import {v4} from 'uuid';
@@ -54,7 +53,7 @@ export class AuthenticatingFetcher implements Fetcher {
     if (responseBody && responseBody.length >= MaxContentLengthBytes) {
       throw new Error(`Response body is too large for Coda. Body is ${responseBody.length} bytes.`);
     }
-        
+
     try {
       const contentType = response.headers['content-type'];
       if (contentType && contentType.includes('text/xml')) {
@@ -239,10 +238,8 @@ class AuthenticatingBlobStorage implements TemporaryBlobStorage {
 export function newFetcherExecutionContext(
   packName: string,
   authDef: Authentication | undefined,
-  credentialsFile?: string,
+  credentials?: Credentials,
 ): ExecutionContext {
-  const allCredentials = readCredentialsFile(credentialsFile);
-  const credentials = allCredentials?.packs[packName];
   const fetcher = new AuthenticatingFetcher(authDef, credentials);
   return {
     invocationLocation: {
@@ -260,9 +257,9 @@ export function newFetcherExecutionContext(
 export function newFetcherSyncExecutionContext(
   packName: string,
   authDef: Authentication | undefined,
-  credentialsFile?: string,
+  credentials?: Credentials,
 ): SyncExecutionContext {
-  const context = newFetcherExecutionContext(packName, authDef, credentialsFile);
+  const context = newFetcherExecutionContext(packName, authDef, credentials);
   return {...context, sync: {}};
 }
 
