@@ -4,7 +4,7 @@
 
 /* eslint-disable */
 
-export const OpenApiSpecHash = 'c6876c1f07a4e420a1a6542ebec6cff3a9be3c4e3a9bf481065fa87d7893d5f5';
+export const OpenApiSpecHash = '9344cda812f318da6169c839fbb51a2f289a9fe2e404d1c869df0c69f0f286c6';
 
 export const OpenApiSpecVersion = '1.2.0';
 
@@ -29,6 +29,7 @@ export enum PublicApiType {
   Pack = 'pack',
   PackVersion = 'packVersion',
   PackAclPermissions = 'packAclPermissions',
+  PackAsset = 'packAsset',
 }
 
 /**
@@ -90,7 +91,7 @@ export interface PublicApiPermission {
 /**
  * Payload for granting a new permission.
  */
-export interface PublicApiAddPermission {
+export interface PublicApiAddPermissionRequest {
   access: PublicApiAccessType;
   principal: PublicApiPrincipal;
   /**
@@ -840,9 +841,18 @@ export type PublicApiDateColumnFormat = PublicApiSimpleColumnFormat & {
  * Format of an email column.
  */
 export type PublicApiEmailColumnFormat = PublicApiSimpleColumnFormat & {
-  iconOnly?: boolean;
-  suggestedDomains?: string;
+  display?: PublicApiEmailDisplayType;
+  autocomplete?: boolean;
 };
+
+/**
+ * How an email address should be displayed in the user interface.
+ */
+export enum PublicApiEmailDisplayType {
+  IconAndEmail = 'iconAndEmail',
+  IconOnly = 'iconOnly',
+  EmailOnly = 'emailOnly',
+}
 
 /**
  * Format of a time column.
@@ -1912,6 +1922,14 @@ export interface PublicApiDocAnalyticsCollection {
 }
 
 /**
+ * Quantization period over which to view analytics.
+ */
+export enum PublicApiDocAnalyticsScale {
+  Day = 'daily',
+  Cumulative = 'cumulative',
+}
+
+/**
  * Payload for creating a Pack.
  */
 export interface PublicApiCreatePackRequest {
@@ -1929,6 +1947,16 @@ export interface PublicApiCreatePackResponse {
    * The ID assigned to the newly-created Pack.
    */
   packId: number;
+}
+
+/**
+ * Payload for registering a Pack version.
+ */
+export interface PublicApiRegisterPackVersionRequest {
+  /**
+   * The SHA-256 hash of the file to be uploaded.
+   */
+  bundleHash: string;
 }
 
 /**
@@ -1961,18 +1989,97 @@ export interface PublicApiUpdatePackRequest {
      */
     operationsPerInterval: number;
   } | null;
+  /**
+   * A post-ingestion url to the Pack's logo, returned by the [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete) endpoint.
+   */
+  logoUploadUrl?: string;
+  /**
+   * Post-ingestion urls to the Pack's example images, returned by  [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete) endpoint.
+   */
+  exampleImageUploadUrls?: string[];
+  /**
+   * The name of the Pack.
+   */
+  name?: string;
+  /**
+   * The full description of the Pack.
+   */
+  description?: string;
+  /**
+   * A short version of the description of the Pack.
+   */
+  shortDescription?: string;
 }
 
 /**
- * Metadata of a Pack.
+ * Details about a Pack.
  */
 export interface PublicApiPack {
   /**
    * ID of the Pack.
    */
   id: number;
+  /**
+   * The link to the logo of the Pack.
+   */
+  logoUrl?: string;
+  /**
+   * The parent workspace for the Pack.
+   */
+  workspaceId: string;
+  /**
+   * The name of the Pack.
+   */
+  name: string;
+  /**
+   * The full description of the Pack.
+   */
+  description: string;
+  /**
+   * A short version of the description of the Pack.
+   */
+  shortDescription: string;
   overallRateLimit?: PublicApiPackRateLimit;
   perConnectionRateLimit?: PublicApiPackRateLimit;
+}
+
+/**
+ * Summary of a Pack.
+ */
+export interface PublicApiPackSummary {
+  /**
+   * ID of the Pack.
+   */
+  id: number;
+  /**
+   * The link to the logo of the Pack.
+   */
+  logoUrl?: string;
+  /**
+   * The parent workspace for the Pack.
+   */
+  workspaceId: string;
+  /**
+   * The name of the Pack.
+   */
+  name: string;
+  /**
+   * The full description of the Pack.
+   */
+  description: string;
+  /**
+   * A short version of the description of the Pack.
+   */
+  shortDescription: string;
+}
+
+/**
+ * List of Pack summaries.
+ */
+export interface PublicApiPackSummaryList {
+  items: PublicApiPackSummary[];
+  nextPageToken?: PublicApiNextPageToken;
+  nextPageLink?: PublicApiNextPageLink & string;
 }
 
 /**
@@ -1990,19 +2097,34 @@ export interface PublicApiPackRateLimit {
 }
 
 /**
+ * Determines how the Packs returned are sorted.
+ */
+export enum PublicApiPacksSortBy {
+  Title = 'title',
+  CreatedAt = 'createdAt',
+  UpdatedAt = 'updatedAt',
+}
+
+/**
  * Information indicating where to upload the Pack version definition.
  */
 export interface PublicApiPackVersionUploadInfo {
   /**
-   * A signed url to be used for uploading a Pack version definition.
+   * A url to be used for uploading a Pack version definition.
    */
   uploadUrl: string;
+  /**
+   * Key-value pairs of authorization headers to include in the upload request.
+   */
+  headers: {
+    [k: string]: unknown;
+  };
 }
 
 /**
  * Payload for setting a Pack version live.
  */
-export interface PublicApiSetPackLiveVersion {
+export interface PublicApiSetPackLiveVersionRequest {
   /**
    * The version of the Pack.
    */
@@ -2020,47 +2142,71 @@ export interface PublicApiCreatePackVersionResponse {}
 export interface PublicApiSetPackLiveVersionResponse {}
 
 /**
+ * Metadata about a Pack principal.
+ */
+export type PublicApiPackPrincipal =
+  | PublicApiPackUserPrincipal
+  | PublicApiPackWorkspacePrincipal
+  | PublicApiPackGlobalPrincipal;
+
+/**
  * Type of Pack permissions.
  */
-export enum PublicApiPackAclType {
+export enum PublicApiPackPrincipalType {
   User = 'user',
   Workspace = 'workspace',
-  Anyone = 'anyone',
+  Worldwide = 'worldwide',
 }
 
 /**
  * Access type for a Pack.
  */
-export enum PublicApiPackAcl {
+export enum PublicApiPackAccessType {
   View = 'view',
   Test = 'test',
   Edit = 'edit',
 }
 
-export interface PublicApiPackUserAcl {
+export interface PublicApiPackUserPrincipal {
   type: 'user';
-  packAcl: PublicApiPackAcl;
   email: string;
 }
 
-export interface PublicApiPackWorkspaceAcl {
+export interface PublicApiPackWorkspacePrincipal {
   type: 'workspace';
-  packAcl: PublicApiPackAcl;
   workspaceId: string;
 }
 
-export interface PublicApiPackGlobalAcl {
-  type: 'anyone';
-  packAcl: PublicApiPackAcl;
+export interface PublicApiPackGlobalPrincipal {
+  type: 'worldwide';
 }
 
 /**
- * Payload for upserting Pack permissions.
+ * List of Pack permissions.
  */
-export type PublicApiAddPackPermissionRequest =
-  | PublicApiPackUserAcl
-  | PublicApiPackWorkspaceAcl
-  | PublicApiPackGlobalAcl;
+export interface PublicApiPackPermissionList {
+  items: PublicApiPackPermission[];
+}
+
+/**
+ * Metadata about a Pack permission.
+ */
+export interface PublicApiPackPermission {
+  /**
+   * Id for the Permission
+   */
+  id: string;
+  principal: PublicApiPackPrincipal;
+  access: PublicApiPackAccessType;
+}
+
+/**
+ * Payload for upserting a Pack permission.
+ */
+export interface PublicApiAddPackPermissionRequest {
+  principal: PublicApiPackPrincipal;
+  access: PublicApiPackAccessType;
+}
 
 /**
  * Confirmation of successfully upserting a Pack permission.
@@ -2076,3 +2222,50 @@ export interface PublicApiAddPackPermissionResponse {
  * Confirmation of successfully deleting a Pack permission.
  */
 export interface PublicApiDeletePackPermissionResponse {}
+
+export enum PublicApiPackAssetType {
+  Logo = 'logo',
+  ExampleImage = 'exampleImage',
+}
+
+/**
+ * Payload for a Pack asset upload.
+ */
+export interface PublicApiUploadPackAssetRequest {
+  packAssetType: PublicApiPackAssetType;
+}
+
+/**
+ * Information indicating where to upload the Pack asset, and an endpoint to mark the upload as complete.
+ */
+export interface PublicApiPackAssetUploadInfo {
+  /**
+   * A signed url to be used for uploading a Pack asset.
+   */
+  uploadUrl: string;
+  /**
+   * An endpoint to mark the upload as complete.
+   */
+  packAssetUploadedPathName: string;
+}
+
+/**
+ * Payload for noting a Pack asset upload is complete.
+ */
+export interface PublicApiPackAssetUploadCompleteRequest {
+  packAssetType: PublicApiPackAssetType;
+}
+
+/**
+ * Response for noting a Pack asset upload is complete.
+ */
+export interface PublicApiPackAssetUploadCompleteResponse {
+  /**
+   * An arbitrary unique identifier for this request.
+   */
+  requestId: string;
+  /**
+   * A post-ingestion url that you can provide to update your Pack's assets.
+   */
+  verifiedUploadUrl: string;
+}

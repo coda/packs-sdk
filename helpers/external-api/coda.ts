@@ -4,13 +4,14 @@
  * available at https://coda.io/developers/apis/v1
  *
  * Version: v1
- * Hash: c6876c1f07a4e420a1a6542ebec6cff3a9be3c4e3a9bf481065fa87d7893d5f5
+ * Hash: 9344cda812f318da6169c839fbb51a2f289a9fe2e404d1c869df0c69f0f286c6
  */
 
 import 'es6-promise/auto';
 import 'isomorphic-fetch';
 import {withQueryParams} from '../url';
 import * as types from './v1';
+
 export class Client {
   private readonly protocolAndHost: string;
   private readonly apiKey: string;
@@ -117,7 +118,7 @@ export class Client {
     return response.json();
   }
 
-  async getAclMetadata(docId: string, params: {} = {}): Promise<types.PublicApiAcl> {
+  async getSharingMetadata(docId: string, params: {} = {}): Promise<types.PublicApiAcl> {
     const allParams = {
       ...params,
     };
@@ -133,7 +134,7 @@ export class Client {
     return response.json();
   }
 
-  async getAclPermissions(docId: string, params: {} = {}): Promise<types.PublicApiAcl> {
+  async getPermissions(docId: string, params: {} = {}): Promise<types.PublicApiAcl> {
     const allParams = {
       ...params,
     };
@@ -149,10 +150,10 @@ export class Client {
     return response.json();
   }
 
-  async shareDoc(
+  async addPermission(
     docId: string,
     params: {} = {},
-    payload: types.PublicApiAddPermission,
+    payload: types.PublicApiAddPermissionRequest,
   ): Promise<types.PublicApiAddPermissionResult> {
     const allParams = {
       ...params,
@@ -730,7 +731,7 @@ export class Client {
       isPublished?: boolean;
       sinceDate?: string;
       untilDate?: string;
-      scale?: string;
+      scale?: types.PublicApiDocAnalyticsScale;
       limit?: number;
       pageToken?: string;
     } = {},
@@ -825,6 +826,30 @@ export class Client {
     return response.json();
   }
 
+  async listPacks(
+    params: {
+      accessType?: types.PublicApiPackAccessType;
+      sortBy?: types.PublicApiPacksSortBy;
+      limit?: number;
+      pageToken?: string;
+    } = {},
+  ): Promise<types.PublicApiPackSummaryList> {
+    const allParams = {
+      ...params,
+    };
+    const {pageToken, ...rest} = allParams;
+    const codaUrl = withQueryParams(`${this.protocolAndHost}/apis/v1/packs`, pageToken ? {pageToken} : rest);
+    const response = await fetch(codaUrl, {
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+        'User-Agent': this.userAgent,
+      },
+      method: 'GET',
+    });
+    return response.json();
+  }
+
   async createPack(
     params: {} = {},
     payload: types.PublicApiCreatePackRequest,
@@ -841,6 +866,22 @@ export class Client {
       },
       method: 'POST',
       body: JSON.stringify(payload),
+    });
+    return response.json();
+  }
+
+  async getPack(packId: number, params: {} = {}): Promise<types.PublicApiPack> {
+    const allParams = {
+      ...params,
+    };
+    const codaUrl = withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}`, allParams);
+    const response = await fetch(codaUrl, {
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+        'User-Agent': this.userAgent,
+      },
+      method: 'GET',
     });
     return response.json();
   }
@@ -870,6 +911,7 @@ export class Client {
     packId: number,
     packVersion: string,
     params: {} = {},
+    payload: types.PublicApiRegisterPackVersionRequest,
   ): Promise<types.PublicApiPackVersionUploadInfo> {
     const allParams = {
       ...params,
@@ -885,6 +927,7 @@ export class Client {
         'User-Agent': this.userAgent,
       },
       method: 'POST',
+      body: JSON.stringify(payload),
     });
     return response.json();
   }
@@ -915,7 +958,7 @@ export class Client {
   async setPackLiveVersion(
     packId: number,
     params: {} = {},
-    payload: types.PublicApiSetPackLiveVersion,
+    payload: types.PublicApiSetPackLiveVersionRequest,
   ): Promise<types.PublicApiSetPackLiveVersionResponse> {
     const allParams = {
       ...params,
@@ -929,6 +972,22 @@ export class Client {
       },
       method: 'PUT',
       body: JSON.stringify(payload),
+    });
+    return response.json();
+  }
+
+  async getPackPermissions(packId: number, params: {} = {}): Promise<types.PublicApiPackPermissionList> {
+    const allParams = {
+      ...params,
+    };
+    const codaUrl = withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/permissions`, allParams);
+    const response = await fetch(codaUrl, {
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+        'User-Agent': this.userAgent,
+      },
+      method: 'GET',
     });
     return response.json();
   }
@@ -948,7 +1007,7 @@ export class Client {
         'Content-Type': 'application/json',
         'User-Agent': this.userAgent,
       },
-      method: 'PUT',
+      method: 'POST',
       body: JSON.stringify(payload),
     });
     return response.json();
@@ -973,6 +1032,51 @@ export class Client {
         'User-Agent': this.userAgent,
       },
       method: 'DELETE',
+    });
+    return response.json();
+  }
+
+  async uploadPackAsset(
+    packId: number,
+    params: {} = {},
+    payload: types.PublicApiUploadPackAssetRequest,
+  ): Promise<types.PublicApiPackAssetUploadInfo> {
+    const allParams = {
+      ...params,
+    };
+    const codaUrl = withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/uploadAsset`, allParams);
+    const response = await fetch(codaUrl, {
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+        'User-Agent': this.userAgent,
+      },
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    return response.json();
+  }
+
+  async packAssetUploadComplete(
+    packId: number,
+    packAssetId: string,
+    packAssetType: types.PublicApiPackAssetType,
+    params: {} = {},
+  ): Promise<types.PublicApiPackAssetUploadCompleteResponse> {
+    const allParams = {
+      ...params,
+    };
+    const codaUrl = withQueryParams(
+      `${this.protocolAndHost}/apis/v1/packs/${packId}/assets/${packAssetId}/assetType/${packAssetType}/uploadComplete`,
+      allParams,
+    );
+    const response = await fetch(codaUrl, {
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+        'User-Agent': this.userAgent,
+      },
+      method: 'POST',
     });
     return response.json();
   }

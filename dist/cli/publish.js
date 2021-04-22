@@ -26,6 +26,7 @@ exports.handlePublish = void 0;
 const logging_1 = require("../helpers/logging");
 const build_1 = require("./build");
 const cli_1 = require("../helpers/cli");
+const crypto_1 = require("../helpers/crypto");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
@@ -62,13 +63,23 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
     //  TODO(alan): error testing
     try {
         logger.info('Registering new Pack version...');
-        const { uploadUrl } = await client.registerPackVersion(packId, packVersion);
+        const bundle = helpers_6.readFile(bundleFilename);
+        if (!bundle) {
+            helpers_5.printAndExit(`Could not find bundle file at path ${bundleFilename}`);
+        }
+        const metadata = cli_1.compilePackMetadata(manifest);
+        const upload = {
+            metadata,
+            bundle: bundle.toString(),
+        };
+        const uploadPayload = JSON.stringify(upload);
+        const bundleHash = crypto_1.computeSha256(uploadPayload);
+        const { uploadUrl, headers } = await client.registerPackVersion(packId, packVersion, {}, { bundleHash });
         // TODO(alan): only grab metadata from manifest.
         logger.info('Validating Pack metadata...');
         await validate_1.validateMetadata(manifest);
         logger.info('Uploading Pack...');
-        const metadata = cli_1.compilePackMetadata(manifest);
-        await uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl);
+        await uploadPack(uploadUrl, uploadPayload, headers);
         logger.info('Validating upload...');
         await client.packVersionUploadComplete(packId, packVersion);
     }
@@ -78,21 +89,11 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
     logger.info('Done!');
 }
 exports.handlePublish = handlePublish;
-async function uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl) {
-    const bundle = helpers_6.readFile(bundleFilename);
-    if (!bundle) {
-        helpers_5.printAndExit(`Could not find bundle file at path ${bundleFilename}`);
-    }
-    const upload = {
-        metadata,
-        bundle: bundle.toString(),
-    };
+async function uploadPack(uploadUrl, uploadPayload, headers) {
     try {
         await request_promise_native_1.default.put(uploadUrl, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            json: upload,
+            headers,
+            body: uploadPayload,
         });
     }
     catch (err) {

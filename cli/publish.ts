@@ -1,10 +1,10 @@
 import type {AllPacks} from './create';
 import type {Arguments} from 'yargs';
 import {ConsoleLogger} from '../helpers/logging';
-import type {PackMetadata} from '../compiled_types';
 import type {PackUpload} from '../compiled_types';
 import {build} from './build';
 import {compilePackMetadata} from '../helpers/cli';
+import {computeSha256} from '../helpers/crypto';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {getApiKey} from './helpers';
@@ -53,15 +53,28 @@ export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<P
   //  TODO(alan): error testing
   try {
     logger.info('Registering new Pack version...');
-    const {uploadUrl} = await client.registerPackVersion(packId, packVersion);
+
+    const bundle = readFile(bundleFilename);
+    if (!bundle) {
+      printAndExit(`Could not find bundle file at path ${bundleFilename}`);
+    }
+    const metadata = compilePackMetadata(manifest);
+
+    const upload: PackUpload = {
+      metadata,
+      bundle: bundle.toString(),
+    };
+    const uploadPayload = JSON.stringify(upload);
+
+    const bundleHash = computeSha256(uploadPayload);
+    const {uploadUrl, headers} = await client.registerPackVersion(packId, packVersion, {}, {bundleHash});
 
     // TODO(alan): only grab metadata from manifest.
     logger.info('Validating Pack metadata...');
     await validateMetadata(manifest);
 
     logger.info('Uploading Pack...');
-    const metadata = compilePackMetadata(manifest);
-    await uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl);
+    await uploadPack(uploadUrl, uploadPayload, headers);
 
     logger.info('Validating upload...');
     await client.packVersionUploadComplete(packId, packVersion);
@@ -72,23 +85,11 @@ export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<P
   logger.info('Done!');
 }
 
-async function uploadPackToSignedUrl(bundleFilename: string, metadata: PackMetadata, uploadUrl: string) {
-  const bundle = readFile(bundleFilename);
-  if (!bundle) {
-    printAndExit(`Could not find bundle file at path ${bundleFilename}`);
-  }
-
-  const upload: PackUpload = {
-    metadata,
-    bundle: bundle.toString(),
-  };
-
+async function uploadPack(uploadUrl: string, uploadPayload: string, headers: {[header: string]: any}) {
   try {
     await requestPromise.put(uploadUrl, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      json: upload,
+      headers,
+      body: uploadPayload,
     });
   } catch (err) {
     printAndExit(`Error in uploading Pack to signed url: ${err}`);
