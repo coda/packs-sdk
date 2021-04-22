@@ -7,7 +7,9 @@ import {compilePackMetadata} from '../helpers/cli';
 import {computeSha256} from '../helpers/crypto';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
+import {formatError} from './errors';
 import {getApiKey} from './helpers';
+import {isCodaError} from './errors';
 import {isTestCommand} from './helpers';
 import {printAndExit} from '../testing/helpers';
 import {readFile} from '../testing/helpers';
@@ -50,7 +52,6 @@ export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<P
     printAndExit(`No Pack version found for your Pack "${manifest.name}"`);
   }
 
-  //  TODO(alan): error testing
   try {
     logger.info('Registering new Pack version...');
 
@@ -67,19 +68,25 @@ export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<P
     const uploadPayload = JSON.stringify(upload);
 
     const bundleHash = computeSha256(uploadPayload);
-    const {uploadUrl, headers} = await client.registerPackVersion(packId, packVersion, {}, {bundleHash});
+    const response = await client.registerPackVersion(packId, packVersion, {}, {bundleHash});
+    if (isCodaError(response)) {
+      return printAndExit(`Error while registering pack version: ${formatError(response)}`);
+    }
+    const {uploadUrl, headers} = response;
 
-    // TODO(alan): only grab metadata from manifest.
     logger.info('Validating Pack metadata...');
-    await validateMetadata(manifest);
+    await validateMetadata(metadata);
 
     logger.info('Uploading Pack...');
     await uploadPack(uploadUrl, uploadPayload, headers);
 
     logger.info('Validating upload...');
-    await client.packVersionUploadComplete(packId, packVersion);
+    const uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion);
+    if (isCodaError(uploadCompleteResponse)) {
+      printAndExit(`Error while finalizing pack version: ${formatError(response)}`);
+    }
   } catch (err) {
-    printAndExit(`Error: ${err}`);
+    printAndExit(`Unepected error during pack upload: ${formatError(err)}`);
   }
 
   logger.info('Done!');
@@ -92,6 +99,6 @@ async function uploadPack(uploadUrl: string, uploadPayload: string, headers: {[h
       body: uploadPayload,
     });
   } catch (err) {
-    printAndExit(`Error in uploading Pack to signed url: ${err}`);
+    printAndExit(`Error in uploading Pack to signed url: ${formatError(err)}`);
   }
 }

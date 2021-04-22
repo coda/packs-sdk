@@ -3,7 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.readPacksFile = exports.storePack = exports.createPack = exports.handleCreate = void 0;
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
+const errors_1 = require("./errors");
 const helpers_3 = require("./helpers");
+const errors_2 = require("./errors");
 const helpers_4 = require("../testing/helpers");
 const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
@@ -21,17 +23,19 @@ async function createPack(packName, codaApiEndpoint) {
         helpers_4.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
     }
     const codaClient = helpers_1.createCodaClient(apiKey, formattedEndpoint);
-    let packId;
     try {
         const response = await codaClient.createPack({}, {});
-        packId = response.packId;
+        if (errors_2.isCodaError(response)) {
+            helpers_4.printAndExit(`Unable to create your pack, received error: ${errors_1.formatError(response)}`);
+        }
+        else {
+            const packId = response.packId;
+            storePack(packName, packId);
+        }
     }
     catch (err) {
-        // TODO(alan): pressure test with errors
-        const error = JSON.parse(err.error);
-        helpers_4.printAndExit(`Unable to create your pack, received error message ${error.message} (status code ${err.statusCode})`);
+        helpers_4.printAndExit(`Unable to create your pack, received error: ${errors_1.formatError(err)}`);
     }
-    storePack(packName, packId);
 }
 exports.createPack = createPack;
 function storePack(packName, packId) {

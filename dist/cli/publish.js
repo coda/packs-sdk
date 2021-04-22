@@ -29,7 +29,9 @@ const cli_1 = require("../helpers/cli");
 const crypto_1 = require("../helpers/crypto");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
+const errors_1 = require("./errors");
 const helpers_3 = require("./helpers");
+const errors_2 = require("./errors");
 const helpers_4 = require("./helpers");
 const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
@@ -60,7 +62,6 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
     if (!packVersion) {
         helpers_5.printAndExit(`No Pack version found for your Pack "${manifest.name}"`);
     }
-    //  TODO(alan): error testing
     try {
         logger.info('Registering new Pack version...');
         const bundle = helpers_6.readFile(bundleFilename);
@@ -74,17 +75,23 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
         };
         const uploadPayload = JSON.stringify(upload);
         const bundleHash = crypto_1.computeSha256(uploadPayload);
-        const { uploadUrl, headers } = await client.registerPackVersion(packId, packVersion, {}, { bundleHash });
-        // TODO(alan): only grab metadata from manifest.
+        const response = await client.registerPackVersion(packId, packVersion, {}, { bundleHash });
+        if (errors_2.isCodaError(response)) {
+            return helpers_5.printAndExit(`Error while registering pack version: ${errors_1.formatError(response)}`);
+        }
+        const { uploadUrl, headers } = response;
         logger.info('Validating Pack metadata...');
-        await validate_1.validateMetadata(manifest);
+        await validate_1.validateMetadata(metadata);
         logger.info('Uploading Pack...');
         await uploadPack(uploadUrl, uploadPayload, headers);
         logger.info('Validating upload...');
-        await client.packVersionUploadComplete(packId, packVersion);
+        const uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion);
+        if (errors_2.isCodaError(uploadCompleteResponse)) {
+            helpers_5.printAndExit(`Error while finalizing pack version: ${errors_1.formatError(response)}`);
+        }
     }
     catch (err) {
-        helpers_5.printAndExit(`Error: ${err}`);
+        helpers_5.printAndExit(`Unepected error during pack upload: ${errors_1.formatError(err)}`);
     }
     logger.info('Done!');
 }
@@ -97,6 +104,6 @@ async function uploadPack(uploadUrl, uploadPayload, headers) {
         });
     }
     catch (err) {
-        helpers_5.printAndExit(`Error in uploading Pack to signed url: ${err}`);
+        helpers_5.printAndExit(`Error in uploading Pack to signed url: ${errors_1.formatError(err)}`);
     }
 }

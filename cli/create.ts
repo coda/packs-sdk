@@ -1,7 +1,9 @@
 import type {Arguments} from 'yargs';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
+import {formatError} from './errors';
 import {getApiKey} from './helpers';
+import {isCodaError} from './errors';
 import {printAndExit} from '../testing/helpers';
 import {readJSONFile} from '../testing/helpers';
 import {writeJSONFile} from '../testing/helpers';
@@ -31,17 +33,17 @@ export async function createPack(packName: string, codaApiEndpoint: string) {
   }
 
   const codaClient = createCodaClient(apiKey, formattedEndpoint);
-  let packId: number;
   try {
     const response = await codaClient.createPack({}, {});
-    packId = response.packId;
+    if (isCodaError(response)) {
+      printAndExit(`Unable to create your pack, received error: ${formatError(response)}`);
+    } else {
+      const packId = response.packId;
+      storePack(packName, packId);
+    }
   } catch (err) {
-    // TODO(alan): pressure test with errors
-    const error = JSON.parse(err.error);
-    printAndExit(`Unable to create your pack, received error message ${error.message} (status code ${err.statusCode})`);
+    printAndExit(`Unable to create your pack, received error: ${formatError(err)}`);
   }
-
-  storePack(packName, packId);
 }
 
 export function storePack(packName: string, packId: number): void {
