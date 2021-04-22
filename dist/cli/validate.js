@@ -27,10 +27,10 @@ async function handleValidate({ manifestFile }) {
     return validateMetadata(manifest);
 }
 exports.handleValidate = handleValidate;
-async function validateMetadata(manifest) {
+async function validateMetadata(metadata) {
     var _a;
     try {
-        await upload_validation_1.validatePackMetadata(manifest);
+        await upload_validation_1.validatePackMetadata(metadata);
     }
     catch (e) {
         const packMetadataValidationError = e;

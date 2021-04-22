@@ -2,6 +2,7 @@ import type {Arguments} from 'yargs';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {getApiKey} from './helpers';
+import {isCodaError} from './errors';
 import {printAndExit} from '../testing/helpers';
 
 interface SetLiveArgs {
@@ -20,11 +21,14 @@ export async function handleSetLive({packId, packVersion, codaApiEndpoint}: Argu
 
   const codaClient = createCodaClient(apiKey, formattedEndpoint);
   try {
-    await codaClient.setPackLiveVersion(packId, {}, {packVersion});
+    const response = await codaClient.setPackLiveVersion(packId, {}, {packVersion});
+    if (isCodaError(response)) {
+      printAndExit(`Error when setting pack live version: ${response}`);
+    } else {
+      printAndExit('Success!');
+    }
   } catch (err) {
     const {statusCode, message} = JSON.parse(err.error);
     printAndExit(`Could not set the pack version: ${statusCode} ${message}`);
   }
-
-  printAndExit('Success!');
 }
