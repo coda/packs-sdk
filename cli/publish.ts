@@ -7,6 +7,7 @@ import {compilePackMetadata} from '../helpers/cli';
 import {computeSha256} from '../helpers/crypto';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
+import {formatError} from './errors';
 import {getApiKey} from './helpers';
 import {isCodaError} from './errors';
 import {isTestCommand} from './helpers';
@@ -69,7 +70,7 @@ export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<P
     const bundleHash = computeSha256(uploadPayload);
     const response = await client.registerPackVersion(packId, packVersion, {}, {bundleHash});
     if (isCodaError(response)) {
-      return printAndExit(`Error while registering pack version: ${response}`);
+      return printAndExit(`Error while registering pack version: ${formatError(response)}`);
     }
     const {uploadUrl, headers} = response;
 
@@ -82,10 +83,10 @@ export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<P
     logger.info('Validating upload...');
     const uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion);
     if (isCodaError(uploadCompleteResponse)) {
-      printAndExit(`Error while finalizing pack version: ${response}`);
+      printAndExit(`Error while finalizing pack version: ${formatError(response)}`);
     }
   } catch (err) {
-    printAndExit(`Unepected error during pack upload: ${err}`);
+    printAndExit(`Unepected error during pack upload: ${formatError(err)}`);
   }
 
   logger.info('Done!');
@@ -98,6 +99,6 @@ async function uploadPack(uploadUrl: string, uploadPayload: string, headers: {[h
       body: uploadPayload,
     });
   } catch (err) {
-    printAndExit(`Error in uploading Pack to signed url: ${err}`);
+    printAndExit(`Error in uploading Pack to signed url: ${formatError(err)}`);
   }
 }

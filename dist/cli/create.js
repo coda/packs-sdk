@@ -3,8 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.readPacksFile = exports.storePack = exports.createPack = exports.handleCreate = void 0;
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
-const helpers_3 = require("./helpers");
 const errors_1 = require("./errors");
+const helpers_3 = require("./helpers");
+const errors_2 = require("./errors");
 const helpers_4 = require("../testing/helpers");
 const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
@@ -24,8 +25,8 @@ async function createPack(packName, codaApiEndpoint) {
     const codaClient = helpers_1.createCodaClient(apiKey, formattedEndpoint);
     try {
         const response = await codaClient.createPack({}, {});
-        if (errors_1.isCodaError(response)) {
-            helpers_4.printAndExit(`Unable to create your pack, received error: ${response}`);
+        if (errors_2.isCodaError(response)) {
+            helpers_4.printAndExit(`Unable to create your pack, received error: ${errors_1.formatError(response)}`);
         }
         else {
             const packId = response.packId;
@@ -33,7 +34,7 @@ async function createPack(packName, codaApiEndpoint) {
         }
     }
     catch (err) {
-        helpers_4.printAndExit(`Unable to create your pack, received error: ${err}`);
+        helpers_4.printAndExit(`Unable to create your pack, received error: ${errors_1.formatError(err)}`);
     }
 }
 exports.createPack = createPack;

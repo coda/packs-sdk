@@ -29,8 +29,9 @@ const cli_1 = require("../helpers/cli");
 const crypto_1 = require("../helpers/crypto");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
-const helpers_3 = require("./helpers");
 const errors_1 = require("./errors");
+const helpers_3 = require("./helpers");
+const errors_2 = require("./errors");
 const helpers_4 = require("./helpers");
 const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
@@ -75,8 +76,8 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
         const uploadPayload = JSON.stringify(upload);
         const bundleHash = crypto_1.computeSha256(uploadPayload);
         const response = await client.registerPackVersion(packId, packVersion, {}, { bundleHash });
-        if (errors_1.isCodaError(response)) {
-            return helpers_5.printAndExit(`Error while registering pack version: ${response}`);
+        if (errors_2.isCodaError(response)) {
+            return helpers_5.printAndExit(`Error while registering pack version: ${errors_1.formatError(response)}`);
         }
         const { uploadUrl, headers } = response;
         logger.info('Validating Pack metadata...');
@@ -85,12 +86,12 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
         await uploadPack(uploadUrl, uploadPayload, headers);
         logger.info('Validating upload...');
         const uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion);
-        if (errors_1.isCodaError(uploadCompleteResponse)) {
-            helpers_5.printAndExit(`Error while finalizing pack version: ${response}`);
+        if (errors_2.isCodaError(uploadCompleteResponse)) {
+            helpers_5.printAndExit(`Error while finalizing pack version: ${errors_1.formatError(response)}`);
         }
     }
     catch (err) {
-        helpers_5.printAndExit(`Unepected error during pack upload: ${err}`);
+        helpers_5.printAndExit(`Unepected error during pack upload: ${errors_1.formatError(err)}`);
     }
     logger.info('Done!');
 }
@@ -103,6 +104,6 @@ async function uploadPack(uploadUrl, uploadPayload, headers) {
         });
     }
     catch (err) {
-        helpers_5.printAndExit(`Error in uploading Pack to signed url: ${err}`);
+        helpers_5.printAndExit(`Error in uploading Pack to signed url: ${errors_1.formatError(err)}`);
     }
 }
