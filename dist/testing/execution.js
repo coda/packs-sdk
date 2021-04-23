@@ -28,12 +28,13 @@ const fetcher_1 = require("./fetcher");
 const fetcher_2 = require("./fetcher");
 const mocks_1 = require("./mocks");
 const mocks_2 = require("./mocks");
+const path = __importStar(require("path"));
 const helpers_2 = require("./helpers");
 const auth_1 = require("./auth");
 async function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, params, context, options, { useRealFetcher, manifestPath } = {}) {
     let executionContext = context;
     if (!executionContext && useRealFetcher) {
-        const credentials = manifestPath ? auth_1.readCredentialsFile(manifestPath) : undefined;
+        const credentials = getCredentials(manifestPath);
         executionContext = fetcher_1.newFetcherExecutionContext(packDef.name, packDef.defaultAuthentication, credentials);
     }
     const formula = helper.findFormula(packDef, formulaNameWithNamespace);
@@ -45,7 +46,7 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifestPath, 
         const module = await Promise.resolve().then(() => __importStar(require(manifestPath)));
         const manifest = helpers_1.getManifestFromModule(module);
         const { useRealFetcher } = contextOptions;
-        const credentials = useRealFetcher && manifestPath ? auth_1.readCredentialsFile(manifestPath) : undefined;
+        const credentials = useRealFetcher && manifestPath ? getCredentials(manifestPath) : undefined;
         // A sync context would work for both formula / syncFormula execution for now.
         // TODO(jonathan): Pass the right context, just to set user expectations correctly for runtime values.
         const executionContext = useRealFetcher
@@ -82,7 +83,7 @@ exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
 async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, context, options, { useRealFetcher, manifestPath } = {}) {
     let executionContext = context;
     if (!executionContext && useRealFetcher) {
-        const credentials = manifestPath ? auth_1.readCredentialsFile(manifestPath) : undefined;
+        const credentials = getCredentials(manifestPath);
         executionContext = fetcher_2.newFetcherSyncExecutionContext(packDef.name, packDef.defaultAuthentication, credentials);
     }
     const formula = helper.findSyncFormula(packDef, syncFormulaName);
@@ -94,3 +95,9 @@ async function executeMetadataFormula(formula, metadataParams = {}, context = mo
     return formula.execute([search || '', formulaContext ? JSON.stringify(formulaContext) : ''], context);
 }
 exports.executeMetadataFormula = executeMetadataFormula;
+function getCredentials(manifestPath) {
+    if (manifestPath) {
+        const manifestDir = path.dirname(manifestPath);
+        return auth_1.readCredentialsFile(manifestDir);
+    }
+}

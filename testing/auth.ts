@@ -267,8 +267,8 @@ export function storeCodaApiKey(apiKey: string, projectDir: string = '.', codaAp
   writeApiKeyFile(filename, apiKeyFile);
 }
 
-export function readCredentialsFile(manifestPath: string): Credentials | undefined {
-  const filename = path.join(manifestPath, CREDENTIALS_FILE_NAME);
+export function readCredentialsFile(manifestDir: string): Credentials | undefined {
+  const filename = path.join(manifestDir, CREDENTIALS_FILE_NAME);
   const fileContents = readJSONFile(filename) as CredentialsFile | undefined;
   return fileContents?.credentials;
 }

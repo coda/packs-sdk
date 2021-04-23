@@ -15,6 +15,7 @@ import {newFetcherExecutionContext} from './fetcher';
 import {newFetcherSyncExecutionContext} from './fetcher';
 import {newMockExecutionContext} from './mocks';
 import {newMockSyncExecutionContext} from './mocks';
+import * as path from 'path';
 import {print} from './helpers';
 import {readCredentialsFile} from './auth';
 
@@ -36,7 +37,7 @@ export async function executeFormulaFromPackDef(
 ) {
   let executionContext = context;
   if (!executionContext && useRealFetcher) {
-    const credentials = manifestPath ? readCredentialsFile(manifestPath) : undefined;
+    const credentials = getCredentials(manifestPath);
     executionContext = newFetcherExecutionContext(packDef.name, packDef.defaultAuthentication, credentials);
   }
 
@@ -62,7 +63,7 @@ export async function executeFormulaOrSyncFromCLI({
     const manifest = getManifestFromModule(module);
     const {useRealFetcher} = contextOptions;
 
-    const credentials = useRealFetcher && manifestPath ? readCredentialsFile(manifestPath) : undefined;
+    const credentials = useRealFetcher && manifestPath ? getCredentials(manifestPath) : undefined;
     // A sync context would work for both formula / syncFormula execution for now.
     // TODO(jonathan): Pass the right context, just to set user expectations correctly for runtime values.
     const executionContext = useRealFetcher
@@ -142,7 +143,7 @@ export async function executeSyncFormulaFromPackDef(
 ) {
   let executionContext = context;
   if (!executionContext && useRealFetcher) {
-    const credentials = manifestPath ? readCredentialsFile(manifestPath) : undefined;
+    const credentials = getCredentials(manifestPath);
     executionContext = newFetcherSyncExecutionContext(packDef.name, packDef.defaultAuthentication, credentials);
   }
 
@@ -160,4 +161,11 @@ export async function executeMetadataFormula(
 ) {
   const {search, formulaContext} = metadataParams;
   return formula.execute([search || '', formulaContext ? JSON.stringify(formulaContext) : ''], context);
+}
+
+function getCredentials(manifestPath: string | undefined) {
+  if (manifestPath) {
+    const manifestDir = path.dirname(manifestPath);
+    return readCredentialsFile(manifestDir);
+  }
 }

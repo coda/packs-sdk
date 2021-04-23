@@ -235,8 +235,8 @@ function storeCodaApiKey(apiKey, projectDir = '.', codaApiEndpoint) {
     writeApiKeyFile(filename, apiKeyFile);
 }
 exports.storeCodaApiKey = storeCodaApiKey;
-function readCredentialsFile(manifestPath) {
-    const filename = path.join(manifestPath, CREDENTIALS_FILE_NAME);
+function readCredentialsFile(manifestDir) {
+    const filename = path.join(manifestDir, CREDENTIALS_FILE_NAME);
     const fileContents = helpers_5.readJSONFile(filename);
     return fileContents === null || fileContents === void 0 ? void 0 : fileContents.credentials;
 }

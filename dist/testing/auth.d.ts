@@ -9,5 +9,5 @@ export declare function setupAuth(manifestDir: string, packDef: PackDefinition, 
 export declare function storeCredential(manifestDir: string, credentials: Credentials): void;
 export declare function getApiKey(codaApiEndpoint?: string): string | undefined;
 export declare function storeCodaApiKey(apiKey: string, projectDir?: string, codaApiEndpoint?: string): void;
-export declare function readCredentialsFile(manifestPath: string): Credentials | undefined;
+export declare function readCredentialsFile(manifestDir: string): Credentials | undefined;
 export {};
