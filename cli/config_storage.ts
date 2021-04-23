@@ -37,7 +37,8 @@ export function getApiKey(codaApiEndpoint: string): string | undefined {
       if (isDefaultApiEndpoint(codaApiEndpoint)) {
         return apiKeyFile.apiKey;
       } else {
-        return apiKeyFile.environmentApiKeys?.[codaApiEndpoint];
+        const {host} = urlParse(codaApiEndpoint);
+        return apiKeyFile.environmentApiKeys?.[host];
       }
     }
   }
@@ -73,8 +74,9 @@ export function storePackId(manifestDir: string, packId: number, codaApiEndpoint
   if (isDefaultApiEndpoint(codaApiEndpoint)) {
     fileContents.packId = packId;
   } else {
+    const {host} = urlParse(codaApiEndpoint);
     fileContents.environmentPackIds = fileContents.environmentPackIds || {};
-    fileContents.environmentPackIds[codaApiEndpoint] = packId;
+    fileContents.environmentPackIds[host] = packId;
   }
   writePacksFile(manifestDir, fileContents);
 }
@@ -87,7 +89,8 @@ export function getPackId(manifestDir: string, codaApiEndpoint: string): number 
   if (isDefaultApiEndpoint(codaApiEndpoint)) {
     return fileContents.packId;
   } else {
-    return fileContents.environmentPackIds?.[codaApiEndpoint];
+    const {host} = urlParse(codaApiEndpoint);
+    return fileContents.environmentPackIds?.[host];
   }
 }
 

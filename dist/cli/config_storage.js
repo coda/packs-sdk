@@ -48,7 +48,8 @@ function getApiKey(codaApiEndpoint) {
                 return apiKeyFile.apiKey;
             }
             else {
-                return (_a = apiKeyFile.environmentApiKeys) === null || _a === void 0 ? void 0 : _a[codaApiEndpoint];
+                const { host } = url_parse_1.default(codaApiEndpoint);
+                return (_a = apiKeyFile.environmentApiKeys) === null || _a === void 0 ? void 0 : _a[host];
             }
         }
     }
@@ -85,8 +86,9 @@ function storePackId(manifestDir, packId, codaApiEndpoint) {
         fileContents.packId = packId;
     }
     else {
+        const { host } = url_parse_1.default(codaApiEndpoint);
         fileContents.environmentPackIds = fileContents.environmentPackIds || {};
-        fileContents.environmentPackIds[codaApiEndpoint] = packId;
+        fileContents.environmentPackIds[host] = packId;
     }
     writePacksFile(manifestDir, fileContents);
 }
@@ -101,7 +103,8 @@ function getPackId(manifestDir, codaApiEndpoint) {
         return fileContents.packId;
     }
     else {
-        return (_a = fileContents.environmentPackIds) === null || _a === void 0 ? void 0 : _a[codaApiEndpoint];
+        const { host } = url_parse_1.default(codaApiEndpoint);
+        return (_a = fileContents.environmentPackIds) === null || _a === void 0 ? void 0 : _a[host];
     }
 }
 exports.getPackId = getPackId;
