@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleRegister = void 0;
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
+const errors_1 = require("./errors");
 const open_1 = __importDefault(require("open"));
 const helpers_3 = require("../testing/helpers");
 const helpers_4 = require("../testing/helpers");
@@ -24,11 +25,13 @@ async function handleRegister({ apiToken, codaApiEndpoint }) {
     }
     const client = helpers_1.createCodaClient(apiToken, formattedEndpoint);
     try {
-        await client.whoami();
+        const response = await client.whoami();
+        if (errors_1.isCodaError(response)) {
+            return helpers_3.printAndExit(`Invalid API token provided.`);
+        }
     }
     catch (err) {
-        const { statusCode, message } = JSON.parse(err.error);
-        helpers_3.printAndExit(`Invalid API token provided: ${statusCode} ${message}`);
+        helpers_3.printAndExit(`Unexpected error while checking validity of API token: ${err}`);
     }
     config_storage_1.storeCodaApiKey(apiToken, process.env.PWD, codaApiEndpoint);
 }
