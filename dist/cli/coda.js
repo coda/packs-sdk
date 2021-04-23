@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const config_storage_1 = require("./config_storage");
 const auth_1 = require("../testing/auth");
 const auth_2 = require("./auth");
 const build_1 = require("./build");
@@ -59,7 +60,7 @@ if (require.main === module) {
             codaApiEndpoint: {
                 string: true,
                 hidden: true,
-                default: 'https://coda.io',
+                default: config_storage_1.DEFAULT_API_ENDPOINT,
             },
         },
         handler: register_1.handleRegister,
@@ -83,19 +84,19 @@ if (require.main === module) {
             codaApiEndpoint: {
                 string: true,
                 hidden: true,
-                default: 'https://coda.io',
+                default: config_storage_1.DEFAULT_API_ENDPOINT,
             },
         },
         handler: publish_1.handlePublish,
     })
         .command({
-        command: 'create <packName>',
+        command: 'create <manifestFile>',
         describe: "Register a new Pack with Coda's servers",
         builder: {
             codaApiEndpoint: {
                 string: true,
                 hidden: true,
-                default: 'https://coda.io',
+                default: config_storage_1.DEFAULT_API_ENDPOINT,
             },
         },
         handler: create_1.handleCreate,
@@ -112,7 +113,7 @@ if (require.main === module) {
             codaApiEndpoint: {
                 string: true,
                 hidden: true,
-                default: 'https://coda.io',
+                default: config_storage_1.DEFAULT_API_ENDPOINT,
             },
         },
         handler: set_live_1.handleSetLive,

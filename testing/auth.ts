@@ -1,4 +1,3 @@
-import type {ApiKeyFile} from './auth_types';
 import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
 import type {Credentials} from './auth_types';
@@ -18,7 +17,6 @@ import {print} from './helpers';
 import {printAndExit} from './helpers';
 import {promptForInput} from './helpers';
 import {readJSONFile} from './helpers';
-import urlParse from 'url-parse';
 import {writeJSONFile} from './helpers';
 
 interface SetupAuthOptions {
@@ -26,7 +24,6 @@ interface SetupAuthOptions {
 }
 
 const CREDENTIALS_FILE_NAME = '.coda-credentials.json';
-const API_KEY_FILE_NAME = '.coda.json';
 export const DEFAULT_OAUTH_SERVER_PORT = 3000;
 
 export async function setupAuthFromModule(
@@ -237,36 +234,6 @@ export function storeCredential(manifestDir: string, credentials: Credentials): 
   writeCredentialsFile(filename, credentials);
 }
 
-export function getApiKey(codaApiEndpoint?: string): string | undefined {
-  const baseFilename = path.join(process.env.PWD || '.', API_KEY_FILE_NAME);
-  // Traverse up from the current directory for a while to see if we can find an API key file.
-  // Usually it will be in the current directory, but if the user has cd'ed deeper into their
-  // project it may be higher up.
-  for (let i = 0; i < 10; i++) {
-    const filename = path.join(`..${path.sep}`.repeat(i), baseFilename);
-    const apiKeyFile = readApiKeyFile(filename);
-    if (apiKeyFile) {
-      if (codaApiEndpoint) {
-        return apiKeyFile.environmentApiKeys?.[codaApiEndpoint];
-      }
-      return apiKeyFile.apiKey;
-    }
-  }
-}
-
-export function storeCodaApiKey(apiKey: string, projectDir: string = '.', codaApiEndpoint?: string) {
-  const filename = path.join(projectDir, API_KEY_FILE_NAME);
-  const apiKeyFile = readApiKeyFile(filename) || {apiKey: ''};
-  if (codaApiEndpoint) {
-    apiKeyFile.environmentApiKeys = apiKeyFile.environmentApiKeys || {};
-    const {host} = urlParse(codaApiEndpoint);
-    apiKeyFile.environmentApiKeys[host] = apiKey;
-  } else {
-    apiKeyFile.apiKey = apiKey;
-  }
-  writeApiKeyFile(filename, apiKeyFile);
-}
-
 export function readCredentialsFile(manifestDir: string): Credentials | undefined {
   const filename = path.join(manifestDir, CREDENTIALS_FILE_NAME);
   const fileContents = readJSONFile(filename) as CredentialsFile | undefined;
@@ -280,18 +247,5 @@ function writeCredentialsFile(credentialsFile: string, credentials: Credentials)
   if (!fileExisted) {
     // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
     fs.chmodSync(credentialsFile, 0o600);
-  }
-}
-
-function readApiKeyFile(filename: string): ApiKeyFile | undefined {
-  return readJSONFile(filename);
-}
-
-function writeApiKeyFile(filename: string, fileContents: ApiKeyFile): void {
-  const fileExisted = fs.existsSync(filename);
-  writeJSONFile(filename, fileContents);
-  if (!fileExisted) {
-    // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
-    fs.chmodSync(filename, 0o600);
   }
 }

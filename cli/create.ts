@@ -1,35 +1,41 @@
 import type {Arguments} from 'yargs';
+import {PACK_ID_FILE_NAME} from './config_storage';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
-import {getApiKey} from '../testing/auth';
+import {getApiKey} from './config_storage';
+import {getPackId} from './config_storage';
 import {isCodaError} from './errors';
+import * as path from 'path';
 import {printAndExit} from '../testing/helpers';
-import {readJSONFile} from '../testing/helpers';
-import {writeJSONFile} from '../testing/helpers';
+import {storePackId} from './config_storage';
 
 interface CreateArgs {
-  packName: string;
+  manifestFile: string;
   codaApiEndpoint: string;
 }
 
-export interface AllPacks {
-  [name: string]: number;
+export async function handleCreate({manifestFile, codaApiEndpoint}: Arguments<CreateArgs>) {
+  await createPack(manifestFile, codaApiEndpoint);
 }
 
-const PACK_IDS_FILE = '.coda-packs.json';
-
-export async function handleCreate({packName, codaApiEndpoint}: Arguments<CreateArgs>) {
-  await createPack(packName, codaApiEndpoint);
-}
-
-export async function createPack(packName: string, codaApiEndpoint: string) {
+export async function createPack(manifestFile: string, codaApiEndpoint: string) {
+  const manifestDir = path.dirname(manifestFile);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   // TODO(alan): we probably want to redirect them to the `coda register`
   // flow if they don't have a Coda API token.
   const apiKey = getApiKey(codaApiEndpoint);
   if (!apiKey) {
     printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
+  }
+
+  const existingPackId = getPackId(manifestDir, codaApiEndpoint);
+  if (existingPackId) {
+    return printAndExit(
+      `This directory has already been registered on ${codaApiEndpoint} with pack id ${existingPackId}.\n` +
+        `If you're trying to create a new pack from a different manifest, you should put the new manifest in a different directory.\n` +
+        `If you're intentionally trying to create a new pack, you can delete ${PACK_ID_FILE_NAME} in this directory and try again.`,
+    );
   }
 
   const codaClient = createCodaClient(apiKey, formattedEndpoint);
@@ -39,23 +45,9 @@ export async function createPack(packName: string, codaApiEndpoint: string) {
       printAndExit(`Unable to create your pack, received error: ${formatError(response)}`);
     } else {
       const packId = response.packId;
-      storePack(packName, packId);
+      storePackId(manifestDir, packId, codaApiEndpoint);
     }
   } catch (err) {
     printAndExit(`Unable to create your pack, received error: ${formatError(err)}`);
   }
-}
-
-export function storePack(packName: string, packId: number): void {
-  const allPacks = readPacksFile() || {};
-  allPacks[packName] = packId;
-  writePacksFile(allPacks);
-}
-
-export function readPacksFile(): AllPacks | undefined {
-  return readJSONFile(PACK_IDS_FILE);
-}
-
-function writePacksFile(allPacks: AllPacks): void {
-  writeJSONFile(PACK_IDS_FILE, allPacks);
 }

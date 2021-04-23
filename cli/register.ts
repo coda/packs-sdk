@@ -4,7 +4,7 @@ import {formatEndpoint} from './helpers';
 import open from 'open';
 import {printAndExit} from '../testing/helpers';
 import {promptForInput} from '../testing/helpers';
-import {storeCodaApiKey} from '../testing/auth';
+import {storeCodaApiKey} from './config_storage';
 
 interface RegisterArgs {
   apiToken?: string;

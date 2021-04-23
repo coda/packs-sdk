@@ -30,15 +30,17 @@ const crypto_1 = require("../helpers/crypto");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const errors_1 = require("./errors");
-const auth_1 = require("../testing/auth");
+const config_storage_1 = require("./config_storage");
+const config_storage_2 = require("./config_storage");
 const errors_2 = require("./errors");
 const helpers_3 = require("./helpers");
+const path = __importStar(require("path"));
 const helpers_4 = require("../testing/helpers");
 const helpers_5 = require("../testing/helpers");
-const create_1 = require("./create");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
 const validate_1 = require("./validate");
 async function handlePublish({ manifestFile, codaApiEndpoint }) {
+    const manifestDir = path.dirname(manifestFile);
     const formattedEndpoint = helpers_2.formatEndpoint(codaApiEndpoint);
     const logger = new logging_1.ConsoleLogger();
     logger.info('Building Pack bundle...');
@@ -48,13 +50,12 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
     const packageJson = await Promise.resolve().then(() => __importStar(require(helpers_3.isTestCommand() ? '../package.json' : '../../package.json')));
     const codaPacksSDKVersion = packageJson.version;
     codaPacksSDKVersion;
-    const apiKey = auth_1.getApiKey(codaApiEndpoint);
+    const apiKey = config_storage_1.getApiKey(codaApiEndpoint);
     if (!apiKey) {
         helpers_4.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
     }
     const client = helpers_1.createCodaClient(apiKey, formattedEndpoint);
-    const packs = create_1.readPacksFile();
-    const packId = packs && packs[manifest.name];
+    const packId = config_storage_2.getPackId(manifestDir, codaApiEndpoint);
     if (!packId) {
         helpers_4.printAndExit(`Could not find a Pack id registered to Pack "${manifest.name}"`);
     }

@@ -9,7 +9,7 @@ const helpers_2 = require("./helpers");
 const open_1 = __importDefault(require("open"));
 const helpers_3 = require("../testing/helpers");
 const helpers_4 = require("../testing/helpers");
-const auth_1 = require("../testing/auth");
+const config_storage_1 = require("./config_storage");
 async function handleRegister({ apiToken, codaApiEndpoint }) {
     const formattedEndpoint = helpers_2.formatEndpoint(codaApiEndpoint);
     if (!apiToken) {
@@ -30,6 +30,6 @@ async function handleRegister({ apiToken, codaApiEndpoint }) {
         const { statusCode, message } = JSON.parse(err.error);
         helpers_3.printAndExit(`Invalid API token provided: ${statusCode} ${message}`);
     }
-    auth_1.storeCodaApiKey(apiToken, process.env.PWD, codaApiEndpoint);
+    config_storage_1.storeCodaApiKey(apiToken, process.env.PWD, codaApiEndpoint);
 }
 exports.handleRegister = handleRegister;

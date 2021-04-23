@@ -2,7 +2,7 @@ import type {Arguments} from 'yargs';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
-import {getApiKey} from '../testing/auth';
+import {getApiKey} from './config_storage';
 import {isCodaError} from './errors';
 import {printAndExit} from '../testing/helpers';
 

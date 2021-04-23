@@ -1,4 +1,3 @@
-import type {AllPacks} from './create';
 import type {Arguments} from 'yargs';
 import {ConsoleLogger} from '../helpers/logging';
 import type {PackUpload} from '../compiled_types';
@@ -8,12 +7,13 @@ import {computeSha256} from '../helpers/crypto';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
-import {getApiKey} from '../testing/auth';
+import {getApiKey} from './config_storage';
+import {getPackId} from './config_storage';
 import {isCodaError} from './errors';
 import {isTestCommand} from './helpers';
+import * as path from 'path';
 import {printAndExit} from '../testing/helpers';
 import {readFile} from '../testing/helpers';
-import {readPacksFile} from './create';
 import requestPromise from 'request-promise-native';
 import {validateMetadata} from './validate';
 
@@ -23,6 +23,7 @@ interface PublishArgs {
 }
 
 export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<PublishArgs>) {
+  const manifestDir = path.dirname(manifestFile);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   const logger = new ConsoleLogger();
   logger.info('Building Pack bundle...');
@@ -41,8 +42,7 @@ export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<P
 
   const client = createCodaClient(apiKey, formattedEndpoint);
 
-  const packs: AllPacks | undefined = readPacksFile();
-  const packId = packs && packs[manifest.name];
+  const packId = getPackId(manifestDir, codaApiEndpoint);
   if (!packId) {
     printAndExit(`Could not find a Pack id registered to Pack "${manifest.name}"`);
   }

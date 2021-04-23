@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import {DEFAULT_API_ENDPOINT} from './config_storage';
 import {DEFAULT_OAUTH_SERVER_PORT} from '../testing/auth';
 import type {Options} from 'yargs';
 import {handleAuth} from './auth';
@@ -58,7 +59,7 @@ if (require.main === module) {
         codaApiEndpoint: {
           string: true,
           hidden: true,
-          default: 'https://coda.io',
+          default: DEFAULT_API_ENDPOINT,
         } as Options,
       },
       handler: handleRegister,
@@ -82,19 +83,19 @@ if (require.main === module) {
         codaApiEndpoint: {
           string: true,
           hidden: true,
-          default: 'https://coda.io',
+          default: DEFAULT_API_ENDPOINT,
         } as Options,
       },
       handler: handlePublish,
     })
     .command({
-      command: 'create <packName>',
+      command: 'create <manifestFile>',
       describe: "Register a new Pack with Coda's servers",
       builder: {
         codaApiEndpoint: {
           string: true,
           hidden: true,
-          default: 'https://coda.io',
+          default: DEFAULT_API_ENDPOINT,
         } as Options,
       },
       handler: handleCreate,
@@ -111,7 +112,7 @@ if (require.main === module) {
         codaApiEndpoint: {
           string: true,
           hidden: true,
-          default: 'https://coda.io',
+          default: DEFAULT_API_ENDPOINT,
         } as Options,
       },
       handler: handleSetLive,
