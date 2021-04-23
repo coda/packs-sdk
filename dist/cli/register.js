@@ -31,8 +31,9 @@ async function handleRegister({ apiToken, codaApiEndpoint }) {
         }
     }
     catch (err) {
-        helpers_3.printAndExit(`Unexpected error while checking validity of API token: ${err}`);
+        return helpers_3.printAndExit(`Unexpected error while checking validity of API token: ${err}`);
     }
     config_storage_1.storeCodaApiKey(apiToken, process.env.PWD, codaApiEndpoint);
+    helpers_3.printAndExit(`API key validated and stored successfully!`, 0);
 }
 exports.handleRegister = handleRegister;

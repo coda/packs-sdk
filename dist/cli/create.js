@@ -53,15 +53,14 @@ async function createPack(manifestFile, codaApiEndpoint) {
     try {
         const response = await codaClient.createPack({}, {});
         if (errors_2.isCodaError(response)) {
-            helpers_3.printAndExit(`Unable to create your pack, received error: ${errors_1.formatError(response)}`);
+            return helpers_3.printAndExit(`Unable to create your pack, received error: ${errors_1.formatError(response)}`);
         }
-        else {
-            const packId = response.packId;
-            config_storage_4.storePackId(manifestDir, packId, codaApiEndpoint);
-        }
+        const packId = response.packId;
+        config_storage_4.storePackId(manifestDir, packId, codaApiEndpoint);
+        return helpers_3.printAndExit(`Pack created successfully! You can manage pack settings at ${codaApiEndpoint}/p/${packId}`, 0);
     }
     catch (err) {
-        helpers_3.printAndExit(`Unable to create your pack, received error: ${errors_1.formatError(err)}`);
+        return helpers_3.printAndExit(`Unable to create your pack, received error: ${errors_1.formatError(err)}`);
     }
 }
 exports.createPack = createPack;
