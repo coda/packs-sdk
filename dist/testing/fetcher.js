@@ -9,7 +9,6 @@ const logging_1 = require("../helpers/logging");
 const url_1 = require("url");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
-const auth_1 = require("./auth");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
 const url_parse_1 = __importDefault(require("url-parse"));
 const uuid_1 = require("uuid");
@@ -191,9 +190,7 @@ class AuthenticatingBlobStorage {
         return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${uuid_1.v4()}`;
     }
 }
-function newFetcherExecutionContext(packName, authDef, credentialsFile) {
-    const allCredentials = auth_1.readCredentialsFile(credentialsFile);
-    const credentials = allCredentials === null || allCredentials === void 0 ? void 0 : allCredentials.packs[packName];
+function newFetcherExecutionContext(packName, authDef, credentials) {
     const fetcher = new AuthenticatingFetcher(authDef, credentials);
     return {
         invocationLocation: {
@@ -208,8 +205,8 @@ function newFetcherExecutionContext(packName, authDef, credentialsFile) {
     };
 }
 exports.newFetcherExecutionContext = newFetcherExecutionContext;
-function newFetcherSyncExecutionContext(packName, authDef, credentialsFile) {
-    const context = newFetcherExecutionContext(packName, authDef, credentialsFile);
+function newFetcherSyncExecutionContext(packName, authDef, credentials) {
+    const context = newFetcherExecutionContext(packName, authDef, credentials);
     return { ...context, sync: {} };
 }
 exports.newFetcherSyncExecutionContext = newFetcherSyncExecutionContext;

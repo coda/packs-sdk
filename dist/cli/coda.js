@@ -5,8 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const auth_1 = require("../testing/auth");
-const auth_2 = require("../testing/auth");
-const auth_3 = require("./auth");
+const auth_2 = require("./auth");
 const build_1 = require("./build");
 const create_1 = require("./create");
 const execute_1 = require("./execute");
@@ -33,29 +32,17 @@ if (require.main === module) {
                 boolean: true,
                 desc: 'Execute the requested command in a virtual machine that mimics the environment Coda uses to execute Packs.',
             },
-            credentialsFile: {
-                alias: 'credentials_file',
-                string: true,
-                default: auth_1.DEFAULT_CREDENTIALS_FILE,
-                desc: 'Path to the credentials file.',
-            },
         },
     })
         .command({
         command: 'auth <manifestPath>',
         describe: 'Set up authentication for a Pack',
-        handler: auth_3.handleAuth,
+        handler: auth_2.handleAuth,
         builder: {
-            credentialsFile: {
-                alias: 'credentials_file',
-                string: true,
-                default: auth_1.DEFAULT_CREDENTIALS_FILE,
-                desc: 'Path to the credentials file.',
-            },
             oauthServerPort: {
                 alias: 'oauth_server_port',
                 number: true,
-                default: auth_2.DEFAULT_OAUTH_SERVER_PORT,
+                default: auth_1.DEFAULT_OAUTH_SERVER_PORT,
                 desc: 'Port to use for the local server that handles OAuth setup.',
             },
         },

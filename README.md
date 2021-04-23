@@ -312,19 +312,21 @@ token(s) or other parameters required by your authorization type.
 If you are using `OAuth2`, after you provide the necessary configuration info,
 it will launch an OAuth flow in your browser.
 
-The credentials you provide will be stored in a file `.coda/credentials.json`.
-When you execute a pack formula using `coda execute --fetch ...`, the credentials
+The credentials you provide will be stored in a file `.coda-credentials.json`
+in the same directory as your manifest.(If you move your manifest file, you'll want
+to move the credentials file along with it!)
+When you execute a pack formula using `coda execute --fetch path/to/manifest.ts ...`, the credentials
 in this file will be applied to your fetcher requests automatically.
 
 Similarly, if you are writing an integration test for your pack,
-you can pass `useRealFetcher: true` in the `ContextOptions` argument
+you can pass `useRealFetcher: true` and `manifestDir: '<manifest-dir>'` in the `ContextOptions` argument
 when calling `executeFormulaFromPackDef()` or `executeSyncFormulaFromPackDef()`,
 and a real (non-mock) http fetcher will be used, and any credentials that you
 have registered will be applied to those requests automatically.
-
-The credentials file can hold credentials for multiple packs simultaneously. So if you
-are authoring multiple packs in the same directory/repo, so long as those packs have
-different names, you can register and use credentials for all of them.
+The `manifestDir` option is required if your integration test requires authentication so that
+the SDK knows where to find the credentials file for this pack; normally you can just pass
+`manifestPath: require.resolve('../manifest')`, where you can replace `'../manifest'` with whatever
+the relative import path from your test to your manifest is.
 
 ### Syncs
 

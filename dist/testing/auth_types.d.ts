@@ -1,9 +1,10 @@
-export interface AllCredentials {
-    __coda__?: {
-        apiKey: string;
-    };
-    packs: {
-        [name: string]: Credentials;
+export interface CredentialsFile {
+    credentials: Credentials;
+}
+export interface ApiKeyFile {
+    apiKey: string;
+    environmentApiKeys?: {
+        [host: string]: string;
     };
 }
 interface BaseCredentials {

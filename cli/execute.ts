@@ -11,7 +11,6 @@ export interface ExecuteArgs {
   params: string[];
   fetch?: boolean;
   vm?: boolean;
-  credentialsFile?: string;
 }
 
 const EXECUTE_BOOTSTRAP_CODE = `
@@ -21,38 +20,30 @@ async function main() {
   const manifestPath = process.argv[1];
   const useRealFetcher = process.argv[2] === 'true';
   const vm = process.argv[3] === 'true';
-  const credentialsFile = process.argv[4] || undefined;
-  const formulaName = process.argv[5];
-  const params = process.argv.slice(6);
+  const formulaName = process.argv[4];
+  const params = process.argv.slice(5);
 
   await executeFormulaOrSyncFromCLI({
     formulaName,
     params,
     manifestPath,
     vm,
-    contextOptions: {useRealFetcher, credentialsFile},
+    contextOptions: {useRealFetcher},
   });
 }
 
 void main();`;
 
-export async function handleExecute({
-  manifestPath,
-  formulaName,
-  params,
-  fetch,
-  credentialsFile,
-  vm,
-}: Arguments<ExecuteArgs>) {
+export async function handleExecute({manifestPath, formulaName, params, fetch, vm}: Arguments<ExecuteArgs>) {
   const fullManifestPath = makeManifestFullPath(manifestPath);
   // If the given manifest source file is a .ts file, we need to evaluate it using ts-node in the user's environment.
   // We can reasonably assume the user has ts-node if they have built a pack definition using a .ts file.
   // Otherwise, the given manifest is most likely a plain .js file or a post-build .js dist file from a TS build.
   // In the latter case, we can import the given file as a regular node (non-TS) import without any bootstrapping.
   if (isTypescript(manifestPath)) {
-    const tsCommand = `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${fullManifestPath} ${Boolean(fetch)} ${Boolean(vm)} ${
-      credentialsFile || '""'
-    } ${formulaName} ${params.map(escapeShellArg).join(' ')}`;
+    const tsCommand = `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${fullManifestPath} ${Boolean(fetch)} ${Boolean(
+      vm,
+    )} ${formulaName} ${params.map(escapeShellArg).join(' ')}`;
     spawnBootstrapCommand(tsCommand);
   } else {
     await executeFormulaOrSyncFromCLI({
@@ -60,7 +51,7 @@ export async function handleExecute({
       params,
       manifestPath,
       vm,
-      contextOptions: {useRealFetcher: fetch, credentialsFile},
+      contextOptions: {useRealFetcher: fetch},
     });
   }
 }

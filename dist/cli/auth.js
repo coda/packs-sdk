@@ -29,22 +29,21 @@ import {setupAuthFromModule} from 'coda-packs-sdk/dist/testing/auth';
 
 async function main() {
   const manifestPath = process.argv[1];
-  const credentialsFile = process.argv[2] || undefined;
-  const oauthServerPort = process.argv[3] ? parseInt(process.argv[3]) : undefined;
+  const oauthServerPort = process.argv[2] ? parseInt(process.argv[2]) : undefined;
   const module = await import(manifestPath);
-  await setupAuthFromModule(module, {credentialsFile, oauthServerPort});
+  await setupAuthFromModule(manifestPath, module, {oauthServerPort});
 }
 
 void main();`;
-async function handleAuth({ manifestPath, credentialsFile, oauthServerPort }) {
+async function handleAuth({ manifestPath, oauthServerPort }) {
     const fullManifestPath = helpers_2.makeManifestFullPath(manifestPath);
     if (helpers_1.isTypescript(manifestPath)) {
-        const tsCommand = `ts-node -e "${AUTH_BOOTSTRAP_CODE}" ${fullManifestPath} ${credentialsFile || '""'} ${oauthServerPort || '""'}`;
+        const tsCommand = `ts-node -e "${AUTH_BOOTSTRAP_CODE}" ${fullManifestPath} ${oauthServerPort || '""'}`;
         helpers_3.spawnBootstrapCommand(tsCommand);
     }
     else {
         const module = await Promise.resolve().then(() => __importStar(require(fullManifestPath)));
-        await auth_1.setupAuthFromModule(module, { credentialsFile, oauthServerPort });
+        await auth_1.setupAuthFromModule(fullManifestPath, module, { oauthServerPort });
     }
 }
 exports.handleAuth = handleAuth;

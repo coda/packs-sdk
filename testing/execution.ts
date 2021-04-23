@@ -7,7 +7,7 @@ import type {PackDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
 import type {SyncExecutionContext} from '../api_types';
-import { build as buildBundle } from '../cli/build';
+import {build as buildBundle} from '../cli/build';
 import {getManifestFromModule} from './helpers';
 import * as helper from './execution_helper';
 import * as ivmHelper from './ivm_helper';
@@ -15,14 +15,16 @@ import {newFetcherExecutionContext} from './fetcher';
 import {newFetcherSyncExecutionContext} from './fetcher';
 import {newMockExecutionContext} from './mocks';
 import {newMockSyncExecutionContext} from './mocks';
+import * as path from 'path';
 import {print} from './helpers';
+import {readCredentialsFile} from './auth';
 
 export {ExecuteOptions} from './execution_helper';
 export {ExecuteSyncOptions} from './execution_helper';
 
 export interface ContextOptions {
   useRealFetcher?: boolean;
-  credentialsFile?: string;
+  manifestPath?: string;
 }
 
 export async function executeFormulaFromPackDef(
@@ -31,11 +33,12 @@ export async function executeFormulaFromPackDef(
   params: ParamValues<ParamDefs>,
   context?: ExecutionContext,
   options?: ExecuteOptions,
-  {useRealFetcher, credentialsFile}: ContextOptions = {},
+  {useRealFetcher, manifestPath}: ContextOptions = {},
 ) {
   let executionContext = context;
   if (!executionContext && useRealFetcher) {
-    executionContext = newFetcherExecutionContext(packDef.name, packDef.defaultAuthentication, credentialsFile);
+    const credentials = getCredentials(manifestPath);
+    executionContext = newFetcherExecutionContext(packDef.name, packDef.defaultAuthentication, credentials);
   }
 
   const formula = helper.findFormula(packDef, formulaNameWithNamespace);
@@ -55,14 +58,16 @@ export async function executeFormulaOrSyncFromCLI({
   vm?: boolean;
   contextOptions?: ContextOptions;
 }) {
-  try {    
+  try {
     const module = await import(manifestPath);
     const manifest = getManifestFromModule(module);
-    const {useRealFetcher, credentialsFile} = contextOptions;
+    const {useRealFetcher} = contextOptions;
 
+    const credentials = useRealFetcher && manifestPath ? getCredentials(manifestPath) : undefined;
     // A sync context would work for both formula / syncFormula execution for now.
-    const executionContext = useRealFetcher 
-      ? newFetcherSyncExecutionContext(manifest.name, manifest.defaultAuthentication, credentialsFile) 
+    // TODO(jonathan): Pass the right context, just to set user expectations correctly for runtime values.
+    const executionContext = useRealFetcher
+      ? newFetcherSyncExecutionContext(manifest.name, manifest.defaultAuthentication, credentials)
       : newMockSyncExecutionContext();
 
     const result = vm
@@ -103,7 +108,7 @@ export async function executeFormulaOrSyncWithRawParamsInVM({
   params: string[];
   manifestPath: string;
   executionContext?: SyncExecutionContext;
-}) {  
+}) {
   const bundlePath = await buildBundle(manifestPath, 'esbuild');
 
   const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
@@ -125,12 +130,7 @@ export async function executeFormulaOrSyncWithRawParams({
 }) {
   const manifest = getManifestFromModule(module);
 
-  return helper.executeFormulaOrSyncWithRawParams(
-    manifest,
-    formulaName,
-    rawParams,
-    executionContext,
-  );  
+  return helper.executeFormulaOrSyncWithRawParams(manifest, formulaName, rawParams, executionContext);
 }
 
 export async function executeSyncFormulaFromPackDef(
@@ -139,11 +139,12 @@ export async function executeSyncFormulaFromPackDef(
   params: ParamValues<ParamDefs>,
   context?: SyncExecutionContext,
   options?: ExecuteSyncOptions,
-  {useRealFetcher, credentialsFile}: ContextOptions = {},
+  {useRealFetcher, manifestPath}: ContextOptions = {},
 ) {
   let executionContext = context;
   if (!executionContext && useRealFetcher) {
-    executionContext = newFetcherSyncExecutionContext(packDef.name, packDef.defaultAuthentication, credentialsFile);
+    const credentials = getCredentials(manifestPath);
+    executionContext = newFetcherSyncExecutionContext(packDef.name, packDef.defaultAuthentication, credentials);
   }
 
   const formula = helper.findSyncFormula(packDef, syncFormulaName);
@@ -160,4 +161,11 @@ export async function executeMetadataFormula(
 ) {
   const {search, formulaContext} = metadataParams;
   return formula.execute([search || '', formulaContext ? JSON.stringify(formulaContext) : ''], context);
+}
+
+function getCredentials(manifestPath: string | undefined) {
+  if (manifestPath) {
+    const manifestDir = path.dirname(manifestPath);
+    return readCredentialsFile(manifestDir);
+  }
 }

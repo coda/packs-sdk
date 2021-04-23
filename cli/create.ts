@@ -2,7 +2,7 @@ import type {Arguments} from 'yargs';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
-import {getApiKey} from './helpers';
+import {getApiKey} from '../testing/auth';
 import {isCodaError} from './errors';
 import {printAndExit} from '../testing/helpers';
 import {readJSONFile} from '../testing/helpers';
@@ -27,7 +27,7 @@ export async function createPack(packName: string, codaApiEndpoint: string) {
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   // TODO(alan): we probably want to redirect them to the `coda register`
   // flow if they don't have a Coda API token.
-  const apiKey = getApiKey();
+  const apiKey = getApiKey(codaApiEndpoint);
   if (!apiKey) {
     printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
   }

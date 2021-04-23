@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import {DEFAULT_CREDENTIALS_FILE} from '../testing/auth';
 import {DEFAULT_OAUTH_SERVER_PORT} from '../testing/auth';
 import type {Options} from 'yargs';
 import {handleAuth} from './auth';
@@ -32,12 +31,6 @@ if (require.main === module) {
           desc:
             'Execute the requested command in a virtual machine that mimics the environment Coda uses to execute Packs.',
         } as Options,
-        credentialsFile: {
-          alias: 'credentials_file',
-          string: true,
-          default: DEFAULT_CREDENTIALS_FILE,
-          desc: 'Path to the credentials file.',
-        } as Options,
       },
     })
     .command({
@@ -45,12 +38,6 @@ if (require.main === module) {
       describe: 'Set up authentication for a Pack',
       handler: handleAuth,
       builder: {
-        credentialsFile: {
-          alias: 'credentials_file',
-          string: true,
-          default: DEFAULT_CREDENTIALS_FILE,
-          desc: 'Path to the credentials file.',
-        } as Options,
         oauthServerPort: {
           alias: 'oauth_server_port',
           number: true,

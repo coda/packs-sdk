@@ -30,11 +30,11 @@ const crypto_1 = require("../helpers/crypto");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const errors_1 = require("./errors");
-const helpers_3 = require("./helpers");
+const auth_1 = require("../testing/auth");
 const errors_2 = require("./errors");
-const helpers_4 = require("./helpers");
+const helpers_3 = require("./helpers");
+const helpers_4 = require("../testing/helpers");
 const helpers_5 = require("../testing/helpers");
-const helpers_6 = require("../testing/helpers");
 const create_1 = require("./create");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
 const validate_1 = require("./validate");
@@ -45,28 +45,28 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
     const bundleFilename = await build_1.build(manifestFile);
     const { manifest } = await Promise.resolve().then(() => __importStar(require(bundleFilename)));
     // Since package.json isn't in dist, we grab it from the root directory instead.
-    const packageJson = await Promise.resolve().then(() => __importStar(require(helpers_4.isTestCommand() ? '../package.json' : '../../package.json')));
+    const packageJson = await Promise.resolve().then(() => __importStar(require(helpers_3.isTestCommand() ? '../package.json' : '../../package.json')));
     const codaPacksSDKVersion = packageJson.version;
     codaPacksSDKVersion;
-    const apiKey = helpers_3.getApiKey();
+    const apiKey = auth_1.getApiKey(codaApiEndpoint);
     if (!apiKey) {
-        helpers_5.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
+        helpers_4.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
     }
     const client = helpers_1.createCodaClient(apiKey, formattedEndpoint);
     const packs = create_1.readPacksFile();
     const packId = packs && packs[manifest.name];
     if (!packId) {
-        helpers_5.printAndExit(`Could not find a Pack id registered to Pack "${manifest.name}"`);
+        helpers_4.printAndExit(`Could not find a Pack id registered to Pack "${manifest.name}"`);
     }
     const packVersion = manifest.version;
     if (!packVersion) {
-        helpers_5.printAndExit(`No Pack version found for your Pack "${manifest.name}"`);
+        helpers_4.printAndExit(`No Pack version found for your Pack "${manifest.name}"`);
     }
     try {
         logger.info('Registering new Pack version...');
-        const bundle = helpers_6.readFile(bundleFilename);
+        const bundle = helpers_5.readFile(bundleFilename);
         if (!bundle) {
-            helpers_5.printAndExit(`Could not find bundle file at path ${bundleFilename}`);
+            helpers_4.printAndExit(`Could not find bundle file at path ${bundleFilename}`);
         }
         const metadata = cli_1.compilePackMetadata(manifest);
         const upload = {
@@ -77,7 +77,7 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
         const bundleHash = crypto_1.computeSha256(uploadPayload);
         const response = await client.registerPackVersion(packId, packVersion, {}, { bundleHash });
         if (errors_2.isCodaError(response)) {
-            return helpers_5.printAndExit(`Error while registering pack version: ${errors_1.formatError(response)}`);
+            return helpers_4.printAndExit(`Error while registering pack version: ${errors_1.formatError(response)}`);
         }
         const { uploadUrl, headers } = response;
         logger.info('Validating Pack metadata...');
@@ -87,11 +87,11 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
         logger.info('Validating upload...');
         const uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion);
         if (errors_2.isCodaError(uploadCompleteResponse)) {
-            helpers_5.printAndExit(`Error while finalizing pack version: ${errors_1.formatError(response)}`);
+            helpers_4.printAndExit(`Error while finalizing pack version: ${errors_1.formatError(response)}`);
         }
     }
     catch (err) {
-        helpers_5.printAndExit(`Unepected error during pack upload: ${errors_1.formatError(err)}`);
+        helpers_4.printAndExit(`Unepected error during pack upload: ${errors_1.formatError(err)}`);
     }
     logger.info('Done!');
 }
@@ -104,6 +104,6 @@ async function uploadPack(uploadUrl, uploadPayload, headers) {
         });
     }
     catch (err) {
-        helpers_5.printAndExit(`Error in uploading Pack to signed url: ${errors_1.formatError(err)}`);
+        helpers_4.printAndExit(`Error in uploading Pack to signed url: ${errors_1.formatError(err)}`);
     }
 }

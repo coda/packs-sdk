@@ -8,7 +8,7 @@ import {computeSha256} from '../helpers/crypto';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
-import {getApiKey} from './helpers';
+import {getApiKey} from '../testing/auth';
 import {isCodaError} from './errors';
 import {isTestCommand} from './helpers';
 import {printAndExit} from '../testing/helpers';
@@ -34,7 +34,7 @@ export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<P
   const codaPacksSDKVersion = packageJson.version;
   codaPacksSDKVersion!;
 
-  const apiKey = getApiKey();
+  const apiKey = getApiKey(codaApiEndpoint);
   if (!apiKey) {
     printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
   }

@@ -1,8 +1,8 @@
 import {testHelper} from './test_helper';
 import type {AfterTokenExchangeCallback} from '../testing/oauth_server';
-import type {AllCredentials} from '../testing/auth_types';
 import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
+import type {Credentials} from '../testing/auth_types';
 import type {PackDefinition} from '../types';
 import {createFakePack} from './test_utils';
 import {executeFormulaFromPackDef} from '../testing/execution';
@@ -17,6 +17,8 @@ import {setupAuth} from '../testing/auth';
 import sinon from 'sinon';
 import {storeCredential} from '../testing/auth';
 
+const MANIFEST_PATH = '.';
+
 function makeFakePromptForInput(rawResponses: string | string[]): typeof helpers.promptForInput {
   const responses = typeof rawResponses === 'string' ? [rawResponses] : rawResponses;
   let counter = 0;
@@ -25,6 +27,10 @@ function makeFakePromptForInput(rawResponses: string | string[]): typeof helpers
   }
 
   return sinon.spy(questionHandler);
+}
+
+function doSetupAuth(pack: PackDefinition) {
+  return setupAuth(MANIFEST_PATH, pack);
 }
 
 describe('Auth', () => {
@@ -50,8 +56,8 @@ describe('Auth', () => {
     mockPromptForInput.callsFake(makeFakePromptForInput(responses));
   }
 
-  function assertCredentialsFileExactly(allCredentials: AllCredentials | undefined, credentialsFile?: string) {
-    assert.deepEqual(readCredentialsFile(credentialsFile), allCredentials);
+  function assertCredentialsFileExactly(credentials: Credentials | undefined) {
+    assert.deepEqual(readCredentialsFile(MANIFEST_PATH), credentials);
   }
 
   describe('setup', () => {
@@ -60,7 +66,7 @@ describe('Auth', () => {
         defaultAuthentication: undefined,
       });
 
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       sinon.assert.calledOnceWithExactly(
         mockPrintAndExit,
@@ -76,7 +82,7 @@ describe('Auth', () => {
         },
       });
 
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       sinon.assert.calledOnceWithExactly(
         mockPrintAndExit,
@@ -94,14 +100,14 @@ describe('Auth', () => {
       });
       setupReadline('some-token');
 
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       sinon.assert.calledOnceWithExactly(mockPromptForInput, 'Paste the token or API key to use for Fake Pack:\n', {
         mask: true,
       });
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({packs: {'Fake Pack': {token: 'some-token'}}});
+      assertCredentialsFileExactly({token: 'some-token'});
     });
 
     it(`${AuthenticationType.HeaderBearerToken}, requires endpoint url`, () => {
@@ -113,7 +119,7 @@ describe('Auth', () => {
       });
       setupReadline(['https://some-endpoint-url.com', 'some-token']);
 
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       sinon.assert.calledWithExactly(
         mockPromptForInput,
@@ -124,9 +130,7 @@ describe('Auth', () => {
       });
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({
-        packs: {'Fake Pack': {endpointUrl: 'https://some-endpoint-url.com', token: 'some-token'}},
-      });
+      assertCredentialsFileExactly({endpointUrl: 'https://some-endpoint-url.com', token: 'some-token'});
     });
 
     it(`${AuthenticationType.CodaApiHeaderBearerToken}`, () => {
@@ -137,14 +141,14 @@ describe('Auth', () => {
       });
       setupReadline('some-token');
 
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       sinon.assert.calledOnceWithExactly(mockPromptForInput, 'Paste the token or API key to use for Fake Pack:\n', {
         mask: true,
       });
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({packs: {'Fake Pack': {token: 'some-token'}}});
+      assertCredentialsFileExactly({token: 'some-token'});
     });
 
     it(`${AuthenticationType.CustomHeaderToken}`, () => {
@@ -156,14 +160,14 @@ describe('Auth', () => {
       });
       setupReadline('some-token');
 
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       sinon.assert.calledOnceWithExactly(mockPromptForInput, 'Paste the token or API key to use for Fake Pack:\n', {
         mask: true,
       });
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({packs: {'Fake Pack': {token: 'some-token'}}});
+      assertCredentialsFileExactly({token: 'some-token'});
     });
 
     it(`${AuthenticationType.QueryParamToken}`, () => {
@@ -175,7 +179,7 @@ describe('Auth', () => {
       });
       setupReadline('some-param-value');
 
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       sinon.assert.calledOnceWithExactly(
         mockPromptForInput,
@@ -184,7 +188,7 @@ describe('Auth', () => {
       );
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({packs: {'Fake Pack': {paramValue: 'some-param-value'}}});
+      assertCredentialsFileExactly({paramValue: 'some-param-value'});
     });
 
     it(`${AuthenticationType.MultiQueryParamToken}`, () => {
@@ -199,7 +203,7 @@ describe('Auth', () => {
       });
       setupReadline(['param-value-1', 'param-value-2']);
 
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       sinon.assert.calledWithExactly(
         mockPromptForInput,
@@ -213,9 +217,7 @@ describe('Auth', () => {
       );
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({
-        packs: {'Fake Pack': {params: {param1: 'param-value-1', param2: 'param-value-2'}}},
-      });
+      assertCredentialsFileExactly({params: {param1: 'param-value-1', param2: 'param-value-2'}});
     });
 
     it(`${AuthenticationType.WebBasic}`, () => {
@@ -226,13 +228,13 @@ describe('Auth', () => {
       });
       setupReadline(['some-username', 'some-password']);
 
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the username for Fake Pack:\n');
       sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the password for Fake Pack:\n', {mask: true});
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({packs: {'Fake Pack': {username: 'some-username', password: 'some-password'}}});
+      assertCredentialsFileExactly({username: 'some-username', password: 'some-password'});
     });
 
     it(`${AuthenticationType.WebBasic}, username only`, () => {
@@ -246,12 +248,12 @@ describe('Auth', () => {
       });
       setupReadline(['some-username']);
 
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       sinon.assert.calledOnceWithExactly(mockPromptForInput, 'Enter the username for Fake Pack:\n');
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({packs: {'Fake Pack': {username: 'some-username'}}});
+      assertCredentialsFileExactly({username: 'some-username'});
     });
 
     it(`${AuthenticationType.WebBasic}, custom field names`, () => {
@@ -266,13 +268,13 @@ describe('Auth', () => {
       });
       setupReadline(['some-username', 'some-password']);
 
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the API Key for Fake Pack:\n');
       sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the API Password for Fake Pack:\n', {mask: true});
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({packs: {'Fake Pack': {username: 'some-username', password: 'some-password'}}});
+      assertCredentialsFileExactly({username: 'some-username', password: 'some-password'});
     });
 
     it(`${AuthenticationType.WebBasic}, requires endpoint url`, () => {
@@ -284,7 +286,7 @@ describe('Auth', () => {
       });
       setupReadline(['https://some-endpoint-url.com', 'some-username', 'some-password']);
 
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       sinon.assert.calledWithExactly(
         mockPromptForInput,
@@ -295,13 +297,9 @@ describe('Auth', () => {
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
       assertCredentialsFileExactly({
-        packs: {
-          'Fake Pack': {
-            endpointUrl: 'https://some-endpoint-url.com',
-            username: 'some-username',
-            password: 'some-password',
-          },
-        },
+        endpointUrl: 'https://some-endpoint-url.com',
+        username: 'some-username',
+        password: 'some-password',
       });
     });
 
@@ -315,7 +313,7 @@ describe('Auth', () => {
       });
       setupReadline(['https://some-endpoint-url.com', 'some-username', 'some-password']);
 
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       sinon.assert.calledWithMatch(
         mockPromptForInput,
@@ -326,13 +324,9 @@ describe('Auth', () => {
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
       assertCredentialsFileExactly({
-        packs: {
-          'Fake Pack': {
-            endpointUrl: 'https://some-endpoint-url.com',
-            username: 'some-username',
-            password: 'some-password',
-          },
-        },
+        endpointUrl: 'https://some-endpoint-url.com',
+        username: 'some-username',
+        password: 'some-password',
       });
     });
   });
@@ -372,7 +366,10 @@ describe('Auth', () => {
           'content-type': 'application/json',
         },
       });
-      return executeFormulaFromPackDef(packDef, formulaName, [url], undefined, undefined, {useRealFetcher: true});
+      return executeFormulaFromPackDef(packDef, formulaName, [url], undefined, undefined, {
+        useRealFetcher: true,
+        manifestPath: MANIFEST_PATH,
+      });
     }
 
     it(`no authentication`, async () => {
@@ -411,7 +408,7 @@ describe('Auth', () => {
         type: AuthenticationType.HeaderBearerToken,
       });
       setupReadline('some-token');
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -430,7 +427,7 @@ describe('Auth', () => {
         requiresEndpointUrl: true,
       });
       setupReadline(['https://some-endpoint-url.com', 'some-token']);
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       await executeFetch(pack, '/foo', {result: 'hello'});
 
@@ -449,7 +446,7 @@ describe('Auth', () => {
         requiresEndpointUrl: true,
       });
       setupReadline(['https://some-endpoint-url.com', 'some-token']);
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       await executeFetch(pack, 'https://some-endpoint-url.com/foo', {result: 'hello'});
 
@@ -468,7 +465,7 @@ describe('Auth', () => {
         requiresEndpointUrl: true,
       });
       setupReadline(['https://some-endpoint-url.com', 'some-token']);
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       await testHelper.willBeRejectedWith(
         executeFetch(pack, 'https://example.com/foo', {result: 'hello'}),
@@ -487,7 +484,7 @@ describe('Auth', () => {
         type: AuthenticationType.CodaApiHeaderBearerToken,
       });
       setupReadline('some-token');
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -506,7 +503,7 @@ describe('Auth', () => {
         headerName: 'MyHeader',
       });
       setupReadline('some-token');
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -526,7 +523,7 @@ describe('Auth', () => {
         tokenPrefix: 'MyPrefix',
       });
       setupReadline('some-token');
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -545,7 +542,7 @@ describe('Auth', () => {
         paramName: 'myParam',
       });
       setupReadline('some-param-value');
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       await executeFetch(pack, 'https://example.com/foo?blah=123', {result: 'hello'});
 
@@ -567,7 +564,7 @@ describe('Auth', () => {
         ],
       });
       setupReadline(['param-value-1', 'param-value-2']);
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       await executeFetch(pack, 'https://example.com/foo?blah=123', {result: 'hello'});
 
@@ -585,7 +582,7 @@ describe('Auth', () => {
         type: AuthenticationType.WebBasic,
       });
       setupReadline(['some-username', 'some-password']);
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -609,7 +606,7 @@ describe('Auth', () => {
         },
       });
       setupReadline(['some-username']);
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -628,7 +625,7 @@ describe('Auth', () => {
         requiresEndpointUrl: true,
       });
       setupReadline(['https://some-endpoint-url.com', 'some-username', 'some-password']);
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       await executeFetch(pack, '/foo?bar=blah', {result: 'hello'});
 
@@ -682,7 +679,7 @@ describe('Auth', () => {
       });
 
       setupReadline('some-token');
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       await executeFetch(pack, 'https://example.com', {result: 'hello'}, 'Fake::FetchNoAuth');
 
@@ -716,7 +713,7 @@ describe('Auth', () => {
       });
 
       setupReadline('some-token');
-      setupAuth(pack);
+      doSetupAuth(pack);
 
       await executeFetch(pack, 'https://example.com/some-blob.jpg', {result: 'hello'}, 'Fake::StoreBlob');
 
@@ -752,7 +749,7 @@ describe('Auth', () => {
           clientSecretEnvVarName: 'ignored',
         });
         setupReadline(['some-client-id', 'some-client-secret']);
-        setupAuth(pack);
+        doSetupAuth(pack);
 
         await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -797,7 +794,7 @@ describe('Auth', () => {
           clientSecretEnvVarName: 'ignored',
         });
         setupReadline(['some-client-id', 'some-client-secret']);
-        setupAuth(pack);
+        doSetupAuth(pack);
 
         await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -830,7 +827,6 @@ describe('Auth', () => {
       });
 
       it(`${AuthenticationType.OAuth2}, leaves existing secrets in place`, async () => {
-        const credentialsFile = 'somedir/credentials.json';
         const pack = createPackWithAuth(
           {
             type: AuthenticationType.OAuth2,
@@ -843,27 +839,20 @@ describe('Auth', () => {
           {name: 'Fake Pack'},
         );
 
-        storeCredential(credentialsFile, 'Fake Pack', {
+        storeCredential(MANIFEST_PATH, {
           clientId: 'existing-client-id',
           clientSecret: 'existing-client-secret',
         });
 
         setupReadline(['y', '', '']);
-        setupAuth(pack, {credentialsFile});
+        doSetupAuth(pack);
 
-        assertCredentialsFileExactly(
-          {
-            packs: {
-              'Fake Pack': {
-                clientId: 'existing-client-id',
-                clientSecret: 'existing-client-secret',
-                accessToken: 'some-access-token',
-                refreshToken: 'some-refresh-token',
-              },
-            },
-          },
-          credentialsFile,
-        );
+        assertCredentialsFileExactly({
+          clientId: 'existing-client-id',
+          clientSecret: 'existing-client-secret',
+          accessToken: 'some-access-token',
+          refreshToken: 'some-refresh-token',
+        });
       });
     });
   });
