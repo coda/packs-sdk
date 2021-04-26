@@ -106,7 +106,7 @@ if (require.main === module) {
       handler: handleValidate,
     })
     .command({
-      command: 'setLive <manifestPath> <packVersion>',
+      command: 'setLive <manifestFile> <packVersion>',
       describe: 'Set the Pack version that is installable for users.',
       builder: {
         codaApiEndpoint: {
