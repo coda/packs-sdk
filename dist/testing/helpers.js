@@ -69,7 +69,7 @@ function writeJSONFile(fileName, payload) {
     ensure_1.ensureNonEmptyString(fileName);
     const dirname = path_1.default.dirname(fileName);
     if (!fs_1.default.existsSync(dirname)) {
-        fs_1.default.mkdirSync(dirname);
+        fs_1.default.mkdirSync(dirname, { recursive: true });
     }
     fs_1.default.writeFileSync(fileName, JSON.stringify(payload, undefined, 2));
 }
