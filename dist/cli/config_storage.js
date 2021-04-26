@@ -36,12 +36,11 @@ function isDefaultApiEndpoint(apiEndpoint) {
 }
 function getApiKey(codaApiEndpoint) {
     var _a;
-    const baseFilename = path.join(process.env.PWD || '.', API_KEY_FILE_NAME);
     // Traverse up from the current directory for a while to see if we can find an API key file.
     // Usually it will be in the current directory, but if the user has cd'ed deeper into their
     // project it may be higher up.
     for (let i = 0; i < 10; i++) {
-        const filename = path.join(`..${path.sep}`.repeat(i), baseFilename);
+        const filename = path.join(process.env.PWD || '.', `..${path.sep}`.repeat(i), API_KEY_FILE_NAME);
         const apiKeyFile = readApiKeyFile(filename);
         if (apiKeyFile) {
             if (isDefaultApiEndpoint(codaApiEndpoint)) {

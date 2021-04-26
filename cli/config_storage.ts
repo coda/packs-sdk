@@ -26,7 +26,6 @@ function isDefaultApiEndpoint(apiEndpoint: string): boolean {
 }
 
 export function getApiKey(codaApiEndpoint: string): string | undefined {
-  // const baseFilename = path.join(process.env.PWD || '.', API_KEY_FILE_NAME);
   // Traverse up from the current directory for a while to see if we can find an API key file.
   // Usually it will be in the current directory, but if the user has cd'ed deeper into their
   // project it may be higher up.
