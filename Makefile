@@ -50,6 +50,11 @@ compile:
 		--format=cjs \
 		--minify \
 		--banner:js="'use strict';"
+	# Generate a typescript file for use in /experimental so the web editor
+	# can resolve packs-sdk imports
+	${ROOTDIR}/node_modules/.bin/dts-bundle-generator ${ROOTDIR}/index.ts \
+  	-o ${ROOTDIR}/dist/bundle.d.ts \
+		--no-banner
 
 .PHONY: docs
 docs:
