@@ -50,6 +50,8 @@ compile:
 		--format=cjs \
 		--minify \
 		--banner:js="'use strict';"
+	${ROOTDIR}/node_modules/.bin/dts-bundle-generator ${ROOTDIR}/index.ts \
+  	-o ${ROOTDIR}/dist/bundle.d.ts  
 
 .PHONY: docs
 docs:

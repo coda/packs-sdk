@@ -125,8 +125,7 @@ export {ensureNonEmptyString} from './helpers/ensure';
 export {ensureUnreachable} from './helpers/ensure';
 
 // Object Schemas
-import * as schema from './schema';
-export {schema};
+export * as schema from './schema';
 export type {ArraySchema} from './schema';
 export type {BooleanSchema} from './schema';
 export {CurrencyFormat} from './schema';
