@@ -356,7 +356,6 @@ const packMetadataSchema = zodCompleteObject({
     description: z.string().nonempty(),
     permissionsDescription: z.string().optional(),
     version: z.string().nonempty(),
-    providerId: z.number().optional(),
     category: z.nativeEnum(types_4.PackCategory),
     logoPath: z.string().optional(),
     enabledConfigName: z.string().optional(),

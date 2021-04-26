@@ -3,7 +3,6 @@ import type { PackFormulas } from './api';
 import type { SyncTable } from './api';
 import type { TypedStandardFormula } from './api';
 export declare type PackId = number;
-export declare type ProviderId = number;
 export declare enum PackCategory {
     CRM = "CRM",
     Calendar = "Calendar",
@@ -191,7 +190,6 @@ export interface PackDefinition {
     description: string;
     permissionsDescription?: string;
     version: string;
-    providerId: ProviderId;
     category: PackCategory;
     logoPath: string;
     enabledConfigName?: string;
@@ -217,10 +215,5 @@ export interface PackDefinition {
      * Whether this is a pack that will be used by Coda internally and not exposed directly to users.
      */
     isSystem?: boolean;
-}
-export interface ProviderDefinition {
-    id: ProviderId;
-    name: string;
-    logoPath: string;
 }
 export {};
