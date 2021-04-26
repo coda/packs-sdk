@@ -423,7 +423,6 @@ const packMetadataSchema = zodCompleteObject<PackMetadata>({
   description: z.string().nonempty(),
   permissionsDescription: z.string().optional(), // TODO: validate present if authentication is present
   version: z.string().nonempty(),
-  providerId: z.number().optional(), // Deprecated
   category: z.nativeEnum(PackCategory),
   logoPath: z.string().optional(),
   enabledConfigName: z.string().optional(),
