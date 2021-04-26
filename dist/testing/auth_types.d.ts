@@ -1,12 +1,6 @@
 export interface CredentialsFile {
     credentials: Credentials;
 }
-export interface ApiKeyFile {
-    apiKey: string;
-    environmentApiKeys?: {
-        [host: string]: string;
-    };
-}
 interface BaseCredentials {
     endpointUrl?: string;
 }

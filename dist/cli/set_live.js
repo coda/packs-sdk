@@ -4,11 +4,11 @@ exports.handleSetLive = void 0;
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const errors_1 = require("./errors");
-const auth_1 = require("../testing/auth");
+const config_storage_1 = require("./config_storage");
 const errors_2 = require("./errors");
 const helpers_3 = require("../testing/helpers");
 async function handleSetLive({ packId, packVersion, codaApiEndpoint }) {
-    const apiKey = auth_1.getApiKey(codaApiEndpoint);
+    const apiKey = config_storage_1.getApiKey(codaApiEndpoint);
     const formattedEndpoint = helpers_2.formatEndpoint(codaApiEndpoint);
     if (!apiKey) {
         helpers_3.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
