@@ -6,7 +6,6 @@ import type {BooleanSchema} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import {DefaultConnectionType} from '../types';
-import {FeatureSet} from '../types';
 import type {HeaderBearerTokenAuthentication} from '../types';
 import type {Identity} from '../schema';
 import type {MultiQueryParamTokenAuthentication} from '../types';
@@ -20,9 +19,8 @@ import {ObjectHintValueTypes} from '../schema';
 import type {ObjectPackFormula} from '../api';
 import type {ObjectSchema} from '../schema';
 import type {ObjectSchemaProperty} from '../schema';
-import {PackCategory} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
-import type {PackMetadata} from '../compiled_types';
+import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDef} from '../api_types';
 import {PostSetupType} from '../types';
 import type {QueryParamTokenAuthentication} from '../types';
@@ -54,7 +52,7 @@ export class PackMetadataValidationError extends Error {
   }
 }
 
-export async function validatePackMetadata(metadata: Record<string, any>): Promise<PackMetadata> {
+export async function validatePackVersionMetadata(metadata: Record<string, any>): Promise<PackVersionMetadata> {
   const validated = packMetadataSchema.safeParse(metadata);
   if (!validated.success) {
     throw new PackMetadataValidationError(
@@ -64,7 +62,7 @@ export async function validatePackMetadata(metadata: Record<string, any>): Promi
     );
   }
 
-  return validated.data as PackMetadata;
+  return validated.data as PackVersionMetadata;
 }
 
 function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError | ValidationError[] {
@@ -447,29 +445,16 @@ const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   matchers: z.array(z.string()),
 });
 
-const packMetadataSchema = zodCompleteObject<PackMetadata>({
-  id: z.number().optional(), // Will be assigned by DB
-  name: z.string().nonempty(),
-  shortDescription: z.string().nonempty(),
-  description: z.string().nonempty(),
+const packMetadataSchema = zodCompleteObject<PackVersionMetadata>({
   permissionsDescription: z.string().optional(), // TODO: validate present if authentication is present
   version: z.string().nonempty(),
-  category: z.nativeEnum(PackCategory),
-  logoPath: z.string().optional(),
-  enabledConfigName: z.string().optional(),
   defaultAuthentication: z.union(zodUnionInput(Object.values(defaultAuthenticationValidators))).optional(),
   networkDomains: z.array(z.string()).optional(),
-  exampleImages: z.array(z.string()).optional(),
-  exampleVideoIds: z.array(z.string()).optional(),
-  minimumFeatureSet: z.nativeEnum(FeatureSet).optional(),
-  quotas: z.any().optional(), // Moving to the UI
-  rateLimits: z.any().optional(), // Moving to the UI
   formulaNamespace: z.string().optional(),
   systemConnectionAuthentication: z.union(zodUnionInput(systemAuthenticationValidators)).optional(),
   formulas: z.array(formulaMetadataSchema).optional().default([]),
   formats: z.array(formatMetadataSchema).optional().default([]),
   syncTables: z.array(z.unknown()).optional().default([]),
-  isSystem: z.boolean().optional(), // Moving to UI/admin
 })
   .refine(
     data => {

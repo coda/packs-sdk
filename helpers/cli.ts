@@ -12,6 +12,8 @@ import type {PackFormulas} from '../api';
 import type {PackFormulasMetadata} from '../compiled_types';
 import type {PackMetadata} from '../compiled_types';
 import type {PackSyncTable} from '../compiled_types';
+import type {PackVersionDefinition} from '../types';
+import type {PackVersionMetadata} from '../compiled_types';
 import type {PostSetup} from '../types';
 import type {PostSetupMetadata} from '../compiled_types';
 import type {TypedPackFormula} from '../api';
@@ -19,12 +21,14 @@ import type {TypedStandardFormula} from '../api';
 import {ensureExists} from '../helpers/ensure';
 import {isDynamicSyncTable} from '../api';
 
-export function compilePackMetadata(manifest: PackDefinition): PackMetadata {
+// Legacy metadata compilation kept around until we migrate first-party packs.
+export function compilePackMetadata(manifest: PackDefinition): PackMetadata;
+export function compilePackMetadata(manifest: PackVersionDefinition): PackVersionMetadata {
   const {formats, formulas, formulaNamespace, syncTables, defaultAuthentication, ...definition} = manifest;
   const compiledFormats = compileFormatsMetadata(formats || []);
   const compiledFormulas = (formulas && compileFormulasMetadata(formulas)) || (Array.isArray(formulas) ? [] : {});
   const defaultAuthenticationMetadata = compileDefaultAuthenticationMetadata(defaultAuthentication);
-  const metadata: PackMetadata = {
+  const metadata: PackVersionMetadata = {
     ...definition,
     defaultAuthentication: defaultAuthenticationMetadata,
     formulaNamespace,
@@ -61,7 +65,6 @@ function compileFormulasMetadata(
   return formulasMetadata;
 }
 
-
 function compileFormulaMetadata(formula: TypedPackFormula): PackFormulaMetadata {
   const {execute, ...rest} = formula;
   return rest;
@@ -89,8 +92,6 @@ function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
   };
 }
 
-
-
 function compileDefaultAuthenticationMetadata(
   authentication: Authentication | undefined,
 ): AuthenticationMetadata | undefined {
@@ -108,8 +109,6 @@ function compileDefaultAuthenticationMetadata(
     postSetup: postSetup ? postSetup.map(compilePostSetupStepMetadata) : undefined,
   };
 }
-
-
 
 function compileMetadataFormulaMetadata(formula: MetadataFormula | undefined): MetadataFormulaMetadata | undefined {
   if (!formula) {

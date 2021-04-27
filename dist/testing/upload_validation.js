@@ -19,15 +19,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validatePackMetadata = exports.PackMetadataValidationError = void 0;
+exports.validatePackVersionMetadata = exports.PackMetadataValidationError = void 0;
 const schema_1 = require("../schema");
 const types_1 = require("../types");
 const types_2 = require("../types");
-const types_3 = require("../types");
 const schema_2 = require("../schema");
 const schema_3 = require("../schema");
-const types_4 = require("../types");
-const types_5 = require("../types");
+const types_3 = require("../types");
 const schema_4 = require("../schema");
 const api_types_1 = require("../api_types");
 const schema_5 = require("../schema");
@@ -46,14 +44,14 @@ class PackMetadataValidationError extends Error {
     }
 }
 exports.PackMetadataValidationError = PackMetadataValidationError;
-async function validatePackMetadata(metadata) {
+async function validatePackVersionMetadata(metadata) {
     const validated = packMetadataSchema.safeParse(metadata);
     if (!validated.success) {
         throw new PackMetadataValidationError('Pack metadata failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
     }
     return validated.data;
 }
-exports.validatePackMetadata = validatePackMetadata;
+exports.validatePackVersionMetadata = validatePackVersionMetadata;
 function zodErrorDetailToValidationError(subError) {
     var _a;
     // Top-level errors for union types are totally useless, they just say "invalid input",
@@ -124,7 +122,7 @@ function zodUnionInput(schemas) {
     return schemas;
 }
 const setEndpointPostSetupValidator = zodCompleteObject({
-    type: zodDiscriminant(types_5.PostSetupType.SetEndpoint),
+    type: zodDiscriminant(types_3.PostSetupType.SetEndpoint),
     name: z.string(),
     description: z.string(),
     // TODO(jonathan): Remove this from the metadata object, only needs to be present in the full bundle.
@@ -376,28 +374,15 @@ const formatMetadataSchema = zodCompleteObject({
     matchers: z.array(z.string()),
 });
 const packMetadataSchema = zodCompleteObject({
-    id: z.number().optional(),
-    name: z.string().nonempty(),
-    shortDescription: z.string().nonempty(),
-    description: z.string().nonempty(),
     permissionsDescription: z.string().optional(),
     version: z.string().nonempty(),
-    category: z.nativeEnum(types_4.PackCategory),
-    logoPath: z.string().optional(),
-    enabledConfigName: z.string().optional(),
     defaultAuthentication: z.union(zodUnionInput(Object.values(defaultAuthenticationValidators))).optional(),
     networkDomains: z.array(z.string()).optional(),
-    exampleImages: z.array(z.string()).optional(),
-    exampleVideoIds: z.array(z.string()).optional(),
-    minimumFeatureSet: z.nativeEnum(types_3.FeatureSet).optional(),
-    quotas: z.any().optional(),
-    rateLimits: z.any().optional(),
     formulaNamespace: z.string().optional(),
     systemConnectionAuthentication: z.union(zodUnionInput(systemAuthenticationValidators)).optional(),
     formulas: z.array(formulaMetadataSchema).optional().default([]),
     formats: z.array(formatMetadataSchema).optional().default([]),
     syncTables: z.array(z.unknown()).optional().default([]),
-    isSystem: z.boolean().optional(), // Moving to UI/admin
 })
     .refine(data => {
     if (data.formulas && data.formulas.length > 0) {

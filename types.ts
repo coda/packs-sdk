@@ -260,34 +260,48 @@ export interface RateLimits {
   perConnection?: RateLimit;
 }
 
-export interface PackDefinition {
-  id: PackId;
-  name: string;
-  shortDescription: string;
-  description: string;
-  permissionsDescription?: string;
+/**
+ * The definition of the contents of a Pack at a specific version. This is the
+ * heart of the implementation of a Pack.
+ */
+export interface PackVersionDefinition {
   version: string;
-  category: PackCategory;
-  logoPath: string;
-  enabledConfigName?: string;
+  permissionsDescription?: string; // TODO(jonathan): Figure out what to do with this.
+  /**
+   * If specified, the user must provide personal authentication credentials before using the pack.
+   */
   defaultAuthentication?: Authentication;
-  networkDomains?: string[];
-  exampleImages?: string[];
-  exampleVideoIds?: string[];
-  minimumFeatureSet?: FeatureSet;
-  quotas?: Partial<{[featureSet in FeatureSet]: Quota}>;
-  rateLimits?: RateLimits;
-  formulaNamespace?: string; // TODO: @alan-fang make required
   /**
    * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
    * explicit connection is specified by the user.
    */
   systemConnectionAuthentication?: SystemAuthentication;
+  networkDomains?: string[];
 
   // User-facing components
+  formulaNamespace?: string; // TODO: @alan-fang remove
   formulas?: PackFormulas | TypedStandardFormula[];
   formats?: Format[];
   syncTables?: SyncTable[];
+}
+
+/**
+ * The legacy complete definition of a Pack including un-versioned metadata.
+ * This should only be used by legacy Coda pack implementations.
+ */
+export interface PackDefinition extends PackVersionDefinition {
+  id: PackId;
+  name: string;
+  shortDescription: string;
+  description: string;
+  category: PackCategory;
+  logoPath: string;
+  enabledConfigName?: string;
+  exampleImages?: string[];
+  exampleVideoIds?: string[];
+  minimumFeatureSet?: FeatureSet;
+  quotas?: Partial<{[featureSet in FeatureSet]: Quota}>;
+  rateLimits?: RateLimits;
   /**
    * Whether this is a pack that will be used by Coda internally and not exposed directly to users.
    */

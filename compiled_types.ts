@@ -6,6 +6,7 @@ import type {MetadataFormulaMetadata} from './api';
 import type {ObjectPackFormulaMetadata} from './api';
 import type {PackDefinition} from './types';
 import type {PackFormulaMetadata} from './api';
+import type {PackVersionDefinition} from './types';
 import type {PostSetup} from './types';
 import type {SyncTable} from './api';
 
@@ -41,6 +42,18 @@ export type AuthenticationMetadata = DistributiveOmit<
   getConnectionName?: MetadataFormulaMetadata;
   getConnectionUserId?: MetadataFormulaMetadata;
   postSetup?: PostSetupMetadata[];
+};
+
+/** Stripped-down version of `PackVersionDefinition` that doesn't contain formula definitions. */
+export type PackVersionMetadata = Omit<
+  PackVersionDefinition,
+  'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'
+> & {
+  // TODO: @alan-fang once all packs are using formulaNamespace, delete PackFormulasMetadata.
+  formulas: PackFormulasMetadata | PackFormulaMetadata[];
+  formats: PackFormatMetadata[];
+  syncTables: PackSyncTable[];
+  defaultAuthentication?: AuthenticationMetadata;
 };
 
 /** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
@@ -92,6 +105,6 @@ export interface ExternalPackMetadata extends BasePackMetadata {
 }
 
 export interface PackUpload {
-  metadata: PackMetadata;
+  metadata: PackVersionMetadata;
   bundle: string;
 }

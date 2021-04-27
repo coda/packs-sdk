@@ -6,6 +6,7 @@ import type { MetadataFormulaMetadata } from './api';
 import type { ObjectPackFormulaMetadata } from './api';
 import type { PackDefinition } from './types';
 import type { PackFormulaMetadata } from './api';
+import type { PackVersionDefinition } from './types';
 import type { PostSetup } from './types';
 import type { SyncTable } from './api';
 export declare type PackSyncTable = Omit<SyncTable, 'getter' | 'getName' | 'getSchema' | 'listDynamicUrls' | 'getDisplayUrl'> & {
@@ -30,6 +31,13 @@ export declare type AuthenticationMetadata = DistributiveOmit<Authentication, 'g
     getConnectionName?: MetadataFormulaMetadata;
     getConnectionUserId?: MetadataFormulaMetadata;
     postSetup?: PostSetupMetadata[];
+};
+/** Stripped-down version of `PackVersionDefinition` that doesn't contain formula definitions. */
+export declare type PackVersionMetadata = Omit<PackVersionDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {
+    formulas: PackFormulasMetadata | PackFormulaMetadata[];
+    formats: PackFormatMetadata[];
+    syncTables: PackSyncTable[];
+    defaultAuthentication?: AuthenticationMetadata;
 };
 /** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
 export declare type PackMetadata = Omit<PackDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {
@@ -66,7 +74,7 @@ export interface ExternalPackMetadata extends BasePackMetadata {
     syncTables?: ExternalSyncTable[];
 }
 export interface PackUpload {
-    metadata: PackMetadata;
+    metadata: PackVersionMetadata;
     bundle: string;
 }
 export {};
