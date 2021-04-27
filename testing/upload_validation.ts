@@ -446,7 +446,6 @@ const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
 });
 
 const packMetadataSchema = zodCompleteObject<PackVersionMetadata>({
-  permissionsDescription: z.string().optional(), // TODO: validate present if authentication is present
   version: z.string().nonempty(),
   defaultAuthentication: z.union(zodUnionInput(Object.values(defaultAuthenticationValidators))).optional(),
   networkDomains: z.array(z.string()).optional(),

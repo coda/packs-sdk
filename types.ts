@@ -266,7 +266,6 @@ export interface RateLimits {
  */
 export interface PackVersionDefinition {
   version: string;
-  permissionsDescription?: string; // TODO(jonathan): Figure out what to do with this.
   /**
    * If specified, the user must provide personal authentication credentials before using the pack.
    */
@@ -294,6 +293,7 @@ export interface PackDefinition extends PackVersionDefinition {
   name: string;
   shortDescription: string;
   description: string;
+  permissionsDescription?: string;
   category: PackCategory;
   logoPath: string;
   enabledConfigName?: string;

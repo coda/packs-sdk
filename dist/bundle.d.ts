@@ -842,7 +842,6 @@ export interface RateLimits {
  */
 export interface PackVersionDefinition {
 	version: string;
-	permissionsDescription?: string;
 	/**
 	 * If specified, the user must provide personal authentication credentials before using the pack.
 	 */
@@ -867,6 +866,7 @@ export interface PackDefinition extends PackVersionDefinition {
 	name: string;
 	shortDescription: string;
 	description: string;
+	permissionsDescription?: string;
 	category: PackCategory;
 	logoPath: string;
 	enabledConfigName?: string;
@@ -913,7 +913,7 @@ export declare type PackVersionMetadata = Omit<PackVersionDefinition, "formulas"
 	defaultAuthentication?: AuthenticationMetadata;
 };
 /** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
-export declare type PackMetadata = PackVersionMetadata & Pick<PackDefinition, "id" | "name" | "shortDescription" | "description" | "category" | "logoPath" | "exampleImages" | "exampleVideoIds" | "minimumFeatureSet" | "quotas" | "rateLimits" | "isSystem">;
+export declare type PackMetadata = PackVersionMetadata & Pick<PackDefinition, "id" | "name" | "shortDescription" | "description" | "permissionsDescription" | "category" | "logoPath" | "exampleImages" | "exampleVideoIds" | "minimumFeatureSet" | "quotas" | "rateLimits" | "enabledConfigName" | "isSystem">;
 export declare type ExternalPackAuthenticationType = AuthenticationType;
 export declare type ExternalPackFormulas = PackFormulasMetadata | PackFormulaMetadata[];
 export declare type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
@@ -942,7 +942,7 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 	syncTables?: ExternalSyncTable[];
 }
 /** Further stripped-down version of `PackMetadata` that contains only what the browser needs. */
-export declare type ExternalPackMetadata = ExternalPackVersionMetadata & Pick<PackMetadata, "id" | "name" | "shortDescription" | "description" | "category" | "logoPath" | "exampleImages" | "exampleVideoIds" | "minimumFeatureSet" | "quotas" | "rateLimits">;
+export declare type ExternalPackMetadata = ExternalPackVersionMetadata & Pick<PackMetadata, "id" | "name" | "shortDescription" | "description" | "permissionsDescription" | "category" | "logoPath" | "exampleImages" | "exampleVideoIds" | "minimumFeatureSet" | "quotas" | "rateLimits" | "isSystem">;
 export declare function withQueryParams(url: string, params?: {
 	[key: string]: any;
 }): string;

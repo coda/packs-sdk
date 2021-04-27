@@ -374,7 +374,6 @@ const formatMetadataSchema = zodCompleteObject({
     matchers: z.array(z.string()),
 });
 const packMetadataSchema = zodCompleteObject({
-    permissionsDescription: z.string().optional(),
     version: z.string().nonempty(),
     defaultAuthentication: z.union(zodUnionInput(Object.values(defaultAuthenticationValidators))).optional(),
     networkDomains: z.array(z.string()).optional(),

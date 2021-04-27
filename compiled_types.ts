@@ -64,6 +64,7 @@ export type PackMetadata = PackVersionMetadata &
     | 'name'
     | 'shortDescription'
     | 'description'
+    | 'permissionsDescription'
     | 'category'
     | 'logoPath'
     | 'exampleImages'
@@ -71,6 +72,7 @@ export type PackMetadata = PackVersionMetadata &
     | 'minimumFeatureSet'
     | 'quotas'
     | 'rateLimits'
+    | 'enabledConfigName'
     | 'isSystem'
   >;
 
@@ -116,6 +118,7 @@ export type ExternalPackMetadata = ExternalPackVersionMetadata &
     | 'name'
     | 'shortDescription'
     | 'description'
+    | 'permissionsDescription'
     | 'category'
     | 'logoPath'
     | 'exampleImages'
@@ -123,6 +126,7 @@ export type ExternalPackMetadata = ExternalPackVersionMetadata &
     | 'minimumFeatureSet'
     | 'quotas'
     | 'rateLimits'
+    | 'isSystem'
   >;
 
 export interface PackUpload {
