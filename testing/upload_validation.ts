@@ -386,7 +386,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
       packId: z.number(), // TODO: Remove
       name: z.string().nonempty().refine(isValidIdentityName, {
         message:
-          'Invalid name. Identity names can only contain alphanumeric characters, underscoes, and dashes, and no spaces.',
+          'Invalid name. Identity names can only contain alphanumeric characters, underscores, and dashes, and no spaces.',
       }),
       dynamicUrl: z.string().optional(),
       attribution: z
