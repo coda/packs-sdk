@@ -350,6 +350,30 @@ const arrayPropertySchema: z.ZodTypeAny = z.lazy(() =>
   }),
 );
 
+const Base64ObjectRegex = /^[A-Za-z0-9=_-]+$/;
+// This is ripped off from isValidObjectId in coda. Violating this causes a number of downstream headaches.
+function isValidObjectId(component: string): boolean {
+  return Base64ObjectRegex.test(component);
+}
+
+// These sync tables already violate the object id constraints and should be cleaned up via upgrade.
+const BAD_SYNC_TABLE_NAMES = [
+  'Pull Request',
+  'Merge Request',
+  'G Suite Directory User',
+  'Campaign Group',
+  'Candidate Stage',
+  'Person Schema',
+  'Doc Analytics',
+];
+
+function isValidIdentityName(name: string): boolean {
+  if (BAD_SYNC_TABLE_NAMES.includes(name)) {
+    return true;
+  }
+  return isValidObjectId(name);
+}
+
 const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
   zodCompleteObject<ObjectSchema<any, any>>({
     type: zodDiscriminant(ValueType.Object),
@@ -360,7 +384,10 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     featured: z.array(z.string()).optional(),
     identity: zodCompleteObject<Identity>({
       packId: z.number(), // TODO: Remove
-      name: z.string().nonempty(),
+      name: z.string().nonempty().refine(isValidIdentityName, {
+        message:
+          'Invalid name. Identity names can only contain alphanumeric characters, underscoes, and dashes, and no spaces.',
+      }),
       dynamicUrl: z.string().optional(),
       attribution: z
         .union([textAttributionNodeSchema, linkAttributionNodeSchema, imageAttributionNodeSchema])

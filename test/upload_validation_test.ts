@@ -229,7 +229,7 @@ describe('Pack metadata Validation', () => {
           primary: 'primary',
           identity: {
             packId: 123,
-            name: 'identity name',
+            name: 'IdentityName',
           },
           properties: {
             id: {type: ValueType.Number, fromKey: 'foo', required: true},
@@ -238,6 +238,28 @@ describe('Pack metadata Validation', () => {
           },
         });
         await validateJson(metadata);
+      });
+
+      it('invalid identity name', async () => {
+        const metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          identity: {
+            packId: 123,
+            name: 'Name With Spaces',
+          },
+          properties: {
+            id: {type: ValueType.Number, fromKey: 'foo', required: true},
+            primary: {type: ValueType.String},
+          },
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message:
+              'Invalid name. Identity names can only contain alphanumeric characters, underscoes, and dashes, and no spaces.',
+            path: 'formulas[0].schema.identity.name',
+          },
+        ]);
       });
 
       it('id not among properties', async () => {
