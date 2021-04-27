@@ -57,13 +57,22 @@ export type PackVersionMetadata = Omit<
 };
 
 /** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
-export type PackMetadata = Omit<PackDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {
-  // TODO: @alan-fang once all packs are using formulaNamespace, delete PackFormulasMetadata.
-  formulas: PackFormulasMetadata | PackFormulaMetadata[];
-  formats: PackFormatMetadata[];
-  syncTables: PackSyncTable[];
-  defaultAuthentication?: AuthenticationMetadata;
-};
+export type PackMetadata = PackVersionMetadata &
+  Pick<
+    PackDefinition,
+    | 'id'
+    | 'name'
+    | 'shortDescription'
+    | 'description'
+    | 'category'
+    | 'logoPath'
+    | 'exampleImages'
+    | 'exampleVideoIds'
+    | 'minimumFeatureSet'
+    | 'quotas'
+    | 'rateLimits'
+    | 'isSystem'
+  >;
 
 // Re-exported values for use in browser code.
 
@@ -75,18 +84,13 @@ export type ExternalPackFormat = Format;
 export type ExternalPackFormatMetadata = PackFormatMetadata;
 export type ExternalSyncTable = PackSyncTable;
 
-type BasePackMetadata = Omit<
-  PackMetadata,
-  | 'enabledConfigName'
-  | 'defaultAuthentication'
-  | 'systemConnectionAuthentication'
-  | 'formulas'
-  | 'formats'
-  | 'syncTables'
+type BasePackVersionMetadata = Omit<
+  PackVersionMetadata,
+  'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables'
 >;
 
-/** Further stripped-down version of `PackMetadata` that contains only what the browser needs. */
-export interface ExternalPackMetadata extends BasePackMetadata {
+/** Further stripped-down version of `PackVersionMetadata` that contains only what the browser needs. */
+export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
   authentication: {
     type: ExternalPackAuthenticationType;
     params?: Array<{name: string; description: string}>;
@@ -103,6 +107,23 @@ export interface ExternalPackMetadata extends BasePackMetadata {
   formats?: ExternalPackFormat[];
   syncTables?: ExternalSyncTable[];
 }
+
+/** Further stripped-down version of `PackMetadata` that contains only what the browser needs. */
+export type ExternalPackMetadata = ExternalPackVersionMetadata &
+  Pick<
+    PackMetadata,
+    | 'id'
+    | 'name'
+    | 'shortDescription'
+    | 'description'
+    | 'category'
+    | 'logoPath'
+    | 'exampleImages'
+    | 'exampleVideoIds'
+    | 'minimumFeatureSet'
+    | 'quotas'
+    | 'rateLimits'
+  >;
 
 export interface PackUpload {
   metadata: PackVersionMetadata;

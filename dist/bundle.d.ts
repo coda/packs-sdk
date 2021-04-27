@@ -913,12 +913,7 @@ export declare type PackVersionMetadata = Omit<PackVersionDefinition, "formulas"
 	defaultAuthentication?: AuthenticationMetadata;
 };
 /** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
-export declare type PackMetadata = Omit<PackDefinition, "formulas" | "formats" | "defaultAuthentication" | "syncTables"> & {
-	formulas: PackFormulasMetadata | PackFormulaMetadata[];
-	formats: PackFormatMetadata[];
-	syncTables: PackSyncTable[];
-	defaultAuthentication?: AuthenticationMetadata;
-};
+export declare type PackMetadata = PackVersionMetadata & Pick<PackDefinition, "id" | "name" | "shortDescription" | "description" | "category" | "logoPath" | "exampleImages" | "exampleVideoIds" | "minimumFeatureSet" | "quotas" | "rateLimits" | "isSystem">;
 export declare type ExternalPackAuthenticationType = AuthenticationType;
 export declare type ExternalPackFormulas = PackFormulasMetadata | PackFormulaMetadata[];
 export declare type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
@@ -926,9 +921,9 @@ export declare type ExternalPackFormula = PackFormulaMetadata;
 export declare type ExternalPackFormat = Format;
 export declare type ExternalPackFormatMetadata = PackFormatMetadata;
 export declare type ExternalSyncTable = PackSyncTable;
-export declare type BasePackMetadata = Omit<PackMetadata, "enabledConfigName" | "defaultAuthentication" | "systemConnectionAuthentication" | "formulas" | "formats" | "syncTables">;
-/** Further stripped-down version of `PackMetadata` that contains only what the browser needs. */
-export interface ExternalPackMetadata extends BasePackMetadata {
+export declare type BasePackVersionMetadata = Omit<PackVersionMetadata, "defaultAuthentication" | "systemConnectionAuthentication" | "formulas" | "formats" | "syncTables">;
+/** Further stripped-down version of `PackVersionMetadata` that contains only what the browser needs. */
+export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 	authentication: {
 		type: ExternalPackAuthenticationType;
 		params?: Array<{
@@ -946,6 +941,8 @@ export interface ExternalPackMetadata extends BasePackMetadata {
 	formats?: ExternalPackFormat[];
 	syncTables?: ExternalSyncTable[];
 }
+/** Further stripped-down version of `PackMetadata` that contains only what the browser needs. */
+export declare type ExternalPackMetadata = ExternalPackVersionMetadata & Pick<PackMetadata, "id" | "name" | "shortDescription" | "description" | "category" | "logoPath" | "exampleImages" | "exampleVideoIds" | "minimumFeatureSet" | "quotas" | "rateLimits">;
 export declare function withQueryParams(url: string, params?: {
 	[key: string]: any;
 }): string;

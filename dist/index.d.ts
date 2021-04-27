@@ -29,6 +29,7 @@ export type { ExternalPackFormula } from './compiled_types';
 export type { ExternalPackFormulas } from './compiled_types';
 export type { ExternalSyncTable } from './compiled_types';
 export type { ExternalPackMetadata } from './compiled_types';
+export type { ExternalPackVersionMetadata } from './compiled_types';
 export type { ArrayType } from './api_types';
 export type { Continuation } from './api';
 export type { DefaultValueType } from './api_types';
