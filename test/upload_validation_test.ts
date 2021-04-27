@@ -256,7 +256,7 @@ describe('Pack metadata Validation', () => {
         assert.deepEqual(err.validationErrors, [
           {
             message:
-              'Invalid name. Identity names can only contain alphanumeric characters, underscoes, and dashes, and no spaces.',
+              'Invalid name. Identity names can only contain alphanumeric characters, underscores, and dashes, and no spaces.',
             path: 'formulas[0].schema.identity.name',
           },
         ]);
