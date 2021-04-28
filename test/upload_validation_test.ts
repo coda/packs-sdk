@@ -9,13 +9,18 @@ import type {PackVersionMetadata} from '../compiled_types';
 import {PostSetupType} from '../types';
 import type {TypedStandardFormula} from '../api';
 import {ValueType} from '../schema';
+import {createFakePack} from './test_utils';
 import {createFakePackFormulaMetadata} from './test_utils';
 import {createFakePackVersionMetadata} from './test_utils';
+import {makeDynamicSyncTable} from '../api';
+import {makeMetadataFormula} from '../api';
 import {makeNumericFormula} from '../api';
 import {makeNumericParameter} from '../api';
 import {makeObjectFormula} from '../api';
+import {makeObjectSchema} from '../schema';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
+import {makeSyncTable} from '../api';
 import {validatePackVersionMetadata} from '../testing/upload_validation';
 
 describe('Pack metadata Validation', () => {
@@ -204,6 +209,134 @@ describe('Pack metadata Validation', () => {
       });
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [{message: 'Required', path: 'formulas[0].description'}]);
+    });
+
+    describe('sync tables', () => {
+      it('valid sync table', async () => {
+        const syncTable = makeSyncTable(
+          'SyncTable',
+          makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            identity: {packId: 424242, name: 'foo'},
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        );
+
+        const metadata = createFakePack({
+          syncTables: [syncTable],
+        });
+        await validateJson(metadata);
+      });
+
+      it('valid dynamic sync table', async () => {
+        const syncTable = makeDynamicSyncTable({
+          packId: 424242,
+          name: 'DynamicSyncTable',
+          getName: makeMetadataFormula(async () => {
+            return '';
+          }),
+          getSchema: makeMetadataFormula(async () => {
+            return '';
+          }),
+          formula: {
+            name: 'Sync table',
+            description: 'Sync table',
+            examples: [],
+            parameters: [],
+            execute: async () => {
+              return {result: []};
+            },
+          },
+          getDisplayUrl: makeMetadataFormula(async () => {
+            return '';
+          }),
+        });
+
+        const metadata = createFakePack({
+          syncTables: [syncTable],
+        });
+        await validateJson(metadata);
+      });
+
+      it('identity name matches property', async () => {
+        const syncTable = makeSyncTable(
+          'SyncTable',
+          makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            identity: {packId: 424242, name: 'Foo'},
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        );
+
+        const metadata = createFakePack({
+          syncTables: [syncTable],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        console.log(err.validationErrors);
+      });
+
+      // it('invalid identity name', async () => {
+      //   const syncTable = makeSyncTable(
+      //     'SyncTable',
+      //     makeObjectSchema({
+      //       type: ValueType.Object,
+      //       primary: 'foo',
+      //       id: 'foo',
+      //       identity: {packId: 424242, name: 'Name with spaces'},
+      //       properties: {
+      //         foo: {type: ValueType.String},
+      //       },
+      //     }),
+      //     {
+      //       name: 'SyncTable',
+      //       description: 'A simple sync table',
+      //       async execute([], _context) {
+      //         return {result: []};
+      //       },
+      //       parameters: [],
+      //       examples: [],
+      //     },
+      //   );
+
+      //   const metadata = createFakePackMetadata({
+      //     syncTables: [syncTable],
+      //   });
+      //   const err = await validateJsonAndAssertFails(metadata);
+      //   assert.deepEqual(err.validationErrors, [
+      //     {
+      //       message:
+      //         'Invalid name. Identity names can only contain
+      //          alphanumeric characters, underscores, and dashes, and no spaces.',
+      //       path: 'syncTables[0].schema.identity.name',
+      //     },
+      //   ]);
+      // });
     });
 
     describe('object schemas', () => {

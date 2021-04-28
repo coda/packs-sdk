@@ -6,6 +6,7 @@ import type {BooleanSchema} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import {DefaultConnectionType} from '../types';
+import type {DynamicSyncTableDef} from '../api';
 import {FeatureSet} from '../types';
 import type {HeaderBearerTokenAuthentication} from '../types';
 import type {Identity} from '../schema';
@@ -24,12 +25,15 @@ import {PackCategory} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDef} from '../api_types';
+import type {ParamDefs} from '../api_types';
 import {PostSetupType} from '../types';
 import type {QueryParamTokenAuthentication} from '../types';
 import type {SetEndpoint} from '../types';
 import {StringHintValueTypes} from '../schema';
 import type {StringPackFormula} from '../api';
 import type {StringSchema} from '../schema';
+import type {SyncFormula} from '../api';
+import type {SyncTableDef} from '../api';
 import {Type} from '../api_types';
 import type {ValidationError} from './types';
 import {ValueType} from '../schema';
@@ -139,8 +143,8 @@ function zodCompleteObject<O, T extends ZodCompleteShape<O> = ZodCompleteShape<R
   return z.object<T>(shape);
 }
 
-function zodDiscriminant(value: string | number) {
-  return z.union([z.string(), z.number()]).refine(data => data === value, {
+function zodDiscriminant(value: string | number | boolean) {
+  return z.union([z.string(), z.number(), z.boolean()]).refine(data => data === value, {
     message: 'Non-matching discriminant',
     params: {customErrorCode: CustomErrorCode.NonMatchingDiscriminant},
   });
@@ -449,6 +453,74 @@ const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   matchers: z.array(z.string()),
 });
 
+const syncFormulaSchema = zodCompleteObject<Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute'>>({
+  schema: arrayPropertySchema.optional(),
+  resultType: z.any(),
+  isSyncFormula: z.boolean(),
+  ...commonPackFormulaSchema,
+});
+
+const baseSyncTableSchema = {
+  name: z.string().nonempty(),
+  schema: genericObjectSchema,
+  getter: syncFormulaSchema,
+  entityName: z.string().optional(),
+};
+
+const genericSyncTableSchema = zodCompleteObject<SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>>({
+  ...baseSyncTableSchema,
+  getSchema: formulaMetadataSchema.optional(),
+}).refine(
+  data => {
+    if (!data.schema.identity) {
+      return true;
+    }
+    const identityName = data.schema.identity.name;
+    // Hack until we fix the NFL pack
+    // if (data.id === PackId.NFL && identityName === 'FullName') {
+    //   return;
+    // }
+    if (data.schema.properties[identityName]) {
+      return false;
+    }
+    return true;
+  },
+  {
+    message: 'Cannot have a property with the same name as the schema identity.',
+  },
+);
+
+const genericDynamicSyncTableSchema = zodCompleteObject<
+  DynamicSyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>
+>({
+  ...baseSyncTableSchema,
+  isDynamic: zodDiscriminant(true),
+  getName: formulaMetadataSchema,
+  getDisplayUrl: formulaMetadataSchema,
+  listDynamicUrls: formulaMetadataSchema.optional(),
+  getSchema: formulaMetadataSchema,
+}).refine(
+  data => {
+    if (!data.schema.identity) {
+      return true;
+    }
+    const identityName = data.schema.identity.name;
+    // Hack until we fix the NFL pack
+    // if (data.id === PackId.NFL && identityName === 'FullName') {
+    //   return;
+    // }
+    if (data.schema.properties[identityName]) {
+      return true;
+    }
+    return true;
+  },
+  {
+    message: 'Cannot have a property with the same name as the schema identity.',
+  },
+);
+
+const syncTableSchema = z.union([genericSyncTableSchema, genericDynamicSyncTableSchema]);
+
 // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
 // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
 // schema we actually use.)
@@ -462,7 +534,7 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata
   systemConnectionAuthentication: z.union(zodUnionInput(systemAuthenticationValidators)).optional(),
   formulas: z.array(formulaMetadataSchema).optional().default([]),
   formats: z.array(formatMetadataSchema).optional().default([]),
-  syncTables: z.array(z.unknown()).optional().default([]),
+  syncTables: z.array(syncTableSchema).optional().default([]),
 });
 
 function validateNamespace(namespace: string | undefined): boolean {
@@ -528,4 +600,26 @@ const legacyPackMetadataSchema = validateFormulas(
     rateLimits: z.any().optional(),
     isSystem: z.boolean().optional(),
   }),
+).refine(
+  data => {
+    for (const syncTable of data.syncTables) {
+      if (!syncTable.schema?.identity) {
+        continue;
+      }
+
+      const identityName = syncTable.schema.identity.name;
+      // Hack until we fix the NFL pack
+      if (data.id === ExceptedPackIds.NFL && identityName === 'FullName') {
+        continue;
+      }
+      if (syncTable.schema.properties[identityName]) {
+        return false;
+      }
+    }
+
+    return true;
+  },
+  {
+    message: "Cannot have a sync table property with the same name as the sync table's schema identity.",
+  },
 );
