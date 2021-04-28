@@ -47,6 +47,10 @@ enum CustomErrorCode {
   NonMatchingDiscriminant = 'nonMatchingDiscriminant',
 }
 
+enum ExceptedPackIds {
+  NFL = 1040,
+}
+
 export class PackMetadataValidationError extends Error {
   readonly originalError: Error | undefined;
   readonly validationErrors: ValidationError[] | undefined;
@@ -470,25 +474,7 @@ const baseSyncTableSchema = {
 const genericSyncTableSchema = zodCompleteObject<SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>>({
   ...baseSyncTableSchema,
   getSchema: formulaMetadataSchema.optional(),
-}).refine(
-  data => {
-    if (!data.schema.identity) {
-      return true;
-    }
-    const identityName = data.schema.identity.name;
-    // Hack until we fix the NFL pack
-    // if (data.id === PackId.NFL && identityName === 'FullName') {
-    //   return;
-    // }
-    if (data.schema.properties[identityName]) {
-      return false;
-    }
-    return true;
-  },
-  {
-    message: 'Cannot have a property with the same name as the schema identity.',
-  },
-);
+});
 
 const genericDynamicSyncTableSchema = zodCompleteObject<
   DynamicSyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>
@@ -499,25 +485,7 @@ const genericDynamicSyncTableSchema = zodCompleteObject<
   getDisplayUrl: formulaMetadataSchema,
   listDynamicUrls: formulaMetadataSchema.optional(),
   getSchema: formulaMetadataSchema,
-}).refine(
-  data => {
-    if (!data.schema.identity) {
-      return true;
-    }
-    const identityName = data.schema.identity.name;
-    // Hack until we fix the NFL pack
-    // if (data.id === PackId.NFL && identityName === 'FullName') {
-    //   return;
-    // }
-    if (data.schema.properties[identityName]) {
-      return true;
-    }
-    return true;
-  },
-  {
-    message: 'Cannot have a property with the same name as the schema identity.',
-  },
-);
+});
 
 const syncTableSchema = z.union([genericSyncTableSchema, genericDynamicSyncTableSchema]);
 
