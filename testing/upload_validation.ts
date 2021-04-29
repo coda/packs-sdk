@@ -151,7 +151,7 @@ function zodCompleteObject<O, T extends ZodCompleteShape<O> = ZodCompleteShape<R
 }
 
 function zodDiscriminant(value: string | number | boolean) {
-  return z.union([z.string(), z.number(), z.boolean()]).refine(data => data === value, {
+  return z.union([z.string(), z.number(), z.boolean(), z.undefined()]).refine(data => data === value, {
     message: 'Non-matching discriminant',
     params: {customErrorCode: CustomErrorCode.NonMatchingDiscriminant},
   });

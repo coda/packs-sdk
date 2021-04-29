@@ -401,25 +401,10 @@ describe('Pack metadata Validation', () => {
               'alphanumeric characters, underscores, and dashes, and no spaces.',
             path: 'syncTables[0].schema.identity.name',
           },
+          // TODO(alan): figure out how to obscure this error.
           {
             message: 'Invalid input',
             path: 'syncTables[0].getter.schema.items',
-          },
-          {
-            message: 'Invalid input',
-            path: 'syncTables[0].isDynamic',
-          },
-          {
-            message: 'Invalid input',
-            path: 'syncTables[0].getName',
-          },
-          {
-            message: 'Invalid input',
-            path: 'syncTables[0].getDisplayUrl',
-          },
-          {
-            message: 'Invalid input',
-            path: 'syncTables[0].getSchema',
           },
         ]);
       });
