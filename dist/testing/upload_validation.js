@@ -23,9 +23,11 @@ exports.validatePackVersionMetadata = exports.PackMetadataValidationError = void
 const schema_1 = require("../schema");
 const types_1 = require("../types");
 const types_2 = require("../types");
+const types_3 = require("../types");
 const schema_2 = require("../schema");
 const schema_3 = require("../schema");
-const types_3 = require("../types");
+const types_4 = require("../types");
+const types_5 = require("../types");
 const schema_4 = require("../schema");
 const api_types_1 = require("../api_types");
 const schema_5 = require("../schema");
@@ -45,7 +47,9 @@ class PackMetadataValidationError extends Error {
 }
 exports.PackMetadataValidationError = PackMetadataValidationError;
 async function validatePackVersionMetadata(metadata) {
-    const validated = packMetadataSchema.safeParse(metadata);
+    // For now we use legacyPackMetadataSchema as the top-level object we validate. As soon as we migrate all of our
+    // first-party pack definitions to only use versioned fields, we can use packVersionMetadataSchema  here.
+    const validated = legacyPackMetadataSchema.safeParse(metadata);
     if (!validated.success) {
         throw new PackMetadataValidationError('Pack metadata failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
     }
@@ -122,7 +126,7 @@ function zodUnionInput(schemas) {
     return schemas;
 }
 const setEndpointPostSetupValidator = zodCompleteObject({
-    type: zodDiscriminant(types_3.PostSetupType.SetEndpoint),
+    type: zodDiscriminant(types_5.PostSetupType.SetEndpoint),
     name: z.string(),
     description: z.string(),
     // TODO(jonathan): Remove this from the metadata object, only needs to be present in the full bundle.
@@ -373,7 +377,7 @@ const formatMetadataSchema = zodCompleteObject({
     placeholder: z.string().optional(),
     matchers: z.array(z.string()),
 });
-const packMetadataSchema = zodCompleteObject({
+const packVersionMetadataSchema = zodCompleteObject({
     version: z.string().nonempty(),
     defaultAuthentication: z.union(zodUnionInput(Object.values(defaultAuthenticationValidators))).optional(),
     networkDomains: z.array(z.string()).optional(),
@@ -404,4 +408,25 @@ const packMetadataSchema = zodCompleteObject({
     message: 'Could not find a formula for one or more matchers. Check that the "formulaName" for each matcher ' +
         'matches the name of a formula defined in this pack.',
     path: ['formats'],
+});
+// We temporarily allow our legacy packs to provide non-versioned data until we sufficiently migrate them.
+// But all fields must be optional, because this is the top-level object we use for validation,
+// so we must be able to pass validation while providing only fields from PackVersionMetadata.
+const legacyPackMetadataSchema = 
+// TODO: Figure out why zodCompleteObject doesn't return something compatible with ZodObject
+packVersionMetadataSchema.extend({
+    id: z.number().optional(),
+    name: z.string().nonempty(),
+    shortDescription: z.string().nonempty().optional(),
+    description: z.string().nonempty().optional(),
+    permissionsDescription: z.string().optional(),
+    category: z.nativeEnum(types_4.PackCategory).optional(),
+    logoPath: z.string().optional(),
+    enabledConfigName: z.string().optional(),
+    exampleImages: z.array(z.string()).optional(),
+    exampleVideoIds: z.array(z.string()).optional(),
+    minimumFeatureSet: z.nativeEnum(types_3.FeatureSet).optional(),
+    quotas: z.any().optional(),
+    rateLimits: z.any().optional(),
+    isSystem: z.boolean().optional(),
 });

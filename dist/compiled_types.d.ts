@@ -71,7 +71,7 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 /** Further stripped-down version of `PackMetadata` that contains only what the browser needs. */
 export declare type ExternalPackMetadata = ExternalPackVersionMetadata & Pick<PackMetadata, 'id' | 'name' | 'shortDescription' | 'description' | 'permissionsDescription' | 'category' | 'logoPath' | 'exampleImages' | 'exampleVideoIds' | 'minimumFeatureSet' | 'quotas' | 'rateLimits' | 'isSystem'>;
 export interface PackUpload {
-    metadata: PackVersionMetadata;
+    metadata: PackVersionMetadata | PackMetadata;
     bundle: string;
 }
 export {};

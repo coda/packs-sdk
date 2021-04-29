@@ -130,6 +130,9 @@ export type ExternalPackMetadata = ExternalPackVersionMetadata &
   >;
 
 export interface PackUpload {
-  metadata: PackVersionMetadata;
+  // PackMetadata is only for legacy packs. This should be removed once
+  // all the feature's we're relying on from legacy pack defs like quotas
+  // have been migrated or retired.
+  metadata: PackVersionMetadata | PackMetadata;
   bundle: string;
 }

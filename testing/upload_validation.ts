@@ -6,6 +6,7 @@ import type {BooleanSchema} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import {DefaultConnectionType} from '../types';
+import {FeatureSet} from '../types';
 import type {HeaderBearerTokenAuthentication} from '../types';
 import type {Identity} from '../schema';
 import type {MultiQueryParamTokenAuthentication} from '../types';
@@ -19,6 +20,7 @@ import {ObjectHintValueTypes} from '../schema';
 import type {ObjectPackFormula} from '../api';
 import type {ObjectSchema} from '../schema';
 import type {ObjectSchemaProperty} from '../schema';
+import {PackCategory} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDef} from '../api_types';
@@ -53,7 +55,9 @@ export class PackMetadataValidationError extends Error {
 }
 
 export async function validatePackVersionMetadata(metadata: Record<string, any>): Promise<PackVersionMetadata> {
-  const validated = packMetadataSchema.safeParse(metadata);
+  // For now we use legacyPackMetadataSchema as the top-level object we validate. As soon as we migrate all of our
+  // first-party pack definitions to only use versioned fields, we can use packVersionMetadataSchema  here.
+  const validated = legacyPackMetadataSchema.safeParse(metadata);
   if (!validated.success) {
     throw new PackMetadataValidationError(
       'Pack metadata failed validation',
@@ -445,7 +449,7 @@ const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   matchers: z.array(z.string()),
 });
 
-const packMetadataSchema = zodCompleteObject<PackVersionMetadata>({
+const packVersionMetadataSchema = zodCompleteObject<PackVersionMetadata>({
   version: z.string().nonempty(),
   defaultAuthentication: z.union(zodUnionInput(Object.values(defaultAuthenticationValidators))).optional(),
   networkDomains: z.array(z.string()).optional(),
@@ -484,3 +488,25 @@ const packMetadataSchema = zodCompleteObject<PackVersionMetadata>({
       path: ['formats'],
     },
   );
+
+// We temporarily allow our legacy packs to provide non-versioned data until we sufficiently migrate them.
+// But all fields must be optional, because this is the top-level object we use for validation,
+// so we must be able to pass validation while providing only fields from PackVersionMetadata.
+const legacyPackMetadataSchema =
+  // TODO: Figure out why zodCompleteObject doesn't return something compatible with ZodObject
+  ((packVersionMetadataSchema as unknown) as z.ZodObject<any>).extend({
+    id: z.number().optional(),
+    name: z.string().nonempty(),
+    shortDescription: z.string().nonempty().optional(),
+    description: z.string().nonempty().optional(),
+    permissionsDescription: z.string().optional(),
+    category: z.nativeEnum(PackCategory).optional(),
+    logoPath: z.string().optional(),
+    enabledConfigName: z.string().optional(),
+    exampleImages: z.array(z.string()).optional(),
+    exampleVideoIds: z.array(z.string()).optional(),
+    minimumFeatureSet: z.nativeEnum(FeatureSet).optional(),
+    quotas: z.any().optional(),
+    rateLimits: z.any().optional(),
+    isSystem: z.boolean().optional(),
+  });
