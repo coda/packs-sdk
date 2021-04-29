@@ -25,6 +25,12 @@ var __toModule = (module2) => {
 
 // node_modules/pascalcase/index.js
 var require_pascalcase = __commonJS((exports, module2) => {
+  /*!
+   * pascalcase <https://github.com/jonschlinkert/pascalcase>
+   *
+   * Copyright (c) 2015-present, Jon ("Schlink") Schlinkert.
+   * Licensed under the MIT License.
+   */
   var titlecase = (input) => input[0].toLocaleUpperCase() + input.slice(1);
   module2.exports = (value) => {
     if (value === null || value === void 0)
@@ -2862,9 +2868,3 @@ function wrapError(err) {
   }
   return err;
 }
-/*!
- * pascalcase <https://github.com/jonschlinkert/pascalcase>
- *
- * Copyright (c) 2015-present, Jon ("Schlink") Schlinkert.
- * Licensed under the MIT License.
- */

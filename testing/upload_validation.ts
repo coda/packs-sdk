@@ -491,7 +491,6 @@ const genericDynamicSyncTableSchema = zodCompleteObject<
 });
 
 const syncTableSchema = z.union([genericDynamicSyncTableSchema, genericSyncTableSchema]);
-// const syncTableSchema = genericDynamicSyncTableSchema;
 
 // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
 // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level

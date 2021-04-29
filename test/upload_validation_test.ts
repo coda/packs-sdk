@@ -330,8 +330,8 @@ describe('Pack metadata Validation', () => {
           }),
         });
 
-        const metadata = createFakePackMetadata({
-          syncTables: [{...syncTable, isDynamic: false}],
+        const metadata = createFakePack({
+          syncTables: [{...syncTable, isDynamic: false as any}],
         });
         // TODO(alan): when https://github.com/colinhacks/zod/issues/418 is resolved, fix this test (it should fail validation).
         await validateJson(metadata);
@@ -360,7 +360,7 @@ describe('Pack metadata Validation', () => {
           },
         );
 
-        const metadata = createFakePackMetadata({
+        const metadata = createFakePack({
           syncTables: [syncTable],
         });
         const err = await validateJsonAndAssertFails(metadata);
