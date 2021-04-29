@@ -649,7 +649,6 @@ export function makeSyncTable<
 interface BaseMakeDynamicSyncTableArgs<ParamDefsT extends ParamDefs> {
   packId: number;
   name: string;
-  inferSchema?: boolean;
   getName: MetadataFormula;
   formula: SyncFormulaDef<ParamDefsT>;
   getDisplayUrl: MetadataFormula;
@@ -660,7 +659,6 @@ interface BaseMakeDynamicSyncTableArgs<ParamDefsT extends ParamDefs> {
 interface StandardMakeDynamicSyncTableArgs<ParamDefsT extends ParamDefs> 
   extends BaseMakeDynamicSyncTableArgs<ParamDefsT> {
   getSchema: MetadataFormula;
-  inferSchema: never;
 }
 
 interface InferredMakeDynamicSyncTableArgs<ParamDefsT extends ParamDefs> 
@@ -669,18 +667,19 @@ interface InferredMakeDynamicSyncTableArgs<ParamDefsT extends ParamDefs>
   inferSchema: true;
 }
 
-export function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({
-  packId,
-  name,
-  getName,
-  getSchema,
-  inferSchema,
-  getDisplayUrl,
-  formula,
-  listDynamicUrls,
-  entityName,
-}: StandardMakeDynamicSyncTableArgs<ParamDefsT> | InferredMakeDynamicSyncTableArgs<ParamDefsT>
+export function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>(
+  args: StandardMakeDynamicSyncTableArgs<ParamDefsT> | InferredMakeDynamicSyncTableArgs<ParamDefsT>
 ): DynamicSyncTableDef<K, L, ParamDefsT, any> {
+  const {
+    packId,
+    name,
+    getName,
+    getSchema,
+    getDisplayUrl,
+    formula,
+    listDynamicUrls,
+    entityName,
+  } = args;
   const fakeSchema = makeObjectSchema({
     // This schema is useless... just creating a stub here but the client will use
     // the dynamic one.
@@ -695,6 +694,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
       id: {type: ValueType.String},
     },
   });
+  const inferSchema = 'inferSchema' in args;
   const table = makeSyncTable(name, fakeSchema, formula, getSchema, entityName, inferSchema);
   return {
     ...table,

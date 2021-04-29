@@ -320,7 +320,8 @@ function makeSyncTable(name, schema, formula, getSchema, entityName, inferSchema
     };
 }
 exports.makeSyncTable = makeSyncTable;
-function makeDynamicSyncTable({ packId, name, getName, getSchema, inferSchema, getDisplayUrl, formula, listDynamicUrls, entityName, }) {
+function makeDynamicSyncTable(args) {
+    const { packId, name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, } = args;
     const fakeSchema = schema_3.makeObjectSchema({
         // This schema is useless... just creating a stub here but the client will use
         // the dynamic one.
@@ -335,6 +336,7 @@ function makeDynamicSyncTable({ packId, name, getName, getSchema, inferSchema, g
             id: { type: schema_1.ValueType.String },
         },
     });
+    const inferSchema = 'inferSchema' in args;
     const table = makeSyncTable(name, fakeSchema, formula, getSchema, entityName, inferSchema);
     return {
         ...table,

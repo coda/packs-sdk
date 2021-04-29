@@ -267,7 +267,6 @@ export declare function makeSyncTable<K extends string, L extends string, ParamD
 interface BaseMakeDynamicSyncTableArgs<ParamDefsT extends ParamDefs> {
     packId: number;
     name: string;
-    inferSchema?: boolean;
     getName: MetadataFormula;
     formula: SyncFormulaDef<ParamDefsT>;
     getDisplayUrl: MetadataFormula;
@@ -276,13 +275,12 @@ interface BaseMakeDynamicSyncTableArgs<ParamDefsT extends ParamDefs> {
 }
 interface StandardMakeDynamicSyncTableArgs<ParamDefsT extends ParamDefs> extends BaseMakeDynamicSyncTableArgs<ParamDefsT> {
     getSchema: MetadataFormula;
-    inferSchema: never;
 }
 interface InferredMakeDynamicSyncTableArgs<ParamDefsT extends ParamDefs> extends BaseMakeDynamicSyncTableArgs<ParamDefsT> {
     getSchema: never;
     inferSchema: true;
 }
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ packId, name, getName, getSchema, inferSchema, getDisplayUrl, formula, listDynamicUrls, entityName, }: StandardMakeDynamicSyncTableArgs<ParamDefsT> | InferredMakeDynamicSyncTableArgs<ParamDefsT>): DynamicSyncTableDef<K, L, ParamDefsT, any>;
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>(args: StandardMakeDynamicSyncTableArgs<ParamDefsT> | InferredMakeDynamicSyncTableArgs<ParamDefsT>): DynamicSyncTableDef<K, L, ParamDefsT, any>;
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
     request: RequestHandlerTemplate;
     description: string;
