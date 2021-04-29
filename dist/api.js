@@ -8,10 +8,11 @@ const api_types_3 = require("./api_types");
 const ensure_1 = require("./helpers/ensure");
 const handler_templates_1 = require("./handler_templates");
 const handler_templates_2 = require("./handler_templates");
+const schema_2 = require("./schema");
 const api_types_4 = require("./api_types");
 const api_types_5 = require("./api_types");
-const schema_2 = require("./schema");
 const schema_3 = require("./schema");
+const schema_4 = require("./schema");
 const api_types_6 = require("./api_types");
 const api_types_7 = require("./api_types");
 /**
@@ -218,7 +219,7 @@ function makeObjectFormula({ response, ...definition }) {
     let schema;
     if (response) {
         if (isResponseHandlerTemplate(response) && response.schema) {
-            response.schema = schema_3.normalizeSchema(response.schema);
+            response.schema = schema_4.normalizeSchema(response.schema);
             schema = response.schema;
         }
         else if (isResponseExampleTemplate(response)) {
@@ -277,11 +278,11 @@ exports.makeObjectFormula = makeObjectFormula;
  * @param getSchema Only used internally by {@link makeDynamicSyncTable}, see there for more details.
  * @param entityName Only used internally by {@link makeDynamicSyncTable}, see there for more details.
  */
-function makeSyncTable(name, schema, formula, getSchema, entityName) {
+function makeSyncTable(name, schema, formula, getSchema, entityName, inferSchema) {
     const { execute: wrappedExecute, ...definition } = formula;
     const formulaSchema = getSchema
         ? undefined
-        : schema_3.normalizeSchema({ type: schema_1.ValueType.Array, items: schema });
+        : schema_4.normalizeSchema({ type: schema_1.ValueType.Array, items: schema });
     const { identity, id, primary } = schema;
     if (!(primary && id && identity)) {
         throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
@@ -292,15 +293,20 @@ function makeSyncTable(name, schema, formula, getSchema, entityName) {
     const responseHandler = handler_templates_1.generateObjectResponseHandler({ schema: formulaSchema });
     const execute = async function exec(params, context) {
         const { result, continuation } = await wrappedExecute(params, context);
-        const appliedSchema = context.sync.schema;
+        const appliedSchema = inferSchema
+            ? schema_2.generateSchema(result)
+            : context.sync.schema;
         return {
             result: responseHandler({ body: ensure_1.ensureExists(result), status: 200, headers: {} }, appliedSchema),
+            schema: inferSchema
+                ? appliedSchema
+                : undefined,
             continuation,
         };
     };
     return {
         name,
-        schema: schema_3.normalizeSchema(schema),
+        schema: schema_4.normalizeSchema(schema),
         getter: {
             ...definition,
             cacheTtlSecs: 0,
@@ -314,8 +320,8 @@ function makeSyncTable(name, schema, formula, getSchema, entityName) {
     };
 }
 exports.makeSyncTable = makeSyncTable;
-function makeDynamicSyncTable({ packId, name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, }) {
-    const fakeSchema = schema_2.makeObjectSchema({
+function makeDynamicSyncTable({ packId, name, getName, getSchema, inferSchema, getDisplayUrl, formula, listDynamicUrls, entityName, }) {
+    const fakeSchema = schema_3.makeObjectSchema({
         // This schema is useless... just creating a stub here but the client will use
         // the dynamic one.
         type: schema_1.ValueType.Object,
@@ -329,7 +335,7 @@ function makeDynamicSyncTable({ packId, name, getName, getSchema, getDisplayUrl,
             id: { type: schema_1.ValueType.String },
         },
     });
-    const table = makeSyncTable(name, fakeSchema, formula, getSchema, entityName);
+    const table = makeSyncTable(name, fakeSchema, formula, getSchema, entityName, inferSchema);
     return {
         ...table,
         isDynamic: true,
@@ -341,7 +347,7 @@ function makeDynamicSyncTable({ packId, name, getName, getSchema, getDisplayUrl,
 exports.makeDynamicSyncTable = makeDynamicSyncTable;
 function makeTranslateObjectFormula({ response, ...definition }) {
     const { request, parameters } = definition;
-    response.schema = response.schema ? schema_3.normalizeSchema(response.schema) : undefined;
+    response.schema = response.schema ? schema_4.normalizeSchema(response.schema) : undefined;
     const { onError } = response;
     const requestHandler = handler_templates_2.generateRequestHandler(request, parameters);
     const responseHandler = handler_templates_1.generateObjectResponseHandler(response);

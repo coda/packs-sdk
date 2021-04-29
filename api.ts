@@ -24,6 +24,7 @@ import {dateArray} from './api_types';
 import {ensureExists} from './helpers/ensure';
 import {generateObjectResponseHandler} from './handler_templates';
 import {generateRequestHandler} from './handler_templates';
+import {generateSchema} from './schema';
 import {htmlArray} from './api_types';
 import {imageArray} from './api_types';
 import {makeObjectSchema} from './schema';
@@ -359,6 +360,7 @@ export function isSyncPackFormula(fn: Formula<ParamDefs, any>): fn is GenericSyn
 
 export interface SyncFormulaResult<ResultT extends object> {
   result: ResultT[];
+  schema?: ArraySchema;
   continuation?: Continuation;
 }
 
@@ -597,6 +599,7 @@ export function makeSyncTable<
   formula: SyncFormulaDef<ParamDefsT>,
   getSchema?: MetadataFormula,
   entityName?: string,
+  inferSchema?: boolean,
 ): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {execute: wrappedExecute, ...definition} = formula;
   const formulaSchema = getSchema
@@ -614,11 +617,16 @@ export function makeSyncTable<
   const responseHandler = generateObjectResponseHandler({schema: formulaSchema});
   const execute = async function exec(params: ParamValues<ParamDefsT>, context: SyncExecutionContext) {
     const {result, continuation} = await wrappedExecute(params, context);
-    const appliedSchema = context.sync.schema;
+    const appliedSchema = inferSchema
+      ? generateSchema(result) as ArraySchema
+      : context.sync.schema;
     return {
       result: responseHandler({body: ensureExists(result), status: 200, headers: {}}, appliedSchema) as Array<
         SchemaType<SchemaT>
       >,
+      schema: inferSchema 
+        ? appliedSchema
+        : undefined,
       continuation,
     };
   };
@@ -638,25 +646,40 @@ export function makeSyncTable<
   };
 }
 
+interface BaseMakeDynamicSyncTableArgs<ParamDefsT extends ParamDefs> {
+  packId: number;
+  name: string;
+  getName: MetadataFormula;
+  formula: SyncFormulaDef<ParamDefsT>;
+  getDisplayUrl: MetadataFormula;
+  listDynamicUrls?: MetadataFormula;
+  entityName?: string;
+}
+
+interface StandardMakeDynamicSyncTableArgs<ParamDefsT extends ParamDefs> 
+  extends BaseMakeDynamicSyncTableArgs<ParamDefsT> {
+  getSchema: MetadataFormula;
+  inferSchema: never;
+}
+
+interface InferredMakeDynamicSyncTableArgs<ParamDefsT extends ParamDefs> 
+  extends BaseMakeDynamicSyncTableArgs<ParamDefsT> {
+  getSchema: never;
+  inferSchema: true;
+}
+
 export function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({
   packId,
   name,
   getName,
   getSchema,
+  inferSchema,
   getDisplayUrl,
   formula,
   listDynamicUrls,
   entityName,
-}: {
-  packId: number;
-  name: string;
-  getName: MetadataFormula;
-  getSchema: MetadataFormula;
-  formula: SyncFormulaDef<ParamDefsT>;
-  getDisplayUrl: MetadataFormula;
-  listDynamicUrls?: MetadataFormula;
-  entityName?: string;
-}): DynamicSyncTableDef<K, L, ParamDefsT, any> {
+}: StandardMakeDynamicSyncTableArgs<ParamDefsT> | InferredMakeDynamicSyncTableArgs<ParamDefsT>
+): DynamicSyncTableDef<K, L, ParamDefsT, any> {
   const fakeSchema = makeObjectSchema({
     // This schema is useless... just creating a stub here but the client will use
     // the dynamic one.
@@ -671,7 +694,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
       id: {type: ValueType.String},
     },
   });
-  const table = makeSyncTable(name, fakeSchema, formula, getSchema, entityName);
+  const table = makeSyncTable(name, fakeSchema, formula, getSchema, entityName, inferSchema);
   return {
     ...table,
     isDynamic: true,

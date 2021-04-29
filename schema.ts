@@ -247,16 +247,20 @@ export type ValidTypes = boolean | number | string | object | boolean[] | number
 
 export function generateSchema(obj: ValidTypes): Schema {
   if (Array.isArray(obj)) {
-    if (obj.length === 0) {
-      throw new Error('Must have representative value.');
+    let itemSchema: Schema;
+    if (obj.length === 0 || obj[0] === null || typeof obj[0] === undefined) {
+      itemSchema = {type: ValueType.String};
+    } else {
+      itemSchema = generateSchema(obj[0]);
     }
-    return {type: ValueType.Array, items: generateSchema(obj[0])};
+    return {type: ValueType.Array, items: itemSchema};
   }
 
   if (typeof obj === 'object') {
     const properties: {[key: string]: Schema} = {};
     if (obj === null) {
-      throw new Error('No nulls allowed.');
+      // Just return something
+      return {type: ValueType.String};
     }
     for (const key in obj) {
       if (obj.hasOwnProperty(key)) {
