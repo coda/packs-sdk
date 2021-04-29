@@ -106,7 +106,10 @@ function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError 
             path: zodPathToPathString(unionIssue.path),
             message: unionIssue.message,
           };
-          underlyingErrors.push(error);
+          // dedupe identical errors.
+          if (!underlyingErrors.find(err => err.path === error.path && err.message === error.message)) {
+            underlyingErrors.push(error);
+          }
         }
       }
     }
@@ -460,7 +463,7 @@ const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
 const syncFormulaSchema = zodCompleteObject<Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute'>>({
   schema: arrayPropertySchema.optional(),
   resultType: z.any(),
-  isSyncFormula: z.boolean(),
+  isSyncFormula: z.literal(true),
   ...commonPackFormulaSchema,
 });
 
@@ -487,7 +490,8 @@ const genericDynamicSyncTableSchema = zodCompleteObject<
   getSchema: formulaMetadataSchema,
 });
 
-const syncTableSchema = z.union([genericSyncTableSchema, genericDynamicSyncTableSchema]);
+const syncTableSchema = z.union([genericDynamicSyncTableSchema, genericSyncTableSchema]);
+// const syncTableSchema = genericDynamicSyncTableSchema;
 
 // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
 // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level

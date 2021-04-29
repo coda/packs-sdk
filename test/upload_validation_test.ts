@@ -298,45 +298,101 @@ describe('Pack metadata Validation', () => {
           syncTables: [syncTable],
         });
         const err = await validateJsonAndAssertFails(metadata);
-        console.log(err.validationErrors);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: "Cannot have a sync table property with the same name as the sync table's schema identity.",
+            path: '',
+          },
+        ]);
       });
 
-      // it('invalid identity name', async () => {
-      //   const syncTable = makeSyncTable(
-      //     'SyncTable',
-      //     makeObjectSchema({
-      //       type: ValueType.Object,
-      //       primary: 'foo',
-      //       id: 'foo',
-      //       identity: {packId: 424242, name: 'Name with spaces'},
-      //       properties: {
-      //         foo: {type: ValueType.String},
-      //       },
-      //     }),
-      //     {
-      //       name: 'SyncTable',
-      //       description: 'A simple sync table',
-      //       async execute([], _context) {
-      //         return {result: []};
-      //       },
-      //       parameters: [],
-      //       examples: [],
-      //     },
-      //   );
+      it('invalid dynamic sync table', async () => {
+        const syncTable = makeDynamicSyncTable({
+          packId: 424242,
+          name: 'DynamicSyncTable',
+          getName: makeMetadataFormula(async () => {
+            return '';
+          }),
+          getSchema: makeMetadataFormula(async () => {
+            return '';
+          }),
+          formula: {
+            name: 'Sync table',
+            description: 'Sync table',
+            examples: [],
+            parameters: [],
+            execute: async () => {
+              return {result: []};
+            },
+          },
+          getDisplayUrl: makeMetadataFormula(async () => {
+            return '';
+          }),
+        });
 
-      //   const metadata = createFakePackMetadata({
-      //     syncTables: [syncTable],
-      //   });
-      //   const err = await validateJsonAndAssertFails(metadata);
-      //   assert.deepEqual(err.validationErrors, [
-      //     {
-      //       message:
-      //         'Invalid name. Identity names can only contain
-      //          alphanumeric characters, underscores, and dashes, and no spaces.',
-      //       path: 'syncTables[0].schema.identity.name',
-      //     },
-      //   ]);
-      // });
+        const metadata = createFakePackMetadata({
+          syncTables: [{...syncTable, isDynamic: false}],
+        });
+        // TODO(alan): when https://github.com/colinhacks/zod/issues/418 is resolved, fix this test (it should fail validation).
+        await validateJson(metadata);
+      });
+
+      it('invalid identity name', async () => {
+        const syncTable = makeSyncTable(
+          'SyncTable',
+          makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            identity: {packId: 424242, name: 'Name with spaces'},
+            properties: {
+              foo: {type: ValueType.String},
+            },
+          }),
+          {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        );
+
+        const metadata = createFakePackMetadata({
+          syncTables: [syncTable],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message:
+              'Invalid name. Identity names can only contain ' +
+              'alphanumeric characters, underscores, and dashes, and no spaces.',
+            path: 'syncTables[0].schema.identity.name',
+          },
+          {
+            message: 'Invalid input',
+            path: 'syncTables[0].getter.schema.items',
+          },
+          {
+            message: 'Invalid input',
+            path: 'syncTables[0].isDynamic',
+          },
+          {
+            message: 'Invalid input',
+            path: 'syncTables[0].getName',
+          },
+          {
+            message: 'Invalid input',
+            path: 'syncTables[0].getDisplayUrl',
+          },
+          {
+            message: 'Invalid input',
+            path: 'syncTables[0].getSchema',
+          },
+        ]);
+      });
     });
 
     describe('object schemas', () => {
