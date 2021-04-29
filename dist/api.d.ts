@@ -267,6 +267,7 @@ export declare function makeSyncTable<K extends string, L extends string, ParamD
 interface BaseMakeDynamicSyncTableArgs<ParamDefsT extends ParamDefs> {
     packId: number;
     name: string;
+    inferSchema?: boolean;
     getName: MetadataFormula;
     formula: SyncFormulaDef<ParamDefsT>;
     getDisplayUrl: MetadataFormula;
