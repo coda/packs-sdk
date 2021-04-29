@@ -123,7 +123,7 @@ function zodCompleteObject(shape) {
     return z.object(shape);
 }
 function zodDiscriminant(value) {
-    return z.union([z.string(), z.number(), z.boolean()]).refine(data => data === value, {
+    return z.union([z.string(), z.number(), z.boolean(), z.undefined()]).refine(data => data === value, {
         message: 'Non-matching discriminant',
         params: { customErrorCode: CustomErrorCode.NonMatchingDiscriminant },
     });
