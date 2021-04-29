@@ -449,7 +449,10 @@ const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   matchers: z.array(z.string()),
 });
 
-const packVersionMetadataSchema = zodCompleteObject<PackVersionMetadata>({
+// Make sure to call the refiners on this after removing legacyPackMetadataSchema.
+// (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
+// schema we actually use.)
+const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata>({
   version: z.string().nonempty(),
   defaultAuthentication: z.union(zodUnionInput(Object.values(defaultAuthenticationValidators))).optional(),
   networkDomains: z.array(z.string()).optional(),
@@ -458,45 +461,48 @@ const packVersionMetadataSchema = zodCompleteObject<PackVersionMetadata>({
   formulas: z.array(formulaMetadataSchema).optional().default([]),
   formats: z.array(formatMetadataSchema).optional().default([]),
   syncTables: z.array(z.unknown()).optional().default([]),
-})
-  .refine(
-    data => {
-      if (data.formulas && data.formulas.length > 0) {
-        return data.formulaNamespace;
-      }
-      return true;
-    },
-    {message: 'A formula namespace must be provided whenever formulas are defined.', path: ['formulaNamespace']},
-  )
-  .refine(
-    data => {
-      const formulas = (data.formulas || []) as PackFormatMetadata[];
-      const formulaNames = new Set(formulas.map(f => f.name));
-      for (const format of data.formats || []) {
-        if (!formulaNames.has(format.formulaName)) {
-          return false;
+});
+
+function validateFormulas(schema: z.ZodObject<any>) {
+  return schema
+    .refine(
+      data => {
+        if (data.formulas && data.formulas.length > 0) {
+          return data.formulaNamespace;
         }
-      }
-      return true;
-    },
-    {
-      // Annoying that the we can't be more precise and identify in the message which format had the issue;
-      // these error messages are static.
-      message:
-        'Could not find a formula for one or more matchers. Check that the "formulaName" for each matcher ' +
-        'matches the name of a formula defined in this pack.',
-      path: ['formats'],
-    },
-  );
+        return true;
+      },
+      {message: 'A formula namespace must be provided whenever formulas are defined.', path: ['formulaNamespace']},
+    )
+    .refine(
+      data => {
+        const formulas = (data.formulas || []) as PackFormatMetadata[];
+        const formulaNames = new Set(formulas.map(f => f.name));
+        for (const format of data.formats || []) {
+          if (!formulaNames.has(format.formulaName)) {
+            return false;
+          }
+        }
+        return true;
+      },
+      {
+        // Annoying that the we can't be more precise and identify in the message which format had the issue;
+        // these error messages are static.
+        message:
+          'Could not find a formula for one or more matchers. Check that the "formulaName" for each matcher ' +
+          'matches the name of a formula defined in this pack.',
+        path: ['formats'],
+      },
+    );
+}
 
 // We temporarily allow our legacy packs to provide non-versioned data until we sufficiently migrate them.
 // But all fields must be optional, because this is the top-level object we use for validation,
 // so we must be able to pass validation while providing only fields from PackVersionMetadata.
-const legacyPackMetadataSchema =
-  // TODO: Figure out why zodCompleteObject doesn't return something compatible with ZodObject
-  ((packVersionMetadataSchema as unknown) as z.ZodObject<any>).extend({
+const legacyPackMetadataSchema = validateFormulas(
+  unrefinedPackVersionMetadataSchema.extend({
     id: z.number().optional(),
-    name: z.string().nonempty(),
+    name: z.string().nonempty().optional(),
     shortDescription: z.string().nonempty().optional(),
     description: z.string().nonempty().optional(),
     permissionsDescription: z.string().optional(),
@@ -509,4 +515,5 @@ const legacyPackMetadataSchema =
     quotas: z.any().optional(),
     rateLimits: z.any().optional(),
     isSystem: z.boolean().optional(),
-  });
+  }),
+);
