@@ -836,18 +836,42 @@ export interface RateLimits {
 	overall?: RateLimit;
 	perConnection?: RateLimit;
 }
-export interface PackDefinition {
+/**
+ * The definition of the contents of a Pack at a specific version. This is the
+ * heart of the implementation of a Pack.
+ */
+export interface PackVersionDefinition {
+	version: string;
+	/**
+	 * If specified, the user must provide personal authentication credentials before using the pack.
+	 */
+	defaultAuthentication?: Authentication;
+	/**
+	 * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
+	 * explicit connection is specified by the user.
+	 */
+	systemConnectionAuthentication?: SystemAuthentication;
+	networkDomains?: string[];
+	formulaNamespace?: string;
+	formulas?: PackFormulas | TypedStandardFormula[];
+	formats?: Format[];
+	syncTables?: SyncTable[];
+}
+/**
+ * @deprecated use `#PackVersionDefinition`
+ *
+ * The legacy complete definition of a Pack including un-versioned metadata.
+ * This should only be used by legacy Coda pack implementations.
+ */
+export interface PackDefinition extends PackVersionDefinition {
 	id: PackId;
 	name: string;
 	shortDescription: string;
 	description: string;
 	permissionsDescription?: string;
-	version: string;
 	category: PackCategory;
 	logoPath: string;
 	enabledConfigName?: string;
-	defaultAuthentication?: Authentication;
-	networkDomains?: string[];
 	exampleImages?: string[];
 	exampleVideoIds?: string[];
 	minimumFeatureSet?: FeatureSet;
@@ -855,15 +879,6 @@ export interface PackDefinition {
 		[featureSet in FeatureSet]: Quota;
 	}>;
 	rateLimits?: RateLimits;
-	formulaNamespace?: string;
-	/**
-	 * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
-	 * explicit connection is specified by the user.
-	 */
-	systemConnectionAuthentication?: SystemAuthentication;
-	formulas?: PackFormulas | TypedStandardFormula[];
-	formats?: Format[];
-	syncTables?: SyncTable[];
 	/**
 	 * Whether this is a pack that will be used by Coda internally and not exposed directly to users.
 	 */
@@ -892,13 +907,15 @@ export declare type AuthenticationMetadata = DistributiveOmit<Authentication, "g
 	getConnectionUserId?: MetadataFormulaMetadata;
 	postSetup?: PostSetupMetadata[];
 };
-/** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
-export declare type PackMetadata = Omit<PackDefinition, "formulas" | "formats" | "defaultAuthentication" | "syncTables"> & {
+/** Stripped-down version of `PackVersionDefinition` that doesn't contain formula definitions. */
+export declare type PackVersionMetadata = Omit<PackVersionDefinition, "formulas" | "formats" | "defaultAuthentication" | "syncTables"> & {
 	formulas: PackFormulasMetadata | PackFormulaMetadata[];
 	formats: PackFormatMetadata[];
 	syncTables: PackSyncTable[];
 	defaultAuthentication?: AuthenticationMetadata;
 };
+/** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
+export declare type PackMetadata = PackVersionMetadata & Pick<PackDefinition, "id" | "name" | "shortDescription" | "description" | "permissionsDescription" | "category" | "logoPath" | "exampleImages" | "exampleVideoIds" | "minimumFeatureSet" | "quotas" | "rateLimits" | "enabledConfigName" | "isSystem">;
 export declare type ExternalPackAuthenticationType = AuthenticationType;
 export declare type ExternalPackFormulas = PackFormulasMetadata | PackFormulaMetadata[];
 export declare type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
@@ -906,9 +923,9 @@ export declare type ExternalPackFormula = PackFormulaMetadata;
 export declare type ExternalPackFormat = Format;
 export declare type ExternalPackFormatMetadata = PackFormatMetadata;
 export declare type ExternalSyncTable = PackSyncTable;
-export declare type BasePackMetadata = Omit<PackMetadata, "enabledConfigName" | "defaultAuthentication" | "systemConnectionAuthentication" | "formulas" | "formats" | "syncTables">;
-/** Further stripped-down version of `PackMetadata` that contains only what the browser needs. */
-export interface ExternalPackMetadata extends BasePackMetadata {
+export declare type BasePackVersionMetadata = Omit<PackVersionMetadata, "defaultAuthentication" | "systemConnectionAuthentication" | "formulas" | "formats" | "syncTables">;
+/** Further stripped-down version of `PackVersionMetadata` that contains only what the browser needs. */
+export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 	authentication: {
 		type: ExternalPackAuthenticationType;
 		params?: Array<{
@@ -926,6 +943,8 @@ export interface ExternalPackMetadata extends BasePackMetadata {
 	formats?: ExternalPackFormat[];
 	syncTables?: ExternalSyncTable[];
 }
+/** Further stripped-down version of `PackMetadata` that contains only what the browser needs. */
+export declare type ExternalPackMetadata = ExternalPackVersionMetadata & Pick<PackMetadata, "id" | "name" | "shortDescription" | "description" | "permissionsDescription" | "category" | "logoPath" | "exampleImages" | "exampleVideoIds" | "minimumFeatureSet" | "quotas" | "rateLimits" | "isSystem">;
 export declare function withQueryParams(url: string, params?: {
 	[key: string]: any;
 }): string;

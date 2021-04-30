@@ -8,6 +8,7 @@ export type {Format} from './types';
 export {PackCategory} from './types';
 export type {PackDefinition} from './types';
 export type {PackId} from './types';
+export type {PackVersionDefinition} from './types';
 export {PostSetupType} from './types';
 export type {Quota} from './types';
 export {QuotaLimitType} from './types';
@@ -23,6 +24,7 @@ export type {PackFormatMetadata} from './compiled_types';
 export type {PackFormulasMetadata} from './compiled_types';
 export type {PackSyncTable} from './compiled_types';
 export type {PackMetadata} from './compiled_types';
+export type {PackVersionMetadata} from './compiled_types';
 
 // Browser interfaces
 export type {ExternalPackFormat} from './compiled_types';
@@ -32,6 +34,7 @@ export type {ExternalPackFormula} from './compiled_types';
 export type {ExternalPackFormulas} from './compiled_types';
 export type {ExternalSyncTable} from './compiled_types';
 export type {ExternalPackMetadata} from './compiled_types';
+export type {ExternalPackVersionMetadata} from './compiled_types';
 
 // Formula related interfaces
 export type {ArrayType} from './api_types';

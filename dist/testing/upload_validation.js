@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validatePackMetadata = exports.PackMetadataValidationError = void 0;
+exports.validatePackVersionMetadata = exports.PackMetadataValidationError = void 0;
 const schema_1 = require("../schema");
 const types_1 = require("../types");
 const types_2 = require("../types");
@@ -46,14 +46,16 @@ class PackMetadataValidationError extends Error {
     }
 }
 exports.PackMetadataValidationError = PackMetadataValidationError;
-async function validatePackMetadata(metadata) {
-    const validated = packMetadataSchema.safeParse(metadata);
+async function validatePackVersionMetadata(metadata) {
+    // For now we use legacyPackMetadataSchema as the top-level object we validate. As soon as we migrate all of our
+    // first-party pack definitions to only use versioned fields, we can use packVersionMetadataSchema  here.
+    const validated = legacyPackMetadataSchema.safeParse(metadata);
     if (!validated.success) {
         throw new PackMetadataValidationError('Pack metadata failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
     }
     return validated.data;
 }
-exports.validatePackMetadata = validatePackMetadata;
+exports.validatePackVersionMetadata = validatePackVersionMetadata;
 function zodErrorDetailToValidationError(subError) {
     var _a;
     // Top-level errors for union types are totally useless, they just say "invalid input",
@@ -375,49 +377,60 @@ const formatMetadataSchema = zodCompleteObject({
     placeholder: z.string().optional(),
     matchers: z.array(z.string()),
 });
-const packMetadataSchema = zodCompleteObject({
-    id: z.number().optional(),
-    name: z.string().nonempty(),
-    shortDescription: z.string().nonempty(),
-    description: z.string().nonempty(),
-    permissionsDescription: z.string().optional(),
+// Make sure to call the refiners on this after removing legacyPackMetadataSchema.
+// (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
+// schema we actually use.)
+const unrefinedPackVersionMetadataSchema = zodCompleteObject({
     version: z.string().nonempty(),
-    category: z.nativeEnum(types_4.PackCategory),
-    logoPath: z.string().optional(),
-    enabledConfigName: z.string().optional(),
     defaultAuthentication: z.union(zodUnionInput(Object.values(defaultAuthenticationValidators))).optional(),
     networkDomains: z.array(z.string()).optional(),
-    exampleImages: z.array(z.string()).optional(),
-    exampleVideoIds: z.array(z.string()).optional(),
-    minimumFeatureSet: z.nativeEnum(types_3.FeatureSet).optional(),
-    quotas: z.any().optional(),
-    rateLimits: z.any().optional(),
     formulaNamespace: z.string().optional(),
     systemConnectionAuthentication: z.union(zodUnionInput(systemAuthenticationValidators)).optional(),
     formulas: z.array(formulaMetadataSchema).optional().default([]),
     formats: z.array(formatMetadataSchema).optional().default([]),
     syncTables: z.array(z.unknown()).optional().default([]),
-    isSystem: z.boolean().optional(), // Moving to UI/admin
-})
-    .refine(data => {
-    if (data.formulas && data.formulas.length > 0) {
-        return data.formulaNamespace;
-    }
-    return true;
-}, { message: 'A formula namespace must be provided whenever formulas are defined.', path: ['formulaNamespace'] })
-    .refine(data => {
-    const formulas = (data.formulas || []);
-    const formulaNames = new Set(formulas.map(f => f.name));
-    for (const format of data.formats || []) {
-        if (!formulaNames.has(format.formulaName)) {
-            return false;
-        }
-    }
-    return true;
-}, {
-    // Annoying that the we can't be more precise and identify in the message which format had the issue;
-    // these error messages are static.
-    message: 'Could not find a formula for one or more matchers. Check that the "formulaName" for each matcher ' +
-        'matches the name of a formula defined in this pack.',
-    path: ['formats'],
 });
+function validateFormulas(schema) {
+    return schema
+        .refine(data => {
+        if (data.formulas && data.formulas.length > 0) {
+            return data.formulaNamespace;
+        }
+        return true;
+    }, { message: 'A formula namespace must be provided whenever formulas are defined.', path: ['formulaNamespace'] })
+        .refine(data => {
+        const formulas = (data.formulas || []);
+        const formulaNames = new Set(formulas.map(f => f.name));
+        for (const format of data.formats || []) {
+            if (!formulaNames.has(format.formulaName)) {
+                return false;
+            }
+        }
+        return true;
+    }, {
+        // Annoying that the we can't be more precise and identify in the message which format had the issue;
+        // these error messages are static.
+        message: 'Could not find a formula for one or more matchers. Check that the "formulaName" for each matcher ' +
+            'matches the name of a formula defined in this pack.',
+        path: ['formats'],
+    });
+}
+// We temporarily allow our legacy packs to provide non-versioned data until we sufficiently migrate them.
+// But all fields must be optional, because this is the top-level object we use for validation,
+// so we must be able to pass validation while providing only fields from PackVersionMetadata.
+const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSchema.extend({
+    id: z.number().optional(),
+    name: z.string().nonempty().optional(),
+    shortDescription: z.string().nonempty().optional(),
+    description: z.string().nonempty().optional(),
+    permissionsDescription: z.string().optional(),
+    category: z.nativeEnum(types_4.PackCategory).optional(),
+    logoPath: z.string().optional(),
+    enabledConfigName: z.string().optional(),
+    exampleImages: z.array(z.string()).optional(),
+    exampleVideoIds: z.array(z.string()).optional(),
+    minimumFeatureSet: z.nativeEnum(types_3.FeatureSet).optional(),
+    quotas: z.any().optional(),
+    rateLimits: z.any().optional(),
+    isSystem: z.boolean().optional(),
+}));

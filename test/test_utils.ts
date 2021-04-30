@@ -2,7 +2,7 @@ import {AuthenticationType} from '../types';
 import {PackCategory} from '../types';
 import type {PackDefinition} from '../types';
 import type {PackFormulaMetadata} from '../api';
-import type {PackMetadata} from '../compiled_types';
+import type {PackVersionMetadata} from '../compiled_types';
 import {Type} from '../index';
 import {ValueType} from '../index';
 import {deepFreeze} from '../helpers/object_utils';
@@ -27,24 +27,16 @@ export const FakePack: PackDefinition = deepFreeze({
   version: '42.42.42',
 });
 
-export const FakePackMetadata: PackMetadata = deepFreeze({
-  id: 424242,
+export const FakePackVersionMetadata: PackVersionMetadata = deepFreeze({
+  version: '42.42.42',
   defaultAuthentication: {
     type: AuthenticationType.QueryParamToken,
     paramName: 'authToken',
   },
-  category: PackCategory.DataStorage,
-  description: 'Fake Pack',
-  exampleImages: [],
-  exampleVideoIds: [],
   formats: [],
   formulas: [],
-  logoPath: 'logo.png',
-  name: 'Fake Pack',
   permissionsDescription: 'Some description about permissions',
-  shortDescription: 'This is the default fake pack description',
   syncTables: [],
-  version: '42.42.42',
 });
 
 export const FakePackFormulaMetadata: PackFormulaMetadata = deepFreeze({
@@ -62,8 +54,8 @@ export function createFakePack(opts: Partial<PackDefinition> = {}): PackDefiniti
   return {...FakePack, ...opts};
 }
 
-export function createFakePackMetadata(opts: Partial<PackMetadata> = {}): PackMetadata {
-  return {...FakePackMetadata, ...opts};
+export function createFakePackVersionMetadata(opts: Partial<PackVersionMetadata> = {}): PackVersionMetadata {
+  return {...FakePackVersionMetadata, ...opts};
 }
 
 export function createFakePackFormulaMetadata(opts: Partial<PackFormulaMetadata> = {}): PackFormulaMetadata {

@@ -4,23 +4,23 @@ import {DefaultConnectionType} from '../types';
 import type {GenericObjectSchema} from '../schema';
 import type {Network} from '../api_types';
 import type {PackFormulaMetadata} from '../api';
-import type {PackMetadata} from '../compiled_types';
 import type {PackMetadataValidationError} from '../testing/upload_validation';
+import type {PackVersionMetadata} from '../compiled_types';
 import {PostSetupType} from '../types';
 import type {TypedStandardFormula} from '../api';
 import {ValueType} from '../schema';
 import {createFakePackFormulaMetadata} from './test_utils';
-import {createFakePackMetadata} from './test_utils';
+import {createFakePackVersionMetadata} from './test_utils';
 import {makeNumericFormula} from '../api';
 import {makeNumericParameter} from '../api';
 import {makeObjectFormula} from '../api';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
-import {validatePackMetadata} from '../testing/upload_validation';
+import {validatePackVersionMetadata} from '../testing/upload_validation';
 
 describe('Pack metadata Validation', () => {
   async function validateJson(obj: Record<string, any>) {
-    return validatePackMetadata(obj);
+    return validatePackVersionMetadata(obj);
   }
 
   async function validateJsonAndAssertFails(obj: Record<string, any>) {
@@ -32,25 +32,8 @@ describe('Pack metadata Validation', () => {
     const err = await validateJsonAndAssertFails({});
     assert.deepEqual(err.validationErrors, [
       {
-        message: 'Missing required field name.',
-        path: 'name',
-      },
-      {
-        message: 'Missing required field shortDescription.',
-        path: 'shortDescription',
-      },
-      {
-        message: 'Missing required field description.',
-        path: 'description',
-      },
-      {
         message: 'Missing required field version.',
         path: 'version',
-      },
-      {
-        message:
-          "Invalid enum value. Expected 'CRM' | 'Calendar' | 'Communication' | 'DataStorage' | 'Design' | 'Financial' | 'Fun' | 'Geo' | 'IT' | 'Mathematics' | 'Organization' | 'Recruiting' | 'Shopping' | 'Social' | 'Sports' | 'Travel' | 'Weather', received undefined",
-        path: 'category',
       },
     ]);
   });
@@ -62,13 +45,13 @@ describe('Pack metadata Validation', () => {
   });
 
   it('simple valid upload', async () => {
-    const metadata = createFakePackMetadata();
+    const metadata = createFakePackVersionMetadata();
     const result = await validateJson(metadata);
     assert.deepEqual(result, metadata);
   });
 
   it('extraneous fields are omitted', async () => {
-    const metadata = createFakePackMetadata();
+    const metadata = createFakePackVersionMetadata();
     const result = await validateJson({
       ...metadata,
       extraneous: 'long evil string',
@@ -77,7 +60,10 @@ describe('Pack metadata Validation', () => {
   });
 
   it('formula namespace required when formulas present', async () => {
-    const metadata = createFakePackMetadata({formulas: [createFakePackFormulaMetadata()], formulaNamespace: undefined});
+    const metadata = createFakePackVersionMetadata({
+      formulas: [createFakePackFormulaMetadata()],
+      formulaNamespace: undefined,
+    });
     const err = await validateJsonAndAssertFails(metadata);
     assert.deepEqual(err.validationErrors, [
       {
@@ -88,12 +74,12 @@ describe('Pack metadata Validation', () => {
   });
 
   it('formula namespace not required when formulas absent', async () => {
-    const metadata = createFakePackMetadata({formulas: undefined, formulaNamespace: undefined});
+    const metadata = createFakePackVersionMetadata({formulas: undefined, formulaNamespace: undefined});
     await validateJson(metadata);
   });
 
   it('formula namespace not required when formulas present but empty', async () => {
-    const metadata = createFakePackMetadata({formulas: [], formulaNamespace: undefined});
+    const metadata = createFakePackVersionMetadata({formulas: [], formulaNamespace: undefined});
     await validateJson(metadata);
   });
 
@@ -111,7 +97,7 @@ describe('Pack metadata Validation', () => {
         parameters: [makeNumericParameter('myParam', 'param description')],
         execute: () => 1,
       });
-      const metadata = createFakePackMetadata({
+      const metadata = createFakePackVersionMetadata({
         formulas: [formulaToMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
@@ -126,7 +112,7 @@ describe('Pack metadata Validation', () => {
         parameters: [makeStringParameter('myParam', 'param description')],
         execute: () => '',
       });
-      const metadata = createFakePackMetadata({
+      const metadata = createFakePackVersionMetadata({
         formulas: [formulaToMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
@@ -141,7 +127,7 @@ describe('Pack metadata Validation', () => {
         parameters: [makeStringParameter('myParam', 'param description')],
         execute: () => '',
       });
-      const metadata = createFakePackMetadata({
+      const metadata = createFakePackVersionMetadata({
         formulas: [formulaToMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
@@ -166,7 +152,7 @@ describe('Pack metadata Validation', () => {
           network,
           execute: () => '',
         });
-        const metadata = createFakePackMetadata({
+        const metadata = createFakePackVersionMetadata({
           formulas: [formulaToMetadata(formula)],
           formulaNamespace: 'MyNamespace',
         });
@@ -183,7 +169,7 @@ describe('Pack metadata Validation', () => {
         parameters: [makeStringParameter('myParam', 'param description')],
         execute: () => ({}),
       });
-      const metadata = createFakePackMetadata({
+      const metadata = createFakePackVersionMetadata({
         formulas: [formulaToMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
@@ -196,7 +182,7 @@ describe('Pack metadata Validation', () => {
         examples: [],
         parameters: [makeNumericParameter('myParam', 'param description')],
       } as any);
-      const metadata = createFakePackMetadata({
+      const metadata = createFakePackVersionMetadata({
         formulas: [formulaToMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
@@ -205,7 +191,7 @@ describe('Pack metadata Validation', () => {
     });
 
     describe('object schemas', () => {
-      function metadataForFormulaWithObjectSchema(schema: GenericObjectSchema): PackMetadata {
+      function metadataForFormulaWithObjectSchema(schema: GenericObjectSchema): PackVersionMetadata {
         const formula = makeObjectFormula({
           name: 'MyFormula',
           description: 'My description',
@@ -216,7 +202,7 @@ describe('Pack metadata Validation', () => {
           },
           execute: () => ({}),
         });
-        return createFakePackMetadata({
+        return createFakePackVersionMetadata({
           formulas: [formulaToMetadata(formula)],
           formulaNamespace: 'MyNamespace',
         });
@@ -323,7 +309,7 @@ describe('Pack metadata Validation', () => {
           parameters: [makeStringParameter('myParam', 'param description')],
           execute: () => '',
         });
-        const metadata = createFakePackMetadata({
+        const metadata = createFakePackVersionMetadata({
           formulas: [formulaToMetadata(formula)],
           formulaNamespace: 'MyNamespace',
           formats: [
@@ -349,7 +335,7 @@ describe('Pack metadata Validation', () => {
           parameters: [makeStringParameter('myParam', 'param description')],
           execute: () => '',
         });
-        const metadata = createFakePackMetadata({
+        const metadata = createFakePackVersionMetadata({
           formulas: [formulaToMetadata(formula)],
           formulaNamespace: 'MyNamespace',
           formats: [
@@ -375,7 +361,7 @@ describe('Pack metadata Validation', () => {
 
   describe('Authentication', () => {
     it('NoAuthentication', async () => {
-      const metadata = createFakePackMetadata({
+      const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.None,
         },
@@ -384,7 +370,7 @@ describe('Pack metadata Validation', () => {
     });
 
     it('HeaderBearerToken', async () => {
-      const metadata = createFakePackMetadata({
+      const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.HeaderBearerToken,
           defaultConnectionType: DefaultConnectionType.Shared,
@@ -404,7 +390,7 @@ describe('Pack metadata Validation', () => {
     });
 
     it('CodaApiHeaderBearerToken', async () => {
-      const metadata = createFakePackMetadata({
+      const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.CodaApiHeaderBearerToken,
           deferConnectionSetup: true,
@@ -415,7 +401,7 @@ describe('Pack metadata Validation', () => {
     });
 
     it('CustomHeaderToken', async () => {
-      const metadata = createFakePackMetadata({
+      const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.CustomHeaderToken,
           headerName: 'some-header',
@@ -431,7 +417,7 @@ describe('Pack metadata Validation', () => {
     });
 
     it('QueryParamToken', async () => {
-      const metadata = createFakePackMetadata({
+      const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.QueryParamToken,
           paramName: 'some-param',
@@ -445,7 +431,7 @@ describe('Pack metadata Validation', () => {
     });
 
     it('MultiQueryParamToken', async () => {
-      const metadata = createFakePackMetadata({
+      const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.MultiQueryParamToken,
           params: [
@@ -465,7 +451,7 @@ describe('Pack metadata Validation', () => {
     });
 
     it('OAuth2, complete', async () => {
-      const metadata = createFakePackMetadata({
+      const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.OAuth2,
           authorizationUrl: 'some-url',
@@ -491,7 +477,7 @@ describe('Pack metadata Validation', () => {
     });
 
     it('OAuth2, minimal', async () => {
-      const metadata = createFakePackMetadata({
+      const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.OAuth2,
           authorizationUrl: 'some-url',
@@ -504,7 +490,7 @@ describe('Pack metadata Validation', () => {
     });
 
     it('WebBasic', async () => {
-      const metadata = createFakePackMetadata({
+      const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.WebBasic,
           uxConfig: {
@@ -518,7 +504,7 @@ describe('Pack metadata Validation', () => {
     });
 
     it('AWSSignature4', async () => {
-      const metadata = createFakePackMetadata({
+      const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.AWSSignature4,
           service: 'some-service',
@@ -532,7 +518,7 @@ describe('Pack metadata Validation', () => {
     });
 
     it('Invalid QueryParamToken', async () => {
-      const metadata = createFakePackMetadata({
+      const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.QueryParamToken,
         } as any,

@@ -30,7 +30,7 @@ exports.handleValidate = handleValidate;
 async function validateMetadata(metadata) {
     var _a;
     try {
-        await upload_validation_1.validatePackMetadata(metadata);
+        await upload_validation_1.validatePackVersionMetadata(metadata);
     }
     catch (e) {
         const packMetadataValidationError = e;

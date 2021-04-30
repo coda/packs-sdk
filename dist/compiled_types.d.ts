@@ -6,6 +6,7 @@ import type { MetadataFormulaMetadata } from './api';
 import type { ObjectPackFormulaMetadata } from './api';
 import type { PackDefinition } from './types';
 import type { PackFormulaMetadata } from './api';
+import type { PackVersionDefinition } from './types';
 import type { PostSetup } from './types';
 import type { SyncTable } from './api';
 export declare type PackSyncTable = Omit<SyncTable, 'getter' | 'getName' | 'getSchema' | 'listDynamicUrls' | 'getDisplayUrl'> & {
@@ -31,13 +32,15 @@ export declare type AuthenticationMetadata = DistributiveOmit<Authentication, 'g
     getConnectionUserId?: MetadataFormulaMetadata;
     postSetup?: PostSetupMetadata[];
 };
-/** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
-export declare type PackMetadata = Omit<PackDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {
+/** Stripped-down version of `PackVersionDefinition` that doesn't contain formula definitions. */
+export declare type PackVersionMetadata = Omit<PackVersionDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {
     formulas: PackFormulasMetadata | PackFormulaMetadata[];
     formats: PackFormatMetadata[];
     syncTables: PackSyncTable[];
     defaultAuthentication?: AuthenticationMetadata;
 };
+/** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
+export declare type PackMetadata = PackVersionMetadata & Pick<PackDefinition, 'id' | 'name' | 'shortDescription' | 'description' | 'permissionsDescription' | 'category' | 'logoPath' | 'exampleImages' | 'exampleVideoIds' | 'minimumFeatureSet' | 'quotas' | 'rateLimits' | 'enabledConfigName' | 'isSystem'>;
 export declare type ExternalPackAuthenticationType = AuthenticationType;
 export declare type ExternalPackFormulas = PackFormulasMetadata | PackFormulaMetadata[];
 export declare type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
@@ -45,9 +48,9 @@ export declare type ExternalPackFormula = PackFormulaMetadata;
 export declare type ExternalPackFormat = Format;
 export declare type ExternalPackFormatMetadata = PackFormatMetadata;
 export declare type ExternalSyncTable = PackSyncTable;
-declare type BasePackMetadata = Omit<PackMetadata, 'enabledConfigName' | 'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables'>;
-/** Further stripped-down version of `PackMetadata` that contains only what the browser needs. */
-export interface ExternalPackMetadata extends BasePackMetadata {
+declare type BasePackVersionMetadata = Omit<PackVersionMetadata, 'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables'>;
+/** Further stripped-down version of `PackVersionMetadata` that contains only what the browser needs. */
+export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
     authentication: {
         type: ExternalPackAuthenticationType;
         params?: Array<{
@@ -65,8 +68,10 @@ export interface ExternalPackMetadata extends BasePackMetadata {
     formats?: ExternalPackFormat[];
     syncTables?: ExternalSyncTable[];
 }
+/** Further stripped-down version of `PackMetadata` that contains only what the browser needs. */
+export declare type ExternalPackMetadata = ExternalPackVersionMetadata & Pick<PackMetadata, 'id' | 'name' | 'shortDescription' | 'description' | 'permissionsDescription' | 'category' | 'logoPath' | 'exampleImages' | 'exampleVideoIds' | 'minimumFeatureSet' | 'quotas' | 'rateLimits' | 'isSystem'>;
 export interface PackUpload {
-    metadata: PackMetadata;
+    metadata: PackVersionMetadata | PackMetadata;
     bundle: string;
 }
 export {};

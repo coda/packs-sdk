@@ -6,6 +6,7 @@ import type {MetadataFormulaMetadata} from './api';
 import type {ObjectPackFormulaMetadata} from './api';
 import type {PackDefinition} from './types';
 import type {PackFormulaMetadata} from './api';
+import type {PackVersionDefinition} from './types';
 import type {PostSetup} from './types';
 import type {SyncTable} from './api';
 
@@ -43,14 +44,37 @@ export type AuthenticationMetadata = DistributiveOmit<
   postSetup?: PostSetupMetadata[];
 };
 
-/** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
-export type PackMetadata = Omit<PackDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {
+/** Stripped-down version of `PackVersionDefinition` that doesn't contain formula definitions. */
+export type PackVersionMetadata = Omit<
+  PackVersionDefinition,
+  'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'
+> & {
   // TODO: @alan-fang once all packs are using formulaNamespace, delete PackFormulasMetadata.
   formulas: PackFormulasMetadata | PackFormulaMetadata[];
   formats: PackFormatMetadata[];
   syncTables: PackSyncTable[];
   defaultAuthentication?: AuthenticationMetadata;
 };
+
+/** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
+export type PackMetadata = PackVersionMetadata &
+  Pick<
+    PackDefinition,
+    | 'id'
+    | 'name'
+    | 'shortDescription'
+    | 'description'
+    | 'permissionsDescription'
+    | 'category'
+    | 'logoPath'
+    | 'exampleImages'
+    | 'exampleVideoIds'
+    | 'minimumFeatureSet'
+    | 'quotas'
+    | 'rateLimits'
+    | 'enabledConfigName'
+    | 'isSystem'
+  >;
 
 // Re-exported values for use in browser code.
 
@@ -62,18 +86,13 @@ export type ExternalPackFormat = Format;
 export type ExternalPackFormatMetadata = PackFormatMetadata;
 export type ExternalSyncTable = PackSyncTable;
 
-type BasePackMetadata = Omit<
-  PackMetadata,
-  | 'enabledConfigName'
-  | 'defaultAuthentication'
-  | 'systemConnectionAuthentication'
-  | 'formulas'
-  | 'formats'
-  | 'syncTables'
+type BasePackVersionMetadata = Omit<
+  PackVersionMetadata,
+  'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables'
 >;
 
-/** Further stripped-down version of `PackMetadata` that contains only what the browser needs. */
-export interface ExternalPackMetadata extends BasePackMetadata {
+/** Further stripped-down version of `PackVersionMetadata` that contains only what the browser needs. */
+export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
   authentication: {
     type: ExternalPackAuthenticationType;
     params?: Array<{name: string; description: string}>;
@@ -91,7 +110,29 @@ export interface ExternalPackMetadata extends BasePackMetadata {
   syncTables?: ExternalSyncTable[];
 }
 
+/** Further stripped-down version of `PackMetadata` that contains only what the browser needs. */
+export type ExternalPackMetadata = ExternalPackVersionMetadata &
+  Pick<
+    PackMetadata,
+    | 'id'
+    | 'name'
+    | 'shortDescription'
+    | 'description'
+    | 'permissionsDescription'
+    | 'category'
+    | 'logoPath'
+    | 'exampleImages'
+    | 'exampleVideoIds'
+    | 'minimumFeatureSet'
+    | 'quotas'
+    | 'rateLimits'
+    | 'isSystem'
+  >;
+
 export interface PackUpload {
-  metadata: PackMetadata;
+  // PackMetadata is only for legacy packs. This should be removed once
+  // all the feature's we're relying on from legacy pack defs like quotas
+  // have been migrated or retired.
+  metadata: PackVersionMetadata | PackMetadata;
   bundle: string;
 }
