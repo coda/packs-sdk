@@ -13,6 +13,9 @@ const api_types_4 = require("./api_types");
 const api_types_5 = require("./api_types");
 const schema_3 = require("./schema");
 const schema_4 = require("./schema");
+const schema_5 = require("./schema");
+const schema_6 = require("./schema");
+const schema_7 = require("./schema");
 const api_types_6 = require("./api_types");
 const api_types_7 = require("./api_types");
 /**
@@ -219,7 +222,7 @@ function makeObjectFormula({ response, ...definition }) {
     let schema;
     if (response) {
         if (isResponseHandlerTemplate(response) && response.schema) {
-            response.schema = schema_4.normalizeSchema(response.schema);
+            response.schema = schema_7.normalizeSchema(response.schema);
             schema = response.schema;
         }
         else if (isResponseExampleTemplate(response)) {
@@ -282,7 +285,7 @@ function makeSyncTable(name, schema, formula, getSchema, entityName, inferSchema
     const { execute: wrappedExecute, ...definition } = formula;
     const formulaSchema = getSchema
         ? undefined
-        : schema_4.normalizeSchema({ type: schema_1.ValueType.Array, items: schema });
+        : schema_7.normalizeSchema({ type: schema_1.ValueType.Array, items: schema });
     const { identity, id, primary } = schema;
     if (!(primary && id && identity)) {
         throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
@@ -290,11 +293,34 @@ function makeSyncTable(name, schema, formula, getSchema, entityName, inferSchema
     if (name.includes(' ')) {
         throw new Error('Sync table name should not include spaces');
     }
+    function generateInferredSchema(result) {
+        const inferredSchema = schema_2.generateSchema(result);
+        if (!(schema_3.isArray(inferredSchema) && schema_4.isObject(inferredSchema.items))) {
+            return schema_6.makeSchema({ type: schema_1.ValueType.Array, items: schema_5.makeObjectSchema({ type: schema_1.ValueType.Object, properties: {} }) });
+        }
+        // Splat on a fake ID onto the result
+        result.forEach((obj, i) => {
+            obj.__id__ = i;
+        });
+        return schema_6.makeSchema({
+            type: schema_1.ValueType.Array,
+            items: schema_6.makeSchema({
+                type: schema_1.ValueType.Object,
+                identity: schema.identity,
+                id: '__id__',
+                featured: Object.keys(inferredSchema.items.properties),
+                properties: {
+                    ...inferredSchema.items.properties,
+                    __id__: { type: schema_1.ValueType.String },
+                },
+            })
+        });
+    }
     const responseHandler = handler_templates_1.generateObjectResponseHandler({ schema: formulaSchema });
     const execute = async function exec(params, context) {
         const { result, continuation } = await wrappedExecute(params, context);
         const appliedSchema = inferSchema
-            ? schema_2.generateSchema(result)
+            ? generateInferredSchema(result)
             : context.sync.schema;
         return {
             result: responseHandler({ body: ensure_1.ensureExists(result), status: 200, headers: {} }, appliedSchema),
@@ -306,7 +332,7 @@ function makeSyncTable(name, schema, formula, getSchema, entityName, inferSchema
     };
     return {
         name,
-        schema: schema_4.normalizeSchema(schema),
+        schema: schema_7.normalizeSchema(schema),
         getter: {
             ...definition,
             cacheTtlSecs: 0,
@@ -322,7 +348,7 @@ function makeSyncTable(name, schema, formula, getSchema, entityName, inferSchema
 exports.makeSyncTable = makeSyncTable;
 function makeDynamicSyncTable(args) {
     const { packId, name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, } = args;
-    const fakeSchema = schema_3.makeObjectSchema({
+    const fakeSchema = schema_5.makeObjectSchema({
         // This schema is useless... just creating a stub here but the client will use
         // the dynamic one.
         type: schema_1.ValueType.Object,
@@ -349,7 +375,7 @@ function makeDynamicSyncTable(args) {
 exports.makeDynamicSyncTable = makeDynamicSyncTable;
 function makeTranslateObjectFormula({ response, ...definition }) {
     const { request, parameters } = definition;
-    response.schema = response.schema ? schema_4.normalizeSchema(response.schema) : undefined;
+    response.schema = response.schema ? schema_7.normalizeSchema(response.schema) : undefined;
     const { onError } = response;
     const requestHandler = handler_templates_2.generateRequestHandler(request, parameters);
     const responseHandler = handler_templates_1.generateObjectResponseHandler(response);

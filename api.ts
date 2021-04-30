@@ -26,8 +26,11 @@ import {generateObjectResponseHandler} from './handler_templates';
 import {generateRequestHandler} from './handler_templates';
 import {generateSchema} from './schema';
 import {htmlArray} from './api_types';
-import {imageArray} from './api_types';
+import {imageArray} from './api_types'
+import {isArray} from './schema';
+import {isObject} from './schema';
 import {makeObjectSchema} from './schema';
+import {makeSchema} from './schema';
 import {normalizeSchema} from './schema';
 import {numberArray} from './api_types';
 import {stringArray} from './api_types';
@@ -614,11 +617,38 @@ export function makeSyncTable<
     throw new Error('Sync table name should not include spaces');
   }
 
+  function generateInferredSchema(result: any[]): ArraySchema<any> {
+    const inferredSchema = generateSchema(result);
+    if (!(isArray(inferredSchema) && isObject(inferredSchema.items))) {
+      return makeSchema({type: ValueType.Array, items: makeObjectSchema({type: ValueType.Object, properties: {}})});
+    }
+
+    // Splat on a fake ID onto the result
+    result.forEach((obj, i) => {
+      obj.__id__ = i;
+    });
+
+    return makeSchema({
+      type: ValueType.Array, 
+      items: makeSchema({
+        type: ValueType.Object,
+        identity: schema.identity,
+        id: '__id__',
+        featured: Object.keys(inferredSchema.items.properties),
+        properties: {
+          ...inferredSchema.items.properties,
+          __id__: {type: ValueType.String},
+        },
+      })
+    });
+  }
+  
+
   const responseHandler = generateObjectResponseHandler({schema: formulaSchema});
   const execute = async function exec(params: ParamValues<ParamDefsT>, context: SyncExecutionContext) {
     const {result, continuation} = await wrappedExecute(params, context);
     const appliedSchema = inferSchema
-      ? generateSchema(result) as ArraySchema
+      ? generateInferredSchema(result)
       : context.sync.schema;
     return {
       result: responseHandler({body: ensureExists(result), status: 200, headers: {}}, appliedSchema) as Array<
@@ -645,6 +675,7 @@ export function makeSyncTable<
     entityName,
   };
 }
+
 
 interface BaseMakeDynamicSyncTableArgs<ParamDefsT extends ParamDefs> {
   packId: number;
