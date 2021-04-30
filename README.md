@@ -290,8 +290,11 @@ Packs code will never have access to the request after authentication credential
   where a pack is going to make requests to Coda's own API. The UI will assist the user
   in creating and configuring an API token without the user needing to do this manually.
   This is mostly for use by Coda-internal packs.
+- **Various**: Indicates that the pack has various different authentication methods. When
+  this is indicated, the user will be able to specify what type of authentication to use
+  when they create a connection. This is mostly for use by Coda-internal packs.
 
-`OAuth2` and `CodaApiHeaderBearerToken` are not available for system authentication.
+`OAuth2`, `CodaApiHeaderBearerToken`, and `Various` are not available for system authentication.
 
 ### Testing Authenticated Requests
 
