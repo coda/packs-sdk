@@ -97,7 +97,7 @@ function compileDefaultAuthenticationMetadata(
   if (!authentication) {
     return;
   }
-  if (authentication.type === AuthenticationType.None) {
+  if (authentication.type === AuthenticationType.None || authentication.type === AuthenticationType.Various) {
     return authentication;
   }
   const {getConnectionName, getConnectionUserId, postSetup, ...rest} = authentication;

@@ -680,7 +680,8 @@ export declare enum AuthenticationType {
 	OAuth2 = "OAuth2",
 	WebBasic = "WebBasic",
 	AWSSignature4 = "AWSSignature4",
-	CodaApiHeaderBearerToken = "CodaApiHeaderBearerToken"
+	CodaApiHeaderBearerToken = "CodaApiHeaderBearerToken",
+	Various = "Various"
 }
 export declare enum DefaultConnectionType {
 	SharedDataOnly = 1,
@@ -783,7 +784,10 @@ export interface AWSSignature4Authentication extends BaseAuthentication {
 	type: AuthenticationType.AWSSignature4;
 	service: string;
 }
-export declare type Authentication = NoAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSSignature4Authentication;
+export interface VariousAuthentication {
+	type: AuthenticationType.Various;
+}
+export declare type Authentication = NoAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSSignature4Authentication | VariousAuthentication;
 export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSSignature4Authentication;
 export interface Format {
 	name: string;
