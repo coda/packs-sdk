@@ -76,11 +76,11 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
         };
         const uploadPayload = JSON.stringify(upload);
         const bundleHash = crypto_1.computeSha256(uploadPayload);
-        const response = await client.registerPackVersion(packId, packVersion, {}, { bundleHash });
-        if (errors_2.isCodaError(response)) {
-            return helpers_4.printAndExit(`Error while registering pack version: ${errors_1.formatError(response)}`);
+        const registerResponse = await client.registerPackVersion(packId, packVersion, {}, { bundleHash });
+        if (errors_2.isCodaError(registerResponse)) {
+            return helpers_4.printAndExit(`Error while registering pack version: ${errors_1.formatError(registerResponse)}`);
         }
-        const { uploadUrl, headers } = response;
+        const { uploadUrl, headers } = registerResponse;
         logger.info('Validating Pack metadata...');
         await validate_1.validateMetadata(metadata);
         logger.info('Uploading Pack...');
@@ -88,7 +88,7 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
         logger.info('Validating upload...');
         const uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion);
         if (errors_2.isCodaError(uploadCompleteResponse)) {
-            helpers_4.printAndExit(`Error while finalizing pack version: ${errors_1.formatError(response)}`);
+            helpers_4.printAndExit(`Error while finalizing pack version: ${errors_1.formatError(uploadCompleteResponse)}`);
         }
     }
     catch (err) {

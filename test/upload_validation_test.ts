@@ -83,6 +83,22 @@ describe('Pack metadata Validation', () => {
     await validateJson(metadata);
   });
 
+  it('valid formula namespace', async () => {
+    const metadata = createFakePackVersionMetadata({formulas: [], formulaNamespace: 'Foo_Bar'});
+    await validateJson(metadata);
+  });
+
+  it('invalid formula namespace', async () => {
+    const metadata = createFakePackVersionMetadata({formulas: [], formulaNamespace: 'Foo Bar'});
+    const err = await validateJsonAndAssertFails(metadata);
+    assert.deepEqual(err.validationErrors, [
+      {
+        path: 'formulaNamespace',
+        message: 'Formula namespaces can only contain alphanumeric characters and underscores.',
+      },
+    ]);
+  });
+
   describe('Formulas', () => {
     function formulaToMetadata(formula: TypedStandardFormula): PackFormulaMetadata {
       const {execute, ...rest} = formula;

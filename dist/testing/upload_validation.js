@@ -384,12 +384,23 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject({
     version: z.string().nonempty(),
     defaultAuthentication: z.union(zodUnionInput(Object.values(defaultAuthenticationValidators))).optional(),
     networkDomains: z.array(z.string()).optional(),
-    formulaNamespace: z.string().optional(),
+    formulaNamespace: z.string().optional().refine(validateNamespace, {
+        message: 'Formula namespaces can only contain alphanumeric characters and underscores.',
+    }),
     systemConnectionAuthentication: z.union(zodUnionInput(systemAuthenticationValidators)).optional(),
     formulas: z.array(formulaMetadataSchema).optional().default([]),
     formats: z.array(formatMetadataSchema).optional().default([]),
     syncTables: z.array(z.unknown()).optional().default([]),
 });
+function validateNamespace(namespace) {
+    if (!namespace) {
+        return true;
+    }
+    // Technically we accept unicode characters in namespaces and formulas in general.
+    // We can borrow the unicode parsing from tokens.ts, but given that this is just temporary
+    // and we're about to delete namespaces, restrict to ascii for now for simplicity.
+    return /^\w+$/.test(namespace);
+}
 function validateFormulas(schema) {
     return schema
         .refine(data => {
