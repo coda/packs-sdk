@@ -858,6 +858,8 @@ export interface PackVersionDefinition {
 	syncTables?: SyncTable[];
 }
 /**
+ * @deprecated use `#PackVersionDefinition`
+ *
  * The legacy complete definition of a Pack including un-versioned metadata.
  * This should only be used by legacy Coda pack implementations.
  */
