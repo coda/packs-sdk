@@ -106,7 +106,8 @@ function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError 
             path: zodPathToPathString(unionIssue.path),
             message: unionIssue.message,
           };
-          // dedupe identical errors.
+          // dedupe identical errors. These can occur when validating union types, and each union type
+          // throws the same validation error.
           if (!underlyingErrors.find(err => err.path === error.path && err.message === error.message)) {
             underlyingErrors.push(error);
           }
@@ -477,7 +478,7 @@ const baseSyncTableSchema = {
 const genericSyncTableSchema = zodCompleteObject<SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>>({
   ...baseSyncTableSchema,
   getSchema: formulaMetadataSchema.optional(),
-});
+}).strict();
 
 const genericDynamicSyncTableSchema = zodCompleteObject<
   DynamicSyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>
@@ -488,7 +489,7 @@ const genericDynamicSyncTableSchema = zodCompleteObject<
   getDisplayUrl: formulaMetadataSchema,
   listDynamicUrls: formulaMetadataSchema.optional(),
   getSchema: formulaMetadataSchema,
-});
+}).strict();
 
 const syncTableSchema = z.union([genericDynamicSyncTableSchema, genericSyncTableSchema]);
 

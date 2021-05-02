@@ -363,8 +363,13 @@ describe('Pack metadata Validation', () => {
         const metadata = createFakePack({
           syncTables: [{...syncTable, isDynamic: false as any}],
         });
-        // TODO(alan): when https://github.com/colinhacks/zod/issues/418 is resolved, fix this test (it should fail validation).
-        await validateJson(metadata);
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            path: 'syncTables[0]',
+            message: "Unrecognized key(s) in object: 'isDynamic', 'getDisplayUrl', 'listDynamicUrls', 'getName'",
+          },
+        ]);
       });
 
       it('invalid identity name', async () => {

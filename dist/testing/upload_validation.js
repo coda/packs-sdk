@@ -88,7 +88,8 @@ function zodErrorDetailToValidationError(subError) {
                         path: zodPathToPathString(unionIssue.path),
                         message: unionIssue.message,
                     };
-                    // dedupe identical errors.
+                    // dedupe identical errors. These can occur when validating union types, and each union type
+                    // throws the same validation error.
                     if (!underlyingErrors.find(err => err.path === error.path && err.message === error.message)) {
                         underlyingErrors.push(error);
                     }
@@ -399,7 +400,7 @@ const baseSyncTableSchema = {
 const genericSyncTableSchema = zodCompleteObject({
     ...baseSyncTableSchema,
     getSchema: formulaMetadataSchema.optional(),
-});
+}).strict();
 const genericDynamicSyncTableSchema = zodCompleteObject({
     ...baseSyncTableSchema,
     isDynamic: zodDiscriminant(true),
@@ -407,7 +408,7 @@ const genericDynamicSyncTableSchema = zodCompleteObject({
     getDisplayUrl: formulaMetadataSchema,
     listDynamicUrls: formulaMetadataSchema.optional(),
     getSchema: formulaMetadataSchema,
-});
+}).strict();
 const syncTableSchema = z.union([genericDynamicSyncTableSchema, genericSyncTableSchema]);
 // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
 // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
