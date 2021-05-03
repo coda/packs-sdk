@@ -72,6 +72,7 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 export declare type ExternalPackMetadata = ExternalPackVersionMetadata & Pick<PackMetadata, 'id' | 'name' | 'shortDescription' | 'description' | 'permissionsDescription' | 'category' | 'logoPath' | 'exampleImages' | 'exampleVideoIds' | 'minimumFeatureSet' | 'quotas' | 'rateLimits' | 'isSystem'>;
 export interface PackUpload {
     metadata: PackVersionMetadata | PackMetadata;
+    sdkVersion: string;
     bundle: string;
 }
 export {};
