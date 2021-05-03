@@ -329,7 +329,7 @@ describe('Pack metadata Validation', () => {
           },
         );
 
-        const metadata = createFakePackMetadata({
+        const metadata = createFakePack({
           id: 1040,
           syncTables: [syncTable],
         });
