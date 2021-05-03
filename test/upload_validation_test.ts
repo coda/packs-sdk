@@ -73,6 +73,27 @@ describe('Pack metadata Validation', () => {
     ]);
   });
 
+  it('valid versions', async () => {
+    for (const version of ['1', '1.0', '1.0.0']) {
+      const metadata = createFakePackVersionMetadata({version});
+      const result = await validateJson(metadata);
+      assert.ok(result, `Expected version identifier "${version}" to be valid.`);
+    }
+  });
+
+  it('invalid versions', async () => {
+    for (const version of ['', 'foo', 'unversioned', '-1', '1.0.0.0', '1.0.0-beta']) {
+      const metadata = createFakePackVersionMetadata({version});
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'version',
+          message: 'Pack versions must use semantic versioning, e.g. "1", "1.0" or "1.0.0".',
+        },
+      ]);
+    }
+  });
+
   it('formula namespace not required when formulas absent', async () => {
     const metadata = createFakePackVersionMetadata({formulas: undefined, formulaNamespace: undefined});
     await validateJson(metadata);
