@@ -453,7 +453,10 @@ const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
 // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
 // schema we actually use.)
 const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata>({
-  version: z.string().nonempty(),
+  version: z
+    .string()
+    .nonempty()
+    .regex(/^\d+(\.\d+){0,2}$/, 'Pack versions must use semantic versioning, e.g. "1", "1.0" or "1.0.0".'),
   defaultAuthentication: z.union(zodUnionInput(Object.values(defaultAuthenticationValidators))).optional(),
   networkDomains: z.array(z.string()).optional(),
   formulaNamespace: z.string().optional().refine(validateNamespace, {
