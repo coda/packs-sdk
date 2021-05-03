@@ -383,7 +383,6 @@ const formatMetadataSchema = zodCompleteObject({
 const unrefinedPackVersionMetadataSchema = zodCompleteObject({
     version: z
         .string()
-        .nonempty()
         .regex(/^\d+(\.\d+){0,2}$/, 'Pack versions must use semantic versioning, e.g. "1", "1.0" or "1.0.0".'),
     defaultAuthentication: z.union(zodUnionInput(Object.values(defaultAuthenticationValidators))).optional(),
     networkDomains: z.array(z.string()).optional(),

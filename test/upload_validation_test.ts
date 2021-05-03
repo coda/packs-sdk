@@ -82,7 +82,7 @@ describe('Pack metadata Validation', () => {
   });
 
   it('invalid versions', async () => {
-    for (const version of ['foo', 'unversioned', '-1', '1.0.0.0', '1.0.0-beta']) {
+    for (const version of ['', 'foo', 'unversioned', '-1', '1.0.0.0', '1.0.0-beta']) {
       const metadata = createFakePackVersionMetadata({version});
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
