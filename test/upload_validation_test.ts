@@ -161,6 +161,45 @@ describe('Pack metadata Validation', () => {
       await validateJson(metadata);
     });
 
+    it('valid formula names', async () => {
+      for (const name of ['foo', 'Foo', 'foo_bar', 'Foo123', 'føø']) {
+        const formula = makeNumericFormula({
+          name,
+          description: 'My description',
+          examples: [],
+          parameters: [],
+          execute: () => 1,
+        });
+        const metadata = createFakePackVersionMetadata({
+          formulas: [formulaToMetadata(formula)],
+          formulaNamespace: 'MyNamespace',
+        });
+        await validateJson(metadata);
+      }
+    });
+
+    it('invalid formula names', async () => {
+      for (const name of ['_foo', 'foo-bar', 'foo bar', '2foo']) {
+        const formula = makeNumericFormula({
+          name,
+          examples: [],
+          description: 'desc',
+          parameters: [],
+        } as any);
+        const metadata = createFakePackVersionMetadata({
+          formulas: [formulaToMetadata(formula)],
+          formulaNamespace: 'MyNamespace',
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Formula names can only contain alphanumeric characters and underscores.',
+            path: 'formulas[0].name',
+          },
+        ]);
+      }
+    });
+
     it('valid string formula with examples', async () => {
       const formula = makeStringFormula({
         name: 'MyFormula',
@@ -220,7 +259,7 @@ describe('Pack metadata Validation', () => {
 
     it('invalid numeric formula', async () => {
       const formula = makeNumericFormula({
-        name: '',
+        name: 'MyFormula',
         examples: [],
         parameters: [makeNumericParameter('myParam', 'param description')],
       } as any);
@@ -273,7 +312,7 @@ describe('Pack metadata Validation', () => {
             return '';
           }),
           formula: {
-            name: 'Sync table',
+            name: 'SyncTable',
             description: 'Sync table',
             examples: [],
             parameters: [],
@@ -368,7 +407,7 @@ describe('Pack metadata Validation', () => {
             return '';
           }),
           formula: {
-            name: 'Sync table',
+            name: 'SyncTable',
             description: 'Sync table',
             examples: [],
             parameters: [],

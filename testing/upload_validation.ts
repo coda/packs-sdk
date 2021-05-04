@@ -277,7 +277,9 @@ const paramDefValidator = zodCompleteObject<ParamDef<any>>({
 });
 
 const commonPackFormulaSchema = {
-  name: z.string(),
+  name: z
+    .string()
+    .refine(validateFormulaName, {message: 'Formula names can only contain alphanumeric characters and underscores.'}),
   description: z.string(),
   examples: z.array(
     z.object({
@@ -517,14 +519,24 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata
   syncTables: z.array(syncTableSchema).optional().default([]),
 });
 
+// The following largely copied from tokens.ts for parsing formula names.
+const letterChar = String.raw`\p{L}`;
+const numberChar = String.raw`\p{N}`;
+const wordChar = String.raw`${letterChar}${numberChar}_`;
+const regexLetterChar = String.raw`[${letterChar}]`;
+const regexWordChar = String.raw`[${wordChar}]`;
+const regexFormulaNameStr = String.raw`^${regexLetterChar}(?:${regexWordChar}+)?$`;
+const regexFormulaName = new RegExp(regexFormulaNameStr, 'u');
+
 function validateNamespace(namespace: string | undefined): boolean {
-  if (!namespace) {
+  if (typeof namespace === 'undefined') {
     return true;
   }
-  // Technically we accept unicode characters in namespaces and formulas in general.
-  // We can borrow the unicode parsing from tokens.ts, but given that this is just temporary
-  // and we're about to delete namespaces, restrict to ascii for now for simplicity.
-  return /^\w+$/.test(namespace);
+  return validateFormulaName(namespace);
+}
+
+function validateFormulaName(value: string): boolean {
+  return regexFormulaName.test(value);
 }
 
 function validateFormulas(schema: z.ZodObject<any>) {
