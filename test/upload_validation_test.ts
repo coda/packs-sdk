@@ -370,6 +370,35 @@ describe('Pack metadata Validation', () => {
             message: "Unrecognized key(s) in object: 'isDynamic', 'getDisplayUrl', 'listDynamicUrls', 'getName'",
           },
         ]);
+
+        const invalidFormulaSyncTable = makeDynamicSyncTable({
+          packId: 424242,
+          name: 'DynamicSyncTable',
+          getName: makeMetadataFormula(async () => {
+            return '';
+          }),
+          getSchema: makeMetadataFormula(async () => {
+            return '';
+          }),
+          formula: {} as any, // broken
+          getDisplayUrl: makeMetadataFormula(async () => {
+            return '';
+          }),
+        });
+        const metadata2 = createFakePack({
+          syncTables: [{...invalidFormulaSyncTable}],
+        });
+        const invalidFormulaErrors = await validateJsonAndAssertFails(metadata2);
+        assert.deepEqual(invalidFormulaErrors.validationErrors, [
+          {path: 'syncTables[0].getter.name', message: 'Required'},
+          {path: 'syncTables[0].getter.description', message: 'Required'},
+          {path: 'syncTables[0].getter.examples', message: 'Required'},
+          {path: 'syncTables[0].getter.parameters', message: 'Required'},
+          {
+            path: 'syncTables[0]',
+            message: "Unrecognized key(s) in object: 'isDynamic', 'getDisplayUrl', 'listDynamicUrls', 'getName'",
+          },
+        ]);
       });
 
       it('invalid identity name', async () => {
