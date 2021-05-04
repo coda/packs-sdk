@@ -37,7 +37,7 @@
     "uuid": "^8.3.2",
     "webpack": "^5.36.2",
     "xml2js": "^0.4.23",
-    "yargs": "^16.2.0",
+    "yargs": "^17.0.1",
     "zod": "^3.0.0-beta.1"
   },
   "devDependencies": {
