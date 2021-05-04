@@ -32,8 +32,7 @@ export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<P
 
   // Since package.json isn't in dist, we grab it from the root directory instead.
   const packageJson = await import(isTestCommand() ? '../package.json' : '../../package.json');
-  const codaPacksSDKVersion = packageJson.version;
-  codaPacksSDKVersion!;
+  const codaPacksSDKVersion = packageJson.version as string;
 
   const apiKey = getApiKey(codaApiEndpoint);
   if (!apiKey) {
@@ -63,6 +62,7 @@ export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<P
 
     const upload: PackUpload = {
       metadata,
+      sdkVersion: codaPacksSDKVersion,
       bundle: bundle.toString(),
     };
     const uploadPayload = JSON.stringify(upload);

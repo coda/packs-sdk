@@ -49,7 +49,6 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
     // Since package.json isn't in dist, we grab it from the root directory instead.
     const packageJson = await Promise.resolve().then(() => __importStar(require(helpers_3.isTestCommand() ? '../package.json' : '../../package.json')));
     const codaPacksSDKVersion = packageJson.version;
-    codaPacksSDKVersion;
     const apiKey = config_storage_1.getApiKey(codaApiEndpoint);
     if (!apiKey) {
         helpers_4.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
@@ -72,6 +71,7 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
         const metadata = cli_1.compilePackMetadata(manifest);
         const upload = {
             metadata,
+            sdkVersion: codaPacksSDKVersion,
             bundle: bundle.toString(),
         };
         const uploadPayload = JSON.stringify(upload);

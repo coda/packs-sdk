@@ -134,5 +134,6 @@ export interface PackUpload {
   // all the feature's we're relying on from legacy pack defs like quotas
   // have been migrated or retired.
   metadata: PackVersionMetadata | PackMetadata;
+  sdkVersion: string;
   bundle: string;
 }
