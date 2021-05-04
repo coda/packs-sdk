@@ -367,7 +367,7 @@ describe('Pack metadata Validation', () => {
         assert.deepEqual(err.validationErrors, [
           {
             path: 'syncTables[0]',
-            message: "Unrecognized key(s) in object: 'isDynamic', 'getDisplayUrl', 'listDynamicUrls', 'getName'",
+            message: "Unrecognized key(s) in object: 'getDisplayUrl', 'listDynamicUrls', 'getName'",
           },
         ]);
 
@@ -394,10 +394,6 @@ describe('Pack metadata Validation', () => {
           {path: 'syncTables[0].getter.description', message: 'Required'},
           {path: 'syncTables[0].getter.examples', message: 'Required'},
           {path: 'syncTables[0].getter.parameters', message: 'Required'},
-          {
-            path: 'syncTables[0]',
-            message: "Unrecognized key(s) in object: 'isDynamic', 'getDisplayUrl', 'listDynamicUrls', 'getName'",
-          },
         ]);
       });
 

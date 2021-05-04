@@ -475,8 +475,14 @@ const baseSyncTableSchema = {
   entityName: z.string().optional(),
 };
 
-const genericSyncTableSchema = zodCompleteObject<SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>>({
+type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;
+
+const genericSyncTableSchema = zodCompleteObject<GenericSyncTableDef & {isDynamic?: false}>({
   ...baseSyncTableSchema,
+  // Add a fake discriminant here so that we can flag union errors as related to a non-matching discriminant
+  // and filter them out. A real regular sync table wouldn't specify `isDynamic` at all here, but including
+  // it in the validator like this helps zod flag it in the way we need.
+  isDynamic: zodDiscriminant(false).optional(),
   getSchema: formulaMetadataSchema.optional(),
 }).strict();
 
