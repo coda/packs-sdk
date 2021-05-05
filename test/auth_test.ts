@@ -334,8 +334,8 @@ describe('Auth', () => {
   describe('authenticated fetching', () => {
     function createPackWithAuth(authDef: Authentication | undefined, opts?: Partial<PackDefinition>) {
       return createFakePack({
-        ...opts,
         defaultAuthentication: authDef,
+        networkDomains: ['example.com'],
         formulas: {
           Fake: [
             makeStringFormula({
@@ -350,6 +350,7 @@ describe('Auth', () => {
             }),
           ],
         },
+        ...opts,
       });
     }
 
@@ -422,10 +423,13 @@ describe('Auth', () => {
     });
 
     it(`${AuthenticationType.HeaderBearerToken}, endpoint url specified in auth config`, async () => {
-      const pack = createPackWithAuth({
-        type: AuthenticationType.HeaderBearerToken,
-        requiresEndpointUrl: true,
-      });
+      const pack = createPackWithAuth(
+        {
+          type: AuthenticationType.HeaderBearerToken,
+          requiresEndpointUrl: true,
+        },
+        {networkDomains: ['some-endpoint-url.com']},
+      );
       setupReadline(['https://some-endpoint-url.com', 'some-token']);
       doSetupAuth(pack);
 
@@ -441,10 +445,13 @@ describe('Auth', () => {
     });
 
     it(`${AuthenticationType.HeaderBearerToken}, endpoint url specified in auth config and also hardcoded`, async () => {
-      const pack = createPackWithAuth({
-        type: AuthenticationType.HeaderBearerToken,
-        requiresEndpointUrl: true,
-      });
+      const pack = createPackWithAuth(
+        {
+          type: AuthenticationType.HeaderBearerToken,
+          requiresEndpointUrl: true,
+        },
+        {networkDomains: ['some-endpoint-url.com']},
+      );
       setupReadline(['https://some-endpoint-url.com', 'some-token']);
       doSetupAuth(pack);
 
@@ -620,10 +627,13 @@ describe('Auth', () => {
     });
 
     it(`${AuthenticationType.WebBasic}, applies host automatially`, async () => {
-      const pack = createPackWithAuth({
-        type: AuthenticationType.WebBasic,
-        requiresEndpointUrl: true,
-      });
+      const pack = createPackWithAuth(
+        {
+          type: AuthenticationType.WebBasic,
+          requiresEndpointUrl: true,
+        },
+        {networkDomains: ['some-endpoint-url.com']},
+      );
       setupReadline(['https://some-endpoint-url.com', 'some-username', 'some-password']);
       doSetupAuth(pack);
 
@@ -662,6 +672,7 @@ describe('Auth', () => {
         defaultAuthentication: {
           type: AuthenticationType.HeaderBearerToken,
         },
+        networkDomains: ['example.com'],
         formulas: {
           Fake: [
             makeStringFormula({
@@ -697,6 +708,7 @@ describe('Auth', () => {
         defaultAuthentication: {
           type: AuthenticationType.HeaderBearerToken,
         },
+        networkDomains: ['example.com'],
         formulas: {
           Fake: [
             makeStringFormula({
@@ -724,6 +736,19 @@ describe('Auth', () => {
         method: 'GET',
         url: 'https://example.com/some-blob.jpg',
       });
+    });
+
+    it(`unauthorized domain fails`, async () => {
+      const pack = createPackWithAuth(
+        {
+          type: AuthenticationType.None,
+        },
+        {networkDomains: ['foo.com']},
+      );
+      await testHelper.willBeRejectedWith(
+        executeFetch(pack, 'https://example.com', {result: 'hello'}),
+        /Attempted to connect to undeclared host 'example.com'/,
+      );
     });
 
     describe('OAuth', () => {
