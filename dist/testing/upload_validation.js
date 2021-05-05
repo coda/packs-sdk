@@ -38,6 +38,10 @@ var CustomErrorCode;
 (function (CustomErrorCode) {
     CustomErrorCode["NonMatchingDiscriminant"] = "nonMatchingDiscriminant";
 })(CustomErrorCode || (CustomErrorCode = {}));
+var ExceptedPackIds;
+(function (ExceptedPackIds) {
+    ExceptedPackIds[ExceptedPackIds["NFL"] = 1040] = "NFL";
+})(ExceptedPackIds || (ExceptedPackIds = {}));
 class PackMetadataValidationError extends Error {
     constructor(message, originalError, validationErrors) {
         super(message);
@@ -84,7 +88,11 @@ function zodErrorDetailToValidationError(subError) {
                         path: zodPathToPathString(unionIssue.path),
                         message: unionIssue.message,
                     };
-                    underlyingErrors.push(error);
+                    // dedupe identical errors. These can occur when validating union types, and each union type
+                    // throws the same validation error.
+                    if (!underlyingErrors.find(err => err.path === error.path && err.message === error.message)) {
+                        underlyingErrors.push(error);
+                    }
                 }
             }
         }
@@ -116,7 +124,7 @@ function zodCompleteObject(shape) {
     return z.object(shape);
 }
 function zodDiscriminant(value) {
-    return z.union([z.string(), z.number()]).refine(data => data === value, {
+    return z.union([z.string(), z.number(), z.boolean(), z.undefined()]).refine(data => data === value, {
         message: 'Non-matching discriminant',
         params: { customErrorCode: CustomErrorCode.NonMatchingDiscriminant },
     });
@@ -377,6 +385,35 @@ const formatMetadataSchema = zodCompleteObject({
     placeholder: z.string().optional(),
     matchers: z.array(z.string()),
 });
+const syncFormulaSchema = zodCompleteObject({
+    schema: arrayPropertySchema.optional(),
+    resultType: z.any(),
+    isSyncFormula: z.literal(true),
+    ...commonPackFormulaSchema,
+});
+const baseSyncTableSchema = {
+    name: z.string().nonempty(),
+    schema: genericObjectSchema,
+    getter: syncFormulaSchema,
+    entityName: z.string().optional(),
+};
+const genericSyncTableSchema = zodCompleteObject({
+    ...baseSyncTableSchema,
+    // Add a fake discriminant here so that we can flag union errors as related to a non-matching discriminant
+    // and filter them out. A real regular sync table wouldn't specify `isDynamic` at all here, but including
+    // it in the validator like this helps zod flag it in the way we need.
+    isDynamic: zodDiscriminant(false).optional(),
+    getSchema: formulaMetadataSchema.optional(),
+}).strict();
+const genericDynamicSyncTableSchema = zodCompleteObject({
+    ...baseSyncTableSchema,
+    isDynamic: zodDiscriminant(true),
+    getName: formulaMetadataSchema,
+    getDisplayUrl: formulaMetadataSchema,
+    listDynamicUrls: formulaMetadataSchema.optional(),
+    getSchema: formulaMetadataSchema,
+}).strict();
+const syncTableSchema = z.union([genericDynamicSyncTableSchema, genericSyncTableSchema]);
 // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
 // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
 // schema we actually use.)
@@ -392,7 +429,7 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject({
     systemConnectionAuthentication: z.union(zodUnionInput(systemAuthenticationValidators)).optional(),
     formulas: z.array(formulaMetadataSchema).optional().default([]),
     formats: z.array(formatMetadataSchema).optional().default([]),
-    syncTables: z.array(z.unknown()).optional().default([]),
+    syncTables: z.array(syncTableSchema).optional().default([]),
 });
 function validateNamespace(namespace) {
     if (!namespace) {
@@ -446,4 +483,22 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
     quotas: z.any().optional(),
     rateLimits: z.any().optional(),
     isSystem: z.boolean().optional(),
-}));
+})).refine(data => {
+    var _a;
+    for (const syncTable of data.syncTables) {
+        if (!((_a = syncTable.schema) === null || _a === void 0 ? void 0 : _a.identity)) {
+            continue;
+        }
+        const identityName = syncTable.schema.identity.name;
+        // Hack until we fix the NFL pack
+        if (data.id === ExceptedPackIds.NFL && identityName === 'FullName') {
+            continue;
+        }
+        if (syncTable.schema.properties[identityName]) {
+            return false;
+        }
+    }
+    return true;
+}, {
+    message: "Cannot have a sync table property with the same name as the sync table's schema identity.",
+});

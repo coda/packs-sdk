@@ -18,7 +18,7 @@ export const FakePack: PackDefinition = deepFreeze({
   exampleImages: [],
   exampleVideoIds: [],
   formats: [],
-  formulas: {},
+  formulas: [],
   logoPath: 'logo.png',
   name: 'Fake Pack',
   permissionsDescription: 'Some description about permissions',

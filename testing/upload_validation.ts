@@ -6,6 +6,7 @@ import type {BooleanSchema} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import {DefaultConnectionType} from '../types';
+import type {DynamicSyncTableDef} from '../api';
 import {FeatureSet} from '../types';
 import type {HeaderBearerTokenAuthentication} from '../types';
 import type {Identity} from '../schema';
@@ -24,12 +25,15 @@ import {PackCategory} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDef} from '../api_types';
+import type {ParamDefs} from '../api_types';
 import {PostSetupType} from '../types';
 import type {QueryParamTokenAuthentication} from '../types';
 import type {SetEndpoint} from '../types';
 import {StringHintValueTypes} from '../schema';
 import type {StringPackFormula} from '../api';
 import type {StringSchema} from '../schema';
+import type {SyncFormula} from '../api';
+import type {SyncTableDef} from '../api';
 import {Type} from '../api_types';
 import type {ValidationError} from './types';
 import {ValueType} from '../schema';
@@ -41,6 +45,10 @@ import * as z from 'zod';
 
 enum CustomErrorCode {
   NonMatchingDiscriminant = 'nonMatchingDiscriminant',
+}
+
+enum ExceptedPackIds {
+  NFL = 1040,
 }
 
 export class PackMetadataValidationError extends Error {
@@ -98,7 +106,11 @@ function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError 
             path: zodPathToPathString(unionIssue.path),
             message: unionIssue.message,
           };
-          underlyingErrors.push(error);
+          // dedupe identical errors. These can occur when validating union types, and each union type
+          // throws the same validation error.
+          if (!underlyingErrors.find(err => err.path === error.path && err.message === error.message)) {
+            underlyingErrors.push(error);
+          }
         }
       }
     }
@@ -139,8 +151,8 @@ function zodCompleteObject<O, T extends ZodCompleteShape<O> = ZodCompleteShape<R
   return z.object<T>(shape);
 }
 
-function zodDiscriminant(value: string | number) {
-  return z.union([z.string(), z.number()]).refine(data => data === value, {
+function zodDiscriminant(value: string | number | boolean) {
+  return z.union([z.string(), z.number(), z.boolean(), z.undefined()]).refine(data => data === value, {
     message: 'Non-matching discriminant',
     params: {customErrorCode: CustomErrorCode.NonMatchingDiscriminant},
   });
@@ -449,6 +461,44 @@ const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   matchers: z.array(z.string()),
 });
 
+const syncFormulaSchema = zodCompleteObject<Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute'>>({
+  schema: arrayPropertySchema.optional(),
+  resultType: z.any(),
+  isSyncFormula: z.literal(true),
+  ...commonPackFormulaSchema,
+});
+
+const baseSyncTableSchema = {
+  name: z.string().nonempty(),
+  schema: genericObjectSchema,
+  getter: syncFormulaSchema,
+  entityName: z.string().optional(),
+};
+
+type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;
+
+const genericSyncTableSchema = zodCompleteObject<GenericSyncTableDef & {isDynamic?: false}>({
+  ...baseSyncTableSchema,
+  // Add a fake discriminant here so that we can flag union errors as related to a non-matching discriminant
+  // and filter them out. A real regular sync table wouldn't specify `isDynamic` at all here, but including
+  // it in the validator like this helps zod flag it in the way we need.
+  isDynamic: zodDiscriminant(false).optional(),
+  getSchema: formulaMetadataSchema.optional(),
+}).strict();
+
+const genericDynamicSyncTableSchema = zodCompleteObject<
+  DynamicSyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>
+>({
+  ...baseSyncTableSchema,
+  isDynamic: zodDiscriminant(true),
+  getName: formulaMetadataSchema,
+  getDisplayUrl: formulaMetadataSchema,
+  listDynamicUrls: formulaMetadataSchema.optional(),
+  getSchema: formulaMetadataSchema,
+}).strict();
+
+const syncTableSchema = z.union([genericDynamicSyncTableSchema, genericSyncTableSchema]);
+
 // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
 // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
 // schema we actually use.)
@@ -464,7 +514,7 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata
   systemConnectionAuthentication: z.union(zodUnionInput(systemAuthenticationValidators)).optional(),
   formulas: z.array(formulaMetadataSchema).optional().default([]),
   formats: z.array(formatMetadataSchema).optional().default([]),
-  syncTables: z.array(z.unknown()).optional().default([]),
+  syncTables: z.array(syncTableSchema).optional().default([]),
 });
 
 function validateNamespace(namespace: string | undefined): boolean {
@@ -530,4 +580,26 @@ const legacyPackMetadataSchema = validateFormulas(
     rateLimits: z.any().optional(),
     isSystem: z.boolean().optional(),
   }),
+).refine(
+  data => {
+    for (const syncTable of data.syncTables) {
+      if (!syncTable.schema?.identity) {
+        continue;
+      }
+
+      const identityName = syncTable.schema.identity.name;
+      // Hack until we fix the NFL pack
+      if (data.id === ExceptedPackIds.NFL && identityName === 'FullName') {
+        continue;
+      }
+      if (syncTable.schema.properties[identityName]) {
+        return false;
+      }
+    }
+
+    return true;
+  },
+  {
+    message: "Cannot have a sync table property with the same name as the sync table's schema identity.",
+  },
 );
