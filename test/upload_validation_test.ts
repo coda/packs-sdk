@@ -1,4 +1,5 @@
 import {testHelper} from './test_helper';
+import type {ArraySchema} from '../schema';
 import {AuthenticationType} from '../types';
 import {DefaultConnectionType} from '../types';
 import type {GenericObjectSchema} from '../schema';
@@ -18,6 +19,7 @@ import {makeNumericFormula} from '../api';
 import {makeNumericParameter} from '../api';
 import {makeObjectFormula} from '../api';
 import {makeObjectSchema} from '../schema';
+import {makeSchema} from '../schema';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
 import {makeSyncTable} from '../api';
@@ -461,17 +463,18 @@ describe('Pack metadata Validation', () => {
               'alphanumeric characters, underscores, and dashes, and no spaces.',
             path: 'syncTables[0].schema.identity.name',
           },
-          // TODO(alan): figure out how to obscure this error.
           {
-            message: 'Invalid input',
-            path: 'syncTables[0].getter.schema.items',
+            message:
+              'Invalid name. Identity names can only contain ' +
+              'alphanumeric characters, underscores, and dashes, and no spaces.',
+            path: 'syncTables[0].getter.schema.items.identity.name',
           },
         ]);
       });
     });
 
     describe('object schemas', () => {
-      function metadataForFormulaWithObjectSchema(schema: GenericObjectSchema): PackVersionMetadata {
+      function metadataForFormulaWithObjectSchema(schema: GenericObjectSchema | ArraySchema): PackVersionMetadata {
         const formula = makeObjectFormula({
           name: 'MyFormula',
           description: 'My description',
@@ -503,6 +506,29 @@ describe('Pack metadata Validation', () => {
             date: {type: ValueType.String, codaType: ValueType.Date},
           },
         });
+        await validateJson(metadata);
+      });
+
+      it('valid object formula with array schema', async () => {
+        const itemSchema = makeObjectSchema({
+          type: ValueType.Object,
+          id: 'id',
+          primary: 'primary',
+          identity: {
+            packId: 123,
+            name: 'IdentityName',
+          },
+          properties: {
+            id: {type: ValueType.Number, fromKey: 'foo', required: true},
+            primary: {type: ValueType.String},
+            date: {type: ValueType.String, codaType: ValueType.Date},
+          },
+        });
+        const arraySchema = makeSchema({
+          type: ValueType.Array,
+          items: itemSchema,
+        });
+        const metadata = metadataForFormulaWithObjectSchema(arraySchema);
         await validateJson(metadata);
       });
 
