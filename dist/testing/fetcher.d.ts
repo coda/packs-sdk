@@ -17,5 +17,5 @@ export declare class AuthenticatingFetcher implements Fetcher {
 export declare const requestHelper: {
     makeRequest: (request: FetchRequest) => Promise<Response>;
 };
-export declare function newFetcherExecutionContext(packName: string, authDef: Authentication | undefined, credentials?: Credentials): ExecutionContext;
-export declare function newFetcherSyncExecutionContext(packName: string, authDef: Authentication | undefined, credentials?: Credentials): SyncExecutionContext;
+export declare function newFetcherExecutionContext(authDef: Authentication | undefined, credentials?: Credentials): ExecutionContext;
+export declare function newFetcherSyncExecutionContext(authDef: Authentication | undefined, credentials?: Credentials): SyncExecutionContext;

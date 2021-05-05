@@ -24,7 +24,6 @@ import {newMockExecutionContext} from '../testing/mocks';
 import sinon from 'sinon';
 
 describe('Execution', () => {
-
   it('executes a formula by name', async () => {
     const result = await executeFormulaFromPackDef(fakePack, 'Fake::Square', [5]);
     assert.equal(result, 25);
@@ -41,12 +40,20 @@ describe('Execution', () => {
   });
 
   it('executes a formula by name with VM', async () => {
-    const result = await executeFormulaOrSyncWithVM({formulaName: 'Fake::Square', params: [5], manifestPath: `${__dirname}/packs/fake`});
+    const result = await executeFormulaOrSyncWithVM({
+      formulaName: 'Fake::Square',
+      params: [5],
+      manifestPath: `${__dirname}/packs/fake`,
+    });
     assert.equal(result, 25);
   });
 
   it('executes a sync formula by name with VM', async () => {
-    const result = await executeFormulaOrSyncWithVM({formulaName: 'Students', params: ['Smith'], manifestPath: `${__dirname}/packs/fake`});
+    const result = await executeFormulaOrSyncWithVM({
+      formulaName: 'Students',
+      params: ['Smith'],
+      manifestPath: `${__dirname}/packs/fake`,
+    });
     assert.deepEqual(result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
   });
 
@@ -70,28 +77,28 @@ describe('Execution', () => {
     it('no formulas', async () => {
       await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(createFakePack({formulas: undefined}), 'Foo::Bar', []),
-        /Pack definition for Fake Pack \(id 424242\) has no formulas./,
+        /Pack definition has no formulas./,
       );
     });
 
     it('malformed formula name', async () => {
       await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(fakePack, 'malformed', []),
-        /Pack definition for Fake Pack \(id 424242\) has no formula "malformed" in namespace "Fake"./,
+        /Pack definition has no formula "malformed" in namespace "Fake"./,
       );
     });
 
     it('bad namespace', async () => {
       await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(fakePack, 'Foo::Bar', []),
-        /Pack definition for Fake Pack \(id 424242\) has no formula "Bar" in namespace "Foo"./,
+        /Pack definition has no formula "Bar" in namespace "Foo"./,
       );
     });
 
     it('non-existent formula', async () => {
       await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(fakePack, 'Fake::Foo', []),
-        /Pack definition for Fake Pack \(id 424242\) has no formula "Foo" in namespace "Fake"./,
+        /Pack definition has no formula "Foo" in namespace "Fake"./,
       );
     });
   });
@@ -307,14 +314,14 @@ describe('Execution', () => {
     it('no sync tables', async () => {
       await testHelper.willBeRejectedWith(
         executeSyncFormulaFromPackDef(createFakePack({formulas: undefined, syncTables: undefined}), 'Bar', []),
-        /Pack definition for Fake Pack \(id 424242\) has no sync tables./,
+        /Pack definition has no sync tables./,
       );
     });
 
     it('non-existent sync formula', async () => {
       await testHelper.willBeRejectedWith(
         executeSyncFormulaFromPackDef(fakePack, 'Foo', []),
-        /Pack definition for Fake Pack \(id 424242\) has no sync formula "Foo" in its sync tables./,
+        /Pack definition has no sync formula "Foo" in its sync tables./,
       );
     });
   });

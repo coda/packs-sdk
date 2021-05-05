@@ -3,7 +3,7 @@ import type {ExecuteSyncOptions} from './execution_helper';
 import type {ExecutionContext} from '../api_types';
 import type {MetadataContext} from '../api';
 import type {MetadataFormula} from '../api';
-import type {PackDefinition} from '../types';
+import type {PackVersionDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
 import type {SyncExecutionContext} from '../api_types';
@@ -28,7 +28,7 @@ export interface ContextOptions {
 }
 
 export async function executeFormulaFromPackDef(
-  packDef: PackDefinition,
+  packDef: PackVersionDefinition,
   formulaNameWithNamespace: string,
   params: ParamValues<ParamDefs>,
   context?: ExecutionContext,
@@ -38,7 +38,7 @@ export async function executeFormulaFromPackDef(
   let executionContext = context;
   if (!executionContext && useRealFetcher) {
     const credentials = getCredentials(manifestPath);
-    executionContext = newFetcherExecutionContext(packDef.name, packDef.defaultAuthentication, credentials);
+    executionContext = newFetcherExecutionContext(packDef.defaultAuthentication, credentials);
   }
 
   const formula = helper.findFormula(packDef, formulaNameWithNamespace);
@@ -67,7 +67,7 @@ export async function executeFormulaOrSyncFromCLI({
     // A sync context would work for both formula / syncFormula execution for now.
     // TODO(jonathan): Pass the right context, just to set user expectations correctly for runtime values.
     const executionContext = useRealFetcher
-      ? newFetcherSyncExecutionContext(manifest.name, manifest.defaultAuthentication, credentials)
+      ? newFetcherSyncExecutionContext(manifest.defaultAuthentication, credentials)
       : newMockSyncExecutionContext();
 
     const result = vm
@@ -134,7 +134,7 @@ export async function executeFormulaOrSyncWithRawParams({
 }
 
 export async function executeSyncFormulaFromPackDef(
-  packDef: PackDefinition,
+  packDef: PackVersionDefinition,
   syncFormulaName: string,
   params: ParamValues<ParamDefs>,
   context?: SyncExecutionContext,
@@ -144,7 +144,7 @@ export async function executeSyncFormulaFromPackDef(
   let executionContext = context;
   if (!executionContext && useRealFetcher) {
     const credentials = getCredentials(manifestPath);
-    executionContext = newFetcherSyncExecutionContext(packDef.name, packDef.defaultAuthentication, credentials);
+    executionContext = newFetcherSyncExecutionContext(packDef.defaultAuthentication, credentials);
   }
 
   const formula = helper.findSyncFormula(packDef, syncFormulaName);

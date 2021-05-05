@@ -35,7 +35,7 @@ async function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, para
     let executionContext = context;
     if (!executionContext && useRealFetcher) {
         const credentials = getCredentials(manifestPath);
-        executionContext = fetcher_1.newFetcherExecutionContext(packDef.name, packDef.defaultAuthentication, credentials);
+        executionContext = fetcher_1.newFetcherExecutionContext(packDef.defaultAuthentication, credentials);
     }
     const formula = helper.findFormula(packDef, formulaNameWithNamespace);
     return helper.executeFormula(formula, params, executionContext || mocks_1.newMockExecutionContext(), options);
@@ -50,7 +50,7 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifestPath, 
         // A sync context would work for both formula / syncFormula execution for now.
         // TODO(jonathan): Pass the right context, just to set user expectations correctly for runtime values.
         const executionContext = useRealFetcher
-            ? fetcher_2.newFetcherSyncExecutionContext(manifest.name, manifest.defaultAuthentication, credentials)
+            ? fetcher_2.newFetcherSyncExecutionContext(manifest.defaultAuthentication, credentials)
             : mocks_2.newMockSyncExecutionContext();
         const result = vm
             ? await executeFormulaOrSyncWithRawParamsInVM({ formulaName, params, manifestPath, executionContext })
@@ -84,7 +84,7 @@ async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, c
     let executionContext = context;
     if (!executionContext && useRealFetcher) {
         const credentials = getCredentials(manifestPath);
-        executionContext = fetcher_2.newFetcherSyncExecutionContext(packDef.name, packDef.defaultAuthentication, credentials);
+        executionContext = fetcher_2.newFetcherSyncExecutionContext(packDef.defaultAuthentication, credentials);
     }
     const formula = helper.findSyncFormula(packDef, syncFormulaName);
     return helper.executeSyncFormula(formula, params, executionContext || mocks_2.newMockSyncExecutionContext(), options);
