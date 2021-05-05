@@ -193,7 +193,7 @@ class AuthenticatingBlobStorage {
         return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${uuid_1.v4()}`;
     }
 }
-function newFetcherExecutionContext(packName, authDef, credentials) {
+function newFetcherExecutionContext(authDef, credentials) {
     const fetcher = new AuthenticatingFetcher(authDef, credentials);
     return {
         invocationLocation: {
@@ -208,8 +208,8 @@ function newFetcherExecutionContext(packName, authDef, credentials) {
     };
 }
 exports.newFetcherExecutionContext = newFetcherExecutionContext;
-function newFetcherSyncExecutionContext(packName, authDef, credentials) {
-    const context = newFetcherExecutionContext(packName, authDef, credentials);
+function newFetcherSyncExecutionContext(authDef, credentials) {
+    const context = newFetcherExecutionContext(authDef, credentials);
     return { ...context, sync: {} };
 }
 exports.newFetcherSyncExecutionContext = newFetcherSyncExecutionContext;

@@ -241,7 +241,6 @@ class AuthenticatingBlobStorage implements TemporaryBlobStorage {
 }
 
 export function newFetcherExecutionContext(
-  packName: string,
   authDef: Authentication | undefined,
   credentials?: Credentials,
 ): ExecutionContext {
@@ -260,11 +259,10 @@ export function newFetcherExecutionContext(
 }
 
 export function newFetcherSyncExecutionContext(
-  packName: string,
   authDef: Authentication | undefined,
   credentials?: Credentials,
 ): SyncExecutionContext {
-  const context = newFetcherExecutionContext(packName, authDef, credentials);
+  const context = newFetcherExecutionContext(authDef, credentials);
   return {...context, sync: {}};
 }
 

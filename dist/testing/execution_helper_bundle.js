@@ -2763,7 +2763,7 @@ async function executeFormulaOrSyncWithRawParams(manifest, formulaName, rawParam
       const params = coerceParams(syncFormula, rawParams);
       return await executeSyncFormula(syncFormula, params, context);
     }
-    throw new Error(`Pack definition for ${manifest.name} has no formula or sync called ${formulaName}.`);
+    throw new Error(`Pack definition has no formula or sync called ${formulaName}.`);
   } catch (err) {
     throw wrapError(err);
   }
@@ -2778,7 +2778,7 @@ async function executeFormulaOrSync(manifest, formulaName, params, context) {
     if (syncFormula) {
       return await executeSyncFormula(syncFormula, params, context);
     }
-    throw new Error(`Pack definition for ${manifest.name} has no formula or sync called ${formulaName}.`);
+    throw new Error(`Pack definition has no formula or sync called ${formulaName}.`);
   } catch (err) {
     throw wrapError(err);
   }
@@ -2815,7 +2815,7 @@ async function executeSyncFormula(formula, params, context, {
 function findFormula(packDef, formulaNameWithNamespace) {
   const packFormulas = packDef.formulas;
   if (!packFormulas) {
-    throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);
+    throw new Error(`Pack definition has no formulas.`);
   }
   const [namespace, name] = formulaNameWithNamespace.includes("::") ? formulaNameWithNamespace.split("::") : [ensureExists(packDef.formulaNamespace), formulaNameWithNamespace];
   if (!(namespace && name)) {
@@ -2823,18 +2823,18 @@ function findFormula(packDef, formulaNameWithNamespace) {
   }
   const formulas = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
   if (!formulas || !formulas.length) {
-    throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas for namespace "${namespace}".`);
+    throw new Error(`Pack definition has no formulas for namespace "${namespace}".`);
   }
   for (const formula of formulas) {
     if (formula.name === name) {
       return formula;
     }
   }
-  throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formula "${name}" in namespace "${namespace}".`);
+  throw new Error(`Pack definition has no formula "${name}" in namespace "${namespace}".`);
 }
 function findSyncFormula(packDef, syncFormulaName) {
   if (!packDef.syncTables) {
-    throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no sync tables.`);
+    throw new Error(`Pack definition has no sync tables.`);
   }
   for (const syncTable of packDef.syncTables) {
     const syncFormula = syncTable.getter;
@@ -2842,7 +2842,7 @@ function findSyncFormula(packDef, syncFormulaName) {
       return syncFormula;
     }
   }
-  throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no sync formula "${syncFormulaName}" in its sync tables.`);
+  throw new Error(`Pack definition has no sync formula "${syncFormulaName}" in its sync tables.`);
 }
 function tryFindFormula(packDef, formulaNameWithNamespace) {
   try {
