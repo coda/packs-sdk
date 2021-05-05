@@ -77,7 +77,7 @@ export async function validatePackVersionMetadata(metadata: Record<string, any>)
   return validated.data as PackVersionMetadata;
 }
 
-function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError | ValidationError[] {
+function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[] {
   // Top-level errors for union types are totally useless, they just say "invalid input",
   // but they do record all of the specific errors when trying each element of the union,
   // so we filter out the errors that were just due to non-matches of the discriminant
@@ -102,14 +102,23 @@ function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError 
           unionIssue.code === z.ZodIssueCode.custom &&
           unionIssue.params?.customErrorCode === CustomErrorCode.NonMatchingDiscriminant;
         if (!isDiscriminantError) {
-          const error: ValidationError = {
-            path: zodPathToPathString(unionIssue.path),
-            message: unionIssue.message,
-          };
+          let errors: ValidationError[];
+          if (unionIssue.code === z.ZodIssueCode.invalid_union) {
+            // Recurse to find the real error underlying any unions within child fields.
+            errors = zodErrorDetailToValidationError(unionIssue);
+          } else {
+            const error: ValidationError = {
+              path: zodPathToPathString(unionIssue.path),
+              message: unionIssue.message,
+            };
+            errors = [error];
+          }
           // dedupe identical errors. These can occur when validating union types, and each union type
           // throws the same validation error.
-          if (!underlyingErrors.find(err => err.path === error.path && err.message === error.message)) {
-            underlyingErrors.push(error);
+          for (const error of errors) {
+            if (!underlyingErrors.find(err => err.path === error.path && err.message === error.message)) {
+              underlyingErrors.push(error);
+            }
           }
         }
       }
@@ -124,10 +133,12 @@ function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError 
     subError.received === 'undefined' &&
     subError.expected.toString() !== 'undefined';
 
-  return {
-    path,
-    message: isMissingRequiredFieldError ? `Missing required field ${path}.` : message,
-  };
+  return [
+    {
+      path,
+      message: isMissingRequiredFieldError ? `Missing required field ${path}.` : message,
+    },
+  ];
 }
 
 function zodPathToPathString(zodPath: Array<string | number>): string {
@@ -447,7 +458,7 @@ const objectPackFormulaSchema = zodCompleteObject<Omit<ObjectPackFormula<any, an
   resultType: zodDiscriminant(Type.object),
   // TODO(jonathan): See if we should really allow this. The SDK right now explicitly tolerates an undefined
   // schema for objects, but that doesn't seem like a use case we actually want to support.
-  schema: genericObjectSchema.optional(),
+  schema: z.union([genericObjectSchema, arrayPropertySchema]).optional(),
 });
 
 const formulaMetadataSchema = z.union([numericPackFormulaSchema, stringPackFormulaSchema, objectPackFormulaSchema]);
