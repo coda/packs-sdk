@@ -366,36 +366,6 @@ describe('Pack metadata Validation', () => {
         ]);
       });
 
-      it('NFL Pack OK', async () => {
-        const syncTable = makeSyncTable(
-          'NFL',
-          makeObjectSchema({
-            type: ValueType.Object,
-            primary: 'FullName',
-            id: 'FullName',
-            identity: {packId: 1040, name: 'FullName'},
-            properties: {
-              FullName: {type: ValueType.String},
-            },
-          }),
-          {
-            name: 'NFL',
-            description: 'A simple sync table',
-            async execute([], _context) {
-              return {result: []};
-            },
-            parameters: [],
-            examples: [],
-          },
-        );
-
-        const metadata = createFakePack({
-          id: 1040,
-          syncTables: [syncTable],
-        });
-        await validateJson(metadata);
-      });
-
       it('invalid dynamic sync table', async () => {
         const syncTable = makeDynamicSyncTable({
           packId: 424242,

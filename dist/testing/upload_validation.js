@@ -38,10 +38,6 @@ var CustomErrorCode;
 (function (CustomErrorCode) {
     CustomErrorCode["NonMatchingDiscriminant"] = "nonMatchingDiscriminant";
 })(CustomErrorCode || (CustomErrorCode = {}));
-var ExceptedPackIds;
-(function (ExceptedPackIds) {
-    ExceptedPackIds[ExceptedPackIds["NFL"] = 1040] = "NFL";
-})(ExceptedPackIds || (ExceptedPackIds = {}));
 class PackMetadataValidationError extends Error {
     constructor(message, originalError, validationErrors) {
         super(message);
@@ -500,10 +496,6 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
             continue;
         }
         const identityName = syncTable.schema.identity.name;
-        // Hack until we fix the NFL pack
-        if (data.id === ExceptedPackIds.NFL && identityName === 'FullName') {
-            continue;
-        }
         if (syncTable.schema.properties[identityName]) {
             return false;
         }

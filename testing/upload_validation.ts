@@ -47,10 +47,6 @@ enum CustomErrorCode {
   NonMatchingDiscriminant = 'nonMatchingDiscriminant',
 }
 
-enum ExceptedPackIds {
-  NFL = 1040,
-}
-
 export class PackMetadataValidationError extends Error {
   readonly originalError: Error | undefined;
   readonly validationErrors: ValidationError[] | undefined;
@@ -600,10 +596,6 @@ const legacyPackMetadataSchema = validateFormulas(
       }
 
       const identityName = syncTable.schema.identity.name;
-      // Hack until we fix the NFL pack
-      if (data.id === ExceptedPackIds.NFL && identityName === 'FullName') {
-        continue;
-      }
       if (syncTable.schema.properties[identityName]) {
         return false;
       }
