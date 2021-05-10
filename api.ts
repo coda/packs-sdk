@@ -434,6 +434,7 @@ export type MetadataContext = Record<string, any>;
 
 export type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
 export type MetadataFormula = ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any>;
+export type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
 export function makeMetadataFormula(
   execute: (
     context: ExecutionContext,

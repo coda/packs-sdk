@@ -46,7 +46,7 @@ export function writeJSONFile(fileName: string, payload: any): void {
   ensureNonEmptyString(fileName);
   const dirname = path.dirname(fileName);
   if (!fs.existsSync(dirname)) {
-    fs.mkdirSync(dirname);
+    fs.mkdirSync(dirname, {recursive: true});
   }
   fs.writeFileSync(fileName, JSON.stringify(payload, undefined, 2));
 }

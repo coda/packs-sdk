@@ -28,6 +28,8 @@
   - [Formula Namespaces](#formula-namespaces)
   - [Metadata Formulas](#metadata-formulas)
   - [Execution Environment](#execution-environment)
+  - [Logging](#logging)
+  - [Temporary Blob Storage](#temporary-blob-storage)
 - [Testing Your Code](#testing-your-code)
   - [Basic Formula Unittest](#basic-formula-unittest)
   - [Formula Unittest With Mock Fetcher](#formula-unittest-with-mock-fetcher)
@@ -127,14 +129,14 @@ The `coda` CLI utility helps you execute formulas, via the `coda execute` sub-co
 `coda execute --help` at any time to refresh yourself on usage. The syntax is:
 
 ```bash
-coda execute path/to/manifest.ts <namespace>:<formula> [params..]
+coda execute path/to/manifest.ts <formula> [params..]
 ```
 
 So for example, if your pack definition was in `src/manifest.ts` and you wanted to call a function
-in namespace `MyPack` called `MyFormula` that takes one argument, you'd run:
+named `MyFormula` that takes one argument, you'd run:
 
 ```bash
-coda execute src/manifest.ts MyPack::MyFormula some-arg
+coda execute src/manifest.ts MyFormula some-arg
 ```
 
 This will execute the formula and print the output to the terminal. (A quick reminder, if your arguments
@@ -150,7 +152,7 @@ To pass array parameters to `coda execute`, use a comma separated string. For ex
 passed with this format:
 
 ```bash
-coda execute src/manifest.ts MyPack::MyFormula "1,2,3"
+coda execute src/manifest.ts MyFormula "1,2,3"
 ```
 
 ### Running Syncs
@@ -179,7 +181,7 @@ By default, `coda execute` will use a mock fetcher for any http requests that yo
 If you wish to actually make http requests, use the `--fetch` flag, for example:
 
 ```bash
-coda execute --fetch src/manifest.ts MyPack::MyFormula some-arg
+coda execute --fetch src/manifest.ts MyFormula some-arg
 ```
 
 Your http requests will commonly require authentication in order to succeed, which the `coda execute` utility supports.
@@ -288,8 +290,11 @@ Packs code will never have access to the request after authentication credential
   where a pack is going to make requests to Coda's own API. The UI will assist the user
   in creating and configuring an API token without the user needing to do this manually.
   This is mostly for use by Coda-internal packs.
+- **Various**: Indicates that the pack has various different authentication methods. When
+  this is indicated, the user will be able to specify what type of authentication to use
+  when they create a connection. This is mostly for use by Coda-internal packs.
 
-`OAuth2` and `CodaApiHeaderBearerToken` are not available for system authentication.
+`OAuth2`, `CodaApiHeaderBearerToken`, and `Various` are not available for system authentication.
 
 ### Testing Authenticated Requests
 
@@ -310,19 +315,21 @@ token(s) or other parameters required by your authorization type.
 If you are using `OAuth2`, after you provide the necessary configuration info,
 it will launch an OAuth flow in your browser.
 
-The credentials you provide will be stored in a file `.coda/credentials.json`.
-When you execute a pack formula using `coda execute --fetch ...`, the credentials
+The credentials you provide will be stored in a file `.coda-credentials.json`
+in the same directory as your manifest.(If you move your manifest file, you'll want
+to move the credentials file along with it!)
+When you execute a pack formula using `coda execute --fetch path/to/manifest.ts ...`, the credentials
 in this file will be applied to your fetcher requests automatically.
 
 Similarly, if you are writing an integration test for your pack,
-you can pass `useRealFetcher: true` in the `ContextOptions` argument
+you can pass `useRealFetcher: true` and `manifestDir: '<manifest-dir>'` in the `ContextOptions` argument
 when calling `executeFormulaFromPackDef()` or `executeSyncFormulaFromPackDef()`,
 and a real (non-mock) http fetcher will be used, and any credentials that you
 have registered will be applied to those requests automatically.
-
-The credentials file can hold credentials for multiple packs simultaneously. So if you
-are authoring multiple packs in the same directory/repo, so long as those packs have
-different names, you can register and use credentials for all of them.
+The `manifestDir` option is required if your integration test requires authentication so that
+the SDK knows where to find the credentials file for this pack; normally you can just pass
+`manifestPath: require.resolve('../manifest')`, where you can replace `'../manifest'` with whatever
+the relative import path from your test to your manifest is.
 
 ### Syncs
 
@@ -536,20 +543,14 @@ spaces or punctuation).
 
 So if you're writing a pack that integrates with Slack, you'd probably want to choose `Slack`
 as your formula namespace. If you wrote a formula that sends a Slack message, you would
-invoke that formula using `Slack::SendMessage(...)`. When users are writing formulas in their
+invoke that formula in a doc using `Slack::SendMessage(...)`. When users are writing formulas in their
 docs, they can type `slack` and autocomplete will show them all of the formulas in the `Slack`
 namespace. If the user also used the Gmail pack and that pack also defined a `SendMessage`
 formula, it would be easy for the user to differentiate between the two because they
 have separate and clear namespaces: `Slack::SendMessage` vs `Gmail::SendMessage`.
 
-While the structure of a pack definition allows you to specify multiple namespaces
-(since formula definitions are a dictionary mapping a namespace to a list of formulas)
-the SDK currently only allows you one namespace per pack. This may change in the future.
-
-While sync tables are implemented using formulas, sync formulas do not have a namespace,
-since these formulas are not called directly by users and are not exposed to users.
-As a pack author, you only need to be aware of this because when you use `coda execute`
-to run one of your syncs, you needn't prefix your sync table name with a namespace.
+(You'll note that you needn't use a namespace with `coda execute` because the CLI can
+infer the namespace from the manifest file you specify in that command.)
 
 ### Metadata Formulas
 
@@ -646,7 +647,7 @@ import {manifest} from '../manifest';
 
 describe('Simple Formula', () => {
   it('executes a formula', async () => {
-    const result = await executeFormulaFromPackDef(manifest, 'MyNamespace::MyFormula', ['my-param']);
+    const result = await executeFormulaFromPackDef(manifest, 'MyFormula', ['my-param']);
     assert.equal(result, 'my-return-value');
   });
 });
@@ -680,7 +681,7 @@ describe('Formula with Fetcher', () => {
     };
     context.fetcher.fetch.returns(newJsonFetchResponse(fakeResponse));
 
-    const result = await executeFormulaFromPackDef(manifest, 'MyNamespace::MyFormula', ['my-param'], context);
+    const result = await executeFormulaFromPackDef(manifest, 'MyFormula', ['my-param'], context);
 
     assert.equal(result.Name, 'Alice');
     sinon.assert.calledOnce(context.fetcher.fetch);
@@ -744,7 +745,7 @@ requests to whatever urls they are given, and will apply authentication to these
 if you have configured authentication locally using `coda auth`. For example:
 
 ```typescript
-const result = await executeFormulaFromPackDef(manifest, 'MyNamespace::MyFormula', ['my-param'], undefined, undefined, {
+const result = await executeFormulaFromPackDef(manifest, 'MyFormula', ['my-param'], undefined, undefined, {
   useRealFetcher: true,
 });
 ```

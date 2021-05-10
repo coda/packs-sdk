@@ -1,5 +1,5 @@
-import type { Logger } from 'api';
-import type { LoggerParamType } from 'index';
+import type { Logger } from '../api';
+import type { LoggerParamType } from '../index';
 export declare class ConsoleLogger implements Logger {
     private _logMessage;
     trace(message: string, ...args: LoggerParamType[]): void;

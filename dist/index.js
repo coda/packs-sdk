@@ -125,8 +125,7 @@ Object.defineProperty(exports, "ensureNonEmptyString", { enumerable: true, get: 
 var ensure_4 = require("./helpers/ensure");
 Object.defineProperty(exports, "ensureUnreachable", { enumerable: true, get: function () { return ensure_4.ensureUnreachable; } });
 // Object Schemas
-const schema = __importStar(require("./schema"));
-exports.schema = schema;
+exports.schema = __importStar(require("./schema"));
 var schema_1 = require("./schema");
 Object.defineProperty(exports, "CurrencyFormat", { enumerable: true, get: function () { return schema_1.CurrencyFormat; } });
 var schema_2 = require("./schema");

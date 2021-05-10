@@ -1,11 +1,9 @@
-import type {CodaFormula} from './api';
 import type {MetadataFormula} from './api';
 import type {PackFormulas} from './api';
 import type {SyncTable} from './api';
 import type {TypedStandardFormula} from './api';
 
 export type PackId = number;
-export type ProviderId = number;
 
 export enum PackCategory {
   CRM = 'CRM',
@@ -262,43 +260,52 @@ export interface RateLimits {
   perConnection?: RateLimit;
 }
 
-export interface PackDefinition {
-  id: PackId;
-  name: string;
-  shortDescription: string;
-  description: string;
-  permissionsDescription?: string;
+/**
+ * The definition of the contents of a Pack at a specific version. This is the
+ * heart of the implementation of a Pack.
+ */
+export interface PackVersionDefinition {
   version: string;
-  providerId: ProviderId;
-  category: PackCategory;
-  logoPath: string;
-  enabledConfigName?: string;
+  /**
+   * If specified, the user must provide personal authentication credentials before using the pack.
+   */
   defaultAuthentication?: Authentication;
-  networkDomains?: string[];
-  exampleImages?: string[];
-  exampleVideoIds?: string[];
-  minimumFeatureSet?: FeatureSet;
-  quotas?: Partial<{[featureSet in FeatureSet]: Quota}>;
-  rateLimits?: RateLimits;
-  formulaNamespace?: string; // TODO: @alan-fang make required
   /**
    * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
    * explicit connection is specified by the user.
    */
   systemConnectionAuthentication?: SystemAuthentication;
+  networkDomains?: string[];
 
   // User-facing components
-  formulas?: PackFormulas | Array<TypedStandardFormula | CodaFormula> ;
+  formulaNamespace?: string; // TODO: @alan-fang remove
+  formulas?: PackFormulas | TypedStandardFormula[];
   formats?: Format[];
   syncTables?: SyncTable[];
+}
+
+/**
+ * @deprecated use `#PackVersionDefinition`
+ *
+ * The legacy complete definition of a Pack including un-versioned metadata.
+ * This should only be used by legacy Coda pack implementations.
+ */
+export interface PackDefinition extends PackVersionDefinition {
+  id: PackId;
+  name: string;
+  shortDescription: string;
+  description: string;
+  permissionsDescription?: string;
+  category: PackCategory;
+  logoPath: string;
+  enabledConfigName?: string;
+  exampleImages?: string[];
+  exampleVideoIds?: string[];
+  minimumFeatureSet?: FeatureSet;
+  quotas?: Partial<{[featureSet in FeatureSet]: Quota}>;
+  rateLimits?: RateLimits;
   /**
    * Whether this is a pack that will be used by Coda internally and not exposed directly to users.
    */
   isSystem?: boolean;
-}
-
-export interface ProviderDefinition {
-  id: ProviderId;
-  name: string;
-  logoPath: string;
 }

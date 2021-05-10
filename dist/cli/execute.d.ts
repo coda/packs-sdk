@@ -4,6 +4,6 @@ export interface ExecuteArgs {
     formulaName: string;
     params: string[];
     fetch?: boolean;
-    credentialsFile?: string;
+    vm?: boolean;
 }
-export declare function handleExecute({ manifestPath, formulaName, params, fetch, credentialsFile, }: Arguments<ExecuteArgs>): Promise<void>;
+export declare function handleExecute({ manifestPath, formulaName, params, fetch, vm }: Arguments<ExecuteArgs>): Promise<void>;

@@ -3,7 +3,7 @@
  * available at https://coda.io/developers/apis/v1
  *
  * Version: v1
- * Hash: d7c3f53287ba26554cc58614e4870ec5bfd5328139ef564e67517bd0411267a6
+ * Hash: 9344cda812f318da6169c839fbb51a2f289a9fe2e404d1c869df0c69f0f286c6
  */
 import 'es6-promise/auto';
 import 'isomorphic-fetch';
@@ -29,9 +29,9 @@ export declare class Client {
     createDoc(params: {} | undefined, payload: types.PublicApiDocCreate): Promise<types.PublicApiDoc>;
     getDoc(docId: string, params?: {}): Promise<types.PublicApiDoc>;
     deleteDoc(docId: string, params?: {}): Promise<types.PublicApiDocDelete>;
-    getAclMetadata(docId: string, params?: {}): Promise<types.PublicApiAcl>;
-    getAclPermissions(docId: string, params?: {}): Promise<types.PublicApiAcl>;
-    shareDoc(docId: string, params: {} | undefined, payload: types.PublicApiAddPermission): Promise<types.PublicApiAddPermissionResult>;
+    getSharingMetadata(docId: string, params?: {}): Promise<types.PublicApiAcl>;
+    getPermissions(docId: string, params?: {}): Promise<types.PublicApiAcl>;
+    addPermission(docId: string, params: {} | undefined, payload: types.PublicApiAddPermissionRequest): Promise<types.PublicApiAddPermissionResult>;
     deletePermission(docId: string, permissionId: string, params?: {}): Promise<types.PublicApiDeletePermissionResult>;
     publishDoc(docId: string, params: {} | undefined, payload: types.PublicApiDocPublish): Promise<types.PublicApiPublishResult>;
     unpublishDoc(docId: string, params?: {}): Promise<types.PublicApiUnpublishResult>;
@@ -59,6 +59,7 @@ export declare class Client {
         useColumnNames?: boolean;
         valueFormat?: types.PublicApiValueFormat;
         visibleOnly?: boolean;
+        syncToken?: string;
         limit?: number;
         pageToken?: string;
     }): Promise<types.PublicApiRowList>;
@@ -97,7 +98,7 @@ export declare class Client {
         isPublished?: boolean;
         sinceDate?: string;
         untilDate?: string;
-        scale?: string;
+        scale?: types.PublicApiDocAnalyticsScale;
         limit?: number;
         pageToken?: string;
     }): Promise<types.PublicApiDocAnalyticsCollection>;
@@ -111,7 +112,21 @@ export declare class Client {
         limit?: number;
         pageToken?: string;
     }): Promise<types.PublicApiGetWorkspaceRoleActivity>;
-    createPack(params?: {}): Promise<types.PublicApiCreatePackResponse>;
-    registerPackVersion(packId: number, packVersion: string, params?: {}): Promise<types.PublicApiPackVersionUploadInfo>;
+    listPacks(params?: {
+        accessType?: types.PublicApiPackAccessType;
+        sortBy?: types.PublicApiPacksSortBy;
+        limit?: number;
+        pageToken?: string;
+    }): Promise<types.PublicApiPackSummaryList>;
+    createPack(params: {} | undefined, payload: types.PublicApiCreatePackRequest): Promise<types.PublicApiCreatePackResponse>;
+    getPack(packId: number, params?: {}): Promise<types.PublicApiPack>;
+    updatePack(packId: number, params: {} | undefined, payload: types.PublicApiUpdatePackRequest): Promise<types.PublicApiPack>;
+    registerPackVersion(packId: number, packVersion: string, params: {} | undefined, payload: types.PublicApiRegisterPackVersionRequest): Promise<types.PublicApiPackVersionUploadInfo>;
     packVersionUploadComplete(packId: number, packVersion: string, params?: {}): Promise<types.PublicApiCreatePackVersionResponse>;
+    setPackLiveVersion(packId: number, params: {} | undefined, payload: types.PublicApiSetPackLiveVersionRequest): Promise<types.PublicApiSetPackLiveVersionResponse>;
+    getPackPermissions(packId: number, params?: {}): Promise<types.PublicApiPackPermissionList>;
+    addPackPermission(packId: number, params: {} | undefined, payload: types.PublicApiAddPackPermissionRequest): Promise<types.PublicApiAddPackPermissionResponse>;
+    deletePackPermission(packId: number, permissionId: string, params?: {}): Promise<types.PublicApiDeletePackPermissionResponse>;
+    uploadPackAsset(packId: number, params: {} | undefined, payload: types.PublicApiUploadPackAssetRequest): Promise<types.PublicApiPackAssetUploadInfo>;
+    packAssetUploadComplete(packId: number, packAssetId: string, packAssetType: types.PublicApiPackAssetType, params?: {}): Promise<types.PublicApiPackAssetUploadCompleteResponse>;
 }

@@ -4,16 +4,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const config_storage_1 = require("./config_storage");
 const auth_1 = require("../testing/auth");
-const auth_2 = require("../testing/auth");
-const auth_3 = require("./auth");
+const auth_2 = require("./auth");
 const build_1 = require("./build");
 const create_1 = require("./create");
 const execute_1 = require("./execute");
-const execute_bundle_1 = require("./execute_bundle");
 const init_1 = require("./init");
 const publish_1 = require("./publish");
 const register_1 = require("./register");
+const set_live_1 = require("./set_live");
 const validate_1 = require("./validate");
 const yargs_1 = __importDefault(require("yargs"));
 if (require.main === module) {
@@ -29,46 +29,21 @@ if (require.main === module) {
                 boolean: true,
                 desc: 'Actually fetch http requests instead of using mocks. Run "coda auth" first to set up credentials.',
             },
-            credentialsFile: {
-                alias: 'credentials_file',
-                string: true,
-                default: auth_1.DEFAULT_CREDENTIALS_FILE,
-                desc: 'Path to the credentials file.',
-            },
-        },
-    })
-        .command({
-        command: 'execute-bundle <bundlePath> <formulaName> [params..]',
-        describe: 'Execute a formula with the bundle file with isolated-vm',
-        handler: execute_bundle_1.handleExecuteBundle,
-        builder: {
-            fetch: {
+            vm: {
                 boolean: true,
-                desc: 'Actually fetch http requests instead of using mocks. Run "coda auth" first to set up credentials.',
-            },
-            credentialsFile: {
-                alias: 'credentials_file',
-                string: true,
-                default: auth_1.DEFAULT_CREDENTIALS_FILE,
-                desc: 'Path to the credentials file.',
+                desc: 'Execute the requested command in a virtual machine that mimics the environment Coda uses to execute Packs.',
             },
         },
     })
         .command({
         command: 'auth <manifestPath>',
         describe: 'Set up authentication for a Pack',
-        handler: auth_3.handleAuth,
+        handler: auth_2.handleAuth,
         builder: {
-            credentialsFile: {
-                alias: 'credentials_file',
-                string: true,
-                default: auth_1.DEFAULT_CREDENTIALS_FILE,
-                desc: 'Path to the credentials file.',
-            },
             oauthServerPort: {
                 alias: 'oauth_server_port',
                 number: true,
-                default: auth_2.DEFAULT_OAUTH_SERVER_PORT,
+                default: auth_1.DEFAULT_OAUTH_SERVER_PORT,
                 desc: 'Port to use for the local server that handles OAuth setup.',
             },
         },
@@ -85,7 +60,7 @@ if (require.main === module) {
             codaApiEndpoint: {
                 string: true,
                 hidden: true,
-                default: 'https://coda.io',
+                default: config_storage_1.DEFAULT_API_ENDPOINT,
             },
         },
         handler: register_1.handleRegister,
@@ -109,19 +84,19 @@ if (require.main === module) {
             codaApiEndpoint: {
                 string: true,
                 hidden: true,
-                default: 'https://coda.io',
+                default: config_storage_1.DEFAULT_API_ENDPOINT,
             },
         },
         handler: publish_1.handlePublish,
     })
         .command({
-        command: 'create <packName>',
+        command: 'create <manifestFile>',
         describe: "Register a new Pack with Coda's servers",
         builder: {
             codaApiEndpoint: {
                 string: true,
                 hidden: true,
-                default: 'https://coda.io',
+                default: config_storage_1.DEFAULT_API_ENDPOINT,
             },
         },
         handler: create_1.handleCreate,
@@ -130,6 +105,18 @@ if (require.main === module) {
         command: 'validate <manifestFile>',
         describe: 'Validate your Pack definition',
         handler: validate_1.handleValidate,
+    })
+        .command({
+        command: 'setLive <manifestFile> <packVersion>',
+        describe: 'Set the Pack version that is installable for users.',
+        builder: {
+            codaApiEndpoint: {
+                string: true,
+                hidden: true,
+                default: config_storage_1.DEFAULT_API_ENDPOINT,
+            },
+        },
+        handler: set_live_1.handleSetLive,
     })
         .demandCommand()
         .strict()

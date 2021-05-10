@@ -17,7 +17,6 @@ import {URL} from 'url';
 import type {WebBasicCredentials} from './auth_types';
 import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
-import {readCredentialsFile} from './auth';
 import requestPromise from 'request-promise-native';
 import urlParse from 'url-parse';
 import {v4} from 'uuid';
@@ -29,15 +28,22 @@ const HeadersToStrip = ['authorization'];
 
 export class AuthenticatingFetcher implements Fetcher {
   private readonly _authDef: Authentication | undefined;
+  private readonly _networkDomains: string[] | undefined;
   private readonly _credentials: Credentials | undefined;
 
-  constructor(authDef: Authentication | undefined, credentials: Credentials | undefined) {
+  constructor(
+    authDef: Authentication | undefined,
+    networkDomains: string[] | undefined,
+    credentials: Credentials | undefined,
+  ) {
     this._authDef = authDef;
+    this._networkDomains = networkDomains;
     this._credentials = credentials;
   }
 
   async fetch<T = any>(request: FetchRequest): Promise<FetchResponse<T>> {
     const {url, headers, body, form} = this._applyAuthentication(request);
+    this._validateHost(url);
 
     const response: Response = await requestHelper.makeRequest({
       url,
@@ -209,6 +215,17 @@ export class AuthenticatingFetcher implements Fetcher {
       return prefixUrl + path;
     }
   }
+
+  private _validateHost(url: string): void {
+    const parsed = new URL(url);
+    const host = parsed.host.toLowerCase();
+    const allowedDomains = this._networkDomains || [];
+    if (
+      !allowedDomains.map(domain => domain.toLowerCase()).some(domain => host === domain || host.endsWith(`.${domain}`))
+    ) {
+      throw new Error(`Attempted to connect to undeclared host '${host}'`);
+    }
+  }
 }
 
 // Namespaced object that can be mocked for testing.
@@ -242,13 +259,11 @@ class AuthenticatingBlobStorage implements TemporaryBlobStorage {
 }
 
 export function newFetcherExecutionContext(
-  packName: string,
   authDef: Authentication | undefined,
-  credentialsFile?: string,
+  networkDomains: string[] | undefined,
+  credentials?: Credentials,
 ): ExecutionContext {
-  const allCredentials = readCredentialsFile(credentialsFile);
-  const credentials = allCredentials?.packs[packName];
-  const fetcher = new AuthenticatingFetcher(authDef, credentials);
+  const fetcher = new AuthenticatingFetcher(authDef, networkDomains, credentials);
   return {
     invocationLocation: {
       protocolAndHost: 'https://coda.io',
@@ -263,11 +278,11 @@ export function newFetcherExecutionContext(
 }
 
 export function newFetcherSyncExecutionContext(
-  packName: string,
   authDef: Authentication | undefined,
-  credentialsFile?: string,
+  networkDomains: string[] | undefined,
+  credentials?: Credentials,
 ): SyncExecutionContext {
-  const context = newFetcherExecutionContext(packName, authDef, credentialsFile);
+  const context = newFetcherExecutionContext(authDef, networkDomains, credentials);
   return {...context, sync: {}};
 }
 

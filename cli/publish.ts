@@ -1,27 +1,19 @@
-import type {AllPacks} from './create';
 import type {Arguments} from 'yargs';
-import type {CodaFormula} from 'api';
 import {ConsoleLogger} from '../helpers/logging';
-import type {Format} from 'types';
-import type {GenericSyncTable} from 'api';
-import type {PackDefinition} from 'types';
-import type {PackFormatMetadata} from '../compiled_types';
-import type {PackFormulaMetadata} from 'api';
-import type {PackFormulas} from 'api';
-import type {PackFormulasMetadata} from '../compiled_types';
-import type {PackMetadata} from '../compiled_types';
-import type {PackSyncTable} from '../compiled_types';
 import type {PackUpload} from '../compiled_types';
-import type {TypedPackFormula} from 'api';
-import type {TypedStandardFormula} from 'api';
 import {build} from './build';
+import {compilePackMetadata} from '../helpers/cli';
+import {computeSha256} from '../helpers/crypto';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
-import {getApiKey} from './helpers';
+import {formatError} from './errors';
+import {getApiKey} from './config_storage';
+import {getPackId} from './config_storage';
+import {isCodaError} from './errors';
 import {isTestCommand} from './helpers';
+import * as path from 'path';
 import {printAndExit} from '../testing/helpers';
 import {readFile} from '../testing/helpers';
-import {readPacksFile} from './create';
 import requestPromise from 'request-promise-native';
 import {validateMetadata} from './validate';
 
@@ -31,26 +23,25 @@ interface PublishArgs {
 }
 
 export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<PublishArgs>) {
+  const manifestDir = path.dirname(manifestFile);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   const logger = new ConsoleLogger();
-  const {manifest} = await import(manifestFile);
   logger.info('Building Pack bundle...');
   const bundleFilename = await build(manifestFile);
+  const {manifest} = await import(bundleFilename);
 
   // Since package.json isn't in dist, we grab it from the root directory instead.
   const packageJson = await import(isTestCommand() ? '../package.json' : '../../package.json');
-  const codaPacksSDKVersion = packageJson.version;
-  codaPacksSDKVersion!;
+  const codaPacksSDKVersion = packageJson.version as string;
 
-  const apiKey = getApiKey();
+  const apiKey = getApiKey(codaApiEndpoint);
   if (!apiKey) {
     printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
   }
 
   const client = createCodaClient(apiKey, formattedEndpoint);
 
-  const packs: AllPacks | undefined = readPacksFile();
-  const packId = packs && packs[manifest.name];
+  const packId = getPackId(manifestDir, codaApiEndpoint);
   if (!packId) {
     printAndExit(`Could not find a Pack id registered to Pack "${manifest.name}"`);
   }
@@ -60,104 +51,54 @@ export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<P
     printAndExit(`No Pack version found for your Pack "${manifest.name}"`);
   }
 
-  //  TODO(alan): error testing
   try {
     logger.info('Registering new Pack version...');
-    const {uploadUrl} = await client.registerPackVersion(packId, packVersion);
 
-    // TODO(alan): only grab metadata from manifest.
+    const bundle = readFile(bundleFilename);
+    if (!bundle) {
+      printAndExit(`Could not find bundle file at path ${bundleFilename}`);
+    }
+    const metadata = compilePackMetadata(manifest);
+
+    const upload: PackUpload = {
+      metadata,
+      sdkVersion: codaPacksSDKVersion,
+      bundle: bundle.toString(),
+    };
+    const uploadPayload = JSON.stringify(upload);
+
+    const bundleHash = computeSha256(uploadPayload);
+    const registerResponse = await client.registerPackVersion(packId, packVersion, {}, {bundleHash});
+    if (isCodaError(registerResponse)) {
+      return printAndExit(`Error while registering pack version: ${formatError(registerResponse)}`);
+    }
+    const {uploadUrl, headers} = registerResponse;
+
     logger.info('Validating Pack metadata...');
-    await validateMetadata(manifest);
+    await validateMetadata(metadata);
 
     logger.info('Uploading Pack...');
-    const metadata = compilePackMetadata(manifest);
-    await uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl);
+    await uploadPack(uploadUrl, uploadPayload, headers);
 
     logger.info('Validating upload...');
-    await client.packVersionUploadComplete(packId, packVersion);
+    const uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion);
+    if (isCodaError(uploadCompleteResponse)) {
+      printAndExit(`Error while finalizing pack version: ${formatError(uploadCompleteResponse)}`);
+    }
   } catch (err) {
-    printAndExit(`Error: ${err}`);
+    printAndExit(`Unepected error during pack upload: ${formatError(err)}`);
   }
 
   logger.info('Done!');
 }
 
-async function uploadPackToSignedUrl(bundleFilename: string, metadata: PackMetadata, uploadUrl: string) {
-  const bundle = readFile(bundleFilename);
-  if (!bundle) {
-    printAndExit(`Could not find bundle file at path ${bundleFilename}`);
-  }
-
-  const upload: PackUpload = {
-    metadata,
-    bundle: bundle.toString(),
-  };
-
+async function uploadPack(uploadUrl: string, uploadPayload: string, headers: {[header: string]: any}) {
   try {
     await requestPromise.put(uploadUrl, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      json: upload,
+      headers,
+      body: uploadPayload,
     });
   } catch (err) {
-    printAndExit(`Error in uploading Pack to signed url: ${err}`);
+    printAndExit(`Error in uploading Pack to signed url: ${formatError(err)}`);
   }
-}
-
-function compilePackMetadata(manifest: PackDefinition): PackMetadata {
-  const {formats, formulas, formulaNamespace, syncTables, ...definition} = manifest;
-  const compiledFormats = compileFormatsMetadata(formats || []);
-  const compiledFormulas = (formulas && compileFormulasMetadata(formulas)) || (Array.isArray(formulas) ? [] : {});
-  const metadata: PackMetadata = {
-    ...definition,
-    formulaNamespace,
-    formats: compiledFormats,
-    formulas: compiledFormulas,
-    syncTables: (syncTables || []).map(compileSyncTable),
-  };
-
-  return metadata;
-}
-
-function compileFormatsMetadata(formats: Format[]): PackFormatMetadata[] {
-  return formats.map(format => {
-    return {
-      ...format,
-      matchers: (format.matchers || []).map(matcher => matcher.toString()),
-    };
-  });
-}
-
-function compileFormulasMetadata(
-  formulas: PackFormulas | Array<CodaFormula | TypedStandardFormula>,
-): PackFormulasMetadata | PackFormulaMetadata[] {
-  const formulasMetadata: PackFormulaMetadata[] | PackFormulasMetadata = Array.isArray(formulas) ? [] : {};
-  // TODO: @alan-fang delete once we move packs off of PackFormulas
-  if (Array.isArray(formulas)) {
-    (formulasMetadata as PackFormulaMetadata[]).push(...formulas.map(compileFormulaMetadata));
-  } else {
-    for (const namespace of Object.keys(formulas)) {
-      (formulasMetadata as PackFormulasMetadata)[namespace] = formulas[namespace].map(compileFormulaMetadata);
-    }
-  }
-
-  return formulasMetadata;
-}
-
-function compileFormulaMetadata(formula: TypedPackFormula): PackFormulaMetadata {
-  if ('isCodaFormula' in formula) {
-    return Object.assign({}, formula);
-  }
-  const {execute, ...rest} = formula;
-  return rest;
-}
-
-function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
-  const {getter, ...rest} = syncTable;
-  const {execute, ...getterRest} = getter;
-  return {
-    ...rest,
-    getter: getterRest,
-  };
 }

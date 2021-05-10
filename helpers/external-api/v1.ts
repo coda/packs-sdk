@@ -4,9 +4,9 @@
 
 /* eslint-disable */
 
-export const OpenApiSpecHash = 'd7c3f53287ba26554cc58614e4870ec5bfd5328139ef564e67517bd0411267a6';
+export const OpenApiSpecHash = '9344cda812f318da6169c839fbb51a2f289a9fe2e404d1c869df0c69f0f286c6';
 
-export const OpenApiSpecVersion = '1.1.0';
+export const OpenApiSpecVersion = '1.2.0';
 
 /**
  * A constant identifying the type of the resource.
@@ -28,6 +28,8 @@ export enum PublicApiType {
   Workspace = 'workspace',
   Pack = 'pack',
   PackVersion = 'packVersion',
+  PackAclPermissions = 'packAclPermissions',
+  PackAsset = 'packAsset',
 }
 
 /**
@@ -89,7 +91,7 @@ export interface PublicApiPermission {
 /**
  * Payload for granting a new permission.
  */
-export interface PublicApiAddPermission {
+export interface PublicApiAddPermissionRequest {
   access: PublicApiAccessType;
   principal: PublicApiPrincipal;
   /**
@@ -586,6 +588,20 @@ export interface PublicApiDocumentMutateResponse {
 }
 
 /**
+ * Detail about why a particular field failed request validation.
+ */
+export interface PublicApiValidationError {
+  /**
+   * A path indicating the affected field, in OGNL notation.
+   */
+  path: string;
+  /**
+   * An error message.
+   */
+  message: string;
+}
+
+/**
  * Reference to a table or view.
  */
 export interface PublicApiTableReference {
@@ -822,6 +838,23 @@ export type PublicApiDateColumnFormat = PublicApiSimpleColumnFormat & {
 };
 
 /**
+ * Format of an email column.
+ */
+export type PublicApiEmailColumnFormat = PublicApiSimpleColumnFormat & {
+  display?: PublicApiEmailDisplayType;
+  autocomplete?: boolean;
+};
+
+/**
+ * How an email address should be displayed in the user interface.
+ */
+export enum PublicApiEmailDisplayType {
+  IconAndEmail = 'iconAndEmail',
+  IconOnly = 'iconOnly',
+  EmailOnly = 'emailOnly',
+}
+
+/**
  * Format of a time column.
  */
 export type PublicApiTimeColumnFormat = PublicApiSimpleColumnFormat & {
@@ -921,6 +954,7 @@ export type PublicApiColumnFormat =
   | PublicApiDateColumnFormat
   | PublicApiDateTimeColumnFormat
   | PublicApiDurationColumnFormat
+  | PublicApiEmailColumnFormat
   | PublicApiCurrencyColumnFormat
   | PublicApiNumericColumnFormat
   | PublicApiReferenceColumnFormat
@@ -943,6 +977,7 @@ export enum PublicApiColumnFormatType {
   DateTime = 'dateTime',
   Time = 'time',
   Duration = 'duration',
+  Email = 'email',
   Slider = 'slider',
   Scale = 'scale',
   Image = 'image',
@@ -951,6 +986,7 @@ export enum PublicApiColumnFormatType {
   Checkbox = 'checkbox',
   Select = 'select',
   PackObject = 'packObject',
+  Reaction = 'reaction',
   Other = 'other',
 }
 
@@ -1069,6 +1105,7 @@ export interface PublicApiRowList {
   href?: string;
   nextPageToken?: PublicApiNextPageToken;
   nextPageLink?: PublicApiNextPageLink & string;
+  nextSyncToken?: PublicApiNextSyncToken;
 }
 
 /**
@@ -1321,7 +1358,12 @@ export interface PublicApiRowsUpsert {
 /**
  * The result of a rows insert/upsert operation.
  */
-export type PublicApiRowsUpsertResult = PublicApiDocumentMutateResponse;
+export type PublicApiRowsUpsertResult = PublicApiDocumentMutateResponse & {
+  /**
+   * Row IDs for rows that will be added. Only applicable when keyColumns is not set or empty.
+   */
+  addedRowIds?: string[];
+};
 
 /**
  * The result of a row deletion.
@@ -1339,6 +1381,7 @@ export type PublicApiRowDeleteResult = PublicApiDocumentMutateResponse & {
 export enum PublicApiRowsSortBy {
   CreatedAt = 'createdAt',
   Natural = 'natural',
+  UpdatedAt = 'updatedAt',
 }
 
 /**
@@ -1484,6 +1527,7 @@ export enum PublicApiControlType {
   Select = 'select',
   Scale = 'scale',
   Slider = 'slider',
+  Reaction = 'reaction',
 }
 
 /**
@@ -1530,6 +1574,12 @@ export type PublicApiNextPageToken = string;
  * If specified, a link that can be used to fetch the next page of results.
  */
 export type PublicApiNextPageLink = string;
+
+/**
+ * If specified, an opaque token that can be passed back later to retrieve new results that match the parameters specified when the sync token was created.
+ *
+ */
+export type PublicApiNextSyncToken = string;
 
 /**
  * Info about a resolved link to an API resource.
@@ -1872,41 +1922,350 @@ export interface PublicApiDocAnalyticsCollection {
 }
 
 /**
- * Info about a pack that was just created.
+ * Quantization period over which to view analytics.
+ */
+export enum PublicApiDocAnalyticsScale {
+  Day = 'daily',
+  Cumulative = 'cumulative',
+}
+
+/**
+ * Payload for creating a Pack.
+ */
+export interface PublicApiCreatePackRequest {
+  /**
+   * The parent workspace for the Pack. If unspecified, the user's default workspace will be used.
+   */
+  workspaceId?: string;
+}
+
+/**
+ * Info about a Pack that was just created.
  */
 export interface PublicApiCreatePackResponse {
   /**
-   * The id assigned to the newly-created pack.
+   * The ID assigned to the newly-created Pack.
    */
   packId: number;
 }
 
 /**
- * Information indicating where to upload the pack version definition.
+ * Payload for registering a Pack version.
  */
-export interface PublicApiPackVersionUploadInfo {
+export interface PublicApiRegisterPackVersionRequest {
   /**
-   * A signed url to be used for uploading a pack version definition.
+   * The SHA-256 hash of the file to be uploaded.
    */
-  uploadUrl: string;
+  bundleHash: string;
 }
 
 /**
- * Confirmation of successful pack version creation.
+ * Payload for updating a Pack.
+ */
+export interface PublicApiUpdatePackRequest {
+  /**
+   * Rate limit in Pack settings.
+   */
+  overallRateLimit?: {
+    /**
+     * The rate limit interval in seconds.
+     */
+    intervalSeconds: number;
+    /**
+     * The maximum number of Pack operations that can be performed in a given interval.
+     */
+    operationsPerInterval: number;
+  } | null;
+  /**
+   * Rate limit in Pack settings.
+   */
+  perConnectionRateLimit?: {
+    /**
+     * The rate limit interval in seconds.
+     */
+    intervalSeconds: number;
+    /**
+     * The maximum number of Pack operations that can be performed in a given interval.
+     */
+    operationsPerInterval: number;
+  } | null;
+  /**
+   * A post-ingestion url to the Pack's logo, returned by the [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete) endpoint.
+   */
+  logoUploadUrl?: string;
+  /**
+   * Post-ingestion urls to the Pack's example images, returned by  [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete) endpoint.
+   */
+  exampleImageUploadUrls?: string[];
+  /**
+   * The name of the Pack.
+   */
+  name?: string;
+  /**
+   * The full description of the Pack.
+   */
+  description?: string;
+  /**
+   * A short version of the description of the Pack.
+   */
+  shortDescription?: string;
+}
+
+/**
+ * Details about a Pack.
+ */
+export interface PublicApiPack {
+  /**
+   * ID of the Pack.
+   */
+  id: number;
+  /**
+   * The link to the logo of the Pack.
+   */
+  logoUrl?: string;
+  /**
+   * The parent workspace for the Pack.
+   */
+  workspaceId: string;
+  /**
+   * The name of the Pack.
+   */
+  name: string;
+  /**
+   * The full description of the Pack.
+   */
+  description: string;
+  /**
+   * A short version of the description of the Pack.
+   */
+  shortDescription: string;
+  overallRateLimit?: PublicApiPackRateLimit;
+  perConnectionRateLimit?: PublicApiPackRateLimit;
+}
+
+/**
+ * Summary of a Pack.
+ */
+export interface PublicApiPackSummary {
+  /**
+   * ID of the Pack.
+   */
+  id: number;
+  /**
+   * The link to the logo of the Pack.
+   */
+  logoUrl?: string;
+  /**
+   * The parent workspace for the Pack.
+   */
+  workspaceId: string;
+  /**
+   * The name of the Pack.
+   */
+  name: string;
+  /**
+   * The full description of the Pack.
+   */
+  description: string;
+  /**
+   * A short version of the description of the Pack.
+   */
+  shortDescription: string;
+}
+
+/**
+ * List of Pack summaries.
+ */
+export interface PublicApiPackSummaryList {
+  items: PublicApiPackSummary[];
+  nextPageToken?: PublicApiNextPageToken;
+  nextPageLink?: PublicApiNextPageLink & string;
+}
+
+/**
+ * Rate limit in Pack settings.
+ */
+export interface PublicApiPackRateLimit {
+  /**
+   * The rate limit interval in seconds.
+   */
+  intervalSeconds: number;
+  /**
+   * The maximum number of Pack operations that can be performed in a given interval.
+   */
+  operationsPerInterval: number;
+}
+
+/**
+ * Determines how the Packs returned are sorted.
+ */
+export enum PublicApiPacksSortBy {
+  Title = 'title',
+  CreatedAt = 'createdAt',
+  UpdatedAt = 'updatedAt',
+}
+
+/**
+ * Information indicating where to upload the Pack version definition.
+ */
+export interface PublicApiPackVersionUploadInfo {
+  /**
+   * A url to be used for uploading a Pack version definition.
+   */
+  uploadUrl: string;
+  /**
+   * Key-value pairs of authorization headers to include in the upload request.
+   */
+  headers: {
+    [k: string]: unknown;
+  };
+}
+
+/**
+ * Payload for setting a Pack version live.
+ */
+export interface PublicApiSetPackLiveVersionRequest {
+  /**
+   * The version of the Pack.
+   */
+  packVersion: string;
+}
+
+/**
+ * Confirmation of successful Pack version creation.
  */
 export interface PublicApiCreatePackVersionResponse {}
 
 /**
- * An error when trying to create a new pack version.
+ * Confirmation of successfully setting a Pack version live.
  */
-export type PublicApiCreatePackVersionError = PublicApiInvalidMetadataError | PublicApiInvalidSemanticVersionError;
+export interface PublicApiSetPackLiveVersionResponse {}
 
 /**
- * An error indicating that the pack version contained unparseable or invalid metadata.
+ * Metadata about a Pack principal.
  */
-export interface PublicApiInvalidMetadataError {}
+export type PublicApiPackPrincipal =
+  | PublicApiPackUserPrincipal
+  | PublicApiPackWorkspacePrincipal
+  | PublicApiPackGlobalPrincipal;
 
 /**
- * An error indicating that the new semantic version is incompatible with the changes in the new pack definition.
+ * Type of Pack permissions.
  */
-export interface PublicApiInvalidSemanticVersionError {}
+export enum PublicApiPackPrincipalType {
+  User = 'user',
+  Workspace = 'workspace',
+  Worldwide = 'worldwide',
+}
+
+/**
+ * Access type for a Pack.
+ */
+export enum PublicApiPackAccessType {
+  View = 'view',
+  Test = 'test',
+  Edit = 'edit',
+}
+
+export interface PublicApiPackUserPrincipal {
+  type: 'user';
+  email: string;
+}
+
+export interface PublicApiPackWorkspacePrincipal {
+  type: 'workspace';
+  workspaceId: string;
+}
+
+export interface PublicApiPackGlobalPrincipal {
+  type: 'worldwide';
+}
+
+/**
+ * List of Pack permissions.
+ */
+export interface PublicApiPackPermissionList {
+  items: PublicApiPackPermission[];
+}
+
+/**
+ * Metadata about a Pack permission.
+ */
+export interface PublicApiPackPermission {
+  /**
+   * Id for the Permission
+   */
+  id: string;
+  principal: PublicApiPackPrincipal;
+  access: PublicApiPackAccessType;
+}
+
+/**
+ * Payload for upserting a Pack permission.
+ */
+export interface PublicApiAddPackPermissionRequest {
+  principal: PublicApiPackPrincipal;
+  access: PublicApiPackAccessType;
+}
+
+/**
+ * Confirmation of successfully upserting a Pack permission.
+ */
+export interface PublicApiAddPackPermissionResponse {
+  /**
+   * The ID of the permission created or updated.
+   */
+  permissionId: string;
+}
+
+/**
+ * Confirmation of successfully deleting a Pack permission.
+ */
+export interface PublicApiDeletePackPermissionResponse {}
+
+export enum PublicApiPackAssetType {
+  Logo = 'logo',
+  ExampleImage = 'exampleImage',
+}
+
+/**
+ * Payload for a Pack asset upload.
+ */
+export interface PublicApiUploadPackAssetRequest {
+  packAssetType: PublicApiPackAssetType;
+}
+
+/**
+ * Information indicating where to upload the Pack asset, and an endpoint to mark the upload as complete.
+ */
+export interface PublicApiPackAssetUploadInfo {
+  /**
+   * A signed url to be used for uploading a Pack asset.
+   */
+  uploadUrl: string;
+  /**
+   * An endpoint to mark the upload as complete.
+   */
+  packAssetUploadedPathName: string;
+}
+
+/**
+ * Payload for noting a Pack asset upload is complete.
+ */
+export interface PublicApiPackAssetUploadCompleteRequest {
+  packAssetType: PublicApiPackAssetType;
+}
+
+/**
+ * Response for noting a Pack asset upload is complete.
+ */
+export interface PublicApiPackAssetUploadCompleteResponse {
+  /**
+   * An arbitrary unique identifier for this request.
+   */
+  requestId: string;
+  /**
+   * A post-ingestion url that you can provide to update your Pack's assets.
+   */
+  verifiedUploadUrl: string;
+}

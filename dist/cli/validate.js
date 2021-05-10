@@ -23,14 +23,14 @@ exports.validateMetadata = exports.handleValidate = void 0;
 const helpers_1 = require("../testing/helpers");
 const upload_validation_1 = require("../testing/upload_validation");
 async function handleValidate({ manifestFile }) {
-    return validateMetadata(manifestFile);
+    const { manifest } = await Promise.resolve().then(() => __importStar(require(manifestFile)));
+    return validateMetadata(manifest);
 }
 exports.handleValidate = handleValidate;
-async function validateMetadata(manifestFile) {
+async function validateMetadata(metadata) {
     var _a;
-    const { manifest } = await Promise.resolve().then(() => __importStar(require(manifestFile)));
     try {
-        await upload_validation_1.validatePackMetadata(manifest);
+        await upload_validation_1.validatePackVersionMetadata(metadata);
     }
     catch (e) {
         const packMetadataValidationError = e;

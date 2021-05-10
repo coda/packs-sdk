@@ -1,18 +1,19 @@
-import type { ContextOptions } from './execution';
+import type { ExecutionContext } from '../api';
 import type {Context as IVMContext} from 'isolated-vm';
-import type { SyncExecutionContext } from 'api_types';
+import type {ParamDefs} from '../api_types';
+import type {ParamValues} from '../api_types';
+import { build as buildBundle } from '../cli/build';
 import fs from 'fs';
 import ivm from 'isolated-vm';
-import { newFetcherSyncExecutionContext } from './fetcher';
 import path from 'path';
-import {print} from './helpers';
 
 const IsolateMemoryLimit = 128;
 const CodaRuntime = '__coda__runtime__';
 
-// bundle_execution_helper_bundle.js is built by esbuild (see Makefile) 
+// execution_helper_bundle.js is built by esbuild (see Makefile) 
 // which puts it into the same directory: dist/testing/
-const CompiledHelperBundlePath = `${__dirname}/bundle_execution_helper_bundle.js`;
+const CompiledHelperBundlePath = `${__dirname}/execution_helper_bundle.js`;
+const HelperTsSourceFile = `${__dirname}/execution_helper.ts`;
 
 // Maps a local function into the ivm context.
 async function mapCallbackFunction(
@@ -70,23 +71,13 @@ function getStubName(name: string): string {
 
 async function setupExecutionContext(
   ivmContext: IVMContext,
-  {credentialsFile}: ContextOptions = {},
+  executionContext: ExecutionContext,
 ) {
   const runtimeContext = await ivmContext.global.get(CodaRuntime, {reference: true});
 
-  // defaultAuthentication has a few function methods and can't be copied without being serialized first.
-  const authJSON = await ivmContext.eval(`JSON.stringify(${getStubName('pack.manifest.defaultAuthentication')})`, {copy: true});
-  const auth = authJSON ? JSON.parse(authJSON) : undefined;
-  const name = (await ivmContext.eval(`${getStubName('pack.manifest.name')}`, {copy: true})) as string;
-  const executionContext = newFetcherSyncExecutionContext(
-    name,
-    auth,
-    credentialsFile,
-  );
-
   // set up a stub to be copied into the ivm context. we are not copying executionContext directly since
   // part of the object is not transferrable. 
-  const executionContextStub: SyncExecutionContext = {
+  const executionContextStub: ExecutionContext = {
     ...executionContext,
 
     // override the non-transferrable fields to empty stubs. 
@@ -131,46 +122,67 @@ async function createIvmContext(isolate: ivm.Isolate): Promise<IVMContext> {
   return ivmContext;
 }
 
-export async function executeFormulaOrSyncFromBundle({
-  bundlePath,
-  formulaName,
-  params: rawParams,
-  contextOptions: executionContextOptions = {},
-}: {
-  bundlePath: string;
-  formulaName: string;
-  params: string[];
-  contextOptions?: ContextOptions;
-}) {
-  let isolate: ivm.Isolate | null = null;
-  try {
-    // creating an isolate with 128M memory limit.    
-    isolate = new ivm.Isolate({ memoryLimit: IsolateMemoryLimit });
-    const ivmContext = await createIvmContext(isolate);
+export async function setupIvmContext(
+  bundlePath: string,
+  executionContext: ExecutionContext,
+): Promise<IVMContext> {
+  // creating an isolate with 128M memory limit.    
+  const isolate = new ivm.Isolate({ memoryLimit: IsolateMemoryLimit });
+  const ivmContext = await createIvmContext(isolate);
 
-    const bundleFullPath = bundlePath.startsWith('/') ? bundlePath : path.join(process.cwd(), bundlePath);
-    await registerBundle(isolate, ivmContext, bundleFullPath, getStubName('pack'));
+  const bundleFullPath = bundlePath.startsWith('/') ? bundlePath : path.join(process.cwd(), bundlePath);
+  await registerBundle(isolate, ivmContext, bundleFullPath, getStubName('pack'));
+
+  // If the ivm helper is running by node, the compiled execution_helper bundle should be ready at the 
+  // dist/ directory described by CompiledHelperBundlePath. If the ivm helper is running by mocha, the 
+  // bundle file may not be available or update-to-date, so we'd always compile it first from 
+  // HelperTsSourceFile.
+  //
+  // TODO(huayang): this is not efficient enough and needs optimization if to be used widely in testing.
+  if (fs.existsSync(CompiledHelperBundlePath)) {
     await registerBundle(isolate, ivmContext, CompiledHelperBundlePath, getStubName('bundleExecutionHelper'));
-    await setupExecutionContext(ivmContext, executionContextOptions);
-
-    // run the formula and redirect result/error.
-    const result = await ivmContext.evalClosure(
-      `return ${getStubName('bundleExecutionHelper')}.executeFormulaOrSyncWithRawParams(
-        ${getStubName('pack.manifest')}, 
-        $0, 
-        $1, 
-        ${getStubName('executionContext')}
-      )`, 
-      [formulaName, rawParams],
-      {arguments: {copy: true}, result: {copy: true, promise: true}},
-    );
-    print(result);
-  } catch (err) {
-    print(err);
-    process.exit(1);
-  } finally {
-    if (isolate) {
-      isolate.dispose();
-    }
+  } else if (fs.existsSync(HelperTsSourceFile)) {
+    const bundlePath = await buildBundle(HelperTsSourceFile, 'esbuild');
+    await registerBundle(isolate, ivmContext, bundlePath, getStubName('bundleExecutionHelper'));
+  } else {
+    throw new Error('cannot find the execution helper');
   }
+
+  await setupExecutionContext(ivmContext, executionContext);
+
+  return ivmContext;
+}
+
+export async function executeFormulaOrSyncWithRawParams(
+  ivmContext: IVMContext,
+  formulaName: string,
+  rawParams: string[],
+) {
+  return ivmContext.evalClosure(
+    `return ${getStubName('bundleExecutionHelper')}.executeFormulaOrSyncWithRawParams(
+      ${getStubName('pack.manifest')}, 
+      $0, 
+      $1, 
+      ${getStubName('executionContext')}
+    )`, 
+    [formulaName, rawParams],
+    {arguments: {copy: true}, result: {copy: true, promise: true}},
+  )
+}
+
+export async function executeFormulaOrSync(
+  ivmContext: IVMContext,
+  formulaName: string,
+  params: ParamValues<ParamDefs>,
+) {
+  return ivmContext.evalClosure(
+    `return ${getStubName('bundleExecutionHelper')}.executeFormulaOrSync(
+      ${getStubName('pack.manifest')}, 
+      $0, 
+      $1, 
+      ${getStubName('executionContext')}
+    )`, 
+    [formulaName, params],
+    {arguments: {copy: true}, result: {copy: true, promise: true}},
+  )
 }

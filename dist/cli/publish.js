@@ -25,125 +25,86 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handlePublish = void 0;
 const logging_1 = require("../helpers/logging");
 const build_1 = require("./build");
+const cli_1 = require("../helpers/cli");
+const crypto_1 = require("../helpers/crypto");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
+const errors_1 = require("./errors");
+const config_storage_1 = require("./config_storage");
+const config_storage_2 = require("./config_storage");
+const errors_2 = require("./errors");
 const helpers_3 = require("./helpers");
-const helpers_4 = require("./helpers");
+const path = __importStar(require("path"));
+const helpers_4 = require("../testing/helpers");
 const helpers_5 = require("../testing/helpers");
-const helpers_6 = require("../testing/helpers");
-const create_1 = require("./create");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
 const validate_1 = require("./validate");
 async function handlePublish({ manifestFile, codaApiEndpoint }) {
+    const manifestDir = path.dirname(manifestFile);
     const formattedEndpoint = helpers_2.formatEndpoint(codaApiEndpoint);
     const logger = new logging_1.ConsoleLogger();
-    const { manifest } = await Promise.resolve().then(() => __importStar(require(manifestFile)));
     logger.info('Building Pack bundle...');
     const bundleFilename = await build_1.build(manifestFile);
+    const { manifest } = await Promise.resolve().then(() => __importStar(require(bundleFilename)));
     // Since package.json isn't in dist, we grab it from the root directory instead.
-    const packageJson = await Promise.resolve().then(() => __importStar(require(helpers_4.isTestCommand() ? '../package.json' : '../../package.json')));
+    const packageJson = await Promise.resolve().then(() => __importStar(require(helpers_3.isTestCommand() ? '../package.json' : '../../package.json')));
     const codaPacksSDKVersion = packageJson.version;
-    codaPacksSDKVersion;
-    const apiKey = helpers_3.getApiKey();
+    const apiKey = config_storage_1.getApiKey(codaApiEndpoint);
     if (!apiKey) {
-        helpers_5.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
+        helpers_4.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
     }
     const client = helpers_1.createCodaClient(apiKey, formattedEndpoint);
-    const packs = create_1.readPacksFile();
-    const packId = packs && packs[manifest.name];
+    const packId = config_storage_2.getPackId(manifestDir, codaApiEndpoint);
     if (!packId) {
-        helpers_5.printAndExit(`Could not find a Pack id registered to Pack "${manifest.name}"`);
+        helpers_4.printAndExit(`Could not find a Pack id registered to Pack "${manifest.name}"`);
     }
     const packVersion = manifest.version;
     if (!packVersion) {
-        helpers_5.printAndExit(`No Pack version found for your Pack "${manifest.name}"`);
+        helpers_4.printAndExit(`No Pack version found for your Pack "${manifest.name}"`);
     }
-    //  TODO(alan): error testing
     try {
         logger.info('Registering new Pack version...');
-        const { uploadUrl } = await client.registerPackVersion(packId, packVersion);
-        // TODO(alan): only grab metadata from manifest.
+        const bundle = helpers_5.readFile(bundleFilename);
+        if (!bundle) {
+            helpers_4.printAndExit(`Could not find bundle file at path ${bundleFilename}`);
+        }
+        const metadata = cli_1.compilePackMetadata(manifest);
+        const upload = {
+            metadata,
+            sdkVersion: codaPacksSDKVersion,
+            bundle: bundle.toString(),
+        };
+        const uploadPayload = JSON.stringify(upload);
+        const bundleHash = crypto_1.computeSha256(uploadPayload);
+        const registerResponse = await client.registerPackVersion(packId, packVersion, {}, { bundleHash });
+        if (errors_2.isCodaError(registerResponse)) {
+            return helpers_4.printAndExit(`Error while registering pack version: ${errors_1.formatError(registerResponse)}`);
+        }
+        const { uploadUrl, headers } = registerResponse;
         logger.info('Validating Pack metadata...');
-        await validate_1.validateMetadata(manifest);
+        await validate_1.validateMetadata(metadata);
         logger.info('Uploading Pack...');
-        const metadata = compilePackMetadata(manifest);
-        await uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl);
+        await uploadPack(uploadUrl, uploadPayload, headers);
         logger.info('Validating upload...');
-        await client.packVersionUploadComplete(packId, packVersion);
+        const uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion);
+        if (errors_2.isCodaError(uploadCompleteResponse)) {
+            helpers_4.printAndExit(`Error while finalizing pack version: ${errors_1.formatError(uploadCompleteResponse)}`);
+        }
     }
     catch (err) {
-        helpers_5.printAndExit(`Error: ${err}`);
+        helpers_4.printAndExit(`Unepected error during pack upload: ${errors_1.formatError(err)}`);
     }
     logger.info('Done!');
 }
 exports.handlePublish = handlePublish;
-async function uploadPackToSignedUrl(bundleFilename, metadata, uploadUrl) {
-    const bundle = helpers_6.readFile(bundleFilename);
-    if (!bundle) {
-        helpers_5.printAndExit(`Could not find bundle file at path ${bundleFilename}`);
-    }
-    const upload = {
-        metadata,
-        bundle: bundle.toString(),
-    };
+async function uploadPack(uploadUrl, uploadPayload, headers) {
     try {
         await request_promise_native_1.default.put(uploadUrl, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            json: upload,
+            headers,
+            body: uploadPayload,
         });
     }
     catch (err) {
-        helpers_5.printAndExit(`Error in uploading Pack to signed url: ${err}`);
+        helpers_4.printAndExit(`Error in uploading Pack to signed url: ${errors_1.formatError(err)}`);
     }
-}
-function compilePackMetadata(manifest) {
-    const { formats, formulas, formulaNamespace, syncTables, ...definition } = manifest;
-    const compiledFormats = compileFormatsMetadata(formats || []);
-    const compiledFormulas = (formulas && compileFormulasMetadata(formulas)) || (Array.isArray(formulas) ? [] : {});
-    const metadata = {
-        ...definition,
-        formulaNamespace,
-        formats: compiledFormats,
-        formulas: compiledFormulas,
-        syncTables: (syncTables || []).map(compileSyncTable),
-    };
-    return metadata;
-}
-function compileFormatsMetadata(formats) {
-    return formats.map(format => {
-        return {
-            ...format,
-            matchers: (format.matchers || []).map(matcher => matcher.toString()),
-        };
-    });
-}
-function compileFormulasMetadata(formulas) {
-    const formulasMetadata = Array.isArray(formulas) ? [] : {};
-    // TODO: @alan-fang delete once we move packs off of PackFormulas
-    if (Array.isArray(formulas)) {
-        formulasMetadata.push(...formulas.map(compileFormulaMetadata));
-    }
-    else {
-        for (const namespace of Object.keys(formulas)) {
-            formulasMetadata[namespace] = formulas[namespace].map(compileFormulaMetadata);
-        }
-    }
-    return formulasMetadata;
-}
-function compileFormulaMetadata(formula) {
-    if ('isCodaFormula' in formula) {
-        return Object.assign({}, formula);
-    }
-    const { execute, ...rest } = formula;
-    return rest;
-}
-function compileSyncTable(syncTable) {
-    const { getter, ...rest } = syncTable;
-    const { execute, ...getterRest } = getter;
-    return {
-        ...rest,
-        getter: getterRest,
-    };
 }

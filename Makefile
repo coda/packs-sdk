@@ -39,11 +39,22 @@ lint-fix:
 .PHONY: compile
 compile:
 	${ROOTDIR}/node_modules/.bin/tsc
-	${ROOTDIR}/node_modules/.bin/esbuild ${ROOTDIR}/testing/bundle_execution_helper.ts \
+	${ROOTDIR}/node_modules/.bin/esbuild ${ROOTDIR}/testing/execution_helper.ts \
 		--bundle \
-		--outfile=${ROOTDIR}/dist/testing/bundle_execution_helper_bundle.js \
+		--outfile=${ROOTDIR}/dist/testing/execution_helper_bundle.js \
 		--format=cjs \
 		--banner:js="'use strict';"
+	${ROOTDIR}/node_modules/.bin/esbuild ${ROOTDIR}/index.ts \
+		--bundle \
+		--outfile=${ROOTDIR}/dist/bundle.js \
+		--format=cjs \
+		--minify \
+		--banner:js="'use strict';"
+	# Generate a typescript file for use in /experimental so the web editor
+	# can resolve packs-sdk imports
+	${ROOTDIR}/node_modules/.bin/dts-bundle-generator ${ROOTDIR}/index.ts \
+  	-o ${ROOTDIR}/dist/bundle.d.ts \
+		--no-banner
 
 .PHONY: docs
 docs:

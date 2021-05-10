@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.wrapError = exports.tryFindSyncFormula = exports.tryFindFormula = exports.findSyncFormula = exports.findFormula = exports.executeFormulaOrSyncWithRawParams = exports.executeSyncFormulaWithoutValidation = void 0;
+exports.wrapError = exports.tryFindSyncFormula = exports.tryFindFormula = exports.findSyncFormula = exports.findFormula = exports.executeSyncFormula = exports.executeFormula = exports.executeFormulaOrSync = exports.executeFormulaOrSyncWithRawParams = exports.executeSyncFormulaWithoutValidation = void 0;
 const coercion_1 = require("./coercion");
-const api_1 = require("../api");
+const ensure_1 = require("../helpers/ensure");
 const validation_1 = require("./validation");
 const validation_2 = require("./validation");
 async function executeSyncFormulaWithoutValidation(formula, params, context, maxIterations = 3) {
@@ -31,50 +31,91 @@ async function executeFormulaOrSyncWithRawParams(manifest, formulaName, rawParam
         const formula = tryFindFormula(manifest, formulaName);
         if (formula) {
             const params = coercion_1.coerceParams(formula, rawParams);
-            validation_1.validateParams(formula, params);
-            const result = await formula.execute(params, context);
-            validation_2.validateResult(formula, result);
-            return result;
+            return await executeFormula(formula, params, context);
         }
         const syncFormula = tryFindSyncFormula(manifest, formulaName);
         if (syncFormula) {
             const params = coercion_1.coerceParams(syncFormula, rawParams);
-            validation_1.validateParams(syncFormula, params);
-            const result = await executeSyncFormulaWithoutValidation(syncFormula, params, context);
-            validation_2.validateResult(syncFormula, result);
-            return result;
+            return await executeSyncFormula(syncFormula, params, context);
         }
+        throw new Error(`Pack definition has no formula or sync called ${formulaName}.`);
     }
     catch (err) {
         throw wrapError(err);
     }
 }
 exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
+async function executeFormulaOrSync(manifest, formulaName, params, context) {
+    try {
+        const formula = tryFindFormula(manifest, formulaName);
+        if (formula) {
+            return await executeFormula(formula, params, context);
+        }
+        const syncFormula = tryFindSyncFormula(manifest, formulaName);
+        if (syncFormula) {
+            return await executeSyncFormula(syncFormula, params, context);
+        }
+        throw new Error(`Pack definition has no formula or sync called ${formulaName}.`);
+    }
+    catch (err) {
+        throw wrapError(err);
+    }
+}
+exports.executeFormulaOrSync = executeFormulaOrSync;
+async function executeFormula(formula, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true } = {}) {
+    if (shouldValidateParams) {
+        validation_1.validateParams(formula, params);
+    }
+    let result;
+    try {
+        result = await formula.execute(params, context);
+    }
+    catch (err) {
+        throw wrapError(err);
+    }
+    if (shouldValidateResult) {
+        validation_2.validateResult(formula, result);
+    }
+    return result;
+}
+exports.executeFormula = executeFormula;
+async function executeSyncFormula(formula, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, maxIterations: maxIterations = 3, } = {}) {
+    if (shouldValidateParams) {
+        validation_1.validateParams(formula, params);
+    }
+    const result = await executeSyncFormulaWithoutValidation(formula, params, context, maxIterations);
+    if (shouldValidateResult) {
+        validation_2.validateResult(formula, result);
+    }
+    return result;
+}
+exports.executeSyncFormula = executeSyncFormula;
 function findFormula(packDef, formulaNameWithNamespace) {
     const packFormulas = packDef.formulas;
     if (!packFormulas) {
-        throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);
+        throw new Error(`Pack definition has no formulas.`);
     }
-    // TODO: @alan-fang remove namespace requirement
-    const [namespace, name] = formulaNameWithNamespace.split('::');
+    const [namespace, name] = formulaNameWithNamespace.includes('::')
+        ? formulaNameWithNamespace.split('::')
+        : [ensure_1.ensureExists(packDef.formulaNamespace), formulaNameWithNamespace];
     if (!(namespace && name)) {
         throw new Error(`Formula names must be specified as FormulaNamespace::FormulaName, but got "${formulaNameWithNamespace}".`);
     }
     const formulas = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
     if (!formulas || !formulas.length) {
-        throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas for namespace "${namespace}".`);
+        throw new Error(`Pack definition has no formulas for namespace "${namespace}".`);
     }
     for (const formula of formulas) {
-        if (formula.name === name && !api_1.isCodaFormula(formula)) {
+        if (formula.name === name) {
             return formula;
         }
     }
-    throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formula "${name}" in namespace "${namespace}".`);
+    throw new Error(`Pack definition has no formula "${name}" in namespace "${namespace}".`);
 }
 exports.findFormula = findFormula;
 function findSyncFormula(packDef, syncFormulaName) {
     if (!packDef.syncTables) {
-        throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no sync tables.`);
+        throw new Error(`Pack definition has no sync tables.`);
     }
     for (const syncTable of packDef.syncTables) {
         const syncFormula = syncTable.getter;
@@ -82,7 +123,7 @@ function findSyncFormula(packDef, syncFormulaName) {
             return syncFormula;
         }
     }
-    throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no sync formula "${syncFormulaName}" in its sync tables.`);
+    throw new Error(`Pack definition has no sync formula "${syncFormulaName}" in its sync tables.`);
 }
 exports.findSyncFormula = findSyncFormula;
 function tryFindFormula(packDef, formulaNameWithNamespace) {

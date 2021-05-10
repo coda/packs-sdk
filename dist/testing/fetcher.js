@@ -9,7 +9,6 @@ const logging_1 = require("../helpers/logging");
 const url_1 = require("url");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
-const auth_1 = require("./auth");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
 const url_parse_1 = __importDefault(require("url-parse"));
 const uuid_1 = require("uuid");
@@ -18,12 +17,14 @@ const FetcherUserAgent = 'Coda-Test-Server-Fetcher';
 const MaxContentLengthBytes = 25 * 1024 * 1024;
 const HeadersToStrip = ['authorization'];
 class AuthenticatingFetcher {
-    constructor(authDef, credentials) {
+    constructor(authDef, networkDomains, credentials) {
         this._authDef = authDef;
+        this._networkDomains = networkDomains;
         this._credentials = credentials;
     }
     async fetch(request) {
         const { url, headers, body, form } = this._applyAuthentication(request);
+        this._validateHost(url);
         const response = await exports.requestHelper.makeRequest({
             url,
             method: request.method,
@@ -168,6 +169,14 @@ class AuthenticatingFetcher {
             return prefixUrl + path;
         }
     }
+    _validateHost(url) {
+        const parsed = new url_1.URL(url);
+        const host = parsed.host.toLowerCase();
+        const allowedDomains = this._networkDomains || [];
+        if (!allowedDomains.map(domain => domain.toLowerCase()).some(domain => host === domain || host.endsWith(`.${domain}`))) {
+            throw new Error(`Attempted to connect to undeclared host '${host}'`);
+        }
+    }
 }
 exports.AuthenticatingFetcher = AuthenticatingFetcher;
 // Namespaced object that can be mocked for testing.
@@ -194,10 +203,8 @@ class AuthenticatingBlobStorage {
         return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${uuid_1.v4()}`;
     }
 }
-function newFetcherExecutionContext(packName, authDef, credentialsFile) {
-    const allCredentials = auth_1.readCredentialsFile(credentialsFile);
-    const credentials = allCredentials === null || allCredentials === void 0 ? void 0 : allCredentials.packs[packName];
-    const fetcher = new AuthenticatingFetcher(authDef, credentials);
+function newFetcherExecutionContext(authDef, networkDomains, credentials) {
+    const fetcher = new AuthenticatingFetcher(authDef, networkDomains, credentials);
     return {
         invocationLocation: {
             protocolAndHost: 'https://coda.io',
@@ -211,8 +218,8 @@ function newFetcherExecutionContext(packName, authDef, credentialsFile) {
     };
 }
 exports.newFetcherExecutionContext = newFetcherExecutionContext;
-function newFetcherSyncExecutionContext(packName, authDef, credentialsFile) {
-    const context = newFetcherExecutionContext(packName, authDef, credentialsFile);
+function newFetcherSyncExecutionContext(authDef, networkDomains, credentials) {
+    const context = newFetcherExecutionContext(authDef, networkDomains, credentials);
     return { ...context, sync: {} };
 }
 exports.newFetcherSyncExecutionContext = newFetcherSyncExecutionContext;

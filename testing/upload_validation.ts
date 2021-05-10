@@ -6,6 +6,7 @@ import type {BooleanSchema} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import {DefaultConnectionType} from '../types';
+import type {DynamicSyncTableDef} from '../api';
 import {FeatureSet} from '../types';
 import type {HeaderBearerTokenAuthentication} from '../types';
 import type {Identity} from '../schema';
@@ -22,14 +23,17 @@ import type {ObjectSchema} from '../schema';
 import type {ObjectSchemaProperty} from '../schema';
 import {PackCategory} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
-import type {PackMetadata} from '../compiled_types';
+import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDef} from '../api_types';
+import type {ParamDefs} from '../api_types';
 import {PostSetupType} from '../types';
 import type {QueryParamTokenAuthentication} from '../types';
 import type {SetEndpoint} from '../types';
 import {StringHintValueTypes} from '../schema';
 import type {StringPackFormula} from '../api';
 import type {StringSchema} from '../schema';
+import type {SyncFormula} from '../api';
+import type {SyncTableDef} from '../api';
 import {Type} from '../api_types';
 import type {ValidationError} from './types';
 import {ValueType} from '../schema';
@@ -54,8 +58,10 @@ export class PackMetadataValidationError extends Error {
   }
 }
 
-export async function validatePackMetadata(metadata: Record<string, any>): Promise<PackMetadata> {
-  const validated = packMetadataSchema.safeParse(metadata);
+export async function validatePackVersionMetadata(metadata: Record<string, any>): Promise<PackVersionMetadata> {
+  // For now we use legacyPackMetadataSchema as the top-level object we validate. As soon as we migrate all of our
+  // first-party pack definitions to only use versioned fields, we can use packVersionMetadataSchema  here.
+  const validated = legacyPackMetadataSchema.safeParse(metadata);
   if (!validated.success) {
     throw new PackMetadataValidationError(
       'Pack metadata failed validation',
@@ -64,10 +70,10 @@ export async function validatePackMetadata(metadata: Record<string, any>): Promi
     );
   }
 
-  return validated.data as PackMetadata;
+  return validated.data as PackVersionMetadata;
 }
 
-function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError | ValidationError[] {
+function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[] {
   // Top-level errors for union types are totally useless, they just say "invalid input",
   // but they do record all of the specific errors when trying each element of the union,
   // so we filter out the errors that were just due to non-matches of the discriminant
@@ -92,11 +98,24 @@ function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError 
           unionIssue.code === z.ZodIssueCode.custom &&
           unionIssue.params?.customErrorCode === CustomErrorCode.NonMatchingDiscriminant;
         if (!isDiscriminantError) {
-          const error: ValidationError = {
-            path: zodPathToPathString(unionIssue.path),
-            message: unionIssue.message,
-          };
-          underlyingErrors.push(error);
+          let errors: ValidationError[];
+          if (unionIssue.code === z.ZodIssueCode.invalid_union) {
+            // Recurse to find the real error underlying any unions within child fields.
+            errors = zodErrorDetailToValidationError(unionIssue);
+          } else {
+            const error: ValidationError = {
+              path: zodPathToPathString(unionIssue.path),
+              message: unionIssue.message,
+            };
+            errors = [error];
+          }
+          // dedupe identical errors. These can occur when validating union types, and each union type
+          // throws the same validation error.
+          for (const error of errors) {
+            if (!underlyingErrors.find(err => err.path === error.path && err.message === error.message)) {
+              underlyingErrors.push(error);
+            }
+          }
         }
       }
     }
@@ -110,10 +129,12 @@ function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError 
     subError.received === 'undefined' &&
     subError.expected.toString() !== 'undefined';
 
-  return {
-    path,
-    message: isMissingRequiredFieldError ? `Missing required field ${path}.` : message,
-  };
+  return [
+    {
+      path,
+      message: isMissingRequiredFieldError ? `Missing required field ${path}.` : message,
+    },
+  ];
 }
 
 function zodPathToPathString(zodPath: Array<string | number>): string {
@@ -137,8 +158,8 @@ function zodCompleteObject<O, T extends ZodCompleteShape<O> = ZodCompleteShape<R
   return z.object<T>(shape);
 }
 
-function zodDiscriminant(value: string | number) {
-  return z.union([z.string(), z.number()]).refine(data => data === value, {
+function zodDiscriminant(value: string | number | boolean) {
+  return z.union([z.string(), z.number(), z.boolean(), z.undefined()]).refine(data => data === value, {
     message: 'Non-matching discriminant',
     params: {customErrorCode: CustomErrorCode.NonMatchingDiscriminant},
   });
@@ -263,7 +284,9 @@ const paramDefValidator = zodCompleteObject<ParamDef<any>>({
 });
 
 const commonPackFormulaSchema = {
-  name: z.string(),
+  name: z
+    .string()
+    .refine(validateFormulaName, {message: 'Formula names can only contain alphanumeric characters and underscores.'}),
   description: z.string(),
   examples: z.array(
     z.object({
@@ -354,6 +377,30 @@ const arrayPropertySchema: z.ZodTypeAny = z.lazy(() =>
   }),
 );
 
+const Base64ObjectRegex = /^[A-Za-z0-9=_-]+$/;
+// This is ripped off from isValidObjectId in coda. Violating this causes a number of downstream headaches.
+function isValidObjectId(component: string): boolean {
+  return Base64ObjectRegex.test(component);
+}
+
+// These sync tables already violate the object id constraints and should be cleaned up via upgrade.
+const BAD_SYNC_TABLE_NAMES = [
+  'Pull Request',
+  'Merge Request',
+  'G Suite Directory User',
+  'Campaign Group',
+  'Candidate Stage',
+  'Person Schema',
+  'Doc Analytics',
+];
+
+function isValidIdentityName(name: string): boolean {
+  if (BAD_SYNC_TABLE_NAMES.includes(name)) {
+    return true;
+  }
+  return isValidObjectId(name);
+}
+
 const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
   zodCompleteObject<ObjectSchema<any, any>>({
     type: zodDiscriminant(ValueType.Object),
@@ -364,7 +411,10 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     featured: z.array(z.string()).optional(),
     identity: zodCompleteObject<Identity>({
       packId: z.number(), // TODO: Remove
-      name: z.string().nonempty(),
+      name: z.string().nonempty().refine(isValidIdentityName, {
+        message:
+          'Invalid name. Identity names can only contain alphanumeric characters, underscores, and dashes, and no spaces.',
+      }),
       dynamicUrl: z.string().optional(),
       attribution: z
         .union([textAttributionNodeSchema, linkAttributionNodeSchema, imageAttributionNodeSchema])
@@ -404,7 +454,7 @@ const objectPackFormulaSchema = zodCompleteObject<Omit<ObjectPackFormula<any, an
   resultType: zodDiscriminant(Type.object),
   // TODO(jonathan): See if we should really allow this. The SDK right now explicitly tolerates an undefined
   // schema for objects, but that doesn't seem like a use case we actually want to support.
-  schema: genericObjectSchema.optional(),
+  schema: z.union([genericObjectSchema, arrayPropertySchema]).optional(),
 });
 
 const formulaMetadataSchema = z.union([numericPackFormulaSchema, stringPackFormulaSchema, objectPackFormulaSchema]);
@@ -420,57 +470,151 @@ const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   matchers: z.array(z.string()),
 });
 
-const packMetadataSchema = zodCompleteObject<PackMetadata>({
-  id: z.number().optional(), // Will be assigned by DB
+const syncFormulaSchema = zodCompleteObject<Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute'>>({
+  schema: arrayPropertySchema.optional(),
+  resultType: z.any(),
+  isSyncFormula: z.literal(true),
+  ...commonPackFormulaSchema,
+});
+
+const baseSyncTableSchema = {
   name: z.string().nonempty(),
-  shortDescription: z.string().nonempty(),
-  description: z.string().nonempty(),
-  permissionsDescription: z.string().optional(), // TODO: validate present if authentication is present
-  version: z.string().nonempty(),
-  providerId: z.number().optional(), // Deprecated
-  category: z.nativeEnum(PackCategory),
-  logoPath: z.string().optional(),
-  enabledConfigName: z.string().optional(),
+  schema: genericObjectSchema,
+  getter: syncFormulaSchema,
+  entityName: z.string().optional(),
+};
+
+type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;
+
+const genericSyncTableSchema = zodCompleteObject<GenericSyncTableDef & {isDynamic?: false}>({
+  ...baseSyncTableSchema,
+  // Add a fake discriminant here so that we can flag union errors as related to a non-matching discriminant
+  // and filter them out. A real regular sync table wouldn't specify `isDynamic` at all here, but including
+  // it in the validator like this helps zod flag it in the way we need.
+  isDynamic: zodDiscriminant(false).optional(),
+  getSchema: formulaMetadataSchema.optional(),
+}).strict();
+
+const genericDynamicSyncTableSchema = zodCompleteObject<
+  DynamicSyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>
+>({
+  ...baseSyncTableSchema,
+  isDynamic: zodDiscriminant(true),
+  getName: formulaMetadataSchema,
+  getDisplayUrl: formulaMetadataSchema,
+  listDynamicUrls: formulaMetadataSchema.optional(),
+  getSchema: formulaMetadataSchema,
+}).strict();
+
+const syncTableSchema = z.union([genericDynamicSyncTableSchema, genericSyncTableSchema]);
+
+// Make sure to call the refiners on this after removing legacyPackMetadataSchema.
+// (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
+// schema we actually use.)
+const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata>({
+  version: z
+    .string()
+    .regex(/^\d+(\.\d+){0,2}$/, 'Pack versions must use semantic versioning, e.g. "1", "1.0" or "1.0.0".'),
   defaultAuthentication: z.union(zodUnionInput(Object.values(defaultAuthenticationValidators))).optional(),
   networkDomains: z.array(z.string()).optional(),
-  exampleImages: z.array(z.string()).optional(),
-  exampleVideoIds: z.array(z.string()).optional(),
-  minimumFeatureSet: z.nativeEnum(FeatureSet).optional(),
-  quotas: z.any().optional(), // Moving to the UI
-  rateLimits: z.any().optional(), // Moving to the UI
-  formulaNamespace: z.string().optional(),
+  formulaNamespace: z.string().optional().refine(validateNamespace, {
+    message: 'Formula namespaces can only contain alphanumeric characters and underscores.',
+  }),
   systemConnectionAuthentication: z.union(zodUnionInput(systemAuthenticationValidators)).optional(),
   formulas: z.array(formulaMetadataSchema).optional().default([]),
   formats: z.array(formatMetadataSchema).optional().default([]),
-  syncTables: z.array(z.unknown()).optional().default([]),
-  isSystem: z.boolean().optional(), // Moving to UI/admin
-})
-  .refine(
-    data => {
-      if (data.formulas && data.formulas.length > 0) {
-        return data.formulaNamespace;
-      }
-      return true;
-    },
-    {message: 'A formula namespace must be provided whenever formulas are defined.', path: ['formulaNamespace']},
-  )
-  .refine(
-    data => {
-      const formulas = (data.formulas || []) as PackFormatMetadata[];
-      const formulaNames = new Set(formulas.map(f => f.name));
-      for (const format of data.formats || []) {
-        if (!formulaNames.has(format.formulaName)) {
-          return false;
+  syncTables: z.array(syncTableSchema).optional().default([]),
+});
+
+// The following largely copied from tokens.ts for parsing formula names.
+const letterChar = String.raw`\p{L}`;
+const numberChar = String.raw`\p{N}`;
+const wordChar = String.raw`${letterChar}${numberChar}_`;
+const regexLetterChar = String.raw`[${letterChar}]`;
+const regexWordChar = String.raw`[${wordChar}]`;
+const regexFormulaNameStr = String.raw`^${regexLetterChar}(?:${regexWordChar}+)?$`;
+const regexFormulaName = new RegExp(regexFormulaNameStr, 'u');
+
+function validateNamespace(namespace: string | undefined): boolean {
+  if (typeof namespace === 'undefined') {
+    return true;
+  }
+  return validateFormulaName(namespace);
+}
+
+function validateFormulaName(value: string): boolean {
+  return regexFormulaName.test(value);
+}
+
+function validateFormulas(schema: z.ZodObject<any>) {
+  return schema
+    .refine(
+      data => {
+        if (data.formulas && data.formulas.length > 0) {
+          return data.formulaNamespace;
         }
+        return true;
+      },
+      {message: 'A formula namespace must be provided whenever formulas are defined.', path: ['formulaNamespace']},
+    )
+    .refine(
+      data => {
+        const formulas = (data.formulas || []) as PackFormatMetadata[];
+        const formulaNames = new Set(formulas.map(f => f.name));
+        for (const format of data.formats || []) {
+          if (!formulaNames.has(format.formulaName)) {
+            return false;
+          }
+        }
+        return true;
+      },
+      {
+        // Annoying that the we can't be more precise and identify in the message which format had the issue;
+        // these error messages are static.
+        message:
+          'Could not find a formula for one or more matchers. Check that the "formulaName" for each matcher ' +
+          'matches the name of a formula defined in this pack.',
+        path: ['formats'],
+      },
+    );
+}
+
+// We temporarily allow our legacy packs to provide non-versioned data until we sufficiently migrate them.
+// But all fields must be optional, because this is the top-level object we use for validation,
+// so we must be able to pass validation while providing only fields from PackVersionMetadata.
+const legacyPackMetadataSchema = validateFormulas(
+  unrefinedPackVersionMetadataSchema.extend({
+    id: z.number().optional(),
+    name: z.string().nonempty().optional(),
+    shortDescription: z.string().nonempty().optional(),
+    description: z.string().nonempty().optional(),
+    permissionsDescription: z.string().optional(),
+    category: z.nativeEnum(PackCategory).optional(),
+    logoPath: z.string().optional(),
+    enabledConfigName: z.string().optional(),
+    exampleImages: z.array(z.string()).optional(),
+    exampleVideoIds: z.array(z.string()).optional(),
+    minimumFeatureSet: z.nativeEnum(FeatureSet).optional(),
+    quotas: z.any().optional(),
+    rateLimits: z.any().optional(),
+    isSystem: z.boolean().optional(),
+  }),
+).refine(
+  data => {
+    for (const syncTable of data.syncTables) {
+      if (!syncTable.schema?.identity) {
+        continue;
       }
-      return true;
-    },
-    {
-      // Annoying that the we can't be more precise and identify in the message which format had the issue;
-      // these error messages are static.
-      message:
-        'Could not find a formula for one or more matchers. Check that the "formulaName" for each matcher ' +
-        'matches the name of a formula defined in this pack.',
-      path: ['formats'],
-    },
-  );
+
+      const identityName = syncTable.schema.identity.name;
+      if (syncTable.schema.properties[identityName]) {
+        return false;
+      }
+    }
+
+    return true;
+  },
+  {
+    message: "Cannot have a sync table property with the same name as the sync table's schema identity.",
+  },
+);

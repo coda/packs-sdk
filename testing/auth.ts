@@ -1,7 +1,7 @@
-import type {AllCredentials} from './auth_types';
 import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
 import type {Credentials} from './auth_types';
+import type {CredentialsFile} from './auth_types';
 import type {MultiQueryParamCredentials} from './auth_types';
 import type {OAuth2Credentials} from './auth_types';
 import type {PackDefinition} from '../types';
@@ -12,6 +12,7 @@ import fs from 'fs';
 import {getManifestFromModule} from './helpers';
 import {launchOAuthServerFlow} from './oauth_server';
 import {makeRedirectUrl} from './oauth_server';
+import * as path from 'path';
 import {print} from './helpers';
 import {printAndExit} from './helpers';
 import {promptForInput} from './helpers';
@@ -19,25 +20,29 @@ import {readJSONFile} from './helpers';
 import {writeJSONFile} from './helpers';
 
 interface SetupAuthOptions {
-  credentialsFile?: string;
   oauthServerPort?: number;
 }
 
-export const DEFAULT_CREDENTIALS_FILE = '.coda/credentials.json';
+const CREDENTIALS_FILE_NAME = '.coda-credentials.json';
 export const DEFAULT_OAUTH_SERVER_PORT = 3000;
 
-export async function setupAuthFromModule(module: any, opts: SetupAuthOptions = {}): Promise<void> {
-  return setupAuth(await getManifestFromModule(module), opts);
+export async function setupAuthFromModule(
+  manifestPath: string,
+  module: any,
+  opts: SetupAuthOptions = {},
+): Promise<void> {
+  const manifestDir = path.dirname(manifestPath);
+  return setupAuth(manifestDir, getManifestFromModule(module), opts);
 }
 
-export function setupAuth(packDef: PackDefinition, opts: SetupAuthOptions = {}): void {
+export function setupAuth(manifestDir: string, packDef: PackDefinition, opts: SetupAuthOptions = {}): void {
   const {name, defaultAuthentication} = packDef;
   if (!defaultAuthentication) {
     return printAndExit(
       `The pack ${name} has no declared authentication. Provide a value for defaultAuthentication in the pack definition.`,
     );
   }
-  const handler = new CredentialHandler(name, defaultAuthentication, opts);
+  const handler = new CredentialHandler(manifestDir, name, defaultAuthentication, opts);
   switch (defaultAuthentication.type) {
     case AuthenticationType.None:
       return printAndExit(
@@ -67,26 +72,31 @@ export function setupAuth(packDef: PackDefinition, opts: SetupAuthOptions = {}):
 class CredentialHandler {
   private readonly _packName: string;
   private readonly _authDef: Authentication;
-  private readonly _credentialsFile: string;
+  private readonly _manifestDir: string;
   private readonly _oauthServerPort: number;
 
-  constructor(packName: string, authDef: Authentication, {credentialsFile, oauthServerPort}: SetupAuthOptions = {}) {
+  constructor(
+    manifestDir: string,
+    packName: string,
+    authDef: Authentication,
+    {oauthServerPort}: SetupAuthOptions = {},
+  ) {
     this._packName = packName;
     this._authDef = authDef;
-    this._credentialsFile = credentialsFile || DEFAULT_CREDENTIALS_FILE;
+    this._manifestDir = manifestDir;
     this._oauthServerPort = oauthServerPort || DEFAULT_OAUTH_SERVER_PORT;
   }
 
   private checkForExistingCredential(): Credentials | undefined {
-    const existingCredentials = readCredentialsFile(this._credentialsFile);
-    if (existingCredentials && existingCredentials.packs[this._packName]) {
+    const existingCredentials = readCredentialsFile(this._manifestDir);
+    if (existingCredentials) {
       const input = promptForInput(
         `Credentials already exist for ${this._packName}, press "y" to overwrite or "n" to cancel: `,
       );
       if (input.toLocaleLowerCase() !== 'y') {
         return process.exit(1);
       }
-      return existingCredentials.packs[this._packName];
+      return existingCredentials;
     }
   }
 
@@ -216,29 +226,25 @@ class CredentialHandler {
   }
 
   storeCredential(credentials: Credentials): void {
-    storeCredential(this._credentialsFile, this._packName, credentials);
+    storeCredential(this._manifestDir, credentials);
   }
 }
 
-export function storeCredential(credentialsFile: string, packName: string, credentials: Credentials): void {
-  const allCredentials: AllCredentials = readCredentialsFile(credentialsFile) || {packs: {}};
-  allCredentials.packs[packName] = credentials;
-  writeCredentialsFile(credentialsFile, allCredentials);
+export function storeCredential(manifestDir: string, credentials: Credentials): void {
+  const filename = path.join(manifestDir, CREDENTIALS_FILE_NAME);
+  writeCredentialsFile(filename, credentials);
 }
 
-export function storeCodaApiKey(apiKey: string, credentialsFile: string = DEFAULT_CREDENTIALS_FILE) {
-  const allCredentials: AllCredentials = readCredentialsFile(credentialsFile) || {packs: {}};
-  allCredentials.__coda__ = {apiKey};
-  writeCredentialsFile(credentialsFile, allCredentials);
+export function readCredentialsFile(manifestDir: string): Credentials | undefined {
+  const filename = path.join(manifestDir, CREDENTIALS_FILE_NAME);
+  const fileContents = readJSONFile(filename) as CredentialsFile | undefined;
+  return fileContents?.credentials;
 }
 
-export function readCredentialsFile(credentialsFile: string = DEFAULT_CREDENTIALS_FILE): AllCredentials | undefined {
-  return readJSONFile(credentialsFile);
-}
-
-function writeCredentialsFile(credentialsFile: string, allCredentials: AllCredentials): void {
+function writeCredentialsFile(credentialsFile: string, credentials: Credentials): void {
   const fileExisted = fs.existsSync(credentialsFile);
-  writeJSONFile(credentialsFile, allCredentials);
+  const fileContents: CredentialsFile = {credentials};
+  writeJSONFile(credentialsFile, fileContents);
   if (!fileExisted) {
     // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
     fs.chmodSync(credentialsFile, 0o600);

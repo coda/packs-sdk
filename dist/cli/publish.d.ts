@@ -3,5 +3,5 @@ interface PublishArgs {
     manifestFile: string;
     codaApiEndpoint: string;
 }
-export declare function handlePublish({ manifestFile, codaApiEndpoint }: Arguments<PublishArgs>): Promise<void>;
+export declare function handlePublish({ manifestFile, codaApiEndpoint }: Arguments<PublishArgs>): Promise<undefined>;
 export {};

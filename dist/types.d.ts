@@ -1,10 +1,8 @@
-import type { CodaFormula } from './api';
 import type { MetadataFormula } from './api';
 import type { PackFormulas } from './api';
 import type { SyncTable } from './api';
 import type { TypedStandardFormula } from './api';
 export declare type PackId = number;
-export declare type ProviderId = number;
 export declare enum PackCategory {
     CRM = "CRM",
     Calendar = "Calendar",
@@ -190,19 +188,42 @@ export interface RateLimits {
     overall?: RateLimit;
     perConnection?: RateLimit;
 }
-export interface PackDefinition {
+/**
+ * The definition of the contents of a Pack at a specific version. This is the
+ * heart of the implementation of a Pack.
+ */
+export interface PackVersionDefinition {
+    version: string;
+    /**
+     * If specified, the user must provide personal authentication credentials before using the pack.
+     */
+    defaultAuthentication?: Authentication;
+    /**
+     * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
+     * explicit connection is specified by the user.
+     */
+    systemConnectionAuthentication?: SystemAuthentication;
+    networkDomains?: string[];
+    formulaNamespace?: string;
+    formulas?: PackFormulas | TypedStandardFormula[];
+    formats?: Format[];
+    syncTables?: SyncTable[];
+}
+/**
+ * @deprecated use `#PackVersionDefinition`
+ *
+ * The legacy complete definition of a Pack including un-versioned metadata.
+ * This should only be used by legacy Coda pack implementations.
+ */
+export interface PackDefinition extends PackVersionDefinition {
     id: PackId;
     name: string;
     shortDescription: string;
     description: string;
     permissionsDescription?: string;
-    version: string;
-    providerId: ProviderId;
     category: PackCategory;
     logoPath: string;
     enabledConfigName?: string;
-    defaultAuthentication?: Authentication;
-    networkDomains?: string[];
     exampleImages?: string[];
     exampleVideoIds?: string[];
     minimumFeatureSet?: FeatureSet;
@@ -210,23 +231,9 @@ export interface PackDefinition {
         [featureSet in FeatureSet]: Quota;
     }>;
     rateLimits?: RateLimits;
-    formulaNamespace?: string;
-    /**
-     * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
-     * explicit connection is specified by the user.
-     */
-    systemConnectionAuthentication?: SystemAuthentication;
-    formulas?: PackFormulas | Array<TypedStandardFormula | CodaFormula>;
-    formats?: Format[];
-    syncTables?: SyncTable[];
     /**
      * Whether this is a pack that will be used by Coda internally and not exposed directly to users.
      */
     isSystem?: boolean;
-}
-export interface ProviderDefinition {
-    id: ProviderId;
-    name: string;
-    logoPath: string;
 }
 export {};

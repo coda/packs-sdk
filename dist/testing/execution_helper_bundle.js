@@ -11,7 +11,7 @@ var __export = (target, all) => {
   for (var name in all)
     __defProp(target, name, {get: all[name], enumerable: true});
 };
-var __exportStar = (target, module2, desc) => {
+var __reExport = (target, module2, desc) => {
   if (module2 && typeof module2 === "object" || typeof module2 === "function") {
     for (let key of __getOwnPropNames(module2))
       if (!__hasOwnProp.call(target, key) && key !== "default")
@@ -20,17 +20,11 @@ var __exportStar = (target, module2, desc) => {
   return target;
 };
 var __toModule = (module2) => {
-  return __exportStar(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? {get: () => module2.default, enumerable: true} : {value: module2, enumerable: true})), module2);
+  return __reExport(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? {get: () => module2.default, enumerable: true} : {value: module2, enumerable: true})), module2);
 };
 
 // node_modules/pascalcase/index.js
 var require_pascalcase = __commonJS((exports, module2) => {
-  /*!
-   * pascalcase <https://github.com/jonschlinkert/pascalcase>
-   *
-   * Copyright (c) 2015-present, Jon ("Schlink") Schlinkert.
-   * Licensed under the MIT License.
-   */
   var titlecase = (input) => input[0].toLocaleUpperCase() + input.slice(1);
   module2.exports = (value) => {
     if (value === null || value === void 0)
@@ -717,8 +711,8 @@ var require_callBound = __commonJS((exports, module2) => {
   };
 });
 
-// (disabled):node_modules/object-inspect/util.inspect.js
-var require_util_inspect = __commonJS(() => {
+// (disabled):node_modules/object-inspect/util.inspect
+var require_util = __commonJS(() => {
 });
 
 // node_modules/object-inspect/index.js
@@ -743,7 +737,7 @@ var require_object_inspect = __commonJS((exports, module2) => {
   var gOPS = Object.getOwnPropertySymbols;
   var symToString = typeof Symbol === "function" ? Symbol.prototype.toString : null;
   var isEnumerable = Object.prototype.propertyIsEnumerable;
-  var inspectCustom = require_util_inspect().custom;
+  var inspectCustom = require_util().custom;
   var inspectSymbol = inspectCustom && isSymbol(inspectCustom) ? inspectCustom : null;
   module2.exports = function inspect_(obj, options, depth, seen) {
     var opts = options || {};
@@ -2185,10 +2179,13 @@ var require_url_parse = __commonJS((exports, module2) => {
   module2.exports = Url;
 });
 
-// testing/bundle_execution_helper.ts
+// testing/execution_helper.ts
 __markAsModule(exports);
 __export(exports, {
+  executeFormula: () => executeFormula,
+  executeFormulaOrSync: () => executeFormulaOrSync,
   executeFormulaOrSyncWithRawParams: () => executeFormulaOrSyncWithRawParams,
+  executeSyncFormula: () => executeSyncFormula,
   executeSyncFormulaWithoutValidation: () => executeSyncFormulaWithoutValidation,
   findFormula: () => findFormula,
   findSyncFormula: () => findSyncFormula,
@@ -2337,9 +2334,6 @@ var UserVisibleError = class extends Error {
 };
 function isObjectPackFormula(fn) {
   return fn.resultType === Type.object;
-}
-function isCodaFormula(fn) {
-  return fn.isCodaFormula;
 }
 
 // helpers/ensure.ts
@@ -2737,7 +2731,7 @@ function validateArray(result, schema, context) {
   return arrayItemErrors;
 }
 
-// testing/bundle_execution_helper.ts
+// testing/execution_helper.ts
 async function executeSyncFormulaWithoutValidation(formula, params, context, maxIterations = 3) {
   const result = [];
   let iterations = 1;
@@ -2762,46 +2756,85 @@ async function executeFormulaOrSyncWithRawParams(manifest, formulaName, rawParam
     const formula = tryFindFormula(manifest, formulaName);
     if (formula) {
       const params = coerceParams(formula, rawParams);
-      validateParams(formula, params);
-      const result = await formula.execute(params, context);
-      validateResult(formula, result);
-      return result;
+      return await executeFormula(formula, params, context);
     }
     const syncFormula = tryFindSyncFormula(manifest, formulaName);
     if (syncFormula) {
       const params = coerceParams(syncFormula, rawParams);
-      validateParams(syncFormula, params);
-      const result = await executeSyncFormulaWithoutValidation(syncFormula, params, context);
-      validateResult(syncFormula, result);
-      return result;
+      return await executeSyncFormula(syncFormula, params, context);
     }
+    throw new Error(`Pack definition has no formula or sync called ${formulaName}.`);
   } catch (err) {
     throw wrapError(err);
   }
 }
+async function executeFormulaOrSync(manifest, formulaName, params, context) {
+  try {
+    const formula = tryFindFormula(manifest, formulaName);
+    if (formula) {
+      return await executeFormula(formula, params, context);
+    }
+    const syncFormula = tryFindSyncFormula(manifest, formulaName);
+    if (syncFormula) {
+      return await executeSyncFormula(syncFormula, params, context);
+    }
+    throw new Error(`Pack definition has no formula or sync called ${formulaName}.`);
+  } catch (err) {
+    throw wrapError(err);
+  }
+}
+async function executeFormula(formula, params, context, {validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true} = {}) {
+  if (shouldValidateParams) {
+    validateParams(formula, params);
+  }
+  let result;
+  try {
+    result = await formula.execute(params, context);
+  } catch (err) {
+    throw wrapError(err);
+  }
+  if (shouldValidateResult) {
+    validateResult(formula, result);
+  }
+  return result;
+}
+async function executeSyncFormula(formula, params, context, {
+  validateParams: shouldValidateParams = true,
+  validateResult: shouldValidateResult = true,
+  maxIterations = 3
+} = {}) {
+  if (shouldValidateParams) {
+    validateParams(formula, params);
+  }
+  const result = await executeSyncFormulaWithoutValidation(formula, params, context, maxIterations);
+  if (shouldValidateResult) {
+    validateResult(formula, result);
+  }
+  return result;
+}
 function findFormula(packDef, formulaNameWithNamespace) {
   const packFormulas = packDef.formulas;
   if (!packFormulas) {
-    throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas.`);
+    throw new Error(`Pack definition has no formulas.`);
   }
-  const [namespace, name] = formulaNameWithNamespace.split("::");
+  const [namespace, name] = formulaNameWithNamespace.includes("::") ? formulaNameWithNamespace.split("::") : [ensureExists(packDef.formulaNamespace), formulaNameWithNamespace];
   if (!(namespace && name)) {
     throw new Error(`Formula names must be specified as FormulaNamespace::FormulaName, but got "${formulaNameWithNamespace}".`);
   }
   const formulas = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
   if (!formulas || !formulas.length) {
-    throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formulas for namespace "${namespace}".`);
+    throw new Error(`Pack definition has no formulas for namespace "${namespace}".`);
   }
   for (const formula of formulas) {
-    if (formula.name === name && !isCodaFormula(formula)) {
+    if (formula.name === name) {
       return formula;
     }
   }
-  throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no formula "${name}" in namespace "${namespace}".`);
+  throw new Error(`Pack definition has no formula "${name}" in namespace "${namespace}".`);
 }
 function findSyncFormula(packDef, syncFormulaName) {
   if (!packDef.syncTables) {
-    throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no sync tables.`);
+    throw new Error(`Pack definition has no sync tables.`);
   }
   for (const syncTable of packDef.syncTables) {
     const syncFormula = syncTable.getter;
@@ -2809,7 +2842,7 @@ function findSyncFormula(packDef, syncFormulaName) {
       return syncFormula;
     }
   }
-  throw new Error(`Pack definition for ${packDef.name} (id ${packDef.id}) has no sync formula "${syncFormulaName}" in its sync tables.`);
+  throw new Error(`Pack definition has no sync formula "${syncFormulaName}" in its sync tables.`);
 }
 function tryFindFormula(packDef, formulaNameWithNamespace) {
   try {
@@ -2829,3 +2862,9 @@ function wrapError(err) {
   }
   return err;
 }
+/*!
+ * pascalcase <https://github.com/jonschlinkert/pascalcase>
+ *
+ * Copyright (c) 2015-present, Jon ("Schlink") Schlinkert.
+ * Licensed under the MIT License.
+ */

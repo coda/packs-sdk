@@ -1,6 +1,5 @@
 import {testHelper} from './test_helper';
 import {AuthenticationType} from '../types';
-import {FakePack} from './test_utils';
 import type {ResponseHandlerTemplate} from '../handler_templates';
 import type {Schema} from '../schema';
 import type {TypedStandardFormula} from '../api';
@@ -8,108 +7,53 @@ import {ValueType} from '../schema';
 import {assertCondition} from '../helpers/ensure';
 import {createFakePack} from './test_utils';
 import {executeFormulaFromPackDef} from '../testing/execution';
+import {executeFormulaOrSyncWithVM} from '../testing/execution';
 import {executeMetadataFormula} from '../testing/execution';
 import {executeSyncFormulaFromPackDef} from '../testing/execution';
+import {manifest as fakePack} from './packs/fake';
 import {makeBooleanParameter} from '../api';
 import {makeMetadataFormula} from '../api';
 import {makeNumericFormula} from '../api';
-import {makeNumericParameter} from '../api';
 import {makeObjectFormula} from '../api';
 import {makeObjectSchema} from '../schema';
 import {makeSimpleAutocompleteMetadataFormula} from '../api';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
-import {makeSyncTable} from '../api';
 import {newJsonFetchResponse} from '../testing/mocks';
 import {newMockExecutionContext} from '../testing/mocks';
 import sinon from 'sinon';
-import {withQueryParams} from '../helpers/url';
 
 describe('Execution', () => {
-  const fakePersonSchema = makeObjectSchema({
-    type: ValueType.Object,
-    primary: 'name',
-    id: 'name',
-    properties: {
-      name: {type: ValueType.String},
-    },
-    identity: {packId: FakePack.id, name: 'Person'},
-  });
-
-  const fakePack = createFakePack({
-    formulaNamespace: 'Fake',
-    formulas: [
-      makeNumericFormula({
-        name: 'Square',
-        description: 'Square a number',
-        examples: [],
-        parameters: [makeNumericParameter('value', 'A value to square.')],
-        execute: ([value]) => {
-          return value ** 2;
-        },
-      }),
-      makeStringFormula({
-        name: 'Lookup',
-        description: 'Lookup a value from a remote service',
-        examples: [],
-        parameters: [makeStringParameter('query', 'A query to look up.')],
-        execute: async ([query], context) => {
-          const url = withQueryParams('https://example.com/lookup', {query});
-          const response = await context.fetcher.fetch({method: 'GET', url});
-          return response.body.result;
-        },
-      }),
-    ],
-    syncTables: [
-      makeSyncTable('Classes', fakePersonSchema, {
-        name: 'Students',
-        description: "Gets students in a teacher's class",
-        execute: async ([teacher], context) => {
-          const {continuation} = context.sync;
-          const page = continuation?.page;
-          switch (teacher) {
-            case 'Smith':
-              if (!page || page === 1) {
-                return {
-                  result: [{name: 'Alice'}, {name: 'Bob'}],
-                  continuation: {page: 2},
-                };
-              }
-              if (page === 2) {
-                return {
-                  result: [{name: 'Chris'}, {name: 'Diana'}],
-                };
-              }
-            case 'Brown':
-              if (!page || page === 1) {
-                return {
-                  result: [{name: 'Annie'}, {name: 'Bryan'}],
-                  continuation: {page: 2},
-                };
-              }
-              if (page === 2) {
-                return {
-                  result: [{name: 'Christina'}, {name: 'Donald'}],
-                };
-              }
-            default:
-              return {} as any;
-          }
-        },
-        network: {hasSideEffect: false},
-        parameters: [makeStringParameter('teacher', 'teacher name')],
-        examples: [],
-      }),
-    ],
-  });
-
   it('executes a formula by name', async () => {
     const result = await executeFormulaFromPackDef(fakePack, 'Fake::Square', [5]);
     assert.equal(result, 25);
   });
 
+  it('executes a formula by name w/o namespace', async () => {
+    const result = await executeFormulaFromPackDef(fakePack, 'Square', [5]);
+    assert.equal(result, 25);
+  });
+
   it('executes a sync formula by name', async () => {
     const result = await executeSyncFormulaFromPackDef(fakePack, 'Students', ['Smith']);
+    assert.deepEqual(result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
+  });
+
+  it('executes a formula by name with VM', async () => {
+    const result = await executeFormulaOrSyncWithVM({
+      formulaName: 'Fake::Square',
+      params: [5],
+      manifestPath: `${__dirname}/packs/fake`,
+    });
+    assert.equal(result, 25);
+  });
+
+  it('executes a sync formula by name with VM', async () => {
+    const result = await executeFormulaOrSyncWithVM({
+      formulaName: 'Students',
+      params: ['Smith'],
+      manifestPath: `${__dirname}/packs/fake`,
+    });
     assert.deepEqual(result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
   });
 
@@ -133,28 +77,28 @@ describe('Execution', () => {
     it('no formulas', async () => {
       await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(createFakePack({formulas: undefined}), 'Foo::Bar', []),
-        /Pack definition for Fake Pack \(id 424242\) has no formulas./,
+        /Pack definition has no formulas./,
       );
     });
 
     it('malformed formula name', async () => {
       await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(fakePack, 'malformed', []),
-        /Formula names must be specified as FormulaNamespace::FormulaName, but got "malformed"./,
+        /Pack definition has no formula "malformed" in namespace "Fake"./,
       );
     });
 
     it('bad namespace', async () => {
       await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(fakePack, 'Foo::Bar', []),
-        /Pack definition for Fake Pack \(id 424242\) has no formula "Bar" in namespace "Foo"./,
+        /Pack definition has no formula "Bar" in namespace "Foo"./,
       );
     });
 
     it('non-existent formula', async () => {
       await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(fakePack, 'Fake::Foo', []),
-        /Pack definition for Fake Pack \(id 424242\) has no formula "Foo" in namespace "Fake"./,
+        /Pack definition has no formula "Foo" in namespace "Fake"./,
       );
     });
   });
@@ -370,14 +314,14 @@ describe('Execution', () => {
     it('no sync tables', async () => {
       await testHelper.willBeRejectedWith(
         executeSyncFormulaFromPackDef(createFakePack({formulas: undefined, syncTables: undefined}), 'Bar', []),
-        /Pack definition for Fake Pack \(id 424242\) has no sync tables./,
+        /Pack definition has no sync tables./,
       );
     });
 
     it('non-existent sync formula', async () => {
       await testHelper.willBeRejectedWith(
         executeSyncFormulaFromPackDef(fakePack, 'Foo', []),
-        /Pack definition for Fake Pack \(id 424242\) has no sync formula "Foo" in its sync tables./,
+        /Pack definition has no sync formula "Foo" in its sync tables./,
       );
     });
   });

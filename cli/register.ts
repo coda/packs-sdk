@@ -1,10 +1,11 @@
 import type {Arguments} from 'yargs';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
+import {isCodaError} from './errors';
 import open from 'open';
 import {printAndExit} from '../testing/helpers';
 import {promptForInput} from '../testing/helpers';
-import {storeCodaApiKey} from '../testing/auth';
+import {storeCodaApiKey} from './config_storage';
 
 interface RegisterArgs {
   apiToken?: string;
@@ -27,10 +28,14 @@ export async function handleRegister({apiToken, codaApiEndpoint}: Arguments<Regi
   const client = createCodaClient(apiToken, formattedEndpoint);
 
   try {
-    await client.whoami();
+    const response = await client.whoami();
+    if (isCodaError(response)) {
+      return printAndExit(`Invalid API token provided.`);
+    }
   } catch (err) {
-    const {statusCode, message} = JSON.parse(err.error);
-    printAndExit(`Invalid API token provided: ${statusCode} ${message}`);
+    return printAndExit(`Unexpected error while checking validity of API token: ${err}`);
   }
-  storeCodaApiKey(apiToken);
+
+  storeCodaApiKey(apiToken, process.env.PWD, codaApiEndpoint);
+  printAndExit(`API key validated and stored successfully!`, 0);
 }
