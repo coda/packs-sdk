@@ -91,7 +91,7 @@ export async function executeFormulaOrSyncWithVM({
   manifestPath: string;
   executionContext?: SyncExecutionContext;
 }) {
-  const bundlePath = await buildBundle(manifestPath, 'esbuild');
+  const bundlePath = await buildBundle(manifestPath);
 
   const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
 
@@ -109,7 +109,7 @@ export async function executeFormulaOrSyncWithRawParamsInVM({
   manifestPath: string;
   executionContext?: SyncExecutionContext;
 }) {
-  const bundlePath = await buildBundle(manifestPath, 'esbuild');
+  const bundlePath = await buildBundle(manifestPath);
 
   const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
 

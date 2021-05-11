@@ -23,33 +23,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.compilePackBundleESBuild = exports.build = exports.handleBuild = void 0;
-const logging_1 = require("../helpers/logging");
 const esbuild = __importStar(require("esbuild"));
 const fs_1 = __importDefault(require("fs"));
 const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
-const webpack_1 = __importDefault(require("webpack"));
-var Compiler;
-(function (Compiler) {
-    Compiler["esbuild"] = "esbuild";
-    Compiler["webpack"] = "webpack";
-})(Compiler || (Compiler = {}));
-async function handleBuild({ manifestFile, compiler }) {
-    await build(manifestFile, compiler);
+async function handleBuild({ manifestFile }) {
+    await build(manifestFile);
 }
 exports.handleBuild = handleBuild;
-async function build(manifestFile, compiler) {
+async function build(manifestFile) {
     const tempDir = fs_1.default.mkdtempSync(path_1.default.join(os_1.default.tmpdir(), 'coda-packs-'));
     const bundleFilename = path_1.default.join(tempDir, `bundle.js`);
-    const logger = new logging_1.ConsoleLogger();
-    switch (compiler) {
-        case Compiler.webpack:
-            await compilePackBundleWebpack(bundleFilename, manifestFile, logger);
-            break;
-        case Compiler.esbuild:
-        default:
-            await compilePackBundleESBuild(bundleFilename, manifestFile);
-    }
+    await compilePackBundleESBuild(bundleFilename, manifestFile);
     return bundleFilename;
 }
 exports.build = build;
@@ -65,45 +50,3 @@ async function compilePackBundleESBuild(bundleFilename, entrypoint) {
     await esbuild.build(options);
 }
 exports.compilePackBundleESBuild = compilePackBundleESBuild;
-async function compilePackBundleWebpack(bundleFilename, entrypoint, logger) {
-    logger.info(`... Bundle -> ${bundleFilename}`);
-    const config = {
-        devtool: 'source-map',
-        entry: entrypoint,
-        mode: 'development',
-        module: {
-            rules: [
-                {
-                    test: /\.[tj]s$/,
-                    use: {
-                        loader: 'ts-loader',
-                        options: {
-                            transpileOnly: true,
-                        },
-                    },
-                },
-            ],
-        },
-        name: 'PackBundle',
-        node: false,
-        output: {
-            path: path_1.default.dirname(bundleFilename),
-            filename: path_1.default.basename(bundleFilename),
-            libraryTarget: 'commonjs2',
-        },
-        resolve: {
-            extensions: ['.ts', '.js'],
-        },
-        target: 'async-node',
-    };
-    const compiler = webpack_1.default(config);
-    return new Promise((resolve, reject) => {
-        compiler.run((err, stats) => {
-            if (err) {
-                logger.warn(err.stack || err.message || err.toString());
-                return reject(err);
-            }
-            return resolve(stats);
-        });
-    });
-}

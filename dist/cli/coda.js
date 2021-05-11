@@ -68,13 +68,6 @@ if (require.main === module) {
         .command({
         command: 'build <manifestFile>',
         describe: 'Generate a bundle for your Pack',
-        builder: {
-            compiler: {
-                string: true,
-                default: 'esbuild',
-                desc: '`esbuild` or `webpack`',
-            },
-        },
         handler: build_1.handleBuild,
     })
         .command({
