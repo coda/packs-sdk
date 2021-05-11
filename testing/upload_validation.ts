@@ -75,6 +75,8 @@ export async function validatePackVersionMetadata(metadata: Record<string, any>)
   return validated.data as PackVersionMetadata;
 }
 
+// Note: This is called within Coda for validating user-provided authentication metadata
+// as part of Various connections.
 export function validateVariousAuthenticationMetadata(auth: any): VariousAuthentication {
   const validated = z.union(zodUnionInput(variousSupportedAuthenticationValidators)).safeParse(auth);
   if (validated.success) {
@@ -173,6 +175,7 @@ function zodCompleteObject<O, T extends ZodCompleteShape<O> = ZodCompleteShape<R
   return z.object<T>(shape);
 }
 
+// TODO(jonathan): Migrate all schemas to strict validation.
 function zodCompleteStrictObject<O, T extends ZodCompleteShape<O> = ZodCompleteShape<Required<O>>>(shape: T) {
   return z.strictObject<T>(shape);
 }
