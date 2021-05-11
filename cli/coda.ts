@@ -29,8 +29,7 @@ if (require.main === module) {
         } as Options,
         vm: {
           boolean: true,
-          desc:
-            'Execute the requested command in a virtual machine that mimics the environment Coda uses to execute Packs.',
+          desc: 'Execute the requested command in a virtual machine that mimics the environment Coda uses to execute Packs.',
         } as Options,
       },
     })
@@ -67,13 +66,6 @@ if (require.main === module) {
     .command({
       command: 'build <manifestFile>',
       describe: 'Generate a bundle for your Pack',
-      builder: {
-        compiler: {
-          string: true,
-          default: 'esbuild',
-          desc: '`esbuild` or `webpack`',
-        } as Options,
-      },
       handler: handleBuild,
     })
     .command({

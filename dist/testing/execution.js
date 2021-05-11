@@ -64,13 +64,13 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifestPath, 
 }
 exports.executeFormulaOrSyncFromCLI = executeFormulaOrSyncFromCLI;
 async function executeFormulaOrSyncWithVM({ formulaName, params, manifestPath, executionContext = mocks_2.newMockSyncExecutionContext(), }) {
-    const bundlePath = await build_1.build(manifestPath, 'esbuild');
+    const bundlePath = await build_1.build(manifestPath);
     const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
     return ivmHelper.executeFormulaOrSync(ivmContext, formulaName, params);
 }
 exports.executeFormulaOrSyncWithVM = executeFormulaOrSyncWithVM;
 async function executeFormulaOrSyncWithRawParamsInVM({ formulaName, params: rawParams, manifestPath, executionContext = mocks_2.newMockSyncExecutionContext(), }) {
-    const bundlePath = await build_1.build(manifestPath, 'esbuild');
+    const bundlePath = await build_1.build(manifestPath);
     const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
     return ivmHelper.executeFormulaOrSyncWithRawParams(ivmContext, formulaName, rawParams);
 }
