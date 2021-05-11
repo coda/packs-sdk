@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validatePackVersionMetadata = exports.PackMetadataValidationError = void 0;
+exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = void 0;
 const schema_1 = require("../schema");
 const types_1 = require("../types");
 const types_2 = require("../types");
@@ -56,6 +56,16 @@ async function validatePackVersionMetadata(metadata) {
     return validated.data;
 }
 exports.validatePackVersionMetadata = validatePackVersionMetadata;
+// Note: This is called within Coda for validating user-provided authentication metadata
+// as part of Various connections.
+function validateVariousAuthenticationMetadata(auth) {
+    const validated = z.union(zodUnionInput(variousSupportedAuthenticationValidators)).safeParse(auth);
+    if (validated.success) {
+        return auth;
+    }
+    throw new PackMetadataValidationError('Various authentication failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
+}
+exports.validateVariousAuthenticationMetadata = validateVariousAuthenticationMetadata;
 function zodErrorDetailToValidationError(subError) {
     var _a;
     // Top-level errors for union types are totally useless, they just say "invalid input",
@@ -131,6 +141,10 @@ function zodPathToPathString(zodPath) {
 function zodCompleteObject(shape) {
     return z.object(shape);
 }
+// TODO(jonathan): Migrate all schemas to strict validation.
+function zodCompleteStrictObject(shape) {
+    return z.strictObject(shape);
+}
 function zodDiscriminant(value) {
     return z.union([z.string(), z.number(), z.boolean(), z.undefined()]).refine(data => data === value, {
         message: 'Non-matching discriminant',
@@ -161,39 +175,39 @@ const baseAuthenticationValidators = {
     postSetup: z.array(setEndpointPostSetupValidator).optional(),
 };
 const defaultAuthenticationValidators = {
-    [types_1.AuthenticationType.None]: zodCompleteObject({
+    [types_1.AuthenticationType.None]: zodCompleteStrictObject({
         type: zodDiscriminant(types_1.AuthenticationType.None),
     }),
-    [types_1.AuthenticationType.HeaderBearerToken]: zodCompleteObject({
+    [types_1.AuthenticationType.HeaderBearerToken]: zodCompleteStrictObject({
         type: zodDiscriminant(types_1.AuthenticationType.HeaderBearerToken),
         ...baseAuthenticationValidators,
     }),
-    [types_1.AuthenticationType.CodaApiHeaderBearerToken]: zodCompleteObject({
+    [types_1.AuthenticationType.CodaApiHeaderBearerToken]: zodCompleteStrictObject({
         type: zodDiscriminant(types_1.AuthenticationType.CodaApiHeaderBearerToken),
         deferConnectionSetup: z.boolean().optional(),
         shouldAutoAuthSetup: z.boolean().optional(),
         ...baseAuthenticationValidators,
     }),
-    [types_1.AuthenticationType.CustomHeaderToken]: zodCompleteObject({
+    [types_1.AuthenticationType.CustomHeaderToken]: zodCompleteStrictObject({
         type: zodDiscriminant(types_1.AuthenticationType.CustomHeaderToken),
         headerName: z.string(),
         tokenPrefix: z.string().optional(),
         ...baseAuthenticationValidators,
     }),
-    [types_1.AuthenticationType.QueryParamToken]: zodCompleteObject({
+    [types_1.AuthenticationType.QueryParamToken]: zodCompleteStrictObject({
         type: zodDiscriminant(types_1.AuthenticationType.QueryParamToken),
         paramName: z.string(),
         ...baseAuthenticationValidators,
     }),
-    [types_1.AuthenticationType.MultiQueryParamToken]: zodCompleteObject({
+    [types_1.AuthenticationType.MultiQueryParamToken]: zodCompleteStrictObject({
         type: zodDiscriminant(types_1.AuthenticationType.MultiQueryParamToken),
-        params: z.array(zodCompleteObject({
+        params: z.array(zodCompleteStrictObject({
             name: z.string(),
             description: z.string(),
         })),
         ...baseAuthenticationValidators,
     }),
-    [types_1.AuthenticationType.OAuth2]: zodCompleteObject({
+    [types_1.AuthenticationType.OAuth2]: zodCompleteStrictObject({
         type: zodDiscriminant(types_1.AuthenticationType.OAuth2),
         authorizationUrl: z.string(),
         tokenUrl: z.string(),
@@ -206,27 +220,45 @@ const defaultAuthenticationValidators = {
         tokenQueryParam: z.string().optional(),
         ...baseAuthenticationValidators,
     }),
-    [types_1.AuthenticationType.WebBasic]: zodCompleteObject({
+    [types_1.AuthenticationType.WebBasic]: zodCompleteStrictObject({
         type: zodDiscriminant(types_1.AuthenticationType.WebBasic),
-        uxConfig: zodCompleteObject({
+        uxConfig: zodCompleteStrictObject({
             placeholderUsername: z.string().optional(),
             placeholderPassword: z.string().optional(),
             usernameOnly: z.boolean().optional(),
         }),
         ...baseAuthenticationValidators,
     }),
-    [types_1.AuthenticationType.AWSSignature4]: zodCompleteObject({
+    [types_1.AuthenticationType.AWSSignature4]: zodCompleteStrictObject({
         type: zodDiscriminant(types_1.AuthenticationType.AWSSignature4),
         service: z.string(),
         ...baseAuthenticationValidators,
     }),
-    [types_1.AuthenticationType.Various]: zodCompleteObject({
+    [types_1.AuthenticationType.Various]: zodCompleteStrictObject({
         type: zodDiscriminant(types_1.AuthenticationType.Various),
     }),
 };
-const systemAuthenticationTypes = Object.values(types_1.AuthenticationType).filter(authType => ![types_1.AuthenticationType.None, types_1.AuthenticationType.CodaApiHeaderBearerToken, types_1.AuthenticationType.OAuth2].includes(authType));
+const systemAuthenticationTypes = {
+    [types_1.AuthenticationType.HeaderBearerToken]: true,
+    [types_1.AuthenticationType.CustomHeaderToken]: true,
+    [types_1.AuthenticationType.MultiQueryParamToken]: true,
+    [types_1.AuthenticationType.QueryParamToken]: true,
+    [types_1.AuthenticationType.WebBasic]: true,
+    [types_1.AuthenticationType.AWSSignature4]: true,
+};
 const systemAuthenticationValidators = Object.entries(defaultAuthenticationValidators)
-    .filter(([authType]) => systemAuthenticationTypes.includes(authType))
+    .filter(([authType]) => authType in systemAuthenticationTypes)
+    .map(([_authType, schema]) => schema);
+const variousSupportedAuthenticationTypes = {
+    [types_1.AuthenticationType.HeaderBearerToken]: true,
+    [types_1.AuthenticationType.CustomHeaderToken]: true,
+    [types_1.AuthenticationType.MultiQueryParamToken]: true,
+    [types_1.AuthenticationType.QueryParamToken]: true,
+    [types_1.AuthenticationType.WebBasic]: true,
+    [types_1.AuthenticationType.None]: true,
+};
+const variousSupportedAuthenticationValidators = Object.entries(defaultAuthenticationValidators)
+    .filter(([authType]) => authType in variousSupportedAuthenticationTypes)
     .map(([_authType, schema]) => schema);
 const primitiveUnion = z.union([z.number(), z.string(), z.boolean(), z.date()]);
 const paramDefValidator = zodCompleteObject({

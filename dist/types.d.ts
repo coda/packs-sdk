@@ -1,3 +1,4 @@
+import type { $Values } from './type_utils';
 import type { MetadataFormula } from './api';
 import type { PackFormulas } from './api';
 import type { SyncTable } from './api';
@@ -140,7 +141,9 @@ export interface VariousAuthentication {
 }
 export declare type Authentication = NoAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSSignature4Authentication | VariousAuthentication;
 export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSSignature4Authentication;
+export declare type SystemAuthenticationTypes = $Values<Pick<SystemAuthentication, 'type'>>;
 export declare type VariousSupportedAuthentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication;
+export declare type VariousSupportedAuthenticationTypes = $Values<Pick<VariousSupportedAuthentication, 'type'>>;
 export interface Format {
     name: string;
     formulaNamespace: string;

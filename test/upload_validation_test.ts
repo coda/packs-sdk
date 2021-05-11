@@ -24,6 +24,7 @@ import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
 import {makeSyncTable} from '../api';
 import {validatePackVersionMetadata} from '../testing/upload_validation';
+import {validateVariousAuthenticationMetadata} from '../testing/upload_validation';
 
 describe('Pack metadata Validation', () => {
   async function validateJson(obj: Record<string, any>) {
@@ -837,5 +838,40 @@ describe('Pack metadata Validation', () => {
         },
       ]);
     });
+  });
+
+  describe('validateVariousAuthenticationMetadata', () => {
+    it('succeeds', () => {
+      assert.ok(validateVariousAuthenticationMetadata({type: AuthenticationType.None}));
+      assert.ok(validateVariousAuthenticationMetadata({
+        type: AuthenticationType.HeaderBearerToken,
+      }));
+      assert.ok(validateVariousAuthenticationMetadata({
+        type: AuthenticationType.CustomHeaderToken,
+        headerName: 'MyHeader',
+      }));
+    });
+
+    it('fails on invalid auth type', () => {
+      assert.throws(() => validateVariousAuthenticationMetadata({type: AuthenticationType.OAuth2}));
+    });
+
+    it('fails on invalid auth type', () => {
+      assert.throws(() => validateVariousAuthenticationMetadata({
+        type: AuthenticationType.CustomHeaderToken,
+      }));
+      assert.throws(() => validateVariousAuthenticationMetadata({
+        type: AuthenticationType.CustomHeaderToken,
+        headerName: {
+          not: 'a string',
+        },
+      }));
+      assert.throws(() => validateVariousAuthenticationMetadata({
+        type: AuthenticationType.CustomHeaderToken,
+        headerName: 'MyHeader',
+        evilData: 0xDEADBEEF,
+      }));
+    });
+
   });
 });
