@@ -1,3 +1,4 @@
+import type {$Values} from './type_utils';
 import type {MetadataFormula} from './api';
 import type {PackFormulas} from './api';
 import type {SyncTable} from './api';
@@ -198,6 +199,8 @@ export type SystemAuthentication =
   | WebBasicAuthentication
   | AWSSignature4Authentication;
 
+export type SystemAuthenticationTypes = $Values<Pick<SystemAuthentication, 'type'>>;
+
 export type VariousSupportedAuthentication =
   | NoAuthentication
   | HeaderBearerTokenAuthentication
@@ -205,6 +208,8 @@ export type VariousSupportedAuthentication =
   | QueryParamTokenAuthentication
   | MultiQueryParamTokenAuthentication
   | WebBasicAuthentication;
+
+export type VariousSupportedAuthenticationTypes = $Values<Pick<VariousSupportedAuthentication, 'type'>>;
 
 export interface Format {
   name: string;
