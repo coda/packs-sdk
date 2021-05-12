@@ -129,9 +129,17 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
   readonly isSystem?: boolean;
 }
 
+export enum NetworkConnection {
+  None = 'none',
+  Optional = 'optional',
+  Required = ' required',
+}
+
 export interface Network {
   readonly hasSideEffect?: boolean;
+  // DEPRECATED. To be removed.
   readonly requiresConnection?: boolean;
+  readonly connection?: NetworkConnection;
 }
 
 // Fetcher APIs
