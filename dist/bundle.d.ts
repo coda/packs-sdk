@@ -258,7 +258,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 	 */
 	readonly isSystem?: boolean;
 }
-declare enum NetworkConnection {
+export declare enum NetworkConnection {
 	None = "none",
 	Optional = "optional",
 	Required = " required"
