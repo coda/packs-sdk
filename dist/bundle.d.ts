@@ -261,7 +261,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 export declare enum NetworkConnection {
 	None = "none",
 	Optional = "optional",
-	Required = " required"
+	Required = "required"
 }
 export interface Network {
 	readonly hasSideEffect?: boolean;

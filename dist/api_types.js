@@ -43,7 +43,7 @@ var NetworkConnection;
 (function (NetworkConnection) {
     NetworkConnection["None"] = "none";
     NetworkConnection["Optional"] = "optional";
-    NetworkConnection["Required"] = " required";
+    NetworkConnection["Required"] = "required";
 })(NetworkConnection = exports.NetworkConnection || (exports.NetworkConnection = {}));
 // Fetcher APIs
 const ValidFetchMethods = [

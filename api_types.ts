@@ -132,7 +132,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 export enum NetworkConnection {
   None = 'none',
   Optional = 'optional',
-  Required = ' required',
+  Required = 'required',
 }
 
 export interface Network {
