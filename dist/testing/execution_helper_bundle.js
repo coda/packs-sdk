@@ -2256,7 +2256,7 @@ var NetworkConnection;
 (function(NetworkConnection2) {
   NetworkConnection2["None"] = "none";
   NetworkConnection2["Optional"] = "optional";
-  NetworkConnection2["Required"] = " required";
+  NetworkConnection2["Required"] = "required";
 })(NetworkConnection || (NetworkConnection = {}));
 var PrecannedDateRange;
 (function(PrecannedDateRange2) {
