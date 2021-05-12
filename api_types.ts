@@ -137,7 +137,7 @@ export enum NetworkConnection {
 
 export interface Network {
   readonly hasSideEffect?: boolean;
-  // DEPRECATED. To be removed.
+  /**  @deprecated use `connection` instead */
   readonly requiresConnection?: boolean;
   readonly connection?: NetworkConnection;
 }
