@@ -114,7 +114,7 @@ export type DefaultValueType<T extends UnionType> = T extends ArrayType<Type.dat
 export interface CommonPackFormulaDef<T extends ParamDefs> {
   readonly name: string;
   readonly description: string;
-  readonly examples: Array<{params: PackFormulaValue[]; result: PackFormulaResult}>;
+  readonly examples?: Array<{params: PackFormulaValue[]; result: PackFormulaResult}>;
   readonly parameters: T;
   readonly varargParameters?: ParamDefs;
   readonly network?: Network;
@@ -143,13 +143,7 @@ export interface Network {
 }
 
 // Fetcher APIs
-const ValidFetchMethods = [
-  'GET',
-  'PATCH',
-  'POST',
-  'PUT',
-  'DELETE',
-] as const;
+const ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE'] as const;
 export type FetchMethodType = typeof ValidFetchMethods[number];
 
 // Copied from https://developer.mozilla.org/en-US/docs/Web/API/Request

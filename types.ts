@@ -217,7 +217,6 @@ export interface Format {
   formulaName: string;
   hasNoConnection?: boolean;
   instructions?: string;
-  logoPath?: string;
   matchers?: RegExp[];
   placeholder?: string;
 }

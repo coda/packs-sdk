@@ -910,11 +910,7 @@ interface MyFormulaResponse {
 
 ## Assets
 
-The `PackDefinition` asks you to specify a `logoPath` to a logo image for your pack.
-This should be a `png` or `svg` in a subdirectory called `assets`.
-
-This should be a square image ideally at least 200 pixels per side and with
-a transparent background.
+Assets like your pack's logo should be uploaded via the Pack management UI.
 
 ## Reference
 

@@ -56,7 +56,7 @@ export declare type DefaultValueType<T extends UnionType> = T extends ArrayType<
 export interface CommonPackFormulaDef<T extends ParamDefs> {
     readonly name: string;
     readonly description: string;
-    readonly examples: Array<{
+    readonly examples?: Array<{
         params: PackFormulaValue[];
         result: PackFormulaResult;
     }>;

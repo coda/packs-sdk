@@ -276,10 +276,12 @@ const commonPackFormulaSchema = {
         .string()
         .refine(validateFormulaName, { message: 'Formula names can only contain alphanumeric characters and underscores.' }),
     description: z.string(),
-    examples: z.array(z.object({
+    examples: z
+        .array(z.object({
         params: z.union([primitiveUnion, z.array(primitiveUnion)]),
         result: z.any(),
-    })),
+    }))
+        .optional(),
     parameters: z.array(paramDefValidator),
     varargParameters: z.array(paramDefValidator).optional(),
     network: zodCompleteObject({
@@ -425,7 +427,6 @@ const formatMetadataSchema = zodCompleteObject({
     formulaName: z.string(),
     hasNoConnection: z.boolean().optional(),
     instructions: z.string().optional(),
-    logoPath: z.string().optional(),
     placeholder: z.string().optional(),
     matchers: z.array(z.string()),
 });

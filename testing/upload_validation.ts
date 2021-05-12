@@ -290,7 +290,7 @@ const systemAuthenticationTypes: {[key in SystemAuthenticationTypes]: true} = {
   [AuthenticationType.QueryParamToken]: true,
   [AuthenticationType.WebBasic]: true,
   [AuthenticationType.AWSSignature4]: true,
-}
+};
 
 const systemAuthenticationValidators = Object.entries(defaultAuthenticationValidators)
   .filter(([authType]) => authType in systemAuthenticationTypes)
@@ -303,7 +303,7 @@ const variousSupportedAuthenticationTypes: {[key in VariousSupportedAuthenticati
   [AuthenticationType.QueryParamToken]: true,
   [AuthenticationType.WebBasic]: true,
   [AuthenticationType.None]: true,
-}
+};
 
 const variousSupportedAuthenticationValidators = Object.entries(defaultAuthenticationValidators)
   .filter(([authType]) => authType in variousSupportedAuthenticationTypes)
@@ -326,12 +326,14 @@ const commonPackFormulaSchema = {
     .string()
     .refine(validateFormulaName, {message: 'Formula names can only contain alphanumeric characters and underscores.'}),
   description: z.string(),
-  examples: z.array(
-    z.object({
-      params: z.union([primitiveUnion, z.array(primitiveUnion)]),
-      result: z.any(),
-    }),
-  ),
+  examples: z
+    .array(
+      z.object({
+        params: z.union([primitiveUnion, z.array(primitiveUnion)]),
+        result: z.any(),
+      }),
+    )
+    .optional(),
   parameters: z.array(paramDefValidator),
   varargParameters: z.array(paramDefValidator).optional(),
   network: zodCompleteObject<Network>({
@@ -504,7 +506,6 @@ const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   formulaName: z.string(),
   hasNoConnection: z.boolean().optional(),
   instructions: z.string().optional(),
-  logoPath: z.string().optional(), // Should move to the UI somehow
   placeholder: z.string().optional(),
   matchers: z.array(z.string()),
 });

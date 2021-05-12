@@ -46,13 +46,7 @@ var NetworkConnection;
     NetworkConnection["Required"] = "required";
 })(NetworkConnection = exports.NetworkConnection || (exports.NetworkConnection = {}));
 // Fetcher APIs
-const ValidFetchMethods = [
-    'GET',
-    'PATCH',
-    'POST',
-    'PUT',
-    'DELETE',
-];
+const ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE'];
 // A mapping exists in coda that allows these to show up in the UI.
 // If adding new values here, add them to that mapping and vice versa.
 var PrecannedDateRange;
