@@ -662,7 +662,6 @@ const formulaMetadataSchema = z
 });
 const formatMetadataSchema = zodCompleteObject({
     name: z.string(),
-    formulaNamespace: z.string(),
     formulaName: z.string(),
     hasNoConnection: z.boolean().optional(),
     instructions: z.string().optional(),

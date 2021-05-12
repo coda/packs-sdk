@@ -1,3 +1,7 @@
+/// <reference types="chai" />
+/// <reference types="mocha" />
+/// <reference types="node" />
+
 /** Returns the codomain for a map-like type. */
 export declare type $Values<S> = S[keyof S];
 /** Omits properties over a union type, only if the union member has that property. */
@@ -2780,12 +2784,15 @@ export interface Format {
 	 * The name of this column format. This will show to users in the column type chooser.
 	 */
 	name: string;
+<<<<<<< HEAD
 	/** @deprecated Namespaces are being removed from the product. */
 	formulaNamespace: string;
 	/**
 	 * The name of the formula to invoke for values in columns using this format.
 	 * This must correspond to the name of a regular, public formula defined in this pack.
 	 */
+=======
+>>>>>>> b33b5536 (fix)
 	formulaName: string;
 	/** @deprecated No longer needed, will be inferred from the referenced formula. */
 	hasNoConnection?: boolean;

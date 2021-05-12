@@ -1328,7 +1328,6 @@ describe('Pack metadata Validation', () => {
           formats: [
             {
               name: 'MyFormat',
-              formulaNamespace: 'MyNamespace',
               formulaName: 'MyFormula',
               hasNoConnection: true,
               instructions: 'some instructions',
@@ -1354,7 +1353,6 @@ describe('Pack metadata Validation', () => {
           formats: [
             {
               name: 'MyFormat',
-              formulaNamespace: 'MyNamespace',
               formulaName: 'Unknown',
               matchers: ['/some compiled regex/i'],
             },
@@ -1416,7 +1414,6 @@ describe('Pack metadata Validation', () => {
           formats: [
             {
               name: 'MyFormat',
-              formulaNamespace: 'MyNamespace',
               formulaName: 'MyFormula',
               matchers: ['/some compiled regex/i'],
             },
@@ -1445,7 +1442,6 @@ describe('Pack metadata Validation', () => {
           formats: [
             {
               name: 'MyFormat',
-              formulaNamespace: 'MyNamespace',
               formulaName: 'MyFormula',
               matchers: ['/some compiled regex/i'],
             },
