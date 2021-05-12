@@ -73,9 +73,15 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
      */
     readonly isSystem?: boolean;
 }
+export declare enum NetworkConnection {
+    None = "none",
+    Optional = "optional",
+    Required = " required"
+}
 export interface Network {
     readonly hasSideEffect?: boolean;
     readonly requiresConnection?: boolean;
+    readonly connection?: NetworkConnection;
 }
 declare const ValidFetchMethods: readonly ["GET", "PATCH", "POST", "PUT", "DELETE"];
 export declare type FetchMethodType = typeof ValidFetchMethods[number];

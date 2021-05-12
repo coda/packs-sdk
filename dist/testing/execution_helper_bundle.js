@@ -2252,6 +2252,12 @@ var Type;
 function isArrayType(obj) {
   return obj && obj.type === "array" && typeof obj.items === "number";
 }
+var NetworkConnection;
+(function(NetworkConnection2) {
+  NetworkConnection2["None"] = "none";
+  NetworkConnection2["Optional"] = "optional";
+  NetworkConnection2["Required"] = " required";
+})(NetworkConnection || (NetworkConnection = {}));
 var PrecannedDateRange;
 (function(PrecannedDateRange2) {
   PrecannedDateRange2["Yesterday"] = "yesterday";
