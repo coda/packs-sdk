@@ -27,8 +27,10 @@ const esbuild = __importStar(require("esbuild"));
 const fs_1 = __importDefault(require("fs"));
 const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
+const helpers_1 = require("../testing/helpers");
 async function handleBuild({ manifestFile }) {
-    await build(manifestFile);
+    const builtFilename = await build(manifestFile);
+    helpers_1.print(`Pack built successfully. Compiled output is in ${builtFilename}`);
 }
 exports.handleBuild = handleBuild;
 async function build(manifestFile) {
