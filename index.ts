@@ -18,6 +18,8 @@ export {SyncInterval} from './types';
 export type {SyncQuota} from './types';
 export type {SystemAuthentication} from './types';
 export type {WebBasicAuthentication} from './types';
+export type {VariousAuthentication} from './types';
+export type {VariousSupportedAuthentication} from './types';
 
 // Compiler interfaces
 export type {PackFormatMetadata} from './compiled_types';
