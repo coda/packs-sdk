@@ -2,6 +2,7 @@ import type {ArraySchema} from './schema';
 import type {ArrayType} from './api_types';
 import type {CommonPackFormulaDef} from './api_types';
 import type {ExecutionContext} from './api_types';
+import {NetworkConnection} from './api_types';
 import type {NumberSchema} from './schema';
 import type {ObjectSchema} from './schema';
 import type {PackFormulaResult} from './api_types';
@@ -448,6 +449,7 @@ export function makeMetadataFormula(
     examples: [],
     network: {
       hasSideEffect: false,
+      connection: NetworkConnection.Required,
       requiresConnection: true,
     },
   });

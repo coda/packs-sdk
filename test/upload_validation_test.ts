@@ -4,6 +4,7 @@ import {AuthenticationType} from '../types';
 import {DefaultConnectionType} from '../types';
 import type {GenericObjectSchema} from '../schema';
 import type {Network} from '../api_types';
+import {NetworkConnection} from '../api_types';
 import type {PackFormulaMetadata} from '../api';
 import type {PackMetadataValidationError} from '../testing/upload_validation';
 import type {PackVersionMetadata} from '../compiled_types';
@@ -226,6 +227,10 @@ describe('Pack metadata Validation', () => {
         {hasSideEffect: true},
         {hasSideEffect: false},
         {hasSideEffect: true, requiresConnection: false},
+        {connection: NetworkConnection.None},
+        {connection: NetworkConnection.Optional},
+        {connection: NetworkConnection.Required},
+        {hasSideEffect: true, connection: NetworkConnection.Optional},        
       ];
       for (const network of networks) {
         const formula = makeStringFormula({

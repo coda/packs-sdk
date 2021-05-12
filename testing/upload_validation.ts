@@ -12,6 +12,7 @@ import type {HeaderBearerTokenAuthentication} from '../types';
 import type {Identity} from '../schema';
 import type {MultiQueryParamTokenAuthentication} from '../types';
 import type {Network} from '../api_types';
+import {NetworkConnection} from '../api_types';
 import type {NoAuthentication} from '../types';
 import {NumberHintValueTypes} from '../schema';
 import type {NumberSchema} from '../schema';
@@ -336,6 +337,7 @@ const commonPackFormulaSchema = {
   network: zodCompleteObject<Network>({
     hasSideEffect: z.boolean().optional(),
     requiresConnection: z.boolean().optional(),
+    connection: z.nativeEnum(NetworkConnection).optional(),
   }).optional(),
   cacheTtlSecs: z.number().min(0).optional(),
   isExperimental: z.boolean().optional(),
