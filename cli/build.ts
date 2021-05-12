@@ -3,13 +3,15 @@ import * as esbuild from 'esbuild';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import {print} from '../testing/helpers';
 
 interface BuildArgs {
   manifestFile: string;
 }
 
 export async function handleBuild({manifestFile}: Arguments<BuildArgs>) {
-  await build(manifestFile);
+  const builtFilename = await build(manifestFile);
+  print(`Pack built successfully. Compiled output is in ${builtFilename}`);
 }
 
 export async function build(manifestFile: string): Promise<string> {
