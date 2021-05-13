@@ -270,7 +270,7 @@ const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> 
       placeholderUsername: z.string().optional(),
       placeholderPassword: z.string().optional(),
       usernameOnly: z.boolean().optional(),
-    }),
+    }).optional(),
     ...baseAuthenticationValidators,
   }),
   [AuthenticationType.AWSSignature4]: zodCompleteStrictObject<AWSSignature4Authentication>({
