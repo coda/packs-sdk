@@ -271,10 +271,10 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     request: RequestHandlerTemplate;
     description: string;
     name: string;
-    examples: {
+    examples?: {
         params: import("./api_types").PackFormulaValue[];
         result: PackFormulaResult;
-    }[];
+    }[] | undefined;
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
     network?: import("./api_types").Network | undefined;

@@ -49,7 +49,7 @@ describe('Pack metadata Validation', () => {
 
   it('wrong top-level types', async () => {
     const metadata = 'asdf';
-    const err = await validateJsonAndAssertFails((metadata as unknown) as Record<string, any>);
+    const err = await validateJsonAndAssertFails(metadata as unknown as Record<string, any>);
     assert.deepEqual(err.validationErrors, [{path: '', message: 'Expected object, received string'}]);
   });
 
@@ -230,7 +230,7 @@ describe('Pack metadata Validation', () => {
         {connection: NetworkConnection.None},
         {connection: NetworkConnection.Optional},
         {connection: NetworkConnection.Required},
-        {hasSideEffect: true, connection: NetworkConnection.Optional},        
+        {hasSideEffect: true, connection: NetworkConnection.Optional},
       ];
       for (const network of networks) {
         const formula = makeStringFormula({
@@ -430,7 +430,6 @@ describe('Pack metadata Validation', () => {
         assert.deepEqual(invalidFormulaErrors.validationErrors, [
           {path: 'syncTables[0].getter.name', message: 'Required'},
           {path: 'syncTables[0].getter.description', message: 'Required'},
-          {path: 'syncTables[0].getter.examples', message: 'Required'},
           {path: 'syncTables[0].getter.parameters', message: 'Required'},
         ]);
       });
@@ -848,13 +847,17 @@ describe('Pack metadata Validation', () => {
   describe('validateVariousAuthenticationMetadata', () => {
     it('succeeds', () => {
       assert.ok(validateVariousAuthenticationMetadata({type: AuthenticationType.None}));
-      assert.ok(validateVariousAuthenticationMetadata({
-        type: AuthenticationType.HeaderBearerToken,
-      }));
-      assert.ok(validateVariousAuthenticationMetadata({
-        type: AuthenticationType.CustomHeaderToken,
-        headerName: 'MyHeader',
-      }));
+      assert.ok(
+        validateVariousAuthenticationMetadata({
+          type: AuthenticationType.HeaderBearerToken,
+        }),
+      );
+      assert.ok(
+        validateVariousAuthenticationMetadata({
+          type: AuthenticationType.CustomHeaderToken,
+          headerName: 'MyHeader',
+        }),
+      );
     });
 
     it('fails on invalid auth type', () => {
@@ -862,21 +865,26 @@ describe('Pack metadata Validation', () => {
     });
 
     it('fails on invalid auth type', () => {
-      assert.throws(() => validateVariousAuthenticationMetadata({
-        type: AuthenticationType.CustomHeaderToken,
-      }));
-      assert.throws(() => validateVariousAuthenticationMetadata({
-        type: AuthenticationType.CustomHeaderToken,
-        headerName: {
-          not: 'a string',
-        },
-      }));
-      assert.throws(() => validateVariousAuthenticationMetadata({
-        type: AuthenticationType.CustomHeaderToken,
-        headerName: 'MyHeader',
-        evilData: 0xDEADBEEF,
-      }));
+      assert.throws(() =>
+        validateVariousAuthenticationMetadata({
+          type: AuthenticationType.CustomHeaderToken,
+        }),
+      );
+      assert.throws(() =>
+        validateVariousAuthenticationMetadata({
+          type: AuthenticationType.CustomHeaderToken,
+          headerName: {
+            not: 'a string',
+          },
+        }),
+      );
+      assert.throws(() =>
+        validateVariousAuthenticationMetadata({
+          type: AuthenticationType.CustomHeaderToken,
+          headerName: 'MyHeader',
+          evilData: 0xdeadbeef,
+        }),
+      );
     });
-
   });
 });

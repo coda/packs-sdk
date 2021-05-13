@@ -241,7 +241,7 @@ export declare type DefaultValueType<T extends UnionType> = T extends ArrayType<
 export interface CommonPackFormulaDef<T extends ParamDefs> {
 	readonly name: string;
 	readonly description: string;
-	readonly examples: Array<{
+	readonly examples?: Array<{
 		params: PackFormulaValue[];
 		result: PackFormulaResult;
 	}>;
@@ -639,10 +639,10 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 	request: RequestHandlerTemplate;
 	description: string;
 	name: string;
-	examples: {
+	examples?: {
 		params: PackFormulaValue[];
 		result: PackFormulaResult;
-	}[];
+	}[] | undefined;
 	parameters: ParamDefsT;
 	varargParameters?: ParamDefs | undefined;
 	network?: Network | undefined;
@@ -803,7 +803,6 @@ export interface Format {
 	formulaName: string;
 	hasNoConnection?: boolean;
 	instructions?: string;
-	logoPath?: string;
 	matchers?: RegExp[];
 	placeholder?: string;
 }
