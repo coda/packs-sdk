@@ -142,7 +142,6 @@ function zodPathToPathString(zodPath) {
 function zodCompleteObject(shape) {
     return z.object(shape);
 }
-// TODO(jonathan): Migrate all schemas to strict validation.
 function zodCompleteStrictObject(shape) {
     return z.strictObject(shape);
 }
