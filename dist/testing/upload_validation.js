@@ -227,7 +227,7 @@ const defaultAuthenticationValidators = {
             placeholderUsername: z.string().optional(),
             placeholderPassword: z.string().optional(),
             usernameOnly: z.boolean().optional(),
-        }),
+        }).optional(),
         ...baseAuthenticationValidators,
     }),
     [types_1.AuthenticationType.AWSSignature4]: zodCompleteStrictObject({
