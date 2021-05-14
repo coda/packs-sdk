@@ -9,4 +9,4 @@ updates:
       day: 'tuesday'
     open-pull-requests-limit: 50
     reviewers:
-      - "coda-hq/ecosystem"
+      - "coda/ecosystem"
