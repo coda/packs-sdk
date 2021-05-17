@@ -281,7 +281,10 @@ export interface PackVersionDefinition {
   networkDomains?: string[];
 
   // User-facing components
-  formulaNamespace?: string; // TODO: @alan-fang remove
+  /**
+   * Required if Pack has formulas.
+   */
+  formulaNamespace?: string;
   formulas?: TypedStandardFormula[];
   formats?: Format[];
   syncTables?: SyncTable[];

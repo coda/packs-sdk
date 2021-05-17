@@ -867,6 +867,9 @@ export interface PackVersionDefinition {
 	 */
 	systemConnectionAuthentication?: SystemAuthentication;
 	networkDomains?: string[];
+	/**
+	 * Required if Pack has formulas.
+	 */
 	formulaNamespace?: string;
 	formulas?: TypedStandardFormula[];
 	formats?: Format[];
