@@ -151,11 +151,10 @@ export function findFormula(packDef: PackVersionDefinition, formulaNameWithNames
     );
   }
 
-  const formulas: TypedStandardFormula[] = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
-  if (!formulas || !formulas.length) {
+  if (!packFormulas || !packFormulas.length) {
     throw new Error(`Pack definition has no formulas for namespace "${namespace}".`);
   }
-  for (const formula of formulas) {
+  for (const formula of packFormulas) {
     if (formula.name === name) {
       return formula;
     }

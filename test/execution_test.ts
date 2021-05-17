@@ -74,13 +74,6 @@ describe('Execution', () => {
   });
 
   describe('errors resolving formulas', () => {
-    it('no formulas', async () => {
-      await testHelper.willBeRejectedWith(
-        executeFormulaFromPackDef(createFakePack({formulas: undefined}), 'Foo::Bar', []),
-        /Pack definition has no formulas./,
-      );
-    });
-
     it('malformed formula name', async () => {
       await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(fakePack, 'malformed', []),
@@ -88,31 +81,24 @@ describe('Execution', () => {
       );
     });
 
-    // it('bad namespace', async () => {
-    //   await testHelper.willBeRejectedWith(
-    //     executeFormulaFromPackDef(fakePack, 'Foo::Bar', []),
-    //     /Pack definition has no formula "Bar" in namespace "Foo"./,
-    //   );
-    // });
-
     it('non-existent formula', async () => {
       await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(createFakePack({formulas: undefined}), 'Bar', []),
-        /Pack definition for Fake Pack \(id 424242\) has no formulas./,
+        /Pack definition has no formulas./,
       );
     });
 
     it('bad namespace', async () => {
       await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(fakePack, 'Foo::Bar', []),
-        /Pack definition for Fake Pack \(id 424242\) has no namespace "Foo"./,
+        /Pack definition has no formula "Bar" in namespace "Foo"./,
       );
     });
 
     it('non-existent formula', async () => {
       await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(fakePack, 'Foo', []),
-        /Pack definition for Fake Pack \(id 424242\) has no formula "Foo" in namespace "Fake"./,
+        /Pack definition has no formula "Foo" in namespace "Fake"./,
       );
     });
   });

@@ -101,11 +101,10 @@ function findFormula(packDef, formulaNameWithNamespace) {
     if (!(namespace && name)) {
         throw new Error(`Formula names must be specified as FormulaNamespace::FormulaName, but got "${formulaNameWithNamespace}".`);
     }
-    const formulas = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
-    if (!formulas || !formulas.length) {
+    if (!packFormulas || !packFormulas.length) {
         throw new Error(`Pack definition has no formulas for namespace "${namespace}".`);
     }
-    for (const formula of formulas) {
+    for (const formula of packFormulas) {
         if (formula.name === name) {
             return formula;
         }
