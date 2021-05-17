@@ -176,7 +176,6 @@ function zodCompleteObject<O, T extends ZodCompleteShape<O> = ZodCompleteShape<R
   return z.object<T>(shape);
 }
 
-// TODO(jonathan): Migrate all schemas to strict validation.
 function zodCompleteStrictObject<O, T extends ZodCompleteShape<O> = ZodCompleteShape<Required<O>>>(shape: T) {
   return z.strictObject<T>(shape);
 }

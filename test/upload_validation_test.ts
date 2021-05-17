@@ -9,6 +9,7 @@ import type {PackFormulaMetadata} from '../api';
 import type {PackMetadataValidationError} from '../testing/upload_validation';
 import type {PackVersionMetadata} from '../compiled_types';
 import {PostSetupType} from '../types';
+import type {StringFormulaDef} from '../api';
 import type {TypedStandardFormula} from '../api';
 import {ValueType} from '../schema';
 import {createFakePack} from './test_utils';
@@ -60,12 +61,24 @@ describe('Pack metadata Validation', () => {
   });
 
   it('extraneous fields are omitted', async () => {
-    const metadata = createFakePackVersionMetadata();
+    const metadata = createFakePackVersionMetadata({
+      formulaNamespace: 'namespace',
+      formulas: [
+        makeStringFormula({
+          extraneous: 'evil long string',
+          name: 'formula',
+          description: '',
+          execute: () => '',
+          parameters: [],
+        } as StringFormulaDef<any>),
+      ],
+    });
     const result = await validateJson({
       ...metadata,
       extraneous: 'long evil string',
     });
     assert.notInclude(Object.keys(result), 'extraneous');
+    assert.notInclude(Object.keys((result.formulas as PackFormulaMetadata[])[0]), 'extraneous');
   });
 
   it('formula namespace required when formulas present', async () => {
