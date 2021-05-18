@@ -2,9 +2,9 @@ import {testHelper} from './test_helper';
 import type {ArraySchema} from '../schema';
 import {AuthenticationType} from '../types';
 import {DefaultConnectionType} from '../types';
-import type {GenericObjectSchema} from '../schema';
 import type {Network} from '../api_types';
 import {NetworkConnection} from '../api_types';
+import type {ObjectSchemaDefinition} from '../schema';
 import type {PackFormulaMetadata} from '../api';
 import type {PackMetadataValidationError} from '../testing/upload_validation';
 import type {PackVersionMetadata} from '../compiled_types';
@@ -490,7 +490,27 @@ describe('Pack metadata Validation', () => {
     });
 
     describe('object schemas', () => {
-      function metadataForFormulaWithObjectSchema(schema: GenericObjectSchema | ArraySchema): PackVersionMetadata {
+      function metadataForFormulaWithObjectSchema(
+        schemaDef: ObjectSchemaDefinition<string, string>,
+      ): PackVersionMetadata {
+        const schema = makeObjectSchema(schemaDef);
+        const formula = makeObjectFormula({
+          name: 'MyFormula',
+          description: 'My description',
+          examples: [],
+          parameters: [makeStringParameter('myParam', 'param description')],
+          response: {
+            schema,
+          },
+          execute: () => ({}),
+        });
+        return createFakePackVersionMetadata({
+          formulas: [formulaToMetadata(formula)],
+          formulaNamespace: 'MyNamespace',
+        });
+      }
+
+      function metadataForFormulaWithArraySchema(schema: ArraySchema): PackVersionMetadata {
         const formula = makeObjectFormula({
           name: 'MyFormula',
           description: 'My description',
@@ -530,7 +550,6 @@ describe('Pack metadata Validation', () => {
           id: 'id',
           primary: 'primary',
           identity: {
-            packId: 123,
             name: 'IdentityName',
           },
           properties: {
@@ -543,7 +562,7 @@ describe('Pack metadata Validation', () => {
           type: ValueType.Array,
           items: itemSchema,
         });
-        const metadata = metadataForFormulaWithObjectSchema(arraySchema);
+        const metadata = metadataForFormulaWithArraySchema(arraySchema);
         await validateJson(metadata);
       });
 
@@ -552,7 +571,7 @@ describe('Pack metadata Validation', () => {
           type: ValueType.Array,
           items: {type: ValueType.String},
         });
-        const metadata = metadataForFormulaWithObjectSchema(arraySchema);
+        const metadata = metadataForFormulaWithArraySchema(arraySchema);
         await validateJson(metadata);
       });
 

@@ -28,10 +28,11 @@ const api_types_1 = require("../api_types");
 const schema_2 = require("../schema");
 const schema_3 = require("../schema");
 const types_4 = require("../types");
-const types_5 = require("../types");
 const schema_4 = require("../schema");
-const api_types_2 = require("../api_types");
+const types_5 = require("../types");
 const schema_5 = require("../schema");
+const api_types_2 = require("../api_types");
+const schema_6 = require("../schema");
 const ensure_1 = require("../helpers/ensure");
 const object_utils_1 = require("../helpers/object_utils");
 const z = __importStar(require("zod"));
@@ -308,7 +309,7 @@ const numericPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(api_types_2.Type.number),
     schema: zodCompleteObject({
-        type: zodDiscriminant(schema_5.ValueType.Number),
+        type: zodDiscriminant(schema_6.ValueType.Number),
         codaType: z.enum([...schema_2.NumberHintValueTypes]).optional(),
         description: z.string().optional(),
     }).optional(),
@@ -317,8 +318,8 @@ const stringPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(api_types_2.Type.string),
     schema: zodCompleteObject({
-        type: zodDiscriminant(schema_5.ValueType.String),
-        codaType: z.enum([...schema_4.StringHintValueTypes]).optional(),
+        type: zodDiscriminant(schema_6.ValueType.String),
+        codaType: z.enum([...schema_5.StringHintValueTypes]).optional(),
         description: z.string().optional(),
     }).optional(),
 });
@@ -343,23 +344,23 @@ const basePropertyValidators = {
     required: z.boolean().optional(),
 };
 const booleanPropertySchema = zodCompleteObject({
-    type: zodDiscriminant(schema_5.ValueType.Boolean),
+    type: zodDiscriminant(schema_6.ValueType.Boolean),
     ...basePropertyValidators,
 });
 const numberPropertySchema = zodCompleteObject({
-    type: zodDiscriminant(schema_5.ValueType.Number),
+    type: zodDiscriminant(schema_6.ValueType.Number),
     codaType: z.enum([...schema_2.NumberHintValueTypes]).optional(),
     ...basePropertyValidators,
 });
 const stringPropertySchema = zodCompleteObject({
-    type: zodDiscriminant(schema_5.ValueType.String),
-    codaType: z.enum([...schema_4.StringHintValueTypes]).optional(),
+    type: zodDiscriminant(schema_6.ValueType.String),
+    codaType: z.enum([...schema_5.StringHintValueTypes]).optional(),
     ...basePropertyValidators,
 });
 // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
 // recurise typing better.
 const arrayPropertySchema = z.lazy(() => zodCompleteObject({
-    type: zodDiscriminant(schema_5.ValueType.Array),
+    type: zodDiscriminant(schema_6.ValueType.Array),
     items: objectPropertyUnionSchema,
     ...basePropertyValidators,
 }));
@@ -385,13 +386,15 @@ function isValidIdentityName(name) {
     return isValidObjectId(name);
 }
 const genericObjectSchema = z.lazy(() => zodCompleteObject({
-    type: zodDiscriminant(schema_5.ValueType.Object),
+    type: zodDiscriminant(schema_6.ValueType.Object),
     description: z.string().optional(),
     id: z.string().optional(),
     primary: z.string().optional(),
     codaType: z.enum([...schema_3.ObjectHintValueTypes]).optional(),
     featured: z.array(z.string()).optional(),
     identity: zodCompleteObject({
+        // Stupid hack to hardcode a pack id that will get replaced at upload time.
+        packId: z.literal(schema_4.PlaceholderIdentityPackId),
         name: z.string().nonempty().refine(isValidIdentityName, {
             message: 'Invalid name. Identity names can only contain alphanumeric characters, underscores, and dashes, and no spaces.',
         }),

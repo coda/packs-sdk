@@ -27,6 +27,7 @@ import type {PackFormatMetadata} from '../compiled_types';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDef} from '../api_types';
 import type {ParamDefs} from '../api_types';
+import {PlaceholderIdentityPackId} from '../schema';
 import {PostSetupType} from '../types';
 import type {QueryParamTokenAuthentication} from '../types';
 import type {SetEndpoint} from '../types';
@@ -469,6 +470,8 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     codaType: z.enum([...ObjectHintValueTypes]).optional(),
     featured: z.array(z.string()).optional(),
     identity: zodCompleteObject<Identity>({
+      // Stupid hack to hardcode a pack id that will get replaced at upload time.
+      packId: z.literal(PlaceholderIdentityPackId),
       name: z.string().nonempty().refine(isValidIdentityName, {
         message:
           'Invalid name. Identity names can only contain alphanumeric characters, underscores, and dashes, and no spaces.',
