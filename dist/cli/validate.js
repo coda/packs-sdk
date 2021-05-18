@@ -20,10 +20,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateMetadata = exports.handleValidate = void 0;
-const helpers_1 = require("../testing/helpers");
+const helpers_1 = require("./helpers");
+const helpers_2 = require("../testing/helpers");
 const upload_validation_1 = require("../testing/upload_validation");
 async function handleValidate({ manifestFile }) {
-    const { manifest } = await Promise.resolve().then(() => __importStar(require(manifestFile)));
+    const fullManifestPath = helpers_1.makeManifestFullPath(manifestFile);
+    const { manifest } = await Promise.resolve().then(() => __importStar(require(fullManifestPath)));
     return validateMetadata(manifest);
 }
 exports.handleValidate = handleValidate;
@@ -35,7 +37,7 @@ async function validateMetadata(metadata) {
     catch (e) {
         const packMetadataValidationError = e;
         const validationErrors = (_a = packMetadataValidationError.validationErrors) === null || _a === void 0 ? void 0 : _a.map(error => error.message).join('\n');
-        helpers_1.printAndExit(`${e.message}: \n${validationErrors}`);
+        helpers_2.printAndExit(`${e.message}: \n${validationErrors}`);
     }
 }
 exports.validateMetadata = validateMetadata;
