@@ -286,7 +286,20 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     resultType: Type.object;
     schema: ResultT | undefined;
 };
-export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: EmptyFormulaDef<ParamDefsT>): EmptyFormulaDef<ParamDefsT> & {
+export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: EmptyFormulaDef<ParamDefsT>): {
+    description: string;
+    name: string;
+    examples?: {
+        params: import("./api_types").PackFormulaValue[];
+        result: PackFormulaResult;
+    }[] | undefined;
+    parameters: ParamDefsT;
+    varargParameters?: ParamDefs | undefined;
+    network?: import("./api_types").Network | undefined;
+    cacheTtlSecs?: number | undefined;
+    isExperimental?: boolean | undefined;
+    isSystem?: boolean | undefined;
+} & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
     resultType: Type.string;
 };

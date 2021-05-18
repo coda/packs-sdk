@@ -362,12 +362,13 @@ function makeTranslateObjectFormula({ response, ...definition }) {
 }
 exports.makeTranslateObjectFormula = makeTranslateObjectFormula;
 function makeEmptyFormula(definition) {
-    const { request, parameters } = definition;
+    const { request, ...rest } = definition;
+    const { parameters } = rest;
     const requestHandler = handler_templates_2.generateRequestHandler(request, parameters);
     function execute(params, context) {
         return context.fetcher.fetch(requestHandler(params)).then(() => '');
     }
-    return Object.assign({}, definition, {
+    return Object.assign({}, rest, {
         execute,
         resultType: api_types_2.Type.string,
     });

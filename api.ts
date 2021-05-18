@@ -68,7 +68,7 @@ export interface SyncTableDef<
   K extends string,
   L extends string,
   ParamDefsT extends ParamDefs,
-  SchemaT extends ObjectSchema<K, L>
+  SchemaT extends ObjectSchema<K, L>,
 > {
   name: string;
   schema: SchemaT;
@@ -85,7 +85,7 @@ export interface DynamicSyncTableDef<
   K extends string,
   L extends string,
   ParamDefsT extends ParamDefs,
-  SchemaT extends ObjectSchema<K, L>
+  SchemaT extends ObjectSchema<K, L>,
 > extends SyncTableDef<K, L, ParamDefsT, SchemaT> {
   isDynamic: true;
   getSchema: MetadataFormula;
@@ -312,12 +312,10 @@ export type Formula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaRes
 
 export type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number> & {schema?: NumberSchema};
 
-export type StringPackFormula<
-  ParamDefsT extends ParamDefs,
-  ResultT extends StringHintTypes = StringHintTypes
-> = Formula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
-  schema?: StringSchema<ResultT>;
-};
+export type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> =
+  Formula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
+    schema?: StringSchema<ResultT>;
+  };
 
 export type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Formula<
   ParamDefsT,
@@ -361,7 +359,7 @@ export type SyncFormula<
   K extends string,
   L extends string,
   ParamDefsT extends ParamDefs,
-  SchemaT extends ObjectSchema<K, L>
+  SchemaT extends ObjectSchema<K, L>,
 > = Omit<SyncFormulaDef<ParamDefsT>, 'execute'> & {
   execute(
     params: ParamValues<ParamDefsT>,
@@ -583,7 +581,7 @@ export function makeSyncTable<
   K extends string,
   L extends string,
   ParamDefsT extends ParamDefs,
-  SchemaT extends ObjectSchema<K, L>
+  SchemaT extends ObjectSchema<K, L>,
 >(
   name: string,
   schema: SchemaT,
@@ -704,14 +702,15 @@ export function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT
 }
 
 export function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: EmptyFormulaDef<ParamDefsT>) {
-  const {request, parameters} = definition;
+  const {request, ...rest} = definition;
+  const {parameters} = rest;
   const requestHandler = generateRequestHandler(request, parameters);
 
   function execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<string> {
     return context.fetcher!.fetch(requestHandler(params)).then(() => '');
   }
 
-  return Object.assign({}, definition, {
+  return Object.assign({}, rest, {
     execute,
     resultType: Type.string as const,
   });
