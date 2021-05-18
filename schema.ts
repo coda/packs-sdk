@@ -168,6 +168,8 @@ export interface IdentityDefinition {
   name: string;
   dynamicUrl?: string;
   attribution?: AttributionNode[];
+  // TODO(jonathan): Remove after existing packs go through the v2 upload flow.
+  packId?: PackId;
 }
 
 export interface Identity extends IdentityDefinition {
@@ -292,9 +294,10 @@ export function makeObjectSchema<K extends string, L extends string, T extends O
 ): ObjectSchema<K, L> {
   validateObjectSchema(schemaDef);
   const schema = schemaDef as ObjectSchema<K, L>;
-  if (schema.identity) {
-    schema.identity = {...schema.identity, packId: PlaceholderIdentityPackId};
-  }
+  // TODO(jonathan): Enable after existing packs go through the v2 upload flow.
+  // if (schema.identity) {
+  //   schema.identity = {...schema.identity, packId: PlaceholderIdentityPackId};
+  // }
   return schema;
 }
 

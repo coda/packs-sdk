@@ -113,6 +113,7 @@ export interface IdentityDefinition {
     name: string;
     dynamicUrl?: string;
     attribution?: AttributionNode[];
+    packId?: PackId;
 }
 export interface Identity extends IdentityDefinition {
     packId: PackId;

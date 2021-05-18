@@ -129,9 +129,10 @@ exports.PlaceholderIdentityPackId = -1;
 function makeObjectSchema(schemaDef) {
     validateObjectSchema(schemaDef);
     const schema = schemaDef;
-    if (schema.identity) {
-        schema.identity = { ...schema.identity, packId: exports.PlaceholderIdentityPackId };
-    }
+    // TODO(jonathan): Enable after existing packs go through the v2 upload flow.
+    // if (schema.identity) {
+    //   schema.identity = {...schema.identity, packId: PlaceholderIdentityPackId};
+    // }
     return schema;
 }
 exports.makeObjectSchema = makeObjectSchema;
