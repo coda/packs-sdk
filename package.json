@@ -22,7 +22,7 @@
     "es6-promise": "^4.2.8",
     "esbuild": "^0.11.20",
     "express": "4.17.1",
-    "isolated-vm": "^4.1.1",
+    "isolated-vm": "^4.2.0",
     "isomorphic-fetch": "^3.0.0",
     "open": "^8.0.9",
     "pascalcase": "^1.0.0",
