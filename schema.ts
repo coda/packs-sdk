@@ -1,5 +1,4 @@
 import type {$Values} from './type_utils';
-import type {PackId} from './types';
 import {assertCondition} from './helpers/ensure';
 import {ensureExists} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
@@ -165,7 +164,6 @@ export type ObjectSchemaProperties<K extends string = never> = {
 export type GenericObjectSchema = ObjectSchema<string, string>;
 
 export interface Identity {
-  packId: PackId;
   name: string;
   dynamicUrl?: string;
   attribution?: AttributionNode[];
@@ -384,18 +382,4 @@ export function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema)
     primary,
     properties: referenceProperties,
   };
-}
-
-export enum SchemaIdPrefix {
-  Identity = 'I',
-}
-
-export type SchemaId = string;
-
-// Return a canonical ID for the schema
-export function getSchemaId(schema: Schema | undefined): SchemaId | undefined {
-  if (!(isObject(schema) && schema.identity)) {
-    return;
-  }
-  return `${SchemaIdPrefix.Identity}:${schema.identity.packId}:${schema.identity.name}`;
 }

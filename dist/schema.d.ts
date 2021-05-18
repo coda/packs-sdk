@@ -1,5 +1,4 @@
 import type { $Values } from './type_utils';
-import type { PackId } from './types';
 export declare enum ValueType {
     Boolean = "boolean",
     Number = "number",
@@ -110,7 +109,6 @@ export declare type ObjectSchemaProperties<K extends string = never> = {
 };
 export declare type GenericObjectSchema = ObjectSchema<string, string>;
 export interface Identity {
-    packId: PackId;
     name: string;
     dynamicUrl?: string;
     attribution?: AttributionNode[];
@@ -169,9 +167,4 @@ export declare function makeObjectSchema<K extends string, L extends string, T e
 export declare function normalizeSchemaKey(key: string): string;
 export declare function normalizeSchema<T extends Schema>(schema: T): T;
 export declare function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema): GenericObjectSchema;
-export declare enum SchemaIdPrefix {
-    Identity = "I"
-}
-export declare type SchemaId = string;
-export declare function getSchemaId(schema: Schema | undefined): SchemaId | undefined;
 export {};

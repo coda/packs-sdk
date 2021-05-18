@@ -392,7 +392,6 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     codaType: z.enum([...schema_3.ObjectHintValueTypes]).optional(),
     featured: z.array(z.string()).optional(),
     identity: zodCompleteObject({
-        packId: z.number(),
         name: z.string().nonempty().refine(isValidIdentityName, {
             message: 'Invalid name. Identity names can only contain alphanumeric characters, underscores, and dashes, and no spaces.',
         }),

@@ -325,7 +325,6 @@ describe('Pack metadata Validation', () => {
 
       it('valid dynamic sync table', async () => {
         const syncTable = makeDynamicSyncTable({
-          packId: 424242,
           name: 'DynamicSyncTable',
           getName: makeMetadataFormula(async () => {
             return '';
@@ -390,7 +389,6 @@ describe('Pack metadata Validation', () => {
 
       it('invalid dynamic sync table', async () => {
         const syncTable = makeDynamicSyncTable({
-          packId: 424242,
           name: 'DynamicSyncTable',
           getName: makeMetadataFormula(async () => {
             return '';
@@ -424,7 +422,6 @@ describe('Pack metadata Validation', () => {
         ]);
 
         const invalidFormulaSyncTable = makeDynamicSyncTable({
-          packId: 424242,
           name: 'DynamicSyncTable',
           getName: makeMetadataFormula(async () => {
             return '';
@@ -516,7 +513,6 @@ describe('Pack metadata Validation', () => {
           id: 'id',
           primary: 'primary',
           identity: {
-            packId: 123,
             name: 'IdentityName',
           },
           properties: {
@@ -564,7 +560,6 @@ describe('Pack metadata Validation', () => {
         const metadata = metadataForFormulaWithObjectSchema({
           type: ValueType.Object,
           identity: {
-            packId: 123,
             name: 'Name With Spaces',
           },
           properties: {

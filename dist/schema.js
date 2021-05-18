@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSchemaId = exports.SchemaIdPrefix = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.DurationUnit = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueType = void 0;
+exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.DurationUnit = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const ensure_2 = require("./helpers/ensure");
 const ensure_3 = require("./helpers/ensure");
@@ -218,15 +218,3 @@ function makeReferenceSchemaFromObjectSchema(schema) {
     };
 }
 exports.makeReferenceSchemaFromObjectSchema = makeReferenceSchemaFromObjectSchema;
-var SchemaIdPrefix;
-(function (SchemaIdPrefix) {
-    SchemaIdPrefix["Identity"] = "I";
-})(SchemaIdPrefix = exports.SchemaIdPrefix || (exports.SchemaIdPrefix = {}));
-// Return a canonical ID for the schema
-function getSchemaId(schema) {
-    if (!(isObject(schema) && schema.identity)) {
-        return;
-    }
-    return `${SchemaIdPrefix.Identity}:${schema.identity.packId}:${schema.identity.name}`;
-}
-exports.getSchemaId = getSchemaId;
