@@ -68,7 +68,7 @@ export interface SyncTableDef<
   K extends string,
   L extends string,
   ParamDefsT extends ParamDefs,
-  SchemaT extends ObjectSchema<K, L>
+  SchemaT extends ObjectSchema<K, L>,
 > {
   name: string;
   schema: SchemaT;
@@ -85,7 +85,7 @@ export interface DynamicSyncTableDef<
   K extends string,
   L extends string,
   ParamDefsT extends ParamDefs,
-  SchemaT extends ObjectSchema<K, L>
+  SchemaT extends ObjectSchema<K, L>,
 > extends SyncTableDef<K, L, ParamDefsT, SchemaT> {
   isDynamic: true;
   getSchema: MetadataFormula;
@@ -312,12 +312,10 @@ export type Formula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaRes
 
 export type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number> & {schema?: NumberSchema};
 
-export type StringPackFormula<
-  ParamDefsT extends ParamDefs,
-  ResultT extends StringHintTypes = StringHintTypes
-> = Formula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
-  schema?: StringSchema<ResultT>;
-};
+export type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> =
+  Formula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
+    schema?: StringSchema<ResultT>;
+  };
 
 export type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Formula<
   ParamDefsT,
@@ -361,7 +359,7 @@ export type SyncFormula<
   K extends string,
   L extends string,
   ParamDefsT extends ParamDefs,
-  SchemaT extends ObjectSchema<K, L>
+  SchemaT extends ObjectSchema<K, L>,
 > = Omit<SyncFormulaDef<ParamDefsT>, 'execute'> & {
   execute(
     params: ParamValues<ParamDefsT>,
@@ -583,7 +581,7 @@ export function makeSyncTable<
   K extends string,
   L extends string,
   ParamDefsT extends ParamDefs,
-  SchemaT extends ObjectSchema<K, L>
+  SchemaT extends ObjectSchema<K, L>,
 >(
   name: string,
   schema: SchemaT,
@@ -632,7 +630,6 @@ export function makeSyncTable<
 }
 
 export function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({
-  packId,
   name,
   getName,
   getSchema,
@@ -641,7 +638,6 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   listDynamicUrls,
   entityName,
 }: {
-  packId: number;
   name: string;
   getName: MetadataFormula;
   getSchema: MetadataFormula;
@@ -656,10 +652,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
     type: ValueType.Object,
     id: 'id',
     primary: 'id',
-    identity: {
-      packId,
-      name,
-    },
+    identity: {name},
     properties: {
       id: {type: ValueType.String},
     },

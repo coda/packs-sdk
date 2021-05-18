@@ -139,7 +139,6 @@ export declare type ObjectSchemaProperties<K extends string = never> = {
 };
 export declare type GenericObjectSchema = ObjectSchema<string, string>;
 export interface Identity {
-	packId: PackId;
 	name: string;
 	dynamicUrl?: string;
 	attribution?: AttributionNode[];
@@ -625,8 +624,7 @@ export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT 
  * @param entityName Only used internally by {@link makeDynamicSyncTable}, see there for more details.
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, formula: SyncFormulaDef<ParamDefsT>, getSchema?: MetadataFormula, entityName?: string): SyncTableDef<K, L, ParamDefsT, SchemaT>;
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ packId, name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, }: {
-	packId: number;
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, }: {
 	name: string;
 	getName: MetadataFormula;
 	getSchema: MetadataFormula;
