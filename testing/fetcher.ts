@@ -19,10 +19,8 @@ import type {WebBasicCredentials} from './auth_types';
 import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {getExpirationDate} from './helpers';
-import path from 'path';
 import {print} from './helpers';
 import requestPromise from 'request-promise-native';
-import {storeCredential} from './auth';
 import urlParse from 'url-parse';
 import {v4} from 'uuid';
 import xml2js from 'xml2js';
@@ -33,6 +31,7 @@ const HeadersToStrip = ['authorization'];
 
 // It seems there isn't a proper type on the error callback, and
 // the request library is deprecated.
+// TODO: Remove this when we replace the deprecated request lib, matching coda repo
 interface RequestError {
   name?: string;
   statusCode?: number;
@@ -40,29 +39,31 @@ interface RequestError {
 }
 
 export class AuthenticatingFetcher implements Fetcher {
-  private readonly _manifestPath: string | undefined;
+  private readonly _updateCredentialsCallback: (newCredentials: Credentials) => void | undefined;
   private readonly _authDef: Authentication | undefined;
   private readonly _networkDomains: string[] | undefined;
-  private readonly _credentials: Credentials | undefined;
+  private _credentials: Credentials | undefined;
 
   constructor(
-    manifestPath: string | undefined,
+    updateCredentialsCallback: (newCredentials: Credentials) => void | undefined,
     authDef: Authentication | undefined,
     networkDomains: string[] | undefined,
     credentials: Credentials | undefined,
   ) {
-    this._manifestPath = manifestPath;
+    this._updateCredentialsCallback = updateCredentialsCallback;
     this._authDef = authDef;
     this._networkDomains = networkDomains;
     this._credentials = credentials;
   }
 
-  async fetch<T = any>(request: FetchRequest): Promise<FetchResponse<T>> {
+  async fetch<T = any>(request: FetchRequest, isRetry?: boolean): Promise<FetchResponse<T>> {
     const {url, headers, body, form} = this._applyAuthentication(request);
     this._validateHost(url);
 
-    return requestHelper
-      .makeRequest({
+    let response: Response | undefined;
+
+    try {
+      response = await requestHelper.makeRequest({
         url,
         method: request.method,
         headers: {
@@ -71,12 +72,28 @@ export class AuthenticatingFetcher implements Fetcher {
         },
         body,
         form,
-      })
-      .then((response: Response): Promise<FetchResponse<any>> => this._handleFetchResponse(response))
-      .catch((error: RequestError): Promise<FetchResponse<any>> => this._handleFetchError(request, error));
-  }
+      });
+    } catch (requestFailure) {
+      // Only attempt 1 retry
+      if (isRetry) {
+        throw requestFailure;
+      }
+      print('Original request failed, considering retrying...');
+      try {
+        await this._maybeRefreshOAuthCredentials(request, requestFailure);
+      } catch (oauthFailure) {
+        print(oauthFailure);
+        // Since retry didn't succeed, throw the original error so the user
+        // pays attention to the likely-most-relevant error.
+        throw requestFailure;
+      }
+      // We have successfully refreshed OAuth credentials, retry query.
+      // If this retry fails, it's good that we will throw *this* error
+      // instead of the original error.
+      print('Retrying original request...');
+      return this.fetch(request, true);
+    }
 
-  private async _handleFetchResponse(response: Response): Promise<FetchResponse<any>> {
     let responseBody = response.body;
     if (responseBody && responseBody.length >= MaxContentLengthBytes) {
       throw new Error(`Response body is too large for Coda. Body is ${responseBody.length} bytes.`);
@@ -113,27 +130,25 @@ export class AuthenticatingFetcher implements Fetcher {
     };
   }
 
-  private async _handleFetchError(request: FetchRequest, error: RequestError): Promise<FetchResponse<any>> {
-    // Check for errors that we can retry.
-    if (!this._authDef) {
-      throw error;
+  private async _maybeRefreshOAuthCredentials(request: FetchRequest, requestFailure: RequestError) {
+    if (!this._authDef || !this._credentials || !this._updateCredentialsCallback) {
+      throw new Error('Cannot retry without full authentication config');
     }
 
     // If OAuth had a 401 error, that should mean invalid token (RFC 6750), which could be
     // an expired token. Let's assume that it is and retry the request after
     // trying to refresh the auth token.
-    if (error.statusCode !== 401 || this._authDef.type !== AuthenticationType.OAuth2) {
-      throw error;
+    if (requestFailure.statusCode !== 401 || this._authDef.type !== AuthenticationType.OAuth2) {
+      throw new Error('We cannot retry this type of error');
     }
 
-    print('Got a 401 error on an OAuth request.');
-    const {authorizationUrl, tokenUrl, scopes, additionalParams} = this._authDef;
+    print('The request error was a 401 code on an OAuth request, we can maybe retry.');
     const {clientId, clientSecret, accessToken, refreshToken} = this._credentials as OAuth2Credentials;
     if (!accessToken || !refreshToken) {
-      throw error;
+      throw new Error('Missing access token or refresh token, cannot retry with automatic auth refresh.');
     }
 
-    print('Attempting oauth token refresh...');
+    const {authorizationUrl, tokenUrl, scopes, additionalParams} = this._authDef;
     const oauth2Client = new ClientOAuth2({
       clientId,
       clientSecret,
@@ -143,21 +158,16 @@ export class AuthenticatingFetcher implements Fetcher {
       query: additionalParams,
     });
     const oauthToken = oauth2Client.createToken(accessToken, refreshToken, {});
-    return oauthToken
-      .refresh()
-      .then(token => {
-        print('OAuth token refresh successful!');
-        (this._credentials as OAuth2Credentials).accessToken = token.accessToken;
-        (this._credentials as OAuth2Credentials).refreshToken = token.refreshToken;
-        (this._credentials as OAuth2Credentials).expires = getExpirationDate(Number(token.data.expires_in)).toString();
-        // If we have gotten to this point, we know these are defined.
-        storeCredential(path.dirname(this._manifestPath!), this._credentials!);
-        return this.fetch(request);
-      })
-      .catch(oauthFailure => {
-        print('Attempt to refresh oauth token failed.');
-        throw oauthFailure;
-      });
+    const refreshedToken = await oauthToken.refresh();
+    print('OAuth token refresh successful, updating credential file...');
+    const newCredentials: Credentials = {
+      ...this._credentials,
+      accessToken: refreshedToken.accessToken,
+      refreshToken: refreshedToken.refreshToken,
+      expires: getExpirationDate(Number(refreshedToken.data.expires_in)).toString(),
+    };
+    this._credentials = newCredentials;
+    this._updateCredentialsCallback(this._credentials);
   }
 
   private _applyAuthentication({
@@ -214,8 +224,6 @@ export class AuthenticatingFetcher implements Fetcher {
       }
       case AuthenticationType.OAuth2: {
         const {accessToken} = this._credentials as OAuth2Credentials;
-        print('Fetcher._applyAuthentication using credentials: ');
-        print(this._credentials);
         const prefix = this._authDef.tokenPrefix || 'Bearer';
         const requestHeaders: {[header: string]: string} = headers || {};
         let requestUrl = url;
@@ -329,12 +337,12 @@ class AuthenticatingBlobStorage implements TemporaryBlobStorage {
 }
 
 export function newFetcherExecutionContext(
-  manifestPath: string | undefined,
+  updateCredentialsCallback: (newCreds: Credentials) => void | undefined,
   authDef: Authentication | undefined,
   networkDomains: string[] | undefined,
   credentials?: Credentials,
 ): ExecutionContext {
-  const fetcher = new AuthenticatingFetcher(manifestPath, authDef, networkDomains, credentials);
+  const fetcher = new AuthenticatingFetcher(updateCredentialsCallback, authDef, networkDomains, credentials);
   return {
     invocationLocation: {
       protocolAndHost: 'https://coda.io',
@@ -349,12 +357,12 @@ export function newFetcherExecutionContext(
 }
 
 export function newFetcherSyncExecutionContext(
-  manifestPath: string | undefined,
+  updateCredentialsCallback: (newCreds: Credentials) => void | undefined,
   authDef: Authentication | undefined,
   networkDomains: string[] | undefined,
   credentials?: Credentials,
 ): SyncExecutionContext {
-  const context = newFetcherExecutionContext(manifestPath, authDef, networkDomains, credentials);
+  const context = newFetcherExecutionContext(updateCredentialsCallback, authDef, networkDomains, credentials);
   return {...context, sync: {}};
 }
 
