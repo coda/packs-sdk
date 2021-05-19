@@ -17,12 +17,13 @@ import {readFile} from '../testing/helpers';
 import requestPromise from 'request-promise-native';
 import {validateMetadata} from './validate';
 
-interface PublishArgs {
+interface UploadArgs {
   manifestFile: string;
   codaApiEndpoint: string;
+  notes?: string;
 }
 
-export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<PublishArgs>) {
+export async function handleUpload({manifestFile, codaApiEndpoint, notes}: Arguments<UploadArgs>) {
   const manifestDir = path.dirname(manifestFile);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   const logger = new ConsoleLogger();
@@ -81,7 +82,7 @@ export async function handlePublish({manifestFile, codaApiEndpoint}: Arguments<P
     await uploadPack(uploadUrl, uploadPayload, headers);
 
     logger.info('Validating upload...');
-    const uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion);
+    const uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion, {}, {notes});
     if (isCodaError(uploadCompleteResponse)) {
       printAndExit(`Error while finalizing pack version: ${formatError(uploadCompleteResponse)}`);
     }

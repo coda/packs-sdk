@@ -30,11 +30,11 @@ const errors_2 = require("./errors");
 const path = __importStar(require("path"));
 const helpers_3 = require("../testing/helpers");
 const config_storage_4 = require("./config_storage");
-async function handleCreate({ manifestFile, codaApiEndpoint }) {
-    await createPack(manifestFile, codaApiEndpoint);
+async function handleCreate({ manifestFile, codaApiEndpoint, name, description }) {
+    await createPack(manifestFile, codaApiEndpoint, { name, description });
 }
 exports.handleCreate = handleCreate;
-async function createPack(manifestFile, codaApiEndpoint) {
+async function createPack(manifestFile, codaApiEndpoint, { name, description }) {
     const manifestDir = path.dirname(manifestFile);
     const formattedEndpoint = helpers_2.formatEndpoint(codaApiEndpoint);
     // TODO(alan): we probably want to redirect them to the `coda register`
@@ -51,7 +51,7 @@ async function createPack(manifestFile, codaApiEndpoint) {
     }
     const codaClient = helpers_1.createCodaClient(apiKey, formattedEndpoint);
     try {
-        const response = await codaClient.createPack({}, {});
+        const response = await codaClient.createPack({}, { name, description });
         if (errors_2.isCodaError(response)) {
             return helpers_3.printAndExit(`Unable to create your pack, received error: ${errors_1.formatError(response)}`);
         }

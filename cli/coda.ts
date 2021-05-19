@@ -2,15 +2,14 @@
 
 import {DEFAULT_API_ENDPOINT} from './config_storage';
 import {DEFAULT_OAUTH_SERVER_PORT} from '../testing/auth';
-import type {Options} from 'yargs';
 import {handleAuth} from './auth';
 import {handleBuild} from './build';
 import {handleCreate} from './create';
 import {handleExecute} from './execute';
 import {handleInit} from './init';
-import {handlePublish} from './publish';
 import {handleRegister} from './register';
-import {handleSetLive} from './set_live';
+import {handleRelease} from './release';
+import {handleUpload} from './upload';
 import {handleValidate} from './validate';
 import yargs from 'yargs';
 
@@ -26,11 +25,11 @@ if (require.main === module) {
         fetch: {
           boolean: true,
           desc: 'Actually fetch http requests instead of using mocks. Run "coda auth" first to set up credentials.',
-        } as Options,
+        },
         vm: {
           boolean: true,
           desc: 'Execute the requested command in a virtual machine that mimics the environment Coda uses to execute Packs.',
-        } as Options,
+        },
       },
     })
     .command({
@@ -43,7 +42,7 @@ if (require.main === module) {
           number: true,
           default: DEFAULT_OAUTH_SERVER_PORT,
           desc: 'Port to use for the local server that handles OAuth setup.',
-        } as Options,
+        },
       },
     })
     .command({
@@ -59,7 +58,7 @@ if (require.main === module) {
           string: true,
           hidden: true,
           default: DEFAULT_API_ENDPOINT,
-        } as Options,
+        },
       },
       handler: handleRegister,
     })
@@ -69,26 +68,41 @@ if (require.main === module) {
       handler: handleBuild,
     })
     .command({
-      command: 'publish <manifestFile>',
-      describe: 'Upload your Pack to Coda',
+      command: 'upload <manifestFile>',
+      describe: 'Upload your Pack version to Coda',
       builder: {
+        notes: {
+          string: true,
+          alias: 'n',
+          describe: 'Notes about the contents of this Pack version',
+        },
         codaApiEndpoint: {
           string: true,
           hidden: true,
           default: DEFAULT_API_ENDPOINT,
-        } as Options,
+        },
       },
-      handler: handlePublish,
+      handler: handleUpload,
     })
     .command({
       command: 'create <manifestFile>',
       describe: "Register a new Pack with Coda's servers",
       builder: {
+        name: {
+          string: true,
+          alias: 'n',
+          describe: 'The name of the Pack. Can be set later in the UI.',
+        },
+        description: {
+          string: true,
+          alias: 'd',
+          describe: 'A description of the Pack. Can be set later in the UI.',
+        },
         codaApiEndpoint: {
           string: true,
           hidden: true,
           default: DEFAULT_API_ENDPOINT,
-        } as Options,
+        },
       },
       handler: handleCreate,
     })
@@ -98,16 +112,24 @@ if (require.main === module) {
       handler: handleValidate,
     })
     .command({
-      command: 'setLive <manifestFile> <packVersion>',
-      describe: 'Set the Pack version that is installable for users.',
+      command: 'release <manifestFile> [packVersion]',
+      describe:
+        'Set the Pack version that is installable for users. You may specify a specific version, ' +
+        'or omit a version to use the version currently in the manifest file. ' +
+        'The version must always be higher than that of any previous release.',
       builder: {
+        notes: {
+          string: true,
+          alias: 'n',
+          describe: 'Notes about the contents of this Pack release',
+        },
         codaApiEndpoint: {
           string: true,
           hidden: true,
           default: DEFAULT_API_ENDPOINT,
-        } as Options,
+        },
       },
-      handler: handleSetLive,
+      handler: handleRelease,
     })
     .demandCommand()
     .strict()

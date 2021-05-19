@@ -11,6 +11,11 @@
   - [Running Formulas](#running-formulas)
   - [Running Syncs](#running-syncs)
   - [Fetching](#fetching)
+- [Uploading a Pack Version](#upload-a-pack-version)
+  - [Registering an API Key](#registering-an-api-key)
+  - [Creating a New Pack](#creating-a-new-pack)
+  - [Uploading a Pack Version](#uploading-a-pack-version)
+  - [Creating a Release](#creating-a-release)
 - [Examples](#examples)
 - [Core Concepts](#core-concepts)
   - [Fetching Remote Data](#fetching-remote-data)
@@ -186,6 +191,98 @@ coda execute --fetch src/manifest.ts MyFormula some-arg
 
 Your http requests will commonly require authentication in order to succeed, which the `coda execute` utility supports.
 See the [Authentication](#authentication) section about how to set this up.
+
+## Uploading Packs
+
+**NOTE: Pack uploads are currently unlaunched and are still in testing. The following commands will not work yet.**
+
+Note: if you are a beta tester using these commands with an alternative Coda environment,
+each of these commands accepts an optional `--codaApiEndpoint` where you must specify
+the url of that environment, e.g. `--codaApiEndpoint=https://<env>.coda.io`
+
+### Registering an API Key
+
+All of the pack upload commands work with the Coda API to upload your pack, and hence
+require an API key to identify you as the user. Simply run this command, and you'll be
+given a link to the Coda Account page to create an API token, which you can then
+paste in the terminal. You API key will be saved in a hidden local file `.coda.json`
+in your current directory, to be used with future commands.
+
+```bash
+coda register
+```
+
+### Creating a New Pack
+
+When you've implemented your pack and are ready to upload it to Coda for the first time,
+you'll need to create new pack on Coda's servers to get assigned a pack id. Run this
+command just once for each pack you create:
+
+```bash
+coda create path/to/manifest.ts
+```
+
+This will create a new empty pack on Coda's servers. It will print out the url of the
+pack management page in the Coda UI, and store the newly-assigned pack id in a hidden file
+`.coda-pack.json` in the same directory as your manifest file. (This allows you to put
+multiple pack definitions in the same repo, as long as they're in different directories.)
+The id in this file will be used subsequent CLI commands for managing your pack.
+
+This command accepts optional flags for specifying a name and description for the pack.
+You can always set or update the name and description in the pack management UI later.
+
+```bash
+coda create path/to/manifest.ts --name "My Pack" --description "My pack description."
+```
+
+### Uploading a Pack Version
+
+As you make changes to your pack, when you're ready to upload them to Coda so that
+you can try them in a real doc, use this command to upload a new version of your
+pack based on your latest code.
+
+```bash
+coda upload path/to/manifest.ts
+```
+
+This will build and upload your code. You must update the `version` in your manifest
+to be greater than your previous upload.
+
+Once uploaded, as an editor of the pack, you'll be able to install this specific version
+of your pack in any of your docs, without affecting the live release version of your pack
+that other users may be using, giving you an opportunity to test out your latest changes
+in your docs before making them live to users.
+
+This command accepts an optional flag where you can provide notes about the contents of the version, helping you track changes from version to version.
+
+```bash
+coda upload path/to/manifest.ts --notes "Added the formula MyNewFormula."
+```
+
+### Creating a Release
+
+When you've tested a pack version and want to make that version live for users of your
+pack, create a release. The pack version that you release will become the version that
+is used by new installations of your pack, and existing installations will gradually
+be upgraded to this version.
+
+```bash
+coda release path/to/manifest.ts <optional-version>
+```
+
+If you don't explicitly specify a version, the version specified in your manifest.ts
+file will be used. But you are free to specify another pack version here if you wish
+to release a specific version rather than the latest.
+
+The version must always be greater than that of any of your previous releases.
+
+Alternatively, you can easily create releases from the pack management UI.
+
+This command accepts an optional flag where you can provide notes about the contents of the release, helping you and users of your pack understand what changed from release to release.
+
+```bash
+coda release path/to/manifest.ts --notes "Added the formula MyNewFormula."
+```
 
 ## Examples
 

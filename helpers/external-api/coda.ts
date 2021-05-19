@@ -4,7 +4,7 @@
  * available at https://coda.io/developers/apis/v1
  *
  * Version: v1
- * Hash: 9344cda812f318da6169c839fbb51a2f289a9fe2e404d1c869df0c69f0f286c6
+ * Hash: c17f33bab1c1496bf73356d09380fa0a04e074f97741adc801db545ea8db0026
  */
 
 import 'es6-promise/auto';
@@ -907,6 +907,32 @@ export class Client {
     return response.json();
   }
 
+  async listPackVersions(
+    packId: number,
+    params: {
+      limit?: number;
+      pageToken?: string;
+    } = {},
+  ): Promise<types.PublicApiPackVersionList> {
+    const allParams = {
+      ...params,
+    };
+    const {pageToken, ...rest} = allParams;
+    const codaUrl = withQueryParams(
+      `${this.protocolAndHost}/apis/v1/packs/${packId}/versions`,
+      pageToken ? {pageToken} : rest,
+    );
+    const response = await fetch(codaUrl, {
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+        'User-Agent': this.userAgent,
+      },
+      method: 'GET',
+    });
+    return response.json();
+  }
+
   async registerPackVersion(
     packId: number,
     packVersion: string,
@@ -936,6 +962,7 @@ export class Client {
     packId: number,
     packVersion: string,
     params: {} = {},
+    payload: types.PublicApiCreatePackVersionRequest,
   ): Promise<types.PublicApiCreatePackVersionResponse> {
     const allParams = {
       ...params,
@@ -951,6 +978,54 @@ export class Client {
         'User-Agent': this.userAgent,
       },
       method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    return response.json();
+  }
+
+  async createPackRelease(
+    packId: number,
+    params: {} = {},
+    payload: types.PublicApiCreatePackReleaseRequest,
+  ): Promise<types.PublicApiPackRelease> {
+    const allParams = {
+      ...params,
+    };
+    const codaUrl = withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/releases`, allParams);
+    const response = await fetch(codaUrl, {
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+        'User-Agent': this.userAgent,
+      },
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    return response.json();
+  }
+
+  async listPackReleases(
+    packId: number,
+    params: {
+      limit?: number;
+      pageToken?: string;
+    } = {},
+  ): Promise<types.PublicApiPackReleaseList> {
+    const allParams = {
+      ...params,
+    };
+    const {pageToken, ...rest} = allParams;
+    const codaUrl = withQueryParams(
+      `${this.protocolAndHost}/apis/v1/packs/${packId}/releases`,
+      pageToken ? {pageToken} : rest,
+    );
+    const response = await fetch(codaUrl, {
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+        'User-Agent': this.userAgent,
+      },
+      method: 'GET',
     });
     return response.json();
   }
@@ -972,6 +1047,62 @@ export class Client {
       },
       method: 'PUT',
       body: JSON.stringify(payload),
+    });
+    return response.json();
+  }
+
+  async setPackSystemConnection(
+    packId: number,
+    params: {} = {},
+    payload: types.PublicApiSetPackSystemConnectionRequest,
+  ): Promise<types.PublicApiPackSystemConnection> {
+    const allParams = {
+      ...params,
+    };
+    const codaUrl = withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/systemConnection`, allParams);
+    const response = await fetch(codaUrl, {
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+        'User-Agent': this.userAgent,
+      },
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    });
+    return response.json();
+  }
+
+  async deletePackSystemConnection(
+    packId: number,
+    params: {} = {},
+  ): Promise<types.PublicApiDeletePackSystemConnectionResponse> {
+    const allParams = {
+      ...params,
+    };
+    const codaUrl = withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/systemConnection`, allParams);
+    const response = await fetch(codaUrl, {
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+        'User-Agent': this.userAgent,
+      },
+      method: 'DELETE',
+    });
+    return response.json();
+  }
+
+  async getPackSystemConnection(packId: number, params: {} = {}): Promise<types.PublicApiPackSystemConnection> {
+    const allParams = {
+      ...params,
+    };
+    const codaUrl = withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/systemConnection`, allParams);
+    const response = await fetch(codaUrl, {
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+        'User-Agent': this.userAgent,
+      },
+      method: 'GET',
     });
     return response.json();
   }
@@ -1057,6 +1188,27 @@ export class Client {
     return response.json();
   }
 
+  async uploadPackSourceCode(
+    packId: number,
+    params: {} = {},
+    payload: types.PublicApiUploadPackSourceCodeRequest,
+  ): Promise<types.PublicApiPackSourceCodeUploadInfo> {
+    const allParams = {
+      ...params,
+    };
+    const codaUrl = withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/uploadSourceCode`, allParams);
+    const response = await fetch(codaUrl, {
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+        'User-Agent': this.userAgent,
+      },
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    return response.json();
+  }
+
   async packAssetUploadComplete(
     packId: number,
     packAssetId: string,
@@ -1077,6 +1229,76 @@ export class Client {
         'User-Agent': this.userAgent,
       },
       method: 'POST',
+    });
+    return response.json();
+  }
+
+  async packSourceCodeUploadComplete(
+    packId: number,
+    packVersion: string,
+    params: {} = {},
+    payload: types.PublicApiPackSourceCodeUploadCompleteRequest,
+  ): Promise<types.PublicApiPackSourceCodeUploadCompleteResponse> {
+    const allParams = {
+      ...params,
+    };
+    const codaUrl = withQueryParams(
+      `${this.protocolAndHost}/apis/v1/packs/${packId}/versions/${packVersion}/sourceCode/uploadComplete`,
+      allParams,
+    );
+    const response = await fetch(codaUrl, {
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+        'User-Agent': this.userAgent,
+      },
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    return response.json();
+  }
+
+  async getPackSourceCode(
+    packId: number,
+    packVersion: string,
+    params: {} = {},
+  ): Promise<types.PublicApiPackSourceCodeInfo> {
+    const allParams = {
+      ...params,
+    };
+    const codaUrl = withQueryParams(
+      `${this.protocolAndHost}/apis/v1/packs/${packId}/versions/${packVersion}/sourceCode`,
+      allParams,
+    );
+    const response = await fetch(codaUrl, {
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+        'User-Agent': this.userAgent,
+      },
+      method: 'GET',
+    });
+    return response.json();
+  }
+
+  async listPackListings(
+    params: {
+      limit?: number;
+      pageToken?: string;
+    } = {},
+  ): Promise<types.PublicApiPackListingList> {
+    const allParams = {
+      ...params,
+    };
+    const {pageToken, ...rest} = allParams;
+    const codaUrl = withQueryParams(`${this.protocolAndHost}/apis/v1/packs/listings`, pageToken ? {pageToken} : rest);
+    const response = await fetch(codaUrl, {
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+        'User-Agent': this.userAgent,
+      },
+      method: 'GET',
     });
     return response.json();
   }

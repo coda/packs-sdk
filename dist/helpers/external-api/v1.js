@@ -3,9 +3,9 @@
  * This file is auto-generated from OpenAPI definitions by `make build-openapi`. Do not edit manually.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PublicApiPackAssetType = exports.PublicApiPackAccessType = exports.PublicApiPackPrincipalType = exports.PublicApiPacksSortBy = exports.PublicApiDocAnalyticsScale = exports.PublicApiWorkspaceUserRole = exports.PublicApiTableType = exports.PublicApiSortBy = exports.PublicApiControlType = exports.PublicApiValueFormat = exports.PublicApiRowsSortBy = exports.PublicApiImageStatus = exports.PublicApiLinkedDataType = exports.PublicApiColumnFormatType = exports.PublicApiIconSet = exports.PublicApiDurationUnit = exports.PublicApiEmailDisplayType = exports.PublicApiCurrencyFormatType = exports.PublicApiSortDirection = exports.PublicApiLayout = exports.PublicApiDocPublishMode = exports.PublicApiAccessType = exports.PublicApiPrincipalType = exports.PublicApiType = exports.OpenApiSpecVersion = exports.OpenApiSpecHash = void 0;
+exports.PublicApiPackConnectionType = exports.PublicApiPackAssetType = exports.PublicApiPackAccessType = exports.PublicApiPackPrincipalType = exports.PublicApiPacksSortBy = exports.PublicApiDocAnalyticsScale = exports.PublicApiWorkspaceUserRole = exports.PublicApiTableType = exports.PublicApiSortBy = exports.PublicApiControlType = exports.PublicApiValueFormat = exports.PublicApiRowsSortBy = exports.PublicApiImageStatus = exports.PublicApiLinkedDataType = exports.PublicApiColumnFormatType = exports.PublicApiIconSet = exports.PublicApiDurationUnit = exports.PublicApiEmailDisplayType = exports.PublicApiCurrencyFormatType = exports.PublicApiSortDirection = exports.PublicApiLayout = exports.PublicApiDocPublishMode = exports.PublicApiAccessType = exports.PublicApiPrincipalType = exports.PublicApiType = exports.OpenApiSpecVersion = exports.OpenApiSpecHash = void 0;
 /* eslint-disable */
-exports.OpenApiSpecHash = '9344cda812f318da6169c839fbb51a2f289a9fe2e404d1c869df0c69f0f286c6';
+exports.OpenApiSpecHash = 'c17f33bab1c1496bf73356d09380fa0a04e074f97741adc801db545ea8db0026';
 exports.OpenApiSpecVersion = '1.2.0';
 /**
  * A constant identifying the type of the resource.
@@ -30,6 +30,8 @@ var PublicApiType;
     PublicApiType["PackVersion"] = "packVersion";
     PublicApiType["PackAclPermissions"] = "packAclPermissions";
     PublicApiType["PackAsset"] = "packAsset";
+    PublicApiType["PackRelease"] = "packRelease";
+    PublicApiType["PackSourceCode"] = "packSourceCode";
 })(PublicApiType = exports.PublicApiType || (exports.PublicApiType = {}));
 /**
  * Type of principal.
@@ -279,3 +281,12 @@ var PublicApiPackAssetType;
     PublicApiPackAssetType["Logo"] = "logo";
     PublicApiPackAssetType["ExampleImage"] = "exampleImage";
 })(PublicApiPackAssetType = exports.PublicApiPackAssetType || (exports.PublicApiPackAssetType = {}));
+/**
+ * Type of Pack connections.
+ */
+var PublicApiPackConnectionType;
+(function (PublicApiPackConnectionType) {
+    PublicApiPackConnectionType["Header"] = "header";
+    PublicApiPackConnectionType["UrlParam"] = "urlParam";
+    PublicApiPackConnectionType["HttpBasic"] = "httpBasic";
+})(PublicApiPackConnectionType = exports.PublicApiPackConnectionType || (exports.PublicApiPackConnectionType = {}));

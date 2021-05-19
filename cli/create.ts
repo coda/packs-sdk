@@ -13,13 +13,19 @@ import {storePackId} from './config_storage';
 interface CreateArgs {
   manifestFile: string;
   codaApiEndpoint: string;
+  name?: string;
+  description?: string;
 }
 
-export async function handleCreate({manifestFile, codaApiEndpoint}: Arguments<CreateArgs>) {
-  await createPack(manifestFile, codaApiEndpoint);
+export async function handleCreate({manifestFile, codaApiEndpoint, name, description}: Arguments<CreateArgs>) {
+  await createPack(manifestFile, codaApiEndpoint, {name, description});
 }
 
-export async function createPack(manifestFile: string, codaApiEndpoint: string) {
+export async function createPack(
+  manifestFile: string,
+  codaApiEndpoint: string,
+  {name, description}: {name?: string; description?: string},
+) {
   const manifestDir = path.dirname(manifestFile);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   // TODO(alan): we probably want to redirect them to the `coda register`
@@ -40,7 +46,7 @@ export async function createPack(manifestFile: string, codaApiEndpoint: string) 
 
   const codaClient = createCodaClient(apiKey, formattedEndpoint);
   try {
-    const response = await codaClient.createPack({}, {});
+    const response = await codaClient.createPack({}, {name, description});
     if (isCodaError(response)) {
       return printAndExit(`Unable to create your pack, received error: ${formatError(response)}`);
     }
