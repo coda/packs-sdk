@@ -53,8 +53,5 @@ export function writeJSONFile(fileName: string, payload: any): void {
 
 export function getExpirationDate(expiresInSeconds: number): Date {
   // OAuth standard says expiresIn units should be seconds.
-  // To account for time delays, plan to expire a minute earlier than perhaps necessary.
-  const expiryDate = new Date();
-  expiryDate.setTime(expiryDate.getTime() + expiresInSeconds * 1000 - 60 * 1000);
-  return expiryDate;
+  return new Date(Date.now() + expiresInSeconds * 1000);
 }

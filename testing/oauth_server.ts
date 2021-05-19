@@ -73,10 +73,7 @@ class OAuthServerContainer {
     app.get('/oauth', async (req, res) => {
       const tokenData = await this._oauth2Client.code.getToken(req.originalUrl);
       const {accessToken, refreshToken, data} = tokenData;
-      let expires = '';
-      if (data.expires_in) {
-        expires = getExpirationDate(Number(data.expires_in)).toString();
-      }
+      const expires = data.expires_in && getExpirationDate(Number(data.expires_in)).toString();
       this._afterTokenExchange({accessToken, refreshToken, expires});
       setTimeout(() => this.shutDown(), 10);
       return res.send('OAuth authentication is complete! You can close this browser tab.');

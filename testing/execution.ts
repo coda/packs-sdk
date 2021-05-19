@@ -1,3 +1,4 @@
+import type {Credentials} from './auth_types';
 import type {ExecuteOptions} from './execution_helper';
 import type {ExecuteSyncOptions} from './execution_helper';
 import type {ExecutionContext} from '../api_types';
@@ -18,6 +19,7 @@ import {newMockSyncExecutionContext} from './mocks';
 import * as path from 'path';
 import {print} from './helpers';
 import {readCredentialsFile} from './auth';
+import {storeCredential} from './auth';
 
 export {ExecuteOptions} from './execution_helper';
 export {ExecuteSyncOptions} from './execution_helper';
@@ -39,7 +41,7 @@ export async function executeFormulaFromPackDef(
   if (!executionContext && useRealFetcher) {
     const credentials = getCredentials(manifestPath);
     executionContext = newFetcherExecutionContext(
-      manifestPath,
+      buildUpdateCredentialsCallback(manifestPath),
       packDef.defaultAuthentication,
       packDef.networkDomains,
       credentials,
@@ -73,7 +75,7 @@ export async function executeFormulaOrSyncFromCLI({
     // TODO(jonathan): Pass the right context, just to set user expectations correctly for runtime values.
     const executionContext = useRealFetcher
       ? newFetcherSyncExecutionContext(
-          manifestPath,
+          buildUpdateCredentialsCallback(manifestPath),
           manifest.defaultAuthentication,
           manifest.networkDomains,
           credentials,
@@ -155,7 +157,7 @@ export async function executeSyncFormulaFromPackDef(
   if (!executionContext && useRealFetcher) {
     const credentials = getCredentials(manifestPath);
     executionContext = newFetcherSyncExecutionContext(
-      manifestPath,
+      buildUpdateCredentialsCallback(manifestPath),
       packDef.defaultAuthentication,
       packDef.networkDomains,
       credentials,
@@ -183,4 +185,12 @@ function getCredentials(manifestPath: string | undefined) {
     const manifestDir = path.dirname(manifestPath);
     return readCredentialsFile(manifestDir);
   }
+}
+
+function buildUpdateCredentialsCallback(manifestPath: string | undefined): (newCredentials: Credentials) => void {
+  return newCredentials => {
+    if (manifestPath) {
+      storeCredential(path.dirname(manifestPath), newCredentials);
+    }
+  };
 }
