@@ -189,6 +189,7 @@ class CredentialHandler {
       clientSecret,
       accessToken: existingCredentials?.accessToken,
       refreshToken: existingCredentials?.refreshToken,
+      expires: existingCredentials?.expires,
     };
     this.storeCredential(credentials);
     print('Credential secrets updated! Launching OAuth handshake in browser...\n');
@@ -198,12 +199,13 @@ class CredentialHandler {
       clientSecret,
       authDef: this._authDef,
       port: this._oauthServerPort,
-      afterTokenExchange: ({accessToken, refreshToken}) => {
+      afterTokenExchange: ({accessToken, refreshToken, expires}) => {
         const credentials: OAuth2Credentials = {
           clientId,
           clientSecret,
           accessToken,
           refreshToken,
+          expires,
         };
         this.storeCredential(credentials);
         print('Access token saved! Shutting down OAuth server and exiting...');

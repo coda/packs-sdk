@@ -38,7 +38,12 @@ export async function executeFormulaFromPackDef(
   let executionContext = context;
   if (!executionContext && useRealFetcher) {
     const credentials = getCredentials(manifestPath);
-    executionContext = newFetcherExecutionContext(packDef.defaultAuthentication, packDef.networkDomains, credentials);
+    executionContext = newFetcherExecutionContext(
+      manifestPath,
+      packDef.defaultAuthentication,
+      packDef.networkDomains,
+      credentials,
+    );
   }
 
   const formula = helper.findFormula(packDef, formulaNameWithNamespace);
@@ -67,7 +72,12 @@ export async function executeFormulaOrSyncFromCLI({
     // A sync context would work for both formula / syncFormula execution for now.
     // TODO(jonathan): Pass the right context, just to set user expectations correctly for runtime values.
     const executionContext = useRealFetcher
-      ? newFetcherSyncExecutionContext(manifest.defaultAuthentication, manifest.networkDomains, credentials)
+      ? newFetcherSyncExecutionContext(
+          manifestPath,
+          manifest.defaultAuthentication,
+          manifest.networkDomains,
+          credentials,
+        )
       : newMockSyncExecutionContext();
 
     const result = vm
@@ -145,6 +155,7 @@ export async function executeSyncFormulaFromPackDef(
   if (!executionContext && useRealFetcher) {
     const credentials = getCredentials(manifestPath);
     executionContext = newFetcherSyncExecutionContext(
+      manifestPath,
       packDef.defaultAuthentication,
       packDef.networkDomains,
       credentials,
