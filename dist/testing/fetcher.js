@@ -47,20 +47,25 @@ class AuthenticatingFetcher {
             if (isRetry) {
                 throw requestFailure;
             }
-            helpers_2.print('Original request failed, considering retrying...');
-            try {
-                await this._maybeRefreshOAuthCredentials(request, requestFailure);
-            }
-            catch (oauthFailure) {
-                helpers_2.print(oauthFailure);
-                // Since retry didn't succeed, throw the original error so the user
-                // pays attention to the likely-most-relevant error.
+            // If OAuth had a 401 error, that should mean invalid token (RFC 6750), which could be
+            // an expired token. Let's assume that it is and retry the request after
+            // refreshing the auth token.
+            if (!this._isOAuth401(requestFailure)) {
                 throw requestFailure;
             }
-            // We have successfully refreshed OAuth credentials, retry query.
-            // If this retry fails, it's good that we will throw *this* error
+            helpers_2.print('The request error was a 401 code on an OAuth request, we will refresh credentials and retry.');
+            try {
+                await this._refreshOAuthCredentials();
+            }
+            catch (oauthFailure) {
+                helpers_2.print(requestFailure);
+                // Now we have both an OAuth failure and an original request error.
+                // We throw the one that is most likely the one the user should try to fix first.
+                throw oauthFailure;
+            }
+            // We have successfully refreshed OAuth credentials, now retry query.
+            // If this retry fails, it's good that we will throw this new error
             // instead of the original error.
-            helpers_2.print('Retrying original request...');
             return this.fetch(request, true);
         }
         let responseBody = response.body;
@@ -96,20 +101,30 @@ class AuthenticatingFetcher {
             body: responseBody,
         };
     }
-    async _maybeRefreshOAuthCredentials(request, requestFailure) {
+    _isOAuth401(requestFailure) {
+        // All these conditions will be checked again in _refreshOAuthCredentials, but those
+        // checks will throw errors, so this function is used to avoid tripping those errors.
         if (!this._authDef || !this._credentials || !this._updateCredentialsCallback) {
-            throw new Error('Cannot retry without full authentication config');
+            return false;
         }
-        // If OAuth had a 401 error, that should mean invalid token (RFC 6750), which could be
-        // an expired token. Let's assume that it is and retry the request after
-        // trying to refresh the auth token.
         if (requestFailure.statusCode !== 401 || this._authDef.type !== types_1.AuthenticationType.OAuth2) {
-            throw new Error('We cannot retry this type of error');
+            return false;
         }
-        helpers_2.print('The request error was a 401 code on an OAuth request, we can maybe retry.');
-        const { clientId, clientSecret, accessToken, refreshToken } = this._credentials;
+        const { accessToken, refreshToken } = this._credentials;
         if (!accessToken || !refreshToken) {
-            throw new Error('Missing access token or refresh token, cannot retry with automatic auth refresh.');
+            return false;
+        }
+        return true;
+    }
+    async _refreshOAuthCredentials() {
+        const { clientId, clientSecret, accessToken, refreshToken } = this._credentials;
+        // These should have already been checked by calling _isOAuth401, but Typescript wants to double check.
+        if (!accessToken ||
+            !refreshToken ||
+            !this._authDef ||
+            !this._credentials ||
+            this._authDef.type !== types_1.AuthenticationType.OAuth2) {
+            throw new Error('This should not be reachable');
         }
         const { authorizationUrl, tokenUrl, scopes, additionalParams } = this._authDef;
         const oauth2Client = new client_oauth2_1.default({
@@ -122,7 +137,6 @@ class AuthenticatingFetcher {
         });
         const oauthToken = oauth2Client.createToken(accessToken, refreshToken, {});
         const refreshedToken = await oauthToken.refresh();
-        helpers_2.print('OAuth token refresh successful, updating credential file...');
         const newCredentials = {
             ...this._credentials,
             accessToken: refreshedToken.accessToken,
