@@ -11,7 +11,7 @@
   - [Running Formulas](#running-formulas)
   - [Running Syncs](#running-syncs)
   - [Fetching](#fetching)
-- [Uploading a Pack Version](#upload-a-pack-version)
+- [Uploading Packs](#uploading-packs)
   - [Registering an API Key](#registering-an-api-key)
   - [Creating a New Pack](#creating-a-new-pack)
   - [Uploading a Pack Version](#uploading-a-pack-version)
