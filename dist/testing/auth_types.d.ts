@@ -24,6 +24,7 @@ export interface OAuth2Credentials extends BaseCredentials {
     clientSecret: string;
     accessToken?: string;
     refreshToken?: string;
+    expires?: string;
 }
 export declare type Credentials = TokenCredentials | WebBasicCredentials | QueryParamCredentials | MultiQueryParamCredentials | OAuth2Credentials;
 export {};

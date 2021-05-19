@@ -5,10 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.newFetcherSyncExecutionContext = exports.newFetcherExecutionContext = exports.requestHelper = exports.AuthenticatingFetcher = void 0;
 const types_1 = require("../types");
+const client_oauth2_1 = __importDefault(require("client-oauth2"));
 const logging_1 = require("../helpers/logging");
 const url_1 = require("url");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
+const helpers_1 = require("./helpers");
+const helpers_2 = require("./helpers");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
 const url_parse_1 = __importDefault(require("url-parse"));
 const uuid_1 = require("uuid");
@@ -17,24 +20,49 @@ const FetcherUserAgent = 'Coda-Test-Server-Fetcher';
 const MaxContentLengthBytes = 25 * 1024 * 1024;
 const HeadersToStrip = ['authorization'];
 class AuthenticatingFetcher {
-    constructor(authDef, networkDomains, credentials) {
+    constructor(updateCredentialsCallback, authDef, networkDomains, credentials) {
+        this._updateCredentialsCallback = updateCredentialsCallback;
         this._authDef = authDef;
         this._networkDomains = networkDomains;
         this._credentials = credentials;
     }
-    async fetch(request) {
+    async fetch(request, isRetry) {
         const { url, headers, body, form } = this._applyAuthentication(request);
         this._validateHost(url);
-        const response = await exports.requestHelper.makeRequest({
-            url,
-            method: request.method,
-            headers: {
-                ...headers,
-                'User-Agent': FetcherUserAgent,
-            },
-            body,
-            form,
-        });
+        let response;
+        try {
+            response = await exports.requestHelper.makeRequest({
+                url,
+                method: request.method,
+                headers: {
+                    ...headers,
+                    'User-Agent': FetcherUserAgent,
+                },
+                body,
+                form,
+            });
+        }
+        catch (requestFailure) {
+            // Only attempt 1 retry
+            if (isRetry) {
+                throw requestFailure;
+            }
+            helpers_2.print('Original request failed, considering retrying...');
+            try {
+                await this._maybeRefreshOAuthCredentials(request, requestFailure);
+            }
+            catch (oauthFailure) {
+                helpers_2.print(oauthFailure);
+                // Since retry didn't succeed, throw the original error so the user
+                // pays attention to the likely-most-relevant error.
+                throw requestFailure;
+            }
+            // We have successfully refreshed OAuth credentials, retry query.
+            // If this retry fails, it's good that we will throw *this* error
+            // instead of the original error.
+            helpers_2.print('Retrying original request...');
+            return this.fetch(request, true);
+        }
         let responseBody = response.body;
         if (responseBody && responseBody.length >= MaxContentLengthBytes) {
             throw new Error(`Response body is too large for Coda. Body is ${responseBody.length} bytes.`);
@@ -67,6 +95,42 @@ class AuthenticatingFetcher {
             headers: responseHeaders,
             body: responseBody,
         };
+    }
+    async _maybeRefreshOAuthCredentials(request, requestFailure) {
+        if (!this._authDef || !this._credentials || !this._updateCredentialsCallback) {
+            throw new Error('Cannot retry without full authentication config');
+        }
+        // If OAuth had a 401 error, that should mean invalid token (RFC 6750), which could be
+        // an expired token. Let's assume that it is and retry the request after
+        // trying to refresh the auth token.
+        if (requestFailure.statusCode !== 401 || this._authDef.type !== types_1.AuthenticationType.OAuth2) {
+            throw new Error('We cannot retry this type of error');
+        }
+        helpers_2.print('The request error was a 401 code on an OAuth request, we can maybe retry.');
+        const { clientId, clientSecret, accessToken, refreshToken } = this._credentials;
+        if (!accessToken || !refreshToken) {
+            throw new Error('Missing access token or refresh token, cannot retry with automatic auth refresh.');
+        }
+        const { authorizationUrl, tokenUrl, scopes, additionalParams } = this._authDef;
+        const oauth2Client = new client_oauth2_1.default({
+            clientId,
+            clientSecret,
+            authorizationUri: authorizationUrl,
+            accessTokenUri: tokenUrl,
+            scopes,
+            query: additionalParams,
+        });
+        const oauthToken = oauth2Client.createToken(accessToken, refreshToken, {});
+        const refreshedToken = await oauthToken.refresh();
+        helpers_2.print('OAuth token refresh successful, updating credential file...');
+        const newCredentials = {
+            ...this._credentials,
+            accessToken: refreshedToken.accessToken,
+            refreshToken: refreshedToken.refreshToken,
+            expires: helpers_1.getExpirationDate(Number(refreshedToken.data.expires_in)).toString(),
+        };
+        this._credentials = newCredentials;
+        this._updateCredentialsCallback(this._credentials);
     }
     _applyAuthentication({ url: rawUrl, headers, body, form, disableAuthentication, }) {
         if (!this._authDef || this._authDef.type === types_1.AuthenticationType.None || disableAuthentication) {
@@ -203,8 +267,8 @@ class AuthenticatingBlobStorage {
         return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${uuid_1.v4()}`;
     }
 }
-function newFetcherExecutionContext(authDef, networkDomains, credentials) {
-    const fetcher = new AuthenticatingFetcher(authDef, networkDomains, credentials);
+function newFetcherExecutionContext(updateCredentialsCallback, authDef, networkDomains, credentials) {
+    const fetcher = new AuthenticatingFetcher(updateCredentialsCallback, authDef, networkDomains, credentials);
     return {
         invocationLocation: {
             protocolAndHost: 'https://coda.io',
@@ -218,8 +282,8 @@ function newFetcherExecutionContext(authDef, networkDomains, credentials) {
     };
 }
 exports.newFetcherExecutionContext = newFetcherExecutionContext;
-function newFetcherSyncExecutionContext(authDef, networkDomains, credentials) {
-    const context = newFetcherExecutionContext(authDef, networkDomains, credentials);
+function newFetcherSyncExecutionContext(updateCredentialsCallback, authDef, networkDomains, credentials) {
+    const context = newFetcherExecutionContext(updateCredentialsCallback, authDef, networkDomains, credentials);
     return { ...context, sync: {} };
 }
 exports.newFetcherSyncExecutionContext = newFetcherSyncExecutionContext;
