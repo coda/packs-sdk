@@ -2,12 +2,14 @@ import ClientOAuth2 from 'client-oauth2';
 import type {OAuth2Authentication} from '../types';
 import {exec} from 'child_process';
 import express from 'express';
+import {getExpirationDate} from './helpers';
 import type * as http from 'http';
 import {print} from './helpers';
 
 interface AfterTokenExchangeParams {
   accessToken: string;
   refreshToken?: string;
+  expires?: string;
 }
 
 export type AfterTokenExchangeCallback = (params: AfterTokenExchangeParams) => void;
@@ -69,10 +71,13 @@ class OAuthServerContainer {
   start(launchCallback: () => void) {
     const app = express();
     app.get('/oauth', async (req, res) => {
-      // TODO: Figure out how to get refresh tokens, maybe including grant_type: 'authorization_code'.
       const tokenData = await this._oauth2Client.code.getToken(req.originalUrl);
-      const {accessToken, refreshToken} = tokenData;
-      this._afterTokenExchange({accessToken, refreshToken});
+      const {accessToken, refreshToken, data} = tokenData;
+      let expires = '';
+      if (data.expires_in) {
+        expires = getExpirationDate(Number(data.expires_in)).toString();
+      }
+      this._afterTokenExchange({accessToken, refreshToken, expires});
       setTimeout(() => this.shutDown(), 10);
       return res.send('OAuth authentication is complete! You can close this browser tab.');
     });

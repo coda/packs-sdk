@@ -1,5 +1,6 @@
 import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
+import ClientOAuth2 from 'client-oauth2';
 import {ConsoleLogger} from '../helpers/logging';
 import type {Credentials} from './auth_types';
 import type {ExecutionContext} from '../api';
@@ -17,7 +18,11 @@ import {URL} from 'url';
 import type {WebBasicCredentials} from './auth_types';
 import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
+import {getExpirationDate} from './helpers';
+import path from 'path';
+import {print} from './helpers';
 import requestPromise from 'request-promise-native';
+import {storeCredential} from './auth';
 import urlParse from 'url-parse';
 import {v4} from 'uuid';
 import xml2js from 'xml2js';
@@ -26,16 +31,27 @@ const FetcherUserAgent = 'Coda-Test-Server-Fetcher';
 const MaxContentLengthBytes = 25 * 1024 * 1024;
 const HeadersToStrip = ['authorization'];
 
+// It seems there isn't a proper type on the error callback, and
+// the request library is deprecated.
+interface RequestError {
+  name?: string;
+  statusCode?: number;
+  error?: string;
+}
+
 export class AuthenticatingFetcher implements Fetcher {
+  private readonly _manifestPath: string | undefined;
   private readonly _authDef: Authentication | undefined;
   private readonly _networkDomains: string[] | undefined;
   private readonly _credentials: Credentials | undefined;
 
   constructor(
+    manifestPath: string | undefined,
     authDef: Authentication | undefined,
     networkDomains: string[] | undefined,
     credentials: Credentials | undefined,
   ) {
+    this._manifestPath = manifestPath;
     this._authDef = authDef;
     this._networkDomains = networkDomains;
     this._credentials = credentials;
@@ -45,17 +61,22 @@ export class AuthenticatingFetcher implements Fetcher {
     const {url, headers, body, form} = this._applyAuthentication(request);
     this._validateHost(url);
 
-    const response: Response = await requestHelper.makeRequest({
-      url,
-      method: request.method,
-      headers: {
-        ...headers,
-        'User-Agent': FetcherUserAgent,
-      },
-      body,
-      form,
-    });
+    return requestHelper
+      .makeRequest({
+        url,
+        method: request.method,
+        headers: {
+          ...headers,
+          'User-Agent': FetcherUserAgent,
+        },
+        body,
+        form,
+      })
+      .then((response: Response): Promise<FetchResponse<any>> => this._handleFetchResponse(response))
+      .catch((error: RequestError): Promise<FetchResponse<any>> => this._handleFetchError(request, error));
+  }
 
+  private async _handleFetchResponse(response: Response): Promise<FetchResponse<any>> {
     let responseBody = response.body;
     if (responseBody && responseBody.length >= MaxContentLengthBytes) {
       throw new Error(`Response body is too large for Coda. Body is ${responseBody.length} bytes.`);
@@ -90,6 +111,53 @@ export class AuthenticatingFetcher implements Fetcher {
       headers: responseHeaders,
       body: responseBody,
     };
+  }
+
+  private async _handleFetchError(request: FetchRequest, error: RequestError): Promise<FetchResponse<any>> {
+    // Check for errors that we can retry.
+    if (!this._authDef) {
+      throw error;
+    }
+
+    // If OAuth had a 401 error, that should mean invalid token (RFC 6750), which could be
+    // an expired token. Let's assume that it is and retry the request after
+    // trying to refresh the auth token.
+    if (error.statusCode !== 401 || this._authDef.type !== AuthenticationType.OAuth2) {
+      throw error;
+    }
+
+    print('Got a 401 error on an OAuth request.');
+    const {authorizationUrl, tokenUrl, scopes, additionalParams} = this._authDef;
+    const {clientId, clientSecret, accessToken, refreshToken} = this._credentials as OAuth2Credentials;
+    if (!accessToken || !refreshToken) {
+      throw error;
+    }
+
+    print('Attempting oauth token refresh...');
+    const oauth2Client = new ClientOAuth2({
+      clientId,
+      clientSecret,
+      authorizationUri: authorizationUrl,
+      accessTokenUri: tokenUrl,
+      scopes,
+      query: additionalParams,
+    });
+    const oauthToken = oauth2Client.createToken(accessToken, refreshToken, {});
+    return oauthToken
+      .refresh()
+      .then(token => {
+        print('OAuth token refresh successful!');
+        (this._credentials as OAuth2Credentials).accessToken = token.accessToken;
+        (this._credentials as OAuth2Credentials).refreshToken = token.refreshToken;
+        (this._credentials as OAuth2Credentials).expires = getExpirationDate(Number(token.data.expires_in)).toString();
+        // If we have gotten to this point, we know these are defined.
+        storeCredential(path.dirname(this._manifestPath!), this._credentials!);
+        return this.fetch(request);
+      })
+      .catch(oauthFailure => {
+        print('Attempt to refresh oauth token failed.');
+        throw oauthFailure;
+      });
   }
 
   private _applyAuthentication({
@@ -146,6 +214,8 @@ export class AuthenticatingFetcher implements Fetcher {
       }
       case AuthenticationType.OAuth2: {
         const {accessToken} = this._credentials as OAuth2Credentials;
+        print('Fetcher._applyAuthentication using credentials: ');
+        print(this._credentials);
         const prefix = this._authDef.tokenPrefix || 'Bearer';
         const requestHeaders: {[header: string]: string} = headers || {};
         let requestUrl = url;
@@ -259,11 +329,12 @@ class AuthenticatingBlobStorage implements TemporaryBlobStorage {
 }
 
 export function newFetcherExecutionContext(
+  manifestPath: string | undefined,
   authDef: Authentication | undefined,
   networkDomains: string[] | undefined,
   credentials?: Credentials,
 ): ExecutionContext {
-  const fetcher = new AuthenticatingFetcher(authDef, networkDomains, credentials);
+  const fetcher = new AuthenticatingFetcher(manifestPath, authDef, networkDomains, credentials);
   return {
     invocationLocation: {
       protocolAndHost: 'https://coda.io',
@@ -278,11 +349,12 @@ export function newFetcherExecutionContext(
 }
 
 export function newFetcherSyncExecutionContext(
+  manifestPath: string | undefined,
   authDef: Authentication | undefined,
   networkDomains: string[] | undefined,
   credentials?: Credentials,
 ): SyncExecutionContext {
-  const context = newFetcherExecutionContext(authDef, networkDomains, credentials);
+  const context = newFetcherExecutionContext(manifestPath, authDef, networkDomains, credentials);
   return {...context, sync: {}};
 }
 

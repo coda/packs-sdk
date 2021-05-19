@@ -28,6 +28,8 @@ export interface OAuth2Credentials extends BaseCredentials {
   clientSecret: string;
   accessToken?: string;
   refreshToken?: string;
+  // Included only for credential debugging purposes
+  expires?: string;
 }
 
 export type Credentials =
