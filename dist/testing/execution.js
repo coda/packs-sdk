@@ -31,11 +31,12 @@ const mocks_2 = require("./mocks");
 const path = __importStar(require("path"));
 const helpers_2 = require("./helpers");
 const auth_1 = require("./auth");
+const auth_2 = require("./auth");
 async function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, params, context, options, { useRealFetcher, manifestPath } = {}) {
     let executionContext = context;
     if (!executionContext && useRealFetcher) {
         const credentials = getCredentials(manifestPath);
-        executionContext = fetcher_1.newFetcherExecutionContext(packDef.defaultAuthentication, packDef.networkDomains, credentials);
+        executionContext = fetcher_1.newFetcherExecutionContext(buildUpdateCredentialsCallback(manifestPath), packDef.defaultAuthentication, packDef.networkDomains, credentials);
     }
     const formula = helper.findFormula(packDef, formulaNameWithNamespace);
     return helper.executeFormula(formula, params, executionContext || mocks_1.newMockExecutionContext(), options);
@@ -50,7 +51,7 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifestPath, 
         // A sync context would work for both formula / syncFormula execution for now.
         // TODO(jonathan): Pass the right context, just to set user expectations correctly for runtime values.
         const executionContext = useRealFetcher
-            ? fetcher_2.newFetcherSyncExecutionContext(manifest.defaultAuthentication, manifest.networkDomains, credentials)
+            ? fetcher_2.newFetcherSyncExecutionContext(buildUpdateCredentialsCallback(manifestPath), manifest.defaultAuthentication, manifest.networkDomains, credentials)
             : mocks_2.newMockSyncExecutionContext();
         const result = vm
             ? await executeFormulaOrSyncWithRawParamsInVM({ formulaName, params, manifestPath, executionContext })
@@ -84,7 +85,7 @@ async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, c
     let executionContext = context;
     if (!executionContext && useRealFetcher) {
         const credentials = getCredentials(manifestPath);
-        executionContext = fetcher_2.newFetcherSyncExecutionContext(packDef.defaultAuthentication, packDef.networkDomains, credentials);
+        executionContext = fetcher_2.newFetcherSyncExecutionContext(buildUpdateCredentialsCallback(manifestPath), packDef.defaultAuthentication, packDef.networkDomains, credentials);
     }
     const formula = helper.findSyncFormula(packDef, syncFormulaName);
     return helper.executeSyncFormula(formula, params, executionContext || mocks_2.newMockSyncExecutionContext(), options);
@@ -100,4 +101,11 @@ function getCredentials(manifestPath) {
         const manifestDir = path.dirname(manifestPath);
         return auth_1.readCredentialsFile(manifestDir);
     }
+}
+function buildUpdateCredentialsCallback(manifestPath) {
+    return newCredentials => {
+        if (manifestPath) {
+            auth_2.storeCredential(path.dirname(manifestPath), newCredentials);
+        }
+    };
 }

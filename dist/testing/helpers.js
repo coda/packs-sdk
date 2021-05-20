@@ -22,7 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.writeJSONFile = exports.readJSONFile = exports.readFile = exports.promptForInput = exports.printAndExit = exports.print = exports.getManifestFromModule = void 0;
+exports.getExpirationDate = exports.writeJSONFile = exports.readJSONFile = exports.readFile = exports.promptForInput = exports.printAndExit = exports.print = exports.getManifestFromModule = void 0;
 const ensure_1 = require("../helpers/ensure");
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
@@ -74,3 +74,8 @@ function writeJSONFile(fileName, payload) {
     fs_1.default.writeFileSync(fileName, JSON.stringify(payload, undefined, 2));
 }
 exports.writeJSONFile = writeJSONFile;
+function getExpirationDate(expiresInSeconds) {
+    // OAuth standard says expiresIn units should be seconds.
+    return new Date(Date.now() + expiresInSeconds * 1000);
+}
+exports.getExpirationDate = getExpirationDate;

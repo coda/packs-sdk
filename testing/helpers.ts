@@ -50,3 +50,8 @@ export function writeJSONFile(fileName: string, payload: any): void {
   }
   fs.writeFileSync(fileName, JSON.stringify(payload, undefined, 2));
 }
+
+export function getExpirationDate(expiresInSeconds: number): Date {
+  // OAuth standard says expiresIn units should be seconds.
+  return new Date(Date.now() + expiresInSeconds * 1000);
+}

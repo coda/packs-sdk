@@ -7,11 +7,14 @@ import type { Fetcher } from '../api_types';
 import type { Response } from 'request';
 import type { SyncExecutionContext } from '../api_types';
 export declare class AuthenticatingFetcher implements Fetcher {
+    private readonly _updateCredentialsCallback;
     private readonly _authDef;
     private readonly _networkDomains;
-    private readonly _credentials;
-    constructor(authDef: Authentication | undefined, networkDomains: string[] | undefined, credentials: Credentials | undefined);
-    fetch<T = any>(request: FetchRequest): Promise<FetchResponse<T>>;
+    private _credentials;
+    constructor(updateCredentialsCallback: (newCredentials: Credentials) => void | undefined, authDef: Authentication | undefined, networkDomains: string[] | undefined, credentials: Credentials | undefined);
+    fetch<T = any>(request: FetchRequest, isRetry?: boolean): Promise<FetchResponse<T>>;
+    private _isOAuth401;
+    private _refreshOAuthCredentials;
     private _applyAuthentication;
     private _applyAndValidateEndpoint;
     private _validateHost;
@@ -19,5 +22,5 @@ export declare class AuthenticatingFetcher implements Fetcher {
 export declare const requestHelper: {
     makeRequest: (request: FetchRequest) => Promise<Response>;
 };
-export declare function newFetcherExecutionContext(authDef: Authentication | undefined, networkDomains: string[] | undefined, credentials?: Credentials): ExecutionContext;
-export declare function newFetcherSyncExecutionContext(authDef: Authentication | undefined, networkDomains: string[] | undefined, credentials?: Credentials): SyncExecutionContext;
+export declare function newFetcherExecutionContext(updateCredentialsCallback: (newCreds: Credentials) => void | undefined, authDef: Authentication | undefined, networkDomains: string[] | undefined, credentials?: Credentials): ExecutionContext;
+export declare function newFetcherSyncExecutionContext(updateCredentialsCallback: (newCreds: Credentials) => void | undefined, authDef: Authentication | undefined, networkDomains: string[] | undefined, credentials?: Credentials): SyncExecutionContext;

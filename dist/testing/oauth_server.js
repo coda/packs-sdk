@@ -8,6 +8,7 @@ const client_oauth2_1 = __importDefault(require("client-oauth2"));
 const child_process_1 = require("child_process");
 const express_1 = __importDefault(require("express"));
 const helpers_1 = require("./helpers");
+const helpers_2 = require("./helpers");
 function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTokenExchange, }) {
     // TODO: Handle endpointKey.
     const { authorizationUrl, tokenUrl, scopes, additionalParams } = authDef;
@@ -23,7 +24,7 @@ function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTok
     const serverContainer = new OAuthServerContainer(oauth2Client, afterTokenExchange, port);
     const launchCallback = () => {
         const authUrl = oauth2Client.code.getUri();
-        helpers_1.print(`OAuth server running at http://localhost:${port}.\n` +
+        helpers_2.print(`OAuth server running at http://localhost:${port}.\n` +
             `Complete the auth flow in your browser. If it does not open automatically, visit ${authUrl}`);
         child_process_1.exec(`open "${authUrl}"`);
     };
@@ -43,10 +44,10 @@ class OAuthServerContainer {
     start(launchCallback) {
         const app = express_1.default();
         app.get('/oauth', async (req, res) => {
-            // TODO: Figure out how to get refresh tokens, maybe including grant_type: 'authorization_code'.
             const tokenData = await this._oauth2Client.code.getToken(req.originalUrl);
-            const { accessToken, refreshToken } = tokenData;
-            this._afterTokenExchange({ accessToken, refreshToken });
+            const { accessToken, refreshToken, data } = tokenData;
+            const expires = data.expires_in && helpers_1.getExpirationDate(Number(data.expires_in)).toString();
+            this._afterTokenExchange({ accessToken, refreshToken, expires });
             setTimeout(() => this.shutDown(), 10);
             return res.send('OAuth authentication is complete! You can close this browser tab.');
         });
