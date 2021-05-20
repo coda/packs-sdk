@@ -3,7 +3,7 @@
  * available at https://coda.io/developers/apis/v1
  *
  * Version: v1
- * Hash: 9344cda812f318da6169c839fbb51a2f289a9fe2e404d1c869df0c69f0f286c6
+ * Hash: c17f33bab1c1496bf73356d09380fa0a04e074f97741adc801db545ea8db0026
  */
 import 'es6-promise/auto';
 import 'isomorphic-fetch';
@@ -121,12 +121,31 @@ export declare class Client {
     createPack(params: {} | undefined, payload: types.PublicApiCreatePackRequest): Promise<types.PublicApiCreatePackResponse>;
     getPack(packId: number, params?: {}): Promise<types.PublicApiPack>;
     updatePack(packId: number, params: {} | undefined, payload: types.PublicApiUpdatePackRequest): Promise<types.PublicApiPack>;
+    listPackVersions(packId: number, params?: {
+        limit?: number;
+        pageToken?: string;
+    }): Promise<types.PublicApiPackVersionList>;
     registerPackVersion(packId: number, packVersion: string, params: {} | undefined, payload: types.PublicApiRegisterPackVersionRequest): Promise<types.PublicApiPackVersionUploadInfo>;
-    packVersionUploadComplete(packId: number, packVersion: string, params?: {}): Promise<types.PublicApiCreatePackVersionResponse>;
+    packVersionUploadComplete(packId: number, packVersion: string, params: {} | undefined, payload: types.PublicApiCreatePackVersionRequest): Promise<types.PublicApiCreatePackVersionResponse>;
+    createPackRelease(packId: number, params: {} | undefined, payload: types.PublicApiCreatePackReleaseRequest): Promise<types.PublicApiPackRelease>;
+    listPackReleases(packId: number, params?: {
+        limit?: number;
+        pageToken?: string;
+    }): Promise<types.PublicApiPackReleaseList>;
     setPackLiveVersion(packId: number, params: {} | undefined, payload: types.PublicApiSetPackLiveVersionRequest): Promise<types.PublicApiSetPackLiveVersionResponse>;
+    setPackSystemConnection(packId: number, params: {} | undefined, payload: types.PublicApiSetPackSystemConnectionRequest): Promise<types.PublicApiPackSystemConnection>;
+    deletePackSystemConnection(packId: number, params?: {}): Promise<types.PublicApiDeletePackSystemConnectionResponse>;
+    getPackSystemConnection(packId: number, params?: {}): Promise<types.PublicApiPackSystemConnection>;
     getPackPermissions(packId: number, params?: {}): Promise<types.PublicApiPackPermissionList>;
     addPackPermission(packId: number, params: {} | undefined, payload: types.PublicApiAddPackPermissionRequest): Promise<types.PublicApiAddPackPermissionResponse>;
     deletePackPermission(packId: number, permissionId: string, params?: {}): Promise<types.PublicApiDeletePackPermissionResponse>;
     uploadPackAsset(packId: number, params: {} | undefined, payload: types.PublicApiUploadPackAssetRequest): Promise<types.PublicApiPackAssetUploadInfo>;
+    uploadPackSourceCode(packId: number, params: {} | undefined, payload: types.PublicApiUploadPackSourceCodeRequest): Promise<types.PublicApiPackSourceCodeUploadInfo>;
     packAssetUploadComplete(packId: number, packAssetId: string, packAssetType: types.PublicApiPackAssetType, params?: {}): Promise<types.PublicApiPackAssetUploadCompleteResponse>;
+    packSourceCodeUploadComplete(packId: number, packVersion: string, params: {} | undefined, payload: types.PublicApiPackSourceCodeUploadCompleteRequest): Promise<types.PublicApiPackSourceCodeUploadCompleteResponse>;
+    getPackSourceCode(packId: number, packVersion: string, params?: {}): Promise<types.PublicApiPackSourceCodeInfo>;
+    listPackListings(params?: {
+        limit?: number;
+        pageToken?: string;
+    }): Promise<types.PublicApiPackListingList>;
 }

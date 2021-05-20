@@ -4,7 +4,7 @@
 
 /* eslint-disable */
 
-export const OpenApiSpecHash = '9344cda812f318da6169c839fbb51a2f289a9fe2e404d1c869df0c69f0f286c6';
+export const OpenApiSpecHash = 'c17f33bab1c1496bf73356d09380fa0a04e074f97741adc801db545ea8db0026';
 
 export const OpenApiSpecVersion = '1.2.0';
 
@@ -30,6 +30,8 @@ export enum PublicApiType {
   PackVersion = 'packVersion',
   PackAclPermissions = 'packAclPermissions',
   PackAsset = 'packAsset',
+  PackRelease = 'packRelease',
+  PackSourceCode = 'packSourceCode',
 }
 
 /**
@@ -125,6 +127,10 @@ export interface PublicApiAclMetadata {
    * When true, the user of the api can share with the org
    */
   canShareWithOrg: boolean;
+  /**
+   * When true, the user of the api can copy the doc
+   */
+  canCopy: boolean;
 }
 
 /**
@@ -1547,6 +1553,10 @@ export interface PublicApiUser {
    */
   type: 'user';
   /**
+   * Browser-friendly link to the user's avatar image.
+   */
+  pictureLink?: string;
+  /**
    * True if the token used to make this request has restricted/scoped access to the API.
    */
   scoped: boolean;
@@ -1558,11 +1568,29 @@ export interface PublicApiUser {
    * API link to the user.
    */
   href: string;
+  workspace: PublicApiWorkspaceReference;
+}
+
+/**
+ * Summary about the user.
+ */
+export interface PublicApiUserSummary {
+  /**
+   * Name of the user.
+   */
+  name: string;
+  /**
+   * Email address of the user.
+   */
+  loginId: string;
+  /**
+   * The type of this resource.
+   */
+  type: 'user';
   /**
    * Browser-friendly link to the user's avatar image.
    */
   pictureLink?: string;
-  workspace: PublicApiWorkspaceReference;
 }
 
 /**
@@ -1930,88 +1958,6 @@ export enum PublicApiDocAnalyticsScale {
 }
 
 /**
- * Payload for creating a Pack.
- */
-export interface PublicApiCreatePackRequest {
-  /**
-   * The parent workspace for the Pack. If unspecified, the user's default workspace will be used.
-   */
-  workspaceId?: string;
-}
-
-/**
- * Info about a Pack that was just created.
- */
-export interface PublicApiCreatePackResponse {
-  /**
-   * The ID assigned to the newly-created Pack.
-   */
-  packId: number;
-}
-
-/**
- * Payload for registering a Pack version.
- */
-export interface PublicApiRegisterPackVersionRequest {
-  /**
-   * The SHA-256 hash of the file to be uploaded.
-   */
-  bundleHash: string;
-}
-
-/**
- * Payload for updating a Pack.
- */
-export interface PublicApiUpdatePackRequest {
-  /**
-   * Rate limit in Pack settings.
-   */
-  overallRateLimit?: {
-    /**
-     * The rate limit interval in seconds.
-     */
-    intervalSeconds: number;
-    /**
-     * The maximum number of Pack operations that can be performed in a given interval.
-     */
-    operationsPerInterval: number;
-  } | null;
-  /**
-   * Rate limit in Pack settings.
-   */
-  perConnectionRateLimit?: {
-    /**
-     * The rate limit interval in seconds.
-     */
-    intervalSeconds: number;
-    /**
-     * The maximum number of Pack operations that can be performed in a given interval.
-     */
-    operationsPerInterval: number;
-  } | null;
-  /**
-   * A post-ingestion url to the Pack's logo, returned by the [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete) endpoint.
-   */
-  logoUploadUrl?: string;
-  /**
-   * Post-ingestion urls to the Pack's example images, returned by  [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete) endpoint.
-   */
-  exampleImageUploadUrls?: string[];
-  /**
-   * The name of the Pack.
-   */
-  name?: string;
-  /**
-   * The full description of the Pack.
-   */
-  description?: string;
-  /**
-   * A short version of the description of the Pack.
-   */
-  shortDescription?: string;
-}
-
-/**
  * Details about a Pack.
  */
 export interface PublicApiPack {
@@ -2117,29 +2063,9 @@ export interface PublicApiPackVersionUploadInfo {
    * Key-value pairs of authorization headers to include in the upload request.
    */
   headers: {
-    [k: string]: unknown;
+    [k: string]: string;
   };
 }
-
-/**
- * Payload for setting a Pack version live.
- */
-export interface PublicApiSetPackLiveVersionRequest {
-  /**
-   * The version of the Pack.
-   */
-  packVersion: string;
-}
-
-/**
- * Confirmation of successful Pack version creation.
- */
-export interface PublicApiCreatePackVersionResponse {}
-
-/**
- * Confirmation of successfully setting a Pack version live.
- */
-export interface PublicApiSetPackLiveVersionResponse {}
 
 /**
  * Metadata about a Pack principal.
@@ -2168,17 +2094,17 @@ export enum PublicApiPackAccessType {
 }
 
 export interface PublicApiPackUserPrincipal {
-  type: 'user';
+  type: PublicApiPackPrincipalType.User;
   email: string;
 }
 
 export interface PublicApiPackWorkspacePrincipal {
-  type: 'workspace';
+  type: PublicApiPackPrincipalType.Workspace;
   workspaceId: string;
 }
 
 export interface PublicApiPackGlobalPrincipal {
-  type: 'worldwide';
+  type: PublicApiPackPrincipalType.Worldwide;
 }
 
 /**
@@ -2186,6 +2112,7 @@ export interface PublicApiPackGlobalPrincipal {
  */
 export interface PublicApiPackPermissionList {
   items: PublicApiPackPermission[];
+  permissionUsers: PublicApiUserSummary[];
 }
 
 /**
@@ -2199,6 +2126,355 @@ export interface PublicApiPackPermission {
   principal: PublicApiPackPrincipal;
   access: PublicApiPackAccessType;
 }
+
+export enum PublicApiPackAssetType {
+  Logo = 'logo',
+  ExampleImage = 'exampleImage',
+}
+
+/**
+ * Information indicating where to upload the Pack asset, and an endpoint to mark the upload as complete.
+ */
+export interface PublicApiPackAssetUploadInfo {
+  /**
+   * A signed url to be used for uploading a Pack asset.
+   */
+  uploadUrl: string;
+  /**
+   * An endpoint to mark the upload as complete.
+   */
+  packAssetUploadedPathName: string;
+  /**
+   * Key-value pairs of authorization headers to include in the upload request.
+   */
+  headers: {
+    [k: string]: string;
+  };
+}
+
+/**
+ * Details about a Pack version.
+ */
+export interface PublicApiPackVersion {
+  /**
+   * ID of the Pack.
+   */
+  packId: number;
+  /**
+   * The build number of the Pack version.
+   */
+  buildId: number;
+  /**
+   * Developer notes.
+   */
+  buildNotes: string;
+  /**
+   * Timestamp for when the version was created.
+   */
+  createdAt: string;
+  /**
+   * The login ID of creation user of the Pack version.
+   */
+  creationUserLoginId: string;
+  /**
+   * The release number of the Pack version if it has one.
+   */
+  releaseId?: number;
+  /**
+   * The semantic format of the Pack version.
+   */
+  packVersion: string;
+}
+
+/**
+ * List of Pack versions.
+ */
+export interface PublicApiPackVersionList {
+  items: PublicApiPackVersion[];
+  creationUsers: PublicApiUserSummary[];
+  nextPageToken?: PublicApiNextPageToken;
+  nextPageLink?: PublicApiNextPageLink & string;
+}
+
+/**
+ * Details about a Pack release.
+ */
+export interface PublicApiPackRelease {
+  /**
+   * ID of the Packs.
+   */
+  packId: number;
+  /**
+   * The build number of the Pack release.
+   */
+  buildId: number;
+  /**
+   * Developer notes.
+   */
+  releaseNotes: string;
+  /**
+   * Timestamp for when the release was created.
+   */
+  createdAt: string;
+  /**
+   * The release number of the Pack version if it has one.
+   */
+  releaseId: number;
+  /**
+   * The semantic format of the Pack version.
+   */
+  packVersion: string;
+  /**
+   * The semantic format of the Pack release version.
+   */
+  releaseVersion: string;
+}
+
+/**
+ * List of Pack releases.
+ */
+export interface PublicApiPackReleaseList {
+  items: PublicApiPackRelease[];
+  nextPageToken?: PublicApiNextPageToken;
+  nextPageLink?: PublicApiNextPageLink & string;
+}
+
+/**
+ * Information indicating where to upload the Pack source code, and an endpoint to mark the upload as complete.
+ */
+export interface PublicApiPackSourceCodeUploadInfo {
+  /**
+   * A signed url to be used for uploading a Pack source code.
+   */
+  uploadUrl: string;
+  /**
+   * An endpoint to mark the upload as complete.
+   */
+  uploadedPathName: string;
+  /**
+   * Key-value pairs of authorization headers to include in the upload request.
+   */
+  headers: {
+    [k: string]: string;
+  };
+}
+
+/**
+ * Information indicating where to upload the Pack source code, and an endpoint to mark the upload as complete.
+ */
+export interface PublicApiPackSourceCodeInfo {
+  files: PublicApiPackSourceCode[];
+}
+
+/**
+ * Details about a Pack's source code.
+ */
+export interface PublicApiPackSourceCode {
+  /**
+   * name of the file
+   */
+  filename: string;
+  /**
+   * The url to download the source code from
+   */
+  url: string;
+}
+
+/**
+ * A Pack listing.
+ */
+export interface PublicApiPackListing {
+  /**
+   * ID of the Pack.
+   */
+  packId: number;
+  /**
+   * The version of the Pack.
+   */
+  packVersion: string;
+  /**
+   * The link to the logo of the Pack.
+   */
+  logoUrl: string;
+  /**
+   * The name of the Pack.
+   */
+  name: string;
+  /**
+   * The full description of the Pack.
+   */
+  description: string;
+  /**
+   * A short version of the description of the Pack.
+   */
+  shortDescription: string;
+}
+
+/**
+ * A list of Pack listings.
+ */
+export interface PublicApiPackListingList {
+  items: PublicApiPackListing[];
+  nextPageToken?: PublicApiNextPageToken;
+  nextPageLink?: PublicApiNextPageLink & string;
+}
+
+/**
+ * The Pack system connection.
+ */
+export interface PublicApiPackSystemConnection {
+  /**
+   * Name of the system connection.
+   */
+  name: string;
+  credentials: PublicApiPackSystemConnectionCredentials;
+}
+
+/**
+ * Payload for creating a Pack.
+ */
+export interface PublicApiCreatePackRequest {
+  /**
+   * The parent workspace for the Pack. If unspecified, the user's default workspace will be used.
+   */
+  workspaceId?: string;
+  /**
+   * The name for the Pack.
+   */
+  name?: string;
+  /**
+   * A brief description of the Pack.
+   */
+  description?: string;
+}
+
+/**
+ * Info about a Pack that was just created.
+ */
+export interface PublicApiCreatePackResponse {
+  /**
+   * The ID assigned to the newly-created Pack.
+   */
+  packId: number;
+}
+
+/**
+ * Type of Pack connections.
+ */
+export enum PublicApiPackConnectionType {
+  Header = 'header',
+  UrlParam = 'urlParam',
+  HttpBasic = 'httpBasic',
+}
+
+/**
+ * Credentials of a Pack connection.
+ */
+export type PublicApiPackSystemConnectionCredentials =
+  | PublicApiPackConnectionHeaderCredentials
+  | PublicApiPackConnectionUrlParamCredentials
+  | PublicApiPackConnectionHttpBasicCredentials;
+
+export interface PublicApiPackConnectionHeaderCredentials {
+  type: PublicApiPackConnectionType.Header;
+  token: string;
+}
+
+export interface PublicApiPackConnectionUrlParamCredentials {
+  type: PublicApiPackConnectionType.UrlParam;
+  params: {
+    key: string;
+    value: string;
+  }[];
+}
+
+export interface PublicApiPackConnectionHttpBasicCredentials {
+  type: PublicApiPackConnectionType.UrlParam;
+  username: string;
+  password: string;
+}
+
+/**
+ * Payload for registering a Pack version.
+ */
+export interface PublicApiRegisterPackVersionRequest {
+  /**
+   * The SHA-256 hash of the file to be uploaded.
+   */
+  bundleHash: string;
+}
+
+/**
+ * Payload for updating a Pack.
+ */
+export interface PublicApiUpdatePackRequest {
+  /**
+   * Rate limit in Pack settings.
+   */
+  overallRateLimit?: {
+    /**
+     * The rate limit interval in seconds.
+     */
+    intervalSeconds: number;
+    /**
+     * The maximum number of Pack operations that can be performed in a given interval.
+     */
+    operationsPerInterval: number;
+  } | null;
+  /**
+   * Rate limit in Pack settings.
+   */
+  perConnectionRateLimit?: {
+    /**
+     * The rate limit interval in seconds.
+     */
+    intervalSeconds: number;
+    /**
+     * The maximum number of Pack operations that can be performed in a given interval.
+     */
+    operationsPerInterval: number;
+  } | null;
+  /**
+   * The asset id of the Pack's logo, returned by [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete) endpoint.
+   */
+  logoAssetId?: string | null;
+  /**
+   * The asset ids of the Pack's example images, returned by [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete) endpoint, sorted by their display order.
+   */
+  exampleImageAssetIds?: string[] | null;
+  /**
+   * The name of the Pack.
+   */
+  name?: string;
+  /**
+   * The full description of the Pack.
+   */
+  description?: string;
+  /**
+   * A short version of the description of the Pack.
+   */
+  shortDescription?: string;
+}
+
+/**
+ * Payload for setting a Pack version live.
+ */
+export interface PublicApiSetPackLiveVersionRequest {
+  /**
+   * The version of the Pack.
+   */
+  packVersion: string;
+}
+
+/**
+ * Confirmation of successful Pack version creation.
+ */
+export interface PublicApiCreatePackVersionResponse {}
+
+/**
+ * Confirmation of successfully setting a Pack version live.
+ */
+export interface PublicApiSetPackLiveVersionResponse {}
 
 /**
  * Payload for upserting a Pack permission.
@@ -2223,30 +2499,20 @@ export interface PublicApiAddPackPermissionResponse {
  */
 export interface PublicApiDeletePackPermissionResponse {}
 
-export enum PublicApiPackAssetType {
-  Logo = 'logo',
-  ExampleImage = 'exampleImage',
-}
-
 /**
  * Payload for a Pack asset upload.
  */
 export interface PublicApiUploadPackAssetRequest {
   packAssetType: PublicApiPackAssetType;
-}
-
-/**
- * Information indicating where to upload the Pack asset, and an endpoint to mark the upload as complete.
- */
-export interface PublicApiPackAssetUploadInfo {
   /**
-   * A signed url to be used for uploading a Pack asset.
+   * The SHA-256 hash of the image to be uploaded.
    */
-  uploadUrl: string;
+  imageHash: string;
   /**
-   * An endpoint to mark the upload as complete.
+   * The media type of the image being sent.
    */
-  packAssetUploadedPathName: string;
+  mimeType: string;
+  filename: string;
 }
 
 /**
@@ -2265,7 +2531,76 @@ export interface PublicApiPackAssetUploadCompleteResponse {
    */
   requestId: string;
   /**
-   * A post-ingestion url that you can provide to update your Pack's assets.
+   * An identifier of this uploaded asset.
    */
-  verifiedUploadUrl: string;
+  assetId: string;
 }
+
+/**
+ * Payload for noting a Pack source code upload is complete.
+ */
+export interface PublicApiPackSourceCodeUploadCompleteRequest {
+  filename: string;
+}
+
+/**
+ * Response for noting a Pack source code upload is complete.
+ */
+export interface PublicApiPackSourceCodeUploadCompleteResponse {
+  /**
+   * An arbitrary unique identifier for this request.
+   */
+  requestId: string;
+}
+
+/**
+ * Payload for Pack version upload complete.
+ */
+export interface PublicApiCreatePackVersionRequest {
+  /**
+   * Developer notes of the new Pack version.
+   */
+  notes?: string;
+}
+
+/**
+ * Payload for creating a new Pack release.
+ */
+export interface PublicApiCreatePackReleaseRequest {
+  /**
+   * Which semantic pack version that the release will be created on.
+   */
+  packVersion: string;
+  /**
+   * Developers notes.
+   */
+  releaseNotes?: string;
+}
+
+/**
+ * Payload for a Pack asset upload.
+ */
+export interface PublicApiUploadPackSourceCodeRequest {
+  /**
+   * The SHA-256 hash of the image to be uploaded.
+   */
+  payloadHash: string;
+  filename: string;
+  packVersion?: string;
+}
+
+/**
+ * The request to set Pack system connection.
+ */
+export interface PublicApiSetPackSystemConnectionRequest {
+  /**
+   * Name of the system connection.
+   */
+  name: string;
+  credentials: PublicApiPackSystemConnectionCredentials;
+}
+
+/**
+ * Empty response of deleting pack system connection.
+ */
+export interface PublicApiDeletePackSystemConnectionResponse {}

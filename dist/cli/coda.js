@@ -11,9 +11,9 @@ const build_1 = require("./build");
 const create_1 = require("./create");
 const execute_1 = require("./execute");
 const init_1 = require("./init");
-const publish_1 = require("./publish");
 const register_1 = require("./register");
-const set_live_1 = require("./set_live");
+const release_1 = require("./release");
+const upload_1 = require("./upload");
 const validate_1 = require("./validate");
 const yargs_1 = __importDefault(require("yargs"));
 if (require.main === module) {
@@ -71,21 +71,36 @@ if (require.main === module) {
         handler: build_1.handleBuild,
     })
         .command({
-        command: 'publish <manifestFile>',
-        describe: 'Upload your Pack to Coda',
+        command: 'upload <manifestFile>',
+        describe: 'Upload your Pack version to Coda',
         builder: {
+            notes: {
+                string: true,
+                alias: 'n',
+                describe: 'Notes about the contents of this Pack version',
+            },
             codaApiEndpoint: {
                 string: true,
                 hidden: true,
                 default: config_storage_1.DEFAULT_API_ENDPOINT,
             },
         },
-        handler: publish_1.handlePublish,
+        handler: upload_1.handleUpload,
     })
         .command({
         command: 'create <manifestFile>',
         describe: "Register a new Pack with Coda's servers",
         builder: {
+            name: {
+                string: true,
+                alias: 'n',
+                describe: 'The name of the Pack. Can be set later in the UI.',
+            },
+            description: {
+                string: true,
+                alias: 'd',
+                describe: 'A description of the Pack. Can be set later in the UI.',
+            },
             codaApiEndpoint: {
                 string: true,
                 hidden: true,
@@ -100,16 +115,23 @@ if (require.main === module) {
         handler: validate_1.handleValidate,
     })
         .command({
-        command: 'setLive <manifestFile> <packVersion>',
-        describe: 'Set the Pack version that is installable for users.',
+        command: 'release <manifestFile> [packVersion]',
+        describe: 'Set the Pack version that is installable for users. You may specify a specific version, ' +
+            'or omit a version to use the version currently in the manifest file. ' +
+            'The version must always be higher than that of any previous release.',
         builder: {
+            notes: {
+                string: true,
+                alias: 'n',
+                describe: 'Notes about the contents of this Pack release',
+            },
             codaApiEndpoint: {
                 string: true,
                 hidden: true,
                 default: config_storage_1.DEFAULT_API_ENDPOINT,
             },
         },
-        handler: set_live_1.handleSetLive,
+        handler: release_1.handleRelease,
     })
         .demandCommand()
         .strict()

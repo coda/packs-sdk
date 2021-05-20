@@ -22,7 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handlePublish = void 0;
+exports.handleUpload = void 0;
 const logging_1 = require("../helpers/logging");
 const build_1 = require("./build");
 const cli_1 = require("../helpers/cli");
@@ -39,7 +39,7 @@ const helpers_4 = require("../testing/helpers");
 const helpers_5 = require("../testing/helpers");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
 const validate_1 = require("./validate");
-async function handlePublish({ manifestFile, codaApiEndpoint }) {
+async function handleUpload({ manifestFile, codaApiEndpoint, notes }) {
     const manifestDir = path.dirname(manifestFile);
     const formattedEndpoint = helpers_2.formatEndpoint(codaApiEndpoint);
     const logger = new logging_1.ConsoleLogger();
@@ -86,7 +86,7 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
         logger.info('Uploading Pack...');
         await uploadPack(uploadUrl, uploadPayload, headers);
         logger.info('Validating upload...');
-        const uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion);
+        const uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion, {}, { notes });
         if (errors_2.isCodaError(uploadCompleteResponse)) {
             helpers_4.printAndExit(`Error while finalizing pack version: ${errors_1.formatError(uploadCompleteResponse)}`);
         }
@@ -96,7 +96,7 @@ async function handlePublish({ manifestFile, codaApiEndpoint }) {
     }
     logger.info('Done!');
 }
-exports.handlePublish = handlePublish;
+exports.handleUpload = handleUpload;
 async function uploadPack(uploadUrl, uploadPayload, headers) {
     try {
         await request_promise_native_1.default.put(uploadUrl, {
