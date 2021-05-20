@@ -245,7 +245,7 @@ pack based on your latest code.
 coda upload path/to/manifest.ts
 ```
 
-This will build and upload your code. You must update the `version` in your manifest
+This will build and upload your compiled pack implementation. You must update the `version` in your manifest
 to be greater than your previous upload.
 
 Once uploaded, as an editor of the pack, you'll be able to install this specific version
@@ -258,6 +258,9 @@ This command accepts an optional flag where you can provide notes about the cont
 ```bash
 coda upload path/to/manifest.ts --notes "Added the formula MyNewFormula."
 ```
+
+**NOTE: At this time, this command will not upload your _source code_, only your compiled pack.** You will not see your source code
+in the web editor as you would if you had used the web code editor to compose your pack.
 
 ### Creating a Release
 
