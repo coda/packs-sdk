@@ -16,6 +16,7 @@ import type {TemporaryBlobStorage} from '../api_types';
 import type {TokenCredentials} from './auth_types';
 import {URL} from 'url';
 import type {WebBasicCredentials} from './auth_types';
+import {assertCondition} from '../helpers/ensure';
 import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {getExpirationDate} from './helpers';
@@ -152,17 +153,11 @@ export class AuthenticatingFetcher implements Fetcher {
   }
 
   private async _refreshOAuthCredentials() {
+    assertCondition(this._authDef?.type === AuthenticationType.OAuth2);
+    assertCondition(this._credentials);
     const {clientId, clientSecret, accessToken, refreshToken} = this._credentials as OAuth2Credentials;
-    // These should have already been checked by calling _isOAuth401, but Typescript wants to double check.
-    if (
-      !accessToken ||
-      !refreshToken ||
-      !this._authDef ||
-      !this._credentials ||
-      this._authDef.type !== AuthenticationType.OAuth2
-    ) {
-      throw new Error('This should not be reachable');
-    }
+    assertCondition(accessToken);
+    assertCondition(refreshToken);
     const {authorizationUrl, tokenUrl, scopes, additionalParams} = this._authDef;
     const oauth2Client = new ClientOAuth2({
       clientId,
@@ -175,7 +170,7 @@ export class AuthenticatingFetcher implements Fetcher {
     const oauthToken = oauth2Client.createToken(accessToken, refreshToken, {});
     const refreshedToken = await oauthToken.refresh();
     const newCredentials: Credentials = {
-      ...this._credentials!,
+      ...this._credentials,
       accessToken: refreshedToken.accessToken,
       refreshToken: refreshedToken.refreshToken,
       expires: getExpirationDate(Number(refreshedToken.data.expires_in)).toString(),

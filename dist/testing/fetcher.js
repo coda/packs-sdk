@@ -10,6 +10,7 @@ const logging_1 = require("../helpers/logging");
 const url_1 = require("url");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
+const ensure_3 = require("../helpers/ensure");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
@@ -117,15 +118,12 @@ class AuthenticatingFetcher {
         return true;
     }
     async _refreshOAuthCredentials() {
+        var _a;
+        ensure_1.assertCondition(((_a = this._authDef) === null || _a === void 0 ? void 0 : _a.type) === types_1.AuthenticationType.OAuth2);
+        ensure_1.assertCondition(this._credentials);
         const { clientId, clientSecret, accessToken, refreshToken } = this._credentials;
-        // These should have already been checked by calling _isOAuth401, but Typescript wants to double check.
-        if (!accessToken ||
-            !refreshToken ||
-            !this._authDef ||
-            !this._credentials ||
-            this._authDef.type !== types_1.AuthenticationType.OAuth2) {
-            throw new Error('This should not be reachable');
-        }
+        ensure_1.assertCondition(accessToken);
+        ensure_1.assertCondition(refreshToken);
         const { authorizationUrl, tokenUrl, scopes, additionalParams } = this._authDef;
         const oauth2Client = new client_oauth2_1.default({
             clientId,
@@ -192,10 +190,10 @@ class AuthenticatingFetcher {
                 const requestHeaders = headers || {};
                 let requestUrl = url;
                 if (this._authDef.tokenQueryParam) {
-                    requestUrl = addQueryParam(url, this._authDef.tokenQueryParam, ensure_1.ensureNonEmptyString(accessToken));
+                    requestUrl = addQueryParam(url, this._authDef.tokenQueryParam, ensure_2.ensureNonEmptyString(accessToken));
                 }
                 else {
-                    requestHeaders.Authorization = `${prefix} ${ensure_1.ensureNonEmptyString(accessToken)}`;
+                    requestHeaders.Authorization = `${prefix} ${ensure_2.ensureNonEmptyString(accessToken)}`;
                 }
                 return {
                     url: requestUrl,
@@ -208,7 +206,7 @@ class AuthenticatingFetcher {
             case types_1.AuthenticationType.Various:
                 throw new Error('Not yet implemented');
             default:
-                return ensure_2.ensureUnreachable(this._authDef);
+                return ensure_3.ensureUnreachable(this._authDef);
         }
     }
     _applyAndValidateEndpoint(rawUrl) {
