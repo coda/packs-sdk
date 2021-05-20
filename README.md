@@ -225,7 +225,7 @@ coda create path/to/manifest.ts
 This will create a new empty pack on Coda's servers. It will print out the url of the
 pack management page in the Coda UI, and store the newly-assigned pack id in a hidden file
 `.coda-pack.json` in the same directory as your manifest file. (This allows you to put
-multiple pack definitions in the same repo, as long as they're in different directories.)
+multiple pack definitions in the same repo, as long as they're in **different directories**.)
 The id in this file will be used subsequent CLI commands for managing your pack.
 
 This command accepts optional flags for specifying a name and description for the pack.
