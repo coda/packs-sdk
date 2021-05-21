@@ -27,6 +27,7 @@
   - [Syncs](#syncs)
     - [Continuation Examples](#continuation-examples)
     - [Dynamic Sync Tables](#dynamic-sync-tables)
+      - [Implementing a Dynamic Sync Table](#implementing-a-dynamic-sync-table)
   - [Normalization](#normalization)
   - [Type Hints](#type-hints)
   - [Key Mapping and Extraneous Properties](#key-mapping-and-extraneous-properties)
@@ -507,10 +508,10 @@ a sync of a user's Google Calendar events, the structure of an Event from the Go
 API is well-known and you can write a schema for what your table should contain.
 
 In certain cases, you may want to sync data whose structure is not known in advance
-and my depend on the user doing the sync. For example, Coda's Jira pack allows users
+and may depend on the user doing the sync. For example, Coda's Jira pack allows users
 to sync data from their Jira instance, but Jira lets users create arbitrary custom fields
 for their Issue objects. So the schema of the Issues sync table is not known in advance;
-it depends on Jira account that the user is syncing from.
+it depends on the Jira account that the user is syncing from.
 
 Coda supports "dynamic" sync tables for cases like these. Instead of including a static
 schema in your sync table definition, you include a formula that returns a schema.
@@ -522,6 +523,137 @@ To define a dynamic schema, use the `makeDynamicSyncTable()` wrapper function.
 You will provide a `getSchema` formula that returns a schema definition. You'll
 also provide some supporting formulas like `getName`, to return a name in the UI
 for the table, in case even the name of the entities being synced is dynamic.
+
+There are two subtle variants of dynamic sync tables. A sync table can be dynamic simply
+because the shape of the entities being synced vary based on who the current user is.
+For example, in the Jira example, Jira Issues are synced by hitting the same static
+Jira API url for Issues, but the schema of the issues returned will be different
+depending on the configuration of the Jira instance of the calling user.
+
+Alternatively, a sync table can be dynamic because the data source is specific
+to each instance of the table. If you were building a sync table to sync data
+from a Google Sheet, the data source would be the API url of a specific sheet.
+In this case, the sync table will be bound to a `dynamicUrl` that defines the data
+source. This url will be available to all of the formulas to implement the sync table
+in the sync context, as `context.sync.dynamicUrl`. To create a sync table that uses
+dynamic urls, you must implement the `listDynamicUrls` metadata formula in your
+dynamic sync table definition, as described below.
+
+##### Implementing a Dynamic Sync Table
+
+Use the `makeDynamicSyncTable()` wrapper function. It takes an object with the following fields:
+
+- **name**: The name for this category of sync table. The actual name of the table once added to a
+  doc will be generated dynamically by your `getName` formula. This static name is just used when
+  describing the contents of your pack. For example, if you had a dynamic sync table that syncs a sheet
+  of data from a Google Sheets spreadsheet, the static name you specify here might be "Sheet",
+  indicating that this pack has a building block for syncing data from a sheet. You would implement
+  your `getName` formula to return the actual name of the sheet, however.
+- **getName**: A formula that returns a string, to be used as the title of the table when added to a doc.
+  Typically this formula calls an API to get a name for the parent entity that you're syncing. In the
+  Google Sheets example, this would call the Google Sheets API with the id of the sheet that you're syncing
+  and return the name of that sheet. As with all metadata formulas, you will wrap your formula implementation
+  with `makeMetadataFormula()`.
+- **getSchema**: A formula that returns a schema object. Typically this formula calls an API to get info
+  about the shape of the data you are syncing. In the Google Sheets example, this formula might fetch the
+  first few rows of data, look at the first row of column headers to use as schema property names, and perhaps
+  look at a few pieces of data in each row to try to sniff a value type for each column (string, number, date, etc).
+  As with all metadata formulas, you will wrap your formula implementation with `makeMetadataFormula()`.
+  The return value from this formula should always be an array schema:
+
+  ```typescript
+  return makeSchema({
+    type: ValueType.Array,
+    items: makeObjectSchema({
+      type: ValueType.Object,
+      // The property name from the `properties` object below that represents the unique
+      // identifier of this item. A sync table MUST have a stable unique identifier. Without
+      // one, each subsequent sync will wipe away all rows and recreate them from scratch.
+      id: '<id property name>',
+      // The property name from the `properties` object below that should label this item
+      // in the UI. All properties can be seen when hovering over a synced item in the UI,
+      // but the `primary` property value is shown on the chip representing the full object.
+      primary: '<display property name>',
+      // Zero or more property names from the `properties` object below that should be created
+      // as projected columns by default the first time a user add this table to their doc.
+      // If your items have lots of properties, it may be overwhelming to create columns for all
+      // of them, so Coda will only automatically create columns for the featured properties
+      // specified here. A user can always reference non-featured properties in formulas or create
+      // new columns for those properties at any time.
+      featured: [<featured property names>],
+      // An identifier for the synced items, primarily used as an implementation detail.
+      identity: {
+        // A label for the kind of entities that you are syncing. In the Google Sheets example
+        // you might use "Row" here, as each synced entity is a row from the source sheet.
+        // This label is used in a doc to identify the column in this table that contains the synced data.
+        // It must not contain any spaces or special characters.
+        name: '<entity name>',
+        // The dynamic url bound to this table instance, if any.
+        dynamicUrl: context.sync.dynamicUrl,
+      },
+      // The actual schema properties.
+      properties: {
+        property1: {type: ValueType.Number},
+        property2: {type: ValueType.String},
+        ...
+      },
+    }),
+  });
+  ```
+
+- **getDisplayUrl**: A metadata formula that returns a string, a user-friendly url representing the
+  entity being synced. The table UI in the doc will provide a convenience link to this url so
+  the user can easily click through to the source of data in that table.
+  In the Google Sheets example, this could be the url to the web-editable spreadsheet document,
+  (as opposed to the API url of the sheet). The `dynamicUrl` for a sync table is typically an API url
+  for whatever service you're syncing from, which is not a meaningful url for an end user.
+  Typically this formula returns a browser-friendly version
+  of the dynamic url. As with all metadata formulas, you will wrap your formula implementation with `makeMetadataFormula()`.
+- **listDynamicUrls**: (Optional) A metadata formula that returns an array of items of the form
+  `{display: '<display label>', value: '<dynamic url>'}`. If your table is in the category of those
+  that require a dynamic url as described above, you must implement this method to list the
+  dynamic urls available to the current user. The actual dynamic url is returned in the `value` property
+  of each item in the returned array, but you must also specify a `display` string, which is the user-friendly
+  name of the entity that will be displayed to the user in the UI in a list of syncable entities.
+  In the Google Sheets example, this formula would return a list of the sheets that the user has access to;
+  the `display` property would be the name of the sheet and the `value` property would be the
+  Google Sheets API url for that sheet. As with all metadata formulas, you will wrap your formula
+  implementation with `makeMetadataFormula()`.
+- **entityName**: (Optional) A label for the kind of entities that you are syncing. In the Google Sheets example
+  you might use "Row" here, as each synced entity is a row from the source sheet. This label is used in a doc to identify the column in this table that contains the synced data. If you don't provide an `entityName`, the value
+  of `identity.name` from your schema will be used instead, so in most cases you don't need to provide this.
+- **formula**: The definition of the formula that actual performs the sync. This formula definition has the
+  same structure as a statuc (non-dynamic) sync table formula. The implementation of your formula,
+  the function given as the `execute` property, has the same form has any other pack formula, taking
+  two parameters, the first being the list of parameters given by the user, and the second being
+  the execution context. As with a static sync table, the execution context has a `sync` property
+  that provides sync-specific context, and in particular, if you are using a dynamic sync table with a
+  `dynamicUrl` that url will be available to your implementation as `context.sync.dynamicUrl`.
+
+  ```typescript
+  {
+    ...
+    execute: async (params, context) => {
+      const response = await context.fetcher.fetch(context.sync.dynamicUrl);
+      ...
+    },
+  }
+  ```
+
+Each of the above metadata formulas (`getName/getDisplayUrl/getSchema/listDynamicUrls`) should be implemented
+with functions that take a single parameter, the execution context. The `dynamicUrl`, if used, is similarly
+provided via `context.sync.dynamicUrl`:
+
+```typescript
+makeDynamicSyncTable({
+  ...
+  getName: makeMetadataFormula(async context => {
+    const response = await context.fetcher.fetch(context.sync.dynamicUrl);
+    return response.body.entityName;
+  }),
+  ...
+});
+```
 
 ### Normalization
 
