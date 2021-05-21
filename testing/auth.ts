@@ -4,7 +4,7 @@ import type {Credentials} from './auth_types';
 import type {CredentialsFile} from './auth_types';
 import type {MultiQueryParamCredentials} from './auth_types';
 import type {OAuth2Credentials} from './auth_types';
-import type {PackDefinition} from '../types';
+import type {PackVersionDefinition} from '../types';
 import {assertCondition} from '../helpers/ensure';
 import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
@@ -35,19 +35,19 @@ export async function setupAuthFromModule(
   return setupAuth(manifestDir, getManifestFromModule(module), opts);
 }
 
-export function setupAuth(manifestDir: string, packDef: PackDefinition, opts: SetupAuthOptions = {}): void {
-  const {name, defaultAuthentication} = packDef;
+export function setupAuth(manifestDir: string, packDef: PackVersionDefinition, opts: SetupAuthOptions = {}): void {
+  const {defaultAuthentication} = packDef;
   if (!defaultAuthentication) {
     return printAndExit(
-      `The pack ${name} has no declared authentication. Provide a value for defaultAuthentication in the pack definition.`,
+      `This Pack has no declared authentication. Provide a value for defaultAuthentication in the Pack definition.`,
     );
   }
-  const handler = new CredentialHandler(manifestDir, name, defaultAuthentication, opts);
+  const handler = new CredentialHandler(manifestDir, defaultAuthentication, opts);
   switch (defaultAuthentication.type) {
     case AuthenticationType.None:
       return printAndExit(
-        `The pack ${name} declares AuthenticationType.None and so does not require authentication. ` +
-          `Please declare another AuthenticationType to use authentication with this pack.`,
+        `This Pack declares AuthenticationType.None and so does not require authentication. ` +
+          `Please declare another AuthenticationType to use authentication with this Pack.`,
       );
     case AuthenticationType.CodaApiHeaderBearerToken:
     case AuthenticationType.CustomHeaderToken:
@@ -70,18 +70,11 @@ export function setupAuth(manifestDir: string, packDef: PackDefinition, opts: Se
 }
 
 class CredentialHandler {
-  private readonly _packName: string;
   private readonly _authDef: Authentication;
   private readonly _manifestDir: string;
   private readonly _oauthServerPort: number;
 
-  constructor(
-    manifestDir: string,
-    packName: string,
-    authDef: Authentication,
-    {oauthServerPort}: SetupAuthOptions = {},
-  ) {
-    this._packName = packName;
+  constructor(manifestDir: string, authDef: Authentication, {oauthServerPort}: SetupAuthOptions = {}) {
     this._authDef = authDef;
     this._manifestDir = manifestDir;
     this._oauthServerPort = oauthServerPort || DEFAULT_OAUTH_SERVER_PORT;
@@ -91,7 +84,7 @@ class CredentialHandler {
     const existingCredentials = readCredentialsFile(this._manifestDir);
     if (existingCredentials) {
       const input = promptForInput(
-        `Credentials already exist for ${this._packName}, press "y" to overwrite or "n" to cancel: `,
+        `Credentials already exist for this Pack, press "y" to overwrite or "n" to cancel: `,
       );
       if (input.toLocaleLowerCase() !== 'y') {
         return process.exit(1);
@@ -103,7 +96,7 @@ class CredentialHandler {
   handleToken() {
     this.checkForExistingCredential();
     const endpointUrl = this.maybePromptForEndpointUrl();
-    const input = promptForInput(`Paste the token or API key to use for ${this._packName}:\n`, {mask: true});
+    const input = promptForInput(`Paste the token or API key to use for this Pack:\n`, {mask: true});
     this.storeCredential({endpointUrl, token: input});
     print('Credentials updated!');
   }
@@ -115,10 +108,10 @@ class CredentialHandler {
     const usernamePlaceholder = this._authDef.uxConfig?.placeholderUsername || 'username';
     const passwordPlaceholder = this._authDef.uxConfig?.placeholderPassword || 'password';
     const usernameOnly = this._authDef.uxConfig?.usernameOnly;
-    const username = promptForInput(`Enter the ${usernamePlaceholder} for ${this._packName}:\n`);
+    const username = promptForInput(`Enter the ${usernamePlaceholder} for this Pack:\n`);
     let password: string | undefined;
     if (!usernameOnly) {
-      password = promptForInput(`Enter the ${passwordPlaceholder} for ${this._packName}:\n`, {mask: true});
+      password = promptForInput(`Enter the ${passwordPlaceholder} for this Pack:\n`, {mask: true});
     }
     this.storeCredential({endpointUrl, username, password});
     print('Credentials updated!');
@@ -127,12 +120,12 @@ class CredentialHandler {
   handleQueryParam(paramName: string) {
     if (!paramName) {
       printAndExit(
-        `Please provide a paramName attribute in the defaultAuthentication section of the ${this._packName} pack definition.`,
+        `Please provide a paramName attribute in the defaultAuthentication section of this Pack definition.`,
       );
     }
     this.checkForExistingCredential();
     const endpointUrl = this.maybePromptForEndpointUrl();
-    const input = promptForInput(`Enter the token to use for the "${paramName}" url param for ${this._packName}:\n`, {
+    const input = promptForInput(`Enter the token to use for the "${paramName}" url param for this Pack:\n`, {
       mask: true,
     });
     this.storeCredential({endpointUrl, paramValue: input});
@@ -147,7 +140,7 @@ class CredentialHandler {
   ) {
     if (paramDefs.length === 0) {
       printAndExit(
-        `Please define one or more entries for "params" in the defaultAuthentication section of the ${this._packName} pack definition.`,
+        `Please define one or more entries for "params" in the defaultAuthentication section of this Pack definition.`,
       );
     }
 
@@ -156,7 +149,7 @@ class CredentialHandler {
     const credentials: MultiQueryParamCredentials = {endpointUrl, params: {}};
     for (const paramDef of paramDefs) {
       const paramValue = promptForInput(
-        `Enter the token to use for the "${paramDef.name}" url param for ${this._packName}:\n`,
+        `Enter the token to use for the "${paramDef.name}" url param for this Pack:\n`,
         {mask: true},
       );
       credentials.params[paramDef.name] = paramValue;
@@ -173,12 +166,12 @@ class CredentialHandler {
         'in order for this tool to work. ***',
     );
     const clientIdPrompt = existingCredentials
-      ? `Enter the OAuth client id for ${this._packName} (or Enter to skip and use existing):\n`
-      : `Enter the OAuth client id for ${this._packName}:\n`;
+      ? `Enter the OAuth client id for this Pack (or Enter to skip and use existing):\n`
+      : `Enter the OAuth client id for this Pack:\n`;
     const newClientId = promptForInput(clientIdPrompt);
     const clientSecretPrompt = existingCredentials
-      ? `Enter the OAuth client secret for ${this._packName} (or Enter to skip and use existing):\n`
-      : `Enter the OAuth client secret for ${this._packName}:\n`;
+      ? `Enter the OAuth client secret for this Pack (or Enter to skip and use existing):\n`
+      : `Enter the OAuth client secret for this Pack:\n`;
     const newClientSecret = promptForInput(clientSecretPrompt, {mask: true});
 
     const clientId = ensureNonEmptyString(newClientId || existingCredentials?.clientId);
@@ -221,10 +214,8 @@ class CredentialHandler {
     if (!requiresEndpointUrl) {
       return;
     }
-    const placeholder = endpointDomain
-      ? `https://my-site.${endpointDomain}`
-      : `https://${this._packName.toLowerCase()}.example.com`;
-    return promptForInput(`Enter the endpoint url for ${this._packName} (for example, ${placeholder}):\n`);
+    const placeholder = endpointDomain ? `https://my-site.${endpointDomain}` : 'https://foo.example.com';
+    return promptForInput(`Enter the endpoint url for this Pack (for example, ${placeholder}):\n`);
   }
 
   storeCredential(credentials: Credentials): void {
