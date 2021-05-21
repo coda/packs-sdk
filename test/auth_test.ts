@@ -70,7 +70,7 @@ describe('Auth', () => {
 
       sinon.assert.calledOnceWithExactly(
         mockPrintAndExit,
-        'The pack Fake Pack has no declared authentication. Provide a value for defaultAuthentication in the pack definition.',
+        'This Pack has no declared authentication. Provide a value for defaultAuthentication in the Pack definition.',
       );
       assertCredentialsFileExactly(undefined);
     });
@@ -86,8 +86,8 @@ describe('Auth', () => {
 
       sinon.assert.calledOnceWithExactly(
         mockPrintAndExit,
-        'The pack Fake Pack declares AuthenticationType.None and so does not require authentication. ' +
-          'Please declare another AuthenticationType to use authentication with this pack.',
+        'This Pack declares AuthenticationType.None and so does not require authentication. ' +
+          'Please declare another AuthenticationType to use authentication with this Pack.',
       );
       assertCredentialsFileExactly(undefined);
     });
@@ -102,7 +102,7 @@ describe('Auth', () => {
 
       doSetupAuth(pack);
 
-      sinon.assert.calledOnceWithExactly(mockPromptForInput, 'Paste the token or API key to use for Fake Pack:\n', {
+      sinon.assert.calledOnceWithExactly(mockPromptForInput, 'Paste the token or API key to use for this Pack:\n', {
         mask: true,
       });
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
@@ -123,9 +123,9 @@ describe('Auth', () => {
 
       sinon.assert.calledWithExactly(
         mockPromptForInput,
-        'Enter the endpoint url for Fake Pack (for example, https://fake pack.example.com):\n',
+        'Enter the endpoint url for this Pack (for example, https://foo.example.com):\n',
       );
-      sinon.assert.calledWithExactly(mockPromptForInput, 'Paste the token or API key to use for Fake Pack:\n', {
+      sinon.assert.calledWithExactly(mockPromptForInput, 'Paste the token or API key to use for this Pack:\n', {
         mask: true,
       });
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
@@ -143,7 +143,7 @@ describe('Auth', () => {
 
       doSetupAuth(pack);
 
-      sinon.assert.calledOnceWithExactly(mockPromptForInput, 'Paste the token or API key to use for Fake Pack:\n', {
+      sinon.assert.calledOnceWithExactly(mockPromptForInput, 'Paste the token or API key to use for this Pack:\n', {
         mask: true,
       });
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
@@ -162,7 +162,7 @@ describe('Auth', () => {
 
       doSetupAuth(pack);
 
-      sinon.assert.calledOnceWithExactly(mockPromptForInput, 'Paste the token or API key to use for Fake Pack:\n', {
+      sinon.assert.calledOnceWithExactly(mockPromptForInput, 'Paste the token or API key to use for this Pack:\n', {
         mask: true,
       });
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
@@ -183,7 +183,7 @@ describe('Auth', () => {
 
       sinon.assert.calledOnceWithExactly(
         mockPromptForInput,
-        'Enter the token to use for the "myParam" url param for Fake Pack:\n',
+        'Enter the token to use for the "myParam" url param for this Pack:\n',
         {mask: true},
       );
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
@@ -207,12 +207,12 @@ describe('Auth', () => {
 
       sinon.assert.calledWithExactly(
         mockPromptForInput,
-        'Enter the token to use for the "param1" url param for Fake Pack:\n',
+        'Enter the token to use for the "param1" url param for this Pack:\n',
         {mask: true},
       );
       sinon.assert.calledWithExactly(
         mockPromptForInput,
-        'Enter the token to use for the "param2" url param for Fake Pack:\n',
+        'Enter the token to use for the "param2" url param for this Pack:\n',
         {mask: true},
       );
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
@@ -230,8 +230,8 @@ describe('Auth', () => {
 
       doSetupAuth(pack);
 
-      sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the username for Fake Pack:\n');
-      sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the password for Fake Pack:\n', {mask: true});
+      sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the username for this Pack:\n');
+      sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the password for this Pack:\n', {mask: true});
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
       assertCredentialsFileExactly({username: 'some-username', password: 'some-password'});
@@ -250,7 +250,7 @@ describe('Auth', () => {
 
       doSetupAuth(pack);
 
-      sinon.assert.calledOnceWithExactly(mockPromptForInput, 'Enter the username for Fake Pack:\n');
+      sinon.assert.calledOnceWithExactly(mockPromptForInput, 'Enter the username for this Pack:\n');
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
       assertCredentialsFileExactly({username: 'some-username'});
@@ -270,8 +270,8 @@ describe('Auth', () => {
 
       doSetupAuth(pack);
 
-      sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the API Key for Fake Pack:\n');
-      sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the API Password for Fake Pack:\n', {mask: true});
+      sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the API Key for this Pack:\n');
+      sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the API Password for this Pack:\n', {mask: true});
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
       assertCredentialsFileExactly({username: 'some-username', password: 'some-password'});
@@ -290,10 +290,10 @@ describe('Auth', () => {
 
       sinon.assert.calledWithExactly(
         mockPromptForInput,
-        'Enter the endpoint url for Fake Pack (for example, https://fake pack.example.com):\n',
+        'Enter the endpoint url for this Pack (for example, https://foo.example.com):\n',
       );
-      sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the username for Fake Pack:\n');
-      sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the password for Fake Pack:\n', {mask: true});
+      sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the username for this Pack:\n');
+      sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the password for this Pack:\n', {mask: true});
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
       assertCredentialsFileExactly({
@@ -317,10 +317,10 @@ describe('Auth', () => {
 
       sinon.assert.calledWithMatch(
         mockPromptForInput,
-        'Enter the endpoint url for Fake Pack (for example, https://my-site.myservice.com):\n',
+        'Enter the endpoint url for this Pack (for example, https://my-site.myservice.com):\n',
       );
-      sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the username for Fake Pack:\n');
-      sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the password for Fake Pack:\n', {mask: true});
+      sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the username for this Pack:\n');
+      sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the password for this Pack:\n', {mask: true});
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
       assertCredentialsFileExactly({
