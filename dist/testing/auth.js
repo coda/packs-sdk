@@ -45,15 +45,15 @@ async function setupAuthFromModule(manifestPath, module, opts = {}) {
 }
 exports.setupAuthFromModule = setupAuthFromModule;
 function setupAuth(manifestDir, packDef, opts = {}) {
-    const { name, defaultAuthentication } = packDef;
+    const { defaultAuthentication } = packDef;
     if (!defaultAuthentication) {
-        return helpers_3.printAndExit(`The pack ${name} has no declared authentication. Provide a value for defaultAuthentication in the pack definition.`);
+        return helpers_3.printAndExit(`This Pack has no declared authentication. Provide a value for defaultAuthentication in the Pack definition.`);
     }
-    const handler = new CredentialHandler(manifestDir, name, defaultAuthentication, opts);
+    const handler = new CredentialHandler(manifestDir, defaultAuthentication, opts);
     switch (defaultAuthentication.type) {
         case types_1.AuthenticationType.None:
-            return helpers_3.printAndExit(`The pack ${name} declares AuthenticationType.None and so does not require authentication. ` +
-                `Please declare another AuthenticationType to use authentication with this pack.`);
+            return helpers_3.printAndExit(`This Pack declares AuthenticationType.None and so does not require authentication. ` +
+                `Please declare another AuthenticationType to use authentication with this Pack.`);
         case types_1.AuthenticationType.CodaApiHeaderBearerToken:
         case types_1.AuthenticationType.CustomHeaderToken:
         case types_1.AuthenticationType.HeaderBearerToken:
@@ -75,8 +75,7 @@ function setupAuth(manifestDir, packDef, opts = {}) {
 }
 exports.setupAuth = setupAuth;
 class CredentialHandler {
-    constructor(manifestDir, packName, authDef, { oauthServerPort } = {}) {
-        this._packName = packName;
+    constructor(manifestDir, authDef, { oauthServerPort } = {}) {
         this._authDef = authDef;
         this._manifestDir = manifestDir;
         this._oauthServerPort = oauthServerPort || exports.DEFAULT_OAUTH_SERVER_PORT;
@@ -84,7 +83,7 @@ class CredentialHandler {
     checkForExistingCredential() {
         const existingCredentials = readCredentialsFile(this._manifestDir);
         if (existingCredentials) {
-            const input = helpers_4.promptForInput(`Credentials already exist for ${this._packName}, press "y" to overwrite or "n" to cancel: `);
+            const input = helpers_4.promptForInput(`Credentials already exist for this Pack, press "y" to overwrite or "n" to cancel: `);
             if (input.toLocaleLowerCase() !== 'y') {
                 return process.exit(1);
             }
@@ -94,7 +93,7 @@ class CredentialHandler {
     handleToken() {
         this.checkForExistingCredential();
         const endpointUrl = this.maybePromptForEndpointUrl();
-        const input = helpers_4.promptForInput(`Paste the token or API key to use for ${this._packName}:\n`, { mask: true });
+        const input = helpers_4.promptForInput(`Paste the token or API key to use for this Pack:\n`, { mask: true });
         this.storeCredential({ endpointUrl, token: input });
         helpers_2.print('Credentials updated!');
     }
@@ -106,21 +105,21 @@ class CredentialHandler {
         const usernamePlaceholder = ((_a = this._authDef.uxConfig) === null || _a === void 0 ? void 0 : _a.placeholderUsername) || 'username';
         const passwordPlaceholder = ((_b = this._authDef.uxConfig) === null || _b === void 0 ? void 0 : _b.placeholderPassword) || 'password';
         const usernameOnly = (_c = this._authDef.uxConfig) === null || _c === void 0 ? void 0 : _c.usernameOnly;
-        const username = helpers_4.promptForInput(`Enter the ${usernamePlaceholder} for ${this._packName}:\n`);
+        const username = helpers_4.promptForInput(`Enter the ${usernamePlaceholder} for this Pack:\n`);
         let password;
         if (!usernameOnly) {
-            password = helpers_4.promptForInput(`Enter the ${passwordPlaceholder} for ${this._packName}:\n`, { mask: true });
+            password = helpers_4.promptForInput(`Enter the ${passwordPlaceholder} for this Pack:\n`, { mask: true });
         }
         this.storeCredential({ endpointUrl, username, password });
         helpers_2.print('Credentials updated!');
     }
     handleQueryParam(paramName) {
         if (!paramName) {
-            helpers_3.printAndExit(`Please provide a paramName attribute in the defaultAuthentication section of the ${this._packName} pack definition.`);
+            helpers_3.printAndExit(`Please provide a paramName attribute in the defaultAuthentication section of this Pack definition.`);
         }
         this.checkForExistingCredential();
         const endpointUrl = this.maybePromptForEndpointUrl();
-        const input = helpers_4.promptForInput(`Enter the token to use for the "${paramName}" url param for ${this._packName}:\n`, {
+        const input = helpers_4.promptForInput(`Enter the token to use for the "${paramName}" url param for this Pack:\n`, {
             mask: true,
         });
         this.storeCredential({ endpointUrl, paramValue: input });
@@ -128,13 +127,13 @@ class CredentialHandler {
     }
     handleMultiQueryParams(paramDefs) {
         if (paramDefs.length === 0) {
-            helpers_3.printAndExit(`Please define one or more entries for "params" in the defaultAuthentication section of the ${this._packName} pack definition.`);
+            helpers_3.printAndExit(`Please define one or more entries for "params" in the defaultAuthentication section of this Pack definition.`);
         }
         this.checkForExistingCredential();
         const endpointUrl = this.maybePromptForEndpointUrl();
         const credentials = { endpointUrl, params: {} };
         for (const paramDef of paramDefs) {
-            const paramValue = helpers_4.promptForInput(`Enter the token to use for the "${paramDef.name}" url param for ${this._packName}:\n`, { mask: true });
+            const paramValue = helpers_4.promptForInput(`Enter the token to use for the "${paramDef.name}" url param for this Pack:\n`, { mask: true });
             credentials.params[paramDef.name] = paramValue;
         }
         this.storeCredential(credentials);
@@ -146,12 +145,12 @@ class CredentialHandler {
         helpers_2.print(`*** Your application must have ${oauth_server_2.makeRedirectUrl(this._oauthServerPort)} whitelisted as an OAuth redirect url ` +
             'in order for this tool to work. ***');
         const clientIdPrompt = existingCredentials
-            ? `Enter the OAuth client id for ${this._packName} (or Enter to skip and use existing):\n`
-            : `Enter the OAuth client id for ${this._packName}:\n`;
+            ? `Enter the OAuth client id for this Pack (or Enter to skip and use existing):\n`
+            : `Enter the OAuth client id for this Pack:\n`;
         const newClientId = helpers_4.promptForInput(clientIdPrompt);
         const clientSecretPrompt = existingCredentials
-            ? `Enter the OAuth client secret for ${this._packName} (or Enter to skip and use existing):\n`
-            : `Enter the OAuth client secret for ${this._packName}:\n`;
+            ? `Enter the OAuth client secret for this Pack (or Enter to skip and use existing):\n`
+            : `Enter the OAuth client secret for this Pack:\n`;
         const newClientSecret = helpers_4.promptForInput(clientSecretPrompt, { mask: true });
         const clientId = ensure_2.ensureNonEmptyString(newClientId || (existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.clientId));
         const clientSecret = ensure_2.ensureNonEmptyString(newClientSecret || (existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.clientSecret));
@@ -190,10 +189,8 @@ class CredentialHandler {
         if (!requiresEndpointUrl) {
             return;
         }
-        const placeholder = endpointDomain
-            ? `https://my-site.${endpointDomain}`
-            : `https://${this._packName.toLowerCase()}.example.com`;
-        return helpers_4.promptForInput(`Enter the endpoint url for ${this._packName} (for example, ${placeholder}):\n`);
+        const placeholder = endpointDomain ? `https://my-site.${endpointDomain}` : 'https://foo.example.com';
+        return helpers_4.promptForInput(`Enter the endpoint url for this Pack (for example, ${placeholder}):\n`);
     }
     storeCredential(credentials) {
         storeCredential(this._manifestDir, credentials);
