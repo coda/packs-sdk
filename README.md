@@ -533,7 +533,7 @@ depending on the configuration of the Jira instance of the calling user.
 Alternatively, a sync table can be dynamic because the data source is specific
 to each instance of the table. If you were building a sync table to sync data
 from a Google Sheet, the data source would be the API url of a specific sheet.
-In this case, the sync table will be bound to a`dynamicUrl` that defines the data
+In this case, the sync table will be bound to a `dynamicUrl` that defines the data
 source. This url will be available to all of the formulas to implement the sync table
 in the sync context, as `context.sync.dynamicUrl`. To create a sync table that uses
 dynamic urls, you must implement the `listDynamicUrls` metadata formula in your
@@ -632,7 +632,7 @@ Use the `makeDynamicSyncTable()` wrapper function. It takes an object with the f
 
   ```typescript
   {
-    ...,
+    ...
     execute: async (params, context) => {
       const response = await context.fetcher.fetch(context.sync.dynamicUrl);
       ...
@@ -646,7 +646,7 @@ provided via `context.sync.dynamicUrl`:
 
 ```typescript
 makeDynamicSyncTable({
-  ...,
+  ...
   getName: makeMetadataFormula(async context => {
     const response = await context.fetcher.fetch(context.sync.dynamicUrl);
     return response.body.entityName;
