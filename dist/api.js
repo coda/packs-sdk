@@ -167,7 +167,6 @@ function makeMetadataFormula(execute) {
         network: {
             hasSideEffect: false,
             connection: api_types_1.NetworkConnection.Required,
-            requiresConnection: true,
         },
     });
 }

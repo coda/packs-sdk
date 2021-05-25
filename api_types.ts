@@ -137,8 +137,6 @@ export enum NetworkConnection {
 
 export interface Network {
   readonly hasSideEffect?: boolean;
-  /**  @deprecated use `connection` instead */
-  readonly requiresConnection?: boolean;
   readonly connection?: NetworkConnection;
 }
 
