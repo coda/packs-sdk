@@ -623,7 +623,7 @@ Use the `makeDynamicSyncTable()` wrapper function. It takes an object with the f
   you might use "Row" here, as each synced entity is a row from the source sheet. This label is used in a doc to identify the column in this table that contains the synced data. If you don't provide an `entityName`, the value
   of `identity.name` from your schema will be used instead, so in most cases you don't need to provide this.
 - **formula**: The definition of the formula that actual performs the sync. This formula definition has the
-  same structure as a statuc (non-dynamic) sync table formula. The implementation of your formula,
+  same structure as a static (non-dynamic) sync table formula. The implementation of your formula,
   the function given as the `execute` property, has the same form has any other pack formula, taking
   two parameters, the first being the list of parameters given by the user, and the second being
   the execution context. As with a static sync table, the execution context has a `sync` property
