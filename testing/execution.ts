@@ -57,12 +57,14 @@ export async function executeFormulaOrSyncFromCLI({
   params,
   manifestPath,
   vm,
+  dynamicUrl,
   contextOptions = {},
 }: {
   formulaName: string;
   params: string[];
   manifestPath: string;
   vm?: boolean;
+  dynamicUrl?: string;
   contextOptions?: ContextOptions;
 }) {
   try {
@@ -81,6 +83,7 @@ export async function executeFormulaOrSyncFromCLI({
           credentials,
         )
       : newMockSyncExecutionContext();
+    executionContext.sync.dynamicUrl = dynamicUrl || undefined;
 
     const result = vm
       ? await executeFormulaOrSyncWithRawParamsInVM({formulaName, params, manifestPath, executionContext})

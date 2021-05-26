@@ -5,5 +5,6 @@ export interface ExecuteArgs {
     params: string[];
     fetch?: boolean;
     vm?: boolean;
+    dynamicUrl?: string;
 }
-export declare function handleExecute({ manifestPath, formulaName, params, fetch, vm }: Arguments<ExecuteArgs>): Promise<void>;
+export declare function handleExecute({ manifestPath, formulaName, params, fetch, vm, dynamicUrl, }: Arguments<ExecuteArgs>): Promise<void>;

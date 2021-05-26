@@ -11,6 +11,7 @@ export interface ExecuteArgs {
   params: string[];
   fetch?: boolean;
   vm?: boolean;
+  dynamicUrl?: string;
 }
 
 const EXECUTE_BOOTSTRAP_CODE = `
@@ -20,21 +21,30 @@ async function main() {
   const manifestPath = process.argv[1];
   const useRealFetcher = process.argv[2] === 'true';
   const vm = process.argv[3] === 'true';
-  const formulaName = process.argv[4];
-  const params = process.argv.slice(5);
+  const dynamicUrl = process.argv[4]
+  const formulaName = process.argv[5];
+  const params = process.argv.slice(6);
 
   await executeFormulaOrSyncFromCLI({
     formulaName,
     params,
     manifestPath,
     vm,
+    dynamicUrl,
     contextOptions: {useRealFetcher},
   });
 }
 
 void main();`;
 
-export async function handleExecute({manifestPath, formulaName, params, fetch, vm}: Arguments<ExecuteArgs>) {
+export async function handleExecute({
+  manifestPath,
+  formulaName,
+  params,
+  fetch,
+  vm,
+  dynamicUrl,
+}: Arguments<ExecuteArgs>) {
   const fullManifestPath = makeManifestFullPath(manifestPath);
   // If the given manifest source file is a .ts file, we need to evaluate it using ts-node in the user's environment.
   // We can reasonably assume the user has ts-node if they have built a pack definition using a .ts file.
@@ -43,7 +53,7 @@ export async function handleExecute({manifestPath, formulaName, params, fetch, v
   if (isTypescript(manifestPath)) {
     const tsCommand = `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${fullManifestPath} ${Boolean(fetch)} ${Boolean(
       vm,
-    )} ${formulaName} ${params.map(escapeShellArg).join(' ')}`;
+    )} ${String(dynamicUrl || '""')} ${formulaName} ${params.map(escapeShellArg).join(' ')}`;
     spawnBootstrapCommand(tsCommand);
   } else {
     await executeFormulaOrSyncFromCLI({
@@ -51,6 +61,7 @@ export async function handleExecute({manifestPath, formulaName, params, fetch, v
       params,
       manifestPath,
       vm,
+      dynamicUrl,
       contextOptions: {useRealFetcher: fetch},
     });
   }

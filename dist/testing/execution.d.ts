@@ -14,11 +14,12 @@ export interface ContextOptions {
     manifestPath?: string;
 }
 export declare function executeFormulaFromPackDef(packDef: PackVersionDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<any>;
-export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manifestPath, vm, contextOptions, }: {
+export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manifestPath, vm, dynamicUrl, contextOptions, }: {
     formulaName: string;
     params: string[];
     manifestPath: string;
     vm?: boolean;
+    dynamicUrl?: string;
     contextOptions?: ContextOptions;
 }): Promise<void>;
 export declare function executeFormulaOrSyncWithVM({ formulaName, params, manifestPath, executionContext, }: {

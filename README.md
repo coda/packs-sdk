@@ -181,6 +181,14 @@ This will execute your sync formula repeatedly until there are no more results, 
 the output array of all result objects to the terminal. See [Syncs](#syncs) for more
 information about how and why sync formulas are invoked repeatedly for paginated results.
 
+If your sync table is a dynamic sync table with a variable source URL, use the `--dynamicUrl`
+parameter to specify which table your sync will use. This will likely be an API-specific URL,
+not a user-friendly URL that could be used in a browser.
+
+```bash
+coda execute path/to/manifest Items --dynamicUrl=https://items.com/api/table
+```
+
 ### Fetching
 
 By default, `coda execute` will use a mock fetcher for any http requests that your formulas make.
@@ -622,8 +630,8 @@ Use the `makeDynamicSyncTable()` wrapper function. It takes an object with the f
 - **entityName**: (Optional) A label for the kind of entities that you are syncing. In the Google Sheets example
   you might use "Row" here, as each synced entity is a row from the source sheet. This label is used in a doc to identify the column in this table that contains the synced data. If you don't provide an `entityName`, the value
   of `identity.name` from your schema will be used instead, so in most cases you don't need to provide this.
-- **formula**: The definition of the formula that actual performs the sync. This formula definition has the
-  same structure as a statuc (non-dynamic) sync table formula. The implementation of your formula,
+- **formula**: The definition of the formula that actually performs the sync. This formula definition has the
+  same structure as a static (non-dynamic) sync table formula. The implementation of your formula,
   the function given as the `execute` property, has the same form has any other pack formula, taking
   two parameters, the first being the list of parameters given by the user, and the second being
   the execution context. As with a static sync table, the execution context has a `sync` property
@@ -634,7 +642,11 @@ Use the `makeDynamicSyncTable()` wrapper function. It takes an object with the f
   {
     ...
     execute: async (params, context) => {
-      const response = await context.fetcher.fetch(context.sync.dynamicUrl);
+      const request = {
+        method: 'GET',
+        dynamicUrl: context.sync.dynamicUrl,
+      }
+      const response = await context.fetcher.fetch(request);
       ...
     },
   }

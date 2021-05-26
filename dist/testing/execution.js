@@ -42,7 +42,7 @@ async function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, para
     return helper.executeFormula(formula, params, executionContext || mocks_1.newMockExecutionContext(), options);
 }
 exports.executeFormulaFromPackDef = executeFormulaFromPackDef;
-async function executeFormulaOrSyncFromCLI({ formulaName, params, manifestPath, vm, contextOptions = {}, }) {
+async function executeFormulaOrSyncFromCLI({ formulaName, params, manifestPath, vm, dynamicUrl, contextOptions = {}, }) {
     try {
         const module = await Promise.resolve().then(() => __importStar(require(manifestPath)));
         const manifest = helpers_1.getManifestFromModule(module);
@@ -53,6 +53,7 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifestPath, 
         const executionContext = useRealFetcher
             ? fetcher_2.newFetcherSyncExecutionContext(buildUpdateCredentialsCallback(manifestPath), manifest.defaultAuthentication, manifest.networkDomains, credentials)
             : mocks_2.newMockSyncExecutionContext();
+        executionContext.sync.dynamicUrl = dynamicUrl || undefined;
         const result = vm
             ? await executeFormulaOrSyncWithRawParamsInVM({ formulaName, params, manifestPath, executionContext })
             : await executeFormulaOrSyncWithRawParams({ formulaName, params, module, executionContext });
