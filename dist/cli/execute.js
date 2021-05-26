@@ -35,7 +35,7 @@ async function handleExecute({ manifestPath, formulaName, params, fetch, vm, dyn
     // Otherwise, the given manifest is most likely a plain .js file or a post-build .js dist file from a TS build.
     // In the latter case, we can import the given file as a regular node (non-TS) import without any bootstrapping.
     if (helpers_2.isTypescript(manifestPath)) {
-        const tsCommand = `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${fullManifestPath} ${Boolean(fetch)} ${Boolean(vm)} ${String(dynamicUrl)} ${formulaName} ${params.map(helpers_1.escapeShellArg).join(' ')}`;
+        const tsCommand = `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${fullManifestPath} ${Boolean(fetch)} ${Boolean(vm)} ${String(dynamicUrl || '""')} ${formulaName} ${params.map(helpers_1.escapeShellArg).join(' ')}`;
         helpers_4.spawnBootstrapCommand(tsCommand);
     }
     else {

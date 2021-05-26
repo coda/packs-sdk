@@ -53,7 +53,7 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifestPath, 
         const executionContext = useRealFetcher
             ? fetcher_2.newFetcherSyncExecutionContext(buildUpdateCredentialsCallback(manifestPath), manifest.defaultAuthentication, manifest.networkDomains, credentials)
             : mocks_2.newMockSyncExecutionContext();
-        executionContext.sync.dynamicUrl = dynamicUrl;
+        executionContext.sync.dynamicUrl = dynamicUrl || undefined;
         const result = vm
             ? await executeFormulaOrSyncWithRawParamsInVM({ formulaName, params, manifestPath, executionContext })
             : await executeFormulaOrSyncWithRawParams({ formulaName, params, module, executionContext });
