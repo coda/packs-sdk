@@ -1,4 +1,6 @@
+import type {Authentication} from '../types';
 import {Client} from '../helpers/external-api/coda';
+import type {PackVersionDefinition} from '../types';
 import path from 'path';
 import {spawnSync} from 'child_process';
 
@@ -41,4 +43,13 @@ export function spawnBootstrapCommand(command: string) {
     cmd = command.replace('coda-packs-sdk/dist', process.env.PWD!);
   }
   spawnProcess(cmd);
+}
+
+// Packs should not have both defaultAuth and systemAuth specs, so this helper just gets
+// whichever is available.
+// TODO: Reviewers, is this correct? Is this enforced anywhere?
+export function getPackAuth(packDef: PackVersionDefinition): Authentication | undefined {
+  const {defaultAuthentication, systemConnectionAuthentication} = packDef;
+  // Since SystemAuthentication is a strict subset of Authentication, we can cast them together.
+  return defaultAuthentication || (systemConnectionAuthentication as Authentication);
 }

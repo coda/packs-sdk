@@ -10,6 +10,7 @@ import type {ParamValues} from '../api_types';
 import type {SyncExecutionContext} from '../api_types';
 import {build as buildBundle} from '../cli/build';
 import {getManifestFromModule} from './helpers';
+import {getPackAuth} from '../cli/helpers';
 import * as helper from './execution_helper';
 import * as ivmHelper from './ivm_helper';
 import {newFetcherExecutionContext} from './fetcher';
@@ -42,7 +43,7 @@ export async function executeFormulaFromPackDef(
     const credentials = getCredentials(manifestPath);
     executionContext = newFetcherExecutionContext(
       buildUpdateCredentialsCallback(manifestPath),
-      packDef.defaultAuthentication,
+      getPackAuth(packDef),
       packDef.networkDomains,
       credentials,
     );
@@ -78,7 +79,7 @@ export async function executeFormulaOrSyncFromCLI({
     const executionContext = useRealFetcher
       ? newFetcherSyncExecutionContext(
           buildUpdateCredentialsCallback(manifestPath),
-          manifest.defaultAuthentication,
+          getPackAuth(manifest),
           manifest.networkDomains,
           credentials,
         )
@@ -161,7 +162,7 @@ export async function executeSyncFormulaFromPackDef(
     const credentials = getCredentials(manifestPath);
     executionContext = newFetcherSyncExecutionContext(
       buildUpdateCredentialsCallback(manifestPath),
-      packDef.defaultAuthentication,
+      getPackAuth(packDef),
       packDef.networkDomains,
       credentials,
     );

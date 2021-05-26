@@ -6,10 +6,12 @@ import type {MultiQueryParamCredentials} from './auth_types';
 import type {OAuth2Credentials} from './auth_types';
 import type {PackVersionDefinition} from '../types';
 import {assertCondition} from '../helpers/ensure';
+import {ensureExists} from '../helpers/ensure';
 import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import fs from 'fs';
 import {getManifestFromModule} from './helpers';
+import {getPackAuth} from '../cli/helpers';
 import {launchOAuthServerFlow} from './oauth_server';
 import {makeRedirectUrl} from './oauth_server';
 import * as path from 'path';
@@ -36,36 +38,42 @@ export async function setupAuthFromModule(
 }
 
 export function setupAuth(manifestDir: string, packDef: PackVersionDefinition, opts: SetupAuthOptions = {}): void {
-  const {defaultAuthentication} = packDef;
-  if (!defaultAuthentication) {
+  const auth = getPackAuth(packDef);
+  if (!auth) {
     return printAndExit(
-      `This Pack has no declared authentication. Provide a value for defaultAuthentication in the Pack definition.`,
+      `This Pack has no declared authentication. ` +
+        `Provide a value for defaultAuthentication or systemConnectionAuthentication in the Pack definition.`,
     );
   }
-  const handler = new CredentialHandler(manifestDir, defaultAuthentication, opts);
-  switch (defaultAuthentication.type) {
+  const handler = new CredentialHandler(manifestDir, auth, opts);
+  switch (auth.type) {
     case AuthenticationType.None:
       return printAndExit(
         `This Pack declares AuthenticationType.None and so does not require authentication. ` +
           `Please declare another AuthenticationType to use authentication with this Pack.`,
       );
     case AuthenticationType.CodaApiHeaderBearerToken:
+      ensureExists(
+        packDef.defaultAuthentication,
+        'CodaApiHeaderBearerToken only works with defaultAuthentication, not system auth.',
+      );
     case AuthenticationType.CustomHeaderToken:
     case AuthenticationType.HeaderBearerToken:
       return handler.handleToken();
     case AuthenticationType.MultiQueryParamToken:
-      return handler.handleMultiQueryParams(defaultAuthentication.params);
+      return handler.handleMultiQueryParams(auth.params);
     case AuthenticationType.QueryParamToken:
-      return handler.handleQueryParam(defaultAuthentication.paramName);
+      return handler.handleQueryParam(auth.paramName);
     case AuthenticationType.WebBasic:
       return handler.handleWebBasic();
     case AuthenticationType.OAuth2:
+      ensureExists(packDef.defaultAuthentication, 'OAuth2 only works with defaultAuthentication, not system auth.');
       return handler.handleOAuth2();
     case AuthenticationType.AWSSignature4:
     case AuthenticationType.Various:
-      throw new Error('Not yet implemented');
+      return printAndExit('This authentication type is not yet implemented');
     default:
-      return ensureUnreachable(defaultAuthentication);
+      return ensureUnreachable(auth);
   }
 }
 
