@@ -83,7 +83,7 @@ export async function executeFormulaOrSyncFromCLI({
           credentials,
         )
       : newMockSyncExecutionContext();
-    executionContext.sync.dynamicUrl = dynamicUrl;
+    executionContext.sync.dynamicUrl = dynamicUrl || undefined;
 
     const result = vm
       ? await executeFormulaOrSyncWithRawParamsInVM({formulaName, params, manifestPath, executionContext})

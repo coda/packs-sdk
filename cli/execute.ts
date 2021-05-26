@@ -53,7 +53,7 @@ export async function handleExecute({
   if (isTypescript(manifestPath)) {
     const tsCommand = `ts-node -e "${EXECUTE_BOOTSTRAP_CODE}" ${fullManifestPath} ${Boolean(fetch)} ${Boolean(
       vm,
-    )} ${String(dynamicUrl)} ${formulaName} ${params.map(escapeShellArg).join(' ')}`;
+    )} ${String(dynamicUrl || '""')} ${formulaName} ${params.map(escapeShellArg).join(' ')}`;
     spawnBootstrapCommand(tsCommand);
   } else {
     await executeFormulaOrSyncFromCLI({

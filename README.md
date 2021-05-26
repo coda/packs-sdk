@@ -181,6 +181,14 @@ This will execute your sync formula repeatedly until there are no more results, 
 the output array of all result objects to the terminal. See [Syncs](#syncs) for more
 information about how and why sync formulas are invoked repeatedly for paginated results.
 
+If your sync table is a dynamic sync table with a variable source URL, use the `--dynamicUrl`
+parameter to specify which table your sync will use. This will likely be an API-specific URL,
+not a user-friendly URL that could be used in a browser.
+
+```bash
+coda execute path/to/manifest Items --dynamicUrl=https://items.com/api/table
+```
+
 ### Fetching
 
 By default, `coda execute` will use a mock fetcher for any http requests that your formulas make.
