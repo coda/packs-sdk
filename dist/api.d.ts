@@ -2,6 +2,7 @@ import type { ArraySchema } from './schema';
 import type { ArrayType } from './api_types';
 import type { CommonPackFormulaDef } from './api_types';
 import type { ExecutionContext } from './api_types';
+import { NetworkConnection } from './api_types';
 import type { NumberSchema } from './schema';
 import type { ObjectSchema } from './schema';
 import type { PackFormulaResult } from './api_types';
@@ -224,7 +225,7 @@ export declare type MetadataContext = Record<string, any>;
 export declare type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
 export declare type MetadataFormula = ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any>;
 export declare type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
-export declare function makeMetadataFormula(execute: (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>): MetadataFormula;
+export declare function makeMetadataFormula(execute: (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>, connection?: NetworkConnection): MetadataFormula;
 export interface SimpleAutocompleteOption {
     display: string;
     value: string | number;

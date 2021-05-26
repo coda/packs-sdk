@@ -143,7 +143,7 @@ function makeStringFormula(definition) {
     });
 }
 exports.makeStringFormula = makeStringFormula;
-function makeMetadataFormula(execute) {
+function makeMetadataFormula(execute, connection = api_types_1.NetworkConnection.Required) {
     return makeObjectFormula({
         name: 'getMetadata',
         description: 'Gets metadata',
@@ -166,7 +166,7 @@ function makeMetadataFormula(execute) {
         examples: [],
         network: {
             hasSideEffect: false,
-            connection: api_types_1.NetworkConnection.Required,
+            connection,
         },
     });
 }

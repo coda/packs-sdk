@@ -590,7 +590,7 @@ export declare type MetadataFormula = ObjectPackFormula<[
 	ParamDef<Type.string>
 ], any>;
 export declare type MetadataFormulaMetadata = Omit<MetadataFormula, "execute">;
-export declare function makeMetadataFormula(execute: (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>): MetadataFormula;
+export declare function makeMetadataFormula(execute: (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>, connection?: NetworkConnection): MetadataFormula;
 export interface SimpleAutocompleteOption {
 	display: string;
 	value: string | number;

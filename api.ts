@@ -425,6 +425,7 @@ export function makeMetadataFormula(
     search: string,
     formulaContext?: MetadataContext,
   ) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>,
+  connection: NetworkConnection = NetworkConnection.Required,
 ): MetadataFormula {
   return makeObjectFormula({
     name: 'getMetadata',
@@ -447,7 +448,7 @@ export function makeMetadataFormula(
     examples: [],
     network: {
       hasSideEffect: false,
-      connection: NetworkConnection.Required,
+      connection,
     },
   });
 }
