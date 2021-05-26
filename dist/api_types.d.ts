@@ -80,6 +80,8 @@ export declare enum NetworkConnection {
 }
 export interface Network {
     readonly hasSideEffect?: boolean;
+    /**  @deprecated use `connection` instead */
+    readonly requiresConnection?: boolean;
     readonly connection?: NetworkConnection;
 }
 declare const ValidFetchMethods: readonly ["GET", "PATCH", "POST", "PUT", "DELETE"];
