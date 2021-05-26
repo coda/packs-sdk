@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.spawnBootstrapCommand = exports.escapeShellArg = exports.isTypescript = exports.makeManifestFullPath = exports.isTestCommand = exports.formatEndpoint = exports.createCodaClient = exports.spawnProcess = void 0;
+exports.getPackAuth = exports.spawnBootstrapCommand = exports.escapeShellArg = exports.isTypescript = exports.makeManifestFullPath = exports.isTestCommand = exports.formatEndpoint = exports.createCodaClient = exports.spawnProcess = void 0;
 const coda_1 = require("../helpers/external-api/coda");
 const path_1 = __importDefault(require("path"));
 const child_process_1 = require("child_process");
@@ -49,3 +49,12 @@ function spawnBootstrapCommand(command) {
     spawnProcess(cmd);
 }
 exports.spawnBootstrapCommand = spawnBootstrapCommand;
+// Packs should not have both defaultAuth and systemAuth specs, so this helper just gets
+// whichever is available.
+// TODO: Reviewers, is this correct? Is this enforced anywhere?
+function getPackAuth(packDef) {
+    const { defaultAuthentication, systemConnectionAuthentication } = packDef;
+    // Since SystemAuthentication is a strict subset of Authentication, we can cast them together.
+    return defaultAuthentication || systemConnectionAuthentication;
+}
+exports.getPackAuth = getPackAuth;
