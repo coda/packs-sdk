@@ -572,9 +572,10 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
  * @param formula The definition of the formula that implements this sync. This is a Coda packs formula
  * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
  * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
- * These will eventually be consolidated.)
- * @param getSchema Only used internally by {@link makeDynamicSyncTable}, see there for more details.
- * @param entityName Only used internally by {@link makeDynamicSyncTable}, see there for more details.
+ * These will eventually be consolidated.) 
+ * @param connection A {@link NetworkConnection} that will be used for all formulas contained within 
+ * this sync table (including autocomplete formulas). 
+ * @param dynamicOptions: A set of options used internally by {@link makeDynamicSyncTable}
  */
 export function makeSyncTable<
   K extends string,
@@ -585,9 +586,13 @@ export function makeSyncTable<
   name: string,
   schema: SchemaT,
   formula: SyncFormulaDef<ParamDefsT>,
-  getSchema?: MetadataFormula,
-  entityName?: string,
+  connection?: NetworkConnection,
+  dynamicOptions: {
+    getSchema?: MetadataFormula,
+    entityName?: string,
+  } = {},  
 ): SyncTableDef<K, L, ParamDefsT, SchemaT> {
+  const {getSchema, entityName} = dynamicOptions;
   const {execute: wrappedExecute, ...definition} = formula;
   const formulaSchema = getSchema
     ? undefined
@@ -621,9 +626,15 @@ export function makeSyncTable<
       execute,
       schema: formulaSchema,
       isSyncFormula: true,
+      network: definition.network && connection
+        ? {
+            ...definition.network,
+            connection,
+          }
+        : definition.network,
       resultType: Type.object as any,
     },
-    getSchema,
+    getSchema: maybeRewriteConnectionForFormula(getSchema, connection),
     entityName,
   };
 }
@@ -637,6 +648,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   formula,
   listDynamicUrls,
   entityName,
+  connection,
 }: {
   packId: number;
   name: string;
@@ -646,6 +658,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   getDisplayUrl: MetadataFormula;
   listDynamicUrls?: MetadataFormula;
   entityName?: string;
+  connection?: NetworkConnection,
 }): DynamicSyncTableDef<K, L, ParamDefsT, any> {
   const fakeSchema = makeObjectSchema({
     // This schema is useless... just creating a stub here but the client will use
@@ -661,13 +674,19 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
       id: {type: ValueType.String},
     },
   });
-  const table = makeSyncTable(name, fakeSchema, formula, getSchema, entityName);
+  const table = makeSyncTable(
+    name, 
+    fakeSchema, 
+    formula, 
+    connection,
+    {getSchema, entityName},
+  );
   return {
     ...table,
     isDynamic: true,
-    getDisplayUrl,
-    listDynamicUrls,
-    getName,
+    getDisplayUrl: ensureExists(maybeRewriteConnectionForFormula(getDisplayUrl, connection)),
+    listDynamicUrls: ensureExists(maybeRewriteConnectionForFormula(listDynamicUrls, connection)),
+    getName: ensureExists(maybeRewriteConnectionForFormula(getName, connection)),
   } as DynamicSyncTableDef<K, L, ParamDefsT, any>;
 }
 
@@ -713,4 +732,29 @@ export function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: Empty
     execute,
     resultType: Type.string as const,
   });
+}
+
+
+function maybeRewriteConnectionForFormula<T extends ParamDefs, U extends CommonPackFormulaDef<T>>(
+  formula: U | undefined,
+  connection: NetworkConnection | undefined
+): U | undefined{
+  if (formula && connection) {
+    return {
+      ...formula,
+      parameters: formula.parameters.map((param: ParamDef<Type>) => {
+        return {
+          ...param,
+          autocomplete: param.autocomplete 
+            ? maybeRewriteConnectionForFormula(param.autocomplete, connection)
+            : undefined,
+        }
+      }) as T,
+      network: {
+        ...formula.network,
+        connection,
+      }
+    };
+  }
+  return formula;
 }

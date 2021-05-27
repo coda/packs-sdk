@@ -271,10 +271,12 @@ exports.makeObjectFormula = makeObjectFormula;
  * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
  * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
  * These will eventually be consolidated.)
- * @param getSchema Only used internally by {@link makeDynamicSyncTable}, see there for more details.
- * @param entityName Only used internally by {@link makeDynamicSyncTable}, see there for more details.
+ * @param connection A {@link NetworkConnection} that will be used for all formulas contained within
+ * this sync table (including autocomplete formulas).
+ * @param dynamicOptions: A set of options used internally by {@link makeDynamicSyncTable}
  */
-function makeSyncTable(name, schema, formula, getSchema, entityName) {
+function makeSyncTable(name, schema, formula, connection, dynamicOptions = {}) {
+    const { getSchema, entityName } = dynamicOptions;
     const { execute: wrappedExecute, ...definition } = formula;
     const formulaSchema = getSchema
         ? undefined
@@ -304,14 +306,20 @@ function makeSyncTable(name, schema, formula, getSchema, entityName) {
             execute,
             schema: formulaSchema,
             isSyncFormula: true,
+            network: definition.network && connection
+                ? {
+                    ...definition.network,
+                    connection,
+                }
+                : definition.network,
             resultType: api_types_2.Type.object,
         },
-        getSchema,
+        getSchema: maybeRewriteConnectionForFormula(getSchema, connection),
         entityName,
     };
 }
 exports.makeSyncTable = makeSyncTable;
-function makeDynamicSyncTable({ packId, name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, }) {
+function makeDynamicSyncTable({ packId, name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, connection, }) {
     const fakeSchema = schema_2.makeObjectSchema({
         // This schema is useless... just creating a stub here but the client will use
         // the dynamic one.
@@ -326,13 +334,13 @@ function makeDynamicSyncTable({ packId, name, getName, getSchema, getDisplayUrl,
             id: { type: schema_1.ValueType.String },
         },
     });
-    const table = makeSyncTable(name, fakeSchema, formula, getSchema, entityName);
+    const table = makeSyncTable(name, fakeSchema, formula, connection, { getSchema, entityName });
     return {
         ...table,
         isDynamic: true,
-        getDisplayUrl,
-        listDynamicUrls,
-        getName,
+        getDisplayUrl: ensure_1.ensureExists(maybeRewriteConnectionForFormula(getDisplayUrl, connection)),
+        listDynamicUrls: ensure_1.ensureExists(maybeRewriteConnectionForFormula(listDynamicUrls, connection)),
+        getName: ensure_1.ensureExists(maybeRewriteConnectionForFormula(getName, connection)),
     };
 }
 exports.makeDynamicSyncTable = makeDynamicSyncTable;
@@ -373,3 +381,23 @@ function makeEmptyFormula(definition) {
     });
 }
 exports.makeEmptyFormula = makeEmptyFormula;
+function maybeRewriteConnectionForFormula(formula, connection) {
+    if (formula && connection) {
+        return {
+            ...formula,
+            parameters: formula.parameters.map((param) => {
+                return {
+                    ...param,
+                    autocomplete: param.autocomplete
+                        ? maybeRewriteConnectionForFormula(param.autocomplete, connection)
+                        : undefined,
+                };
+            }),
+            network: {
+                ...formula.network,
+                connection,
+            }
+        };
+    }
+    return formula;
+}
