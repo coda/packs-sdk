@@ -49,11 +49,16 @@ function spawnBootstrapCommand(command) {
     spawnProcess(cmd);
 }
 exports.spawnBootstrapCommand = spawnBootstrapCommand;
-// Packs should not have both defaultAuth and systemAuth specs, so this helper just gets
-// whichever is available.
-// TODO: Reviewers, is this correct? Is this enforced anywhere?
+// Packs today do not have both defaultAuth and systemAuth specs, so this helper gets
+// whichever is available. This could in theory be supported in the future, for a use
+// case like a Google Maps pack which allowed a default credential from the pack author
+// to be used up to some rate limit, after which a power user would need to connect their
+// own Maps API credential.
 function getPackAuth(packDef) {
     const { defaultAuthentication, systemConnectionAuthentication } = packDef;
+    if (defaultAuthentication && systemConnectionAuthentication) {
+        throw new Error('We do not support using both defaultAuthentication and systemConnectionAuthentication in the CLI.');
+    }
     // Since SystemAuthentication is a strict subset of Authentication, we can cast them together.
     return defaultAuthentication || systemConnectionAuthentication;
 }
