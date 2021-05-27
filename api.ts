@@ -593,7 +593,7 @@ export function makeSyncTable<
   } = {},  
 ): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {getSchema, entityName} = dynamicOptions;
-  const {execute: wrappedExecute, ...definition} = formula;
+  const {execute: wrappedExecute, ...definition} = ensureExists(maybeRewriteConnectionForFormula(formula, connection));
   const formulaSchema = getSchema
     ? undefined
     : normalizeSchema<ArraySchema<Schema>>({type: ValueType.Array, items: schema});
@@ -743,6 +743,14 @@ function maybeRewriteConnectionForFormula<T extends ParamDefs, U extends CommonP
     return {
       ...formula,
       parameters: formula.parameters.map((param: ParamDef<Type>) => {
+        return {
+          ...param,
+          autocomplete: param.autocomplete 
+            ? maybeRewriteConnectionForFormula(param.autocomplete, connection)
+            : undefined,
+        }
+      }) as T,
+      varargParameters: (formula.varargParameters || []).map((param: ParamDef<Type>) => {
         return {
           ...param,
           autocomplete: param.autocomplete 
