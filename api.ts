@@ -593,7 +593,7 @@ export function makeSyncTable<
   } = {},  
 ): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {getSchema, entityName} = dynamicOptions;
-  const {execute: wrappedExecute, ...definition} = ensureExists(maybeRewriteConnectionForFormula(formula, connection));
+  const {execute: wrappedExecute, ...definition} = maybeRewriteConnectionForFormula(formula, connection);
   const formulaSchema = getSchema
     ? undefined
     : normalizeSchema<ArraySchema<Schema>>({type: ValueType.Array, items: schema});
@@ -684,9 +684,9 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   return {
     ...table,
     isDynamic: true,
-    getDisplayUrl: ensureExists(maybeRewriteConnectionForFormula(getDisplayUrl, connection)),
+    getDisplayUrl: maybeRewriteConnectionForFormula(getDisplayUrl, connection),
     listDynamicUrls: maybeRewriteConnectionForFormula(listDynamicUrls, connection),
-    getName: ensureExists(maybeRewriteConnectionForFormula(getName, connection)),
+    getName: maybeRewriteConnectionForFormula(getName, connection),
   } as DynamicSyncTableDef<K, L, ParamDefsT, any>;
 }
 
@@ -735,10 +735,11 @@ export function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: Empty
 }
 
 
-function maybeRewriteConnectionForFormula<T extends ParamDefs, U extends CommonPackFormulaDef<T>>(
-  formula: U | undefined,
+function maybeRewriteConnectionForFormula<
+T extends ParamDefs, U extends CommonPackFormulaDef<T>, V extends U | undefined>(
+  formula: V,
   connection: NetworkConnection | undefined
-): U | undefined{
+): V {
   if (formula && connection) {
     return {
       ...formula,

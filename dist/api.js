@@ -277,7 +277,7 @@ exports.makeObjectFormula = makeObjectFormula;
  */
 function makeSyncTable(name, schema, formula, connection, dynamicOptions = {}) {
     const { getSchema, entityName } = dynamicOptions;
-    const { execute: wrappedExecute, ...definition } = formula;
+    const { execute: wrappedExecute, ...definition } = maybeRewriteConnectionForFormula(formula, connection);
     const formulaSchema = getSchema
         ? undefined
         : schema_3.normalizeSchema({ type: schema_1.ValueType.Array, items: schema });
@@ -338,9 +338,9 @@ function makeDynamicSyncTable({ packId, name, getName, getSchema, getDisplayUrl,
     return {
         ...table,
         isDynamic: true,
-        getDisplayUrl: ensure_1.ensureExists(maybeRewriteConnectionForFormula(getDisplayUrl, connection)),
+        getDisplayUrl: maybeRewriteConnectionForFormula(getDisplayUrl, connection),
         listDynamicUrls: maybeRewriteConnectionForFormula(listDynamicUrls, connection),
-        getName: ensure_1.ensureExists(maybeRewriteConnectionForFormula(getName, connection)),
+        getName: maybeRewriteConnectionForFormula(getName, connection),
     };
 }
 exports.makeDynamicSyncTable = makeDynamicSyncTable;
@@ -386,6 +386,14 @@ function maybeRewriteConnectionForFormula(formula, connection) {
         return {
             ...formula,
             parameters: formula.parameters.map((param) => {
+                return {
+                    ...param,
+                    autocomplete: param.autocomplete
+                        ? maybeRewriteConnectionForFormula(param.autocomplete, connection)
+                        : undefined,
+                };
+            }),
+            varargParameters: (formula.varargParameters || []).map((param) => {
                 return {
                     ...param,
                     autocomplete: param.autocomplete
