@@ -821,6 +821,14 @@ describe('Pack metadata Validation', () => {
             usernameOnly: false,
           },
         },
+        systemConnectionAuthentication: {
+          type: AuthenticationType.WebBasic,
+          uxConfig: {
+            placeholderUsername: 'username',
+            placeholderPassword: 'password',
+            usernameOnly: false,
+          },
+        },
       });
       await validateJson(metadata);
     });
