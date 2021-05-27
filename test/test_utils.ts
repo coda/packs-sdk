@@ -35,14 +35,6 @@ export const FakePackVersionMetadata: PackVersionMetadata = deepFreeze({
   },
 });
 
-export const FakePackSystemAuthVersionMetadata: PackVersionMetadata = deepFreeze({
-  ...BaseFakePack,
-  systemConnectionAuthentication: {
-    type: AuthenticationType.QueryParamToken,
-    paramName: 'authToken',
-  },
-});
-
 export const FakePackFormulaMetadata: PackFormulaMetadata = deepFreeze({
   schema: {
     type: ValueType.String,
@@ -60,12 +52,6 @@ export function createFakePack(opts: Partial<PackDefinition> = {}): PackDefiniti
 
 export function createFakePackVersionMetadata(opts: Partial<PackVersionMetadata> = {}): PackVersionMetadata {
   return {...FakePackVersionMetadata, ...opts};
-}
-
-export function createFakePackWithSystemAuthVersionMetadata(
-  opts: Partial<PackVersionMetadata> = {},
-): PackVersionMetadata {
-  return {...FakePackSystemAuthVersionMetadata, ...opts};
 }
 
 export function createFakePackFormulaMetadata(opts: Partial<PackFormulaMetadata> = {}): PackFormulaMetadata {
