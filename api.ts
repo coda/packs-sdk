@@ -685,7 +685,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
     ...table,
     isDynamic: true,
     getDisplayUrl: ensureExists(maybeRewriteConnectionForFormula(getDisplayUrl, connection)),
-    listDynamicUrls: ensureExists(maybeRewriteConnectionForFormula(listDynamicUrls, connection)),
+    listDynamicUrls: maybeRewriteConnectionForFormula(listDynamicUrls, connection),
     getName: ensureExists(maybeRewriteConnectionForFormula(getName, connection)),
   } as DynamicSyncTableDef<K, L, ParamDefsT, any>;
 }

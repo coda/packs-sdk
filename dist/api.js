@@ -339,7 +339,7 @@ function makeDynamicSyncTable({ packId, name, getName, getSchema, getDisplayUrl,
         ...table,
         isDynamic: true,
         getDisplayUrl: ensure_1.ensureExists(maybeRewriteConnectionForFormula(getDisplayUrl, connection)),
-        listDynamicUrls: ensure_1.ensureExists(maybeRewriteConnectionForFormula(listDynamicUrls, connection)),
+        listDynamicUrls: maybeRewriteConnectionForFormula(listDynamicUrls, connection),
         getName: ensure_1.ensureExists(maybeRewriteConnectionForFormula(getName, connection)),
     };
 }
