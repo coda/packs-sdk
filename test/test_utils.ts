@@ -9,10 +9,6 @@ import {deepFreeze} from '../helpers/object_utils';
 
 export const FakePack: PackDefinition = deepFreeze({
   id: 424242,
-  authentication: {
-    type: AuthenticationType.OAuth2,
-    requiresEndpointUrl: false,
-  },
   category: PackCategory.DataStorage,
   description: 'Fake Pack',
   exampleImages: [],

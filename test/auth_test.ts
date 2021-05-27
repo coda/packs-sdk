@@ -4,6 +4,7 @@ import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
 import type {Credentials} from '../testing/auth_types';
 import type {PackDefinition} from '../types';
+import type {SystemAuthentication} from '../types';
 import {createFakePack} from './test_utils';
 import {executeFormulaFromPackDef} from '../testing/execution';
 import * as helpers from '../testing/helpers';
@@ -70,7 +71,8 @@ describe('Auth', () => {
 
       sinon.assert.calledOnceWithExactly(
         mockPrintAndExit,
-        'This Pack has no declared authentication. Provide a value for defaultAuthentication in the Pack definition.',
+        'This Pack has no declared authentication. ' +
+          'Provide a value for defaultAuthentication or systemConnectionAuthentication in the Pack definition.',
       );
       assertCredentialsFileExactly(undefined);
     });
@@ -92,12 +94,7 @@ describe('Auth', () => {
       assertCredentialsFileExactly(undefined);
     });
 
-    it(`${AuthenticationType.HeaderBearerToken}`, () => {
-      const pack = createFakePack({
-        defaultAuthentication: {
-          type: AuthenticationType.HeaderBearerToken,
-        },
-      });
+    const testTokenAuthFlow = (pack: PackDefinition) => {
       setupReadline('some-token');
 
       doSetupAuth(pack);
@@ -108,6 +105,18 @@ describe('Auth', () => {
       sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
       assertCredentialsFileExactly({token: 'some-token'});
+    };
+
+    describe(`${AuthenticationType.HeaderBearerToken}`, () => {
+      const auth: Authentication = {
+        type: AuthenticationType.HeaderBearerToken,
+      };
+      it('defaultAuthentication', () => {
+        testTokenAuthFlow(createFakePack({defaultAuthentication: auth}));
+      });
+      it('systemConnectionAuthentication', () => {
+        testTokenAuthFlow(createFakePack({systemConnectionAuthentication: auth}));
+      });
     });
 
     it(`${AuthenticationType.HeaderBearerToken}, requires endpoint url`, () => {
@@ -133,91 +142,84 @@ describe('Auth', () => {
       assertCredentialsFileExactly({endpointUrl: 'https://some-endpoint-url.com', token: 'some-token'});
     });
 
-    it(`${AuthenticationType.CodaApiHeaderBearerToken}`, () => {
-      const pack = createFakePack({
-        defaultAuthentication: {
-          type: AuthenticationType.CodaApiHeaderBearerToken,
-        },
+    describe(`${AuthenticationType.CodaApiHeaderBearerToken}`, () => {
+      const auth: Authentication = {
+        type: AuthenticationType.CodaApiHeaderBearerToken,
+      };
+      it('defaultAuthentication', () => testTokenAuthFlow(createFakePack({defaultAuthentication: auth})));
+      it('systemConnectionAuthentication', () => {
+        try {
+          testTokenAuthFlow(createFakePack({systemConnectionAuthentication: auth as unknown as SystemAuthentication}));
+        } catch (error) {
+          assert(error.message === 'CodaApiHeaderBearerToken only works with defaultAuthentication, not system auth.');
+        }
       });
-      setupReadline('some-token');
-
-      doSetupAuth(pack);
-
-      sinon.assert.calledOnceWithExactly(mockPromptForInput, 'Paste the token or API key to use for this Pack:\n', {
-        mask: true,
-      });
-      sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
-
-      assertCredentialsFileExactly({token: 'some-token'});
     });
 
-    it(`${AuthenticationType.CustomHeaderToken}`, () => {
-      const pack = createFakePack({
-        defaultAuthentication: {
-          type: AuthenticationType.CustomHeaderToken,
-          headerName: 'MyHeader',
-        },
-      });
-      setupReadline('some-token');
-
-      doSetupAuth(pack);
-
-      sinon.assert.calledOnceWithExactly(mockPromptForInput, 'Paste the token or API key to use for this Pack:\n', {
-        mask: true,
-      });
-      sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
-
-      assertCredentialsFileExactly({token: 'some-token'});
+    describe(`${AuthenticationType.CustomHeaderToken}`, () => {
+      const auth: Authentication = {
+        type: AuthenticationType.CustomHeaderToken,
+        headerName: 'MyHeader',
+      };
+      it('defaultAuthenticatio', () => testTokenAuthFlow(createFakePack({defaultAuthentication: auth})));
+      it('systemConnectionAuthentication', () =>
+        testTokenAuthFlow(createFakePack({systemConnectionAuthentication: auth})));
     });
 
-    it(`${AuthenticationType.QueryParamToken}`, () => {
-      const pack = createFakePack({
-        defaultAuthentication: {
-          type: AuthenticationType.QueryParamToken,
-          paramName: 'myParam',
-        },
-      });
-      setupReadline('some-param-value');
+    describe(`${AuthenticationType.QueryParamToken}`, () => {
+      const testQueryParamAuthFlow = (pack: PackDefinition) => {
+        setupReadline('some-param-value');
 
-      doSetupAuth(pack);
+        doSetupAuth(pack);
 
-      sinon.assert.calledOnceWithExactly(
-        mockPromptForInput,
-        'Enter the token to use for the "myParam" url param for this Pack:\n',
-        {mask: true},
-      );
-      sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
+        sinon.assert.calledOnceWithExactly(
+          mockPromptForInput,
+          'Enter the token to use for the "myParam" url param for this Pack:\n',
+          {mask: true},
+        );
+        sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({paramValue: 'some-param-value'});
+        assertCredentialsFileExactly({paramValue: 'some-param-value'});
+      };
+      const auth: Authentication = {
+        type: AuthenticationType.QueryParamToken,
+        paramName: 'myParam',
+      };
+      it('defaultAuthentication', () => testQueryParamAuthFlow(createFakePack({defaultAuthentication: auth})));
+      it('systemConnectionAuthentication', () =>
+        testQueryParamAuthFlow(createFakePack({systemConnectionAuthentication: auth})));
     });
 
-    it(`${AuthenticationType.MultiQueryParamToken}`, () => {
-      const pack = createFakePack({
-        defaultAuthentication: {
-          type: AuthenticationType.MultiQueryParamToken,
-          params: [
-            {name: 'param1', description: 'Description for param1'},
-            {name: 'param2', description: 'Description for param2'},
-          ],
-        },
-      });
-      setupReadline(['param-value-1', 'param-value-2']);
+    describe(`${AuthenticationType.MultiQueryParamToken}`, () => {
+      const testMultiQueryParamAuthFlow = (pack: PackDefinition) => {
+        setupReadline(['param-value-1', 'param-value-2']);
 
-      doSetupAuth(pack);
+        doSetupAuth(pack);
 
-      sinon.assert.calledWithExactly(
-        mockPromptForInput,
-        'Enter the token to use for the "param1" url param for this Pack:\n',
-        {mask: true},
-      );
-      sinon.assert.calledWithExactly(
-        mockPromptForInput,
-        'Enter the token to use for the "param2" url param for this Pack:\n',
-        {mask: true},
-      );
-      sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
+        sinon.assert.calledWithExactly(
+          mockPromptForInput,
+          'Enter the token to use for the "param1" url param for this Pack:\n',
+          {mask: true},
+        );
+        sinon.assert.calledWithExactly(
+          mockPromptForInput,
+          'Enter the token to use for the "param2" url param for this Pack:\n',
+          {mask: true},
+        );
+        sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-      assertCredentialsFileExactly({params: {param1: 'param-value-1', param2: 'param-value-2'}});
+        assertCredentialsFileExactly({params: {param1: 'param-value-1', param2: 'param-value-2'}});
+      };
+      const auth: Authentication = {
+        type: AuthenticationType.MultiQueryParamToken,
+        params: [
+          {name: 'param1', description: 'Description for param1'},
+          {name: 'param2', description: 'Description for param2'},
+        ],
+      };
+      it('defaultAuthentication', () => testMultiQueryParamAuthFlow(createFakePack({defaultAuthentication: auth})));
+      it('systemConnectionAuthentication', () =>
+        testMultiQueryParamAuthFlow(createFakePack({systemConnectionAuthentication: auth})));
     });
 
     it(`${AuthenticationType.WebBasic}`, () => {
