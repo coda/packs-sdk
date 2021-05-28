@@ -7,36 +7,32 @@ import {Type} from '../index';
 import {ValueType} from '../index';
 import {deepFreeze} from '../helpers/object_utils';
 
+const BaseFakePack = {
+  version: '42.42.42',
+  formats: [],
+  formulas: [],
+  syncTables: [],
+  permissionsDescription: 'Some description about permissions',
+};
+
 export const FakePack: PackDefinition = deepFreeze({
+  ...BaseFakePack,
   id: 424242,
-  authentication: {
-    type: AuthenticationType.OAuth2,
-    requiresEndpointUrl: false,
-  },
   category: PackCategory.DataStorage,
   description: 'Fake Pack',
   exampleImages: [],
   exampleVideoIds: [],
-  formats: [],
-  formulas: [],
   logoPath: 'logo.png',
   name: 'Fake Pack',
-  permissionsDescription: 'Some description about permissions',
   shortDescription: 'This is the default fake pack description',
-  syncTables: [],
-  version: '42.42.42',
 });
 
 export const FakePackVersionMetadata: PackVersionMetadata = deepFreeze({
-  version: '42.42.42',
+  ...BaseFakePack,
   defaultAuthentication: {
     type: AuthenticationType.QueryParamToken,
     paramName: 'authToken',
   },
-  formats: [],
-  formulas: [],
-  permissionsDescription: 'Some description about permissions',
-  syncTables: [],
 });
 
 export const FakePackFormulaMetadata: PackFormulaMetadata = deepFreeze({

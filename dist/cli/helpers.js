@@ -3,9 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.spawnBootstrapCommand = exports.escapeShellArg = exports.isTypescript = exports.makeManifestFullPath = exports.isTestCommand = exports.formatEndpoint = exports.createCodaClient = exports.spawnProcess = void 0;
+exports.getPackAuth = exports.spawnBootstrapCommand = exports.escapeShellArg = exports.isTypescript = exports.makeManifestFullPath = exports.isTestCommand = exports.formatEndpoint = exports.createCodaClient = exports.spawnProcess = void 0;
 const coda_1 = require("../helpers/external-api/coda");
 const path_1 = __importDefault(require("path"));
+const helpers_1 = require("../testing/helpers");
 const child_process_1 = require("child_process");
 function spawnProcess(command) {
     return child_process_1.spawnSync(command, {
@@ -49,3 +50,19 @@ function spawnBootstrapCommand(command) {
     spawnProcess(cmd);
 }
 exports.spawnBootstrapCommand = spawnBootstrapCommand;
+// Packs today do not have both defaultAuth and systemAuth specs, so this helper gets
+// whichever is available, defaulting to defaultAuth. A smarter version could be supported
+// in the future, for a use case like a Google Maps pack which allowed a default credential
+// from the pack author to be used up to some rate limit, after which a power user would need
+// to connect their own Maps API credential.
+function getPackAuth(packDef) {
+    const { defaultAuthentication, systemConnectionAuthentication } = packDef;
+    if (defaultAuthentication && systemConnectionAuthentication) {
+        helpers_1.print('Both defaultAuthentication & systemConnectionAuthentication are specified.');
+        helpers_1.print('Using defaultAuthentication.');
+        return defaultAuthentication;
+    }
+    // Since SystemAuthentication is a strict subset of Authentication, we can cast them together.
+    return defaultAuthentication || systemConnectionAuthentication;
+}
+exports.getPackAuth = getPackAuth;

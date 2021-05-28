@@ -340,7 +340,7 @@ your pack code.
 The SDK broadly divides authentication into two categories: authentication that is tied to
 the user of the pack vs authentication that is managed by the system, aka the pack author.
 In the pack definition the former is known as `defaultAuthentication` and the latter
-`systemAuthentication`. You will typically specify one or the other in your pack definition,
+`systemConnectionAuthentication`. You will typically specify one or the other in your pack definition,
 or neither if your pack does not make http requests or those requests do not require authentication.
 
 Default authentication is the most common. Specify this if each user of your pack
@@ -381,17 +381,19 @@ Packs code will never have access to the request after authentication credential
 - **HeaderBearerToken**: The user (or pack author, if using system authentication) provides an API token
   which is applied to the `Authorization` header of each fetcher request, in the form
   `Authorization: Bearer <token>`.
-- **CustomHeaderToken**: The user provides an API token, which is applied to a custom API
-  header as specified by the pack author, in the form `<custom-header>: <custom-prefix> <token>`.
-- **QueryParamToken**: The user provides an API token, which is applied to the url of each
-  fetcher request in a url parameter specified by the pack author. Using url params for authentication
-  is not recommended if there are other alternatives.
-- **MultiQueryParamToken**: The user provides multiple tokens, which are applied to the url of
-  each fetcher request in url parameters specified by the pack author. This is not common.
+- **CustomHeaderToken**: The user (or pack author, if using system authentication) provides an API token,
+  which is applied to a custom API header as specified by the pack author, in the form
+  `<custom-header>: <custom-prefix> <token>`.
+- **QueryParamToken**: The user (or pack author, if using system authentication) provides an API token,
+  which is applied to the url of each fetcher request in a url parameter specified by the pack author.
   Using url params for authentication is not recommended if there are other alternatives.
-- **WebBasic**: The user provides a username and typically a password, which are base64-encoded
-  and applied to the `Authorization` header of each fetcher request, in the form
-  `Authorization: Basic <base64encode(username:password)>`, as outlined in
+- **MultiQueryParamToken**: The user (or pack author, if using system authentication) provides
+  multiple tokens, which are applied to the url of each fetcher request in url parameters specified
+  by the pack author. This is not common. Using url params for authentication is not recommended
+  if there are other alternatives.
+- **WebBasic**: The user (or pack author, if using system authentication) provides a username and
+  typically a password, which are base64-encoded and applied to the `Authorization` header of each
+  fetcher request, in the form `Authorization: Basic <base64encode(username:password)>`, as outlined in
   [Basic access authentication](https://en.wikipedia.org/wiki/Basic_access_authentication).
   Web basic authentication sends passwords in cleartext so is not recommended if there are
   alternatives.

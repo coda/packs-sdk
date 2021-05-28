@@ -8,6 +8,8 @@ function compilePackMetadata(manifest) {
     const { formats, formulas, formulaNamespace, syncTables, defaultAuthentication, ...definition } = manifest;
     const compiledFormats = compileFormatsMetadata(formats || []);
     const compiledFormulas = (formulas && compileFormulasMetadata(formulas)) || (Array.isArray(formulas) ? [] : {});
+    // Note: we do not need to compile systemConnectionAuthentication metadata because it doesn't contain formulas,
+    // so we can pass it through directly as metadata.
     const defaultAuthenticationMetadata = compileDefaultAuthenticationMetadata(defaultAuthentication);
     const metadata = {
         ...definition,

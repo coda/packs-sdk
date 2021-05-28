@@ -14,6 +14,22 @@
       "cwd": "${workspaceRoot}",
       "protocol": "inspector",
       "env": {"TS_NODE_FILES": "true"}
-    }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug current file with mocha",
+      "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+      "runtimeExecutable": "${env:NVM_BIN}/node",
+      "stopOnEntry": false,
+      "runtimeArgs": ["--allow-natives-syntax"],
+      "args": ["--no-timeouts", "--config", "${workspaceRoot}/.mocharc.json", "--inspect", "${relativeFile}"],
+      "cwd": "${workspaceRoot}",
+      "sourceMaps": true,
+      "protocol": "inspector",
+      "env": {
+        "TS_NODE_TRANSPILE_ONLY": "1",
+      },
+    },
   ]
 }
