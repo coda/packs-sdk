@@ -225,7 +225,9 @@ export declare type MetadataContext = Record<string, any>;
 export declare type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
 export declare type MetadataFormula = ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any>;
 export declare type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
-export declare function makeMetadataFormula(execute: (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>): MetadataFormula;
+export declare function makeMetadataFormula(execute: (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>, options?: {
+    connection?: NetworkConnection;
+}): MetadataFormula;
 export interface SimpleAutocompleteOption {
     display: string;
     value: string | number;

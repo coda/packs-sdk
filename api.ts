@@ -425,6 +425,7 @@ export function makeMetadataFormula(
     search: string,
     formulaContext?: MetadataContext,
   ) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>,
+  options?: {connection?: NetworkConnection},
 ): MetadataFormula {
   return makeObjectFormula({
     name: 'getMetadata',
@@ -447,7 +448,7 @@ export function makeMetadataFormula(
     examples: [],
     network: {
       hasSideEffect: false,
-      connection: NetworkConnection.Required,
+      connection: options?.connection || NetworkConnection.Required,
     },
   });
 }
@@ -572,9 +573,9 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
  * @param formula The definition of the formula that implements this sync. This is a Coda packs formula
  * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
  * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
- * These will eventually be consolidated.) 
- * @param connection A {@link NetworkConnection} that will be used for all formulas contained within 
- * this sync table (including autocomplete formulas). 
+ * These will eventually be consolidated.)
+ * @param connection A {@link NetworkConnection} that will be used for all formulas contained within
+ * this sync table (including autocomplete formulas).
  * @param dynamicOptions: A set of options used internally by {@link makeDynamicSyncTable}
  */
 export function makeSyncTable<
@@ -588,9 +589,9 @@ export function makeSyncTable<
   formula: SyncFormulaDef<ParamDefsT>,
   connection?: NetworkConnection,
   dynamicOptions: {
-    getSchema?: MetadataFormula,
-    entityName?: string,
-  } = {},  
+    getSchema?: MetadataFormula;
+    entityName?: string;
+  } = {},
 ): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {getSchema, entityName} = dynamicOptions;
   const {execute: wrappedExecute, ...definition} = maybeRewriteConnectionForFormula(formula, connection);
@@ -626,12 +627,13 @@ export function makeSyncTable<
       execute,
       schema: formulaSchema,
       isSyncFormula: true,
-      network: definition.network && connection
-        ? {
-            ...definition.network,
-            connection,
-          }
-        : definition.network,
+      network:
+        definition.network && connection
+          ? {
+              ...definition.network,
+              connection,
+            }
+          : definition.network,
       resultType: Type.object as any,
     },
     getSchema: maybeRewriteConnectionForFormula(getSchema, connection),
@@ -658,7 +660,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   getDisplayUrl: MetadataFormula;
   listDynamicUrls?: MetadataFormula;
   entityName?: string;
-  connection?: NetworkConnection,
+  connection?: NetworkConnection;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any> {
   const fakeSchema = makeObjectSchema({
     // This schema is useless... just creating a stub here but the client will use
@@ -674,13 +676,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
       id: {type: ValueType.String},
     },
   });
-  const table = makeSyncTable(
-    name, 
-    fakeSchema, 
-    formula, 
-    connection,
-    {getSchema, entityName},
-  );
+  const table = makeSyncTable(name, fakeSchema, formula, connection, {getSchema, entityName});
   return {
     ...table,
     isDynamic: true,
@@ -734,35 +730,34 @@ export function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: Empty
   });
 }
 
-
 function maybeRewriteConnectionForFormula<
-T extends ParamDefs, U extends CommonPackFormulaDef<T>, V extends U | undefined>(
-  formula: V,
-  connection: NetworkConnection | undefined
-): V {
+  T extends ParamDefs,
+  U extends CommonPackFormulaDef<T>,
+  V extends U | undefined,
+>(formula: V, connection: NetworkConnection | undefined): V {
   if (formula && connection) {
     return {
       ...formula,
       parameters: formula.parameters.map((param: ParamDef<Type>) => {
         return {
           ...param,
-          autocomplete: param.autocomplete 
+          autocomplete: param.autocomplete
             ? maybeRewriteConnectionForFormula(param.autocomplete, connection)
             : undefined,
-        }
+        };
       }) as T,
       varargParameters: (formula.varargParameters || []).map((param: ParamDef<Type>) => {
         return {
           ...param,
-          autocomplete: param.autocomplete 
+          autocomplete: param.autocomplete
             ? maybeRewriteConnectionForFormula(param.autocomplete, connection)
             : undefined,
-        }
+        };
       }) as T,
       network: {
         ...formula.network,
         connection,
-      }
+      },
     };
   }
   return formula;
