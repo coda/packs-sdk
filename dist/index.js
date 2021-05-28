@@ -20,7 +20,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.schema = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeStringFormula = exports.makeObjectFormula = exports.makeNumericFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makeMetadataFormula = exports.makeUserVisibleError = exports.isUserVisibleError = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.isDynamicSyncTable = exports.isArrayType = exports.UserVisibleError = exports.Type = exports.StatusCodeError = exports.PrecannedDateRange = exports.NetworkConnection = exports.SyncInterval = exports.QuotaLimitType = exports.PostSetupType = exports.PackCategory = exports.DefaultConnectionType = exports.FeatureSet = exports.AuthenticationType = void 0;
-exports.makeSchema = exports.makeObjectSchema = exports.ValueType = exports.DurationUnit = exports.CurrencyFormat = void 0;
+exports.makeSchema = exports.makeObjectSchema = exports.generateSchema = exports.ValueType = exports.DurationUnit = exports.CurrencyFormat = void 0;
 var types_1 = require("./types");
 Object.defineProperty(exports, "AuthenticationType", { enumerable: true, get: function () { return types_1.AuthenticationType; } });
 var types_2 = require("./types");
@@ -131,6 +131,8 @@ Object.defineProperty(exports, "DurationUnit", { enumerable: true, get: function
 var schema_3 = require("./schema");
 Object.defineProperty(exports, "ValueType", { enumerable: true, get: function () { return schema_3.ValueType; } });
 var schema_4 = require("./schema");
-Object.defineProperty(exports, "makeObjectSchema", { enumerable: true, get: function () { return schema_4.makeObjectSchema; } });
+Object.defineProperty(exports, "generateSchema", { enumerable: true, get: function () { return schema_4.generateSchema; } });
 var schema_5 = require("./schema");
-Object.defineProperty(exports, "makeSchema", { enumerable: true, get: function () { return schema_5.makeSchema; } });
+Object.defineProperty(exports, "makeObjectSchema", { enumerable: true, get: function () { return schema_5.makeObjectSchema; } });
+var schema_6 = require("./schema");
+Object.defineProperty(exports, "makeSchema", { enumerable: true, get: function () { return schema_6.makeSchema; } });

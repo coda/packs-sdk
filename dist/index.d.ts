@@ -134,5 +134,6 @@ export type { SliderSchema } from './schema';
 export type { StringSchema } from './schema';
 export type { TimeSchema } from './schema';
 export { ValueType } from './schema';
+export { generateSchema } from './schema';
 export { makeObjectSchema } from './schema';
 export { makeSchema } from './schema';
