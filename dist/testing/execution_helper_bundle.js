@@ -5,24 +5,24 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __markAsModule = (target) => __defProp(target, "__esModule", {value: true});
+var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
 var __commonJS = (cb, mod) => function __require() {
-  return mod || (0, cb[Object.keys(cb)[0]])((mod = {exports: {}}).exports, mod), mod.exports;
+  return mod || (0, cb[Object.keys(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
 var __export = (target, all) => {
   for (var name in all)
-    __defProp(target, name, {get: all[name], enumerable: true});
+    __defProp(target, name, { get: all[name], enumerable: true });
 };
 var __reExport = (target, module2, desc) => {
   if (module2 && typeof module2 === "object" || typeof module2 === "function") {
     for (let key of __getOwnPropNames(module2))
       if (!__hasOwnProp.call(target, key) && key !== "default")
-        __defProp(target, key, {get: () => module2[key], enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable});
+        __defProp(target, key, { get: () => module2[key], enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable });
   }
   return target;
 };
 var __toModule = (module2) => {
-  return __reExport(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? {get: () => module2.default, enumerable: true} : {value: module2, enumerable: true})), module2);
+  return __reExport(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? { get: () => module2.default, enumerable: true } : { value: module2, enumerable: true })), module2);
 };
 
 // node_modules/pascalcase/index.js
@@ -690,7 +690,7 @@ var require_call_bind = __commonJS({
     var $max = GetIntrinsic("%Math.max%");
     if ($defineProperty) {
       try {
-        $defineProperty({}, "a", {value: 1});
+        $defineProperty({}, "a", { value: 1 });
       } catch (e) {
         $defineProperty = null;
       }
@@ -700,7 +700,7 @@ var require_call_bind = __commonJS({
       if ($gOPD && $defineProperty) {
         var desc = $gOPD(func, "length");
         if (desc.configurable) {
-          $defineProperty(func, "length", {value: 1 + $max(0, originalFunction.length - (arguments.length - 1))});
+          $defineProperty(func, "length", { value: 1 + $max(0, originalFunction.length - (arguments.length - 1)) });
         }
       }
       return func;
@@ -709,7 +709,7 @@ var require_call_bind = __commonJS({
       return $reflectApply(bind, $apply, arguments);
     };
     if ($defineProperty) {
-      $defineProperty(module2.exports, "apply", {value: applyBind});
+      $defineProperty(module2.exports, "apply", { value: applyBind });
     } else {
       module2.exports.apply = applyBind;
     }
@@ -1252,7 +1252,7 @@ var require_side_channel = __commonJS({
             $mapSet($m, key, value);
           } else {
             if (!$o) {
-              $o = {key: {}, next: null};
+              $o = { key: {}, next: null };
             }
             listSet($o, key, value);
           }
@@ -1433,7 +1433,7 @@ var require_utils = __commonJS({
       return out;
     };
     var compact = function compact2(value) {
-      var queue = [{obj: {o: value}, prop: "o"}];
+      var queue = [{ obj: { o: value }, prop: "o" }];
       var refs = [];
       for (var i = 0; i < queue.length; ++i) {
         var item = queue[i];
@@ -1443,7 +1443,7 @@ var require_utils = __commonJS({
           var key = keys[j];
           var val = obj[key];
           if (typeof val === "object" && val !== null && refs.indexOf(val) === -1) {
-            queue.push({obj, prop: key});
+            queue.push({ obj, prop: key });
             refs.push(val);
           }
         }
@@ -1572,7 +1572,7 @@ var require_stringify = __commonJS({
       }
       var objKeys;
       if (generateArrayPrefix === "comma" && isArray2(obj)) {
-        objKeys = [{value: obj.length > 0 ? obj.join(",") || null : void 0}];
+        objKeys = [{ value: obj.length > 0 ? obj.join(",") || null : void 0 }];
       } else if (isArray2(filter)) {
         objKeys = filter;
       } else {
@@ -1788,7 +1788,7 @@ var require_parse = __commonJS({
           var cleanRoot = root.charAt(0) === "[" && root.charAt(root.length - 1) === "]" ? root.slice(1, -1) : root;
           var index = parseInt(cleanRoot, 10);
           if (!options.parseArrays && cleanRoot === "") {
-            obj = {0: leaf};
+            obj = { 0: leaf };
           } else if (!isNaN(index) && root !== cleanRoot && String(index) === cleanRoot && index >= 0 && (options.parseArrays && index <= options.arrayLimit)) {
             obj = [];
             obj[index] = leaf;
@@ -2000,7 +2000,7 @@ var require_url_parse = __commonJS({
       [/:(\d+)$/, "port", void 0, 1],
       [NaN, "hostname", void 0, 1, 1]
     ];
-    var ignore = {hash: 1, query: 1};
+    var ignore = { hash: 1, query: 1 };
     function lolcation(loc) {
       var globalVar;
       if (typeof window !== "undefined")
@@ -2214,7 +2214,7 @@ var require_url_parse = __commonJS({
         result += url.hash;
       return result;
     }
-    Url.prototype = {set, toString};
+    Url.prototype = { set, toString };
     Url.extractProtocol = extractProtocol;
     Url.location = lolcation;
     Url.trimLeft = trimLeft;
@@ -2413,7 +2413,7 @@ function deepCopy(obj) {
 
 // testing/coercion.ts
 function coerceParams(formula, args) {
-  const {parameters, varargParameters} = formula;
+  const { parameters, varargParameters } = formula;
   const coerced = [];
   let varargIndex = 0;
   for (let i = 0; i < args.length; i++) {
@@ -2470,7 +2470,7 @@ var ResultValidationContext = class {
     this.fieldContexts = contexts ? deepCopy(contexts) : [];
   }
   extendForProperty(propertyKey) {
-    const newContext = {propertyKey, arrayIndices: []};
+    const newContext = { propertyKey, arrayIndices: [] };
     return new ResultValidationContext([...this.fieldContexts, newContext]);
   }
   extendForIndex(arrayIndex) {
@@ -2484,7 +2484,7 @@ var ResultValidationContext = class {
     return fieldPath.join(".");
   }
   generateFieldPathFromValidationContext(context) {
-    const {propertyKey, arrayIndices} = context;
+    const { propertyKey, arrayIndices } = context;
     return `${propertyKey}${arrayIndices.map((idx) => `[${idx}]`)}`;
   }
 };
@@ -2510,7 +2510,7 @@ function isEmail(text) {
 // testing/validation.ts
 var import_url_parse2 = __toModule(require_url_parse());
 function validateParams(formula, args) {
-  const {parameters, varargParameters} = formula;
+  const { parameters, varargParameters } = formula;
   const numRequiredParams = parameters.filter((param) => !param.optional).length;
   if (args.length < numRequiredParams) {
     throw new ParameterException(`Expected at least ${numRequiredParams} parameter but only ${args.length} were provided.`);
@@ -2545,7 +2545,7 @@ function validateResult(formula, result) {
 }
 function validateResultType(resultType, result) {
   if (!isDefined(result)) {
-    return {message: `Expected a ${resultType} result but got ${result}.`};
+    return { message: `Expected a ${resultType} result but got ${result}.` };
   }
   const typeOfResult = typeof result;
   switch (resultType) {
@@ -2660,7 +2660,7 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
 function tryParseDateTimeString(result, schema) {
   const dateTime = result;
   if (isNaN(Date.parse(dateTime))) {
-    return {message: `Failed to parse ${dateTime} as a ${schema.codaType}.`};
+    return { message: `Failed to parse ${dateTime} as a ${schema.codaType}.` };
   }
 }
 function tryParseUrl(result, schema) {
@@ -2678,36 +2678,36 @@ function tryParseUrl(result, schema) {
 }
 function tryParseSlider(result, schema) {
   const value = result;
-  const {minimum, maximum} = schema;
+  const { minimum, maximum } = schema;
   if (value < (minimum ?? 0)) {
-    return {message: `Slider value ${result} is below the specified minimum value of ${minimum ?? 0}.`};
+    return { message: `Slider value ${result} is below the specified minimum value of ${minimum ?? 0}.` };
   }
   if (maximum && value > maximum) {
-    return {message: `Slider value ${result} is greater than the specified maximum value of ${maximum}.`};
+    return { message: `Slider value ${result} is greater than the specified maximum value of ${maximum}.` };
   }
 }
 function tryParseScale(result, schema) {
-  const {maximum} = schema;
+  const { maximum } = schema;
   const value = result;
   if (!Number.isInteger(result)) {
-    return {message: `Scale value ${result} must be an integer.`};
+    return { message: `Scale value ${result} must be an integer.` };
   }
   if (value < 0) {
-    return {message: `Scale value ${result} cannot be below 0.`};
+    return { message: `Scale value ${result} cannot be below 0.` };
   }
   if (value > maximum) {
-    return {message: `Scale value ${result} is greater than the specified maximum value of ${maximum}.`};
+    return { message: `Scale value ${result} is greater than the specified maximum value of ${maximum}.` };
   }
 }
 function tryParsePerson(result, schema) {
-  const {id} = schema;
+  const { id } = schema;
   const validId = ensureExists(id);
   const idError = checkFieldInResult(result, validId);
   if (idError) {
     return idError;
   }
   if (!isEmail(result[validId])) {
-    return {message: `The id field for the person result must be an email string, but got "${result[validId]}".`};
+    return { message: `The id field for the person result must be an email string, but got "${result[validId]}".` };
   }
 }
 function checkFieldInResult(result, property) {
@@ -2720,11 +2720,11 @@ function checkFieldInResult(result, property) {
 function checkType(typeMatches, expectedResultTypeName, result) {
   if (!typeMatches) {
     const resultValue = typeof result === "string" ? `"${result}"` : result;
-    return {message: `Expected a ${expectedResultTypeName} result but got ${resultValue}.`};
+    return { message: `Expected a ${expectedResultTypeName} result but got ${resultValue}.` };
   }
 }
 function validateObjectResult(formula, result) {
-  const {schema} = formula;
+  const { schema } = formula;
   if (!schema) {
     return;
   }
@@ -2737,7 +2737,7 @@ function validateObjectResult(formula, result) {
     return;
   }
   if (!isObject(schema)) {
-    const error = {message: `Expected an object schema, but found ${JSON.stringify(schema)}.`};
+    const error = { message: `Expected an object schema, but found ${JSON.stringify(schema)}.` };
     throw ResultValidationException.fromErrors(formula.name, [error]);
   }
   const errors = validateObject(result, schema, validationContext);
@@ -2768,7 +2768,7 @@ function validateObject(result, schema, context) {
 }
 function validateArray(result, schema, context) {
   if (!Array.isArray(result)) {
-    const error = {message: `Expected an ${schema.type} result but got ${result}.`};
+    const error = { message: `Expected an ${schema.type} result but got ${result}.` };
     return [error];
   }
   const arrayItemErrors = [];
@@ -2833,7 +2833,7 @@ async function executeFormulaOrSync(manifest, formulaName, params, context) {
     throw wrapError(err);
   }
 }
-async function executeFormula(formula, params, context, {validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true} = {}) {
+async function executeFormula(formula, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true } = {}) {
   if (shouldValidateParams) {
     validateParams(formula, params);
   }
