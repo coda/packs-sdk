@@ -29,10 +29,7 @@
       "protocol": "inspector",
       "env": {
         "TS_NODE_TRANSPILE_ONLY": "1",
-        "NODE_EXTRA_CA_CERTS": "${workspaceRoot}/config/dev-certs/cacert.pem"
       },
-      "outFiles": ["${workspaceRoot}/artifacts", "${workspaceRoot}/assets", "${workspaceRoot}/modules"],
-      "skipFiles": ["inspector_async_hook.js", "async_hooks.js"]
     },
   ]
 }
