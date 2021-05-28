@@ -15,7 +15,7 @@ import yargs from 'yargs';
 
 if (require.main === module) {
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  yargs
+  void yargs
     .parserConfiguration({'parse-numbers': false})
     .command({
       command: 'execute <manifestPath> <formulaName> [params..]',

@@ -18,7 +18,7 @@ const validate_1 = require("./validate");
 const yargs_1 = __importDefault(require("yargs"));
 if (require.main === module) {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    yargs_1.default
+    void yargs_1.default
         .parserConfiguration({ 'parse-numbers': false })
         .command({
         command: 'execute <manifestPath> <formulaName> [params..]',
