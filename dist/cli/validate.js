@@ -20,12 +20,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateMetadata = exports.handleValidate = void 0;
+const build_1 = require("./build");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("../testing/helpers");
 const upload_validation_1 = require("../testing/upload_validation");
 async function handleValidate({ manifestFile }) {
     const fullManifestPath = helpers_1.makeManifestFullPath(manifestFile);
-    const { manifest } = await Promise.resolve().then(() => __importStar(require(fullManifestPath)));
+    const bundleFilename = await build_1.build(fullManifestPath);
+    const { manifest } = await Promise.resolve().then(() => __importStar(require(bundleFilename)));
     return validateMetadata(manifest);
 }
 exports.handleValidate = handleValidate;
