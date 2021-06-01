@@ -26,7 +26,8 @@ export function compilePackMetadata(manifest: PackDefinition): PackMetadata;
 export function compilePackMetadata(manifest: PackVersionDefinition): PackVersionMetadata {
   const {formats, formulas, formulaNamespace, syncTables, defaultAuthentication, ...definition} = manifest;
   const compiledFormats = compileFormatsMetadata(formats || []);
-  const compiledFormulas = (formulas && compileFormulasMetadata(formulas)) || (Array.isArray(formulas) ? [] : {});
+  const compiledFormulas =
+    (formulas && compileFormulasMetadata(formulas)) || (Array.isArray(formulas) || !formulas ? [] : {});
   // Note: we do not need to compile systemConnectionAuthentication metadata because it doesn't contain formulas,
   // so we can pass it through directly as metadata.
   const defaultAuthenticationMetadata = compileDefaultAuthenticationMetadata(defaultAuthentication);
@@ -54,7 +55,7 @@ function compileFormatsMetadata(formats: Format[]): PackFormatMetadata[] {
 function compileFormulasMetadata(
   formulas: PackFormulas | TypedStandardFormula[],
 ): PackFormulasMetadata | PackFormulaMetadata[] {
-  const formulasMetadata: PackFormulaMetadata[] | PackFormulasMetadata = Array.isArray(formulas) ? [] : {};
+  const formulasMetadata: PackFormulaMetadata[] | PackFormulasMetadata = Array.isArray(formulas) || !formulas ? [] : {};
   // TODO: @alan-fang delete once we move packs off of PackFormulas
   if (Array.isArray(formulas)) {
     (formulasMetadata as PackFormulaMetadata[]).push(...formulas.map(compileFormulaMetadata));
