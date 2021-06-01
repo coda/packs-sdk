@@ -2679,8 +2679,8 @@ function tryParseUrl(result, schema) {
 function tryParseSlider(result, schema) {
   const value = result;
   const { minimum, maximum } = schema;
-  if (value < (minimum ?? 0)) {
-    return { message: `Slider value ${result} is below the specified minimum value of ${minimum ?? 0}.` };
+  if (value < (minimum != null ? minimum : 0)) {
+    return { message: `Slider value ${result} is below the specified minimum value of ${minimum != null ? minimum : 0}.` };
   }
   if (maximum && value > maximum) {
     return { message: `Slider value ${result} is greater than the specified maximum value of ${maximum}.` };
