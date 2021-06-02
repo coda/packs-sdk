@@ -746,7 +746,7 @@ function maybeRewriteConnectionForFormula<
             : undefined,
         };
       }) as T,
-      varargParameters: (formula.varargParameters || []).map((param: ParamDef<Type>) => {
+      varargParameters: formula.varargParameters?.map((param: ParamDef<Type>) => {
         return {
           ...param,
           autocomplete: param.autocomplete
