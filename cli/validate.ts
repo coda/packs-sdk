@@ -1,6 +1,7 @@
 import type {Arguments} from 'yargs';
 import type {PackMetadata} from '../compiled_types';
 import type {PackMetadataValidationError} from '../testing/upload_validation';
+import type {ValidationError} from '../testing/types';
 import {build} from './build';
 import {makeManifestFullPath} from './helpers';
 import {printAndExit} from '../testing/helpers';
@@ -22,7 +23,14 @@ export async function validateMetadata(metadata: PackMetadata) {
     await validatePackVersionMetadata(metadata);
   } catch (e: any) {
     const packMetadataValidationError = e as PackMetadataValidationError;
-    const validationErrors = packMetadataValidationError.validationErrors?.map(error => error.message).join('\n');
+    const validationErrors = packMetadataValidationError.validationErrors?.map(makeErrorMessage).join('\n');
     printAndExit(`${e.message}: \n${validationErrors}`);
   }
+}
+
+function makeErrorMessage({path, message}: ValidationError): string {
+  if (path) {
+    return `Error in field at path "${path}": ${message}`;
+  }
+  return message;
 }

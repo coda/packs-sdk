@@ -38,8 +38,14 @@ async function validateMetadata(metadata) {
     }
     catch (e) {
         const packMetadataValidationError = e;
-        const validationErrors = (_a = packMetadataValidationError.validationErrors) === null || _a === void 0 ? void 0 : _a.map(error => error.message).join('\n');
+        const validationErrors = (_a = packMetadataValidationError.validationErrors) === null || _a === void 0 ? void 0 : _a.map(makeErrorMessage).join('\n');
         helpers_2.printAndExit(`${e.message}: \n${validationErrors}`);
     }
 }
 exports.validateMetadata = validateMetadata;
+function makeErrorMessage({ path, message }) {
+    if (path) {
+        return `Error in field at path "${path}": ${message}`;
+    }
+    return message;
+}
