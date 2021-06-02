@@ -382,6 +382,7 @@ function makeEmptyFormula(definition) {
 }
 exports.makeEmptyFormula = makeEmptyFormula;
 function maybeRewriteConnectionForFormula(formula, connection) {
+    var _a;
     if (formula && connection) {
         return {
             ...formula,
@@ -393,7 +394,7 @@ function maybeRewriteConnectionForFormula(formula, connection) {
                         : undefined,
                 };
             }),
-            varargParameters: (formula.varargParameters || []).map((param) => {
+            varargParameters: (_a = formula.varargParameters) === null || _a === void 0 ? void 0 : _a.map((param) => {
                 return {
                     ...param,
                     autocomplete: param.autocomplete
