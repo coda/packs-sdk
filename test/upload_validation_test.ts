@@ -26,6 +26,7 @@ import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
 import {makeSyncTable} from '../api';
 import {validatePackVersionMetadata} from '../testing/upload_validation';
+import {validateSyncTableSchema} from '../testing/upload_validation';
 import {validateVariousAuthenticationMetadata} from '../testing/upload_validation';
 
 describe('Pack metadata Validation', () => {
@@ -525,7 +526,7 @@ describe('Pack metadata Validation', () => {
         await validateJson(metadata);
       });
 
-      it('valid object formula with array schema', async () => {
+      it('valid object formula with object array schema', async () => {
         const itemSchema = makeObjectSchema({
           type: ValueType.Object,
           id: 'id',
@@ -543,6 +544,15 @@ describe('Pack metadata Validation', () => {
         const arraySchema = makeSchema({
           type: ValueType.Array,
           items: itemSchema,
+        });
+        const metadata = metadataForFormulaWithObjectSchema(arraySchema);
+        await validateJson(metadata);
+      });
+
+      it('valid object formula with primitive array schema', async () => {
+        const arraySchema = makeSchema({
+          type: ValueType.Array,
+          items: {type: ValueType.String},
         });
         const metadata = metadataForFormulaWithObjectSchema(arraySchema);
         await validateJson(metadata);
@@ -618,6 +628,19 @@ describe('Pack metadata Validation', () => {
             message: 'One or more of the "featured" fields do not appear in the "properties" object.',
             path: 'formulas[0].schema',
           },
+        ]);
+      });
+
+      it('bad schema type', async () => {
+        const metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            name: {type: ValueType.DateTime} as any,
+          },
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {message: 'Could not find any valid schema for this value.', path: 'formulas[0].schema.properties.Name'},
         ]);
       });
     });
@@ -904,6 +927,44 @@ describe('Pack metadata Validation', () => {
           evilData: 0xdeadbeef,
         }),
       );
+    });
+  });
+
+  describe('validateSyncTableSchema', () => {
+    it('succeeds', () => {
+      const itemSchema = makeObjectSchema({
+        type: ValueType.Object,
+        id: 'id',
+        primary: 'primary',
+        identity: {
+          packId: 123,
+          name: 'IdentityName',
+        },
+        properties: {
+          id: {type: ValueType.Number, fromKey: 'foo', required: true},
+          primary: {type: ValueType.String},
+          date: {type: ValueType.String, codaType: ValueType.Date},
+        },
+      });
+      const arraySchema = makeSchema({
+        type: ValueType.Array,
+        items: itemSchema,
+      });
+      const result = validateSyncTableSchema(arraySchema);
+      assert.ok(result);
+    });
+
+    it('fails', () => {
+      const arraySchema = makeSchema({
+        type: ValueType.Array,
+        items: makeObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            foo: {type: ValueType.DateTime} as any,
+          },
+        }),
+      });
+      assert.throws(() => validateSyncTableSchema(arraySchema), /Schema failed validation/);
     });
   });
 });
