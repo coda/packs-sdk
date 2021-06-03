@@ -91,6 +91,20 @@ export function validateVariousAuthenticationMetadata(auth: any): VariousAuthent
   );
 }
 
+// Note: This is called within Coda for validating the result of getSchema calls for dynamic sync tables.
+export function validateSyncTableSchema(schema: any): ArraySchema<ObjectSchema<any, any>> {
+  const validated = arrayPropertySchema.safeParse(schema);
+  if (validated.success) {
+    return validated.data;
+  }
+
+  throw new PackMetadataValidationError(
+    'Schema failed validation',
+    validated.error,
+    validated.error.errors.flatMap(zodErrorDetailToValidationError),
+  );
+}
+
 function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[] {
   // Top-level errors for union types are totally useless, they just say "invalid input",
   // but they do record all of the specific errors when trying each element of the union,
@@ -137,6 +151,11 @@ function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[
         }
       }
     }
+
+    if (underlyingErrors.length === 0) {
+      return [{path: zodPathToPathString(subError.path), message: 'Could not find any valid schema for this value.'}];
+    }
+
     return underlyingErrors;
   }
 

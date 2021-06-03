@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = void 0;
+exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = void 0;
 const schema_1 = require("../schema");
 const types_1 = require("../types");
 const types_2 = require("../types");
@@ -67,6 +67,15 @@ function validateVariousAuthenticationMetadata(auth) {
     throw new PackMetadataValidationError('Various authentication failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
 }
 exports.validateVariousAuthenticationMetadata = validateVariousAuthenticationMetadata;
+// Note: This is called within Coda for validating the result of getSchema calls for dynamic sync tables.
+function validateSyncTableSchema(schema) {
+    const validated = arrayPropertySchema.safeParse(schema);
+    if (validated.success) {
+        return validated.data;
+    }
+    throw new PackMetadataValidationError('Schema failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
+}
+exports.validateSyncTableSchema = validateSyncTableSchema;
 function zodErrorDetailToValidationError(subError) {
     var _a;
     // Top-level errors for union types are totally useless, they just say "invalid input",
@@ -112,6 +121,9 @@ function zodErrorDetailToValidationError(subError) {
                     }
                 }
             }
+        }
+        if (underlyingErrors.length === 0) {
+            return [{ path: zodPathToPathString(subError.path), message: 'Could not find any valid schema for this value.' }];
         }
         return underlyingErrors;
     }
