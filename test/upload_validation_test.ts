@@ -236,9 +236,11 @@ describe('Pack metadata Validation', () => {
     it('valid formula with network', async () => {
       const networks: Network[] = [
         {},
+        {requiresConnection: true},
+        {requiresConnection: false},
         {hasSideEffect: true},
         {hasSideEffect: false},
-        {hasSideEffect: true, connection: NetworkConnection.Required},
+        {hasSideEffect: true, requiresConnection: false},
         {connection: NetworkConnection.None},
         {connection: NetworkConnection.Optional},
         {connection: NetworkConnection.Required},

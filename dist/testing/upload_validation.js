@@ -297,6 +297,7 @@ const commonPackFormulaSchema = {
     varargParameters: z.array(paramDefValidator).optional(),
     network: zodCompleteObject({
         hasSideEffect: z.boolean().optional(),
+        requiresConnection: z.boolean().optional(),
         connection: z.nativeEnum(api_types_1.NetworkConnection).optional(),
     }).optional(),
     cacheTtlSecs: z.number().min(0).optional(),
