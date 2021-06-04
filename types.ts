@@ -269,7 +269,7 @@ export interface RateLimits {
  * heart of the implementation of a Pack.
  */
 export interface PackVersionDefinition {
-  version?: string;
+  version: string;
   /**
    * If specified, the user must provide personal authentication credentials before using the pack.
    */
