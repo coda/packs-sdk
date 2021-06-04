@@ -1,5 +1,6 @@
 export type { Authentication } from './types';
 export { AuthenticationType } from './types';
+export type { BasicPackDefinition } from './types';
 export { FeatureSet } from './types';
 export { DefaultConnectionType } from './types';
 export type { OAuth2Authentication } from './types';
