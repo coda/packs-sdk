@@ -449,6 +449,7 @@ export function makeMetadataFormula(
     network: {
       hasSideEffect: false,
       connection: options?.connection || NetworkConnection.Required,
+      requiresConnection: true,
     },
   });
 }
