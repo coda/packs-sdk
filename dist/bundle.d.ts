@@ -801,8 +801,6 @@ export interface OAuth2Authentication extends BaseAuthentication {
 	additionalParams?: {
 		[key: string]: any;
 	};
-	clientIdEnvVarName: string;
-	clientSecretEnvVarName: string;
 	endpointKey?: string;
 	tokenQueryParam?: string;
 }

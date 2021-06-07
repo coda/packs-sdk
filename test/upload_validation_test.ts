@@ -820,8 +820,6 @@ describe('Pack metadata Validation', () => {
           scopes: ['scope 1', 'scope 2'],
           tokenPrefix: 'some-prefix',
           additionalParams: {foo: 'bar'},
-          clientIdEnvVarName: 'deprecated',
-          clientSecretEnvVarName: 'deprecated',
           endpointKey: 'some-key',
           tokenQueryParam: 'some-param',
           postSetup: [
@@ -843,8 +841,6 @@ describe('Pack metadata Validation', () => {
           type: AuthenticationType.OAuth2,
           authorizationUrl: 'some-url',
           tokenUrl: 'some-url',
-          clientIdEnvVarName: 'deprecated',
-          clientSecretEnvVarName: 'deprecated',
         },
       });
       await validateJson(metadata);

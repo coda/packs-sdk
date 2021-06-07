@@ -276,8 +276,6 @@ const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> 
     scopes: z.array(z.string()).optional(),
     tokenPrefix: z.string().optional(),
     additionalParams: z.record(z.any()).optional(),
-    clientIdEnvVarName: z.string().optional(), // Deprecated
-    clientSecretEnvVarName: z.string().optional(), // Deprecated
     endpointKey: z.string().optional(),
     tokenQueryParam: z.string().optional(),
     ...baseAuthenticationValidators,
