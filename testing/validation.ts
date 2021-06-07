@@ -16,6 +16,7 @@ import type {StringSchema} from '../schema';
 import {Type} from '../api_types';
 import type {TypedPackFormula} from '../api';
 import type {ValidationError} from './types';
+import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
 import {ensureExists} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
@@ -128,17 +129,17 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
         return [];
       }
       switch (schema.codaType) {
-        case ValueType.Slider:
+        case ValueHintType.Slider:
           const sliderErrorMessage = tryParseSlider(result, schema);
           return sliderErrorMessage ? [sliderErrorMessage] : [];
-        case ValueType.Scale:
+        case ValueHintType.Scale:
           const scaleErrorMessage = tryParseScale(result, schema);
           return scaleErrorMessage ? [scaleErrorMessage] : [];
-        case ValueType.Date:
-        case ValueType.DateTime:
-        case ValueType.Time:
-        case ValueType.Percent:
-        case ValueType.Currency:
+        case ValueHintType.Date:
+        case ValueHintType.DateTime:
+        case ValueHintType.Time:
+        case ValueHintType.Percent:
+        case ValueHintType.Currency:
         case undefined:
           // no need to coerce current result type
           return [];
@@ -152,23 +153,23 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
         return errors;
       }
       switch (schema.codaType) {
-        case ValueType.Attachment:
-        case ValueType.Embed:
-        case ValueType.Image:
-        case ValueType.ImageAttachment:
-        case ValueType.Url:
+        case ValueHintType.Attachment:
+        case ValueHintType.Embed:
+        case ValueHintType.Image:
+        case ValueHintType.ImageAttachment:
+        case ValueHintType.Url:
           const urlErrorMessage = tryParseUrl(result, schema);
           return urlErrorMessage ? [urlErrorMessage] : [];
-        case ValueType.Date:
-        case ValueType.DateTime:
+        case ValueHintType.Date:
+        case ValueHintType.DateTime:
           const dateTimeErrorMessage = tryParseDateTimeString(result, schema);
           return dateTimeErrorMessage ? [dateTimeErrorMessage] : [];
-        case ValueType.Duration:
-        case ValueType.Time:
+        case ValueHintType.Duration:
+        case ValueHintType.Time:
           // TODO: investigate how to do this in a lightweight fashion.
           return [];
-        case ValueType.Html:
-        case ValueType.Markdown:
+        case ValueHintType.Html:
+        case ValueHintType.Markdown:
         case undefined:
           // no need to coerce current result type
           return [];
@@ -184,10 +185,10 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
         return errors;
       }
       switch (schema.codaType) {
-        case ValueType.Person:
+        case ValueHintType.Person:
           const personErrorMessage = tryParsePerson(result, schema);
           return personErrorMessage ? [personErrorMessage] : [];
-        case ValueType.Reference:
+        case ValueHintType.Reference:
         // these are validated in the schema creation.
         case undefined:
           return validateObject(result as Record<string, unknown>, schema, context);

@@ -8,13 +8,22 @@ import pascalcase from 'pascalcase';
 // Defines a subset of the JSON Object schema for use in annotating API results.
 // http://json-schema.org/latest/json-schema-core.html#rfc.section.8.2
 
+/**
+ * The set of primitive value types that can be used as return values for formulas
+ * or in object schemas.
+ */
 export enum ValueType {
   Boolean = 'boolean',
   Number = 'number',
   String = 'string',
   Array = 'array',
   Object = 'object',
-  // Synthetic types we will use to coerce values.
+}
+
+/**
+ * Synthetic types that instruct Coda how to coerce values from primitives at ingestion time.
+ */
+export enum ValueHintType {
   Date = 'date',
   Time = 'time',
   DateTime = 'datetime',
@@ -35,28 +44,28 @@ export enum ValueType {
 }
 
 export const StringHintValueTypes = [
-  ValueType.Attachment,
-  ValueType.Date,
-  ValueType.Time,
-  ValueType.DateTime,
-  ValueType.Duration,
-  ValueType.Embed,
-  ValueType.Html,
-  ValueType.Image,
-  ValueType.ImageAttachment,
-  ValueType.Markdown,
-  ValueType.Url,
+  ValueHintType.Attachment,
+  ValueHintType.Date,
+  ValueHintType.Time,
+  ValueHintType.DateTime,
+  ValueHintType.Duration,
+  ValueHintType.Embed,
+  ValueHintType.Html,
+  ValueHintType.Image,
+  ValueHintType.ImageAttachment,
+  ValueHintType.Markdown,
+  ValueHintType.Url,
 ] as const;
 export const NumberHintValueTypes = [
-  ValueType.Date,
-  ValueType.Time,
-  ValueType.DateTime,
-  ValueType.Percent,
-  ValueType.Currency,
-  ValueType.Slider,
-  ValueType.Scale,
+  ValueHintType.Date,
+  ValueHintType.Time,
+  ValueHintType.DateTime,
+  ValueHintType.Percent,
+  ValueHintType.Currency,
+  ValueHintType.Slider,
+  ValueHintType.Scale,
 ] as const;
-export const ObjectHintValueTypes = [ValueType.Person, ValueType.Reference] as const;
+export const ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference] as const;
 
 export type StringHintTypes = typeof StringHintValueTypes[number];
 export type NumberHintTypes = typeof NumberHintValueTypes[number];
@@ -76,7 +85,7 @@ export interface NumberSchema extends BaseSchema {
 }
 
 export interface NumericSchema extends NumberSchema {
-  codaType?: ValueType.Percent; // Can also be undefined if it's a vanilla number
+  codaType?: ValueHintType.Percent; // Can also be undefined if it's a vanilla number
   precision?: number;
   useThousandsSeparator?: boolean;
 }
@@ -88,21 +97,21 @@ export enum CurrencyFormat {
 }
 
 export interface CurrencySchema extends NumberSchema {
-  codaType: ValueType.Currency;
+  codaType: ValueHintType.Currency;
   precision?: number;
   currencyCode?: string;
   format?: CurrencyFormat;
 }
 
 export interface SliderSchema extends NumberSchema {
-  codaType: ValueType.Slider;
+  codaType: ValueHintType.Slider;
   minimum?: number | string;
   maximum?: number | string;
   step?: number | string;
 }
 
 export interface ScaleSchema extends NumberSchema {
-  codaType: ValueType.Scale;
+  codaType: ValueHintType.Scale;
   maximum: number;
   icon: string;
 }
@@ -112,19 +121,19 @@ interface BaseDateSchema extends BaseSchema {
 }
 
 export interface DateSchema extends BaseDateSchema {
-  codaType: ValueType.Date;
+  codaType: ValueHintType.Date;
   // A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
   format?: string;
 }
 
 export interface TimeSchema extends BaseDateSchema {
-  codaType: ValueType.Time;
+  codaType: ValueHintType.Time;
   // A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
   format?: string;
 }
 
 export interface DateTimeSchema extends BaseDateSchema {
-  codaType: ValueType.DateTime;
+  codaType: ValueHintType.DateTime;
   // A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
   dateFormat?: string;
   // A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
@@ -138,7 +147,7 @@ export enum DurationUnit {
   Seconds = 'seconds',
 }
 
-export interface DurationSchema extends StringSchema<ValueType.Duration> {
+export interface DurationSchema extends StringSchema<ValueHintType.Duration> {
   precision?: number;
   maxUnit?: DurationUnit;
 }
@@ -231,7 +240,7 @@ export function isArray(val?: Schema): val is ArraySchema {
 type PickOptional<T, K extends keyof T> = Partial<T> & {[P in K]: T[P]};
 
 interface StringHintTypeToSchemaTypeMap {
-  [ValueType.Date]: Date;
+  [ValueHintType.Date]: Date;
 }
 type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T extends keyof StringHintTypeToSchemaTypeMap
   ? StringHintTypeToSchemaTypeMap[T]
@@ -302,7 +311,7 @@ export function makeObjectSchema<K extends string, L extends string, T extends O
 }
 
 function validateObjectSchema<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>>(schema: T) {
-  if (schema.codaType === ValueType.Reference) {
+  if (schema.codaType === ValueHintType.Reference) {
     const {id, identity, primary} = schema;
 
     checkRequiredFieldInObjectSchema(id, 'id', schema.codaType);
@@ -312,7 +321,7 @@ function validateObjectSchema<K extends string, L extends string, T extends Obje
     checkSchemaPropertyIsRequired(ensureExists(id), schema);
     checkSchemaPropertyIsRequired(ensureExists(primary), schema);
   }
-  if (schema.codaType === ValueType.Person) {
+  if (schema.codaType === ValueHintType.Person) {
     const {id} = schema;
     checkRequiredFieldInObjectSchema(id, 'id', schema.codaType);
     checkSchemaPropertyIsRequired(ensureExists(id), schema);
@@ -395,7 +404,7 @@ export function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema)
     referenceProperties[primary] = properties[primary];
   }
   return {
-    codaType: ValueType.Reference,
+    codaType: ValueHintType.Reference,
     type,
     id,
     identity,

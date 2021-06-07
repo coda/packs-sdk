@@ -3,13 +3,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.PlaceholderIdentityPackId = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.DurationUnit = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueType = void 0;
+exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.PlaceholderIdentityPackId = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.DurationUnit = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const ensure_2 = require("./helpers/ensure");
 const ensure_3 = require("./helpers/ensure");
 const pascalcase_1 = __importDefault(require("pascalcase"));
 // Defines a subset of the JSON Object schema for use in annotating API results.
 // http://json-schema.org/latest/json-schema-core.html#rfc.section.8.2
+/**
+ * The set of primitive value types that can be used as return values for formulas
+ * or in object schemas.
+ */
 var ValueType;
 (function (ValueType) {
     ValueType["Boolean"] = "boolean";
@@ -17,48 +21,53 @@ var ValueType;
     ValueType["String"] = "string";
     ValueType["Array"] = "array";
     ValueType["Object"] = "object";
-    // Synthetic types we will use to coerce values.
-    ValueType["Date"] = "date";
-    ValueType["Time"] = "time";
-    ValueType["DateTime"] = "datetime";
-    ValueType["Duration"] = "duration";
-    ValueType["Person"] = "person";
-    ValueType["Percent"] = "percent";
-    ValueType["Currency"] = "currency";
-    ValueType["Image"] = "image";
-    ValueType["Url"] = "url";
-    ValueType["Markdown"] = "markdown";
-    ValueType["Html"] = "html";
-    ValueType["Embed"] = "embed";
-    ValueType["Reference"] = "reference";
-    ValueType["ImageAttachment"] = "imageAttachment";
-    ValueType["Attachment"] = "attachment";
-    ValueType["Slider"] = "slider";
-    ValueType["Scale"] = "scale";
 })(ValueType = exports.ValueType || (exports.ValueType = {}));
+/**
+ * Synthetic types that instruct Coda how to coerce values from primitives at ingestion time.
+ */
+var ValueHintType;
+(function (ValueHintType) {
+    ValueHintType["Date"] = "date";
+    ValueHintType["Time"] = "time";
+    ValueHintType["DateTime"] = "datetime";
+    ValueHintType["Duration"] = "duration";
+    ValueHintType["Person"] = "person";
+    ValueHintType["Percent"] = "percent";
+    ValueHintType["Currency"] = "currency";
+    ValueHintType["Image"] = "image";
+    ValueHintType["Url"] = "url";
+    ValueHintType["Markdown"] = "markdown";
+    ValueHintType["Html"] = "html";
+    ValueHintType["Embed"] = "embed";
+    ValueHintType["Reference"] = "reference";
+    ValueHintType["ImageAttachment"] = "imageAttachment";
+    ValueHintType["Attachment"] = "attachment";
+    ValueHintType["Slider"] = "slider";
+    ValueHintType["Scale"] = "scale";
+})(ValueHintType = exports.ValueHintType || (exports.ValueHintType = {}));
 exports.StringHintValueTypes = [
-    ValueType.Attachment,
-    ValueType.Date,
-    ValueType.Time,
-    ValueType.DateTime,
-    ValueType.Duration,
-    ValueType.Embed,
-    ValueType.Html,
-    ValueType.Image,
-    ValueType.ImageAttachment,
-    ValueType.Markdown,
-    ValueType.Url,
+    ValueHintType.Attachment,
+    ValueHintType.Date,
+    ValueHintType.Time,
+    ValueHintType.DateTime,
+    ValueHintType.Duration,
+    ValueHintType.Embed,
+    ValueHintType.Html,
+    ValueHintType.Image,
+    ValueHintType.ImageAttachment,
+    ValueHintType.Markdown,
+    ValueHintType.Url,
 ];
 exports.NumberHintValueTypes = [
-    ValueType.Date,
-    ValueType.Time,
-    ValueType.DateTime,
-    ValueType.Percent,
-    ValueType.Currency,
-    ValueType.Slider,
-    ValueType.Scale,
+    ValueHintType.Date,
+    ValueHintType.Time,
+    ValueHintType.DateTime,
+    ValueHintType.Percent,
+    ValueHintType.Currency,
+    ValueHintType.Slider,
+    ValueHintType.Scale,
 ];
-exports.ObjectHintValueTypes = [ValueType.Person, ValueType.Reference];
+exports.ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference];
 var CurrencyFormat;
 (function (CurrencyFormat) {
     CurrencyFormat["Currency"] = "currency";
@@ -137,7 +146,7 @@ function makeObjectSchema(schemaDef) {
 }
 exports.makeObjectSchema = makeObjectSchema;
 function validateObjectSchema(schema) {
-    if (schema.codaType === ValueType.Reference) {
+    if (schema.codaType === ValueHintType.Reference) {
         const { id, identity, primary } = schema;
         checkRequiredFieldInObjectSchema(id, 'id', schema.codaType);
         checkRequiredFieldInObjectSchema(identity, 'identity', schema.codaType);
@@ -145,7 +154,7 @@ function validateObjectSchema(schema) {
         checkSchemaPropertyIsRequired(ensure_2.ensureExists(id), schema);
         checkSchemaPropertyIsRequired(ensure_2.ensureExists(primary), schema);
     }
-    if (schema.codaType === ValueType.Person) {
+    if (schema.codaType === ValueHintType.Person) {
         const { id } = schema;
         checkRequiredFieldInObjectSchema(id, 'id', schema.codaType);
         checkSchemaPropertyIsRequired(ensure_2.ensureExists(id), schema);
@@ -215,7 +224,7 @@ function makeReferenceSchemaFromObjectSchema(schema) {
         referenceProperties[primary] = properties[primary];
     }
     return {
-        codaType: ValueType.Reference,
+        codaType: ValueHintType.Reference,
         type,
         id,
         identity,

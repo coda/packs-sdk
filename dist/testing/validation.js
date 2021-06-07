@@ -28,12 +28,13 @@ const types_2 = require("./types");
 const types_3 = require("./types");
 const api_types_1 = require("../api_types");
 const schema_1 = require("../schema");
+const schema_2 = require("../schema");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
-const schema_2 = require("../schema");
+const schema_3 = require("../schema");
 const object_utils_1 = require("../helpers/object_utils");
 const string_1 = require("../helpers/string");
-const schema_3 = require("../schema");
+const schema_4 = require("../schema");
 const api_1 = require("../api");
 const objectUtils = __importStar(require("../helpers/object_utils"));
 const url_parse_1 = __importDefault(require("url-parse"));
@@ -107,11 +108,11 @@ function generateErrorFromValidationContext(context, schema, result) {
 function checkPropertyTypeAndCodaType(schema, result, context) {
     const errors = [generateErrorFromValidationContext(context, schema, result)];
     switch (schema.type) {
-        case schema_1.ValueType.Boolean: {
+        case schema_2.ValueType.Boolean: {
             const resultValidationError = checkType(typeof result === 'boolean', 'boolean', result);
             return resultValidationError ? errors : [];
         }
-        case schema_1.ValueType.Number: {
+        case schema_2.ValueType.Number: {
             const resultValidationError = checkType(typeof result === 'number', 'number', result);
             if (resultValidationError) {
                 return errors;
@@ -120,17 +121,17 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                 return [];
             }
             switch (schema.codaType) {
-                case schema_1.ValueType.Slider:
+                case schema_1.ValueHintType.Slider:
                     const sliderErrorMessage = tryParseSlider(result, schema);
                     return sliderErrorMessage ? [sliderErrorMessage] : [];
-                case schema_1.ValueType.Scale:
+                case schema_1.ValueHintType.Scale:
                     const scaleErrorMessage = tryParseScale(result, schema);
                     return scaleErrorMessage ? [scaleErrorMessage] : [];
-                case schema_1.ValueType.Date:
-                case schema_1.ValueType.DateTime:
-                case schema_1.ValueType.Time:
-                case schema_1.ValueType.Percent:
-                case schema_1.ValueType.Currency:
+                case schema_1.ValueHintType.Date:
+                case schema_1.ValueHintType.DateTime:
+                case schema_1.ValueHintType.Time:
+                case schema_1.ValueHintType.Percent:
+                case schema_1.ValueHintType.Currency:
                 case undefined:
                     // no need to coerce current result type
                     return [];
@@ -138,29 +139,29 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                     return ensure_2.ensureUnreachable(schema);
             }
         }
-        case schema_1.ValueType.String: {
+        case schema_2.ValueType.String: {
             const resultValidationError = checkType(typeof result === 'string', 'string', result);
             if (resultValidationError) {
                 return errors;
             }
             switch (schema.codaType) {
-                case schema_1.ValueType.Attachment:
-                case schema_1.ValueType.Embed:
-                case schema_1.ValueType.Image:
-                case schema_1.ValueType.ImageAttachment:
-                case schema_1.ValueType.Url:
+                case schema_1.ValueHintType.Attachment:
+                case schema_1.ValueHintType.Embed:
+                case schema_1.ValueHintType.Image:
+                case schema_1.ValueHintType.ImageAttachment:
+                case schema_1.ValueHintType.Url:
                     const urlErrorMessage = tryParseUrl(result, schema);
                     return urlErrorMessage ? [urlErrorMessage] : [];
-                case schema_1.ValueType.Date:
-                case schema_1.ValueType.DateTime:
+                case schema_1.ValueHintType.Date:
+                case schema_1.ValueHintType.DateTime:
                     const dateTimeErrorMessage = tryParseDateTimeString(result, schema);
                     return dateTimeErrorMessage ? [dateTimeErrorMessage] : [];
-                case schema_1.ValueType.Duration:
-                case schema_1.ValueType.Time:
+                case schema_1.ValueHintType.Duration:
+                case schema_1.ValueHintType.Time:
                     // TODO: investigate how to do this in a lightweight fashion.
                     return [];
-                case schema_1.ValueType.Html:
-                case schema_1.ValueType.Markdown:
+                case schema_1.ValueHintType.Html:
+                case schema_1.ValueHintType.Markdown:
                 case undefined:
                     // no need to coerce current result type
                     return [];
@@ -168,18 +169,18 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                     ensure_2.ensureUnreachable(schema);
             }
         }
-        case schema_1.ValueType.Array:
+        case schema_2.ValueType.Array:
             return validateArray(result, schema, context);
-        case schema_1.ValueType.Object: {
+        case schema_2.ValueType.Object: {
             const resultValidationError = checkType(typeof result === 'object', 'object', result);
             if (resultValidationError) {
                 return errors;
             }
             switch (schema.codaType) {
-                case schema_1.ValueType.Person:
+                case schema_1.ValueHintType.Person:
                     const personErrorMessage = tryParsePerson(result, schema);
                     return personErrorMessage ? [personErrorMessage] : [];
-                case schema_1.ValueType.Reference:
+                case schema_1.ValueHintType.Reference:
                 // these are validated in the schema creation.
                 case undefined:
                     return validateObject(result, schema, context);
@@ -264,14 +265,14 @@ function validateObjectResult(formula, result) {
         return;
     }
     const validationContext = new types_2.ResultValidationContext();
-    if (schema_2.isArray(schema)) {
+    if (schema_3.isArray(schema)) {
         const arrayValidationErrors = validateArray(result, schema, new types_2.ResultValidationContext().extendForProperty(formula.name));
         if (arrayValidationErrors.length) {
             throw types_3.ResultValidationException.fromErrors(formula.name, arrayValidationErrors);
         }
         return;
     }
-    if (!schema_3.isObject(schema)) {
+    if (!schema_4.isObject(schema)) {
         const error = { message: `Expected an object schema, but found ${JSON.stringify(schema)}.` };
         throw types_3.ResultValidationException.fromErrors(formula.name, [error]);
     }

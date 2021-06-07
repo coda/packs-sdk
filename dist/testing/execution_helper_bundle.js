@@ -2296,47 +2296,50 @@ var ValueType;
   ValueType2["String"] = "string";
   ValueType2["Array"] = "array";
   ValueType2["Object"] = "object";
-  ValueType2["Date"] = "date";
-  ValueType2["Time"] = "time";
-  ValueType2["DateTime"] = "datetime";
-  ValueType2["Duration"] = "duration";
-  ValueType2["Person"] = "person";
-  ValueType2["Percent"] = "percent";
-  ValueType2["Currency"] = "currency";
-  ValueType2["Image"] = "image";
-  ValueType2["Url"] = "url";
-  ValueType2["Markdown"] = "markdown";
-  ValueType2["Html"] = "html";
-  ValueType2["Embed"] = "embed";
-  ValueType2["Reference"] = "reference";
-  ValueType2["ImageAttachment"] = "imageAttachment";
-  ValueType2["Attachment"] = "attachment";
-  ValueType2["Slider"] = "slider";
-  ValueType2["Scale"] = "scale";
 })(ValueType || (ValueType = {}));
+var ValueHintType;
+(function(ValueHintType2) {
+  ValueHintType2["Date"] = "date";
+  ValueHintType2["Time"] = "time";
+  ValueHintType2["DateTime"] = "datetime";
+  ValueHintType2["Duration"] = "duration";
+  ValueHintType2["Person"] = "person";
+  ValueHintType2["Percent"] = "percent";
+  ValueHintType2["Currency"] = "currency";
+  ValueHintType2["Image"] = "image";
+  ValueHintType2["Url"] = "url";
+  ValueHintType2["Markdown"] = "markdown";
+  ValueHintType2["Html"] = "html";
+  ValueHintType2["Embed"] = "embed";
+  ValueHintType2["Reference"] = "reference";
+  ValueHintType2["ImageAttachment"] = "imageAttachment";
+  ValueHintType2["Attachment"] = "attachment";
+  ValueHintType2["Slider"] = "slider";
+  ValueHintType2["Scale"] = "scale";
+})(ValueHintType || (ValueHintType = {}));
 var StringHintValueTypes = [
-  ValueType.Attachment,
-  ValueType.Date,
-  ValueType.Time,
-  ValueType.DateTime,
-  ValueType.Duration,
-  ValueType.Embed,
-  ValueType.Html,
-  ValueType.Image,
-  ValueType.ImageAttachment,
-  ValueType.Markdown,
-  ValueType.Url
+  ValueHintType.Attachment,
+  ValueHintType.Date,
+  ValueHintType.Time,
+  ValueHintType.DateTime,
+  ValueHintType.Duration,
+  ValueHintType.Embed,
+  ValueHintType.Html,
+  ValueHintType.Image,
+  ValueHintType.ImageAttachment,
+  ValueHintType.Markdown,
+  ValueHintType.Url
 ];
 var NumberHintValueTypes = [
-  ValueType.Date,
-  ValueType.Time,
-  ValueType.DateTime,
-  ValueType.Percent,
-  ValueType.Currency,
-  ValueType.Slider,
-  ValueType.Scale
+  ValueHintType.Date,
+  ValueHintType.Time,
+  ValueHintType.DateTime,
+  ValueHintType.Percent,
+  ValueHintType.Currency,
+  ValueHintType.Slider,
+  ValueHintType.Scale
 ];
-var ObjectHintValueTypes = [ValueType.Person, ValueType.Reference];
+var ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference];
 var CurrencyFormat;
 (function(CurrencyFormat2) {
   CurrencyFormat2["Currency"] = "currency";
@@ -2586,17 +2589,17 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
         return [];
       }
       switch (schema.codaType) {
-        case ValueType.Slider:
+        case ValueHintType.Slider:
           const sliderErrorMessage = tryParseSlider(result, schema);
           return sliderErrorMessage ? [sliderErrorMessage] : [];
-        case ValueType.Scale:
+        case ValueHintType.Scale:
           const scaleErrorMessage = tryParseScale(result, schema);
           return scaleErrorMessage ? [scaleErrorMessage] : [];
-        case ValueType.Date:
-        case ValueType.DateTime:
-        case ValueType.Time:
-        case ValueType.Percent:
-        case ValueType.Currency:
+        case ValueHintType.Date:
+        case ValueHintType.DateTime:
+        case ValueHintType.Time:
+        case ValueHintType.Percent:
+        case ValueHintType.Currency:
         case void 0:
           return [];
         default:
@@ -2609,22 +2612,22 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
         return errors;
       }
       switch (schema.codaType) {
-        case ValueType.Attachment:
-        case ValueType.Embed:
-        case ValueType.Image:
-        case ValueType.ImageAttachment:
-        case ValueType.Url:
+        case ValueHintType.Attachment:
+        case ValueHintType.Embed:
+        case ValueHintType.Image:
+        case ValueHintType.ImageAttachment:
+        case ValueHintType.Url:
           const urlErrorMessage = tryParseUrl(result, schema);
           return urlErrorMessage ? [urlErrorMessage] : [];
-        case ValueType.Date:
-        case ValueType.DateTime:
+        case ValueHintType.Date:
+        case ValueHintType.DateTime:
           const dateTimeErrorMessage = tryParseDateTimeString(result, schema);
           return dateTimeErrorMessage ? [dateTimeErrorMessage] : [];
-        case ValueType.Duration:
-        case ValueType.Time:
+        case ValueHintType.Duration:
+        case ValueHintType.Time:
           return [];
-        case ValueType.Html:
-        case ValueType.Markdown:
+        case ValueHintType.Html:
+        case ValueHintType.Markdown:
         case void 0:
           return [];
         default:
@@ -2639,10 +2642,10 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
         return errors;
       }
       switch (schema.codaType) {
-        case ValueType.Person:
+        case ValueHintType.Person:
           const personErrorMessage = tryParsePerson(result, schema);
           return personErrorMessage ? [personErrorMessage] : [];
-        case ValueType.Reference:
+        case ValueHintType.Reference:
         case void 0:
           return validateObject(result, schema, context);
         default:
