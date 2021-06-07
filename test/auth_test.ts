@@ -850,9 +850,6 @@ describe('Auth', () => {
           type: AuthenticationType.OAuth2,
           authorizationUrl: 'https://auth-url.com',
           tokenUrl: 'https://token-url.com',
-
-          clientIdEnvVarName: 'ignored',
-          clientSecretEnvVarName: 'ignored',
         });
         setupReadline(['some-client-id', 'some-client-secret']);
         doSetupAuth(pack);
@@ -875,8 +872,6 @@ describe('Auth', () => {
           authDef: {
             additionalParams: undefined,
             authorizationUrl: 'https://auth-url.com',
-            clientIdEnvVarName: 'ignored',
-            clientSecretEnvVarName: 'ignored',
             scopes: undefined,
             tokenUrl: 'https://token-url.com',
             type: 'OAuth2',
@@ -895,9 +890,6 @@ describe('Auth', () => {
           tokenPrefix: 'SomePrefix',
           scopes: ['scope1', 'scope2'],
           additionalParams: {foo: 'bar'},
-
-          clientIdEnvVarName: 'ignored',
-          clientSecretEnvVarName: 'ignored',
         });
         setupReadline(['some-client-id', 'some-client-secret']);
         doSetupAuth(pack);
@@ -920,8 +912,6 @@ describe('Auth', () => {
           authDef: {
             additionalParams: {foo: 'bar'},
             authorizationUrl: 'https://auth-url.com',
-            clientIdEnvVarName: 'ignored',
-            clientSecretEnvVarName: 'ignored',
             scopes: ['scope1', 'scope2'],
             tokenUrl: 'https://token-url.com',
             type: 'OAuth2',
@@ -938,9 +928,6 @@ describe('Auth', () => {
             type: AuthenticationType.OAuth2,
             authorizationUrl: 'https://auth-url.com',
             tokenUrl: 'https://token-url.com',
-
-            clientIdEnvVarName: 'ignored',
-            clientSecretEnvVarName: 'ignored',
           },
           {name: 'Fake Pack'},
         );

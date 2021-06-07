@@ -226,8 +226,6 @@ const defaultAuthenticationValidators = {
         scopes: z.array(z.string()).optional(),
         tokenPrefix: z.string().optional(),
         additionalParams: z.record(z.any()).optional(),
-        clientIdEnvVarName: z.string().optional(),
-        clientSecretEnvVarName: z.string().optional(),
         endpointKey: z.string().optional(),
         tokenQueryParam: z.string().optional(),
         ...baseAuthenticationValidators,
