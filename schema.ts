@@ -164,20 +164,29 @@ export type ObjectSchemaProperties<K extends string = never> = {
 
 export type GenericObjectSchema = ObjectSchema<string, string>;
 
-export interface Identity {
-  packId: PackId;
+export interface IdentityDefinition {
   name: string;
   dynamicUrl?: string;
   attribution?: AttributionNode[];
+  // TODO(jonathan): Remove after existing packs go through the v2 upload flow.
+  packId?: PackId;
 }
 
-export interface ObjectSchema<K extends string, L extends string> extends BaseSchema {
+export interface Identity extends IdentityDefinition {
+  packId: PackId;
+}
+
+export interface ObjectSchemaDefinition<K extends string, L extends string> extends BaseSchema {
   type: ValueType.Object;
   properties: ObjectSchemaProperties<K | L>;
   id?: K;
   primary?: K;
   codaType?: ObjectHintTypes;
   featured?: L[];
+  identity?: IdentityDefinition;
+}
+
+export interface ObjectSchema<K extends string, L extends string> extends ObjectSchemaDefinition<K, L> {
   identity?: Identity;
 }
 
@@ -278,12 +287,21 @@ export function makeSchema<T extends Schema>(schema: T): T {
   return schema;
 }
 
-export function makeObjectSchema<K extends string, L extends string, T extends ObjectSchema<K, L>>(schema: T): T {
-  validateObjectSchema(schema);
+export const PlaceholderIdentityPackId = -1;
+
+export function makeObjectSchema<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>>(
+  schemaDef: T,
+): ObjectSchema<K, L> {
+  validateObjectSchema(schemaDef);
+  const schema = schemaDef as ObjectSchema<K, L>;
+  // TODO(jonathan): Enable after existing packs go through the v2 upload flow.
+  // if (schema.identity) {
+  //   schema.identity = {...schema.identity, packId: PlaceholderIdentityPackId};
+  // }
   return schema;
 }
 
-function validateObjectSchema<K extends string, L extends string, T extends ObjectSchema<K, L>>(schema: T) {
+function validateObjectSchema<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>>(schema: T) {
   if (schema.codaType === ValueType.Reference) {
     const {id, identity, primary} = schema;
 
@@ -314,7 +332,7 @@ function checkRequiredFieldInObjectSchema(field: any, fieldName: string, codaTyp
   );
 }
 
-function checkSchemaPropertyIsRequired<K extends string, L extends string, T extends ObjectSchema<K, L>>(
+function checkSchemaPropertyIsRequired<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>>(
   field: string,
   schema: T,
 ) {
@@ -384,18 +402,4 @@ export function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema)
     primary,
     properties: referenceProperties,
   };
-}
-
-export enum SchemaIdPrefix {
-  Identity = 'I',
-}
-
-export type SchemaId = string;
-
-// Return a canonical ID for the schema
-export function getSchemaId(schema: Schema | undefined): SchemaId | undefined {
-  if (!(isObject(schema) && schema.identity)) {
-    return;
-  }
-  return `${SchemaIdPrefix.Identity}:${schema.identity.packId}:${schema.identity.name}`;
 }

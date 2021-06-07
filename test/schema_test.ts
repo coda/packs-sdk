@@ -2,8 +2,6 @@ import {ValueType} from '../index';
 import {makeObjectSchema} from '../index';
 import {schema} from '../index';
 
-const CODA_DEBUG_PACK_ID = 1009;
-
 describe('Schema', () => {
   describe('generateSchema', () => {
     it('number', () => {
@@ -65,7 +63,7 @@ describe('Schema', () => {
         const missingIdSchema: any = {
           ...baseReferenceSchema,
           primary: 'reference',
-          identity: {packId: CODA_DEBUG_PACK_ID, name: 'Test'},
+          identity: {name: 'Test'},
         };
         makeObjectSchema(missingIdSchema);
       }).to.throw('Objects with codaType "reference" require a "id" property in the schema definition.');
@@ -74,7 +72,7 @@ describe('Schema', () => {
         const missingPrimarySchema: any = {
           ...baseReferenceSchema,
           id: 'reference',
-          identity: {packId: CODA_DEBUG_PACK_ID, name: 'Test'},
+          identity: {name: 'Test'},
         };
         makeObjectSchema(missingPrimarySchema);
       }).to.throw('Objects with codaType "reference" require a "primary" property in the schema definition.');
@@ -93,7 +91,7 @@ describe('Schema', () => {
           ...baseReferenceSchema,
           id: 'reference',
           primary: 'reference',
-          identity: {packId: CODA_DEBUG_PACK_ID, name: 'Test'},
+          identity: {name: 'Test'},
           properties: {...baseReferenceSchema.properties, required: false},
         };
         makeObjectSchema(referenceNotRequiredSchema);
@@ -104,7 +102,7 @@ describe('Schema', () => {
         codaType: ValueType.Reference,
         id: 'reference',
         primary: 'reference',
-        identity: {packId: CODA_DEBUG_PACK_ID, name: 'Test'},
+        identity: {name: 'Test'},
         properties: {
           reference: {
             type: ValueType.Object,
@@ -183,13 +181,11 @@ describe('Schema', () => {
           }),
         },
         identity: {
-          packId: CODA_DEBUG_PACK_ID,
           name: 'hello',
         },
       });
       const normalized = schema.normalizeSchema(objectSchema);
       assert.deepEqual((normalized as any).identity, {
-        packId: CODA_DEBUG_PACK_ID,
         name: 'hello',
       });
     });

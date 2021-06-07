@@ -469,7 +469,10 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     codaType: z.enum([...ObjectHintValueTypes]).optional(),
     featured: z.array(z.string()).optional(),
     identity: zodCompleteObject<Identity>({
-      packId: z.number(), // TODO: Remove
+      // Stupid hack to hardcode a pack id that will get replaced at upload time.
+      // TODO(jonathan): Enable after existing packs go through the v2 upload flow.
+      // packId: z.literal(PlaceholderIdentityPackId),
+      packId: z.number().optional(),
       name: z.string().nonempty().refine(isValidIdentityName, {
         message:
           'Invalid name. Identity names can only contain alphanumeric characters, underscores, and dashes, and no spaces.',

@@ -143,6 +143,7 @@ export type {NumberSchema} from './schema';
 export type {NumericSchema} from './schema';
 export type {GenericObjectSchema} from './schema';
 export type {Identity} from './schema';
+export type {IdentityDefinition} from './schema';
 export type {ObjectSchema} from './schema';
 export type {ObjectSchemaProperties} from './schema';
 export type {ObjectSchemaProperty} from './schema';

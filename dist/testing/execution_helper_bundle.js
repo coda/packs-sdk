@@ -2362,10 +2362,6 @@ function isObject(val) {
 function isArray(val) {
   return Boolean(val && val.type === ValueType.Array);
 }
-var SchemaIdPrefix;
-(function(SchemaIdPrefix2) {
-  SchemaIdPrefix2["Identity"] = "I";
-})(SchemaIdPrefix || (SchemaIdPrefix = {}));
 
 // handler_templates.ts
 var import_clone = __toModule(require_clone());

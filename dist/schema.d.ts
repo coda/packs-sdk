@@ -109,19 +109,25 @@ export declare type ObjectSchemaProperties<K extends string = never> = {
     [K2 in K | string]: Schema & ObjectSchemaProperty;
 };
 export declare type GenericObjectSchema = ObjectSchema<string, string>;
-export interface Identity {
-    packId: PackId;
+export interface IdentityDefinition {
     name: string;
     dynamicUrl?: string;
     attribution?: AttributionNode[];
+    packId?: PackId;
 }
-export interface ObjectSchema<K extends string, L extends string> extends BaseSchema {
+export interface Identity extends IdentityDefinition {
+    packId: PackId;
+}
+export interface ObjectSchemaDefinition<K extends string, L extends string> extends BaseSchema {
     type: ValueType.Object;
     properties: ObjectSchemaProperties<K | L>;
     id?: K;
     primary?: K;
     codaType?: ObjectHintTypes;
     featured?: L[];
+    identity?: IdentityDefinition;
+}
+export interface ObjectSchema<K extends string, L extends string> extends ObjectSchemaDefinition<K, L> {
     identity?: Identity;
 }
 export declare enum AttributionNodeType {
@@ -165,13 +171,9 @@ export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boo
 export declare type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
 export declare function generateSchema(obj: ValidTypes): Schema;
 export declare function makeSchema<T extends Schema>(schema: T): T;
-export declare function makeObjectSchema<K extends string, L extends string, T extends ObjectSchema<K, L>>(schema: T): T;
+export declare const PlaceholderIdentityPackId = -1;
+export declare function makeObjectSchema<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>>(schemaDef: T): ObjectSchema<K, L>;
 export declare function normalizeSchemaKey(key: string): string;
 export declare function normalizeSchema<T extends Schema>(schema: T): T;
 export declare function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema): GenericObjectSchema;
-export declare enum SchemaIdPrefix {
-    Identity = "I"
-}
-export declare type SchemaId = string;
-export declare function getSchemaId(schema: Schema | undefined): SchemaId | undefined;
 export {};

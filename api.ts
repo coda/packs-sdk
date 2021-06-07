@@ -643,7 +643,6 @@ export function makeSyncTable<
 }
 
 export function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({
-  packId,
   name,
   getName,
   getSchema,
@@ -653,7 +652,6 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   entityName,
   connection,
 }: {
-  packId: number;
   name: string;
   getName: MetadataFormula;
   getSchema: MetadataFormula;
@@ -669,10 +667,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
     type: ValueType.Object,
     id: 'id',
     primary: 'id',
-    identity: {
-      packId,
-      name,
-    },
+    identity: {name},
     properties: {
       id: {type: ValueType.String},
     },

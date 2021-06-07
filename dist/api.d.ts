@@ -264,8 +264,7 @@ export declare function makeSyncTable<K extends string, L extends string, ParamD
     getSchema?: MetadataFormula;
     entityName?: string;
 }): SyncTableDef<K, L, ParamDefsT, SchemaT>;
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ packId, name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, connection, }: {
-    packId: number;
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, connection, }: {
     name: string;
     getName: MetadataFormula;
     getSchema: MetadataFormula;
