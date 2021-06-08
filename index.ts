@@ -94,6 +94,7 @@ export {makeUserVisibleError} from './api';
 export {makeMetadataFormula} from './api';
 export {makeDynamicSyncTable} from './api';
 export {makeEmptyFormula} from './api';
+export {makeFormula} from './api';
 export {makeNumericFormula} from './api';
 export {makeObjectFormula} from './api';
 export {makeStringFormula} from './api';
