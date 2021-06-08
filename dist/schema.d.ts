@@ -1,11 +1,20 @@
 import type { $Values } from './type_utils';
 import type { PackId } from './types';
+/**
+ * The set of primitive value types that can be used as return values for formulas
+ * or in object schemas.
+ */
 export declare enum ValueType {
     Boolean = "boolean",
     Number = "number",
     String = "string",
     Array = "array",
-    Object = "object",
+    Object = "object"
+}
+/**
+ * Synthetic types that instruct Coda how to coerce values from primitives at ingestion time.
+ */
+export declare enum ValueHintType {
     Date = "date",
     Time = "time",
     DateTime = "datetime",
@@ -24,9 +33,9 @@ export declare enum ValueType {
     Slider = "slider",
     Scale = "scale"
 }
-export declare const StringHintValueTypes: readonly [ValueType.Attachment, ValueType.Date, ValueType.Time, ValueType.DateTime, ValueType.Duration, ValueType.Embed, ValueType.Html, ValueType.Image, ValueType.ImageAttachment, ValueType.Markdown, ValueType.Url];
-export declare const NumberHintValueTypes: readonly [ValueType.Date, ValueType.Time, ValueType.DateTime, ValueType.Percent, ValueType.Currency, ValueType.Slider, ValueType.Scale];
-export declare const ObjectHintValueTypes: readonly [ValueType.Person, ValueType.Reference];
+export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Embed, ValueHintType.Html, ValueHintType.Image, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url];
+export declare const NumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Percent, ValueHintType.Currency, ValueHintType.Slider, ValueHintType.Scale];
+export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference];
 export declare type StringHintTypes = typeof StringHintValueTypes[number];
 export declare type NumberHintTypes = typeof NumberHintValueTypes[number];
 export declare type ObjectHintTypes = typeof ObjectHintValueTypes[number];
@@ -41,7 +50,7 @@ export interface NumberSchema extends BaseSchema {
     codaType?: NumberHintTypes;
 }
 export interface NumericSchema extends NumberSchema {
-    codaType?: ValueType.Percent;
+    codaType?: ValueHintType.Percent;
     precision?: number;
     useThousandsSeparator?: boolean;
 }
@@ -51,19 +60,19 @@ export declare enum CurrencyFormat {
     Financial = "financial"
 }
 export interface CurrencySchema extends NumberSchema {
-    codaType: ValueType.Currency;
+    codaType: ValueHintType.Currency;
     precision?: number;
     currencyCode?: string;
     format?: CurrencyFormat;
 }
 export interface SliderSchema extends NumberSchema {
-    codaType: ValueType.Slider;
+    codaType: ValueHintType.Slider;
     minimum?: number | string;
     maximum?: number | string;
     step?: number | string;
 }
 export interface ScaleSchema extends NumberSchema {
-    codaType: ValueType.Scale;
+    codaType: ValueHintType.Scale;
     maximum: number;
     icon: string;
 }
@@ -71,15 +80,15 @@ interface BaseDateSchema extends BaseSchema {
     type: ValueType.Number | ValueType.String;
 }
 export interface DateSchema extends BaseDateSchema {
-    codaType: ValueType.Date;
+    codaType: ValueHintType.Date;
     format?: string;
 }
 export interface TimeSchema extends BaseDateSchema {
-    codaType: ValueType.Time;
+    codaType: ValueHintType.Time;
     format?: string;
 }
 export interface DateTimeSchema extends BaseDateSchema {
-    codaType: ValueType.DateTime;
+    codaType: ValueHintType.DateTime;
     dateFormat?: string;
     timeFormat?: string;
 }
@@ -89,7 +98,7 @@ export declare enum DurationUnit {
     Minutes = "minutes",
     Seconds = "seconds"
 }
-export interface DurationSchema extends StringSchema<ValueType.Duration> {
+export interface DurationSchema extends StringSchema<ValueHintType.Duration> {
     precision?: number;
     maxUnit?: DurationUnit;
 }
@@ -158,7 +167,7 @@ declare type PickOptional<T, K extends keyof T> = Partial<T> & {
     [P in K]: T[P];
 };
 interface StringHintTypeToSchemaTypeMap {
-    [ValueType.Date]: Date;
+    [ValueHintType.Date]: Date;
 }
 declare type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T extends keyof StringHintTypeToSchemaTypeMap ? StringHintTypeToSchemaTypeMap[T] : string;
 export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? StringHintTypeToSchemaType<T['codaType']> : T extends ArraySchema ? Array<SchemaType<T['items']>> : T extends GenericObjectSchema ? PickOptional<{

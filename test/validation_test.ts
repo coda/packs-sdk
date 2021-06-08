@@ -2,6 +2,7 @@ import {testHelper} from './test_helper';
 import {FakePack} from './test_utils';
 import type {ParamDefs} from '../api_types';
 import type {StringSchema} from '../schema';
+import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
 import {coerceParams} from '../testing/coercion';
 import {createFakePack} from './test_utils';
@@ -23,31 +24,31 @@ describe('Property validation in objects', () => {
     id: 'date',
     properties: {
       bool: {type: ValueType.Boolean},
-      date: {type: ValueType.String, codaType: ValueType.Date},
-      url: {type: ValueType.String, codaType: ValueType.Url},
+      date: {type: ValueType.String, codaType: ValueHintType.Date},
+      url: {type: ValueType.String, codaType: ValueHintType.Url},
       slider: {
         type: ValueType.Number,
-        codaType: ValueType.Slider,
+        codaType: ValueHintType.Slider,
         minimum: 12,
         maximum: 30,
         step: 3,
       },
       scale: {
         type: ValueType.Number,
-        codaType: ValueType.Scale,
+        codaType: ValueHintType.Scale,
         maximum: 5,
       },
       names: {type: ValueType.Array, items: {type: ValueType.String} as StringSchema},
       person: {
         type: ValueType.Object,
-        codaType: ValueType.Person,
+        codaType: ValueHintType.Person,
         primary: 'email',
         id: 'email',
         properties: {email: {type: ValueType.String, required: true}},
       },
       ref: {
         type: ValueType.Object,
-        codaType: ValueType.Reference,
+        codaType: ValueHintType.Reference,
         id: 'reference',
         primary: 'name',
         identity: {packId: FakePack.id, name: ''},

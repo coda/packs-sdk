@@ -728,12 +728,12 @@ The SDK allows you to optionally provide a `codaType` when declaring a property 
 schema which tells Coda how to interpret a value that is otherwise one of the basic value types.
 
 For example, suppose the API you're using provides a created-at timestamp as a numeric Unix time value.
-You can simply declare your field as `{type: ValueType.Number, codaType: ValueType.DateTime}` and
+You can simply declare your field as `{type: ValueType.Number, codaType: ValueHintType.DateTime}` and
 Coda will parse the timestamp into a proper DateTime value on your behalf.
 
 Or perhaps you want to return an object that has an image associated with it, and your pack
 and the API it integrates with specify that image as a url. Your schema can declare that
-property as `{type: ValueType.String, codaType: ValueType.Image}` and that url will be
+property as `{type: ValueType.String, codaType: ValueHintType.Image}` and that url will be
 downloaded to be hosted on Coda and presented as an image in the Coda UI.
 
 TODO: Link to full reference on hint types.
@@ -1110,7 +1110,7 @@ export const personSchema = makeObjectSchema({
   properties: {
     email: {type: ValueType.String},
     name: {type: ValueType.String},
-    dateOfBirth: {type: ValueType.String, codaType: ValueType.Date, fromKey: 'dob'},
+    dateOfBirth: {type: ValueType.String, codaType: ValueHintType.Date, fromKey: 'dob'},
   },
 });
 ```

@@ -11,6 +11,7 @@ import type {PackVersionMetadata} from '../compiled_types';
 import {PostSetupType} from '../types';
 import type {StringFormulaDef} from '../api';
 import type {TypedStandardFormula} from '../api';
+import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
 import {createFakePack} from './test_utils';
 import {createFakePackFormulaMetadata} from './test_utils';
@@ -538,7 +539,7 @@ describe('Pack metadata Validation', () => {
           properties: {
             id: {type: ValueType.Number, fromKey: 'foo', required: true},
             primary: {type: ValueType.String},
-            date: {type: ValueType.String, codaType: ValueType.Date},
+            date: {type: ValueType.String, codaType: ValueHintType.Date},
           },
         });
         await validateJson(metadata);
@@ -555,7 +556,7 @@ describe('Pack metadata Validation', () => {
           properties: {
             id: {type: ValueType.Number, fromKey: 'foo', required: true},
             primary: {type: ValueType.String},
-            date: {type: ValueType.String, codaType: ValueType.Date},
+            date: {type: ValueType.String, codaType: ValueHintType.Date},
           },
         });
         const arraySchema = makeSchema({
@@ -651,7 +652,7 @@ describe('Pack metadata Validation', () => {
         const metadata = metadataForFormulaWithObjectSchema({
           type: ValueType.Object,
           properties: {
-            name: {type: ValueType.DateTime} as any,
+            name: {type: ValueHintType.DateTime} as any,
           },
         });
         const err = await validateJsonAndAssertFails(metadata);
@@ -955,7 +956,7 @@ describe('Pack metadata Validation', () => {
         properties: {
           id: {type: ValueType.Number, fromKey: 'foo', required: true},
           primary: {type: ValueType.String},
-          date: {type: ValueType.String, codaType: ValueType.Date},
+          date: {type: ValueType.String, codaType: ValueHintType.Date},
         },
       });
       const arraySchema = makeSchema({
@@ -972,7 +973,7 @@ describe('Pack metadata Validation', () => {
         items: makeObjectSchema({
           type: ValueType.Object,
           properties: {
-            foo: {type: ValueType.DateTime} as any,
+            foo: {type: ValueHintType.DateTime} as any,
           },
         }),
       });

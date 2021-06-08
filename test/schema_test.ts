@@ -1,3 +1,4 @@
+import {ValueHintType} from '../index';
 import {ValueType} from '../index';
 import {makeObjectSchema} from '../index';
 import {schema} from '../index';
@@ -46,7 +47,7 @@ describe('Schema', () => {
     it('requires for codaType.Reference', async () => {
       const baseReferenceSchema = {
         type: ValueType.Object,
-        codaType: ValueType.Reference,
+        codaType: ValueHintType.Reference,
         properties: {
           reference: {
             type: ValueType.Object,
@@ -99,7 +100,7 @@ describe('Schema', () => {
 
       makeObjectSchema({
         type: ValueType.Object,
-        codaType: ValueType.Reference,
+        codaType: ValueHintType.Reference,
         id: 'reference',
         primary: 'reference',
         identity: {name: 'Test'},
@@ -121,7 +122,7 @@ describe('Schema', () => {
       expect(() => {
         makeObjectSchema({
           type: ValueType.Object,
-          codaType: ValueType.Person,
+          codaType: ValueHintType.Person,
           primary: 'name',
           properties: {
             email: {type: ValueType.String, required: true},
@@ -133,7 +134,7 @@ describe('Schema', () => {
       expect(() => {
         makeObjectSchema({
           type: ValueType.Object,
-          codaType: ValueType.Person,
+          codaType: ValueHintType.Person,
           id: 'email',
           primary: 'name',
           properties: {
@@ -145,7 +146,7 @@ describe('Schema', () => {
 
       makeObjectSchema({
         type: ValueType.Object,
-        codaType: ValueType.Person,
+        codaType: ValueHintType.Person,
         id: 'email',
         primary: 'name',
         properties: {
