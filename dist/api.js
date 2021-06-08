@@ -1,12 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.StatusCodeError = exports.UserVisibleError = exports.newPack = void 0;
+exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.StatusCodeError = exports.UserVisibleError = exports.newPack = void 0;
 const api_types_1 = require("./api_types");
 const api_types_2 = require("./api_types");
 const schema_1 = require("./schema");
 const api_types_3 = require("./api_types");
 const api_types_4 = require("./api_types");
 const ensure_1 = require("./helpers/ensure");
+const ensure_2 = require("./helpers/ensure");
 const handler_templates_1 = require("./handler_templates");
 const handler_templates_2 = require("./handler_templates");
 const api_types_5 = require("./api_types");
@@ -160,6 +161,76 @@ function makeStringFormula(definition) {
     });
 }
 exports.makeStringFormula = makeStringFormula;
+function makeFormula(rawDef) {
+    let formula;
+    const { onError, ...definition } = rawDef;
+    switch (definition.resultType) {
+        case schema_1.ValueType.String: {
+            const { resultType: unused, codaType, ...rest } = definition;
+            const stringFormula = {
+                ...rest,
+                resultType: api_types_2.Type.string,
+                schema: codaType ? { type: schema_1.ValueType.String, codaType } : undefined,
+            };
+            formula = stringFormula;
+            break;
+        }
+        case schema_1.ValueType.Number: {
+            const { resultType: unused, codaType, ...rest } = definition;
+            const numericFormula = {
+                ...rest,
+                resultType: api_types_2.Type.number,
+                schema: codaType ? { type: schema_1.ValueType.Number, codaType } : undefined,
+            };
+            formula = numericFormula;
+            break;
+        }
+        case schema_1.ValueType.Boolean: {
+            const { resultType: unused, ...rest } = definition;
+            const booleanFormula = {
+                ...rest,
+                resultType: api_types_2.Type.boolean,
+            };
+            formula = booleanFormula;
+            break;
+        }
+        case schema_1.ValueType.Array: {
+            const { resultType: unused, items, ...rest } = definition;
+            const arrayFormula = {
+                ...rest,
+                resultType: api_types_2.Type.object,
+                schema: schema_3.normalizeSchema(items),
+            };
+            formula = arrayFormula;
+            break;
+        }
+        case schema_1.ValueType.Object: {
+            const { resultType: unused, schema, ...rest } = definition;
+            const objectFormula = {
+                ...rest,
+                resultType: api_types_2.Type.object,
+                schema: schema_3.normalizeSchema(schema),
+            };
+            formula = objectFormula;
+            break;
+        }
+        default:
+            return ensure_2.ensureUnreachable(definition);
+    }
+    if (onError) {
+        const wrappedExecute = formula.execute;
+        formula.execute = async function (params, context) {
+            try {
+                return await wrappedExecute(params, context);
+            }
+            catch (err) {
+                return onError(err);
+            }
+        };
+    }
+    return formula;
+}
+exports.makeFormula = makeFormula;
 function makeMetadataFormula(execute, options) {
     return makeObjectFormula({
         name: 'getMetadata',

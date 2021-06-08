@@ -4,6 +4,7 @@ import type { BasicPackDefinition } from './types';
 import type { CommonPackFormulaDef } from './api_types';
 import type { ExecutionContext } from './api_types';
 import { NetworkConnection } from './api_types';
+import type { NumberHintTypes } from './schema';
 import type { NumberSchema } from './schema';
 import type { ObjectSchema } from './schema';
 import type { PackFormulaResult } from './api_types';
@@ -20,6 +21,7 @@ import type { StringSchema } from './schema';
 import type { SyncExecutionContext } from './api_types';
 import { Type } from './api_types';
 import type { TypeOf } from './api_types';
+import { ValueType } from './schema';
 export { ExecutionContext };
 export { FetchRequest } from './api_types';
 export { Logger } from './api_types';
@@ -177,6 +179,7 @@ export declare type Formula<ParamDefsT extends ParamDefs, ResultT extends PackFo
 export declare type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number> & {
     schema?: NumberSchema;
 };
+export declare type BooleanPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, boolean>;
 export declare type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> = Formula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
     schema?: StringSchema<ResultT>;
 };
@@ -218,6 +221,34 @@ export declare function makeNumericFormula<ParamDefsT extends ParamDefs>(definit
  * @param definition The definition of a formula that returns a string.
  */
 export declare function makeStringFormula<ParamDefsT extends ParamDefs>(definition: StringFormulaDef<ParamDefsT>): StringPackFormula<ParamDefsT>;
+export declare function makeFormula<ParamDefsT extends ParamDefs>(rawDef: StringFormulaDefV2<ParamDefsT> | NumericFormulaDefV2<ParamDefsT> | BooleanFormulaDefV2<ParamDefsT> | ArrayFormulaDefV2<ParamDefsT> | ObjectFormulaDefV2<ParamDefsT>): BooleanPackFormula<ParamDefsT> | ObjectPackFormula<ParamDefsT, Schema>;
+interface BaseFormulaDefV2<ParamDefsT extends ParamDefs, ResultT extends string | number | boolean | object> extends PackFormulaDef<ParamDefsT, ResultT> {
+    onError?(error: Error): any;
+}
+declare type StringFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, string> & {
+    resultType: ValueType.String;
+    codaType?: StringHintTypes;
+    execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<string> | string;
+};
+declare type NumericFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, number> & {
+    resultType: ValueType.Number;
+    codaType?: NumberHintTypes;
+    execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<number> | number;
+};
+declare type BooleanFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, boolean> & {
+    resultType: ValueType.Boolean;
+    execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<boolean> | boolean;
+};
+declare type ArrayFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, object> & {
+    resultType: ValueType.Array;
+    items: Schema;
+    execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<object> | object;
+};
+declare type ObjectFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, object> & {
+    resultType: ValueType.Object;
+    schema: Schema;
+    execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<object> | object;
+};
 /**
  * The return type for a metadata formula that should return a different display to the user
  * than is used internally.
