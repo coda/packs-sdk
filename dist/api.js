@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.StatusCodeError = exports.UserVisibleError = void 0;
+exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.StatusCodeError = exports.UserVisibleError = exports.newPack = void 0;
 const api_types_1 = require("./api_types");
 const api_types_2 = require("./api_types");
 const schema_1 = require("./schema");
@@ -15,6 +15,23 @@ const schema_2 = require("./schema");
 const schema_3 = require("./schema");
 const api_types_7 = require("./api_types");
 const api_types_8 = require("./api_types");
+/**
+ * Creates a new skeleton pack definition that can be added to.
+ *
+ * @example
+ * export const pack = newPack();
+ * newPack.formulas.push(makeFormula(...));
+ * newPack.syncTables.push(makeSyncTable(...));
+ */
+function newPack(definition) {
+    return {
+        ...definition,
+        formulas: Array.isArray(definition === null || definition === void 0 ? void 0 : definition.formulas) ? (definition === null || definition === void 0 ? void 0 : definition.formulas) || [] : [],
+        syncTables: (definition === null || definition === void 0 ? void 0 : definition.syncTables) || [],
+        formats: (definition === null || definition === void 0 ? void 0 : definition.formats) || [],
+    };
+}
+exports.newPack = newPack;
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
  * If an error is encountered in a formula and you want to describe the error
