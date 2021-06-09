@@ -1,6 +1,7 @@
 import type {ArraySchema} from './schema';
 import type {ArrayType} from './api_types';
 import type {BasicPackDefinition} from './types';
+import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
 import type {ExecutionContext} from './api_types';
 import {NetworkConnection} from './api_types';
@@ -335,7 +336,7 @@ export type Formula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaRes
 
 export type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number> & {schema?: NumberSchema};
 
-export type BooleanPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, boolean>;
+export type BooleanPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, boolean> & {schema?: BooleanSchema};
 
 export type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> =
   Formula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {

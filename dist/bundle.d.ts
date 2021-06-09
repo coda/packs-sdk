@@ -557,7 +557,9 @@ export declare type Formula<ParamDefsT extends ParamDefs, ResultT extends PackFo
 export declare type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number> & {
 	schema?: NumberSchema;
 };
-export declare type BooleanPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, boolean>;
+export declare type BooleanPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, boolean> & {
+	schema?: BooleanSchema;
+};
 export declare type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> = Formula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
 	schema?: StringSchema<ResultT>;
 };
