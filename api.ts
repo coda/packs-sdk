@@ -4,6 +4,7 @@ import type {BasicPackDefinition} from './types';
 import type {CommonPackFormulaDef} from './api_types';
 import type {ExecutionContext} from './api_types';
 import {NetworkConnection} from './api_types';
+import type {NumberHintTypes} from './schema';
 import type {NumberSchema} from './schema';
 import type {ObjectSchema} from './schema';
 import type {PackFormulaResult} from './api_types';
@@ -24,6 +25,7 @@ import {ValueType} from './schema';
 import {booleanArray} from './api_types';
 import {dateArray} from './api_types';
 import {ensureExists} from './helpers/ensure';
+import {ensureUnreachable} from './helpers/ensure';
 import {generateObjectResponseHandler} from './handler_templates';
 import {generateRequestHandler} from './handler_templates';
 import {htmlArray} from './api_types';
@@ -333,6 +335,8 @@ export type Formula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaRes
 
 export type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number> & {schema?: NumberSchema};
 
+export type BooleanPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, boolean>;
+
 export type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> =
   Formula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
     schema?: StringSchema<ResultT>;
@@ -345,10 +349,11 @@ export type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Sche
   schema?: SchemaT;
 };
 
-export type TypedStandardFormula =
-  | NumericPackFormula<ParamDefs>
-  | StringPackFormula<ParamDefs, any>
-  | ObjectPackFormula<ParamDefs, Schema>;
+export type TypedStandardFormula<ParamDefsT extends ParamDefs = ParamDefs> =
+  | NumericPackFormula<ParamDefsT>
+  | StringPackFormula<ParamDefsT, any>
+  | BooleanPackFormula<ParamDefsT>
+  | ObjectPackFormula<ParamDefsT, Schema>;
 
 export type TypedPackFormula = TypedStandardFormula | GenericSyncFormula;
 
@@ -418,6 +423,122 @@ export function makeStringFormula<ParamDefsT extends ParamDefs>(
     ...(response && {schema: response.schema}),
   }) as StringPackFormula<ParamDefsT>;
 }
+
+export function makeFormula<ParamDefsT extends ParamDefs>(
+  fullDefinition:
+    | StringFormulaDefV2<ParamDefsT>
+    | NumericFormulaDefV2<ParamDefsT>
+    | BooleanFormulaDefV2<ParamDefsT>
+    | ArrayFormulaDefV2<ParamDefsT>
+    | ObjectFormulaDefV2<ParamDefsT>,
+): TypedStandardFormula<ParamDefsT> {
+  let formula:
+    | StringPackFormula<ParamDefsT>
+    | NumericPackFormula<ParamDefsT>
+    | BooleanPackFormula<ParamDefsT>
+    | ObjectPackFormula<ParamDefsT, Schema>;
+  const {onError, ...definition} = fullDefinition;
+  switch (definition.resultType) {
+    case ValueType.String: {
+      const {resultType: unused, codaType, ...rest} = definition;
+      const stringFormula: StringPackFormula<ParamDefsT> = {
+        ...rest,
+        resultType: Type.string,
+        schema: codaType ? {type: ValueType.String, codaType} : undefined,
+      };
+      formula = stringFormula;
+      break;
+    }
+    case ValueType.Number: {
+      const {resultType: unused, codaType, ...rest} = definition;
+      const numericFormula: NumericPackFormula<ParamDefsT> = {
+        ...rest,
+        resultType: Type.number,
+        schema: codaType ? {type: ValueType.Number, codaType} : undefined,
+      };
+      formula = numericFormula;
+      break;
+    }
+    case ValueType.Boolean: {
+      const {resultType: unused, ...rest} = definition;
+      const booleanFormula: BooleanPackFormula<ParamDefsT> = {
+        ...rest,
+        resultType: Type.boolean,
+      };
+      formula = booleanFormula;
+      break;
+    }
+    case ValueType.Array: {
+      const {resultType: unused, items, ...rest} = definition;
+      const arrayFormula: ObjectPackFormula<ParamDefsT, Schema> = {
+        ...rest,
+        resultType: Type.object,
+        schema: normalizeSchema(items),
+      };
+      formula = arrayFormula;
+      break;
+    }
+    case ValueType.Object: {
+      const {resultType: unused, schema, ...rest} = definition;
+      const objectFormula: ObjectPackFormula<ParamDefsT, Schema> = {
+        ...rest,
+        resultType: Type.object,
+        schema: normalizeSchema(schema),
+      };
+      formula = objectFormula;
+      break;
+    }
+    default:
+      return ensureUnreachable(definition);
+  }
+
+  if (onError) {
+    const wrappedExecute = formula.execute;
+    formula.execute = async function (params: ParamValues<ParamDefsT>, context: ExecutionContext) {
+      try {
+        return await wrappedExecute(params, context);
+      } catch (err) {
+        return onError(err);
+      }
+    };
+  }
+
+  return formula;
+}
+
+interface BaseFormulaDefV2<ParamDefsT extends ParamDefs, ResultT extends string | number | boolean | object>
+  extends PackFormulaDef<ParamDefsT, ResultT> {
+  onError?(error: Error): any;
+}
+
+type StringFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, string> & {
+  resultType: ValueType.String;
+  codaType?: StringHintTypes;
+  execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<string> | string;
+};
+
+type NumericFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, number> & {
+  resultType: ValueType.Number;
+  codaType?: NumberHintTypes;
+  execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<number> | number;
+};
+
+type BooleanFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, boolean> & {
+  resultType: ValueType.Boolean;
+  execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<boolean> | boolean;
+};
+
+type ArrayFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, object> & {
+  resultType: ValueType.Array;
+  items: Schema;
+  execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<object> | object;
+};
+
+type ObjectFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, object> & {
+  resultType: ValueType.Object;
+  schema: Schema;
+  execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<object> | object;
+};
 
 /**
  * The return type for a metadata formula that should return a different display to the user
