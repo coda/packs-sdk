@@ -1,10 +1,10 @@
-import type {PackDefinition} from '../types';
+import type {PackVersionDefinition} from '../types';
 import {ensureNonEmptyString} from '../helpers/ensure';
 import fs from 'fs';
 import path from 'path';
 import * as readlineSync from 'readline-sync';
 
-export function getManifestFromModule(module: any): PackDefinition {
+export function getManifestFromModule(module: any): PackVersionDefinition {
   if (!module.manifest && !module.pack) {
     printAndExit('Manifest file must export a variable called "manifest" that refers to a PackDefinition.');
   }

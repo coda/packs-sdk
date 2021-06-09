@@ -28,24 +28,6 @@ export function makeManifestFullPath(manifestPath: string): string {
   return manifestPath.startsWith('/') ? manifestPath : path.join(process.cwd(), manifestPath);
 }
 
-export function isTypescript(path: string): boolean {
-  return path.toLowerCase().endsWith('.ts');
-}
-
-export function escapeShellArg(arg: string): string {
-  return `"${arg.replace(/(["'$`\\])/g, '\\$1')}"`;
-}
-
-export function spawnBootstrapCommand(command: string) {
-  let cmd = command;
-  // Hack to allow us to run this CLI tool for testing purposes from within this repo, without
-  // needing it installed as an npm package.
-  if (isTestCommand()) {
-    cmd = command.replace('coda-packs-sdk/dist', process.env.PWD!);
-  }
-  spawnProcess(cmd);
-}
-
 // Packs today do not have both defaultAuth and systemAuth specs, so this helper gets
 // whichever is available, defaulting to defaultAuth. A smarter version could be supported
 // in the future, for a use case like a Google Maps pack which allowed a default credential

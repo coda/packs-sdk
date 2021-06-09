@@ -9,7 +9,6 @@ import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
 import type {SyncExecutionContext} from '../api_types';
 import {build as buildBundle} from '../cli/build';
-import {getManifestFromModule} from './helpers';
 import {getPackAuth} from '../cli/helpers';
 import * as helper from './execution_helper';
 import * as ivmHelper from './ivm_helper';
@@ -56,6 +55,7 @@ export async function executeFormulaFromPackDef(
 export async function executeFormulaOrSyncFromCLI({
   formulaName,
   params,
+  manifest,
   manifestPath,
   vm,
   dynamicUrl,
@@ -63,14 +63,13 @@ export async function executeFormulaOrSyncFromCLI({
 }: {
   formulaName: string;
   params: string[];
+  manifest: PackVersionDefinition;
   manifestPath: string;
   vm?: boolean;
   dynamicUrl?: string;
   contextOptions?: ContextOptions;
 }) {
   try {
-    const module = await import(manifestPath);
-    const manifest = getManifestFromModule(module);
     const {useRealFetcher} = contextOptions;
 
     const credentials = useRealFetcher && manifestPath ? getCredentials(manifestPath) : undefined;
@@ -88,7 +87,7 @@ export async function executeFormulaOrSyncFromCLI({
 
     const result = vm
       ? await executeFormulaOrSyncWithRawParamsInVM({formulaName, params, manifestPath, executionContext})
-      : await executeFormulaOrSyncWithRawParams({formulaName, params, module, executionContext});
+      : await executeFormulaOrSyncWithRawParams({formulaName, params, manifest, executionContext});
     print(result);
   } catch (err) {
     print(err);
@@ -135,17 +134,15 @@ export async function executeFormulaOrSyncWithRawParamsInVM({
 export async function executeFormulaOrSyncWithRawParams({
   formulaName,
   params: rawParams,
-  module,
+  manifest,
   executionContext,
 }: {
   formulaName: string;
   params: string[];
-  module: any;
+  manifest: PackVersionDefinition;
   vm?: boolean;
   executionContext: SyncExecutionContext;
 }) {
-  const manifest = getManifestFromModule(module);
-
   return helper.executeFormulaOrSyncWithRawParams(manifest, formulaName, rawParams, executionContext);
 }
 
