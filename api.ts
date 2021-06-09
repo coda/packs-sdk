@@ -168,6 +168,34 @@ export function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDy
   return 'isDynamic' in syncTable;
 }
 
+/**
+ * Create a definition for a scalar parameter for a formula or sync.
+ *
+ * To create a parameter that is a list (array) of values, use {@link makeArrayParameter}.
+ *
+ * @example
+ * makeParameter({type: Type.String, name: 'myParam', description: 'My description'});
+ */
+export function makeParameter<T extends Type>(definition: ParamDef<T>): ParamDef<T> {
+  return Object.freeze(definition);
+}
+
+/**
+ * Create a definition for an array parameter for a formula or sync.
+ *
+ * @example
+ * makeArrayParameter({itemType: Type.String, name: 'myArrayParam', description: 'My description'});
+ */
+export function makeArrayParameter<T extends Type>(
+  definition: Omit<ParamDef<ArrayType<T>>, 'type'> & {itemType: T},
+): ParamDef<ArrayType<T>> {
+  const {itemType, ...rest} = definition;
+  const arrayType: ArrayType<T> = {type: 'array', items: itemType};
+  return Object.freeze({...rest, type: arrayType});
+}
+
+// Other parameter helpers below here are obsolete given the above generate parameter makers.
+
 export function makeStringParameter(
   name: string,
   description: string,
@@ -404,6 +432,50 @@ export function makeStringFormula<ParamDefsT extends ParamDefs>(
   }) as StringPackFormula<ParamDefsT>;
 }
 
+/**
+ * Creates a formula definition.
+ *
+ * You must indicate the kind of value that this formula returns (string, number, object, etc)
+ * using the `resultType` field.
+ *
+ * Formulas always return basic types, but you may optionally give a type hint using
+ * `codaType to tell Coda how to interpret a given value. For example, you can return
+ * a string that represents a date, but use `codaType: ValueType.Date` to tell Coda
+ * to interpret as a date in a document.
+ *
+ * If your formula returns an object, you must provide a `schema` property that describes
+ * the structure of the object. See {@link makeObjectSchema} for how to construct an object schema.
+ *
+ * If your formula returns a list (array), you must provide an `items` property that describes
+ * what the elements of the array are. This could be a simple schema like `{type: ValueType.String}`
+ * indicating that the array elements are all just strings, or it could be an object schema
+ * created using {@link makeObjectSchema} if the elements are objects.
+ *
+ * @example
+ * makeFormula({resultType: ValueType.String, name: 'Hello', ...});
+ *
+ * @example
+ * makeFormula({resultType: ValueType.String, codaType: ValueType.Html, name: 'HelloHtml', ...});
+ *
+ * @example
+ * makeFormula({resultType: ValueType.Array, items: {type: ValueType.String}, name: 'HelloStringArray', ...});
+ *
+ * @example
+ * makeFormula({
+ *   resultType: ValueType.Object,
+ *   schema: makeObjectSchema({type: ValueType.Object, properties: {...}}),
+ *   name: 'HelloObject',
+ *   ...
+ * });
+ *
+ * @example
+ * makeFormula({
+ *   resultType: ValueType.Array,
+ *   items: makeObjectSchema({type: ValueType.Object, properties: {...}}),
+ *   name: 'HelloObjectArray',
+ *   ...
+ * });
+ */
 export function makeFormula<ParamDefsT extends ParamDefs>(
   fullDefinition: FormulaDefinitionV2<ParamDefsT>,
 ): TypedStandardFormula<ParamDefsT> {
