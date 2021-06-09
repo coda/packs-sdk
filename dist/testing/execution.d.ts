@@ -14,9 +14,10 @@ export interface ContextOptions {
     manifestPath?: string;
 }
 export declare function executeFormulaFromPackDef(packDef: PackVersionDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<any>;
-export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manifestPath, vm, dynamicUrl, contextOptions, }: {
+export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, contextOptions, }: {
     formulaName: string;
     params: string[];
+    manifest: PackVersionDefinition;
     manifestPath: string;
     vm?: boolean;
     dynamicUrl?: string;
@@ -34,10 +35,10 @@ export declare function executeFormulaOrSyncWithRawParamsInVM({ formulaName, par
     manifestPath: string;
     executionContext?: SyncExecutionContext;
 }): Promise<any>;
-export declare function executeFormulaOrSyncWithRawParams({ formulaName, params: rawParams, module, executionContext, }: {
+export declare function executeFormulaOrSyncWithRawParams({ formulaName, params: rawParams, manifest, executionContext, }: {
     formulaName: string;
     params: string[];
-    module: any;
+    manifest: PackVersionDefinition;
     vm?: boolean;
     executionContext: SyncExecutionContext;
 }): Promise<any>;

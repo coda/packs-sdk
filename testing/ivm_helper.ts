@@ -192,7 +192,7 @@ export async function executeFormulaOrSyncWithRawParams(
 ) {
   return ivmContext.evalClosure(
     `return ${getStubName('bundleExecutionHelper')}.executeFormulaOrSyncWithRawParams(
-      ${getStubName('pack.manifest')},
+      ${getStubName('pack.pack')} || ${getStubName('pack.manifest')},
       $0,
       $1,
       ${getStubName('executionContext')}
@@ -209,7 +209,7 @@ export async function executeFormulaOrSync(
 ) {
   return ivmContext.evalClosure(
     `return ${getStubName('bundleExecutionHelper')}.executeFormulaOrSync(
-      ${getStubName('pack.manifest')},
+      ${getStubName('pack.pack')} || ${getStubName('pack.manifest')},
       $0,
       $1,
       ${getStubName('executionContext')}

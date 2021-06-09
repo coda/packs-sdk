@@ -10,7 +10,6 @@ import {ensureExists} from '../helpers/ensure';
 import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import fs from 'fs';
-import {getManifestFromModule} from './helpers';
 import {getPackAuth} from '../cli/helpers';
 import {launchOAuthServerFlow} from './oauth_server';
 import {makeRedirectUrl} from './oauth_server';
@@ -30,11 +29,11 @@ export const DEFAULT_OAUTH_SERVER_PORT = 3000;
 
 export async function setupAuthFromModule(
   manifestPath: string,
-  module: any,
+  manifest: PackVersionDefinition,
   opts: SetupAuthOptions = {},
 ): Promise<void> {
   const manifestDir = path.dirname(manifestPath);
-  return setupAuth(manifestDir, getManifestFromModule(module), opts);
+  return setupAuth(manifestDir, manifest, opts);
 }
 
 export function setupAuth(manifestDir: string, packDef: PackVersionDefinition, opts: SetupAuthOptions = {}): void {

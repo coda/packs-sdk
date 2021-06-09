@@ -1,6 +1,6 @@
 /// <reference types="node" />
-import type { PackDefinition } from '../types';
-export declare function getManifestFromModule(module: any): PackDefinition;
+import type { PackVersionDefinition } from '../types';
+export declare function getManifestFromModule(module: any): PackVersionDefinition;
 export declare const print: {
     (...data: any[]): void;
     (message?: any, ...optionalParams: any[]): void;

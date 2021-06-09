@@ -7,8 +7,5 @@ export declare function createCodaClient(apiKey: string, protocolAndHost?: strin
 export declare function formatEndpoint(endpoint: string): string;
 export declare function isTestCommand(): boolean;
 export declare function makeManifestFullPath(manifestPath: string): string;
-export declare function isTypescript(path: string): boolean;
-export declare function escapeShellArg(arg: string): string;
-export declare function spawnBootstrapCommand(command: string): void;
 export declare function getPackAuth(packDef: PackVersionDefinition): Authentication | undefined;
 export declare function importManifest(bundleFilename: string): Promise<PackVersionDefinition>;
