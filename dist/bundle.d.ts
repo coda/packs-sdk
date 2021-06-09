@@ -405,6 +405,17 @@ export interface ResponseHandlerTemplate<T extends Schema> {
 	onError?(error: Error): any;
 }
 /**
+ * Creates a new skeleton pack definition that can be added to.
+ *
+ * @example
+ * export const pack = newPack();
+ * newPack.formulas.push(makeFormula(...));
+ * newPack.syncTables.push(makeSyncTable(...));
+ */
+export declare function newPack(definition?: Partial<BasicPackDefinition>): BasicPackDefinition & Required<Pick<BasicPackDefinition, "formulas" | "syncTables" | "formats">> & {
+	formulas: TypedStandardFormula[];
+};
+/**
  * An error whose message will be shown to the end user in the UI when it occurs.
  * If an error is encountered in a formula and you want to describe the error
  * to the end user, throw a UserVisibleError with a user-friendly message

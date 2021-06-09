@@ -1,5 +1,6 @@
 import type { ArraySchema } from './schema';
 import type { ArrayType } from './api_types';
+import type { BasicPackDefinition } from './types';
 import type { CommonPackFormulaDef } from './api_types';
 import type { ExecutionContext } from './api_types';
 import { NetworkConnection } from './api_types';
@@ -22,6 +23,17 @@ import type { TypeOf } from './api_types';
 export { ExecutionContext };
 export { FetchRequest } from './api_types';
 export { Logger } from './api_types';
+/**
+ * Creates a new skeleton pack definition that can be added to.
+ *
+ * @example
+ * export const pack = newPack();
+ * newPack.formulas.push(makeFormula(...));
+ * newPack.syncTables.push(makeSyncTable(...));
+ */
+export declare function newPack(definition?: Partial<BasicPackDefinition>): BasicPackDefinition & Required<Pick<BasicPackDefinition, 'formulas' | 'syncTables' | 'formats'>> & {
+    formulas: TypedStandardFormula[];
+};
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
  * If an error is encountered in a formula and you want to describe the error

@@ -1,5 +1,6 @@
 import type {ArraySchema} from './schema';
 import type {ArrayType} from './api_types';
+import type {BasicPackDefinition} from './types';
 import type {CommonPackFormulaDef} from './api_types';
 import type {ExecutionContext} from './api_types';
 import {NetworkConnection} from './api_types';
@@ -35,6 +36,26 @@ import {stringArray} from './api_types';
 export {ExecutionContext};
 export {FetchRequest} from './api_types';
 export {Logger} from './api_types';
+
+/**
+ * Creates a new skeleton pack definition that can be added to.
+ *
+ * @example
+ * export const pack = newPack();
+ * newPack.formulas.push(makeFormula(...));
+ * newPack.syncTables.push(makeSyncTable(...));
+ */
+export function newPack(definition?: Partial<BasicPackDefinition>): BasicPackDefinition &
+  // TODO(jonathan/alan): Remove ` & {formulas: TypedStandardFormula[]}`` when `formulas` is defined as only an
+  // array and not also a namespace object.
+  Required<Pick<BasicPackDefinition, 'formulas' | 'syncTables' | 'formats'>> & {formulas: TypedStandardFormula[]} {
+  return {
+    ...definition,
+    formulas: Array.isArray(definition?.formulas) ? definition?.formulas || [] : [],
+    syncTables: definition?.syncTables || [],
+    formats: definition?.formats || [],
+  };
+}
 
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
