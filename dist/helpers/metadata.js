@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.compilePackMetadata = void 0;
 const types_1 = require("../types");
-const ensure_1 = require("../helpers/ensure");
+const ensure_1 = require("./ensure");
 const api_1 = require("../api");
 function compilePackMetadata(manifest) {
     const { formats, formulas, formulaNamespace, syncTables, defaultAuthentication, ...definition } = manifest;

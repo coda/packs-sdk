@@ -20,8 +20,8 @@ const api_types_8 = require("./api_types");
  *
  * @example
  * export const pack = newPack();
- * newPack.formulas.push(makeFormula(...));
- * newPack.syncTables.push(makeSyncTable(...));
+ * pack.formulas.push(makeFormula(...));
+ * pack.syncTables.push(makeSyncTable(...));
  */
 function newPack(definition) {
     return {

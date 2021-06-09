@@ -2,13 +2,14 @@ import type {Arguments} from 'yargs';
 import {ConsoleLogger} from '../helpers/logging';
 import type {PackUpload} from '../compiled_types';
 import {build} from './build';
-import {compilePackMetadata} from '../helpers/cli';
+import {compilePackMetadata} from '../helpers/metadata';
 import {computeSha256} from '../helpers/crypto';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
 import {getApiKey} from './config_storage';
 import {getPackId} from './config_storage';
+import {importManifest} from './helpers';
 import {isCodaError} from './errors';
 import {isTestCommand} from './helpers';
 import * as path from 'path';
@@ -29,7 +30,7 @@ export async function handleUpload({manifestFile, codaApiEndpoint, notes}: Argum
   const logger = new ConsoleLogger();
   logger.info('Building Pack bundle...');
   const bundleFilename = await build(manifestFile);
-  const {manifest} = await import(bundleFilename);
+  const manifest = await importManifest(bundleFilename);
 
   // Since package.json isn't in dist, we grab it from the root directory instead.
   const packageJson = await import(isTestCommand() ? '../package.json' : '../../package.json');
@@ -44,12 +45,12 @@ export async function handleUpload({manifestFile, codaApiEndpoint, notes}: Argum
 
   const packId = getPackId(manifestDir, codaApiEndpoint);
   if (!packId) {
-    printAndExit(`Could not find a Pack id registered to Pack "${manifest.name}"`);
+    printAndExit(`Could not find a Pack id registered in directory "${manifestDir}"`);
   }
 
   const packVersion = manifest.version;
   if (!packVersion) {
-    printAndExit(`No Pack version found for your Pack "${manifest.name}"`);
+    printAndExit(`No Pack version declared for this Pack`);
   }
 
   try {

@@ -5,6 +5,7 @@ import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
 import {getApiKey} from './config_storage';
 import {getPackId} from './config_storage';
+import {importManifest} from './helpers';
 import {isCodaError} from './errors';
 import * as path from 'path';
 import {printAndExit} from '../testing/helpers';
@@ -41,7 +42,7 @@ export async function handleRelease({
   if (!packVersion) {
     try {
       const bundleFilename = await build(manifestFile);
-      const {manifest} = await import(bundleFilename);
+      const manifest = await importManifest(bundleFilename);
       packVersion = manifest.version as string;
     } catch (err) {
       return printAndExit(`Got an error while building your pack to get the current pack version: ${formatError(err)}`);

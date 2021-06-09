@@ -18,11 +18,12 @@ import type {PostSetup} from '../types';
 import type {PostSetupMetadata} from '../compiled_types';
 import type {TypedPackFormula} from '../api';
 import type {TypedStandardFormula} from '../api';
-import {ensureExists} from '../helpers/ensure';
+import {ensureExists} from './ensure';
 import {isDynamicSyncTable} from '../api';
 
 // Legacy metadata compilation kept around until we migrate first-party packs.
 export function compilePackMetadata(manifest: PackDefinition): PackMetadata;
+export function compilePackMetadata(manifest: PackVersionDefinition): PackVersionMetadata;
 export function compilePackMetadata(manifest: PackVersionDefinition): PackVersionMetadata {
   const {formats, formulas, formulaNamespace, syncTables, defaultAuthentication, ...definition} = manifest;
   const compiledFormats = compileFormatsMetadata(formats || []);

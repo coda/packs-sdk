@@ -409,8 +409,8 @@ export interface ResponseHandlerTemplate<T extends Schema> {
  *
  * @example
  * export const pack = newPack();
- * newPack.formulas.push(makeFormula(...));
- * newPack.syncTables.push(makeSyncTable(...));
+ * pack.formulas.push(makeFormula(...));
+ * pack.syncTables.push(makeSyncTable(...));
  */
 export declare function newPack(definition?: Partial<BasicPackDefinition>): BasicPackDefinition & Required<Pick<BasicPackDefinition, "formulas" | "syncTables" | "formats">> & {
 	formulas: TypedStandardFormula[];
