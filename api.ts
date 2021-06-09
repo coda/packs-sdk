@@ -42,8 +42,8 @@ export {Logger} from './api_types';
  *
  * @example
  * export const pack = newPack();
- * newPack.formulas.push(makeFormula(...));
- * newPack.syncTables.push(makeSyncTable(...));
+ * pack.formulas.push(makeFormula(...));
+ * pack.syncTables.push(makeSyncTable(...));
  */
 export function newPack(definition?: Partial<BasicPackDefinition>): BasicPackDefinition &
   // TODO(jonathan/alan): Remove ` & {formulas: TypedStandardFormula[]}`` when `formulas` is defined as only an
