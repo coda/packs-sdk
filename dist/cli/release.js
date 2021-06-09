@@ -26,47 +26,48 @@ const helpers_2 = require("./helpers");
 const errors_1 = require("./errors");
 const config_storage_1 = require("./config_storage");
 const config_storage_2 = require("./config_storage");
+const helpers_3 = require("./helpers");
 const errors_2 = require("./errors");
 const path = __importStar(require("path"));
-const helpers_3 = require("../testing/helpers");
+const helpers_4 = require("../testing/helpers");
 async function handleRelease({ manifestFile, packVersion: explicitPackVersion, codaApiEndpoint, notes, }) {
     const manifestDir = path.dirname(manifestFile);
     const apiKey = config_storage_1.getApiKey(codaApiEndpoint);
     const formattedEndpoint = helpers_2.formatEndpoint(codaApiEndpoint);
     if (!apiKey) {
-        return helpers_3.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
+        return helpers_4.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
     }
     const packId = config_storage_2.getPackId(manifestDir, codaApiEndpoint);
     if (!packId) {
-        return helpers_3.printAndExit(`Could not find a Pack id in directory ${manifestDir}. You may need to run "coda create" first if this is a brand new pack.`);
+        return helpers_4.printAndExit(`Could not find a Pack id in directory ${manifestDir}. You may need to run "coda create" first if this is a brand new pack.`);
     }
     let packVersion = explicitPackVersion;
     if (!packVersion) {
         try {
             const bundleFilename = await build_1.build(manifestFile);
-            const { manifest } = await Promise.resolve().then(() => __importStar(require(bundleFilename)));
+            const manifest = await helpers_3.importManifest(bundleFilename);
             packVersion = manifest.version;
         }
         catch (err) {
-            return helpers_3.printAndExit(`Got an error while building your pack to get the current pack version: ${errors_1.formatError(err)}`);
+            return helpers_4.printAndExit(`Got an error while building your pack to get the current pack version: ${errors_1.formatError(err)}`);
         }
     }
     const codaClient = helpers_1.createCodaClient(apiKey, formattedEndpoint);
     // TODO(jonathan/huayang): Remove this if createPackRelease also sets the live version.
     await handleResponse(codaClient.setPackLiveVersion(packId, {}, { packVersion }));
     await handleResponse(codaClient.createPackRelease(packId, {}, { packVersion, releaseNotes: notes }));
-    return helpers_3.printAndExit('Success!', 0);
+    return helpers_4.printAndExit('Success!', 0);
 }
 exports.handleRelease = handleRelease;
 async function handleResponse(p) {
     try {
         const response = await p;
         if (errors_2.isCodaError(response)) {
-            return helpers_3.printAndExit(`Error while creating pack release: ${errors_1.formatError(response)}`);
+            return helpers_4.printAndExit(`Error while creating pack release: ${errors_1.formatError(response)}`);
         }
         return p;
     }
     catch (err) {
-        return helpers_3.printAndExit(`Unexpected error while creating release: ${errors_1.formatError(err)}`);
+        return helpers_4.printAndExit(`Unexpected error while creating release: ${errors_1.formatError(err)}`);
     }
 }

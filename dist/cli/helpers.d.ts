@@ -11,3 +11,4 @@ export declare function isTypescript(path: string): boolean;
 export declare function escapeShellArg(arg: string): string;
 export declare function spawnBootstrapCommand(command: string): void;
 export declare function getPackAuth(packDef: PackVersionDefinition): Authentication | undefined;
+export declare function importManifest(bundleFilename: string): Promise<PackVersionDefinition>;

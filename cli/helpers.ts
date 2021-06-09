@@ -61,3 +61,8 @@ export function getPackAuth(packDef: PackVersionDefinition): Authentication | un
   // Since SystemAuthentication is a strict subset of Authentication, we can cast them together.
   return defaultAuthentication || (systemConnectionAuthentication as Authentication);
 }
+
+export async function importManifest(bundleFilename: string): Promise<PackVersionDefinition> {
+  const module = await import(bundleFilename);
+  return module.pack || module.manifest;
+}

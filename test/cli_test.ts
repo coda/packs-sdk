@@ -1,5 +1,5 @@
 import type {PackVersionDefinition} from '../types';
-import {compilePackMetadata} from '../helpers/cli';
+import {compilePackMetadata} from '../helpers/metadata';
 
 describe('CLI', () => {
   describe('compile pack metadata', () => {
