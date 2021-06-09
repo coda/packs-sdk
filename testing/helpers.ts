@@ -5,10 +5,10 @@ import path from 'path';
 import * as readlineSync from 'readline-sync';
 
 export function getManifestFromModule(module: any): PackDefinition {
-  if (!module.manifest) {
+  if (!module.manifest && !module.pack) {
     printAndExit('Manifest file must export a variable called "manifest" that refers to a PackDefinition.');
   }
-  return module.manifest;
+  return module.pack || module.manifest;
 }
 
 // eslint-disable-next-line no-console
