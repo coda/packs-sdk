@@ -21,8 +21,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.executeFormulaOrSyncWithRawParamsInVM = exports.executeFormulaOrSyncWithVM = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = void 0;
 const build_1 = require("../cli/build");
-const helpers_1 = require("./helpers");
-const helpers_2 = require("../cli/helpers");
+const helpers_1 = require("../cli/helpers");
 const helper = __importStar(require("./execution_helper"));
 const ivmHelper = __importStar(require("./ivm_helper"));
 const fetcher_1 = require("./fetcher");
@@ -30,38 +29,36 @@ const fetcher_2 = require("./fetcher");
 const mocks_1 = require("./mocks");
 const mocks_2 = require("./mocks");
 const path = __importStar(require("path"));
-const helpers_3 = require("./helpers");
+const helpers_2 = require("./helpers");
 const auth_1 = require("./auth");
 const auth_2 = require("./auth");
 async function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, params, context, options, { useRealFetcher, manifestPath } = {}) {
     let executionContext = context;
     if (!executionContext && useRealFetcher) {
         const credentials = getCredentials(manifestPath);
-        executionContext = fetcher_1.newFetcherExecutionContext(buildUpdateCredentialsCallback(manifestPath), helpers_2.getPackAuth(packDef), packDef.networkDomains, credentials);
+        executionContext = fetcher_1.newFetcherExecutionContext(buildUpdateCredentialsCallback(manifestPath), helpers_1.getPackAuth(packDef), packDef.networkDomains, credentials);
     }
     const formula = helper.findFormula(packDef, formulaNameWithNamespace);
     return helper.executeFormula(formula, params, executionContext || mocks_1.newMockExecutionContext(), options);
 }
 exports.executeFormulaFromPackDef = executeFormulaFromPackDef;
-async function executeFormulaOrSyncFromCLI({ formulaName, params, manifestPath, vm, dynamicUrl, contextOptions = {}, }) {
+async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, contextOptions = {}, }) {
     try {
-        const module = await Promise.resolve().then(() => __importStar(require(manifestPath)));
-        const manifest = helpers_1.getManifestFromModule(module);
         const { useRealFetcher } = contextOptions;
         const credentials = useRealFetcher && manifestPath ? getCredentials(manifestPath) : undefined;
         // A sync context would work for both formula / syncFormula execution for now.
         // TODO(jonathan): Pass the right context, just to set user expectations correctly for runtime values.
         const executionContext = useRealFetcher
-            ? fetcher_2.newFetcherSyncExecutionContext(buildUpdateCredentialsCallback(manifestPath), helpers_2.getPackAuth(manifest), manifest.networkDomains, credentials)
+            ? fetcher_2.newFetcherSyncExecutionContext(buildUpdateCredentialsCallback(manifestPath), helpers_1.getPackAuth(manifest), manifest.networkDomains, credentials)
             : mocks_2.newMockSyncExecutionContext();
         executionContext.sync.dynamicUrl = dynamicUrl || undefined;
         const result = vm
             ? await executeFormulaOrSyncWithRawParamsInVM({ formulaName, params, manifestPath, executionContext })
-            : await executeFormulaOrSyncWithRawParams({ formulaName, params, module, executionContext });
-        helpers_3.print(result);
+            : await executeFormulaOrSyncWithRawParams({ formulaName, params, manifest, executionContext });
+        helpers_2.print(result);
     }
     catch (err) {
-        helpers_3.print(err);
+        helpers_2.print(err);
         process.exit(1);
     }
 }
@@ -78,8 +75,7 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaName, params: rawP
     return ivmHelper.executeFormulaOrSyncWithRawParams(ivmContext, formulaName, rawParams);
 }
 exports.executeFormulaOrSyncWithRawParamsInVM = executeFormulaOrSyncWithRawParamsInVM;
-async function executeFormulaOrSyncWithRawParams({ formulaName, params: rawParams, module, executionContext, }) {
-    const manifest = helpers_1.getManifestFromModule(module);
+async function executeFormulaOrSyncWithRawParams({ formulaName, params: rawParams, manifest, executionContext, }) {
     return helper.executeFormulaOrSyncWithRawParams(manifest, formulaName, rawParams, executionContext);
 }
 exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
@@ -87,7 +83,7 @@ async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, c
     let executionContext = context;
     if (!executionContext && useRealFetcher) {
         const credentials = getCredentials(manifestPath);
-        executionContext = fetcher_2.newFetcherSyncExecutionContext(buildUpdateCredentialsCallback(manifestPath), helpers_2.getPackAuth(packDef), packDef.networkDomains, credentials);
+        executionContext = fetcher_2.newFetcherSyncExecutionContext(buildUpdateCredentialsCallback(manifestPath), helpers_1.getPackAuth(packDef), packDef.networkDomains, credentials);
     }
     const formula = helper.findSyncFormula(packDef, syncFormulaName);
     return helper.executeSyncFormula(formula, params, executionContext || mocks_2.newMockSyncExecutionContext(), options);

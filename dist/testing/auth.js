@@ -29,33 +29,32 @@ const ensure_2 = require("../helpers/ensure");
 const ensure_3 = require("../helpers/ensure");
 const ensure_4 = require("../helpers/ensure");
 const fs_1 = __importDefault(require("fs"));
-const helpers_1 = require("./helpers");
-const helpers_2 = require("../cli/helpers");
+const helpers_1 = require("../cli/helpers");
 const oauth_server_1 = require("./oauth_server");
 const oauth_server_2 = require("./oauth_server");
 const path = __importStar(require("path"));
+const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
 const helpers_4 = require("./helpers");
 const helpers_5 = require("./helpers");
 const helpers_6 = require("./helpers");
-const helpers_7 = require("./helpers");
 const CREDENTIALS_FILE_NAME = '.coda-credentials.json';
 exports.DEFAULT_OAUTH_SERVER_PORT = 3000;
-async function setupAuthFromModule(manifestPath, module, opts = {}) {
+async function setupAuthFromModule(manifestPath, manifest, opts = {}) {
     const manifestDir = path.dirname(manifestPath);
-    return setupAuth(manifestDir, helpers_1.getManifestFromModule(module), opts);
+    return setupAuth(manifestDir, manifest, opts);
 }
 exports.setupAuthFromModule = setupAuthFromModule;
 function setupAuth(manifestDir, packDef, opts = {}) {
-    const auth = helpers_2.getPackAuth(packDef);
+    const auth = helpers_1.getPackAuth(packDef);
     if (!auth) {
-        return helpers_4.printAndExit(`This Pack has no declared authentication. ` +
+        return helpers_3.printAndExit(`This Pack has no declared authentication. ` +
             `Provide a value for defaultAuthentication or systemConnectionAuthentication in the Pack definition.`);
     }
     const handler = new CredentialHandler(manifestDir, auth, opts);
     switch (auth.type) {
         case types_1.AuthenticationType.None:
-            return helpers_4.printAndExit(`This Pack declares AuthenticationType.None and so does not require authentication. ` +
+            return helpers_3.printAndExit(`This Pack declares AuthenticationType.None and so does not require authentication. ` +
                 `Please declare another AuthenticationType to use authentication with this Pack.`);
         case types_1.AuthenticationType.CodaApiHeaderBearerToken:
             ensure_2.ensureExists(packDef.defaultAuthentication, 'CodaApiHeaderBearerToken only works with defaultAuthentication, not system auth.');
@@ -73,7 +72,7 @@ function setupAuth(manifestDir, packDef, opts = {}) {
             return handler.handleOAuth2();
         case types_1.AuthenticationType.AWSSignature4:
         case types_1.AuthenticationType.Various:
-            return helpers_4.printAndExit('This authentication type is not yet implemented');
+            return helpers_3.printAndExit('This authentication type is not yet implemented');
         default:
             return ensure_4.ensureUnreachable(auth);
     }
@@ -88,7 +87,7 @@ class CredentialHandler {
     checkForExistingCredential() {
         const existingCredentials = readCredentialsFile(this._manifestDir);
         if (existingCredentials) {
-            const input = helpers_5.promptForInput(`Credentials already exist for this Pack, press "y" to overwrite or "n" to cancel: `);
+            const input = helpers_4.promptForInput(`Credentials already exist for this Pack, press "y" to overwrite or "n" to cancel: `);
             if (input.toLocaleLowerCase() !== 'y') {
                 return process.exit(1);
             }
@@ -98,9 +97,9 @@ class CredentialHandler {
     handleToken() {
         this.checkForExistingCredential();
         const endpointUrl = this.maybePromptForEndpointUrl();
-        const input = helpers_5.promptForInput(`Paste the token or API key to use for this Pack:\n`, { mask: true });
+        const input = helpers_4.promptForInput(`Paste the token or API key to use for this Pack:\n`, { mask: true });
         this.storeCredential({ endpointUrl, token: input });
-        helpers_3.print('Credentials updated!');
+        helpers_2.print('Credentials updated!');
     }
     handleWebBasic() {
         var _a, _b, _c;
@@ -110,53 +109,53 @@ class CredentialHandler {
         const usernamePlaceholder = ((_a = this._authDef.uxConfig) === null || _a === void 0 ? void 0 : _a.placeholderUsername) || 'username';
         const passwordPlaceholder = ((_b = this._authDef.uxConfig) === null || _b === void 0 ? void 0 : _b.placeholderPassword) || 'password';
         const usernameOnly = (_c = this._authDef.uxConfig) === null || _c === void 0 ? void 0 : _c.usernameOnly;
-        const username = helpers_5.promptForInput(`Enter the ${usernamePlaceholder} for this Pack:\n`);
+        const username = helpers_4.promptForInput(`Enter the ${usernamePlaceholder} for this Pack:\n`);
         let password;
         if (!usernameOnly) {
-            password = helpers_5.promptForInput(`Enter the ${passwordPlaceholder} for this Pack:\n`, { mask: true });
+            password = helpers_4.promptForInput(`Enter the ${passwordPlaceholder} for this Pack:\n`, { mask: true });
         }
         this.storeCredential({ endpointUrl, username, password });
-        helpers_3.print('Credentials updated!');
+        helpers_2.print('Credentials updated!');
     }
     handleQueryParam(paramName) {
         if (!paramName) {
-            helpers_4.printAndExit(`Please provide a paramName attribute in the defaultAuthentication section of this Pack definition.`);
+            helpers_3.printAndExit(`Please provide a paramName attribute in the defaultAuthentication section of this Pack definition.`);
         }
         this.checkForExistingCredential();
         const endpointUrl = this.maybePromptForEndpointUrl();
-        const input = helpers_5.promptForInput(`Enter the token to use for the "${paramName}" url param for this Pack:\n`, {
+        const input = helpers_4.promptForInput(`Enter the token to use for the "${paramName}" url param for this Pack:\n`, {
             mask: true,
         });
         this.storeCredential({ endpointUrl, paramValue: input });
-        helpers_3.print('Credentials updated!');
+        helpers_2.print('Credentials updated!');
     }
     handleMultiQueryParams(paramDefs) {
         if (paramDefs.length === 0) {
-            helpers_4.printAndExit(`Please define one or more entries for "params" in the defaultAuthentication section of this Pack definition.`);
+            helpers_3.printAndExit(`Please define one or more entries for "params" in the defaultAuthentication section of this Pack definition.`);
         }
         this.checkForExistingCredential();
         const endpointUrl = this.maybePromptForEndpointUrl();
         const credentials = { endpointUrl, params: {} };
         for (const paramDef of paramDefs) {
-            const paramValue = helpers_5.promptForInput(`Enter the token to use for the "${paramDef.name}" url param for this Pack:\n`, { mask: true });
+            const paramValue = helpers_4.promptForInput(`Enter the token to use for the "${paramDef.name}" url param for this Pack:\n`, { mask: true });
             credentials.params[paramDef.name] = paramValue;
         }
         this.storeCredential(credentials);
-        helpers_3.print('Credentials updated!');
+        helpers_2.print('Credentials updated!');
     }
     handleOAuth2() {
         ensure_1.assertCondition(this._authDef.type === types_1.AuthenticationType.OAuth2);
         const existingCredentials = this.checkForExistingCredential();
-        helpers_3.print(`*** Your application must have ${oauth_server_2.makeRedirectUrl(this._oauthServerPort)} whitelisted as an OAuth redirect url ` +
+        helpers_2.print(`*** Your application must have ${oauth_server_2.makeRedirectUrl(this._oauthServerPort)} whitelisted as an OAuth redirect url ` +
             'in order for this tool to work. ***');
         const clientIdPrompt = existingCredentials
             ? `Enter the OAuth client id for this Pack (or Enter to skip and use existing):\n`
             : `Enter the OAuth client id for this Pack:\n`;
-        const newClientId = helpers_5.promptForInput(clientIdPrompt);
+        const newClientId = helpers_4.promptForInput(clientIdPrompt);
         const clientSecretPrompt = existingCredentials
             ? `Enter the OAuth client secret for this Pack (or Enter to skip and use existing):\n`
             : `Enter the OAuth client secret for this Pack:\n`;
-        const newClientSecret = helpers_5.promptForInput(clientSecretPrompt, { mask: true });
+        const newClientSecret = helpers_4.promptForInput(clientSecretPrompt, { mask: true });
         const clientId = ensure_3.ensureNonEmptyString(newClientId || (existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.clientId));
         const clientSecret = ensure_3.ensureNonEmptyString(newClientSecret || (existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.clientSecret));
         const credentials = {
@@ -167,7 +166,7 @@ class CredentialHandler {
             expires: existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.expires,
         };
         this.storeCredential(credentials);
-        helpers_3.print('Credential secrets updated! Launching OAuth handshake in browser...\n');
+        helpers_2.print('Credential secrets updated! Launching OAuth handshake in browser...\n');
         oauth_server_1.launchOAuthServerFlow({
             clientId,
             clientSecret,
@@ -182,7 +181,7 @@ class CredentialHandler {
                     expires,
                 };
                 this.storeCredential(credentials);
-                helpers_3.print('Access token saved! Shutting down OAuth server and exiting...');
+                helpers_2.print('Access token saved! Shutting down OAuth server and exiting...');
             },
         });
     }
@@ -195,7 +194,7 @@ class CredentialHandler {
             return;
         }
         const placeholder = endpointDomain ? `https://my-site.${endpointDomain}` : 'https://foo.example.com';
-        return helpers_5.promptForInput(`Enter the endpoint url for this Pack (for example, ${placeholder}):\n`);
+        return helpers_4.promptForInput(`Enter the endpoint url for this Pack (for example, ${placeholder}):\n`);
     }
     storeCredential(credentials) {
         storeCredential(this._manifestDir, credentials);
@@ -208,14 +207,14 @@ function storeCredential(manifestDir, credentials) {
 exports.storeCredential = storeCredential;
 function readCredentialsFile(manifestDir) {
     const filename = path.join(manifestDir, CREDENTIALS_FILE_NAME);
-    const fileContents = helpers_6.readJSONFile(filename);
+    const fileContents = helpers_5.readJSONFile(filename);
     return fileContents === null || fileContents === void 0 ? void 0 : fileContents.credentials;
 }
 exports.readCredentialsFile = readCredentialsFile;
 function writeCredentialsFile(credentialsFile, credentials) {
     const fileExisted = fs_1.default.existsSync(credentialsFile);
     const fileContents = { credentials };
-    helpers_7.writeJSONFile(credentialsFile, fileContents);
+    helpers_6.writeJSONFile(credentialsFile, fileContents);
     if (!fileExisted) {
         // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
         fs_1.default.chmodSync(credentialsFile, 0o600);

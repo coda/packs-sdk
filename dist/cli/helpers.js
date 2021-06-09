@@ -22,7 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.importManifest = exports.getPackAuth = exports.spawnBootstrapCommand = exports.escapeShellArg = exports.isTypescript = exports.makeManifestFullPath = exports.isTestCommand = exports.formatEndpoint = exports.createCodaClient = exports.spawnProcess = void 0;
+exports.importManifest = exports.getPackAuth = exports.makeManifestFullPath = exports.isTestCommand = exports.formatEndpoint = exports.createCodaClient = exports.spawnProcess = void 0;
 const coda_1 = require("../helpers/external-api/coda");
 const path_1 = __importDefault(require("path"));
 const helpers_1 = require("../testing/helpers");
@@ -51,24 +51,6 @@ function makeManifestFullPath(manifestPath) {
     return manifestPath.startsWith('/') ? manifestPath : path_1.default.join(process.cwd(), manifestPath);
 }
 exports.makeManifestFullPath = makeManifestFullPath;
-function isTypescript(path) {
-    return path.toLowerCase().endsWith('.ts');
-}
-exports.isTypescript = isTypescript;
-function escapeShellArg(arg) {
-    return `"${arg.replace(/(["'$`\\])/g, '\\$1')}"`;
-}
-exports.escapeShellArg = escapeShellArg;
-function spawnBootstrapCommand(command) {
-    let cmd = command;
-    // Hack to allow us to run this CLI tool for testing purposes from within this repo, without
-    // needing it installed as an npm package.
-    if (isTestCommand()) {
-        cmd = command.replace('coda-packs-sdk/dist', process.env.PWD);
-    }
-    spawnProcess(cmd);
-}
-exports.spawnBootstrapCommand = spawnBootstrapCommand;
 // Packs today do not have both defaultAuth and systemAuth specs, so this helper gets
 // whichever is available, defaulting to defaultAuth. A smarter version could be supported
 // in the future, for a use case like a Google Maps pack which allowed a default credential

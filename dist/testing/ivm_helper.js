@@ -117,7 +117,7 @@ async function setupIvmContext(bundlePath, executionContext) {
 exports.setupIvmContext = setupIvmContext;
 async function executeFormulaOrSyncWithRawParams(ivmContext, formulaName, rawParams) {
     return ivmContext.evalClosure(`return ${getStubName('bundleExecutionHelper')}.executeFormulaOrSyncWithRawParams(
-      ${getStubName('pack.manifest')},
+      ${getStubName('pack.pack')} || ${getStubName('pack.manifest')},
       $0,
       $1,
       ${getStubName('executionContext')}
@@ -126,7 +126,7 @@ async function executeFormulaOrSyncWithRawParams(ivmContext, formulaName, rawPar
 exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
 async function executeFormulaOrSync(ivmContext, formulaName, params) {
     return ivmContext.evalClosure(`return ${getStubName('bundleExecutionHelper')}.executeFormulaOrSync(
-      ${getStubName('pack.manifest')},
+      ${getStubName('pack.pack')} || ${getStubName('pack.manifest')},
       $0,
       $1,
       ${getStubName('executionContext')}
