@@ -161,9 +161,9 @@ function makeStringFormula(definition) {
     });
 }
 exports.makeStringFormula = makeStringFormula;
-function makeFormula(rawDef) {
+function makeFormula(fullDefinition) {
     let formula;
-    const { onError, ...definition } = rawDef;
+    const { onError, ...definition } = fullDefinition;
     switch (definition.resultType) {
         case schema_1.ValueType.String: {
             const { resultType: unused, codaType, ...rest } = definition;

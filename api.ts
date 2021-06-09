@@ -349,10 +349,11 @@ export type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Sche
   schema?: SchemaT;
 };
 
-export type TypedStandardFormula =
-  | NumericPackFormula<ParamDefs>
-  | StringPackFormula<ParamDefs, any>
-  | ObjectPackFormula<ParamDefs, Schema>;
+export type TypedStandardFormula<ParamDefsT extends ParamDefs = ParamDefs> =
+  | NumericPackFormula<ParamDefsT>
+  | StringPackFormula<ParamDefsT, any>
+  | BooleanPackFormula<ParamDefsT>
+  | ObjectPackFormula<ParamDefsT, Schema>;
 
 export type TypedPackFormula = TypedStandardFormula | GenericSyncFormula;
 
@@ -424,19 +425,19 @@ export function makeStringFormula<ParamDefsT extends ParamDefs>(
 }
 
 export function makeFormula<ParamDefsT extends ParamDefs>(
-  rawDef:
+  fullDefinition:
     | StringFormulaDefV2<ParamDefsT>
     | NumericFormulaDefV2<ParamDefsT>
     | BooleanFormulaDefV2<ParamDefsT>
     | ArrayFormulaDefV2<ParamDefsT>
     | ObjectFormulaDefV2<ParamDefsT>,
-) {
+): TypedStandardFormula<ParamDefsT> {
   let formula:
     | StringPackFormula<ParamDefsT>
     | NumericPackFormula<ParamDefsT>
     | BooleanPackFormula<ParamDefsT>
     | ObjectPackFormula<ParamDefsT, Schema>;
-  const {onError, ...definition} = rawDef;
+  const {onError, ...definition} = fullDefinition;
   switch (definition.resultType) {
     case ValueType.String: {
       const {resultType: unused, codaType, ...rest} = definition;
