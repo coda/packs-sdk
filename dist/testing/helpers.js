@@ -28,10 +28,10 @@ const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const readlineSync = __importStar(require("readline-sync"));
 function getManifestFromModule(module) {
-    if (!module.manifest) {
+    if (!module.manifest && !module.pack) {
         printAndExit('Manifest file must export a variable called "manifest" that refers to a PackDefinition.');
     }
-    return module.manifest;
+    return module.pack || module.manifest;
 }
 exports.getManifestFromModule = getManifestFromModule;
 // eslint-disable-next-line no-console
