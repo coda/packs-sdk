@@ -126,22 +126,20 @@ export declare type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
 export declare function isUserVisibleError(error: Error): error is UserVisibleError;
 export declare function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDynamicSyncTable;
 /**
- * Create a definition for a scalar parameter for a formula or sync.
+ * Create a definition for a parameter for a formula or sync.
  *
- * To create a parameter that is a list (array) of values, use {@link makeArrayParameter}.
+ * To create a scalar parameter, specify a `type` field, e.g. `type: Type.String`.
+ * To create an array parameter, specify an `arrayType` field, e.g. `arrayType: Type.String`.
  *
  * @example
  * makeParameter({type: Type.String, name: 'myParam', description: 'My description'});
- */
-export declare function makeParameter<T extends Type>(definition: ParamDef<T>): ParamDef<T>;
-/**
- * Create a definition for an array parameter for a formula or sync.
  *
  * @example
- * makeArrayParameter({itemType: Type.String, name: 'myArrayParam', description: 'My description'});
+ * makeArrayParameter({arrayType: Type.String, name: 'myArrayParam', description: 'My description'});
  */
-export declare function makeArrayParameter<T extends Type>(definition: Omit<ParamDef<ArrayType<T>>, 'type'> & {
-    itemType: T;
+export declare function makeParameter<T extends Type>(definition: ParamDef<T>): ParamDef<T>;
+export declare function makeParameter<T extends Type>(definition: Omit<ParamDef<ArrayType<T>>, 'type'> & {
+    arrayType: T;
 }): ParamDef<ArrayType<T>>;
 export declare function makeStringParameter(name: string, description: string, args?: ParamArgs<Type.string>): ParamDef<Type.string>;
 export declare function makeStringArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.string>>): ParamDef<ArrayType<Type.string>>;
@@ -377,7 +375,10 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     name: string;
     examples?: {
         params: import("./api_types").PackFormulaValue[];
-        result: PackFormulaResult;
+        result: PackFormulaResult; /**
+         * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
+         * instead, define dynamic sync tables using {@link makeDynamicSyncTable}.
+         */
     }[] | undefined;
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
@@ -395,7 +396,10 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
     name: string;
     examples?: {
         params: import("./api_types").PackFormulaValue[];
-        result: PackFormulaResult;
+        result: PackFormulaResult; /**
+         * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
+         * instead, define dynamic sync tables using {@link makeDynamicSyncTable}.
+         */
     }[] | undefined;
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;

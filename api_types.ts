@@ -22,7 +22,7 @@ export function isArrayType(obj: any): obj is ArrayType<any> {
   return obj && obj.type === 'array' && typeof obj.items === 'number';
 }
 
-export type UnionType = ArrayType<Type> | Type;
+type UnionType = ArrayType<Type> | Type;
 
 export const stringArray: ArrayType<Type.string> = {
   type: 'array',

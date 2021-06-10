@@ -740,7 +740,10 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 	name: string;
 	examples?: {
 		params: PackFormulaValue[];
-		result: PackFormulaResult;
+		result: PackFormulaResult; /**
+		 * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
+		 * instead, define dynamic sync tables using {@link makeDynamicSyncTable}.
+		 */
 	}[] | undefined;
 	parameters: ParamDefsT;
 	varargParameters?: ParamDefs | undefined;
@@ -758,7 +761,10 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
 	name: string;
 	examples?: {
 		params: PackFormulaValue[];
-		result: PackFormulaResult;
+		result: PackFormulaResult; /**
+		 * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
+		 * instead, define dynamic sync tables using {@link makeDynamicSyncTable}.
+		 */
 	}[] | undefined;
 	parameters: ParamDefsT;
 	varargParameters?: ParamDefs | undefined;

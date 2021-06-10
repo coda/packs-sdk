@@ -169,29 +169,31 @@ export function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDy
 }
 
 /**
- * Create a definition for a scalar parameter for a formula or sync.
+ * Create a definition for a parameter for a formula or sync.
  *
- * To create a parameter that is a list (array) of values, use {@link makeArrayParameter}.
+ * To create a scalar parameter, specify a `type` field, e.g. `type: Type.String`.
+ * To create an array parameter, specify an `arrayType` field, e.g. `arrayType: Type.String`.
  *
  * @example
  * makeParameter({type: Type.String, name: 'myParam', description: 'My description'});
- */
-export function makeParameter<T extends Type>(definition: ParamDef<T>): ParamDef<T> {
-  return Object.freeze(definition);
-}
-
-/**
- * Create a definition for an array parameter for a formula or sync.
  *
  * @example
- * makeArrayParameter({itemType: Type.String, name: 'myArrayParam', description: 'My description'});
+ * makeArrayParameter({arrayType: Type.String, name: 'myArrayParam', description: 'My description'});
  */
-export function makeArrayParameter<T extends Type>(
-  definition: Omit<ParamDef<ArrayType<T>>, 'type'> & {itemType: T},
-): ParamDef<ArrayType<T>> {
-  const {itemType, ...rest} = definition;
-  const arrayType: ArrayType<T> = {type: 'array', items: itemType};
-  return Object.freeze({...rest, type: arrayType});
+export function makeParameter<T extends Type>(definition: ParamDef<T>): ParamDef<T>;
+export function makeParameter<T extends Type>(
+  definition: Omit<ParamDef<ArrayType<T>>, 'type'> & {arrayType: T},
+): ParamDef<ArrayType<T>>;
+export function makeParameter<T extends Type>(
+  definition: ParamDef<T> | (Omit<ParamDef<ArrayType<T>>, 'type'> & {arrayType: T}),
+): ParamDef<T> | ParamDef<ArrayType<T>> {
+  if ('arrayType' in definition) {
+    const {arrayType, ...rest} = definition;
+    const arrayTypeDef: ArrayType<T> = {type: 'array', items: arrayType};
+    return Object.freeze({...rest, type: arrayTypeDef});
+  }
+
+  return Object.freeze(definition);
 }
 
 // Other parameter helpers below here are obsolete given the above generate parameter makers.

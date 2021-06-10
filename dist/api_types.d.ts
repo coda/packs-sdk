@@ -17,7 +17,7 @@ export interface ArrayType<T extends Type> {
     items: T;
 }
 export declare function isArrayType(obj: any): obj is ArrayType<any>;
-export declare type UnionType = ArrayType<Type> | Type;
+declare type UnionType = ArrayType<Type> | Type;
 export declare const stringArray: ArrayType<Type.string>;
 export declare const numberArray: ArrayType<Type.number>;
 export declare const booleanArray: ArrayType<Type.boolean>;
