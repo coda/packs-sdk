@@ -504,6 +504,22 @@ export declare type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
  */
 export declare function isUserVisibleError(error: Error): error is UserVisibleError;
 export declare function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDynamicSyncTable;
+/**
+ * Create a definition for a parameter for a formula or sync.
+ *
+ * To create a scalar parameter, specify a `type` field, e.g. `type: Type.String`.
+ * To create an array parameter, specify an `arrayType` field, e.g. `arrayType: Type.String`.
+ *
+ * @example
+ * makeParameter({type: Type.String, name: 'myParam', description: 'My description'});
+ *
+ * @example
+ * makeParameter({arrayType: Type.String, name: 'myArrayParam', description: 'My description'});
+ */
+export declare function makeParameter<T extends Type>(definition: ParamDef<T>): ParamDef<T>;
+export declare function makeParameter<T extends Type>(definition: Omit<ParamDef<ArrayType<T>>, "type"> & {
+	arrayType: T;
+}): ParamDef<ArrayType<T>>;
 export declare function makeStringParameter(name: string, description: string, args?: ParamArgs<Type.string>): ParamDef<Type.string>;
 export declare function makeStringArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.string>>): ParamDef<ArrayType<Type.string>>;
 export declare function makeNumericParameter(name: string, description: string, args?: ParamArgs<Type.number>): ParamDef<Type.number>;
