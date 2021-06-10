@@ -178,7 +178,7 @@ export function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDy
  * makeParameter({type: Type.String, name: 'myParam', description: 'My description'});
  *
  * @example
- * makeArrayParameter({arrayType: Type.String, name: 'myArrayParam', description: 'My description'});
+ * makeParameter({arrayType: Type.String, name: 'myArrayParam', description: 'My description'});
  */
 export function makeParameter<T extends Type>(definition: ParamDef<T>): ParamDef<T>;
 export function makeParameter<T extends Type>(
@@ -437,11 +437,11 @@ export function makeStringFormula<ParamDefsT extends ParamDefs>(
 /**
  * Creates a formula definition.
  *
- * You must indicate the kind of value that this formula returns (string, number, object, etc)
+ * You must indicate the kind of value that this formula returns (string, number, boolean, array, or object)
  * using the `resultType` field.
  *
  * Formulas always return basic types, but you may optionally give a type hint using
- * `codaType to tell Coda how to interpret a given value. For example, you can return
+ * `codaType` to tell Coda how to interpret a given value. For example, you can return
  * a string that represents a date, but use `codaType: ValueType.Date` to tell Coda
  * to interpret as a date in a document.
  *
