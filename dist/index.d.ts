@@ -95,6 +95,7 @@ export type { SimpleAutocompleteOption } from './api';
 export { autocompleteSearchObjects } from './api';
 export { makeSimpleAutocompleteMetadataFormula } from './api';
 export { simpleAutocomplete } from './api';
+export { makeParameter } from './api';
 export { makeBooleanParameter } from './api';
 export { makeBooleanArrayParameter } from './api';
 export { makeDateParameter } from './api';
