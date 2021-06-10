@@ -21,7 +21,7 @@ export type {SystemAuthentication} from './types';
 export type {WebBasicAuthentication} from './types';
 export type {VariousAuthentication} from './types';
 export type {VariousSupportedAuthentication} from './types';
-export {newPack} from './api';
+export {newPack} from './builder';
 
 // Compiler interfaces
 export type {PackFormatMetadata} from './compiled_types';
