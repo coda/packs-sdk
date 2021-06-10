@@ -1,6 +1,5 @@
 import type {ArraySchema} from './schema';
 import type {ArrayType} from './api_types';
-import type {BasicPackDefinition} from './types';
 import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
 import type {ExecutionContext} from './api_types';
@@ -39,26 +38,6 @@ import {stringArray} from './api_types';
 export {ExecutionContext};
 export {FetchRequest} from './api_types';
 export {Logger} from './api_types';
-
-/**
- * Creates a new skeleton pack definition that can be added to.
- *
- * @example
- * export const pack = newPack();
- * pack.formulas.push(makeFormula(...));
- * pack.syncTables.push(makeSyncTable(...));
- */
-export function newPack(definition?: Partial<BasicPackDefinition>): BasicPackDefinition &
-  // TODO(jonathan/alan): Remove ` & {formulas: TypedStandardFormula[]}`` when `formulas` is defined as only an
-  // array and not also a namespace object.
-  Required<Pick<BasicPackDefinition, 'formulas' | 'syncTables' | 'formats'>> & {formulas: TypedStandardFormula[]} {
-  return {
-    ...definition,
-    formulas: Array.isArray(definition?.formulas) ? definition?.formulas || [] : [],
-    syncTables: definition?.syncTables || [],
-    formats: definition?.formats || [],
-  };
-}
 
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
@@ -378,7 +357,7 @@ export interface SyncFormulaResult<ResultT extends object> {
   continuation?: Continuation;
 }
 
-interface SyncFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaDef<ParamsT> {
+export interface SyncFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaDef<ParamsT> {
   execute(params: ParamValues<ParamsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<object>>;
 }
 
@@ -426,12 +405,7 @@ export function makeStringFormula<ParamDefsT extends ParamDefs>(
 }
 
 export function makeFormula<ParamDefsT extends ParamDefs>(
-  fullDefinition:
-    | StringFormulaDefV2<ParamDefsT>
-    | NumericFormulaDefV2<ParamDefsT>
-    | BooleanFormulaDefV2<ParamDefsT>
-    | ArrayFormulaDefV2<ParamDefsT>
-    | ObjectFormulaDefV2<ParamDefsT>,
+  fullDefinition: FormulaDefinitionV2<ParamDefsT>,
 ): TypedStandardFormula<ParamDefsT> {
   let formula:
     | StringPackFormula<ParamDefsT>
@@ -540,6 +514,13 @@ type ObjectFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDe
   schema: Schema;
   execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<object> | object;
 };
+
+export type FormulaDefinitionV2<ParamDefsT extends ParamDefs> =
+  | StringFormulaDefV2<ParamDefsT>
+  | NumericFormulaDefV2<ParamDefsT>
+  | BooleanFormulaDefV2<ParamDefsT>
+  | ArrayFormulaDefV2<ParamDefsT>
+  | ObjectFormulaDefV2<ParamDefsT>;
 
 /**
  * The return type for a metadata formula that should return a different display to the user

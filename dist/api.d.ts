@@ -1,6 +1,5 @@
 import type { ArraySchema } from './schema';
 import type { ArrayType } from './api_types';
-import type { BasicPackDefinition } from './types';
 import type { BooleanSchema } from './schema';
 import type { CommonPackFormulaDef } from './api_types';
 import type { ExecutionContext } from './api_types';
@@ -26,17 +25,6 @@ import { ValueType } from './schema';
 export { ExecutionContext };
 export { FetchRequest } from './api_types';
 export { Logger } from './api_types';
-/**
- * Creates a new skeleton pack definition that can be added to.
- *
- * @example
- * export const pack = newPack();
- * pack.formulas.push(makeFormula(...));
- * pack.syncTables.push(makeSyncTable(...));
- */
-export declare function newPack(definition?: Partial<BasicPackDefinition>): BasicPackDefinition & Required<Pick<BasicPackDefinition, 'formulas' | 'syncTables' | 'formats'>> & {
-    formulas: TypedStandardFormula[];
-};
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
  * If an error is encountered in a formula and you want to describe the error
@@ -201,7 +189,7 @@ export interface SyncFormulaResult<ResultT extends object> {
     result: ResultT[];
     continuation?: Continuation;
 }
-interface SyncFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaDef<ParamsT> {
+export interface SyncFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaDef<ParamsT> {
     execute(params: ParamValues<ParamsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<object>>;
 }
 export declare type SyncFormula<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> = Omit<SyncFormulaDef<ParamDefsT>, 'execute'> & {
@@ -224,7 +212,7 @@ export declare function makeNumericFormula<ParamDefsT extends ParamDefs>(definit
  * @param definition The definition of a formula that returns a string.
  */
 export declare function makeStringFormula<ParamDefsT extends ParamDefs>(definition: StringFormulaDef<ParamDefsT>): StringPackFormula<ParamDefsT>;
-export declare function makeFormula<ParamDefsT extends ParamDefs>(fullDefinition: StringFormulaDefV2<ParamDefsT> | NumericFormulaDefV2<ParamDefsT> | BooleanFormulaDefV2<ParamDefsT> | ArrayFormulaDefV2<ParamDefsT> | ObjectFormulaDefV2<ParamDefsT>): TypedStandardFormula<ParamDefsT>;
+export declare function makeFormula<ParamDefsT extends ParamDefs>(fullDefinition: FormulaDefinitionV2<ParamDefsT>): TypedStandardFormula<ParamDefsT>;
 interface BaseFormulaDefV2<ParamDefsT extends ParamDefs, ResultT extends string | number | boolean | object> extends PackFormulaDef<ParamDefsT, ResultT> {
     onError?(error: Error): any;
 }
@@ -252,6 +240,7 @@ declare type ObjectFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2
     schema: Schema;
     execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<object> | object;
 };
+export declare type FormulaDefinitionV2<ParamDefsT extends ParamDefs> = StringFormulaDefV2<ParamDefsT> | NumericFormulaDefV2<ParamDefsT> | BooleanFormulaDefV2<ParamDefsT> | ArrayFormulaDefV2<ParamDefsT> | ObjectFormulaDefV2<ParamDefsT>;
 /**
  * The return type for a metadata formula that should return a different display to the user
  * than is used internally.
@@ -326,7 +315,10 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     name: string;
     examples?: {
         params: import("./api_types").PackFormulaValue[];
-        result: PackFormulaResult;
+        result: PackFormulaResult; /**
+         * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
+         * instead, define dynamic sync tables using {@link makeDynamicSyncTable}.
+         */
     }[] | undefined;
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
@@ -344,7 +336,10 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
     name: string;
     examples?: {
         params: import("./api_types").PackFormulaValue[];
-        result: PackFormulaResult;
+        result: PackFormulaResult; /**
+         * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
+         * instead, define dynamic sync tables using {@link makeDynamicSyncTable}.
+         */
     }[] | undefined;
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
