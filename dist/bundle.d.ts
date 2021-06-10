@@ -590,6 +590,50 @@ export declare function makeNumericFormula<ParamDefsT extends ParamDefs>(definit
  * @param definition The definition of a formula that returns a string.
  */
 export declare function makeStringFormula<ParamDefsT extends ParamDefs>(definition: StringFormulaDef<ParamDefsT>): StringPackFormula<ParamDefsT>;
+/**
+ * Creates a formula definition.
+ *
+ * You must indicate the kind of value that this formula returns (string, number, boolean, array, or object)
+ * using the `resultType` field.
+ *
+ * Formulas always return basic types, but you may optionally give a type hint using
+ * `codaType` to tell Coda how to interpret a given value. For example, you can return
+ * a string that represents a date, but use `codaType: ValueType.Date` to tell Coda
+ * to interpret as a date in a document.
+ *
+ * If your formula returns an object, you must provide a `schema` property that describes
+ * the structure of the object. See {@link makeObjectSchema} for how to construct an object schema.
+ *
+ * If your formula returns a list (array), you must provide an `items` property that describes
+ * what the elements of the array are. This could be a simple schema like `{type: ValueType.String}`
+ * indicating that the array elements are all just strings, or it could be an object schema
+ * created using {@link makeObjectSchema} if the elements are objects.
+ *
+ * @example
+ * makeFormula({resultType: ValueType.String, name: 'Hello', ...});
+ *
+ * @example
+ * makeFormula({resultType: ValueType.String, codaType: ValueType.Html, name: 'HelloHtml', ...});
+ *
+ * @example
+ * makeFormula({resultType: ValueType.Array, items: {type: ValueType.String}, name: 'HelloStringArray', ...});
+ *
+ * @example
+ * makeFormula({
+ *   resultType: ValueType.Object,
+ *   schema: makeObjectSchema({type: ValueType.Object, properties: {...}}),
+ *   name: 'HelloObject',
+ *   ...
+ * });
+ *
+ * @example
+ * makeFormula({
+ *   resultType: ValueType.Array,
+ *   items: makeObjectSchema({type: ValueType.Object, properties: {...}}),
+ *   name: 'HelloObjectArray',
+ *   ...
+ * });
+ */
 export declare function makeFormula<ParamDefsT extends ParamDefs>(fullDefinition: FormulaDefinitionV2<ParamDefsT>): TypedStandardFormula<ParamDefsT>;
 export interface BaseFormulaDefV2<ParamDefsT extends ParamDefs, ResultT extends string | number | boolean | object> extends PackFormulaDef<ParamDefsT, ResultT> {
 	onError?(error: Error): any;

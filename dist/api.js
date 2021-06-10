@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.StatusCodeError = exports.UserVisibleError = void 0;
+exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.StatusCodeError = exports.UserVisibleError = void 0;
 const api_types_1 = require("./api_types");
 const api_types_2 = require("./api_types");
 const schema_1 = require("./schema");
@@ -50,6 +50,16 @@ function isDynamicSyncTable(syncTable) {
     return 'isDynamic' in syncTable;
 }
 exports.isDynamicSyncTable = isDynamicSyncTable;
+function makeParameter(definition) {
+    if ('arrayType' in definition) {
+        const { arrayType, ...rest } = definition;
+        const arrayTypeDef = { type: 'array', items: arrayType };
+        return Object.freeze({ ...rest, type: arrayTypeDef });
+    }
+    return Object.freeze(definition);
+}
+exports.makeParameter = makeParameter;
+// Other parameter helpers below here are obsolete given the above generate parameter makers.
 function makeStringParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_2.Type.string });
 }
@@ -144,6 +154,50 @@ function makeStringFormula(definition) {
     });
 }
 exports.makeStringFormula = makeStringFormula;
+/**
+ * Creates a formula definition.
+ *
+ * You must indicate the kind of value that this formula returns (string, number, boolean, array, or object)
+ * using the `resultType` field.
+ *
+ * Formulas always return basic types, but you may optionally give a type hint using
+ * `codaType` to tell Coda how to interpret a given value. For example, you can return
+ * a string that represents a date, but use `codaType: ValueType.Date` to tell Coda
+ * to interpret as a date in a document.
+ *
+ * If your formula returns an object, you must provide a `schema` property that describes
+ * the structure of the object. See {@link makeObjectSchema} for how to construct an object schema.
+ *
+ * If your formula returns a list (array), you must provide an `items` property that describes
+ * what the elements of the array are. This could be a simple schema like `{type: ValueType.String}`
+ * indicating that the array elements are all just strings, or it could be an object schema
+ * created using {@link makeObjectSchema} if the elements are objects.
+ *
+ * @example
+ * makeFormula({resultType: ValueType.String, name: 'Hello', ...});
+ *
+ * @example
+ * makeFormula({resultType: ValueType.String, codaType: ValueType.Html, name: 'HelloHtml', ...});
+ *
+ * @example
+ * makeFormula({resultType: ValueType.Array, items: {type: ValueType.String}, name: 'HelloStringArray', ...});
+ *
+ * @example
+ * makeFormula({
+ *   resultType: ValueType.Object,
+ *   schema: makeObjectSchema({type: ValueType.Object, properties: {...}}),
+ *   name: 'HelloObject',
+ *   ...
+ * });
+ *
+ * @example
+ * makeFormula({
+ *   resultType: ValueType.Array,
+ *   items: makeObjectSchema({type: ValueType.Object, properties: {...}}),
+ *   name: 'HelloObjectArray',
+ *   ...
+ * });
+ */
 function makeFormula(fullDefinition) {
     let formula;
     const { onError, ...definition } = fullDefinition;
