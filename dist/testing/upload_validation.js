@@ -20,9 +20,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = void 0;
-const api_types_1 = require("../api_types");
 const schema_1 = require("../schema");
 const types_1 = require("../types");
+const api_types_1 = require("../api_types");
 const types_2 = require("../types");
 const types_3 = require("../types");
 const api_types_2 = require("../api_types");
@@ -295,7 +295,7 @@ const commonPackFormulaSchema = {
     parameters: z.array(paramDefValidator),
     varargParameters: z.array(paramDefValidator).optional(),
     isAction: z.boolean().optional(),
-    account: z.nativeEnum(api_types_1.AccountRequirement).optional(),
+    connectionRequirement: z.nativeEnum(api_types_1.ConnectionRequirement).optional(),
     // TODO(jonathan): Remove after removing `network` from formula def.
     network: zodCompleteObject({
         hasSideEffect: z.boolean().optional(),

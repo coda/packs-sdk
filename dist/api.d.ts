@@ -380,7 +380,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
         result: PackFormulaResult;
     }[] | undefined;
     isAction?: boolean | undefined;
-    account?: import("./api_types").AccountRequirement | undefined;
+    connectionRequirement?: import("./api_types").ConnectionRequirement | undefined;
     network?: import("./api_types").Network | undefined;
     cacheTtlSecs?: number | undefined;
     isExperimental?: boolean | undefined;
@@ -400,7 +400,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
         result: PackFormulaResult;
     }[] | undefined;
     isAction?: boolean | undefined;
-    account?: import("./api_types").AccountRequirement | undefined;
+    connectionRequirement?: import("./api_types").ConnectionRequirement | undefined;
     network?: import("./api_types").Network | undefined;
     cacheTtlSecs?: number | undefined;
     isExperimental?: boolean | undefined;

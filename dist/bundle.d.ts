@@ -286,10 +286,10 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 	 */
 	readonly isAction?: boolean;
 	/**
-	 * Does this formula require an account?
+	 * Does this formula require a connection (aka an account)?
 	 */
-	readonly account?: AccountRequirement;
-	/** @deprecated use `isAction` and `account` instead */
+	readonly connectionRequirement?: ConnectionRequirement;
+	/** @deprecated use `isAction` and `connectionRequirement` instead */
 	readonly network?: Network;
 	/**
 	 * How long formulas running with the same values should cache their results for.
@@ -306,18 +306,18 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 	 */
 	readonly isSystem?: boolean;
 }
-export declare enum AccountRequirement {
+export declare enum ConnectionRequirement {
 	None = "none",
 	Optional = "optional",
 	Required = "required"
 }
-/** @deprecated use `AccountRequirement` instead */
+/** @deprecated use `ConnectionRequirement` instead */
 export declare enum NetworkConnection {
 	None = "none",
 	Optional = "optional",
 	Required = "required"
 }
-/** @deprecated use `isAction` and `account` on the formula definition instead. */
+/** @deprecated use `isAction` and `connectionRequirement` on the formula definition instead. */
 export interface Network {
 	readonly hasSideEffect?: boolean;
 	readonly requiresConnection?: boolean;
@@ -798,7 +798,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 		result: PackFormulaResult;
 	}[] | undefined;
 	isAction?: boolean | undefined;
-	account?: AccountRequirement | undefined;
+	connectionRequirement?: ConnectionRequirement | undefined;
 	network?: Network | undefined;
 	cacheTtlSecs?: number | undefined;
 	isExperimental?: boolean | undefined;
@@ -818,7 +818,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
 		result: PackFormulaResult;
 	}[] | undefined;
 	isAction?: boolean | undefined;
-	account?: AccountRequirement | undefined;
+	connectionRequirement?: ConnectionRequirement | undefined;
 	network?: Network | undefined;
 	cacheTtlSecs?: number | undefined;
 	isExperimental?: boolean | undefined;

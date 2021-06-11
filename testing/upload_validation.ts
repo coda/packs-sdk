@@ -1,10 +1,10 @@
 import type {AWSSignature4Authentication} from '../types';
-import {AccountRequirement} from '../api_types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import {AuthenticationType} from '../types';
 import type {BooleanSchema} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
+import {ConnectionRequirement} from '../api_types';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import {DefaultConnectionType} from '../types';
 import type {DynamicSyncTableDef} from '../api';
@@ -354,7 +354,7 @@ const commonPackFormulaSchema = {
   parameters: z.array(paramDefValidator),
   varargParameters: z.array(paramDefValidator).optional(),
   isAction: z.boolean().optional(),
-  account: z.nativeEnum(AccountRequirement).optional(),
+  connectionRequirement: z.nativeEnum(ConnectionRequirement).optional(),
   // TODO(jonathan): Remove after removing `network` from formula def.
   network: zodCompleteObject<Network>({
     hasSideEffect: z.boolean().optional(),

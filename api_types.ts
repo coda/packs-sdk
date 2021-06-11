@@ -141,11 +141,11 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
    */
   readonly isAction?: boolean;
   /**
-   * Does this formula require an account?
+   * Does this formula require a connection (aka an account)?
    */
-  readonly account?: AccountRequirement;
+  readonly connectionRequirement?: ConnectionRequirement;
 
-  /** @deprecated use `isAction` and `account` instead */
+  /** @deprecated use `isAction` and `connectionRequirement` instead */
   readonly network?: Network;
 
   /**
@@ -166,20 +166,20 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
   readonly isSystem?: boolean;
 }
 
-export enum AccountRequirement {
+export enum ConnectionRequirement {
   None = 'none',
   Optional = 'optional',
   Required = 'required',
 }
 
-/** @deprecated use `AccountRequirement` instead */
+/** @deprecated use `ConnectionRequirement` instead */
 export enum NetworkConnection {
   None = 'none',
   Optional = 'optional',
   Required = 'required',
 }
 
-/** @deprecated use `isAction` and `account` on the formula definition instead. */
+/** @deprecated use `isAction` and `connectionRequirement` on the formula definition instead. */
 export interface Network {
   readonly hasSideEffect?: boolean;
   readonly requiresConnection?: boolean;

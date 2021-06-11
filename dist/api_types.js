@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PrecannedDateRange = exports.NetworkConnection = exports.AccountRequirement = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.PrecannedDateRange = exports.NetworkConnection = exports.ConnectionRequirement = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 var Type;
 (function (Type) {
     Type[Type["string"] = 0] = "string";
@@ -39,13 +39,13 @@ exports.imageArray = {
     type: 'array',
     items: Type.image,
 };
-var AccountRequirement;
-(function (AccountRequirement) {
-    AccountRequirement["None"] = "none";
-    AccountRequirement["Optional"] = "optional";
-    AccountRequirement["Required"] = "required";
-})(AccountRequirement = exports.AccountRequirement || (exports.AccountRequirement = {}));
-/** @deprecated use `AccountRequirement` instead */
+var ConnectionRequirement;
+(function (ConnectionRequirement) {
+    ConnectionRequirement["None"] = "none";
+    ConnectionRequirement["Optional"] = "optional";
+    ConnectionRequirement["Required"] = "required";
+})(ConnectionRequirement = exports.ConnectionRequirement || (exports.ConnectionRequirement = {}));
+/** @deprecated use `ConnectionRequirement` instead */
 var NetworkConnection;
 (function (NetworkConnection) {
     NetworkConnection["None"] = "none";
