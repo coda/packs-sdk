@@ -22,15 +22,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = void 0;
 const schema_1 = require("../schema");
 const types_1 = require("../types");
+const api_types_1 = require("../api_types");
 const types_2 = require("../types");
 const types_3 = require("../types");
-const api_types_1 = require("../api_types");
+const api_types_2 = require("../api_types");
 const schema_2 = require("../schema");
 const schema_3 = require("../schema");
 const types_4 = require("../types");
 const types_5 = require("../types");
 const schema_4 = require("../schema");
-const api_types_2 = require("../api_types");
+const api_types_3 = require("../api_types");
 const schema_5 = require("../schema");
 const ensure_1 = require("../helpers/ensure");
 const object_utils_1 = require("../helpers/object_utils");
@@ -273,7 +274,7 @@ const variousSupportedAuthenticationValidators = Object.entries(defaultAuthentic
 const primitiveUnion = z.union([z.number(), z.string(), z.boolean(), z.date()]);
 const paramDefValidator = zodCompleteObject({
     name: z.string(),
-    type: z.union([z.nativeEnum(api_types_2.Type), z.object({ type: zodDiscriminant('array'), items: z.nativeEnum(api_types_2.Type) })]),
+    type: z.union([z.nativeEnum(api_types_3.Type), z.object({ type: zodDiscriminant('array'), items: z.nativeEnum(api_types_3.Type) })]),
     description: z.string(),
     optional: z.boolean().optional(),
     hidden: z.boolean().optional(),
@@ -293,10 +294,13 @@ const commonPackFormulaSchema = {
         .optional(),
     parameters: z.array(paramDefValidator),
     varargParameters: z.array(paramDefValidator).optional(),
+    isAction: z.boolean().optional(),
+    connectionRequirement: z.nativeEnum(api_types_1.ConnectionRequirement).optional(),
+    // TODO(jonathan): Remove after removing `network` from formula def.
     network: zodCompleteObject({
         hasSideEffect: z.boolean().optional(),
         requiresConnection: z.boolean().optional(),
-        connection: z.nativeEnum(api_types_1.NetworkConnection).optional(),
+        connection: z.nativeEnum(api_types_2.NetworkConnection).optional(),
     }).optional(),
     cacheTtlSecs: z.number().min(0).optional(),
     isExperimental: z.boolean().optional(),
@@ -304,7 +308,7 @@ const commonPackFormulaSchema = {
 };
 const numericPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: zodDiscriminant(api_types_2.Type.number),
+    resultType: zodDiscriminant(api_types_3.Type.number),
     schema: zodCompleteObject({
         type: zodDiscriminant(schema_5.ValueType.Number),
         codaType: z.enum([...schema_2.NumberHintValueTypes]).optional(),
@@ -313,7 +317,7 @@ const numericPackFormulaSchema = zodCompleteObject({
 });
 const stringPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: zodDiscriminant(api_types_2.Type.string),
+    resultType: zodDiscriminant(api_types_3.Type.string),
     schema: zodCompleteObject({
         type: zodDiscriminant(schema_5.ValueType.String),
         codaType: z.enum([...schema_4.StringHintValueTypes]).optional(),
@@ -427,7 +431,7 @@ const objectPropertyUnionSchema = z.union([
 ]);
 const objectPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: zodDiscriminant(api_types_2.Type.object),
+    resultType: zodDiscriminant(api_types_3.Type.object),
     // TODO(jonathan): See if we should really allow this. The SDK right now explicitly tolerates an undefined
     // schema for objects, but that doesn't seem like a use case we actually want to support.
     schema: z.union([genericObjectSchema, arrayPropertySchema]).optional(),

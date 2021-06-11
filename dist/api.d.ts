@@ -373,15 +373,14 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     request: RequestHandlerTemplate;
     description: string;
     name: string;
-    examples?: {
-        params: import("./api_types").PackFormulaValue[];
-        result: PackFormulaResult; /**
-         * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
-         * instead, define dynamic sync tables using {@link makeDynamicSyncTable}.
-         */
-    }[] | undefined;
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
+    examples?: {
+        params: import("./api_types").PackFormulaValue[];
+        result: PackFormulaResult;
+    }[] | undefined;
+    isAction?: boolean | undefined;
+    connectionRequirement?: import("./api_types").ConnectionRequirement | undefined;
     network?: import("./api_types").Network | undefined;
     cacheTtlSecs?: number | undefined;
     isExperimental?: boolean | undefined;
@@ -394,15 +393,14 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: EmptyFormulaDef<ParamDefsT>): {
     description: string;
     name: string;
-    examples?: {
-        params: import("./api_types").PackFormulaValue[];
-        result: PackFormulaResult; /**
-         * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
-         * instead, define dynamic sync tables using {@link makeDynamicSyncTable}.
-         */
-    }[] | undefined;
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
+    examples?: {
+        params: import("./api_types").PackFormulaValue[];
+        result: PackFormulaResult;
+    }[] | undefined;
+    isAction?: boolean | undefined;
+    connectionRequirement?: import("./api_types").ConnectionRequirement | undefined;
     network?: import("./api_types").Network | undefined;
     cacheTtlSecs?: number | undefined;
     isExperimental?: boolean | undefined;

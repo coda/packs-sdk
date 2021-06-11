@@ -42,6 +42,7 @@ export type {ExternalPackVersionMetadata} from './compiled_types';
 
 // Formula related interfaces
 export type {ArrayType} from './api_types';
+export {ConnectionRequirement} from './api_types';
 export type {Continuation} from './api';
 export type {DefaultValueType} from './api_types';
 export type {DynamicSyncTableDef} from './api';

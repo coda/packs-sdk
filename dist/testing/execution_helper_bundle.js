@@ -2252,6 +2252,12 @@ var Type;
 function isArrayType(obj) {
   return obj && obj.type === "array" && typeof obj.items === "number";
 }
+var ConnectionRequirement;
+(function(ConnectionRequirement2) {
+  ConnectionRequirement2["None"] = "none";
+  ConnectionRequirement2["Optional"] = "optional";
+  ConnectionRequirement2["Required"] = "required";
+})(ConnectionRequirement || (ConnectionRequirement = {}));
 var NetworkConnection;
 (function(NetworkConnection2) {
   NetworkConnection2["None"] = "none";
