@@ -29,6 +29,7 @@ export const FakePack: PackDefinition = deepFreeze({
 
 export const FakePackVersionMetadata: PackVersionMetadata = deepFreeze({
   ...BaseFakePack,
+  networkDomains: ['example.com'],
   defaultAuthentication: {
     type: AuthenticationType.QueryParamToken,
     paramName: 'authToken',

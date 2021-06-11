@@ -658,22 +658,37 @@ const legacyPackMetadataSchema = validateFormulas(
     rateLimits: z.any().optional(),
     isSystem: z.boolean().optional(),
   }),
-).refine(
-  data => {
-    for (const syncTable of data.syncTables) {
-      if (!syncTable.schema?.identity) {
-        continue;
+)
+  .refine(
+    data => {
+      for (const syncTable of data.syncTables) {
+        if (!syncTable.schema?.identity) {
+          continue;
+        }
+
+        const identityName = syncTable.schema.identity.name;
+        if (syncTable.schema.properties[identityName]) {
+          return false;
+        }
       }
 
-      const identityName = syncTable.schema.identity.name;
-      if (syncTable.schema.properties[identityName]) {
-        return false;
-      }
-    }
-
-    return true;
-  },
-  {
-    message: "Cannot have a sync table property with the same name as the sync table's schema identity.",
-  },
-);
+      return true;
+    },
+    {
+      message: "Cannot have a sync table property with the same name as the sync table's schema identity.",
+    },
+  )
+  .refine(
+    data => {
+      const usesAuthentication =
+        (data.defaultAuthentication && data.defaultAuthentication.type !== AuthenticationType.None) ||
+        data.systemConnectionAuthentication;
+      return !usesAuthentication || data.networkDomains?.length;
+    },
+    {
+      message:
+        'This pack uses authentication but did not declare a network domain. ' +
+        "Specify the domain that your pack makes http requests to using `networkDomains: ['example.com']`",
+      path: ['networkDomains'],
+    },
+  );
