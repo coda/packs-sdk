@@ -256,33 +256,70 @@ export declare type ParamValues<ParamDefsT extends ParamDefs> = {
 } & any[];
 export declare type DefaultValueType<T extends UnionType> = T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
 export interface CommonPackFormulaDef<T extends ParamDefs> {
+	/**
+	 * The name of the formula, used to invoke it.
+	 */
 	readonly name: string;
+	/**
+	 * A brief description of what the formula does.
+	 */
 	readonly description: string;
+	/**
+	 * The parameter inputs to the formula, if any.
+	 */
+	readonly parameters: T;
+	/**
+	 * Variable argument parameters, used if this formula should accept arbitrary
+	 * numbers of inputs.
+	 */
+	readonly varargParameters?: ParamDefs;
+	/**
+	 * Sample inputs and outputs demonstrating usage of this formula.
+	 */
 	readonly examples?: Array<{
 		params: PackFormulaValue[];
 		result: PackFormulaResult;
 	}>;
-	readonly parameters: T;
-	readonly varargParameters?: ParamDefs;
+	/**
+	 * Does this formula take an action (vs retrieve data or make a calculation)?
+	 * Actions are presented as buttons in the Coda UI.
+	 */
+	readonly isAction?: boolean;
+	/**
+	 * Does this formula require an account?
+	 */
+	readonly account?: AccountRequirement;
+	/** @deprecated use `isAction` and `account` instead */
 	readonly network?: Network;
 	/**
-	 * How long formulas running with the same values should cache their results for. By default, 1 second.
+	 * How long formulas running with the same values should cache their results for.
 	 */
 	readonly cacheTtlSecs?: number;
+	/**
+	 * If specified, the formula will not be suggested to users in Coda's formula autocomplete.
+	 * The formula can still be invoked by manually typing its full name.
+	 */
 	readonly isExperimental?: boolean;
 	/**
 	 * Whether this is a formula that will be used by Coda internally and not exposed directly to users.
+	 * Not for use by packs that are not authored by Coda.
 	 */
 	readonly isSystem?: boolean;
 }
+export declare enum AccountRequirement {
+	None = "none",
+	Optional = "optional",
+	Required = "required"
+}
+/** @deprecated use `AccountRequirement` instead */
 export declare enum NetworkConnection {
 	None = "none",
 	Optional = "optional",
 	Required = "required"
 }
+/** @deprecated use `isAction` and `account` on the formula definition instead. */
 export interface Network {
 	readonly hasSideEffect?: boolean;
-	/**  @deprecated use `connection` instead */
 	readonly requiresConnection?: boolean;
 	readonly connection?: NetworkConnection;
 }
@@ -754,15 +791,14 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 	request: RequestHandlerTemplate;
 	description: string;
 	name: string;
-	examples?: {
-		params: PackFormulaValue[];
-		result: PackFormulaResult; /**
-		 * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
-		 * instead, define dynamic sync tables using {@link makeDynamicSyncTable}.
-		 */
-	}[] | undefined;
 	parameters: ParamDefsT;
 	varargParameters?: ParamDefs | undefined;
+	examples?: {
+		params: PackFormulaValue[];
+		result: PackFormulaResult;
+	}[] | undefined;
+	isAction?: boolean | undefined;
+	account?: AccountRequirement | undefined;
 	network?: Network | undefined;
 	cacheTtlSecs?: number | undefined;
 	isExperimental?: boolean | undefined;
@@ -775,15 +811,14 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: EmptyFormulaDef<ParamDefsT>): {
 	description: string;
 	name: string;
-	examples?: {
-		params: PackFormulaValue[];
-		result: PackFormulaResult; /**
-		 * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
-		 * instead, define dynamic sync tables using {@link makeDynamicSyncTable}.
-		 */
-	}[] | undefined;
 	parameters: ParamDefsT;
 	varargParameters?: ParamDefs | undefined;
+	examples?: {
+		params: PackFormulaValue[];
+		result: PackFormulaResult;
+	}[] | undefined;
+	isAction?: boolean | undefined;
+	account?: AccountRequirement | undefined;
 	network?: Network | undefined;
 	cacheTtlSecs?: number | undefined;
 	isExperimental?: boolean | undefined;

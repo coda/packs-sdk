@@ -1,4 +1,5 @@
 import type {AWSSignature4Authentication} from '../types';
+import {AccountRequirement} from '../api_types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import {AuthenticationType} from '../types';
@@ -352,6 +353,9 @@ const commonPackFormulaSchema = {
     .optional(),
   parameters: z.array(paramDefValidator),
   varargParameters: z.array(paramDefValidator).optional(),
+  isAction: z.boolean().optional(),
+  account: z.nativeEnum(AccountRequirement).optional(),
+  // TODO(jonathan): Remove after removing `network` from formula def.
   network: zodCompleteObject<Network>({
     hasSideEffect: z.boolean().optional(),
     requiresConnection: z.boolean().optional(),

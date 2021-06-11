@@ -54,6 +54,7 @@ export type { MetadataContext } from './api';
 export type { MetadataFormulaObjectResultType } from './api';
 export type { MetadataFormulaResultType } from './api';
 export type { MetadataFormula } from './api';
+export { AccountRequirement } from './api_types';
 export type { Network } from './api_types';
 export { NetworkConnection } from './api_types';
 export type { PackFormulaDef } from './api';
