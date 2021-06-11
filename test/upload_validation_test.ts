@@ -897,6 +897,57 @@ describe('Pack metadata Validation', () => {
         },
       ]);
     });
+
+    it('missing networkDomains when specifying authentication', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: undefined,
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message:
+            "This pack uses authentication but did not declare a network domain. Specify the domain that your pack makes http requests to using `networkDomains: ['example.com']`",
+          path: 'networkDomains',
+        },
+      ]);
+    });
+
+    it('empty networkDomains when specifying authentication', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: [],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message:
+            "This pack uses authentication but did not declare a network domain. Specify the domain that your pack makes http requests to using `networkDomains: ['example.com']`",
+          path: 'networkDomains',
+        },
+      ]);
+    });
+
+    it('missing networkDomains when specifying system authentication', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: undefined,
+        systemConnectionAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message:
+            "This pack uses authentication but did not declare a network domain. Specify the domain that your pack makes http requests to using `networkDomains: ['example.com']`",
+          path: 'networkDomains',
+        },
+      ]);
+    });
   });
 
   describe('validateVariousAuthenticationMetadata', () => {
