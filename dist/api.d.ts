@@ -2,8 +2,8 @@ import type { ArraySchema } from './schema';
 import type { ArrayType } from './api_types';
 import type { BooleanSchema } from './schema';
 import type { CommonPackFormulaDef } from './api_types';
+import type { ConnectionRequirement } from './api_types';
 import type { ExecutionContext } from './api_types';
-import { NetworkConnection } from './api_types';
 import type { NumberHintTypes } from './schema';
 import type { NumberSchema } from './schema';
 import type { ObjectSchema } from './schema';
@@ -321,7 +321,7 @@ export declare type MetadataFormulaResultType = string | number | MetadataFormul
 export declare type MetadataFormula = ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any>;
 export declare type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
 export declare function makeMetadataFormula(execute: (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>, options?: {
-    connection?: NetworkConnection;
+    connectionRequirement?: ConnectionRequirement;
 }): MetadataFormula;
 export interface SimpleAutocompleteOption {
     display: string;
@@ -351,15 +351,15 @@ export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT 
  * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
  * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
  * These will eventually be consolidated.)
- * @param connection A {@link NetworkConnection} that will be used for all formulas contained within
+ * @param connectionRequirement A {@link ConnectionRequirement} that will be used for all formulas contained within
  * this sync table (including autocomplete formulas).
  * @param dynamicOptions: A set of options used internally by {@link makeDynamicSyncTable}
  */
-export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, formula: SyncFormulaDef<ParamDefsT>, connection?: NetworkConnection, dynamicOptions?: {
+export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, formula: SyncFormulaDef<ParamDefsT>, connectionRequirement?: ConnectionRequirement, dynamicOptions?: {
     getSchema?: MetadataFormula;
     entityName?: string;
 }): SyncTableDef<K, L, ParamDefsT, SchemaT>;
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, connection, }: {
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, connectionRequirement, }: {
     name: string;
     getName: MetadataFormula;
     getSchema: MetadataFormula;
@@ -367,7 +367,7 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
     getDisplayUrl: MetadataFormula;
     listDynamicUrls?: MetadataFormula;
     entityName?: string;
-    connection?: NetworkConnection;
+    connectionRequirement?: ConnectionRequirement;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any>;
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
     request: RequestHandlerTemplate;
@@ -380,7 +380,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
         result: PackFormulaResult;
     }[] | undefined;
     isAction?: boolean | undefined;
-    connectionRequirement?: import("./api_types").ConnectionRequirement | undefined;
+    connectionRequirement?: ConnectionRequirement | undefined;
     network?: import("./api_types").Network | undefined;
     cacheTtlSecs?: number | undefined;
     isExperimental?: boolean | undefined;
@@ -400,7 +400,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
         result: PackFormulaResult;
     }[] | undefined;
     isAction?: boolean | undefined;
-    connectionRequirement?: import("./api_types").ConnectionRequirement | undefined;
+    connectionRequirement?: ConnectionRequirement | undefined;
     network?: import("./api_types").Network | undefined;
     cacheTtlSecs?: number | undefined;
     isExperimental?: boolean | undefined;

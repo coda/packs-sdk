@@ -1,6 +1,6 @@
 import './test_helper';
 import type {ArrayType} from '../api_types';
-import {NetworkConnection} from '../api_types';
+import {ConnectionRequirement} from '../api_types';
 import {Type} from '../api_types';
 import {ValueType} from '../schema';
 import {makeDynamicSyncTable} from '../api';
@@ -15,7 +15,7 @@ describe('API test', () => {
     it('connection overrides individual connection values', () => {
       const table = makeDynamicSyncTable({
         name: 'Whatever',
-        connection: NetworkConnection.Optional,
+        connectionRequirement: ConnectionRequirement.Optional,
         getName: makeMetadataFormula(async () => 'sup'),
         getSchema: makeMetadataFormula(async () =>
           schema.makeSchema({
@@ -38,12 +38,15 @@ describe('API test', () => {
         },
       });
 
-      assert.equal(NetworkConnection.Optional, table.getDisplayUrl.network?.connection);
-      assert.equal(NetworkConnection.Optional, table.getName.network?.connection);
-      assert.equal(NetworkConnection.Optional, table.listDynamicUrls?.network?.connection);
-      assert.equal(NetworkConnection.Optional, table.getSchema?.network?.connection);
-      assert.equal(NetworkConnection.Optional, table.getter.parameters[0].autocomplete?.network?.connection);
-      assert.equal(NetworkConnection.Optional, table.getter.varargParameters![0]!.autocomplete?.network?.connection);
+      assert.equal(ConnectionRequirement.Optional, table.getDisplayUrl.connectionRequirement);
+      assert.equal(ConnectionRequirement.Optional, table.getName.connectionRequirement);
+      assert.equal(ConnectionRequirement.Optional, table.listDynamicUrls?.connectionRequirement);
+      assert.equal(ConnectionRequirement.Optional, table.getSchema?.connectionRequirement);
+      assert.equal(ConnectionRequirement.Optional, table.getter.parameters[0].autocomplete?.connectionRequirement);
+      assert.equal(
+        ConnectionRequirement.Optional,
+        table.getter.varargParameters![0]!.autocomplete?.connectionRequirement,
+      );
     });
   });
 

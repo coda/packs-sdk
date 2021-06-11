@@ -739,7 +739,7 @@ export declare type MetadataFormula = ObjectPackFormula<[
 ], any>;
 export declare type MetadataFormulaMetadata = Omit<MetadataFormula, "execute">;
 export declare function makeMetadataFormula(execute: (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>, options?: {
-	connection?: NetworkConnection;
+	connectionRequirement?: ConnectionRequirement;
 }): MetadataFormula;
 export interface SimpleAutocompleteOption {
 	display: string;
@@ -769,15 +769,15 @@ export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT 
  * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
  * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
  * These will eventually be consolidated.)
- * @param connection A {@link NetworkConnection} that will be used for all formulas contained within
+ * @param connectionRequirement A {@link ConnectionRequirement} that will be used for all formulas contained within
  * this sync table (including autocomplete formulas).
  * @param dynamicOptions: A set of options used internally by {@link makeDynamicSyncTable}
  */
-export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, formula: SyncFormulaDef<ParamDefsT>, connection?: NetworkConnection, dynamicOptions?: {
+export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, formula: SyncFormulaDef<ParamDefsT>, connectionRequirement?: ConnectionRequirement, dynamicOptions?: {
 	getSchema?: MetadataFormula;
 	entityName?: string;
 }): SyncTableDef<K, L, ParamDefsT, SchemaT>;
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, connection, }: {
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, connectionRequirement, }: {
 	name: string;
 	getName: MetadataFormula;
 	getSchema: MetadataFormula;
@@ -785,7 +785,7 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
 	getDisplayUrl: MetadataFormula;
 	listDynamicUrls?: MetadataFormula;
 	entityName?: string;
-	connection?: NetworkConnection;
+	connectionRequirement?: ConnectionRequirement;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any>;
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
 	request: RequestHandlerTemplate;
@@ -1079,7 +1079,7 @@ declare class PackDefinitionBuilder implements BasicPackDefinition {
 	formulaNamespace?: string;
 	constructor(definition?: Partial<BasicPackDefinition>);
 	addFormula<ParamDefsT extends ParamDefs>(definition: FormulaDefinitionV2<ParamDefsT>): this;
-	addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, formula: SyncFormulaDef<ParamDefsT>, connection?: NetworkConnection, dynamicOptions?: {
+	addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, formula: SyncFormulaDef<ParamDefsT>, connectionRequirement?: ConnectionRequirement, dynamicOptions?: {
 		getSchema?: MetadataFormula;
 		entityName?: string;
 	}): this;
@@ -1091,7 +1091,7 @@ declare class PackDefinitionBuilder implements BasicPackDefinition {
 		getDisplayUrl: MetadataFormula;
 		listDynamicUrls?: MetadataFormula;
 		entityName?: string;
-		connection?: NetworkConnection;
+		connectionRequirement?: ConnectionRequirement;
 	}): this;
 	addColumnFormat(format: Format): this;
 	setUserAuthentication(authentication: Authentication): this;

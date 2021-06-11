@@ -1,9 +1,9 @@
 import type { Authentication } from './types';
 import type { BasicPackDefinition } from './types';
+import type { ConnectionRequirement } from './api_types';
 import type { Format } from './types';
 import type { FormulaDefinitionV2 } from './api';
 import type { MetadataFormula } from './api';
-import type { NetworkConnection } from './api_types';
 import type { ObjectSchema } from './schema';
 import type { ParamDefs } from './api_types';
 import type { SyncFormulaDef } from './api';
@@ -30,7 +30,7 @@ declare class PackDefinitionBuilder implements BasicPackDefinition {
     formulaNamespace?: string;
     constructor(definition?: Partial<BasicPackDefinition>);
     addFormula<ParamDefsT extends ParamDefs>(definition: FormulaDefinitionV2<ParamDefsT>): this;
-    addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, formula: SyncFormulaDef<ParamDefsT>, connection?: NetworkConnection, dynamicOptions?: {
+    addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, formula: SyncFormulaDef<ParamDefsT>, connectionRequirement?: ConnectionRequirement, dynamicOptions?: {
         getSchema?: MetadataFormula;
         entityName?: string;
     }): this;
@@ -42,7 +42,7 @@ declare class PackDefinitionBuilder implements BasicPackDefinition {
         getDisplayUrl: MetadataFormula;
         listDynamicUrls?: MetadataFormula;
         entityName?: string;
-        connection?: NetworkConnection;
+        connectionRequirement?: ConnectionRequirement;
     }): this;
     addColumnFormat(format: Format): this;
     setUserAuthentication(authentication: Authentication): this;
