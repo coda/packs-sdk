@@ -4,6 +4,7 @@ import {NetworkConnection} from '../api_types';
 import {Type} from '../api_types';
 import {ValueType} from '../schema';
 import {makeDynamicSyncTable} from '../api';
+import {makeFormula} from '../api';
 import {makeMetadataFormula} from '../api';
 import {makeParameter} from '../api';
 import {makeStringParameter} from '../api';
@@ -73,6 +74,39 @@ describe('API test', () => {
       const dateArrayParam = makeParameter({arrayType: Type.date, name: 'dateArray', description: ''});
       const dateArrayType: ArrayType<Type.date> = dateArrayParam.type;
       dateArrayType!;
+    });
+
+    it('strong typing inferred from makeParameter with scalar param', () => {
+      makeFormula({
+        resultType: ValueType.String,
+        name: 'Test',
+        description: '',
+        parameters: [makeParameter({type: Type.string, name: 'myParam', description: ''})],
+        execute: ([param]) => param,
+      });
+    });
+
+    it('strong typing inferred from makeParameter with array param', () => {
+      makeFormula({
+        resultType: ValueType.String,
+        name: 'Test',
+        description: '',
+        parameters: [makeParameter({arrayType: Type.string, name: 'myParam', description: ''})],
+        execute: ([param]) => param[0],
+      });
+    });
+
+    it('strong typing inferred from makeParameter with multiple params', () => {
+      makeFormula({
+        resultType: ValueType.String,
+        name: 'Test',
+        description: '',
+        parameters: [
+          makeParameter({arrayType: Type.string, name: 'myParam', description: ''}),
+          makeParameter({type: Type.number, name: 'myParam', description: ''}),
+        ],
+        execute: ([param1, param2]) => param1[param2],
+      });
     });
   });
 });

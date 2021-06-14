@@ -17,7 +17,7 @@ export interface ArrayType<T extends Type> {
     items: T;
 }
 export declare function isArrayType(obj: any): obj is ArrayType<any>;
-declare type UnionType = ArrayType<Type> | Type;
+export declare type UnionType = ArrayType<Type> | Type;
 export declare const stringArray: ArrayType<Type.string>;
 export declare const numberArray: ArrayType<Type.number>;
 export declare const booleanArray: ArrayType<Type.boolean>;
@@ -46,7 +46,7 @@ export interface ParamDef<T extends UnionType> {
     defaultValue?: DefaultValueType<T>;
 }
 export declare type ParamArgs<T extends UnionType> = Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
-export declare type ParamDefs = [ParamDef<any>, ...Array<ParamDef<any>>] | [];
+export declare type ParamDefs = [ParamDef<UnionType>, ...Array<ParamDef<UnionType>>] | [];
 export declare type ParamsList = Array<ParamDef<UnionType>>;
 declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : T extends ArrayType<infer V> ? Array<TypeMap[V]> : never;
 export declare type ParamValues<ParamDefsT extends ParamDefs> = {

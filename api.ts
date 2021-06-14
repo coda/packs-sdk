@@ -21,6 +21,7 @@ import type {StringSchema} from './schema';
 import type {SyncExecutionContext} from './api_types';
 import {Type} from './api_types';
 import type {TypeOf} from './api_types';
+import type {UnionType} from './api_types';
 import {ValueType} from './schema';
 import {booleanArray} from './api_types';
 import {dateArray} from './api_types';
@@ -932,7 +933,7 @@ function maybeRewriteConnectionForFormula<
   if (formula && connection) {
     return {
       ...formula,
-      parameters: formula.parameters.map((param: ParamDef<Type>) => {
+      parameters: formula.parameters.map((param: ParamDef<UnionType>) => {
         return {
           ...param,
           autocomplete: param.autocomplete
@@ -940,7 +941,7 @@ function maybeRewriteConnectionForFormula<
             : undefined,
         };
       }) as T,
-      varargParameters: formula.varargParameters?.map((param: ParamDef<Type>) => {
+      varargParameters: formula.varargParameters?.map((param: ParamDef<UnionType>) => {
         return {
           ...param,
           autocomplete: param.autocomplete

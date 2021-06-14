@@ -245,8 +245,8 @@ export interface ParamDef<T extends UnionType> {
 }
 export declare type ParamArgs<T extends UnionType> = Omit<ParamDef<T>, "description" | "name" | "type">;
 export declare type ParamDefs = [
-	ParamDef<any>,
-	...Array<ParamDef<any>>
+	ParamDef<UnionType>,
+	...Array<ParamDef<UnionType>>
 ] | [
 ];
 export declare type ParamsList = Array<ParamDef<UnionType>>;

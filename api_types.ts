@@ -22,7 +22,7 @@ export function isArrayType(obj: any): obj is ArrayType<any> {
   return obj && obj.type === 'array' && typeof obj.items === 'number';
 }
 
-type UnionType = ArrayType<Type> | Type;
+export type UnionType = ArrayType<Type> | Type;
 
 export const stringArray: ArrayType<Type.string> = {
   type: 'array',
@@ -92,7 +92,7 @@ export interface ParamDef<T extends UnionType> {
 
 export type ParamArgs<T extends UnionType> = Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
 
-export type ParamDefs = [ParamDef<any>, ...Array<ParamDef<any>>] | [];
+export type ParamDefs = [ParamDef<UnionType>, ...Array<ParamDef<UnionType>>] | [];
 
 export type ParamsList = Array<ParamDef<UnionType>>;
 
