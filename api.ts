@@ -827,7 +827,7 @@ export function makeSyncTable<
       execute,
       schema: formulaSchema,
       isSyncFormula: true,
-      connectionRequirement,
+      connectionRequirement: definition.connectionRequirement || connectionRequirement,
       resultType: Type.object as any,
     },
     getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),

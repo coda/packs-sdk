@@ -8,6 +8,7 @@ import {makeFormula} from '../api';
 import {makeMetadataFormula} from '../api';
 import {makeParameter} from '../api';
 import {makeStringParameter} from '../api';
+import {makeSyncTable} from '../api';
 import * as schema from '../schema';
 
 describe('API test', () => {
@@ -47,6 +48,29 @@ describe('API test', () => {
         ConnectionRequirement.Optional,
         table.getter.varargParameters![0]!.autocomplete?.connectionRequirement,
       );
+    });
+
+    it('connectionRequirement on getter still carries through', () => {
+      const table = makeSyncTable(
+        'SomeSync',
+        schema.makeObjectSchema({
+          type: ValueType.Object,
+          id: 'id',
+          primary: 'id',
+          identity: {name: 'Identity'},
+          properties: {id: {type: ValueType.String}},
+        }),
+        {
+          name: 'Whatever',
+          connectionRequirement: ConnectionRequirement.Optional,
+          description: 'Whatever',
+          parameters: [],
+          async execute() {
+            return {result: []};
+          },
+        },
+      );
+      assert.equal(ConnectionRequirement.Optional, table.getter.connectionRequirement);
     });
   });
 

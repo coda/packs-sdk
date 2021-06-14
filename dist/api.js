@@ -431,7 +431,7 @@ function makeSyncTable(name, schema, formula, connectionRequirement, dynamicOpti
             execute,
             schema: formulaSchema,
             isSyncFormula: true,
-            connectionRequirement,
+            connectionRequirement: definition.connectionRequirement || connectionRequirement,
             resultType: api_types_1.Type.object,
         },
         getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
