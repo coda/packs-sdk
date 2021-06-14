@@ -1010,7 +1010,12 @@ export interface RateLimits {
 	overall?: RateLimit;
 	perConnection?: RateLimit;
 }
-export declare type BasicPackDefinition = Omit<PackVersionDefinition, "version">;
+export interface BasicPackDefinition extends Omit<PackVersionDefinition, "version" | "formats"> {
+	formats?: BasicFormat[];
+}
+export interface BasicFormat extends Omit<Format, "matchers"> {
+	matchers?: string[];
+}
 /**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
@@ -1071,7 +1076,7 @@ export interface PackDefinition extends PackVersionDefinition {
 export declare function newPack(definition?: Partial<BasicPackDefinition>): PackDefinitionBuilder;
 declare class PackDefinitionBuilder implements BasicPackDefinition {
 	formulas: TypedStandardFormula[];
-	formats: Format[];
+	formats: BasicFormat[];
 	syncTables: SyncTable[];
 	networkDomains: string[];
 	defaultAuthentication?: Authentication;
@@ -1093,7 +1098,7 @@ declare class PackDefinitionBuilder implements BasicPackDefinition {
 		entityName?: string;
 		connection?: NetworkConnection;
 	}): this;
-	addColumnFormat(format: Format): this;
+	addColumnFormat(format: BasicFormat): this;
 	setUserAuthentication(authentication: Authentication): this;
 	setSystemAuthentication(systemAuthentication: SystemAuthentication): this;
 	addNetworkDomain(...domain: string[]): this;

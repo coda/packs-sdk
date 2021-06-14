@@ -261,7 +261,13 @@ export interface RateLimits {
   perConnection?: RateLimit;
 }
 
-export type BasicPackDefinition = Omit<PackVersionDefinition, 'version'>;
+export interface BasicPackDefinition extends Omit<PackVersionDefinition, 'version'| 'formats'> {
+  formats?: BasicFormat[];
+}
+
+export interface BasicFormat extends Omit<Format, 'matchers'> {
+  matchers?: string[];
+}
 
 /**
  * The definition of the contents of a Pack at a specific version. This is the

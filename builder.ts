@@ -1,6 +1,6 @@
 import type {Authentication} from './types';
+import type {BasicFormat} from './types';
 import type {BasicPackDefinition} from './types';
-import type {Format} from './types';
 import type {FormulaDefinitionV2} from './api';
 import type {MetadataFormula} from './api';
 import type {NetworkConnection} from './api_types';
@@ -29,7 +29,7 @@ export function newPack(definition?: Partial<BasicPackDefinition>): PackDefiniti
 
 class PackDefinitionBuilder implements BasicPackDefinition {
   formulas: TypedStandardFormula[];
-  formats: Format[];
+  formats: BasicFormat[];
   syncTables: SyncTable[];
   networkDomains: string[];
 
@@ -93,7 +93,7 @@ class PackDefinitionBuilder implements BasicPackDefinition {
     return this;
   }
 
-  addColumnFormat(format: Format): this {
+  addColumnFormat(format: BasicFormat): this {
     this.formats.push(format);
     return this;
   }
