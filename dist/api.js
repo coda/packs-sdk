@@ -250,8 +250,9 @@ function makeFormula(fullDefinition) {
                 resultType: api_types_2.Type.object,
                 schema: finalSchema,
             };
+            const wrappedExecute = objectFormula.execute;
             objectFormula.execute = async function (params, context) {
-                const result = await objectFormula.execute(params, context);
+                const result = await wrappedExecute(params, context);
                 return handler_templates_3.transformBody(result, finalSchema);
             };
             formula = objectFormula;

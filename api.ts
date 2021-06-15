@@ -537,8 +537,9 @@ export function makeFormula<ParamDefsT extends ParamDefs>(
         resultType: Type.object,
         schema: finalSchema,
       };
+      const wrappedExecute = objectFormula.execute;
       objectFormula.execute = async function (params: ParamValues<ParamDefsT>, context: ExecutionContext) {
-        const result = await objectFormula.execute(params, context);
+        const result = await wrappedExecute(params, context);
         return transformBody(result, finalSchema);
       };
       formula = objectFormula;
