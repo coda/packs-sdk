@@ -16,6 +16,7 @@ const schema_2 = require("./schema");
 const schema_3 = require("./schema");
 const api_types_7 = require("./api_types");
 const api_types_8 = require("./api_types");
+const handler_templates_3 = require("./handler_templates");
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
  * If an error is encountered in a formula and you want to describe the error
@@ -243,10 +244,15 @@ function makeFormula(fullDefinition) {
         }
         case schema_1.ValueType.Object: {
             const { resultType: unused, schema, ...rest } = definition;
+            const finalSchema = schema_3.normalizeSchema(schema);
             const objectFormula = {
                 ...rest,
                 resultType: api_types_2.Type.object,
-                schema: schema_3.normalizeSchema(schema),
+                schema: finalSchema,
+            };
+            objectFormula.execute = async function (params, context) {
+                const result = await objectFormula.execute(params, context);
+                return handler_templates_3.transformBody(result, finalSchema);
             };
             formula = objectFormula;
             break;

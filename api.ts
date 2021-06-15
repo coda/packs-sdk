@@ -35,6 +35,7 @@ import {makeObjectSchema} from './schema';
 import {normalizeSchema} from './schema';
 import {numberArray} from './api_types';
 import {stringArray} from './api_types';
+import {transformBody} from './handler_templates';
 
 export {ExecutionContext};
 export {FetchRequest} from './api_types';
@@ -530,10 +531,15 @@ export function makeFormula<ParamDefsT extends ParamDefs>(
     }
     case ValueType.Object: {
       const {resultType: unused, schema, ...rest} = definition;
+      const finalSchema = normalizeSchema(schema);
       const objectFormula: ObjectPackFormula<ParamDefsT, Schema> = {
         ...rest,
         resultType: Type.object,
-        schema: normalizeSchema(schema),
+        schema: finalSchema,
+      };
+      objectFormula.execute = async function (params: ParamValues<ParamDefsT>, context: ExecutionContext) {
+        const result = await objectFormula.execute(params, context);
+        return transformBody(result, finalSchema);
       };
       formula = objectFormula;
       break;
