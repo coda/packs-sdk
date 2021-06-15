@@ -1,9 +1,9 @@
 import type {Authentication} from './types';
 import type {BasicPackDefinition} from './types';
+import type {ConnectionRequirement} from './api_types';
 import type {Format} from './types';
 import type {FormulaDefinitionV2} from './api';
 import type {MetadataFormula} from './api';
-import type {NetworkConnection} from './api_types';
 import type {ObjectSchema} from './schema';
 import type {ParamDefs} from './api_types';
 import type {SyncFormulaDef} from './api';
@@ -67,13 +67,13 @@ class PackDefinitionBuilder implements BasicPackDefinition {
     name: string,
     schema: SchemaT,
     formula: SyncFormulaDef<ParamDefsT>,
-    connection?: NetworkConnection,
+    connectionRequirement?: ConnectionRequirement,
     dynamicOptions: {
       getSchema?: MetadataFormula;
       entityName?: string;
     } = {},
   ): this {
-    const syncTable = makeSyncTable(name, schema, formula, connection, dynamicOptions);
+    const syncTable = makeSyncTable(name, schema, formula, connectionRequirement, dynamicOptions);
     this.syncTables.push(syncTable);
     return this;
   }
@@ -86,7 +86,7 @@ class PackDefinitionBuilder implements BasicPackDefinition {
     getDisplayUrl: MetadataFormula;
     listDynamicUrls?: MetadataFormula;
     entityName?: string;
-    connection?: NetworkConnection;
+    connectionRequirement?: ConnectionRequirement;
   }): this {
     const dynamicSyncTable = makeDynamicSyncTable(definition);
     this.syncTables.push(dynamicSyncTable);

@@ -1,7 +1,7 @@
 import {FakePack} from '../test_utils';
-import type { PackDefinition } from '../../types';
+import type {PackDefinition} from '../../types';
 import {ValueType} from '../../schema';
-import { createFakePack } from '../test_utils';
+import {createFakePack} from '../test_utils';
 import {makeNumericFormula} from '../../api';
 import {makeNumericParameter} from '../../api';
 import {makeObjectSchema} from '../../schema';
@@ -80,7 +80,6 @@ export const manifest: PackDefinition = createFakePack({
             return {} as any;
         }
       },
-      network: {hasSideEffect: false},
       parameters: [makeStringParameter('teacher', 'teacher name')],
       examples: [],
     }),

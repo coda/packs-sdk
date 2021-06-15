@@ -1,9 +1,8 @@
 import {testHelper} from './test_helper';
 import type {ArraySchema} from '../schema';
 import {AuthenticationType} from '../types';
+import {ConnectionRequirement} from '../api_types';
 import {DefaultConnectionType} from '../types';
-import type {Network} from '../api_types';
-import {NetworkConnection} from '../api_types';
 import type {ObjectSchemaDefinition} from '../schema';
 import type {PackFormulaMetadata} from '../api';
 import type {PackMetadataValidationError} from '../testing/upload_validation';
@@ -234,26 +233,23 @@ describe('Pack metadata Validation', () => {
       await validateJson(metadata);
     });
 
-    it('valid formula with network', async () => {
-      const networks: Network[] = [
+    it('valid formula with network fields', async () => {
+      const networkSettings: Array<{isAction?: boolean; connectionRequirement?: ConnectionRequirement}> = [
         {},
-        {requiresConnection: true},
-        {requiresConnection: false},
-        {hasSideEffect: true},
-        {hasSideEffect: false},
-        {hasSideEffect: true, requiresConnection: false},
-        {connection: NetworkConnection.None},
-        {connection: NetworkConnection.Optional},
-        {connection: NetworkConnection.Required},
-        {hasSideEffect: true, connection: NetworkConnection.Optional},
+        {isAction: true},
+        {isAction: false},
+        {connectionRequirement: ConnectionRequirement.None},
+        {connectionRequirement: ConnectionRequirement.Optional},
+        {connectionRequirement: ConnectionRequirement.Required},
       ];
-      for (const network of networks) {
+      for (const {isAction, connectionRequirement} of networkSettings) {
         const formula = makeStringFormula({
           name: 'MyFormula',
           description: 'My description',
           examples: [],
           parameters: [makeStringParameter('myParam', 'param description')],
-          network,
+          isAction,
+          connectionRequirement,
           execute: () => '',
         });
         const metadata = createFakePackVersionMetadata({

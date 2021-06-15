@@ -2,8 +2,8 @@ import type {ArraySchema} from './schema';
 import type {ArrayType} from './api_types';
 import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
+import {ConnectionRequirement} from './api_types';
 import type {ExecutionContext} from './api_types';
-import {NetworkConnection} from './api_types';
 import type {NumberHintTypes} from './schema';
 import type {NumberSchema} from './schema';
 import type {ObjectSchema} from './schema';
@@ -624,7 +624,7 @@ export function makeMetadataFormula(
     search: string,
     formulaContext?: MetadataContext,
   ) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>,
-  options?: {connection?: NetworkConnection},
+  options?: {connectionRequirement?: ConnectionRequirement},
 ): MetadataFormula {
   return makeObjectFormula({
     name: 'getMetadata',
@@ -645,11 +645,7 @@ export function makeMetadataFormula(
       makeStringParameter('formulaContext', 'Serialized JSON for metadata', {optional: true}),
     ],
     examples: [],
-    network: {
-      hasSideEffect: false,
-      connection: options?.connection || NetworkConnection.Required,
-      requiresConnection: true,
-    },
+    connectionRequirement: options?.connectionRequirement || ConnectionRequirement.Required,
   });
 }
 
@@ -774,7 +770,7 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
  * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
  * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
  * These will eventually be consolidated.)
- * @param connection A {@link NetworkConnection} that will be used for all formulas contained within
+ * @param connectionRequirement A {@link ConnectionRequirement} that will be used for all formulas contained within
  * this sync table (including autocomplete formulas).
  * @param dynamicOptions: A set of options used internally by {@link makeDynamicSyncTable}
  */
@@ -787,14 +783,14 @@ export function makeSyncTable<
   name: string,
   schema: SchemaT,
   formula: SyncFormulaDef<ParamDefsT>,
-  connection?: NetworkConnection,
+  connectionRequirement?: ConnectionRequirement,
   dynamicOptions: {
     getSchema?: MetadataFormula;
     entityName?: string;
   } = {},
 ): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {getSchema, entityName} = dynamicOptions;
-  const {execute: wrappedExecute, ...definition} = maybeRewriteConnectionForFormula(formula, connection);
+  const {execute: wrappedExecute, ...definition} = maybeRewriteConnectionForFormula(formula, connectionRequirement);
   const formulaSchema = getSchema
     ? undefined
     : normalizeSchema<ArraySchema<Schema>>({type: ValueType.Array, items: schema});
@@ -827,16 +823,10 @@ export function makeSyncTable<
       execute,
       schema: formulaSchema,
       isSyncFormula: true,
-      network:
-        definition.network && connection
-          ? {
-              ...definition.network,
-              connection,
-            }
-          : definition.network,
+      connectionRequirement: definition.connectionRequirement || connectionRequirement,
       resultType: Type.object as any,
     },
-    getSchema: maybeRewriteConnectionForFormula(getSchema, connection),
+    getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
     entityName,
   };
 }
@@ -849,7 +839,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   formula,
   listDynamicUrls,
   entityName,
-  connection,
+  connectionRequirement,
 }: {
   name: string;
   getName: MetadataFormula;
@@ -858,7 +848,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   getDisplayUrl: MetadataFormula;
   listDynamicUrls?: MetadataFormula;
   entityName?: string;
-  connection?: NetworkConnection;
+  connectionRequirement?: ConnectionRequirement;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any> {
   const fakeSchema = makeObjectSchema({
     // This schema is useless... just creating a stub here but the client will use
@@ -871,13 +861,13 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
       id: {type: ValueType.String},
     },
   });
-  const table = makeSyncTable(name, fakeSchema, formula, connection, {getSchema, entityName});
+  const table = makeSyncTable(name, fakeSchema, formula, connectionRequirement, {getSchema, entityName});
   return {
     ...table,
     isDynamic: true,
-    getDisplayUrl: maybeRewriteConnectionForFormula(getDisplayUrl, connection),
-    listDynamicUrls: maybeRewriteConnectionForFormula(listDynamicUrls, connection),
-    getName: maybeRewriteConnectionForFormula(getName, connection),
+    getDisplayUrl: maybeRewriteConnectionForFormula(getDisplayUrl, connectionRequirement),
+    listDynamicUrls: maybeRewriteConnectionForFormula(listDynamicUrls, connectionRequirement),
+    getName: maybeRewriteConnectionForFormula(getName, connectionRequirement),
   } as DynamicSyncTableDef<K, L, ParamDefsT, any>;
 }
 
@@ -929,15 +919,15 @@ function maybeRewriteConnectionForFormula<
   T extends ParamDefs,
   U extends CommonPackFormulaDef<T>,
   V extends U | undefined,
->(formula: V, connection: NetworkConnection | undefined): V {
-  if (formula && connection) {
+>(formula: V, connectionRequirement: ConnectionRequirement | undefined): V {
+  if (formula && connectionRequirement) {
     return {
       ...formula,
       parameters: formula.parameters.map((param: ParamDef<UnionType>) => {
         return {
           ...param,
           autocomplete: param.autocomplete
-            ? maybeRewriteConnectionForFormula(param.autocomplete, connection)
+            ? maybeRewriteConnectionForFormula(param.autocomplete, connectionRequirement)
             : undefined,
         };
       }) as T,
@@ -945,14 +935,11 @@ function maybeRewriteConnectionForFormula<
         return {
           ...param,
           autocomplete: param.autocomplete
-            ? maybeRewriteConnectionForFormula(param.autocomplete, connection)
+            ? maybeRewriteConnectionForFormula(param.autocomplete, connectionRequirement)
             : undefined,
         };
       }) as T,
-      network: {
-        ...formula.network,
-        connection,
-      },
+      connectionRequirement,
     };
   }
   return formula;

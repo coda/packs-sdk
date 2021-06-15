@@ -289,11 +289,7 @@ function makeMetadataFormula(execute, options) {
             makeStringParameter('formulaContext', 'Serialized JSON for metadata', { optional: true }),
         ],
         examples: [],
-        network: {
-            hasSideEffect: false,
-            connection: (options === null || options === void 0 ? void 0 : options.connection) || api_types_1.NetworkConnection.Required,
-            requiresConnection: true,
-        },
+        connectionRequirement: (options === null || options === void 0 ? void 0 : options.connectionRequirement) || api_types_1.ConnectionRequirement.Required,
     });
 }
 exports.makeMetadataFormula = makeMetadataFormula;
@@ -397,13 +393,13 @@ exports.makeObjectFormula = makeObjectFormula;
  * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
  * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
  * These will eventually be consolidated.)
- * @param connection A {@link NetworkConnection} that will be used for all formulas contained within
+ * @param connectionRequirement A {@link ConnectionRequirement} that will be used for all formulas contained within
  * this sync table (including autocomplete formulas).
  * @param dynamicOptions: A set of options used internally by {@link makeDynamicSyncTable}
  */
-function makeSyncTable(name, schema, formula, connection, dynamicOptions = {}) {
+function makeSyncTable(name, schema, formula, connectionRequirement, dynamicOptions = {}) {
     const { getSchema, entityName } = dynamicOptions;
-    const { execute: wrappedExecute, ...definition } = maybeRewriteConnectionForFormula(formula, connection);
+    const { execute: wrappedExecute, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
     const formulaSchema = getSchema
         ? undefined
         : schema_3.normalizeSchema({ type: schema_1.ValueType.Array, items: schema });
@@ -432,20 +428,15 @@ function makeSyncTable(name, schema, formula, connection, dynamicOptions = {}) {
             execute,
             schema: formulaSchema,
             isSyncFormula: true,
-            network: definition.network && connection
-                ? {
-                    ...definition.network,
-                    connection,
-                }
-                : definition.network,
+            connectionRequirement: definition.connectionRequirement || connectionRequirement,
             resultType: api_types_2.Type.object,
         },
-        getSchema: maybeRewriteConnectionForFormula(getSchema, connection),
+        getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
         entityName,
     };
 }
 exports.makeSyncTable = makeSyncTable;
-function makeDynamicSyncTable({ name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, connection, }) {
+function makeDynamicSyncTable({ name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, connectionRequirement, }) {
     const fakeSchema = schema_2.makeObjectSchema({
         // This schema is useless... just creating a stub here but the client will use
         // the dynamic one.
@@ -457,13 +448,13 @@ function makeDynamicSyncTable({ name, getName, getSchema, getDisplayUrl, formula
             id: { type: schema_1.ValueType.String },
         },
     });
-    const table = makeSyncTable(name, fakeSchema, formula, connection, { getSchema, entityName });
+    const table = makeSyncTable(name, fakeSchema, formula, connectionRequirement, { getSchema, entityName });
     return {
         ...table,
         isDynamic: true,
-        getDisplayUrl: maybeRewriteConnectionForFormula(getDisplayUrl, connection),
-        listDynamicUrls: maybeRewriteConnectionForFormula(listDynamicUrls, connection),
-        getName: maybeRewriteConnectionForFormula(getName, connection),
+        getDisplayUrl: maybeRewriteConnectionForFormula(getDisplayUrl, connectionRequirement),
+        listDynamicUrls: maybeRewriteConnectionForFormula(listDynamicUrls, connectionRequirement),
+        getName: maybeRewriteConnectionForFormula(getName, connectionRequirement),
     };
 }
 exports.makeDynamicSyncTable = makeDynamicSyncTable;
@@ -504,16 +495,16 @@ function makeEmptyFormula(definition) {
     });
 }
 exports.makeEmptyFormula = makeEmptyFormula;
-function maybeRewriteConnectionForFormula(formula, connection) {
+function maybeRewriteConnectionForFormula(formula, connectionRequirement) {
     var _a;
-    if (formula && connection) {
+    if (formula && connectionRequirement) {
         return {
             ...formula,
             parameters: formula.parameters.map((param) => {
                 return {
                     ...param,
                     autocomplete: param.autocomplete
-                        ? maybeRewriteConnectionForFormula(param.autocomplete, connection)
+                        ? maybeRewriteConnectionForFormula(param.autocomplete, connectionRequirement)
                         : undefined,
                 };
             }),
@@ -521,14 +512,11 @@ function maybeRewriteConnectionForFormula(formula, connection) {
                 return {
                     ...param,
                     autocomplete: param.autocomplete
-                        ? maybeRewriteConnectionForFormula(param.autocomplete, connection)
+                        ? maybeRewriteConnectionForFormula(param.autocomplete, connectionRequirement)
                         : undefined,
                 };
             }),
-            network: {
-                ...formula.network,
-                connection,
-            },
+            connectionRequirement,
         };
     }
     return formula;
