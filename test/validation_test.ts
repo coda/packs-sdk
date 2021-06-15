@@ -391,7 +391,6 @@ describe('validation in sync tables', () => {
               };
           }
         },
-        network: {hasSideEffect: false},
         parameters: [makeBooleanParameter('malformed', 'whether or not to return a malformed response')],
         examples: [],
       }),

@@ -2,7 +2,7 @@ import type { ArraySchema } from './schema';
 import type { ArrayType } from './api_types';
 import type { BooleanSchema } from './schema';
 import type { CommonPackFormulaDef } from './api_types';
-import type { ConnectionRequirement } from './api_types';
+import { ConnectionRequirement } from './api_types';
 import type { ExecutionContext } from './api_types';
 import type { NumberHintTypes } from './schema';
 import type { NumberSchema } from './schema';

@@ -2,7 +2,7 @@ import type {ArraySchema} from './schema';
 import type {ArrayType} from './api_types';
 import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
-import type {ConnectionRequirement} from './api_types';
+import {ConnectionRequirement} from './api_types';
 import type {ExecutionContext} from './api_types';
 import type {NumberHintTypes} from './schema';
 import type {NumberSchema} from './schema';
@@ -645,11 +645,7 @@ export function makeMetadataFormula(
       makeStringParameter('formulaContext', 'Serialized JSON for metadata', {optional: true}),
     ],
     examples: [],
-    connectionRequirement: options?.connectionRequirement,
-    network: {
-      hasSideEffect: false,
-      requiresConnection: true,
-    },
+    connectionRequirement: options?.connectionRequirement || ConnectionRequirement.Required,
   });
 }
 
