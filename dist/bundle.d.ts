@@ -970,7 +970,7 @@ export interface Format {
 	formulaName: string;
 	hasNoConnection?: boolean;
 	instructions?: string;
-	matchers?: RegExp[];
+	matchers?: Array<RegExp | string>;
 	placeholder?: string;
 }
 export declare enum FeatureSet {
