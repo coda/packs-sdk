@@ -148,7 +148,7 @@ export interface Format {
     formulaName: string;
     hasNoConnection?: boolean;
     instructions?: string;
-    matchers?: RegExp[];
+    matchers?: Array<RegExp | string>;
     placeholder?: string;
 }
 export declare enum FeatureSet {
@@ -188,12 +188,7 @@ export interface RateLimits {
     overall?: RateLimit;
     perConnection?: RateLimit;
 }
-export interface BasicPackDefinition extends Omit<PackVersionDefinition, 'version' | 'formats'> {
-    formats?: BasicFormat[];
-}
-export interface BasicFormat extends Omit<Format, 'matchers'> {
-    matchers?: string[];
-}
+export declare type BasicPackDefinition = Omit<PackVersionDefinition, 'version'>;
 /**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.

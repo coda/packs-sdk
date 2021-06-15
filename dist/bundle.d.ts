@@ -970,7 +970,7 @@ export interface Format {
 	formulaName: string;
 	hasNoConnection?: boolean;
 	instructions?: string;
-	matchers?: RegExp[];
+	matchers?: Array<RegExp | string>;
 	placeholder?: string;
 }
 export declare enum FeatureSet {
@@ -1010,12 +1010,7 @@ export interface RateLimits {
 	overall?: RateLimit;
 	perConnection?: RateLimit;
 }
-export interface BasicPackDefinition extends Omit<PackVersionDefinition, "version" | "formats"> {
-	formats?: BasicFormat[];
-}
-export interface BasicFormat extends Omit<Format, "matchers"> {
-	matchers?: string[];
-}
+export declare type BasicPackDefinition = Omit<PackVersionDefinition, "version">;
 /**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
@@ -1076,7 +1071,7 @@ export interface PackDefinition extends PackVersionDefinition {
 export declare function newPack(definition?: Partial<BasicPackDefinition>): PackDefinitionBuilder;
 declare class PackDefinitionBuilder implements BasicPackDefinition {
 	formulas: TypedStandardFormula[];
-	formats: BasicFormat[];
+	formats: Format[];
 	syncTables: SyncTable[];
 	networkDomains: string[];
 	defaultAuthentication?: Authentication;
@@ -1098,7 +1093,7 @@ declare class PackDefinitionBuilder implements BasicPackDefinition {
 		entityName?: string;
 		connection?: NetworkConnection;
 	}): this;
-	addColumnFormat(format: BasicFormat): this;
+	addColumnFormat(format: Format): this;
 	setUserAuthentication(authentication: Authentication): this;
 	setSystemAuthentication(systemAuthentication: SystemAuthentication): this;
 	addNetworkDomain(...domain: string[]): this;
