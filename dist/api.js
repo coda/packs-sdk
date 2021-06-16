@@ -237,7 +237,7 @@ function makeFormula(fullDefinition) {
             const arrayFormula = {
                 ...rest,
                 resultType: api_types_2.Type.object,
-                schema: schema_3.normalizeSchema(items),
+                schema: schema_3.normalizeSchema({ type: schema_1.ValueType.Array, items }),
             };
             formula = arrayFormula;
             break;
@@ -250,16 +250,18 @@ function makeFormula(fullDefinition) {
                 resultType: api_types_2.Type.object,
                 schema: finalSchema,
             };
-            const wrappedExecute = objectFormula.execute;
-            objectFormula.execute = async function (params, context) {
-                const result = await wrappedExecute(params, context);
-                return handler_templates_3.transformBody(result, finalSchema);
-            };
             formula = objectFormula;
             break;
         }
         default:
             return ensure_2.ensureUnreachable(definition);
+    }
+    if ([schema_1.ValueType.Object, schema_1.ValueType.Array].includes(definition.resultType)) {
+        const wrappedExecute = formula.execute;
+        formula.execute = async function (params, context) {
+            const result = await wrappedExecute(params, context);
+            return handler_templates_3.transformBody(result, ensure_1.ensureExists(formula.schema));
+        };
     }
     if (onError) {
         const wrappedExecute = formula.execute;

@@ -74,6 +74,46 @@ describe('API test', () => {
     });
   });
 
+  describe('makeFormula', () => {
+    it('object formula', async () => {
+      const formula = makeFormula({
+        resultType: ValueType.Object,
+        name: 'Test',
+        description: '',
+        parameters: [],
+        schema: schema.makeObjectSchema({
+          type: ValueType.Object,
+          primary: 'foo',
+          properties: {foo: {type: ValueType.String}},
+        }),
+        execute: () => {
+          return {foo: 'blah'};
+        },
+      });
+      const result = await formula.execute([] as any, {} as any);
+      assert.deepEqual(result, {Foo: 'blah'}); // Gets normalized
+    });
+
+    it('array formula', async () => {
+      const formula = makeFormula({
+        resultType: ValueType.Array,
+        name: 'Test',
+        description: '',
+        parameters: [],
+        items: schema.makeObjectSchema({
+          type: ValueType.Object,
+          primary: 'foo',
+          properties: {foo: {type: ValueType.String}},
+        }),
+        execute: () => {
+          return [{foo: 'blah'}];
+        },
+      });
+      const result = await formula.execute([] as any, {} as any);
+      assert.deepEqual(result, [{Foo: 'blah'}]); // Gets normalized
+    });
+  });
+
   // These tests don't actually run anything, they're just examples of TypeScript usage that we
   // want to ensure continue to compile properly.
   describe('strong typing', () => {
