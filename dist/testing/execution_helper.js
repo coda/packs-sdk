@@ -5,7 +5,7 @@ const coercion_1 = require("./coercion");
 const ensure_1 = require("../helpers/ensure");
 const validation_1 = require("./validation");
 const validation_2 = require("./validation");
-async function executeSyncFormulaWithoutValidation(formula, params, context, maxIterations = 3) {
+async function executeSyncFormulaWithoutValidation(formula, params, context, maxIterations = 100) {
     const result = [];
     let iterations = 1;
     do {

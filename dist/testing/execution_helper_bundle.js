@@ -2787,7 +2787,7 @@ function validateArray(result, schema, context) {
 }
 
 // testing/execution_helper.ts
-async function executeSyncFormulaWithoutValidation(formula, params, context, maxIterations = 3) {
+async function executeSyncFormulaWithoutValidation(formula, params, context, maxIterations = 100) {
   const result = [];
   let iterations = 1;
   do {
