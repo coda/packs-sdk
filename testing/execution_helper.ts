@@ -24,7 +24,7 @@ export async function executeSyncFormulaWithoutValidation(
   formula: GenericSyncFormula,
   params: ParamValues<ParamDefs>,
   context: SyncExecutionContext,
-  maxIterations: number = 3,
+  maxIterations: number = 100,
 ) {
   const result = [];
   let iterations = 1;
