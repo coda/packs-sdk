@@ -11,6 +11,7 @@ import type {PackFormulaResult} from './api_types';
 import type {ParamArgs} from './api_types';
 import type {ParamDef} from './api_types';
 import type {ParamDefs} from './api_types';
+import type {ParamType} from './api_types';
 import type {ParamValues} from './api_types';
 import type {RequestHandlerTemplate} from './handler_templates';
 import type {ResponseHandlerTemplate} from './handler_templates';
@@ -182,11 +183,11 @@ export function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDy
  * @example
  * makeParameter({arrayType: Type.String, name: 'myArrayParam', description: 'My description'});
  */
-export function makeParameter<T extends Type>(definition: ParamDef<T>): ParamDef<T>;
-export function makeParameter<T extends Type>(
+export function makeParameter<T extends ParamType>(definition: ParamDef<T>): ParamDef<T>;
+export function makeParameter<T extends ParamType>(
   definition: Omit<ParamDef<ArrayType<T>>, 'type'> & {arrayType: T},
 ): ParamDef<ArrayType<T>>;
-export function makeParameter<T extends Type>(
+export function makeParameter<T extends ParamType>(
   definition: ParamDef<T> | (Omit<ParamDef<ArrayType<T>>, 'type'> & {arrayType: T}),
 ): ParamDef<T> | ParamDef<ArrayType<T>> {
   if ('arrayType' in definition) {
