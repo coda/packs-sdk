@@ -35,6 +35,7 @@ import {makeObjectSchema} from './schema';
 import {normalizeSchema} from './schema';
 import {numberArray} from './api_types';
 import {stringArray} from './api_types';
+import {transformBody} from './handler_templates';
 
 export {ExecutionContext};
 export {FetchRequest} from './api_types';
@@ -523,7 +524,7 @@ export function makeFormula<ParamDefsT extends ParamDefs>(
       const arrayFormula: ObjectPackFormula<ParamDefsT, Schema> = {
         ...rest,
         resultType: Type.object,
-        schema: normalizeSchema(items),
+        schema: normalizeSchema({type: ValueType.Array, items}),
       };
       formula = arrayFormula;
       break;
@@ -540,6 +541,14 @@ export function makeFormula<ParamDefsT extends ParamDefs>(
     }
     default:
       return ensureUnreachable(definition);
+  }
+
+  if ([ValueType.Object, ValueType.Array].includes(definition.resultType)) {
+    const wrappedExecute = formula.execute;
+    formula.execute = async function (params: ParamValues<ParamDefsT>, context: ExecutionContext) {
+      const result = await wrappedExecute(params, context);
+      return transformBody(result, ensureExists(formula.schema));
+    };
   }
 
   if (onError) {

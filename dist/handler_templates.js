@@ -39,7 +39,7 @@ function generateQueryParamMap(keys, nameToValueMap, optionalNames) {
     });
     return map;
 }
-// A quick implemenation of string-template. Need to remove the package because it uses the 
+// A quick implemenation of string-template. Need to remove the package because it uses the
 // `new Function(<code>)` syntax.
 function formatString(template, params) {
     let result = template;

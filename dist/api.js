@@ -16,6 +16,7 @@ const schema_2 = require("./schema");
 const schema_3 = require("./schema");
 const api_types_7 = require("./api_types");
 const api_types_8 = require("./api_types");
+const handler_templates_3 = require("./handler_templates");
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
  * If an error is encountered in a formula and you want to describe the error
@@ -236,7 +237,7 @@ function makeFormula(fullDefinition) {
             const arrayFormula = {
                 ...rest,
                 resultType: api_types_2.Type.object,
-                schema: schema_3.normalizeSchema(items),
+                schema: schema_3.normalizeSchema({ type: schema_1.ValueType.Array, items }),
             };
             formula = arrayFormula;
             break;
@@ -253,6 +254,13 @@ function makeFormula(fullDefinition) {
         }
         default:
             return ensure_2.ensureUnreachable(definition);
+    }
+    if ([schema_1.ValueType.Object, schema_1.ValueType.Array].includes(definition.resultType)) {
+        const wrappedExecute = formula.execute;
+        formula.execute = async function (params, context) {
+            const result = await wrappedExecute(params, context);
+            return handler_templates_3.transformBody(result, ensure_1.ensureExists(formula.schema));
+        };
     }
     if (onError) {
         const wrappedExecute = formula.execute;
