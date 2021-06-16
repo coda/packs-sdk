@@ -244,11 +244,10 @@ function makeFormula(fullDefinition) {
         }
         case schema_1.ValueType.Object: {
             const { resultType: unused, schema, ...rest } = definition;
-            const finalSchema = schema_3.normalizeSchema(schema);
             const objectFormula = {
                 ...rest,
                 resultType: api_types_2.Type.object,
-                schema: finalSchema,
+                schema: schema_3.normalizeSchema(schema),
             };
             formula = objectFormula;
             break;

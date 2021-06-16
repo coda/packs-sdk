@@ -531,11 +531,10 @@ export function makeFormula<ParamDefsT extends ParamDefs>(
     }
     case ValueType.Object: {
       const {resultType: unused, schema, ...rest} = definition;
-      const finalSchema = normalizeSchema(schema);
       const objectFormula: ObjectPackFormula<ParamDefsT, Schema> = {
         ...rest,
         resultType: Type.object,
-        schema: finalSchema,
+        schema: normalizeSchema(schema),
       };
       formula = objectFormula;
       break;
