@@ -216,6 +216,7 @@ export declare enum Type {
 	html = 5,
 	image = 6
 }
+export declare type ParamType = Exclude<Type, Type.object>;
 export interface ArrayType<T extends Type> {
 	type: "array";
 	items: T;
@@ -553,8 +554,8 @@ export declare function isDynamicSyncTable(syncTable: SyncTable): syncTable is G
  * @example
  * makeParameter({arrayType: Type.String, name: 'myArrayParam', description: 'My description'});
  */
-export declare function makeParameter<T extends Type>(definition: ParamDef<T>): ParamDef<T>;
-export declare function makeParameter<T extends Type>(definition: Omit<ParamDef<ArrayType<T>>, "type"> & {
+export declare function makeParameter<T extends ParamType>(definition: ParamDef<T>): ParamDef<T>;
+export declare function makeParameter<T extends ParamType>(definition: Omit<ParamDef<ArrayType<T>>, "type"> & {
 	arrayType: T;
 }): ParamDef<ArrayType<T>>;
 export declare function makeStringParameter(name: string, description: string, args?: ParamArgs<Type.string>): ParamDef<Type.string>;

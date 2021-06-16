@@ -12,6 +12,7 @@ export declare enum Type {
     html = 5,
     image = 6
 }
+export declare type ParamType = Exclude<Type, Type.object>;
 export interface ArrayType<T extends Type> {
     type: 'array';
     items: T;
