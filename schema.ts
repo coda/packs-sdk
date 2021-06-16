@@ -274,7 +274,8 @@ export function generateSchema(obj: ValidTypes): Schema {
   if (typeof obj === 'object') {
     const properties: {[key: string]: Schema} = {};
     if (obj === null) {
-      throw new Error('No nulls allowed.');
+      // Default nulls to string which is the least common denominator.
+      return {type: ValueType.String};
     }
     for (const key in obj) {
       if (obj.hasOwnProperty(key)) {

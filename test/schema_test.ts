@@ -17,6 +17,10 @@ describe('Schema', () => {
       assert.deepEqual(schema.generateSchema(false), {type: schema.ValueType.Boolean});
     });
 
+    it('null', () => {
+      assert.deepEqual(schema.generateSchema(null as any), {type: schema.ValueType.String});
+    });
+
     it('array of scalars', () => {
       assert.deepEqual(schema.generateSchema(['foobaz']), {
         type: schema.ValueType.Array,
