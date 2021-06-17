@@ -194,6 +194,11 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
    * Not for use by packs that are not authored by Coda.
    */
   readonly isSystem?: boolean;
+
+  /**
+   *
+   */
+  readonly requiredOAuthScopes?: string[];
 }
 
 export enum ConnectionRequirement {

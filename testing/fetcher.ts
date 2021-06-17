@@ -155,10 +155,11 @@ export class AuthenticatingFetcher implements Fetcher {
   private async _refreshOAuthCredentials() {
     assertCondition(this._authDef?.type === AuthenticationType.OAuth2);
     assertCondition(this._credentials);
-    const {clientId, clientSecret, accessToken, refreshToken} = this._credentials as OAuth2Credentials;
+    // Reauth with the scopes from the original auth call, not what is currently defined in the manifest.
+    const {clientId, clientSecret, accessToken, refreshToken, scopes} = this._credentials as OAuth2Credentials;
     assertCondition(accessToken);
     assertCondition(refreshToken);
-    const {authorizationUrl, tokenUrl, scopes, additionalParams} = this._authDef;
+    const {authorizationUrl, tokenUrl, additionalParams} = this._authDef;
     const oauth2Client = new ClientOAuth2({
       clientId,
       clientSecret,
@@ -174,6 +175,7 @@ export class AuthenticatingFetcher implements Fetcher {
       accessToken: refreshedToken.accessToken,
       refreshToken: refreshedToken.refreshToken,
       expires: getExpirationDate(Number(refreshedToken.data.expires_in)).toString(),
+      scopes,
     };
     this._credentials = newCredentials;
     this._updateCredentialsCallback(this._credentials);

@@ -20,12 +20,14 @@ export function launchOAuthServerFlow({
   authDef,
   port,
   afterTokenExchange,
+  extraOAuthScopes,
 }: {
   clientId: string;
   clientSecret: string;
   authDef: OAuth2Authentication;
   port: number;
   afterTokenExchange: AfterTokenExchangeCallback;
+  extraOAuthScopes?: string[];
 }) {
   // TODO: Handle endpointKey.
   const {authorizationUrl, tokenUrl, scopes, additionalParams} = authDef;
@@ -34,7 +36,7 @@ export function launchOAuthServerFlow({
     clientSecret,
     authorizationUri: authorizationUrl,
     accessTokenUri: tokenUrl,
-    scopes,
+    scopes: extraOAuthScopes ? [...(scopes || []), ...extraOAuthScopes] : scopes,
     redirectUri: makeRedirectUrl(port),
     query: additionalParams,
   });

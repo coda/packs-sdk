@@ -79,10 +79,11 @@ function setupAuth(manifestDir, packDef, opts = {}) {
 }
 exports.setupAuth = setupAuth;
 class CredentialHandler {
-    constructor(manifestDir, authDef, { oauthServerPort } = {}) {
+    constructor(manifestDir, authDef, { oauthServerPort, extraOAuthScopes } = {}) {
         this._authDef = authDef;
         this._manifestDir = manifestDir;
         this._oauthServerPort = oauthServerPort || exports.DEFAULT_OAUTH_SERVER_PORT;
+        this._extraOAuthScopes = (extraOAuthScopes === null || extraOAuthScopes === void 0 ? void 0 : extraOAuthScopes.split(' ')) || [];
     }
     checkForExistingCredential() {
         const existingCredentials = readCredentialsFile(this._manifestDir);
@@ -144,6 +145,7 @@ class CredentialHandler {
         helpers_2.print('Credentials updated!');
     }
     handleOAuth2() {
+        var _a;
         ensure_1.assertCondition(this._authDef.type === types_1.AuthenticationType.OAuth2);
         const existingCredentials = this.checkForExistingCredential();
         helpers_2.print(`*** Your application must have ${oauth_server_2.makeRedirectUrl(this._oauthServerPort)} whitelisted as an OAuth redirect url ` +
@@ -164,9 +166,12 @@ class CredentialHandler {
             accessToken: existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.accessToken,
             refreshToken: existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.refreshToken,
             expires: existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.expires,
+            scopes: existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.scopes,
         };
         this.storeCredential(credentials);
         helpers_2.print('Credential secrets updated! Launching OAuth handshake in browser...\n');
+        const manifestScopes = this._authDef.scopes || [];
+        const requestedScopes = ((_a = this._extraOAuthScopes) === null || _a === void 0 ? void 0 : _a.length) > 0 ? [...manifestScopes, ...this._extraOAuthScopes] : manifestScopes;
         oauth_server_1.launchOAuthServerFlow({
             clientId,
             clientSecret,
@@ -179,10 +184,12 @@ class CredentialHandler {
                     accessToken,
                     refreshToken,
                     expires,
+                    scopes: requestedScopes,
                 };
                 this.storeCredential(credentials);
                 helpers_2.print('Access token saved! Shutting down OAuth server and exiting...');
             },
+            extraOAuthScopes: this._extraOAuthScopes,
         });
     }
     maybePromptForEndpointUrl() {

@@ -67,6 +67,9 @@ async function executeFormula(formula, params, context, { validateParams: should
     if (shouldValidateParams) {
         validation_1.validateParams(formula, params);
     }
+    // TODO(patrick): We should not execute a formula that requests scopes that we don't have
+    // in our stored credentials. Either we check stored credentials here or we pass the requested
+    // scopes from formula.requiredOAuthScopes in to the execution context.
     let result;
     try {
         result = await formula.execute(params, context);

@@ -2,6 +2,7 @@ import type { Credentials } from './auth_types';
 import type { PackVersionDefinition } from '../types';
 interface SetupAuthOptions {
     oauthServerPort?: number;
+    extraOAuthScopes?: string;
 }
 export declare const DEFAULT_OAUTH_SERVER_PORT = 3000;
 export declare function setupAuthFromModule(manifestPath: string, manifest: PackVersionDefinition, opts?: SetupAuthOptions): Promise<void>;

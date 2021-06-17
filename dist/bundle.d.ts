@@ -331,6 +331,10 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 	 * Not for use by packs that are not authored by Coda.
 	 */
 	readonly isSystem?: boolean;
+	/**
+	 *
+	 */
+	readonly requiredOAuthScopes?: string[];
 }
 export declare enum ConnectionRequirement {
 	None = "none",
@@ -792,6 +796,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 	cacheTtlSecs?: number | undefined;
 	isExperimental?: boolean | undefined;
 	isSystem?: boolean | undefined;
+	requiredOAuthScopes?: string[] | undefined;
 } & {
 	execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<SchemaType<ResultT>>;
 	resultType: Type.object;
@@ -812,6 +817,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
 	cacheTtlSecs?: number | undefined;
 	isExperimental?: boolean | undefined;
 	isSystem?: boolean | undefined;
+	requiredOAuthScopes?: string[] | undefined;
 } & {
 	execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
 	resultType: Type.string;

@@ -47,6 +47,12 @@ if (require.main === module) {
           default: DEFAULT_OAUTH_SERVER_PORT,
           desc: 'Port to use for the local server that handles OAuth setup.',
         },
+        extraOAuthScopes: {
+          alias: 'extra_oauth_scopes',
+          string: true,
+          default: '',
+          desc: 'Scopes to request beyond those listed in the manifest, for specific formulas that need extra permissions.',
+        },
       },
     })
     .command({
