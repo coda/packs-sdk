@@ -96,31 +96,15 @@ export {makeMetadataFormula} from './api';
 export {makeDynamicSyncTable} from './api';
 export {makeEmptyFormula} from './api';
 export {makeFormula} from './api';
-export {makeNumericFormula} from './api';
-export {makeObjectFormula} from './api';
-export {makeStringFormula} from './api';
 export {makeSyncTable} from './api';
 export {makeTranslateObjectFormula} from './api';
+export {makeParameter} from './api';
 
 // Autocomplete helpers.
 export type {SimpleAutocompleteOption} from './api';
 export {autocompleteSearchObjects} from './api';
 export {makeSimpleAutocompleteMetadataFormula} from './api';
 export {simpleAutocomplete} from './api';
-
-export {makeParameter} from './api';
-export {makeBooleanParameter} from './api';
-export {makeBooleanArrayParameter} from './api';
-export {makeDateParameter} from './api';
-export {makeDateArrayParameter} from './api';
-export {makeNumericParameter} from './api';
-export {makeNumericArrayParameter} from './api';
-export {makeHtmlParameter} from './api';
-export {makeHtmlArrayParameter} from './api';
-export {makeImageParameter} from './api';
-export {makeImageArrayParameter} from './api';
-export {makeStringParameter} from './api';
-export {makeStringArrayParameter} from './api';
 
 // Execution helpers.
 export {getQueryParams} from './helpers/url';

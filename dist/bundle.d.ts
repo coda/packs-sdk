@@ -270,7 +270,6 @@ export interface ParamDef<T extends UnionType> {
 	 */
 	defaultValue?: DefaultValueType<T>;
 }
-export declare type ParamArgs<T extends UnionType> = Omit<ParamDef<T>, "description" | "name" | "type">;
 export declare type ParamDefs = [
 	ParamDef<UnionType>,
 	...Array<ParamDef<UnionType>>
@@ -584,34 +583,12 @@ export declare function makeParameter<T extends ParamType>(definition: ParamDef<
 export declare function makeParameter<T extends ParamType>(definition: Omit<ParamDef<ArrayType<T>>, "type"> & {
 	arrayType: T;
 }): ParamDef<ArrayType<T>>;
-export declare function makeStringParameter(name: string, description: string, args?: ParamArgs<Type.string>): ParamDef<Type.string>;
-export declare function makeStringArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.string>>): ParamDef<ArrayType<Type.string>>;
-export declare function makeNumericParameter(name: string, description: string, args?: ParamArgs<Type.number>): ParamDef<Type.number>;
-export declare function makeNumericArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.number>>): ParamDef<ArrayType<Type.number>>;
-export declare function makeBooleanParameter(name: string, description: string, args?: ParamArgs<Type.boolean>): ParamDef<Type.boolean>;
-export declare function makeBooleanArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.boolean>>): ParamDef<ArrayType<Type.boolean>>;
-export declare function makeDateParameter(name: string, description: string, args?: ParamArgs<Type.date>): ParamDef<Type.date>;
-export declare function makeDateArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.date>>): ParamDef<ArrayType<Type.date>>;
-export declare function makeHtmlParameter(name: string, description: string, args?: ParamArgs<Type.html>): ParamDef<Type.html>;
-export declare function makeHtmlArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.html>>): ParamDef<ArrayType<Type.html>>;
-export declare function makeImageParameter(name: string, description: string, args?: ParamArgs<Type.image>): ParamDef<Type.image>;
-export declare function makeImageArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.image>>): ParamDef<ArrayType<Type.image>>;
 export declare function makeUserVisibleError(msg: string): UserVisibleError;
 export interface PackFormulas {
 	readonly [namespace: string]: TypedStandardFormula[];
 }
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult> extends CommonPackFormulaDef<ParamsT> {
 	execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
-}
-export interface StringFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaDef<ParamsT> {
-	execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<string> | string;
-	response?: {
-		schema: StringSchema;
-	};
-}
-export interface ObjectResultFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema> extends PackFormulaDef<ParamsT, object | object[]> {
-	execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<object> | object;
-	response?: ResponseHandlerTemplate<SchemaT>;
 }
 export interface ObjectArrayFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema> extends Omit<PackFormulaDef<ParamsT, SchemaType<SchemaT>>, "execute"> {
 	request: RequestHandlerTemplate;
@@ -656,20 +633,6 @@ export declare type SyncFormula<K extends string, L extends string, ParamDefsT e
 	isSyncFormula: true;
 	schema?: ArraySchema;
 };
-/**
- * Helper for returning the definition of a formula that returns a number. Adds result type information
- * to a generic formula definition.
- *
- * @param definition The definition of a formula that returns a number.
- */
-export declare function makeNumericFormula<ParamDefsT extends ParamDefs>(definition: PackFormulaDef<ParamDefsT, number>): NumericPackFormula<ParamDefsT>;
-/**
- * Helper for returning the definition of a formula that returns a string. Adds result type information
- * to a generic formula definition.
- *
- * @param definition The definition of a formula that returns a string.
- */
-export declare function makeStringFormula<ParamDefsT extends ParamDefs>(definition: StringFormulaDef<ParamDefsT>): StringPackFormula<ParamDefsT>;
 /**
  * Creates a formula definition.
  *
@@ -775,7 +738,6 @@ export interface SimpleAutocompleteOption {
 export declare function simpleAutocomplete(search: string | undefined, options: Array<string | SimpleAutocompleteOption>): Promise<MetadataFormulaObjectResultType[]>;
 export declare function autocompleteSearchObjects<T>(search: string, objs: T[], displayKey: keyof T, valueKey: keyof T): Promise<MetadataFormulaObjectResultType[]>;
 export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | SimpleAutocompleteOption>): MetadataFormula;
-export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
 /**
  * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
  * using this wrapper rather than declaring a sync table definition object directly.
