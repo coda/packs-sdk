@@ -3,7 +3,6 @@ import {AuthenticationType} from '../types';
 import type {Credentials} from './auth_types';
 import type {CredentialsFile} from './auth_types';
 import type {MultiQueryParamCredentials} from './auth_types';
-import type {OAuth2Authentication} from '../types';
 import type {OAuth2Credentials} from './auth_types';
 import type {PackVersionDefinition} from '../types';
 import {assertCondition} from '../helpers/ensure';
@@ -203,7 +202,7 @@ class CredentialHandler {
     this.storeCredential(credentials);
     print('Credential secrets updated! Launching OAuth handshake in browser...\n');
 
-    const manifestScopes = (this._authDef as OAuth2Authentication).scopes || [];
+    const manifestScopes = this._authDef.scopes || [];
     const requestedScopes =
       this._extraOAuthScopes.length > 0 ? [...manifestScopes, ...this._extraOAuthScopes] : manifestScopes;
 

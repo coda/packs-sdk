@@ -146,10 +146,12 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
    * The name of the formula, used to invoke it.
    */
   readonly name: string;
+
   /**
    * A brief description of what the formula does.
    */
   readonly description: string;
+
   /**
    * The parameter inputs to the formula, if any.
    */
@@ -170,6 +172,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
    * Actions are presented as buttons in the Coda UI.
    */
   readonly isAction?: boolean;
+
   /**
    * Does this formula require a connection (aka an account)?
    */
@@ -199,9 +202,11 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
    * OAuth scopes that the formula needs that weren't requested in the pack's overall authentication
    * config. For example, a Slack pack can have one formula that needs admin privileges, but non-admins
    * can use the bulk of the pack without those privileges. Coda will give users help in understanding
-   * that they need additional authentication to use a formula with extra OAuth scopes.
+   * that they need additional authentication to use a formula with extra OAuth scopes. Note that
+   * these scopes will always be requested in addition to the default scopes for the pack,
+   * so an end user must have both sets of permissions.
    */
-  readonly requiredOAuthScopes?: string[];
+  readonly extraOAuthScopes?: string[];
 }
 
 export enum ConnectionRequirement {
