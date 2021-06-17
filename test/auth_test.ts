@@ -920,6 +920,14 @@ describe('Auth', () => {
           clientSecret: 'some-client-secret',
           port: 3000,
         });
+
+        assertCredentialsFileExactly({
+          clientId: 'some-client-id',
+          clientSecret: 'some-client-secret',
+          accessToken: 'some-access-token',
+          refreshToken: 'some-refresh-token',
+          scopes: ['scope1', 'scope2'],
+        });
       });
 
       it(`${AuthenticationType.OAuth2}, leaves existing secrets in place`, async () => {
