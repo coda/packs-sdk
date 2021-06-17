@@ -2787,7 +2787,8 @@ function validateArray(result, schema, context) {
 }
 
 // testing/execution_helper.ts
-async function executeSyncFormulaWithoutValidation(formula, params, context, maxIterations = 100) {
+var MaxSyncIterations = 100;
+async function executeSyncFormulaWithoutValidation(formula, params, context, maxIterations = MaxSyncIterations) {
   const result = [];
   let iterations = 1;
   do {
@@ -2856,7 +2857,7 @@ async function executeFormula(formula, params, context, { validateParams: should
 async function executeSyncFormula(formula, params, context, {
   validateParams: shouldValidateParams = true,
   validateResult: shouldValidateResult = true,
-  maxIterations = 3
+  maxIterations = MaxSyncIterations
 } = {}) {
   if (shouldValidateParams) {
     validateParams(formula, params);
