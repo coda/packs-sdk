@@ -205,7 +205,7 @@ class CredentialHandler {
 
     const manifestScopes = (this._authDef as OAuth2Authentication).scopes || [];
     const requestedScopes =
-      this._extraOAuthScopes?.length > 0 ? [...manifestScopes, ...this._extraOAuthScopes] : manifestScopes;
+      this._extraOAuthScopes.length > 0 ? [...manifestScopes, ...this._extraOAuthScopes] : manifestScopes;
 
     launchOAuthServerFlow({
       clientId,
@@ -224,7 +224,7 @@ class CredentialHandler {
         this.storeCredential(credentials);
         print('Access token saved! Shutting down OAuth server and exiting...');
       },
-      extraOAuthScopes: this._extraOAuthScopes,
+      scopes: requestedScopes,
     });
   }
 
