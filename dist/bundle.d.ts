@@ -331,6 +331,15 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 	 * Not for use by packs that are not authored by Coda.
 	 */
 	readonly isSystem?: boolean;
+	/**
+	 * OAuth scopes that the formula needs that weren't requested in the pack's overall authentication
+	 * config. For example, a Slack pack can have one formula that needs admin privileges, but non-admins
+	 * can use the bulk of the pack without those privileges. Coda will give users help in understanding
+	 * that they need additional authentication to use a formula with extra OAuth scopes. Note that
+	 * these scopes will always be requested in addition to the default scopes for the pack,
+	 * so an end user must have both sets of permissions.
+	 */
+	readonly extraOAuthScopes?: string[];
 }
 export declare enum ConnectionRequirement {
 	None = "none",
@@ -792,6 +801,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 	cacheTtlSecs?: number | undefined;
 	isExperimental?: boolean | undefined;
 	isSystem?: boolean | undefined;
+	extraOAuthScopes?: string[] | undefined;
 } & {
 	execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<SchemaType<ResultT>>;
 	resultType: Type.object;
@@ -812,6 +822,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
 	cacheTtlSecs?: number | undefined;
 	isExperimental?: boolean | undefined;
 	isSystem?: boolean | undefined;
+	extraOAuthScopes?: string[] | undefined;
 } & {
 	execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
 	resultType: Type.string;

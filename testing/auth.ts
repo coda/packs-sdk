@@ -22,6 +22,7 @@ import {writeJSONFile} from './helpers';
 
 interface SetupAuthOptions {
   oauthServerPort?: number;
+  extraOAuthScopes?: string;
 }
 
 const CREDENTIALS_FILE_NAME = '.coda-credentials.json';
@@ -80,11 +81,17 @@ class CredentialHandler {
   private readonly _authDef: Authentication;
   private readonly _manifestDir: string;
   private readonly _oauthServerPort: number;
+  private readonly _extraOAuthScopes: string[];
 
-  constructor(manifestDir: string, authDef: Authentication, {oauthServerPort}: SetupAuthOptions = {}) {
+  constructor(
+    manifestDir: string,
+    authDef: Authentication,
+    {oauthServerPort, extraOAuthScopes}: SetupAuthOptions = {},
+  ) {
     this._authDef = authDef;
     this._manifestDir = manifestDir;
     this._oauthServerPort = oauthServerPort || DEFAULT_OAUTH_SERVER_PORT;
+    this._extraOAuthScopes = extraOAuthScopes?.split(' ') || [];
   }
 
   private checkForExistingCredential(): Credentials | undefined {
@@ -190,9 +197,14 @@ class CredentialHandler {
       accessToken: existingCredentials?.accessToken,
       refreshToken: existingCredentials?.refreshToken,
       expires: existingCredentials?.expires,
+      scopes: existingCredentials?.scopes,
     };
     this.storeCredential(credentials);
     print('Credential secrets updated! Launching OAuth handshake in browser...\n');
+
+    const manifestScopes = this._authDef.scopes || [];
+    const requestedScopes =
+      this._extraOAuthScopes.length > 0 ? [...manifestScopes, ...this._extraOAuthScopes] : manifestScopes;
 
     launchOAuthServerFlow({
       clientId,
@@ -206,10 +218,12 @@ class CredentialHandler {
           accessToken,
           refreshToken,
           expires,
+          scopes: requestedScopes,
         };
         this.storeCredential(credentials);
         print('Access token saved! Shutting down OAuth server and exiting...');
       },
+      scopes: requestedScopes,
     });
   }
 

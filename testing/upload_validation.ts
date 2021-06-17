@@ -262,18 +262,20 @@ const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> 
   }),
   [AuthenticationType.MultiQueryParamToken]: zodCompleteStrictObject<MultiQueryParamTokenAuthentication>({
     type: zodDiscriminant(AuthenticationType.MultiQueryParamToken),
-    params: z.array(
-      zodCompleteStrictObject<MultiQueryParamTokenAuthentication['params'][number]>({
-        name: z.string(),
-        description: z.string(),
-      }),
-    ).refine(
-      params => {
-        const keys = params.map(param => param.name);
-        return keys.length === new Set(keys).size;
-      }, 
-      {message: 'Duplicated parameter names in the mutli-query-token authentication config'}
-    ),
+    params: z
+      .array(
+        zodCompleteStrictObject<MultiQueryParamTokenAuthentication['params'][number]>({
+          name: z.string(),
+          description: z.string(),
+        }),
+      )
+      .refine(
+        params => {
+          const keys = params.map(param => param.name);
+          return keys.length === new Set(keys).size;
+        },
+        {message: 'Duplicated parameter names in the mutli-query-token authentication config'},
+      ),
     ...baseAuthenticationValidators,
   }),
   [AuthenticationType.OAuth2]: zodCompleteStrictObject<OAuth2Authentication>({
@@ -392,6 +394,7 @@ const commonPackFormulaSchema = {
   cacheTtlSecs: z.number().min(0).optional(),
   isExperimental: z.boolean().optional(),
   isSystem: z.boolean().optional(),
+  extraOAuthScopes: z.array(z.string()).optional(),
 };
 
 const numericPackFormulaSchema = zodCompleteObject<Omit<NumericPackFormula<any>, 'execute'>>({

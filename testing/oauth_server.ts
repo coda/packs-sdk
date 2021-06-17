@@ -20,21 +20,25 @@ export function launchOAuthServerFlow({
   authDef,
   port,
   afterTokenExchange,
+  scopes,
 }: {
   clientId: string;
   clientSecret: string;
   authDef: OAuth2Authentication;
   port: number;
   afterTokenExchange: AfterTokenExchangeCallback;
+  scopes?: string[];
 }) {
   // TODO: Handle endpointKey.
-  const {authorizationUrl, tokenUrl, scopes, additionalParams} = authDef;
+  const {authorizationUrl, tokenUrl, additionalParams} = authDef;
+  // Use the manifest's scopes as a default.
+  const requestedScopes = scopes && scopes.length > 0 ? scopes : authDef.scopes;
   const oauth2Client = new ClientOAuth2({
     clientId,
     clientSecret,
     authorizationUri: authorizationUrl,
     accessTokenUri: tokenUrl,
-    scopes,
+    scopes: requestedScopes,
     redirectUri: makeRedirectUrl(port),
     query: additionalParams,
   });

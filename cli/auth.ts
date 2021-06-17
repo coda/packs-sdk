@@ -7,11 +7,12 @@ import {setupAuthFromModule} from '../testing/auth';
 interface AuthArgs {
   manifestPath: string;
   oauthServerPort?: number;
+  extraOAuthScopes?: string;
 }
 
-export async function handleAuth({manifestPath, oauthServerPort}: Arguments<AuthArgs>) {
+export async function handleAuth({manifestPath, oauthServerPort, extraOAuthScopes}: Arguments<AuthArgs>) {
   const fullManifestPath = makeManifestFullPath(manifestPath);
   const bundleFilename = await build(fullManifestPath);
   const manifest = await importManifest(bundleFilename);
-  await setupAuthFromModule(fullManifestPath, manifest, {oauthServerPort});
+  await setupAuthFromModule(fullManifestPath, manifest, {oauthServerPort, extraOAuthScopes});
 }

@@ -9,15 +9,17 @@ const child_process_1 = require("child_process");
 const express_1 = __importDefault(require("express"));
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
-function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTokenExchange, }) {
+function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTokenExchange, scopes, }) {
     // TODO: Handle endpointKey.
-    const { authorizationUrl, tokenUrl, scopes, additionalParams } = authDef;
+    const { authorizationUrl, tokenUrl, additionalParams } = authDef;
+    // Use the manifest's scopes as a default.
+    const requestedScopes = scopes && scopes.length > 0 ? scopes : authDef.scopes;
     const oauth2Client = new client_oauth2_1.default({
         clientId,
         clientSecret,
         authorizationUri: authorizationUrl,
         accessTokenUri: tokenUrl,
-        scopes,
+        scopes: requestedScopes,
         redirectUri: makeRedirectUrl(port),
         query: additionalParams,
     });
