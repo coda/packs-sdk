@@ -945,6 +945,7 @@ describe('Auth', () => {
           clientSecret: 'existing-client-secret',
           accessToken: 'some-access-token',
           refreshToken: 'some-refresh-token',
+          scopes: [],
         });
       });
     });

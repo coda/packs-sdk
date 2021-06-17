@@ -324,7 +324,7 @@ const commonPackFormulaSchema = {
     cacheTtlSecs: z.number().min(0).optional(),
     isExperimental: z.boolean().optional(),
     isSystem: z.boolean().optional(),
-    requiredOAuthScopes: z.array(z.string()),
+    requiredOAuthScopes: z.array(z.string()).optional(),
 };
 const numericPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
