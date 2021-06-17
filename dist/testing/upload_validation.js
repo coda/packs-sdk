@@ -214,10 +214,12 @@ const defaultAuthenticationValidators = {
     }),
     [types_1.AuthenticationType.MultiQueryParamToken]: zodCompleteStrictObject({
         type: zodDiscriminant(types_1.AuthenticationType.MultiQueryParamToken),
-        params: z.array(zodCompleteStrictObject({
+        params: z
+            .array(zodCompleteStrictObject({
             name: z.string(),
             description: z.string(),
-        })).refine(params => {
+        }))
+            .refine(params => {
             const keys = params.map(param => param.name);
             return keys.length === new Set(keys).size;
         }, { message: 'Duplicated parameter names in the mutli-query-token authentication config' }),
@@ -324,7 +326,7 @@ const commonPackFormulaSchema = {
     cacheTtlSecs: z.number().min(0).optional(),
     isExperimental: z.boolean().optional(),
     isSystem: z.boolean().optional(),
-    requiredOAuthScopes: z.array(z.string()).optional(),
+    extraOAuthScopes: z.array(z.string()).optional(),
 };
 const numericPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
