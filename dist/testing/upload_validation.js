@@ -216,7 +216,10 @@ const defaultAuthenticationValidators = {
         params: z.array(zodCompleteStrictObject({
             name: z.string(),
             description: z.string(),
-        })),
+        })).refine(params => {
+            const keys = params.map(param => param.name);
+            return keys.length === new Set(keys).size;
+        }, { message: 'Duplicated parameter names in the mutli-query-token authentication config' }),
         ...baseAuthenticationValidators,
     }),
     [types_1.AuthenticationType.OAuth2]: zodCompleteStrictObject({

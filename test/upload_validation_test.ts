@@ -812,6 +812,25 @@ describe('Pack metadata Validation', () => {
       await validateJson(metadata);
     });
 
+    it('MultiQueryParamToken on dup names', async () => {
+      const metadata = createFakePackVersionMetadata({
+        systemConnectionAuthentication: {
+          type: AuthenticationType.MultiQueryParamToken,
+          params: [
+            {name: 'param1', description: 'description 1'},
+            {name: 'param1', description: 'description 2'},
+          ],
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'Duplicated parameter names in the mutli-query-token authentication config',
+          path: 'systemConnectionAuthentication.params',
+        },
+      ]);
+    });
+
     it('OAuth2, complete', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
