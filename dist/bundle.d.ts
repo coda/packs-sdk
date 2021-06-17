@@ -236,12 +236,38 @@ export declare type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | Pac
 export declare type PackFormulaResult = $Values<TypeMap> | PackFormulaResult[];
 export declare type TypeOf<T extends PackFormulaResult> = T extends number ? Type.number : T extends string ? Type.string : T extends boolean ? Type.boolean : T extends Date ? Type.date : T extends object ? Type.object : never;
 export interface ParamDef<T extends UnionType> {
+	/**
+	 * The name of the parameter, which will be shown to the user when invoking this formula.
+	 */
 	name: string;
+	/**
+	 * The data type of this parameter (string, number, etc).
+	 */
 	type: T;
+	/**
+	 * A brief description of what this parameter is used for, shown to the user when invoking the formula.
+	 */
 	description: string;
+	/**
+	 * Whether this parameter can be omitted when invoking the formula.
+	 * All optional parameters must come after all non-optional parameters.
+	 */
 	optional?: boolean;
 	hidden?: boolean;
+	/**
+	 * A {@link MetadataFormula} that returns valid values for this parameter, optionally matching a search
+	 * query. This can be useful both if there are a fixed number of valid values for the parameter,
+	 * or if the valid values from the parameter can be looked up from some API.
+	 * Use {@link makeMetadataFormula} to wrap a function that implements your autocomplete logic.
+	 * Typically once you have fetched the list of matching values, you'll use
+	 * {@link autocompleteSearchObjects} to handle searching over those values.
+	 * If you have a hardcoded list of valid values, you would only need to use
+	 * {@link makeSimpleAutocompleteMetadataFormula}.
+	 */
 	autocomplete?: MetadataFormula;
+	/**
+	 * The default value to be used for this parameter if it is not specified by the user.
+	 */
 	defaultValue?: DefaultValueType<T>;
 }
 export declare type ParamArgs<T extends UnionType> = Omit<ParamDef<T>, "description" | "name" | "type">;

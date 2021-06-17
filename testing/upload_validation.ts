@@ -360,7 +360,20 @@ const commonPackFormulaSchema = {
       }),
     )
     .optional(),
-  parameters: z.array(paramDefValidator),
+  parameters: z.array(paramDefValidator).refine(
+    params => {
+      let hasOptional = false;
+      for (const param of params) {
+        if (param.optional) {
+          hasOptional = true;
+        } else if (!param.optional && hasOptional) {
+          return false;
+        }
+      }
+      return true;
+    },
+    {message: 'All optional parameters must be come after all non-optional parameters.'},
+  ),
   varargParameters: z.array(paramDefValidator).optional(),
   isAction: z.boolean().optional(),
   connectionRequirement: z.nativeEnum(ConnectionRequirement).optional(),

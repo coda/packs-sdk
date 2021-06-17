@@ -7,6 +7,7 @@ import type {ObjectSchemaDefinition} from '../schema';
 import type {PackFormulaMetadata} from '../api';
 import type {PackMetadataValidationError} from '../testing/upload_validation';
 import type {PackVersionMetadata} from '../compiled_types';
+import type {ParamDefs} from '../api_types';
 import {PostSetupType} from '../types';
 import type {StringFormulaDef} from '../api';
 import {Type} from '../api_types';
@@ -235,78 +236,6 @@ describe('Pack metadata Validation', () => {
       await validateJson(metadata);
     });
 
-    it('valid formula with generic makeParameter', async () => {
-      const formula = makeNumericFormula({
-        name: 'MyFormula',
-        description: 'My description',
-        examples: [],
-        parameters: [makeParameter({type: Type.string, name: 'myParam', description: 'param description'})],
-        execute: () => 1,
-      });
-      const metadata = createFakePackVersionMetadata({
-        formulas: [formulaToMetadata(formula)],
-        formulaNamespace: 'MyNamespace',
-      });
-      await validateJson(metadata);
-    });
-
-    it('valid formula with generic makeParameter array param', async () => {
-      const formula = makeNumericFormula({
-        name: 'MyFormula',
-        description: 'My description',
-        examples: [],
-        parameters: [makeParameter({arrayType: Type.string, name: 'myParam', description: 'param description'})],
-        execute: () => 1,
-      });
-      const metadata = createFakePackVersionMetadata({
-        formulas: [formulaToMetadata(formula)],
-        formulaNamespace: 'MyNamespace',
-      });
-      await validateJson(metadata);
-    });
-
-    it('invalid formula with object parameter', async () => {
-      const formula = makeNumericFormula({
-        name: 'MyFormula',
-        description: 'My description',
-        examples: [],
-        parameters: [makeParameter({type: Type.object as any, name: 'myParam', description: 'param description'})],
-        execute: () => 1,
-      });
-      const metadata = createFakePackVersionMetadata({
-        formulas: [formulaToMetadata(formula)],
-        formulaNamespace: 'MyNamespace',
-      });
-      const err = await validateJsonAndAssertFails(metadata);
-      assert.deepEqual(err.validationErrors, [
-        {
-          message: 'Object parameters are not currently supported.',
-          path: 'formulas[0].parameters[0].type',
-        },
-      ]);
-    });
-
-    it('invalid formula with object array parameter', async () => {
-      const formula = makeNumericFormula({
-        name: 'MyFormula',
-        description: 'My description',
-        examples: [],
-        parameters: [makeParameter({arrayType: Type.object as any, name: 'myParam', description: 'param description'})],
-        execute: () => 1,
-      });
-      const metadata = createFakePackVersionMetadata({
-        formulas: [formulaToMetadata(formula)],
-        formulaNamespace: 'MyNamespace',
-      });
-      const err = await validateJsonAndAssertFails(metadata);
-      assert.deepEqual(err.validationErrors, [
-        {
-          message: 'Object parameters are not currently supported.',
-          path: 'formulas[0].parameters[0].type',
-        },
-      ]);
-    });
-
     it('valid formula with network fields', async () => {
       const networkSettings: Array<{isAction?: boolean; connectionRequirement?: ConnectionRequirement}> = [
         {},
@@ -362,6 +291,92 @@ describe('Pack metadata Validation', () => {
       });
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [{message: 'Required', path: 'formulas[0].description'}]);
+    });
+
+    describe('parameters', () => {
+      function makeMetadataFromParams(params: ParamDefs) {
+        const formula = makeNumericFormula({
+          name: 'MyFormula',
+          description: 'My description',
+          examples: [],
+          parameters: params,
+          execute: () => 1,
+        });
+        return createFakePackVersionMetadata({
+          formulas: [formulaToMetadata(formula)],
+          formulaNamespace: 'MyNamespace',
+        });
+      }
+
+      it('valid formula with generic makeParameter', async () => {
+        const metadata = makeMetadataFromParams([
+          makeParameter({type: Type.string, name: 'myParam', description: 'param description'}),
+        ]);
+        await validateJson(metadata);
+      });
+
+      it('valid formula with generic makeParameter array param', async () => {
+        const metadata = makeMetadataFromParams([
+          makeParameter({arrayType: Type.string, name: 'myParam', description: 'param description'}),
+        ]);
+        await validateJson(metadata);
+      });
+
+      it('invalid formula with object parameter', async () => {
+        const metadata = makeMetadataFromParams([
+          makeParameter({type: Type.object as any, name: 'myParam', description: 'param description'}),
+        ]);
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Object parameters are not currently supported.',
+            path: 'formulas[0].parameters[0].type',
+          },
+        ]);
+      });
+
+      it('invalid formula with object array parameter', async () => {
+        const metadata = makeMetadataFromParams([
+          makeParameter({arrayType: Type.object as any, name: 'myParam', description: 'param description'}),
+        ]);
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Object parameters are not currently supported.',
+            path: 'formulas[0].parameters[0].type',
+          },
+        ]);
+      });
+
+      it('valid formula with only optional param', async () => {
+        const metadata = makeMetadataFromParams([
+          makeParameter({type: Type.string, name: 'p', description: '', optional: true}),
+        ]);
+        await validateJson(metadata);
+      });
+
+      it('valid formula with required and optional params', async () => {
+        const metadata = makeMetadataFromParams([
+          makeParameter({type: Type.string, name: 'p1', description: ''}),
+          makeParameter({type: Type.string, name: 'p2', description: '', optional: true}),
+        ]);
+        await validateJson(metadata);
+      });
+
+      it('invalid formula with required param after optional param', async () => {
+        const metadata = makeMetadataFromParams([
+          makeParameter({type: Type.string, name: 'p1', description: ''}),
+          makeParameter({type: Type.string, name: 'p2', description: '', optional: true}),
+          makeParameter({type: Type.string, name: 'p3', description: ''}),
+        ]);
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'All optional parameters must be come after all non-optional parameters.',
+            path: 'formulas[0].parameters',
+          },
+        ]);
+      });
     });
 
     describe('sync tables', () => {
