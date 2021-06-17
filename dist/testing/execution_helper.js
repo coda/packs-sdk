@@ -5,7 +5,8 @@ const coercion_1 = require("./coercion");
 const ensure_1 = require("../helpers/ensure");
 const validation_1 = require("./validation");
 const validation_2 = require("./validation");
-async function executeSyncFormulaWithoutValidation(formula, params, context, maxIterations = 100) {
+const MaxSyncIterations = 100;
+async function executeSyncFormulaWithoutValidation(formula, params, context, maxIterations = MaxSyncIterations) {
     const result = [];
     let iterations = 1;
     do {
@@ -79,7 +80,7 @@ async function executeFormula(formula, params, context, { validateParams: should
     return result;
 }
 exports.executeFormula = executeFormula;
-async function executeSyncFormula(formula, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, maxIterations: maxIterations = 3, } = {}) {
+async function executeSyncFormula(formula, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, maxIterations: maxIterations = MaxSyncIterations, } = {}) {
     if (shouldValidateParams) {
         validation_1.validateParams(formula, params);
     }

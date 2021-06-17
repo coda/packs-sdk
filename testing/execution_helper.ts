@@ -20,11 +20,13 @@ export interface ExecuteSyncOptions extends ExecuteOptions {
   maxIterations?: number;
 }
 
+const MaxSyncIterations = 100;
+
 export async function executeSyncFormulaWithoutValidation(
   formula: GenericSyncFormula,
   params: ParamValues<ParamDefs>,
   context: SyncExecutionContext,
-  maxIterations: number = 100,
+  maxIterations: number = MaxSyncIterations,
 ) {
   const result = [];
   let iterations = 1;
@@ -121,7 +123,7 @@ export async function executeSyncFormula(
   {
     validateParams: shouldValidateParams = true,
     validateResult: shouldValidateResult = true,
-    maxIterations: maxIterations = 3,
+    maxIterations: maxIterations = MaxSyncIterations,
   }: ExecuteSyncOptions = {},
 ) {
   if (shouldValidateParams) {
