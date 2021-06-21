@@ -803,6 +803,64 @@ describe('Pack metadata Validation', () => {
           },
         ]);
       });
+
+      it('formula uses more than one parameter', async () => {
+        const formula = makeStringFormula({
+          name: 'MyFormula',
+          description: 'My description',
+          examples: [],
+          parameters: [makeStringParameter('p1', ''), makeStringParameter('p2', '')],
+          execute: () => '',
+        });
+        const metadata = createFakePackVersionMetadata({
+          formulas: [formulaToMetadata(formula)],
+          formulaNamespace: 'MyNamespace',
+          formats: [
+            {
+              name: 'MyFormat',
+              formulaNamespace: 'MyNamespace',
+              formulaName: 'MyFormula',
+              matchers: ['some-regex'],
+            },
+          ],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Formats can only be implemented using formulas that take exactly one parameter.',
+            path: 'formats',
+          },
+        ]);
+      });
+
+      it('formula uses no parameters', async () => {
+        const formula = makeStringFormula({
+          name: 'MyFormula',
+          description: 'My description',
+          examples: [],
+          parameters: [],
+          execute: () => '',
+        });
+        const metadata = createFakePackVersionMetadata({
+          formulas: [formulaToMetadata(formula)],
+          formulaNamespace: 'MyNamespace',
+          formats: [
+            {
+              name: 'MyFormat',
+              formulaNamespace: 'MyNamespace',
+              formulaName: 'MyFormula',
+              matchers: ['some-regex'],
+            },
+          ],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Formats can only be implemented using formulas that take exactly one parameter.',
+            path: 'formats',
+          },
+        ]);
+      });
     });
   });
 
