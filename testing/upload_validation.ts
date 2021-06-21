@@ -25,6 +25,7 @@ import type {ObjectSchema} from '../schema';
 import type {ObjectSchemaProperty} from '../schema';
 import {PackCategory} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
+import type {PackFormulaMetadata} from '../api';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDef} from '../api_types';
 import type {ParamDefs} from '../api_types';
@@ -653,7 +654,7 @@ function validateFormulas(schema: z.ZodObject<any>) {
     )
     .refine(
       data => {
-        const formulas = (data.formulas || []) as PackFormatMetadata[];
+        const formulas = (data.formulas || []) as PackFormulaMetadata[];
         const formulaNames = new Set(formulas.map(f => f.name));
         for (const format of data.formats || []) {
           if (!formulaNames.has(format.formulaName)) {
@@ -668,6 +669,27 @@ function validateFormulas(schema: z.ZodObject<any>) {
         message:
           'Could not find a formula for one or more matchers. Check that the "formulaName" for each matcher ' +
           'matches the name of a formula defined in this pack.',
+        path: ['formats'],
+      },
+    )
+    .refine(
+      data => {
+        const formulas = (data.formulas || []) as PackFormulaMetadata[];
+        for (const format of data.formats || []) {
+          const formula = formulas.find(f => f.name === format.formulaName);
+          if (formula) {
+            if (formula.parameters?.length !== 1) {
+              return false;
+            }
+          }
+          // Ignore the else case of formula not found, that will be validated already above.
+        }
+        return true;
+      },
+      {
+        // Annoying that the we can't be more precise and identify in the message which format had the issue;
+        // these error messages are static.
+        message: 'Formats can only be implemented using formulas that take exactly one parameter.',
         path: ['formats'],
       },
     );

@@ -554,6 +554,25 @@ function validateFormulas(schema) {
         message: 'Could not find a formula for one or more matchers. Check that the "formulaName" for each matcher ' +
             'matches the name of a formula defined in this pack.',
         path: ['formats'],
+    })
+        .refine(data => {
+        var _a;
+        const formulas = (data.formulas || []);
+        for (const format of data.formats || []) {
+            const formula = formulas.find(f => f.name === format.formulaName);
+            if (formula) {
+                if (((_a = formula.parameters) === null || _a === void 0 ? void 0 : _a.length) !== 1) {
+                    return false;
+                }
+            }
+            // Ignore the else case of formula not found, that will be validated already above.
+        }
+        return true;
+    }, {
+        // Annoying that the we can't be more precise and identify in the message which format had the issue;
+        // these error messages are static.
+        message: 'Formats can only be implemented using formulas that take exactly one parameter.',
+        path: ['formats'],
     });
 }
 // We temporarily allow our legacy packs to provide non-versioned data until we sufficiently migrate them.
