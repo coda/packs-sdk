@@ -1,5 +1,4 @@
 /// <reference types="chai" />
-/// <reference types="chai-as-promised" />
 /// <reference types="mocha" />
 /// <reference types="node" />
 
