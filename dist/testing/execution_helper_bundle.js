@@ -10,7 +10,6 @@ var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[Object.keys(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
 var __export = (target, all) => {
-  __markAsModule(target);
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: true });
 };
@@ -755,23 +754,16 @@ var require_object_inspect = __commonJS({
     var weakMapHas = hasWeakMap ? WeakMap.prototype.has : null;
     var hasWeakSet = typeof WeakSet === "function" && WeakSet.prototype;
     var weakSetHas = hasWeakSet ? WeakSet.prototype.has : null;
-    var hasWeakRef = typeof WeakRef === "function" && WeakRef.prototype;
-    var weakRefDeref = hasWeakRef ? WeakRef.prototype.deref : null;
     var booleanValueOf = Boolean.prototype.valueOf;
     var objectToString = Object.prototype.toString;
     var functionToString = Function.prototype.toString;
     var match = String.prototype.match;
     var bigIntValueOf = typeof BigInt === "function" ? BigInt.prototype.valueOf : null;
     var gOPS = Object.getOwnPropertySymbols;
-    var symToString = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? Symbol.prototype.toString : null;
-    var hasShammedSymbols = typeof Symbol === "function" && typeof Symbol.iterator === "object";
+    var symToString = typeof Symbol === "function" ? Symbol.prototype.toString : null;
     var isEnumerable = Object.prototype.propertyIsEnumerable;
-    var gPO = (typeof Reflect === "function" ? Reflect.getPrototypeOf : Object.getPrototypeOf) || ([].__proto__ === Array.prototype ? function(O) {
-      return O.__proto__;
-    } : null);
     var inspectCustom = require_util().custom;
     var inspectSymbol = inspectCustom && isSymbol(inspectCustom) ? inspectCustom : null;
-    var toStringTag = typeof Symbol === "function" && typeof Symbol.toStringTag !== "undefined" ? Symbol.toStringTag : null;
     module2.exports = function inspect_(obj, options, depth, seen) {
       var opts = options || {};
       if (has(opts, "quoteStyle") && (opts.quoteStyle !== "single" && opts.quoteStyle !== "double")) {
@@ -843,8 +835,8 @@ var require_object_inspect = __commonJS({
         return "[Function" + (name ? ": " + name : " (anonymous)") + "]" + (keys.length > 0 ? " { " + keys.join(", ") + " }" : "");
       }
       if (isSymbol(obj)) {
-        var symString = hasShammedSymbols ? String(obj).replace(/^(Symbol\(.*\))_[^)]*$/, "$1") : symToString.call(obj);
-        return typeof obj === "object" && !hasShammedSymbols ? markBoxed(symString) : symString;
+        var symString = symToString.call(obj);
+        return typeof obj === "object" ? markBoxed(symString) : symString;
       }
       if (isElement(obj)) {
         var s = "<" + String(obj.nodeName).toLowerCase();
@@ -903,9 +895,6 @@ var require_object_inspect = __commonJS({
       if (isWeakSet(obj)) {
         return weakCollectionOf("WeakSet");
       }
-      if (isWeakRef(obj)) {
-        return weakCollectionOf("WeakRef");
-      }
       if (isNumber(obj)) {
         return markBoxed(inspect(Number(obj)));
       }
@@ -920,18 +909,13 @@ var require_object_inspect = __commonJS({
       }
       if (!isDate(obj) && !isRegExp(obj)) {
         var ys = arrObjKeys(obj, inspect);
-        var isPlainObject = gPO ? gPO(obj) === Object.prototype : obj instanceof Object || obj.constructor === Object;
-        var protoTag = obj instanceof Object ? "" : "null prototype";
-        var stringTag = !isPlainObject && toStringTag && Object(obj) === obj && toStringTag in obj ? toStr(obj).slice(8, -1) : protoTag ? "Object" : "";
-        var constructorTag = isPlainObject || typeof obj.constructor !== "function" ? "" : obj.constructor.name ? obj.constructor.name + " " : "";
-        var tag = constructorTag + (stringTag || protoTag ? "[" + [].concat(stringTag || [], protoTag || []).join(": ") + "] " : "");
         if (ys.length === 0) {
-          return tag + "{}";
+          return "{}";
         }
         if (indent) {
-          return tag + "{" + indentedJoin(ys, indent) + "}";
+          return "{" + indentedJoin(ys, indent) + "}";
         }
-        return tag + "{ " + ys.join(", ") + " }";
+        return "{ " + ys.join(", ") + " }";
       }
       return String(obj);
     };
@@ -943,53 +927,31 @@ var require_object_inspect = __commonJS({
       return String(s).replace(/"/g, "&quot;");
     }
     function isArray2(obj) {
-      return toStr(obj) === "[object Array]" && (!toStringTag || !(typeof obj === "object" && toStringTag in obj));
+      return toStr(obj) === "[object Array]";
     }
     function isDate(obj) {
-      return toStr(obj) === "[object Date]" && (!toStringTag || !(typeof obj === "object" && toStringTag in obj));
+      return toStr(obj) === "[object Date]";
     }
     function isRegExp(obj) {
-      return toStr(obj) === "[object RegExp]" && (!toStringTag || !(typeof obj === "object" && toStringTag in obj));
+      return toStr(obj) === "[object RegExp]";
     }
     function isError(obj) {
-      return toStr(obj) === "[object Error]" && (!toStringTag || !(typeof obj === "object" && toStringTag in obj));
-    }
-    function isString(obj) {
-      return toStr(obj) === "[object String]" && (!toStringTag || !(typeof obj === "object" && toStringTag in obj));
-    }
-    function isNumber(obj) {
-      return toStr(obj) === "[object Number]" && (!toStringTag || !(typeof obj === "object" && toStringTag in obj));
-    }
-    function isBoolean(obj) {
-      return toStr(obj) === "[object Boolean]" && (!toStringTag || !(typeof obj === "object" && toStringTag in obj));
+      return toStr(obj) === "[object Error]";
     }
     function isSymbol(obj) {
-      if (hasShammedSymbols) {
-        return obj && typeof obj === "object" && obj instanceof Symbol;
-      }
-      if (typeof obj === "symbol") {
-        return true;
-      }
-      if (!obj || typeof obj !== "object" || !symToString) {
-        return false;
-      }
-      try {
-        symToString.call(obj);
-        return true;
-      } catch (e) {
-      }
-      return false;
+      return toStr(obj) === "[object Symbol]";
+    }
+    function isString(obj) {
+      return toStr(obj) === "[object String]";
+    }
+    function isNumber(obj) {
+      return toStr(obj) === "[object Number]";
     }
     function isBigInt(obj) {
-      if (!obj || typeof obj !== "object" || !bigIntValueOf) {
-        return false;
-      }
-      try {
-        bigIntValueOf.call(obj);
-        return true;
-      } catch (e) {
-      }
-      return false;
+      return toStr(obj) === "[object BigInt]";
+    }
+    function isBoolean(obj) {
+      return toStr(obj) === "[object Boolean]";
     }
     var hasOwn = Object.prototype.hasOwnProperty || function(key) {
       return key in this;
@@ -1049,17 +1011,6 @@ var require_object_inspect = __commonJS({
           return true;
         }
         return x instanceof WeakMap;
-      } catch (e) {
-      }
-      return false;
-    }
-    function isWeakRef(x) {
-      if (!weakRefDeref || !x || typeof x !== "object") {
-        return false;
-      }
-      try {
-        weakRefDeref.call(x);
-        return true;
       } catch (e) {
       }
       return false;
@@ -1176,14 +1127,6 @@ var require_object_inspect = __commonJS({
           xs[i] = has(obj, i) ? inspect(obj[i], obj) : "";
         }
       }
-      var syms = typeof gOPS === "function" ? gOPS(obj) : [];
-      var symMap;
-      if (hasShammedSymbols) {
-        symMap = {};
-        for (var k = 0; k < syms.length; k++) {
-          symMap["$" + syms[k]] = syms[k];
-        }
-      }
       for (var key in obj) {
         if (!has(obj, key)) {
           continue;
@@ -1191,15 +1134,14 @@ var require_object_inspect = __commonJS({
         if (isArr && String(Number(key)) === key && key < obj.length) {
           continue;
         }
-        if (hasShammedSymbols && symMap["$" + key] instanceof Symbol) {
-          continue;
-        } else if (/[^\w$]/.test(key)) {
+        if (/[^\w$]/.test(key)) {
           xs.push(inspect(key, obj) + ": " + inspect(obj[key], obj));
         } else {
           xs.push(key + ": " + inspect(obj[key], obj));
         }
       }
       if (typeof gOPS === "function") {
+        var syms = gOPS(obj);
         for (var j = 0; j < syms.length; j++) {
           if (isEnumerable.call(obj, syms[j])) {
             xs.push("[" + inspect(syms[j]) + "]: " + inspect(obj[syms[j]], obj));
@@ -1998,15 +1940,8 @@ var require_querystringify = __commonJS({
         return null;
       }
     }
-    function encode(input) {
-      try {
-        return encodeURIComponent(input);
-      } catch (e) {
-        return null;
-      }
-    }
     function querystring(query) {
-      var parser = /([^=?#&]+)=?([^&]*)/g, result = {}, part;
+      var parser = /([^=?&]+)=?([^&]*)/g, result = {}, part;
       while (part = parser.exec(query)) {
         var key = decode(part[1]), value = decode(part[2]);
         if (key === null || value === null || key in result)
@@ -2026,8 +1961,8 @@ var require_querystringify = __commonJS({
           if (!value && (value === null || value === undef || isNaN(value))) {
             value = "";
           }
-          key = encode(key);
-          value = encode(value);
+          key = encodeURIComponent(key);
+          value = encodeURIComponent(value);
           if (key === null || value === null)
             continue;
           pairs.push(key + "=" + value);
@@ -2289,6 +2224,7 @@ var require_url_parse = __commonJS({
 });
 
 // testing/execution_helper.ts
+__markAsModule(exports);
 __export(exports, {
   executeFormula: () => executeFormula,
   executeFormulaOrSync: () => executeFormulaOrSync,

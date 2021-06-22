@@ -68,6 +68,10 @@ view-docs: docs
 test:
 	TS_NODE_TRANSPILE_ONLY=1 ${ROOTDIR}/node_modules/.bin/mocha test/*_test.ts
 
+.PHONY: test-file
+test-file:
+	TS_NODE_TRANSPILE_ONLY=1 ${ROOTDIR}/node_modules/.bin/mocha ${FILE}
+
 .PHONY: clean
 clean:
 	rm -rf ${ROOTDIR}/dist

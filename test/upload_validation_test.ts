@@ -438,6 +438,51 @@ describe('Pack metadata Validation', () => {
         await validateJson(metadata);
       });
 
+      it('valid sync table with nested object schema', async () => {
+        const syncTable = makeSyncTable(
+          'SyncTable',
+          makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            identity: {packId: 424242, name: 'foo'},
+            properties: {
+              foo: {type: ValueType.String},
+              child: makeObjectSchema({
+                type: ValueType.Object,
+                id: 'c1',
+                required: true,
+                featured: ['c1'],
+                properties: {
+                  c1: {type: ValueType.String},
+                }
+              }),
+            },
+          }),
+          {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        );
+
+        const metadata = createFakePack({
+          syncTables: [syncTable],
+        });
+        const validatedMetadata = await validateJson(metadata);
+
+        const {schema} = validatedMetadata.syncTables[0];
+        assert.ok(schema);
+        const childSchema = schema.properties.Child
+        assert.ok(childSchema);
+        assert.equal(childSchema.fromKey, 'child');
+        assert.isTrue(childSchema.required);
+      });
+
       it('identity name matches property', async () => {
         const syncTable = makeSyncTable(
           'SyncTable',
