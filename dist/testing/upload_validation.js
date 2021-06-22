@@ -409,6 +409,7 @@ function isValidIdentityName(name) {
     return isValidObjectId(name);
 }
 const genericObjectSchema = z.lazy(() => zodCompleteObject({
+    ...basePropertyValidators,
     type: zodDiscriminant(schema_5.ValueType.Object),
     description: z.string().optional(),
     id: z.string().optional(),
