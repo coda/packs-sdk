@@ -21,6 +21,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.executeFormulaOrSyncWithRawParamsInVM = exports.executeFormulaOrSyncWithVM = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = void 0;
 const build_1 = require("../cli/build");
+const ensure_1 = require("../helpers/ensure");
 const helpers_1 = require("../cli/helpers");
 const helper = __importStar(require("./execution_helper"));
 const ivmHelper = __importStar(require("./ivm_helper"));
@@ -63,8 +64,13 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
     }
 }
 exports.executeFormulaOrSyncFromCLI = executeFormulaOrSyncFromCLI;
-async function executeFormulaOrSyncWithVM({ formulaName, params, manifestPath, executionContext = mocks_2.newMockSyncExecutionContext(), }) {
-    const bundlePath = await build_1.build(manifestPath);
+async function executeFormulaOrSyncWithVM({ formulaName, params, manifestPath, bundlePath, executionContext = mocks_2.newMockSyncExecutionContext(), }) {
+    if (!manifestPath && !bundlePath) {
+        throw new Error('Expecting either manifestPath or bundlePath but both are undefined.');
+    }
+    if (!bundlePath) {
+        bundlePath = await build_1.build(ensure_1.ensureExists(manifestPath));
+    }
     const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
     return ivmHelper.executeFormulaOrSync(ivmContext, formulaName, params);
 }
