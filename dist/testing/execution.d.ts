@@ -23,11 +23,10 @@ export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manif
     dynamicUrl?: string;
     contextOptions?: ContextOptions;
 }): Promise<void>;
-export declare function executeFormulaOrSyncWithVM({ formulaName, params, manifestPath, bundlePath, executionContext, }: {
+export declare function executeFormulaOrSyncWithVM({ formulaName, params, bundlePath, executionContext, }: {
     formulaName: string;
     params: ParamValues<ParamDefs>;
-    manifestPath?: string;
-    bundlePath?: string;
+    bundlePath: string;
     executionContext?: SyncExecutionContext;
 }): Promise<any>;
 export declare function executeFormulaOrSyncWithRawParamsInVM({ formulaName, params: rawParams, manifestPath, executionContext, }: {

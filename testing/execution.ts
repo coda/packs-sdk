@@ -9,7 +9,6 @@ import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
 import type {SyncExecutionContext} from '../api_types';
 import {build as buildBundle} from '../cli/build';
-import { ensureExists } from '../helpers/ensure';
 import {getPackAuth} from '../cli/helpers';
 import * as helper from './execution_helper';
 import * as ivmHelper from './ivm_helper';
@@ -99,24 +98,14 @@ export async function executeFormulaOrSyncFromCLI({
 export async function executeFormulaOrSyncWithVM({
   formulaName,
   params,
-  manifestPath,
   bundlePath,
   executionContext = newMockSyncExecutionContext(),
 }: {
   formulaName: string;
   params: ParamValues<ParamDefs>;
-  manifestPath?: string;
-  bundlePath?: string;
+  bundlePath: string;
   executionContext?: SyncExecutionContext;
 }) {
-  if (!manifestPath && !bundlePath) {
-    throw new Error('Expecting either manifestPath or bundlePath but both are undefined.');
-  }
-  
-  if (!bundlePath) {
-    bundlePath = await buildBundle(ensureExists(manifestPath));
-  }
-
   const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
 
   return ivmHelper.executeFormulaOrSync(ivmContext, formulaName, params);
