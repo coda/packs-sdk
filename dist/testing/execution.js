@@ -63,8 +63,7 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
     }
 }
 exports.executeFormulaOrSyncFromCLI = executeFormulaOrSyncFromCLI;
-async function executeFormulaOrSyncWithVM({ formulaName, params, manifestPath, executionContext = mocks_2.newMockSyncExecutionContext(), }) {
-    const bundlePath = await build_1.build(manifestPath);
+async function executeFormulaOrSyncWithVM({ formulaName, params, bundlePath, executionContext = mocks_2.newMockSyncExecutionContext(), }) {
     const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
     return ivmHelper.executeFormulaOrSync(ivmContext, formulaName, params);
 }

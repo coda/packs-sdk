@@ -5,6 +5,7 @@ import type {Schema} from '../schema';
 import type {TypedStandardFormula} from '../api';
 import {ValueType} from '../schema';
 import {assertCondition} from '../helpers/ensure';
+import {build as buildBundle} from '../cli/build';
 import {createFakePack} from './test_utils';
 import {executeFormulaFromPackDef} from '../testing/execution';
 import {executeFormulaOrSyncWithVM} from '../testing/execution';
@@ -24,6 +25,12 @@ import {newMockExecutionContext} from '../testing/mocks';
 import sinon from 'sinon';
 
 describe('Execution', () => {
+  let bundlePath: string;
+
+  before(async () => {  
+    bundlePath = await buildBundle(`${__dirname}/packs/fake`);
+  });
+
   it('executes a formula by name', async () => {
     const result = await executeFormulaFromPackDef(fakePack, 'Fake::Square', [5]);
     assert.equal(result, 25);
@@ -43,7 +50,7 @@ describe('Execution', () => {
     const result = await executeFormulaOrSyncWithVM({
       formulaName: 'Fake::Square',
       params: [5],
-      manifestPath: `${__dirname}/packs/fake`,
+      bundlePath,
     });
     assert.equal(result, 25);
   });
@@ -52,7 +59,7 @@ describe('Execution', () => {
     const result = await executeFormulaOrSyncWithVM({
       formulaName: 'Students',
       params: ['Smith'],
-      manifestPath: `${__dirname}/packs/fake`,
+      bundlePath,
     });
     assert.deepEqual(result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
   });
