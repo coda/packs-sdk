@@ -216,7 +216,6 @@ export declare enum Type {
 	html = 5,
 	image = 6
 }
-export declare type ParamType = Exclude<Type, Type.object>;
 export interface ArrayType<T extends Type> {
 	type: "array";
 	items: T;
@@ -235,6 +234,34 @@ export interface TypeMap {
 export declare type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | PackFormulaValue[];
 export declare type PackFormulaResult = $Values<TypeMap> | PackFormulaResult[];
 export declare type TypeOf<T extends PackFormulaResult> = T extends number ? Type.number : T extends string ? Type.string : T extends boolean ? Type.boolean : T extends Date ? Type.date : T extends object ? Type.object : never;
+export declare enum ParameterType {
+	String = "string",
+	Number = "number",
+	Boolean = "boolean",
+	Date = "date",
+	Html = "html",
+	Image = "image",
+	StringArray = "stringArray",
+	NumberArray = "numberArray",
+	BooleanArray = "booleanArray",
+	DateArray = "dateArray",
+	HtmlArray = "htmlArray`",
+	ImageArray = "imageArray"
+}
+export interface ParameterTypeMap {
+	[ParameterType.String]: Type.string;
+	[ParameterType.Number]: Type.number;
+	[ParameterType.Boolean]: Type.boolean;
+	[ParameterType.Date]: Type.date;
+	[ParameterType.Html]: Type.html;
+	[ParameterType.Image]: Type.image;
+	[ParameterType.StringArray]: ArrayType<Type.string>;
+	[ParameterType.NumberArray]: ArrayType<Type.number>;
+	[ParameterType.BooleanArray]: ArrayType<Type.boolean>;
+	[ParameterType.DateArray]: ArrayType<Type.date>;
+	[ParameterType.HtmlArray]: ArrayType<Type.html>;
+	[ParameterType.ImageArray]: ArrayType<Type.image>;
+}
 export interface ParamDef<T extends UnionType> {
 	/**
 	 * The name of the parameter, which will be shown to the user when invoking this formula.
@@ -576,22 +603,19 @@ export declare type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
  */
 export declare function isUserVisibleError(error: Error): error is UserVisibleError;
 export declare function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDynamicSyncTable;
+export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, "type"> & {
+	type: T;
+};
 /**
  * Create a definition for a parameter for a formula or sync.
  *
- * To create a scalar parameter, specify a `type` field, e.g. `type: Type.String`.
- * To create an array parameter, specify an `arrayType` field, e.g. `arrayType: Type.String`.
+ * @example
+ * makeParameter({type: ParameterType.String, name: 'myParam', description: 'My description'});
  *
  * @example
- * makeParameter({type: Type.String, name: 'myParam', description: 'My description'});
- *
- * @example
- * makeParameter({arrayType: Type.String, name: 'myArrayParam', description: 'My description'});
+ * makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', description: 'My description'});
  */
-export declare function makeParameter<T extends ParamType>(definition: ParamDef<T>): ParamDef<T>;
-export declare function makeParameter<T extends ParamType>(definition: Omit<ParamDef<ArrayType<T>>, "type"> & {
-	arrayType: T;
-}): ParamDef<ArrayType<T>>;
+export declare function makeParameter<T extends ParameterType>(paramDefinition: ParameterOptions<T>): ParamDef<ParameterTypeMap[T]>;
 export declare function makeUserVisibleError(msg: string): UserVisibleError;
 export interface PackFormulas {
 	readonly [namespace: string]: TypedStandardFormula[];

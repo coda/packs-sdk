@@ -65,6 +65,7 @@ export type { PackFormulaResult } from './api_types';
 export type { ParamDef } from './api_types';
 export type { ParamDefs } from './api_types';
 export type { ParamValues } from './api_types';
+export { ParameterType } from './api_types';
 export type { ParamsList } from './api_types';
 export { PrecannedDateRange } from './api_types';
 export { StatusCodeError } from './api';

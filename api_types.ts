@@ -82,6 +82,54 @@ export type TypeOf<T extends PackFormulaResult> = T extends number
   ? Type.object
   : never;
 
+export enum ParameterType {
+  String = 'string',
+  Number = 'number',
+  Boolean = 'boolean',
+  Date = 'date',
+  Html = 'html',
+  Image = 'image',
+
+  StringArray = 'stringArray',
+  NumberArray = 'numberArray',
+  BooleanArray = 'booleanArray',
+  DateArray = 'dateArray',
+  HtmlArray = 'htmlArray`',
+  ImageArray = 'imageArray',
+}
+
+export interface ParameterTypeMap {
+  [ParameterType.String]: Type.string;
+  [ParameterType.Number]: Type.number;
+  [ParameterType.Boolean]: Type.boolean;
+  [ParameterType.Date]: Type.date;
+  [ParameterType.Html]: Type.html;
+  [ParameterType.Image]: Type.image;
+
+  [ParameterType.StringArray]: ArrayType<Type.string>;
+  [ParameterType.NumberArray]: ArrayType<Type.number>;
+  [ParameterType.BooleanArray]: ArrayType<Type.boolean>;
+  [ParameterType.DateArray]: ArrayType<Type.date>;
+  [ParameterType.HtmlArray]: ArrayType<Type.html>;
+  [ParameterType.ImageArray]: ArrayType<Type.image>;
+}
+
+export const ParameterTypeInputMap: Record<ParameterType, UnionType> = {
+  [ParameterType.String]: Type.string,
+  [ParameterType.Number]: Type.number,
+  [ParameterType.Boolean]: Type.boolean,
+  [ParameterType.Date]: Type.date,
+  [ParameterType.Html]: Type.html,
+  [ParameterType.Image]: Type.image,
+
+  [ParameterType.StringArray]: {type: 'array', items: Type.string},
+  [ParameterType.NumberArray]: {type: 'array', items: Type.number},
+  [ParameterType.BooleanArray]: {type: 'array', items: Type.boolean},
+  [ParameterType.DateArray]: {type: 'array', items: Type.date},
+  [ParameterType.HtmlArray]: {type: 'array', items: Type.html},
+  [ParameterType.ImageArray]: {type: 'array', items: Type.image},
+};
+
 export interface ParamDef<T extends UnionType> {
   /**
    * The name of the parameter, which will be shown to the user when invoking this formula.

@@ -2316,6 +2316,35 @@ var Type;
 function isArrayType(obj) {
   return obj && obj.type === "array" && typeof obj.items === "number";
 }
+var ParameterType;
+(function(ParameterType2) {
+  ParameterType2["String"] = "string";
+  ParameterType2["Number"] = "number";
+  ParameterType2["Boolean"] = "boolean";
+  ParameterType2["Date"] = "date";
+  ParameterType2["Html"] = "html";
+  ParameterType2["Image"] = "image";
+  ParameterType2["StringArray"] = "stringArray";
+  ParameterType2["NumberArray"] = "numberArray";
+  ParameterType2["BooleanArray"] = "booleanArray";
+  ParameterType2["DateArray"] = "dateArray";
+  ParameterType2["HtmlArray"] = "htmlArray`";
+  ParameterType2["ImageArray"] = "imageArray";
+})(ParameterType || (ParameterType = {}));
+var ParameterTypeInputMap = {
+  [ParameterType.String]: 0,
+  [ParameterType.Number]: 1,
+  [ParameterType.Boolean]: 3,
+  [ParameterType.Date]: 4,
+  [ParameterType.Html]: 5,
+  [ParameterType.Image]: 6,
+  [ParameterType.StringArray]: { type: "array", items: 0 },
+  [ParameterType.NumberArray]: { type: "array", items: 1 },
+  [ParameterType.BooleanArray]: { type: "array", items: 3 },
+  [ParameterType.DateArray]: { type: "array", items: 4 },
+  [ParameterType.HtmlArray]: { type: "array", items: 5 },
+  [ParameterType.ImageArray]: { type: "array", items: 6 }
+};
 var ConnectionRequirement;
 (function(ConnectionRequirement2) {
   ConnectionRequirement2["None"] = "none";

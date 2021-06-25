@@ -8,6 +8,7 @@ import type {PackFormulaMetadata} from '../api';
 import type {PackMetadataValidationError} from '../testing/upload_validation';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDefs} from '../api_types';
+import {ParameterType} from '../api_types';
 import {PostSetupType} from '../types';
 import type {StringFormulaDef} from '../api';
 import {Type} from '../api_types';
@@ -310,21 +311,21 @@ describe('Pack metadata Validation', () => {
 
       it('valid formula with generic makeParameter', async () => {
         const metadata = makeMetadataFromParams([
-          makeParameter({type: Type.string, name: 'myParam', description: 'param description'}),
+          makeParameter({type: ParameterType.String, name: 'myParam', description: 'param description'}),
         ]);
         await validateJson(metadata);
       });
 
       it('valid formula with generic makeParameter array param', async () => {
         const metadata = makeMetadataFromParams([
-          makeParameter({arrayType: Type.string, name: 'myParam', description: 'param description'}),
+          makeParameter({type: ParameterType.StringArray, name: 'myParam', description: 'param description'}),
         ]);
         await validateJson(metadata);
       });
 
       it('invalid formula with object parameter', async () => {
         const metadata = makeMetadataFromParams([
-          makeParameter({type: Type.object as any, name: 'myParam', description: 'param description'}),
+          {type: Type.object, name: 'myParam', description: 'param description'},
         ]);
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
@@ -337,7 +338,7 @@ describe('Pack metadata Validation', () => {
 
       it('invalid formula with object array parameter', async () => {
         const metadata = makeMetadataFromParams([
-          makeParameter({arrayType: Type.object as any, name: 'myParam', description: 'param description'}),
+          {type: {type: 'array', items: Type.object}, name: 'myParam', description: 'param description'},
         ]);
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
@@ -350,24 +351,24 @@ describe('Pack metadata Validation', () => {
 
       it('valid formula with only optional param', async () => {
         const metadata = makeMetadataFromParams([
-          makeParameter({type: Type.string, name: 'p', description: '', optional: true}),
+          makeParameter({type: ParameterType.String, name: 'p', description: '', optional: true}),
         ]);
         await validateJson(metadata);
       });
 
       it('valid formula with required and optional params', async () => {
         const metadata = makeMetadataFromParams([
-          makeParameter({type: Type.string, name: 'p1', description: ''}),
-          makeParameter({type: Type.string, name: 'p2', description: '', optional: true}),
+          makeParameter({type: ParameterType.String, name: 'p1', description: ''}),
+          makeParameter({type: ParameterType.String, name: 'p2', description: '', optional: true}),
         ]);
         await validateJson(metadata);
       });
 
       it('invalid formula with required param after optional param', async () => {
         const metadata = makeMetadataFromParams([
-          makeParameter({type: Type.string, name: 'p1', description: ''}),
-          makeParameter({type: Type.string, name: 'p2', description: '', optional: true}),
-          makeParameter({type: Type.string, name: 'p3', description: ''}),
+          makeParameter({type: ParameterType.String, name: 'p1', description: ''}),
+          makeParameter({type: ParameterType.String, name: 'p2', description: '', optional: true}),
+          makeParameter({type: ParameterType.String, name: 'p3', description: ''}),
         ]);
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [

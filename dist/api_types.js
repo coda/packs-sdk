@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PrecannedDateRange = exports.NetworkConnection = exports.ConnectionRequirement = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.PrecannedDateRange = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 var Type;
 (function (Type) {
     Type[Type["string"] = 0] = "string";
@@ -38,6 +38,35 @@ exports.htmlArray = {
 exports.imageArray = {
     type: 'array',
     items: Type.image,
+};
+var ParameterType;
+(function (ParameterType) {
+    ParameterType["String"] = "string";
+    ParameterType["Number"] = "number";
+    ParameterType["Boolean"] = "boolean";
+    ParameterType["Date"] = "date";
+    ParameterType["Html"] = "html";
+    ParameterType["Image"] = "image";
+    ParameterType["StringArray"] = "stringArray";
+    ParameterType["NumberArray"] = "numberArray";
+    ParameterType["BooleanArray"] = "booleanArray";
+    ParameterType["DateArray"] = "dateArray";
+    ParameterType["HtmlArray"] = "htmlArray`";
+    ParameterType["ImageArray"] = "imageArray";
+})(ParameterType = exports.ParameterType || (exports.ParameterType = {}));
+exports.ParameterTypeInputMap = {
+    [ParameterType.String]: Type.string,
+    [ParameterType.Number]: Type.number,
+    [ParameterType.Boolean]: Type.boolean,
+    [ParameterType.Date]: Type.date,
+    [ParameterType.Html]: Type.html,
+    [ParameterType.Image]: Type.image,
+    [ParameterType.StringArray]: { type: 'array', items: Type.string },
+    [ParameterType.NumberArray]: { type: 'array', items: Type.number },
+    [ParameterType.BooleanArray]: { type: 'array', items: Type.boolean },
+    [ParameterType.DateArray]: { type: 'array', items: Type.date },
+    [ParameterType.HtmlArray]: { type: 'array', items: Type.html },
+    [ParameterType.ImageArray]: { type: 'array', items: Type.image },
 };
 var ConnectionRequirement;
 (function (ConnectionRequirement) {
