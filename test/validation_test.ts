@@ -362,37 +362,41 @@ describe('validation in sync tables', () => {
 
   const fakePack = createFakePack({
     syncTables: [
-      makeSyncTable('Classes', fakePersonSchema, {
-        name: 'Students',
-        description: 'Gets students in a class',
-        execute: async ([malformed], context) => {
-          const {continuation} = context.sync;
-          const page = continuation?.page;
-          switch (page) {
-            case 1:
-            case undefined:
-              return {
-                result: [
-                  {name: 'Alice', info: {age: malformed ? '100' : 100, grade: 1}},
-                  {name: 'Bob', info: {age: 100, grade: 1}},
-                ],
-                continuation: {page: 2},
-              } as any;
-            case 2:
-              return {
-                result: [
-                  {name: 'Chris', info: {age: 100, grade: 1}},
-                  {name: 'Diana', info: {age: 100, grade: 1}},
-                ],
-              };
-            default:
-              return {
-                result: [],
-              };
-          }
+      makeSyncTable({
+        name: 'Classes',
+        schema: fakePersonSchema,
+        formula: {
+          name: 'Students',
+          description: 'Gets students in a class',
+          execute: async ([malformed], context) => {
+            const {continuation} = context.sync;
+            const page = continuation?.page;
+            switch (page) {
+              case 1:
+              case undefined:
+                return {
+                  result: [
+                    {name: 'Alice', info: {age: malformed ? '100' : 100, grade: 1}},
+                    {name: 'Bob', info: {age: 100, grade: 1}},
+                  ],
+                  continuation: {page: 2},
+                } as any;
+              case 2:
+                return {
+                  result: [
+                    {name: 'Chris', info: {age: 100, grade: 1}},
+                    {name: 'Diana', info: {age: 100, grade: 1}},
+                  ],
+                };
+              default:
+                return {
+                  result: [],
+                };
+            }
+          },
+          parameters: [makeBooleanParameter('malformed', 'whether or not to return a malformed response')],
+          examples: [],
         },
-        parameters: [makeBooleanParameter('malformed', 'whether or not to return a malformed response')],
-        examples: [],
       }),
     ],
   });

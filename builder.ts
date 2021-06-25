@@ -8,6 +8,7 @@ import type {ObjectSchema} from './schema';
 import type {ParamDefs} from './api_types';
 import type {SyncFormulaDef} from './api';
 import type {SyncTable} from './api';
+import type {SyncTableOptions} from './api';
 import type {SystemAuthentication} from './types';
 import type {TypedStandardFormula} from './api';
 import {makeDynamicSyncTable} from './api';
@@ -63,17 +64,14 @@ class PackDefinitionBuilder implements BasicPackDefinition {
     return this;
   }
 
-  addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(
-    name: string,
-    schema: SchemaT,
-    formula: SyncFormulaDef<ParamDefsT>,
-    connectionRequirement?: ConnectionRequirement,
-    dynamicOptions: {
-      getSchema?: MetadataFormula;
-      entityName?: string;
-    } = {},
-  ): this {
-    const syncTable = makeSyncTable(name, schema, formula, connectionRequirement, dynamicOptions);
+  addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({
+    name,
+    schema,
+    formula,
+    connectionRequirement,
+    dynamicOptions = {},
+  }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this {
+    const syncTable = makeSyncTable({name, schema, formula, connectionRequirement, dynamicOptions});
     this.syncTables.push(syncTable);
     return this;
   }

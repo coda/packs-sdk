@@ -2,7 +2,7 @@
 // Exports of things that used to be in index.ts that are now deprecated as part of SDK
 // simplification and will likely be removed in the future.
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeStringFormula = exports.makeObjectFormula = exports.makeNumericFormula = void 0;
+exports.makeSyncTableLegacy = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeStringFormula = exports.makeObjectFormula = exports.makeNumericFormula = void 0;
 var api_1 = require("./api");
 Object.defineProperty(exports, "makeNumericFormula", { enumerable: true, get: function () { return api_1.makeNumericFormula; } });
 var api_2 = require("./api");
@@ -33,3 +33,5 @@ var api_14 = require("./api");
 Object.defineProperty(exports, "makeStringParameter", { enumerable: true, get: function () { return api_14.makeStringParameter; } });
 var api_15 = require("./api");
 Object.defineProperty(exports, "makeStringArrayParameter", { enumerable: true, get: function () { return api_15.makeStringArrayParameter; } });
+var api_16 = require("./api");
+Object.defineProperty(exports, "makeSyncTableLegacy", { enumerable: true, get: function () { return api_16.makeSyncTableLegacy; } });
