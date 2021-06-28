@@ -18,9 +18,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.executeFormulaOrSyncWithRawParamsInVM = exports.executeFormulaOrSyncWithVM = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = void 0;
-const build_1 = require("../cli/build");
+exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.executeFormulaOrSyncWithRawParamsInVM = exports.VMError = exports.translateErrorStackFromVM = exports.executeFormulaOrSyncWithVM = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = void 0;
+const source_map_1 = require("source-map");
+const compile_1 = require("./compile");
+const fs_1 = __importDefault(require("fs"));
 const helpers_1 = require("../cli/helpers");
 const helper = __importStar(require("./execution_helper"));
 const ivmHelper = __importStar(require("./ivm_helper"));
@@ -31,7 +36,9 @@ const mocks_2 = require("./mocks");
 const path = __importStar(require("path"));
 const helpers_2 = require("./helpers");
 const auth_1 = require("./auth");
+const stackTraceParser = __importStar(require("stacktrace-parser"));
 const auth_2 = require("./auth");
+const util_1 = __importDefault(require("util"));
 async function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, params, context, options, { useRealFetcher, manifestPath } = {}) {
     let executionContext = context;
     if (!executionContext && useRealFetcher) {
@@ -68,10 +75,49 @@ async function executeFormulaOrSyncWithVM({ formulaName, params, bundlePath, exe
     return ivmHelper.executeFormulaOrSync(ivmContext, formulaName, params);
 }
 exports.executeFormulaOrSyncWithVM = executeFormulaOrSyncWithVM;
+// isolated-vm doesn't translate error stack with source map. so we have to do this manually.
+async function translateErrorStackFromVM({ error, bundleSourceMapPath, vmFilename, }) {
+    if (!error.stack) {
+        return error.stack;
+    }
+    const consumer = await new source_map_1.SourceMapConsumer(fs_1.default.readFileSync(bundleSourceMapPath, 'utf8'));
+    const stack = stackTraceParser.parse(error.stack);
+    const translatedStack = stack.map(frame => {
+        if (frame.file !== vmFilename || frame.lineNumber === null || frame.column === null) {
+            return frame;
+        }
+        const originalFrame = consumer.originalPositionFor({ line: frame.lineNumber, column: frame.column - 1 });
+        return {
+            ...frame,
+            file: originalFrame.source,
+            column: originalFrame.column ? originalFrame.column + 1 : originalFrame.column,
+            lineNumber: originalFrame.line,
+            methodName: originalFrame.name || frame.methodName,
+        };
+    });
+    return translatedStack.map(stackValue => `    at ${stackValue.methodName || '<unknown>'} (${stackValue.file}:${stackValue.lineNumber}:${stackValue.column})\n`).join('');
+}
+exports.translateErrorStackFromVM = translateErrorStackFromVM;
+class VMError {
+    constructor(name, message, stack) {
+        this.name = name;
+        this.message = message;
+        this.stack = stack;
+    }
+    [util_1.default.inspect.custom]() {
+        return `${this.name}: ${this.message}\n${this.stack}`;
+    }
+}
+exports.VMError = VMError;
 async function executeFormulaOrSyncWithRawParamsInVM({ formulaName, params: rawParams, manifestPath, executionContext = mocks_2.newMockSyncExecutionContext(), }) {
-    const bundlePath = await build_1.build(manifestPath);
+    const { bundleSourceMapPath, bundlePath } = await compile_1.compilePackBundle({ manifestPath, minify: false });
     const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
-    return ivmHelper.executeFormulaOrSyncWithRawParams(ivmContext, formulaName, rawParams);
+    try {
+        return await ivmHelper.executeFormulaOrSyncWithRawParams(ivmContext, formulaName, rawParams);
+    }
+    catch (err) {
+        throw new VMError(err.name, err.message, await translateErrorStackFromVM({ error: err, bundleSourceMapPath, vmFilename: bundlePath }) || '');
+    }
 }
 exports.executeFormulaOrSyncWithRawParamsInVM = executeFormulaOrSyncWithRawParamsInVM;
 async function executeFormulaOrSyncWithRawParams({ formulaName, params: rawParams, manifest, executionContext, }) {

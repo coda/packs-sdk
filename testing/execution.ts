@@ -7,8 +7,10 @@ import type {MetadataFormula} from '../api';
 import type {PackVersionDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
+import {SourceMapConsumer} from 'source-map';
 import type {SyncExecutionContext} from '../api_types';
-import {build as buildBundle} from '../cli/build';
+import { compilePackBundle } from './compile';
+import fs from 'fs';
 import {getPackAuth} from '../cli/helpers';
 import * as helper from './execution_helper';
 import * as ivmHelper from './ivm_helper';
@@ -19,7 +21,9 @@ import {newMockSyncExecutionContext} from './mocks';
 import * as path from 'path';
 import {print} from './helpers';
 import {readCredentialsFile} from './auth';
+import * as stackTraceParser from 'stacktrace-parser';
 import {storeCredential} from './auth';
+import util from 'util';
 
 export {ExecuteOptions} from './execution_helper';
 export {ExecuteSyncOptions} from './execution_helper';
@@ -111,6 +115,61 @@ export async function executeFormulaOrSyncWithVM({
   return ivmHelper.executeFormulaOrSync(ivmContext, formulaName, params);
 }
 
+// isolated-vm doesn't translate error stack with source map. so we have to do this manually.
+export async function translateErrorStackFromVM({
+  error,
+  bundleSourceMapPath,
+  vmFilename,
+}: {
+  error: Error;
+  bundleSourceMapPath: string,
+  vmFilename: string,
+}): Promise<string | undefined> {
+  if (!error.stack) {
+    return error.stack;
+  }
+
+  const consumer = await new SourceMapConsumer(fs.readFileSync(bundleSourceMapPath, 'utf8'));
+  const stack = stackTraceParser.parse(error.stack);
+
+  const translatedStack = stack.map(frame => {
+    if (frame.file !== vmFilename || frame.lineNumber === null || frame.column === null) {
+      return frame;
+    }
+
+    const originalFrame = consumer.originalPositionFor({line: frame.lineNumber, column: frame.column - 1});
+    
+    return {
+      ...frame,
+      file: originalFrame.source,
+      column: originalFrame.column ? originalFrame.column + 1 : originalFrame.column,
+      lineNumber: originalFrame.line,
+      methodName: originalFrame.name || frame.methodName,
+    };
+  });
+
+  
+  return translatedStack.map(stackValue => 
+    `    at ${stackValue.methodName || '<unknown>'} (${stackValue.file}:${stackValue.lineNumber}:${stackValue.column})\n`
+  ).join('');
+}
+
+export class VMError {
+  name: string; 
+  message: string; 
+  stack: string;
+
+  constructor(name: string, message: string, stack: string) {
+    this.name = name;
+    this.message = message;
+    this.stack = stack;
+  }
+
+  [util.inspect.custom]() {
+    return `${this.name}: ${this.message}\n${this.stack}`;
+  }
+}
+
 export async function executeFormulaOrSyncWithRawParamsInVM({
   formulaName,
   params: rawParams,
@@ -122,11 +181,19 @@ export async function executeFormulaOrSyncWithRawParamsInVM({
   manifestPath: string;
   executionContext?: SyncExecutionContext;
 }) {
-  const bundlePath = await buildBundle(manifestPath);
+  const {bundleSourceMapPath, bundlePath} = await compilePackBundle({manifestPath, minify: false});
 
   const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
 
-  return ivmHelper.executeFormulaOrSyncWithRawParams(ivmContext, formulaName, rawParams);
+  try {
+    return await ivmHelper.executeFormulaOrSyncWithRawParams(ivmContext, formulaName, rawParams);
+  } catch (err) {
+    throw new VMError(
+      err.name, 
+      err.message, 
+      await translateErrorStackFromVM({error: err, bundleSourceMapPath, vmFilename: bundlePath}) || '',
+    );
+  }
 }
 
 export async function executeFormulaOrSyncWithRawParams({
