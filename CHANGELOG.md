@@ -2,7 +2,7 @@
 
 ### `makeSyncTable()` now accepts a single parameter dictionary instead of having some positional parameters first.
 
-This eliminates an inconsistency bewteen this function and most similar wrapper functions elsewhere in the SDK.
+This eliminates an inconsistency between this function and most similar wrapper functions elsewhere in the SDK.
 
 To migrate existing usage:
 
