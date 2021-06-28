@@ -37,6 +37,35 @@ interface TypeMap {
 export declare type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | PackFormulaValue[];
 export declare type PackFormulaResult = $Values<TypeMap> | PackFormulaResult[];
 export declare type TypeOf<T extends PackFormulaResult> = T extends number ? Type.number : T extends string ? Type.string : T extends boolean ? Type.boolean : T extends Date ? Type.date : T extends object ? Type.object : never;
+export declare enum ParameterType {
+    String = "string",
+    Number = "number",
+    Boolean = "boolean",
+    Date = "date",
+    Html = "html",
+    Image = "image",
+    StringArray = "stringArray",
+    NumberArray = "numberArray",
+    BooleanArray = "booleanArray",
+    DateArray = "dateArray",
+    HtmlArray = "htmlArray`",
+    ImageArray = "imageArray"
+}
+export interface ParameterTypeMap {
+    [ParameterType.String]: Type.string;
+    [ParameterType.Number]: Type.number;
+    [ParameterType.Boolean]: Type.boolean;
+    [ParameterType.Date]: Type.date;
+    [ParameterType.Html]: Type.html;
+    [ParameterType.Image]: Type.image;
+    [ParameterType.StringArray]: ArrayType<Type.string>;
+    [ParameterType.NumberArray]: ArrayType<Type.number>;
+    [ParameterType.BooleanArray]: ArrayType<Type.boolean>;
+    [ParameterType.DateArray]: ArrayType<Type.date>;
+    [ParameterType.HtmlArray]: ArrayType<Type.html>;
+    [ParameterType.ImageArray]: ArrayType<Type.image>;
+}
+export declare const ParameterTypeInputMap: Record<ParameterType, UnionType>;
 export interface ParamDef<T extends UnionType> {
     /**
      * The name of the parameter, which will be shown to the user when invoking this formula.

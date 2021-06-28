@@ -3,19 +3,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.StatusCodeError = exports.UserVisibleError = void 0;
 const api_types_1 = require("./api_types");
 const api_types_2 = require("./api_types");
-const schema_1 = require("./schema");
 const api_types_3 = require("./api_types");
+const schema_1 = require("./schema");
 const api_types_4 = require("./api_types");
+const api_types_5 = require("./api_types");
 const ensure_1 = require("./helpers/ensure");
 const ensure_2 = require("./helpers/ensure");
 const handler_templates_1 = require("./handler_templates");
 const handler_templates_2 = require("./handler_templates");
-const api_types_5 = require("./api_types");
 const api_types_6 = require("./api_types");
+const api_types_7 = require("./api_types");
 const schema_2 = require("./schema");
 const schema_3 = require("./schema");
-const api_types_7 = require("./api_types");
 const api_types_8 = require("./api_types");
+const api_types_9 = require("./api_types");
 const handler_templates_3 = require("./handler_templates");
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
@@ -51,62 +52,68 @@ function isDynamicSyncTable(syncTable) {
     return 'isDynamic' in syncTable;
 }
 exports.isDynamicSyncTable = isDynamicSyncTable;
-function makeParameter(definition) {
-    if ('arrayType' in definition) {
-        const { arrayType, ...rest } = definition;
-        const arrayTypeDef = { type: 'array', items: arrayType };
-        return Object.freeze({ ...rest, type: arrayTypeDef });
-    }
-    return Object.freeze(definition);
+/**
+ * Create a definition for a parameter for a formula or sync.
+ *
+ * @example
+ * makeParameter({type: ParameterType.String, name: 'myParam', description: 'My description'});
+ *
+ * @example
+ * makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', description: 'My description'});
+ */
+function makeParameter(paramDefinition) {
+    const { type, ...rest } = paramDefinition;
+    const actualType = api_types_2.ParameterTypeInputMap[type];
+    return Object.freeze({ ...rest, type: actualType });
 }
 exports.makeParameter = makeParameter;
 // Other parameter helpers below here are obsolete given the above generate parameter makers.
 function makeStringParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_2.Type.string });
+    return Object.freeze({ ...args, name, description, type: api_types_3.Type.string });
 }
 exports.makeStringParameter = makeStringParameter;
 function makeStringArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_8.stringArray });
+    return Object.freeze({ ...args, name, description, type: api_types_9.stringArray });
 }
 exports.makeStringArrayParameter = makeStringArrayParameter;
 function makeNumericParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_2.Type.number });
+    return Object.freeze({ ...args, name, description, type: api_types_3.Type.number });
 }
 exports.makeNumericParameter = makeNumericParameter;
 function makeNumericArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_7.numberArray });
+    return Object.freeze({ ...args, name, description, type: api_types_8.numberArray });
 }
 exports.makeNumericArrayParameter = makeNumericArrayParameter;
 function makeBooleanParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_2.Type.boolean });
+    return Object.freeze({ ...args, name, description, type: api_types_3.Type.boolean });
 }
 exports.makeBooleanParameter = makeBooleanParameter;
 function makeBooleanArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_3.booleanArray });
+    return Object.freeze({ ...args, name, description, type: api_types_4.booleanArray });
 }
 exports.makeBooleanArrayParameter = makeBooleanArrayParameter;
 function makeDateParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_2.Type.date });
+    return Object.freeze({ ...args, name, description, type: api_types_3.Type.date });
 }
 exports.makeDateParameter = makeDateParameter;
 function makeDateArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_4.dateArray });
+    return Object.freeze({ ...args, name, description, type: api_types_5.dateArray });
 }
 exports.makeDateArrayParameter = makeDateArrayParameter;
 function makeHtmlParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_2.Type.html });
+    return Object.freeze({ ...args, name, description, type: api_types_3.Type.html });
 }
 exports.makeHtmlParameter = makeHtmlParameter;
 function makeHtmlArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_5.htmlArray });
+    return Object.freeze({ ...args, name, description, type: api_types_6.htmlArray });
 }
 exports.makeHtmlArrayParameter = makeHtmlArrayParameter;
 function makeImageParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_2.Type.image });
+    return Object.freeze({ ...args, name, description, type: api_types_3.Type.image });
 }
 exports.makeImageParameter = makeImageParameter;
 function makeImageArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_6.imageArray });
+    return Object.freeze({ ...args, name, description, type: api_types_7.imageArray });
 }
 exports.makeImageArrayParameter = makeImageArrayParameter;
 function makeUserVisibleError(msg) {
@@ -120,11 +127,11 @@ function check(condition, msg) {
 }
 exports.check = check;
 function isObjectPackFormula(fn) {
-    return fn.resultType === api_types_2.Type.object;
+    return fn.resultType === api_types_3.Type.object;
 }
 exports.isObjectPackFormula = isObjectPackFormula;
 function isStringPackFormula(fn) {
-    return fn.resultType === api_types_2.Type.string;
+    return fn.resultType === api_types_3.Type.string;
 }
 exports.isStringPackFormula = isStringPackFormula;
 function isSyncPackFormula(fn) {
@@ -138,7 +145,7 @@ exports.isSyncPackFormula = isSyncPackFormula;
  * @param definition The definition of a formula that returns a number.
  */
 function makeNumericFormula(definition) {
-    return Object.assign({}, definition, { resultType: api_types_2.Type.number });
+    return Object.assign({}, definition, { resultType: api_types_3.Type.number });
 }
 exports.makeNumericFormula = makeNumericFormula;
 /**
@@ -150,7 +157,7 @@ exports.makeNumericFormula = makeNumericFormula;
 function makeStringFormula(definition) {
     const { response } = definition;
     return Object.assign({}, definition, {
-        resultType: api_types_2.Type.string,
+        resultType: api_types_3.Type.string,
         ...(response && { schema: response.schema }),
     });
 }
@@ -207,7 +214,7 @@ function makeFormula(fullDefinition) {
             const { resultType: unused, codaType, ...rest } = definition;
             const stringFormula = {
                 ...rest,
-                resultType: api_types_2.Type.string,
+                resultType: api_types_3.Type.string,
                 schema: codaType ? { type: schema_1.ValueType.String, codaType } : undefined,
             };
             formula = stringFormula;
@@ -217,7 +224,7 @@ function makeFormula(fullDefinition) {
             const { resultType: unused, codaType, ...rest } = definition;
             const numericFormula = {
                 ...rest,
-                resultType: api_types_2.Type.number,
+                resultType: api_types_3.Type.number,
                 schema: codaType ? { type: schema_1.ValueType.Number, codaType } : undefined,
             };
             formula = numericFormula;
@@ -227,7 +234,7 @@ function makeFormula(fullDefinition) {
             const { resultType: unused, ...rest } = definition;
             const booleanFormula = {
                 ...rest,
-                resultType: api_types_2.Type.boolean,
+                resultType: api_types_3.Type.boolean,
             };
             formula = booleanFormula;
             break;
@@ -236,7 +243,7 @@ function makeFormula(fullDefinition) {
             const { resultType: unused, items, ...rest } = definition;
             const arrayFormula = {
                 ...rest,
-                resultType: api_types_2.Type.object,
+                resultType: api_types_3.Type.object,
                 schema: schema_3.normalizeSchema({ type: schema_1.ValueType.Array, items }),
             };
             formula = arrayFormula;
@@ -246,7 +253,7 @@ function makeFormula(fullDefinition) {
             const { resultType: unused, schema, ...rest } = definition;
             const objectFormula = {
                 ...rest,
-                resultType: api_types_2.Type.object,
+                resultType: api_types_3.Type.object,
                 schema: schema_3.normalizeSchema(schema),
             };
             formula = objectFormula;
@@ -375,7 +382,7 @@ function makeObjectFormula({ response, ...definition }) {
         };
     }
     return Object.assign({}, definition, {
-        resultType: api_types_2.Type.object,
+        resultType: api_types_3.Type.object,
         execute,
         schema,
     });
@@ -424,7 +431,7 @@ function makeSyncTable({ name, schema, formula, connectionRequirement, dynamicOp
             schema: formulaSchema,
             isSyncFormula: true,
             connectionRequirement: definition.connectionRequirement || connectionRequirement,
-            resultType: api_types_2.Type.object,
+            resultType: api_types_3.Type.object,
         },
         getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
         entityName,
@@ -482,7 +489,7 @@ function makeTranslateObjectFormula({ response, ...definition }) {
     }
     return Object.assign({}, definition, {
         execute,
-        resultType: api_types_2.Type.object,
+        resultType: api_types_3.Type.object,
         schema: response.schema,
     });
 }
@@ -496,7 +503,7 @@ function makeEmptyFormula(definition) {
     }
     return Object.assign({}, rest, {
         execute,
-        resultType: api_types_2.Type.string,
+        resultType: api_types_3.Type.string,
     });
 }
 exports.makeEmptyFormula = makeEmptyFormula;

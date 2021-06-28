@@ -11,8 +11,9 @@ import type { PackFormulaResult } from './api_types';
 import type { ParamArgs } from './api_types';
 import type { ParamDef } from './api_types';
 import type { ParamDefs } from './api_types';
-import type { ParamType } from './api_types';
 import type { ParamValues } from './api_types';
+import type { ParameterType } from './api_types';
+import type { ParameterTypeMap } from './api_types';
 import type { RequestHandlerTemplate } from './handler_templates';
 import type { ResponseHandlerTemplate } from './handler_templates';
 import type { Schema } from './schema';
@@ -126,22 +127,19 @@ export declare type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
  */
 export declare function isUserVisibleError(error: Error): error is UserVisibleError;
 export declare function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDynamicSyncTable;
+declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, 'type'> & {
+    type: T;
+};
 /**
  * Create a definition for a parameter for a formula or sync.
  *
- * To create a scalar parameter, specify a `type` field, e.g. `type: Type.String`.
- * To create an array parameter, specify an `arrayType` field, e.g. `arrayType: Type.String`.
+ * @example
+ * makeParameter({type: ParameterType.String, name: 'myParam', description: 'My description'});
  *
  * @example
- * makeParameter({type: Type.String, name: 'myParam', description: 'My description'});
- *
- * @example
- * makeParameter({arrayType: Type.String, name: 'myArrayParam', description: 'My description'});
+ * makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', description: 'My description'});
  */
-export declare function makeParameter<T extends ParamType>(definition: ParamDef<T>): ParamDef<T>;
-export declare function makeParameter<T extends ParamType>(definition: Omit<ParamDef<ArrayType<T>>, 'type'> & {
-    arrayType: T;
-}): ParamDef<ArrayType<T>>;
+export declare function makeParameter<T extends ParameterType>(paramDefinition: ParameterOptions<T>): ParamDef<ParameterTypeMap[T]>;
 export declare function makeStringParameter(name: string, description: string, args?: ParamArgs<Type.string>): ParamDef<Type.string>;
 export declare function makeStringArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.string>>): ParamDef<ArrayType<Type.string>>;
 export declare function makeNumericParameter(name: string, description: string, args?: ParamArgs<Type.number>): ParamDef<Type.number>;

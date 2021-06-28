@@ -1,7 +1,8 @@
 import './test_helper';
 import type {ArrayType} from '../api_types';
 import {ConnectionRequirement} from '../api_types';
-import {Type} from '../api_types';
+import {ParameterType} from '../api_types';
+import type {Type} from '../api_types';
 import {ValueType} from '../schema';
 import {makeDynamicSyncTable} from '../api';
 import {makeFormula} from '../api';
@@ -118,27 +119,27 @@ describe('API test', () => {
   // want to ensure continue to compile properly.
   describe('strong typing', () => {
     it('parameter types are strong', () => {
-      const stringParam = makeParameter({type: Type.string, name: 'stringScalar', description: ''});
+      const stringParam = makeParameter({type: ParameterType.String, name: 'stringScalar', description: ''});
       const stringType: Type.string = stringParam.type;
       stringType!;
 
-      const stringArrayParam = makeParameter({arrayType: Type.string, name: 'stringArray', description: ''});
+      const stringArrayParam = makeParameter({type: ParameterType.StringArray, name: 'stringArray', description: ''});
       const stringArrayType: ArrayType<Type.string> = stringArrayParam.type;
       stringArrayType!;
 
-      const numberParam = makeParameter({type: Type.number, name: 'numberScalar', description: ''});
+      const numberParam = makeParameter({type: ParameterType.Number, name: 'numberScalar', description: ''});
       const numberType: Type.number = numberParam.type;
       numberType!;
 
-      const numberArrayParam = makeParameter({arrayType: Type.number, name: 'numberArray', description: ''});
+      const numberArrayParam = makeParameter({type: ParameterType.NumberArray, name: 'numberArray', description: ''});
       const numberArrayType: ArrayType<Type.number> = numberArrayParam.type;
       numberArrayType!;
 
-      const dateParam = makeParameter({type: Type.date, name: 'dateScalar', description: ''});
+      const dateParam = makeParameter({type: ParameterType.Date, name: 'dateScalar', description: ''});
       const dateType: Type.date = dateParam.type;
       dateType!;
 
-      const dateArrayParam = makeParameter({arrayType: Type.date, name: 'dateArray', description: ''});
+      const dateArrayParam = makeParameter({type: ParameterType.DateArray, name: 'dateArray', description: ''});
       const dateArrayType: ArrayType<Type.date> = dateArrayParam.type;
       dateArrayType!;
     });
@@ -148,7 +149,7 @@ describe('API test', () => {
         resultType: ValueType.String,
         name: 'Test',
         description: '',
-        parameters: [makeParameter({type: Type.string, name: 'myParam', description: ''})],
+        parameters: [makeParameter({type: ParameterType.String, name: 'myParam', description: ''})],
         execute: ([param]) => param,
       });
     });
@@ -158,7 +159,7 @@ describe('API test', () => {
         resultType: ValueType.String,
         name: 'Test',
         description: '',
-        parameters: [makeParameter({arrayType: Type.string, name: 'myParam', description: ''})],
+        parameters: [makeParameter({type: ParameterType.StringArray, name: 'myParam', description: ''})],
         execute: ([param]) => param[0],
       });
     });
@@ -169,8 +170,8 @@ describe('API test', () => {
         name: 'Test',
         description: '',
         parameters: [
-          makeParameter({arrayType: Type.string, name: 'myParam', description: ''}),
-          makeParameter({type: Type.number, name: 'myParam', description: ''}),
+          makeParameter({type: ParameterType.String, name: 'myParam', description: ''}),
+          makeParameter({type: ParameterType.Number, name: 'myParam', description: ''}),
         ],
         execute: ([param1, param2]) => param1[param2],
       });
