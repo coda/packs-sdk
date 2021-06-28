@@ -350,10 +350,12 @@ export type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefs
 
 export type BooleanPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, boolean> & {schema?: BooleanSchema};
 
-export type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> =
-  Formula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
-    schema?: StringSchema<ResultT>;
-  };
+export type StringPackFormula<
+  ParamDefsT extends ParamDefs,
+  ResultT extends StringHintTypes = StringHintTypes,
+> = Formula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
+  schema?: StringSchema<ResultT>;
+};
 
 export type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Formula<
   ParamDefsT,
@@ -760,6 +762,44 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
   }) as ObjectPackFormula<ParamDefsT, SchemaT>;
 }
 
+export interface SyncTableOptions<
+  K extends string,
+  L extends string,
+  ParamDefsT extends ParamDefs,
+  SchemaT extends ObjectSchema<K, L>,
+> {
+  /**
+   * The name of the sync table. This should describe the entities being synced. For example,
+   * a sync table that syncs products from an e-commerce platform should be called 'Products'. This name
+   * must not contain spaces.
+   */
+  name: string;
+  /**
+   * The definition of the schema that describes a single response object. For example, the
+   * schema for a single product. The sync formula will return an array of objects that fit this schema.
+   */
+  schema: SchemaT;
+  /**
+   * The definition of the formula that implements this sync. This is a Coda packs formula
+   * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
+   * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
+   * These will eventually be consolidated.)
+   */
+  formula: SyncFormulaDef<ParamDefsT>;
+  /**
+   * A {@link ConnectionRequirement} that will be used for all formulas contained within
+   * this sync table (including autocomplete formulas).
+   */
+  connectionRequirement?: ConnectionRequirement;
+  /**
+   * A set of options used internally by {@link makeDynamicSyncTable}
+   */
+  dynamicOptions?: {
+    getSchema?: MetadataFormula;
+    entityName?: string;
+  };
+}
+
 /**
  * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
  * using this wrapper rather than declaring a sync table definition object directly.
@@ -770,35 +810,19 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
  * * Wrapping the execute formula to normalize return values to match the normalized schema.
  *
  * See [Normalization](/index.html#normalization) for more information about schema normalization.
- *
- * @param name The name of the sync table. This should describe the entities being synced. For example,
- * a sync table that syncs products from an e-commerce platform should be called 'Products'. This name
- * must not contain spaces.
- * @param schema The definition of the schema that describes a single response object. For example, the
- * schema for a single product. The sync formula will return an array of objects that fit this schema.
- * @param formula The definition of the formula that implements this sync. This is a Coda packs formula
- * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
- * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
- * These will eventually be consolidated.)
- * @param connectionRequirement A {@link ConnectionRequirement} that will be used for all formulas contained within
- * this sync table (including autocomplete formulas).
- * @param dynamicOptions: A set of options used internally by {@link makeDynamicSyncTable}
  */
 export function makeSyncTable<
   K extends string,
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>,
->(
-  name: string,
-  schema: SchemaT,
-  formula: SyncFormulaDef<ParamDefsT>,
-  connectionRequirement?: ConnectionRequirement,
-  dynamicOptions: {
-    getSchema?: MetadataFormula;
-    entityName?: string;
-  } = {},
-): SyncTableDef<K, L, ParamDefsT, SchemaT> {
+>({
+  name,
+  schema,
+  formula,
+  connectionRequirement,
+  dynamicOptions = {},
+}: SyncTableOptions<K, L, ParamDefsT, SchemaT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {getSchema, entityName} = dynamicOptions;
   const {execute: wrappedExecute, ...definition} = maybeRewriteConnectionForFormula(formula, connectionRequirement);
   const formulaSchema = getSchema
@@ -841,6 +865,24 @@ export function makeSyncTable<
   };
 }
 
+export function makeSyncTableLegacy<
+  K extends string,
+  L extends string,
+  ParamDefsT extends ParamDefs,
+  SchemaT extends ObjectSchema<K, L>,
+>(
+  name: string,
+  schema: SchemaT,
+  formula: SyncFormulaDef<ParamDefsT>,
+  connectionRequirement?: ConnectionRequirement,
+  dynamicOptions: {
+    getSchema?: MetadataFormula;
+    entityName?: string;
+  } = {},
+): SyncTableDef<K, L, ParamDefsT, SchemaT> {
+  return makeSyncTable({name, schema, formula, connectionRequirement, dynamicOptions});
+}
+
 export function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({
   name,
   getName,
@@ -871,7 +913,13 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
       id: {type: ValueType.String},
     },
   });
-  const table = makeSyncTable(name, fakeSchema, formula, connectionRequirement, {getSchema, entityName});
+  const table = makeSyncTable({
+    name,
+    schema: fakeSchema,
+    formula,
+    connectionRequirement,
+    dynamicOptions: {getSchema, entityName},
+  });
   return {
     ...table,
     isDynamic: true,

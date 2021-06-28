@@ -33,8 +33,8 @@ class PackDefinitionBuilder {
         this.formulas.push(formula); // WTF
         return this;
     }
-    addSyncTable(name, schema, formula, connectionRequirement, dynamicOptions = {}) {
-        const syncTable = api_3.makeSyncTable(name, schema, formula, connectionRequirement, dynamicOptions);
+    addSyncTable({ name, schema, formula, connectionRequirement, dynamicOptions = {}, }) {
+        const syncTable = api_3.makeSyncTable({ name, schema, formula, connectionRequirement, dynamicOptions });
         this.syncTables.push(syncTable);
         return this;
     }

@@ -13,3 +13,4 @@ export { makeImageParameter } from './api';
 export { makeImageArrayParameter } from './api';
 export { makeStringParameter } from './api';
 export { makeStringArrayParameter } from './api';
+export { makeSyncTableLegacy } from './api';

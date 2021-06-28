@@ -45,43 +45,47 @@ export const manifest: PackDefinition = createFakePack({
     }),
   ],
   syncTables: [
-    makeSyncTable('Classes', fakePersonSchema, {
-      name: 'Students',
-      description: "Gets students in a teacher's class",
-      execute: async ([teacher], context) => {
-        const {continuation} = context.sync;
-        const page = continuation?.page;
-        switch (teacher) {
-          case 'Smith':
-            if (!page || page === 1) {
-              return {
-                result: [{name: 'Alice'}, {name: 'Bob'}],
-                continuation: {page: 2},
-              };
-            }
-            if (page === 2) {
-              return {
-                result: [{name: 'Chris'}, {name: 'Diana'}],
-              };
-            }
-          case 'Brown':
-            if (!page || page === 1) {
-              return {
-                result: [{name: 'Annie'}, {name: 'Bryan'}],
-                continuation: {page: 2},
-              };
-            }
-            if (page === 2) {
-              return {
-                result: [{name: 'Christina'}, {name: 'Donald'}],
-              };
-            }
-          default:
-            return {} as any;
-        }
+    makeSyncTable({
+      name: 'Classes',
+      schema: fakePersonSchema,
+      formula: {
+        name: 'Students',
+        description: "Gets students in a teacher's class",
+        execute: async ([teacher], context) => {
+          const {continuation} = context.sync;
+          const page = continuation?.page;
+          switch (teacher) {
+            case 'Smith':
+              if (!page || page === 1) {
+                return {
+                  result: [{name: 'Alice'}, {name: 'Bob'}],
+                  continuation: {page: 2},
+                };
+              }
+              if (page === 2) {
+                return {
+                  result: [{name: 'Chris'}, {name: 'Diana'}],
+                };
+              }
+            case 'Brown':
+              if (!page || page === 1) {
+                return {
+                  result: [{name: 'Annie'}, {name: 'Bryan'}],
+                  continuation: {page: 2},
+                };
+              }
+              if (page === 2) {
+                return {
+                  result: [{name: 'Christina'}, {name: 'Donald'}],
+                };
+              }
+            default:
+              return {} as any;
+          }
+        },
+        parameters: [makeStringParameter('teacher', 'teacher name')],
+        examples: [],
       },
-      parameters: [makeStringParameter('teacher', 'teacher name')],
-      examples: [],
     }),
   ],
 });

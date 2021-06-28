@@ -8,6 +8,7 @@ import type { ObjectSchema } from './schema';
 import type { ParamDefs } from './api_types';
 import type { SyncFormulaDef } from './api';
 import type { SyncTable } from './api';
+import type { SyncTableOptions } from './api';
 import type { SystemAuthentication } from './types';
 import type { TypedStandardFormula } from './api';
 /**
@@ -30,10 +31,7 @@ declare class PackDefinitionBuilder implements BasicPackDefinition {
     formulaNamespace?: string;
     constructor(definition?: Partial<BasicPackDefinition>);
     addFormula<ParamDefsT extends ParamDefs>(definition: FormulaDefinitionV2<ParamDefsT>): this;
-    addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, formula: SyncFormulaDef<ParamDefsT>, connectionRequirement?: ConnectionRequirement, dynamicOptions?: {
-        getSchema?: MetadataFormula;
-        entityName?: string;
-    }): this;
+    addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({ name, schema, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this;
     addDynamicSyncTable<ParamDefsT extends ParamDefs>(definition: {
         name: string;
         getName: MetadataFormula;

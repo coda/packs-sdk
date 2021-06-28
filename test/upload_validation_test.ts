@@ -381,9 +381,9 @@ describe('Pack metadata Validation', () => {
 
     describe('sync tables', () => {
       it('valid sync table', async () => {
-        const syncTable = makeSyncTable(
-          'SyncTable',
-          makeObjectSchema({
+        const syncTable = makeSyncTable({
+          name: 'SyncTable',
+          schema: makeObjectSchema({
             type: ValueType.Object,
             primary: 'foo',
             id: 'foo',
@@ -392,7 +392,7 @@ describe('Pack metadata Validation', () => {
               Foo: {type: ValueType.String},
             },
           }),
-          {
+          formula: {
             name: 'SyncTable',
             description: 'A simple sync table',
             async execute([], _context) {
@@ -401,7 +401,7 @@ describe('Pack metadata Validation', () => {
             parameters: [],
             examples: [],
           },
-        );
+        });
 
         const metadata = createFakePack({
           syncTables: [syncTable],
@@ -439,9 +439,9 @@ describe('Pack metadata Validation', () => {
       });
 
       it('valid sync table with nested object schema', async () => {
-        const syncTable = makeSyncTable(
-          'SyncTable',
-          makeObjectSchema({
+        const syncTable = makeSyncTable({
+          name: 'SyncTable',
+          schema: makeObjectSchema({
             type: ValueType.Object,
             primary: 'foo',
             id: 'foo',
@@ -455,11 +455,11 @@ describe('Pack metadata Validation', () => {
                 featured: ['c1'],
                 properties: {
                   c1: {type: ValueType.String},
-                }
+                },
               }),
             },
           }),
-          {
+          formula: {
             name: 'SyncTable',
             description: 'A simple sync table',
             async execute([], _context) {
@@ -468,7 +468,7 @@ describe('Pack metadata Validation', () => {
             parameters: [],
             examples: [],
           },
-        );
+        });
 
         const metadata = createFakePack({
           syncTables: [syncTable],
@@ -477,16 +477,16 @@ describe('Pack metadata Validation', () => {
 
         const {schema} = validatedMetadata.syncTables[0];
         assert.ok(schema);
-        const childSchema = schema.properties.Child
+        const childSchema = schema.properties.Child;
         assert.ok(childSchema);
         assert.equal(childSchema.fromKey, 'child');
         assert.isTrue(childSchema.required);
       });
 
       it('identity name matches property', async () => {
-        const syncTable = makeSyncTable(
-          'SyncTable',
-          makeObjectSchema({
+        const syncTable = makeSyncTable({
+          name: 'SyncTable',
+          schema: makeObjectSchema({
             type: ValueType.Object,
             primary: 'foo',
             id: 'foo',
@@ -495,7 +495,7 @@ describe('Pack metadata Validation', () => {
               Foo: {type: ValueType.String},
             },
           }),
-          {
+          formula: {
             name: 'SyncTable',
             description: 'A simple sync table',
             async execute([], _context) {
@@ -504,7 +504,7 @@ describe('Pack metadata Validation', () => {
             parameters: [],
             examples: [],
           },
-        );
+        });
 
         const metadata = createFakePack({
           syncTables: [syncTable],
@@ -577,9 +577,9 @@ describe('Pack metadata Validation', () => {
       });
 
       it('invalid identity name', async () => {
-        const syncTable = makeSyncTable(
-          'SyncTable',
-          makeObjectSchema({
+        const syncTable = makeSyncTable({
+          name: 'SyncTable',
+          schema: makeObjectSchema({
             type: ValueType.Object,
             primary: 'foo',
             id: 'foo',
@@ -588,7 +588,7 @@ describe('Pack metadata Validation', () => {
               foo: {type: ValueType.String},
             },
           }),
-          {
+          formula: {
             name: 'SyncTable',
             description: 'A simple sync table',
             async execute([], _context) {
@@ -597,7 +597,7 @@ describe('Pack metadata Validation', () => {
             parameters: [],
             examples: [],
           },
-        );
+        });
 
         const metadata = createFakePack({
           syncTables: [syncTable],

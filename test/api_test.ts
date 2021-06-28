@@ -51,16 +51,16 @@ describe('API test', () => {
     });
 
     it('connectionRequirement on getter still carries through', () => {
-      const table = makeSyncTable(
-        'SomeSync',
-        schema.makeObjectSchema({
+      const table = makeSyncTable({
+        name: 'SomeSync',
+        schema: schema.makeObjectSchema({
           type: ValueType.Object,
           id: 'id',
           primary: 'id',
           identity: {name: 'Identity'},
           properties: {id: {type: ValueType.String}},
         }),
-        {
+        formula: {
           name: 'Whatever',
           connectionRequirement: ConnectionRequirement.Optional,
           description: 'Whatever',
@@ -69,7 +69,7 @@ describe('API test', () => {
             return {result: []};
           },
         },
-      );
+      });
       assert.equal(ConnectionRequirement.Optional, table.getter.connectionRequirement);
     });
   });
