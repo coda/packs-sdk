@@ -405,7 +405,7 @@ function makeSyncTable({ name, identityName, schema: schemaDef, formula, connect
     if (schemaDef.identity) {
         schemaDef.identity = { ...schemaDef.identity, name: identityName || schemaDef.identity.name };
     }
-    else {
+    else if (identityName) {
         schemaDef.identity = { name: identityName };
     }
     const schema = schema_2.makeObjectSchema(schemaDef);
@@ -449,7 +449,7 @@ function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynam
     return makeSyncTable({ name, identityName: '', schema, formula, connectionRequirement, dynamicOptions });
 }
 exports.makeSyncTableLegacy = makeSyncTableLegacy;
-function makeDynamicSyncTable({ name, identityName, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, connectionRequirement, }) {
+function makeDynamicSyncTable({ name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, connectionRequirement, }) {
     const fakeSchema = schema_2.makeObjectSchema({
         // This schema is useless... just creating a stub here but the client will use
         // the dynamic one.
@@ -463,7 +463,7 @@ function makeDynamicSyncTable({ name, identityName, getName, getSchema, getDispl
     });
     const table = makeSyncTable({
         name,
-        identityName,
+        identityName: '',
         schema: fakeSchema,
         formula,
         connectionRequirement,

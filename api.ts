@@ -837,7 +837,7 @@ export function makeSyncTable<
   const {execute: wrappedExecute, ...definition} = maybeRewriteConnectionForFormula(formula, connectionRequirement);
   if (schemaDef.identity) {
     schemaDef.identity = {...schemaDef.identity, name: identityName || schemaDef.identity.name};
-  } else {
+  } else if (identityName) {
     schemaDef.identity = {name: identityName};
   }
   const schema = makeObjectSchema<K, L, SchemaDefT>(schemaDef) as SchemaT;
@@ -901,7 +901,6 @@ export function makeSyncTableLegacy<
 
 export function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({
   name,
-  identityName,
   getName,
   getSchema,
   getDisplayUrl,
@@ -911,7 +910,6 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   connectionRequirement,
 }: {
   name: string;
-  identityName: string;
   getName: MetadataFormula;
   getSchema: MetadataFormula;
   formula: SyncFormulaDef<ParamDefsT>;
@@ -933,7 +931,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   });
   const table = makeSyncTable({
     name,
-    identityName,
+    identityName: '',
     schema: fakeSchema,
     formula,
     connectionRequirement,

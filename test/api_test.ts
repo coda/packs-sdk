@@ -17,7 +17,6 @@ describe('API test', () => {
     it('connection overrides individual connection values', () => {
       const table = makeDynamicSyncTable({
         name: 'Whatever',
-        identityName: 'Identity',
         connectionRequirement: ConnectionRequirement.Optional,
         getName: makeMetadataFormula(async () => 'sup'),
         getSchema: makeMetadataFormula(async () =>

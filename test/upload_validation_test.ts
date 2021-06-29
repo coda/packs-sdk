@@ -415,7 +415,6 @@ describe('Pack metadata Validation', () => {
       it('valid dynamic sync table', async () => {
         const syncTable = makeDynamicSyncTable({
           name: 'DynamicSyncTable',
-          identityName: 'Sync',
           getName: makeMetadataFormula(async () => {
             return '';
           }),
@@ -588,40 +587,6 @@ describe('Pack metadata Validation', () => {
         assert.deepEqual(schema.identity, {name: 'LegacyName'});
       });
 
-      it('identityName propagated to schmea for dynamic sync table', async () => {
-        const syncTable = makeDynamicSyncTable({
-          name: 'DynamicSyncTable',
-          identityName: 'IdentityName',
-          getName: makeMetadataFormula(async () => {
-            return '';
-          }),
-          getSchema: makeMetadataFormula(async () => {
-            return '';
-          }),
-          formula: {
-            name: 'SyncTable',
-            description: 'Sync table',
-            examples: [],
-            parameters: [],
-            execute: async () => {
-              return {result: []};
-            },
-          },
-          getDisplayUrl: makeMetadataFormula(async () => {
-            return '';
-          }),
-        });
-
-        const metadata = createFakePack({
-          syncTables: [syncTable],
-        });
-        const validatedMetadata = await validateJson(metadata);
-
-        const {schema} = validatedMetadata.syncTables[0];
-        assert.ok(schema);
-        assert.deepEqual(schema.identity, {name: 'IdentityName'});
-      });
-
       it('identity name matches property', async () => {
         const syncTable = makeSyncTable({
           name: 'SyncTable',
@@ -660,7 +625,6 @@ describe('Pack metadata Validation', () => {
       it('invalid dynamic sync table', async () => {
         const syncTable = makeDynamicSyncTable({
           name: 'DynamicSyncTable',
-          identityName: 'Sync',
           getName: makeMetadataFormula(async () => {
             return '';
           }),
@@ -694,7 +658,6 @@ describe('Pack metadata Validation', () => {
 
         const invalidFormulaSyncTable = makeDynamicSyncTable({
           name: 'DynamicSyncTable',
-          identityName: 'Sync',
           getName: makeMetadataFormula(async () => {
             return '';
           }),
@@ -815,6 +778,55 @@ describe('Pack metadata Validation', () => {
           path: 'syncTables',
         },
       ]);
+    });
+
+    it('duplicate sync table identity names not triggered for dynamic sync tables', async () => {
+      const syncTable1 = makeDynamicSyncTable({
+        name: 'DynamicSyncTable1',
+        getName: makeMetadataFormula(async () => {
+          return '';
+        }),
+        getSchema: makeMetadataFormula(async () => {
+          return '';
+        }),
+        formula: {
+          name: 'SyncTable',
+          description: 'Sync table',
+          examples: [],
+          parameters: [],
+          execute: async () => {
+            return {result: []};
+          },
+        },
+        getDisplayUrl: makeMetadataFormula(async () => {
+          return '';
+        }),
+      });
+      const syncTable2 = makeDynamicSyncTable({
+        name: 'DynamicSyncTable2',
+        getName: makeMetadataFormula(async () => {
+          return '';
+        }),
+        getSchema: makeMetadataFormula(async () => {
+          return '';
+        }),
+        formula: {
+          name: 'SyncTable',
+          description: 'Sync table',
+          examples: [],
+          parameters: [],
+          execute: async () => {
+            return {result: []};
+          },
+        },
+        getDisplayUrl: makeMetadataFormula(async () => {
+          return '';
+        }),
+      });
+      const metadata = createFakePack({
+        syncTables: [syncTable1, syncTable2],
+      });
+      await validateJson(metadata);
     });
 
     it('duplicate sync table names', async () => {
