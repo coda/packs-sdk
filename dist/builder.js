@@ -33,11 +33,12 @@ class PackDefinitionBuilder {
         this.formulas.push(formula); // WTF
         return this;
     }
-    addSyncTable({ name, schema, formula, connectionRequirement, dynamicOptions = {}, }) {
-        const syncTable = api_3.makeSyncTable({ name, schema, formula, connectionRequirement, dynamicOptions });
+    addSyncTable({ name, identityName, schema, formula, connectionRequirement, dynamicOptions = {}, }) {
+        const syncTable = api_3.makeSyncTable({ name, identityName, schema, formula, connectionRequirement, dynamicOptions });
         this.syncTables.push(syncTable);
         return this;
     }
+    // TODO(jonathan): Split out the definition into a type and add doc comments.
     addDynamicSyncTable(definition) {
         const dynamicSyncTable = api_1.makeDynamicSyncTable(definition);
         this.syncTables.push(dynamicSyncTable);

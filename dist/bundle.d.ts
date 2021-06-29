@@ -771,13 +771,27 @@ export interface SimpleAutocompleteOption {
 export declare function simpleAutocomplete(search: string | undefined, options: Array<string | SimpleAutocompleteOption>): Promise<MetadataFormulaObjectResultType[]>;
 export declare function autocompleteSearchObjects<T>(search: string, objs: T[], displayKey: keyof T, valueKey: keyof T): Promise<MetadataFormulaObjectResultType[]>;
 export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | SimpleAutocompleteOption>): MetadataFormula;
-export interface SyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> {
+export interface SyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> {
 	/**
 	 * The name of the sync table. This should describe the entities being synced. For example,
 	 * a sync table that syncs products from an e-commerce platform should be called 'Products'. This name
-	 * must not contain spaces.
+	 * must not contain spaces. This name will be shown to users in the Coda UI.
 	 */
 	name: string;
+	/**
+	 * The "unique identifier" for the entity being synced. This will serve as the unique id for this
+	 * table, and must be unique across other sync tables for your pack. This is often the singular
+	 * form of the table name, e.g. if your table name was 'Products' you might choose 'Product'
+	 * as the identity name.
+	 *
+	 * When returning objects from other syncs or formulas, you may create Coda references to objects
+	 * in this table by defining an {@link Identity} in that schema that refers to this identity name.
+	 *
+	 * For example, if your identity name was 'Product', another formula or sync could return
+	 * shell objects that reference rows in this table, so long as they contain the id
+	 * of the object, and the schema is declared as `{identity: {name: 'Products'}}`.
+	 */
+	identityName: string;
 	/**
 	 * The definition of the schema that describes a single response object. For example, the
 	 * schema for a single product. The sync formula will return an array of objects that fit this schema.
@@ -814,9 +828,10 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
  *
  * See [Normalization](/index.html#normalization) for more information about schema normalization.
  */
-export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({ name, schema, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, connectionRequirement, }: {
+export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends ObjectSchema<K, L>>({ name, identityName, schema: schemaDef, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ name, identityName, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, connectionRequirement, }: {
 	name: string;
+	identityName: string;
 	getName: MetadataFormula;
 	getSchema: MetadataFormula;
 	formula: SyncFormulaDef<ParamDefsT>;
@@ -1119,9 +1134,10 @@ declare class PackDefinitionBuilder implements BasicPackDefinition {
 	formulaNamespace?: string;
 	constructor(definition?: Partial<BasicPackDefinition>);
 	addFormula<ParamDefsT extends ParamDefs>(definition: FormulaDefinitionV2<ParamDefsT>): this;
-	addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({ name, schema, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this;
+	addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({ name, identityName, schema, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this;
 	addDynamicSyncTable<ParamDefsT extends ParamDefs>(definition: {
 		name: string;
+		identityName: string;
 		getName: MetadataFormula;
 		getSchema: MetadataFormula;
 		formula: SyncFormulaDef<ParamDefsT>;

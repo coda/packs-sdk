@@ -357,13 +357,13 @@ describe('validation in sync tables', () => {
         },
       },
     },
-    identity: {packId: FakePack.id, name: 'Person'},
   });
 
   const fakePack = createFakePack({
     syncTables: [
       makeSyncTable({
         name: 'Classes',
+        identityName: 'Person',
         schema: fakePersonSchema,
         formula: {
           name: 'Students',

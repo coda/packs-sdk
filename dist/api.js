@@ -399,9 +399,16 @@ exports.makeObjectFormula = makeObjectFormula;
  *
  * See [Normalization](/index.html#normalization) for more information about schema normalization.
  */
-function makeSyncTable({ name, schema, formula, connectionRequirement, dynamicOptions = {}, }) {
+function makeSyncTable({ name, identityName, schema: schemaDef, formula, connectionRequirement, dynamicOptions = {}, }) {
     const { getSchema, entityName } = dynamicOptions;
     const { execute: wrappedExecute, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
+    if (schemaDef.identity) {
+        schemaDef.identity = { ...schemaDef.identity, name: identityName || schemaDef.identity.name };
+    }
+    else {
+        schemaDef.identity = { name: identityName };
+    }
+    const schema = schema_2.makeObjectSchema(schemaDef);
     const formulaSchema = getSchema
         ? undefined
         : schema_3.normalizeSchema({ type: schema_1.ValueType.Array, items: schema });
@@ -439,10 +446,10 @@ function makeSyncTable({ name, schema, formula, connectionRequirement, dynamicOp
 }
 exports.makeSyncTable = makeSyncTable;
 function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynamicOptions = {}) {
-    return makeSyncTable({ name, schema, formula, connectionRequirement, dynamicOptions });
+    return makeSyncTable({ name, identityName: '', schema, formula, connectionRequirement, dynamicOptions });
 }
 exports.makeSyncTableLegacy = makeSyncTableLegacy;
-function makeDynamicSyncTable({ name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, connectionRequirement, }) {
+function makeDynamicSyncTable({ name, identityName, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, connectionRequirement, }) {
     const fakeSchema = schema_2.makeObjectSchema({
         // This schema is useless... just creating a stub here but the client will use
         // the dynamic one.
@@ -456,6 +463,7 @@ function makeDynamicSyncTable({ name, getName, getSchema, getDisplayUrl, formula
     });
     const table = makeSyncTable({
         name,
+        identityName,
         schema: fakeSchema,
         formula,
         connectionRequirement,
