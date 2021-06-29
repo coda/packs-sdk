@@ -184,5 +184,5 @@ export declare const PlaceholderIdentityPackId = -1;
 export declare function makeObjectSchema<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>>(schemaDef: T): ObjectSchema<K, L>;
 export declare function normalizeSchemaKey(key: string): string;
 export declare function normalizeSchema<T extends Schema>(schema: T): T;
-export declare function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema): GenericObjectSchema;
+export declare function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema, identityName?: string): GenericObjectSchema;
 export {};
