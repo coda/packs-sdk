@@ -150,7 +150,7 @@ export async function executeFormulaOrSyncWithRawParamsInVM({
     throw new VMError(
       err.name, 
       err.message, 
-      await translateErrorStackFromVM({stacktrace: err.stacktrace, bundleSourceMapPath, vmFilename: bundlePath}) || '',
+      await translateErrorStackFromVM({stacktrace: err.stack, bundleSourceMapPath, vmFilename: bundlePath}) || '',
     );
   }
 }

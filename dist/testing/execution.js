@@ -91,7 +91,7 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaName, params: rawP
         return await ivmHelper.executeFormulaOrSyncWithRawParams(ivmContext, formulaName, rawParams);
     }
     catch (err) {
-        throw new VMError(err.name, err.message, await execution_1.translateErrorStackFromVM({ stacktrace: err.stacktrace, bundleSourceMapPath, vmFilename: bundlePath }) || '');
+        throw new VMError(err.name, err.message, await execution_1.translateErrorStackFromVM({ stacktrace: err.stack, bundleSourceMapPath, vmFilename: bundlePath }) || '');
     }
 }
 exports.executeFormulaOrSyncWithRawParamsInVM = executeFormulaOrSyncWithRawParamsInVM;
