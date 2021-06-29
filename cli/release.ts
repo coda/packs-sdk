@@ -51,8 +51,6 @@ export async function handleRelease({
 
   const codaClient = createCodaClient(apiKey, formattedEndpoint);
 
-  // TODO(jonathan/huayang): Remove this if createPackRelease also sets the live version.
-  await handleResponse(codaClient.setPackLiveVersion(packId, {}, {packVersion}));
   await handleResponse(codaClient.createPackRelease(packId, {}, {packVersion, releaseNotes: notes}));
   return printAndExit('Success!', 0);
 }
