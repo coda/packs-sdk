@@ -1,7 +1,7 @@
 import { compilePackBundle } from '../testing/compile';
 import {executeFormulaOrSyncWithVM} from '../testing/execution';
 import path from 'path';
-import {translateErrorStackFromVM} from '../testing/execution';
+import {translateErrorStackFromVM} from '../runtime/execution';
 
 describe('compile', () => {
   it('works with source map', async () => {
@@ -15,7 +15,8 @@ describe('compile', () => {
 
       assert.fail('Throw formula should throw.');
     } catch (error) {
-      const stack = await translateErrorStackFromVM({error, bundleSourceMapPath, vmFilename: bundlePath});
+      const stack = await translateErrorStackFromVM({
+        stacktrace: error.stack, bundleSourceMapPath, vmFilename: bundlePath});
 
       /* eslint-disable max-len */
       // the error stack should be prorerly formatted. for example,
@@ -43,7 +44,8 @@ describe('compile', () => {
 
       assert.fail('Throw formula should throw.');
     } catch (error) {
-      const stack = await translateErrorStackFromVM({error, bundleSourceMapPath, vmFilename: bundlePath});
+      const stack = await translateErrorStackFromVM({
+        stacktrace: error.stack, bundleSourceMapPath, vmFilename: bundlePath});
 
       assert.include(stack, path.join(__dirname, 'packs/fake.ts'));
     }

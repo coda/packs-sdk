@@ -31,11 +31,6 @@ export declare function executeFormulaOrSyncWithVM({ formulaName, params, bundle
     bundlePath: string;
     executionContext?: SyncExecutionContext;
 }): Promise<any>;
-export declare function translateErrorStackFromVM({ error, bundleSourceMapPath, vmFilename, }: {
-    error: Error;
-    bundleSourceMapPath: string;
-    vmFilename: string;
-}): Promise<string | undefined>;
 export declare class VMError {
     name: string;
     message: string;
