@@ -7,6 +7,7 @@ import type {ExecutionContext} from './api_types';
 import type {NumberHintTypes} from './schema';
 import type {NumberSchema} from './schema';
 import type {ObjectSchema} from './schema';
+import type {ObjectSchemaDefinition} from './schema';
 import type {PackFormulaResult} from './api_types';
 import type {ParamArgs} from './api_types';
 import type {ParamDef} from './api_types';
@@ -759,14 +760,28 @@ export interface SyncTableOptions<
   K extends string,
   L extends string,
   ParamDefsT extends ParamDefs,
-  SchemaT extends ObjectSchema<K, L>,
+  SchemaT extends ObjectSchemaDefinition<K, L>,
 > {
   /**
    * The name of the sync table. This should describe the entities being synced. For example,
    * a sync table that syncs products from an e-commerce platform should be called 'Products'. This name
-   * must not contain spaces.
+   * must not contain spaces. This name will be shown to users in the Coda UI.
    */
   name: string;
+  /**
+   * The "unique identifier" for the entity being synced. This will serve as the unique id for this
+   * table, and must be unique across other sync tables for your pack. This is often the singular
+   * form of the table name, e.g. if your table name was 'Products' you might choose 'Product'
+   * as the identity name.
+   *
+   * When returning objects from other syncs or formulas, you may create Coda references to objects
+   * in this table by defining an {@link Identity} in that schema that refers to this identity name.
+   *
+   * For example, if your identity name was 'Product', another formula or sync could return
+   * shell objects that reference rows in this table, so long as they contain the id
+   * of the object, and the schema is declared as `{identity: {name: 'Products'}}`.
+   */
+  identityName: string;
   /**
    * The definition of the schema that describes a single response object. For example, the
    * schema for a single product. The sync formula will return an array of objects that fit this schema.
@@ -808,16 +823,24 @@ export function makeSyncTable<
   K extends string,
   L extends string,
   ParamDefsT extends ParamDefs,
+  SchemaDefT extends ObjectSchemaDefinition<K, L>,
   SchemaT extends ObjectSchema<K, L>,
 >({
   name,
-  schema,
+  identityName,
+  schema: schemaDef,
   formula,
   connectionRequirement,
   dynamicOptions = {},
-}: SyncTableOptions<K, L, ParamDefsT, SchemaT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
+}: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {getSchema, entityName} = dynamicOptions;
   const {execute: wrappedExecute, ...definition} = maybeRewriteConnectionForFormula(formula, connectionRequirement);
+  if (schemaDef.identity) {
+    schemaDef.identity = {...schemaDef.identity, name: identityName || schemaDef.identity.name};
+  } else {
+    schemaDef.identity = {name: identityName};
+  }
+  const schema = makeObjectSchema<K, L, SchemaDefT>(schemaDef) as SchemaT;
   const formulaSchema = getSchema
     ? undefined
     : normalizeSchema<ArraySchema<Schema>>({type: ValueType.Array, items: schema});
@@ -873,11 +896,12 @@ export function makeSyncTableLegacy<
     entityName?: string;
   } = {},
 ): SyncTableDef<K, L, ParamDefsT, SchemaT> {
-  return makeSyncTable({name, schema, formula, connectionRequirement, dynamicOptions});
+  return makeSyncTable({name, identityName: '', schema, formula, connectionRequirement, dynamicOptions});
 }
 
 export function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({
   name,
+  identityName,
   getName,
   getSchema,
   getDisplayUrl,
@@ -887,6 +911,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   connectionRequirement,
 }: {
   name: string;
+  identityName: string;
   getName: MetadataFormula;
   getSchema: MetadataFormula;
   formula: SyncFormulaDef<ParamDefsT>;
@@ -908,6 +933,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   });
   const table = makeSyncTable({
     name,
+    identityName,
     schema: fakeSchema,
     formula,
     connectionRequirement,

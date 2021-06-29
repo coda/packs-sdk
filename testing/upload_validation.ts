@@ -619,7 +619,24 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata
   systemConnectionAuthentication: z.union(zodUnionInput(systemAuthenticationValidators)).optional(),
   formulas: z.array(formulaMetadataSchema).optional().default([]),
   formats: z.array(formatMetadataSchema).optional().default([]),
-  syncTables: z.array(syncTableSchema).optional().default([]),
+  syncTables: z
+    .array(syncTableSchema)
+    .optional()
+    .default([])
+    .refine(
+      data => {
+        const identityNames = data.map(tableDef => tableDef.schema.identity.name);
+        return identityNames.length === new Set(identityNames).size;
+      },
+      {message: 'Sync table identity names must be unique.'},
+    )
+    .refine(
+      data => {
+        const names = data.map(tableDef => tableDef.name);
+        return names.length === new Set(names).size;
+      },
+      {message: 'Sync table names must be unique.'},
+    ),
 });
 
 // The following largely copied from tokens.ts for parsing formula names.
