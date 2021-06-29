@@ -1,3 +1,38 @@
+## 0.3.0
+
+### Clarity around sync table identities
+
+`makeSyncTable()` now takes a top-level field `identityName`, replacing the `identity` field
+on the sync table's schema. To migrate, you can simply remove the `identity` field of your
+schema and move the identity name string to the new `identityName` value.
+
+The identity name is essentially the unique id for a sync table. It is also used if you want
+to return objects from other syncs or formulas that reference rows in this single table.
+To do that, you would use this identity name in the `identity` field of the schema
+for that other formula/sync.
+
+```typescript
+// Old
+makeSyncTable({
+  name: 'MySync',
+  schema: makeObjectSchema({
+    identity: {name: 'MyIdentity'},
+    ...
+  }),
+  formula: ...
+});
+
+// New
+makeSyncTable({
+  name: 'MySync',
+  identityName: 'MyIdentity',
+  schema: makeObjectSchema({
+    ...
+  }),
+  formula: ...
+});
+```
+
 ## 0.2.0
 
 ### `makeSyncTable()` now accepts a single parameter dictionary instead of having some positional parameters first.

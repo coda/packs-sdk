@@ -333,9 +333,9 @@ export declare function makeSimpleAutocompleteMetadataFormula(options: Array<str
 export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
 export interface SyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> {
     /**
-     * The name of the sync table. This should describe the entities being synced. For example,
-     * a sync table that syncs products from an e-commerce platform should be called 'Products'. This name
-     * must not contain spaces. This name will be shown to users in the Coda UI.
+     * The name of the sync table. This is shown to users in the Coda UI.
+     * This should describe the entities being synced. For example, a sync table that syncs products
+     * from an e-commerce platform should be called 'Products'. This name must not contain spaces.
      */
     name: string;
     /**
