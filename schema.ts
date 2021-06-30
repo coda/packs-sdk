@@ -396,20 +396,26 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
 // properties indicated by the id and primary.
 // A reference schema can always be defined directly, but if you already have an object
 // schema it provides better code reuse to derive a reference schema instead.
-export function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema): GenericObjectSchema {
+export function makeReferenceSchemaFromObjectSchema(
+  schema: GenericObjectSchema,
+  identityName?: string,
+): GenericObjectSchema {
   const {type, id, primary, identity, properties} = schema;
-  ensureExists(identity);
+  ensureExists(
+    identity || identityName,
+    'Source schema must have an identity field, or you must provide an identity name for the reference.',
+  );
   const validId = ensureExists(id);
   const referenceProperties: ObjectSchemaProperties = {[validId]: properties[validId]};
   if (primary && primary !== id) {
     referenceProperties[primary] = properties[primary];
   }
-  return {
+  return makeObjectSchema({
     codaType: ValueHintType.Reference,
     type,
     id,
-    identity,
+    identity: identity || {name: ensureExists(identityName)},
     primary,
     properties: referenceProperties,
-  };
+  });
 }

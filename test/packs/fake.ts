@@ -1,4 +1,3 @@
-import {FakePack} from '../test_utils';
 import type {PackDefinition} from '../../types';
 import {ValueType} from '../../schema';
 import {createFakePack} from '../test_utils';
@@ -18,7 +17,6 @@ const fakePersonSchema = makeObjectSchema({
   properties: {
     name: {type: ValueType.String},
   },
-  identity: {packId: FakePack.id, name: 'Person'},
 });
 
 function throwError() {
@@ -63,6 +61,7 @@ export const manifest: PackDefinition = createFakePack({
   syncTables: [
     makeSyncTable({
       name: 'Classes',
+      identityName: 'Person',
       schema: fakePersonSchema,
       formula: {
         name: 'Students',

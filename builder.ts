@@ -66,18 +66,21 @@ class PackDefinitionBuilder implements BasicPackDefinition {
 
   addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({
     name,
+    identityName,
     schema,
     formula,
     connectionRequirement,
     dynamicOptions = {},
   }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this {
-    const syncTable = makeSyncTable({name, schema, formula, connectionRequirement, dynamicOptions});
+    const syncTable = makeSyncTable({name, identityName, schema, formula, connectionRequirement, dynamicOptions});
     this.syncTables.push(syncTable);
     return this;
   }
 
+  // TODO(jonathan): Split out the definition into a type and add doc comments.
   addDynamicSyncTable<ParamDefsT extends ParamDefs>(definition: {
     name: string;
+    identityName: string;
     getName: MetadataFormula;
     getSchema: MetadataFormula;
     formula: SyncFormulaDef<ParamDefsT>;

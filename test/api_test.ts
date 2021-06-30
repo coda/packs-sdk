@@ -54,11 +54,11 @@ describe('API test', () => {
     it('connectionRequirement on getter still carries through', () => {
       const table = makeSyncTable({
         name: 'SomeSync',
+        identityName: 'Identity',
         schema: schema.makeObjectSchema({
           type: ValueType.Object,
           id: 'id',
           primary: 'id',
-          identity: {name: 'Identity'},
           properties: {id: {type: ValueType.String}},
         }),
         formula: {
