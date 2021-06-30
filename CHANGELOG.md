@@ -1,3 +1,52 @@
+## 0.3.1
+
+### Metadata formulas no longer need to be wrapped in `makeMetadataFormula()`.
+
+Packs support various kinds of "metadata formulas", which aren't explicitly callable by the user
+but provide supporting functionality to the pack. Examples of these include `getConnectionName`
+in the authentication section of a pack def, `autocomplete` for formula and sync parameters,
+and `getSchema` for dynamic sync tables.
+
+You now need only provide the JavaScript function that implements your metadata formula,
+and the SDK will wrap it in `makeMetadataFormula()` on your behalf.
+
+```typescript
+// Old
+makeParameter({type: ParameterTypeString, name: 'p', autocomplete: makeMetadataFormula(async (context, search) => ...)});
+
+// New
+makeParameter({type: ParameterTypeString, name: 'p', autocomplete: async (context, search) => ...});
+```
+
+```typescript
+// Old
+export const pack: PackVersionDefinition = {
+  defaultAuthentication: {
+    type: AuthenticationType.HeaderBearerToken,
+    getConnectionName: makeMetadataFormula(async (context, search) => {
+      ...
+    }),
+  },
+  ...
+};
+
+// New
+export const pack = newPack();
+
+pack.setUserAuthentication({
+  type: AuthenticationType.HeaderBearerToken,
+  getConnectionName: async (context, search) => {
+    ...
+  },
+  ...
+};
+```
+
+The one caveat is that if you need to override the default `connectionRequirement` for
+a metadata formula, you will still need to use `makeMetadataFormula(fn, {connectionRequirement})`
+to provide that override. This is very rare, but it sometimes needed for autocomplete formulas
+that need not use authentication even when the parent formula does.
+
 ## 0.3.0
 
 ### Clarity around sync table identities
