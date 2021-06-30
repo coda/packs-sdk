@@ -1,7 +1,7 @@
 import type {Arguments} from 'yargs';
 import {ConsoleLogger} from '../helpers/logging';
 import type {PackUpload} from '../compiled_types';
-import {build} from './build';
+import {compilePackBundle} from '../testing/compile';
 import {compilePackMetadata} from '../helpers/metadata';
 import {computeSha256} from '../helpers/crypto';
 import {createCodaClient} from './helpers';
@@ -29,8 +29,8 @@ export async function handleUpload({manifestFile, codaApiEndpoint, notes}: Argum
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   const logger = new ConsoleLogger();
   logger.info('Building Pack bundle...');
-  const bundleFilename = await build(manifestFile);
-  const manifest = await importManifest(bundleFilename);
+  const {bundlePath, bundleSourceMapPath} = await compilePackBundle({manifestPath: manifestFile});
+  const manifest = await importManifest(bundlePath);
 
   // Since package.json isn't in dist, we grab it from the root directory instead.
   const packageJson = await import(isTestCommand() ? '../package.json' : '../../package.json');
@@ -56,16 +56,22 @@ export async function handleUpload({manifestFile, codaApiEndpoint, notes}: Argum
   try {
     logger.info('Registering new Pack version...');
 
-    const bundle = readFile(bundleFilename);
+    const bundle = readFile(bundlePath);
     if (!bundle) {
-      printAndExit(`Could not find bundle file at path ${bundleFilename}`);
+      printAndExit(`Could not find bundle file at path ${bundlePath}`);
     }
     const metadata = compilePackMetadata(manifest);
+
+    const sourceMap = readFile(bundleSourceMapPath);
+    if (!sourceMap) {
+      printAndExit(`Could not find bundle source map at path ${bundleSourceMapPath}`);
+    }
 
     const upload: PackUpload = {
       metadata,
       sdkVersion: codaPacksSDKVersion,
       bundle: bundle.toString(),
+      sourceMap: sourceMap.toString(),
     };
     const uploadPayload = JSON.stringify(upload);
 
