@@ -2,7 +2,7 @@ import type {Arguments} from 'yargs';
 import type {PackMetadataValidationError} from '../testing/upload_validation';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ValidationError} from '../testing/types';
-import {build} from './build';
+import { compilePackBundle } from '../testing/compile';
 import {compilePackMetadata} from '../helpers/metadata';
 import {importManifest} from './helpers';
 import {makeManifestFullPath} from './helpers';
@@ -15,8 +15,8 @@ interface ValidateArgs {
 
 export async function handleValidate({manifestFile}: Arguments<ValidateArgs>) {
   const fullManifestPath = makeManifestFullPath(manifestFile);
-  const bundleFilename = await build(fullManifestPath);
-  const manifest = await importManifest(bundleFilename);
+  const {bundlePath} = await compilePackBundle({manifestPath: fullManifestPath, minify: false});
+  const manifest = await importManifest(bundlePath);
   const metadata = compilePackMetadata(manifest);
   return validateMetadata(metadata);
 }

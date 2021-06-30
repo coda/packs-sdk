@@ -1,6 +1,7 @@
 import type {PackDefinition} from '../../types';
 import {ValueType} from '../../schema';
 import {createFakePack} from '../test_utils';
+import {makeFormula} from '../../api';
 import {makeNumericFormula} from '../../api';
 import {makeNumericParameter} from '../../api';
 import {makeObjectSchema} from '../../schema';
@@ -17,6 +18,10 @@ const fakePersonSchema = makeObjectSchema({
     name: {type: ValueType.String},
   },
 });
+
+function throwError() {
+  throw new Error('here');
+}
 
 export const manifest: PackDefinition = createFakePack({
   formulaNamespace: 'Fake',
@@ -39,6 +44,17 @@ export const manifest: PackDefinition = createFakePack({
         const url = withQueryParams('https://example.com/lookup', {query});
         const response = await context.fetcher.fetch({method: 'GET', url});
         return response.body.result;
+      },
+    }),
+    makeFormula({
+      resultType: ValueType.Boolean,
+      name: 'Throw',
+      description: 'Throw an error.',
+      examples: [],
+      parameters: [],
+      execute: ([]) => {
+        throwError();
+        return false;
       },
     }),
   ],
