@@ -1018,8 +1018,16 @@ export interface AWSSignature4Authentication extends BaseAuthentication {
 export interface VariousAuthentication {
 	type: AuthenticationType.Various;
 }
-export declare type Authentication = NoAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSSignature4Authentication | VariousAuthentication;
+export declare type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSSignature4Authentication;
+export declare type AuthenticationDef = NoAuthentication | VariousAuthentication | (Omit<HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSSignature4Authentication, "getConnectionName" | "getConnectionUserId"> & {
+	getConnectionName?: MetadataFormulaDef;
+	getConnectionUserId?: MetadataFormulaDef;
+});
 export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSSignature4Authentication;
+export declare type SystemAuthenticationDef = Omit<HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSSignature4Authentication, "getConnectionName" | "getConnectionUserId"> & {
+	getConnectionName?: MetadataFormulaDef;
+	getConnectionUserId?: MetadataFormulaDef;
+};
 export declare type VariousSupportedAuthentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication;
 export interface Format {
 	name: string;
@@ -1149,8 +1157,8 @@ declare class PackDefinitionBuilder implements BasicPackDefinition {
 		connectionRequirement?: ConnectionRequirement;
 	}): this;
 	addColumnFormat(format: Format): this;
-	setUserAuthentication(authentication: Authentication): this;
-	setSystemAuthentication(systemAuthentication: SystemAuthentication): this;
+	setUserAuthentication(authentication: AuthenticationDef): this;
+	setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this;
 	addNetworkDomain(...domain: string[]): this;
 }
 export declare type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "getDisplayUrl"> & {

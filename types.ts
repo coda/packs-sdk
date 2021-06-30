@@ -1,5 +1,6 @@
 import type {$Values} from './type_utils';
 import type {MetadataFormula} from './api';
+import type {MetadataFormulaDef} from './api';
 import type {PackFormulas} from './api';
 import type {SyncTable} from './api';
 import type {TypedStandardFormula} from './api';
@@ -178,6 +179,7 @@ export interface VariousAuthentication {
 
 export type Authentication =
   | NoAuthentication
+  | VariousAuthentication
   | HeaderBearerTokenAuthentication
   | CodaApiBearerTokenAuthentication
   | CustomHeaderTokenAuthentication
@@ -185,8 +187,25 @@ export type Authentication =
   | MultiQueryParamTokenAuthentication
   | OAuth2Authentication
   | WebBasicAuthentication
-  | AWSSignature4Authentication
-  | VariousAuthentication;
+  | AWSSignature4Authentication;
+
+export type AuthenticationDef =
+  | NoAuthentication
+  | VariousAuthentication
+  | (Omit<
+      | HeaderBearerTokenAuthentication
+      | CodaApiBearerTokenAuthentication
+      | CustomHeaderTokenAuthentication
+      | QueryParamTokenAuthentication
+      | MultiQueryParamTokenAuthentication
+      | OAuth2Authentication
+      | WebBasicAuthentication
+      | AWSSignature4Authentication,
+      'getConnectionName' | 'getConnectionUserId'
+    > & {
+      getConnectionName?: MetadataFormulaDef;
+      getConnectionUserId?: MetadataFormulaDef;
+    });
 
 export type SystemAuthentication =
   | HeaderBearerTokenAuthentication
@@ -195,6 +214,19 @@ export type SystemAuthentication =
   | MultiQueryParamTokenAuthentication
   | WebBasicAuthentication
   | AWSSignature4Authentication;
+
+export type SystemAuthenticationDef = Omit<
+  | HeaderBearerTokenAuthentication
+  | CustomHeaderTokenAuthentication
+  | QueryParamTokenAuthentication
+  | MultiQueryParamTokenAuthentication
+  | WebBasicAuthentication
+  | AWSSignature4Authentication,
+  'getConnectionName' | 'getConnectionUserId'
+> & {
+  getConnectionName?: MetadataFormulaDef;
+  getConnectionUserId?: MetadataFormulaDef;
+};
 
 export type SystemAuthenticationTypes = $Values<Pick<SystemAuthentication, 'type'>>;
 

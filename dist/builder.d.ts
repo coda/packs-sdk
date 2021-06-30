@@ -1,4 +1,5 @@
 import type { Authentication } from './types';
+import type { AuthenticationDef } from './types';
 import type { BasicPackDefinition } from './types';
 import type { ConnectionRequirement } from './api_types';
 import type { Format } from './types';
@@ -10,6 +11,7 @@ import type { SyncFormulaDef } from './api';
 import type { SyncTable } from './api';
 import type { SyncTableOptions } from './api';
 import type { SystemAuthentication } from './types';
+import type { SystemAuthenticationDef } from './types';
 import type { TypedStandardFormula } from './api';
 /**
  * Creates a new skeleton pack definition that can be added to.
@@ -44,8 +46,8 @@ declare class PackDefinitionBuilder implements BasicPackDefinition {
         connectionRequirement?: ConnectionRequirement;
     }): this;
     addColumnFormat(format: Format): this;
-    setUserAuthentication(authentication: Authentication): this;
-    setSystemAuthentication(systemAuthentication: SystemAuthentication): this;
+    setUserAuthentication(authentication: AuthenticationDef): this;
+    setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this;
     addNetworkDomain(...domain: string[]): this;
 }
 export {};

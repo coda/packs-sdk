@@ -174,7 +174,7 @@ export function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDy
   return 'isDynamic' in syncTable;
 }
 
-function wrapMetadataFunction(
+export function wrapMetadataFunction(
   fnOrFormula: MetadataFormula | MetadataFunction | undefined,
 ): MetadataFormula | undefined {
   return typeof fnOrFormula === 'function' ? makeMetadataFormula(fnOrFormula) : fnOrFormula;
