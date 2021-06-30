@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import type { ExecuteOptions } from './execution_helper';
 import type { ExecuteSyncOptions } from './execution_helper';
 import type { ExecutionContext } from '../api_types';
@@ -8,7 +7,6 @@ import type { PackVersionDefinition } from '../types';
 import type { ParamDefs } from '../api_types';
 import type { ParamValues } from '../api_types';
 import type { SyncExecutionContext } from '../api_types';
-import util from 'util';
 export { ExecuteOptions } from './execution_helper';
 export { ExecuteSyncOptions } from './execution_helper';
 export interface ContextOptions {
@@ -31,13 +29,6 @@ export declare function executeFormulaOrSyncWithVM({ formulaName, params, bundle
     bundlePath: string;
     executionContext?: SyncExecutionContext;
 }): Promise<any>;
-export declare class VMError {
-    name: string;
-    message: string;
-    stack: string;
-    constructor(name: string, message: string, stack: string);
-    [util.inspect.custom](): string;
-}
 export declare function executeFormulaOrSyncWithRawParamsInVM({ formulaName, params: rawParams, manifestPath, executionContext, }: {
     formulaName: string;
     params: string[];
