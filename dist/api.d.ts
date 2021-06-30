@@ -128,8 +128,9 @@ export declare type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
  */
 export declare function isUserVisibleError(error: Error): error is UserVisibleError;
 export declare function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDynamicSyncTable;
-declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, 'type'> & {
+declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, 'type' | 'autocomplete'> & {
     type: T;
+    autocomplete?: MetadataFormulaDef;
 };
 /**
  * Create a definition for a parameter for a formula or sync.
@@ -320,7 +321,9 @@ export declare type MetadataContext = Record<string, any>;
 export declare type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
 export declare type MetadataFormula = ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any>;
 export declare type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
-export declare function makeMetadataFormula(execute: (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>, options?: {
+export declare type MetadataFunction = (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>;
+export declare type MetadataFormulaDef = MetadataFormula | MetadataFunction;
+export declare function makeMetadataFormula(execute: MetadataFunction, options?: {
     connectionRequirement?: ConnectionRequirement;
 }): MetadataFormula;
 export interface SimpleAutocompleteOption {
@@ -373,7 +376,7 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
      * A set of options used internally by {@link makeDynamicSyncTable}
      */
     dynamicOptions?: {
-        getSchema?: MetadataFormula;
+        getSchema?: MetadataFormulaDef;
         entityName?: string;
     };
 }
@@ -393,13 +396,13 @@ export declare function makeSyncTableLegacy<K extends string, L extends string, 
     getSchema?: MetadataFormula;
     entityName?: string;
 }): SyncTableDef<K, L, ParamDefsT, SchemaT>;
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, connectionRequirement, }: {
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ name, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, }: {
     name: string;
-    getName: MetadataFormula;
-    getSchema: MetadataFormula;
+    getName: MetadataFormulaDef;
+    getSchema: MetadataFormulaDef;
     formula: SyncFormulaDef<ParamDefsT>;
-    getDisplayUrl: MetadataFormula;
-    listDynamicUrls?: MetadataFormula;
+    getDisplayUrl: MetadataFormulaDef;
+    listDynamicUrls?: MetadataFormulaDef;
     entityName?: string;
     connectionRequirement?: ConnectionRequirement;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any>;

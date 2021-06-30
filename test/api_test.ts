@@ -176,5 +176,32 @@ describe('API test', () => {
         execute: ([param1, param2]) => param1[param2],
       });
     });
+
+    it('parameter autocomplete shorthand', () => {
+      makeParameter({
+        type: ParameterType.String,
+        name: 'p',
+        description: '',
+        autocomplete: async (context, search) => {
+          context.fetcher!;
+          return [{display: search, value: search}];
+        },
+      });
+    });
+
+    it('parameter autocomplete longhand', () => {
+      makeParameter({
+        type: ParameterType.String,
+        name: 'p',
+        description: '',
+        autocomplete: makeMetadataFormula(
+          async (context, search) => {
+            context.fetcher!;
+            return [{display: search, value: search}];
+          },
+          {connectionRequirement: ConnectionRequirement.None},
+        ),
+      });
+    });
   });
 });

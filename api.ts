@@ -174,7 +174,16 @@ export function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDy
   return 'isDynamic' in syncTable;
 }
 
-type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, 'type'> & {type: T};
+function wrapMetadataFunction(
+  fnOrFormula: MetadataFormula | MetadataFunction | undefined,
+): MetadataFormula | undefined {
+  return typeof fnOrFormula === 'function' ? makeMetadataFormula(fnOrFormula) : fnOrFormula;
+}
+
+type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, 'type' | 'autocomplete'> & {
+  type: T;
+  autocomplete?: MetadataFormulaDef;
+};
 
 /**
  * Create a definition for a parameter for a formula or sync.
@@ -188,9 +197,10 @@ type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[
 export function makeParameter<T extends ParameterType>(
   paramDefinition: ParameterOptions<T>,
 ): ParamDef<ParameterTypeMap[T]> {
-  const {type, ...rest} = paramDefinition;
+  const {type, autocomplete: autocompleteDef, ...rest} = paramDefinition;
   const actualType = ParameterTypeInputMap[type] as ParameterTypeMap[T];
-  return Object.freeze({...rest, type: actualType});
+  const autocomplete = wrapMetadataFunction(autocompleteDef);
+  return Object.freeze({...rest, autocomplete, type: actualType});
 }
 
 // Other parameter helpers below here are obsolete given the above generate parameter makers.
@@ -624,12 +634,15 @@ export type MetadataContext = Record<string, any>;
 export type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
 export type MetadataFormula = ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any>;
 export type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
+export type MetadataFunction = (
+  context: ExecutionContext,
+  search: string,
+  formulaContext?: MetadataContext,
+) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>;
+export type MetadataFormulaDef = MetadataFormula | MetadataFunction;
+
 export function makeMetadataFormula(
-  execute: (
-    context: ExecutionContext,
-    search: string,
-    formulaContext?: MetadataContext,
-  ) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>,
+  execute: MetadataFunction,
   options?: {connectionRequirement?: ConnectionRequirement},
 ): MetadataFormula {
   return makeObjectFormula({
@@ -803,7 +816,7 @@ export interface SyncTableOptions<
    * A set of options used internally by {@link makeDynamicSyncTable}
    */
   dynamicOptions?: {
-    getSchema?: MetadataFormula;
+    getSchema?: MetadataFormulaDef;
     entityName?: string;
   };
 }
@@ -833,13 +846,14 @@ export function makeSyncTable<
   connectionRequirement,
   dynamicOptions = {},
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
-  const {getSchema, entityName} = dynamicOptions;
+  const {getSchema: getSchemaDef, entityName} = dynamicOptions;
   const {execute: wrappedExecute, ...definition} = maybeRewriteConnectionForFormula(formula, connectionRequirement);
   if (schemaDef.identity) {
     schemaDef.identity = {...schemaDef.identity, name: identityName || schemaDef.identity.name};
   } else if (identityName) {
     schemaDef.identity = {name: identityName};
   }
+  const getSchema = wrapMetadataFunction(getSchemaDef);
   const schema = makeObjectSchema<K, L, SchemaDefT>(schemaDef) as SchemaT;
   const formulaSchema = getSchema
     ? undefined
@@ -901,20 +915,20 @@ export function makeSyncTableLegacy<
 
 export function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({
   name,
-  getName,
-  getSchema,
-  getDisplayUrl,
+  getName: getNameDef,
+  getSchema: getSchemaDef,
+  getDisplayUrl: getDisplayUrlDef,
   formula,
-  listDynamicUrls,
+  listDynamicUrls: listDynamicUrlsDef,
   entityName,
   connectionRequirement,
 }: {
   name: string;
-  getName: MetadataFormula;
-  getSchema: MetadataFormula;
+  getName: MetadataFormulaDef;
+  getSchema: MetadataFormulaDef;
   formula: SyncFormulaDef<ParamDefsT>;
-  getDisplayUrl: MetadataFormula;
-  listDynamicUrls?: MetadataFormula;
+  getDisplayUrl: MetadataFormulaDef;
+  listDynamicUrls?: MetadataFormulaDef;
   entityName?: string;
   connectionRequirement?: ConnectionRequirement;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any> {
@@ -929,6 +943,10 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
       id: {type: ValueType.String},
     },
   });
+  const getName = wrapMetadataFunction(getNameDef);
+  const getSchema = wrapMetadataFunction(getSchemaDef);
+  const getDisplayUrl = wrapMetadataFunction(getDisplayUrlDef);
+  const listDynamicUrls = wrapMetadataFunction(listDynamicUrlsDef);
   const table = makeSyncTable({
     name,
     identityName: '',
