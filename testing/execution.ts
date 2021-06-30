@@ -8,7 +8,7 @@ import type {PackVersionDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
 import type {SyncExecutionContext} from '../api_types';
-import {build as buildBundle} from '../cli/build';
+import { compilePackBundle } from './compile';
 import {getPackAuth} from '../cli/helpers';
 import * as helper from './execution_helper';
 import * as ivmHelper from './ivm_helper';
@@ -20,6 +20,8 @@ import * as path from 'path';
 import {print} from './helpers';
 import {readCredentialsFile} from './auth';
 import {storeCredential} from './auth';
+import { translateErrorStackFromVM } from '../runtime/execution';
+import util from 'util';
 
 export {ExecuteOptions} from './execution_helper';
 export {ExecuteSyncOptions} from './execution_helper';
@@ -111,6 +113,22 @@ export async function executeFormulaOrSyncWithVM({
   return ivmHelper.executeFormulaOrSync(ivmContext, formulaName, params);
 }
 
+export class VMError {
+  name: string; 
+  message: string; 
+  stack: string;
+
+  constructor(name: string, message: string, stack: string) {
+    this.name = name;
+    this.message = message;
+    this.stack = stack;
+  }
+
+  [util.inspect.custom]() {
+    return `${this.name}: ${this.message}\n${this.stack}`;
+  }
+}
+
 export async function executeFormulaOrSyncWithRawParamsInVM({
   formulaName,
   params: rawParams,
@@ -122,11 +140,19 @@ export async function executeFormulaOrSyncWithRawParamsInVM({
   manifestPath: string;
   executionContext?: SyncExecutionContext;
 }) {
-  const bundlePath = await buildBundle(manifestPath);
+  const {bundleSourceMapPath, bundlePath} = await compilePackBundle({manifestPath, minify: false});
 
   const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
 
-  return ivmHelper.executeFormulaOrSyncWithRawParams(ivmContext, formulaName, rawParams);
+  try {
+    return await ivmHelper.executeFormulaOrSyncWithRawParams(ivmContext, formulaName, rawParams);
+  } catch (err) {
+    throw new VMError(
+      err.name, 
+      err.message, 
+      await translateErrorStackFromVM({stacktrace: err.stack, bundleSourceMapPath, vmFilename: bundlePath}) || '',
+    );
+  }
 }
 
 export async function executeFormulaOrSyncWithRawParams({

@@ -24,7 +24,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleUpload = void 0;
 const logging_1 = require("../helpers/logging");
-const build_1 = require("./build");
+const compile_1 = require("../testing/compile");
 const metadata_1 = require("../helpers/metadata");
 const crypto_1 = require("../helpers/crypto");
 const helpers_1 = require("./helpers");
@@ -45,8 +45,8 @@ async function handleUpload({ manifestFile, codaApiEndpoint, notes }) {
     const formattedEndpoint = helpers_2.formatEndpoint(codaApiEndpoint);
     const logger = new logging_1.ConsoleLogger();
     logger.info('Building Pack bundle...');
-    const bundleFilename = await build_1.build(manifestFile);
-    const manifest = await helpers_3.importManifest(bundleFilename);
+    const { bundlePath, bundleSourceMapPath } = await compile_1.compilePackBundle({ manifestPath: manifestFile });
+    const manifest = await helpers_3.importManifest(bundlePath);
     // Since package.json isn't in dist, we grab it from the root directory instead.
     const packageJson = await Promise.resolve().then(() => __importStar(require(helpers_4.isTestCommand() ? '../package.json' : '../../package.json')));
     const codaPacksSDKVersion = packageJson.version;
@@ -65,15 +65,20 @@ async function handleUpload({ manifestFile, codaApiEndpoint, notes }) {
     }
     try {
         logger.info('Registering new Pack version...');
-        const bundle = helpers_6.readFile(bundleFilename);
+        const bundle = helpers_6.readFile(bundlePath);
         if (!bundle) {
-            helpers_5.printAndExit(`Could not find bundle file at path ${bundleFilename}`);
+            helpers_5.printAndExit(`Could not find bundle file at path ${bundlePath}`);
         }
         const metadata = metadata_1.compilePackMetadata(manifest);
+        const sourceMap = helpers_6.readFile(bundleSourceMapPath);
+        if (!sourceMap) {
+            helpers_5.printAndExit(`Could not find bundle source map at path ${bundleSourceMapPath}`);
+        }
         const upload = {
             metadata,
             sdkVersion: codaPacksSDKVersion,
             bundle: bundle.toString(),
+            sourceMap: sourceMap.toString(),
         };
         const uploadPayload = JSON.stringify(upload);
         const bundleHash = crypto_1.computeSha256(uploadPayload);
