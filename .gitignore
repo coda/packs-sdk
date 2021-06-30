@@ -7,5 +7,3 @@ artifacts
 dist/test
 yarn-error.log
 local-docs
-bundle.js
-bundle.js.map

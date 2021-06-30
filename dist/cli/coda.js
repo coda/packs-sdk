@@ -79,13 +79,6 @@ if (require.main === module) {
         .command({
         command: 'build <manifestFile>',
         describe: 'Generate a bundle for your Pack',
-        builder: {
-            outputDir: {
-                string: true,
-                alias: 'o',
-                default: undefined,
-            },
-        },
         handler: build_1.handleBuild,
     })
         .command({
