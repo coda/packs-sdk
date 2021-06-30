@@ -74,6 +74,5 @@ export interface PackUpload {
     metadata: PackVersionMetadata | PackMetadata;
     sdkVersion: string;
     bundle: string;
-    sourceMap: string;
 }
 export {};
