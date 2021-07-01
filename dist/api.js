@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.StatusCodeError = exports.UserVisibleError = void 0;
+exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.wrapMetadataFunction = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.StatusCodeError = exports.UserVisibleError = void 0;
 const api_types_1 = require("./api_types");
 const api_types_2 = require("./api_types");
 const api_types_3 = require("./api_types");
@@ -52,6 +52,10 @@ function isDynamicSyncTable(syncTable) {
     return 'isDynamic' in syncTable;
 }
 exports.isDynamicSyncTable = isDynamicSyncTable;
+function wrapMetadataFunction(fnOrFormula) {
+    return typeof fnOrFormula === 'function' ? makeMetadataFormula(fnOrFormula) : fnOrFormula;
+}
+exports.wrapMetadataFunction = wrapMetadataFunction;
 /**
  * Create a definition for a parameter for a formula or sync.
  *
@@ -62,9 +66,10 @@ exports.isDynamicSyncTable = isDynamicSyncTable;
  * makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', description: 'My description'});
  */
 function makeParameter(paramDefinition) {
-    const { type, ...rest } = paramDefinition;
+    const { type, autocomplete: autocompleteDef, ...rest } = paramDefinition;
     const actualType = api_types_2.ParameterTypeInputMap[type];
-    return Object.freeze({ ...rest, type: actualType });
+    const autocomplete = wrapMetadataFunction(autocompleteDef);
+    return Object.freeze({ ...rest, autocomplete, type: actualType });
 }
 exports.makeParameter = makeParameter;
 // Other parameter helpers below here are obsolete given the above generate parameter makers.
@@ -400,7 +405,7 @@ exports.makeObjectFormula = makeObjectFormula;
  * See [Normalization](/index.html#normalization) for more information about schema normalization.
  */
 function makeSyncTable({ name, identityName, schema: schemaDef, formula, connectionRequirement, dynamicOptions = {}, }) {
-    const { getSchema, entityName } = dynamicOptions;
+    const { getSchema: getSchemaDef, entityName } = dynamicOptions;
     const { execute: wrappedExecute, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
     if (schemaDef.identity) {
         schemaDef.identity = { ...schemaDef.identity, name: identityName || schemaDef.identity.name };
@@ -408,6 +413,7 @@ function makeSyncTable({ name, identityName, schema: schemaDef, formula, connect
     else if (identityName) {
         schemaDef.identity = { name: identityName };
     }
+    const getSchema = wrapMetadataFunction(getSchemaDef);
     const schema = schema_2.makeObjectSchema(schemaDef);
     const formulaSchema = getSchema
         ? undefined
@@ -449,7 +455,7 @@ function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynam
     return makeSyncTable({ name, identityName: '', schema, formula, connectionRequirement, dynamicOptions });
 }
 exports.makeSyncTableLegacy = makeSyncTableLegacy;
-function makeDynamicSyncTable({ name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, connectionRequirement, }) {
+function makeDynamicSyncTable({ name, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, }) {
     const fakeSchema = schema_2.makeObjectSchema({
         // This schema is useless... just creating a stub here but the client will use
         // the dynamic one.
@@ -461,6 +467,10 @@ function makeDynamicSyncTable({ name, getName, getSchema, getDisplayUrl, formula
             id: { type: schema_1.ValueType.String },
         },
     });
+    const getName = wrapMetadataFunction(getNameDef);
+    const getSchema = wrapMetadataFunction(getSchemaDef);
+    const getDisplayUrl = wrapMetadataFunction(getDisplayUrlDef);
+    const listDynamicUrls = wrapMetadataFunction(listDynamicUrlsDef);
     const table = makeSyncTable({
         name,
         identityName: '',

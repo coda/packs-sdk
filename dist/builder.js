@@ -1,9 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.newPack = void 0;
+const types_1 = require("./types");
 const api_1 = require("./api");
 const api_2 = require("./api");
 const api_3 = require("./api");
+const api_4 = require("./api");
 /**
  * Creates a new skeleton pack definition that can be added to.
  *
@@ -49,11 +51,22 @@ class PackDefinitionBuilder {
         return this;
     }
     setUserAuthentication(authentication) {
-        this.defaultAuthentication = authentication;
+        if (authentication.type === types_1.AuthenticationType.None || authentication.type === types_1.AuthenticationType.Various) {
+            this.defaultAuthentication = authentication;
+        }
+        else {
+            const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, ...rest } = authentication;
+            const getConnectionName = api_4.wrapMetadataFunction(getConnectionNameDef);
+            const getConnectionUserId = api_4.wrapMetadataFunction(getConnectionUserIdDef);
+            this.defaultAuthentication = { ...rest, getConnectionName, getConnectionUserId };
+        }
         return this;
     }
     setSystemAuthentication(systemAuthentication) {
-        this.systemConnectionAuthentication = systemAuthentication;
+        const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, ...rest } = systemAuthentication;
+        const getConnectionName = api_4.wrapMetadataFunction(getConnectionNameDef);
+        const getConnectionUserId = api_4.wrapMetadataFunction(getConnectionUserIdDef);
+        this.systemConnectionAuthentication = { ...rest, getConnectionName, getConnectionUserId };
         return this;
     }
     addNetworkDomain(...domain) {

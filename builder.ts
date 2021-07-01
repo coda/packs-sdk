@@ -1,4 +1,6 @@
 import type {Authentication} from './types';
+import type {AuthenticationDef} from './types';
+import {AuthenticationType} from './types';
 import type {BasicPackDefinition} from './types';
 import type {ConnectionRequirement} from './api_types';
 import type {Format} from './types';
@@ -10,10 +12,12 @@ import type {SyncFormulaDef} from './api';
 import type {SyncTable} from './api';
 import type {SyncTableOptions} from './api';
 import type {SystemAuthentication} from './types';
+import type {SystemAuthenticationDef} from './types';
 import type {TypedStandardFormula} from './api';
 import {makeDynamicSyncTable} from './api';
 import {makeFormula} from './api';
 import {makeSyncTable} from './api';
+import {wrapMetadataFunction} from './api';
 
 /**
  * Creates a new skeleton pack definition that can be added to.
@@ -99,13 +103,31 @@ class PackDefinitionBuilder implements BasicPackDefinition {
     return this;
   }
 
-  setUserAuthentication(authentication: Authentication): this {
-    this.defaultAuthentication = authentication;
+  setUserAuthentication(authentication: AuthenticationDef): this {
+    if (authentication.type === AuthenticationType.None || authentication.type === AuthenticationType.Various) {
+      this.defaultAuthentication = authentication;
+    } else {
+      const {
+        getConnectionName: getConnectionNameDef,
+        getConnectionUserId: getConnectionUserIdDef,
+        ...rest
+      } = authentication;
+      const getConnectionName = wrapMetadataFunction(getConnectionNameDef);
+      const getConnectionUserId = wrapMetadataFunction(getConnectionUserIdDef);
+      this.defaultAuthentication = {...rest, getConnectionName, getConnectionUserId} as Authentication;
+    }
     return this;
   }
 
-  setSystemAuthentication(systemAuthentication: SystemAuthentication): this {
-    this.systemConnectionAuthentication = systemAuthentication;
+  setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this {
+    const {
+      getConnectionName: getConnectionNameDef,
+      getConnectionUserId: getConnectionUserIdDef,
+      ...rest
+    } = systemAuthentication;
+    const getConnectionName = wrapMetadataFunction(getConnectionNameDef);
+    const getConnectionUserId = wrapMetadataFunction(getConnectionUserIdDef);
+    this.systemConnectionAuthentication = {...rest, getConnectionName, getConnectionUserId} as SystemAuthentication;
     return this;
   }
 

@@ -562,13 +562,11 @@ Use the `makeDynamicSyncTable()` wrapper function. It takes an object with the f
 - **getName**: A formula that returns a string, to be used as the title of the table when added to a doc.
   Typically this formula calls an API to get a name for the parent entity that you're syncing. In the
   Google Sheets example, this would call the Google Sheets API with the id of the sheet that you're syncing
-  and return the name of that sheet. As with all metadata formulas, you will wrap your formula implementation
-  with `makeMetadataFormula()`.
+  and return the name of that sheet.
 - **getSchema**: A formula that returns a schema object. Typically this formula calls an API to get info
   about the shape of the data you are syncing. In the Google Sheets example, this formula might fetch the
   first few rows of data, look at the first row of column headers to use as schema property names, and perhaps
   look at a few pieces of data in each row to try to sniff a value type for each column (string, number, date, etc).
-  As with all metadata formulas, you will wrap your formula implementation with `makeMetadataFormula()`.
   The return value from this formula should always be an array schema:
 
   ```typescript
@@ -618,7 +616,7 @@ Use the `makeDynamicSyncTable()` wrapper function. It takes an object with the f
   (as opposed to the API url of the sheet). The `dynamicUrl` for a sync table is typically an API url
   for whatever service you're syncing from, which is not a meaningful url for an end user.
   Typically this formula returns a browser-friendly version
-  of the dynamic url. As with all metadata formulas, you will wrap your formula implementation with `makeMetadataFormula()`.
+  of the dynamic url.
 - **listDynamicUrls**: (Optional) A metadata formula that returns an array of items of the form
   `{display: '<display label>', value: '<dynamic url>'}`. If your table is in the category of those
   that require a dynamic url as described above, you must implement this method to list the
@@ -627,8 +625,7 @@ Use the `makeDynamicSyncTable()` wrapper function. It takes an object with the f
   name of the entity that will be displayed to the user in the UI in a list of syncable entities.
   In the Google Sheets example, this formula would return a list of the sheets that the user has access to;
   the `display` property would be the name of the sheet and the `value` property would be the
-  Google Sheets API url for that sheet. As with all metadata formulas, you will wrap your formula
-  implementation with `makeMetadataFormula()`.
+  Google Sheets API url for that sheet.
 - **entityName**: (Optional) A label for the kind of entities that you are syncing. In the Google Sheets example
   you might use "Row" here, as each synced entity is a row from the source sheet. This label is used in a doc to identify the column in this table that contains the synced data. If you don't provide an `entityName`, the value
   of `identity.name` from your schema will be used instead, so in most cases you don't need to provide this.
@@ -661,10 +658,10 @@ provided via `context.sync.dynamicUrl`:
 ```typescript
 makeDynamicSyncTable({
   ...
-  getName: makeMetadataFormula(async context => {
+  getName: async context => {
     const response = await context.fetcher.fetch(context.sync.dynamicUrl);
     return response.body.entityName;
-  }),
+  },
   ...
 });
 ```

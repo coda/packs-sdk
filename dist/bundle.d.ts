@@ -603,8 +603,9 @@ export declare type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
  */
 export declare function isUserVisibleError(error: Error): error is UserVisibleError;
 export declare function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDynamicSyncTable;
-export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, "type"> & {
+export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, "type" | "autocomplete"> & {
 	type: T;
+	autocomplete?: MetadataFormulaDef;
 };
 /**
  * Create a definition for a parameter for a formula or sync.
@@ -761,7 +762,9 @@ export declare type MetadataFormula = ObjectPackFormula<[
 	ParamDef<Type.string>
 ], any>;
 export declare type MetadataFormulaMetadata = Omit<MetadataFormula, "execute">;
-export declare function makeMetadataFormula(execute: (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>, options?: {
+export declare type MetadataFunction = (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>;
+export declare type MetadataFormulaDef = MetadataFormula | MetadataFunction;
+export declare function makeMetadataFormula(execute: MetadataFunction, options?: {
 	connectionRequirement?: ConnectionRequirement;
 }): MetadataFormula;
 export interface SimpleAutocompleteOption {
@@ -813,7 +816,7 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	 * A set of options used internally by {@link makeDynamicSyncTable}
 	 */
 	dynamicOptions?: {
-		getSchema?: MetadataFormula;
+		getSchema?: MetadataFormulaDef;
 		entityName?: string;
 	};
 }
@@ -829,13 +832,13 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
  * See [Normalization](/index.html#normalization) for more information about schema normalization.
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends ObjectSchema<K, L>>({ name, identityName, schema: schemaDef, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ name, getName, getSchema, getDisplayUrl, formula, listDynamicUrls, entityName, connectionRequirement, }: {
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ name, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, }: {
 	name: string;
-	getName: MetadataFormula;
-	getSchema: MetadataFormula;
+	getName: MetadataFormulaDef;
+	getSchema: MetadataFormulaDef;
 	formula: SyncFormulaDef<ParamDefsT>;
-	getDisplayUrl: MetadataFormula;
-	listDynamicUrls?: MetadataFormula;
+	getDisplayUrl: MetadataFormulaDef;
+	listDynamicUrls?: MetadataFormulaDef;
 	entityName?: string;
 	connectionRequirement?: ConnectionRequirement;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any>;
@@ -1015,8 +1018,16 @@ export interface AWSSignature4Authentication extends BaseAuthentication {
 export interface VariousAuthentication {
 	type: AuthenticationType.Various;
 }
-export declare type Authentication = NoAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSSignature4Authentication | VariousAuthentication;
+export declare type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSSignature4Authentication;
+export declare type AuthenticationDef = NoAuthentication | VariousAuthentication | (Omit<HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSSignature4Authentication, "getConnectionName" | "getConnectionUserId"> & {
+	getConnectionName?: MetadataFormulaDef;
+	getConnectionUserId?: MetadataFormulaDef;
+});
 export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSSignature4Authentication;
+export declare type SystemAuthenticationDef = Omit<HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSSignature4Authentication, "getConnectionName" | "getConnectionUserId"> & {
+	getConnectionName?: MetadataFormulaDef;
+	getConnectionUserId?: MetadataFormulaDef;
+};
 export declare type VariousSupportedAuthentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication;
 export interface Format {
 	name: string;
@@ -1146,8 +1157,8 @@ declare class PackDefinitionBuilder implements BasicPackDefinition {
 		connectionRequirement?: ConnectionRequirement;
 	}): this;
 	addColumnFormat(format: Format): this;
-	setUserAuthentication(authentication: Authentication): this;
-	setSystemAuthentication(systemAuthentication: SystemAuthentication): this;
+	setUserAuthentication(authentication: AuthenticationDef): this;
+	setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this;
 	addNetworkDomain(...domain: string[]): this;
 }
 export declare type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "getDisplayUrl"> & {
