@@ -1,1 +1,0 @@
-Adds a Coda formula which will return a text string in the doc.
