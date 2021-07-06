@@ -714,7 +714,9 @@ export function autocompleteSearchObjects<T>(
 export function makeSimpleAutocompleteMetadataFormula(
   options: Array<string | SimpleAutocompleteOption>,
 ): MetadataFormula {
-  return makeMetadataFormula((context, [search]) => simpleAutocomplete(search, options));
+  return makeMetadataFormula((context, [search]) => simpleAutocomplete(search, options), {
+    connectionRequirement: ConnectionRequirement.None,
+  });
 }
 
 function isResponseHandlerTemplate(obj: any): obj is ResponseHandlerTemplate<any> {
