@@ -2,6 +2,7 @@ import type {AWSSignature4Authentication} from '../types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import {AuthenticationType} from '../types';
+import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
 import {ConnectionRequirement} from '../api_types';
@@ -418,6 +419,15 @@ const stringPackFormulaSchema = zodCompleteObject<Omit<StringPackFormula<any>, '
   }).optional(),
 });
 
+const booleanPackFormulaSchema = zodCompleteObject<Omit<BooleanPackFormula<any>, 'execute'>>({
+  ...commonPackFormulaSchema,
+  resultType: zodDiscriminant(Type.boolean),
+  schema: zodCompleteObject<BooleanSchema>({
+    type: zodDiscriminant(ValueType.Boolean),
+    description: z.string().optional(),
+  }).optional(),
+});
+
 // TODO(jonathan): Use zodCompleteObject on these after exporting these types.
 
 const textAttributionNodeSchema = z.object({
@@ -554,7 +564,12 @@ const objectPackFormulaSchema = zodCompleteObject<Omit<ObjectPackFormula<any, an
   schema: z.union([genericObjectSchema, arrayPropertySchema]).optional(),
 });
 
-const formulaMetadataSchema = z.union([numericPackFormulaSchema, stringPackFormulaSchema, objectPackFormulaSchema]);
+const formulaMetadataSchema = z.union([
+  numericPackFormulaSchema,
+  stringPackFormulaSchema,
+  booleanPackFormulaSchema,
+  objectPackFormulaSchema,
+]);
 
 const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   name: z.string(),
