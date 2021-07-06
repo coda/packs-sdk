@@ -390,7 +390,6 @@ const commonPackFormulaSchema = {
   // TODO(jonathan): Remove after removing `network` from formula def.
   network: zodCompleteObject<Network>({
     hasSideEffect: z.boolean().optional(),
-    requiresConnection: z.boolean().optional(),
     connection: z.nativeEnum(NetworkConnection).optional(),
   }).optional(),
   cacheTtlSecs: z.number().min(0).optional(),
