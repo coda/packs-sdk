@@ -131,7 +131,7 @@ export declare function isDynamicSyncTable(syncTable: SyncTable): syncTable is G
 export declare function wrapMetadataFunction(fnOrFormula: MetadataFormula | MetadataFunction | undefined): MetadataFormula | undefined;
 declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, 'type' | 'autocomplete'> & {
     type: T;
-    autocomplete?: MetadataFormulaDef;
+    autocomplete?: MetadataFormulaDef | Array<string | SimpleAutocompleteOption>;
 };
 /**
  * Create a definition for a parameter for a formula or sync.

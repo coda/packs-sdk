@@ -189,6 +189,24 @@ describe('API test', () => {
       });
     });
 
+    it('parameter autocomplete with harcoded options', () => {
+      makeParameter({
+        type: ParameterType.String,
+        name: 'p',
+        description: '',
+        autocomplete: ['foo', 'bar', 'baz'],
+      });
+    });
+
+    it('parameter autocomplete with harcoded options with display values', () => {
+      makeParameter({
+        type: ParameterType.String,
+        name: 'p',
+        description: '',
+        autocomplete: [{display: 'Foo', value: 'foo'}],
+      });
+    });
+
     it('parameter autocomplete longhand', () => {
       makeParameter({
         type: ParameterType.String,

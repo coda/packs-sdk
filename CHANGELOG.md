@@ -42,9 +42,27 @@ pack.setUserAuthentication({
 };
 ```
 
+Additionally, if you are only using hardcoded values for your autocomplete options,
+you may specify them directly without needing to wrap them in a function. The SDK
+will create a function on your behalf that searches over the given options.
+
+```typescript
+makeParameter({
+  ...
+  autocomplete: ['apple', 'banana'],
+});
+
+// Or
+
+makeParameter({
+  ...
+  autocomplete: [{display: 'Apple', value: 1}, {display: 'Banana', value: 2}],
+});
+```
+
 The one caveat is that if you need to override the default `connectionRequirement` for
 a metadata formula, you will still need to use `makeMetadataFormula(fn, {connectionRequirement})`
-to provide that override. This is very rare, but it sometimes needed for autocomplete formulas
+to provide that override. This is very rare, but it is sometimes needed for autocomplete formulas
 that need not use authentication even when the parent formula does.
 
 ## 0.3.0
