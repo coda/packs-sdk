@@ -59,7 +59,7 @@
     "@types/request": "^2.48.5",
     "@types/request-promise-native": "^1.0.17",
     "@types/sha.js": "^2.4.0",
-    "@types/uglify-js": "^3.13.0",
+    "@types/uglify-js": "^3.13.1",
     "@types/url-parse": "^1.4.3",
     "@types/uuid": "^8.3.1",
     "@types/xml2js": "^0.4.8",
