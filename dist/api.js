@@ -66,8 +66,12 @@ exports.wrapMetadataFunction = wrapMetadataFunction;
  * makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', description: 'My description'});
  */
 function makeParameter(paramDefinition) {
-    const { type, autocomplete: autocompleteDef, ...rest } = paramDefinition;
+    const { type, autocomplete: autocompleteDefOrItems, ...rest } = paramDefinition;
     const actualType = api_types_2.ParameterTypeInputMap[type];
+    let autocompleteDef = autocompleteDefOrItems;
+    if (Array.isArray(autocompleteDef)) {
+        autocompleteDef = makeSimpleAutocompleteMetadataFormula(autocompleteDef);
+    }
     const autocomplete = wrapMetadataFunction(autocompleteDef);
     return Object.freeze({ ...rest, autocomplete, type: actualType });
 }

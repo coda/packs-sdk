@@ -182,7 +182,7 @@ export function wrapMetadataFunction(
 
 type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, 'type' | 'autocomplete'> & {
   type: T;
-  autocomplete?: MetadataFormulaDef;
+  autocomplete?: MetadataFormulaDef | Array<string | SimpleAutocompleteOption>;
 };
 
 /**
@@ -197,8 +197,12 @@ type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[
 export function makeParameter<T extends ParameterType>(
   paramDefinition: ParameterOptions<T>,
 ): ParamDef<ParameterTypeMap[T]> {
-  const {type, autocomplete: autocompleteDef, ...rest} = paramDefinition;
+  const {type, autocomplete: autocompleteDefOrItems, ...rest} = paramDefinition;
   const actualType = ParameterTypeInputMap[type] as ParameterTypeMap[T];
+  let autocompleteDef = autocompleteDefOrItems;
+  if (Array.isArray(autocompleteDef)) {
+    autocompleteDef = makeSimpleAutocompleteMetadataFormula(autocompleteDef);
+  }
   const autocomplete = wrapMetadataFunction(autocompleteDef);
   return Object.freeze({...rest, autocomplete, type: actualType});
 }

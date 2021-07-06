@@ -815,9 +815,9 @@ Suppose that your formula accepts a `country` parameter that should only be one 
 an `autocomplete` option in your parameter definition, which would be a metadata formula
 that returns those 20 valid values. The user would be able to select value from a dropdown
 instead of having to type a value directly. Your autocomplete formula can either return
-static values directly (in which chase the `makeSimpleAutocompleteMetadataFormula` helper
-should make this trivial to write) but it can also use the fetcher to request values
-from an API.
+static values directly (in which case you can simply provide the array of items to use
+and a metadata formula will be generated implicitly)
+but it can also use the fetcher to request values from an API.
 
 A metadata formula is structurally similar to a regular pack formula, in that it is
 given an `ExecutionContext` and may make fetcher requests.

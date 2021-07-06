@@ -601,7 +601,7 @@ export declare function isUserVisibleError(error: Error): error is UserVisibleEr
 export declare function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDynamicSyncTable;
 export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, "type" | "autocomplete"> & {
 	type: T;
-	autocomplete?: MetadataFormulaDef;
+	autocomplete?: MetadataFormulaDef | Array<string | SimpleAutocompleteOption>;
 };
 /**
  * Create a definition for a parameter for a formula or sync.
