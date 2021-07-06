@@ -345,7 +345,9 @@ function autocompleteSearchObjects(search, objs, displayKey, valueKey) {
 exports.autocompleteSearchObjects = autocompleteSearchObjects;
 function makeSimpleAutocompleteMetadataFormula(options) {
     return makeMetadataFormula((context, [search]) => simpleAutocomplete(search, options), {
-        connectionRequirement: api_types_1.ConnectionRequirement.None,
+        // A connection won't be used here, but if the parent formula uses a connection
+        // the execution code is going to try to pass it here. We should fix that.
+        connectionRequirement: api_types_1.ConnectionRequirement.Optional,
     });
 }
 exports.makeSimpleAutocompleteMetadataFormula = makeSimpleAutocompleteMetadataFormula;

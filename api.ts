@@ -715,7 +715,9 @@ export function makeSimpleAutocompleteMetadataFormula(
   options: Array<string | SimpleAutocompleteOption>,
 ): MetadataFormula {
   return makeMetadataFormula((context, [search]) => simpleAutocomplete(search, options), {
-    connectionRequirement: ConnectionRequirement.None,
+    // A connection won't be used here, but if the parent formula uses a connection
+    // the execution code is going to try to pass it here. We should fix that.
+    connectionRequirement: ConnectionRequirement.Optional,
   });
 }
 
