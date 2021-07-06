@@ -11,6 +11,7 @@ const url_1 = require("url");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
 const ensure_3 = require("../helpers/ensure");
+const ensure_4 = require("../helpers/ensure");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
@@ -21,11 +22,12 @@ const FetcherUserAgent = 'Coda-Test-Server-Fetcher';
 const MaxContentLengthBytes = 25 * 1024 * 1024;
 const HeadersToStrip = ['authorization'];
 class AuthenticatingFetcher {
-    constructor(updateCredentialsCallback, authDef, networkDomains, credentials) {
+    constructor(updateCredentialsCallback, authDef, networkDomains, credentials, invocationToken) {
         this._updateCredentialsCallback = updateCredentialsCallback;
         this._authDef = authDef;
         this._networkDomains = networkDomains;
         this._credentials = credentials;
+        this._invocationToken = invocationToken;
     }
     async fetch(request, isRetry) {
         const { url, headers, body, form } = this._applyAuthentication(request);
@@ -159,7 +161,21 @@ class AuthenticatingFetcher {
             case types_1.AuthenticationType.WebBasic: {
                 const { username, password } = this._credentials;
                 const encodedAuth = Buffer.from(`${username}:${password}`).toString('base64');
-                return { url, body, form, headers: { ...headers, Authorization: `Basic ${encodedAuth}` } };
+                let bodyWithTemplateSubstitutions = body;
+                if (bodyWithTemplateSubstitutions) {
+                    // For awful APIs that require auth parameters in the request body, we have
+                    // this scheme we were do template substitution of the body using an unguessable
+                    // random token as part of the template key.
+                    Object.entries(this._credentials).forEach(([key, value]) => {
+                        bodyWithTemplateSubstitutions = ensure_2.ensureExists(bodyWithTemplateSubstitutions).replace(`{{${key}-${this._invocationToken}}}`, value);
+                    });
+                }
+                return {
+                    url,
+                    body: bodyWithTemplateSubstitutions,
+                    form,
+                    headers: { ...headers, Authorization: `Basic ${encodedAuth}` },
+                };
             }
             case types_1.AuthenticationType.QueryParamToken: {
                 const { paramValue } = this._credentials;
@@ -192,10 +208,10 @@ class AuthenticatingFetcher {
                 const requestHeaders = headers || {};
                 let requestUrl = url;
                 if (this._authDef.tokenQueryParam) {
-                    requestUrl = addQueryParam(url, this._authDef.tokenQueryParam, ensure_2.ensureNonEmptyString(accessToken));
+                    requestUrl = addQueryParam(url, this._authDef.tokenQueryParam, ensure_3.ensureNonEmptyString(accessToken));
                 }
                 else {
-                    requestHeaders.Authorization = `${prefix} ${ensure_2.ensureNonEmptyString(accessToken)}`;
+                    requestHeaders.Authorization = `${prefix} ${ensure_3.ensureNonEmptyString(accessToken)}`;
                 }
                 return {
                     url: requestUrl,
@@ -208,7 +224,7 @@ class AuthenticatingFetcher {
             case types_1.AuthenticationType.Various:
                 throw new Error('Not yet implemented');
             default:
-                return ensure_3.ensureUnreachable(this._authDef);
+                return ensure_4.ensureUnreachable(this._authDef);
         }
     }
     _applyAndValidateEndpoint(rawUrl) {
@@ -282,13 +298,14 @@ class AuthenticatingBlobStorage {
     }
 }
 function newFetcherExecutionContext(updateCredentialsCallback, authDef, networkDomains, credentials) {
-    const fetcher = new AuthenticatingFetcher(updateCredentialsCallback, authDef, networkDomains, credentials);
+    const invocationToken = uuid_1.v4();
+    const fetcher = new AuthenticatingFetcher(updateCredentialsCallback, authDef, networkDomains, credentials, invocationToken);
     return {
         invocationLocation: {
             protocolAndHost: 'https://coda.io',
         },
         timezone: 'America/Los_Angeles',
-        invocationToken: uuid_1.v4(),
+        invocationToken,
         endpoint: credentials === null || credentials === void 0 ? void 0 : credentials.endpointUrl,
         fetcher,
         temporaryBlobStorage: new AuthenticatingBlobStorage(fetcher),

@@ -5,9 +5,11 @@ import {AuthenticationType} from '../types';
 import type {Credentials} from '../testing/auth_types';
 import type {PackDefinition} from '../types';
 import type {SystemAuthentication} from '../types';
+import {ValueType} from '../schema';
 import {createFakePack} from './test_utils';
 import {executeFormulaFromPackDef} from '../testing/execution';
 import * as helpers from '../testing/helpers';
+import {makeFormula} from '../api';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
 import mockFs from 'mock-fs';
@@ -666,6 +668,93 @@ describe('Auth', () => {
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
       it('systemAuth', () => execTest(createPackWithSystemAuth(auth)));
+
+      it('template variable replacement in string body', async () => {
+        setupReadline(['some-username', 'some-password']);
+        const pack = createPackWithDefaultAuth(auth, {
+          networkDomains: ['some-url.com'],
+          formulas: [
+            makeFormula({
+              resultType: ValueType.String,
+              name: 'FormulaWithTemplateReplacement',
+              description: '',
+              parameters: [],
+              execute: async (_, context) => {
+                await context.fetcher.fetch({
+                  method: 'GET',
+                  url: 'https://some-url.com',
+                  body: `some-body {{username-${context.invocationToken}}} {{password-${context.invocationToken}}}`,
+                });
+                return '';
+              },
+            }),
+          ],
+        });
+        doSetupAuth(pack);
+
+        mockMakeRequest.returns({
+          statusCode: 200,
+          body: JSON.stringify({}),
+          headers: {
+            'content-type': 'application/json',
+          },
+        });
+
+        await executeFormulaFromPackDef(pack, 'Fake::FormulaWithTemplateReplacement', [], undefined, undefined, {
+          useRealFetcher: true,
+          manifestPath: MANIFEST_PATH,
+        });
+
+        sinon.assert.calledOnce(mockMakeRequest);
+        assert.equal(mockMakeRequest.getCall(0).args[0].body, 'some-body some-username some-password');
+      });
+
+      it('template variable replacement in json body', async () => {
+        setupReadline(['some-username', 'some-password']);
+        const pack = createPackWithDefaultAuth(auth, {
+          networkDomains: ['some-url.com'],
+          formulas: [
+            makeFormula({
+              resultType: ValueType.String,
+              name: 'FormulaWithTemplateReplacement',
+              description: '',
+              parameters: [],
+              execute: async (_, context) => {
+                await context.fetcher.fetch({
+                  method: 'GET',
+                  url: 'https://some-url.com',
+                  body: JSON.stringify({
+                    foo: 'bar',
+                    username: `{{username-${context.invocationToken}}}`,
+                    password: `{{password-${context.invocationToken}}}`,
+                  }),
+                });
+                return '';
+              },
+            }),
+          ],
+        });
+        doSetupAuth(pack);
+
+        mockMakeRequest.returns({
+          statusCode: 200,
+          body: JSON.stringify({}),
+          headers: {
+            'content-type': 'application/json',
+          },
+        });
+
+        await executeFormulaFromPackDef(pack, 'Fake::FormulaWithTemplateReplacement', [], undefined, undefined, {
+          useRealFetcher: true,
+          manifestPath: MANIFEST_PATH,
+        });
+
+        sinon.assert.calledOnce(mockMakeRequest);
+        assert.equal(
+          mockMakeRequest.getCall(0).args[0].body,
+          '{"foo":"bar","username":"some-username","password":"some-password"}',
+        );
+      });
     });
 
     describe(`${AuthenticationType.WebBasic}, username only`, async () => {

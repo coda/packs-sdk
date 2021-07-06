@@ -17,6 +17,7 @@ import type {TokenCredentials} from './auth_types';
 import {URL} from 'url';
 import type {WebBasicCredentials} from './auth_types';
 import {assertCondition} from '../helpers/ensure';
+import {ensureExists} from '../helpers/ensure';
 import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {getExpirationDate} from './helpers';
@@ -44,17 +45,20 @@ export class AuthenticatingFetcher implements Fetcher {
   private readonly _authDef: Authentication | undefined;
   private readonly _networkDomains: string[] | undefined;
   private _credentials: Credentials | undefined;
+  private readonly _invocationToken: string;
 
   constructor(
     updateCredentialsCallback: (newCredentials: Credentials) => void | undefined,
     authDef: Authentication | undefined,
     networkDomains: string[] | undefined,
     credentials: Credentials | undefined,
+    invocationToken: string,
   ) {
     this._updateCredentialsCallback = updateCredentialsCallback;
     this._authDef = authDef;
     this._networkDomains = networkDomains;
     this._credentials = credentials;
+    this._invocationToken = invocationToken;
   }
 
   async fetch<T = any>(request: FetchRequest, isRetry?: boolean): Promise<FetchResponse<T>> {
@@ -204,7 +208,26 @@ export class AuthenticatingFetcher implements Fetcher {
       case AuthenticationType.WebBasic: {
         const {username, password} = this._credentials as WebBasicCredentials;
         const encodedAuth = Buffer.from(`${username}:${password}`).toString('base64');
-        return {url, body, form, headers: {...headers, Authorization: `Basic ${encodedAuth}`}};
+
+        let bodyWithTemplateSubstitutions = body;
+        if (bodyWithTemplateSubstitutions) {
+          // For awful APIs that require auth parameters in the request body, we have
+          // this scheme we were do template substitution of the body using an unguessable
+          // random token as part of the template key.
+          Object.entries(this._credentials).forEach(([key, value]) => {
+            bodyWithTemplateSubstitutions = ensureExists(bodyWithTemplateSubstitutions).replace(
+              `{{${key}-${this._invocationToken}}}`,
+              value,
+            );
+          });
+        }
+
+        return {
+          url,
+          body: bodyWithTemplateSubstitutions,
+          form,
+          headers: {...headers, Authorization: `Basic ${encodedAuth}`},
+        };
       }
       case AuthenticationType.QueryParamToken: {
         const {paramValue} = this._credentials as QueryParamCredentials;
@@ -353,13 +376,20 @@ export function newFetcherExecutionContext(
   networkDomains: string[] | undefined,
   credentials?: Credentials,
 ): ExecutionContext {
-  const fetcher = new AuthenticatingFetcher(updateCredentialsCallback, authDef, networkDomains, credentials);
+  const invocationToken = v4();
+  const fetcher = new AuthenticatingFetcher(
+    updateCredentialsCallback,
+    authDef,
+    networkDomains,
+    credentials,
+    invocationToken,
+  );
   return {
     invocationLocation: {
       protocolAndHost: 'https://coda.io',
     },
     timezone: 'America/Los_Angeles',
-    invocationToken: v4(),
+    invocationToken,
     endpoint: credentials?.endpointUrl,
     fetcher,
     temporaryBlobStorage: new AuthenticatingBlobStorage(fetcher),
