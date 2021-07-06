@@ -164,7 +164,7 @@ class AuthenticatingFetcher {
                 let bodyWithTemplateSubstitutions = body;
                 if (bodyWithTemplateSubstitutions) {
                     // For awful APIs that require auth parameters in the request body, we have
-                    // this scheme we were do template substitution of the body using an unguessable
+                    // this scheme where we do template substitution of the body using an unguessable
                     // random token as part of the template key.
                     Object.entries(this._credentials).forEach(([key, value]) => {
                         bodyWithTemplateSubstitutions = ensure_2.ensureExists(bodyWithTemplateSubstitutions).replace(`{{${key}-${this._invocationToken}}}`, value);
