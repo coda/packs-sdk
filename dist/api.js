@@ -344,7 +344,9 @@ function autocompleteSearchObjects(search, objs, displayKey, valueKey) {
 }
 exports.autocompleteSearchObjects = autocompleteSearchObjects;
 function makeSimpleAutocompleteMetadataFormula(options) {
-    return makeMetadataFormula((context, [search]) => simpleAutocomplete(search, options));
+    return makeMetadataFormula((context, [search]) => simpleAutocomplete(search, options), {
+        connectionRequirement: api_types_1.ConnectionRequirement.None,
+    });
 }
 exports.makeSimpleAutocompleteMetadataFormula = makeSimpleAutocompleteMetadataFormula;
 function isResponseHandlerTemplate(obj) {
