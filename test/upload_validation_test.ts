@@ -19,6 +19,7 @@ import {createFakePack} from './test_utils';
 import {createFakePackFormulaMetadata} from './test_utils';
 import {createFakePackVersionMetadata} from './test_utils';
 import {makeDynamicSyncTable} from '../api';
+import {makeFormula} from '../api';
 import {makeMetadataFormula} from '../api';
 import {makeNumericFormula} from '../api';
 import {makeNumericParameter} from '../api';
@@ -155,7 +156,8 @@ describe('Pack metadata Validation', () => {
     }
 
     it('valid number formula', async () => {
-      const formula = makeNumericFormula({
+      const formula = makeFormula({
+        resultType: ValueType.Number,
         name: 'MyFormula',
         description: 'My description',
         examples: [],
@@ -170,12 +172,86 @@ describe('Pack metadata Validation', () => {
     });
 
     it('valid string formula', async () => {
-      const formula = makeStringFormula({
+      const formula = makeFormula({
+        resultType: ValueType.String,
         name: 'MyFormula',
         description: 'My description',
         examples: [],
         parameters: [makeStringParameter('myParam', 'param description')],
         execute: () => '',
+      });
+      const metadata = createFakePackVersionMetadata({
+        formulas: [formulaToMetadata(formula)],
+        formulaNamespace: 'MyNamespace',
+      });
+      await validateJson(metadata);
+    });
+
+    it('valid boolean formula', async () => {
+      const formula = makeFormula({
+        resultType: ValueType.Boolean,
+        name: 'MyFormula',
+        description: 'My description',
+        examples: [],
+        parameters: [makeStringParameter('myParam', 'param description')],
+        execute: () => true,
+      });
+      const metadata = createFakePackVersionMetadata({
+        formulas: [formulaToMetadata(formula)],
+        formulaNamespace: 'MyNamespace',
+      });
+      await validateJson(metadata);
+    });
+
+    it('valid scalar array formula', async () => {
+      const formula = makeFormula({
+        resultType: ValueType.Array,
+        items: {type: ValueType.String},
+        name: 'MyFormula',
+        description: 'My description',
+        examples: [],
+        parameters: [makeStringParameter('myParam', 'param description')],
+        execute: () => ['hello'],
+      });
+      const metadata = createFakePackVersionMetadata({
+        formulas: [formulaToMetadata(formula)],
+        formulaNamespace: 'MyNamespace',
+      });
+      await validateJson(metadata);
+    });
+
+    it('valid object array formula', async () => {
+      const formula = makeFormula({
+        resultType: ValueType.Array,
+        items: makeObjectSchema({
+          type: ValueType.Object,
+          properties: {foo: {type: ValueType.String}},
+        }),
+        name: 'MyFormula',
+        description: 'My description',
+        examples: [],
+        parameters: [makeStringParameter('myParam', 'param description')],
+        execute: () => ['hello'],
+      });
+      const metadata = createFakePackVersionMetadata({
+        formulas: [formulaToMetadata(formula)],
+        formulaNamespace: 'MyNamespace',
+      });
+      await validateJson(metadata);
+    });
+
+    it('valid object formula', async () => {
+      const formula = makeFormula({
+        resultType: ValueType.Object,
+        schema: makeObjectSchema({
+          type: ValueType.Object,
+          properties: {foo: {type: ValueType.String}},
+        }),
+        name: 'MyFormula',
+        description: 'My description',
+        examples: [],
+        parameters: [makeStringParameter('myParam', 'param description')],
+        execute: () => ['hello'],
       });
       const metadata = createFakePackVersionMetadata({
         formulas: [formulaToMetadata(formula)],

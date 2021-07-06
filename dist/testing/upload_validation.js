@@ -346,6 +346,14 @@ const stringPackFormulaSchema = zodCompleteObject({
         description: z.string().optional(),
     }).optional(),
 });
+const booleanPackFormulaSchema = zodCompleteObject({
+    ...commonPackFormulaSchema,
+    resultType: zodDiscriminant(api_types_3.Type.boolean),
+    schema: zodCompleteObject({
+        type: zodDiscriminant(schema_5.ValueType.Boolean),
+        description: z.string().optional(),
+    }).optional(),
+});
 // TODO(jonathan): Use zodCompleteObject on these after exporting these types.
 const textAttributionNodeSchema = z.object({
     type: zodDiscriminant(schema_1.AttributionNodeType.Text),
@@ -459,7 +467,12 @@ const objectPackFormulaSchema = zodCompleteObject({
     // schema for objects, but that doesn't seem like a use case we actually want to support.
     schema: z.union([genericObjectSchema, arrayPropertySchema]).optional(),
 });
-const formulaMetadataSchema = z.union([numericPackFormulaSchema, stringPackFormulaSchema, objectPackFormulaSchema]);
+const formulaMetadataSchema = z.union([
+    numericPackFormulaSchema,
+    stringPackFormulaSchema,
+    booleanPackFormulaSchema,
+    objectPackFormulaSchema,
+]);
 const formatMetadataSchema = zodCompleteObject({
     name: z.string(),
     formulaNamespace: z.string(),
