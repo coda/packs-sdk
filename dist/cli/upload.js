@@ -45,7 +45,14 @@ async function handleUpload({ manifestFile, codaApiEndpoint, notes }) {
     const formattedEndpoint = helpers_2.formatEndpoint(codaApiEndpoint);
     const logger = new logging_1.ConsoleLogger();
     logger.info('Building Pack bundle...');
-    const { bundlePath, bundleSourceMapPath } = await compile_1.compilePackBundle({ manifestPath: manifestFile });
+    // we need to generate the bundle file in the working directory instead of a temp directory in
+    // order to set source map right. The source map tool chain isn't smart enough to resolve a
+    // relative path in the end.
+    const { bundlePath, bundleSourceMapPath } = await compile_1.compilePackBundle({
+        manifestPath: manifestFile,
+        outputDirectory: './',
+        intermediateOutputDirectory: './',
+    });
     const manifest = await helpers_3.importManifest(bundlePath);
     // Since package.json isn't in dist, we grab it from the root directory instead.
     const packageJson = await Promise.resolve().then(() => __importStar(require(helpers_4.isTestCommand() ? '../package.json' : '../../package.json')));
