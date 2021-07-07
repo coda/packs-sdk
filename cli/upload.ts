@@ -63,8 +63,6 @@ export async function handleUpload({manifestFile, codaApiEndpoint, notes}: Argum
   }
 
   try {
-    logger.info('Registering new Pack version...');
-
     const bundle = readFile(bundlePath);
     if (!bundle) {
       printAndExit(`Could not find bundle file at path ${bundlePath}`);
@@ -85,14 +83,16 @@ export async function handleUpload({manifestFile, codaApiEndpoint, notes}: Argum
     const uploadPayload = JSON.stringify(upload);
 
     const bundleHash = computeSha256(uploadPayload);
+
+    logger.info('Validating Pack metadata...');
+    await validateMetadata(metadata);
+
+    logger.info('Registering new Pack version...');
     const registerResponse = await client.registerPackVersion(packId, packVersion, {}, {bundleHash});
     if (isCodaError(registerResponse)) {
       return printAndExit(`Error while registering pack version: ${formatError(registerResponse)}`);
     }
     const {uploadUrl, headers} = registerResponse;
-
-    logger.info('Validating Pack metadata...');
-    await validateMetadata(metadata);
 
     logger.info('Uploading Pack...');
     await uploadPack(uploadUrl, uploadPayload, headers);

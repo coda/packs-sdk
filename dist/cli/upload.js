@@ -71,7 +71,6 @@ async function handleUpload({ manifestFile, codaApiEndpoint, notes }) {
         helpers_5.printAndExit(`No Pack version declared for this Pack`);
     }
     try {
-        logger.info('Registering new Pack version...');
         const bundle = helpers_6.readFile(bundlePath);
         if (!bundle) {
             helpers_5.printAndExit(`Could not find bundle file at path ${bundlePath}`);
@@ -89,13 +88,14 @@ async function handleUpload({ manifestFile, codaApiEndpoint, notes }) {
         };
         const uploadPayload = JSON.stringify(upload);
         const bundleHash = crypto_1.computeSha256(uploadPayload);
+        logger.info('Validating Pack metadata...');
+        await validate_1.validateMetadata(metadata);
+        logger.info('Registering new Pack version...');
         const registerResponse = await client.registerPackVersion(packId, packVersion, {}, { bundleHash });
         if (errors_2.isCodaError(registerResponse)) {
             return helpers_5.printAndExit(`Error while registering pack version: ${errors_1.formatError(registerResponse)}`);
         }
         const { uploadUrl, headers } = registerResponse;
-        logger.info('Validating Pack metadata...');
-        await validate_1.validateMetadata(metadata);
         logger.info('Uploading Pack...');
         await uploadPack(uploadUrl, uploadPayload, headers);
         logger.info('Validating upload...');

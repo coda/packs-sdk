@@ -170,8 +170,8 @@ export async function compilePackBundle({
   fs.copyFileSync(`${tempBundlePath}.map`, bundleSourceMapPath);
 
   return {
-    bundlePath,
     intermediateOutputDirectory,
+    bundlePath,
     bundleSourceMapPath,
   }
 }
