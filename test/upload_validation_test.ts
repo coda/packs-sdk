@@ -1213,7 +1213,7 @@ describe('Pack metadata Validation', () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: 'Formats can only be implemented using formulas that take exactly one parameter.',
+            message: 'Formats can only be implemented using formulas that take exactly one required parameter.',
             path: 'formats',
           },
         ]);
@@ -1242,7 +1242,7 @@ describe('Pack metadata Validation', () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: 'Formats can only be implemented using formulas that take exactly one parameter.',
+            message: 'Formats can only be implemented using formulas that take exactly one required parameter.',
             path: 'formats',
           },
         ]);

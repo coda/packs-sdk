@@ -45,6 +45,6 @@ export function getPackAuth(packDef: PackVersionDefinition): Authentication | un
 }
 
 export async function importManifest(bundleFilename: string): Promise<PackVersionDefinition> {
-  const module = await import(bundleFilename);
+  const module = await import(path.resolve(bundleFilename));
   return module.pack || module.manifest;
 }

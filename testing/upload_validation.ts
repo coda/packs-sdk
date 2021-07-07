@@ -523,9 +523,9 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
           'Invalid name. Identity names can only contain alphanumeric characters, underscores, and dashes, and no spaces.',
       }),
       dynamicUrl: z.string().optional(),
-      attribution: z
-        .union([textAttributionNodeSchema, linkAttributionNodeSchema, imageAttributionNodeSchema])
-        .optional(),
+      attribution: z.array(
+        z.union([textAttributionNodeSchema, linkAttributionNodeSchema, imageAttributionNodeSchema])
+      ).optional(),
     }).optional(),
     properties: z.record(objectPropertyUnionSchema),
   })
@@ -711,8 +711,14 @@ function validateFormulas(schema: z.ZodObject<any>) {
         for (const format of data.formats || []) {
           const formula = formulas.find(f => f.name === format.formulaName);
           if (formula) {
-            if (formula.parameters?.length !== 1) {
+            if (!formula.parameters?.length) {
               return false;
+            }
+            const [_, ...extraParams] = formula.parameters;
+            for (const extraParam of extraParams) {
+              if (!extraParam.optional) {
+                return false;
+              }
             }
           }
           // Ignore the else case of formula not found, that will be validated already above.
@@ -722,7 +728,7 @@ function validateFormulas(schema: z.ZodObject<any>) {
       {
         // Annoying that the we can't be more precise and identify in the message which format had the issue;
         // these error messages are static.
-        message: 'Formats can only be implemented using formulas that take exactly one parameter.',
+        message: 'Formats can only be implemented using formulas that take exactly one required parameter.',
         path: ['formats'],
       },
     );

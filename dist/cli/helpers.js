@@ -68,7 +68,7 @@ function getPackAuth(packDef) {
 }
 exports.getPackAuth = getPackAuth;
 async function importManifest(bundleFilename) {
-    const module = await Promise.resolve().then(() => __importStar(require(bundleFilename)));
+    const module = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(bundleFilename))));
     return module.pack || module.manifest;
 }
 exports.importManifest = importManifest;
