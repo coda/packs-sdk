@@ -132,4 +132,16 @@ export const Snippets: Snippet[] = [
     content: 'Creates a number array parameter.', 
     codeFile: './snippets/parameter/array/number_array_parameter.ts'
   },
+  {
+    name: 'Sync Table', 
+    triggerWords: ['SyncTable', 'addSyncTable', 'newSyncTable'],
+    content: 'Adds a sync table.', 
+    codeFile: './snippets/sync_table.ts'
+  },
+  {
+    name: 'Dynamic Sync Table',
+    triggerWords: ['DynamicSyncTable', 'addDynamicSyncTable', 'newDynamicSyncTable'],
+    content: 'Adds a dynamic sync table.',
+    codeFile: './snippets/dynamic_sync_table.ts'
+  }
 ]
