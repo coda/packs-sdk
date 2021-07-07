@@ -1,5 +1,7 @@
 # Coda Packs SDK
 
+_This is the documentation for the SDK to build Packs eitehr via our Web IDE or the Command Line Interface (CLI) tool. Click here (LINK FORTHCOMIG) to learn how to use the Web IDE, and [here](README_CLI.md) to learn how to use the CLI._
+
 - [Basic Concepts](#basic-concepts)
 - [Core Concepts](#core-concepts)
   - [Fetching Remote Data](#fetching-remote-data)
