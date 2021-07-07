@@ -161,6 +161,8 @@ Packs code will never have access to the request after authentication credential
 
 ### Testing Authenticated Requests
 
+_Note: This section applies to the CLI only._
+
 The SDK will help you set up authentication in your development environment so that you can
 execute pack formulas with authentication applied to them, allowing you to run your code
 end-to-end including making fetcher requests to third-party services.
@@ -524,28 +526,6 @@ will be remapped to `id` and `name` (and then those fields will be normalized, t
 With the use of the schema declaration (including `fromKey`), you generally can avoid writing
 any custom code to remove or remap fields to make an API object conform to your desired schema.
 
-### Formula Namespaces
-
-When defining the formulas included in your pack, you must place them in a **namespace**.
-When users invoke your formula in the Coda UI (or you invoke them when testing your pack)
-the formula will be prefixed by its namespace.
-
-The namespace exists so that formulas can be nicely grouped together by the pack they
-originated from, to make it easier to work with docs that have lots of formulas and
-avoid collisions when multiple unrelated packs may define formulas with the same name.
-Generally, the name of your namespace can just be the name of your pack (without any
-spaces or punctuation).
-
-So if you're writing a pack that integrates with Slack, you'd probably want to choose `Slack`
-as your formula namespace. If you wrote a formula that sends a Slack message, you would
-invoke that formula in a doc using `Slack::SendMessage(...)`. When users are writing formulas in their
-docs, they can type `slack` and autocomplete will show them all of the formulas in the `Slack`
-namespace. If the user also used the Gmail pack and that pack also defined a `SendMessage`
-formula, it would be easy for the user to differentiate between the two because they
-have separate and clear namespaces: `Slack::SendMessage` vs `Gmail::SendMessage`.
-
-(You'll note that you needn't use a namespace with `coda execute` because the CLI can
-infer the namespace from the manifest file you specify in that command.)
 
 ### Metadata Formulas
 
@@ -610,7 +590,4 @@ TODO: Write
 
 ## Reference
 
-Run `make view-docs` to generate detailed reference documentation from the source code
-and open it in your browser.
-
-This will eventually be published on a documentation website.
+Visit [here](https://coda.github.io/packs-sdk) for detailed reference documentation.
