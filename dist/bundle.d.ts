@@ -1029,6 +1029,7 @@ export interface Format {
 	name: string;
 	formulaNamespace: string;
 	formulaName: string;
+	/** @deprecated No longer needed, will be inferred from the referenced formula. */
 	hasNoConnection?: boolean;
 	instructions?: string;
 	matchers?: string[];
