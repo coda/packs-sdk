@@ -13,9 +13,9 @@ pack.addFormula({
       type: coda.ParameterType.String,
       name: 'myParam',
       description: '',
-     }),
+    }),
   ],
   execute([param]) {
     return `Hello ${param}`;
-  }
+  },
 });

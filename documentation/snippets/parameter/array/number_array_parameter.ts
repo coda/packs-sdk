@@ -5,5 +5,5 @@ import * as coda from '../../../../index';
 coda.makeParameter({
   type: coda.ParameterType.NumberArray,
   name: 'myParam',
-  description: 'My description'
-})
+  description: 'My description',
+});

@@ -5,5 +5,5 @@ import * as coda from '../../../index';
 coda.makeParameter({
   type: coda.ParameterType.Image,
   name: 'myParam',
-  description: 'My description'
-})
+  description: 'My description',
+});

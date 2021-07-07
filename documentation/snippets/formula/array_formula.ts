@@ -13,12 +13,14 @@ pack.addFormula({
       type: coda.ParameterType.Number,
       name: 'myParam',
       description: '',
-     }),
+    }),
   ],
   items: {
-    type: coda.ValueType.Number
+    type: coda.ValueType.Number,
   },
   execute([param]) {
-    return [1,2,3,param];
-  }
+    return [1, 2, 3, param];
+  },
 });
+
+// hello

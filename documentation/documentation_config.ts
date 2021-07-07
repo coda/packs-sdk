@@ -1,8 +1,8 @@
 interface Snippet {
-  name: string,
-  triggerWords: string[],
-  content: string,
-  codeFile: string,
+  name: string;
+  triggerWords: string[];
+  content: string;
+  codeFile: string;
 }
 
 export const Snippets: Snippet[] = [
@@ -58,90 +58,90 @@ export const Snippets: Snippet[] = [
     name: 'Network Domain',
     triggerWords: ['NetworkDomain', 'addNetworkDomain', 'newNetworkDomain'],
     content: 'Allows the pack to make requests to listed domains.',
-    codeFile: './snippets/network_domain.ts'
+    codeFile: './snippets/network_domain.ts',
   },
   {
-    name: 'String Parameter', 
+    name: 'String Parameter',
     triggerWords: ['StringParameter', 'addParameter', 'newParameter'],
-    content: 'Creates a string parameter.', 
-    codeFile: './snippets/parameter/string_parameter.ts'
+    content: 'Creates a string parameter.',
+    codeFile: './snippets/parameter/string_parameter.ts',
   },
   {
-    name: 'Boolean Parameter', 
+    name: 'Boolean Parameter',
     triggerWords: ['BooleanParameter', 'addParameter', 'newParameter'],
-    content: 'Creates a boolean parameter.', 
-    codeFile: './snippets/parameter/boolean_parameter.ts'
+    content: 'Creates a boolean parameter.',
+    codeFile: './snippets/parameter/boolean_parameter.ts',
   },
   {
-    name: 'Date Parameter', 
+    name: 'Date Parameter',
     triggerWords: ['DateParameter', 'addParameter', 'newParameter'],
-    content: 'Creates a date parameter.', 
-    codeFile: './snippets/parameter/date_parameter.ts'
+    content: 'Creates a date parameter.',
+    codeFile: './snippets/parameter/date_parameter.ts',
   },
   {
-    name: 'Html Parameter', 
+    name: 'Html Parameter',
     triggerWords: ['HtmlParameter', 'addParameter', 'newParameter'],
-    content: 'Creates a html parameter.', 
-    codeFile: './snippets/parameter/html_parameter.ts'
+    content: 'Creates a html parameter.',
+    codeFile: './snippets/parameter/html_parameter.ts',
   },
   {
-    name: 'Image Parameter', 
+    name: 'Image Parameter',
     triggerWords: ['ImageParameter', 'addParameter', 'newParameter'],
-    content: 'Creates a image parameter.', 
-    codeFile: './snippets/parameter/image_parameter.ts'
+    content: 'Creates a image parameter.',
+    codeFile: './snippets/parameter/image_parameter.ts',
   },
   {
-    name: 'Number Parameter', 
+    name: 'Number Parameter',
     triggerWords: ['NumberParameter', 'addParameter', 'newParameter'],
-    content: 'Creates a number parameter.', 
-    codeFile: './snippets/parameter/number_parameter.ts'
+    content: 'Creates a number parameter.',
+    codeFile: './snippets/parameter/number_parameter.ts',
   },
   {
-    name: 'String Array Parameter', 
+    name: 'String Array Parameter',
     triggerWords: ['StringArrayParameter', 'addArrayParameter', 'newArrayParameter'],
-    content: 'Creates a string array parameter.', 
-    codeFile: './snippets/parameter/array/string_array_parameter.ts'
+    content: 'Creates a string array parameter.',
+    codeFile: './snippets/parameter/array/string_array_parameter.ts',
   },
   {
-    name: 'Boolean Array Parameter', 
+    name: 'Boolean Array Parameter',
     triggerWords: ['BooleanArrayParameter', 'addArrayParameter', 'newArrayParameter'],
-    content: 'Creates a boolean array parameter.', 
-    codeFile: './snippets/parameter/array/boolean_array_parameter.ts'
+    content: 'Creates a boolean array parameter.',
+    codeFile: './snippets/parameter/array/boolean_array_parameter.ts',
   },
   {
-    name: 'Date Array Parameter', 
+    name: 'Date Array Parameter',
     triggerWords: ['DateArrayParameter', 'addArrayParameter', 'newArrayParameter'],
-    content: 'Creates a date array parameter.', 
-    codeFile: './snippets/parameter/array/date_array_parameter.ts'
+    content: 'Creates a date array parameter.',
+    codeFile: './snippets/parameter/array/date_array_parameter.ts',
   },
   {
-    name: 'Html Array Parameter', 
+    name: 'Html Array Parameter',
     triggerWords: ['HtmlArrayParameter', 'addArrayParameter', 'newArrayParameter'],
-    content: 'Creates a html array parameter.', 
-    codeFile: './snippets/parameter/array/html_array_parameter.ts'
+    content: 'Creates a html array parameter.',
+    codeFile: './snippets/parameter/array/html_array_parameter.ts',
   },
   {
-    name: 'Image Array Parameter', 
+    name: 'Image Array Parameter',
     triggerWords: ['ImageArrayParameter', 'addArrayParameter', 'newArrayParameter'],
-    content: 'Creates a image array parameter.', 
-    codeFile: './snippets/parameter/array/image_array_parameter.ts'
+    content: 'Creates a image array parameter.',
+    codeFile: './snippets/parameter/array/image_array_parameter.ts',
   },
   {
-    name: 'Number Array Parameter', 
+    name: 'Number Array Parameter',
     triggerWords: ['NumberArrayParameter', 'addArrayParameter', 'newArrayParameter'],
-    content: 'Creates a number array parameter.', 
-    codeFile: './snippets/parameter/array/number_array_parameter.ts'
+    content: 'Creates a number array parameter.',
+    codeFile: './snippets/parameter/array/number_array_parameter.ts',
   },
   {
-    name: 'Sync Table', 
+    name: 'Sync Table',
     triggerWords: ['SyncTable', 'addSyncTable', 'newSyncTable'],
-    content: 'Adds a sync table.', 
-    codeFile: './snippets/sync_table.ts'
+    content: 'Adds a sync table.',
+    codeFile: './snippets/sync_table.ts',
   },
   {
     name: 'Dynamic Sync Table',
     triggerWords: ['DynamicSyncTable', 'addDynamicSyncTable', 'newDynamicSyncTable'],
     content: 'Adds a dynamic sync table.',
-    codeFile: './snippets/dynamic_sync_table.ts'
-  }
-]
+    codeFile: './snippets/dynamic_sync_table.ts',
+  },
+];

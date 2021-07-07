@@ -13,7 +13,7 @@ pack.addFormula({
       type: coda.ParameterType.String,
       name: 'myParam',
       description: '',
-     }),
+    }),
   ],
   execute([param]) {
     if (param === 'true') {
@@ -21,5 +21,5 @@ pack.addFormula({
     } else {
       return false;
     }
-  }
+  },
 });

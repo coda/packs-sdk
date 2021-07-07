@@ -14,8 +14,8 @@ pack.addSyncTable({
     properties: {
       idColumn: {type: coda.ValueType.String},
       displayColumn: {type: coda.ValueType.String},
-      otherColumn: {type: coda.ValueType.Number,}
-    }
+      otherColumn: {type: coda.ValueType.Number},
+    },
   }),
   formula: {
     name: 'SyncTable',
@@ -23,13 +23,15 @@ pack.addSyncTable({
     connectionRequirement: coda.ConnectionRequirement.None,
     parameters: [coda.makeParameter({type: coda.ParameterType.String, name: 'myParam', description: 'My description'})],
     async execute([param]) {
-      return {result: [
-        {
-          idColumn: 'Example1',
-          displayColumn: 'Example1',
-          otherColumn: param
-        }
-      ]};
-    }
-  }
+      return {
+        result: [
+          {
+            idColumn: 'Example1',
+            displayColumn: 'Example1',
+            otherColumn: param,
+          },
+        ],
+      };
+    },
+  },
 });

@@ -5,5 +5,5 @@ const pack = coda.newPack();
 // BEGIN
 
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.None
+  type: coda.AuthenticationType.None,
 });

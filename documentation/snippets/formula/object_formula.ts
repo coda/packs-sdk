@@ -19,20 +19,20 @@ pack.addFormula({
       idPropertyName: {type: coda.ValueType.String},
       displayPropertyName: {type: coda.ValueType.Number},
       otherProperty: {type: coda.ValueType.String},
-    }
+    },
   }),
   parameters: [
     coda.makeParameter({
       type: coda.ParameterType.String,
       name: 'myParam',
       description: '',
-     }),
+    }),
   ],
   execute([param]) {
     return {
       idPropertyName: param,
       displayPropertyName: 123,
-      otherProperty: 'other property!'
-    }
-  }
+      otherProperty: 'other property!',
+    };
+  },
 });
