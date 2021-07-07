@@ -1,4 +1,6 @@
-# Coda Packs SDK
+# Coda Packs CLI
+
+_The Packs Command Line Interface (CLI) tool aims to help you build and test Pack code locally. For a guide on using the SDK itself, [see the SDK readme](README.md)._
 
 - [Getting Started with the CLI](#getting-started-with-the-cli)
   - [Prerequisites](#prerequisites)
@@ -28,7 +30,7 @@
 - [Reference](#reference)
 
 
-## Getting Started with the CLI
+## Getting Started
 
 ### Prerequisites
 
