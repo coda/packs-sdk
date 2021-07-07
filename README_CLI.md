@@ -1,6 +1,6 @@
 # Coda Packs SDK
 
-- [Getting Started](#getting-started)
+- [Getting Started with the CLI](#getting-started-with-the-cli)
   - [Prerequisites](#prerequisites)
   - [One-time Setup](#one-time-setup)
     - [Global Install (Quick)](#global-install-quick)
@@ -28,7 +28,7 @@
 - [Reference](#reference)
 
 
-## Getting Started
+## Getting Started with the CLI
 
 ### Prerequisites
 
