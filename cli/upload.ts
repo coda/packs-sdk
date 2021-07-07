@@ -29,7 +29,16 @@ export async function handleUpload({manifestFile, codaApiEndpoint, notes}: Argum
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   const logger = new ConsoleLogger();
   logger.info('Building Pack bundle...');
-  const {bundlePath, bundleSourceMapPath} = await compilePackBundle({manifestPath: manifestFile});
+
+  // we need to generate the bundle file in the working directory instead of a temp directory in
+  // order to set source map right. The source map tool chain isn't smart enough to resolve a
+  // relative path in the end.
+  const {bundlePath, bundleSourceMapPath} = await compilePackBundle({
+    manifestPath: manifestFile,
+    outputDirectory: './',
+    intermediateOutputDirectory: './',
+  });
+
   const manifest = await importManifest(bundlePath);
 
   // Since package.json isn't in dist, we grab it from the root directory instead.

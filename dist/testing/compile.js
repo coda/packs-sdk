@@ -64,7 +64,6 @@ async function uglifyBundle({ outputDirectory, lastBundleFilename, outputBundleF
             url: `${outputBundleFilename}.map`,
             content: sourcemap,
             includeSources: true,
-            root: `${process.cwd()}/`,
         },
     });
     if (uglifyOutput.error) {
@@ -86,7 +85,7 @@ async function buildWithES({ manifestPath, outputDirectory, outputBundleFilename
         format: 'cjs',
         platform: 'node',
         minify: false,
-        sourcemap: 'inline',
+        sourcemap: 'both',
     };
     await esbuild.build(options);
 }
@@ -128,7 +127,7 @@ outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, }) {
     // which uses gifcodec, which calls process.nextTick on the global level.
     // maybe we just need to get rid of jimp and resize-optimize-images instead.
     await loadIntoVM(tempBundlePath);
-    if (!outputDirectory) {
+    if (!outputDirectory || outputDirectory === intermediateOutputDirectory) {
         return {
             bundlePath: path_1.default.join(intermediateOutputDirectory, bundleFilename),
             intermediateOutputDirectory,

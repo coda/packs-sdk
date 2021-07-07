@@ -69,7 +69,6 @@ async function uglifyBundle({
         url: `${outputBundleFilename}.map`,
         content: sourcemap,
         includeSources: true,
-        root: `${process.cwd()}/`,
       },
     }
   );
@@ -100,7 +99,7 @@ async function buildWithES({
     format: 'cjs',
     platform: 'node',
     minify: false,  // don't minify here since browserify doesn't minify anyway.
-    sourcemap: 'inline',
+    sourcemap: 'both',
   };
   
   await esbuild.build(options);
@@ -155,7 +154,7 @@ export async function compilePackBundle({
   // maybe we just need to get rid of jimp and resize-optimize-images instead.
   await loadIntoVM(tempBundlePath);
 
-  if (!outputDirectory) {
+  if (!outputDirectory || outputDirectory === intermediateOutputDirectory) {
     return {
       bundlePath: path.join(intermediateOutputDirectory, bundleFilename),
       intermediateOutputDirectory,
