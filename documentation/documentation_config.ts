@@ -1,9 +1,4 @@
-interface Snippet {
-  name: string;
-  triggerWords: string[];
-  content: string;
-  codeFile: string;
-}
+import type {Snippet} from './types';
 
 export const Snippets: Snippet[] = [
   {

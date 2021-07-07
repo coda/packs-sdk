@@ -2,8 +2,8 @@ import * as coda from '../../../index';
 
 const pack = coda.newPack();
 
-// BEGIN
 // TODO(Lucas): Validate this in the editor
+// BEGIN
 pack.addFormula({
   resultType: coda.ValueType.Array,
   name: 'MyFormula',
@@ -22,5 +22,3 @@ pack.addFormula({
     return [1, 2, 3, param];
   },
 });
-
-// hello

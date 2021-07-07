@@ -5,8 +5,8 @@ const pack = coda.newPack();
 // BEGIN
 
 pack.addColumnFormat({
-  name: 'format name',
-  formulaNamespace: 'formulaNamespace of Pack',
+  name: 'MyName',
+  formulaNamespace: 'deprecated', // Will be removed shortly
   formulaName: 'the name of a formula to execute using the value in the column',
   instructions: '',
   matchers: [],

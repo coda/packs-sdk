@@ -16,10 +16,6 @@ pack.addFormula({
     }),
   ],
   execute([param]) {
-    if (param === 'true') {
-      return true;
-    } else {
-      return false;
-    }
+    return param === 'true';
   },
 });
