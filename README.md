@@ -26,15 +26,14 @@ _This is the documentation for the SDK to build Packs eitehr via our Web IDE or 
 
 ## Basic Concepts
 
-Coda Packs allow you to extend the functionality of Coda with extensions that you write in JavaScript/TypeScript.
-These extensions can communicate with third-party APIs, with or without user authentication, if desired.
+Coda Packs allow you to extend Coda by building new building blocks that can operate directly on Coda docs' canvas. You can write these extensions in JavaScript/TypeScript, using them to create functions that let you re-use a formula's complex logic across documents or even  communicate with third-party APIs, with or without user authentication.
 
 Packs are a combination of **formulas**, **sync tables**, and **column formats**.
 
-A **formula** is a JavaScript function that will be exposed as a Coda formula, that you can use anywhere in a
+A **formula (including a button)** is a JavaScript function that will be exposed as a Coda formula, that you can use anywhere in a
 Coda doc that you can use any normal formula. Formulas take basic Coda types as input, like strings, numbers,
 dates, booleans, and arrays of these types, and return any of these types or objects whose properties are any
-of these types.
+of these types. Buttons are just a flavor of a formula with the flag `isButton` activated.
 
 A **sync table** is how to bring structured data from a third-party into Coda. A sync table is a table that
 you can add to a Coda doc that gets its rows from a third-party data source, that can be refreshed regularly
@@ -54,6 +53,17 @@ into a `PackDefinition` object which forms the complete specification of your pa
 
 
 ## Core Concepts
+
+### How Packs Work
+
+When you bulid a Pack, you're ultimatley outputting a bundle of compiled code that Coda can then run on your
+behalf. Doc Makers will install a Pack in a doc. Then, whenever they invoke the Pack from their doc -- whether
+a formula, sync table, or other formula-based feature -- Coda executes the formula on our backend server. If
+the formula fetches data from any external APIs or requires the user to establish an authenticated connection,
+we make thsoe calls on your behalf as well from our backend. Finally, we return the data to the Doc Maker in their browser.
+
+![image](https://user-images.githubusercontent.com/79715674/124839359-81495d00-df3d-11eb-9586-d3847ca6a980.png)
+
 
 ### Fetching Remote Data
 
