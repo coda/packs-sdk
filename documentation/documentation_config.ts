@@ -38,25 +38,25 @@ export const Snippets: Snippet[] = [
   },
   {
     name: 'Column Format',
-    triggerWords: ['ColumnFormat'],
+    triggerWords: ['ColumnFormat', 'addColumnFormat', 'newColumnFormat'],
     content: 'Adds a custom column type that you apply to any column in any Coda table.',
     codeFile: './snippets/column_format.ts',
   },
   {
     name: 'User Authentication',
-    triggerWords: ['UserAuthentication'],
+    triggerWords: ['UserAuthentication', 'addUserAuthentication', 'newUserAuthentication'],
     content: 'Adds a Coda formula which will return an object in the doc.',
     codeFile: './snippets/object_formula.ts',
   },
   {
     name: 'System Authentication',
-    triggerWords: ['SystemAuthentication'],
+    triggerWords: ['SystemAuthentication', 'addSystemAuthentication', 'newSystemAuthentication'],
     content: 'Adds a Coda formula which will return an object in the doc.',
     codeFile: './snippets/object_formula.ts',
   },
   {
     name: 'Network Domain',
-    triggerWords: ['NetworkDomain'],
+    triggerWords: ['NetworkDomain', 'addNetworkDomain', 'newNetworkDomain'],
     content: 'Allows the pack to make requests to listed domains.',
     codeFile: './snippets/network_domain.ts'
   },
