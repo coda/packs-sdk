@@ -78,7 +78,7 @@ a formula, sync table, or other formula-based feature -- Coda executes the formu
 the formula fetches data from any external APIs or requires the user to establish an authenticated connection,
 we make those calls on your behalf as well from our backend. Finally, we return the data to the Doc Maker in their browser.
 
-![image](https://user-images.githubusercontent.com/79715674/124839359-81495d00-df3d-11eb-9586-d3847ca6a980.png)
+![Diagram_HowPacksWork](Diagram_HowPacksWork.png)
 
 
 ### Fetching Remote Data
