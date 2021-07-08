@@ -183,7 +183,6 @@ export declare enum NetworkConnection {
 /** @deprecated use `isAction` and `connectionRequirement` on the formula definition instead. */
 export interface Network {
     readonly hasSideEffect?: boolean;
-    readonly requiresConnection?: boolean;
     readonly connection?: NetworkConnection;
 }
 declare const ValidFetchMethods: readonly ["GET", "PATCH", "POST", "PUT", "DELETE"];
