@@ -35,9 +35,12 @@ pack.addFormula({
         }),
     ],
     items: {
-        type: coda.ValueType.Number,
+        type: coda.ValueType.Object,
+        properties: {
+            column1: { type: coda.ValueType.String },
+        },
     },
     execute([param]) {
-        return [1, 2, 3, param];
+        return [{ column1: 'hello' }, { column1: 'world' }, { column1: `${param}` }];
     },
 });

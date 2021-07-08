@@ -40,12 +40,13 @@ pack.addSyncTable({
         description: 'Creates a sync table',
         connectionRequirement: coda.ConnectionRequirement.None,
         parameters: [coda.makeParameter({ type: coda.ParameterType.String, name: 'myParam', description: 'My description' })],
-        async execute([param]) {
+        async execute([param], context) {
+            const response = await context.fetcher.fetch({ method: 'GET', url: 'coda.io' });
             return {
                 result: [
                     {
                         idColumn: 'Example1',
-                        displayColumn: 'Example1',
+                        displayColumn: response.body,
                         otherColumn: param,
                     },
                 ],
