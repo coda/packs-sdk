@@ -74,11 +74,6 @@ Use the Pack in a Doc
 7. **Return data to doc**: the results (or errors) from the execution are sent back to the doc.
 
 
-Doc Makers will install a Pack in a doc. Then, whenever they invoke the Pack from their doc -- whether
-a formula, sync table, or other formula-based feature -- Coda executes the formula on our backend server. If
-the formula fetches data from any external APIs or requires the user to establish an authenticated connection,
-we make those calls on your behalf as well from our backend. Finally, we return the data to the Doc Maker in their browser.
-
 ![Diagram_HowPacksWork](Diagram_HowPacksWork.png)
 
 
