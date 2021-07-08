@@ -62,15 +62,16 @@ behalf when the Pack is used in a doc. This is different from our API, where we 
 Here's how Packs work:
 
 Create a Pack
-1. *Pack Makers creates and build the Pack* via the Online Pack Editor or CLI tools.
-2. *Build sent to Coda's Backend*, either via a command or automatically
+1. **Pack Makers creates and build the Pack** via the Online Pack Editor or CLI tools.
+2. **Build sent to Coda's Backend**, either via a command or automatically
 
 Use the Pack in a Doc
-3. *Doc Makers/Editors install the Pack in their doc*: they receive basic information on the Pack from Coda's backend
-4. *They invoke formulas from the doc*: When any formulaic element (e.g. formula, sync table, column format, button) is invoked, the request is sent to the Coda backend
-5. *Coda runs the formula*: we retrieve your Pack build and run it for you in the Packs Secure Execution Environment. The formulas are run _only with the inputs provided to it_; each call to a formula is independent as formulas are state-less. Thus, Packs cannot rely on data that changes and persists between individual calls to a formula.
-6. *If applicable, external API called* by the Execution Environment. All API calls will originate from our servers to protect authentication credentials, which we store on our servers and never send to clients.
-7. *Return data to doc*: the results (or errors) from the execution are sent back to the doc.
+
+3. **Doc Makers/Editors install the Pack in their doc**: they receive basic information on the Pack from Coda's backend
+4. **They invoke formulas from the doc**: When any formulaic element (e.g. formula, sync table, column format, button) is invoked, the request is sent to the Coda backend
+5. **Coda runs the formula**: we retrieve your Pack build and run it for you in the Packs Secure Execution Environment. The formulas are run _only with the inputs provided to it_; each call to a formula is independent as formulas are state-less. Thus, Packs cannot rely on data that changes and persists between individual calls to a formula.
+6. **If applicable, external API called** by the Execution Environment. All API calls will originate from our servers to protect authentication credentials, which we store on our servers and never send to clients.
+7. **Return data to doc**: the results (or errors) from the execution are sent back to the doc.
 
 
 Doc Makers will install a Pack in a doc. Then, whenever they invoke the Pack from their doc -- whether
