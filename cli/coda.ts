@@ -9,6 +9,7 @@ import {handleExecute} from './execute';
 import {handleInit} from './init';
 import {handleRegister} from './register';
 import {handleRelease} from './release';
+import { handleUpdateConfig } from './update_config';
 import {handleUpload} from './upload';
 import {handleValidate} from './validate';
 import yargs from 'yargs';
@@ -149,6 +150,20 @@ if (require.main === module) {
         },
       },
       handler: handleRelease,
+    })
+    .command({
+      command: 'update-config <manifestFile>',
+      describe:
+        'Update the pack title, description, short description, and image assets from ' +
+        'the manifest. This only applies to the full PackDefinition exports.',
+      builder: {
+        codaApiEndpoint: {
+          string: true,
+          hidden: true,
+          default: DEFAULT_API_ENDPOINT,
+        },
+      },
+      handler: handleUpdateConfig,
     })
     .demandCommand()
     .strict()

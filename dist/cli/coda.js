@@ -13,6 +13,7 @@ const execute_1 = require("./execute");
 const init_1 = require("./init");
 const register_1 = require("./register");
 const release_1 = require("./release");
+const update_config_1 = require("./update_config");
 const upload_1 = require("./upload");
 const validate_1 = require("./validate");
 const yargs_1 = __importDefault(require("yargs"));
@@ -150,6 +151,19 @@ if (require.main === module) {
             },
         },
         handler: release_1.handleRelease,
+    })
+        .command({
+        command: 'update-config <manifestFile>',
+        describe: 'Update the pack title, description, short description, and image assets from ' +
+            'the manifest. This only applies to the full PackDefinition exports.',
+        builder: {
+            codaApiEndpoint: {
+                string: true,
+                hidden: true,
+                default: config_storage_1.DEFAULT_API_ENDPOINT,
+            },
+        },
+        handler: update_config_1.handleUpdateConfig,
     })
         .demandCommand()
         .strict()
