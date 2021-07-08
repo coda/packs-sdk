@@ -97,6 +97,10 @@ if (require.main === module) {
                 alias: 'n',
                 describe: 'Notes about the contents of this Pack version',
             },
+            skipValidation: {
+                boolean: true,
+                describe: 'True to skip validation before uploading.',
+            },
             codaApiEndpoint: {
                 string: true,
                 hidden: true,

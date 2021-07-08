@@ -22,9 +22,10 @@ interface UploadArgs {
   manifestFile: string;
   codaApiEndpoint: string;
   notes?: string;
+  skipValidation?: boolean;
 }
 
-export async function handleUpload({manifestFile, codaApiEndpoint, notes}: Arguments<UploadArgs>) {
+export async function handleUpload({manifestFile, codaApiEndpoint, notes, skipValidation}: Arguments<UploadArgs>) {
   const manifestDir = path.dirname(manifestFile);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   const logger = new ConsoleLogger();
@@ -84,8 +85,12 @@ export async function handleUpload({manifestFile, codaApiEndpoint, notes}: Argum
 
     const bundleHash = computeSha256(uploadPayload);
 
-    logger.info('Validating Pack metadata...');
-    await validateMetadata(metadata);
+    if (skipValidation) {
+      logger.info('Skipping Pack metadata validation...');
+    } else {
+      logger.info('Validating Pack metadata...');
+      await validateMetadata(metadata);  
+    }
 
     logger.info('Registering new Pack version...');
     const registerResponse = await client.registerPackVersion(packId, packVersion, {}, {bundleHash});

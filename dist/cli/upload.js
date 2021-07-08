@@ -40,7 +40,7 @@ const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
 const validate_1 = require("./validate");
-async function handleUpload({ manifestFile, codaApiEndpoint, notes }) {
+async function handleUpload({ manifestFile, codaApiEndpoint, notes, skipValidation }) {
     const manifestDir = path.dirname(manifestFile);
     const formattedEndpoint = helpers_2.formatEndpoint(codaApiEndpoint);
     const logger = new logging_1.ConsoleLogger();
@@ -88,8 +88,13 @@ async function handleUpload({ manifestFile, codaApiEndpoint, notes }) {
         };
         const uploadPayload = JSON.stringify(upload);
         const bundleHash = crypto_1.computeSha256(uploadPayload);
-        logger.info('Validating Pack metadata...');
-        await validate_1.validateMetadata(metadata);
+        if (skipValidation) {
+            logger.info('Skipping Pack metadata validation...');
+        }
+        else {
+            logger.info('Validating Pack metadata...');
+            await validate_1.validateMetadata(metadata);
+        }
         logger.info('Registering new Pack version...');
         const registerResponse = await client.registerPackVersion(packId, packVersion, {}, { bundleHash });
         if (errors_2.isCodaError(registerResponse)) {
