@@ -1,15 +1,15 @@
 # Coda Packs SDK
 
-_This is the documentation for the SDK to build Packs eitehr via our Web IDE or the Command Line Interface (CLI) tool. Click here (LINK FORTHCOMING) to learn how to use the Web IDE, and [here](README_CLI.md) to learn how to use the CLI._
+_This is the documentation for the SDK to build Packs either via our Online Pack Editor or the Command Line Interface (CLI) tool. Click here (LINK FORTHCOMING) to learn how to use the Web IDE, and [here](README_CLI.md) to learn how to use the CLI._
 
 - [Basic Concepts](#basic-concepts)
 - [Core Concepts](#core-concepts)
+  - [How Packs Work](#how-packs-work)
   - [Fetching Remote Data](#fetching-remote-data)
   - [Authentication](#authentication)
     - [User (Default) Authentication vs System Authentication](#user-default-authentication-vs-system-authentication)
     - [Security](#security)
     - [Authentication Types](#authentication-types)
-  - [Testing Authenticated Requests](#testing-authenticated-requests)
   - [Syncs](#syncs)
     - [Continuation Examples](#continuation-examples)
     - [Dynamic Sync Tables](#dynamic-sync-tables)
@@ -56,11 +56,27 @@ into a `PackDefinition` object which forms the complete specification of your pa
 
 ### How Packs Work
 
-When you bulid a Pack, you're ultimatley outputting a bundle of compiled code that Coda can then run on your
-behalf. Doc Makers will install a Pack in a doc. Then, whenever they invoke the Pack from their doc -- whether
+When you build a Pack, you're ultimately outputting a bundle of compiled code that Coda then runs on your
+behalf when the Pack is used in a doc. This is different from our API, where we allow you to retrieve/edit data from docs but developers are responsible for running their code.
+
+Here's how Packs work:
+
+Create a Pack
+1. *Pack Makers creates and build the Pack* via the Online Pack Editor or CLI tools.
+2. *Build sent to Coda's Backend*, either via a command or automatically
+
+Use the Pack in a Doc
+3. *Doc Makers/Editors install the Pack in their doc*: they receive basic information on the Pack from Coda's backend
+4. *They invoke formulas from the doc*: When any formulaic element (e.g. formula, sync table, column format, button) is invoked, the request is sent to the Coda backend
+5. *Coda runs the formula*: we retrieve your Pack build and run it for you in the Packs Secure Execution Environment. The formulas are run _only with the inputs provided to it_; each call to a formula is independent as formulas are state-less. Thus, Packs cannot rely on data that changes and persists between individual calls to a formula.
+6. *If applicable, external API called* by the Execution Environment. All API calls will originate from our servers to protect authentication credentials, which we store on our servers and never send to clients.
+7. *Return data to doc*: the results (or errors) from the execution are sent back to the doc.
+
+
+Doc Makers will install a Pack in a doc. Then, whenever they invoke the Pack from their doc -- whether
 a formula, sync table, or other formula-based feature -- Coda executes the formula on our backend server. If
 the formula fetches data from any external APIs or requires the user to establish an authenticated connection,
-we make thsoe calls on your behalf as well from our backend. Finally, we return the data to the Doc Maker in their browser.
+we make those calls on your behalf as well from our backend. Finally, we return the data to the Doc Maker in their browser.
 
 ![image](https://user-images.githubusercontent.com/79715674/124839359-81495d00-df3d-11eb-9586-d3847ca6a980.png)
 
@@ -157,7 +173,7 @@ Packs code will never have access to the request after authentication credential
   typically a password, which are base64-encoded and applied to the `Authorization` header of each
   fetcher request, in the form `Authorization: Basic <base64encode(username:password)>`, as outlined in
   [Basic access authentication](https://en.wikipedia.org/wiki/Basic_access_authentication).
-  Web basic authentication sends passwords in cleartext so is not recommended if there are
+  Web basic authentication sends passwords in clear text so is not recommended if there are
   alternatives.
 - **CodaApiHeaderBearerToken**: Internally the same as `HeaderBearerToken` but for cases
   where a pack is going to make requests to Coda's own API. The UI will assist the user
@@ -168,43 +184,6 @@ Packs code will never have access to the request after authentication credential
   when they create a connection. This is mostly for use by Coda-internal packs.
 
 `OAuth2`, `CodaApiHeaderBearerToken`, and `Various` are not available for system authentication.
-
-### Testing Authenticated Requests
-
-_Note: This section applies to the CLI only._
-
-The SDK will help you set up authentication in your development environment so that you can
-execute pack formulas with authentication applied to them, allowing you to run your code
-end-to-end including making fetcher requests to third-party services.
-
-The `coda auth` utility is used to set up authentication for a pack. Run `coda auth --help` at
-any time for a refresher on how to use the utility. Mostly, it's as simple as running
-
-```bash
-coda auth path/to/manifest.ts
-```
-
-The utility will inspect your pack definition to see what kind of authentication you
-have defined, and then it will prompt you to provide in the console the necessary
-token(s) or other parameters required by your authorization type.
-If you are using `OAuth2`, after you provide the necessary configuration info,
-it will launch an OAuth flow in your browser.
-
-The credentials you provide will be stored in a file `.coda-credentials.json`
-in the same directory as your manifest.(If you move your manifest file, you'll want
-to move the credentials file along with it!)
-When you execute a pack formula using `coda execute --fetch path/to/manifest.ts ...`, the credentials
-in this file will be applied to your fetcher requests automatically.
-
-Similarly, if you are writing an integration test for your pack,
-you can pass `useRealFetcher: true` and `manifestDir: '<manifest-dir>'` in the `ContextOptions` argument
-when calling `executeFormulaFromPackDef()` or `executeSyncFormulaFromPackDef()`,
-and a real (non-mock) http fetcher will be used, and any credentials that you
-have registered will be applied to those requests automatically.
-The `manifestDir` option is required if your integration test requires authentication so that
-the SDK knows where to find the credentials file for this pack; normally you can just pass
-`manifestPath: require.resolve('../manifest')`, where you can replace `'../manifest'` with whatever
-the relative import path from your test to your manifest is.
 
 ### Syncs
 
@@ -386,7 +365,7 @@ Use the `makeDynamicSyncTable()` wrapper function. It takes an object with the f
   that require a dynamic url as described above, you must implement this method to list the
   dynamic urls available to the current user. The actual dynamic url is returned in the `value` property
   of each item in the returned array, but you must also specify a `display` string, which is the user-friendly
-  name of the entity that will be displayed to the user in the UI in a list of syncable entities.
+  name of the entity that will be displayed to the user in the UI in a list of sync-able entities.
   In the Google Sheets example, this formula would return a list of the sheets that the user has access to;
   the `display` property would be the name of the sheet and the `value` property would be the
   Google Sheets API url for that sheet.
@@ -441,7 +420,7 @@ to understand the output when testing your formulas and avoid being surprised.
 
 There are a few reasons that object property names are normalized. One is to remove any punctuation from
 property names that would affect the Coda formula builder and cause a user to be unable to access
-a field in an object due to a bad name. Another reason is to standarize all property names across
+a field in an object due to a bad name. Another reason is to standardize all property names across
 all the different packs which have different authors, so that working with pack values is consistent
 for Coda users.
 
@@ -507,7 +486,7 @@ so the SDK supports ways to pass through third-party data as-is or with minimal 
 
 The SDK will automatically remove properties that are not declared within the schema. So if
 your API returns properties not useful to the end user, you can just leave them out of the
-object scehma and they will be automatically elided.
+object schema and they will be automatically elided.
 
 To make parsing an API object and massaging it to match your schema easier, you can use the
 `fromKey` property of a schema property definition. This instructs the SDK to convert
@@ -600,4 +579,4 @@ TODO: Write
 
 ## Reference
 
-Visit [here](https://coda.github.io/packs-sdk) for detailed reference documentation.
+Visit [https://coda.github.io/packs-sdk](https://coda.github.io/packs-sdk) for detailed reference documentation.

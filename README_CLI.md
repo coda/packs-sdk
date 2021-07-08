@@ -1,6 +1,6 @@
 # Coda Packs CLI
 
-_The Packs Command Line Interface (CLI) tool aims to help you build and test Pack code locally. For a guide on using the SDK itself, [see the SDK readme](README.md)._
+_The Packs Command Line Interface (CLI) tool helps you build and test Pack code locally. For a guide on using the SDK itself, [see the SDK readme](README.md)._
 
 - [Getting Started with the CLI](#getting-started-with-the-cli)
   - [Prerequisites](#prerequisites)
@@ -19,6 +19,7 @@ _The Packs Command Line Interface (CLI) tool aims to help you build and test Pac
   - [Creating a Release](#creating-a-release)
 - [Examples](#examples)
 - [Testing Your Code](#testing-your-code)
+  - [Authenticated Requests](#authenticated-requests)
   - [Basic Formula Unittest](#basic-formula-unittest)
   - [Formula Unittest With Mock Fetcher](#formula-unittest-with-mock-fetcher)
   - [Sync Unittest](#sync-unittest)
@@ -27,7 +28,6 @@ _The Packs Command Line Interface (CLI) tool aims to help you build and test Pac
 - [Best Practices](#best-practices)
   - [File Structure](#file-structure)
 - [Assets](#assets)
-- [Reference](#reference)
 
 
 ## Getting Started
@@ -62,7 +62,7 @@ npm init
 npm install --save git+ssh://github.com/coda/packs-sdk.git
 ```
 
-Update your path so you can easily use the `coda` commandline (CLI) that ships with the SDK:
+Update your path so you can easily use the `coda` command line (CLI) tool that ships with the SDK:
 
 ```bash
 # Make sure to run this from the root directory of your project.
@@ -80,7 +80,7 @@ and install the suggested npm dependencies.
 ## Running Your Code
 
 Once published, your pack functionality will be executed on Coda servers after being invoked from a Coda doc.
-During the development process, you can call your formulas directly from the commandline, to simulate this
+During the development process, you can call your formulas directly from the command line, to simulate this
 process for rapid development. When you're nearing the end of authoring your pack, you can upload your pack
 to Coda and run it in a real doc to verify it works as intended.
 
@@ -102,11 +102,11 @@ coda execute src/manifest.ts MyFormula some-arg
 
 This will execute the formula and print the output to the terminal. (A quick reminder, if your arguments
 have spaces or special characters in them, put them in quotation marks when specifying them on the
-commandline.)
+command line.)
 
 The `coda execute` utility will look at your pack definition to determine the types of your parameters
 and will interpret your arguments accordingly. For example, if your formula takes a string and you pass
-`123` as an argument on the commandline, it will know to interpret that as a string, but if your formula
+`123` as an argument on the command line, it will know to interpret that as a string, but if your formula
 takes a number, it will interpret `123` as a number before executing the formula.
 
 To pass array parameters to `coda execute`, use a comma separated string. For example, [1,2,3] should be
@@ -158,7 +158,7 @@ See the [Authentication](#authentication) section about how to set this up.
 
 ## Uploading Packs
 
-**NOTE: Pack uploads are currently unlaunched and are still in testing. The following commands will not work yet.**
+**NOTE: Pack uploads are currently not launched and are still in testing. The following commands will not work yet.**
 
 Note: if you are a beta tester using these commands with an alternative Coda environment,
 each of these commands accepts an optional `--codaApiEndpoint` where you must specify
@@ -259,7 +259,7 @@ pack definitions of various levels of complexity.
 
 ## Testing Your Code
 
-The SDK includes some utilities to help you write unittests and integration tests for your pack.
+The SDK includes some utilities to help you write unit tests and integration tests for your pack.
 These utilities include:
 
 - Helper functions to execute a specific formula or sync from your pack definition.
@@ -280,6 +280,41 @@ real Coda sync will do.
 By default, these utilities will use an execution environment that includes a mock fetcher
 that will not actually make http requests. You can pass your own mock fetcher if you wish
 to configure and inspect the mock requests.
+
+### Authenticated Requests
+
+The SDK will help you set up authentication in your development environment so that you can
+execute pack formulas with authentication applied to them, allowing you to run your code
+end-to-end including making fetcher requests to third-party services.
+
+The `coda auth` utility is used to set up authentication for a pack. Run `coda auth --help` at
+any time for a refresher on how to use the utility. Mostly, it's as simple as running
+
+```bash
+coda auth path/to/manifest.ts
+```
+
+The utility will inspect your pack definition to see what kind of authentication you
+have defined, and then it will prompt you to provide in the console the necessary
+token(s) or other parameters required by your authorization type.
+If you are using `OAuth2`, after you provide the necessary configuration info,
+it will launch an OAuth flow in your browser.
+
+The credentials you provide will be stored in a file `.coda-credentials.json`
+in the same directory as your manifest.(If you move your manifest file, you'll want
+to move the credentials file along with it!)
+When you execute a pack formula using `coda execute --fetch path/to/manifest.ts ...`, the credentials
+in this file will be applied to your fetcher requests automatically.
+
+Similarly, if you are writing an integration test for your pack,
+you can pass `useRealFetcher: true` and `manifestDir: '<manifest-dir>'` in the `ContextOptions` argument
+when calling `executeFormulaFromPackDef()` or `executeSyncFormulaFromPackDef()`,
+and a real (non-mock) http fetcher will be used, and any credentials that you
+have registered will be applied to those requests automatically.
+The `manifestDir` option is required if your integration test requires authentication so that
+the SDK knows where to find the credentials file for this pack; normally you can just pass
+`manifestPath: require.resolve('../manifest')`, where you can replace `'../manifest'` with whatever
+the relative import path from your test to your manifest is.
 
 ### Basic Formula Unittest
 
@@ -407,7 +442,7 @@ This validation can also help ensure that your test code correctly simulates res
 the API that you're integrating with. For instance, while developing our pack, you may have
 been regularly exercising your formula code by running `coda execute --fetch` frequently
 and you're confident that your code works correctly when run against the real API. Then you
-go to write unittests for you pack and you define some fake response objects, but you forget
+go to write unit tests for you pack and you define some fake response objects, but you forget
 some required fields or you specified a field as an array when it should be a comma-separated list.
 If your fake response result in your pack returning a value that doesn't match the schema you,
 the validator will catch these and notify you and you can fix your test code.
@@ -476,7 +511,7 @@ import type {SyncTable} from 'coda-packs-sdk';
 import type {TypedStandardFormula} from 'coda-packs-sdk';
 
 export const formulas: TypedStandardFormula[] = [
-  // Formula defintions go here, e.g.
+  // Formula definitions go here, e.g.
   // makeStringFormula({ ... }),
 ];
 
@@ -556,10 +591,3 @@ interface MyFormulaResponse {
 ## Assets
 
 Assets like your pack's logo should be uploaded via the Pack management UI.
-
-## Reference
-
-Run `make view-docs` to generate detailed reference documentation from the source code
-and open it in your browser.
-
-This will eventually be published on a documentation website.
