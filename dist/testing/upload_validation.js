@@ -642,7 +642,15 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
     var _a;
     const usesAuthentication = (data.defaultAuthentication && data.defaultAuthentication.type !== types_1.AuthenticationType.None) ||
         data.systemConnectionAuthentication;
-    return !usesAuthentication || ((_a = data.networkDomains) === null || _a === void 0 ? void 0 : _a.length);
+    if (!usesAuthentication || ((_a = data.networkDomains) === null || _a === void 0 ? void 0 : _a.length)) {
+        return true;
+    }
+    // Various is an internal authentication type that's only applicable to whitelisted Pack Ids. 
+    // Skipping validation here to let it exempt from network domains.
+    if (data.defaultAuthentication.type === types_1.AuthenticationType.Various) {
+        return true;
+    }
+    return false;
 }, {
     message: 'This pack uses authentication but did not declare a network domain. ' +
         "Specify the domain that your pack makes http requests to using `networkDomains: ['example.com']`",

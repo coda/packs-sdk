@@ -778,8 +778,18 @@ const legacyPackMetadataSchema = validateFormulas(
     data => {
       const usesAuthentication =
         (data.defaultAuthentication && data.defaultAuthentication.type !== AuthenticationType.None) ||
-        data.systemConnectionAuthentication;
-      return !usesAuthentication || data.networkDomains?.length;
+        data.systemConnectionAuthentication;      
+      if (!usesAuthentication || data.networkDomains?.length) {
+        return true;
+      }
+      
+      // Various is an internal authentication type that's only applicable to whitelisted Pack Ids. 
+      // Skipping validation here to let it exempt from network domains.
+      if (data.defaultAuthentication.type === AuthenticationType.Various) {
+        return true;
+      }
+
+      return false;
     },
     {
       message:

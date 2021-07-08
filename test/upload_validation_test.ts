@@ -1480,6 +1480,15 @@ describe('Pack metadata Validation', () => {
       ]);
     });
 
+    it('various auth type exempt from networkDomains requirement', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.Various,
+        },
+      });
+      await validateJson(metadata);
+    });
+
     it('missing networkDomains when specifying system authentication', async () => {
       const metadata = createFakePackVersionMetadata({
         networkDomains: undefined,
