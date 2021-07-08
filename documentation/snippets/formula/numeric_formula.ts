@@ -15,7 +15,7 @@ pack.addFormula({
       description: '',
     }),
   ],
-  execute([param]) {
+  execute: ([param]) => {
     if (param === 'ten') {
       return 10;
     } else {

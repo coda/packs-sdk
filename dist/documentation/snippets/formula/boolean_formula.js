@@ -33,7 +33,7 @@ pack.addFormula({
             description: '',
         }),
     ],
-    execute([param]) {
+    execute: async ([param]) => {
         return param === 'true';
     },
 });

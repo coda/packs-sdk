@@ -24,7 +24,7 @@ const pack = coda.newPack();
 // BEGIN
 pack.addColumnFormat({
     name: 'MyName',
-    formulaNamespace: 'deprecated',
+    formulaNamespace: 'Deprecated',
     formulaName: 'the name of a formula to execute using the value in the column',
     instructions: '',
     matchers: [],

@@ -51,7 +51,7 @@ pack.addDynamicSyncTable({
         description: 'Creates a dynamic sync table',
         connectionRequirement: coda.ConnectionRequirement.None,
         parameters: [coda.makeParameter({ type: coda.ParameterType.String, name: 'myParam', description: 'My description' })],
-        async execute([param]) {
+        execute: async ([param]) => {
             return {
                 result: [
                     {

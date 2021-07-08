@@ -28,7 +28,7 @@ pack.addFormula({
       description: '',
     }),
   ],
-  execute([param]) {
+  execute: async ([param]) => {
     return {
       idPropertyName: param,
       displayPropertyName: 123,

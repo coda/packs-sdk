@@ -40,7 +40,7 @@ pack.addFormula({
             column1: { type: coda.ValueType.String },
         },
     },
-    execute([param]) {
+    execute: ([param]) => {
         return [{ column1: 'hello' }, { column1: 'world' }, { column1: `${param}` }];
     },
 });
