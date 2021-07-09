@@ -151,7 +151,9 @@ Packs code will never have access to the request after authentication credential
   to use for the token creation flow and token exchange, the scopes needed by the pack.
   The pack author must also provide a client id and client secret for the third-party service,
   which are typically obtained when registering a new application in the third-party
-  service's developer portal.
+  service's developer portal. During your registration with that third-party, you will need
+  to provide an authorization callback URL: https://coda.io/packsAuth/oauth2
+  (or https://packs.adhoc.coda.io/packsAuth/oauth2 during our private alpha).
 - **HeaderBearerToken**: The user (or pack author, if using system authentication) provides an API token
   which is applied to the `Authorization` header of each fetcher request, in the form
   `Authorization: Bearer <token>`.
