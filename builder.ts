@@ -17,6 +17,7 @@ import type {SystemAuthenticationDef} from './types';
 import {makeDynamicSyncTable} from './api';
 import {makeFormula} from './api';
 import {makeSyncTable} from './api';
+import {maybeRewriteConnectionForFormula} from './api';
 import {wrapMetadataFunction} from './api';
 
 /**
@@ -32,7 +33,7 @@ export function newPack(definition?: Partial<BasicPackDefinition>): PackDefiniti
   return new PackDefinitionBuilder(definition);
 }
 
-class PackDefinitionBuilder implements BasicPackDefinition {
+export class PackDefinitionBuilder implements BasicPackDefinition {
   formulas: Formula[];
   formats: Format[];
   syncTables: SyncTable[];
@@ -42,6 +43,8 @@ class PackDefinitionBuilder implements BasicPackDefinition {
   systemConnectionAuthentication?: SystemAuthentication;
 
   formulaNamespace?: string;
+
+  private _defaultConnectionRequirement: ConnectionRequirement | undefined;
 
   constructor(definition?: Partial<BasicPackDefinition>) {
     const {
@@ -63,7 +66,10 @@ class PackDefinitionBuilder implements BasicPackDefinition {
   }
 
   addFormula<ParamDefsT extends ParamDefs>(definition: FormulaDefinitionV2<ParamDefsT>): this {
-    const formula = makeFormula(definition);
+    const formula = makeFormula({
+      ...definition,
+      connectionRequirement: definition.connectionRequirement || this._defaultConnectionRequirement,
+    });
     this.formulas.push(formula as any); // WTF
     return this;
   }
@@ -76,7 +82,15 @@ class PackDefinitionBuilder implements BasicPackDefinition {
     connectionRequirement,
     dynamicOptions = {},
   }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this {
-    const syncTable = makeSyncTable({name, identityName, schema, formula, connectionRequirement, dynamicOptions});
+    const connectionRequirementToUse = connectionRequirement || this._defaultConnectionRequirement;
+    const syncTable = makeSyncTable({
+      name,
+      identityName,
+      schema,
+      formula,
+      connectionRequirement: connectionRequirementToUse,
+      dynamicOptions,
+    });
     this.syncTables.push(syncTable);
     return this;
   }
@@ -93,7 +107,10 @@ class PackDefinitionBuilder implements BasicPackDefinition {
     entityName?: string;
     connectionRequirement?: ConnectionRequirement;
   }): this {
-    const dynamicSyncTable = makeDynamicSyncTable(definition);
+    const dynamicSyncTable = makeDynamicSyncTable({
+      ...definition,
+      connectionRequirement: definition.connectionRequirement || this._defaultConnectionRequirement,
+    });
     this.syncTables.push(dynamicSyncTable);
     return this;
   }
@@ -133,6 +150,30 @@ class PackDefinitionBuilder implements BasicPackDefinition {
 
   addNetworkDomain(...domain: string[]): this {
     this.networkDomains.push(...domain);
+    return this;
+  }
+
+  setDefaultConnectionRequirement(connectionRequirement: ConnectionRequirement): this {
+    this._defaultConnectionRequirement = connectionRequirement;
+
+    // Rewrite any formulas or sync tables that were already defined, in case the maker sets the default
+    // after the fact.
+    [...this.formulas].forEach((formula, i) => {
+      if (!formula.connectionRequirement) {
+        const newFormula = maybeRewriteConnectionForFormula({...formula, connectionRequirement}, connectionRequirement);
+        this.formulas.splice(i, 1, newFormula);
+      }
+    });
+    [...this.syncTables].forEach((syncTable, i) => {
+      if (!syncTable.getter.connectionRequirement) {
+        const newSyncTable: SyncTable = {
+          ...syncTable,
+          getter: maybeRewriteConnectionForFormula(syncTable.getter, connectionRequirement),
+        };
+        this.syncTables.splice(i, 1, newSyncTable);
+      }
+    });
+
     return this;
   }
 }

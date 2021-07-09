@@ -577,7 +577,7 @@ export function makeFormula<ParamDefsT extends ParamDefs>(
     };
   }
 
-  return formula;
+  return maybeRewriteConnectionForFormula(formula, definition.connectionRequirement);
 }
 
 interface BaseFormulaDefV2<ParamDefsT extends ParamDefs, ResultT extends string | number | boolean | object>
@@ -1020,7 +1020,7 @@ export function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: Empty
   });
 }
 
-function maybeRewriteConnectionForFormula<
+export function maybeRewriteConnectionForFormula<
   T extends ParamDefs,
   U extends CommonPackFormulaDef<T>,
   V extends U | undefined,

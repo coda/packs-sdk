@@ -23,7 +23,7 @@ import type { SystemAuthenticationDef } from './types';
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
  */
 export declare function newPack(definition?: Partial<BasicPackDefinition>): PackDefinitionBuilder;
-declare class PackDefinitionBuilder implements BasicPackDefinition {
+export declare class PackDefinitionBuilder implements BasicPackDefinition {
     formulas: Formula[];
     formats: Format[];
     syncTables: SyncTable[];
@@ -31,6 +31,7 @@ declare class PackDefinitionBuilder implements BasicPackDefinition {
     defaultAuthentication?: Authentication;
     systemConnectionAuthentication?: SystemAuthentication;
     formulaNamespace?: string;
+    private _defaultConnectionRequirement;
     constructor(definition?: Partial<BasicPackDefinition>);
     addFormula<ParamDefsT extends ParamDefs>(definition: FormulaDefinitionV2<ParamDefsT>): this;
     addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({ name, identityName, schema, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this;
@@ -49,5 +50,5 @@ declare class PackDefinitionBuilder implements BasicPackDefinition {
     setUserAuthentication(authentication: AuthenticationDef): this;
     setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this;
     addNetworkDomain(...domain: string[]): this;
+    setDefaultConnectionRequirement(connectionRequirement: ConnectionRequirement): this;
 }
-export {};

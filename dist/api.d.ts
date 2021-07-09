@@ -449,3 +449,4 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
     resultType: Type.string;
 };
+export declare function maybeRewriteConnectionForFormula<T extends ParamDefs, U extends CommonPackFormulaDef<T>, V extends U | undefined>(formula: V, connectionRequirement: ConnectionRequirement | undefined): V;
