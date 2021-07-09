@@ -29,7 +29,7 @@ const codeBegin = '// BEGIN\n';
 const BaseDir = path_1.default.join(__dirname, '..');
 const DocumentationRoot = path_1.default.join(BaseDir, 'documentation');
 function main() {
-    const CompiledSnippets = documentation_config_1.Snippets.map(snippet => {
+    const compiledSnippets = documentation_config_1.Snippets.map(snippet => {
         const data = fs.readFileSync(path_1.default.join(DocumentationRoot, snippet.codeFile), 'utf8');
         const codeStart = data.indexOf(codeBegin) + codeBegin.length;
         const code = data.substring(codeStart).trim();
@@ -40,6 +40,6 @@ function main() {
             code,
         };
     });
-    fs.writeFileSync(path_1.default.join(DocumentationRoot, 'generated/snippets.json'), JSON.stringify(CompiledSnippets));
+    fs.writeFileSync(path_1.default.join(DocumentationRoot, 'generated/snippets.json'), JSON.stringify(compiledSnippets, null, 2));
 }
 main();

@@ -8,7 +8,7 @@ const BaseDir = path.join(__dirname, '..');
 const DocumentationRoot = path.join(BaseDir, 'documentation');
 
 function main() {
-  const CompiledSnippets: CompiledSnippet[] = Snippets.map(snippet => {
+  const compiledSnippets: CompiledSnippet[] = Snippets.map(snippet => {
     const data = fs.readFileSync(path.join(DocumentationRoot, snippet.codeFile), 'utf8');
     const codeStart = data.indexOf(codeBegin) + codeBegin.length;
     const code = data.substring(codeStart).trim();
@@ -21,7 +21,7 @@ function main() {
     };
   });
 
-  fs.writeFileSync(path.join(DocumentationRoot, 'generated/snippets.json'), JSON.stringify(CompiledSnippets));
+  fs.writeFileSync(path.join(DocumentationRoot, 'generated/snippets.json'), JSON.stringify(compiledSnippets, null, 2));
 }
 
 main();
