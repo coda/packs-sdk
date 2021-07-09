@@ -41,13 +41,13 @@ export const Snippets: Snippet[] = [
     name: 'User Authentication',
     triggerWords: ['UserAuthentication', 'addUserAuthentication', 'newUserAuthentication'],
     content: 'Adds a Coda formula which will return an object in the doc.',
-    codeFile: './snippets/object_formula.ts',
+    codeFile: './snippets/user_authentication.ts',
   },
   {
     name: 'System Authentication',
     triggerWords: ['SystemAuthentication', 'addSystemAuthentication', 'newSystemAuthentication'],
     content: 'Adds a Coda formula which will return an object in the doc.',
-    codeFile: './snippets/object_formula.ts',
+    codeFile: './snippets/system_authentication.ts',
   },
   {
     name: 'Network Domain',

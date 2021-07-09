@@ -56,6 +56,10 @@ compile:
   	-o ${ROOTDIR}/dist/bundle.d.ts \
 		--no-banner
 
+.PHONY: snippets
+snippets:
+	node -r ts-node/register documentation/snippet_compiler.ts
+
 .PHONY: docs
 docs:
 	${ROOTDIR}/node_modules/.bin/typedoc index.ts --out ${ROOTDIR}/local-docs --excludeExternals --excludePrivate --excludeProtected
@@ -77,7 +81,7 @@ clean:
 	rm -rf ${ROOTDIR}/dist
 
 .PHONY: build
-build: clean lint compile
+build: clean lint compile snippets
 
 # allow debugging packs sdk with local packs repo.
 .PHONY: publish-local
