@@ -1,3 +1,4 @@
+import type {Formula} from '../api';
 import type {PackDefinition} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
 import type {PackFormulaMetadata} from '../api';
@@ -5,11 +6,10 @@ import type {PackFormulas} from '../api';
 import type {PackFormulasMetadata} from '../compiled_types';
 import type {PackMetadata} from '../compiled_types';
 import type {PackSyncTable} from '../compiled_types';
-import type {TypedStandardFormula} from '../api';
 
 // Used to avoid needing promises when exporting fake `PackMetadata`s.
 export interface FakePackDefinition extends Omit<PackDefinition, 'formulas'> {
-  formulas?: PackFormulas | TypedStandardFormula[];
+  formulas?: PackFormulas | Formula[];
 }
 
 export function fakeDefinitionToDefinition(def: FakePackDefinition): PackDefinition {

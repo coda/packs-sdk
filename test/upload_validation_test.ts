@@ -3,6 +3,7 @@ import type {ArraySchema} from '../schema';
 import {AuthenticationType} from '../types';
 import {ConnectionRequirement} from '../api_types';
 import {DefaultConnectionType} from '../types';
+import type {Formula} from '../api';
 import type {ObjectSchemaDefinition} from '../schema';
 import type {PackFormulaMetadata} from '../api';
 import type {PackMetadataValidationError} from '../testing/upload_validation';
@@ -12,7 +13,6 @@ import {ParameterType} from '../api_types';
 import {PostSetupType} from '../types';
 import type {StringFormulaDef} from '../api';
 import {Type} from '../api_types';
-import type {TypedStandardFormula} from '../api';
 import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
 import {createFakePack} from './test_utils';
@@ -150,7 +150,7 @@ describe('Pack metadata Validation', () => {
   });
 
   describe('Formulas', () => {
-    function formulaToMetadata(formula: TypedStandardFormula): PackFormulaMetadata {
+    function formulaToMetadata(formula: Formula): PackFormulaMetadata {
       const {execute, ...rest} = formula;
       return rest;
     }

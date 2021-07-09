@@ -615,7 +615,7 @@ export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<Pa
 export declare function makeParameter<T extends ParameterType>(paramDefinition: ParameterOptions<T>): ParamDef<ParameterTypeMap[T]>;
 export declare function makeUserVisibleError(msg: string): UserVisibleError;
 export interface PackFormulas {
-	readonly [namespace: string]: TypedStandardFormula[];
+	readonly [namespace: string]: Formula[];
 }
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult> extends CommonPackFormulaDef<ParamsT> {
 	execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
@@ -627,29 +627,29 @@ export interface ObjectArrayFormulaDef<ParamsT extends ParamDefs, SchemaT extend
 export interface EmptyFormulaDef<ParamsT extends ParamDefs> extends Omit<PackFormulaDef<ParamsT, string>, "execute"> {
 	request: RequestHandlerTemplate;
 }
-export declare type Formula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = PackFormulaDef<ParamDefsT, ResultT> & {
+export declare type BaseFormula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = PackFormulaDef<ParamDefsT, ResultT> & {
 	resultType: TypeOf<ResultT>;
 };
-export declare type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number> & {
+export declare type NumericPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, number> & {
 	schema?: NumberSchema;
 };
-export declare type BooleanPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, boolean> & {
+export declare type BooleanPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, boolean> & {
 	schema?: BooleanSchema;
 };
-export declare type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> = Formula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
+export declare type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> = BaseFormula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
 	schema?: StringSchema<ResultT>;
 };
-export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Formula<ParamDefsT, SchemaType<SchemaT>> & {
+export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = BaseFormula<ParamDefsT, SchemaType<SchemaT>> & {
 	schema?: SchemaT;
 };
-export declare type TypedStandardFormula<ParamDefsT extends ParamDefs = ParamDefs> = NumericPackFormula<ParamDefsT> | StringPackFormula<ParamDefsT, any> | BooleanPackFormula<ParamDefsT> | ObjectPackFormula<ParamDefsT, Schema>;
-export declare type TypedPackFormula = TypedStandardFormula | GenericSyncFormula;
+export declare type Formula<ParamDefsT extends ParamDefs = ParamDefs> = NumericPackFormula<ParamDefsT> | StringPackFormula<ParamDefsT, any> | BooleanPackFormula<ParamDefsT> | ObjectPackFormula<ParamDefsT, Schema>;
+export declare type TypedPackFormula = Formula | GenericSyncFormula;
 export declare type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 export declare type PackFormulaMetadata = Omit<TypedPackFormula, "execute">;
 export declare type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, "execute">;
 export declare function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata;
-export declare function isStringPackFormula(fn: Formula<ParamDefs, any>): fn is StringPackFormula<ParamDefs>;
-export declare function isSyncPackFormula(fn: Formula<ParamDefs, any>): fn is GenericSyncFormula;
+export declare function isStringPackFormula(fn: BaseFormula<ParamDefs, any>): fn is StringPackFormula<ParamDefs>;
+export declare function isSyncPackFormula(fn: BaseFormula<ParamDefs, any>): fn is GenericSyncFormula;
 export interface SyncFormulaResult<ResultT extends object> {
 	result: ResultT[];
 	continuation?: Continuation;
@@ -707,7 +707,7 @@ export declare type SyncFormula<K extends string, L extends string, ParamDefsT e
  *   ...
  * });
  */
-export declare function makeFormula<ParamDefsT extends ParamDefs>(fullDefinition: FormulaDefinitionV2<ParamDefsT>): TypedStandardFormula<ParamDefsT>;
+export declare function makeFormula<ParamDefsT extends ParamDefs>(fullDefinition: FormulaDefinitionV2<ParamDefsT>): Formula<ParamDefsT>;
 export interface BaseFormulaDefV2<ParamDefsT extends ParamDefs, ResultT extends string | number | boolean | object> extends PackFormulaDef<ParamDefsT, ResultT> {
 	onError?(error: Error): any;
 }
@@ -1090,7 +1090,7 @@ export interface PackVersionDefinition {
 	systemConnectionAuthentication?: SystemAuthentication;
 	networkDomains?: string[];
 	formulaNamespace?: string;
-	formulas?: PackFormulas | TypedStandardFormula[];
+	formulas?: PackFormulas | Formula[];
 	formats?: Format[];
 	syncTables?: SyncTable[];
 }
@@ -1132,7 +1132,7 @@ export interface PackDefinition extends PackVersionDefinition {
  */
 export declare function newPack(definition?: Partial<BasicPackDefinition>): PackDefinitionBuilder;
 declare class PackDefinitionBuilder implements BasicPackDefinition {
-	formulas: TypedStandardFormula[];
+	formulas: Formula[];
 	formats: Format[];
 	syncTables: SyncTable[];
 	networkDomains: string[];

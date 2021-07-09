@@ -1,3 +1,10 @@
+## 0.4.0
+
+### TypedStandardFormula renamed to Formula (TypeScript only)
+
+The type `TypedStandardFormula`, which is the type used for the `formulas` array in main
+`PackVersionDefinition` type has been renamed `Formula` to be simpler and more intuitive.
+
 ## 0.3.1
 
 ### Metadata formulas no longer need to be wrapped in `makeMetadataFormula()`.

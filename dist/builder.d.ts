@@ -3,6 +3,7 @@ import type { AuthenticationDef } from './types';
 import type { BasicPackDefinition } from './types';
 import type { ConnectionRequirement } from './api_types';
 import type { Format } from './types';
+import type { Formula } from './api';
 import type { FormulaDefinitionV2 } from './api';
 import type { MetadataFormula } from './api';
 import type { ObjectSchema } from './schema';
@@ -12,7 +13,6 @@ import type { SyncTable } from './api';
 import type { SyncTableOptions } from './api';
 import type { SystemAuthentication } from './types';
 import type { SystemAuthenticationDef } from './types';
-import type { TypedStandardFormula } from './api';
 /**
  * Creates a new skeleton pack definition that can be added to.
  *
@@ -24,7 +24,7 @@ import type { TypedStandardFormula } from './api';
  */
 export declare function newPack(definition?: Partial<BasicPackDefinition>): PackDefinitionBuilder;
 declare class PackDefinitionBuilder implements BasicPackDefinition {
-    formulas: TypedStandardFormula[];
+    formulas: Formula[];
     formats: Format[];
     syncTables: SyncTable[];
     networkDomains: string[];
