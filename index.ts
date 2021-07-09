@@ -82,7 +82,7 @@ export type {SyncTableDef} from './api';
 export type {TemporaryBlobStorage} from './api_types';
 export {Type} from './api_types';
 export type {TypedPackFormula} from './api';
-export type {TypedStandardFormula} from './api';
+export type {Formula as TypedStandardFormula} from './api';
 export {UserVisibleError} from './api';
 export {isArrayType} from './api_types';
 export {isDynamicSyncTable} from './api';

@@ -2,6 +2,7 @@ import type {Authentication} from '../types';
 import type {AuthenticationMetadata} from '../compiled_types';
 import {AuthenticationType} from '../types';
 import type {Format} from '../types';
+import type {Formula} from '../api';
 import type {GenericSyncTable} from '../api';
 import type {MetadataFormula} from '../api';
 import type {MetadataFormulaMetadata} from '../api';
@@ -17,7 +18,6 @@ import type {PackVersionMetadata} from '../compiled_types';
 import type {PostSetup} from '../types';
 import type {PostSetupMetadata} from '../compiled_types';
 import type {TypedPackFormula} from '../api';
-import type {TypedStandardFormula} from '../api';
 import {ensureExists} from './ensure';
 import {isDynamicSyncTable} from '../api';
 
@@ -53,9 +53,7 @@ function compileFormatsMetadata(formats: Format[]): PackFormatMetadata[] {
   });
 }
 
-function compileFormulasMetadata(
-  formulas: PackFormulas | TypedStandardFormula[],
-): PackFormulasMetadata | PackFormulaMetadata[] {
+function compileFormulasMetadata(formulas: PackFormulas | Formula[]): PackFormulasMetadata | PackFormulaMetadata[] {
   const formulasMetadata: PackFormulaMetadata[] | PackFormulasMetadata = Array.isArray(formulas) || !formulas ? [] : {};
   // TODO: @alan-fang delete once we move packs off of PackFormulas
   if (Array.isArray(formulas)) {
