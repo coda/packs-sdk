@@ -642,7 +642,7 @@ export declare type StringPackFormula<ParamDefsT extends ParamDefs, ResultT exte
 export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = BaseFormula<ParamDefsT, SchemaType<SchemaT>> & {
 	schema?: SchemaT;
 };
-declare type Formula<ParamDefsT extends ParamDefs = ParamDefs> = NumericPackFormula<ParamDefsT> | StringPackFormula<ParamDefsT, any> | BooleanPackFormula<ParamDefsT> | ObjectPackFormula<ParamDefsT, Schema>;
+export declare type Formula<ParamDefsT extends ParamDefs = ParamDefs> = NumericPackFormula<ParamDefsT> | StringPackFormula<ParamDefsT, any> | BooleanPackFormula<ParamDefsT> | ObjectPackFormula<ParamDefsT, Schema>;
 export declare type TypedPackFormula = Formula | GenericSyncFormula;
 export declare type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 export declare type PackFormulaMetadata = Omit<TypedPackFormula, "execute">;
@@ -1232,7 +1232,6 @@ export declare function ensureExists<T>(value: T | null | undefined, message?: s
 export declare function assertCondition(condition: any, message?: string): asserts condition;
 
 export {
-	Formula as TypedStandardFormula,
 	join as joinUrl,
 };
 
