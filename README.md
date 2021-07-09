@@ -1073,9 +1073,9 @@ Most of your pack implementation goes here.
 ```typescript
 import type {Format} from 'coda-packs-sdk';
 import type {SyncTable} from 'coda-packs-sdk';
-import type {TypedStandardFormula} from 'coda-packs-sdk';
+import type {Formula} from 'coda-packs-sdk';
 
-export const formulas: TypedStandardFormula[] = [
+export const formulas: Formula[] = [
   // Formula defintions go here, e.g.
   // makeStringFormula({ ... }),
 ];
