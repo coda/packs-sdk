@@ -1,0 +1,232 @@
+[
+  {
+    "name": "String Formula",
+    "triggerWords": [
+      "StringFormula",
+      "newFormula",
+      "addFormula"
+    ],
+    "content": "Adds a Coda formula which will return a text string in the doc.",
+    "code": "pack.addFormula({\n  resultType: coda.ValueType.String,\n  name: 'MyFormula',\n  description: '',\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: 'myParam',\n      description: '',\n    }),\n  ],\n  execute: async ([param]) => {\n    return `Hello ${param}`;\n  },\n});"
+  },
+  {
+    "name": "Array Formula",
+    "triggerWords": [
+      "ArrayFormula",
+      "newFormula",
+      "addFormula"
+    ],
+    "content": "Adds a Coda formula which will return a text string in the doc.",
+    "code": "pack.addFormula({\n  resultType: coda.ValueType.Array,\n  name: 'MyFormula',\n  description: '',\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.Number,\n      name: 'myParam',\n      description: '',\n    }),\n  ],\n  items: {\n    type: coda.ValueType.Object,\n    properties: {\n      column1: {type: coda.ValueType.String},\n    },\n  },\n  execute: ([param]) => {\n    return [{column1: 'hello'}, {column1: 'world'}, {column1: `${param}`}];\n  },\n});"
+  },
+  {
+    "name": "Boolean Formula",
+    "triggerWords": [
+      "BooleanFormula",
+      "newFormula",
+      "addFormula"
+    ],
+    "content": "Adds a Coda formula which will return true or false in the doc.",
+    "code": "pack.addFormula({\n  resultType: coda.ValueType.Boolean,\n  name: 'MyFormula',\n  description: '',\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: 'myParam',\n      description: '',\n    }),\n  ],\n  execute: async ([param]) => {\n    return param === 'true';\n  },\n});"
+  },
+  {
+    "name": "Numeric Formula",
+    "triggerWords": [
+      "NumericFormula",
+      "newFormula",
+      "addFormula"
+    ],
+    "content": "Adds a Coda formula which will return a number in the doc.",
+    "code": "pack.addFormula({\n  resultType: coda.ValueType.Number,\n  name: 'MyFormula',\n  description: '',\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: 'myParam',\n      description: '',\n    }),\n  ],\n  execute: ([param]) => {\n    if (param === 'ten') {\n      return 10;\n    } else {\n      return 0;\n    }\n  },\n});"
+  },
+  {
+    "name": "Object Formula",
+    "triggerWords": [
+      "ObjectFormula",
+      "newFormula",
+      "addFormula"
+    ],
+    "content": "Adds a Coda formula which will return an object in the doc.",
+    "code": "pack.addFormula({\n  resultType: coda.ValueType.Object,\n  name: 'MyFormula',\n  description: '',\n  schema: coda.makeObjectSchema({\n    type: coda.ValueType.Object,\n    id: 'idPropertyName',\n    primary: 'displayPropertyName',\n    identity: {\n      name: 'entityName',\n    },\n    properties: {\n      idPropertyName: {type: coda.ValueType.String},\n      displayPropertyName: {type: coda.ValueType.Number},\n      otherProperty: {type: coda.ValueType.String},\n    },\n  }),\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: 'myParam',\n      description: '',\n    }),\n  ],\n  execute: async ([param]) => {\n    return {\n      idPropertyName: param,\n      displayPropertyName: 123,\n      otherProperty: 'other property!',\n    };\n  },\n});"
+  },
+  {
+    "name": "Column Format",
+    "triggerWords": [
+      "ColumnFormat",
+      "addColumnFormat",
+      "newColumnFormat"
+    ],
+    "content": "Adds a custom column type that you apply to any column in any Coda table.",
+    "code": "pack.addColumnFormat({\n  name: 'MyName',\n  formulaNamespace: 'Deprecated', // Will be removed shortly\n  formulaName: 'the name of a formula to execute using the value in the column',\n  instructions: '',\n  matchers: [],\n});"
+  },
+  {
+    "name": "User Authentication",
+    "triggerWords": [
+      "UserAuthentication",
+      "addUserAuthentication",
+      "newUserAuthentication"
+    ],
+    "content": "Adds a Coda formula which will return an object in the doc.",
+    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.None,\n});"
+  },
+  {
+    "name": "System Authentication",
+    "triggerWords": [
+      "SystemAuthentication",
+      "addSystemAuthentication",
+      "newSystemAuthentication"
+    ],
+    "content": "Adds a Coda formula which will return an object in the doc.",
+    "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n});"
+  },
+  {
+    "name": "Network Domain",
+    "triggerWords": [
+      "NetworkDomain",
+      "addNetworkDomain",
+      "newNetworkDomain"
+    ],
+    "content": "Allows the pack to make requests to listed domains.",
+    "code": "pack.addNetworkDomain('Your Network Domain');"
+  },
+  {
+    "name": "String Parameter",
+    "triggerWords": [
+      "StringParameter",
+      "addParameter",
+      "newParameter"
+    ],
+    "content": "Creates a string parameter.",
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.String,\n  name: 'myParam',\n  description: 'My description',\n});"
+  },
+  {
+    "name": "Boolean Parameter",
+    "triggerWords": [
+      "BooleanParameter",
+      "addParameter",
+      "newParameter"
+    ],
+    "content": "Creates a boolean parameter.",
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.Boolean,\n  name: 'myParam',\n  description: 'My description',\n});"
+  },
+  {
+    "name": "Date Parameter",
+    "triggerWords": [
+      "DateParameter",
+      "addParameter",
+      "newParameter"
+    ],
+    "content": "Creates a date parameter.",
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.Date,\n  name: 'myParam',\n  description: 'My description',\n});"
+  },
+  {
+    "name": "Html Parameter",
+    "triggerWords": [
+      "HtmlParameter",
+      "addParameter",
+      "newParameter"
+    ],
+    "content": "Creates a html parameter.",
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.Html,\n  name: 'myParam',\n  description: 'My description',\n});"
+  },
+  {
+    "name": "Image Parameter",
+    "triggerWords": [
+      "ImageParameter",
+      "addParameter",
+      "newParameter"
+    ],
+    "content": "Creates a image parameter.",
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.Image,\n  name: 'myParam',\n  description: 'My description',\n});"
+  },
+  {
+    "name": "Number Parameter",
+    "triggerWords": [
+      "NumberParameter",
+      "addParameter",
+      "newParameter"
+    ],
+    "content": "Creates a number parameter.",
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.Number,\n  name: 'myParam',\n  description: 'My description',\n});"
+  },
+  {
+    "name": "String Array Parameter",
+    "triggerWords": [
+      "StringArrayParameter",
+      "addArrayParameter",
+      "newArrayParameter"
+    ],
+    "content": "Creates a string array parameter.",
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.StringArray,\n  name: 'myParam',\n  description: 'My description',\n});"
+  },
+  {
+    "name": "Boolean Array Parameter",
+    "triggerWords": [
+      "BooleanArrayParameter",
+      "addArrayParameter",
+      "newArrayParameter"
+    ],
+    "content": "Creates a boolean array parameter.",
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.BooleanArray,\n  name: 'myParam',\n  description: 'My description',\n});"
+  },
+  {
+    "name": "Date Array Parameter",
+    "triggerWords": [
+      "DateArrayParameter",
+      "addArrayParameter",
+      "newArrayParameter"
+    ],
+    "content": "Creates a date array parameter.",
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.DateArray,\n  name: 'myParam',\n  description: 'My description',\n});"
+  },
+  {
+    "name": "Html Array Parameter",
+    "triggerWords": [
+      "HtmlArrayParameter",
+      "addArrayParameter",
+      "newArrayParameter"
+    ],
+    "content": "Creates a html array parameter.",
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.HtmlArray,\n  name: 'myParam',\n  description: 'My description',\n});"
+  },
+  {
+    "name": "Image Array Parameter",
+    "triggerWords": [
+      "ImageArrayParameter",
+      "addArrayParameter",
+      "newArrayParameter"
+    ],
+    "content": "Creates a image array parameter.",
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.ImageArray,\n  name: 'myParam',\n  description: 'My description',\n});"
+  },
+  {
+    "name": "Number Array Parameter",
+    "triggerWords": [
+      "NumberArrayParameter",
+      "addArrayParameter",
+      "newArrayParameter"
+    ],
+    "content": "Creates a number array parameter.",
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.NumberArray,\n  name: 'myParam',\n  description: 'My description',\n});"
+  },
+  {
+    "name": "Sync Table",
+    "triggerWords": [
+      "SyncTable",
+      "addSyncTable",
+      "newSyncTable"
+    ],
+    "content": "Adds a sync table.",
+    "code": "pack.addSyncTable({\n  name: 'MySyncTable',\n  identityName: 'EntityName',\n  schema: coda.makeObjectSchema({\n    type: coda.ValueType.Object,\n    id: 'idColumn',\n    primary: 'displayColumn',\n    properties: {\n      idColumn: {type: coda.ValueType.String},\n      displayColumn: {type: coda.ValueType.String},\n      otherColumn: {type: coda.ValueType.Number},\n    },\n  }),\n  formula: {\n    name: 'SyncTable',\n    description: 'Creates a sync table',\n    connectionRequirement: coda.ConnectionRequirement.None,\n    parameters: [coda.makeParameter({type: coda.ParameterType.String, name: 'myParam', description: 'My description'})],\n    execute: async ([param], context) => {\n      const response = await context.fetcher.fetch({method: 'GET', url: 'coda.io'});\n      return {\n        result: [\n          {\n            idColumn: 'Example1',\n            displayColumn: response.body,\n            otherColumn: param,\n          },\n        ],\n      };\n    },\n  },\n});"
+  },
+  {
+    "name": "Dynamic Sync Table",
+    "triggerWords": [
+      "DynamicSyncTable",
+      "addDynamicSyncTable",
+      "newDynamicSyncTable"
+    ],
+    "content": "Adds a dynamic sync table.",
+    "code": "pack.addDynamicSyncTable({\n  name: 'MyDynamicSynctable',\n  identityName: 'Entityname',\n  getName: coda.makeMetadataFormula(async context => {\n    const response = await context.fetcher.fetch({method: 'GET', url: 'coda.io'});\n    return response.body;\n  }),\n  getSchema: coda.makeMetadataFormula(async () => {\n    return coda.makeSchema({\n      type: coda.ValueType.Array,\n      items: coda.makeObjectSchema({\n        type: coda.ValueType.Object,\n        id: 'idColumn',\n        primary: 'displayColumn',\n        featured: ['otherColumn'],\n        properties: {\n          idColumn: {type: coda.ValueType.Number},\n          displayColumn: {type: coda.ValueType.String},\n          otherColumn: {type: coda.ValueType.String},\n        },\n      }),\n    });\n  }),\n  getDisplayUrl: coda.makeMetadataFormula(async context => context.sync!.dynamicUrl!),\n  formula: {\n    name: 'DynamicSyncTable',\n    description: 'Creates a dynamic sync table',\n    connectionRequirement: coda.ConnectionRequirement.None,\n    parameters: [coda.makeParameter({type: coda.ParameterType.String, name: 'myParam', description: 'My description'})],\n    execute: async ([param]) => {\n      return {\n        result: [\n          {\n            idPropertyName: 1,\n            displayPropertyName: 'Example1',\n            otherPropertyName: param,\n          },\n        ],\n      };\n    },\n  },\n});"
+  }
+]
