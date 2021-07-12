@@ -816,6 +816,54 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 		entityName?: string;
 	};
 }
+export interface DynamicSyncTableOptions<ParamDefsT extends ParamDefs> {
+	/**
+	 * The name of the dynamic sync table. This is shown to users in the Coda UI
+	 * when listing what build blocks are contained within this pack.
+	 * This should describe the category of entities being synced. The actual
+	 * table name once added to the doc will be dynamic, it will be whatever value
+	 * is returned by the `getName` formula.
+	 */
+	name: string;
+	/**
+	 * A formula that returns the name of this table.
+	 */
+	getName: MetadataFormulaDef;
+	/**
+	 * A formula that returns the schema for this table.
+	 */
+	getSchema: MetadataFormulaDef;
+	/**
+	 * A formula that that returns a browser-friendly url representing the
+	 * resource being synced. The Coda UI links to this url as the source
+	 * of the table data. This is typically a browser-friendly form of the
+	 * `dynamicUrl`, which is typically an API url.
+	 */
+	getDisplayUrl: MetadataFormulaDef;
+	/**
+	 * A formula that returns a list of available dynamic urls that can be
+	 * used to create an instance of this dynamic sync table.
+	 */
+	listDynamicUrls?: MetadataFormulaDef;
+	/**
+	 * The definition of the formula that implements this sync. This is a Coda packs formula
+	 * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
+	 * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
+	 * These will eventually be consolidated.)
+	 */
+	formula: SyncFormulaDef<ParamDefsT>;
+	/**
+	 * A label for the kind of entities that you are syncing. This label is used in a doc to identify
+	 * the column in this table that contains the synced data. If you don't provide an `entityName`, the value
+	 * of `identity.name` from your schema will be used instead, so in most cases you don't need to provide this.
+	 */
+	entityName?: string;
+	/**
+	 * A {@link ConnectionRequirement} that will be used for all formulas contained within
+	 * this sync table (including autocomplete formulas).
+	 */
+	connectionRequirement?: ConnectionRequirement;
+}
 /**
  * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
  * using this wrapper rather than declaring a sync table definition object directly.
@@ -1141,23 +1189,140 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	formulaNamespace?: string;
 	private _defaultConnectionRequirement;
 	constructor(definition?: Partial<BasicPackDefinition>);
+	/**
+	 * Adds a formula definition to this pack.
+	 *
+	 * In the web editor, the `/Formula` shortcut will insert a snippet of a skeleton formula.
+	 *
+	 * @example
+	 * pack.addFormula({
+	 *   resultType: ValueType.String,
+	 *    name: 'MyFormula',
+	 *    description: 'My description.',
+	 *    parameters: [
+	 *      makeParameter({
+	 *        type: ParameterType.String,
+	 *        name: 'myParam',
+	 *        description: 'My param description.',
+	 *      }),
+	 *    ],
+	 *    execute: async ([param]) => {
+	 *      return `Hello ${param}`;
+	 *    },
+	 * });
+	 */
 	addFormula<ParamDefsT extends ParamDefs>(definition: FormulaDefinitionV2<ParamDefsT>): this;
+	/**
+	 * Adds a sync table definition to this pack.
+	 *
+	 * In the web editor, the `/SyncTable` shortcut will insert a snippet of a skeleton sync table.
+	 *
+	 * @example
+	 * pack.addSyncTable({
+	 *   name: 'MySyncTable',
+	 *   identityName: 'EntityName',
+	 *   schema: coda.makeObjectSchema({
+	 *     ...
+	 *   }),
+	 *   formula: {
+	 *     ...
+	 *   },
+	 * });
+	 */
 	addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({ name, identityName, schema, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this;
-	addDynamicSyncTable<ParamDefsT extends ParamDefs>(definition: {
-		name: string;
-		identityName: string;
-		getName: MetadataFormulaDef;
-		getSchema: MetadataFormulaDef;
-		formula: SyncFormulaDef<ParamDefsT>;
-		getDisplayUrl: MetadataFormulaDef;
-		listDynamicUrls?: MetadataFormulaDef;
-		entityName?: string;
-		connectionRequirement?: ConnectionRequirement;
-	}): this;
+	/**
+	 * Adds a dynamic sync table definition to this pack.
+	 *
+	 * In the web editor, the `/DynamicSyncTable` shortcut will insert a snippet of a skeleton sync table.
+	 *
+	 * @example
+	 * pack.addDynamicSyncTable({
+	 *   name: 'MySyncTable',
+	 *   getName: async (context) => {
+	 *     const response = await context.fetcher.fetch({method: 'GET', url: context.sync.dynamicUrl});
+	 *     return response.body.name;
+	 *   },
+	 *   getName: async (context) => {
+	 *     const response = await context.fetcher.fetch({method: 'GET', url: context.sync.dynamicUrl});
+	 *     return response.body.browserLink;
+	 *   },
+	 *   ...
+	 * });
+	 */
+	addDynamicSyncTable<ParamDefsT extends ParamDefs>(definition: DynamicSyncTableOptions<ParamDefsT>): this;
+	/**
+	 * Adds a column format definition to this pack.
+	 *
+	 * In the web editor, the `/ColumnFormat` shortcut will insert a snippet of a skeleton format.
+	 *
+	 * @example
+	 * pack.addColumnFormat({
+	 *   name: 'MyColumn',
+	 *   formulaName: 'MyFormula',
+	 * });
+	 */
 	addColumnFormat(format: Format): this;
+	/**
+	 * Sets this pack to use authentication for individual users, using the
+	 * authentication method is the given definition.
+	 *
+	 * Each user will need to register an account in order to use this pack.
+	 *
+	 * In the web editor, the `/UserAuthentication` shortcut will insert a snippet of a skeleton
+	 * authentication definition.
+	 *
+	 * @example
+	 * pack.setUserAuthentication({
+	 *   type: AuthenticationType.HeaderBearerToken,
+	 * });
+	 */
 	setUserAuthentication(authentication: AuthenticationDef): this;
+	/**
+	 * Sets this pack to use authentication provided by you as the maker of this pack.
+	 *
+	 * You will need to register credentials to use with this pack. When users use the
+	 * pack, their requests will be authenticated with those system credentials, they need
+	 * not register their own account.
+	 *
+	 * In the web editor, the `/SystemAuthentication` shortcut will insert a snippet of a skeleton
+	 * authentication definition.
+	 *
+	 * @example
+	 * pack.setSystemAuthentication({
+	 *   type: AuthenticationType.HeaderBearerToken,
+	 * });
+	 */
 	setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this;
+	/**
+	 * Adds the domain that this pack makes HTTP requests to.
+	 * For example, if your pack makes HTTP requests to "api.example.com",
+	 * use "example.com" as your network domain.
+	 *
+	 * If your pack make HTTP requests, it must declare a network domain,
+	 * for security purposes. Coda enforces that your pack cannot make requests to
+	 * any undeclared domains.
+	 *
+	 * You are allowed one network domain per pack by default. If your pack needs
+	 * to connect to multiple domains, contact Coda Support for approval.
+	 *
+	 * @example
+	 * pack.addNetworkDomain('example.com');
+	 */
 	addNetworkDomain(...domain: string[]): this;
+	/**
+	 * Declares a default connection (account) requirement to be used for all
+	 * formulas and sync tables on this pack that don't explicitly specify one.
+	 *
+	 * This is purely a convenience to avoid having to specify a connection requirement
+	 * on each individual build block definition. For example, if your pack uses
+	 * authentication and all or most of your formulas require a user account,
+	 * rather than specifying `connectionRequirement: ConnectionRequirement.Required`
+	 * each time you call `pack.addFormula()`, you can set a default connection requirement
+	 * up front and it will apply to all formula and sync table definitions.
+	 *
+	 * @example
+	 * pack.setDefaultConnectionRequirement(ConnectionRequirement.Required);
+	 */
 	setDefaultConnectionRequirement(connectionRequirement: ConnectionRequirement): this;
 }
 export declare type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "getDisplayUrl"> & {

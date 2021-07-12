@@ -6,7 +6,6 @@ const pack = coda.newPack();
 
 pack.addDynamicSyncTable({
   name: 'MyDynamicSynctable',
-  identityName: 'Entityname',
   getName: coda.makeMetadataFormula(async context => {
     const response = await context.fetcher.fetch({method: 'GET', url: 'coda.io'});
     return response.body;
