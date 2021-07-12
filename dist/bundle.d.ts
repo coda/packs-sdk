@@ -1139,17 +1139,18 @@ declare class PackDefinitionBuilder implements BasicPackDefinition {
 	defaultAuthentication?: Authentication;
 	systemConnectionAuthentication?: SystemAuthentication;
 	formulaNamespace?: string;
+	private _defaultConnectionRequirement;
 	constructor(definition?: Partial<BasicPackDefinition>);
 	addFormula<ParamDefsT extends ParamDefs>(definition: FormulaDefinitionV2<ParamDefsT>): this;
 	addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({ name, identityName, schema, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this;
 	addDynamicSyncTable<ParamDefsT extends ParamDefs>(definition: {
 		name: string;
 		identityName: string;
-		getName: MetadataFormula;
-		getSchema: MetadataFormula;
+		getName: MetadataFormulaDef;
+		getSchema: MetadataFormulaDef;
 		formula: SyncFormulaDef<ParamDefsT>;
-		getDisplayUrl: MetadataFormula;
-		listDynamicUrls?: MetadataFormula;
+		getDisplayUrl: MetadataFormulaDef;
+		listDynamicUrls?: MetadataFormulaDef;
 		entityName?: string;
 		connectionRequirement?: ConnectionRequirement;
 	}): this;
@@ -1157,6 +1158,7 @@ declare class PackDefinitionBuilder implements BasicPackDefinition {
 	setUserAuthentication(authentication: AuthenticationDef): this;
 	setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this;
 	addNetworkDomain(...domain: string[]): this;
+	setDefaultConnectionRequirement(connectionRequirement: ConnectionRequirement): this;
 }
 export declare type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "getDisplayUrl"> & {
 	getter: PackFormulaMetadata;

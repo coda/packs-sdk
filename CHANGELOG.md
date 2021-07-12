@@ -1,3 +1,21 @@
+## 0.4.1
+
+The pack builder now includes a method `setDefaultConnectionRequirement()`
+which sets a default value (Required, Optional, or None) to apply
+to all formula definitions if an explicit value is not specific
+when those formulas are defined. This is very convenient when you
+are using authentication and you simply want every formula in your pack
+to use a connection (aka an account). This is just syntactic sugar
+that does the same thing as specifying a `connectionRequirement`
+on every formula and sync table definition. Example usage:
+
+```typescript
+export const pack = newPack();
+pack.setDefaultConnectionRequirement(ConnectionRequirement.Required);
+pack.addFormula(...);
+pack.addSyncTable(...);
+```
+
 ## 0.4.0
 
 ### TypedStandardFormula renamed to Formula (TypeScript only)

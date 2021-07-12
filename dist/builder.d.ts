@@ -5,7 +5,7 @@ import type { ConnectionRequirement } from './api_types';
 import type { Format } from './types';
 import type { Formula } from './api';
 import type { FormulaDefinitionV2 } from './api';
-import type { MetadataFormula } from './api';
+import type { MetadataFormulaDef } from './api';
 import type { ObjectSchema } from './schema';
 import type { ParamDefs } from './api_types';
 import type { SyncFormulaDef } from './api';
@@ -23,7 +23,7 @@ import type { SystemAuthenticationDef } from './types';
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
  */
 export declare function newPack(definition?: Partial<BasicPackDefinition>): PackDefinitionBuilder;
-declare class PackDefinitionBuilder implements BasicPackDefinition {
+export declare class PackDefinitionBuilder implements BasicPackDefinition {
     formulas: Formula[];
     formats: Format[];
     syncTables: SyncTable[];
@@ -31,17 +31,18 @@ declare class PackDefinitionBuilder implements BasicPackDefinition {
     defaultAuthentication?: Authentication;
     systemConnectionAuthentication?: SystemAuthentication;
     formulaNamespace?: string;
+    private _defaultConnectionRequirement;
     constructor(definition?: Partial<BasicPackDefinition>);
     addFormula<ParamDefsT extends ParamDefs>(definition: FormulaDefinitionV2<ParamDefsT>): this;
     addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({ name, identityName, schema, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this;
     addDynamicSyncTable<ParamDefsT extends ParamDefs>(definition: {
         name: string;
         identityName: string;
-        getName: MetadataFormula;
-        getSchema: MetadataFormula;
+        getName: MetadataFormulaDef;
+        getSchema: MetadataFormulaDef;
         formula: SyncFormulaDef<ParamDefsT>;
-        getDisplayUrl: MetadataFormula;
-        listDynamicUrls?: MetadataFormula;
+        getDisplayUrl: MetadataFormulaDef;
+        listDynamicUrls?: MetadataFormulaDef;
         entityName?: string;
         connectionRequirement?: ConnectionRequirement;
     }): this;
@@ -49,5 +50,5 @@ declare class PackDefinitionBuilder implements BasicPackDefinition {
     setUserAuthentication(authentication: AuthenticationDef): this;
     setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this;
     addNetworkDomain(...domain: string[]): this;
+    setDefaultConnectionRequirement(connectionRequirement: ConnectionRequirement): this;
 }
-export {};
