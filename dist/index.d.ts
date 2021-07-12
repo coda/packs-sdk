@@ -21,6 +21,7 @@ export type { WebBasicAuthentication } from './types';
 export type { VariousAuthentication } from './types';
 export type { VariousSupportedAuthentication } from './types';
 export { newPack } from './builder';
+export { PackDefinitionBuilder } from './builder';
 export type { PackFormatMetadata } from './compiled_types';
 export type { PackFormulasMetadata } from './compiled_types';
 export type { PackSyncTable } from './compiled_types';

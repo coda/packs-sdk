@@ -1131,7 +1131,7 @@ export interface PackDefinition extends PackVersionDefinition {
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
  */
 export declare function newPack(definition?: Partial<BasicPackDefinition>): PackDefinitionBuilder;
-declare class PackDefinitionBuilder implements BasicPackDefinition {
+export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	formulas: Formula[];
 	formats: Format[];
 	syncTables: SyncTable[];
