@@ -62,14 +62,14 @@ snippets:
 
 .PHONY: typedoc
 typedoc:
-	${ROOTDIR}/node_modules/.bin/typedoc index.ts --out ${ROOTDIR}/documentation/generated/typedoc --excludeExternals --excludePrivate --excludeProtected
+	${ROOTDIR}/node_modules/.bin/typedoc index.ts --out ${ROOTDIR}/docs --excludeExternals --excludePrivate --excludeProtected
 
 .PHONY: docs
 docs: snippets typedoc
 
 .PHONY: view-docs
 view-docs: typedoc
-	open ${ROOTDIR}/documentation/generated/typedoc/index.html
+	open ${ROOTDIR}/docs/index.html
 
 .PHONY: test
 test:
