@@ -164,7 +164,7 @@ class PackDefinitionBuilder {
      * Sets this pack to use authentication provided by you as the maker of this pack.
      *
      * You will need to register credentials to use with this pack. When users use the
-     * pack, their requests will be authenticated with those system credentials., they need
+     * pack, their requests will be authenticated with those system credentials, they need
      * not register their own account.
      *
      * In the web editor, the `/SystemAuthentication` shortcut will insert a snippet of a skeleton

@@ -838,7 +838,7 @@ export interface DynamicSyncTableOptions<ParamDefsT extends ParamDefs> {
    * The name of the dynamic sync table. This is shown to users in the Coda UI
    * when listing what build blocks are contained within this pack.
    * This should describe the category of entities being synced. The actual
-   * table name once added the doc will be dynamic, it will be whatever value
+   * table name once added to the doc will be dynamic, it will be whatever value
    * is returned by the `getName` formula.
    */
   name: string;

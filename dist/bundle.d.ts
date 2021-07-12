@@ -821,7 +821,7 @@ export interface DynamicSyncTableOptions<ParamDefsT extends ParamDefs> {
 	 * The name of the dynamic sync table. This is shown to users in the Coda UI
 	 * when listing what build blocks are contained within this pack.
 	 * This should describe the category of entities being synced. The actual
-	 * table name once added the doc will be dynamic, it will be whatever value
+	 * table name once added to the doc will be dynamic, it will be whatever value
 	 * is returned by the `getName` formula.
 	 */
 	name: string;
@@ -1281,7 +1281,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * Sets this pack to use authentication provided by you as the maker of this pack.
 	 *
 	 * You will need to register credentials to use with this pack. When users use the
-	 * pack, their requests will be authenticated with those system credentials., they need
+	 * pack, their requests will be authenticated with those system credentials, they need
 	 * not register their own account.
 	 *
 	 * In the web editor, the `/SystemAuthentication` shortcut will insert a snippet of a skeleton
