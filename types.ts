@@ -1,9 +1,9 @@
 import type {$Values} from './type_utils';
+import type {Formula} from './api';
 import type {MetadataFormula} from './api';
 import type {MetadataFormulaDef} from './api';
 import type {PackFormulas} from './api';
 import type {SyncTable} from './api';
-import type {TypedStandardFormula} from './api';
 
 export type PackId = number;
 
@@ -244,6 +244,7 @@ export interface Format {
   name: string;
   formulaNamespace: string;
   formulaName: string;
+  /** @deprecated No longer needed, will be inferred from the referenced formula. */
   hasNoConnection?: boolean;
   instructions?: string;
   matchers?: string[];
@@ -314,7 +315,7 @@ export interface PackVersionDefinition {
 
   // User-facing components
   formulaNamespace?: string; // TODO: @alan-fang remove
-  formulas?: PackFormulas | TypedStandardFormula[];
+  formulas?: PackFormulas | Formula[];
   formats?: Format[];
   syncTables?: SyncTable[];
 }

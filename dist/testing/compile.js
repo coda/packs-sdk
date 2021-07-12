@@ -140,8 +140,8 @@ outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, }) {
     fs_1.default.copyFileSync(tempBundlePath, bundlePath);
     fs_1.default.copyFileSync(`${tempBundlePath}.map`, bundleSourceMapPath);
     return {
-        bundlePath,
         intermediateOutputDirectory,
+        bundlePath,
         bundleSourceMapPath,
     };
 }

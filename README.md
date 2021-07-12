@@ -382,11 +382,10 @@ Use the `makeDynamicSyncTable()` wrapper function. It takes an object with the f
   {
     ...
     execute: async (params, context) => {
-      const request = {
+      const response = await context.fetcher.fetch({
         method: 'GET',
-        dynamicUrl: context.sync.dynamicUrl,
-      }
-      const response = await context.fetcher.fetch(request);
+        url: context.sync.dynamicUrl,
+      });
       ...
     },
   }

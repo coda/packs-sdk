@@ -1,8 +1,8 @@
 import {testHelper} from './test_helper';
 import {AuthenticationType} from '../types';
+import type {Formula} from '../api';
 import type {ResponseHandlerTemplate} from '../handler_templates';
 import type {Schema} from '../schema';
-import type {TypedStandardFormula} from '../api';
 import {ValueType} from '../schema';
 import {assertCondition} from '../helpers/ensure';
 import {build as buildBundle} from '../cli/build';
@@ -27,7 +27,7 @@ import sinon from 'sinon';
 describe('Execution', () => {
   let bundlePath: string;
 
-  before(async () => {  
+  before(async () => {
     bundlePath = await buildBundle(`${__dirname}/packs/fake`);
   });
 
@@ -374,7 +374,7 @@ describe('Execution', () => {
     });
 
     it('executes simple autocomplete formula', async () => {
-      const formula = (fakePackWithMetadata.formulas as TypedStandardFormula[])![0];
+      const formula = (fakePackWithMetadata.formulas as Formula[])![0];
       const result = await executeMetadataFormula(formula.parameters[0]?.autocomplete!, {search: 'ba'});
       assert.deepEqual(result, [
         {

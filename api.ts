@@ -316,7 +316,7 @@ export function check(condition: boolean, msg: string) {
 }
 
 export interface PackFormulas {
-  readonly [namespace: string]: TypedStandardFormula[];
+  readonly [namespace: string]: Formula[];
 }
 
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult>
@@ -347,38 +347,42 @@ export interface EmptyFormulaDef<ParamsT extends ParamDefs> extends Omit<PackFor
   request: RequestHandlerTemplate;
 }
 
-export type Formula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = PackFormulaDef<
+export type BaseFormula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = PackFormulaDef<
   ParamDefsT,
   ResultT
 > & {
   resultType: TypeOf<ResultT>;
 };
 
-export type NumericPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, number> & {schema?: NumberSchema};
+export type NumericPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, number> & {
+  schema?: NumberSchema;
+};
 
-export type BooleanPackFormula<ParamDefsT extends ParamDefs> = Formula<ParamDefsT, boolean> & {schema?: BooleanSchema};
+export type BooleanPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, boolean> & {
+  schema?: BooleanSchema;
+};
 
 export type StringPackFormula<
   ParamDefsT extends ParamDefs,
   ResultT extends StringHintTypes = StringHintTypes,
-> = Formula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
+> = BaseFormula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
   schema?: StringSchema<ResultT>;
 };
 
-export type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Formula<
+export type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = BaseFormula<
   ParamDefsT,
   SchemaType<SchemaT>
 > & {
   schema?: SchemaT;
 };
 
-export type TypedStandardFormula<ParamDefsT extends ParamDefs = ParamDefs> =
+export type Formula<ParamDefsT extends ParamDefs = ParamDefs> =
   | NumericPackFormula<ParamDefsT>
   | StringPackFormula<ParamDefsT, any>
   | BooleanPackFormula<ParamDefsT>
   | ObjectPackFormula<ParamDefsT, Schema>;
 
-export type TypedPackFormula = TypedStandardFormula | GenericSyncFormula;
+export type TypedPackFormula = Formula | GenericSyncFormula;
 
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
@@ -387,11 +391,11 @@ export function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFo
   return fn.resultType === Type.object;
 }
 
-export function isStringPackFormula(fn: Formula<ParamDefs, any>): fn is StringPackFormula<ParamDefs> {
+export function isStringPackFormula(fn: BaseFormula<ParamDefs, any>): fn is StringPackFormula<ParamDefs> {
   return fn.resultType === Type.string;
 }
 
-export function isSyncPackFormula(fn: Formula<ParamDefs, any>): fn is GenericSyncFormula {
+export function isSyncPackFormula(fn: BaseFormula<ParamDefs, any>): fn is GenericSyncFormula {
   return Boolean((fn as GenericSyncFormula).isSyncFormula);
 }
 
@@ -493,7 +497,7 @@ export function makeStringFormula<ParamDefsT extends ParamDefs>(
  */
 export function makeFormula<ParamDefsT extends ParamDefs>(
   fullDefinition: FormulaDefinitionV2<ParamDefsT>,
-): TypedStandardFormula<ParamDefsT> {
+): Formula<ParamDefsT> {
   let formula:
     | StringPackFormula<ParamDefsT>
     | NumericPackFormula<ParamDefsT>
@@ -573,7 +577,7 @@ export function makeFormula<ParamDefsT extends ParamDefs>(
     };
   }
 
-  return formula;
+  return maybeRewriteConnectionForFormula(formula, definition.connectionRequirement);
 }
 
 interface BaseFormulaDefV2<ParamDefsT extends ParamDefs, ResultT extends string | number | boolean | object>
@@ -1016,7 +1020,7 @@ export function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: Empty
   });
 }
 
-function maybeRewriteConnectionForFormula<
+export function maybeRewriteConnectionForFormula<
   T extends ParamDefs,
   U extends CommonPackFormulaDef<T>,
   V extends U | undefined,

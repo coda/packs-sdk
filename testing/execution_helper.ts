@@ -1,11 +1,11 @@
 import type {ExecutionContext} from '../api_types';
+import type {Formula} from '../api';
 import type {GenericSyncFormula} from '../api';
 import type {PackVersionDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
 import type {SyncExecutionContext} from '../api_types';
 import type {SyncFormulaResult} from '../api';
-import type {TypedStandardFormula} from '../api';
 import {coerceParams} from './coercion';
 import {ensureExists} from '../helpers/ensure';
 import {validateParams} from './validation';
@@ -96,7 +96,7 @@ export async function executeFormulaOrSync(
 }
 
 export async function executeFormula(
-  formula: TypedStandardFormula,
+  formula: Formula,
   params: ParamValues<ParamDefs>,
   context: ExecutionContext,
   {validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true}: ExecuteOptions = {},
@@ -143,7 +143,7 @@ export async function executeSyncFormula(
   return result;
 }
 
-export function findFormula(packDef: PackVersionDefinition, formulaNameWithNamespace: string): TypedStandardFormula {
+export function findFormula(packDef: PackVersionDefinition, formulaNameWithNamespace: string): Formula {
   const packFormulas = packDef.formulas;
   if (!packFormulas) {
     throw new Error(`Pack definition has no formulas.`);
@@ -158,7 +158,7 @@ export function findFormula(packDef: PackVersionDefinition, formulaNameWithNames
     );
   }
 
-  const formulas: TypedStandardFormula[] = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
+  const formulas: Formula[] = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
   if (!formulas || !formulas.length) {
     throw new Error(`Pack definition has no formulas for namespace "${namespace}".`);
   }
@@ -185,10 +185,7 @@ export function findSyncFormula(packDef: PackVersionDefinition, syncFormulaName:
   throw new Error(`Pack definition has no sync formula "${syncFormulaName}" in its sync tables.`);
 }
 
-export function tryFindFormula(
-  packDef: PackVersionDefinition,
-  formulaNameWithNamespace: string,
-): TypedStandardFormula | undefined {
+export function tryFindFormula(packDef: PackVersionDefinition, formulaNameWithNamespace: string): Formula | undefined {
   try {
     return findFormula(packDef, formulaNameWithNamespace);
   } catch (_err) {}
