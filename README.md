@@ -74,7 +74,7 @@ Use the Pack in a Doc
 7. **Return data to doc**: the results (or errors) from the execution are sent back to the doc.
 
 
-![Diagram_HowPacksWork](Diagram_HowPacksWork.png)
+TODO: add diagram
 
 
 ### Fetching Remote Data
