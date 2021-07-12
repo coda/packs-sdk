@@ -60,13 +60,16 @@ compile:
 snippets:
 	node -r ts-node/register documentation/snippet_compiler.ts
 
+.PHONY: typedoc
+typedoc:
+	${ROOTDIR}/node_modules/.bin/typedoc index.ts --out ${ROOTDIR}/documentation/generated/typedoc --excludeExternals --excludePrivate --excludeProtected
+
 .PHONY: docs
-docs:
-	${ROOTDIR}/node_modules/.bin/typedoc index.ts --out ${ROOTDIR}/local-docs --excludeExternals --excludePrivate --excludeProtected
+docs: snippets typedoc
 
 .PHONY: view-docs
-view-docs: docs
-	open ${ROOTDIR}/local-docs/index.html
+view-docs: typedoc
+	open ${ROOTDIR}/documentation/generated/typedoc/index.html
 
 .PHONY: test
 test:
@@ -81,7 +84,7 @@ clean:
 	rm -rf ${ROOTDIR}/dist
 
 .PHONY: build
-build: clean lint compile snippets
+build: clean lint compile docs
 
 # allow debugging packs sdk with local packs repo.
 .PHONY: publish-local
