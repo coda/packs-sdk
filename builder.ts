@@ -66,6 +66,28 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     this.formulaNamespace = formulaNamespace || 'Deprecated';
   }
 
+  /**
+   * Adds a formula definition to this pack.
+   *
+   * In the web editor, the `/Formula` shortcut will insert a snippet of a skeleton formula.
+   *
+   * @example
+   * pack.addFormula({
+   *   resultType: ValueType.String,
+   *    name: 'MyFormula',
+   *    description: 'My description.',
+   *    parameters: [
+   *      makeParameter({
+   *        type: ParameterType.String,
+   *        name: 'myParam',
+   *        description: 'My param description.',
+   *      }),
+   *    ],
+   *    execute: async ([param]) => {
+   *      return `Hello ${param}`;
+   *    },
+   * });
+   */
   addFormula<ParamDefsT extends ParamDefs>(definition: FormulaDefinitionV2<ParamDefsT>): this {
     const formula = makeFormula({
       ...definition,
@@ -75,6 +97,23 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     return this;
   }
 
+  /**
+   * Adds a sync table definition to this pack.
+   *
+   * In the web editor, the `/SyncTable` shortcut will insert a snippet of a skeleton sync table.
+   *
+   * @example
+   * pack.addSyncTable({
+   *   name: 'MySyncTable',
+   *   identityName: 'EntityName',
+   *   schema: coda.makeObjectSchema({
+   *     ...
+   *   }),
+   *   formula: {
+   *     ...
+   *   },
+   * });
+   */
   addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({
     name,
     identityName,
