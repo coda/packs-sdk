@@ -6,7 +6,7 @@ import type {ConnectionRequirement} from './api_types';
 import type {Format} from './types';
 import type {Formula} from './api';
 import type {FormulaDefinitionV2} from './api';
-import type {MetadataFormula} from './api';
+import type {MetadataFormulaDef} from './api';
 import type {ObjectSchema} from './schema';
 import type {ParamDefs} from './api_types';
 import type {SyncFormulaDef} from './api';
@@ -14,6 +14,7 @@ import type {SyncTable} from './api';
 import type {SyncTableOptions} from './api';
 import type {SystemAuthentication} from './types';
 import type {SystemAuthenticationDef} from './types';
+import {isDynamicSyncTable} from './api';
 import {makeDynamicSyncTable} from './api';
 import {makeFormula} from './api';
 import {makeSyncTable} from './api';
@@ -99,11 +100,11 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
   addDynamicSyncTable<ParamDefsT extends ParamDefs>(definition: {
     name: string;
     identityName: string;
-    getName: MetadataFormula;
-    getSchema: MetadataFormula;
+    getName: MetadataFormulaDef;
+    getSchema: MetadataFormulaDef;
     formula: SyncFormulaDef<ParamDefsT>;
-    getDisplayUrl: MetadataFormula;
-    listDynamicUrls?: MetadataFormula;
+    getDisplayUrl: MetadataFormulaDef;
+    listDynamicUrls?: MetadataFormulaDef;
     entityName?: string;
     connectionRequirement?: ConnectionRequirement;
   }): this {
@@ -158,19 +159,38 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
 
     // Rewrite any formulas or sync tables that were already defined, in case the maker sets the default
     // after the fact.
-    [...this.formulas].forEach((formula, i) => {
-      if (!formula.connectionRequirement) {
-        const newFormula = maybeRewriteConnectionForFormula({...formula, connectionRequirement}, connectionRequirement);
-        this.formulas.splice(i, 1, newFormula);
-      }
+    this.formulas = this.formulas.map(formula => {
+      return formula.connectionRequirement ? formula : maybeRewriteConnectionForFormula(formula, connectionRequirement);
     });
-    [...this.syncTables].forEach((syncTable, i) => {
-      if (!syncTable.getter.connectionRequirement) {
-        const newSyncTable: SyncTable = {
+    this.syncTables = this.syncTables.map(syncTable => {
+      if (syncTable.getter.connectionRequirement) {
+        return syncTable;
+      } else if (isDynamicSyncTable(syncTable)) {
+        return {
           ...syncTable,
           getter: maybeRewriteConnectionForFormula(syncTable.getter, connectionRequirement),
+          // These 4 are metadata formulas, so they use ConnectionRequirement.Required
+          // by default if you don't specify a connection requirement (a legacy behavior
+          // that is confusing and perhaps undesirable now that we have better builders).
+          // We don't know if the maker set Required explicitly or if was just the default,
+          // so we don't know if we should overwrite the connection requirement. For lack
+          // of a better option, we'll override it here regardless. This ensure that these
+          // dynamic sync table metadata formulas have the same connetion requirement as the
+          // sync table itself, which seems desirable basically 100% of the time and should
+          // always work, but it does give rise to confusing behavior that calling
+          // setDefaultConnectionRequirement() can wipe away an explicit connection
+          // requirement override set on one of these 4 metadata formulas.
+          getName: maybeRewriteConnectionForFormula(syncTable.getName, connectionRequirement),
+          getDisplayUrl: maybeRewriteConnectionForFormula(syncTable.getDisplayUrl, connectionRequirement),
+          getSchema: maybeRewriteConnectionForFormula(syncTable.getSchema, connectionRequirement),
+          listDynamicUrls: maybeRewriteConnectionForFormula(syncTable.listDynamicUrls, connectionRequirement),
         };
-        this.syncTables.splice(i, 1, newSyncTable);
+      } else {
+        return {
+          ...syncTable,
+          getter: maybeRewriteConnectionForFormula(syncTable.getter, connectionRequirement),
+          getSchema: maybeRewriteConnectionForFormula(syncTable.getSchema, connectionRequirement),
+        };
       }
     });
 

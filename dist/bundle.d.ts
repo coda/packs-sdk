@@ -1146,11 +1146,11 @@ declare class PackDefinitionBuilder implements BasicPackDefinition {
 	addDynamicSyncTable<ParamDefsT extends ParamDefs>(definition: {
 		name: string;
 		identityName: string;
-		getName: MetadataFormula;
-		getSchema: MetadataFormula;
+		getName: MetadataFormulaDef;
+		getSchema: MetadataFormulaDef;
 		formula: SyncFormulaDef<ParamDefsT>;
-		getDisplayUrl: MetadataFormula;
-		listDynamicUrls?: MetadataFormula;
+		getDisplayUrl: MetadataFormulaDef;
+		listDynamicUrls?: MetadataFormulaDef;
 		entityName?: string;
 		connectionRequirement?: ConnectionRequirement;
 	}): this;

@@ -1,15 +1,28 @@
 import './test_helper';
 import {ConnectionRequirement} from '../api_types';
+import type {DynamicSyncTableDef} from '../api';
+import type {MetadataFormulaDef} from '../api';
 import type {PackDefinitionBuilder} from '../builder';
 import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
 import {ValueType} from '../schema';
+import {makeMetadataFormula} from '../api';
 import {makeObjectSchema} from '../schema';
 import {makeParameter} from '../api';
+import {makeSchema} from '../schema';
 import {newPack} from '../builder';
 
 describe('Builder', () => {
   let pack: PackDefinitionBuilder;
+  const dummyObjectSchema = makeObjectSchema({
+    type: ValueType.Object,
+    id: 'foo',
+    primary: 'foo',
+    identity: {name: 'Identity'},
+    properties: {
+      foo: {type: ValueType.String},
+    },
+  });
 
   beforeEach(() => {
     pack = newPack();
@@ -47,6 +60,41 @@ describe('Builder', () => {
         name: 'Ignored',
         description: '',
         parameters: parameters || [],
+        execute: async () => {
+          return {result: []};
+        },
+      },
+    });
+  }
+
+  function addDummyDynamicSyncTable(
+    pack_: PackDefinitionBuilder,
+    {
+      connectionRequirement,
+      getName,
+      getSchema,
+      getDisplayUrl,
+      listDynamicUrls,
+    }: {
+      connectionRequirement?: ConnectionRequirement;
+      getName: MetadataFormulaDef;
+      getSchema: MetadataFormulaDef;
+      getDisplayUrl: MetadataFormulaDef;
+      listDynamicUrls: MetadataFormulaDef;
+    },
+  ) {
+    pack_.addDynamicSyncTable({
+      name: 'Foos',
+      identityName: 'Foo',
+      connectionRequirement,
+      getName,
+      getSchema,
+      getDisplayUrl,
+      listDynamicUrls,
+      formula: {
+        name: 'Ignored',
+        description: '',
+        parameters: [],
         execute: async () => {
           return {result: []};
         },
@@ -141,6 +189,60 @@ describe('Builder', () => {
         pack.syncTables[0].getter.parameters[0]?.autocomplete?.connectionRequirement,
         ConnectionRequirement.Required,
       );
+    });
+
+    it('works for dynamic sync table metadata formulas', () => {
+      pack.setDefaultConnectionRequirement(ConnectionRequirement.Optional);
+      addDummyDynamicSyncTable(pack, {
+        getName: makeMetadataFormula(async () => 'name'),
+        getDisplayUrl: makeMetadataFormula(async () => 'display-url'),
+        getSchema: makeMetadataFormula(async () => makeSchema({type: ValueType.Array, items: dummyObjectSchema})),
+        listDynamicUrls: makeMetadataFormula(async () => ['url']),
+      });
+      const syncTable = pack.syncTables[0] as DynamicSyncTableDef<any, any, any, any>;
+      assert.equal(syncTable.getName.connectionRequirement, ConnectionRequirement.Optional);
+      assert.equal(syncTable.getDisplayUrl.connectionRequirement, ConnectionRequirement.Optional);
+      assert.equal(syncTable.getSchema.connectionRequirement, ConnectionRequirement.Optional);
+      assert.equal(syncTable.listDynamicUrls!.connectionRequirement, ConnectionRequirement.Optional);
+    });
+
+    it('works for dynamic sync table metadata formulas after the fact', () => {
+      addDummyDynamicSyncTable(pack, {
+        getName: makeMetadataFormula(async () => 'name'),
+        getDisplayUrl: makeMetadataFormula(async () => 'display-url'),
+        getSchema: makeMetadataFormula(async () => makeSchema({type: ValueType.Array, items: dummyObjectSchema})),
+        listDynamicUrls: makeMetadataFormula(async () => ['url']),
+      });
+      pack.setDefaultConnectionRequirement(ConnectionRequirement.Optional);
+      const syncTable = pack.syncTables[0] as DynamicSyncTableDef<any, any, any, any>;
+      assert.equal(syncTable.getName.connectionRequirement, ConnectionRequirement.Optional);
+      assert.equal(syncTable.getDisplayUrl.connectionRequirement, ConnectionRequirement.Optional);
+      assert.equal(syncTable.getSchema.connectionRequirement, ConnectionRequirement.Optional);
+      assert.equal(syncTable.listDynamicUrls!.connectionRequirement, ConnectionRequirement.Optional);
+    });
+
+    // This is demonstrating a quirk of setDefaultConnectionRequirement()
+    // documented in the lengthy comment in that method. We don't about
+    // supporting the behavior in this test, it's simply demonstarting that
+    // it occurs, and perhaps one day we can eliminate the behavior and
+    // remove this test.
+    it('unfortunate behavior that default connection requirement overrides explicit connection requirement on dynamic sync table formulas', () => {
+      addDummyDynamicSyncTable(pack, {
+        getName: makeMetadataFormula(async () => 'name', {connectionRequirement: ConnectionRequirement.None}),
+        getDisplayUrl: makeMetadataFormula(async () => 'display-url', {
+          connectionRequirement: ConnectionRequirement.None,
+        }),
+        getSchema: makeMetadataFormula(async () => makeSchema({type: ValueType.Array, items: dummyObjectSchema}), {
+          connectionRequirement: ConnectionRequirement.None,
+        }),
+        listDynamicUrls: makeMetadataFormula(async () => ['url'], {connectionRequirement: ConnectionRequirement.None}),
+      });
+      pack.setDefaultConnectionRequirement(ConnectionRequirement.Optional);
+      const syncTable = pack.syncTables[0] as DynamicSyncTableDef<any, any, any, any>;
+      assert.equal(syncTable.getName.connectionRequirement, ConnectionRequirement.Optional);
+      assert.equal(syncTable.getDisplayUrl.connectionRequirement, ConnectionRequirement.Optional);
+      assert.equal(syncTable.getSchema.connectionRequirement, ConnectionRequirement.Optional);
+      assert.equal(syncTable.listDynamicUrls!.connectionRequirement, ConnectionRequirement.Optional);
     });
   });
 });

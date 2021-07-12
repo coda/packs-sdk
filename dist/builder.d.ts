@@ -5,7 +5,7 @@ import type { ConnectionRequirement } from './api_types';
 import type { Format } from './types';
 import type { Formula } from './api';
 import type { FormulaDefinitionV2 } from './api';
-import type { MetadataFormula } from './api';
+import type { MetadataFormulaDef } from './api';
 import type { ObjectSchema } from './schema';
 import type { ParamDefs } from './api_types';
 import type { SyncFormulaDef } from './api';
@@ -38,11 +38,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
     addDynamicSyncTable<ParamDefsT extends ParamDefs>(definition: {
         name: string;
         identityName: string;
-        getName: MetadataFormula;
-        getSchema: MetadataFormula;
+        getName: MetadataFormulaDef;
+        getSchema: MetadataFormulaDef;
         formula: SyncFormulaDef<ParamDefsT>;
-        getDisplayUrl: MetadataFormula;
-        listDynamicUrls?: MetadataFormula;
+        getDisplayUrl: MetadataFormulaDef;
+        listDynamicUrls?: MetadataFormulaDef;
         entityName?: string;
         connectionRequirement?: ConnectionRequirement;
     }): this;
