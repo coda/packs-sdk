@@ -381,6 +381,54 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
         entityName?: string;
     };
 }
+export interface DynamicSyncTableOptions<ParamDefsT extends ParamDefs> {
+    /**
+     * The name of the dynamic sync table. This is shown to users in the Coda UI
+     * when listing what build blocks are contained within this pack.
+     * This should describe the category of entities being synced. The actual
+     * table name once added the doc will be dynamic, it will be whatever value
+     * is returned by the `getName` formula.
+     */
+    name: string;
+    /**
+     * A formula that returns the name of this table.
+     */
+    getName: MetadataFormulaDef;
+    /**
+     * A formula that returns the schema for this table.
+     */
+    getSchema: MetadataFormulaDef;
+    /**
+     * A formula that that returns a browser-friendly url representing the
+     * resource being synced. The Coda UI links to this url as the source
+     * of the table data. This is typically a browser-friendly form of the
+     * `dynamicUrl`, which is typically an API url.
+     */
+    getDisplayUrl: MetadataFormulaDef;
+    /**
+     * A formula that returns a list of available dynamic urls that can be
+     * used to create an instance of this dynamic sync table.
+     */
+    listDynamicUrls?: MetadataFormulaDef;
+    /**
+     * The definition of the formula that implements this sync. This is a Coda packs formula
+     * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
+     * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
+     * These will eventually be consolidated.)
+     */
+    formula: SyncFormulaDef<ParamDefsT>;
+    /**
+     * A label for the kind of entities that you are syncing. This label is used in a doc to identify
+     * the column in this table that contains the synced data. If you don't provide an `entityName`, the value
+     * of `identity.name` from your schema will be used instead, so in most cases you don't need to provide this.
+     */
+    entityName?: string;
+    /**
+     * A {@link ConnectionRequirement} that will be used for all formulas contained within
+     * this sync table (including autocomplete formulas).
+     */
+    connectionRequirement?: ConnectionRequirement;
+}
 /**
  * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
  * using this wrapper rather than declaring a sync table definition object directly.

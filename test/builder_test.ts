@@ -85,7 +85,6 @@ describe('Builder', () => {
   ) {
     pack_.addDynamicSyncTable({
       name: 'Foos',
-      identityName: 'Foo',
       connectionRequirement,
       getName,
       getSchema,
