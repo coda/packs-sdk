@@ -1,17 +1,26 @@
 ## 0.4.1
 
-The pack builder now includes a method `setDefaultConnectionRequirement()`
-which sets a default value (Required, Optional, or None) to apply
-to all formula definitions if an explicit value is not specific
-when those formulas are defined. This is very convenient when you
-are using authentication and you simply want every formula in your pack
-to use a connection (aka an account). This is just syntactic sugar
-that does the same thing as specifying a `connectionRequirement`
-on every formula and sync table definition. Example usage:
+The pack builder now sets a default connection (account) requirement when you specify authentication.
+Normally, to indicate on a particular formula or sync table that an account is required,
+you manually specify a `connectionRequirement` option. To simplify the common case, when you
+call `pack.setUserAuthentication()` or `pack.setSystemAuthentication()`, all of the formulas
+and sync tables in your pack will be set to use `ConnectionRequirement.Required` unless
+that formula/sync explicitly defines a different `connectionRequirement`.
+
+If you wish to use a different default, you can supply a `defaultConnectionRequirement` option
+to `setUserAuthentication()` or `setSystemAuthentication()`.
 
 ```typescript
 export const pack = newPack();
-pack.setDefaultConnectionRequirement(ConnectionRequirement.Required);
+
+// Implicitly sets all formulas and sync tables to use `connectionRequirement: ConnectionRequirement.Required`.
+pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
+// OR, to use a different default:
+pack.setUserAuthentication({
+  type: AuthenticationType.HeaderBearerToken,
+  defaultConnectionRequirememnt: ConnectionRequirement.None,
+});
+
 pack.addFormula(...);
 pack.addSyncTable(...);
 ```

@@ -1271,12 +1271,19 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * In the web editor, the `/UserAuthentication` shortcut will insert a snippet of a skeleton
 	 * authentication definition.
 	 *
+	 * By default, this will set a default connection (account) requirement, making a user account
+	 * required to invoke all formulas in this pack unless you specify differently on a particular
+	 * formula. To change the default, you can pass a `defaultConnectionRequirement` option into
+	 * this method.
+	 *
 	 * @example
 	 * pack.setUserAuthentication({
 	 *   type: AuthenticationType.HeaderBearerToken,
 	 * });
 	 */
-	setUserAuthentication(authentication: AuthenticationDef): this;
+	setUserAuthentication(authDef: AuthenticationDef & {
+		defaultConnectionRequirement?: ConnectionRequirement;
+	}): this;
 	/**
 	 * Sets this pack to use authentication provided by you as the maker of this pack.
 	 *
@@ -1286,13 +1293,20 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 *
 	 * In the web editor, the `/SystemAuthentication` shortcut will insert a snippet of a skeleton
 	 * authentication definition.
+  
+	 * By default, this will set a default connection (account) requirement, including the credentials
+	 * from this system account when invoking all formulas in this pack unless you specify differently
+	 * on a particular formula. To change the default, you can pass a `defaultConnectionRequirement`
+	 * option into this method.
 	 *
 	 * @example
 	 * pack.setSystemAuthentication({
 	 *   type: AuthenticationType.HeaderBearerToken,
 	 * });
 	 */
-	setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this;
+	setSystemAuthentication(authDef: SystemAuthenticationDef & {
+		defaultConnectionRequirement?: ConnectionRequirement;
+	}): this;
 	/**
 	 * Adds the domain that this pack makes HTTP requests to.
 	 * For example, if your pack makes HTTP requests to "api.example.com",
@@ -1309,21 +1323,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * pack.addNetworkDomain('example.com');
 	 */
 	addNetworkDomain(...domain: string[]): this;
-	/**
-	 * Declares a default connection (account) requirement to be used for all
-	 * formulas and sync tables on this pack that don't explicitly specify one.
-	 *
-	 * This is purely a convenience to avoid having to specify a connection requirement
-	 * on each individual build block definition. For example, if your pack uses
-	 * authentication and all or most of your formulas require a user account,
-	 * rather than specifying `connectionRequirement: ConnectionRequirement.Required`
-	 * each time you call `pack.addFormula()`, you can set a default connection requirement
-	 * up front and it will apply to all formula and sync table definitions.
-	 *
-	 * @example
-	 * pack.setDefaultConnectionRequirement(ConnectionRequirement.Required);
-	 */
-	setDefaultConnectionRequirement(connectionRequirement: ConnectionRequirement): this;
+	private _setDefaultConnectionRequirement;
 }
 export declare type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "getDisplayUrl"> & {
 	getter: PackFormulaMetadata;
