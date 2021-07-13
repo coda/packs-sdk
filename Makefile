@@ -62,7 +62,7 @@ snippets:
 
 .PHONY: typedoc
 typedoc:
-	${ROOTDIR}/node_modules/.bin/typedoc index.ts --out ${ROOTDIR}/docs --excludeExternals --excludePrivate --excludeProtected
+	${ROOTDIR}/node_modules/.bin/typedoc index.ts --out ${ROOTDIR}/docs --excludeExternals --excludePrivate --excludeProtected --gitRevision main
 
 .PHONY: docs
 docs: snippets typedoc
