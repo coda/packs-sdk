@@ -1,4 +1,5 @@
 import './test_helper';
+import {AuthenticationType} from '../types';
 import {ConnectionRequirement} from '../api_types';
 import type {DynamicSyncTableDef} from '../api';
 import type {MetadataFormulaDef} from '../api';
@@ -101,9 +102,9 @@ describe('Builder', () => {
     });
   }
 
-  describe('setDefaultConnectionRequirement', () => {
+  describe('default connection requirement', () => {
     it('works for formula', () => {
-      pack.setDefaultConnectionRequirement(ConnectionRequirement.Required);
+      pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
       addDummyFormula(pack);
       assert.equal(pack.formulas[0].connectionRequirement, ConnectionRequirement.Required);
     });
@@ -116,18 +117,36 @@ describe('Builder', () => {
         parameters: [],
         execute: () => '',
       });
-      pack.setDefaultConnectionRequirement(ConnectionRequirement.Required);
+      pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
       assert.equal(pack.formulas[0].connectionRequirement, ConnectionRequirement.Required);
     });
 
+    it('works for formula with alternate default', () => {
+      pack.setUserAuthentication({
+        type: AuthenticationType.HeaderBearerToken,
+        defaultConnectionRequirement: ConnectionRequirement.None,
+      });
+      addDummyFormula(pack);
+      assert.equal(pack.formulas[0].connectionRequirement, ConnectionRequirement.None);
+    });
+
+    it('works for formula with alternate default after the fact', () => {
+      addDummyFormula(pack);
+      pack.setUserAuthentication({
+        type: AuthenticationType.HeaderBearerToken,
+        defaultConnectionRequirement: ConnectionRequirement.Optional,
+      });
+      assert.equal(pack.formulas[0].connectionRequirement, ConnectionRequirement.Optional);
+    });
+
     it('does not override manually set value for formula', () => {
-      pack.setDefaultConnectionRequirement(ConnectionRequirement.Required);
+      pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
       addDummyFormula(pack, {connectionRequirement: ConnectionRequirement.None});
       assert.equal(pack.formulas[0].connectionRequirement, ConnectionRequirement.None);
     });
 
     it('works for formula autocomplete', () => {
-      pack.setDefaultConnectionRequirement(ConnectionRequirement.Required);
+      pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
       addDummyFormula(pack, {
         parameters: [
           makeParameter({type: ParameterType.String, name: 'p', description: '', autocomplete: ['foo', 'bar']}),
@@ -142,30 +161,30 @@ describe('Builder', () => {
           makeParameter({type: ParameterType.String, name: 'p', description: '', autocomplete: ['foo', 'bar']}),
         ],
       });
-      pack.setDefaultConnectionRequirement(ConnectionRequirement.Required);
+      pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
       assert.equal(pack.formulas[0].parameters[0]?.autocomplete?.connectionRequirement, ConnectionRequirement.Required);
     });
 
     it('works for sync table', () => {
-      pack.setDefaultConnectionRequirement(ConnectionRequirement.Required);
+      pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
       addDummySyncTable(pack);
       assert.equal(pack.syncTables[0].getter.connectionRequirement, ConnectionRequirement.Required);
     });
 
     it('works for sync table after the fact', () => {
       addDummySyncTable(pack);
-      pack.setDefaultConnectionRequirement(ConnectionRequirement.Required);
+      pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
       assert.equal(pack.syncTables[0].getter.connectionRequirement, ConnectionRequirement.Required);
     });
 
     it('does not override manually set value for sync table', () => {
-      pack.setDefaultConnectionRequirement(ConnectionRequirement.Required);
+      pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
       addDummySyncTable(pack, {connectionRequirement: ConnectionRequirement.None});
       assert.equal(pack.syncTables[0].getter.connectionRequirement, ConnectionRequirement.None);
     });
 
     it('works for sync table parameter autocomplete', () => {
-      pack.setDefaultConnectionRequirement(ConnectionRequirement.Required);
+      pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
       addDummySyncTable(pack, {
         parameters: [
           makeParameter({type: ParameterType.String, name: 'p', description: '', autocomplete: ['foo', 'bar']}),
@@ -183,7 +202,7 @@ describe('Builder', () => {
           makeParameter({type: ParameterType.String, name: 'p', description: '', autocomplete: ['foo', 'bar']}),
         ],
       });
-      pack.setDefaultConnectionRequirement(ConnectionRequirement.Required);
+      pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
       assert.equal(
         pack.syncTables[0].getter.parameters[0]?.autocomplete?.connectionRequirement,
         ConnectionRequirement.Required,
@@ -191,7 +210,10 @@ describe('Builder', () => {
     });
 
     it('works for dynamic sync table metadata formulas', () => {
-      pack.setDefaultConnectionRequirement(ConnectionRequirement.Optional);
+      pack.setUserAuthentication({
+        type: AuthenticationType.HeaderBearerToken,
+        defaultConnectionRequirement: ConnectionRequirement.Optional,
+      });
       addDummyDynamicSyncTable(pack, {
         getName: makeMetadataFormula(async () => 'name'),
         getDisplayUrl: makeMetadataFormula(async () => 'display-url'),
@@ -212,7 +234,10 @@ describe('Builder', () => {
         getSchema: makeMetadataFormula(async () => makeSchema({type: ValueType.Array, items: dummyObjectSchema})),
         listDynamicUrls: makeMetadataFormula(async () => ['url']),
       });
-      pack.setDefaultConnectionRequirement(ConnectionRequirement.Optional);
+      pack.setUserAuthentication({
+        type: AuthenticationType.HeaderBearerToken,
+        defaultConnectionRequirement: ConnectionRequirement.Optional,
+      });
       const syncTable = pack.syncTables[0] as DynamicSyncTableDef<any, any, any, any>;
       assert.equal(syncTable.getName.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.getDisplayUrl.connectionRequirement, ConnectionRequirement.Optional);
@@ -236,7 +261,10 @@ describe('Builder', () => {
         }),
         listDynamicUrls: makeMetadataFormula(async () => ['url'], {connectionRequirement: ConnectionRequirement.None}),
       });
-      pack.setDefaultConnectionRequirement(ConnectionRequirement.Optional);
+      pack.setUserAuthentication({
+        type: AuthenticationType.HeaderBearerToken,
+        defaultConnectionRequirement: ConnectionRequirement.Optional,
+      });
       const syncTable = pack.syncTables[0] as DynamicSyncTableDef<any, any, any, any>;
       assert.equal(syncTable.getName.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.getDisplayUrl.connectionRequirement, ConnectionRequirement.Optional);

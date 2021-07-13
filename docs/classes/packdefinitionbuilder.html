@@ -107,7 +107,6 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="packdefinitionbuilder.html#addformula" class="tsd-kind-icon">add<wbr>Formula</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="packdefinitionbuilder.html#addnetworkdomain" class="tsd-kind-icon">add<wbr>Network<wbr>Domain</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="packdefinitionbuilder.html#addsynctable" class="tsd-kind-icon">add<wbr>Sync<wbr>Table</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="packdefinitionbuilder.html#setdefaultconnectionrequirement" class="tsd-kind-icon">set<wbr>Default<wbr>Connection<wbr>Requirement</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="packdefinitionbuilder.html#setsystemauthentication" class="tsd-kind-icon">set<wbr>System<wbr>Authentication</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="packdefinitionbuilder.html#setuserauthentication" class="tsd-kind-icon">set<wbr>User<wbr>Authentication</a></li>
 							</ul>
@@ -375,7 +374,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L253">builder.ts:253</a></li>
+									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L273">builder.ts:273</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -464,56 +463,16 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="setdefaultconnectionrequirement" class="tsd-anchor"></a>
-					<h3>set<wbr>Default<wbr>Connection<wbr>Requirement</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Default<wbr>Connection<wbr>Requirement<span class="tsd-signature-symbol">(</span>connectionRequirement<span class="tsd-signature-symbol">: </span><a href="../enums/connectionrequirement.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ConnectionRequirement</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="packdefinitionbuilder.html" class="tsd-signature-type" data-tsd-kind="Class">PackDefinitionBuilder</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L272">builder.ts:272</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Declares a default connection (account) requirement to be used for all
-									formulas and sync tables on this pack that don&#39;t explicitly specify one.</p>
-								</div>
-								<p>This is purely a convenience to avoid having to specify a connection requirement
-									on each individual build block definition. For example, if your pack uses
-									authentication and all or most of your formulas require a user account,
-									rather than specifying <code>connectionRequirement: ConnectionRequirement.Required</code>
-									each time you call <code>pack.addFormula()</code>, you can set a default connection requirement
-								up front and it will apply to all formula and sync table definitions.</p>
-								<dl class="tsd-comment-tags">
-									<dt>example</dt>
-									<dd><p>pack.setDefaultConnectionRequirement(ConnectionRequirement.Required);</p>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>connectionRequirement: <a href="../enums/connectionrequirement.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ConnectionRequirement</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="packdefinitionbuilder.html" class="tsd-signature-type" data-tsd-kind="Class">PackDefinitionBuilder</a></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="setsystemauthentication" class="tsd-anchor"></a>
 					<h3>set<wbr>System<wbr>Authentication</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>System<wbr>Authentication<span class="tsd-signature-symbol">(</span>systemAuthentication<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SystemAuthenticationDef</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="packdefinitionbuilder.html" class="tsd-signature-type" data-tsd-kind="Class">PackDefinitionBuilder</a></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>System<wbr>Authentication<span class="tsd-signature-symbol">(</span>authDef<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">HeaderBearerTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CustomHeaderTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">QueryParamTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">MultiQueryParamTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/webbasicauthentication.html" class="tsd-signature-type" data-tsd-kind="Interface">WebBasicAuthentication</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AWSSignature4Authentication</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;getConnectionName&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;getConnectionUserId&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>getConnectionName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">MetadataFormulaDef</span><span class="tsd-signature-symbol">; </span>getConnectionUserId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">MetadataFormulaDef</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>defaultConnectionRequirement<span class="tsd-signature-symbol">?: </span><a href="../enums/connectionrequirement.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ConnectionRequirement</a><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="packdefinitionbuilder.html" class="tsd-signature-type" data-tsd-kind="Class">PackDefinitionBuilder</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L226">builder.ts:226</a></li>
+									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L240">builder.ts:240</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -525,6 +484,10 @@
 								not register their own account.</p>
 								<p>In the web editor, the <code>/SystemAuthentication</code> shortcut will insert a snippet of a skeleton
 								authentication definition.</p>
+								<p>By default, this will set a default connection (account) requirement, including the credentials
+									from this system account when invoking all formulas in this pack unless you specify differently
+									on a particular formula. To change the default, you can pass a <code>defaultConnectionRequirement</code>
+								option into this method.</p>
 								<dl class="tsd-comment-tags">
 									<dt>example</dt>
 									<dd><p>pack.setSystemAuthentication({
@@ -536,7 +499,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>systemAuthentication: <span class="tsd-signature-type">SystemAuthenticationDef</span></h5>
+									<h5>authDef: <span class="tsd-signature-type">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">HeaderBearerTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CustomHeaderTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">QueryParamTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">MultiQueryParamTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/webbasicauthentication.html" class="tsd-signature-type" data-tsd-kind="Interface">WebBasicAuthentication</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AWSSignature4Authentication</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;getConnectionName&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;getConnectionUserId&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>getConnectionName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">MetadataFormulaDef</span><span class="tsd-signature-symbol">; </span>getConnectionUserId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">MetadataFormulaDef</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>defaultConnectionRequirement<span class="tsd-signature-symbol">?: </span><a href="../enums/connectionrequirement.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ConnectionRequirement</a><span class="tsd-signature-symbol"> }</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="packdefinitionbuilder.html" class="tsd-signature-type" data-tsd-kind="Class">PackDefinitionBuilder</a></h4>
@@ -547,13 +510,13 @@
 					<a name="setuserauthentication" class="tsd-anchor"></a>
 					<h3>set<wbr>User<wbr>Authentication</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>User<wbr>Authentication<span class="tsd-signature-symbol">(</span>authentication<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">AuthenticationDef</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="packdefinitionbuilder.html" class="tsd-signature-type" data-tsd-kind="Class">PackDefinitionBuilder</a></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>User<wbr>Authentication<span class="tsd-signature-symbol">(</span>authDef<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">NoAuthentication</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>defaultConnectionRequirement<span class="tsd-signature-symbol">?: </span><a href="../enums/connectionrequirement.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ConnectionRequirement</a><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/variousauthentication.html" class="tsd-signature-type" data-tsd-kind="Interface">VariousAuthentication</a><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>defaultConnectionRequirement<span class="tsd-signature-symbol">?: </span><a href="../enums/connectionrequirement.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ConnectionRequirement</a><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">HeaderBearerTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CodaApiBearerTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CustomHeaderTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">QueryParamTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">MultiQueryParamTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/oauth2authentication.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuth2Authentication</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/webbasicauthentication.html" class="tsd-signature-type" data-tsd-kind="Interface">WebBasicAuthentication</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AWSSignature4Authentication</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;getConnectionName&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;getConnectionUserId&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>getConnectionName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">MetadataFormulaDef</span><span class="tsd-signature-symbol">; </span>getConnectionUserId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">MetadataFormulaDef</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>defaultConnectionRequirement<span class="tsd-signature-symbol">?: </span><a href="../enums/connectionrequirement.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ConnectionRequirement</a><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="packdefinitionbuilder.html" class="tsd-signature-type" data-tsd-kind="Class">PackDefinitionBuilder</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L195">builder.ts:195</a></li>
+									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L200">builder.ts:200</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -564,6 +527,10 @@
 								<p>Each user will need to register an account in order to use this pack.</p>
 								<p>In the web editor, the <code>/UserAuthentication</code> shortcut will insert a snippet of a skeleton
 								authentication definition.</p>
+								<p>By default, this will set a default connection (account) requirement, making a user account
+									required to invoke all formulas in this pack unless you specify differently on a particular
+									formula. To change the default, you can pass a <code>defaultConnectionRequirement</code> option into
+								this method.</p>
 								<dl class="tsd-comment-tags">
 									<dt>example</dt>
 									<dd><p>pack.setUserAuthentication({
@@ -575,7 +542,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>authentication: <span class="tsd-signature-type">AuthenticationDef</span></h5>
+									<h5>authDef: <span class="tsd-signature-type">NoAuthentication</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>defaultConnectionRequirement<span class="tsd-signature-symbol">?: </span><a href="../enums/connectionrequirement.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ConnectionRequirement</a><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/variousauthentication.html" class="tsd-signature-type" data-tsd-kind="Interface">VariousAuthentication</a><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>defaultConnectionRequirement<span class="tsd-signature-symbol">?: </span><a href="../enums/connectionrequirement.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ConnectionRequirement</a><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">HeaderBearerTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CodaApiBearerTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CustomHeaderTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">QueryParamTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">MultiQueryParamTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/oauth2authentication.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuth2Authentication</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/webbasicauthentication.html" class="tsd-signature-type" data-tsd-kind="Interface">WebBasicAuthentication</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AWSSignature4Authentication</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;getConnectionName&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;getConnectionUserId&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>getConnectionName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">MetadataFormulaDef</span><span class="tsd-signature-symbol">; </span>getConnectionUserId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">MetadataFormulaDef</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>defaultConnectionRequirement<span class="tsd-signature-symbol">?: </span><a href="../enums/connectionrequirement.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ConnectionRequirement</a><span class="tsd-signature-symbol"> }</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="packdefinitionbuilder.html" class="tsd-signature-type" data-tsd-kind="Class">PackDefinitionBuilder</a></h4>
@@ -637,9 +604,6 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 								<a href="packdefinitionbuilder.html#addsynctable" class="tsd-kind-icon">add<wbr>Sync<wbr>Table</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="packdefinitionbuilder.html#setdefaultconnectionrequirement" class="tsd-kind-icon">set<wbr>Default<wbr>Connection<wbr>Requirement</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="packdefinitionbuilder.html#setsystemauthentication" class="tsd-kind-icon">set<wbr>System<wbr>Authentication</a>

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PackDefinitionBuilder = exports.newPack = void 0;
 const types_1 = require("./types");
+const api_types_1 = require("./api_types");
 const api_1 = require("./api");
 const api_2 = require("./api");
 const api_3 = require("./api");
@@ -143,12 +144,18 @@ class PackDefinitionBuilder {
      * In the web editor, the `/UserAuthentication` shortcut will insert a snippet of a skeleton
      * authentication definition.
      *
+     * By default, this will set a default connection (account) requirement, making a user account
+     * required to invoke all formulas in this pack unless you specify differently on a particular
+     * formula. To change the default, you can pass a `defaultConnectionRequirement` option into
+     * this method.
+     *
      * @example
      * pack.setUserAuthentication({
      *   type: AuthenticationType.HeaderBearerToken,
      * });
      */
-    setUserAuthentication(authentication) {
+    setUserAuthentication(authDef) {
+        const { defaultConnectionRequirement = api_types_1.ConnectionRequirement.Required, ...authentication } = authDef;
         if (authentication.type === types_1.AuthenticationType.None || authentication.type === types_1.AuthenticationType.Various) {
             this.defaultAuthentication = authentication;
         }
@@ -158,6 +165,7 @@ class PackDefinitionBuilder {
             const getConnectionUserId = api_6.wrapMetadataFunction(getConnectionUserIdDef);
             this.defaultAuthentication = { ...rest, getConnectionName, getConnectionUserId };
         }
+        this._setDefaultConnectionRequirement(defaultConnectionRequirement);
         return this;
     }
     /**
@@ -169,17 +177,24 @@ class PackDefinitionBuilder {
      *
      * In the web editor, the `/SystemAuthentication` shortcut will insert a snippet of a skeleton
      * authentication definition.
+  
+     * By default, this will set a default connection (account) requirement, including the credentials
+     * from this system account when invoking all formulas in this pack unless you specify differently
+     * on a particular formula. To change the default, you can pass a `defaultConnectionRequirement`
+     * option into this method.
      *
      * @example
      * pack.setSystemAuthentication({
      *   type: AuthenticationType.HeaderBearerToken,
      * });
      */
-    setSystemAuthentication(systemAuthentication) {
+    setSystemAuthentication(authDef) {
+        const { defaultConnectionRequirement = api_types_1.ConnectionRequirement.Required, ...systemAuthentication } = authDef;
         const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, ...rest } = systemAuthentication;
         const getConnectionName = api_6.wrapMetadataFunction(getConnectionNameDef);
         const getConnectionUserId = api_6.wrapMetadataFunction(getConnectionUserIdDef);
         this.systemConnectionAuthentication = { ...rest, getConnectionName, getConnectionUserId };
+        this._setDefaultConnectionRequirement(defaultConnectionRequirement);
         return this;
     }
     /**
@@ -201,21 +216,7 @@ class PackDefinitionBuilder {
         this.networkDomains.push(...domain);
         return this;
     }
-    /**
-     * Declares a default connection (account) requirement to be used for all
-     * formulas and sync tables on this pack that don't explicitly specify one.
-     *
-     * This is purely a convenience to avoid having to specify a connection requirement
-     * on each individual build block definition. For example, if your pack uses
-     * authentication and all or most of your formulas require a user account,
-     * rather than specifying `connectionRequirement: ConnectionRequirement.Required`
-     * each time you call `pack.addFormula()`, you can set a default connection requirement
-     * up front and it will apply to all formula and sync table definitions.
-     *
-     * @example
-     * pack.setDefaultConnectionRequirement(ConnectionRequirement.Required);
-     */
-    setDefaultConnectionRequirement(connectionRequirement) {
+    _setDefaultConnectionRequirement(connectionRequirement) {
         this._defaultConnectionRequirement = connectionRequirement;
         // Rewrite any formulas or sync tables that were already defined, in case the maker sets the default
         // after the fact.
