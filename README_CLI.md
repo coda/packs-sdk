@@ -322,7 +322,7 @@ Here's a very simple example test, using Mocha, for a formula that doesn't make 
 fetcher requests:
 
 ```typescript
-import {executeFormulaFromPackDef} from 'coda-packs-sdk/dist/development';
+import {executeFormulaFromPackDef} from '@codahq/packs-sdk/dist/development';
 import {manifest} from '../manifest';
 
 describe('Simple Formula', () => {
@@ -340,11 +340,11 @@ Here we set up a mock execution context, register a fake response on it, and pas
 mock fetcher when executing our formula.
 
 ```typescript
-import {MockExecutionContext} from 'coda-packs-sdk/dist/development';
-import {executeFormulaFromPackDef} from 'coda-packs-sdk/dist/development';
+import {MockExecutionContext} from '@codahq/packs-sdk/dist/development';
+import {executeFormulaFromPackDef} from '@codahq/packs-sdk/dist/development';
 import {manifest} from '../manifest';
-import {newJsonFetchResponse} from 'coda-packs-sdk/dist/development';
-import {newMockExecutionContext} from 'coda-packs-sdk/dist/development';
+import {newJsonFetchResponse} from '@codahq/packs-sdk/dist/development';
+import {newMockExecutionContext} from '@codahq/packs-sdk/dist/development';
 import sinon from 'sinon';
 
 describe('Formula with Fetcher', () => {
@@ -377,11 +377,11 @@ your sync handles pagination properly by setting up mock fetcher responses that 
 in your sync formula return a `Continuation` at least once.
 
 ```typescript
-import {MockSyncExecutionContext} from 'coda-packs-sdk/dist/development';
-import {executeSyncFormulaFromPackDef} from 'coda-packs-sdk/dist/development';
+import {MockSyncExecutionContext} from '@codahq/packs-sdk/dist/development';
+import {executeSyncFormulaFromPackDef} from '@codahq/packs-sdk/dist/development';
 import {manifest} from '../manifest';
-import {newJsonFetchResponse} from 'coda-packs-sdk/dist/development';
-import {newMockSyncExecutionContext} from 'coda-packs-sdk/dist/development';
+import {newJsonFetchResponse} from '@codahq/packs-sdk/dist/development';
+import {newMockSyncExecutionContext} from '@codahq/packs-sdk/dist/development';
 import sinon from 'sinon';
 
 describe('Sync Formula', () => {
@@ -484,7 +484,7 @@ file by itself containing nothing but the definition itself, importing the nuts
 and bolts of your pack from other files.
 
 ```typescript
-import {PackDefinition} from 'coda-packs-sdk';
+import {PackDefinition} from '@codahq/packs-sdk';
 import {formulas} from './formulas';
 import {syncTables} from './formulas';
 
@@ -506,9 +506,9 @@ export const manifest: PackDefinition = {
 Most of your pack implementation goes here.
 
 ```typescript
-import type {Format} from 'coda-packs-sdk';
-import type {SyncTable} from 'coda-packs-sdk';
-import type {Formula} from 'coda-packs-sdk';
+import type {Format} from '@codahq/packs-sdk';
+import type {SyncTable} from '@codahq/packs-sdk';
+import type {Formula} from '@codahq/packs-sdk';
 
 export const formulas: Formula[] = [
   // Formula definitions go here, e.g.
@@ -534,8 +534,8 @@ between schema and implementation and allows you to refer back to your schemas
 without wading through long formula implementations.
 
 ```typescript
-import {ValueType} from 'coda-packs-sdk';
-import {makeObjectSchema} from 'coda-packs-sdk';
+import {ValueType} from '@codahq/packs-sdk';
+import {makeObjectSchema} from '@codahq/packs-sdk';
 
 export const personSchema = makeObjectSchema({
   type: ValueType.Object,

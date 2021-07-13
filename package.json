@@ -1,8 +1,7 @@
 {
-  "name": "coda-packs-sdk",
+  "name": "@codahq/packs-sdk",
   "version": "0.4.1",
-  "license": "UNLICENSED",
-  "private": true,
+  "license": "MIT",
   "engines": {
     "node": ">=14.x"
   },
