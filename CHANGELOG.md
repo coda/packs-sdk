@@ -154,7 +154,7 @@ If you wish to continue using the old syntax (temporarily while we still support
 your imports to this and leave your code unchanged:
 
 ```typescript
-import {makeSyncTableLegacy as makeSyncTable} from 'coda-packs-sdk/dist/legacy_exports';
+import {makeSyncTableLegacy as makeSyncTable} from '@codahq/packs-sdk/dist/legacy_exports';
 ```
 
 The new syntax has also been applied to the pack builder's `addSyncTable()` method.
