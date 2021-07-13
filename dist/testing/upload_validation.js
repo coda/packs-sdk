@@ -433,7 +433,9 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
             message: 'Invalid name. Identity names can only contain alphanumeric characters, underscores, and dashes, and no spaces.',
         }),
         dynamicUrl: z.string().optional(),
-        attribution: z.array(z.union([textAttributionNodeSchema, linkAttributionNodeSchema, imageAttributionNodeSchema])).optional(),
+        attribution: z
+            .array(z.union([textAttributionNodeSchema, linkAttributionNodeSchema, imageAttributionNodeSchema]))
+            .optional(),
     }).optional(),
     properties: z.record(objectPropertyUnionSchema),
 })
@@ -517,7 +519,11 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject({
         .string()
         .regex(/^\d+(\.\d+){0,2}$/, 'Pack versions must use semantic versioning, e.g. "1", "1.0" or "1.0.0".'),
     defaultAuthentication: z.union(zodUnionInput(Object.values(defaultAuthenticationValidators))).optional(),
-    networkDomains: z.array(z.string()).optional(),
+    networkDomains: z
+        .array(z.string().refine(domain => !(domain.startsWith('http:') || domain.startsWith('https:')), {
+        message: 'Invalid network domain. Instead of "https://www.example.com", just specify "example.com".',
+    }))
+        .optional(),
     formulaNamespace: z.string().optional().refine(validateNamespace, {
         message: 'Formula namespaces can only contain alphanumeric characters and underscores.',
     }),
@@ -645,7 +651,7 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
     if (!usesAuthentication || ((_a = data.networkDomains) === null || _a === void 0 ? void 0 : _a.length)) {
         return true;
     }
-    // Various is an internal authentication type that's only applicable to whitelisted Pack Ids. 
+    // Various is an internal authentication type that's only applicable to whitelisted Pack Ids.
     // Skipping validation here to let it exempt from network domains.
     if (data.defaultAuthentication.type === types_1.AuthenticationType.Various) {
         return true;

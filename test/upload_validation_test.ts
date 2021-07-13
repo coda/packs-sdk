@@ -1505,6 +1505,22 @@ describe('Pack metadata Validation', () => {
         },
       ]);
     });
+
+    it('using a url instead of a domain gives friendly error', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['https://foo.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'Invalid network domain. Instead of "https://www.example.com", just specify "example.com".',
+          path: 'networkDomains[0]',
+        },
+      ]);
+    });
   });
 
   describe('validateVariousAuthenticationMetadata', () => {
