@@ -29,7 +29,6 @@ _The Packs Command Line Interface (CLI) tool helps you build and test Pack code 
   - [File Structure](#file-structure)
 - [Assets](#assets)
 
-
 ## Getting Started
 
 ### Prerequisites
@@ -44,7 +43,7 @@ in which case, make sure that you have TypeScript and **ts-node** installed.
 The simplest way to get started with the SDK is to install it globally:
 
 ```bash
-npm install --global git+ssh://github.com/coda/packs-sdk.git
+npm install --global @codahq/packs-sdk
 ```
 
 #### Single-Project Install (Recommended)
@@ -59,7 +58,7 @@ Create a new project directory if you haven't already and initialize your projec
 # Initialize npm and follow prompts.
 npm init
 # Install the Coda Packs SDK locally in your project
-npm install --save git+ssh://github.com/coda/packs-sdk.git
+npm install --save @codahq/packs-sdk
 ```
 
 Update your path so you can easily use the `coda` command line (CLI) tool that ships with the SDK:
@@ -255,7 +254,6 @@ coda release path/to/manifest.ts --notes "Added the formula MyNewFormula."
 
 See our examples repo https://github.com/coda/packs-examples for several examples of complete
 pack definitions of various levels of complexity.
-
 
 ## Testing Your Code
 
