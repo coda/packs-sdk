@@ -1,7 +1,7 @@
 {
   "name": "@codahq/packs-sdk",
   "version": "0.4.1",
-  "license": "UNLICENSED",
+  "license": "SEE LICENSE IN LICENSE.txt",
   "engines": {
     "node": ">=14.x"
   },
