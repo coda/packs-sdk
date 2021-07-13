@@ -1,6 +1,6 @@
 # Coda Packs SDK
 
-_This is the documentation for the SDK to build Packs either via our Online Pack Editor or the Command Line Interface (CLI) tool. Click [here](https://coda.io/@coda/developer-terms-and-conditions) to learn how to use the Online Pack Editor and Pack making more broadly, and [here](README_CLI.md) to learn how to use the CLI._
+_This is the documentation for the SDK to build Packs either via our Online Pack Editor or the Command Line Interface (CLI) tool. Click [here](https://coda.io/@coda/make-a-pack-private-alpha) to learn how to use the Online Pack Editor and Pack making more broadly, and [here](README_CLI.md) to learn how to use the CLI._
 
 - [Basic Concepts](#basic-concepts)
 - [Core Concepts](#core-concepts)
