@@ -51,7 +51,7 @@
     "@types/exorcist": "^2.0.0",
     "@types/express": "^4.17.12",
     "@types/mocha": "^8.2.2",
-    "@types/mock-fs": "^4.13.0",
+    "@types/mock-fs": "^4.13.1",
     "@types/node": "^16.0.0",
     "@types/pascalcase": "^1.0.0",
     "@types/qs": "^6.9.6",
