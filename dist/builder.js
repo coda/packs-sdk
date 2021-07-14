@@ -165,7 +165,9 @@ class PackDefinitionBuilder {
             const getConnectionUserId = api_6.wrapMetadataFunction(getConnectionUserIdDef);
             this.defaultAuthentication = { ...rest, getConnectionName, getConnectionUserId };
         }
-        this._setDefaultConnectionRequirement(defaultConnectionRequirement);
+        if (authentication.type !== types_1.AuthenticationType.None) {
+            this._setDefaultConnectionRequirement(defaultConnectionRequirement);
+        }
         return this;
     }
     /**
