@@ -102,4 +102,4 @@ validate-no-changes: compile
 
 .PHONY: npm-publish
 npm-publish:
-  npm publish --tag alpha --access public
+	npm publish --tag alpha --tag latest --access public
