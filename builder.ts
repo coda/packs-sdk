@@ -212,7 +212,9 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       this.defaultAuthentication = {...rest, getConnectionName, getConnectionUserId} as Authentication;
     }
 
-    this._setDefaultConnectionRequirement(defaultConnectionRequirement);
+    if (authentication.type !== AuthenticationType.None) {
+      this._setDefaultConnectionRequirement(defaultConnectionRequirement);
+    }
 
     return this;
   }

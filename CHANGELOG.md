@@ -1,5 +1,10 @@
 ## 0.4.2
 
+Fix a bug where using `setUserAuthentication()` with `AuthenticationType.None` would
+inadvertently make accounts required.
+
+## 0.4.2
+
 Fixed a bug preventing `coda init` from working.
 
 ## 0.4.1
