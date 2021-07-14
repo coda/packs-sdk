@@ -37,6 +37,7 @@ const auth_1 = require("./auth");
 const auth_2 = require("./auth");
 const execution_1 = require("../runtime/execution");
 const util_1 = __importDefault(require("util"));
+const MaxSyncIterations = 100;
 async function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, params, context, options, { useRealFetcher, manifestPath } = {}) {
     let executionContext = context;
     if (!executionContext && useRealFetcher) {
@@ -57,10 +58,29 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
             ? fetcher_2.newFetcherSyncExecutionContext(buildUpdateCredentialsCallback(manifestPath), helpers_1.getPackAuth(manifest), manifest.networkDomains, credentials)
             : mocks_2.newMockSyncExecutionContext();
         executionContext.sync.dynamicUrl = dynamicUrl || undefined;
-        const result = vm
-            ? await executeFormulaOrSyncWithRawParamsInVM({ formulaName, params, manifestPath, executionContext })
-            : await executeFormulaOrSyncWithRawParams({ formulaName, params, manifest, executionContext });
-        helpers_2.print(result);
+        const syncFormula = helper.tryFindSyncFormula(manifest, formulaName);
+        if (syncFormula) {
+            const result = [];
+            let iterations = 1;
+            do {
+                if (iterations > MaxSyncIterations) {
+                    throw new Error(`Sync is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`);
+                }
+                const response = vm
+                    ? await executeFormulaOrSyncWithRawParamsInVM({ formulaName, params, manifestPath, executionContext })
+                    : await executeFormulaOrSyncWithRawParams({ formulaName, params, manifest, executionContext });
+                result.push(...response.result);
+                executionContext.sync.continuation = response.continuation;
+                iterations++;
+            } while (executionContext.sync.continuation);
+            helpers_2.print(result);
+        }
+        else {
+            const result = vm
+                ? await executeFormulaOrSyncWithRawParamsInVM({ formulaName, params, manifestPath, executionContext })
+                : await executeFormulaOrSyncWithRawParams({ formulaName, params, manifest, executionContext });
+            helpers_2.print(result);
+        }
     }
     catch (err) {
         helpers_2.print(err);
@@ -91,7 +111,7 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaName, params: rawP
         return await ivmHelper.executeFormulaOrSyncWithRawParams(ivmContext, formulaName, rawParams);
     }
     catch (err) {
-        throw new VMError(err.name, err.message, await execution_1.translateErrorStackFromVM({ stacktrace: err.stack, bundleSourceMapPath, vmFilename: bundlePath }) || '');
+        throw new VMError(err.name, err.message, (await execution_1.translateErrorStackFromVM({ stacktrace: err.stack, bundleSourceMapPath, vmFilename: bundlePath })) || '');
     }
 }
 exports.executeFormulaOrSyncWithRawParamsInVM = executeFormulaOrSyncWithRawParamsInVM;

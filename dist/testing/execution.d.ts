@@ -1,6 +1,5 @@
 /// <reference types="node" />
 import type { ExecuteOptions } from './execution_helper';
-import type { ExecuteSyncOptions } from './execution_helper';
 import type { ExecutionContext } from '../api_types';
 import type { MetadataContext } from '../api';
 import type { MetadataFormula } from '../api';
@@ -8,9 +7,9 @@ import type { PackVersionDefinition } from '../types';
 import type { ParamDefs } from '../api_types';
 import type { ParamValues } from '../api_types';
 import type { SyncExecutionContext } from '../api_types';
+import type { SyncFormulaResult } from '../api';
 import util from 'util';
 export { ExecuteOptions } from './execution_helper';
-export { ExecuteSyncOptions } from './execution_helper';
 export interface ContextOptions {
     useRealFetcher?: boolean;
     manifestPath?: string;
@@ -51,7 +50,7 @@ export declare function executeFormulaOrSyncWithRawParams({ formulaName, params:
     vm?: boolean;
     executionContext: SyncExecutionContext;
 }): Promise<any>;
-export declare function executeSyncFormulaFromPackDef(packDef: PackVersionDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, options?: ExecuteSyncOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<any[]>;
+export declare function executeSyncFormulaFromPackDef(packDef: PackVersionDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<SyncFormulaResult<any>>;
 export declare function executeMetadataFormula(formula: MetadataFormula, metadataParams?: {
     search?: string;
     formulaContext?: MetadataContext;

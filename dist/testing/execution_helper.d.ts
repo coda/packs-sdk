@@ -9,14 +9,10 @@ export interface ExecuteOptions {
     validateParams?: boolean;
     validateResult?: boolean;
 }
-export interface ExecuteSyncOptions extends ExecuteOptions {
-    maxIterations?: number;
-}
-export declare function executeSyncFormulaWithoutValidation(formula: GenericSyncFormula, params: ParamValues<ParamDefs>, context: SyncExecutionContext, maxIterations?: number): Promise<any[]>;
 export declare function executeFormulaOrSyncWithRawParams(manifest: PackVersionDefinition, formulaName: string, rawParams: string[], context: SyncExecutionContext): Promise<any>;
 export declare function executeFormulaOrSync(manifest: PackVersionDefinition, formulaName: string, params: ParamValues<ParamDefs>, context: SyncExecutionContext): Promise<any>;
 export declare function executeFormula(formula: Formula, params: ParamValues<ParamDefs>, context: ExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult }?: ExecuteOptions): Promise<any>;
-export declare function executeSyncFormula(formula: GenericSyncFormula, params: ParamValues<ParamDefs>, context: SyncExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult, maxIterations: maxIterations, }?: ExecuteSyncOptions): Promise<any[]>;
+export declare function executeSyncFormula(formula: GenericSyncFormula, params: ParamValues<ParamDefs>, context: SyncExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult }?: ExecuteOptions): Promise<import("../api").SyncFormulaResult<any>>;
 export declare function findFormula(packDef: PackVersionDefinition, formulaNameWithNamespace: string): Formula;
 export declare function findSyncFormula(packDef: PackVersionDefinition, syncFormulaName: string): GenericSyncFormula;
 export declare function tryFindFormula(packDef: PackVersionDefinition, formulaNameWithNamespace: string): Formula | undefined;
