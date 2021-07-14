@@ -53,7 +53,7 @@
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^16.0.0",
     "@types/pascalcase": "^1.0.0",
-    "@types/qs": "^6.9.6",
+    "@types/qs": "^6.9.7",
     "@types/readline-sync": "1.4.3",
     "@types/request": "^2.48.6",
     "@types/request-promise-native": "^1.0.17",
