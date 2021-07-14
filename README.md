@@ -26,7 +26,7 @@ _This is the documentation for the SDK to build Packs either via our Online Pack
 
 ## Basic Concepts
 
-Coda Packs allow you to extend Coda by building new building blocks that can operate directly on Coda docs' canvas. You can write these extensions in JavaScript/TypeScript, using them to create functions that let you re-use a formula's complex logic across documents or even  communicate with third-party APIs, with or without user authentication.
+Coda Packs allow you to extend Coda by building new building blocks that can operate directly on Coda docs' canvas. You can write these extensions in JavaScript/TypeScript, using them to create functions that let you re-use a formula's complex logic across documents or even communicate with third-party APIs, with or without user authentication.
 
 Packs are a combination of **formulas**, **sync tables**, and **column formats**.
 
@@ -51,7 +51,6 @@ and the resulting object with weather info will be shown in the cell.
 Your formulas, sync tables, and column formats are bundled together with metadata describing your pack,
 into a `PackDefinition` object which forms the complete specification of your pack.
 
-
 ## Core Concepts
 
 ### How Packs Work
@@ -62,6 +61,7 @@ behalf when the Pack is used in a doc. This is different from our API, where we 
 Here's how Packs work:
 
 Create a Pack
+
 1. **Pack Makers create and build the Pack** via the Online Pack Editor or CLI tools.
 2. **Build sent to Coda's Backend**, either via a command or automatically
 
@@ -73,9 +73,7 @@ Use the Pack in a Doc
 6. **If applicable, external API called** by the Execution Environment. All API calls will originate from our servers to protect authentication credentials, which we store on our servers and never send to clients.
 7. **Return data to doc**: the results (or errors) from the execution are sent back to the doc.
 
-
 TODO: add diagram
-
 
 ### Fetching Remote Data
 
@@ -512,7 +510,6 @@ will be remapped to `id` and `name` (and then those fields will be normalized, t
 With the use of the schema declaration (including `fromKey`), you generally can avoid writing
 any custom code to remove or remap fields to make an API object conform to your desired schema.
 
-
 ### Metadata Formulas
 
 While **formulas** and **sync tables** are the backbone of your pack, sometimes you will
@@ -573,7 +570,6 @@ The format of the `message` parameter to the `Logger` method is (documented here
 
 TODO: Write
 
-
 ## Reference
 
-Visit [https://coda.github.io/packs-sdk](https://coda.github.io/packs-sdk) for detailed reference documentation.
+Visit [https://coda.github.io/packs-sdk/](https://coda.github.io/packs-sdk/) for detailed reference documentation.
