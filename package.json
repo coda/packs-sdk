@@ -51,7 +51,7 @@
     "@types/express": "^4.17.13",
     "@types/mocha": "^8.2.2",
     "@types/mock-fs": "^4.13.1",
-    "@types/node": "^16.0.0",
+    "@types/node": "^16.3.2",
     "@types/pascalcase": "^1.0.0",
     "@types/qs": "^6.9.7",
     "@types/readline-sync": "1.4.3",
