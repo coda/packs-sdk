@@ -48,7 +48,7 @@
     "@types/chai": "^4.2.21",
     "@types/clone": "^2.1.0",
     "@types/exorcist": "^2.0.0",
-    "@types/express": "^4.17.12",
+    "@types/express": "^4.17.13",
     "@types/mocha": "^8.2.2",
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^16.0.0",
