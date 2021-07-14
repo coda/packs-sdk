@@ -99,3 +99,7 @@ validate-no-changes: compile
 		echo "dist directory is not clean. run 'make build'"; \
 		exit 1; \
 	fi
+
+.PHONY: npm-publish
+npm-publish:
+  npm publish --tag alpha --access public
