@@ -1,3 +1,7 @@
+## 0.4.2
+
+Fixed a bug preventing `coda init` from working.
+
 ## 0.4.1
 
 The pack builder now sets a default connection (account) requirement when you specify authentication.
