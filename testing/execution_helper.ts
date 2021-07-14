@@ -5,7 +5,6 @@ import type {PackVersionDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
 import type {SyncExecutionContext} from '../api_types';
-import type {SyncFormulaResult} from '../api';
 import {coerceParams} from './coercion';
 import {ensureExists} from '../helpers/ensure';
 import {validateParams} from './validation';
@@ -14,39 +13,6 @@ import {validateResult} from './validation';
 export interface ExecuteOptions {
   validateParams?: boolean;
   validateResult?: boolean;
-}
-
-export interface ExecuteSyncOptions extends ExecuteOptions {
-  maxIterations?: number;
-}
-
-const MaxSyncIterations = 100;
-
-export async function executeSyncFormulaWithoutValidation(
-  formula: GenericSyncFormula,
-  params: ParamValues<ParamDefs>,
-  context: SyncExecutionContext,
-  maxIterations: number = MaxSyncIterations,
-) {
-  const result = [];
-  let iterations = 1;
-  do {
-    if (iterations > maxIterations) {
-      throw new Error(
-        `Sync is still running after ${maxIterations} iterations, this is likely due to an infinite loop. If more iterations are needed, use the maxIterations option.`,
-      );
-    }
-    let response: SyncFormulaResult<any>;
-    try {
-      response = await formula.execute(params, context);
-    } catch (err) {
-      throw wrapError(err);
-    }
-    result.push(...response.result);
-    context.sync.continuation = response.continuation;
-    iterations++;
-  } while (context.sync.continuation);
-  return result;
 }
 
 export async function executeFormulaOrSyncWithRawParams(
@@ -125,20 +91,16 @@ export async function executeSyncFormula(
   formula: GenericSyncFormula,
   params: ParamValues<ParamDefs>,
   context: SyncExecutionContext,
-  {
-    validateParams: shouldValidateParams = true,
-    validateResult: shouldValidateResult = true,
-    maxIterations: maxIterations = MaxSyncIterations,
-  }: ExecuteSyncOptions = {},
+  {validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true}: ExecuteOptions = {},
 ) {
   if (shouldValidateParams) {
     validateParams(formula, params);
   }
 
-  const result = await executeSyncFormulaWithoutValidation(formula, params, context, maxIterations);
+  const result = await formula.execute(params, context);
 
   if (shouldValidateResult) {
-    validateResult(formula, result);
+    validateResult(formula, result.result);
   }
   return result;
 }

@@ -65,6 +65,7 @@ export function validateResult<ResultT extends any>(formula: TypedPackFormula, r
   if (maybeError) {
     throw ResultValidationException.fromErrors(formula.name, [maybeError]);
   }
+
   if (isObjectPackFormula(formula)) {
     // We've already validated that the result type is valid by this point.
     validateObjectResult(formula, result as Record<string, unknown>);

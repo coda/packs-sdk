@@ -43,7 +43,7 @@ describe('Execution', () => {
 
   it('executes a sync formula by name', async () => {
     const result = await executeSyncFormulaFromPackDef(fakePack, 'Students', ['Smith']);
-    assert.deepEqual(result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
+    assert.deepEqual(result, {result: [{Name: 'Alice'}, {Name: 'Bob'}], continuation: {page: 2}});
   });
 
   it('executes a formula by name with VM', async () => {
@@ -61,14 +61,7 @@ describe('Execution', () => {
       params: ['Smith'],
       bundlePath,
     });
-    assert.deepEqual(result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
-  });
-
-  it('error when maxIterations exceeded', async () => {
-    await testHelper.willBeRejectedWith(
-      executeSyncFormulaFromPackDef(fakePack, 'Students', ['Smith'], undefined, {maxIterations: 1}),
-      /Sync is still running after 1 iterations, this is likely due to an infinite loop. If more iterations are needed, use the maxIterations option./,
-    );
+    assert.deepEqual(result, {result: [{Name: 'Alice'}, {Name: 'Bob'}], continuation: {page: 2}});
   });
 
   describe('execution errors', () => {

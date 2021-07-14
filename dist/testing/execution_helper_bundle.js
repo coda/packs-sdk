@@ -2294,7 +2294,6 @@ __export(exports, {
   executeFormulaOrSync: () => executeFormulaOrSync,
   executeFormulaOrSyncWithRawParams: () => executeFormulaOrSyncWithRawParams,
   executeSyncFormula: () => executeSyncFormula,
-  executeSyncFormulaWithoutValidation: () => executeSyncFormulaWithoutValidation,
   findFormula: () => findFormula,
   findSyncFormula: () => findSyncFormula,
   tryFindFormula: () => tryFindFormula,
@@ -2880,26 +2879,6 @@ function validateArray(result, schema, context) {
 }
 
 // testing/execution_helper.ts
-var MaxSyncIterations = 100;
-async function executeSyncFormulaWithoutValidation(formula, params, context, maxIterations = MaxSyncIterations) {
-  const result = [];
-  let iterations = 1;
-  do {
-    if (iterations > maxIterations) {
-      throw new Error(`Sync is still running after ${maxIterations} iterations, this is likely due to an infinite loop. If more iterations are needed, use the maxIterations option.`);
-    }
-    let response;
-    try {
-      response = await formula.execute(params, context);
-    } catch (err) {
-      throw wrapError(err);
-    }
-    result.push(...response.result);
-    context.sync.continuation = response.continuation;
-    iterations++;
-  } while (context.sync.continuation);
-  return result;
-}
 async function executeFormulaOrSyncWithRawParams(manifest, formulaName, rawParams, context) {
   try {
     const formula = tryFindFormula(manifest, formulaName);
@@ -2947,17 +2926,13 @@ async function executeFormula(formula, params, context, { validateParams: should
   }
   return result;
 }
-async function executeSyncFormula(formula, params, context, {
-  validateParams: shouldValidateParams = true,
-  validateResult: shouldValidateResult = true,
-  maxIterations = MaxSyncIterations
-} = {}) {
+async function executeSyncFormula(formula, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true } = {}) {
   if (shouldValidateParams) {
     validateParams(formula, params);
   }
-  const result = await executeSyncFormulaWithoutValidation(formula, params, context, maxIterations);
+  const result = await formula.execute(params, context);
   if (shouldValidateResult) {
-    validateResult(formula, result);
+    validateResult(formula, result.result);
   }
   return result;
 }

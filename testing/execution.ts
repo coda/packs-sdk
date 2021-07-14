@@ -1,6 +1,5 @@
 import type {Credentials} from './auth_types';
 import type {ExecuteOptions} from './execution_helper';
-import type {ExecuteSyncOptions} from './execution_helper';
 import type {ExecutionContext} from '../api_types';
 import type {MetadataContext} from '../api';
 import type {MetadataFormula} from '../api';
@@ -8,7 +7,8 @@ import type {PackVersionDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
 import type {SyncExecutionContext} from '../api_types';
-import { compilePackBundle } from './compile';
+import type {SyncFormulaResult} from '../api';
+import {compilePackBundle} from './compile';
 import {getPackAuth} from '../cli/helpers';
 import * as helper from './execution_helper';
 import * as ivmHelper from './ivm_helper';
@@ -20,11 +20,12 @@ import * as path from 'path';
 import {print} from './helpers';
 import {readCredentialsFile} from './auth';
 import {storeCredential} from './auth';
-import { translateErrorStackFromVM } from '../runtime/execution';
+import {translateErrorStackFromVM} from '../runtime/execution';
 import util from 'util';
 
+const MaxSyncIterations = 100;
+
 export {ExecuteOptions} from './execution_helper';
-export {ExecuteSyncOptions} from './execution_helper';
 
 export interface ContextOptions {
   useRealFetcher?: boolean;
@@ -87,10 +88,31 @@ export async function executeFormulaOrSyncFromCLI({
       : newMockSyncExecutionContext();
     executionContext.sync.dynamicUrl = dynamicUrl || undefined;
 
-    const result = vm
-      ? await executeFormulaOrSyncWithRawParamsInVM({formulaName, params, manifestPath, executionContext})
-      : await executeFormulaOrSyncWithRawParams({formulaName, params, manifest, executionContext});
-    print(result);
+    const syncFormula = helper.tryFindSyncFormula(manifest, formulaName);
+    if (syncFormula) {
+      const result = [];
+      let iterations = 1;
+      do {
+        if (iterations > MaxSyncIterations) {
+          throw new Error(
+            `Sync is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`,
+          );
+        }
+        const response: SyncFormulaResult<any> = vm
+          ? await executeFormulaOrSyncWithRawParamsInVM({formulaName, params, manifestPath, executionContext})
+          : await executeFormulaOrSyncWithRawParams({formulaName, params, manifest, executionContext});
+
+        result.push(...response.result);
+        executionContext.sync.continuation = response.continuation;
+        iterations++;
+      } while (executionContext.sync.continuation);
+      print(result);
+    } else {
+      const result = vm
+        ? await executeFormulaOrSyncWithRawParamsInVM({formulaName, params, manifestPath, executionContext})
+        : await executeFormulaOrSyncWithRawParams({formulaName, params, manifest, executionContext});
+      print(result);
+    }
   } catch (err) {
     print(err);
     process.exit(1);
@@ -114,8 +136,8 @@ export async function executeFormulaOrSyncWithVM({
 }
 
 export class VMError {
-  name: string; 
-  message: string; 
+  name: string;
+  message: string;
   stack: string;
 
   constructor(name: string, message: string, stack: string) {
@@ -148,9 +170,9 @@ export async function executeFormulaOrSyncWithRawParamsInVM({
     return await ivmHelper.executeFormulaOrSyncWithRawParams(ivmContext, formulaName, rawParams);
   } catch (err) {
     throw new VMError(
-      err.name, 
-      err.message, 
-      await translateErrorStackFromVM({stacktrace: err.stack, bundleSourceMapPath, vmFilename: bundlePath}) || '',
+      err.name,
+      err.message,
+      (await translateErrorStackFromVM({stacktrace: err.stack, bundleSourceMapPath, vmFilename: bundlePath})) || '',
     );
   }
 }
@@ -175,7 +197,7 @@ export async function executeSyncFormulaFromPackDef(
   syncFormulaName: string,
   params: ParamValues<ParamDefs>,
   context?: SyncExecutionContext,
-  options?: ExecuteSyncOptions,
+  options?: ExecuteOptions,
   {useRealFetcher, manifestPath}: ContextOptions = {},
 ) {
   let executionContext = context;

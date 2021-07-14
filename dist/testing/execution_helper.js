@@ -1,32 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.wrapError = exports.tryFindSyncFormula = exports.tryFindFormula = exports.findSyncFormula = exports.findFormula = exports.executeSyncFormula = exports.executeFormula = exports.executeFormulaOrSync = exports.executeFormulaOrSyncWithRawParams = exports.executeSyncFormulaWithoutValidation = void 0;
+exports.wrapError = exports.tryFindSyncFormula = exports.tryFindFormula = exports.findSyncFormula = exports.findFormula = exports.executeSyncFormula = exports.executeFormula = exports.executeFormulaOrSync = exports.executeFormulaOrSyncWithRawParams = void 0;
 const coercion_1 = require("./coercion");
 const ensure_1 = require("../helpers/ensure");
 const validation_1 = require("./validation");
 const validation_2 = require("./validation");
-const MaxSyncIterations = 100;
-async function executeSyncFormulaWithoutValidation(formula, params, context, maxIterations = MaxSyncIterations) {
-    const result = [];
-    let iterations = 1;
-    do {
-        if (iterations > maxIterations) {
-            throw new Error(`Sync is still running after ${maxIterations} iterations, this is likely due to an infinite loop. If more iterations are needed, use the maxIterations option.`);
-        }
-        let response;
-        try {
-            response = await formula.execute(params, context);
-        }
-        catch (err) {
-            throw wrapError(err);
-        }
-        result.push(...response.result);
-        context.sync.continuation = response.continuation;
-        iterations++;
-    } while (context.sync.continuation);
-    return result;
-}
-exports.executeSyncFormulaWithoutValidation = executeSyncFormulaWithoutValidation;
 async function executeFormulaOrSyncWithRawParams(manifest, formulaName, rawParams, context) {
     try {
         const formula = tryFindFormula(manifest, formulaName);
@@ -83,13 +61,13 @@ async function executeFormula(formula, params, context, { validateParams: should
     return result;
 }
 exports.executeFormula = executeFormula;
-async function executeSyncFormula(formula, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, maxIterations: maxIterations = MaxSyncIterations, } = {}) {
+async function executeSyncFormula(formula, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true } = {}) {
     if (shouldValidateParams) {
         validation_1.validateParams(formula, params);
     }
-    const result = await executeSyncFormulaWithoutValidation(formula, params, context, maxIterations);
+    const result = await formula.execute(params, context);
     if (shouldValidateResult) {
-        validation_2.validateResult(formula, result);
+        validation_2.validateResult(formula, result.result);
     }
     return result;
 }
