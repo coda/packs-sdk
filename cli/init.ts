@@ -1,12 +1,12 @@
 import fs from 'fs';
 import {spawnProcess} from './helpers';
 
-const PACKS_EXAMPLES_DIRECTORY = 'node_modules/coda-packs-examples';
+const PACKS_EXAMPLES_DIRECTORY = 'node_modules/@codahq/packs-examples';
 
 export async function handleInit() {
   let isPacksExamplesInstalled: boolean;
   try {
-    const listNpmPackages = spawnProcess('npm list coda-packs-examples');
+    const listNpmPackages = spawnProcess('npm list @codahq/packs-examples');
     isPacksExamplesInstalled = listNpmPackages.status === 0;
   } catch (error) {
     isPacksExamplesInstalled = false;
@@ -14,7 +14,7 @@ export async function handleInit() {
 
   if (!isPacksExamplesInstalled) {
     // TODO(jonathan): Switch this to a regular https repo url when the repo becomes public.
-    const installCommand = `npm install git+ssh://github.com/kr-project/packs-examples.git`;
+    const installCommand = `npm install git+ssh://github.com/coda/packs-examples.git`;
     spawnProcess(installCommand);
   }
 
@@ -29,7 +29,7 @@ export async function handleInit() {
   spawnProcess(copyCommand);
 
   if (!isPacksExamplesInstalled) {
-    const uninstallCommand = `npm uninstall coda-packs-examples`;
+    const uninstallCommand = `npm uninstall @codahq/packs-examples`;
     spawnProcess(uninstallCommand);
   }
 }
