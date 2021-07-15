@@ -1184,7 +1184,7 @@ describe('Pack metadata Validation', () => {
         assert.deepEqual(err.validationErrors, [
           {
             message:
-              'Could not find a formula name for this format. Each format must reference the name of a formula defined in this pack.',
+              'Could not find a formula definition for this format. Each format must reference the name of a formula defined in this pack.',
             path: 'formats[0]',
           },
         ]);

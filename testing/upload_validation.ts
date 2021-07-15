@@ -714,7 +714,7 @@ function validateFormulas(schema: z.ZodObject<any>) {
             code: z.ZodIssueCode.custom,
             path: ['formats', i],
             message:
-              'Could not find a formula name for this format. Each format must reference the name of a formula defined in this pack.',
+              'Could not find a formula definition for this format. Each format must reference the name of a formula defined in this pack.',
           });
         } else {
           let hasError = !formula.parameters?.length;

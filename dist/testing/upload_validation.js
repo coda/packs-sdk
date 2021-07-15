@@ -599,7 +599,7 @@ function validateFormulas(schema) {
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
                     path: ['formats', i],
-                    message: 'Could not find a formula name for this format. Each format must reference the name of a formula defined in this pack.',
+                    message: 'Could not find a formula definition for this format. Each format must reference the name of a formula defined in this pack.',
                 });
             }
             else {
