@@ -693,7 +693,7 @@ describe('Pack metadata Validation', () => {
         assert.deepEqual(err.validationErrors, [
           {
             message: "Cannot have a sync table property with the same name as the sync table's schema identity.",
-            path: '',
+            path: 'syncTables[0].schema.properties.Foo',
           },
         ]);
       });
@@ -850,7 +850,7 @@ describe('Pack metadata Validation', () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: 'Sync table identity names must be unique.',
+          message: 'Sync table identity names must be unique. Found duplicate name "Identity".',
           path: 'syncTables',
         },
       ]);
@@ -955,7 +955,7 @@ describe('Pack metadata Validation', () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: 'Sync table names must be unique.',
+          message: 'Sync table names must be unique. Found duplicate name "SyncTable".',
           path: 'syncTables',
         },
       ]);
@@ -1113,8 +1113,8 @@ describe('Pack metadata Validation', () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: 'One or more of the "featured" fields do not appear in the "properties" object.',
-            path: 'formulas[0].schema',
+            message: 'The featured field name "Foo" does not exist in the "properties" object.',
+            path: 'formulas[0].schema.featured[1]',
           },
         ]);
       });
@@ -1184,8 +1184,8 @@ describe('Pack metadata Validation', () => {
         assert.deepEqual(err.validationErrors, [
           {
             message:
-              'Could not find a formula for one or more matchers. Check that the "formulaName" for each matcher matches the name of a formula defined in this pack.',
-            path: 'formats',
+              'Could not find a formula name for this format. Each format must reference the name of a formula defined in this pack.',
+            path: 'formats[0]',
           },
         ]);
       });
@@ -1214,7 +1214,7 @@ describe('Pack metadata Validation', () => {
         assert.deepEqual(err.validationErrors, [
           {
             message: 'Formats can only be implemented using formulas that take exactly one required parameter.',
-            path: 'formats',
+            path: 'formats[0]',
           },
         ]);
       });
@@ -1243,7 +1243,7 @@ describe('Pack metadata Validation', () => {
         assert.deepEqual(err.validationErrors, [
           {
             message: 'Formats can only be implemented using formulas that take exactly one required parameter.',
-            path: 'formats',
+            path: 'formats[0]',
           },
         ]);
       });
