@@ -108,6 +108,18 @@ export function validateSyncTableSchema(schema: any): ArraySchema<ObjectSchema<a
   );
 }
 
+function getNonUniqueElements<T>(items: T[]): T[] {
+  const set = new Set<T>();
+  const nonUnique: T[] = [];
+  for (const item of items) {
+    if (set.has(item)) {
+      nonUnique.push(item);
+    }
+    set.add(item);
+  }
+  return nonUnique;
+}
+
 function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[] {
   // Top-level errors for union types are totally useless, they just say "invalid input",
   // but they do record all of the specific errors when trying each element of the union,
@@ -535,17 +547,17 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     .refine(data => isNil(data.primary) || data.primary in data.properties, {
       message: 'The "primary" property must appear as a key in the "properties" object.',
     })
-    .refine(
-      data => {
-        for (const f of data.featured || []) {
-          if (!(f in data.properties)) {
-            return false;
-          }
+    .superRefine((data, context) => {
+      ((data.featured as string[]) || []).forEach((f, i) => {
+        if (!(f in data.properties)) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['featured', i],
+            message: `The featured field name "${f}" does not exist in the "properties" object.`,
+          });
         }
-        return true;
-      },
-      {message: 'One or more of the "featured" fields do not appear in the "properties" object.'},
-    ),
+      });
+    }),
 );
 
 const objectPropertyUnionSchema = z.union([
@@ -644,20 +656,22 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata
     .array(syncTableSchema)
     .optional()
     .default([])
-    .refine(
-      data => {
-        const identityNames = data.map(tableDef => tableDef.schema.identity.name);
-        return identityNames.length === new Set(identityNames).size;
-      },
-      {message: 'Sync table identity names must be unique.'},
-    )
-    .refine(
-      data => {
-        const names = data.map(tableDef => tableDef.name);
-        return names.length === new Set(names).size;
-      },
-      {message: 'Sync table names must be unique.'},
-    ),
+    .superRefine((data, context) => {
+      const identityNames = data.map(tableDef => tableDef.schema.identity.name);
+      for (const dupe of getNonUniqueElements(identityNames)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Sync table identity names must be unique. Found duplicate name "${dupe}".`,
+        });
+      }
+      const tableNames = data.map(tableDef => tableDef.name);
+      for (const dupe of getNonUniqueElements(tableNames)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Sync table names must be unique. Found duplicate name "${dupe}".`,
+        });
+      }
+    }),
 });
 
 // The following largely copied from tokens.ts for parsing formula names.
@@ -691,53 +705,35 @@ function validateFormulas(schema: z.ZodObject<any>) {
       },
       {message: 'A formula namespace must be provided whenever formulas are defined.', path: ['formulaNamespace']},
     )
-    .refine(
-      data => {
-        const formulas = (data.formulas || []) as PackFormulaMetadata[];
-        const formulaNames = new Set(formulas.map(f => f.name));
-        for (const format of data.formats || []) {
-          if (!formulaNames.has(format.formulaName)) {
-            return false;
-          }
-        }
-        return true;
-      },
-      {
-        // Annoying that the we can't be more precise and identify in the message which format had the issue;
-        // these error messages are static.
-        message:
-          'Could not find a formula for one or more matchers. Check that the "formulaName" for each matcher ' +
-          'matches the name of a formula defined in this pack.',
-        path: ['formats'],
-      },
-    )
-    .refine(
-      data => {
-        const formulas = (data.formulas || []) as PackFormulaMetadata[];
-        for (const format of data.formats || []) {
-          const formula = formulas.find(f => f.name === format.formulaName);
-          if (formula) {
-            if (!formula.parameters?.length) {
-              return false;
-            }
-            const [_, ...extraParams] = formula.parameters;
-            for (const extraParam of extraParams) {
-              if (!extraParam.optional) {
-                return false;
-              }
+    .superRefine((data, context) => {
+      const formulas = (data.formulas || []) as PackFormulaMetadata[];
+      ((data.formats as any[]) || []).forEach((format, i) => {
+        const formula = formulas.find(f => f.name === format.formulaName);
+        if (!formula) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['formats', i],
+            message:
+              'Could not find a formula definition for this format. Each format must reference the name of a formula defined in this pack.',
+          });
+        } else {
+          let hasError = !formula.parameters?.length;
+          const [_, ...extraParams] = formula.parameters || [];
+          for (const extraParam of extraParams) {
+            if (!extraParam.optional) {
+              hasError = true;
             }
           }
-          // Ignore the else case of formula not found, that will be validated already above.
+          if (hasError) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ['formats', i],
+              message: 'Formats can only be implemented using formulas that take exactly one required parameter.',
+            });
+          }
         }
-        return true;
-      },
-      {
-        // Annoying that the we can't be more precise and identify in the message which format had the issue;
-        // these error messages are static.
-        message: 'Formats can only be implemented using formulas that take exactly one required parameter.',
-        path: ['formats'],
-      },
-    );
+      });
+    });
 }
 
 // We temporarily allow our legacy packs to provide non-versioned data until we sufficiently migrate them.
@@ -761,25 +757,22 @@ const legacyPackMetadataSchema = validateFormulas(
     isSystem: z.boolean().optional(),
   }),
 )
-  .refine(
-    data => {
-      for (const syncTable of data.syncTables) {
-        if (!syncTable.schema?.identity) {
-          continue;
-        }
-
-        const identityName = syncTable.schema.identity.name;
-        if (syncTable.schema.properties[identityName]) {
-          return false;
-        }
+  .superRefine((data, context) => {
+    ((data.syncTables as any[]) || []).forEach((syncTable, i) => {
+      if (!syncTable.schema?.identity) {
+        return;
       }
 
-      return true;
-    },
-    {
-      message: "Cannot have a sync table property with the same name as the sync table's schema identity.",
-    },
-  )
+      const identityName = syncTable.schema.identity.name;
+      if (syncTable.schema.properties[identityName]) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['syncTables', i, 'schema', 'properties', identityName],
+          message: "Cannot have a sync table property with the same name as the sync table's schema identity.",
+        });
+      }
+    });
+  })
   .refine(
     data => {
       const usesAuthentication =
