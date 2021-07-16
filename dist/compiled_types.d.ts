@@ -38,6 +38,7 @@ export declare type PackVersionMetadata = Omit<PackVersionDefinition, 'formulas'
     formats: PackFormatMetadata[];
     syncTables: PackSyncTable[];
     defaultAuthentication?: AuthenticationMetadata;
+    sdkVersion?: string;
 };
 /** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
 export declare type PackMetadata = PackVersionMetadata & Pick<PackDefinition, 'id' | 'name' | 'shortDescription' | 'description' | 'permissionsDescription' | 'category' | 'logoPath' | 'exampleImages' | 'exampleVideoIds' | 'minimumFeatureSet' | 'quotas' | 'rateLimits' | 'enabledConfigName' | 'isSystem'>;

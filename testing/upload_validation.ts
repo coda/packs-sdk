@@ -637,6 +637,7 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata
   formulaNamespace: z.string().optional().refine(validateNamespace, {
     message: 'Formula namespaces can only contain alphanumeric characters and underscores.',
   }),
+  sdkVersion: z.string().nonempty().optional(),
   systemConnectionAuthentication: z.union(zodUnionInput(systemAuthenticationValidators)).optional(),
   formulas: z.array(formulaMetadataSchema).optional().default([]),
   formats: z.array(formatMetadataSchema).optional().default([]),

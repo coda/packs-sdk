@@ -54,6 +54,7 @@ export type PackVersionMetadata = Omit<
   formats: PackFormatMetadata[];
   syncTables: PackSyncTable[];
   defaultAuthentication?: AuthenticationMetadata;
+  sdkVersion?: string;
 };
 
 /** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
