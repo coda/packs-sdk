@@ -17,7 +17,6 @@ _This is the documentation for the SDK to build Packs either via our Online Pack
   - [Normalization](#normalization)
   - [Type Hints](#type-hints)
   - [Key Mapping and Extraneous Properties](#key-mapping-and-extraneous-properties)
-  - [Formula Namespaces](#formula-namespaces)
   - [Metadata Formulas](#metadata-formulas)
   - [Execution Environment](#execution-environment)
   - [Logging](#logging)
@@ -60,12 +59,12 @@ behalf when the Pack is used in a doc. This is different from our API, where we 
 
 Here's how Packs work:
 
-Create a Pack
+**Create a Pack**
 
 1. **Pack Makers create and build the Pack** via the Online Pack Editor or CLI tools.
 2. **Build sent to Coda's Backend**, either via a command or automatically
 
-Use the Pack in a Doc
+**Use the Pack in a Doc**
 
 3. **Doc Makers/Editors install the Pack in their doc**
 4. **They invoke formulas from the doc**: When any formulaic element (e.g. formula, sync table, column format, button) is invoked, the request is sent to the Coda backend
@@ -73,7 +72,8 @@ Use the Pack in a Doc
 6. **If applicable, external API called** by the Execution Environment. All API calls will originate from our servers to protect authentication credentials, which we store on our servers and never send to clients.
 7. **Return data to doc**: the results (or errors) from the execution are sent back to the doc.
 
-TODO: add diagram
+![packs execution](https://user-images.githubusercontent.com/79715674/125986426-7dc52e30-4bc6-4e18-98a9-ba5a293b6f6a.png)
+
 
 ### Fetching Remote Data
 
