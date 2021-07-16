@@ -43,7 +43,7 @@ describe('Execution', () => {
 
   it('executes a sync formula by name', async () => {
     const result = await executeSyncFormulaFromPackDef(fakePack, 'Students', ['Smith']);
-    assert.deepEqual(result, {result: [{Name: 'Alice'}, {Name: 'Bob'}], continuation: {page: 2}});
+    assert.deepEqual(result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
   });
 
   it('executes a formula by name with VM', async () => {

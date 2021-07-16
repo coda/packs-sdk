@@ -192,6 +192,18 @@ export async function executeFormulaOrSyncWithRawParams({
   return helper.executeFormulaOrSyncWithRawParams(manifest, formulaName, rawParams, executionContext);
 }
 
+/**
+ * Executes multiple iterations of a sync formula in a loop until there is no longer
+ * a `continuation` returned, aggregating each page of results and returning an array
+ * with results of all iterations combined and flattened.
+ *
+ * NOTE: This currently runs all the iterations in a simple loop, which does not
+ * adequately simulate the fact that in a real execution environment each iteration
+ * will be run in a completely isolated environment, with absolutely no sharing
+ * of state or global variables between iterations.
+ *
+ * For now, use `coda execute --vm` to simulate that level of isolation.
+ */
 export async function executeSyncFormulaFromPackDef(
   packDef: PackVersionDefinition,
   syncFormulaName: string,
@@ -199,7 +211,52 @@ export async function executeSyncFormulaFromPackDef(
   context?: SyncExecutionContext,
   options?: ExecuteOptions,
   {useRealFetcher, manifestPath}: ContextOptions = {},
-) {
+): Promise<any[]> {
+  let executionContext = context;
+  if (!executionContext) {
+    if (useRealFetcher) {
+      const credentials = getCredentials(manifestPath);
+      executionContext = newFetcherSyncExecutionContext(
+        buildUpdateCredentialsCallback(manifestPath),
+        getPackAuth(packDef),
+        packDef.networkDomains,
+        credentials,
+      );
+    } else {
+      executionContext = newMockSyncExecutionContext();
+    }
+  }
+  const formula = helper.findSyncFormula(packDef, syncFormulaName);
+
+  const result = [];
+  let iterations = 1;
+  do {
+    if (iterations > MaxSyncIterations) {
+      throw new Error(
+        `Sync is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`,
+      );
+    }
+    const response = await helper.executeSyncFormula(formula, params, executionContext, options);
+    result.push(...response.result);
+    executionContext.sync.continuation = response.continuation;
+    iterations++;
+  } while (executionContext.sync.continuation);
+
+  return result;
+}
+
+/**
+ * Executes a single sync iteration, and returns the return value from the sync formula
+ * including the continuation, for inspection.
+ */
+export async function executeSyncFormulaFromPackDefSingleIteration(
+  packDef: PackVersionDefinition,
+  syncFormulaName: string,
+  params: ParamValues<ParamDefs>,
+  context?: SyncExecutionContext,
+  options?: ExecuteOptions,
+  {useRealFetcher, manifestPath}: ContextOptions = {},
+): Promise<SyncFormulaResult<any>> {
   let executionContext = context;
   if (!executionContext && useRealFetcher) {
     const credentials = getCredentials(manifestPath);

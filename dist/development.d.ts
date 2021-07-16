@@ -3,6 +3,7 @@ export type { ExecuteOptions } from './testing/execution';
 export { executeFormulaFromPackDef } from './testing/execution';
 export { executeMetadataFormula } from './testing/execution';
 export { executeSyncFormulaFromPackDef } from './testing/execution';
+export { executeSyncFormulaFromPackDefSingleIteration } from './testing/execution';
 export { executeFormulaOrSyncWithVM } from './testing/execution';
 export type { MockExecutionContext } from './testing/mocks';
 export type { MockSyncExecutionContext } from './testing/mocks';

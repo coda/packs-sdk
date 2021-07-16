@@ -22,7 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.executeFormulaOrSyncWithRawParamsInVM = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = void 0;
+exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.executeFormulaOrSyncWithRawParamsInVM = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = void 0;
 const compile_1 = require("./compile");
 const helpers_1 = require("../cli/helpers");
 const helper = __importStar(require("./execution_helper"));
@@ -119,7 +119,49 @@ async function executeFormulaOrSyncWithRawParams({ formulaName, params: rawParam
     return helper.executeFormulaOrSyncWithRawParams(manifest, formulaName, rawParams, executionContext);
 }
 exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
+/**
+ * Executes multiple iterations of a sync formula in a loop until there is no longer
+ * a `continuation` returned, aggregating each page of results and returning an array
+ * with results of all iterations combined and flattened.
+ *
+ * NOTE: This currently runs all the iterations in a simple loop, which does not
+ * adequately simulate the fact that in a real execution environment each iteration
+ * will be run in a completely isolated environment, with absolutely no sharing
+ * of state or global variables between iterations.
+ *
+ * For now, use `coda execute --vm` to simulate that level of isolation.
+ */
 async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, context, options, { useRealFetcher, manifestPath } = {}) {
+    let executionContext = context;
+    if (!executionContext) {
+        if (useRealFetcher) {
+            const credentials = getCredentials(manifestPath);
+            executionContext = fetcher_2.newFetcherSyncExecutionContext(buildUpdateCredentialsCallback(manifestPath), helpers_1.getPackAuth(packDef), packDef.networkDomains, credentials);
+        }
+        else {
+            executionContext = mocks_2.newMockSyncExecutionContext();
+        }
+    }
+    const formula = helper.findSyncFormula(packDef, syncFormulaName);
+    const result = [];
+    let iterations = 1;
+    do {
+        if (iterations > MaxSyncIterations) {
+            throw new Error(`Sync is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`);
+        }
+        const response = await helper.executeSyncFormula(formula, params, executionContext, options);
+        result.push(...response.result);
+        executionContext.sync.continuation = response.continuation;
+        iterations++;
+    } while (executionContext.sync.continuation);
+    return result;
+}
+exports.executeSyncFormulaFromPackDef = executeSyncFormulaFromPackDef;
+/**
+ * Executes a single sync iteration, and returns the return value from the sync formula
+ * including the continuation, for inspection.
+ */
+async function executeSyncFormulaFromPackDefSingleIteration(packDef, syncFormulaName, params, context, options, { useRealFetcher, manifestPath } = {}) {
     let executionContext = context;
     if (!executionContext && useRealFetcher) {
         const credentials = getCredentials(manifestPath);
@@ -128,7 +170,7 @@ async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, c
     const formula = helper.findSyncFormula(packDef, syncFormulaName);
     return helper.executeSyncFormula(formula, params, executionContext || mocks_2.newMockSyncExecutionContext(), options);
 }
-exports.executeSyncFormulaFromPackDef = executeSyncFormulaFromPackDef;
+exports.executeSyncFormulaFromPackDefSingleIteration = executeSyncFormulaFromPackDefSingleIteration;
 async function executeMetadataFormula(formula, metadataParams = {}, context = mocks_1.newMockExecutionContext()) {
     const { search, formulaContext } = metadataParams;
     return formula.execute([search || '', formulaContext ? JSON.stringify(formulaContext) : ''], context);
