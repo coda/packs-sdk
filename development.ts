@@ -7,6 +7,7 @@ export type {ExecuteOptions} from './testing/execution';
 export {executeFormulaFromPackDef} from './testing/execution';
 export {executeMetadataFormula} from './testing/execution';
 export {executeSyncFormulaFromPackDef} from './testing/execution';
+export {executeSyncFormulaFromPackDefSingleIteration} from './testing/execution';
 
 // TODO(huayang): this needs to be documented in README once it's ready to be used efficiently.
 export {executeFormulaOrSyncWithVM} from './testing/execution';
