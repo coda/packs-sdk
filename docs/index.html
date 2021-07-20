@@ -82,7 +82,6 @@
 							<li><a href="#normalization">Normalization</a></li>
 							<li><a href="#type-hints">Type Hints</a></li>
 							<li><a href="#key-mapping-and-extraneous-properties">Key Mapping and Extraneous Properties</a></li>
-							<li><a href="#formula-namespaces">Formula Namespaces</a></li>
 							<li><a href="#metadata-formulas">Metadata Formulas</a></li>
 							<li><a href="#execution-environment">Execution Environment</a></li>
 							<li><a href="#logging">Logging</a></li>
@@ -122,12 +121,12 @@
 				<p>When you build a Pack, you&#39;re ultimately outputting a bundle of compiled code that Coda then runs on your
 				behalf when the Pack is used in a doc. This is different from our API, where we allow you to retrieve/edit data from docs but developers are responsible for running their code.</p>
 				<p>Here&#39;s how Packs work:</p>
-				<p>Create a Pack</p>
+				<p><strong>Create a Pack</strong></p>
 				<ol>
 					<li><strong>Pack Makers create and build the Pack</strong> via the Online Pack Editor or CLI tools.</li>
 					<li><strong>Build sent to Coda&#39;s Backend</strong>, either via a command or automatically</li>
 				</ol>
-				<p>Use the Pack in a Doc</p>
+				<p><strong>Use the Pack in a Doc</strong></p>
 				<ol start="3">
 					<li><strong>Doc Makers/Editors install the Pack in their doc</strong></li>
 					<li><strong>They invoke formulas from the doc</strong>: When any formulaic element (e.g. formula, sync table, column format, button) is invoked, the request is sent to the Coda backend</li>
@@ -135,7 +134,7 @@
 					<li><strong>If applicable, external API called</strong> by the Execution Environment. All API calls will originate from our servers to protect authentication credentials, which we store on our servers and never send to clients.</li>
 					<li><strong>Return data to doc</strong>: the results (or errors) from the execution are sent back to the doc.</li>
 				</ol>
-				<p>TODO: add diagram</p>
+				<p><img src="https://user-images.githubusercontent.com/79715674/125986426-7dc52e30-4bc6-4e18-98a9-ba5a293b6f6a.png" alt="packs execution"></p>
 				<a href="#fetching-remote-data" id="fetching-remote-data" style="color: inherit; text-decoration: none;">
 					<h3>Fetching Remote Data</h3>
 				</a>
