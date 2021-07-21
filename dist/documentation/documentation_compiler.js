@@ -23,16 +23,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const documentation_config_1 = require("./documentation_config");
+const documentation_config_2 = require("./documentation_config");
 const fs = __importStar(require("fs"));
 const path_1 = __importDefault(require("path"));
 const codeBegin = '// BEGIN\n';
 const BaseDir = path_1.default.join(__dirname, '..');
 const DocumentationRoot = path_1.default.join(BaseDir, 'documentation');
 function main() {
-    const compiledSnippets = documentation_config_1.Snippets.map(snippet => {
-        const data = fs.readFileSync(path_1.default.join(DocumentationRoot, snippet.codeFile), 'utf8');
-        const codeStart = data.indexOf(codeBegin) + codeBegin.length;
-        const code = data.substring(codeStart).trim();
+    compileSnippets();
+    compileExamples();
+}
+function compileSnippets() {
+    const compiledSnippets = documentation_config_2.Snippets.map(snippet => {
+        const code = getCodeFile(snippet.codeFile);
         return {
             name: snippet.name,
             triggerWords: snippet.triggerWords,
@@ -41,5 +44,31 @@ function main() {
         };
     });
     fs.writeFileSync(path_1.default.join(DocumentationRoot, 'generated/snippets.json'), JSON.stringify(compiledSnippets, null, 2));
+}
+function compileExamples() {
+    const compiledExamples = documentation_config_1.Examples.map(example => {
+        const content = getContentFile(example.contentFile);
+        const code = compileCodeFiles(example);
+        return {
+            content,
+            code,
+            categories: example.categories,
+        };
+    });
+    fs.writeFileSync(path_1.default.join(DocumentationRoot, 'generated/examples.json'), JSON.stringify(compiledExamples, null, 2));
+}
+function getContentFile(file) {
+    return fs.readFileSync(path_1.default.join(DocumentationRoot, file), 'utf8').trim();
+}
+function compileCodeFiles(example) {
+    const code = example.codeFiles.map(codeFile => {
+        return getCodeFile(codeFile);
+    });
+    return code;
+}
+function getCodeFile(file) {
+    const data = fs.readFileSync(path_1.default.join(DocumentationRoot, file), 'utf8');
+    const codeStart = data.indexOf(codeBegin) + codeBegin.length;
+    return data.substring(codeStart).trim();
 }
 main();

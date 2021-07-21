@@ -11,3 +11,19 @@ export interface CompiledSnippet {
   content: string;
   code: string;
 }
+
+export enum Category {
+  ColumnFormat = 'ColumnFormat',
+}
+
+export interface Example {
+  contentFile: string;
+  codeFiles: string[];
+  categories: Category[];
+}
+
+export interface CompiledExample {
+  content: string;
+  code: string[];
+  categories: Category[];
+}

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Snippets = void 0;
+exports.Examples = exports.Snippets = void 0;
+const types_1 = require("./types");
 exports.Snippets = [
     {
         name: 'String Formula',
@@ -139,5 +140,12 @@ exports.Snippets = [
         triggerWords: ['DynamicSyncTable', 'addDynamicSyncTable', 'newDynamicSyncTable'],
         content: 'Adds a dynamic sync table.',
         codeFile: './snippets/dynamic_sync_table.ts',
+    },
+];
+exports.Examples = [
+    {
+        contentFile: './examples/column-format/column_format.md',
+        codeFiles: ['./examples/column-format/no_matchers.ts'],
+        categories: [types_1.Category.ColumnFormat],
     },
 ];

@@ -56,16 +56,16 @@ compile:
   	-o ${ROOTDIR}/dist/bundle.d.ts \
 		--no-banner
 
-.PHONY: snippets
-snippets:
-	node -r ts-node/register documentation/snippet_compiler.ts
+.PHONY: generated-documentation
+generated-documentation:
+	node -r ts-node/register documentation/documentation_compiler.ts
 
 .PHONY: typedoc
 typedoc:
 	${ROOTDIR}/node_modules/.bin/typedoc index.ts --out ${ROOTDIR}/docs --excludeExternals --excludePrivate --excludeProtected --gitRevision main
 
 .PHONY: docs
-docs: snippets typedoc
+docs: generated-documentation typedoc
 
 .PHONY: view-docs
 view-docs: typedoc

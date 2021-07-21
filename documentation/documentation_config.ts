@@ -1,3 +1,5 @@
+import {Category} from './types';
+import type {Example} from './types';
 import type {Snippet} from './types';
 
 export const Snippets: Snippet[] = [
@@ -138,5 +140,13 @@ export const Snippets: Snippet[] = [
     triggerWords: ['DynamicSyncTable', 'addDynamicSyncTable', 'newDynamicSyncTable'],
     content: 'Adds a dynamic sync table.',
     codeFile: './snippets/dynamic_sync_table.ts',
+  },
+];
+
+export const Examples: Example[] = [
+  {
+    contentFile: './examples/column-format/column_format.md',
+    codeFiles: ['./examples/column-format/no_matchers.ts'],
+    categories: [Category.ColumnFormat],
   },
 ];
