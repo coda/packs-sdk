@@ -8,6 +8,7 @@ import type {Format} from './types';
 import type {Formula} from './api';
 import type {FormulaDefinitionV2} from './api';
 import type {ObjectSchema} from './schema';
+import type {PackVersionDefinition} from './types';
 import type {ParamDefs} from './api_types';
 import type {SyncTable} from './api';
 import type {SyncTableOptions} from './api';
@@ -29,7 +30,7 @@ import {wrapMetadataFunction} from './api';
  * pack.addSyncTable('MyTable', ...);
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
  */
-export function newPack(definition?: Partial<BasicPackDefinition>): PackDefinitionBuilder {
+export function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder {
   return new PackDefinitionBuilder(definition);
 }
 
@@ -42,11 +43,12 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
   defaultAuthentication?: Authentication;
   systemConnectionAuthentication?: SystemAuthentication;
 
+  version?: string;
   formulaNamespace?: string;
 
   private _defaultConnectionRequirement: ConnectionRequirement | undefined;
 
-  constructor(definition?: Partial<BasicPackDefinition>) {
+  constructor(definition?: Partial<PackVersionDefinition>) {
     const {
       formulas,
       formats,
@@ -54,6 +56,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       networkDomains,
       defaultAuthentication,
       systemConnectionAuthentication,
+      version,
       formulaNamespace,
     } = definition || {};
     this.formulas = Array.isArray(formulas) ? formulas : [];
@@ -62,6 +65,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     this.networkDomains = networkDomains || [];
     this.defaultAuthentication = defaultAuthentication;
     this.systemConnectionAuthentication = systemConnectionAuthentication;
+    this.version = version;
     this.formulaNamespace = formulaNamespace || 'Deprecated';
   }
 
@@ -274,6 +278,22 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   addNetworkDomain(...domain: string[]): this {
     this.networkDomains.push(...domain);
+    return this;
+  }
+
+  /**
+   * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
+   *
+   * This is optional, and you only need to provide a version if you are manually doing
+   * semantic versioning, or using the CLI. If using the web editor, you can omit this
+   * and the web editor will automatically provide an appropriate semantic version
+   * each time you build a version.
+   *
+   * @example
+   * pack.setVersion('1.2.3');
+   */
+  setVersion(version: string): this {
+    this.version = version;
     return this;
   }
 

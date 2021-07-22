@@ -7,6 +7,7 @@ import type { Format } from './types';
 import type { Formula } from './api';
 import type { FormulaDefinitionV2 } from './api';
 import type { ObjectSchema } from './schema';
+import type { PackVersionDefinition } from './types';
 import type { ParamDefs } from './api_types';
 import type { SyncTable } from './api';
 import type { SyncTableOptions } from './api';
@@ -21,7 +22,7 @@ import type { SystemAuthenticationDef } from './types';
  * pack.addSyncTable('MyTable', ...);
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
  */
-export declare function newPack(definition?: Partial<BasicPackDefinition>): PackDefinitionBuilder;
+export declare function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder;
 export declare class PackDefinitionBuilder implements BasicPackDefinition {
     formulas: Formula[];
     formats: Format[];
@@ -29,9 +30,10 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
     networkDomains: string[];
     defaultAuthentication?: Authentication;
     systemConnectionAuthentication?: SystemAuthentication;
+    version?: string;
     formulaNamespace?: string;
     private _defaultConnectionRequirement;
-    constructor(definition?: Partial<BasicPackDefinition>);
+    constructor(definition?: Partial<PackVersionDefinition>);
     /**
      * Adds a formula definition to this pack.
      *
@@ -166,5 +168,17 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * pack.addNetworkDomain('example.com');
      */
     addNetworkDomain(...domain: string[]): this;
+    /**
+     * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
+     *
+     * This is optional, and you only need to provide a version if you are manually doing
+     * semantic versioning, or using the CLI. If using the web editor, you can omit this
+     * and the web editor will automatically provide an appropriate semantic version
+     * each time you build a version.
+     *
+     * @example
+     * pack.setVersion('1.2.3');
+     */
+    setVersion(version: string): this;
     private _setDefaultConnectionRequirement;
 }
