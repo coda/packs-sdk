@@ -30,6 +30,7 @@ const helpers_3 = require("./helpers");
 const errors_2 = require("./errors");
 const path = __importStar(require("path"));
 const helpers_4 = require("../testing/helpers");
+const errors_3 = require("./errors");
 async function handleRelease({ manifestFile, packVersion: explicitPackVersion, codaApiEndpoint, notes, }) {
     const manifestDir = path.dirname(manifestFile);
     const apiKey = config_storage_1.getApiKey(codaApiEndpoint);
@@ -66,6 +67,7 @@ async function handleResponse(p) {
         return p;
     }
     catch (err) {
-        return helpers_4.printAndExit(`Unexpected error while creating release: ${errors_1.formatError(err)}`);
+        const errors = [`Unexpected error while creating release: ${errors_1.formatError(err)}`, errors_3.tryParseSystemError(err)];
+        return helpers_4.printAndExit(errors.join('\n'));
     }
 }

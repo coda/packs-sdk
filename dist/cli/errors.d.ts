@@ -4,4 +4,5 @@ export interface CodaError {
     message: string;
 }
 export declare function isCodaError(value: any): value is CodaError;
+export declare function tryParseSystemError(error: any): "" | "Run `export NODE_TLS_REJECT_UNAUTHORIZED=1` and rerun your command.";
 export declare function formatError(obj: any): string;

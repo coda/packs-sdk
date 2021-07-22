@@ -6,7 +6,7 @@ import {compilePackMetadata} from '../helpers/metadata';
 import {computeSha256} from '../helpers/crypto';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
-import {formatError} from './errors';
+import {formatError, tryParseSystemError} from './errors';
 import {getApiKey} from './config_storage';
 import {getPackId} from './config_storage';
 import {importManifest} from './helpers';
@@ -92,6 +92,7 @@ export async function handleUpload({manifestFile, codaApiEndpoint, notes}: Argum
     if (isCodaError(registerResponse)) {
       return printAndExit(`Error while registering pack version: ${formatError(registerResponse)}`);
     }
+
     const {uploadUrl, headers} = registerResponse;
 
     logger.info('Uploading Pack...');
@@ -103,7 +104,8 @@ export async function handleUpload({manifestFile, codaApiEndpoint, notes}: Argum
       printAndExit(`Error while finalizing pack version: ${formatError(uploadCompleteResponse)}`);
     }
   } catch (err) {
-    printAndExit(`Unepected error during pack upload: ${formatError(err)}`);
+    const errors = [`Unexpected error during Pack upload: ${formatError(err)}`, tryParseSystemError(err)];
+    printAndExit(errors.join(`\n`));
   }
 
   logger.info('Done!');

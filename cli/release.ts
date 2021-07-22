@@ -9,6 +9,7 @@ import {importManifest} from './helpers';
 import {isCodaError} from './errors';
 import * as path from 'path';
 import {printAndExit} from '../testing/helpers';
+import {tryParseSystemError} from './errors';
 
 interface ReleaseArgs {
   manifestFile: string;
@@ -63,6 +64,7 @@ async function handleResponse<T extends any>(p: Promise<T>): Promise<T> {
     }
     return p;
   } catch (err) {
-    return printAndExit(`Unexpected error while creating release: ${formatError(err)}`);
+    const errors = [`Unexpected error while creating release: ${formatError(err)}`, tryParseSystemError(err)];
+    return printAndExit(errors.join('\n'));
   }
 }
