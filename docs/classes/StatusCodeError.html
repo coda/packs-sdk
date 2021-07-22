@@ -63,6 +63,13 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>StatusCodeError is a simple version of StatusCodeError in request-promise to keep backwards compatibility.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -89,6 +96,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="StatusCodeError.html#body" class="tsd-kind-icon">body</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="StatusCodeError.html#options" class="tsd-kind-icon">options</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="StatusCodeError.html#response" class="tsd-kind-icon">response</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="StatusCodeError.html#statusCode" class="tsd-kind-icon">status<wbr>Code</a></li>
 							</ul>
 						</section>
@@ -101,20 +111,29 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Status<wbr>Code<wbr>Error<span class="tsd-signature-symbol">(</span>statusCode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="StatusCodeError.html" class="tsd-signature-type" data-tsd-kind="Class">StatusCodeError</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Status<wbr>Code<wbr>Error<span class="tsd-signature-symbol">(</span>statusCode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, body<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/FetchRequest.html" class="tsd-signature-type" data-tsd-kind="Interface">FetchRequest</a>, response<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">StatusCodeErrorResponse</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="StatusCodeError.html" class="tsd-signature-type" data-tsd-kind="Class">StatusCodeError</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides Error.constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L66">api.ts:66</a></li>
+									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L78">api.ts:78</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>statusCode: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>body: <span class="tsd-signature-type">any</span></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/FetchRequest.html" class="tsd-signature-type" data-tsd-kind="Interface">FetchRequest</a></h5>
+								</li>
+								<li>
+									<h5>response: <span class="tsd-signature-type">StatusCodeErrorResponse</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="StatusCodeError.html" class="tsd-signature-type" data-tsd-kind="Class">StatusCodeError</a></h4>
@@ -125,12 +144,42 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="body" class="tsd-anchor"></a>
+					<h3>body</h3>
+					<div class="tsd-signature tsd-kind-icon">body<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L75">api.ts:75</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="options" class="tsd-anchor"></a>
+					<h3>options</h3>
+					<div class="tsd-signature tsd-kind-icon">options<span class="tsd-signature-symbol">:</span> <a href="../interfaces/FetchRequest.html" class="tsd-signature-type" data-tsd-kind="Interface">FetchRequest</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L76">api.ts:76</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="response" class="tsd-anchor"></a>
+					<h3>response</h3>
+					<div class="tsd-signature tsd-kind-icon">response<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">StatusCodeErrorResponse</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L77">api.ts:77</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="statusCode" class="tsd-anchor"></a>
 					<h3>status<wbr>Code</h3>
 					<div class="tsd-signature tsd-kind-icon">status<wbr>Code<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L65">api.ts:65</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L74">api.ts:74</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -153,6 +202,15 @@
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 								<a href="StatusCodeError.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="StatusCodeError.html#body" class="tsd-kind-icon">body</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="StatusCodeError.html#options" class="tsd-kind-icon">options</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="StatusCodeError.html#response" class="tsd-kind-icon">response</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="StatusCodeError.html#statusCode" class="tsd-kind-icon">status<wbr>Code</a>

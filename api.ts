@@ -4,6 +4,7 @@ import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
 import {ConnectionRequirement} from './api_types';
 import type {ExecutionContext} from './api_types';
+import type {FetchRequest} from './api_types';
 import type {NumberHintTypes} from './schema';
 import type {NumberSchema} from './schema';
 import type {ObjectSchema} from './schema';
@@ -61,11 +62,25 @@ export class UserVisibleError extends Error {
   }
 }
 
+interface StatusCodeErrorResponse {
+  body?: any;
+  headers?: {[key: string]: string | string[] | undefined};
+}
+
+/**
+ * StatusCodeError is a simple version of StatusCodeError in request-promise to keep backwards compatibility.
+ */
 export class StatusCodeError extends Error {
   statusCode: number;
-  constructor(statusCode: number) {
-    super(`statusCode: ${statusCode}`);
+  body: any;
+  options: FetchRequest;
+  response: StatusCodeErrorResponse;
+  constructor(statusCode: number, body: any, options: FetchRequest, response: StatusCodeErrorResponse) {
+    super(`${statusCode} - ${body}`);
     this.statusCode = statusCode;
+    this.body = body;
+    this.options = options;
+    this.response = response;
   }
 }
 

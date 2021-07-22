@@ -510,9 +510,21 @@ export declare class UserVisibleError extends Error {
 	readonly internalError: Error | undefined;
 	constructor(message?: string, internalError?: Error);
 }
+export interface StatusCodeErrorResponse {
+	body?: any;
+	headers?: {
+		[key: string]: string | string[] | undefined;
+	};
+}
+/**
+ * StatusCodeError is a simple version of StatusCodeError in request-promise to keep backwards compatibility.
+ */
 export declare class StatusCodeError extends Error {
 	statusCode: number;
-	constructor(statusCode: number);
+	body: any;
+	options: FetchRequest;
+	response: StatusCodeErrorResponse;
+	constructor(statusCode: number, body: any, options: FetchRequest, response: StatusCodeErrorResponse);
 }
 /**
  * Type definition for a Sync Table. Should not be necessary to use directly,
