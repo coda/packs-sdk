@@ -1178,7 +1178,7 @@ export interface PackDefinition extends PackVersionDefinition {
  * pack.addSyncTable('MyTable', ...);
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
  */
-export declare function newPack(definition?: Partial<BasicPackDefinition>): PackDefinitionBuilder;
+export declare function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder;
 export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	formulas: Formula[];
 	formats: Format[];
@@ -1186,9 +1186,10 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	networkDomains: string[];
 	defaultAuthentication?: Authentication;
 	systemConnectionAuthentication?: SystemAuthentication;
+	version?: string;
 	formulaNamespace?: string;
 	private _defaultConnectionRequirement;
-	constructor(definition?: Partial<BasicPackDefinition>);
+	constructor(definition?: Partial<PackVersionDefinition>);
 	/**
 	 * Adds a formula definition to this pack.
 	 *
@@ -1323,6 +1324,18 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * pack.addNetworkDomain('example.com');
 	 */
 	addNetworkDomain(...domain: string[]): this;
+	/**
+	 * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
+	 *
+	 * This is optional, and you only need to provide a version if you are manually doing
+	 * semantic versioning, or using the CLI. If using the web editor, you can omit this
+	 * and the web editor will automatically provide an appropriate semantic version
+	 * each time you build a version.
+	 *
+	 * @example
+	 * pack.setVersion('1.2.3');
+	 */
+	setVersion(version: string): this;
 	private _setDefaultConnectionRequirement;
 }
 export declare type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "getDisplayUrl"> & {

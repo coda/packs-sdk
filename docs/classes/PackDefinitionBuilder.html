@@ -97,6 +97,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="PackDefinitionBuilder.html#networkDomains" class="tsd-kind-icon">network<wbr>Domains</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="PackDefinitionBuilder.html#syncTables" class="tsd-kind-icon">sync<wbr>Tables</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="PackDefinitionBuilder.html#systemConnectionAuthentication" class="tsd-kind-icon">system<wbr>Connection<wbr>Authentication</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="PackDefinitionBuilder.html#version" class="tsd-kind-icon">version</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -109,6 +110,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="PackDefinitionBuilder.html#addSyncTable" class="tsd-kind-icon">add<wbr>Sync<wbr>Table</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="PackDefinitionBuilder.html#setSystemAuthentication" class="tsd-kind-icon">set<wbr>System<wbr>Authentication</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="PackDefinitionBuilder.html#setUserAuthentication" class="tsd-kind-icon">set<wbr>User<wbr>Authentication</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="PackDefinitionBuilder.html#setVersion" class="tsd-kind-icon">set<wbr>Version</a></li>
 							</ul>
 						</section>
 					</div>
@@ -120,19 +122,19 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Pack<wbr>Definition<wbr>Builder<span class="tsd-signature-symbol">(</span>definition<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules.html#BasicPackDefinition" class="tsd-signature-type" data-tsd-kind="Type alias">BasicPackDefinition</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="PackDefinitionBuilder.html" class="tsd-signature-type" data-tsd-kind="Class">PackDefinitionBuilder</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Pack<wbr>Definition<wbr>Builder<span class="tsd-signature-symbol">(</span>definition<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/PackVersionDefinition.html" class="tsd-signature-type" data-tsd-kind="Interface">PackVersionDefinition</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="PackDefinitionBuilder.html" class="tsd-signature-type" data-tsd-kind="Class">PackDefinitionBuilder</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L49">builder.ts:49</a></li>
+									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L51">builder.ts:51</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> definition: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules.html#BasicPackDefinition" class="tsd-signature-type" data-tsd-kind="Type alias">BasicPackDefinition</a><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> definition: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/PackVersionDefinition.html" class="tsd-signature-type" data-tsd-kind="Interface">PackVersionDefinition</a><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="PackDefinitionBuilder.html" class="tsd-signature-type" data-tsd-kind="Class">PackDefinitionBuilder</a></h4>
@@ -149,7 +151,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of BasicPackDefinition.defaultAuthentication</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L42">builder.ts:42</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L43">builder.ts:43</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -160,7 +162,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of BasicPackDefinition.formats</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L38">builder.ts:38</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L39">builder.ts:39</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -171,7 +173,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of BasicPackDefinition.formulaNamespace</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L45">builder.ts:45</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L47">builder.ts:47</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -182,7 +184,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of BasicPackDefinition.formulas</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L37">builder.ts:37</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L38">builder.ts:38</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -193,7 +195,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of BasicPackDefinition.networkDomains</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L40">builder.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L41">builder.ts:41</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -204,7 +206,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of BasicPackDefinition.syncTables</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L39">builder.ts:39</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L40">builder.ts:40</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -215,7 +217,17 @@
 					<aside class="tsd-sources">
 						<p>Implementation of BasicPackDefinition.systemConnectionAuthentication</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L43">builder.ts:43</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L44">builder.ts:44</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="version" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> version</h3>
+					<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L46">builder.ts:46</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -232,7 +244,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L176">builder.ts:176</a></li>
+									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L180">builder.ts:180</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -269,7 +281,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L156">builder.ts:156</a></li>
+									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L160">builder.ts:160</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -320,7 +332,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L90">builder.ts:90</a></li>
+									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L94">builder.ts:94</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -374,7 +386,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L275">builder.ts:275</a></li>
+									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L279">builder.ts:279</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -414,7 +426,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L116">builder.ts:116</a></li>
+									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L120">builder.ts:120</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -472,7 +484,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L242">builder.ts:242</a></li>
+									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L246">builder.ts:246</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -516,7 +528,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L200">builder.ts:200</a></li>
+									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L204">builder.ts:204</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -543,6 +555,43 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>authDef: <span class="tsd-signature-type">NoAuthentication</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>defaultConnectionRequirement<span class="tsd-signature-symbol">?: </span><a href="../enums/ConnectionRequirement.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ConnectionRequirement</a><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><a href="../interfaces/VariousAuthentication.html" class="tsd-signature-type" data-tsd-kind="Interface">VariousAuthentication</a><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>defaultConnectionRequirement<span class="tsd-signature-symbol">?: </span><a href="../enums/ConnectionRequirement.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ConnectionRequirement</a><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">HeaderBearerTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CodaApiBearerTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CustomHeaderTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">QueryParamTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">MultiQueryParamTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/OAuth2Authentication.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuth2Authentication</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/WebBasicAuthentication.html" class="tsd-signature-type" data-tsd-kind="Interface">WebBasicAuthentication</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AWSSignature4Authentication</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;getConnectionName&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;getConnectionUserId&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>getConnectionName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">MetadataFormulaDef</span><span class="tsd-signature-symbol">; </span>getConnectionUserId<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">MetadataFormulaDef</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-symbol">{ </span>defaultConnectionRequirement<span class="tsd-signature-symbol">?: </span><a href="../enums/ConnectionRequirement.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ConnectionRequirement</a><span class="tsd-signature-symbol"> }</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="PackDefinitionBuilder.html" class="tsd-signature-type" data-tsd-kind="Class">PackDefinitionBuilder</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setVersion" class="tsd-anchor"></a>
+					<h3>set<wbr>Version</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Version<span class="tsd-signature-symbol">(</span>version<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="PackDefinitionBuilder.html" class="tsd-signature-type" data-tsd-kind="Class">PackDefinitionBuilder</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L295">builder.ts:295</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sets the semantic version of this pack version, e.g. <code>&#39;1.2.3&#39;</code>.</p>
+								</div>
+								<p>This is optional, and you only need to provide a version if you are manually doing
+									semantic versioning, or using the CLI. If using the web editor, you can omit this
+									and the web editor will automatically provide an appropriate semantic version
+								each time you build a version.</p>
+								<dl class="tsd-comment-tags">
+									<dt>example</dt>
+									<dd><p>pack.setVersion(&#39;1.2.3&#39;);</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>version: <span class="tsd-signature-type">string</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="PackDefinitionBuilder.html" class="tsd-signature-type" data-tsd-kind="Class">PackDefinitionBuilder</a></h4>
@@ -590,6 +639,9 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="PackDefinitionBuilder.html#systemConnectionAuthentication" class="tsd-kind-icon">system<wbr>Connection<wbr>Authentication</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="PackDefinitionBuilder.html#version" class="tsd-kind-icon">version</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="PackDefinitionBuilder.html#addColumnFormat" class="tsd-kind-icon">add<wbr>Column<wbr>Format</a>
 							</li>
@@ -610,6 +662,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="PackDefinitionBuilder.html#setUserAuthentication" class="tsd-kind-icon">set<wbr>User<wbr>Authentication</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="PackDefinitionBuilder.html#setVersion" class="tsd-kind-icon">set<wbr>Version</a>
 							</li>
 						</ul>
 					</li>

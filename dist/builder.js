@@ -24,13 +24,14 @@ function newPack(definition) {
 exports.newPack = newPack;
 class PackDefinitionBuilder {
     constructor(definition) {
-        const { formulas, formats, syncTables, networkDomains, defaultAuthentication, systemConnectionAuthentication, formulaNamespace, } = definition || {};
+        const { formulas, formats, syncTables, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, } = definition || {};
         this.formulas = Array.isArray(formulas) ? formulas : [];
         this.formats = formats || [];
         this.syncTables = syncTables || [];
         this.networkDomains = networkDomains || [];
         this.defaultAuthentication = defaultAuthentication;
         this.systemConnectionAuthentication = systemConnectionAuthentication;
+        this.version = version;
         this.formulaNamespace = formulaNamespace || 'Deprecated';
     }
     /**
@@ -216,6 +217,21 @@ class PackDefinitionBuilder {
      */
     addNetworkDomain(...domain) {
         this.networkDomains.push(...domain);
+        return this;
+    }
+    /**
+     * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
+     *
+     * This is optional, and you only need to provide a version if you are manually doing
+     * semantic versioning, or using the CLI. If using the web editor, you can omit this
+     * and the web editor will automatically provide an appropriate semantic version
+     * each time you build a version.
+     *
+     * @example
+     * pack.setVersion('1.2.3');
+     */
+    setVersion(version) {
+        this.version = version;
         return this;
     }
     _setDefaultConnectionRequirement(connectionRequirement) {
