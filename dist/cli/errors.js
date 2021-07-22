@@ -3,12 +3,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatError = exports.isCodaError = void 0;
+exports.formatError = exports.tryParseSystemError = exports.isCodaError = void 0;
 const util_1 = __importDefault(require("util"));
 function isCodaError(value) {
     return value && 'statusCode' in value && typeof value.statusCode === 'number' && value.statusCode >= 400;
 }
 exports.isCodaError = isCodaError;
+function tryParseSystemError(error) {
+    if (error.errno === 'UNABLE_TO_VERIFY_LEAF_SIGNATURE') {
+        return 'Run `export NODE_TLS_REJECT_UNAUTHORIZED=1` and rerun your command.';
+    }
+    return '';
+}
+exports.tryParseSystemError = tryParseSystemError;
 function formatError(obj) {
     return util_1.default.inspect(obj, false, null, true);
 }

@@ -9,6 +9,7 @@ import {isCodaError} from './errors';
 import * as path from 'path';
 import {printAndExit} from '../testing/helpers';
 import {storePackId} from './config_storage';
+import {tryParseSystemError} from './errors';
 
 interface CreateArgs {
   manifestFile: string;
@@ -53,7 +54,8 @@ export async function createPack(
     const packId = response.packId;
     storePackId(manifestDir, packId, codaApiEndpoint);
     return printAndExit(`Pack created successfully! You can manage pack settings at ${codaApiEndpoint}/p/${packId}`, 0);
-  } catch (err) {
-    return printAndExit(`Unable to create your pack, received error: ${formatError(err)}`);
+} catch (err) {
+    const errors = [`Unable to create your pack, received error: ${formatError(err)}`, tryParseSystemError(err)];
+    return printAndExit(errors.join('\n'));
   }
 }
