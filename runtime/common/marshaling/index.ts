@@ -1,19 +1,18 @@
-import {finishMarshaling} from './config';
 import {marshalBuffer} from './marshal_buffer';
 import {marshalDate} from './marshal_dates';
 import {marshalError} from './marshal_errors';
 import {marshalNumber} from './marshal_numbers';
-import {startMarshaling} from './config';
 import {unmarshalBuffer} from './marshal_buffer';
 import {unmarshalDate} from './marshal_dates';
 import {unmarshalError} from './marshal_errors';
 import {unmarshalNumber} from './marshal_numbers';
 
+const MaxTraverseDepth = 100;
 const customMarshalers = [marshalError, marshalBuffer, marshalNumber, marshalDate];
 
 const customUnmarshalers: Array<(val: any) => any> = [unmarshalError, unmarshalBuffer, unmarshalNumber, unmarshalDate];
 
-function serializer(_: string, val: any): any {
+function serialize(val: any): any {
   for (const marshaler of customMarshalers) {
     const result = marshaler(val);
     if (result !== undefined) {
@@ -24,7 +23,7 @@ function serializer(_: string, val: any): any {
   return val;
 }
 
-function deserializer(_: string, val: any): any {
+function deserialize(_: string, val: any): any {
   if (val) {
     for (const unmarshaler of customUnmarshalers) {
       const result = unmarshaler(val);
@@ -37,13 +36,50 @@ function deserializer(_: string, val: any): any {
   return val;
 }
 
-export function marshalValue(val: any): string | undefined {
-  try {
-    startMarshaling();
-    return JSON.stringify(val, serializer);
-  } finally {
-    finishMarshaling();
+function processValue(val: any, depth: number = 0): any {
+  if (depth >= MaxTraverseDepth) {
+    throw new Error('marshaling value is too deep or containing circular strcture');
   }
+
+  if (val === undefined || val === null) {
+    return val;
+  }
+
+  const serializedValue = serialize(val);
+
+  if (Array.isArray(serializedValue)) {
+    return serializedValue.map(item => processValue(item, depth + 1));
+  }
+
+  if (typeof serializedValue === 'object') {
+    let objectValue = serializedValue;
+    if ('toJSON' in serializedValue && typeof serializedValue.toJSON === 'function') {
+      objectValue = serializedValue.toJSON();
+    }
+
+    // if val has a constructor that isn't recognized by customMarshalers, it will be
+    // converted into a plain object.
+    const processedValue: {[key: string]: any} = {};
+    for (const key of Object.getOwnPropertyNames(objectValue)) {
+      processedValue[key] = processValue(objectValue[key], depth + 1);
+    }
+
+    return processedValue;
+  }
+
+  return serializedValue;
+}
+
+export function marshalValue(val: any): string | undefined {
+  // Instead of passing a replacer to `JSON.stringify`, we chose to preprocess the value before
+  // passing it to `JSON.stringify`. The reason is that `JSON.stringify` may call the object toJSON
+  // method before calling the replacer. In many cases, that means the replacer can't tell if the
+  // input has been processed by toJSON or not. For example, Date.prototype.toJSON simply returns
+  // a date string. The replacer can't identify if the initial value is a Date or a date string.
+  //
+  // processValue is trying to mimic the object processing of JSON but the behavior may not be
+  // identical. It will only serve the purpose of our internal marshaling use case.
+  return JSON.stringify(processValue(val));
 }
 
 export function unmarshalValue(marshaledValue: string | undefined): any {
@@ -51,5 +87,5 @@ export function unmarshalValue(marshaledValue: string | undefined): any {
     return marshaledValue;
   }
 
-  return JSON.parse(marshaledValue, deserializer);
+  return JSON.parse(marshaledValue, deserialize);
 }

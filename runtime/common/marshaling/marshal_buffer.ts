@@ -1,23 +1,11 @@
 import {MarshalingInjectedKeys} from './constants';
-import {isMarshaling} from './config';
 
-const existingToJSON = Buffer.prototype.toJSON;
-
-Buffer.prototype.toJSON = function () {
-  if (!isMarshaling()) {
-    return existingToJSON.call(this);
-  }
-
-  return {
-    ...existingToJSON.call(this),
-    [MarshalingInjectedKeys.IsBuffer]: true,
-  };
-};
-
-export function marshalBuffer(val: any): void {
+export function marshalBuffer(val: any): object | undefined {
   if (val instanceof Buffer) {
-    // native Buffer defines its toJSON() function, which runs before serializer.
-    throw new Error('Unexpected Buffer');
+    return {
+      data: [...Uint8Array.from(val)],
+      [MarshalingInjectedKeys.IsBuffer]: true,
+    };
   }
 }
 
