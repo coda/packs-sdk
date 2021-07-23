@@ -1,3 +1,4 @@
+import {CodaMarshalerType} from './constants';
 import {MarshalingInjectedKeys} from './constants';
 import {StatusCodeError} from '../../../api';
 
@@ -49,7 +50,7 @@ export function marshalError(err: any): object | undefined {
     name,
     stack,
     message,
-    [MarshalingInjectedKeys.IsError]: true,
+    [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Error,
     [MarshalingInjectedKeys.ErrorClassName]: err.constructor.name,
     [MarshalingInjectedKeys.ErrorClassType]: getErrorClassType(err),
     ...args,
@@ -73,7 +74,7 @@ function getErrorClass(errorClassType: ErrorClassType, name: string): ErrorConst
 }
 
 export function unmarshalError(val: {[key: string]: any | undefined}): Error | undefined {
-  if (typeof val !== 'object' || !val[MarshalingInjectedKeys.IsError]) {
+  if (typeof val !== 'object' || val[MarshalingInjectedKeys.CodaMarshaler] !== CodaMarshalerType.Error) {
     return;
   }
 
@@ -82,7 +83,7 @@ export function unmarshalError(val: {[key: string]: any | undefined}): Error | u
     stack,
     message,
     [MarshalingInjectedKeys.ErrorClassName]: errorClassName,
-    [MarshalingInjectedKeys.IsError]: _,
+    [MarshalingInjectedKeys.CodaMarshaler]: _,
     [MarshalingInjectedKeys.ErrorClassType]: errorClassType,
     ...otherProperties
   } = val;

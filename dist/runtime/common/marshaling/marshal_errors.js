@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.unmarshalError = exports.marshalError = void 0;
 const constants_1 = require("./constants");
+const constants_2 = require("./constants");
 const api_1 = require("../../../api");
 var ErrorClassType;
 (function (ErrorClassType) {
@@ -46,9 +47,9 @@ function marshalError(err) {
         name,
         stack,
         message,
-        [constants_1.MarshalingInjectedKeys.IsError]: true,
-        [constants_1.MarshalingInjectedKeys.ErrorClassName]: err.constructor.name,
-        [constants_1.MarshalingInjectedKeys.ErrorClassType]: getErrorClassType(err),
+        [constants_2.MarshalingInjectedKeys.CodaMarshaler]: constants_1.CodaMarshalerType.Error,
+        [constants_2.MarshalingInjectedKeys.ErrorClassName]: err.constructor.name,
+        [constants_2.MarshalingInjectedKeys.ErrorClassType]: getErrorClassType(err),
         ...args,
     };
 }
@@ -68,10 +69,10 @@ function getErrorClass(errorClassType, name) {
     return errorClasses.find(cls => cls.name === name) || Error;
 }
 function unmarshalError(val) {
-    if (typeof val !== 'object' || !val[constants_1.MarshalingInjectedKeys.IsError]) {
+    if (typeof val !== 'object' || val[constants_2.MarshalingInjectedKeys.CodaMarshaler] !== constants_1.CodaMarshalerType.Error) {
         return;
     }
-    const { name, stack, message, [constants_1.MarshalingInjectedKeys.ErrorClassName]: errorClassName, [constants_1.MarshalingInjectedKeys.IsError]: _, [constants_1.MarshalingInjectedKeys.ErrorClassType]: errorClassType, ...otherProperties } = val;
+    const { name, stack, message, [constants_2.MarshalingInjectedKeys.ErrorClassName]: errorClassName, [constants_2.MarshalingInjectedKeys.CodaMarshaler]: _, [constants_2.MarshalingInjectedKeys.ErrorClassType]: errorClassType, ...otherProperties } = val;
     const ErrorClass = getErrorClass(errorClassType, errorClassName);
     const error = new ErrorClass();
     error.message = message;

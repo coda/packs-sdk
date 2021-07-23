@@ -39,10 +39,10 @@ function processValue(val, depth = 0) {
     if (val === undefined || val === null) {
         return val;
     }
-    const serializedValue = serialize(val);
-    if (Array.isArray(serializedValue)) {
-        return serializedValue.map(item => processValue(item, depth + 1));
+    if (Array.isArray(val)) {
+        return val.map(item => processValue(item, depth + 1));
     }
+    const serializedValue = serialize(val);
     if (typeof serializedValue === 'object') {
         let objectValue = serializedValue;
         if ('toJSON' in serializedValue && typeof serializedValue.toJSON === 'function') {

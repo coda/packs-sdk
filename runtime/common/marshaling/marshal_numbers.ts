@@ -1,3 +1,4 @@
+import {CodaMarshalerType} from './constants';
 import {MarshalingInjectedKeys} from './constants';
 
 export function marshalNumber(val: any): object | undefined {
@@ -5,13 +6,13 @@ export function marshalNumber(val: any): object | undefined {
   if (typeof val === 'number' && (isNaN(val) || val === Infinity)) {
     return {
       data: val.toString(),
-      [MarshalingInjectedKeys.IsNumber]: true,
+      [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Number,
     };
   }
 }
 
 export function unmarshalNumber(val: {[key: string]: any}): number | undefined {
-  if (typeof val !== 'object' || !val[MarshalingInjectedKeys.IsNumber]) {
+  if (typeof val !== 'object' || val[MarshalingInjectedKeys.CodaMarshaler] !== CodaMarshalerType.Number) {
     return;
   }
   return Number(val.data);
