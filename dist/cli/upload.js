@@ -105,7 +105,8 @@ async function handleUpload({ manifestFile, codaApiEndpoint, notes }) {
         }
     }
     catch (err) {
-        helpers_5.printAndExit(`Unepected error during pack upload: ${errors_1.formatError(err)}`);
+        const errors = [`Unexpected error during Pack upload: ${errors_1.formatError(err)}`, errors_1.tryParseSystemError(err)];
+        helpers_5.printAndExit(errors.join(`\n`));
     }
     logger.info('Done!');
 }

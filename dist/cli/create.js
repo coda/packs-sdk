@@ -30,6 +30,7 @@ const errors_2 = require("./errors");
 const path = __importStar(require("path"));
 const helpers_3 = require("../testing/helpers");
 const config_storage_4 = require("./config_storage");
+const errors_3 = require("./errors");
 async function handleCreate({ manifestFile, codaApiEndpoint, name, description }) {
     await createPack(manifestFile, codaApiEndpoint, { name, description });
 }
@@ -60,7 +61,8 @@ async function createPack(manifestFile, codaApiEndpoint, { name, description }) 
         return helpers_3.printAndExit(`Pack created successfully! You can manage pack settings at ${codaApiEndpoint}/p/${packId}`, 0);
     }
     catch (err) {
-        return helpers_3.printAndExit(`Unable to create your pack, received error: ${errors_1.formatError(err)}`);
+        const errors = [`Unable to create your pack, received error: ${errors_1.formatError(err)}`, errors_3.tryParseSystemError(err)];
+        return helpers_3.printAndExit(errors.join('\n'));
     }
 }
 exports.createPack = createPack;

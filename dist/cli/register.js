@@ -11,6 +11,7 @@ const open_1 = __importDefault(require("open"));
 const helpers_3 = require("../testing/helpers");
 const helpers_4 = require("../testing/helpers");
 const config_storage_1 = require("./config_storage");
+const errors_2 = require("./errors");
 async function handleRegister({ apiToken, codaApiEndpoint }) {
     const formattedEndpoint = helpers_2.formatEndpoint(codaApiEndpoint);
     if (!apiToken) {
@@ -31,7 +32,8 @@ async function handleRegister({ apiToken, codaApiEndpoint }) {
         }
     }
     catch (err) {
-        return helpers_3.printAndExit(`Unexpected error while checking validity of API token: ${err}`);
+        const errors = [`Unexpected error while checking validity of API token: ${err}`, errors_2.tryParseSystemError(err)];
+        return helpers_3.printAndExit(errors.join('\n'));
     }
     config_storage_1.storeCodaApiKey(apiToken, process.env.PWD, codaApiEndpoint);
     helpers_3.printAndExit(`API key validated and stored successfully!`, 0);
