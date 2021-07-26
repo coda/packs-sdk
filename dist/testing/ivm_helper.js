@@ -115,21 +115,21 @@ async function setupIvmContext(bundlePath, executionContext) {
     return ivmContext;
 }
 exports.setupIvmContext = setupIvmContext;
-async function executeFormulaOrSyncWithRawParams(ivmContext, formulaName, rawParams) {
+async function executeFormulaOrSyncWithRawParams(ivmContext, formulaSpecification, rawParams) {
     return ivmContext.evalClosure(`return ${getStubName('bundleExecutionHelper')}.executeFormulaOrSyncWithRawParams(
       ${getStubName('pack.pack')} || ${getStubName('pack.manifest')},
       $0,
       $1,
       ${getStubName('executionContext')}
-    )`, [formulaName, rawParams], { arguments: { copy: true }, result: { copy: true, promise: true } });
+    )`, [formulaSpecification, rawParams], { arguments: { copy: true }, result: { copy: true, promise: true } });
 }
 exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
-async function executeFormulaOrSync(ivmContext, formulaName, params) {
+async function executeFormulaOrSync(ivmContext, formulaSpecification, params) {
     return ivmContext.evalClosure(`return ${getStubName('bundleExecutionHelper')}.executeFormulaOrSync(
       ${getStubName('pack.pack')} || ${getStubName('pack.manifest')},
       $0,
       $1,
       ${getStubName('executionContext')}
-    )`, [formulaName, params], { arguments: { copy: true }, result: { copy: true, promise: true } });
+    )`, [formulaSpecification, params], { arguments: { copy: true }, result: { copy: true, promise: true } });
 }
 exports.executeFormulaOrSync = executeFormulaOrSync;
