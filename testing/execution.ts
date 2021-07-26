@@ -14,6 +14,7 @@ import type {SyncFormulaSpecification} from '../runtime/types';
 import {compilePackBundle} from './compile';
 import {getPackAuth} from '../cli/helpers';
 import * as helper from './execution_helper';
+import {importManifest} from '../cli/helpers';
 import * as ivmHelper from './ivm_helper';
 import {newFetcherExecutionContext} from './fetcher';
 import {newFetcherSyncExecutionContext} from './fetcher';
@@ -132,23 +133,7 @@ export async function executeFormulaOrSyncFromCLI({
   }
 }
 
-export async function executeFormulaWithVM({
-  formulaName,
-  params,
-  bundlePath,
-  executionContext = newMockExecutionContext(),
-}: {
-  formulaName: string;
-  params: ParamValues<ParamDefs>;
-  bundlePath: string;
-  executionContext?: ExecutionContext;
-}) {
-  const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
-
-  return ivmHelper.executeFormulaOrSync(ivmContext, {type: FormulaType.Standard, formulaName}, params);
-}
-
-export async function executeSyncFormulaWithVM({
+export async function executeFormulaOrSyncWithVM({
   formulaName,
   params,
   bundlePath,
@@ -157,11 +142,20 @@ export async function executeSyncFormulaWithVM({
   formulaName: string;
   params: ParamValues<ParamDefs>;
   bundlePath: string;
-  executionContext?: SyncExecutionContext;
+  executionContext?: ExecutionContext;
 }) {
+  // TODO(huayang): importing manifest makes this method not usable in production, where we are not
+  // supposed to load a manifest outside of the VM context.
+  const manifest = await importManifest(bundlePath);
+  const syncFormula = helper.tryFindSyncFormula(manifest, formulaName);
+  const formulaSpecification: SyncFormulaSpecification | StandardFormulaSpecification = {
+    type: syncFormula ? FormulaType.Sync : FormulaType.Standard,
+    formulaName,
+  };
+
   const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
 
-  return ivmHelper.executeFormulaOrSync(ivmContext, {type: FormulaType.Sync, formulaName}, params);
+  return ivmHelper.executeFormulaOrSync(ivmContext, formulaSpecification, params);
 }
 
 export class VMError {

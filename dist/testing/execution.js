@@ -22,18 +22,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.executeFormulaOrSyncWithRawParamsInVM = exports.VMError = exports.executeSyncFormulaWithVM = exports.executeFormulaWithVM = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = void 0;
+exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.executeFormulaOrSyncWithRawParamsInVM = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = void 0;
 const types_1 = require("../runtime/types");
 const compile_1 = require("./compile");
 const helpers_1 = require("../cli/helpers");
 const helper = __importStar(require("./execution_helper"));
+const helpers_2 = require("../cli/helpers");
 const ivmHelper = __importStar(require("./ivm_helper"));
 const fetcher_1 = require("./fetcher");
 const fetcher_2 = require("./fetcher");
 const mocks_1 = require("./mocks");
 const mocks_2 = require("./mocks");
 const path = __importStar(require("path"));
-const helpers_2 = require("./helpers");
+const helpers_3 = require("./helpers");
 const auth_1 = require("./auth");
 const auth_2 = require("./auth");
 const execution_1 = require("../runtime/execution");
@@ -77,31 +78,34 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
                 executionContext.sync.continuation = response.continuation;
                 iterations++;
             } while (executionContext.sync.continuation);
-            helpers_2.print(result);
+            helpers_3.print(result);
         }
         else {
             const result = vm
                 ? await executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, params, manifestPath, executionContext })
                 : await executeFormulaOrSyncWithRawParams({ formulaSpecification, params, manifest, executionContext });
-            helpers_2.print(result);
+            helpers_3.print(result);
         }
     }
     catch (err) {
-        helpers_2.print(err);
+        helpers_3.print(err);
         process.exit(1);
     }
 }
 exports.executeFormulaOrSyncFromCLI = executeFormulaOrSyncFromCLI;
-async function executeFormulaWithVM({ formulaName, params, bundlePath, executionContext = mocks_1.newMockExecutionContext(), }) {
+async function executeFormulaOrSyncWithVM({ formulaName, params, bundlePath, executionContext = mocks_2.newMockSyncExecutionContext(), }) {
+    // TODO(huayang): importing manifest makes this method not usable in production, where we are not
+    // supposed to load a manifest outside of the VM context.
+    const manifest = await helpers_2.importManifest(bundlePath);
+    const syncFormula = helper.tryFindSyncFormula(manifest, formulaName);
+    const formulaSpecification = {
+        type: syncFormula ? types_1.FormulaType.Sync : types_1.FormulaType.Standard,
+        formulaName,
+    };
     const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
-    return ivmHelper.executeFormulaOrSync(ivmContext, { type: types_1.FormulaType.Standard, formulaName }, params);
+    return ivmHelper.executeFormulaOrSync(ivmContext, formulaSpecification, params);
 }
-exports.executeFormulaWithVM = executeFormulaWithVM;
-async function executeSyncFormulaWithVM({ formulaName, params, bundlePath, executionContext = mocks_2.newMockSyncExecutionContext(), }) {
-    const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
-    return ivmHelper.executeFormulaOrSync(ivmContext, { type: types_1.FormulaType.Sync, formulaName }, params);
-}
-exports.executeSyncFormulaWithVM = executeSyncFormulaWithVM;
+exports.executeFormulaOrSyncWithVM = executeFormulaOrSyncWithVM;
 class VMError {
     constructor(name, message, stack) {
         this.name = name;

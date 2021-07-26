@@ -26,17 +26,11 @@ export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manif
     dynamicUrl?: string;
     contextOptions?: ContextOptions;
 }): Promise<void>;
-export declare function executeFormulaWithVM({ formulaName, params, bundlePath, executionContext, }: {
+export declare function executeFormulaOrSyncWithVM({ formulaName, params, bundlePath, executionContext, }: {
     formulaName: string;
     params: ParamValues<ParamDefs>;
     bundlePath: string;
     executionContext?: ExecutionContext;
-}): Promise<any>;
-export declare function executeSyncFormulaWithVM({ formulaName, params, bundlePath, executionContext, }: {
-    formulaName: string;
-    params: ParamValues<ParamDefs>;
-    bundlePath: string;
-    executionContext?: SyncExecutionContext;
 }): Promise<any>;
 export declare class VMError {
     name: string;
