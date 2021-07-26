@@ -348,20 +348,18 @@ describe('Auth', () => {
     function createPack(opts?: Partial<PackDefinition>) {
       return createFakePack({
         networkDomains: ['example.com'],
-        formulas: {
-          Fake: [
-            makeStringFormula({
-              name: 'Fetch',
-              description: 'Fetch a url',
-              examples: [],
-              parameters: [makeStringParameter('url', 'An example url to fetch.')],
-              execute: async ([url], context) => {
-                const response = await context.fetcher.fetch({method: 'GET', url});
-                return response.body.result;
-              },
-            }),
-          ],
-        },
+        formulas: [
+          makeStringFormula({
+            name: 'Fetch',
+            description: 'Fetch a url',
+            examples: [],
+            parameters: [makeStringParameter('url', 'An example url to fetch.')],
+            execute: async ([url], context) => {
+              const response = await context.fetcher.fetch({method: 'GET', url});
+              return response.body.result;
+            },
+          }),
+        ],
         ...opts,
       });
     }
@@ -384,7 +382,7 @@ describe('Auth', () => {
       packDef: PackDefinition,
       url: string,
       jsonResponse: object,
-      formulaName: string = 'Fake::Fetch',
+      formulaName: string = 'Fetch',
     ) {
       mockMakeRequest.returns({
         statusCode: 200,
@@ -700,7 +698,7 @@ describe('Auth', () => {
           },
         });
 
-        await executeFormulaFromPackDef(pack, 'Fake::FormulaWithTemplateReplacement', [], undefined, undefined, {
+        await executeFormulaFromPackDef(pack, 'FormulaWithTemplateReplacement', [], undefined, undefined, {
           useRealFetcher: true,
           manifestPath: MANIFEST_PATH,
         });
@@ -744,7 +742,7 @@ describe('Auth', () => {
           },
         });
 
-        await executeFormulaFromPackDef(pack, 'Fake::FormulaWithTemplateReplacement', [], undefined, undefined, {
+        await executeFormulaFromPackDef(pack, 'FormulaWithTemplateReplacement', [], undefined, undefined, {
           useRealFetcher: true,
           manifestPath: MANIFEST_PATH,
         });
@@ -836,26 +834,24 @@ describe('Auth', () => {
           type: AuthenticationType.HeaderBearerToken,
         },
         networkDomains: ['example.com'],
-        formulas: {
-          Fake: [
-            makeStringFormula({
-              name: 'FetchNoAuth',
-              description: 'Fetch a url without authentication',
-              examples: [],
-              parameters: [makeStringParameter('url', 'An example url to fetch.')],
-              execute: async ([url], context) => {
-                const response = await context.fetcher.fetch({method: 'GET', url, disableAuthentication: true});
-                return response.body.result;
-              },
-            }),
-          ],
-        },
+        formulas: [
+          makeStringFormula({
+            name: 'FetchNoAuth',
+            description: 'Fetch a url without authentication',
+            examples: [],
+            parameters: [makeStringParameter('url', 'An example url to fetch.')],
+            execute: async ([url], context) => {
+              const response = await context.fetcher.fetch({method: 'GET', url, disableAuthentication: true});
+              return response.body.result;
+            },
+          }),
+        ],
       });
 
       setupReadline('some-token');
       doSetupAuth(pack);
 
-      await executeFetch(pack, 'https://example.com', {result: 'hello'}, 'Fake::FetchNoAuth');
+      await executeFetch(pack, 'https://example.com', {result: 'hello'}, 'FetchNoAuth');
 
       sinon.assert.calledOnceWithExactly(mockMakeRequest, {
         body: undefined,
@@ -872,26 +868,24 @@ describe('Auth', () => {
       };
       const opts: Partial<PackDefinition> = {
         networkDomains: ['example.com'],
-        formulas: {
-          Fake: [
-            makeStringFormula({
-              name: 'StoreBlob',
-              description: 'Fetch a url without authentication',
-              examples: [],
-              parameters: [makeStringParameter('url', 'An example url to fetch.')],
-              execute: async ([url], context) => {
-                return context.temporaryBlobStorage.storeUrl(url);
-              },
-            }),
-          ],
-        },
+        formulas: [
+          makeStringFormula({
+            name: 'StoreBlob',
+            description: 'Fetch a url without authentication',
+            examples: [],
+            parameters: [makeStringParameter('url', 'An example url to fetch.')],
+            execute: async ([url], context) => {
+              return context.temporaryBlobStorage.storeUrl(url);
+            },
+          }),
+        ],
       };
 
       const execTest = async (pack: PackDefinition) => {
         setupReadline('some-token');
         doSetupAuth(pack);
 
-        await executeFetch(pack, 'https://example.com/some-blob.jpg', {result: 'hello'}, 'Fake::StoreBlob');
+        await executeFetch(pack, 'https://example.com/some-blob.jpg', {result: 'hello'}, 'StoreBlob');
 
         sinon.assert.calledOnceWithExactly(mockMakeRequest, {
           body: undefined,

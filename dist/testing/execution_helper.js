@@ -1,40 +1,38 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.wrapError = exports.tryFindSyncFormula = exports.tryFindFormula = exports.findSyncFormula = exports.findFormula = exports.executeSyncFormula = exports.executeFormula = exports.executeFormulaOrSync = exports.executeFormulaOrSyncWithRawParams = void 0;
+const types_1 = require("../runtime/types");
 const coercion_1 = require("./coercion");
-const ensure_1 = require("../helpers/ensure");
 const validation_1 = require("./validation");
 const validation_2 = require("./validation");
-async function executeFormulaOrSyncWithRawParams(manifest, formulaName, rawParams, context) {
+async function executeFormulaOrSyncWithRawParams(manifest, formulaSpecification, rawParams, context) {
     try {
-        const formula = tryFindFormula(manifest, formulaName);
-        if (formula) {
+        if (formulaSpecification.type === types_1.FormulaType.Standard) {
+            const formula = findFormula(manifest, formulaSpecification.formulaName);
             const params = coercion_1.coerceParams(formula, rawParams);
             return await executeFormula(formula, params, context);
         }
-        const syncFormula = tryFindSyncFormula(manifest, formulaName);
-        if (syncFormula) {
+        else {
+            const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName);
             const params = coercion_1.coerceParams(syncFormula, rawParams);
             return await executeSyncFormula(syncFormula, params, context);
         }
-        throw new Error(`Pack definition has no formula or sync called ${formulaName}.`);
     }
     catch (err) {
         throw wrapError(err);
     }
 }
 exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
-async function executeFormulaOrSync(manifest, formulaName, params, context) {
+async function executeFormulaOrSync(manifest, formulaSpecification, params, context, options) {
     try {
-        const formula = tryFindFormula(manifest, formulaName);
-        if (formula) {
-            return await executeFormula(formula, params, context);
+        if (formulaSpecification.type === types_1.FormulaType.Standard) {
+            const formula = findFormula(manifest, formulaSpecification.formulaName);
+            return await executeFormula(formula, params, context, options);
         }
-        const syncFormula = tryFindSyncFormula(manifest, formulaName);
-        if (syncFormula) {
-            return await executeSyncFormula(syncFormula, params, context);
+        else {
+            const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName);
+            return await executeSyncFormula(syncFormula, params, context, options);
         }
-        throw new Error(`Pack definition has no formula or sync called ${formulaName}.`);
     }
     catch (err) {
         throw wrapError(err);
@@ -79,20 +77,21 @@ function findFormula(packDef, formulaNameWithNamespace) {
     }
     const [namespace, name] = formulaNameWithNamespace.includes('::')
         ? formulaNameWithNamespace.split('::')
-        : [ensure_1.ensureExists(packDef.formulaNamespace), formulaNameWithNamespace];
-    if (!(namespace && name)) {
-        throw new Error(`Formula names must be specified as FormulaNamespace::FormulaName, but got "${formulaNameWithNamespace}".`);
+        : ['', formulaNameWithNamespace];
+    if (namespace) {
+        // eslint-disable-next-line no-console
+        console.warn('Formula namespace is being deprecated');
     }
     const formulas = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
     if (!formulas || !formulas.length) {
-        throw new Error(`Pack definition has no formulas for namespace "${namespace}".`);
+        throw new Error(`Pack definition has no formulas${namespace !== null && namespace !== void 0 ? namespace : ` for namespace "${namespace}"`}.`);
     }
     for (const formula of formulas) {
         if (formula.name === name) {
             return formula;
         }
     }
-    throw new Error(`Pack definition has no formula "${name}" in namespace "${namespace}".`);
+    throw new Error(`Pack definition has no formula "${name}"${namespace !== null && namespace !== void 0 ? namespace : ` in namespace "${namespace}"`}.`);
 }
 exports.findFormula = findFormula;
 function findSyncFormula(packDef, syncFormulaName) {
