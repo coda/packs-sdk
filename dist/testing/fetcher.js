@@ -77,7 +77,7 @@ class AuthenticatingFetcher {
         }
         try {
             const contentType = response.headers['content-type'];
-            if (contentType && contentType.includes('text/xml')) {
+            if (contentType && (contentType.includes('text/xml') || contentType.includes('application/xml'))) {
                 responseBody = await xml2js_1.default.parseStringPromise(responseBody, { explicitRoot: false });
             }
             else {
