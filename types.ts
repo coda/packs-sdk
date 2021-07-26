@@ -189,23 +189,22 @@ export type Authentication =
   | WebBasicAuthentication
   | AWSSignature4Authentication;
 
+type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId'> & {
+  getConnectionName?: MetadataFormulaDef;
+  getConnectionUserId?: MetadataFormulaDef;
+};
+
 export type AuthenticationDef =
   | NoAuthentication
   | VariousAuthentication
-  | (Omit<
-      | HeaderBearerTokenAuthentication
-      | CodaApiBearerTokenAuthentication
-      | CustomHeaderTokenAuthentication
-      | QueryParamTokenAuthentication
-      | MultiQueryParamTokenAuthentication
-      | OAuth2Authentication
-      | WebBasicAuthentication
-      | AWSSignature4Authentication,
-      'getConnectionName' | 'getConnectionUserId'
-    > & {
-      getConnectionName?: MetadataFormulaDef;
-      getConnectionUserId?: MetadataFormulaDef;
-    });
+  | AsAuthDef<HeaderBearerTokenAuthentication>
+  | AsAuthDef<CodaApiBearerTokenAuthentication>
+  | AsAuthDef<CustomHeaderTokenAuthentication>
+  | AsAuthDef<QueryParamTokenAuthentication>
+  | AsAuthDef<MultiQueryParamTokenAuthentication>
+  | AsAuthDef<OAuth2Authentication>
+  | AsAuthDef<WebBasicAuthentication>
+  | AsAuthDef<AWSSignature4Authentication>;
 
 export type SystemAuthentication =
   | HeaderBearerTokenAuthentication
@@ -215,18 +214,13 @@ export type SystemAuthentication =
   | WebBasicAuthentication
   | AWSSignature4Authentication;
 
-export type SystemAuthenticationDef = Omit<
-  | HeaderBearerTokenAuthentication
-  | CustomHeaderTokenAuthentication
-  | QueryParamTokenAuthentication
-  | MultiQueryParamTokenAuthentication
-  | WebBasicAuthentication
-  | AWSSignature4Authentication,
-  'getConnectionName' | 'getConnectionUserId'
-> & {
-  getConnectionName?: MetadataFormulaDef;
-  getConnectionUserId?: MetadataFormulaDef;
-};
+export type SystemAuthenticationDef =
+  | AsAuthDef<HeaderBearerTokenAuthentication>
+  | AsAuthDef<CustomHeaderTokenAuthentication>
+  | AsAuthDef<QueryParamTokenAuthentication>
+  | AsAuthDef<MultiQueryParamTokenAuthentication>
+  | AsAuthDef<WebBasicAuthentication>
+  | AsAuthDef<AWSSignature4Authentication>;
 
 export type SystemAuthenticationTypes = $Values<Pick<SystemAuthentication, 'type'>>;
 
