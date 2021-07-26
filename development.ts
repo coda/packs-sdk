@@ -10,8 +10,7 @@ export {executeSyncFormulaFromPackDef} from './testing/execution';
 export {executeSyncFormulaFromPackDefSingleIteration} from './testing/execution';
 
 // TODO(huayang): this needs to be documented in README once it's ready to be used efficiently.
-export {executeFormulaWithVM} from './testing/execution';
-export {executeSyncFormulaWithVM} from './testing/execution';
+export {executeFormulaOrSyncWithVM} from './testing/execution';
 
 export type {MockExecutionContext} from './testing/mocks';
 export type {MockSyncExecutionContext} from './testing/mocks';

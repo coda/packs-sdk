@@ -8,10 +8,9 @@ import {assertCondition} from '../helpers/ensure';
 import {build as buildBundle} from '../cli/build';
 import {createFakePack} from './test_utils';
 import {executeFormulaFromPackDef} from '../testing/execution';
-import {executeFormulaWithVM} from '../testing/execution';
+import {executeFormulaOrSyncWithVM} from '../testing/execution';
 import {executeMetadataFormula} from '../testing/execution';
 import {executeSyncFormulaFromPackDef} from '../testing/execution';
-import {executeSyncFormulaWithVM} from '../testing/execution';
 import {manifest as fakePack} from './packs/fake';
 import {makeBooleanParameter} from '../api';
 import {makeMetadataFormula} from '../api';
@@ -48,7 +47,7 @@ describe('Execution', () => {
   });
 
   it('executes a formula by name with VM', async () => {
-    const result = await executeFormulaWithVM({
+    const result = await executeFormulaOrSyncWithVM({
       formulaName: 'Square',
       params: [5],
       bundlePath,
@@ -57,7 +56,7 @@ describe('Execution', () => {
   });
 
   it('executes a sync formula by name with VM', async () => {
-    const result = await executeSyncFormulaWithVM({
+    const result = await executeFormulaOrSyncWithVM({
       formulaName: 'Students',
       params: ['Smith'],
       bundlePath,

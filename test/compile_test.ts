@@ -1,5 +1,5 @@
 import {compilePackBundle} from '../testing/compile';
-import {executeFormulaWithVM} from '../testing/execution';
+import {executeFormulaOrSyncWithVM} from '../testing/execution';
 import path from 'path';
 import {translateErrorStackFromVM} from '../runtime/execution';
 
@@ -10,7 +10,7 @@ describe('compile', () => {
       minify: false,
     });
     try {
-      await executeFormulaWithVM({
+      await executeFormulaOrSyncWithVM({
         formulaName: 'Throw',
         params: [],
         bundlePath,
@@ -45,7 +45,7 @@ describe('compile', () => {
       minify: true,
     });
     try {
-      await executeFormulaWithVM({
+      await executeFormulaOrSyncWithVM({
         formulaName: 'Throw',
         params: [],
         bundlePath,
