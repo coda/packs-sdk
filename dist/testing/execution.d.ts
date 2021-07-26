@@ -6,8 +6,10 @@ import type { MetadataFormula } from '../api';
 import type { PackVersionDefinition } from '../types';
 import type { ParamDefs } from '../api_types';
 import type { ParamValues } from '../api_types';
+import type { StandardFormulaSpecification } from '../runtime/types';
 import type { SyncExecutionContext } from '../api_types';
 import type { SyncFormulaResult } from '../api';
+import type { SyncFormulaSpecification } from '../runtime/types';
 import util from 'util';
 export { ExecuteOptions } from './execution_helper';
 export interface ContextOptions {
@@ -24,7 +26,13 @@ export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manif
     dynamicUrl?: string;
     contextOptions?: ContextOptions;
 }): Promise<void>;
-export declare function executeFormulaOrSyncWithVM({ formulaName, params, bundlePath, executionContext, }: {
+export declare function executeFormulaWithVM({ formulaName, params, bundlePath, executionContext, }: {
+    formulaName: string;
+    params: ParamValues<ParamDefs>;
+    bundlePath: string;
+    executionContext?: ExecutionContext;
+}): Promise<any>;
+export declare function executeSyncFormulaWithVM({ formulaName, params, bundlePath, executionContext, }: {
     formulaName: string;
     params: ParamValues<ParamDefs>;
     bundlePath: string;
@@ -37,14 +45,14 @@ export declare class VMError {
     constructor(name: string, message: string, stack: string);
     [util.inspect.custom](): string;
 }
-export declare function executeFormulaOrSyncWithRawParamsInVM({ formulaName, params: rawParams, manifestPath, executionContext, }: {
-    formulaName: string;
+export declare function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, params: rawParams, manifestPath, executionContext, }: {
+    formulaSpecification: SyncFormulaSpecification | StandardFormulaSpecification;
     params: string[];
     manifestPath: string;
     executionContext?: SyncExecutionContext;
 }): Promise<any>;
-export declare function executeFormulaOrSyncWithRawParams({ formulaName, params: rawParams, manifest, executionContext, }: {
-    formulaName: string;
+export declare function executeFormulaOrSyncWithRawParams({ formulaSpecification, params: rawParams, manifest, executionContext, }: {
+    formulaSpecification: StandardFormulaSpecification | SyncFormulaSpecification;
     params: string[];
     manifest: PackVersionDefinition;
     vm?: boolean;
