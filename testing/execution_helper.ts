@@ -114,7 +114,7 @@ export function findFormula(packDef: PackVersionDefinition, formulaNameWithNames
 
   if (namespace) {
     // eslint-disable-next-line no-console
-    console.warn('Formula namespace is being deprecated');
+    console.log('Warning: formula namespace is being deprecated');
   }
 
   const formulas: Formula[] = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
