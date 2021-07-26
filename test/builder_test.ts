@@ -102,6 +102,23 @@ describe('Builder', () => {
     });
   }
 
+  describe('typing works', () => {
+    it('oauth2', () => {
+      pack.setUserAuthentication({
+        type: AuthenticationType.OAuth2,
+        authorizationUrl: 'auth-url',
+        tokenUrl: 'token-url',
+      });
+    });
+
+    it('query param, system auth', () => {
+      pack.setSystemAuthentication({
+        type: AuthenticationType.QueryParamToken,
+        paramName: 'param',
+      });
+    });
+  });
+
   describe('default connection requirement', () => {
     it('works for formula', () => {
       pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
