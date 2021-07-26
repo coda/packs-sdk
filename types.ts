@@ -145,7 +145,13 @@ export interface OAuth2Authentication extends BaseAuthentication {
   type: AuthenticationType.OAuth2;
   authorizationUrl: string;
   tokenUrl: string;
+
+  // This field assumes that the OAuth provider accepts space delimited scopes per
+  // https://datatracker.ietf.org/doc/html/rfc6749#section-3.3. In case the OAuth provider
+  // only accepts comma-delimited scopes, simply pass the whole scopes string like
+  // scopes: ["scope1,scope2,scope3"].
   scopes?: string[];
+
   tokenPrefix?: string;
   additionalParams?: {[key: string]: any};
 
