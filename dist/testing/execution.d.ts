@@ -16,7 +16,7 @@ export interface ContextOptions {
     useRealFetcher?: boolean;
     manifestPath?: string;
 }
-export declare function executeFormulaFromPackDef(packDef: PackVersionDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<any>;
+export declare function executeFormulaFromPackDef(packDef: PackVersionDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, _options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<import("../api_types").PackFormulaResult>;
 export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, contextOptions, }: {
     formulaName: string;
     params: string[];
@@ -51,7 +51,7 @@ export declare function executeFormulaOrSyncWithRawParams({ formulaSpecification
     manifest: PackVersionDefinition;
     vm?: boolean;
     executionContext: SyncExecutionContext;
-}): Promise<any>;
+}): Promise<import("../api_types").PackFormulaResult | SyncFormulaResult<any>>;
 /**
  * Executes multiple iterations of a sync formula in a loop until there is no longer
  * a `continuation` returned, aggregating each page of results and returning an array
@@ -64,7 +64,7 @@ export declare function executeFormulaOrSyncWithRawParams({ formulaSpecification
  *
  * For now, use `coda execute --vm` to simulate that level of isolation.
  */
-export declare function executeSyncFormulaFromPackDef(packDef: PackVersionDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<any[]>;
+export declare function executeSyncFormulaFromPackDef(packDef: PackVersionDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, _options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<any[]>;
 /**
  * Executes a single sync iteration, and returns the return value from the sync formula
  * including the continuation, for inspection.

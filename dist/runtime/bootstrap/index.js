@@ -89,7 +89,7 @@ exports.injectFetcherFunction = injectFetcherFunction;
  * Actually execute the pack function inside the isolate by loading and passing control to the thunk.
  */
 async function executeThunk(context, { params, formulaSpec }) {
-    const resultRef = await context.evalClosure('return findAndExecutePackFunction($0, $1);', [params, formulaSpec], {
+    const resultRef = await context.evalClosure('return findAndExecutePackFunction($0, $1, global.exports.pack || global.exports.manifest, global.executionContext);', [params, formulaSpec], {
         arguments: { copy: true },
         result: { reference: true, promise: true },
     });

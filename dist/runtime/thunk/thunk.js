@@ -7,31 +7,45 @@ const types_3 = require("../types");
 const types_4 = require("../../types");
 const api_1 = require("../../api");
 const api_2 = require("../../api");
-// TODO(huayang)
-function marshalError(err) {
-    return err;
+const marshaling_1 = require("../common/marshaling");
+const marshaling_2 = require("../common/marshaling");
+function wrapError(err) {
+    // TODO(huayang): we do this for the sdk.
+    // if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
+    //   err.message +=
+    //     '\nThis means your formula was invoked with a mock fetcher that had no response configured.' +
+    //     '\nThis usually means you invoked your formula from the commandline with `coda execute` but forgot to ' +
+    //     'add the --fetch flag ' +
+    //     'to actually fetch from the remote API.';
+    // }
+    return new Error(marshaling_1.marshalValue(err));
 }
-// TODO(huayang)
-function unmarshalError(err) {
-    return err;
+function unwrapError(err) {
+    try {
+        const unmarshaledValue = marshaling_2.unmarshalValue(err.message);
+        if (unmarshaledValue instanceof Error) {
+            return unmarshaledValue;
+        }
+        return err;
+    }
+    catch (_) {
+        return err;
+    }
 }
 /**
  * The thunk entrypoint - the first code that runs inside the v8 isolate once control is passed over.
  */
-async function findAndExecutePackFunction(params, formulaSpec) {
+async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext) {
     try {
-        return await doFindAndExecutePackFunction(params, formulaSpec);
+        return await doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext);
     }
     catch (err) {
         // all errors should be marshaled to avoid IVM dropping essential fields / name.
-        throw marshalError(err);
+        throw wrapError(err);
     }
 }
 exports.findAndExecutePackFunction = findAndExecutePackFunction;
-function doFindAndExecutePackFunction(params, formulaSpec) {
-    // Pull useful variables out of injected globals
-    const manifest = (global.exports.pack || global.exports.manifest);
-    const executionContext = global.executionContext;
+function doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext) {
     const { formulas, syncTables, defaultAuthentication } = manifest;
     switch (formulaSpec.type) {
         case types_2.FormulaType.Standard: {
@@ -160,7 +174,7 @@ async function handleErrorAsync(func) {
         return await func();
     }
     catch (err) {
-        throw unmarshalError(err);
+        throw unwrapError(err);
     }
 }
 exports.handleErrorAsync = handleErrorAsync;
@@ -169,7 +183,7 @@ function handleError(func) {
         return func();
     }
     catch (err) {
-        throw unmarshalError(err);
+        throw unwrapError(err);
     }
 }
 exports.handleError = handleError;

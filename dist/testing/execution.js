@@ -24,6 +24,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.executeFormulaOrSyncWithRawParamsInVM = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = void 0;
 const types_1 = require("../runtime/types");
+const coercion_1 = require("./coercion");
 const compile_1 = require("./compile");
 const helpers_1 = require("../cli/helpers");
 const helper = __importStar(require("./execution_helper"));
@@ -37,16 +38,28 @@ const path = __importStar(require("path"));
 const helpers_3 = require("./helpers");
 const auth_1 = require("./auth");
 const auth_2 = require("./auth");
+const thunk = __importStar(require("../runtime/thunk/thunk"));
 const execution_1 = require("../runtime/execution");
 const util_1 = __importDefault(require("util"));
 const MaxSyncIterations = 100;
-async function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, params, context, options, { useRealFetcher, manifestPath } = {}) {
+function resolveFormulaNameWithNamespace(formulaNameWithNamespace) {
+    const [namespace, name] = formulaNameWithNamespace.includes('::')
+        ? formulaNameWithNamespace.split('::')
+        : ['', formulaNameWithNamespace];
+    if (namespace) {
+        // eslint-disable-next-line no-console
+        console.warn('Formula namespace is being deprecated');
+    }
+    return name;
+}
+async function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, params, context, _options, { useRealFetcher, manifestPath } = {}) {
     let executionContext = context;
     if (!executionContext && useRealFetcher) {
         const credentials = getCredentials(manifestPath);
         executionContext = fetcher_1.newFetcherExecutionContext(buildUpdateCredentialsCallback(manifestPath), helpers_1.getPackAuth(packDef), packDef.networkDomains, credentials);
     }
-    return helper.executeFormulaOrSync(packDef, { type: types_1.FormulaType.Standard, formulaName: formulaNameWithNamespace }, params, executionContext || mocks_1.newMockExecutionContext(), options);
+    // TODO(huayang): param validations.
+    return thunk.findAndExecutePackFunction(params, { type: types_1.FormulaType.Standard, formulaName: resolveFormulaNameWithNamespace(formulaNameWithNamespace) }, packDef, executionContext || mocks_1.newMockExecutionContext());
 }
 exports.executeFormulaFromPackDef = executeFormulaFromPackDef;
 async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, contextOptions = {}, }) {
@@ -129,7 +142,17 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
 }
 exports.executeFormulaOrSyncWithRawParamsInVM = executeFormulaOrSyncWithRawParamsInVM;
 async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params: rawParams, manifest, executionContext, }) {
-    return helper.executeFormulaOrSyncWithRawParams(manifest, formulaSpecification, rawParams, executionContext);
+    let params;
+    if (formulaSpecification.type === types_1.FormulaType.Standard) {
+        const formula = helper.findFormula(manifest, formulaSpecification.formulaName);
+        params = coercion_1.coerceParams(formula, rawParams);
+    }
+    else {
+        const syncFormula = helper.findSyncFormula(manifest, formulaSpecification.formulaName);
+        params = coercion_1.coerceParams(syncFormula, rawParams);
+    }
+    // TODO(huayang): validation.
+    return thunk.findAndExecutePackFunction(params, formulaSpecification, manifest, executionContext);
 }
 exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
 /**
@@ -144,7 +167,7 @@ exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
  *
  * For now, use `coda execute --vm` to simulate that level of isolation.
  */
-async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, context, options, { useRealFetcher, manifestPath } = {}) {
+async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, context, _options, { useRealFetcher, manifestPath } = {}) {
     let executionContext = context;
     if (!executionContext) {
         if (useRealFetcher) {
@@ -161,7 +184,8 @@ async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, c
         if (iterations > MaxSyncIterations) {
             throw new Error(`Sync is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`);
         }
-        const response = await helper.executeFormulaOrSync(packDef, { formulaName: syncFormulaName, type: types_1.FormulaType.Sync }, params, executionContext, options);
+        // TODO(huayang): validation.
+        const response = await thunk.findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.Sync }, packDef, executionContext);
         result.push(...response.result);
         executionContext.sync.continuation = response.continuation;
         iterations++;
@@ -179,7 +203,8 @@ async function executeSyncFormulaFromPackDefSingleIteration(packDef, syncFormula
         const credentials = getCredentials(manifestPath);
         executionContext = fetcher_2.newFetcherSyncExecutionContext(buildUpdateCredentialsCallback(manifestPath), helpers_1.getPackAuth(packDef), packDef.networkDomains, credentials);
     }
-    return helper.executeFormulaOrSync(packDef, { formulaName: syncFormulaName, type: types_1.FormulaType.Sync }, params, executionContext || mocks_2.newMockSyncExecutionContext(), options);
+    // TODO(huayang): validation.
+    return thunk.findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.Sync }, packDef, executionContext || mocks_2.newMockSyncExecutionContext());
 }
 exports.executeSyncFormulaFromPackDefSingleIteration = executeSyncFormulaFromPackDefSingleIteration;
 async function executeMetadataFormula(formula, metadataParams = {}, context = mocks_1.newMockExecutionContext()) {

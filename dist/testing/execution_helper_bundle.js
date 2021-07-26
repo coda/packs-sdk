@@ -2958,7 +2958,7 @@ function findFormula(packDef, formulaNameWithNamespace) {
   }
   const [namespace, name] = formulaNameWithNamespace.includes("::") ? formulaNameWithNamespace.split("::") : ["", formulaNameWithNamespace];
   if (namespace) {
-    console.warn("Formula namespace is being deprecated");
+    console.log("Warning: formula namespace is being deprecated");
   }
   const formulas = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
   if (!formulas || !formulas.length) {

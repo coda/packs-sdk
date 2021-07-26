@@ -1,7 +1,12 @@
-## 0.4.2
+## 0.4.3
 
-Fix a bug where using `setUserAuthentication()` with `AuthenticationType.None` would
-inadvertently make accounts required.
+- Fixed a bug where using `setUserAuthentication()` with `AuthenticationType.None` would
+  inadvertently make accounts required.
+
+- Fixed a TypeScript bug where using `setUserAuthentication()` with authentication types like OAuth2 would give
+  TypeScript errors even for valid definitions.
+
+- Parse XML fetcher responses to JSON for respones with content type `application/xml`. Previously only `text/xml` worked.
 
 ## 0.4.2
 
