@@ -11,6 +11,7 @@ import type {StandardFormulaSpecification} from '../runtime/types';
 import type {SyncExecutionContext} from '../api_types';
 import type {SyncFormulaResult} from '../api';
 import type {SyncFormulaSpecification} from '../runtime/types';
+import {coerceParams} from './coercion';
 import {compilePackBundle} from './compile';
 import {getPackAuth} from '../cli/helpers';
 import * as helper from './execution_helper';
@@ -24,6 +25,7 @@ import * as path from 'path';
 import {print} from './helpers';
 import {readCredentialsFile} from './auth';
 import {storeCredential} from './auth';
+import * as thunk from '../runtime/thunk/thunk';
 import {translateErrorStackFromVM} from '../runtime/execution';
 import util from 'util';
 
@@ -36,12 +38,25 @@ export interface ContextOptions {
   manifestPath?: string;
 }
 
+function resolveFormulaNameWithNamespace(formulaNameWithNamespace: string): string {
+  const [namespace, name] = formulaNameWithNamespace.includes('::')
+    ? formulaNameWithNamespace.split('::')
+    : ['', formulaNameWithNamespace];
+
+  if (namespace) {
+    // eslint-disable-next-line no-console
+    console.warn('Formula namespace is being deprecated');
+  }
+
+  return name;
+}
+
 export async function executeFormulaFromPackDef(
   packDef: PackVersionDefinition,
   formulaNameWithNamespace: string,
   params: ParamValues<ParamDefs>,
   context?: ExecutionContext,
-  options?: ExecuteOptions,
+  _options?: ExecuteOptions,
   {useRealFetcher, manifestPath}: ContextOptions = {},
 ) {
   let executionContext = context;
@@ -55,12 +70,12 @@ export async function executeFormulaFromPackDef(
     );
   }
 
-  return helper.executeFormulaOrSync(
-    packDef,
-    {type: FormulaType.Standard, formulaName: formulaNameWithNamespace},
+  // TODO(huayang): param validations.
+  return thunk.findAndExecutePackFunction(
     params,
+    {type: FormulaType.Standard, formulaName: resolveFormulaNameWithNamespace(formulaNameWithNamespace)},
+    packDef,
     executionContext || newMockExecutionContext(),
-    options,
   );
 }
 
@@ -212,7 +227,17 @@ export async function executeFormulaOrSyncWithRawParams({
   vm?: boolean;
   executionContext: SyncExecutionContext;
 }) {
-  return helper.executeFormulaOrSyncWithRawParams(manifest, formulaSpecification, rawParams, executionContext);
+  let params: ParamValues<ParamDefs>;
+  if (formulaSpecification.type === FormulaType.Standard) {
+    const formula = helper.findFormula(manifest, formulaSpecification.formulaName);
+    params = coerceParams(formula, rawParams as any);
+  } else {
+    const syncFormula = helper.findSyncFormula(manifest, formulaSpecification.formulaName);
+    params = coerceParams(syncFormula, rawParams as any);
+  }
+
+  // TODO(huayang): validation.
+  return thunk.findAndExecutePackFunction(params, formulaSpecification, manifest, executionContext);
 }
 
 /**
@@ -232,7 +257,7 @@ export async function executeSyncFormulaFromPackDef(
   syncFormulaName: string,
   params: ParamValues<ParamDefs>,
   context?: SyncExecutionContext,
-  options?: ExecuteOptions,
+  _options?: ExecuteOptions,
   {useRealFetcher, manifestPath}: ContextOptions = {},
 ): Promise<any[]> {
   let executionContext = context;
@@ -257,13 +282,14 @@ export async function executeSyncFormulaFromPackDef(
         `Sync is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`,
       );
     }
-    const response = await helper.executeFormulaOrSync(
-      packDef,
-      {formulaName: syncFormulaName, type: FormulaType.Sync},
+    // TODO(huayang): validation.
+    const response = await thunk.findAndExecutePackFunction(
       params,
+      {formulaName: syncFormulaName, type: FormulaType.Sync},
+      packDef,
       executionContext,
-      options,
     );
+
     result.push(...response.result);
     executionContext.sync.continuation = response.continuation;
     iterations++;
@@ -295,12 +321,12 @@ export async function executeSyncFormulaFromPackDefSingleIteration(
     );
   }
 
-  return helper.executeFormulaOrSync(
-    packDef,
-    {formulaName: syncFormulaName, type: FormulaType.Sync},
+  // TODO(huayang): validation.
+  return thunk.findAndExecutePackFunction(
     params,
+    {formulaName: syncFormulaName, type: FormulaType.Sync},
+    packDef,
     executionContext || newMockSyncExecutionContext(),
-    options,
   );
 }
 

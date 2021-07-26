@@ -6,8 +6,8 @@ import type {FormulaSpecification} from '../types';
 import {FormulaType} from '../types';
 import type {MetadataFormula} from '../../api';
 import {MetadataFormulaType} from '../types';
-import type {PackDefinition} from '../../types';
 import type {PackFormulaResult} from '../../api_types';
+import type {PackVersionDefinition} from '../../types';
 import type {ParamDefs} from '../../api_types';
 import type {ParamValues} from '../../api_types';
 import type {ParameterAutocompleteMetadataFormulaSpecification} from '../types';
@@ -16,42 +16,60 @@ import {PostSetupType} from '../../types';
 import {StatusCodeError} from '../../api';
 import type {SyncExecutionContext} from '../../api_types';
 import type {SyncFormulaResult} from '../../api';
+import type {SyncFormulaSpecification} from '../types';
 import type {TypedPackFormula} from '../../api';
 import {isDynamicSyncTable} from '../../api';
+import {marshalValue} from '../common/marshaling';
+import {unmarshalValue} from '../common/marshaling';
 
-// TODO(huayang)
-function marshalError(err: Error): Error {
-  return err;
+function wrapError(err: Error): Error {
+  // TODO(huayang): we do this for the sdk.
+  // if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
+  //   err.message +=
+  //     '\nThis means your formula was invoked with a mock fetcher that had no response configured.' +
+  //     '\nThis usually means you invoked your formula from the commandline with `coda execute` but forgot to ' +
+  //     'add the --fetch flag ' +
+  //     'to actually fetch from the remote API.';
+  // }
+
+  return new Error(marshalValue(err));
 }
 
-// TODO(huayang)
-function unmarshalError(err: Error): Error {
-  return err;
+function unwrapError(err: Error): Error {
+  try {
+    const unmarshaledValue = unmarshalValue(err.message);
+    if (unmarshaledValue instanceof Error) {
+      return unmarshaledValue;
+    }
+    return err;
+  } catch (_) {
+    return err;
+  }
 }
 
 /**
  * The thunk entrypoint - the first code that runs inside the v8 isolate once control is passed over.
  */
-export async function findAndExecutePackFunction(
+export async function findAndExecutePackFunction<T extends FormulaSpecification>(
   params: ParamValues<ParamDefs>,
-  formulaSpec: FormulaSpecification,
-): Promise<PackFormulaResult | SyncFormulaResult<any>> {
+  formulaSpec: T,
+  manifest: PackVersionDefinition,
+  executionContext: ExecutionContext | SyncExecutionContext,
+): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<any> : PackFormulaResult> {
   try {
-    return await doFindAndExecutePackFunction(params, formulaSpec);
+    return await doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext);
   } catch (err) {
     // all errors should be marshaled to avoid IVM dropping essential fields / name.
-    throw marshalError(err);
+    throw wrapError(err);
   }
 }
 
-function doFindAndExecutePackFunction(
+function doFindAndExecutePackFunction<T extends FormulaSpecification>(
   params: ParamValues<ParamDefs>,
-  formulaSpec: FormulaSpecification,
-): Promise<PackFormulaResult | SyncFormulaResult<any>> {
-  // Pull useful variables out of injected globals
-  const manifest = (global.exports.pack || global.exports.manifest) as PackDefinition;
-  const executionContext = (global as any).executionContext;
-
+  formulaSpec: T,
+  manifest: PackVersionDefinition,
+  executionContext: ExecutionContext | SyncExecutionContext,
+): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<any> : PackFormulaResult> {
   const {formulas, syncTables, defaultAuthentication} = manifest;
 
   switch (formulaSpec.type) {
@@ -162,7 +180,10 @@ function doFindAndExecutePackFunction(
   throw new Error(`Could not find a formula matching formula spec ${JSON.stringify(formulaSpec)}`);
 }
 
-function findParentFormula(manifest: PackDefinition, formulaSpec: ParameterAutocompleteMetadataFormulaSpecification) {
+function findParentFormula(
+  manifest: PackVersionDefinition,
+  formulaSpec: ParameterAutocompleteMetadataFormulaSpecification,
+) {
   const {formulas, syncTables} = manifest;
   let formula: TypedPackFormula | undefined;
   switch (formulaSpec.parentFormulaType) {
@@ -196,7 +217,7 @@ export async function handleErrorAsync(func: () => Promise<any>): Promise<any> {
   try {
     return await func();
   } catch (err) {
-    throw unmarshalError(err);
+    throw unwrapError(err);
   }
 }
 
@@ -204,7 +225,7 @@ export function handleError(func: () => any): any {
   try {
     return func();
   } catch (err) {
-    throw unmarshalError(err);
+    throw unwrapError(err);
   }
 }
 

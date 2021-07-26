@@ -130,10 +130,14 @@ export async function executeThunk(
   context: Context,
   {params, formulaSpec}: {params: ParamValues<ParamDefs>; formulaSpec: FormulaSpecification},
 ): Promise<SyncFormulaResult<object> | PackFormulaResult> {
-  const resultRef = await context.evalClosure('return findAndExecutePackFunction($0, $1);', [params, formulaSpec], {
-    arguments: {copy: true},
-    result: {reference: true, promise: true},
-  });
+  const resultRef = await context.evalClosure(
+    'return findAndExecutePackFunction($0, $1, global.exports.pack || global.exports.manifest, global.executionContext);',
+    [params, formulaSpec],
+    {
+      arguments: {copy: true},
+      result: {reference: true, promise: true},
+    },
+  );
 
   // And marshal out the results into a local copy of the isolate object reference.
   const localIsolateValue = await resultRef.copy();
