@@ -3,7 +3,7 @@ interface UploadArgs {
     manifestFile: string;
     codaApiEndpoint: string;
     notes?: string;
-    outputDir?: string;
+    intermediateOutputDirectory: string;
 }
-export declare function handleUpload({ outputDir, manifestFile, codaApiEndpoint, notes }: Arguments<UploadArgs>): Promise<undefined>;
+export declare function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, }: Arguments<UploadArgs>): Promise<undefined>;
 export {};

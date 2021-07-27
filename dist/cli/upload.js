@@ -30,28 +30,35 @@ const crypto_1 = require("../helpers/crypto");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const errors_1 = require("./errors");
+const fs_1 = __importDefault(require("fs"));
 const config_storage_1 = require("./config_storage");
 const config_storage_2 = require("./config_storage");
 const helpers_3 = require("./helpers");
 const errors_2 = require("./errors");
 const helpers_4 = require("./helpers");
+const os_1 = __importDefault(require("os"));
 const path = __importStar(require("path"));
 const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
+const uuid_1 = require("uuid");
 const validate_1 = require("./validate");
-async function handleUpload({ outputDir, manifestFile, codaApiEndpoint, notes }) {
+async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, }) {
     const manifestDir = path.dirname(manifestFile);
     const formattedEndpoint = helpers_2.formatEndpoint(codaApiEndpoint);
     const logger = new logging_1.ConsoleLogger();
     logger.info('Building Pack bundle...');
+    if (fs_1.default.existsSync(intermediateOutputDirectory)) {
+        logger.info(`Existing directory ${intermediateOutputDirectory} detected. Probably left over from previous build. Removing it...`);
+        fs_1.default.rmdirSync(intermediateOutputDirectory);
+    }
     // we need to generate the bundle file in the working directory instead of a temp directory in
     // order to set source map right. The source map tool chain isn't smart enough to resolve a
     // relative path in the end.
     const { bundlePath, bundleSourceMapPath } = await compile_1.compilePackBundle({
         manifestPath: manifestFile,
-        outputDirectory: outputDir,
-        intermediateOutputDirectory: outputDir,
+        outputDirectory: intermediateOutputDirectory,
+        intermediateOutputDirectory,
     });
     const manifest = await helpers_3.importManifest(bundlePath);
     // Since package.json isn't in dist, we grab it from the root directory instead.
@@ -103,6 +110,10 @@ async function handleUpload({ outputDir, manifestFile, codaApiEndpoint, notes })
         if (errors_2.isCodaError(uploadCompleteResponse)) {
             helpers_5.printAndExit(`Error while finalizing pack version: ${errors_1.formatError(uploadCompleteResponse)}`);
         }
+        logger.info('\n\nCleaning up...');
+        const tempDirectory = fs_1.default.mkdtempSync(path.join(os_1.default.tmpdir(), `coda-packs-${uuid_1.v4()}`));
+        fs_1.default.renameSync(intermediateOutputDirectory, tempDirectory);
+        logger.info(`Intermediate files are moved to ${tempDirectory}`);
     }
     catch (err) {
         helpers_5.printAndExit(`Unepected error during pack upload: ${errors_1.formatError(err)}`);

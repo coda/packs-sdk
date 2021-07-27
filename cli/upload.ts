@@ -7,37 +7,52 @@ import {computeSha256} from '../helpers/crypto';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
+import fs from 'fs';
 import {getApiKey} from './config_storage';
 import {getPackId} from './config_storage';
 import {importManifest} from './helpers';
 import {isCodaError} from './errors';
 import {isTestCommand} from './helpers';
+import os from 'os';
 import * as path from 'path';
 import {printAndExit} from '../testing/helpers';
 import {readFile} from '../testing/helpers';
 import requestPromise from 'request-promise-native';
+import {v4} from 'uuid';
 import {validateMetadata} from './validate';
 
 interface UploadArgs {
   manifestFile: string;
   codaApiEndpoint: string;
   notes?: string;
-  outputDir?: string;
+  intermediateOutputDirectory: string;
 }
 
-export async function handleUpload({outputDir, manifestFile, codaApiEndpoint, notes}: Arguments<UploadArgs>) {
+export async function handleUpload({
+  intermediateOutputDirectory,
+  manifestFile,
+  codaApiEndpoint,
+  notes,
+}: Arguments<UploadArgs>) {
   const manifestDir = path.dirname(manifestFile);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   const logger = new ConsoleLogger();
   logger.info('Building Pack bundle...');
+
+  if (fs.existsSync(intermediateOutputDirectory)) {
+    logger.info(
+      `Existing directory ${intermediateOutputDirectory} detected. Probably left over from previous build. Removing it...`,
+    );
+    fs.rmdirSync(intermediateOutputDirectory);
+  }
 
   // we need to generate the bundle file in the working directory instead of a temp directory in
   // order to set source map right. The source map tool chain isn't smart enough to resolve a
   // relative path in the end.
   const {bundlePath, bundleSourceMapPath} = await compilePackBundle({
     manifestPath: manifestFile,
-    outputDirectory: outputDir,
-    intermediateOutputDirectory: outputDir,
+    outputDirectory: intermediateOutputDirectory,
+    intermediateOutputDirectory,
   });
 
   const manifest = await importManifest(bundlePath);
@@ -103,6 +118,13 @@ export async function handleUpload({outputDir, manifestFile, codaApiEndpoint, no
     if (isCodaError(uploadCompleteResponse)) {
       printAndExit(`Error while finalizing pack version: ${formatError(uploadCompleteResponse)}`);
     }
+
+    logger.info('\n\nCleaning up...');
+
+    const tempDirectory = fs.mkdtempSync(path.join(os.tmpdir(), `coda-packs-${v4()}`));
+    fs.renameSync(intermediateOutputDirectory, tempDirectory);
+
+    logger.info(`Intermediate files are moved to ${tempDirectory}`);
   } catch (err) {
     printAndExit(`Unepected error during pack upload: ${formatError(err)}`);
   }

@@ -81,7 +81,7 @@ if (require.main === module) {
         outputDir: {
           string: true,
           alias: 'o',
-          default: 'build',
+          default: undefined,
         },
       },
       handler: handleBuild,
@@ -100,10 +100,10 @@ if (require.main === module) {
           hidden: true,
           default: DEFAULT_API_ENDPOINT,
         },
-        outputDir: {
+        intermediateOutputDirectory: {
           string: true,
           alias: 'o',
-          default: 'build',
+          default: './_upload_build',
         },
       },
       handler: handleUpload,
