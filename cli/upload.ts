@@ -15,7 +15,7 @@ import {isCodaError} from './errors';
 import {isTestCommand} from './helpers';
 import os from 'os';
 import * as path from 'path';
-import {printAndExit} from '../testing/helpers';
+import {printAndExit as printAndExitImpl} from '../testing/helpers';
 import {readFile} from '../testing/helpers';
 import requestPromise from 'request-promise-native';
 import {tryParseSystemError} from './errors';
@@ -29,12 +29,28 @@ interface UploadArgs {
   intermediateOutputDirectory: string;
 }
 
+function cleanup(intermediateOutputDirectory: string, logger: ConsoleLogger) {
+  logger.info('\n\nCleaning up...');
+
+  if (fs.existsSync(intermediateOutputDirectory)) {
+    const tempDirectory = fs.mkdtempSync(path.join(os.tmpdir(), `coda-packs-${v4()}`));
+    fs.renameSync(intermediateOutputDirectory, tempDirectory);
+
+    logger.info(`Intermediate files are moved to ${tempDirectory}`);
+  }
+}
+
 export async function handleUpload({
   intermediateOutputDirectory,
   manifestFile,
   codaApiEndpoint,
   notes,
 }: Arguments<UploadArgs>) {
+  function printAndExit(message: string): never {
+    cleanup(intermediateOutputDirectory, logger);
+    printAndExitImpl(message);
+  }
+
   const manifestDir = path.dirname(manifestFile);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   const logger = new ConsoleLogger();
@@ -123,17 +139,9 @@ export async function handleUpload({
   } catch (err) {
     const errors = [`Unexpected error during Pack upload: ${formatError(err)}`, tryParseSystemError(err)];
     printAndExit(errors.join(`\n`));
-  } finally {
-    logger.info('\n\nCleaning up...');
-
-    if (fs.existsSync(intermediateOutputDirectory)) {
-      const tempDirectory = fs.mkdtempSync(path.join(os.tmpdir(), `coda-packs-${v4()}`));
-      fs.renameSync(intermediateOutputDirectory, tempDirectory);
-
-      logger.info(`Intermediate files are moved to ${tempDirectory}`);
-    }
   }
 
+  cleanup(intermediateOutputDirectory, logger);
   logger.info('Done!');
 }
 
@@ -144,6 +152,6 @@ async function uploadPack(uploadUrl: string, uploadPayload: string, headers: {[h
       body: uploadPayload,
     });
   } catch (err) {
-    printAndExit(`Error in uploading Pack to signed url: ${formatError(err)}`);
+    printAndExitImpl(`Error in uploading Pack to signed url: ${formatError(err)}`);
   }
 }

@@ -44,7 +44,19 @@ const request_promise_native_1 = __importDefault(require("request-promise-native
 const errors_3 = require("./errors");
 const uuid_1 = require("uuid");
 const validate_1 = require("./validate");
+function cleanup(intermediateOutputDirectory, logger) {
+    logger.info('\n\nCleaning up...');
+    if (fs_1.default.existsSync(intermediateOutputDirectory)) {
+        const tempDirectory = fs_1.default.mkdtempSync(path.join(os_1.default.tmpdir(), `coda-packs-${uuid_1.v4()}`));
+        fs_1.default.renameSync(intermediateOutputDirectory, tempDirectory);
+        logger.info(`Intermediate files are moved to ${tempDirectory}`);
+    }
+}
 async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, }) {
+    function printAndExit(message) {
+        cleanup(intermediateOutputDirectory, logger);
+        helpers_5.printAndExit(message);
+    }
     const manifestDir = path.dirname(manifestFile);
     const formattedEndpoint = helpers_2.formatEndpoint(codaApiEndpoint);
     const logger = new logging_1.ConsoleLogger();
@@ -67,26 +79,26 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
     const codaPacksSDKVersion = packageJson.version;
     const apiKey = config_storage_1.getApiKey(codaApiEndpoint);
     if (!apiKey) {
-        helpers_5.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
+        printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
     }
     const client = helpers_1.createCodaClient(apiKey, formattedEndpoint);
     const packId = config_storage_2.getPackId(manifestDir, codaApiEndpoint);
     if (!packId) {
-        helpers_5.printAndExit(`Could not find a Pack id registered in directory "${manifestDir}"`);
+        printAndExit(`Could not find a Pack id registered in directory "${manifestDir}"`);
     }
     const packVersion = manifest.version;
     if (!packVersion) {
-        helpers_5.printAndExit(`No Pack version declared for this Pack`);
+        printAndExit(`No Pack version declared for this Pack`);
     }
     try {
         const bundle = helpers_6.readFile(bundlePath);
         if (!bundle) {
-            helpers_5.printAndExit(`Could not find bundle file at path ${bundlePath}`);
+            printAndExit(`Could not find bundle file at path ${bundlePath}`);
         }
         const metadata = metadata_1.compilePackMetadata(manifest);
         const sourceMap = helpers_6.readFile(bundleSourceMapPath);
         if (!sourceMap) {
-            helpers_5.printAndExit(`Could not find bundle source map at path ${bundleSourceMapPath}`);
+            printAndExit(`Could not find bundle source map at path ${bundleSourceMapPath}`);
         }
         const upload = {
             metadata,
@@ -101,7 +113,7 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
         logger.info('Registering new Pack version...');
         const registerResponse = await client.registerPackVersion(packId, packVersion, {}, { bundleHash });
         if (errors_2.isCodaError(registerResponse)) {
-            return helpers_5.printAndExit(`Error while registering pack version: ${errors_1.formatError(registerResponse)}`);
+            return printAndExit(`Error while registering pack version: ${errors_1.formatError(registerResponse)}`);
         }
         const { uploadUrl, headers } = registerResponse;
         logger.info('Uploading Pack...');
@@ -109,21 +121,14 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
         logger.info('Validating upload...');
         const uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion, {}, { notes });
         if (errors_2.isCodaError(uploadCompleteResponse)) {
-            helpers_5.printAndExit(`Error while finalizing pack version: ${errors_1.formatError(uploadCompleteResponse)}`);
+            printAndExit(`Error while finalizing pack version: ${errors_1.formatError(uploadCompleteResponse)}`);
         }
     }
     catch (err) {
         const errors = [`Unexpected error during Pack upload: ${errors_1.formatError(err)}`, errors_3.tryParseSystemError(err)];
-        helpers_5.printAndExit(errors.join(`\n`));
+        printAndExit(errors.join(`\n`));
     }
-    finally {
-        logger.info('\n\nCleaning up...');
-        if (fs_1.default.existsSync(intermediateOutputDirectory)) {
-            const tempDirectory = fs_1.default.mkdtempSync(path.join(os_1.default.tmpdir(), `coda-packs-${uuid_1.v4()}`));
-            fs_1.default.renameSync(intermediateOutputDirectory, tempDirectory);
-            logger.info(`Intermediate files are moved to ${tempDirectory}`);
-        }
-    }
+    cleanup(intermediateOutputDirectory, logger);
     logger.info('Done!');
 }
 exports.handleUpload = handleUpload;
