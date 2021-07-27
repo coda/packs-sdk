@@ -1,3 +1,8 @@
+## 0.4.4
+
+- Fixed a bug where using `pack.setSystemAuthentication()` would add a required connection
+  parameter to every formula.
+
 ## 0.4.3
 
 - Fixed a bug where using `setUserAuthentication()` with `AuthenticationType.None` would

@@ -2288,18 +2288,85 @@ var require_url_parse = __commonJS({
   }
 });
 
-// testing/execution_helper.ts
+// runtime/thunk/thunk.ts
 __export(exports, {
-  executeFormula: () => executeFormula,
-  executeFormulaOrSync: () => executeFormulaOrSync,
-  executeFormulaOrSyncWithRawParams: () => executeFormulaOrSyncWithRawParams,
-  executeSyncFormula: () => executeSyncFormula,
+  ensureSwitchUnreachable: () => ensureSwitchUnreachable,
+  findAndExecutePackFunction: () => findAndExecutePackFunction,
   findFormula: () => findFormula,
   findSyncFormula: () => findSyncFormula,
+  handleError: () => handleError,
+  handleErrorAsync: () => handleErrorAsync,
+  handleFetcherStatusError: () => handleFetcherStatusError,
   tryFindFormula: () => tryFindFormula,
   tryFindSyncFormula: () => tryFindSyncFormula,
-  wrapError: () => wrapError
+  unwrapError: () => unwrapError
 });
+
+// types.ts
+var PackCategory;
+(function(PackCategory2) {
+  PackCategory2["CRM"] = "CRM";
+  PackCategory2["Calendar"] = "Calendar";
+  PackCategory2["Communication"] = "Communication";
+  PackCategory2["DataStorage"] = "DataStorage";
+  PackCategory2["Design"] = "Design";
+  PackCategory2["Financial"] = "Financial";
+  PackCategory2["Fun"] = "Fun";
+  PackCategory2["Geo"] = "Geo";
+  PackCategory2["IT"] = "IT";
+  PackCategory2["Mathematics"] = "Mathematics";
+  PackCategory2["Organization"] = "Organization";
+  PackCategory2["Recruiting"] = "Recruiting";
+  PackCategory2["Shopping"] = "Shopping";
+  PackCategory2["Social"] = "Social";
+  PackCategory2["Sports"] = "Sports";
+  PackCategory2["Travel"] = "Travel";
+  PackCategory2["Weather"] = "Weather";
+})(PackCategory || (PackCategory = {}));
+var AuthenticationType;
+(function(AuthenticationType2) {
+  AuthenticationType2["None"] = "None";
+  AuthenticationType2["HeaderBearerToken"] = "HeaderBearerToken";
+  AuthenticationType2["CustomHeaderToken"] = "CustomHeaderToken";
+  AuthenticationType2["QueryParamToken"] = "QueryParamToken";
+  AuthenticationType2["MultiQueryParamToken"] = "MultiQueryParamToken";
+  AuthenticationType2["OAuth2"] = "OAuth2";
+  AuthenticationType2["WebBasic"] = "WebBasic";
+  AuthenticationType2["AWSSignature4"] = "AWSSignature4";
+  AuthenticationType2["CodaApiHeaderBearerToken"] = "CodaApiHeaderBearerToken";
+  AuthenticationType2["Various"] = "Various";
+})(AuthenticationType || (AuthenticationType = {}));
+var DefaultConnectionType;
+(function(DefaultConnectionType2) {
+  DefaultConnectionType2[DefaultConnectionType2["SharedDataOnly"] = 1] = "SharedDataOnly";
+  DefaultConnectionType2[DefaultConnectionType2["Shared"] = 2] = "Shared";
+  DefaultConnectionType2[DefaultConnectionType2["ProxyActionsOnly"] = 3] = "ProxyActionsOnly";
+})(DefaultConnectionType || (DefaultConnectionType = {}));
+var PostSetupType;
+(function(PostSetupType2) {
+  PostSetupType2["SetEndpoint"] = "SetEndPoint";
+})(PostSetupType || (PostSetupType = {}));
+var FeatureSet;
+(function(FeatureSet2) {
+  FeatureSet2["Basic"] = "Basic";
+  FeatureSet2["Pro"] = "Pro";
+  FeatureSet2["Team"] = "Team";
+  FeatureSet2["Enterprise"] = "Enterprise";
+})(FeatureSet || (FeatureSet = {}));
+var QuotaLimitType;
+(function(QuotaLimitType2) {
+  QuotaLimitType2["Action"] = "Action";
+  QuotaLimitType2["Getter"] = "Getter";
+  QuotaLimitType2["Sync"] = "Sync";
+  QuotaLimitType2["Metadata"] = "Metadata";
+})(QuotaLimitType || (QuotaLimitType = {}));
+var SyncInterval;
+(function(SyncInterval2) {
+  SyncInterval2["Manual"] = "Manual";
+  SyncInterval2["Daily"] = "Daily";
+  SyncInterval2["Hourly"] = "Hourly";
+  SyncInterval2["EveryTenMinutes"] = "EveryTenMinutes";
+})(SyncInterval || (SyncInterval = {}));
 
 // runtime/types.ts
 var FormulaType;
@@ -2331,9 +2398,6 @@ var Type;
   Type2[Type2["html"] = 5] = "html";
   Type2[Type2["image"] = 6] = "image";
 })(Type || (Type = {}));
-function isArrayType(obj) {
-  return obj && obj.type === "array" && typeof obj.items === "number";
-}
 var ParameterType;
 (function(ParameterType2) {
   ParameterType2["String"] = "string";
@@ -2476,12 +2540,6 @@ var AttributionNodeType;
   AttributionNodeType2[AttributionNodeType2["Link"] = 2] = "Link";
   AttributionNodeType2[AttributionNodeType2["Image"] = 3] = "Image";
 })(AttributionNodeType || (AttributionNodeType = {}));
-function isObject(val) {
-  return Boolean(val && val.type === ValueType.Object);
-}
-function isArray(val) {
-  return Boolean(val && val.type === ValueType.Array);
-}
 
 // handler_templates.ts
 var import_clone = __toModule(require_clone());
@@ -2491,465 +2549,235 @@ var import_qs = __toModule(require_lib());
 var import_url_parse = __toModule(require_url_parse());
 
 // api.ts
-var UserVisibleError = class extends Error {
-  constructor(message, internalError) {
-    super(message);
-    this.isUserVisible = true;
-    this.internalError = internalError;
+var StatusCodeError = class extends Error {
+  constructor(statusCode, body, options, response) {
+    super(`${statusCode} - ${body}`);
+    this.statusCode = statusCode;
+    this.body = body;
+    this.options = options;
+    this.response = response;
   }
 };
-function isObjectPackFormula(fn) {
-  return fn.resultType === Type.object;
+function isDynamicSyncTable(syncTable) {
+  return "isDynamic" in syncTable;
 }
 
-// helpers/ensure.ts
-function ensureUnreachable(value, message) {
-  throw new Error(message || `Unreachable code hit with value ${String(value)}`);
-}
-function ensureExists(value, message) {
-  if (typeof value === "undefined" || value === null) {
-    throw new (getErrorConstructor(message))(message || `Expected value for ${String(value)}`);
-  }
-  return value;
-}
-function getErrorConstructor(message) {
-  return message ? UserVisibleError : Error;
-}
+// runtime/common/marshaling/constants.ts
+var CodaMarshalerType;
+(function(CodaMarshalerType2) {
+  CodaMarshalerType2["Error"] = "Error";
+  CodaMarshalerType2["Buffer"] = "Buffer";
+  CodaMarshalerType2["Number"] = "Number";
+  CodaMarshalerType2["Date"] = "Date";
+})(CodaMarshalerType || (CodaMarshalerType = {}));
+var MarshalingInjectedKeys;
+(function(MarshalingInjectedKeys2) {
+  MarshalingInjectedKeys2["CodaMarshaler"] = "__coda_marshaler__";
+  MarshalingInjectedKeys2["ErrorClassName"] = "__error_class_name__";
+  MarshalingInjectedKeys2["ErrorClassType"] = "__error_class_type__";
+})(MarshalingInjectedKeys || (MarshalingInjectedKeys = {}));
 
-// helpers/object_utils.ts
-function isDefined(obj) {
-  return !isNil(obj);
-}
-function isNil(obj) {
-  return typeof obj === "undefined" || obj === null;
-}
-function deepCopy(obj) {
-  return JSON.parse(JSON.stringify(obj));
-}
-
-// testing/coercion.ts
-function coerceParams(formula, args) {
-  const { parameters, varargParameters } = formula;
-  const coerced = [];
-  let varargIndex = 0;
-  for (let i = 0; i < args.length; i++) {
-    const paramDef = parameters[i];
-    if (paramDef) {
-      coerced.push(coerceParamValue(paramDef, args[i]));
-    } else {
-      if (varargParameters) {
-        const varargDef = varargParameters[varargIndex];
-        coerced.push(coerceParamValue(varargDef, args[i]));
-        varargIndex = (varargIndex + 1) % varargParameters.length;
-      } else {
-        coerced.push(args[i]);
-      }
-    }
-  }
-  return coerced;
-}
-function coerceParamValue(paramDef, paramValue) {
-  if (!isDefined(paramValue)) {
-    return paramValue;
-  }
-  if (isArrayType(paramDef.type)) {
-    const valuesString = paramValue;
-    const value = valuesString.length ? valuesString.split(",") : [];
-    return value.map((item) => coerceParam(paramDef.type.items, item.trim()));
-  }
-  return coerceParam(paramDef.type, paramValue);
-}
-function coerceParam(type, value) {
-  switch (type) {
-    case Type.boolean:
-      return (value || "").toLowerCase() === "true";
-    case Type.date:
-      return new Date(value);
-    case Type.number:
-      return Number(value);
-    case Type.object:
-      return JSON.parse(value);
-    case Type.html:
-    case Type.image:
-    case Type.string:
-      return value;
-    default:
-      return ensureUnreachable(type);
-  }
-}
-
-// testing/types.ts
-var ParameterException = class extends Error {
-};
-var ResultValidationContext = class {
-  constructor(contexts) {
-    this.fieldContexts = contexts ? deepCopy(contexts) : [];
-  }
-  extendForProperty(propertyKey) {
-    const newContext = { propertyKey, arrayIndices: [] };
-    return new ResultValidationContext([...this.fieldContexts, newContext]);
-  }
-  extendForIndex(arrayIndex) {
-    const newContext = new ResultValidationContext(this.fieldContexts);
-    const currentContext = newContext.fieldContexts[newContext.fieldContexts.length - 1];
-    currentContext.arrayIndices.push(arrayIndex);
-    return newContext;
-  }
-  generateFieldPath() {
-    const fieldPath = this.fieldContexts.map((context) => this.generateFieldPathFromValidationContext(context));
-    return fieldPath.join(".");
-  }
-  generateFieldPathFromValidationContext(context) {
-    const { propertyKey, arrayIndices } = context;
-    return `${propertyKey}${arrayIndices.map((idx) => `[${idx}]`)}`;
-  }
-};
-var ResultValidationException = class extends Error {
-  constructor(message, errors) {
-    super(message);
-    this.errors = errors;
-  }
-  static fromErrors(formulaName, errors) {
-    const messages = errors.map((err) => err.message).join("\n");
-    const message = `The following errors were found when validating the result of the formula "${formulaName}":
-${messages}`;
-    return new ResultValidationException(message, errors);
-  }
-};
-
-// helpers/string.ts
-var EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-function isEmail(text) {
-  return EMAIL_REGEX.test(text);
-}
-
-// testing/validation.ts
-var import_url_parse2 = __toModule(require_url_parse());
-function validateParams(formula, args) {
-  const { parameters, varargParameters } = formula;
-  const numRequiredParams = parameters.filter((param) => !param.optional).length;
-  if (args.length < numRequiredParams) {
-    throw new ParameterException(`Expected at least ${numRequiredParams} parameter but only ${args.length} were provided.`);
-  }
-  if (args.length > parameters.length && !varargParameters) {
-    throw new ParameterException(`Formula only accepts ${parameters.length} parameters but ${args.length} were provided.`);
-  }
-  const errors = [];
-  for (let i = 0; i < parameters.length; i++) {
-    const param = args[i];
-    const paramDef = parameters[i];
-    if (!paramDef.optional && !isDefined(param)) {
-      errors.push({
-        message: `Param ${i} "${paramDef.name}" is required but a value was not provided.`
-      });
-    }
-  }
-  if (errors.length) {
-    const errorMsgs = errors.map((error) => error.message);
-    throw new ParameterException(`The following parameter errors were found:
-${errorMsgs.join("\n")}`);
-  }
-}
-function validateResult(formula, result) {
-  const maybeError = validateResultType(formula.resultType, result);
-  if (maybeError) {
-    throw ResultValidationException.fromErrors(formula.name, [maybeError]);
-  }
-  if (isObjectPackFormula(formula)) {
-    validateObjectResult(formula, result);
-  }
-}
-function validateResultType(resultType, result) {
-  if (!isDefined(result)) {
-    return { message: `Expected a ${resultType} result but got ${result}.` };
-  }
-  const typeOfResult = typeof result;
-  switch (resultType) {
-    case Type.boolean:
-      return checkType(typeOfResult === "boolean", "boolean", result);
-    case Type.date:
-      return checkType(result instanceof Date, "date", result);
-    case Type.html:
-      return checkType(typeOfResult === "string", "html", result);
-    case Type.image:
-      return checkType(typeOfResult === "string", "image", result);
-    case Type.number:
-      return checkType(typeOfResult === "number", "number", result);
-    case Type.object:
-      return checkType(typeOfResult === "object", "object", result);
-    case Type.string:
-      return checkType(typeOfResult === "string", "string", result);
-    default:
-      return ensureUnreachable(resultType);
-  }
-}
-function generateErrorFromValidationContext(context, schema, result) {
-  const resultValue = typeof result === "string" ? `"${result}"` : result;
-  const objectTrace = context.generateFieldPath();
-  return {
-    message: `Expected a ${schema.type} property for ${objectTrace} but got ${resultValue}.`
-  };
-}
-function checkPropertyTypeAndCodaType(schema, result, context) {
-  const errors = [generateErrorFromValidationContext(context, schema, result)];
-  switch (schema.type) {
-    case ValueType.Boolean: {
-      const resultValidationError = checkType(typeof result === "boolean", "boolean", result);
-      return resultValidationError ? errors : [];
-    }
-    case ValueType.Number: {
-      const resultValidationError = checkType(typeof result === "number", "number", result);
-      if (resultValidationError) {
-        return errors;
-      }
-      if (!("codaType" in schema)) {
-        return [];
-      }
-      switch (schema.codaType) {
-        case ValueHintType.Slider:
-          const sliderErrorMessage = tryParseSlider(result, schema);
-          return sliderErrorMessage ? [sliderErrorMessage] : [];
-        case ValueHintType.Scale:
-          const scaleErrorMessage = tryParseScale(result, schema);
-          return scaleErrorMessage ? [scaleErrorMessage] : [];
-        case ValueHintType.Date:
-        case ValueHintType.DateTime:
-        case ValueHintType.Time:
-        case ValueHintType.Percent:
-        case ValueHintType.Currency:
-        case void 0:
-          return [];
-        default:
-          return ensureUnreachable(schema);
-      }
-    }
-    case ValueType.String: {
-      const resultValidationError = checkType(typeof result === "string", "string", result);
-      if (resultValidationError) {
-        return errors;
-      }
-      switch (schema.codaType) {
-        case ValueHintType.Attachment:
-        case ValueHintType.Embed:
-        case ValueHintType.Image:
-        case ValueHintType.ImageAttachment:
-        case ValueHintType.Url:
-          const urlErrorMessage = tryParseUrl(result, schema);
-          return urlErrorMessage ? [urlErrorMessage] : [];
-        case ValueHintType.Date:
-        case ValueHintType.DateTime:
-          const dateTimeErrorMessage = tryParseDateTimeString(result, schema);
-          return dateTimeErrorMessage ? [dateTimeErrorMessage] : [];
-        case ValueHintType.Duration:
-        case ValueHintType.Time:
-          return [];
-        case ValueHintType.Html:
-        case ValueHintType.Markdown:
-        case void 0:
-          return [];
-        default:
-          ensureUnreachable(schema);
-      }
-    }
-    case ValueType.Array:
-      return validateArray(result, schema, context);
-    case ValueType.Object: {
-      const resultValidationError = checkType(typeof result === "object", "object", result);
-      if (resultValidationError) {
-        return errors;
-      }
-      switch (schema.codaType) {
-        case ValueHintType.Person:
-          const personErrorMessage = tryParsePerson(result, schema);
-          return personErrorMessage ? [personErrorMessage] : [];
-        case ValueHintType.Reference:
-        case void 0:
-          return validateObject(result, schema, context);
-        default:
-          ensureUnreachable(schema);
-      }
-    }
-    default:
-      return ensureUnreachable(schema);
-  }
-}
-function tryParseDateTimeString(result, schema) {
-  const dateTime = result;
-  if (isNaN(Date.parse(dateTime))) {
-    return { message: `Failed to parse ${dateTime} as a ${schema.codaType}.` };
-  }
-}
-function tryParseUrl(result, schema) {
-  const invalidUrlError = {
-    message: `Property with codaType "${schema.codaType}" must be a valid HTTP(S) url, but got "${result}".`
-  };
-  try {
-    const url = (0, import_url_parse2.default)(result);
-    if (!(url.protocol === "http:" || url.protocol === "https:")) {
-      return invalidUrlError;
-    }
-  } catch (error) {
-    return invalidUrlError;
-  }
-}
-function tryParseSlider(result, schema) {
-  const value = result;
-  const { minimum, maximum } = schema;
-  if (value < (minimum != null ? minimum : 0)) {
-    return { message: `Slider value ${result} is below the specified minimum value of ${minimum != null ? minimum : 0}.` };
-  }
-  if (maximum && value > maximum) {
-    return { message: `Slider value ${result} is greater than the specified maximum value of ${maximum}.` };
-  }
-}
-function tryParseScale(result, schema) {
-  const { maximum } = schema;
-  const value = result;
-  if (!Number.isInteger(result)) {
-    return { message: `Scale value ${result} must be an integer.` };
-  }
-  if (value < 0) {
-    return { message: `Scale value ${result} cannot be below 0.` };
-  }
-  if (value > maximum) {
-    return { message: `Scale value ${result} is greater than the specified maximum value of ${maximum}.` };
-  }
-}
-function tryParsePerson(result, schema) {
-  const { id } = schema;
-  const validId = ensureExists(id);
-  const idError = checkFieldInResult(result, validId);
-  if (idError) {
-    return idError;
-  }
-  if (!isEmail(result[validId])) {
-    return { message: `The id field for the person result must be an email string, but got "${result[validId]}".` };
-  }
-}
-function checkFieldInResult(result, property) {
-  if (!(property in result) || !result[property]) {
+// runtime/common/marshaling/marshal_buffer.ts
+function marshalBuffer(val) {
+  if (val instanceof Buffer) {
     return {
-      message: `Schema declares required property "${property}" but this attribute is missing or empty.`
+      data: [...Uint8Array.from(val)],
+      [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Buffer
     };
   }
 }
-function checkType(typeMatches, expectedResultTypeName, result) {
-  if (!typeMatches) {
-    const resultValue = typeof result === "string" ? `"${result}"` : result;
-    return { message: `Expected a ${expectedResultTypeName} result but got ${resultValue}.` };
-  }
-}
-function validateObjectResult(formula, result) {
-  const { schema } = formula;
-  if (!schema) {
+function unmarshalBuffer(val) {
+  if (typeof val !== "object" || val[MarshalingInjectedKeys.CodaMarshaler] !== CodaMarshalerType.Buffer) {
     return;
   }
-  const validationContext = new ResultValidationContext();
-  if (isArray(schema)) {
-    const arrayValidationErrors = validateArray(result, schema, new ResultValidationContext().extendForProperty(formula.name));
-    if (arrayValidationErrors.length) {
-      throw ResultValidationException.fromErrors(formula.name, arrayValidationErrors);
-    }
-    return;
-  }
-  if (!isObject(schema)) {
-    const error = { message: `Expected an object schema, but found ${JSON.stringify(schema)}.` };
-    throw ResultValidationException.fromErrors(formula.name, [error]);
-  }
-  const errors = validateObject(result, schema, validationContext);
-  if (errors.length) {
-    throw ResultValidationException.fromErrors(formula.name, errors);
-  }
-}
-function validateObject(result, schema, context) {
-  const errors = [];
-  for (const [propertyKey, propertySchema] of Object.entries(schema.properties)) {
-    const value = result[propertyKey];
-    if (propertySchema.required && isNil(value)) {
-      errors.push({
-        message: `Schema declares required property "${propertyKey}" but this attribute is missing or empty.`
-      });
-    }
-    if (value) {
-      const propertyLevelErrors = checkPropertyTypeAndCodaType(propertySchema, value, context.extendForProperty(propertyKey));
-      errors.push(...propertyLevelErrors);
-    }
-  }
-  if (schema.id && schema.id in result && !result[schema.id]) {
-    errors.push({
-      message: `Schema declares "${schema.id}" as an id property but an empty value was found in result.`
-    });
-  }
-  return errors;
-}
-function validateArray(result, schema, context) {
-  if (!Array.isArray(result)) {
-    const error = { message: `Expected an ${schema.type} result but got ${result}.` };
-    return [error];
-  }
-  const arrayItemErrors = [];
-  const itemType = schema.items;
-  for (let i = 0; i < result.length; i++) {
-    const item = result[i];
-    const propertyLevelErrors = checkPropertyTypeAndCodaType(itemType, item, context.extendForIndex(i));
-    arrayItemErrors.push(...propertyLevelErrors);
-  }
-  return arrayItemErrors;
+  return Buffer.from(val.data);
 }
 
-// testing/execution_helper.ts
-async function executeFormulaOrSyncWithRawParams(manifest, formulaSpecification, rawParams, context) {
-  try {
-    if (formulaSpecification.type === FormulaType.Standard) {
-      const formula = findFormula(manifest, formulaSpecification.formulaName);
-      const params = coerceParams(formula, rawParams);
-      return await executeFormula(formula, params, context);
-    } else {
-      const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName);
-      const params = coerceParams(syncFormula, rawParams);
-      return await executeSyncFormula(syncFormula, params, context);
+// runtime/common/marshaling/marshal_dates.ts
+function marshalDate(val) {
+  if (val instanceof Date) {
+    return {
+      date: val.toJSON(),
+      [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Date
+    };
+  }
+}
+function unmarshalDate(val) {
+  if (typeof val !== "object" || val[MarshalingInjectedKeys.CodaMarshaler] !== CodaMarshalerType.Date) {
+    return;
+  }
+  return new Date(Date.parse(val.date));
+}
+
+// runtime/common/marshaling/marshal_errors.ts
+var ErrorClassType;
+(function(ErrorClassType2) {
+  ErrorClassType2["System"] = "System";
+  ErrorClassType2["Coda"] = "Coda";
+  ErrorClassType2["Other"] = "Other";
+})(ErrorClassType || (ErrorClassType = {}));
+var recognizableSystemErrorClasses = [
+  Error,
+  EvalError,
+  RangeError,
+  ReferenceError,
+  SyntaxError,
+  TypeError,
+  URIError
+];
+var recognizableCodaErrorClasses = [
+  StatusCodeError
+];
+function getErrorClassType(err) {
+  if (recognizableSystemErrorClasses.some((cls) => cls === err.constructor)) {
+    return ErrorClassType.System;
+  }
+  if (recognizableCodaErrorClasses.some((cls) => cls === err.constructor)) {
+    return ErrorClassType.Coda;
+  }
+  return ErrorClassType.Other;
+}
+function marshalError(err) {
+  if (!(err instanceof Error)) {
+    return;
+  }
+  const { name, stack, message, ...args } = err;
+  return {
+    name,
+    stack,
+    message,
+    [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Error,
+    [MarshalingInjectedKeys.ErrorClassName]: err.constructor.name,
+    [MarshalingInjectedKeys.ErrorClassType]: getErrorClassType(err),
+    ...args
+  };
+}
+function getErrorClass(errorClassType, name) {
+  let errorClasses;
+  switch (errorClassType) {
+    case ErrorClassType.System:
+      errorClasses = recognizableSystemErrorClasses;
+      break;
+    case ErrorClassType.Coda:
+      errorClasses = recognizableCodaErrorClasses;
+      break;
+    default:
+      errorClasses = [];
+  }
+  return errorClasses.find((cls) => cls.name === name) || Error;
+}
+function unmarshalError(val) {
+  if (typeof val !== "object" || val[MarshalingInjectedKeys.CodaMarshaler] !== CodaMarshalerType.Error) {
+    return;
+  }
+  const {
+    name,
+    stack,
+    message,
+    [MarshalingInjectedKeys.ErrorClassName]: errorClassName,
+    [MarshalingInjectedKeys.CodaMarshaler]: _,
+    [MarshalingInjectedKeys.ErrorClassType]: errorClassType,
+    ...otherProperties
+  } = val;
+  const ErrorClass = getErrorClass(errorClassType, errorClassName);
+  const error = new ErrorClass();
+  error.message = message;
+  error.stack = stack;
+  error.name = name;
+  for (const key of Object.keys(otherProperties)) {
+    error[key] = otherProperties[key];
+  }
+  return error;
+}
+
+// runtime/common/marshaling/marshal_numbers.ts
+function marshalNumber(val) {
+  if (typeof val === "number" && (isNaN(val) || val === Infinity)) {
+    return {
+      data: val.toString(),
+      [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Number
+    };
+  }
+}
+function unmarshalNumber(val) {
+  if (typeof val !== "object" || val[MarshalingInjectedKeys.CodaMarshaler] !== CodaMarshalerType.Number) {
+    return;
+  }
+  return Number(val.data);
+}
+
+// runtime/common/marshaling/index.ts
+var MaxTraverseDepth = 100;
+var customMarshalers = [marshalError, marshalBuffer, marshalNumber, marshalDate];
+var customUnmarshalers = [unmarshalError, unmarshalBuffer, unmarshalNumber, unmarshalDate];
+function serialize(val) {
+  for (const marshaler of customMarshalers) {
+    const result = marshaler(val);
+    if (result !== void 0) {
+      return result;
     }
-  } catch (err) {
-    throw wrapError(err);
   }
+  return val;
 }
-async function executeFormulaOrSync(manifest, formulaSpecification, params, context, options) {
-  try {
-    if (formulaSpecification.type === FormulaType.Standard) {
-      const formula = findFormula(manifest, formulaSpecification.formulaName);
-      return await executeFormula(formula, params, context, options);
-    } else {
-      const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName);
-      return await executeSyncFormula(syncFormula, params, context, options);
+function deserialize(_, val) {
+  if (val) {
+    for (const unmarshaler of customUnmarshalers) {
+      const result = unmarshaler(val);
+      if (result !== void 0) {
+        return result;
+      }
     }
-  } catch (err) {
-    throw wrapError(err);
   }
+  return val;
 }
-async function executeFormula(formula, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true } = {}) {
-  if (shouldValidateParams) {
-    validateParams(formula, params);
+function processValue(val, depth = 0) {
+  if (depth >= MaxTraverseDepth) {
+    throw new Error("marshaling value is too deep or containing circular strcture");
   }
-  let result;
+  if (val === void 0 || val === null) {
+    return val;
+  }
+  if (Array.isArray(val)) {
+    return val.map((item) => processValue(item, depth + 1));
+  }
+  const serializedValue = serialize(val);
+  if (typeof serializedValue === "object") {
+    let objectValue = serializedValue;
+    if ("toJSON" in serializedValue && typeof serializedValue.toJSON === "function") {
+      objectValue = serializedValue.toJSON();
+    }
+    const processedValue = {};
+    for (const key of Object.getOwnPropertyNames(objectValue)) {
+      processedValue[key] = processValue(objectValue[key], depth + 1);
+    }
+    return processedValue;
+  }
+  return serializedValue;
+}
+function marshalValue(val) {
+  return JSON.stringify(processValue(val));
+}
+function unmarshalValue(marshaledValue) {
+  if (marshaledValue === void 0) {
+    return marshaledValue;
+  }
+  return JSON.parse(marshaledValue, deserialize);
+}
+
+// runtime/thunk/thunk.ts
+function wrapError(err) {
+  return new Error(marshalValue(err));
+}
+function unwrapError(err) {
   try {
-    result = await formula.execute(params, context);
-  } catch (err) {
-    throw wrapError(err);
+    const unmarshaledValue = unmarshalValue(err.message);
+    if (unmarshaledValue instanceof Error) {
+      return unmarshaledValue;
+    }
+    return err;
+  } catch (_) {
+    return err;
   }
-  if (shouldValidateResult) {
-    validateResult(formula, result);
-  }
-  return result;
-}
-async function executeSyncFormula(formula, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true } = {}) {
-  if (shouldValidateParams) {
-    validateParams(formula, params);
-  }
-  const result = await formula.execute(params, context);
-  if (shouldValidateResult) {
-    validateResult(formula, result.result);
-  }
-  return result;
 }
 function findFormula(packDef, formulaNameWithNamespace) {
   const packFormulas = packDef.formulas;
@@ -2958,7 +2786,7 @@ function findFormula(packDef, formulaNameWithNamespace) {
   }
   const [namespace, name] = formulaNameWithNamespace.includes("::") ? formulaNameWithNamespace.split("::") : ["", formulaNameWithNamespace];
   if (namespace) {
-    console.log("Warning: formula namespace is being deprecated");
+    console.log(`Warning: formula was invoked with a namespace (${formulaNameWithNamespace}), but namespaces are now deprecated.`);
   }
   const formulas = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
   if (!formulas || !formulas.length) {
@@ -2983,6 +2811,13 @@ function findSyncFormula(packDef, syncFormulaName) {
   }
   throw new Error(`Pack definition has no sync formula "${syncFormulaName}" in its sync tables.`);
 }
+async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, shouldWrapError = true) {
+  try {
+    return await doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext);
+  } catch (err) {
+    throw shouldWrapError ? wrapError(err) : err;
+  }
+}
 function tryFindFormula(packDef, formulaNameWithNamespace) {
   try {
     return findFormula(packDef, formulaNameWithNamespace);
@@ -2995,11 +2830,132 @@ function tryFindSyncFormula(packDef, syncFormulaName) {
   } catch (_err) {
   }
 }
-function wrapError(err) {
-  if (err.name === "TypeError" && err.message === `Cannot read property 'body' of undefined`) {
-    err.message += "\nThis means your formula was invoked with a mock fetcher that had no response configured.\nThis usually means you invoked your formula from the commandline with `coda execute` but forgot to add the --fetch flag to actually fetch from the remote API.";
+function doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext) {
+  const { syncTables, defaultAuthentication } = manifest;
+  switch (formulaSpec.type) {
+    case FormulaType.Standard: {
+      const formula = findFormula(manifest, formulaSpec.formulaName);
+      return formula.execute(params, executionContext);
+    }
+    case FormulaType.Sync: {
+      const formula = findSyncFormula(manifest, formulaSpec.formulaName);
+      return formula.execute(params, executionContext);
+    }
+    case FormulaType.Metadata: {
+      switch (formulaSpec.metadataFormulaType) {
+        case MetadataFormulaType.GetConnectionName:
+          if ((defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== AuthenticationType.None && (defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== AuthenticationType.Various && (defaultAuthentication == null ? void 0 : defaultAuthentication.getConnectionName)) {
+            return defaultAuthentication.getConnectionName.execute(params, executionContext);
+          }
+          break;
+        case MetadataFormulaType.GetConnectionUserId:
+          if ((defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== AuthenticationType.None && (defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== AuthenticationType.Various && (defaultAuthentication == null ? void 0 : defaultAuthentication.getConnectionUserId)) {
+            return defaultAuthentication.getConnectionUserId.execute(params, executionContext);
+          }
+          break;
+        case MetadataFormulaType.ParameterAutocomplete:
+          const parentFormula = findParentFormula(manifest, formulaSpec);
+          if (parentFormula) {
+            return parentFormula.execute(params, executionContext);
+          }
+          break;
+        case MetadataFormulaType.PostSetupSetEndpoint:
+          if ((defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== AuthenticationType.None && (defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== AuthenticationType.Various && (defaultAuthentication == null ? void 0 : defaultAuthentication.postSetup)) {
+            const setupStep = defaultAuthentication.postSetup.find((step) => step.type === PostSetupType.SetEndpoint && step.name === formulaSpec.stepName);
+            if (setupStep) {
+              return setupStep.getOptionsFormula.execute(params, executionContext);
+            }
+          }
+          break;
+        case MetadataFormulaType.SyncListDynamicUrls:
+        case MetadataFormulaType.SyncGetDisplayUrl:
+        case MetadataFormulaType.SyncGetTableName:
+        case MetadataFormulaType.SyncGetSchema:
+          if (syncTables) {
+            const syncTable = syncTables.find((table) => table.name === formulaSpec.syncTableName);
+            if (syncTable && isDynamicSyncTable(syncTable)) {
+              let formula;
+              switch (formulaSpec.metadataFormulaType) {
+                case MetadataFormulaType.SyncListDynamicUrls:
+                  formula = syncTable.listDynamicUrls;
+                  break;
+                case MetadataFormulaType.SyncGetDisplayUrl:
+                  formula = syncTable.getDisplayUrl;
+                  break;
+                case MetadataFormulaType.SyncGetTableName:
+                  formula = syncTable.getName;
+                  break;
+                case MetadataFormulaType.SyncGetSchema:
+                  formula = syncTable.getSchema;
+                  break;
+                default:
+                  return ensureSwitchUnreachable(formulaSpec);
+              }
+              if (formula) {
+                return formula.execute(params, executionContext);
+              }
+            }
+          }
+          break;
+        default:
+          return ensureSwitchUnreachable(formulaSpec);
+      }
+      break;
+    }
+    default:
+      return ensureSwitchUnreachable(formulaSpec);
   }
-  return err;
+  throw new Error(`Could not find a formula matching formula spec ${JSON.stringify(formulaSpec)}`);
+}
+function findParentFormula(manifest, formulaSpec) {
+  const { formulas, syncTables } = manifest;
+  let formula;
+  switch (formulaSpec.parentFormulaType) {
+    case FormulaType.Standard:
+      if (formulas) {
+        const namespacedFormulas = Array.isArray(formulas) ? formulas : Object.values(formulas)[0];
+        formula = namespacedFormulas.find((defn) => defn.name === formulaSpec.parentFormulaName);
+      }
+      break;
+    case FormulaType.Sync:
+      if (syncTables) {
+        const syncTable = syncTables.find((table) => table.getter.name === formulaSpec.parentFormulaName);
+        formula = syncTable == null ? void 0 : syncTable.getter;
+      }
+      break;
+    default:
+      return ensureSwitchUnreachable(formulaSpec.parentFormulaType);
+  }
+  if (formula) {
+    const params = formula.parameters.concat(formula.varargParameters || []);
+    const paramDef = params.find((param) => param.name === formulaSpec.parameterName);
+    return paramDef == null ? void 0 : paramDef.autocomplete;
+  }
+}
+function ensureSwitchUnreachable(value) {
+  throw new Error(`Unreachable code hit with value ${String(value)}`);
+}
+async function handleErrorAsync(func) {
+  try {
+    return await func();
+  } catch (err) {
+    throw unwrapError(err);
+  }
+}
+function handleError(func) {
+  try {
+    return func();
+  } catch (err) {
+    throw unwrapError(err);
+  }
+}
+function handleFetcherStatusError(fetchResult, fetchRequest) {
+  if (fetchResult.status >= 300) {
+    throw new StatusCodeError(fetchResult.status, fetchResult.body, fetchRequest, {
+      body: fetchResult.body,
+      headers: fetchResult.headers
+    });
+  }
 }
 /*!
  * pascalcase <https://github.com/jonschlinkert/pascalcase>

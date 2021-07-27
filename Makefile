@@ -39,9 +39,9 @@ lint-fix:
 .PHONY: compile
 compile:
 	${ROOTDIR}/node_modules/.bin/tsc
-	${ROOTDIR}/node_modules/.bin/esbuild ${ROOTDIR}/testing/execution_helper.ts \
+	${ROOTDIR}/node_modules/.bin/esbuild ${ROOTDIR}/runtime/thunk/thunk.ts \
 		--bundle \
-		--outfile=${ROOTDIR}/dist/testing/execution_helper_bundle.js \
+		--outfile=${ROOTDIR}/dist/thunk_bundle.js \
 		--format=cjs \
 		--banner:js="'use strict';"
 	${ROOTDIR}/node_modules/.bin/esbuild ${ROOTDIR}/index.ts \

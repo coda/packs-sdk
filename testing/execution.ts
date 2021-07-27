@@ -1,6 +1,6 @@
 import type {Credentials} from './auth_types';
-import type {ExecuteOptions} from './execution_helper';
 import type {ExecutionContext} from '../api_types';
+import type {FormulaSpecification} from '../runtime/types';
 import {FormulaType} from '../runtime/types';
 import type {MetadataContext} from '../api';
 import type {MetadataFormula} from '../api';
@@ -11,9 +11,10 @@ import type {StandardFormulaSpecification} from '../runtime/types';
 import type {SyncExecutionContext} from '../api_types';
 import type {SyncFormulaResult} from '../api';
 import type {SyncFormulaSpecification} from '../runtime/types';
+import type {TypedPackFormula} from '../api';
+import {coerceParams} from './coercion';
 import {compilePackBundle} from './compile';
 import {getPackAuth} from '../cli/helpers';
-import * as helper from './execution_helper';
 import {importManifest} from '../cli/helpers';
 import * as ivmHelper from './ivm_helper';
 import {newFetcherExecutionContext} from './fetcher';
@@ -24,16 +25,65 @@ import * as path from 'path';
 import {print} from './helpers';
 import {readCredentialsFile} from './auth';
 import {storeCredential} from './auth';
-import {translateErrorStackFromVM} from '../runtime/execution';
+import * as thunk from '../runtime/thunk/thunk';
 import util from 'util';
+import {validateParams} from './validation';
+import {validateResult} from './validation';
 
 const MaxSyncIterations = 100;
 
-export {ExecuteOptions} from './execution_helper';
+export interface ExecuteOptions {
+  validateParams?: boolean;
+  validateResult?: boolean;
+}
 
 export interface ContextOptions {
   useRealFetcher?: boolean;
   manifestPath?: string;
+}
+
+function resolveFormulaNameWithNamespace(formulaNameWithNamespace: string): string {
+  const [namespace, name] = formulaNameWithNamespace.includes('::')
+    ? formulaNameWithNamespace.split('::')
+    : ['', formulaNameWithNamespace];
+
+  if (namespace) {
+    // eslint-disable-next-line no-console
+    console.log(
+      `Warning: formula was invoked with a namespace (${formulaNameWithNamespace}), but namespaces are now deprecated.`,
+    );
+  }
+
+  return name;
+}
+
+async function findAndExecutePackFunction<T extends FormulaSpecification>(
+  params: ParamValues<ParamDefs>,
+  formulaSpec: T,
+  manifest: PackVersionDefinition,
+  executionContext: ExecutionContext | SyncExecutionContext,
+  {validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true}: ExecuteOptions = {},
+) {
+  let formula: TypedPackFormula | undefined;
+  switch (formulaSpec.type) {
+    case FormulaType.Standard:
+      formula = thunk.findFormula(manifest, formulaSpec.formulaName);
+      break;
+    case FormulaType.Sync:
+      formula = thunk.findSyncFormula(manifest, formulaSpec.formulaName);
+      break;
+  }
+
+  if (shouldValidateParams && formula) {
+    validateParams(formula, params);
+  }
+  const result = await thunk.findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, false);
+
+  if (shouldValidateResult && formula) {
+    validateResult(formula, result);
+  }
+
+  return result;
 }
 
 export async function executeFormulaFromPackDef(
@@ -55,10 +105,10 @@ export async function executeFormulaFromPackDef(
     );
   }
 
-  return helper.executeFormulaOrSync(
-    packDef,
-    {type: FormulaType.Standard, formulaName: formulaNameWithNamespace},
+  return findAndExecutePackFunction(
     params,
+    {type: FormulaType.Standard, formulaName: resolveFormulaNameWithNamespace(formulaNameWithNamespace)},
+    packDef,
     executionContext || newMockExecutionContext(),
     options,
   );
@@ -97,7 +147,7 @@ export async function executeFormulaOrSyncFromCLI({
       : newMockSyncExecutionContext();
     executionContext.sync.dynamicUrl = dynamicUrl || undefined;
 
-    const syncFormula = helper.tryFindSyncFormula(manifest, formulaName);
+    const syncFormula = thunk.tryFindSyncFormula(manifest, formulaName);
     const formulaSpecification: SyncFormulaSpecification | StandardFormulaSpecification = {
       type: syncFormula ? FormulaType.Sync : FormulaType.Standard,
       formulaName,
@@ -147,7 +197,7 @@ export async function executeFormulaOrSyncWithVM({
   // TODO(huayang): importing manifest makes this method not usable in production, where we are not
   // supposed to load a manifest outside of the VM context.
   const manifest = await importManifest(bundlePath);
-  const syncFormula = helper.tryFindSyncFormula(manifest, formulaName);
+  const syncFormula = thunk.tryFindSyncFormula(manifest, formulaName);
   const formulaSpecification: SyncFormulaSpecification | StandardFormulaSpecification = {
     type: syncFormula ? FormulaType.Sync : FormulaType.Standard,
     formulaName,
@@ -155,7 +205,7 @@ export async function executeFormulaOrSyncWithVM({
 
   const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
 
-  return ivmHelper.executeFormulaOrSync(ivmContext, formulaSpecification, params);
+  return ivmHelper.executeFormulaOrSync(ivmContext, formulaSpecification, params, bundlePath + '.map', bundlePath);
 }
 
 export class VMError {
@@ -189,15 +239,17 @@ export async function executeFormulaOrSyncWithRawParamsInVM({
 
   const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
 
-  try {
-    return await ivmHelper.executeFormulaOrSyncWithRawParams(ivmContext, formulaSpecification, rawParams);
-  } catch (err) {
-    throw new VMError(
-      err.name,
-      err.message,
-      (await translateErrorStackFromVM({stacktrace: err.stack, bundleSourceMapPath, vmFilename: bundlePath})) || '',
-    );
+  const manifest = await importManifest(bundlePath);
+  let params: ParamValues<ParamDefs>;
+  if (formulaSpecification.type === FormulaType.Standard) {
+    const formula = thunk.findFormula(manifest, formulaSpecification.formulaName);
+    params = coerceParams(formula, rawParams as any);
+  } else {
+    const syncFormula = thunk.findSyncFormula(manifest, formulaSpecification.formulaName);
+    params = coerceParams(syncFormula, rawParams as any);
   }
+
+  return ivmHelper.executeFormulaOrSync(ivmContext, formulaSpecification, params, bundleSourceMapPath, bundlePath);
 }
 
 export async function executeFormulaOrSyncWithRawParams({
@@ -212,7 +264,16 @@ export async function executeFormulaOrSyncWithRawParams({
   vm?: boolean;
   executionContext: SyncExecutionContext;
 }) {
-  return helper.executeFormulaOrSyncWithRawParams(manifest, formulaSpecification, rawParams, executionContext);
+  let params: ParamValues<ParamDefs>;
+  if (formulaSpecification.type === FormulaType.Standard) {
+    const formula = thunk.findFormula(manifest, formulaSpecification.formulaName);
+    params = coerceParams(formula, rawParams as any);
+  } else {
+    const syncFormula = thunk.findSyncFormula(manifest, formulaSpecification.formulaName);
+    params = coerceParams(syncFormula, rawParams as any);
+  }
+
+  return findAndExecutePackFunction(params, formulaSpecification, manifest, executionContext);
 }
 
 /**
@@ -232,9 +293,14 @@ export async function executeSyncFormulaFromPackDef(
   syncFormulaName: string,
   params: ParamValues<ParamDefs>,
   context?: SyncExecutionContext,
-  options?: ExecuteOptions,
+  {validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true}: ExecuteOptions = {},
   {useRealFetcher, manifestPath}: ContextOptions = {},
 ): Promise<any[]> {
+  const formula = thunk.findSyncFormula(packDef, syncFormulaName);
+  if (shouldValidateParams && formula) {
+    validateParams(formula, params);
+  }
+
   let executionContext = context;
   if (!executionContext) {
     if (useRealFetcher) {
@@ -257,17 +323,22 @@ export async function executeSyncFormulaFromPackDef(
         `Sync is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`,
       );
     }
-    const response = await helper.executeFormulaOrSync(
-      packDef,
-      {formulaName: syncFormulaName, type: FormulaType.Sync},
+    const response = await findAndExecutePackFunction(
       params,
+      {formulaName: syncFormulaName, type: FormulaType.Sync},
+      packDef,
       executionContext,
-      options,
+      {validateParams: false, validateResult: false},
     );
+
     result.push(...response.result);
     executionContext.sync.continuation = response.continuation;
     iterations++;
   } while (executionContext.sync.continuation);
+
+  if (shouldValidateResult && formula) {
+    validateResult(formula, result);
+  }
 
   return result;
 }
@@ -295,10 +366,10 @@ export async function executeSyncFormulaFromPackDefSingleIteration(
     );
   }
 
-  return helper.executeFormulaOrSync(
-    packDef,
-    {formulaName: syncFormulaName, type: FormulaType.Sync},
+  return findAndExecutePackFunction(
     params,
+    {formulaName: syncFormulaName, type: FormulaType.Sync},
+    packDef,
     executionContext || newMockSyncExecutionContext(),
     options,
   );

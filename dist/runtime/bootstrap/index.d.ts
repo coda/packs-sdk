@@ -1,12 +1,16 @@
 import type { Context } from 'isolated-vm';
 import type { FetchRequest } from '../../api_types';
 import type { FetchResponse } from '../../api_types';
+import type { Fetcher } from '../../api_types';
 import type { FormulaSpecification } from '../types';
 import type { Isolate } from 'isolated-vm';
+import type { Logger } from '../../api_types';
 import type { PackFormulaResult } from '../../api_types';
 import type { ParamDefs } from '../../api_types';
 import type { ParamValues } from '../../api_types';
+import type { Sync } from '../../api_types';
 import type { SyncFormulaResult } from '../../api';
+import type { TemporaryBlobStorage } from '../../api_types';
 /**
  * Setup an isolate context with sufficient globals needed to execute a pack.
  *
@@ -32,3 +36,17 @@ export declare function executeThunk(context: Context, { params, formulaSpec }: 
     params: ParamValues<ParamDefs>;
     formulaSpec: FormulaSpecification;
 }): Promise<SyncFormulaResult<object> | PackFormulaResult>;
+/**
+ * Injects the ExecutionContext object, including stubs for network calls, into the isolate.
+ */
+export declare function injectExecutionContext({ context, fetcher, temporaryBlobStorage, logger, endpoint, timezone, invocationToken, sync, }: {
+    context: Context;
+    fetcher: Fetcher;
+    temporaryBlobStorage: TemporaryBlobStorage;
+    logger: Logger;
+    endpoint?: string;
+    timezone: string;
+    invocationToken?: string;
+    sync?: Sync;
+}): Promise<void>;
+export declare function registerBundle(isolate: Isolate, context: Context, path: string, stubName: string): Promise<void>;

@@ -2,12 +2,14 @@ import {AuthenticationType} from '../../types';
 import type {ExecutionContext} from '../../api_types';
 import type {FetchRequest} from '../../api_types';
 import type {FetchResponse} from '../../api_types';
+import type {Formula} from '../../api';
 import type {FormulaSpecification} from '../types';
 import {FormulaType} from '../types';
+import type {GenericSyncFormula} from '../../api';
 import type {MetadataFormula} from '../../api';
 import {MetadataFormulaType} from '../types';
-import type {PackDefinition} from '../../types';
 import type {PackFormulaResult} from '../../api_types';
+import type {PackVersionDefinition} from '../../types';
 import type {ParamDefs} from '../../api_types';
 import type {ParamValues} from '../../api_types';
 import type {ParameterAutocompleteMetadataFormulaSpecification} from '../types';
@@ -16,63 +18,130 @@ import {PostSetupType} from '../../types';
 import {StatusCodeError} from '../../api';
 import type {SyncExecutionContext} from '../../api_types';
 import type {SyncFormulaResult} from '../../api';
+import type {SyncFormulaSpecification} from '../types';
 import type {TypedPackFormula} from '../../api';
 import {isDynamicSyncTable} from '../../api';
+import {marshalValue} from '../common/marshaling';
+import {unmarshalValue} from '../common/marshaling';
 
-// TODO(huayang)
-function marshalError(err: Error): Error {
-  return err;
+function wrapError(err: Error): Error {
+  // TODO(huayang): we do this for the sdk.
+  // if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
+  //   err.message +=
+  //     '\nThis means your formula was invoked with a mock fetcher that had no response configured.' +
+  //     '\nThis usually means you invoked your formula from the commandline with `coda execute` but forgot to ' +
+  //     'add the --fetch flag ' +
+  //     'to actually fetch from the remote API.';
+  // }
+
+  return new Error(marshalValue(err));
 }
 
-// TODO(huayang)
-function unmarshalError(err: Error): Error {
-  return err;
+export function unwrapError(err: Error): Error {
+  try {
+    const unmarshaledValue = unmarshalValue(err.message);
+    if (unmarshaledValue instanceof Error) {
+      return unmarshaledValue;
+    }
+    return err;
+  } catch (_) {
+    return err;
+  }
+}
+
+export function findFormula(packDef: PackVersionDefinition, formulaNameWithNamespace: string): Formula {
+  const packFormulas = packDef.formulas;
+  if (!packFormulas) {
+    throw new Error(`Pack definition has no formulas.`);
+  }
+
+  const [namespace, name] = formulaNameWithNamespace.includes('::')
+    ? formulaNameWithNamespace.split('::')
+    : ['', formulaNameWithNamespace];
+
+  if (namespace) {
+    // eslint-disable-next-line no-console
+    console.log(
+      `Warning: formula was invoked with a namespace (${formulaNameWithNamespace}), but namespaces are now deprecated.`,
+    );
+  }
+
+  const formulas: Formula[] = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
+  if (!formulas || !formulas.length) {
+    throw new Error(`Pack definition has no formulas${namespace ?? ` for namespace "${namespace}"`}.`);
+  }
+  for (const formula of formulas) {
+    if (formula.name === name) {
+      return formula;
+    }
+  }
+  throw new Error(`Pack definition has no formula "${name}"${namespace ?? ` in namespace "${namespace}"`}.`);
+}
+
+export function findSyncFormula(packDef: PackVersionDefinition, syncFormulaName: string): GenericSyncFormula {
+  if (!packDef.syncTables) {
+    throw new Error(`Pack definition has no sync tables.`);
+  }
+
+  for (const syncTable of packDef.syncTables) {
+    const syncFormula = syncTable.getter;
+    if (syncFormula.name === syncFormulaName) {
+      return syncFormula;
+    }
+  }
+
+  throw new Error(`Pack definition has no sync formula "${syncFormulaName}" in its sync tables.`);
 }
 
 /**
  * The thunk entrypoint - the first code that runs inside the v8 isolate once control is passed over.
  */
-export async function findAndExecutePackFunction(
+export async function findAndExecutePackFunction<T extends FormulaSpecification>(
   params: ParamValues<ParamDefs>,
-  formulaSpec: FormulaSpecification,
-): Promise<PackFormulaResult | SyncFormulaResult<any>> {
+  formulaSpec: T,
+  manifest: PackVersionDefinition,
+  executionContext: ExecutionContext | SyncExecutionContext,
+  shouldWrapError: boolean = true,
+): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<any> : PackFormulaResult> {
   try {
-    return await doFindAndExecutePackFunction(params, formulaSpec);
+    return await doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext);
   } catch (err) {
     // all errors should be marshaled to avoid IVM dropping essential fields / name.
-    throw marshalError(err);
+    throw shouldWrapError ? wrapError(err) : err;
   }
 }
 
-function doFindAndExecutePackFunction(
-  params: ParamValues<ParamDefs>,
-  formulaSpec: FormulaSpecification,
-): Promise<PackFormulaResult | SyncFormulaResult<any>> {
-  // Pull useful variables out of injected globals
-  const manifest = (global.exports.pack || global.exports.manifest) as PackDefinition;
-  const executionContext = (global as any).executionContext;
+export function tryFindFormula(packDef: PackVersionDefinition, formulaNameWithNamespace: string): Formula | undefined {
+  try {
+    return findFormula(packDef, formulaNameWithNamespace);
+  } catch (_err) {}
+}
 
-  const {formulas, syncTables, defaultAuthentication} = manifest;
+export function tryFindSyncFormula(
+  packDef: PackVersionDefinition,
+  syncFormulaName: string,
+): GenericSyncFormula | undefined {
+  try {
+    return findSyncFormula(packDef, syncFormulaName);
+  } catch (_err) {}
+}
+
+function doFindAndExecutePackFunction<T extends FormulaSpecification>(
+  params: ParamValues<ParamDefs>,
+  formulaSpec: T,
+  manifest: PackVersionDefinition,
+  executionContext: ExecutionContext | SyncExecutionContext,
+): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<any> : PackFormulaResult> {
+  const {syncTables, defaultAuthentication} = manifest;
 
   switch (formulaSpec.type) {
     case FormulaType.Standard: {
-      if (formulas) {
-        const namespacedFormulas = Array.isArray(formulas) ? formulas : Object.values(formulas)[0];
-        const formula = namespacedFormulas.find(defn => defn.name === formulaSpec.formulaName);
-        if (formula) {
-          return formula.execute(params, executionContext as ExecutionContext);
-        }
-      }
-      break;
+      const formula = findFormula(manifest, formulaSpec.formulaName);
+      return formula.execute(params, executionContext as ExecutionContext);
     }
     case FormulaType.Sync: {
-      if (syncTables) {
-        const syncTable = syncTables.find(table => table.name === formulaSpec.formulaName);
-        if (syncTable) {
-          return syncTable.getter.execute(params, executionContext as SyncExecutionContext);
-        }
-      }
-      break;
+      const formula = findSyncFormula(manifest, formulaSpec.formulaName);
+      return formula.execute(params, executionContext as SyncExecutionContext);
     }
     case FormulaType.Metadata: {
       switch (formulaSpec.metadataFormulaType) {
@@ -162,7 +231,10 @@ function doFindAndExecutePackFunction(
   throw new Error(`Could not find a formula matching formula spec ${JSON.stringify(formulaSpec)}`);
 }
 
-function findParentFormula(manifest: PackDefinition, formulaSpec: ParameterAutocompleteMetadataFormulaSpecification) {
+function findParentFormula(
+  manifest: PackVersionDefinition,
+  formulaSpec: ParameterAutocompleteMetadataFormulaSpecification,
+) {
   const {formulas, syncTables} = manifest;
   let formula: TypedPackFormula | undefined;
   switch (formulaSpec.parentFormulaType) {
@@ -196,7 +268,7 @@ export async function handleErrorAsync(func: () => Promise<any>): Promise<any> {
   try {
     return await func();
   } catch (err) {
-    throw unmarshalError(err);
+    throw unwrapError(err);
   }
 }
 
@@ -204,7 +276,7 @@ export function handleError(func: () => any): any {
   try {
     return func();
   } catch (err) {
-    throw unmarshalError(err);
+    throw unwrapError(err);
   }
 }
 
