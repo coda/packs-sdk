@@ -26,7 +26,7 @@ export interface CompilePackBundleResult {
 async function loadIntoVM(bundlePath: string) {
   const bundle = fs.readFileSync(bundlePath);
 
-  const isolate = new ivm.Isolate({ memoryLimit: 128 });
+  const isolate = new ivm.Isolate({memoryLimit: 128});
   const ivmContext = await isolate.createContext();
   // Setup the global object.
   const jail = ivmContext.global;
@@ -41,15 +41,29 @@ async function browserifyBundle({
   outputDirectory,
   lastBundleFilename,
   outputBundleFilename,
-}: {outputDirectory: string; lastBundleFilename: string, outputBundleFilename: string}) {
+}: {
+  outputDirectory: string;
+  lastBundleFilename: string;
+  outputBundleFilename: string;
+}) {
   // browserify doesn't minify by default. if necessary another pipe can be created to minify the output.
-  const browserifyCompiler = browserify(path.join(outputDirectory, lastBundleFilename), {debug: true, standalone: 'exports'});
+  const browserifyCompiler = browserify(path.join(outputDirectory, lastBundleFilename), {
+    debug: true,
+    standalone: 'exports',
+  });
   const writer = fs.createWriteStream(path.join(outputDirectory, outputBundleFilename));
   const compiledStream = browserifyCompiler.bundle();
   return new Promise(resolve => {
     compiledStream
-      .pipe(exorcist(`${path.join(outputDirectory, outputBundleFilename)}.map`, undefined, `${process.cwd()}/`, outputDirectory))
-      .pipe(writer);  
+      .pipe(
+        exorcist(
+          `${path.join(outputDirectory, outputBundleFilename)}.map`,
+          undefined,
+          `${process.cwd()}/`,
+          outputDirectory,
+        ),
+      )
+      .pipe(writer);
     writer.on('finish', () => {
       resolve(undefined);
     });
@@ -60,18 +74,19 @@ async function uglifyBundle({
   outputDirectory,
   lastBundleFilename,
   outputBundleFilename,
-}: {outputDirectory: string; lastBundleFilename: string, outputBundleFilename: string}) {
+}: {
+  outputDirectory: string;
+  lastBundleFilename: string;
+  outputBundleFilename: string;
+}) {
   const sourcemap = JSON.parse(fs.readFileSync(`${path.join(outputDirectory, lastBundleFilename)}.map`).toString());
-  const uglifyOutput = uglify.minify(
-    fs.readFileSync(path.join(outputDirectory, lastBundleFilename)).toString(),
-    {
-      sourceMap: {
-        url: `${outputBundleFilename}.map`,
-        content: sourcemap,
-        includeSources: true,
-      },
-    }
-  );
+  const uglifyOutput = uglify.minify(fs.readFileSync(path.join(outputDirectory, lastBundleFilename)).toString(), {
+    sourceMap: {
+      url: `${outputBundleFilename}.map`,
+      content: sourcemap,
+      includeSources: true,
+    },
+  });
 
   if (uglifyOutput.error) {
     throw uglifyOutput.error;
@@ -90,7 +105,11 @@ async function buildWithES({
   manifestPath,
   outputDirectory,
   outputBundleFilename,
-}: {manifestPath: string, outputDirectory: string, outputBundleFilename: string}) {
+}: {
+  manifestPath: string;
+  outputDirectory: string;
+  outputBundleFilename: string;
+}) {
   const options: esbuild.BuildOptions = {
     banner: {js: "'use strict';"},
     bundle: true,
@@ -98,15 +117,15 @@ async function buildWithES({
     outfile: path.join(outputDirectory, outputBundleFilename),
     format: 'cjs',
     platform: 'node',
-    minify: false,  // don't minify here since browserify doesn't minify anyway.
+    minify: false, // don't minify here since browserify doesn't minify anyway.
     sourcemap: 'both',
   };
-  
+
   await esbuild.build(options);
 }
 
 export async function compilePackBundle({
-  bundleFilename = 'bundle.js',  // the output bundle filename
+  bundleFilename = 'bundle.js', // the output bundle filename
   outputDirectory,
   manifestPath,
   minify = true,
@@ -128,20 +147,20 @@ export async function compilePackBundle({
 
   if (minify) {
     await browserifyBundle({
-      outputDirectory: intermediateOutputDirectory, 
-      lastBundleFilename: nodeBundleFilename, 
+      outputDirectory: intermediateOutputDirectory,
+      lastBundleFilename: nodeBundleFilename,
       outputBundleFilename: browserifyBundleFilename,
     });
-  
+
     await uglifyBundle({
       outputDirectory: intermediateOutputDirectory,
       outputBundleFilename: bundleFilename,
       lastBundleFilename: browserifyBundleFilename,
-    });  
+    });
   } else {
     await browserifyBundle({
-      outputDirectory: intermediateOutputDirectory, 
-      lastBundleFilename: nodeBundleFilename, 
+      outputDirectory: intermediateOutputDirectory,
+      lastBundleFilename: nodeBundleFilename,
       outputBundleFilename: bundleFilename,
     });
   }
@@ -149,7 +168,7 @@ export async function compilePackBundle({
   const tempBundlePath = path.join(intermediateOutputDirectory, bundleFilename);
 
   // test if it can be loaded into isolated-vm.
-  // among all the packs. Google Drive (1059) won't load into IVM at this moment since it requires jimp 
+  // among all the packs. Google Drive (1059) won't load into IVM at this moment since it requires jimp
   // which uses gifcodec, which calls process.nextTick on the global level.
   // maybe we just need to get rid of jimp and resize-optimize-images instead.
   await loadIntoVM(tempBundlePath);
@@ -159,11 +178,15 @@ export async function compilePackBundle({
       bundlePath: path.join(intermediateOutputDirectory, bundleFilename),
       intermediateOutputDirectory,
       bundleSourceMapPath: path.join(intermediateOutputDirectory, `${bundleFilename}.map`),
-    }  
+    };
   }
 
   const bundlePath = path.join(outputDirectory, bundleFilename);
   const bundleSourceMapPath = `${bundlePath}.map`;
+
+  if (!fs.existsSync(outputDirectory)) {
+    fs.mkdirSync(outputDirectory, {recursive: true});
+  }
 
   // move over finally compiled bundle & sourcemap to the target directory.
   fs.copyFileSync(tempBundlePath, bundlePath);
@@ -173,5 +196,5 @@ export async function compilePackBundle({
     intermediateOutputDirectory,
     bundlePath,
     bundleSourceMapPath,
-  }
+  };
 }

@@ -22,9 +22,10 @@ interface UploadArgs {
   manifestFile: string;
   codaApiEndpoint: string;
   notes?: string;
+  outputDir?: string;
 }
 
-export async function handleUpload({manifestFile, codaApiEndpoint, notes}: Arguments<UploadArgs>) {
+export async function handleUpload({outputDir, manifestFile, codaApiEndpoint, notes}: Arguments<UploadArgs>) {
   const manifestDir = path.dirname(manifestFile);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   const logger = new ConsoleLogger();
@@ -35,8 +36,8 @@ export async function handleUpload({manifestFile, codaApiEndpoint, notes}: Argum
   // relative path in the end.
   const {bundlePath, bundleSourceMapPath} = await compilePackBundle({
     manifestPath: manifestFile,
-    outputDirectory: './',
-    intermediateOutputDirectory: './',
+    outputDirectory: outputDir,
+    intermediateOutputDirectory: outputDir,
   });
 
   const manifest = await importManifest(bundlePath);

@@ -40,7 +40,7 @@ const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
 const validate_1 = require("./validate");
-async function handleUpload({ manifestFile, codaApiEndpoint, notes }) {
+async function handleUpload({ outputDir, manifestFile, codaApiEndpoint, notes }) {
     const manifestDir = path.dirname(manifestFile);
     const formattedEndpoint = helpers_2.formatEndpoint(codaApiEndpoint);
     const logger = new logging_1.ConsoleLogger();
@@ -50,8 +50,8 @@ async function handleUpload({ manifestFile, codaApiEndpoint, notes }) {
     // relative path in the end.
     const { bundlePath, bundleSourceMapPath } = await compile_1.compilePackBundle({
         manifestPath: manifestFile,
-        outputDirectory: './',
-        intermediateOutputDirectory: './',
+        outputDirectory: outputDir,
+        intermediateOutputDirectory: outputDir,
     });
     const manifest = await helpers_3.importManifest(bundlePath);
     // Since package.json isn't in dist, we grab it from the root directory instead.
