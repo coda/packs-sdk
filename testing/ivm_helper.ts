@@ -2,6 +2,8 @@ import type {ExecutionContext} from '../api';
 import type {Context as IVMContext} from 'isolated-vm';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
+import type {StandardFormulaSpecification} from '../runtime/types';
+import type {SyncFormulaSpecification} from '../runtime/types';
 import {build as buildBundle} from '../cli/build';
 import fs from 'fs';
 import ivm from 'isolated-vm';
@@ -187,7 +189,7 @@ export async function setupIvmContext(bundlePath: string, executionContext: Exec
 
 export async function executeFormulaOrSyncWithRawParams(
   ivmContext: IVMContext,
-  formulaName: string,
+  formulaSpecification: SyncFormulaSpecification | StandardFormulaSpecification,
   rawParams: string[],
 ) {
   return ivmContext.evalClosure(
@@ -197,14 +199,14 @@ export async function executeFormulaOrSyncWithRawParams(
       $1,
       ${getStubName('executionContext')}
     )`,
-    [formulaName, rawParams],
+    [formulaSpecification, rawParams],
     {arguments: {copy: true}, result: {copy: true, promise: true}},
   );
 }
 
 export async function executeFormulaOrSync(
   ivmContext: IVMContext,
-  formulaName: string,
+  formulaSpecification: StandardFormulaSpecification | SyncFormulaSpecification,
   params: ParamValues<ParamDefs>,
 ) {
   return ivmContext.evalClosure(
@@ -214,7 +216,7 @@ export async function executeFormulaOrSync(
       $1,
       ${getStubName('executionContext')}
     )`,
-    [formulaName, params],
+    [formulaSpecification, params],
     {arguments: {copy: true}, result: {copy: true, promise: true}},
   );
 }

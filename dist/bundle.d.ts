@@ -1063,15 +1063,13 @@ export interface VariousAuthentication {
 	type: AuthenticationType.Various;
 }
 export declare type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSSignature4Authentication;
-export declare type AuthenticationDef = NoAuthentication | VariousAuthentication | (Omit<HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSSignature4Authentication, "getConnectionName" | "getConnectionUserId"> & {
-	getConnectionName?: MetadataFormulaDef;
-	getConnectionUserId?: MetadataFormulaDef;
-});
-export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSSignature4Authentication;
-export declare type SystemAuthenticationDef = Omit<HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSSignature4Authentication, "getConnectionName" | "getConnectionUserId"> & {
+export declare type AsAuthDef<T extends BaseAuthentication> = Omit<T, "getConnectionName" | "getConnectionUserId"> & {
 	getConnectionName?: MetadataFormulaDef;
 	getConnectionUserId?: MetadataFormulaDef;
 };
+export declare type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSSignature4Authentication>;
+export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSSignature4Authentication;
+export declare type SystemAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSSignature4Authentication>;
 export declare type VariousSupportedAuthentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication;
 export interface Format {
 	name: string;
@@ -1294,20 +1292,13 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 *
 	 * In the web editor, the `/SystemAuthentication` shortcut will insert a snippet of a skeleton
 	 * authentication definition.
-  
-	 * By default, this will set a default connection (account) requirement, including the credentials
-	 * from this system account when invoking all formulas in this pack unless you specify differently
-	 * on a particular formula. To change the default, you can pass a `defaultConnectionRequirement`
-	 * option into this method.
 	 *
 	 * @example
 	 * pack.setSystemAuthentication({
 	 *   type: AuthenticationType.HeaderBearerToken,
 	 * });
 	 */
-	setSystemAuthentication(authDef: SystemAuthenticationDef & {
-		defaultConnectionRequirement?: ConnectionRequirement;
-	}): this;
+	setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this;
 	/**
 	 * Adds the domain that this pack makes HTTP requests to.
 	 * For example, if your pack makes HTTP requests to "api.example.com",

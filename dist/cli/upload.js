@@ -41,6 +41,7 @@ const path = __importStar(require("path"));
 const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
+const errors_3 = require("./errors");
 const uuid_1 = require("uuid");
 const validate_1 = require("./validate");
 async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, }) {
@@ -50,7 +51,7 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
     logger.info('Building Pack bundle...');
     if (fs_1.default.existsSync(intermediateOutputDirectory)) {
         logger.info(`Existing directory ${intermediateOutputDirectory} detected. Probably left over from previous build. Removing it...`);
-        fs_1.default.rmdirSync(intermediateOutputDirectory);
+        fs_1.default.rmdirSync(intermediateOutputDirectory, { recursive: true });
     }
     // we need to generate the bundle file in the working directory instead of a temp directory in
     // order to set source map right. The source map tool chain isn't smart enough to resolve a
@@ -110,13 +111,18 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
         if (errors_2.isCodaError(uploadCompleteResponse)) {
             helpers_5.printAndExit(`Error while finalizing pack version: ${errors_1.formatError(uploadCompleteResponse)}`);
         }
-        logger.info('\n\nCleaning up...');
-        const tempDirectory = fs_1.default.mkdtempSync(path.join(os_1.default.tmpdir(), `coda-packs-${uuid_1.v4()}`));
-        fs_1.default.renameSync(intermediateOutputDirectory, tempDirectory);
-        logger.info(`Intermediate files are moved to ${tempDirectory}`);
     }
     catch (err) {
-        helpers_5.printAndExit(`Unepected error during pack upload: ${errors_1.formatError(err)}`);
+        const errors = [`Unexpected error during Pack upload: ${errors_1.formatError(err)}`, errors_3.tryParseSystemError(err)];
+        helpers_5.printAndExit(errors.join(`\n`));
+    }
+    finally {
+        logger.info('\n\nCleaning up...');
+        if (fs_1.default.existsSync(intermediateOutputDirectory)) {
+            const tempDirectory = fs_1.default.mkdtempSync(path.join(os_1.default.tmpdir(), `coda-packs-${uuid_1.v4()}`));
+            fs_1.default.renameSync(intermediateOutputDirectory, tempDirectory);
+            logger.info(`Intermediate files are moved to ${tempDirectory}`);
+        }
     }
     logger.info('Done!');
 }

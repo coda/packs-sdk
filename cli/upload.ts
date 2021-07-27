@@ -18,6 +18,7 @@ import * as path from 'path';
 import {printAndExit} from '../testing/helpers';
 import {readFile} from '../testing/helpers';
 import requestPromise from 'request-promise-native';
+import {tryParseSystemError} from './errors';
 import {v4} from 'uuid';
 import {validateMetadata} from './validate';
 
@@ -43,7 +44,7 @@ export async function handleUpload({
     logger.info(
       `Existing directory ${intermediateOutputDirectory} detected. Probably left over from previous build. Removing it...`,
     );
-    fs.rmdirSync(intermediateOutputDirectory);
+    fs.rmdirSync(intermediateOutputDirectory, {recursive: true});
   }
 
   // we need to generate the bundle file in the working directory instead of a temp directory in
@@ -108,6 +109,7 @@ export async function handleUpload({
     if (isCodaError(registerResponse)) {
       return printAndExit(`Error while registering pack version: ${formatError(registerResponse)}`);
     }
+
     const {uploadUrl, headers} = registerResponse;
 
     logger.info('Uploading Pack...');
@@ -118,15 +120,18 @@ export async function handleUpload({
     if (isCodaError(uploadCompleteResponse)) {
       printAndExit(`Error while finalizing pack version: ${formatError(uploadCompleteResponse)}`);
     }
-
+  } catch (err) {
+    const errors = [`Unexpected error during Pack upload: ${formatError(err)}`, tryParseSystemError(err)];
+    printAndExit(errors.join(`\n`));
+  } finally {
     logger.info('\n\nCleaning up...');
 
-    const tempDirectory = fs.mkdtempSync(path.join(os.tmpdir(), `coda-packs-${v4()}`));
-    fs.renameSync(intermediateOutputDirectory, tempDirectory);
+    if (fs.existsSync(intermediateOutputDirectory)) {
+      const tempDirectory = fs.mkdtempSync(path.join(os.tmpdir(), `coda-packs-${v4()}`));
+      fs.renameSync(intermediateOutputDirectory, tempDirectory);
 
-    logger.info(`Intermediate files are moved to ${tempDirectory}`);
-  } catch (err) {
-    printAndExit(`Unepected error during pack upload: ${formatError(err)}`);
+      logger.info(`Intermediate files are moved to ${tempDirectory}`);
+    }
   }
 
   logger.info('Done!');

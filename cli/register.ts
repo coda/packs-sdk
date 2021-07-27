@@ -6,6 +6,7 @@ import open from 'open';
 import {printAndExit} from '../testing/helpers';
 import {promptForInput} from '../testing/helpers';
 import {storeCodaApiKey} from './config_storage';
+import {tryParseSystemError} from './errors';
 
 interface RegisterArgs {
   apiToken?: string;
@@ -33,7 +34,8 @@ export async function handleRegister({apiToken, codaApiEndpoint}: Arguments<Regi
       return printAndExit(`Invalid API token provided.`);
     }
   } catch (err) {
-    return printAndExit(`Unexpected error while checking validity of API token: ${err}`);
+    const errors = [`Unexpected error while checking validity of API token: ${err}`, tryParseSystemError(err)];
+    return printAndExit(errors.join('\n'));
   }
 
   storeCodaApiKey(apiToken, process.env.PWD, codaApiEndpoint);
