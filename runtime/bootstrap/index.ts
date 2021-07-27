@@ -176,8 +176,9 @@ export async function injectExecutionContext({
     logger: {},
     endpoint,
     invocationLocation: {
-      // TODO(huayang): protocolAndHost needs to be populated for coda packs to work.
-      protocolAndHost: 'TBI',
+      // TODO(huayang): protocolAndHost needs to be set to base url of the executing environment.
+      // it should be injected in the IVM setup.
+      protocolAndHost: 'https://coda.io',
     },
     timezone,
     invocationToken,
