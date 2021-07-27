@@ -180,24 +180,17 @@ class PackDefinitionBuilder {
      *
      * In the web editor, the `/SystemAuthentication` shortcut will insert a snippet of a skeleton
      * authentication definition.
-  
-     * By default, this will set a default connection (account) requirement, including the credentials
-     * from this system account when invoking all formulas in this pack unless you specify differently
-     * on a particular formula. To change the default, you can pass a `defaultConnectionRequirement`
-     * option into this method.
      *
      * @example
      * pack.setSystemAuthentication({
      *   type: AuthenticationType.HeaderBearerToken,
      * });
      */
-    setSystemAuthentication(authDef) {
-        const { defaultConnectionRequirement = api_types_1.ConnectionRequirement.Required, ...systemAuthentication } = authDef;
+    setSystemAuthentication(systemAuthentication) {
         const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, ...rest } = systemAuthentication;
         const getConnectionName = api_6.wrapMetadataFunction(getConnectionNameDef);
         const getConnectionUserId = api_6.wrapMetadataFunction(getConnectionUserIdDef);
         this.systemConnectionAuthentication = { ...rest, getConnectionName, getConnectionUserId };
-        this._setDefaultConnectionRequirement(defaultConnectionRequirement);
         return this;
     }
     /**
