@@ -176,6 +176,7 @@ export async function injectExecutionContext({
     logger: {},
     endpoint,
     invocationLocation: {
+      // TODO(huayang): protocolAndHost needs to be populated for coda packs to work.
       protocolAndHost: 'TBI',
     },
     timezone,
@@ -199,7 +200,7 @@ export async function injectExecutionContext({
   await injectVoidFunction(context, 'console.info', logger.info.bind(logger));
   await injectVoidFunction(context, 'console.warn', logger.warn.bind(logger));
   await injectVoidFunction(context, 'console.error', logger.error.bind(logger));
-  // console.log is an alias of console.info
+  // console.log is an alias of logger.info
   await injectVoidFunction(context, 'console.log', logger.info.bind(logger));
 
   await injectAsyncFunction(
