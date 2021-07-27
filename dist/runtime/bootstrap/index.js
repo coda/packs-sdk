@@ -111,6 +111,7 @@ async function injectExecutionContext({ context, fetcher, temporaryBlobStorage, 
         logger: {},
         endpoint,
         invocationLocation: {
+            // TODO(huayang): protocolAndHost needs to be populated for coda packs to work.
             protocolAndHost: 'TBI',
         },
         timezone,
@@ -130,7 +131,7 @@ async function injectExecutionContext({ context, fetcher, temporaryBlobStorage, 
     await injectVoidFunction(context, 'console.info', logger.info.bind(logger));
     await injectVoidFunction(context, 'console.warn', logger.warn.bind(logger));
     await injectVoidFunction(context, 'console.error', logger.error.bind(logger));
-    // console.log is an alias of console.info
+    // console.log is an alias of logger.info
     await injectVoidFunction(context, 'console.log', logger.info.bind(logger));
     await injectAsyncFunction(context, 'executionContext.temporaryBlobStorage.storeBlob', temporaryBlobStorage.storeBlob.bind(temporaryBlobStorage));
     await injectAsyncFunction(context, 'executionContext.temporaryBlobStorage.storeUrl', temporaryBlobStorage.storeUrl.bind(temporaryBlobStorage));

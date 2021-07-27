@@ -43,7 +43,7 @@ function findFormula(packDef, formulaNameWithNamespace) {
         : ['', formulaNameWithNamespace];
     if (namespace) {
         // eslint-disable-next-line no-console
-        console.log('Warning: formula namespace is being deprecated');
+        console.log(`Warning: formula was invoked with a namespace (${formulaNameWithNamespace}), but namespaces are now deprecated.`);
     }
     const formulas = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
     if (!formulas || !formulas.length) {
