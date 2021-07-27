@@ -784,7 +784,7 @@ const legacyPackMetadataSchema = validateFormulas(
 
       // Various is an internal authentication type that's only applicable to whitelisted Pack Ids.
       // Skipping validation here to let it exempt from network domains.
-      if (data.defaultAuthentication.type === AuthenticationType.Various) {
+      if (data.defaultAuthentication?.type === AuthenticationType.Various) {
         return true;
       }
 
