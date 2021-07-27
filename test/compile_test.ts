@@ -1,7 +1,7 @@
 import {compilePackBundle} from '../testing/compile';
 import {executeFormulaOrSyncWithVM} from '../testing/execution';
 import path from 'path';
-import {translateErrorStackFromVM} from '../runtime/execution';
+import {translateErrorStackFromVM} from '../runtime/common/source_map';
 
 describe('compile', () => {
   it('works with source map', async () => {

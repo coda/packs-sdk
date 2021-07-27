@@ -11,7 +11,7 @@ import {injectExecutionContext} from '../runtime/bootstrap';
 import ivm from 'isolated-vm';
 import path from 'path';
 import {registerBundle} from '../runtime/bootstrap';
-import {translateErrorStackFromVM} from '../runtime/execution';
+import {translateErrorStackFromVM} from '../runtime/common/source_map';
 import {unwrapError} from '../runtime/thunk/thunk';
 
 const IsolateMemoryLimit = 128;

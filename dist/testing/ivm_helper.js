@@ -11,7 +11,7 @@ const bootstrap_2 = require("../runtime/bootstrap");
 const isolated_vm_1 = __importDefault(require("isolated-vm"));
 const path_1 = __importDefault(require("path"));
 const bootstrap_3 = require("../runtime/bootstrap");
-const execution_1 = require("../runtime/execution");
+const source_map_1 = require("../runtime/common/source_map");
 const thunk_1 = require("../runtime/thunk/thunk");
 const IsolateMemoryLimit = 128;
 // execution_helper_bundle.js is built by esbuild (see Makefile)
@@ -64,7 +64,7 @@ async function executeFormulaOrSync(ivmContext, formulaSpecification, params, bu
     }
     catch (wrappedError) {
         const err = thunk_1.unwrapError(wrappedError);
-        const translatedStacktrace = await execution_1.translateErrorStackFromVM({
+        const translatedStacktrace = await source_map_1.translateErrorStackFromVM({
             stacktrace: err.stack,
             bundleSourceMapPath,
             vmFilename,
