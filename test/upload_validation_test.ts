@@ -1521,6 +1521,24 @@ describe('Pack metadata Validation', () => {
         },
       ]);
     });
+
+    it('system authentication without network domains gives error', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: undefined,
+        systemConnectionAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+        },
+        networkDomains: [],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message:
+            "This pack uses authentication but did not declare a network domain. Specify the domain that your pack makes http requests to using `networkDomains: ['example.com']`",
+          path: 'networkDomains',
+        },
+      ]);
+    });
   });
 
   describe('validateVariousAuthenticationMetadata', () => {
