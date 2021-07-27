@@ -1,6 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.executeThunk = exports.injectFetcherFunction = exports.injectVoidFunction = exports.injectAsyncFunction = exports.createIsolateContext = void 0;
+exports.registerBundle = exports.injectExecutionContext = exports.executeThunk = exports.injectFetcherFunction = exports.injectVoidFunction = exports.injectAsyncFunction = exports.createIsolateContext = void 0;
+const fs_1 = __importDefault(require("fs"));
+const marshaling_1 = require("../common/marshaling");
+const marshaling_2 = require("../common/marshaling");
 /**
  * Setup an isolate context with sufficient globals needed to execute a pack.
  *
@@ -30,56 +36,52 @@ exports.createIsolateContext = createIsolateContext;
  */
 async function injectAsyncFunction(context, stubName, func) {
     const stub = async (...args) => {
-        const result = await func(...args.map(arg => JSON.parse(arg)));
-        return JSON.stringify(result);
+        const result = await func(...args.map(arg => marshaling_2.unmarshalValue(arg)));
+        return marshaling_1.marshalValue(result);
     };
-    // TODO(huayang): JSON.stringify/parse isn't able to serialize/deserialize error object. So context.logger.error(err)
-    // is going to miss fields.
     await context.evalClosure(`${stubName} = async function(...args) {
-        return handleErrorAsync(async () => {
+        return coda.handleErrorAsync(async () => {
          const result = await $0.apply(
            undefined,
-           args.map(JSON.stringify),
+           args.map(coda.marshalValue),
            {
              arguments: {copy: true},
              result: {copy: true, promise: true},
            },
          );
-         return JSON.parse(result);
+         return coda.unmarshalValue(result);
        });
      };`, [stub], { arguments: { reference: true } });
 }
 exports.injectAsyncFunction = injectAsyncFunction;
 async function injectVoidFunction(context, stubName, func) {
     const stub = (...args) => {
-        func(...args.map(arg => JSON.parse(arg)));
+        func(...args.map(arg => marshaling_2.unmarshalValue(arg)));
     };
     await context.evalClosure(`${stubName} = function(...args) {
-        handleError(() => {
-          $0.applyIgnored(undefined, args.map(JSON.stringify), {arguments: {copy: true}});
+        coda.handleError(() => {
+          $0.applyIgnored(undefined, args.map(coda.marshalValue), {arguments: {copy: true}});
         });
      };`, [stub], { arguments: { reference: true } });
 }
 exports.injectVoidFunction = injectVoidFunction;
 async function injectFetcherFunction(context, stubName, func) {
-    const stub = async (requestJson) => {
-        const result = await func(JSON.parse(requestJson));
-        return JSON.stringify(result);
+    const stub = async (marshaledValue) => {
+        const result = await func(marshaling_2.unmarshalValue(marshaledValue));
+        return marshaling_1.marshalValue(result);
     };
-    // TODO(huayang): JSON.stringify/parse isn't able to serialize/deserialize error object. So context.logger.error(err)
-    // is going to miss fields.
     await context.evalClosure(`${stubName} = async function(fetchRequest) {
-        return handleErrorAsync(async () => {
+        return coda.handleErrorAsync(async () => {
          const fetchResult = await $0.apply(
            undefined,
-           [JSON.stringify(fetchRequest)],
+           [coda.marshalValue(fetchRequest)],
            {
              arguments: {copy: true},
              result: {copy: true, promise: true},
            },
          );
-         const parsedResult = JSON.parse(fetchResult);
-         handleFetcherStatusError(parsedResult, fetchRequest);
+         const parsedResult = coda.unmarshalValue(fetchResult);
+         coda.handleFetcherStatusError(parsedResult, fetchRequest);
          return parsedResult;
        });
      };`, [stub], { arguments: { reference: true } });
@@ -89,7 +91,7 @@ exports.injectFetcherFunction = injectFetcherFunction;
  * Actually execute the pack function inside the isolate by loading and passing control to the thunk.
  */
 async function executeThunk(context, { params, formulaSpec }) {
-    const resultRef = await context.evalClosure('return findAndExecutePackFunction($0, $1, global.exports.pack || global.exports.manifest, global.executionContext);', [params, formulaSpec], {
+    const resultRef = await context.evalClosure('return coda.findAndExecutePackFunction($0, $1, pack.pack || pack.manifest, executionContext);', [params, formulaSpec], {
         arguments: { copy: true },
         result: { reference: true, promise: true },
     });
@@ -98,3 +100,52 @@ async function executeThunk(context, { params, formulaSpec }) {
     return localIsolateValue;
 }
 exports.executeThunk = executeThunk;
+/**
+ * Injects the ExecutionContext object, including stubs for network calls, into the isolate.
+ */
+async function injectExecutionContext({ context, fetcher, temporaryBlobStorage, logger, endpoint, timezone, invocationToken, sync, }) {
+    // Inject all of the primitives into a global we'll access when we execute the pack function.
+    const executionContextPrimitives = {
+        fetcher: {},
+        temporaryBlobStorage: {},
+        logger: {},
+        endpoint,
+        invocationLocation: {
+            protocolAndHost: 'TBI',
+        },
+        timezone,
+        invocationToken,
+        sync,
+    };
+    await context.global.set('executionContext', executionContextPrimitives, { copy: true });
+    await context.global.set('console', {}, { copy: true });
+    await injectFetcherFunction(context, 'executionContext.fetcher.fetch', fetcher.fetch.bind(fetcher));
+    await injectVoidFunction(context, 'executionContext.logger.trace', logger.trace.bind(logger));
+    await injectVoidFunction(context, 'executionContext.logger.debug', logger.debug.bind(logger));
+    await injectVoidFunction(context, 'executionContext.logger.info', logger.info.bind(logger));
+    await injectVoidFunction(context, 'executionContext.logger.warn', logger.warn.bind(logger));
+    await injectVoidFunction(context, 'executionContext.logger.error', logger.error.bind(logger));
+    await injectVoidFunction(context, 'console.trace', logger.trace.bind(logger));
+    await injectVoidFunction(context, 'console.debug', logger.debug.bind(logger));
+    await injectVoidFunction(context, 'console.info', logger.info.bind(logger));
+    await injectVoidFunction(context, 'console.warn', logger.warn.bind(logger));
+    await injectVoidFunction(context, 'console.error', logger.error.bind(logger));
+    // console.log is an alias of console.info
+    await injectVoidFunction(context, 'console.log', logger.info.bind(logger));
+    await injectAsyncFunction(context, 'executionContext.temporaryBlobStorage.storeBlob', temporaryBlobStorage.storeBlob.bind(temporaryBlobStorage));
+    await injectAsyncFunction(context, 'executionContext.temporaryBlobStorage.storeUrl', temporaryBlobStorage.storeUrl.bind(temporaryBlobStorage));
+}
+exports.injectExecutionContext = injectExecutionContext;
+async function registerBundle(isolate, context, path, stubName) {
+    // init / reset global.exports for import. Assuming the bundle is following commonJS format.
+    // be aware that we don't support commonJS2 (one of webpack's output format).
+    await context.global.set('exports', {}, { copy: true });
+    // compiling the bundle allows IVM to map the stack trace.
+    const bundle = fs_1.default.readFileSync(path).toString();
+    // bundle needs to be converted into a closure to avoid leaking variables to global scope.
+    const script = await isolate.compileScript(`(() => { ${bundle} \n ${stubName} = exports })()`, {
+        filename: path,
+    });
+    await script.run(context);
+}
+exports.registerBundle = registerBundle;

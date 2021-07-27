@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleFetcherStatusError = exports.handleError = exports.handleErrorAsync = exports.ensureSwitchUnreachable = exports.findAndExecutePackFunction = void 0;
+exports.handleFetcherStatusError = exports.handleError = exports.handleErrorAsync = exports.ensureSwitchUnreachable = exports.tryFindSyncFormula = exports.tryFindFormula = exports.findAndExecutePackFunction = exports.findSyncFormula = exports.findFormula = exports.unwrapError = void 0;
 const types_1 = require("../../types");
 const types_2 = require("../types");
 const types_3 = require("../types");
@@ -32,40 +32,81 @@ function unwrapError(err) {
         return err;
     }
 }
+exports.unwrapError = unwrapError;
+function findFormula(packDef, formulaNameWithNamespace) {
+    const packFormulas = packDef.formulas;
+    if (!packFormulas) {
+        throw new Error(`Pack definition has no formulas.`);
+    }
+    const [namespace, name] = formulaNameWithNamespace.includes('::')
+        ? formulaNameWithNamespace.split('::')
+        : ['', formulaNameWithNamespace];
+    if (namespace) {
+        // eslint-disable-next-line no-console
+        console.log('Warning: formula namespace is being deprecated');
+    }
+    const formulas = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
+    if (!formulas || !formulas.length) {
+        throw new Error(`Pack definition has no formulas${namespace !== null && namespace !== void 0 ? namespace : ` for namespace "${namespace}"`}.`);
+    }
+    for (const formula of formulas) {
+        if (formula.name === name) {
+            return formula;
+        }
+    }
+    throw new Error(`Pack definition has no formula "${name}"${namespace !== null && namespace !== void 0 ? namespace : ` in namespace "${namespace}"`}.`);
+}
+exports.findFormula = findFormula;
+function findSyncFormula(packDef, syncFormulaName) {
+    if (!packDef.syncTables) {
+        throw new Error(`Pack definition has no sync tables.`);
+    }
+    for (const syncTable of packDef.syncTables) {
+        const syncFormula = syncTable.getter;
+        if (syncFormula.name === syncFormulaName) {
+            return syncFormula;
+        }
+    }
+    throw new Error(`Pack definition has no sync formula "${syncFormulaName}" in its sync tables.`);
+}
+exports.findSyncFormula = findSyncFormula;
 /**
  * The thunk entrypoint - the first code that runs inside the v8 isolate once control is passed over.
  */
-async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext) {
+async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, shouldWrapError = true) {
     try {
         return await doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext);
     }
     catch (err) {
         // all errors should be marshaled to avoid IVM dropping essential fields / name.
-        throw wrapError(err);
+        throw shouldWrapError ? wrapError(err) : err;
     }
 }
 exports.findAndExecutePackFunction = findAndExecutePackFunction;
+function tryFindFormula(packDef, formulaNameWithNamespace) {
+    try {
+        return findFormula(packDef, formulaNameWithNamespace);
+    }
+    catch (_err) { }
+}
+exports.tryFindFormula = tryFindFormula;
+function tryFindSyncFormula(packDef, syncFormulaName) {
+    try {
+        return findSyncFormula(packDef, syncFormulaName);
+    }
+    catch (_err) { }
+}
+exports.tryFindSyncFormula = tryFindSyncFormula;
 function doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext) {
-    const { formulas, syncTables, defaultAuthentication } = manifest;
+    const { syncTables, defaultAuthentication } = manifest;
     switch (formulaSpec.type) {
         case types_2.FormulaType.Standard: {
-            if (formulas) {
-                const namespacedFormulas = Array.isArray(formulas) ? formulas : Object.values(formulas)[0];
-                const formula = namespacedFormulas.find(defn => defn.name === formulaSpec.formulaName);
-                if (formula) {
-                    return formula.execute(params, executionContext);
-                }
-            }
-            break;
+            const formula = findFormula(manifest, formulaSpec.formulaName);
+            return formula.execute(params, executionContext);
         }
         case types_2.FormulaType.Sync: {
-            if (syncTables) {
-                const syncTable = syncTables.find(table => table.name === formulaSpec.formulaName);
-                if (syncTable) {
-                    return syncTable.getter.execute(params, executionContext);
-                }
-            }
-            break;
+            const formula = findSyncFormula(manifest, formulaSpec.formulaName);
+            return formula.execute(params, executionContext);
         }
         case types_2.FormulaType.Metadata: {
             switch (formulaSpec.metadataFormulaType) {

@@ -2,8 +2,10 @@ import {AuthenticationType} from '../../types';
 import type {ExecutionContext} from '../../api_types';
 import type {FetchRequest} from '../../api_types';
 import type {FetchResponse} from '../../api_types';
+import type {Formula} from '../../api';
 import type {FormulaSpecification} from '../types';
 import {FormulaType} from '../types';
+import type {GenericSyncFormula} from '../../api';
 import type {MetadataFormula} from '../../api';
 import {MetadataFormulaType} from '../types';
 import type {PackFormulaResult} from '../../api_types';
@@ -35,7 +37,7 @@ function wrapError(err: Error): Error {
   return new Error(marshalValue(err));
 }
 
-function unwrapError(err: Error): Error {
+export function unwrapError(err: Error): Error {
   try {
     const unmarshaledValue = unmarshalValue(err.message);
     if (unmarshaledValue instanceof Error) {
@@ -47,6 +49,48 @@ function unwrapError(err: Error): Error {
   }
 }
 
+export function findFormula(packDef: PackVersionDefinition, formulaNameWithNamespace: string): Formula {
+  const packFormulas = packDef.formulas;
+  if (!packFormulas) {
+    throw new Error(`Pack definition has no formulas.`);
+  }
+
+  const [namespace, name] = formulaNameWithNamespace.includes('::')
+    ? formulaNameWithNamespace.split('::')
+    : ['', formulaNameWithNamespace];
+
+  if (namespace) {
+    // eslint-disable-next-line no-console
+    console.log('Warning: formula namespace is being deprecated');
+  }
+
+  const formulas: Formula[] = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
+  if (!formulas || !formulas.length) {
+    throw new Error(`Pack definition has no formulas${namespace ?? ` for namespace "${namespace}"`}.`);
+  }
+  for (const formula of formulas) {
+    if (formula.name === name) {
+      return formula;
+    }
+  }
+  throw new Error(`Pack definition has no formula "${name}"${namespace ?? ` in namespace "${namespace}"`}.`);
+}
+
+export function findSyncFormula(packDef: PackVersionDefinition, syncFormulaName: string): GenericSyncFormula {
+  if (!packDef.syncTables) {
+    throw new Error(`Pack definition has no sync tables.`);
+  }
+
+  for (const syncTable of packDef.syncTables) {
+    const syncFormula = syncTable.getter;
+    if (syncFormula.name === syncFormulaName) {
+      return syncFormula;
+    }
+  }
+
+  throw new Error(`Pack definition has no sync formula "${syncFormulaName}" in its sync tables.`);
+}
+
 /**
  * The thunk entrypoint - the first code that runs inside the v8 isolate once control is passed over.
  */
@@ -55,13 +99,29 @@ export async function findAndExecutePackFunction<T extends FormulaSpecification>
   formulaSpec: T,
   manifest: PackVersionDefinition,
   executionContext: ExecutionContext | SyncExecutionContext,
+  shouldWrapError: boolean = true,
 ): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<any> : PackFormulaResult> {
   try {
     return await doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext);
   } catch (err) {
     // all errors should be marshaled to avoid IVM dropping essential fields / name.
-    throw wrapError(err);
+    throw shouldWrapError ? wrapError(err) : err;
   }
+}
+
+export function tryFindFormula(packDef: PackVersionDefinition, formulaNameWithNamespace: string): Formula | undefined {
+  try {
+    return findFormula(packDef, formulaNameWithNamespace);
+  } catch (_err) {}
+}
+
+export function tryFindSyncFormula(
+  packDef: PackVersionDefinition,
+  syncFormulaName: string,
+): GenericSyncFormula | undefined {
+  try {
+    return findSyncFormula(packDef, syncFormulaName);
+  } catch (_err) {}
 }
 
 function doFindAndExecutePackFunction<T extends FormulaSpecification>(
@@ -70,27 +130,16 @@ function doFindAndExecutePackFunction<T extends FormulaSpecification>(
   manifest: PackVersionDefinition,
   executionContext: ExecutionContext | SyncExecutionContext,
 ): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<any> : PackFormulaResult> {
-  const {formulas, syncTables, defaultAuthentication} = manifest;
+  const {syncTables, defaultAuthentication} = manifest;
 
   switch (formulaSpec.type) {
     case FormulaType.Standard: {
-      if (formulas) {
-        const namespacedFormulas = Array.isArray(formulas) ? formulas : Object.values(formulas)[0];
-        const formula = namespacedFormulas.find(defn => defn.name === formulaSpec.formulaName);
-        if (formula) {
-          return formula.execute(params, executionContext as ExecutionContext);
-        }
-      }
-      break;
+      const formula = findFormula(manifest, formulaSpec.formulaName);
+      return formula.execute(params, executionContext as ExecutionContext);
     }
     case FormulaType.Sync: {
-      if (syncTables) {
-        const syncTable = syncTables.find(table => table.name === formulaSpec.formulaName);
-        if (syncTable) {
-          return syncTable.getter.execute(params, executionContext as SyncExecutionContext);
-        }
-      }
-      break;
+      const formula = findSyncFormula(manifest, formulaSpec.formulaName);
+      return formula.execute(params, executionContext as SyncExecutionContext);
     }
     case FormulaType.Metadata: {
       switch (formulaSpec.metadataFormulaType) {
