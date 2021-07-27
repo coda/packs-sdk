@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.executeFormulaOrSync = exports.setupIvmContext = void 0;
+exports.setupIvmContext = void 0;
 const build_1 = require("../cli/build");
 const bootstrap_1 = require("../runtime/bootstrap");
 const fs_1 = __importDefault(require("fs"));
@@ -11,8 +11,6 @@ const bootstrap_2 = require("../runtime/bootstrap");
 const isolated_vm_1 = __importDefault(require("isolated-vm"));
 const path_1 = __importDefault(require("path"));
 const bootstrap_3 = require("../runtime/bootstrap");
-const source_map_1 = require("../runtime/common/source_map");
-const thunk_1 = require("../runtime/thunk/thunk");
 const IsolateMemoryLimit = 128;
 // execution_helper_bundle.js is built by esbuild (see Makefile)
 // which puts it into the same directory: dist/testing/
@@ -52,24 +50,3 @@ async function setupIvmContext(bundlePath, executionContext) {
     return ivmContext;
 }
 exports.setupIvmContext = setupIvmContext;
-async function executeFormulaOrSync(ivmContext, formulaSpecification, params, bundleSourceMapPath, vmFilename) {
-    try {
-        return await ivmContext.evalClosure(`return coda.findAndExecutePackFunction(
-      $0,
-      $1,
-      pack.pack || pack.manifest,
-      executionContext,
-    )`, [params, formulaSpecification], { arguments: { copy: true }, result: { copy: true, promise: true } });
-    }
-    catch (wrappedError) {
-        const err = thunk_1.unwrapError(wrappedError);
-        const translatedStacktrace = await source_map_1.translateErrorStackFromVM({
-            stacktrace: err.stack,
-            bundleSourceMapPath,
-            vmFilename,
-        });
-        err.stack = `${err.constructor.name}${err.message ? `: ${err.message}` : ''}\n${translatedStacktrace}`;
-        throw err;
-    }
-}
-exports.executeFormulaOrSync = executeFormulaOrSync;

@@ -6,7 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerBundles = exports.registerBundle = exports.injectExecutionContext = exports.executeThunk = exports.injectFetcherFunction = exports.injectVoidFunction = exports.injectAsyncFunction = exports.createIsolateContext = void 0;
 const fs_1 = __importDefault(require("fs"));
 const marshaling_1 = require("../common/marshaling");
+const source_map_1 = require("../common/source_map");
 const marshaling_2 = require("../common/marshaling");
+const marshaling_3 = require("../common/marshaling");
 /**
  * Setup an isolate context with sufficient globals needed to execute a pack.
  *
@@ -90,14 +92,26 @@ exports.injectFetcherFunction = injectFetcherFunction;
 /**
  * Actually execute the pack function inside the isolate by loading and passing control to the thunk.
  */
-async function executeThunk(context, { params, formulaSpec }) {
-    const resultRef = await context.evalClosure('return coda.findAndExecutePackFunction($0, $1, pack.pack || pack.manifest, executionContext);', [params, formulaSpec], {
-        arguments: { copy: true },
-        result: { reference: true, promise: true },
-    });
-    // And marshal out the results into a local copy of the isolate object reference.
-    const localIsolateValue = await resultRef.copy();
-    return localIsolateValue;
+async function executeThunk(context, { params, formulaSpec }, packBundlePath, packBundleSourceMapPath) {
+    try {
+        const resultRef = await context.evalClosure('return coda.findAndExecutePackFunction($0, $1, pack.pack || pack.manifest, executionContext);', [params, formulaSpec], {
+            arguments: { copy: true },
+            result: { reference: true, promise: true },
+        });
+        // And marshal out the results into a local copy of the isolate object reference.
+        const localIsolateValue = await resultRef.copy();
+        return localIsolateValue;
+    }
+    catch (wrappedError) {
+        const err = marshaling_3.unwrapError(wrappedError);
+        const translatedStacktrace = await source_map_1.translateErrorStackFromVM({
+            stacktrace: err.stack,
+            bundleSourceMapPath: packBundleSourceMapPath,
+            vmFilename: packBundlePath,
+        });
+        err.stack = `${err.constructor.name}${err.message ? `: ${err.message}` : ''}\n${translatedStacktrace}`;
+        throw err;
+    }
 }
 exports.executeThunk = executeThunk;
 /**

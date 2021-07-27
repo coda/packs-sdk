@@ -26,6 +26,7 @@ exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDefSingleIter
 const types_1 = require("../runtime/types");
 const coercion_1 = require("./coercion");
 const compile_1 = require("./compile");
+const bootstrap_1 = require("../runtime/bootstrap");
 const helpers_1 = require("../cli/helpers");
 const helpers_2 = require("../cli/helpers");
 const ivmHelper = __importStar(require("./ivm_helper"));
@@ -95,7 +96,7 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
             type: syncFormula ? types_1.FormulaType.Sync : types_1.FormulaType.Standard,
             formulaName,
         };
-        if (syncFormula) {
+        if (formulaSpecification.type === types_1.FormulaType.Sync) {
             const result = [];
             let iterations = 1;
             do {
@@ -134,7 +135,7 @@ async function executeFormulaOrSyncWithVM({ formulaName, params, bundlePath, exe
         formulaName,
     };
     const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
-    return ivmHelper.executeFormulaOrSync(ivmContext, formulaSpecification, params, bundlePath + '.map', bundlePath);
+    return bootstrap_1.executeThunk(ivmContext, { params, formulaSpec: formulaSpecification }, bundlePath, bundlePath + '.map');
 }
 exports.executeFormulaOrSyncWithVM = executeFormulaOrSyncWithVM;
 class VMError {
@@ -161,7 +162,7 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
         const syncFormula = thunk.findSyncFormula(manifest, formulaSpecification.formulaName);
         params = coercion_1.coerceParams(syncFormula, rawParams);
     }
-    return ivmHelper.executeFormulaOrSync(ivmContext, formulaSpecification, params, bundleSourceMapPath, bundlePath);
+    return bootstrap_1.executeThunk(ivmContext, { params, formulaSpec: formulaSpecification }, bundlePath, bundleSourceMapPath);
 }
 exports.executeFormulaOrSyncWithRawParamsInVM = executeFormulaOrSyncWithRawParamsInVM;
 async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params: rawParams, manifest, executionContext, }) {

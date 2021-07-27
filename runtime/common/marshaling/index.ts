@@ -89,3 +89,28 @@ export function unmarshalValue(marshaledValue: string | undefined): any {
 
   return JSON.parse(marshaledValue, deserialize);
 }
+
+export function wrapError(err: Error): Error {
+  // TODO(huayang): we do this for the sdk.
+  // if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
+  //   err.message +=
+  //     '\nThis means your formula was invoked with a mock fetcher that had no response configured.' +
+  //     '\nThis usually means you invoked your formula from the commandline with `coda execute` but forgot to ' +
+  //     'add the --fetch flag ' +
+  //     'to actually fetch from the remote API.';
+  // }
+
+  return new Error(marshalValue(err));
+}
+
+export function unwrapError(err: Error): Error {
+  try {
+    const unmarshaledValue = unmarshalValue(err.message);
+    if (unmarshaledValue instanceof Error) {
+      return unmarshaledValue;
+    }
+    return err;
+  } catch (_) {
+    return err;
+  }
+}

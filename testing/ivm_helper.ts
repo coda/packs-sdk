@@ -1,9 +1,5 @@
 import type {ExecutionContext} from '../api';
 import type {Context as IVMContext} from 'isolated-vm';
-import type {ParamDefs} from '../api_types';
-import type {ParamValues} from '../api_types';
-import type {StandardFormulaSpecification} from '../runtime/types';
-import type {SyncFormulaSpecification} from '../runtime/types';
 import {build as buildBundle} from '../cli/build';
 import {createIsolateContext} from '../runtime/bootstrap';
 import fs from 'fs';
@@ -11,8 +7,6 @@ import {injectExecutionContext} from '../runtime/bootstrap';
 import ivm from 'isolated-vm';
 import path from 'path';
 import {registerBundles} from '../runtime/bootstrap';
-import {translateErrorStackFromVM} from '../runtime/common/source_map';
-import {unwrapError} from '../runtime/thunk/thunk';
 
 const IsolateMemoryLimit = 128;
 
@@ -55,34 +49,4 @@ export async function setupIvmContext(bundlePath: string, executionContext: Exec
   });
 
   return ivmContext;
-}
-
-export async function executeFormulaOrSync(
-  ivmContext: IVMContext,
-  formulaSpecification: StandardFormulaSpecification | SyncFormulaSpecification,
-  params: ParamValues<ParamDefs>,
-  bundleSourceMapPath: string,
-  vmFilename: string,
-) {
-  try {
-    return await ivmContext.evalClosure(
-      `return coda.findAndExecutePackFunction(
-      $0,
-      $1,
-      pack.pack || pack.manifest,
-      executionContext,
-    )`,
-      [params, formulaSpecification],
-      {arguments: {copy: true}, result: {copy: true, promise: true}},
-    );
-  } catch (wrappedError) {
-    const err = unwrapError(wrappedError);
-    const translatedStacktrace = await translateErrorStackFromVM({
-      stacktrace: err.stack,
-      bundleSourceMapPath,
-      vmFilename,
-    });
-    err.stack = `${err.constructor.name}${err.message ? `: ${err.message}` : ''}\n${translatedStacktrace}`;
-    throw err;
-  }
 }

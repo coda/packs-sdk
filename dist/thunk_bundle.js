@@ -2298,8 +2298,7 @@ __export(exports, {
   handleErrorAsync: () => handleErrorAsync,
   handleFetcherStatusError: () => handleFetcherStatusError,
   tryFindFormula: () => tryFindFormula,
-  tryFindSyncFormula: () => tryFindSyncFormula,
-  unwrapError: () => unwrapError
+  tryFindSyncFormula: () => tryFindSyncFormula
 });
 
 // types.ts
@@ -2763,8 +2762,6 @@ function unmarshalValue(marshaledValue) {
   }
   return JSON.parse(marshaledValue, deserialize);
 }
-
-// runtime/thunk/thunk.ts
 function wrapError(err) {
   return new Error(marshalValue(err));
 }
@@ -2779,6 +2776,8 @@ function unwrapError(err) {
     return err;
   }
 }
+
+// runtime/thunk/thunk.ts
 function findFormula(packDef, formulaNameWithNamespace) {
   const packFormulas = packDef.formulas;
   if (!packFormulas) {

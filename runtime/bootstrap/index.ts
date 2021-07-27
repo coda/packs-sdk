@@ -10,10 +10,13 @@ import type {ParamDefs} from '../../api_types';
 import type {ParamValues} from '../../api_types';
 import type {Sync} from '../../api_types';
 import type {SyncFormulaResult} from '../../api';
+import type {SyncFormulaSpecification} from '../types';
 import type {TemporaryBlobStorage} from '../../api_types';
 import fs from 'fs';
 import {marshalValue} from '../common/marshaling';
+import {translateErrorStackFromVM} from '../common/source_map';
 import {unmarshalValue} from '../common/marshaling';
+import {unwrapError} from '../common/marshaling';
 
 /**
  * Setup an isolate context with sufficient globals needed to execute a pack.
@@ -129,22 +132,35 @@ export async function injectFetcherFunction(
 /**
  * Actually execute the pack function inside the isolate by loading and passing control to the thunk.
  */
-export async function executeThunk(
+export async function executeThunk<T extends FormulaSpecification>(
   context: Context,
-  {params, formulaSpec}: {params: ParamValues<ParamDefs>; formulaSpec: FormulaSpecification},
-): Promise<SyncFormulaResult<object> | PackFormulaResult> {
-  const resultRef = await context.evalClosure(
-    'return coda.findAndExecutePackFunction($0, $1, pack.pack || pack.manifest, executionContext);',
-    [params, formulaSpec],
-    {
-      arguments: {copy: true},
-      result: {reference: true, promise: true},
-    },
-  );
+  {params, formulaSpec}: {params: ParamValues<ParamDefs>; formulaSpec: T},
+  packBundlePath: string,
+  packBundleSourceMapPath: string,
+): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<object> : PackFormulaResult> {
+  try {
+    const resultRef = await context.evalClosure(
+      'return coda.findAndExecutePackFunction($0, $1, pack.pack || pack.manifest, executionContext);',
+      [params, formulaSpec],
+      {
+        arguments: {copy: true},
+        result: {reference: true, promise: true},
+      },
+    );
 
-  // And marshal out the results into a local copy of the isolate object reference.
-  const localIsolateValue = await resultRef.copy();
-  return localIsolateValue;
+    // And marshal out the results into a local copy of the isolate object reference.
+    const localIsolateValue = await resultRef.copy();
+    return localIsolateValue;
+  } catch (wrappedError) {
+    const err = unwrapError(wrappedError);
+    const translatedStacktrace = await translateErrorStackFromVM({
+      stacktrace: err.stack,
+      bundleSourceMapPath: packBundleSourceMapPath,
+      vmFilename: packBundlePath,
+    });
+    err.stack = `${err.constructor.name}${err.message ? `: ${err.message}` : ''}\n${translatedStacktrace}`;
+    throw err;
+  }
 }
 
 /**
