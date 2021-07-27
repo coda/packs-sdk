@@ -50,3 +50,4 @@ export declare function injectExecutionContext({ context, fetcher, temporaryBlob
     sync?: Sync;
 }): Promise<void>;
 export declare function registerBundle(isolate: Isolate, context: Context, path: string, stubName: string): Promise<void>;
+export declare function registerBundles(isolate: Isolate, context: Context, packBundlePath: string, thunkBundlePath: string): Promise<void>;

@@ -23,7 +23,6 @@ async function setupIvmContext(bundlePath, executionContext) {
     const isolate = new isolated_vm_1.default.Isolate({ memoryLimit: IsolateMemoryLimit });
     const ivmContext = await bootstrap_1.createIsolateContext(isolate);
     const bundleFullPath = bundlePath.startsWith('/') ? bundlePath : path_1.default.join(process.cwd(), bundlePath);
-    await bootstrap_3.registerBundle(isolate, ivmContext, bundleFullPath, 'pack');
     // If the ivm helper is running by node, the compiled execution_helper bundle should be ready at the
     // dist/ directory described by CompiledHelperBundlePath. If the ivm helper is running by mocha, the
     // bundle file may not be available or update-to-date, so we'd always compile it first from
@@ -31,11 +30,11 @@ async function setupIvmContext(bundlePath, executionContext) {
     //
     // TODO(huayang): this is not efficient enough and needs optimization if to be used widely in testing.
     if (fs_1.default.existsSync(CompiledHelperBundlePath)) {
-        await bootstrap_3.registerBundle(isolate, ivmContext, CompiledHelperBundlePath, 'coda');
+        await bootstrap_3.registerBundles(isolate, ivmContext, bundleFullPath, CompiledHelperBundlePath);
     }
     else if (fs_1.default.existsSync(HelperTsSourceFile)) {
         const bundlePath = await build_1.build(HelperTsSourceFile);
-        await bootstrap_3.registerBundle(isolate, ivmContext, bundlePath, 'coda');
+        await bootstrap_3.registerBundles(isolate, ivmContext, bundleFullPath, bundlePath);
     }
     else {
         throw new Error('cannot find the execution helper');

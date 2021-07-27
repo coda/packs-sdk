@@ -235,3 +235,13 @@ export async function registerBundle(
   });
   await script.run(context);
 }
+
+export async function registerBundles(
+  isolate: Isolate,
+  context: Context,
+  packBundlePath: string,
+  thunkBundlePath: string,
+): Promise<void> {
+  await registerBundle(isolate, context, thunkBundlePath, 'coda');
+  await registerBundle(isolate, context, packBundlePath, 'pack');
+}

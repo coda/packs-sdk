@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerBundle = exports.injectExecutionContext = exports.executeThunk = exports.injectFetcherFunction = exports.injectVoidFunction = exports.injectAsyncFunction = exports.createIsolateContext = void 0;
+exports.registerBundles = exports.registerBundle = exports.injectExecutionContext = exports.executeThunk = exports.injectFetcherFunction = exports.injectVoidFunction = exports.injectAsyncFunction = exports.createIsolateContext = void 0;
 const fs_1 = __importDefault(require("fs"));
 const marshaling_1 = require("../common/marshaling");
 const marshaling_2 = require("../common/marshaling");
@@ -151,3 +151,8 @@ async function registerBundle(isolate, context, path, stubName) {
     await script.run(context);
 }
 exports.registerBundle = registerBundle;
+async function registerBundles(isolate, context, packBundlePath, thunkBundlePath) {
+    await registerBundle(isolate, context, thunkBundlePath, 'coda');
+    await registerBundle(isolate, context, packBundlePath, 'pack');
+}
+exports.registerBundles = registerBundles;
