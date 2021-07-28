@@ -63,7 +63,9 @@ export function findSyncFormula(packDef: PackVersionDefinition, syncFormulaName:
 
   for (const syncTable of packDef.syncTables) {
     const syncFormula = syncTable.getter;
-    if (syncFormula.name === syncFormulaName) {
+    // TODO(huayang): it seems like a bug that client passes syncTable.name in, instead of syncTable.identityName or
+    // syncTable.getter.name.
+    if (syncTable.name === syncFormulaName) {
       return syncFormula;
     }
   }
