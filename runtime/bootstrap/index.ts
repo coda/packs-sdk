@@ -42,6 +42,9 @@ export async function createIsolateContext(isolate: Isolate): Promise<Context> {
   // We used to block Function, but the SDK bundles in a helper that needs it :(
   await jail.set('eval', undefined, {copy: true});
 
+  await jail.set('coda', {}, {copy: true});
+  await jail.set('pack', {}, {copy: true});
+
   return context;
 }
 
