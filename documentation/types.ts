@@ -14,6 +14,10 @@ export interface CompiledSnippet {
 
 export enum Category {
   ColumnFormat = 'ColumnFormat',
+  Authentication = 'Authentication',
+  DynamicSyncTable = 'DynamicSynctable',
+  Formula = 'Formula',
+  SyncTable = 'SyncTable',
 }
 
 export interface Example {

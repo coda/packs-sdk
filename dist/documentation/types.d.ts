@@ -11,7 +11,11 @@ export interface CompiledSnippet {
     code: string;
 }
 export declare enum Category {
-    ColumnFormat = "ColumnFormat"
+    ColumnFormat = "ColumnFormat",
+    Authentication = "Authentication",
+    DynamicSyncTable = "DynamicSynctable",
+    Formula = "Formula",
+    SyncTable = "SyncTable"
 }
 export interface Example {
     contentFile: string;
