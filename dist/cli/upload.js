@@ -30,28 +30,48 @@ const crypto_1 = require("../helpers/crypto");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const errors_1 = require("./errors");
+const fs_1 = __importDefault(require("fs"));
 const config_storage_1 = require("./config_storage");
 const config_storage_2 = require("./config_storage");
 const helpers_3 = require("./helpers");
 const errors_2 = require("./errors");
 const helpers_4 = require("./helpers");
+const os_1 = __importDefault(require("os"));
 const path = __importStar(require("path"));
 const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
+const errors_3 = require("./errors");
+const uuid_1 = require("uuid");
 const validate_1 = require("./validate");
-async function handleUpload({ manifestFile, codaApiEndpoint, notes }) {
+function cleanup(intermediateOutputDirectory, logger) {
+    logger.info('\n\nCleaning up...');
+    if (fs_1.default.existsSync(intermediateOutputDirectory)) {
+        const tempDirectory = fs_1.default.mkdtempSync(path.join(os_1.default.tmpdir(), `coda-packs-${uuid_1.v4()}`));
+        fs_1.default.renameSync(intermediateOutputDirectory, tempDirectory);
+        logger.info(`Intermediate files are moved to ${tempDirectory}`);
+    }
+}
+async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, }) {
+    function printAndExit(message) {
+        cleanup(intermediateOutputDirectory, logger);
+        helpers_5.printAndExit(message);
+    }
     const manifestDir = path.dirname(manifestFile);
     const formattedEndpoint = helpers_2.formatEndpoint(codaApiEndpoint);
     const logger = new logging_1.ConsoleLogger();
     logger.info('Building Pack bundle...');
+    if (fs_1.default.existsSync(intermediateOutputDirectory)) {
+        logger.info(`Existing directory ${intermediateOutputDirectory} detected. Probably left over from previous build. Removing it...`);
+        fs_1.default.rmdirSync(intermediateOutputDirectory, { recursive: true });
+    }
     // we need to generate the bundle file in the working directory instead of a temp directory in
     // order to set source map right. The source map tool chain isn't smart enough to resolve a
     // relative path in the end.
     const { bundlePath, bundleSourceMapPath } = await compile_1.compilePackBundle({
         manifestPath: manifestFile,
-        outputDirectory: './',
-        intermediateOutputDirectory: './',
+        outputDirectory: intermediateOutputDirectory,
+        intermediateOutputDirectory,
     });
     const manifest = await helpers_3.importManifest(bundlePath);
     // Since package.json isn't in dist, we grab it from the root directory instead.
@@ -59,26 +79,26 @@ async function handleUpload({ manifestFile, codaApiEndpoint, notes }) {
     const codaPacksSDKVersion = packageJson.version;
     const apiKey = config_storage_1.getApiKey(codaApiEndpoint);
     if (!apiKey) {
-        helpers_5.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
+        printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
     }
     const client = helpers_1.createCodaClient(apiKey, formattedEndpoint);
     const packId = config_storage_2.getPackId(manifestDir, codaApiEndpoint);
     if (!packId) {
-        helpers_5.printAndExit(`Could not find a Pack id registered in directory "${manifestDir}"`);
+        printAndExit(`Could not find a Pack id registered in directory "${manifestDir}"`);
     }
     const packVersion = manifest.version;
     if (!packVersion) {
-        helpers_5.printAndExit(`No Pack version declared for this Pack`);
+        printAndExit(`No Pack version declared for this Pack`);
     }
     try {
         const bundle = helpers_6.readFile(bundlePath);
         if (!bundle) {
-            helpers_5.printAndExit(`Could not find bundle file at path ${bundlePath}`);
+            printAndExit(`Could not find bundle file at path ${bundlePath}`);
         }
         const metadata = metadata_1.compilePackMetadata(manifest);
         const sourceMap = helpers_6.readFile(bundleSourceMapPath);
         if (!sourceMap) {
-            helpers_5.printAndExit(`Could not find bundle source map at path ${bundleSourceMapPath}`);
+            printAndExit(`Could not find bundle source map at path ${bundleSourceMapPath}`);
         }
         const upload = {
             metadata,
@@ -93,7 +113,7 @@ async function handleUpload({ manifestFile, codaApiEndpoint, notes }) {
         logger.info('Registering new Pack version...');
         const registerResponse = await client.registerPackVersion(packId, packVersion, {}, { bundleHash });
         if (errors_2.isCodaError(registerResponse)) {
-            return helpers_5.printAndExit(`Error while registering pack version: ${errors_1.formatError(registerResponse)}`);
+            return printAndExit(`Error while registering pack version: ${errors_1.formatError(registerResponse)}`);
         }
         const { uploadUrl, headers } = registerResponse;
         logger.info('Uploading Pack...');
@@ -101,13 +121,14 @@ async function handleUpload({ manifestFile, codaApiEndpoint, notes }) {
         logger.info('Validating upload...');
         const uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion, {}, { notes });
         if (errors_2.isCodaError(uploadCompleteResponse)) {
-            helpers_5.printAndExit(`Error while finalizing pack version: ${errors_1.formatError(uploadCompleteResponse)}`);
+            printAndExit(`Error while finalizing pack version: ${errors_1.formatError(uploadCompleteResponse)}`);
         }
     }
     catch (err) {
-        const errors = [`Unexpected error during Pack upload: ${errors_1.formatError(err)}`, errors_1.tryParseSystemError(err)];
-        helpers_5.printAndExit(errors.join(`\n`));
+        const errors = [`Unexpected error during Pack upload: ${errors_1.formatError(err)}`, errors_3.tryParseSystemError(err)];
+        printAndExit(errors.join(`\n`));
     }
+    cleanup(intermediateOutputDirectory, logger);
     logger.info('Done!');
 }
 exports.handleUpload = handleUpload;
