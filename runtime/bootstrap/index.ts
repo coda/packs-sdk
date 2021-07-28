@@ -3,7 +3,8 @@ import type {FetchRequest} from '../../api_types';
 import type {FetchResponse} from '../../api_types';
 import type {Fetcher} from '../../api_types';
 import type {FormulaSpecification} from '../types';
-import type {Isolate} from 'isolated-vm';
+import {Isolate} from 'isolated-vm';
+import type {IsolateOptions} from 'isolated-vm';
 import type {Logger} from '../../api_types';
 import type {PackFormulaResult} from '../../api_types';
 import type {ParamDefs} from '../../api_types';
@@ -269,4 +270,8 @@ export async function registerBundles(
 
 export function getThunkPath(): string {
   return path.join(__dirname, '../../thunk_bundle.js');
+}
+
+export function createIsolate(options: IsolateOptions): Isolate {
+  return new Isolate(options);
 }

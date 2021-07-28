@@ -3,7 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getThunkPath = exports.registerBundles = exports.registerBundle = exports.injectExecutionContext = exports.executeThunk = exports.injectFetcherFunction = exports.injectVoidFunction = exports.injectAsyncFunction = exports.createIsolateContext = void 0;
+exports.createIsolate = exports.getThunkPath = exports.registerBundles = exports.registerBundle = exports.injectExecutionContext = exports.executeThunk = exports.injectFetcherFunction = exports.injectVoidFunction = exports.injectAsyncFunction = exports.createIsolateContext = void 0;
+const isolated_vm_1 = require("isolated-vm");
 const fs_1 = __importDefault(require("fs"));
 const marshaling_1 = require("../common/marshaling");
 const path_1 = __importDefault(require("path"));
@@ -178,3 +179,7 @@ function getThunkPath() {
     return path_1.default.join(__dirname, '../../thunk_bundle.js');
 }
 exports.getThunkPath = getThunkPath;
+function createIsolate(options) {
+    return new isolated_vm_1.Isolate(options);
+}
+exports.createIsolate = createIsolate;

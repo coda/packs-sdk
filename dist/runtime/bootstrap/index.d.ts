@@ -3,7 +3,8 @@ import type { FetchRequest } from '../../api_types';
 import type { FetchResponse } from '../../api_types';
 import type { Fetcher } from '../../api_types';
 import type { FormulaSpecification } from '../types';
-import type { Isolate } from 'isolated-vm';
+import { Isolate } from 'isolated-vm';
+import type { IsolateOptions } from 'isolated-vm';
 import type { Logger } from '../../api_types';
 import type { PackFormulaResult } from '../../api_types';
 import type { ParamDefs } from '../../api_types';
@@ -53,3 +54,4 @@ export declare function injectExecutionContext({ context, fetcher, temporaryBlob
 export declare function registerBundle(isolate: Isolate, context: Context, path: string, stubName: string): Promise<void>;
 export declare function registerBundles(isolate: Isolate, context: Context, packBundlePath: string, thunkBundlePath: string): Promise<void>;
 export declare function getThunkPath(): string;
+export declare function createIsolate(options: IsolateOptions): Isolate;
