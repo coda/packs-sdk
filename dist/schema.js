@@ -211,11 +211,13 @@ function normalizeSchema(schema) {
     return schema;
 }
 exports.normalizeSchema = normalizeSchema;
-// Convenience for creating a reference object schema from an existing schema for the
-// object. Copies over the identity, id, and primary from the schema, and the subset of
-// properties indicated by the id and primary.
-// A reference schema can always be defined directly, but if you already have an object
-// schema it provides better code reuse to derive a reference schema instead.
+/**
+ * Convenience for creating a reference object schema from an existing schema for the
+ * object. Copies over the identity, id, and primary from the schema, and the subset of
+ * properties indicated by the id and primary.
+ * A reference schema can always be defined directly, but if you already have an object
+ * schema it provides better code reuse to derive a reference schema instead.
+ */
 function makeReferenceSchemaFromObjectSchema(schema, identityName) {
     const { type, id, primary, identity, properties } = schema;
     ensure_2.ensureExists(identity || identityName, 'Source schema must have an identity field, or you must provide an identity name for the reference.');
