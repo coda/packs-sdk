@@ -11,6 +11,8 @@ import type { ParamValues } from '../../api_types';
 import type { SyncExecutionContext } from '../../api_types';
 import type { SyncFormulaResult } from '../../api';
 import type { SyncFormulaSpecification } from '../types';
+export { marshalValue } from '../common/marshaling';
+export { unmarshalValue } from '../common/marshaling';
 export declare function findFormula(packDef: PackVersionDefinition, formulaNameWithNamespace: string): Formula;
 export declare function findSyncFormula(packDef: PackVersionDefinition, syncFormulaName: string): GenericSyncFormula;
 /**

@@ -24,6 +24,9 @@ import {isDynamicSyncTable} from '../../api';
 import {unwrapError} from '../common/marshaling';
 import {wrapError} from '../common/marshaling';
 
+export {marshalValue} from '../common/marshaling';
+export {unmarshalValue} from '../common/marshaling';
+
 export function findFormula(packDef: PackVersionDefinition, formulaNameWithNamespace: string): Formula {
   const packFormulas = packDef.formulas;
   if (!packFormulas) {

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleFetcherStatusError = exports.handleError = exports.handleErrorAsync = exports.ensureSwitchUnreachable = exports.tryFindSyncFormula = exports.tryFindFormula = exports.findAndExecutePackFunction = exports.findSyncFormula = exports.findFormula = void 0;
+exports.handleFetcherStatusError = exports.handleError = exports.handleErrorAsync = exports.ensureSwitchUnreachable = exports.tryFindSyncFormula = exports.tryFindFormula = exports.findAndExecutePackFunction = exports.findSyncFormula = exports.findFormula = exports.unmarshalValue = exports.marshalValue = void 0;
 const types_1 = require("../../types");
 const types_2 = require("../types");
 const types_3 = require("../types");
@@ -9,6 +9,10 @@ const api_1 = require("../../api");
 const api_2 = require("../../api");
 const marshaling_1 = require("../common/marshaling");
 const marshaling_2 = require("../common/marshaling");
+var marshaling_3 = require("../common/marshaling");
+Object.defineProperty(exports, "marshalValue", { enumerable: true, get: function () { return marshaling_3.marshalValue; } });
+var marshaling_4 = require("../common/marshaling");
+Object.defineProperty(exports, "unmarshalValue", { enumerable: true, get: function () { return marshaling_4.unmarshalValue; } });
 function findFormula(packDef, formulaNameWithNamespace) {
     const packFormulas = packDef.formulas;
     if (!packFormulas) {

@@ -2297,8 +2297,10 @@ __export(exports, {
   handleError: () => handleError,
   handleErrorAsync: () => handleErrorAsync,
   handleFetcherStatusError: () => handleFetcherStatusError,
+  marshalValue: () => marshalValue,
   tryFindFormula: () => tryFindFormula,
-  tryFindSyncFormula: () => tryFindSyncFormula
+  tryFindSyncFormula: () => tryFindSyncFormula,
+  unmarshalValue: () => unmarshalValue
 });
 
 // types.ts
