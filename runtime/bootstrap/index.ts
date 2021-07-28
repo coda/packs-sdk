@@ -14,6 +14,7 @@ import type {SyncFormulaSpecification} from '../types';
 import type {TemporaryBlobStorage} from '../../api_types';
 import fs from 'fs';
 import {marshalValue} from '../common/marshaling';
+import path from 'path';
 import {translateErrorStackFromVM} from '../common/source_map';
 import {unmarshalValue} from '../common/marshaling';
 import {unwrapError} from '../common/marshaling';
@@ -260,4 +261,8 @@ export async function registerBundles(
 ): Promise<void> {
   await registerBundle(isolate, context, thunkBundlePath, 'coda');
   await registerBundle(isolate, context, packBundlePath, 'pack');
+}
+
+export function getThunkPath(): string {
+  return path.join(__dirname, '../../thunk_bundle.js');
 }

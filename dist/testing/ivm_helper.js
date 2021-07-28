@@ -8,13 +8,14 @@ const build_1 = require("../cli/build");
 const bootstrap_1 = require("../runtime/bootstrap");
 const fs_1 = __importDefault(require("fs"));
 const bootstrap_2 = require("../runtime/bootstrap");
+const bootstrap_3 = require("../runtime/bootstrap");
 const isolated_vm_1 = __importDefault(require("isolated-vm"));
 const path_1 = __importDefault(require("path"));
-const bootstrap_3 = require("../runtime/bootstrap");
+const bootstrap_4 = require("../runtime/bootstrap");
 const IsolateMemoryLimit = 128;
 // execution_helper_bundle.js is built by esbuild (see Makefile)
 // which puts it into the same directory: dist/testing/
-const CompiledHelperBundlePath = `${__dirname}/../thunk_bundle.js`;
+const CompiledHelperBundlePath = bootstrap_2.getThunkPath();
 const HelperTsSourceFile = `${__dirname}/../runtime/thunk/thunk.ts`;
 async function setupIvmContext(bundlePath, executionContext) {
     // creating an isolate with 128M memory limit.
@@ -28,16 +29,16 @@ async function setupIvmContext(bundlePath, executionContext) {
     //
     // TODO(huayang): this is not efficient enough and needs optimization if to be used widely in testing.
     if (fs_1.default.existsSync(CompiledHelperBundlePath)) {
-        await bootstrap_3.registerBundles(isolate, ivmContext, bundleFullPath, CompiledHelperBundlePath);
+        await bootstrap_4.registerBundles(isolate, ivmContext, bundleFullPath, CompiledHelperBundlePath);
     }
     else if (fs_1.default.existsSync(HelperTsSourceFile)) {
         const bundlePath = await build_1.build(HelperTsSourceFile);
-        await bootstrap_3.registerBundles(isolate, ivmContext, bundleFullPath, bundlePath);
+        await bootstrap_4.registerBundles(isolate, ivmContext, bundleFullPath, bundlePath);
     }
     else {
         throw new Error('cannot find the execution helper');
     }
-    await bootstrap_2.injectExecutionContext({
+    await bootstrap_3.injectExecutionContext({
         context: ivmContext,
         fetcher: executionContext.fetcher,
         temporaryBlobStorage: executionContext.temporaryBlobStorage,

@@ -3,9 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerBundles = exports.registerBundle = exports.injectExecutionContext = exports.executeThunk = exports.injectFetcherFunction = exports.injectVoidFunction = exports.injectAsyncFunction = exports.createIsolateContext = void 0;
+exports.getThunkPath = exports.registerBundles = exports.registerBundle = exports.injectExecutionContext = exports.executeThunk = exports.injectFetcherFunction = exports.injectVoidFunction = exports.injectAsyncFunction = exports.createIsolateContext = void 0;
 const fs_1 = __importDefault(require("fs"));
 const marshaling_1 = require("../common/marshaling");
+const path_1 = __importDefault(require("path"));
 const source_map_1 = require("../common/source_map");
 const marshaling_2 = require("../common/marshaling");
 const marshaling_3 = require("../common/marshaling");
@@ -170,3 +171,7 @@ async function registerBundles(isolate, context, packBundlePath, thunkBundlePath
     await registerBundle(isolate, context, packBundlePath, 'pack');
 }
 exports.registerBundles = registerBundles;
+function getThunkPath() {
+    return path_1.default.join(__dirname, '../../thunk_bundle.js');
+}
+exports.getThunkPath = getThunkPath;

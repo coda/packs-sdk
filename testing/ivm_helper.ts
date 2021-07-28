@@ -3,6 +3,7 @@ import type {Context as IVMContext} from 'isolated-vm';
 import {build as buildBundle} from '../cli/build';
 import {createIsolateContext} from '../runtime/bootstrap';
 import fs from 'fs';
+import {getThunkPath} from '../runtime/bootstrap';
 import {injectExecutionContext} from '../runtime/bootstrap';
 import ivm from 'isolated-vm';
 import path from 'path';
@@ -12,7 +13,7 @@ const IsolateMemoryLimit = 128;
 
 // execution_helper_bundle.js is built by esbuild (see Makefile)
 // which puts it into the same directory: dist/testing/
-const CompiledHelperBundlePath = `${__dirname}/../thunk_bundle.js`;
+const CompiledHelperBundlePath = getThunkPath();
 const HelperTsSourceFile = `${__dirname}/../runtime/thunk/thunk.ts`;
 
 export async function setupIvmContext(bundlePath: string, executionContext: ExecutionContext): Promise<IVMContext> {
