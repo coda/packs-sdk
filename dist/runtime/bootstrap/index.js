@@ -113,7 +113,8 @@ async function executeThunk(context, { params, formulaSpec }, packBundlePath, pa
             bundleSourceMapPath: packBundleSourceMapPath,
             vmFilename: packBundlePath,
         });
-        err.stack = `${err.constructor.name}${err.message ? `: ${err.message}` : ''}\n${translatedStacktrace}`;
+        const messageSuffix = err.message ? `: ${err.message}` : '';
+        err.stack = `${err.constructor.name}${messageSuffix}\n${translatedStacktrace}`;
         throw err;
     }
 }
@@ -175,6 +176,6 @@ async function registerBundles(isolate, context, packBundlePath, thunkBundlePath
 }
 exports.registerBundles = registerBundles;
 function getThunkPath() {
-    return path_1.default.join(__dirname, '../../thunk_bundle.js');
+    return path_1.default.join(__dirname, '../../bundles/thunk_bundle.js');
 }
 exports.getThunkPath = getThunkPath;

@@ -41,9 +41,11 @@ compile:
 	${ROOTDIR}/node_modules/.bin/tsc
 	${ROOTDIR}/node_modules/.bin/esbuild ${ROOTDIR}/runtime/thunk/thunk.ts \
 		--bundle \
-		--outfile=${ROOTDIR}/dist/thunk_bundle.js \
+		--outfile=${ROOTDIR}/bundles/thunk_bundle.js \
 		--format=cjs \
 		--banner:js="'use strict';"
+	# copy it to dist/ to make it available after packaging.
+	mkdir -p ${ROOTDIR}/dist/bundles/ && cp ${ROOTDIR}/bundles/thunk_bundle.js ${ROOTDIR}/dist/bundles/thunk_bundle.js
 	${ROOTDIR}/node_modules/.bin/esbuild ${ROOTDIR}/index.ts \
 		--bundle \
 		--outfile=${ROOTDIR}/dist/bundle.js \
