@@ -2580,7 +2580,7 @@ var MarshalingInjectedKeys;
 
 // runtime/common/marshaling/marshal_buffer.ts
 function marshalBuffer(val) {
-  if (val instanceof Buffer) {
+  if (global.Buffer && val instanceof Buffer) {
     return {
       data: [...Uint8Array.from(val)],
       [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Buffer
@@ -2588,6 +2588,9 @@ function marshalBuffer(val) {
   }
 }
 function unmarshalBuffer(val) {
+  if (!global.Buffer) {
+    return;
+  }
   if (typeof val !== "object" || val[MarshalingInjectedKeys.CodaMarshaler] !== CodaMarshalerType.Buffer) {
     return;
   }

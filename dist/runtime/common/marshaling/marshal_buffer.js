@@ -4,7 +4,8 @@ exports.unmarshalBuffer = exports.marshalBuffer = void 0;
 const constants_1 = require("./constants");
 const constants_2 = require("./constants");
 function marshalBuffer(val) {
-    if (val instanceof Buffer) {
+    // Buffer is not provided by IVM. If the bundle is not browserified, global.Buffer will be undefined.
+    if (global.Buffer && val instanceof Buffer) {
         return {
             data: [...Uint8Array.from(val)],
             [constants_2.MarshalingInjectedKeys.CodaMarshaler]: constants_1.CodaMarshalerType.Buffer,
@@ -13,6 +14,10 @@ function marshalBuffer(val) {
 }
 exports.marshalBuffer = marshalBuffer;
 function unmarshalBuffer(val) {
+    // Buffer is not provided by IVM. If the bundle is not browserified, global.Buffer will be undefined.
+    if (!global.Buffer) {
+        return;
+    }
     if (typeof val !== 'object' || val[constants_2.MarshalingInjectedKeys.CodaMarshaler] !== constants_1.CodaMarshalerType.Buffer) {
         return;
     }
