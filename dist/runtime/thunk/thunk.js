@@ -1,11 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleFetcherStatusError = exports.handleError = exports.handleErrorAsync = exports.ensureSwitchUnreachable = exports.tryFindSyncFormula = exports.tryFindFormula = exports.findAndExecutePackFunction = exports.findSyncFormula = exports.findFormula = exports.unmarshalValue = exports.marshalValue = void 0;
+exports.handleFetcherStatusError = exports.handleError = exports.handleErrorAsync = exports.ensureSwitchUnreachable = exports.findAndExecutePackFunction = exports.unmarshalValue = exports.marshalValue = void 0;
 const types_1 = require("../../types");
 const types_2 = require("../types");
 const types_3 = require("../types");
 const types_4 = require("../../types");
 const api_1 = require("../../api");
+const helpers_1 = require("../common/helpers");
+const helpers_2 = require("../common/helpers");
 const api_2 = require("../../api");
 const marshaling_1 = require("../common/marshaling");
 const marshaling_2 = require("../common/marshaling");
@@ -13,45 +15,6 @@ var marshaling_3 = require("../common/marshaling");
 Object.defineProperty(exports, "marshalValue", { enumerable: true, get: function () { return marshaling_3.marshalValue; } });
 var marshaling_4 = require("../common/marshaling");
 Object.defineProperty(exports, "unmarshalValue", { enumerable: true, get: function () { return marshaling_4.unmarshalValue; } });
-function findFormula(packDef, formulaNameWithNamespace) {
-    const packFormulas = packDef.formulas;
-    if (!packFormulas) {
-        throw new Error(`Pack definition has no formulas.`);
-    }
-    const [namespace, name] = formulaNameWithNamespace.includes('::')
-        ? formulaNameWithNamespace.split('::')
-        : ['', formulaNameWithNamespace];
-    if (namespace) {
-        // eslint-disable-next-line no-console
-        console.log(`Warning: formula was invoked with a namespace (${formulaNameWithNamespace}), but namespaces are now deprecated.`);
-    }
-    const formulas = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
-    if (!formulas || !formulas.length) {
-        throw new Error(`Pack definition has no formulas${namespace !== null && namespace !== void 0 ? namespace : ` for namespace "${namespace}"`}.`);
-    }
-    for (const formula of formulas) {
-        if (formula.name === name) {
-            return formula;
-        }
-    }
-    throw new Error(`Pack definition has no formula "${name}"${namespace !== null && namespace !== void 0 ? namespace : ` in namespace "${namespace}"`}.`);
-}
-exports.findFormula = findFormula;
-function findSyncFormula(packDef, syncFormulaName) {
-    if (!packDef.syncTables) {
-        throw new Error(`Pack definition has no sync tables.`);
-    }
-    for (const syncTable of packDef.syncTables) {
-        const syncFormula = syncTable.getter;
-        // TODO(huayang): it seems like a bug that client passes syncTable.name in, instead of syncTable.identityName or
-        // syncTable.getter.name.
-        if (syncTable.name === syncFormulaName) {
-            return syncFormula;
-        }
-    }
-    throw new Error(`Pack definition has no sync formula "${syncFormulaName}" in its sync tables.`);
-}
-exports.findSyncFormula = findSyncFormula;
 /**
  * The thunk entrypoint - the first code that runs inside the v8 isolate once control is passed over.
  */
@@ -65,29 +28,15 @@ async function findAndExecutePackFunction(params, formulaSpec, manifest, executi
     }
 }
 exports.findAndExecutePackFunction = findAndExecutePackFunction;
-function tryFindFormula(packDef, formulaNameWithNamespace) {
-    try {
-        return findFormula(packDef, formulaNameWithNamespace);
-    }
-    catch (_err) { }
-}
-exports.tryFindFormula = tryFindFormula;
-function tryFindSyncFormula(packDef, syncFormulaName) {
-    try {
-        return findSyncFormula(packDef, syncFormulaName);
-    }
-    catch (_err) { }
-}
-exports.tryFindSyncFormula = tryFindSyncFormula;
 function doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext) {
     const { syncTables, defaultAuthentication } = manifest;
     switch (formulaSpec.type) {
         case types_2.FormulaType.Standard: {
-            const formula = findFormula(manifest, formulaSpec.formulaName);
+            const formula = helpers_1.findFormula(manifest, formulaSpec.formulaName);
             return formula.execute(params, executionContext);
         }
         case types_2.FormulaType.Sync: {
-            const formula = findSyncFormula(manifest, formulaSpec.formulaName);
+            const formula = helpers_2.findSyncFormula(manifest, formulaSpec.formulaName);
             return formula.execute(params, executionContext);
         }
         case types_2.FormulaType.Metadata: {

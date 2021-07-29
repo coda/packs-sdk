@@ -2333,14 +2333,10 @@ var require_url_parse = __commonJS({
 __export(exports, {
   ensureSwitchUnreachable: () => ensureSwitchUnreachable,
   findAndExecutePackFunction: () => findAndExecutePackFunction,
-  findFormula: () => findFormula,
-  findSyncFormula: () => findSyncFormula,
   handleError: () => handleError,
   handleErrorAsync: () => handleErrorAsync,
   handleFetcherStatusError: () => handleFetcherStatusError,
   marshalValue: () => marshalValue,
-  tryFindFormula: () => tryFindFormula,
-  tryFindSyncFormula: () => tryFindSyncFormula,
   unmarshalValue: () => unmarshalValue
 });
 
@@ -2604,6 +2600,40 @@ function isDynamicSyncTable(syncTable) {
   return "isDynamic" in syncTable;
 }
 
+// runtime/common/helpers.ts
+function findFormula(packDef, formulaNameWithNamespace) {
+  const packFormulas = packDef.formulas;
+  if (!packFormulas) {
+    throw new Error(`Pack definition has no formulas.`);
+  }
+  const [namespace, name] = formulaNameWithNamespace.includes("::") ? formulaNameWithNamespace.split("::") : ["", formulaNameWithNamespace];
+  if (namespace) {
+    console.log(`Warning: formula was invoked with a namespace (${formulaNameWithNamespace}), but namespaces are now deprecated.`);
+  }
+  const formulas = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
+  if (!formulas || !formulas.length) {
+    throw new Error(`Pack definition has no formulas${namespace != null ? namespace : ` for namespace "${namespace}"`}.`);
+  }
+  for (const formula of formulas) {
+    if (formula.name === name) {
+      return formula;
+    }
+  }
+  throw new Error(`Pack definition has no formula "${name}"${namespace != null ? namespace : ` in namespace "${namespace}"`}.`);
+}
+function findSyncFormula(packDef, syncFormulaName) {
+  if (!packDef.syncTables) {
+    throw new Error(`Pack definition has no sync tables.`);
+  }
+  for (const syncTable of packDef.syncTables) {
+    const syncFormula = syncTable.getter;
+    if (syncTable.name === syncFormulaName) {
+      return syncFormula;
+    }
+  }
+  throw new Error(`Pack definition has no sync formula "${syncFormulaName}" in its sync tables.`);
+}
+
 // runtime/common/marshaling/constants.ts
 var CodaMarshalerType;
 (function(CodaMarshalerType2) {
@@ -2824,55 +2854,11 @@ function unwrapError(err) {
 }
 
 // runtime/thunk/thunk.ts
-function findFormula(packDef, formulaNameWithNamespace) {
-  const packFormulas = packDef.formulas;
-  if (!packFormulas) {
-    throw new Error(`Pack definition has no formulas.`);
-  }
-  const [namespace, name] = formulaNameWithNamespace.includes("::") ? formulaNameWithNamespace.split("::") : ["", formulaNameWithNamespace];
-  if (namespace) {
-    console.log(`Warning: formula was invoked with a namespace (${formulaNameWithNamespace}), but namespaces are now deprecated.`);
-  }
-  const formulas = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
-  if (!formulas || !formulas.length) {
-    throw new Error(`Pack definition has no formulas${namespace != null ? namespace : ` for namespace "${namespace}"`}.`);
-  }
-  for (const formula of formulas) {
-    if (formula.name === name) {
-      return formula;
-    }
-  }
-  throw new Error(`Pack definition has no formula "${name}"${namespace != null ? namespace : ` in namespace "${namespace}"`}.`);
-}
-function findSyncFormula(packDef, syncFormulaName) {
-  if (!packDef.syncTables) {
-    throw new Error(`Pack definition has no sync tables.`);
-  }
-  for (const syncTable of packDef.syncTables) {
-    const syncFormula = syncTable.getter;
-    if (syncTable.name === syncFormulaName) {
-      return syncFormula;
-    }
-  }
-  throw new Error(`Pack definition has no sync formula "${syncFormulaName}" in its sync tables.`);
-}
 async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, shouldWrapError = true) {
   try {
     return await doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext);
   } catch (err) {
     throw shouldWrapError ? wrapError(err) : err;
-  }
-}
-function tryFindFormula(packDef, formulaNameWithNamespace) {
-  try {
-    return findFormula(packDef, formulaNameWithNamespace);
-  } catch (_err) {
-  }
-}
-function tryFindSyncFormula(packDef, syncFormulaName) {
-  try {
-    return findSyncFormula(packDef, syncFormulaName);
-  } catch (_err) {
   }
 }
 function doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext) {
