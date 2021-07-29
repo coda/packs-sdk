@@ -1,0 +1,58 @@
+{
+  "_from": "isolated-vm@4.3.2",
+  "_id": "isolated-vm@4.3.2",
+  "_inBundle": false,
+  "_integrity": "sha512-ENBKkW+ViWq3Dor7rXA/6/sl7Pp/bn8vw6zAPsriXQqd9+uagrV3triiv0AO8HyerSqa3kymGteNq+zOvung6Q==",
+  "_location": "/isolated-vm",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "isolated-vm@4.3.2",
+    "name": "isolated-vm",
+    "escapedName": "isolated-vm",
+    "rawSpec": "4.3.2",
+    "saveSpec": null,
+    "fetchSpec": "4.3.2"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/isolated-vm/-/isolated-vm-4.3.2.tgz",
+  "_shasum": "8ddbe8a024b3b6c01901534aa256018d34b49bdd",
+  "_spec": "isolated-vm@4.3.2",
+  "_where": "/var/task",
+  "author": {
+    "name": "https://github.com/laverdet/"
+  },
+  "bugs": {
+    "url": "https://github.com/laverdet/isolated-vm/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "Access to multiple isolates",
+  "devDependencies": {
+    "isolated-vm": "."
+  },
+  "engines": {
+    "node": ">=10.4.0"
+  },
+  "gypfile": true,
+  "homepage": "https://github.com/laverdet/isolated-vm#readme",
+  "license": "ISC",
+  "main": "isolated-vm.js",
+  "name": "isolated-vm",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/laverdet/isolated-vm.git"
+  },
+  "scripts": {
+    "install": "node-gyp rebuild --release -j 4",
+    "lint": "find src -name '*.cc' | xargs -n1 clang-tidy",
+    "postinstall": "node-gyp clean",
+    "test": "node test.js || nodejs test.js"
+  },
+  "types": "isolated-vm.d.ts",
+  "version": "4.3.2"
+}

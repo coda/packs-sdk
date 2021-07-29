@@ -6,6 +6,9 @@ ROOTDIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 # CircleCI yarn cache directory may also need to be updated in sync with this
 YARN_CACHE_DIR=~/.yarncache
 
+ISOLATED_VM_VERSION_COMMAND="require('./node_modules/isolated-vm/package.json').version"
+ISOLATED_VM_VERSION=$(shell node -p -e $(ISOLATED_VM_VERSION_COMMAND))
+
 # Aliases
 bs: bootstrap
 
@@ -36,6 +39,27 @@ lint:
 lint-fix:
 	find . -name "*.ts" | grep -v /dist/ | grep -v /node_modules/ | grep -v .d.ts | xargs ${ROOTDIR}/node_modules/.bin/eslint --fix
 
+.PHONY: do-compile-isolated-vm
+do-compile-isolated-vm:
+	rm -rf build-isolated-vm
+
+	mkdir build-isolated-vm && \
+		cd build-isolated-vm && \
+		npm init -y && \
+		docker run --rm -v `pwd`:/var/task amazon/aws-sam-cli-build-image-nodejs14.x:latest npm install isolated-vm@${ISOLATED_VM_VERSION}
+	cp build-isolated-vm/node_modules/isolated-vm/package.json runtime/isolated-vm/
+	cp build-isolated-vm/node_modules/isolated-vm/isolated-vm.js runtime/isolated-vm/
+	cp build-isolated-vm/node_modules/isolated-vm/out/isolated_vm.node runtime/isolated-vm/out/
+
+	rm -rf build-isolated-vm
+
+.PHONY: compile-isolated-vm
+compile-isolated-vm:
+	if [ `node -p -e "require('./runtime/isolated-vm/package.json').version"` != $(ISOLATED_VM_VERSION) ]; \
+		then $(MAKE) do-compile-isolated-vm; \
+		else echo "isolated-vm version matches, skipping."; \
+	fi
+
 .PHONY: compile
 compile:
 	${ROOTDIR}/node_modules/.bin/tsc
@@ -55,6 +79,8 @@ compile:
 	${ROOTDIR}/node_modules/.bin/dts-bundle-generator ${ROOTDIR}/index.ts \
   	-o ${ROOTDIR}/dist/bundle.d.ts \
 		--no-banner
+	# Generate isolated-vm binaries that's compatible to Amazon Linux 2.
+	$(MAKE) compile-isolated-vm
 
 .PHONY: generated-documentation
 generated-documentation:
