@@ -10,6 +10,7 @@ import type { ParamDefs } from '../../api_types';
 import type { ParamValues } from '../../api_types';
 import type { Sync } from '../../api_types';
 import type { SyncFormulaResult } from '../../api';
+import type { SyncFormulaSpecification } from '../types';
 import type { TemporaryBlobStorage } from '../../api_types';
 /**
  * Setup an isolate context with sufficient globals needed to execute a pack.
@@ -32,10 +33,10 @@ export declare function injectFetcherFunction(context: Context, stubName: string
 /**
  * Actually execute the pack function inside the isolate by loading and passing control to the thunk.
  */
-export declare function executeThunk(context: Context, { params, formulaSpec }: {
+export declare function executeThunk<T extends FormulaSpecification>(context: Context, { params, formulaSpec }: {
     params: ParamValues<ParamDefs>;
-    formulaSpec: FormulaSpecification;
-}): Promise<SyncFormulaResult<object> | PackFormulaResult>;
+    formulaSpec: T;
+}, packBundlePath: string, packBundleSourceMapPath: string): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<object> : PackFormulaResult>;
 /**
  * Injects the ExecutionContext object, including stubs for network calls, into the isolate.
  */
@@ -50,3 +51,5 @@ export declare function injectExecutionContext({ context, fetcher, temporaryBlob
     sync?: Sync;
 }): Promise<void>;
 export declare function registerBundle(isolate: Isolate, context: Context, path: string, stubName: string): Promise<void>;
+export declare function registerBundles(isolate: Isolate, context: Context, packBundlePath: string, thunkBundlePath: string): Promise<void>;
+export declare function getThunkPath(): string;

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unmarshalValue = exports.marshalValue = void 0;
+exports.unwrapError = exports.wrapError = exports.unmarshalValue = exports.marshalValue = void 0;
 const marshal_buffer_1 = require("./marshal_buffer");
 const marshal_dates_1 = require("./marshal_dates");
 const marshal_errors_1 = require("./marshal_errors");
@@ -77,3 +77,28 @@ function unmarshalValue(marshaledValue) {
     return JSON.parse(marshaledValue, deserialize);
 }
 exports.unmarshalValue = unmarshalValue;
+function wrapError(err) {
+    // TODO(huayang): we do this for the sdk.
+    // if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
+    //   err.message +=
+    //     '\nThis means your formula was invoked with a mock fetcher that had no response configured.' +
+    //     '\nThis usually means you invoked your formula from the commandline with `coda execute` but forgot to ' +
+    //     'add the --fetch flag ' +
+    //     'to actually fetch from the remote API.';
+    // }
+    return new Error(marshalValue(err));
+}
+exports.wrapError = wrapError;
+function unwrapError(err) {
+    try {
+        const unmarshaledValue = unmarshalValue(err.message);
+        if (unmarshaledValue instanceof Error) {
+            return unmarshaledValue;
+        }
+        return err;
+    }
+    catch (_) {
+        return err;
+    }
+}
+exports.unwrapError = unwrapError;

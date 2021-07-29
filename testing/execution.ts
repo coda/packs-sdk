@@ -4,6 +4,7 @@ import type {FormulaSpecification} from '../runtime/types';
 import {FormulaType} from '../runtime/types';
 import type {MetadataContext} from '../api';
 import type {MetadataFormula} from '../api';
+import type {PackFormulaResult} from '../api_types';
 import type {PackVersionDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
@@ -14,6 +15,7 @@ import type {SyncFormulaSpecification} from '../runtime/types';
 import type {TypedPackFormula} from '../api';
 import {coerceParams} from './coercion';
 import {compilePackBundle} from './compile';
+import {executeThunk} from '../runtime/bootstrap';
 import {getPackAuth} from '../cli/helpers';
 import {importManifest} from '../cli/helpers';
 import * as ivmHelper from './ivm_helper';
@@ -63,7 +65,7 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
   manifest: PackVersionDefinition,
   executionContext: ExecutionContext | SyncExecutionContext,
   {validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true}: ExecuteOptions = {},
-) {
+): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<object> : PackFormulaResult> {
   let formula: TypedPackFormula | undefined;
   switch (formulaSpec.type) {
     case FormulaType.Standard:
@@ -153,7 +155,7 @@ export async function executeFormulaOrSyncFromCLI({
       formulaName,
     };
 
-    if (syncFormula) {
+    if (formulaSpecification.type === FormulaType.Sync) {
       const result = [];
       let iterations = 1;
       do {
@@ -205,7 +207,7 @@ export async function executeFormulaOrSyncWithVM({
 
   const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
 
-  return ivmHelper.executeFormulaOrSync(ivmContext, formulaSpecification, params, bundlePath + '.map', bundlePath);
+  return executeThunk(ivmContext, {params, formulaSpec: formulaSpecification}, bundlePath, bundlePath + '.map');
 }
 
 export class VMError {
@@ -224,17 +226,19 @@ export class VMError {
   }
 }
 
-export async function executeFormulaOrSyncWithRawParamsInVM({
+export async function executeFormulaOrSyncWithRawParamsInVM<
+  T extends SyncFormulaSpecification | StandardFormulaSpecification,
+>({
   formulaSpecification,
   params: rawParams,
   manifestPath,
   executionContext = newMockSyncExecutionContext(),
 }: {
-  formulaSpecification: SyncFormulaSpecification | StandardFormulaSpecification;
+  formulaSpecification: T;
   params: string[];
   manifestPath: string;
   executionContext?: SyncExecutionContext;
-}) {
+}): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<object> : PackFormulaResult> {
   const {bundleSourceMapPath, bundlePath} = await compilePackBundle({manifestPath, minify: false});
 
   const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
@@ -249,21 +253,23 @@ export async function executeFormulaOrSyncWithRawParamsInVM({
     params = coerceParams(syncFormula, rawParams as any);
   }
 
-  return ivmHelper.executeFormulaOrSync(ivmContext, formulaSpecification, params, bundleSourceMapPath, bundlePath);
+  return executeThunk(ivmContext, {params, formulaSpec: formulaSpecification}, bundlePath, bundleSourceMapPath);
 }
 
-export async function executeFormulaOrSyncWithRawParams({
+export async function executeFormulaOrSyncWithRawParams<
+  T extends StandardFormulaSpecification | SyncFormulaSpecification,
+>({
   formulaSpecification,
   params: rawParams,
   manifest,
   executionContext,
 }: {
-  formulaSpecification: StandardFormulaSpecification | SyncFormulaSpecification;
+  formulaSpecification: T;
   params: string[];
   manifest: PackVersionDefinition;
   vm?: boolean;
   executionContext: SyncExecutionContext;
-}) {
+}): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<object> : PackFormulaResult> {
   let params: ParamValues<ParamDefs>;
   if (formulaSpecification.type === FormulaType.Standard) {
     const formula = thunk.findFormula(manifest, formulaSpecification.formulaName);

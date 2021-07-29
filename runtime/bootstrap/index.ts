@@ -10,10 +10,14 @@ import type {ParamDefs} from '../../api_types';
 import type {ParamValues} from '../../api_types';
 import type {Sync} from '../../api_types';
 import type {SyncFormulaResult} from '../../api';
+import type {SyncFormulaSpecification} from '../types';
 import type {TemporaryBlobStorage} from '../../api_types';
 import fs from 'fs';
 import {marshalValue} from '../common/marshaling';
+import path from 'path';
+import {translateErrorStackFromVM} from '../common/source_map';
 import {unmarshalValue} from '../common/marshaling';
+import {unwrapError} from '../common/marshaling';
 
 /**
  * Setup an isolate context with sufficient globals needed to execute a pack.
@@ -37,6 +41,10 @@ export async function createIsolateContext(isolate: Isolate): Promise<Context> {
   // Attempt to hide away eval as defense-in-depth against dynamic code gen.
   // We used to block Function, but the SDK bundles in a helper that needs it :(
   await jail.set('eval', undefined, {copy: true});
+
+  // register bundle stubs.
+  await jail.set('coda', {}, {copy: true});
+  await jail.set('pack', {}, {copy: true});
 
   return context;
 }
@@ -129,22 +137,36 @@ export async function injectFetcherFunction(
 /**
  * Actually execute the pack function inside the isolate by loading and passing control to the thunk.
  */
-export async function executeThunk(
+export async function executeThunk<T extends FormulaSpecification>(
   context: Context,
-  {params, formulaSpec}: {params: ParamValues<ParamDefs>; formulaSpec: FormulaSpecification},
-): Promise<SyncFormulaResult<object> | PackFormulaResult> {
-  const resultRef = await context.evalClosure(
-    'return coda.findAndExecutePackFunction($0, $1, pack.pack || pack.manifest, executionContext);',
-    [params, formulaSpec],
-    {
-      arguments: {copy: true},
-      result: {reference: true, promise: true},
-    },
-  );
+  {params, formulaSpec}: {params: ParamValues<ParamDefs>; formulaSpec: T},
+  packBundlePath: string,
+  packBundleSourceMapPath: string,
+): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<object> : PackFormulaResult> {
+  try {
+    const resultRef = await context.evalClosure(
+      'return coda.findAndExecutePackFunction($0, $1, pack.pack || pack.manifest, executionContext);',
+      [params, formulaSpec],
+      {
+        arguments: {copy: true},
+        result: {reference: true, promise: true},
+      },
+    );
 
-  // And marshal out the results into a local copy of the isolate object reference.
-  const localIsolateValue = await resultRef.copy();
-  return localIsolateValue;
+    // And marshal out the results into a local copy of the isolate object reference.
+    const localIsolateValue = await resultRef.copy();
+    return localIsolateValue;
+  } catch (wrappedError) {
+    const err = unwrapError(wrappedError);
+    const translatedStacktrace = await translateErrorStackFromVM({
+      stacktrace: err.stack,
+      bundleSourceMapPath: packBundleSourceMapPath,
+      vmFilename: packBundlePath,
+    });
+    const messageSuffix = err.message ? `: ${err.message}` : '';
+    err.stack = `${err.constructor.name}${messageSuffix}\n${translatedStacktrace}`;
+    throw err;
+  }
 }
 
 /**
@@ -234,4 +256,18 @@ export async function registerBundle(
     filename: path,
   });
   await script.run(context);
+}
+
+export async function registerBundles(
+  isolate: Isolate,
+  context: Context,
+  packBundlePath: string,
+  thunkBundlePath: string,
+): Promise<void> {
+  await registerBundle(isolate, context, thunkBundlePath, 'coda');
+  await registerBundle(isolate, context, packBundlePath, 'pack');
+}
+
+export function getThunkPath(): string {
+  return path.join(__dirname, '../../bundles/thunk_bundle.js');
 }

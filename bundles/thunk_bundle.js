@@ -2297,9 +2297,10 @@ __export(exports, {
   handleError: () => handleError,
   handleErrorAsync: () => handleErrorAsync,
   handleFetcherStatusError: () => handleFetcherStatusError,
+  marshalValue: () => marshalValue,
   tryFindFormula: () => tryFindFormula,
   tryFindSyncFormula: () => tryFindSyncFormula,
-  unwrapError: () => unwrapError
+  unmarshalValue: () => unmarshalValue
 });
 
 // types.ts
@@ -2579,7 +2580,7 @@ var MarshalingInjectedKeys;
 
 // runtime/common/marshaling/marshal_buffer.ts
 function marshalBuffer(val) {
-  if (val instanceof Buffer) {
+  if (global.Buffer && val instanceof Buffer) {
     return {
       data: [...Uint8Array.from(val)],
       [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Buffer
@@ -2587,6 +2588,9 @@ function marshalBuffer(val) {
   }
 }
 function unmarshalBuffer(val) {
+  if (!global.Buffer) {
+    return;
+  }
   if (typeof val !== "object" || val[MarshalingInjectedKeys.CodaMarshaler] !== CodaMarshalerType.Buffer) {
     return;
   }
@@ -2763,8 +2767,6 @@ function unmarshalValue(marshaledValue) {
   }
   return JSON.parse(marshaledValue, deserialize);
 }
-
-// runtime/thunk/thunk.ts
 function wrapError(err) {
   return new Error(marshalValue(err));
 }
@@ -2779,6 +2781,8 @@ function unwrapError(err) {
     return err;
   }
 }
+
+// runtime/thunk/thunk.ts
 function findFormula(packDef, formulaNameWithNamespace) {
   const packFormulas = packDef.formulas;
   if (!packFormulas) {
@@ -2805,7 +2809,7 @@ function findSyncFormula(packDef, syncFormulaName) {
   }
   for (const syncTable of packDef.syncTables) {
     const syncFormula = syncTable.getter;
-    if (syncFormula.name === syncFormulaName) {
+    if (syncTable.name === syncFormulaName) {
       return syncFormula;
     }
   }

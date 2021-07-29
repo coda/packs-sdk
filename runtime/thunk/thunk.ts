@@ -21,33 +21,11 @@ import type {SyncFormulaResult} from '../../api';
 import type {SyncFormulaSpecification} from '../types';
 import type {TypedPackFormula} from '../../api';
 import {isDynamicSyncTable} from '../../api';
-import {marshalValue} from '../common/marshaling';
-import {unmarshalValue} from '../common/marshaling';
+import {unwrapError} from '../common/marshaling';
+import {wrapError} from '../common/marshaling';
 
-function wrapError(err: Error): Error {
-  // TODO(huayang): we do this for the sdk.
-  // if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
-  //   err.message +=
-  //     '\nThis means your formula was invoked with a mock fetcher that had no response configured.' +
-  //     '\nThis usually means you invoked your formula from the commandline with `coda execute` but forgot to ' +
-  //     'add the --fetch flag ' +
-  //     'to actually fetch from the remote API.';
-  // }
-
-  return new Error(marshalValue(err));
-}
-
-export function unwrapError(err: Error): Error {
-  try {
-    const unmarshaledValue = unmarshalValue(err.message);
-    if (unmarshaledValue instanceof Error) {
-      return unmarshaledValue;
-    }
-    return err;
-  } catch (_) {
-    return err;
-  }
-}
+export {marshalValue} from '../common/marshaling';
+export {unmarshalValue} from '../common/marshaling';
 
 export function findFormula(packDef: PackVersionDefinition, formulaNameWithNamespace: string): Formula {
   const packFormulas = packDef.formulas;
@@ -85,7 +63,9 @@ export function findSyncFormula(packDef: PackVersionDefinition, syncFormulaName:
 
   for (const syncTable of packDef.syncTables) {
     const syncFormula = syncTable.getter;
-    if (syncFormula.name === syncFormulaName) {
+    // TODO(huayang): it seems like a bug that client passes syncTable.name in, instead of syncTable.identityName or
+    // syncTable.getter.name.
+    if (syncTable.name === syncFormulaName) {
       return syncFormula;
     }
   }

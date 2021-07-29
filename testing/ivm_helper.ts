@@ -1,24 +1,19 @@
 import type {ExecutionContext} from '../api';
 import type {Context as IVMContext} from 'isolated-vm';
-import type {ParamDefs} from '../api_types';
-import type {ParamValues} from '../api_types';
-import type {StandardFormulaSpecification} from '../runtime/types';
-import type {SyncFormulaSpecification} from '../runtime/types';
 import {build as buildBundle} from '../cli/build';
 import {createIsolateContext} from '../runtime/bootstrap';
 import fs from 'fs';
+import {getThunkPath} from '../runtime/bootstrap';
 import {injectExecutionContext} from '../runtime/bootstrap';
 import ivm from 'isolated-vm';
 import path from 'path';
-import {registerBundle} from '../runtime/bootstrap';
-import {translateErrorStackFromVM} from '../runtime/common/source_map';
-import {unwrapError} from '../runtime/thunk/thunk';
+import {registerBundles} from '../runtime/bootstrap';
 
 const IsolateMemoryLimit = 128;
 
 // execution_helper_bundle.js is built by esbuild (see Makefile)
 // which puts it into the same directory: dist/testing/
-const CompiledHelperBundlePath = `${__dirname}/../thunk_bundle.js`;
+const CompiledHelperBundlePath = getThunkPath();
 const HelperTsSourceFile = `${__dirname}/../runtime/thunk/thunk.ts`;
 
 export async function setupIvmContext(bundlePath: string, executionContext: ExecutionContext): Promise<IVMContext> {
@@ -27,7 +22,6 @@ export async function setupIvmContext(bundlePath: string, executionContext: Exec
   const ivmContext = await createIsolateContext(isolate);
 
   const bundleFullPath = bundlePath.startsWith('/') ? bundlePath : path.join(process.cwd(), bundlePath);
-  await registerBundle(isolate, ivmContext, bundleFullPath, 'pack');
 
   // If the ivm helper is running by node, the compiled execution_helper bundle should be ready at the
   // dist/ directory described by CompiledHelperBundlePath. If the ivm helper is running by mocha, the
@@ -36,10 +30,10 @@ export async function setupIvmContext(bundlePath: string, executionContext: Exec
   //
   // TODO(huayang): this is not efficient enough and needs optimization if to be used widely in testing.
   if (fs.existsSync(CompiledHelperBundlePath)) {
-    await registerBundle(isolate, ivmContext, CompiledHelperBundlePath, 'coda');
+    await registerBundles(isolate, ivmContext, bundleFullPath, CompiledHelperBundlePath);
   } else if (fs.existsSync(HelperTsSourceFile)) {
     const bundlePath = await buildBundle(HelperTsSourceFile);
-    await registerBundle(isolate, ivmContext, bundlePath, 'coda');
+    await registerBundles(isolate, ivmContext, bundleFullPath, bundlePath);
   } else {
     throw new Error('cannot find the execution helper');
   }
@@ -56,34 +50,4 @@ export async function setupIvmContext(bundlePath: string, executionContext: Exec
   });
 
   return ivmContext;
-}
-
-export async function executeFormulaOrSync(
-  ivmContext: IVMContext,
-  formulaSpecification: StandardFormulaSpecification | SyncFormulaSpecification,
-  params: ParamValues<ParamDefs>,
-  bundleSourceMapPath: string,
-  vmFilename: string,
-) {
-  try {
-    return await ivmContext.evalClosure(
-      `return coda.findAndExecutePackFunction(
-      $0,
-      $1,
-      pack.pack || pack.manifest,
-      executionContext,
-    )`,
-      [params, formulaSpecification],
-      {arguments: {copy: true}, result: {copy: true, promise: true}},
-    );
-  } catch (wrappedError) {
-    const err = unwrapError(wrappedError);
-    const translatedStacktrace = await translateErrorStackFromVM({
-      stacktrace: err.stack,
-      bundleSourceMapPath,
-      vmFilename,
-    });
-    err.stack = `${err.constructor.name}${err.message ? `: ${err.message}` : ''}\n${translatedStacktrace}`;
-    throw err;
-  }
 }

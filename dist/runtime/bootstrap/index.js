@@ -3,10 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerBundle = exports.injectExecutionContext = exports.executeThunk = exports.injectFetcherFunction = exports.injectVoidFunction = exports.injectAsyncFunction = exports.createIsolateContext = void 0;
+exports.getThunkPath = exports.registerBundles = exports.registerBundle = exports.injectExecutionContext = exports.executeThunk = exports.injectFetcherFunction = exports.injectVoidFunction = exports.injectAsyncFunction = exports.createIsolateContext = void 0;
 const fs_1 = __importDefault(require("fs"));
 const marshaling_1 = require("../common/marshaling");
+const path_1 = __importDefault(require("path"));
+const source_map_1 = require("../common/source_map");
 const marshaling_2 = require("../common/marshaling");
+const marshaling_3 = require("../common/marshaling");
 /**
  * Setup an isolate context with sufficient globals needed to execute a pack.
  *
@@ -26,6 +29,9 @@ async function createIsolateContext(isolate) {
     // Attempt to hide away eval as defense-in-depth against dynamic code gen.
     // We used to block Function, but the SDK bundles in a helper that needs it :(
     await jail.set('eval', undefined, { copy: true });
+    // register bundle stubs.
+    await jail.set('coda', {}, { copy: true });
+    await jail.set('pack', {}, { copy: true });
     return context;
 }
 exports.createIsolateContext = createIsolateContext;
@@ -90,14 +96,27 @@ exports.injectFetcherFunction = injectFetcherFunction;
 /**
  * Actually execute the pack function inside the isolate by loading and passing control to the thunk.
  */
-async function executeThunk(context, { params, formulaSpec }) {
-    const resultRef = await context.evalClosure('return coda.findAndExecutePackFunction($0, $1, pack.pack || pack.manifest, executionContext);', [params, formulaSpec], {
-        arguments: { copy: true },
-        result: { reference: true, promise: true },
-    });
-    // And marshal out the results into a local copy of the isolate object reference.
-    const localIsolateValue = await resultRef.copy();
-    return localIsolateValue;
+async function executeThunk(context, { params, formulaSpec }, packBundlePath, packBundleSourceMapPath) {
+    try {
+        const resultRef = await context.evalClosure('return coda.findAndExecutePackFunction($0, $1, pack.pack || pack.manifest, executionContext);', [params, formulaSpec], {
+            arguments: { copy: true },
+            result: { reference: true, promise: true },
+        });
+        // And marshal out the results into a local copy of the isolate object reference.
+        const localIsolateValue = await resultRef.copy();
+        return localIsolateValue;
+    }
+    catch (wrappedError) {
+        const err = marshaling_3.unwrapError(wrappedError);
+        const translatedStacktrace = await source_map_1.translateErrorStackFromVM({
+            stacktrace: err.stack,
+            bundleSourceMapPath: packBundleSourceMapPath,
+            vmFilename: packBundlePath,
+        });
+        const messageSuffix = err.message ? `: ${err.message}` : '';
+        err.stack = `${err.constructor.name}${messageSuffix}\n${translatedStacktrace}`;
+        throw err;
+    }
 }
 exports.executeThunk = executeThunk;
 /**
@@ -151,3 +170,12 @@ async function registerBundle(isolate, context, path, stubName) {
     await script.run(context);
 }
 exports.registerBundle = registerBundle;
+async function registerBundles(isolate, context, packBundlePath, thunkBundlePath) {
+    await registerBundle(isolate, context, thunkBundlePath, 'coda');
+    await registerBundle(isolate, context, packBundlePath, 'pack');
+}
+exports.registerBundles = registerBundles;
+function getThunkPath() {
+    return path_1.default.join(__dirname, '../../bundles/thunk_bundle.js');
+}
+exports.getThunkPath = getThunkPath;

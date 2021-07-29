@@ -15,7 +15,7 @@ describe('Thunk', () => {
   });
 
   it('should bundle and run in an IVM context', async () => {
-    const outputFilePath = 'dist/thunk_bundle.js';
+    const outputFilePath = 'bundles/thunk_bundle.js';
     const options: esbuild.BuildOptions = {
       banner: {js: "'use strict';"},
       bundle: true,

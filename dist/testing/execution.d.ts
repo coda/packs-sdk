@@ -2,6 +2,7 @@
 import type { ExecutionContext } from '../api_types';
 import type { MetadataContext } from '../api';
 import type { MetadataFormula } from '../api';
+import type { PackFormulaResult } from '../api_types';
 import type { PackVersionDefinition } from '../types';
 import type { ParamDefs } from '../api_types';
 import type { ParamValues } from '../api_types';
@@ -18,7 +19,7 @@ export interface ContextOptions {
     useRealFetcher?: boolean;
     manifestPath?: string;
 }
-export declare function executeFormulaFromPackDef(packDef: PackVersionDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<import("../api_types").PackFormulaResult>;
+export declare function executeFormulaFromPackDef(packDef: PackVersionDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<PackFormulaResult>;
 export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, contextOptions, }: {
     formulaName: string;
     params: string[];
@@ -33,7 +34,7 @@ export declare function executeFormulaOrSyncWithVM({ formulaName, params, bundle
     params: ParamValues<ParamDefs>;
     bundlePath: string;
     executionContext?: ExecutionContext;
-}): Promise<any>;
+}): Promise<PackFormulaResult | SyncFormulaResult<object>>;
 export declare class VMError {
     name: string;
     message: string;
@@ -41,19 +42,19 @@ export declare class VMError {
     constructor(name: string, message: string, stack: string);
     [util.inspect.custom](): string;
 }
-export declare function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, params: rawParams, manifestPath, executionContext, }: {
-    formulaSpecification: SyncFormulaSpecification | StandardFormulaSpecification;
+export declare function executeFormulaOrSyncWithRawParamsInVM<T extends SyncFormulaSpecification | StandardFormulaSpecification>({ formulaSpecification, params: rawParams, manifestPath, executionContext, }: {
+    formulaSpecification: T;
     params: string[];
     manifestPath: string;
     executionContext?: SyncExecutionContext;
-}): Promise<any>;
-export declare function executeFormulaOrSyncWithRawParams({ formulaSpecification, params: rawParams, manifest, executionContext, }: {
-    formulaSpecification: StandardFormulaSpecification | SyncFormulaSpecification;
+}): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<object> : PackFormulaResult>;
+export declare function executeFormulaOrSyncWithRawParams<T extends StandardFormulaSpecification | SyncFormulaSpecification>({ formulaSpecification, params: rawParams, manifest, executionContext, }: {
+    formulaSpecification: T;
     params: string[];
     manifest: PackVersionDefinition;
     vm?: boolean;
     executionContext: SyncExecutionContext;
-}): Promise<import("../api_types").PackFormulaResult | SyncFormulaResult<any>>;
+}): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<object> : PackFormulaResult>;
 /**
  * Executes multiple iterations of a sync formula in a loop until there is no longer
  * a `continuation` returned, aggregating each page of results and returning an array
