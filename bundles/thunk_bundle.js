@@ -2046,8 +2046,9 @@ var require_url_parse = __commonJS({
     "use strict";
     var required = require_requires_port();
     var qs2 = require_querystringify();
-    var slashes = /^[A-Za-z][A-Za-z0-9+-.]*:[\\/]+/;
-    var protocolre = /^([a-z][a-z0-9.+-]*:)?([\\/]{1,})?([\S\s]*)/i;
+    var slashes = /^[A-Za-z][A-Za-z0-9+-.]*:\/\//;
+    var protocolre = /^([a-z][a-z0-9.+-]*:)?(\/\/)?([\\/]+)?([\S\s]*)/i;
+    var windowsDriveLetter = /^[a-zA-Z]:/;
     var whitespace = "[\\x09\\x0A\\x0B\\x0C\\x0D\\x20\\xA0\\u1680\\u180E\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\\u2028\\u2029\\uFEFF]";
     var left = new RegExp("^" + whitespace + "+");
     function trimLeft(str) {
@@ -2056,8 +2057,8 @@ var require_url_parse = __commonJS({
     var rules = [
       ["#", "hash"],
       ["?", "query"],
-      function sanitize(address) {
-        return address.replace("\\", "/");
+      function sanitize(address, url) {
+        return isSpecial(url.protocol) ? address.replace(/\\/g, "/") : address;
       },
       ["/", "pathname"],
       ["@", "auth", 1],
@@ -2097,12 +2098,51 @@ var require_url_parse = __commonJS({
       }
       return finaldestination;
     }
-    function extractProtocol(address) {
+    function isSpecial(scheme) {
+      return scheme === "file:" || scheme === "ftp:" || scheme === "http:" || scheme === "https:" || scheme === "ws:" || scheme === "wss:";
+    }
+    function extractProtocol(address, location) {
       address = trimLeft(address);
-      var match = protocolre.exec(address), protocol = match[1] ? match[1].toLowerCase() : "", slashes2 = !!(match[2] && match[2].length >= 2), rest = match[2] && match[2].length === 1 ? "/" + match[3] : match[3];
+      location = location || {};
+      var match = protocolre.exec(address);
+      var protocol = match[1] ? match[1].toLowerCase() : "";
+      var forwardSlashes = !!match[2];
+      var otherSlashes = !!match[3];
+      var slashesCount = 0;
+      var rest;
+      if (forwardSlashes) {
+        if (otherSlashes) {
+          rest = match[2] + match[3] + match[4];
+          slashesCount = match[2].length + match[3].length;
+        } else {
+          rest = match[2] + match[4];
+          slashesCount = match[2].length;
+        }
+      } else {
+        if (otherSlashes) {
+          rest = match[3] + match[4];
+          slashesCount = match[3].length;
+        } else {
+          rest = match[4];
+        }
+      }
+      if (protocol === "file:") {
+        if (slashesCount >= 2) {
+          rest = rest.slice(2);
+        }
+      } else if (isSpecial(protocol)) {
+        rest = match[4];
+      } else if (protocol) {
+        if (forwardSlashes) {
+          rest = rest.slice(2);
+        }
+      } else if (slashesCount >= 2 && isSpecial(location.protocol)) {
+        rest = match[4];
+      }
       return {
         protocol,
-        slashes: slashes2,
+        slashes: forwardSlashes || isSpecial(protocol),
+        slashesCount,
         rest
       };
     }
@@ -2142,17 +2182,18 @@ var require_url_parse = __commonJS({
       if (parser && typeof parser !== "function")
         parser = qs2.parse;
       location = lolcation(location);
-      extracted = extractProtocol(address || "");
+      extracted = extractProtocol(address || "", location);
       relative = !extracted.protocol && !extracted.slashes;
       url.slashes = extracted.slashes || relative && location.slashes;
       url.protocol = extracted.protocol || location.protocol || "";
       address = extracted.rest;
-      if (!extracted.slashes)
+      if (extracted.protocol === "file:" && (extracted.slashesCount !== 2 || windowsDriveLetter.test(address)) || !extracted.slashes && (extracted.protocol || extracted.slashesCount < 2 || !isSpecial(url.protocol))) {
         instructions[3] = [/(.*)/, "pathname"];
+      }
       for (; i < instructions.length; i++) {
         instruction = instructions[i];
         if (typeof instruction === "function") {
-          address = instruction(address);
+          address = instruction(address, url);
           continue;
         }
         parse = instruction[0];
@@ -2182,7 +2223,7 @@ var require_url_parse = __commonJS({
       if (relative && location.slashes && url.pathname.charAt(0) !== "/" && (url.pathname !== "" || location.pathname !== "")) {
         url.pathname = resolve(url.pathname, location.pathname);
       }
-      if (url.pathname.charAt(0) !== "/" && url.hostname) {
+      if (url.pathname.charAt(0) !== "/" && isSpecial(url.protocol)) {
         url.pathname = "/" + url.pathname;
       }
       if (!required(url.port, url.protocol)) {
@@ -2195,7 +2236,7 @@ var require_url_parse = __commonJS({
         url.username = instruction[0] || "";
         url.password = instruction[1] || "";
       }
-      url.origin = url.protocol && url.host && url.protocol !== "file:" ? url.protocol + "//" + url.host : "null";
+      url.origin = url.protocol !== "file:" && isSpecial(url.protocol) && url.host ? url.protocol + "//" + url.host : "null";
       url.href = url.toString();
     }
     function set(part, value, fn) {
@@ -2254,7 +2295,7 @@ var require_url_parse = __commonJS({
         if (ins[4])
           url[ins[1]] = url[ins[1]].toLowerCase();
       }
-      url.origin = url.protocol && url.host && url.protocol !== "file:" ? url.protocol + "//" + url.host : "null";
+      url.origin = url.protocol !== "file:" && isSpecial(url.protocol) && url.host ? url.protocol + "//" + url.host : "null";
       url.href = url.toString();
       return url;
     }
@@ -2264,7 +2305,7 @@ var require_url_parse = __commonJS({
       var query, url = this, protocol = url.protocol;
       if (protocol && protocol.charAt(protocol.length - 1) !== ":")
         protocol += ":";
-      var result = protocol + (url.slashes ? "//" : "");
+      var result = protocol + (url.slashes || isSpecial(url.protocol) ? "//" : "");
       if (url.username) {
         result += url.username;
         if (url.password)
