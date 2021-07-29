@@ -9,12 +9,6 @@ YARN_CACHE_DIR=~/.yarncache
 ISOLATED_VM_VERSION_COMMAND="require('./node_modules/isolated-vm/package.json').version"
 ISOLATED_VM_VERSION=$(shell node -p -e $(ISOLATED_VM_VERSION_COMMAND))
 
-iv:
-	if [ `node -p -e "require('./runtime/isolated-vm/package.json').version"` == $(ISOLATED_VM_VERSION) ]; \
-		then echo 'here'; \
-		else echo 'there'; \
-	fi
-
 # Aliases
 bs: bootstrap
 
