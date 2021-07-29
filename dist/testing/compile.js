@@ -45,7 +45,10 @@ async function loadIntoVM(bundlePath) {
 }
 async function browserifyBundle({ outputDirectory, lastBundleFilename, outputBundleFilename, }) {
     // browserify doesn't minify by default. if necessary another pipe can be created to minify the output.
-    const browserifyCompiler = browserify_1.default(path_1.default.join(outputDirectory, lastBundleFilename), { debug: true, standalone: 'exports' });
+    const browserifyCompiler = browserify_1.default(path_1.default.join(outputDirectory, lastBundleFilename), {
+        debug: true,
+        standalone: 'exports',
+    });
     const writer = fs_1.default.createWriteStream(path_1.default.join(outputDirectory, outputBundleFilename));
     const compiledStream = browserifyCompiler.bundle();
     return new Promise(resolve => {
@@ -123,7 +126,7 @@ outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, }) {
     }
     const tempBundlePath = path_1.default.join(intermediateOutputDirectory, bundleFilename);
     // test if it can be loaded into isolated-vm.
-    // among all the packs. Google Drive (1059) won't load into IVM at this moment since it requires jimp 
+    // among all the packs. Google Drive (1059) won't load into IVM at this moment since it requires jimp
     // which uses gifcodec, which calls process.nextTick on the global level.
     // maybe we just need to get rid of jimp and resize-optimize-images instead.
     await loadIntoVM(tempBundlePath);
@@ -136,6 +139,9 @@ outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, }) {
     }
     const bundlePath = path_1.default.join(outputDirectory, bundleFilename);
     const bundleSourceMapPath = `${bundlePath}.map`;
+    if (!fs_1.default.existsSync(outputDirectory)) {
+        fs_1.default.mkdirSync(outputDirectory, { recursive: true });
+    }
     // move over finally compiled bundle & sourcemap to the target directory.
     fs_1.default.copyFileSync(tempBundlePath, bundlePath);
     fs_1.default.copyFileSync(`${tempBundlePath}.map`, bundleSourceMapPath);

@@ -100,6 +100,11 @@ if (require.main === module) {
           hidden: true,
           default: DEFAULT_API_ENDPOINT,
         },
+        intermediateOutputDirectory: {
+          string: true,
+          alias: 'o',
+          default: './_upload_build',
+        },
       },
       handler: handleUpload,
     })

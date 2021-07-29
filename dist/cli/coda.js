@@ -102,6 +102,11 @@ if (require.main === module) {
                 hidden: true,
                 default: config_storage_1.DEFAULT_API_ENDPOINT,
             },
+            intermediateOutputDirectory: {
+                string: true,
+                alias: 'o',
+                default: './_upload_build',
+            },
         },
         handler: upload_1.handleUpload,
     })
