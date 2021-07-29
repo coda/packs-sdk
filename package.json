@@ -36,7 +36,7 @@
     "source-map": "^0.8.0-beta.0",
     "stacktrace-parser": "^0.1.10",
     "typescript": "^4.3.5",
-    "uglify-js": "^3.13.10",
+    "uglify-js": "^3.14.1",
     "url-parse": "^1.5.1",
     "uuid": "^8.3.2",
     "xml2js": "^0.4.23",
