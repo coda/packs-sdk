@@ -16,6 +16,8 @@ import type {TypedPackFormula} from '../api';
 import {coerceParams} from './coercion';
 import {compilePackBundle} from './compile';
 import {executeThunk} from '../runtime/bootstrap';
+import {findFormula} from '../runtime/common/helpers';
+import {findSyncFormula} from '../runtime/common/helpers';
 import {getPackAuth} from '../cli/helpers';
 import {importManifest} from '../cli/helpers';
 import * as ivmHelper from './ivm_helper';
@@ -28,6 +30,7 @@ import {print} from './helpers';
 import {readCredentialsFile} from './auth';
 import {storeCredential} from './auth';
 import * as thunk from '../runtime/thunk/thunk';
+import {tryFindSyncFormula} from '../runtime/common/helpers';
 import util from 'util';
 import {validateParams} from './validation';
 import {validateResult} from './validation';
@@ -69,10 +72,10 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
   let formula: TypedPackFormula | undefined;
   switch (formulaSpec.type) {
     case FormulaType.Standard:
-      formula = thunk.findFormula(manifest, formulaSpec.formulaName);
+      formula = findFormula(manifest, formulaSpec.formulaName);
       break;
     case FormulaType.Sync:
-      formula = thunk.findSyncFormula(manifest, formulaSpec.formulaName);
+      formula = findSyncFormula(manifest, formulaSpec.formulaName);
       break;
   }
 
@@ -149,7 +152,7 @@ export async function executeFormulaOrSyncFromCLI({
       : newMockSyncExecutionContext();
     executionContext.sync.dynamicUrl = dynamicUrl || undefined;
 
-    const syncFormula = thunk.tryFindSyncFormula(manifest, formulaName);
+    const syncFormula = tryFindSyncFormula(manifest, formulaName);
     const formulaSpecification: SyncFormulaSpecification | StandardFormulaSpecification = {
       type: syncFormula ? FormulaType.Sync : FormulaType.Standard,
       formulaName,
@@ -199,7 +202,7 @@ export async function executeFormulaOrSyncWithVM({
   // TODO(huayang): importing manifest makes this method not usable in production, where we are not
   // supposed to load a manifest outside of the VM context.
   const manifest = await importManifest(bundlePath);
-  const syncFormula = thunk.tryFindSyncFormula(manifest, formulaName);
+  const syncFormula = tryFindSyncFormula(manifest, formulaName);
   const formulaSpecification: SyncFormulaSpecification | StandardFormulaSpecification = {
     type: syncFormula ? FormulaType.Sync : FormulaType.Standard,
     formulaName,
@@ -246,10 +249,10 @@ export async function executeFormulaOrSyncWithRawParamsInVM<
   const manifest = await importManifest(bundlePath);
   let params: ParamValues<ParamDefs>;
   if (formulaSpecification.type === FormulaType.Standard) {
-    const formula = thunk.findFormula(manifest, formulaSpecification.formulaName);
+    const formula = findFormula(manifest, formulaSpecification.formulaName);
     params = coerceParams(formula, rawParams as any);
   } else {
-    const syncFormula = thunk.findSyncFormula(manifest, formulaSpecification.formulaName);
+    const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName);
     params = coerceParams(syncFormula, rawParams as any);
   }
 
@@ -272,10 +275,10 @@ export async function executeFormulaOrSyncWithRawParams<
 }): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<object> : PackFormulaResult> {
   let params: ParamValues<ParamDefs>;
   if (formulaSpecification.type === FormulaType.Standard) {
-    const formula = thunk.findFormula(manifest, formulaSpecification.formulaName);
+    const formula = findFormula(manifest, formulaSpecification.formulaName);
     params = coerceParams(formula, rawParams as any);
   } else {
-    const syncFormula = thunk.findSyncFormula(manifest, formulaSpecification.formulaName);
+    const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName);
     params = coerceParams(syncFormula, rawParams as any);
   }
 
@@ -302,7 +305,7 @@ export async function executeSyncFormulaFromPackDef(
   {validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true}: ExecuteOptions = {},
   {useRealFetcher, manifestPath}: ContextOptions = {},
 ): Promise<any[]> {
-  const formula = thunk.findSyncFormula(packDef, syncFormulaName);
+  const formula = findSyncFormula(packDef, syncFormulaName);
   if (shouldValidateParams && formula) {
     validateParams(formula, params);
   }
