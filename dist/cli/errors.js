@@ -12,7 +12,7 @@ exports.isCodaError = isCodaError;
 function tryParseSystemError(error) {
     // NB(alan): this should only be hit for Coda developers trying to use the CLI with their development server.
     if (error.errno === 'UNABLE_TO_VERIFY_LEAF_SIGNATURE') {
-        return 'Run `export NODE_TLS_REJECT_UNAUTHORIZED=1` and rerun your command.';
+        return 'Run `export NODE_TLS_REJECT_UNAUTHORIZED=0` and rerun your command.';
     }
     return '';
 }
