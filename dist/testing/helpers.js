@@ -22,11 +22,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getExpirationDate = exports.writeJSONFile = exports.readJSONFile = exports.readFile = exports.promptForInput = exports.printAndExit = exports.print = exports.getManifestFromModule = void 0;
+exports.processVmError = exports.getExpirationDate = exports.writeJSONFile = exports.readJSONFile = exports.readFile = exports.promptForInput = exports.printAndExit = exports.print = exports.getManifestFromModule = void 0;
 const ensure_1 = require("../helpers/ensure");
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const readlineSync = __importStar(require("readline-sync"));
+const source_map_1 = require("../runtime/common/source_map");
+const marshaling_1 = require("../runtime/common/marshaling");
+const marshaling_2 = require("../runtime/common/marshaling");
 function getManifestFromModule(module) {
     if (!module.manifest && !module.pack) {
         printAndExit('Manifest file must export a variable called "manifest" that refers to a PackDefinition.');
@@ -84,3 +87,18 @@ function getExpirationDate(expiresInSeconds) {
     return new Date(Date.now() + expiresInSeconds * 1000);
 }
 exports.getExpirationDate = getExpirationDate;
+async function processVmError(vmError, bundlePath) {
+    // this is weird. the error thrown by ivm seems a standard error but somehow its stack can't be overwritten.
+    // unwrapError(wrapError(err)) will recreate the same type of error in a standard way, where the stack can
+    // be overwritten.
+    const err = marshaling_1.unwrapError(marshaling_2.wrapError(vmError));
+    const translatedStacktrace = await source_map_1.translateErrorStackFromVM({
+        stacktrace: err.stack,
+        bundleSourceMapPath: bundlePath + '.map',
+        vmFilename: bundlePath,
+    });
+    const messageSuffix = err.message ? `: ${err.message}` : '';
+    err.stack = `${err.constructor.name}${messageSuffix}\n${translatedStacktrace}`;
+    return err;
+}
+exports.processVmError = processVmError;

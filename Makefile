@@ -83,6 +83,8 @@ compile:
 		--no-banner
 	# Generate isolated-vm binaries that's compatible to Amazon Linux 2.
 	$(MAKE) compile-isolated-vm
+	# copy these esm format js files to dist directly.
+	cp -r ${ROOTDIR}/testing/injections ${ROOTDIR}/dist/testing/
 
 .PHONY: generated-documentation
 generated-documentation:

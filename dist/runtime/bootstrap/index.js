@@ -110,8 +110,10 @@ async function executeThunk(context, { params, formulaSpec }, packBundlePath, pa
         const err = marshaling_3.unwrapError(wrappedError);
         const translatedStacktrace = await source_map_1.translateErrorStackFromVM({
             stacktrace: err.stack,
-            bundleSourceMapPath: packBundleSourceMapPath,
-            vmFilename: packBundlePath,
+            // the sourcemap needs packBundleSourceMapPath to be either absolute or relative, but not something like
+            // 'bundle.js' or 'bundle.js.map'.
+            bundleSourceMapPath: path_1.default.resolve(packBundleSourceMapPath),
+            vmFilename: path_1.default.resolve(packBundlePath),
         });
         const messageSuffix = err.message ? `: ${err.message}` : '';
         err.stack = `${err.constructor.name}${messageSuffix}\n${translatedStacktrace}`;

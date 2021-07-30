@@ -20,13 +20,15 @@ export interface ContextOptions {
     manifestPath?: string;
 }
 export declare function executeFormulaFromPackDef<T extends PackFormulaResult | SyncFormulaResult<object> = any>(packDef: PackVersionDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<T>;
-export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, contextOptions, }: {
+export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, bundleSourceMapPath, bundlePath, contextOptions, }: {
     formulaName: string;
     params: string[];
     manifest: PackVersionDefinition;
     manifestPath: string;
     vm?: boolean;
     dynamicUrl?: string;
+    bundleSourceMapPath: string;
+    bundlePath: string;
     contextOptions?: ContextOptions;
 }): Promise<void>;
 export declare function executeFormulaOrSyncWithVM<T extends PackFormulaResult | SyncFormulaResult<object> = any>({ formulaName, params, bundlePath, executionContext, }: {
@@ -42,12 +44,6 @@ export declare class VMError {
     constructor(name: string, message: string, stack: string);
     [util.inspect.custom](): string;
 }
-export declare function executeFormulaOrSyncWithRawParamsInVM<T extends SyncFormulaSpecification | StandardFormulaSpecification>({ formulaSpecification, params: rawParams, manifestPath, executionContext, }: {
-    formulaSpecification: T;
-    params: string[];
-    manifestPath: string;
-    executionContext?: SyncExecutionContext;
-}): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<object> : PackFormulaResult>;
 export declare function executeFormulaOrSyncWithRawParams<T extends StandardFormulaSpecification | SyncFormulaSpecification>({ formulaSpecification, params: rawParams, manifest, executionContext, }: {
     formulaSpecification: T;
     params: string[];

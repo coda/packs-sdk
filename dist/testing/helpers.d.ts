@@ -14,3 +14,4 @@ export declare function readFile(fileName: string): Buffer | undefined;
 export declare function readJSONFile(fileName: string): any | undefined;
 export declare function writeJSONFile(fileName: string, payload: any, mode?: fs.Mode): void;
 export declare function getExpirationDate(expiresInSeconds: number): Date;
+export declare function processVmError(vmError: Error, bundlePath: string): Promise<Error>;

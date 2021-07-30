@@ -30,6 +30,7 @@ const fs_1 = __importDefault(require("fs"));
 const isolated_vm_1 = __importDefault(require("isolated-vm"));
 const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
+const helpers_1 = require("./helpers");
 const uglify_js_1 = __importDefault(require("uglify-js"));
 const uuid_1 = require("uuid");
 async function loadIntoVM(bundlePath) {
@@ -40,29 +41,29 @@ async function loadIntoVM(bundlePath) {
     const jail = ivmContext.global;
     await jail.set('global', jail.derefInto());
     await jail.set('exports', {}, { copy: true });
-    const script = await isolate.compileScript(bundle.toString());
+    const script = await isolate.compileScript(bundle.toString(), { filename: bundlePath });
     await script.run(ivmContext);
 }
-async function browserifyBundle({ outputDirectory, lastBundleFilename, outputBundleFilename, }) {
+async function browserifyBundle({ lastBundleFilename, outputBundleFilename, options, }) {
     // browserify doesn't minify by default. if necessary another pipe can be created to minify the output.
-    const browserifyCompiler = browserify_1.default(path_1.default.join(outputDirectory, lastBundleFilename), {
+    const browserifyCompiler = browserify_1.default(lastBundleFilename, {
         debug: true,
         standalone: 'exports',
     });
-    const writer = fs_1.default.createWriteStream(path_1.default.join(outputDirectory, outputBundleFilename));
+    const writer = fs_1.default.createWriteStream(outputBundleFilename);
     const compiledStream = browserifyCompiler.bundle();
     return new Promise(resolve => {
         compiledStream
-            .pipe(exorcist_1.default(`${path_1.default.join(outputDirectory, outputBundleFilename)}.map`, undefined, `${process.cwd()}/`, outputDirectory))
+            .pipe(exorcist_1.default(`${outputBundleFilename}.map`, undefined, `${process.cwd()}/`, options.intermediateOutputDirectory))
             .pipe(writer);
         writer.on('finish', () => {
             resolve(undefined);
         });
     });
 }
-async function uglifyBundle({ outputDirectory, lastBundleFilename, outputBundleFilename, }) {
-    const sourcemap = JSON.parse(fs_1.default.readFileSync(`${path_1.default.join(outputDirectory, lastBundleFilename)}.map`).toString());
-    const uglifyOutput = uglify_js_1.default.minify(fs_1.default.readFileSync(path_1.default.join(outputDirectory, lastBundleFilename)).toString(), {
+async function uglifyBundle({ lastBundleFilename, outputBundleFilename, }) {
+    const sourcemap = JSON.parse(fs_1.default.readFileSync(`${lastBundleFilename}.map`).toString());
+    const uglifyOutput = uglify_js_1.default.minify(fs_1.default.readFileSync(lastBundleFilename).toString(), {
         sourceMap: {
             url: `${outputBundleFilename}.map`,
             content: sourcemap,
@@ -76,65 +77,82 @@ async function uglifyBundle({ outputDirectory, lastBundleFilename, outputBundleF
         // eslint-disable-next-line no-console
         console.warn(uglifyOutput.warnings);
     }
-    fs_1.default.writeFileSync(path_1.default.join(outputDirectory, outputBundleFilename), uglifyOutput.code);
-    fs_1.default.writeFileSync(path_1.default.join(outputDirectory, `${outputBundleFilename}.map`), uglifyOutput.map);
+    fs_1.default.writeFileSync(outputBundleFilename, uglifyOutput.code);
+    fs_1.default.writeFileSync(`${outputBundleFilename}.map`, uglifyOutput.map);
 }
-async function buildWithES({ manifestPath, outputDirectory, outputBundleFilename, }) {
+async function buildWithES({ lastBundleFilename, outputBundleFilename, options: { enableTimers }, }) {
     const options = {
         banner: { js: "'use strict';" },
         bundle: true,
-        entryPoints: [manifestPath],
-        outfile: path_1.default.join(outputDirectory, outputBundleFilename),
+        entryPoints: [lastBundleFilename],
+        outfile: outputBundleFilename,
         format: 'cjs',
         platform: 'node',
+        // TODO(huayang): still add another timers shim to throw useful error messages if timers is not enabled.
+        inject: enableTimers ? [`${__dirname}/injections/timers_shim.js`] : undefined,
         minify: false,
         sourcemap: 'both',
     };
     await esbuild.build(options);
 }
 async function compilePackBundle({ bundleFilename = 'bundle.js', // the output bundle filename
-outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, }) {
-    const nodeBundleFilename = 'node-bundle.js';
+outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, enableTimers = false, }) {
+    const esbuildBundleFilename = 'esbuild-bundle.js';
     const browserifyBundleFilename = 'browserify-bundle.js';
+    const browserifyWithShimBundleFilename = 'browserify-with-shim-bundle.js';
+    const uglifyBundleFilename = 'uglify-bundle.js';
     if (!intermediateOutputDirectory) {
         intermediateOutputDirectory = fs_1.default.mkdtempSync(path_1.default.join(os_1.default.tmpdir(), `coda-packs-${uuid_1.v4()}`));
     }
-    // TODO(huayang): esbuild may not be necessary here since we use browserify to bundle it anyway.
-    await buildWithES({
+    const options = {
+        bundleFilename,
+        outputDirectory,
         manifestPath,
-        outputDirectory: intermediateOutputDirectory,
-        outputBundleFilename: nodeBundleFilename,
-    });
+        minify,
+        intermediateOutputDirectory,
+        enableTimers,
+    };
+    const buildChain = [
+        { builder: buildWithES, outputFilename: esbuildBundleFilename },
+        { builder: browserifyBundle, outputFilename: browserifyBundleFilename },
+    ];
+    if (enableTimers) {
+        // if timers are enabled, we'll need to shim it again after browserifying because it will
+        // introduce extra code that needs shim.
+        buildChain.push({ builder: buildWithES, outputFilename: browserifyWithShimBundleFilename });
+    }
     if (minify) {
-        await browserifyBundle({
-            outputDirectory: intermediateOutputDirectory,
-            lastBundleFilename: nodeBundleFilename,
-            outputBundleFilename: browserifyBundleFilename,
-        });
-        await uglifyBundle({
-            outputDirectory: intermediateOutputDirectory,
-            outputBundleFilename: bundleFilename,
-            lastBundleFilename: browserifyBundleFilename,
-        });
+        buildChain.push({ builder: uglifyBundle, outputFilename: uglifyBundleFilename });
     }
-    else {
-        await browserifyBundle({
-            outputDirectory: intermediateOutputDirectory,
-            lastBundleFilename: nodeBundleFilename,
-            outputBundleFilename: bundleFilename,
+    // let the last step of the chain use bundleFilename for output name so that we don't need to
+    // apply another step to rename the filenames in sourcemap.
+    buildChain[buildChain.length - 1].outputFilename = bundleFilename;
+    let filename = path_1.default.resolve(manifestPath);
+    for (const { builder, outputFilename } of buildChain) {
+        const outputBundleFilename = path_1.default.join(intermediateOutputDirectory, outputFilename);
+        await builder({
+            lastBundleFilename: filename,
+            outputBundleFilename,
+            options,
         });
+        filename = outputBundleFilename;
     }
-    const tempBundlePath = path_1.default.join(intermediateOutputDirectory, bundleFilename);
+    const tempBundlePath = filename;
     // test if it can be loaded into isolated-vm.
     // among all the packs. Google Drive (1059) won't load into IVM at this moment since it requires jimp
     // which uses gifcodec, which calls process.nextTick on the global level.
     // maybe we just need to get rid of jimp and resize-optimize-images instead.
-    await loadIntoVM(tempBundlePath);
+    try {
+        await loadIntoVM(tempBundlePath);
+    }
+    catch (err) {
+        throw helpers_1.processVmError(err, tempBundlePath);
+    }
     if (!outputDirectory || outputDirectory === intermediateOutputDirectory) {
         return {
-            bundlePath: path_1.default.join(intermediateOutputDirectory, bundleFilename),
+            bundlePath: tempBundlePath,
             intermediateOutputDirectory,
-            bundleSourceMapPath: path_1.default.join(intermediateOutputDirectory, `${bundleFilename}.map`),
+            bundleSourceMapPath: `${tempBundlePath}.map`,
         };
     }
     const bundlePath = path_1.default.join(outputDirectory, bundleFilename);
