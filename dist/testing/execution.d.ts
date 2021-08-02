@@ -19,7 +19,7 @@ export interface ContextOptions {
     useRealFetcher?: boolean;
     manifestPath?: string;
 }
-export declare function executeFormulaFromPackDef(packDef: PackVersionDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<PackFormulaResult>;
+export declare function executeFormulaFromPackDef<T extends PackFormulaResult = any>(packDef: PackVersionDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<T>;
 export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, contextOptions, }: {
     formulaName: string;
     params: string[];

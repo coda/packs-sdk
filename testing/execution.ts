@@ -91,14 +91,14 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
   return result;
 }
 
-export async function executeFormulaFromPackDef(
+export async function executeFormulaFromPackDef<T extends PackFormulaResult = any>(
   packDef: PackVersionDefinition,
   formulaNameWithNamespace: string,
   params: ParamValues<ParamDefs>,
   context?: ExecutionContext,
   options?: ExecuteOptions,
   {useRealFetcher, manifestPath}: ContextOptions = {},
-) {
+): Promise<T> {
   let executionContext = context;
   if (!executionContext && useRealFetcher) {
     const credentials = getCredentials(manifestPath);
@@ -116,7 +116,7 @@ export async function executeFormulaFromPackDef(
     packDef,
     executionContext || newMockExecutionContext(),
     options,
-  );
+  ) as T;
 }
 
 export async function executeFormulaOrSyncFromCLI({
