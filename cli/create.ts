@@ -3,6 +3,7 @@ import {PACK_ID_FILE_NAME} from './config_storage';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
+import fs from 'fs';
 import {getApiKey} from './config_storage';
 import {getPackId} from './config_storage';
 import {isCodaError} from './errors';
@@ -36,6 +37,10 @@ export async function createPack(
     printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
   }
 
+  if (!fs.existsSync(manifestFile)) {
+    return printAndExit(`${manifestFile} is not a valid pack definition file. Check the filename and try again.`);
+  }
+
   const existingPackId = getPackId(manifestDir, codaApiEndpoint);
   if (existingPackId) {
     return printAndExit(
@@ -54,7 +59,7 @@ export async function createPack(
     const packId = response.packId;
     storePackId(manifestDir, packId, codaApiEndpoint);
     return printAndExit(`Pack created successfully! You can manage pack settings at ${codaApiEndpoint}/p/${packId}`, 0);
-} catch (err) {
+  } catch (err) {
     const errors = [`Unable to create your pack, received error: ${formatError(err)}`, tryParseSystemError(err)];
     return printAndExit(errors.join('\n'));
   }

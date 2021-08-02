@@ -18,12 +18,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createPack = exports.handleCreate = void 0;
 const config_storage_1 = require("./config_storage");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const errors_1 = require("./errors");
+const fs_1 = __importDefault(require("fs"));
 const config_storage_2 = require("./config_storage");
 const config_storage_3 = require("./config_storage");
 const errors_2 = require("./errors");
@@ -43,6 +47,9 @@ async function createPack(manifestFile, codaApiEndpoint, { name, description }) 
     const apiKey = config_storage_2.getApiKey(codaApiEndpoint);
     if (!apiKey) {
         helpers_3.printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
+    }
+    if (!fs_1.default.existsSync(manifestFile)) {
+        return helpers_3.printAndExit(`${manifestFile} is not a valid pack definition file. Check the filename and try again.`);
     }
     const existingPackId = config_storage_3.getPackId(manifestDir, codaApiEndpoint);
     if (existingPackId) {
