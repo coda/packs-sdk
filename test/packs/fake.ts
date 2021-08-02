@@ -60,7 +60,7 @@ export const manifest: PackDefinition = createFakePack({
   ],
   syncTables: [
     makeSyncTable({
-      name: 'Classes',
+      name: 'Students',
       identityName: 'Person',
       schema: fakePersonSchema,
       formula: {

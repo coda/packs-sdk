@@ -69,7 +69,7 @@ describe('Marshaling', () => {
     });
 
     it('works for whitelisted coda errors', () => {
-      const error = new StatusCodeError(404);
+      const error = new StatusCodeError(404, '', {url: 'https://coda.io', method: 'GET'}, {headers: {}, body: ''});
       const transformedError = transform(error);
       assertErrorsEqual(error, transformedError);
       assert.isTrue(transformedError instanceof StatusCodeError);

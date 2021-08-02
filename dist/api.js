@@ -32,10 +32,16 @@ class UserVisibleError extends Error {
     }
 }
 exports.UserVisibleError = UserVisibleError;
+/**
+ * StatusCodeError is a simple version of StatusCodeError in request-promise to keep backwards compatibility.
+ */
 class StatusCodeError extends Error {
-    constructor(statusCode) {
-        super(`statusCode: ${statusCode}`);
+    constructor(statusCode, body, options, response) {
+        super(`${statusCode} - ${body}`);
         this.statusCode = statusCode;
+        this.body = body;
+        this.options = options;
+        this.response = response;
     }
 }
 exports.StatusCodeError = StatusCodeError;
