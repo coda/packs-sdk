@@ -1,3 +1,10 @@
+## 0.4.5
+
+- Make a few testing functions (e.g. `executeFormulaFromPackDef`) optionally typed. 
+
+- Update `StatusCodeError` constructor, which now requires the fetch request.
+
+
 ## 0.4.4
 
 - Fixed a bug where using `pack.setSystemAuthentication()` would add a required connection
