@@ -19,7 +19,7 @@ export interface ContextOptions {
     useRealFetcher?: boolean;
     manifestPath?: string;
 }
-export declare function executeFormulaFromPackDef<T extends PackFormulaResult = any>(packDef: PackVersionDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<T>;
+export declare function executeFormulaFromPackDef<T extends PackFormulaResult | SyncFormulaResult<object> = any>(packDef: PackVersionDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<T>;
 export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, contextOptions, }: {
     formulaName: string;
     params: string[];
@@ -29,12 +29,12 @@ export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manif
     dynamicUrl?: string;
     contextOptions?: ContextOptions;
 }): Promise<void>;
-export declare function executeFormulaOrSyncWithVM({ formulaName, params, bundlePath, executionContext, }: {
+export declare function executeFormulaOrSyncWithVM<T extends PackFormulaResult | SyncFormulaResult<object> = any>({ formulaName, params, bundlePath, executionContext, }: {
     formulaName: string;
     params: ParamValues<ParamDefs>;
     bundlePath: string;
     executionContext?: ExecutionContext;
-}): Promise<PackFormulaResult | SyncFormulaResult<object>>;
+}): Promise<T>;
 export declare class VMError {
     name: string;
     message: string;
@@ -67,12 +67,12 @@ export declare function executeFormulaOrSyncWithRawParams<T extends StandardForm
  *
  * For now, use `coda execute --vm` to simulate that level of isolation.
  */
-export declare function executeSyncFormulaFromPackDef(packDef: PackVersionDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult }?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<any[]>;
+export declare function executeSyncFormulaFromPackDef<T extends object = any>(packDef: PackVersionDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult }?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<T[]>;
 /**
  * Executes a single sync iteration, and returns the return value from the sync formula
  * including the continuation, for inspection.
  */
-export declare function executeSyncFormulaFromPackDefSingleIteration(packDef: PackVersionDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<SyncFormulaResult<any>>;
+export declare function executeSyncFormulaFromPackDefSingleIteration<T extends object>(packDef: PackVersionDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<SyncFormulaResult<T>>;
 export declare function executeMetadataFormula(formula: MetadataFormula, metadataParams?: {
     search?: string;
     formulaContext?: MetadataContext;

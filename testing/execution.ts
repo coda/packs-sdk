@@ -91,7 +91,7 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
   return result;
 }
 
-export async function executeFormulaFromPackDef<T extends PackFormulaResult = any>(
+export async function executeFormulaFromPackDef<T extends PackFormulaResult | SyncFormulaResult<object> = any>(
   packDef: PackVersionDefinition,
   formulaNameWithNamespace: string,
   params: ParamValues<ParamDefs>,
@@ -188,7 +188,7 @@ export async function executeFormulaOrSyncFromCLI({
   }
 }
 
-export async function executeFormulaOrSyncWithVM({
+export async function executeFormulaOrSyncWithVM<T extends PackFormulaResult | SyncFormulaResult<object> = any>({
   formulaName,
   params,
   bundlePath,
@@ -198,7 +198,7 @@ export async function executeFormulaOrSyncWithVM({
   params: ParamValues<ParamDefs>;
   bundlePath: string;
   executionContext?: ExecutionContext;
-}) {
+}): Promise<T> {
   // TODO(huayang): importing manifest makes this method not usable in production, where we are not
   // supposed to load a manifest outside of the VM context.
   const manifest = await importManifest(bundlePath);
@@ -210,7 +210,7 @@ export async function executeFormulaOrSyncWithVM({
 
   const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
 
-  return executeThunk(ivmContext, {params, formulaSpec: formulaSpecification}, bundlePath, bundlePath + '.map');
+  return executeThunk(ivmContext, {params, formulaSpec: formulaSpecification}, bundlePath, bundlePath + '.map') as T;
 }
 
 export class VMError {
@@ -297,14 +297,14 @@ export async function executeFormulaOrSyncWithRawParams<
  *
  * For now, use `coda execute --vm` to simulate that level of isolation.
  */
-export async function executeSyncFormulaFromPackDef(
+export async function executeSyncFormulaFromPackDef<T extends object = any>(
   packDef: PackVersionDefinition,
   syncFormulaName: string,
   params: ParamValues<ParamDefs>,
   context?: SyncExecutionContext,
   {validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true}: ExecuteOptions = {},
   {useRealFetcher, manifestPath}: ContextOptions = {},
-): Promise<any[]> {
+): Promise<T[]> {
   const formula = findSyncFormula(packDef, syncFormulaName);
   if (shouldValidateParams && formula) {
     validateParams(formula, params);
@@ -349,21 +349,21 @@ export async function executeSyncFormulaFromPackDef(
     validateResult(formula, result);
   }
 
-  return result;
+  return result as T[];
 }
 
 /**
  * Executes a single sync iteration, and returns the return value from the sync formula
  * including the continuation, for inspection.
  */
-export async function executeSyncFormulaFromPackDefSingleIteration(
+export async function executeSyncFormulaFromPackDefSingleIteration<T extends object>(
   packDef: PackVersionDefinition,
   syncFormulaName: string,
   params: ParamValues<ParamDefs>,
   context?: SyncExecutionContext,
   options?: ExecuteOptions,
   {useRealFetcher, manifestPath}: ContextOptions = {},
-): Promise<SyncFormulaResult<any>> {
+): Promise<SyncFormulaResult<T>> {
   let executionContext = context;
   if (!executionContext && useRealFetcher) {
     const credentials = getCredentials(manifestPath);
@@ -381,7 +381,7 @@ export async function executeSyncFormulaFromPackDefSingleIteration(
     packDef,
     executionContext || newMockSyncExecutionContext(),
     options,
-  );
+  ) as Promise<SyncFormulaResult<T>>;
 }
 
 export async function executeMetadataFormula(
