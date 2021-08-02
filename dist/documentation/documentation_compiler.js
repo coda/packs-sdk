@@ -53,7 +53,7 @@ function compileExamples() {
             content,
             code,
             categories: example.categories,
-            triggerWords: example.triggerWords,
+            triggerTokens: example.triggerTokens,
         };
     });
     fs.writeFileSync(path_1.default.join(DocumentationRoot, 'generated/examples.json'), JSON.stringify(compiledExamples, null, 2));

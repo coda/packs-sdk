@@ -7,7 +7,7 @@
     "categories": [
       "ColumnFormat"
     ],
-    "triggerWords": [
+    "triggerTokens": [
       "addColumnFormat"
     ]
   },
@@ -20,7 +20,7 @@
     "categories": [
       "Authentication"
     ],
-    "triggerWords": [
+    "triggerTokens": [
       "setSystemAuthentication",
       "setUserAuthentication"
     ]
@@ -33,7 +33,7 @@
     "categories": [
       "DynamicSynctable"
     ],
-    "triggerWords": [
+    "triggerTokens": [
       "addDynamicSyncTable"
     ]
   },
@@ -45,7 +45,7 @@
     "categories": [
       "Formula"
     ],
-    "triggerWords": [
+    "triggerTokens": [
       "addFormula"
     ]
   },
@@ -57,7 +57,7 @@
     "categories": [
       "SyncTable"
     ],
-    "triggerWords": [
+    "triggerTokens": [
       "addSyncTable"
     ]
   }
