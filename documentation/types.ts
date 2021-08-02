@@ -24,10 +24,12 @@ export interface Example {
   contentFile: string;
   codeFiles: string[];
   categories: Category[];
+  triggerWords: string[];
 }
 
 export interface CompiledExample {
   content: string;
   code: string[];
   categories: Category[];
+  triggerWords: string[];
 }

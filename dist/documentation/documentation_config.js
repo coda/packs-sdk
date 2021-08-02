@@ -147,6 +147,7 @@ exports.Examples = [
         contentFile: './examples/column-format/column_format.md',
         codeFiles: ['./examples/column-format/no_matchers.ts'],
         categories: [types_1.Category.ColumnFormat],
+        triggerWords: ['addColumnFormat'],
     },
     {
         contentFile: './examples/authentication/authentication.md',
@@ -155,20 +156,24 @@ exports.Examples = [
             './examples/authentication/user_authentication.ts',
         ],
         categories: [types_1.Category.Authentication],
+        triggerWords: ['setSystemAuthentication', 'setUserAuthentication'],
     },
     {
         contentFile: './examples/dynamic-sync-table/dynamic_sync_table.md',
         codeFiles: ['./examples/dynamic-sync-table/basic_dynamic_sync_table.ts'],
         categories: [types_1.Category.DynamicSyncTable],
+        triggerWords: ['addDynamicSyncTable'],
     },
     {
         contentFile: './examples/formula/formula.md',
         codeFiles: ['./examples/formula/basic_formula.ts'],
         categories: [types_1.Category.Formula],
+        triggerWords: ['addFormula'],
     },
     {
         contentFile: './examples/sync-table/sync_table.md',
         codeFiles: ['./examples/sync-table/basic_sync_table.ts'],
         categories: [types_1.Category.SyncTable],
+        triggerWords: ['addSyncTable'],
     },
 ];

@@ -55,7 +55,6 @@ pack.addDynamicSyncTable({
     description: '<Creates a dynamic sync table>',
 
     // If your formula requires one or more inputs, you’ll define them here.
-    // You can change the coda.Type to anything but object.
     parameters: [
       coda.makeParameter({
         type: coda.ParameterType.String,
