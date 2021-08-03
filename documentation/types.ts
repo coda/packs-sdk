@@ -14,16 +14,22 @@ export interface CompiledSnippet {
 
 export enum Category {
   ColumnFormat = 'ColumnFormat',
+  Authentication = 'Authentication',
+  DynamicSyncTable = 'DynamicSynctable',
+  Formula = 'Formula',
+  SyncTable = 'SyncTable',
 }
 
 export interface Example {
   contentFile: string;
   codeFiles: string[];
   categories: Category[];
+  triggerTokens: string[];
 }
 
 export interface CompiledExample {
   content: string;
   code: string[];
   categories: Category[];
+  triggerTokens: string[];
 }
