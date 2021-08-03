@@ -73,7 +73,6 @@ function doFindAndExecutePackFunction<T extends FormulaSpecification>(
             return defaultAuthentication.getConnectionName.execute(params as any, executionContext as ExecutionContext);
           }
           break;
-
         case MetadataFormulaType.GetConnectionUserId:
           if (
             defaultAuthentication?.type !== AuthenticationType.None &&
