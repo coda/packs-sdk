@@ -37,6 +37,7 @@ function compileExamples() {
       content,
       code,
       categories: example.categories,
+      triggerTokens: example.triggerTokens,
     };
   });
   fs.writeFileSync(path.join(DocumentationRoot, 'generated/examples.json'), JSON.stringify(compiledExamples, null, 2));

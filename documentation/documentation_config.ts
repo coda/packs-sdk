@@ -148,5 +148,33 @@ export const Examples: Example[] = [
     contentFile: './examples/column-format/column_format.md',
     codeFiles: ['./examples/column-format/no_matchers.ts'],
     categories: [Category.ColumnFormat],
+    triggerTokens: ['addColumnFormat'],
+  },
+  {
+    contentFile: './examples/authentication/authentication.md',
+    codeFiles: [
+      './examples/authentication/system_authentication.ts',
+      './examples/authentication/user_authentication.ts',
+    ],
+    categories: [Category.Authentication],
+    triggerTokens: ['setSystemAuthentication', 'setUserAuthentication'],
+  },
+  {
+    contentFile: './examples/dynamic-sync-table/dynamic_sync_table.md',
+    codeFiles: ['./examples/dynamic-sync-table/basic_dynamic_sync_table.ts'],
+    categories: [Category.DynamicSyncTable],
+    triggerTokens: ['addDynamicSyncTable'],
+  },
+  {
+    contentFile: './examples/formula/formula.md',
+    codeFiles: ['./examples/formula/basic_formula.ts'],
+    categories: [Category.Formula],
+    triggerTokens: ['addFormula'],
+  },
+  {
+    contentFile: './examples/sync-table/sync_table.md',
+    codeFiles: ['./examples/sync-table/basic_sync_table.ts'],
+    categories: [Category.SyncTable],
+    triggerTokens: ['addSyncTable'],
   },
 ];
