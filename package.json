@@ -23,7 +23,7 @@
     "esbuild": "^0.12.17",
     "exorcist": "^2.0.0",
     "express": "4.17.1",
-    "isolated-vm": "^4.3.2",
+    "isolated-vm": "^4.3.3",
     "isomorphic-fetch": "^3.0.0",
     "open": "^8.2.1",
     "pascalcase": "^1.0.0",
