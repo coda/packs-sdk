@@ -26,19 +26,19 @@ const documentation_config_1 = require("./documentation_config");
 const documentation_config_2 = require("./documentation_config");
 const fs = __importStar(require("fs"));
 const path_1 = __importDefault(require("path"));
-const codeBegin = '// BEGIN\n';
+const CodeBegin = '// BEGIN\n';
 const BaseDir = path_1.default.join(__dirname, '..');
 const DocumentationRoot = path_1.default.join(BaseDir, 'documentation');
+const TypeDocsRoot = path_1.default.join(BaseDir, 'docs');
 function main() {
-    compileSnippets();
+    compileAutocompleteSnippets();
     compileExamples();
 }
-function compileSnippets() {
+function compileAutocompleteSnippets() {
     const compiledSnippets = documentation_config_2.Snippets.map(snippet => {
         const code = getCodeFile(snippet.codeFile);
         return {
-            name: snippet.name,
-            triggerWords: snippet.triggerWords,
+            triggerTokens: snippet.triggerTokens,
             content: snippet.content,
             code,
         };
@@ -48,28 +48,40 @@ function compileSnippets() {
 function compileExamples() {
     const compiledExamples = documentation_config_1.Examples.map(example => {
         const content = getContentFile(example.contentFile);
-        const code = compileCodeFiles(example);
+        const compiledExampleSnippets = compileExampleSnippets(example);
+        if (!isValidReferencePath(example.sdkReferencePath)) {
+            throw new Error(`${example.sdkReferencePath} is not a valid path`);
+        }
         return {
-            content,
-            code,
-            categories: example.categories,
             triggerTokens: example.triggerTokens,
+            sdkReferencePath: example.sdkReferencePath,
+            content,
+            exampleSnippets: compiledExampleSnippets,
         };
     });
     fs.writeFileSync(path_1.default.join(DocumentationRoot, 'generated/examples.json'), JSON.stringify(compiledExamples, null, 2));
 }
+function getCodeFile(file) {
+    const data = fs.readFileSync(path_1.default.join(DocumentationRoot, file), 'utf8');
+    const codeStart = data.indexOf(CodeBegin) + CodeBegin.length;
+    return data.substring(codeStart).trim();
+}
 function getContentFile(file) {
     return fs.readFileSync(path_1.default.join(DocumentationRoot, file), 'utf8').trim();
 }
-function compileCodeFiles(example) {
-    const code = example.codeFiles.map(codeFile => {
-        return getCodeFile(codeFile);
+function compileExampleSnippets(example) {
+    return example.exampleSnippets.map(exampleSnippet => {
+        return {
+            name: exampleSnippet.name,
+            content: exampleSnippet.content,
+            code: getCodeFile(exampleSnippet.codeFile),
+        };
     });
-    return code;
 }
-function getCodeFile(file) {
-    const data = fs.readFileSync(path_1.default.join(DocumentationRoot, file), 'utf8');
-    const codeStart = data.indexOf(codeBegin) + codeBegin.length;
-    return data.substring(codeStart).trim();
+function isValidReferencePath(sdkReferencePath) {
+    const splitPath = sdkReferencePath.split('#');
+    const page = splitPath[0];
+    const filePath = path_1.default.join(TypeDocsRoot, page);
+    return fs.existsSync(filePath);
 }
 main();

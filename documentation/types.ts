@@ -1,35 +1,38 @@
-export interface Snippet {
-  name: string;
-  triggerWords: string[];
+export interface AutocompleteSnippet {
+  triggerTokens: string[];
   content: string;
   codeFile: string;
 }
 
-export interface CompiledSnippet {
-  name: string;
-  triggerWords: string[];
+export interface CompiledAutocompleteSnippet {
+  // The first item in triggerTokens is used as the autocomplete label in the packs IDE
+  triggerTokens: string[];
   content: string;
   code: string;
 }
 
-export enum Category {
-  ColumnFormat = 'ColumnFormat',
-  Authentication = 'Authentication',
-  DynamicSyncTable = 'DynamicSynctable',
-  Formula = 'Formula',
-  SyncTable = 'SyncTable',
+export interface ExampleSnippet {
+  name: string;
+  content: string;
+  codeFile: string;
+}
+
+export interface CompiledExampleSnippet {
+  name: string;
+  content: string;
+  code: string;
 }
 
 export interface Example {
-  contentFile: string;
-  codeFiles: string[];
-  categories: Category[];
   triggerTokens: string[];
+  sdkReferencePath: string;
+  contentFile: string;
+  exampleSnippets: ExampleSnippet[];
 }
 
 export interface CompiledExample {
-  content: string;
-  code: string[];
-  categories: Category[];
   triggerTokens: string[];
+  sdkReferencePath: string;
+  content: string;
+  exampleSnippets: CompiledExampleSnippet[];
 }
