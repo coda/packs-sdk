@@ -18,9 +18,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.readCredentialsFile = exports.storeCredential = exports.setupAuth = exports.setupAuthFromModule = exports.DEFAULT_OAUTH_SERVER_PORT = void 0;
 const types_1 = require("../types");
@@ -28,7 +25,6 @@ const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
 const ensure_3 = require("../helpers/ensure");
 const ensure_4 = require("../helpers/ensure");
-const fs_1 = __importDefault(require("fs"));
 const helpers_1 = require("../cli/helpers");
 const oauth_server_1 = require("./oauth_server");
 const oauth_server_2 = require("./oauth_server");
@@ -218,11 +214,6 @@ function readCredentialsFile(manifestDir) {
 }
 exports.readCredentialsFile = readCredentialsFile;
 function writeCredentialsFile(credentialsFile, credentials) {
-    const fileExisted = fs_1.default.existsSync(credentialsFile);
     const fileContents = { credentials };
-    helpers_6.writeJSONFile(credentialsFile, fileContents);
-    if (!fileExisted) {
-        // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
-        fs_1.default.chmodSync(credentialsFile, 0o600);
-    }
+    helpers_6.writeJSONFile(credentialsFile, fileContents, 0o600);
 }
