@@ -20,8 +20,7 @@ async function handleRegister({ apiToken, codaApiEndpoint }) {
         if (!shouldOpenBrowser.toLocaleLowerCase().startsWith('y')) {
             return process.exit(1);
         }
-        // TODO: figure out how to deep-link to the API tokens section of account settings
-        await open_1.default(`${formattedEndpoint}/account`);
+        await open_1.default(`${formattedEndpoint}/account?openDialog=CREATE_API_TOKEN&scopeType=pack`);
         apiToken = helpers_4.promptForInput('Please paste the token here: ', { mask: true });
     }
     const client = helpers_1.createCodaClient(apiToken, formattedEndpoint);
