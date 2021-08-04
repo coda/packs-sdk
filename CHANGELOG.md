@@ -1,5 +1,10 @@
 ## 0.4.5
 
+- Bug fix: Executing sync table formulas via CLI now validates results correctly.
+
+
+## 0.4.5
+
 - Make a few testing functions (e.g. `executeFormulaFromPackDef`) optionally typed. 
 
 - Update `StatusCodeError` constructor, which now requires the fetch request.
