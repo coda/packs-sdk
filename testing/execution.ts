@@ -85,7 +85,9 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
   const result = await thunk.findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, false);
 
   if (shouldValidateResult && formula) {
-    validateResult(formula, result);
+    const resultToValidate =
+      formulaSpec.type === FormulaType.Sync ? (result as SyncFormulaResult<object>).result : result;
+    validateResult(formula, resultToValidate);
   }
 
   return result;
