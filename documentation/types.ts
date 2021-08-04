@@ -1,12 +1,11 @@
 export interface Snippet {
-  name: string;
   triggerWords: string[];
   content: string;
   codeFile: string;
 }
 
 export interface CompiledSnippet {
-  name: string;
+  // The first item in triggerWords is used as the autocomplete label in the packs IDE
   triggerWords: string[];
   content: string;
   code: string;

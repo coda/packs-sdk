@@ -19,7 +19,6 @@ function compileSnippets() {
   const compiledSnippets: CompiledSnippet[] = Snippets.map(snippet => {
     const code = getCodeFile(snippet.codeFile);
     return {
-      name: snippet.name,
       triggerWords: snippet.triggerWords,
       content: snippet.content,
       code,

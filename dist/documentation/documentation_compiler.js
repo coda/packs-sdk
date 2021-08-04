@@ -37,7 +37,6 @@ function compileSnippets() {
     const compiledSnippets = documentation_config_2.Snippets.map(snippet => {
         const code = getCodeFile(snippet.codeFile);
         return {
-            name: snippet.name,
             triggerWords: snippet.triggerWords,
             content: snippet.content,
             code,
