@@ -1,4 +1,4 @@
+import type { AutocompleteSnippet } from './types';
 import type { Example } from './types';
-import type { Snippet } from './types';
-export declare const Snippets: Snippet[];
+export declare const Snippets: AutocompleteSnippet[];
 export declare const Examples: Example[];

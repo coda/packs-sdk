@@ -1,29 +1,31 @@
-export interface Snippet {
+export interface AutocompleteSnippet {
     triggerWords: string[];
     content: string;
     codeFile: string;
 }
-export interface CompiledSnippet {
+export interface CompiledAutocompleteSnippet {
     triggerWords: string[];
     content: string;
     code: string;
 }
-export declare enum Category {
-    ColumnFormat = "ColumnFormat",
-    Authentication = "Authentication",
-    DynamicSyncTable = "DynamicSynctable",
-    Formula = "Formula",
-    SyncTable = "SyncTable"
+export interface ExampleSnippet {
+    content: string;
+    codeFile: string;
+}
+export interface CompiledExampleSnippet {
+    name: string;
+    content: string;
+    code: string;
 }
 export interface Example {
+    tokens: string[];
+    referencePath: string;
     contentFile: string;
-    codeFiles: string[];
-    categories: Category[];
-    triggerTokens: string[];
+    exampleSnippets: ExampleSnippet[];
 }
 export interface CompiledExample {
+    tokens: string[];
+    referencePath: string;
     content: string;
-    code: string[];
-    categories: Category[];
-    triggerTokens: string[];
+    exampleSnippets: CompiledExampleSnippet[];
 }

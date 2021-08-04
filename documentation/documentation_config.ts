@@ -1,8 +1,7 @@
-import {Category} from './types';
+import type {AutocompleteSnippet} from './types';
 import type {Example} from './types';
-import type {Snippet} from './types';
 
-export const Snippets: Snippet[] = [
+export const Snippets: AutocompleteSnippet[] = [
   {
     triggerWords: ['addStringFormula', 'makeStringFormula', 'StringFormula', 'addFormula'],
     content: 'Adds a Coda formula which will return a text string in the doc.',
@@ -122,36 +121,62 @@ export const Snippets: Snippet[] = [
 
 export const Examples: Example[] = [
   {
+    tokens: ['addColumnFormat'],
     contentFile: './examples/column-format/column_format.md',
-    codeFiles: ['./examples/column-format/no_matchers.ts'],
-    categories: [Category.ColumnFormat],
-    triggerTokens: ['addColumnFormat'],
-  },
-  {
-    contentFile: './examples/authentication/authentication.md',
-    codeFiles: [
-      './examples/authentication/system_authentication.ts',
-      './examples/authentication/user_authentication.ts',
+    referencePath: '/classes/PackDefinitionBuilder.html#addColumnFormat',
+    exampleSnippets: [
+      {
+        content: 'Basic **Column Format** example without any matchers. ',
+        codeFile: './examples/column-format/no_matchers.ts',
+      },
     ],
-    categories: [Category.Authentication],
-    triggerTokens: ['setSystemAuthentication', 'setUserAuthentication'],
   },
   {
+    tokens: ['setSystemAuthentication', 'setUserAuthentication'],
+    contentFile: './examples/authentication/authentication.md',
+    referencePath: '/classes/PackDefinitionBuilder.html#setSystemAuthentication',
+    exampleSnippets: [
+      {
+        content: '',
+        codeFile: './examples/authentication/system_authentication.ts',
+      },
+      {
+        content: '',
+        codeFile: './examples/authentication/user_authentication.ts',
+      },
+    ],
+  },
+  {
+    tokens: ['addDynamicSyncTable'],
     contentFile: './examples/dynamic-sync-table/dynamic_sync_table.md',
-    codeFiles: ['./examples/dynamic-sync-table/basic_dynamic_sync_table.ts'],
-    categories: [Category.DynamicSyncTable],
-    triggerTokens: ['addDynamicSyncTable'],
+    referencePath: '/classes/PackDefinitionBuilder.html#addDynamicSyncTable',
+    exampleSnippets: [
+      {
+        content: '',
+        codeFile: './examples/dynamic-sync-table/basic_dynamic_sync_table.ts',
+      },
+    ],
   },
   {
+    tokens: ['addFormula'],
     contentFile: './examples/formula/formula.md',
-    codeFiles: ['./examples/formula/basic_formula.ts'],
-    categories: [Category.Formula],
-    triggerTokens: ['addFormula'],
+    referencePath: 'classes/PackDefinitionBuilder.html#addFormula',
+    exampleSnippets: [
+      {
+        content: '',
+        codeFile: './examples/formula/basic_formula.ts',
+      },
+    ],
   },
   {
+    tokens: ['addSyncTable'],
     contentFile: './examples/sync-table/sync_table.md',
-    codeFiles: ['./examples/sync-table/basic_sync_table.ts'],
-    categories: [Category.SyncTable],
-    triggerTokens: ['addSyncTable'],
+    referencePath: '/classes/PackDefinitionBuilder.html#addSyncTable',
+    exampleSnippets: [
+      {
+        content: '',
+        codeFile: './examples/sync-table/basic_sync_table.ts',
+      },
+    ],
   },
 ];
