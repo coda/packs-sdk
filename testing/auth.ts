@@ -9,7 +9,6 @@ import {assertCondition} from '../helpers/ensure';
 import {ensureExists} from '../helpers/ensure';
 import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
-import fs from 'fs';
 import {getPackAuth} from '../cli/helpers';
 import {launchOAuthServerFlow} from './oauth_server';
 import {makeRedirectUrl} from './oauth_server';
@@ -256,11 +255,6 @@ export function readCredentialsFile(manifestDir: string): Credentials | undefine
 }
 
 function writeCredentialsFile(credentialsFile: string, credentials: Credentials): void {
-  const fileExisted = fs.existsSync(credentialsFile);
   const fileContents: CredentialsFile = {credentials};
-  writeJSONFile(credentialsFile, fileContents);
-  if (!fileExisted) {
-    // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
-    fs.chmodSync(credentialsFile, 0o600);
-  }
+  writeJSONFile(credentialsFile, fileContents, 0o600);
 }

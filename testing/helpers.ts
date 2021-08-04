@@ -42,13 +42,18 @@ export function readJSONFile(fileName: string): any | undefined {
   return file ? JSON.parse(file.toString()) : undefined;
 }
 
-export function writeJSONFile(fileName: string, payload: any): void {
+export function writeJSONFile(fileName: string, payload: any, mode?: fs.Mode): void {
   ensureNonEmptyString(fileName);
   const dirname = path.dirname(fileName);
   if (!fs.existsSync(dirname)) {
     fs.mkdirSync(dirname, {recursive: true});
   }
-  fs.writeFileSync(fileName, JSON.stringify(payload, undefined, 2));
+  if (mode && fs.existsSync(fileName)) {
+    // If the file already existed, make sure we update the mode before writing anything
+    // sensitive to it.
+    fs.chmodSync(fileName, mode);
+  }
+  fs.writeFileSync(fileName, JSON.stringify(payload, undefined, 2), {mode});
 }
 
 export function getExpirationDate(expiresInSeconds: number): Date {

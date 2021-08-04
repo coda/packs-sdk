@@ -1,4 +1,3 @@
-import fs from 'fs';
 import * as path from 'path';
 import {readJSONFile} from '../testing/helpers';
 import urlParse from 'url-parse';
@@ -60,12 +59,7 @@ function readApiKeyFile(filename: string): ApiKeyFile | undefined {
 }
 
 function writeApiKeyFile(filename: string, fileContents: ApiKeyFile): void {
-  const fileExisted = fs.existsSync(filename);
-  writeJSONFile(filename, fileContents);
-  if (!fileExisted) {
-    // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
-    fs.chmodSync(filename, 0o600);
-  }
+  writeJSONFile(filename, fileContents, 0o600);
 }
 
 export function storePackId(manifestDir: string, packId: number, codaApiEndpoint: string): void {

@@ -65,13 +65,18 @@ function readJSONFile(fileName) {
     return file ? JSON.parse(file.toString()) : undefined;
 }
 exports.readJSONFile = readJSONFile;
-function writeJSONFile(fileName, payload) {
+function writeJSONFile(fileName, payload, mode) {
     ensure_1.ensureNonEmptyString(fileName);
     const dirname = path_1.default.dirname(fileName);
     if (!fs_1.default.existsSync(dirname)) {
         fs_1.default.mkdirSync(dirname, { recursive: true });
     }
-    fs_1.default.writeFileSync(fileName, JSON.stringify(payload, undefined, 2));
+    if (mode && fs_1.default.existsSync(fileName)) {
+        // If the file already existed, make sure we update the mode before writing anything
+        // sensitive to it.
+        fs_1.default.chmodSync(fileName, mode);
+    }
+    fs_1.default.writeFileSync(fileName, JSON.stringify(payload, undefined, 2), { mode });
 }
 exports.writeJSONFile = writeJSONFile;
 function getExpirationDate(expiresInSeconds) {

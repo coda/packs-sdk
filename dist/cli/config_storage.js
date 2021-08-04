@@ -23,7 +23,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPackId = exports.storePackId = exports.storeCodaApiKey = exports.getApiKey = exports.PACK_ID_FILE_NAME = exports.DEFAULT_API_ENDPOINT = void 0;
-const fs_1 = __importDefault(require("fs"));
 const path = __importStar(require("path"));
 const helpers_1 = require("../testing/helpers");
 const url_parse_1 = __importDefault(require("url-parse"));
@@ -72,12 +71,7 @@ function readApiKeyFile(filename) {
     return helpers_1.readJSONFile(filename);
 }
 function writeApiKeyFile(filename, fileContents) {
-    const fileExisted = fs_1.default.existsSync(filename);
-    helpers_2.writeJSONFile(filename, fileContents);
-    if (!fileExisted) {
-        // When we create the file, make sure only the owner can read it, because it contains sensitive credentials.
-        fs_1.default.chmodSync(filename, 0o600);
-    }
+    helpers_2.writeJSONFile(filename, fileContents, 0o600);
 }
 function storePackId(manifestDir, packId, codaApiEndpoint) {
     const fileContents = readPackIdFile(manifestDir) || { packId: -1 };
