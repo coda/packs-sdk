@@ -5,7 +5,7 @@ export interface AutocompleteSnippet {
 }
 
 export interface CompiledAutocompleteSnippet {
-  // The first item in triggerWords is used as the autocomplete label in the packs IDE
+  // The first item in triggerTokens is used as the autocomplete label in the packs IDE
   triggerTokens: string[];
   content: string;
   code: string;
