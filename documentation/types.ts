@@ -1,17 +1,18 @@
 export interface AutocompleteSnippet {
-  triggerWords: string[];
+  triggerTokens: string[];
   content: string;
   codeFile: string;
 }
 
 export interface CompiledAutocompleteSnippet {
   // The first item in triggerWords is used as the autocomplete label in the packs IDE
-  triggerWords: string[];
+  triggerTokens: string[];
   content: string;
   code: string;
 }
 
 export interface ExampleSnippet {
+  name: string;
   content: string;
   codeFile: string;
 }
@@ -23,15 +24,15 @@ export interface CompiledExampleSnippet {
 }
 
 export interface Example {
-  tokens: string[];
-  referencePath: string;
+  triggerTokens: string[];
+  sdkReferencePath: string;
   contentFile: string;
   exampleSnippets: ExampleSnippet[];
 }
 
 export interface CompiledExample {
-  tokens: string[];
-  referencePath: string;
+  triggerTokens: string[];
+  sdkReferencePath: string;
   content: string;
   exampleSnippets: CompiledExampleSnippet[];
 }

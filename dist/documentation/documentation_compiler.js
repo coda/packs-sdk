@@ -38,7 +38,7 @@ function compileAutocompleteSnippets() {
     const compiledSnippets = documentation_config_2.Snippets.map(snippet => {
         const code = getCodeFile(snippet.codeFile);
         return {
-            triggerWords: snippet.triggerWords,
+            triggerTokens: snippet.triggerTokens,
             content: snippet.content,
             code,
         };
@@ -49,12 +49,12 @@ function compileExamples() {
     const compiledExamples = documentation_config_1.Examples.map(example => {
         const content = getContentFile(example.contentFile);
         const compiledExampleSnippets = compileExampleSnippets(example);
-        if (!isValidReferencePath(example.referencePath)) {
-            throw new Error(`${example.referencePath} is not a valid path`);
+        if (!isValidReferencePath(example.sdkReferencePath)) {
+            throw new Error(`${example.sdkReferencePath} is not a valid path`);
         }
         return {
-            tokens: example.tokens,
-            referencePath: example.referencePath,
+            triggerTokens: example.triggerTokens,
+            sdkReferencePath: example.sdkReferencePath,
             content,
             exampleSnippets: compiledExampleSnippets,
         };
@@ -72,28 +72,16 @@ function getContentFile(file) {
 function compileExampleSnippets(example) {
     return example.exampleSnippets.map(exampleSnippet => {
         return {
-            name: formatSnippetName(path_1.default.basename(exampleSnippet.codeFile)),
+            name: exampleSnippet.name,
             content: exampleSnippet.content,
             code: getCodeFile(exampleSnippet.codeFile),
         };
     });
 }
-function formatSnippetName(baseName) {
-    const fileName = baseName.split('.')[0];
-    const snippetNameArray = fileName.split('_');
-    return snippetNameArray
-        .map(segment => {
-        return `${segment.charAt(0).toUpperCase()}${segment.slice(1)}`;
-    })
-        .join(' ');
-}
-function isValidReferencePath(referencePath) {
-    const splitPath = referencePath.split('#');
+function isValidReferencePath(sdkReferencePath) {
+    const splitPath = sdkReferencePath.split('#');
     const page = splitPath[0];
-    const fragmentIdentifier = splitPath[1];
     const filePath = path_1.default.join(TypeDocsRoot, page);
-    const fileContent = fs.readFileSync(filePath).toString();
-    const searchTerm = `name="${fragmentIdentifier}"`;
-    return fileContent.search(searchTerm) > -1;
+    return fs.existsSync(filePath);
 }
 main();

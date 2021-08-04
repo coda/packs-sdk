@@ -3,117 +3,117 @@ import type {Example} from './types';
 
 export const Snippets: AutocompleteSnippet[] = [
   {
-    triggerWords: ['addStringFormula', 'makeStringFormula', 'StringFormula', 'addFormula'],
+    triggerTokens: ['addStringFormula', 'makeStringFormula', 'StringFormula', 'addFormula'],
     content: 'Adds a Coda formula which will return a text string in the doc.',
     codeFile: './snippets/formula/string_formula.ts',
   },
   {
-    triggerWords: ['addArrayFormula', 'makeArrayFormula', 'ArrayFormula'],
+    triggerTokens: ['addArrayFormula', 'makeArrayFormula', 'ArrayFormula'],
     content: 'Adds a Coda formula which will return a text string in the doc.',
     codeFile: './snippets/formula/array_formula.ts',
   },
   {
-    triggerWords: ['addBooleanFormula', 'makeBooleanFormula', 'BooleanFormula'],
+    triggerTokens: ['addBooleanFormula', 'makeBooleanFormula', 'BooleanFormula'],
     content: 'Adds a Coda formula which will return true or false in the doc.',
     codeFile: './snippets/formula/boolean_formula.ts',
   },
   {
-    triggerWords: ['addNumericFormula', 'makeNumericFormula', 'NumericFormula'],
+    triggerTokens: ['addNumericFormula', 'makeNumericFormula', 'NumericFormula'],
     content: 'Adds a Coda formula which will return a number in the doc.',
     codeFile: './snippets/formula/numeric_formula.ts',
   },
   {
-    triggerWords: ['addObjectFormula', 'makeObjectFormula', 'ObjectFormula'],
+    triggerTokens: ['addObjectFormula', 'makeObjectFormula', 'ObjectFormula'],
     content: 'Adds a Coda formula which will return an object in the doc.',
     codeFile: './snippets/formula/object_formula.ts',
   },
   {
-    triggerWords: ['addColumnFormat', 'makeColumnFormat', 'ColumnFormat'],
+    triggerTokens: ['addColumnFormat', 'makeColumnFormat', 'ColumnFormat'],
     content: 'Adds a custom column type that you apply to any column in any Coda table.',
     codeFile: './snippets/column_format.ts',
   },
   {
-    triggerWords: ['setUserAuthentication', 'addUserAuthentication', 'UserAuthentication'],
+    triggerTokens: ['setUserAuthentication', 'addUserAuthentication', 'UserAuthentication'],
     content: 'Adds a Coda formula which will return an object in the doc.',
     codeFile: './snippets/user_authentication.ts',
   },
   {
-    triggerWords: ['setSystemAuthentication', 'addSystemAuthentication', 'SystemAuthentication'],
+    triggerTokens: ['setSystemAuthentication', 'addSystemAuthentication', 'SystemAuthentication'],
     content: 'Adds a Coda formula which will return an object in the doc.',
     codeFile: './snippets/system_authentication.ts',
   },
   {
-    triggerWords: ['addNetworkDomain', 'makeNetworkDomain', 'NetworkDomain'],
+    triggerTokens: ['addNetworkDomain', 'makeNetworkDomain', 'NetworkDomain'],
     content: 'Allows the pack to make requests to listed domains.',
     codeFile: './snippets/network_domain.ts',
   },
   {
-    triggerWords: ['makeStringParameter', 'addStringParameter', 'StringParameter'],
+    triggerTokens: ['makeStringParameter', 'addStringParameter', 'StringParameter'],
     content: 'Creates a string parameter.',
     codeFile: './snippets/parameter/string_parameter.ts',
   },
   {
-    triggerWords: ['makeBooleanParameter', 'addBooleanParameter', 'BooleanParameter'],
+    triggerTokens: ['makeBooleanParameter', 'addBooleanParameter', 'BooleanParameter'],
     content: 'Creates a boolean parameter.',
     codeFile: './snippets/parameter/boolean_parameter.ts',
   },
   {
-    triggerWords: ['makeDateParameter', 'addDateParameter', 'DateParameter'],
+    triggerTokens: ['makeDateParameter', 'addDateParameter', 'DateParameter'],
     content: 'Creates a date parameter.',
     codeFile: './snippets/parameter/date_parameter.ts',
   },
   {
-    triggerWords: ['makeHtmlParameter', 'addHtmlParameter', 'HtmlParameter'],
+    triggerTokens: ['makeHtmlParameter', 'addHtmlParameter', 'HtmlParameter'],
     content: 'Creates a html parameter.',
     codeFile: './snippets/parameter/html_parameter.ts',
   },
   {
-    triggerWords: ['makeImageParameter', 'addImageParameter', 'ImageParameter'],
+    triggerTokens: ['makeImageParameter', 'addImageParameter', 'ImageParameter'],
     content: 'Creates a image parameter.',
     codeFile: './snippets/parameter/image_parameter.ts',
   },
   {
-    triggerWords: ['makeNumberParameter', 'addNumberParameter', 'NumberParameter'],
+    triggerTokens: ['makeNumberParameter', 'addNumberParameter', 'NumberParameter'],
     content: 'Creates a number parameter.',
     codeFile: './snippets/parameter/number_parameter.ts',
   },
   {
-    triggerWords: ['makeStringArrayParameter', 'addStringArrayParameter', 'StringArrayParameter'],
+    triggerTokens: ['makeStringArrayParameter', 'addStringArrayParameter', 'StringArrayParameter'],
     content: 'Creates a string array parameter.',
     codeFile: './snippets/parameter/array/string_array_parameter.ts',
   },
   {
-    triggerWords: ['makeBooleanArrayParameter', 'addBooleanArrayParameter', 'BooleanArrayParameter'],
+    triggerTokens: ['makeBooleanArrayParameter', 'addBooleanArrayParameter', 'BooleanArrayParameter'],
     content: 'Creates a boolean array parameter.',
     codeFile: './snippets/parameter/array/boolean_array_parameter.ts',
   },
   {
-    triggerWords: ['makeDateArrayParameter', 'addDateArrayParameter', 'DateArrayParameter'],
+    triggerTokens: ['makeDateArrayParameter', 'addDateArrayParameter', 'DateArrayParameter'],
     content: 'Creates a date array parameter.',
     codeFile: './snippets/parameter/array/date_array_parameter.ts',
   },
   {
-    triggerWords: ['makeHtmlArrayParameter', 'addHtmlArrayParameter', 'HtmlArrayParameter'],
+    triggerTokens: ['makeHtmlArrayParameter', 'addHtmlArrayParameter', 'HtmlArrayParameter'],
     content: 'Creates a html array parameter.',
     codeFile: './snippets/parameter/array/html_array_parameter.ts',
   },
   {
-    triggerWords: ['makeImageArrayParameter', 'addImageArrayParameter', 'ImageArrayParameter'],
+    triggerTokens: ['makeImageArrayParameter', 'addImageArrayParameter', 'ImageArrayParameter'],
     content: 'Creates a image array parameter.',
     codeFile: './snippets/parameter/array/image_array_parameter.ts',
   },
   {
-    triggerWords: ['makeNumberArrayParameter', 'addNumberArrayParameter', 'NumberArrayParameter'],
+    triggerTokens: ['makeNumberArrayParameter', 'addNumberArrayParameter', 'NumberArrayParameter'],
     content: 'Creates a number array parameter.',
     codeFile: './snippets/parameter/array/number_array_parameter.ts',
   },
   {
-    triggerWords: ['addSyncTable', 'addSyncTable', 'SyncTable'],
+    triggerTokens: ['addSyncTable', 'addSyncTable', 'SyncTable'],
     content: 'Adds a sync table.',
     codeFile: './snippets/sync_table.ts',
   },
   {
-    triggerWords: ['addDynamicSyncTable', 'makeDynamicSyncTable', 'DynamicSyncTable'],
+    triggerTokens: ['addDynamicSyncTable', 'makeDynamicSyncTable', 'DynamicSyncTable'],
     content: 'Adds a dynamic sync table.',
     codeFile: './snippets/dynamic_sync_table.ts',
   },
@@ -121,59 +121,65 @@ export const Snippets: AutocompleteSnippet[] = [
 
 export const Examples: Example[] = [
   {
-    tokens: ['addColumnFormat'],
+    triggerTokens: ['addColumnFormat'],
     contentFile: './examples/column-format/column_format.md',
-    referencePath: '/classes/PackDefinitionBuilder.html#addColumnFormat',
+    sdkReferencePath: '/classes/PackDefinitionBuilder.html#addColumnFormat',
     exampleSnippets: [
       {
+        name: 'Column Format with No Matchers',
         content: 'Basic **Column Format** example without any matchers. ',
         codeFile: './examples/column-format/no_matchers.ts',
       },
     ],
   },
   {
-    tokens: ['setSystemAuthentication', 'setUserAuthentication'],
+    triggerTokens: ['setSystemAuthentication', 'setUserAuthentication'],
     contentFile: './examples/authentication/authentication.md',
-    referencePath: '/classes/PackDefinitionBuilder.html#setSystemAuthentication',
+    sdkReferencePath: '/classes/PackDefinitionBuilder.html#setSystemAuthentication',
     exampleSnippets: [
       {
+        name: 'System Authentication',
         content: '',
         codeFile: './examples/authentication/system_authentication.ts',
       },
       {
+        name: 'User Authentication',
         content: '',
         codeFile: './examples/authentication/user_authentication.ts',
       },
     ],
   },
   {
-    tokens: ['addDynamicSyncTable'],
+    triggerTokens: ['addDynamicSyncTable'],
     contentFile: './examples/dynamic-sync-table/dynamic_sync_table.md',
-    referencePath: '/classes/PackDefinitionBuilder.html#addDynamicSyncTable',
+    sdkReferencePath: '/classes/PackDefinitionBuilder.html#addDynamicSyncTable',
     exampleSnippets: [
       {
+        name: 'Basic Dynamic Sync Table',
         content: '',
         codeFile: './examples/dynamic-sync-table/basic_dynamic_sync_table.ts',
       },
     ],
   },
   {
-    tokens: ['addFormula'],
+    triggerTokens: ['addFormula'],
     contentFile: './examples/formula/formula.md',
-    referencePath: 'classes/PackDefinitionBuilder.html#addFormula',
+    sdkReferencePath: '/classes/PackDefinitionBuilder.html#addFormula',
     exampleSnippets: [
       {
+        name: 'Basic Formula',
         content: '',
         codeFile: './examples/formula/basic_formula.ts',
       },
     ],
   },
   {
-    tokens: ['addSyncTable'],
+    triggerTokens: ['addSyncTable'],
     contentFile: './examples/sync-table/sync_table.md',
-    referencePath: '/classes/PackDefinitionBuilder.html#addSyncTable',
+    sdkReferencePath: '/classes/PackDefinitionBuilder.html#addSyncTable',
     exampleSnippets: [
       {
+        name: 'Basic Sync Table',
         content: '',
         codeFile: './examples/sync-table/basic_sync_table.ts',
       },

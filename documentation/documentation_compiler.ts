@@ -21,7 +21,7 @@ function compileAutocompleteSnippets() {
   const compiledSnippets: CompiledAutocompleteSnippet[] = Snippets.map(snippet => {
     const code = getCodeFile(snippet.codeFile);
     return {
-      triggerWords: snippet.triggerWords,
+      triggerTokens: snippet.triggerTokens,
       content: snippet.content,
       code,
     };
@@ -34,12 +34,12 @@ function compileExamples() {
   const compiledExamples: CompiledExample[] = Examples.map(example => {
     const content = getContentFile(example.contentFile);
     const compiledExampleSnippets = compileExampleSnippets(example);
-    if (!isValidReferencePath(example.referencePath)) {
-      throw new Error(`${example.referencePath} is not a valid path`);
+    if (!isValidReferencePath(example.sdkReferencePath)) {
+      throw new Error(`${example.sdkReferencePath} is not a valid path`);
     }
     return {
-      tokens: example.tokens,
-      referencePath: example.referencePath,
+      triggerTokens: example.triggerTokens,
+      sdkReferencePath: example.sdkReferencePath,
       content,
       exampleSnippets: compiledExampleSnippets,
     };
@@ -48,7 +48,7 @@ function compileExamples() {
   fs.writeFileSync(path.join(DocumentationRoot, 'generated/examples.json'), JSON.stringify(compiledExamples, null, 2));
 }
 
-function getCodeFile(file: string) {
+function getCodeFile(file: string): string {
   const data = fs.readFileSync(path.join(DocumentationRoot, file), 'utf8');
   const codeStart = data.indexOf(CodeBegin) + CodeBegin.length;
   return data.substring(codeStart).trim();
@@ -61,34 +61,20 @@ function getContentFile(file: string) {
 function compileExampleSnippets(example: Example): CompiledExampleSnippet[] {
   return example.exampleSnippets.map(exampleSnippet => {
     return {
-      name: formatSnippetName(path.basename(exampleSnippet.codeFile)),
+      name: exampleSnippet.name,
       content: exampleSnippet.content,
       code: getCodeFile(exampleSnippet.codeFile),
     };
   });
 }
 
-function formatSnippetName(baseName: string): string {
-  const fileName = baseName.split('.')[0];
-  const snippetNameArray = fileName.split('_');
-  return snippetNameArray
-    .map(segment => {
-      return `${segment.charAt(0).toUpperCase()}${segment.slice(1)}`;
-    })
-    .join(' ');
-}
-
-function isValidReferencePath(referencePath: string): boolean {
-  const splitPath = referencePath.split('#');
+function isValidReferencePath(sdkReferencePath: string): boolean {
+  const splitPath = sdkReferencePath.split('#');
   const page = splitPath[0];
-  const fragmentIdentifier = splitPath[1];
 
   const filePath = path.join(TypeDocsRoot, page);
-  const fileContent = fs.readFileSync(filePath).toString();
 
-  const searchTerm = `name="${fragmentIdentifier}"`;
-
-  return fileContent.search(searchTerm) > -1;
+  return fs.existsSync(filePath);
 }
 
 main();
