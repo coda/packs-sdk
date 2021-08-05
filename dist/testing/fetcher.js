@@ -37,6 +37,7 @@ class AuthenticatingFetcher {
             response = await exports.requestHelper.makeRequest({
                 url,
                 method: request.method,
+                isBinaryResponse: request.isBinaryResponse,
                 headers: {
                     ...headers,
                     'User-Agent': FetcherUserAgent,
@@ -72,6 +73,14 @@ class AuthenticatingFetcher {
             return this.fetch(request, true);
         }
         let responseBody = response.body;
+        if (request.isBinaryResponse && response.body) {
+            // When request.isBinaryResponse is set, requestPromise is supposed to return a Buffer.
+            // However, what it actually returns is a Buffer-like object that looks identical to Buffer but isn't actually
+            // a Buffer (i.e. Buffer.isBuffer returns false).
+            // v1 fetcher didn't hit this issue because it uses JSON stringify/parse between the fetcher and the calc server
+            // and finally converts back to a Buffer.
+            responseBody = Buffer.from(response.body.toJSON());
+        }
         if (responseBody && responseBody.length >= MaxContentLengthBytes) {
             throw new Error(`Response body is too large for Coda. Body is ${responseBody.length} bytes.`);
         }
