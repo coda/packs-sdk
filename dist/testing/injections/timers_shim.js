@@ -6,7 +6,7 @@
 // of the current thread. 
 export function setTimeout(callback, _) { new Promise(_ => callback()) }
 
-// can't actually set internal in ivm. this would only be executed once. maybe we should 
+// can't actually set interval in ivm. this would only be executed once. maybe we should 
 // just throw an error if setInterval is called. 
 export function setInterval(callback, _) { new Promise(_ => callback()) }
 
