@@ -3,7 +3,7 @@ import {MarshalingInjectedKeys} from './constants';
 
 export function marshalBuffer(val: any): object | undefined {
   // Buffer is not provided by IVM. If the bundle is not browserified, global.Buffer will be undefined.
-  if (global.Buffer && val instanceof Buffer) {
+  if (Buffer && val instanceof Buffer) {
     return {
       data: [...Uint8Array.from(val)],
       [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Buffer,
@@ -13,7 +13,7 @@ export function marshalBuffer(val: any): object | undefined {
 
 export function unmarshalBuffer(val: {[key: string]: any}): Buffer | undefined {
   // Buffer is not provided by IVM. If the bundle is not browserified, global.Buffer will be undefined.
-  if (!global.Buffer) {
+  if (!Buffer) {
     return;
   }
 
