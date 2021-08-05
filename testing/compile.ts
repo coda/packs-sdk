@@ -193,7 +193,7 @@ export async function compilePackBundle({
   try {
     await loadIntoVM(tempBundlePath);
   } catch (err) {
-    throw processVmError(err, tempBundlePath);
+    throw await processVmError(err, tempBundlePath);
   }
 
   if (!outputDirectory || outputDirectory === intermediateOutputDirectory) {

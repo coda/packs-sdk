@@ -144,7 +144,7 @@ outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, enabl
         await loadIntoVM(tempBundlePath);
     }
     catch (err) {
-        throw helpers_1.processVmError(err, tempBundlePath);
+        throw await helpers_1.processVmError(err, tempBundlePath);
     }
     if (!outputDirectory || outputDirectory === intermediateOutputDirectory) {
         return {
