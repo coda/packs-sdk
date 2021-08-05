@@ -27,6 +27,16 @@ export const manifest: PackDefinition = createFakePack({
   formulaNamespace: 'Fake',
   formulas: [
     makeNumericFormula({
+      name: 'Timer',
+      description: 'Timer',
+      examples: [],
+      parameters: [makeNumericParameter('value', 'The time to wait.')],
+      execute: ([value]) => {
+        setTimeout(() => {}, value);
+        return value;
+      },
+    }),
+    makeNumericFormula({
       name: 'Square',
       description: 'Square a number',
       examples: [],

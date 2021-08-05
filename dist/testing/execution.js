@@ -22,10 +22,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.executeFormulaOrSyncWithRawParamsInVM = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = void 0;
+exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = void 0;
 const types_1 = require("../runtime/types");
 const coercion_1 = require("./coercion");
-const compile_1 = require("./compile");
 const bootstrap_1 = require("../runtime/bootstrap");
 const helpers_1 = require("../runtime/common/helpers");
 const helpers_2 = require("../runtime/common/helpers");
@@ -85,7 +84,7 @@ async function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, para
     return findAndExecutePackFunction(params, { type: types_1.FormulaType.Standard, formulaName: resolveFormulaNameWithNamespace(formulaNameWithNamespace) }, packDef, executionContext || mocks_1.newMockExecutionContext(), options);
 }
 exports.executeFormulaFromPackDef = executeFormulaFromPackDef;
-async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, contextOptions = {}, }) {
+async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, bundleSourceMapPath, bundlePath, contextOptions = {}, }) {
     try {
         const { useRealFetcher } = contextOptions;
         const credentials = useRealFetcher && manifestPath ? getCredentials(manifestPath) : undefined;
@@ -108,7 +107,13 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
                     throw new Error(`Sync is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`);
                 }
                 const response = vm
-                    ? await executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, params, manifestPath, executionContext })
+                    ? await executeFormulaOrSyncWithRawParamsInVM({
+                        formulaSpecification,
+                        params,
+                        bundleSourceMapPath,
+                        bundlePath,
+                        executionContext,
+                    })
                     : await executeFormulaOrSyncWithRawParams({ formulaSpecification, params, manifest, executionContext });
                 result.push(...response.result);
                 executionContext.sync.continuation = response.continuation;
@@ -118,7 +123,13 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
         }
         else {
             const result = vm
-                ? await executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, params, manifestPath, executionContext })
+                ? await executeFormulaOrSyncWithRawParamsInVM({
+                    formulaSpecification,
+                    params,
+                    bundleSourceMapPath,
+                    bundlePath,
+                    executionContext,
+                })
                 : await executeFormulaOrSyncWithRawParams({ formulaSpecification, params, manifest, executionContext });
             helpers_5.print(result);
         }
@@ -153,8 +164,7 @@ class VMError {
     }
 }
 exports.VMError = VMError;
-async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, params: rawParams, manifestPath, executionContext = mocks_2.newMockSyncExecutionContext(), }) {
-    const { bundleSourceMapPath, bundlePath } = await compile_1.compilePackBundle({ manifestPath, minify: false });
+async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, params: rawParams, bundlePath, bundleSourceMapPath, executionContext = mocks_2.newMockSyncExecutionContext(), }) {
     const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
     const manifest = await helpers_4.importManifest(bundlePath);
     let params;
@@ -168,7 +178,6 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
     }
     return bootstrap_1.executeThunk(ivmContext, { params, formulaSpec: formulaSpecification }, bundlePath, bundleSourceMapPath);
 }
-exports.executeFormulaOrSyncWithRawParamsInVM = executeFormulaOrSyncWithRawParamsInVM;
 async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params: rawParams, manifest, executionContext, }) {
     let params;
     if (formulaSpecification.type === types_1.FormulaType.Standard) {

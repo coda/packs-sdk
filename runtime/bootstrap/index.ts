@@ -160,8 +160,10 @@ export async function executeThunk<T extends FormulaSpecification>(
     const err = unwrapError(wrappedError);
     const translatedStacktrace = await translateErrorStackFromVM({
       stacktrace: err.stack,
-      bundleSourceMapPath: packBundleSourceMapPath,
-      vmFilename: packBundlePath,
+      // the sourcemap needs packBundleSourceMapPath to be either absolute or relative, but not something like
+      // 'bundle.js' or 'bundle.js.map'.
+      bundleSourceMapPath: path.resolve(packBundleSourceMapPath),
+      vmFilename: path.resolve(packBundlePath),
     });
     const messageSuffix = err.message ? `: ${err.message}` : '';
     err.stack = `${err.constructor.name}${messageSuffix}\n${translatedStacktrace}`;
