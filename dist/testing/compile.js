@@ -88,8 +88,9 @@ async function buildWithES({ lastBundleFilename, outputBundleFilename, options: 
         outfile: outputBundleFilename,
         format: 'cjs',
         platform: 'node',
-        // TODO(huayang): still add another timers shim to throw useful error messages if timers is not enabled.
-        inject: enableTimers ? [`${__dirname}/injections/timers_shim.js`] : undefined,
+        inject: enableTimers
+            ? [`${__dirname}/injections/timers_shim.js`]
+            : [`${__dirname}/injections/timers_disabled_shim.js`],
         minify: false,
         sourcemap: 'both',
     };
@@ -115,12 +116,9 @@ outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, enabl
     const buildChain = [
         { builder: buildWithES, outputFilename: esbuildBundleFilename },
         { builder: browserifyBundle, outputFilename: browserifyBundleFilename },
+        // browserify will add additional symbols that need shim injection.
+        { builder: buildWithES, outputFilename: browserifyWithShimBundleFilename },
     ];
-    if (enableTimers) {
-        // if timers are enabled, we'll need to shim it again after browserifying because it will
-        // introduce extra code that needs shim.
-        buildChain.push({ builder: buildWithES, outputFilename: browserifyWithShimBundleFilename });
-    }
     if (minify) {
         buildChain.push({ builder: uglifyBundle, outputFilename: uglifyBundleFilename });
     }
