@@ -37,6 +37,11 @@ if (require.main === module) {
                 string: true,
                 desc: 'For a dynamic sync table with a variable source location, specify the URL to test here.',
             },
+            timers: {
+                boolean: true,
+                default: false,
+                desc: 'Set to true to enable timer methods in the build. i.e. setTimeout',
+            },
         },
     })
         .command({
@@ -84,6 +89,15 @@ if (require.main === module) {
                 string: true,
                 alias: 'o',
                 default: undefined,
+            },
+            minify: {
+                boolean: true,
+                default: true,
+            },
+            timers: {
+                boolean: true,
+                default: false,
+                desc: 'Set to true to enable timer methods in the build. i.e. setTimeout',
             },
         },
         handler: build_1.handleBuild,

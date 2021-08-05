@@ -35,7 +35,8 @@ async function translateErrorStackFromVM({ stacktrace, bundleSourceMapPath, vmFi
         const consumer = await new source_map_1.SourceMapConsumer(fs_1.default.readFileSync(bundleSourceMapPath, 'utf8'));
         const stack = stackTraceParser.parse(stacktrace);
         const translatedStack = stack.map(frame => {
-            if (frame.file !== vmFilename || frame.lineNumber === null || frame.column === null) {
+            var _a;
+            if (!((_a = frame.file) === null || _a === void 0 ? void 0 : _a.endsWith(vmFilename)) || frame.lineNumber === null || frame.column === null) {
                 return frame;
             }
             const originalFrame = consumer.originalPositionFor({ line: frame.lineNumber, column: frame.column - 1 });

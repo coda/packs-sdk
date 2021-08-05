@@ -1,5 +1,5 @@
 import type {Arguments} from 'yargs';
-import {build} from './build';
+import {compilePackBundle} from '../testing/compile';
 import {executeFormulaOrSyncFromCLI} from '../testing/execution';
 import {importManifest} from './helpers';
 import {makeManifestFullPath} from './helpers';
@@ -11,6 +11,7 @@ export interface ExecuteArgs {
   fetch?: boolean;
   vm?: boolean;
   dynamicUrl?: string;
+  timers: boolean;
 }
 
 export async function handleExecute({
@@ -20,10 +21,15 @@ export async function handleExecute({
   fetch,
   vm,
   dynamicUrl,
+  timers,
 }: Arguments<ExecuteArgs>) {
   const fullManifestPath = makeManifestFullPath(manifestPath);
-  const bundleFilename = await build(fullManifestPath);
-  const manifest = await importManifest(bundleFilename);
+  const {bundlePath, bundleSourceMapPath} = await compilePackBundle({
+    manifestPath: fullManifestPath,
+    minify: false,
+    enableTimers: timers,
+  });
+  const manifest = await importManifest(bundlePath);
   await executeFormulaOrSyncFromCLI({
     formulaName,
     params,
@@ -31,6 +37,8 @@ export async function handleExecute({
     manifestPath,
     vm,
     dynamicUrl,
+    bundleSourceMapPath,
+    bundlePath,
     contextOptions: {useRealFetcher: fetch},
   });
 }

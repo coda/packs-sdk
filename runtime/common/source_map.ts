@@ -21,7 +21,7 @@ export async function translateErrorStackFromVM({
     const stack = stackTraceParser.parse(stacktrace);
 
     const translatedStack = stack.map(frame => {
-      if (frame.file !== vmFilename || frame.lineNumber === null || frame.column === null) {
+      if (!frame.file?.endsWith(vmFilename) || frame.lineNumber === null || frame.column === null) {
         return frame;
       }
 

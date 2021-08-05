@@ -14,7 +14,6 @@ import type {SyncFormulaResult} from '../api';
 import type {SyncFormulaSpecification} from '../runtime/types';
 import type {TypedPackFormula} from '../api';
 import {coerceParams} from './coercion';
-import {compilePackBundle} from './compile';
 import {executeThunk} from '../runtime/bootstrap';
 import {findFormula} from '../runtime/common/helpers';
 import {findSyncFormula} from '../runtime/common/helpers';
@@ -128,6 +127,8 @@ export async function executeFormulaOrSyncFromCLI({
   manifestPath,
   vm,
   dynamicUrl,
+  bundleSourceMapPath,
+  bundlePath,
   contextOptions = {},
 }: {
   formulaName: string;
@@ -136,6 +137,8 @@ export async function executeFormulaOrSyncFromCLI({
   manifestPath: string;
   vm?: boolean;
   dynamicUrl?: string;
+  bundleSourceMapPath: string;
+  bundlePath: string;
   contextOptions?: ContextOptions;
 }) {
   try {
@@ -170,7 +173,13 @@ export async function executeFormulaOrSyncFromCLI({
           );
         }
         const response: SyncFormulaResult<any> = vm
-          ? await executeFormulaOrSyncWithRawParamsInVM({formulaSpecification, params, manifestPath, executionContext})
+          ? await executeFormulaOrSyncWithRawParamsInVM({
+              formulaSpecification,
+              params,
+              bundleSourceMapPath,
+              bundlePath,
+              executionContext,
+            })
           : await executeFormulaOrSyncWithRawParams({formulaSpecification, params, manifest, executionContext});
 
         result.push(...response.result);
@@ -180,7 +189,13 @@ export async function executeFormulaOrSyncFromCLI({
       print(result);
     } else {
       const result = vm
-        ? await executeFormulaOrSyncWithRawParamsInVM({formulaSpecification, params, manifestPath, executionContext})
+        ? await executeFormulaOrSyncWithRawParamsInVM({
+            formulaSpecification,
+            params,
+            bundleSourceMapPath,
+            bundlePath,
+            executionContext,
+          })
         : await executeFormulaOrSyncWithRawParams({formulaSpecification, params, manifest, executionContext});
       print(result);
     }
@@ -231,21 +246,21 @@ export class VMError {
   }
 }
 
-export async function executeFormulaOrSyncWithRawParamsInVM<
+async function executeFormulaOrSyncWithRawParamsInVM<
   T extends SyncFormulaSpecification | StandardFormulaSpecification,
 >({
   formulaSpecification,
   params: rawParams,
-  manifestPath,
+  bundlePath,
+  bundleSourceMapPath,
   executionContext = newMockSyncExecutionContext(),
 }: {
   formulaSpecification: T;
   params: string[];
-  manifestPath: string;
   executionContext?: SyncExecutionContext;
+  bundleSourceMapPath: string;
+  bundlePath: string;
 }): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<object> : PackFormulaResult> {
-  const {bundleSourceMapPath, bundlePath} = await compilePackBundle({manifestPath, minify: false});
-
   const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
 
   const manifest = await importManifest(bundlePath);
