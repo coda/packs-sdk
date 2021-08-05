@@ -17,7 +17,6 @@ export interface CompilePackBundleOptions {
   sourceMap?: boolean;
   minify?: boolean;
   enableTimers?: boolean;
-  browserifyWithEsbuild?: boolean;
 }
 
 export interface CompilePackBundleResult {
@@ -107,7 +106,7 @@ async function uglifyBundle({
 async function buildWithES({
   lastBundleFilename,
   outputBundleFilename,
-  options: {enableTimers, browserifyWithEsbuild},
+  options: {enableTimers},
 }: {
   lastBundleFilename: string;
   outputBundleFilename: string;
@@ -119,7 +118,7 @@ async function buildWithES({
     entryPoints: [lastBundleFilename],
     outfile: outputBundleFilename,
     format: 'cjs',
-    platform: browserifyWithEsbuild ? 'browser' : 'node',
+    platform: 'node',
 
     // TODO(huayang): still add another timers shim to throw useful error messages if timers is not enabled.
     inject: enableTimers ? [`${__dirname}/injections/timers_shim.js`] : undefined,
@@ -137,7 +136,6 @@ export async function compilePackBundle({
   minify = true,
   intermediateOutputDirectory,
   enableTimers = false,
-  browserifyWithEsbuild = false,
 }: CompilePackBundleOptions): Promise<CompilePackBundleResult> {
   const esbuildBundleFilename = 'esbuild-bundle.js';
   const browserifyBundleFilename = 'browserify-bundle.js';
@@ -155,16 +153,12 @@ export async function compilePackBundle({
     minify,
     intermediateOutputDirectory,
     enableTimers,
-    browserifyWithEsbuild,
   };
 
   const buildChain: Array<{builder: BuildFunction; outputFilename: string}> = [
     {builder: buildWithES, outputFilename: esbuildBundleFilename},
+    {builder: browserifyBundle, outputFilename: browserifyBundleFilename},
   ];
-
-  if (!browserifyWithEsbuild) {
-    buildChain.push({builder: browserifyBundle, outputFilename: browserifyBundleFilename});
-  }
 
   if (enableTimers) {
     // if timers are enabled, we'll need to shim it again after browserifying because it will

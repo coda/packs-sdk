@@ -80,14 +80,14 @@ async function uglifyBundle({ lastBundleFilename, outputBundleFilename, }) {
     fs_1.default.writeFileSync(outputBundleFilename, uglifyOutput.code);
     fs_1.default.writeFileSync(`${outputBundleFilename}.map`, uglifyOutput.map);
 }
-async function buildWithES({ lastBundleFilename, outputBundleFilename, options: { enableTimers, browserifyWithEsbuild }, }) {
+async function buildWithES({ lastBundleFilename, outputBundleFilename, options: { enableTimers }, }) {
     const options = {
         banner: { js: "'use strict';" },
         bundle: true,
         entryPoints: [lastBundleFilename],
         outfile: outputBundleFilename,
         format: 'cjs',
-        platform: browserifyWithEsbuild ? 'browser' : 'node',
+        platform: 'node',
         // TODO(huayang): still add another timers shim to throw useful error messages if timers is not enabled.
         inject: enableTimers ? [`${__dirname}/injections/timers_shim.js`] : undefined,
         minify: false,
@@ -96,7 +96,7 @@ async function buildWithES({ lastBundleFilename, outputBundleFilename, options: 
     await esbuild.build(options);
 }
 async function compilePackBundle({ bundleFilename = 'bundle.js', // the output bundle filename
-outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, enableTimers = false, browserifyWithEsbuild = false, }) {
+outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, enableTimers = false, }) {
     const esbuildBundleFilename = 'esbuild-bundle.js';
     const browserifyBundleFilename = 'browserify-bundle.js';
     const browserifyWithShimBundleFilename = 'browserify-with-shim-bundle.js';
@@ -111,14 +111,11 @@ outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, enabl
         minify,
         intermediateOutputDirectory,
         enableTimers,
-        browserifyWithEsbuild,
     };
     const buildChain = [
         { builder: buildWithES, outputFilename: esbuildBundleFilename },
+        { builder: browserifyBundle, outputFilename: browserifyBundleFilename },
     ];
-    if (!browserifyWithEsbuild) {
-        buildChain.push({ builder: browserifyBundle, outputFilename: browserifyBundleFilename });
-    }
     if (enableTimers) {
         // if timers are enabled, we'll need to shim it again after browserifying because it will
         // introduce extra code that needs shim.

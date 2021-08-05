@@ -7,6 +7,5 @@ export interface ExecuteArgs {
     vm?: boolean;
     dynamicUrl?: string;
     timers: boolean;
-    browserifyWithEsbuild: boolean;
 }
-export declare function handleExecute({ manifestPath, formulaName, params, fetch, vm, dynamicUrl, timers, browserifyWithEsbuild, }: Arguments<ExecuteArgs>): Promise<void>;
+export declare function handleExecute({ manifestPath, formulaName, params, fetch, vm, dynamicUrl, timers, }: Arguments<ExecuteArgs>): Promise<void>;

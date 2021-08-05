@@ -42,11 +42,6 @@ if (require.main === module) {
                 default: false,
                 desc: 'Set to true to enable timer methods in the build. i.e. setTimeout',
             },
-            browserifyWithEsbuild: {
-                boolean: true,
-                default: false,
-                desc: 'Set to true to let esbuild do browserify',
-            },
         },
     })
         .command({

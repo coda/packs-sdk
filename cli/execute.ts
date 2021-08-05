@@ -12,7 +12,6 @@ export interface ExecuteArgs {
   vm?: boolean;
   dynamicUrl?: string;
   timers: boolean;
-  browserifyWithEsbuild: boolean;
 }
 
 export async function handleExecute({
@@ -23,14 +22,12 @@ export async function handleExecute({
   vm,
   dynamicUrl,
   timers,
-  browserifyWithEsbuild,
 }: Arguments<ExecuteArgs>) {
   const fullManifestPath = makeManifestFullPath(manifestPath);
   const {bundlePath, bundleSourceMapPath} = await compilePackBundle({
     manifestPath: fullManifestPath,
     minify: false,
     enableTimers: timers,
-    browserifyWithEsbuild,
   });
   const manifest = await importManifest(bundlePath);
   await executeFormulaOrSyncFromCLI({

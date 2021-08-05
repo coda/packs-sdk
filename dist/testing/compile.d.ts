@@ -6,7 +6,6 @@ export interface CompilePackBundleOptions {
     sourceMap?: boolean;
     minify?: boolean;
     enableTimers?: boolean;
-    browserifyWithEsbuild?: boolean;
 }
 export interface CompilePackBundleResult {
     bundlePath: string;
@@ -14,4 +13,4 @@ export interface CompilePackBundleResult {
     intermediateOutputDirectory: string;
 }
 export declare function compilePackBundle({ bundleFilename, // the output bundle filename
-outputDirectory, manifestPath, minify, intermediateOutputDirectory, enableTimers, browserifyWithEsbuild, }: CompilePackBundleOptions): Promise<CompilePackBundleResult>;
+outputDirectory, manifestPath, minify, intermediateOutputDirectory, enableTimers, }: CompilePackBundleOptions): Promise<CompilePackBundleResult>;
