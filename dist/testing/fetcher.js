@@ -94,6 +94,8 @@ class AuthenticatingFetcher {
             }
             // Do not inadvertently parse non-objects.
             if (typeof responseBody !== 'object') {
+                // eslint-disable-next-line no-console
+                console.log('resetting????');
                 responseBody = response.body;
             }
         }
@@ -107,6 +109,8 @@ class AuthenticatingFetcher {
                 delete responseHeaders[key];
             }
         }
+        // eslint-disable-next-line no-console
+        console.log(Buffer.isBuffer(responseBody));
         return {
             status: response.statusCode,
             headers: responseHeaders,

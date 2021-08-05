@@ -130,6 +130,8 @@ export class AuthenticatingFetcher implements Fetcher {
 
       // Do not inadvertently parse non-objects.
       if (typeof responseBody !== 'object') {
+        // eslint-disable-next-line no-console
+        console.log('resetting????');
         responseBody = response.body;
       }
     } catch (e) {
@@ -143,6 +145,9 @@ export class AuthenticatingFetcher implements Fetcher {
         delete responseHeaders[key];
       }
     }
+
+    // eslint-disable-next-line no-console
+    console.log(Buffer.isBuffer(responseBody));
 
     return {
       status: response.statusCode,
