@@ -1,6 +1,7 @@
-## 0.4.5
+## 0.4.6
 
 - Bug fix: Executing sync table formulas via CLI now validates results correctly.
+- Add custom scope separator field to OAuth authentication for providers not accepting whitespace as the separator.
 
 
 ## 0.4.5
