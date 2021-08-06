@@ -9,7 +9,7 @@ const child_process_1 = require("child_process");
 const express_1 = __importDefault(require("express"));
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
-function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTokenExchange, scopes, }) {
+function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTokenExchange, scopes, scopeDelimiter, }) {
     // TODO: Handle endpointKey.
     const { authorizationUrl, tokenUrl, additionalParams } = authDef;
     // Use the manifest's scopes as a default.
@@ -19,7 +19,11 @@ function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTok
         clientSecret,
         authorizationUri: authorizationUrl,
         accessTokenUri: tokenUrl,
-        scopes: requestedScopes,
+        // ClientOAuth2 uses a single space for scope delimiter and isn't customizable.
+        // If the pack uses a non standard space delimiter, we'll hack it to a single string.
+        scopes: !scopeDelimiter || scopeDelimiter === ' '
+            ? requestedScopes
+            : requestedScopes && [requestedScopes.join(scopeDelimiter)],
         redirectUri: makeRedirectUrl(port),
         query: additionalParams,
     });

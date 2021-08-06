@@ -156,8 +156,8 @@ export interface OAuth2Authentication extends BaseAuthentication {
   // Some OAuth providers require passing the token as a URL param.
   tokenQueryParam?: string;
 
-  // The charactor used to separate multiple OAuth scopes. Default is a whitespace.
-  scopeSeparator?: string;
+  /** Default is a single space, per the OAuth standard. */
+  scopeDelimiter?: string;
 }
 
 export interface WebBasicAuthentication extends BaseAuthentication {

@@ -185,6 +185,7 @@ class CredentialHandler {
                 helpers_2.print('Access token saved! Shutting down OAuth server and exiting...');
             },
             scopes: requestedScopes,
+            scopeDelimiter: this._authDef.scopeDelimiter,
         });
     }
     maybePromptForEndpointUrl() {

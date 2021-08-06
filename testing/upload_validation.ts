@@ -301,7 +301,7 @@ const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> 
     additionalParams: z.record(z.any()).optional(),
     endpointKey: z.string().optional(),
     tokenQueryParam: z.string().optional(),
-    scopeSeparator: z.string().optional(),
+    scopeDelimiter: z.string().optional(),
     ...baseAuthenticationValidators,
   }),
   [AuthenticationType.WebBasic]: zodCompleteStrictObject<WebBasicAuthentication>({

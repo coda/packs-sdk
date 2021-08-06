@@ -223,6 +223,7 @@ class CredentialHandler {
         print('Access token saved! Shutting down OAuth server and exiting...');
       },
       scopes: requestedScopes,
+      scopeDelimiter: this._authDef.scopeDelimiter,
     });
   }
 

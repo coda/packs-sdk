@@ -21,6 +21,7 @@ export function launchOAuthServerFlow({
   port,
   afterTokenExchange,
   scopes,
+  scopeDelimiter,
 }: {
   clientId: string;
   clientSecret: string;
@@ -28,6 +29,7 @@ export function launchOAuthServerFlow({
   port: number;
   afterTokenExchange: AfterTokenExchangeCallback;
   scopes?: string[];
+  scopeDelimiter?: string;
 }) {
   // TODO: Handle endpointKey.
   const {authorizationUrl, tokenUrl, additionalParams} = authDef;
@@ -38,7 +40,12 @@ export function launchOAuthServerFlow({
     clientSecret,
     authorizationUri: authorizationUrl,
     accessTokenUri: tokenUrl,
-    scopes: requestedScopes,
+    // ClientOAuth2 uses a single space for scope delimiter and isn't customizable.
+    // If the pack uses a non standard space delimiter, we'll hack it to a single string.
+    scopes:
+      !scopeDelimiter || scopeDelimiter === ' '
+        ? requestedScopes
+        : requestedScopes && [requestedScopes.join(scopeDelimiter)],
     redirectUri: makeRedirectUrl(port),
     query: additionalParams,
   });
