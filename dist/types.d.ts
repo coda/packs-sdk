@@ -123,7 +123,7 @@ export interface OAuth2Authentication extends BaseAuthentication {
     endpointKey?: string;
     tokenQueryParam?: string;
     /** Default is a single space, per the OAuth standard. */
-    scopeDelimiter?: string;
+    scopeDelimiter?: ' ' | ':' | ',' | ';';
 }
 export interface WebBasicAuthentication extends BaseAuthentication {
     type: AuthenticationType.WebBasic;

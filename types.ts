@@ -157,7 +157,7 @@ export interface OAuth2Authentication extends BaseAuthentication {
   tokenQueryParam?: string;
 
   /** Default is a single space, per the OAuth standard. */
-  scopeDelimiter?: string;
+  scopeDelimiter?: ' ' | ':' | ',' | ';';
 }
 
 export interface WebBasicAuthentication extends BaseAuthentication {

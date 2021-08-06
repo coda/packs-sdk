@@ -245,7 +245,7 @@ const defaultAuthenticationValidators = {
         additionalParams: z.record(z.any()).optional(),
         endpointKey: z.string().optional(),
         tokenQueryParam: z.string().optional(),
-        scopeDelimiter: z.string().optional(),
+        scopeDelimiter: z.enum([' ', ':', ',', ';']).optional(),
         ...baseAuthenticationValidators,
     }),
     [types_1.AuthenticationType.WebBasic]: zodCompleteStrictObject({

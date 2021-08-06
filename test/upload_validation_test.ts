@@ -1371,6 +1371,7 @@ describe('Pack metadata Validation', () => {
           additionalParams: {foo: 'bar'},
           endpointKey: 'some-key',
           tokenQueryParam: 'some-param',
+          scopeDelimiter: ',',
           postSetup: [
             {
               type: PostSetupType.SetEndpoint,
@@ -1393,6 +1394,24 @@ describe('Pack metadata Validation', () => {
         },
       });
       await validateJson(metadata);
+    });
+
+    it('OAuth2, invalid scope delimiter', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2,
+          authorizationUrl: 'some-url',
+          tokenUrl: 'some-url',
+          scopeDelimiter: '&../',
+        } as any,
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: "Invalid enum value. Expected ' ' | ':' | ',' | ';', received '&../'",
+          path: 'defaultAuthentication.scopeDelimiter',
+        },
+      ]);
     });
 
     it('WebBasic', async () => {
