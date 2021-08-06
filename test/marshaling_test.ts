@@ -79,6 +79,7 @@ describe('Marshaling', () => {
   it('works for Buffer', () => {
     const buffer = Buffer.from('some testing data');
     assert.isTrue(buffer.equals(transform(buffer)));
+    assert.isTrue(Buffer.isBuffer(transform(buffer)));
   });
 
   it('toJSON override does not apply if not marshaling', () => {

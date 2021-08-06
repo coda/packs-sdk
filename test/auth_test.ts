@@ -381,14 +381,14 @@ describe('Auth', () => {
     async function executeFetch(
       packDef: PackDefinition,
       url: string,
-      jsonResponse: object,
+      responseBody: object,
       formulaName: string = 'Fetch',
     ) {
       mockMakeRequest.returns({
         statusCode: 200,
-        body: JSON.stringify(jsonResponse),
+        body: Buffer.isBuffer(responseBody) ? responseBody : JSON.stringify(responseBody),
         headers: {
-          'content-type': 'application/json',
+          'content-type': Buffer.isBuffer(responseBody) ? 'application/octet-stream' : 'application/json',
         },
       });
       return executeFormulaFromPackDef(packDef, formulaName, [url], undefined, undefined, {
@@ -409,6 +409,7 @@ describe('Auth', () => {
         headers: {'User-Agent': 'Coda-Test-Server-Fetcher'},
         method: 'GET',
         url: 'https://example.com',
+        isBinaryResponse: undefined,
       });
     });
 
@@ -424,6 +425,7 @@ describe('Auth', () => {
           headers: {'User-Agent': 'Coda-Test-Server-Fetcher'},
           method: 'GET',
           url: 'https://example.com',
+          isBinaryResponse: undefined,
         });
       };
       it('defaultAuthentication', () => execTest(createPackWithDefaultAuth(auth)));
@@ -444,6 +446,7 @@ describe('Auth', () => {
           headers: {Authorization: 'Bearer some-token', 'User-Agent': 'Coda-Test-Server-Fetcher'},
           method: 'GET',
           url: 'https://example.com',
+          isBinaryResponse: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -468,6 +471,7 @@ describe('Auth', () => {
           headers: {Authorization: 'Bearer some-token', 'User-Agent': 'Coda-Test-Server-Fetcher'},
           method: 'GET',
           url: 'https://some-endpoint-url.com/foo',
+          isBinaryResponse: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth, opts)));
@@ -492,6 +496,7 @@ describe('Auth', () => {
           headers: {Authorization: 'Bearer some-token', 'User-Agent': 'Coda-Test-Server-Fetcher'},
           method: 'GET',
           url: 'https://some-endpoint-url.com/foo',
+          isBinaryResponse: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth, opts)));
@@ -536,6 +541,7 @@ describe('Auth', () => {
           headers: {Authorization: 'Bearer some-token', 'User-Agent': 'Coda-Test-Server-Fetcher'},
           method: 'GET',
           url: 'https://example.com',
+          isBinaryResponse: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -564,6 +570,7 @@ describe('Auth', () => {
           headers: {MyHeader: 'some-token', 'User-Agent': 'Coda-Test-Server-Fetcher'},
           method: 'GET',
           url: 'https://example.com',
+          isBinaryResponse: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -588,6 +595,7 @@ describe('Auth', () => {
           headers: {MyHeader: 'MyPrefix some-token', 'User-Agent': 'Coda-Test-Server-Fetcher'},
           method: 'GET',
           url: 'https://example.com',
+          isBinaryResponse: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -611,6 +619,7 @@ describe('Auth', () => {
           headers: {'User-Agent': 'Coda-Test-Server-Fetcher'},
           method: 'GET',
           url: 'https://example.com/foo?myParam=some-param-value&blah=123',
+          isBinaryResponse: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -637,6 +646,7 @@ describe('Auth', () => {
           headers: {'User-Agent': 'Coda-Test-Server-Fetcher'},
           method: 'GET',
           url: 'https://example.com/foo?blah=123&param1=param-value-1&param2=param-value-2',
+          isBinaryResponse: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -662,6 +672,7 @@ describe('Auth', () => {
           },
           method: 'GET',
           url: 'https://example.com',
+          isBinaryResponse: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -681,6 +692,7 @@ describe('Auth', () => {
                 await context.fetcher.fetch({
                   method: 'GET',
                   url: 'https://some-url.com',
+                  isBinaryResponse: undefined,
                   body: `some-body {{username-${context.invocationToken}}} {{password-${context.invocationToken}}}`,
                 });
                 return '';
@@ -721,6 +733,7 @@ describe('Auth', () => {
                 await context.fetcher.fetch({
                   method: 'GET',
                   url: 'https://some-url.com',
+                  isBinaryResponse: undefined,
                   body: JSON.stringify({
                     foo: 'bar',
                     username: `{{username-${context.invocationToken}}}`,
@@ -774,6 +787,7 @@ describe('Auth', () => {
           headers: {Authorization: 'Basic c29tZS11c2VybmFtZTp1bmRlZmluZWQ=', 'User-Agent': 'Coda-Test-Server-Fetcher'},
           method: 'GET',
           url: 'https://example.com',
+          isBinaryResponse: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -802,6 +816,7 @@ describe('Auth', () => {
           },
           method: 'GET',
           url: 'https://some-endpoint-url.com/foo?bar=blah',
+          isBinaryResponse: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth, opts)));
@@ -859,6 +874,7 @@ describe('Auth', () => {
         headers: {'User-Agent': 'Coda-Test-Server-Fetcher'},
         method: 'GET',
         url: 'https://example.com',
+        isBinaryResponse: undefined,
       });
     });
 
@@ -885,7 +901,7 @@ describe('Auth', () => {
         setupReadline('some-token');
         doSetupAuth(pack);
 
-        await executeFetch(pack, 'https://example.com/some-blob.jpg', {result: 'hello'}, 'StoreBlob');
+        await executeFetch(pack, 'https://example.com/some-blob.jpg', Buffer.from('adf'), 'StoreBlob');
 
         sinon.assert.calledOnceWithExactly(mockMakeRequest, {
           body: undefined,
@@ -893,6 +909,7 @@ describe('Auth', () => {
           headers: {Authorization: 'Bearer some-token', 'User-Agent': 'Coda-Test-Server-Fetcher'},
           method: 'GET',
           url: 'https://example.com/some-blob.jpg',
+          isBinaryResponse: true,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth, opts)));
@@ -948,6 +965,7 @@ describe('Auth', () => {
           },
           method: 'GET',
           url: 'https://example.com',
+          isBinaryResponse: undefined,
         });
 
         sinon.assert.calledOnceWithMatch(fakeLaunchOAuthServerFlow, {
@@ -988,6 +1006,7 @@ describe('Auth', () => {
           },
           method: 'GET',
           url: 'https://example.com',
+          isBinaryResponse: undefined,
         });
 
         sinon.assert.calledOnceWithMatch(fakeLaunchOAuthServerFlow, {

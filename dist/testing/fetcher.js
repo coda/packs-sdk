@@ -37,6 +37,7 @@ class AuthenticatingFetcher {
             response = await exports.requestHelper.makeRequest({
                 url,
                 method: request.method,
+                isBinaryResponse: request.isBinaryResponse,
                 headers: {
                     ...headers,
                     'User-Agent': FetcherUserAgent,

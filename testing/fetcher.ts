@@ -71,6 +71,7 @@ export class AuthenticatingFetcher implements Fetcher {
       response = await requestHelper.makeRequest({
         url,
         method: request.method,
+        isBinaryResponse: request.isBinaryResponse,
         headers: {
           ...headers,
           'User-Agent': FetcherUserAgent,
@@ -105,6 +106,7 @@ export class AuthenticatingFetcher implements Fetcher {
     }
 
     let responseBody = response.body;
+
     if (responseBody && responseBody.length >= MaxContentLengthBytes) {
       throw new Error(`Response body is too large for Coda. Body is ${responseBody.length} bytes.`);
     }
