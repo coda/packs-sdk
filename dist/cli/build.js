@@ -3,12 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.build = exports.handleBuild = void 0;
 const compile_1 = require("../testing/compile");
 const helpers_1 = require("../testing/helpers");
-async function handleBuild({ outputDir, manifestFile, minify, timers }) {
+async function handleBuild({ bundleFilename, intermediateOutputDirectory: intermediateOutputDirectoryInput, outputDir, manifestFile, minify, timers, }) {
     const { bundlePath, intermediateOutputDirectory } = await compile_1.compilePackBundle({
         manifestPath: manifestFile,
         minify,
         outputDirectory: outputDir,
         enableTimers: timers,
+        bundleFilename,
+        intermediateOutputDirectory: intermediateOutputDirectoryInput,
     });
     if (outputDir) {
         helpers_1.print(`Pack built successfully. Compiled output is in ${bundlePath}. Intermediate files are in ${intermediateOutputDirectory}`);

@@ -60,16 +60,17 @@ compile-isolated-vm:
 		else echo "isolated-vm version matches, skipping."; \
 	fi
 
+.PHONY: compile-thunk
+compile-thunk:
+	${ROOTDIR}/node_modules/.bin/ts-node cli/coda.ts build ./runtime/thunk/thunk.ts -o ${ROOTDIR}/bundles --bundleFilename thunk_bundle.js --intermediateOutputDirectory ./_thunk_build
+	rm -rf ./_thunk_build
+	# copy it to dist/ to make it available after packaging.
+	mkdir -p ${ROOTDIR}/dist/bundles/ && cp ${ROOTDIR}/bundles/thunk_bundle.js* ${ROOTDIR}/dist/bundles/
+
 .PHONY: compile
 compile:
 	${ROOTDIR}/node_modules/.bin/tsc
-	${ROOTDIR}/node_modules/.bin/esbuild ${ROOTDIR}/runtime/thunk/thunk.ts \
-		--bundle \
-		--outfile=${ROOTDIR}/bundles/thunk_bundle.js \
-		--format=cjs \
-		--banner:js="'use strict';"
-	# copy it to dist/ to make it available after packaging.
-	mkdir -p ${ROOTDIR}/dist/bundles/ && cp ${ROOTDIR}/bundles/thunk_bundle.js ${ROOTDIR}/dist/bundles/thunk_bundle.js
+	$(MAKE) compile-thunk
 	${ROOTDIR}/node_modules/.bin/esbuild ${ROOTDIR}/index.ts \
 		--bundle \
 		--outfile=${ROOTDIR}/dist/bundle.js \

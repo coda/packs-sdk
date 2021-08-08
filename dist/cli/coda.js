@@ -90,6 +90,14 @@ if (require.main === module) {
                 alias: 'o',
                 default: undefined,
             },
+            intermediateOutputDirectory: {
+                string: true,
+                default: undefined,
+            },
+            bundleFilename: {
+                string: true,
+                default: undefined,
+            },
             minify: {
                 boolean: true,
                 default: true,

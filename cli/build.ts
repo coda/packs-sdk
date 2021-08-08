@@ -7,14 +7,25 @@ interface BuildArgs {
   outputDir?: string;
   minify: boolean;
   timers: boolean;
+  bundleFilename?: string;
+  intermediateOutputDirectory?: string;
 }
 
-export async function handleBuild({outputDir, manifestFile, minify, timers}: Arguments<BuildArgs>) {
+export async function handleBuild({
+  bundleFilename,
+  intermediateOutputDirectory: intermediateOutputDirectoryInput,
+  outputDir,
+  manifestFile,
+  minify,
+  timers,
+}: Arguments<BuildArgs>) {
   const {bundlePath, intermediateOutputDirectory} = await compilePackBundle({
     manifestPath: manifestFile,
     minify,
     outputDirectory: outputDir,
     enableTimers: timers,
+    bundleFilename,
+    intermediateOutputDirectory: intermediateOutputDirectoryInput,
   });
   if (outputDir) {
     print(
