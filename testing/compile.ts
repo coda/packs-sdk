@@ -120,9 +120,12 @@ async function buildWithES({
     format: 'cjs',
     platform: 'node',
 
-    inject: enableTimers
-      ? [`${__dirname}/injections/timers_shim.js`]
-      : [`${__dirname}/injections/timers_disabled_shim.js`],
+    inject:
+      enableTimers === undefined
+        ? []
+        : enableTimers
+        ? [`${__dirname}/injections/timers_shim.js`]
+        : [`${__dirname}/injections/timers_disabled_shim.js`],
     minify: false, // don't minify here since browserify doesn't minify anyway.
     sourcemap: 'both',
   };
@@ -136,7 +139,7 @@ export async function compilePackBundle({
   manifestPath,
   minify = true,
   intermediateOutputDirectory,
-  enableTimers = false,
+  enableTimers,
 }: CompilePackBundleOptions): Promise<CompilePackBundleResult> {
   const esbuildBundleFilename = 'esbuild-bundle.js';
   const browserifyBundleFilename = 'browserify-bundle.js';
