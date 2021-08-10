@@ -88,16 +88,18 @@ async function buildWithES({ lastBundleFilename, outputBundleFilename, options: 
         outfile: outputBundleFilename,
         format: 'cjs',
         platform: 'node',
-        inject: enableTimers
-            ? [`${__dirname}/injections/timers_shim.js`]
-            : [`${__dirname}/injections/timers_disabled_shim.js`],
+        inject: enableTimers === undefined
+            ? []
+            : enableTimers
+                ? [`${__dirname}/injections/timers_shim.js`]
+                : [`${__dirname}/injections/timers_disabled_shim.js`],
         minify: false,
         sourcemap: 'both',
     };
     await esbuild.build(options);
 }
 async function compilePackBundle({ bundleFilename = 'bundle.js', // the output bundle filename
-outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, enableTimers = false, }) {
+outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, enableTimers, }) {
     const esbuildBundleFilename = 'esbuild-bundle.js';
     const browserifyBundleFilename = 'browserify-bundle.js';
     const browserifyWithShimBundleFilename = 'browserify-with-shim-bundle.js';
