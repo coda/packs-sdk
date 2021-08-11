@@ -1,4 +1,5 @@
 import browserify from 'browserify';
+import {ensureUnreachable} from '../helpers/ensure';
 import * as esbuild from 'esbuild';
 import exorcist from 'exorcist';
 import fs from 'fs';
@@ -16,7 +17,13 @@ export interface CompilePackBundleOptions {
   intermediateOutputDirectory?: string;
   sourceMap?: boolean;
   minify?: boolean;
-  enableTimers?: boolean;
+  timerStrategy?: TimerShimStrategy;
+}
+
+export enum TimerShimStrategy {
+  Disable = 'disable',
+  Error = 'error',
+  Fake = 'fake',
 }
 
 export interface CompilePackBundleResult {
@@ -103,10 +110,23 @@ async function uglifyBundle({
   fs.writeFileSync(`${outputBundleFilename}.map`, uglifyOutput.map);
 }
 
+function getInjections({timerStrategy = TimerShimStrategy.Disable}: CompilePackBundleOptions) {
+  switch (timerStrategy) {
+    case TimerShimStrategy.Disable:
+      return [];
+    case TimerShimStrategy.Fake:
+      return [`${__dirname}/injections/timers_shim.js`];
+    case TimerShimStrategy.Error:
+      return [`${__dirname}/injections/timers_disabled_shim.js`];
+    default:
+      ensureUnreachable(timerStrategy);
+  }
+}
+
 async function buildWithES({
   lastBundleFilename,
   outputBundleFilename,
-  options: {enableTimers},
+  options: buildOptions,
 }: {
   lastBundleFilename: string;
   outputBundleFilename: string;
@@ -120,12 +140,7 @@ async function buildWithES({
     format: 'cjs',
     platform: 'node',
 
-    inject:
-      enableTimers === undefined
-        ? []
-        : enableTimers
-        ? [`${__dirname}/injections/timers_shim.js`]
-        : [`${__dirname}/injections/timers_disabled_shim.js`],
+    inject: getInjections(buildOptions),
     minify: false, // don't minify here since browserify doesn't minify anyway.
     sourcemap: 'both',
   };
@@ -139,7 +154,7 @@ export async function compilePackBundle({
   manifestPath,
   minify = true,
   intermediateOutputDirectory,
-  enableTimers,
+  timerStrategy = TimerShimStrategy.Disable,
 }: CompilePackBundleOptions): Promise<CompilePackBundleResult> {
   const esbuildBundleFilename = 'esbuild-bundle.js';
   const browserifyBundleFilename = 'browserify-bundle.js';
@@ -156,7 +171,7 @@ export async function compilePackBundle({
     manifestPath,
     minify,
     intermediateOutputDirectory,
-    enableTimers,
+    timerStrategy,
   };
 
   const buildChain: Array<{builder: BuildFunction; outputFilename: string}> = [

@@ -1,4 +1,5 @@
 import type { Arguments } from 'yargs';
+import type { TimerShimStrategy } from '../testing/compile';
 export interface ExecuteArgs {
     manifestPath: string;
     formulaName: string;
@@ -6,6 +7,6 @@ export interface ExecuteArgs {
     fetch?: boolean;
     vm?: boolean;
     dynamicUrl?: string;
-    timers: boolean;
+    timerStrategy: TimerShimStrategy;
 }
-export declare function handleExecute({ manifestPath, formulaName, params, fetch, vm, dynamicUrl, timers, }: Arguments<ExecuteArgs>): Promise<void>;
+export declare function handleExecute({ manifestPath, formulaName, params, fetch, vm, dynamicUrl, timerStrategy, }: Arguments<ExecuteArgs>): Promise<void>;
