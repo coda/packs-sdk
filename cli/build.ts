@@ -1,4 +1,5 @@
 import type {Arguments} from 'yargs';
+import type {TimerShimStrategy} from '../testing/compile';
 import {compilePackBundle} from '../testing/compile';
 import {print} from '../testing/helpers';
 
@@ -6,15 +7,15 @@ interface BuildArgs {
   manifestFile: string;
   outputDir?: string;
   minify: boolean;
-  timers: boolean;
+  timerStrategy: TimerShimStrategy;
 }
 
-export async function handleBuild({outputDir, manifestFile, minify, timers}: Arguments<BuildArgs>) {
+export async function handleBuild({outputDir, manifestFile, minify, timerStrategy}: Arguments<BuildArgs>) {
   const {bundlePath, intermediateOutputDirectory} = await compilePackBundle({
     manifestPath: manifestFile,
     minify,
     outputDirectory: outputDir,
-    enableTimers: timers,
+    timerStrategy,
   });
   if (outputDir) {
     print(

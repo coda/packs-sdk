@@ -6,6 +6,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_storage_1 = require("./config_storage");
 const auth_1 = require("../testing/auth");
+const compile_1 = require("../testing/compile");
 const auth_2 = require("./auth");
 const build_1 = require("./build");
 const create_1 = require("./create");
@@ -37,10 +38,10 @@ if (require.main === module) {
                 string: true,
                 desc: 'For a dynamic sync table with a variable source location, specify the URL to test here.',
             },
-            timers: {
-                boolean: true,
-                default: false,
-                desc: 'Set to true to enable timer methods in the build. i.e. setTimeout',
+            timerStrategy: {
+                string: true,
+                default: compile_1.TimerShimStrategy.None,
+                desc: 'Options: none, error, fake.',
             },
         },
     })
@@ -94,10 +95,10 @@ if (require.main === module) {
                 boolean: true,
                 default: true,
             },
-            timers: {
-                boolean: true,
-                default: false,
-                desc: 'Set to true to enable timer methods in the build. i.e. setTimeout',
+            timerStrategy: {
+                string: true,
+                default: compile_1.TimerShimStrategy.None,
+                desc: 'Options: none, error, fake.',
             },
         },
         handler: build_1.handleBuild,

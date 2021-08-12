@@ -1,4 +1,5 @@
 import type {Arguments} from 'yargs';
+import type {TimerShimStrategy} from '../testing/compile';
 import {compilePackBundle} from '../testing/compile';
 import {executeFormulaOrSyncFromCLI} from '../testing/execution';
 import {importManifest} from './helpers';
@@ -11,7 +12,7 @@ export interface ExecuteArgs {
   fetch?: boolean;
   vm?: boolean;
   dynamicUrl?: string;
-  timers: boolean;
+  timerStrategy: TimerShimStrategy;
 }
 
 export async function handleExecute({
@@ -21,13 +22,13 @@ export async function handleExecute({
   fetch,
   vm,
   dynamicUrl,
-  timers,
+  timerStrategy,
 }: Arguments<ExecuteArgs>) {
   const fullManifestPath = makeManifestFullPath(manifestPath);
   const {bundlePath, bundleSourceMapPath} = await compilePackBundle({
     manifestPath: fullManifestPath,
     minify: false,
-    enableTimers: timers,
+    timerStrategy,
   });
   const manifest = await importManifest(bundlePath);
   await executeFormulaOrSyncFromCLI({

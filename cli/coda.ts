@@ -2,6 +2,7 @@
 
 import {DEFAULT_API_ENDPOINT} from './config_storage';
 import {DEFAULT_OAUTH_SERVER_PORT} from '../testing/auth';
+import {TimerShimStrategy} from '../testing/compile';
 import {handleAuth} from './auth';
 import {handleBuild} from './build';
 import {handleCreate} from './create';
@@ -34,10 +35,10 @@ if (require.main === module) {
           string: true,
           desc: 'For a dynamic sync table with a variable source location, specify the URL to test here.',
         },
-        timers: {
-          boolean: true,
-          default: false,
-          desc: 'Set to true to enable timer methods in the build. i.e. setTimeout',
+        timerStrategy: {
+          string: true,
+          default: TimerShimStrategy.None,
+          desc: 'Options: none, error, fake.',
         },
       },
     })
@@ -92,10 +93,10 @@ if (require.main === module) {
           boolean: true,
           default: true,
         },
-        timers: {
-          boolean: true,
-          default: false,
-          desc: 'Set to true to enable timer methods in the build. i.e. setTimeout',
+        timerStrategy: {
+          string: true,
+          default: TimerShimStrategy.None,
+          desc: 'Options: none, error, fake.',
         },
       },
       handler: handleBuild,
