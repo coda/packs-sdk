@@ -38,6 +38,7 @@ function compileExamples() {
       throw new Error(`${example.sdkReferencePath} is not a valid path`);
     }
     return {
+      name: example.name,
       triggerTokens: example.triggerTokens,
       sdkReferencePath: example.sdkReferencePath,
       content,

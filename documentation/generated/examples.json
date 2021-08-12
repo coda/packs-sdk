@@ -1,10 +1,11 @@
 [
   {
+    "name": "addColumnFormat()",
     "triggerTokens": [
       "addColumnFormat"
     ],
     "sdkReferencePath": "/classes/PackDefinitionBuilder.html#addColumnFormat",
-    "content": "A **column format** is a custom column type that you apply to any column in any Coda table. A column format& tells Coda to interpret the value in a cell by executing a **formula** using that value, typically looking up data related to that value from a third-party API. For example, the Weather pack has a column format `Current Weather`; when applied to a column, if you type a city or address into a cell in that column, that location will be used an input to a formula that fetches the current weather at that location, and the resulting object with weather info will be shown in the cell.",
+    "content": "A **column format** is a custom column type that you apply to any column in any Coda table. A column format& tells Coda to interpret the value in a cell by executing a **formula** using that value, typically looking up data related to that value from a third-party API.\n\nFor example, the Weather pack has a column format `Current Weather`; when applied to a column, if you type a city or address into a cell in that column, that location will be used an input to a formula that fetches the current weather at that location, and the resulting object with weather info will be shown in the cell.",
     "exampleSnippets": [
       {
         "name": "Column Format with No Matchers",
@@ -14,6 +15,7 @@
     ]
   },
   {
+    "name": "Authentication",
     "triggerTokens": [
       "setSystemAuthentication",
       "setUserAuthentication"
@@ -34,6 +36,7 @@
     ]
   },
   {
+    "name": "addDynmaicSyncTable()",
     "triggerTokens": [
       "addDynamicSyncTable"
     ],
@@ -48,6 +51,7 @@
     ]
   },
   {
+    "name": "addFormula()",
     "triggerTokens": [
       "addFormula"
     ],
@@ -62,6 +66,7 @@
     ]
   },
   {
+    "name": "addSyncTable()",
     "triggerTokens": [
       "addSyncTable"
     ],

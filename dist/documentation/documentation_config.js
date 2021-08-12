@@ -125,6 +125,7 @@ exports.Snippets = [
 ];
 exports.Examples = [
     {
+        name: 'addColumnFormat()',
         triggerTokens: ['addColumnFormat'],
         contentFile: './examples/column-format/column_format.md',
         sdkReferencePath: '/classes/PackDefinitionBuilder.html#addColumnFormat',
@@ -137,6 +138,7 @@ exports.Examples = [
         ],
     },
     {
+        name: 'Authentication',
         triggerTokens: ['setSystemAuthentication', 'setUserAuthentication'],
         contentFile: './examples/authentication/authentication.md',
         sdkReferencePath: '/classes/PackDefinitionBuilder.html#setSystemAuthentication',
@@ -154,6 +156,7 @@ exports.Examples = [
         ],
     },
     {
+        name: 'addDynmaicSyncTable()',
         triggerTokens: ['addDynamicSyncTable'],
         contentFile: './examples/dynamic-sync-table/dynamic_sync_table.md',
         sdkReferencePath: '/classes/PackDefinitionBuilder.html#addDynamicSyncTable',
@@ -166,6 +169,7 @@ exports.Examples = [
         ],
     },
     {
+        name: 'addFormula()',
         triggerTokens: ['addFormula'],
         contentFile: './examples/formula/formula.md',
         sdkReferencePath: '/classes/PackDefinitionBuilder.html#addFormula',
@@ -178,6 +182,7 @@ exports.Examples = [
         ],
     },
     {
+        name: 'addSyncTable()',
         triggerTokens: ['addSyncTable'],
         contentFile: './examples/sync-table/sync_table.md',
         sdkReferencePath: '/classes/PackDefinitionBuilder.html#addSyncTable',
