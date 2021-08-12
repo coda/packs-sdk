@@ -3,6 +3,7 @@ import type { FetchRequest } from '../../api_types';
 import type { FetchResponse } from '../../api_types';
 import type { Fetcher } from '../../api_types';
 import type { FormulaSpecification } from '../types';
+import type { InvocationLocation } from '../../api_types';
 import type { Isolate } from 'isolated-vm';
 import type { Logger } from '../../api_types';
 import type { PackFormulaResult } from '../../api_types';
@@ -40,12 +41,13 @@ export declare function executeThunk<T extends FormulaSpecification>(context: Co
 /**
  * Injects the ExecutionContext object, including stubs for network calls, into the isolate.
  */
-export declare function injectExecutionContext({ context, fetcher, temporaryBlobStorage, logger, endpoint, timezone, invocationToken, sync, }: {
+export declare function injectExecutionContext({ context, fetcher, temporaryBlobStorage, logger, endpoint, invocationLocation, timezone, invocationToken, sync, }: {
     context: Context;
     fetcher: Fetcher;
     temporaryBlobStorage: TemporaryBlobStorage;
     logger: Logger;
     endpoint?: string;
+    invocationLocation: InvocationLocation;
     timezone: string;
     invocationToken?: string;
     sync?: Sync;

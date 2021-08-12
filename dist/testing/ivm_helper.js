@@ -44,6 +44,7 @@ async function setupIvmContext(bundlePath, executionContext) {
         temporaryBlobStorage: executionContext.temporaryBlobStorage,
         logger: console,
         endpoint: executionContext.endpoint,
+        invocationLocation: executionContext.invocationLocation,
         timezone: executionContext.timezone,
         invocationToken: executionContext.invocationToken,
         sync: executionContext.sync,
