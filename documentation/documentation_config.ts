@@ -119,7 +119,7 @@ export const Snippets: AutocompleteSnippet[] = [
   },
   {
     triggerTokens: ['makeObjectSchema', 'addObjectSchema', 'ObjectSchema'],
-    content: 'Makes an object Schema.',
+    content: 'Creates an object schema definition.',
     codeFile: './snippets/object_schema.ts',
   },
 ];

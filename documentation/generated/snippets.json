@@ -213,7 +213,7 @@
       "addObjectSchema",
       "ObjectSchema"
     ],
-    "content": "Makes an object Schema.",
+    "content": "Creates an object schema definition.",
     "code": "coda.makeObjectSchema({\n  type: coda.ValueType.Object,\n  id: '<objectId>',\n  primary: '<displayName>',\n  properties: {\n    // objectId: {type: coda.ValueType.Number},\n    // displayName: {type: coda.ValueType.String},\n  },\n});"
   }
 ]
