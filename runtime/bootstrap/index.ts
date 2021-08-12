@@ -3,6 +3,7 @@ import type {FetchRequest} from '../../api_types';
 import type {FetchResponse} from '../../api_types';
 import type {Fetcher} from '../../api_types';
 import type {FormulaSpecification} from '../types';
+import type {InvocationLocation} from '../../api_types';
 import type {Isolate} from 'isolated-vm';
 import type {Logger} from '../../api_types';
 import type {PackFormulaResult} from '../../api_types';
@@ -180,6 +181,7 @@ export async function injectExecutionContext({
   temporaryBlobStorage,
   logger,
   endpoint,
+  invocationLocation,
   timezone,
   invocationToken,
   sync,
@@ -189,6 +191,7 @@ export async function injectExecutionContext({
   temporaryBlobStorage: TemporaryBlobStorage;
   logger: Logger;
   endpoint?: string;
+  invocationLocation: InvocationLocation;
   timezone: string;
   invocationToken?: string;
   sync?: Sync;
@@ -199,11 +202,7 @@ export async function injectExecutionContext({
     temporaryBlobStorage: {},
     logger: {},
     endpoint,
-    invocationLocation: {
-      // TODO(huayang): protocolAndHost needs to be set to base url of the executing environment.
-      // it should be injected in the IVM setup.
-      protocolAndHost: 'https://coda.io',
-    },
+    invocationLocation,
     timezone,
     invocationToken,
     sync,

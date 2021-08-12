@@ -328,15 +328,17 @@ export interface Logger {
   error(message: string, ...args: LoggerParamType[]): void;
 }
 
+export interface InvocationLocation {
+  protocolAndHost: string;
+  docId?: string;
+}
+
 export interface ExecutionContext {
   readonly fetcher: Fetcher;
   readonly temporaryBlobStorage: TemporaryBlobStorage;
   readonly logger: Logger;
   readonly endpoint?: string;
-  readonly invocationLocation: {
-    protocolAndHost: string;
-    docId?: string;
-  };
+  readonly invocationLocation: InvocationLocation;
   readonly timezone: string;
   // An arbitrary token scoped to only this request invocation.readonly.
   // Used for things like naming template parameters that will be replaced
