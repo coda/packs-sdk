@@ -8,7 +8,7 @@ export interface CompilePackBundleOptions {
     timerStrategy?: TimerShimStrategy;
 }
 export declare enum TimerShimStrategy {
-    Disable = "disable",
+    None = "none",
     Error = "error",
     Fake = "fake"
 }

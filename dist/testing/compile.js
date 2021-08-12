@@ -36,7 +36,7 @@ const uglify_js_1 = __importDefault(require("uglify-js"));
 const uuid_1 = require("uuid");
 var TimerShimStrategy;
 (function (TimerShimStrategy) {
-    TimerShimStrategy["Disable"] = "disable";
+    TimerShimStrategy["None"] = "none";
     TimerShimStrategy["Error"] = "error";
     TimerShimStrategy["Fake"] = "fake";
 })(TimerShimStrategy = exports.TimerShimStrategy || (exports.TimerShimStrategy = {}));
@@ -87,9 +87,9 @@ async function uglifyBundle({ lastBundleFilename, outputBundleFilename, }) {
     fs_1.default.writeFileSync(outputBundleFilename, uglifyOutput.code);
     fs_1.default.writeFileSync(`${outputBundleFilename}.map`, uglifyOutput.map);
 }
-function getInjections({ timerStrategy = TimerShimStrategy.Disable }) {
+function getInjections({ timerStrategy = TimerShimStrategy.None }) {
     switch (timerStrategy) {
-        case TimerShimStrategy.Disable:
+        case TimerShimStrategy.None:
             return [];
         case TimerShimStrategy.Fake:
             return [`${__dirname}/injections/timers_shim.js`];
@@ -114,7 +114,7 @@ async function buildWithES({ lastBundleFilename, outputBundleFilename, options: 
     await esbuild.build(options);
 }
 async function compilePackBundle({ bundleFilename = 'bundle.js', // the output bundle filename
-outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, timerStrategy = TimerShimStrategy.Disable, }) {
+outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, timerStrategy = TimerShimStrategy.None, }) {
     const esbuildBundleFilename = 'esbuild-bundle.js';
     const browserifyBundleFilename = 'browserify-bundle.js';
     const browserifyWithShimBundleFilename = 'browserify-with-shim-bundle.js';

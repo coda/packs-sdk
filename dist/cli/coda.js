@@ -40,8 +40,8 @@ if (require.main === module) {
             },
             timerStrategy: {
                 string: true,
-                default: compile_1.TimerShimStrategy.Disable,
-                desc: 'Options: disable, error, fake.',
+                default: compile_1.TimerShimStrategy.None,
+                desc: 'Options: none, error, fake.',
             },
         },
     })
@@ -97,8 +97,8 @@ if (require.main === module) {
             },
             timerStrategy: {
                 string: true,
-                default: compile_1.TimerShimStrategy.Disable,
-                desc: 'Options: disable, error, fake.',
+                default: compile_1.TimerShimStrategy.None,
+                desc: 'Options: none, error, fake.',
             },
         },
         handler: build_1.handleBuild,

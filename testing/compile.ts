@@ -21,7 +21,7 @@ export interface CompilePackBundleOptions {
 }
 
 export enum TimerShimStrategy {
-  Disable = 'disable',
+  None = 'none',
   Error = 'error',
   Fake = 'fake',
 }
@@ -110,9 +110,9 @@ async function uglifyBundle({
   fs.writeFileSync(`${outputBundleFilename}.map`, uglifyOutput.map);
 }
 
-function getInjections({timerStrategy = TimerShimStrategy.Disable}: CompilePackBundleOptions) {
+function getInjections({timerStrategy = TimerShimStrategy.None}: CompilePackBundleOptions) {
   switch (timerStrategy) {
-    case TimerShimStrategy.Disable:
+    case TimerShimStrategy.None:
       return [];
     case TimerShimStrategy.Fake:
       return [`${__dirname}/injections/timers_shim.js`];
@@ -154,7 +154,7 @@ export async function compilePackBundle({
   manifestPath,
   minify = true,
   intermediateOutputDirectory,
-  timerStrategy = TimerShimStrategy.Disable,
+  timerStrategy = TimerShimStrategy.None,
 }: CompilePackBundleOptions): Promise<CompilePackBundleResult> {
   const esbuildBundleFilename = 'esbuild-bundle.js';
   const browserifyBundleFilename = 'browserify-bundle.js';
