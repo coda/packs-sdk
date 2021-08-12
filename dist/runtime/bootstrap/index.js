@@ -124,18 +124,14 @@ exports.executeThunk = executeThunk;
 /**
  * Injects the ExecutionContext object, including stubs for network calls, into the isolate.
  */
-async function injectExecutionContext({ context, fetcher, temporaryBlobStorage, logger, endpoint, timezone, invocationToken, sync, }) {
+async function injectExecutionContext({ context, fetcher, temporaryBlobStorage, logger, endpoint, invocationLocation, timezone, invocationToken, sync, }) {
     // Inject all of the primitives into a global we'll access when we execute the pack function.
     const executionContextPrimitives = {
         fetcher: {},
         temporaryBlobStorage: {},
         logger: {},
         endpoint,
-        invocationLocation: {
-            // TODO(huayang): protocolAndHost needs to be set to base url of the executing environment.
-            // it should be injected in the IVM setup.
-            protocolAndHost: 'https://coda.io',
-        },
+        invocationLocation,
         timezone,
         invocationToken,
         sync,

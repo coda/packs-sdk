@@ -442,15 +442,16 @@ export interface Logger {
 	warn(message: string, ...args: LoggerParamType[]): void;
 	error(message: string, ...args: LoggerParamType[]): void;
 }
+export interface InvocationLocation {
+	protocolAndHost: string;
+	docId?: string;
+}
 export interface ExecutionContext {
 	readonly fetcher: Fetcher;
 	readonly temporaryBlobStorage: TemporaryBlobStorage;
 	readonly logger: Logger;
 	readonly endpoint?: string;
-	readonly invocationLocation: {
-		protocolAndHost: string;
-		docId?: string;
-	};
+	readonly invocationLocation: InvocationLocation;
 	readonly timezone: string;
 	readonly invocationToken: string;
 	readonly sync?: Sync;
