@@ -117,6 +117,11 @@ exports.Snippets = [
         content: 'Adds a dynamic sync table.',
         codeFile: './snippets/dynamic_sync_table.ts',
     },
+    {
+        triggerTokens: ['makeObjectSchema', 'addObjectSchema', 'ObjectSchema'],
+        content: 'Makes an object Schema.',
+        codeFile: './snippets/object_schema.ts',
+    },
 ];
 exports.Examples = [
     {
