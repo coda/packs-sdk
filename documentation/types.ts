@@ -24,6 +24,7 @@ export interface CompiledExampleSnippet {
 }
 
 export interface Example {
+  name: string;
   triggerTokens: string[];
   sdkReferencePath: string;
   contentFile: string;
@@ -31,6 +32,7 @@ export interface Example {
 }
 
 export interface CompiledExample {
+  name: string;
   triggerTokens: string[];
   sdkReferencePath: string;
   content: string;

@@ -19,12 +19,14 @@ export interface CompiledExampleSnippet {
     code: string;
 }
 export interface Example {
+    name: string;
     triggerTokens: string[];
     sdkReferencePath: string;
     contentFile: string;
     exampleSnippets: ExampleSnippet[];
 }
 export interface CompiledExample {
+    name: string;
     triggerTokens: string[];
     sdkReferencePath: string;
     content: string;
