@@ -156,7 +156,7 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
       switch (schema.codaType) {
         case ValueHintType.Attachment:
         case ValueHintType.Embed:
-        case ValueHintType.Image:
+        case ValueHintType.ImageReference:
         case ValueHintType.ImageAttachment:
         case ValueHintType.Url:
           const urlErrorMessage = tryParseUrl(result, schema);
