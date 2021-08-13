@@ -34,13 +34,14 @@ var ValueHintType;
     ValueHintType["Person"] = "person";
     ValueHintType["Percent"] = "percent";
     ValueHintType["Currency"] = "currency";
-    ValueHintType["Image"] = "image";
+    // TODO(spencer): change value to reflect new enum name and update ImageAttachment to Image
+    ValueHintType["ImageReference"] = "image";
+    ValueHintType["ImageAttachment"] = "imageAttachment";
     ValueHintType["Url"] = "url";
     ValueHintType["Markdown"] = "markdown";
     ValueHintType["Html"] = "html";
     ValueHintType["Embed"] = "embed";
     ValueHintType["Reference"] = "reference";
-    ValueHintType["ImageAttachment"] = "imageAttachment";
     ValueHintType["Attachment"] = "attachment";
     ValueHintType["Slider"] = "slider";
     ValueHintType["Scale"] = "scale";
@@ -53,7 +54,7 @@ exports.StringHintValueTypes = [
     ValueHintType.Duration,
     ValueHintType.Embed,
     ValueHintType.Html,
-    ValueHintType.Image,
+    ValueHintType.ImageReference,
     ValueHintType.ImageAttachment,
     ValueHintType.Markdown,
     ValueHintType.Url,
