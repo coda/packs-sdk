@@ -34,7 +34,6 @@ var ValueHintType;
     ValueHintType["Person"] = "person";
     ValueHintType["Percent"] = "percent";
     ValueHintType["Currency"] = "currency";
-    // TODO(spencer): change value to reflect new enum name and update ImageAttachment to Image
     ValueHintType["ImageReference"] = "image";
     ValueHintType["ImageAttachment"] = "imageAttachment";
     ValueHintType["Url"] = "url";
