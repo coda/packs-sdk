@@ -66,6 +66,7 @@ compile:
 	${ROOTDIR}/node_modules/.bin/esbuild ${ROOTDIR}/runtime/thunk/thunk.ts \
 		--bundle \
 		--outfile=${ROOTDIR}/bundles/thunk_bundle.js \
+		--inject:${ROOTDIR}/testing/injections/buffer_shim.js \
 		--format=cjs \
 		--banner:js="'use strict';"
 	# copy it to dist/ to make it available after packaging.
