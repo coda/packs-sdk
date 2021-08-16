@@ -31,7 +31,6 @@ export enum ValueHintType {
   Person = 'person',
   Percent = 'percent',
   Currency = 'currency',
-  // TODO(spencer): change value to reflect new enum name and update ImageAttachment to Image
   ImageReference = 'image',
   ImageAttachment = 'imageAttachment',
   Url = 'url',
