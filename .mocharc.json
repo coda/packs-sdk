@@ -9,6 +9,7 @@
   "reporter": "dot",
   "slow": 75,
   "timeout": 10000,
+  "globals": ["crypto"],
   "require": [
     "ts-node/register",
     "test/bootstrap.ts"

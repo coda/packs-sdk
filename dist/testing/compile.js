@@ -87,7 +87,7 @@ async function uglifyBundle({ lastBundleFilename, outputBundleFilename, }) {
     fs_1.default.writeFileSync(outputBundleFilename, uglifyOutput.code);
     fs_1.default.writeFileSync(`${outputBundleFilename}.map`, uglifyOutput.map);
 }
-function getInjections({ timerStrategy = TimerShimStrategy.None }) {
+function getTimerShims(timerStrategy) {
     switch (timerStrategy) {
         case TimerShimStrategy.None:
             return [];
@@ -98,6 +98,10 @@ function getInjections({ timerStrategy = TimerShimStrategy.None }) {
         default:
             ensure_1.ensureUnreachable(timerStrategy);
     }
+}
+function getInjections({ timerStrategy = TimerShimStrategy.None }) {
+    const shims = [...getTimerShims(timerStrategy), `${__dirname}/injections/crypto_shim.js`];
+    return shims;
 }
 async function buildWithES({ lastBundleFilename, outputBundleFilename, options: buildOptions, }) {
     const options = {
