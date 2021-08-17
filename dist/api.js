@@ -41,7 +41,7 @@ class StatusCodeError extends Error {
         this.statusCode = statusCode;
         this.body = body;
         this.options = options;
-        let responseBody = response.body;
+        let responseBody = response === null || response === void 0 ? void 0 : response.body;
         if (typeof responseBody === 'object') {
             // "request-promise"'s error.response.body is always the original, unparsed response body,
             // while our fetcher service may attempt a JSON.parse for any response body and alter the behavior.
