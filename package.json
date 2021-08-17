@@ -74,11 +74,20 @@
     "eslint-plugin-ban": "^1.5.2",
     "eslint-plugin-filenames": "^1.3.2",
     "eslint-plugin-local": "^1.0.0",
+    "husky": "^7.0.1",
     "mocha": "^9.0.3",
     "mock-fs": "^5.0.0",
     "ts-loader": "^9.2.4",
     "ts-node": "^10.1.0",
     "typedoc": "^0.21.5"
+  },
+  "scripts": {
+    "postinstall": "husky install"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pre-commit-hook"
+    }
   },
   "resolutions": {
     "marked": "^2.0.0"

@@ -134,3 +134,10 @@ validate-no-changes: compile
 .PHONY: npm-publish
 npm-publish:
 	npm publish --tag alpha --tag latest --access public
+
+.PHONY: pre-commit-hook
+pre-commit-hook:
+	if [[ ! -z "${shell git diff HEAD -- docs | grep -E '^\+' | grep 'https://github.com/kr-project/'}" ]]; then \
+		echo "Please avoid the legacy https://github.com/kr-project/ in generated docs. This is usually because you have an old entry in git remote -v"; \
+		exit 1; \
+	fi
