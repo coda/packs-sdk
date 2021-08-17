@@ -4461,7 +4461,11 @@ var StatusCodeError = class extends Error {
     this.statusCode = statusCode;
     this.body = body;
     this.options = options;
-    this.response = response;
+    let responseBody = response == null ? void 0 : response.body;
+    if (typeof responseBody === "object") {
+      responseBody = JSON.stringify(responseBody);
+    }
+    this.response = { ...response, body: responseBody };
   }
 };
 function isDynamicSyncTable(syncTable) {

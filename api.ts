@@ -80,7 +80,16 @@ export class StatusCodeError extends Error {
     this.statusCode = statusCode;
     this.body = body;
     this.options = options;
-    this.response = response;
+
+    let responseBody = response?.body;
+    if (typeof responseBody === 'object') {
+      // "request-promise"'s error.response.body is always the original, unparsed response body,
+      // while our fetcher service may attempt a JSON.parse for any response body and alter the behavior.
+      // Here we attempt to restore the original response body for a few v1 packs compatibility.
+      responseBody = JSON.stringify(responseBody);
+    }
+
+    this.response = {...response, body: responseBody};
   }
 }
 
