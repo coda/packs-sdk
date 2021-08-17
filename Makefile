@@ -93,7 +93,7 @@ generated-documentation:
 
 .PHONY: typedoc
 typedoc:
-	${ROOTDIR}/node_modules/.bin/typedoc index.ts --out ${ROOTDIR}/docs --excludeExternals --excludePrivate --excludeProtected --gitRevision main
+	${ROOTDIR}/node_modules/.bin/typedoc index.ts --out ${ROOTDIR}/docs --excludeExternals --excludePrivate --excludeProtected --gitRevision --gitRemote main
 
 .PHONY: docs
 docs: generated-documentation typedoc
