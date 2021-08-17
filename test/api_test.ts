@@ -2,6 +2,7 @@ import './test_helper';
 import type {ArrayType} from '../api_types';
 import {ConnectionRequirement} from '../api_types';
 import {ParameterType} from '../api_types';
+import {StatusCodeError} from '../api';
 import type {Type} from '../api_types';
 import {ValueType} from '../schema';
 import {makeDynamicSyncTable} from '../api';
@@ -221,5 +222,11 @@ describe('API test', () => {
         ),
       });
     });
+  });
+
+  it('StatusCodeError response body should always be a string', () => {
+    const body = {};
+    const error = new StatusCodeError(400, body, {url: '', method: 'GET'}, {body, headers: {}});
+    assert.equal(error.response.body, '{}');
   });
 });
