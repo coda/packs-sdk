@@ -22,18 +22,18 @@ export declare enum ValueHintType {
     Person = "person",
     Percent = "percent",
     Currency = "currency",
-    Image = "image",
+    ImageReference = "image",
+    ImageAttachment = "imageAttachment",
     Url = "url",
     Markdown = "markdown",
     Html = "html",
     Embed = "embed",
     Reference = "reference",
-    ImageAttachment = "imageAttachment",
     Attachment = "attachment",
     Slider = "slider",
     Scale = "scale"
 }
-export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Embed, ValueHintType.Html, ValueHintType.Image, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url];
+export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url];
 export declare const NumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Percent, ValueHintType.Currency, ValueHintType.Slider, ValueHintType.Scale];
 export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference];
 export declare type StringHintTypes = typeof StringHintValueTypes[number];

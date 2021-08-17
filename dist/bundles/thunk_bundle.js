@@ -4391,13 +4391,13 @@ var ValueHintType;
   ValueHintType2["Person"] = "person";
   ValueHintType2["Percent"] = "percent";
   ValueHintType2["Currency"] = "currency";
-  ValueHintType2["Image"] = "image";
+  ValueHintType2["ImageReference"] = "image";
+  ValueHintType2["ImageAttachment"] = "imageAttachment";
   ValueHintType2["Url"] = "url";
   ValueHintType2["Markdown"] = "markdown";
   ValueHintType2["Html"] = "html";
   ValueHintType2["Embed"] = "embed";
   ValueHintType2["Reference"] = "reference";
-  ValueHintType2["ImageAttachment"] = "imageAttachment";
   ValueHintType2["Attachment"] = "attachment";
   ValueHintType2["Slider"] = "slider";
   ValueHintType2["Scale"] = "scale";
@@ -4410,7 +4410,7 @@ var StringHintValueTypes = [
   ValueHintType.Duration,
   ValueHintType.Embed,
   ValueHintType.Html,
-  ValueHintType.Image,
+  ValueHintType.ImageReference,
   ValueHintType.ImageAttachment,
   ValueHintType.Markdown,
   ValueHintType.Url
