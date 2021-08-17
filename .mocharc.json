@@ -8,7 +8,7 @@
   "recursive": true,
   "reporter": "dot",
   "slow": 75,
-  "timeout": 10000,
+  "timeout": 20000,
   "globals": ["crypto"],
   "require": [
     "ts-node/register",
