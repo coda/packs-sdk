@@ -230,7 +230,7 @@ export interface PackDefinition extends PackVersionDefinition {
     shortDescription: string;
     description: string;
     permissionsDescription?: string;
-    category: PackCategory;
+    category?: PackCategory;
     logoPath: string;
     enabledConfigName?: string;
     exampleImages?: string[];
