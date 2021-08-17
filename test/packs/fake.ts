@@ -8,6 +8,7 @@ import {makeObjectSchema} from '../../schema';
 import {makeStringFormula} from '../../api';
 import {makeStringParameter} from '../../api';
 import {makeSyncTable} from '../../api';
+import {v4} from 'uuid';
 import {withQueryParams} from '../../helpers/url';
 
 const fakePersonSchema = makeObjectSchema({
@@ -65,6 +66,16 @@ export const manifest: PackDefinition = createFakePack({
       execute: ([]) => {
         throwError();
         return false;
+      },
+    }),
+    makeFormula({
+      resultType: ValueType.String,
+      name: 'RandomId',
+      description: 'Returns a uuid.',
+      examples: [],
+      parameters: [],
+      execute: ([]) => {
+        return v4();
       },
     }),
   ],

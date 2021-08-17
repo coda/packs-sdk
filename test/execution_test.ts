@@ -373,4 +373,12 @@ describe('Execution', () => {
       ]);
     });
   });
+
+  it('works with uuid', async () => {
+    await executeFormulaFromPackDef(fakePack, 'RandomId', []);
+  });
+
+  it('works with uuid in VM', async () => {
+    await executeFormulaOrSyncWithVM({formulaName: 'RandomId', params: [], bundlePath});
+  });
 });
