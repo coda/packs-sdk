@@ -93,7 +93,7 @@ generated-documentation:
 
 .PHONY: typedoc
 typedoc:
-	if [ "${shell git config --get remote.origin.url}" != "git@github.com:coda/packs-sdk.git" ]; then \
+	if [ -z "${shell git config --get remote.origin.url | grep coda/packs-sdk}" ]; then \
 		echo "Please config your git origin to git@github.com:coda/packs-sdk.git"; \
 		exit 1; \
 	fi
