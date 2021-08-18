@@ -93,7 +93,11 @@ generated-documentation:
 
 .PHONY: typedoc
 typedoc:
-	${ROOTDIR}/node_modules/.bin/typedoc index.ts --out ${ROOTDIR}/docs --excludeExternals --excludePrivate --excludeProtected --gitRevision main
+	# add a typedoc remote in case some folks have a legacy origin pointing to kr-project.
+	if [[ -z "${shell git remote -v | grep typedoc}" ]]; then \
+		git remote add typedoc git@github.com:coda/packs-sdk.git; \
+	fi
+	${ROOTDIR}/node_modules/.bin/typedoc index.ts --out ${ROOTDIR}/docs --excludeExternals --excludePrivate --excludeProtected --gitRevision main --gitRemote typedoc
 
 .PHONY: docs
 docs: generated-documentation typedoc
