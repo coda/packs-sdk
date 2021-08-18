@@ -93,6 +93,10 @@ generated-documentation:
 
 .PHONY: typedoc
 typedoc:
+	if [ "${shell git config --get remote.origin.url}" != "git@github.com:coda/packs-sdk.git" ]; then \
+		echo "Please config your git origin to git@github.com:coda/packs-sdk.git"; \
+		exit 1; \
+	fi
 	${ROOTDIR}/node_modules/.bin/typedoc index.ts --out ${ROOTDIR}/docs --excludeExternals --excludePrivate --excludeProtected --gitRevision main
 
 .PHONY: docs
