@@ -338,7 +338,7 @@ function validateObject<ResultT extends Record<string, unknown>>(
     }
   }
 
-  if (schema.id && schema.id in result && !result[schema.id]) {
+  if (schema.id && schema.id in result && (result[schema.id] === null || result[schema.id] === undefined)) {
     errors.push({
       message: `Schema declares "${schema.id}" as an id property but an empty value was found in result.`,
     });
