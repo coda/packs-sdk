@@ -4458,6 +4458,7 @@ var import_url_parse = __toModule(require_url_parse());
 var StatusCodeError = class extends Error {
   constructor(statusCode, body, options, response) {
     super(`${statusCode} - ${body}`);
+    this.name = "StatusCodeError";
     this.statusCode = statusCode;
     this.body = body;
     this.options = options;
