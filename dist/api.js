@@ -38,6 +38,7 @@ exports.UserVisibleError = UserVisibleError;
 class StatusCodeError extends Error {
     constructor(statusCode, body, options, response) {
         super(`${statusCode} - ${body}`);
+        this.name = 'StatusCodeError';
         this.statusCode = statusCode;
         this.body = body;
         this.options = options;

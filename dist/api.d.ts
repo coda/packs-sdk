@@ -50,6 +50,7 @@ interface StatusCodeErrorResponse {
  * StatusCodeError is a simple version of StatusCodeError in request-promise to keep backwards compatibility.
  */
 export declare class StatusCodeError extends Error {
+    name: string;
     statusCode: number;
     body: any;
     options: FetchRequest;
