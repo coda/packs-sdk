@@ -455,6 +455,20 @@ describe('Pack metadata Validation', () => {
           },
         ]);
       });
+
+      it('invalid formula with duplicate params', async () => {
+        const metadata = makeMetadataFromParams([
+          makeParameter({type: ParameterType.String, name: 'p1', description: ''}),
+          makeParameter({type: ParameterType.String, name: 'p1', description: ''}),
+        ]);
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Parameter names must be unique. Found duplicate name "p1".',
+            path: 'formulas[0].parameters',
+          },
+        ]);
+      });
     });
 
     describe('sync tables', () => {
