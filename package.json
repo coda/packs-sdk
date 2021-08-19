@@ -60,7 +60,7 @@
     "@types/request-promise-native": "^1.0.18",
     "@types/sha.js": "^2.4.0",
     "@types/uglify-js": "^3.13.1",
-    "@types/url-parse": "^1.4.3",
+    "@types/url-parse": "^1.4.4",
     "@types/uuid": "^8.3.1",
     "@types/xml2js": "^0.4.9",
     "@types/yargs": "^17.0.2",
