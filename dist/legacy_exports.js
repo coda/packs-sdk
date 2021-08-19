@@ -1,0 +1,37 @@
+"use strict";
+// Exports of things that used to be in index.ts that are now deprecated as part of SDK
+// simplification and will likely be removed in the future.
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.makeSyncTableLegacy = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeStringFormula = exports.makeObjectFormula = exports.makeNumericFormula = void 0;
+var api_1 = require("./api");
+Object.defineProperty(exports, "makeNumericFormula", { enumerable: true, get: function () { return api_1.makeNumericFormula; } });
+var api_2 = require("./api");
+Object.defineProperty(exports, "makeObjectFormula", { enumerable: true, get: function () { return api_2.makeObjectFormula; } });
+var api_3 = require("./api");
+Object.defineProperty(exports, "makeStringFormula", { enumerable: true, get: function () { return api_3.makeStringFormula; } });
+var api_4 = require("./api");
+Object.defineProperty(exports, "makeBooleanParameter", { enumerable: true, get: function () { return api_4.makeBooleanParameter; } });
+var api_5 = require("./api");
+Object.defineProperty(exports, "makeBooleanArrayParameter", { enumerable: true, get: function () { return api_5.makeBooleanArrayParameter; } });
+var api_6 = require("./api");
+Object.defineProperty(exports, "makeDateParameter", { enumerable: true, get: function () { return api_6.makeDateParameter; } });
+var api_7 = require("./api");
+Object.defineProperty(exports, "makeDateArrayParameter", { enumerable: true, get: function () { return api_7.makeDateArrayParameter; } });
+var api_8 = require("./api");
+Object.defineProperty(exports, "makeNumericParameter", { enumerable: true, get: function () { return api_8.makeNumericParameter; } });
+var api_9 = require("./api");
+Object.defineProperty(exports, "makeNumericArrayParameter", { enumerable: true, get: function () { return api_9.makeNumericArrayParameter; } });
+var api_10 = require("./api");
+Object.defineProperty(exports, "makeHtmlParameter", { enumerable: true, get: function () { return api_10.makeHtmlParameter; } });
+var api_11 = require("./api");
+Object.defineProperty(exports, "makeHtmlArrayParameter", { enumerable: true, get: function () { return api_11.makeHtmlArrayParameter; } });
+var api_12 = require("./api");
+Object.defineProperty(exports, "makeImageParameter", { enumerable: true, get: function () { return api_12.makeImageParameter; } });
+var api_13 = require("./api");
+Object.defineProperty(exports, "makeImageArrayParameter", { enumerable: true, get: function () { return api_13.makeImageArrayParameter; } });
+var api_14 = require("./api");
+Object.defineProperty(exports, "makeStringParameter", { enumerable: true, get: function () { return api_14.makeStringParameter; } });
+var api_15 = require("./api");
+Object.defineProperty(exports, "makeStringArrayParameter", { enumerable: true, get: function () { return api_15.makeStringArrayParameter; } });
+var api_16 = require("./api");
+Object.defineProperty(exports, "makeSyncTableLegacy", { enumerable: true, get: function () { return api_16.makeSyncTableLegacy; } });

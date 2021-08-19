@@ -4457,7 +4457,7 @@ var import_url_parse = __toModule(require_url_parse());
 // api.ts
 var StatusCodeError = class extends Error {
   constructor(statusCode, body, options, response) {
-    super(`${statusCode} - ${body}`);
+    super(`${statusCode} - ${JSON.stringify(body)}`);
     this.name = "StatusCodeError";
     this.statusCode = statusCode;
     this.body = body;
@@ -4785,23 +4785,27 @@ function doFindAndExecutePackFunction(params, formulaSpec, manifest, executionCo
         case MetadataFormulaType.SyncGetSchema:
           if (syncTables) {
             const syncTable = syncTables.find((table) => table.name === formulaSpec.syncTableName);
-            if (syncTable && isDynamicSyncTable(syncTable)) {
+            if (syncTable) {
               let formula;
-              switch (formulaSpec.metadataFormulaType) {
-                case MetadataFormulaType.SyncListDynamicUrls:
-                  formula = syncTable.listDynamicUrls;
-                  break;
-                case MetadataFormulaType.SyncGetDisplayUrl:
-                  formula = syncTable.getDisplayUrl;
-                  break;
-                case MetadataFormulaType.SyncGetTableName:
-                  formula = syncTable.getName;
-                  break;
-                case MetadataFormulaType.SyncGetSchema:
-                  formula = syncTable.getSchema;
-                  break;
-                default:
-                  return ensureSwitchUnreachable(formulaSpec);
+              if (isDynamicSyncTable(syncTable)) {
+                switch (formulaSpec.metadataFormulaType) {
+                  case MetadataFormulaType.SyncListDynamicUrls:
+                    formula = syncTable.listDynamicUrls;
+                    break;
+                  case MetadataFormulaType.SyncGetDisplayUrl:
+                    formula = syncTable.getDisplayUrl;
+                    break;
+                  case MetadataFormulaType.SyncGetTableName:
+                    formula = syncTable.getName;
+                    break;
+                  case MetadataFormulaType.SyncGetSchema:
+                    formula = syncTable.getSchema;
+                    break;
+                  default:
+                    return ensureSwitchUnreachable(formulaSpec);
+                }
+              } else if (formulaSpec.metadataFormulaType === MetadataFormulaType.SyncGetSchema) {
+                formula = syncTable.getSchema;
               }
               if (formula) {
                 return formula.execute(params, executionContext);
