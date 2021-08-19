@@ -37,7 +37,7 @@ exports.UserVisibleError = UserVisibleError;
  */
 class StatusCodeError extends Error {
     constructor(statusCode, body, options, response) {
-        super(`${statusCode} - ${JSON.stringify(body)}`);
+        super(`Fetch failed with status code: ${statusCode}`);
         this.name = 'StatusCodeError';
         this.statusCode = statusCode;
         this.body = body;

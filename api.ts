@@ -77,7 +77,7 @@ export class StatusCodeError extends Error {
   options: FetchRequest;
   response: StatusCodeErrorResponse;
   constructor(statusCode: number, body: any, options: FetchRequest, response: StatusCodeErrorResponse) {
-    super(`${statusCode} - ${JSON.stringify(body)}`);
+    super(`Fetch failed with status code: ${statusCode}`);
     this.statusCode = statusCode;
     this.body = body;
     this.options = options;
