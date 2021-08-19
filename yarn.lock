@@ -2267,10 +2267,10 @@ isexe@^2.0.0:
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha1-6PvzdNxVb/iUehDcsFctYz8s+hA=
 
-isolated-vm@^4.3.3:
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/isolated-vm/-/isolated-vm-4.3.3.tgz#eb36f306a39bbbcf64431c1f10e6f0d0202e95e7"
-  integrity sha512-ri9H2WBFOh8Xl2NhVlxMuX+hbk5oLqjrO/2KkFaJkahr10LYeYp2uAHclPEVeQW/1t3ZS5a8PnjoD5nIkWEK5Q==
+isolated-vm@^4.3.4:
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/isolated-vm/-/isolated-vm-4.3.4.tgz#440ac14d37281081c9d36b7d47be852a4b1cc963"
+  integrity sha512-CIBELONcKmfnYrALeIah2VxZQ2Ezv4SNOKyThPzGjKsKG4XAbkcQmiqGP9cDm9fbwh2KaD+SCfdIX1Vzg6F3kw==
 
 isomorphic-fetch@^3.0.0:
   version "3.0.0"
