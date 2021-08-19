@@ -4457,7 +4457,7 @@ var import_url_parse = __toModule(require_url_parse());
 // api.ts
 var StatusCodeError = class extends Error {
   constructor(statusCode, body, options, response) {
-    super(`Fetch failed with status code: ${statusCode}`);
+    super(`Fetch failed with status code: ${statusCode} - ${JSON.stringify(body, null, 4)}`);
     this.name = "StatusCodeError";
     this.statusCode = statusCode;
     this.body = body;
