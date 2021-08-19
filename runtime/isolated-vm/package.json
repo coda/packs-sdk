@@ -1,27 +1,27 @@
 {
-  "_from": "isolated-vm@4.3.3",
-  "_id": "isolated-vm@4.3.3",
+  "_from": "isolated-vm@4.3.4",
+  "_id": "isolated-vm@4.3.4",
   "_inBundle": false,
-  "_integrity": "sha512-ri9H2WBFOh8Xl2NhVlxMuX+hbk5oLqjrO/2KkFaJkahr10LYeYp2uAHclPEVeQW/1t3ZS5a8PnjoD5nIkWEK5Q==",
+  "_integrity": "sha512-CIBELONcKmfnYrALeIah2VxZQ2Ezv4SNOKyThPzGjKsKG4XAbkcQmiqGP9cDm9fbwh2KaD+SCfdIX1Vzg6F3kw==",
   "_location": "/isolated-vm",
   "_phantomChildren": {},
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "isolated-vm@4.3.3",
+    "raw": "isolated-vm@4.3.4",
     "name": "isolated-vm",
     "escapedName": "isolated-vm",
-    "rawSpec": "4.3.3",
+    "rawSpec": "4.3.4",
     "saveSpec": null,
-    "fetchSpec": "4.3.3"
+    "fetchSpec": "4.3.4"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/isolated-vm/-/isolated-vm-4.3.3.tgz",
-  "_shasum": "eb36f306a39bbbcf64431c1f10e6f0d0202e95e7",
-  "_spec": "isolated-vm@4.3.3",
+  "_resolved": "https://registry.npmjs.org/isolated-vm/-/isolated-vm-4.3.4.tgz",
+  "_shasum": "440ac14d37281081c9d36b7d47be852a4b1cc963",
+  "_spec": "isolated-vm@4.3.4",
   "_where": "/var/task",
   "author": {
     "name": "https://github.com/laverdet/"
@@ -54,5 +54,5 @@
     "test": "node test.js || nodejs test.js"
   },
   "types": "isolated-vm.d.ts",
-  "version": "4.3.3"
+  "version": "4.3.4"
 }
