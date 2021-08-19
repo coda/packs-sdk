@@ -77,23 +77,30 @@ function doFindAndExecutePackFunction(params, formulaSpec, manifest, executionCo
                 case types_3.MetadataFormulaType.SyncGetSchema:
                     if (syncTables) {
                         const syncTable = syncTables.find(table => table.name === formulaSpec.syncTableName);
-                        if (syncTable && api_2.isDynamicSyncTable(syncTable)) {
+                        if (syncTable) {
                             let formula;
-                            switch (formulaSpec.metadataFormulaType) {
-                                case types_3.MetadataFormulaType.SyncListDynamicUrls:
-                                    formula = syncTable.listDynamicUrls;
-                                    break;
-                                case types_3.MetadataFormulaType.SyncGetDisplayUrl:
-                                    formula = syncTable.getDisplayUrl;
-                                    break;
-                                case types_3.MetadataFormulaType.SyncGetTableName:
-                                    formula = syncTable.getName;
-                                    break;
-                                case types_3.MetadataFormulaType.SyncGetSchema:
-                                    formula = syncTable.getSchema;
-                                    break;
-                                default:
-                                    return ensureSwitchUnreachable(formulaSpec);
+                            if (api_2.isDynamicSyncTable(syncTable)) {
+                                switch (formulaSpec.metadataFormulaType) {
+                                    case types_3.MetadataFormulaType.SyncListDynamicUrls:
+                                        formula = syncTable.listDynamicUrls;
+                                        break;
+                                    case types_3.MetadataFormulaType.SyncGetDisplayUrl:
+                                        formula = syncTable.getDisplayUrl;
+                                        break;
+                                    case types_3.MetadataFormulaType.SyncGetTableName:
+                                        formula = syncTable.getName;
+                                        break;
+                                    case types_3.MetadataFormulaType.SyncGetSchema:
+                                        formula = syncTable.getSchema;
+                                        break;
+                                    default:
+                                        return ensureSwitchUnreachable(formulaSpec);
+                                }
+                            }
+                            else if (formulaSpec.metadataFormulaType === types_3.MetadataFormulaType.SyncGetSchema) {
+                                // Certain sync tables (Jira Issues, canonically) are not "dynamic" but have a getSchema formula
+                                // in order to augment a static base schema with dynamic properties.
+                                formula = syncTable.getSchema;
                             }
                             if (formula) {
                                 return formula.execute(params, executionContext);
