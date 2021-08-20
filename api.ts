@@ -69,17 +69,24 @@ interface StatusCodeErrorResponse {
 
 /**
  * StatusCodeError is a simple version of StatusCodeError in request-promise to keep backwards compatibility.
+ * This tries to replicate its exact structure, massaging as necessary to handle the various transforms
+ * in our stack.
+ *
+ * https://github.com/request/promise-core/blob/master/lib/errors.js#L22
  */
 export class StatusCodeError extends Error {
   override name: string = 'StatusCodeError';
   statusCode: number;
   body: any;
+  error: any;
   options: FetchRequest;
   response: StatusCodeErrorResponse;
+
   constructor(statusCode: number, body: any, options: FetchRequest, response: StatusCodeErrorResponse) {
-    super(`Fetch failed with status code: ${statusCode} - ${JSON.stringify(body, null, 4)}`);
+    super(`${statusCode} - ${JSON.stringify(body)}`);
     this.statusCode = statusCode;
     this.body = body;
+    this.error = body;
     this.options = options;
 
     let responseBody = response?.body;
