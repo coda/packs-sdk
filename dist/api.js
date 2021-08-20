@@ -34,13 +34,18 @@ class UserVisibleError extends Error {
 exports.UserVisibleError = UserVisibleError;
 /**
  * StatusCodeError is a simple version of StatusCodeError in request-promise to keep backwards compatibility.
+ * This tries to replicate its exact structure, massaging as necessary to handle the various transforms
+ * in our stack.
+ *
+ * https://github.com/request/promise-core/blob/master/lib/errors.js#L22
  */
 class StatusCodeError extends Error {
     constructor(statusCode, body, options, response) {
-        super(`Fetch failed with status code: ${statusCode} - ${JSON.stringify(body, null, 4)}`);
+        super(`${statusCode} - ${JSON.stringify(body)}`);
         this.name = 'StatusCodeError';
         this.statusCode = statusCode;
         this.body = body;
+        this.error = body;
         this.options = options;
         let responseBody = response === null || response === void 0 ? void 0 : response.body;
         if (typeof responseBody === 'object') {
