@@ -7,5 +7,7 @@ interface BuildArgs {
     timerStrategy: TimerShimStrategy;
 }
 export declare function handleBuild({ outputDir, manifestFile, minify, timerStrategy }: Arguments<BuildArgs>): Promise<void>;
-export declare function build(manifestFile: string): Promise<string>;
+export declare function build(manifestFile: string, { timerStrategy }?: {
+    timerStrategy?: TimerShimStrategy;
+}): Promise<string>;
 export {};

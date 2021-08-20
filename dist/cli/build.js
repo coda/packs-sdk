@@ -18,9 +18,10 @@ async function handleBuild({ outputDir, manifestFile, minify, timerStrategy }) {
     }
 }
 exports.handleBuild = handleBuild;
-async function build(manifestFile) {
+async function build(manifestFile, { timerStrategy } = {}) {
     const { bundlePath } = await compile_1.compilePackBundle({
         manifestPath: manifestFile,
+        timerStrategy,
     });
     return bundlePath;
 }

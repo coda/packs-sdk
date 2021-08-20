@@ -26,9 +26,13 @@ export async function handleBuild({outputDir, manifestFile, minify, timerStrateg
   }
 }
 
-export async function build(manifestFile: string): Promise<string> {
+export async function build(
+  manifestFile: string,
+  {timerStrategy}: {timerStrategy?: TimerShimStrategy} = {},
+): Promise<string> {
   const {bundlePath} = await compilePackBundle({
     manifestPath: manifestFile,
+    timerStrategy,
   });
 
   return bundlePath;

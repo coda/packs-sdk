@@ -3,6 +3,7 @@ import {AuthenticationType} from '../types';
 import type {Formula} from '../api';
 import type {ResponseHandlerTemplate} from '../handler_templates';
 import type {Schema} from '../schema';
+import {TimerShimStrategy} from '../testing/compile';
 import {ValueType} from '../schema';
 import {assertCondition} from '../helpers/ensure';
 import {build as buildBundle} from '../cli/build';
@@ -28,7 +29,7 @@ describe('Execution', () => {
   let bundlePath: string;
 
   before(async () => {
-    bundlePath = await buildBundle(`${__dirname}/packs/fake`);
+    bundlePath = await buildBundle(`${__dirname}/packs/fake`, {timerStrategy: TimerShimStrategy.Fake});
   });
 
   it('executes a formula by name', async () => {
@@ -62,6 +63,15 @@ describe('Execution', () => {
       bundlePath,
     });
     assert.deepEqual(result, {result: [{Name: 'Alice'}, {Name: 'Bob'}], continuation: {page: 2}});
+  });
+
+  it('exercises timer shim in VM', async () => {
+    const result = await executeFormulaOrSyncWithVM({
+      formulaName: 'Timer',
+      params: [1],
+      bundlePath,
+    });
+    assert.equal(result, 1);
   });
 
   describe('execution errors', () => {
