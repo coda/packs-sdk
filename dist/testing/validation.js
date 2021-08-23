@@ -295,7 +295,7 @@ function validateObject(result, schema, context) {
             errors.push(...propertyLevelErrors);
         }
     }
-    if (schema.id && schema.id in result && (result[schema.id] === null || result[schema.id] === undefined)) {
+    if (schema.id && schema.id in result && !objectUtils.isDefined(result[schema.id])) {
         errors.push({
             message: `Schema declares "${schema.id}" as an id property but an empty value was found in result.`,
         });
