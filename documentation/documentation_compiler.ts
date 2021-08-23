@@ -12,7 +12,7 @@ const CodeBegin = '// BEGIN\n';
 const BaseDir = path.join(__dirname, '..');
 const DocumentationRoot = path.join(BaseDir, 'documentation');
 const TypeDocsRoot = path.join(BaseDir, 'docs');
-const EmbededSnippetsRoot = path.join(TypeDocsRoot, 'embedded-snippets');
+const EmbeddedSnippetsRoot = path.join(TypeDocsRoot, 'embedded-snippets');
 
 function main() {
   compileAutocompleteSnippets();
@@ -77,11 +77,11 @@ function compileExampleSnippetEmbed(exampleSnippet: ExampleSnippet) {
   const exampleSnippetEmbed = snippetEmbedTemplate.replace(/DEFAULT TEXT/, getCodeFile(exampleSnippet.codeFile));
   const snippetFileName = path.basename(exampleSnippet.codeFile).split('.')[0];
 
-  if (!fs.existsSync(EmbededSnippetsRoot)) {
-    fs.mkdirSync(EmbededSnippetsRoot);
+  if (!fs.existsSync(EmbeddedSnippetsRoot)) {
+    fs.mkdirSync(EmbeddedSnippetsRoot);
   }
 
-  fs.writeFileSync(path.join(EmbededSnippetsRoot, `${snippetFileName}.html`), exampleSnippetEmbed);
+  fs.writeFileSync(path.join(EmbeddedSnippetsRoot, `${snippetFileName}.html`), exampleSnippetEmbed);
 }
 
 function isValidReferencePath(sdkReferencePath: string): boolean {
