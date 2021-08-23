@@ -1,0 +1,38 @@
+<div id="container" style="min-width: 600px; min-height: 300px"></div>
+
+<!-- Monaco library script is loaded from: https://cdnjs.com/libraries/monaco-editor-->
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs/loader.min.js"
+  integrity="sha512-SExj71Cw3B9C9EE8BC/ad3AKia5zQXDj/2SM4THgkeKh5GIFZhKM/R3uclUG8YZwJrjcVhydAlIHmfNvsBCKZA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script>
+  require.config({
+    paths: {
+      vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs',
+    },
+  });
+
+  require(['vs/editor/editor.main'], function () {
+    var editor = monaco.editor.create(document.getElementById('container'), {
+      value: `// Replace all <text> with your own text
+// A custom column type that you apply to any column in any Coda table.
+pack.addColumnFormat({
+  name: '<format name>',
+  formulaNamespace: '<the name of a formula in this pack>', // this will be deprecated
+  formulaName: '<the name of a formula to execute using the value in the column>',
+  instructions: '<instruction text that will be visible by Users>',
+  // Optional, regular expressions that detect urls that are handeable by this column format. When a
+  // user pastes a url that matches any of these, the UI will hint to the user that they can apply
+  // this format to their column.
+  matchers: [],
+});`,
+      language: 'javascript',
+      minimap: {enabled: false},
+      readOnly: true,
+      renderValidationDecorations: 'off',
+      wordWrap: 'on',
+    });
+  });
+</script>

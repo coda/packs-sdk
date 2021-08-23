@@ -1,0 +1,31 @@
+<div id="container" style="min-width: 600px; min-height: 300px"></div>
+
+<!-- Monaco library script is loaded from: https://cdnjs.com/libraries/monaco-editor-->
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs/loader.min.js"
+  integrity="sha512-SExj71Cw3B9C9EE8BC/ad3AKia5zQXDj/2SM4THgkeKh5GIFZhKM/R3uclUG8YZwJrjcVhydAlIHmfNvsBCKZA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script>
+  require.config({
+    paths: {
+      vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs',
+    },
+  });
+
+  require(['vs/editor/editor.main'], function () {
+    var editor = monaco.editor.create(document.getElementById('container'), {
+      value: `pack.setSystemAuthentication({
+  // Replace HeaderBearerToken with an authentication type.
+  // (Not all authentication types are available for system authentication.)
+  type: coda.AuthenticationType.HeaderBearerToken,
+});`,
+      language: 'javascript',
+      minimap: {enabled: false},
+      readOnly: true,
+      renderValidationDecorations: 'off',
+      wordWrap: 'on',
+    });
+  });
+</script>
