@@ -581,7 +581,19 @@ const formulaMetadataSchema = z.union([
   stringPackFormulaSchema,
   booleanPackFormulaSchema,
   objectPackFormulaSchema,
-]);
+]).superRefine((data, context) => {
+  const parameters = data.parameters as ParamDefs;
+  const varargParameters = data.varargParameters || [] as ParamDefs;
+  const paramNames = new Set();
+  for (const param of [...parameters, ...varargParameters]) {
+    if (paramNames.has(param.name)) {
+      context.addIssue({code: z.ZodIssueCode.custom,
+      path: ['parameters'],
+      message: `Parameter names must be unique. Found duplicate name "${param.name}".`})
+    }
+    paramNames.add(param.name);
+  }
+});
 
 const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   name: z.string(),
