@@ -411,6 +411,7 @@ const Base64ObjectRegex = /^[A-Za-z0-9=_-]+$/;
 function isValidObjectId(component) {
     return Base64ObjectRegex.test(component);
 }
+const BAD_PACK_IDS = [1090];
 // These sync tables already violate the object id constraints and should be cleaned up via upgrade.
 const BAD_SYNC_TABLE_NAMES = [
     'Pull Request',
@@ -421,7 +422,10 @@ const BAD_SYNC_TABLE_NAMES = [
     'Person Schema',
     'Doc Analytics',
 ];
-function isValidIdentityName(name) {
+function isValidIdentityName(packId, name) {
+    if (BAD_PACK_IDS.includes(packId)) {
+        return true;
+    }
     if (BAD_SYNC_TABLE_NAMES.includes(name)) {
         return true;
     }
@@ -440,15 +444,16 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
         // TODO(jonathan): Enable after existing packs go through the v2 upload flow.
         // packId: z.literal(PlaceholderIdentityPackId),
         packId: z.number().optional(),
-        name: z.string().nonempty().refine(isValidIdentityName, {
-            message: 'Invalid name. Identity names can only contain alphanumeric characters, underscores, and dashes, and no spaces.',
-        }),
+        name: z.string().nonempty(),
         dynamicUrl: z.string().optional(),
         attribution: z
             .array(z.union([textAttributionNodeSchema, linkAttributionNodeSchema, imageAttributionNodeSchema]))
             .optional(),
     }).optional(),
     properties: z.record(objectPropertyUnionSchema),
+})
+    .refine(data => { var _a; return isValidIdentityName(data.id, (_a = data.identity) === null || _a === void 0 ? void 0 : _a.name); }, {
+    message: 'Invalid name. Identity names can only contain alphanumeric characters, underscores, and dashes, and no spaces.',
 })
     .refine(data => object_utils_1.isNil(data.id) || data.id in data.properties, {
     message: 'The "id" property must appear as a key in the "properties" object.',
