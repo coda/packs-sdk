@@ -546,9 +546,15 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     }).optional(),
     properties: z.record(objectPropertyUnionSchema),
   })
-    .refine(data => isValidIdentityName(data.id, data.identity?.name as string), {
-      message:
-        'Invalid name. Identity names can only contain alphanumeric characters, underscores, and dashes, and no spaces.',
+    .superRefine((data, context) => {
+      if (!isValidIdentityName(data.id, data.identity?.name as string)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['identity', 'name'],
+          message:
+            'Invalid name. Identity names can only contain alphanumeric characters, underscores, and dashes, and no spaces.',
+        });
+      }
     })
     .refine(data => isNil(data.id) || data.id in data.properties, {
       message: 'The "id" property must appear as a key in the "properties" object.',
