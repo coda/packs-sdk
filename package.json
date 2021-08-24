@@ -78,7 +78,7 @@
     "mock-fs": "^5.0.0",
     "ts-loader": "^9.2.5",
     "ts-node": "^10.2.1",
-    "typedoc": "^0.21.5"
+    "typedoc": "^0.21.6"
   },
   "resolutions": {
     "marked": "^2.0.0"
