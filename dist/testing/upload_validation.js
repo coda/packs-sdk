@@ -411,7 +411,9 @@ const Base64ObjectRegex = /^[A-Za-z0-9=_-]+$/;
 function isValidObjectId(component) {
     return Base64ObjectRegex.test(component);
 }
-const BAD_PACK_IDS = [1090];
+const BAD_PACK_IDS = [
+    1090, // salesforce pack has a large number of dynamic identity ids that include empty spaces.
+];
 // These sync tables already violate the object id constraints and should be cleaned up via upgrade.
 const BAD_SYNC_TABLE_NAMES = [
     'Pull Request',
@@ -486,20 +488,19 @@ const objectPackFormulaSchema = zodCompleteObject({
     // schema for objects, but that doesn't seem like a use case we actually want to support.
     schema: z.union([genericObjectSchema, arrayPropertySchema]).optional(),
 });
-const formulaMetadataSchema = z.union([
-    numericPackFormulaSchema,
-    stringPackFormulaSchema,
-    booleanPackFormulaSchema,
-    objectPackFormulaSchema,
-]).superRefine((data, context) => {
+const formulaMetadataSchema = z
+    .union([numericPackFormulaSchema, stringPackFormulaSchema, booleanPackFormulaSchema, objectPackFormulaSchema])
+    .superRefine((data, context) => {
     const parameters = data.parameters;
     const varargParameters = data.varargParameters || [];
     const paramNames = new Set();
     for (const param of [...parameters, ...varargParameters]) {
         if (paramNames.has(param.name)) {
-            context.addIssue({ code: z.ZodIssueCode.custom,
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
                 path: ['parameters'],
-                message: `Parameter names must be unique. Found duplicate name "${param.name}".` });
+                message: `Parameter names must be unique. Found duplicate name "${param.name}".`,
+            });
         }
         paramNames.add(param.name);
     }

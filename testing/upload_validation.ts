@@ -498,7 +498,9 @@ function isValidObjectId(component: string): boolean {
   return Base64ObjectRegex.test(component);
 }
 
-const BAD_PACK_IDS = [1090];
+const BAD_PACK_IDS = [
+  1090, // salesforce pack has a large number of dynamic identity ids that include empty spaces.
+];
 
 // These sync tables already violate the object id constraints and should be cleaned up via upgrade.
 const BAD_SYNC_TABLE_NAMES = [
@@ -583,24 +585,23 @@ const objectPackFormulaSchema = zodCompleteObject<Omit<ObjectPackFormula<any, an
   schema: z.union([genericObjectSchema, arrayPropertySchema]).optional(),
 });
 
-const formulaMetadataSchema = z.union([
-  numericPackFormulaSchema,
-  stringPackFormulaSchema,
-  booleanPackFormulaSchema,
-  objectPackFormulaSchema,
-]).superRefine((data, context) => {
-  const parameters = data.parameters as ParamDefs;
-  const varargParameters = data.varargParameters || [] as ParamDefs;
-  const paramNames = new Set();
-  for (const param of [...parameters, ...varargParameters]) {
-    if (paramNames.has(param.name)) {
-      context.addIssue({code: z.ZodIssueCode.custom,
-      path: ['parameters'],
-      message: `Parameter names must be unique. Found duplicate name "${param.name}".`})
+const formulaMetadataSchema = z
+  .union([numericPackFormulaSchema, stringPackFormulaSchema, booleanPackFormulaSchema, objectPackFormulaSchema])
+  .superRefine((data, context) => {
+    const parameters = data.parameters as ParamDefs;
+    const varargParameters = data.varargParameters || ([] as ParamDefs);
+    const paramNames = new Set();
+    for (const param of [...parameters, ...varargParameters]) {
+      if (paramNames.has(param.name)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['parameters'],
+          message: `Parameter names must be unique. Found duplicate name "${param.name}".`,
+        });
+      }
+      paramNames.add(param.name);
     }
-    paramNames.add(param.name);
-  }
-});
+  });
 
 const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   name: z.string(),
