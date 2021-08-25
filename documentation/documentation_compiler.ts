@@ -11,6 +11,8 @@ const CodeBegin = '// BEGIN\n';
 const BaseDir = path.join(__dirname, '..');
 const DocumentationRoot = path.join(BaseDir, 'documentation');
 const TypeDocsRoot = path.join(BaseDir, 'docs');
+const EmbeddedSnippetsRoot = path.join(TypeDocsRoot, 'embedded-snippets');
+const SnippetEmbedTemplate = fs.readFileSync(path.join(DocumentationRoot, 'snippet_embed_template.html'), 'utf8');
 
 function main() {
   compileAutocompleteSnippets();
@@ -20,6 +22,7 @@ function main() {
 function compileAutocompleteSnippets() {
   const compiledSnippets: CompiledAutocompleteSnippet[] = Snippets.map(snippet => {
     const code = getCodeFile(snippet.codeFile);
+    compileSnippetEmbed(snippet.codeFile);
     return {
       triggerTokens: snippet.triggerTokens,
       content: snippet.content,
@@ -61,12 +64,24 @@ function getContentFile(file: string) {
 
 function compileExampleSnippets(example: Example): CompiledExampleSnippet[] {
   return example.exampleSnippets.map(exampleSnippet => {
+    compileSnippetEmbed(exampleSnippet.codeFile);
     return {
       name: exampleSnippet.name,
       content: exampleSnippet.content,
       code: getCodeFile(exampleSnippet.codeFile),
     };
   });
+}
+
+function compileSnippetEmbed(codeFile: string) {
+  const exampleSnippetEmbed = SnippetEmbedTemplate.replace(/{{CODE}}/, getCodeFile(codeFile));
+  const snippetFileName = path.basename(codeFile).split('.')[0];
+
+  if (!fs.existsSync(EmbeddedSnippetsRoot)) {
+    fs.mkdirSync(EmbeddedSnippetsRoot);
+  }
+
+  fs.writeFileSync(path.join(EmbeddedSnippetsRoot, `${snippetFileName}.html`), exampleSnippetEmbed);
 }
 
 function isValidReferencePath(sdkReferencePath: string): boolean {

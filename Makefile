@@ -100,7 +100,7 @@ typedoc:
 	${ROOTDIR}/node_modules/.bin/typedoc index.ts --out ${ROOTDIR}/docs --excludeExternals --excludePrivate --excludeProtected --gitRevision main
 
 .PHONY: docs
-docs: generated-documentation typedoc
+docs: typedoc generated-documentation
 
 .PHONY: view-docs
 view-docs: typedoc
