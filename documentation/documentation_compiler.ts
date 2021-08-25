@@ -2,7 +2,6 @@ import type {CompiledAutocompleteSnippet} from './types';
 import type {CompiledExample} from './types';
 import type {CompiledExampleSnippet} from './types';
 import type {Example} from './types';
-import type {ExampleSnippet} from './types';
 import {Examples} from './documentation_config';
 import {Snippets} from './documentation_config';
 import * as fs from 'fs';
@@ -23,6 +22,7 @@ function main() {
 function compileAutocompleteSnippets() {
   const compiledSnippets: CompiledAutocompleteSnippet[] = Snippets.map(snippet => {
     const code = getCodeFile(snippet.codeFile);
+    compileSnippetEmbed(snippet.codeFile);
     return {
       triggerTokens: snippet.triggerTokens,
       content: snippet.content,
@@ -64,7 +64,7 @@ function getContentFile(file: string) {
 
 function compileExampleSnippets(example: Example): CompiledExampleSnippet[] {
   return example.exampleSnippets.map(exampleSnippet => {
-    compileExampleSnippetEmbed(exampleSnippet);
+    compileSnippetEmbed(exampleSnippet.codeFile);
     return {
       name: exampleSnippet.name,
       content: exampleSnippet.content,
@@ -73,9 +73,9 @@ function compileExampleSnippets(example: Example): CompiledExampleSnippet[] {
   });
 }
 
-function compileExampleSnippetEmbed(exampleSnippet: ExampleSnippet) {
-  const exampleSnippetEmbed = SnippetEmbedTemplate.replace(/{{CODE}}/, getCodeFile(exampleSnippet.codeFile));
-  const snippetFileName = path.basename(exampleSnippet.codeFile).split('.')[0];
+function compileSnippetEmbed(codeFile: string) {
+  const exampleSnippetEmbed = SnippetEmbedTemplate.replace(/{{CODE}}/, getCodeFile(codeFile));
+  const snippetFileName = path.basename(codeFile).split('.')[0];
 
   if (!fs.existsSync(EmbeddedSnippetsRoot)) {
     fs.mkdirSync(EmbeddedSnippetsRoot);

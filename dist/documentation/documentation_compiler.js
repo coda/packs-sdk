@@ -39,6 +39,7 @@ function main() {
 function compileAutocompleteSnippets() {
     const compiledSnippets = documentation_config_2.Snippets.map(snippet => {
         const code = getCodeFile(snippet.codeFile);
+        compileSnippetEmbed(snippet.codeFile);
         return {
             triggerTokens: snippet.triggerTokens,
             content: snippet.content,
@@ -74,7 +75,7 @@ function getContentFile(file) {
 }
 function compileExampleSnippets(example) {
     return example.exampleSnippets.map(exampleSnippet => {
-        compileExampleSnippetEmbed(exampleSnippet);
+        compileSnippetEmbed(exampleSnippet.codeFile);
         return {
             name: exampleSnippet.name,
             content: exampleSnippet.content,
@@ -82,9 +83,9 @@ function compileExampleSnippets(example) {
         };
     });
 }
-function compileExampleSnippetEmbed(exampleSnippet) {
-    const exampleSnippetEmbed = SnippetEmbedTemplate.replace(/{{CODE}}/, getCodeFile(exampleSnippet.codeFile));
-    const snippetFileName = path_1.default.basename(exampleSnippet.codeFile).split('.')[0];
+function compileSnippetEmbed(codeFile) {
+    const exampleSnippetEmbed = SnippetEmbedTemplate.replace(/{{CODE}}/, getCodeFile(codeFile));
+    const snippetFileName = path_1.default.basename(codeFile).split('.')[0];
     if (!fs.existsSync(EmbeddedSnippetsRoot)) {
         fs.mkdirSync(EmbeddedSnippetsRoot);
     }
