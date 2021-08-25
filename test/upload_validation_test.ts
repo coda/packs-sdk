@@ -1619,8 +1619,14 @@ describe('Pack metadata Validation', () => {
         type: ValueType.Array,
         items: itemSchema,
       });
-      const result = validateSyncTableSchema(arraySchema);
-      assert.ok(result);
+      // Test an array schema
+      const arraySchemaResult = validateSyncTableSchema(arraySchema);
+      assert.ok(arraySchemaResult);
+      // Test an object schema
+      const objectSchemaResult = validateSyncTableSchema(itemSchema);
+      assert.ok(objectSchemaResult);
+      // It should be changed into an Array schema automatically.
+      assert.equal(objectSchemaResult.type, ValueType.Array);
     });
 
     it('fails', () => {
