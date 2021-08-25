@@ -498,12 +498,12 @@ function isValidObjectId(component: string): boolean {
   return Base64ObjectRegex.test(component);
 }
 
-const BAD_PACK_IDS = [
+const PackIdsWithBadSyncTableNames = [
   1090, // salesforce pack has a large number of dynamic identity ids that include empty spaces.
 ];
 
 // These sync tables already violate the object id constraints and should be cleaned up via upgrade.
-const BAD_SYNC_TABLE_NAMES = [
+const BadSyncTableNames = [
   'Pull Request',
   'Merge Request',
   'G Suite Directory User',
@@ -514,11 +514,11 @@ const BAD_SYNC_TABLE_NAMES = [
 ];
 
 function isValidIdentityName(packId: number, name: string): boolean {
-  if (BAD_PACK_IDS.includes(packId)) {
+  if (PackIdsWithBadSyncTableNames.includes(packId)) {
     return true;
   }
 
-  if (BAD_SYNC_TABLE_NAMES.includes(name)) {
+  if (BadSyncTableNames.includes(name)) {
     return true;
   }
   return isValidObjectId(name);
