@@ -958,6 +958,9 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
 	resultType: Type.string;
 };
 export declare type PackId = number;
+/**
+ * @deprecated
+ */
 export declare enum PackCategory {
 	CRM = "CRM",
 	Calendar = "Calendar",
@@ -977,25 +980,91 @@ export declare enum PackCategory {
 	Travel = "Travel",
 	Weather = "Weather"
 }
+/**
+ * Authentication types support by Coda Packs.
+ */
 export declare enum AuthenticationType {
+	/**
+	 * Indicates this pack does not use authentication. You may also omit an authentication declaration entirely.
+	 */
 	None = "None",
+	/**
+	 * Authenticate using an http header of the form `Authorization: Bearer <token>`.
+	 */
 	HeaderBearerToken = "HeaderBearerToken",
+	/**
+	 * Authenticate using an http header with a custom name and token prefix that you specify.
+	 */
 	CustomHeaderToken = "CustomHeaderToken",
+	/**
+	 * Authenticate using a token that is passed as a url parameter with each request, e.g.
+	 * https://example.com/api?paramName=token
+	 */
 	QueryParamToken = "QueryParamToken",
+	/**
+	 * Authenticate using multiple tokens, each passed as a different url parameter, e.g.
+	 * https://example.com/api?param1=token1&param2=token2
+	 */
 	MultiQueryParamToken = "MultiQueryParamToken",
+	/**
+	 * Authenticate using OAuth2. You must specify the authorization url, token exchange url, and
+	 * scopes here as part of the pack definition. You'll provide the application's client ID and
+	 * client secret in the pack management UI, so that these can be stored securely.
+	 *
+	 * The API must use a (largely) standards-compliant implementation of OAuth2.
+	 */
 	OAuth2 = "OAuth2",
+	/**
+	 * Authenticate using HTTP Basic authorization. The user provides a username and password
+	 * (sometimes optional) where included as an http header according to the Basic auth standard.
+	 *
+	 * See https://en.wikipedia.org/wiki/Basic_access_authentication
+	 */
 	WebBasic = "WebBasic",
+	/**
+	 * Authenticate with Amazon Web Services using AWS Signature Version 4.
+	 *
+	 * This is not yet supported.
+	 */
 	AWSSignature4 = "AWSSignature4",
+	/**
+	 * Authenticate using a Coda REST API token, sent as an http header.
+	 *
+	 * This is identical to {@link HeaderBearerToken} except the user wil be presented
+	 * with a UI to generate an API token rather than needing to paste an arbitrary API
+	 * token into a text input.
+	 *
+	 * This is primarily for use by Coda-authored packs, as it is only relevant for interacting with the
+	 * Coda REST API.
+	 */
 	CodaApiHeaderBearerToken = "CodaApiHeaderBearerToken",
+	/**
+	 * Only for use by Coda-authored packs.
+	 */
 	Various = "Various"
 }
+/**
+ * Ways in which a user account can be used with a doc.
+ */
 export declare enum DefaultConnectionType {
+	/**
+	 * An account can be used to invoke pack formulas by any user of a doc, but only
+	 * to retrieve data, not to take actions (i.e. push buttons).
+	 */
 	SharedDataOnly = 1,
+	/**
+	 * An account can be used by any user of a doc both to retrieve data and to take actions.
+	 */
 	Shared = 2,
+	/**
+	 * An account can only be used by the Coda user who set up the account, as their "private account"
+	 * for taking actions. Private, aka "proxy", accounts can only be used to take actions, and not
+	 * to retrieve data, because all users of a doc must be able to retrieve the same data.
+	 */
 	ProxyActionsOnly = 3
 }
 /**
- * A pack or formula which uses no authentication mechanism
+ * A pack or formula which does not use authentication..
  */
 export interface NoAuthentication {
 	type: AuthenticationType.None;
@@ -1013,10 +1082,29 @@ export declare type PostSetup = SetEndpoint;
 export interface BaseAuthentication {
 	getConnectionName?: MetadataFormula;
 	getConnectionUserId?: MetadataFormula;
+	/**
+	 * Indicates how a user's account is expected to be used by this pack, e.g. is this account
+	 * used for retrieving data, taking actions, or both.
+	 */
 	defaultConnectionType?: DefaultConnectionType;
+	/**
+	 * A link to a help article or other page with more instructions about how to set up an account for this pack.
+	 */
 	instructionsUrl?: string;
+	/**
+	 * Does this pack have a specific endpoint domain for each account, that is used as the basis of http requests?
+	 * For example, are API requests made to <custom-subdomain>.example.com rather than example.com?
+	 */
 	requiresEndpointUrl?: boolean;
+	/**
+	 * If this pack does require an account-specific endpoint domain, this is the root domain of all of those endpoints.
+	 * For example, this value would be "example.com" if specific endpoints looked like <custom-subdomain>.example.com.
+	 */
 	endpointDomain?: string;
+	/**
+	 * One or more setup steps to run after the user has set up the account, before completing installation of the pack.
+	 * This is not common.
+	 */
 	postSetup?: PostSetup[];
 }
 /**
@@ -1093,7 +1181,23 @@ export interface VariousAuthentication {
 }
 export declare type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSSignature4Authentication;
 export declare type AsAuthDef<T extends BaseAuthentication> = Omit<T, "getConnectionName" | "getConnectionUserId"> & {
+	/**
+	 * A function that is called when a user sets up a new account, that returns a name for
+	 * the account to label that account in the UI. The users credentials are applied to any
+	 * fetcher requests that this function makes. Typically, this function makes an API call
+	 * to an API's "who am I" endpoint and returns a username.
+	 *
+	 * If omitted, or if the function returns an empty value, the account will be labeled
+	 * with the creating user's Coda email address.
+	 */
 	getConnectionName?: MetadataFormulaDef;
+	/**
+	 * A function that is called when a user sets up a new account, that returns the id of
+	 * that account in the third-party system being called.
+	 *
+	 * This id is not yet subsequently exposed to pack developers and is mostly for Coda
+	 * internal use.
+	 */
 	getConnectionUserId?: MetadataFormulaDef;
 };
 export declare type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSSignature4Authentication>;
@@ -1147,6 +1251,10 @@ export interface RateLimits {
 	overall?: RateLimit;
 	perConnection?: RateLimit;
 }
+/**
+ * A pack definition without an author-defined semantic version, for use in the web
+ * editor where Coda will manage versioning on behalf of the pack author.
+ */
 export declare type BasicPackDefinition = Omit<PackVersionDefinition, "version">;
 /**
  * The definition of the contents of a Pack at a specific version. This is the

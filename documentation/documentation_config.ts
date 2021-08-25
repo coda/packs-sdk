@@ -157,7 +157,7 @@ export const Examples: Example[] = [
     ],
   },
   {
-    name: 'addDynmaicSyncTable()',
+    name: 'addDynamicSyncTable()',
     triggerTokens: ['addDynamicSyncTable'],
     contentFile: './examples/dynamic-sync-table/dynamic_sync_table.md',
     sdkReferencePath: '/classes/PackDefinitionBuilder.html#addDynamicSyncTable',

@@ -1,6 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.PostSetupType = exports.DefaultConnectionType = exports.AuthenticationType = exports.PackCategory = void 0;
+/**
+ * @deprecated
+ */
 var PackCategory;
 (function (PackCategory) {
     PackCategory["CRM"] = "CRM";
@@ -21,23 +24,89 @@ var PackCategory;
     PackCategory["Travel"] = "Travel";
     PackCategory["Weather"] = "Weather";
 })(PackCategory = exports.PackCategory || (exports.PackCategory = {}));
+/**
+ * Authentication types support by Coda Packs.
+ */
 var AuthenticationType;
 (function (AuthenticationType) {
+    /**
+     * Indicates this pack does not use authentication. You may also omit an authentication declaration entirely.
+     */
     AuthenticationType["None"] = "None";
+    /**
+     * Authenticate using an http header of the form `Authorization: Bearer <token>`.
+     */
     AuthenticationType["HeaderBearerToken"] = "HeaderBearerToken";
+    /**
+     * Authenticate using an http header with a custom name and token prefix that you specify.
+     */
     AuthenticationType["CustomHeaderToken"] = "CustomHeaderToken";
+    /**
+     * Authenticate using a token that is passed as a url parameter with each request, e.g.
+     * https://example.com/api?paramName=token
+     */
     AuthenticationType["QueryParamToken"] = "QueryParamToken";
+    /**
+     * Authenticate using multiple tokens, each passed as a different url parameter, e.g.
+     * https://example.com/api?param1=token1&param2=token2
+     */
     AuthenticationType["MultiQueryParamToken"] = "MultiQueryParamToken";
+    /**
+     * Authenticate using OAuth2. You must specify the authorization url, token exchange url, and
+     * scopes here as part of the pack definition. You'll provide the application's client ID and
+     * client secret in the pack management UI, so that these can be stored securely.
+     *
+     * The API must use a (largely) standards-compliant implementation of OAuth2.
+     */
     AuthenticationType["OAuth2"] = "OAuth2";
+    /**
+     * Authenticate using HTTP Basic authorization. The user provides a username and password
+     * (sometimes optional) where included as an http header according to the Basic auth standard.
+     *
+     * See https://en.wikipedia.org/wiki/Basic_access_authentication
+     */
     AuthenticationType["WebBasic"] = "WebBasic";
+    /**
+     * Authenticate with Amazon Web Services using AWS Signature Version 4.
+     *
+     * This is not yet supported.
+     */
     AuthenticationType["AWSSignature4"] = "AWSSignature4";
+    /**
+     * Authenticate using a Coda REST API token, sent as an http header.
+     *
+     * This is identical to {@link HeaderBearerToken} except the user wil be presented
+     * with a UI to generate an API token rather than needing to paste an arbitrary API
+     * token into a text input.
+     *
+     * This is primarily for use by Coda-authored packs, as it is only relevant for interacting with the
+     * Coda REST API.
+     */
     AuthenticationType["CodaApiHeaderBearerToken"] = "CodaApiHeaderBearerToken";
+    /**
+     * Only for use by Coda-authored packs.
+     */
     AuthenticationType["Various"] = "Various";
 })(AuthenticationType = exports.AuthenticationType || (exports.AuthenticationType = {}));
+/**
+ * Ways in which a user account can be used with a doc.
+ */
 var DefaultConnectionType;
 (function (DefaultConnectionType) {
+    /**
+     * An account can be used to invoke pack formulas by any user of a doc, but only
+     * to retrieve data, not to take actions (i.e. push buttons).
+     */
     DefaultConnectionType[DefaultConnectionType["SharedDataOnly"] = 1] = "SharedDataOnly";
+    /**
+     * An account can be used by any user of a doc both to retrieve data and to take actions.
+     */
     DefaultConnectionType[DefaultConnectionType["Shared"] = 2] = "Shared";
+    /**
+     * An account can only be used by the Coda user who set up the account, as their "private account"
+     * for taking actions. Private, aka "proxy", accounts can only be used to take actions, and not
+     * to retrieve data, because all users of a doc must be able to retrieve the same data.
+     */
     DefaultConnectionType[DefaultConnectionType["ProxyActionsOnly"] = 3] = "ProxyActionsOnly";
 })(DefaultConnectionType = exports.DefaultConnectionType || (exports.DefaultConnectionType = {}));
 var PostSetupType;

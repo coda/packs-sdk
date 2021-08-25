@@ -2,6 +2,8 @@
 export type {Authentication} from './types';
 export {AuthenticationType} from './types';
 export type {BasicPackDefinition} from './types';
+// TODO(jonathan): Stop default-exporting these enums that have to do with rate limits and quotas,
+// since those are only used by Coda-authored packs. We can import those privately.
 export {FeatureSet} from './types';
 export {DefaultConnectionType} from './types';
 export type {OAuth2Authentication} from './types';
