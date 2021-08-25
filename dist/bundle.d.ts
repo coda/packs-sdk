@@ -787,7 +787,7 @@ export declare type MetadataFormula = ObjectPackFormula<[
 	ParamDef<Type.string>
 ], any>;
 export declare type MetadataFormulaMetadata = Omit<MetadataFormula, "execute">;
-export declare type MetadataFunction = (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>;
+export declare type MetadataFunction = <K extends string, L extends string>(context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<K, L>>;
 export declare type MetadataFormulaDef = MetadataFormula | MetadataFunction;
 export declare function makeMetadataFormula(execute: MetadataFunction, options?: {
 	connectionRequirement?: ConnectionRequirement;
