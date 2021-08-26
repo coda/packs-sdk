@@ -674,11 +674,11 @@ export type MetadataContext = Record<string, any>;
 export type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
 export type MetadataFormula = ObjectPackFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any>;
 export type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
-export type MetadataFunction = (
+export type MetadataFunction = <K extends string, L extends string>(
   context: ExecutionContext,
   search: string,
   formulaContext?: MetadataContext,
-) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema>;
+) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<K, L>>;
 export type MetadataFormulaDef = MetadataFormula | MetadataFunction;
 
 export function makeMetadataFormula(

@@ -47,6 +47,7 @@ import type {VariousSupportedAuthenticationTypes} from '../types';
 import type {WebBasicAuthentication} from '../types';
 import {assertCondition} from '../helpers/ensure';
 import {isNil} from '../helpers/object_utils';
+import {makeSchema} from '../schema';
 import * as z from 'zod';
 
 enum CustomErrorCode {
@@ -99,6 +100,15 @@ export function validateSyncTableSchema(schema: any): ArraySchema<ObjectSchema<a
   const validated = arrayPropertySchema.safeParse(schema);
   if (validated.success) {
     return validated.data;
+  }
+  // In case this was an ObjectSchema (describing a single row), wrap it up as an ArraySchema.
+  const syntheticArraySchema = makeSchema({
+    type: ValueType.Array,
+    items: schema,
+  });
+  const validatedAsObjectSchema = arrayPropertySchema.safeParse(syntheticArraySchema);
+  if (validatedAsObjectSchema.success) {
+    return validatedAsObjectSchema.data;
   }
 
   throw new PackMetadataValidationError(
@@ -483,7 +493,7 @@ const stringPropertySchema = zodCompleteObject<StringSchema & ObjectSchemaProper
 });
 
 // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
-// recurise typing better.
+// recursive typing better.
 const arrayPropertySchema: z.ZodTypeAny = z.lazy(() =>
   zodCompleteObject<ArraySchema & ObjectSchemaProperty>({
     type: zodDiscriminant(ValueType.Array),
@@ -576,24 +586,23 @@ const objectPackFormulaSchema = zodCompleteObject<Omit<ObjectPackFormula<any, an
   schema: z.union([genericObjectSchema, arrayPropertySchema]).optional(),
 });
 
-const formulaMetadataSchema = z.union([
-  numericPackFormulaSchema,
-  stringPackFormulaSchema,
-  booleanPackFormulaSchema,
-  objectPackFormulaSchema,
-]).superRefine((data, context) => {
-  const parameters = data.parameters as ParamDefs;
-  const varargParameters = data.varargParameters || [] as ParamDefs;
-  const paramNames = new Set();
-  for (const param of [...parameters, ...varargParameters]) {
-    if (paramNames.has(param.name)) {
-      context.addIssue({code: z.ZodIssueCode.custom,
-      path: ['parameters'],
-      message: `Parameter names must be unique. Found duplicate name "${param.name}".`})
+const formulaMetadataSchema = z
+  .union([numericPackFormulaSchema, stringPackFormulaSchema, booleanPackFormulaSchema, objectPackFormulaSchema])
+  .superRefine((data, context) => {
+    const parameters = data.parameters as ParamDefs;
+    const varargParameters = data.varargParameters || ([] as ParamDefs);
+    const paramNames = new Set();
+    for (const param of [...parameters, ...varargParameters]) {
+      if (paramNames.has(param.name)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['parameters'],
+          message: `Parameter names must be unique. Found duplicate name "${param.name}".`,
+        });
+      }
+      paramNames.add(param.name);
     }
-    paramNames.add(param.name);
-  }
-});
+  });
 
 const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   name: z.string(),

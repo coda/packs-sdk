@@ -35,6 +35,7 @@ const api_types_3 = require("../api_types");
 const schema_5 = require("../schema");
 const ensure_1 = require("../helpers/ensure");
 const object_utils_1 = require("../helpers/object_utils");
+const schema_6 = require("../schema");
 const z = __importStar(require("zod"));
 var CustomErrorCode;
 (function (CustomErrorCode) {
@@ -73,6 +74,15 @@ function validateSyncTableSchema(schema) {
     const validated = arrayPropertySchema.safeParse(schema);
     if (validated.success) {
         return validated.data;
+    }
+    // In case this was an ObjectSchema (describing a single row), wrap it up as an ArraySchema.
+    const syntheticArraySchema = schema_6.makeSchema({
+        type: schema_5.ValueType.Array,
+        items: schema,
+    });
+    const validatedAsObjectSchema = arrayPropertySchema.safeParse(syntheticArraySchema);
+    if (validatedAsObjectSchema.success) {
+        return validatedAsObjectSchema.data;
     }
     throw new PackMetadataValidationError('Schema failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
 }
@@ -400,7 +410,7 @@ const stringPropertySchema = zodCompleteObject({
     ...basePropertyValidators,
 });
 // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
-// recurise typing better.
+// recursive typing better.
 const arrayPropertySchema = z.lazy(() => zodCompleteObject({
     type: zodDiscriminant(schema_5.ValueType.Array),
     items: objectPropertyUnionSchema,
@@ -481,20 +491,19 @@ const objectPackFormulaSchema = zodCompleteObject({
     // schema for objects, but that doesn't seem like a use case we actually want to support.
     schema: z.union([genericObjectSchema, arrayPropertySchema]).optional(),
 });
-const formulaMetadataSchema = z.union([
-    numericPackFormulaSchema,
-    stringPackFormulaSchema,
-    booleanPackFormulaSchema,
-    objectPackFormulaSchema,
-]).superRefine((data, context) => {
+const formulaMetadataSchema = z
+    .union([numericPackFormulaSchema, stringPackFormulaSchema, booleanPackFormulaSchema, objectPackFormulaSchema])
+    .superRefine((data, context) => {
     const parameters = data.parameters;
     const varargParameters = data.varargParameters || [];
     const paramNames = new Set();
     for (const param of [...parameters, ...varargParameters]) {
         if (paramNames.has(param.name)) {
-            context.addIssue({ code: z.ZodIssueCode.custom,
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
                 path: ['parameters'],
-                message: `Parameter names must be unique. Found duplicate name "${param.name}".` });
+                message: `Parameter names must be unique. Found duplicate name "${param.name}".`,
+            });
         }
         paramNames.add(param.name);
     }
