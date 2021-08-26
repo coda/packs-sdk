@@ -1063,19 +1063,19 @@ export declare enum DefaultConnectionType {
 	 */
 	SharedDataOnly = 1,
 	/**
-	 * The account can be used by any user of a doc both to retrieve data and to take actions.
+	 * The account can be used by any user in the doc both to retrieve data and to take actions.
 	 */
 	Shared = 2,
 	/**
 	 * The account can only be used by the Coda user who set up the account, and only to take
 	 * actions (i.e. push buttons). Each Coda user that uses the pack will be prompted to
 	 * connect their own private (AKA proxy) account. Private accounts can't be used to retrieve
-	 * data, because all users of a doc must be able to retrieve the same data.
+	 * data, because all users in the doc must be able to retrieve the same data.
 	 */
 	ProxyActionsOnly = 3
 }
 /**
- * A pack or formula which does not use authentication..
+ * A pack or formula which does not use authentication.
  */
 export interface NoAuthentication {
 	type: AuthenticationType.None;
@@ -1111,8 +1111,11 @@ export interface BaseAuthentication {
 	 */
 	requiresEndpointUrl?: boolean;
 	/**
-	 * If this pack does require an account-specific endpoint domain, this is the root domain of all of those endpoints.
-	 * For example, this value would be "example.com" if specific endpoints looked like <custom-subdomain>.example.com.
+	 * When requiresEndpointUrl is set to true this should be the root domain that all endpoints share.
+	 * For example, this value would be "example.com" if specific endpoints looked like {custom-subdomain}.example.com.
+	 *
+	 * For packs that make requests to multiple domains (uncommon), this should be the domain within
+	 * {@link networkDomains} that this configuration applies to.
 	 */
 	endpointDomain?: string;
 	/**

@@ -109,14 +109,14 @@ var DefaultConnectionType;
      */
     DefaultConnectionType[DefaultConnectionType["SharedDataOnly"] = 1] = "SharedDataOnly";
     /**
-     * The account can be used by any user of a doc both to retrieve data and to take actions.
+     * The account can be used by any user in the doc both to retrieve data and to take actions.
      */
     DefaultConnectionType[DefaultConnectionType["Shared"] = 2] = "Shared";
     /**
      * The account can only be used by the Coda user who set up the account, and only to take
      * actions (i.e. push buttons). Each Coda user that uses the pack will be prompted to
      * connect their own private (AKA proxy) account. Private accounts can't be used to retrieve
-     * data, because all users of a doc must be able to retrieve the same data.
+     * data, because all users in the doc must be able to retrieve the same data.
      */
     DefaultConnectionType[DefaultConnectionType["ProxyActionsOnly"] = 3] = "ProxyActionsOnly";
 })(DefaultConnectionType = exports.DefaultConnectionType || (exports.DefaultConnectionType = {}));

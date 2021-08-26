@@ -124,14 +124,16 @@
 					<aside class="tsd-sources">
 						<p>Inherited from BaseAuthentication.endpointDomain</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L177">types.ts:177</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L180">types.ts:180</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>If this pack does require an account-specific endpoint domain, this is the root domain of all of those endpoints.
-							For example, this value would be &quot;example.com&quot; if specific endpoints looked like <custom-subdomain>.example.com.</p>
+							<p>When requiresEndpointUrl is set to true this should be the root domain that all endpoints share.
+							For example, this value would be &quot;example.com&quot; if specific endpoints looked like {custom-subdomain}.example.com.</p>
 						</div>
+						<p>For packs that make requests to multiple domains (uncommon), this should be the domain within
+						<a href="PackDefinition.html#networkDomains">networkDomains</a> that this configuration applies to.</p>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
@@ -179,7 +181,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from BaseAuthentication.postSetup</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L183">types.ts:183</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L186">types.ts:186</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -214,7 +216,7 @@
 					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <a href="../enums/AuthenticationType.html#WebBasic" class="tsd-signature-type" data-tsd-kind="Enumeration member">WebBasic</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L257">types.ts:257</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L260">types.ts:260</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -224,7 +226,7 @@
 					<div class="tsd-signature tsd-kind-icon">ux<wbr>Config<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>placeholderPassword<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>placeholderUsername<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>usernameOnly<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L258">types.ts:258</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L261">types.ts:261</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
