@@ -634,7 +634,6 @@ export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<Pa
  * makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', description: 'My description'});
  */
 export declare function makeParameter<T extends ParameterType>(paramDefinition: ParameterOptions<T>): ParamDef<ParameterTypeMap[T]>;
-export declare function makeUserVisibleError(msg: string): UserVisibleError;
 export interface PackFormulas {
 	readonly [namespace: string]: Formula[];
 }

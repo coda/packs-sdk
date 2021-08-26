@@ -70,7 +70,6 @@ export { Type } from './api_types';
 export type { TypedPackFormula } from './api';
 export type { Formula } from './api';
 export { UserVisibleError } from './api';
-export { makeUserVisibleError } from './api';
 export { makeMetadataFormula } from './api';
 export { makeDynamicSyncTable } from './api';
 export { makeEmptyFormula } from './api';

@@ -14,6 +14,8 @@ export { makeImageArrayParameter } from './api';
 export { makeStringParameter } from './api';
 export { makeStringArrayParameter } from './api';
 export { makeSyncTableLegacy } from './api';
+export { isUserVisibleError } from './api';
+export { makeUserVisibleError } from './api';
 export { FeatureSet } from './types';
 export { PackCategory } from './types';
 export type { Quota } from './types';

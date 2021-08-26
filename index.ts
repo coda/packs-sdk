@@ -77,7 +77,6 @@ export {Type} from './api_types';
 export type {TypedPackFormula} from './api';
 export type {Formula} from './api';
 export {UserVisibleError} from './api';
-export {makeUserVisibleError} from './api';
 
 // Formula definition helpers
 export {makeMetadataFormula} from './api';
