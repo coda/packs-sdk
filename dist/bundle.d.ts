@@ -226,7 +226,6 @@ export interface ArrayType<T extends Type> {
 	type: "array";
 	items: T;
 }
-export declare function isArrayType(obj: any): obj is ArrayType<any>;
 export declare type UnionType = ArrayType<Type> | Type;
 export interface TypeMap {
 	[Type.number]: number;
@@ -621,13 +620,6 @@ export declare type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, Para
  * for defining a sync table.
  */
 export declare type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
-/**
- * Helper to determine if an error is considered user-visible and can be shown in the UI.
- * See {@link UserVisibleError}.
- * @param error Any error object.
- */
-export declare function isUserVisibleError(error: Error): error is UserVisibleError;
-export declare function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDynamicSyncTable;
 export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, "type" | "autocomplete"> & {
 	type: T;
 	autocomplete?: MetadataFormulaDef | Array<string | SimpleAutocompleteOption>;
@@ -676,9 +668,6 @@ export declare type TypedPackFormula = Formula | GenericSyncFormula;
 export declare type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 export declare type PackFormulaMetadata = Omit<TypedPackFormula, "execute">;
 export declare type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, "execute">;
-export declare function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata;
-export declare function isStringPackFormula(fn: BaseFormula<ParamDefs, any>): fn is StringPackFormula<ParamDefs>;
-export declare function isSyncPackFormula(fn: BaseFormula<ParamDefs, any>): fn is GenericSyncFormula;
 export interface SyncFormulaResult<ResultT extends object> {
 	result: ResultT[];
 	continuation?: Continuation;
@@ -958,10 +947,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
 	resultType: Type.string;
 };
 export declare type PackId = number;
-/**
- * @deprecated
- */
-export declare enum PackCategory {
+declare enum PackCategory {
 	CRM = "CRM",
 	Calendar = "Calendar",
 	Communication = "Communication",
@@ -1233,19 +1219,19 @@ export interface Format {
 	matchers?: string[];
 	placeholder?: string;
 }
-export declare enum FeatureSet {
+declare enum FeatureSet {
 	Basic = "Basic",
 	Pro = "Pro",
 	Team = "Team",
 	Enterprise = "Enterprise"
 }
-export declare enum QuotaLimitType {
+declare enum QuotaLimitType {
 	Action = "Action",
 	Getter = "Getter",
 	Sync = "Sync",
 	Metadata = "Metadata"
 }
-export declare enum SyncInterval {
+declare enum SyncInterval {
 	Manual = "Manual",
 	Daily = "Daily",
 	Hourly = "Hourly",
