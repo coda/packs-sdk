@@ -106,13 +106,14 @@
 					<aside class="tsd-sources">
 						<p>Inherited from BaseAuthentication.defaultConnectionType</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L146">types.ts:146</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L158">types.ts:158</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Indicates how a user&#39;s account is expected to be used by this pack, e.g. is this account
-							used for retrieving data, taking actions, or both.</p>
+							<p>Indicates the defualt manner in which a user&#39;s account is expected to be used by this pack,
+								e.g. is this account used for retrieving data, taking actions, or both.
+							See <a href="https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs#h_40472431f0">https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs#h_40472431f0</a></p>
 						</div>
 					</div>
 				</section>
@@ -123,7 +124,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from BaseAuthentication.endpointDomain</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L163">types.ts:163</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L177">types.ts:177</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -140,7 +141,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from BaseAuthentication.getConnectionName</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L139">types.ts:139</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L150">types.ts:150</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -151,7 +152,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from BaseAuthentication.getConnectionUserId</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L140">types.ts:140</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L151">types.ts:151</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -162,7 +163,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from BaseAuthentication.instructionsUrl</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L151">types.ts:151</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L163">types.ts:163</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -178,7 +179,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from BaseAuthentication.postSetup</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L169">types.ts:169</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L183">types.ts:183</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -195,13 +196,15 @@
 					<aside class="tsd-sources">
 						<p>Inherited from BaseAuthentication.requiresEndpointUrl</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L157">types.ts:157</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L171">types.ts:171</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Does this pack have a specific endpoint domain for each account, that is used as the basis of http requests?
-							For example, are API requests made to <custom-subdomain>.example.com rather than example.com?</p>
+							<p>If true, indicates this has pack has a specific endpoint domain for each account, that is used
+								as the basis of HTTP requests. For example, API requests are made to <custom-subdomain>.example.com
+									rather than example.com. If true, the user will be prompted to provide their specific endpoint domain
+							when creating a new account.</p>
 						</div>
 					</div>
 				</section>
@@ -211,7 +214,7 @@
 					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <a href="../enums/AuthenticationType.html#WebBasic" class="tsd-signature-type" data-tsd-kind="Enumeration member">WebBasic</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L243">types.ts:243</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L257">types.ts:257</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -221,7 +224,7 @@
 					<div class="tsd-signature tsd-kind-icon">ux<wbr>Config<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>placeholderPassword<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>placeholderUsername<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>usernameOnly<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L244">types.ts:244</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L258">types.ts:258</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">

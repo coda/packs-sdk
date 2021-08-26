@@ -66,7 +66,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Authentication types support by Coda Packs.</p>
+						<p>Authentication types supported by Coda Packs.</p>
 					</div>
 				</div>
 			</section>
@@ -77,7 +77,6 @@
 						<section class="tsd-index-section ">
 							<h3>Enumeration members</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="AuthenticationType.html#AWSSignature4" class="tsd-kind-icon">AWSSignature4</a></li>
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="AuthenticationType.html#CodaApiHeaderBearerToken" class="tsd-kind-icon">Coda<wbr>Api<wbr>Header<wbr>Bearer<wbr>Token</a></li>
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="AuthenticationType.html#CustomHeaderToken" class="tsd-kind-icon">Custom<wbr>Header<wbr>Token</a></li>
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="AuthenticationType.html#HeaderBearerToken" class="tsd-kind-icon">Header<wbr>Bearer<wbr>Token</a></li>
@@ -85,7 +84,6 @@
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="AuthenticationType.html#None" class="tsd-kind-icon">None</a></li>
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="AuthenticationType.html#OAuth2" class="tsd-kind-icon">OAuth2</a></li>
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="AuthenticationType.html#QueryParamToken" class="tsd-kind-icon">Query<wbr>Param<wbr>Token</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="AuthenticationType.html#Various" class="tsd-kind-icon">Various</a></li>
 								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="AuthenticationType.html#WebBasic" class="tsd-kind-icon">Web<wbr>Basic</a></li>
 							</ul>
 						</section>
@@ -95,33 +93,17 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Enumeration members</h2>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="AWSSignature4" class="tsd-anchor"></a>
-					<h3>AWSSignature4</h3>
-					<div class="tsd-signature tsd-kind-icon">AWSSignature4<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;AWSSignature4&quot;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L79">types.ts:79</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Authenticate with Amazon Web Services using AWS Signature Version 4.</p>
-						</div>
-						<p>This is not yet supported.</p>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 					<a name="CodaApiHeaderBearerToken" class="tsd-anchor"></a>
 					<h3>Coda<wbr>Api<wbr>Header<wbr>Bearer<wbr>Token</h3>
 					<div class="tsd-signature tsd-kind-icon">Coda<wbr>Api<wbr>Header<wbr>Bearer<wbr>Token<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;CodaApiHeaderBearerToken&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L90">types.ts:90</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L98">types.ts:98</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Authenticate using a Coda REST API token, sent as an http header.</p>
+							<p>Authenticate using a Coda REST API token, sent as an HTTP header.</p>
 						</div>
 						<p>This is identical to <a href="AuthenticationType.html#HeaderBearerToken">HeaderBearerToken</a> except the user wil be presented
 							with a UI to generate an API token rather than needing to paste an arbitrary API
@@ -136,12 +118,13 @@
 					<div class="tsd-signature tsd-kind-icon">Custom<wbr>Header<wbr>Token<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;CustomHeaderToken&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L48">types.ts:48</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L49">types.ts:49</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Authenticate using an http header with a custom name and token prefix that you specify.</p>
+							<p>Authenticate using an HTTP header with a custom name and token prefix that you specify.
+							The header name is defined in the {@link headerName} property.</p>
 						</div>
 					</div>
 				</section>
@@ -156,7 +139,7 @@
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Authenticate using an http header of the form <code>Authorization: Bearer &lt;token&gt;</code>.</p>
+							<p>Authenticate using an HTTP header of the form <code>Authorization: Bearer &lt;token&gt;</code>.</p>
 						</div>
 					</div>
 				</section>
@@ -166,14 +149,15 @@
 					<div class="tsd-signature tsd-kind-icon">Multi<wbr>Query<wbr>Param<wbr>Token<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;MultiQueryParamToken&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L58">types.ts:58</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L63">types.ts:63</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Authenticate using multiple tokens, each passed as a different url parameter, e.g.
+							<p>Authenticate using multiple tokens, each passed as a different URL parameter, e.g.
 							<a href="https://example.com/api?param1=token1&amp;param2=token2">https://example.com/api?param1=token1&amp;param2=token2</a></p>
 						</div>
+						<p>The parameter names are defined in the <a href="../interfaces/ExternalPackVersionMetadata.html#__type.params">params</a> array property.</p>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
@@ -197,12 +181,12 @@
 					<div class="tsd-signature tsd-kind-icon">OAuth2<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;OAuth2&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L66">types.ts:66</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L71">types.ts:71</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Authenticate using OAuth2. You must specify the authorization url, token exchange url, and
+							<p>Authenticate using OAuth2. You must specify the authorization URL, token exchange URL, and
 								scopes here as part of the pack definition. You&#39;ll provide the application&#39;s client ID and
 							client secret in the pack management UI, so that these can be stored securely.</p>
 						</div>
@@ -215,29 +199,15 @@
 					<div class="tsd-signature tsd-kind-icon">Query<wbr>Param<wbr>Token<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;QueryParamToken&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L53">types.ts:53</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L56">types.ts:56</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Authenticate using a token that is passed as a url parameter with each request, e.g.
+							<p>Authenticate using a token that is passed as a URL parameter with each request, e.g.
 							<a href="https://example.com/api?paramName=token">https://example.com/api?paramName=token</a></p>
 						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="Various" class="tsd-anchor"></a>
-					<h3>Various</h3>
-					<div class="tsd-signature tsd-kind-icon">Various<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;Various&quot;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L94">types.ts:94</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Only for use by Coda-authored packs.</p>
-						</div>
+						<p>The parameter name is defined in the {@link paramName} property.</p>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
@@ -246,13 +216,13 @@
 					<div class="tsd-signature tsd-kind-icon">Web<wbr>Basic<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = &quot;WebBasic&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L73">types.ts:73</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L78">types.ts:78</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>Authenticate using HTTP Basic authorization. The user provides a username and password
-							(sometimes optional) where included as an http header according to the Basic auth standard.</p>
+							(sometimes optional) which are included as an HTTP header according to the Basic auth standard.</p>
 						</div>
 						<p>See <a href="https://en.wikipedia.org/wiki/Basic_access_authentication">https://en.wikipedia.org/wiki/Basic_access_authentication</a></p>
 					</div>
@@ -275,9 +245,6 @@
 						<a href="AuthenticationType.html" class="tsd-kind-icon">Authentication<wbr>Type</a>
 						<ul>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="AuthenticationType.html#AWSSignature4" class="tsd-kind-icon">AWSSignature4</a>
-							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
 								<a href="AuthenticationType.html#CodaApiHeaderBearerToken" class="tsd-kind-icon">Coda<wbr>Api<wbr>Header<wbr>Bearer<wbr>Token</a>
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
@@ -297,9 +264,6 @@
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
 								<a href="AuthenticationType.html#QueryParamToken" class="tsd-kind-icon">Query<wbr>Param<wbr>Token</a>
-							</li>
-							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="AuthenticationType.html#Various" class="tsd-kind-icon">Various</a>
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
 								<a href="AuthenticationType.html#WebBasic" class="tsd-kind-icon">Web<wbr>Basic</a>

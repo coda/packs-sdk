@@ -93,14 +93,15 @@
 					<div class="tsd-signature tsd-kind-icon">Proxy<wbr>Actions<wbr>Only<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 3</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L115">types.ts:115</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L126">types.ts:126</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>An account can only be used by the Coda user who set up the account, as their &quot;private account&quot;
-								for taking actions. Private, aka &quot;proxy&quot;, accounts can only be used to take actions, and not
-							to retrieve data, because all users of a doc must be able to retrieve the same data.</p>
+							<p>The account can only be used by the Coda user who set up the account, and only to take
+								actions (i.e. push buttons). Each Coda user that uses the pack will be prompted to
+								connect their own private (AKA proxy) account. Private accounts can&#39;t be used to retrieve
+							data, because all users of a doc must be able to retrieve the same data.</p>
 						</div>
 					</div>
 				</section>
@@ -110,12 +111,12 @@
 					<div class="tsd-signature tsd-kind-icon">Shared<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 2</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L109">types.ts:109</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L119">types.ts:119</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>An account can be used by any user of a doc both to retrieve data and to take actions.</p>
+							<p>The account can be used by any user of a doc both to retrieve data and to take actions.</p>
 						</div>
 					</div>
 				</section>
@@ -125,13 +126,13 @@
 					<div class="tsd-signature tsd-kind-icon">Shared<wbr>Data<wbr>Only<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 1</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L105">types.ts:105</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L115">types.ts:115</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>An account can be used to invoke pack formulas by any user of a doc, but only
-							to retrieve data, not to take actions (i.e. push buttons).</p>
+							<p>The account can be used by any user in the a doc, but only to read data. The account can&#39;t be
+							used to take actions (i.e. push buttons).</p>
 						</div>
 					</div>
 				</section>
