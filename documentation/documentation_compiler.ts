@@ -80,8 +80,9 @@ function compileExampleSnippets(example: Example): CompiledExampleSnippet[] {
 }
 
 function compileSnippetEmbed(codeFile: string) {
-  const templateLiteralSafeCode = getCodeFile(codeFile).replace(/`/g, '\\`').replace(/\$/g, '\\$');
-  const exampleSnippetEmbed = SnippetEmbedTemplate.replace(/{{CODE}}/, templateLiteralSafeCode);
+  // TODO: Escape the html. codeString is inserted into a JS script.
+  const codeString = JSON.stringify(getCodeFile(codeFile));
+  const exampleSnippetEmbed = SnippetEmbedTemplate.replace(/'{{CODE}}'/, codeString);
   const snippetFileName = path.basename(codeFile).split('.')[0];
 
   if (!fs.existsSync(EmbeddedSnippetsRoot)) {

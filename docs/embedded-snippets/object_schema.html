@@ -16,15 +16,7 @@
 
       require(['vs/editor/editor.main'], function () {
         var editor = monaco.editor.create(document.getElementById('container'), {
-          value: `coda.makeObjectSchema({
-  type: coda.ValueType.Object,
-  id: '<objectId>',
-  primary: '<displayName>',
-  properties: {
-    // objectId: {type: coda.ValueType.Number},
-    // displayName: {type: coda.ValueType.String},
-  },
-});`,
+          value: "coda.makeObjectSchema({\n  type: coda.ValueType.Object,\n  id: '<objectId>',\n  primary: '<displayName>',\n  properties: {\n    // objectId: {type: coda.ValueType.Number},\n    // displayName: {type: coda.ValueType.String},\n  },\n});",
           language: 'javascript',
           minimap: {enabled: false},
           readOnly: true,

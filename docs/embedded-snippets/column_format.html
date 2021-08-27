@@ -16,13 +16,7 @@
 
       require(['vs/editor/editor.main'], function () {
         var editor = monaco.editor.create(document.getElementById('container'), {
-          value: `pack.addColumnFormat({
-  name: 'MyName',
-  formulaNamespace: 'Deprecated', // Will be removed shortly
-  formulaName: 'the name of a formula to execute using the value in the column',
-  instructions: '',
-  matchers: [],
-});`,
+          value: "pack.addColumnFormat({\n  name: 'MyName',\n  formulaNamespace: 'Deprecated', // Will be removed shortly\n  formulaName: 'the name of a formula to execute using the value in the column',\n  instructions: '',\n  matchers: [],\n});",
           language: 'javascript',
           minimap: {enabled: false},
           readOnly: true,

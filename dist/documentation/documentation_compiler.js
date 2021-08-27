@@ -90,8 +90,9 @@ function compileExampleSnippets(example) {
     });
 }
 function compileSnippetEmbed(codeFile) {
-    const templateLiteralSafeCode = getCodeFile(codeFile).replace(/`/g, '\\`').replace(/\$/g, '\\$');
-    const exampleSnippetEmbed = SnippetEmbedTemplate.replace(/{{CODE}}/, templateLiteralSafeCode);
+    // const templateLiteralSafeCode = getCodeFile(codeFile).replace(/`/g, '\\`').replace(/\$/g, '\\$');
+    const templateLiteralSafeCode = JSON.stringify(getCodeFile(codeFile));
+    const exampleSnippetEmbed = SnippetEmbedTemplate.replace(/'{{CODE}}'/, templateLiteralSafeCode);
     const snippetFileName = path_1.default.basename(codeFile).split('.')[0];
     if (!fs.existsSync(EmbeddedSnippetsRoot)) {
         fs.mkdirSync(EmbeddedSnippetsRoot);

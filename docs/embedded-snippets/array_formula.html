@@ -16,27 +16,7 @@
 
       require(['vs/editor/editor.main'], function () {
         var editor = monaco.editor.create(document.getElementById('container'), {
-          value: `pack.addFormula({
-  resultType: coda.ValueType.Array,
-  name: 'MyFormula',
-  description: '',
-  parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
-      name: 'myParam',
-      description: '',
-    }),
-  ],
-  items: {
-    type: coda.ValueType.Object,
-    properties: {
-      column1: {type: coda.ValueType.String},
-    },
-  },
-  execute: ([param]) => {
-    return [{column1: 'hello'}, {column1: 'world'}, {column1: param}];
-  },
-});`,
+          value: "pack.addFormula({\n  resultType: coda.ValueType.Array,\n  name: 'MyFormula',\n  description: '',\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.Number,\n      name: 'myParam',\n      description: '',\n    }),\n  ],\n  items: {\n    type: coda.ValueType.Object,\n    properties: {\n      column1: {type: coda.ValueType.String},\n    },\n  },\n  execute: ([param]) => {\n    return [{column1: 'hello'}, {column1: 'world'}, {column1: param}];\n  },\n});",
           language: 'javascript',
           minimap: {enabled: false},
           readOnly: true,
