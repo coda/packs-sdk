@@ -4,7 +4,7 @@
     "triggerTokens": [
       "addColumnFormat"
     ],
-    "exampleFooterLink": "https://coda.github.io/packs-sdk//classes/PackDefinitionBuilder.html#addColumnFormat",
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/classes/PackDefinitionBuilder.html#addColumnFormat",
     "content": "A **column format** is a custom column type that you apply to any column in any Coda table. A column format& tells Coda to interpret the value in a cell by executing a **formula** using that value, typically looking up data related to that value from a third-party API.\n\nFor example, the Weather pack has a column format `Current Weather`; when applied to a column, if you type a city or address into a cell in that column, that location will be used an input to a formula that fetches the current weather at that location, and the resulting object with weather info will be shown in the cell.",
     "exampleSnippets": [
       {
@@ -20,7 +20,7 @@
       "setSystemAuthentication",
       "setUserAuthentication"
     ],
-    "exampleFooterLink": "https://coda.github.io/packs-sdk//classes/PackDefinitionBuilder.html#setSystemAuthentication",
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/classes/PackDefinitionBuilder.html#setSystemAuthentication",
     "content": "The SDK broadly divides authentication into two categories: authentication that is tied to the user of the pack vs authentication that is managed by the system, aka the pack author. In the pack definition the former is known as `defaultAuthentication` and the latter `systemConnectionAuthentication`. You will typically specify one or the other in your pack definition, or neither if your pack does not make http requests or those requests do not require authentication.\n\nDefault authentication is the most common. Specify this if each user of your pack should log in with OAuth, or have their own API key, or whatever user-specific token is necessary for the pack to be able to retrieve data that is specific to that user.\n\nUse system authentication if you as the pack author will provide the necessary tokens to successfully make http requests within your pack. An example would be if your pack returns weather forecasts and the API involved requires an API key, but individual users need not provide their own API key. You as the pack author will register an API key and provide it to Coda, and Coda will apply it to all pack requests regardless of the user.",
     "exampleSnippets": [
       {
@@ -40,7 +40,7 @@
     "triggerTokens": [
       "addDynamicSyncTable"
     ],
-    "exampleFooterLink": "https://coda.github.io/packs-sdk//classes/PackDefinitionBuilder.html#addDynamicSyncTable",
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/classes/PackDefinitionBuilder.html#addDynamicSyncTable",
     "content": "Most sync tables have schemas that can be statically defined. For example, if you're writing a sync of a user's Google Calendar events, the structure of an Event from the Google Calendar API is well-known and you can write a schema for what your table should contain.\n\nIn certain cases, you may want to sync data whose structure is not known in advance and may depend on the user doing the sync. For example, Coda's Jira pack allows users to sync data from their Jira instance, but Jira lets users create arbitrary custom fields for their Issue objects. So the schema of the Issues sync table is not known in advance; it depends on the Jira account that the user is syncing from.\n\nCoda supports \"dynamic\" sync tables for cases like these. Instead of including a static schema in your sync table definition, you include a formula that returns a schema. This formula can use the fetcher to make authenticated http requests to your pack's API so that you may retrieve any necessary info from that third-party service needed to construct an appropriate schema.\n\nTo define a dynamic schema, use the `makeDynamicSyncTable()` wrapper function. You will provide a `getSchema` formula that returns a schema definition. You'll also provide some supporting formulas like `getName`, to return a name in the UI for the table, in case even the name of the entities being synced is dynamic.\n\nThere are two subtle variants of dynamic sync tables. A sync table can be dynamic simply because the shape of the entities being synced vary based on who the current user is. For example, in the Jira example, Jira Issues are synced by hitting the same static Jira API url for Issues, but the schema of the issues returned will be different depending on the configuration of the Jira instance of the calling user.\n\nAlternatively, a sync table can be dynamic because the data source is specific to each instance of the table. If you were building a sync table to sync data from a Google Sheet, the data source would be the API url of a specific sheet. In this case, the sync table will be bound to a `dynamicUrl` that defines the data source. This url will be available to all of the formulas to implement the sync table in the sync context, as `context.sync.dynamicUrl`. To create a sync table that uses dynamic urls, you must implement the `listDynamicUrls` metadata formula in your dynamic sync table definition.",
     "exampleSnippets": [
       {
@@ -55,7 +55,7 @@
     "triggerTokens": [
       "addFormula"
     ],
-    "exampleFooterLink": "https://coda.github.io/packs-sdk//classes/PackDefinitionBuilder.html#addFormula",
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/classes/PackDefinitionBuilder.html#addFormula",
     "content": "A **formula (including a button)** is a JavaScript function that will be exposed as a Coda formula, that you can use anywhere in a Coda doc that you can use any normal formula. Formulas take basic Coda types as input, like strings, numbers, dates, booleans, and arrays of these types, and return any of these types or objects whose properties are any of these types. Buttons are just a flavor of a formula with the flag `isButton` activated.",
     "exampleSnippets": [
       {
@@ -70,7 +70,7 @@
     "triggerTokens": [
       "addSyncTable"
     ],
-    "exampleFooterLink": "https://coda.github.io/packs-sdk//classes/PackDefinitionBuilder.html#addSyncTable",
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/classes/PackDefinitionBuilder.html#addSyncTable",
     "content": "A **sync table** is how to bring structured data from a third-party into Coda. A sync table is a table that you can add to a Coda doc that gets its rows from a third-party data source, that can be refreshed regularly to pull in new or updated data. A sync table is powered by a **formula** that takes parameters that represent sync options and returns an array of objects representing row data. A sync table also includes a schema describing the structure of the returned objects.",
     "exampleSnippets": [
       {

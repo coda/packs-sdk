@@ -14,7 +14,7 @@ const DocumentationRoot = path.join(BaseDir, 'documentation');
 const TypeDocsRoot = path.join(BaseDir, 'docs');
 const EmbeddedSnippetsRoot = path.join(TypeDocsRoot, 'embedded-snippets');
 const SnippetEmbedTemplate = fs.readFileSync(path.join(DocumentationRoot, 'snippet_embed_template.html'), 'utf8');
-const SdkReferenceLink = 'https://coda.github.io/packs-sdk/';
+const SdkReferenceLink = 'https://coda.github.io/packs-sdk';
 
 function main() {
   compileAutocompleteSnippets();
