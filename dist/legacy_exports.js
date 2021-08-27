@@ -2,7 +2,7 @@
 // Exports of things that used to be in index.ts that are now deprecated as part of SDK
 // simplification and will likely be removed in the future.
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeSyncTableLegacy = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeStringFormula = exports.makeObjectFormula = exports.makeNumericFormula = void 0;
+exports.SyncInterval = exports.QuotaLimitType = exports.PackCategory = exports.FeatureSet = exports.makeUserVisibleError = exports.isUserVisibleError = exports.makeSyncTableLegacy = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeStringFormula = exports.makeObjectFormula = exports.makeNumericFormula = void 0;
 var api_1 = require("./api");
 Object.defineProperty(exports, "makeNumericFormula", { enumerable: true, get: function () { return api_1.makeNumericFormula; } });
 var api_2 = require("./api");
@@ -35,3 +35,15 @@ var api_15 = require("./api");
 Object.defineProperty(exports, "makeStringArrayParameter", { enumerable: true, get: function () { return api_15.makeStringArrayParameter; } });
 var api_16 = require("./api");
 Object.defineProperty(exports, "makeSyncTableLegacy", { enumerable: true, get: function () { return api_16.makeSyncTableLegacy; } });
+var api_17 = require("./api");
+Object.defineProperty(exports, "isUserVisibleError", { enumerable: true, get: function () { return api_17.isUserVisibleError; } });
+var api_18 = require("./api");
+Object.defineProperty(exports, "makeUserVisibleError", { enumerable: true, get: function () { return api_18.makeUserVisibleError; } });
+var types_1 = require("./types");
+Object.defineProperty(exports, "FeatureSet", { enumerable: true, get: function () { return types_1.FeatureSet; } });
+var types_2 = require("./types");
+Object.defineProperty(exports, "PackCategory", { enumerable: true, get: function () { return types_2.PackCategory; } });
+var types_3 = require("./types");
+Object.defineProperty(exports, "QuotaLimitType", { enumerable: true, get: function () { return types_3.QuotaLimitType; } });
+var types_4 = require("./types");
+Object.defineProperty(exports, "SyncInterval", { enumerable: true, get: function () { return types_4.SyncInterval; } });
