@@ -62,13 +62,13 @@ interface TypeMap {
   [Type.string]: string;
   [Type.object]: object;
   [Type.boolean]: boolean;
-  [Type.date]: Date;
+  [Type.date]: string;
   [Type.html]: string;
   [Type.image]: string;
 }
 
 export type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | PackFormulaValue[];
-export type PackFormulaResult = $Values<TypeMap> | PackFormulaResult[];
+export type PackFormulaResult = $Values<Omit<TypeMap, Type.date>> | PackFormulaResult[];
 
 export type TypeOf<T extends PackFormulaResult> = T extends number
   ? Type.number

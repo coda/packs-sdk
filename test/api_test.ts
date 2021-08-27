@@ -5,6 +5,7 @@ import {ParameterType} from '../api_types';
 import {StatusCodeError} from '../api';
 import type {Type} from '../api_types';
 import {ValueType} from '../schema';
+import {makeDateParameter} from '../api';
 import {makeDynamicSyncTable} from '../api';
 import {makeFormula} from '../api';
 import {makeMetadataFormula} from '../api';
@@ -175,6 +176,19 @@ describe('API test', () => {
           makeParameter({type: ParameterType.Number, name: 'myParam', description: ''}),
         ],
         execute: ([param1, param2]) => param1[param2],
+      });
+    });
+
+    it('strong typing inferred from makeParameter with date param', () => {
+      makeFormula({
+        resultType: ValueType.String,
+        name: 'Test',
+        description: '',
+        parameters: [
+          makeParameter({type: ParameterType.Date, name: 'dateParam1', description: ''}),
+          makeDateParameter('dateParam2', ''), // backwards compatibility.
+        ],
+        execute: ([dateParam1, dateParam2]) => dateParam1.substring(0, 1) + dateParam2.substring(0, 1),
       });
     });
 

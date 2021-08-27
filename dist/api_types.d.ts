@@ -30,12 +30,12 @@ interface TypeMap {
     [Type.string]: string;
     [Type.object]: object;
     [Type.boolean]: boolean;
-    [Type.date]: Date;
+    [Type.date]: string;
     [Type.html]: string;
     [Type.image]: string;
 }
 export declare type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | PackFormulaValue[];
-export declare type PackFormulaResult = $Values<TypeMap> | PackFormulaResult[];
+export declare type PackFormulaResult = $Values<Omit<TypeMap, Type.date>> | PackFormulaResult[];
 export declare type TypeOf<T extends PackFormulaResult> = T extends number ? Type.number : T extends string ? Type.string : T extends boolean ? Type.boolean : T extends Date ? Type.date : T extends object ? Type.object : never;
 export declare enum ParameterType {
     String = "string",
