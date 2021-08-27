@@ -4,7 +4,7 @@
     "triggerTokens": [
       "addColumnFormat"
     ],
-    "sdkReferencePath": "/classes/PackDefinitionBuilder.html#addColumnFormat",
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/classes/PackDefinitionBuilder.html#addColumnFormat",
     "content": "A **column format** is a custom column type that you apply to any column in any Coda table. A column format& tells Coda to interpret the value in a cell by executing a **formula** using that value, typically looking up data related to that value from a third-party API.\n\nFor example, the Weather pack has a column format `Current Weather`; when applied to a column, if you type a city or address into a cell in that column, that location will be used an input to a formula that fetches the current weather at that location, and the resulting object with weather info will be shown in the cell.",
     "exampleSnippets": [
       {
@@ -20,7 +20,7 @@
       "setSystemAuthentication",
       "setUserAuthentication"
     ],
-    "sdkReferencePath": "/classes/PackDefinitionBuilder.html#setSystemAuthentication",
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/classes/PackDefinitionBuilder.html#setSystemAuthentication",
     "content": "The SDK broadly divides authentication into two categories: authentication that is tied to the user of the pack vs authentication that is managed by the system, aka the pack author. In the pack definition the former is known as `defaultAuthentication` and the latter `systemConnectionAuthentication`. You will typically specify one or the other in your pack definition, or neither if your pack does not make http requests or those requests do not require authentication.\n\nDefault authentication is the most common. Specify this if each user of your pack should log in with OAuth, or have their own API key, or whatever user-specific token is necessary for the pack to be able to retrieve data that is specific to that user.\n\nUse system authentication if you as the pack author will provide the necessary tokens to successfully make http requests within your pack. An example would be if your pack returns weather forecasts and the API involved requires an API key, but individual users need not provide their own API key. You as the pack author will register an API key and provide it to Coda, and Coda will apply it to all pack requests regardless of the user.",
     "exampleSnippets": [
       {
@@ -40,7 +40,7 @@
     "triggerTokens": [
       "addDynamicSyncTable"
     ],
-    "sdkReferencePath": "/classes/PackDefinitionBuilder.html#addDynamicSyncTable",
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/classes/PackDefinitionBuilder.html#addDynamicSyncTable",
     "content": "Most sync tables have schemas that can be statically defined. For example, if you're writing a sync of a user's Google Calendar events, the structure of an Event from the Google Calendar API is well-known and you can write a schema for what your table should contain.\n\nIn certain cases, you may want to sync data whose structure is not known in advance and may depend on the user doing the sync. For example, Coda's Jira pack allows users to sync data from their Jira instance, but Jira lets users create arbitrary custom fields for their Issue objects. So the schema of the Issues sync table is not known in advance; it depends on the Jira account that the user is syncing from.\n\nCoda supports \"dynamic\" sync tables for cases like these. Instead of including a static schema in your sync table definition, you include a formula that returns a schema. This formula can use the fetcher to make authenticated http requests to your pack's API so that you may retrieve any necessary info from that third-party service needed to construct an appropriate schema.\n\nTo define a dynamic schema, use the `makeDynamicSyncTable()` wrapper function. You will provide a `getSchema` formula that returns a schema definition. You'll also provide some supporting formulas like `getName`, to return a name in the UI for the table, in case even the name of the entities being synced is dynamic.\n\nThere are two subtle variants of dynamic sync tables. A sync table can be dynamic simply because the shape of the entities being synced vary based on who the current user is. For example, in the Jira example, Jira Issues are synced by hitting the same static Jira API url for Issues, but the schema of the issues returned will be different depending on the configuration of the Jira instance of the calling user.\n\nAlternatively, a sync table can be dynamic because the data source is specific to each instance of the table. If you were building a sync table to sync data from a Google Sheet, the data source would be the API url of a specific sheet. In this case, the sync table will be bound to a `dynamicUrl` that defines the data source. This url will be available to all of the formulas to implement the sync table in the sync context, as `context.sync.dynamicUrl`. To create a sync table that uses dynamic urls, you must implement the `listDynamicUrls` metadata formula in your dynamic sync table definition.",
     "exampleSnippets": [
       {
@@ -55,7 +55,7 @@
     "triggerTokens": [
       "addFormula"
     ],
-    "sdkReferencePath": "/classes/PackDefinitionBuilder.html#addFormula",
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/classes/PackDefinitionBuilder.html#addFormula",
     "content": "A **formula (including a button)** is a JavaScript function that will be exposed as a Coda formula, that you can use anywhere in a Coda doc that you can use any normal formula. Formulas take basic Coda types as input, like strings, numbers, dates, booleans, and arrays of these types, and return any of these types or objects whose properties are any of these types. Buttons are just a flavor of a formula with the flag `isButton` activated.",
     "exampleSnippets": [
       {
@@ -70,13 +70,78 @@
     "triggerTokens": [
       "addSyncTable"
     ],
-    "sdkReferencePath": "/classes/PackDefinitionBuilder.html#addSyncTable",
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/classes/PackDefinitionBuilder.html#addSyncTable",
     "content": "A **sync table** is how to bring structured data from a third-party into Coda. A sync table is a table that you can add to a Coda doc that gets its rows from a third-party data source, that can be refreshed regularly to pull in new or updated data. A sync table is powered by a **formula** that takes parameters that represent sync options and returns an array of objects representing row data. A sync table also includes a schema describing the structure of the returned objects.",
     "exampleSnippets": [
       {
         "name": "Basic Sync Table",
         "content": "",
         "code": "// Replace all <text> with your own text\npack.addSyncTable({\n  // The display name for the table, shown in the UI.\n  name: '<MySyncTable>',\n  // The unique identifier for the table.\n  identityName: '<TableName>',\n  schema: coda.makeObjectSchema({\n    type: coda.ValueType.Object,\n    // The property name from the properties object below that represents the unique\n    // identifier of this item. A sync table MUST have a stable unique identifier. Without\n    // one, each subsequent sync will wipe away all rows and recreate them from scratch.\n    id: '<idColumn>',\n    // The property name from the properties object below that should label this item\n    // in the UI. All properties can be seen when hovering over a synced item in the UI,\n    // but the primary property value is shown on the chip representing the full object.\n    primary: '<displayColumn>',\n    // The actual schema properties.\n    properties: {\n      // Add your properties here e.g.\n      // idColumn: {type: coda.ValueType.String},\n      // displayColumn: {type: coda.ValueType.String},\n      // otherColumn: {type: coda.ValueType.Number},\n    },\n  }),\n  formula: {\n    // This is the name that will be called in the formula builder.\n    // Remember, your formula name cannot have spaces in it.\n    name: '<SyncTable>',\n    description: '<Creates a sync table>',\n\n    // If your formula requires one or more inputs, you’ll define them here.\n    // You can change the coda.Type to anything but object.\n    parameters: [\n      coda.makeParameter({\n        type: coda.ParameterType.String,\n        name: '<myParam>',\n        description: '<My description>',\n      }),\n    ],\n    // Everything inside this statement will execute anytime your Coda function is called in a doc.\n    execute: async function ([myParam], context) {\n      const response = await context.fetcher.fetch({method: 'GET', url: '<your url>'});\n      return {\n        result: [\n          {\n            // idColumn: 'Example1',\n            // displayColumn: response.body,\n            // otherColumn: myParam,\n          },\n        ],\n      };\n    },\n  },\n});"
+      }
+    ]
+  },
+  {
+    "name": "Hello World",
+    "triggerTokens": [],
+    "exampleFooterLink": "https://coda.io/@coda/make-a-pack-private-alpha/hello-world-16",
+    "content": "This is an example which creates a single formula called Hello, that takes in a string called name and returns “Hello, name !“.",
+    "exampleSnippets": [
+      {
+        "name": "Hello World",
+        "content": "",
+        "code": "/*\nStart making Packs!\nTry out the hello world sample below to create your first build.\n*/\n\n// **This import statement gives you access to all parts of the Coda Packs SDK. Uncomment to start!**\n// import * as coda from '@codahq/packs-sdk';\n\n// This line creates your new Pack.\nexport const pack = coda.newPack();\n\n// Here, we add a new formula to this Pack.\npack.addFormula({\n  // This is the name that will be called in the formula builder.\n  // Remember, your formula name cannot have spaces in it.\n  name: 'Hello',\n  description: 'A Hello World example.',\n\n  // If your formula requires one or more inputs, you’ll define them here.\n  // Here, we're creating a string input called “name”.\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: 'name',\n      description: 'The name you would like to say hello to.',\n    }),\n  ],\n\n  // Everything inside this execute statement will happen anytime your Coda function is called in a doc.\n  // An array of all user inputs is always the 1st parameter.\n  execute: async function ([name]) {\n    return `Hello ${name}!`;\n  },\n\n  // The resultType defines what will be returned in your Coda doc. Here, we're returning a simple text string.\n  resultType: coda.ValueType.String,\n});"
+      }
+    ]
+  },
+  {
+    "name": "Daylight",
+    "triggerTokens": [],
+    "exampleFooterLink": "https://coda.io/@coda/make-a-pack-private-alpha/daylight-29",
+    "content": "This is an example that creates a formula called daylight, which\n\n- takes in a numeric latitude and longitude as well as an optional Date, and\n- returns an object containing the duration of daylight hours along with sunrise and sunset times.",
+    "exampleSnippets": [
+      {
+        "name": "Daylight",
+        "content": "",
+        "code": "// **This import statement gives you access to all parts of the Coda Packs SDK. Uncomment to start!**\n// import * as coda from '@codahq/packs-sdk';\n\n// This line creates your new Pack.\nexport const pack = coda.newPack();\n\n// When using the fetcher, this is the domain of the API that your pack makes fetcher requests to.\npack.addNetworkDomain('sunrise-sunset.org');\n\n// Every object must have a schema, which defines things like the primary value that will be seen.\n// If you think of an object as a row in a table, you can think of the schema as the columns.\n// In this case, we're creating a new schema that has daylight hours, time of sunrise, and time of sunset.\nconst sunSchema = coda.makeObjectSchema({\n  type: coda.ValueType.Object,\n  properties: {\n    // The values we return are simple strings, but we use the codaType field to\n    // to tell Coda to interpret them as durations and time values.\n    daylight: {type: coda.ValueType.String, codaType: coda.ValueHintType.Duration},\n    sunriseUTC: {type: coda.ValueType.String, codaType: coda.ValueHintType.Time},\n    sunsetUTC: {type: coda.ValueType.String, codaType: coda.ValueHintType.Time},\n  },\n  // This is the property to use for display purposes on the UI chip for this object.\n  primary: 'daylight',\n});\n\n// This line adds a new formula.\npack.addFormula({\n  // This is the name that will be called in the formula builder. Remember, your formula name cannot have spaces in it.\n  name: 'Daylight',\n  description: 'Returns an object with sunrise and sunset for a given latitude and longitude.',\n\n  // This formula takes two required numeric inputs (the latitude and longitude) and one optional (the date)\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.Number,\n      name: 'lat',\n      description: 'The latitude to use.',\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.Number,\n      name: 'lng',\n      description: 'The longitude to use.',\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.Date,\n      name: 'date',\n      description: 'The date to use. Defaults to today.',\n\n      // This date parameter is an optional input.\n      optional: true,\n    }),\n  ],\n\n  // Everything inside this execute statement will happen anytime your Coda function is called in a doc.\n  // An array of all user inputs is passed as the 1st parameter.\n  // The context object is always the 2nd parameter and is used for fetching data.\n  execute: async function ([lat, lng, date], context) {\n    // Default to today if no date is provided.\n    const lookupDate = date ? new Date(date.toString()) : new Date();\n\n    // Format date to yyyy-mm-dd format as required by this API.\n    const formattedDate = lookupDate.toISOString().split('T')[0];\n\n    const url = `https://api.sunrise-sunset.org/json?lat='${lat}'&lng=${lng}&date=${formattedDate}'`;\n\n    const response = await context.fetcher.fetch({method: 'GET', url});\n\n    // Re-format the day_length string to [h] hrs [m] mins [s] secs to work as a duration.\n    const hours = response.body.results.day_length.split(':')[0];\n    const mins = response.body.results.day_length.split(':')[1];\n    const secs = response.body.results.day_length.split(':')[2];\n\n    const daylight = `${hours}hrs${mins}mins${secs}secs`;\n\n    // This API returns time in UTC so for simplicity we will just identify that in the output.\n    return {\n      daylight: daylight,\n      sunriseUTC: response.body.results.sunrise,\n      sunsetUTC: response.body.results.sunset,\n    };\n  },\n\n  // In this formula, we're returning an object with multiple properties.\n  resultType: coda.ValueType.Object,\n\n  // This object will be defined according to the schema written above.\n  schema: sunSchema,\n});"
+      }
+    ]
+  },
+  {
+    "name": "Hello Fetcher",
+    "triggerTokens": [],
+    "exampleFooterLink": "https://coda.io/@coda/make-a-pack-private-alpha/hello-fetcher-28",
+    "content": "This is an example which creates a single formula titled FetchIpsum, which returns a string of lorem ipsum copy.",
+    "exampleSnippets": [
+      {
+        "name": "Hello Fetcher",
+        "content": "",
+        "code": "// **This import statement gives you access to all parts of the Coda Packs SDK. Uncomment to start!**\n// import * as coda from '@codahq/packs-sdk';\n\n// This line creates your new Pack.\nexport const pack = coda.newPack();\n\n// When using the fetcher, this is the domain of the API that your pack makes fetcher requests to.\npack.addNetworkDomain('baconipsum.com');\n\n// This line adds a new formula to this Pack.\npack.addFormula({\n  // Remember, the formula name cannot have spaces in it.\n  name: 'FetchIpsum',\n  description: 'A simple fetcher example returning some lorem ipsum copy.',\n\n  // This formula does not need any user inputs, so the parameters field is empty.\n  parameters: [],\n\n  /* Everything inside this execute statement will happen anytime your Coda function is called in a doc.\n  An array of all user inputs is passed as the 1st parameter.\n  The context object is always the 2nd parameter and is used for fetching data and debugging. */\n  execute: async function ([], context) {\n    const url = 'https://baconipsum.com/api/?type=meat-and-filler';\n\n    // context.fetcher.fetch allows you to pull in external data, specifying things like the HTTP method and URL.\n    const response = await context.fetcher.fetch({method: 'GET', url});\n\n    // The entire body of the response contains the lorem ipsum text to be returned.\n    return response.body;\n  },\n\n  // In this formula, we're returning a string.\n  resultType: coda.ValueType.String,\n});"
+      }
+    ]
+  },
+  {
+    "name": "Number Array",
+    "triggerTokens": [],
+    "exampleFooterLink": "https://coda.io/@coda/make-a-pack-private-alpha/number-array-27",
+    "content": "This is an example which creates two formulas that each take in an array of numbers and return the greatest common denominator and least common multiple.",
+    "exampleSnippets": [
+      {
+        "name": "Number Array",
+        "content": "",
+        "code": "// **This import statement gives you access to all parts of the Coda Packs SDK. Uncomment to start!**\n// import * as coda from '@codahq/packs-sdk';\n\n// **This import statement gives you access to all parts of the Coda Packs SDK. Uncomment to start!**\nexport const pack = coda.newPack();\n\n// We'll use an array of numbers in *both* formulas.\nconst numberArray = coda.makeParameter({\n  type: coda.ParameterType.NumberArray,\n  name: 'Numbers',\n  description: 'the numbers you want to calculate',\n});\n\n// We'll also use this helper function that finds the gcd of two numbers in *both* formulas.\nfunction gcd(a, b) {\n  if (a === 0) {\n    return b;\n  }\n  return gcd(b % a, a);\n}\n\n// This line adds a new formula.\npack.addFormula({\n  // This is the name that will be called in the formula builder. Remember, your formula name cannot have spaces in it.\n  name: 'GCD',\n  description: 'Returns the greatest common denominator for an array',\n\n  // The needed array of numbers has already been defined above.\n  parameters: [numberArray],\n\n  // Everything inside this execute statement will happen anytime your Coda function is called in a doc.\n  // An array of all user inputs is always the 1st parameter.\n  execute: async function ([numberArray]) {\n    let gcdResult = numberArray[0];\n\n    for (let i = 1; i < numberArray.length; i++) {\n      gcdResult = gcd(numberArray[i], gcdResult);\n\n      if (gcdResult === 1) {\n        return 1;\n      }\n    }\n    return gcdResult;\n  },\n\n  // In this formula, we're returning a number in the Coda doc.\n  resultType: coda.ValueType.Number,\n});\n\n// Now, we'll define and add the second formula to the pack.\npack.addFormula({\n  name: 'LCM',\n  description: 'Returns the least common multiple for an array',\n  parameters: [numberArray],\n  execute: async function ([numberArray]) {\n    let lcmResult = numberArray[0];\n\n    for (let i = 1; i < numberArray.length; i++) {\n      lcmResult = (numberArray[i] * lcmResult) / gcd(numberArray[i], lcmResult);\n    }\n\n    return lcmResult;\n  },\n  resultType: coda.ValueType.Number,\n});"
+      }
+    ]
+  },
+  {
+    "name": "Todoist",
+    "triggerTokens": [],
+    "exampleFooterLink": "https://coda.io/@coda/make-a-pack-private-alpha/todoist-30",
+    "content": "This Pack acts as an integration with Todoist, and creates:\n\n- 3 buttons\n  - addProject , which creates a new Project with a given title\n  - addTask , which creates a new task with the given content , and adds it to an optional Project (by default, this goes into your Inbox)\n  - markAsComplete , which closes out a given task based on its taskID\n- 2 sync tables\n  - Projects syncs all of the user’s Projects\n  - Tasks syncs all of the user’s active tasks, across all projects\n\nNote this Pack requires a free Todoist account. The API key needed can be accessed from the “Integrations” tab within Settings.",
+    "exampleSnippets": [
+      {
+        "name": "Todoist",
+        "content": "",
+        "code": ""
       }
     ]
   }

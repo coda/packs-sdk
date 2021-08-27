@@ -24,6 +24,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const documentation_config_1 = require("./documentation_config");
 const documentation_config_2 = require("./documentation_config");
+const types_1 = require("./types");
 const fs = __importStar(require("fs"));
 const path_1 = __importDefault(require("path"));
 const CodeBegin = '// BEGIN\n';
@@ -32,6 +33,7 @@ const DocumentationRoot = path_1.default.join(BaseDir, 'documentation');
 const TypeDocsRoot = path_1.default.join(BaseDir, 'docs');
 const EmbeddedSnippetsRoot = path_1.default.join(TypeDocsRoot, 'embedded-snippets');
 const SnippetEmbedTemplate = fs.readFileSync(path_1.default.join(DocumentationRoot, 'snippet_embed_template.html'), 'utf8');
+const SdkReferenceLink = 'https://coda.github.io/packs-sdk';
 function main() {
     compileAutocompleteSnippets();
     compileExamples();
@@ -52,13 +54,17 @@ function compileExamples() {
     const compiledExamples = documentation_config_1.Examples.map(example => {
         const content = getContentFile(example.contentFile);
         const compiledExampleSnippets = compileExampleSnippets(example);
-        if (!isValidReferencePath(example.sdkReferencePath)) {
-            throw new Error(`${example.sdkReferencePath} is not a valid path`);
+        let exampleFooterLink = example.linkData.url;
+        if (example.linkData.type === types_1.UrlType.SdkReferencePath) {
+            if (!isValidReferencePath(exampleFooterLink)) {
+                throw new Error(`${exampleFooterLink} is not a valid path`);
+            }
+            exampleFooterLink = `${SdkReferenceLink}${exampleFooterLink}`;
         }
         return {
             name: example.name,
             triggerTokens: example.triggerTokens,
-            sdkReferencePath: example.sdkReferencePath,
+            exampleFooterLink,
             content,
             exampleSnippets: compiledExampleSnippets,
         };
@@ -84,7 +90,9 @@ function compileExampleSnippets(example) {
     });
 }
 function compileSnippetEmbed(codeFile) {
-    const exampleSnippetEmbed = SnippetEmbedTemplate.replace(/{{CODE}}/, getCodeFile(codeFile));
+    // TODO: Escape the html. codeString is inserted into a JS script.
+    const codeString = JSON.stringify(getCodeFile(codeFile));
+    const exampleSnippetEmbed = SnippetEmbedTemplate.replace(/'{{CODE}}'/, codeString);
     const snippetFileName = path_1.default.basename(codeFile).split('.')[0];
     if (!fs.existsSync(EmbeddedSnippetsRoot)) {
         fs.mkdirSync(EmbeddedSnippetsRoot);

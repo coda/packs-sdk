@@ -16,10 +16,7 @@
 
       require(['vs/editor/editor.main'], function () {
         var editor = monaco.editor.create(document.getElementById('container'), {
-          value: `pack.setUserAuthentication({
-  // Replace None with the authentication type that applies for your pack.
-  type: coda.AuthenticationType.None,
-});`,
+          value: "pack.setUserAuthentication({\n  // Replace None with the authentication type that applies for your pack.\n  type: coda.AuthenticationType.None,\n});",
           language: 'javascript',
           minimap: {enabled: false},
           readOnly: true,

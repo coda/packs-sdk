@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <!-- Monaco library script is loaded from: https://cdnjs.com/libraries/monaco-editor-->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs/loader.min.js"
+      integrity="sha512-SExj71Cw3B9C9EE8BC/ad3AKia5zQXDj/2SM4THgkeKh5GIFZhKM/R3uclUG8YZwJrjcVhydAlIHmfNvsBCKZA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      require.config({
+        paths: {
+          vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs',
+        },
+      });
+
+      require(['vs/editor/editor.main'], function () {
+        var editor = monaco.editor.create(document.getElementById('container'), {
+          value: "// **This import statement gives you access to all parts of the Coda Packs SDK. Uncomment to start!**\n// import * as coda from '@codahq/packs-sdk';\n\n// **This import statement gives you access to all parts of the Coda Packs SDK. Uncomment to start!**\nexport const pack = coda.newPack();\n\n// We'll use an array of numbers in *both* formulas.\nconst numberArray = coda.makeParameter({\n  type: coda.ParameterType.NumberArray,\n  name: 'Numbers',\n  description: 'the numbers you want to calculate',\n});\n\n// We'll also use this helper function that finds the gcd of two numbers in *both* formulas.\nfunction gcd(a, b) {\n  if (a === 0) {\n    return b;\n  }\n  return gcd(b % a, a);\n}\n\n// This line adds a new formula.\npack.addFormula({\n  // This is the name that will be called in the formula builder. Remember, your formula name cannot have spaces in it.\n  name: 'GCD',\n  description: 'Returns the greatest common denominator for an array',\n\n  // The needed array of numbers has already been defined above.\n  parameters: [numberArray],\n\n  // Everything inside this execute statement will happen anytime your Coda function is called in a doc.\n  // An array of all user inputs is always the 1st parameter.\n  execute: async function ([numberArray]) {\n    let gcdResult = numberArray[0];\n\n    for (let i = 1; i < numberArray.length; i++) {\n      gcdResult = gcd(numberArray[i], gcdResult);\n\n      if (gcdResult === 1) {\n        return 1;\n      }\n    }\n    return gcdResult;\n  },\n\n  // In this formula, we're returning a number in the Coda doc.\n  resultType: coda.ValueType.Number,\n});\n\n// Now, we'll define and add the second formula to the pack.\npack.addFormula({\n  name: 'LCM',\n  description: 'Returns the least common multiple for an array',\n  parameters: [numberArray],\n  execute: async function ([numberArray]) {\n    let lcmResult = numberArray[0];\n\n    for (let i = 1; i < numberArray.length; i++) {\n      lcmResult = (numberArray[i] * lcmResult) / gcd(numberArray[i], lcmResult);\n    }\n\n    return lcmResult;\n  },\n  resultType: coda.ValueType.Number,\n});",
+          language: 'javascript',
+          minimap: {enabled: false},
+          readOnly: true,
+          renderValidationDecorations: 'off',
+          wordWrap: 'on',
+          contextmenu: false,
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="container" style="position: absolute; top: 0; right: 16; bottom: 16; left: 0"></div>
+  </body>
+</html>

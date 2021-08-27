@@ -21,14 +21,22 @@ export interface CompiledExampleSnippet {
 export interface Example {
     name: string;
     triggerTokens: string[];
-    sdkReferencePath: string;
+    linkData: LinkData;
     contentFile: string;
     exampleSnippets: ExampleSnippet[];
 }
 export interface CompiledExample {
     name: string;
     triggerTokens: string[];
-    sdkReferencePath: string;
+    exampleFooterLink: string;
     content: string;
     exampleSnippets: CompiledExampleSnippet[];
+}
+export interface LinkData {
+    type: UrlType;
+    url: string;
+}
+export declare enum UrlType {
+    SdkReferencePath = "SdkReferencePath",
+    Web = "Web"
 }

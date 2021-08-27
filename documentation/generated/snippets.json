@@ -16,7 +16,7 @@
       "ArrayFormula"
     ],
     "content": "Adds a Coda formula which will return a text string in the doc.",
-    "code": "pack.addFormula({\n  resultType: coda.ValueType.Array,\n  name: 'MyFormula',\n  description: '',\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.Number,\n      name: 'myParam',\n      description: '',\n    }),\n  ],\n  items: {\n    type: coda.ValueType.Object,\n    properties: {\n      column1: {type: coda.ValueType.String},\n    },\n  },\n  execute: ([param]) => {\n    return [{column1: 'hello'}, {column1: 'world'}, {column1: `${param}`}];\n  },\n});"
+    "code": "pack.addFormula({\n  resultType: coda.ValueType.Array,\n  name: 'MyFormula',\n  description: '',\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.Number,\n      name: 'myParam',\n      description: '',\n    }),\n  ],\n  items: {\n    type: coda.ValueType.Object,\n    properties: {\n      column1: {type: coda.ValueType.String},\n    },\n  },\n  execute: ([param]) => {\n    return [{column1: 'hello'}, {column1: 'world'}, {column1: param}];\n  },\n});"
   },
   {
     "triggerTokens": [
