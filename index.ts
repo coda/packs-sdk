@@ -105,8 +105,8 @@ export {ensureNonEmptyString} from './helpers/ensure';
 export {ensureUnreachable} from './helpers/ensure';
 
 // Object Schemas
-export * as schema from './schema';
 export type {ArraySchema} from './schema';
+export {AttributionNodeType} from './schema';
 export type {BooleanSchema} from './schema';
 export {CurrencyFormat} from './schema';
 export type {CurrencySchema} from './schema';
@@ -131,6 +131,7 @@ export type {TimeSchema} from './schema';
 export {ValueHintType} from './schema';
 export {ValueType} from './schema';
 export {generateSchema} from './schema';
+export {makeAttributionNode} from './schema';
 export {makeObjectSchema} from './schema';
 export {makeReferenceSchemaFromObjectSchema} from './schema';
 export {makeSchema} from './schema';

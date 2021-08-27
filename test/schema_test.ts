@@ -1,7 +1,7 @@
 import {ValueHintType} from '../index';
 import {ValueType} from '../index';
 import {makeObjectSchema} from '../index';
-import {schema} from '../index';
+import * as schema from '../schema';
 
 describe('Schema', () => {
   describe('generateSchema', () => {

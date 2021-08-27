@@ -166,7 +166,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 export interface ObjectSchema<K extends string, L extends string> extends ObjectSchemaDefinition<K, L> {
 	identity?: Identity;
 }
-declare enum AttributionNodeType {
+export declare enum AttributionNodeType {
 	Text = 1,
 	Link = 2,
 	Image = 3
@@ -186,6 +186,7 @@ export interface ImageAttributionNode {
 	imageUrl: string;
 }
 export declare type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
+export declare function makeAttributionNode<T extends AttributionNode>(node: T): T;
 export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
 export declare type PickOptional<T, K extends keyof T> = Partial<T> & {
 	[P in K]: T[P];

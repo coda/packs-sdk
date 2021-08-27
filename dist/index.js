@@ -1,25 +1,6 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = exports.makeObjectSchema = exports.generateSchema = exports.ValueType = exports.ValueHintType = exports.DurationUnit = exports.CurrencyFormat = exports.schema = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeParameter = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makeMetadataFormula = exports.UserVisibleError = exports.Type = exports.StatusCodeError = exports.PrecannedDateRange = exports.ParameterType = exports.NetworkConnection = exports.ConnectionRequirement = exports.PackDefinitionBuilder = exports.newPack = exports.PostSetupType = exports.DefaultConnectionType = exports.AuthenticationType = void 0;
+exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = exports.makeObjectSchema = exports.makeAttributionNode = exports.generateSchema = exports.ValueType = exports.ValueHintType = exports.DurationUnit = exports.CurrencyFormat = exports.AttributionNodeType = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeParameter = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makeMetadataFormula = exports.UserVisibleError = exports.Type = exports.StatusCodeError = exports.PrecannedDateRange = exports.ParameterType = exports.NetworkConnection = exports.ConnectionRequirement = exports.PackDefinitionBuilder = exports.newPack = exports.PostSetupType = exports.DefaultConnectionType = exports.AuthenticationType = void 0;
 var types_1 = require("./types");
 Object.defineProperty(exports, "AuthenticationType", { enumerable: true, get: function () { return types_1.AuthenticationType; } });
 var types_2 = require("./types");
@@ -81,21 +62,23 @@ var ensure_3 = require("./helpers/ensure");
 Object.defineProperty(exports, "ensureNonEmptyString", { enumerable: true, get: function () { return ensure_3.ensureNonEmptyString; } });
 var ensure_4 = require("./helpers/ensure");
 Object.defineProperty(exports, "ensureUnreachable", { enumerable: true, get: function () { return ensure_4.ensureUnreachable; } });
-// Object Schemas
-exports.schema = __importStar(require("./schema"));
 var schema_1 = require("./schema");
-Object.defineProperty(exports, "CurrencyFormat", { enumerable: true, get: function () { return schema_1.CurrencyFormat; } });
+Object.defineProperty(exports, "AttributionNodeType", { enumerable: true, get: function () { return schema_1.AttributionNodeType; } });
 var schema_2 = require("./schema");
-Object.defineProperty(exports, "DurationUnit", { enumerable: true, get: function () { return schema_2.DurationUnit; } });
+Object.defineProperty(exports, "CurrencyFormat", { enumerable: true, get: function () { return schema_2.CurrencyFormat; } });
 var schema_3 = require("./schema");
-Object.defineProperty(exports, "ValueHintType", { enumerable: true, get: function () { return schema_3.ValueHintType; } });
+Object.defineProperty(exports, "DurationUnit", { enumerable: true, get: function () { return schema_3.DurationUnit; } });
 var schema_4 = require("./schema");
-Object.defineProperty(exports, "ValueType", { enumerable: true, get: function () { return schema_4.ValueType; } });
+Object.defineProperty(exports, "ValueHintType", { enumerable: true, get: function () { return schema_4.ValueHintType; } });
 var schema_5 = require("./schema");
-Object.defineProperty(exports, "generateSchema", { enumerable: true, get: function () { return schema_5.generateSchema; } });
+Object.defineProperty(exports, "ValueType", { enumerable: true, get: function () { return schema_5.ValueType; } });
 var schema_6 = require("./schema");
-Object.defineProperty(exports, "makeObjectSchema", { enumerable: true, get: function () { return schema_6.makeObjectSchema; } });
+Object.defineProperty(exports, "generateSchema", { enumerable: true, get: function () { return schema_6.generateSchema; } });
 var schema_7 = require("./schema");
-Object.defineProperty(exports, "makeReferenceSchemaFromObjectSchema", { enumerable: true, get: function () { return schema_7.makeReferenceSchemaFromObjectSchema; } });
+Object.defineProperty(exports, "makeAttributionNode", { enumerable: true, get: function () { return schema_7.makeAttributionNode; } });
 var schema_8 = require("./schema");
-Object.defineProperty(exports, "makeSchema", { enumerable: true, get: function () { return schema_8.makeSchema; } });
+Object.defineProperty(exports, "makeObjectSchema", { enumerable: true, get: function () { return schema_8.makeObjectSchema; } });
+var schema_9 = require("./schema");
+Object.defineProperty(exports, "makeReferenceSchemaFromObjectSchema", { enumerable: true, get: function () { return schema_9.makeReferenceSchemaFromObjectSchema; } });
+var schema_10 = require("./schema");
+Object.defineProperty(exports, "makeSchema", { enumerable: true, get: function () { return schema_10.makeSchema; } });
