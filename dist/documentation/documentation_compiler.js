@@ -90,9 +90,9 @@ function compileExampleSnippets(example) {
     });
 }
 function compileSnippetEmbed(codeFile) {
-    // const templateLiteralSafeCode = getCodeFile(codeFile).replace(/`/g, '\\`').replace(/\$/g, '\\$');
-    const templateLiteralSafeCode = JSON.stringify(getCodeFile(codeFile));
-    const exampleSnippetEmbed = SnippetEmbedTemplate.replace(/'{{CODE}}'/, templateLiteralSafeCode);
+    // TODO: Escape the html. codeString is inserted into a JS script.
+    const codeString = JSON.stringify(getCodeFile(codeFile));
+    const exampleSnippetEmbed = SnippetEmbedTemplate.replace(/'{{CODE}}'/, codeString);
     const snippetFileName = path_1.default.basename(codeFile).split('.')[0];
     if (!fs.existsSync(EmbeddedSnippetsRoot)) {
         fs.mkdirSync(EmbeddedSnippetsRoot);
