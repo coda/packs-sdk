@@ -22,6 +22,6 @@ pack.addFormula({
     },
   },
   execute: ([param]) => {
-    return [{column1: 'hello'}, {column1: 'world'}, {column1: `${param}`}];
+    return [{column1: 'hello'}, {column1: 'world'}, {column1: param}];
   },
 });

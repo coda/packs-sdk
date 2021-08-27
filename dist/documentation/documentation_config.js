@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Examples = exports.Snippets = void 0;
+const types_1 = require("./types");
 exports.Snippets = [
     {
         triggerTokens: ['addStringFormula', 'makeStringFormula', 'StringFormula', 'addFormula'],
@@ -128,7 +129,10 @@ exports.Examples = [
         name: 'addColumnFormat()',
         triggerTokens: ['addColumnFormat'],
         contentFile: './examples/column-format/column_format.md',
-        sdkReferencePath: '/classes/PackDefinitionBuilder.html#addColumnFormat',
+        linkData: {
+            type: types_1.UrlType.SdkReferencePath,
+            url: '/classes/PackDefinitionBuilder.html#addColumnFormat',
+        },
         exampleSnippets: [
             {
                 name: 'Column Format with No Matchers',
@@ -141,7 +145,10 @@ exports.Examples = [
         name: 'Authentication',
         triggerTokens: ['setSystemAuthentication', 'setUserAuthentication'],
         contentFile: './examples/authentication/authentication.md',
-        sdkReferencePath: '/classes/PackDefinitionBuilder.html#setSystemAuthentication',
+        linkData: {
+            type: types_1.UrlType.SdkReferencePath,
+            url: '/classes/PackDefinitionBuilder.html#setSystemAuthentication',
+        },
         exampleSnippets: [
             {
                 name: 'System Authentication',
@@ -159,7 +166,10 @@ exports.Examples = [
         name: 'addDynamicSyncTable()',
         triggerTokens: ['addDynamicSyncTable'],
         contentFile: './examples/dynamic-sync-table/dynamic_sync_table.md',
-        sdkReferencePath: '/classes/PackDefinitionBuilder.html#addDynamicSyncTable',
+        linkData: {
+            type: types_1.UrlType.SdkReferencePath,
+            url: '/classes/PackDefinitionBuilder.html#addDynamicSyncTable',
+        },
         exampleSnippets: [
             {
                 name: 'Basic Dynamic Sync Table',
@@ -172,7 +182,10 @@ exports.Examples = [
         name: 'addFormula()',
         triggerTokens: ['addFormula'],
         contentFile: './examples/formula/formula.md',
-        sdkReferencePath: '/classes/PackDefinitionBuilder.html#addFormula',
+        linkData: {
+            type: types_1.UrlType.SdkReferencePath,
+            url: '/classes/PackDefinitionBuilder.html#addFormula',
+        },
         exampleSnippets: [
             {
                 name: 'Basic Formula',
@@ -185,12 +198,95 @@ exports.Examples = [
         name: 'addSyncTable()',
         triggerTokens: ['addSyncTable'],
         contentFile: './examples/sync-table/sync_table.md',
-        sdkReferencePath: '/classes/PackDefinitionBuilder.html#addSyncTable',
+        linkData: {
+            type: types_1.UrlType.SdkReferencePath,
+            url: '/classes/PackDefinitionBuilder.html#addSyncTable',
+        },
         exampleSnippets: [
             {
                 name: 'Basic Sync Table',
                 content: '',
                 codeFile: './examples/sync-table/basic_sync_table.ts',
+            },
+        ],
+    },
+    {
+        name: 'Hello World',
+        triggerTokens: [],
+        contentFile: './examples/hello_world/hello_world.md',
+        linkData: {
+            type: types_1.UrlType.Web,
+            url: 'https://coda.io/@coda/make-a-pack-private-alpha/hello-world-16',
+        },
+        exampleSnippets: [
+            {
+                name: 'Hello World',
+                content: '',
+                codeFile: './examples/hello_world/hello_world.ts',
+            },
+        ],
+    },
+    {
+        name: 'Daylight',
+        triggerTokens: [],
+        contentFile: './examples/daylight/daylight.md',
+        linkData: {
+            type: types_1.UrlType.Web,
+            url: 'https://coda.io/@coda/make-a-pack-private-alpha/daylight-29',
+        },
+        exampleSnippets: [
+            {
+                name: 'Daylight',
+                content: '',
+                codeFile: './examples/daylight/daylight.ts',
+            },
+        ],
+    },
+    {
+        name: 'Hello Fetcher',
+        triggerTokens: [],
+        contentFile: './examples/hello_fetcher/hello_fetcher.md',
+        linkData: {
+            type: types_1.UrlType.Web,
+            url: 'https://coda.io/@coda/make-a-pack-private-alpha/hello-fetcher-28',
+        },
+        exampleSnippets: [
+            {
+                name: 'Hello Fetcher',
+                content: '',
+                codeFile: './examples/hello_fetcher/hello_fetcher.ts',
+            },
+        ],
+    },
+    {
+        name: 'Number Array',
+        triggerTokens: [],
+        contentFile: './examples/number_array/number_array.md',
+        linkData: {
+            type: types_1.UrlType.Web,
+            url: 'https://coda.io/@coda/make-a-pack-private-alpha/number-array-27',
+        },
+        exampleSnippets: [
+            {
+                name: 'Number Array',
+                content: '',
+                codeFile: './examples/number_array/number_array.ts',
+            },
+        ],
+    },
+    {
+        name: 'Todoist',
+        triggerTokens: [],
+        contentFile: './examples/todoist/todoist.md',
+        linkData: {
+            type: types_1.UrlType.Web,
+            url: 'https://coda.io/@coda/make-a-pack-private-alpha/todoist-30',
+        },
+        exampleSnippets: [
+            {
+                name: 'Todoist',
+                content: '',
+                codeFile: './examples/todoist/todoist.ts',
             },
         ],
     },
