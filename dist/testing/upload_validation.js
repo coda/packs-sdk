@@ -421,8 +421,11 @@ const Base64ObjectRegex = /^[A-Za-z0-9=_-]+$/;
 function isValidObjectId(component) {
     return Base64ObjectRegex.test(component);
 }
+const PackIdsWithBadSyncTableNames = [
+    1090, // salesforce pack has a large number of dynamic identity ids that include empty spaces.
+];
 // These sync tables already violate the object id constraints and should be cleaned up via upgrade.
-const BAD_SYNC_TABLE_NAMES = [
+const BadSyncTableNames = [
     'Pull Request',
     'Merge Request',
     'G Suite Directory User',
@@ -431,8 +434,11 @@ const BAD_SYNC_TABLE_NAMES = [
     'Person Schema',
     'Doc Analytics',
 ];
-function isValidIdentityName(name) {
-    if (BAD_SYNC_TABLE_NAMES.includes(name)) {
+function isValidIdentityName(packId, name) {
+    if (PackIdsWithBadSyncTableNames.includes(packId)) {
+        return true;
+    }
+    if (BadSyncTableNames.includes(name)) {
         return true;
     }
     return isValidObjectId(name);
@@ -450,15 +456,23 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
         // TODO(jonathan): Enable after existing packs go through the v2 upload flow.
         // packId: z.literal(PlaceholderIdentityPackId),
         packId: z.number().optional(),
-        name: z.string().nonempty().refine(isValidIdentityName, {
-            message: 'Invalid name. Identity names can only contain alphanumeric characters, underscores, and dashes, and no spaces.',
-        }),
+        name: z.string().nonempty(),
         dynamicUrl: z.string().optional(),
         attribution: z
             .array(z.union([textAttributionNodeSchema, linkAttributionNodeSchema, imageAttributionNodeSchema]))
             .optional(),
     }).optional(),
     properties: z.record(objectPropertyUnionSchema),
+})
+    .superRefine((data, context) => {
+    var _a;
+    if (!isValidIdentityName(data.id, (_a = data.identity) === null || _a === void 0 ? void 0 : _a.name)) {
+        context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['identity', 'name'],
+            message: 'Invalid name. Identity names can only contain alphanumeric characters, underscores, and dashes, and no spaces.',
+        });
+    }
 })
     .refine(data => object_utils_1.isNil(data.id) || data.id in data.properties, {
     message: 'The "id" property must appear as a key in the "properties" object.',
