@@ -4664,7 +4664,7 @@ function unmarshalNumber(val) {
 }
 
 // runtime/common/marshaling/index.ts
-var HACK_UNDEFINED_JSON_VALUE = "__UNDEFINED__";
+var HACK_UNDEFINED_JSON_VALUE = "__CODA_UNDEFINED__";
 var MaxTraverseDepth = 100;
 var customMarshalers = [marshalError, marshalBuffer, marshalNumber, marshalDate];
 var customUnmarshalers = [unmarshalError, unmarshalBuffer, unmarshalNumber, unmarshalDate];
@@ -4679,9 +4679,6 @@ function serialize(val) {
 }
 function deserialize(_, val) {
   if (val) {
-    if (val === HACK_UNDEFINED_JSON_VALUE) {
-      return void 0;
-    }
     for (const unmarshaler of customUnmarshalers) {
       const result = unmarshaler(val);
       if (result !== void 0) {
@@ -4725,7 +4722,8 @@ function unmarshalValue(marshaledValue) {
   if (marshaledValue === void 0) {
     return marshaledValue;
   }
-  return JSON.parse(marshaledValue, deserialize);
+  const parsed = JSON.parse(marshaledValue, deserialize);
+  return reviveUndefinedValues(parsed);
 }
 function wrapError(err) {
   return new Error(marshalValue(err));
@@ -4740,6 +4738,23 @@ function unwrapError(err) {
   } catch (_) {
     return err;
   }
+}
+function reviveUndefinedValues(val) {
+  if (val === null) {
+    return val;
+  }
+  if (val === HACK_UNDEFINED_JSON_VALUE) {
+    return void 0;
+  }
+  if (Array.isArray(val)) {
+    return val.map((x) => reviveUndefinedValues(x));
+  }
+  if (typeof val === "object") {
+    for (const key of Object.getOwnPropertyNames(val)) {
+      val[key] = reviveUndefinedValues(val[key]);
+    }
+  }
+  return val;
 }
 
 // runtime/thunk/thunk.ts
