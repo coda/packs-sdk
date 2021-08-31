@@ -9,6 +9,8 @@ const marshal_buffer_2 = require("./marshal_buffer");
 const marshal_dates_2 = require("./marshal_dates");
 const marshal_errors_2 = require("./marshal_errors");
 const marshal_numbers_2 = require("./marshal_numbers");
+// JSON has no native way to represent `undefined`.
+const HACK_UNDEFINED_JSON_VALUE = '__UNDEFINED__';
 const MaxTraverseDepth = 100;
 const customMarshalers = [marshal_errors_1.marshalError, marshal_buffer_1.marshalBuffer, marshal_numbers_1.marshalNumber, marshal_dates_1.marshalDate];
 const customUnmarshalers = [marshal_errors_2.unmarshalError, marshal_buffer_2.unmarshalBuffer, marshal_numbers_2.unmarshalNumber, marshal_dates_2.unmarshalDate];
@@ -23,6 +25,9 @@ function serialize(val) {
 }
 function deserialize(_, val) {
     if (val) {
+        if (val === HACK_UNDEFINED_JSON_VALUE) {
+            return undefined;
+        }
         for (const unmarshaler of customUnmarshalers) {
             const result = unmarshaler(val);
             if (result !== undefined) {
@@ -36,7 +41,10 @@ function processValue(val, depth = 0) {
     if (depth >= MaxTraverseDepth) {
         throw new Error('marshaling value is too deep or containing circular strcture');
     }
-    if (val === undefined || val === null) {
+    if (val === undefined) {
+        return HACK_UNDEFINED_JSON_VALUE;
+    }
+    if (val === null) {
         return val;
     }
     if (Array.isArray(val)) {

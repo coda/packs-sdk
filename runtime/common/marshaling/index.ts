@@ -7,7 +7,11 @@ import {unmarshalDate} from './marshal_dates';
 import {unmarshalError} from './marshal_errors';
 import {unmarshalNumber} from './marshal_numbers';
 
+// JSON has no native way to represent `undefined`.
+const HACK_UNDEFINED_JSON_VALUE = '__UNDEFINED__';
+
 const MaxTraverseDepth = 100;
+
 const customMarshalers = [marshalError, marshalBuffer, marshalNumber, marshalDate];
 
 const customUnmarshalers: Array<(val: any) => any> = [unmarshalError, unmarshalBuffer, unmarshalNumber, unmarshalDate];
@@ -25,6 +29,10 @@ function serialize(val: any): any {
 
 function deserialize(_: string, val: any): any {
   if (val) {
+    if (val === HACK_UNDEFINED_JSON_VALUE) {
+      return undefined;
+    }
+
     for (const unmarshaler of customUnmarshalers) {
       const result = unmarshaler(val);
       if (result !== undefined) {
@@ -41,7 +49,11 @@ function processValue(val: any, depth: number = 0): any {
     throw new Error('marshaling value is too deep or containing circular strcture');
   }
 
-  if (val === undefined || val === null) {
+  if (val === undefined) {
+    return HACK_UNDEFINED_JSON_VALUE;
+  }
+
+  if (val === null) {
     return val;
   }
 

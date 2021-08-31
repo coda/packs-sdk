@@ -17,6 +17,7 @@ describe('Marshaling', () => {
     assert.deepEqual([1], transform([1]));
     assert.deepEqual({a: 1}, transform({a: 1}));
     assert.deepEqual(undefined, transform(undefined));
+    assert.deepEqual([undefined], transform([undefined]));
     assert.deepEqual(null, transform(null));
     assert.deepEqual(true, transform(true));
     assert.deepEqual(Number(123), transform(Number(123)));

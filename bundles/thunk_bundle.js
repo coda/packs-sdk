@@ -4664,6 +4664,7 @@ function unmarshalNumber(val) {
 }
 
 // runtime/common/marshaling/index.ts
+var HACK_UNDEFINED_JSON_VALUE = "__UNDEFINED__";
 var MaxTraverseDepth = 100;
 var customMarshalers = [marshalError, marshalBuffer, marshalNumber, marshalDate];
 var customUnmarshalers = [unmarshalError, unmarshalBuffer, unmarshalNumber, unmarshalDate];
@@ -4678,6 +4679,9 @@ function serialize(val) {
 }
 function deserialize(_, val) {
   if (val) {
+    if (val === HACK_UNDEFINED_JSON_VALUE) {
+      return void 0;
+    }
     for (const unmarshaler of customUnmarshalers) {
       const result = unmarshaler(val);
       if (result !== void 0) {
@@ -4691,7 +4695,10 @@ function processValue(val, depth = 0) {
   if (depth >= MaxTraverseDepth) {
     throw new Error("marshaling value is too deep or containing circular strcture");
   }
-  if (val === void 0 || val === null) {
+  if (val === void 0) {
+    return HACK_UNDEFINED_JSON_VALUE;
+  }
+  if (val === null) {
     return val;
   }
   if (Array.isArray(val)) {
