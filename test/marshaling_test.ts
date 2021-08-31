@@ -20,6 +20,7 @@ describe('Marshaling', () => {
     assert.deepEqual(transform([undefined]), [undefined]);
     assert.deepEqual(transform({a: undefined}), {a: undefined});
     assert.deepEqual(transform(null), null);
+    assert.deepEqual(transform([null]), [null]);
     assert.deepEqual(transform(true), true);
     assert.deepEqual(transform(Number(123)), Number(123));
     assert.deepEqual(transform(NaN), NaN);
@@ -36,7 +37,7 @@ describe('Marshaling', () => {
   it('works for a variety of compound objects', () => {
     const testObjects: any = [
       [null, undefined, 0, false, NaN, Infinity, {undefined: 1, null: undefined}],
-      {Array: [], Boolean: false, new: {}, function: undefined, NaN: 1},
+      {Array: [], Boolean: false, new: {_: null}, function: undefined, NaN: 1},
       [{undefined: [{false: [{true: [{null: 0}]}]}]}],
     ];
     testObjects.forEach((x: any) => assert.deepEqual(transform(x), x));
