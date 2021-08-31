@@ -9,6 +9,8 @@ const marshal_buffer_2 = require("./marshal_buffer");
 const marshal_dates_2 = require("./marshal_dates");
 const marshal_errors_2 = require("./marshal_errors");
 const marshal_numbers_2 = require("./marshal_numbers");
+// JSON has no native way to represent `undefined`.
+const HACK_UNDEFINED_JSON_VALUE = '__CODA_UNDEFINED__';
 const MaxTraverseDepth = 100;
 const customMarshalers = [marshal_errors_1.marshalError, marshal_buffer_1.marshalBuffer, marshal_numbers_1.marshalNumber, marshal_dates_1.marshalDate];
 const customUnmarshalers = [marshal_errors_2.unmarshalError, marshal_buffer_2.unmarshalBuffer, marshal_numbers_2.unmarshalNumber, marshal_dates_2.unmarshalDate];
@@ -36,7 +38,10 @@ function processValue(val, depth = 0) {
     if (depth >= MaxTraverseDepth) {
         throw new Error('marshaling value is too deep or containing circular strcture');
     }
-    if (val === undefined || val === null) {
+    if (val === undefined) {
+        return HACK_UNDEFINED_JSON_VALUE;
+    }
+    if (val === null) {
         return val;
     }
     if (Array.isArray(val)) {
@@ -74,7 +79,9 @@ function unmarshalValue(marshaledValue) {
     if (marshaledValue === undefined) {
         return marshaledValue;
     }
-    return JSON.parse(marshaledValue, deserialize);
+    const parsed = JSON.parse(marshaledValue, deserialize);
+    // JSON parsing can't populate `undefined` in deserialize b/c it's not a valid JSON value, so we make a 2nd pass.
+    return reviveUndefinedValues(parsed);
 }
 exports.unmarshalValue = unmarshalValue;
 function wrapError(err) {
@@ -102,3 +109,22 @@ function unwrapError(err) {
     }
 }
 exports.unwrapError = unwrapError;
+// Recursively traverses objects/arrays
+function reviveUndefinedValues(val) {
+    // Check null first b/c typeof null === 'object'
+    if (val === null) {
+        return val;
+    }
+    if (val === HACK_UNDEFINED_JSON_VALUE) {
+        return undefined;
+    }
+    if (Array.isArray(val)) {
+        return val.map(x => reviveUndefinedValues(x));
+    }
+    if (typeof val === 'object') {
+        for (const key of Object.getOwnPropertyNames(val)) {
+            val[key] = reviveUndefinedValues(val[key]);
+        }
+    }
+    return val;
+}

@@ -11,24 +11,36 @@ describe('Marshaling', () => {
   it('works for regular objects', () => {
     // this test covers most of https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 
-    assert.deepEqual(1, transform(1));
-    assert.deepEqual(1.1, transform(1.1));
-    assert.deepEqual('1', transform('1'));
-    assert.deepEqual([1], transform([1]));
-    assert.deepEqual({a: 1}, transform({a: 1}));
-    assert.deepEqual(undefined, transform(undefined));
-    assert.deepEqual(null, transform(null));
-    assert.deepEqual(true, transform(true));
-    assert.deepEqual(Number(123), transform(Number(123)));
-    assert.deepEqual(NaN, transform(NaN));
-    assert.deepEqual(Infinity, transform(Infinity));
-    assert.deepEqual(new Date(123), transform(new Date(123)));
+    assert.deepEqual(transform(1), 1);
+    assert.deepEqual(transform(1.1), 1.1);
+    assert.deepEqual(transform('1'), '1');
+    assert.deepEqual(transform([1]), [1]);
+    assert.deepEqual(transform({a: 1}), {a: 1});
+    assert.deepEqual(transform(undefined), undefined);
+    assert.deepEqual(transform([undefined]), [undefined]);
+    assert.deepEqual(transform({a: undefined}), {a: undefined});
+    assert.deepEqual(transform(null), null);
+    assert.deepEqual(transform([null]), [null]);
+    assert.deepEqual(transform(true), true);
+    assert.deepEqual(transform(Number(123)), Number(123));
+    assert.deepEqual(transform(NaN), NaN);
+    assert.deepEqual(transform(Infinity), Infinity);
+    assert.deepEqual(transform(new Date(123)), new Date(123));
 
     // the following doesn't work yet.
-    // assert.deepEqual(/123/, transform(/123/));
-    // assert.deepEqual(Uint8Array.from([1, 2, 3]), transform(Uint8Array.from([1, 2, 3])));
-    // assert.deepEqual(new Set([1, 2]), transform(new Set([1, 2])));
-    // assert.deepEqual(new Map([['a', 2]]), transform(new Map([['a', 2]])));
+    // assert.deepEqual(transform(/123/), /123/);
+    // assert.deepEqual(transform(Uint8Array.from([1, 2, 3])), Uint8Array.from([1, 2, 3]));
+    // assert.deepEqual(transform(new Set([1, 2])), new Set([1, 2]));
+    // assert.deepEqual(transform(new Map([['a', 2]])), new Map([['a', 2]]));
+  });
+
+  it('works for a variety of compound objects', () => {
+    const testObjects: any = [
+      [null, undefined, 0, false, NaN, Infinity, {undefined: 1, null: undefined}],
+      {Array: [], Boolean: false, new: {_: null}, function: undefined, NaN: 1},
+      [{undefined: [{false: [{true: [{null: 0}]}]}]}],
+    ];
+    testObjects.forEach((x: any) => assert.deepEqual(transform(x), x));
   });
 
   it('does not throw error for unhandled objects', () => {
@@ -58,7 +70,7 @@ describe('Marshaling', () => {
 
     it('works for regular error', () => {
       const error = new Error('test');
-      assertErrorsEqual(error, transform(error));
+      assertErrorsEqual(transform(error), error);
     });
 
     it('works for common system errors', () => {
@@ -71,7 +83,7 @@ describe('Marshaling', () => {
     it('works for whitelisted coda errors', () => {
       const error = new StatusCodeError(404, '', {url: 'https://coda.io', method: 'GET'}, {headers: {}, body: ''});
       const transformedError = transform(error);
-      assertErrorsEqual(error, transformedError);
+      assertErrorsEqual(transformedError, error);
       assert.isTrue(transformedError instanceof StatusCodeError);
     });
   });

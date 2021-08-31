@@ -7,7 +7,11 @@ import {unmarshalDate} from './marshal_dates';
 import {unmarshalError} from './marshal_errors';
 import {unmarshalNumber} from './marshal_numbers';
 
+// JSON has no native way to represent `undefined`.
+const HACK_UNDEFINED_JSON_VALUE = '__CODA_UNDEFINED__';
+
 const MaxTraverseDepth = 100;
+
 const customMarshalers = [marshalError, marshalBuffer, marshalNumber, marshalDate];
 
 const customUnmarshalers: Array<(val: any) => any> = [unmarshalError, unmarshalBuffer, unmarshalNumber, unmarshalDate];
@@ -41,7 +45,11 @@ function processValue(val: any, depth: number = 0): any {
     throw new Error('marshaling value is too deep or containing circular strcture');
   }
 
-  if (val === undefined || val === null) {
+  if (val === undefined) {
+    return HACK_UNDEFINED_JSON_VALUE;
+  }
+
+  if (val === null) {
     return val;
   }
 
@@ -87,7 +95,10 @@ export function unmarshalValue(marshaledValue: string | undefined): any {
     return marshaledValue;
   }
 
-  return JSON.parse(marshaledValue, deserialize);
+  const parsed = JSON.parse(marshaledValue, deserialize);
+
+  // JSON parsing can't populate `undefined` in deserialize b/c it's not a valid JSON value, so we make a 2nd pass.
+  return reviveUndefinedValues(parsed);
 }
 
 export function wrapError(err: Error): Error {
@@ -113,4 +124,24 @@ export function unwrapError(err: Error): Error {
   } catch (_) {
     return err;
   }
+}
+
+// Recursively traverses objects/arrays
+function reviveUndefinedValues(val: any): any {
+  // Check null first b/c typeof null === 'object'
+  if (val === null) {
+    return val;
+  }
+  if (val === HACK_UNDEFINED_JSON_VALUE) {
+    return undefined;
+  }
+  if (Array.isArray(val)) {
+    return val.map(x => reviveUndefinedValues(x));
+  }
+  if (typeof val === 'object') {
+    for (const key of Object.getOwnPropertyNames(val)) {
+      val[key] = reviveUndefinedValues(val[key]);
+    }
+  }
+  return val;
 }
