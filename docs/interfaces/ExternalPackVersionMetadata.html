@@ -158,9 +158,15 @@
 					<aside class="tsd-sources">
 						<p>Inherited from BasePackVersionMetadata.formulaNamespace</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L432">types.ts:432</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L698">types.ts:698</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<dl class="tsd-comment-tags">
+							<dt>deprecated</dt>
+							<dd></dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="formulas" class="tsd-anchor"></a>
@@ -189,9 +195,19 @@
 					<aside class="tsd-sources">
 						<p>Inherited from BasePackVersionMetadata.networkDomains</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L429">types.ts:429</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L691">types.ts:691</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Any domain(s) to which this pack makes fetcher requests. The domains this pack connects to must be
+								declared up front here, both to clearly communicate to users what a pack is capable of connecting to,
+								and for security reasons. These network domains are enforced at execution time: any fetcher request
+							to a domain not listed here will be rejected.</p>
+						</div>
+						<p>Only one network domain is allowed by default. If your pack has needs to connect to multiple domains
+						contact Coda support for approval.</p>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="syncTables" class="tsd-anchor"></a>
@@ -210,9 +226,15 @@
 					<aside class="tsd-sources">
 						<p>Inherited from BasePackVersionMetadata.version</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L419">types.ts:419</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L672">types.ts:672</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The semantic version of the pack. This must be valid semantic version of the form <code>1</code>, <code>1.2</code>, or <code>1.2.3</code>.
+							When uploading a pack version, the semantic version must be greater than any previously uploaded version.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>

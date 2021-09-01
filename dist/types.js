@@ -120,10 +120,19 @@ var DefaultConnectionType;
      */
     DefaultConnectionType[DefaultConnectionType["ProxyActionsOnly"] = 3] = "ProxyActionsOnly";
 })(DefaultConnectionType = exports.DefaultConnectionType || (exports.DefaultConnectionType = {}));
+/**
+ * Enumeration of post-account-setup step types. See {@link PostSetup}.
+ */
 var PostSetupType;
 (function (PostSetupType) {
+    /**
+     * See {@link SetEndpoint}.
+     */
     PostSetupType["SetEndpoint"] = "SetEndPoint";
 })(PostSetupType = exports.PostSetupType || (exports.PostSetupType = {}));
+/**
+ * @ignore
+ */
 var FeatureSet;
 (function (FeatureSet) {
     FeatureSet["Basic"] = "Basic";
@@ -131,6 +140,9 @@ var FeatureSet;
     FeatureSet["Team"] = "Team";
     FeatureSet["Enterprise"] = "Enterprise";
 })(FeatureSet = exports.FeatureSet || (exports.FeatureSet = {}));
+/**
+ * @ignore
+ */
 var QuotaLimitType;
 (function (QuotaLimitType) {
     QuotaLimitType["Action"] = "Action";
@@ -138,6 +150,9 @@ var QuotaLimitType;
     QuotaLimitType["Sync"] = "Sync";
     QuotaLimitType["Metadata"] = "Metadata";
 })(QuotaLimitType = exports.QuotaLimitType || (exports.QuotaLimitType = {}));
+/**
+ * @ignore
+ */
 var SyncInterval;
 (function (SyncInterval) {
     SyncInterval["Manual"] = "Manual";

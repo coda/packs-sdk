@@ -130,7 +130,6 @@
 								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/SyncTableDef.html" class="tsd-kind-icon">Sync<wbr>Table<wbr>Def</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/TemporaryBlobStorage.html" class="tsd-kind-icon">Temporary<wbr>Blob<wbr>Storage</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/TimeSchema.html" class="tsd-kind-icon">Time<wbr>Schema</a></li>
-								<li class="tsd-kind-interface"><a href="interfaces/VariousAuthentication.html" class="tsd-kind-icon">Various<wbr>Authentication</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/WebBasicAuthentication.html" class="tsd-kind-icon">Web<wbr>Basic<wbr>Authentication</a></li>
 							</ul>
 						</section>
@@ -173,7 +172,6 @@
 								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#SchemaType" class="tsd-kind-icon">Schema<wbr>Type</a></li>
 								<li class="tsd-kind-type-alias"><a href="modules.html#SystemAuthentication" class="tsd-kind-icon">System<wbr>Authentication</a></li>
 								<li class="tsd-kind-type-alias"><a href="modules.html#TypedPackFormula" class="tsd-kind-icon">Typed<wbr>Pack<wbr>Formula</a></li>
-								<li class="tsd-kind-type-alias"><a href="modules.html#VariousSupportedAuthentication" class="tsd-kind-icon">Various<wbr>Supported<wbr>Authentication</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -212,12 +210,17 @@
 				<section class="tsd-panel tsd-member tsd-kind-type-alias">
 					<a name="Authentication" class="tsd-anchor"></a>
 					<h3>Authentication</h3>
-					<div class="tsd-signature tsd-kind-icon">Authentication<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NoAuthentication</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/VariousAuthentication.html" class="tsd-signature-type" data-tsd-kind="Interface">VariousAuthentication</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HeaderBearerTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CodaApiBearerTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CustomHeaderTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">QueryParamTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">MultiQueryParamTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/OAuth2Authentication.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuth2Authentication</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/WebBasicAuthentication.html" class="tsd-signature-type" data-tsd-kind="Interface">WebBasicAuthentication</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AWSSignature4Authentication</span></div>
+					<div class="tsd-signature tsd-kind-icon">Authentication<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NoAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">VariousAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HeaderBearerTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CodaApiBearerTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CustomHeaderTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">QueryParamTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">MultiQueryParamTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/OAuth2Authentication.html" class="tsd-signature-type" data-tsd-kind="Interface">OAuth2Authentication</a><span class="tsd-signature-symbol"> | </span><a href="interfaces/WebBasicAuthentication.html" class="tsd-signature-type" data-tsd-kind="Interface">WebBasicAuthentication</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AWSSignature4Authentication</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L279">types.ts:279</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L433">types.ts:433</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The union of supported authentication methods.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias">
 					<a name="BasicPackDefinition" class="tsd-anchor"></a>
@@ -225,7 +228,7 @@
 					<div class="tsd-signature tsd-kind-icon">Basic<wbr>Pack<wbr>Definition<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Omit</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/PackVersionDefinition.html" class="tsd-signature-type" data-tsd-kind="Interface">PackVersionDefinition</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;version&quot;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L412">types.ts:412</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L661">types.ts:661</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -530,9 +533,16 @@
 					<div class="tsd-signature tsd-kind-icon">Pack<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L8">types.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L11">types.ts:11</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<dl class="tsd-comment-tags">
+							<dt>deprecated</dt>
+							<dd><p>Use <code>number</code> in new code.</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias">
 					<a name="PackMetadata" class="tsd-anchor"></a>
@@ -642,9 +652,15 @@
 					<div class="tsd-signature tsd-kind-icon">System<wbr>Authentication<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HeaderBearerTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CustomHeaderTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">QueryParamTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">MultiQueryParamTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/WebBasicAuthentication.html" class="tsd-signature-type" data-tsd-kind="Interface">WebBasicAuthentication</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">AWSSignature4Authentication</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L326">types.ts:326</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L490">types.ts:490</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The union of authentication methods that are supported for system authentication,
+							where the pack author provides credentials used in HTTP requests rather than the user.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias">
 					<a name="TypedPackFormula" class="tsd-anchor"></a>
@@ -653,16 +669,6 @@
 					<aside class="tsd-sources">
 						<ul>
 							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L417">api.ts:417</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias">
-					<a name="VariousSupportedAuthentication" class="tsd-anchor"></a>
-					<h3>Various<wbr>Supported<wbr>Authentication</h3>
-					<div class="tsd-signature tsd-kind-icon">Various<wbr>Supported<wbr>Authentication<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NoAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HeaderBearerTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">CustomHeaderTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">QueryParamTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">MultiQueryParamTokenAuthentication</span><span class="tsd-signature-symbol"> | </span><a href="interfaces/WebBasicAuthentication.html" class="tsd-signature-type" data-tsd-kind="Interface">WebBasicAuthentication</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L344">types.ts:344</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1652,9 +1658,6 @@
 						<a href="interfaces/TimeSchema.html" class="tsd-kind-icon">Time<wbr>Schema</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="interfaces/VariousAuthentication.html" class="tsd-kind-icon">Various<wbr>Authentication</a>
-					</li>
-					<li class=" tsd-kind-interface">
 						<a href="interfaces/WebBasicAuthentication.html" class="tsd-kind-icon">Web<wbr>Basic<wbr>Authentication</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
@@ -1764,9 +1767,6 @@
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="modules.html#TypedPackFormula" class="tsd-kind-icon">Typed<wbr>Pack<wbr>Formula</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#VariousSupportedAuthentication" class="tsd-kind-icon">Various<wbr>Supported<wbr>Authentication</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="modules.html#assertCondition" class="tsd-kind-icon">assert<wbr>Condition</a>
