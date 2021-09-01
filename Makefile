@@ -25,7 +25,7 @@ _bootstrap-node:
 
 .PHONY: _bootstrap-python
 _bootstrap-python:
-	PIPENV sync
+	${PIPENV} sync
 
 .PHONY: bootstrap
 bootstrap:
@@ -112,7 +112,7 @@ docs: typedoc generated-documentation
 
 .PHONY: view-docs
 view-docs: docs
-	expect -c 'spawn PIPENV run mkdocs serve; expect "Serving on"; exec open "http://localhost:8000"; interact'
+	PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 expect -c 'spawn pipenv run mkdocs serve; expect "Serving on"; exec open "http://localhost:8000"; interact'
 
 .PHONY: publish-docs
 publish-docs:
@@ -120,7 +120,7 @@ publish-docs:
 		echo "The documentation can only be published from main at head."; \
 		exit 1; \
 	fi
-	PIPENV run mkdocs gh-deploy
+	${PIPENV} run mkdocs gh-deploy
 
 .PHONY: test
 test:
