@@ -97,7 +97,8 @@ typedoc:
 		echo "Please config your git origin to git@github.com:coda/packs-sdk.git"; \
 		exit 1; \
 	fi
-	${ROOTDIR}/node_modules/.bin/typedoc index.ts --out ${ROOTDIR}/docs --excludeExternals --excludePrivate --excludeProtected --gitRevision main
+	# Most options loaded from typedoc.js.
+	${ROOTDIR}/node_modules/.bin/typedoc index.ts --options typedoc.js --out ${ROOTDIR}/docs
 
 .PHONY: docs
 docs: typedoc generated-documentation
