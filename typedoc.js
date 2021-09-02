@@ -5,4 +5,12 @@ module.exports = {
   excludePrivate: true,
   excludeProtected: true,
   gitRevision: 'main',
+  plugin: 'typedoc-plugin-markdown',
+  readme: 'none',
+  
+  // Markdown-specific options.
+  hideBreadcrumbs: true,
+  hideInPageTOC: true,
+  allReflectionsHaveOwnDocument: true,
+  hidePageTitle: true,
 };

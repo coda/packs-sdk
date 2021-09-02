@@ -105,7 +105,7 @@ typedoc:
 		exit 1; \
 	fi
 	# Most options loaded from typedoc.js.
-	${ROOTDIR}/node_modules/.bin/typedoc index.ts --options typedoc.js --out ${ROOTDIR}/docs
+	${ROOTDIR}/node_modules/.bin/typedoc index.ts --options typedoc.js --out ${ROOTDIR}/docs/reference/sdk
 
 .PHONY: docs
 docs: typedoc generated-documentation
