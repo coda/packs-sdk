@@ -15,6 +15,7 @@ const TypeDocsRoot = path.join(BaseDir, 'docs');
 const EmbeddedSnippetsRoot = path.join(TypeDocsRoot, 'embedded-snippets');
 const SnippetEmbedTemplate = fs.readFileSync(path.join(DocumentationRoot, 'snippet_embed_template.html'), 'utf8');
 const SdkReferenceLink = 'https://coda.github.io/packs-sdk';
+const PageFileExtension = 'md';
 
 function main() {
   compileAutocompleteSnippets();
@@ -95,8 +96,9 @@ function compileSnippetEmbed(codeFile: string) {
 function isValidReferencePath(sdkReferencePath: string): boolean {
   const splitPath = sdkReferencePath.split('#');
   const page = splitPath[0];
+  const file =  page + '.' + PageFileExtension;
 
-  const filePath = path.join(TypeDocsRoot, page);
+  const filePath = path.join(TypeDocsRoot, file);
 
   return fs.existsSync(filePath);
 }
