@@ -1,0 +1,5 @@
+/* Create a custom Coda color scheme. */
+[data-md-color-scheme="coda"] {
+  --md-primary-fg-color: #006838; /* Emerald */
+  --md-accent-fg-color: #EE5A29; /* Tomato Soup */
+}
