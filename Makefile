@@ -9,6 +9,8 @@ YARN_CACHE_DIR=~/.yarncache
 ISOLATED_VM_VERSION_COMMAND="require('./node_modules/isolated-vm/package.json').version"
 ISOLATED_VM_VERSION=$(shell node -p -e $(ISOLATED_VM_VERSION_COMMAND))
 
+PIPENV := PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 pipenv
+
 # Aliases
 bs: bootstrap
 
@@ -21,9 +23,14 @@ _bootstrap-node:
 	yarn config set cache-folder ${YARN_CACHE_DIR}
 	yarn install
 
+.PHONY: _bootstrap-python
+_bootstrap-python:
+	${PIPENV} sync
+
 .PHONY: bootstrap
 bootstrap:
 	$(MAKE) MAKEFLAGS= _bootstrap-node
+	$(MAKE) MAKEFLAGS= _bootstrap-python
 	echo
 	echo '  make bootstrap complete!'
 	echo
@@ -104,8 +111,18 @@ typedoc:
 docs: typedoc generated-documentation
 
 .PHONY: view-docs
-view-docs: typedoc
-	open ${ROOTDIR}/docs/index.html
+view-docs: docs
+	PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 expect -c 'spawn pipenv run mkdocs serve; expect "Serving on"; exec open "http://localhost:8000"; interact'
+
+.PHONY: publish-docs
+publish-docs:
+	if [ -z ${shell git status -uno | grep "Your branch is up to date with 'origin/main'"} ]; then \
+		echo "The documentation can only be published from main at head."; \
+		exit 1; \
+	fi
+	# Build the docs and push them to the gh-pages brance.
+	# See: https://www.mkdocs.org/user-guide/deploying-your-docs/#github-pages
+	${PIPENV} run mkdocs gh-deploy
 
 .PHONY: test
 test:

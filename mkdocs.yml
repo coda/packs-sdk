@@ -1,0 +1,28 @@
+# MkDocs options.
+# See: https://www.mkdocs.org/user-guide/configuration/
+site_name: Coda Packs SDK
+repo_url: https://github.com/coda/packs-sdk
+docs_dir: docs
+markdown_extensions:
+  - admonition
+  - attr_list
+  - pymdownx.details
+  - pymdownx.highlight:
+      linenums: true
+  - pymdownx.keys
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - toc:
+      permalink: true
+plugins:
+    - search
+
+# Material theme options.
+# See: https://squidfunk.github.io/mkdocs-material/
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tabs
+    - navigation.sections
+    - navigation.indexes
