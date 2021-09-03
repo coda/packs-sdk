@@ -131,7 +131,7 @@ exports.Examples = [
         contentFile: './examples/column-format/column_format.md',
         linkData: {
             type: types_1.UrlType.SdkReferencePath,
-            url: '/classes/PackDefinitionBuilder.html#addColumnFormat',
+            url: '/reference/sdk/classes/PackDefinitionBuilder#addColumnFormat',
         },
         exampleSnippets: [
             {
@@ -147,7 +147,7 @@ exports.Examples = [
         contentFile: './examples/authentication/authentication.md',
         linkData: {
             type: types_1.UrlType.SdkReferencePath,
-            url: '/classes/PackDefinitionBuilder.html#setSystemAuthentication',
+            url: '/reference/sdk/classes/PackDefinitionBuilder#setSystemAuthentication',
         },
         exampleSnippets: [
             {
@@ -168,7 +168,7 @@ exports.Examples = [
         contentFile: './examples/dynamic-sync-table/dynamic_sync_table.md',
         linkData: {
             type: types_1.UrlType.SdkReferencePath,
-            url: '/classes/PackDefinitionBuilder.html#addDynamicSyncTable',
+            url: '/reference/sdk/classes/PackDefinitionBuilder#addDynamicSyncTable',
         },
         exampleSnippets: [
             {
@@ -184,7 +184,7 @@ exports.Examples = [
         contentFile: './examples/formula/formula.md',
         linkData: {
             type: types_1.UrlType.SdkReferencePath,
-            url: '/classes/PackDefinitionBuilder.html#addFormula',
+            url: '/reference/sdk/classes/PackDefinitionBuilder#addFormula',
         },
         exampleSnippets: [
             {
@@ -200,7 +200,7 @@ exports.Examples = [
         contentFile: './examples/sync-table/sync_table.md',
         linkData: {
             type: types_1.UrlType.SdkReferencePath,
-            url: '/classes/PackDefinitionBuilder.html#addSyncTable',
+            url: '/reference/sdk/classes/PackDefinitionBuilder#addSyncTable',
         },
         exampleSnippets: [
             {
