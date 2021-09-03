@@ -9,4 +9,4 @@ title: "PackId"
 
 #### Defined in
 
-[types.ts:11](https://github.com/coda/packs-sdk/blob/main/types.ts#L11)
+[types.ts:10](https://github.com/coda/packs-sdk/blob/main/types.ts#L10)

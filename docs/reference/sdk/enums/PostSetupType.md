@@ -15,4 +15,4 @@ See [SetEndpoint](PostSetupType.md#setendpoint).
 
 #### Defined in
 
-[types.ts:185](https://github.com/coda/packs-sdk/blob/main/types.ts#L185)
+[types.ts:184](https://github.com/coda/packs-sdk/blob/main/types.ts#L184)

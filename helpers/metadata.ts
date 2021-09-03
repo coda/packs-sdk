@@ -9,8 +9,6 @@ import type {MetadataFormulaMetadata} from '../api';
 import type {PackDefinition} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
 import type {PackFormulaMetadata} from '../api';
-import type {PackFormulas} from '../api';
-import type {PackFormulasMetadata} from '../compiled_types';
 import type {PackMetadata} from '../compiled_types';
 import type {PackSyncTable} from '../compiled_types';
 import type {PackVersionDefinition} from '../types';
@@ -27,8 +25,7 @@ export function compilePackMetadata(manifest: PackVersionDefinition): PackVersio
 export function compilePackMetadata(manifest: PackVersionDefinition): PackVersionMetadata {
   const {formats, formulas, formulaNamespace, syncTables, defaultAuthentication, ...definition} = manifest;
   const compiledFormats = compileFormatsMetadata(formats || []);
-  const compiledFormulas =
-    (formulas && compileFormulasMetadata(formulas)) || (Array.isArray(formulas) || !formulas ? [] : {});
+  const compiledFormulas = (formulas && compileFormulasMetadata(formulas)) || [];
   // Note: we do not need to compile systemConnectionAuthentication metadata because it doesn't contain formulas,
   // so we can pass it through directly as metadata.
   const defaultAuthenticationMetadata = compileDefaultAuthenticationMetadata(defaultAuthentication);
@@ -53,18 +50,8 @@ function compileFormatsMetadata(formats: Format[]): PackFormatMetadata[] {
   });
 }
 
-function compileFormulasMetadata(formulas: PackFormulas | Formula[]): PackFormulasMetadata | PackFormulaMetadata[] {
-  const formulasMetadata: PackFormulaMetadata[] | PackFormulasMetadata = Array.isArray(formulas) || !formulas ? [] : {};
-  // TODO: @alan-fang delete once we move packs off of PackFormulas
-  if (Array.isArray(formulas)) {
-    (formulasMetadata as PackFormulaMetadata[]).push(...formulas.map(compileFormulaMetadata));
-  } else {
-    for (const namespace of Object.keys(formulas)) {
-      (formulasMetadata as PackFormulasMetadata)[namespace] = formulas[namespace].map(compileFormulaMetadata);
-    }
-  }
-
-  return formulasMetadata;
+function compileFormulasMetadata(formulas: Formula[]): PackFormulaMetadata[] {
+  return formulas.map(compileFormulaMetadata);
 }
 
 function compileFormulaMetadata(formula: TypedPackFormula): PackFormulaMetadata {
