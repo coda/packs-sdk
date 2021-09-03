@@ -112,7 +112,7 @@
 					<div class="tsd-signature tsd-kind-icon">default<wbr>Authentication<span class="tsd-signature-symbol">:</span> <a href="../modules.html#Authentication" class="tsd-signature-type" data-tsd-kind="Type alias">Authentication</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L423">types.ts:423</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L684">types.ts:684</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -127,9 +127,14 @@
 					<div class="tsd-signature tsd-kind-icon">formats<span class="tsd-signature-symbol">:</span> <a href="Format.html" class="tsd-signature-type" data-tsd-kind="Interface">Format</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L434">types.ts:434</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L720">types.ts:720</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Definitions of this pack&#39;s column formats. See <a href="Format.html">Format</a>.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="formulaNamespace" class="tsd-anchor"></a>
@@ -137,9 +142,15 @@
 					<div class="tsd-signature tsd-kind-icon">formula<wbr>Namespace<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L432">types.ts:432</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L706">types.ts:706</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<dl class="tsd-comment-tags">
+							<dt>deprecated</dt>
+							<dd></dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="formulas" class="tsd-anchor"></a>
@@ -147,9 +158,18 @@
 					<div class="tsd-signature tsd-kind-icon">formulas<span class="tsd-signature-symbol">:</span> <a href="PackFormulas.html" class="tsd-signature-type" data-tsd-kind="Interface">PackFormulas</a><span class="tsd-signature-symbol"> | </span><a href="../modules.html#Formula" class="tsd-signature-type" data-tsd-kind="Type alias">Formula</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules.html#ParamDefs" class="tsd-signature-type" data-tsd-kind="Type alias">ParamDefs</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L433">types.ts:433</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L716">types.ts:716</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Definitions of this pack&#39;s formulas. See <a href="../modules.html#Formula">Formula</a>.</p>
+						</div>
+						<p>Note that button actions are also defind here. Buttons are simply formulas
+						with <code>isAction: true</code>.</p>
+						<p>Note also, this should always be an array of Formulas. The PackFormulas object structure is deprecated
+						and will be removed shortly.</p>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="networkDomains" class="tsd-anchor"></a>
@@ -157,9 +177,19 @@
 					<div class="tsd-signature tsd-kind-icon">network<wbr>Domains<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L429">types.ts:429</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L699">types.ts:699</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Any domain(s) to which this pack makes fetcher requests. The domains this pack connects to must be
+								declared up front here, both to clearly communicate to users what a pack is capable of connecting to,
+								and for security reasons. These network domains are enforced at execution time: any fetcher request
+							to a domain not listed here will be rejected.</p>
+						</div>
+						<p>Only one network domain is allowed by default. If your pack has needs to connect to multiple domains
+						contact Coda support for approval.</p>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="syncTables" class="tsd-anchor"></a>
@@ -167,9 +197,14 @@
 					<div class="tsd-signature tsd-kind-icon">sync<wbr>Tables<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SyncTable</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L435">types.ts:435</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L724">types.ts:724</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Definitions of this pack&#39;s sync tables. See {@link SyncTable}.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="systemConnectionAuthentication" class="tsd-anchor"></a>
@@ -177,7 +212,7 @@
 					<div class="tsd-signature tsd-kind-icon">system<wbr>Connection<wbr>Authentication<span class="tsd-signature-symbol">:</span> <a href="../modules.html#SystemAuthentication" class="tsd-signature-type" data-tsd-kind="Type alias">SystemAuthentication</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L428">types.ts:428</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L689">types.ts:689</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -193,9 +228,15 @@
 					<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L419">types.ts:419</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L680">types.ts:680</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The semantic version of the pack. This must be valid semantic version of the form <code>1</code>, <code>1.2</code>, or <code>1.2.3</code>.
+							When uploading a pack version, the semantic version must be greater than any previously uploaded version.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
