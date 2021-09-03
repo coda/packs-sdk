@@ -121,7 +121,7 @@
 					<div class="tsd-signature tsd-kind-icon">additional<wbr>Params<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L361">types.ts:361</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L364">types.ts:364</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -164,7 +164,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from BaseAuthentication.defaultConnectionType</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L205">types.ts:205</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L204">types.ts:204</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -182,7 +182,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from BaseAuthentication.endpointDomain</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L227">types.ts:227</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L226">types.ts:226</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -200,7 +200,7 @@
 					<div class="tsd-signature tsd-kind-icon">endpoint<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L368">types.ts:368</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L374">types.ts:374</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -209,6 +209,8 @@
 								part of the OAuth token exchange response. If so, this is the property in the OAuth
 							token exchange response JSON body that points to the endpoint.</p>
 						</div>
+						<p>The endpoint will be saved along with the account and will be available during execution
+						as <a href="ExecutionContext.html#endpoint">ExecutionContext.endpoint</a>.</p>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
@@ -218,7 +220,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from BaseAuthentication.getConnectionName</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L197">types.ts:197</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L196">types.ts:196</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -229,7 +231,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from BaseAuthentication.getConnectionUserId</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L198">types.ts:198</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L197">types.ts:197</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -240,7 +242,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from BaseAuthentication.instructionsUrl</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L210">types.ts:210</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L209">types.ts:209</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -256,7 +258,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from BaseAuthentication.postSetup</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L233">types.ts:233</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L232">types.ts:232</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -273,7 +275,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from BaseAuthentication.requiresEndpointUrl</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L218">types.ts:218</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L217">types.ts:217</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -291,13 +293,15 @@
 					<div class="tsd-signature tsd-kind-icon">scopes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L348">types.ts:348</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L351">types.ts:351</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>Scopes that are required to use this pack.</p>
 						</div>
+						<p>Each API defines its own list of scopes, or none at all. You should consult
+						the documentation for the API you are connecting to.</p>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
@@ -306,7 +310,7 @@
 					<div class="tsd-signature tsd-kind-icon">token<wbr>Prefix<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L356">types.ts:356</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L359">types.ts:359</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -325,7 +329,7 @@
 					<div class="tsd-signature tsd-kind-icon">token<wbr>Query<wbr>Param<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L375">types.ts:375</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L381">types.ts:381</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -347,8 +351,8 @@
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>The URL that Coda will hit in order to exchange the temporary token for an access token
-							at the end of the OAuth handshaek flow.</p>
+							<p>The URL that Coda will hit in order to exchange the temporary code for an access token
+							at the end of the OAuth handshake flow.</p>
 						</div>
 					</div>
 				</section>

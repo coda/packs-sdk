@@ -138,13 +138,12 @@ export interface NoAuthentication {
  * The selected endpoint domain is bound to this account and used as the root domain
  * of HTTP requests made by the fetcher.
  *
- * As full context, this is a generalization of a necessary step for setting up a
- * Jira account for use with a Coda pack, that may or may not be applicable to other
- * packs. A Jira account may have access to multiple Jira instances; after authorizing
- * the user account, this step makes an API call to fetch all of the Jira instances
- * that the user has access to, which are rendered as options for the user,
- * and the endpoint domain of the select option (of the form <instance>.atlassian.net)
- * is stored along with this account.
+ * As an example, we use this in the Jira pack to set up the Jira instance endpoint
+ * to use with the user's account. A Jira account may have access to multiple
+ * Jira instances; after authorizing the user account, this step makes an API call to
+ * fetch all of the Jira instances that the user has access to, which are rendered as
+ * options for the user, and the endpoint domain of the select option
+ * (of the form <instance>.atlassian.net) is stored along with this account.
  */
 export interface SetEndpoint {
     type: PostSetupType.SetEndpoint;
@@ -155,11 +154,11 @@ export interface SetEndpoint {
     name: string;
     /**
      * A description to render to the user describing the selection they should be making,
-     * for example, "Choose an instance to use with this account"
+     * for example, "Choose an instance to use with this account".
      */
     description: string;
     /**
-     * The actual implementation of the formula that fetches endpoints for the user
+     * The formula that fetches endpoints for the user
      * to select from. Like any {@link MetadataFormula}, this formula should return
      * an array of options, either strings or objects of the form
      * `{display: '<display name>', value: '<endpoint>'}` if wanting to render a display
@@ -237,13 +236,13 @@ export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
 export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
     type: AuthenticationType.CodaApiHeaderBearerToken;
     /**
-     * If specified, does not require a connection to be configured in
+     * If true, does not require a connection to be configured in
      * order to install the pack.
      */
     deferConnectionSetup?: boolean;
     /**
-     * If specified, automatically creates and configures an account with a Coda API token with
-     * default settings when installing the pack: an scoped read-write token, added to the doc
+     * If true, automatically creates and configures an account with a Coda API token with
+     * default settings when installing the pack: a scoped read-write token, added to the doc
      * as a shared account that allows actions.
      */
     shouldAutoAuthSetup?: boolean;
@@ -275,7 +274,8 @@ export interface CustomHeaderTokenAuthentication extends BaseAuthentication {
 export interface QueryParamTokenAuthentication extends BaseAuthentication {
     type: AuthenticationType.QueryParamToken;
     /**
-     * The name of the query parameter that will include the token.
+     * The name of the query parameter that will include the token,
+     * e.g. "foo" if a token is passed as "foo=bar".
      */
     paramName: string;
 }
@@ -292,11 +292,11 @@ export interface MultiQueryParamTokenAuthentication extends BaseAuthentication {
      */
     params: Array<{
         /**
-         * The actual query parameter, e.g. "foo" if a token is passed as "foo=bar".
+         * The name of the query parameter, e.g. "foo" if a token is passed as "foo=bar".
          */
         name: string;
         /**
-         * A description for the user of what value they should provide this parameter.
+         * A description shown to the user indicating what value they should provide for this parameter.
          */
         description: string;
     }>;
@@ -318,12 +318,15 @@ export interface OAuth2Authentication extends BaseAuthentication {
      */
     authorizationUrl: string;
     /**
-     * The URL that Coda will hit in order to exchange the temporary token for an access token
-     * at the end of the OAuth handshaek flow.
+     * The URL that Coda will hit in order to exchange the temporary code for an access token
+     * at the end of the OAuth handshake flow.
      */
     tokenUrl: string;
     /**
      * Scopes that are required to use this pack.
+     *
+     * Each API defines its own list of scopes, or none at all. You should consult
+     * the documentation for the API you are connecting to.
      */
     scopes?: string[];
     /**
@@ -345,6 +348,9 @@ export interface OAuth2Authentication extends BaseAuthentication {
      * In rare cases, OAuth providers will return the specific API endpoint domain for the user as
      * part of the OAuth token exchange response. If so, this is the property in the OAuth
      * token exchange response JSON body that points to the endpoint.
+     *
+     * The endpoint will be saved along with the account and will be available during execution
+     * as {@link ExecutionContext.endpoint}.
      */
     endpointKey?: string;
     /**
@@ -376,8 +382,7 @@ export interface WebBasicAuthentication extends BaseAuthentication {
         placeholderPassword?: string;
         /**
          * If true, only a username input will be shown to the user.
-         * Some services pass API keys in the username field and do not require a password
-         * (not recommended!).
+         * Some services pass API keys in the username field and do not require a password.
          */
         usernameOnly?: boolean;
     };
@@ -461,11 +466,11 @@ export declare type VariousSupportedAuthentication = NoAuthentication | HeaderBe
  */
 export declare type VariousSupportedAuthenticationTypes = $Values<Pick<VariousSupportedAuthentication, 'type'>>;
 /**
- * Definition for a custom column type that you apply to any column in any Coda table.
+ * Definition for a custom column type that users can apply to any column in any Coda table.
  * A column format tells Coda to interpret the value in a cell by executing a formula
  * using that value, typically looking up data related to that value from a third-party API.
  * For example, the Weather pack has a column format "Current Weather"; when applied to a column,
- * if you type a city or address into a cell in that column, that location will be used an input
+ * if you type a city or address into a cell in that column, that location will be used as the input
  * to a formula that fetches the current weather at that location, and the resulting object with
  * weather info will be shown in the cell.
  *
@@ -473,7 +478,7 @@ export declare type VariousSupportedAuthenticationTypes = $Values<Pick<VariousSu
  * of your pack definition. It tells Coda to execute that particular formula using the value
  * of the cell as input.
  *
- * The formula referenced by a Format must have exactly one required parameter.
+ * The formula referenced by a format must have exactly one required parameter.
  *
  * You may optionally specify one or more {@link matchers}, which are regular expressions
  * that can be matched against values that users paste into table cells, to determine if
@@ -496,7 +501,7 @@ export interface Format {
     formulaNamespace: string;
     /**
      * The name of the formula to invoke for values in columns using this format.
-     * This must correspond to the name of a formula defined in this pack.
+     * This must correspond to the name of a regular, public formula defined in this pack.
      */
     formulaName: string;
     /** @deprecated No longer needed, will be inferred from the referenced formula. */
@@ -507,7 +512,7 @@ export interface Format {
      */
     instructions?: string;
     /**
-     * Any regular expressions that match URLs that the formula implementing this format
+     * A list of regular expressions that match URLs that the formula implementing this format
      * is capable of handling. As described in {@link Format}, this is a discovery mechanism.
      */
     matchers?: string[];
@@ -617,7 +622,10 @@ export interface PackVersionDefinition {
     /**
      * Definitions of this pack's formulas. See {@link Formula}.
      *
-     * Note, this should always be an array of Formulas. The PackFormulas object structure is deprecated
+     * Note that button actions are also defind here. Buttons are simply formulas
+     * with `isAction: true`.
+     *
+     * Note also, this should always be an array of Formulas. The PackFormulas object structure is deprecated
      * and will be removed shortly.
      */
     formulas?: PackFormulas | Formula[];

@@ -66,18 +66,18 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Definition for a custom column type that you apply to any column in any Coda table.
+						<p>Definition for a custom column type that users can apply to any column in any Coda table.
 							A column format tells Coda to interpret the value in a cell by executing a formula
 							using that value, typically looking up data related to that value from a third-party API.
 							For example, the Weather pack has a column format &quot;Current Weather&quot;; when applied to a column,
-							if you type a city or address into a cell in that column, that location will be used an input
+							if you type a city or address into a cell in that column, that location will be used as the input
 							to a formula that fetches the current weather at that location, and the resulting object with
 						weather info will be shown in the cell.</p>
 					</div>
 					<p>A column format is just a wrapper around a formula defined in the <a href="PackDefinition.html#formulas">formulas</a> section
 						of your pack definition. It tells Coda to execute that particular formula using the value
 					of the cell as input.</p>
-					<p>The formula referenced by a Format must have exactly one required parameter.</p>
+					<p>The formula referenced by a format must have exactly one required parameter.</p>
 					<p>You may optionally specify one or more <a href="Format.html#matchers">matchers</a>, which are regular expressions
 						that can be matched against values that users paste into table cells, to determine if
 						this Format is applicable to that value. This is a discovery mechanism to help users
@@ -124,13 +124,13 @@
 					<div class="tsd-signature tsd-kind-icon">formula<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L572">types.ts:572</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L577">types.ts:577</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>The name of the formula to invoke for values in columns using this format.
-							This must correspond to the name of a formula defined in this pack.</p>
+							This must correspond to the name of a regular, public formula defined in this pack.</p>
 						</div>
 					</div>
 				</section>
@@ -140,7 +140,7 @@
 					<div class="tsd-signature tsd-kind-icon">formula<wbr>Namespace<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L567">types.ts:567</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L572">types.ts:572</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -157,7 +157,7 @@
 					<div class="tsd-signature tsd-kind-icon">has<wbr>NoConnection<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L574">types.ts:574</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L579">types.ts:579</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -174,7 +174,7 @@
 					<div class="tsd-signature tsd-kind-icon">instructions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L579">types.ts:579</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L584">types.ts:584</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -190,12 +190,12 @@
 					<div class="tsd-signature tsd-kind-icon">matchers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L584">types.ts:584</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L589">types.ts:589</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Any regular expressions that match URLs that the formula implementing this format
+							<p>A list of regular expressions that match URLs that the formula implementing this format
 							is capable of handling. As described in <a href="Format.html">Format</a>, this is a discovery mechanism.</p>
 						</div>
 					</div>
@@ -206,7 +206,7 @@
 					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L565">types.ts:565</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L570">types.ts:570</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -221,7 +221,7 @@
 					<div class="tsd-signature tsd-kind-icon">placeholder<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L588">types.ts:588</a></li>
+							<li>Defined in <a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L593">types.ts:593</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
