@@ -142,7 +142,10 @@ export interface NoAuthentication {
  * the user to select the one that should apply to this account.
  *
  * The selected endpoint domain is bound to this account and used as the root domain
- * of HTTP requests made by the fetcher.
+ * of HTTP requests made by the fetcher. (Whenever an endpoint is associated with
+ * an account, it is available at execution time as `context.endpoint`, and alternatively
+ * can make fetcher requests using relative URLs and the fetcher will apply the endpoint
+ * to the URL automatically.)
  *
  * As an example, we use this in the Jira pack to set up the Jira instance endpoint
  * to use with the user's account. A Jira account may have access to multiple
@@ -553,8 +556,8 @@ export type VariousSupportedAuthenticationTypes = $Values<Pick<VariousSupportedA
  *
  * You may optionally specify one or more {@link matchers}, which are regular expressions
  * that can be matched against values that users paste into table cells, to determine if
- * this Format is applicable to that value. This is a discovery mechanism to help users
- * realize that there is a pack that may augment their experience of working with such values.
+ * this Format is applicable to that value. Matchers help users realize that there is a pack
+ * format that may augment their experience of working with such values.
  *
  * For example, if you're building a Wikipedia pack, you may write a matcher regular expression
  * that looks for Wikipedia article URLs, if you have a formula that can fetched structured data
