@@ -4477,11 +4477,11 @@ function isDynamicSyncTable(syncTable) {
 // runtime/common/helpers.ts
 init_buffer_shim();
 function findFormula(packDef, formulaNameWithNamespace) {
-  const [namespace, name] = formulaNameWithNamespace.includes("::") ? formulaNameWithNamespace.split("::") : ["", formulaNameWithNamespace];
   const packFormulas = packDef.formulas;
   if (!packFormulas) {
-    throw new Error(`Could not find a formula named "${name}".`);
+    throw new Error(`Pack definition has no formulas.`);
   }
+  const [namespace, name] = formulaNameWithNamespace.includes("::") ? formulaNameWithNamespace.split("::") : ["", formulaNameWithNamespace];
   if (namespace) {
     console.log(`Warning: formula was invoked with a namespace (${formulaNameWithNamespace}), but namespaces are now deprecated.`);
   }

@@ -41,6 +41,7 @@ const auth_1 = require("./auth");
 const auth_2 = require("./auth");
 const thunk = __importStar(require("../runtime/thunk/thunk"));
 const helpers_6 = require("../runtime/common/helpers");
+const helpers_7 = require("../runtime/common/helpers");
 const util_1 = __importDefault(require("util"));
 const validation_1 = require("./validation");
 const validation_2 = require("./validation");
@@ -94,7 +95,11 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
             ? fetcher_2.newFetcherSyncExecutionContext(buildUpdateCredentialsCallback(manifestPath), helpers_3.getPackAuth(manifest), manifest.networkDomains, credentials)
             : mocks_2.newMockSyncExecutionContext();
         executionContext.sync.dynamicUrl = dynamicUrl || undefined;
-        const syncFormula = helpers_6.tryFindSyncFormula(manifest, formulaName);
+        const syncFormula = helpers_7.tryFindSyncFormula(manifest, formulaName);
+        const formula = helpers_6.tryFindFormula(manifest, formulaName);
+        if (!(syncFormula || formula)) {
+            throw new Error(`Could not find a formula or sync named "${formulaName}".`);
+        }
         const formulaSpecification = {
             type: syncFormula ? types_1.FormulaType.Sync : types_1.FormulaType.Standard,
             formulaName,
@@ -144,7 +149,7 @@ async function executeFormulaOrSyncWithVM({ formulaName, params, bundlePath, exe
     // TODO(huayang): importing manifest makes this method not usable in production, where we are not
     // supposed to load a manifest outside of the VM context.
     const manifest = await helpers_4.importManifest(bundlePath);
-    const syncFormula = helpers_6.tryFindSyncFormula(manifest, formulaName);
+    const syncFormula = helpers_7.tryFindSyncFormula(manifest, formulaName);
     const formulaSpecification = {
         type: syncFormula ? types_1.FormulaType.Sync : types_1.FormulaType.Standard,
         formulaName,

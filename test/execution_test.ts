@@ -87,7 +87,7 @@ describe('Execution', () => {
     it('no formulas', async () => {
       await testHelper.willBeRejectedWith(
         executeFormulaFromPackDef(createFakePack({formulas: undefined}), 'Bar', []),
-        /Could not find a formula named "Bar"\./,
+        /Pack definition has no formulas./,
       );
     });
 
