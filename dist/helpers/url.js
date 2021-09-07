@@ -11,7 +11,7 @@ function withQueryParams(url, params) {
     if (!params) {
         return url;
     }
-    const parsedUrl = url_parse_1.default(url);
+    const parsedUrl = (0, url_parse_1.default)(url);
     // Merge the params together
     const updatedParams = Object.assign({}, qs_1.default.parse(parsedUrl.query, { ignoreQueryPrefix: true }), params);
     parsedUrl.set('query', qs_1.default.stringify(JSON.parse(JSON.stringify(updatedParams)), { addQueryPrefix: true }));
@@ -19,7 +19,7 @@ function withQueryParams(url, params) {
 }
 exports.withQueryParams = withQueryParams;
 function getQueryParams(url) {
-    const parsedUrl = url_parse_1.default(url);
+    const parsedUrl = (0, url_parse_1.default)(url);
     // Merge the params together
     return qs_1.default.parse(parsedUrl.query, { ignoreQueryPrefix: true });
 }
@@ -34,7 +34,7 @@ function join(...tokens) {
     }
     const combinedTokens = [];
     for (const token of tokens) {
-        ensure_1.ensureNonEmptyString(token);
+        (0, ensure_1.ensureNonEmptyString)(token);
         if (combinedTokens.length === 0) {
             combinedTokens.push(token);
         }

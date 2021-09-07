@@ -15,12 +15,12 @@ const bootstrap_4 = require("../runtime/bootstrap");
 const IsolateMemoryLimit = 128;
 // execution_helper_bundle.js is built by esbuild (see Makefile)
 // which puts it into the same directory: dist/testing/
-const CompiledHelperBundlePath = bootstrap_2.getThunkPath();
+const CompiledHelperBundlePath = (0, bootstrap_2.getThunkPath)();
 const HelperTsSourceFile = `${__dirname}/../runtime/thunk/thunk.ts`;
 async function setupIvmContext(bundlePath, executionContext) {
     // creating an isolate with 128M memory limit.
     const isolate = new isolated_vm_1.default.Isolate({ memoryLimit: IsolateMemoryLimit });
-    const ivmContext = await bootstrap_1.createIsolateContext(isolate);
+    const ivmContext = await (0, bootstrap_1.createIsolateContext)(isolate);
     const bundleFullPath = bundlePath.startsWith('/') ? bundlePath : path_1.default.join(process.cwd(), bundlePath);
     // If the ivm helper is running by node, the compiled execution_helper bundle should be ready at the
     // dist/ directory described by CompiledHelperBundlePath. If the ivm helper is running by mocha, the
@@ -29,16 +29,16 @@ async function setupIvmContext(bundlePath, executionContext) {
     //
     // TODO(huayang): this is not efficient enough and needs optimization if to be used widely in testing.
     if (fs_1.default.existsSync(CompiledHelperBundlePath)) {
-        await bootstrap_4.registerBundles(isolate, ivmContext, bundleFullPath, CompiledHelperBundlePath);
+        await (0, bootstrap_4.registerBundles)(isolate, ivmContext, bundleFullPath, CompiledHelperBundlePath);
     }
     else if (fs_1.default.existsSync(HelperTsSourceFile)) {
-        const bundlePath = await build_1.build(HelperTsSourceFile);
-        await bootstrap_4.registerBundles(isolate, ivmContext, bundleFullPath, bundlePath);
+        const bundlePath = await (0, build_1.build)(HelperTsSourceFile);
+        await (0, bootstrap_4.registerBundles)(isolate, ivmContext, bundleFullPath, bundlePath);
     }
     else {
         throw new Error('cannot find the execution helper');
     }
-    await bootstrap_3.injectExecutionContext({
+    await (0, bootstrap_3.injectExecutionContext)({
         context: ivmContext,
         fetcher: executionContext.fetcher,
         temporaryBlobStorage: executionContext.temporaryBlobStorage,

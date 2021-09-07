@@ -28,7 +28,7 @@ const path_1 = __importDefault(require("path"));
 const helpers_1 = require("../testing/helpers");
 const child_process_1 = require("child_process");
 function spawnProcess(command) {
-    return child_process_1.spawnSync(command, {
+    return (0, child_process_1.spawnSync)(command, {
         shell: true,
         stdio: 'inherit',
     });
@@ -59,8 +59,8 @@ exports.makeManifestFullPath = makeManifestFullPath;
 function getPackAuth(packDef) {
     const { defaultAuthentication, systemConnectionAuthentication } = packDef;
     if (defaultAuthentication && systemConnectionAuthentication) {
-        helpers_1.print('Both defaultAuthentication & systemConnectionAuthentication are specified.');
-        helpers_1.print('Using defaultAuthentication.');
+        (0, helpers_1.print)('Both defaultAuthentication & systemConnectionAuthentication are specified.');
+        (0, helpers_1.print)('Using defaultAuthentication.');
         return defaultAuthentication;
     }
     // Since SystemAuthentication is a strict subset of Authentication, we can cast them together.

@@ -128,7 +128,7 @@ function generateSchema(obj) {
     else if (typeof obj === 'number') {
         return { type: ValueType.Number };
     }
-    return ensure_3.ensureUnreachable(obj);
+    return (0, ensure_3.ensureUnreachable)(obj);
 }
 exports.generateSchema = generateSchema;
 function makeSchema(schema) {
@@ -152,13 +152,13 @@ function validateObjectSchema(schema) {
         checkRequiredFieldInObjectSchema(id, 'id', schema.codaType);
         checkRequiredFieldInObjectSchema(identity, 'identity', schema.codaType);
         checkRequiredFieldInObjectSchema(primary, 'primary', schema.codaType);
-        checkSchemaPropertyIsRequired(ensure_2.ensureExists(id), schema);
-        checkSchemaPropertyIsRequired(ensure_2.ensureExists(primary), schema);
+        checkSchemaPropertyIsRequired((0, ensure_2.ensureExists)(id), schema);
+        checkSchemaPropertyIsRequired((0, ensure_2.ensureExists)(primary), schema);
     }
     if (schema.codaType === ValueHintType.Person) {
         const { id } = schema;
         checkRequiredFieldInObjectSchema(id, 'id', schema.codaType);
-        checkSchemaPropertyIsRequired(ensure_2.ensureExists(id), schema);
+        checkSchemaPropertyIsRequired((0, ensure_2.ensureExists)(id), schema);
     }
     for (const [_propertyKey, propertySchema] of Object.entries(schema.properties)) {
         if (propertySchema.type === ValueType.Object) {
@@ -167,15 +167,15 @@ function validateObjectSchema(schema) {
     }
 }
 function checkRequiredFieldInObjectSchema(field, fieldName, codaType) {
-    ensure_2.ensureExists(field, `Objects with codaType "${codaType}" require a "${fieldName}" property in the schema definition.`);
+    (0, ensure_2.ensureExists)(field, `Objects with codaType "${codaType}" require a "${fieldName}" property in the schema definition.`);
 }
 function checkSchemaPropertyIsRequired(field, schema) {
     const { properties, codaType } = schema;
-    ensure_1.assertCondition(properties[field].required, `Field "${field}" must be marked as required in schema with codaType "${codaType}".`);
+    (0, ensure_1.assertCondition)(properties[field].required, `Field "${field}" must be marked as required in schema with codaType "${codaType}".`);
 }
 function normalizeSchemaKey(key) {
     // Colons cause problems in our formula handling.
-    return pascalcase_1.default(key).replace(/:/g, '_');
+    return (0, pascalcase_1.default)(key).replace(/:/g, '_');
 }
 exports.normalizeSchemaKey = normalizeSchemaKey;
 function normalizeSchema(schema) {
@@ -220,8 +220,8 @@ exports.normalizeSchema = normalizeSchema;
  */
 function makeReferenceSchemaFromObjectSchema(schema, identityName) {
     const { type, id, primary, identity, properties } = schema;
-    ensure_2.ensureExists(identity || identityName, 'Source schema must have an identity field, or you must provide an identity name for the reference.');
-    const validId = ensure_2.ensureExists(id);
+    (0, ensure_2.ensureExists)(identity || identityName, 'Source schema must have an identity field, or you must provide an identity name for the reference.');
+    const validId = (0, ensure_2.ensureExists)(id);
     const referenceProperties = { [validId]: properties[validId] };
     if (primary && primary !== id) {
         referenceProperties[primary] = properties[primary];
@@ -230,7 +230,7 @@ function makeReferenceSchemaFromObjectSchema(schema, identityName) {
         codaType: ValueHintType.Reference,
         type,
         id,
-        identity: identity || { name: ensure_2.ensureExists(identityName) },
+        identity: identity || { name: (0, ensure_2.ensureExists)(identityName) },
         primary,
         properties: referenceProperties,
     });

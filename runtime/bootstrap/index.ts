@@ -157,7 +157,7 @@ export async function executeThunk<T extends FormulaSpecification>(
     // And marshal out the results into a local copy of the isolate object reference.
     const localIsolateValue = await resultRef.copy();
     return localIsolateValue;
-  } catch (wrappedError) {
+  } catch (wrappedError: any) {
     const err = unwrapError(wrappedError);
     const translatedStacktrace = await translateErrorStackFromVM({
       stacktrace: err.stack,

@@ -59,7 +59,7 @@ export async function createPack(
     const packId = response.packId;
     storePackId(manifestDir, packId, codaApiEndpoint);
     return printAndExit(`Pack created successfully! You can manage pack settings at ${codaApiEndpoint}/p/${packId}`, 0);
-  } catch (err) {
+  } catch (err: any) {
     const errors = [`Unable to create your pack, received error: ${formatError(err)}`, tryParseSystemError(err)];
     return printAndExit(errors.join('\n'));
   }
