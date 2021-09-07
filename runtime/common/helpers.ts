@@ -3,14 +3,14 @@ import type {GenericSyncFormula} from '../../api';
 import type {PackVersionDefinition} from '../../types';
 
 export function findFormula(packDef: PackVersionDefinition, formulaNameWithNamespace: string): Formula {
-  const packFormulas = packDef.formulas;
-  if (!packFormulas) {
-    throw new Error(`Pack definition has no formulas.`);
-  }
-
   const [namespace, name] = formulaNameWithNamespace.includes('::')
     ? formulaNameWithNamespace.split('::')
     : ['', formulaNameWithNamespace];
+
+  const packFormulas = packDef.formulas;
+  if (!packFormulas) {
+    throw new Error(`Could not find a formula named "${name}".`);
+  }
 
   if (namespace) {
     // eslint-disable-next-line no-console

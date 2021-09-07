@@ -2,13 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.tryFindSyncFormula = exports.tryFindFormula = exports.findSyncFormula = exports.findFormula = void 0;
 function findFormula(packDef, formulaNameWithNamespace) {
-    const packFormulas = packDef.formulas;
-    if (!packFormulas) {
-        throw new Error(`Pack definition has no formulas.`);
-    }
     const [namespace, name] = formulaNameWithNamespace.includes('::')
         ? formulaNameWithNamespace.split('::')
         : ['', formulaNameWithNamespace];
+    const packFormulas = packDef.formulas;
+    if (!packFormulas) {
+        throw new Error(`Could not find a formula named "${name}".`);
+    }
     if (namespace) {
         // eslint-disable-next-line no-console
         console.log(`Warning: formula was invoked with a namespace (${formulaNameWithNamespace}), but namespaces are now deprecated.`);
