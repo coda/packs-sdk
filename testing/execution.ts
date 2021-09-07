@@ -29,6 +29,7 @@ import {print} from './helpers';
 import {readCredentialsFile} from './auth';
 import {storeCredential} from './auth';
 import * as thunk from '../runtime/thunk/thunk';
+import {tryFindFormula} from '../runtime/common/helpers';
 import {tryFindSyncFormula} from '../runtime/common/helpers';
 import util from 'util';
 import {validateParams} from './validation';
@@ -158,6 +159,10 @@ export async function executeFormulaOrSyncFromCLI({
     executionContext.sync.dynamicUrl = dynamicUrl || undefined;
 
     const syncFormula = tryFindSyncFormula(manifest, formulaName);
+    const formula = tryFindFormula(manifest, formulaName);
+    if (!(syncFormula || formula)) {
+      throw new Error(`Could not find a formula or sync named "${formulaName}".`);
+    }
     const formulaSpecification: SyncFormulaSpecification | StandardFormulaSpecification = {
       type: syncFormula ? FormulaType.Sync : FormulaType.Standard,
       formulaName,
