@@ -24,7 +24,7 @@ async function findAndExecutePackFunction(params, formulaSpec, manifest, executi
     }
     catch (err) {
         // all errors should be marshaled to avoid IVM dropping essential fields / name.
-        throw shouldWrapError ? marshaling_2.wrapError(err) : err;
+        throw shouldWrapError ? (0, marshaling_2.wrapError)(err) : err;
     }
 }
 exports.findAndExecutePackFunction = findAndExecutePackFunction;
@@ -32,11 +32,11 @@ function doFindAndExecutePackFunction(params, formulaSpec, manifest, executionCo
     const { syncTables, defaultAuthentication } = manifest;
     switch (formulaSpec.type) {
         case types_2.FormulaType.Standard: {
-            const formula = helpers_1.findFormula(manifest, formulaSpec.formulaName);
+            const formula = (0, helpers_1.findFormula)(manifest, formulaSpec.formulaName);
             return formula.execute(params, executionContext);
         }
         case types_2.FormulaType.Sync: {
-            const formula = helpers_2.findSyncFormula(manifest, formulaSpec.formulaName);
+            const formula = (0, helpers_2.findSyncFormula)(manifest, formulaSpec.formulaName);
             return formula.execute(params, executionContext);
         }
         case types_2.FormulaType.Metadata: {
@@ -79,7 +79,7 @@ function doFindAndExecutePackFunction(params, formulaSpec, manifest, executionCo
                         const syncTable = syncTables.find(table => table.name === formulaSpec.syncTableName);
                         if (syncTable) {
                             let formula;
-                            if (api_2.isDynamicSyncTable(syncTable)) {
+                            if ((0, api_2.isDynamicSyncTable)(syncTable)) {
                                 switch (formulaSpec.metadataFormulaType) {
                                     case types_3.MetadataFormulaType.SyncListDynamicUrls:
                                         formula = syncTable.listDynamicUrls;
@@ -153,7 +153,7 @@ async function handleErrorAsync(func) {
         return await func();
     }
     catch (err) {
-        throw marshaling_1.unwrapError(err);
+        throw (0, marshaling_1.unwrapError)(err);
     }
 }
 exports.handleErrorAsync = handleErrorAsync;
@@ -162,7 +162,7 @@ function handleError(func) {
         return func();
     }
     catch (err) {
-        throw marshaling_1.unwrapError(err);
+        throw (0, marshaling_1.unwrapError)(err);
     }
 }
 exports.handleError = handleError;

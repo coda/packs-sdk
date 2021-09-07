@@ -48,7 +48,7 @@ function compileFormulaMetadata(formula) {
     return rest;
 }
 function compileSyncTable(syncTable) {
-    if (api_1.isDynamicSyncTable(syncTable)) {
+    if ((0, api_1.isDynamicSyncTable)(syncTable)) {
         const { getter, getName, getSchema, getDisplayUrl, listDynamicUrls, ...rest } = syncTable;
         const { execute, ...getterRest } = getter;
         return {
@@ -93,6 +93,6 @@ function compilePostSetupStepMetadata(step) {
     const { getOptionsFormula, ...rest } = step;
     return {
         ...rest,
-        getOptionsFormula: ensure_1.ensureExists(compileMetadataFormulaMetadata(getOptionsFormula)),
+        getOptionsFormula: (0, ensure_1.ensureExists)(compileMetadataFormulaMetadata(getOptionsFormula)),
     };
 }

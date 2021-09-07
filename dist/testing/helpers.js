@@ -40,7 +40,7 @@ exports.getManifestFromModule = getManifestFromModule;
 // eslint-disable-next-line no-console
 exports.print = console.log;
 function printAndExit(msg, exitCode = 1) {
-    exports.print(msg);
+    (0, exports.print)(msg);
     return process.exit(exitCode);
 }
 exports.printAndExit = printAndExit;
@@ -49,7 +49,7 @@ function promptForInput(prompt, { mask } = {}) {
 }
 exports.promptForInput = promptForInput;
 function readFile(fileName) {
-    ensure_1.ensureNonEmptyString(fileName);
+    (0, ensure_1.ensureNonEmptyString)(fileName);
     let file;
     try {
         file = fs_1.default.readFileSync(fileName);
@@ -69,7 +69,7 @@ function readJSONFile(fileName) {
 }
 exports.readJSONFile = readJSONFile;
 function writeJSONFile(fileName, payload, mode) {
-    ensure_1.ensureNonEmptyString(fileName);
+    (0, ensure_1.ensureNonEmptyString)(fileName);
     const dirname = path_1.default.dirname(fileName);
     if (!fs_1.default.existsSync(dirname)) {
         fs_1.default.mkdirSync(dirname, { recursive: true });
@@ -91,8 +91,8 @@ async function processVmError(vmError, bundlePath) {
     // this is weird. the error thrown by ivm seems a standard error but somehow its stack can't be overwritten.
     // unwrapError(wrapError(err)) will recreate the same type of error in a standard way, where the stack can
     // be overwritten.
-    const err = marshaling_1.unwrapError(marshaling_2.wrapError(vmError));
-    const translatedStacktrace = await source_map_1.translateErrorStackFromVM({
+    const err = (0, marshaling_1.unwrapError)((0, marshaling_2.wrapError)(vmError));
+    const translatedStacktrace = await (0, source_map_1.translateErrorStackFromVM)({
         stacktrace: err.stack,
         bundleSourceMapPath: bundlePath + '.map',
         vmFilename: bundlePath,

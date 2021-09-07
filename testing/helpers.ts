@@ -31,7 +31,7 @@ export function readFile(fileName: string): Buffer | undefined {
   let file: Buffer;
   try {
     file = fs.readFileSync(fileName);
-  } catch (err) {
+  } catch (err: any) {
     if (err.message && err.message.includes('no such file or directory')) {
       return;
     }

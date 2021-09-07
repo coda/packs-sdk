@@ -272,7 +272,7 @@ function makeFormula(fullDefinition) {
             const arrayFormula = {
                 ...rest,
                 resultType: api_types_3.Type.object,
-                schema: schema_3.normalizeSchema({ type: schema_1.ValueType.Array, items }),
+                schema: (0, schema_3.normalizeSchema)({ type: schema_1.ValueType.Array, items }),
             };
             formula = arrayFormula;
             break;
@@ -282,19 +282,19 @@ function makeFormula(fullDefinition) {
             const objectFormula = {
                 ...rest,
                 resultType: api_types_3.Type.object,
-                schema: schema_3.normalizeSchema(schema),
+                schema: (0, schema_3.normalizeSchema)(schema),
             };
             formula = objectFormula;
             break;
         }
         default:
-            return ensure_2.ensureUnreachable(definition);
+            return (0, ensure_2.ensureUnreachable)(definition);
     }
     if ([schema_1.ValueType.Object, schema_1.ValueType.Array].includes(definition.resultType)) {
         const wrappedExecute = formula.execute;
         formula.execute = async function (params, context) {
             const result = await wrappedExecute(params, context);
-            return handler_templates_3.transformBody(result, ensure_1.ensureExists(formula.schema));
+            return (0, handler_templates_3.transformBody)(result, (0, ensure_1.ensureExists)(formula.schema));
         };
     }
     if (onError) {
@@ -384,7 +384,7 @@ function makeObjectFormula({ response, ...definition }) {
     let schema;
     if (response) {
         if (isResponseHandlerTemplate(response) && response.schema) {
-            response.schema = schema_3.normalizeSchema(response.schema);
+            response.schema = (0, schema_3.normalizeSchema)(response.schema);
             schema = response.schema;
         }
         else if (isResponseExampleTemplate(response)) {
@@ -396,7 +396,7 @@ function makeObjectFormula({ response, ...definition }) {
     if (isResponseHandlerTemplate(response)) {
         const { onError } = response;
         const wrappedExecute = execute;
-        const responseHandler = handler_templates_1.generateObjectResponseHandler(response);
+        const responseHandler = (0, handler_templates_1.generateObjectResponseHandler)(response);
         execute = async function exec(params, context) {
             let result;
             try {
@@ -410,7 +410,7 @@ function makeObjectFormula({ response, ...definition }) {
                     throw err;
                 }
             }
-            return responseHandler({ body: ensure_1.ensureExists(result), status: 200, headers: {} });
+            return responseHandler({ body: (0, ensure_1.ensureExists)(result), status: 200, headers: {} });
         };
     }
     return Object.assign({}, definition, {
@@ -441,10 +441,10 @@ function makeSyncTable({ name, identityName, schema: schemaDef, formula, connect
         schemaDef.identity = { name: identityName };
     }
     const getSchema = wrapMetadataFunction(getSchemaDef);
-    const schema = schema_2.makeObjectSchema(schemaDef);
+    const schema = (0, schema_2.makeObjectSchema)(schemaDef);
     const formulaSchema = getSchema
         ? undefined
-        : schema_3.normalizeSchema({ type: schema_1.ValueType.Array, items: schema });
+        : (0, schema_3.normalizeSchema)({ type: schema_1.ValueType.Array, items: schema });
     const { identity, id, primary } = schema;
     if (!(primary && id && identity)) {
         throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
@@ -452,18 +452,18 @@ function makeSyncTable({ name, identityName, schema: schemaDef, formula, connect
     if (name.includes(' ')) {
         throw new Error('Sync table name should not include spaces');
     }
-    const responseHandler = handler_templates_1.generateObjectResponseHandler({ schema: formulaSchema });
+    const responseHandler = (0, handler_templates_1.generateObjectResponseHandler)({ schema: formulaSchema });
     const execute = async function exec(params, context) {
         const { result, continuation } = await wrappedExecute(params, context);
         const appliedSchema = context.sync.schema;
         return {
-            result: responseHandler({ body: ensure_1.ensureExists(result), status: 200, headers: {} }, appliedSchema),
+            result: responseHandler({ body: (0, ensure_1.ensureExists)(result), status: 200, headers: {} }, appliedSchema),
             continuation,
         };
     };
     return {
         name,
-        schema: schema_3.normalizeSchema(schema),
+        schema: (0, schema_3.normalizeSchema)(schema),
         getter: {
             ...definition,
             cacheTtlSecs: 0,
@@ -483,7 +483,7 @@ function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynam
 }
 exports.makeSyncTableLegacy = makeSyncTableLegacy;
 function makeDynamicSyncTable({ name, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, }) {
-    const fakeSchema = schema_2.makeObjectSchema({
+    const fakeSchema = (0, schema_2.makeObjectSchema)({
         // This schema is useless... just creating a stub here but the client will use
         // the dynamic one.
         type: schema_1.ValueType.Object,
@@ -517,10 +517,10 @@ function makeDynamicSyncTable({ name, getName: getNameDef, getSchema: getSchemaD
 exports.makeDynamicSyncTable = makeDynamicSyncTable;
 function makeTranslateObjectFormula({ response, ...definition }) {
     const { request, parameters } = definition;
-    response.schema = response.schema ? schema_3.normalizeSchema(response.schema) : undefined;
+    response.schema = response.schema ? (0, schema_3.normalizeSchema)(response.schema) : undefined;
     const { onError } = response;
-    const requestHandler = handler_templates_2.generateRequestHandler(request, parameters);
-    const responseHandler = handler_templates_1.generateObjectResponseHandler(response);
+    const requestHandler = (0, handler_templates_2.generateRequestHandler)(request, parameters);
+    const responseHandler = (0, handler_templates_1.generateObjectResponseHandler)(response);
     function execute(params, context) {
         return context.fetcher
             .fetch(requestHandler(params))
@@ -542,7 +542,7 @@ exports.makeTranslateObjectFormula = makeTranslateObjectFormula;
 function makeEmptyFormula(definition) {
     const { request, ...rest } = definition;
     const { parameters } = rest;
-    const requestHandler = handler_templates_2.generateRequestHandler(request, parameters);
+    const requestHandler = (0, handler_templates_2.generateRequestHandler)(request, parameters);
     function execute(params, context) {
         return context.fetcher.fetch(requestHandler(params)).then(() => '');
     }

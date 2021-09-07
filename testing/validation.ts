@@ -219,7 +219,7 @@ function tryParseUrl(result: unknown, schema: StringSchema) {
     if (!(url.protocol === 'http:' || url.protocol === 'https:')) {
       return invalidUrlError;
     }
-  } catch (error) {
+  } catch (error: any) {
     return invalidUrlError;
   }
 }

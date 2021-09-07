@@ -57,12 +57,12 @@ class AuthenticatingFetcher {
             if (!this._isOAuth401(requestFailure)) {
                 throw requestFailure;
             }
-            helpers_2.print('The request error was a 401 code on an OAuth request, we will refresh credentials and retry.');
+            (0, helpers_2.print)('The request error was a 401 code on an OAuth request, we will refresh credentials and retry.');
             try {
                 await this._refreshOAuthCredentials();
             }
             catch (oauthFailure) {
-                helpers_2.print(requestFailure);
+                (0, helpers_2.print)(requestFailure);
                 // Now we have both an OAuth failure and an original request error.
                 // We throw the one that is most likely the one the user should try to fix first.
                 throw oauthFailure;
@@ -122,12 +122,12 @@ class AuthenticatingFetcher {
     }
     async _refreshOAuthCredentials() {
         var _a;
-        ensure_1.assertCondition(((_a = this._authDef) === null || _a === void 0 ? void 0 : _a.type) === types_1.AuthenticationType.OAuth2);
-        ensure_1.assertCondition(this._credentials);
+        (0, ensure_1.assertCondition)(((_a = this._authDef) === null || _a === void 0 ? void 0 : _a.type) === types_1.AuthenticationType.OAuth2);
+        (0, ensure_1.assertCondition)(this._credentials);
         // Reauth with the scopes from the original auth call, not what is currently defined in the manifest.
         const { clientId, clientSecret, accessToken, refreshToken, scopes } = this._credentials;
-        ensure_1.assertCondition(accessToken);
-        ensure_1.assertCondition(refreshToken);
+        (0, ensure_1.assertCondition)(accessToken);
+        (0, ensure_1.assertCondition)(refreshToken);
         const { authorizationUrl, tokenUrl, additionalParams } = this._authDef;
         const oauth2Client = new client_oauth2_1.default({
             clientId,
@@ -143,7 +143,7 @@ class AuthenticatingFetcher {
             ...this._credentials,
             accessToken: refreshedToken.accessToken,
             refreshToken: refreshedToken.refreshToken,
-            expires: helpers_1.getExpirationDate(Number(refreshedToken.data.expires_in)).toString(),
+            expires: (0, helpers_1.getExpirationDate)(Number(refreshedToken.data.expires_in)).toString(),
             scopes,
         };
         this._credentials = newCredentials;
@@ -168,7 +168,7 @@ class AuthenticatingFetcher {
                     // this scheme where we do template substitution of the body using an unguessable
                     // random token as part of the template key.
                     Object.entries(this._credentials).forEach(([key, value]) => {
-                        bodyWithTemplateSubstitutions = ensure_2.ensureExists(bodyWithTemplateSubstitutions).replace(`{{${key}-${this._invocationToken}}}`, value);
+                        bodyWithTemplateSubstitutions = (0, ensure_2.ensureExists)(bodyWithTemplateSubstitutions).replace(`{{${key}-${this._invocationToken}}}`, value);
                     });
                 }
                 return {
@@ -209,10 +209,10 @@ class AuthenticatingFetcher {
                 const requestHeaders = headers || {};
                 let requestUrl = url;
                 if (this._authDef.tokenQueryParam) {
-                    requestUrl = addQueryParam(url, this._authDef.tokenQueryParam, ensure_3.ensureNonEmptyString(accessToken));
+                    requestUrl = addQueryParam(url, this._authDef.tokenQueryParam, (0, ensure_3.ensureNonEmptyString)(accessToken));
                 }
                 else {
-                    requestHeaders.Authorization = `${prefix} ${ensure_3.ensureNonEmptyString(accessToken)}`;
+                    requestHeaders.Authorization = `${prefix} ${(0, ensure_3.ensureNonEmptyString)(accessToken)}`;
                 }
                 return {
                     url: requestUrl,
@@ -225,7 +225,7 @@ class AuthenticatingFetcher {
             case types_1.AuthenticationType.Various:
                 throw new Error('Not yet implemented');
             default:
-                return ensure_4.ensureUnreachable(this._authDef);
+                return (0, ensure_4.ensureUnreachable)(this._authDef);
         }
     }
     _applyAndValidateEndpoint(rawUrl) {
@@ -250,7 +250,7 @@ class AuthenticatingFetcher {
                 throw new Error(`The endpoint ${endpointUrl} is not authorized. The domain must match the domain ${endpointDomain} provided in the pack definition.`);
             }
         }
-        const parsedUrl = url_parse_1.default(rawUrl, {});
+        const parsedUrl = (0, url_parse_1.default)(rawUrl, {});
         if (parsedUrl.hostname) {
             if (parsedUrl.hostname !== parsedEndpointUrl.hostname) {
                 throw new Error(`The url ${rawUrl} is not authorized. The host must match the host ${parsedEndpointUrl.hostname} that was specified with the auth credentials. ` +
@@ -277,7 +277,7 @@ exports.AuthenticatingFetcher = AuthenticatingFetcher;
 // Namespaced object that can be mocked for testing.
 exports.requestHelper = {
     makeRequest: async (request) => {
-        return request_promise_native_1.default({
+        return (0, request_promise_native_1.default)({
             ...request,
             encoding: request.isBinaryResponse ? null : undefined,
             resolveWithFullResponse: true,
@@ -292,14 +292,14 @@ class AuthenticatingBlobStorage {
     }
     async storeUrl(url, _opts) {
         await this._fetcher.fetch({ method: 'GET', url, isBinaryResponse: true });
-        return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${uuid_1.v4()}`;
+        return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${(0, uuid_1.v4)()}`;
     }
     async storeBlob(_blobData, _contentType, _opts) {
-        return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${uuid_1.v4()}`;
+        return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${(0, uuid_1.v4)()}`;
     }
 }
 function newFetcherExecutionContext(updateCredentialsCallback, authDef, networkDomains, credentials) {
-    const invocationToken = uuid_1.v4();
+    const invocationToken = (0, uuid_1.v4)();
     const fetcher = new AuthenticatingFetcher(updateCredentialsCallback, authDef, networkDomains, credentials, invocationToken);
     return {
         invocationLocation: {

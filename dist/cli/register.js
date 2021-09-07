@@ -13,28 +13,28 @@ const helpers_4 = require("../testing/helpers");
 const config_storage_1 = require("./config_storage");
 const errors_2 = require("./errors");
 async function handleRegister({ apiToken, codaApiEndpoint }) {
-    const formattedEndpoint = helpers_2.formatEndpoint(codaApiEndpoint);
+    const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
     if (!apiToken) {
         // TODO: deal with auto-open on devbox setups
-        const shouldOpenBrowser = helpers_4.promptForInput('No API token provided. Do you want to visit Coda to create one? ');
+        const shouldOpenBrowser = (0, helpers_4.promptForInput)('No API token provided. Do you want to visit Coda to create one? ');
         if (!shouldOpenBrowser.toLocaleLowerCase().startsWith('y')) {
             return process.exit(1);
         }
-        await open_1.default(`${formattedEndpoint}/account?openDialog=CREATE_API_TOKEN&scopeType=pack`);
-        apiToken = helpers_4.promptForInput('Please paste the token here: ', { mask: true });
+        await (0, open_1.default)(`${formattedEndpoint}/account?openDialog=CREATE_API_TOKEN&scopeType=pack`);
+        apiToken = (0, helpers_4.promptForInput)('Please paste the token here: ', { mask: true });
     }
-    const client = helpers_1.createCodaClient(apiToken, formattedEndpoint);
+    const client = (0, helpers_1.createCodaClient)(apiToken, formattedEndpoint);
     try {
         const response = await client.whoami();
-        if (errors_1.isCodaError(response)) {
-            return helpers_3.printAndExit(`Invalid API token provided.`);
+        if ((0, errors_1.isCodaError)(response)) {
+            return (0, helpers_3.printAndExit)(`Invalid API token provided.`);
         }
     }
     catch (err) {
-        const errors = [`Unexpected error while checking validity of API token: ${err}`, errors_2.tryParseSystemError(err)];
-        return helpers_3.printAndExit(errors.join('\n'));
+        const errors = [`Unexpected error while checking validity of API token: ${err}`, (0, errors_2.tryParseSystemError)(err)];
+        return (0, helpers_3.printAndExit)(errors.join('\n'));
     }
-    config_storage_1.storeCodaApiKey(apiToken, process.env.PWD, codaApiEndpoint);
-    helpers_3.printAndExit(`API key validated and stored successfully!`, 0);
+    (0, config_storage_1.storeCodaApiKey)(apiToken, process.env.PWD, codaApiEndpoint);
+    (0, helpers_3.printAndExit)(`API key validated and stored successfully!`, 0);
 }
 exports.handleRegister = handleRegister;

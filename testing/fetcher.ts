@@ -79,7 +79,7 @@ export class AuthenticatingFetcher implements Fetcher {
         body,
         form,
       });
-    } catch (requestFailure) {
+    } catch (requestFailure: any) {
       // Only attempt 1 retry
       if (isRetry) {
         throw requestFailure;
@@ -93,7 +93,7 @@ export class AuthenticatingFetcher implements Fetcher {
       print('The request error was a 401 code on an OAuth request, we will refresh credentials and retry.');
       try {
         await this._refreshOAuthCredentials();
-      } catch (oauthFailure) {
+      } catch (oauthFailure: any) {
         print(requestFailure);
         // Now we have both an OAuth failure and an original request error.
         // We throw the one that is most likely the one the user should try to fix first.
@@ -123,7 +123,7 @@ export class AuthenticatingFetcher implements Fetcher {
       if (typeof responseBody !== 'object') {
         responseBody = response.body;
       }
-    } catch (e) {
+    } catch (e: any) {
       // Ignore if we cannot parse.
     }
 

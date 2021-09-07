@@ -42,8 +42,8 @@ exports.createIsolateContext = createIsolateContext;
  */
 async function injectAsyncFunction(context, stubName, func) {
     const stub = async (...args) => {
-        const result = await func(...args.map(arg => marshaling_2.unmarshalValue(arg)));
-        return marshaling_1.marshalValue(result);
+        const result = await func(...args.map(arg => (0, marshaling_2.unmarshalValue)(arg)));
+        return (0, marshaling_1.marshalValue)(result);
     };
     await context.evalClosure(`${stubName} = async function(...args) {
         return coda.handleErrorAsync(async () => {
@@ -62,7 +62,7 @@ async function injectAsyncFunction(context, stubName, func) {
 exports.injectAsyncFunction = injectAsyncFunction;
 async function injectVoidFunction(context, stubName, func) {
     const stub = (...args) => {
-        func(...args.map(arg => marshaling_2.unmarshalValue(arg)));
+        func(...args.map(arg => (0, marshaling_2.unmarshalValue)(arg)));
     };
     await context.evalClosure(`${stubName} = function(...args) {
         coda.handleError(() => {
@@ -73,8 +73,8 @@ async function injectVoidFunction(context, stubName, func) {
 exports.injectVoidFunction = injectVoidFunction;
 async function injectFetcherFunction(context, stubName, func) {
     const stub = async (marshaledValue) => {
-        const result = await func(marshaling_2.unmarshalValue(marshaledValue));
-        return marshaling_1.marshalValue(result);
+        const result = await func((0, marshaling_2.unmarshalValue)(marshaledValue));
+        return (0, marshaling_1.marshalValue)(result);
     };
     await context.evalClosure(`${stubName} = async function(fetchRequest) {
         return coda.handleErrorAsync(async () => {
@@ -107,8 +107,8 @@ async function executeThunk(context, { params, formulaSpec }, packBundlePath, pa
         return localIsolateValue;
     }
     catch (wrappedError) {
-        const err = marshaling_3.unwrapError(wrappedError);
-        const translatedStacktrace = await source_map_1.translateErrorStackFromVM({
+        const err = (0, marshaling_3.unwrapError)(wrappedError);
+        const translatedStacktrace = await (0, source_map_1.translateErrorStackFromVM)({
             stacktrace: err.stack,
             // the sourcemap needs packBundleSourceMapPath to be either absolute or relative, but not something like
             // 'bundle.js' or 'bundle.js.map'.
