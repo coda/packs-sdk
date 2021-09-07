@@ -9,7 +9,7 @@ export const testHelper = {
   async willBeRejected<ErrorT = any>(promise: Promise<any>): Promise<ErrorT> {
     try {
       await promise;
-    } catch (err) {
+    } catch (err: any) {
       return err;
     }
 

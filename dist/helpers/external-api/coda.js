@@ -22,7 +22,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/categories`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/categories`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -38,7 +38,7 @@ class Client {
             ...params,
         };
         const { pageToken, ...rest } = allParams;
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs`, pageToken ? { pageToken } : rest);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs`, pageToken ? { pageToken } : rest);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -53,7 +53,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -69,7 +69,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -84,7 +84,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -99,7 +99,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/acl/metadata`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/acl/metadata`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -114,7 +114,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/acl/permissions`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/acl/permissions`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -129,7 +129,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/acl/permissions`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/acl/permissions`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -145,7 +145,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/acl/permissions/${permissionId}`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/acl/permissions/${permissionId}`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -160,7 +160,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/publish`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/publish`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -176,7 +176,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/publish`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/publish`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -192,7 +192,7 @@ class Client {
             ...params,
         };
         const { pageToken, ...rest } = allParams;
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/pages`, pageToken ? { pageToken } : rest);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/pages`, pageToken ? { pageToken } : rest);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -207,7 +207,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/pages/${pageIdOrName}`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/pages/${pageIdOrName}`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -222,7 +222,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/pages/${pageIdOrName}`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/pages/${pageIdOrName}`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -239,7 +239,7 @@ class Client {
             ...params,
         };
         const { pageToken, ...rest } = allParams;
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables`, pageToken ? { pageToken } : rest);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables`, pageToken ? { pageToken } : rest);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -254,7 +254,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables/${tableIdOrName}`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables/${tableIdOrName}`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -270,7 +270,7 @@ class Client {
             ...params,
         };
         const { pageToken, ...rest } = allParams;
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables/${tableIdOrName}/columns`, pageToken ? { pageToken } : rest);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables/${tableIdOrName}/columns`, pageToken ? { pageToken } : rest);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -286,7 +286,7 @@ class Client {
             ...params,
         };
         const { pageToken, ...rest } = allParams;
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables/${tableIdOrName}/rows`, pageToken ? { pageToken } : rest);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables/${tableIdOrName}/rows`, pageToken ? { pageToken } : rest);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -301,7 +301,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables/${tableIdOrName}/rows`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables/${tableIdOrName}/rows`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -317,7 +317,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables/${tableIdOrName}/rows`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables/${tableIdOrName}/rows`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -333,7 +333,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables/${tableIdOrName}/rows/${rowIdOrName}`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables/${tableIdOrName}/rows/${rowIdOrName}`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -348,7 +348,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables/${tableIdOrName}/rows/${rowIdOrName}`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables/${tableIdOrName}/rows/${rowIdOrName}`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -364,7 +364,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables/${tableIdOrName}/rows/${rowIdOrName}`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables/${tableIdOrName}/rows/${rowIdOrName}`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -379,7 +379,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables/${tableIdOrName}/rows/${rowIdOrName}/buttons/${columnIdOrName}`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables/${tableIdOrName}/rows/${rowIdOrName}/buttons/${columnIdOrName}`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -394,7 +394,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables/${tableIdOrName}/columns/${columnIdOrName}`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/tables/${tableIdOrName}/columns/${columnIdOrName}`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -410,7 +410,7 @@ class Client {
             ...params,
         };
         const { pageToken, ...rest } = allParams;
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/formulas`, pageToken ? { pageToken } : rest);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/formulas`, pageToken ? { pageToken } : rest);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -425,7 +425,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/formulas/${formulaIdOrName}`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/formulas/${formulaIdOrName}`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -441,7 +441,7 @@ class Client {
             ...params,
         };
         const { pageToken, ...rest } = allParams;
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/controls`, pageToken ? { pageToken } : rest);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/controls`, pageToken ? { pageToken } : rest);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -456,7 +456,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/docs/${docId}/controls/${controlIdOrName}`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/docs/${docId}/controls/${controlIdOrName}`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -471,7 +471,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/whoami`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/whoami`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -487,7 +487,7 @@ class Client {
             ...params,
             url,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/resolveBrowserLink`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/resolveBrowserLink`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -502,7 +502,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/mutationStatus/${requestId}`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/mutationStatus/${requestId}`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -518,7 +518,7 @@ class Client {
             ...params,
         };
         const { pageToken, ...rest } = allParams;
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/analytics/docs`, pageToken ? { pageToken } : rest);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/analytics/docs`, pageToken ? { pageToken } : rest);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -534,7 +534,7 @@ class Client {
             ...params,
         };
         const { pageToken, ...rest } = allParams;
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/workspaces/${workspaceId}/users`, pageToken ? { pageToken } : rest);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/workspaces/${workspaceId}/users`, pageToken ? { pageToken } : rest);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -549,7 +549,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/workspaces/${workspaceId}/users/role`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/workspaces/${workspaceId}/users/role`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -566,7 +566,7 @@ class Client {
             ...params,
         };
         const { pageToken, ...rest } = allParams;
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/workspaces/${workspaceId}/roles`, pageToken ? { pageToken } : rest);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/workspaces/${workspaceId}/roles`, pageToken ? { pageToken } : rest);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -582,7 +582,7 @@ class Client {
             ...params,
         };
         const { pageToken, ...rest } = allParams;
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs`, pageToken ? { pageToken } : rest);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs`, pageToken ? { pageToken } : rest);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -597,7 +597,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -613,7 +613,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -628,7 +628,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -645,7 +645,7 @@ class Client {
             ...params,
         };
         const { pageToken, ...rest } = allParams;
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/versions`, pageToken ? { pageToken } : rest);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}/versions`, pageToken ? { pageToken } : rest);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -660,7 +660,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/versions/${packVersion}/register`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}/versions/${packVersion}/register`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -676,7 +676,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/versions/${packVersion}/uploadComplete`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}/versions/${packVersion}/uploadComplete`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -692,7 +692,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/releases`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}/releases`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -709,7 +709,7 @@ class Client {
             ...params,
         };
         const { pageToken, ...rest } = allParams;
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/releases`, pageToken ? { pageToken } : rest);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}/releases`, pageToken ? { pageToken } : rest);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -724,7 +724,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/liveVersion`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}/liveVersion`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -740,7 +740,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/systemConnection`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}/systemConnection`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -756,7 +756,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/systemConnection`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}/systemConnection`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -771,7 +771,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/systemConnection`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}/systemConnection`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -786,7 +786,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/permissions`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}/permissions`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -801,7 +801,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/permissions`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}/permissions`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -817,7 +817,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/permissions/${permissionId}`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}/permissions/${permissionId}`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -832,7 +832,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/uploadAsset`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}/uploadAsset`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -848,7 +848,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/uploadSourceCode`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}/uploadSourceCode`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -864,7 +864,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/assets/${packAssetId}/assetType/${packAssetType}/uploadComplete`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}/assets/${packAssetId}/assetType/${packAssetType}/uploadComplete`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -879,7 +879,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/versions/${packVersion}/sourceCode/uploadComplete`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}/versions/${packVersion}/sourceCode/uploadComplete`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -895,7 +895,7 @@ class Client {
         const allParams = {
             ...params,
         };
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}/versions/${packVersion}/sourceCode`, allParams);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}/versions/${packVersion}/sourceCode`, allParams);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,
@@ -911,7 +911,7 @@ class Client {
             ...params,
         };
         const { pageToken, ...rest } = allParams;
-        const codaUrl = url_1.withQueryParams(`${this.protocolAndHost}/apis/v1/packs/listings`, pageToken ? { pageToken } : rest);
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/listings`, pageToken ? { pageToken } : rest);
         const response = await fetch(codaUrl, {
             headers: {
                 Authorization: `Bearer ${this.apiKey}`,

@@ -51,7 +51,7 @@ function validateParams(formula, args) {
     for (let i = 0; i < parameters.length; i++) {
         const param = args[i];
         const paramDef = parameters[i];
-        if (!paramDef.optional && !object_utils_1.isDefined(param)) {
+        if (!paramDef.optional && !(0, object_utils_1.isDefined)(param)) {
             errors.push({
                 message: `Param ${i} "${paramDef.name}" is required but a value was not provided.`,
             });
@@ -68,14 +68,14 @@ function validateResult(formula, result) {
     if (maybeError) {
         throw types_3.ResultValidationException.fromErrors(formula.name, [maybeError]);
     }
-    if (api_1.isObjectPackFormula(formula)) {
+    if ((0, api_1.isObjectPackFormula)(formula)) {
         // We've already validated that the result type is valid by this point.
         validateObjectResult(formula, result);
     }
 }
 exports.validateResult = validateResult;
 function validateResultType(resultType, result) {
-    if (!object_utils_1.isDefined(result)) {
+    if (!(0, object_utils_1.isDefined)(result)) {
         return { message: `Expected a ${resultType} result but got ${result}.` };
     }
     const typeOfResult = typeof result;
@@ -95,7 +95,7 @@ function validateResultType(resultType, result) {
         case api_types_1.Type.string:
             return checkType(typeOfResult === 'string', 'string', result);
         default:
-            return ensure_2.ensureUnreachable(resultType);
+            return (0, ensure_2.ensureUnreachable)(resultType);
     }
 }
 function generateErrorFromValidationContext(context, schema, result) {
@@ -136,7 +136,7 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                     // no need to coerce current result type
                     return [];
                 default:
-                    return ensure_2.ensureUnreachable(schema);
+                    return (0, ensure_2.ensureUnreachable)(schema);
             }
         }
         case schema_2.ValueType.String: {
@@ -166,7 +166,7 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                     // no need to coerce current result type
                     return [];
                 default:
-                    ensure_2.ensureUnreachable(schema);
+                    (0, ensure_2.ensureUnreachable)(schema);
             }
         }
         case schema_2.ValueType.Array:
@@ -185,11 +185,11 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                 case undefined:
                     return validateObject(result, schema, context);
                 default:
-                    ensure_2.ensureUnreachable(schema);
+                    (0, ensure_2.ensureUnreachable)(schema);
             }
         }
         default:
-            return ensure_2.ensureUnreachable(schema);
+            return (0, ensure_2.ensureUnreachable)(schema);
     }
 }
 function tryParseDateTimeString(result, schema) {
@@ -203,7 +203,7 @@ function tryParseUrl(result, schema) {
         message: `Property with codaType "${schema.codaType}" must be a valid HTTP(S) url, but got "${result}".`,
     };
     try {
-        const url = url_parse_1.default(result);
+        const url = (0, url_parse_1.default)(result);
         if (!(url.protocol === 'http:' || url.protocol === 'https:')) {
             return invalidUrlError;
         }
@@ -237,12 +237,12 @@ function tryParseScale(result, schema) {
 }
 function tryParsePerson(result, schema) {
     const { id } = schema;
-    const validId = ensure_1.ensureExists(id);
+    const validId = (0, ensure_1.ensureExists)(id);
     const idError = checkFieldInResult(result, validId);
     if (idError) {
         return idError;
     }
-    if (!string_1.isEmail(result[validId])) {
+    if (!(0, string_1.isEmail)(result[validId])) {
         return { message: `The id field for the person result must be an email string, but got "${result[validId]}".` };
     }
 }
@@ -265,14 +265,14 @@ function validateObjectResult(formula, result) {
         return;
     }
     const validationContext = new types_2.ResultValidationContext();
-    if (schema_3.isArray(schema)) {
+    if ((0, schema_3.isArray)(schema)) {
         const arrayValidationErrors = validateArray(result, schema, new types_2.ResultValidationContext().extendForProperty(formula.name));
         if (arrayValidationErrors.length) {
             throw types_3.ResultValidationException.fromErrors(formula.name, arrayValidationErrors);
         }
         return;
     }
-    if (!schema_4.isObject(schema)) {
+    if (!(0, schema_4.isObject)(schema)) {
         const error = { message: `Expected an object schema, but found ${JSON.stringify(schema)}.` };
         throw types_3.ResultValidationException.fromErrors(formula.name, [error]);
     }

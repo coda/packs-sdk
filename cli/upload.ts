@@ -136,7 +136,7 @@ export async function handleUpload({
     if (isCodaError(uploadCompleteResponse)) {
       printAndExit(`Error while finalizing pack version: ${formatError(uploadCompleteResponse)}`);
     }
-  } catch (err) {
+  } catch (err: any) {
     const errors = [`Unexpected error during Pack upload: ${formatError(err)}`, tryParseSystemError(err)];
     printAndExit(errors.join(`\n`));
   }
@@ -151,7 +151,7 @@ async function uploadPack(uploadUrl: string, uploadPayload: string, headers: {[h
       headers,
       body: uploadPayload,
     });
-  } catch (err) {
+  } catch (err: any) {
     printAndExitImpl(`Error in uploading Pack to signed url: ${formatError(err)}`);
   }
 }

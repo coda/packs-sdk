@@ -7,7 +7,7 @@ class ParameterException extends Error {
 exports.ParameterException = ParameterException;
 class ResultValidationContext {
     constructor(contexts) {
-        this.fieldContexts = contexts ? object_utils_1.deepCopy(contexts) : [];
+        this.fieldContexts = contexts ? (0, object_utils_1.deepCopy)(contexts) : [];
     }
     extendForProperty(propertyKey) {
         const newContext = { propertyKey, arrayIndices: [] };

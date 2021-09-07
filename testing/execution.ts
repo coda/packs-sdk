@@ -204,7 +204,7 @@ export async function executeFormulaOrSyncFromCLI({
         : await executeFormulaOrSyncWithRawParams({formulaSpecification, params, manifest, executionContext});
       print(result);
     }
-  } catch (err) {
+  } catch (err: any) {
     print(err);
     process.exit(1);
   }

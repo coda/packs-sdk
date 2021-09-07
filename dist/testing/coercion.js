@@ -30,10 +30,10 @@ function coerceParams(formula, args) {
 }
 exports.coerceParams = coerceParams;
 function coerceParamValue(paramDef, paramValue) {
-    if (!object_utils_1.isDefined(paramValue)) {
+    if (!(0, object_utils_1.isDefined)(paramValue)) {
         return paramValue;
     }
-    if (api_types_2.isArrayType(paramDef.type)) {
+    if ((0, api_types_2.isArrayType)(paramDef.type)) {
         const valuesString = paramValue;
         const value = valuesString.length ? valuesString.split(',') : [];
         return value.map(item => coerceParam(paramDef.type.items, item.trim()));
@@ -55,6 +55,6 @@ function coerceParam(type, value) {
         case api_types_1.Type.string:
             return value;
         default:
-            return ensure_1.ensureUnreachable(type);
+            return (0, ensure_1.ensureUnreachable)(type);
     }
 }

@@ -6,7 +6,7 @@ class ConsoleLogger {
     _logMessage(level, message, args) {
         if (args.length) {
             // eslint-disable-next-line no-console
-            console.log(`[${level}/${new Date().toISOString()}]: ${util_1.format(message, args)}`);
+            console.log(`[${level}/${new Date().toISOString()}]: ${(0, util_1.format)(message, args)}`);
         }
         else {
             // eslint-disable-next-line no-console

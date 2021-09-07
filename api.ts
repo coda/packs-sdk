@@ -603,7 +603,7 @@ export function makeFormula<ParamDefsT extends ParamDefs>(
     formula.execute = async function (params: ParamValues<ParamDefsT>, context: ExecutionContext) {
       try {
         return await wrappedExecute(params, context);
-      } catch (err) {
+      } catch (err: any) {
         return onError(err);
       }
     };
@@ -694,7 +694,7 @@ export function makeMetadataFormula(
       let formulaContext = {};
       try {
         formulaContext = JSON.parse(serializedFormulaContext);
-      } catch (err) {
+      } catch (err: any) {
         //  Ignore.
       }
       return execute(context, search, formulaContext) as any;
@@ -793,7 +793,7 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
       let result: object;
       try {
         result = await wrappedExecute(params, context);
-      } catch (err) {
+      } catch (err: any) {
         if (onError) {
           result = onError(err);
         } else {

@@ -16,7 +16,7 @@ function newMockExecutionContext(overrides) {
             protocolAndHost: 'https://coda.io',
         },
         timezone: 'America/Los_Angeles',
-        invocationToken: uuid_1.v4(),
+        invocationToken: (0, uuid_1.v4)(),
         fetcher: {
             fetch: sinon_1.default.stub(),
         },

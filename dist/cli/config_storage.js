@@ -46,7 +46,7 @@ function getApiKey(codaApiEndpoint) {
                 return apiKeyFile.apiKey;
             }
             else {
-                const { host } = url_parse_1.default(codaApiEndpoint);
+                const { host } = (0, url_parse_1.default)(codaApiEndpoint);
                 return (_a = apiKeyFile.environmentApiKeys) === null || _a === void 0 ? void 0 : _a[host];
             }
         }
@@ -61,17 +61,17 @@ function storeCodaApiKey(apiKey, projectDir = '.', codaApiEndpoint) {
     }
     else {
         apiKeyFile.environmentApiKeys = apiKeyFile.environmentApiKeys || {};
-        const { host } = url_parse_1.default(codaApiEndpoint);
+        const { host } = (0, url_parse_1.default)(codaApiEndpoint);
         apiKeyFile.environmentApiKeys[host] = apiKey;
     }
     writeApiKeyFile(filename, apiKeyFile);
 }
 exports.storeCodaApiKey = storeCodaApiKey;
 function readApiKeyFile(filename) {
-    return helpers_1.readJSONFile(filename);
+    return (0, helpers_1.readJSONFile)(filename);
 }
 function writeApiKeyFile(filename, fileContents) {
-    helpers_2.writeJSONFile(filename, fileContents, 0o600);
+    (0, helpers_2.writeJSONFile)(filename, fileContents, 0o600);
 }
 function storePackId(manifestDir, packId, codaApiEndpoint) {
     const fileContents = readPackIdFile(manifestDir) || { packId: -1 };
@@ -79,7 +79,7 @@ function storePackId(manifestDir, packId, codaApiEndpoint) {
         fileContents.packId = packId;
     }
     else {
-        const { host } = url_parse_1.default(codaApiEndpoint);
+        const { host } = (0, url_parse_1.default)(codaApiEndpoint);
         fileContents.environmentPackIds = fileContents.environmentPackIds || {};
         fileContents.environmentPackIds[host] = packId;
     }
@@ -96,16 +96,16 @@ function getPackId(manifestDir, codaApiEndpoint) {
         return fileContents.packId;
     }
     else {
-        const { host } = url_parse_1.default(codaApiEndpoint);
+        const { host } = (0, url_parse_1.default)(codaApiEndpoint);
         return (_a = fileContents.environmentPackIds) === null || _a === void 0 ? void 0 : _a[host];
     }
 }
 exports.getPackId = getPackId;
 function readPackIdFile(manifestDir) {
     const filename = path.join(manifestDir, exports.PACK_ID_FILE_NAME);
-    return helpers_1.readJSONFile(filename);
+    return (0, helpers_1.readJSONFile)(filename);
 }
 function writePacksFile(manifestDir, fileContents) {
     const filename = path.join(manifestDir, exports.PACK_ID_FILE_NAME);
-    helpers_2.writeJSONFile(filename, fileContents);
+    (0, helpers_2.writeJSONFile)(filename, fileContents);
 }

@@ -216,7 +216,7 @@ export async function compilePackBundle({
   // maybe we just need to get rid of jimp and resize-optimize-images instead.
   try {
     await loadIntoVM(tempBundlePath);
-  } catch (err) {
+  } catch (err: any) {
     throw await processVmError(err, tempBundlePath);
   }
 

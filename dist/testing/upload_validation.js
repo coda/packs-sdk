@@ -76,7 +76,7 @@ function validateSyncTableSchema(schema) {
         return validated.data;
     }
     // In case this was an ObjectSchema (describing a single row), wrap it up as an ArraySchema.
-    const syntheticArraySchema = schema_6.makeSchema({
+    const syntheticArraySchema = (0, schema_6.makeSchema)({
         type: schema_5.ValueType.Array,
         items: schema,
     });
@@ -186,7 +186,7 @@ function zodDiscriminant(value) {
     });
 }
 function zodUnionInput(schemas) {
-    ensure_1.assertCondition(schemas.length >= 2, 'A zod union type requires at least 2 options.');
+    (0, ensure_1.assertCondition)(schemas.length >= 2, 'A zod union type requires at least 2 options.');
     return schemas;
 }
 const setEndpointPostSetupValidator = zodCompleteObject({
@@ -474,10 +474,10 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
         });
     }
 })
-    .refine(data => object_utils_1.isNil(data.id) || data.id in data.properties, {
+    .refine(data => (0, object_utils_1.isNil)(data.id) || data.id in data.properties, {
     message: 'The "id" property must appear as a key in the "properties" object.',
 })
-    .refine(data => object_utils_1.isNil(data.primary) || data.primary in data.properties, {
+    .refine(data => (0, object_utils_1.isNil)(data.primary) || data.primary in data.properties, {
     message: 'The "primary" property must appear as a key in the "properties" object.',
 })
     .superRefine((data, context) => {
