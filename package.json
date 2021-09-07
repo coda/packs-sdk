@@ -23,7 +23,7 @@
     "esbuild": "^0.12.24",
     "exorcist": "^2.0.0",
     "express": "4.17.1",
-    "isolated-vm": "^4.3.4",
+    "isolated-vm": "^4.3.5",
     "isomorphic-fetch": "^3.0.0",
     "mersenne-twister": "^1.1.0",
     "open": "^8.2.1",
