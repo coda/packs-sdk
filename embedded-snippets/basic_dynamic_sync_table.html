@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <!-- Monaco library script is loaded from: https://cdnjs.com/libraries/monaco-editor-->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs/loader.min.js"
+      integrity="sha512-SExj71Cw3B9C9EE8BC/ad3AKia5zQXDj/2SM4THgkeKh5GIFZhKM/R3uclUG8YZwJrjcVhydAlIHmfNvsBCKZA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      require.config({
+        paths: {
+          vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs',
+        },
+      });
+
+      require(['vs/editor/editor.main'], function () {
+        var editor = monaco.editor.create(document.getElementById('container'), {
+          value: "// Replace all <text> with your own names\npack.addDynamicSyncTable({\n  // The static name for this category of sync table\n  name: '<MyDynamicSynctable>',\n  // The display name for the table, shown in the UI.\n  getName: async context => {\n    const response = await context.fetcher.fetch({method: 'GET', url: context.sync.dynamicUrl});\n    // Return whatever represents the name of the entity you're syncing.\n    return response.body.name;\n  },\n  // A label for the kind of entities that you are syncing.\n  // Using Google Sheets as example you might use \"Row\" here, as each synced entity is a row from the source sheet.\n  entityName: '<RowName>',\n  getSchema: async () => {\n    return coda.makeSchema({\n      type: coda.ValueType.Array,\n      items: coda.makeObjectSchema({\n        type: coda.ValueType.Object,\n        // The property name from the properties object below that represents the unique\n        // identifier of this item. A sync table MUST have a stable unique identifier. Without\n        // one, each subsequent sync will wipe away all rows and recreate them from scratch.\n        id: '<idColumn>',\n        // The property name from the properties object below that should label this item\n        // in the UI. All properties can be seen when hovering over a synced item in the UI,\n        // but the primary property value is shown on the chip representing the full object.\n        primary: '<displayColumn>',\n        // The columns that will be displayed on the table\n        featured: ['<otherColumn>'],\n        // The actual schema properties.\n        properties: {\n          // Add your properties here e.g.\n          // idColumn: {type: coda.ValueType.Number},\n          // displayColumn: {type: coda.ValueType.String},\n          // otherColumn: {type: coda.ValueType.String},\n        },\n      }),\n    });\n  },\n  // A user-friendly url representing the entity being synced. The table UI in the doc will provide\n  // a convenience link to this url so the user can easily click through to the source of data in that table.\n  getDisplayUrl: async context => {\n    const response = await context.fetcher.fetch({method: 'GET', url: context.sync.dynamicUrl});\n    // Return whatever represents a browser-friendly version of the dynamic url.\n    return response.body.browserLink;\n  },\n  formula: {\n    // This is the name that will be called in the formula builder.\n    // Remember, your formula name cannot have spaces in it.\n    name: '<DynamicSyncTable>',\n    description: '<Creates a dynamic sync table>',\n\n    // If your formula requires one or more inputs, you’ll define them here.\n    parameters: [\n      coda.makeParameter({\n        type: coda.ParameterType.String,\n        name: '<myParam>',\n        description: '<My description>',\n      }),\n    ],\n    // Everything inside this statement will execute anytime your Coda function is called in a doc.\n    execute: async function ([myParam], context) {\n      return {\n        result: [\n          // {\n          //   idPropertyName: 1,\n          //   displayPropertyName: '<Example1>',\n          //   otherPropertyName: myParam,\n          // },\n        ],\n      };\n    },\n  },\n});",
+          language: 'javascript',
+          minimap: {enabled: false},
+          readOnly: true,
+          renderValidationDecorations: 'off',
+          wordWrap: 'on',
+          contextmenu: false,
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="container" style="position: absolute; top: 0; right: 16; bottom: 16; left: 0"></div>
+  </body>
+</html>

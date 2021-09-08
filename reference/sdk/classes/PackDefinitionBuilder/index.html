@@ -1,0 +1,2769 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.6">
+    
+    
+      
+        <title>PackDefinitionBuilder - Coda Packs SDK</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.802231af.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.3f5d1f46.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    <script>function __prefix(e){return new URL("../../../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#implements" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Coda Packs SDK" class="md-header__button md-logo" aria-label="Coda Packs SDK" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Coda Packs SDK
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PackDefinitionBuilder
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/coda/packs-sdk/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../../.." class="md-tabs__link">
+      Home
+    </a>
+  </li>
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link md-tabs__link--active">
+        Reference
+      </a>
+    </li>
+  
+
+  
+
+      
+    </ul>
+  </div>
+</nav>
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Coda Packs SDK" class="md-nav__button md-logo" aria-label="Coda Packs SDK" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Coda Packs SDK
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/coda/packs-sdk/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
+      
+      <label class="md-nav__link" for="__nav_2">
+        Reference
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Reference" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Reference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+    
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_1" type="checkbox" id="__nav_2_1" checked>
+      
+      <label class="md-nav__link" for="__nav_2_1">
+        Sdk
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Sdk" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_1">
+          <span class="md-nav__icon md-icon"></span>
+          Sdk
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        Index
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_1_2" type="checkbox" id="__nav_2_1_2" checked>
+      
+      <label class="md-nav__link" for="__nav_2_1_2">
+        Classes
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Classes" data-md-level="3">
+        <label class="md-nav__title" for="__nav_2_1_2">
+          <span class="md-nav__icon md-icon"></span>
+          Classes
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          PackDefinitionBuilder
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        PackDefinitionBuilder
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#implements" class="md-nav__link">
+    Implements
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constructors" class="md-nav__link">
+    Constructors
+  </a>
+  
+    <nav class="md-nav" aria-label="Constructors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
+    constructor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#properties" class="md-nav__link">
+    Properties
+  </a>
+  
+    <nav class="md-nav" aria-label="Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defaultauthentication" class="md-nav__link">
+    defaultAuthentication
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#formats" class="md-nav__link">
+    formats
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#formulanamespace" class="md-nav__link">
+    formulaNamespace
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#formulas" class="md-nav__link">
+    formulas
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#networkdomains" class="md-nav__link">
+    networkDomains
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#synctables" class="md-nav__link">
+    syncTables
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#systemconnectionauthentication" class="md-nav__link">
+    systemConnectionAuthentication
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version" class="md-nav__link">
+    version
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    Methods
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#addcolumnformat" class="md-nav__link">
+    addColumnFormat
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adddynamicsynctable" class="md-nav__link">
+    addDynamicSyncTable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addformula" class="md-nav__link">
+    addFormula
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addnetworkdomain" class="md-nav__link">
+    addNetworkDomain
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addsynctable" class="md-nav__link">
+    addSyncTable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setsystemauthentication" class="md-nav__link">
+    setSystemAuthentication
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setuserauthentication" class="md-nav__link">
+    setUserAuthentication
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setversion" class="md-nav__link">
+    setVersion
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../StatusCodeError/" class="md-nav__link">
+        StatusCodeError
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../UserVisibleError/" class="md-nav__link">
+        UserVisibleError
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_1_3" type="checkbox" id="__nav_2_1_3" >
+      
+      <label class="md-nav__link" for="__nav_2_1_3">
+        Enums
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Enums" data-md-level="3">
+        <label class="md-nav__title" for="__nav_2_1_3">
+          <span class="md-nav__icon md-icon"></span>
+          Enums
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../enums/AttributionNodeType/" class="md-nav__link">
+        AttributionNodeType
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../enums/AuthenticationType/" class="md-nav__link">
+        AuthenticationType
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../enums/ConnectionRequirement/" class="md-nav__link">
+        ConnectionRequirement
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../enums/CurrencyFormat/" class="md-nav__link">
+        CurrencyFormat
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../enums/DefaultConnectionType/" class="md-nav__link">
+        DefaultConnectionType
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../enums/DurationUnit/" class="md-nav__link">
+        DurationUnit
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../enums/NetworkConnection/" class="md-nav__link">
+        NetworkConnection
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../enums/ParameterType/" class="md-nav__link">
+        ParameterType
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../enums/PostSetupType/" class="md-nav__link">
+        PostSetupType
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../enums/PrecannedDateRange/" class="md-nav__link">
+        PrecannedDateRange
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../enums/Type/" class="md-nav__link">
+        Type
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../enums/ValueHintType/" class="md-nav__link">
+        ValueHintType
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../enums/ValueType/" class="md-nav__link">
+        ValueType
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_1_4" type="checkbox" id="__nav_2_1_4" >
+      
+      <label class="md-nav__link" for="__nav_2_1_4">
+        Functions
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Functions" data-md-level="3">
+        <label class="md-nav__title" for="__nav_2_1_4">
+          <span class="md-nav__icon md-icon"></span>
+          Functions
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/assertCondition/" class="md-nav__link">
+        assertCondition
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/autocompleteSearchObjects/" class="md-nav__link">
+        autocompleteSearchObjects
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/ensureExists/" class="md-nav__link">
+        ensureExists
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/ensureNonEmptyString/" class="md-nav__link">
+        ensureNonEmptyString
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/ensureUnreachable/" class="md-nav__link">
+        ensureUnreachable
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/generateSchema/" class="md-nav__link">
+        generateSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/getQueryParams/" class="md-nav__link">
+        getQueryParams
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/joinUrl/" class="md-nav__link">
+        joinUrl
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/makeAttributionNode/" class="md-nav__link">
+        makeAttributionNode
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/makeDynamicSyncTable/" class="md-nav__link">
+        makeDynamicSyncTable
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/makeEmptyFormula/" class="md-nav__link">
+        makeEmptyFormula
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/makeFormula/" class="md-nav__link">
+        makeFormula
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/makeMetadataFormula/" class="md-nav__link">
+        makeMetadataFormula
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/makeObjectSchema/" class="md-nav__link">
+        makeObjectSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/makeParameter/" class="md-nav__link">
+        makeParameter
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/makeReferenceSchemaFromObjectSchema/" class="md-nav__link">
+        makeReferenceSchemaFromObjectSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/makeSchema/" class="md-nav__link">
+        makeSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/makeSimpleAutocompleteMetadataFormula/" class="md-nav__link">
+        makeSimpleAutocompleteMetadataFormula
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/makeSyncTable/" class="md-nav__link">
+        makeSyncTable
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/makeTranslateObjectFormula/" class="md-nav__link">
+        makeTranslateObjectFormula
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/newPack/" class="md-nav__link">
+        newPack
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/simpleAutocomplete/" class="md-nav__link">
+        simpleAutocomplete
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../functions/withQueryParams/" class="md-nav__link">
+        withQueryParams
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_1_5" type="checkbox" id="__nav_2_1_5" >
+      
+      <label class="md-nav__link" for="__nav_2_1_5">
+        Interfaces
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Interfaces" data-md-level="3">
+        <label class="md-nav__title" for="__nav_2_1_5">
+          <span class="md-nav__icon md-icon"></span>
+          Interfaces
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/ArraySchema/" class="md-nav__link">
+        ArraySchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/ArrayType/" class="md-nav__link">
+        ArrayType
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/BooleanSchema/" class="md-nav__link">
+        BooleanSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/Continuation/" class="md-nav__link">
+        Continuation
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/CurrencySchema/" class="md-nav__link">
+        CurrencySchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/DateSchema/" class="md-nav__link">
+        DateSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/DateTimeSchema/" class="md-nav__link">
+        DateTimeSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/DurationSchema/" class="md-nav__link">
+        DurationSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/DynamicSyncTableDef/" class="md-nav__link">
+        DynamicSyncTableDef
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/EmptyFormulaDef/" class="md-nav__link">
+        EmptyFormulaDef
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/ExecutionContext/" class="md-nav__link">
+        ExecutionContext
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/ExternalPackVersionMetadata/" class="md-nav__link">
+        ExternalPackVersionMetadata
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/FetchRequest/" class="md-nav__link">
+        FetchRequest
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/FetchResponse/" class="md-nav__link">
+        FetchResponse
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/Fetcher/" class="md-nav__link">
+        Fetcher
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/Format/" class="md-nav__link">
+        Format
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/Identity/" class="md-nav__link">
+        Identity
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/IdentityDefinition/" class="md-nav__link">
+        IdentityDefinition
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/Logger/" class="md-nav__link">
+        Logger
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/MetadataFormulaObjectResultType/" class="md-nav__link">
+        MetadataFormulaObjectResultType
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/Network/" class="md-nav__link">
+        Network
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/NumberSchema/" class="md-nav__link">
+        NumberSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/NumericSchema/" class="md-nav__link">
+        NumericSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/OAuth2Authentication/" class="md-nav__link">
+        OAuth2Authentication
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/ObjectSchema/" class="md-nav__link">
+        ObjectSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/ObjectSchemaProperty/" class="md-nav__link">
+        ObjectSchemaProperty
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/PackDefinition/" class="md-nav__link">
+        PackDefinition
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/PackFormatMetadata/" class="md-nav__link">
+        PackFormatMetadata
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/PackFormulaDef/" class="md-nav__link">
+        PackFormulaDef
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/PackFormulas/" class="md-nav__link">
+        PackFormulas
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/PackFormulasMetadata/" class="md-nav__link">
+        PackFormulasMetadata
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/PackVersionDefinition/" class="md-nav__link">
+        PackVersionDefinition
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/ParamDef/" class="md-nav__link">
+        ParamDef
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/ScaleSchema/" class="md-nav__link">
+        ScaleSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/SimpleAutocompleteOption/" class="md-nav__link">
+        SimpleAutocompleteOption
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/SliderSchema/" class="md-nav__link">
+        SliderSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/StringSchema/" class="md-nav__link">
+        StringSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/SyncExecutionContext/" class="md-nav__link">
+        SyncExecutionContext
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/SyncFormulaResult/" class="md-nav__link">
+        SyncFormulaResult
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/SyncTableDef/" class="md-nav__link">
+        SyncTableDef
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/TemporaryBlobStorage/" class="md-nav__link">
+        TemporaryBlobStorage
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/TimeSchema/" class="md-nav__link">
+        TimeSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/WebBasicAuthentication/" class="md-nav__link">
+        WebBasicAuthentication
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_1_6" type="checkbox" id="__nav_2_1_6" >
+      
+      <label class="md-nav__link" for="__nav_2_1_6">
+        Types
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Types" data-md-level="3">
+        <label class="md-nav__title" for="__nav_2_1_6">
+          <span class="md-nav__icon md-icon"></span>
+          Types
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/Authentication/" class="md-nav__link">
+        Authentication
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/BasicPackDefinition/" class="md-nav__link">
+        BasicPackDefinition
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/DefaultValueType/" class="md-nav__link">
+        DefaultValueType
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/ExternalObjectPackFormula/" class="md-nav__link">
+        ExternalObjectPackFormula
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/ExternalPackFormat/" class="md-nav__link">
+        ExternalPackFormat
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/ExternalPackFormatMetadata/" class="md-nav__link">
+        ExternalPackFormatMetadata
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/ExternalPackFormula/" class="md-nav__link">
+        ExternalPackFormula
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/ExternalPackFormulas/" class="md-nav__link">
+        ExternalPackFormulas
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/ExternalPackMetadata/" class="md-nav__link">
+        ExternalPackMetadata
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/ExternalSyncTable/" class="md-nav__link">
+        ExternalSyncTable
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/FetchMethodType/" class="md-nav__link">
+        FetchMethodType
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/Formula/" class="md-nav__link">
+        Formula
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/GenericDynamicSyncTable/" class="md-nav__link">
+        GenericDynamicSyncTable
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/GenericObjectSchema/" class="md-nav__link">
+        GenericObjectSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/GenericSyncFormula/" class="md-nav__link">
+        GenericSyncFormula
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/GenericSyncFormulaResult/" class="md-nav__link">
+        GenericSyncFormulaResult
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/GenericSyncTable/" class="md-nav__link">
+        GenericSyncTable
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/LoggerParamType/" class="md-nav__link">
+        LoggerParamType
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/MetadataContext/" class="md-nav__link">
+        MetadataContext
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/MetadataFormula/" class="md-nav__link">
+        MetadataFormula
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/MetadataFormulaResultType/" class="md-nav__link">
+        MetadataFormulaResultType
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/ObjectSchemaProperties/" class="md-nav__link">
+        ObjectSchemaProperties
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/PackFormulaMetadata/" class="md-nav__link">
+        PackFormulaMetadata
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/PackFormulaResult/" class="md-nav__link">
+        PackFormulaResult
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/PackFormulaValue/" class="md-nav__link">
+        PackFormulaValue
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/PackId/" class="md-nav__link">
+        PackId
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/PackMetadata/" class="md-nav__link">
+        PackMetadata
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/PackSyncTable/" class="md-nav__link">
+        PackSyncTable
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/PackVersionMetadata/" class="md-nav__link">
+        PackVersionMetadata
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/ParamDefs/" class="md-nav__link">
+        ParamDefs
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/ParamValues/" class="md-nav__link">
+        ParamValues
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/ParamsList/" class="md-nav__link">
+        ParamsList
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/Schema/" class="md-nav__link">
+        Schema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/SchemaType/" class="md-nav__link">
+        SchemaType
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/SystemAuthentication/" class="md-nav__link">
+        SystemAuthentication
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/TypedPackFormula/" class="md-nav__link">
+        TypedPackFormula
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#implements" class="md-nav__link">
+    Implements
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constructors" class="md-nav__link">
+    Constructors
+  </a>
+  
+    <nav class="md-nav" aria-label="Constructors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructor" class="md-nav__link">
+    constructor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#properties" class="md-nav__link">
+    Properties
+  </a>
+  
+    <nav class="md-nav" aria-label="Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defaultauthentication" class="md-nav__link">
+    defaultAuthentication
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#formats" class="md-nav__link">
+    formats
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#formulanamespace" class="md-nav__link">
+    formulaNamespace
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#formulas" class="md-nav__link">
+    formulas
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#networkdomains" class="md-nav__link">
+    networkDomains
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#synctables" class="md-nav__link">
+    syncTables
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#systemconnectionauthentication" class="md-nav__link">
+    systemConnectionAuthentication
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version" class="md-nav__link">
+    version
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    Methods
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#addcolumnformat" class="md-nav__link">
+    addColumnFormat
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adddynamicsynctable" class="md-nav__link">
+    addDynamicSyncTable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addformula" class="md-nav__link">
+    addFormula
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addnetworkdomain" class="md-nav__link">
+    addNetworkDomain
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#addsynctable" class="md-nav__link">
+    addSyncTable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setsystemauthentication" class="md-nav__link">
+    setSystemAuthentication
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setuserauthentication" class="md-nav__link">
+    setUserAuthentication
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setversion" class="md-nav__link">
+    setVersion
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/coda/packs-sdk/edit/master/docs/reference/sdk/classes/PackDefinitionBuilder.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                  <h1>PackDefinitionBuilder</h1>
+                
+                <h2 id="implements">Implements<a class="headerlink" href="#implements" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../types/BasicPackDefinition/"><code>BasicPackDefinition</code></a></li>
+</ul>
+<h2 id="constructors">Constructors<a class="headerlink" href="#constructors" title="Permanent link">&para;</a></h2>
+<h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">&para;</a></h3>
+<p>• <strong>new PackDefinitionBuilder</strong>(<code>definition?</code>)</p>
+<h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>definition?</code></td>
+<td align="left"><code>Partial</code>&lt;<a href="../../interfaces/PackVersionDefinition/"><code>PackVersionDefinition</code></a>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L51">builder.ts:51</a></p>
+<h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h2>
+<h3 id="defaultauthentication">defaultAuthentication<a class="headerlink" href="#defaultauthentication" title="Permanent link">&para;</a></h3>
+<p>• <code>Optional</code> <strong>defaultAuthentication</strong>: <a href="../../types/Authentication/"><code>Authentication</code></a></p>
+<h4 id="implementation-of">Implementation of<a class="headerlink" href="#implementation-of" title="Permanent link">&para;</a></h4>
+<p>BasicPackDefinition.defaultAuthentication</p>
+<h4 id="defined-in_1">Defined in<a class="headerlink" href="#defined-in_1" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L43">builder.ts:43</a></p>
+<hr />
+<h3 id="formats">formats<a class="headerlink" href="#formats" title="Permanent link">&para;</a></h3>
+<p>• <strong>formats</strong>: <a href="../../interfaces/Format/"><code>Format</code></a>[]</p>
+<h4 id="implementation-of_1">Implementation of<a class="headerlink" href="#implementation-of_1" title="Permanent link">&para;</a></h4>
+<p>BasicPackDefinition.formats</p>
+<h4 id="defined-in_2">Defined in<a class="headerlink" href="#defined-in_2" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L39">builder.ts:39</a></p>
+<hr />
+<h3 id="formulanamespace">formulaNamespace<a class="headerlink" href="#formulanamespace" title="Permanent link">&para;</a></h3>
+<p>• <code>Optional</code> <strong>formulaNamespace</strong>: <code>string</code></p>
+<h4 id="implementation-of_2">Implementation of<a class="headerlink" href="#implementation-of_2" title="Permanent link">&para;</a></h4>
+<p>BasicPackDefinition.formulaNamespace</p>
+<h4 id="defined-in_3">Defined in<a class="headerlink" href="#defined-in_3" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L47">builder.ts:47</a></p>
+<hr />
+<h3 id="formulas">formulas<a class="headerlink" href="#formulas" title="Permanent link">&para;</a></h3>
+<p>• <strong>formulas</strong>: <a href="../../types/Formula/"><code>Formula</code></a>&lt;<a href="../../types/ParamDefs/"><code>ParamDefs</code></a>>[]</p>
+<h4 id="implementation-of_3">Implementation of<a class="headerlink" href="#implementation-of_3" title="Permanent link">&para;</a></h4>
+<p>BasicPackDefinition.formulas</p>
+<h4 id="defined-in_4">Defined in<a class="headerlink" href="#defined-in_4" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L38">builder.ts:38</a></p>
+<hr />
+<h3 id="networkdomains">networkDomains<a class="headerlink" href="#networkdomains" title="Permanent link">&para;</a></h3>
+<p>• <strong>networkDomains</strong>: <code>string</code>[]</p>
+<h4 id="implementation-of_4">Implementation of<a class="headerlink" href="#implementation-of_4" title="Permanent link">&para;</a></h4>
+<p>BasicPackDefinition.networkDomains</p>
+<h4 id="defined-in_5">Defined in<a class="headerlink" href="#defined-in_5" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L41">builder.ts:41</a></p>
+<hr />
+<h3 id="synctables">syncTables<a class="headerlink" href="#synctables" title="Permanent link">&para;</a></h3>
+<p>• <strong>syncTables</strong>: <code>SyncTable</code>[]</p>
+<h4 id="implementation-of_5">Implementation of<a class="headerlink" href="#implementation-of_5" title="Permanent link">&para;</a></h4>
+<p>BasicPackDefinition.syncTables</p>
+<h4 id="defined-in_6">Defined in<a class="headerlink" href="#defined-in_6" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L40">builder.ts:40</a></p>
+<hr />
+<h3 id="systemconnectionauthentication">systemConnectionAuthentication<a class="headerlink" href="#systemconnectionauthentication" title="Permanent link">&para;</a></h3>
+<p>• <code>Optional</code> <strong>systemConnectionAuthentication</strong>: <a href="../../types/SystemAuthentication/"><code>SystemAuthentication</code></a></p>
+<h4 id="implementation-of_6">Implementation of<a class="headerlink" href="#implementation-of_6" title="Permanent link">&para;</a></h4>
+<p>BasicPackDefinition.systemConnectionAuthentication</p>
+<h4 id="defined-in_7">Defined in<a class="headerlink" href="#defined-in_7" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L44">builder.ts:44</a></p>
+<hr />
+<h3 id="version">version<a class="headerlink" href="#version" title="Permanent link">&para;</a></h3>
+<p>• <code>Optional</code> <strong>version</strong>: <code>string</code></p>
+<h4 id="defined-in_8">Defined in<a class="headerlink" href="#defined-in_8" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L46">builder.ts:46</a></p>
+<h2 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h2>
+<h3 id="addcolumnformat">addColumnFormat<a class="headerlink" href="#addcolumnformat" title="Permanent link">&para;</a></h3>
+<p>▸ <strong>addColumnFormat</strong>(<code>format</code>): <a href="./"><code>PackDefinitionBuilder</code></a></p>
+<p>Adds a column format definition to this pack.</p>
+<p>In the web editor, the <code>/ColumnFormat</code> shortcut will insert a snippet of a skeleton format.</p>
+<p><strong><code>example</code></strong>
+pack.addColumnFormat({
+  name: 'MyColumn',
+  formulaName: 'MyFormula',
+});</p>
+<h4 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>format</code></td>
+<td align="left"><a href="../../interfaces/Format/"><code>Format</code></a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h4>
+<p><a href="./"><code>PackDefinitionBuilder</code></a></p>
+<h4 id="defined-in_9">Defined in<a class="headerlink" href="#defined-in_9" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L180">builder.ts:180</a></p>
+<hr />
+<h3 id="adddynamicsynctable">addDynamicSyncTable<a class="headerlink" href="#adddynamicsynctable" title="Permanent link">&para;</a></h3>
+<p>▸ <strong>addDynamicSyncTable</strong>&lt;<code>ParamDefsT</code>>(<code>definition</code>): <a href="./"><code>PackDefinitionBuilder</code></a></p>
+<p>Adds a dynamic sync table definition to this pack.</p>
+<p>In the web editor, the <code>/DynamicSyncTable</code> shortcut will insert a snippet of a skeleton sync table.</p>
+<p><strong><code>example</code></strong>
+pack.addDynamicSyncTable({
+  name: 'MySyncTable',
+  getName: async (context) =&gt; {
+    const response = await context.fetcher.fetch({method: 'GET', url: context.sync.dynamicUrl});
+    return response.body.name;
+  },
+  getName: async (context) =&gt; {
+    const response = await context.fetcher.fetch({method: 'GET', url: context.sync.dynamicUrl});
+    return response.body.browserLink;
+  },
+  ...
+});</p>
+<h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>ParamDefsT</code></td>
+<td align="left">extends <a href="../../types/ParamDefs/"><code>ParamDefs</code></a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>definition</code></td>
+<td align="left"><code>DynamicSyncTableOptions</code>&lt;<code>ParamDefsT</code>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">&para;</a></h4>
+<p><a href="./"><code>PackDefinitionBuilder</code></a></p>
+<h4 id="defined-in_10">Defined in<a class="headerlink" href="#defined-in_10" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L160">builder.ts:160</a></p>
+<hr />
+<h3 id="addformula">addFormula<a class="headerlink" href="#addformula" title="Permanent link">&para;</a></h3>
+<p>▸ <strong>addFormula</strong>&lt;<code>ParamDefsT</code>>(<code>definition</code>): <a href="./"><code>PackDefinitionBuilder</code></a></p>
+<p>Adds a formula definition to this pack.</p>
+<p>In the web editor, the <code>/Formula</code> shortcut will insert a snippet of a skeleton formula.</p>
+<p><strong><code>example</code></strong>
+pack.addFormula({
+  resultType: ValueType.String,
+   name: 'MyFormula',
+   description: 'My description.',
+   parameters: [
+     makeParameter({
+       type: ParameterType.String,
+       name: 'myParam',
+       description: 'My param description.',
+     }),
+   ],
+   execute: async ([param]) =&gt; {
+     return <code>Hello ${param}</code>;
+   },
+});</p>
+<h4 id="type-parameters_1">Type parameters<a class="headerlink" href="#type-parameters_1" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>ParamDefsT</code></td>
+<td align="left">extends <a href="../../types/ParamDefs/"><code>ParamDefs</code></a></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>definition</code></td>
+<td align="left"><code>FormulaDefinitionV2</code>&lt;<code>ParamDefsT</code>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">&para;</a></h4>
+<p><a href="./"><code>PackDefinitionBuilder</code></a></p>
+<h4 id="defined-in_11">Defined in<a class="headerlink" href="#defined-in_11" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L94">builder.ts:94</a></p>
+<hr />
+<h3 id="addnetworkdomain">addNetworkDomain<a class="headerlink" href="#addnetworkdomain" title="Permanent link">&para;</a></h3>
+<p>▸ <strong>addNetworkDomain</strong>(...<code>domain</code>): <a href="./"><code>PackDefinitionBuilder</code></a></p>
+<p>Adds the domain that this pack makes HTTP requests to.
+For example, if your pack makes HTTP requests to "api.example.com",
+use "example.com" as your network domain.</p>
+<p>If your pack make HTTP requests, it must declare a network domain,
+for security purposes. Coda enforces that your pack cannot make requests to
+any undeclared domains.</p>
+<p>You are allowed one network domain per pack by default. If your pack needs
+to connect to multiple domains, contact Coda Support for approval.</p>
+<p><strong><code>example</code></strong>
+pack.addNetworkDomain('example.com');</p>
+<h4 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>...domain</code></td>
+<td align="left"><code>string</code>[]</td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">&para;</a></h4>
+<p><a href="./"><code>PackDefinitionBuilder</code></a></p>
+<h4 id="defined-in_12">Defined in<a class="headerlink" href="#defined-in_12" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L269">builder.ts:269</a></p>
+<hr />
+<h3 id="addsynctable">addSyncTable<a class="headerlink" href="#addsynctable" title="Permanent link">&para;</a></h3>
+<p>▸ <strong>addSyncTable</strong>&lt;<code>K</code>, <code>L</code>, <code>ParamDefsT</code>, <code>SchemaT</code>>(<code>__namedParameters</code>): <a href="./"><code>PackDefinitionBuilder</code></a></p>
+<p>Adds a sync table definition to this pack.</p>
+<p>In the web editor, the <code>/SyncTable</code> shortcut will insert a snippet of a skeleton sync table.</p>
+<p><strong><code>example</code></strong>
+pack.addSyncTable({
+  name: 'MySyncTable',
+  identityName: 'EntityName',
+  schema: coda.makeObjectSchema({
+    ...
+  }),
+  formula: {
+    ...
+  },
+});</p>
+<h4 id="type-parameters_2">Type parameters<a class="headerlink" href="#type-parameters_2" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>K</code></td>
+<td align="left">extends <code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>L</code></td>
+<td align="left">extends <code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>ParamDefsT</code></td>
+<td align="left">extends <a href="../../types/ParamDefs/"><code>ParamDefs</code></a></td>
+</tr>
+<tr>
+<td align="left"><code>SchemaT</code></td>
+<td align="left">extends <a href="../../interfaces/ObjectSchema/"><code>ObjectSchema</code></a>&lt;<code>K</code>, <code>L</code>, <code>SchemaT</code>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="parameters_5">Parameters<a class="headerlink" href="#parameters_5" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>__namedParameters</code></td>
+<td align="left"><code>SyncTableOptions</code>&lt;<code>K</code>, <code>L</code>, <code>ParamDefsT</code>, <code>SchemaT</code>></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">&para;</a></h4>
+<p><a href="./"><code>PackDefinitionBuilder</code></a></p>
+<h4 id="defined-in_13">Defined in<a class="headerlink" href="#defined-in_13" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L120">builder.ts:120</a></p>
+<hr />
+<h3 id="setsystemauthentication">setSystemAuthentication<a class="headerlink" href="#setsystemauthentication" title="Permanent link">&para;</a></h3>
+<p>▸ <strong>setSystemAuthentication</strong>(<code>systemAuthentication</code>): <a href="./"><code>PackDefinitionBuilder</code></a></p>
+<p>Sets this pack to use authentication provided by you as the maker of this pack.</p>
+<p>You will need to register credentials to use with this pack. When users use the
+pack, their requests will be authenticated with those system credentials, they need
+not register their own account.</p>
+<p>In the web editor, the <code>/SystemAuthentication</code> shortcut will insert a snippet of a skeleton
+authentication definition.</p>
+<p><strong><code>example</code></strong>
+pack.setSystemAuthentication({
+  type: AuthenticationType.HeaderBearerToken,
+});</p>
+<h4 id="parameters_6">Parameters<a class="headerlink" href="#parameters_6" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>systemAuthentication</code></td>
+<td align="left"><code>SystemAuthenticationDef</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">&para;</a></h4>
+<p><a href="./"><code>PackDefinitionBuilder</code></a></p>
+<h4 id="defined-in_14">Defined in<a class="headerlink" href="#defined-in_14" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L241">builder.ts:241</a></p>
+<hr />
+<h3 id="setuserauthentication">setUserAuthentication<a class="headerlink" href="#setuserauthentication" title="Permanent link">&para;</a></h3>
+<p>▸ <strong>setUserAuthentication</strong>(<code>authDef</code>): <a href="./"><code>PackDefinitionBuilder</code></a></p>
+<p>Sets this pack to use authentication for individual users, using the
+authentication method is the given definition.</p>
+<p>Each user will need to register an account in order to use this pack.</p>
+<p>In the web editor, the <code>/UserAuthentication</code> shortcut will insert a snippet of a skeleton
+authentication definition.</p>
+<p>By default, this will set a default connection (account) requirement, making a user account
+required to invoke all formulas in this pack unless you specify differently on a particular
+formula. To change the default, you can pass a <code>defaultConnectionRequirement</code> option into
+this method.</p>
+<p><strong><code>example</code></strong>
+pack.setUserAuthentication({
+  type: AuthenticationType.HeaderBearerToken,
+});</p>
+<h4 id="parameters_7">Parameters<a class="headerlink" href="#parameters_7" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>authDef</code></td>
+<td align="left"><code>NoAuthentication</code> &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>VariousAuthentication</code> &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<code>HeaderBearerTokenAuthentication</code>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code>> &amp; { <code>getConnectionName?</code>: <code>MetadataFormulaDef</code>  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<code>CodaApiBearerTokenAuthentication</code>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code>> &amp; { <code>getConnectionName?</code>: <code>MetadataFormulaDef</code>  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<code>CustomHeaderTokenAuthentication</code>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code>> &amp; { <code>getConnectionName?</code>: <code>MetadataFormulaDef</code>  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<code>QueryParamTokenAuthentication</code>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code>> &amp; { <code>getConnectionName?</code>: <code>MetadataFormulaDef</code>  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<code>MultiQueryParamTokenAuthentication</code>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code>> &amp; { <code>getConnectionName?</code>: <code>MetadataFormulaDef</code>  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/OAuth2Authentication/"><code>OAuth2Authentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code>> &amp; { <code>getConnectionName?</code>: <code>MetadataFormulaDef</code>  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/WebBasicAuthentication/"><code>WebBasicAuthentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code>> &amp; { <code>getConnectionName?</code>: <code>MetadataFormulaDef</code>  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<code>AWSSignature4Authentication</code>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code>> &amp; { <code>getConnectionName?</code>: <code>MetadataFormulaDef</code>  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  }</td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">&para;</a></h4>
+<p><a href="./"><code>PackDefinitionBuilder</code></a></p>
+<h4 id="defined-in_15">Defined in<a class="headerlink" href="#defined-in_15" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L204">builder.ts:204</a></p>
+<hr />
+<h3 id="setversion">setVersion<a class="headerlink" href="#setversion" title="Permanent link">&para;</a></h3>
+<p>▸ <strong>setVersion</strong>(<code>version</code>): <a href="./"><code>PackDefinitionBuilder</code></a></p>
+<p>Sets the semantic version of this pack version, e.g. <code>'1.2.3'</code>.</p>
+<p>This is optional, and you only need to provide a version if you are manually doing
+semantic versioning, or using the CLI. If using the web editor, you can omit this
+and the web editor will automatically provide an appropriate semantic version
+each time you build a version.</p>
+<p><strong><code>example</code></strong>
+pack.setVersion('1.2.3');</p>
+<h4 id="parameters_8">Parameters<a class="headerlink" href="#parameters_8" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>version</code></td>
+<td align="left"><code>string</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">&para;</a></h4>
+<p><a href="./"><code>PackDefinitionBuilder</code></a></p>
+<h4 id="defined-in_16">Defined in<a class="headerlink" href="#defined-in_16" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L285">builder.ts:285</a></p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Index" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Index
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../StatusCodeError/" class="md-footer__link md-footer__link--next" aria-label="Next: StatusCodeError" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              StatusCodeError
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.instant", "navigation.tabs", "navigation.sections", "navigation.indexes"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.409db549.min.js", "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.756773cc.min.js"></script>
+      
+    
+  </body>
+</html>
