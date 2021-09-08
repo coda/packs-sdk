@@ -25,6 +25,7 @@ plugins:
 # See: https://squidfunk.github.io/mkdocs-material/
 theme:
   name: material
+  custom_dir: documentation/theme
   features:
     - navigation.instant
     - navigation.tabs

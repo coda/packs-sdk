@@ -3,3 +3,9 @@
   --md-primary-fg-color: #006838; /* Emerald */
   --md-accent-fg-color: #EE5A29; /* Tomato Soup */
 }
+
+/* Don't use link colors in the announcement banner, for readability. */
+.md-announce a {
+  color: inherit;
+  text-decoration: underline;
+}
