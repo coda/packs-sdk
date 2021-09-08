@@ -7,4 +7,4 @@ hide:
 
 # Welcome
 
-Check out the [SDK reference](/reference/sdk).
+Check out the [SDK reference](/packs-sdk/reference/sdk).

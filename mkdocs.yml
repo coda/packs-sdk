@@ -1,6 +1,7 @@
 # MkDocs options.
 # See: https://www.mkdocs.org/user-guide/configuration/
 site_name: Coda Packs SDK
+site_url: https://coda.github.io/packs-sdk/
 repo_url: https://github.com/coda/packs-sdk
 docs_dir: docs
 extra_css:
