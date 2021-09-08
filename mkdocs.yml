@@ -3,6 +3,8 @@
 site_name: Coda Packs SDK
 repo_url: https://github.com/coda/packs-sdk
 docs_dir: docs
+extra_css:
+  - assets/custom.css
 markdown_extensions:
   - admonition
   - attr_list
@@ -28,3 +30,7 @@ theme:
     - navigation.tabs
     - navigation.sections
     - navigation.indexes
+  palette:
+    scheme: coda
+  logo: assets/logo.png
+  favicon: assets/favicon.png
