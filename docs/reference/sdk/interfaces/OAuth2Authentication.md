@@ -1,3 +1,9 @@
+Authenticate using OAuth2. You must specify the authorization URL, token exchange URL, and
+scopes here as part of the pack definition. You'll provide the application's client ID and
+client secret in the pack management UI, so that these can be stored securely.
+
+The API must use a (largely) standards-compliant implementation of OAuth2.
+
 ## Hierarchy
 
 - `BaseAuthentication`
@@ -10,13 +16,16 @@
 
 • `Optional` **additionalParams**: `Object`
 
+Option custom URL parameters and values that should be included when redirecting the
+user to the [authorizationUrl](OAuth2Authentication.md#authorizationurl).
+
 #### Index signature
 
 ▪ [key: `string`]: `any`
 
 #### Defined in
 
-[types.ts:249](https://github.com/coda/packs-sdk/blob/main/types.ts#L249)
+[types.ts:367](https://github.com/coda/packs-sdk/blob/main/types.ts#L367)
 
 ___
 
@@ -24,9 +33,14 @@ ___
 
 • **authorizationUrl**: `string`
 
+The URL to which the user will be redirected in order to authorize this pack.
+This is typically just a base url with no parameters. Coda will append the `scope`
+parameter automatically. If the authorization flow requires additional parameters,
+they may be specified using [additionalParams](OAuth2Authentication.md#additionalparams).
+
 #### Defined in
 
-[types.ts:245](https://github.com/coda/packs-sdk/blob/main/types.ts#L245)
+[types.ts:342](https://github.com/coda/packs-sdk/blob/main/types.ts#L342)
 
 ___
 
@@ -44,7 +58,7 @@ BaseAuthentication.defaultConnectionType
 
 #### Defined in
 
-[types.ts:158](https://github.com/coda/packs-sdk/blob/main/types.ts#L158)
+[types.ts:207](https://github.com/coda/packs-sdk/blob/main/types.ts#L207)
 
 ___
 
@@ -64,7 +78,7 @@ BaseAuthentication.endpointDomain
 
 #### Defined in
 
-[types.ts:180](https://github.com/coda/packs-sdk/blob/main/types.ts#L180)
+[types.ts:229](https://github.com/coda/packs-sdk/blob/main/types.ts#L229)
 
 ___
 
@@ -72,9 +86,16 @@ ___
 
 • `Optional` **endpointKey**: `string`
 
+In rare cases, OAuth providers will return the specific API endpoint domain for the user as
+part of the OAuth token exchange response. If so, this is the property in the OAuth
+token exchange response JSON body that points to the endpoint.
+
+The endpoint will be saved along with the account and will be available during execution
+as [ExecutionContext.endpoint](ExecutionContext.md#endpoint).
+
 #### Defined in
 
-[types.ts:253](https://github.com/coda/packs-sdk/blob/main/types.ts#L253)
+[types.ts:377](https://github.com/coda/packs-sdk/blob/main/types.ts#L377)
 
 ___
 
@@ -88,7 +109,7 @@ BaseAuthentication.getConnectionName
 
 #### Defined in
 
-[types.ts:150](https://github.com/coda/packs-sdk/blob/main/types.ts#L150)
+[types.ts:199](https://github.com/coda/packs-sdk/blob/main/types.ts#L199)
 
 ___
 
@@ -102,7 +123,7 @@ BaseAuthentication.getConnectionUserId
 
 #### Defined in
 
-[types.ts:151](https://github.com/coda/packs-sdk/blob/main/types.ts#L151)
+[types.ts:200](https://github.com/coda/packs-sdk/blob/main/types.ts#L200)
 
 ___
 
@@ -118,7 +139,7 @@ BaseAuthentication.instructionsUrl
 
 #### Defined in
 
-[types.ts:163](https://github.com/coda/packs-sdk/blob/main/types.ts#L163)
+[types.ts:212](https://github.com/coda/packs-sdk/blob/main/types.ts#L212)
 
 ___
 
@@ -135,7 +156,7 @@ BaseAuthentication.postSetup
 
 #### Defined in
 
-[types.ts:186](https://github.com/coda/packs-sdk/blob/main/types.ts#L186)
+[types.ts:235](https://github.com/coda/packs-sdk/blob/main/types.ts#L235)
 
 ___
 
@@ -154,7 +175,7 @@ BaseAuthentication.requiresEndpointUrl
 
 #### Defined in
 
-[types.ts:171](https://github.com/coda/packs-sdk/blob/main/types.ts#L171)
+[types.ts:220](https://github.com/coda/packs-sdk/blob/main/types.ts#L220)
 
 ___
 
@@ -162,9 +183,14 @@ ___
 
 • `Optional` **scopes**: `string`[]
 
+Scopes that are required to use this pack.
+
+Each API defines its own list of scopes, or none at all. You should consult
+the documentation for the API you are connecting to.
+
 #### Defined in
 
-[types.ts:247](https://github.com/coda/packs-sdk/blob/main/types.ts#L247)
+[types.ts:354](https://github.com/coda/packs-sdk/blob/main/types.ts#L354)
 
 ___
 
@@ -172,9 +198,15 @@ ___
 
 • `Optional` **tokenPrefix**: `string`
 
+A custom prefix to be used when passing the access token in the HTTP Authorization
+header when making requests. Typically this prefix is `Bearer` which is what will be
+used if this value is omitted. However, some services require a different prefix.
+When sending authenticated requests, a HTTP header of the form
+`Authorization: <tokenPrefix> <token>` will be used.
+
 #### Defined in
 
-[types.ts:248](https://github.com/coda/packs-sdk/blob/main/types.ts#L248)
+[types.ts:362](https://github.com/coda/packs-sdk/blob/main/types.ts#L362)
 
 ___
 
@@ -182,9 +214,13 @@ ___
 
 • `Optional` **tokenQueryParam**: `string`
 
+In rare cases, OAuth providers ask that a token is passed as a URL parameter
+rather than an HTTP header. If so, this is the name of the URL query parameter
+that should contain the token.
+
 #### Defined in
 
-[types.ts:256](https://github.com/coda/packs-sdk/blob/main/types.ts#L256)
+[types.ts:384](https://github.com/coda/packs-sdk/blob/main/types.ts#L384)
 
 ___
 
@@ -192,9 +228,12 @@ ___
 
 • **tokenUrl**: `string`
 
+The URL that Coda will hit in order to exchange the temporary code for an access token
+at the end of the OAuth handshake flow.
+
 #### Defined in
 
-[types.ts:246](https://github.com/coda/packs-sdk/blob/main/types.ts#L246)
+[types.ts:347](https://github.com/coda/packs-sdk/blob/main/types.ts#L347)
 
 ___
 
@@ -204,4 +243,4 @@ ___
 
 #### Defined in
 
-[types.ts:244](https://github.com/coda/packs-sdk/blob/main/types.ts#L244)
+[types.ts:335](https://github.com/coda/packs-sdk/blob/main/types.ts#L335)

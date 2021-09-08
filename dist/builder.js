@@ -57,7 +57,7 @@ class PackDefinitionBuilder {
      * });
      */
     addFormula(definition) {
-        const formula = api_3.makeFormula({
+        const formula = (0, api_3.makeFormula)({
             ...definition,
             connectionRequirement: definition.connectionRequirement || this._defaultConnectionRequirement,
         });
@@ -83,7 +83,7 @@ class PackDefinitionBuilder {
      */
     addSyncTable({ name, identityName, schema, formula, connectionRequirement, dynamicOptions = {}, }) {
         const connectionRequirementToUse = connectionRequirement || this._defaultConnectionRequirement;
-        const syncTable = api_4.makeSyncTable({
+        const syncTable = (0, api_4.makeSyncTable)({
             name,
             identityName,
             schema,
@@ -114,7 +114,7 @@ class PackDefinitionBuilder {
      * });
      */
     addDynamicSyncTable(definition) {
-        const dynamicSyncTable = api_2.makeDynamicSyncTable({
+        const dynamicSyncTable = (0, api_2.makeDynamicSyncTable)({
             ...definition,
             connectionRequirement: definition.connectionRequirement || this._defaultConnectionRequirement,
         });
@@ -162,8 +162,8 @@ class PackDefinitionBuilder {
         }
         else {
             const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, ...rest } = authentication;
-            const getConnectionName = api_6.wrapMetadataFunction(getConnectionNameDef);
-            const getConnectionUserId = api_6.wrapMetadataFunction(getConnectionUserIdDef);
+            const getConnectionName = (0, api_6.wrapMetadataFunction)(getConnectionNameDef);
+            const getConnectionUserId = (0, api_6.wrapMetadataFunction)(getConnectionUserIdDef);
             this.defaultAuthentication = { ...rest, getConnectionName, getConnectionUserId };
         }
         if (authentication.type !== types_1.AuthenticationType.None) {
@@ -188,8 +188,8 @@ class PackDefinitionBuilder {
      */
     setSystemAuthentication(systemAuthentication) {
         const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, ...rest } = systemAuthentication;
-        const getConnectionName = api_6.wrapMetadataFunction(getConnectionNameDef);
-        const getConnectionUserId = api_6.wrapMetadataFunction(getConnectionUserIdDef);
+        const getConnectionName = (0, api_6.wrapMetadataFunction)(getConnectionNameDef);
+        const getConnectionUserId = (0, api_6.wrapMetadataFunction)(getConnectionUserIdDef);
         this.systemConnectionAuthentication = { ...rest, getConnectionName, getConnectionUserId };
         return this;
     }
@@ -232,16 +232,16 @@ class PackDefinitionBuilder {
         // Rewrite any formulas or sync tables that were already defined, in case the maker sets the default
         // after the fact.
         this.formulas = this.formulas.map(formula => {
-            return formula.connectionRequirement ? formula : api_5.maybeRewriteConnectionForFormula(formula, connectionRequirement);
+            return formula.connectionRequirement ? formula : (0, api_5.maybeRewriteConnectionForFormula)(formula, connectionRequirement);
         });
         this.syncTables = this.syncTables.map(syncTable => {
             if (syncTable.getter.connectionRequirement) {
                 return syncTable;
             }
-            else if (api_1.isDynamicSyncTable(syncTable)) {
+            else if ((0, api_1.isDynamicSyncTable)(syncTable)) {
                 return {
                     ...syncTable,
-                    getter: api_5.maybeRewriteConnectionForFormula(syncTable.getter, connectionRequirement),
+                    getter: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getter, connectionRequirement),
                     // These 4 are metadata formulas, so they use ConnectionRequirement.Required
                     // by default if you don't specify a connection requirement (a legacy behavior
                     // that is confusing and perhaps undesirable now that we have better builders).
@@ -253,17 +253,17 @@ class PackDefinitionBuilder {
                     // always work, but it does give rise to confusing behavior that calling
                     // setDefaultConnectionRequirement() can wipe away an explicit connection
                     // requirement override set on one of these 4 metadata formulas.
-                    getName: api_5.maybeRewriteConnectionForFormula(syncTable.getName, connectionRequirement),
-                    getDisplayUrl: api_5.maybeRewriteConnectionForFormula(syncTable.getDisplayUrl, connectionRequirement),
-                    getSchema: api_5.maybeRewriteConnectionForFormula(syncTable.getSchema, connectionRequirement),
-                    listDynamicUrls: api_5.maybeRewriteConnectionForFormula(syncTable.listDynamicUrls, connectionRequirement),
+                    getName: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getName, connectionRequirement),
+                    getDisplayUrl: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getDisplayUrl, connectionRequirement),
+                    getSchema: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getSchema, connectionRequirement),
+                    listDynamicUrls: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.listDynamicUrls, connectionRequirement),
                 };
             }
             else {
                 return {
                     ...syncTable,
-                    getter: api_5.maybeRewriteConnectionForFormula(syncTable.getter, connectionRequirement),
-                    getSchema: api_5.maybeRewriteConnectionForFormula(syncTable.getSchema, connectionRequirement),
+                    getter: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getter, connectionRequirement),
+                    getSchema: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getSchema, connectionRequirement),
                 };
             }
         });

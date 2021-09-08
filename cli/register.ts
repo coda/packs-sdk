@@ -32,7 +32,7 @@ export async function handleRegister({apiToken, codaApiEndpoint}: Arguments<Regi
     if (isCodaError(response)) {
       return printAndExit(`Invalid API token provided.`);
     }
-  } catch (err) {
+  } catch (err: any) {
     const errors = [`Unexpected error while checking validity of API token: ${err}`, tryParseSystemError(err)];
     return printAndExit(errors.join('\n'));
   }

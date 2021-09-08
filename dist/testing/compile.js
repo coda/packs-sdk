@@ -53,7 +53,7 @@ async function loadIntoVM(bundlePath) {
 }
 async function browserifyBundle({ lastBundleFilename, outputBundleFilename, options, }) {
     // browserify doesn't minify by default. if necessary another pipe can be created to minify the output.
-    const browserifyCompiler = browserify_1.default(lastBundleFilename, {
+    const browserifyCompiler = (0, browserify_1.default)(lastBundleFilename, {
         debug: true,
         standalone: 'exports',
     });
@@ -61,7 +61,7 @@ async function browserifyBundle({ lastBundleFilename, outputBundleFilename, opti
     const compiledStream = browserifyCompiler.bundle();
     return new Promise(resolve => {
         compiledStream
-            .pipe(exorcist_1.default(`${outputBundleFilename}.map`, undefined, `${process.cwd()}/`, options.intermediateOutputDirectory))
+            .pipe((0, exorcist_1.default)(`${outputBundleFilename}.map`, undefined, `${process.cwd()}/`, options.intermediateOutputDirectory))
             .pipe(writer);
         writer.on('finish', () => {
             resolve(undefined);
@@ -96,7 +96,7 @@ function getTimerShims(timerStrategy) {
         case TimerShimStrategy.Error:
             return [`${__dirname}/injections/timers_disabled_shim.js`];
         default:
-            ensure_1.ensureUnreachable(timerStrategy);
+            (0, ensure_1.ensureUnreachable)(timerStrategy);
     }
 }
 function getInjections({ timerStrategy = TimerShimStrategy.None }) {
@@ -124,7 +124,7 @@ outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, timer
     const browserifyWithShimBundleFilename = 'browserify-with-shim-bundle.js';
     const uglifyBundleFilename = 'uglify-bundle.js';
     if (!intermediateOutputDirectory) {
-        intermediateOutputDirectory = fs_1.default.mkdtempSync(path_1.default.join(os_1.default.tmpdir(), `coda-packs-${uuid_1.v4()}`));
+        intermediateOutputDirectory = fs_1.default.mkdtempSync(path_1.default.join(os_1.default.tmpdir(), `coda-packs-${(0, uuid_1.v4)()}`));
     }
     const options = {
         bundleFilename,
@@ -165,7 +165,7 @@ outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, timer
         await loadIntoVM(tempBundlePath);
     }
     catch (err) {
-        throw await helpers_1.processVmError(err, tempBundlePath);
+        throw await (0, helpers_1.processVmError)(err, tempBundlePath);
     }
     if (!outputDirectory || outputDirectory === intermediateOutputDirectory) {
         return {

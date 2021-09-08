@@ -17,7 +17,7 @@ describe('compile', () => {
       });
 
       assert.fail('Throw formula should throw.');
-    } catch (error) {
+    } catch (error: any) {
       const stack = await translateErrorStackFromVM({
         stacktrace: error.stack,
         bundleSourceMapPath,
@@ -52,7 +52,7 @@ describe('compile', () => {
       });
 
       assert.fail('Throw formula should throw.');
-    } catch (error) {
+    } catch (error: any) {
       const stack = await translateErrorStackFromVM({
         stacktrace: error.stack,
         bundleSourceMapPath,

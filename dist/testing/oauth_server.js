@@ -26,9 +26,9 @@ function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTok
     const serverContainer = new OAuthServerContainer(oauth2Client, afterTokenExchange, port);
     const launchCallback = () => {
         const authUrl = oauth2Client.code.getUri();
-        helpers_2.print(`OAuth server running at http://localhost:${port}.\n` +
+        (0, helpers_2.print)(`OAuth server running at http://localhost:${port}.\n` +
             `Complete the auth flow in your browser. If it does not open automatically, visit ${authUrl}`);
-        child_process_1.exec(`open "${authUrl}"`);
+        (0, child_process_1.exec)(`open "${authUrl}"`);
     };
     serverContainer.start(launchCallback);
 }
@@ -44,11 +44,11 @@ class OAuthServerContainer {
         this._afterTokenExchange = afterTokenExchange;
     }
     start(launchCallback) {
-        const app = express_1.default();
+        const app = (0, express_1.default)();
         app.get('/oauth', async (req, res) => {
             const tokenData = await this._oauth2Client.code.getToken(req.originalUrl);
             const { accessToken, refreshToken, data } = tokenData;
-            const expires = data.expires_in && helpers_1.getExpirationDate(Number(data.expires_in)).toString();
+            const expires = data.expires_in && (0, helpers_1.getExpirationDate)(Number(data.expires_in)).toString();
             this._afterTokenExchange({ accessToken, refreshToken, expires });
             setTimeout(() => this.shutDown(), 10);
             return res.send('OAuth authentication is complete! You can close this browser tab.');

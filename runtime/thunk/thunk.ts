@@ -39,7 +39,7 @@ export async function findAndExecutePackFunction<T extends FormulaSpecification>
 ): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<any> : PackFormulaResult> {
   try {
     return await doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext);
-  } catch (err) {
+  } catch (err: any) {
     // all errors should be marshaled to avoid IVM dropping essential fields / name.
     throw shouldWrapError ? wrapError(err) : err;
   }
@@ -192,7 +192,7 @@ export function ensureSwitchUnreachable(value: never): never {
 export async function handleErrorAsync(func: () => Promise<any>): Promise<any> {
   try {
     return await func();
-  } catch (err) {
+  } catch (err: any) {
     throw unwrapError(err);
   }
 }
@@ -200,7 +200,7 @@ export async function handleErrorAsync(func: () => Promise<any>): Promise<any> {
 export function handleError(func: () => any): any {
   try {
     return func();
-  } catch (err) {
+  } catch (err: any) {
     throw unwrapError(err);
   }
 }

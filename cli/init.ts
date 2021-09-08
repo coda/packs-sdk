@@ -8,7 +8,7 @@ export async function handleInit() {
   try {
     const listNpmPackages = spawnProcess('npm list @codahq/packs-examples');
     isPacksExamplesInstalled = listNpmPackages.status === 0;
-  } catch (error) {
+  } catch (error: any) {
     isPacksExamplesInstalled = false;
   }
 

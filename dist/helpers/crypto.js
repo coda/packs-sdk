@@ -10,7 +10,7 @@ function computeSha256(dataToChecksum, encodeAsUtf8 = true) {
 }
 exports.computeSha256 = computeSha256;
 function _computeSha256Impl(dataToChecksum, encodeAsUtf8 = true, outputHex) {
-    const hash = sha_js_1.default('sha256');
+    const hash = (0, sha_js_1.default)('sha256');
     if (typeof dataToChecksum === 'string' && encodeAsUtf8) {
         hash.update(dataToChecksum, 'utf8');
     }

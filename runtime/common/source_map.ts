@@ -44,7 +44,7 @@ export async function translateErrorStackFromVM({
           })\n`,
       )
       .join('');
-  } catch (err) {
+  } catch (err: any) {
     // something went wrong. just return the original stacktrace.
     // eslint-disable-next-line no-console
     console.log('Failed to translate error stack', err);

@@ -45,7 +45,7 @@ export async function handleRelease({
       const bundleFilename = await build(manifestFile);
       const manifest = await importManifest(bundleFilename);
       packVersion = manifest.version as string;
-    } catch (err) {
+    } catch (err: any) {
       return printAndExit(`Got an error while building your pack to get the current pack version: ${formatError(err)}`);
     }
   }
@@ -63,7 +63,7 @@ async function handleResponse<T extends any>(p: Promise<T>): Promise<T> {
       return printAndExit(`Error while creating pack release: ${formatError(response)}`);
     }
     return p;
-  } catch (err) {
+  } catch (err: any) {
     const errors = [`Unexpected error while creating release: ${formatError(err)}`, tryParseSystemError(err)];
     return printAndExit(errors.join('\n'));
   }

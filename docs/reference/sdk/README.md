@@ -64,7 +64,6 @@
 - [SyncTableDef](interfaces/SyncTableDef.md)
 - [TemporaryBlobStorage](interfaces/TemporaryBlobStorage.md)
 - [TimeSchema](interfaces/TimeSchema.md)
-- [VariousAuthentication](interfaces/VariousAuthentication.md)
 - [WebBasicAuthentication](interfaces/WebBasicAuthentication.md)
 
 ## Type aliases
@@ -105,7 +104,6 @@
 - [SchemaType](types/SchemaType.md)
 - [SystemAuthentication](types/SystemAuthentication.md)
 - [TypedPackFormula](types/TypedPackFormula.md)
-- [VariousSupportedAuthentication](types/VariousSupportedAuthentication.md)
 
 ## Functions
 

@@ -13,7 +13,7 @@ data, because all users in the doc must be able to retrieve the same data.
 
 #### Defined in
 
-[types.ts:126](https://github.com/coda/packs-sdk/blob/main/types.ts#L126)
+[types.ts:129](https://github.com/coda/packs-sdk/blob/main/types.ts#L129)
 
 ___
 
@@ -25,7 +25,7 @@ The account can be used by any user in the doc both to retrieve data and to take
 
 #### Defined in
 
-[types.ts:119](https://github.com/coda/packs-sdk/blob/main/types.ts#L119)
+[types.ts:122](https://github.com/coda/packs-sdk/blob/main/types.ts#L122)
 
 ___
 
@@ -38,4 +38,4 @@ used to take actions (i.e. push buttons).
 
 #### Defined in
 
-[types.ts:115](https://github.com/coda/packs-sdk/blob/main/types.ts#L115)
+[types.ts:118](https://github.com/coda/packs-sdk/blob/main/types.ts#L118)
