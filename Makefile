@@ -26,6 +26,8 @@ _bootstrap-node:
 .PHONY: _bootstrap-python
 _bootstrap-python:
 	${PIPENV} sync
+	# Ensure requirements.txt (used by Read the Docs) is in sync.
+	${PIPENV} lock -r > requirements.txt
 
 .PHONY: bootstrap
 bootstrap:
