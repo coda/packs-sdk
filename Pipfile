@@ -1,3 +1,6 @@
+# Read the Docs doesn't support Pipfiles yet, and uses requirements.txt instead.
+# If changing this file, run `make bs` to generate a corresponding requirements.txt file.
+
 [[source]]
 url = "https://pypi.org/simple"
 verify_ssl = true
