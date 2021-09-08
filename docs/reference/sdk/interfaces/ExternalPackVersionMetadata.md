@@ -44,13 +44,15 @@ ___
 
 • `Optional` **formulaNamespace**: `string`
 
+**`deprecated`**
+
 #### Inherited from
 
 BasePackVersionMetadata.formulaNamespace
 
 #### Defined in
 
-[types.ts:432](https://github.com/coda/packs-sdk/blob/main/types.ts#L432)
+[types.ts:706](https://github.com/coda/packs-sdk/blob/main/types.ts#L706)
 
 ___
 
@@ -78,13 +80,21 @@ ___
 
 • `Optional` **networkDomains**: `string`[]
 
+Any domain(s) to which this pack makes fetcher requests. The domains this pack connects to must be
+declared up front here, both to clearly communicate to users what a pack is capable of connecting to,
+and for security reasons. These network domains are enforced at execution time: any fetcher request
+to a domain not listed here will be rejected.
+
+Only one network domain is allowed by default. If your pack has needs to connect to multiple domains
+contact Coda support for approval.
+
 #### Inherited from
 
 BasePackVersionMetadata.networkDomains
 
 #### Defined in
 
-[types.ts:429](https://github.com/coda/packs-sdk/blob/main/types.ts#L429)
+[types.ts:699](https://github.com/coda/packs-sdk/blob/main/types.ts#L699)
 
 ___
 
@@ -102,10 +112,13 @@ ___
 
 • **version**: `string`
 
+The semantic version of the pack. This must be valid semantic version of the form `1`, `1.2`, or `1.2.3`.
+When uploading a pack version, the semantic version must be greater than any previously uploaded version.
+
 #### Inherited from
 
 BasePackVersionMetadata.version
 
 #### Defined in
 
-[types.ts:419](https://github.com/coda/packs-sdk/blob/main/types.ts#L419)
+[types.ts:680](https://github.com/coda/packs-sdk/blob/main/types.ts#L680)

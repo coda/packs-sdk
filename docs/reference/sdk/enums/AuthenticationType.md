@@ -17,7 +17,7 @@ Coda REST API.
 
 #### Defined in
 
-[types.ts:98](https://github.com/coda/packs-sdk/blob/main/types.ts#L98)
+[types.ts:101](https://github.com/coda/packs-sdk/blob/main/types.ts#L101)
 
 ___
 
@@ -30,7 +30,7 @@ The header name is defined in the {@link headerName} property.
 
 #### Defined in
 
-[types.ts:49](https://github.com/coda/packs-sdk/blob/main/types.ts#L49)
+[types.ts:52](https://github.com/coda/packs-sdk/blob/main/types.ts#L52)
 
 ___
 
@@ -42,7 +42,7 @@ Authenticate using an HTTP header of the form `Authorization: Bearer <token>`.
 
 #### Defined in
 
-[types.ts:44](https://github.com/coda/packs-sdk/blob/main/types.ts#L44)
+[types.ts:47](https://github.com/coda/packs-sdk/blob/main/types.ts#L47)
 
 ___
 
@@ -57,7 +57,7 @@ The parameter names are defined in the [params](../interfaces/ExternalPackVersio
 
 #### Defined in
 
-[types.ts:63](https://github.com/coda/packs-sdk/blob/main/types.ts#L63)
+[types.ts:66](https://github.com/coda/packs-sdk/blob/main/types.ts#L66)
 
 ___
 
@@ -69,7 +69,7 @@ Indicates this pack does not use authentication. You may also omit an authentica
 
 #### Defined in
 
-[types.ts:40](https://github.com/coda/packs-sdk/blob/main/types.ts#L40)
+[types.ts:43](https://github.com/coda/packs-sdk/blob/main/types.ts#L43)
 
 ___
 
@@ -85,7 +85,7 @@ The API must use a (largely) standards-compliant implementation of OAuth2.
 
 #### Defined in
 
-[types.ts:71](https://github.com/coda/packs-sdk/blob/main/types.ts#L71)
+[types.ts:74](https://github.com/coda/packs-sdk/blob/main/types.ts#L74)
 
 ___
 
@@ -100,7 +100,7 @@ The parameter name is defined in the {@link paramName} property.
 
 #### Defined in
 
-[types.ts:56](https://github.com/coda/packs-sdk/blob/main/types.ts#L56)
+[types.ts:59](https://github.com/coda/packs-sdk/blob/main/types.ts#L59)
 
 ___
 
@@ -115,4 +115,4 @@ See https://en.wikipedia.org/wiki/Basic_access_authentication
 
 #### Defined in
 
-[types.ts:78](https://github.com/coda/packs-sdk/blob/main/types.ts#L78)
+[types.ts:81](https://github.com/coda/packs-sdk/blob/main/types.ts#L81)
