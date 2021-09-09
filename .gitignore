@@ -7,3 +7,4 @@ artifacts
 dist/test
 yarn-error.log
 local-docs
+site

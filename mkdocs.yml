@@ -3,6 +3,7 @@
 site_name: Coda Packs SDK
 site_url: https://coda.github.io/packs-sdk/
 repo_url: https://github.com/coda/packs-sdk
+edit_uri: https://github.com/coda/packs-sdk/blob/main/docs
 docs_dir: docs
 extra_css:
   - assets/custom.css
