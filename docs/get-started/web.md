@@ -54,7 +54,7 @@ Your new Pack is now available to use in all your docs, and you can install it j
     This will open a dialog with more information about the Pack.
 
 1. Click the **Install** button in the upper right.
-1. Drag the **Hello** formula from the sidebar on the right into your doc.
+1. Drag the **Hello** formula from the panel on the right into your doc.
 
     ??? info "Alternative: Type the formula"
         Place your cursor in the doc and type `=Hello`, and then press the tab key to select formula from your Pack.
@@ -82,16 +82,16 @@ Now that you have your Pack up and running let's make a change to how it works.
     ```
 
 1. Click the **Build** button again to rebuild your Pack with this change.
-1. When the Build has completed, switch back to you test document.
+1. When the Build has completed, switch back to your test document.
 
     You'll notice that the formula is still returning `Hello World`, and that's because formulas aren't automatically recalculated when you update your pack code.
 
-1. In the Pack's sidebar, click the **Settings** tab.
+1. In the Pack's panel, click the **Settings** tab.
 
     The **Currently Installed** version of the pack should now read **Version 2**.
 
-    ??? info "Getting back to the Pack's sidebar"
-        If you have navigated away from the Pack's sidebar, click **Explore**, **Packs & import**, and then your Pack name.
+    ??? info "Re-opening the Pack's panel"
+        If you have navigated away from the Pack's panel, click **Explore**, **Packs & import**, and then your Pack name.
 
 1. Click the **Refresh now** :material-refresh: button.
 
