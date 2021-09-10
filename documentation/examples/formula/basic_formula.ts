@@ -1,4 +1,3 @@
-// This import statement gives you access to all parts of the Coda Packs SDK.
 import * as coda from '@codahq/packs-sdk';
 
 const pack = coda.newPack();
