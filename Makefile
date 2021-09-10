@@ -23,7 +23,7 @@ _bootstrap-node:
 	yarn config set cache-folder ${YARN_CACHE_DIR}
 	yarn install
 	# Install a symlink of the working directory as @codahq/packs-sdk, so that the sample code compiles.
-	yarn unlink  # Remove any existing links providing @codahq/packs-sdk
+	yarn unlink || true # Remove any existing links providing @codahq/packs-sdk
 	yarn link  # Provide @codahq/packs-sdk from this directory
 	yarn link "@codahq/packs-sdk"  # Consume the link whenever @codahq/packs-sdk is imported
 
