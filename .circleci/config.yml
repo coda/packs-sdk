@@ -22,7 +22,7 @@ jobs:
             - v2-dependencies-
       - run:
           name: 'Install deps'
-          command: make bs
+          command: make _bootstrap-node
       - save_cache:
           paths:
             - node_modules
