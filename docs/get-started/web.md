@@ -103,4 +103,4 @@ Your formula result should now be `Howdy World`.
 [web_ide_rebuild]: ../images/web_ide_rebuild.gif
 
 !!! tip
-    To skip having to hit the refresh button on every update, toggle on the setting **Auto-Refresh When Version Changes**.
+    To avoid having to hit the refresh button on every update, toggle on the setting **Auto-Refresh When Version Changes**.
