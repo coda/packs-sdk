@@ -1,13 +1,10 @@
-import * as coda from '../../../index';
-// BEGIN
-
 /*
 Start making Packs!
 Try out the hello world sample below to create your first build.
 */
 
-// **This import statement gives you access to all parts of the Coda Packs SDK. Uncomment to start!**
-// import * as coda from '@codahq/packs-sdk';
+// This import statement gives you access to all parts of the Coda Packs SDK.
+import * as coda from '@codahq/packs-sdk';
 
 // This line creates your new Pack.
 export const pack = coda.newPack();
