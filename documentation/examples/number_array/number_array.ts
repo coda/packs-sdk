@@ -1,10 +1,7 @@
-import * as coda from '../../../index';
+// This import statement gives you access to all parts of the Coda Packs SDK.
+import * as coda from '@codahq/packs-sdk';
 
-// BEGIN
-// **This import statement gives you access to all parts of the Coda Packs SDK. Uncomment to start!**
-// import * as coda from '@codahq/packs-sdk';
-
-// **This import statement gives you access to all parts of the Coda Packs SDK. Uncomment to start!**
+// This import statement gives you access to all parts of the Coda Packs SDK.
 export const pack = coda.newPack();
 
 // We'll use an array of numbers in *both* formulas.
