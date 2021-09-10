@@ -22,7 +22,7 @@ jobs:
             - v2-dependencies-
       - run:
           name: 'Install deps'
-          command: yarn install
+          command: make bs
       - save_cache:
           paths:
             - node_modules
