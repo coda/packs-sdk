@@ -22,6 +22,10 @@ _bootstrap-node:
 	mkdir -p ${YARN_CACHE_DIR}
 	yarn config set cache-folder ${YARN_CACHE_DIR}
 	yarn install
+	# Install a symlink of the working directory as @codahq/packs-sdk, so that the sample code compiles.
+	yarn unlink || true # Remove any existing links providing @codahq/packs-sdk
+	yarn link  # Provide @codahq/packs-sdk from this directory
+	yarn link "@codahq/packs-sdk"  # Consume the link whenever @codahq/packs-sdk is imported
 
 .PHONY: _bootstrap-python
 _bootstrap-python:
@@ -96,8 +100,12 @@ compile:
 	# copy these esm format js files to dist directly.
 	cp -r ${ROOTDIR}/testing/injections ${ROOTDIR}/dist/testing/
 
+.PHONY: compile-samples
+compile-samples:
+	${ROOTDIR}/node_modules/.bin/tsc --project tsconfig.samples.json
+
 .PHONY: generated-documentation
-generated-documentation:
+generated-documentation: compile-samples
 	node -r ts-node/register documentation/documentation_compiler.ts
 
 .PHONY: typedoc
