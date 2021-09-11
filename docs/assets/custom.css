@@ -9,3 +9,13 @@
   color: inherit;
   text-decoration: underline;
 }
+
+/* Size in-line image to be the same size as the text. */
+img.inline-icon {
+  height: 1em;
+}
+
+img.screenshot {
+  border-radius: 8px;
+  box-shadow: 0 0 24px rgba(0,0,0,var(--opacity-shadow-normal,.15));  
+}

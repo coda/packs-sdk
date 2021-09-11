@@ -9,6 +9,8 @@ name = "pypi"
 [packages]
 mkdocs = "*"
 mkdocs-material = "*"
+mkdocs-awesome-pages-plugin = "*"
+mkdocs-macros-plugin = "*"
 
 [dev-packages]
 

@@ -11,9 +11,16 @@ markdown_extensions:
   - admonition
   - attr_list
   - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
   - pymdownx.highlight:
       linenums: true
   - pymdownx.keys
+  # Snippets inclusion.
+  # See: https://facelessuser.github.io/pymdown-extensions/extensions/snippets/
+  - pymdownx.snippets:
+      base_path: documentation/examples
   - pymdownx.superfences
   - pymdownx.tabbed
   - toc:
@@ -22,6 +29,13 @@ markdown_extensions:
       toc_depth: 2-3
 plugins:
     - search
+    # Navigation enhancements.
+    # See: https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin
+    - awesome-pages:
+        filename: .nav.yml
+    # Variables in markdown.
+    # See: https://squidfunk.github.io/mkdocs-material/reference/variables/
+    - macros
 
 # Material theme options.
 # See: https://squidfunk.github.io/mkdocs-material/
@@ -33,7 +47,15 @@ theme:
     - navigation.tabs
     - navigation.sections
     - navigation.indexes
+    - toc.integrate
   palette:
     scheme: coda
   logo: assets/logo.png
   favicon: assets/favicon.png
+
+# Global variables available in markdown.
+# See: https://squidfunk.github.io/mkdocs-material/reference/variables/
+extra:
+  coda:
+    # Domain of the Coda instance.
+    domain: packs.adhoc.coda.io
