@@ -44,6 +44,3 @@ workflows:
       - build:
           context:
             - dockerhub
-          filters:
-            branches:
-              ignore: gh-pages

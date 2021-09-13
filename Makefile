@@ -130,9 +130,10 @@ publish-docs:
 		echo "The documentation can only be published from main at head."; \
 		exit 1; \
 	fi
-	# Build the docs and push them to the gh-pages brance.
+	# Build the docs and push them to the gh-pages branch.
 	# See: https://www.mkdocs.org/user-guide/deploying-your-docs/#github-pages
-	${PIPENV} run mkdocs gh-deploy
+	# Including the tag "[ci skip]" in the commit message to prevent CircleCI from building the branch.
+	${PIPENV} run mkdocs gh-deploy --message "Deployed {sha} with MkDocs version: {version} [ci skip]"
 
 .PHONY: test
 test:
