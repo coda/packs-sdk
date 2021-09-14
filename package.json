@@ -54,7 +54,7 @@
     "@types/mocha": "^9.0.0",
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^16.7.13",
-    "@types/pascalcase": "^1.0.0",
+    "@types/pascalcase": "^1.0.1",
     "@types/qs": "^6.9.7",
     "@types/readline-sync": "1.4.4",
     "@types/request": "^2.48.7",
