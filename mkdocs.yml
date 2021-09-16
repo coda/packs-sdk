@@ -14,24 +14,15 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
-<<<<<<< HEAD
   - footnotes
   - pymdownx.highlight
-=======
-  - pymdownx.highlight:
-      linenums: true
->>>>>>> 45e84304ff390a6e3ac78a73f4a43d16d15a2b88
   - pymdownx.keys
   # Snippets inclusion.
   # See: https://facelessuser.github.io/pymdown-extensions/extensions/snippets/
   - pymdownx.snippets:
-<<<<<<< HEAD
       base_path:
         - documentation/examples
         - docs
-=======
-      base_path: documentation/examples
->>>>>>> 45e84304ff390a6e3ac78a73f4a43d16d15a2b88
   - pymdownx.superfences
   - pymdownx.tabbed
   - toc:
