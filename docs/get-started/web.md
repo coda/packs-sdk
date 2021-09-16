@@ -48,26 +48,7 @@ Your Pack is now built and ready to use!
 
 Your new Pack is now available to use in all your docs, and you can install it just like a Coda-made Pack:
 
-1. In your doc, click **Explore**, then **Packs & import**.
-1. Find your new Pack, **Hello World**, and click on it.
-
-    This will open a dialog with more information about the Pack.
-
-1. Click the **Install** button in the upper right.
-1. Drag the **Hello** formula from the panel on the right into your doc.
-
-    ??? info "Alternative: Type the formula"
-        Place your cursor in the doc and type `=Hello`, and then press the tab key to select formula from your Pack.
-
-1. Complete the formula by passing in a **name** parameter, such as `Hello("World")`, and hit enter.
-
-If everything has gone right you should see the result `Hello World` as the output of your formula.
-
-[![!How to install and use the Pack][web_ide_use]{: .screenshot}][web_ide_use]
-[web_ide_use]: ../images/web_ide_use.gif
-
-!!! tip
-    For a more personalized message, try changing the formula to `Hello(User())`.
+--8<-- "get-started/.use.md"
 
 ## Update the Pack
 
