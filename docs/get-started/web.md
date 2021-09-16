@@ -4,32 +4,32 @@ title: In the browser
 
 # Get started in the browser 
 
-The fastest and easiest way to create a Pack is to use our web-based editor. You don't need to download any code or tools, just make sure you have:
+The fastest and easiest way to create a Pack is to use our web-based Pack Studio. You don't need to download any code or tools, just make sure you have:
 
 1. A Coda account, with
 2. [Doc Maker access](https://help.coda.io/en/articles/3388781-members-and-roles) in your workspace.
 
 If you're new to Coda, [sign up](https://{{coda.domain}}/signup) for a free account and you'll automatically be made a Doc Maker in your personal workspace.
 
-## Navigate to the Pack editor
+## Navigate to the Pack Studio
 
-The Pack editor is built right in to the Coda application. To get there:
+The Pack Studio is built right in to the Coda application. To get there:
 
 1. Open [Coda](https://{{coda.domain}}/docs) in your browser.
 1. Click on the name of your workspace in the navigation menu on the left.
 1. Click on **Packs** in the header.
 1. Click the **New Pack** button in the upper right.
 
-You are now in the Pack editor, ready to start building!
+You are now in the Pack Studio, ready to start building!
 
-[![How to navigate to the Packs editor][web_ide_navigate]{: .screenshot}][web_ide_navigate]
+[![How to navigate to the Pack Studio][web_ide_navigate]{: .screenshot}][web_ide_navigate]
 [web_ide_navigate]: ../images/web_ide_navigate.gif
 
 ## Create a Pack from sample code
 
-All new Packs created in the editor start off with the basic [Hello World](../samples/hello_world.md) sample code. Take a moment to read through the code and comments to get an understanding of how a Pack is structured.
+All new Packs created in the Pack Studio start off with the basic [Hello World](../samples/hello_world.md) sample code. Take a moment to read through the code and comments to get an understanding of how a Pack is structured.
 
-Next we'll use the Packs editor to build that code and get it ready to use:
+Next we'll use the Pack Studio to build that code and get it ready to use:
 
 1. Click on the Pack name **Untitled Pack** in the upper left, and change it to "Hello World".
 
@@ -54,7 +54,7 @@ Your new Pack is now available to use in all your docs, and you can install it j
 
 Now that you have your Pack up and running let's make a change to how it works.
 
-1. Back in the Pack editor, update your code to say "Howdy" instead of "Hello":
+1. Back in the Pack Studio, update your code to say "Howdy" instead of "Hello":
 
     ```ts hl_lines="2"
     execute: function ([name]) {
@@ -65,11 +65,11 @@ Now that you have your Pack up and running let's make a change to how it works.
 1. Click the **Build** button again to rebuild your Pack with this change.
 1. When the Build has completed, switch back to your test document.
 
-    You'll notice that the formula is still returning `Hello World`, and that's because formulas aren't automatically recalculated when you update your pack code.
+    You'll notice that the formula is still returning `Hello World`, and that's because formulas aren't automatically recalculated when you update your Pack code.
 
 1. In the Pack's panel, click the **Settings** tab.
 
-    The **Currently Installed** version of the pack should now read **Version 2**.
+    The **Currently Installed** version of the Pack should now read **Version 2**.
 
     ??? info "Re-opening the Pack's panel"
         If you have navigated away from the Pack's panel, click **Explore**, **Packs & import**, and then your Pack name.
