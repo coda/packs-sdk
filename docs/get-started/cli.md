@@ -65,7 +65,7 @@ Now that you've got the basic structure of a Pack it's time to customize it and 
 1. Edit `formulas.ts` to include the definition of a new "Hello" formula:
 
     === "formulas.ts"
-        ```ts hl_lines="1 6-29"
+        ```ts hl_lines="4-7 10-34"
         --8<-- "hello_cli/formulas.ts"
         ```
 
