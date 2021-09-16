@@ -27,7 +27,7 @@ You are now in the Pack Studio, ready to start building!
 
 ## Create a Pack from sample code
 
-All new Packs created in the Pack Studio start off with the basic [Hello World](../samples/hello_world.md) sample code. Take a moment to read through the code and comments to get an understanding of how a Pack is structured.
+All new Packs created in the Pack Studio start off with the basic [Hello World](../samples/hello_world.md) sample code. Take a moment to read through the code and comments and get an understanding of how a Pack is structured.
 
 Next we'll use the Pack Studio to build that code and get it ready to use:
 
@@ -46,7 +46,7 @@ Your Pack is now built and ready to use!
 
 ## Install and use the Pack
 
-Your new Pack is now available to use in all your docs, and you can install it just like a Coda-made Pack:
+Your new Pack is now available to use in all your docs, and you can install it just any other Pack.
 
 --8<-- "get-started/.use.md"
 

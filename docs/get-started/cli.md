@@ -45,8 +45,7 @@ The instructions below assume some familiarity with the terminal / command promp
     npx coda init
     ```
 
-
-The `coda init` command creates the basic skeleton of a Pack based off of our [template Pack](https://github.com/coda/packs-examples/tree/main/examples/template). It's not required, but it's a fast way to get started.
+    The `coda init` command creates the basic skeleton of a Pack based off of our [template Pack](https://github.com/coda/packs-examples/tree/main/examples/template). It's not required, but it's a fast way to get started.
 
 Your directory should now contain the following files:
 
@@ -58,7 +57,7 @@ Your directory should now contain the following files:
 * `schemas.ts` - A place to define the schemas (structured data types) used by your Pack.
 * `types.ts` - A place to define TypeScript types for the data used by your Pack.
 
-## Add functionality to you Pack
+## Add functionality to your Pack
 
 Now that you've got the basic structure of a Pack it's time to customize it and add some functionality. In this tutorial you'll be creating a simple "Hello World" Pack with a single formula.
 
@@ -69,12 +68,16 @@ Now that you've got the basic structure of a Pack it's time to customize it and 
         --8<-- "hello_cli/formulas.ts"
         ```
 
+    Take a moment to read through the code and comments and get an understanding of how a Pack is structured.
+
 1. Edit `manifest.ts` to set the formula namespace to `HelloWorld`:
 
     === "manifest.ts"
         ```ts hl_lines="8"
         --8<-- "hello_cli/manifest.ts"
         ```
+
+    The formula namespace is occasionally used as a prefix to the Pack's formulas, to disnguish them from built-in formulas.
 
     !!! note
         The value in `formulaNamespace` isn't normally visible to the user, as Coda prefers to show the Pack's icon instead. However when a formula is copied from the formula editor and pasted as plain text the namespace is used instead of the icon.
@@ -95,7 +98,7 @@ So far everything you've built only exists on your local machine, and Coda has n
 
 ### Register an API token
 
-The `coda` CLI uses the Coda API under the hood to upload your code, and likewise needs an API token to operate. Registering an API token is a one-time setup step that must be done for each new Pack.
+The `coda` CLI uses the Coda API under the hood to upload your code, and likewise needs an API token to operate. Registering an API token is a one-time setup step.
 
 1. Register an API key for Pack uploads:
 
@@ -120,11 +123,14 @@ This will create a new file `.coda.json` in your working directory that contains
 
 ### Create the Pack
 
-Now that you have the access configured you can create the new Pack on Coda's servers. Like registering an API token, this is also a one-time setup step that needs to be done for each Pack.
+Now that you have the access configured you can create the new Pack on Coda's servers. This setup step that needs to be done for each Pack you create.
 
 ```shell
 npx coda create manifest.ts --name "Hello World" --description "My first Pack." --codaApiEndpoint=https://{{coda.domain}}
 ```
+
+??? note "Edit your branding later"
+    The `name` and `description` arguments are optional and can be changed later in the Pack Studio's **Listing** tab, along with a variety of other branding options.
 
 This will create a new, empty Pack on Coda's servers and output its URL in the Pack Studio. It stores the Pack's ID in the new file `.coda-pack.json`.
 
@@ -147,8 +153,7 @@ npx coda upload manifest.ts --notes "Initial version." --codaApiEndpoint=https:/
 
 ## Install and use the Pack
 
-Your new Pack is now available to use in all your docs, and you can install it just like a Coda-made Pack.
-
+Your new Pack is now available to use in all your docs, and you can install it just any other Pack. Let's create a new document and install it:
 1. Open [Coda](https://{{coda.domain}}/docs) in your browser.
 1. Click the **+ New doc** button and select **Start with a blank page**.
 
