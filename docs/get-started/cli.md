@@ -60,7 +60,7 @@ Your directory should now contain the following files:
 
 ## Add functionality to you Pack
 
-Now that you've got the basic structure of a Pack it's time to customize it and add some functionality. In this tutorial you'll be creating a simple "Hello World" pack with a single formula.
+Now that you've got the basic structure of a Pack it's time to customize it and add some functionality. In this tutorial you'll be creating a simple "Hello World" Pack with a single formula.
 
 1. Edit `formulas.ts` to include the definition of a new "Hello" formula:
 
@@ -79,7 +79,7 @@ Now that you've got the basic structure of a Pack it's time to customize it and 
     !!! note
         The value in `formulaNamespace` isn't normally visible to the user, as Coda prefers to show the Pack's icon instead. However when a formula is copied from the formula editor and pasted as plain text the namespace is used instead of the icon.
 
-## Test your pack locally
+## Test your Pack locally
 
 One of the advantages of developing locally is that you can test your Pack code without having to upload it to Coda's servers. Let's test the new `Hello` formula you just added:
 
@@ -95,7 +95,7 @@ So far everything you've built only exists on your local machine, and Coda has n
 
 ### Register an API token
 
-The `coda` CLI uses the Coda API under the hood to upload your code, and likewise needs an API token to operate. Registering an API token is a one-time setup step that must be done for each new pack.
+The `coda` CLI uses the Coda API under the hood to upload your code, and likewise needs an API token to operate. Registering an API token is a one-time setup step that must be done for each new Pack.
 
 1. Register an API key for Pack uploads:
 
@@ -123,7 +123,7 @@ This will create a new file `.coda.json` in your working directory that contains
 Now that you have the access configured you can create the new Pack on Coda's servers. Like registering an API token, this is also a one-time setup step that needs to be done for each Pack.
 
 ```shell
-npx coda create manifest.ts --name "Hello World" --description "My first pack." --codaApiEndpoint=https://{{coda.domain}}
+npx coda create manifest.ts --name "Hello World" --description "My first Pack." --codaApiEndpoint=https://{{coda.domain}}
 ```
 
 This will create a new, empty Pack on Coda's servers and output its URL in the Pack Studio. It stores the Pack's ID in the new file `.coda-pack.json`.
@@ -203,11 +203,11 @@ Now that you have your Pack up and running let's make a change to how it works.
 
 1. When the upload has completed, switch back to your test document.
 
-    You'll notice that the formula is still returning `Hello World`, and that's because formulas aren't automatically recalculated when you update your pack code.
+    You'll notice that the formula is still returning `Hello World`, and that's because formulas aren't automatically recalculated when you update your Pack code.
 
 1. In the Pack's panel, click the **Settings** tab.
 
-    The **Currently Installed** version of the pack should now read **Version 1.0.1**.
+    The **Currently Installed** version of the Pack should now read **Version 1.0.1**.
 
     ??? info "Re-opening the Pack's panel"
         If you have navigated away from the Pack's panel, click **Explore**, **Packs & import**, and then your Pack name.
