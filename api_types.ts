@@ -318,7 +318,7 @@ export interface Sync {
   dynamicUrl?: string;
 }
 
-type LoggerParamType = string | number | boolean | Record<any, any>;
+export type LoggerParamType = string | number | boolean | Record<any, any>;
 
 export interface Logger {
   trace(message: string, ...args: LoggerParamType[]): void;
