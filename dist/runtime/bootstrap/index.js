@@ -139,11 +139,6 @@ async function injectExecutionContext({ context, fetcher, temporaryBlobStorage, 
     await context.global.set('executionContext', executionContextPrimitives, { copy: true });
     await context.global.set('console', {}, { copy: true });
     await injectFetcherFunction(context, 'executionContext.fetcher.fetch', fetcher.fetch.bind(fetcher));
-    await injectVoidFunction(context, 'executionContext.logger.trace', logger.trace.bind(logger));
-    await injectVoidFunction(context, 'executionContext.logger.debug', logger.debug.bind(logger));
-    await injectVoidFunction(context, 'executionContext.logger.info', logger.info.bind(logger));
-    await injectVoidFunction(context, 'executionContext.logger.warn', logger.warn.bind(logger));
-    await injectVoidFunction(context, 'executionContext.logger.error', logger.error.bind(logger));
     await injectVoidFunction(context, 'console.trace', logger.trace.bind(logger));
     await injectVoidFunction(context, 'console.debug', logger.debug.bind(logger));
     await injectVoidFunction(context, 'console.info', logger.info.bind(logger));

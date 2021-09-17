@@ -231,4 +231,4 @@ CommonPackFormulaDef.varargParameters
 
 #### Defined in
 
-[api.ts:356](https://github.com/coda/packs-sdk/blob/main/api.ts#L356)
+[api.ts:355](https://github.com/coda/packs-sdk/blob/main/api.ts#L355)

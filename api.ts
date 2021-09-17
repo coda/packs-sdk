@@ -44,7 +44,6 @@ import {transformBody} from './handler_templates';
 
 export {ExecutionContext};
 export {FetchRequest} from './api_types';
-export {Logger} from './api_types';
 
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.

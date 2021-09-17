@@ -7,4 +7,4 @@ values are provided in this context object.
 
 #### Defined in
 
-[api.ts:672](https://github.com/coda/packs-sdk/blob/main/api.ts#L672)
+[api.ts:671](https://github.com/coda/packs-sdk/blob/main/api.ts#L671)

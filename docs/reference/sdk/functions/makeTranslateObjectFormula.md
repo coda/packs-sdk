@@ -19,4 +19,4 @@
 
 #### Defined in
 
-[api.ts:1060](https://github.com/coda/packs-sdk/blob/main/api.ts#L1060)
+[api.ts:1059](https://github.com/coda/packs-sdk/blob/main/api.ts#L1059)

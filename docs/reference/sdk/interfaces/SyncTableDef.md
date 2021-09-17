@@ -24,7 +24,7 @@ instead, define sync tables using [makeSyncTable](../functions/makeSyncTable.md)
 
 #### Defined in
 
-[api.ts:118](https://github.com/coda/packs-sdk/blob/main/api.ts#L118)
+[api.ts:117](https://github.com/coda/packs-sdk/blob/main/api.ts#L117)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-[api.ts:117](https://github.com/coda/packs-sdk/blob/main/api.ts#L117)
+[api.ts:116](https://github.com/coda/packs-sdk/blob/main/api.ts#L116)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-[api.ts:116](https://github.com/coda/packs-sdk/blob/main/api.ts#L116)
+[api.ts:115](https://github.com/coda/packs-sdk/blob/main/api.ts#L115)
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 #### Defined in
 
-[api.ts:114](https://github.com/coda/packs-sdk/blob/main/api.ts#L114)
+[api.ts:113](https://github.com/coda/packs-sdk/blob/main/api.ts#L113)
 
 ___
 
@@ -64,4 +64,4 @@ ___
 
 #### Defined in
 
-[api.ts:115](https://github.com/coda/packs-sdk/blob/main/api.ts#L115)
+[api.ts:114](https://github.com/coda/packs-sdk/blob/main/api.ts#L114)

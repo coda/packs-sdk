@@ -36,13 +36,6 @@ export function newMockExecutionContext(overrides?: Partial<MockExecutionContext
       storeUrl: sinon.stub(),
       storeBlob: sinon.stub(),
     },
-    logger: {
-      trace: sinon.stub(),
-      debug: sinon.stub(),
-      info: sinon.stub(),
-      warn: sinon.stub(),
-      error: sinon.stub(),
-    },
     ...overrides,
   };
 }

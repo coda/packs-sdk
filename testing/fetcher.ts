@@ -1,7 +1,6 @@
 import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
 import ClientOAuth2 from 'client-oauth2';
-import {ConsoleLogger} from '../helpers/logging';
 import type {Credentials} from './auth_types';
 import type {ExecutionContext} from '../api';
 import type {FetchRequest} from '../api_types';
@@ -395,7 +394,6 @@ export function newFetcherExecutionContext(
     endpoint: credentials?.endpointUrl,
     fetcher,
     temporaryBlobStorage: new AuthenticatingBlobStorage(fetcher),
-    logger: new ConsoleLogger(),
   };
 }
 

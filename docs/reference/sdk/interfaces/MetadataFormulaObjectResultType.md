@@ -9,7 +9,7 @@ than is used internally.
 
 #### Defined in
 
-[api.ts:661](https://github.com/coda/packs-sdk/blob/main/api.ts#L661)
+[api.ts:660](https://github.com/coda/packs-sdk/blob/main/api.ts#L660)
 
 ___
 
@@ -19,7 +19,7 @@ ___
 
 #### Defined in
 
-[api.ts:663](https://github.com/coda/packs-sdk/blob/main/api.ts#L663)
+[api.ts:662](https://github.com/coda/packs-sdk/blob/main/api.ts#L662)
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-[api.ts:662](https://github.com/coda/packs-sdk/blob/main/api.ts#L662)
+[api.ts:661](https://github.com/coda/packs-sdk/blob/main/api.ts#L661)

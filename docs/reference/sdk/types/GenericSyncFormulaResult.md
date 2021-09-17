@@ -6,4 +6,4 @@ for defining a sync table.
 
 #### Defined in
 
-[api.ts:176](https://github.com/coda/packs-sdk/blob/main/api.ts#L176)
+[api.ts:175](https://github.com/coda/packs-sdk/blob/main/api.ts#L175)
