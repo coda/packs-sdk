@@ -57,32 +57,20 @@ Your directory should now contain the following files:
 * `schemas.ts` - A place to define the schemas (structured data types) used by your Pack.
 * `types.ts` - A place to define TypeScript types for the data used by your Pack.
 
-## Add functionality to your Pack
+## Add code to the Pack
 
-Now that you've got the basic structure of a Pack it's time to customize it and add some functionality. In this tutorial you'll be creating a simple "Hello World" Pack with a single formula.
+Now that you've got the basic structure of a Pack it's time to add some code. In this tutorial you'll be creating a simple "Hello World" Pack with a single formula.
 
-1. Edit `formulas.ts` to include the definition of a new "Hello" formula:
+Edit `formulas.ts` to include the definition of a new "Hello" formula:
 
-    === "formulas.ts"
-        ```ts hl_lines="4-7 10-34"
-        --8<-- "hello_cli/formulas.ts"
-        ```
+=== "formulas.ts"
+    ```ts hl_lines="4-7 10-34"
+    --8<-- "hello_cli/formulas.ts"
+    ```
 
-    Take a moment to read through the code and comments and get an understanding of how a Pack is structured.
+Take a moment to read through the code and comments and get an understanding of how a formula is structured.
 
-1. Edit `manifest.ts` to set the formula namespace to `HelloWorld`:
-
-    === "manifest.ts"
-        ```ts hl_lines="8"
-        --8<-- "hello_cli/manifest.ts"
-        ```
-
-    The formula namespace is occasionally used as a prefix to the Pack's formulas, to disnguish them from built-in formulas.
-
-    !!! note
-        The value in `formulaNamespace` isn't normally visible to the user, as Coda prefers to show the Pack's icon instead. However when a formula is copied from the formula editor and pasted as plain text the namespace is used instead of the icon.
-
-## Test your Pack locally
+## Test the Pack locally
 
 One of the advantages of developing locally is that you can test your Pack code without having to upload it to Coda's servers. Let's test the new `Hello` formula you just added:
 
@@ -92,7 +80,7 @@ npx coda execute manifest.ts Hello "world"
 
 If everything works correctly this should output `Hello world!`.
 
-## Upload your Pack
+## Upload the Pack
 
 So far everything you've built only exists on your local machine, and Coda has no knowledge of it. To see it working in a real doc you'll need to upload your Pack to Coda's servers.
 
@@ -129,12 +117,12 @@ Now that you have the access configured you can create the new Pack on Coda's se
 npx coda create manifest.ts --name "Hello World" --description "My first Pack." --codaApiEndpoint=https://{{coda.domain}}
 ```
 
-??? note "Edit your branding later"
+??? info "Edit your branding later"
     The `name` and `description` arguments are optional and can be changed later in the Pack Studio's **Listing** tab, along with a variety of other branding options.
 
 This will create a new, empty Pack on Coda's servers and output its URL in the Pack Studio. It stores the Pack's ID in the new file `.coda-pack.json`.
 
-### Upload your first version
+### Upload the first version
 
 Now that you've established access and created the empty Pack, you're finally ready to upload your code.
 
@@ -142,7 +130,7 @@ Now that you've established access and created the empty Pack, you're finally re
 npx coda upload manifest.ts --notes "Initial version." --codaApiEndpoint=https://{{coda.domain}}
 ```
 
-??? note "Source code not avilable"
+??? warning "Source code not avilable"
     If you open your Pack in the online Pack Studio code editor you'll see a message like:
     
     ```ts
@@ -197,7 +185,7 @@ Now that you have your Pack up and running let's make a change to how it works.
 
     In order for to upload a new version you must increase the version number.
 
-    ??? note "SemVer versioning"
+    ??? info "SemVer versioning"
         The Packs SDK uses the [SemVer](https://semver.org/) versioning spec. Small changes like this only require a change to the patch version (third number), but larger or more breaking changes require a change to the minor or major version.
 
 1. Run `coda upload` again to upload the new version.
