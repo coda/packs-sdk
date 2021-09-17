@@ -32,4 +32,4 @@ See [Normalization](/index.html#normalization) for more information about schema
 
 #### Defined in
 
-[api.ts:928](https://github.com/coda/packs-sdk/blob/main/api.ts#L928)
+[api.ts:927](https://github.com/coda/packs-sdk/blob/main/api.ts#L927)

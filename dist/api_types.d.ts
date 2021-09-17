@@ -225,7 +225,7 @@ export interface Sync {
     schema?: ArraySchema;
     dynamicUrl?: string;
 }
-export declare type LoggerParamType = string | number | boolean | Record<any, any>;
+declare type LoggerParamType = string | number | boolean | Record<any, any>;
 export interface Logger {
     trace(message: string, ...args: LoggerParamType[]): void;
     debug(message: string, ...args: LoggerParamType[]): void;
@@ -240,7 +240,6 @@ export interface InvocationLocation {
 export interface ExecutionContext {
     readonly fetcher: Fetcher;
     readonly temporaryBlobStorage: TemporaryBlobStorage;
-    readonly logger: Logger;
     readonly endpoint?: string;
     readonly invocationLocation: InvocationLocation;
     readonly timezone: string;

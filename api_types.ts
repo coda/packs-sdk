@@ -318,7 +318,7 @@ export interface Sync {
   dynamicUrl?: string;
 }
 
-export type LoggerParamType = string | number | boolean | Record<any, any>;
+type LoggerParamType = string | number | boolean | Record<any, any>;
 
 export interface Logger {
   trace(message: string, ...args: LoggerParamType[]): void;
@@ -336,7 +336,6 @@ export interface InvocationLocation {
 export interface ExecutionContext {
   readonly fetcher: Fetcher;
   readonly temporaryBlobStorage: TemporaryBlobStorage;
-  readonly logger: Logger;
   readonly endpoint?: string;
   readonly invocationLocation: InvocationLocation;
   readonly timezone: string;

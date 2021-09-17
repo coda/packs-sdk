@@ -1,14 +1,18 @@
-## 0.4.5
+## 0.5.0
+
+- **Breaking Change** `context.logger` has been removed. It has been redundant with `console.log`
+  for a while, so we've eliminated the unnecessary extra interface to avoid confusion.
+  (Also `console.trace/debug/warn/info/error` are all valid.)
+
+## 0.4.6
 
 - Bug fix: Executing sync table formulas via CLI now validates results correctly.
 
-
 ## 0.4.5
 
-- Make a few testing functions (e.g. `executeFormulaFromPackDef`) optionally typed. 
+- Make a few testing functions (e.g. `executeFormulaFromPackDef`) optionally typed.
 
 - Update `StatusCodeError` constructor, which now requires the fetch request.
-
 
 ## 0.4.4
 

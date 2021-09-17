@@ -23,7 +23,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleUpload = void 0;
-const logging_1 = require("../helpers/logging");
 const compile_1 = require("../testing/compile");
 const metadata_1 = require("../helpers/metadata");
 const crypto_1 = require("../helpers/crypto");
@@ -53,13 +52,13 @@ function cleanup(intermediateOutputDirectory, logger) {
     }
 }
 async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, }) {
+    const logger = console;
     function printAndExit(message) {
         cleanup(intermediateOutputDirectory, logger);
         (0, helpers_5.printAndExit)(message);
     }
     const manifestDir = path.dirname(manifestFile);
     const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
-    const logger = new logging_1.ConsoleLogger();
     logger.info('Building Pack bundle...');
     if (fs_1.default.existsSync(intermediateOutputDirectory)) {
         logger.info(`Existing directory ${intermediateOutputDirectory} detected. Probably left over from previous build. Removing it...`);

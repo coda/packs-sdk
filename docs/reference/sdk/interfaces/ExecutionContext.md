@@ -12,7 +12,7 @@
 
 #### Defined in
 
-[api_types.ts:340](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L340)
+[api_types.ts:339](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L339)
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:341](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L341)
+[api_types.ts:340](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L340)
 
 ___
 
@@ -42,17 +42,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:346](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L346)
-
-___
-
-### logger
-
-• `Readonly` **logger**: [`Logger`](Logger.md)
-
-#### Defined in
-
-[api_types.ts:339](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L339)
+[api_types.ts:345](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L345)
 
 ___
 
@@ -62,7 +52,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:347](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L347)
+[api_types.ts:346](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L346)
 
 ___
 
@@ -82,4 +72,4 @@ ___
 
 #### Defined in
 
-[api_types.ts:342](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L342)
+[api_types.ts:341](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L341)

@@ -12,7 +12,7 @@
 
 #### Defined in
 
-[api.ts:436](https://github.com/coda/packs-sdk/blob/main/api.ts#L436)
+[api.ts:435](https://github.com/coda/packs-sdk/blob/main/api.ts#L435)
 
 ___
 
@@ -22,4 +22,4 @@ ___
 
 #### Defined in
 
-[api.ts:435](https://github.com/coda/packs-sdk/blob/main/api.ts#L435)
+[api.ts:434](https://github.com/coda/packs-sdk/blob/main/api.ts#L434)

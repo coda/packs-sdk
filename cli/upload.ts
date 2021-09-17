@@ -1,5 +1,5 @@
 import type {Arguments} from 'yargs';
-import {ConsoleLogger} from '../helpers/logging';
+import type {Logger} from '../api_types';
 import type {PackUpload} from '../compiled_types';
 import {compilePackBundle} from '../testing/compile';
 import {compilePackMetadata} from '../helpers/metadata';
@@ -29,7 +29,7 @@ interface UploadArgs {
   intermediateOutputDirectory: string;
 }
 
-function cleanup(intermediateOutputDirectory: string, logger: ConsoleLogger) {
+function cleanup(intermediateOutputDirectory: string, logger: Logger) {
   logger.info('\n\nCleaning up...');
 
   if (fs.existsSync(intermediateOutputDirectory)) {
@@ -46,6 +46,7 @@ export async function handleUpload({
   codaApiEndpoint,
   notes,
 }: Arguments<UploadArgs>) {
+  const logger = console;
   function printAndExit(message: string): never {
     cleanup(intermediateOutputDirectory, logger);
     printAndExitImpl(message);
@@ -53,7 +54,6 @@ export async function handleUpload({
 
   const manifestDir = path.dirname(manifestFile);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
-  const logger = new ConsoleLogger();
   logger.info('Building Pack bundle...');
 
   if (fs.existsSync(intermediateOutputDirectory)) {

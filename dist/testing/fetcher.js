@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.newFetcherSyncExecutionContext = exports.newFetcherExecutionContext = exports.requestHelper = exports.AuthenticatingFetcher = void 0;
 const types_1 = require("../types");
 const client_oauth2_1 = __importDefault(require("client-oauth2"));
-const logging_1 = require("../helpers/logging");
 const url_1 = require("url");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
@@ -310,7 +309,6 @@ function newFetcherExecutionContext(updateCredentialsCallback, authDef, networkD
         endpoint: credentials === null || credentials === void 0 ? void 0 : credentials.endpointUrl,
         fetcher,
         temporaryBlobStorage: new AuthenticatingBlobStorage(fetcher),
-        logger: new logging_1.ConsoleLogger(),
     };
 }
 exports.newFetcherExecutionContext = newFetcherExecutionContext;
