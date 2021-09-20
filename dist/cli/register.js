@@ -20,7 +20,7 @@ async function handleRegister({ apiToken, codaApiEndpoint }) {
         if (!shouldOpenBrowser.toLocaleLowerCase().startsWith('y')) {
             return process.exit(1);
         }
-        await (0, open_1.default)(`${formattedEndpoint}/account?openDialog=CREATE_API_TOKEN&scopeType=pack`);
+        await (0, open_1.default)(`${formattedEndpoint}/account?openDialog=CREATE_API_TOKEN&scopeType=pack#apiSettings`);
         apiToken = (0, helpers_4.promptForInput)('Please paste the token here: ', { mask: true });
     }
     const client = (0, helpers_1.createCodaClient)(apiToken, formattedEndpoint);

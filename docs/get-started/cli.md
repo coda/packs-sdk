@@ -100,7 +100,7 @@ The `coda` CLI uses the Coda API under the hood to upload your code, and likewis
 
 1. In the **Name** field enter "Hello World Pack" and then click **Generate API token**.
 
-1. Scroll down the page to the **Coda API tokens** section, find the token you just created, and click the **Copy token** link.
+1. In the **Coda API tokens** section, find the token you just created, and click the **Copy token** link.
 
 1. Switch back to your terminal, paste your token into the prompt, and hit enter.
 
