@@ -21,7 +21,7 @@ export async function handleRegister({apiToken, codaApiEndpoint}: Arguments<Regi
     if (!shouldOpenBrowser.toLocaleLowerCase().startsWith('y')) {
       return process.exit(1);
     }
-    await open(`${formattedEndpoint}/account?openDialog=CREATE_API_TOKEN&scopeType=pack`);
+    await open(`${formattedEndpoint}/account?openDialog=CREATE_API_TOKEN&scopeType=pack#apiSettings`);
     apiToken = promptForInput('Please paste the token here: ', {mask: true});
   }
 
