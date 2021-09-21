@@ -33,7 +33,7 @@ Next we'll use the Pack Studio to build that code and get it ready to use:
 
 1. Click on the Pack name **Untitled Pack** in the upper left, and change it to "Hello World".
 
-1. Click the **Build** button in the upper right.
+1. Click the **Build** button in the bottom left.
 
     This checks your Pack for errors and Packages it up for use in a Coda doc. It can take a few seconds for the build to complete.
 
