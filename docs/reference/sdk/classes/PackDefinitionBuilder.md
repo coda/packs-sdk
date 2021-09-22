@@ -18,7 +18,7 @@
 
 #### Defined in
 
-[builder.ts:51](https://github.com/coda/packs-sdk/blob/main/builder.ts#L51)
+[builder.ts:53](https://github.com/coda/packs-sdk/blob/main/builder.ts#L53)
 
 ## Properties
 
@@ -32,7 +32,7 @@ BasicPackDefinition.defaultAuthentication
 
 #### Defined in
 
-[builder.ts:43](https://github.com/coda/packs-sdk/blob/main/builder.ts#L43)
+[builder.ts:45](https://github.com/coda/packs-sdk/blob/main/builder.ts#L45)
 
 ___
 
@@ -46,7 +46,7 @@ BasicPackDefinition.formats
 
 #### Defined in
 
-[builder.ts:39](https://github.com/coda/packs-sdk/blob/main/builder.ts#L39)
+[builder.ts:41](https://github.com/coda/packs-sdk/blob/main/builder.ts#L41)
 
 ___
 
@@ -60,7 +60,7 @@ BasicPackDefinition.formulaNamespace
 
 #### Defined in
 
-[builder.ts:47](https://github.com/coda/packs-sdk/blob/main/builder.ts#L47)
+[builder.ts:49](https://github.com/coda/packs-sdk/blob/main/builder.ts#L49)
 
 ___
 
@@ -74,7 +74,7 @@ BasicPackDefinition.formulas
 
 #### Defined in
 
-[builder.ts:38](https://github.com/coda/packs-sdk/blob/main/builder.ts#L38)
+[builder.ts:40](https://github.com/coda/packs-sdk/blob/main/builder.ts#L40)
 
 ___
 
@@ -88,7 +88,7 @@ BasicPackDefinition.networkDomains
 
 #### Defined in
 
-[builder.ts:41](https://github.com/coda/packs-sdk/blob/main/builder.ts#L41)
+[builder.ts:43](https://github.com/coda/packs-sdk/blob/main/builder.ts#L43)
 
 ___
 
@@ -102,7 +102,7 @@ BasicPackDefinition.syncTables
 
 #### Defined in
 
-[builder.ts:40](https://github.com/coda/packs-sdk/blob/main/builder.ts#L40)
+[builder.ts:42](https://github.com/coda/packs-sdk/blob/main/builder.ts#L42)
 
 ___
 
@@ -116,7 +116,7 @@ BasicPackDefinition.systemConnectionAuthentication
 
 #### Defined in
 
-[builder.ts:44](https://github.com/coda/packs-sdk/blob/main/builder.ts#L44)
+[builder.ts:46](https://github.com/coda/packs-sdk/blob/main/builder.ts#L46)
 
 ___
 
@@ -126,7 +126,7 @@ ___
 
 #### Defined in
 
-[builder.ts:46](https://github.com/coda/packs-sdk/blob/main/builder.ts#L46)
+[builder.ts:48](https://github.com/coda/packs-sdk/blob/main/builder.ts#L48)
 
 ## Methods
 
@@ -139,10 +139,12 @@ Adds a column format definition to this pack.
 In the web editor, the `/ColumnFormat` shortcut will insert a snippet of a skeleton format.
 
 **`example`**
+```
 pack.addColumnFormat({
   name: 'MyColumn',
   formulaName: 'MyFormula',
 });
+```
 
 #### Parameters
 
@@ -156,7 +158,7 @@ pack.addColumnFormat({
 
 #### Defined in
 
-[builder.ts:180](https://github.com/coda/packs-sdk/blob/main/builder.ts#L180)
+[builder.ts:190](https://github.com/coda/packs-sdk/blob/main/builder.ts#L190)
 
 ___
 
@@ -169,6 +171,7 @@ Adds a dynamic sync table definition to this pack.
 In the web editor, the `/DynamicSyncTable` shortcut will insert a snippet of a skeleton sync table.
 
 **`example`**
+```
 pack.addDynamicSyncTable({
   name: 'MySyncTable',
   getName: async (context) => {
@@ -181,6 +184,7 @@ pack.addDynamicSyncTable({
   },
   ...
 });
+```
 
 #### Type parameters
 
@@ -200,7 +204,7 @@ pack.addDynamicSyncTable({
 
 #### Defined in
 
-[builder.ts:160](https://github.com/coda/packs-sdk/blob/main/builder.ts#L160)
+[builder.ts:168](https://github.com/coda/packs-sdk/blob/main/builder.ts#L168)
 
 ___
 
@@ -213,6 +217,7 @@ Adds a formula definition to this pack.
 In the web editor, the `/Formula` shortcut will insert a snippet of a skeleton formula.
 
 **`example`**
+```
 pack.addFormula({
   resultType: ValueType.String,
    name: 'MyFormula',
@@ -228,6 +233,7 @@ pack.addFormula({
      return `Hello ${param}`;
    },
 });
+```
 
 #### Type parameters
 
@@ -247,7 +253,7 @@ pack.addFormula({
 
 #### Defined in
 
-[builder.ts:94](https://github.com/coda/packs-sdk/blob/main/builder.ts#L94)
+[builder.ts:98](https://github.com/coda/packs-sdk/blob/main/builder.ts#L98)
 
 ___
 
@@ -267,7 +273,9 @@ You are allowed one network domain per pack by default. If your pack needs
 to connect to multiple domains, contact Coda Support for approval.
 
 **`example`**
+```
 pack.addNetworkDomain('example.com');
+```
 
 #### Parameters
 
@@ -281,7 +289,7 @@ pack.addNetworkDomain('example.com');
 
 #### Defined in
 
-[builder.ts:269](https://github.com/coda/packs-sdk/blob/main/builder.ts#L269)
+[builder.ts:285](https://github.com/coda/packs-sdk/blob/main/builder.ts#L285)
 
 ___
 
@@ -294,6 +302,7 @@ Adds a sync table definition to this pack.
 In the web editor, the `/SyncTable` shortcut will insert a snippet of a skeleton sync table.
 
 **`example`**
+```
 pack.addSyncTable({
   name: 'MySyncTable',
   identityName: 'EntityName',
@@ -304,6 +313,7 @@ pack.addSyncTable({
     ...
   },
 });
+```
 
 #### Type parameters
 
@@ -326,7 +336,7 @@ pack.addSyncTable({
 
 #### Defined in
 
-[builder.ts:120](https://github.com/coda/packs-sdk/blob/main/builder.ts#L120)
+[builder.ts:126](https://github.com/coda/packs-sdk/blob/main/builder.ts#L126)
 
 ___
 
@@ -344,9 +354,11 @@ In the web editor, the `/SystemAuthentication` shortcut will insert a snippet of
 authentication definition.
 
 **`example`**
+```
 pack.setSystemAuthentication({
   type: AuthenticationType.HeaderBearerToken,
 });
+```
 
 #### Parameters
 
@@ -360,7 +372,7 @@ pack.setSystemAuthentication({
 
 #### Defined in
 
-[builder.ts:241](https://github.com/coda/packs-sdk/blob/main/builder.ts#L241)
+[builder.ts:255](https://github.com/coda/packs-sdk/blob/main/builder.ts#L255)
 
 ___
 
@@ -382,9 +394,11 @@ formula. To change the default, you can pass a `defaultConnectionRequirement` op
 this method.
 
 **`example`**
+```
 pack.setUserAuthentication({
   type: AuthenticationType.HeaderBearerToken,
 });
+```
 
 #### Parameters
 
@@ -398,7 +412,7 @@ pack.setUserAuthentication({
 
 #### Defined in
 
-[builder.ts:204](https://github.com/coda/packs-sdk/blob/main/builder.ts#L204)
+[builder.ts:216](https://github.com/coda/packs-sdk/blob/main/builder.ts#L216)
 
 ___
 
@@ -414,7 +428,9 @@ and the web editor will automatically provide an appropriate semantic version
 each time you build a version.
 
 **`example`**
+```
 pack.setVersion('1.2.3');
+```
 
 #### Parameters
 
@@ -428,4 +444,4 @@ pack.setVersion('1.2.3');
 
 #### Defined in
 
-[builder.ts:285](https://github.com/coda/packs-sdk/blob/main/builder.ts#L285)
+[builder.ts:303](https://github.com/coda/packs-sdk/blob/main/builder.ts#L303)

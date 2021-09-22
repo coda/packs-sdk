@@ -21,29 +21,39 @@ indicating that the array elements are all just strings, or it could be an objec
 created using [makeObjectSchema](makeObjectSchema.md) if the elements are objects.
 
 **`example`**
+```
 makeFormula({resultType: ValueType.String, name: 'Hello', ...});
+```
 
 **`example`**
+```
 makeFormula({resultType: ValueType.String, codaType: ValueType.Html, name: 'HelloHtml', ...});
+```
 
 **`example`**
+```
 makeFormula({resultType: ValueType.Array, items: {type: ValueType.String}, name: 'HelloStringArray', ...});
+```
 
 **`example`**
+```
 makeFormula({
   resultType: ValueType.Object,
   schema: makeObjectSchema({type: ValueType.Object, properties: {...}}),
   name: 'HelloObject',
   ...
 });
+```
 
 **`example`**
+```
 makeFormula({
   resultType: ValueType.Array,
   items: makeObjectSchema({type: ValueType.Object, properties: {...}}),
   name: 'HelloObjectArray',
   ...
 });
+```
 
 #### Type parameters
 
@@ -63,4 +73,4 @@ makeFormula({
 
 #### Defined in
 
-[api.ts:529](https://github.com/coda/packs-sdk/blob/main/api.ts#L529)
+[api.ts:543](https://github.com/coda/packs-sdk/blob/main/api.ts#L543)
