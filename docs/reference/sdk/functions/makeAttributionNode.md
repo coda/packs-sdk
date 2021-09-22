@@ -1,3 +1,5 @@
+# Function: makeAttributionNode
+
 ▸ **makeAttributionNode**<`T`\>(`node`): `T`
 
 #### Type parameters

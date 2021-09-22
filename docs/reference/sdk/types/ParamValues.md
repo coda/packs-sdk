@@ -1,3 +1,5 @@
+# Type alias: ParamValues<ParamDefsT\>
+
 Ƭ **ParamValues**<`ParamDefsT`\>: { [K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T\> ? TypeOfMap<T\> : never} & `any`[]
 
 #### Type parameters

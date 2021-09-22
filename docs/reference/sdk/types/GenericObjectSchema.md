@@ -1,3 +1,5 @@
+# Type alias: GenericObjectSchema
+
 Ƭ **GenericObjectSchema**: [`ObjectSchema`](../interfaces/ObjectSchema.md)<`string`, `string`\>
 
 #### Defined in

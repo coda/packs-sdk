@@ -1,3 +1,5 @@
+# Type alias: ParamDefs
+
 Ƭ **ParamDefs**: [[`ParamDef`](../interfaces/ParamDef.md)<`UnionType`\>, ...ParamDef<UnionType\>[]] \| []
 
 #### Defined in

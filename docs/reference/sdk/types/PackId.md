@@ -1,3 +1,5 @@
+# Type alias: PackId
+
 Ƭ **PackId**: `number`
 
 **`deprecated`** Use `number` in new code.

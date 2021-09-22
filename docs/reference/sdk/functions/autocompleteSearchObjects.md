@@ -1,3 +1,5 @@
+# Function: autocompleteSearchObjects
+
 ▸ **autocompleteSearchObjects**<`T`\>(`search`, `objs`, `displayKey`, `valueKey`): `Promise`<[`MetadataFormulaObjectResultType`](../interfaces/MetadataFormulaObjectResultType.md)[]\>
 
 #### Type parameters

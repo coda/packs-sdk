@@ -1,3 +1,5 @@
+# Type alias: MetadataContext
+
 Ƭ **MetadataContext**: `Record`<`string`, `any`\>
 
 A context object that is provided to a metadata formula at execution time.

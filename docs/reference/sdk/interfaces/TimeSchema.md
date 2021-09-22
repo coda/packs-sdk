@@ -1,3 +1,5 @@
+# Interface: TimeSchema
+
 ## Hierarchy
 
 - `BaseDateSchema`

@@ -1,3 +1,5 @@
+# Interface: OAuth2Authentication
+
 Authenticate using OAuth2. You must specify the authorization URL, token exchange URL, and
 scopes here as part of the pack definition. You'll provide the application's client ID and
 client secret in the pack management UI, so that these can be stored securely.

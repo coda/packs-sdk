@@ -1,3 +1,5 @@
+# Interface: ObjectSchemaProperty
+
 ## Properties
 
 ### fromKey

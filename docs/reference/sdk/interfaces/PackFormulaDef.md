@@ -1,3 +1,5 @@
+# Interface: PackFormulaDef<ParamsT, ResultT\>
+
 ## Type parameters
 
 | Name | Type |

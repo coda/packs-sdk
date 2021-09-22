@@ -1,3 +1,5 @@
+# Interface: FetchResponse<T\>
+
 ## Type parameters
 
 | Name | Type |

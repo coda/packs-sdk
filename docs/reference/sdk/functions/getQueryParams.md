@@ -1,3 +1,5 @@
+# Function: getQueryParams
+
 ▸ **getQueryParams**(`url`): `Object`
 
 #### Parameters

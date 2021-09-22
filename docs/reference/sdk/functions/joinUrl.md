@@ -1,3 +1,5 @@
+# Function: joinUrl
+
 ▸ **joinUrl**(...`tokens`): `string`
 
 Joins all the tokens into a single URL string separated by '/'. Zero length tokens cause errors.

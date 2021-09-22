@@ -1,3 +1,5 @@
+# Interface: IdentityDefinition
+
 ## Hierarchy
 
 - **`IdentityDefinition`**

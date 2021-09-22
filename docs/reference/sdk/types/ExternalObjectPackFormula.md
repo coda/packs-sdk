@@ -1,3 +1,5 @@
+# Type alias: ExternalObjectPackFormula
+
 Ƭ **ExternalObjectPackFormula**: `ObjectPackFormulaMetadata`
 
 #### Defined in

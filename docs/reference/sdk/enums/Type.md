@@ -1,3 +1,5 @@
+# Enumeration: Type
+
 ## Enumeration members
 
 ### boolean

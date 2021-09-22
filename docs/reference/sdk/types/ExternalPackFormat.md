@@ -1,3 +1,5 @@
+# Type alias: ExternalPackFormat
+
 Ƭ **ExternalPackFormat**: [`Format`](../interfaces/Format.md)
 
 #### Defined in

@@ -1,3 +1,5 @@
+# Enumeration: ValueHintType
+
 Synthetic types that instruct Coda how to coerce values from primitives at ingestion time.
 
 ## Enumeration members

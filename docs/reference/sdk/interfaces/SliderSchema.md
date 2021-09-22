@@ -1,3 +1,5 @@
+# Interface: SliderSchema
+
 ## Hierarchy
 
 - [`NumberSchema`](NumberSchema.md)

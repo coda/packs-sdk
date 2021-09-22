@@ -1,3 +1,5 @@
+# Type alias: MetadataFormulaResultType
+
 Ƭ **MetadataFormulaResultType**: `string` \| `number` \| [`MetadataFormulaObjectResultType`](../interfaces/MetadataFormulaObjectResultType.md)
 
 #### Defined in

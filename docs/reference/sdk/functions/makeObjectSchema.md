@@ -1,3 +1,5 @@
+# Function: makeObjectSchema
+
 ▸ **makeObjectSchema**<`K`, `L`, `T`\>(`schemaDef`): [`ObjectSchema`](../interfaces/ObjectSchema.md)<`K`, `L`\>
 
 #### Type parameters

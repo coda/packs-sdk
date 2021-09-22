@@ -1,3 +1,5 @@
+# Interface: DurationSchema
+
 ## Hierarchy
 
 - [`StringSchema`](StringSchema.md)<[`Duration`](../enums/ValueHintType.md#duration)\>

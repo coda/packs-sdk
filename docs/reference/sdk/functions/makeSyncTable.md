@@ -1,3 +1,5 @@
+# Function: makeSyncTable
+
 ▸ **makeSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaDefT`, `SchemaT`\>(`__namedParameters`): [`SyncTableDef`](../interfaces/SyncTableDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\>
 
 Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
