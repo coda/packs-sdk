@@ -17,16 +17,18 @@ interface CreateArgs {
   codaApiEndpoint: string;
   name?: string;
   description?: string;
+  workspaceId?: string;
 }
 
-export async function handleCreate({manifestFile, codaApiEndpoint, name, description}: Arguments<CreateArgs>) {
-  await createPack(manifestFile, codaApiEndpoint, {name, description});
+export async function handleCreate(
+  {manifestFile, codaApiEndpoint, name, description, workspaceId}: Arguments<CreateArgs>) {
+  await createPack(manifestFile, codaApiEndpoint, {name, description, workspaceId});
 }
 
 export async function createPack(
   manifestFile: string,
   codaApiEndpoint: string,
-  {name, description}: {name?: string; description?: string},
+  {name, description, workspaceId}: {name?: string; description?: string, workspaceId?: string},
 ) {
   const manifestDir = path.dirname(manifestFile);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
@@ -52,7 +54,7 @@ export async function createPack(
 
   const codaClient = createCodaClient(apiKey, formattedEndpoint);
   try {
-    const response = await codaClient.createPack({}, {name, description});
+    const response = await codaClient.createPack({}, {name, description, workspaceId});
     if (isCodaError(response)) {
       return printAndExit(`Unable to create your pack, received error: ${formatError(response)}`);
     }
