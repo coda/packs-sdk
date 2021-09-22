@@ -1,3 +1,5 @@
+# Type alias: SystemAuthentication
+
 Ƭ **SystemAuthentication**: `HeaderBearerTokenAuthentication` \| `CustomHeaderTokenAuthentication` \| `QueryParamTokenAuthentication` \| `MultiQueryParamTokenAuthentication` \| [`WebBasicAuthentication`](../interfaces/WebBasicAuthentication.md) \| `AWSSignature4Authentication`
 
 The union of authentication methods that are supported for system authentication,

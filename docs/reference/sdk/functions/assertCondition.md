@@ -1,3 +1,5 @@
+# Function: assertCondition
+
 ▸ **assertCondition**(`condition`, `message?`): asserts condition
 
 #### Parameters

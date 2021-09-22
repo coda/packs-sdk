@@ -1,3 +1,5 @@
+# Interface: ArrayType<T\>
+
 ## Type parameters
 
 | Name | Type |

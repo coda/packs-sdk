@@ -1,3 +1,5 @@
+# Interface: ArraySchema<T\>
+
 ## Type parameters
 
 | Name | Type |

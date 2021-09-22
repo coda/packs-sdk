@@ -1,3 +1,5 @@
+# Type alias: PackMetadata
+
 Ƭ **PackMetadata**: [`PackVersionMetadata`](PackVersionMetadata.md) & `Pick`<[`PackDefinition`](../interfaces/PackDefinition.md), ``"id"`` \| ``"name"`` \| ``"shortDescription"`` \| ``"description"`` \| ``"permissionsDescription"`` \| ``"category"`` \| ``"logoPath"`` \| ``"exampleImages"`` \| ``"exampleVideoIds"`` \| ``"minimumFeatureSet"`` \| ``"quotas"`` \| ``"rateLimits"`` \| ``"enabledConfigName"`` \| ``"isSystem"``\>
 
 Stripped-down version of `PackDefinition` that doesn't contain formula definitions.

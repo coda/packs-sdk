@@ -1,3 +1,5 @@
+# Function: makeReferenceSchemaFromObjectSchema
+
 ▸ **makeReferenceSchemaFromObjectSchema**(`schema`, `identityName?`): [`GenericObjectSchema`](../types/GenericObjectSchema.md)
 
 Convenience for creating a reference object schema from an existing schema for the

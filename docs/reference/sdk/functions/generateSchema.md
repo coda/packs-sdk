@@ -1,3 +1,5 @@
+# Function: generateSchema
+
 ▸ **generateSchema**(`obj`): [`Schema`](../types/Schema.md)
 
 #### Parameters

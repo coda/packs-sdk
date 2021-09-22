@@ -1,3 +1,5 @@
+# Interface: Format
+
 Definition for a custom column type that users can apply to any column in any Coda table.
 A column format tells Coda to interpret the value in a cell by executing a formula
 using that value, typically looking up data related to that value from a third-party API.

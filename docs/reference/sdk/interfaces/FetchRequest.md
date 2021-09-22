@@ -1,3 +1,5 @@
+# Interface: FetchRequest
+
 ## Properties
 
 ### body

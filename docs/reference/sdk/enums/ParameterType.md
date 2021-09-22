@@ -1,3 +1,5 @@
+# Enumeration: ParameterType
+
 ## Enumeration members
 
 ### Boolean

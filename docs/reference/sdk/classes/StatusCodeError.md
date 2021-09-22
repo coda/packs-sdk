@@ -1,3 +1,5 @@
+# Class: StatusCodeError
+
 StatusCodeError is a simple version of StatusCodeError in request-promise to keep backwards compatibility.
 This tries to replicate its exact structure, massaging as necessary to handle the various transforms
 in our stack.

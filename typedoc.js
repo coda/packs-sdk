@@ -13,5 +13,4 @@ module.exports = {
   hideBreadcrumbs: true,
   hideInPageTOC: true,
   allReflectionsHaveOwnDocument: true,
-  hidePageTitle: true,
 };

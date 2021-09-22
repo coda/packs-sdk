@@ -1,3 +1,5 @@
+# Type alias: GenericSyncFormulaResult
+
 Ƭ **GenericSyncFormulaResult**: [`SyncFormulaResult`](../interfaces/SyncFormulaResult.md)<`any`\>
 
 Type definition for the return value of a sync table.

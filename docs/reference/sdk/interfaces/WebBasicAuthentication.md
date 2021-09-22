@@ -1,3 +1,5 @@
+# Interface: WebBasicAuthentication
+
 Authenticate using HTTP Basic authorization. The user provides a username and password
 (sometimes optional) which are included as an HTTP header according to the Basic auth standard.
 

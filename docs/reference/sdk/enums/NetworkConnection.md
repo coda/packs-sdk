@@ -1,3 +1,5 @@
+# Enumeration: NetworkConnection
+
 **`deprecated`** use `ConnectionRequirement` instead
 
 ## Enumeration members

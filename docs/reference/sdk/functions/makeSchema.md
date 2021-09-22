@@ -1,3 +1,5 @@
+# Function: makeSchema
+
 ▸ **makeSchema**<`T`\>(`schema`): `T`
 
 #### Type parameters

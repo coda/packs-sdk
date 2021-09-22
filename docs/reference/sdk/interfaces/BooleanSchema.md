@@ -1,3 +1,5 @@
+# Interface: BooleanSchema
+
 ## Hierarchy
 
 - `BaseSchema`

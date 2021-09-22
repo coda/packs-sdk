@@ -1,3 +1,5 @@
+# Interface: Network
+
 **`deprecated`** use `isAction` and `connectionRequirement` on the formula definition instead.
 
 ## Properties

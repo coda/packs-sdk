@@ -1,3 +1,5 @@
+# Type alias: BasicPackDefinition
+
 Ƭ **BasicPackDefinition**: `Omit`<[`PackVersionDefinition`](../interfaces/PackVersionDefinition.md), ``"version"``\>
 
 A pack definition without an author-defined semantic version, for use in the web

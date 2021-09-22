@@ -1,3 +1,5 @@
+# Interface: ObjectSchema<K, L\>
+
 ## Type parameters
 
 | Name | Type |

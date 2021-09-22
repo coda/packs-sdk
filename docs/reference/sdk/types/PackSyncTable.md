@@ -1,3 +1,5 @@
+# Type alias: PackSyncTable
+
 Ƭ **PackSyncTable**: `Omit`<`SyncTable`, ``"getter"`` \| ``"getName"`` \| ``"getSchema"`` \| ``"listDynamicUrls"`` \| ``"getDisplayUrl"``\> & { `getDisplayUrl?`: `MetadataFormulaMetadata` ; `getName?`: `MetadataFormulaMetadata` ; `getSchema?`: `MetadataFormulaMetadata` ; `getter`: [`PackFormulaMetadata`](PackFormulaMetadata.md) ; `hasDynamicSchema?`: `boolean` ; `isDynamic?`: `boolean` ; `listDynamicUrls?`: `MetadataFormulaMetadata`  }
 
 #### Defined in

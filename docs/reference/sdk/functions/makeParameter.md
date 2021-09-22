@@ -1,3 +1,5 @@
+# Function: makeParameter
+
 ▸ **makeParameter**<`T`\>(`paramDefinition`): [`ParamDef`](../interfaces/ParamDef.md)<`ParameterTypeMap`[`T`]\>
 
 Create a definition for a parameter for a formula or sync.

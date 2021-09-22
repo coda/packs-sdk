@@ -1,3 +1,5 @@
+# Type alias: ExternalSyncTable
+
 Ƭ **ExternalSyncTable**: [`PackSyncTable`](PackSyncTable.md)
 
 #### Defined in

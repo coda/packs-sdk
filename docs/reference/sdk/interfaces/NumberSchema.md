@@ -1,3 +1,5 @@
+# Interface: NumberSchema
+
 ## Hierarchy
 
 - `BaseSchema`

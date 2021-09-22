@@ -1,3 +1,5 @@
+# Enumeration: ValueType
+
 The set of primitive value types that can be used as return values for formulas
 or in object schemas.
 

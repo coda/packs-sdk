@@ -1,3 +1,5 @@
+# Function: makeMetadataFormula
+
 ▸ **makeMetadataFormula**(`execute`, `options?`): [`MetadataFormula`](../types/MetadataFormula.md)
 
 #### Parameters

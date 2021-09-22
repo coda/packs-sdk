@@ -1,3 +1,5 @@
+# Interface: SimpleAutocompleteOption
+
 ## Properties
 
 ### display

@@ -1,3 +1,5 @@
+# Function: ensureExists
+
 ▸ **ensureExists**<`T`\>(`value`, `message?`): `T`
 
 #### Type parameters

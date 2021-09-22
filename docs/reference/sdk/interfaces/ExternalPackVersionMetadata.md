@@ -1,3 +1,5 @@
+# Interface: ExternalPackVersionMetadata
+
 Further stripped-down version of `PackVersionMetadata` that contains only what the browser needs.
 
 ## Hierarchy
