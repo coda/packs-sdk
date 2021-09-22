@@ -26,6 +26,6 @@ pack.addFormula({
   // Everything inside this execute statement will happen anytime your Coda function is called in a doc.
   execute: async function ([myParam], context) {
     // Here, myParam is the first parameter you’ve defined above: the “name” input.
-    return 'Hello ' + myParam + '!';
+    return `Hello ${myParam}!`;
   },
 });

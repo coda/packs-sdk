@@ -19,14 +19,14 @@ export const formulas: Formula[] = [
       makeParameter({
         type: ParameterType.String,
         name: 'name',
-        description: 'The name you\'d like to say hello to.'
+        description: "The name you'd like to say hello to.",
       }),
     ],
 
     // Everything inside this execute statement will happen anytime your Coda function is called in a doc.
     // An array of all user inputs is always the 1st parameter.
     execute: function ([name]) {
-      return 'Hello ' + name + '!';
+      return `Hello ${name}!`;
     },
 
     // The resultType defines what will be returned in your Coda doc. Here, we're returning a simple text string.
