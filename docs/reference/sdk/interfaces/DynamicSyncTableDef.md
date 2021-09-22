@@ -1,7 +1,7 @@
 # Interface: DynamicSyncTableDef<K, L, ParamDefsT, SchemaT\>
 
 Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
-instead, define dynamic sync tables using [makeDynamicSyncTable](../functions/makeDynamicSyncTable.md).
+instead, define dynamic sync tables using [makeDynamicSyncTable](../README.md#makedynamicsynctable).
 
 ## Type parameters
 
@@ -9,7 +9,7 @@ instead, define dynamic sync tables using [makeDynamicSyncTable](../functions/ma
 | :------ | :------ |
 | `K` | extends `string` |
 | `L` | extends `string` |
-| `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
+| `ParamDefsT` | extends [`ParamDefs`](../README.md#paramdefs) |
 | `SchemaT` | extends [`ObjectSchema`](ObjectSchema.md)<`K`, `L`\> |
 
 ## Hierarchy
@@ -36,7 +36,7 @@ ___
 
 ### getDisplayUrl
 
-• **getDisplayUrl**: [`MetadataFormula`](../types/MetadataFormula.md)
+• **getDisplayUrl**: [`MetadataFormula`](../README.md#metadataformula)
 
 #### Defined in
 
@@ -46,7 +46,7 @@ ___
 
 ### getName
 
-• **getName**: [`MetadataFormula`](../types/MetadataFormula.md)
+• **getName**: [`MetadataFormula`](../README.md#metadataformula)
 
 #### Defined in
 
@@ -56,7 +56,7 @@ ___
 
 ### getSchema
 
-• **getSchema**: [`MetadataFormula`](../types/MetadataFormula.md)
+• **getSchema**: [`MetadataFormula`](../README.md#metadataformula)
 
 #### Overrides
 
@@ -94,7 +94,7 @@ ___
 
 ### listDynamicUrls
 
-• `Optional` **listDynamicUrls**: [`MetadataFormula`](../types/MetadataFormula.md)
+• `Optional` **listDynamicUrls**: [`MetadataFormula`](../README.md#metadataformula)
 
 #### Defined in
 

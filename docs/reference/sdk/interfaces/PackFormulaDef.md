@@ -4,8 +4,8 @@
 
 | Name | Type |
 | :------ | :------ |
-| `ParamsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
-| `ResultT` | extends [`PackFormulaResult`](../types/PackFormulaResult.md) |
+| `ParamsT` | extends [`ParamDefs`](../README.md#paramdefs) |
+| `ResultT` | extends [`PackFormulaResult`](../README.md#packformularesult) |
 
 ## Hierarchy
 
@@ -65,7 +65,7 @@ ___
 
 ### examples
 
-• `Optional` `Readonly` **examples**: { `params`: [`PackFormulaValue`](../types/PackFormulaValue.md)[] ; `result`: [`PackFormulaResult`](../types/PackFormulaResult.md)  }[]
+• `Optional` `Readonly` **examples**: { `params`: [`PackFormulaValue`](../README.md#packformulavalue)[] ; `result`: [`PackFormulaResult`](../README.md#packformularesult)  }[]
 
 Sample inputs and outputs demonstrating usage of this formula.
 
@@ -201,7 +201,7 @@ ___
 
 ### varargParameters
 
-• `Optional` `Readonly` **varargParameters**: [`ParamDefs`](../types/ParamDefs.md)
+• `Optional` `Readonly` **varargParameters**: [`ParamDefs`](../README.md#paramdefs)
 
 Variable argument parameters, used if this formula should accept arbitrary
 numbers of inputs.
@@ -224,7 +224,7 @@ CommonPackFormulaDef.varargParameters
 
 | Name | Type |
 | :------ | :------ |
-| `params` | [`ParamValues`](../types/ParamValues.md)<`ParamsT`\> |
+| `params` | [`ParamValues`](../README.md#paramvalues)<`ParamsT`\> |
 | `context` | [`ExecutionContext`](ExecutionContext.md) |
 
 #### Returns

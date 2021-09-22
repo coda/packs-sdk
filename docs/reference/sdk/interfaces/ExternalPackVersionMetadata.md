@@ -60,7 +60,7 @@ ___
 
 ### formulas
 
-• `Optional` **formulas**: [`ExternalPackFormulas`](../types/ExternalPackFormulas.md)
+• `Optional` **formulas**: [`ExternalPackFormulas`](../README.md#externalpackformulas)
 
 #### Defined in
 
@@ -102,7 +102,7 @@ ___
 
 ### syncTables
 
-• `Optional` **syncTables**: [`PackSyncTable`](../types/PackSyncTable.md)[]
+• `Optional` **syncTables**: [`PackSyncTable`](../README.md#packsynctable)[]
 
 #### Defined in
 

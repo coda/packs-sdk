@@ -2,7 +2,7 @@
 
 ## Implements
 
-- [`BasicPackDefinition`](../types/BasicPackDefinition.md)
+- [`BasicPackDefinition`](../README.md#basicpackdefinition)
 
 ## Constructors
 
@@ -24,7 +24,7 @@
 
 ### defaultAuthentication
 
-• `Optional` **defaultAuthentication**: [`Authentication`](../types/Authentication.md)
+• `Optional` **defaultAuthentication**: [`Authentication`](../README.md#authentication)
 
 #### Implementation of
 
@@ -66,7 +66,7 @@ ___
 
 ### formulas
 
-• **formulas**: [`Formula`](../types/Formula.md)<[`ParamDefs`](../types/ParamDefs.md)\>[]
+• **formulas**: [`Formula`](../README.md#formula)<[`ParamDefs`](../README.md#paramdefs)\>[]
 
 #### Implementation of
 
@@ -108,7 +108,7 @@ ___
 
 ### systemConnectionAuthentication
 
-• `Optional` **systemConnectionAuthentication**: [`SystemAuthentication`](../types/SystemAuthentication.md)
+• `Optional` **systemConnectionAuthentication**: [`SystemAuthentication`](../README.md#systemauthentication)
 
 #### Implementation of
 
@@ -186,7 +186,7 @@ pack.addDynamicSyncTable({
 
 | Name | Type |
 | :------ | :------ |
-| `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
+| `ParamDefsT` | extends [`ParamDefs`](../README.md#paramdefs) |
 
 #### Parameters
 
@@ -233,7 +233,7 @@ pack.addFormula({
 
 | Name | Type |
 | :------ | :------ |
-| `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
+| `ParamDefsT` | extends [`ParamDefs`](../README.md#paramdefs) |
 
 #### Parameters
 
@@ -311,7 +311,7 @@ pack.addSyncTable({
 | :------ | :------ |
 | `K` | extends `string` |
 | `L` | extends `string` |
-| `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
+| `ParamDefsT` | extends [`ParamDefs`](../README.md#paramdefs) |
 | `SchemaT` | extends [`ObjectSchema`](../interfaces/ObjectSchema.md)<`K`, `L`, `SchemaT`\> |
 
 #### Parameters

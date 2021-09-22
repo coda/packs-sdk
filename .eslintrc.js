@@ -33,11 +33,5 @@ module.exports = {
         camelcase: 'off',
       },
     },
-    {
-      files: ['documentation/examples/**'],
-      rules: {
-        '@typescript-eslint/restrict-plus-operands': 'off',
-      }
-    },
   ],
 };

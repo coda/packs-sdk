@@ -1,7 +1,7 @@
 # Interface: SyncTableDef<K, L, ParamDefsT, SchemaT\>
 
 Type definition for a Sync Table. Should not be necessary to use directly,
-instead, define sync tables using [makeSyncTable](../functions/makeSyncTable.md).
+instead, define sync tables using [makeSyncTable](../README.md#makesynctable).
 
 ## Type parameters
 
@@ -9,7 +9,7 @@ instead, define sync tables using [makeSyncTable](../functions/makeSyncTable.md)
 | :------ | :------ |
 | `K` | extends `string` |
 | `L` | extends `string` |
-| `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
+| `ParamDefsT` | extends [`ParamDefs`](../README.md#paramdefs) |
 | `SchemaT` | extends [`ObjectSchema`](ObjectSchema.md)<`K`, `L`\> |
 
 ## Hierarchy
@@ -32,7 +32,7 @@ ___
 
 ### getSchema
 
-• `Optional` **getSchema**: [`MetadataFormula`](../types/MetadataFormula.md)
+• `Optional` **getSchema**: [`MetadataFormula`](../README.md#metadataformula)
 
 #### Defined in
 

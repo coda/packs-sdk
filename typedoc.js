@@ -12,5 +12,5 @@ module.exports = {
   // Markdown-specific options.
   hideBreadcrumbs: true,
   hideInPageTOC: true,
-  allReflectionsHaveOwnDocument: true,
+  allReflectionsHaveOwnDocument: false,
 };

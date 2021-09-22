@@ -101,7 +101,7 @@ ___
 
 ### properties
 
-• **properties**: [`ObjectSchemaProperties`](../types/ObjectSchemaProperties.md)<`K` \| `L`\>
+• **properties**: [`ObjectSchemaProperties`](../README.md#objectschemaproperties)<`K` \| `L`\>
 
 #### Inherited from
 

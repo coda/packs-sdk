@@ -4,7 +4,7 @@
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends [`Schema`](../types/Schema.md)[`Schema`](../types/Schema.md) |
+| `T` | extends [`Schema`](../README.md#schema)[`Schema`](../README.md#schema) |
 
 ## Hierarchy
 

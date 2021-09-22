@@ -2,4 +2,4 @@
 
 ## Indexable
 
-▪ [namespace: `string`]: [`PackFormulaMetadata`](../types/PackFormulaMetadata.md)[]
+▪ [namespace: `string`]: [`PackFormulaMetadata`](../README.md#packformulametadata)[]

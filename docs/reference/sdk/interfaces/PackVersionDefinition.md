@@ -13,7 +13,7 @@ heart of the implementation of a Pack.
 
 ### defaultAuthentication
 
-• `Optional` **defaultAuthentication**: [`Authentication`](../types/Authentication.md)
+• `Optional` **defaultAuthentication**: [`Authentication`](../README.md#authentication)
 
 If specified, the user must provide personal authentication credentials before using the pack.
 
@@ -49,9 +49,9 @@ ___
 
 ### formulas
 
-• `Optional` **formulas**: [`PackFormulas`](PackFormulas.md) \| [`Formula`](../types/Formula.md)<[`ParamDefs`](../types/ParamDefs.md)\>[]
+• `Optional` **formulas**: [`PackFormulas`](PackFormulas.md) \| [`Formula`](../README.md#formula)<[`ParamDefs`](../README.md#paramdefs)\>[]
 
-Definitions of this pack's formulas. See [Formula](../types/Formula.md).
+Definitions of this pack's formulas. See [Formula](../README.md#formula).
 
 Note that button actions are also defind here. Buttons are simply formulas
 with `isAction: true`.
@@ -97,7 +97,7 @@ ___
 
 ### systemConnectionAuthentication
 
-• `Optional` **systemConnectionAuthentication**: [`SystemAuthentication`](../types/SystemAuthentication.md)
+• `Optional` **systemConnectionAuthentication**: [`SystemAuthentication`](../README.md#systemauthentication)
 
 If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
 explicit connection is specified by the user.

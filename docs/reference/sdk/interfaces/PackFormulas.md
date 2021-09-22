@@ -2,4 +2,4 @@
 
 ## Indexable
 
-▪ [namespace: `string`]: [`Formula`](../types/Formula.md)[]
+▪ [namespace: `string`]: [`Formula`](../README.md#formula)[]

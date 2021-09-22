@@ -103,7 +103,7 @@ ___
 
 ### getConnectionName
 
-• `Optional` **getConnectionName**: [`MetadataFormula`](../types/MetadataFormula.md)
+• `Optional` **getConnectionName**: [`MetadataFormula`](../README.md#metadataformula)
 
 #### Inherited from
 
@@ -117,7 +117,7 @@ ___
 
 ### getConnectionUserId
 
-• `Optional` **getConnectionUserId**: [`MetadataFormula`](../types/MetadataFormula.md)
+• `Optional` **getConnectionUserId**: [`MetadataFormula`](../README.md#metadataformula)
 
 #### Inherited from
 
