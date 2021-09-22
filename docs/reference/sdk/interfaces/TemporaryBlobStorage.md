@@ -1,3 +1,5 @@
+# Interface: TemporaryBlobStorage
+
 ## Methods
 
 ### storeBlob

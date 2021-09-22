@@ -1,3 +1,5 @@
+# Type alias: PackFormulaMetadata
+
 Ƭ **PackFormulaMetadata**: `Omit`<[`TypedPackFormula`](TypedPackFormula.md), ``"execute"``\>
 
 #### Defined in

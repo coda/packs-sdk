@@ -1,3 +1,5 @@
+# Interface: SyncExecutionContext
+
 ## Hierarchy
 
 - [`ExecutionContext`](ExecutionContext.md)

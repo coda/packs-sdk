@@ -1,3 +1,5 @@
+# Type alias: ExternalPackFormatMetadata
+
 Ƭ **ExternalPackFormatMetadata**: [`PackFormatMetadata`](../interfaces/PackFormatMetadata.md)
 
 #### Defined in

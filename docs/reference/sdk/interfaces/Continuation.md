@@ -1,3 +1,5 @@
+# Interface: Continuation
+
 Container for arbitrary data about which page of data to retrieve in this sync invocation.
 
 Sync formulas fetch one reasonable size "page" of data per invocation such that the formula

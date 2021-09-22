@@ -1,3 +1,5 @@
+# Function: ensureNonEmptyString
+
 ▸ **ensureNonEmptyString**(`value`, `message?`): `string`
 
 #### Parameters

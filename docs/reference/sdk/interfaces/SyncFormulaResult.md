@@ -1,3 +1,5 @@
+# Interface: SyncFormulaResult<ResultT\>
+
 ## Type parameters
 
 | Name | Type |

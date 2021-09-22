@@ -1,3 +1,5 @@
+# Enumeration: PostSetupType
+
 Enumeration of post-account-setup step types. See {@link PostSetup}.
 
 ## Enumeration members

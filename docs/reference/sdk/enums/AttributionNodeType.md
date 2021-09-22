@@ -1,3 +1,5 @@
+# Enumeration: AttributionNodeType
+
 ## Enumeration members
 
 ### Image

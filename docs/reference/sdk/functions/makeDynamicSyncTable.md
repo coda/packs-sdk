@@ -1,3 +1,5 @@
+# Function: makeDynamicSyncTable
+
 ▸ **makeDynamicSyncTable**<`K`, `L`, `ParamDefsT`\>(`__namedParameters`): [`DynamicSyncTableDef`](../interfaces/DynamicSyncTableDef.md)<`K`, `L`, `ParamDefsT`, `any`\>
 
 #### Type parameters

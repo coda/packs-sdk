@@ -1,3 +1,5 @@
+# Type alias: ExternalPackFormula
+
 Ƭ **ExternalPackFormula**: [`PackFormulaMetadata`](PackFormulaMetadata.md)
 
 #### Defined in

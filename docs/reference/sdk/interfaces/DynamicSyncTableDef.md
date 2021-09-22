@@ -1,3 +1,5 @@
+# Interface: DynamicSyncTableDef<K, L, ParamDefsT, SchemaT\>
+
 Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
 instead, define dynamic sync tables using [makeDynamicSyncTable](../functions/makeDynamicSyncTable.md).
 

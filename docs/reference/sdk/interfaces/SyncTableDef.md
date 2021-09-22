@@ -1,3 +1,5 @@
+# Interface: SyncTableDef<K, L, ParamDefsT, SchemaT\>
+
 Type definition for a Sync Table. Should not be necessary to use directly,
 instead, define sync tables using [makeSyncTable](../functions/makeSyncTable.md).
 

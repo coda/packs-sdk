@@ -1,3 +1,5 @@
+# Interface: Identity
+
 ## Hierarchy
 
 - [`IdentityDefinition`](IdentityDefinition.md)

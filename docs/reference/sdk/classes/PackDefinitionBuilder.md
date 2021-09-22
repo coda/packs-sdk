@@ -1,3 +1,5 @@
+# Class: PackDefinitionBuilder
+
 ## Implements
 
 - [`BasicPackDefinition`](../types/BasicPackDefinition.md)

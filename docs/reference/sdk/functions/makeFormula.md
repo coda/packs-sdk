@@ -1,3 +1,5 @@
+# Function: makeFormula
+
 ▸ **makeFormula**<`ParamDefsT`\>(`fullDefinition`): [`Formula`](../types/Formula.md)<`ParamDefsT`\>
 
 Creates a formula definition.

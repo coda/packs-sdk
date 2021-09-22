@@ -1,3 +1,5 @@
+# Enumeration: DurationUnit
+
 ## Enumeration members
 
 ### Days

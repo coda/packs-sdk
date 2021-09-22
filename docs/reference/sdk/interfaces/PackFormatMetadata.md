@@ -1,3 +1,5 @@
+# Interface: PackFormatMetadata
+
 ## Hierarchy
 
 - `Omit`<[`Format`](Format.md), ``"matchers"``\>

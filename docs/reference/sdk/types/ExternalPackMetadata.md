@@ -1,3 +1,5 @@
+# Type alias: ExternalPackMetadata
+
 Ƭ **ExternalPackMetadata**: [`ExternalPackVersionMetadata`](../interfaces/ExternalPackVersionMetadata.md) & `Pick`<[`PackMetadata`](PackMetadata.md), ``"id"`` \| ``"name"`` \| ``"shortDescription"`` \| ``"description"`` \| ``"permissionsDescription"`` \| ``"category"`` \| ``"logoPath"`` \| ``"exampleImages"`` \| ``"exampleVideoIds"`` \| ``"minimumFeatureSet"`` \| ``"quotas"`` \| ``"rateLimits"`` \| ``"isSystem"``\>
 
 Further stripped-down version of `PackMetadata` that contains only what the browser needs.

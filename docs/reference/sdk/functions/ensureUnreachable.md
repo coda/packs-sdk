@@ -1,3 +1,5 @@
+# Function: ensureUnreachable
+
 ▸ **ensureUnreachable**(`value`, `message?`): `never`
 
 #### Parameters

@@ -1,3 +1,5 @@
+# Enumeration: AuthenticationType
+
 Authentication types supported by Coda Packs.
 
 ## Enumeration members

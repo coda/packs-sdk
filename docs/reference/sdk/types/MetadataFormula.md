@@ -1,3 +1,5 @@
+# Type alias: MetadataFormula
+
 Ƭ **MetadataFormula**: `ObjectPackFormula`<[[`ParamDef`](../interfaces/ParamDef.md)<[`string`](../enums/Type.md#string)\>, [`ParamDef`](../interfaces/ParamDef.md)<[`string`](../enums/Type.md#string)\>], `any`\>
 
 #### Defined in

@@ -1,3 +1,5 @@
+# Enumeration: ConnectionRequirement
+
 ## Enumeration members
 
 ### None

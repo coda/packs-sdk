@@ -1,3 +1,5 @@
+# Function: newPack
+
 ▸ **newPack**(`definition?`): [`PackDefinitionBuilder`](../classes/PackDefinitionBuilder.md)
 
 Creates a new skeleton pack definition that can be added to.

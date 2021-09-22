@@ -1,3 +1,5 @@
+# Interface: StringSchema<T\>
+
 ## Type parameters
 
 | Name | Type |

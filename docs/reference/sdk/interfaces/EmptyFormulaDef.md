@@ -1,3 +1,5 @@
+# Interface: EmptyFormulaDef<ParamsT\>
+
 ## Type parameters
 
 | Name | Type |

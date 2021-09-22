@@ -1,3 +1,5 @@
+# Function: simpleAutocomplete
+
 ▸ **simpleAutocomplete**(`search`, `options`): `Promise`<[`MetadataFormulaObjectResultType`](../interfaces/MetadataFormulaObjectResultType.md)[]\>
 
 #### Parameters

@@ -1,3 +1,5 @@
+# Enumeration: CurrencyFormat
+
 ## Enumeration members
 
 ### Accounting

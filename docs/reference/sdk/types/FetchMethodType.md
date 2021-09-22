@@ -1,3 +1,5 @@
+# Type alias: FetchMethodType
+
 Ƭ **FetchMethodType**: typeof `ValidFetchMethods`[`number`]
 
 #### Defined in

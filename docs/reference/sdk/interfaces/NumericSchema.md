@@ -1,3 +1,5 @@
+# Interface: NumericSchema
+
 ## Hierarchy
 
 - [`NumberSchema`](NumberSchema.md)
