@@ -1,6 +1,7 @@
 import type {Arguments} from 'yargs';
 import type {Logger} from '../api_types';
 import type {PackUpload} from '../compiled_types';
+import type {TimerShimStrategy} from '../testing/compile';
 import {compilePackBundle} from '../testing/compile';
 import {compilePackMetadata} from '../helpers/metadata';
 import {computeSha256} from '../helpers/crypto';
@@ -27,6 +28,7 @@ interface UploadArgs {
   codaApiEndpoint: string;
   notes?: string;
   intermediateOutputDirectory: string;
+  timerStrategy: TimerShimStrategy;
 }
 
 function cleanup(intermediateOutputDirectory: string, logger: Logger) {
@@ -45,6 +47,7 @@ export async function handleUpload({
   manifestFile,
   codaApiEndpoint,
   notes,
+  timerStrategy,
 }: Arguments<UploadArgs>) {
   const logger = console;
   function printAndExit(message: string): never {
@@ -70,6 +73,7 @@ export async function handleUpload({
     manifestPath: manifestFile,
     outputDirectory: intermediateOutputDirectory,
     intermediateOutputDirectory,
+    timerStrategy,
   });
 
   const manifest = await importManifest(bundlePath);
