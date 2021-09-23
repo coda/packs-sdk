@@ -59,10 +59,49 @@ export declare enum CurrencyFormat {
     Accounting = "accounting",
     Financial = "financial"
 }
+export declare enum CurrencyCode {
+    USD = "USD",
+    CAD = "CAD",
+    AUD = "AUD",
+    HKD = "HKD",
+    SGD = "SGD",
+    TWD = "TWD",
+    EUR = "EUR",
+    CHF = "CHF",
+    SEK = "SEK",
+    DKK = "DKK",
+    NOK = "NOK",
+    MXN = "MXN",
+    GBP = "GBP",
+    BRL = "BRL",
+    INR = "INR",
+    KRW = "KRW",
+    JPY = "JPY",
+    CNY = "CNY",
+    IDR = "IDR",
+    RUB = "RUB",
+    TRY = "TRY",
+    THB = "THB",
+    PLN = "PLN",
+    ZAR = "ZAR",
+    ARS = "ARS",
+    SAR = "SAR",
+    AED = "AED",
+    EGP = "EGP",
+    HRK = "HRK",
+    CZK = "CZK",
+    ILS = "ILS",
+    HUF = "HUF",
+    RON = "RON",
+    UAH = "UAH",
+    VND = "VND",
+    MYR = "MYR",
+    XBT = "XBT"
+}
 export interface CurrencySchema extends NumberSchema {
     codaType: ValueHintType.Currency;
     precision?: number;
-    currencyCode?: string;
+    currencyCode?: CurrencyCode;
     format?: CurrencyFormat;
 }
 export interface SliderSchema extends NumberSchema {
@@ -71,10 +110,32 @@ export interface SliderSchema extends NumberSchema {
     maximum?: number | string;
     step?: number | string;
 }
+export declare enum IconSet {
+    Star = "star",
+    Circle = "circle",
+    Fire = "fire",
+    Bug = "bug",
+    Diamond = "diamond",
+    Bell = "bell",
+    ThumbsUp = "thumbsup",
+    Heart = "heart",
+    Chili = "chili",
+    Smiley = "smiley",
+    Lightning = "lightning",
+    Currency = "currency",
+    Coffee = "coffee",
+    Person = "person",
+    Battery = "battery",
+    Cocktail = "cocktail",
+    Cloud = "cloud",
+    Sun = "sun",
+    Checkmark = "checkmark",
+    LightBulb = "lightbulb"
+}
 export interface ScaleSchema extends NumberSchema {
     codaType: ValueHintType.Scale;
     maximum: number;
-    icon: string;
+    icon: IconSet;
 }
 interface BaseDateSchema extends BaseSchema {
     type: ValueType.Number | ValueType.String;
