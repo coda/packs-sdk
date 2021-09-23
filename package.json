@@ -80,7 +80,7 @@
     "mock-fs": "^5.1.0",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.2.1",
-    "typedoc": "^0.22.4"
+    "typedoc": "^0.21.9"
   },
   "resolutions": {
     "marked": "^2.0.0"
