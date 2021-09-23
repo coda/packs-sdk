@@ -79,10 +79,14 @@ exports.wrapMetadataFunction = wrapMetadataFunction;
  * Create a definition for a parameter for a formula or sync.
  *
  * @example
+ * ```
  * makeParameter({type: ParameterType.String, name: 'myParam', description: 'My description'});
+ * ```
  *
  * @example
+ * ```
  * makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', description: 'My description'});
+ * ```
  */
 function makeParameter(paramDefinition) {
     const { type, autocomplete: autocompleteDefOrItems, ...rest } = paramDefinition;
@@ -210,29 +214,39 @@ exports.makeStringFormula = makeStringFormula;
  * created using {@link makeObjectSchema} if the elements are objects.
  *
  * @example
+ * ```
  * makeFormula({resultType: ValueType.String, name: 'Hello', ...});
+ * ```
  *
  * @example
+ * ```
  * makeFormula({resultType: ValueType.String, codaType: ValueType.Html, name: 'HelloHtml', ...});
+ * ```
  *
  * @example
+ * ```
  * makeFormula({resultType: ValueType.Array, items: {type: ValueType.String}, name: 'HelloStringArray', ...});
+ * ```
  *
  * @example
+ * ```
  * makeFormula({
  *   resultType: ValueType.Object,
  *   schema: makeObjectSchema({type: ValueType.Object, properties: {...}}),
  *   name: 'HelloObject',
  *   ...
  * });
+ * ```
  *
  * @example
+ * ```
  * makeFormula({
  *   resultType: ValueType.Array,
  *   items: makeObjectSchema({type: ValueType.Object, properties: {...}}),
  *   name: 'HelloObjectArray',
  *   ...
  * });
+ * ```
  */
 function makeFormula(fullDefinition) {
     let formula;

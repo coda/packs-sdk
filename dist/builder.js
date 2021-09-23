@@ -13,10 +13,12 @@ const api_6 = require("./api");
  * Creates a new skeleton pack definition that can be added to.
  *
  * @example
+ * ```
  * export const pack = newPack();
  * pack.addFormula({resultType: ValueType.String, name: 'MyFormula', ...});
  * pack.addSyncTable('MyTable', ...);
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
+ * ```
  */
 function newPack(definition) {
     return new PackDefinitionBuilder(definition);
@@ -40,6 +42,7 @@ class PackDefinitionBuilder {
      * In the web editor, the `/Formula` shortcut will insert a snippet of a skeleton formula.
      *
      * @example
+     * ```
      * pack.addFormula({
      *   resultType: ValueType.String,
      *    name: 'MyFormula',
@@ -55,6 +58,7 @@ class PackDefinitionBuilder {
      *      return `Hello ${param}`;
      *    },
      * });
+     * ```
      */
     addFormula(definition) {
         const formula = (0, api_3.makeFormula)({
@@ -70,6 +74,7 @@ class PackDefinitionBuilder {
      * In the web editor, the `/SyncTable` shortcut will insert a snippet of a skeleton sync table.
      *
      * @example
+     * ```
      * pack.addSyncTable({
      *   name: 'MySyncTable',
      *   identityName: 'EntityName',
@@ -80,6 +85,7 @@ class PackDefinitionBuilder {
      *     ...
      *   },
      * });
+     * ```
      */
     addSyncTable({ name, identityName, schema, formula, connectionRequirement, dynamicOptions = {}, }) {
         const connectionRequirementToUse = connectionRequirement || this._defaultConnectionRequirement;
@@ -100,6 +106,7 @@ class PackDefinitionBuilder {
      * In the web editor, the `/DynamicSyncTable` shortcut will insert a snippet of a skeleton sync table.
      *
      * @example
+     * ```
      * pack.addDynamicSyncTable({
      *   name: 'MySyncTable',
      *   getName: async (context) => {
@@ -112,6 +119,7 @@ class PackDefinitionBuilder {
      *   },
      *   ...
      * });
+     * ```
      */
     addDynamicSyncTable(definition) {
         const dynamicSyncTable = (0, api_2.makeDynamicSyncTable)({
@@ -127,10 +135,12 @@ class PackDefinitionBuilder {
      * In the web editor, the `/ColumnFormat` shortcut will insert a snippet of a skeleton format.
      *
      * @example
+     * ```
      * pack.addColumnFormat({
      *   name: 'MyColumn',
      *   formulaName: 'MyFormula',
      * });
+     * ```
      */
     addColumnFormat(format) {
         this.formats.push(format);
@@ -151,9 +161,11 @@ class PackDefinitionBuilder {
      * this method.
      *
      * @example
+     * ```
      * pack.setUserAuthentication({
      *   type: AuthenticationType.HeaderBearerToken,
      * });
+     * ```
      */
     setUserAuthentication(authDef) {
         const { defaultConnectionRequirement = api_types_1.ConnectionRequirement.Required, ...authentication } = authDef;
@@ -182,9 +194,11 @@ class PackDefinitionBuilder {
      * authentication definition.
      *
      * @example
+     * ```
      * pack.setSystemAuthentication({
      *   type: AuthenticationType.HeaderBearerToken,
      * });
+     * ```
      */
     setSystemAuthentication(systemAuthentication) {
         const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, ...rest } = systemAuthentication;
@@ -206,7 +220,9 @@ class PackDefinitionBuilder {
      * to connect to multiple domains, contact Coda Support for approval.
      *
      * @example
+     * ```
      * pack.addNetworkDomain('example.com');
+     * ```
      */
     addNetworkDomain(...domain) {
         this.networkDomains.push(...domain);
@@ -221,7 +237,9 @@ class PackDefinitionBuilder {
      * each time you build a version.
      *
      * @example
+     * ```
      * pack.setVersion('1.2.3');
+     * ```
      */
     setVersion(version) {
         this.version = version;

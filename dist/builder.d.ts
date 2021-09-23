@@ -17,10 +17,12 @@ import type { SystemAuthenticationDef } from './types';
  * Creates a new skeleton pack definition that can be added to.
  *
  * @example
+ * ```
  * export const pack = newPack();
  * pack.addFormula({resultType: ValueType.String, name: 'MyFormula', ...});
  * pack.addSyncTable('MyTable', ...);
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
+ * ```
  */
 export declare function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder;
 export declare class PackDefinitionBuilder implements BasicPackDefinition {
@@ -40,6 +42,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * In the web editor, the `/Formula` shortcut will insert a snippet of a skeleton formula.
      *
      * @example
+     * ```
      * pack.addFormula({
      *   resultType: ValueType.String,
      *    name: 'MyFormula',
@@ -55,6 +58,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      *      return `Hello ${param}`;
      *    },
      * });
+     * ```
      */
     addFormula<ParamDefsT extends ParamDefs>(definition: FormulaDefinitionV2<ParamDefsT>): this;
     /**
@@ -63,6 +67,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * In the web editor, the `/SyncTable` shortcut will insert a snippet of a skeleton sync table.
      *
      * @example
+     * ```
      * pack.addSyncTable({
      *   name: 'MySyncTable',
      *   identityName: 'EntityName',
@@ -73,6 +78,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      *     ...
      *   },
      * });
+     * ```
      */
     addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({ name, identityName, schema, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this;
     /**
@@ -81,6 +87,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * In the web editor, the `/DynamicSyncTable` shortcut will insert a snippet of a skeleton sync table.
      *
      * @example
+     * ```
      * pack.addDynamicSyncTable({
      *   name: 'MySyncTable',
      *   getName: async (context) => {
@@ -93,6 +100,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      *   },
      *   ...
      * });
+     * ```
      */
     addDynamicSyncTable<ParamDefsT extends ParamDefs>(definition: DynamicSyncTableOptions<ParamDefsT>): this;
     /**
@@ -101,10 +109,12 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * In the web editor, the `/ColumnFormat` shortcut will insert a snippet of a skeleton format.
      *
      * @example
+     * ```
      * pack.addColumnFormat({
      *   name: 'MyColumn',
      *   formulaName: 'MyFormula',
      * });
+     * ```
      */
     addColumnFormat(format: Format): this;
     /**
@@ -122,9 +132,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * this method.
      *
      * @example
+     * ```
      * pack.setUserAuthentication({
      *   type: AuthenticationType.HeaderBearerToken,
      * });
+     * ```
      */
     setUserAuthentication(authDef: AuthenticationDef & {
         defaultConnectionRequirement?: ConnectionRequirement;
@@ -140,9 +152,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * authentication definition.
      *
      * @example
+     * ```
      * pack.setSystemAuthentication({
      *   type: AuthenticationType.HeaderBearerToken,
      * });
+     * ```
      */
     setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this;
     /**
@@ -158,7 +172,9 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * to connect to multiple domains, contact Coda Support for approval.
      *
      * @example
+     * ```
      * pack.addNetworkDomain('example.com');
+     * ```
      */
     addNetworkDomain(...domain: string[]): this;
     /**
@@ -170,7 +186,9 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * each time you build a version.
      *
      * @example
+     * ```
      * pack.setVersion('1.2.3');
+     * ```
      */
     setVersion(version: string): this;
     private _setDefaultConnectionRequirement;
