@@ -122,6 +122,11 @@ if (require.main === module) {
                 alias: 'o',
                 default: './_upload_build',
             },
+            timerStrategy: {
+                string: true,
+                default: compile_1.TimerShimStrategy.None,
+                desc: 'Options: none, error, fake.',
+            },
         },
         handler: upload_1.handleUpload,
     })

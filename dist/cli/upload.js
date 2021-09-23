@@ -51,7 +51,7 @@ function cleanup(intermediateOutputDirectory, logger) {
         logger.info(`Intermediate files are moved to ${tempDirectory}`);
     }
 }
-async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, }) {
+async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, timerStrategy, }) {
     const logger = console;
     function printAndExit(message) {
         cleanup(intermediateOutputDirectory, logger);
@@ -71,6 +71,7 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
         manifestPath: manifestFile,
         outputDirectory: intermediateOutputDirectory,
         intermediateOutputDirectory,
+        timerStrategy,
     });
     const manifest = await (0, helpers_3.importManifest)(bundlePath);
     // Since package.json isn't in dist, we grab it from the root directory instead.
