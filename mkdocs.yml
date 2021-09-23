@@ -22,6 +22,7 @@ markdown_extensions:
   - pymdownx.snippets:
       base_path:
         - documentation/examples
+        - documentation
         - docs
   - pymdownx.superfences
   - pymdownx.tabbed
