@@ -7,6 +7,7 @@ exports.generateObjectResponseHandler = exports.transformBody = exports.generate
 const clone_1 = __importDefault(require("clone"));
 const ensure_1 = require("./helpers/ensure");
 const schema_1 = require("./schema");
+const object_utils_1 = require("./helpers/object_utils");
 const schema_2 = require("./schema");
 const url_1 = require("./helpers/url");
 function generateParamMap(keys, nameToValueMap, optionalNames) {
@@ -117,6 +118,9 @@ function generateRequestHandler(request, parameters) {
 exports.generateRequestHandler = generateRequestHandler;
 function mapKeys(obj, schema) {
     if (!(schema && (0, schema_2.isObject)(schema))) {
+        return obj;
+    }
+    if ((0, object_utils_1.isNil)(obj)) {
         return obj;
     }
     const { properties } = schema;

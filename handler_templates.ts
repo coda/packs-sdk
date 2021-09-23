@@ -10,6 +10,7 @@ import type {SchemaType} from './schema';
 import clone from 'clone';
 import {ensureExists} from './helpers/ensure';
 import {isArray} from './schema';
+import {isNil} from './helpers/object_utils';
 import {isObject} from './schema';
 import {withQueryParams} from './helpers/url';
 
@@ -166,6 +167,10 @@ export function generateRequestHandler<ParamDefsT extends ParamDefs>(
 
 function mapKeys(obj: {[key: string]: any}, schema?: Schema): object {
   if (!(schema && isObject(schema))) {
+    return obj;
+  }
+
+  if (isNil(obj)) {
     return obj;
   }
 

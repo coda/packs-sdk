@@ -4452,6 +4452,9 @@ var AttributionNodeType;
 init_buffer_shim();
 var import_clone = __toModule(require_clone());
 
+// helpers/object_utils.ts
+init_buffer_shim();
+
 // helpers/url.ts
 init_buffer_shim();
 var import_qs = __toModule(require_lib());

@@ -78,6 +78,16 @@ export const manifest: PackDefinition = createFakePack({
         return v4();
       },
     }),
+    makeFormula({
+      resultType: ValueType.Array,
+      items: fakePersonSchema,
+      name: 'NullPerson',
+      description: '',
+      parameters: [],
+      execute: ([]) => {
+        return [null];
+      },
+    }),
   ],
   syncTables: [
     makeSyncTable({
