@@ -155,10 +155,14 @@ declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<Parameter
  * Create a definition for a parameter for a formula or sync.
  *
  * @example
+ * ```
  * makeParameter({type: ParameterType.String, name: 'myParam', description: 'My description'});
+ * ```
  *
  * @example
+ * ```
  * makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', description: 'My description'});
+ * ```
  */
 export declare function makeParameter<T extends ParameterType>(paramDefinition: ParameterOptions<T>): ParamDef<ParameterTypeMap[T]>;
 export declare function makeStringParameter(name: string, description: string, args?: ParamArgs<Type.string>): ParamDef<Type.string>;
@@ -268,29 +272,39 @@ export declare function makeStringFormula<ParamDefsT extends ParamDefs>(definiti
  * created using {@link makeObjectSchema} if the elements are objects.
  *
  * @example
+ * ```
  * makeFormula({resultType: ValueType.String, name: 'Hello', ...});
+ * ```
  *
  * @example
+ * ```
  * makeFormula({resultType: ValueType.String, codaType: ValueType.Html, name: 'HelloHtml', ...});
+ * ```
  *
  * @example
+ * ```
  * makeFormula({resultType: ValueType.Array, items: {type: ValueType.String}, name: 'HelloStringArray', ...});
+ * ```
  *
  * @example
+ * ```
  * makeFormula({
  *   resultType: ValueType.Object,
  *   schema: makeObjectSchema({type: ValueType.Object, properties: {...}}),
  *   name: 'HelloObject',
  *   ...
  * });
+ * ```
  *
  * @example
+ * ```
  * makeFormula({
  *   resultType: ValueType.Array,
  *   items: makeObjectSchema({type: ValueType.Object, properties: {...}}),
  *   name: 'HelloObjectArray',
  *   ...
  * });
+ * ```
  */
 export declare function makeFormula<ParamDefsT extends ParamDefs>(fullDefinition: FormulaDefinitionV2<ParamDefsT>): Formula<ParamDefsT>;
 interface BaseFormulaDefV2<ParamDefsT extends ParamDefs, ResultT extends string | number | boolean | object> extends PackFormulaDef<ParamDefsT, ResultT> {

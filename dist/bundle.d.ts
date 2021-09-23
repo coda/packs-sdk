@@ -620,10 +620,14 @@ export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<Pa
  * Create a definition for a parameter for a formula or sync.
  *
  * @example
+ * ```
  * makeParameter({type: ParameterType.String, name: 'myParam', description: 'My description'});
+ * ```
  *
  * @example
+ * ```
  * makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', description: 'My description'});
+ * ```
  */
 export declare function makeParameter<T extends ParameterType>(paramDefinition: ParameterOptions<T>): ParamDef<ParameterTypeMap[T]>;
 export interface PackFormulas {
@@ -692,29 +696,39 @@ export declare type SyncFormula<K extends string, L extends string, ParamDefsT e
  * created using {@link makeObjectSchema} if the elements are objects.
  *
  * @example
+ * ```
  * makeFormula({resultType: ValueType.String, name: 'Hello', ...});
+ * ```
  *
  * @example
+ * ```
  * makeFormula({resultType: ValueType.String, codaType: ValueType.Html, name: 'HelloHtml', ...});
+ * ```
  *
  * @example
+ * ```
  * makeFormula({resultType: ValueType.Array, items: {type: ValueType.String}, name: 'HelloStringArray', ...});
+ * ```
  *
  * @example
+ * ```
  * makeFormula({
  *   resultType: ValueType.Object,
  *   schema: makeObjectSchema({type: ValueType.Object, properties: {...}}),
  *   name: 'HelloObject',
  *   ...
  * });
+ * ```
  *
  * @example
+ * ```
  * makeFormula({
  *   resultType: ValueType.Array,
  *   items: makeObjectSchema({type: ValueType.Object, properties: {...}}),
  *   name: 'HelloObjectArray',
  *   ...
  * });
+ * ```
  */
 export declare function makeFormula<ParamDefsT extends ParamDefs>(fullDefinition: FormulaDefinitionV2<ParamDefsT>): Formula<ParamDefsT>;
 export interface BaseFormulaDefV2<ParamDefsT extends ParamDefs, ResultT extends string | number | boolean | object> extends PackFormulaDef<ParamDefsT, ResultT> {
@@ -1584,10 +1598,12 @@ export interface PackDefinition extends PackVersionDefinition {
  * Creates a new skeleton pack definition that can be added to.
  *
  * @example
+ * ```
  * export const pack = newPack();
  * pack.addFormula({resultType: ValueType.String, name: 'MyFormula', ...});
  * pack.addSyncTable('MyTable', ...);
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
+ * ```
  */
 export declare function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder;
 export declare class PackDefinitionBuilder implements BasicPackDefinition {
@@ -1607,6 +1623,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * In the web editor, the `/Formula` shortcut will insert a snippet of a skeleton formula.
 	 *
 	 * @example
+	 * ```
 	 * pack.addFormula({
 	 *   resultType: ValueType.String,
 	 *    name: 'MyFormula',
@@ -1622,6 +1639,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 *      return `Hello ${param}`;
 	 *    },
 	 * });
+	 * ```
 	 */
 	addFormula<ParamDefsT extends ParamDefs>(definition: FormulaDefinitionV2<ParamDefsT>): this;
 	/**
@@ -1630,6 +1648,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * In the web editor, the `/SyncTable` shortcut will insert a snippet of a skeleton sync table.
 	 *
 	 * @example
+	 * ```
 	 * pack.addSyncTable({
 	 *   name: 'MySyncTable',
 	 *   identityName: 'EntityName',
@@ -1640,6 +1659,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 *     ...
 	 *   },
 	 * });
+	 * ```
 	 */
 	addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({ name, identityName, schema, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this;
 	/**
@@ -1648,6 +1668,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * In the web editor, the `/DynamicSyncTable` shortcut will insert a snippet of a skeleton sync table.
 	 *
 	 * @example
+	 * ```
 	 * pack.addDynamicSyncTable({
 	 *   name: 'MySyncTable',
 	 *   getName: async (context) => {
@@ -1660,6 +1681,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 *   },
 	 *   ...
 	 * });
+	 * ```
 	 */
 	addDynamicSyncTable<ParamDefsT extends ParamDefs>(definition: DynamicSyncTableOptions<ParamDefsT>): this;
 	/**
@@ -1668,10 +1690,12 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * In the web editor, the `/ColumnFormat` shortcut will insert a snippet of a skeleton format.
 	 *
 	 * @example
+	 * ```
 	 * pack.addColumnFormat({
 	 *   name: 'MyColumn',
 	 *   formulaName: 'MyFormula',
 	 * });
+	 * ```
 	 */
 	addColumnFormat(format: Format): this;
 	/**
@@ -1689,9 +1713,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * this method.
 	 *
 	 * @example
+	 * ```
 	 * pack.setUserAuthentication({
 	 *   type: AuthenticationType.HeaderBearerToken,
 	 * });
+	 * ```
 	 */
 	setUserAuthentication(authDef: AuthenticationDef & {
 		defaultConnectionRequirement?: ConnectionRequirement;
@@ -1707,9 +1733,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * authentication definition.
 	 *
 	 * @example
+	 * ```
 	 * pack.setSystemAuthentication({
 	 *   type: AuthenticationType.HeaderBearerToken,
 	 * });
+	 * ```
 	 */
 	setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this;
 	/**
@@ -1725,7 +1753,9 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * to connect to multiple domains, contact Coda Support for approval.
 	 *
 	 * @example
+	 * ```
 	 * pack.addNetworkDomain('example.com');
+	 * ```
 	 */
 	addNetworkDomain(...domain: string[]): this;
 	/**
@@ -1737,7 +1767,9 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * each time you build a version.
 	 *
 	 * @example
+	 * ```
 	 * pack.setVersion('1.2.3');
+	 * ```
 	 */
 	setVersion(version: string): this;
 	private _setDefaultConnectionRequirement;

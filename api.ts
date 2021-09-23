@@ -220,10 +220,14 @@ type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[
  * Create a definition for a parameter for a formula or sync.
  *
  * @example
+ * ```
  * makeParameter({type: ParameterType.String, name: 'myParam', description: 'My description'});
+ * ```
  *
  * @example
+ * ```
  * makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', description: 'My description'});
+ * ```
  */
 export function makeParameter<T extends ParameterType>(
   paramDefinition: ParameterOptions<T>,
@@ -502,29 +506,39 @@ export function makeStringFormula<ParamDefsT extends ParamDefs>(
  * created using {@link makeObjectSchema} if the elements are objects.
  *
  * @example
+ * ```
  * makeFormula({resultType: ValueType.String, name: 'Hello', ...});
+ * ```
  *
  * @example
+ * ```
  * makeFormula({resultType: ValueType.String, codaType: ValueType.Html, name: 'HelloHtml', ...});
+ * ```
  *
  * @example
+ * ```
  * makeFormula({resultType: ValueType.Array, items: {type: ValueType.String}, name: 'HelloStringArray', ...});
+ * ```
  *
  * @example
+ * ```
  * makeFormula({
  *   resultType: ValueType.Object,
  *   schema: makeObjectSchema({type: ValueType.Object, properties: {...}}),
  *   name: 'HelloObject',
  *   ...
  * });
+ * ```
  *
  * @example
+ * ```
  * makeFormula({
  *   resultType: ValueType.Array,
  *   items: makeObjectSchema({type: ValueType.Object, properties: {...}}),
  *   name: 'HelloObjectArray',
  *   ...
  * });
+ * ```
  */
 export function makeFormula<ParamDefsT extends ParamDefs>(
   fullDefinition: FormulaDefinitionV2<ParamDefsT>,

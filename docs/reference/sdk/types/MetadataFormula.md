@@ -4,4 +4,4 @@
 
 #### Defined in
 
-[api.ts:674](https://github.com/coda/packs-sdk/blob/main/api.ts#L674)
+[api.ts:688](https://github.com/coda/packs-sdk/blob/main/api.ts#L688)
