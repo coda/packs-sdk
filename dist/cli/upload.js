@@ -29,7 +29,7 @@ const crypto_1 = require("../helpers/crypto");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const errors_1 = require("./errors");
-const fs_extra_1 = __importDefault(require("fs-extra"));
+const fs_1 = __importDefault(require("fs"));
 const config_storage_1 = require("./config_storage");
 const config_storage_2 = require("./config_storage");
 const helpers_3 = require("./helpers");
@@ -45,9 +45,9 @@ const uuid_1 = require("uuid");
 const validate_1 = require("./validate");
 function cleanup(intermediateOutputDirectory, logger) {
     logger.info('\n\nCleaning up...');
-    if (fs_extra_1.default.existsSync(intermediateOutputDirectory)) {
-        const tempDirectory = fs_extra_1.default.mkdtempSync(path.join(os_1.default.tmpdir(), `coda-packs-${(0, uuid_1.v4)()}`));
-        fs_extra_1.default.moveSync(intermediateOutputDirectory, tempDirectory);
+    if (fs_1.default.existsSync(intermediateOutputDirectory)) {
+        const tempDirectory = fs_1.default.mkdtempSync(path.join(os_1.default.tmpdir(), `coda-packs-${(0, uuid_1.v4)()}`));
+        fs_1.default.renameSync(intermediateOutputDirectory, tempDirectory);
         logger.info(`Intermediate files are moved to ${tempDirectory}`);
     }
 }
@@ -60,9 +60,9 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
     const manifestDir = path.dirname(manifestFile);
     const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
     logger.info('Building Pack bundle...');
-    if (fs_extra_1.default.existsSync(intermediateOutputDirectory)) {
+    if (fs_1.default.existsSync(intermediateOutputDirectory)) {
         logger.info(`Existing directory ${intermediateOutputDirectory} detected. Probably left over from previous build. Removing it...`);
-        fs_extra_1.default.rmdirSync(intermediateOutputDirectory, { recursive: true });
+        fs_1.default.rmdirSync(intermediateOutputDirectory, { recursive: true });
     }
     // we need to generate the bundle file in the working directory instead of a temp directory in
     // order to set source map right. The source map tool chain isn't smart enough to resolve a
