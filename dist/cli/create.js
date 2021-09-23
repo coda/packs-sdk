@@ -25,6 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createPack = exports.handleCreate = void 0;
 const config_storage_1 = require("./config_storage");
 const helpers_1 = require("./helpers");
+const ensure_1 = require("../helpers/ensure");
 const helpers_2 = require("./helpers");
 const errors_1 = require("./errors");
 const fs_1 = __importDefault(require("fs"));
@@ -35,11 +36,11 @@ const path = __importStar(require("path"));
 const helpers_3 = require("../testing/helpers");
 const config_storage_4 = require("./config_storage");
 const errors_3 = require("./errors");
-async function handleCreate({ manifestFile, codaApiEndpoint, name, description, workspaceId }) {
-    await createPack(manifestFile, codaApiEndpoint, { name, description, workspaceId });
+async function handleCreate({ manifestFile, codaApiEndpoint, name, description, workspaceIdOrUrl }) {
+    await createPack(manifestFile, codaApiEndpoint, { name, description, workspaceIdOrUrl });
 }
 exports.handleCreate = handleCreate;
-async function createPack(manifestFile, codaApiEndpoint, { name, description, workspaceId }) {
+async function createPack(manifestFile, codaApiEndpoint, { name, description, workspaceIdOrUrl }) {
     const manifestDir = path.dirname(manifestFile);
     const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
     // TODO(alan): we probably want to redirect them to the `coda register`
@@ -59,7 +60,7 @@ async function createPack(manifestFile, codaApiEndpoint, { name, description, wo
     }
     const codaClient = (0, helpers_1.createCodaClient)(apiKey, formattedEndpoint);
     try {
-        const response = await codaClient.createPack({}, { name, description, workspaceId });
+        const response = await codaClient.createPack({}, { name, description, workspaceId: parseWorkspaceIdOrUrl(workspaceIdOrUrl) });
         if ((0, errors_2.isCodaError)(response)) {
             return (0, helpers_3.printAndExit)(`Unable to create your pack, received error: ${(0, errors_1.formatError)(response)}`);
         }
@@ -73,3 +74,11 @@ async function createPack(manifestFile, codaApiEndpoint, { name, description, wo
     }
 }
 exports.createPack = createPack;
+function parseWorkspaceIdOrUrl(workspaceIdOrUrl) {
+    const urlMatch = workspaceIdOrUrl === null || workspaceIdOrUrl === void 0 ? void 0 : workspaceIdOrUrl.match(/.*\/workspaces\/ws-[a-zA-z0-9].{10}/);
+    if (urlMatch) {
+        const parsedUrl = (0, ensure_1.ensureExists)(workspaceIdOrUrl).split('/');
+        return parsedUrl[parsedUrl.findIndex(part => part === 'workspaces') + 1];
+    }
+    return workspaceIdOrUrl;
+}

@@ -1,6 +1,7 @@
 import type {Arguments} from 'yargs';
 import {PACK_ID_FILE_NAME} from './config_storage';
 import {createCodaClient} from './helpers';
+import { ensureExists } from '../helpers/ensure';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
 import fs from 'fs';
@@ -17,18 +18,18 @@ interface CreateArgs {
   codaApiEndpoint: string;
   name?: string;
   description?: string;
-  workspaceId?: string;
+  workspaceIdOrUrl?: string;
 }
 
 export async function handleCreate(
-  {manifestFile, codaApiEndpoint, name, description, workspaceId}: Arguments<CreateArgs>) {
-  await createPack(manifestFile, codaApiEndpoint, {name, description, workspaceId});
+  {manifestFile, codaApiEndpoint, name, description, workspaceIdOrUrl}: Arguments<CreateArgs>) {
+  await createPack(manifestFile, codaApiEndpoint, {name, description, workspaceIdOrUrl});
 }
 
 export async function createPack(
   manifestFile: string,
   codaApiEndpoint: string,
-  {name, description, workspaceId}: {name?: string; description?: string, workspaceId?: string},
+  {name, description, workspaceIdOrUrl}: {name?: string; description?: string, workspaceIdOrUrl?: string},
 ) {
   const manifestDir = path.dirname(manifestFile);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
@@ -54,7 +55,8 @@ export async function createPack(
 
   const codaClient = createCodaClient(apiKey, formattedEndpoint);
   try {
-    const response = await codaClient.createPack({}, {name, description, workspaceId});
+    const response = await codaClient.createPack({}, 
+      {name, description, workspaceId: parseWorkspaceIdOrUrl(workspaceIdOrUrl)});
     if (isCodaError(response)) {
       return printAndExit(`Unable to create your pack, received error: ${formatError(response)}`);
     }
@@ -65,4 +67,14 @@ export async function createPack(
     const errors = [`Unable to create your pack, received error: ${formatError(err)}`, tryParseSystemError(err)];
     return printAndExit(errors.join('\n'));
   }
+}
+
+function parseWorkspaceIdOrUrl(workspaceIdOrUrl: string | undefined): string | undefined {
+  const urlMatch = workspaceIdOrUrl?.match(/.*\/workspaces\/ws-[a-zA-z0-9].{10}/);
+  if (urlMatch) {
+    const parsedUrl = ensureExists(workspaceIdOrUrl).split('/');
+    return parsedUrl[parsedUrl.findIndex(part => part === 'workspaces') + 1]
+  }
+
+  return workspaceIdOrUrl;
 }

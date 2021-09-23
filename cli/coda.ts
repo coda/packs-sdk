@@ -137,6 +137,11 @@ if (require.main === module) {
           alias: 'd',
           describe: 'A description of the Pack. Can be set later in the UI.',
         },
+        workspaceIdOrUrl: {
+          string: true,
+          alias: 'w',
+          describe: 'The workspace ID, or workspace URL that you want your Pack to be created under.',
+        },
         codaApiEndpoint: {
           string: true,
           hidden: true,
