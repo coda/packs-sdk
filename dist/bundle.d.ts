@@ -89,9 +89,9 @@ export declare enum CurrencyFormat {
 export interface CurrencySchema extends NumberSchema {
 	codaType: ValueHintType.Currency;
 	precision?: number;
-	/**
-	  A three-letter ISO 4217 currency code, e.g. USD or EUR.
-	  If the currency code is not supported by Coda, the value will be rendered using USD.
+	/***
+	 * A three-letter ISO 4217 currency code, e.g. USD or EUR.
+	 * If the currency code is not supported by Coda, the value will be rendered using USD.
 	*/
 	currencyCode?: string;
 	format?: CurrencyFormat;
