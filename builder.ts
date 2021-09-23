@@ -25,10 +25,12 @@ import {wrapMetadataFunction} from './api';
  * Creates a new skeleton pack definition that can be added to.
  *
  * @example
+ * ```
  * export const pack = newPack();
  * pack.addFormula({resultType: ValueType.String, name: 'MyFormula', ...});
  * pack.addSyncTable('MyTable', ...);
  * pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
+ * ```
  */
 export function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder {
   return new PackDefinitionBuilder(definition);
@@ -75,6 +77,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * In the web editor, the `/Formula` shortcut will insert a snippet of a skeleton formula.
    *
    * @example
+   * ```
    * pack.addFormula({
    *   resultType: ValueType.String,
    *    name: 'MyFormula',
@@ -90,6 +93,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    *      return `Hello ${param}`;
    *    },
    * });
+   * ```
    */
   addFormula<ParamDefsT extends ParamDefs>(definition: FormulaDefinitionV2<ParamDefsT>): this {
     const formula = makeFormula({
@@ -106,6 +110,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * In the web editor, the `/SyncTable` shortcut will insert a snippet of a skeleton sync table.
    *
    * @example
+   * ```
    * pack.addSyncTable({
    *   name: 'MySyncTable',
    *   identityName: 'EntityName',
@@ -116,6 +121,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    *     ...
    *   },
    * });
+   * ```
    */
   addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({
     name,
@@ -144,6 +150,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * In the web editor, the `/DynamicSyncTable` shortcut will insert a snippet of a skeleton sync table.
    *
    * @example
+   * ```
    * pack.addDynamicSyncTable({
    *   name: 'MySyncTable',
    *   getName: async (context) => {
@@ -156,6 +163,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    *   },
    *   ...
    * });
+   * ```
    */
   addDynamicSyncTable<ParamDefsT extends ParamDefs>(definition: DynamicSyncTableOptions<ParamDefsT>): this {
     const dynamicSyncTable = makeDynamicSyncTable({
@@ -172,10 +180,12 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * In the web editor, the `/ColumnFormat` shortcut will insert a snippet of a skeleton format.
    *
    * @example
+   * ```
    * pack.addColumnFormat({
    *   name: 'MyColumn',
    *   formulaName: 'MyFormula',
    * });
+   * ```
    */
   addColumnFormat(format: Format): this {
     this.formats.push(format);
@@ -197,9 +207,11 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * this method.
    *
    * @example
+   * ```
    * pack.setUserAuthentication({
    *   type: AuthenticationType.HeaderBearerToken,
    * });
+   * ```
    */
   setUserAuthentication(authDef: AuthenticationDef & {defaultConnectionRequirement?: ConnectionRequirement}): this {
     const {defaultConnectionRequirement = ConnectionRequirement.Required, ...authentication} = authDef;
@@ -234,9 +246,11 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * authentication definition.
    *
    * @example
+   * ```
    * pack.setSystemAuthentication({
    *   type: AuthenticationType.HeaderBearerToken,
    * });
+   * ```
    */
   setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this {
     const {
@@ -264,7 +278,9 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * to connect to multiple domains, contact Coda Support for approval.
    *
    * @example
+   * ```
    * pack.addNetworkDomain('example.com');
+   * ```
    */
   addNetworkDomain(...domain: string[]): this {
     this.networkDomains.push(...domain);
@@ -280,7 +296,9 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * each time you build a version.
    *
    * @example
+   * ```
    * pack.setVersion('1.2.3');
+   * ```
    */
   setVersion(version: string): this {
     this.version = version;
