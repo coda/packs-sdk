@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.PlaceholderIdentityPackId = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.DurationUnit = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.PlaceholderIdentityPackId = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.DurationUnit = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const ensure_2 = require("./helpers/ensure");
 const ensure_3 = require("./helpers/ensure");
@@ -74,6 +74,29 @@ var CurrencyFormat;
     CurrencyFormat["Accounting"] = "accounting";
     CurrencyFormat["Financial"] = "financial";
 })(CurrencyFormat = exports.CurrencyFormat || (exports.CurrencyFormat = {}));
+var ScaleIconSet;
+(function (ScaleIconSet) {
+    ScaleIconSet["Star"] = "star";
+    ScaleIconSet["Circle"] = "circle";
+    ScaleIconSet["Fire"] = "fire";
+    ScaleIconSet["Bug"] = "bug";
+    ScaleIconSet["Diamond"] = "diamond";
+    ScaleIconSet["Bell"] = "bell";
+    ScaleIconSet["ThumbsUp"] = "thumbsup";
+    ScaleIconSet["Heart"] = "heart";
+    ScaleIconSet["Chili"] = "chili";
+    ScaleIconSet["Smiley"] = "smiley";
+    ScaleIconSet["Lightning"] = "lightning";
+    ScaleIconSet["Currency"] = "currency";
+    ScaleIconSet["Coffee"] = "coffee";
+    ScaleIconSet["Person"] = "person";
+    ScaleIconSet["Battery"] = "battery";
+    ScaleIconSet["Cocktail"] = "cocktail";
+    ScaleIconSet["Cloud"] = "cloud";
+    ScaleIconSet["Sun"] = "sun";
+    ScaleIconSet["Checkmark"] = "checkmark";
+    ScaleIconSet["LightBulb"] = "lightbulb";
+})(ScaleIconSet = exports.ScaleIconSet || (exports.ScaleIconSet = {}));
 var DurationUnit;
 (function (DurationUnit) {
     DurationUnit["Days"] = "days";
