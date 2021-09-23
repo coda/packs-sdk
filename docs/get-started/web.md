@@ -27,7 +27,7 @@ You are now in the Pack Studio, ready to start building!
 
 ## Create a Pack from sample code
 
-All new Packs created in the Pack Studio start off with the basic [Hello World](../samples/hello_world.md) sample code. Take a moment to read through the code and comments and get an understanding of how a Pack is structured.
+All new Packs created in the Pack Studio start off with the basic [Hello World](../samples/hello-world.md) sample code. Take a moment to read through the code and comments and get an understanding of how a Pack is structured.
 
 Next we'll use the Pack Studio to build that code and get it ready to use:
 

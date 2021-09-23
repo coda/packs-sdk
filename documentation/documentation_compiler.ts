@@ -3,6 +3,7 @@ import type {CompiledExample} from './types';
 import type {CompiledExampleSnippet} from './types';
 import type {Example} from './types';
 import {Examples} from './documentation_config';
+import * as Handlebars from 'handlebars';
 import {Snippets} from './documentation_config';
 import {UrlType} from './types';
 import * as fs from 'fs';
@@ -14,6 +15,9 @@ const DocumentationRoot = path.join(BaseDir, 'documentation');
 const TypeDocsRoot = path.join(BaseDir, 'docs');
 const EmbeddedSnippetsRoot = path.join(TypeDocsRoot, 'embedded-snippets');
 const SnippetEmbedTemplate = fs.readFileSync(path.join(DocumentationRoot, 'snippet_embed_template.html'), 'utf8');
+const ExamplePagesRoot = path.join(TypeDocsRoot, 'samples');
+const ExamplePageTemplate = Handlebars.compile(fs.readFileSync(path.join(DocumentationRoot, 'example_page_template.md'), 'utf8'));
+const ExampleNavTemplate = Handlebars.compile(fs.readFileSync(path.join(DocumentationRoot, 'example_nav_template.yml'), 'utf8'));
 const SdkReferenceLink = 'https://coda.github.io/packs-sdk';
 const PageFileExtension = 'md';
 
@@ -47,6 +51,7 @@ function compileExamples() {
       }
       exampleFooterLink = `${SdkReferenceLink}${exampleFooterLink}`;
     }
+    compileExamplePage(example);
     return {
       name: example.name,
       triggerTokens: example.triggerTokens,
@@ -57,6 +62,7 @@ function compileExamples() {
   });
 
   fs.writeFileSync(path.join(DocumentationRoot, 'generated/examples.json'), JSON.stringify(compiledExamples, null, 2));
+  compileExampleNav(Examples);
 }
 
 function getCodeFile(file: string): string {
@@ -87,10 +93,38 @@ function compileSnippetEmbed(codeFile: string) {
   const snippetFileName = path.basename(codeFile).split('.')[0];
 
   if (!fs.existsSync(EmbeddedSnippetsRoot)) {
-    fs.mkdirSync(EmbeddedSnippetsRoot);
+    fs.mkdirSync(EmbeddedSnippetsRoot, { recursive: true });
   }
 
   fs.writeFileSync(path.join(EmbeddedSnippetsRoot, `${snippetFileName}.html`), exampleSnippetEmbed);
+}
+
+function compileExamplePage(example: Example) {
+  const examplePageContent = ExamplePageTemplate(example);
+  const pageFileName = getExamplePageName(example);
+
+  if (!fs.existsSync(ExamplePagesRoot)) {
+    fs.mkdirSync(ExamplePagesRoot, { recursive: true });
+  }
+
+  fs.writeFileSync(path.join(ExamplePagesRoot, pageFileName), examplePageContent);
+}
+
+function compileExampleNav(examples: Example[]) {
+  const filenames = examples.sort((a, b) => {
+    return a.name.localeCompare(b.name);
+  }).map(getExamplePageName);
+  const exampleNavContent = ExampleNavTemplate({filenames});
+
+  if (!fs.existsSync(ExamplePagesRoot)) {
+    fs.mkdirSync(ExamplePagesRoot, { recursive: true });
+  }
+
+  fs.writeFileSync(path.join(ExamplePagesRoot, '.nav.yml'), exampleNavContent);
+}
+
+function getExamplePageName(example: Example) {
+  return path.basename(path.dirname(example.contentFile)).replace(/_/g, '-') + '.md';
 }
 
 function isValidReferencePath(sdkReferencePath: string): boolean {

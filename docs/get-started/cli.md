@@ -65,7 +65,7 @@ Edit `formulas.ts` to include the definition of a new "Hello" formula:
 
 === "formulas.ts"
     ```ts hl_lines="4-7 10-34"
-    --8<-- "hello_cli/formulas.ts"
+    --8<-- "examples/hello_cli/formulas.ts"
     ```
 
 Take a moment to read through the code and comments and get an understanding of how a formula is structured.
