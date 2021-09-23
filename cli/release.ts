@@ -6,7 +6,7 @@ import {formatError} from './errors';
 import {getApiKey} from './config_storage';
 import {getPackId} from './config_storage';
 import {importManifest} from './helpers';
-import {isCodaError} from './errors';
+import {isResponseError} from '../helpers/external-api/coda';
 import * as path from 'path';
 import {printAndExit} from '../testing/helpers';
 import {tryParseSystemError} from './errors';
@@ -58,12 +58,11 @@ export async function handleRelease({
 
 async function handleResponse<T extends any>(p: Promise<T>): Promise<T> {
   try {
-    const response = await p;
-    if (isCodaError(response)) {
-      return printAndExit(`Error while creating pack release: ${formatError(response)}`);
-    }
-    return p;
+    return await p;
   } catch (err: any) {
+    if (isResponseError(err)) {
+      return printAndExit(`Error while creating pack release: ${formatError(err.response)}`);
+    }
     const errors = [`Unexpected error while creating release: ${formatError(err)}`, tryParseSystemError(err)];
     return printAndExit(errors.join('\n'));
   }

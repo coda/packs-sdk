@@ -34,8 +34,8 @@ function spawnProcess(command) {
     });
 }
 exports.spawnProcess = spawnProcess;
-function createCodaClient(apiKey, protocolAndHost) {
-    return new coda_1.Client(protocolAndHost !== null && protocolAndHost !== void 0 ? protocolAndHost : 'https://coda.io', apiKey);
+function createCodaClient(apiToken, protocolAndHost) {
+    return new coda_1.Client({ protocolAndHost, apiToken });
 }
 exports.createCodaClient = createCodaClient;
 function formatEndpoint(endpoint) {

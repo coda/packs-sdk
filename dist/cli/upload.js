@@ -33,14 +33,14 @@ const fs_extra_1 = __importDefault(require("fs-extra"));
 const config_storage_1 = require("./config_storage");
 const config_storage_2 = require("./config_storage");
 const helpers_3 = require("./helpers");
-const errors_2 = require("./errors");
+const coda_1 = require("../helpers/external-api/coda");
 const helpers_4 = require("./helpers");
 const os_1 = __importDefault(require("os"));
 const path = __importStar(require("path"));
 const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
-const errors_3 = require("./errors");
+const errors_2 = require("./errors");
 const uuid_1 = require("uuid");
 const validate_1 = require("./validate");
 function cleanup(intermediateOutputDirectory, logger) {
@@ -111,21 +111,32 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
         logger.info('Validating Pack metadata...');
         await (0, validate_1.validateMetadata)(metadata);
         logger.info('Registering new Pack version...');
-        const registerResponse = await client.registerPackVersion(packId, packVersion, {}, { bundleHash });
-        if ((0, errors_2.isCodaError)(registerResponse)) {
-            return printAndExit(`Error while registering pack version: ${(0, errors_1.formatError)(registerResponse)}`);
+        let registerResponse;
+        try {
+            registerResponse = await client.registerPackVersion(packId, packVersion, {}, { bundleHash });
+        }
+        catch (err) {
+            if ((0, coda_1.isResponseError)(err)) {
+                return printAndExit(`Error while registering pack version: ${(0, errors_1.formatError)(err.response)}`);
+            }
+            throw err;
         }
         const { uploadUrl, headers } = registerResponse;
         logger.info('Uploading Pack...');
         await uploadPack(uploadUrl, uploadPayload, headers);
         logger.info('Validating upload...');
-        const uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion, {}, { notes });
-        if ((0, errors_2.isCodaError)(uploadCompleteResponse)) {
-            printAndExit(`Error while finalizing pack version: ${(0, errors_1.formatError)(uploadCompleteResponse)}`);
+        try {
+            await client.packVersionUploadComplete(packId, packVersion, {}, { notes });
+        }
+        catch (err) {
+            if ((0, coda_1.isResponseError)(err)) {
+                printAndExit(`Error while finalizing pack version: ${(0, errors_1.formatError)(err.response)}`);
+            }
+            throw err;
         }
     }
     catch (err) {
-        const errors = [`Unexpected error during Pack upload: ${(0, errors_1.formatError)(err)}`, (0, errors_3.tryParseSystemError)(err)];
+        const errors = [`Unexpected error during Pack upload: ${(0, errors_1.formatError)(err)}`, (0, errors_2.tryParseSystemError)(err)];
         printAndExit(errors.join(`\n`));
     }
     cleanup(intermediateOutputDirectory, logger);
