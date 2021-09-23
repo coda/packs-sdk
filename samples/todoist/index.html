@@ -9,14 +9,14 @@
       
       
       
-        <link rel="canonical" href="https://coda.github.io/packs-sdk/samples/hello_world/">
+        <link rel="canonical" href="https://coda.github.io/packs-sdk/samples/todoist/">
       
       <link rel="icon" href="../../assets/favicon.png">
       <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.6">
     
     
       
-        <title>Hello World - Coda Packs SDK</title>
+        <title>Todoist - Coda Packs SDK</title>
       
     
     
@@ -65,7 +65,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#hello-world-sample" class="md-skip">
+        <a href="#todoist" class="md-skip">
           Skip to content
         </a>
       
@@ -103,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Hello World
+              Todoist
             
           </span>
         </div>
@@ -234,7 +234,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="./" class="md-tabs__link md-tabs__link--active">
+      <a href="../column-format/" class="md-tabs__link md-tabs__link--active">
         Samples
       </a>
     </li>
@@ -478,6 +478,114 @@
             
   
   
+  
+    <li class="md-nav__item">
+      <a href="../column-format/" class="md-nav__link">
+        addColumnFormat()
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dynamic-sync-table/" class="md-nav__link">
+        addDynamicSyncTable()
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../formula/" class="md-nav__link">
+        addFormula()
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sync-table/" class="md-nav__link">
+        addSyncTable()
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../authentication/" class="md-nav__link">
+        Authentication
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../daylight/" class="md-nav__link">
+        Daylight
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hello-fetcher/" class="md-nav__link">
+        Hello Fetcher
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hello-world/" class="md-nav__link">
+        Hello World
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../number-array/" class="md-nav__link">
+        Number Array
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
     
   
   
@@ -490,7 +598,7 @@
       
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Hello World
+        Todoist
       </a>
       
     </li>
@@ -2113,53 +2221,252 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/coda/packs-sdk/blob/main/docs/samples/hello_world.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/coda/packs-sdk/blob/main/docs/samples/todoist.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                <h1 id="hello-world-sample">Hello World sample<a class="headerlink" href="#hello-world-sample" title="Permanent link">&para;</a></h1>
-<p>This is an example which creates a single formula called Hello, that takes in a string called name and returns “Hello, name !“.</p>
-<div class="highlight"><pre><span></span><code><span class="cm">/*</span>
-<span class="cm">Start making Packs!</span>
-<span class="cm">Try out the hello world sample below to create your first build.</span>
-<span class="cm">*/</span>
-
-<span class="c1">// This import statement gives you access to all parts of the Coda Packs SDK.</span>
+                <h1 id="todoist">Todoist<a class="headerlink" href="#todoist" title="Permanent link">&para;</a></h1>
+<p>This Pack acts as an integration with Todoist, and creates:</p>
+<ul>
+<li>3 buttons</li>
+<li>addProject , which creates a new Project with a given title</li>
+<li>addTask , which creates a new task with the given content , and adds it to an optional Project (by default, this goes into your Inbox)</li>
+<li>markAsComplete , which closes out a given task based on its taskID</li>
+<li>2 sync tables</li>
+<li>Projects syncs all of the user’s Projects</li>
+<li>Tasks syncs all of the user’s active tasks, across all projects</li>
+</ul>
+<p>Note this Pack requires a free Todoist account. The API key needed can be accessed from the “Integrations” tab within Settings.</p>
+<div class="tabbed-set" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">Todoist</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="c1">// This import statement gives you access to all parts of the Coda Packs SDK.</span>
 <span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s1">&#39;@codahq/packs-sdk&#39;</span><span class="p">;</span>
 
 <span class="c1">// This line creates your new Pack.</span>
 <span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
 
-<span class="c1">// Here, we add a new formula to this Pack.</span>
-<span class="nx">pack</span><span class="p">.</span><span class="nx">addFormula</span><span class="p">({</span>
-  <span class="c1">// This is the name that will be called in the formula builder.</span>
-  <span class="c1">// Remember, your formula name cannot have spaces in it.</span>
-  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Hello&#39;</span><span class="p">,</span>
-  <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;A Hello World example.&#39;</span><span class="p">,</span>
+<span class="c1">// We use &quot;user authentication&quot; so that users of this Pack will provide their own credentials,</span>
+<span class="c1">// as opposed to &quot;system authentication&quot;, which the pack author provides a single set of credentials</span>
+<span class="c1">// that apply to all requests from this pack.</span>
+<span class="c1">// In this case, users must grab the API token from the &quot;Integrations&quot; tab within Todoist&#39;s settings</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">setUserAuthentication</span><span class="p">({</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">AuthenticationType</span><span class="p">.</span><span class="nx">HeaderBearerToken</span><span class="p">});</span>
 
-  <span class="c1">// If your formula requires one or more inputs, you’ll define them here.</span>
-  <span class="c1">// Here, we&#39;re creating a string input called “name”.</span>
+<span class="c1">// When using the fetcher, this is the domain of the API that your pack makes fetcher requests to.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addNetworkDomain</span><span class="p">(</span><span class="s1">&#39;api.todoist.com&#39;</span><span class="p">);</span>
+
+<span class="c1">// The following adds a new formula to this Pack.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addFormula</span><span class="p">({</span>
+  <span class="c1">// Remember, the formula name cannot have spaces in it.</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;AddProject&#39;</span><span class="p">,</span>
+  <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;Add a Todoist project&#39;</span><span class="p">,</span>
   <span class="nx">parameters</span><span class="o">:</span> <span class="p">[</span>
     <span class="nx">coda</span><span class="p">.</span><span class="nx">makeParameter</span><span class="p">({</span>
       <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ParameterType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
-      <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span>
-      <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;The name you would like to say hello to.&#39;</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;The title or name of your new project&#39;</span><span class="p">,</span>
+    <span class="p">}),</span>
+  <span class="p">],</span>
+  <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">title</span><span class="p">],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// This formula makes an HTTP Post request to create a new project.</span>
+    <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+      <span class="nx">url</span><span class="o">:</span> <span class="sb">`https://api.todoist.com/rest/v1/projects`</span><span class="p">,</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span>
+      <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
+      <span class="p">},</span>
+
+      <span class="c1">// The project is created with the given title. No other fields are needed.</span>
+      <span class="nx">body</span>: <span class="kt">JSON.stringify</span><span class="p">({</span>
+        <span class="nx">name</span>: <span class="kt">title</span><span class="p">,</span>
+      <span class="p">}),</span>
+    <span class="p">});</span>
+    <span class="c1">// We don&#39;t necessarily have to return anything, but it&#39;s useful to return</span>
+    <span class="c1">// some kind of non-empty values that callers can use to check whether this</span>
+    <span class="c1">// button action has already been taken. Often it&#39;s a good idea to return the</span>
+    <span class="c1">// id of the object that was created, if possible.</span>
+    <span class="k">return</span> <span class="s1">&#39;OK&#39;</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="c1">// This is an action, so it will show up as a button in the Coda UI.</span>
+  <span class="nx">isAction</span>: <span class="kt">true</span><span class="p">,</span>
+  <span class="c1">// This formula requires that a user has connected a Todoist account.</span>
+  <span class="nx">connectionRequirement</span>: <span class="kt">coda.ConnectionRequirement.Required</span><span class="p">,</span>
+
+  <span class="c1">// This formula returns a simple string upon completion, per line 46 above.</span>
+  <span class="nx">resultType</span>: <span class="kt">coda.ValueType.String</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addFormula</span><span class="p">({</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;AddTask&#39;</span><span class="p">,</span>
+  <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;Add a task.&#39;</span><span class="p">,</span>
+
+  <span class="c1">// This formula takes two parameters: the task, and the project it is to be added to.</span>
+  <span class="nx">parameters</span><span class="o">:</span> <span class="p">[</span>
+    <span class="nx">coda</span><span class="p">.</span><span class="nx">makeParameter</span><span class="p">({</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ParameterType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;content&#39;</span><span class="p">,</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;Content of the task.&#39;</span><span class="p">,</span>
+    <span class="p">}),</span>
+
+    <span class="c1">// The project is an optional field. If not provided, it defaults to the inbox per Todoist&#39;s documentation.</span>
+    <span class="nx">coda</span><span class="p">.</span><span class="nx">makeParameter</span><span class="p">({</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ParameterType</span><span class="p">.</span><span class="nb">Number</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;project&#39;</span><span class="p">,</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;project ID. if blank, will default to inbox.&#39;</span><span class="p">,</span>
+      <span class="nx">optional</span>: <span class="kt">true</span><span class="p">,</span>
+    <span class="p">}),</span>
+  <span class="p">],</span>
+  <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">title</span><span class="p">,</span> <span class="nx">id</span><span class="p">],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+      <span class="nx">url</span><span class="o">:</span> <span class="sb">`https://api.todoist.com/rest/v1/tasks`</span><span class="p">,</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span>
+      <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
+      <span class="p">},</span>
+      <span class="nx">body</span>: <span class="kt">JSON.stringify</span><span class="p">({</span>
+        <span class="nx">content</span>: <span class="kt">title</span><span class="p">,</span>
+        <span class="nx">project_id</span>: <span class="kt">id</span><span class="p">,</span>
+      <span class="p">}),</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="s1">&#39;OK&#39;</span><span class="p">;</span>
+  <span class="p">},</span>
+  <span class="nx">isAction</span>: <span class="kt">true</span><span class="p">,</span>
+  <span class="nx">connectionRequirement</span>: <span class="kt">coda.ConnectionRequirement.Required</span><span class="p">,</span>
+  <span class="nx">resultType</span>: <span class="kt">coda.ValueType.String</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addFormula</span><span class="p">({</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;MarkAsComplete&#39;</span><span class="p">,</span>
+  <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;Mark a task as completed.&#39;</span><span class="p">,</span>
+  <span class="nx">parameters</span><span class="o">:</span> <span class="p">[</span>
+    <span class="nx">coda</span><span class="p">.</span><span class="nx">makeParameter</span><span class="p">({</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ParameterType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;taskId&#39;</span><span class="p">,</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;The ID of the task to be marked as complete.&#39;</span><span class="p">,</span>
     <span class="p">}),</span>
   <span class="p">],</span>
 
-  <span class="c1">// Everything inside this execute statement will happen anytime your Coda function is called in a doc.</span>
-  <span class="c1">// An array of all user inputs is always the 1st parameter.</span>
-  <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">name</span><span class="p">])</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="sb">`Hello </span><span class="si">${</span><span class="nx">name</span><span class="si">}</span><span class="sb">!`</span><span class="p">;</span>
+  <span class="c1">// This formula makes a POST request to a designated URL constructed from the task ID.</span>
+  <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">id</span><span class="p">],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+      <span class="nx">url</span><span class="o">:</span> <span class="sb">`https://api.todoist.com/rest/v1/tasks/</span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">/close`</span><span class="p">,</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span>
+      <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
+      <span class="p">},</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="s1">&#39;OK&#39;</span><span class="p">;</span>
   <span class="p">},</span>
-
-  <span class="c1">// The resultType defines what will be returned in your Coda doc. Here, we&#39;re returning a simple text string.</span>
+  <span class="nx">isAction</span>: <span class="kt">true</span><span class="p">,</span>
+  <span class="nx">connectionRequirement</span>: <span class="kt">coda.ConnectionRequirement.Required</span><span class="p">,</span>
   <span class="nx">resultType</span>: <span class="kt">coda.ValueType.String</span><span class="p">,</span>
 <span class="p">});</span>
+
+<span class="c1">// Here, we define the two schemas for our sync tables (tasks and projects).</span>
+<span class="kd">const</span> <span class="nx">taskSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
+  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
+
+  <span class="c1">// These properties are applied to each row and will be used to define other information about this schema below.</span>
+  <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">task</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
+    <span class="nx">projectId</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">},</span>
+    <span class="nx">id</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">},</span>
+  <span class="p">},</span>
+
+  <span class="c1">// The &#39;primary&#39; property defines which field from this object will render in</span>
+  <span class="c1">// the object chip in the UI.</span>
+  <span class="nx">primary</span><span class="o">:</span> <span class="s1">&#39;task&#39;</span><span class="p">,</span>
+
+  <span class="c1">// The &#39;featured&#39; array defines which of the above properties should have columns</span>
+  <span class="c1">// created for them by default. If your schema has lots of properties, it&#39;s often</span>
+  <span class="c1">// a good idea to only feature some of them so the table doesn&#39;t have an overwhelming</span>
+  <span class="c1">// number of columns. Users can always add additional columns for non-featured properties</span>
+  <span class="c1">// at any time.</span>
+  <span class="nx">featured</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;projectId&#39;</span><span class="p">],</span>
+
+  <span class="c1">// &#39;id&#39; is the property that acts as the unique id of each row.</span>
+  <span class="c1">// Entities being synced must have unique, stable ids in order for rows to be updated</span>
+  <span class="c1">// in-place on subsequent syncs.</span>
+  <span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="kd">const</span> <span class="nx">projectSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
+  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
+  <span class="nx">primary</span><span class="o">:</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span>
+  <span class="nx">featured</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;projectId&#39;</span><span class="p">],</span>
+  <span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;projectId&#39;</span><span class="p">,</span>
+  <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
+    <span class="nx">projectId</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">},</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addSyncTable</span><span class="p">({</span>
+  <span class="c1">// This is the name of the table displayed to users.</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Tasks&#39;</span><span class="p">,</span>
+  <span class="c1">// This is a unique identifier for this table, used internally by Coda.</span>
+  <span class="nx">identityName</span><span class="o">:</span> <span class="s1">&#39;TaskTitle&#39;</span><span class="p">,</span>
+  <span class="nx">schema</span>: <span class="kt">taskSchema</span><span class="p">,</span>
+  <span class="c1">// Users must have a connection to Todoist to sync in tasks.</span>
+  <span class="nx">connectionRequirement</span>: <span class="kt">coda.ConnectionRequirement.Required</span><span class="p">,</span>
+  <span class="nx">formula</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Tasks&#39;</span><span class="p">,</span>
+    <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;Sync current tasks&#39;</span><span class="p">,</span>
+    <span class="nx">parameters</span><span class="o">:</span> <span class="p">[],</span>
+
+    <span class="c1">// Unlike canvas formulas, sync table formulas may run multiple times to get</span>
+    <span class="c1">// multiple pages of results, based on whether you return a &quot;continuation&quot;.</span>
+    <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="s1">&#39;https://api.todoist.com/rest/v1/tasks&#39;</span><span class="p">;</span>
+      <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span><span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="nx">url</span><span class="p">});</span>
+      <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">[];</span>
+
+      <span class="c1">// Here, we add the relevant properties from the returned JSON per task to a new array.</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">taskObj</span> <span class="k">of</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+          <span class="nx">task</span>: <span class="kt">taskObj.content</span><span class="p">,</span>
+          <span class="nx">projectId</span>: <span class="kt">taskObj.project_id</span><span class="p">,</span>
+          <span class="nx">id</span>: <span class="kt">taskObj.id</span><span class="p">,</span>
+        <span class="p">});</span>
+      <span class="p">}</span>
+
+      <span class="k">return</span> <span class="p">{</span>
+        <span class="nx">result</span><span class="p">,</span>
+        <span class="c1">// Todoist returns all tasks at once, so this formula only needs to run once to fill the sync table.</span>
+        <span class="nx">continuation</span>: <span class="kt">undefined</span><span class="p">,</span>
+      <span class="p">};</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addSyncTable</span><span class="p">({</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Projects&#39;</span><span class="p">,</span>
+  <span class="nx">schema</span>: <span class="kt">projectSchema</span><span class="p">,</span>
+  <span class="nx">identityName</span><span class="o">:</span> <span class="s1">&#39;Project&#39;</span><span class="p">,</span>
+  <span class="nx">connectionRequirement</span>: <span class="kt">coda.ConnectionRequirement.Required</span><span class="p">,</span>
+  <span class="nx">formula</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Projects&#39;</span><span class="p">,</span>
+    <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;Sync open projects&#39;</span><span class="p">,</span>
+    <span class="nx">parameters</span><span class="o">:</span> <span class="p">[],</span>
+    <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="sb">`https://api.todoist.com/rest/v1/projects`</span><span class="p">;</span>
+      <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span><span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="nx">url</span><span class="p">});</span>
+
+      <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">[];</span>
+
+      <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">project</span> <span class="k">of</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+          <span class="nx">name</span>: <span class="kt">project.name</span><span class="p">,</span>
+          <span class="nx">projectId</span>: <span class="kt">project.id</span><span class="p">,</span>
+        <span class="p">});</span>
+      <span class="p">}</span>
+
+      <span class="k">return</span> <span class="p">{</span><span class="nx">result</span><span class="p">};</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+<span class="p">});</span>
 </code></pre></div>
-                
-                  
+</div>
+</div>
                 
               
               
@@ -2179,7 +2486,7 @@
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../../guides/advanced/libraries/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Using libraries" rel="prev">
+        <a href="../number-array/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Number Array" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -2188,7 +2495,7 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              Using libraries
+              Number Array
             </div>
           </div>
         </a>

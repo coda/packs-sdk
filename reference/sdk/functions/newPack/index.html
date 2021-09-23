@@ -232,7 +232,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../../samples/hello_world/" class="md-tabs__link">
+      <a href="../../../../samples/column-format/" class="md-tabs__link">
         Samples
       </a>
     </li>
@@ -478,8 +478,116 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../../samples/hello_world/" class="md-nav__link">
+      <a href="../../../../samples/column-format/" class="md-nav__link">
+        addColumnFormat()
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../samples/dynamic-sync-table/" class="md-nav__link">
+        addDynamicSyncTable()
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../samples/formula/" class="md-nav__link">
+        addFormula()
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../samples/sync-table/" class="md-nav__link">
+        addSyncTable()
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../samples/authentication/" class="md-nav__link">
+        Authentication
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../samples/daylight/" class="md-nav__link">
+        Daylight
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../samples/hello-fetcher/" class="md-nav__link">
+        Hello Fetcher
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../samples/hello-world/" class="md-nav__link">
         Hello World
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../samples/number-array/" class="md-nav__link">
+        Number Array
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../samples/todoist/" class="md-nav__link">
+        Todoist
       </a>
     </li>
   
@@ -2126,10 +2234,11 @@
 <p>▸ <strong>newPack</strong>(<code>definition?</code>): <a href="../../classes/PackDefinitionBuilder/"><code>PackDefinitionBuilder</code></a></p>
 <p>Creates a new skeleton pack definition that can be added to.</p>
 <p><strong><code>example</code></strong>
-export const pack = newPack();
-pack.addFormula({resultType: ValueType.String, name: 'MyFormula', ...});
-pack.addSyncTable('MyTable', ...);
-pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});</p>
+<div class="highlight"><pre><span></span><code>export const pack = newPack();
+pack.addFormula({resultType: ValueType.String, name: &#39;MyFormula&#39;, ...});
+pack.addSyncTable(&#39;MyTable&#39;, ...);
+pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
+</code></pre></div></p>
 <h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -2148,7 +2257,7 @@ pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});</p>
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h4>
 <p><a href="../../classes/PackDefinitionBuilder/"><code>PackDefinitionBuilder</code></a></p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L33">builder.ts:33</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L35">builder.ts:35</a></p>
                 
               
               
