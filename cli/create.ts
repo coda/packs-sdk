@@ -17,16 +17,18 @@ interface CreateArgs {
   codaApiEndpoint: string;
   name?: string;
   description?: string;
+  workspace?: string;
 }
 
-export async function handleCreate({manifestFile, codaApiEndpoint, name, description}: Arguments<CreateArgs>) {
-  await createPack(manifestFile, codaApiEndpoint, {name, description});
+export async function handleCreate(
+  {manifestFile, codaApiEndpoint, name, description, workspace}: Arguments<CreateArgs>) {
+  await createPack(manifestFile, codaApiEndpoint, {name, description, workspace});
 }
 
 export async function createPack(
   manifestFile: string,
   codaApiEndpoint: string,
-  {name, description}: {name?: string; description?: string},
+  {name, description, workspace}: {name?: string; description?: string, workspace?: string},
 ) {
   const manifestDir = path.dirname(manifestFile);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
@@ -52,7 +54,8 @@ export async function createPack(
 
   const codaClient = createCodaClient(apiKey, formattedEndpoint);
   try {
-    const response = await codaClient.createPack({}, {name, description});
+    const response = await codaClient.createPack({}, 
+      {name, description, workspaceId: parseWorkspace(workspace)});
     if (isCodaError(response)) {
       return printAndExit(`Unable to create your pack, received error: ${formatError(response)}`);
     }
@@ -63,4 +66,15 @@ export async function createPack(
     const errors = [`Unable to create your pack, received error: ${formatError(err)}`, tryParseSystemError(err)];
     return printAndExit(errors.join('\n'));
   }
+}
+
+function parseWorkspace(workspace: string | undefined): string | undefined {
+  if (workspace) {
+    const match = /.*\/workspaces\/(ws-[A-Za-z0-9=_-]{10})/.exec(workspace);
+    if (match) {
+      return match[1];
+    }
+  }
+
+  return workspace;
 }
