@@ -21,7 +21,6 @@ markdown_extensions:
   # See: https://facelessuser.github.io/pymdown-extensions/extensions/snippets/
   - pymdownx.snippets:
       base_path:
-        - documentation/examples
         - documentation
         - docs
   - pymdownx.superfences
