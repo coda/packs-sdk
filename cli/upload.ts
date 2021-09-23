@@ -8,7 +8,7 @@ import {computeSha256} from '../helpers/crypto';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
-import fs from 'fs';
+import fs from 'fs-extra';
 import {getApiKey} from './config_storage';
 import {getPackId} from './config_storage';
 import {importManifest} from './helpers';
@@ -36,7 +36,7 @@ function cleanup(intermediateOutputDirectory: string, logger: Logger) {
 
   if (fs.existsSync(intermediateOutputDirectory)) {
     const tempDirectory = fs.mkdtempSync(path.join(os.tmpdir(), `coda-packs-${v4()}`));
-    fs.renameSync(intermediateOutputDirectory, tempDirectory);
+    fs.moveSync(intermediateOutputDirectory, path.join(tempDirectory, 'build'));
 
     logger.info(`Intermediate files are moved to ${tempDirectory}`);
   }
