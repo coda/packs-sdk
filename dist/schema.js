@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.PlaceholderIdentityPackId = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.DurationUnit = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.PlaceholderIdentityPackId = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.DurationUnit = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.SimpleNumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const ensure_2 = require("./helpers/ensure");
 const ensure_3 = require("./helpers/ensure");
@@ -58,7 +58,7 @@ exports.StringHintValueTypes = [
     ValueHintType.Markdown,
     ValueHintType.Url,
 ];
-exports.NumberHintValueTypes = [
+exports.SimpleNumberHintValueTypes = [
     ValueHintType.Date,
     ValueHintType.Time,
     ValueHintType.DateTime,

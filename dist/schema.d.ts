@@ -34,10 +34,10 @@ export declare enum ValueHintType {
     Scale = "scale"
 }
 export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url];
-export declare const NumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Percent, ValueHintType.Currency, ValueHintType.Slider, ValueHintType.Scale];
+export declare const SimpleNumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Percent, ValueHintType.Currency, ValueHintType.Slider, ValueHintType.Scale];
 export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference];
 export declare type StringHintTypes = typeof StringHintValueTypes[number];
-export declare type NumberHintTypes = typeof NumberHintValueTypes[number];
+export declare type SimpleNumberHintTypes = typeof SimpleNumberHintValueTypes[number];
 export declare type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 interface BaseSchema {
     description?: string;
@@ -45,11 +45,11 @@ interface BaseSchema {
 export interface BooleanSchema extends BaseSchema {
     type: ValueType.Boolean;
 }
-export interface NumberSchema extends BaseSchema {
+export declare type NumberSchema = CurrencySchema | SliderSchema | ScaleSchema | NumericSchema | SimpleNumberSchema;
+export interface BaseNumberSchema extends BaseSchema {
     type: ValueType.Number;
-    codaType?: NumberHintTypes;
 }
-export interface NumericSchema extends NumberSchema {
+export interface NumericSchema extends BaseNumberSchema {
     codaType?: ValueHintType.Percent;
     precision?: number;
     useThousandsSeparator?: boolean;
@@ -59,7 +59,10 @@ export declare enum CurrencyFormat {
     Accounting = "accounting",
     Financial = "financial"
 }
-export interface CurrencySchema extends NumberSchema {
+export interface SimpleNumberSchema extends BaseNumberSchema {
+    codaType?: ValueHintType.Date | ValueHintType.Time | ValueHintType.DateTime | ValueHintType.Percent;
+}
+export interface CurrencySchema extends BaseNumberSchema {
     codaType: ValueHintType.Currency;
     precision?: number;
     /***
@@ -69,7 +72,7 @@ export interface CurrencySchema extends NumberSchema {
     currencyCode?: string;
     format?: CurrencyFormat;
 }
-export interface SliderSchema extends NumberSchema {
+export interface SliderSchema extends BaseNumberSchema {
     codaType: ValueHintType.Slider;
     minimum?: number | string;
     maximum?: number | string;
@@ -97,7 +100,7 @@ export declare enum ScaleIconSet {
     Checkmark = "checkmark",
     LightBulb = "lightbulb"
 }
-export interface ScaleSchema extends NumberSchema {
+export interface ScaleSchema extends BaseNumberSchema {
     codaType: ValueHintType.Scale;
     maximum: number;
     icon: ScaleIconSet;
@@ -187,7 +190,7 @@ interface ImageAttributionNode {
 }
 declare type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
 export declare function makeAttributionNode<T extends AttributionNode>(node: T): T;
-export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema | ScaleSchema;
+export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
 export declare function isObject(val?: Schema): val is GenericObjectSchema;
 export declare function isArray(val?: Schema): val is ArraySchema;
 declare type PickOptional<T, K extends keyof T> = Partial<T> & {

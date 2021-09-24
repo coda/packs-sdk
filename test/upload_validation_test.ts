@@ -11,6 +11,7 @@ import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
 import {PostSetupType} from '../types';
+import {ScaleIconSet} from '../schema';
 import type {StringFormulaDef} from '../api';
 import {Type} from '../api_types';
 import {ValueHintType} from '../schema';
@@ -18,6 +19,7 @@ import {ValueType} from '../schema';
 import {createFakePack} from './test_utils';
 import {createFakePackFormulaMetadata} from './test_utils';
 import {createFakePackVersionMetadata} from './test_utils';
+import { it } from 'mocha';
 import {makeDynamicSyncTable} from '../api';
 import {makeFormula} from '../api';
 import {makeMetadataFormula} from '../api';
@@ -712,6 +714,37 @@ describe('Pack metadata Validation', () => {
             path: 'syncTables[0].schema.properties.Foo',
           },
         ]);
+      });
+
+      it('sync table with scale schema', async () => {
+        const syncTable = makeSyncTable({
+          name: 'ScaleSyncTable',
+          identityName: 'Sync',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            identity: {name: 'foo'},
+            properties: {
+              Foo: {type: ValueType.Number, codaType: ValueHintType.Scale, maximum: 5, icon: ScaleIconSet.Star},
+            },
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        });
+
+        const metadata = createFakePack({
+          name: 'scalePack',
+          syncTables: [syncTable],
+        });
+        await validateJson(metadata);
       });
 
       it('invalid dynamic sync table', async () => {

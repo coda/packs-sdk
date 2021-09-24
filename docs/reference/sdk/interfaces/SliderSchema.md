@@ -2,7 +2,7 @@
 
 ## Hierarchy
 
-- [`NumberSchema`](NumberSchema.md)
+- `BaseNumberSchema`
 
   ↳ **`SliderSchema`**
 
@@ -12,13 +12,9 @@
 
 • **codaType**: [`Slider`](../enums/ValueHintType.md#slider)
 
-#### Overrides
-
-[NumberSchema](NumberSchema.md).[codaType](NumberSchema.md#codatype)
-
 #### Defined in
 
-[schema.ts:111](https://github.com/coda/packs-sdk/blob/main/schema.ts#L111)
+[schema.ts:116](https://github.com/coda/packs-sdk/blob/main/schema.ts#L116)
 
 ___
 
@@ -28,7 +24,7 @@ ___
 
 #### Inherited from
 
-[NumberSchema](NumberSchema.md).[description](NumberSchema.md#description)
+BaseNumberSchema.description
 
 #### Defined in
 
@@ -42,7 +38,7 @@ ___
 
 #### Defined in
 
-[schema.ts:113](https://github.com/coda/packs-sdk/blob/main/schema.ts#L113)
+[schema.ts:118](https://github.com/coda/packs-sdk/blob/main/schema.ts#L118)
 
 ___
 
@@ -52,7 +48,7 @@ ___
 
 #### Defined in
 
-[schema.ts:112](https://github.com/coda/packs-sdk/blob/main/schema.ts#L112)
+[schema.ts:117](https://github.com/coda/packs-sdk/blob/main/schema.ts#L117)
 
 ___
 
@@ -62,7 +58,7 @@ ___
 
 #### Defined in
 
-[schema.ts:114](https://github.com/coda/packs-sdk/blob/main/schema.ts#L114)
+[schema.ts:119](https://github.com/coda/packs-sdk/blob/main/schema.ts#L119)
 
 ___
 
@@ -72,8 +68,8 @@ ___
 
 #### Inherited from
 
-[NumberSchema](NumberSchema.md).[type](NumberSchema.md#type)
+BaseNumberSchema.type
 
 #### Defined in
 
-[schema.ts:83](https://github.com/coda/packs-sdk/blob/main/schema.ts#L83)
+[schema.ts:84](https://github.com/coda/packs-sdk/blob/main/schema.ts#L84)

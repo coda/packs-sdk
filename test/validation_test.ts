@@ -1,7 +1,8 @@
 import {testHelper} from './test_helper';
 import {FakePack} from './test_utils';
 import type {ParamDefs} from '../api_types';
-import type {StringSchema} from '../schema';
+import {ScaleIconSet} from '../schema';
+import type { StringSchema} from '../schema';
 import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
 import {coerceParams} from '../testing/coercion';
@@ -37,6 +38,7 @@ describe('Property validation in objects', () => {
         type: ValueType.Number,
         codaType: ValueHintType.Scale,
         maximum: 5,
+        icon: ScaleIconSet.Star
       },
       names: {type: ValueType.Array, items: {type: ValueType.String} as StringSchema},
       person: {

@@ -33,7 +33,7 @@ Error.constructor
 
 #### Defined in
 
-[api.ts:86](https://github.com/coda/packs-sdk/blob/main/api.ts#L86)
+[api.ts:85](https://github.com/coda/packs-sdk/blob/main/api.ts#L85)
 
 ## Properties
 
@@ -43,7 +43,7 @@ Error.constructor
 
 #### Defined in
 
-[api.ts:81](https://github.com/coda/packs-sdk/blob/main/api.ts#L81)
+[api.ts:80](https://github.com/coda/packs-sdk/blob/main/api.ts#L80)
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 #### Defined in
 
-[api.ts:82](https://github.com/coda/packs-sdk/blob/main/api.ts#L82)
+[api.ts:81](https://github.com/coda/packs-sdk/blob/main/api.ts#L81)
 
 ___
 
@@ -67,7 +67,7 @@ Error.name
 
 #### Defined in
 
-[api.ts:79](https://github.com/coda/packs-sdk/blob/main/api.ts#L79)
+[api.ts:78](https://github.com/coda/packs-sdk/blob/main/api.ts#L78)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[api.ts:83](https://github.com/coda/packs-sdk/blob/main/api.ts#L83)
+[api.ts:82](https://github.com/coda/packs-sdk/blob/main/api.ts#L82)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-[api.ts:84](https://github.com/coda/packs-sdk/blob/main/api.ts#L84)
+[api.ts:83](https://github.com/coda/packs-sdk/blob/main/api.ts#L83)
 
 ___
 
@@ -97,4 +97,4 @@ ___
 
 #### Defined in
 
-[api.ts:80](https://github.com/coda/packs-sdk/blob/main/api.ts#L80)
+[api.ts:79](https://github.com/coda/packs-sdk/blob/main/api.ts#L79)

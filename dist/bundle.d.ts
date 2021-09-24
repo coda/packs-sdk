@@ -50,21 +50,11 @@ declare const StringHintValueTypes: readonly [
 	ValueHintType.Markdown,
 	ValueHintType.Url
 ];
-declare const NumberHintValueTypes: readonly [
-	ValueHintType.Date,
-	ValueHintType.Time,
-	ValueHintType.DateTime,
-	ValueHintType.Percent,
-	ValueHintType.Currency,
-	ValueHintType.Slider,
-	ValueHintType.Scale
-];
 declare const ObjectHintValueTypes: readonly [
 	ValueHintType.Person,
 	ValueHintType.Reference
 ];
 export declare type StringHintTypes = typeof StringHintValueTypes[number];
-export declare type NumberHintTypes = typeof NumberHintValueTypes[number];
 export declare type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 export interface BaseSchema {
 	description?: string;
@@ -72,11 +62,11 @@ export interface BaseSchema {
 export interface BooleanSchema extends BaseSchema {
 	type: ValueType.Boolean;
 }
-export interface NumberSchema extends BaseSchema {
+export declare type NumberSchema = CurrencySchema | SliderSchema | ScaleSchema | NumericSchema | SimpleNumberSchema;
+export interface BaseNumberSchema extends BaseSchema {
 	type: ValueType.Number;
-	codaType?: NumberHintTypes;
 }
-export interface NumericSchema extends NumberSchema {
+export interface NumericSchema extends BaseNumberSchema {
 	codaType?: ValueHintType.Percent;
 	precision?: number;
 	useThousandsSeparator?: boolean;
@@ -86,7 +76,10 @@ export declare enum CurrencyFormat {
 	Accounting = "accounting",
 	Financial = "financial"
 }
-export interface CurrencySchema extends NumberSchema {
+export interface SimpleNumberSchema extends BaseNumberSchema {
+	codaType?: ValueHintType.Date | ValueHintType.Time | ValueHintType.DateTime | ValueHintType.Percent;
+}
+export interface CurrencySchema extends BaseNumberSchema {
 	codaType: ValueHintType.Currency;
 	precision?: number;
 	/***
@@ -96,7 +89,7 @@ export interface CurrencySchema extends NumberSchema {
 	currencyCode?: string;
 	format?: CurrencyFormat;
 }
-export interface SliderSchema extends NumberSchema {
+export interface SliderSchema extends BaseNumberSchema {
 	codaType: ValueHintType.Slider;
 	minimum?: number | string;
 	maximum?: number | string;
@@ -124,7 +117,7 @@ declare enum ScaleIconSet {
 	Checkmark = "checkmark",
 	LightBulb = "lightbulb"
 }
-export interface ScaleSchema extends NumberSchema {
+export interface ScaleSchema extends BaseNumberSchema {
 	codaType: ValueHintType.Scale;
 	maximum: number;
 	icon: ScaleIconSet;
@@ -214,7 +207,7 @@ export interface ImageAttributionNode {
 }
 export declare type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
 export declare function makeAttributionNode<T extends AttributionNode>(node: T): T;
-export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema | ScaleSchema;
+export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
 export declare type PickOptional<T, K extends keyof T> = Partial<T> & {
 	[P in K]: T[P];
 };
@@ -782,7 +775,7 @@ export declare type StringFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormu
 };
 export declare type NumericFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, number> & {
 	resultType: ValueType.Number;
-	codaType?: NumberHintTypes;
+	schema?: NumberSchema;
 	execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<number> | number;
 };
 export declare type BooleanFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, boolean> & {

@@ -264,11 +264,11 @@ function makeFormula(fullDefinition) {
             break;
         }
         case schema_1.ValueType.Number: {
-            const { onError: _, resultType: unused, codaType, ...rest } = fullDefinition;
+            const { onError: _, resultType: unused, schema, ...rest } = fullDefinition;
             const numericFormula = {
                 ...rest,
                 resultType: api_types_3.Type.number,
-                schema: codaType ? { type: schema_1.ValueType.Number, codaType } : undefined,
+                schema,
             };
             formula = numericFormula;
             break;

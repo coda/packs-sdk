@@ -6,7 +6,6 @@ import {ConnectionRequirement} from './api_types';
 import type {ExecutionContext} from './api_types';
 import type {FetchRequest} from './api_types';
 import type {Identity} from './schema';
-import type {NumberHintTypes} from './schema';
 import type {NumberSchema} from './schema';
 import type {ObjectSchema} from './schema';
 import type {ObjectSchemaDefinition} from './schema';
@@ -582,11 +581,11 @@ export function makeFormula<
       break;
     }
     case ValueType.Number: {
-      const {onError: _, resultType: unused, codaType, ...rest} = fullDefinition as NumericFormulaDefV2<ParamDefsT>;
+      const {onError: _, resultType: unused, schema, ...rest} = fullDefinition as NumericFormulaDefV2<ParamDefsT>;
       const numericFormula: NumericPackFormula<ParamDefsT> = {
         ...rest,
         resultType: Type.number,
-        schema: codaType ? {type: ValueType.Number, codaType} : undefined,
+        schema,
       };
       formula = numericFormula;
       break;
@@ -673,7 +672,7 @@ type StringFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDe
 
 type NumericFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, number> & {
   resultType: ValueType.Number;
-  codaType?: NumberHintTypes;
+  schema?: NumberSchema;
   execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<number> | number;
 };
 

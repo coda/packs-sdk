@@ -2,7 +2,7 @@
 
 ## Hierarchy
 
-- [`NumberSchema`](NumberSchema.md)
+- `BaseNumberSchema`
 
   ↳ **`NumericSchema`**
 
@@ -11,10 +11,6 @@
 ### codaType
 
 • `Optional` **codaType**: [`Percent`](../enums/ValueHintType.md#percent)
-
-#### Overrides
-
-[NumberSchema](NumberSchema.md).[codaType](NumberSchema.md#codatype)
 
 #### Defined in
 
@@ -28,7 +24,7 @@ ___
 
 #### Inherited from
 
-[NumberSchema](NumberSchema.md).[description](NumberSchema.md#description)
+BaseNumberSchema.description
 
 #### Defined in
 
@@ -52,11 +48,11 @@ ___
 
 #### Inherited from
 
-[NumberSchema](NumberSchema.md).[type](NumberSchema.md#type)
+BaseNumberSchema.type
 
 #### Defined in
 
-[schema.ts:83](https://github.com/coda/packs-sdk/blob/main/schema.ts#L83)
+[schema.ts:84](https://github.com/coda/packs-sdk/blob/main/schema.ts#L84)
 
 ___
 

@@ -56,7 +56,7 @@ export const StringHintValueTypes = [
   ValueHintType.Markdown,
   ValueHintType.Url,
 ] as const;
-export const NumberHintValueTypes = [
+export const SimpleNumberHintValueTypes = [
   ValueHintType.Date,
   ValueHintType.Time,
   ValueHintType.DateTime,
@@ -68,7 +68,7 @@ export const NumberHintValueTypes = [
 export const ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference] as const;
 
 export type StringHintTypes = typeof StringHintValueTypes[number];
-export type NumberHintTypes = typeof NumberHintValueTypes[number];
+export type SimpleNumberHintTypes = typeof SimpleNumberHintValueTypes[number];
 export type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 
 interface BaseSchema {
@@ -79,12 +79,12 @@ export interface BooleanSchema extends BaseSchema {
   type: ValueType.Boolean;
 }
 
-export interface NumberSchema extends BaseSchema {
+export type NumberSchema = CurrencySchema | SliderSchema | ScaleSchema | NumericSchema | SimpleNumberSchema;
+export interface BaseNumberSchema extends BaseSchema {
   type: ValueType.Number;
-  codaType?: NumberHintTypes;
 }
 
-export interface NumericSchema extends NumberSchema {
+export interface NumericSchema extends BaseNumberSchema {
   codaType?: ValueHintType.Percent; // Can also be undefined if it's a vanilla number
   precision?: number;
   useThousandsSeparator?: boolean;
@@ -96,7 +96,12 @@ export enum CurrencyFormat {
   Financial = 'financial',
 }
 
-export interface CurrencySchema extends NumberSchema {
+export interface SimpleNumberSchema extends BaseNumberSchema {
+   // These need no other values for Coda's value formats.
+  codaType?: ValueHintType.Date | ValueHintType.Time | ValueHintType.DateTime | ValueHintType.Percent;
+}
+
+export interface CurrencySchema extends BaseNumberSchema {
   codaType: ValueHintType.Currency;
   precision?: number;
   /***
@@ -107,7 +112,7 @@ export interface CurrencySchema extends NumberSchema {
   format?: CurrencyFormat;
 }
 
-export interface SliderSchema extends NumberSchema {
+export interface SliderSchema extends BaseNumberSchema {
   codaType: ValueHintType.Slider;
   minimum?: number | string;
   maximum?: number | string;
@@ -137,7 +142,7 @@ export enum ScaleIconSet {
   LightBulb = 'lightbulb',
 }
 
-export interface ScaleSchema extends NumberSchema {
+export interface ScaleSchema extends BaseNumberSchema {
   codaType: ValueHintType.Scale;
   maximum: number;
   icon: ScaleIconSet;
@@ -260,7 +265,7 @@ export function makeAttributionNode<T extends AttributionNode>(node: T): T {
   return node;
 }
 
-export type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema | ScaleSchema;
+export type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
 
 export function isObject(val?: Schema): val is GenericObjectSchema {
   return Boolean(val && val.type === ValueType.Object);

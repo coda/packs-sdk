@@ -4415,7 +4415,7 @@ var StringHintValueTypes = [
   ValueHintType.Markdown,
   ValueHintType.Url
 ];
-var NumberHintValueTypes = [
+var SimpleNumberHintValueTypes = [
   ValueHintType.Date,
   ValueHintType.Time,
   ValueHintType.DateTime,

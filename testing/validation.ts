@@ -1,6 +1,5 @@
 import type {ArraySchema} from '../schema';
 import type {GenericObjectSchema} from '../schema';
-import type {NumberSchema} from '../schema';
 import type {ObjectPackFormulaMetadata} from '../api';
 import type {ObjectSchemaProperty} from '../schema';
 import type {ParamDefs} from '../api_types';
@@ -224,9 +223,9 @@ function tryParseUrl(result: unknown, schema: StringSchema) {
   }
 }
 
-function tryParseSlider(result: unknown, schema: NumberSchema) {
+function tryParseSlider(result: unknown, schema: SliderSchema) {
   const value = result as number;
-  const {minimum, maximum} = schema as SliderSchema;
+  const {minimum, maximum} = schema;
   if (value < (minimum ?? 0)) {
     return {message: `Slider value ${result} is below the specified minimum value of ${minimum ?? 0}.`};
   }
@@ -235,8 +234,8 @@ function tryParseSlider(result: unknown, schema: NumberSchema) {
   }
 }
 
-function tryParseScale(result: unknown, schema: NumberSchema) {
-  const {maximum} = schema as ScaleSchema;
+function tryParseScale(result: unknown, schema: ScaleSchema) {
+  const {maximum} = schema;
   const value = result as number;
   if (!Number.isInteger(result)) {
     return {message: `Scale value ${result} must be an integer.`};

@@ -6,6 +6,8 @@ import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
 import {ConnectionRequirement} from '../api_types';
+import {CurrencyFormat} from '../schema';
+import type {CurrencySchema} from '../schema';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import {DefaultConnectionType} from '../types';
 import type {DynamicSyncTableDef} from '../api';
@@ -16,8 +18,6 @@ import type {MultiQueryParamTokenAuthentication} from '../types';
 import type {Network} from '../api_types';
 import {NetworkConnection} from '../api_types';
 import type {NoAuthentication} from '../types';
-import {NumberHintValueTypes} from '../schema';
-import type {NumberSchema} from '../schema';
 import type {NumericPackFormula} from '../api';
 import type {OAuth2Authentication} from '../types';
 import {ObjectHintValueTypes} from '../schema';
@@ -32,7 +32,12 @@ import type {ParamDef} from '../api_types';
 import type {ParamDefs} from '../api_types';
 import {PostSetupType} from '../types';
 import type {QueryParamTokenAuthentication} from '../types';
+import {ScaleIconSet} from '../schema';
+import type { ScaleSchema } from '..';
 import type {SetEndpoint} from '../types';
+import {SimpleNumberHintValueTypes} from '../schema';
+import type {SimpleNumberSchema} from '../schema';
+import type {SliderSchema} from '../schema';
 import {StringHintValueTypes} from '../schema';
 import type {StringPackFormula} from '../api';
 import type {StringSchema} from '../schema';
@@ -41,6 +46,7 @@ import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
 import {Type} from '../api_types';
 import type {ValidationError} from './types';
+import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
 import type {VariousAuthentication} from '../types';
 import type {VariousSupportedAuthenticationTypes} from '../types';
@@ -430,16 +436,6 @@ const commonPackFormulaSchema = {
   extraOAuthScopes: z.array(z.string()).optional(),
 };
 
-const numericPackFormulaSchema = zodCompleteObject<Omit<NumericPackFormula<any>, 'execute'>>({
-  ...commonPackFormulaSchema,
-  resultType: zodDiscriminant(Type.number),
-  schema: zodCompleteObject<NumberSchema>({
-    type: zodDiscriminant(ValueType.Number),
-    codaType: z.enum([...NumberHintValueTypes]).optional(),
-    description: z.string().optional(),
-  }).optional(),
-});
-
 const stringPackFormulaSchema = zodCompleteObject<Omit<StringPackFormula<any>, 'execute'>>({
   ...commonPackFormulaSchema,
   resultType: zodDiscriminant(Type.string),
@@ -489,11 +485,51 @@ const booleanPropertySchema = zodCompleteObject<BooleanSchema & ObjectSchemaProp
   ...basePropertyValidators,
 });
 
-const numberPropertySchema = zodCompleteObject<NumberSchema & ObjectSchemaProperty>({
+const simpleNumberPropertySchema = zodCompleteStrictObject<SimpleNumberSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Number),
-  codaType: z.enum([...NumberHintValueTypes]).optional(),
+  codaType: z.enum([...SimpleNumberHintValueTypes]).optional(),
   ...basePropertyValidators,
+})
+
+const scalePropertySchema = zodCompleteStrictObject<ScaleSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.Number),
+  codaType: zodDiscriminant(ValueHintType.Scale),
+  maximum: z.number(),
+  icon: z.nativeEnum(ScaleIconSet),
+  ...basePropertyValidators,
+})
+
+const sliderPropertySchema = zodCompleteStrictObject<SliderSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.Number),
+  codaType: zodDiscriminant(ValueHintType.Slider),
+  maximum: z.number().optional(),
+  minimum: z.number().optional(),
+  step: z.number().optional(),
+  ...basePropertyValidators,
+})
+
+const currencyPropertySchema = zodCompleteStrictObject<CurrencySchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.Number),
+  codaType: zodDiscriminant(ValueHintType.Currency),
+  precision: z.number().optional(),
+  currencyCode: z.string().optional(),
+  format: z.nativeEnum(CurrencyFormat).optional(),
+  ...basePropertyValidators,
+})
+
+const numberPropertySchema = z.union([
+  simpleNumberPropertySchema, 
+  scalePropertySchema, 
+  sliderPropertySchema, 
+  currencyPropertySchema
+]);
+
+const numericPackFormulaSchema = zodCompleteObject<Omit<NumericPackFormula<any>, 'execute'>>({
+  ...commonPackFormulaSchema,
+  resultType: zodDiscriminant(Type.number),
+  schema: numberPropertySchema.optional(),
 });
+
 
 const stringPropertySchema = zodCompleteObject<StringSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.String),
