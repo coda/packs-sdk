@@ -2334,7 +2334,7 @@
 </ul>
 <p>Local development is enabled through the <code>coda</code> command line tool (CLI). Keep reading to learn how to install the CLI and use it to build a Pack.</p>
 <h2 id="before-you-get-started">Before you get started<a class="headerlink" href="#before-you-get-started" title="Permanent link">&para;</a></h2>
-<p>To create a Pack you will need a Coda account, with <a href="https://help.coda.io/en/articles/3388781-members-and-roles">Doc Maker access</a> in your workspace. If you're new to Coda, <a href="https://packs.adhoc.coda.io/signup">sign up</a> for a free account and you'll automatically be made a Doc Maker in your personal workspace.</p>
+<p>To create a Pack you will need a Coda account, with <a href="https://help.coda.io/en/articles/3388781-members-and-roles">Doc Maker access</a> in your workspace. If you're new to Coda, <a href="https://coda.io/signup">sign up</a> for a free account and you'll automatically be made a Doc Maker in your personal workspace.</p>
 <p>Make sure you have <code>node</code> and <code>npm</code> available on your machine. These two tools often come bundled together, and more information on how to install them is available in the <a href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm">npm docs</a>.</p>
 <p>The instructions below assume some familiarity with the terminal / command prompt. If you aren't used to using this interface consult the help material for your operating system.</p>
 <h2 id="set-up-the-pack-structure">Set up the Pack structure<a class="headerlink" href="#set-up-the-pack-structure" title="Permanent link">&para;</a></h2>
@@ -2433,7 +2433,7 @@
 <ol>
 <li>
 <p>Register an API key for Pack uploads:</p>
-<div class="highlight"><pre><span></span><code>npx coda register --codaApiEndpoint<span class="o">=</span>https://packs.adhoc.coda.io
+<div class="highlight"><pre><span></span><code>npx coda register
 </code></pre></div>
 </li>
 <li>
@@ -2455,14 +2455,14 @@
 </details>
 <h3 id="create-the-pack">Create the Pack<a class="headerlink" href="#create-the-pack" title="Permanent link">&para;</a></h3>
 <p>Now that you have the access configured you can create the new Pack on Coda's servers. This setup step that needs to be done for each Pack you create.</p>
-<div class="highlight"><pre><span></span><code>npx coda create manifest.ts --name <span class="s2">&quot;Hello World&quot;</span> --description <span class="s2">&quot;My first Pack.&quot;</span> --codaApiEndpoint<span class="o">=</span>https://packs.adhoc.coda.io
+<div class="highlight"><pre><span></span><code>npx coda create manifest.ts --name <span class="s2">&quot;Hello World&quot;</span> --description <span class="s2">&quot;My first Pack.&quot;</span>
 </code></pre></div>
 <details class="info"><summary>Edit your branding later</summary><p>The <code>name</code> and <code>description</code> arguments are optional and can be changed later in the Pack Studio's <strong>Listing</strong> tab, along with a variety of other branding options.</p>
 </details>
 <p>This will create a new, empty Pack on Coda's servers and output its URL in the Pack Studio. It stores the Pack's ID in the new file <code>.coda-pack.json</code>.</p>
 <h3 id="upload-the-first-version">Upload the first version<a class="headerlink" href="#upload-the-first-version" title="Permanent link">&para;</a></h3>
 <p>Now that you've established access and created the empty Pack, you're finally ready to upload your code.</p>
-<div class="highlight"><pre><span></span><code>npx coda upload manifest.ts --notes <span class="s2">&quot;Initial version.&quot;</span> --codaApiEndpoint<span class="o">=</span>https://packs.adhoc.coda.io
+<div class="highlight"><pre><span></span><code>npx coda upload manifest.ts --notes <span class="s2">&quot;Initial version.&quot;</span>
 </code></pre></div>
 <details class="warning"><summary>Source code not avilable</summary><p>If you open your Pack in the online Pack Studio code editor you'll see a message like:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Some boilerplate when failed to load source code</span>
@@ -2471,7 +2471,7 @@
 </details>
 <h2 id="install-and-use-the-pack">Install and use the Pack<a class="headerlink" href="#install-and-use-the-pack" title="Permanent link">&para;</a></h2>
 <p>Your new Pack is now available to use in all your docs, and you can install it just any other Pack. Let's create a new document and install it:
-1. Open <a href="https://packs.adhoc.coda.io/docs">Coda</a> in your browser.
+1. Open <a href="https://coda.io/docs">Coda</a> in your browser.
 1. Click the <strong>+ New doc</strong> button and select <strong>Start with a blank page</strong>.</p>
 <ol>
 <li>In your doc, click <strong>Explore</strong>, then <strong>Packs &amp; import</strong>.</li>
@@ -2536,7 +2536,7 @@
 </li>
 <li>
 <p>Run <code>coda upload</code> again to upload the new version.</p>
-<div class="highlight"><pre><span></span><code>npx coda upload manifest.ts --notes <span class="s2">&quot;Changed to Howdy.&quot;</span> --codaApiEndpoint<span class="o">=</span>https://packs.adhoc.coda.io
+<div class="highlight"><pre><span></span><code>npx coda upload manifest.ts --notes <span class="s2">&quot;Changed to Howdy.&quot;</span>
 </code></pre></div>
 </li>
 <li>
