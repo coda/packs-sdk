@@ -1,6 +1,7 @@
 import type {Arguments} from 'yargs';
 import type {Logger} from '../api_types';
 import type {PackUpload} from '../compiled_types';
+import type {PublicApiPackVersionUploadInfo} from '../helpers/external-api/v1';
 import type {TimerShimStrategy} from '../testing/compile';
 import {compilePackBundle} from '../testing/compile';
 import {compilePackMetadata} from '../helpers/metadata';
@@ -8,11 +9,12 @@ import {computeSha256} from '../helpers/crypto';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
+import {formatResponseError} from './errors';
 import fs from 'fs-extra';
 import {getApiKey} from './config_storage';
 import {getPackId} from './config_storage';
 import {importManifest} from './helpers';
-import {isCodaError} from './errors';
+import {isResponseError} from '../helpers/external-api/coda';
 import {isTestCommand} from './helpers';
 import os from 'os';
 import * as path from 'path';
@@ -125,9 +127,14 @@ export async function handleUpload({
     await validateMetadata(metadata);
 
     logger.info('Registering new Pack version...');
-    const registerResponse = await client.registerPackVersion(packId, packVersion, {}, {bundleHash});
-    if (isCodaError(registerResponse)) {
-      return printAndExit(`Error while registering pack version: ${formatError(registerResponse)}`);
+    let registerResponse: PublicApiPackVersionUploadInfo;
+    try {
+      registerResponse = await client.registerPackVersion(packId, packVersion, {}, {bundleHash});
+    } catch (err: any) {
+      if (isResponseError(err)) {
+        return printAndExit(`Error while registering pack version: ${await formatResponseError(err)}`);
+      }
+      throw err;
     }
 
     const {uploadUrl, headers} = registerResponse;
@@ -136,9 +143,13 @@ export async function handleUpload({
     await uploadPack(uploadUrl, uploadPayload, headers);
 
     logger.info('Validating upload...');
-    const uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion, {}, {notes});
-    if (isCodaError(uploadCompleteResponse)) {
-      printAndExit(`Error while finalizing pack version: ${formatError(uploadCompleteResponse)}`);
+    try {
+      await client.packVersionUploadComplete(packId, packVersion, {}, {notes});
+    } catch (err: any) {
+      if (isResponseError(err)) {
+        printAndExit(`Error while finalizing pack version: ${await formatResponseError(err)}`);
+      }
+      throw err;
     }
   } catch (err: any) {
     const errors = [`Unexpected error during Pack upload: ${formatError(err)}`, tryParseSystemError(err)];

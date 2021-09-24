@@ -26,9 +26,12 @@ ___
 
 • `Optional` **currencyCode**: `string`
 
+A three-letter ISO 4217 currency code, e.g. USD or EUR.
+If the currency code is not supported by Coda, the value will be rendered using USD.
+
 #### Defined in
 
-[schema.ts:102](https://github.com/coda/packs-sdk/blob/main/schema.ts#L102)
+[schema.ts:106](https://github.com/coda/packs-sdk/blob/main/schema.ts#L106)
 
 ___
 
@@ -52,7 +55,7 @@ ___
 
 #### Defined in
 
-[schema.ts:103](https://github.com/coda/packs-sdk/blob/main/schema.ts#L103)
+[schema.ts:107](https://github.com/coda/packs-sdk/blob/main/schema.ts#L107)
 
 ___
 

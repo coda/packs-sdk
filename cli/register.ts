@@ -1,7 +1,7 @@
 import type {Arguments} from 'yargs';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
-import {isCodaError} from './errors';
+import {isResponseError} from '../helpers/external-api/coda';
 import open from 'open';
 import {printAndExit} from '../testing/helpers';
 import {promptForInput} from '../testing/helpers';
@@ -28,11 +28,12 @@ export async function handleRegister({apiToken, codaApiEndpoint}: Arguments<Regi
   const client = createCodaClient(apiToken, formattedEndpoint);
 
   try {
-    const response = await client.whoami();
-    if (isCodaError(response)) {
+    await client.whoami();
+  } catch (err: any) {
+    if (isResponseError(err)) {
       return printAndExit(`Invalid API token provided.`);
     }
-  } catch (err: any) {
+
     const errors = [`Unexpected error while checking validity of API token: ${err}`, tryParseSystemError(err)];
     return printAndExit(errors.join('\n'));
   }

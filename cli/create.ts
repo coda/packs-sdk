@@ -3,10 +3,11 @@ import {PACK_ID_FILE_NAME} from './config_storage';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
+import {formatResponseError} from './errors';
 import fs from 'fs';
 import {getApiKey} from './config_storage';
 import {getPackId} from './config_storage';
-import {isCodaError} from './errors';
+import {isResponseError} from '../helpers/external-api/coda';
 import * as path from 'path';
 import {printAndExit} from '../testing/helpers';
 import {storePackId} from './config_storage';
@@ -20,15 +21,20 @@ interface CreateArgs {
   workspace?: string;
 }
 
-export async function handleCreate(
-  {manifestFile, codaApiEndpoint, name, description, workspace}: Arguments<CreateArgs>) {
+export async function handleCreate({
+  manifestFile,
+  codaApiEndpoint,
+  name,
+  description,
+  workspace,
+}: Arguments<CreateArgs>) {
   await createPack(manifestFile, codaApiEndpoint, {name, description, workspace});
 }
 
 export async function createPack(
   manifestFile: string,
   codaApiEndpoint: string,
-  {name, description, workspace}: {name?: string; description?: string, workspace?: string},
+  {name, description, workspace}: {name?: string; description?: string; workspace?: string},
 ) {
   const manifestDir = path.dirname(manifestFile);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
@@ -54,15 +60,14 @@ export async function createPack(
 
   const codaClient = createCodaClient(apiKey, formattedEndpoint);
   try {
-    const response = await codaClient.createPack({}, 
-      {name, description, workspaceId: parseWorkspace(workspace)});
-    if (isCodaError(response)) {
-      return printAndExit(`Unable to create your pack, received error: ${formatError(response)}`);
-    }
+    const response = await codaClient.createPack({}, {name, description, workspaceId: parseWorkspace(workspace)});
     const packId = response.packId;
     storePackId(manifestDir, packId, codaApiEndpoint);
     return printAndExit(`Pack created successfully! You can manage pack settings at ${codaApiEndpoint}/p/${packId}`, 0);
   } catch (err: any) {
+    if (isResponseError(err)) {
+      return printAndExit(`Unable to create your pack, received error: ${await formatResponseError(err)}`);
+    }
     const errors = [`Unable to create your pack, received error: ${formatError(err)}`, tryParseSystemError(err)];
     return printAndExit(errors.join('\n'));
   }

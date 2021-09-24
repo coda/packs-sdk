@@ -4,34 +4,40 @@
 
 /* eslint-disable */
 
-export const OpenApiSpecHash = 'c17f33bab1c1496bf73356d09380fa0a04e074f97741adc801db545ea8db0026';
+export const OpenApiSpecHash = '3aa501d45272807675d21bf05be9126605ebf1b875aca82ff56b077a3111af4d';
 
-export const OpenApiSpecVersion = '1.2.0';
+export const OpenApiSpecVersion = '1.2.1';
 
 /**
  * A constant identifying the type of the resource.
  */
 export enum PublicApiType {
-  Doc = 'doc',
-  AclPermissions = 'aclPermissions',
   AclMetadata = 'aclMetadata',
-  User = 'user',
+  AclPermissions = 'aclPermissions',
   ApiLink = 'apiLink',
-  Page = 'page',
-  Table = 'table',
-  Row = 'row',
   Column = 'column',
-  Formula = 'formula',
   Control = 'control',
+  Doc = 'doc',
   DocAnalytics = 'docAnalytics',
+  Folder = 'folder',
+  Formula = 'formula',
   MutationStatus = 'mutationStatus',
-  Workspace = 'workspace',
   Pack = 'pack',
-  PackVersion = 'packVersion',
   PackAclPermissions = 'packAclPermissions',
   PackAsset = 'packAsset',
+  PackCategory = 'packCategory',
+  PackLog = 'packLog',
+  PackMaker = 'packMaker',
+  PackOauthConfig = 'packOauthConfig',
   PackRelease = 'packRelease',
   PackSourceCode = 'packSourceCode',
+  PackSystemConnection = 'packSystemConnection',
+  PackVersion = 'packVersion',
+  Page = 'page',
+  Row = 'row',
+  Table = 'table',
+  User = 'user',
+  Workspace = 'workspace',
 }
 
 /**
@@ -154,7 +160,7 @@ export interface PublicApiDocReference {
   /**
    * The type of this resource.
    */
-  type: 'doc';
+  type: PublicApiType.Doc;
   /**
    * API link to the Coda doc.
    */
@@ -176,7 +182,7 @@ export interface PublicApiDoc {
   /**
    * The type of this resource.
    */
-  type: 'doc';
+  type: PublicApiType.Doc;
   /**
    * API link to the Coda doc.
    */
@@ -209,6 +215,8 @@ export interface PublicApiDoc {
    */
   updatedAt: string;
   published?: PublicApiDocPublished;
+  folder: PublicApiFolderReference;
+  workspace: PublicApiWorkspaceReference;
   /**
    * ID of the Coda workspace containing this doc.
    */
@@ -269,7 +277,7 @@ export interface PublicApiDocCreate {
    */
   timezone?: string;
   /**
-   * The ID of the folder within which to create this doc. Defaults to your "My Docs" folder in the oldest workspace you joined; this is subject to change. You can get this ID by opening the folder in the docs list on your computer and grabbing the `folderId` query parameter.
+   * The ID of the folder within which to create this doc. Defaults to your "My docs" folder in the oldest workspace you joined; this is subject to change. You can get this ID by opening the folder in the docs list on your computer and grabbing the `folderId` query parameter.
    *
    */
   folderId?: string;
@@ -311,10 +319,6 @@ export interface PublicApiDocPublish {
    */
   slug?: string;
   /**
-   * If true, the doc will display a copy button in the header.
-   */
-  copyable?: boolean;
-  /**
    * If true, indicates that the doc is discoverable.
    */
   discoverable?: boolean;
@@ -346,10 +350,6 @@ export interface PublicApiDocPublished {
    * URL to the cover image for the published doc.
    */
   imageLink?: string;
-  /**
-   * If true, the doc will display a copy button in the header.
-   */
-  copyable: boolean;
   /**
    * If true, indicates that the doc is discoverable.
    */
@@ -396,7 +396,7 @@ export interface PublicApiDocumentCreationResult {
   /**
    * The type of this resource.
    */
-  type: 'doc';
+  type: PublicApiType.Doc;
   /**
    * API link to the Coda doc.
    */
@@ -429,6 +429,8 @@ export interface PublicApiDocumentCreationResult {
    */
   updatedAt: string;
   published?: PublicApiDocPublished;
+  folder: PublicApiFolderReference;
+  workspace: PublicApiWorkspaceReference;
   /**
    * ID of the Coda workspace containing this doc.
    */
@@ -454,7 +456,7 @@ export interface PublicApiPageReference {
   /**
    * The type of this resource.
    */
-  type: 'page';
+  type: PublicApiType.Page;
   /**
    * API link to the page.
    */
@@ -480,7 +482,7 @@ export interface PublicApiPage {
   /**
    * The type of this resource.
    */
-  type: 'page';
+  type: PublicApiType.Page;
   /**
    * API link to the page.
    */
@@ -618,7 +620,7 @@ export interface PublicApiTableReference {
   /**
    * The type of this resource.
    */
-  type: 'table';
+  type: PublicApiType.Table;
   tableType: PublicApiTableType;
   /**
    * API link to the table.
@@ -646,7 +648,7 @@ export interface PublicApiTable {
   /**
    * The type of this resource.
    */
-  type: 'table';
+  type: PublicApiType.Table;
   tableType: PublicApiTableType;
   /**
    * API link to the table.
@@ -707,7 +709,7 @@ export interface PublicApiColumnReference {
   /**
    * The type of this resource.
    */
-  type: 'column';
+  type: PublicApiType.Column;
   /**
    * API link to the column.
    */
@@ -725,7 +727,7 @@ export interface PublicApiColumn {
   /**
    * The type of this resource.
    */
-  type: 'column';
+  type: PublicApiType.Column;
   /**
    * API link to the column.
    */
@@ -742,6 +744,14 @@ export interface PublicApiColumn {
    * Whether the column has a formula set on it.
    */
   calculated?: boolean;
+  /**
+   * Formula on the column.
+   */
+  formula?: string;
+  /**
+   * Default value formula for the column.
+   */
+  defaultValue?: string;
   format: PublicApiColumnFormat;
 }
 
@@ -756,7 +766,7 @@ export interface PublicApiColumnDetail {
   /**
    * The type of this resource.
    */
-  type: 'column';
+  type: PublicApiType.Column;
   /**
    * API link to the column.
    */
@@ -773,6 +783,14 @@ export interface PublicApiColumnDetail {
    * Whether the column has a formula set on it.
    */
   calculated?: boolean;
+  /**
+   * Formula on the column.
+   */
+  formula?: string;
+  /**
+   * Default value formula for the column.
+   */
+  defaultValue?: string;
   format: PublicApiColumnFormat;
   parent: PublicApiTableReference;
 }
@@ -917,6 +935,24 @@ export type PublicApiSliderColumnFormat = PublicApiSimpleColumnFormat & {
 };
 
 /**
+ * Format of a button column.
+ */
+export type PublicApiButtonColumnFormat = PublicApiSimpleColumnFormat & {
+  /**
+   * Label formula for the button.
+   */
+  label?: string;
+  /**
+   * DisableIf formula for the button.
+   */
+  disableIf?: string;
+  /**
+   * Action formula for the button.
+   */
+  action?: string;
+};
+
+/**
  * List of available icon sets.
  */
 export enum PublicApiIconSet {
@@ -957,6 +993,7 @@ export type PublicApiScaleColumnFormat = PublicApiSimpleColumnFormat & {
  * Format of a column.
  */
 export type PublicApiColumnFormat =
+  | PublicApiButtonColumnFormat
   | PublicApiDateColumnFormat
   | PublicApiDateTimeColumnFormat
   | PublicApiDurationColumnFormat
@@ -1020,7 +1057,7 @@ export interface PublicApiRow {
   /**
    * The type of this resource.
    */
-  type: 'row';
+  type: PublicApiType.Row;
   /**
    * API link to the row.
    */
@@ -1065,7 +1102,7 @@ export interface PublicApiRowDetail {
   /**
    * The type of this resource.
    */
-  type: 'row';
+  type: PublicApiType.Row;
   /**
    * API link to the row.
    */
@@ -1410,7 +1447,7 @@ export interface PublicApiFormulaReference {
   /**
    * The type of this resource.
    */
-  type: 'formula';
+  type: PublicApiType.Formula;
   /**
    * API link to the formula.
    */
@@ -1433,7 +1470,7 @@ export interface PublicApiFormula {
   /**
    * The type of this resource.
    */
-  type: 'formula';
+  type: PublicApiType.Formula;
   /**
    * API link to the formula.
    */
@@ -1470,7 +1507,7 @@ export interface PublicApiControlReference {
   /**
    * The type of this resource.
    */
-  type: 'control';
+  type: PublicApiType.Control;
   /**
    * API link to the control.
    */
@@ -1493,7 +1530,7 @@ export interface PublicApiControl {
   /**
    * The type of this resource.
    */
-  type: 'control';
+  type: PublicApiType.Control;
   /**
    * API link to the control.
    */
@@ -1551,7 +1588,7 @@ export interface PublicApiUser {
   /**
    * The type of this resource.
    */
-  type: 'user';
+  type: PublicApiType.User;
   /**
    * Browser-friendly link to the user's avatar image.
    */
@@ -1586,7 +1623,7 @@ export interface PublicApiUserSummary {
   /**
    * The type of this resource.
    */
-  type: 'user';
+  type: PublicApiType.User;
   /**
    * Browser-friendly link to the user's avatar image.
    */
@@ -1610,13 +1647,91 @@ export type PublicApiNextPageLink = string;
 export type PublicApiNextSyncToken = string;
 
 /**
+ * Info about a publishing category
+ */
+export interface PublicApiPublishingCategory {
+  /**
+   * The ID for this category.
+   */
+  categoryId: string;
+  /**
+   * The name of the category.
+   */
+  categoryName: string;
+}
+
+/**
+ * Info about the maker
+ */
+export interface PublicApiMaker {
+  /**
+   * Name of the maker.
+   */
+  name: string;
+  /**
+   * Browser-friendly link to the maker's avatar image.
+   */
+  pictureLink?: string;
+  /**
+   * Maker profile identifier for the maker.
+   */
+  slug?: string;
+  /**
+   * Job title for maker.
+   */
+  jobTitle?: string;
+  /**
+   * Employer for maker.
+   */
+  employer?: string;
+  /**
+   * Description for the maker.
+   */
+  description?: string;
+  /**
+   * Email address of the user.
+   */
+  loginId: string;
+}
+
+/**
+ * Summary about a maker
+ */
+export interface PublicApiMakerSummary {
+  /**
+   * Name of the maker.
+   */
+  name: string;
+  /**
+   * Browser-friendly link to the maker's avatar image.
+   */
+  pictureLink?: string;
+  /**
+   * Maker profile identifier for the maker.
+   */
+  slug?: string;
+  /**
+   * Job title for maker.
+   */
+  jobTitle?: string;
+  /**
+   * Employer for maker.
+   */
+  employer?: string;
+  /**
+   * Description for the maker.
+   */
+  description?: string;
+}
+
+/**
  * Info about a resolved link to an API resource.
  */
 export interface PublicApiApiLink {
   /**
    * The type of this resource.
    */
-  type: 'apiLink';
+  type: PublicApiType.ApiLink;
   /**
    * Self link to this query.
    */
@@ -1737,6 +1852,24 @@ export interface PublicApiMutationStatus {
 }
 
 /**
+ * Reference to a Coda folder.
+ */
+export interface PublicApiFolderReference {
+  /**
+   * ID of the Coda folder.
+   */
+  id: string;
+  /**
+   * The type of this resource.
+   */
+  type: PublicApiType.Folder;
+  /**
+   * Browser-friendly link to the folder.
+   */
+  browserLink: string;
+}
+
+/**
  * Reference to a Coda workspace.
  */
 export interface PublicApiWorkspaceReference {
@@ -1747,7 +1880,11 @@ export interface PublicApiWorkspaceReference {
   /**
    * The type of this resource.
    */
-  type: 'workspace';
+  type: PublicApiType.Workspace;
+  /**
+   * ID of the organization bound to this workspace, if any.
+   */
+  organizationId?: string;
   /**
    * Browser-friendly link to the Coda workspace.
    */
@@ -1765,7 +1902,11 @@ export interface PublicApiWorkspace {
   /**
    * The type of this resource.
    */
-  type: 'workspace';
+  type: PublicApiType.Workspace;
+  /**
+   * ID of the organization bound to this workspace, if any.
+   */
+  organizationId?: string;
   /**
    * Browser-friendly link to the Coda workspace.
    */
@@ -1970,9 +2111,17 @@ export interface PublicApiPack {
    */
   logoUrl?: string;
   /**
+   * The link to the cover photo of the Pack.
+   */
+  coverUrl?: string;
+  /**
    * The parent workspace for the Pack.
    */
   workspaceId: string;
+  /**
+   * Publishing categories associated with this Pack.
+   */
+  categories: PublicApiPublishingCategory[];
   /**
    * The name of the Pack.
    */
@@ -1985,6 +2134,10 @@ export interface PublicApiPack {
    * A short version of the description of the Pack.
    */
   shortDescription: string;
+  /**
+   * A contact email for the Pack.
+   */
+  supportEmail?: string;
   overallRateLimit?: PublicApiPackRateLimit;
   perConnectionRateLimit?: PublicApiPackRateLimit;
 }
@@ -2002,9 +2155,17 @@ export interface PublicApiPackSummary {
    */
   logoUrl?: string;
   /**
+   * The link to the cover photo of the Pack.
+   */
+  coverUrl?: string;
+  /**
    * The parent workspace for the Pack.
    */
   workspaceId: string;
+  /**
+   * Publishing categories associated with this Pack.
+   */
+  categories: PublicApiPublishingCategory[];
   /**
    * The name of the Pack.
    */
@@ -2017,6 +2178,10 @@ export interface PublicApiPackSummary {
    * A short version of the description of the Pack.
    */
   shortDescription: string;
+  /**
+   * A contact email for the Pack.
+   */
+  supportEmail?: string;
 }
 
 /**
@@ -2084,14 +2249,16 @@ export enum PublicApiPackPrincipalType {
   Worldwide = 'worldwide',
 }
 
-/**
- * Access type for a Pack.
- */
 export enum PublicApiPackAccessType {
   View = 'view',
   Test = 'test',
   Edit = 'edit',
 }
+
+/**
+ * Access types for a Pack.
+ */
+export type PublicApiPackAccessTypes = PublicApiPackAccessType[];
 
 export interface PublicApiPackUserPrincipal {
   type: PublicApiPackPrincipalType.User;
@@ -2129,6 +2296,7 @@ export interface PublicApiPackPermission {
 
 export enum PublicApiPackAssetType {
   Logo = 'logo',
+  Cover = 'cover',
   ExampleImage = 'exampleImage',
 }
 
@@ -2281,6 +2449,15 @@ export interface PublicApiPackSourceCode {
 }
 
 /**
+ * Widest principal a Pack is available to.
+ */
+export enum PublicApiPackDiscoverability {
+  Public = 'public',
+  Workspace = 'workspace',
+  Private = 'private',
+}
+
+/**
  * A Pack listing.
  */
 export interface PublicApiPackListing {
@@ -2297,6 +2474,10 @@ export interface PublicApiPackListing {
    */
   logoUrl: string;
   /**
+   * The link to the cover photo of the Pack.
+   */
+  coverUrl?: string;
+  /**
    * The name of the Pack.
    */
   name: string;
@@ -2308,6 +2489,86 @@ export interface PublicApiPackListing {
    * A short version of the description of the Pack.
    */
   shortDescription: string;
+  /**
+   * A contact email for the Pack.
+   */
+  supportEmail?: string;
+  /**
+   * Publishing Categories associated with this Pack.
+   */
+  categories: PublicApiPublishingCategory[];
+  minimumFeatureSet?: PublicApiFeatureSet;
+  unrestrictedFeatureSet?: PublicApiFeatureSet;
+  /**
+   * The url where complete metadata about the contents of the Pack version can be downloaded.
+   */
+  externalMetadataUrl: string;
+}
+
+/**
+ * A detailed Pack listing.
+ */
+export interface PublicApiPackListingDetail {
+  /**
+   * ID of the Pack.
+   */
+  packId: number;
+  /**
+   * The version of the Pack.
+   */
+  packVersion: string;
+  /**
+   * The link to the logo of the Pack.
+   */
+  logoUrl: string;
+  /**
+   * The link to the cover photo of the Pack.
+   */
+  coverUrl?: string;
+  /**
+   * The name of the Pack.
+   */
+  name: string;
+  /**
+   * The full description of the Pack.
+   */
+  description: string;
+  /**
+   * A short version of the description of the Pack.
+   */
+  shortDescription: string;
+  /**
+   * A contact email for the Pack.
+   */
+  supportEmail?: string;
+  /**
+   * Publishing Categories associated with this Pack.
+   */
+  categories: PublicApiPublishingCategory[];
+  minimumFeatureSet?: PublicApiFeatureSet;
+  unrestrictedFeatureSet?: PublicApiFeatureSet;
+  /**
+   * The url where complete metadata about the contents of the Pack version can be downloaded.
+   */
+  externalMetadataUrl: string;
+  /**
+   * The release number of the Pack version if it has one.
+   */
+  releaseId?: number;
+  discoverability: PublicApiPackDiscoverability;
+  /**
+   * Makers associated with this Pack.
+   */
+  makers: PublicApiMakerSummary[];
+  /**
+   * The access capabilities the current user has for this Pack.
+   */
+  userAccess: {
+    canEdit: boolean;
+    canTest: boolean;
+    canView: boolean;
+    canInstall: boolean;
+  };
 }
 
 /**
@@ -2320,14 +2581,41 @@ export interface PublicApiPackListingList {
 }
 
 /**
- * The Pack system connection.
+ * Metadata of a Pack system connection.
  */
-export interface PublicApiPackSystemConnection {
+export type PublicApiPackSystemConnectionMetadata =
+  | PublicApiPackConnectionHeaderMetadata
+  | PublicApiPackConnectionUrlParamMetadata
+  | PublicApiPackConnectionHttpBasicMetadata;
+
+/**
+ * The Pack OAuth configuration metadata.
+ */
+export interface PublicApiPackOauthConfigMetadata {
   /**
-   * Name of the system connection.
+   * Masked OAuth client id. If not set, empty string will be returned.
    */
-  name: string;
-  credentials: PublicApiPackSystemConnectionCredentials;
+  maskedClientId: string;
+  /**
+   * Masked OAuth client secret. If not set, empty string will be returned.
+   */
+  maskedClientSecret: string;
+  /**
+   * Authorization url of the OAuth provider.
+   */
+  authorizationUrl: string;
+  /**
+   * Token url of the OAuth provider.
+   */
+  tokenUrl: string;
+  /**
+   * Optional token prefix that's used to make the API request.
+   */
+  tokenPrefix?: string;
+  /**
+   * Optional scopes of the OAuth client.
+   */
+  scopes?: string;
 }
 
 /**
@@ -2359,6 +2647,16 @@ export interface PublicApiCreatePackResponse {
 }
 
 /**
+ * Payload for getting the next version of a Pack.
+ */
+export interface PublicApiGetNextPackVersionRequest {
+  /**
+   * The metadata for the next version of the Pack.
+   */
+  proposedMetadata: string;
+}
+
+/**
  * Type of Pack connections.
  */
 export enum PublicApiPackConnectionType {
@@ -2375,6 +2673,29 @@ export type PublicApiPackSystemConnectionCredentials =
   | PublicApiPackConnectionUrlParamCredentials
   | PublicApiPackConnectionHttpBasicCredentials;
 
+export interface PublicApiPackConnectionHeaderMetadata {
+  type: PublicApiPackConnectionType.Header;
+  maskedToken?: string;
+  headerName: string;
+  tokenPrefix: string;
+}
+
+export interface PublicApiPackConnectionUrlParamMetadata {
+  type: PublicApiPackConnectionType.UrlParam;
+  params: {
+    key: string;
+    maskedValue: string;
+  }[];
+  domain: string;
+  presetKeys: string[];
+}
+
+export interface PublicApiPackConnectionHttpBasicMetadata {
+  type: PublicApiPackConnectionType.HttpBasic;
+  maskedUsername?: string;
+  maskedPassword?: string;
+}
+
 export interface PublicApiPackConnectionHeaderCredentials {
   type: PublicApiPackConnectionType.Header;
   token: string;
@@ -2389,9 +2710,224 @@ export interface PublicApiPackConnectionUrlParamCredentials {
 }
 
 export interface PublicApiPackConnectionHttpBasicCredentials {
-  type: PublicApiPackConnectionType.UrlParam;
+  type: PublicApiPackConnectionType.HttpBasic;
   username: string;
-  password: string;
+  password?: string;
+}
+
+export interface PublicApiPackConnectionHeaderPatch {
+  type: PublicApiPackConnectionType.Header;
+  token?: string;
+}
+
+export interface PublicApiPackConnectionUrlParamPatch {
+  type: PublicApiPackConnectionType.UrlParam;
+  paramsToPatch?: {
+    key: string;
+    value: string;
+  }[];
+}
+
+export interface PublicApiPackConnectionHttpBasicPatch {
+  type: PublicApiPackConnectionType.HttpBasic;
+  username?: string;
+  password?: string;
+}
+
+/**
+ * List of Pack logs.
+ */
+export interface PublicApiPackLogsList {
+  items: PublicApiPackLog[];
+  nextPageToken?: PublicApiNextPageToken;
+  nextPageLink?: PublicApiNextPageLink & string;
+}
+
+/**
+ * A record of Pack log.
+ */
+export type PublicApiPackLog =
+  | PublicApiPackCustomLog
+  | PublicApiPackInvocationLog
+  | PublicApiPackFetcherLog
+  | PublicApiPackInternalLog
+  | PublicApiPackAuthLog;
+
+/**
+ * Logging context that comes with a Pack log.
+ */
+export interface PublicApiPackLogContext {
+  docId: string;
+  packId: string;
+  packVersion: string;
+  formulaName: string;
+  userId: string;
+  connectionId: string;
+  /**
+   * A unique identifier of the Pack invocation that can be used to associate all log types generated in one call of a Pack formula.
+   *
+   */
+  requestId: string;
+  requestType: PublicApiPackLogRequestType;
+  /**
+   * Creation time of the log.
+   */
+  createdAt: string;
+  /**
+   * Unique identifier of this log record.
+   */
+  logId: string;
+}
+
+/**
+ * Pack log generated by developer's custom logging with context.logger.
+ */
+export interface PublicApiPackCustomLog {
+  type: PublicApiPackLogType.Custom;
+  context: PublicApiPackLogContext;
+  /**
+   * The message that's passed into context.logger.
+   */
+  message: string;
+  level: PublicApiLogLevel;
+}
+
+/**
+ * System logs of the invocations of the Pack.
+ */
+export interface PublicApiPackInvocationLog {
+  type: PublicApiPackLogType.Invocation;
+  context: PublicApiPackLogContext;
+  /**
+   * Error info if this invocation resulted in an error.
+   */
+  error?: {
+    message: string;
+  };
+}
+
+/**
+ * System logs of Pack calls to context.fetcher.
+ */
+export interface PublicApiPackFetcherLog {
+  type: PublicApiPackLogType.Fetcher;
+  context: PublicApiPackLogContext;
+  responseCode?: number;
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+  /**
+   * base url of the fetcher request, with all query parameters stripped off.
+   */
+  baseUrl?: string;
+  /**
+   * true if the fetcher request hits catche instead of actually requesting the remote service.
+   */
+  cacheHit?: boolean;
+  /**
+   * Duration of the fetcher request in miliseconds.
+   */
+  duration?: number;
+}
+
+/**
+ * Coda internal logs from the packs infrastructure. Only visible to Codans.
+ */
+export interface PublicApiPackInternalLog {
+  type: PublicApiPackLogType.Internal;
+  context: PublicApiPackLogContext;
+  /**
+   * The log message.
+   */
+  message: string;
+  level: PublicApiLogLevel;
+}
+
+/**
+ * System logs of Pack authentication requests.
+ */
+export interface PublicApiPackAuthLog {
+  type: PublicApiPackLogType.Auth;
+  context: PublicApiPackLogContext;
+  /**
+   * The request path.
+   */
+  path: string;
+  /**
+   * The error message.
+   */
+  errorMessage?: string;
+  /**
+   * The error stacktrace (internal only).
+   */
+  errorStack?: string;
+}
+
+/**
+ * The context request type where a Pack log is generated.
+ */
+export enum PublicApiPackLogRequestType {
+  Unknown = 'unknown',
+  ConnectionNameMetadataRequest = 'connectionNameMetadataRequest',
+  ParameterAutocompleteMetadataRequest = 'parameterAutocompleteMetadataRequest',
+  PostAuthSetupMetadataRequest = 'postAuthSetupMetadataRequest',
+  GetSyncTableSchemaMetadataRequest = 'getSyncTableSchemaMetadataRequest',
+  GetDynamicSyncTableNameMetadataRequest = 'getDynamicSyncTableNameMetadataRequest',
+  ListSyncTableDynamicUrlsMetadataRequest = 'listSyncTableDynamicUrlsMetadataRequest',
+  GetDynamicSyncTableDisplayUrlMetadataRequest = 'getDynamicSyncTableDisplayUrlMetadataRequest',
+  GetIdentifiersForConnectionRequest = 'getIdentifiersForConnectionRequest',
+  InvokeFormulaRequest = 'invokeFormulaRequest',
+  InvokeSyncFormulaRequest = 'invokeSyncFormulaRequest',
+  ImpersonateInvokeFormulaRequest = 'impersonateInvokeFormulaRequest',
+  ImpersonateInvokeMetadataFormulaRequest = 'impersonateInvokeMetadataFormulaRequest',
+}
+
+export enum PublicApiPackLogType {
+  Custom = 'custom',
+  Fetcher = 'fetcher',
+  Invocation = 'invocation',
+  Internal = 'internal',
+  Auth = 'auth',
+}
+
+export enum PublicApiLogLevel {
+  Error = 'error',
+  Warn = 'warn',
+  Info = 'info',
+  Debug = 'debug',
+  Trace = 'trace',
+  Unknown = 'unknown',
+}
+
+/**
+ * Only relevant for original Coda packs.
+ */
+export enum PublicApiFeatureSet {
+  Basic = 'Basic',
+  Pro = 'Pro',
+  Team = 'Team',
+  Enterprise = 'Enterprise',
+}
+
+/**
+ * The request to patch pack system connection credentials.
+ */
+export type PublicApiPatchPackSystemConnectionRequest =
+  | PublicApiPackConnectionHeaderPatch
+  | PublicApiPackConnectionUrlParamPatch
+  | PublicApiPackConnectionHttpBasicPatch;
+
+/**
+ * Request to set the Pack OAuth configuration.
+ */
+export interface PublicApiSetPackOauthConfigRequest {
+  clientId: string;
+  clientSecret: string;
+}
+
+/**
+ * The request to set pack system connection credentials.
+ */
+export interface PublicApiSetPackSystemConnectionRequest {
+  credentials: PublicApiPackSystemConnectionCredentials;
 }
 
 /**
@@ -2402,6 +2938,7 @@ export interface PublicApiRegisterPackVersionRequest {
    * The SHA-256 hash of the file to be uploaded.
    */
   bundleHash: string;
+  [k: string]: unknown;
 }
 
 /**
@@ -2439,6 +2976,10 @@ export interface PublicApiUpdatePackRequest {
    */
   logoAssetId?: string | null;
   /**
+   * The asset id of the Pack's cover image, returned by [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete) endpoint.
+   */
+  coverAssetId?: string | null;
+  /**
    * The asset ids of the Pack's example images, returned by [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete) endpoint, sorted by their display order.
    */
   exampleImageAssetIds?: string[] | null;
@@ -2454,16 +2995,10 @@ export interface PublicApiUpdatePackRequest {
    * A short version of the description of the Pack.
    */
   shortDescription?: string;
-}
-
-/**
- * Payload for setting a Pack version live.
- */
-export interface PublicApiSetPackLiveVersionRequest {
   /**
-   * The version of the Pack.
+   * A contact email for the Pack.
    */
-  packVersion: string;
+  supportEmail?: string;
 }
 
 /**
@@ -2472,9 +3007,61 @@ export interface PublicApiSetPackLiveVersionRequest {
 export interface PublicApiCreatePackVersionResponse {}
 
 /**
- * Confirmation of successfully setting a Pack version live.
+ * Confirmation of successfully retrieving Pack makers.
  */
-export interface PublicApiSetPackLiveVersionResponse {}
+export interface PublicApiListPackMakersResponse {
+  makers: PublicApiMaker[];
+}
+
+/**
+ * Payload for adding a Pack maker.
+ */
+export interface PublicApiAddPackMakerRequest {
+  /**
+   * The email of the Pack maker.
+   */
+  loginId: string;
+}
+
+/**
+ * Confirmation of successfully adding a Pack maker.
+ */
+export interface PublicApiAddPackMakerResponse {}
+
+/**
+ * Confirmation of successfully deleting a Pack maker.
+ */
+export interface PublicApiDeletePackMakerResponse {}
+
+/**
+ * Confirmation of successfully retrieving Pack categories.
+ */
+export interface PublicApiListPackCategoriesResponse {
+  /**
+   * The names of categories associated with a Pack.
+   */
+  categories: PublicApiPublishingCategory[];
+}
+
+/**
+ * Payload for adding a Pack Category.
+ */
+export interface PublicApiAddPackCategoryRequest {
+  /**
+   * Name of the publishing category.
+   */
+  categoryName: string;
+}
+
+/**
+ * Confirmation of successfully adding a Pack category.
+ */
+export interface PublicApiAddPackCategoryResponse {}
+
+/**
+ * Confirmation of successfully deleting a Pack category.
+ */
+export interface PublicApiDeletePackCategoryResponse {}
 
 /**
  * Payload for upserting a Pack permission.
@@ -2561,6 +3148,7 @@ export interface PublicApiCreatePackVersionRequest {
    * Developer notes of the new Pack version.
    */
   notes?: string;
+  [k: string]: unknown;
 }
 
 /**
@@ -2575,6 +3163,7 @@ export interface PublicApiCreatePackReleaseRequest {
    * Developers notes.
    */
   releaseNotes?: string;
+  [k: string]: unknown;
 }
 
 /**
@@ -2590,17 +3179,25 @@ export interface PublicApiUploadPackSourceCodeRequest {
 }
 
 /**
- * The request to set Pack system connection.
+ * Information indicating the next Pack version definition.
  */
-export interface PublicApiSetPackSystemConnectionRequest {
+export interface PublicApiNextPackVersionInfo {
   /**
-   * Name of the system connection.
+   * The next valid version for the Pack.
    */
-  name: string;
-  credentials: PublicApiPackSystemConnectionCredentials;
+  nextVersion: string;
+  /**
+   * List of changes from the previous version.
+   */
+  findings: string[];
 }
 
 /**
- * Empty response of deleting pack system connection.
+ * Info about the diff between two Pack versions.
  */
-export interface PublicApiDeletePackSystemConnectionResponse {}
+export interface PublicApiPackVersionDiffs {
+  /**
+   * List of changes from the previous version to the next version.
+   */
+  findings: string[];
+}

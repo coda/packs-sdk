@@ -12,8 +12,8 @@ export function spawnProcess(command: string) {
   });
 }
 
-export function createCodaClient(apiKey: string, protocolAndHost?: string) {
-  return new Client(protocolAndHost ?? 'https://coda.io', apiKey);
+export function createCodaClient(apiToken: string, protocolAndHost?: string) {
+  return new Client({protocolAndHost, apiToken});
 }
 
 export function formatEndpoint(endpoint: string) {
