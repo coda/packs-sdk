@@ -1,3 +1,4 @@
+import type {ResponseError} from '../helpers/external-api/coda';
 import util from 'util';
 
 export function tryParseSystemError(error: any) {
@@ -6,6 +7,11 @@ export function tryParseSystemError(error: any) {
     return 'Run `export NODE_TLS_REJECT_UNAUTHORIZED=0` and rerun your command.';
   }
   return '';
+}
+
+export async function formatResponseError(err: ResponseError): Promise<string> {
+  const json = await err.response.json();
+  return formatError(json);
 }
 
 export function formatError(obj: any): string {

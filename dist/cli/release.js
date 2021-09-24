@@ -24,13 +24,14 @@ const build_1 = require("./build");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const errors_1 = require("./errors");
+const errors_2 = require("./errors");
 const config_storage_1 = require("./config_storage");
 const config_storage_2 = require("./config_storage");
 const helpers_3 = require("./helpers");
 const coda_1 = require("../helpers/external-api/coda");
 const path = __importStar(require("path"));
 const helpers_4 = require("../testing/helpers");
-const errors_2 = require("./errors");
+const errors_3 = require("./errors");
 async function handleRelease({ manifestFile, packVersion: explicitPackVersion, codaApiEndpoint, notes, }) {
     const manifestDir = path.dirname(manifestFile);
     const apiKey = (0, config_storage_1.getApiKey)(codaApiEndpoint);
@@ -64,9 +65,9 @@ async function handleResponse(p) {
     }
     catch (err) {
         if ((0, coda_1.isResponseError)(err)) {
-            return (0, helpers_4.printAndExit)(`Error while creating pack release: ${(0, errors_1.formatError)(err.response)}`);
+            return (0, helpers_4.printAndExit)(`Error while creating pack release: ${await (0, errors_2.formatResponseError)(err)}`);
         }
-        const errors = [`Unexpected error while creating release: ${(0, errors_1.formatError)(err)}`, (0, errors_2.tryParseSystemError)(err)];
+        const errors = [`Unexpected error while creating release: ${(0, errors_1.formatError)(err)}`, (0, errors_3.tryParseSystemError)(err)];
         return (0, helpers_4.printAndExit)(errors.join('\n'));
     }
 }

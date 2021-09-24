@@ -3,6 +3,7 @@ import {PACK_ID_FILE_NAME} from './config_storage';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
+import {formatResponseError} from './errors';
 import fs from 'fs';
 import {getApiKey} from './config_storage';
 import {getPackId} from './config_storage';
@@ -65,7 +66,7 @@ export async function createPack(
     return printAndExit(`Pack created successfully! You can manage pack settings at ${codaApiEndpoint}/p/${packId}`, 0);
   } catch (err: any) {
     if (isResponseError(err)) {
-      return printAndExit(`Unable to create your pack, received error: ${formatError(err.response)}`);
+      return printAndExit(`Unable to create your pack, received error: ${await formatResponseError(err)}`);
     }
     const errors = [`Unable to create your pack, received error: ${formatError(err)}`, tryParseSystemError(err)];
     return printAndExit(errors.join('\n'));

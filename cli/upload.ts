@@ -9,6 +9,7 @@ import {computeSha256} from '../helpers/crypto';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
+import {formatResponseError} from './errors';
 import fs from 'fs-extra';
 import {getApiKey} from './config_storage';
 import {getPackId} from './config_storage';
@@ -131,7 +132,7 @@ export async function handleUpload({
       registerResponse = await client.registerPackVersion(packId, packVersion, {}, {bundleHash});
     } catch (err: any) {
       if (isResponseError(err)) {
-        return printAndExit(`Error while registering pack version: ${formatError(err.response)}`);
+        return printAndExit(`Error while registering pack version: ${await formatResponseError(err)}`);
       }
       throw err;
     }
@@ -146,7 +147,7 @@ export async function handleUpload({
       await client.packVersionUploadComplete(packId, packVersion, {}, {notes});
     } catch (err: any) {
       if (isResponseError(err)) {
-        printAndExit(`Error while finalizing pack version: ${formatError(err.response)}`);
+        printAndExit(`Error while finalizing pack version: ${await formatResponseError(err)}`);
       }
       throw err;
     }

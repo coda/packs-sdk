@@ -3,6 +3,7 @@ import {build} from './build';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
+import {formatResponseError} from './errors';
 import {getApiKey} from './config_storage';
 import {getPackId} from './config_storage';
 import {importManifest} from './helpers';
@@ -61,7 +62,7 @@ async function handleResponse<T extends any>(p: Promise<T>): Promise<T> {
     return await p;
   } catch (err: any) {
     if (isResponseError(err)) {
-      return printAndExit(`Error while creating pack release: ${formatError(err.response)}`);
+      return printAndExit(`Error while creating pack release: ${await formatResponseError(err)}`);
     }
     const errors = [`Unexpected error while creating release: ${formatError(err)}`, tryParseSystemError(err)];
     return printAndExit(errors.join('\n'));

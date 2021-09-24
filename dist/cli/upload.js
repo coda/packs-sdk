@@ -29,6 +29,7 @@ const crypto_1 = require("../helpers/crypto");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const errors_1 = require("./errors");
+const errors_2 = require("./errors");
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const config_storage_1 = require("./config_storage");
 const config_storage_2 = require("./config_storage");
@@ -40,7 +41,7 @@ const path = __importStar(require("path"));
 const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
-const errors_2 = require("./errors");
+const errors_3 = require("./errors");
 const uuid_1 = require("uuid");
 const validate_1 = require("./validate");
 function cleanup(intermediateOutputDirectory, logger) {
@@ -117,7 +118,7 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
         }
         catch (err) {
             if ((0, coda_1.isResponseError)(err)) {
-                return printAndExit(`Error while registering pack version: ${(0, errors_1.formatError)(err.response)}`);
+                return printAndExit(`Error while registering pack version: ${await (0, errors_2.formatResponseError)(err)}`);
             }
             throw err;
         }
@@ -130,13 +131,13 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
         }
         catch (err) {
             if ((0, coda_1.isResponseError)(err)) {
-                printAndExit(`Error while finalizing pack version: ${(0, errors_1.formatError)(err.response)}`);
+                printAndExit(`Error while finalizing pack version: ${await (0, errors_2.formatResponseError)(err)}`);
             }
             throw err;
         }
     }
     catch (err) {
-        const errors = [`Unexpected error during Pack upload: ${(0, errors_1.formatError)(err)}`, (0, errors_2.tryParseSystemError)(err)];
+        const errors = [`Unexpected error during Pack upload: ${(0, errors_1.formatError)(err)}`, (0, errors_3.tryParseSystemError)(err)];
         printAndExit(errors.join(`\n`));
     }
     cleanup(intermediateOutputDirectory, logger);
