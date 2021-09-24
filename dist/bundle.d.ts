@@ -214,7 +214,7 @@ export interface ImageAttributionNode {
 }
 export declare type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
 export declare function makeAttributionNode<T extends AttributionNode>(node: T): T;
-export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
+export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema | ScaleSchema;
 export declare type PickOptional<T, K extends keyof T> = Partial<T> & {
 	[P in K]: T[P];
 };

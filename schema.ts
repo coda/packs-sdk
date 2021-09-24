@@ -260,7 +260,7 @@ export function makeAttributionNode<T extends AttributionNode>(node: T): T {
   return node;
 }
 
-export type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
+export type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema | ScaleSchema;
 
 export function isObject(val?: Schema): val is GenericObjectSchema {
   return Boolean(val && val.type === ValueType.Object);
