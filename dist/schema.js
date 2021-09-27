@@ -63,9 +63,6 @@ exports.SimpleNumberHintValueTypes = [
     ValueHintType.Time,
     ValueHintType.DateTime,
     ValueHintType.Percent,
-    ValueHintType.Currency,
-    ValueHintType.Slider,
-    ValueHintType.Scale,
 ];
 exports.ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference];
 var CurrencyFormat;

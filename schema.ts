@@ -61,9 +61,6 @@ export const SimpleNumberHintValueTypes = [
   ValueHintType.Time,
   ValueHintType.DateTime,
   ValueHintType.Percent,
-  ValueHintType.Currency,
-  ValueHintType.Slider,
-  ValueHintType.Scale,
 ] as const;
 export const ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference] as const;
 

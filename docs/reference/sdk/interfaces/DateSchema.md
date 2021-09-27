@@ -14,7 +14,7 @@
 
 #### Defined in
 
-[schema.ts:156](https://github.com/coda/packs-sdk/blob/main/schema.ts#L156)
+[schema.ts:153](https://github.com/coda/packs-sdk/blob/main/schema.ts#L153)
 
 ___
 
@@ -28,7 +28,7 @@ BaseDateSchema.description
 
 #### Defined in
 
-[schema.ts:75](https://github.com/coda/packs-sdk/blob/main/schema.ts#L75)
+[schema.ts:72](https://github.com/coda/packs-sdk/blob/main/schema.ts#L72)
 
 ___
 
@@ -38,7 +38,7 @@ ___
 
 #### Defined in
 
-[schema.ts:158](https://github.com/coda/packs-sdk/blob/main/schema.ts#L158)
+[schema.ts:155](https://github.com/coda/packs-sdk/blob/main/schema.ts#L155)
 
 ___
 
@@ -52,4 +52,4 @@ BaseDateSchema.type
 
 #### Defined in
 
-[schema.ts:152](https://github.com/coda/packs-sdk/blob/main/schema.ts#L152)
+[schema.ts:149](https://github.com/coda/packs-sdk/blob/main/schema.ts#L149)

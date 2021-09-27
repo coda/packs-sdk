@@ -485,32 +485,32 @@ const booleanPropertySchema = zodCompleteObject<BooleanSchema & ObjectSchemaProp
   ...basePropertyValidators,
 });
 
-const simpleNumberPropertySchema = zodCompleteStrictObject<SimpleNumberSchema & ObjectSchemaProperty>({
+const simpleNumberPropertySchema = zodCompleteObject<SimpleNumberSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Number),
   codaType: z.enum([...SimpleNumberHintValueTypes]).optional(),
   ...basePropertyValidators,
 })
 
-const scalePropertySchema = zodCompleteStrictObject<ScaleSchema & ObjectSchemaProperty>({
+const scalePropertySchema = zodCompleteObject<ScaleSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Number),
-  codaType: zodDiscriminant(ValueHintType.Scale),
+  codaType: z.literal(ValueHintType.Scale),
   maximum: z.number(),
   icon: z.nativeEnum(ScaleIconSet),
   ...basePropertyValidators,
 })
 
-const sliderPropertySchema = zodCompleteStrictObject<SliderSchema & ObjectSchemaProperty>({
+const sliderPropertySchema = zodCompleteObject<SliderSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Number),
-  codaType: zodDiscriminant(ValueHintType.Slider),
+  codaType: z.literal(ValueHintType.Slider),
   maximum: z.number().optional(),
   minimum: z.number().optional(),
   step: z.number().optional(),
   ...basePropertyValidators,
 })
 
-const currencyPropertySchema = zodCompleteStrictObject<CurrencySchema & ObjectSchemaProperty>({
+const currencyPropertySchema = zodCompleteObject<CurrencySchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Number),
-  codaType: zodDiscriminant(ValueHintType.Currency),
+  codaType: z.literal(ValueHintType.Currency),
   precision: z.number().optional(),
   currencyCode: z.string().optional(),
   format: z.nativeEnum(CurrencyFormat).optional(),

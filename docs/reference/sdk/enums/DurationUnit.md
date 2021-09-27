@@ -8,7 +8,7 @@
 
 #### Defined in
 
-[schema.ts:176](https://github.com/coda/packs-sdk/blob/main/schema.ts#L176)
+[schema.ts:173](https://github.com/coda/packs-sdk/blob/main/schema.ts#L173)
 
 ___
 
@@ -18,7 +18,7 @@ ___
 
 #### Defined in
 
-[schema.ts:177](https://github.com/coda/packs-sdk/blob/main/schema.ts#L177)
+[schema.ts:174](https://github.com/coda/packs-sdk/blob/main/schema.ts#L174)
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 #### Defined in
 
-[schema.ts:178](https://github.com/coda/packs-sdk/blob/main/schema.ts#L178)
+[schema.ts:175](https://github.com/coda/packs-sdk/blob/main/schema.ts#L175)
 
 ___
 
@@ -38,4 +38,4 @@ ___
 
 #### Defined in
 
-[schema.ts:179](https://github.com/coda/packs-sdk/blob/main/schema.ts#L179)
+[schema.ts:176](https://github.com/coda/packs-sdk/blob/main/schema.ts#L176)

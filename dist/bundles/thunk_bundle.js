@@ -4419,10 +4419,7 @@ var SimpleNumberHintValueTypes = [
   ValueHintType.Date,
   ValueHintType.Time,
   ValueHintType.DateTime,
-  ValueHintType.Percent,
-  ValueHintType.Currency,
-  ValueHintType.Slider,
-  ValueHintType.Scale
+  ValueHintType.Percent
 ];
 var ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference];
 var CurrencyFormat;

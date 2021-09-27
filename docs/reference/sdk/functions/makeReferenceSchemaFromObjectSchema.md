@@ -21,4 +21,8 @@ schema it provides better code reuse to derive a reference schema instead.
 
 #### Defined in
 
+<<<<<<< HEAD
 [schema.ts:468](https://github.com/coda/packs-sdk/blob/main/schema.ts#L468)
+=======
+[schema.ts:430](https://github.com/coda/packs-sdk/blob/main/schema.ts#L430)
+>>>>>>> 40f7a22 (Tweak our zod validation to complain when invalid property schemas ar eprovided)

@@ -34,7 +34,7 @@ export declare enum ValueHintType {
     Scale = "scale"
 }
 export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url];
-export declare const SimpleNumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Percent, ValueHintType.Currency, ValueHintType.Slider, ValueHintType.Scale];
+export declare const SimpleNumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Percent];
 export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference];
 export declare type StringHintTypes = typeof StringHintValueTypes[number];
 export declare type SimpleNumberHintTypes = typeof SimpleNumberHintValueTypes[number];

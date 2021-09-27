@@ -10,4 +10,8 @@
 
 #### Defined in
 
+<<<<<<< HEAD
 [schema.ts:318](https://github.com/coda/packs-sdk/blob/main/schema.ts#L318)
+=======
+[schema.ts:278](https://github.com/coda/packs-sdk/blob/main/schema.ts#L278)
+>>>>>>> 40f7a22 (Tweak our zod validation to complain when invalid property schemas ar eprovided)
