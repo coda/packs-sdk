@@ -216,10 +216,6 @@ type ZodCompleteShape<T> = {
   [k in keyof T]: z.ZodTypeAny;
 };
 
-function zodCompleteObject<O, T extends ZodCompleteShape<O> = ZodCompleteShape<Required<O>>>(shape: T) {
-  return z.object<T>(shape);
-}
-
 function zodCompleteStrictObject<O, T extends ZodCompleteShape<O> = ZodCompleteShape<Required<O>>>(shape: T) {
   return z.strictObject<T>(shape);
 }
@@ -238,7 +234,7 @@ function zodUnionInput(schemas: z.ZodTypeAny[]): ZodUnionInput {
   return schemas as ZodUnionInput;
 }
 
-const setEndpointPostSetupValidator = zodCompleteObject<SetEndpoint>({
+const setEndpointPostSetupValidator = zodCompleteStrictObject<SetEndpoint>({
   type: zodDiscriminant(PostSetupType.SetEndpoint),
   name: z.string(),
   description: z.string(),
@@ -360,7 +356,7 @@ const variousSupportedAuthenticationValidators = Object.entries(defaultAuthentic
 
 const primitiveUnion = z.union([z.number(), z.string(), z.boolean(), z.date()]);
 
-const paramDefValidator = zodCompleteObject<ParamDef<any>>({
+const paramDefValidator = zodCompleteStrictObject<ParamDef<any>>({
   name: z.string(),
   type: z
     .union([z.nativeEnum(Type), z.object({type: zodDiscriminant('array'), items: z.nativeEnum(Type)})])
@@ -410,7 +406,7 @@ const commonPackFormulaSchema = {
   isAction: z.boolean().optional(),
   connectionRequirement: z.nativeEnum(ConnectionRequirement).optional(),
   // TODO(jonathan): Remove after removing `network` from formula def.
-  network: zodCompleteObject<Network>({
+  network: zodCompleteStrictObject<Network>({
     hasSideEffect: z.boolean().optional(),
     requiresConnection: z.boolean().optional(),
     connection: z.nativeEnum(NetworkConnection).optional(),
@@ -421,36 +417,36 @@ const commonPackFormulaSchema = {
   extraOAuthScopes: z.array(z.string()).optional(),
 };
 
-const numericPackFormulaSchema = zodCompleteObject<Omit<NumericPackFormula<any>, 'execute'>>({
+const numericPackFormulaSchema = zodCompleteStrictObject<Omit<NumericPackFormula<any>, 'execute'>>({
   ...commonPackFormulaSchema,
   resultType: zodDiscriminant(Type.number),
-  schema: zodCompleteObject<NumberSchema>({
+  schema: zodCompleteStrictObject<NumberSchema>({
     type: zodDiscriminant(ValueType.Number),
     codaType: z.enum([...NumberHintValueTypes]).optional(),
     description: z.string().optional(),
   }).optional(),
 });
 
-const stringPackFormulaSchema = zodCompleteObject<Omit<StringPackFormula<any>, 'execute'>>({
+const stringPackFormulaSchema = zodCompleteStrictObject<Omit<StringPackFormula<any>, 'execute'>>({
   ...commonPackFormulaSchema,
   resultType: zodDiscriminant(Type.string),
-  schema: zodCompleteObject<StringSchema>({
+  schema: zodCompleteStrictObject<StringSchema>({
     type: zodDiscriminant(ValueType.String),
     codaType: z.enum([...StringHintValueTypes]).optional(),
     description: z.string().optional(),
   }).optional(),
 });
 
-const booleanPackFormulaSchema = zodCompleteObject<Omit<BooleanPackFormula<any>, 'execute'>>({
+const booleanPackFormulaSchema = zodCompleteStrictObject<Omit<BooleanPackFormula<any>, 'execute'>>({
   ...commonPackFormulaSchema,
   resultType: zodDiscriminant(Type.boolean),
-  schema: zodCompleteObject<BooleanSchema>({
+  schema: zodCompleteStrictObject<BooleanSchema>({
     type: zodDiscriminant(ValueType.Boolean),
     description: z.string().optional(),
   }).optional(),
 });
 
-// TODO(jonathan): Use zodCompleteObject on these after exporting these types.
+// TODO(jonathan): Use zodCompleteStrictObject on these after exporting these types.
 
 const textAttributionNodeSchema = z.object({
   type: zodDiscriminant(AttributionNodeType.Text),
@@ -475,18 +471,18 @@ const basePropertyValidators = {
   required: z.boolean().optional(),
 };
 
-const booleanPropertySchema = zodCompleteObject<BooleanSchema & ObjectSchemaProperty>({
+const booleanPropertySchema = zodCompleteStrictObject<BooleanSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Boolean),
   ...basePropertyValidators,
 });
 
-const numberPropertySchema = zodCompleteObject<NumberSchema & ObjectSchemaProperty>({
+const numberPropertySchema = zodCompleteStrictObject<NumberSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Number),
   codaType: z.enum([...NumberHintValueTypes]).optional(),
   ...basePropertyValidators,
 });
 
-const stringPropertySchema = zodCompleteObject<StringSchema & ObjectSchemaProperty>({
+const stringPropertySchema = zodCompleteStrictObject<StringSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.String),
   codaType: z.enum([...StringHintValueTypes]).optional(),
   ...basePropertyValidators,
@@ -495,7 +491,7 @@ const stringPropertySchema = zodCompleteObject<StringSchema & ObjectSchemaProper
 // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
 // recursive typing better.
 const arrayPropertySchema: z.ZodTypeAny = z.lazy(() =>
-  zodCompleteObject<ArraySchema & ObjectSchemaProperty>({
+  zodCompleteStrictObject<ArraySchema & ObjectSchemaProperty>({
     type: zodDiscriminant(ValueType.Array),
     items: objectPropertyUnionSchema,
     ...basePropertyValidators,
@@ -535,7 +531,7 @@ function isValidIdentityName(packId: number, name: string): boolean {
 }
 
 const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
-  zodCompleteObject<ObjectSchema<any, any>>({
+  zodCompleteStrictObject<ObjectSchema<any, any>>({
     ...basePropertyValidators,
     type: zodDiscriminant(ValueType.Object),
     description: z.string().optional(),
@@ -543,7 +539,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     primary: z.string().optional(),
     codaType: z.enum([...ObjectHintValueTypes]).optional(),
     featured: z.array(z.string()).optional(),
-    identity: zodCompleteObject<Identity>({
+    identity: zodCompleteStrictObject<Identity>({
       // Stupid hack to hardcode a pack id that will get replaced at upload time.
       // TODO(jonathan): Enable after existing packs go through the v2 upload flow.
       // packId: z.literal(PlaceholderIdentityPackId),
@@ -593,7 +589,7 @@ const objectPropertyUnionSchema = z.union([
   genericObjectSchema,
 ]);
 
-const objectPackFormulaSchema = zodCompleteObject<Omit<ObjectPackFormula<any, any>, 'execute'>>({
+const objectPackFormulaSchema = zodCompleteStrictObject<Omit<ObjectPackFormula<any, any>, 'execute'>>({
   ...commonPackFormulaSchema,
   resultType: zodDiscriminant(Type.object),
   // TODO(jonathan): See if we should really allow this. The SDK right now explicitly tolerates an undefined
@@ -619,7 +615,7 @@ const formulaMetadataSchema = z
     }
   });
 
-const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
+const formatMetadataSchema = zodCompleteStrictObject<PackFormatMetadata>({
   name: z.string(),
   formulaNamespace: z.string(), // Will be removed once we deprecate namespace objects.
   formulaName: z.string(),
@@ -629,7 +625,9 @@ const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   matchers: z.array(z.string()),
 });
 
-const syncFormulaSchema = zodCompleteObject<Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute'>>({
+const syncFormulaSchema = zodCompleteStrictObject<
+  Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute'>
+>({
   schema: arrayPropertySchema.optional(),
   resultType: z.any(),
   isSyncFormula: z.literal(true),
@@ -645,7 +643,7 @@ const baseSyncTableSchema = {
 
 type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;
 
-const genericSyncTableSchema = zodCompleteObject<GenericSyncTableDef & {isDynamic?: false}>({
+const genericSyncTableSchema = zodCompleteStrictObject<GenericSyncTableDef & {isDynamic?: false}>({
   ...baseSyncTableSchema,
   // Add a fake discriminant here so that we can flag union errors as related to a non-matching discriminant
   // and filter them out. A real regular sync table wouldn't specify `isDynamic` at all here, but including
@@ -654,7 +652,7 @@ const genericSyncTableSchema = zodCompleteObject<GenericSyncTableDef & {isDynami
   getSchema: formulaMetadataSchema.optional(),
 }).strict();
 
-const genericDynamicSyncTableSchema = zodCompleteObject<
+const genericDynamicSyncTableSchema = zodCompleteStrictObject<
   DynamicSyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>
 >({
   ...baseSyncTableSchema,
@@ -670,7 +668,7 @@ const syncTableSchema = z.union([genericDynamicSyncTableSchema, genericSyncTable
 // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
 // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
 // schema we actually use.)
-const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata>({
+const unrefinedPackVersionMetadataSchema = zodCompleteStrictObject<PackVersionMetadata>({
   version: z
     .string()
     .regex(/^\d+(\.\d+){0,2}$/, 'Pack versions must use semantic versioning, e.g. "1", "1.0" or "1.0.0".'),
