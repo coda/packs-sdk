@@ -82,7 +82,7 @@
     "mock-fs": "^5.1.0",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.2.1",
-    "typedoc": "^0.21.9"
+    "typedoc": "^0.22.4"
   },
   "resolutions": {
     "ansi-regex": "^5.0.1",
