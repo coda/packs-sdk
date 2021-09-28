@@ -156,7 +156,7 @@ publish-local: build
 	cp -r dist/* ../packs/node_modules/@codahq/packs-sdk/dist/
 
 .PHONY: validate-no-changes
-validate-no-changes: compile
+validate-no-changes: compile docs
 	$(eval UNTRACKED_FILES := $(shell git status --short))
 	$(eval CHANGED_FILES := $(shell git diff --name-only))
 	if [[ -n "${UNTRACKED_FILES}" || -n "${CHANGED_FILES}" ]]; then \
