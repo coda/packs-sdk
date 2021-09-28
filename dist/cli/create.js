@@ -27,19 +27,20 @@ const config_storage_1 = require("./config_storage");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const errors_1 = require("./errors");
+const errors_2 = require("./errors");
 const fs_1 = __importDefault(require("fs"));
 const config_storage_2 = require("./config_storage");
 const config_storage_3 = require("./config_storage");
-const errors_2 = require("./errors");
+const coda_1 = require("../helpers/external-api/coda");
 const path = __importStar(require("path"));
 const helpers_3 = require("../testing/helpers");
 const config_storage_4 = require("./config_storage");
 const errors_3 = require("./errors");
-async function handleCreate({ manifestFile, codaApiEndpoint, name, description }) {
-    await createPack(manifestFile, codaApiEndpoint, { name, description });
+async function handleCreate({ manifestFile, codaApiEndpoint, name, description, workspace, }) {
+    await createPack(manifestFile, codaApiEndpoint, { name, description, workspace });
 }
 exports.handleCreate = handleCreate;
-async function createPack(manifestFile, codaApiEndpoint, { name, description }) {
+async function createPack(manifestFile, codaApiEndpoint, { name, description, workspace }) {
     const manifestDir = path.dirname(manifestFile);
     const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
     // TODO(alan): we probably want to redirect them to the `coda register`
@@ -59,17 +60,26 @@ async function createPack(manifestFile, codaApiEndpoint, { name, description }) 
     }
     const codaClient = (0, helpers_1.createCodaClient)(apiKey, formattedEndpoint);
     try {
-        const response = await codaClient.createPack({}, { name, description });
-        if ((0, errors_2.isCodaError)(response)) {
-            return (0, helpers_3.printAndExit)(`Unable to create your pack, received error: ${(0, errors_1.formatError)(response)}`);
-        }
+        const response = await codaClient.createPack({}, { name, description, workspaceId: parseWorkspace(workspace) });
         const packId = response.packId;
         (0, config_storage_4.storePackId)(manifestDir, packId, codaApiEndpoint);
         return (0, helpers_3.printAndExit)(`Pack created successfully! You can manage pack settings at ${codaApiEndpoint}/p/${packId}`, 0);
     }
     catch (err) {
+        if ((0, coda_1.isResponseError)(err)) {
+            return (0, helpers_3.printAndExit)(`Unable to create your pack, received error: ${await (0, errors_2.formatResponseError)(err)}`);
+        }
         const errors = [`Unable to create your pack, received error: ${(0, errors_1.formatError)(err)}`, (0, errors_3.tryParseSystemError)(err)];
         return (0, helpers_3.printAndExit)(errors.join('\n'));
     }
 }
 exports.createPack = createPack;
+function parseWorkspace(workspace) {
+    if (workspace) {
+        const match = /.*\/workspaces\/(ws-[A-Za-z0-9=_-]{10})/.exec(workspace);
+        if (match) {
+            return match[1];
+        }
+    }
+    return workspace;
+}

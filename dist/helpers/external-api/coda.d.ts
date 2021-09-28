@@ -3,16 +3,26 @@
  * available at https://coda.io/developers/apis/v1
  *
  * Version: v1
- * Hash: c17f33bab1c1496bf73356d09380fa0a04e074f97741adc801db545ea8db0026
+ * Hash: 3aa501d45272807675d21bf05be9126605ebf1b875aca82ff56b077a3111af4d
  */
 import 'es6-promise/auto';
 import 'isomorphic-fetch';
 import * as types from './v1';
+export declare class ResponseError extends Error {
+    response: Response;
+    constructor(response: Response);
+}
+export declare function isResponseError(err: any): err is ResponseError;
 export declare class Client {
     private readonly protocolAndHost;
-    private readonly apiKey;
+    private readonly apiToken;
     private readonly userAgent;
-    constructor(protocolAndHost: string, apiKey: string, userAgent?: string);
+    constructor({ apiToken, protocolAndHost, userAgent, }: {
+        apiToken: string;
+        protocolAndHost?: string;
+        userAgent?: string;
+    });
+    private _makeRequest;
     listCategories(params?: {}): Promise<types.PublicApiDocCategoryList>;
     listDocs(params?: {
         isOwner?: boolean;
@@ -115,6 +125,7 @@ export declare class Client {
     listPacks(params?: {
         accessType?: types.PublicApiPackAccessType;
         sortBy?: types.PublicApiPacksSortBy;
+        workspaceId?: string;
         limit?: number;
         pageToken?: string;
     }): Promise<types.PublicApiPackSummaryList>;
@@ -125,6 +136,8 @@ export declare class Client {
         limit?: number;
         pageToken?: string;
     }): Promise<types.PublicApiPackVersionList>;
+    getNextPackVersion(packId: number, params: {} | undefined, payload: types.PublicApiGetNextPackVersionRequest): Promise<types.PublicApiNextPackVersionInfo>;
+    getPackVersionDiffs(packId: number, basePackVersion: string, targetPackVersion: string, params?: {}): Promise<types.PublicApiPackVersionDiffs>;
     registerPackVersion(packId: number, packVersion: string, params: {} | undefined, payload: types.PublicApiRegisterPackVersionRequest): Promise<types.PublicApiPackVersionUploadInfo>;
     packVersionUploadComplete(packId: number, packVersion: string, params: {} | undefined, payload: types.PublicApiCreatePackVersionRequest): Promise<types.PublicApiCreatePackVersionResponse>;
     createPackRelease(packId: number, params: {} | undefined, payload: types.PublicApiCreatePackReleaseRequest): Promise<types.PublicApiPackRelease>;
@@ -132,20 +145,46 @@ export declare class Client {
         limit?: number;
         pageToken?: string;
     }): Promise<types.PublicApiPackReleaseList>;
-    setPackLiveVersion(packId: number, params: {} | undefined, payload: types.PublicApiSetPackLiveVersionRequest): Promise<types.PublicApiSetPackLiveVersionResponse>;
-    setPackSystemConnection(packId: number, params: {} | undefined, payload: types.PublicApiSetPackSystemConnectionRequest): Promise<types.PublicApiPackSystemConnection>;
-    deletePackSystemConnection(packId: number, params?: {}): Promise<types.PublicApiDeletePackSystemConnectionResponse>;
-    getPackSystemConnection(packId: number, params?: {}): Promise<types.PublicApiPackSystemConnection>;
+    setPackOauthConfig(packId: number, params: {} | undefined, payload: types.PublicApiSetPackOauthConfigRequest): Promise<types.PublicApiPackOauthConfigMetadata>;
+    getPackOauthConfig(packId: number, params?: {}): Promise<types.PublicApiPackOauthConfigMetadata>;
+    setPackSystemConnection(packId: number, params: {} | undefined, payload: types.PublicApiSetPackSystemConnectionRequest): Promise<types.PublicApiPackSystemConnectionMetadata>;
+    patchPackSystemConnection(packId: number, params: {} | undefined, payload: types.PublicApiPatchPackSystemConnectionRequest): Promise<types.PublicApiPackSystemConnectionMetadata>;
+    getPackSystemConnection(packId: number, params?: {}): Promise<types.PublicApiPackSystemConnectionMetadata>;
     getPackPermissions(packId: number, params?: {}): Promise<types.PublicApiPackPermissionList>;
     addPackPermission(packId: number, params: {} | undefined, payload: types.PublicApiAddPackPermissionRequest): Promise<types.PublicApiAddPackPermissionResponse>;
     deletePackPermission(packId: number, permissionId: string, params?: {}): Promise<types.PublicApiDeletePackPermissionResponse>;
+    listPackMakers(packId: number, params?: {
+        limit?: number;
+        pageToken?: string;
+    }): Promise<types.PublicApiListPackMakersResponse>;
+    addPackMaker(packId: number, params: {} | undefined, payload: types.PublicApiAddPackMakerRequest): Promise<types.PublicApiAddPackMakerResponse>;
+    deletePackMaker(packId: number, loginId: string, params?: {}): Promise<types.PublicApiAddPackMakerResponse>;
+    listPackCategories(packId: number, params?: {
+        limit?: number;
+        pageToken?: string;
+    }): Promise<types.PublicApiListPackCategoriesResponse>;
+    addPackCategory(packId: number, params: {} | undefined, payload: types.PublicApiAddPackCategoryRequest): Promise<types.PublicApiAddPackCategoryResponse>;
+    deletePackCategory(packId: number, categoryName: string, params?: {}): Promise<types.PublicApiDeletePackCategoryResponse>;
     uploadPackAsset(packId: number, params: {} | undefined, payload: types.PublicApiUploadPackAssetRequest): Promise<types.PublicApiPackAssetUploadInfo>;
     uploadPackSourceCode(packId: number, params: {} | undefined, payload: types.PublicApiUploadPackSourceCodeRequest): Promise<types.PublicApiPackSourceCodeUploadInfo>;
     packAssetUploadComplete(packId: number, packAssetId: string, packAssetType: types.PublicApiPackAssetType, params?: {}): Promise<types.PublicApiPackAssetUploadCompleteResponse>;
     packSourceCodeUploadComplete(packId: number, packVersion: string, params: {} | undefined, payload: types.PublicApiPackSourceCodeUploadCompleteRequest): Promise<types.PublicApiPackSourceCodeUploadCompleteResponse>;
     getPackSourceCode(packId: number, packVersion: string, params?: {}): Promise<types.PublicApiPackSourceCodeInfo>;
     listPackListings(params?: {
+        packAccessTypes?: types.PublicApiPackAccessTypes;
+        packIds?: string;
+        excludePublicPacks?: boolean;
         limit?: number;
         pageToken?: string;
     }): Promise<types.PublicApiPackListingList>;
+    getPackListing(packId: number, params?: {}): Promise<types.PublicApiPackListingDetail>;
+    listPackLogs(packId: number, docId: string, params?: {
+        logTypes?: string;
+        beforeTimestamp?: string;
+        afterTimestamp?: string;
+        order?: string;
+        q?: string;
+        limit?: number;
+        pageToken?: string;
+    }): Promise<types.PublicApiPackLogsList>;
 }

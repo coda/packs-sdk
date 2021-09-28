@@ -9,13 +9,13 @@ The fastest and easiest way to create a Pack is to use our web-based Pack Studio
 1. A Coda account, with
 2. [Doc Maker access](https://help.coda.io/en/articles/3388781-members-and-roles) in your workspace.
 
-If you're new to Coda, [sign up](https://{{coda.domain}}/signup) for a free account and you'll automatically be made a Doc Maker in your personal workspace.
+If you're new to Coda, [sign up](https://coda.io/signup) for a free account and you'll automatically be made a Doc Maker in your personal workspace.
 
 ## Navigate to the Pack Studio
 
 The Pack Studio is built right in to the Coda application. To get there:
 
-1. Open [Coda](https://{{coda.domain}}/docs) in your browser.
+1. Open [Coda](https://coda.io/docs) in your browser.
 1. Click on the name of your workspace in the navigation menu on the left.
 1. Click on **Packs** in the header.
 1. Click the **New Pack** button in the upper right.

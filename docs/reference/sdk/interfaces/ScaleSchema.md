@@ -18,7 +18,7 @@
 
 #### Defined in
 
-[schema.ts:114](https://github.com/coda/packs-sdk/blob/main/schema.ts#L114)
+[schema.ts:141](https://github.com/coda/packs-sdk/blob/main/schema.ts#L141)
 
 ___
 
@@ -38,11 +38,11 @@ ___
 
 ### icon
 
-• **icon**: `string`
+• **icon**: `ScaleIconSet`
 
 #### Defined in
 
-[schema.ts:116](https://github.com/coda/packs-sdk/blob/main/schema.ts#L116)
+[schema.ts:143](https://github.com/coda/packs-sdk/blob/main/schema.ts#L143)
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-[schema.ts:115](https://github.com/coda/packs-sdk/blob/main/schema.ts#L115)
+[schema.ts:142](https://github.com/coda/packs-sdk/blob/main/schema.ts#L142)
 
 ___
 

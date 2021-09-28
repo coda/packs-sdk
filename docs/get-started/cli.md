@@ -16,7 +16,7 @@ Local development is enabled through the `coda` command line tool (CLI). Keep re
 
 ## Before you get started
 
-To create a Pack you will need a Coda account, with [Doc Maker access](https://help.coda.io/en/articles/3388781-members-and-roles) in your workspace. If you're new to Coda, [sign up](https://{{coda.domain}}/signup) for a free account and you'll automatically be made a Doc Maker in your personal workspace.
+To create a Pack you will need a Coda account, with [Doc Maker access](https://help.coda.io/en/articles/3388781-members-and-roles) in your workspace. If you're new to Coda, [sign up](https://coda.io/signup) for a free account and you'll automatically be made a Doc Maker in your personal workspace.
 
 Make sure you have `node` and `npm` available on your machine. These two tools often come bundled together, and more information on how to install them is available in the [npm docs](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
 
@@ -91,7 +91,7 @@ The `coda` CLI uses the Coda API under the hood to upload your code, and likewis
 1. Register an API key for Pack uploads:
 
     ```shell
-    npx coda register --codaApiEndpoint=https://{{coda.domain}}
+    npx coda register
     ```
 
 1. When prompted to create a new API token, type `y` and hit enter.
@@ -114,7 +114,7 @@ This will create a new file `.coda.json` in your working directory that contains
 Now that you have the access configured you can create the new Pack on Coda's servers. This setup step that needs to be done for each Pack you create.
 
 ```shell
-npx coda create manifest.ts --name "Hello World" --description "My first Pack." --codaApiEndpoint=https://{{coda.domain}}
+npx coda create manifest.ts --name "Hello World" --description "My first Pack."
 ```
 
 ??? info "Edit your branding later"
@@ -127,7 +127,7 @@ This will create a new, empty Pack on Coda's servers and output its URL in the P
 Now that you've established access and created the empty Pack, you're finally ready to upload your code.
 
 ```shell
-npx coda upload manifest.ts --notes "Initial version." --codaApiEndpoint=https://{{coda.domain}}
+npx coda upload manifest.ts --notes "Initial version."
 ```
 
 ??? warning "Source code not avilable"
@@ -142,7 +142,7 @@ npx coda upload manifest.ts --notes "Initial version." --codaApiEndpoint=https:/
 ## Install and use the Pack
 
 Your new Pack is now available to use in all your docs, and you can install it just any other Pack. Let's create a new document and install it:
-1. Open [Coda](https://{{coda.domain}}/docs) in your browser.
+1. Open [Coda](https://coda.io/docs) in your browser.
 1. Click the **+ New doc** button and select **Start with a blank page**.
 
 --8<-- "get-started/.use.md"
@@ -191,7 +191,7 @@ Now that you have your Pack up and running let's make a change to how it works.
 1. Run `coda upload` again to upload the new version.
 
     ```shell
-    npx coda upload manifest.ts --notes "Changed to Howdy." --codaApiEndpoint=https://{{coda.domain}}
+    npx coda upload manifest.ts --notes "Changed to Howdy."
     ```
 
 1. When the upload has completed, switch back to your test document.

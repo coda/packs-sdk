@@ -3,35 +3,41 @@
  * This file is auto-generated from OpenAPI definitions by `make build-openapi`. Do not edit manually.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PublicApiPackConnectionType = exports.PublicApiPackAssetType = exports.PublicApiPackAccessType = exports.PublicApiPackPrincipalType = exports.PublicApiPacksSortBy = exports.PublicApiDocAnalyticsScale = exports.PublicApiWorkspaceUserRole = exports.PublicApiTableType = exports.PublicApiSortBy = exports.PublicApiControlType = exports.PublicApiValueFormat = exports.PublicApiRowsSortBy = exports.PublicApiImageStatus = exports.PublicApiLinkedDataType = exports.PublicApiColumnFormatType = exports.PublicApiIconSet = exports.PublicApiDurationUnit = exports.PublicApiEmailDisplayType = exports.PublicApiCurrencyFormatType = exports.PublicApiSortDirection = exports.PublicApiLayout = exports.PublicApiDocPublishMode = exports.PublicApiAccessType = exports.PublicApiPrincipalType = exports.PublicApiType = exports.OpenApiSpecVersion = exports.OpenApiSpecHash = void 0;
+exports.PublicApiFeatureSet = exports.PublicApiLogLevel = exports.PublicApiPackLogType = exports.PublicApiPackLogRequestType = exports.PublicApiPackConnectionType = exports.PublicApiPackDiscoverability = exports.PublicApiPackAssetType = exports.PublicApiPackAccessType = exports.PublicApiPackPrincipalType = exports.PublicApiPacksSortBy = exports.PublicApiDocAnalyticsScale = exports.PublicApiWorkspaceUserRole = exports.PublicApiTableType = exports.PublicApiSortBy = exports.PublicApiControlType = exports.PublicApiValueFormat = exports.PublicApiRowsSortBy = exports.PublicApiImageStatus = exports.PublicApiLinkedDataType = exports.PublicApiColumnFormatType = exports.PublicApiIconSet = exports.PublicApiDurationUnit = exports.PublicApiEmailDisplayType = exports.PublicApiCurrencyFormatType = exports.PublicApiSortDirection = exports.PublicApiLayout = exports.PublicApiDocPublishMode = exports.PublicApiAccessType = exports.PublicApiPrincipalType = exports.PublicApiType = exports.OpenApiSpecVersion = exports.OpenApiSpecHash = void 0;
 /* eslint-disable */
-exports.OpenApiSpecHash = 'c17f33bab1c1496bf73356d09380fa0a04e074f97741adc801db545ea8db0026';
-exports.OpenApiSpecVersion = '1.2.0';
+exports.OpenApiSpecHash = '3aa501d45272807675d21bf05be9126605ebf1b875aca82ff56b077a3111af4d';
+exports.OpenApiSpecVersion = '1.2.1';
 /**
  * A constant identifying the type of the resource.
  */
 var PublicApiType;
 (function (PublicApiType) {
-    PublicApiType["Doc"] = "doc";
-    PublicApiType["AclPermissions"] = "aclPermissions";
     PublicApiType["AclMetadata"] = "aclMetadata";
-    PublicApiType["User"] = "user";
+    PublicApiType["AclPermissions"] = "aclPermissions";
     PublicApiType["ApiLink"] = "apiLink";
-    PublicApiType["Page"] = "page";
-    PublicApiType["Table"] = "table";
-    PublicApiType["Row"] = "row";
     PublicApiType["Column"] = "column";
-    PublicApiType["Formula"] = "formula";
     PublicApiType["Control"] = "control";
+    PublicApiType["Doc"] = "doc";
     PublicApiType["DocAnalytics"] = "docAnalytics";
+    PublicApiType["Folder"] = "folder";
+    PublicApiType["Formula"] = "formula";
     PublicApiType["MutationStatus"] = "mutationStatus";
-    PublicApiType["Workspace"] = "workspace";
     PublicApiType["Pack"] = "pack";
-    PublicApiType["PackVersion"] = "packVersion";
     PublicApiType["PackAclPermissions"] = "packAclPermissions";
     PublicApiType["PackAsset"] = "packAsset";
+    PublicApiType["PackCategory"] = "packCategory";
+    PublicApiType["PackLog"] = "packLog";
+    PublicApiType["PackMaker"] = "packMaker";
+    PublicApiType["PackOauthConfig"] = "packOauthConfig";
     PublicApiType["PackRelease"] = "packRelease";
     PublicApiType["PackSourceCode"] = "packSourceCode";
+    PublicApiType["PackSystemConnection"] = "packSystemConnection";
+    PublicApiType["PackVersion"] = "packVersion";
+    PublicApiType["Page"] = "page";
+    PublicApiType["Row"] = "row";
+    PublicApiType["Table"] = "table";
+    PublicApiType["User"] = "user";
+    PublicApiType["Workspace"] = "workspace";
 })(PublicApiType = exports.PublicApiType || (exports.PublicApiType = {}));
 /**
  * Type of principal.
@@ -267,9 +273,6 @@ var PublicApiPackPrincipalType;
     PublicApiPackPrincipalType["Workspace"] = "workspace";
     PublicApiPackPrincipalType["Worldwide"] = "worldwide";
 })(PublicApiPackPrincipalType = exports.PublicApiPackPrincipalType || (exports.PublicApiPackPrincipalType = {}));
-/**
- * Access type for a Pack.
- */
 var PublicApiPackAccessType;
 (function (PublicApiPackAccessType) {
     PublicApiPackAccessType["View"] = "view";
@@ -279,8 +282,18 @@ var PublicApiPackAccessType;
 var PublicApiPackAssetType;
 (function (PublicApiPackAssetType) {
     PublicApiPackAssetType["Logo"] = "logo";
+    PublicApiPackAssetType["Cover"] = "cover";
     PublicApiPackAssetType["ExampleImage"] = "exampleImage";
 })(PublicApiPackAssetType = exports.PublicApiPackAssetType || (exports.PublicApiPackAssetType = {}));
+/**
+ * Widest principal a Pack is available to.
+ */
+var PublicApiPackDiscoverability;
+(function (PublicApiPackDiscoverability) {
+    PublicApiPackDiscoverability["Public"] = "public";
+    PublicApiPackDiscoverability["Workspace"] = "workspace";
+    PublicApiPackDiscoverability["Private"] = "private";
+})(PublicApiPackDiscoverability = exports.PublicApiPackDiscoverability || (exports.PublicApiPackDiscoverability = {}));
 /**
  * Type of Pack connections.
  */
@@ -290,3 +303,49 @@ var PublicApiPackConnectionType;
     PublicApiPackConnectionType["UrlParam"] = "urlParam";
     PublicApiPackConnectionType["HttpBasic"] = "httpBasic";
 })(PublicApiPackConnectionType = exports.PublicApiPackConnectionType || (exports.PublicApiPackConnectionType = {}));
+/**
+ * The context request type where a Pack log is generated.
+ */
+var PublicApiPackLogRequestType;
+(function (PublicApiPackLogRequestType) {
+    PublicApiPackLogRequestType["Unknown"] = "unknown";
+    PublicApiPackLogRequestType["ConnectionNameMetadataRequest"] = "connectionNameMetadataRequest";
+    PublicApiPackLogRequestType["ParameterAutocompleteMetadataRequest"] = "parameterAutocompleteMetadataRequest";
+    PublicApiPackLogRequestType["PostAuthSetupMetadataRequest"] = "postAuthSetupMetadataRequest";
+    PublicApiPackLogRequestType["GetSyncTableSchemaMetadataRequest"] = "getSyncTableSchemaMetadataRequest";
+    PublicApiPackLogRequestType["GetDynamicSyncTableNameMetadataRequest"] = "getDynamicSyncTableNameMetadataRequest";
+    PublicApiPackLogRequestType["ListSyncTableDynamicUrlsMetadataRequest"] = "listSyncTableDynamicUrlsMetadataRequest";
+    PublicApiPackLogRequestType["GetDynamicSyncTableDisplayUrlMetadataRequest"] = "getDynamicSyncTableDisplayUrlMetadataRequest";
+    PublicApiPackLogRequestType["GetIdentifiersForConnectionRequest"] = "getIdentifiersForConnectionRequest";
+    PublicApiPackLogRequestType["InvokeFormulaRequest"] = "invokeFormulaRequest";
+    PublicApiPackLogRequestType["InvokeSyncFormulaRequest"] = "invokeSyncFormulaRequest";
+    PublicApiPackLogRequestType["ImpersonateInvokeFormulaRequest"] = "impersonateInvokeFormulaRequest";
+    PublicApiPackLogRequestType["ImpersonateInvokeMetadataFormulaRequest"] = "impersonateInvokeMetadataFormulaRequest";
+})(PublicApiPackLogRequestType = exports.PublicApiPackLogRequestType || (exports.PublicApiPackLogRequestType = {}));
+var PublicApiPackLogType;
+(function (PublicApiPackLogType) {
+    PublicApiPackLogType["Custom"] = "custom";
+    PublicApiPackLogType["Fetcher"] = "fetcher";
+    PublicApiPackLogType["Invocation"] = "invocation";
+    PublicApiPackLogType["Internal"] = "internal";
+    PublicApiPackLogType["Auth"] = "auth";
+})(PublicApiPackLogType = exports.PublicApiPackLogType || (exports.PublicApiPackLogType = {}));
+var PublicApiLogLevel;
+(function (PublicApiLogLevel) {
+    PublicApiLogLevel["Error"] = "error";
+    PublicApiLogLevel["Warn"] = "warn";
+    PublicApiLogLevel["Info"] = "info";
+    PublicApiLogLevel["Debug"] = "debug";
+    PublicApiLogLevel["Trace"] = "trace";
+    PublicApiLogLevel["Unknown"] = "unknown";
+})(PublicApiLogLevel = exports.PublicApiLogLevel || (exports.PublicApiLogLevel = {}));
+/**
+ * Only relevant for original Coda packs.
+ */
+var PublicApiFeatureSet;
+(function (PublicApiFeatureSet) {
+    PublicApiFeatureSet["Basic"] = "Basic";
+    PublicApiFeatureSet["Pro"] = "Pro";
+    PublicApiFeatureSet["Team"] = "Team";
+    PublicApiFeatureSet["Enterprise"] = "Enterprise";
+})(PublicApiFeatureSet = exports.PublicApiFeatureSet || (exports.PublicApiFeatureSet = {}));

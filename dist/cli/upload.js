@@ -29,11 +29,12 @@ const crypto_1 = require("../helpers/crypto");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const errors_1 = require("./errors");
+const errors_2 = require("./errors");
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const config_storage_1 = require("./config_storage");
 const config_storage_2 = require("./config_storage");
 const helpers_3 = require("./helpers");
-const errors_2 = require("./errors");
+const coda_1 = require("../helpers/external-api/coda");
 const helpers_4 = require("./helpers");
 const os_1 = __importDefault(require("os"));
 const path = __importStar(require("path"));
@@ -47,11 +48,11 @@ function cleanup(intermediateOutputDirectory, logger) {
     logger.info('\n\nCleaning up...');
     if (fs_extra_1.default.existsSync(intermediateOutputDirectory)) {
         const tempDirectory = fs_extra_1.default.mkdtempSync(path.join(os_1.default.tmpdir(), `coda-packs-${(0, uuid_1.v4)()}`));
-        fs_extra_1.default.moveSync(intermediateOutputDirectory, tempDirectory);
+        fs_extra_1.default.moveSync(intermediateOutputDirectory, path.join(tempDirectory, 'build'));
         logger.info(`Intermediate files are moved to ${tempDirectory}`);
     }
 }
-async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, }) {
+async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, timerStrategy, }) {
     const logger = console;
     function printAndExit(message) {
         cleanup(intermediateOutputDirectory, logger);
@@ -71,6 +72,7 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
         manifestPath: manifestFile,
         outputDirectory: intermediateOutputDirectory,
         intermediateOutputDirectory,
+        timerStrategy,
     });
     const manifest = await (0, helpers_3.importManifest)(bundlePath);
     // Since package.json isn't in dist, we grab it from the root directory instead.
@@ -110,17 +112,28 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
         logger.info('Validating Pack metadata...');
         await (0, validate_1.validateMetadata)(metadata);
         logger.info('Registering new Pack version...');
-        const registerResponse = await client.registerPackVersion(packId, packVersion, {}, { bundleHash });
-        if ((0, errors_2.isCodaError)(registerResponse)) {
-            return printAndExit(`Error while registering pack version: ${(0, errors_1.formatError)(registerResponse)}`);
+        let registerResponse;
+        try {
+            registerResponse = await client.registerPackVersion(packId, packVersion, {}, { bundleHash });
+        }
+        catch (err) {
+            if ((0, coda_1.isResponseError)(err)) {
+                return printAndExit(`Error while registering pack version: ${await (0, errors_2.formatResponseError)(err)}`);
+            }
+            throw err;
         }
         const { uploadUrl, headers } = registerResponse;
         logger.info('Uploading Pack...');
         await uploadPack(uploadUrl, uploadPayload, headers);
         logger.info('Validating upload...');
-        const uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion, {}, { notes });
-        if ((0, errors_2.isCodaError)(uploadCompleteResponse)) {
-            printAndExit(`Error while finalizing pack version: ${(0, errors_1.formatError)(uploadCompleteResponse)}`);
+        try {
+            await client.packVersionUploadComplete(packId, packVersion, {}, { notes });
+        }
+        catch (err) {
+            if ((0, coda_1.isResponseError)(err)) {
+                printAndExit(`Error while finalizing pack version: ${await (0, errors_2.formatResponseError)(err)}`);
+            }
+            throw err;
         }
     }
     catch (err) {

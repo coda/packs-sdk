@@ -6,12 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleRegister = void 0;
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
-const errors_1 = require("./errors");
+const coda_1 = require("../helpers/external-api/coda");
 const open_1 = __importDefault(require("open"));
 const helpers_3 = require("../testing/helpers");
 const helpers_4 = require("../testing/helpers");
 const config_storage_1 = require("./config_storage");
-const errors_2 = require("./errors");
+const errors_1 = require("./errors");
 async function handleRegister({ apiToken, codaApiEndpoint }) {
     const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
     if (!apiToken) {
@@ -25,13 +25,13 @@ async function handleRegister({ apiToken, codaApiEndpoint }) {
     }
     const client = (0, helpers_1.createCodaClient)(apiToken, formattedEndpoint);
     try {
-        const response = await client.whoami();
-        if ((0, errors_1.isCodaError)(response)) {
-            return (0, helpers_3.printAndExit)(`Invalid API token provided.`);
-        }
+        await client.whoami();
     }
     catch (err) {
-        const errors = [`Unexpected error while checking validity of API token: ${err}`, (0, errors_2.tryParseSystemError)(err)];
+        if ((0, coda_1.isResponseError)(err)) {
+            return (0, helpers_3.printAndExit)(`Invalid API token provided.`);
+        }
+        const errors = [`Unexpected error while checking validity of API token: ${err}`, (0, errors_1.tryParseSystemError)(err)];
         return (0, helpers_3.printAndExit)(errors.join('\n'));
     }
     (0, config_storage_1.storeCodaApiKey)(apiToken, process.env.PWD, codaApiEndpoint);

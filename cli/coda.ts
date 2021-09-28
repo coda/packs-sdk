@@ -120,6 +120,11 @@ if (require.main === module) {
           alias: 'o',
           default: './_upload_build',
         },
+        timerStrategy: {
+          string: true,
+          default: TimerShimStrategy.None,
+          desc: 'Options: none, error, fake.',
+        },
       },
       handler: handleUpload,
     })
@@ -136,6 +141,11 @@ if (require.main === module) {
           string: true,
           alias: 'd',
           describe: 'A description of the Pack. Can be set later in the UI.',
+        },
+        workspace: {
+          string: true,
+          alias: 'w',
+          describe: 'The workspace ID, or workspace URL that you want your Pack to be created under.',
         },
         codaApiEndpoint: {
           string: true,

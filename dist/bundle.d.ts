@@ -89,6 +89,10 @@ export declare enum CurrencyFormat {
 export interface CurrencySchema extends NumberSchema {
 	codaType: ValueHintType.Currency;
 	precision?: number;
+	/***
+	 * A three-letter ISO 4217 currency code, e.g. USD or EUR.
+	 * If the currency code is not supported by Coda, the value will be rendered using USD.
+	*/
 	currencyCode?: string;
 	format?: CurrencyFormat;
 }
@@ -98,10 +102,32 @@ export interface SliderSchema extends NumberSchema {
 	maximum?: number | string;
 	step?: number | string;
 }
+declare enum ScaleIconSet {
+	Star = "star",
+	Circle = "circle",
+	Fire = "fire",
+	Bug = "bug",
+	Diamond = "diamond",
+	Bell = "bell",
+	ThumbsUp = "thumbsup",
+	Heart = "heart",
+	Chili = "chili",
+	Smiley = "smiley",
+	Lightning = "lightning",
+	Currency = "currency",
+	Coffee = "coffee",
+	Person = "person",
+	Battery = "battery",
+	Cocktail = "cocktail",
+	Cloud = "cloud",
+	Sun = "sun",
+	Checkmark = "checkmark",
+	LightBulb = "lightbulb"
+}
 export interface ScaleSchema extends NumberSchema {
 	codaType: ValueHintType.Scale;
 	maximum: number;
-	icon: string;
+	icon: ScaleIconSet;
 }
 export interface BaseDateSchema extends BaseSchema {
 	type: ValueType.Number | ValueType.String;
