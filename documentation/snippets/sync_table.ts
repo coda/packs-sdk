@@ -14,7 +14,7 @@ pack.addSyncTable({
     properties: {
       idColumn: {type: coda.ValueType.String},
       displayColumn: {type: coda.ValueType.String},
-      otherColumn: {type: coda.ValueType.Number},
+      otherColumn: {type: coda.ValueType.String},
     },
   }),
   formula: {

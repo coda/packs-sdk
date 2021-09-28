@@ -1,6 +1,6 @@
 # Function: makeObjectSchema
 
-▸ **makeObjectSchema**<`K`, `L`, `T`\>(`schemaDef`): [`ObjectSchema`](../interfaces/ObjectSchema.md)<`K`, `L`\>
+▸ **makeObjectSchema**<`K`, `L`, `T`\>(`schemaDef`): `T` & { `identity?`: [`Identity`](../interfaces/Identity.md)  }
 
 #### Type parameters
 
@@ -18,8 +18,8 @@
 
 #### Returns
 
-[`ObjectSchema`](../interfaces/ObjectSchema.md)<`K`, `L`\>
+`T` & { `identity?`: [`Identity`](../interfaces/Identity.md)  }
 
 #### Defined in
 
-[schema.ts:329](https://github.com/coda/packs-sdk/blob/main/schema.ts#L329)
+[schema.ts:357](https://github.com/coda/packs-sdk/blob/main/schema.ts#L357)

@@ -4,6 +4,7 @@ import type {FetchRequest} from '../../api_types';
 import type {FetchResponse} from '../../api_types';
 import type {FormulaSpecification} from '../types';
 import {FormulaType} from '../types';
+import type {GenericSyncFormulaResult} from '../../api';
 import type {MetadataFormula} from '../../api';
 import {MetadataFormulaType} from '../types';
 import type {PackFormulaResult} from '../../api_types';
@@ -15,7 +16,6 @@ import type {ParamsList} from '../../api_types';
 import {PostSetupType} from '../../types';
 import {StatusCodeError} from '../../api';
 import type {SyncExecutionContext} from '../../api_types';
-import type {SyncFormulaResult} from '../../api';
 import type {SyncFormulaSpecification} from '../types';
 import type {TypedPackFormula} from '../../api';
 import {findFormula} from '../common/helpers';
@@ -36,7 +36,7 @@ export async function findAndExecutePackFunction<T extends FormulaSpecification>
   manifest: PackVersionDefinition,
   executionContext: ExecutionContext | SyncExecutionContext,
   shouldWrapError: boolean = true,
-): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<any> : PackFormulaResult> {
+): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
   try {
     return await doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext);
   } catch (err: any) {
@@ -50,13 +50,13 @@ function doFindAndExecutePackFunction<T extends FormulaSpecification>(
   formulaSpec: T,
   manifest: PackVersionDefinition,
   executionContext: ExecutionContext | SyncExecutionContext,
-): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<any> : PackFormulaResult> {
+): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
   const {syncTables, defaultAuthentication} = manifest;
 
   switch (formulaSpec.type) {
     case FormulaType.Standard: {
       const formula = findFormula(manifest, formulaSpec.formulaName);
-      return formula.execute(params, executionContext as ExecutionContext);
+      return formula.execute(params, executionContext as ExecutionContext) as any;
     }
     case FormulaType.Sync: {
       const formula = findSyncFormula(manifest, formulaSpec.formulaName);

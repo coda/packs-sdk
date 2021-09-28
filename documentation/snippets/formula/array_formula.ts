@@ -10,7 +10,7 @@ pack.addFormula({
   description: '',
   parameters: [
     coda.makeParameter({
-      type: coda.ParameterType.Number,
+      type: coda.ParameterType.String,
       name: 'myParam',
       description: '',
     }),

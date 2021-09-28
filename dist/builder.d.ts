@@ -6,9 +6,12 @@ import type { DynamicSyncTableOptions } from './api';
 import type { Format } from './types';
 import type { Formula } from './api';
 import type { FormulaDefinitionV2 } from './api';
+import type { FormulaResultValueType } from './api';
 import type { ObjectSchema } from './schema';
+import type { ObjectSchemaDefinition } from './schema';
 import type { PackVersionDefinition } from './types';
 import type { ParamDefs } from './api_types';
+import type { Schema } from './schema';
 import type { SyncTable } from './api';
 import type { SyncTableOptions } from './api';
 import type { SystemAuthentication } from './types';
@@ -60,7 +63,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * });
      * ```
      */
-    addFormula<ParamDefsT extends ParamDefs>(definition: FormulaDefinitionV2<ParamDefsT>): this;
+    addFormula<ParamDefsT extends ParamDefs, ResultT extends FormulaResultValueType, SchemaT extends Schema>(definition: FormulaDefinitionV2<ParamDefsT, ResultT, SchemaT>): this;
     /**
      * Adds a sync table definition to this pack.
      *
@@ -102,7 +105,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * });
      * ```
      */
-    addDynamicSyncTable<ParamDefsT extends ParamDefs>(definition: DynamicSyncTableOptions<ParamDefsT>): this;
+    addDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>>(definition: DynamicSyncTableOptions<K, L, ParamDefsT, SchemaT>): this;
     /**
      * Adds a column format definition to this pack.
      *

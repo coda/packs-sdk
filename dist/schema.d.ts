@@ -65,7 +65,7 @@ export interface CurrencySchema extends NumberSchema {
     /***
      * A three-letter ISO 4217 currency code, e.g. USD or EUR.
      * If the currency code is not supported by Coda, the value will be rendered using USD.
-    */
+     */
     currencyCode?: string;
     format?: CurrencyFormat;
 }
@@ -162,6 +162,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
     featured?: L[];
     identity?: IdentityDefinition;
 }
+export declare type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 export interface ObjectSchema<K extends string, L extends string> extends ObjectSchemaDefinition<K, L> {
     identity?: Identity;
 }
@@ -196,18 +197,32 @@ interface StringHintTypeToSchemaTypeMap {
     [ValueHintType.Date]: Date;
 }
 declare type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T extends keyof StringHintTypeToSchemaTypeMap ? StringHintTypeToSchemaTypeMap[T] : string;
-export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? StringHintTypeToSchemaType<T['codaType']> : T extends ArraySchema ? Array<SchemaType<T['items']>> : T extends GenericObjectSchema ? PickOptional<{
-    [K in keyof T['properties']]: SchemaType<T['properties'][K]>;
+declare type SchemaWithNoFromKey<T extends ObjectSchemaDefinition<any, any>> = {
+    [K in keyof T['properties'] as T['properties'][K] extends {
+        fromKey: string;
+    } ? never : K]: T['properties'][K];
+};
+declare type SchemaFromKeyWildCard<T extends ObjectSchemaDefinition<any, any>> = {
+    [K in keyof T['properties'] as T['properties'][K] extends {
+        fromKey: string;
+    } ? string : never]: any;
+};
+declare type ObjectSchemaNoFromKeyType<T extends ObjectSchemaDefinition<any, any>, P extends SchemaWithNoFromKey<T> = SchemaWithNoFromKey<T>> = PickOptional<{
+    [K in keyof P]: SchemaType<P[K]>;
 }, $Values<{
-    [K in keyof T['properties']]: T['properties'][K] extends {
+    [K in keyof P]: P[K] extends {
         required: true;
     } ? K : never;
-}>> : never;
+}>>;
+declare type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = ObjectSchemaNoFromKeyType<T> & SchemaFromKeyWildCard<T>;
+export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? StringHintTypeToSchemaType<T['codaType']> : T extends ArraySchema ? Array<SchemaType<T['items']>> : T extends GenericObjectSchema ? ObjectSchemaType<T> : never;
 export declare type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
 export declare function generateSchema(obj: ValidTypes): Schema;
 export declare function makeSchema<T extends Schema>(schema: T): T;
 export declare const PlaceholderIdentityPackId = -1;
-export declare function makeObjectSchema<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>>(schemaDef: T): ObjectSchema<K, L>;
+export declare function makeObjectSchema<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>>(schemaDef: T): T & {
+    identity?: Identity;
+};
 export declare function normalizeSchemaKey(key: string): string;
 export declare function normalizeSchema<T extends Schema>(schema: T): T;
 /**

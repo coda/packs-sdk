@@ -49,7 +49,7 @@ ___
 
 ### formulas
 
-• `Optional` **formulas**: [`PackFormulas`](PackFormulas.md) \| [`Formula`](../types/Formula.md)<[`ParamDefs`](../types/ParamDefs.md)\>[]
+• `Optional` **formulas**: [`PackFormulas`](PackFormulas.md) \| (`BooleanPackFormula`<[`ParamDefs`](../types/ParamDefs.md)\> \| `NumericPackFormula`<[`ParamDefs`](../types/ParamDefs.md)\> \| `StringPackFormula`<[`ParamDefs`](../types/ParamDefs.md), [`Date`](../enums/ValueHintType.md#date) \| [`Time`](../enums/ValueHintType.md#time) \| [`DateTime`](../enums/ValueHintType.md#datetime) \| [`Duration`](../enums/ValueHintType.md#duration) \| [`ImageReference`](../enums/ValueHintType.md#imagereference) \| [`ImageAttachment`](../enums/ValueHintType.md#imageattachment) \| [`Url`](../enums/ValueHintType.md#url) \| [`Markdown`](../enums/ValueHintType.md#markdown) \| [`Html`](../enums/ValueHintType.md#html) \| [`Embed`](../enums/ValueHintType.md#embed) \| [`Attachment`](../enums/ValueHintType.md#attachment)\> \| `ObjectPackFormula`<[`ParamDefs`](../types/ParamDefs.md), [`ArraySchema`](ArraySchema.md)<[`Schema`](../types/Schema.md)\>\> \| `ObjectPackFormula`<[`ParamDefs`](../types/ParamDefs.md), [`Schema`](../types/Schema.md)\>)[]
 
 Definitions of this pack's formulas. See [Formula](../types/Formula.md).
 

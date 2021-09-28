@@ -16,7 +16,7 @@
       "ArrayFormula"
     ],
     "content": "Adds a Coda formula which will return a text string in the doc.",
-    "code": "pack.addFormula({\n  resultType: coda.ValueType.Array,\n  name: 'MyFormula',\n  description: '',\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.Number,\n      name: 'myParam',\n      description: '',\n    }),\n  ],\n  items: {\n    type: coda.ValueType.Object,\n    properties: {\n      column1: {type: coda.ValueType.String},\n    },\n  },\n  execute: ([param]) => {\n    return [{column1: 'hello'}, {column1: 'world'}, {column1: param}];\n  },\n});"
+    "code": "pack.addFormula({\n  resultType: coda.ValueType.Array,\n  name: 'MyFormula',\n  description: '',\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: 'myParam',\n      description: '',\n    }),\n  ],\n  items: {\n    type: coda.ValueType.Object,\n    properties: {\n      column1: {type: coda.ValueType.String},\n    },\n  },\n  execute: ([param]) => {\n    return [{column1: 'hello'}, {column1: 'world'}, {column1: param}];\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -196,7 +196,7 @@
       "SyncTable"
     ],
     "content": "Adds a sync table.",
-    "code": "pack.addSyncTable({\n  name: 'MySyncTable',\n  identityName: 'EntityName',\n  schema: coda.makeObjectSchema({\n    type: coda.ValueType.Object,\n    id: 'idColumn',\n    primary: 'displayColumn',\n    properties: {\n      idColumn: {type: coda.ValueType.String},\n      displayColumn: {type: coda.ValueType.String},\n      otherColumn: {type: coda.ValueType.Number},\n    },\n  }),\n  formula: {\n    name: 'SyncTable',\n    description: 'Creates a sync table',\n    connectionRequirement: coda.ConnectionRequirement.None,\n    parameters: [coda.makeParameter({type: coda.ParameterType.String, name: 'myParam', description: 'My description'})],\n    execute: async ([param], context) => {\n      const response = await context.fetcher.fetch({method: 'GET', url: 'coda.io'});\n      return {\n        result: [\n          {\n            idColumn: 'Example1',\n            displayColumn: response.body,\n            otherColumn: param,\n          },\n        ],\n      };\n    },\n  },\n});"
+    "code": "pack.addSyncTable({\n  name: 'MySyncTable',\n  identityName: 'EntityName',\n  schema: coda.makeObjectSchema({\n    type: coda.ValueType.Object,\n    id: 'idColumn',\n    primary: 'displayColumn',\n    properties: {\n      idColumn: {type: coda.ValueType.String},\n      displayColumn: {type: coda.ValueType.String},\n      otherColumn: {type: coda.ValueType.String},\n    },\n  }),\n  formula: {\n    name: 'SyncTable',\n    description: 'Creates a sync table',\n    connectionRequirement: coda.ConnectionRequirement.None,\n    parameters: [coda.makeParameter({type: coda.ParameterType.String, name: 'myParam', description: 'My description'})],\n    execute: async ([param], context) => {\n      const response = await context.fetcher.fetch({method: 'GET', url: 'coda.io'});\n      return {\n        result: [\n          {\n            idColumn: 'Example1',\n            displayColumn: response.body,\n            otherColumn: param,\n          },\n        ],\n      };\n    },\n  },\n});"
   },
   {
     "triggerTokens": [

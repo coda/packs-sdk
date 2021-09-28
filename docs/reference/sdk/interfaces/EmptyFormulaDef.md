@@ -204,7 +204,7 @@ ___
 
 #### Defined in
 
-[api.ts:382](https://github.com/coda/packs-sdk/blob/main/api.ts#L382)
+[api.ts:384](https://github.com/coda/packs-sdk/blob/main/api.ts#L384)
 
 ___
 

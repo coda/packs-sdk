@@ -112,7 +112,7 @@ export const manifest: PackDefinition = createFakePack({
               }
               if (page === 2) {
                 return {
-                  result: [{name: 'Christina'}, {name: 'Donald'}],
+                  result: [{name: 'Christina'}, {x: 'Donald'}],
                 };
               }
             default:

@@ -1,10 +1,12 @@
-# Interface: SyncFormulaResult<ResultT\>
+# Interface: SyncFormulaResult<K, L, SchemaT\>
 
 ## Type parameters
 
 | Name | Type |
 | :------ | :------ |
-| `ResultT` | extends `object` |
+| `K` | extends `string` |
+| `L` | extends `string` |
+| `SchemaT` | extends `ObjectSchemaDefinition`<`K`, `L`\> |
 
 ## Properties
 
@@ -14,14 +16,14 @@
 
 #### Defined in
 
-[api.ts:439](https://github.com/coda/packs-sdk/blob/main/api.ts#L439)
+[api.ts:460](https://github.com/coda/packs-sdk/blob/main/api.ts#L460)
 
 ___
 
 ### result
 
-• **result**: `ResultT`[]
+• **result**: `ObjectSchemaDefinitionType`<`K`, `L`, `SchemaT`\>[]
 
 #### Defined in
 
-[api.ts:438](https://github.com/coda/packs-sdk/blob/main/api.ts#L438)
+[api.ts:459](https://github.com/coda/packs-sdk/blob/main/api.ts#L459)

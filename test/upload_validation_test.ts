@@ -231,7 +231,7 @@ describe('Pack metadata Validation', () => {
         description: 'My description',
         examples: [],
         parameters: [makeStringParameter('myParam', 'param description')],
-        execute: () => ['hello'],
+        execute: () => [{foo: 'test'}],
       });
       const metadata = createFakePackVersionMetadata({
         formulas: [formulaToMetadata(formula)],
@@ -251,7 +251,9 @@ describe('Pack metadata Validation', () => {
         description: 'My description',
         examples: [],
         parameters: [makeStringParameter('myParam', 'param description')],
-        execute: () => ['hello'],
+        execute: () => {
+          return {foo: 'test'};
+        },
       });
       const metadata = createFakePackVersionMetadata({
         formulas: [formulaToMetadata(formula)],

@@ -1,6 +1,6 @@
 # Function: makeFormula
 
-▸ **makeFormula**<`ParamDefsT`\>(`fullDefinition`): [`Formula`](../types/Formula.md)<`ParamDefsT`\>
+▸ **makeFormula**<`ParamDefsT`, `ResultT`, `SchemaT`\>(`fullDefinition`): [`Formula`](../types/Formula.md)<`ParamDefsT`, `ResultT`, `SchemaT`\>
 
 Creates a formula definition.
 
@@ -60,17 +60,19 @@ makeFormula({
 | Name | Type |
 | :------ | :------ |
 | `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
+| `ResultT` | extends `FormulaResultValueType` |
+| `SchemaT` | extends [`Schema`](../types/Schema.md)[`Schema`](../types/Schema.md) |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `fullDefinition` | `FormulaDefinitionV2`<`ParamDefsT`\> |
+| `fullDefinition` | `FormulaDefinitionV2`<`ParamDefsT`, `ResultT`, `SchemaT`\> |
 
 #### Returns
 
-[`Formula`](../types/Formula.md)<`ParamDefsT`\>
+[`Formula`](../types/Formula.md)<`ParamDefsT`, `ResultT`, `SchemaT`\>
 
 #### Defined in
 
-[api.ts:543](https://github.com/coda/packs-sdk/blob/main/api.ts#L543)
+[api.ts:565](https://github.com/coda/packs-sdk/blob/main/api.ts#L565)
