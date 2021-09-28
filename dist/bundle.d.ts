@@ -62,7 +62,7 @@ export interface BaseSchema {
 export interface BooleanSchema extends BaseSchema {
 	type: ValueType.Boolean;
 }
-export declare type NumberSchema = CurrencySchema | SliderSchema | ScaleSchema | NumericSchema | SimpleNumberSchema;
+export declare type NumberSchema = CurrencySchema | BaseNumberSchema | SliderSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema;
 export interface BaseNumberSchema extends BaseSchema {
 	type: ValueType.Number;
 }
@@ -71,13 +71,23 @@ export interface NumericSchema extends BaseNumberSchema {
 	precision?: number;
 	useThousandsSeparator?: boolean;
 }
+export interface NumericDateSchema extends BaseNumberSchema {
+	codaType: ValueHintType.Date;
+	format?: string;
+}
+export interface NumericTimeSchema extends BaseNumberSchema {
+	codaType: ValueHintType.Time;
+	format?: string;
+}
+export interface NumericDateTimeSchema extends BaseNumberSchema {
+	codaType: ValueHintType.DateTime;
+	dateFormat?: string;
+	timeFormat?: string;
+}
 export declare enum CurrencyFormat {
 	Currency = "currency",
 	Accounting = "accounting",
 	Financial = "financial"
-}
-export interface SimpleNumberSchema extends BaseNumberSchema {
-	codaType?: ValueHintType.Date | ValueHintType.Time | ValueHintType.DateTime | ValueHintType.Percent;
 }
 export interface CurrencySchema extends BaseNumberSchema {
 	codaType: ValueHintType.Currency;

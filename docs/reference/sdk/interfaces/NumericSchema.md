@@ -14,7 +14,7 @@
 
 #### Defined in
 
-[schema.ts:85](https://github.com/coda/packs-sdk/blob/main/schema.ts#L85)
+[schema.ts:89](https://github.com/coda/packs-sdk/blob/main/schema.ts#L89)
 
 ___
 
@@ -28,7 +28,7 @@ BaseNumberSchema.description
 
 #### Defined in
 
-[schema.ts:72](https://github.com/coda/packs-sdk/blob/main/schema.ts#L72)
+[schema.ts:75](https://github.com/coda/packs-sdk/blob/main/schema.ts#L75)
 
 ___
 
@@ -38,7 +38,7 @@ ___
 
 #### Defined in
 
-[schema.ts:86](https://github.com/coda/packs-sdk/blob/main/schema.ts#L86)
+[schema.ts:90](https://github.com/coda/packs-sdk/blob/main/schema.ts#L90)
 
 ___
 
@@ -52,7 +52,7 @@ BaseNumberSchema.type
 
 #### Defined in
 
-[schema.ts:81](https://github.com/coda/packs-sdk/blob/main/schema.ts#L81)
+[schema.ts:85](https://github.com/coda/packs-sdk/blob/main/schema.ts#L85)
 
 ___
 
@@ -62,4 +62,4 @@ ___
 
 #### Defined in
 
-[schema.ts:87](https://github.com/coda/packs-sdk/blob/main/schema.ts#L87)
+[schema.ts:91](https://github.com/coda/packs-sdk/blob/main/schema.ts#L91)

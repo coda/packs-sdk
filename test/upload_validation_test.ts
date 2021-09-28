@@ -749,45 +749,6 @@ describe('Pack metadata Validation', () => {
         assert.equal(parsedMetadata.syncTables[0].schema.properties.Foo.icon, ScaleIconSet.Star)
       });
 
-      it('sync table with invalid scale schema', async () => {
-        const syncTable = makeSyncTable({
-          name: 'ScaleSyncTable',
-          identityName: 'Sync',
-          schema: makeObjectSchema({
-            type: ValueType.Object,
-            primary: 'foo',
-            id: 'foo',
-            identity: {name: 'foo'},
-            properties: {
-              Foo: {type: ValueType.Number, codaType: ValueHintType.Scale as any},
-            },
-          }),
-          formula: {
-            name: 'SyncTable',
-            description: 'A simple sync table',
-            async execute([], _context) {
-              return {result: []};
-            },
-            parameters: [],
-            examples: [],
-          },
-        });
-
-        const metadata = createFakePack({
-          name: 'invalidScalePack',
-          syncTables: [syncTable],
-        });
-        // console.log(metadata.syncTables![0].getter.schema)
-        try {
-          await validateJson(metadata);
-        } catch (_err) {
-          // console.log(err.validationErrors)
-        }
-        // console.log(parsedMetadata.syncTables[0].schema)
-        // assert.equal(parsedMetadata.syncTables[0].schema.maximum, 5)
-        // assert.equal(parsedMetadata.syncTables[0].schema.icon, 'star')
-      });
-
       it('invalid dynamic sync table', async () => {
         const syncTable = makeDynamicSyncTable({
           name: 'DynamicSyncTable',

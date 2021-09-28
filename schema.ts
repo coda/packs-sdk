@@ -56,16 +56,19 @@ export const StringHintValueTypes = [
   ValueHintType.Markdown,
   ValueHintType.Url,
 ] as const;
-export const SimpleNumberHintValueTypes = [
+export const NumberHintValueTypes = [
   ValueHintType.Date,
   ValueHintType.Time,
   ValueHintType.DateTime,
   ValueHintType.Percent,
+  ValueHintType.Currency,
+  ValueHintType.Slider,
+  ValueHintType.Scale,
 ] as const;
 export const ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference] as const;
 
 export type StringHintTypes = typeof StringHintValueTypes[number];
-export type SimpleNumberHintTypes = typeof SimpleNumberHintValueTypes[number];
+export type NumberHintTypes = typeof NumberHintValueTypes[number];
 export type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 
 interface BaseSchema {
@@ -76,7 +79,8 @@ export interface BooleanSchema extends BaseSchema {
   type: ValueType.Boolean;
 }
 
-export type NumberSchema = CurrencySchema | SliderSchema | ScaleSchema | NumericSchema | SimpleNumberSchema;
+export type NumberSchema = CurrencySchema | BaseNumberSchema |
+  SliderSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema;
 export interface BaseNumberSchema extends BaseSchema {
   type: ValueType.Number;
 }
@@ -87,15 +91,31 @@ export interface NumericSchema extends BaseNumberSchema {
   useThousandsSeparator?: boolean;
 }
 
+export interface NumericDateSchema extends BaseNumberSchema {
+  codaType: ValueHintType.Date;
+  // A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+  format?: string;
+}
+
+export interface NumericTimeSchema extends BaseNumberSchema {
+  codaType: ValueHintType.Time;
+  // A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+  format?: string;
+}
+
+export interface NumericDateTimeSchema extends BaseNumberSchema {
+  codaType: ValueHintType.DateTime;
+  // A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+  dateFormat?: string;
+  // A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+  timeFormat?: string;
+}
+
+
 export enum CurrencyFormat {
   Currency = 'currency',
   Accounting = 'accounting',
   Financial = 'financial',
-}
-
-export interface SimpleNumberSchema extends BaseNumberSchema {
-   // These need no other values for Coda's value formats.
-  codaType?: ValueHintType.Date | ValueHintType.Time | ValueHintType.DateTime | ValueHintType.Percent;
 }
 
 export interface CurrencySchema extends BaseNumberSchema {

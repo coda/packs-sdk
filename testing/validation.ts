@@ -1,4 +1,5 @@
 import type {ArraySchema} from '../schema';
+import type { DateTimeSchema } from '..';
 import type {GenericObjectSchema} from '../schema';
 import type {ObjectPackFormulaMetadata} from '../api';
 import type {ObjectSchemaProperty} from '../schema';
@@ -162,7 +163,7 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
           return urlErrorMessage ? [urlErrorMessage] : [];
         case ValueHintType.Date:
         case ValueHintType.DateTime:
-          const dateTimeErrorMessage = tryParseDateTimeString(result, schema);
+          const dateTimeErrorMessage = tryParseDateTimeString(result, schema as DateTimeSchema);
           return dateTimeErrorMessage ? [dateTimeErrorMessage] : [];
         case ValueHintType.Duration:
         case ValueHintType.Time:
@@ -201,7 +202,7 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
   }
 }
 
-function tryParseDateTimeString(result: unknown, schema: StringSchema) {
+function tryParseDateTimeString(result: unknown, schema: DateTimeSchema) {
   const dateTime = result as string;
   if (isNaN(Date.parse(dateTime))) {
     return {message: `Failed to parse ${dateTime} as a ${schema.codaType}.`};

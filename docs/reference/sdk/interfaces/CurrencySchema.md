@@ -14,7 +14,7 @@
 
 #### Defined in
 
-[schema.ts:102](https://github.com/coda/packs-sdk/blob/main/schema.ts#L102)
+[schema.ts:122](https://github.com/coda/packs-sdk/blob/main/schema.ts#L122)
 
 ___
 
@@ -27,7 +27,7 @@ If the currency code is not supported by Coda, the value will be rendered using 
 
 #### Defined in
 
-[schema.ts:108](https://github.com/coda/packs-sdk/blob/main/schema.ts#L108)
+[schema.ts:128](https://github.com/coda/packs-sdk/blob/main/schema.ts#L128)
 
 ___
 
@@ -41,7 +41,7 @@ BaseNumberSchema.description
 
 #### Defined in
 
-[schema.ts:72](https://github.com/coda/packs-sdk/blob/main/schema.ts#L72)
+[schema.ts:75](https://github.com/coda/packs-sdk/blob/main/schema.ts#L75)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[schema.ts:109](https://github.com/coda/packs-sdk/blob/main/schema.ts#L109)
+[schema.ts:129](https://github.com/coda/packs-sdk/blob/main/schema.ts#L129)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[schema.ts:103](https://github.com/coda/packs-sdk/blob/main/schema.ts#L103)
+[schema.ts:123](https://github.com/coda/packs-sdk/blob/main/schema.ts#L123)
 
 ___
 
@@ -75,4 +75,4 @@ BaseNumberSchema.type
 
 #### Defined in
 
-[schema.ts:81](https://github.com/coda/packs-sdk/blob/main/schema.ts#L81)
+[schema.ts:85](https://github.com/coda/packs-sdk/blob/main/schema.ts#L85)

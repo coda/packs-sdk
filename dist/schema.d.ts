@@ -34,10 +34,10 @@ export declare enum ValueHintType {
     Scale = "scale"
 }
 export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url];
-export declare const SimpleNumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Percent];
+export declare const NumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Percent, ValueHintType.Currency, ValueHintType.Slider, ValueHintType.Scale];
 export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference];
 export declare type StringHintTypes = typeof StringHintValueTypes[number];
-export declare type SimpleNumberHintTypes = typeof SimpleNumberHintValueTypes[number];
+export declare type NumberHintTypes = typeof NumberHintValueTypes[number];
 export declare type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 interface BaseSchema {
     description?: string;
@@ -45,7 +45,7 @@ interface BaseSchema {
 export interface BooleanSchema extends BaseSchema {
     type: ValueType.Boolean;
 }
-export declare type NumberSchema = CurrencySchema | SliderSchema | ScaleSchema | NumericSchema | SimpleNumberSchema;
+export declare type NumberSchema = CurrencySchema | BaseNumberSchema | SliderSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema;
 export interface BaseNumberSchema extends BaseSchema {
     type: ValueType.Number;
 }
@@ -54,13 +54,23 @@ export interface NumericSchema extends BaseNumberSchema {
     precision?: number;
     useThousandsSeparator?: boolean;
 }
+export interface NumericDateSchema extends BaseNumberSchema {
+    codaType: ValueHintType.Date;
+    format?: string;
+}
+export interface NumericTimeSchema extends BaseNumberSchema {
+    codaType: ValueHintType.Time;
+    format?: string;
+}
+export interface NumericDateTimeSchema extends BaseNumberSchema {
+    codaType: ValueHintType.DateTime;
+    dateFormat?: string;
+    timeFormat?: string;
+}
 export declare enum CurrencyFormat {
     Currency = "currency",
     Accounting = "accounting",
     Financial = "financial"
-}
-export interface SimpleNumberSchema extends BaseNumberSchema {
-    codaType?: ValueHintType.Date | ValueHintType.Time | ValueHintType.DateTime | ValueHintType.Percent;
 }
 export interface CurrencySchema extends BaseNumberSchema {
     codaType: ValueHintType.Currency;

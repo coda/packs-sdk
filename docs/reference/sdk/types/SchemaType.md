@@ -11,7 +11,11 @@
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [schema.ts:318](https://github.com/coda/packs-sdk/blob/main/schema.ts#L318)
 =======
 [schema.ts:278](https://github.com/coda/packs-sdk/blob/main/schema.ts#L278)
 >>>>>>> 40f7a22 (Tweak our zod validation to complain when invalid property schemas ar eprovided)
+=======
+[schema.ts:298](https://github.com/coda/packs-sdk/blob/main/schema.ts#L298)
+>>>>>>> 46bf97b (fix typing)

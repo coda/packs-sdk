@@ -25,7 +25,7 @@ ObjectSchemaDefinition.codaType
 
 #### Defined in
 
-[schema.ts:222](https://github.com/coda/packs-sdk/blob/main/schema.ts#L222)
+[schema.ts:242](https://github.com/coda/packs-sdk/blob/main/schema.ts#L242)
 
 ___
 
@@ -39,7 +39,7 @@ ObjectSchemaDefinition.description
 
 #### Defined in
 
-[schema.ts:72](https://github.com/coda/packs-sdk/blob/main/schema.ts#L72)
+[schema.ts:75](https://github.com/coda/packs-sdk/blob/main/schema.ts#L75)
 
 ___
 
@@ -53,7 +53,7 @@ ObjectSchemaDefinition.featured
 
 #### Defined in
 
-[schema.ts:223](https://github.com/coda/packs-sdk/blob/main/schema.ts#L223)
+[schema.ts:243](https://github.com/coda/packs-sdk/blob/main/schema.ts#L243)
 
 ___
 
@@ -67,7 +67,7 @@ ObjectSchemaDefinition.id
 
 #### Defined in
 
-[schema.ts:220](https://github.com/coda/packs-sdk/blob/main/schema.ts#L220)
+[schema.ts:240](https://github.com/coda/packs-sdk/blob/main/schema.ts#L240)
 
 ___
 
@@ -82,10 +82,14 @@ ObjectSchemaDefinition.identity
 #### Defined in
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 [schema.ts:237](https://github.com/coda/packs-sdk/blob/main/schema.ts#L237)
 =======
 [schema.ts:228](https://github.com/coda/packs-sdk/blob/main/schema.ts#L228)
 >>>>>>> 40f7a22 (Tweak our zod validation to complain when invalid property schemas ar eprovided)
+=======
+[schema.ts:248](https://github.com/coda/packs-sdk/blob/main/schema.ts#L248)
+>>>>>>> 46bf97b (fix typing)
 
 ___
 
@@ -99,7 +103,7 @@ ObjectSchemaDefinition.primary
 
 #### Defined in
 
-[schema.ts:221](https://github.com/coda/packs-sdk/blob/main/schema.ts#L221)
+[schema.ts:241](https://github.com/coda/packs-sdk/blob/main/schema.ts#L241)
 
 ___
 
@@ -113,7 +117,7 @@ ObjectSchemaDefinition.properties
 
 #### Defined in
 
-[schema.ts:219](https://github.com/coda/packs-sdk/blob/main/schema.ts#L219)
+[schema.ts:239](https://github.com/coda/packs-sdk/blob/main/schema.ts#L239)
 
 ___
 
@@ -127,4 +131,4 @@ ObjectSchemaDefinition.type
 
 #### Defined in
 
-[schema.ts:218](https://github.com/coda/packs-sdk/blob/main/schema.ts#L218)
+[schema.ts:238](https://github.com/coda/packs-sdk/blob/main/schema.ts#L238)

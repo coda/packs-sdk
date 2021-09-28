@@ -4415,11 +4415,14 @@ var StringHintValueTypes = [
   ValueHintType.Markdown,
   ValueHintType.Url
 ];
-var SimpleNumberHintValueTypes = [
+var NumberHintValueTypes = [
   ValueHintType.Date,
   ValueHintType.Time,
   ValueHintType.DateTime,
-  ValueHintType.Percent
+  ValueHintType.Percent,
+  ValueHintType.Currency,
+  ValueHintType.Slider,
+  ValueHintType.Scale
 ];
 var ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference];
 var CurrencyFormat;
