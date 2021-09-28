@@ -1,6 +1,6 @@
 # Type alias: ObjectSchemaProperties<K\>
 
-Ƭ **ObjectSchemaProperties**<`K`\>: { [K2 in K \| string]: Schema & ObjectSchemaProperty}
+Ƭ **ObjectSchemaProperties**<`K`\>: { [K2 in K \| string]: Schema & ObjectSchemaProperty }
 
 #### Type parameters
 

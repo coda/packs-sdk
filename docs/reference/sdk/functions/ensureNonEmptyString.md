@@ -6,7 +6,7 @@
 
 | Name | Type |
 | :------ | :------ |
-| `value` | `string` \| ``null`` \| `undefined` |
+| `value` | `undefined` \| ``null`` \| `string` |
 | `message?` | `string` |
 
 #### Returns
