@@ -412,8 +412,8 @@ const numericPropertySchema = baseNumberPropertySchema.extend({
 const scalePropertySchema = baseNumberPropertySchema.extend({
     type: zodDiscriminant(schema_7.ValueType.Number),
     codaType: zodDiscriminant(schema_6.ValueHintType.Scale),
-    maximum: z.number(),
-    icon: z.nativeEnum(schema_4.ScaleIconSet),
+    maximum: z.number().optional(),
+    icon: z.nativeEnum(schema_4.ScaleIconSet).optional(),
     ...basePropertyValidators,
 });
 const sliderPropertySchema = baseNumberPropertySchema.extend({

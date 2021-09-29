@@ -498,8 +498,8 @@ const numericPropertySchema = baseNumberPropertySchema.extend({
 const scalePropertySchema = baseNumberPropertySchema.extend({
   type: zodDiscriminant(ValueType.Number),
   codaType: zodDiscriminant(ValueHintType.Scale),
-  maximum: z.number(),
-  icon: z.nativeEnum(ScaleIconSet),
+  maximum: z.number().optional(),
+  icon: z.nativeEnum(ScaleIconSet).optional(),
   ...basePropertyValidators,
 })
 

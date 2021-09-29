@@ -168,8 +168,8 @@ export enum ScaleIconSet {
 
 export interface ScaleSchema extends BaseNumberSchema {
   codaType: ValueHintType.Scale;
-  maximum: number;
-  icon: ScaleIconSet;
+  maximum?: number;
+  icon?: ScaleIconSet;
 }
 
 export interface StringDateSchema extends StringSchema {

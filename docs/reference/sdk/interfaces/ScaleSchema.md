@@ -34,7 +34,7 @@ ___
 
 ### icon
 
-• **icon**: `ScaleIconSet`
+• `Optional` **icon**: `ScaleIconSet`
 
 #### Defined in
 
@@ -44,7 +44,7 @@ ___
 
 ### maximum
 
-• **maximum**: `number`
+• `Optional` **maximum**: `number`
 
 #### Defined in
 
