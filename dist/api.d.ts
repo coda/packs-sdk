@@ -6,6 +6,7 @@ import { ConnectionRequirement } from './api_types';
 import type { ExecutionContext } from './api_types';
 import type { FetchRequest } from './api_types';
 import type { Identity } from './schema';
+import type { NumberHintTypes } from './schema';
 import type { NumberSchema } from './schema';
 import type { ObjectSchema } from './schema';
 import type { ObjectSchemaDefinition } from './schema';
@@ -318,9 +319,12 @@ declare type StringFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2
 };
 declare type NumericFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, number> & {
     resultType: ValueType.Number;
-    schema?: NumberSchema;
     execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<number> | number;
-};
+} & ({
+    schema?: NumberSchema;
+} | {
+    codaType?: NumberHintTypes;
+});
 declare type BooleanFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, boolean> & {
     resultType: ValueType.Boolean;
     execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<boolean> | boolean;

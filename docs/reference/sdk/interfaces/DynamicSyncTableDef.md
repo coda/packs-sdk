@@ -30,7 +30,7 @@ instead, define dynamic sync tables using [makeDynamicSyncTable](../functions/ma
 
 #### Defined in
 
-[api.ts:118](https://github.com/coda/packs-sdk/blob/main/api.ts#L118)
+[api.ts:119](https://github.com/coda/packs-sdk/blob/main/api.ts#L119)
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 #### Defined in
 
-[api.ts:134](https://github.com/coda/packs-sdk/blob/main/api.ts#L134)
+[api.ts:135](https://github.com/coda/packs-sdk/blob/main/api.ts#L135)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[api.ts:133](https://github.com/coda/packs-sdk/blob/main/api.ts#L133)
+[api.ts:134](https://github.com/coda/packs-sdk/blob/main/api.ts#L134)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-[api.ts:132](https://github.com/coda/packs-sdk/blob/main/api.ts#L132)
+[api.ts:133](https://github.com/coda/packs-sdk/blob/main/api.ts#L133)
 
 ___
 
@@ -78,7 +78,7 @@ ___
 
 #### Defined in
 
-[api.ts:116](https://github.com/coda/packs-sdk/blob/main/api.ts#L116)
+[api.ts:117](https://github.com/coda/packs-sdk/blob/main/api.ts#L117)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[api.ts:131](https://github.com/coda/packs-sdk/blob/main/api.ts#L131)
+[api.ts:132](https://github.com/coda/packs-sdk/blob/main/api.ts#L132)
 
 ___
 
@@ -98,7 +98,7 @@ ___
 
 #### Defined in
 
-[api.ts:135](https://github.com/coda/packs-sdk/blob/main/api.ts#L135)
+[api.ts:136](https://github.com/coda/packs-sdk/blob/main/api.ts#L136)
 
 ___
 
@@ -112,7 +112,7 @@ ___
 
 #### Defined in
 
-[api.ts:114](https://github.com/coda/packs-sdk/blob/main/api.ts#L114)
+[api.ts:115](https://github.com/coda/packs-sdk/blob/main/api.ts#L115)
 
 ___
 
@@ -126,4 +126,4 @@ ___
 
 #### Defined in
 
-[api.ts:115](https://github.com/coda/packs-sdk/blob/main/api.ts#L115)
+[api.ts:116](https://github.com/coda/packs-sdk/blob/main/api.ts#L116)

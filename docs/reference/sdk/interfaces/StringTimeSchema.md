@@ -1,24 +1,24 @@
-# Interface: DurationSchema
+# Interface: StringTimeSchema
 
 ## Hierarchy
 
-- [`StringSchema`](StringSchema.md)<[`Duration`](../enums/ValueHintType.md#duration)\>
+- [`StringSchema`](StringSchema.md)
 
-  ↳ **`DurationSchema`**
+  ↳ **`StringTimeSchema`**
 
 ## Properties
 
 ### codaType
 
-• `Optional` **codaType**: [`Duration`](../enums/ValueHintType.md#duration)
+• **codaType**: [`Time`](../enums/ValueHintType.md#time)
 
-#### Inherited from
+#### Overrides
 
 [StringSchema](StringSchema.md).[codaType](StringSchema.md#codatype)
 
 #### Defined in
 
-[schema.ts:209](https://github.com/coda/packs-sdk/blob/main/schema.ts#L209)
+[schema.ts:182](https://github.com/coda/packs-sdk/blob/main/schema.ts#L182)
 
 ___
 
@@ -36,23 +36,13 @@ ___
 
 ___
 
-### maxUnit
+### format
 
-• `Optional` **maxUnit**: [`DurationUnit`](../enums/DurationUnit.md)
-
-#### Defined in
-
-[schema.ts:204](https://github.com/coda/packs-sdk/blob/main/schema.ts#L204)
-
-___
-
-### precision
-
-• `Optional` **precision**: `number`
+• `Optional` **format**: `string`
 
 #### Defined in
 
-[schema.ts:203](https://github.com/coda/packs-sdk/blob/main/schema.ts#L203)
+[schema.ts:184](https://github.com/coda/packs-sdk/blob/main/schema.ts#L184)
 
 ___
 

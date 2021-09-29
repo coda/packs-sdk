@@ -25,7 +25,7 @@ ObjectSchemaDefinition.codaType
 
 #### Defined in
 
-[schema.ts:242](https://github.com/coda/packs-sdk/blob/main/schema.ts#L242)
+[schema.ts:245](https://github.com/coda/packs-sdk/blob/main/schema.ts#L245)
 
 ___
 
@@ -53,7 +53,7 @@ ObjectSchemaDefinition.featured
 
 #### Defined in
 
-[schema.ts:243](https://github.com/coda/packs-sdk/blob/main/schema.ts#L243)
+[schema.ts:246](https://github.com/coda/packs-sdk/blob/main/schema.ts#L246)
 
 ___
 
@@ -67,7 +67,7 @@ ObjectSchemaDefinition.id
 
 #### Defined in
 
-[schema.ts:240](https://github.com/coda/packs-sdk/blob/main/schema.ts#L240)
+[schema.ts:243](https://github.com/coda/packs-sdk/blob/main/schema.ts#L243)
 
 ___
 
@@ -81,15 +81,7 @@ ObjectSchemaDefinition.identity
 
 #### Defined in
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-[schema.ts:237](https://github.com/coda/packs-sdk/blob/main/schema.ts#L237)
-=======
-[schema.ts:228](https://github.com/coda/packs-sdk/blob/main/schema.ts#L228)
->>>>>>> 40f7a22 (Tweak our zod validation to complain when invalid property schemas ar eprovided)
-=======
-[schema.ts:248](https://github.com/coda/packs-sdk/blob/main/schema.ts#L248)
->>>>>>> 46bf97b (fix typing)
+[schema.ts:257](https://github.com/coda/packs-sdk/blob/main/schema.ts#L257)
 
 ___
 
@@ -103,7 +95,7 @@ ObjectSchemaDefinition.primary
 
 #### Defined in
 
-[schema.ts:241](https://github.com/coda/packs-sdk/blob/main/schema.ts#L241)
+[schema.ts:244](https://github.com/coda/packs-sdk/blob/main/schema.ts#L244)
 
 ___
 
@@ -117,7 +109,7 @@ ObjectSchemaDefinition.properties
 
 #### Defined in
 
-[schema.ts:239](https://github.com/coda/packs-sdk/blob/main/schema.ts#L239)
+[schema.ts:242](https://github.com/coda/packs-sdk/blob/main/schema.ts#L242)
 
 ___
 
@@ -131,4 +123,4 @@ ObjectSchemaDefinition.type
 
 #### Defined in
 
-[schema.ts:238](https://github.com/coda/packs-sdk/blob/main/schema.ts#L238)
+[schema.ts:241](https://github.com/coda/packs-sdk/blob/main/schema.ts#L241)

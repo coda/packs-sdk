@@ -432,21 +432,19 @@ const currencyPropertySchema = baseNumberPropertySchema.extend({
     format: z.nativeEnum(schema_2.CurrencyFormat).optional(),
     ...basePropertyValidators,
 });
-// TODO(alan): create base date, time, and datetime schemas to reuse across numeric schema
-// properties and string schema properties.
-const datePropertySchema = zodCompleteObject({
+const numericDatePropertySchema = zodCompleteObject({
     type: zodDiscriminant(schema_7.ValueType.Number),
     codaType: zodDiscriminant(schema_6.ValueHintType.Date),
     format: z.string().optional(),
     ...basePropertyValidators,
 });
-const timePropertySchema = zodCompleteObject({
+const numericTimePropertySchema = zodCompleteObject({
     type: zodDiscriminant(schema_7.ValueType.Number),
     codaType: zodDiscriminant(schema_6.ValueHintType.Time),
     format: z.string().optional(),
     ...basePropertyValidators,
 });
-const dateTimePropertySchema = zodCompleteObject({
+const numericDateTimePropertySchema = zodCompleteObject({
     type: zodDiscriminant(schema_7.ValueType.Number),
     codaType: zodDiscriminant(schema_6.ValueHintType.DateTime),
     dateFormat: z.string().optional(),
@@ -458,9 +456,9 @@ const numberPropertySchema = z.union([
     scalePropertySchema,
     sliderPropertySchema,
     currencyPropertySchema,
-    datePropertySchema,
-    timePropertySchema,
-    dateTimePropertySchema,
+    numericDatePropertySchema,
+    numericTimePropertySchema,
+    numericDateTimePropertySchema,
     baseNumberPropertySchema,
 ]);
 const numericPackFormulaSchema = zodCompleteObject({

@@ -14,6 +14,12 @@
 
   ↳↳ [`DurationSchema`](DurationSchema.md)
 
+  ↳↳ [`StringDateSchema`](StringDateSchema.md)
+
+  ↳↳ [`StringDateTimeSchema`](StringDateTimeSchema.md)
+
+  ↳↳ [`StringTimeSchema`](StringTimeSchema.md)
+
 ## Properties
 
 ### codaType
@@ -22,7 +28,7 @@
 
 #### Defined in
 
-[schema.ts:206](https://github.com/coda/packs-sdk/blob/main/schema.ts#L206)
+[schema.ts:209](https://github.com/coda/packs-sdk/blob/main/schema.ts#L209)
 
 ___
 
@@ -46,4 +52,4 @@ ___
 
 #### Defined in
 
-[schema.ts:205](https://github.com/coda/packs-sdk/blob/main/schema.ts#L205)
+[schema.ts:208](https://github.com/coda/packs-sdk/blob/main/schema.ts#L208)

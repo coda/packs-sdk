@@ -50,11 +50,21 @@ declare const StringHintValueTypes: readonly [
 	ValueHintType.Markdown,
 	ValueHintType.Url
 ];
+declare const NumberHintValueTypes: readonly [
+	ValueHintType.Date,
+	ValueHintType.Time,
+	ValueHintType.DateTime,
+	ValueHintType.Percent,
+	ValueHintType.Currency,
+	ValueHintType.Slider,
+	ValueHintType.Scale
+];
 declare const ObjectHintValueTypes: readonly [
 	ValueHintType.Person,
 	ValueHintType.Reference
 ];
 export declare type StringHintTypes = typeof StringHintValueTypes[number];
+export declare type NumberHintTypes = typeof NumberHintValueTypes[number];
 export declare type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 export interface BaseSchema {
 	description?: string;
@@ -132,18 +142,15 @@ export interface ScaleSchema extends BaseNumberSchema {
 	maximum: number;
 	icon: ScaleIconSet;
 }
-export interface BaseDateSchema extends BaseSchema {
-	type: ValueType.Number | ValueType.String;
-}
-export interface DateSchema extends BaseDateSchema {
+export interface StringDateSchema extends StringSchema {
 	codaType: ValueHintType.Date;
 	format?: string;
 }
-export interface TimeSchema extends BaseDateSchema {
+export interface StringTimeSchema extends StringSchema {
 	codaType: ValueHintType.Time;
 	format?: string;
 }
-export interface DateTimeSchema extends BaseDateSchema {
+export interface StringDateTimeSchema extends StringSchema {
 	codaType: ValueHintType.DateTime;
 	dateFormat?: string;
 	timeFormat?: string;
@@ -785,9 +792,12 @@ export declare type StringFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormu
 };
 export declare type NumericFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, number> & {
 	resultType: ValueType.Number;
-	schema?: NumberSchema;
 	execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<number> | number;
-};
+} & ({
+	schema?: NumberSchema;
+} | {
+	codaType?: NumberHintTypes;
+});
 export declare type BooleanFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, boolean> & {
 	resultType: ValueType.Boolean;
 	execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<boolean> | boolean;

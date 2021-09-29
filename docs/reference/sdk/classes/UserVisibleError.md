@@ -30,7 +30,7 @@ Error.constructor
 
 #### Defined in
 
-[api.ts:59](https://github.com/coda/packs-sdk/blob/main/api.ts#L59)
+[api.ts:60](https://github.com/coda/packs-sdk/blob/main/api.ts#L60)
 
 ## Properties
 
@@ -40,7 +40,7 @@ Error.constructor
 
 #### Defined in
 
-[api.ts:57](https://github.com/coda/packs-sdk/blob/main/api.ts#L57)
+[api.ts:58](https://github.com/coda/packs-sdk/blob/main/api.ts#L58)
 
 ___
 
@@ -50,4 +50,4 @@ ___
 
 #### Defined in
 
-[api.ts:56](https://github.com/coda/packs-sdk/blob/main/api.ts#L56)
+[api.ts:57](https://github.com/coda/packs-sdk/blob/main/api.ts#L57)

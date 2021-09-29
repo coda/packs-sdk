@@ -115,18 +115,15 @@ export interface ScaleSchema extends BaseNumberSchema {
     maximum: number;
     icon: ScaleIconSet;
 }
-interface BaseDateSchema extends BaseSchema {
-    type: ValueType.Number | ValueType.String;
-}
-export interface DateSchema extends BaseDateSchema {
+export interface StringDateSchema extends StringSchema {
     codaType: ValueHintType.Date;
     format?: string;
 }
-export interface TimeSchema extends BaseDateSchema {
+export interface StringTimeSchema extends StringSchema {
     codaType: ValueHintType.Time;
     format?: string;
 }
-export interface DateTimeSchema extends BaseDateSchema {
+export interface StringDateTimeSchema extends StringSchema {
     codaType: ValueHintType.DateTime;
     dateFormat?: string;
     timeFormat?: string;

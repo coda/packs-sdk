@@ -9,8 +9,6 @@ import type {CodaApiBearerTokenAuthentication} from '../types';
 import {ConnectionRequirement} from '../api_types';
 import {CurrencyFormat} from '../schema';
 import type {CustomHeaderTokenAuthentication} from '../types';
-import type {DateSchema} from '..';
-import type {DateTimeSchema} from '../schema';
 import {DefaultConnectionType} from '../types';
 import type {DynamicSyncTableDef} from '../api';
 import {FeatureSet} from '../types';
@@ -20,7 +18,10 @@ import type {MultiQueryParamTokenAuthentication} from '../types';
 import type {Network} from '../api_types';
 import {NetworkConnection} from '../api_types';
 import type {NoAuthentication} from '../types';
+import type {NumericDateSchema} from '../schema';
+import type {NumericDateTimeSchema} from '../schema';
 import type {NumericPackFormula} from '../api';
+import type {NumericTimeSchema} from '../schema';
 import type {OAuth2Authentication} from '../types';
 import {ObjectHintValueTypes} from '../schema';
 import type {ObjectPackFormula} from '../api';
@@ -520,24 +521,21 @@ const currencyPropertySchema = baseNumberPropertySchema.extend({
   ...basePropertyValidators,
 })
 
-// TODO(alan): create base date, time, and datetime schemas to reuse across numeric schema
-// properties and string schema properties.
-
-const datePropertySchema = zodCompleteObject<DateSchema & ObjectSchemaProperty>({
+const numericDatePropertySchema = zodCompleteObject<NumericDateSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Number),
   codaType: zodDiscriminant(ValueHintType.Date),
   format: z.string().optional(),
   ...basePropertyValidators,
 })
 
-const timePropertySchema = zodCompleteObject<DateSchema & ObjectSchemaProperty>({
+const numericTimePropertySchema = zodCompleteObject<NumericTimeSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Number),
   codaType: zodDiscriminant(ValueHintType.Time),
   format: z.string().optional(),
   ...basePropertyValidators,
 })
 
-const dateTimePropertySchema = zodCompleteObject<DateTimeSchema & ObjectSchemaProperty>({
+const numericDateTimePropertySchema = zodCompleteObject<NumericDateTimeSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Number),
   codaType: zodDiscriminant(ValueHintType.DateTime),
   dateFormat: z.string().optional(),
@@ -550,9 +548,9 @@ const numberPropertySchema = z.union([
   scalePropertySchema, 
   sliderPropertySchema, 
   currencyPropertySchema,
-  datePropertySchema,
-  timePropertySchema,
-  dateTimePropertySchema,
+  numericDatePropertySchema,
+  numericTimePropertySchema,
+  numericDateTimePropertySchema,
   baseNumberPropertySchema,
 ]);
 

@@ -79,8 +79,15 @@ export interface BooleanSchema extends BaseSchema {
   type: ValueType.Boolean;
 }
 
-export type NumberSchema = CurrencySchema | BaseNumberSchema |
-  SliderSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema;
+export type NumberSchema = CurrencySchema | 
+                           BaseNumberSchema |
+                           SliderSchema | 
+                           ScaleSchema | 
+                           NumericSchema | 
+                           NumericDateSchema | 
+                           NumericTimeSchema | 
+                           NumericDateTimeSchema;
+
 export interface BaseNumberSchema extends BaseSchema {
   type: ValueType.Number;
 }
@@ -165,23 +172,19 @@ export interface ScaleSchema extends BaseNumberSchema {
   icon: ScaleIconSet;
 }
 
-interface BaseDateSchema extends BaseSchema {
-  type: ValueType.Number | ValueType.String;
-}
-
-export interface DateSchema extends BaseDateSchema {
+export interface StringDateSchema extends StringSchema {
   codaType: ValueHintType.Date;
   // A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
   format?: string;
 }
 
-export interface TimeSchema extends BaseDateSchema {
+export interface StringTimeSchema extends StringSchema {
   codaType: ValueHintType.Time;
   // A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
   format?: string;
 }
 
-export interface DateTimeSchema extends BaseDateSchema {
+export interface StringDateTimeSchema extends StringSchema {
   codaType: ValueHintType.DateTime;
   // A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
   dateFormat?: string;
