@@ -56,6 +56,8 @@ function doFindAndExecutePackFunction<T extends FormulaSpecification>(
   switch (formulaSpec.type) {
     case FormulaType.Standard: {
       const formula = findFormula(manifest, formulaSpec.formulaName);
+      // for some reasons TS can't tell that
+      // `T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult` is now PackFormulaResult.
       return formula.execute(params, executionContext as ExecutionContext) as any;
     }
     case FormulaType.Sync: {

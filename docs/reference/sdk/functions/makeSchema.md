@@ -20,4 +20,4 @@
 
 #### Defined in
 
-[schema.ts:351](https://github.com/coda/packs-sdk/blob/main/schema.ts#L351)
+[schema.ts:357](https://github.com/coda/packs-sdk/blob/main/schema.ts#L357)

@@ -279,7 +279,6 @@ type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T exten
   ? StringHintTypeToSchemaTypeMap[T]
   : string;
 
-// if there's a fromKey, use it for the actual key.
 type SchemaWithNoFromKey<T extends ObjectSchemaDefinition<any, any>> = {
   [K in keyof T['properties'] as T['properties'][K] extends {fromKey: string} ? never : K]: T['properties'][K];
 };
@@ -304,6 +303,13 @@ type ObjectSchemaNoFromKeyType<
 type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = ObjectSchemaNoFromKeyType<T> &
   SchemaFromKeyWildCard<T>;
 
+// SchemaType parses the expected formula return type from the schema. For example,
+// StringFormula will need to return a string type value. NumbericFormula needs to return a number.
+//
+// ObjectFormula usually should return an object matching the schema as well but typescript
+// doesn't work perfectly with fromKey. In presense of a property using fromKey, SchemaType
+// will only check properties without fromKey attribute and will blindly accept additional
+// properites in the return value.
 export type SchemaType<T extends Schema> = T extends BooleanSchema
   ? boolean
   : T extends NumberSchema
