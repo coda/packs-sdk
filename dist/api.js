@@ -250,10 +250,11 @@ exports.makeStringFormula = makeStringFormula;
  */
 function makeFormula(fullDefinition) {
     let formula;
-    const { onError, ...definition } = fullDefinition;
-    switch (definition.resultType) {
+    switch (fullDefinition.resultType) {
         case schema_1.ValueType.String: {
-            const { resultType: unused, codaType, ...rest } = definition;
+            // very strange ts knows that fullDefinition.codaType is StringHintTypes but doesn't know if
+            // fullDefinition is StringFormulaDefV2.
+            const { onError: _, resultType: unused, codaType, ...rest } = fullDefinition;
             const stringFormula = {
                 ...rest,
                 resultType: api_types_3.Type.string,
@@ -263,7 +264,7 @@ function makeFormula(fullDefinition) {
             break;
         }
         case schema_1.ValueType.Number: {
-            const { resultType: unused, codaType, ...rest } = definition;
+            const { onError: _, resultType: unused, codaType, ...rest } = fullDefinition;
             const numericFormula = {
                 ...rest,
                 resultType: api_types_3.Type.number,
@@ -273,7 +274,7 @@ function makeFormula(fullDefinition) {
             break;
         }
         case schema_1.ValueType.Boolean: {
-            const { resultType: unused, ...rest } = definition;
+            const { onError: _, resultType: unused, ...rest } = fullDefinition;
             const booleanFormula = {
                 ...rest,
                 resultType: api_types_3.Type.boolean,
@@ -282,9 +283,10 @@ function makeFormula(fullDefinition) {
             break;
         }
         case schema_1.ValueType.Array: {
-            const { resultType: unused, items, ...rest } = definition;
+            const { onError: _, resultType: unused, items, ...rest } = fullDefinition;
             const arrayFormula = {
                 ...rest,
+                // TypeOf<SchemaType<ArraySchema<SchemaT>>> is always Type.object but TS can't infer this.
                 resultType: api_types_3.Type.object,
                 schema: (0, schema_3.normalizeSchema)({ type: schema_1.ValueType.Array, items }),
             };
@@ -292,7 +294,8 @@ function makeFormula(fullDefinition) {
             break;
         }
         case schema_1.ValueType.Object: {
-            const { resultType: unused, schema, ...rest } = definition;
+            const { onError: _, resultType: unused, schema, ...rest } = fullDefinition;
+            // need a force cast since execute has a different return value due to key normalization.
             const objectFormula = {
                 ...rest,
                 resultType: api_types_3.Type.object,
@@ -302,15 +305,16 @@ function makeFormula(fullDefinition) {
             break;
         }
         default:
-            return (0, ensure_2.ensureUnreachable)(definition);
+            return (0, ensure_2.ensureUnreachable)(fullDefinition);
     }
-    if ([schema_1.ValueType.Object, schema_1.ValueType.Array].includes(definition.resultType)) {
+    if ([schema_1.ValueType.Object, schema_1.ValueType.Array].includes(fullDefinition.resultType)) {
         const wrappedExecute = formula.execute;
         formula.execute = async function (params, context) {
             const result = await wrappedExecute(params, context);
             return (0, handler_templates_3.transformBody)(result, (0, ensure_1.ensureExists)(formula.schema));
         };
     }
+    const onError = fullDefinition.onError;
     if (onError) {
         const wrappedExecute = formula.execute;
         formula.execute = async function (params, context) {
@@ -322,7 +326,7 @@ function makeFormula(fullDefinition) {
             }
         };
     }
-    return maybeRewriteConnectionForFormula(formula, definition.connectionRequirement);
+    return maybeRewriteConnectionForFormula(formula, fullDefinition.connectionRequirement);
 }
 exports.makeFormula = makeFormula;
 function makeMetadataFormula(execute, options) {

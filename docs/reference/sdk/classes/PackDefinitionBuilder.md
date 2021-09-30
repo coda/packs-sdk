@@ -18,7 +18,7 @@
 
 #### Defined in
 
-[builder.ts:53](https://github.com/coda/packs-sdk/blob/main/builder.ts#L53)
+[builder.ts:56](https://github.com/coda/packs-sdk/blob/main/builder.ts#L56)
 
 ## Properties
 
@@ -32,7 +32,7 @@ BasicPackDefinition.defaultAuthentication
 
 #### Defined in
 
-[builder.ts:45](https://github.com/coda/packs-sdk/blob/main/builder.ts#L45)
+[builder.ts:48](https://github.com/coda/packs-sdk/blob/main/builder.ts#L48)
 
 ___
 
@@ -46,7 +46,7 @@ BasicPackDefinition.formats
 
 #### Defined in
 
-[builder.ts:41](https://github.com/coda/packs-sdk/blob/main/builder.ts#L41)
+[builder.ts:44](https://github.com/coda/packs-sdk/blob/main/builder.ts#L44)
 
 ___
 
@@ -60,13 +60,13 @@ BasicPackDefinition.formulaNamespace
 
 #### Defined in
 
-[builder.ts:49](https://github.com/coda/packs-sdk/blob/main/builder.ts#L49)
+[builder.ts:52](https://github.com/coda/packs-sdk/blob/main/builder.ts#L52)
 
 ___
 
 ### formulas
 
-• **formulas**: [`Formula`](../types/Formula.md)<[`ParamDefs`](../types/ParamDefs.md)\>[]
+• **formulas**: (`BooleanPackFormula`<[`ParamDefs`](../types/ParamDefs.md)\> \| `NumericPackFormula`<[`ParamDefs`](../types/ParamDefs.md)\> \| `StringPackFormula`<[`ParamDefs`](../types/ParamDefs.md), [`Date`](../enums/ValueHintType.md#date) \| [`Time`](../enums/ValueHintType.md#time) \| [`DateTime`](../enums/ValueHintType.md#datetime) \| [`Duration`](../enums/ValueHintType.md#duration) \| [`ImageReference`](../enums/ValueHintType.md#imagereference) \| [`ImageAttachment`](../enums/ValueHintType.md#imageattachment) \| [`Url`](../enums/ValueHintType.md#url) \| [`Markdown`](../enums/ValueHintType.md#markdown) \| [`Html`](../enums/ValueHintType.md#html) \| [`Embed`](../enums/ValueHintType.md#embed) \| [`Attachment`](../enums/ValueHintType.md#attachment)\> \| `ObjectPackFormula`<[`ParamDefs`](../types/ParamDefs.md), [`ArraySchema`](../interfaces/ArraySchema.md)<[`Schema`](../types/Schema.md)\>\> \| `ObjectPackFormula`<[`ParamDefs`](../types/ParamDefs.md), [`Schema`](../types/Schema.md)\>)[]
 
 #### Implementation of
 
@@ -74,7 +74,7 @@ BasicPackDefinition.formulas
 
 #### Defined in
 
-[builder.ts:40](https://github.com/coda/packs-sdk/blob/main/builder.ts#L40)
+[builder.ts:43](https://github.com/coda/packs-sdk/blob/main/builder.ts#L43)
 
 ___
 
@@ -88,7 +88,7 @@ BasicPackDefinition.networkDomains
 
 #### Defined in
 
-[builder.ts:43](https://github.com/coda/packs-sdk/blob/main/builder.ts#L43)
+[builder.ts:46](https://github.com/coda/packs-sdk/blob/main/builder.ts#L46)
 
 ___
 
@@ -102,7 +102,7 @@ BasicPackDefinition.syncTables
 
 #### Defined in
 
-[builder.ts:42](https://github.com/coda/packs-sdk/blob/main/builder.ts#L42)
+[builder.ts:45](https://github.com/coda/packs-sdk/blob/main/builder.ts#L45)
 
 ___
 
@@ -116,7 +116,7 @@ BasicPackDefinition.systemConnectionAuthentication
 
 #### Defined in
 
-[builder.ts:46](https://github.com/coda/packs-sdk/blob/main/builder.ts#L46)
+[builder.ts:49](https://github.com/coda/packs-sdk/blob/main/builder.ts#L49)
 
 ___
 
@@ -126,7 +126,7 @@ ___
 
 #### Defined in
 
-[builder.ts:48](https://github.com/coda/packs-sdk/blob/main/builder.ts#L48)
+[builder.ts:51](https://github.com/coda/packs-sdk/blob/main/builder.ts#L51)
 
 ## Methods
 
@@ -158,13 +158,13 @@ pack.addColumnFormat({
 
 #### Defined in
 
-[builder.ts:190](https://github.com/coda/packs-sdk/blob/main/builder.ts#L190)
+[builder.ts:200](https://github.com/coda/packs-sdk/blob/main/builder.ts#L200)
 
 ___
 
 ### addDynamicSyncTable
 
-▸ **addDynamicSyncTable**<`ParamDefsT`\>(`definition`): [`PackDefinitionBuilder`](PackDefinitionBuilder.md)
+▸ **addDynamicSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaT`\>(`definition`): [`PackDefinitionBuilder`](PackDefinitionBuilder.md)
 
 Adds a dynamic sync table definition to this pack.
 
@@ -190,13 +190,16 @@ pack.addDynamicSyncTable({
 
 | Name | Type |
 | :------ | :------ |
+| `K` | extends `string` |
+| `L` | extends `string` |
 | `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
+| `SchemaT` | extends `ObjectSchemaDefinition`<`K`, `L`, `SchemaT`\> |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `definition` | `DynamicSyncTableOptions`<`ParamDefsT`\> |
+| `definition` | `DynamicSyncTableOptions`<`K`, `L`, `ParamDefsT`, `SchemaT`\> |
 
 #### Returns
 
@@ -204,13 +207,13 @@ pack.addDynamicSyncTable({
 
 #### Defined in
 
-[builder.ts:168](https://github.com/coda/packs-sdk/blob/main/builder.ts#L168)
+[builder.ts:173](https://github.com/coda/packs-sdk/blob/main/builder.ts#L173)
 
 ___
 
 ### addFormula
 
-▸ **addFormula**<`ParamDefsT`\>(`definition`): [`PackDefinitionBuilder`](PackDefinitionBuilder.md)
+▸ **addFormula**<`ParamDefsT`, `ResultT`, `SchemaT`\>(`definition`): [`PackDefinitionBuilder`](PackDefinitionBuilder.md)
 
 Adds a formula definition to this pack.
 
@@ -240,12 +243,14 @@ pack.addFormula({
 | Name | Type |
 | :------ | :------ |
 | `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
+| `ResultT` | extends `FormulaResultValueType` |
+| `SchemaT` | extends [`Schema`](../types/Schema.md) |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `definition` | `FormulaDefinitionV2`<`ParamDefsT`\> |
+| `definition` | `FormulaDefinitionV2`<`ParamDefsT`, `ResultT`, `SchemaT`\> |
 
 #### Returns
 
@@ -253,7 +258,7 @@ pack.addFormula({
 
 #### Defined in
 
-[builder.ts:98](https://github.com/coda/packs-sdk/blob/main/builder.ts#L98)
+[builder.ts:101](https://github.com/coda/packs-sdk/blob/main/builder.ts#L101)
 
 ___
 
@@ -289,7 +294,7 @@ pack.addNetworkDomain('example.com');
 
 #### Defined in
 
-[builder.ts:285](https://github.com/coda/packs-sdk/blob/main/builder.ts#L285)
+[builder.ts:295](https://github.com/coda/packs-sdk/blob/main/builder.ts#L295)
 
 ___
 
@@ -336,7 +341,7 @@ pack.addSyncTable({
 
 #### Defined in
 
-[builder.ts:126](https://github.com/coda/packs-sdk/blob/main/builder.ts#L126)
+[builder.ts:131](https://github.com/coda/packs-sdk/blob/main/builder.ts#L131)
 
 ___
 
@@ -372,7 +377,7 @@ pack.setSystemAuthentication({
 
 #### Defined in
 
-[builder.ts:255](https://github.com/coda/packs-sdk/blob/main/builder.ts#L255)
+[builder.ts:265](https://github.com/coda/packs-sdk/blob/main/builder.ts#L265)
 
 ___
 
@@ -412,7 +417,7 @@ pack.setUserAuthentication({
 
 #### Defined in
 
-[builder.ts:216](https://github.com/coda/packs-sdk/blob/main/builder.ts#L216)
+[builder.ts:226](https://github.com/coda/packs-sdk/blob/main/builder.ts#L226)
 
 ___
 
@@ -444,4 +449,4 @@ pack.setVersion('1.2.3');
 
 #### Defined in
 
-[builder.ts:303](https://github.com/coda/packs-sdk/blob/main/builder.ts#L303)
+[builder.ts:313](https://github.com/coda/packs-sdk/blob/main/builder.ts#L313)

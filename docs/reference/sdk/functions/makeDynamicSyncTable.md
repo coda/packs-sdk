@@ -17,7 +17,7 @@
 | `__namedParameters` | `Object` |
 | `__namedParameters.connectionRequirement?` | [`ConnectionRequirement`](../enums/ConnectionRequirement.md) |
 | `__namedParameters.entityName?` | `string` |
-| `__namedParameters.formula` | `SyncFormulaDef`<`ParamDefsT`\> |
+| `__namedParameters.formula` | `SyncFormulaDef`<`K`, `L`, `ParamDefsT`, `any`\> |
 | `__namedParameters.getDisplayUrl` | `MetadataFormulaDef` |
 | `__namedParameters.getName` | `MetadataFormulaDef` |
 | `__namedParameters.getSchema` | `MetadataFormulaDef` |
@@ -30,4 +30,4 @@
 
 #### Defined in
 
-[api.ts:1022](https://github.com/coda/packs-sdk/blob/main/api.ts#L1022)
+[api.ts:1083](https://github.com/coda/packs-sdk/blob/main/api.ts#L1083)
