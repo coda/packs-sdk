@@ -727,6 +727,7 @@ describe('Pack metadata Validation', () => {
             identity: {name: 'foo'},
             properties: {
               Foo: {type: ValueType.Number, codaType: ValueHintType.Scale, maximum: 5, icon: ScaleIconSet.Star},
+              Bar: {type: ValueType.String, codaType: ValueHintType.Date, format: 'MMM D, YYYY'}
             },
           }),
           formula: {
@@ -747,6 +748,7 @@ describe('Pack metadata Validation', () => {
         const parsedMetadata = await validateJson(metadata);
         assert.equal(parsedMetadata.syncTables[0].schema.properties.Foo.maximum, 5)
         assert.equal(parsedMetadata.syncTables[0].schema.properties.Foo.icon, ScaleIconSet.Star)
+        assert.equal(parsedMetadata.syncTables[0].schema.properties.Bar.format,'MMM D, YYYY')
       });
 
       it('invalid dynamic sync table', async () => {

@@ -1,5 +1,6 @@
 import type { ArraySchema } from './schema';
 import type { ArrayType } from './api_types';
+import type { BaseStringSchema } from './schema';
 import type { BooleanSchema } from './schema';
 import type { CommonPackFormulaDef } from './api_types';
 import { ConnectionRequirement } from './api_types';
@@ -23,7 +24,6 @@ import type { ResponseHandlerTemplate } from './handler_templates';
 import type { Schema } from './schema';
 import type { SchemaType } from './schema';
 import type { StringHintTypes } from './schema';
-import type { StringSchema } from './schema';
 import type { SyncExecutionContext } from './api_types';
 import { Type } from './api_types';
 import type { TypeOf } from './api_types';
@@ -190,7 +190,7 @@ export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackF
 export interface StringFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaDef<ParamsT> {
     execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<string> | string;
     response?: {
-        schema: StringSchema;
+        schema: BaseStringSchema;
     };
 }
 export interface ObjectResultFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema> extends PackFormulaDef<ParamsT, object | object[]> {
@@ -213,8 +213,8 @@ export declare type NumericPackFormula<ParamDefsT extends ParamDefs> = BaseFormu
 export declare type BooleanPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, boolean> & {
     schema?: BooleanSchema;
 };
-export declare type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> = BaseFormula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
-    schema?: StringSchema<ResultT>;
+export declare type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> = BaseFormula<ParamDefsT, SchemaType<BaseStringSchema<ResultT>>> & {
+    schema?: BaseStringSchema<ResultT>;
 };
 export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Omit<BaseFormula<ParamDefsT, SchemaType<SchemaT>>, 'execute'> & {
     schema?: SchemaT;
@@ -314,9 +314,12 @@ interface BaseFormulaDefV2<ParamDefsT extends ParamDefs, ResultT extends string 
 }
 declare type StringFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, string> & {
     resultType: ValueType.String;
-    codaType?: StringHintTypes;
     execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<string> | string;
-};
+} & ({
+    schema?: BaseStringSchema;
+} | {
+    codaType?: StringHintTypes;
+});
 declare type NumericFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, number> & {
     resultType: ValueType.Number;
     execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<number> | number;

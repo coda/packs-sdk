@@ -3,6 +3,7 @@ import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import {AuthenticationType} from '../types';
 import type {BaseNumberSchema} from '../schema';
+import type {BaseStringSchema} from '../schema';
 import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
@@ -10,6 +11,8 @@ import {ConnectionRequirement} from '../api_types';
 import {CurrencyFormat} from '../schema';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import {DefaultConnectionType} from '../types';
+import type { DurationSchema } from '../schema';
+import { DurationUnit } from '../schema';
 import type {DynamicSyncTableDef} from '../api';
 import {FeatureSet} from '../types';
 import type {HeaderBearerTokenAuthentication} from '../types';
@@ -37,9 +40,11 @@ import {PostSetupType} from '../types';
 import type {QueryParamTokenAuthentication} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {SetEndpoint} from '../types';
+import type {StringDateSchema} from '../schema';
+import type { StringDateTimeSchema } from '../schema';
 import {StringHintValueTypes} from '../schema';
 import type {StringPackFormula} from '../api';
-import type {StringSchema} from '../schema';
+import type { StringTimeSchema } from '../schema';
 import type {SyncFormula} from '../api';
 import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
@@ -438,7 +443,7 @@ const commonPackFormulaSchema = {
 const stringPackFormulaSchema = zodCompleteObject<Omit<StringPackFormula<any>, 'execute'>>({
   ...commonPackFormulaSchema,
   resultType: zodDiscriminant(Type.string),
-  schema: zodCompleteObject<StringSchema>({
+  schema: zodCompleteObject<BaseStringSchema>({
     type: zodDiscriminant(ValueType.String),
     codaType: z.enum([...StringHintValueTypes]).optional(),
     description: z.string().optional(),
@@ -560,12 +565,49 @@ const numericPackFormulaSchema = zodCompleteObject<Omit<NumericPackFormula<any>,
   schema: numberPropertySchema.optional(),
 });
 
+const stringDatePropertySchema = zodCompleteObject<StringDateSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.String),
+  codaType: zodDiscriminant(ValueHintType.Date),
+  format: z.string().optional(),
+  ...basePropertyValidators,
+})
 
-const stringPropertySchema = zodCompleteObject<StringSchema & ObjectSchemaProperty>({
+const stringTimePropertySchema = zodCompleteObject<StringTimeSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.String),
+  codaType: zodDiscriminant(ValueHintType.Time),
+  format: z.string().optional(),
+  ...basePropertyValidators,
+})
+
+const stringDateTimePropertySchema = zodCompleteObject<StringDateTimeSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.String),
+  codaType: zodDiscriminant(ValueHintType.DateTime),
+  dateFormat: z.string().optional(),
+  timeFormat: z.string().optional(),
+  ...basePropertyValidators,
+})
+
+const durationPropertySchema = zodCompleteObject<DurationSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.String),
+  codaType: zodDiscriminant(ValueHintType.Duration),
+  precision: z.number().optional(),
+  maxUnit: z.nativeEnum(DurationUnit).optional(),
+  ...basePropertyValidators,
+});
+
+const baseStringPropertySchema = zodCompleteObject<BaseStringSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.String),
   codaType: z.enum([...StringHintValueTypes]).optional(),
   ...basePropertyValidators,
 });
+
+const stringPropertySchema = z.union([
+  stringDatePropertySchema,
+  stringTimePropertySchema,
+  stringDateTimePropertySchema,
+  durationPropertySchema,
+  baseStringPropertySchema
+])
 
 // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
 // recursive typing better.

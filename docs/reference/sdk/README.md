@@ -26,6 +26,7 @@
 
 - [ArraySchema](interfaces/ArraySchema.md)
 - [ArrayType](interfaces/ArrayType.md)
+- [BaseStringSchema](interfaces/BaseStringSchema.md)
 - [BooleanSchema](interfaces/BooleanSchema.md)
 - [Continuation](interfaces/Continuation.md)
 - [CurrencySchema](interfaces/CurrencySchema.md)
@@ -58,7 +59,6 @@
 - [SliderSchema](interfaces/SliderSchema.md)
 - [StringDateSchema](interfaces/StringDateSchema.md)
 - [StringDateTimeSchema](interfaces/StringDateTimeSchema.md)
-- [StringSchema](interfaces/StringSchema.md)
 - [StringTimeSchema](interfaces/StringTimeSchema.md)
 - [SyncExecutionContext](interfaces/SyncExecutionContext.md)
 - [SyncFormulaResult](interfaces/SyncFormulaResult.md)

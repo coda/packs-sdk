@@ -8,6 +8,8 @@
 
 - CLI `coda execute` now defaults to run with vm. To execute without vm, use `--no-vm`.
 
+- Bug fix: Numeric and string `codaType` properties are no longer erroneously removed in upload validation.
+
 ## 0.4.6
 
 - Bug fix: Executing sync table formulas via CLI now validates results correctly.

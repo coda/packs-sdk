@@ -1,4 +1,4 @@
-# Interface: StringSchema<T\>
+# Interface: BaseStringSchema<T\>
 
 ## Type parameters
 
@@ -10,7 +10,7 @@
 
 - `BaseSchema`
 
-  ↳ **`StringSchema`**
+  ↳ **`BaseStringSchema`**
 
   ↳↳ [`DurationSchema`](DurationSchema.md)
 

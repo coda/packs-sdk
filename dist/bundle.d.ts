@@ -142,15 +142,15 @@ export interface ScaleSchema extends BaseNumberSchema {
 	maximum?: number;
 	icon?: ScaleIconSet;
 }
-export interface StringDateSchema extends StringSchema {
+export interface StringDateSchema extends BaseStringSchema {
 	codaType: ValueHintType.Date;
 	format?: string;
 }
-export interface StringTimeSchema extends StringSchema {
+export interface StringTimeSchema extends BaseStringSchema {
 	codaType: ValueHintType.Time;
 	format?: string;
 }
-export interface StringDateTimeSchema extends StringSchema {
+export interface StringDateTimeSchema extends BaseStringSchema {
 	codaType: ValueHintType.DateTime;
 	dateFormat?: string;
 	timeFormat?: string;
@@ -161,14 +161,15 @@ export declare enum DurationUnit {
 	Minutes = "minutes",
 	Seconds = "seconds"
 }
-export interface DurationSchema extends StringSchema<ValueHintType.Duration> {
+export interface DurationSchema extends BaseStringSchema<ValueHintType.Duration> {
 	precision?: number;
 	maxUnit?: DurationUnit;
 }
-export interface StringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
+export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
 	type: ValueType.String;
 	codaType?: T;
 }
+export declare type StringSchema = BaseStringSchema | StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema;
 export interface ArraySchema<T extends Schema = Schema> extends BaseSchema {
 	type: ValueType.Array;
 	items: T;
@@ -703,8 +704,8 @@ export declare type NumericPackFormula<ParamDefsT extends ParamDefs> = BaseFormu
 export declare type BooleanPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, boolean> & {
 	schema?: BooleanSchema;
 };
-export declare type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> = BaseFormula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
-	schema?: StringSchema<ResultT>;
+export declare type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> = BaseFormula<ParamDefsT, SchemaType<BaseStringSchema<ResultT>>> & {
+	schema?: BaseStringSchema<ResultT>;
 };
 export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Omit<BaseFormula<ParamDefsT, SchemaType<SchemaT>>, "execute"> & {
 	schema?: SchemaT;
@@ -787,9 +788,12 @@ export interface BaseFormulaDefV2<ParamDefsT extends ParamDefs, ResultT extends 
 }
 export declare type StringFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, string> & {
 	resultType: ValueType.String;
-	codaType?: StringHintTypes;
 	execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<string> | string;
-};
+} & ({
+	schema?: BaseStringSchema;
+} | {
+	codaType?: StringHintTypes;
+});
 export declare type NumericFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, number> & {
 	resultType: ValueType.Number;
 	execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<number> | number;

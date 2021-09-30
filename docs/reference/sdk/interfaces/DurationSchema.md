@@ -2,7 +2,7 @@
 
 ## Hierarchy
 
-- [`StringSchema`](StringSchema.md)<[`Duration`](../enums/ValueHintType.md#duration)\>
+- [`BaseStringSchema`](BaseStringSchema.md)<[`Duration`](../enums/ValueHintType.md#duration)\>
 
   ↳ **`DurationSchema`**
 
@@ -14,7 +14,7 @@
 
 #### Inherited from
 
-[StringSchema](StringSchema.md).[codaType](StringSchema.md#codatype)
+[BaseStringSchema](BaseStringSchema.md).[codaType](BaseStringSchema.md#codatype)
 
 #### Defined in
 
@@ -28,7 +28,7 @@ ___
 
 #### Inherited from
 
-[StringSchema](StringSchema.md).[description](StringSchema.md#description)
+[BaseStringSchema](BaseStringSchema.md).[description](BaseStringSchema.md#description)
 
 #### Defined in
 
@@ -62,7 +62,7 @@ ___
 
 #### Inherited from
 
-[StringSchema](StringSchema.md).[type](StringSchema.md#type)
+[BaseStringSchema](BaseStringSchema.md).[type](BaseStringSchema.md#type)
 
 #### Defined in
 

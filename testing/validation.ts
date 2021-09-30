@@ -1,4 +1,5 @@
 import type {ArraySchema} from '../schema';
+import type {BaseStringSchema} from '../schema';
 import type {GenericObjectSchema} from '../schema';
 import type {ObjectPackFormulaMetadata} from '../api';
 import type {ObjectSchemaProperty} from '../schema';
@@ -11,7 +12,6 @@ import {ResultValidationException} from './types';
 import type {ScaleSchema} from '../schema';
 import type {Schema} from '../schema';
 import type {SliderSchema} from '../schema';
-import type {StringSchema} from '../schema';
 import {Type} from '../api_types';
 import type {TypedPackFormula} from '../api';
 import type {ValidationError} from './types';
@@ -201,14 +201,14 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
   }
 }
 
-function tryParseDateTimeString(result: unknown, schema: StringSchema) {
+function tryParseDateTimeString(result: unknown, schema: BaseStringSchema) {
   const dateTime = result as string;
   if (isNaN(Date.parse(dateTime))) {
     return {message: `Failed to parse ${dateTime} as a ${schema.codaType}.`};
   }
 }
 
-function tryParseUrl(result: unknown, schema: StringSchema) {
+function tryParseUrl(result: unknown, schema: BaseStringSchema) {
   const invalidUrlError = {
     message: `Property with codaType "${schema.codaType}" must be a valid HTTP(S) url, but got "${result}".`,
   };
