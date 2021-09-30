@@ -844,6 +844,10 @@ describe('Pack metadata Validation', () => {
             path: 'syncTables[0].schema.identity.name',
           },
           {
+            message: 'Could not find any valid schema for this value.',
+            path: 'syncTables[0].getter.schema.items'
+          },
+          {
             message:
               'Invalid name. Identity names can only contain ' +
               'alphanumeric characters, underscores, and dashes, and no spaces.',
