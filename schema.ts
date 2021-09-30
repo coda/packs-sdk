@@ -273,7 +273,7 @@ export function isArray(val?: Schema): val is ArraySchema {
 type PickOptional<T, K extends keyof T> = Partial<T> & {[P in K]: T[P]};
 
 interface StringHintTypeToSchemaTypeMap {
-  [ValueHintType.Date]: Date | string;
+  [ValueHintType.Date]: Date | string | number;
 }
 type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T extends keyof StringHintTypeToSchemaTypeMap
   ? StringHintTypeToSchemaTypeMap[T]
