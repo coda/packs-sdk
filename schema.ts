@@ -79,14 +79,14 @@ export interface BooleanSchema extends BaseSchema {
   type: ValueType.Boolean;
 }
 
-export type NumberSchema = CurrencySchema | 
-                           BaseNumberSchema |
-                           SliderSchema | 
-                           ScaleSchema | 
-                           NumericSchema | 
-                           NumericDateSchema | 
-                           NumericTimeSchema | 
-                           NumericDateTimeSchema;
+export type NumberSchema =
+  | CurrencySchema
+  | SliderSchema
+  | ScaleSchema
+  | NumericSchema
+  | NumericDateSchema
+  | NumericTimeSchema
+  | NumericDateTimeSchema;
 
 export interface BaseNumberSchema extends BaseSchema {
   type: ValueType.Number;
@@ -117,7 +117,6 @@ export interface NumericDateTimeSchema extends BaseNumberSchema {
   // A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
   timeFormat?: string;
 }
-
 
 export enum CurrencyFormat {
   Currency = 'currency',
@@ -209,11 +208,29 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
   codaType?: T;
 }
 
-export type StringSchema = BaseStringSchema | 
-                           StringDateSchema | 
-                           StringTimeSchema | 
-                           StringDateTimeSchema | 
-                           DurationSchema;
+/**
+ * The subset of StringHintTypes that don't have specific schema attributes.
+ */
+export const SimpleStringHintValueTypes = [
+  ValueHintType.Attachment,
+  ValueHintType.Embed,
+  ValueHintType.Html,
+  ValueHintType.ImageReference,
+  ValueHintType.ImageAttachment,
+  ValueHintType.Markdown,
+  ValueHintType.Url,
+] as const;
+export type SimpleStringHintTypes = typeof SimpleStringHintValueTypes[number];
+
+export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStringHintTypes>
+  extends BaseStringSchema<T> {}
+
+export type StringSchema =
+  | SimpleStringSchema
+  | StringDateSchema
+  | StringTimeSchema
+  | StringDateTimeSchema
+  | DurationSchema;
 
 export interface ArraySchema<T extends Schema = Schema> extends BaseSchema {
   type: ValueType.Array;

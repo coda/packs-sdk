@@ -25,6 +25,7 @@ import type {ResponseHandlerTemplate} from './handler_templates';
 import type {Schema} from './schema';
 import type {SchemaType} from './schema';
 import type {StringHintTypes} from './schema';
+import type {StringSchema} from './schema';
 import type {SyncExecutionContext} from './api_types';
 import {Type} from './api_types';
 import type {TypeOf} from './api_types';
@@ -402,7 +403,7 @@ export type BooleanPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<Param
 export type StringPackFormula<
   ParamDefsT extends ParamDefs,
   ResultT extends StringHintTypes = StringHintTypes,
-> = BaseFormula<ParamDefsT, SchemaType<BaseStringSchema<ResultT>>> & {
+> = BaseFormula<ParamDefsT, SchemaType<StringSchema>> & {
   schema?: BaseStringSchema<ResultT>;
 };
 
@@ -672,14 +673,12 @@ interface BaseFormulaDefV2<ParamDefsT extends ParamDefs, ResultT extends string 
 type StringFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, string> & {
   resultType: ValueType.String;
   execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<string> | string;
-} & 
-({schema?: BaseStringSchema} | {codaType?: StringHintTypes});
+} & ({schema?: BaseStringSchema} | {codaType?: StringHintTypes});
 
 type NumericFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, number> & {
   resultType: ValueType.Number;
   execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<number> | number;
-} & 
-  ({schema?: NumberSchema} | {codaType?: NumberHintTypes});
+} & ({schema?: NumberSchema} | {codaType?: NumberHintTypes});
 
 type BooleanFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, boolean> & {
   resultType: ValueType.Boolean;
