@@ -1,38 +1,49 @@
-import * as coda from '@codahq/packs-sdk';
+import * as coda from "@codahq/packs-sdk";
 
 const pack = coda.newPack();
 
 // BEGIN
 
+const MySchema = coda.makeObjectSchema({
+  type: coda.ValueType.Object,
+  properties: {
+    property1: {type: coda.ValueType.Number},
+    property2: {type: coda.ValueType.String},
+    // Add more properties here.
+  },
+  id: "property1", // Which property above is a unique ID.
+  primary: "property2", // Which property above to display by default.
+  identity: {
+    name: "<User-visible name for the column containing the schema>",
+  },
+});
+
 pack.addSyncTable({
-  name: 'MySyncTable',
-  identityName: 'EntityName',
-  schema: coda.makeObjectSchema({
-    type: coda.ValueType.Object,
-    id: 'idColumn',
-    primary: 'displayColumn',
-    properties: {
-      idColumn: {type: coda.ValueType.String},
-      displayColumn: {type: coda.ValueType.String},
-      otherColumn: {type: coda.ValueType.String},
-    },
-  }),
+  name: "<User-visible name for the sync table>",
+  identityName: "<User-visible name for the column containing the schema>",
+  schema: MySchema,
   formula: {
-    name: 'SyncTable',
-    description: 'Creates a sync table',
-    connectionRequirement: coda.ConnectionRequirement.None,
-    parameters: [coda.makeParameter({type: coda.ParameterType.String, name: 'myParam', description: 'My description'})],
+    name: "<Name of the sync formula, not show to the user>",
+    description: "<Help text for the sync formula, not show to the user>",
+    parameters: [
+      coda.makeParameter({
+        type: coda.ParameterType.String,
+        name: "<User-visible name of parameter>",
+        description: "<Help text for the parameter>",
+      }),
+      // Add more parameters here and in the array below.
+    ],
     execute: async ([param], context) => {
-      const response = await context.fetcher.fetch({method: 'GET', url: 'coda.io'});
+      let url = "<URL to pull data from>";
+      let response = await context.fetcher.fetch({
+        method: "GET", 
+        url: url,
+      });
+      let items = response.body.items;
+      // Adjust the items to fit the schema if required.
       return {
-        result: [
-          {
-            idColumn: 'Example1',
-            displayColumn: response.body,
-            otherColumn: param,
-          },
-        ],
-      };
+        result: items,
+      }
     },
   },
 });

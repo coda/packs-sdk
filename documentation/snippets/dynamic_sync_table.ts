@@ -1,47 +1,68 @@
-import * as coda from '@codahq/packs-sdk';
+import * as coda from "@codahq/packs-sdk";
 
 const pack = coda.newPack();
 
 // BEGIN
 
 pack.addDynamicSyncTable({
-  name: 'MyDynamicSynctable',
+  name: "<User-visible name for the sync table>",
   getName: coda.makeMetadataFormula(async context => {
-    const response = await context.fetcher.fetch({method: 'GET', url: 'coda.io'});
-    return response.body;
+    let datasourceUrl = context.sync!.dynamicUrl!;
+    // TODO: Fetch metdata about the datasource and return the name.
+    return "<Datasource Name>";
   }),
-  getSchema: coda.makeMetadataFormula(async () => {
+  getSchema: coda.makeMetadataFormula(async context => {
+    let datasourceUrl = context.sync!.dynamicUrl!;
+    // TODO: Fetch metdata about the datasource and get the list of fields.
+    let propreties = {
+      // TODO: Create a property for each field.
+    };
+    let id = "<Determine the field containing a unique ID>";
+    let primary = "<Determine the field containing the display value>";
+    let featured = [
+      // TODO: Determine which fields to show in the table by default.
+    ];
     return coda.makeSchema({
       type: coda.ValueType.Array,
       items: coda.makeObjectSchema({
         type: coda.ValueType.Object,
-        id: 'idColumn',
-        primary: 'displayColumn',
-        featured: ['otherColumn'],
-        properties: {
-          idColumn: {type: coda.ValueType.Number},
-          displayColumn: {type: coda.ValueType.String},
-          otherColumn: {type: coda.ValueType.String},
+        identity: {
+          name: "<User-visible name for the column containing the schema>",
+          dynamicUrl: datasourceUrl,
         },
+        properties: propreties,
+        id: id,
+        primary: primary,
+        featured: featured,
       }),
     });
   }),
-  getDisplayUrl: coda.makeMetadataFormula(async context => context.sync!.dynamicUrl!),
+  getDisplayUrl: coda.makeMetadataFormula(async context => {
+    return context.sync!.dynamicUrl!;
+  }),
   formula: {
-    name: 'DynamicSyncTable',
-    description: 'Creates a dynamic sync table',
-    connectionRequirement: coda.ConnectionRequirement.None,
-    parameters: [coda.makeParameter({type: coda.ParameterType.String, name: 'myParam', description: 'My description'})],
-    execute: async ([param]) => {
+    name: "<Name of the sync formula, not show to the user>",
+    description: "<Help text for the sync formula, not show to the user>",
+    parameters: [
+      coda.makeParameter({
+        type: coda.ParameterType.String,
+        name: "<User-visible name of parameter>",
+        description: "<Help text for the parameter>",
+      }),
+      // Add more parameters here and in the array below.
+    ],
+    execute: async ([param], context) => {
+      let datasourceUrl = context.sync!.dynamicUrl!;
+      let url = "<URL to pull data from>";
+      let response = await context.fetcher.fetch({
+        method: "GET", 
+        url: url,
+      });
+      let items = response.body.items;
+      // Adjust the items to fit the schema if required.
       return {
-        result: [
-          {
-            idPropertyName: 1,
-            displayPropertyName: 'Example1',
-            otherPropertyName: param,
-          },
-        ],
-      };
+        result: items,
+      }
     },
   },
 });

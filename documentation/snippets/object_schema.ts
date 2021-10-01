@@ -1,12 +1,17 @@
-import * as coda from '@codahq/packs-sdk';
+import * as coda from "@codahq/packs-sdk";
 
 // BEGIN
-coda.makeObjectSchema({
+
+const MySchema = coda.makeObjectSchema({
   type: coda.ValueType.Object,
-  id: '<objectId>',
-  primary: '<displayName>',
   properties: {
-    // objectId: {type: coda.ValueType.Number},
-    // displayName: {type: coda.ValueType.String},
+    property1: {type: coda.ValueType.Number},
+    property2: {type: coda.ValueType.String},
+    // Add more properties here.
+  },
+  id: "property1", // Which property above is a unique ID.
+  primary: "property2", // Which property above to display by default.
+  identity: {
+    name: "<User-visible name of the schema>",
   },
 });

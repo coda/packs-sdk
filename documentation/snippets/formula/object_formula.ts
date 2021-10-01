@@ -1,38 +1,40 @@
-import * as coda from '@codahq/packs-sdk';
+import * as coda from "@codahq/packs-sdk";
 
 const pack = coda.newPack();
 
 // BEGIN
 
+const MySchema = coda.makeObjectSchema({
+  type: coda.ValueType.Object,
+  properties: {
+    property1: {type: coda.ValueType.Number},
+    property2: {type: coda.ValueType.String},
+    // Add more properties here.
+  },
+  id: "property1", // Which property above is a unique ID.
+  primary: "property2", // Which property above to display by default.
+  identity: {
+    name: "<User-visible name>",
+  },
+});
+
 pack.addFormula({
-  resultType: coda.ValueType.Object,
-  name: 'MyFormula',
-  description: '',
-  schema: coda.makeObjectSchema({
-    type: coda.ValueType.Object,
-    id: 'idPropertyName',
-    primary: 'displayPropertyName',
-    identity: {
-      name: 'entityName',
-    },
-    properties: {
-      idPropertyName: {type: coda.ValueType.String},
-      displayPropertyName: {type: coda.ValueType.Number},
-      otherProperty: {type: coda.ValueType.String},
-    },
-  }),
+  name: "<User-visible name of formula>",
+  description: "<Help text for the formula>",
   parameters: [
     coda.makeParameter({
       type: coda.ParameterType.String,
-      name: 'myParam',
-      description: '',
+      name: "<User-visible name of parameter>",
+      description: "<Help text for the parameter>",
     }),
+    // Add more parameters here and in the array below.
   ],
-  execute: async ([param]) => {
+  resultType: coda.ValueType.Object,
+  schema: MySchema,
+  execute: async ([param], context) => {
     return {
-      idPropertyName: param,
-      displayPropertyName: 123,
-      otherProperty: 'other property!',
+      property1: 123,
+      property2: param,
     };
   },
 });
