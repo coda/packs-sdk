@@ -1,27 +1,25 @@
-import * as coda from '@codahq/packs-sdk';
+import * as coda from "@codahq/packs-sdk";
 
 const pack = coda.newPack();
 
-// TODO(Lucas): Validate this in the editor
 // BEGIN
+
 pack.addFormula({
-  resultType: coda.ValueType.Array,
-  name: 'MyFormula',
-  description: '',
+  name: "<User-visible name of formula>",
+  description: "<Help text for the formula>",
   parameters: [
     coda.makeParameter({
-      type: coda.ParameterType.Number,
-      name: 'myParam',
-      description: '',
+      type: coda.ParameterType.String,
+      name: "<User-visible name of parameter>",
+      description: "<Help text for the parameter>",
     }),
+    // Add more parameters here and in the array below.
   ],
+  resultType: coda.ValueType.Array,
   items: {
-    type: coda.ValueType.Object,
-    properties: {
-      column1: {type: coda.ValueType.String},
-    },
+    type: coda.ValueType.String,
   },
-  execute: ([param]) => {
-    return [{column1: 'hello'}, {column1: 'world'}, {column1: param}];
+  execute: async ([param], context) => {
+    return ["Hello", param];
   },
 });
