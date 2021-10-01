@@ -1,5 +1,7 @@
 module.exports = {
-  noInlineConfig: false,
+  plugins: [
+    'prefer-let',
+  ],
   overrides: [
     {
       files: ['snippets/**/*.ts'],
@@ -12,6 +14,7 @@ module.exports = {
         'max-len': ['error', { 'code': 80 }],
         'quotes': ['error', 'double'],
         'prefer-const': 'off',
+        'prefer-let/prefer-let': 2,
         'prefer-template': 'off',
       },
     },

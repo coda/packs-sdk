@@ -1547,6 +1547,13 @@ eslint-plugin-local@^1.0.0:
   resolved "https://registry.yarnpkg.com/eslint-plugin-local/-/eslint-plugin-local-1.0.0.tgz#f0c07011c95fec42bfb4d909debb6ea035f3b2a4"
   integrity sha1-8MBwEclf7EK/tNkJ3rtuoDXzsqQ=
 
+eslint-plugin-prefer-let@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-prefer-let/-/eslint-plugin-prefer-let-1.1.0.tgz#a5eb401a5f6b6995883bac7ebafb7fe5d6e9bedb"
+  integrity sha512-d7IhB8FZCtnCNQ20e4UTETPJNF3mIES3ZYan9RK/K3sIkEfuL3NfF9t5gxoNRFjeSkhlGpJmZdLGLRGPmKgVfQ==
+  dependencies:
+    requireindex "~1.2.0"
+
 eslint-scope@^5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/eslint-scope/-/eslint-scope-5.1.1.tgz#e786e59a66cb92b3f6c1fb0d508aab174848f48c"
