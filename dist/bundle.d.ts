@@ -72,24 +72,25 @@ export interface BaseSchema {
 export interface BooleanSchema extends BaseSchema {
 	type: ValueType.Boolean;
 }
-export declare type NumberSchema = CurrencySchema | BaseNumberSchema | SliderSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema;
-export interface BaseNumberSchema extends BaseSchema {
+export declare type NumberSchema = CurrencySchema | SliderSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema;
+export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
 	type: ValueType.Number;
+	codaType?: T;
 }
 export interface NumericSchema extends BaseNumberSchema {
 	codaType?: ValueHintType.Percent;
 	precision?: number;
 	useThousandsSeparator?: boolean;
 }
-export interface NumericDateSchema extends BaseNumberSchema {
+export interface NumericDateSchema extends BaseNumberSchema<ValueHintType.Date> {
 	codaType: ValueHintType.Date;
 	format?: string;
 }
-export interface NumericTimeSchema extends BaseNumberSchema {
+export interface NumericTimeSchema extends BaseNumberSchema<ValueHintType.Time> {
 	codaType: ValueHintType.Time;
 	format?: string;
 }
-export interface NumericDateTimeSchema extends BaseNumberSchema {
+export interface NumericDateTimeSchema extends BaseNumberSchema<ValueHintType.DateTime> {
 	codaType: ValueHintType.DateTime;
 	dateFormat?: string;
 	timeFormat?: string;
@@ -99,7 +100,7 @@ export declare enum CurrencyFormat {
 	Accounting = "accounting",
 	Financial = "financial"
 }
-export interface CurrencySchema extends BaseNumberSchema {
+export interface CurrencySchema extends BaseNumberSchema<ValueHintType.Currency> {
 	codaType: ValueHintType.Currency;
 	precision?: number;
 	/***
@@ -109,7 +110,7 @@ export interface CurrencySchema extends BaseNumberSchema {
 	currencyCode?: string;
 	format?: CurrencyFormat;
 }
-export interface SliderSchema extends BaseNumberSchema {
+export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
 	codaType: ValueHintType.Slider;
 	minimum?: number | string;
 	maximum?: number | string;
@@ -137,20 +138,20 @@ declare enum ScaleIconSet {
 	Checkmark = "checkmark",
 	LightBulb = "lightbulb"
 }
-export interface ScaleSchema extends BaseNumberSchema {
+export interface ScaleSchema extends BaseNumberSchema<ValueHintType.Scale> {
 	codaType: ValueHintType.Scale;
 	maximum?: number;
 	icon?: ScaleIconSet;
 }
-export interface StringDateSchema extends BaseStringSchema {
+export interface StringDateSchema extends BaseStringSchema<ValueHintType.Date> {
 	codaType: ValueHintType.Date;
 	format?: string;
 }
-export interface StringTimeSchema extends BaseStringSchema {
+export interface StringTimeSchema extends BaseStringSchema<ValueHintType.Time> {
 	codaType: ValueHintType.Time;
 	format?: string;
 }
-export interface StringDateTimeSchema extends BaseStringSchema {
+export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.DateTime> {
 	codaType: ValueHintType.DateTime;
 	dateFormat?: string;
 	timeFormat?: string;
@@ -169,7 +170,19 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
 	type: ValueType.String;
 	codaType?: T;
 }
-export declare type StringSchema = BaseStringSchema | StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema;
+declare const SimpleStringHintValueTypes: readonly [
+	ValueHintType.Attachment,
+	ValueHintType.Embed,
+	ValueHintType.Html,
+	ValueHintType.ImageReference,
+	ValueHintType.ImageAttachment,
+	ValueHintType.Markdown,
+	ValueHintType.Url
+];
+export declare type SimpleStringHintTypes = typeof SimpleStringHintValueTypes[number];
+export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStringHintTypes> extends BaseStringSchema<T> {
+}
+export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema | SimpleStringSchema;
 export interface ArraySchema<T extends Schema = Schema> extends BaseSchema {
 	type: ValueType.Array;
 	items: T;
@@ -704,8 +717,8 @@ export declare type NumericPackFormula<ParamDefsT extends ParamDefs> = BaseFormu
 export declare type BooleanPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, boolean> & {
 	schema?: BooleanSchema;
 };
-export declare type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> = BaseFormula<ParamDefsT, SchemaType<BaseStringSchema<ResultT>>> & {
-	schema?: BaseStringSchema<ResultT>;
+export declare type StringPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, SchemaType<StringSchema>> & {
+	schema?: StringSchema;
 };
 export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Omit<BaseFormula<ParamDefsT, SchemaType<SchemaT>>, "execute"> & {
 	schema?: SchemaT;
@@ -790,7 +803,7 @@ export declare type StringFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormu
 	resultType: ValueType.String;
 	execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<string> | string;
 } & ({
-	schema?: BaseStringSchema;
+	schema?: StringSchema;
 } | {
 	codaType?: StringHintTypes;
 });

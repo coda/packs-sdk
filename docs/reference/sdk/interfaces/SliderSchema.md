@@ -2,7 +2,7 @@
 
 ## Hierarchy
 
-- `BaseNumberSchema`
+- `BaseNumberSchema`<[`Slider`](../enums/ValueHintType.md#slider)\>
 
   ↳ **`SliderSchema`**
 
@@ -11,6 +11,10 @@
 ### codaType
 
 • **codaType**: [`Slider`](../enums/ValueHintType.md#slider)
+
+#### Overrides
+
+BaseNumberSchema.codaType
 
 #### Defined in
 

@@ -12,9 +12,13 @@
 
 • `Optional` **codaType**: [`Percent`](../enums/ValueHintType.md#percent)
 
+#### Overrides
+
+BaseNumberSchema.codaType
+
 #### Defined in
 
-[schema.ts:96](https://github.com/coda/packs-sdk/blob/main/schema.ts#L96)
+[schema.ts:97](https://github.com/coda/packs-sdk/blob/main/schema.ts#L97)
 
 ___
 
@@ -38,7 +42,7 @@ ___
 
 #### Defined in
 
-[schema.ts:97](https://github.com/coda/packs-sdk/blob/main/schema.ts#L97)
+[schema.ts:98](https://github.com/coda/packs-sdk/blob/main/schema.ts#L98)
 
 ___
 
@@ -62,4 +66,4 @@ ___
 
 #### Defined in
 
-[schema.ts:98](https://github.com/coda/packs-sdk/blob/main/schema.ts#L98)
+[schema.ts:99](https://github.com/coda/packs-sdk/blob/main/schema.ts#L99)

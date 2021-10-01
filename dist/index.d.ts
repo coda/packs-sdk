@@ -107,7 +107,7 @@ export type { SchemaType } from './schema';
 export type { SliderSchema } from './schema';
 export type { StringDateSchema } from './schema';
 export type { StringDateTimeSchema } from './schema';
-export type { BaseStringSchema } from './schema';
+export type { SimpleStringSchema } from './schema';
 export type { StringTimeSchema } from './schema';
 export { ValueHintType } from './schema';
 export { ValueType } from './schema';

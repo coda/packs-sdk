@@ -11,7 +11,7 @@ than is used internally.
 
 #### Defined in
 
-[api.ts:732](https://github.com/coda/packs-sdk/blob/main/api.ts#L732)
+[api.ts:727](https://github.com/coda/packs-sdk/blob/main/api.ts#L727)
 
 ___
 
@@ -21,7 +21,7 @@ ___
 
 #### Defined in
 
-[api.ts:734](https://github.com/coda/packs-sdk/blob/main/api.ts#L734)
+[api.ts:729](https://github.com/coda/packs-sdk/blob/main/api.ts#L729)
 
 ___
 
@@ -31,4 +31,4 @@ ___
 
 #### Defined in
 
-[api.ts:733](https://github.com/coda/packs-sdk/blob/main/api.ts#L733)
+[api.ts:728](https://github.com/coda/packs-sdk/blob/main/api.ts#L728)

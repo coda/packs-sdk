@@ -1,30 +1,26 @@
-# Interface: BaseStringSchema<T\>
+# Interface: SimpleStringSchema<T\>
 
 ## Type parameters
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends `StringHintTypes``StringHintTypes` |
+| `T` | extends `SimpleStringHintTypes``SimpleStringHintTypes` |
 
 ## Hierarchy
 
-- `BaseSchema`
+- `BaseStringSchema`<`T`\>
 
-  ↳ **`BaseStringSchema`**
-
-  ↳↳ [`DurationSchema`](DurationSchema.md)
-
-  ↳↳ [`StringDateSchema`](StringDateSchema.md)
-
-  ↳↳ [`StringDateTimeSchema`](StringDateTimeSchema.md)
-
-  ↳↳ [`StringTimeSchema`](StringTimeSchema.md)
+  ↳ **`SimpleStringSchema`**
 
 ## Properties
 
 ### codaType
 
 • `Optional` **codaType**: `T`
+
+#### Inherited from
+
+BaseStringSchema.codaType
 
 #### Defined in
 
@@ -38,7 +34,7 @@ ___
 
 #### Inherited from
 
-BaseSchema.description
+BaseStringSchema.description
 
 #### Defined in
 
@@ -49,6 +45,10 @@ ___
 ### type
 
 • **type**: [`String`](../enums/ValueType.md#string)
+
+#### Inherited from
+
+BaseStringSchema.type
 
 #### Defined in
 

@@ -2,7 +2,7 @@
 
 ## Hierarchy
 
-- `BaseNumberSchema`
+- `BaseNumberSchema`<[`Currency`](../enums/ValueHintType.md#currency)\>
 
   ↳ **`CurrencySchema`**
 
@@ -11,6 +11,10 @@
 ### codaType
 
 • **codaType**: [`Currency`](../enums/ValueHintType.md#currency)
+
+#### Overrides
+
+BaseNumberSchema.codaType
 
 #### Defined in
 

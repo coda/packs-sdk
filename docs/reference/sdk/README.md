@@ -26,7 +26,6 @@
 
 - [ArraySchema](interfaces/ArraySchema.md)
 - [ArrayType](interfaces/ArrayType.md)
-- [BaseStringSchema](interfaces/BaseStringSchema.md)
 - [BooleanSchema](interfaces/BooleanSchema.md)
 - [Continuation](interfaces/Continuation.md)
 - [CurrencySchema](interfaces/CurrencySchema.md)
@@ -56,6 +55,7 @@
 - [ParamDef](interfaces/ParamDef.md)
 - [ScaleSchema](interfaces/ScaleSchema.md)
 - [SimpleAutocompleteOption](interfaces/SimpleAutocompleteOption.md)
+- [SimpleStringSchema](interfaces/SimpleStringSchema.md)
 - [SliderSchema](interfaces/SliderSchema.md)
 - [StringDateSchema](interfaces/StringDateSchema.md)
 - [StringDateTimeSchema](interfaces/StringDateTimeSchema.md)

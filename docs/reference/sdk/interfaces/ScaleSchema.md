@@ -2,7 +2,7 @@
 
 ## Hierarchy
 
-- `BaseNumberSchema`
+- `BaseNumberSchema`<[`Scale`](../enums/ValueHintType.md#scale)\>
 
   ↳ **`ScaleSchema`**
 
@@ -11,6 +11,10 @@
 ### codaType
 
 • **codaType**: [`Scale`](../enums/ValueHintType.md#scale)
+
+#### Overrides
+
+BaseNumberSchema.codaType
 
 #### Defined in
 

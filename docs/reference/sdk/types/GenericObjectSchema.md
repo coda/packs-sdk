@@ -4,4 +4,4 @@
 
 #### Defined in
 
-[schema.ts:232](https://github.com/coda/packs-sdk/blob/main/schema.ts#L232)
+[schema.ts:250](https://github.com/coda/packs-sdk/blob/main/schema.ts#L250)

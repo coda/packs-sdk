@@ -88,8 +88,9 @@ export type NumberSchema =
   | NumericTimeSchema
   | NumericDateTimeSchema;
 
-export interface BaseNumberSchema extends BaseSchema {
+export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
   type: ValueType.Number;
+  codaType?: T;
 }
 
 export interface NumericSchema extends BaseNumberSchema {
@@ -98,19 +99,19 @@ export interface NumericSchema extends BaseNumberSchema {
   useThousandsSeparator?: boolean;
 }
 
-export interface NumericDateSchema extends BaseNumberSchema {
+export interface NumericDateSchema extends BaseNumberSchema<ValueHintType.Date> {
   codaType: ValueHintType.Date;
   // A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
   format?: string;
 }
 
-export interface NumericTimeSchema extends BaseNumberSchema {
+export interface NumericTimeSchema extends BaseNumberSchema<ValueHintType.Time> {
   codaType: ValueHintType.Time;
   // A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
   format?: string;
 }
 
-export interface NumericDateTimeSchema extends BaseNumberSchema {
+export interface NumericDateTimeSchema extends BaseNumberSchema<ValueHintType.DateTime> {
   codaType: ValueHintType.DateTime;
   // A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
   dateFormat?: string;
@@ -124,7 +125,7 @@ export enum CurrencyFormat {
   Financial = 'financial',
 }
 
-export interface CurrencySchema extends BaseNumberSchema {
+export interface CurrencySchema extends BaseNumberSchema<ValueHintType.Currency> {
   codaType: ValueHintType.Currency;
   precision?: number;
   /***
@@ -135,7 +136,7 @@ export interface CurrencySchema extends BaseNumberSchema {
   format?: CurrencyFormat;
 }
 
-export interface SliderSchema extends BaseNumberSchema {
+export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
   codaType: ValueHintType.Slider;
   minimum?: number | string;
   maximum?: number | string;
@@ -165,25 +166,25 @@ export enum ScaleIconSet {
   LightBulb = 'lightbulb',
 }
 
-export interface ScaleSchema extends BaseNumberSchema {
+export interface ScaleSchema extends BaseNumberSchema<ValueHintType.Scale> {
   codaType: ValueHintType.Scale;
   maximum?: number;
   icon?: ScaleIconSet;
 }
 
-export interface StringDateSchema extends BaseStringSchema {
+export interface StringDateSchema extends BaseStringSchema<ValueHintType.Date> {
   codaType: ValueHintType.Date;
   // A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
   format?: string;
 }
 
-export interface StringTimeSchema extends BaseStringSchema {
+export interface StringTimeSchema extends BaseStringSchema<ValueHintType.Time> {
   codaType: ValueHintType.Time;
   // A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
   format?: string;
 }
 
-export interface StringDateTimeSchema extends BaseStringSchema {
+export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.DateTime> {
   codaType: ValueHintType.DateTime;
   // A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
   dateFormat?: string;
@@ -226,11 +227,11 @@ export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStri
   extends BaseStringSchema<T> {}
 
 export type StringSchema =
-  | SimpleStringSchema
   | StringDateSchema
   | StringTimeSchema
   | StringDateTimeSchema
-  | DurationSchema;
+  | DurationSchema
+  | SimpleStringSchema;
 
 export interface ArraySchema<T extends Schema = Schema> extends BaseSchema {
   type: ValueType.Array;

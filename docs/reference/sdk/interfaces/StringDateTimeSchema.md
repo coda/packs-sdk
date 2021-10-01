@@ -2,7 +2,7 @@
 
 ## Hierarchy
 
-- [`BaseStringSchema`](BaseStringSchema.md)
+- `BaseStringSchema`<[`DateTime`](../enums/ValueHintType.md#datetime)\>
 
   ↳ **`StringDateTimeSchema`**
 
@@ -14,7 +14,7 @@
 
 #### Overrides
 
-[BaseStringSchema](BaseStringSchema.md).[codaType](BaseStringSchema.md#codatype)
+BaseStringSchema.codaType
 
 #### Defined in
 
@@ -38,7 +38,7 @@ ___
 
 #### Inherited from
 
-[BaseStringSchema](BaseStringSchema.md).[description](BaseStringSchema.md#description)
+BaseStringSchema.description
 
 #### Defined in
 
@@ -62,7 +62,7 @@ ___
 
 #### Inherited from
 
-[BaseStringSchema](BaseStringSchema.md).[type](BaseStringSchema.md#type)
+BaseStringSchema.type
 
 #### Defined in
 
