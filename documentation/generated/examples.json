@@ -56,7 +56,7 @@
       "addFormula"
     ],
     "exampleFooterLink": "https://coda.github.io/packs-sdk/reference/sdk/classes/PackDefinitionBuilder#addFormula",
-    "content": "A **formula (including a button)** is a JavaScript function that will be exposed as a Coda formula, that you can use anywhere in a Coda doc that you can use any normal formula. Formulas take basic Coda types as input, like strings, numbers, dates, booleans, and arrays of these types, and return any of these types or objects whose properties are any of these types. Buttons are just a flavor of a formula with the flag `isButton` activated.",
+    "content": "A **formula (including a button)** is a JavaScript function that will be exposed as a Coda formula, that you can use anywhere in a Coda doc that you can use any normal formula. Formulas take basic Coda types as input, like strings, numbers, dates, booleans, and arrays of these types, and return any of these types or objects whose properties are any of these types. Buttons are just a flavor of a formula with the flag `isAction` activated.",
     "exampleSnippets": [
       {
         "name": "Basic Formula",

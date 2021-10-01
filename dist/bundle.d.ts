@@ -92,7 +92,7 @@ export interface CurrencySchema extends NumberSchema {
 	/***
 	 * A three-letter ISO 4217 currency code, e.g. USD or EUR.
 	 * If the currency code is not supported by Coda, the value will be rendered using USD.
-	*/
+	 */
 	currencyCode?: string;
 	format?: CurrencyFormat;
 }
@@ -189,6 +189,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	featured?: L[];
 	identity?: IdentityDefinition;
 }
+export declare type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 export interface ObjectSchema<K extends string, L extends string> extends ObjectSchemaDefinition<K, L> {
 	identity?: Identity;
 }
@@ -218,20 +219,34 @@ export declare type PickOptional<T, K extends keyof T> = Partial<T> & {
 	[P in K]: T[P];
 };
 export interface StringHintTypeToSchemaTypeMap {
-	[ValueHintType.Date]: Date;
+	[ValueHintType.Date]: Date | string | number;
 }
 export declare type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T extends keyof StringHintTypeToSchemaTypeMap ? StringHintTypeToSchemaTypeMap[T] : string;
-export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? StringHintTypeToSchemaType<T["codaType"]> : T extends ArraySchema ? Array<SchemaType<T["items"]>> : T extends GenericObjectSchema ? PickOptional<{
-	[K in keyof T["properties"]]: SchemaType<T["properties"][K]>;
+export declare type SchemaWithNoFromKey<T extends ObjectSchemaDefinition<any, any>> = {
+	[K in keyof T["properties"] as T["properties"][K] extends {
+		fromKey: string;
+	} ? never : K]: T["properties"][K];
+};
+export declare type SchemaFromKeyWildCard<T extends ObjectSchemaDefinition<any, any>> = {
+	[K in keyof T["properties"] as T["properties"][K] extends {
+		fromKey: string;
+	} ? string : never]: any;
+};
+export declare type ObjectSchemaNoFromKeyType<T extends ObjectSchemaDefinition<any, any>, P extends SchemaWithNoFromKey<T> = SchemaWithNoFromKey<T>> = PickOptional<{
+	[K in keyof P]: SchemaType<P[K]>;
 }, $Values<{
-	[K in keyof T["properties"]]: T["properties"][K] extends {
+	[K in keyof P]: P[K] extends {
 		required: true;
 	} ? K : never;
-}>> : never;
+}>>;
+export declare type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = ObjectSchemaNoFromKeyType<T> & SchemaFromKeyWildCard<T>;
+export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? StringHintTypeToSchemaType<T["codaType"]> : T extends ArraySchema ? Array<SchemaType<T["items"]>> : T extends GenericObjectSchema ? ObjectSchemaType<T> : never;
 export declare type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
 export declare function generateSchema(obj: ValidTypes): Schema;
 export declare function makeSchema<T extends Schema>(schema: T): T;
-export declare function makeObjectSchema<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>>(schemaDef: T): ObjectSchema<K, L>;
+export declare function makeObjectSchema<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>>(schemaDef: T): T & {
+	identity?: Identity;
+};
 /**
  * Convenience for creating a reference object schema from an existing schema for the
  * object. Copies over the identity, id, and primary from the schema, and the subset of
@@ -619,7 +634,7 @@ export declare type GenericSyncFormula = SyncFormula<any, any, ParamDefs, any>;
  * Should not be necessary to use directly, see {@link makeSyncTable}
  * for defining a sync table.
  */
-export declare type GenericSyncFormulaResult = SyncFormulaResult<any>;
+export declare type GenericSyncFormulaResult = SyncFormulaResult<any, any, any>;
 /**
  * Type definition for a static (non-dynamic) sync table.
  * Should not be necessary to use directly, see {@link makeSyncTable}
@@ -681,23 +696,23 @@ export declare type BooleanPackFormula<ParamDefsT extends ParamDefs> = BaseFormu
 export declare type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> = BaseFormula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
 	schema?: StringSchema<ResultT>;
 };
-export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = BaseFormula<ParamDefsT, SchemaType<SchemaT>> & {
+export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Omit<BaseFormula<ParamDefsT, SchemaType<SchemaT>>, "execute"> & {
 	schema?: SchemaT;
+	execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<object> | object;
 };
-export declare type Formula<ParamDefsT extends ParamDefs = ParamDefs> = NumericPackFormula<ParamDefsT> | StringPackFormula<ParamDefsT, any> | BooleanPackFormula<ParamDefsT> | ObjectPackFormula<ParamDefsT, Schema>;
+export declare type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT extends FormulaResultValueType = FormulaResultValueType, SchemaT extends Schema = Schema> = ResultT extends ValueType.String ? StringPackFormula<ParamDefsT> : ResultT extends ValueType.Number ? NumericPackFormula<ParamDefsT> : ResultT extends ValueType.Boolean ? BooleanPackFormula<ParamDefsT> : ResultT extends ValueType.Array ? ObjectPackFormula<ParamDefsT, ArraySchema<SchemaT>> : ObjectPackFormula<ParamDefsT, SchemaT>;
 export declare type TypedPackFormula = Formula | GenericSyncFormula;
 export declare type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 export declare type PackFormulaMetadata = Omit<TypedPackFormula, "execute">;
 export declare type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, "execute">;
-export interface SyncFormulaResult<ResultT extends object> {
-	result: ResultT[];
+export interface SyncFormulaResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+	result: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>;
 	continuation?: Continuation;
 }
-export interface SyncFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaDef<ParamsT> {
-	execute(params: ParamValues<ParamsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<object>>;
+export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> extends CommonPackFormulaDef<ParamDefsT> {
+	execute(params: ParamValues<ParamDefsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<K, L, SchemaT>>;
 }
-export declare type SyncFormula<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> = Omit<SyncFormulaDef<ParamDefsT>, "execute"> & {
-	execute(params: ParamValues<ParamDefsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<SchemaType<SchemaT>>>;
+export declare type SyncFormula<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
 	resultType: TypeOf<SchemaType<SchemaT>>;
 	isSyncFormula: true;
 	schema?: ArraySchema;
@@ -756,7 +771,7 @@ export declare type SyncFormula<K extends string, L extends string, ParamDefsT e
  * });
  * ```
  */
-export declare function makeFormula<ParamDefsT extends ParamDefs>(fullDefinition: FormulaDefinitionV2<ParamDefsT>): Formula<ParamDefsT>;
+export declare function makeFormula<ParamDefsT extends ParamDefs, ResultT extends FormulaResultValueType, SchemaT extends Schema = Schema>(fullDefinition: FormulaDefinitionV2<ParamDefsT, ResultT, SchemaT>): Formula<ParamDefsT, ResultT, SchemaT>;
 export interface BaseFormulaDefV2<ParamDefsT extends ParamDefs, ResultT extends string | number | boolean | object> extends PackFormulaDef<ParamDefsT, ResultT> {
 	onError?(error: Error): any;
 }
@@ -774,17 +789,16 @@ export declare type BooleanFormulaDefV2<ParamDefsT extends ParamDefs> = BaseForm
 	resultType: ValueType.Boolean;
 	execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<boolean> | boolean;
 };
-export declare type ArrayFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, object> & {
+export declare type ArrayFormulaDefV2<ParamDefsT extends ParamDefs, SchemaT extends Schema> = BaseFormulaDefV2<ParamDefsT, SchemaType<ArraySchema<SchemaT>>> & {
 	resultType: ValueType.Array;
-	items: Schema;
-	execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<object> | object;
+	items: SchemaT;
 };
-export declare type ObjectFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, object> & {
+export declare type ObjectFormulaDefV2<ParamDefsT extends ParamDefs, SchemaT extends Schema> = BaseFormulaDefV2<ParamDefsT, SchemaType<SchemaT>> & {
 	resultType: ValueType.Object;
-	schema: Schema;
-	execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<object> | object;
+	schema: SchemaT;
 };
-export declare type FormulaDefinitionV2<ParamDefsT extends ParamDefs> = StringFormulaDefV2<ParamDefsT> | NumericFormulaDefV2<ParamDefsT> | BooleanFormulaDefV2<ParamDefsT> | ArrayFormulaDefV2<ParamDefsT> | ObjectFormulaDefV2<ParamDefsT>;
+export declare type FormulaResultValueType = ValueType.String | ValueType.Number | ValueType.Boolean | ValueType.Array | ValueType.Object;
+export declare type FormulaDefinitionV2<ParamDefsT extends ParamDefs, ResultT extends FormulaResultValueType, SchemaT extends Schema> = ResultT extends ValueType.String ? StringFormulaDefV2<ParamDefsT> : ResultT extends ValueType.Number ? NumericFormulaDefV2<ParamDefsT> : ResultT extends ValueType.Boolean ? BooleanFormulaDefV2<ParamDefsT> : ResultT extends ValueType.Array ? ArrayFormulaDefV2<ParamDefsT, SchemaT> : ObjectFormulaDefV2<ParamDefsT, SchemaT>;
 /**
  * The return type for a metadata formula that should return a different display to the user
  * than is used internally.
@@ -802,10 +816,12 @@ export interface MetadataFormulaObjectResultType {
  */
 export declare type MetadataContext = Record<string, any>;
 export declare type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
-export declare type MetadataFormula = ObjectPackFormula<[
+export declare type MetadataFormula = BaseFormula<[
 	ParamDef<Type.string>,
 	ParamDef<Type.string>
-], any>;
+], any> & {
+	schema?: any;
+};
 export declare type MetadataFormulaMetadata = Omit<MetadataFormula, "execute">;
 export declare type MetadataFunction = <K extends string, L extends string>(context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<K, L>>;
 export declare type MetadataFormulaDef = MetadataFormula | MetadataFunction;
@@ -851,7 +867,7 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	 * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
 	 * These will eventually be consolidated.)
 	 */
-	formula: SyncFormulaDef<ParamDefsT>;
+	formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT>;
 	/**
 	 * A {@link ConnectionRequirement} that will be used for all formulas contained within
 	 * this sync table (including autocomplete formulas).
@@ -865,7 +881,7 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 		entityName?: string;
 	};
 }
-export interface DynamicSyncTableOptions<ParamDefsT extends ParamDefs> {
+export interface DynamicSyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> {
 	/**
 	 * The name of the dynamic sync table. This is shown to users in the Coda UI
 	 * when listing what build blocks are contained within this pack.
@@ -900,7 +916,7 @@ export interface DynamicSyncTableOptions<ParamDefsT extends ParamDefs> {
 	 * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
 	 * These will eventually be consolidated.)
 	 */
-	formula: SyncFormulaDef<ParamDefsT>;
+	formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT>;
 	/**
 	 * A label for the kind of entities that you are syncing. This label is used in a doc to identify
 	 * the column in this table that contains the synced data. If you don't provide an `entityName`, the value
@@ -924,12 +940,14 @@ export interface DynamicSyncTableOptions<ParamDefsT extends ParamDefs> {
  *
  * See [Normalization](/index.html#normalization) for more information about schema normalization.
  */
-export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends ObjectSchema<K, L>>({ name, identityName, schema: schemaDef, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
+export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
+	identity?: Identity;
+}>({ name, identityName, schema: schemaDef, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
 export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ name, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, }: {
 	name: string;
 	getName: MetadataFormulaDef;
 	getSchema: MetadataFormulaDef;
-	formula: SyncFormulaDef<ParamDefsT>;
+	formula: SyncFormulaDef<K, L, ParamDefsT, any>;
 	getDisplayUrl: MetadataFormulaDef;
 	listDynamicUrls?: MetadataFormulaDef;
 	entityName?: string;
@@ -1667,7 +1685,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * });
 	 * ```
 	 */
-	addFormula<ParamDefsT extends ParamDefs>(definition: FormulaDefinitionV2<ParamDefsT>): this;
+	addFormula<ParamDefsT extends ParamDefs, ResultT extends FormulaResultValueType, SchemaT extends Schema>(definition: FormulaDefinitionV2<ParamDefsT, ResultT, SchemaT>): this;
 	/**
 	 * Adds a sync table definition to this pack.
 	 *
@@ -1709,7 +1727,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * });
 	 * ```
 	 */
-	addDynamicSyncTable<ParamDefsT extends ParamDefs>(definition: DynamicSyncTableOptions<ParamDefsT>): this;
+	addDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>>(definition: DynamicSyncTableOptions<K, L, ParamDefsT, SchemaT>): this;
 	/**
 	 * Adds a column format definition to this pack.
 	 *

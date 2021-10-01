@@ -12,7 +12,7 @@
 
 | Name | Type |
 | :------ | :------ |
-| `value` | `T` \| ``null`` \| `undefined` |
+| `value` | `undefined` \| ``null`` \| `T` |
 | `message?` | `string` |
 
 #### Returns

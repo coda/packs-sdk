@@ -4,6 +4,8 @@
   for a while, so we've eliminated the unnecessary extra interface to avoid confusion.
   (Also `console.trace/debug/warn/info/error` are all valid.)
 
+- Formula return types are now strong-typed (except if you are using the fromKey attribute of object properties).
+
 ## 0.4.6
 
 - Bug fix: Executing sync table formulas via CLI now validates results correctly.

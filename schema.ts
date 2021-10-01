@@ -102,7 +102,7 @@ export interface CurrencySchema extends NumberSchema {
   /***
    * A three-letter ISO 4217 currency code, e.g. USD or EUR.
    * If the currency code is not supported by Coda, the value will be rendered using USD.
-  */
+   */
   currencyCode?: string;
   format?: CurrencyFormat;
 }
@@ -222,6 +222,12 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
   identity?: IdentityDefinition;
 }
 
+export type ObjectSchemaDefinitionType<
+  K extends string,
+  L extends string,
+  T extends ObjectSchemaDefinition<K, L>,
+> = ObjectSchemaType<T>;
+
 export interface ObjectSchema<K extends string, L extends string> extends ObjectSchemaDefinition<K, L> {
   identity?: Identity;
 }
@@ -267,12 +273,43 @@ export function isArray(val?: Schema): val is ArraySchema {
 type PickOptional<T, K extends keyof T> = Partial<T> & {[P in K]: T[P]};
 
 interface StringHintTypeToSchemaTypeMap {
-  [ValueHintType.Date]: Date;
+  [ValueHintType.Date]: Date | string | number;
 }
 type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T extends keyof StringHintTypeToSchemaTypeMap
   ? StringHintTypeToSchemaTypeMap[T]
   : string;
 
+type SchemaWithNoFromKey<T extends ObjectSchemaDefinition<any, any>> = {
+  [K in keyof T['properties'] as T['properties'][K] extends {fromKey: string} ? never : K]: T['properties'][K];
+};
+
+// if there's a field with fromKey, inject {string: any} to fail silently.
+type SchemaFromKeyWildCard<T extends ObjectSchemaDefinition<any, any>> = {
+  [K in keyof T['properties'] as T['properties'][K] extends {fromKey: string} ? string : never]: any;
+};
+
+type ObjectSchemaNoFromKeyType<
+  T extends ObjectSchemaDefinition<any, any>,
+  P extends SchemaWithNoFromKey<T> = SchemaWithNoFromKey<T>,
+> = PickOptional<
+  {
+    [K in keyof P]: SchemaType<P[K]>;
+  },
+  $Values<{
+    [K in keyof P]: P[K] extends {required: true} ? K : never;
+  }>
+>;
+
+type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = ObjectSchemaNoFromKeyType<T> &
+  SchemaFromKeyWildCard<T>;
+
+// SchemaType parses the expected formula return type from the schema. For example,
+// StringFormula will need to return a string type value. NumbericFormula needs to return a number.
+//
+// ObjectFormula usually should return an object matching the schema as well but typescript
+// doesn't work perfectly with fromKey. In presense of a property using fromKey, SchemaType
+// will only check properties without fromKey attribute and will blindly accept additional
+// properites in the return value.
 export type SchemaType<T extends Schema> = T extends BooleanSchema
   ? boolean
   : T extends NumberSchema
@@ -282,10 +319,7 @@ export type SchemaType<T extends Schema> = T extends BooleanSchema
   : T extends ArraySchema
   ? Array<SchemaType<T['items']>>
   : T extends GenericObjectSchema
-  ? PickOptional<
-      {[K in keyof T['properties']]: SchemaType<T['properties'][K]>},
-      $Values<{[K in keyof T['properties']]: T['properties'][K] extends {required: true} ? K : never}>
-    >
+  ? ObjectSchemaType<T>
   : never;
 
 export type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
@@ -328,14 +362,15 @@ export const PlaceholderIdentityPackId = -1;
 
 export function makeObjectSchema<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>>(
   schemaDef: T,
-): ObjectSchema<K, L> {
+): T & {
+  identity?: Identity;
+} {
   validateObjectSchema(schemaDef);
-  const schema = schemaDef as ObjectSchema<K, L>;
   // TODO(jonathan): Enable after existing packs go through the v2 upload flow.
   // if (schema.identity) {
   //   schema.identity = {...schema.identity, packId: PlaceholderIdentityPackId};
   // }
-  return schema;
+  return schemaDef as any;
 }
 
 function validateObjectSchema<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>>(schema: T) {

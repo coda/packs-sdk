@@ -2,6 +2,7 @@ import type {Credentials} from './auth_types';
 import type {ExecutionContext} from '../api_types';
 import type {FormulaSpecification} from '../runtime/types';
 import {FormulaType} from '../runtime/types';
+import type {GenericSyncFormulaResult} from '../api';
 import type {MetadataContext} from '../api';
 import type {MetadataFormula} from '../api';
 import type {PackFormulaResult} from '../api_types';
@@ -10,7 +11,6 @@ import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
 import type {StandardFormulaSpecification} from '../runtime/types';
 import type {SyncExecutionContext} from '../api_types';
-import type {SyncFormulaResult} from '../api';
 import type {SyncFormulaSpecification} from '../runtime/types';
 import type {TypedPackFormula} from '../api';
 import {coerceParams} from './coercion';
@@ -68,7 +68,7 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
   manifest: PackVersionDefinition,
   executionContext: ExecutionContext | SyncExecutionContext,
   {validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true}: ExecuteOptions = {},
-): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<object> : PackFormulaResult> {
+): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
   let formula: TypedPackFormula | undefined;
   switch (formulaSpec.type) {
     case FormulaType.Standard:
@@ -86,14 +86,14 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
 
   if (shouldValidateResult && formula) {
     const resultToValidate =
-      formulaSpec.type === FormulaType.Sync ? (result as SyncFormulaResult<object>).result : result;
+      formulaSpec.type === FormulaType.Sync ? (result as GenericSyncFormulaResult).result : result;
     validateResult(formula, resultToValidate);
   }
 
   return result;
 }
 
-export async function executeFormulaFromPackDef<T extends PackFormulaResult | SyncFormulaResult<object> = any>(
+export async function executeFormulaFromPackDef<T extends PackFormulaResult | GenericSyncFormulaResult = any>(
   packDef: PackVersionDefinition,
   formulaNameWithNamespace: string,
   params: ParamValues<ParamDefs>,
@@ -177,7 +177,7 @@ export async function executeFormulaOrSyncFromCLI({
             `Sync is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`,
           );
         }
-        const response: SyncFormulaResult<any> = vm
+        const response: GenericSyncFormulaResult = vm
           ? await executeFormulaOrSyncWithRawParamsInVM({
               formulaSpecification,
               params,
@@ -210,7 +210,7 @@ export async function executeFormulaOrSyncFromCLI({
   }
 }
 
-export async function executeFormulaOrSyncWithVM<T extends PackFormulaResult | SyncFormulaResult<object> = any>({
+export async function executeFormulaOrSyncWithVM<T extends PackFormulaResult | GenericSyncFormulaResult = any>({
   formulaName,
   params,
   bundlePath,
@@ -265,7 +265,7 @@ async function executeFormulaOrSyncWithRawParamsInVM<
   executionContext?: SyncExecutionContext;
   bundleSourceMapPath: string;
   bundlePath: string;
-}): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<object> : PackFormulaResult> {
+}): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
   const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
 
   const manifest = await importManifest(bundlePath);
@@ -294,7 +294,7 @@ export async function executeFormulaOrSyncWithRawParams<
   manifest: PackVersionDefinition;
   vm?: boolean;
   executionContext: SyncExecutionContext;
-}): Promise<T extends SyncFormulaSpecification ? SyncFormulaResult<object> : PackFormulaResult> {
+}): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
   let params: ParamValues<ParamDefs>;
   if (formulaSpecification.type === FormulaType.Standard) {
     const formula = findFormula(manifest, formulaSpecification.formulaName);
@@ -378,14 +378,14 @@ export async function executeSyncFormulaFromPackDef<T extends object = any>(
  * Executes a single sync iteration, and returns the return value from the sync formula
  * including the continuation, for inspection.
  */
-export async function executeSyncFormulaFromPackDefSingleIteration<T extends object>(
+export async function executeSyncFormulaFromPackDefSingleIteration(
   packDef: PackVersionDefinition,
   syncFormulaName: string,
   params: ParamValues<ParamDefs>,
   context?: SyncExecutionContext,
   options?: ExecuteOptions,
   {useRealFetcher, manifestPath}: ContextOptions = {},
-): Promise<SyncFormulaResult<T>> {
+): Promise<GenericSyncFormulaResult> {
   let executionContext = context;
   if (!executionContext && useRealFetcher) {
     const credentials = getCredentials(manifestPath);
@@ -403,7 +403,7 @@ export async function executeSyncFormulaFromPackDefSingleIteration<T extends obj
     packDef,
     executionContext || newMockSyncExecutionContext(),
     options,
-  ) as Promise<SyncFormulaResult<T>>;
+  ) as Promise<GenericSyncFormulaResult>;
 }
 
 export async function executeMetadataFormula(

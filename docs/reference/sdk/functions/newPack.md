@@ -24,4 +24,4 @@ pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
 
 #### Defined in
 
-[builder.ts:35](https://github.com/coda/packs-sdk/blob/main/builder.ts#L35)
+[builder.ts:38](https://github.com/coda/packs-sdk/blob/main/builder.ts#L38)
