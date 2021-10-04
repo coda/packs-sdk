@@ -127,7 +127,7 @@ pack.addFormula({
 });
 
 // Here, we define the two schemas for our sync tables (tasks and projects).
-const taskSchema = coda.makeObjectSchema({
+const TaskSchema = coda.makeObjectSchema({
   type: coda.ValueType.Object,
 
   // These properties are applied to each row and will be used to define other
@@ -155,7 +155,7 @@ const taskSchema = coda.makeObjectSchema({
   featured: ["projectId"],
 });
 
-const projectSchema = coda.makeObjectSchema({
+const ProjectSchema = coda.makeObjectSchema({
   type: coda.ValueType.Object,
   properties: {
     name: {type: coda.ValueType.String},
@@ -171,7 +171,7 @@ pack.addSyncTable({
   name: "Tasks",
   // This is a unique identifier for this table, used internally by Coda.
   identityName: "TaskTitle",
-  schema: taskSchema,
+  schema: TaskSchema,
   // Users must have a connection to Todoist to sync in tasks.
   connectionRequirement: coda.ConnectionRequirement.Required,
   formula: {
@@ -211,7 +211,7 @@ pack.addSyncTable({
 
 pack.addSyncTable({
   name: "Projects",
-  schema: projectSchema,
+  schema: ProjectSchema,
   identityName: "Project",
   connectionRequirement: coda.ConnectionRequirement.Required,
   formula: {

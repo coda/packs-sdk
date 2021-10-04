@@ -4,7 +4,7 @@ import * as coda from "@codahq/packs-sdk";
 // This line creates your new Pack.
 export const pack = coda.newPack();
 
-// When using the fetcher, this is the domain of the API that your Pack makes 
+// When using the fetcher, this is the domain of the API that your Pack makes
 // fetcher requests to.
 pack.addNetworkDomain("sunrise-sunset.org");
 
@@ -12,21 +12,21 @@ pack.addNetworkDomain("sunrise-sunset.org");
 // that will be seen. If you think of an object as a row in a table, you can
 // think of the schema as the columns. In this case, we're creating a new schema
 // that has daylight hours, time of sunrise, and time of sunset.
-const sunSchema = coda.makeObjectSchema({
+const SunSchema = coda.makeObjectSchema({
   type: coda.ValueType.Object,
   properties: {
     // The values we return are simple strings, but we use the codaType field to
     // to tell Coda to interpret them as durations and time values.
     daylight: {
-      type: coda.ValueType.String, 
+      type: coda.ValueType.String,
       codaType: coda.ValueHintType.Duration,
     },
     sunriseUTC: {
-      type: coda.ValueType.String, 
+      type: coda.ValueType.String,
       codaType: coda.ValueHintType.Time,
     },
     sunsetUTC: {
-      type: coda.ValueType.String, 
+      type: coda.ValueType.String,
       codaType: coda.ValueHintType.Time,
     },
   },
@@ -70,7 +70,7 @@ pack.addFormula({
   resultType: coda.ValueType.Object,
 
   // This object will be defined according to the schema written above.
-  schema: sunSchema,
+  schema: SunSchema,
 
   // Everything inside this execute statement will happen anytime your Coda
   // function is called in a doc. An array of all user inputs is passed as the
@@ -92,7 +92,7 @@ pack.addFormula({
     });
 
     let response = await context.fetcher.fetch({
-      method: "GET", 
+      method: "GET",
       url: url
     });
 
