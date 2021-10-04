@@ -4,7 +4,7 @@ module.exports = {
   ],
   overrides: [
     {
-      files: ['snippets/**/*.ts'],
+      files: ['examples/**/*.ts', 'snippets/**/*.ts'],
       rules: {
         'object-shorthand': ['error', 'never'],
         '@typescript-eslint/no-unused-vars': ['error', {
@@ -18,16 +18,5 @@ module.exports = {
         'prefer-template': 'off',
       },
     },
-    // TODO: Merge with above once the code in /examples is updated.
-    {
-      files: ['examples/**/*.ts'],
-      rules: {
-        'object-shorthand': 'off',
-        '@typescript-eslint/no-unused-vars': ['error', {
-          varsIgnorePattern: 'response', 
-          argsIgnorePattern: 'myParam|context'
-        },],
-      }
-    }
-  ]
+  ],
 };
