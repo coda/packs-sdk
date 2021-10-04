@@ -536,7 +536,7 @@ const formatMetadataSchema = zodCompleteObject({
     hasNoConnection: z.boolean().optional(),
     instructions: z.string().optional(),
     placeholder: z.string().optional(),
-    matchers: z.array(z.string().regex(exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX)).refine(validateFormatMatchers),
+    matchers: z.array(z.string().regex(exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX).refine(validateFormatMatcher)),
 });
 const syncFormulaSchema = zodCompleteObject({
     schema: arrayPropertySchema.optional(),
@@ -663,16 +663,14 @@ function validateFormulas(schema) {
         });
     });
 }
-function validateFormatMatchers(values) {
+function validateFormatMatcher(value) {
     try {
-        values.forEach(value => {
-            const parsed = value.match(exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX);
-            if (!parsed) {
-                throw new Error('Column matcher not recognized as a regex');
-            }
-            const [, pattern, flags] = parsed;
-            new RegExp(pattern, flags);
-        });
+        const parsed = value.match(exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX);
+        if (!parsed) {
+            throw new Error('Column matcher not recognized as a regex');
+        }
+        const [, pattern, flags] = parsed;
+        new RegExp(pattern, flags);
         return true;
     }
     catch (error) {

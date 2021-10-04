@@ -634,7 +634,7 @@ const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   hasNoConnection: z.boolean().optional(),
   instructions: z.string().optional(),
   placeholder: z.string().optional(),
-  matchers: z.array(z.string().regex(PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX)).refine(validateFormatMatchers),
+  matchers: z.array(z.string().regex(PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX).refine(validateFormatMatcher)),
 });
 
 const syncFormulaSchema = zodCompleteObject<Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute'>>({
@@ -780,16 +780,14 @@ function validateFormulas(schema: z.ZodObject<any>) {
     });
 }
 
-function validateFormatMatchers(values: string[]): boolean {
+function validateFormatMatcher(value: string): boolean {
   try {
-    values.forEach(value => {
-      const parsed = value.match(PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX);
-      if (!parsed) {
-        throw new Error('Column matcher not recognized as a regex');
-      }
-      const [, pattern, flags] = parsed;
-      new RegExp(pattern, flags);
-    });
+    const parsed = value.match(PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX);
+    if (!parsed) {
+      throw new Error('Column matcher not recognized as a regex');
+    }
+    const [, pattern, flags] = parsed;
+    new RegExp(pattern, flags);
     return true;
   } catch (error: any) {
     return false;
