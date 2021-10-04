@@ -86,6 +86,7 @@
     "typedoc-plugin-markdown": "^3.11.2"
   },
   "resolutions": {
+    "browserify-sign": "^4.2.1",
     "ansi-regex": "^5.0.1",
     "marked": "^2.0.0"
   }
