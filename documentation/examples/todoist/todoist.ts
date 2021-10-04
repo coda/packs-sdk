@@ -49,9 +49,9 @@ pack.addFormula({
         name: title,
       }),
     });
-    // We do' necessarily have to return anything, but i' useful to return
+    // We don't necessarily have to return anything, but it's useful to return
     // some kind of non-empty values that callers can use to check whether this
-    // button action has already been taken. Often i' a good idea to return
+    // button action has already been taken. Often it's a good idea to return
     // the id of the object that was created, if possible.
     return "OK";
   },
@@ -71,7 +71,7 @@ pack.addFormula({
     }),
 
     // The project is an optional field. If not provided, it defaults to the
-    // inbox per Todois' documentation.
+    // inbox per Todoist's documentation.
     coda.makeParameter({
       type: coda.ParameterType.Number,
       name: "project",
