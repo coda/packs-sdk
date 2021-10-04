@@ -84,32 +84,8 @@ export async function validatePackVersionMetadata(metadata: Record<string, any>)
       validated.error.errors.flatMap(zodErrorDetailToValidationError),
     );
   }
-  const packMetadata = validated.data as PackVersionMetadata;
-  validateColumnFormats(packMetadata.formats);
-  return packMetadata;
-}
 
-/**
- * Verifies that the string column format matchers look like compiled regexes.
- */
-function validateColumnFormats(formats: PackFormatMetadata[]) {
-  formats.forEach(fmt => {
-    fmt.matchers.forEach(matcher => {
-      try {
-        const parsed = matcher.match(PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX);
-        if (!parsed) {
-          throw new Error('Column matcher not recognized as a regex');
-        }
-        const [, pattern, flags] = parsed;
-        return new RegExp(pattern, flags);
-      } catch (error: any) {
-        throw new PackMetadataValidationError(
-          `Pack metadata failed validation: The format matcher "${matcher}" is not valid.`,
-          error,
-        );
-      }
-    });
-  });
+  return validated.data as PackVersionMetadata;
 }
 
 // Note: This is called within Coda for validating user-provided authentication metadata
@@ -658,7 +634,7 @@ const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   hasNoConnection: z.boolean().optional(),
   instructions: z.string().optional(),
   placeholder: z.string().optional(),
-  matchers: z.array(z.string()),
+  matchers: z.array(z.string().regex(PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX)).refine(validateFormatMatchers),
 });
 
 const syncFormulaSchema = zodCompleteObject<Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute'>>({
@@ -802,6 +778,22 @@ function validateFormulas(schema: z.ZodObject<any>) {
         }
       });
     });
+}
+
+function validateFormatMatchers(values: string[]): boolean {
+  try {
+    values.forEach(value => {
+      const parsed = value.match(PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX);
+      if (!parsed) {
+        throw new Error('Column matcher not recognized as a regex');
+      }
+      const [, pattern, flags] = parsed;
+      new RegExp(pattern, flags);
+    });
+    return true;
+  } catch (error: any) {
+    return false;
+  }
 }
 
 // We temporarily allow our legacy packs to provide non-versioned data until we sufficiently migrate them.

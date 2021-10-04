@@ -1230,10 +1230,12 @@ describe('Pack metadata Validation', () => {
           ],
         });
         const err = await validateJsonAndAssertFails(metadata);
-        assert.deepEqual(
-          err.message,
-          'Pack metadata failed validation: The format matcher "not a regex" is not valid.',
-        );
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Invalid',
+            path: 'formats[0].matchers[0]',
+          },
+        ]);
       });
 
       it('formula uses more than one parameter', async () => {
