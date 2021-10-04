@@ -1,17 +1,21 @@
-// This import statement gives you access to all parts of the Coda Packs SDK.
+/**
+ * This Pack provides a "Daylight" formula that determines the daylight,
+ * sunrise, and sunset at a given location using the Sunrise Sunset API.
+ * The results are returns as a rich object.
+ * @see {@link https://sunrise-sunset.org/api|Sunrise Sunset API}
+ */
+
+// This import statement provides access to all parts of the Coda Packs SDK.
 import * as coda from "@codahq/packs-sdk";
 
-// This line creates your new Pack.
+// This line creates the new Pack.
 export const pack = coda.newPack();
 
-// When using the fetcher, this is the domain of the API that your Pack makes
-// fetcher requests to.
+// The domain that the Pack will match fetcher requests to.
 pack.addNetworkDomain("sunrise-sunset.org");
 
-// Every object must have a schema, which defines things like the primary value
-// that will be seen. If you think of an object as a row in a table, you can
-// think of the schema as the columns. In this case, we're creating a new schema
-// that has daylight hours, time of sunrise, and time of sunset.
+// Define a schema that will be used to bundle up the multiple pieces of data
+// our formula will return. In the Coda doc this will be displayed as a chip.
 const SunSchema = coda.makeObjectSchema({
   type: coda.ValueType.Object,
   properties: {
@@ -30,20 +34,17 @@ const SunSchema = coda.makeObjectSchema({
       codaType: coda.ValueHintType.Time,
     },
   },
-  // This is the property to use for display purposes on the UI chip for this
-  // object.
+  // Which of the properties defined above will be shown inside the chip.
   primary: "daylight",
 });
 
-// This line adds a new formula.
+// Add a "Daylight" formula to the Pack.
 pack.addFormula({
-  // This is the name that will be called in the formula builder. Remember, your
-  // formula name cannot have spaces in it.
   name: "Daylight",
   description: "Returns the sunrise and sunset for a given location.",
 
   // This formula takes two required numeric inputs (the latitude and longitude)
-  // and one optional (the date).
+  // and one optional date.
   parameters: [
     coda.makeParameter({
       type: coda.ParameterType.Number,
@@ -59,12 +60,10 @@ pack.addFormula({
       type: coda.ParameterType.Date,
       name: "date",
       description: "The date to use. Defaults to today.",
-
       // This date parameter is an optional input.
       optional: true,
     }),
   ],
-
 
   // In this formula, we're returning an object with multiple properties.
   resultType: coda.ValueType.Object,
@@ -72,10 +71,10 @@ pack.addFormula({
   // This object will be defined according to the schema written above.
   schema: SunSchema,
 
-  // Everything inside this execute statement will happen anytime your Coda
-  // function is called in a doc. An array of all user inputs is passed as the
-  // 1st parameter. The context object is always the 2nd parameter and is used
-  // for fetching data.
+  // Everything inside this execute statement will happen anytime the Coda
+  // formula is called in a doc. An array of all user inputs is passed as the
+  // first parameter. The context object is always the second parameter and is
+  // used for fetching data.
   execute: async function ([lat, lng, date], context) {
     // Default to today if no date is provided.
     let lookupDate = date || new Date();
@@ -91,21 +90,26 @@ pack.addFormula({
       date: formattedDate
     });
 
+    // Fetch the URL and get the response.
     let response = await context.fetcher.fetch({
       method: "GET",
       url: url
     });
 
+    // The JSON returned by the API is parsed automatically and available in
+    // `response.body`. Here we pull out the content in the "results" key.
+    let results = response.body.results;
+
     // Re-format the day_length string to [h] hrs [m] mins [s] secs to work as a
     // duration.
-    let hours = response.body.results.day_length.split(":")[0];
-    let mins = response.body.results.day_length.split(":")[1];
-    let secs = response.body.results.day_length.split(":")[2];
+    let hours = results.day_length.split(":")[0];
+    let mins = results.day_length.split(":")[1];
+    let secs = results.day_length.split(":")[2];
 
-    let daylight = `${hours}hrs ${mins}mins ${secs}secs`;
+    let daylight = `${hours} hrs ${mins} mins ${secs} secs`;
 
-    // This API returns time in UTC so for simplicity we will just identify that
-    // in the output.
+    // Return the final object. The keys here must match with the properties
+    // defined above in the schema.
     return {
       daylight: daylight,
       sunriseUTC: response.body.results.sunrise,

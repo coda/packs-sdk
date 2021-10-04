@@ -1,4 +1,6 @@
-This is an example that creates a formula called daylight, which
+ This Pack provides a `Daylight` formula that determines the daylight, sunrise,
+ and sunset at a given location using the [Sunrise Sunset API][api]. It accepts
+ a latitude, longitude, an optional date and returns a rich object (schema) as
+ a result. It uses the `Fetcher` to pull data from an external API.
 
-- takes in a numeric latitude and longitude as well as an optional Date, and
-- returns an object containing the duration of daylight hours along with sunrise and sunset times.
+ [api]: https://sunrise-sunset.org/api
