@@ -50,6 +50,14 @@ import {isNil} from '../helpers/object_utils';
 import {makeSchema} from '../schema';
 import * as z from 'zod';
 
+/**
+ * The uncompiled column format matchers will be expected to be actual regex objects,
+ * and when we compile the pack / stringify it to json, we will store the .toString()
+ * of those regex objects. This regex is used to hydrate the stringified regex back into
+ * a real RegExp object.
+ */
+export const PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = /^\/(.*)\/([a-z]+)?$/;
+
 enum CustomErrorCode {
   NonMatchingDiscriminant = 'nonMatchingDiscriminant',
 }
@@ -76,8 +84,32 @@ export async function validatePackVersionMetadata(metadata: Record<string, any>)
       validated.error.errors.flatMap(zodErrorDetailToValidationError),
     );
   }
+  const packMetadata = validated.data as PackVersionMetadata;
+  validateColumnFormats(packMetadata.formats);
+  return packMetadata;
+}
 
-  return validated.data as PackVersionMetadata;
+/**
+ * Verifies that the string column format matchers look like compiled regexes.
+ */
+function validateColumnFormats(formats: PackFormatMetadata[]) {
+  formats.forEach(fmt => {
+    fmt.matchers.forEach(matcher => {
+      try {
+        const parsed = matcher.match(PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX);
+        if (!parsed) {
+          throw new Error('Column matcher not recognized as a regex');
+        }
+        const [, pattern, flags] = parsed;
+        return new RegExp(pattern, flags);
+      } catch (error: any) {
+        throw new PackMetadataValidationError(
+          `Pack metadata failed validation: The format matcher "${matcher}" is not valid.`,
+          error,
+        );
+      }
+    });
+  });
 }
 
 // Note: This is called within Coda for validating user-provided authentication metadata
