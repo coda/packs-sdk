@@ -48,7 +48,6 @@ export declare function executeFormulaOrSyncWithRawParams<T extends StandardForm
     formulaSpecification: T;
     params: string[];
     manifest: PackVersionDefinition;
-    vm?: boolean;
     executionContext: SyncExecutionContext;
 }): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult>;
 /**

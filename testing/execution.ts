@@ -210,6 +210,7 @@ export async function executeFormulaOrSyncFromCLI({
   }
 }
 
+// This method is used to execute a (sync) formula in testing with VM. Don't use it in lambda or calc service.
 export async function executeFormulaOrSyncWithVM<T extends PackFormulaResult | GenericSyncFormulaResult = any>({
   formulaName,
   params,
@@ -221,8 +222,6 @@ export async function executeFormulaOrSyncWithVM<T extends PackFormulaResult | G
   bundlePath: string;
   executionContext?: ExecutionContext;
 }): Promise<T> {
-  // TODO(huayang): importing manifest makes this method not usable in production, where we are not
-  // supposed to load a manifest outside of the VM context.
   const manifest = await importManifest(bundlePath);
   const syncFormula = tryFindSyncFormula(manifest, formulaName);
   const formulaSpecification: SyncFormulaSpecification | StandardFormulaSpecification = {
@@ -292,7 +291,6 @@ export async function executeFormulaOrSyncWithRawParams<
   formulaSpecification: T;
   params: string[];
   manifest: PackVersionDefinition;
-  vm?: boolean;
   executionContext: SyncExecutionContext;
 }): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
   let params: ParamValues<ParamDefs>;
