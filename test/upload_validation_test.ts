@@ -579,7 +579,7 @@ describe('Pack metadata Validation', () => {
         assert.isTrue(childSchema.required);
       });
 
-      it('identityName propagated to identiy field', async () => {
+      it('identityName propagated to identity field', async () => {
         const syncTable = makeSyncTable({
           name: 'SyncTable',
           identityName: 'SomeIdentity',
@@ -977,6 +977,73 @@ describe('Pack metadata Validation', () => {
       ]);
     });
 
+    it('invalid sync table getter name', async () => {
+      const syncTable = makeSyncTable({
+        name: 'SyncTable',
+        identityName: 'Sync',
+        schema: makeObjectSchema({
+          type: ValueType.Object,
+          primary: 'foo',
+          id: 'foo',
+          identity: {packId: 424242, name: 'foo'},
+          properties: {
+            Foo: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'Formula with Spaces',
+          description: 'A simple sync table',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+      });
+
+      const metadata = createFakePack({
+        syncTables: [syncTable],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'Formula names can only contain alphanumeric characters and underscores.',
+          path: 'syncTables[0].getter.name',
+        },
+      ]);
+    });
+
+    it('invalid sync table getter name but in legacy exemption list', async () => {
+      const syncTable = makeSyncTable({
+        name: 'SyncTable',
+        identityName: 'Sync',
+        schema: makeObjectSchema({
+          type: ValueType.Object,
+          primary: 'foo',
+          id: 'foo',
+          identity: {packId: 424242, name: 'foo'},
+          properties: {
+            Foo: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'Sync repos',
+          description: 'A simple sync table',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+      });
+
+      const metadata = createFakePack({
+        id: 1013,
+        syncTables: [syncTable],
+      });
+      await validateJson(metadata);
+    });
+
     describe('object schemas', () => {
       function metadataForFormulaWithObjectSchema(
         schemaDef: ObjectSchemaDefinition<string, string>,
@@ -1082,6 +1149,21 @@ describe('Pack metadata Validation', () => {
             path: 'formulas[0].schema.identity.name',
           },
         ]);
+      });
+
+      it('invalid identity name but in legacy exemptions', async () => {
+        const metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          identity: {
+            packId: 1013,
+            name: 'Pull Request',
+          },
+          properties: {
+            id: {type: ValueType.Number, fromKey: 'foo', required: true},
+            primary: {type: ValueType.String},
+          },
+        });
+        await validateJson(metadata);
       });
 
       it('id not among properties', async () => {

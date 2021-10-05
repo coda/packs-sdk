@@ -388,9 +388,10 @@ const paramDefValidator = zodCompleteObject<ParamDef<any>>({
 });
 
 const commonPackFormulaSchema = {
-  name: z
-    .string()
-    .refine(validateFormulaName, {message: 'Formula names can only contain alphanumeric characters and underscores.'}),
+  // It would be preferable to use validateFormulaName here, but we have to exempt legacy packs with sync tables
+  // whose getter names violate the validator, and those exemptions require the pack id, so this has to be
+  // done as a superRefine on the top-level object that also contains the pack id.
+  name: z.string(),
   description: z.string(),
   examples: z
     .array(
@@ -516,27 +517,62 @@ function isValidObjectId(component: string): boolean {
   return Base64ObjectRegex.test(component);
 }
 
-const PackIdsWithBadSyncTableNames = [
-  1090, // salesforce pack has a large number of dynamic identity ids that include empty spaces.
+enum ExemptionType {
+  IdentityName = 'IdentityName',
+  SyncTableGetterName = 'SyncTableGetterName',
+}
+
+type Exemption = [number, string, ExemptionType];
+
+const Exemptions: Exemption[] = [
+  [1013, 'Pull Request', ExemptionType.IdentityName],
+  [1021, 'Doc Analytics', ExemptionType.IdentityName],
+  [1060, 'Candidate Stage', ExemptionType.IdentityName],
+  [1075, 'G Suite Directory User', ExemptionType.IdentityName],
+  [1079, 'Campaign Group', ExemptionType.IdentityName],
+  [1083, 'Merge Request', ExemptionType.IdentityName],
+
+  [1013, 'Sync commit history', ExemptionType.SyncTableGetterName],
+  [1013, 'Sync issues', ExemptionType.SyncTableGetterName],
+  [1013, 'Sync pull requests', ExemptionType.SyncTableGetterName],
+  [1013, 'Sync repos', ExemptionType.SyncTableGetterName],
+  [1054, 'Sync table', ExemptionType.SyncTableGetterName],
+  [1062, 'Form responses', ExemptionType.SyncTableGetterName],
+  [1062, 'Sync forms', ExemptionType.SyncTableGetterName],
+  [1078, 'Ad Creatives', ExemptionType.SyncTableGetterName],
+  [1078, 'Ad Sets', ExemptionType.SyncTableGetterName],
+  [1078, 'Custom Audiences', ExemptionType.SyncTableGetterName],
+  [1078, 'Page Posts', ExemptionType.SyncTableGetterName],
+  [1083, 'Sync commits', ExemptionType.SyncTableGetterName],
+  [1083, 'Sync issues', ExemptionType.SyncTableGetterName],
+  [1083, 'Sync merge requests', ExemptionType.SyncTableGetterName],
+  [1083, 'Sync projects', ExemptionType.SyncTableGetterName],
+  [1084, 'Ad Groups', ExemptionType.SyncTableGetterName],
+  [1093, 'Sync table', ExemptionType.SyncTableGetterName],
 ];
 
-// These sync tables already violate the object id constraints and should be cleaned up via upgrade.
-const BadSyncTableNames = [
-  'Pull Request',
-  'Merge Request',
-  'G Suite Directory User',
-  'Campaign Group',
-  'Candidate Stage',
-  'Person Schema',
-  'Doc Analytics',
-];
+function exemptionKey(packId: number, entityName: string): string {
+  return `${packId}/${entityName}`;
+}
 
-function isValidIdentityName(packId: number, name: string): boolean {
-  if (PackIdsWithBadSyncTableNames.includes(packId)) {
+const IdentityNameExemptions = new Set(
+  Exemptions.filter(([_packId, _name, exemptionType]) => exemptionType === ExemptionType.IdentityName).map(
+    ([packId, name]) => exemptionKey(packId, name),
+  ),
+);
+
+const SyncTableGetterNameExemptions = new Set(
+  Exemptions.filter(([_packId, _name, exemptionType]) => exemptionType === ExemptionType.SyncTableGetterName).map(
+    ([packId, name]) => exemptionKey(packId, name),
+  ),
+);
+
+function isValidIdentityName(packId: number | undefined, name: string): boolean {
+  if (packId && IdentityNameExemptions.has(exemptionKey(packId, name))) {
     return true;
   }
-
-  if (BadSyncTableNames.includes(name)) {
+  if (packId === 1090) {
+    // SalesForce pack has a large number of dynamic identity ids that include empty spaces.
     return true;
   }
   return isValidObjectId(name);
@@ -565,7 +601,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     properties: z.record(objectPropertyUnionSchema),
   })
     .superRefine((data, context) => {
-      if (!isValidIdentityName(data.id, data.identity?.name as string)) {
+      if (!isValidIdentityName(data.identity?.packId, data.identity?.name as string)) {
         context.addIssue({
           code: z.ZodIssueCode.custom,
           path: ['identity', 'name'],
@@ -827,6 +863,37 @@ const legacyPackMetadataSchema = validateFormulas(
           code: z.ZodIssueCode.custom,
           path: ['syncTables', i, 'schema', 'properties', identityName],
           message: "Cannot have a sync table property with the same name as the sync table's schema identity.",
+        });
+      }
+    });
+  })
+  .superRefine((data, context) => {
+    ((data.syncTables as any[]) || []).forEach((syncTable, i) => {
+      const packId = data.id as number | undefined;
+      const getterName = syncTable.getter.name as string;
+      if (packId && SyncTableGetterNameExemptions.has(exemptionKey(packId, getterName))) {
+        return;
+      }
+
+      if (!validateFormulaName(getterName)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['syncTables', i, 'getter', 'name'],
+          message: 'Formula names can only contain alphanumeric characters and underscores.',
+        });
+      }
+    });
+  })
+  .superRefine((data, context) => {
+    ((data.formulas as any[]) || []).forEach((formula, i) => {
+      // We have to validate regular formula names here as a superRefine because formulas share
+      // a validator with sync table getters, and we need pack ids to exempt certain legacy
+      // formula getters with spaces in their names.
+      if (!validateFormulaName(formula.name)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['formulas', i, 'name'],
+          message: 'Formula names can only contain alphanumeric characters and underscores.',
         });
       }
     });
