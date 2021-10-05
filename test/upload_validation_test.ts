@@ -1716,6 +1716,16 @@ describe('Pack metadata Validation', () => {
   });
 
   describe('validateSyncTableSchema', () => {
+    function validateAndAssertFails(schema: any): PackMetadataValidationError {
+      try {
+        validateSyncTableSchema(schema);
+        assert.fail('Expected validateSyncTableSchema to fail but it succeeded');
+      } catch (err: any) {
+        assert.equal(err.message, 'Schema failed validation');
+        return err as PackMetadataValidationError;
+      }
+    }
+
     it('succeeds', () => {
       const itemSchema = makeObjectSchema({
         type: ValueType.Object,
@@ -1755,7 +1765,61 @@ describe('Pack metadata Validation', () => {
           },
         }),
       });
-      assert.throws(() => validateSyncTableSchema(arraySchema), /Schema failed validation/);
+      validateAndAssertFails(arraySchema);
+    });
+
+    it('fails on invalid identity name', async () => {
+      const itemSchema = makeObjectSchema({
+        type: ValueType.Object,
+        id: 'id',
+        primary: 'primary',
+        identity: {
+          packId: 123,
+          name: 'Identity name with spaces',
+        },
+        properties: {
+          id: {type: ValueType.Number, fromKey: 'foo', required: true},
+          primary: {type: ValueType.String},
+          date: {type: ValueType.String, codaType: ValueHintType.Date},
+        },
+      });
+      const arraySchema = makeSchema({
+        type: ValueType.Array,
+        items: itemSchema,
+      });
+      const err = validateAndAssertFails(arraySchema);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'items.identity.name',
+          message:
+            'Invalid name. Identity names can only contain alphanumeric characters, underscores, and dashes, and no spaces.',
+        },
+      ]);
+    });
+
+    it('invalid identity name but in legacy exemption list', async () => {
+      const itemSchema = makeObjectSchema({
+        type: ValueType.Object,
+        id: 'id',
+        primary: 'primary',
+        identity: {
+          packId: 1090,
+          name: 'Identity name with spaces',
+        },
+        properties: {
+          id: {type: ValueType.Number, fromKey: 'foo', required: true},
+          primary: {type: ValueType.String},
+          date: {type: ValueType.String, codaType: ValueHintType.Date},
+        },
+      });
+      const arraySchema = makeSchema({
+        type: ValueType.Array,
+        items: itemSchema,
+      });
+      const arraySchemaResult = validateSyncTableSchema(arraySchema);
+      assert.ok(arraySchemaResult);
+      const objectSchemaResult = validateSyncTableSchema(itemSchema);
+      assert.ok(objectSchemaResult);
     });
   });
 });
