@@ -75,7 +75,7 @@ Take a moment to read through the code and comments and get an understanding of 
 One of the advantages of developing locally is that you can test your Pack code without having to upload it to Coda's servers. Let's test the new `Hello` formula you just added:
 
 ```shell
-npx coda execute manifest.ts Hello "world"  
+npx coda execute manifest.ts Hello "world"
 ```
 
 If everything works correctly this should output `Hello world!`.
@@ -130,9 +130,9 @@ Now that you've established access and created the empty Pack, you're finally re
 npx coda upload manifest.ts --notes "Initial version."
 ```
 
-??? warning "Source code not avilable"
+??? warning "Source code not available"
     If you open your Pack in the online Pack Studio code editor you'll see a message like:
-    
+
     ```ts
     // Some boilerplate when failed to load source code
     ```
@@ -163,7 +163,7 @@ Now that you have your Pack up and running let's make a change to how it works.
 1. Run your code locally to ensure it works:
 
     ```shell
-    npx coda execute manifest.ts Hello "world"  
+    npx coda execute manifest.ts Hello "world"
     ```
 
     This should output `Howdy world!`.
