@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = void 0;
+exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
 const schema_1 = require("../schema");
 const types_1 = require("../types");
 const api_types_1 = require("../api_types");
@@ -37,6 +37,13 @@ const ensure_1 = require("../helpers/ensure");
 const object_utils_1 = require("../helpers/object_utils");
 const schema_6 = require("../schema");
 const z = __importStar(require("zod"));
+/**
+ * The uncompiled column format matchers will be expected to be actual regex objects,
+ * and when we compile the pack / stringify it to json, we will store the .toString()
+ * of those regex objects. This regex is used to hydrate the stringified regex back into
+ * a real RegExp object.
+ */
+exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = /^\/(.*)\/([a-z]+)?$/;
 var CustomErrorCode;
 (function (CustomErrorCode) {
     CustomErrorCode["NonMatchingDiscriminant"] = "nonMatchingDiscriminant";
@@ -529,7 +536,7 @@ const formatMetadataSchema = zodCompleteObject({
     hasNoConnection: z.boolean().optional(),
     instructions: z.string().optional(),
     placeholder: z.string().optional(),
-    matchers: z.array(z.string()),
+    matchers: z.array(z.string().regex(exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX).refine(validateFormatMatcher)),
 });
 const syncFormulaSchema = zodCompleteObject({
     schema: arrayPropertySchema.optional(),
@@ -655,6 +662,20 @@ function validateFormulas(schema) {
             }
         });
     });
+}
+function validateFormatMatcher(value) {
+    try {
+        const parsed = value.match(exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX);
+        if (!parsed) {
+            throw new Error('Column matcher not recognized as a regex');
+        }
+        const [, pattern, flags] = parsed;
+        new RegExp(pattern, flags);
+        return true;
+    }
+    catch (error) {
+        return false;
+    }
 }
 // We temporarily allow our legacy packs to provide non-versioned data until we sufficiently migrate them.
 // But all fields must be optional, because this is the top-level object we use for validation,

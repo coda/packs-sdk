@@ -50,6 +50,14 @@ import {isNil} from '../helpers/object_utils';
 import {makeSchema} from '../schema';
 import * as z from 'zod';
 
+/**
+ * The uncompiled column format matchers will be expected to be actual regex objects,
+ * and when we compile the pack / stringify it to json, we will store the .toString()
+ * of those regex objects. This regex is used to hydrate the stringified regex back into
+ * a real RegExp object.
+ */
+export const PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = /^\/(.*)\/([a-z]+)?$/;
+
 enum CustomErrorCode {
   NonMatchingDiscriminant = 'nonMatchingDiscriminant',
 }
@@ -626,7 +634,7 @@ const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   hasNoConnection: z.boolean().optional(),
   instructions: z.string().optional(),
   placeholder: z.string().optional(),
-  matchers: z.array(z.string()),
+  matchers: z.array(z.string().regex(PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX).refine(validateFormatMatcher)),
 });
 
 const syncFormulaSchema = zodCompleteObject<Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute'>>({
@@ -770,6 +778,20 @@ function validateFormulas(schema: z.ZodObject<any>) {
         }
       });
     });
+}
+
+function validateFormatMatcher(value: string): boolean {
+  try {
+    const parsed = value.match(PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX);
+    if (!parsed) {
+      throw new Error('Column matcher not recognized as a regex');
+    }
+    const [, pattern, flags] = parsed;
+    new RegExp(pattern, flags);
+    return true;
+  } catch (error: any) {
+    return false;
+  }
 }
 
 // We temporarily allow our legacy packs to provide non-versioned data until we sufficiently migrate them.

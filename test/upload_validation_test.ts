@@ -1169,7 +1169,7 @@ describe('Pack metadata Validation', () => {
               hasNoConnection: true,
               instructions: 'some instructions',
               placeholder: 'some placehoder',
-              matchers: ['some-regex'],
+              matchers: ['/some compiled regex/i'],
             },
           ],
         });
@@ -1192,7 +1192,7 @@ describe('Pack metadata Validation', () => {
               name: 'MyFormat',
               formulaNamespace: 'MyNamespace',
               formulaName: 'Unknown',
-              matchers: ['some-regex'],
+              matchers: ['/some compiled regex/i'],
             },
           ],
         });
@@ -1202,6 +1202,38 @@ describe('Pack metadata Validation', () => {
             message:
               'Could not find a formula definition for this format. Each format must reference the name of a formula defined in this pack.',
             path: 'formats[0]',
+          },
+        ]);
+      });
+
+      it('requires format matchers to be valid regexes', async () => {
+        const formula = makeStringFormula({
+          name: 'MyFormula',
+          description: 'My description',
+          examples: [],
+          parameters: [makeStringParameter('myParam', 'param description')],
+          execute: () => '',
+        });
+        const metadata = createFakePackVersionMetadata({
+          formulas: [formulaToMetadata(formula)],
+          formulaNamespace: 'MyNamespace',
+          formats: [
+            {
+              name: 'MyFormat',
+              formulaNamespace: 'MyNamespace',
+              formulaName: 'MyFormula',
+              hasNoConnection: true,
+              instructions: 'some instructions',
+              placeholder: 'some placehoder',
+              matchers: ['not a regex'],
+            },
+          ],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Invalid',
+            path: 'formats[0].matchers[0]',
           },
         ]);
       });
@@ -1222,7 +1254,7 @@ describe('Pack metadata Validation', () => {
               name: 'MyFormat',
               formulaNamespace: 'MyNamespace',
               formulaName: 'MyFormula',
-              matchers: ['some-regex'],
+              matchers: ['/some compiled regex/i'],
             },
           ],
         });
@@ -1251,7 +1283,7 @@ describe('Pack metadata Validation', () => {
               name: 'MyFormat',
               formulaNamespace: 'MyNamespace',
               formulaName: 'MyFormula',
-              matchers: ['some-regex'],
+              matchers: ['/some compiled regex/i'],
             },
           ],
         });
