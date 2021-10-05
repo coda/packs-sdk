@@ -538,7 +538,8 @@ function makeDynamicSyncTable({ name, getName: getNameDef, getSchema: getSchemaD
 }
 exports.makeDynamicSyncTable = makeDynamicSyncTable;
 function makeTranslateObjectFormula({ response, ...definition }) {
-    const { request, parameters } = definition;
+    const { request, ...rest } = definition;
+    const { parameters } = rest;
     response.schema = response.schema ? (0, schema_3.normalizeSchema)(response.schema) : undefined;
     const { onError } = response;
     const requestHandler = (0, handler_templates_2.generateRequestHandler)(request, parameters);
@@ -554,7 +555,7 @@ function makeTranslateObjectFormula({ response, ...definition }) {
         })
             .then(responseHandler);
     }
-    return Object.assign({}, definition, {
+    return Object.assign({}, rest, {
         execute,
         resultType: api_types_3.Type.object,
         schema: response.schema,
