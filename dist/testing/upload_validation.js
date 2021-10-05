@@ -320,9 +320,10 @@ const paramDefValidator = zodCompleteObject({
     defaultValue: z.unknown(),
 });
 const commonPackFormulaSchema = {
-    name: z
-        .string()
-        .refine(validateFormulaName, { message: 'Formula names can only contain alphanumeric characters and underscores.' }),
+    // It would be preferable to use validateFormulaName here, but we have to exempt legacy packs with sync tables
+    // whose getter names violate the validator, and those exemptions require the pack id, so this has to be
+    // done as a superRefine on the top-level object that also contains the pack id.
+    name: z.string(),
     description: z.string(),
     examples: z
         .array(z.object({
@@ -428,24 +429,47 @@ const Base64ObjectRegex = /^[A-Za-z0-9=_-]+$/;
 function isValidObjectId(component) {
     return Base64ObjectRegex.test(component);
 }
-const PackIdsWithBadSyncTableNames = [
-    1090, // salesforce pack has a large number of dynamic identity ids that include empty spaces.
+var ExemptionType;
+(function (ExemptionType) {
+    ExemptionType["IdentityName"] = "IdentityName";
+    ExemptionType["SyncTableGetterName"] = "SyncTableGetterName";
+})(ExemptionType || (ExemptionType = {}));
+const Exemptions = [
+    [1013, 'Pull Request', ExemptionType.IdentityName],
+    [1021, 'Doc Analytics', ExemptionType.IdentityName],
+    [1060, 'Candidate Stage', ExemptionType.IdentityName],
+    [1075, 'G Suite Directory User', ExemptionType.IdentityName],
+    [1079, 'Campaign Group', ExemptionType.IdentityName],
+    [1083, 'Merge Request', ExemptionType.IdentityName],
+    [1013, 'Sync commit history', ExemptionType.SyncTableGetterName],
+    [1013, 'Sync issues', ExemptionType.SyncTableGetterName],
+    [1013, 'Sync pull requests', ExemptionType.SyncTableGetterName],
+    [1013, 'Sync repos', ExemptionType.SyncTableGetterName],
+    [1054, 'Sync table', ExemptionType.SyncTableGetterName],
+    [1062, 'Form responses', ExemptionType.SyncTableGetterName],
+    [1062, 'Sync forms', ExemptionType.SyncTableGetterName],
+    [1078, 'Ad Creatives', ExemptionType.SyncTableGetterName],
+    [1078, 'Ad Sets', ExemptionType.SyncTableGetterName],
+    [1078, 'Custom Audiences', ExemptionType.SyncTableGetterName],
+    [1078, 'Page Posts', ExemptionType.SyncTableGetterName],
+    [1083, 'Sync commits', ExemptionType.SyncTableGetterName],
+    [1083, 'Sync issues', ExemptionType.SyncTableGetterName],
+    [1083, 'Sync merge requests', ExemptionType.SyncTableGetterName],
+    [1083, 'Sync projects', ExemptionType.SyncTableGetterName],
+    [1084, 'Ad Groups', ExemptionType.SyncTableGetterName],
+    [1093, 'Sync table', ExemptionType.SyncTableGetterName],
 ];
-// These sync tables already violate the object id constraints and should be cleaned up via upgrade.
-const BadSyncTableNames = [
-    'Pull Request',
-    'Merge Request',
-    'G Suite Directory User',
-    'Campaign Group',
-    'Candidate Stage',
-    'Person Schema',
-    'Doc Analytics',
-];
+function exemptionKey(packId, entityName) {
+    return `${packId}/${entityName}`;
+}
+const IdentityNameExemptions = new Set(Exemptions.filter(([_packId, _name, exemptionType]) => exemptionType === ExemptionType.IdentityName).map(([packId, name]) => exemptionKey(packId, name)));
+const SyncTableGetterNameExemptions = new Set(Exemptions.filter(([_packId, _name, exemptionType]) => exemptionType === ExemptionType.SyncTableGetterName).map(([packId, name]) => exemptionKey(packId, name)));
 function isValidIdentityName(packId, name) {
-    if (PackIdsWithBadSyncTableNames.includes(packId)) {
+    if (packId && IdentityNameExemptions.has(exemptionKey(packId, name))) {
         return true;
     }
-    if (BadSyncTableNames.includes(name)) {
+    if (packId === 1090) {
+        // SalesForce pack has a large number of dynamic identity ids that include empty spaces.
         return true;
     }
     return isValidObjectId(name);
@@ -472,8 +496,8 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     properties: z.record(objectPropertyUnionSchema),
 })
     .superRefine((data, context) => {
-    var _a;
-    if (!isValidIdentityName(data.id, (_a = data.identity) === null || _a === void 0 ? void 0 : _a.name)) {
+    var _a, _b;
+    if (!isValidIdentityName((_a = data.identity) === null || _a === void 0 ? void 0 : _a.packId, (_b = data.identity) === null || _b === void 0 ? void 0 : _b.name)) {
         context.addIssue({
             code: z.ZodIssueCode.custom,
             path: ['identity', 'name'],
@@ -708,6 +732,36 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
                 code: z.ZodIssueCode.custom,
                 path: ['syncTables', i, 'schema', 'properties', identityName],
                 message: "Cannot have a sync table property with the same name as the sync table's schema identity.",
+            });
+        }
+    });
+})
+    .superRefine((data, context) => {
+    (data.syncTables || []).forEach((syncTable, i) => {
+        const packId = data.id;
+        const getterName = syncTable.getter.name;
+        if (packId && SyncTableGetterNameExemptions.has(exemptionKey(packId, getterName))) {
+            return;
+        }
+        if (!validateFormulaName(getterName)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['syncTables', i, 'getter', 'name'],
+                message: 'Formula names can only contain alphanumeric characters and underscores.',
+            });
+        }
+    });
+})
+    .superRefine((data, context) => {
+    (data.formulas || []).forEach((formula, i) => {
+        // We have to validate regular formula names here as a superRefine because formulas share
+        // a validator with sync table getters, and we need pack ids to exempt certain legacy
+        // formula getters with spaces in their names.
+        if (!validateFormulaName(formula.name)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['formulas', i, 'name'],
+                message: 'Formula names can only contain alphanumeric characters and underscores.',
             });
         }
     });

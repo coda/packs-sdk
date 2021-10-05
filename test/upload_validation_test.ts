@@ -579,7 +579,7 @@ describe('Pack metadata Validation', () => {
         assert.isTrue(childSchema.required);
       });
 
-      it('identityName propagated to identiy field', async () => {
+      it('identityName propagated to identity field', async () => {
         const syncTable = makeSyncTable({
           name: 'SyncTable',
           identityName: 'SomeIdentity',
@@ -977,6 +977,73 @@ describe('Pack metadata Validation', () => {
       ]);
     });
 
+    it('invalid sync table getter name', async () => {
+      const syncTable = makeSyncTable({
+        name: 'SyncTable',
+        identityName: 'Sync',
+        schema: makeObjectSchema({
+          type: ValueType.Object,
+          primary: 'foo',
+          id: 'foo',
+          identity: {packId: 424242, name: 'foo'},
+          properties: {
+            Foo: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'Formula with Spaces',
+          description: 'A simple sync table',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+      });
+
+      const metadata = createFakePack({
+        syncTables: [syncTable],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'Formula names can only contain alphanumeric characters and underscores.',
+          path: 'syncTables[0].getter.name',
+        },
+      ]);
+    });
+
+    it('invalid sync table getter name but in legacy exemption list', async () => {
+      const syncTable = makeSyncTable({
+        name: 'SyncTable',
+        identityName: 'Sync',
+        schema: makeObjectSchema({
+          type: ValueType.Object,
+          primary: 'foo',
+          id: 'foo',
+          identity: {packId: 424242, name: 'foo'},
+          properties: {
+            Foo: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'Sync repos',
+          description: 'A simple sync table',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+      });
+
+      const metadata = createFakePack({
+        id: 1013,
+        syncTables: [syncTable],
+      });
+      await validateJson(metadata);
+    });
+
     describe('object schemas', () => {
       function metadataForFormulaWithObjectSchema(
         schemaDef: ObjectSchemaDefinition<string, string>,
@@ -1082,6 +1149,21 @@ describe('Pack metadata Validation', () => {
             path: 'formulas[0].schema.identity.name',
           },
         ]);
+      });
+
+      it('invalid identity name but in legacy exemptions', async () => {
+        const metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          identity: {
+            packId: 1013,
+            name: 'Pull Request',
+          },
+          properties: {
+            id: {type: ValueType.Number, fromKey: 'foo', required: true},
+            primary: {type: ValueType.String},
+          },
+        });
+        await validateJson(metadata);
       });
 
       it('id not among properties', async () => {
@@ -1634,6 +1716,16 @@ describe('Pack metadata Validation', () => {
   });
 
   describe('validateSyncTableSchema', () => {
+    function validateAndAssertFails(schema: any): PackMetadataValidationError {
+      try {
+        validateSyncTableSchema(schema);
+        assert.fail('Expected validateSyncTableSchema to fail but it succeeded');
+      } catch (err: any) {
+        assert.equal(err.message, 'Schema failed validation');
+        return err as PackMetadataValidationError;
+      }
+    }
+
     it('succeeds', () => {
       const itemSchema = makeObjectSchema({
         type: ValueType.Object,
@@ -1673,7 +1765,61 @@ describe('Pack metadata Validation', () => {
           },
         }),
       });
-      assert.throws(() => validateSyncTableSchema(arraySchema), /Schema failed validation/);
+      validateAndAssertFails(arraySchema);
+    });
+
+    it('fails on invalid identity name', async () => {
+      const itemSchema = makeObjectSchema({
+        type: ValueType.Object,
+        id: 'id',
+        primary: 'primary',
+        identity: {
+          packId: 123,
+          name: 'Identity name with spaces',
+        },
+        properties: {
+          id: {type: ValueType.Number, fromKey: 'foo', required: true},
+          primary: {type: ValueType.String},
+          date: {type: ValueType.String, codaType: ValueHintType.Date},
+        },
+      });
+      const arraySchema = makeSchema({
+        type: ValueType.Array,
+        items: itemSchema,
+      });
+      const err = validateAndAssertFails(arraySchema);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'items.identity.name',
+          message:
+            'Invalid name. Identity names can only contain alphanumeric characters, underscores, and dashes, and no spaces.',
+        },
+      ]);
+    });
+
+    it('invalid identity name but in legacy exemption list', async () => {
+      const itemSchema = makeObjectSchema({
+        type: ValueType.Object,
+        id: 'id',
+        primary: 'primary',
+        identity: {
+          packId: 1090,
+          name: 'Identity name with spaces',
+        },
+        properties: {
+          id: {type: ValueType.Number, fromKey: 'foo', required: true},
+          primary: {type: ValueType.String},
+          date: {type: ValueType.String, codaType: ValueHintType.Date},
+        },
+      });
+      const arraySchema = makeSchema({
+        type: ValueType.Array,
+        items: itemSchema,
+      });
+      const arraySchemaResult = validateSyncTableSchema(arraySchema);
+      assert.ok(arraySchemaResult);
+      const objectSchemaResult = validateSyncTableSchema(itemSchema);
+      assert.ok(objectSchemaResult);
     });
   });
 });
