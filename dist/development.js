@@ -12,7 +12,6 @@ var execution_3 = require("./testing/execution");
 Object.defineProperty(exports, "executeSyncFormulaFromPackDef", { enumerable: true, get: function () { return execution_3.executeSyncFormulaFromPackDef; } });
 var execution_4 = require("./testing/execution");
 Object.defineProperty(exports, "executeSyncFormulaFromPackDefSingleIteration", { enumerable: true, get: function () { return execution_4.executeSyncFormulaFromPackDefSingleIteration; } });
-// TODO(huayang): this needs to be documented in README once it's ready to be used efficiently.
 var execution_5 = require("./testing/execution");
 Object.defineProperty(exports, "executeFormulaOrSyncWithVM", { enumerable: true, get: function () { return execution_5.executeFormulaOrSyncWithVM; } });
 var mocks_1 = require("./testing/mocks");

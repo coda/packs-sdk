@@ -33,6 +33,7 @@ if (require.main === module) {
             vm: {
                 boolean: true,
                 desc: 'Execute the requested command in a virtual machine that mimics the environment Coda uses to execute Packs.',
+                default: true,
             },
             dynamicUrl: {
                 string: true,

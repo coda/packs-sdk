@@ -145,9 +145,8 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
     }
 }
 exports.executeFormulaOrSyncFromCLI = executeFormulaOrSyncFromCLI;
+// This method is used to execute a (sync) formula in testing with VM. Don't use it in lambda or calc service.
 async function executeFormulaOrSyncWithVM({ formulaName, params, bundlePath, executionContext = (0, mocks_2.newMockSyncExecutionContext)(), }) {
-    // TODO(huayang): importing manifest makes this method not usable in production, where we are not
-    // supposed to load a manifest outside of the VM context.
     const manifest = await (0, helpers_4.importManifest)(bundlePath);
     const syncFormula = (0, helpers_7.tryFindSyncFormula)(manifest, formulaName);
     const formulaSpecification = {
