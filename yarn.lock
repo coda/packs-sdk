@@ -2801,10 +2801,10 @@ mocha@^9.1.2:
     yargs-parser "20.2.4"
     yargs-unparser "2.0.0"
 
-mock-fs@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/mock-fs/-/mock-fs-5.1.0.tgz#a9aebd4e6d74a626f84b86eae8a372bd061754e8"
-  integrity sha512-wXdQ2nIk81TYIGLphUnbXl8akQpjb9ItfZefMcTxZcoe+djMkd5POU8fQdSEErxVAeT4CgDHWveYquys4H6Cmw==
+mock-fs@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/mock-fs/-/mock-fs-5.1.1.tgz#d4c95e916abf400664197079d7e399d133bb6048"
+  integrity sha512-p/8oZ3qvfKGPw+4wdVCyjDxa6wn2tP0TCf3WXC1UyUBAevezPn1TtOoxtMYVbZu/S/iExg+Ghed1busItj2CEw==
 
 module-deps@^6.2.3:
   version "6.2.3"
