@@ -55,7 +55,7 @@
     "@types/fs-extra": "^9.0.13",
     "@types/mocha": "^9.0.0",
     "@types/mock-fs": "^4.13.1",
-    "@types/node": "^16.10.1",
+    "@types/node": "^16.10.2",
     "@types/pascalcase": "^1.0.1",
     "@types/qs": "^6.9.7",
     "@types/readline-sync": "1.4.4",
