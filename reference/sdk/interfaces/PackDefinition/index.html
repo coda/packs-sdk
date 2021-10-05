@@ -1891,7 +1891,7 @@
   
     <li class="md-nav__item">
       <a href="../SyncFormulaResult/" class="md-nav__link">
-        Interface: SyncFormulaResult<ResultT\>
+        Interface: SyncFormulaResult<K, L, SchemaT\>
       </a>
     </li>
   
@@ -2110,7 +2110,7 @@
   
     <li class="md-nav__item">
       <a href="../../types/Formula/" class="md-nav__link">
-        Type alias: Formula<ParamDefsT\>
+        Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
       </a>
     </li>
   
@@ -2487,7 +2487,7 @@ This should only be used by legacy Coda pack implementations.</p>
 <p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L706">types.ts:706</a></p>
 <hr />
 <h3 id="formulas">formulas<a class="headerlink" href="#formulas" title="Permanent link">&para;</a></h3>
-<p>• <code>Optional</code> <strong>formulas</strong>: <a href="../PackFormulas/"><code>PackFormulas</code></a> | <a href="../../types/Formula/"><code>Formula</code></a>&lt;<a href="../../types/ParamDefs/"><code>ParamDefs</code></a>>[]</p>
+<p>• <code>Optional</code> <strong>formulas</strong>: <a href="../PackFormulas/"><code>PackFormulas</code></a> | (<code>BooleanPackFormula</code>&lt;<a href="../../types/ParamDefs/"><code>ParamDefs</code></a>> | <code>NumericPackFormula</code>&lt;<a href="../../types/ParamDefs/"><code>ParamDefs</code></a>> | <code>StringPackFormula</code>&lt;<a href="../../types/ParamDefs/"><code>ParamDefs</code></a>, <a href="../../enums/ValueHintType/#date"><code>Date</code></a> | <a href="../../enums/ValueHintType/#time"><code>Time</code></a> | <a href="../../enums/ValueHintType/#datetime"><code>DateTime</code></a> | <a href="../../enums/ValueHintType/#duration"><code>Duration</code></a> | <a href="../../enums/ValueHintType/#imagereference"><code>ImageReference</code></a> | <a href="../../enums/ValueHintType/#imageattachment"><code>ImageAttachment</code></a> | <a href="../../enums/ValueHintType/#url"><code>Url</code></a> | <a href="../../enums/ValueHintType/#markdown"><code>Markdown</code></a> | <a href="../../enums/ValueHintType/#html"><code>Html</code></a> | <a href="../../enums/ValueHintType/#embed"><code>Embed</code></a> | <a href="../../enums/ValueHintType/#attachment"><code>Attachment</code></a>> | <code>ObjectPackFormula</code>&lt;<a href="../../types/ParamDefs/"><code>ParamDefs</code></a>, <a href="../ArraySchema/"><code>ArraySchema</code></a>&lt;<a href="../../types/Schema/"><code>Schema</code></a>>> | <code>ObjectPackFormula</code>&lt;<a href="../../types/ParamDefs/"><code>ParamDefs</code></a>, <a href="../../types/Schema/"><code>Schema</code></a>>)[]</p>
 <p>Definitions of this pack's formulas. See <a href="../../types/Formula/">Formula</a>.</p>
 <p>Note that button actions are also defind here. Buttons are simply formulas
 with <code>isAction: true</code>.</p>

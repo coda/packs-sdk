@@ -1779,7 +1779,7 @@
   
     <li class="md-nav__item">
       <a href="../SyncFormulaResult/" class="md-nav__link">
-        Interface: SyncFormulaResult<ResultT\>
+        Interface: SyncFormulaResult<K, L, SchemaT\>
       </a>
     </li>
   
@@ -1998,7 +1998,7 @@
   
     <li class="md-nav__item">
       <a href="../../types/Formula/" class="md-nav__link">
-        Type alias: Formula<ParamDefsT\>
+        Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
       </a>
     </li>
   
@@ -2364,7 +2364,7 @@ of values they should put in columns using this format.</p>
 <p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L587">types.ts:587</a></p>
 <hr />
 <h3 id="matchers">matchers<a class="headerlink" href="#matchers" title="Permanent link">&para;</a></h3>
-<p>• <code>Optional</code> <strong>matchers</strong>: <code>string</code>[]</p>
+<p>• <code>Optional</code> <strong>matchers</strong>: (<code>string</code> | <code>RegExp</code>)[]</p>
 <p>A list of regular expressions that match URLs that the formula implementing this format
 is capable of handling. As described in <a href="./">Format</a>, this is a discovery mechanism.</p>
 <h4 id="defined-in_4">Defined in<a class="headerlink" href="#defined-in_4" title="Permanent link">&para;</a></h4>

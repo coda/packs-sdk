@@ -1694,7 +1694,7 @@
   
     <li class="md-nav__item">
       <a href="../../interfaces/SyncFormulaResult/" class="md-nav__link">
-        Interface: SyncFormulaResult<ResultT\>
+        Interface: SyncFormulaResult<K, L, SchemaT\>
       </a>
     </li>
   
@@ -1913,7 +1913,7 @@
   
     <li class="md-nav__item">
       <a href="../../types/Formula/" class="md-nav__link">
-        Type alias: Formula<ParamDefsT\>
+        Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
       </a>
     </li>
   
@@ -2231,7 +2231,7 @@
                 
                 
                 <h1 id="function-makeobjectschema">Function: makeObjectSchema<a class="headerlink" href="#function-makeobjectschema" title="Permanent link">&para;</a></h1>
-<p>▸ <strong>makeObjectSchema</strong>&lt;<code>K</code>, <code>L</code>, <code>T</code>>(<code>schemaDef</code>): <a href="../../interfaces/ObjectSchema/"><code>ObjectSchema</code></a>&lt;<code>K</code>, <code>L</code>></p>
+<p>▸ <strong>makeObjectSchema</strong>&lt;<code>K</code>, <code>L</code>, <code>T</code>>(<code>schemaDef</code>): <code>T</code> &amp; { <code>identity?</code>: <a href="../../interfaces/Identity/"><code>Identity</code></a>  }</p>
 <h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -2271,9 +2271,9 @@
 </tbody>
 </table>
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h4>
-<p><a href="../../interfaces/ObjectSchema/"><code>ObjectSchema</code></a>&lt;<code>K</code>, <code>L</code>></p>
+<p><code>T</code> &amp; { <code>identity?</code>: <a href="../../interfaces/Identity/"><code>Identity</code></a>  }</p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L302">schema.ts:302</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L363">schema.ts:363</a></p>
                 
               
               

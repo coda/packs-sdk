@@ -1694,7 +1694,7 @@
   
     <li class="md-nav__item">
       <a href="../../interfaces/SyncFormulaResult/" class="md-nav__link">
-        Interface: SyncFormulaResult<ResultT\>
+        Interface: SyncFormulaResult<K, L, SchemaT\>
       </a>
     </li>
   
@@ -1913,7 +1913,7 @@
   
     <li class="md-nav__item">
       <a href="../../types/Formula/" class="md-nav__link">
-        Type alias: Formula<ParamDefsT\>
+        Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
       </a>
     </li>
   
@@ -2231,7 +2231,7 @@
                 
                 
                 <h1 id="function-makeformula">Function: makeFormula<a class="headerlink" href="#function-makeformula" title="Permanent link">&para;</a></h1>
-<p>▸ <strong>makeFormula</strong>&lt;<code>ParamDefsT</code>>(<code>fullDefinition</code>): <a href="../../types/Formula/"><code>Formula</code></a>&lt;<code>ParamDefsT</code>></p>
+<p>▸ <strong>makeFormula</strong>&lt;<code>ParamDefsT</code>, <code>ResultT</code>, <code>SchemaT</code>>(<code>fullDefinition</code>): <a href="../../types/Formula/"><code>Formula</code></a>&lt;<code>ParamDefsT</code>, <code>ResultT</code>, <code>SchemaT</code>></p>
 <p>Creates a formula definition.</p>
 <p>You must indicate the kind of value that this formula returns (string, number, boolean, array, or object)
 using the <code>resultType</code> field.</p>
@@ -2283,6 +2283,14 @@ created using <a href="../makeObjectSchema/">makeObjectSchema</a> if the element
 <td align="left"><code>ParamDefsT</code></td>
 <td align="left">extends <a href="../../types/ParamDefs/"><code>ParamDefs</code></a></td>
 </tr>
+<tr>
+<td align="left"><code>ResultT</code></td>
+<td align="left">extends <code>FormulaResultValueType</code></td>
+</tr>
+<tr>
+<td align="left"><code>SchemaT</code></td>
+<td align="left">extends <a href="../../types/Schema/"><code>Schema</code></a><a href="../../types/Schema/"><code>Schema</code></a></td>
+</tr>
 </tbody>
 </table>
 <h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h4>
@@ -2296,14 +2304,14 @@ created using <a href="../makeObjectSchema/">makeObjectSchema</a> if the element
 <tbody>
 <tr>
 <td align="left"><code>fullDefinition</code></td>
-<td align="left"><code>FormulaDefinitionV2</code>&lt;<code>ParamDefsT</code>></td>
+<td align="left"><code>FormulaDefinitionV2</code>&lt;<code>ParamDefsT</code>, <code>ResultT</code>, <code>SchemaT</code>></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h4>
-<p><a href="../../types/Formula/"><code>Formula</code></a>&lt;<code>ParamDefsT</code>></p>
+<p><a href="../../types/Formula/"><code>Formula</code></a>&lt;<code>ParamDefsT</code>, <code>ResultT</code>, <code>SchemaT</code>></p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L543">api.ts:543</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L565">api.ts:565</a></p>
                 
               
               

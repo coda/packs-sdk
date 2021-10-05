@@ -1882,7 +1882,7 @@
   
     <li class="md-nav__item">
       <a href="../../interfaces/SyncFormulaResult/" class="md-nav__link">
-        Interface: SyncFormulaResult<ResultT\>
+        Interface: SyncFormulaResult<K, L, SchemaT\>
       </a>
     </li>
   
@@ -2101,7 +2101,7 @@
   
     <li class="md-nav__item">
       <a href="../../types/Formula/" class="md-nav__link">
-        Type alias: Formula<ParamDefsT\>
+        Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
       </a>
     </li>
   
@@ -2442,61 +2442,61 @@
 </tbody>
 </table>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L53">builder.ts:53</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L56">builder.ts:56</a></p>
 <h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h2>
 <h3 id="defaultauthentication">defaultAuthentication<a class="headerlink" href="#defaultauthentication" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>defaultAuthentication</strong>: <a href="../../types/Authentication/"><code>Authentication</code></a></p>
 <h4 id="implementation-of">Implementation of<a class="headerlink" href="#implementation-of" title="Permanent link">&para;</a></h4>
 <p>BasicPackDefinition.defaultAuthentication</p>
 <h4 id="defined-in_1">Defined in<a class="headerlink" href="#defined-in_1" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L45">builder.ts:45</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L48">builder.ts:48</a></p>
 <hr />
 <h3 id="formats">formats<a class="headerlink" href="#formats" title="Permanent link">&para;</a></h3>
 <p>• <strong>formats</strong>: <a href="../../interfaces/Format/"><code>Format</code></a>[]</p>
 <h4 id="implementation-of_1">Implementation of<a class="headerlink" href="#implementation-of_1" title="Permanent link">&para;</a></h4>
 <p>BasicPackDefinition.formats</p>
 <h4 id="defined-in_2">Defined in<a class="headerlink" href="#defined-in_2" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L41">builder.ts:41</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L44">builder.ts:44</a></p>
 <hr />
 <h3 id="formulanamespace">formulaNamespace<a class="headerlink" href="#formulanamespace" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>formulaNamespace</strong>: <code>string</code></p>
 <h4 id="implementation-of_2">Implementation of<a class="headerlink" href="#implementation-of_2" title="Permanent link">&para;</a></h4>
 <p>BasicPackDefinition.formulaNamespace</p>
 <h4 id="defined-in_3">Defined in<a class="headerlink" href="#defined-in_3" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L49">builder.ts:49</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L52">builder.ts:52</a></p>
 <hr />
 <h3 id="formulas">formulas<a class="headerlink" href="#formulas" title="Permanent link">&para;</a></h3>
-<p>• <strong>formulas</strong>: <a href="../../types/Formula/"><code>Formula</code></a>&lt;<a href="../../types/ParamDefs/"><code>ParamDefs</code></a>>[]</p>
+<p>• <strong>formulas</strong>: (<code>BooleanPackFormula</code>&lt;<a href="../../types/ParamDefs/"><code>ParamDefs</code></a>> | <code>NumericPackFormula</code>&lt;<a href="../../types/ParamDefs/"><code>ParamDefs</code></a>> | <code>StringPackFormula</code>&lt;<a href="../../types/ParamDefs/"><code>ParamDefs</code></a>, <a href="../../enums/ValueHintType/#date"><code>Date</code></a> | <a href="../../enums/ValueHintType/#time"><code>Time</code></a> | <a href="../../enums/ValueHintType/#datetime"><code>DateTime</code></a> | <a href="../../enums/ValueHintType/#duration"><code>Duration</code></a> | <a href="../../enums/ValueHintType/#imagereference"><code>ImageReference</code></a> | <a href="../../enums/ValueHintType/#imageattachment"><code>ImageAttachment</code></a> | <a href="../../enums/ValueHintType/#url"><code>Url</code></a> | <a href="../../enums/ValueHintType/#markdown"><code>Markdown</code></a> | <a href="../../enums/ValueHintType/#html"><code>Html</code></a> | <a href="../../enums/ValueHintType/#embed"><code>Embed</code></a> | <a href="../../enums/ValueHintType/#attachment"><code>Attachment</code></a>> | <code>ObjectPackFormula</code>&lt;<a href="../../types/ParamDefs/"><code>ParamDefs</code></a>, <a href="../../interfaces/ArraySchema/"><code>ArraySchema</code></a>&lt;<a href="../../types/Schema/"><code>Schema</code></a>>> | <code>ObjectPackFormula</code>&lt;<a href="../../types/ParamDefs/"><code>ParamDefs</code></a>, <a href="../../types/Schema/"><code>Schema</code></a>>)[]</p>
 <h4 id="implementation-of_3">Implementation of<a class="headerlink" href="#implementation-of_3" title="Permanent link">&para;</a></h4>
 <p>BasicPackDefinition.formulas</p>
 <h4 id="defined-in_4">Defined in<a class="headerlink" href="#defined-in_4" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L40">builder.ts:40</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L43">builder.ts:43</a></p>
 <hr />
 <h3 id="networkdomains">networkDomains<a class="headerlink" href="#networkdomains" title="Permanent link">&para;</a></h3>
 <p>• <strong>networkDomains</strong>: <code>string</code>[]</p>
 <h4 id="implementation-of_4">Implementation of<a class="headerlink" href="#implementation-of_4" title="Permanent link">&para;</a></h4>
 <p>BasicPackDefinition.networkDomains</p>
 <h4 id="defined-in_5">Defined in<a class="headerlink" href="#defined-in_5" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L43">builder.ts:43</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L46">builder.ts:46</a></p>
 <hr />
 <h3 id="synctables">syncTables<a class="headerlink" href="#synctables" title="Permanent link">&para;</a></h3>
 <p>• <strong>syncTables</strong>: <code>SyncTable</code>[]</p>
 <h4 id="implementation-of_5">Implementation of<a class="headerlink" href="#implementation-of_5" title="Permanent link">&para;</a></h4>
 <p>BasicPackDefinition.syncTables</p>
 <h4 id="defined-in_6">Defined in<a class="headerlink" href="#defined-in_6" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L42">builder.ts:42</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L45">builder.ts:45</a></p>
 <hr />
 <h3 id="systemconnectionauthentication">systemConnectionAuthentication<a class="headerlink" href="#systemconnectionauthentication" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>systemConnectionAuthentication</strong>: <a href="../../types/SystemAuthentication/"><code>SystemAuthentication</code></a></p>
 <h4 id="implementation-of_6">Implementation of<a class="headerlink" href="#implementation-of_6" title="Permanent link">&para;</a></h4>
 <p>BasicPackDefinition.systemConnectionAuthentication</p>
 <h4 id="defined-in_7">Defined in<a class="headerlink" href="#defined-in_7" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L46">builder.ts:46</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L49">builder.ts:49</a></p>
 <hr />
 <h3 id="version">version<a class="headerlink" href="#version" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>version</strong>: <code>string</code></p>
 <h4 id="defined-in_8">Defined in<a class="headerlink" href="#defined-in_8" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L48">builder.ts:48</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L51">builder.ts:51</a></p>
 <h2 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h2>
 <h3 id="addcolumnformat">addColumnFormat<a class="headerlink" href="#addcolumnformat" title="Permanent link">&para;</a></h3>
 <p>▸ <strong>addColumnFormat</strong>(<code>format</code>): <a href="./"><code>PackDefinitionBuilder</code></a></p>
@@ -2526,10 +2526,10 @@
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h4>
 <p><a href="./"><code>PackDefinitionBuilder</code></a></p>
 <h4 id="defined-in_9">Defined in<a class="headerlink" href="#defined-in_9" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L190">builder.ts:190</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L200">builder.ts:200</a></p>
 <hr />
 <h3 id="adddynamicsynctable">addDynamicSyncTable<a class="headerlink" href="#adddynamicsynctable" title="Permanent link">&para;</a></h3>
-<p>▸ <strong>addDynamicSyncTable</strong>&lt;<code>ParamDefsT</code>>(<code>definition</code>): <a href="./"><code>PackDefinitionBuilder</code></a></p>
+<p>▸ <strong>addDynamicSyncTable</strong>&lt;<code>K</code>, <code>L</code>, <code>ParamDefsT</code>, <code>SchemaT</code>>(<code>definition</code>): <a href="./"><code>PackDefinitionBuilder</code></a></p>
 <p>Adds a dynamic sync table definition to this pack.</p>
 <p>In the web editor, the <code>/DynamicSyncTable</code> shortcut will insert a snippet of a skeleton sync table.</p>
 <p><strong><code>example</code></strong>
@@ -2556,8 +2556,20 @@
 </thead>
 <tbody>
 <tr>
+<td align="left"><code>K</code></td>
+<td align="left">extends <code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>L</code></td>
+<td align="left">extends <code>string</code></td>
+</tr>
+<tr>
 <td align="left"><code>ParamDefsT</code></td>
 <td align="left">extends <a href="../../types/ParamDefs/"><code>ParamDefs</code></a></td>
+</tr>
+<tr>
+<td align="left"><code>SchemaT</code></td>
+<td align="left">extends <code>ObjectSchemaDefinition</code>&lt;<code>K</code>, <code>L</code>, <code>SchemaT</code>></td>
 </tr>
 </tbody>
 </table>
@@ -2572,17 +2584,17 @@
 <tbody>
 <tr>
 <td align="left"><code>definition</code></td>
-<td align="left"><code>DynamicSyncTableOptions</code>&lt;<code>ParamDefsT</code>></td>
+<td align="left"><code>DynamicSyncTableOptions</code>&lt;<code>K</code>, <code>L</code>, <code>ParamDefsT</code>, <code>SchemaT</code>></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">&para;</a></h4>
 <p><a href="./"><code>PackDefinitionBuilder</code></a></p>
 <h4 id="defined-in_10">Defined in<a class="headerlink" href="#defined-in_10" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L168">builder.ts:168</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L173">builder.ts:173</a></p>
 <hr />
 <h3 id="addformula">addFormula<a class="headerlink" href="#addformula" title="Permanent link">&para;</a></h3>
-<p>▸ <strong>addFormula</strong>&lt;<code>ParamDefsT</code>>(<code>definition</code>): <a href="./"><code>PackDefinitionBuilder</code></a></p>
+<p>▸ <strong>addFormula</strong>&lt;<code>ParamDefsT</code>, <code>ResultT</code>, <code>SchemaT</code>>(<code>definition</code>): <a href="./"><code>PackDefinitionBuilder</code></a></p>
 <p>Adds a formula definition to this pack.</p>
 <p>In the web editor, the <code>/Formula</code> shortcut will insert a snippet of a skeleton formula.</p>
 <p><strong><code>example</code></strong>
@@ -2615,6 +2627,14 @@
 <td align="left"><code>ParamDefsT</code></td>
 <td align="left">extends <a href="../../types/ParamDefs/"><code>ParamDefs</code></a></td>
 </tr>
+<tr>
+<td align="left"><code>ResultT</code></td>
+<td align="left">extends <code>FormulaResultValueType</code></td>
+</tr>
+<tr>
+<td align="left"><code>SchemaT</code></td>
+<td align="left">extends <a href="../../types/Schema/"><code>Schema</code></a></td>
+</tr>
 </tbody>
 </table>
 <h4 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">&para;</a></h4>
@@ -2628,14 +2648,14 @@
 <tbody>
 <tr>
 <td align="left"><code>definition</code></td>
-<td align="left"><code>FormulaDefinitionV2</code>&lt;<code>ParamDefsT</code>></td>
+<td align="left"><code>FormulaDefinitionV2</code>&lt;<code>ParamDefsT</code>, <code>ResultT</code>, <code>SchemaT</code>></td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">&para;</a></h4>
 <p><a href="./"><code>PackDefinitionBuilder</code></a></p>
 <h4 id="defined-in_11">Defined in<a class="headerlink" href="#defined-in_11" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L98">builder.ts:98</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L101">builder.ts:101</a></p>
 <hr />
 <h3 id="addnetworkdomain">addNetworkDomain<a class="headerlink" href="#addnetworkdomain" title="Permanent link">&para;</a></h3>
 <p>▸ <strong>addNetworkDomain</strong>(...<code>domain</code>): <a href="./"><code>PackDefinitionBuilder</code></a></p>
@@ -2668,7 +2688,7 @@ to connect to multiple domains, contact Coda Support for approval.</p>
 <h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">&para;</a></h4>
 <p><a href="./"><code>PackDefinitionBuilder</code></a></p>
 <h4 id="defined-in_12">Defined in<a class="headerlink" href="#defined-in_12" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L285">builder.ts:285</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L295">builder.ts:295</a></p>
 <hr />
 <h3 id="addsynctable">addSyncTable<a class="headerlink" href="#addsynctable" title="Permanent link">&para;</a></h3>
 <p>▸ <strong>addSyncTable</strong>&lt;<code>K</code>, <code>L</code>, <code>ParamDefsT</code>, <code>SchemaT</code>>(<code>__namedParameters</code>): <a href="./"><code>PackDefinitionBuilder</code></a></p>
@@ -2731,7 +2751,7 @@ to connect to multiple domains, contact Coda Support for approval.</p>
 <h4 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">&para;</a></h4>
 <p><a href="./"><code>PackDefinitionBuilder</code></a></p>
 <h4 id="defined-in_13">Defined in<a class="headerlink" href="#defined-in_13" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L126">builder.ts:126</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L131">builder.ts:131</a></p>
 <hr />
 <h3 id="setsystemauthentication">setSystemAuthentication<a class="headerlink" href="#setsystemauthentication" title="Permanent link">&para;</a></h3>
 <p>▸ <strong>setSystemAuthentication</strong>(<code>systemAuthentication</code>): <a href="./"><code>PackDefinitionBuilder</code></a></p>
@@ -2764,7 +2784,7 @@ authentication definition.</p>
 <h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">&para;</a></h4>
 <p><a href="./"><code>PackDefinitionBuilder</code></a></p>
 <h4 id="defined-in_14">Defined in<a class="headerlink" href="#defined-in_14" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L255">builder.ts:255</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L265">builder.ts:265</a></p>
 <hr />
 <h3 id="setuserauthentication">setUserAuthentication<a class="headerlink" href="#setuserauthentication" title="Permanent link">&para;</a></h3>
 <p>▸ <strong>setUserAuthentication</strong>(<code>authDef</code>): <a href="./"><code>PackDefinitionBuilder</code></a></p>
@@ -2800,7 +2820,7 @@ this method.</p>
 <h4 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">&para;</a></h4>
 <p><a href="./"><code>PackDefinitionBuilder</code></a></p>
 <h4 id="defined-in_15">Defined in<a class="headerlink" href="#defined-in_15" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L216">builder.ts:216</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L226">builder.ts:226</a></p>
 <hr />
 <h3 id="setversion">setVersion<a class="headerlink" href="#setversion" title="Permanent link">&para;</a></h3>
 <p>▸ <strong>setVersion</strong>(<code>version</code>): <a href="./"><code>PackDefinitionBuilder</code></a></p>
@@ -2830,7 +2850,7 @@ each time you build a version.</p>
 <h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">&para;</a></h4>
 <p><a href="./"><code>PackDefinitionBuilder</code></a></p>
 <h4 id="defined-in_16">Defined in<a class="headerlink" href="#defined-in_16" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L303">builder.ts:303</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L313">builder.ts:313</a></p>
                 
               
               

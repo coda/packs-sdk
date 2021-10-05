@@ -1789,7 +1789,7 @@
   
     <li class="md-nav__item">
       <a href="../../reference/sdk/interfaces/SyncFormulaResult/" class="md-nav__link">
-        Interface: SyncFormulaResult<ResultT\>
+        Interface: SyncFormulaResult<K, L, SchemaT\>
       </a>
     </li>
   
@@ -2008,7 +2008,7 @@
   
     <li class="md-nav__item">
       <a href="../../reference/sdk/types/Formula/" class="md-nav__link">
-        Type alias: Formula<ParamDefsT\>
+        Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
       </a>
     </li>
   
@@ -2372,41 +2372,44 @@
 <p>Now that you've got the basic structure of a Pack it's time to add some code. In this tutorial you'll be creating a simple "Hello World" Pack with a single formula.</p>
 <p>Edit <code>formulas.ts</code> to include the definition of a new "Hello" formula:</p>
 <div class="tabbed-set" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">formulas.ts</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="kr">type</span> <span class="p">{</span><span class="nx">Format</span><span class="p">}</span> <span class="kr">from</span> <span class="s1">&#39;@codahq/packs-sdk&#39;</span><span class="p">;</span>
-<span class="k">import</span> <span class="kr">type</span> <span class="p">{</span><span class="nx">Formula</span><span class="p">}</span> <span class="kr">from</span> <span class="s1">&#39;@codahq/packs-sdk&#39;</span><span class="p">;</span>
-<span class="k">import</span> <span class="kr">type</span> <span class="p">{</span><span class="nx">GenericSyncTable</span><span class="p">}</span> <span class="kr">from</span> <span class="s1">&#39;@codahq/packs-sdk&#39;</span><span class="p">;</span>
-<span class="hll"><span class="k">import</span> <span class="p">{</span><span class="nx">ParameterType</span><span class="p">}</span> <span class="kr">from</span> <span class="s1">&#39;@codahq/packs-sdk&#39;</span><span class="p">;</span>
-</span><span class="hll"><span class="k">import</span> <span class="p">{</span><span class="nx">ValueType</span><span class="p">}</span> <span class="kr">from</span> <span class="s1">&#39;@codahq/packs-sdk&#39;</span><span class="p">;</span>
-</span><span class="hll"><span class="k">import</span> <span class="p">{</span><span class="nx">makeFormula</span><span class="p">}</span> <span class="kr">from</span> <span class="s1">&#39;@codahq/packs-sdk&#39;</span><span class="p">;</span>
-</span><span class="hll"><span class="k">import</span> <span class="p">{</span><span class="nx">makeParameter</span><span class="p">}</span> <span class="kr">from</span> <span class="s1">&#39;@codahq/packs-sdk&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="kr">type</span> <span class="p">{</span><span class="nx">Format</span><span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="kr">type</span> <span class="p">{</span><span class="nx">Formula</span><span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="kr">type</span> <span class="p">{</span><span class="nx">GenericSyncTable</span><span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
+<span class="hll"><span class="k">import</span> <span class="p">{</span><span class="nx">ParameterType</span><span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
+</span><span class="hll"><span class="k">import</span> <span class="p">{</span><span class="nx">ValueType</span><span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
+</span><span class="hll"><span class="k">import</span> <span class="p">{</span><span class="nx">makeFormula</span><span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
+</span><span class="hll"><span class="k">import</span> <span class="p">{</span><span class="nx">makeParameter</span><span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
 </span>
 <span class="k">export</span> <span class="kd">const</span> <span class="nx">formulas</span>: <span class="kt">Formula</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[</span>
 <span class="hll">  <span class="nx">makeFormula</span><span class="p">({</span>
 </span><span class="hll">    <span class="c1">// This is the name that will be called in the formula builder.</span>
 </span><span class="hll">    <span class="c1">// Remember, your formula name cannot have spaces in it.</span>
-</span><span class="hll">    <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Hello&#39;</span><span class="p">,</span>
-</span><span class="hll">    <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;A Hello World example.&#39;</span><span class="p">,</span>
+</span><span class="hll">    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Hello&quot;</span><span class="p">,</span>
+</span><span class="hll">    <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;A Hello World example.&quot;</span><span class="p">,</span>
 </span><span class="hll">
 </span><span class="hll">    <span class="c1">// If your formula requires one or more inputs, you’ll define them here.</span>
 </span><span class="hll">    <span class="c1">// Here, we&#39;re creating a string input called “name”.</span>
 </span><span class="hll">    <span class="nx">parameters</span><span class="o">:</span> <span class="p">[</span>
 </span><span class="hll">      <span class="nx">makeParameter</span><span class="p">({</span>
 </span><span class="hll">        <span class="kr">type</span><span class="o">:</span> <span class="nx">ParameterType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
-</span><span class="hll">        <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span>
-</span><span class="hll">        <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;The name you\&#39;d like to say hello to.&#39;</span>
+</span><span class="hll">        <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+</span><span class="hll">        <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The name you\&quot;d like to say hello to.&quot;</span>
 </span><span class="hll">      <span class="p">}),</span>
 </span><span class="hll">    <span class="p">],</span>
 </span><span class="hll">
-</span><span class="hll">    <span class="c1">// Everything inside this execute statement will happen anytime your Coda function is called in a doc.</span>
-</span><span class="hll">    <span class="c1">// An array of all user inputs is always the 1st parameter.</span>
-</span><span class="hll">    <span class="nx">execute</span>: <span class="kt">function</span> <span class="p">([</span><span class="nx">name</span><span class="p">])</span> <span class="p">{</span>
-</span><span class="hll">      <span class="k">return</span> <span class="s1">&#39;Hello &#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39;!&#39;</span><span class="p">;</span>
-</span><span class="hll">    <span class="p">},</span>
 </span><span class="hll">
-</span><span class="hll">    <span class="c1">// The resultType defines what will be returned in your Coda doc. Here, we&#39;re returning a simple text string.</span>
+</span><span class="hll">    <span class="c1">// The resultType defines what will be returned in your Coda doc. Here,</span>
+</span><span class="hll">    <span class="c1">// we&#39;re returning a simple text string.</span>
 </span><span class="hll">    <span class="nx">resultType</span>: <span class="kt">ValueType.String</span><span class="p">,</span>
-</span><span class="hll">  <span class="p">}),</span>
-</span><span class="p">];</span>
+</span><span class="hll">
+</span><span class="hll">    <span class="c1">// Everything inside this execute statement will happen anytime your Coda</span>
+</span><span class="hll">    <span class="c1">// formula is called in a doc. An array of all user inputs is always the 1st</span>
+</span><span class="hll">    <span class="c1">// parameter.</span>
+</span><span class="hll">    <span class="nx">execute</span>: <span class="kt">function</span> <span class="p">([</span><span class="nx">name</span><span class="p">])</span> <span class="p">{</span>
+</span>      <span class="k">return</span> <span class="s2">&quot;Hello &quot;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot;!&quot;</span><span class="p">;</span>
+    <span class="p">},</span>
+  <span class="p">}),</span>
+<span class="p">];</span>
 
 <span class="k">export</span> <span class="kd">const</span> <span class="nx">syncTables</span>: <span class="kt">GenericSyncTable</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[</span>
   <span class="c1">// Sync table definitions go here, e.g.</span>
@@ -2415,7 +2418,7 @@
 
 <span class="k">export</span> <span class="kd">const</span> <span class="nx">formats</span>: <span class="kt">Format</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[</span>
   <span class="c1">// Column formats go here, e.g.</span>
-  <span class="c1">// {name: &#39;MyFormat&#39;, formulaNamespace: &#39;MyPack&#39;, formulaName: &#39;MyFormula&#39;}</span>
+  <span class="c1">// {name: &quot;MyFormat&quot;, formulaNamespace: &quot;MyPack&quot;, formulaName: &quot;MyFormula&quot;}</span>
 <span class="p">];</span>
 </code></pre></div>
 </div>
@@ -2423,7 +2426,7 @@
 <p>Take a moment to read through the code and comments and get an understanding of how a formula is structured.</p>
 <h2 id="test-the-pack-locally">Test the Pack locally<a class="headerlink" href="#test-the-pack-locally" title="Permanent link">&para;</a></h2>
 <p>One of the advantages of developing locally is that you can test your Pack code without having to upload it to Coda's servers. Let's test the new <code>Hello</code> formula you just added:</p>
-<div class="highlight"><pre><span></span><code>npx coda execute manifest.ts Hello <span class="s2">&quot;world&quot;</span>  
+<div class="highlight"><pre><span></span><code>npx coda execute manifest.ts Hello <span class="s2">&quot;world&quot;</span>
 </code></pre></div>
 <p>If everything works correctly this should output <code>Hello world!</code>.</p>
 <h2 id="upload-the-pack">Upload the Pack<a class="headerlink" href="#upload-the-pack" title="Permanent link">&para;</a></h2>
@@ -2464,7 +2467,7 @@
 <p>Now that you've established access and created the empty Pack, you're finally ready to upload your code.</p>
 <div class="highlight"><pre><span></span><code>npx coda upload manifest.ts --notes <span class="s2">&quot;Initial version.&quot;</span>
 </code></pre></div>
-<details class="warning"><summary>Source code not avilable</summary><p>If you open your Pack in the online Pack Studio code editor you'll see a message like:</p>
+<details class="warning"><summary>Source code not available</summary><p>If you open your Pack in the online Pack Studio code editor you'll see a message like:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Some boilerplate when failed to load source code</span>
 </code></pre></div>
 <p>This is expected, since the CLI will only upload the built Pack and not the source code.</p>
@@ -2512,7 +2515,7 @@
 </li>
 <li>
 <p>Run your code locally to ensure it works:</p>
-<div class="highlight"><pre><span></span><code>npx coda execute manifest.ts Hello <span class="s2">&quot;world&quot;</span>  
+<div class="highlight"><pre><span></span><code>npx coda execute manifest.ts Hello <span class="s2">&quot;world&quot;</span>
 </code></pre></div>
 <p>This should output <code>Howdy world!</code>.</p>
 </li>

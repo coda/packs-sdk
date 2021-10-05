@@ -1682,7 +1682,7 @@
   
     <li class="md-nav__item">
       <a href="../../interfaces/SyncFormulaResult/" class="md-nav__link">
-        Interface: SyncFormulaResult<ResultT\>
+        Interface: SyncFormulaResult<K, L, SchemaT\>
       </a>
     </li>
   
@@ -1903,7 +1903,7 @@
   
     <li class="md-nav__item">
       <a href="../Formula/" class="md-nav__link">
-        Type alias: Formula<ParamDefsT\>
+        Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
       </a>
     </li>
   
@@ -2231,7 +2231,7 @@
                 
                 
                 <h1 id="type-alias-schematypet">Type alias: SchemaType&lt;T><a class="headerlink" href="#type-alias-schematypet" title="Permanent link">&para;</a></h1>
-<p>Ƭ <strong>SchemaType</strong>&lt;<code>T</code>>: <code>T</code> extends <a href="../../interfaces/BooleanSchema/"><code>BooleanSchema</code></a> ? <code>boolean</code> : <code>T</code> extends <a href="../../interfaces/NumberSchema/"><code>NumberSchema</code></a> ? <code>number</code> : <code>T</code> extends <a href="../../interfaces/StringSchema/"><code>StringSchema</code></a> ? <code>StringHintTypeToSchemaType</code>&lt;<code>T</code>[<code>"codaType"</code>]> : <code>T</code> extends <a href="../../interfaces/ArraySchema/"><code>ArraySchema</code></a> ? <a href="./"><code>SchemaType</code></a>&lt;<code>T</code>[<code>"items"</code>]>[] : <code>T</code> extends <a href="../GenericObjectSchema/"><code>GenericObjectSchema</code></a> ? <code>PickOptional</code>&lt;{ [K in keyof T["properties"]]: SchemaType&lt;T["properties"][K]>}, <code>$Values</code>&lt;{ [K in keyof T["properties"]]: T["properties"][K] extends object ? K : never}>> : <code>never</code></p>
+<p>Ƭ <strong>SchemaType</strong>&lt;<code>T</code>>: <code>T</code> extends <a href="../../interfaces/BooleanSchema/"><code>BooleanSchema</code></a> ? <code>boolean</code> : <code>T</code> extends <a href="../../interfaces/NumberSchema/"><code>NumberSchema</code></a> ? <code>number</code> : <code>T</code> extends <a href="../../interfaces/StringSchema/"><code>StringSchema</code></a> ? <code>StringHintTypeToSchemaType</code>&lt;<code>T</code>[<code>"codaType"</code>]> : <code>T</code> extends <a href="../../interfaces/ArraySchema/"><code>ArraySchema</code></a> ? <a href="./"><code>SchemaType</code></a>&lt;<code>T</code>[<code>"items"</code>]>[] : <code>T</code> extends <a href="../GenericObjectSchema/"><code>GenericObjectSchema</code></a> ? <code>ObjectSchemaType</code>&lt;<code>T</code>> : <code>never</code></p>
 <h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -2248,7 +2248,7 @@
 </tbody>
 </table>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L249">schema.ts:249</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L313">schema.ts:313</a></p>
                 
               
               

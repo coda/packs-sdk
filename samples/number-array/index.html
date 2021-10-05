@@ -1690,7 +1690,7 @@
   
     <li class="md-nav__item">
       <a href="../../reference/sdk/interfaces/SyncFormulaResult/" class="md-nav__link">
-        Interface: SyncFormulaResult<ResultT\>
+        Interface: SyncFormulaResult<K, L, SchemaT\>
       </a>
     </li>
   
@@ -1909,7 +1909,7 @@
   
     <li class="md-nav__item">
       <a href="../../reference/sdk/types/Formula/" class="md-nav__link">
-        Type alias: Formula<ParamDefsT\>
+        Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
       </a>
     </li>
   
@@ -2230,7 +2230,7 @@
 <p>This is an example which creates two formulas that each take in an array of numbers and return the greatest common denominator and least common multiple.</p>
 <div class="tabbed-set" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">Number Array</label><div class="tabbed-content">
 <div class="highlight"><pre><span></span><code><span class="c1">// This import statement gives you access to all parts of the Coda Packs SDK.</span>
-<span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s1">&#39;@codahq/packs-sdk&#39;</span><span class="p">;</span>
+<span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
 
 <span class="c1">// This import statement gives you access to all parts of the Coda Packs SDK.</span>
 <span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
@@ -2238,11 +2238,12 @@
 <span class="c1">// We&#39;ll use an array of numbers in *both* formulas.</span>
 <span class="kd">const</span> <span class="nx">numberArray</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeParameter</span><span class="p">({</span>
   <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ParameterType</span><span class="p">.</span><span class="nx">NumberArray</span><span class="p">,</span>
-  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Numbers&#39;</span><span class="p">,</span>
-  <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;the numbers you want to calculate&#39;</span><span class="p">,</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Numbers&quot;</span><span class="p">,</span>
+  <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;the numbers you want to calculate&quot;</span><span class="p">,</span>
 <span class="p">});</span>
 
-<span class="c1">// We&#39;ll also use this helper function that finds the gcd of two numbers in *both* formulas.</span>
+<span class="c1">// We&#39;ll also use this helper function that finds the gcd of two numbers in</span>
+<span class="c1">// both formulas.</span>
 <span class="kd">function</span> <span class="nx">gcd</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">a</span> <span class="o">===</span> <span class="mf">0</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nx">b</span><span class="p">;</span>
@@ -2252,15 +2253,20 @@
 
 <span class="c1">// This line adds a new formula.</span>
 <span class="nx">pack</span><span class="p">.</span><span class="nx">addFormula</span><span class="p">({</span>
-  <span class="c1">// This is the name that will be called in the formula builder. Remember, your formula name cannot have spaces in it.</span>
-  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;GCD&#39;</span><span class="p">,</span>
-  <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;Returns the greatest common denominator for an array&#39;</span><span class="p">,</span>
+  <span class="c1">// This is the name that will be called in the formula builder. Remember, your</span>
+  <span class="c1">// formula name cannot have spaces in it.</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;GCD&quot;</span><span class="p">,</span>
+  <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Returns the greatest common denominator for an array&quot;</span><span class="p">,</span>
 
   <span class="c1">// The needed array of numbers has already been defined above.</span>
   <span class="nx">parameters</span><span class="o">:</span> <span class="p">[</span><span class="nx">numberArray</span><span class="p">],</span>
 
-  <span class="c1">// Everything inside this execute statement will happen anytime your Coda function is called in a doc.</span>
-  <span class="c1">// An array of all user inputs is always the 1st parameter.</span>
+  <span class="c1">// In this formula, we&#39;re returning a number in the Coda doc.</span>
+  <span class="nx">resultType</span>: <span class="kt">coda.ValueType.Number</span><span class="p">,</span>
+
+  <span class="c1">// Everything inside this execute statement will happen anytime your Coda</span>
+  <span class="c1">// function is called in a doc. An array of all user inputs is always the 1st</span>
+  <span class="c1">// parameter.</span>
   <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">numberArray</span><span class="p">])</span> <span class="p">{</span>
     <span class="kd">let</span> <span class="nx">gcdResult</span> <span class="o">=</span> <span class="nx">numberArray</span><span class="p">[</span><span class="mf">0</span><span class="p">];</span>
 
@@ -2273,16 +2279,14 @@
     <span class="p">}</span>
     <span class="k">return</span> <span class="nx">gcdResult</span><span class="p">;</span>
   <span class="p">},</span>
-
-  <span class="c1">// In this formula, we&#39;re returning a number in the Coda doc.</span>
-  <span class="nx">resultType</span>: <span class="kt">coda.ValueType.Number</span><span class="p">,</span>
 <span class="p">});</span>
 
 <span class="c1">// Now, we&#39;ll define and add the second formula to the pack.</span>
 <span class="nx">pack</span><span class="p">.</span><span class="nx">addFormula</span><span class="p">({</span>
-  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;LCM&#39;</span><span class="p">,</span>
-  <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;Returns the least common multiple for an array&#39;</span><span class="p">,</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;LCM&quot;</span><span class="p">,</span>
+  <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Returns the least common multiple for an array&quot;</span><span class="p">,</span>
   <span class="nx">parameters</span><span class="o">:</span> <span class="p">[</span><span class="nx">numberArray</span><span class="p">],</span>
+  <span class="nx">resultType</span>: <span class="kt">coda.ValueType.Number</span><span class="p">,</span>
   <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">numberArray</span><span class="p">])</span> <span class="p">{</span>
     <span class="kd">let</span> <span class="nx">lcmResult</span> <span class="o">=</span> <span class="nx">numberArray</span><span class="p">[</span><span class="mf">0</span><span class="p">];</span>
 
@@ -2292,7 +2296,6 @@
 
     <span class="k">return</span> <span class="nx">lcmResult</span><span class="p">;</span>
   <span class="p">},</span>
-  <span class="nx">resultType</span>: <span class="kt">coda.ValueType.Number</span><span class="p">,</span>
 <span class="p">});</span>
 </code></pre></div>
 </div>

@@ -1690,7 +1690,7 @@
   
     <li class="md-nav__item">
       <a href="../../reference/sdk/interfaces/SyncFormulaResult/" class="md-nav__link">
-        Interface: SyncFormulaResult<ResultT\>
+        Interface: SyncFormulaResult<K, L, SchemaT\>
       </a>
     </li>
   
@@ -1909,7 +1909,7 @@
   
     <li class="md-nav__item">
       <a href="../../reference/sdk/types/Formula/" class="md-nav__link">
-        Type alias: Formula<ParamDefsT\>
+        Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
       </a>
     </li>
   
@@ -2229,12 +2229,12 @@
                 <h1 id="adddynamicsynctable">addDynamicSyncTable()<a class="headerlink" href="#adddynamicsynctable" title="Permanent link">&para;</a></h1>
 <p>Most sync tables have schemas that can be statically defined. For example, if you're writing a sync of a user's Google Calendar events, the structure of an Event from the Google Calendar API is well-known and you can write a schema for what your table should contain.</p>
 <p>In certain cases, you may want to sync data whose structure is not known in advance and may depend on the user doing the sync. For example, Coda's Jira pack allows users to sync data from their Jira instance, but Jira lets users create arbitrary custom fields for their Issue objects. So the schema of the Issues sync table is not known in advance; it depends on the Jira account that the user is syncing from.</p>
-<p>Coda supports "dynamic" sync tables for cases like these. Instead of including a static schema in your sync table definition, you include a formula that returns a schema. This formula can use the fetcher to make authenticated http requests to your pack's API so that you may retrieve any necessary info from that third-party service needed to construct an appropriate schema.</p>
+<p>Coda supports "dynamic" sync tables for cases like these. Instead of including a static schema in your sync table definition, you include a formula that returns a schema. This formula can use the fetcher to make authenticated http requests to your Pack's API so that you may retrieve any necessary info from that third-party service needed to construct an appropriate schema.</p>
 <p>To define a dynamic schema, use the <code>makeDynamicSyncTable()</code> wrapper function. You will provide a <code>getSchema</code> formula that returns a schema definition. You'll also provide some supporting formulas like <code>getName</code>, to return a name in the UI for the table, in case even the name of the entities being synced is dynamic.</p>
 <p>There are two subtle variants of dynamic sync tables. A sync table can be dynamic simply because the shape of the entities being synced vary based on who the current user is. For example, in the Jira example, Jira Issues are synced by hitting the same static Jira API url for Issues, but the schema of the issues returned will be different depending on the configuration of the Jira instance of the calling user.</p>
 <p>Alternatively, a sync table can be dynamic because the data source is specific to each instance of the table. If you were building a sync table to sync data from a Google Sheet, the data source would be the API url of a specific sheet. In this case, the sync table will be bound to a <code>dynamicUrl</code> that defines the data source. This url will be available to all of the formulas to implement the sync table in the sync context, as <code>context.sync.dynamicUrl</code>. To create a sync table that uses dynamic urls, you must implement the <code>listDynamicUrls</code> metadata formula in your dynamic sync table definition.</p>
 <div class="tabbed-set" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">Basic Dynamic Sync Table</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s1">&#39;@codahq/packs-sdk&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
 
 <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
 
@@ -2242,31 +2242,25 @@
 <span class="c1">// Replace all &lt;text&gt; with your own names</span>
 <span class="nx">pack</span><span class="p">.</span><span class="nx">addDynamicSyncTable</span><span class="p">({</span>
   <span class="c1">// The static name for this category of sync table</span>
-  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;&lt;MyDynamicSynctable&gt;&#39;</span><span class="p">,</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;&lt;MyDynamicSynctable&gt;&quot;</span><span class="p">,</span>
   <span class="c1">// The display name for the table, shown in the UI.</span>
   <span class="nx">getName</span>: <span class="kt">async</span> <span class="nx">context</span> <span class="p">=&gt;</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span><span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="nx">url</span>: <span class="kt">context.sync.dynamicUrl</span><span class="p">});</span>
+    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+      <span class="nx">url</span>: <span class="kt">context.sync.dynamicUrl</span>
+    <span class="p">});</span>
     <span class="c1">// Return whatever represents the name of the entity you&#39;re syncing.</span>
     <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
   <span class="p">},</span>
   <span class="c1">// A label for the kind of entities that you are syncing.</span>
-  <span class="c1">// Using Google Sheets as example you might use &quot;Row&quot; here, as each synced entity is a row from the source sheet.</span>
-  <span class="nx">entityName</span><span class="o">:</span> <span class="s1">&#39;&lt;RowName&gt;&#39;</span><span class="p">,</span>
+  <span class="c1">// Using Google Sheets as example you might use &quot;Row&quot; here, as each synced</span>
+  <span class="c1">// entity is a row from the source sheet.</span>
+  <span class="nx">entityName</span><span class="o">:</span> <span class="s2">&quot;&lt;RowName&gt;&quot;</span><span class="p">,</span>
   <span class="nx">getSchema</span>: <span class="kt">async</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeSchema</span><span class="p">({</span>
       <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Array</span><span class="p">,</span>
       <span class="nx">items</span>: <span class="kt">coda.makeObjectSchema</span><span class="p">({</span>
         <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
-        <span class="c1">// The property name from the properties object below that represents the unique</span>
-        <span class="c1">// identifier of this item. A sync table MUST have a stable unique identifier. Without</span>
-        <span class="c1">// one, each subsequent sync will wipe away all rows and recreate them from scratch.</span>
-        <span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;&lt;idColumn&gt;&#39;</span><span class="p">,</span>
-        <span class="c1">// The property name from the properties object below that should label this item</span>
-        <span class="c1">// in the UI. All properties can be seen when hovering over a synced item in the UI,</span>
-        <span class="c1">// but the primary property value is shown on the chip representing the full object.</span>
-        <span class="nx">primary</span><span class="o">:</span> <span class="s1">&#39;&lt;displayColumn&gt;&#39;</span><span class="p">,</span>
-        <span class="c1">// The columns that will be displayed on the table</span>
-        <span class="nx">featured</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;&lt;otherColumn&gt;&#39;</span><span class="p">],</span>
         <span class="c1">// The actual schema properties.</span>
         <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
           <span class="c1">// Add your properties here e.g.</span>
@@ -2274,37 +2268,54 @@
           <span class="c1">// displayColumn: {type: coda.ValueType.String},</span>
           <span class="c1">// otherColumn: {type: coda.ValueType.String},</span>
         <span class="p">},</span>
+        <span class="c1">// The property name from the properties object below that represents</span>
+        <span class="c1">// the unique identifier of this item. A sync table MUST have a stable</span>
+        <span class="c1">// unique identifier. Without one, each subsequent sync will wipe away</span>
+        <span class="c1">// all rows and recreate them from scratch.</span>
+        <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;&lt;idColumn&gt;&quot;</span><span class="p">,</span>
+        <span class="c1">// The property name from the properties object below that should label</span>
+        <span class="c1">// this item in the UI. All properties can be seen when hovering over a</span>
+        <span class="c1">// synced item in the UI, but the primary property value is shown on the</span>
+        <span class="c1">// chip representing the full object.</span>
+        <span class="nx">primary</span><span class="o">:</span> <span class="s2">&quot;&lt;displayColumn&gt;&quot;</span><span class="p">,</span>
+        <span class="c1">// The columns that will be displayed on the table</span>
+        <span class="nx">featured</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;&lt;otherColumn&gt;&quot;</span><span class="p">],</span>
       <span class="p">}),</span>
     <span class="p">});</span>
   <span class="p">},</span>
-  <span class="c1">// A user-friendly url representing the entity being synced. The table UI in the doc will provide</span>
-  <span class="c1">// a convenience link to this url so the user can easily click through to the source of data in that table.</span>
+  <span class="c1">// A user-friendly url representing the entity being synced. The table UI in</span>
+  <span class="c1">// the doc will provide a convenience link to this url so the user can easily</span>
+  <span class="c1">// click through to the source of data in that table.</span>
   <span class="nx">getDisplayUrl</span>: <span class="kt">async</span> <span class="nx">context</span> <span class="p">=&gt;</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span><span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="nx">url</span>: <span class="kt">context.sync.dynamicUrl</span><span class="p">});</span>
+    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+      <span class="nx">url</span>: <span class="kt">context.sync.dynamicUrl</span>
+    <span class="p">});</span>
     <span class="c1">// Return whatever represents a browser-friendly version of the dynamic url.</span>
     <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">browserLink</span><span class="p">;</span>
   <span class="p">},</span>
   <span class="nx">formula</span><span class="o">:</span> <span class="p">{</span>
     <span class="c1">// This is the name that will be called in the formula builder.</span>
     <span class="c1">// Remember, your formula name cannot have spaces in it.</span>
-    <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;&lt;DynamicSyncTable&gt;&#39;</span><span class="p">,</span>
-    <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;&lt;Creates a dynamic sync table&gt;&#39;</span><span class="p">,</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;&lt;DynamicSyncTable&gt;&quot;</span><span class="p">,</span>
+    <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;&lt;Creates a dynamic sync table&gt;&quot;</span><span class="p">,</span>
 
     <span class="c1">// If your formula requires one or more inputs, you’ll define them here.</span>
     <span class="nx">parameters</span><span class="o">:</span> <span class="p">[</span>
       <span class="nx">coda</span><span class="p">.</span><span class="nx">makeParameter</span><span class="p">({</span>
         <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ParameterType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
-        <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;&lt;myParam&gt;&#39;</span><span class="p">,</span>
-        <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;&lt;My description&gt;&#39;</span><span class="p">,</span>
+        <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;&lt;myParam&gt;&quot;</span><span class="p">,</span>
+        <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;&lt;My description&gt;&quot;</span><span class="p">,</span>
       <span class="p">}),</span>
     <span class="p">],</span>
-    <span class="c1">// Everything inside this statement will execute anytime your Coda function is called in a doc.</span>
-    <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">myParam</span><span class="p">],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Everything inside this statement will execute anytime your Coda function</span>
+    <span class="c1">// is called in a doc.</span>
+    <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">param</span><span class="p">],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">return</span> <span class="p">{</span>
         <span class="nx">result</span><span class="o">:</span> <span class="p">[</span>
           <span class="c1">// {</span>
           <span class="c1">//   idPropertyName: 1,</span>
-          <span class="c1">//   displayPropertyName: &#39;&lt;Example1&gt;&#39;,</span>
+          <span class="c1">//   displayPropertyName: &quot;&lt;Example1&gt;&quot;,</span>
           <span class="c1">//   otherPropertyName: myParam,</span>
           <span class="c1">// },</span>
         <span class="p">],</span>

@@ -65,7 +65,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-syncformularesultresultt" class="md-skip">
+        <a href="#interface-syncformularesultk-l-schemat" class="md-skip">
           Skip to content
         </a>
       
@@ -103,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Interface: SyncFormulaResult<ResultT\>
+              Interface: SyncFormulaResult<K, L, SchemaT\>
             
           </span>
         </div>
@@ -1693,12 +1693,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Interface: SyncFormulaResult<ResultT\>
+          Interface: SyncFormulaResult<K, L, SchemaT\>
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Interface: SyncFormulaResult<ResultT\>
+        Interface: SyncFormulaResult<K, L, SchemaT\>
       </a>
       
         
@@ -1970,7 +1970,7 @@
   
     <li class="md-nav__item">
       <a href="../../types/Formula/" class="md-nav__link">
-        Type alias: Formula<ParamDefsT\>
+        Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
       </a>
     </li>
   
@@ -2287,7 +2287,7 @@
                   </a>
                 
                 
-                <h1 id="interface-syncformularesultresultt">Interface: SyncFormulaResult&lt;ResultT><a class="headerlink" href="#interface-syncformularesultresultt" title="Permanent link">&para;</a></h1>
+                <h1 id="interface-syncformularesultk-l-schemat">Interface: SyncFormulaResult&lt;K, L, SchemaT><a class="headerlink" href="#interface-syncformularesultk-l-schemat" title="Permanent link">&para;</a></h1>
 <h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2298,8 +2298,16 @@
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>ResultT</code></td>
-<td align="left">extends <code>object</code></td>
+<td align="left"><code>K</code></td>
+<td align="left">extends <code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>L</code></td>
+<td align="left">extends <code>string</code></td>
+</tr>
+<tr>
+<td align="left"><code>SchemaT</code></td>
+<td align="left">extends <code>ObjectSchemaDefinition</code>&lt;<code>K</code>, <code>L</code>></td>
 </tr>
 </tbody>
 </table>
@@ -2307,12 +2315,12 @@
 <h3 id="continuation">continuation<a class="headerlink" href="#continuation" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>continuation</strong>: <a href="../Continuation/"><code>Continuation</code></a></p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L439">api.ts:439</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L460">api.ts:460</a></p>
 <hr />
 <h3 id="result">result<a class="headerlink" href="#result" title="Permanent link">&para;</a></h3>
-<p>• <strong>result</strong>: <code>ResultT</code>[]</p>
+<p>• <strong>result</strong>: <code>ObjectSchemaDefinitionType</code>&lt;<code>K</code>, <code>L</code>, <code>SchemaT</code>>[]</p>
 <h4 id="defined-in_1">Defined in<a class="headerlink" href="#defined-in_1" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L438">api.ts:438</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L459">api.ts:459</a></p>
                 
               
               

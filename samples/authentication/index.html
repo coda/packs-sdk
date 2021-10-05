@@ -1690,7 +1690,7 @@
   
     <li class="md-nav__item">
       <a href="../../reference/sdk/interfaces/SyncFormulaResult/" class="md-nav__link">
-        Interface: SyncFormulaResult<ResultT\>
+        Interface: SyncFormulaResult<K, L, SchemaT\>
       </a>
     </li>
   
@@ -1909,7 +1909,7 @@
   
     <li class="md-nav__item">
       <a href="../../reference/sdk/types/Formula/" class="md-nav__link">
-        Type alias: Formula<ParamDefsT\>
+        Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
       </a>
     </li>
   
@@ -2231,7 +2231,7 @@
 <p>Default authentication is the most common. Specify this if each user of your pack should log in with OAuth, or have their own API key, or whatever user-specific token is necessary for the pack to be able to retrieve data that is specific to that user.</p>
 <p>Use system authentication if you as the pack author will provide the necessary tokens to successfully make http requests within your pack. An example would be if your pack returns weather forecasts and the API involved requires an API key, but individual users need not provide their own API key. You as the pack author will register an API key and provide it to Coda, and Coda will apply it to all pack requests regardless of the user.</p>
 <div class="tabbed-set" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">System Authentication</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s1">&#39;@codahq/packs-sdk&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
 
 <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
 
@@ -2245,7 +2245,7 @@
 </code></pre></div>
 </div>
 <input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">User Authentication</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s1">&#39;@codahq/packs-sdk&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
 
 <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
 

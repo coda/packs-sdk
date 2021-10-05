@@ -1694,7 +1694,7 @@
   
     <li class="md-nav__item">
       <a href="../../interfaces/SyncFormulaResult/" class="md-nav__link">
-        Interface: SyncFormulaResult<ResultT\>
+        Interface: SyncFormulaResult<K, L, SchemaT\>
       </a>
     </li>
   
@@ -1913,7 +1913,7 @@
   
     <li class="md-nav__item">
       <a href="../../types/Formula/" class="md-nav__link">
-        Type alias: Formula<ParamDefsT\>
+        Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
       </a>
     </li>
   
@@ -2266,7 +2266,7 @@ using this wrapper rather than declaring a sync table definition object directly
 </tr>
 <tr>
 <td align="left"><code>SchemaT</code></td>
-<td align="left">extends <a href="../../interfaces/ObjectSchema/"><code>ObjectSchema</code></a>&lt;<code>K</code>, <code>L</code>, <code>SchemaT</code>></td>
+<td align="left">extends <code>ObjectSchemaDefinition</code>&lt;<code>K</code>, <code>L</code>, <code>SchemaT</code>> &amp; { <code>identity?</code>: <a href="../../interfaces/Identity/"><code>Identity</code></a>  }</td>
 </tr>
 </tbody>
 </table>
@@ -2288,7 +2288,7 @@ using this wrapper rather than declaring a sync table definition object directly
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h4>
 <p><a href="../../interfaces/SyncTableDef/"><code>SyncTableDef</code></a>&lt;<code>K</code>, <code>L</code>, <code>ParamDefsT</code>, <code>SchemaT</code>></p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L941">api.ts:941</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1002">api.ts:1002</a></p>
                 
               
               

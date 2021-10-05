@@ -1690,7 +1690,7 @@
   
     <li class="md-nav__item">
       <a href="../../reference/sdk/interfaces/SyncFormulaResult/" class="md-nav__link">
-        Interface: SyncFormulaResult<ResultT\>
+        Interface: SyncFormulaResult<K, L, SchemaT\>
       </a>
     </li>
   
@@ -1909,7 +1909,7 @@
   
     <li class="md-nav__item">
       <a href="../../reference/sdk/types/Formula/" class="md-nav__link">
-        Type alias: Formula<ParamDefsT\>
+        Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
       </a>
     </li>
   
@@ -2230,7 +2230,7 @@
 <p>A <strong>column format</strong> is a custom column type that you apply to any column in any Coda table. A column format&amp; tells Coda to interpret the value in a cell by executing a <strong>formula</strong> using that value, typically looking up data related to that value from a third-party API.</p>
 <p>For example, the Weather pack has a column format <code>Current Weather</code>; when applied to a column, if you type a city or address into a cell in that column, that location will be used an input to a formula that fetches the current weather at that location, and the resulting object with weather info will be shown in the cell.</p>
 <div class="tabbed-set" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">Column Format with No Matchers</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s1">&#39;@codahq/packs-sdk&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
 
 <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
 
@@ -2239,13 +2239,13 @@
 <span class="c1">// Replace all &lt;text&gt; with your own text</span>
 <span class="c1">// A custom column type that you apply to any column in any Coda table.</span>
 <span class="nx">pack</span><span class="p">.</span><span class="nx">addColumnFormat</span><span class="p">({</span>
-  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;&lt;format name&gt;&#39;</span><span class="p">,</span>
-  <span class="nx">formulaNamespace</span><span class="o">:</span> <span class="s1">&#39;&lt;the name of a formula in this pack&gt;&#39;</span><span class="p">,</span> <span class="c1">// this will be deprecated</span>
-  <span class="nx">formulaName</span><span class="o">:</span> <span class="s1">&#39;&lt;the name of a formula to execute using the value in the column&gt;&#39;</span><span class="p">,</span>
-  <span class="nx">instructions</span><span class="o">:</span> <span class="s1">&#39;&lt;instruction text that will be visible by Users&gt;&#39;</span><span class="p">,</span>
-  <span class="c1">// Optional, regular expressions that detect urls that are handeable by this column format. When a</span>
-  <span class="c1">// user pastes a url that matches any of these, the UI will hint to the user that they can apply</span>
-  <span class="c1">// this format to their column.</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;&lt;format name&gt;&quot;</span><span class="p">,</span>
+  <span class="nx">instructions</span><span class="o">:</span> <span class="s2">&quot;&lt;instruction text that will be visible by Users&gt;&quot;</span><span class="p">,</span>
+  <span class="nx">formulaName</span><span class="o">:</span> <span class="s2">&quot;&lt;the name of a formula to execute using the column value&gt;&quot;</span><span class="p">,</span>
+  <span class="nx">formulaNamespace</span><span class="o">:</span> <span class="s2">&quot;Ignore&quot;</span><span class="p">,</span> <span class="c1">// this will be deprecated</span>
+  <span class="c1">// Optional, regular expressions that detect urls that are handeable by this</span>
+  <span class="c1">// column format. When a user pastes a url that matches any of these, the UI</span>
+  <span class="c1">// will hint to the user that they can apply this format to their column.</span>
   <span class="nx">matchers</span><span class="o">:</span> <span class="p">[],</span>
 <span class="p">});</span>
 </code></pre></div>

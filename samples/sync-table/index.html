@@ -1690,7 +1690,7 @@
   
     <li class="md-nav__item">
       <a href="../../reference/sdk/interfaces/SyncFormulaResult/" class="md-nav__link">
-        Interface: SyncFormulaResult<ResultT\>
+        Interface: SyncFormulaResult<K, L, SchemaT\>
       </a>
     </li>
   
@@ -1909,7 +1909,7 @@
   
     <li class="md-nav__item">
       <a href="../../reference/sdk/types/Formula/" class="md-nav__link">
-        Type alias: Formula<ParamDefsT\>
+        Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
       </a>
     </li>
   
@@ -2229,57 +2229,67 @@
                 <h1 id="addsynctable">addSyncTable()<a class="headerlink" href="#addsynctable" title="Permanent link">&para;</a></h1>
 <p>A <strong>sync table</strong> is how to bring structured data from a third-party into Coda. A sync table is a table that you can add to a Coda doc that gets its rows from a third-party data source, that can be refreshed regularly to pull in new or updated data. A sync table is powered by a <strong>formula</strong> that takes parameters that represent sync options and returns an array of objects representing row data. A sync table also includes a schema describing the structure of the returned objects.</p>
 <div class="tabbed-set" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">Basic Sync Table</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s1">&#39;@codahq/packs-sdk&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
 
 <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
 
 <span class="c1">// BEGIN</span>
+
+<span class="kd">const</span> <span class="nx">MySchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
+  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
+  <span class="c1">// The actual schema properties.</span>
+  <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
+    <span class="c1">// Add your properties here e.g.</span>
+    <span class="c1">// idColumn: {type: coda.ValueType.String},</span>
+    <span class="c1">// displayColumn: {type: coda.ValueType.String},</span>
+    <span class="c1">// otherColumn: {type: coda.ValueType.Number},</span>
+  <span class="p">},</span>
+  <span class="c1">// The property name from the properties object below that represents the</span>
+  <span class="c1">// unique identifier of this item. A sync table MUST have a stable unique</span>
+  <span class="c1">// identifier. Without one, each subsequent sync will wipe away all rows and</span>
+  <span class="c1">// recreate them from scratch.</span>
+  <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;&lt;idColumn&gt;&quot;</span><span class="p">,</span>
+  <span class="c1">// The property name from the properties object below that should label this</span>
+  <span class="c1">// item in the UI. All properties can be seen when hovering over a synced</span>
+  <span class="c1">// item in the UI, but the primary property value is shown on the chip</span>
+  <span class="c1">// representing the full object.</span>
+  <span class="nx">primary</span><span class="o">:</span> <span class="s2">&quot;&lt;displayColumn&gt;&quot;</span><span class="p">,</span>
+<span class="p">})</span>
+
 <span class="c1">// Replace all &lt;text&gt; with your own text</span>
 <span class="nx">pack</span><span class="p">.</span><span class="nx">addSyncTable</span><span class="p">({</span>
   <span class="c1">// The display name for the table, shown in the UI.</span>
-  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;&lt;MySyncTable&gt;&#39;</span><span class="p">,</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;&lt;MySyncTable&gt;&quot;</span><span class="p">,</span>
   <span class="c1">// The unique identifier for the table.</span>
-  <span class="nx">identityName</span><span class="o">:</span> <span class="s1">&#39;&lt;TableName&gt;&#39;</span><span class="p">,</span>
-  <span class="nx">schema</span>: <span class="kt">coda.makeObjectSchema</span><span class="p">({</span>
-    <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
-    <span class="c1">// The property name from the properties object below that represents the unique</span>
-    <span class="c1">// identifier of this item. A sync table MUST have a stable unique identifier. Without</span>
-    <span class="c1">// one, each subsequent sync will wipe away all rows and recreate them from scratch.</span>
-    <span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;&lt;idColumn&gt;&#39;</span><span class="p">,</span>
-    <span class="c1">// The property name from the properties object below that should label this item</span>
-    <span class="c1">// in the UI. All properties can be seen when hovering over a synced item in the UI,</span>
-    <span class="c1">// but the primary property value is shown on the chip representing the full object.</span>
-    <span class="nx">primary</span><span class="o">:</span> <span class="s1">&#39;&lt;displayColumn&gt;&#39;</span><span class="p">,</span>
-    <span class="c1">// The actual schema properties.</span>
-    <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
-      <span class="c1">// Add your properties here e.g.</span>
-      <span class="c1">// idColumn: {type: coda.ValueType.String},</span>
-      <span class="c1">// displayColumn: {type: coda.ValueType.String},</span>
-      <span class="c1">// otherColumn: {type: coda.ValueType.Number},</span>
-    <span class="p">},</span>
-  <span class="p">}),</span>
+  <span class="nx">identityName</span><span class="o">:</span> <span class="s2">&quot;&lt;TableName&gt;&quot;</span><span class="p">,</span>
+  <span class="nx">schema</span>: <span class="kt">MySchema</span><span class="p">,</span>
   <span class="nx">formula</span><span class="o">:</span> <span class="p">{</span>
     <span class="c1">// This is the name that will be called in the formula builder.</span>
     <span class="c1">// Remember, your formula name cannot have spaces in it.</span>
-    <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;&lt;SyncTable&gt;&#39;</span><span class="p">,</span>
-    <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;&lt;Creates a sync table&gt;&#39;</span><span class="p">,</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;&lt;SyncTable&gt;&quot;</span><span class="p">,</span>
+    <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;&lt;Creates a sync table&gt;&quot;</span><span class="p">,</span>
 
     <span class="c1">// If your formula requires one or more inputs, you’ll define them here.</span>
     <span class="c1">// You can change the coda.Type to anything but object.</span>
     <span class="nx">parameters</span><span class="o">:</span> <span class="p">[</span>
       <span class="nx">coda</span><span class="p">.</span><span class="nx">makeParameter</span><span class="p">({</span>
         <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ParameterType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
-        <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;&lt;myParam&gt;&#39;</span><span class="p">,</span>
-        <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;&lt;My description&gt;&#39;</span><span class="p">,</span>
+        <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;&lt;myParam&gt;&quot;</span><span class="p">,</span>
+        <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;&lt;My description&gt;&quot;</span><span class="p">,</span>
       <span class="p">}),</span>
     <span class="p">],</span>
-    <span class="c1">// Everything inside this statement will execute anytime your Coda function is called in a doc.</span>
-    <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">myParam</span><span class="p">],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span><span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;&lt;your url&gt;&#39;</span><span class="p">});</span>
+
+    <span class="c1">// Everything inside this statement will execute anytime your Coda formula</span>
+    <span class="c1">// is called in a doc.</span>
+    <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">param</span><span class="p">],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+        <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+        <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;&lt;your url&gt;&quot;</span>
+      <span class="p">});</span>
       <span class="k">return</span> <span class="p">{</span>
         <span class="nx">result</span><span class="o">:</span> <span class="p">[</span>
           <span class="p">{</span>
-            <span class="c1">// idColumn: &#39;Example1&#39;,</span>
+            <span class="c1">// idColumn: &quot;Example1&quot;,</span>
             <span class="c1">// displayColumn: response.body,</span>
             <span class="c1">// otherColumn: myParam,</span>
           <span class="p">},</span>

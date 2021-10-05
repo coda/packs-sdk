@@ -1690,7 +1690,7 @@
   
     <li class="md-nav__item">
       <a href="../../reference/sdk/interfaces/SyncFormulaResult/" class="md-nav__link">
-        Interface: SyncFormulaResult<ResultT\>
+        Interface: SyncFormulaResult<K, L, SchemaT\>
       </a>
     </li>
   
@@ -1909,7 +1909,7 @@
   
     <li class="md-nav__item">
       <a href="../../reference/sdk/types/Formula/" class="md-nav__link">
-        Type alias: Formula<ParamDefsT\>
+        Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
       </a>
     </li>
   
@@ -2227,99 +2227,129 @@
                 
                 
                 <h1 id="daylight">Daylight<a class="headerlink" href="#daylight" title="Permanent link">&para;</a></h1>
-<p>This is an example that creates a formula called daylight, which</p>
-<ul>
-<li>takes in a numeric latitude and longitude as well as an optional Date, and</li>
-<li>returns an object containing the duration of daylight hours along with sunrise and sunset times.</li>
-</ul>
+<p>This Pack provides a <code>Daylight</code> formula that determines the daylight, sunrise,
+ and sunset at a given location using the <a href="https://sunrise-sunset.org/api">Sunrise Sunset API</a>. It accepts
+ a latitude, longitude, an optional date and returns a rich object (schema) as
+ a result. It uses the <code>Fetcher</code> to pull data from an external API.</p>
 <div class="tabbed-set" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">Daylight</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="c1">// This import statement gives you access to all parts of the Coda Packs SDK.</span>
-<span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s1">&#39;@codahq/packs-sdk&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="cm">/**</span>
+<span class="cm"> * This Pack provides a &quot;Daylight&quot; formula that determines the daylight,</span>
+<span class="cm"> * sunrise, and sunset at a given location using the Sunrise Sunset API.</span>
+<span class="cm"> * The results are returns as a rich object.</span>
+<span class="cm"> * @see {@link https://sunrise-sunset.org/api|Sunrise Sunset API}</span>
+<span class="cm"> */</span>
 
-<span class="c1">// This line creates your new Pack.</span>
+<span class="c1">// This import statement provides access to all parts of the Coda Packs SDK.</span>
+<span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
+
+<span class="c1">// This line creates the new Pack.</span>
 <span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
 
-<span class="c1">// When using the fetcher, this is the domain of the API that your pack makes fetcher requests to.</span>
-<span class="nx">pack</span><span class="p">.</span><span class="nx">addNetworkDomain</span><span class="p">(</span><span class="s1">&#39;sunrise-sunset.org&#39;</span><span class="p">);</span>
+<span class="c1">// The domain that the Pack will match fetcher requests to.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addNetworkDomain</span><span class="p">(</span><span class="s2">&quot;sunrise-sunset.org&quot;</span><span class="p">);</span>
 
-<span class="c1">// Every object must have a schema, which defines things like the primary value that will be seen.</span>
-<span class="c1">// If you think of an object as a row in a table, you can think of the schema as the columns.</span>
-<span class="c1">// In this case, we&#39;re creating a new schema that has daylight hours, time of sunrise, and time of sunset.</span>
-<span class="kd">const</span> <span class="nx">sunSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
+<span class="c1">// Define a schema that will be used to bundle up the multiple pieces of data</span>
+<span class="c1">// our formula will return. In the Coda doc this will be displayed as a chip.</span>
+<span class="kd">const</span> <span class="nx">SunSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
   <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
   <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
     <span class="c1">// The values we return are simple strings, but we use the codaType field to</span>
     <span class="c1">// to tell Coda to interpret them as durations and time values.</span>
-    <span class="nx">daylight</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span> <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Duration</span><span class="p">},</span>
-    <span class="nx">sunriseUTC</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span> <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Time</span><span class="p">},</span>
-    <span class="nx">sunsetUTC</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span> <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Time</span><span class="p">},</span>
+    <span class="nx">daylight</span><span class="o">:</span> <span class="p">{</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Duration</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">sunriseUTC</span><span class="o">:</span> <span class="p">{</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Time</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">sunsetUTC</span><span class="o">:</span> <span class="p">{</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Time</span><span class="p">,</span>
+    <span class="p">},</span>
   <span class="p">},</span>
-  <span class="c1">// This is the property to use for display purposes on the UI chip for this object.</span>
-  <span class="nx">primary</span><span class="o">:</span> <span class="s1">&#39;daylight&#39;</span><span class="p">,</span>
+  <span class="c1">// Which of the properties defined above will be shown inside the chip.</span>
+  <span class="nx">primary</span><span class="o">:</span> <span class="s2">&quot;daylight&quot;</span><span class="p">,</span>
 <span class="p">});</span>
 
-<span class="c1">// This line adds a new formula.</span>
+<span class="c1">// Add a &quot;Daylight&quot; formula to the Pack.</span>
 <span class="nx">pack</span><span class="p">.</span><span class="nx">addFormula</span><span class="p">({</span>
-  <span class="c1">// This is the name that will be called in the formula builder. Remember, your formula name cannot have spaces in it.</span>
-  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Daylight&#39;</span><span class="p">,</span>
-  <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;Returns an object with sunrise and sunset for a given latitude and longitude.&#39;</span><span class="p">,</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Daylight&quot;</span><span class="p">,</span>
+  <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Returns the sunrise and sunset for a given location.&quot;</span><span class="p">,</span>
 
-  <span class="c1">// This formula takes two required numeric inputs (the latitude and longitude) and one optional (the date)</span>
+  <span class="c1">// This formula takes two required numeric inputs (the latitude and longitude)</span>
+  <span class="c1">// and one optional date.</span>
   <span class="nx">parameters</span><span class="o">:</span> <span class="p">[</span>
     <span class="nx">coda</span><span class="p">.</span><span class="nx">makeParameter</span><span class="p">({</span>
       <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ParameterType</span><span class="p">.</span><span class="nb">Number</span><span class="p">,</span>
-      <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;lat&#39;</span><span class="p">,</span>
-      <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;The latitude to use.&#39;</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;lat&quot;</span><span class="p">,</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The latitude to use.&quot;</span><span class="p">,</span>
     <span class="p">}),</span>
     <span class="nx">coda</span><span class="p">.</span><span class="nx">makeParameter</span><span class="p">({</span>
       <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ParameterType</span><span class="p">.</span><span class="nb">Number</span><span class="p">,</span>
-      <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;lng&#39;</span><span class="p">,</span>
-      <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;The longitude to use.&#39;</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;lng&quot;</span><span class="p">,</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The longitude to use.&quot;</span><span class="p">,</span>
     <span class="p">}),</span>
     <span class="nx">coda</span><span class="p">.</span><span class="nx">makeParameter</span><span class="p">({</span>
       <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ParameterType</span><span class="p">.</span><span class="nb">Date</span><span class="p">,</span>
-      <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span>
-      <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;The date to use. Defaults to today.&#39;</span><span class="p">,</span>
-
+      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;date&quot;</span><span class="p">,</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The date to use. Defaults to today.&quot;</span><span class="p">,</span>
       <span class="c1">// This date parameter is an optional input.</span>
       <span class="nx">optional</span>: <span class="kt">true</span><span class="p">,</span>
     <span class="p">}),</span>
   <span class="p">],</span>
 
-  <span class="c1">// Everything inside this execute statement will happen anytime your Coda function is called in a doc.</span>
-  <span class="c1">// An array of all user inputs is passed as the 1st parameter.</span>
-  <span class="c1">// The context object is always the 2nd parameter and is used for fetching data.</span>
+  <span class="c1">// In this formula, we&#39;re returning an object with multiple properties.</span>
+  <span class="nx">resultType</span>: <span class="kt">coda.ValueType.Object</span><span class="p">,</span>
+
+  <span class="c1">// This object will be defined according to the schema written above.</span>
+  <span class="nx">schema</span>: <span class="kt">SunSchema</span><span class="p">,</span>
+
+  <span class="c1">// Everything inside this execute statement will happen anytime the Coda</span>
+  <span class="c1">// formula is called in a doc. An array of all user inputs is passed as the</span>
+  <span class="c1">// first parameter. The context object is always the second parameter and is</span>
+  <span class="c1">// used for fetching data.</span>
   <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">lat</span><span class="p">,</span> <span class="nx">lng</span><span class="p">,</span> <span class="nx">date</span><span class="p">],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">// Default to today if no date is provided.</span>
-    <span class="kd">const</span> <span class="nx">lookupDate</span> <span class="o">=</span> <span class="nx">date</span> <span class="o">?</span> <span class="ow">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nx">date</span><span class="p">.</span><span class="nx">toString</span><span class="p">())</span> <span class="o">:</span> <span class="ow">new</span> <span class="nb">Date</span><span class="p">();</span>
+    <span class="kd">let</span> <span class="nx">lookupDate</span> <span class="o">=</span> <span class="nx">date</span> <span class="o">||</span> <span class="ow">new</span> <span class="nb">Date</span><span class="p">();</span>
 
     <span class="c1">// Format date to yyyy-mm-dd format as required by this API.</span>
-    <span class="kd">const</span> <span class="nx">formattedDate</span> <span class="o">=</span> <span class="nx">lookupDate</span><span class="p">.</span><span class="nx">toISOString</span><span class="p">().</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)[</span><span class="mf">0</span><span class="p">];</span>
+    <span class="kd">let</span> <span class="nx">formattedDate</span> <span class="o">=</span> <span class="nx">lookupDate</span><span class="p">.</span><span class="nx">toISOString</span><span class="p">().</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">];</span>
 
-    <span class="kd">const</span> <span class="nx">url</span> <span class="o">=</span> <span class="sb">`https://api.sunrise-sunset.org/json?lat=&#39;</span><span class="si">${</span><span class="nx">lat</span><span class="si">}</span><span class="sb">&#39;&amp;lng=</span><span class="si">${</span><span class="nx">lng</span><span class="si">}</span><span class="sb">&amp;date=</span><span class="si">${</span><span class="nx">formattedDate</span><span class="si">}</span><span class="sb">&#39;`</span><span class="p">;</span>
+    <span class="c1">// Create the URL to fetch, using the helper function coda.withQueryParams</span>
+    <span class="c1">// to add on query parameters (ex: &quot;?lat=40.123...&quot;).</span>
+    <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">withQueryParams</span><span class="p">(</span><span class="s2">&quot;https://api.sunrise-sunset.org/json&quot;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">lat</span>: <span class="kt">lat</span><span class="p">,</span>
+      <span class="nx">lng</span>: <span class="kt">lng</span><span class="p">,</span>
+      <span class="nx">date</span>: <span class="kt">formattedDate</span>
+    <span class="p">});</span>
 
-    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span><span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="nx">url</span><span class="p">});</span>
+    <span class="c1">// Fetch the URL and get the response.</span>
+    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+      <span class="nx">url</span>: <span class="kt">url</span>
+    <span class="p">});</span>
 
-    <span class="c1">// Re-format the day_length string to [h] hrs [m] mins [s] secs to work as a duration.</span>
-    <span class="kd">const</span> <span class="nx">hours</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">results</span><span class="p">.</span><span class="nx">day_length</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mf">0</span><span class="p">];</span>
-    <span class="kd">const</span> <span class="nx">mins</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">results</span><span class="p">.</span><span class="nx">day_length</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mf">1</span><span class="p">];</span>
-    <span class="kd">const</span> <span class="nx">secs</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">results</span><span class="p">.</span><span class="nx">day_length</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mf">2</span><span class="p">];</span>
+    <span class="c1">// The JSON returned by the API is parsed automatically and available in</span>
+    <span class="c1">// `response.body`. Here we pull out the content in the &quot;results&quot; key.</span>
+    <span class="kd">let</span> <span class="nx">results</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">results</span><span class="p">;</span>
 
-    <span class="kd">const</span> <span class="nx">daylight</span> <span class="o">=</span> <span class="sb">`</span><span class="si">${</span><span class="nx">hours</span><span class="si">}</span><span class="sb">hrs</span><span class="si">${</span><span class="nx">mins</span><span class="si">}</span><span class="sb">mins</span><span class="si">${</span><span class="nx">secs</span><span class="si">}</span><span class="sb">secs`</span><span class="p">;</span>
+    <span class="c1">// Re-format the day_length string to [h] hrs [m] mins [s] secs to work as a</span>
+    <span class="c1">// duration.</span>
+    <span class="kd">let</span> <span class="nx">hours</span> <span class="o">=</span> <span class="nx">results</span><span class="p">.</span><span class="nx">day_length</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">];</span>
+    <span class="kd">let</span> <span class="nx">mins</span> <span class="o">=</span> <span class="nx">results</span><span class="p">.</span><span class="nx">day_length</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mf">1</span><span class="p">];</span>
+    <span class="kd">let</span> <span class="nx">secs</span> <span class="o">=</span> <span class="nx">results</span><span class="p">.</span><span class="nx">day_length</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mf">2</span><span class="p">];</span>
 
-    <span class="c1">// This API returns time in UTC so for simplicity we will just identify that in the output.</span>
+    <span class="kd">let</span> <span class="nx">daylight</span> <span class="o">=</span> <span class="sb">`</span><span class="si">${</span><span class="nx">hours</span><span class="si">}</span><span class="sb"> hrs </span><span class="si">${</span><span class="nx">mins</span><span class="si">}</span><span class="sb"> mins </span><span class="si">${</span><span class="nx">secs</span><span class="si">}</span><span class="sb"> secs`</span><span class="p">;</span>
+
+    <span class="c1">// Return the final object. The keys here must match with the properties</span>
+    <span class="c1">// defined above in the schema.</span>
     <span class="k">return</span> <span class="p">{</span>
       <span class="nx">daylight</span>: <span class="kt">daylight</span><span class="p">,</span>
       <span class="nx">sunriseUTC</span>: <span class="kt">response.body.results.sunrise</span><span class="p">,</span>
       <span class="nx">sunsetUTC</span>: <span class="kt">response.body.results.sunset</span><span class="p">,</span>
     <span class="p">};</span>
   <span class="p">},</span>
-
-  <span class="c1">// In this formula, we&#39;re returning an object with multiple properties.</span>
-  <span class="nx">resultType</span>: <span class="kt">coda.ValueType.Object</span><span class="p">,</span>
-
-  <span class="c1">// This object will be defined according to the schema written above.</span>
-  <span class="nx">schema</span>: <span class="kt">sunSchema</span><span class="p">,</span>
 <span class="p">});</span>
 </code></pre></div>
 </div>

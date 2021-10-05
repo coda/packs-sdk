@@ -1690,7 +1690,7 @@
   
     <li class="md-nav__item">
       <a href="../../reference/sdk/interfaces/SyncFormulaResult/" class="md-nav__link">
-        Interface: SyncFormulaResult<ResultT\>
+        Interface: SyncFormulaResult<K, L, SchemaT\>
       </a>
     </li>
   
@@ -1909,7 +1909,7 @@
   
     <li class="md-nav__item">
       <a href="../../reference/sdk/types/Formula/" class="md-nav__link">
-        Type alias: Formula<ParamDefsT\>
+        Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
       </a>
     </li>
   
@@ -2235,7 +2235,7 @@
 <span class="cm">*/</span>
 
 <span class="c1">// This import statement gives you access to all parts of the Coda Packs SDK.</span>
-<span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s1">&#39;@codahq/packs-sdk&#39;</span><span class="p">;</span>
+<span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
 
 <span class="c1">// This line creates your new Pack.</span>
 <span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
@@ -2244,27 +2244,29 @@
 <span class="nx">pack</span><span class="p">.</span><span class="nx">addFormula</span><span class="p">({</span>
   <span class="c1">// This is the name that will be called in the formula builder.</span>
   <span class="c1">// Remember, your formula name cannot have spaces in it.</span>
-  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Hello&#39;</span><span class="p">,</span>
-  <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;A Hello World example.&#39;</span><span class="p">,</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Hello&quot;</span><span class="p">,</span>
+  <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;A Hello World example.&quot;</span><span class="p">,</span>
 
   <span class="c1">// If your formula requires one or more inputs, you’ll define them here.</span>
   <span class="c1">// Here, we&#39;re creating a string input called “name”.</span>
   <span class="nx">parameters</span><span class="o">:</span> <span class="p">[</span>
     <span class="nx">coda</span><span class="p">.</span><span class="nx">makeParameter</span><span class="p">({</span>
       <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ParameterType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
-      <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span>
-      <span class="nx">description</span><span class="o">:</span> <span class="s1">&#39;The name you would like to say hello to.&#39;</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The name you would like to say hello to.&quot;</span><span class="p">,</span>
     <span class="p">}),</span>
   <span class="p">],</span>
 
-  <span class="c1">// Everything inside this execute statement will happen anytime your Coda function is called in a doc.</span>
-  <span class="c1">// An array of all user inputs is always the 1st parameter.</span>
-  <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">name</span><span class="p">])</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="sb">`Hello </span><span class="si">${</span><span class="nx">name</span><span class="si">}</span><span class="sb">!`</span><span class="p">;</span>
-  <span class="p">},</span>
+  <span class="c1">// The resultType defines what will be returned in your Coda doc. Here, we&#39;re</span>
+  <span class="c1">// returning a simple text string.</span>
+  <span class="nx">resultType</span>: <span class="kt">coda.ValueType.String</span><span class="p">,</span>  
 
-  <span class="c1">// The resultType defines what will be returned in your Coda doc. Here, we&#39;re returning a simple text string.</span>
-  <span class="nx">resultType</span>: <span class="kt">coda.ValueType.String</span><span class="p">,</span>
+  <span class="c1">// Everything inside this execute statement will happen anytime your Coda</span>
+  <span class="c1">// formumla is called in a doc. An array of all user inputs is always the 1st</span>
+  <span class="c1">// parameter.</span>
+  <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">name</span><span class="p">])</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s2">&quot;Hello &quot;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot;!&quot;</span><span class="p">;</span>
+  <span class="p">},</span>
 <span class="p">});</span>
 </code></pre></div>
 </div>

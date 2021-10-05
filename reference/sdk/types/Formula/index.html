@@ -65,7 +65,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#type-alias-formulaparamdefst" class="md-skip">
+        <a href="#type-alias-formulaparamdefst-resultt-schemat" class="md-skip">
           Skip to content
         </a>
       
@@ -103,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Type alias: Formula<ParamDefsT\>
+              Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
             
           </span>
         </div>
@@ -1682,7 +1682,7 @@
   
     <li class="md-nav__item">
       <a href="../../interfaces/SyncFormulaResult/" class="md-nav__link">
-        Interface: SyncFormulaResult<ResultT\>
+        Interface: SyncFormulaResult<K, L, SchemaT\>
       </a>
     </li>
   
@@ -1912,7 +1912,7 @@
       
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Type alias: Formula<ParamDefsT\>
+        Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
       </a>
       
     </li>
@@ -2230,8 +2230,8 @@
                   </a>
                 
                 
-                <h1 id="type-alias-formulaparamdefst">Type alias: Formula&lt;ParamDefsT><a class="headerlink" href="#type-alias-formulaparamdefst" title="Permanent link">&para;</a></h1>
-<p>Ƭ <strong>Formula</strong>&lt;<code>ParamDefsT</code>>: <code>NumericPackFormula</code>&lt;<code>ParamDefsT</code>> | <code>StringPackFormula</code>&lt;<code>ParamDefsT</code>, <code>any</code>> | <code>BooleanPackFormula</code>&lt;<code>ParamDefsT</code>> | <code>ObjectPackFormula</code>&lt;<code>ParamDefsT</code>, <a href="../Schema/"><code>Schema</code></a>></p>
+                <h1 id="type-alias-formulaparamdefst-resultt-schemat">Type alias: Formula&lt;ParamDefsT, ResultT, SchemaT><a class="headerlink" href="#type-alias-formulaparamdefst-resultt-schemat" title="Permanent link">&para;</a></h1>
+<p>Ƭ <strong>Formula</strong>&lt;<code>ParamDefsT</code>, <code>ResultT</code>, <code>SchemaT</code>>: <code>ResultT</code> extends <a href="../../enums/ValueType/#string"><code>String</code></a> ? <code>StringPackFormula</code>&lt;<code>ParamDefsT</code>> : <code>ResultT</code> extends <a href="../../enums/ValueType/#number"><code>Number</code></a> ? <code>NumericPackFormula</code>&lt;<code>ParamDefsT</code>> : <code>ResultT</code> extends <a href="../../enums/ValueType/#boolean"><code>Boolean</code></a> ? <code>BooleanPackFormula</code>&lt;<code>ParamDefsT</code>> : <code>ResultT</code> extends <a href="../../enums/ValueType/#array"><code>Array</code></a> ? <code>ObjectPackFormula</code>&lt;<code>ParamDefsT</code>, <a href="../../interfaces/ArraySchema/"><code>ArraySchema</code></a>&lt;<code>SchemaT</code>>> : <code>ObjectPackFormula</code>&lt;<code>ParamDefsT</code>, <code>SchemaT</code>></p>
 <h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -2245,10 +2245,18 @@
 <td align="left"><code>ParamDefsT</code></td>
 <td align="left">extends <a href="../ParamDefs/"><code>ParamDefs</code></a><a href="../ParamDefs/"><code>ParamDefs</code></a></td>
 </tr>
+<tr>
+<td align="left"><code>ResultT</code></td>
+<td align="left">extends <code>FormulaResultValueType``FormulaResultValueType</code></td>
+</tr>
+<tr>
+<td align="left"><code>SchemaT</code></td>
+<td align="left">extends <a href="../Schema/"><code>Schema</code></a><a href="../Schema/"><code>Schema</code></a></td>
+</tr>
 </tbody>
 </table>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L414">api.ts:414</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L420">api.ts:420</a></p>
                 
               
               
