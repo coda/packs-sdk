@@ -6,6 +6,8 @@
 
 - Formula return types are now strong-typed (except if you are using the fromKey attribute of object properties).
 
+- CLI `coda execute` now defaults to run with vm. To execute without vm, use `--no-vm`.
+
 ## 0.4.6
 
 - Bug fix: Executing sync table formulas via CLI now validates results correctly.
