@@ -2,7 +2,6 @@ import type {AWSSignature4Authentication} from '../types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import {AuthenticationType} from '../types';
-import type {BaseStringSchema} from '../schema';
 import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
@@ -49,6 +48,7 @@ import type {StringDateSchema} from '../schema';
 import type {StringDateTimeSchema} from '../schema';
 import {StringHintValueTypes} from '../schema';
 import type {StringPackFormula} from '../api';
+import type {StringSchema} from '../schema';
 import type {StringTimeSchema} from '../schema';
 import type {SyncFormula} from '../api';
 import type {SyncTableDef} from '../api';
@@ -448,7 +448,7 @@ const commonPackFormulaSchema = {
 const stringPackFormulaSchema = zodCompleteObject<Omit<StringPackFormula<any>, 'execute'>>({
   ...commonPackFormulaSchema,
   resultType: zodDiscriminant(Type.string),
-  schema: zodCompleteObject<BaseStringSchema>({
+  schema: zodCompleteObject<StringSchema>({
     type: zodDiscriminant(ValueType.String),
     codaType: z.enum([...StringHintValueTypes]).optional(),
     description: z.string().optional(),
