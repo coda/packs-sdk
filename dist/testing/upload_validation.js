@@ -597,7 +597,8 @@ const syncTableSchema = z.union([genericDynamicSyncTableSchema, genericSyncTable
 const unrefinedPackVersionMetadataSchema = zodCompleteObject({
     version: z
         .string()
-        .regex(/^\d+(\.\d+){0,2}$/, 'Pack versions must use semantic versioning, e.g. "1", "1.0" or "1.0.0".'),
+        .regex(/^\d+(\.\d+){0,2}$/, 'Pack versions must use semantic versioning, e.g. "1", "1.0" or "1.0.0".')
+        .optional(),
     defaultAuthentication: z.union(zodUnionInput(Object.values(defaultAuthenticationValidators))).optional(),
     networkDomains: z
         .array(z.string().refine(domain => !(domain.startsWith('http:') || domain.startsWith('https:')), {
