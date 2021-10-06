@@ -38,7 +38,7 @@ ___
 
 ### icon
 
-• `Optional` **icon**: `ScaleIconSet`
+• `Optional` **icon**: [`ScaleIconSet`](../enums/ScaleIconSet.md)
 
 #### Defined in
 

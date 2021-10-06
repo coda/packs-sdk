@@ -1,6 +1,6 @@
 # Type alias: Schema
 
-Ƭ **Schema**: [`BooleanSchema`](../interfaces/BooleanSchema.md) \| [`NumberSchema`](NumberSchema.md) \| `StringSchema` \| [`ArraySchema`](../interfaces/ArraySchema.md) \| [`GenericObjectSchema`](GenericObjectSchema.md)
+Ƭ **Schema**: [`BooleanSchema`](../interfaces/BooleanSchema.md) \| [`NumberSchema`](NumberSchema.md) \| [`StringSchema`](StringSchema.md) \| [`ArraySchema`](../interfaces/ArraySchema.md) \| [`GenericObjectSchema`](GenericObjectSchema.md)
 
 #### Defined in
 

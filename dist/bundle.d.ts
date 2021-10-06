@@ -116,7 +116,7 @@ export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
 	maximum?: number | string;
 	step?: number | string;
 }
-declare enum ScaleIconSet {
+export declare enum ScaleIconSet {
 	Star = "star",
 	Circle = "circle",
 	Fire = "fire",

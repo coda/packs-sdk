@@ -12,6 +12,7 @@
 - [ParameterType](enums/ParameterType.md)
 - [PostSetupType](enums/PostSetupType.md)
 - [PrecannedDateRange](enums/PrecannedDateRange.md)
+- [ScaleIconSet](enums/ScaleIconSet.md)
 - [Type](enums/Type.md)
 - [ValueHintType](enums/ValueHintType.md)
 - [ValueType](enums/ValueType.md)
@@ -102,6 +103,7 @@
 - [ParamsList](types/ParamsList.md)
 - [Schema](types/Schema.md)
 - [SchemaType](types/SchemaType.md)
+- [StringSchema](types/StringSchema.md)
 - [SystemAuthentication](types/SystemAuthentication.md)
 - [TypedPackFormula](types/TypedPackFormula.md)
 
