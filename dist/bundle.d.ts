@@ -1568,7 +1568,7 @@ export interface PackVersionDefinition {
 	 * The semantic version of the pack. This must be valid semantic version of the form `1`, `1.2`, or `1.2.3`.
 	 * When uploading a pack version, the semantic version must be greater than any previously uploaded version.
 	 */
-	version?: string;
+	version: string;
 	/**
 	 * If specified, the user must provide personal authentication credentials before using the pack.
 	 */
