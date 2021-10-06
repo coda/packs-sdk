@@ -118,7 +118,7 @@ export type {IdentityDefinition} from './schema';
 export type {ObjectSchema} from './schema';
 export type {ObjectSchemaProperties} from './schema';
 export type {ObjectSchemaProperty} from './schema';
-export type {ScaleIconSet} from './schema';
+export {ScaleIconSet} from './schema';
 export type {ScaleSchema} from './schema';
 export type {Schema} from './schema';
 export type {SchemaType} from './schema';
