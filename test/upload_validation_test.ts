@@ -45,8 +45,14 @@ describe('Pack metadata Validation', () => {
     return err as PackMetadataValidationError;
   }
 
-  it('empty upload JSON object validates successfully', async () => {
-    await validateJson({});
+  it('empty upload JSON object', async () => {
+    const err = await validateJsonAndAssertFails({});
+    assert.deepEqual(err.validationErrors, [
+      {
+        message: 'Missing required field version.',
+        path: 'version',
+      },
+    ]);
   });
 
   it('wrong top-level types', async () => {
