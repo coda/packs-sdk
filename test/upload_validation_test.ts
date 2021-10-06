@@ -1830,6 +1830,10 @@ describe('Pack metadata Validation', () => {
       const err = validateAndAssertFails(arraySchema);
       assert.deepEqual(err.validationErrors, [
         {
+          path: 'items',
+          message: 'Could not find any valid schema for this value.',
+        },
+        {
           path: 'items.identity.name',
           message:
             'Invalid name. Identity names can only contain alphanumeric characters, underscores, and dashes, and no spaces.',
