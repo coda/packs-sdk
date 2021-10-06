@@ -46,9 +46,7 @@ import type {SimpleStringSchema} from '../schema';
 import type {SliderSchema} from '..';
 import type {StringDateSchema} from '../schema';
 import type {StringDateTimeSchema} from '../schema';
-import {StringHintValueTypes} from '../schema';
 import type {StringPackFormula} from '../api';
-import type {StringSchema} from '../schema';
 import type {StringTimeSchema} from '../schema';
 import type {SyncFormula} from '../api';
 import type {SyncTableDef} from '../api';
@@ -445,16 +443,6 @@ const commonPackFormulaSchema = {
   extraOAuthScopes: z.array(z.string()).optional(),
 };
 
-const stringPackFormulaSchema = zodCompleteObject<Omit<StringPackFormula<any>, 'execute'>>({
-  ...commonPackFormulaSchema,
-  resultType: zodDiscriminant(Type.string),
-  schema: zodCompleteObject<StringSchema>({
-    type: zodDiscriminant(ValueType.String),
-    codaType: z.enum([...StringHintValueTypes]).optional(),
-    description: z.string().optional(),
-  }).optional(),
-});
-
 const booleanPackFormulaSchema = zodCompleteObject<Omit<BooleanPackFormula<any>, 'execute'>>({
   ...commonPackFormulaSchema,
   resultType: zodDiscriminant(Type.boolean),
@@ -609,6 +597,12 @@ const stringPropertySchema = z.union([
   stringDateTimePropertySchema,
   durationPropertySchema,
 ]);
+
+const stringPackFormulaSchema = zodCompleteObject<Omit<StringPackFormula<any>, 'execute'>>({
+  ...commonPackFormulaSchema,
+  resultType: zodDiscriminant(Type.string),
+  schema: stringPropertySchema.optional(),
+});
 
 // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
 // recursive typing better.
