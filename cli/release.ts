@@ -11,6 +11,7 @@ import {importManifest} from './helpers';
 import {isResponseError} from '../helpers/external-api/coda';
 import * as path from 'path';
 import {printAndExit} from '../testing/helpers';
+import {promptForInput} from '../testing/helpers';
 import {tryParseSystemError} from './errors';
 
 interface ReleaseArgs {
@@ -41,6 +42,8 @@ export async function handleRelease({
     );
   }
 
+  const codaClient = createCodaClient(apiKey, formattedEndpoint);
+
   // TODO(alan/jonathan): Deal with the case of a pack that doesn't specify a version at all.
   // Either error out with a useful message about needing to provide a specific version
   // via the optional second CLI arg, or add a CLI flag --latest that uses the latest version.
@@ -49,13 +52,24 @@ export async function handleRelease({
     try {
       const bundleFilename = await build(manifestFile);
       const manifest = await importManifest<PackVersionDefinition>(bundleFilename);
-      packVersion = manifest.version as string;
+      packVersion = manifest.version as string | undefined;
     } catch (err: any) {
       return printAndExit(`Got an error while building your pack to get the current pack version: ${formatError(err)}`);
     }
   }
 
-  const codaClient = createCodaClient(apiKey, formattedEndpoint);
+  if (!packVersion) {
+    const {items: versions} = await codaClient.listPackVersions(packId, {limit: 1});
+    const [latestPackVersionData] = versions;
+    const {packVersion: latestPackVersion} = latestPackVersionData;
+    const shouldReleaseLatestPackVersion = promptForInput(
+      `No version specified in your manifest. Do you want to release the latest version of the Pack (${latestPackVersion})? (y/n)`,
+    );
+    if (!shouldReleaseLatestPackVersion.toLocaleLowerCase().startsWith('y')) {
+      return process.exit(1);
+    }
+    packVersion = latestPackVersion;
+  }
 
   await handleResponse(codaClient.createPackRelease(packId, {}, {packVersion, releaseNotes: notes}));
   return printAndExit('Success!', 0);
