@@ -2,7 +2,9 @@ import {testHelper} from './test_helper';
 import type {ArraySchema} from '../schema';
 import {AuthenticationType} from '../types';
 import {ConnectionRequirement} from '../api_types';
+import {CurrencyFormat} from '..';
 import {DefaultConnectionType} from '../types';
+import {DurationUnit} from '..';
 import type {Formula} from '../api';
 import type {ObjectSchemaDefinition} from '../schema';
 import type {PackFormulaMetadata} from '../api';
@@ -35,8 +37,6 @@ import {makeSyncTableLegacy} from '../api';
 import {validatePackVersionMetadata} from '../testing/upload_validation';
 import {validateSyncTableSchema} from '../testing/upload_validation';
 import {validateVariousAuthenticationMetadata} from '../testing/upload_validation';
-import {CurrencyFormat} from '..';
-import {DurationUnit} from '..';
 
 describe('Pack metadata Validation', () => {
   async function validateJson(obj: Record<string, any>) {
