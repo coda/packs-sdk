@@ -2,6 +2,10 @@ MAKEFLAGS = -s ${MAX_PARALLEL_MAKEFLAG}
 SHELL = /bin/bash
 ROOTDIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
+# NOTE(spencer): this should probably be the semantic version of the sdk corresponding to the package.json
+CURRENT_GIT_SHA1 := $(shell git log -1 --format="%H")
+TRUNCATED_GIT_SHA1 := $(shell git log -1 --format="%h")
+
 ### YARN
 # CircleCI yarn cache directory may also need to be updated in sync with this
 YARN_CACHE_DIR=~/.yarncache
@@ -129,8 +133,20 @@ docs: typedoc generated-documentation
 view-docs:
 	PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 expect -c 'spawn pipenv run mkdocs serve; expect "Serving on"; exec open "http://localhost:8000"; interact'
 
+###############################################################################
+### Deployment of documentation ### 
+
+# This step generates all the documentation for the SDK using mkdocs and dumps the contents in /site
+.PHONY: build-docs
+build-docs:
+	${PIPENV} run mkdocs build;
+
 .PHONY: publish-docs
-publish-docs:
+publish-docs: docs build-docs
+	(cd ${ROOTDIR}; tsnode documentation/documentation_publisher.ts push ${CURRENT_GIT_SHA1})
+
+.PHONY: publish-docs-gh-pages
+publish-docs-gh-pages:
 	if [ -z ${shell git status -uno | grep "Your branch is up to date with 'origin/main'"} ]; then \
 		echo "The documentation can only be published from main at head."; \
 		exit 1; \
@@ -139,6 +155,8 @@ publish-docs:
 	# See: https://www.mkdocs.org/user-guide/deploying-your-docs/#github-pages
 	# Including the tag "[ci skip]" in the commit message to prevent CircleCI from building the branch.
 	${PIPENV} run mkdocs gh-deploy --message "Deployed {sha} with MkDocs version: {version} [ci skip]"
+
+###############################################################################
 
 .PHONY: test
 test:
