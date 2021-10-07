@@ -1,9 +1,10 @@
+/* eslint-disable no-console */
 import AWS from 'aws-sdk';
+import {Command} from 'commander';
 import S3 from 'aws-sdk/clients/s3';
 import * as fs from 'fs';
-import * as path from 'path';
 import * as mime from 'mime';
-import {Command} from 'commander';
+import * as path from 'path';
 
 const AwsRegion = 'us-west-2';
 const BaseGeneratedDocsPath = 'site';
