@@ -18,6 +18,7 @@ import {isResponseError} from '../helpers/external-api/coda';
 import {isTestCommand} from './helpers';
 import os from 'os';
 import * as path from 'path';
+import {print} from '../testing/helpers';
 import {printAndExit as printAndExitImpl} from '../testing/helpers';
 import {readFile} from '../testing/helpers';
 import requestPromise from 'request-promise-native';
@@ -96,17 +97,25 @@ export async function handleUpload({
     printAndExit(`Could not find a Pack id registered in directory "${manifestDir}"`);
   }
 
-  const packVersion = manifest.version;
+  const metadata = compilePackMetadata(manifest);
+  let packVersion = manifest.version;
   if (!packVersion) {
-    printAndExit(`No Pack version declared for this Pack`);
+    const nextPackVersionInfo = await client.getNextPackVersion(
+      packId,
+      {},
+      {proposedMetadata: JSON.stringify(metadata)},
+    );
+    packVersion = nextPackVersionInfo.nextVersion;
+    print(`Pack version not provided. Generated one for you: version is ${packVersion}`);
   }
+
+  metadata.version = packVersion;
 
   try {
     const bundle = readFile(bundlePath);
     if (!bundle) {
       printAndExit(`Could not find bundle file at path ${bundlePath}`);
     }
-    const metadata = compilePackMetadata(manifest);
 
     const sourceMap = readFile(bundleSourceMapPath);
     if (!sourceMap) {

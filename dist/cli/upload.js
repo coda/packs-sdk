@@ -40,6 +40,7 @@ const os_1 = __importDefault(require("os"));
 const path = __importStar(require("path"));
 const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
+const helpers_7 = require("../testing/helpers");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
 const errors_3 = require("./errors");
 const uuid_1 = require("uuid");
@@ -56,7 +57,7 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
     const logger = console;
     function printAndExit(message) {
         cleanup(intermediateOutputDirectory, logger);
-        (0, helpers_5.printAndExit)(message);
+        (0, helpers_6.printAndExit)(message);
     }
     const manifestDir = path.dirname(manifestFile);
     const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
@@ -87,17 +88,20 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
     if (!packId) {
         printAndExit(`Could not find a Pack id registered in directory "${manifestDir}"`);
     }
-    const packVersion = manifest.version;
+    const metadata = (0, metadata_1.compilePackMetadata)(manifest);
+    let packVersion = manifest.version;
     if (!packVersion) {
-        printAndExit(`No Pack version declared for this Pack`);
+        const nextPackVersionInfo = await client.getNextPackVersion(packId, {}, { proposedMetadata: JSON.stringify(metadata) });
+        packVersion = nextPackVersionInfo.nextVersion;
+        (0, helpers_5.print)(`Pack version not provided. Generated one for you: version is ${packVersion}`);
     }
+    metadata.version = packVersion;
     try {
-        const bundle = (0, helpers_6.readFile)(bundlePath);
+        const bundle = (0, helpers_7.readFile)(bundlePath);
         if (!bundle) {
             printAndExit(`Could not find bundle file at path ${bundlePath}`);
         }
-        const metadata = (0, metadata_1.compilePackMetadata)(manifest);
-        const sourceMap = (0, helpers_6.readFile)(bundleSourceMapPath);
+        const sourceMap = (0, helpers_7.readFile)(bundleSourceMapPath);
         if (!sourceMap) {
             printAndExit(`Could not find bundle source map at path ${bundleSourceMapPath}`);
         }
@@ -152,6 +156,6 @@ async function uploadPack(uploadUrl, uploadPayload, headers) {
         });
     }
     catch (err) {
-        (0, helpers_5.printAndExit)(`Error in uploading Pack to signed url: ${(0, errors_1.formatError)(err)}`);
+        (0, helpers_6.printAndExit)(`Error in uploading Pack to signed url: ${(0, errors_1.formatError)(err)}`);
     }
 }
