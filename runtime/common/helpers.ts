@@ -1,8 +1,8 @@
+import type {BasicPackDefinition} from '../../types';
 import type {Formula} from '../../api';
 import type {GenericSyncFormula} from '../../api';
-import type {PackVersionDefinition} from '../../types';
 
-export function findFormula(packDef: PackVersionDefinition, formulaNameWithNamespace: string): Formula {
+export function findFormula(packDef: BasicPackDefinition, formulaNameWithNamespace: string): Formula {
   const packFormulas = packDef.formulas;
   if (!packFormulas) {
     throw new Error(`Pack definition has no formulas.`);
@@ -31,7 +31,7 @@ export function findFormula(packDef: PackVersionDefinition, formulaNameWithNames
   throw new Error(`Pack definition has no formula "${name}"${namespace ?? ` in namespace "${namespace}"`}.`);
 }
 
-export function findSyncFormula(packDef: PackVersionDefinition, syncFormulaName: string): GenericSyncFormula {
+export function findSyncFormula(packDef: BasicPackDefinition, syncFormulaName: string): GenericSyncFormula {
   if (!packDef.syncTables) {
     throw new Error(`Pack definition has no sync tables.`);
   }
@@ -48,14 +48,14 @@ export function findSyncFormula(packDef: PackVersionDefinition, syncFormulaName:
   throw new Error(`Pack definition has no sync formula "${syncFormulaName}" in its sync tables.`);
 }
 
-export function tryFindFormula(packDef: PackVersionDefinition, formulaNameWithNamespace: string): Formula | undefined {
+export function tryFindFormula(packDef: BasicPackDefinition, formulaNameWithNamespace: string): Formula | undefined {
   try {
     return findFormula(packDef, formulaNameWithNamespace);
   } catch (_err) {}
 }
 
 export function tryFindSyncFormula(
-  packDef: PackVersionDefinition,
+  packDef: BasicPackDefinition,
   syncFormulaName: string,
 ): GenericSyncFormula | undefined {
   try {

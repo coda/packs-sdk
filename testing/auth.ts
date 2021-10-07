@@ -1,10 +1,10 @@
 import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
+import type {BasicPackDefinition} from '../types';
 import type {Credentials} from './auth_types';
 import type {CredentialsFile} from './auth_types';
 import type {MultiQueryParamCredentials} from './auth_types';
 import type {OAuth2Credentials} from './auth_types';
-import type {PackVersionDefinition} from '../types';
 import {assertCondition} from '../helpers/ensure';
 import {ensureExists} from '../helpers/ensure';
 import {ensureNonEmptyString} from '../helpers/ensure';
@@ -29,14 +29,14 @@ export const DEFAULT_OAUTH_SERVER_PORT = 3000;
 
 export async function setupAuthFromModule(
   manifestPath: string,
-  manifest: PackVersionDefinition,
+  manifest: BasicPackDefinition,
   opts: SetupAuthOptions = {},
 ): Promise<void> {
   const manifestDir = path.dirname(manifestPath);
   return setupAuth(manifestDir, manifest, opts);
 }
 
-export function setupAuth(manifestDir: string, packDef: PackVersionDefinition, opts: SetupAuthOptions = {}): void {
+export function setupAuth(manifestDir: string, packDef: BasicPackDefinition, opts: SetupAuthOptions = {}): void {
   const auth = getPackAuth(packDef);
   if (!auth) {
     return printAndExit(

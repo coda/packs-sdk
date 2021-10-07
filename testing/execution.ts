@@ -1,3 +1,4 @@
+import type {BasicPackDefinition} from '../types';
 import type {Credentials} from './auth_types';
 import type {ExecutionContext} from '../api_types';
 import type {FormulaSpecification} from '../runtime/types';
@@ -6,7 +7,6 @@ import type {GenericSyncFormulaResult} from '../api';
 import type {MetadataContext} from '../api';
 import type {MetadataFormula} from '../api';
 import type {PackFormulaResult} from '../api_types';
-import type {PackVersionDefinition} from '../types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
 import type {StandardFormulaSpecification} from '../runtime/types';
@@ -65,7 +65,7 @@ function resolveFormulaNameWithNamespace(formulaNameWithNamespace: string): stri
 async function findAndExecutePackFunction<T extends FormulaSpecification>(
   params: ParamValues<ParamDefs>,
   formulaSpec: T,
-  manifest: PackVersionDefinition,
+  manifest: BasicPackDefinition,
   executionContext: ExecutionContext | SyncExecutionContext,
   {validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true}: ExecuteOptions = {},
 ): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
@@ -94,7 +94,7 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
 }
 
 export async function executeFormulaFromPackDef<T extends PackFormulaResult | GenericSyncFormulaResult = any>(
-  packDef: PackVersionDefinition,
+  packDef: BasicPackDefinition,
   formulaNameWithNamespace: string,
   params: ParamValues<ParamDefs>,
   context?: ExecutionContext,
@@ -134,7 +134,7 @@ export async function executeFormulaOrSyncFromCLI({
 }: {
   formulaName: string;
   params: string[];
-  manifest: PackVersionDefinition;
+  manifest: BasicPackDefinition;
   manifestPath: string;
   vm?: boolean;
   dynamicUrl?: string;
@@ -290,7 +290,7 @@ export async function executeFormulaOrSyncWithRawParams<
 }: {
   formulaSpecification: T;
   params: string[];
-  manifest: PackVersionDefinition;
+  manifest: BasicPackDefinition;
   executionContext: SyncExecutionContext;
 }): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
   let params: ParamValues<ParamDefs>;
@@ -318,7 +318,7 @@ export async function executeFormulaOrSyncWithRawParams<
  * For now, use `coda execute --vm` to simulate that level of isolation.
  */
 export async function executeSyncFormulaFromPackDef<T extends object = any>(
-  packDef: PackVersionDefinition,
+  packDef: BasicPackDefinition,
   syncFormulaName: string,
   params: ParamValues<ParamDefs>,
   context?: SyncExecutionContext,
@@ -377,7 +377,7 @@ export async function executeSyncFormulaFromPackDef<T extends object = any>(
  * including the continuation, for inspection.
  */
 export async function executeSyncFormulaFromPackDefSingleIteration(
-  packDef: PackVersionDefinition,
+  packDef: BasicPackDefinition,
   syncFormulaName: string,
   params: ParamValues<ParamDefs>,
   context?: SyncExecutionContext,

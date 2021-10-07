@@ -1,4 +1,5 @@
 import type {Arguments} from 'yargs';
+import type {PackVersionDefinition} from '..';
 import {build} from './build';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
@@ -40,11 +41,14 @@ export async function handleRelease({
     );
   }
 
+  // TODO(alan/jonathan): Deal with the case of a pack that doesn't specify a version at all.
+  // Either error out with a useful message about needing to provide a specific version
+  // via the optional second CLI arg, or add a CLI flag --latest that uses the latest version.
   let packVersion = explicitPackVersion;
   if (!packVersion) {
     try {
       const bundleFilename = await build(manifestFile);
-      const manifest = await importManifest(bundleFilename);
+      const manifest = await importManifest<PackVersionDefinition>(bundleFilename);
       packVersion = manifest.version as string;
     } catch (err: any) {
       return printAndExit(`Got an error while building your pack to get the current pack version: ${formatError(err)}`);
