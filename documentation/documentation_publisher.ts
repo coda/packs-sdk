@@ -10,8 +10,7 @@ const BaseGeneratedDocsPath = 'site';
 const DocumentationBucket = 'developer-documentation';
 const PacksSdkBucketRootPath = 'packs';
 const EnvironmentKeyRoot = `${PacksSdkBucketRootPath}/current`;
-// const Environments = ['adhoc', 'head', 'staging', 'prod'];
-const Environments = ['adhoc'];
+const Environments = ['adhoc', 'head', 'staging', 'prod'];
 const program = new Command();
 
 // only works after `program` has been parsed
@@ -51,19 +50,19 @@ async function pushDocsToEnv(env: string, version: string) {
   const bucket = getS3Bucket(env);
   const key = getS3ConfigKey(version);
 
-  async function pushDocsDirectory(rootPath: string): Promise<any> {
-    const fullFilePath = path.join(BaseGeneratedDocsPath, rootPath);
+  async function pushDocsDirectory(basePath: string): Promise<any> {
+    const fullFilePath = path.join(BaseGeneratedDocsPath, basePath);
     const fileStats = fs.lstatSync(fullFilePath);
     if (fileStats.isFile()) {
       const contentType = mime.getType(fullFilePath) || undefined;
       const fileData = fs.createReadStream(fullFilePath);
       if (isVerbose()) {
-        console.log(`Uploading ${rootPath} to S3 as a file`);
+        console.log(`Uploading ${basePath} to S3 as a file`);
       }
       return s3
         .putObject({
           Bucket: bucket,
-          Key: `${key}/${rootPath}`,
+          Key: `${key}/${basePath}`,
           Body: fileData,
           ContentType: contentType,
         })
@@ -71,11 +70,13 @@ async function pushDocsToEnv(env: string, version: string) {
     }
 
     if (fileStats.isDirectory()) {
+      if (isVerbose()) {
+        console.log(`Recursively traversing the directory ${basePath}.`);
+      }
       const files = fs.readdirSync(fullFilePath);
       return Promise.all(
         files.map(fileName => {
-          // get the full path of the file
-          const nestedFilePath = path.join(rootPath, fileName);
+          const nestedFilePath = path.join(basePath, fileName);
           return pushDocsDirectory(nestedFilePath);
         }),
       );

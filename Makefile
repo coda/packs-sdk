@@ -2,9 +2,8 @@ MAKEFLAGS = -s ${MAX_PARALLEL_MAKEFLAG}
 SHELL = /bin/bash
 ROOTDIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
-# NOTE(spencer): this should probably be the semantic version of the sdk corresponding to the package.json
+# TODO(spencer): this should probably be the semantic version of the sdk corresponding to the package.json
 CURRENT_GIT_SHA1 := $(shell git log -1 --format="%H")
-TRUNCATED_GIT_SHA1 := $(shell git log -1 --format="%h")
 
 ### YARN
 # CircleCI yarn cache directory may also need to be updated in sync with this
