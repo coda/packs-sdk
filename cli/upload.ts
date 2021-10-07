@@ -1,6 +1,7 @@
 import type {Arguments} from 'yargs';
 import type {Logger} from '../api_types';
 import type {PackUpload} from '../compiled_types';
+import type {PackVersionDefinition} from '..';
 import type {PublicApiPackVersionUploadInfo} from '../helpers/external-api/v1';
 import type {TimerShimStrategy} from '../testing/compile';
 import {compilePackBundle} from '../testing/compile';
@@ -79,7 +80,7 @@ export async function handleUpload({
     timerStrategy,
   });
 
-  const manifest = await importManifest(bundlePath);
+  const manifest = await importManifest<PackVersionDefinition>(bundlePath);
 
   // Since package.json isn't in dist, we grab it from the root directory instead.
   const packageJson = await import(isTestCommand() ? '../package.json' : '../../package.json');

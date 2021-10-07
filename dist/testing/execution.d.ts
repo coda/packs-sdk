@@ -1,10 +1,10 @@
 /// <reference types="node" />
+import type { BasicPackDefinition } from '../types';
 import type { ExecutionContext } from '../api_types';
 import type { GenericSyncFormulaResult } from '../api';
 import type { MetadataContext } from '../api';
 import type { MetadataFormula } from '../api';
 import type { PackFormulaResult } from '../api_types';
-import type { PackVersionDefinition } from '../types';
 import type { ParamDefs } from '../api_types';
 import type { ParamValues } from '../api_types';
 import type { StandardFormulaSpecification } from '../runtime/types';
@@ -19,11 +19,11 @@ export interface ContextOptions {
     useRealFetcher?: boolean;
     manifestPath?: string;
 }
-export declare function executeFormulaFromPackDef<T extends PackFormulaResult | GenericSyncFormulaResult = any>(packDef: PackVersionDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<T>;
+export declare function executeFormulaFromPackDef<T extends PackFormulaResult | GenericSyncFormulaResult = any>(packDef: BasicPackDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<T>;
 export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, bundleSourceMapPath, bundlePath, contextOptions, }: {
     formulaName: string;
     params: string[];
-    manifest: PackVersionDefinition;
+    manifest: BasicPackDefinition;
     manifestPath: string;
     vm?: boolean;
     dynamicUrl?: string;
@@ -47,7 +47,7 @@ export declare class VMError {
 export declare function executeFormulaOrSyncWithRawParams<T extends StandardFormulaSpecification | SyncFormulaSpecification>({ formulaSpecification, params: rawParams, manifest, executionContext, }: {
     formulaSpecification: T;
     params: string[];
-    manifest: PackVersionDefinition;
+    manifest: BasicPackDefinition;
     executionContext: SyncExecutionContext;
 }): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult>;
 /**
@@ -62,12 +62,12 @@ export declare function executeFormulaOrSyncWithRawParams<T extends StandardForm
  *
  * For now, use `coda execute --vm` to simulate that level of isolation.
  */
-export declare function executeSyncFormulaFromPackDef<T extends object = any>(packDef: PackVersionDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult }?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<T[]>;
+export declare function executeSyncFormulaFromPackDef<T extends object = any>(packDef: BasicPackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult }?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<T[]>;
 /**
  * Executes a single sync iteration, and returns the return value from the sync formula
  * including the continuation, for inspection.
  */
-export declare function executeSyncFormulaFromPackDefSingleIteration(packDef: PackVersionDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<GenericSyncFormulaResult>;
+export declare function executeSyncFormulaFromPackDefSingleIteration(packDef: BasicPackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<GenericSyncFormulaResult>;
 export declare function executeMetadataFormula(formula: MetadataFormula, metadataParams?: {
     search?: string;
     formulaContext?: MetadataContext;

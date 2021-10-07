@@ -1,4 +1,5 @@
 import {AuthenticationType} from '../../types';
+import type {BasicPackDefinition} from '../../types';
 import type {ExecutionContext} from '../../api_types';
 import type {FetchRequest} from '../../api_types';
 import type {FetchResponse} from '../../api_types';
@@ -8,7 +9,6 @@ import type {GenericSyncFormulaResult} from '../../api';
 import type {MetadataFormula} from '../../api';
 import {MetadataFormulaType} from '../types';
 import type {PackFormulaResult} from '../../api_types';
-import type {PackVersionDefinition} from '../../types';
 import type {ParamDefs} from '../../api_types';
 import type {ParamValues} from '../../api_types';
 import type {ParameterAutocompleteMetadataFormulaSpecification} from '../types';
@@ -33,7 +33,7 @@ export {unmarshalValue} from '../common/marshaling';
 export async function findAndExecutePackFunction<T extends FormulaSpecification>(
   params: ParamValues<ParamDefs>,
   formulaSpec: T,
-  manifest: PackVersionDefinition,
+  manifest: BasicPackDefinition,
   executionContext: ExecutionContext | SyncExecutionContext,
   shouldWrapError: boolean = true,
 ): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
@@ -48,7 +48,7 @@ export async function findAndExecutePackFunction<T extends FormulaSpecification>
 function doFindAndExecutePackFunction<T extends FormulaSpecification>(
   params: ParamValues<ParamDefs>,
   formulaSpec: T,
-  manifest: PackVersionDefinition,
+  manifest: BasicPackDefinition,
   executionContext: ExecutionContext | SyncExecutionContext,
 ): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
   const {syncTables, defaultAuthentication} = manifest;
@@ -159,7 +159,7 @@ function doFindAndExecutePackFunction<T extends FormulaSpecification>(
 }
 
 function findParentFormula(
-  manifest: PackVersionDefinition,
+  manifest: BasicPackDefinition,
   formulaSpec: ParameterAutocompleteMetadataFormulaSpecification,
 ) {
   const {formulas, syncTables} = manifest;

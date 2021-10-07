@@ -43,6 +43,9 @@ async function handleRelease({ manifestFile, packVersion: explicitPackVersion, c
     if (!packId) {
         return (0, helpers_4.printAndExit)(`Could not find a Pack id in directory ${manifestDir}. You may need to run "coda create" first if this is a brand new pack.`);
     }
+    // TODO(alan/jonathan): Deal with the case of a pack that doesn't specify a version at all.
+    // Either error out with a useful message about needing to provide a specific version
+    // via the optional second CLI arg, or add a CLI flag --latest that uses the latest version.
     let packVersion = explicitPackVersion;
     if (!packVersion) {
         try {

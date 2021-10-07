@@ -1,6 +1,6 @@
 import type {Authentication} from '../types';
+import type {BasicPackDefinition} from '../types';
 import {Client} from '../helpers/external-api/coda';
-import type {PackVersionDefinition} from '../types';
 import path from 'path';
 import {print} from '../testing/helpers';
 import {spawnSync} from 'child_process';
@@ -33,7 +33,7 @@ export function makeManifestFullPath(manifestPath: string): string {
 // in the future, for a use case like a Google Maps pack which allowed a default credential
 // from the pack author to be used up to some rate limit, after which a power user would need
 // to connect their own Maps API credential.
-export function getPackAuth(packDef: PackVersionDefinition): Authentication | undefined {
+export function getPackAuth(packDef: BasicPackDefinition): Authentication | undefined {
   const {defaultAuthentication, systemConnectionAuthentication} = packDef;
   if (defaultAuthentication && systemConnectionAuthentication) {
     print('Both defaultAuthentication & systemConnectionAuthentication are specified.');
@@ -44,7 +44,9 @@ export function getPackAuth(packDef: PackVersionDefinition): Authentication | un
   return defaultAuthentication || (systemConnectionAuthentication as Authentication);
 }
 
-export async function importManifest(bundleFilename: string): Promise<PackVersionDefinition> {
+export async function importManifest<T extends BasicPackDefinition = BasicPackDefinition>(
+  bundleFilename: string,
+): Promise<T> {
   const module = await import(path.resolve(bundleFilename));
   return module.pack || module.manifest;
 }
