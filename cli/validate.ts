@@ -2,7 +2,7 @@ import type {Arguments} from 'yargs';
 import type {PackMetadataValidationError} from '../testing/upload_validation';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ValidationError} from '../testing/types';
-import { compilePackBundle } from '../testing/compile';
+import {compilePackBundle} from '../testing/compile';
 import {compilePackMetadata} from '../helpers/metadata';
 import {importManifest} from './helpers';
 import {makeManifestFullPath} from './helpers';
@@ -17,6 +17,12 @@ export async function handleValidate({manifestFile}: Arguments<ValidateArgs>) {
   const fullManifestPath = makeManifestFullPath(manifestFile);
   const {bundlePath} = await compilePackBundle({manifestPath: fullManifestPath, minify: false});
   const manifest = await importManifest(bundlePath);
+
+  // Since it's okay to not specify a version, we inject one if it's not provided.
+  if (!manifest.version) {
+    manifest.version = '1';
+  }
+
   const metadata = compilePackMetadata(manifest);
   return validateMetadata(metadata);
 }
