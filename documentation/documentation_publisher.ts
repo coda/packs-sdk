@@ -1,13 +1,17 @@
 import AWS from 'aws-sdk';
 import S3 from 'aws-sdk/clients/s3';
 import * as fs from 'fs';
+import * as path from 'path';
+import * as mime from 'mime';
 import {Command} from 'commander';
 
 const AwsRegion = 'us-west-2';
+const BaseGeneratedDocsPath = 'site';
 const DocumentationBucket = 'developer-documentation';
 const PacksSdkBucketRootPath = 'packs';
 const EnvironmentKeyRoot = `${PacksSdkBucketRootPath}/current`;
-const Environments = ['adhoc', 'head', 'staging', 'prod'];
+// const Environments = ['adhoc', 'head', 'staging', 'prod'];
+const Environments = ['adhoc'];
 const program = new Command();
 
 // only works after `program` has been parsed
@@ -42,28 +46,70 @@ function getS3EnvironmentKey(environment: string): string {
   return `${EnvironmentKeyRoot}/${environment}`;
 }
 
-async function pushConfigToEnv(env: string, version: string) {
-  const body = JSON.parse(fs.readFileSync('config/runtime_config.json', {encoding: 'utf8'}));
+async function pushDocsToEnv(env: string, version: string) {
   const s3 = getS3Service(env);
   const bucket = getS3Bucket(env);
   const key = getS3ConfigKey(version);
 
+  async function pushDocsDirectory(rootPath: string): Promise<any> {
+    const fileStats = fs.lstatSync(rootPath);
+    if (fileStats.isFile()) {
+      const contentType = mime.getType(rootPath) || undefined;
+      const fileData = fs.createReadStream(rootPath);
+      if (isVerbose()) {
+        console.log(`Uploading ${rootPath} to S3 as a file`);
+      }
+      return s3
+        .putObject({
+          Bucket: bucket,
+          Key: `${key}/${rootPath}`,
+          Body: fileData,
+          ContentType: contentType,
+        })
+        .promise();
+    }
+
+    if (fileStats.isDirectory()) {
+      const files = fs.readdirSync(rootPath);
+      return Promise.all(
+        files.map(fileName => {
+          // get the full path of the file
+          const filePath = path.join(rootPath, fileName);
+          return pushDocsDirectory(filePath);
+        }),
+      );
+    }
+  }
+
   try {
-    console.log(`Pushing the current config ${key} to ${env}...`);
-    await s3
-      .putObject({Bucket: bucket, Key: key, Body: JSON.stringify(body), ContentType: 'application/json'})
-      .promise();
-    console.log(`The current config was pushed to ${env}:${key} successfully.`);
+    console.log(`Pushing the current packs-sdk documentation ${key} to ${env}...`);
+    await pushDocsDirectory(BaseGeneratedDocsPath);
+    console.log(`The current packs-sdk documentation was pushed to ${env}:${key} successfully.`);
   } catch (err: any) {
     handleError(err);
   }
 }
 
 async function pushDocumentation(version: string) {
-  await Promise.all(Environments.map(env => pushConfigToEnv(env, version)));
+  await Promise.all(Environments.map(env => pushDocsToEnv(env, version)));
 }
 
-function activateDocumentationVersion(version: string, environment: string) {}
+async function activateDocumentationVersion(version: string, env: string) {
+  const body = {version};
+  const s3 = getS3Service(env);
+  const bucket = getS3Bucket(env);
+  const key = getS3EnvironmentKey(env);
+
+  try {
+    console.log(`Activating packs-sdk documentation at ${version} in ${env}...`);
+    await s3
+      .putObject({Bucket: bucket, Key: key, Body: JSON.stringify(body), ContentType: 'application/json'})
+      .promise();
+    console.log(`The packs-sdk documentation at ${version} was activated in ${env}.`);
+  } catch (err: any) {
+    handleError(err);
+  }
+}
 
 // User Command Handling
 program
