@@ -1,16 +1,22 @@
-# Interface: DurationSchema
+# Interface: SimpleStringSchema<T\>
+
+## Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends `SimpleStringHintTypes``SimpleStringHintTypes` |
 
 ## Hierarchy
 
-- `BaseStringSchema`<[`Duration`](../enums/ValueHintType.md#duration)\>
+- `BaseStringSchema`<`T`\>
 
-  ↳ **`DurationSchema`**
+  ↳ **`SimpleStringSchema`**
 
 ## Properties
 
 ### codaType
 
-• `Optional` **codaType**: [`Duration`](../enums/ValueHintType.md#duration)
+• `Optional` **codaType**: `T`
 
 #### Inherited from
 
@@ -33,26 +39,6 @@ BaseStringSchema.description
 #### Defined in
 
 [schema.ts:75](https://github.com/coda/packs-sdk/blob/main/schema.ts#L75)
-
-___
-
-### maxUnit
-
-• `Optional` **maxUnit**: [`DurationUnit`](../enums/DurationUnit.md)
-
-#### Defined in
-
-[schema.ts:204](https://github.com/coda/packs-sdk/blob/main/schema.ts#L204)
-
-___
-
-### precision
-
-• `Optional` **precision**: `number`
-
-#### Defined in
-
-[schema.ts:203](https://github.com/coda/packs-sdk/blob/main/schema.ts#L203)
 
 ___
 

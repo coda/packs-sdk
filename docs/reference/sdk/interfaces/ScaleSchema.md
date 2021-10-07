@@ -2,7 +2,7 @@
 
 ## Hierarchy
 
-- [`NumberSchema`](NumberSchema.md)
+- `BaseNumberSchema`<[`Scale`](../enums/ValueHintType.md#scale)\>
 
   ↳ **`ScaleSchema`**
 
@@ -14,11 +14,11 @@
 
 #### Overrides
 
-[NumberSchema](NumberSchema.md).[codaType](NumberSchema.md#codatype)
+BaseNumberSchema.codaType
 
 #### Defined in
 
-[schema.ts:141](https://github.com/coda/packs-sdk/blob/main/schema.ts#L141)
+[schema.ts:170](https://github.com/coda/packs-sdk/blob/main/schema.ts#L170)
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 #### Inherited from
 
-[NumberSchema](NumberSchema.md).[description](NumberSchema.md#description)
+BaseNumberSchema.description
 
 #### Defined in
 
@@ -38,21 +38,21 @@ ___
 
 ### icon
 
-• **icon**: `ScaleIconSet`
+• `Optional` **icon**: [`ScaleIconSet`](../enums/ScaleIconSet.md)
 
 #### Defined in
 
-[schema.ts:143](https://github.com/coda/packs-sdk/blob/main/schema.ts#L143)
+[schema.ts:172](https://github.com/coda/packs-sdk/blob/main/schema.ts#L172)
 
 ___
 
 ### maximum
 
-• **maximum**: `number`
+• `Optional` **maximum**: `number`
 
 #### Defined in
 
-[schema.ts:142](https://github.com/coda/packs-sdk/blob/main/schema.ts#L142)
+[schema.ts:171](https://github.com/coda/packs-sdk/blob/main/schema.ts#L171)
 
 ___
 
@@ -62,8 +62,8 @@ ___
 
 #### Inherited from
 
-[NumberSchema](NumberSchema.md).[type](NumberSchema.md#type)
+BaseNumberSchema.type
 
 #### Defined in
 
-[schema.ts:83](https://github.com/coda/packs-sdk/blob/main/schema.ts#L83)
+[schema.ts:92](https://github.com/coda/packs-sdk/blob/main/schema.ts#L92)

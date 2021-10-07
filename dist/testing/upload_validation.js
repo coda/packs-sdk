@@ -23,19 +23,22 @@ exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata 
 const schema_1 = require("../schema");
 const types_1 = require("../types");
 const api_types_1 = require("../api_types");
+const schema_2 = require("../schema");
 const types_2 = require("../types");
+const schema_3 = require("../schema");
 const types_3 = require("../types");
 const api_types_2 = require("../api_types");
-const schema_2 = require("../schema");
-const schema_3 = require("../schema");
+const schema_4 = require("../schema");
 const types_4 = require("../types");
 const types_5 = require("../types");
-const schema_4 = require("../schema");
-const api_types_3 = require("../api_types");
 const schema_5 = require("../schema");
+const schema_6 = require("../schema");
+const api_types_3 = require("../api_types");
+const schema_7 = require("../schema");
+const schema_8 = require("../schema");
 const ensure_1 = require("../helpers/ensure");
 const object_utils_1 = require("../helpers/object_utils");
-const schema_6 = require("../schema");
+const schema_9 = require("../schema");
 const z = __importStar(require("zod"));
 /**
  * The uncompiled column format matchers will be expected to be actual regex objects,
@@ -83,8 +86,8 @@ function validateSyncTableSchema(schema) {
         return validated.data;
     }
     // In case this was an ObjectSchema (describing a single row), wrap it up as an ArraySchema.
-    const syntheticArraySchema = (0, schema_6.makeSchema)({
-        type: schema_5.ValueType.Array,
+    const syntheticArraySchema = (0, schema_9.makeSchema)({
+        type: schema_8.ValueType.Array,
         items: schema,
     });
     const validatedAsObjectSchema = arrayPropertySchema.safeParse(syntheticArraySchema);
@@ -357,29 +360,11 @@ const commonPackFormulaSchema = {
     isSystem: z.boolean().optional(),
     extraOAuthScopes: z.array(z.string()).optional(),
 };
-const numericPackFormulaSchema = zodCompleteObject({
-    ...commonPackFormulaSchema,
-    resultType: zodDiscriminant(api_types_3.Type.number),
-    schema: zodCompleteObject({
-        type: zodDiscriminant(schema_5.ValueType.Number),
-        codaType: z.enum([...schema_2.NumberHintValueTypes]).optional(),
-        description: z.string().optional(),
-    }).optional(),
-});
-const stringPackFormulaSchema = zodCompleteObject({
-    ...commonPackFormulaSchema,
-    resultType: zodDiscriminant(api_types_3.Type.string),
-    schema: zodCompleteObject({
-        type: zodDiscriminant(schema_5.ValueType.String),
-        codaType: z.enum([...schema_4.StringHintValueTypes]).optional(),
-        description: z.string().optional(),
-    }).optional(),
-});
 const booleanPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(api_types_3.Type.boolean),
     schema: zodCompleteObject({
-        type: zodDiscriminant(schema_5.ValueType.Boolean),
+        type: zodDiscriminant(schema_8.ValueType.Boolean),
         description: z.string().optional(),
     }).optional(),
 });
@@ -404,23 +389,119 @@ const basePropertyValidators = {
     required: z.boolean().optional(),
 };
 const booleanPropertySchema = zodCompleteObject({
-    type: zodDiscriminant(schema_5.ValueType.Boolean),
+    type: zodDiscriminant(schema_8.ValueType.Boolean),
     ...basePropertyValidators,
 });
-const numberPropertySchema = zodCompleteObject({
-    type: zodDiscriminant(schema_5.ValueType.Number),
-    codaType: z.enum([...schema_2.NumberHintValueTypes]).optional(),
+const numericPropertySchema = zodCompleteObject({
+    type: zodDiscriminant(schema_8.ValueType.Number),
+    codaType: zodDiscriminant(schema_7.ValueHintType.Percent).optional(),
+    precision: z.number().optional(),
+    useThousandsSeparator: z.boolean().optional(),
     ...basePropertyValidators,
 });
-const stringPropertySchema = zodCompleteObject({
-    type: zodDiscriminant(schema_5.ValueType.String),
-    codaType: z.enum([...schema_4.StringHintValueTypes]).optional(),
+const scalePropertySchema = zodCompleteObject({
+    type: zodDiscriminant(schema_8.ValueType.Number),
+    codaType: zodDiscriminant(schema_7.ValueHintType.Scale),
+    maximum: z.number().optional(),
+    icon: z.nativeEnum(schema_5.ScaleIconSet).optional(),
     ...basePropertyValidators,
+});
+const sliderPropertySchema = zodCompleteObject({
+    type: zodDiscriminant(schema_8.ValueType.Number),
+    codaType: zodDiscriminant(schema_7.ValueHintType.Slider),
+    maximum: z.number().optional(),
+    minimum: z.number().optional(),
+    step: z.number().optional(),
+    ...basePropertyValidators,
+});
+const currencyPropertySchema = zodCompleteObject({
+    type: zodDiscriminant(schema_8.ValueType.Number),
+    codaType: zodDiscriminant(schema_7.ValueHintType.Currency),
+    precision: z.number().optional(),
+    currencyCode: z.string().optional(),
+    format: z.nativeEnum(schema_2.CurrencyFormat).optional(),
+    ...basePropertyValidators,
+});
+const numericDatePropertySchema = zodCompleteObject({
+    type: zodDiscriminant(schema_8.ValueType.Number),
+    codaType: zodDiscriminant(schema_7.ValueHintType.Date),
+    format: z.string().optional(),
+    ...basePropertyValidators,
+});
+const numericTimePropertySchema = zodCompleteObject({
+    type: zodDiscriminant(schema_8.ValueType.Number),
+    codaType: zodDiscriminant(schema_7.ValueHintType.Time),
+    format: z.string().optional(),
+    ...basePropertyValidators,
+});
+const numericDateTimePropertySchema = zodCompleteObject({
+    type: zodDiscriminant(schema_8.ValueType.Number),
+    codaType: zodDiscriminant(schema_7.ValueHintType.DateTime),
+    dateFormat: z.string().optional(),
+    timeFormat: z.string().optional(),
+    ...basePropertyValidators,
+});
+const numberPropertySchema = z.union([
+    numericPropertySchema,
+    scalePropertySchema,
+    sliderPropertySchema,
+    currencyPropertySchema,
+    numericDatePropertySchema,
+    numericTimePropertySchema,
+    numericDateTimePropertySchema,
+]);
+const numericPackFormulaSchema = zodCompleteObject({
+    ...commonPackFormulaSchema,
+    resultType: zodDiscriminant(api_types_3.Type.number),
+    schema: numberPropertySchema.optional(),
+});
+const simpleStringPropertySchema = zodCompleteObject({
+    type: zodDiscriminant(schema_8.ValueType.String),
+    codaType: z.enum([...schema_6.SimpleStringHintValueTypes]).optional(),
+    ...basePropertyValidators,
+});
+const stringDatePropertySchema = zodCompleteObject({
+    type: zodDiscriminant(schema_8.ValueType.String),
+    codaType: zodDiscriminant(schema_7.ValueHintType.Date),
+    format: z.string().optional(),
+    ...basePropertyValidators,
+});
+const stringTimePropertySchema = zodCompleteObject({
+    type: zodDiscriminant(schema_8.ValueType.String),
+    codaType: zodDiscriminant(schema_7.ValueHintType.Time),
+    format: z.string().optional(),
+    ...basePropertyValidators,
+});
+const stringDateTimePropertySchema = zodCompleteObject({
+    type: zodDiscriminant(schema_8.ValueType.String),
+    codaType: zodDiscriminant(schema_7.ValueHintType.DateTime),
+    dateFormat: z.string().optional(),
+    timeFormat: z.string().optional(),
+    ...basePropertyValidators,
+});
+const durationPropertySchema = zodCompleteObject({
+    type: zodDiscriminant(schema_8.ValueType.String),
+    codaType: zodDiscriminant(schema_7.ValueHintType.Duration),
+    precision: z.number().optional(),
+    maxUnit: z.nativeEnum(schema_3.DurationUnit).optional(),
+    ...basePropertyValidators,
+});
+const stringPropertySchema = z.union([
+    simpleStringPropertySchema,
+    stringDatePropertySchema,
+    stringTimePropertySchema,
+    stringDateTimePropertySchema,
+    durationPropertySchema,
+]);
+const stringPackFormulaSchema = zodCompleteObject({
+    ...commonPackFormulaSchema,
+    resultType: zodDiscriminant(api_types_3.Type.string),
+    schema: stringPropertySchema.optional(),
 });
 // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
 // recursive typing better.
 const arrayPropertySchema = z.lazy(() => zodCompleteObject({
-    type: zodDiscriminant(schema_5.ValueType.Array),
+    type: zodDiscriminant(schema_8.ValueType.Array),
     items: objectPropertyUnionSchema,
     ...basePropertyValidators,
 }));
@@ -476,11 +557,11 @@ function isValidIdentityName(packId, name) {
 }
 const genericObjectSchema = z.lazy(() => zodCompleteObject({
     ...basePropertyValidators,
-    type: zodDiscriminant(schema_5.ValueType.Object),
+    type: zodDiscriminant(schema_8.ValueType.Object),
     description: z.string().optional(),
     id: z.string().optional(),
     primary: z.string().optional(),
-    codaType: z.enum([...schema_3.ObjectHintValueTypes]).optional(),
+    codaType: z.enum([...schema_4.ObjectHintValueTypes]).optional(),
     featured: z.array(z.string()).optional(),
     identity: zodCompleteObject({
         // Stupid hack to hardcode a pack id that will get replaced at upload time.

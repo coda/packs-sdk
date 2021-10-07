@@ -66,7 +66,7 @@ ___
 
 ### formulas
 
-• **formulas**: (`BooleanPackFormula`<[`ParamDefs`](../types/ParamDefs.md)\> \| `NumericPackFormula`<[`ParamDefs`](../types/ParamDefs.md)\> \| `StringPackFormula`<[`ParamDefs`](../types/ParamDefs.md), [`Date`](../enums/ValueHintType.md#date) \| [`Time`](../enums/ValueHintType.md#time) \| [`DateTime`](../enums/ValueHintType.md#datetime) \| [`Duration`](../enums/ValueHintType.md#duration) \| [`ImageReference`](../enums/ValueHintType.md#imagereference) \| [`ImageAttachment`](../enums/ValueHintType.md#imageattachment) \| [`Url`](../enums/ValueHintType.md#url) \| [`Markdown`](../enums/ValueHintType.md#markdown) \| [`Html`](../enums/ValueHintType.md#html) \| [`Embed`](../enums/ValueHintType.md#embed) \| [`Attachment`](../enums/ValueHintType.md#attachment)\> \| `ObjectPackFormula`<[`ParamDefs`](../types/ParamDefs.md), [`ArraySchema`](../interfaces/ArraySchema.md)<[`Schema`](../types/Schema.md)\>\> \| `ObjectPackFormula`<[`ParamDefs`](../types/ParamDefs.md), [`Schema`](../types/Schema.md)\>)[]
+• **formulas**: (`BooleanPackFormula`<[`ParamDefs`](../types/ParamDefs.md)\> \| `NumericPackFormula`<[`ParamDefs`](../types/ParamDefs.md)\> \| `StringPackFormula`<[`ParamDefs`](../types/ParamDefs.md)\> \| `ObjectPackFormula`<[`ParamDefs`](../types/ParamDefs.md), [`ArraySchema`](../interfaces/ArraySchema.md)<[`Schema`](../types/Schema.md)\>\> \| `ObjectPackFormula`<[`ParamDefs`](../types/ParamDefs.md), [`Schema`](../types/Schema.md)\>)[]
 
 #### Implementation of
 

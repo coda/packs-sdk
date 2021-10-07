@@ -254,21 +254,25 @@ function makeFormula(fullDefinition) {
         case schema_1.ValueType.String: {
             // very strange ts knows that fullDefinition.codaType is StringHintTypes but doesn't know if
             // fullDefinition is StringFormulaDefV2.
-            const { onError: _, resultType: unused, codaType, ...rest } = fullDefinition;
+            const { onError: _, resultType: unused, ...rest } = fullDefinition;
+            const codaType = 'codaType' in fullDefinition ? fullDefinition.codaType : undefined;
+            const formulaSchema = 'schema' in fullDefinition ? fullDefinition.schema : undefined;
             const stringFormula = {
                 ...rest,
                 resultType: api_types_3.Type.string,
-                schema: codaType ? { type: schema_1.ValueType.String, codaType } : undefined,
+                schema: formulaSchema || (codaType ? { type: schema_1.ValueType.String, codaType } : undefined),
             };
             formula = stringFormula;
             break;
         }
         case schema_1.ValueType.Number: {
-            const { onError: _, resultType: unused, codaType, ...rest } = fullDefinition;
+            const { onError: _, resultType: unused, ...rest } = fullDefinition;
+            const codaType = 'codaType' in fullDefinition ? fullDefinition.codaType : undefined;
+            const formulaSchema = 'schema' in fullDefinition ? fullDefinition.schema : undefined;
             const numericFormula = {
                 ...rest,
                 resultType: api_types_3.Type.number,
-                schema: codaType ? { type: schema_1.ValueType.Number, codaType } : undefined,
+                schema: formulaSchema || (codaType ? { type: schema_1.ValueType.Number, codaType } : undefined),
             };
             formula = numericFormula;
             break;

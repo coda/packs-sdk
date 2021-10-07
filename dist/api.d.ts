@@ -213,8 +213,8 @@ export declare type NumericPackFormula<ParamDefsT extends ParamDefs> = BaseFormu
 export declare type BooleanPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, boolean> & {
     schema?: BooleanSchema;
 };
-export declare type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> = BaseFormula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
-    schema?: StringSchema<ResultT>;
+export declare type StringPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, SchemaType<StringSchema>> & {
+    schema?: StringSchema;
 };
 export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Omit<BaseFormula<ParamDefsT, SchemaType<SchemaT>>, 'execute'> & {
     schema?: SchemaT;
@@ -314,14 +314,20 @@ interface BaseFormulaDefV2<ParamDefsT extends ParamDefs, ResultT extends string 
 }
 declare type StringFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, string> & {
     resultType: ValueType.String;
-    codaType?: StringHintTypes;
     execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<string> | string;
-};
+} & ({
+    schema?: StringSchema;
+} | {
+    codaType?: StringHintTypes;
+});
 declare type NumericFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, number> & {
     resultType: ValueType.Number;
-    codaType?: NumberHintTypes;
     execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<number> | number;
-};
+} & ({
+    schema?: NumberSchema;
+} | {
+    codaType?: NumberHintTypes;
+});
 declare type BooleanFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, boolean> & {
     resultType: ValueType.Boolean;
     execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<boolean> | boolean;

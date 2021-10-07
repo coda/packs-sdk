@@ -2,7 +2,7 @@
 
 ## Hierarchy
 
-- [`NumberSchema`](NumberSchema.md)
+- `BaseNumberSchema`
 
   ↳ **`NumericSchema`**
 
@@ -14,11 +14,11 @@
 
 #### Overrides
 
-[NumberSchema](NumberSchema.md).[codaType](NumberSchema.md#codatype)
+BaseNumberSchema.codaType
 
 #### Defined in
 
-[schema.ts:88](https://github.com/coda/packs-sdk/blob/main/schema.ts#L88)
+[schema.ts:97](https://github.com/coda/packs-sdk/blob/main/schema.ts#L97)
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 #### Inherited from
 
-[NumberSchema](NumberSchema.md).[description](NumberSchema.md#description)
+BaseNumberSchema.description
 
 #### Defined in
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-[schema.ts:89](https://github.com/coda/packs-sdk/blob/main/schema.ts#L89)
+[schema.ts:98](https://github.com/coda/packs-sdk/blob/main/schema.ts#L98)
 
 ___
 
@@ -52,11 +52,11 @@ ___
 
 #### Inherited from
 
-[NumberSchema](NumberSchema.md).[type](NumberSchema.md#type)
+BaseNumberSchema.type
 
 #### Defined in
 
-[schema.ts:83](https://github.com/coda/packs-sdk/blob/main/schema.ts#L83)
+[schema.ts:92](https://github.com/coda/packs-sdk/blob/main/schema.ts#L92)
 
 ___
 
@@ -66,4 +66,4 @@ ___
 
 #### Defined in
 
-[schema.ts:90](https://github.com/coda/packs-sdk/blob/main/schema.ts#L90)
+[schema.ts:99](https://github.com/coda/packs-sdk/blob/main/schema.ts#L99)

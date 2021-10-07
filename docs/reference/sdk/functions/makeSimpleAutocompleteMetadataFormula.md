@@ -14,4 +14,4 @@
 
 #### Defined in
 
-[api.ts:823](https://github.com/coda/packs-sdk/blob/main/api.ts#L823)
+[api.ts:822](https://github.com/coda/packs-sdk/blob/main/api.ts#L822)

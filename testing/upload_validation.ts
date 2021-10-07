@@ -6,8 +6,12 @@ import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
 import {ConnectionRequirement} from '../api_types';
+import {CurrencyFormat} from '../schema';
+import type {CurrencySchema} from '..';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import {DefaultConnectionType} from '../types';
+import type {DurationSchema} from '../schema';
+import {DurationUnit} from '../schema';
 import type {DynamicSyncTableDef} from '../api';
 import {FeatureSet} from '../types';
 import type {HeaderBearerTokenAuthentication} from '../types';
@@ -16,9 +20,11 @@ import type {MultiQueryParamTokenAuthentication} from '../types';
 import type {Network} from '../api_types';
 import {NetworkConnection} from '../api_types';
 import type {NoAuthentication} from '../types';
-import {NumberHintValueTypes} from '../schema';
-import type {NumberSchema} from '../schema';
+import type {NumericDateSchema} from '../schema';
+import type {NumericDateTimeSchema} from '../schema';
 import type {NumericPackFormula} from '../api';
+import type {NumericSchema} from '..';
+import type {NumericTimeSchema} from '../schema';
 import type {OAuth2Authentication} from '../types';
 import {ObjectHintValueTypes} from '../schema';
 import type {ObjectPackFormula} from '../api';
@@ -32,15 +38,22 @@ import type {ParamDef} from '../api_types';
 import type {ParamDefs} from '../api_types';
 import {PostSetupType} from '../types';
 import type {QueryParamTokenAuthentication} from '../types';
+import {ScaleIconSet} from '../schema';
+import type {ScaleSchema} from '..';
 import type {SetEndpoint} from '../types';
-import {StringHintValueTypes} from '../schema';
+import {SimpleStringHintValueTypes} from '../schema';
+import type {SimpleStringSchema} from '../schema';
+import type {SliderSchema} from '..';
+import type {StringDateSchema} from '../schema';
+import type {StringDateTimeSchema} from '../schema';
 import type {StringPackFormula} from '../api';
-import type {StringSchema} from '../schema';
+import type {StringTimeSchema} from '../schema';
 import type {SyncFormula} from '../api';
 import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
 import {Type} from '../api_types';
 import type {ValidationError} from './types';
+import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
 import type {VariousAuthentication} from '../types';
 import type {VariousSupportedAuthenticationTypes} from '../types';
@@ -430,26 +443,6 @@ const commonPackFormulaSchema = {
   extraOAuthScopes: z.array(z.string()).optional(),
 };
 
-const numericPackFormulaSchema = zodCompleteObject<Omit<NumericPackFormula<any>, 'execute'>>({
-  ...commonPackFormulaSchema,
-  resultType: zodDiscriminant(Type.number),
-  schema: zodCompleteObject<NumberSchema>({
-    type: zodDiscriminant(ValueType.Number),
-    codaType: z.enum([...NumberHintValueTypes]).optional(),
-    description: z.string().optional(),
-  }).optional(),
-});
-
-const stringPackFormulaSchema = zodCompleteObject<Omit<StringPackFormula<any>, 'execute'>>({
-  ...commonPackFormulaSchema,
-  resultType: zodDiscriminant(Type.string),
-  schema: zodCompleteObject<StringSchema>({
-    type: zodDiscriminant(ValueType.String),
-    codaType: z.enum([...StringHintValueTypes]).optional(),
-    description: z.string().optional(),
-  }).optional(),
-});
-
 const booleanPackFormulaSchema = zodCompleteObject<Omit<BooleanPackFormula<any>, 'execute'>>({
   ...commonPackFormulaSchema,
   resultType: zodDiscriminant(Type.boolean),
@@ -489,16 +482,126 @@ const booleanPropertySchema = zodCompleteObject<BooleanSchema & ObjectSchemaProp
   ...basePropertyValidators,
 });
 
-const numberPropertySchema = zodCompleteObject<NumberSchema & ObjectSchemaProperty>({
+const numericPropertySchema = zodCompleteObject<NumericSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Number),
-  codaType: z.enum([...NumberHintValueTypes]).optional(),
+  codaType: zodDiscriminant(ValueHintType.Percent).optional(),
+  precision: z.number().optional(),
+  useThousandsSeparator: z.boolean().optional(),
   ...basePropertyValidators,
 });
 
-const stringPropertySchema = zodCompleteObject<StringSchema & ObjectSchemaProperty>({
-  type: zodDiscriminant(ValueType.String),
-  codaType: z.enum([...StringHintValueTypes]).optional(),
+const scalePropertySchema = zodCompleteObject<ScaleSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.Number),
+  codaType: zodDiscriminant(ValueHintType.Scale),
+  maximum: z.number().optional(),
+  icon: z.nativeEnum(ScaleIconSet).optional(),
   ...basePropertyValidators,
+});
+
+const sliderPropertySchema = zodCompleteObject<SliderSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.Number),
+  codaType: zodDiscriminant(ValueHintType.Slider),
+  maximum: z.number().optional(),
+  minimum: z.number().optional(),
+  step: z.number().optional(),
+  ...basePropertyValidators,
+});
+
+const currencyPropertySchema = zodCompleteObject<CurrencySchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.Number),
+  codaType: zodDiscriminant(ValueHintType.Currency),
+  precision: z.number().optional(),
+  currencyCode: z.string().optional(),
+  format: z.nativeEnum(CurrencyFormat).optional(),
+  ...basePropertyValidators,
+});
+
+const numericDatePropertySchema = zodCompleteObject<NumericDateSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.Number),
+  codaType: zodDiscriminant(ValueHintType.Date),
+  format: z.string().optional(),
+  ...basePropertyValidators,
+});
+
+const numericTimePropertySchema = zodCompleteObject<NumericTimeSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.Number),
+  codaType: zodDiscriminant(ValueHintType.Time),
+  format: z.string().optional(),
+  ...basePropertyValidators,
+});
+
+const numericDateTimePropertySchema = zodCompleteObject<NumericDateTimeSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.Number),
+  codaType: zodDiscriminant(ValueHintType.DateTime),
+  dateFormat: z.string().optional(),
+  timeFormat: z.string().optional(),
+  ...basePropertyValidators,
+});
+
+const numberPropertySchema = z.union([
+  numericPropertySchema,
+  scalePropertySchema,
+  sliderPropertySchema,
+  currencyPropertySchema,
+  numericDatePropertySchema,
+  numericTimePropertySchema,
+  numericDateTimePropertySchema,
+]);
+
+const numericPackFormulaSchema = zodCompleteObject<Omit<NumericPackFormula<any>, 'execute'>>({
+  ...commonPackFormulaSchema,
+  resultType: zodDiscriminant(Type.number),
+  schema: numberPropertySchema.optional(),
+});
+
+const simpleStringPropertySchema = zodCompleteObject<SimpleStringSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.String),
+  codaType: z.enum([...SimpleStringHintValueTypes]).optional(),
+  ...basePropertyValidators,
+});
+
+const stringDatePropertySchema = zodCompleteObject<StringDateSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.String),
+  codaType: zodDiscriminant(ValueHintType.Date),
+  format: z.string().optional(),
+  ...basePropertyValidators,
+});
+
+const stringTimePropertySchema = zodCompleteObject<StringTimeSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.String),
+  codaType: zodDiscriminant(ValueHintType.Time),
+  format: z.string().optional(),
+  ...basePropertyValidators,
+});
+
+const stringDateTimePropertySchema = zodCompleteObject<StringDateTimeSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.String),
+  codaType: zodDiscriminant(ValueHintType.DateTime),
+  dateFormat: z.string().optional(),
+  timeFormat: z.string().optional(),
+  ...basePropertyValidators,
+});
+
+const durationPropertySchema = zodCompleteObject<DurationSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.String),
+  codaType: zodDiscriminant(ValueHintType.Duration),
+  precision: z.number().optional(),
+  maxUnit: z.nativeEnum(DurationUnit).optional(),
+  ...basePropertyValidators,
+});
+
+const stringPropertySchema = z.union([
+  simpleStringPropertySchema,
+  stringDatePropertySchema,
+  stringTimePropertySchema,
+  stringDateTimePropertySchema,
+  durationPropertySchema,
+]);
+
+const stringPackFormulaSchema = zodCompleteObject<Omit<StringPackFormula<any>, 'execute'>>({
+  ...commonPackFormulaSchema,
+  resultType: zodDiscriminant(Type.string),
+  schema: stringPropertySchema.optional(),
 });
 
 // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out

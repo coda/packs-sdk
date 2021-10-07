@@ -4461,6 +4461,15 @@ var DurationUnit;
   DurationUnit2["Minutes"] = "minutes";
   DurationUnit2["Seconds"] = "seconds";
 })(DurationUnit || (DurationUnit = {}));
+var SimpleStringHintValueTypes = [
+  ValueHintType.Attachment,
+  ValueHintType.Embed,
+  ValueHintType.Html,
+  ValueHintType.ImageReference,
+  ValueHintType.ImageAttachment,
+  ValueHintType.Markdown,
+  ValueHintType.Url
+];
 var AttributionNodeType;
 (function(AttributionNodeType2) {
   AttributionNodeType2[AttributionNodeType2["Text"] = 1] = "Text";

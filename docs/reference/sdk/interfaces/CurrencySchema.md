@@ -2,7 +2,7 @@
 
 ## Hierarchy
 
-- [`NumberSchema`](NumberSchema.md)
+- `BaseNumberSchema`<[`Currency`](../enums/ValueHintType.md#currency)\>
 
   ↳ **`CurrencySchema`**
 
@@ -14,11 +14,11 @@
 
 #### Overrides
 
-[NumberSchema](NumberSchema.md).[codaType](NumberSchema.md#codatype)
+BaseNumberSchema.codaType
 
 #### Defined in
 
-[schema.ts:100](https://github.com/coda/packs-sdk/blob/main/schema.ts#L100)
+[schema.ts:129](https://github.com/coda/packs-sdk/blob/main/schema.ts#L129)
 
 ___
 
@@ -31,7 +31,7 @@ If the currency code is not supported by Coda, the value will be rendered using 
 
 #### Defined in
 
-[schema.ts:106](https://github.com/coda/packs-sdk/blob/main/schema.ts#L106)
+[schema.ts:135](https://github.com/coda/packs-sdk/blob/main/schema.ts#L135)
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 #### Inherited from
 
-[NumberSchema](NumberSchema.md).[description](NumberSchema.md#description)
+BaseNumberSchema.description
 
 #### Defined in
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[schema.ts:107](https://github.com/coda/packs-sdk/blob/main/schema.ts#L107)
+[schema.ts:136](https://github.com/coda/packs-sdk/blob/main/schema.ts#L136)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[schema.ts:101](https://github.com/coda/packs-sdk/blob/main/schema.ts#L101)
+[schema.ts:130](https://github.com/coda/packs-sdk/blob/main/schema.ts#L130)
 
 ___
 
@@ -75,8 +75,8 @@ ___
 
 #### Inherited from
 
-[NumberSchema](NumberSchema.md).[type](NumberSchema.md#type)
+BaseNumberSchema.type
 
 #### Defined in
 
-[schema.ts:83](https://github.com/coda/packs-sdk/blob/main/schema.ts#L83)
+[schema.ts:92](https://github.com/coda/packs-sdk/blob/main/schema.ts#L92)

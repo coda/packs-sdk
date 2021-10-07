@@ -399,11 +399,8 @@ export type BooleanPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<Param
   schema?: BooleanSchema;
 };
 
-export type StringPackFormula<
-  ParamDefsT extends ParamDefs,
-  ResultT extends StringHintTypes = StringHintTypes,
-> = BaseFormula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
-  schema?: StringSchema<ResultT>;
+export type StringPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, SchemaType<StringSchema>> & {
+  schema?: StringSchema;
 };
 
 export type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Omit<
@@ -572,21 +569,25 @@ export function makeFormula<
     case ValueType.String: {
       // very strange ts knows that fullDefinition.codaType is StringHintTypes but doesn't know if
       // fullDefinition is StringFormulaDefV2.
-      const {onError: _, resultType: unused, codaType, ...rest} = fullDefinition as StringFormulaDefV2<ParamDefsT>;
+      const {onError: _, resultType: unused, ...rest} = fullDefinition as StringFormulaDefV2<ParamDefsT>;
+      const codaType = 'codaType' in fullDefinition ? fullDefinition.codaType : undefined;
+      const formulaSchema = 'schema' in fullDefinition ? fullDefinition.schema : undefined;
       const stringFormula: StringPackFormula<ParamDefsT> = {
         ...rest,
         resultType: Type.string,
-        schema: codaType ? {type: ValueType.String, codaType} : undefined,
+        schema: formulaSchema || (codaType ? {type: ValueType.String, codaType} : undefined),
       };
       formula = stringFormula;
       break;
     }
     case ValueType.Number: {
-      const {onError: _, resultType: unused, codaType, ...rest} = fullDefinition as NumericFormulaDefV2<ParamDefsT>;
+      const {onError: _, resultType: unused, ...rest} = fullDefinition as NumericFormulaDefV2<ParamDefsT>;
+      const codaType = 'codaType' in fullDefinition ? fullDefinition.codaType : undefined;
+      const formulaSchema = 'schema' in fullDefinition ? fullDefinition.schema : undefined;
       const numericFormula: NumericPackFormula<ParamDefsT> = {
         ...rest,
         resultType: Type.number,
-        schema: codaType ? {type: ValueType.Number, codaType} : undefined,
+        schema: formulaSchema || (codaType ? {type: ValueType.Number, codaType} : undefined),
       };
       formula = numericFormula;
       break;
@@ -667,15 +668,13 @@ interface BaseFormulaDefV2<ParamDefsT extends ParamDefs, ResultT extends string 
 
 type StringFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, string> & {
   resultType: ValueType.String;
-  codaType?: StringHintTypes;
   execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<string> | string;
-};
+} & ({schema?: StringSchema} | {codaType?: StringHintTypes});
 
 type NumericFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, number> & {
   resultType: ValueType.Number;
-  codaType?: NumberHintTypes;
   execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<number> | number;
-};
+} & ({schema?: NumberSchema} | {codaType?: NumberHintTypes});
 
 type BooleanFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, boolean> & {
   resultType: ValueType.Boolean;

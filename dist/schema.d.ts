@@ -45,21 +45,35 @@ interface BaseSchema {
 export interface BooleanSchema extends BaseSchema {
     type: ValueType.Boolean;
 }
-export interface NumberSchema extends BaseSchema {
+export declare type NumberSchema = CurrencySchema | SliderSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema;
+export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
     type: ValueType.Number;
-    codaType?: NumberHintTypes;
+    codaType?: T;
 }
-export interface NumericSchema extends NumberSchema {
+export interface NumericSchema extends BaseNumberSchema {
     codaType?: ValueHintType.Percent;
     precision?: number;
     useThousandsSeparator?: boolean;
+}
+export interface NumericDateSchema extends BaseNumberSchema<ValueHintType.Date> {
+    codaType: ValueHintType.Date;
+    format?: string;
+}
+export interface NumericTimeSchema extends BaseNumberSchema<ValueHintType.Time> {
+    codaType: ValueHintType.Time;
+    format?: string;
+}
+export interface NumericDateTimeSchema extends BaseNumberSchema<ValueHintType.DateTime> {
+    codaType: ValueHintType.DateTime;
+    dateFormat?: string;
+    timeFormat?: string;
 }
 export declare enum CurrencyFormat {
     Currency = "currency",
     Accounting = "accounting",
     Financial = "financial"
 }
-export interface CurrencySchema extends NumberSchema {
+export interface CurrencySchema extends BaseNumberSchema<ValueHintType.Currency> {
     codaType: ValueHintType.Currency;
     precision?: number;
     /***
@@ -69,7 +83,7 @@ export interface CurrencySchema extends NumberSchema {
     currencyCode?: string;
     format?: CurrencyFormat;
 }
-export interface SliderSchema extends NumberSchema {
+export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
     codaType: ValueHintType.Slider;
     minimum?: number | string;
     maximum?: number | string;
@@ -97,23 +111,20 @@ export declare enum ScaleIconSet {
     Checkmark = "checkmark",
     LightBulb = "lightbulb"
 }
-export interface ScaleSchema extends NumberSchema {
+export interface ScaleSchema extends BaseNumberSchema<ValueHintType.Scale> {
     codaType: ValueHintType.Scale;
-    maximum: number;
-    icon: ScaleIconSet;
+    maximum?: number;
+    icon?: ScaleIconSet;
 }
-interface BaseDateSchema extends BaseSchema {
-    type: ValueType.Number | ValueType.String;
-}
-export interface DateSchema extends BaseDateSchema {
+export interface StringDateSchema extends BaseStringSchema<ValueHintType.Date> {
     codaType: ValueHintType.Date;
     format?: string;
 }
-export interface TimeSchema extends BaseDateSchema {
+export interface StringTimeSchema extends BaseStringSchema<ValueHintType.Time> {
     codaType: ValueHintType.Time;
     format?: string;
 }
-export interface DateTimeSchema extends BaseDateSchema {
+export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.DateTime> {
     codaType: ValueHintType.DateTime;
     dateFormat?: string;
     timeFormat?: string;
@@ -124,14 +135,22 @@ export declare enum DurationUnit {
     Minutes = "minutes",
     Seconds = "seconds"
 }
-export interface DurationSchema extends StringSchema<ValueHintType.Duration> {
+export interface DurationSchema extends BaseStringSchema<ValueHintType.Duration> {
     precision?: number;
     maxUnit?: DurationUnit;
 }
-export interface StringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
+export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
     type: ValueType.String;
     codaType?: T;
 }
+/**
+ * The subset of StringHintTypes that don't have specific schema attributes.
+ */
+export declare const SimpleStringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url];
+export declare type SimpleStringHintTypes = typeof SimpleStringHintValueTypes[number];
+export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStringHintTypes> extends BaseStringSchema<T> {
+}
+export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema | SimpleStringSchema;
 export interface ArraySchema<T extends Schema = Schema> extends BaseSchema {
     type: ValueType.Array;
     items: T;

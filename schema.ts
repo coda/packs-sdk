@@ -79,15 +79,44 @@ export interface BooleanSchema extends BaseSchema {
   type: ValueType.Boolean;
 }
 
-export interface NumberSchema extends BaseSchema {
+export type NumberSchema =
+  | CurrencySchema
+  | SliderSchema
+  | ScaleSchema
+  | NumericSchema
+  | NumericDateSchema
+  | NumericTimeSchema
+  | NumericDateTimeSchema;
+
+export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
   type: ValueType.Number;
-  codaType?: NumberHintTypes;
+  codaType?: T;
 }
 
-export interface NumericSchema extends NumberSchema {
+export interface NumericSchema extends BaseNumberSchema {
   codaType?: ValueHintType.Percent; // Can also be undefined if it's a vanilla number
   precision?: number;
   useThousandsSeparator?: boolean;
+}
+
+export interface NumericDateSchema extends BaseNumberSchema<ValueHintType.Date> {
+  codaType: ValueHintType.Date;
+  // A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+  format?: string;
+}
+
+export interface NumericTimeSchema extends BaseNumberSchema<ValueHintType.Time> {
+  codaType: ValueHintType.Time;
+  // A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+  format?: string;
+}
+
+export interface NumericDateTimeSchema extends BaseNumberSchema<ValueHintType.DateTime> {
+  codaType: ValueHintType.DateTime;
+  // A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+  dateFormat?: string;
+  // A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+  timeFormat?: string;
 }
 
 export enum CurrencyFormat {
@@ -96,7 +125,7 @@ export enum CurrencyFormat {
   Financial = 'financial',
 }
 
-export interface CurrencySchema extends NumberSchema {
+export interface CurrencySchema extends BaseNumberSchema<ValueHintType.Currency> {
   codaType: ValueHintType.Currency;
   precision?: number;
   /***
@@ -107,7 +136,7 @@ export interface CurrencySchema extends NumberSchema {
   format?: CurrencyFormat;
 }
 
-export interface SliderSchema extends NumberSchema {
+export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
   codaType: ValueHintType.Slider;
   minimum?: number | string;
   maximum?: number | string;
@@ -137,29 +166,25 @@ export enum ScaleIconSet {
   LightBulb = 'lightbulb',
 }
 
-export interface ScaleSchema extends NumberSchema {
+export interface ScaleSchema extends BaseNumberSchema<ValueHintType.Scale> {
   codaType: ValueHintType.Scale;
-  maximum: number;
-  icon: ScaleIconSet;
+  maximum?: number;
+  icon?: ScaleIconSet;
 }
 
-interface BaseDateSchema extends BaseSchema {
-  type: ValueType.Number | ValueType.String;
-}
-
-export interface DateSchema extends BaseDateSchema {
+export interface StringDateSchema extends BaseStringSchema<ValueHintType.Date> {
   codaType: ValueHintType.Date;
   // A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
   format?: string;
 }
 
-export interface TimeSchema extends BaseDateSchema {
+export interface StringTimeSchema extends BaseStringSchema<ValueHintType.Time> {
   codaType: ValueHintType.Time;
   // A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
   format?: string;
 }
 
-export interface DateTimeSchema extends BaseDateSchema {
+export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.DateTime> {
   codaType: ValueHintType.DateTime;
   // A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
   dateFormat?: string;
@@ -174,15 +199,39 @@ export enum DurationUnit {
   Seconds = 'seconds',
 }
 
-export interface DurationSchema extends StringSchema<ValueHintType.Duration> {
+export interface DurationSchema extends BaseStringSchema<ValueHintType.Duration> {
   precision?: number;
   maxUnit?: DurationUnit;
 }
 
-export interface StringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
+export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
   type: ValueType.String;
   codaType?: T;
 }
+
+/**
+ * The subset of StringHintTypes that don't have specific schema attributes.
+ */
+export const SimpleStringHintValueTypes = [
+  ValueHintType.Attachment,
+  ValueHintType.Embed,
+  ValueHintType.Html,
+  ValueHintType.ImageReference,
+  ValueHintType.ImageAttachment,
+  ValueHintType.Markdown,
+  ValueHintType.Url,
+] as const;
+export type SimpleStringHintTypes = typeof SimpleStringHintValueTypes[number];
+
+export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStringHintTypes>
+  extends BaseStringSchema<T> {}
+
+export type StringSchema =
+  | StringDateSchema
+  | StringTimeSchema
+  | StringDateTimeSchema
+  | DurationSchema
+  | SimpleStringSchema;
 
 export interface ArraySchema<T extends Schema = Schema> extends BaseSchema {
   type: ValueType.Array;
