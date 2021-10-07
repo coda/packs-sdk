@@ -35,6 +35,8 @@ import {makeSyncTableLegacy} from '../api';
 import {validatePackVersionMetadata} from '../testing/upload_validation';
 import {validateSyncTableSchema} from '../testing/upload_validation';
 import {validateVariousAuthenticationMetadata} from '../testing/upload_validation';
+import {CurrencyFormat} from '..';
+import {DurationUnit} from '..';
 
 describe('Pack metadata Validation', () => {
   async function validateJson(obj: Record<string, any>) {
@@ -715,7 +717,7 @@ describe('Pack metadata Validation', () => {
         ]);
       });
 
-      it('sync table with scale schema', async () => {
+      it('sync table with various schemas', async () => {
         const syncTable = makeSyncTable({
           name: 'ScaleSyncTable',
           identityName: 'Sync',
@@ -727,6 +729,20 @@ describe('Pack metadata Validation', () => {
             properties: {
               Foo: {type: ValueType.Number, codaType: ValueHintType.Scale, maximum: 5, icon: ScaleIconSet.Star},
               Bar: {type: ValueType.String, codaType: ValueHintType.Date, format: 'MMM D, YYYY'},
+              Slider: {type: ValueType.Number, codaType: ValueHintType.Slider, minimum: 1, maximum: 3, step: 1},
+              Currency: {
+                type: ValueType.Number,
+                codaType: ValueHintType.Currency,
+                precision: 2,
+                currencyCode: 'EUR',
+                format: CurrencyFormat.Accounting,
+              },
+              Duration: {
+                type: ValueType.String,
+                codaType: ValueHintType.Duration,
+                precision: 2,
+                maxUnit: DurationUnit.Days,
+              },
             },
           }),
           formula: {
@@ -745,9 +761,22 @@ describe('Pack metadata Validation', () => {
           syncTables: [syncTable],
         });
         const parsedMetadata = await validateJson(metadata);
-        assert.equal(parsedMetadata.syncTables[0].schema.properties.Foo.maximum, 5);
-        assert.equal(parsedMetadata.syncTables[0].schema.properties.Foo.icon, ScaleIconSet.Star);
-        assert.equal(parsedMetadata.syncTables[0].schema.properties.Bar.format, 'MMM D, YYYY');
+        const schemaProperties = parsedMetadata.syncTables[0].schema.properties;
+        assert.equal(schemaProperties.Foo.maximum, 5);
+        assert.equal(schemaProperties.Foo.icon, ScaleIconSet.Star);
+
+        assert.equal(schemaProperties.Bar.format, 'MMM D, YYYY');
+
+        assert.equal(schemaProperties.Slider.minimum, 1);
+        assert.equal(schemaProperties.Slider.maximum, 3);
+        assert.equal(schemaProperties.Slider.step, 1);
+
+        assert.equal(schemaProperties.Currency.precision, 2);
+        assert.equal(schemaProperties.Currency.currencyCode, 'EUR');
+        assert.equal(schemaProperties.Currency.format, CurrencyFormat.Accounting);
+
+        assert.equal(schemaProperties.Duration.precision, 2);
+        assert.equal(schemaProperties.Duration.maxUnit, DurationUnit.Days);
       });
 
       it('invalid dynamic sync table', async () => {
