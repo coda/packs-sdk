@@ -52,10 +52,11 @@ async function pushDocsToEnv(env: string, version: string) {
   const key = getS3ConfigKey(version);
 
   async function pushDocsDirectory(rootPath: string): Promise<any> {
-    const fileStats = fs.lstatSync(rootPath);
+    const fullFilePath = path.join(BaseGeneratedDocsPath, rootPath);
+    const fileStats = fs.lstatSync(fullFilePath);
     if (fileStats.isFile()) {
-      const contentType = mime.getType(rootPath) || undefined;
-      const fileData = fs.createReadStream(rootPath);
+      const contentType = mime.getType(fullFilePath) || undefined;
+      const fileData = fs.createReadStream(fullFilePath);
       if (isVerbose()) {
         console.log(`Uploading ${rootPath} to S3 as a file`);
       }
@@ -70,12 +71,12 @@ async function pushDocsToEnv(env: string, version: string) {
     }
 
     if (fileStats.isDirectory()) {
-      const files = fs.readdirSync(rootPath);
+      const files = fs.readdirSync(fullFilePath);
       return Promise.all(
         files.map(fileName => {
           // get the full path of the file
-          const filePath = path.join(rootPath, fileName);
-          return pushDocsDirectory(filePath);
+          const nestedFilePath = path.join(rootPath, fileName);
+          return pushDocsDirectory(nestedFilePath);
         }),
       );
     }
@@ -83,7 +84,7 @@ async function pushDocsToEnv(env: string, version: string) {
 
   try {
     console.log(`Pushing the current packs-sdk documentation ${key} to ${env}...`);
-    await pushDocsDirectory(BaseGeneratedDocsPath);
+    await pushDocsDirectory('');
     console.log(`The current packs-sdk documentation was pushed to ${env}:${key} successfully.`);
   } catch (err: any) {
     handleError(err);

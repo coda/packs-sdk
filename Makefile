@@ -143,6 +143,7 @@ build-docs:
 
 .PHONY: publish-docs
 publish-docs: docs build-docs
+# TODO(spencer): change GIT SHA to the version from package.json
 	(cd ${ROOTDIR}; tsnode documentation/documentation_publisher.ts push ${CURRENT_GIT_SHA1})
 
 .PHONY: publish-docs-gh-pages
