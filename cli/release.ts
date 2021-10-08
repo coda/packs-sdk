@@ -1,4 +1,5 @@
 import type {Arguments} from 'yargs';
+import type {BasicPackDefinition} from '..';
 import type {PackVersionDefinition} from '..';
 import {build} from './build';
 import {createCodaClient} from './helpers';
@@ -44,15 +45,14 @@ export async function handleRelease({
 
   const codaClient = createCodaClient(apiKey, formattedEndpoint);
 
-  // TODO(alan/jonathan): Deal with the case of a pack that doesn't specify a version at all.
-  // Either error out with a useful message about needing to provide a specific version
-  // via the optional second CLI arg, or add a CLI flag --latest that uses the latest version.
   let packVersion = explicitPackVersion;
   if (!packVersion) {
     try {
       const bundleFilename = await build(manifestFile);
-      const manifest = await importManifest<PackVersionDefinition>(bundleFilename);
-      packVersion = manifest.version as string | undefined;
+      const manifest = await importManifest<BasicPackDefinition | PackVersionDefinition>(bundleFilename);
+      if ('version' in manifest) {
+        packVersion = manifest.version;
+      }
     } catch (err: any) {
       return printAndExit(`Got an error while building your pack to get the current pack version: ${formatError(err)}`);
     }
@@ -60,10 +60,14 @@ export async function handleRelease({
 
   if (!packVersion) {
     const {items: versions} = await codaClient.listPackVersions(packId, {limit: 1});
+    if (!versions.length) {
+      printAndExit('No version was found to release for your Pack.');
+    }
+
     const [latestPackVersionData] = versions;
     const {packVersion: latestPackVersion} = latestPackVersionData;
     const shouldReleaseLatestPackVersion = promptForInput(
-      `No version specified in your manifest. Do you want to release the latest version of the Pack (${latestPackVersion})? (y/n)`,
+      `No version specified in your manifest. Do you want to release the latest version of the Pack (${latestPackVersion})? (y/n)\n`,
     );
     if (!shouldReleaseLatestPackVersion.toLocaleLowerCase().startsWith('y')) {
       return process.exit(1);

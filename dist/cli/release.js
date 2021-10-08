@@ -45,15 +45,14 @@ async function handleRelease({ manifestFile, packVersion: explicitPackVersion, c
         return (0, helpers_4.printAndExit)(`Could not find a Pack id in directory ${manifestDir}. You may need to run "coda create" first if this is a brand new pack.`);
     }
     const codaClient = (0, helpers_1.createCodaClient)(apiKey, formattedEndpoint);
-    // TODO(alan/jonathan): Deal with the case of a pack that doesn't specify a version at all.
-    // Either error out with a useful message about needing to provide a specific version
-    // via the optional second CLI arg, or add a CLI flag --latest that uses the latest version.
     let packVersion = explicitPackVersion;
     if (!packVersion) {
         try {
             const bundleFilename = await (0, build_1.build)(manifestFile);
             const manifest = await (0, helpers_3.importManifest)(bundleFilename);
-            packVersion = manifest.version;
+            if ('version' in manifest) {
+                packVersion = manifest.version;
+            }
         }
         catch (err) {
             return (0, helpers_4.printAndExit)(`Got an error while building your pack to get the current pack version: ${(0, errors_1.formatError)(err)}`);
@@ -61,9 +60,12 @@ async function handleRelease({ manifestFile, packVersion: explicitPackVersion, c
     }
     if (!packVersion) {
         const { items: versions } = await codaClient.listPackVersions(packId, { limit: 1 });
+        if (!versions.length) {
+            (0, helpers_4.printAndExit)('No version was found to release for your Pack.');
+        }
         const [latestPackVersionData] = versions;
         const { packVersion: latestPackVersion } = latestPackVersionData;
-        const shouldReleaseLatestPackVersion = (0, helpers_5.promptForInput)(`No version specified in your manifest. Do you want to release the latest version of the Pack (${latestPackVersion})? (y/n)`);
+        const shouldReleaseLatestPackVersion = (0, helpers_5.promptForInput)(`No version specified in your manifest. Do you want to release the latest version of the Pack (${latestPackVersion})? (y/n)\n`);
         if (!shouldReleaseLatestPackVersion.toLocaleLowerCase().startsWith('y')) {
             return process.exit(1);
         }
