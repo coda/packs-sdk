@@ -83,7 +83,7 @@
     "ts-loader": "^9.2.6",
     "ts-node": "^10.3.0",
     "typedoc": "^0.22.5",
-    "typedoc-plugin-markdown": "^3.11.2"
+    "typedoc-plugin-markdown": "^3.11.3"
   },
   "resolutions": {
     "ansi-regex": "^5.0.1",
