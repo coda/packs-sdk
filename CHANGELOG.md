@@ -10,6 +10,8 @@
 
 - Bug fix: Numeric and string `codaType` properties are no longer erroneously removed in upload validation.
 
+- CLI: `coda release` no longer requires an explicit Pack version to release a Pack version (if no Pack version is supplied, the latest version is marked for release instead).
+
 ## 0.4.6
 
 - Bug fix: Executing sync table formulas via CLI now validates results correctly.
