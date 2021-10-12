@@ -15,8 +15,7 @@ const EnvironmentKeyRoot = `${PacksSdkBucketRootPath}/current`;
 const Environments = ['adhoc', 'head', 'staging', 'prod'];
 
 function handleError(e: Error) {
-  console.error(e);
-  printAndExit(e.message);
+  printAndExit(e.message + ` ${e.stack || ''}`);
 }
 
 function getS3Service(env: string): S3 {
