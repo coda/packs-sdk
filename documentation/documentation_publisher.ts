@@ -1,27 +1,26 @@
-/* eslint-disable no-console */
 import AWS from 'aws-sdk';
-import {Command} from 'commander';
 import S3 from 'aws-sdk/clients/s3';
-import * as fs from 'fs';
-import * as mime from 'mime';
-import * as path from 'path';
+// import * as fs from 'fs';
+// import * as mime from 'mime';
+// import * as path from 'path';
+import {promisify} from 'util';
+import {print, printAndExit} from '../testing/helpers';
+import {version} from '../package.json';
+import yargs, {Arguments} from 'yargs';
+import {exec as childExec} from 'child_process';
+const exec = promisify(childExec);
 
 const AwsRegion = 'us-west-2';
 const BaseGeneratedDocsPath = 'site';
 const DocumentationBucket = 'developer-documentation';
 const PacksSdkBucketRootPath = 'packs';
 const EnvironmentKeyRoot = `${PacksSdkBucketRootPath}/current`;
-const Environments = ['adhoc', 'head', 'staging', 'prod'];
-const program = new Command();
-
-// only works after `program` has been parsed
-function isVerbose() {
-  return program.opts().verbose;
-}
+const Environments = ['adhoc'];
+// const Environments = ['adhoc', 'head', 'staging', 'prod'];
 
 function handleError(e: Error) {
   console.error(e);
-  process.exit(1);
+  printAndExit(e.message);
 }
 
 function getS3Service(env: string): S3 {
@@ -38,95 +37,79 @@ function getS3Bucket(env: string): string {
   return `coda-us-west-2-${env}-${DocumentationBucket}`;
 }
 
-function getS3ConfigKey(hash: string): string {
-  return `${PacksSdkBucketRootPath}/${hash}`;
+function getS3ConfigKey(): string {
+  return `${PacksSdkBucketRootPath}/${version}`;
 }
 
 function getS3EnvironmentKey(environment: string): string {
   return `${EnvironmentKeyRoot}/${environment}`;
 }
 
-async function pushDocsToEnv(env: string, version: string) {
+async function pushDocsToEnv(env: string) {
   const s3 = getS3Service(env);
   const bucket = getS3Bucket(env);
-  const key = getS3ConfigKey(version);
+  const key = getS3ConfigKey();
 
-  async function pushDocsDirectory(basePath: string): Promise<any> {
-    const fullFilePath = path.join(BaseGeneratedDocsPath, basePath);
-    const fileStats = fs.lstatSync(fullFilePath);
-    if (fileStats.isFile()) {
-      const contentType = mime.getType(fullFilePath) || undefined;
-      const fileData = fs.createReadStream(fullFilePath);
-      if (isVerbose()) {
-        console.log(`Uploading ${basePath} to S3 as a file`);
-      }
-      return s3
-        .putObject({
-          Bucket: bucket,
-          Key: `${key}/${basePath}`,
-          Body: fileData,
-          ContentType: contentType,
-        })
-        .promise();
-    }
-
-    if (fileStats.isDirectory()) {
-      if (isVerbose()) {
-        console.log(`Recursively traversing the directory ${basePath}.`);
-      }
-      const files = fs.readdirSync(fullFilePath);
-      return Promise.all(
-        files.map(fileName => {
-          const nestedFilePath = path.join(basePath, fileName);
-          return pushDocsDirectory(nestedFilePath);
-        }),
-      );
-    }
+  async function pushDocsDirectory(): Promise<any> {
+    await exec(`aws s3 sync --profile ${env} --region ${AwsRegion} ${BaseGeneratedDocsPath} s3://${bucket}/${key}`);
   }
 
   try {
-    console.log(`Pushing the current packs-sdk documentation ${key} to ${env}...`);
-    await pushDocsDirectory('');
-    console.log(`The current packs-sdk documentation was pushed to ${env}:${key} successfully.`);
+    // If folder already exists, warn since we are uploading all the documentation wholesale instead of "syncing."
+    const obj = await s3.listObjectsV2({Bucket: bucket, MaxKeys: 1, Prefix: key}).promise();
+    if (!obj.Contents?.length) {
+      console.warn(`Folder already exists for ${version}.`);
+    }
+    print(`Pushing the current packs-sdk documentation ${key} to ${env}...`);
+    await pushDocsDirectory();
+    print(`The current packs-sdk documentation was pushed to ${env}:${key} successfully.`);
   } catch (err: any) {
     handleError(err);
   }
 }
 
-async function pushDocumentation(version: string) {
-  await Promise.all(Environments.map(env => pushDocsToEnv(env, version)));
+async function pushDocumentation() {
+  await Promise.all(Environments.map(env => pushDocsToEnv(env)));
 }
 
-async function activateDocumentationVersion(version: string, env: string) {
+async function activateDocumentationVersion({env}: Arguments<{env: string}>) {
   const body = {version};
   const s3 = getS3Service(env);
   const bucket = getS3Bucket(env);
   const key = getS3EnvironmentKey(env);
 
   try {
-    console.log(`Activating packs-sdk documentation at ${version} in ${env}...`);
+    print(`Activating packs-sdk documentation at ${version} in ${env}...`);
     await s3
       .putObject({Bucket: bucket, Key: key, Body: JSON.stringify(body), ContentType: 'application/json'})
       .promise();
-    console.log(`The packs-sdk documentation at ${version} was activated in ${env}.`);
+    print(`The packs-sdk documentation at ${version} was activated in ${env}.`);
   } catch (err: any) {
     handleError(err);
   }
 }
 
 // User Command Handling
-program
-  .usage('ts-node tools/config_tool.ts <command> <arguments...>')
-  .option('-v, --verbose', 'Print out debugging statements', false);
-
-program
-  .command('push <version>')
-  .description('Push the current config under the given version.')
-  .action(version => pushDocumentation(version));
-
-program
-  .command('activate <version> <environment>', {})
-  .description('Activate the config under the given version in the given environment.')
-  .action(activateDocumentationVersion);
-
-program.parse();
+if (require.main === module) {
+  void yargs
+    .usage('ts-node tools/config_tool.ts <command> <arguments...>')
+    .command({
+      command: 'push',
+      describe: 'Push the current config under the given version for the package.json.',
+      handler: pushDocumentation,
+    })
+    .command({
+      command: 'activate',
+      describe: 'Activate the config under the given version in the given environment.',
+      handler: activateDocumentationVersion,
+      builder: {
+        environment: {
+          string: true,
+          desc: `Should be one of 'adhoc', 'staging', 'head', or 'prod'`,
+        },
+      },
+    })
+    .demandCommand()
+    .strict()
+    .help().argv;
+}

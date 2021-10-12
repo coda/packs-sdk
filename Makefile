@@ -136,14 +136,15 @@ view-docs:
 ### Deployment of documentation ### 
 
 # This step generates all the documentation for the SDK using mkdocs and dumps the contents in /site
-.PHONY: build-docs
+.PHONY: build-mkdocs
 build-docs:
-	${PIPENV} run mkdocs build;
+	${PIPENV} run mkdocs build
 
+# This step uploads the documentation for the current package version.
+# TODO(spencer): probably need some user handling to make sure there is an update in package.json if the documentation has been updated.
 .PHONY: publish-docs
-publish-docs: docs build-docs
-# TODO(spencer): change GIT SHA to the version from package.json
-	(cd ${ROOTDIR}; tsnode documentation/documentation_publisher.ts push ${CURRENT_GIT_SHA1})
+publish-docs: docs build-mkdocs
+	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push)
 
 .PHONY: publish-docs-gh-pages
 publish-docs-gh-pages:
