@@ -134,7 +134,7 @@ view-docs:
 
 # This step generates all the documentation for the SDK using mkdocs and dumps the contents in /site
 .PHONY: build-mkdocs
-build-docs:
+build-mkdocs:
 	${PIPENV} run mkdocs build
 
 # This step uploads the documentation for the current package version.
