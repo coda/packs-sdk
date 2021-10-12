@@ -3,7 +3,7 @@ version: 2.1
 executors:
   default_build_environment:
     docker:
-      - image: cimg/node:14.13
+      - image: cimg/node:14.17
         auth:
           username: codainternaltools
           password: $DOCKERHUB_PASSWORD
