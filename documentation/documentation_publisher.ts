@@ -1,8 +1,5 @@
 import AWS from 'aws-sdk';
 import S3 from 'aws-sdk/clients/s3';
-// import * as fs from 'fs';
-// import * as mime from 'mime';
-// import * as path from 'path';
 import {promisify} from 'util';
 import {print, printAndExit} from '../testing/helpers';
 import {version} from '../package.json';
@@ -15,8 +12,7 @@ const BaseGeneratedDocsPath = 'site';
 const DocumentationBucket = 'developer-documentation';
 const PacksSdkBucketRootPath = 'packs';
 const EnvironmentKeyRoot = `${PacksSdkBucketRootPath}/current`;
-const Environments = ['adhoc'];
-// const Environments = ['adhoc', 'head', 'staging', 'prod'];
+const Environments = ['adhoc', 'head', 'staging', 'prod'];
 
 function handleError(e: Error) {
   console.error(e);
