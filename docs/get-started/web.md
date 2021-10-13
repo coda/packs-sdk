@@ -2,7 +2,7 @@
 title: In the browser
 ---
 
-# Get started in the browser 
+# Get started in the browser
 
 The fastest and easiest way to create a Pack is to use our web-based Pack Studio. You don't need to download any code or tools, just make sure you have:
 
@@ -16,8 +16,7 @@ If you're new to Coda, [sign up](https://coda.io/signup) for a free account and 
 The Pack Studio is built right in to the Coda application. To get there:
 
 1. Open [Coda](https://coda.io/docs) in your browser.
-1. Click on the name of your workspace in the navigation menu on the left.
-1. Click on **Packs** in the header.
+1. In the navigation menu on the left, click on **Packs**.
 1. Click the **New Pack** button in the upper right.
 
 You are now in the Pack Studio, ready to start building!
