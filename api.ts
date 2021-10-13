@@ -1134,7 +1134,8 @@ export function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT
   response,
   ...definition
 }: ObjectArrayFormulaDef<ParamDefsT, ResultT>) {
-  const {request, parameters} = definition;
+  const {request, ...rest} = definition;
+  const {parameters} = rest;
   response.schema = response.schema ? (normalizeSchema(response.schema) as ResultT) : undefined;
   const {onError} = response;
   const requestHandler = generateRequestHandler(request, parameters);
@@ -1152,7 +1153,7 @@ export function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT
       .then(responseHandler);
   }
 
-  return Object.assign({}, definition, {
+  return Object.assign({}, rest, {
     execute,
     resultType: Type.object as const,
     schema: response.schema,
