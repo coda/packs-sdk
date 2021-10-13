@@ -10,6 +10,11 @@
 
 - Bug fix: Numeric and string `codaType` properties are no longer erroneously removed in upload validation.
 
+- CLI: You may omit a Pack version in your definition, either by using the pack builder (`coda.newPack()`)
+  or using the `BasicPackDefinition` type (if you are using TypeScript). When you upload your pack,
+  the next available version number will be selected and assigned on your behalf. This behavior matches
+  what happens in the web editor.
+
 - CLI: `coda release` no longer requires an explicit Pack version to release a Pack version (if no Pack version is supplied, the latest version is marked for release instead).
 
 ## 0.4.6
