@@ -1,3 +1,7 @@
+## 0.6.0
+
+- **Breaking Change** Column Formats must now use only real Regex objects in their `matchers` array.
+
 ## 0.5.0
 
 - **Breaking Change** `context.logger` has been removed. It has been redundant with `console.log`

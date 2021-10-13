@@ -518,7 +518,7 @@ export interface Format {
      * A list of regular expressions that match URLs that the formula implementing this format
      * is capable of handling. As described in {@link Format}, this is a discovery mechanism.
      */
-    matchers?: Array<string | RegExp>;
+    matchers?: RegExp[];
     /**
      * @deprecated Currently unused.
      */

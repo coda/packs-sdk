@@ -80,7 +80,7 @@ ___
 
 ### matchers
 
-• `Optional` **matchers**: (`string` \| `RegExp`)[]
+• `Optional` **matchers**: `RegExp`[]
 
 A list of regular expressions that match URLs that the formula implementing this format
 is capable of handling. As described in [Format](Format.md), this is a discovery mechanism.
