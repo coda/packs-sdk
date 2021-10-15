@@ -43,6 +43,7 @@ Unfortunately there isn't an easy way to determine beforehand if a given library
 
 When using the CLI, [browserify][browserify] is used to provide shims [for some Node.js modules][browserify_modules]. These shims themselves are designed to work in the browser, so not all modules that browserify supports may be supported in the Packs execution environment.
 
+Additionally, the CLI provides optional shims for timer-related functions (`setTimeout` and `setInterval`). To enable these shims, pass the flag `--timerStrategy=fake` when executing and uploading your Pack. Note that these shims attempt to approximate the behavior of these methods, but may not work reliably.
 
 [mdn_standard]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 [mdn_web]: https://developer.mozilla.org/en-US/docs/Web/API
