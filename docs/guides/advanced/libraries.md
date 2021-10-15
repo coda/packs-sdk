@@ -35,14 +35,20 @@ import _ from 'lodash';
 Some JavaScript libraries are written assuming the code is being run in either a web browser or on a Node.js server, and the Packs execution environment isn't exactly either. The execution environment provides access to the [standard built-in JavaScript objects][mdn_standard], but doesn't support [Web APIs][mdn_web] or [Node.js APIs][node_apis]. These include but are not limited to:
 
 - Browser: `window`, `document`, `XMLHttpRequest`, `fetch()`
-- Node.js: `fs`, `http`
+- Node.js: `fs`, `http`, `buffer`[^1]
+- Both: `setTimeout()`[^1], `setInterval()`[^1]
 
-Unfortunately there isn't an easy way to determine beforehand if a given library will fail due to an unavailable API. At the moment the best approach is to try the library and see if it runs successfully in the Packs environment. The `code execute` command runs your code in a VM with all of the same limitations in place, allowing you test compatibility without needing to upload your code to server.
+[^1]: A [shim](#shims) exists for this feature.
+
+Unfortunately there isn't an easy way to determine beforehand if a given library will fail due to an unavailable API. At the moment the best approach is to try the library and see if it runs successfully in the Packs environment.
+
+While many compatibility issues will be caught when the Pack is being built, there are others that are only exposed at runtime. In those cases your code will fail with an error like `<function> is not defined`. The `code execute` command runs your code in a VM with all of the same limitations in place, allowing you test compatibility without needing to upload your code to the server.
 
 ### Shims
 
 When using the CLI, [browserify][browserify] is used to provide shims [for some Node.js modules][browserify_modules]. These shims themselves are designed to work in the browser, so not all modules that browserify supports may be supported in the Packs execution environment.
 
+Additionally, the CLI provides optional shims for some timer-related functions (`setTimeout` and `setInterval`). To enable these shims, pass the flag `--timerStrategy=fake` when executing and uploading your Pack. Note that these shims attempt to approximate the behavior of these methods, but may not work reliably.
 
 [mdn_standard]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 [mdn_web]: https://developer.mozilla.org/en-US/docs/Web/API
