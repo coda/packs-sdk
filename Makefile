@@ -139,9 +139,23 @@ build-mkdocs:
 
 # This step uploads the documentation for the current package version.
 # TODO(spencer): probably need some user handling to make sure there is an update in package.json if the documentation has been updated.
-.PHONY: publish-docs
-publish-docs: docs build-mkdocs
-	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push)
+# TODO(spencer): add post-push verify step to probe that it is acutally serving for the different environments?
+# These steps assume that the docs have been built
+.PHONY: publish-docs-adhoc
+publish-docs-adhoc:
+	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push adhoc)
+
+.PHONY: publish-docs-head
+publish-docs-head:
+	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push head)
+
+.PHONY: publish-docs-staging
+publish-docs-staging:
+	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push staging)
+
+.PHONY: publish-docs-prod
+publish-docs-prod:
+	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push prod)
 
 .PHONY: publish-docs-gh-pages
 publish-docs-gh-pages:
