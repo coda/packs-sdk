@@ -14,13 +14,6 @@ const BaseGeneratedDocsPath = 'site';
 const DocumentationBucket = 'developer-documentation';
 const PacksSdkBucketRootPath = 'packs';
 
-enum Environment {
-  Adhoc = 'adhoc',
-  Head = 'head',
-  Staging = 'staging',
-  Prod = 'prod',
-}
-
 function handleError(e: Error) {
   printAndExit(e.message + ` ${e.stack || ''}`);
 }
@@ -72,11 +65,14 @@ async function pushDocsToEnv(env: string) {
     await pushDocsDirectory(latestKey);
     print(`${env}: The current packs-sdk documentation was pushed to ${versionedKey} successfully.`);
   } catch (err: any) {
+    if (err?.code == 'CredentialsError') {
+      console.error(`Credentials not found or invalid! Try running 'prodaccess'.`);
+    }
     handleError(err);
   }
 }
 
-async function pushDocumentation({env}: Arguments<{env: string}>) {
+async function pushDocumentation({env}: Arguments<{env: string}>): Promise<void> {
   await pushDocsToEnv(env);
 }
 
