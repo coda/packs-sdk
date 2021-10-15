@@ -871,6 +871,18 @@
   
   
     <li class="md-nav__item">
+      <a href="../../enums/ScaleIconSet/" class="md-nav__link">
+        Enumeration: ScaleIconSet
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../enums/Type/" class="md-nav__link">
         Enumeration: Type
       </a>
@@ -1299,30 +1311,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../DateSchema/" class="md-nav__link">
-        Interface: DateSchema
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../DateTimeSchema/" class="md-nav__link">
-        Interface: DateTimeSchema
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../DurationSchema/" class="md-nav__link">
         Interface: DurationSchema
       </a>
@@ -1479,8 +1467,20 @@
   
   
     <li class="md-nav__item">
-      <a href="../NumberSchema/" class="md-nav__link">
-        Interface: NumberSchema
+      <a href="../NumericDateSchema/" class="md-nav__link">
+        Interface: NumericDateSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../NumericDateTimeSchema/" class="md-nav__link">
+        Interface: NumericDateTimeSchema
       </a>
     </li>
   
@@ -1582,6 +1582,18 @@
   
 </nav>
       
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../NumericTimeSchema/" class="md-nav__link">
+        Interface: NumericTimeSchema
+      </a>
     </li>
   
 
@@ -1735,6 +1747,18 @@
   
   
     <li class="md-nav__item">
+      <a href="../SimpleStringSchema/" class="md-nav__link">
+        Interface: SimpleStringSchema<T\>
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../SliderSchema/" class="md-nav__link">
         Interface: SliderSchema
       </a>
@@ -1747,8 +1771,32 @@
   
   
     <li class="md-nav__item">
-      <a href="../StringSchema/" class="md-nav__link">
-        Interface: StringSchema<T\>
+      <a href="../StringDateSchema/" class="md-nav__link">
+        Interface: StringDateSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../StringDateTimeSchema/" class="md-nav__link">
+        Interface: StringDateTimeSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../StringTimeSchema/" class="md-nav__link">
+        Interface: StringTimeSchema
       </a>
     </li>
   
@@ -1797,18 +1845,6 @@
     <li class="md-nav__item">
       <a href="../TemporaryBlobStorage/" class="md-nav__link">
         Interface: TemporaryBlobStorage
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../TimeSchema/" class="md-nav__link">
-        Interface: TimeSchema
       </a>
     </li>
   
@@ -2098,6 +2134,18 @@
   
   
     <li class="md-nav__item">
+      <a href="../../types/NumberSchema/" class="md-nav__link">
+        Type alias: NumberSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../types/ObjectSchemaProperties/" class="md-nav__link">
         Type alias: ObjectSchemaProperties<K\>
       </a>
@@ -2254,6 +2302,18 @@
   
   
     <li class="md-nav__item">
+      <a href="../../types/StringSchema/" class="md-nav__link">
+        Type alias: StringSchema
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../types/SystemAuthentication/" class="md-nav__link">
         Type alias: SystemAuthentication
       </a>
@@ -2311,40 +2371,40 @@
                 <h1 id="interface-numericschema">Interface: NumericSchema<a class="headerlink" href="#interface-numericschema" title="Permanent link">&para;</a></h1>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../NumberSchema/"><code>NumberSchema</code></a></li>
+<li><code>BaseNumberSchema</code></li>
 </ul>
 <p>↳ <strong><code>NumericSchema</code></strong></p>
 <h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h2>
 <h3 id="codatype">codaType<a class="headerlink" href="#codatype" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>codaType</strong>: <a href="../../enums/ValueHintType/#percent"><code>Percent</code></a></p>
 <h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">&para;</a></h4>
-<p><a href="../NumberSchema/">NumberSchema</a>.<a href="../NumberSchema/#codatype">codaType</a></p>
+<p>BaseNumberSchema.codaType</p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L88">schema.ts:88</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L97">schema.ts:97</a></p>
 <hr />
 <h3 id="description">description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>description</strong>: <code>string</code></p>
 <h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">&para;</a></h4>
-<p><a href="../NumberSchema/">NumberSchema</a>.<a href="../NumberSchema/#description">description</a></p>
+<p>BaseNumberSchema.description</p>
 <h4 id="defined-in_1">Defined in<a class="headerlink" href="#defined-in_1" title="Permanent link">&para;</a></h4>
 <p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L75">schema.ts:75</a></p>
 <hr />
 <h3 id="precision">precision<a class="headerlink" href="#precision" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>precision</strong>: <code>number</code></p>
 <h4 id="defined-in_2">Defined in<a class="headerlink" href="#defined-in_2" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L89">schema.ts:89</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L98">schema.ts:98</a></p>
 <hr />
 <h3 id="type">type<a class="headerlink" href="#type" title="Permanent link">&para;</a></h3>
 <p>• <strong>type</strong>: <a href="../../enums/ValueType/#number"><code>Number</code></a></p>
 <h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">&para;</a></h4>
-<p><a href="../NumberSchema/">NumberSchema</a>.<a href="../NumberSchema/#type">type</a></p>
+<p>BaseNumberSchema.type</p>
 <h4 id="defined-in_3">Defined in<a class="headerlink" href="#defined-in_3" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L83">schema.ts:83</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L92">schema.ts:92</a></p>
 <hr />
 <h3 id="usethousandsseparator">useThousandsSeparator<a class="headerlink" href="#usethousandsseparator" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>useThousandsSeparator</strong>: <code>boolean</code></p>
 <h4 id="defined-in_4">Defined in<a class="headerlink" href="#defined-in_4" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L90">schema.ts:90</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L99">schema.ts:99</a></p>
                 
               
               
@@ -2364,7 +2424,7 @@
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../NumberSchema/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Interface: NumberSchema" rel="prev">
+        <a href="../NumericDateTimeSchema/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Interface: NumericDateTimeSchema" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -2373,20 +2433,20 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              Interface: NumberSchema
+              Interface: NumericDateTimeSchema
             </div>
           </div>
         </a>
       
       
         
-        <a href="../OAuth2Authentication/" class="md-footer__link md-footer__link--next" aria-label="Next: Interface: OAuth2Authentication" rel="next">
+        <a href="../NumericTimeSchema/" class="md-footer__link md-footer__link--next" aria-label="Next: Interface: NumericTimeSchema" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Interface: OAuth2Authentication
+              Interface: NumericTimeSchema
             </div>
           </div>
           <div class="md-footer__button md-icon">
