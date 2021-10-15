@@ -2,7 +2,7 @@ import AWS from 'aws-sdk';
 import type {Arguments} from 'yargs';
 import S3 from 'aws-sdk/clients/s3';
 import {exec as childExec} from 'child_process';
-import {print} from '../testing/helpers';
+import {print, printError, printWarn} from '../testing/helpers';
 import {printAndExit} from '../testing/helpers';
 import {promisify} from 'util';
 import {version} from '../package.json';
@@ -56,8 +56,7 @@ async function pushDocsToEnv(env: string) {
     // If folder already exists, warn since we are uploading all the documentation wholesale instead of "syncing."
     const obj = await s3.listObjectsV2({Bucket: bucket, MaxKeys: 1, Prefix: versionedKey}).promise();
     if (!obj.Contents?.length) {
-      // eslint-disable-next-line no-console
-      console.warn(`Folder already exists for ${version}.`);
+      printWarn(`Folder already exists for ${version}.`);
     }
     print(`${env}:Pushing the current packs-sdk documentation ${versionedKey}...`);
     await pushDocsDirectory(versionedKey);
@@ -65,8 +64,8 @@ async function pushDocsToEnv(env: string) {
     await pushDocsDirectory(latestKey);
     print(`${env}: The current packs-sdk documentation was pushed to ${versionedKey} successfully.`);
   } catch (err: any) {
-    if (err?.code == 'CredentialsError') {
-      console.error(`Credentials not found or invalid! Try running 'prodaccess'.`);
+    if (err?.code === 'CredentialsError') {
+      printError(`Credentials not found or invalid! Try running 'prodaccess'.`);
     }
     handleError(err);
   }
