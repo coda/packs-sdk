@@ -37,10 +37,11 @@ Some JavaScript libraries are written assuming the code is being run in either a
 - Browser: `window`, `document`, `XMLHttpRequest`, `fetch()`
 - Node.js: `fs`, `http`
 
-Unfortunately there isn't an easy way to determine beforehand if a given library will fail due to an unavailable API. At the moment the best approach is to try the library and see if it runs successfully in the Packs environment.
+Unfortunately there isn't an easy way to determine beforehand if a given library will fail due to an unavailable API. At the moment the best approach is to try the library and see if it runs successfully in the Packs environment. The `code execute` command runs your code in a VM with all of the same limitations in place, allowing you test compatibility without needing to upload your code to server.
 
-!!! info "Some Node.js compatibility via browserify"
-    When using the CLI, [browserify][browserify] is used to provide polyfills [for some Node.js modules][browserify_modules]. These polyfills themselves are designed to work in the browser, so not all modules that browserify supports may be supported in the Packs execution environment.
+### Shims
+
+When using the CLI, [browserify][browserify] is used to provide shims [for some Node.js modules][browserify_modules]. These shims themselves are designed to work in the browser, so not all modules that browserify supports may be supported in the Packs execution environment.
 
 
 [mdn_standard]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
