@@ -29,7 +29,7 @@ pack.setUserAuthentication({
   scopes: ["data:read_write"],
 
   // Determines the display name of the connected account.
-  getConnectionName: coda.makeMetadataFormula(async context => {
+  getConnectionName: async context => {
     let url = coda.withQueryParams("https://api.todoist.com/sync/v8/sync", {
       resource_types: JSON.stringify(["user"]),
     });
@@ -38,7 +38,7 @@ pack.setUserAuthentication({
       url: url,
     });
     return response.body.user?.full_name;
-  }),
+  },
 });
 
 // Schemas
@@ -178,7 +178,7 @@ const TaskSchema = coda.makeObjectSchema({
 /**
  * Convert a Project API response to a Project schema.
  */
-function toProjectSchema(project: any, withReferences=false) {
+function toProject(project: any, withReferences=false) {
   let result: any = {
     name: project.name,
     projectId: project.id,
@@ -199,7 +199,7 @@ function toProjectSchema(project: any, withReferences=false) {
 /**
  * Convert a Task API response to a Task schema.
  */
-function toTaskSchema(task: any, withReferences=false) {
+function toTask(task: any, withReferences=false) {
   let result: any = {
     name: task.content,
     description: task.description,
@@ -249,7 +249,7 @@ pack.addFormula({
       url: "https://api.todoist.com/rest/v1/projects/" + projectId,
       method: "GET",
     });
-    return toProjectSchema(response.body);
+    return toProject(response.body);
   },
 });
 
@@ -272,7 +272,7 @@ pack.addFormula({
       url: "https://api.todoist.com/rest/v1/tasks/" + taskId,
       method: "GET",
     });
-    return toTaskSchema(response.body);
+    return toTask(response.body);
   },
 });
 
@@ -398,7 +398,7 @@ pack.addFormula({
       method: "GET",
       cacheTtlSecs: 0,  // Ensure we are getting the latest data.
     });
-    return toTaskSchema(response.body);
+    return toTask(response.body);
   },
 });
 
@@ -449,7 +449,7 @@ pack.addSyncTable({
 
       let results: any[] = [];
       for (let project of response.body) {
-        results.push(toProjectSchema(project, true));
+        results.push(toProject(project, true));
       }
       return {
         result: results,
@@ -475,7 +475,7 @@ pack.addSyncTable({
 
       let results: any[] = [];
       for (let task of response.body) {
-        results.push(toTaskSchema(task, true));
+        results.push(toTask(task, true));
       }
       return {
         result: results,
