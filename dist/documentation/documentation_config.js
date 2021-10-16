@@ -279,8 +279,8 @@ exports.Examples = [
         triggerTokens: [],
         contentFile: './examples/todoist/todoist.md',
         linkData: {
-            type: types_1.UrlType.Web,
-            url: 'https://coda.io/@coda/make-a-pack-private-alpha/todoist-30',
+            type: types_1.UrlType.SdkReferencePath,
+            url: '/samples/todoist',
         },
         exampleSnippets: [
             {
