@@ -45,7 +45,7 @@ function main() {
 }
 function compileAutocompleteSnippets() {
     const compiledSnippets = documentation_config_2.Snippets.map(snippet => {
-        const code = getCodeFile(snippet.codeFile);
+        const code = getCodeFile(snippet.codeFile, true);
         compileSnippetEmbed(snippet.codeFile);
         return {
             triggerTokens: snippet.triggerTokens,
@@ -78,9 +78,12 @@ function compileExamples() {
     fs.writeFileSync(path_1.default.join(DocumentationRoot, 'generated/examples.json'), JSON.stringify(compiledExamples, null, 2));
     compileExampleNav(documentation_config_1.Examples);
 }
-function getCodeFile(file) {
+function getCodeFile(file, requireBegin = false) {
     const data = fs.readFileSync(path_1.default.join(DocumentationRoot, file), 'utf8');
     const begin = data.indexOf(CodeBegin);
+    if (requireBegin && begin === -1) {
+        throw new Error(`Missing "${CodeBegin.trim()}" in file: ${file}`);
+    }
     const codeStart = begin >= 0 ? data.indexOf(CodeBegin) + CodeBegin.length : 0;
     return data.substring(codeStart).trim();
 }
