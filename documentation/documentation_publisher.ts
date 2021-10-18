@@ -9,6 +9,7 @@ import {printWarn} from '../testing/helpers';
 import {promisify} from 'util';
 import {version} from '../package.json';
 import yargs from 'yargs';
+
 const exec = promisify(childExec);
 
 const AwsRegion = 'us-west-2';
@@ -17,7 +18,7 @@ const DocumentationBucket = 'developer-documentation';
 const PacksSdkBucketRootPath = 'packs';
 
 function handleError(e: Error) {
-  printAndExit(e.message + ` ${e.stack || ''}`);
+  printAndExit(`${e.message} ${e.stack || ''}`);
 }
 
 function getS3Service(env: string): S3 {
