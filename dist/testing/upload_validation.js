@@ -23,6 +23,7 @@ exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata 
 const schema_1 = require("../schema");
 const types_1 = require("../types");
 const api_types_1 = require("../api_types");
+<<<<<<< HEAD
 const schema_2 = require("../schema");
 const types_2 = require("../types");
 const schema_3 = require("../schema");
@@ -39,6 +40,21 @@ const schema_8 = require("../schema");
 const ensure_1 = require("../helpers/ensure");
 const object_utils_1 = require("../helpers/object_utils");
 const schema_9 = require("../schema");
+=======
+const types_2 = require("../types");
+const types_3 = require("../types");
+const api_types_2 = require("../api_types");
+const schema_2 = require("../schema");
+const schema_3 = require("../schema");
+const types_4 = require("../types");
+const types_5 = require("../types");
+const schema_4 = require("../schema");
+const api_types_3 = require("../api_types");
+const schema_5 = require("../schema");
+const ensure_1 = require("../helpers/ensure");
+const object_utils_1 = require("../helpers/object_utils");
+const schema_6 = require("../schema");
+>>>>>>> 70ee3ea0 (make build again)
 const z = __importStar(require("zod"));
 /**
  * The uncompiled column format matchers will be expected to be actual regex objects,
@@ -86,8 +102,13 @@ function validateSyncTableSchema(schema) {
         return validated.data;
     }
     // In case this was an ObjectSchema (describing a single row), wrap it up as an ArraySchema.
+<<<<<<< HEAD
     const syntheticArraySchema = (0, schema_9.makeSchema)({
         type: schema_8.ValueType.Array,
+=======
+    const syntheticArraySchema = (0, schema_6.makeSchema)({
+        type: schema_5.ValueType.Array,
+>>>>>>> 70ee3ea0 (make build again)
         items: schema,
     });
     const validatedAsObjectSchema = arrayPropertySchema.safeParse(syntheticArraySchema);
@@ -360,11 +381,36 @@ const commonPackFormulaSchema = {
     isSystem: z.boolean().optional(),
     extraOAuthScopes: z.array(z.string()).optional(),
 };
+<<<<<<< HEAD
+=======
+const numericPackFormulaSchema = zodCompleteObject({
+    ...commonPackFormulaSchema,
+    resultType: zodDiscriminant(api_types_3.Type.number),
+    schema: zodCompleteObject({
+        type: zodDiscriminant(schema_5.ValueType.Number),
+        codaType: z.enum([...schema_2.NumberHintValueTypes]).optional(),
+        description: z.string().optional(),
+    }).optional(),
+});
+const stringPackFormulaSchema = zodCompleteObject({
+    ...commonPackFormulaSchema,
+    resultType: zodDiscriminant(api_types_3.Type.string),
+    schema: zodCompleteObject({
+        type: zodDiscriminant(schema_5.ValueType.String),
+        codaType: z.enum([...schema_4.StringHintValueTypes]).optional(),
+        description: z.string().optional(),
+    }).optional(),
+});
+>>>>>>> 70ee3ea0 (make build again)
 const booleanPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(api_types_3.Type.boolean),
     schema: zodCompleteObject({
+<<<<<<< HEAD
         type: zodDiscriminant(schema_8.ValueType.Boolean),
+=======
+        type: zodDiscriminant(schema_5.ValueType.Boolean),
+>>>>>>> 70ee3ea0 (make build again)
         description: z.string().optional(),
     }).optional(),
 });
@@ -389,6 +435,7 @@ const basePropertyValidators = {
     required: z.boolean().optional(),
 };
 const booleanPropertySchema = zodCompleteObject({
+<<<<<<< HEAD
     type: zodDiscriminant(schema_8.ValueType.Boolean),
     ...basePropertyValidators,
 });
@@ -502,6 +549,25 @@ const stringPackFormulaSchema = zodCompleteObject({
 // recursive typing better.
 const arrayPropertySchema = z.lazy(() => zodCompleteObject({
     type: zodDiscriminant(schema_8.ValueType.Array),
+=======
+    type: zodDiscriminant(schema_5.ValueType.Boolean),
+    ...basePropertyValidators,
+});
+const numberPropertySchema = zodCompleteObject({
+    type: zodDiscriminant(schema_5.ValueType.Number),
+    codaType: z.enum([...schema_2.NumberHintValueTypes]).optional(),
+    ...basePropertyValidators,
+});
+const stringPropertySchema = zodCompleteObject({
+    type: zodDiscriminant(schema_5.ValueType.String),
+    codaType: z.enum([...schema_4.StringHintValueTypes]).optional(),
+    ...basePropertyValidators,
+});
+// TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
+// recursive typing better.
+const arrayPropertySchema = z.lazy(() => zodCompleteObject({
+    type: zodDiscriminant(schema_5.ValueType.Array),
+>>>>>>> 70ee3ea0 (make build again)
     items: objectPropertyUnionSchema,
     ...basePropertyValidators,
 }));
@@ -557,11 +623,19 @@ function isValidIdentityName(packId, name) {
 }
 const genericObjectSchema = z.lazy(() => zodCompleteObject({
     ...basePropertyValidators,
+<<<<<<< HEAD
     type: zodDiscriminant(schema_8.ValueType.Object),
     description: z.string().optional(),
     id: z.string().optional(),
     primary: z.string().optional(),
     codaType: z.enum([...schema_4.ObjectHintValueTypes]).optional(),
+=======
+    type: zodDiscriminant(schema_5.ValueType.Object),
+    description: z.string().optional(),
+    id: z.string().optional(),
+    primary: z.string().optional(),
+    codaType: z.enum([...schema_3.ObjectHintValueTypes]).optional(),
+>>>>>>> 70ee3ea0 (make build again)
     featured: z.array(z.string()).optional(),
     identity: zodCompleteObject({
         // Stupid hack to hardcode a pack id that will get replaced at upload time.

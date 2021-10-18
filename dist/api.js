@@ -254,6 +254,7 @@ function makeFormula(fullDefinition) {
         case schema_1.ValueType.String: {
             // very strange ts knows that fullDefinition.codaType is StringHintTypes but doesn't know if
             // fullDefinition is StringFormulaDefV2.
+<<<<<<< HEAD
             const { onError: _, resultType: unused, ...rest } = fullDefinition;
             const codaType = 'codaType' in fullDefinition ? fullDefinition.codaType : undefined;
             const formulaSchema = 'schema' in fullDefinition ? fullDefinition.schema : undefined;
@@ -261,11 +262,19 @@ function makeFormula(fullDefinition) {
                 ...rest,
                 resultType: api_types_3.Type.string,
                 schema: formulaSchema || (codaType ? { type: schema_1.ValueType.String, codaType } : undefined),
+=======
+            const { onError: _, resultType: unused, codaType, ...rest } = fullDefinition;
+            const stringFormula = {
+                ...rest,
+                resultType: api_types_3.Type.string,
+                schema: codaType ? { type: schema_1.ValueType.String, codaType } : undefined,
+>>>>>>> 70ee3ea0 (make build again)
             };
             formula = stringFormula;
             break;
         }
         case schema_1.ValueType.Number: {
+<<<<<<< HEAD
             const { onError: _, resultType: unused, ...rest } = fullDefinition;
             const codaType = 'codaType' in fullDefinition ? fullDefinition.codaType : undefined;
             const formulaSchema = 'schema' in fullDefinition ? fullDefinition.schema : undefined;
@@ -273,6 +282,13 @@ function makeFormula(fullDefinition) {
                 ...rest,
                 resultType: api_types_3.Type.number,
                 schema: formulaSchema || (codaType ? { type: schema_1.ValueType.Number, codaType } : undefined),
+=======
+            const { onError: _, resultType: unused, codaType, ...rest } = fullDefinition;
+            const numericFormula = {
+                ...rest,
+                resultType: api_types_3.Type.number,
+                schema: codaType ? { type: schema_1.ValueType.Number, codaType } : undefined,
+>>>>>>> 70ee3ea0 (make build again)
             };
             formula = numericFormula;
             break;
@@ -538,8 +554,12 @@ function makeDynamicSyncTable({ name, getName: getNameDef, getSchema: getSchemaD
 }
 exports.makeDynamicSyncTable = makeDynamicSyncTable;
 function makeTranslateObjectFormula({ response, ...definition }) {
+<<<<<<< HEAD
     const { request, ...rest } = definition;
     const { parameters } = rest;
+=======
+    const { request, parameters } = definition;
+>>>>>>> 70ee3ea0 (make build again)
     response.schema = response.schema ? (0, schema_3.normalizeSchema)(response.schema) : undefined;
     const { onError } = response;
     const requestHandler = (0, handler_templates_2.generateRequestHandler)(request, parameters);
@@ -555,7 +575,11 @@ function makeTranslateObjectFormula({ response, ...definition }) {
         })
             .then(responseHandler);
     }
+<<<<<<< HEAD
     return Object.assign({}, rest, {
+=======
+    return Object.assign({}, definition, {
+>>>>>>> 70ee3ea0 (make build again)
         execute,
         resultType: api_types_3.Type.object,
         schema: response.schema,

@@ -31,7 +31,10 @@ const helpers_3 = require("./helpers");
 const coda_1 = require("../helpers/external-api/coda");
 const path = __importStar(require("path"));
 const helpers_4 = require("../testing/helpers");
+<<<<<<< HEAD
 const helpers_5 = require("../testing/helpers");
+=======
+>>>>>>> 70ee3ea0 (make build again)
 const errors_3 = require("./errors");
 async function handleRelease({ manifestFile, packVersion: explicitPackVersion, codaApiEndpoint, notes, }) {
     const manifestDir = path.dirname(manifestFile);
@@ -44,20 +47,28 @@ async function handleRelease({ manifestFile, packVersion: explicitPackVersion, c
     if (!packId) {
         return (0, helpers_4.printAndExit)(`Could not find a Pack id in directory ${manifestDir}. You may need to run "coda create" first if this is a brand new pack.`);
     }
+<<<<<<< HEAD
     const codaClient = (0, helpers_1.createCodaClient)(apiKey, formattedEndpoint);
+=======
+>>>>>>> 70ee3ea0 (make build again)
     let packVersion = explicitPackVersion;
     if (!packVersion) {
         try {
             const bundleFilename = await (0, build_1.build)(manifestFile);
             const manifest = await (0, helpers_3.importManifest)(bundleFilename);
+<<<<<<< HEAD
             if ('version' in manifest) {
                 packVersion = manifest.version;
             }
+=======
+            packVersion = manifest.version;
+>>>>>>> 70ee3ea0 (make build again)
         }
         catch (err) {
             return (0, helpers_4.printAndExit)(`Got an error while building your pack to get the current pack version: ${(0, errors_1.formatError)(err)}`);
         }
     }
+<<<<<<< HEAD
     if (!packVersion) {
         const { items: versions } = await codaClient.listPackVersions(packId, { limit: 1 });
         if (!versions.length) {
@@ -71,6 +82,9 @@ async function handleRelease({ manifestFile, packVersion: explicitPackVersion, c
         }
         packVersion = latestPackVersion;
     }
+=======
+    const codaClient = (0, helpers_1.createCodaClient)(apiKey, formattedEndpoint);
+>>>>>>> 70ee3ea0 (make build again)
     await handleResponse(codaClient.createPackRelease(packId, {}, { packVersion, releaseNotes: notes }));
     return (0, helpers_4.printAndExit)('Success!', 0);
 }

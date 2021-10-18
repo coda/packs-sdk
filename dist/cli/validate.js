@@ -11,10 +11,13 @@ async function handleValidate({ manifestFile }) {
     const fullManifestPath = (0, helpers_2.makeManifestFullPath)(manifestFile);
     const { bundlePath } = await (0, compile_1.compilePackBundle)({ manifestPath: fullManifestPath, minify: false });
     const manifest = await (0, helpers_1.importManifest)(bundlePath);
+<<<<<<< HEAD
     // Since it's okay to not specify a version, we inject one if it's not provided.
     if (!manifest.version) {
         manifest.version = '1';
     }
+=======
+>>>>>>> 70ee3ea0 (make build again)
     const metadata = (0, metadata_1.compilePackMetadata)(manifest);
     return validateMetadata(metadata);
 }

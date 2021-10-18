@@ -91,6 +91,7 @@ export { AttributionNodeType } from './schema';
 export type { BooleanSchema } from './schema';
 export { CurrencyFormat } from './schema';
 export type { CurrencySchema } from './schema';
+<<<<<<< HEAD
 export type { DurationSchema } from './schema';
 export { DurationUnit } from './schema';
 export type { GenericObjectSchema } from './schema';
@@ -105,15 +106,34 @@ export type { ObjectSchema } from './schema';
 export type { ObjectSchemaProperties } from './schema';
 export type { ObjectSchemaProperty } from './schema';
 export { ScaleIconSet } from './schema';
+=======
+export type { DateSchema } from './schema';
+export type { DateTimeSchema } from './schema';
+export type { DurationSchema } from './schema';
+export { DurationUnit } from './schema';
+export type { NumberSchema } from './schema';
+export type { NumericSchema } from './schema';
+export type { GenericObjectSchema } from './schema';
+export type { Identity } from './schema';
+export type { IdentityDefinition } from './schema';
+export type { ObjectSchema } from './schema';
+export type { ObjectSchemaProperties } from './schema';
+export type { ObjectSchemaProperty } from './schema';
+>>>>>>> 70ee3ea0 (make build again)
 export type { ScaleSchema } from './schema';
 export type { Schema } from './schema';
 export type { SchemaType } from './schema';
 export type { SliderSchema } from './schema';
+<<<<<<< HEAD
 export type { StringDateSchema } from './schema';
 export type { StringDateTimeSchema } from './schema';
 export type { StringSchema } from './schema';
 export type { SimpleStringSchema } from './schema';
 export type { StringTimeSchema } from './schema';
+=======
+export type { StringSchema } from './schema';
+export type { TimeSchema } from './schema';
+>>>>>>> 70ee3ea0 (make build again)
 export { ValueHintType } from './schema';
 export { ValueType } from './schema';
 export { generateSchema } from './schema';

@@ -213,8 +213,13 @@ export declare type NumericPackFormula<ParamDefsT extends ParamDefs> = BaseFormu
 export declare type BooleanPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, boolean> & {
     schema?: BooleanSchema;
 };
+<<<<<<< HEAD
 export declare type StringPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, SchemaType<StringSchema>> & {
     schema?: StringSchema;
+=======
+export declare type StringPackFormula<ParamDefsT extends ParamDefs, ResultT extends StringHintTypes = StringHintTypes> = BaseFormula<ParamDefsT, SchemaType<StringSchema<ResultT>>> & {
+    schema?: StringSchema<ResultT>;
+>>>>>>> 70ee3ea0 (make build again)
 };
 export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Omit<BaseFormula<ParamDefsT, SchemaType<SchemaT>>, 'execute'> & {
     schema?: SchemaT;
@@ -314,6 +319,7 @@ interface BaseFormulaDefV2<ParamDefsT extends ParamDefs, ResultT extends string 
 }
 declare type StringFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, string> & {
     resultType: ValueType.String;
+<<<<<<< HEAD
     execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<string> | string;
 } & ({
     schema?: StringSchema;
@@ -328,6 +334,16 @@ declare type NumericFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV
 } | {
     codaType?: NumberHintTypes;
 });
+=======
+    codaType?: StringHintTypes;
+    execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<string> | string;
+};
+declare type NumericFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, number> & {
+    resultType: ValueType.Number;
+    codaType?: NumberHintTypes;
+    execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<number> | number;
+};
+>>>>>>> 70ee3ea0 (make build again)
 declare type BooleanFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, boolean> & {
     resultType: ValueType.Boolean;
     execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<boolean> | boolean;
@@ -499,6 +515,10 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
     connectionRequirement?: ConnectionRequirement;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any>;
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
+<<<<<<< HEAD
+=======
+    request: RequestHandlerTemplate;
+>>>>>>> 70ee3ea0 (make build again)
     name: string;
     description: string;
     parameters: ParamDefsT;

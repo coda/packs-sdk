@@ -231,7 +231,11 @@ function tryParseScale(result, schema) {
     if (value < 0) {
         return { message: `Scale value ${result} cannot be below 0.` };
     }
+<<<<<<< HEAD
     if (maximum && value > maximum) {
+=======
+    if (value > maximum) {
+>>>>>>> 70ee3ea0 (make build again)
         return { message: `Scale value ${result} is greater than the specified maximum value of ${maximum}.` };
     }
 }

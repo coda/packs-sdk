@@ -3,7 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+<<<<<<< HEAD
 exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.PlaceholderIdentityPackId = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+=======
+exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.PlaceholderIdentityPackId = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.DurationUnit = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+>>>>>>> 70ee3ea0 (make build again)
 const ensure_1 = require("./helpers/ensure");
 const ensure_2 = require("./helpers/ensure");
 const ensure_3 = require("./helpers/ensure");
@@ -104,6 +108,7 @@ var DurationUnit;
     DurationUnit["Minutes"] = "minutes";
     DurationUnit["Seconds"] = "seconds";
 })(DurationUnit = exports.DurationUnit || (exports.DurationUnit = {}));
+<<<<<<< HEAD
 /**
  * The subset of StringHintTypes that don't have specific schema attributes.
  */
@@ -116,6 +121,8 @@ exports.SimpleStringHintValueTypes = [
     ValueHintType.Markdown,
     ValueHintType.Url,
 ];
+=======
+>>>>>>> 70ee3ea0 (make build again)
 var AttributionNodeType;
 (function (AttributionNodeType) {
     AttributionNodeType[AttributionNodeType["Text"] = 1] = "Text";

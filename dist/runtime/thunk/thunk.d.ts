@@ -1,10 +1,17 @@
+<<<<<<< HEAD
 import type { BasicPackDefinition } from '../../types';
+=======
+>>>>>>> 70ee3ea0 (make build again)
 import type { ExecutionContext } from '../../api_types';
 import type { FetchRequest } from '../../api_types';
 import type { FetchResponse } from '../../api_types';
 import type { FormulaSpecification } from '../types';
 import type { GenericSyncFormulaResult } from '../../api';
 import type { PackFormulaResult } from '../../api_types';
+<<<<<<< HEAD
+=======
+import type { PackVersionDefinition } from '../../types';
+>>>>>>> 70ee3ea0 (make build again)
 import type { ParamDefs } from '../../api_types';
 import type { ParamValues } from '../../api_types';
 import type { SyncExecutionContext } from '../../api_types';
@@ -14,7 +21,11 @@ export { unmarshalValue } from '../common/marshaling';
 /**
  * The thunk entrypoint - the first code that runs inside the v8 isolate once control is passed over.
  */
+<<<<<<< HEAD
 export declare function findAndExecutePackFunction<T extends FormulaSpecification>(params: ParamValues<ParamDefs>, formulaSpec: T, manifest: BasicPackDefinition, executionContext: ExecutionContext | SyncExecutionContext, shouldWrapError?: boolean): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult>;
+=======
+export declare function findAndExecutePackFunction<T extends FormulaSpecification>(params: ParamValues<ParamDefs>, formulaSpec: T, manifest: PackVersionDefinition, executionContext: ExecutionContext | SyncExecutionContext, shouldWrapError?: boolean): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult>;
+>>>>>>> 70ee3ea0 (make build again)
 export declare function ensureSwitchUnreachable(value: never): never;
 export declare function handleErrorAsync(func: () => Promise<any>): Promise<any>;
 export declare function handleError(func: () => any): any;

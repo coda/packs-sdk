@@ -4461,6 +4461,7 @@ var DurationUnit;
   DurationUnit2["Minutes"] = "minutes";
   DurationUnit2["Seconds"] = "seconds";
 })(DurationUnit || (DurationUnit = {}));
+<<<<<<< HEAD
 var SimpleStringHintValueTypes = [
   ValueHintType.Attachment,
   ValueHintType.Embed,
@@ -4470,6 +4471,8 @@ var SimpleStringHintValueTypes = [
   ValueHintType.Markdown,
   ValueHintType.Url
 ];
+=======
+>>>>>>> 70ee3ea0 (make build again)
 var AttributionNodeType;
 (function(AttributionNodeType2) {
   AttributionNodeType2[AttributionNodeType2["Text"] = 1] = "Text";
