@@ -141,21 +141,25 @@ build-mkdocs:
 # TODO(spencer): probably need some user handling to make sure there is an update in package.json if the documentation has been updated.
 # TODO(spencer): add post-push verify step to probe that it is acutally serving for the different environments?
 # These steps assume that the docs have been built
+
+# pass in `FLAGS` to control optional arguments into the documentation push script
+# For example, if you wanted to force upload (to skip the existing directory check), you can run
+# make publish-docs-<env> FLAGS=--forceUpload
 .PHONY: publish-docs-adhoc
 publish-docs-adhoc:
-	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push adhoc)
+	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push adhoc ${FLAGS})
 
 .PHONY: publish-docs-head
 publish-docs-head:
-	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push head)
+	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push head ${FLAGS})
 
 .PHONY: publish-docs-staging
 publish-docs-staging:
-	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push staging)
+	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push staging ${FLAGS})
 
 .PHONY: publish-docs-prod
 publish-docs-prod:
-	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push prod)
+	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push prod ${FLAGS})
 
 .PHONY: publish-docs-gh-pages
 publish-docs-gh-pages:
