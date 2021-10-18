@@ -18,6 +18,18 @@ module.exports = {
   settings: {},
   rules: {
     '@typescript-eslint/restrict-plus-operands': 'error',
+    'max-len': [
+      'error',
+      {
+        code: 120,
+        tabWidth: 2,
+        ignoreUrls: true,
+        ignoreStrings: true,
+        ignoreTemplateLiterals: true,
+        ignoreRegExpLiterals: true,
+        ignorePattern: '^import ',
+      },
+    ],
   },
   overrides: [
     {

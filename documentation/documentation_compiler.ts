@@ -29,7 +29,7 @@ function main() {
 
 function compileAutocompleteSnippets() {
   const compiledSnippets: CompiledAutocompleteSnippet[] = Snippets.map(snippet => {
-    const code = getCodeFile(snippet.codeFile);
+    const code = getCodeFile(snippet.codeFile, true);
     compileSnippetEmbed(snippet.codeFile);
     return {
       triggerTokens: snippet.triggerTokens,
@@ -71,9 +71,12 @@ function compileExamples() {
   fs.writeFileSync(path.join(DocumentationRoot, 'generated/examples.json'), JSON.stringify(compiledExamples, null, 2));
 }
 
-function getCodeFile(file: string): string {
+function getCodeFile(file: string, requireBegin=false): string {
   const data = fs.readFileSync(path.join(DocumentationRoot, file), 'utf8');
   const begin = data.indexOf(CodeBegin);
+  if (requireBegin && begin === -1) {
+    throw new Error(`Missing "${CodeBegin.trim()}" in file: ${file}`);
+  }
   const codeStart = begin >= 0 ? data.indexOf(CodeBegin) + CodeBegin.length : 0;
   return data.substring(codeStart).trim();
 }
