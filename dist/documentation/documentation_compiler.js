@@ -45,7 +45,7 @@ function main() {
 }
 function compileAutocompleteSnippets() {
     const compiledSnippets = documentation_config_2.Snippets.map(snippet => {
-        const code = getCodeFile(snippet.codeFile);
+        const code = getCodeFile(snippet.codeFile, true);
         compileSnippetEmbed(snippet.codeFile);
         return {
             triggerTokens: snippet.triggerTokens,
@@ -78,9 +78,12 @@ function compileExamples() {
     fs.writeFileSync(path_1.default.join(DocumentationRoot, 'generated/examples.json'), JSON.stringify(compiledExamples, null, 2));
     compileExampleNav(documentation_config_1.Examples);
 }
-function getCodeFile(file) {
+function getCodeFile(file, requireBegin = false) {
     const data = fs.readFileSync(path_1.default.join(DocumentationRoot, file), 'utf8');
     const begin = data.indexOf(CodeBegin);
+    if (requireBegin && begin === -1) {
+        throw new Error(`Missing "${CodeBegin.trim()}" in file: ${file}`);
+    }
     const codeStart = begin >= 0 ? data.indexOf(CodeBegin) + CodeBegin.length : 0;
     return data.substring(codeStart).trim();
 }
@@ -101,11 +104,12 @@ function compileSnippetEmbed(codeFile) {
     // TODO: Escape the html. codeString is inserted into a JS script.
     const codeString = JSON.stringify(getCodeFile(codeFile));
     const exampleSnippetEmbed = SnippetEmbedTemplate.replace(/'{{CODE}}'/, codeString);
+    const snippetDirPath = path_1.default.join(EmbeddedSnippetsRoot, path_1.default.dirname(codeFile));
     const snippetFileName = path_1.default.basename(codeFile).split('.')[0];
-    if (!fs.existsSync(EmbeddedSnippetsRoot)) {
-        fs.mkdirSync(EmbeddedSnippetsRoot, { recursive: true });
+    if (!fs.existsSync(snippetDirPath)) {
+        fs.mkdirSync(snippetDirPath, { recursive: true });
     }
-    fs.writeFileSync(path_1.default.join(EmbeddedSnippetsRoot, `${snippetFileName}.html`), exampleSnippetEmbed);
+    fs.writeFileSync(path_1.default.join(snippetDirPath, `${snippetFileName}.html`), exampleSnippetEmbed);
 }
 function compileExamplePage(example) {
     const examplePageContent = ExamplePageTemplate(example);
