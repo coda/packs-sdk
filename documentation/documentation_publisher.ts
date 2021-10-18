@@ -5,7 +5,6 @@ import {exec as childExec} from 'child_process';
 import {print} from '../testing/helpers';
 import {printAndExit} from '../testing/helpers';
 import {printError} from '../testing/helpers';
-import {printWarn} from '../testing/helpers';
 import {promisify} from 'util';
 import {version} from '../package.json';
 import yargs from 'yargs';
@@ -43,7 +42,12 @@ function getS3LatestDocsKey(): string {
   return `${PacksSdkBucketRootPath}/latest`;
 }
 
-async function pushDocsToEnv(env: string) {
+interface PushDocumentationArgs {
+  env: string;
+  forceUpload: boolean;
+}
+
+async function pushDocumentation({env, forceUpload}: Arguments<PushDocumentationArgs>): Promise<void> {
   const s3 = getS3Service(env);
   const bucket = getS3Bucket(env);
   const versionedKey = getS3DocVersionedKey();
@@ -58,10 +62,11 @@ async function pushDocsToEnv(env: string) {
   }
 
   try {
-    // If folder already exists, warn since we are uploading all the documentation wholesale instead of "syncing."
-    const obj = await s3.listObjectsV2({Bucket: bucket, MaxKeys: 1, Prefix: versionedKey}).promise();
-    if (!obj.Contents?.length) {
-      printWarn(`Folder already exists for ${version}.`);
+    if (!forceUpload) {
+      const obj = await s3.listObjectsV2({Bucket: bucket, MaxKeys: 1, Prefix: versionedKey}).promise();
+      if (obj.Contents?.length) {
+        printAndExit(`${env}: Trying to upload ${version} but folder already exists in S3.`);
+      }
     }
     print(`${env}:Pushing the current packs-sdk documentation ${versionedKey}...`);
     await pushDocsDirectory(versionedKey);
@@ -69,15 +74,11 @@ async function pushDocsToEnv(env: string) {
     await pushDocsDirectory(latestKey);
     print(`${env}: The current packs-sdk documentation was pushed to ${versionedKey} successfully.`);
   } catch (err: any) {
-    if (err?.code === 'CredentialsError') {
-      printError(`Credentials not found or invalid! Try running 'prodaccess'.`);
+    if (err?.code === 'CredentialsError' || err?.code === 'ExpiredToken') {
+      printError(`Credentials not found, invalid, or expired! Try running 'prodaccess'.`);
     }
     handleError(err);
   }
-}
-
-async function pushDocumentation({env}: Arguments<{env: string}>): Promise<void> {
-  await pushDocsToEnv(env);
 }
 
 // User Command Handling
@@ -87,6 +88,12 @@ if (require.main === module) {
     .command({
       command: 'push <env>',
       describe: 'Push the current config under the given version for the package.json.',
+      builder: {
+        forceUpload: {
+          boolean: true,
+          describe: 'Force upload of new files even if directory already exists in S3',
+        },
+      },
       handler: pushDocumentation,
     })
     .demandCommand()
