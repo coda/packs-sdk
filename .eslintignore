@@ -1,0 +1,7 @@
+.circleci/*
+.githooks/*
+.idea/*
+.vscode/*
+node_modules/*
+./documentation/snippets
+./documentation/examples
