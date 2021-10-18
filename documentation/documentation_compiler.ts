@@ -28,7 +28,7 @@ function main() {
 
 function compileAutocompleteSnippets() {
   const compiledSnippets: CompiledAutocompleteSnippet[] = Snippets.map(snippet => {
-    const code = getCodeFile(snippet.codeFile);
+    const code = getCodeFile(snippet.codeFile, true);
     compileSnippetEmbed(snippet.codeFile);
     return {
       triggerTokens: snippet.triggerTokens,
@@ -65,9 +65,12 @@ function compileExamples() {
   compileExampleNav(Examples);
 }
 
-function getCodeFile(file: string): string {
+function getCodeFile(file: string, requireBegin=false): string {
   const data = fs.readFileSync(path.join(DocumentationRoot, file), 'utf8');
   const begin = data.indexOf(CodeBegin);
+  if (requireBegin && begin === -1) {
+    throw new Error(`Missing "${CodeBegin.trim()}" in file: ${file}`);
+  }
   const codeStart = begin >= 0 ? data.indexOf(CodeBegin) + CodeBegin.length : 0;
   return data.substring(codeStart).trim();
 }
@@ -91,13 +94,14 @@ function compileSnippetEmbed(codeFile: string) {
   // TODO: Escape the html. codeString is inserted into a JS script.
   const codeString = JSON.stringify(getCodeFile(codeFile));
   const exampleSnippetEmbed = SnippetEmbedTemplate.replace(/'{{CODE}}'/, codeString);
+  const snippetDirPath = path.join(EmbeddedSnippetsRoot, path.dirname(codeFile));
   const snippetFileName = path.basename(codeFile).split('.')[0];
 
-  if (!fs.existsSync(EmbeddedSnippetsRoot)) {
-    fs.mkdirSync(EmbeddedSnippetsRoot, { recursive: true });
+  if (!fs.existsSync(snippetDirPath)) {
+    fs.mkdirSync(snippetDirPath, { recursive: true });
   }
 
-  fs.writeFileSync(path.join(EmbeddedSnippetsRoot, `${snippetFileName}.html`), exampleSnippetEmbed);
+  fs.writeFileSync(path.join(snippetDirPath, `${snippetFileName}.html`), exampleSnippetEmbed);
 }
 
 function compileExamplePage(example: Example) {
