@@ -518,11 +518,7 @@ export interface Format {
      * A list of regular expressions that match URLs that the formula implementing this format
      * is capable of handling. As described in {@link Format}, this is a discovery mechanism.
      */
-<<<<<<< HEAD
     matchers?: RegExp[];
-=======
-    matchers?: Array<string | RegExp>;
->>>>>>> 70ee3ea0 (make build again)
     /**
      * @deprecated Currently unused.
      */

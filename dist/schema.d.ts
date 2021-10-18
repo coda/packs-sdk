@@ -45,25 +45,16 @@ interface BaseSchema {
 export interface BooleanSchema extends BaseSchema {
     type: ValueType.Boolean;
 }
-<<<<<<< HEAD
 export declare type NumberSchema = CurrencySchema | SliderSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema;
 export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
     type: ValueType.Number;
     codaType?: T;
 }
 export interface NumericSchema extends BaseNumberSchema {
-=======
-export interface NumberSchema extends BaseSchema {
-    type: ValueType.Number;
-    codaType?: NumberHintTypes;
-}
-export interface NumericSchema extends NumberSchema {
->>>>>>> 70ee3ea0 (make build again)
     codaType?: ValueHintType.Percent;
     precision?: number;
     useThousandsSeparator?: boolean;
 }
-<<<<<<< HEAD
 export interface NumericDateSchema extends BaseNumberSchema<ValueHintType.Date> {
     codaType: ValueHintType.Date;
     format?: string;
@@ -77,18 +68,12 @@ export interface NumericDateTimeSchema extends BaseNumberSchema<ValueHintType.Da
     dateFormat?: string;
     timeFormat?: string;
 }
-=======
->>>>>>> 70ee3ea0 (make build again)
 export declare enum CurrencyFormat {
     Currency = "currency",
     Accounting = "accounting",
     Financial = "financial"
 }
-<<<<<<< HEAD
 export interface CurrencySchema extends BaseNumberSchema<ValueHintType.Currency> {
-=======
-export interface CurrencySchema extends NumberSchema {
->>>>>>> 70ee3ea0 (make build again)
     codaType: ValueHintType.Currency;
     precision?: number;
     /***
@@ -98,11 +83,7 @@ export interface CurrencySchema extends NumberSchema {
     currencyCode?: string;
     format?: CurrencyFormat;
 }
-<<<<<<< HEAD
 export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
-=======
-export interface SliderSchema extends NumberSchema {
->>>>>>> 70ee3ea0 (make build again)
     codaType: ValueHintType.Slider;
     minimum?: number | string;
     maximum?: number | string;
@@ -130,7 +111,6 @@ export declare enum ScaleIconSet {
     Checkmark = "checkmark",
     LightBulb = "lightbulb"
 }
-<<<<<<< HEAD
 export interface ScaleSchema extends BaseNumberSchema<ValueHintType.Scale> {
     codaType: ValueHintType.Scale;
     maximum?: number;
@@ -145,25 +125,6 @@ export interface StringTimeSchema extends BaseStringSchema<ValueHintType.Time> {
     format?: string;
 }
 export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.DateTime> {
-=======
-export interface ScaleSchema extends NumberSchema {
-    codaType: ValueHintType.Scale;
-    maximum: number;
-    icon: ScaleIconSet;
-}
-interface BaseDateSchema extends BaseSchema {
-    type: ValueType.Number | ValueType.String;
-}
-export interface DateSchema extends BaseDateSchema {
-    codaType: ValueHintType.Date;
-    format?: string;
-}
-export interface TimeSchema extends BaseDateSchema {
-    codaType: ValueHintType.Time;
-    format?: string;
-}
-export interface DateTimeSchema extends BaseDateSchema {
->>>>>>> 70ee3ea0 (make build again)
     codaType: ValueHintType.DateTime;
     dateFormat?: string;
     timeFormat?: string;
@@ -174,7 +135,6 @@ export declare enum DurationUnit {
     Minutes = "minutes",
     Seconds = "seconds"
 }
-<<<<<<< HEAD
 export interface DurationSchema extends BaseStringSchema<ValueHintType.Duration> {
     precision?: number;
     maxUnit?: DurationUnit;
@@ -191,16 +151,6 @@ export declare type SimpleStringHintTypes = typeof SimpleStringHintValueTypes[nu
 export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStringHintTypes> extends BaseStringSchema<T> {
 }
 export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema | SimpleStringSchema;
-=======
-export interface DurationSchema extends StringSchema<ValueHintType.Duration> {
-    precision?: number;
-    maxUnit?: DurationUnit;
-}
-export interface StringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
-    type: ValueType.String;
-    codaType?: T;
-}
->>>>>>> 70ee3ea0 (make build again)
 export interface ArraySchema<T extends Schema = Schema> extends BaseSchema {
     type: ValueType.Array;
     items: T;
