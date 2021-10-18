@@ -1,4 +1,0 @@
-nav:
-{{#each filenames}}
-  - {{this}}
-{{/each}}

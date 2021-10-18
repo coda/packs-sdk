@@ -1,4 +1,4 @@
-# addColumnFormat()
+# Column Formats
 
 --8<-- "./examples/column-format/column_format.md"
 

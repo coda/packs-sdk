@@ -1,4 +1,4 @@
-# addDynamicSyncTable()
+# Dynamic Sync Tables
 
 --8<-- "./examples/dynamic-sync-table/dynamic_sync_table.md"
 

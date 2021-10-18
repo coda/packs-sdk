@@ -20,6 +20,7 @@ export interface CompiledExampleSnippet {
 }
 export interface Example {
     name: string;
+    category: ExampleCategory;
     triggerTokens: string[];
     linkData: LinkData;
     contentFile: string;
@@ -34,9 +35,14 @@ export interface CompiledExample {
 }
 export interface LinkData {
     type: UrlType;
-    url: string;
+    url?: string;
 }
 export declare enum UrlType {
+    SamplePage = "SamplePage",
     SdkReferencePath = "SdkReferencePath",
     Web = "Web"
+}
+export declare enum ExampleCategory {
+    Topic = "topic",
+    Full = "full"
 }

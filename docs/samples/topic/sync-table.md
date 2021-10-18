@@ -1,4 +1,4 @@
-# addSyncTable()
+# Sync Tables
 
 --8<-- "./examples/sync-table/sync_table.md"
 

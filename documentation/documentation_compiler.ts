@@ -15,10 +15,11 @@ const DocumentationRoot = path.join(BaseDir, 'documentation');
 const TypeDocsRoot = path.join(BaseDir, 'docs');
 const EmbeddedSnippetsRoot = path.join(TypeDocsRoot, 'embedded-snippets');
 const SnippetEmbedTemplate = fs.readFileSync(path.join(DocumentationRoot, 'snippet_embed_template.html'), 'utf8');
-const ExamplePagesRoot = path.join(TypeDocsRoot, 'samples');
+const ExampleDirName = 'samples';
+const ExamplePagesRoot = path.join(TypeDocsRoot, ExampleDirName);
 const ExamplePageTemplate = Handlebars.compile(fs.readFileSync(path.join(DocumentationRoot, 'example_page_template.md'), 'utf8'));
-const ExampleNavTemplate = Handlebars.compile(fs.readFileSync(path.join(DocumentationRoot, 'example_nav_template.yml'), 'utf8'));
 const SdkReferenceLink = 'https://coda.github.io/packs-sdk';
+const SamplePageLink = path.join(SdkReferenceLink, ExampleDirName);
 const PageFileExtension = 'md';
 
 function main() {
@@ -46,10 +47,16 @@ function compileExamples() {
     const compiledExampleSnippets = compileExampleSnippets(example);
     let exampleFooterLink = example.linkData.url;
     if (example.linkData.type === UrlType.SdkReferencePath) {
-      if (!isValidReferencePath(exampleFooterLink)) {
+      if (!isValidReferencePath(exampleFooterLink!)) {
         throw new Error(`${exampleFooterLink} is not a valid path`);
       }
       exampleFooterLink = `${SdkReferenceLink}${exampleFooterLink}`;
+    } else if (example.linkData.type === UrlType.SamplePage) {
+      const pageName = getExamplePageName(example).split('.')[0];
+      exampleFooterLink = `${SamplePageLink}/${example.category}/${pageName}`;
+    }
+    if (!exampleFooterLink) {
+      throw new Error(`Missing link for example "${example.name}".`);
     }
     compileExamplePage(example);
     return {
@@ -62,7 +69,6 @@ function compileExamples() {
   });
 
   fs.writeFileSync(path.join(DocumentationRoot, 'generated/examples.json'), JSON.stringify(compiledExamples, null, 2));
-  compileExampleNav(Examples);
 }
 
 function getCodeFile(file: string): string {
@@ -104,25 +110,13 @@ function compileSnippetEmbed(codeFile: string) {
 function compileExamplePage(example: Example) {
   const examplePageContent = ExamplePageTemplate(example);
   const pageFileName = getExamplePageName(example);
+  const pagePath = path.join(ExamplePagesRoot, example.category);
 
-  if (!fs.existsSync(ExamplePagesRoot)) {
-    fs.mkdirSync(ExamplePagesRoot, { recursive: true });
+  if (!fs.existsSync(pagePath)) {
+    fs.mkdirSync(pagePath, { recursive: true });
   }
 
-  fs.writeFileSync(path.join(ExamplePagesRoot, pageFileName), examplePageContent);
-}
-
-function compileExampleNav(examples: Example[]) {
-  const filenames = examples.sort((a, b) => {
-    return a.name.localeCompare(b.name);
-  }).map(getExamplePageName);
-  const exampleNavContent = ExampleNavTemplate({filenames});
-
-  if (!fs.existsSync(ExamplePagesRoot)) {
-    fs.mkdirSync(ExamplePagesRoot, { recursive: true });
-  }
-
-  fs.writeFileSync(path.join(ExamplePagesRoot, '.nav.yml'), exampleNavContent);
+  fs.writeFileSync(path.join(pagePath, pageFileName), examplePageContent);
 }
 
 function getExamplePageName(example: Example) {

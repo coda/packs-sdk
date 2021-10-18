@@ -1,4 +1,4 @@
-# addFormula()
+# Formulas
 
 --8<-- "./examples/formula/formula.md"
 
