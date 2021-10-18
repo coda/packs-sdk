@@ -1,11 +1,10 @@
-This Pack acts as an integration with Todoist, and creates:
+This Pack provides an integration with the task tracking app [Todoist][todoist]. It uses a variety of building blocks to allow users to work with their projects and tasks, including:
 
-- 3 buttons
-  - addProject , which creates a new Project with a given title
-  - addTask , which creates a new task with the given content , and adds it to an optional Project (by default, this goes into your Inbox)
-  - markAsComplete , which closes out a given task based on its taskID
-- 2 sync tables
-  - Projects syncs all of the user’s Projects
-  - Tasks syncs all of the user’s active tasks, across all projects
+- Formulas that provide rich data about an item given its URL.
+- Column formats that automatically apply those formulas to matching URLs.
+- Action formulas that create and update items, for use in button and automations.
+- Sync tables for pulling in all of the user's items.
 
-Note this Pack requires a free Todoist account. The API key needed can be accessed from the “Integrations” tab within Settings.
+The Pack uses OAuth2 to connect to a user's Todoist account, which you can create for free.
+
+[todoist]: https://todoist.com/

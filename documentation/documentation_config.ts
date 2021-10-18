@@ -280,8 +280,8 @@ export const Examples: Example[] = [
     triggerTokens: [],
     contentFile: './examples/todoist/todoist.md',
     linkData: {
-      type: UrlType.Web,
-      url: 'https://coda.io/@coda/make-a-pack-private-alpha/todoist-30',
+      type: UrlType.SdkReferencePath,
+      url: '/samples/todoist',
     },
     exampleSnippets: [
       {
