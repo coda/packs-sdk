@@ -6,6 +6,14 @@ export declare const print: {
     (...data: any[]): void;
     (message?: any, ...optionalParams: any[]): void;
 };
+export declare const printWarn: {
+    (...data: any[]): void;
+    (message?: any, ...optionalParams: any[]): void;
+};
+export declare const printError: {
+    (...data: any[]): void;
+    (message?: any, ...optionalParams: any[]): void;
+};
 export declare function printAndExit(msg: string, exitCode?: number): never;
 export declare function promptForInput(prompt: string, { mask }?: {
     mask?: boolean;

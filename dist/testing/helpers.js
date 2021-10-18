@@ -22,7 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.processVmError = exports.getExpirationDate = exports.writeJSONFile = exports.readJSONFile = exports.readFile = exports.promptForInput = exports.printAndExit = exports.print = exports.getManifestFromModule = void 0;
+exports.processVmError = exports.getExpirationDate = exports.writeJSONFile = exports.readJSONFile = exports.readFile = exports.promptForInput = exports.printAndExit = exports.printError = exports.printWarn = exports.print = exports.getManifestFromModule = void 0;
 const ensure_1 = require("../helpers/ensure");
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
@@ -39,6 +39,10 @@ function getManifestFromModule(module) {
 exports.getManifestFromModule = getManifestFromModule;
 // eslint-disable-next-line no-console
 exports.print = console.log;
+// eslint-disable-next-line no-console
+exports.printWarn = console.warn;
+// eslint-disable-next-line no-console
+exports.printError = console.error;
 function printAndExit(msg, exitCode = 1) {
     (0, exports.print)(msg);
     return process.exit(exitCode);

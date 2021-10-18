@@ -15,7 +15,6 @@
     "url": "https://github.com/coda/packs-sdk"
   },
   "dependencies": {
-    "@types/sinon": "^10.0.4",
     "browserify": "^17.0.0",
     "client-oauth2": "^4.3.3",
     "clone": "^2.1.2",
@@ -47,6 +46,11 @@
     "zod": "^3.9.8"
   },
   "devDependencies": {
+    "aws-sdk": "^2.1002.0",
+    "@types/aws-sdk": "^2.7.0",
+    "mime": "^2.5.2",
+    "@types/mime": "^2.0.3",
+    "@types/sinon": "^10.0.4",
     "@types/browserify": "^12.0.37",
     "@types/chai": "^4.2.22",
     "@types/clone": "^2.1.1",

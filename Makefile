@@ -129,8 +129,40 @@ docs: typedoc generated-documentation
 view-docs:
 	PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 expect -c 'spawn pipenv run mkdocs serve; expect "Serving on"; exec open "http://localhost:8000"; interact'
 
-.PHONY: publish-docs
-publish-docs:
+###############################################################################
+### Deployment of documentation ### 
+
+# This step generates all the documentation for the SDK using mkdocs and dumps the contents in /site
+.PHONY: build-mkdocs
+build-mkdocs:
+	${PIPENV} run mkdocs build
+
+# This step uploads the documentation for the current package version.
+# TODO(spencer): probably need some user handling to make sure there is an update in package.json if the documentation has been updated.
+# TODO(spencer): add post-push verify step to probe that it is acutally serving for the different environments?
+# These steps assume that the docs have been built
+
+# pass in `FLAGS` to control optional arguments into the documentation push script
+# For example, if you wanted to force upload (to skip the existing directory check), you can run
+# make publish-docs-<env> FLAGS=--forceUpload
+.PHONY: publish-docs-adhoc
+publish-docs-adhoc:
+	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push adhoc ${FLAGS})
+
+.PHONY: publish-docs-head
+publish-docs-head:
+	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push head ${FLAGS})
+
+.PHONY: publish-docs-staging
+publish-docs-staging:
+	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push staging ${FLAGS})
+
+.PHONY: publish-docs-prod
+publish-docs-prod:
+	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push prod ${FLAGS})
+
+.PHONY: publish-docs-gh-pages
+publish-docs-gh-pages:
 	if [ -z ${shell git status -uno | grep "Your branch is up to date with 'origin/main'"} ]; then \
 		echo "The documentation can only be published from main at head."; \
 		exit 1; \
@@ -139,6 +171,8 @@ publish-docs:
 	# See: https://www.mkdocs.org/user-guide/deploying-your-docs/#github-pages
 	# Including the tag "[ci skip]" in the commit message to prevent CircleCI from building the branch.
 	${PIPENV} run mkdocs gh-deploy --message "Deployed {sha} with MkDocs version: {version} [ci skip]"
+
+###############################################################################
 
 .PHONY: test
 test:

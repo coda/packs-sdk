@@ -16,6 +16,10 @@ export function getManifestFromModule(module: any): PackVersionDefinition {
 
 // eslint-disable-next-line no-console
 export const print = console.log;
+// eslint-disable-next-line no-console
+export const printWarn = console.warn;
+// eslint-disable-next-line no-console
+export const printError = console.error;
 
 export function printAndExit(msg: string, exitCode: number = 1): never {
   print(msg);
