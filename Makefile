@@ -33,10 +33,15 @@ _bootstrap-python:
 	# Ensure requirements.txt (used by Read the Docs) is in sync.
 	${PIPENV} lock -r > requirements.txt
 
+.PHONY: _bootstrap-githooks
+_bootstrap-githooks: clean-githooks
+	-(cd ${ROOTDIR}; scripts/dev/git-hooks.sh --install)
+
 .PHONY: bootstrap
 bootstrap:
 	$(MAKE) MAKEFLAGS= _bootstrap-node
 	$(MAKE) MAKEFLAGS= _bootstrap-python
+	$(MAKE) MAKEFLAGS= _bootstrap-githooks
 	echo
 	echo '  make bootstrap complete!'
 	echo
@@ -142,6 +147,10 @@ test:
 .PHONY: test-file
 test-file:
 	TS_NODE_TRANSPILE_ONLY=1 ${ROOTDIR}/node_modules/.bin/mocha ${FILE}
+
+.PHONY: clean-githooks
+clean-githooks:
+	-rm -rf ${ROOTDIR}/.git/hooks/* ${ROOTDIR}/.git/hooks.old
 
 .PHONY: clean
 clean:
