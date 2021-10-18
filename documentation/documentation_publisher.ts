@@ -2,8 +2,10 @@ import AWS from 'aws-sdk';
 import type {Arguments} from 'yargs';
 import S3 from 'aws-sdk/clients/s3';
 import {exec as childExec} from 'child_process';
-import {print, printError, printWarn} from '../testing/helpers';
+import {print} from '../testing/helpers';
 import {printAndExit} from '../testing/helpers';
+import {printError} from '../testing/helpers';
+import {printWarn} from '../testing/helpers';
 import {promisify} from 'util';
 import {version} from '../package.json';
 import yargs from 'yargs';
@@ -49,7 +51,9 @@ async function pushDocsToEnv(env: string) {
   print(`${env}: Pushing to bucket ${bucket}.`);
 
   async function pushDocsDirectory(key: string): Promise<any> {
-    await exec(`aws s3 sync --profile ${env} --region ${AwsRegion} ${BaseGeneratedDocsPath} s3://${bucket}/${key}`);
+    await exec(
+      `aws s3 sync --profile ${env} --region ${AwsRegion} ${BaseGeneratedDocsPath} s3://${bucket}/${key} --delete`,
+    );
   }
 
   try {
