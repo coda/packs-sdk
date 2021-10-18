@@ -80,7 +80,8 @@ function compileExamples() {
 }
 function getCodeFile(file) {
     const data = fs.readFileSync(path_1.default.join(DocumentationRoot, file), 'utf8');
-    const codeStart = data.indexOf(CodeBegin) + CodeBegin.length;
+    const begin = data.indexOf(CodeBegin);
+    const codeStart = begin >= 0 ? data.indexOf(CodeBegin) + CodeBegin.length : 0;
     return data.substring(codeStart).trim();
 }
 function getContentFile(file) {
