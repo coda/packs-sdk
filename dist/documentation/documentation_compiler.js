@@ -104,11 +104,12 @@ function compileSnippetEmbed(codeFile) {
     // TODO: Escape the html. codeString is inserted into a JS script.
     const codeString = JSON.stringify(getCodeFile(codeFile));
     const exampleSnippetEmbed = SnippetEmbedTemplate.replace(/'{{CODE}}'/, codeString);
+    const snippetDirPath = path_1.default.join(EmbeddedSnippetsRoot, path_1.default.dirname(codeFile));
     const snippetFileName = path_1.default.basename(codeFile).split('.')[0];
-    if (!fs.existsSync(EmbeddedSnippetsRoot)) {
-        fs.mkdirSync(EmbeddedSnippetsRoot, { recursive: true });
+    if (!fs.existsSync(snippetDirPath)) {
+        fs.mkdirSync(snippetDirPath, { recursive: true });
     }
-    fs.writeFileSync(path_1.default.join(EmbeddedSnippetsRoot, `${snippetFileName}.html`), exampleSnippetEmbed);
+    fs.writeFileSync(path_1.default.join(snippetDirPath, `${snippetFileName}.html`), exampleSnippetEmbed);
 }
 function compileExamplePage(example) {
     const examplePageContent = ExamplePageTemplate(example);
