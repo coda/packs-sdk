@@ -2287,115 +2287,416 @@
                 
                 
                 <h1 id="todoist">Todoist<a class="headerlink" href="#todoist" title="Permanent link">&para;</a></h1>
-<p>This Pack acts as an integration with Todoist, and creates:</p>
+<p>This Pack provides an integration with the task tracking app <a href="https://todoist.com/">Todoist</a>. It uses a variety of building blocks to allow users to work with their projects and tasks, including:</p>
 <ul>
-<li>3 buttons</li>
-<li>addProject , which creates a new Project with a given title</li>
-<li>addTask , which creates a new task with the given content , and adds it to an optional Project (by default, this goes into your Inbox)</li>
-<li>markAsComplete , which closes out a given task based on its taskID</li>
-<li>2 sync tables</li>
-<li>Projects syncs all of the user’s Projects</li>
-<li>Tasks syncs all of the user’s active tasks, across all projects</li>
+<li>Formulas that provide rich data about an item given its URL.</li>
+<li>Column formats that automatically apply those formulas to matching URLs.</li>
+<li>Action formulas that create and update items, for use in button and automations.</li>
+<li>Sync tables for pulling in all of the user's items.</li>
 </ul>
-<p>Note this Pack requires a free Todoist account. The API key needed can be accessed from the “Integrations” tab within Settings.</p>
+<p>The Pack uses OAuth2 to connect to a user's Todoist account, which you can create for free.</p>
 <div class="tabbed-set" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">Todoist</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="c1">// This import statement gives you access to all parts of the Coda Packs SDK.</span>
-<span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
 
-<span class="c1">// This line creates your new Pack.</span>
+
+<span class="c1">// Constants.</span>
+
+<span class="kd">const</span> <span class="nx">ProjectUrlPatterns</span>: <span class="kt">RegExp</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="ow">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="s2">&quot;^https://todoist.com/app/project/([0-9]+)$&quot;</span><span class="p">),</span>
+  <span class="ow">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="s2">&quot;^https://todoist.com/showProject\\?id=([0-9]+)&quot;</span><span class="p">),</span>
+<span class="p">];</span>
+
+<span class="kd">const</span> <span class="nx">TaskUrlPatterns</span>: <span class="kt">RegExp</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="ow">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="s2">&quot;^https://todoist.com/app/project/[0-9]+/task/([0-9]+)$&quot;</span><span class="p">),</span>
+  <span class="ow">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="s2">&quot;^https://todoist.com/showTask\\?id=([0-9]+)&quot;</span><span class="p">),</span>
+<span class="p">];</span>
+
+
+<span class="c1">// Pack setup.</span>
+
 <span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
 
-<span class="c1">// We use &quot;user authentication&quot; so that users of this Pack will provide their</span>
-<span class="c1">// own credentials, as opposed to &quot;system authentication&quot;, which the pack author</span>
-<span class="c1">// provides a single set of credentials that apply to all requests from this</span>
-<span class="c1">// pack. In this case, users must grab the API token from the &quot;Integrations&quot; tab</span>
-<span class="c1">// within Todoist&#39;s settings</span>
-<span class="nx">pack</span><span class="p">.</span><span class="nx">setUserAuthentication</span><span class="p">({</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">AuthenticationType</span><span class="p">.</span><span class="nx">HeaderBearerToken</span><span class="p">});</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addNetworkDomain</span><span class="p">(</span><span class="s2">&quot;todoist.com&quot;</span><span class="p">);</span>
 
-<span class="c1">// When using the fetcher, this is the domain of the API that your pack makes</span>
-<span class="c1">// fetcher requests to.</span>
-<span class="nx">pack</span><span class="p">.</span><span class="nx">addNetworkDomain</span><span class="p">(</span><span class="s2">&quot;api.todoist.com&quot;</span><span class="p">);</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">setUserAuthentication</span><span class="p">({</span>
+  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">AuthenticationType</span><span class="p">.</span><span class="nx">OAuth2</span><span class="p">,</span>
+  <span class="c1">// Settings pulled from the Todoist OAuth guide.</span>
+  <span class="c1">// https://developer.todoist.com/guides/#oauth</span>
+  <span class="nx">authorizationUrl</span><span class="o">:</span> <span class="s2">&quot;https://todoist.com/oauth/authorize&quot;</span><span class="p">,</span>
+  <span class="nx">tokenUrl</span><span class="o">:</span> <span class="s2">&quot;https://todoist.com/oauth/access_token&quot;</span><span class="p">,</span>
+  <span class="nx">scopes</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;data:read_write&quot;</span><span class="p">],</span>
 
-<span class="c1">// The following adds a new formula to this Pack.</span>
+  <span class="c1">// Determines the display name of the connected account.</span>
+  <span class="nx">getConnectionName</span>: <span class="kt">async</span> <span class="nx">context</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">withQueryParams</span><span class="p">(</span><span class="s2">&quot;https://api.todoist.com/sync/v8/sync&quot;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">resource_types</span>: <span class="kt">JSON.stringify</span><span class="p">([</span><span class="s2">&quot;user&quot;</span><span class="p">]),</span>
+    <span class="p">});</span>
+    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+      <span class="nx">url</span>: <span class="kt">url</span><span class="p">,</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">user</span><span class="o">?</span><span class="p">.</span><span class="nx">full_name</span><span class="p">;</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Schemas</span>
+
+<span class="c1">// A reference to a synced Project. Usually you can use</span>
+<span class="c1">// `coda.makeReferenceSchemaFromObjectSchema` to generate these from the primary</span>
+<span class="c1">// schema, but that doesn&#39;t work in this case since a Project itself can contain</span>
+<span class="c1">// a reference to a parent project.</span>
+<span class="kd">const</span> <span class="nx">ProjectReferenceSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
+  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
+  <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Reference</span><span class="p">,</span>
+  <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span> <span class="nx">required</span>: <span class="kt">true</span><span class="p">},</span>
+    <span class="nx">projectId</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">,</span> <span class="nx">required</span>: <span class="kt">true</span><span class="p">},</span>
+  <span class="p">},</span>
+  <span class="nx">primary</span><span class="o">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+  <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;projectId&quot;</span><span class="p">,</span>
+  <span class="nx">identity</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Project&quot;</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="kd">const</span> <span class="nx">ProjectSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
+  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
+  <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Reference</span><span class="p">,</span>
+  <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The name of the project.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="nx">required</span>: <span class="kt">true</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">url</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;A link to the project in the Todoist app.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Url</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">shared</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Is the project is shared.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Boolean</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">favorite</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Is the project a favorite.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Boolean</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">projectId</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The ID of the project.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">,</span>
+      <span class="nx">required</span>: <span class="kt">true</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">parentProjectId</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;For sub-projects, the ID of the parent project.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="c1">// Add a reference to the sync&#39;ed row of the parent project.</span>
+    <span class="c1">// References only work in sync tables.</span>
+    <span class="nx">parentProject</span>: <span class="kt">ProjectReferenceSchema</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="nx">primary</span><span class="o">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+  <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;projectId&quot;</span><span class="p">,</span>
+  <span class="nx">featured</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">],</span>
+  <span class="nx">identity</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Project&quot;</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// A reference to a synced Task. Usually you can use</span>
+<span class="c1">// `coda.makeReferenceSchemaFromObjectSchema` to generate these from the primary</span>
+<span class="c1">// schema, but that doesn&#39;t work in this case since a Project itself can contain</span>
+<span class="c1">// a reference to a parent project.</span>
+<span class="kd">const</span> <span class="nx">TaskReferenceSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
+  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
+  <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Reference</span><span class="p">,</span>
+  <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span> <span class="nx">required</span>: <span class="kt">true</span><span class="p">},</span>
+    <span class="nx">taskId</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">,</span> <span class="nx">required</span>: <span class="kt">true</span><span class="p">},</span>
+  <span class="p">},</span>
+  <span class="nx">primary</span><span class="o">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+  <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;taskId&quot;</span><span class="p">,</span>
+  <span class="nx">identity</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Task&quot;</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="kd">const</span> <span class="nx">TaskSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
+  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
+  <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The name of the task.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="nx">required</span>: <span class="kt">true</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">description</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;A detailed description of the task.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">url</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;A link to the task in the Todoist app.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Url</span>
+    <span class="p">},</span>
+    <span class="nx">order</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The position of the task in the project or parent task.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">priority</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The priority of the task.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">taskId</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The ID of the task.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">,</span>
+      <span class="nx">required</span>: <span class="kt">true</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">projectId</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The ID of the project that the task belongs to.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">parentTaskId</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;For sub-tasks, the ID of the parent task it belongs to.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="c1">// A reference to the sync&#39;ed row of the project.</span>
+    <span class="c1">// References only work in sync tables.</span>
+    <span class="nx">project</span>: <span class="kt">ProjectReferenceSchema</span><span class="p">,</span>
+    <span class="c1">// Add a reference to the sync&#39;ed row of the parent task.</span>
+    <span class="c1">// References only work in sync tables.</span>
+    <span class="nx">parentTask</span>: <span class="kt">TaskReferenceSchema</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="nx">primary</span><span class="o">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+  <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;taskId&quot;</span><span class="p">,</span>
+  <span class="nx">featured</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;project&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">],</span>
+  <span class="nx">identity</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Task&quot;</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Convert a Project API response to a Project schema.</span>
+<span class="cm"> */</span>
+<span class="kd">function</span> <span class="nx">toProject</span><span class="p">(</span><span class="nx">project</span>: <span class="kt">any</span><span class="p">,</span> <span class="nx">withReferences</span><span class="o">=</span><span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">result</span>: <span class="kt">any</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">name</span>: <span class="kt">project.name</span><span class="p">,</span>
+    <span class="nx">projectId</span>: <span class="kt">project.id</span><span class="p">,</span>
+    <span class="nx">url</span>: <span class="kt">project.url</span><span class="p">,</span>
+    <span class="nx">shared</span>: <span class="kt">project.shared</span><span class="p">,</span>
+    <span class="nx">favorite</span>: <span class="kt">project.favorite</span><span class="p">,</span>
+    <span class="nx">parentProjectId</span>: <span class="kt">project.parent_id</span><span class="p">,</span>
+  <span class="p">};</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">withReferences</span> <span class="o">&amp;&amp;</span> <span class="nx">project</span><span class="p">.</span><span class="nx">parent_id</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">result</span><span class="p">.</span><span class="nx">parentProject</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="nx">projectId</span>: <span class="kt">project.parent_id</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Not found&quot;</span><span class="p">,</span>  <span class="c1">// If sync&#39;ed, the real name will be shown instead.</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Convert a Task API response to a Task schema.</span>
+<span class="cm"> */</span>
+<span class="kd">function</span> <span class="nx">toTask</span><span class="p">(</span><span class="nx">task</span>: <span class="kt">any</span><span class="p">,</span> <span class="nx">withReferences</span><span class="o">=</span><span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">result</span>: <span class="kt">any</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">name</span>: <span class="kt">task.content</span><span class="p">,</span>
+    <span class="nx">description</span>: <span class="kt">task.description</span><span class="p">,</span>
+    <span class="nx">url</span>: <span class="kt">task.url</span><span class="p">,</span>
+    <span class="nx">order</span>: <span class="kt">task.order</span><span class="p">,</span>
+    <span class="nx">priority</span>: <span class="kt">task.priority</span><span class="p">,</span>
+    <span class="nx">taskId</span>: <span class="kt">task.id</span><span class="p">,</span>
+    <span class="nx">projectId</span>: <span class="kt">task.project_id</span><span class="p">,</span>
+    <span class="nx">parentTaskId</span>: <span class="kt">task.parent_id</span><span class="p">,</span>
+  <span class="p">};</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">withReferences</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Add a reference to the corresponding row in the Projects sync table.</span>
+    <span class="nx">result</span><span class="p">.</span><span class="nx">project</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="nx">projectId</span>: <span class="kt">task.project_id</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Not found&quot;</span><span class="p">,</span>  <span class="c1">// If sync&#39;ed, the real name will be shown instead.</span>
+    <span class="p">};</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">task</span><span class="p">.</span><span class="nx">parent_id</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Add a reference to the corresponding row in the Tasks sync table.</span>
+      <span class="nx">result</span><span class="p">.</span><span class="nx">parentTask</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">taskId</span>: <span class="kt">task.parent_id</span><span class="p">,</span>
+        <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Not found&quot;</span><span class="p">,</span>  <span class="c1">// If sync&#39;ed, the real name will be shown instead.</span>
+      <span class="p">};</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="c1">// Formulas (read-only).</span>
+
 <span class="nx">pack</span><span class="p">.</span><span class="nx">addFormula</span><span class="p">({</span>
-  <span class="c1">// Remember, the formula name cannot have spaces in it.</span>
-  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;AddProject&quot;</span><span class="p">,</span>
-  <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Add a Todoist project&quot;</span><span class="p">,</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;GetProject&quot;</span><span class="p">,</span>
+  <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Gets a Todoist project by URL&quot;</span><span class="p">,</span>
   <span class="nx">parameters</span><span class="o">:</span> <span class="p">[</span>
     <span class="nx">coda</span><span class="p">.</span><span class="nx">makeParameter</span><span class="p">({</span>
       <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ParameterType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
-      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span>
-      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The title or name of your new project&quot;</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;url&quot;</span><span class="p">,</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The URL of the project&quot;</span><span class="p">,</span>
     <span class="p">}),</span>
   <span class="p">],</span>
-  <span class="c1">// This formula returns a simple string upon completion, per line 46 above.</span>
-  <span class="nx">resultType</span>: <span class="kt">coda.ValueType.String</span><span class="p">,</span>
-  <span class="c1">// This is an action, so it will show up as a button in the Coda UI.</span>
-  <span class="nx">isAction</span>: <span class="kt">true</span><span class="p">,</span>
-  <span class="c1">// This formula requires that a user has connected a Todoist account.</span>
-  <span class="nx">connectionRequirement</span>: <span class="kt">coda.ConnectionRequirement.Required</span><span class="p">,</span>
+  <span class="nx">resultType</span>: <span class="kt">coda.ValueType.Object</span><span class="p">,</span>
+  <span class="nx">schema</span>: <span class="kt">ProjectSchema</span><span class="p">,</span>
 
-  <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">title</span><span class="p">],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// This formula makes an HTTP Post request to create a new project.</span>
-    <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+  <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">url</span><span class="p">],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">projectId</span> <span class="o">=</span> <span class="nx">extractProjectId</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+      <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;https://api.todoist.com/rest/v1/projects/&quot;</span> <span class="o">+</span> <span class="nx">projectId</span><span class="p">,</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="nx">toProject</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">);</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addFormula</span><span class="p">({</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;GetTask&quot;</span><span class="p">,</span>
+  <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Gets a Todoist task by URL&quot;</span><span class="p">,</span>
+  <span class="nx">parameters</span><span class="o">:</span> <span class="p">[</span>
+    <span class="nx">coda</span><span class="p">.</span><span class="nx">makeParameter</span><span class="p">({</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ParameterType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;url&quot;</span><span class="p">,</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The URL of the task&quot;</span><span class="p">,</span>
+    <span class="p">}),</span>
+  <span class="p">],</span>
+  <span class="nx">resultType</span>: <span class="kt">coda.ValueType.Object</span><span class="p">,</span>
+  <span class="nx">schema</span>: <span class="kt">TaskSchema</span><span class="p">,</span>
+
+  <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">url</span><span class="p">],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">taskId</span> <span class="o">=</span> <span class="nx">extractTaskId</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+      <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;https://api.todoist.com/rest/v1/tasks/&quot;</span> <span class="o">+</span> <span class="nx">taskId</span><span class="p">,</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="nx">toTask</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">);</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+
+<span class="c1">// Column Formats.</span>
+
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addColumnFormat</span><span class="p">({</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Project&quot;</span><span class="p">,</span>
+  <span class="nx">formulaName</span><span class="o">:</span> <span class="s2">&quot;GetProject&quot;</span><span class="p">,</span>
+  <span class="nx">formulaNamespace</span><span class="o">:</span> <span class="s2">&quot;Deprecated&quot;</span><span class="p">,</span>
+  <span class="nx">matchers</span>: <span class="kt">ProjectUrlPatterns</span><span class="p">,</span>
+<span class="p">})</span>
+
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addColumnFormat</span><span class="p">({</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Task&quot;</span><span class="p">,</span>
+  <span class="nx">formulaName</span><span class="o">:</span> <span class="s2">&quot;GetTask&quot;</span><span class="p">,</span>
+  <span class="nx">formulaNamespace</span><span class="o">:</span> <span class="s2">&quot;Deprecated&quot;</span><span class="p">,</span>
+  <span class="nx">matchers</span>: <span class="kt">TaskUrlPatterns</span><span class="p">,</span>
+<span class="p">})</span>
+
+
+<span class="c1">// Action formulas (buttons/automations).</span>
+
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addFormula</span><span class="p">({</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;AddProject&quot;</span><span class="p">,</span>
+  <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Add a new Todoist project&quot;</span><span class="p">,</span>
+  <span class="nx">parameters</span><span class="o">:</span> <span class="p">[</span>
+    <span class="nx">coda</span><span class="p">.</span><span class="nx">makeParameter</span><span class="p">({</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ParameterType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The name of the new project&quot;</span><span class="p">,</span>
+    <span class="p">}),</span>
+  <span class="p">],</span>
+  <span class="nx">resultType</span>: <span class="kt">coda.ValueType.String</span><span class="p">,</span>
+  <span class="nx">isAction</span>: <span class="kt">true</span><span class="p">,</span>
+
+  <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">name</span><span class="p">],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
       <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;https://api.todoist.com/rest/v1/projects&quot;</span><span class="p">,</span>
       <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
       <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;Content-Type&quot;</span><span class="o">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
       <span class="p">},</span>
-
-      <span class="c1">// The project is created with the given title. No other fields are</span>
-      <span class="c1">// needed.</span>
       <span class="nx">body</span>: <span class="kt">JSON.stringify</span><span class="p">({</span>
-        <span class="nx">name</span>: <span class="kt">title</span><span class="p">,</span>
+        <span class="nx">name</span>: <span class="kt">name</span><span class="p">,</span>
       <span class="p">}),</span>
     <span class="p">});</span>
-    <span class="c1">// We don&#39;t necessarily have to return anything, but it&#39;s useful to return</span>
-    <span class="c1">// some kind of non-empty values that callers can use to check whether this</span>
-    <span class="c1">// button action has already been taken. Often it&#39;s a good idea to return</span>
-    <span class="c1">// the id of the object that was created, if possible.</span>
-    <span class="k">return</span> <span class="s2">&quot;OK&quot;</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">url</span><span class="p">;</span>
   <span class="p">},</span>
 <span class="p">});</span>
 
 <span class="nx">pack</span><span class="p">.</span><span class="nx">addFormula</span><span class="p">({</span>
   <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;AddTask&quot;</span><span class="p">,</span>
-  <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Add a task.&quot;</span><span class="p">,</span>
-
-  <span class="c1">// This formula takes two parameters: the task, and the project it is to be</span>
-  <span class="c1">// added to.</span>
+  <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Add a new task.&quot;</span><span class="p">,</span>
   <span class="nx">parameters</span><span class="o">:</span> <span class="p">[</span>
     <span class="nx">coda</span><span class="p">.</span><span class="nx">makeParameter</span><span class="p">({</span>
       <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ParameterType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
-      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;content&quot;</span><span class="p">,</span>
-      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Content of the task.&quot;</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The name of the task.&quot;</span><span class="p">,</span>
     <span class="p">}),</span>
-
-    <span class="c1">// The project is an optional field. If not provided, it defaults to the</span>
-    <span class="c1">// inbox per Todoist&#39;s documentation.</span>
     <span class="nx">coda</span><span class="p">.</span><span class="nx">makeParameter</span><span class="p">({</span>
       <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ParameterType</span><span class="p">.</span><span class="nb">Number</span><span class="p">,</span>
-      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;project&quot;</span><span class="p">,</span>
-      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;project ID. if blank, will default to inbox.&quot;</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;projectId&quot;</span><span class="p">,</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The ID of the project to add it to. If blank, &quot;</span> <span class="o">+</span>
+          <span class="s2">&quot;it will be added to the user&#39;s Inbox.&quot;</span><span class="p">,</span>
       <span class="nx">optional</span>: <span class="kt">true</span><span class="p">,</span>
     <span class="p">}),</span>
   <span class="p">],</span>
   <span class="nx">resultType</span>: <span class="kt">coda.ValueType.String</span><span class="p">,</span>
   <span class="nx">isAction</span>: <span class="kt">true</span><span class="p">,</span>
-  <span class="nx">connectionRequirement</span>: <span class="kt">coda.ConnectionRequirement.Required</span><span class="p">,</span>
-  <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">title</span><span class="p">,</span> <span class="nx">id</span><span class="p">],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+
+  <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">name</span><span class="p">,</span> <span class="nx">projectId</span><span class="p">],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
       <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;https://api.todoist.com/rest/v1/tasks&quot;</span><span class="p">,</span>
       <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
       <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;Content-Type&quot;</span><span class="o">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
       <span class="p">},</span>
       <span class="nx">body</span>: <span class="kt">JSON.stringify</span><span class="p">({</span>
-        <span class="nx">content</span>: <span class="kt">title</span><span class="p">,</span>
-        <span class="nx">project_id</span>: <span class="kt">id</span><span class="p">,</span>
+        <span class="nx">content</span>: <span class="kt">name</span><span class="p">,</span>
+        <span class="nx">project_id</span>: <span class="kt">projectId</span><span class="p">,</span>
       <span class="p">}),</span>
     <span class="p">});</span>
-    <span class="k">return</span> <span class="s2">&quot;OK&quot;</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">url</span><span class="p">;</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addFormula</span><span class="p">({</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;UpdateTask&quot;</span><span class="p">,</span>
+  <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Updates the name of a task.&quot;</span><span class="p">,</span>
+  <span class="nx">parameters</span><span class="o">:</span> <span class="p">[</span>
+    <span class="nx">coda</span><span class="p">.</span><span class="nx">makeParameter</span><span class="p">({</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ParameterType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;taskId&quot;</span><span class="p">,</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The ID of the task to update.&quot;</span><span class="p">,</span>
+    <span class="p">}),</span>
+    <span class="nx">coda</span><span class="p">.</span><span class="nx">makeParameter</span><span class="p">({</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ParameterType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The new name of the task.&quot;</span><span class="p">,</span>
+    <span class="p">}),</span>
+  <span class="p">],</span>
+  <span class="nx">resultType</span>: <span class="kt">coda.ValueType.Object</span><span class="p">,</span>
+  <span class="nx">schema</span>: <span class="kt">TaskSchema</span><span class="p">,</span>
+  <span class="nx">isAction</span>: <span class="kt">true</span><span class="p">,</span>
+
+  <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">taskId</span><span class="p">,</span> <span class="nx">name</span><span class="p">],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;https://api.todoist.com/rest/v1/tasks/&quot;</span> <span class="o">+</span> <span class="nx">taskId</span><span class="p">;</span>
+    <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+      <span class="nx">url</span>: <span class="kt">url</span><span class="p">,</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+      <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;Content-Type&quot;</span><span class="o">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+      <span class="p">},</span>
+      <span class="nx">body</span>: <span class="kt">JSON.stringify</span><span class="p">({</span>
+        <span class="nx">content</span>: <span class="kt">name</span><span class="p">,</span>
+      <span class="p">}),</span>
+    <span class="p">});</span>
+    <span class="c1">// Get the updated Task and return it, which will update the row in the sync</span>
+    <span class="c1">// table.</span>
+    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+      <span class="nx">url</span>: <span class="kt">url</span><span class="p">,</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+      <span class="nx">cacheTtlSecs</span>: <span class="kt">0</span><span class="p">,</span>  <span class="c1">// Ensure we are getting the latest data.</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="nx">toTask</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">);</span>
   <span class="p">},</span>
 <span class="p">});</span>
 
@@ -2411,14 +2712,12 @@
   <span class="p">],</span>
   <span class="nx">resultType</span>: <span class="kt">coda.ValueType.String</span><span class="p">,</span>
   <span class="nx">isAction</span>: <span class="kt">true</span><span class="p">,</span>
-  <span class="nx">connectionRequirement</span>: <span class="kt">coda.ConnectionRequirement.Required</span><span class="p">,</span>
 
-  <span class="c1">// This formula makes a POST request to a designated URL constructed from the</span>
-  <span class="c1">// task ID.</span>
-  <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">id</span><span class="p">],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">taskId</span><span class="p">],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;https://api.todoist.com/rest/v1/tasks/&quot;</span> <span class="o">+</span> <span class="nx">taskId</span> <span class="o">+</span> <span class="s2">&quot;/close&quot;</span><span class="p">;</span>
     <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
-      <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;https://api.todoist.com/rest/v1/tasks/&quot;</span> <span class="o">+</span> <span class="nx">id</span> <span class="o">+</span> <span class="s2">&quot;/close&quot;</span><span class="p">,</span>
       <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+      <span class="nx">url</span>: <span class="kt">url</span><span class="p">,</span>
       <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;Content-Type&quot;</span><span class="o">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
       <span class="p">},</span>
@@ -2427,98 +2726,18 @@
   <span class="p">},</span>
 <span class="p">});</span>
 
-<span class="c1">// Here, we define the two schemas for our sync tables (tasks and projects).</span>
-<span class="kd">const</span> <span class="nx">TaskSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
-  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
 
-  <span class="c1">// These properties are applied to each row and will be used to define other</span>
-  <span class="c1">// information about this schema below.</span>
-  <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
-    <span class="nx">task</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
-    <span class="nx">projectId</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">},</span>
-    <span class="nx">id</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">},</span>
-  <span class="p">},</span>
-
-  <span class="c1">// &quot;id&quot; is the property that acts as the unique id of each row.</span>
-  <span class="c1">// Entities being synced must have unique, stable ids in order for rows to be</span>
-  <span class="c1">// updated in-place on subsequent syncs.</span>
-  <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;id&quot;</span><span class="p">,</span>
-
-  <span class="c1">// The &quot;primary&quot; property defines which field from this object will render in</span>
-  <span class="c1">// the object chip in the UI.</span>
-  <span class="nx">primary</span><span class="o">:</span> <span class="s2">&quot;task&quot;</span><span class="p">,</span>
-
-  <span class="c1">// The &quot;featured&quot; array defines which of the above properties should have</span>
-  <span class="c1">// columns created for them by default. If your schema has lots of properties,</span>
-  <span class="c1">// it&#39;s often a good idea to only feature some of them so the table doesn&#39;t</span>
-  <span class="c1">// have an overwhelming number of columns. Users can always add additional</span>
-  <span class="c1">// columns for non-featured properties at any time.</span>
-  <span class="nx">featured</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;projectId&quot;</span><span class="p">],</span>
-<span class="p">});</span>
-
-<span class="kd">const</span> <span class="nx">ProjectSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
-  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
-  <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
-    <span class="nx">name</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
-    <span class="nx">projectId</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">},</span>
-  <span class="p">},</span>
-  <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;projectId&quot;</span><span class="p">,</span>
-  <span class="nx">primary</span><span class="o">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
-  <span class="nx">featured</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;projectId&quot;</span><span class="p">],</span>
-<span class="p">});</span>
-
-<span class="nx">pack</span><span class="p">.</span><span class="nx">addSyncTable</span><span class="p">({</span>
-  <span class="c1">// This is the name of the table displayed to users.</span>
-  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Tasks&quot;</span><span class="p">,</span>
-  <span class="c1">// This is a unique identifier for this table, used internally by Coda.</span>
-  <span class="nx">identityName</span><span class="o">:</span> <span class="s2">&quot;TaskTitle&quot;</span><span class="p">,</span>
-  <span class="nx">schema</span>: <span class="kt">TaskSchema</span><span class="p">,</span>
-  <span class="c1">// Users must have a connection to Todoist to sync in tasks.</span>
-  <span class="nx">connectionRequirement</span>: <span class="kt">coda.ConnectionRequirement.Required</span><span class="p">,</span>
-  <span class="nx">formula</span><span class="o">:</span> <span class="p">{</span>
-    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Tasks&quot;</span><span class="p">,</span>
-    <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Sync current tasks&quot;</span><span class="p">,</span>
-    <span class="nx">parameters</span><span class="o">:</span> <span class="p">[],</span>
-
-    <span class="c1">// Unlike canvas formulas, sync table formulas may run multiple times to get</span>
-    <span class="c1">// multiple pages of results, based on whether you return a &quot;continuation&quot;.</span>
-    <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;https://api.todoist.com/rest/v1/tasks&quot;</span><span class="p">;</span>
-      <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
-        <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
-        <span class="nx">url</span>: <span class="kt">url</span><span class="p">,</span>
-      <span class="p">});</span>
-      <span class="kd">let</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">[];</span>
-
-      <span class="c1">// Here, we add the relevant properties from the returned JSON per task</span>
-      <span class="c1">// to a new array.</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">taskObj</span> <span class="k">of</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
-          <span class="nx">task</span>: <span class="kt">taskObj.content</span><span class="p">,</span>
-          <span class="nx">projectId</span>: <span class="kt">taskObj.project_id</span><span class="p">,</span>
-          <span class="nx">id</span>: <span class="kt">taskObj.id</span><span class="p">,</span>
-        <span class="p">});</span>
-      <span class="p">}</span>
-
-      <span class="k">return</span> <span class="p">{</span>
-        <span class="nx">result</span>: <span class="kt">result</span><span class="p">,</span>
-        <span class="c1">// Todoist returns all tasks at once, so this formula only needs to</span>
-        <span class="c1">// run once to fill the sync table.</span>
-        <span class="nx">continuation</span>: <span class="kt">undefined</span><span class="p">,</span>
-      <span class="p">};</span>
-    <span class="p">},</span>
-  <span class="p">},</span>
-<span class="p">});</span>
+<span class="c1">// Sync tables.</span>
 
 <span class="nx">pack</span><span class="p">.</span><span class="nx">addSyncTable</span><span class="p">({</span>
   <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Projects&quot;</span><span class="p">,</span>
   <span class="nx">schema</span>: <span class="kt">ProjectSchema</span><span class="p">,</span>
   <span class="nx">identityName</span><span class="o">:</span> <span class="s2">&quot;Project&quot;</span><span class="p">,</span>
-  <span class="nx">connectionRequirement</span>: <span class="kt">coda.ConnectionRequirement.Required</span><span class="p">,</span>
   <span class="nx">formula</span><span class="o">:</span> <span class="p">{</span>
-    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Projects&quot;</span><span class="p">,</span>
-    <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Sync open projects&quot;</span><span class="p">,</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;SyncProjects&quot;</span><span class="p">,</span>
+    <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Sync projects&quot;</span><span class="p">,</span>
     <span class="nx">parameters</span><span class="o">:</span> <span class="p">[],</span>
+
     <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
       <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;https://api.todoist.com/rest/v1/projects&quot;</span><span class="p">;</span>
       <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
@@ -2526,21 +2745,65 @@
         <span class="nx">url</span>: <span class="kt">url</span><span class="p">,</span>
       <span class="p">});</span>
 
-      <span class="kd">let</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">[];</span>
-
+      <span class="kd">let</span> <span class="nx">results</span>: <span class="kt">any</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
       <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">project</span> <span class="k">of</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
-          <span class="nx">name</span>: <span class="kt">project.name</span><span class="p">,</span>
-          <span class="nx">projectId</span>: <span class="kt">project.id</span><span class="p">,</span>
-        <span class="p">});</span>
+        <span class="nx">results</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">toProject</span><span class="p">(</span><span class="nx">project</span><span class="p">,</span> <span class="kc">true</span><span class="p">));</span>
       <span class="p">}</span>
-
       <span class="k">return</span> <span class="p">{</span>
-        <span class="nx">result</span>: <span class="kt">result</span><span class="p">,</span>
+        <span class="nx">result</span>: <span class="kt">results</span><span class="p">,</span>
       <span class="p">};</span>
     <span class="p">},</span>
   <span class="p">},</span>
 <span class="p">});</span>
+
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addSyncTable</span><span class="p">({</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Tasks&quot;</span><span class="p">,</span>
+  <span class="nx">schema</span>: <span class="kt">TaskSchema</span><span class="p">,</span>
+  <span class="nx">identityName</span><span class="o">:</span> <span class="s2">&quot;Task&quot;</span><span class="p">,</span>
+  <span class="nx">formula</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;SyncTasks&quot;</span><span class="p">,</span>
+    <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Sync tasks&quot;</span><span class="p">,</span>
+    <span class="nx">parameters</span><span class="o">:</span> <span class="p">[],</span>
+    <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;https://api.todoist.com/rest/v1/tasks&quot;</span><span class="p">;</span>
+      <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+        <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+        <span class="nx">url</span>: <span class="kt">url</span><span class="p">,</span>
+      <span class="p">});</span>
+
+      <span class="kd">let</span> <span class="nx">results</span>: <span class="kt">any</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">task</span> <span class="k">of</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">results</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">toTask</span><span class="p">(</span><span class="nx">task</span><span class="p">,</span> <span class="kc">true</span><span class="p">));</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="p">{</span>
+        <span class="nx">result</span>: <span class="kt">results</span><span class="p">,</span>
+      <span class="p">};</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+
+<span class="c1">// Helper functions.</span>
+
+<span class="kd">function</span> <span class="nx">extractProjectId</span><span class="p">(</span><span class="nx">projectUrl</span>: <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">pattern</span> <span class="k">of</span> <span class="nx">ProjectUrlPatterns</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">matches</span> <span class="o">=</span> <span class="nx">projectUrl</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">pattern</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">matches</span> <span class="o">&amp;&amp;</span> <span class="nx">matches</span><span class="p">[</span><span class="mf">1</span><span class="p">])</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">matches</span><span class="p">[</span><span class="mf">1</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">throw</span> <span class="ow">new</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">UserVisibleError</span><span class="p">(</span><span class="s2">&quot;Invalid project URL: &quot;</span> <span class="o">+</span> <span class="nx">projectUrl</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">extractTaskId</span><span class="p">(</span><span class="nx">taskUrl</span>: <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">pattern</span> <span class="k">of</span> <span class="nx">TaskUrlPatterns</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">matches</span> <span class="o">=</span> <span class="nx">taskUrl</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">pattern</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">matches</span> <span class="o">&amp;&amp;</span> <span class="nx">matches</span><span class="p">[</span><span class="mf">1</span><span class="p">])</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">matches</span><span class="p">[</span><span class="mf">1</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">throw</span> <span class="ow">new</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">UserVisibleError</span><span class="p">(</span><span class="s2">&quot;Invalid task URL: &quot;</span> <span class="o">+</span> <span class="nx">taskUrl</span><span class="p">);</span>
+<span class="p">}</span>
 </code></pre></div>
 </div>
 </div>

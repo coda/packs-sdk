@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <!-- Monaco library script is loaded from: https://cdnjs.com/libraries/monaco-editor-->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs/loader.min.js"
+      integrity="sha512-SExj71Cw3B9C9EE8BC/ad3AKia5zQXDj/2SM4THgkeKh5GIFZhKM/R3uclUG8YZwJrjcVhydAlIHmfNvsBCKZA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      require.config({
+        paths: {
+          vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs',
+        },
+      });
+
+      require(['vs/editor/editor.main'], function () {
+        var editor = monaco.editor.create(document.getElementById('container'), {
+          value: "// This import statement gives you access to all parts of the Coda Packs SDK.\nimport * as coda from \"@codahq/packs-sdk\";\n\n// This line creates your new Pack.\nexport const pack = coda.newPack();\n\n// When using the fetcher, this is the domain of the API that your pack makes\n// fetcher requests to.\npack.addNetworkDomain(\"baconipsum.com\");\n\n// This line adds a new formula to this Pack.\npack.addFormula({\n  // Remember, the formula name cannot have spaces in it.\n  name: \"FetchIpsum\",\n  description: \"A simple fetcher example returning some lorem ipsum copy.\",\n\n  // This formula does not need any user inputs, so the parameters field is\n  // empty.\n  parameters: [],\n\n  // In this formula, we're returning a string.\n  resultType: coda.ValueType.String,\n\n  // Everything inside this execute statement will happen anytime your Coda\n  // formula is called in a doc. An array of all user inputs is passed as the\n  // 1st parameter. The context object is always the 2nd parameter and is used\n  // for fetching data and debugging.\n  execute: async function ([], context) {\n    let url = \"https://baconipsum.com/api/?type=meat-and-filler\";\n\n    // context.fetcher.fetch allows you to pull in external data, specifying\n    // things like the HTTP method and URL.\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: url\n    });\n\n    // The entire body of the response contains the lorem ipsum text to be\n    // returned.\n    return response.body;\n  },\n});",
+          language: 'javascript',
+          minimap: {enabled: false},
+          readOnly: true,
+          renderValidationDecorations: 'off',
+          wordWrap: 'on',
+          contextmenu: false,
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="container" style="position: absolute; top: 0; right: 16; bottom: 16; left: 0"></div>
+  </body>
+</html>
