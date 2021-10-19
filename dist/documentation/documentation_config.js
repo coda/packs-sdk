@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Examples = exports.Snippets = void 0;
 const types_1 = require("./types");
+const types_2 = require("./types");
 exports.Snippets = [
     {
         triggerTokens: ['addStringFormula', 'makeStringFormula', 'StringFormula', 'addFormula'],
@@ -126,11 +127,12 @@ exports.Snippets = [
 ];
 exports.Examples = [
     {
-        name: 'addColumnFormat()',
+        name: 'Column Formats',
+        category: types_1.ExampleCategory.Topic,
         triggerTokens: ['addColumnFormat'],
         contentFile: './examples/column-format/column_format.md',
         linkData: {
-            type: types_1.UrlType.SdkReferencePath,
+            type: types_2.UrlType.SdkReferencePath,
             url: '/reference/sdk/classes/PackDefinitionBuilder#addColumnFormat',
         },
         exampleSnippets: [
@@ -143,10 +145,11 @@ exports.Examples = [
     },
     {
         name: 'Authentication',
+        category: types_1.ExampleCategory.Topic,
         triggerTokens: ['setSystemAuthentication', 'setUserAuthentication'],
         contentFile: './examples/authentication/authentication.md',
         linkData: {
-            type: types_1.UrlType.SdkReferencePath,
+            type: types_2.UrlType.SdkReferencePath,
             url: '/reference/sdk/classes/PackDefinitionBuilder#setSystemAuthentication',
         },
         exampleSnippets: [
@@ -163,11 +166,12 @@ exports.Examples = [
         ],
     },
     {
-        name: 'addDynamicSyncTable()',
+        name: 'Dynamic Sync Tables',
+        category: types_1.ExampleCategory.Topic,
         triggerTokens: ['addDynamicSyncTable'],
         contentFile: './examples/dynamic-sync-table/dynamic_sync_table.md',
         linkData: {
-            type: types_1.UrlType.SdkReferencePath,
+            type: types_2.UrlType.SdkReferencePath,
             url: '/reference/sdk/classes/PackDefinitionBuilder#addDynamicSyncTable',
         },
         exampleSnippets: [
@@ -179,11 +183,12 @@ exports.Examples = [
         ],
     },
     {
-        name: 'addFormula()',
+        name: 'Formulas',
+        category: types_1.ExampleCategory.Topic,
         triggerTokens: ['addFormula'],
         contentFile: './examples/formula/formula.md',
         linkData: {
-            type: types_1.UrlType.SdkReferencePath,
+            type: types_2.UrlType.SdkReferencePath,
             url: '/reference/sdk/classes/PackDefinitionBuilder#addFormula',
         },
         exampleSnippets: [
@@ -195,11 +200,12 @@ exports.Examples = [
         ],
     },
     {
-        name: 'addSyncTable()',
+        name: 'Sync Tables',
+        category: types_1.ExampleCategory.Topic,
         triggerTokens: ['addSyncTable'],
         contentFile: './examples/sync-table/sync_table.md',
         linkData: {
-            type: types_1.UrlType.SdkReferencePath,
+            type: types_2.UrlType.SdkReferencePath,
             url: '/reference/sdk/classes/PackDefinitionBuilder#addSyncTable',
         },
         exampleSnippets: [
@@ -212,10 +218,11 @@ exports.Examples = [
     },
     {
         name: 'Hello World',
+        category: types_1.ExampleCategory.Full,
         triggerTokens: [],
         contentFile: './examples/hello_world/hello_world.md',
         linkData: {
-            type: types_1.UrlType.Web,
+            type: types_2.UrlType.Web,
             url: 'https://coda.io/@coda/make-a-pack-private-alpha/hello-world-16',
         },
         exampleSnippets: [
@@ -228,10 +235,11 @@ exports.Examples = [
     },
     {
         name: 'Daylight',
+        category: types_1.ExampleCategory.Full,
         triggerTokens: [],
         contentFile: './examples/daylight/daylight.md',
         linkData: {
-            type: types_1.UrlType.Web,
+            type: types_2.UrlType.Web,
             url: 'https://coda.io/@coda/make-a-pack-private-alpha/daylight-29',
         },
         exampleSnippets: [
@@ -244,10 +252,11 @@ exports.Examples = [
     },
     {
         name: 'Hello Fetcher',
+        category: types_1.ExampleCategory.Full,
         triggerTokens: [],
         contentFile: './examples/hello_fetcher/hello_fetcher.md',
         linkData: {
-            type: types_1.UrlType.Web,
+            type: types_2.UrlType.Web,
             url: 'https://coda.io/@coda/make-a-pack-private-alpha/hello-fetcher-28',
         },
         exampleSnippets: [
@@ -260,10 +269,11 @@ exports.Examples = [
     },
     {
         name: 'Number Array',
+        category: types_1.ExampleCategory.Full,
         triggerTokens: [],
         contentFile: './examples/number_array/number_array.md',
         linkData: {
-            type: types_1.UrlType.Web,
+            type: types_2.UrlType.Web,
             url: 'https://coda.io/@coda/make-a-pack-private-alpha/number-array-27',
         },
         exampleSnippets: [
@@ -276,17 +286,17 @@ exports.Examples = [
     },
     {
         name: 'Todoist',
+        category: types_1.ExampleCategory.Full,
         triggerTokens: [],
-        contentFile: './examples/todoist/todoist.md',
+        contentFile: './examples/todoist/full.md',
         linkData: {
-            type: types_1.UrlType.SdkReferencePath,
-            url: '/samples/todoist',
+            type: types_2.UrlType.SamplePage,
         },
         exampleSnippets: [
             {
-                name: 'Todoist',
+                name: 'pack.ts',
                 content: '',
-                codeFile: './examples/todoist/todoist.ts',
+                codeFile: './examples/todoist/full.ts',
             },
         ],
     },

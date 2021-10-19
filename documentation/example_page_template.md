@@ -1,10 +1,10 @@
 # {{name}}
 
---8<-- "{{contentFile}}"
+{{{content}}}
 
 {{#each exampleSnippets}}
 === "{{name}}"
     ```ts
-    --8<-- "{{codeFile}}"
+    {{{indent code 4}}}
     ```
 {{/each}}

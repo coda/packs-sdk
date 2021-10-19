@@ -15,10 +15,11 @@ const DocumentationRoot = path.join(BaseDir, 'documentation');
 const TypeDocsRoot = path.join(BaseDir, 'docs');
 const EmbeddedSnippetsRoot = path.join(TypeDocsRoot, 'embedded-snippets');
 const SnippetEmbedTemplate = fs.readFileSync(path.join(DocumentationRoot, 'snippet_embed_template.html'), 'utf8');
-const ExamplePagesRoot = path.join(TypeDocsRoot, 'samples');
+const ExampleDirName = 'samples';
+const ExamplePagesRoot = path.join(TypeDocsRoot, ExampleDirName);
 const ExamplePageTemplate = Handlebars.compile(fs.readFileSync(path.join(DocumentationRoot, 'example_page_template.md'), 'utf8'));
-const ExampleNavTemplate = Handlebars.compile(fs.readFileSync(path.join(DocumentationRoot, 'example_nav_template.yml'), 'utf8'));
 const SdkReferenceLink = 'https://coda.github.io/packs-sdk';
+const SamplePageLink = `${SdkReferenceLink}/${ExampleDirName}`;
 const PageFileExtension = 'md';
 
 function main() {
@@ -46,23 +47,30 @@ function compileExamples() {
     const compiledExampleSnippets = compileExampleSnippets(example);
     let exampleFooterLink = example.linkData.url;
     if (example.linkData.type === UrlType.SdkReferencePath) {
-      if (!isValidReferencePath(exampleFooterLink)) {
+      if (!isValidReferencePath(exampleFooterLink!)) {
         throw new Error(`${exampleFooterLink} is not a valid path`);
       }
       exampleFooterLink = `${SdkReferenceLink}${exampleFooterLink}`;
+    } else if (example.linkData.type === UrlType.SamplePage) {
+      const pagePath = getExamplePagePath(example);
+      const pageName = getExamplePageName(example).split('.')[0];
+      exampleFooterLink = `${SamplePageLink}/${pagePath}/${pageName}`;
     }
-    compileExamplePage(example);
-    return {
+    if (!exampleFooterLink) {
+      throw new Error(`Missing link for example "${example.name}".`);
+    }
+    const compiledExample = {
       name: example.name,
       triggerTokens: example.triggerTokens,
       exampleFooterLink,
       content,
       exampleSnippets: compiledExampleSnippets,
     };
+    compileExamplePage(example, compiledExample);
+    return compiledExample;
   });
 
   fs.writeFileSync(path.join(DocumentationRoot, 'generated/examples.json'), JSON.stringify(compiledExamples, null, 2));
-  compileExampleNav(Examples);
 }
 
 function getCodeFile(file: string, requireBegin=false): string {
@@ -104,28 +112,20 @@ function compileSnippetEmbed(codeFile: string) {
   fs.writeFileSync(path.join(snippetDirPath, `${snippetFileName}.html`), exampleSnippetEmbed);
 }
 
-function compileExamplePage(example: Example) {
-  const examplePageContent = ExamplePageTemplate(example);
+function compileExamplePage(example: Example, compiledExample: CompiledExample) {
+  const examplePageContent = ExamplePageTemplate(compiledExample);
   const pageFileName = getExamplePageName(example);
+  const pagePath = path.join(ExamplePagesRoot, getExamplePagePath(example));
 
-  if (!fs.existsSync(ExamplePagesRoot)) {
-    fs.mkdirSync(ExamplePagesRoot, { recursive: true });
+  if (!fs.existsSync(pagePath)) {
+    fs.mkdirSync(pagePath, { recursive: true });
   }
 
-  fs.writeFileSync(path.join(ExamplePagesRoot, pageFileName), examplePageContent);
+  fs.writeFileSync(path.join(pagePath, pageFileName), examplePageContent);
 }
 
-function compileExampleNav(examples: Example[]) {
-  const filenames = examples.sort((a, b) => {
-    return a.name.localeCompare(b.name);
-  }).map(getExamplePageName);
-  const exampleNavContent = ExampleNavTemplate({filenames});
-
-  if (!fs.existsSync(ExamplePagesRoot)) {
-    fs.mkdirSync(ExamplePagesRoot, { recursive: true });
-  }
-
-  fs.writeFileSync(path.join(ExamplePagesRoot, '.nav.yml'), exampleNavContent);
+function getExamplePagePath(example: Example) {
+  return example.category.toString().toLowerCase();
 }
 
 function getExamplePageName(example: Example) {
@@ -141,5 +141,10 @@ function isValidReferencePath(sdkReferencePath: string): boolean {
 
   return fs.existsSync(filePath);
 }
+
+Handlebars.registerHelper('indent', (content, numSpaces) => {
+  const indent = ' '.repeat(numSpaces);
+  return content.replace(/\n(?!\n)/g, '\n' + indent);
+});
 
 main();

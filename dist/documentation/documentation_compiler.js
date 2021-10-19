@@ -34,10 +34,11 @@ const DocumentationRoot = path_1.default.join(BaseDir, 'documentation');
 const TypeDocsRoot = path_1.default.join(BaseDir, 'docs');
 const EmbeddedSnippetsRoot = path_1.default.join(TypeDocsRoot, 'embedded-snippets');
 const SnippetEmbedTemplate = fs.readFileSync(path_1.default.join(DocumentationRoot, 'snippet_embed_template.html'), 'utf8');
-const ExamplePagesRoot = path_1.default.join(TypeDocsRoot, 'samples');
+const ExampleDirName = 'samples';
+const ExamplePagesRoot = path_1.default.join(TypeDocsRoot, ExampleDirName);
 const ExamplePageTemplate = Handlebars.compile(fs.readFileSync(path_1.default.join(DocumentationRoot, 'example_page_template.md'), 'utf8'));
-const ExampleNavTemplate = Handlebars.compile(fs.readFileSync(path_1.default.join(DocumentationRoot, 'example_nav_template.yml'), 'utf8'));
 const SdkReferenceLink = 'https://coda.github.io/packs-sdk';
+const SamplePageLink = `${SdkReferenceLink}/${ExampleDirName}`;
 const PageFileExtension = 'md';
 function main() {
     compileAutocompleteSnippets();
@@ -66,17 +67,25 @@ function compileExamples() {
             }
             exampleFooterLink = `${SdkReferenceLink}${exampleFooterLink}`;
         }
-        compileExamplePage(example);
-        return {
+        else if (example.linkData.type === types_1.UrlType.SamplePage) {
+            const pagePath = getExamplePagePath(example);
+            const pageName = getExamplePageName(example).split('.')[0];
+            exampleFooterLink = `${SamplePageLink}/${pagePath}/${pageName}`;
+        }
+        if (!exampleFooterLink) {
+            throw new Error(`Missing link for example "${example.name}".`);
+        }
+        const compiledExample = {
             name: example.name,
             triggerTokens: example.triggerTokens,
             exampleFooterLink,
             content,
             exampleSnippets: compiledExampleSnippets,
         };
+        compileExamplePage(example, compiledExample);
+        return compiledExample;
     });
     fs.writeFileSync(path_1.default.join(DocumentationRoot, 'generated/examples.json'), JSON.stringify(compiledExamples, null, 2));
-    compileExampleNav(documentation_config_1.Examples);
 }
 function getCodeFile(file, requireBegin = false) {
     const data = fs.readFileSync(path_1.default.join(DocumentationRoot, file), 'utf8');
@@ -111,23 +120,17 @@ function compileSnippetEmbed(codeFile) {
     }
     fs.writeFileSync(path_1.default.join(snippetDirPath, `${snippetFileName}.html`), exampleSnippetEmbed);
 }
-function compileExamplePage(example) {
-    const examplePageContent = ExamplePageTemplate(example);
+function compileExamplePage(example, compiledExample) {
+    const examplePageContent = ExamplePageTemplate(compiledExample);
     const pageFileName = getExamplePageName(example);
-    if (!fs.existsSync(ExamplePagesRoot)) {
-        fs.mkdirSync(ExamplePagesRoot, { recursive: true });
+    const pagePath = path_1.default.join(ExamplePagesRoot, getExamplePagePath(example));
+    if (!fs.existsSync(pagePath)) {
+        fs.mkdirSync(pagePath, { recursive: true });
     }
-    fs.writeFileSync(path_1.default.join(ExamplePagesRoot, pageFileName), examplePageContent);
+    fs.writeFileSync(path_1.default.join(pagePath, pageFileName), examplePageContent);
 }
-function compileExampleNav(examples) {
-    const filenames = examples.sort((a, b) => {
-        return a.name.localeCompare(b.name);
-    }).map(getExamplePageName);
-    const exampleNavContent = ExampleNavTemplate({ filenames });
-    if (!fs.existsSync(ExamplePagesRoot)) {
-        fs.mkdirSync(ExamplePagesRoot, { recursive: true });
-    }
-    fs.writeFileSync(path_1.default.join(ExamplePagesRoot, '.nav.yml'), exampleNavContent);
+function getExamplePagePath(example) {
+    return example.category.toString().toLowerCase();
 }
 function getExamplePageName(example) {
     return path_1.default.basename(path_1.default.dirname(example.contentFile)).replace(/_/g, '-') + '.md';
@@ -139,4 +142,8 @@ function isValidReferencePath(sdkReferencePath) {
     const filePath = path_1.default.join(TypeDocsRoot, file);
     return fs.existsSync(filePath);
 }
+Handlebars.registerHelper('indent', (content, numSpaces) => {
+    const indent = ' '.repeat(numSpaces);
+    return content.replace(/\n(?!\n)/g, '\n' + indent);
+});
 main();

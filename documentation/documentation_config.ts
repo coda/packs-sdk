@@ -1,5 +1,6 @@
 import type {AutocompleteSnippet} from './types';
 import type {Example} from './types';
+import {ExampleCategory} from './types';
 import {UrlType} from './types';
 
 export const Snippets: AutocompleteSnippet[] = [
@@ -127,7 +128,8 @@ export const Snippets: AutocompleteSnippet[] = [
 
 export const Examples: Example[] = [
   {
-    name: 'addColumnFormat()',
+    name: 'Column Formats',
+    category: ExampleCategory.Topic,
     triggerTokens: ['addColumnFormat'],
     contentFile: './examples/column-format/column_format.md',
     linkData: {
@@ -144,6 +146,7 @@ export const Examples: Example[] = [
   },
   {
     name: 'Authentication',
+    category: ExampleCategory.Topic,
     triggerTokens: ['setSystemAuthentication', 'setUserAuthentication'],
     contentFile: './examples/authentication/authentication.md',
     linkData: {
@@ -164,7 +167,8 @@ export const Examples: Example[] = [
     ],
   },
   {
-    name: 'addDynamicSyncTable()',
+    name: 'Dynamic Sync Tables',
+    category: ExampleCategory.Topic,
     triggerTokens: ['addDynamicSyncTable'],
     contentFile: './examples/dynamic-sync-table/dynamic_sync_table.md',
     linkData: {
@@ -180,7 +184,8 @@ export const Examples: Example[] = [
     ],
   },
   {
-    name: 'addFormula()',
+    name: 'Formulas',
+    category: ExampleCategory.Topic,
     triggerTokens: ['addFormula'],
     contentFile: './examples/formula/formula.md',
     linkData: {
@@ -196,7 +201,8 @@ export const Examples: Example[] = [
     ],
   },
   {
-    name: 'addSyncTable()',
+    name: 'Sync Tables',
+    category: ExampleCategory.Topic,
     triggerTokens: ['addSyncTable'],
     contentFile: './examples/sync-table/sync_table.md',
     linkData: {
@@ -213,6 +219,7 @@ export const Examples: Example[] = [
   },
   {
     name: 'Hello World',
+    category: ExampleCategory.Full,
     triggerTokens: [],
     contentFile: './examples/hello_world/hello_world.md',
     linkData: {
@@ -229,6 +236,7 @@ export const Examples: Example[] = [
   },
   {
     name: 'Daylight',
+    category: ExampleCategory.Full,
     triggerTokens: [],
     contentFile: './examples/daylight/daylight.md',
     linkData: {
@@ -245,6 +253,7 @@ export const Examples: Example[] = [
   },
   {
     name: 'Hello Fetcher',
+    category: ExampleCategory.Full,
     triggerTokens: [],
     contentFile: './examples/hello_fetcher/hello_fetcher.md',
     linkData: {
@@ -261,6 +270,7 @@ export const Examples: Example[] = [
   },
   {
     name: 'Number Array',
+    category: ExampleCategory.Full,
     triggerTokens: [],
     contentFile: './examples/number_array/number_array.md',
     linkData: {
@@ -277,17 +287,17 @@ export const Examples: Example[] = [
   },
   {
     name: 'Todoist',
+    category: ExampleCategory.Full,
     triggerTokens: [],
-    contentFile: './examples/todoist/todoist.md',
+    contentFile: './examples/todoist/full.md',
     linkData: {
-      type: UrlType.SdkReferencePath,
-      url: '/samples/todoist',
+      type: UrlType.SamplePage,
     },
     exampleSnippets: [
       {
-        name: 'Todoist',
+        name: 'pack.ts',
         content: '',
-        codeFile: './examples/todoist/todoist.ts',
+        codeFile: './examples/todoist/full.ts',
       },
     ],
   },
