@@ -5,7 +5,7 @@
       "addColumnFormat"
     ],
     "exampleFooterLink": "https://coda.github.io/packs-sdk/reference/sdk/classes/PackDefinitionBuilder#addColumnFormat",
-    "content": "A **column format** is a custom column type that you apply to any column in any Coda table. A column format& tells Coda to interpret the value in a cell by executing a **formula** using that value, typically looking up data related to that value from a third-party API.\n\nFor example, the Weather pack has a column format `Current Weather`; when applied to a column, if you type a city or address into a cell in that column, that location will be used an input to a formula that fetches the current weather at that location, and the resulting object with weather info will be shown in the cell.",
+    "content": "A **column format** is a custom column type that you apply to any column in any Coda table. A column format tells Coda to interpret the value in a cell by executing a **formula** using that value, typically looking up data related to that value from a third-party API.\n\nFor example, the Weather pack has a column format `Current Weather`; when applied to a column, if you type a city or address into a cell in that column, that location will be used an input to a formula that fetches the current weather at that location, and the resulting object with weather info will be shown in the cell.",
     "exampleSnippets": [
       {
         "name": "Column Format with No Matchers",
@@ -135,7 +135,7 @@
   {
     "name": "Todoist",
     "triggerTokens": [],
-    "exampleFooterLink": "https:/coda.github.io/packs-sdk/samples/full/todoist",
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/samples/full/todoist",
     "content": "This Pack provides an integration with the task tracking app [Todoist][todoist]. It uses a variety of building blocks to allow users to work with their projects and tasks, including:\n\n- Formulas that provide rich data about an item given its URL.\n- Column formats that automatically apply those formulas to matching URLs.\n- Action formulas that create and update items, for use in button and automations.\n- Sync tables for pulling in all of the user's items.\n\nThe Pack uses OAuth2 to connect to a user's Todoist account, which you can create for free.\n\n[todoist]: https://todoist.com/",
     "exampleSnippets": [
       {

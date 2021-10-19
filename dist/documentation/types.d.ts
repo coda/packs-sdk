@@ -43,6 +43,6 @@ export declare enum UrlType {
     Web = "Web"
 }
 export declare enum ExampleCategory {
-    Topic = "topic",
-    Full = "full"
+    Topic = "Topic",
+    Full = "Full"
 }

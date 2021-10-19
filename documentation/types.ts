@@ -52,6 +52,6 @@ export enum UrlType {
 }
 
 export enum ExampleCategory {
-  Topic = 'topic',
-  Full = 'full',
+  Topic = 'Topic',
+  Full = 'Full',
 }

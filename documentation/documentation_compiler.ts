@@ -19,7 +19,7 @@ const ExampleDirName = 'samples';
 const ExamplePagesRoot = path.join(TypeDocsRoot, ExampleDirName);
 const ExamplePageTemplate = Handlebars.compile(fs.readFileSync(path.join(DocumentationRoot, 'example_page_template.md'), 'utf8'));
 const SdkReferenceLink = 'https://coda.github.io/packs-sdk';
-const SamplePageLink = path.join(SdkReferenceLink, ExampleDirName);
+const SamplePageLink = `${SdkReferenceLink}/${ExampleDirName}`;
 const PageFileExtension = 'md';
 
 function main() {
@@ -52,20 +52,22 @@ function compileExamples() {
       }
       exampleFooterLink = `${SdkReferenceLink}${exampleFooterLink}`;
     } else if (example.linkData.type === UrlType.SamplePage) {
+      const pagePath = getExamplePagePath(example);
       const pageName = getExamplePageName(example).split('.')[0];
-      exampleFooterLink = `${SamplePageLink}/${example.category}/${pageName}`;
+      exampleFooterLink = `${SamplePageLink}/${pagePath}/${pageName}`;
     }
     if (!exampleFooterLink) {
       throw new Error(`Missing link for example "${example.name}".`);
     }
-    compileExamplePage(example);
-    return {
+    const compiledExample = {
       name: example.name,
       triggerTokens: example.triggerTokens,
       exampleFooterLink,
       content,
       exampleSnippets: compiledExampleSnippets,
     };
+    compileExamplePage(example, compiledExample);
+    return compiledExample;
   });
 
   fs.writeFileSync(path.join(DocumentationRoot, 'generated/examples.json'), JSON.stringify(compiledExamples, null, 2));
@@ -110,16 +112,20 @@ function compileSnippetEmbed(codeFile: string) {
   fs.writeFileSync(path.join(snippetDirPath, `${snippetFileName}.html`), exampleSnippetEmbed);
 }
 
-function compileExamplePage(example: Example) {
-  const examplePageContent = ExamplePageTemplate(example);
+function compileExamplePage(example: Example, compiledExample: CompiledExample) {
+  const examplePageContent = ExamplePageTemplate(compiledExample);
   const pageFileName = getExamplePageName(example);
-  const pagePath = path.join(ExamplePagesRoot, example.category);
+  const pagePath = path.join(ExamplePagesRoot, getExamplePagePath(example));
 
   if (!fs.existsSync(pagePath)) {
     fs.mkdirSync(pagePath, { recursive: true });
   }
 
   fs.writeFileSync(path.join(pagePath, pageFileName), examplePageContent);
+}
+
+function getExamplePagePath(example: Example) {
+  return example.category.toString().toLowerCase();
 }
 
 function getExamplePageName(example: Example) {
@@ -135,5 +141,10 @@ function isValidReferencePath(sdkReferencePath: string): boolean {
 
   return fs.existsSync(filePath);
 }
+
+Handlebars.registerHelper('indent', (content, numSpaces) => {
+  const indent = ' '.repeat(numSpaces);
+  return content.replace(/\n(?!\n)/g, '\n' + indent);
+});
 
 main();

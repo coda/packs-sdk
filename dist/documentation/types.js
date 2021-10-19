@@ -9,6 +9,6 @@ var UrlType;
 })(UrlType = exports.UrlType || (exports.UrlType = {}));
 var ExampleCategory;
 (function (ExampleCategory) {
-    ExampleCategory["Topic"] = "topic";
-    ExampleCategory["Full"] = "full";
+    ExampleCategory["Topic"] = "Topic";
+    ExampleCategory["Full"] = "Full";
 })(ExampleCategory = exports.ExampleCategory || (exports.ExampleCategory = {}));
