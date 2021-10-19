@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+<!-- TODO(spencer): remove this after we launch hosted documentation -->
+{% block extrahead %}
+  <meta name="robots" content="noindex">
+{% endblock %}
+
 {% block announce %}
   The Packs SDK is currently only available to a limited set of partners.
   If you are interested in becoming a partner, contact us at <a href="mailto:partners@coda.io">partners@coda.io</a>.
