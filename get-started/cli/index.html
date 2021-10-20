@@ -46,6 +46,8 @@
 
     
     
+  <meta name="robots" content="noindex">
+
   </head>
   
   
@@ -233,11 +235,18 @@
   
   
   
+    
+
+  
+  
+  
     <li class="md-tabs__item">
-      <a href="../../samples/column-format/" class="md-tabs__link">
+      <a href="../../samples/topic/authentication/" class="md-tabs__link">
         Samples
       </a>
     </li>
+  
+
   
 
       
@@ -588,56 +597,31 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../../samples/column-format/" class="md-nav__link">
-        addColumnFormat()
-      </a>
-    </li>
-  
-
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_1" type="checkbox" id="__nav_4_1" >
+      
+      <label class="md-nav__link" for="__nav_4_1">
+        By topic
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="By topic" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_1">
+          <span class="md-nav__icon md-icon"></span>
+          By topic
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
           
             
   
   
   
     <li class="md-nav__item">
-      <a href="../../samples/dynamic-sync-table/" class="md-nav__link">
-        addDynamicSyncTable()
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../samples/formula/" class="md-nav__link">
-        addFormula()
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../samples/sync-table/" class="md-nav__link">
-        addSyncTable()
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../samples/authentication/" class="md-nav__link">
+      <a href="../../samples/topic/authentication/" class="md-nav__link">
         Authentication
       </a>
     </li>
@@ -649,7 +633,84 @@
   
   
     <li class="md-nav__item">
-      <a href="../../samples/daylight/" class="md-nav__link">
+      <a href="../../samples/topic/column-format/" class="md-nav__link">
+        Column Formats
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/topic/dynamic-sync-table/" class="md-nav__link">
+        Dynamic Sync Tables
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/topic/formula/" class="md-nav__link">
+        Formulas
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/topic/sync-table/" class="md-nav__link">
+        Sync Tables
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2" type="checkbox" id="__nav_4_2" >
+      
+      <label class="md-nav__link" for="__nav_4_2">
+        Full
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Full" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_2">
+          <span class="md-nav__icon md-icon"></span>
+          Full
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/full/daylight/" class="md-nav__link">
         Daylight
       </a>
     </li>
@@ -661,7 +722,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../samples/hello-fetcher/" class="md-nav__link">
+      <a href="../../samples/full/hello-fetcher/" class="md-nav__link">
         Hello Fetcher
       </a>
     </li>
@@ -673,7 +734,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../samples/hello-world/" class="md-nav__link">
+      <a href="../../samples/full/hello-world/" class="md-nav__link">
         Hello World
       </a>
     </li>
@@ -685,7 +746,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../samples/number-array/" class="md-nav__link">
+      <a href="../../samples/full/number-array/" class="md-nav__link">
         Number Array
       </a>
     </li>
@@ -697,9 +758,15 @@
   
   
     <li class="md-nav__item">
-      <a href="../../samples/todoist/" class="md-nav__link">
+      <a href="../../samples/full/todoist/" class="md-nav__link">
         Todoist
       </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -2420,9 +2487,9 @@
 </ol>
 <p>Your directory should now contain the following files:</p>
 <ul>
-<li><code>formulas.ts</code> - A place to define the Coda formulas, including those that power sync tables and column formats.</li>
-<li><code>manifest.ts</code> - Defines the metadata and contents of your Pack.</li>
+<li><code>helpers.ts</code> - A place to define helper functions used by your Pack.</li>
 <li><code>node_modules</code> - The dependencies downloaded from NPM (standard for Node.js projects).</li>
+<li><code>pack.ts</code> - The core Pack definition, where all of the formulas, sync tables, and other building blocks are added.</li>
 <li><code>package-lock.json</code> - The versions of the dependencies downloaded from NPM (standard for Node.js projects).</li>
 <li><code>package.json</code> - The project's dependencies from NPM (standard for Node.js projects).</li>
 <li><code>schemas.ts</code> - A place to define the schemas (structured data types) used by your Pack.</li>
@@ -2430,63 +2497,54 @@
 </ul>
 <h2 id="add-code-to-the-pack">Add code to the Pack<a class="headerlink" href="#add-code-to-the-pack" title="Permanent link">&para;</a></h2>
 <p>Now that you've got the basic structure of a Pack it's time to add some code. In this tutorial you'll be creating a simple "Hello World" Pack with a single formula.</p>
-<p>Edit <code>formulas.ts</code> to include the definition of a new "Hello" formula:</p>
-<div class="tabbed-set" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">formulas.ts</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="kr">type</span> <span class="p">{</span><span class="nx">Format</span><span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="kr">type</span> <span class="p">{</span><span class="nx">Formula</span><span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="kr">type</span> <span class="p">{</span><span class="nx">GenericSyncTable</span><span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
-<span class="hll"><span class="k">import</span> <span class="p">{</span><span class="nx">ParameterType</span><span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
-</span><span class="hll"><span class="k">import</span> <span class="p">{</span><span class="nx">ValueType</span><span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
-</span><span class="hll"><span class="k">import</span> <span class="p">{</span><span class="nx">makeFormula</span><span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
-</span><span class="hll"><span class="k">import</span> <span class="p">{</span><span class="nx">makeParameter</span><span class="p">}</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
-</span>
-<span class="k">export</span> <span class="kd">const</span> <span class="nx">formulas</span>: <span class="kt">Formula</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[</span>
-<span class="hll">  <span class="nx">makeFormula</span><span class="p">({</span>
-</span><span class="hll">    <span class="c1">// This is the name that will be called in the formula builder.</span>
-</span><span class="hll">    <span class="c1">// Remember, your formula name cannot have spaces in it.</span>
-</span><span class="hll">    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Hello&quot;</span><span class="p">,</span>
-</span><span class="hll">    <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;A Hello World example.&quot;</span><span class="p">,</span>
-</span><span class="hll">
-</span><span class="hll">    <span class="c1">// If your formula requires one or more inputs, you’ll define them here.</span>
-</span><span class="hll">    <span class="c1">// Here, we&#39;re creating a string input called “name”.</span>
-</span><span class="hll">    <span class="nx">parameters</span><span class="o">:</span> <span class="p">[</span>
-</span><span class="hll">      <span class="nx">makeParameter</span><span class="p">({</span>
-</span><span class="hll">        <span class="kr">type</span><span class="o">:</span> <span class="nx">ParameterType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
-</span><span class="hll">        <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
-</span><span class="hll">        <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The name you\&quot;d like to say hello to.&quot;</span>
-</span><span class="hll">      <span class="p">}),</span>
-</span><span class="hll">    <span class="p">],</span>
-</span><span class="hll">
-</span><span class="hll">
-</span><span class="hll">    <span class="c1">// The resultType defines what will be returned in your Coda doc. Here,</span>
-</span><span class="hll">    <span class="c1">// we&#39;re returning a simple text string.</span>
-</span><span class="hll">    <span class="nx">resultType</span>: <span class="kt">ValueType.String</span><span class="p">,</span>
-</span><span class="hll">
-</span><span class="hll">    <span class="c1">// Everything inside this execute statement will happen anytime your Coda</span>
-</span><span class="hll">    <span class="c1">// formula is called in a doc. An array of all user inputs is always the 1st</span>
-</span><span class="hll">    <span class="c1">// parameter.</span>
-</span><span class="hll">    <span class="nx">execute</span>: <span class="kt">function</span> <span class="p">([</span><span class="nx">name</span><span class="p">])</span> <span class="p">{</span>
-</span>      <span class="k">return</span> <span class="s2">&quot;Hello &quot;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot;!&quot;</span><span class="p">;</span>
-    <span class="p">},</span>
-  <span class="p">}),</span>
-<span class="p">];</span>
+<p>Replace the contents of <code>pack.ts</code> with the following code, which adds a "Hello" formula:</p>
+<div class="tabbed-set" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">pack.ts</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="cm">/*</span>
+<span class="cm">Start making Packs!</span>
+<span class="cm">Try out the hello world sample below to create your first build.</span>
+<span class="cm">*/</span>
 
-<span class="k">export</span> <span class="kd">const</span> <span class="nx">syncTables</span>: <span class="kt">GenericSyncTable</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[</span>
-  <span class="c1">// Sync table definitions go here, e.g.</span>
-  <span class="c1">// makeSyncTable({...}),</span>
-<span class="p">];</span>
+<span class="c1">// This import statement gives you access to all parts of the Coda Packs SDK.</span>
+<span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
 
-<span class="k">export</span> <span class="kd">const</span> <span class="nx">formats</span>: <span class="kt">Format</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[</span>
-  <span class="c1">// Column formats go here, e.g.</span>
-  <span class="c1">// {name: &quot;MyFormat&quot;, formulaNamespace: &quot;MyPack&quot;, formulaName: &quot;MyFormula&quot;}</span>
-<span class="p">];</span>
+<span class="c1">// This line creates your new Pack.</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
+
+<span class="c1">// Here, we add a new formula to this Pack.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addFormula</span><span class="p">({</span>
+  <span class="c1">// This is the name that will be called in the formula builder.</span>
+  <span class="c1">// Remember, your formula name cannot have spaces in it.</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Hello&quot;</span><span class="p">,</span>
+  <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;A Hello World example.&quot;</span><span class="p">,</span>
+
+  <span class="c1">// If your formula requires one or more inputs, you’ll define them here.</span>
+  <span class="c1">// Here, we&#39;re creating a string input called “name”.</span>
+  <span class="nx">parameters</span><span class="o">:</span> <span class="p">[</span>
+    <span class="nx">coda</span><span class="p">.</span><span class="nx">makeParameter</span><span class="p">({</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ParameterType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The name you would like to say hello to.&quot;</span><span class="p">,</span>
+    <span class="p">}),</span>
+  <span class="p">],</span>
+
+  <span class="c1">// The resultType defines what will be returned in your Coda doc. Here, we&#39;re</span>
+  <span class="c1">// returning a simple text string.</span>
+  <span class="nx">resultType</span>: <span class="kt">coda.ValueType.String</span><span class="p">,</span>
+
+  <span class="c1">// Everything inside this execute statement will happen anytime your Coda</span>
+  <span class="c1">// formula is called in a doc. An array of all user inputs is always the 1st</span>
+  <span class="c1">// parameter.</span>
+  <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">name</span><span class="p">])</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s2">&quot;Hello &quot;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot;!&quot;</span><span class="p">;</span>
+  <span class="p">},</span>
+<span class="p">});</span>
 </code></pre></div>
 </div>
 </div>
 <p>Take a moment to read through the code and comments and get an understanding of how a formula is structured.</p>
 <h2 id="test-the-pack-locally">Test the Pack locally<a class="headerlink" href="#test-the-pack-locally" title="Permanent link">&para;</a></h2>
 <p>One of the advantages of developing locally is that you can test your Pack code without having to upload it to Coda's servers. Let's test the new <code>Hello</code> formula you just added:</p>
-<div class="highlight"><pre><span></span><code>npx coda execute manifest.ts Hello <span class="s2">&quot;world&quot;</span>
+<div class="highlight"><pre><span></span><code>npx coda execute pack.ts Hello <span class="s2">&quot;world&quot;</span>
 </code></pre></div>
 <p>If everything works correctly this should output <code>Hello world!</code>.</p>
 <h2 id="upload-the-pack">Upload the Pack<a class="headerlink" href="#upload-the-pack" title="Permanent link">&para;</a></h2>
@@ -2518,14 +2576,14 @@
 </details>
 <h3 id="create-the-pack">Create the Pack<a class="headerlink" href="#create-the-pack" title="Permanent link">&para;</a></h3>
 <p>Now that you have the access configured you can create the new Pack on Coda's servers. This setup step that needs to be done for each Pack you create.</p>
-<div class="highlight"><pre><span></span><code>npx coda create manifest.ts --name <span class="s2">&quot;Hello World&quot;</span> --description <span class="s2">&quot;My first Pack.&quot;</span>
+<div class="highlight"><pre><span></span><code>npx coda create pack.ts --name <span class="s2">&quot;Hello World&quot;</span> --description <span class="s2">&quot;My first Pack.&quot;</span>
 </code></pre></div>
 <details class="info"><summary>Edit your branding later</summary><p>The <code>name</code> and <code>description</code> arguments are optional and can be changed later in the Pack Studio's <strong>Listing</strong> tab, along with a variety of other branding options.</p>
 </details>
 <p>This will create a new, empty Pack on Coda's servers and output its URL in the Pack Studio. It stores the Pack's ID in the new file <code>.coda-pack.json</code>.</p>
 <h3 id="upload-the-first-version">Upload the first version<a class="headerlink" href="#upload-the-first-version" title="Permanent link">&para;</a></h3>
 <p>Now that you've established access and created the empty Pack, you're finally ready to upload your code.</p>
-<div class="highlight"><pre><span></span><code>npx coda upload manifest.ts --notes <span class="s2">&quot;Initial version.&quot;</span>
+<div class="highlight"><pre><span></span><code>npx coda upload pack.ts --notes <span class="s2">&quot;Initial version.&quot;</span>
 </code></pre></div>
 <details class="warning"><summary>Source code not available</summary><p>If you open your Pack in the online Pack Studio code editor you'll see a message like:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// Some boilerplate when failed to load source code</span>
@@ -2564,7 +2622,7 @@
 <p>Now that you have your Pack up and running let's make a change to how it works.</p>
 <ol>
 <li>
-<p>Back in your code editor, open <code>formulas.ts</code> and update it to say "Howdy" instead of "Hello":</p>
+<p>Back in your code editor, open <code>pack.ts</code> and update it to say "Howdy" instead of "Hello":</p>
 <div class="tabbed-set" data-tabs="2:1"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><label for="__tabbed_2_1">formulas.ts</label><div class="tabbed-content">
 <div class="highlight"><pre><span></span><code><span class="nx">execute</span>: <span class="kt">function</span> <span class="p">([</span><span class="nx">name</span><span class="p">])</span> <span class="p">{</span>
 <span class="hll">  <span class="k">return</span> <span class="s2">&quot;Howdy &quot;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot;!&quot;</span><span class="p">;</span>
@@ -2575,31 +2633,13 @@
 </li>
 <li>
 <p>Run your code locally to ensure it works:</p>
-<div class="highlight"><pre><span></span><code>npx coda execute manifest.ts Hello <span class="s2">&quot;world&quot;</span>
+<div class="highlight"><pre><span></span><code>npx coda execute pack.ts Hello <span class="s2">&quot;world&quot;</span>
 </code></pre></div>
 <p>This should output <code>Howdy world!</code>.</p>
 </li>
 <li>
-<p>Open <code>manifest.ts</code> and change the version number to "1.0.1":</p>
-<div class="tabbed-set" data-tabs="3:1"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><label for="__tabbed_3_1">manifest.ts</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="k">export</span> <span class="kd">const</span> <span class="nx">manifest</span>: <span class="kt">PackVersionDefinition</span> <span class="o">=</span> <span class="p">{</span>
-<span class="hll">  <span class="nx">version</span><span class="o">:</span> <span class="s1">&#39;1.0.1&#39;</span><span class="p">,</span>
-</span>  <span class="nx">formulaNamespace</span><span class="o">:</span> <span class="s1">&#39;HelloWorld&#39;</span><span class="p">,</span>
-  <span class="c1">// The substance of the pack, imported from other files.</span>
-  <span class="nx">formulas</span><span class="p">,</span>
-  <span class="nx">syncTables</span><span class="p">,</span>
-  <span class="nx">formats</span><span class="p">,</span>
-<span class="p">};</span>
-</code></pre></div>
-</div>
-</div>
-<p>In order for to upload a new version you must increase the version number.</p>
-<details class="info"><summary>SemVer versioning</summary><p>The Packs SDK uses the <a href="https://semver.org/">SemVer</a> versioning spec. Small changes like this only require a change to the patch version (third number), but larger or more breaking changes require a change to the minor or major version.</p>
-</details>
-</li>
-<li>
-<p>Run <code>coda upload</code> again to upload the new version.</p>
-<div class="highlight"><pre><span></span><code>npx coda upload manifest.ts --notes <span class="s2">&quot;Changed to Howdy.&quot;</span>
+<p>Run <code>coda upload</code> again to upload a new version.</p>
+<div class="highlight"><pre><span></span><code>npx coda upload pack.ts --notes <span class="s2">&quot;Changed to Howdy.&quot;</span>
 </code></pre></div>
 </li>
 <li>
