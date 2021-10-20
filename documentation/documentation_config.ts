@@ -138,9 +138,14 @@ export const Examples: Example[] = [
     },
     exampleSnippets: [
       {
-        name: 'Column Format with No Matchers',
-        content: 'Basic **Column Format** example without any matchers. ',
-        codeFile: './examples/column-format/no_matchers.ts',
+        name: 'Template',
+        content: '',
+        codeFile: './snippets/column_format.ts',
+      },
+      {
+        name: 'Todoist',
+        content: '',
+        codeFile: './examples/todoist/column_format.ts',
       },
     ],
   },
@@ -155,14 +160,14 @@ export const Examples: Example[] = [
     },
     exampleSnippets: [
       {
-        name: 'System Authentication',
+        name: 'Template',
         content: '',
-        codeFile: './examples/authentication/system_authentication.ts',
+        codeFile: './snippets/user_authentication.ts',
       },
       {
-        name: 'User Authentication',
+        name: 'Todoist (OAuth2)',
         content: '',
-        codeFile: './examples/authentication/user_authentication.ts',
+        codeFile: './examples/todoist/auth.ts',
       },
     ],
   },
@@ -177,9 +182,9 @@ export const Examples: Example[] = [
     },
     exampleSnippets: [
       {
-        name: 'Basic Dynamic Sync Table',
+        name: 'Template',
         content: '',
-        codeFile: './examples/dynamic-sync-table/basic_dynamic_sync_table.ts',
+        codeFile: './snippets/dynamic_sync_table.ts',
       },
     ],
   },
@@ -194,9 +199,14 @@ export const Examples: Example[] = [
     },
     exampleSnippets: [
       {
-        name: 'Basic Formula',
+        name: 'Template',
         content: '',
-        codeFile: './examples/formula/basic_formula.ts',
+        codeFile: './snippets/formula/string_formula.ts',
+      },
+      {
+        name: 'Todoist',
+        content: '',
+        codeFile: './examples/todoist/formula.ts',
       },
     ],
   },
@@ -211,9 +221,14 @@ export const Examples: Example[] = [
     },
     exampleSnippets: [
       {
-        name: 'Basic Sync Table',
+        name: 'Template',
         content: '',
-        codeFile: './examples/sync-table/basic_sync_table.ts',
+        codeFile: './snippets/sync_table.ts',
+      },
+      {
+        name: 'Todoist',
+        content: '',
+        codeFile: './examples/todoist/sync_table.ts',
       },
     ],
   },
