@@ -200,8 +200,8 @@ publish-local: build
 
 .PHONY: validate-no-changes
 validate-no-changes: clean compile docs
-	$(eval UNTRACKED_FILES := $(shell git status --short))
-	$(eval CHANGED_FILES := $(shell git diff --name-only))
+	$(eval UNTRACKED_FILES := $(shell git status --short dist/))
+	$(eval CHANGED_FILES := $(shell git diff --name-only dist/))
 	if [[ -n "${UNTRACKED_FILES}" || -n "${CHANGED_FILES}" ]]; then \
 		echo "dist directory is not clean. run 'make build' untracked: ${UNTRACKED_FILES} changed: ${CHANGED_FILES}"; \
 		exit 1; \
