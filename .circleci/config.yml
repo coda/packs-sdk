@@ -139,12 +139,12 @@ workflows:
             - util
           circle_token: ${CIRCLECI_TOKEN}
           requires:
-            - push
+            - build
       - head:
           context:
             - dockerhub
           requires:
-            - push
+            - build
       - staging:
           context:
             - dockerhub
