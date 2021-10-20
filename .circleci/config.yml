@@ -1,4 +1,7 @@
 version: 2.1
+orbs:
+  jq: circleci/jq@1.9.1
+  utils: coda/utils@0.4.0
 
 executors:
   default_build_environment:
@@ -36,6 +39,82 @@ jobs:
       - run:
           name: 'Ensure clean dist diff'
           command: make validate-no-changes
+  
+  adhoc:
+    executor: default_build_environment
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v2-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v2-dependencies-
+      - run:
+          name: Bootstrap
+          command: 'make bs'
+      - run:
+          name: Deploy Adhoc
+          command: 'make publish-docs-adhoc'
+      # TODO: add a probe step here to validate?
+
+  head:
+    executor: default_build_environment
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v2-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v2-dependencies-
+      - run:
+          name: Bootstrap
+          command: 'make bs'
+      - run:
+          name: Deploy Head
+          command: 'make publish-docs-head'
+      # TODO: add a probe step here to validate?
+  
+  staging:
+    executor: default_build_environment
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v2-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v2-dependencies-
+      - run:
+          name: Bootstrap
+          command: 'make bs'
+      - run:
+          name: Deploy Staging
+          command: 'make publish-docs-staging'
+      # TODO: add a probe step here to validate?
+  
+  prod:
+    executor: default_build_environment
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v2-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v2-dependencies-
+      - run:
+          name: Bootstrap
+          command: 'make bs'
+      - run:
+          name: Deploy Prod
+          command: 'make publish-docs-prod'
+      # TODO: add a probe step here to validate?
 
 workflows:
   version: 2
@@ -44,3 +123,52 @@ workflows:
       - build:
           context:
             - dockerhub
+
+  deploy:
+    jobs:
+      - build:
+          context:
+            - dockerhub
+          filters:
+            branches:
+              only:
+                - sc-ci-deploy-docs
+      - push:
+          context:
+            - dockerhub
+          requires:
+            - test
+      - utils/cancel-older-awaiting-approvals:
+          context:
+            - dockerhub
+            - util
+          circle_token: ${CIRCLECI_TOKEN}
+          requires:
+            - push
+      - head:
+          context:
+            - dockerhub
+          requires:
+            - push
+      - staging:
+          context:
+            - dockerhub
+          requires:
+            - head
+      - utils/slack-notify-waiting-for-approval:
+          slack_bot_token: ${PUSH_REMINDER_BOT_TOKEN}
+          requires:
+            - staging
+          context:
+            - util
+      - wait-for-approval:
+          context:
+            - dockerhub
+          type: approval
+          requires:
+            - staging
+      - prod:
+          context:
+            - dockerhub
+          requires:
+            - wait-for-approval
