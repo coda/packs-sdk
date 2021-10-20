@@ -133,11 +133,6 @@ workflows:
             branches:
               only:
                 - sc-ci-deploy-docs
-      - push:
-          context:
-            - dockerhub
-          requires:
-            - test
       - utils/cancel-older-awaiting-approvals:
           context:
             - dockerhub
