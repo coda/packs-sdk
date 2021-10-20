@@ -8,7 +8,7 @@ orbs:
         steps:
           - run:
               name: Install basic tools
-              command: apt-get update && apt-get install -y pipenv
+              command: sudo apt-get update && sudo apt-get install -y pipenv
 
 executors:
   default_build_environment:
@@ -27,7 +27,7 @@ commands:
             - pipenv-{{ checksum "Pipfile.lock" }}
       - run:
           name: Bootstrap
-          command: "make _bootstrap-python | while IFS= read -r line; do printf '[%s] %s\n' \"$(date '+%Y-%m-%d %H:%M:%S')\" \"$line\"; done"
+          command: make _bootstrap-python
       - save_cache:
           name: Save Cache - pipenv
           key: pipenv-{{ checksum "Pipfile.lock" }}
