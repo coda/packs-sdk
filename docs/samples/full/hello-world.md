@@ -34,10 +34,10 @@ This is an example which creates a single formula called Hello, that takes in a 
 
       // The resultType defines what will be returned in your Coda doc. Here, we're
       // returning a simple text string.
-      resultType: coda.ValueType.String,  
+      resultType: coda.ValueType.String,
 
       // Everything inside this execute statement will happen anytime your Coda
-      // formumla is called in a doc. An array of all user inputs is always the 1st
+      // formula is called in a doc. An array of all user inputs is always the 1st
       // parameter.
       execute: async function ([name]) {
         return "Hello " + name + "!";
