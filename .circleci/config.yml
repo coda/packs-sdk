@@ -83,7 +83,7 @@ jobs:
           name: "MkDocs"
           command: make build-mkdocs
       - persist_to_workspace:
-          root: workspace
+          root: ~/
           paths:
             - site
 
