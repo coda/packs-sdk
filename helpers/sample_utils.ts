@@ -62,7 +62,7 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
   const syncTables: PackSyncTable[] = [];
   for (const {getter, getSchema, ...others} of originalSyncTables || []) {
     const {execute, ...otherGetter} = getter;
-    syncTables.push({getter: {...otherGetter}, hasDynamicSchema: Boolean(getSchema), ...others});
+    syncTables.push({getter: {...otherGetter}, getSchema, ...others});
   }
   return {
     formulas,
