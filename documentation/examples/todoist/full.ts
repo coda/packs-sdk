@@ -22,7 +22,7 @@ pack.addNetworkDomain("todoist.com");
 
 pack.setUserAuthentication({
   type: coda.AuthenticationType.OAuth2,
-  // Settings pulled from the Todoist OAuth guide.
+  // OAuth2 URLs and scopes are found in the the Todoist OAuth guide:
   // https://developer.todoist.com/guides/#oauth
   authorizationUrl: "https://todoist.com/oauth/authorize",
   tokenUrl: "https://todoist.com/oauth/access_token",
@@ -284,14 +284,14 @@ pack.addColumnFormat({
   formulaName: "GetProject",
   formulaNamespace: "Deprecated",
   matchers: ProjectUrlPatterns,
-})
+});
 
 pack.addColumnFormat({
   name: "Task",
   formulaName: "GetTask",
   formulaNamespace: "Deprecated",
   matchers: TaskUrlPatterns,
-})
+});
 
 
 // Action formulas (buttons/automations).

@@ -2,34 +2,96 @@
 
 A **formula (including a button)** is a JavaScript function that will be exposed as a Coda formula, that you can use anywhere in a Coda doc that you can use any normal formula. Formulas take basic Coda types as input, like strings, numbers, dates, booleans, and arrays of these types, and return any of these types or objects whose properties are any of these types. Buttons are just a flavor of a formula with the flag `isAction` activated.
 
-=== "Basic Formula"
+=== "Template"
     ```ts
-    // Replace all <text> with your own text
     pack.addFormula({
-      // This sets the return type of the formula.
-      resultType: coda.ValueType.String,
-
-      // This is the name that will be called in the formula builder.
-      // Remember, your formula name cannot have spaces in it.
-      name: "<Hello>",
-      description: "<A Hello World example.>",
-
-      // If your formula requires one or more inputs, you’ll define them here.
-      // Create more parameters with /Parameter.
+      name: "<User-visible name of formula>",
+      description: "<Help text for the formula>",
       parameters: [
         coda.makeParameter({
           type: coda.ParameterType.String,
-          name: "<myParam>",
-          description: "<My description>",
+          name: "<User-visible name of parameter>",
+          description: "<Help text for the parameter>",
+        }),
+        // Add more parameters here and in the array below.
+      ],
+      resultType: coda.ValueType.String,
+      execute: async ([param], context) => {
+        return "Hello " + param;
+      },
+    });
+    ```
+=== "Todoist"
+    ```ts
+    import * as coda from "@codahq/packs-sdk";
+    export const pack = coda.newPack();
+
+    // A schema defining the rich metadata to be returned about each task.
+    const TaskSchema = coda.makeObjectSchema({
+      type: coda.ValueType.Object,
+      properties: {
+        name: {
+          description: "The name of the task.",
+          type: coda.ValueType.String,
+          required: true,
+        },
+        description: {
+          description: "A detailed description of the task.",
+          type: coda.ValueType.String,
+        },
+        url: {
+          description: "A link to the task in the Todoist app.",
+          type: coda.ValueType.String,
+          codaType: coda.ValueHintType.Url
+        },
+        taskId: {
+          description: "The ID of the task.",
+          type: coda.ValueType.Number,
+          required: true,
+        },
+      },
+      primary: "name",
+      id: "taskId",
+      identity: {
+        name: "Task",
+      },
+    });
+
+    // Formula that looks up rich metadata about a task given it's URL.
+    pack.addFormula({
+      name: "GetTaskById",
+      description: "Gets a Todoist task by ID",
+      parameters: [
+        coda.makeParameter({
+          type: coda.ParameterType.String,
+          name: "taskId",
+          description: "The ID of the task",
         }),
       ],
+      resultType: coda.ValueType.Object,
+      schema: TaskSchema,
 
-      // Everything inside this execute statement will happen anytime your Coda 
-      // formula is called in a doc.
-      execute: async function ([myParam], context) {
-        // Here, myParam is the first parameter you’ve defined above: the “name” 
-        // input.
-        return "Hello " + myParam + "!";
+      execute: async function ([taskId], context) {
+        let response = await context.fetcher.fetch({
+          url: "https://api.todoist.com/rest/v1/tasks/" + taskId,
+          method: "GET",
+        });
+        let task = response.body;
+        return {
+          name: task.content,
+          description: task.description,
+          url: task.url,
+          taskId: task.id,
+        };
       },
+    });
+
+    // Allow the pack to make requests to Todoist.
+    pack.addNetworkDomain("todoist.com");
+
+    // Setup authentication using a Todoist API token.
+    pack.setUserAuthentication({
+      type: coda.AuthenticationType.HeaderBearerToken,
+      instructionsUrl: "https://todoist.com/app/settings/integrations",
     });
     ```
