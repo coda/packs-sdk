@@ -49,9 +49,9 @@ The instructions below assume some familiarity with the terminal / command promp
 
 Your directory should now contain the following files:
 
-* `formulas.ts` - A place to define the Coda formulas, including those that power sync tables and column formats.
-* `manifest.ts` - Defines the metadata and contents of your Pack.
+* `helpers.ts` - A place to define helper functions used by your Pack.
 * `node_modules` - The dependencies downloaded from NPM (standard for Node.js projects).
+* `pack.ts` - The core Pack definition, where all of the formulas, sync tables, and other building blocks are added.
 * `package-lock.json` - The versions of the dependencies downloaded from NPM (standard for Node.js projects).
 * `package.json` - The project's dependencies from NPM (standard for Node.js projects).
 * `schemas.ts` - A place to define the schemas (structured data types) used by your Pack.
@@ -61,11 +61,11 @@ Your directory should now contain the following files:
 
 Now that you've got the basic structure of a Pack it's time to add some code. In this tutorial you'll be creating a simple "Hello World" Pack with a single formula.
 
-Edit `formulas.ts` to include the definition of a new "Hello" formula:
+Replace the contents of `pack.ts` with the following code, which adds a "Hello" formula:
 
-=== "formulas.ts"
-    ```ts hl_lines="4-7 10-34"
-    --8<-- "examples/hello_cli/formulas.ts"
+=== "pack.ts"
+    ```ts
+    --8<-- "examples/hello_world/hello_world.ts"
     ```
 
 Take a moment to read through the code and comments and get an understanding of how a formula is structured.
@@ -75,7 +75,7 @@ Take a moment to read through the code and comments and get an understanding of 
 One of the advantages of developing locally is that you can test your Pack code without having to upload it to Coda's servers. Let's test the new `Hello` formula you just added:
 
 ```shell
-npx coda execute manifest.ts Hello "world"
+npx coda execute pack.ts Hello "world"
 ```
 
 If everything works correctly this should output `Hello world!`.
@@ -114,7 +114,7 @@ This will create a new file `.coda.json` in your working directory that contains
 Now that you have the access configured you can create the new Pack on Coda's servers. This setup step that needs to be done for each Pack you create.
 
 ```shell
-npx coda create manifest.ts --name "Hello World" --description "My first Pack."
+npx coda create pack.ts --name "Hello World" --description "My first Pack."
 ```
 
 ??? info "Edit your branding later"
@@ -127,7 +127,7 @@ This will create a new, empty Pack on Coda's servers and output its URL in the P
 Now that you've established access and created the empty Pack, you're finally ready to upload your code.
 
 ```shell
-npx coda upload manifest.ts --notes "Initial version."
+npx coda upload pack.ts --notes "Initial version."
 ```
 
 ??? warning "Source code not available"
@@ -151,7 +151,7 @@ Your new Pack is now available to use in all your docs, and you can install it j
 
 Now that you have your Pack up and running let's make a change to how it works.
 
-1. Back in your code editor, open `formulas.ts` and update it to say "Howdy" instead of "Hello":
+1. Back in your code editor, open `pack.ts` and update it to say "Howdy" instead of "Hello":
 
     === "formulas.ts"
         ```ts hl_lines="2"
@@ -163,35 +163,15 @@ Now that you have your Pack up and running let's make a change to how it works.
 1. Run your code locally to ensure it works:
 
     ```shell
-    npx coda execute manifest.ts Hello "world"
+    npx coda execute pack.ts Hello "world"
     ```
 
     This should output `Howdy world!`.
 
-
-1. Open `manifest.ts` and change the version number to "1.0.1":
-
-    === "manifest.ts"
-        ```ts hl_lines="2"
-        export const manifest: PackVersionDefinition = {
-          version: '1.0.1',
-          formulaNamespace: 'HelloWorld',
-          // The substance of the pack, imported from other files.
-          formulas,
-          syncTables,
-          formats,
-        };
-        ```
-
-    In order for to upload a new version you must increase the version number.
-
-    ??? info "SemVer versioning"
-        The Packs SDK uses the [SemVer](https://semver.org/) versioning spec. Small changes like this only require a change to the patch version (third number), but larger or more breaking changes require a change to the minor or major version.
-
-1. Run `coda upload` again to upload the new version.
+1. Run `coda upload` again to upload a new version.
 
     ```shell
-    npx coda upload manifest.ts --notes "Changed to Howdy."
+    npx coda upload pack.ts --notes "Changed to Howdy."
     ```
 
 1. When the upload has completed, switch back to your test document.
