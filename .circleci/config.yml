@@ -56,9 +56,7 @@ jobs:
 
     steps:
       - checkout
-      - base-tools/install
       - bootstrap_node
-      - bootstrap_pipenv
       - run:
           name: 'Lint'
           command: make lint
@@ -68,79 +66,82 @@ jobs:
       - run:
           name: 'Ensure clean dist diff'
           command: make validate-no-changes
-  
-  adhoc:
+
+  build-docs:
+    executor: default_build_environment
+    working_directory: ~/repo
+    
+    steps:
+      - checkout
+      - base-tools/install
+      - bootstrap_node
+      - bootstrap_pipenv
+      - run:
+          name: 'Typedoc'
+          command: make docs
+      - run:
+          name: "MkDocs"
+          command: make build-mkdocs
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - site
+
+  push-adhoc-docs:
     executor: default_build_environment
     working_directory: ~/repo
 
     steps:
       - checkout
-      # - restore_cache:
-      #     name: Restore Cache - yarn
-      #     keys:
-      #       - v2-dependencies-{{ checksum "package.json" }}
-      #       # fallback to using the latest cache if no exact match is found
-      #       - v2-dependencies-
-      - run:
-          name: Bootstrap
-          command: 'make bs'
+      # - base-tools/install
+      - bootstrap_node
+      # - bootstrap_pipenv
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: ~/repo
+      - run: ls ~/repo/site
       - run:
           name: Deploy Adhoc
           command: 'make publish-docs-adhoc'
       # TODO: add a probe step here to validate?
 
-  head:
+  push-head-docs:
     executor: default_build_environment
     working_directory: ~/repo
 
     steps:
       - checkout
-      # - restore_cache:
-      #     keys:
-      #       - v2-dependencies-{{ checksum "package.json" }}
-      #       # fallback to using the latest cache if no exact match is found
-      #       - v2-dependencies-
-      - run:
-          name: Bootstrap
-          command: 'make bs'
+      # - base-tools/install
+      - bootstrap_node
+      # - bootstrap_pipenv
       - run:
           name: Deploy Head
           command: 'make publish-docs-head'
       # TODO: add a probe step here to validate?
   
-  staging:
+  push-staging-docs:
     executor: default_build_environment
     working_directory: ~/repo
 
     steps:
       - checkout
-      # - restore_cache:
-      #     keys:
-      #       - v2-dependencies-{{ checksum "package.json" }}
-      #       # fallback to using the latest cache if no exact match is found
-      #       - v2-dependencies-
-      - run:
-          name: Bootstrap
-          command: 'make bs'
+      # - base-tools/install
+      - bootstrap_node
+      # - bootstrap_pipenv
       - run:
           name: Deploy Staging
           command: 'make publish-docs-staging'
       # TODO: add a probe step here to validate?
   
-  prod:
+  push-prod-docs:
     executor: default_build_environment
     working_directory: ~/repo
 
     steps:
       - checkout
-      # - restore_cache:
-      #     keys:
-      #       - v2-dependencies-{{ checksum "package.json" }}
-      #       # fallback to using the latest cache if no exact match is found
-      #       - v2-dependencies-
-      - run:
-          name: Bootstrap
-          command: 'make bs'
+      # - base-tools/install
+      - bootstrap_node
+      # - bootstrap_pipenv
       - run:
           name: Deploy Prod
           command: 'make publish-docs-prod'
@@ -170,20 +171,30 @@ workflows:
           circle_token: ${CIRCLECI_TOKEN}
           requires:
             - build
-      - head:
+      - build-docs:
           context:
             - dockerhub
           requires:
-            - build
-      - staging:
+            - build      
+      - push-adhoc-docs:
           context:
             - dockerhub
           requires:
-            - head
+            - build-docs
+      - push-head-docs:
+          context:
+            - dockerhub
+          requires:
+            - push-adhoc-docs
+      - push-staging-docs:
+          context:
+            - dockerhub
+          requires:
+            - push-head-docs
       - utils/slack-notify-waiting-for-approval:
           slack_bot_token: ${PUSH_REMINDER_BOT_TOKEN}
           requires:
-            - staging
+            - push-staging-docs
           context:
             - util
       - wait-for-approval:
@@ -191,8 +202,8 @@ workflows:
             - dockerhub
           type: approval
           requires:
-            - staging
-      - prod:
+            - push-staging-docs
+      - push-prod-docs:
           context:
             - dockerhub
           requires:
