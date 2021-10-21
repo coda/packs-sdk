@@ -13,7 +13,98 @@ For example, the Weather pack has a column format `Current Weather`; when applie
       formulaNamespace: "Deprecated", // Will be removed shortly
     });
     ```
-=== "Todoist"
+=== "Text (Reverse)"
+    ```ts
+    import * as coda from "@codahq/packs-sdk";
+    export const pack = coda.newPack();
+
+    // Adds a column format to the Pack, which will display the contents of the
+    // column in reverse order.
+    pack.addColumnFormat({
+      name: "Reversed Text",
+      // The formula "Reverse()" (defined below) will be run on the content of the
+      // column to determine it's display value.
+      formulaName: "Reverse",
+      formulaNamespace: "Deprecated", // Will be removed shortly.
+      instructions: "Whatever text you enter into this column will be reversed.",
+    });
+
+    // Adds a formula to this Pack to reverse text. It is used by the column format
+    // above, but can also be used on it's own anywhere in the doc.
+    pack.addFormula({
+      resultType: coda.ValueType.String,
+      name: "Reverse",
+      description: "Reverses text.",
+      parameters: [
+        // Formulas used in column formats can have only one required parameter.
+        coda.makeParameter({
+          type: coda.ParameterType.String,
+          name: "input",
+          description: "The text to reverse.",
+        }),
+        // Optional parameters can't be set when run as a column format.
+        coda.makeParameter({
+          type: coda.ParameterType.Boolean,
+          name: "byWord",
+          description: "Reverse the text word-by-word.",
+          defaultValue: false,
+          optional: true,
+        }),
+      ],
+      execute: async ([input, byWord = false]) => {
+        let separator = "";
+        if (byWord) {
+          separator = " ";
+        }
+        return input.split(separator).reverse().join(separator);
+      },
+    });
+    ```
+=== "Image (Cats)"
+    ```ts
+    import * as coda from "@codahq/packs-sdk";
+    export const pack = coda.newPack();
+
+    // Column format that displays the cell's value within a random cat image,
+    // using the CatImage() formula defined above.
+    pack.addColumnFormat({
+      name: "Cat Image",
+      instructions: "Displays the text over the image of a random cat.",
+      formulaName: "CatImage",
+      formulaNamespace: "Deprecated", // Will be removed shortly
+    });
+
+    // Formula that fetches a random cat image, with various options.
+    pack.addFormula({
+      name: "CatImage",
+      description: "Gets a random cat image.",
+      parameters: [
+        coda.makeParameter({
+          type: coda.ParameterType.String,
+          name: "text",
+          description: "Text to display over the image.",
+        }),
+      ],
+      resultType: coda.ValueType.String,
+      codaType: coda.ValueHintType.ImageReference,
+      execute: async ([text], context) => {
+        let url = "https://cataas.com/cat/says/" + encodeURIComponent(text);
+        url = coda.withQueryParams(url, {
+          json: true,
+        });
+        let response = await context.fetcher.fetch({
+          method: "GET",
+          url: url,
+          cacheTtlSecs: 0, // Don't cache the result, so we can get a fresh cat.
+        });
+        return "https://cataas.com" + response.body.url;
+      },
+    });
+
+    // Allow the pack to make requests to Cat-as-a-service API.
+    pack.addNetworkDomain("cataas.com");
+    ```
+=== "Rich Data (Todoist)"
     ```ts
     import * as coda from "@codahq/packs-sdk";
 

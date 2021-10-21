@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <!-- Monaco library script is loaded from: https://cdnjs.com/libraries/monaco-editor-->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs/loader.min.js"
+      integrity="sha512-SExj71Cw3B9C9EE8BC/ad3AKia5zQXDj/2SM4THgkeKh5GIFZhKM/R3uclUG8YZwJrjcVhydAlIHmfNvsBCKZA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      require.config({
+        paths: {
+          vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs',
+        },
+      });
+
+      require(['vs/editor/editor.main'], function () {
+        var editor = monaco.editor.create(document.getElementById('container'), {
+          value: "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Column format that displays the cell's value within a random cat image,\n// using the CatImage() formula defined above.\npack.addColumnFormat({\n  name: \"Cat Image\",\n  instructions: \"Displays the text over the image of a random cat.\",\n  formulaName: \"CatImage\",\n  formulaNamespace: \"Deprecated\", // Will be removed shortly\n});\n\n// Formula that fetches a random cat image, with various options.\npack.addFormula({\n  name: \"CatImage\",\n  description: \"Gets a random cat image.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"text\",\n      description: \"Text to display over the image.\",\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  codaType: coda.ValueHintType.ImageReference,\n  execute: async ([text], context) => {\n    let url = \"https://cataas.com/cat/says/\" + encodeURIComponent(text);\n    url = coda.withQueryParams(url, {\n      json: true,\n    });\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: url,\n      cacheTtlSecs: 0, // Don't cache the result, so we can get a fresh cat.\n    });\n    return \"https://cataas.com\" + response.body.url;\n  },\n});\n\n// Allow the pack to make requests to Cat-as-a-service API.\npack.addNetworkDomain(\"cataas.com\");",
+          language: 'javascript',
+          minimap: {enabled: false},
+          readOnly: true,
+          renderValidationDecorations: 'off',
+          wordWrap: 'on',
+          contextmenu: false,
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="container" style="position: absolute; top: 0; right: 16; bottom: 16; left: 0"></div>
+  </body>
+</html>

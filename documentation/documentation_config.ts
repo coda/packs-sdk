@@ -143,7 +143,17 @@ export const Examples: Example[] = [
         codeFile: './snippets/column_format.ts',
       },
       {
-        name: 'Todoist',
+        name: 'Text (Reverse)',
+        content: '',
+        codeFile: './examples/column-format/reverse.ts',
+      },
+      {
+        name: 'Image (Cats)',
+        content: '',
+        codeFile: './examples/cats/column_format.ts',
+      },
+      {
+        name: 'Rich Data (Todoist)',
         content: '',
         codeFile: './examples/todoist/column_format.ts',
       },
@@ -165,7 +175,7 @@ export const Examples: Example[] = [
         codeFile: './snippets/user_authentication.ts',
       },
       {
-        name: 'Todoist (OAuth2)',
+        name: 'OAuth2 (Todoist)',
         content: '',
         codeFile: './examples/todoist/auth.ts',
       },
@@ -204,7 +214,12 @@ export const Examples: Example[] = [
         codeFile: './snippets/formula/string_formula.ts',
       },
       {
-        name: 'Todoist',
+        name: 'Image (Cats)',
+        content: '',
+        codeFile: './examples/cats/formula.ts',
+      },
+      {
+        name: 'Rich Data (Todoist)',
         content: '',
         codeFile: './examples/todoist/formula.ts',
       },
@@ -313,6 +328,22 @@ export const Examples: Example[] = [
         name: 'pack.ts',
         content: '',
         codeFile: './examples/todoist/full.ts',
+      },
+    ],
+  },
+  {
+    name: 'Cats',
+    category: ExampleCategory.Full,
+    triggerTokens: [],
+    contentFile: './examples/cats/README.md',
+    linkData: {
+      type: UrlType.SamplePage,
+    },
+    exampleSnippets: [
+      {
+        name: 'pack.ts',
+        content: '',
+        codeFile: './examples/cats/full.ts',
       },
     ],
   },
