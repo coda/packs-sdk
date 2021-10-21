@@ -98,6 +98,7 @@ jobs:
       - checkout
       - bootstrap_node
       - bootstrap_aws_creds
+      - run: ls ~/.aws/credentials
       - attach_workspace:
           at: ~/repo
       - run:
