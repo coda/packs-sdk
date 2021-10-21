@@ -48,6 +48,9 @@ commands:
           paths:
             - node_modules
           key: v2-dependencies-{{ checksum "package.json" }}
+  bootstrap_aws_creds:
+    steps:
+      - run: make bootstrap_aws_creds
 
 jobs:
   build:
@@ -93,13 +96,10 @@ jobs:
 
     steps:
       - checkout
-      # - base-tools/install
       - bootstrap_node
-      # - bootstrap_pipenv
+      - bootstrap_aws_creds
       - attach_workspace:
-          # Must be absolute path or relative path from working_directory
           at: ~/repo
-      - run: ls ~/repo/site
       - run:
           name: Deploy Adhoc
           command: 'make publish-docs-adhoc'
@@ -111,9 +111,10 @@ jobs:
 
     steps:
       - checkout
-      # - base-tools/install
       - bootstrap_node
-      # - bootstrap_pipenv
+      - bootstrap_aws_creds
+      - attach_workspace:
+          at: ~/repo
       - run:
           name: Deploy Head
           command: 'make publish-docs-head'
@@ -125,9 +126,10 @@ jobs:
 
     steps:
       - checkout
-      # - base-tools/install
       - bootstrap_node
-      # - bootstrap_pipenv
+      - bootstrap_aws_creds
+      - attach_workspace:
+          at: ~/repo
       - run:
           name: Deploy Staging
           command: 'make publish-docs-staging'
@@ -139,9 +141,10 @@ jobs:
 
     steps:
       - checkout
-      # - base-tools/install
       - bootstrap_node
-      # - bootstrap_pipenv
+      - bootstrap_aws_creds
+      - attach_workspace:
+          at: ~/repo
       - run:
           name: Deploy Prod
           command: 'make publish-docs-prod'
