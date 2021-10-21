@@ -241,6 +241,11 @@ export const Examples: Example[] = [
         codeFile: './snippets/sync_table.ts',
       },
       {
+        name: 'Cats',
+        content: '',
+        codeFile: './examples/cats/sync_table.ts',
+      },
+      {
         name: 'Todoist',
         content: '',
         codeFile: './examples/todoist/sync_table.ts',
