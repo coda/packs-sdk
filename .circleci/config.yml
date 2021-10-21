@@ -27,7 +27,7 @@ commands:
           keys:
             - pipenv-{{ checksum "Pipfile.lock" }}
       - run:
-          name: Bootstrap
+          name: Bootstrap pipenv
           command: make _bootstrap-python
       - save_cache:
           name: Save Cache - pipenv
@@ -160,7 +160,7 @@ workflows:
           context:
             - dockerhub
 
-  deploy:
+  build-and-deploy-docs:
     jobs:
       - build:
           context:
