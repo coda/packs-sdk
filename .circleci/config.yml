@@ -215,3 +215,4 @@ workflows:
             - dockerhub
           requires:
             - wait-for-approval
+      # TODO: add publish NPM package with approval?
