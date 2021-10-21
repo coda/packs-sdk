@@ -37,6 +37,13 @@ _bootstrap-python:
 _bootstrap-githooks: clean-githooks
 	-(cd ${ROOTDIR}; scripts/dev/git-hooks.sh --install)
 
+# This should only be needed for CI rather than locally,
+# so we don't run it in `make bs`
+.PHONY: bootstrap_aws_creds
+bootstrap_aws_creds:
+	mkdir -p ~/.aws
+	echo ${AWSBase64Creds} | base64 -d > ~/.aws/credentials
+
 .PHONY: bootstrap
 bootstrap:
 	$(MAKE) MAKEFLAGS= _bootstrap-node
@@ -203,7 +210,7 @@ validate-no-changes: clean compile docs
 	$(eval UNTRACKED_FILES := $(shell git status --short))
 	$(eval CHANGED_FILES := $(shell git diff --name-only))
 	if [[ -n "${UNTRACKED_FILES}" || -n "${CHANGED_FILES}" ]]; then \
-		echo "dist directory is not clean. run 'make build' untracked: ${UNTRACKED_FILES} changed: ${CHANGED_FILES}"; \
+		echo "directory is not clean. run 'make build' and commit all files untracked: ${UNTRACKED_FILES} changed: ${CHANGED_FILES}"; \
 		exit 1; \
 	fi
 

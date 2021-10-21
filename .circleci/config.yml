@@ -1,4 +1,15 @@
 version: 2.1
+orbs:
+  aws-cli: circleci/aws-cli@1.3.0
+  jq: circleci/jq@1.9.1
+  utils: coda/utils@0.5.0
+  base-tools:
+    commands:
+      install:
+        steps:
+          - run:
+              name: Install basic tools
+              command: sudo apt-get update && sudo apt-get install -y pipenv
 
 executors:
   default_build_environment:
@@ -8,6 +19,41 @@ executors:
           username: codainternaltools
           password: $DOCKERHUB_PASSWORD
 
+commands:
+  bootstrap_pipenv:
+    steps:
+      - restore_cache:
+          name: Restore Cache - pipenv
+          keys:
+            - pipenv-{{ checksum "Pipfile.lock" }}
+      - run:
+          name: Bootstrap pipenv
+          command: make _bootstrap-python
+      - save_cache:
+          name: Save Cache - pipenv
+          key: pipenv-{{ checksum "Pipfile.lock" }}
+          paths:
+            - /root/project/.venv # python
+  bootstrap_node:
+    steps:
+      - restore_cache:
+          name: Restore Cache - yarn
+          keys:
+            - v2-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v2-dependencies-
+      - run:
+          name: 'Install deps (node)'
+          command: make _bootstrap-node
+      - save_cache:
+          paths:
+            - node_modules
+          key: v2-dependencies-{{ checksum "package.json" }}
+  bootstrap_aws_cli:
+    steps:
+      - run: make bootstrap_aws_creds
+      - aws-cli/install
+
 jobs:
   build:
     executor: default_build_environment
@@ -15,18 +61,7 @@ jobs:
 
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v2-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v2-dependencies-
-      - run:
-          name: 'Install deps'
-          command: make _bootstrap-node
-      - save_cache:
-          paths:
-            - node_modules
-          key: v2-dependencies-{{ checksum "package.json" }}
+      - bootstrap_node
       - run:
           name: 'Lint'
           command: make lint
@@ -37,6 +72,86 @@ jobs:
           name: 'Ensure clean dist diff'
           command: make validate-no-changes
 
+  build-docs:
+    executor: default_build_environment
+    working_directory: ~/repo
+    
+    steps:
+      - checkout
+      - base-tools/install
+      - bootstrap_node
+      - bootstrap_pipenv
+      - run:
+          name: 'Typedoc'
+          command: make docs
+      - run:
+          name: "MkDocs"
+          command: make build-mkdocs
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - site
+
+  push-adhoc-docs:
+    executor: default_build_environment
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - bootstrap_node
+      - bootstrap_aws_cli
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Deploy Adhoc
+          command: 'make publish-docs-adhoc FLAGS=--forceUpload'
+      # TODO: add a probe step here to validate?
+
+  push-head-docs:
+    executor: default_build_environment
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - bootstrap_node
+      - bootstrap_aws_cli
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Deploy Head
+          command: 'make publish-docs-head FLAGS=--forceUpload'
+      # TODO: add a probe step here to validate?
+  
+  push-staging-docs:
+    executor: default_build_environment
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - bootstrap_node
+      - bootstrap_aws_cli
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Deploy Staging
+          command: 'make publish-docs-staging FLAGS=--forceUpload'
+      # TODO: add a probe step here to validate?
+  
+  push-prod-docs:
+    executor: default_build_environment
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - bootstrap_node
+      - bootstrap_aws_cli
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Deploy Prod
+          command: 'make publish-docs-prod FLAGS=--forceUpload'
+      # TODO: add a probe step here to validate?
+
 workflows:
   version: 2
   commit_validation:
@@ -44,3 +159,64 @@ workflows:
       - build:
           context:
             - dockerhub
+          filters:
+            branches:
+              ignore:
+                - release
+
+  build-and-deploy-docs:
+    jobs:
+      - build:
+          context:
+            - dockerhub
+          filters:
+            branches:
+              only:
+                - release
+      - utils/cancel-older-awaiting-approvals:
+          context:
+            - dockerhub
+            - util
+          circle_token: ${CIRCLECI_TOKEN}
+          requires:
+            - build
+      - build-docs:
+          context:
+            - dockerhub
+          requires:
+            - build      
+      # TODO(spencer): figure out why we aren't serving CDN on adhoc, technically this step isn't needed
+      # as long as that is true
+      - push-adhoc-docs:
+          context:
+            - dockerhub
+          requires:
+            - build-docs
+      - push-head-docs:
+          context:
+            - dockerhub
+          requires:
+            - push-adhoc-docs
+      - push-staging-docs:
+          context:
+            - dockerhub
+          requires:
+            - push-head-docs
+      - utils/slack-notify-waiting-for-approval:
+          slack_bot_token: ${PUSH_REMINDER_BOT_TOKEN}
+          requires:
+            - push-staging-docs
+          context:
+            - util
+      - wait-for-approval:
+          context:
+            - dockerhub
+          type: approval
+          requires:
+            - push-staging-docs
+      - push-prod-docs:
+          context:
+            - dockerhub
+          requires:
+            - wait-for-approval
+      # TODO: add publish NPM package with approval?
