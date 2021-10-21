@@ -49,9 +49,10 @@ commands:
           paths:
             - node_modules
           key: v2-dependencies-{{ checksum "package.json" }}
-  bootstrap_aws_creds:
+  bootstrap_aws_cli:
     steps:
       - run: make bootstrap_aws_creds
+      - aws-cli/install
 
 jobs:
   build:
@@ -98,7 +99,7 @@ jobs:
     steps:
       - checkout
       - bootstrap_node
-      - bootstrap_aws_creds
+      - bootstrap_aws_cli
       - attach_workspace:
           at: ~/repo
       - run:
@@ -113,7 +114,7 @@ jobs:
     steps:
       - checkout
       - bootstrap_node
-      - bootstrap_aws_creds
+      - bootstrap_aws_cli
       - attach_workspace:
           at: ~/repo
       - run:
@@ -128,7 +129,7 @@ jobs:
     steps:
       - checkout
       - bootstrap_node
-      - bootstrap_aws_creds
+      - bootstrap_aws_cli
       - attach_workspace:
           at: ~/repo
       - run:
@@ -143,7 +144,7 @@ jobs:
     steps:
       - checkout
       - bootstrap_node
-      - bootstrap_aws_creds
+      - bootstrap_aws_cli
       - attach_workspace:
           at: ~/repo
       - run:

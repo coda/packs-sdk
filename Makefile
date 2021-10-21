@@ -37,6 +37,8 @@ _bootstrap-python:
 _bootstrap-githooks: clean-githooks
 	-(cd ${ROOTDIR}; scripts/dev/git-hooks.sh --install)
 
+# This should only be needed for CI rather than locally,
+# so we don't run it in `make bs`
 .PHONY: bootstrap_aws_creds
 bootstrap_aws_creds:
 	mkdir -p ~/.aws
