@@ -159,6 +159,10 @@ workflows:
       - build:
           context:
             - dockerhub
+          filters:
+            branches:
+              ignore:
+                - release
 
   build-and-deploy-docs:
     jobs:
