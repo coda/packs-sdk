@@ -168,7 +168,7 @@ workflows:
           filters:
             branches:
               only:
-                - sc-ci-deploy-docs
+                - release
       - utils/cancel-older-awaiting-approvals:
           context:
             - dockerhub
@@ -181,6 +181,8 @@ workflows:
             - dockerhub
           requires:
             - build      
+      # TODO(spencer): figure out why we aren't serving CDN on adhoc, technically this step isn't needed
+      # as long as that is true
       - push-adhoc-docs:
           context:
             - dockerhub
