@@ -38,6 +38,7 @@ _bootstrap-githooks: clean-githooks
 	-(cd ${ROOTDIR}; scripts/dev/git-hooks.sh --install)
 
 .PHONY: bootstrap_aws_creds
+bootstrap_aws_creds:
 	mkdir -p ~/.aws
 	echo ${AWSBase64Creds} | base64 -d > ~/.aws/credentials
 
