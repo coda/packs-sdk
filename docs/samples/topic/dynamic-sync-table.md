@@ -14,7 +14,6 @@ Alternatively, a sync table can be dynamic because the data source is specific t
 
 === "Template"
     ```ts
-    
     pack.addDynamicSyncTable({
       name: "<User-visible name for the sync table>",
       getName: coda.makeMetadataFormula(async context => {
@@ -77,5 +76,4 @@ Alternatively, a sync table can be dynamic because the data source is specific t
         },
       },
     });
-    
     ```

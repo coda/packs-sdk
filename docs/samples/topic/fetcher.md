@@ -13,7 +13,6 @@ Communicating with an API or external server is done through the `Fetcher`, a cu
       },
     });
     let data = response.body;
-    
     ```
 === "Template (POST)"
     ```ts
@@ -30,7 +29,6 @@ Communicating with an API or external server is done through the `Fetcher`, a cu
       body: JSON.stringify(payload),
     });
     let data = response.body;
-    
     ```
 === "JSON Array (Bacon Ipsum)"
     ```ts
@@ -68,5 +66,4 @@ Communicating with an API or external server is done through the `Fetcher`, a cu
         return paragraphs.join("\n\n");
       },
     });
-    
     ```

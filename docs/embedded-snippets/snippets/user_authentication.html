@@ -16,7 +16,7 @@
 
       require(['vs/editor/editor.main'], function () {
         var editor = monaco.editor.create(document.getElementById('container'), {
-          value: "\npack.setUserAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n});\n",
+          value: "pack.setUserAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n});",
           language: 'javascript',
           minimap: {enabled: false},
           readOnly: true,

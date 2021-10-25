@@ -43,5 +43,4 @@ This is an example which creates a single formula called Hello, that takes in a 
         return "Hello " + name + "!";
       },
     });
-    
     ```

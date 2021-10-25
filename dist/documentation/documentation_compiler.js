@@ -97,7 +97,7 @@ function getCodeFile(file, requireBegin = false) {
     const codeStart = begin >= 0 ? data.indexOf(CodeBegin) + CodeBegin.length : 0;
     const end = data.indexOf(CodeEnd);
     const codeEnd = end >= 0 ? end : data.length;
-    return stripIndent(data.substring(codeStart, codeEnd));
+    return stripIndent(data.substring(codeStart, codeEnd)).trim();
 }
 function getContentFile(file) {
     return fs.readFileSync(path_1.default.join(DocumentationRoot, file), 'utf8').trim();

@@ -4,7 +4,6 @@ A **formula (including a button)** is a JavaScript function that will be exposed
 
 === "Template"
     ```ts
-    
     pack.addFormula({
       name: "<User-visible name of formula>",
       description: "<Help text for the formula>",
@@ -21,7 +20,6 @@ A **formula (including a button)** is a JavaScript function that will be exposed
         return "Hello " + param;
       },
     });
-    
     ```
 === "Todoist"
     ```ts
@@ -96,5 +94,4 @@ A **formula (including a button)** is a JavaScript function that will be exposed
       type: coda.AuthenticationType.HeaderBearerToken,
       instructionsUrl: "https://todoist.com/app/settings/integrations",
     });
-    
     ```
