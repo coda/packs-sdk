@@ -2,6 +2,7 @@ import type {CompiledAutocompleteSnippet} from './types';
 import type {CompiledExample} from './types';
 import type {CompiledExampleSnippet} from './types';
 import type {Example} from './types';
+import {ExampleCategory} from './types';
 import {Examples} from './documentation_config';
 import * as Handlebars from 'handlebars';
 import {Snippets} from './documentation_config';
@@ -61,6 +62,7 @@ function compileExamples() {
     }
     const compiledExample = {
       name: example.name,
+      category: example.category,
       triggerTokens: example.triggerTokens,
       exampleFooterLink,
       content,
@@ -145,6 +147,13 @@ function isValidReferencePath(sdkReferencePath: string): boolean {
 Handlebars.registerHelper('indent', (content, numSpaces) => {
   const indent = ' '.repeat(numSpaces);
   return content.replace(/\n(?!\n)/g, '\n' + indent);
+});
+
+Handlebars.registerHelper('pageTitle', (example: CompiledExample) => {
+  const singularName = example.name.replace(/s$/, '');
+  const isMultiple = example.exampleSnippets.length > 1 &&
+      example.category !== ExampleCategory.Full;
+  return `${singularName} sample${isMultiple ? 's' : ''}`;
 });
 
 main();

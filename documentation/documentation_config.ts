@@ -128,7 +128,7 @@ export const Snippets: AutocompleteSnippet[] = [
 
 export const Examples: Example[] = [
   {
-    name: 'Column Formats',
+    name: 'Column formats',
     category: ExampleCategory.Topic,
     triggerTokens: ['addColumnFormat'],
     contentFile: './examples/column-format/column_format.md',
@@ -172,7 +172,7 @@ export const Examples: Example[] = [
     ],
   },
   {
-    name: 'Dynamic Sync Tables',
+    name: 'Dynamic sync tables',
     category: ExampleCategory.Topic,
     triggerTokens: ['addDynamicSyncTable'],
     contentFile: './examples/dynamic-sync-table/dynamic_sync_table.md',
@@ -211,7 +211,7 @@ export const Examples: Example[] = [
     ],
   },
   {
-    name: 'Sync Tables',
+    name: 'Sync tables',
     category: ExampleCategory.Topic,
     triggerTokens: ['addSyncTable'],
     contentFile: './examples/sync-table/sync_table.md',

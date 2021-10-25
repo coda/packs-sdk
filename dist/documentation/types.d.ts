@@ -28,6 +28,7 @@ export interface Example {
 }
 export interface CompiledExample {
     name: string;
+    category: ExampleCategory;
     triggerTokens: string[];
     exampleFooterLink: string;
     content: string;

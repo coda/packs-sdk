@@ -22,10 +22,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const types_1 = require("./types");
 const documentation_config_1 = require("./documentation_config");
 const Handlebars = __importStar(require("handlebars"));
 const documentation_config_2 = require("./documentation_config");
-const types_1 = require("./types");
+const types_2 = require("./types");
 const fs = __importStar(require("fs"));
 const path_1 = __importDefault(require("path"));
 const CodeBegin = '// BEGIN\n';
@@ -61,13 +62,13 @@ function compileExamples() {
         const content = getContentFile(example.contentFile);
         const compiledExampleSnippets = compileExampleSnippets(example);
         let exampleFooterLink = example.linkData.url;
-        if (example.linkData.type === types_1.UrlType.SdkReferencePath) {
+        if (example.linkData.type === types_2.UrlType.SdkReferencePath) {
             if (!isValidReferencePath(exampleFooterLink)) {
                 throw new Error(`${exampleFooterLink} is not a valid path`);
             }
             exampleFooterLink = `${SdkReferenceLink}${exampleFooterLink}`;
         }
-        else if (example.linkData.type === types_1.UrlType.SamplePage) {
+        else if (example.linkData.type === types_2.UrlType.SamplePage) {
             const pagePath = getExamplePagePath(example);
             const pageName = getExamplePageName(example).split('.')[0];
             exampleFooterLink = `${SamplePageLink}/${pagePath}/${pageName}`;
@@ -77,6 +78,7 @@ function compileExamples() {
         }
         const compiledExample = {
             name: example.name,
+            category: example.category,
             triggerTokens: example.triggerTokens,
             exampleFooterLink,
             content,
@@ -145,5 +147,11 @@ function isValidReferencePath(sdkReferencePath) {
 Handlebars.registerHelper('indent', (content, numSpaces) => {
     const indent = ' '.repeat(numSpaces);
     return content.replace(/\n(?!\n)/g, '\n' + indent);
+});
+Handlebars.registerHelper('pageTitle', (example) => {
+    const singularName = example.name.replace(/s$/, '');
+    const isMultiple = example.exampleSnippets.length > 1 &&
+        example.category !== types_1.ExampleCategory.Full;
+    return `${singularName} sample${isMultiple ? 's' : ''}`;
 });
 main();

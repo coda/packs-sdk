@@ -1,4 +1,8 @@
-# Todoist
+---
+title: Todoist
+---
+
+# Todoist sample
 
 This Pack provides an integration with the task tracking app [Todoist][todoist]. It uses a variety of building blocks to allow users to work with their projects and tasks, including:
 
