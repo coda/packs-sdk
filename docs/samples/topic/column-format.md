@@ -6,12 +6,14 @@ For example, the Weather pack has a column format `Current Weather`; when applie
 
 === "Template"
     ```ts
+    
     pack.addColumnFormat({
       name: "<User-visible name>",
       instructions: "<Help text for the format>",
       formulaName: "<Name of the formula to run>",
       formulaNamespace: "Deprecated", // Will be removed shortly
     });
+    
     ```
 === "Todoist"
     ```ts
@@ -119,4 +121,5 @@ For example, the Weather pack has a column format `Current Weather`; when applie
       type: coda.AuthenticationType.HeaderBearerToken,
       instructionsUrl: "https://todoist.com/app/settings/integrations",
     });
+    
     ```

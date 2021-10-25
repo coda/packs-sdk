@@ -72,4 +72,5 @@ This is an example which creates two formulas that each take in an array of numb
         return lcmResult;
       },
     });
+    
     ```

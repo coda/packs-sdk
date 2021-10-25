@@ -8,9 +8,11 @@ Use system authentication if you as the pack author will provide the necessary t
 
 === "Template"
     ```ts
+    
     pack.setUserAuthentication({
       type: coda.AuthenticationType.HeaderBearerToken,
     });
+    
     ```
 === "Todoist (OAuth2)"
     ```ts
@@ -41,4 +43,5 @@ Use system authentication if you as the pack author will provide the necessary t
         return response.body.user?.full_name;
       },
     });
+    
     ```

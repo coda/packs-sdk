@@ -16,7 +16,7 @@
 
       require(['vs/editor/editor.main'], function () {
         var editor = monaco.editor.create(document.getElementById('container'), {
-          value: "coda.makeParameter({\n  type: coda.ParameterType.Number,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n});",
+          value: "\ncoda.makeParameter({\n  type: coda.ParameterType.Number,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n});\n",
           language: 'javascript',
           minimap: {enabled: false},
           readOnly: true,

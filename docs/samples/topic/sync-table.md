@@ -4,6 +4,7 @@ A **sync table** is how to bring structured data from a third-party into Coda. A
 
 === "Template"
     ```ts
+    
     const MySchema = coda.makeObjectSchema({
       type: coda.ValueType.Object,
       properties: {
@@ -47,6 +48,7 @@ A **sync table** is how to bring structured data from a third-party into Coda. A
         },
       },
     });
+    
     ```
 === "Todoist"
     ```ts
@@ -124,4 +126,5 @@ A **sync table** is how to bring structured data from a third-party into Coda. A
       type: coda.AuthenticationType.HeaderBearerToken,
       instructionsUrl: "https://todoist.com/app/settings/integrations",
     });
+    
     ```

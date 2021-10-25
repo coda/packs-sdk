@@ -25,6 +25,7 @@ markdown_extensions:
         - docs
   - pymdownx.superfences
   - pymdownx.tabbed
+  - tables
   - toc:
       permalink: true
       # Don't show TOC entries for h4 and below, as it clutters the TOC in the reference docs.
@@ -49,7 +50,6 @@ theme:
     - navigation.tabs
     - navigation.sections
     - navigation.indexes
-    - toc.integrate
   palette:
     scheme: coda
   logo: assets/logo.png

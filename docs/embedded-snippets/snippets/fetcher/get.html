@@ -16,7 +16,7 @@
 
       require(['vs/editor/editor.main'], function () {
         var editor = monaco.editor.create(document.getElementById('container'), {
-          value: "\ncoda.makeParameter({\n  type: coda.ParameterType.ImageArray,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n});\n",
+          value: "let response = await context.fetcher.fetch({\n  method: \"GET\",\n  url: \"<The URL to fetch>\",\n  headers: {\n    \"<HeaderName>\": \"<HeaderValue>\",\n    // Add more headers as needed.\n  },\n});\nlet data = response.body;\n",
           language: 'javascript',
           minimap: {enabled: false},
           readOnly: true,
