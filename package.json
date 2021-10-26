@@ -72,7 +72,7 @@
     "@types/xml2js": "^0.4.9",
     "@types/yargs": "^17.0.4",
     "@typescript-eslint/eslint-plugin": "4.33.0",
-    "@typescript-eslint/experimental-utils": "5.1.0",
+    "@typescript-eslint/experimental-utils": "5.2.0",
     "@typescript-eslint/parser": "4.33.0",
     "buffer": "^6.0.3",
     "chai": "^4.3.4",
