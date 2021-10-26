@@ -50,7 +50,7 @@
     "@types/aws-sdk": "^2.7.0",
     "mime": "^2.5.2",
     "@types/mime": "^2.0.3",
-    "@types/sinon": "^10.0.4",
+    "@types/sinon": "^10.0.6",
     "@types/browserify": "^12.0.37",
     "@types/chai": "^4.2.22",
     "@types/clone": "^2.1.1",
