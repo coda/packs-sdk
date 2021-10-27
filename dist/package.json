@@ -34,7 +34,7 @@
         "request": "2.88.2",
         "request-promise-native": "^1.0.9",
         "sha.js": "^2.4.11",
-        "sinon": "^11.1.2",
+        "sinon": "11.1.2",
         "source-map": "^0.8.0-beta.0",
         "stacktrace-parser": "^0.1.10",
         "typescript": "^4.4.4",
