@@ -30,6 +30,7 @@ const types_2 = require("./types");
 const fs = __importStar(require("fs"));
 const path_1 = __importDefault(require("path"));
 const CodeBegin = '// BEGIN\n';
+const CodeEnd = '// END\n';
 const BaseDir = path_1.default.join(__dirname, '..');
 const DocumentationRoot = path_1.default.join(BaseDir, 'documentation');
 const TypeDocsRoot = path_1.default.join(BaseDir, 'docs');
@@ -96,7 +97,9 @@ function getCodeFile(file, requireBegin = false) {
         throw new Error(`Missing "${CodeBegin.trim()}" in file: ${file}`);
     }
     const codeStart = begin >= 0 ? data.indexOf(CodeBegin) + CodeBegin.length : 0;
-    return data.substring(codeStart).trim();
+    const end = data.indexOf(CodeEnd);
+    const codeEnd = end >= 0 ? end : data.length;
+    return stripIndent(data.substring(codeStart, codeEnd)).trim();
 }
 function getContentFile(file) {
     return fs.readFileSync(path_1.default.join(DocumentationRoot, file), 'utf8').trim();
@@ -143,6 +146,24 @@ function isValidReferencePath(sdkReferencePath) {
     const file = page + '.' + PageFileExtension;
     const filePath = path_1.default.join(TypeDocsRoot, file);
     return fs.existsSync(filePath);
+}
+/**
+ * Un-indents text, removing the shortest common leading whitespace from each
+ * line.
+ * Code adapted from strip-indent (and min-indent). Can't use it directly since
+ * it's an ES Module.
+ * @param text The text to un-indent.
+ * @returns The text with the minimum indent.
+ */
+function stripIndent(text) {
+    const match = text.match(/^[ ]*(?=\S)/gm);
+    if (!match) {
+        // No indents found, return the original string.
+        return text;
+    }
+    const minIndent = match.reduce((r, a) => Math.min(r, a.length), Infinity);
+    const regex = new RegExp(`^[ \\t]{${minIndent}}`, 'gm');
+    return text.replace(regex, '');
 }
 Handlebars.registerHelper('indent', (content, numSpaces) => {
     const indent = ' '.repeat(numSpaces);

@@ -49,7 +49,6 @@ theme:
     - navigation.tabs
     - navigation.sections
     - navigation.indexes
-    - toc.integrate
   palette:
     scheme: coda
   logo: assets/logo.png

@@ -121,6 +121,32 @@
     ]
   },
   {
+    "name": "Fetcher",
+    "category": "Topic",
+    "triggerTokens": [
+      "fetch"
+    ],
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/reference/sdk/interfaces/Fetcher",
+    "content": "Communicating with an API or external server is done through the `Fetcher`, a custom interface for making HTTP requests. The fetcher is made available through the `context` object passed in to formulas. The fetcher can only send requests to URLs that have have a domain name that's been registered using `addNetworkDomain`. The fetcher runs asynchronously, and is typically run within an `async` function that will `await` the result.",
+    "exampleSnippets": [
+      {
+        "name": "Template (GET)",
+        "content": "",
+        "code": "let response = await context.fetcher.fetch({\n  method: \"GET\",\n  url: \"<The URL to fetch>\",\n  headers: {\n    \"<HeaderName>\": \"<HeaderValue>\",\n    // Add more headers as needed.\n  },\n});\nlet data = response.body;"
+      },
+      {
+        "name": "Template (POST)",
+        "content": "",
+        "code": "let payload = {\n  // Whatever JSON structure the API expects.\n};\nlet response = await context.fetcher.fetch({\n  method: \"POST\",\n  url: \"<The URL to send the request to>\",\n  headers: {\n    \"Content-Type\": \"application/json\",\n    // Add more headers as needed.\n  },\n  body: JSON.stringify(payload),\n});\nlet data = response.body;"
+      },
+      {
+        "name": "JSON Array (Bacon Ipsum)",
+        "content": "",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// When using the fetcher, this is the domain of the API that your pack makes\n// fetcher requests to.\npack.addNetworkDomain(\"baconipsum.com\");\n\n// This line adds a new formula to this Pack.\npack.addFormula({\n  name: \"BaconIpsum\",\n  description: \"Returns meat-themed lorem ipsum copy.\",\n  parameters: [], // No parameters required.\n  resultType: coda.ValueType.String,\n\n  // This function is declared async to that is can wait for the fetcher to\n  // complete. The context parameter provides access to the fetcher.\n  execute: async function ([], context) {\n    let url = \"https://baconipsum.com/api/?type=meat-and-filler\";\n\n    // The fetcher's fetch method makes the request. The await keyword is used\n    // to wait for the API's response before continuing on through the code.\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: url\n    });\n\n    // The API returns an array of strings, which is automatically parsed by\n    // the fetcher into a JavaScript object.\n    let paragraphs = response.body;\n\n    // Return the paragraphs separated by a blank line.\n    return paragraphs.join(\"\\n\\n\");\n  },\n});"
+      }
+    ]
+  },
+  {
     "name": "Hello World",
     "category": "Full",
     "triggerTokens": [],
@@ -145,20 +171,6 @@
         "name": "Daylight",
         "content": "",
         "code": "/**\n * This Pack provides a \"Daylight\" formula that determines the daylight,\n * sunrise, and sunset at a given location using the Sunrise Sunset API.\n * The results are returns as a rich object.\n * @see {@link https://sunrise-sunset.org/api|Sunrise Sunset API}\n */\n\n// This import statement provides access to all parts of the Coda Packs SDK.\nimport * as coda from \"@codahq/packs-sdk\";\n\n// This line creates the new Pack.\nexport const pack = coda.newPack();\n\n// The domain that the Pack will match fetcher requests to.\npack.addNetworkDomain(\"sunrise-sunset.org\");\n\n// Define a schema that will be used to bundle up the multiple pieces of data\n// our formula will return. In the Coda doc this will be displayed as a chip.\nconst SunSchema = coda.makeObjectSchema({\n  type: coda.ValueType.Object,\n  properties: {\n    // The values we return are simple strings, but we use the codaType field to\n    // to tell Coda to interpret them as durations and time values.\n    daylight: {\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.Duration,\n    },\n    sunriseUTC: {\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.Time,\n    },\n    sunsetUTC: {\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.Time,\n    },\n  },\n  // Which of the properties defined above will be shown inside the chip.\n  primary: \"daylight\",\n});\n\n// Add a \"Daylight\" formula to the Pack.\npack.addFormula({\n  name: \"Daylight\",\n  description: \"Returns the sunrise and sunset for a given location.\",\n\n  // This formula takes two required numeric inputs (the latitude and longitude)\n  // and one optional date.\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.Number,\n      name: \"lat\",\n      description: \"The latitude to use.\",\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.Number,\n      name: \"lng\",\n      description: \"The longitude to use.\",\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.Date,\n      name: \"date\",\n      description: \"The date to use. Defaults to today.\",\n      // This date parameter is an optional input.\n      optional: true,\n    }),\n  ],\n\n  // In this formula, we're returning an object with multiple properties.\n  resultType: coda.ValueType.Object,\n\n  // This object will be defined according to the schema written above.\n  schema: SunSchema,\n\n  // Everything inside this execute statement will happen anytime the Coda\n  // formula is called in a doc. An array of all user inputs is passed as the\n  // first parameter. The context object is always the second parameter and is\n  // used for fetching data.\n  execute: async function ([lat, lng, date], context) {\n    // Default to today if no date is provided.\n    let lookupDate = date || new Date();\n\n    // Format date to yyyy-mm-dd format as required by this API.\n    let formattedDate = lookupDate.toISOString().split(\"T\")[0];\n\n    // Create the URL to fetch, using the helper function coda.withQueryParams\n    // to add on query parameters (ex: \"?lat=40.123...\").\n    let url = coda.withQueryParams(\"https://api.sunrise-sunset.org/json\", {\n      lat: lat,\n      lng: lng,\n      date: formattedDate\n    });\n\n    // Fetch the URL and get the response.\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: url\n    });\n\n    // The JSON returned by the API is parsed automatically and available in\n    // `response.body`. Here we pull out the content in the \"results\" key.\n    let results = response.body.results;\n\n    // Re-format the day_length string to [h] hrs [m] mins [s] secs to work as a\n    // duration.\n    let hours = results.day_length.split(\":\")[0];\n    let mins = results.day_length.split(\":\")[1];\n    let secs = results.day_length.split(\":\")[2];\n\n    let daylight = `${hours} hrs ${mins} mins ${secs} secs`;\n\n    // Return the final object. The keys here must match with the properties\n    // defined above in the schema.\n    return {\n      daylight: daylight,\n      sunriseUTC: response.body.results.sunrise,\n      sunsetUTC: response.body.results.sunset,\n    };\n  },\n});"
-      }
-    ]
-  },
-  {
-    "name": "Hello Fetcher",
-    "category": "Full",
-    "triggerTokens": [],
-    "exampleFooterLink": "https://coda.io/@coda/make-a-pack-private-alpha/hello-fetcher-28",
-    "content": "This is an example which creates a single formula titled FetchIpsum, which returns a string of lorem ipsum copy.",
-    "exampleSnippets": [
-      {
-        "name": "Hello Fetcher",
-        "content": "",
-        "code": "// This import statement gives you access to all parts of the Coda Packs SDK.\nimport * as coda from \"@codahq/packs-sdk\";\n\n// This line creates your new Pack.\nexport const pack = coda.newPack();\n\n// When using the fetcher, this is the domain of the API that your pack makes\n// fetcher requests to.\npack.addNetworkDomain(\"baconipsum.com\");\n\n// This line adds a new formula to this Pack.\npack.addFormula({\n  // Remember, the formula name cannot have spaces in it.\n  name: \"FetchIpsum\",\n  description: \"A simple fetcher example returning some lorem ipsum copy.\",\n\n  // This formula does not need any user inputs, so the parameters field is\n  // empty.\n  parameters: [],\n\n  // In this formula, we're returning a string.\n  resultType: coda.ValueType.String,\n\n  // Everything inside this execute statement will happen anytime your Coda\n  // formula is called in a doc. An array of all user inputs is passed as the\n  // 1st parameter. The context object is always the 2nd parameter and is used\n  // for fetching data and debugging.\n  execute: async function ([], context) {\n    let url = \"https://baconipsum.com/api/?type=meat-and-filler\";\n\n    // context.fetcher.fetch allows you to pull in external data, specifying\n    // things like the HTTP method and URL.\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: url\n    });\n\n    // The entire body of the response contains the lorem ipsum text to be\n    // returned.\n    return response.body;\n  },\n});"
       }
     ]
   },
