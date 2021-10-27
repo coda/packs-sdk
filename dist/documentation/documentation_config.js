@@ -137,7 +137,7 @@ exports.Snippets = [
 ];
 exports.Examples = [
     {
-        name: 'Column Formats',
+        name: 'Column formats',
         category: types_1.ExampleCategory.Topic,
         triggerTokens: ['addColumnFormat'],
         contentFile: './examples/column-format/column_format.md',
@@ -152,7 +152,17 @@ exports.Examples = [
                 codeFile: './snippets/column_format.ts',
             },
             {
-                name: 'Todoist',
+                name: 'Text (Reverse)',
+                content: '',
+                codeFile: './examples/column-format/reverse.ts',
+            },
+            {
+                name: 'Image (Cats)',
+                content: '',
+                codeFile: './examples/cats/column_format.ts',
+            },
+            {
+                name: 'Rich Data (Todoist)',
                 content: '',
                 codeFile: './examples/todoist/column_format.ts',
             },
@@ -174,14 +184,14 @@ exports.Examples = [
                 codeFile: './snippets/user_authentication.ts',
             },
             {
-                name: 'Todoist (OAuth2)',
+                name: 'OAuth2 (Todoist)',
                 content: '',
                 codeFile: './examples/todoist/auth.ts',
             },
         ],
     },
     {
-        name: 'Dynamic Sync Tables',
+        name: 'Dynamic sync tables',
         category: types_1.ExampleCategory.Topic,
         triggerTokens: ['addDynamicSyncTable'],
         contentFile: './examples/dynamic-sync-table/dynamic_sync_table.md',
@@ -213,14 +223,19 @@ exports.Examples = [
                 codeFile: './snippets/formula/string_formula.ts',
             },
             {
-                name: 'Todoist',
+                name: 'Image (Cats)',
+                content: '',
+                codeFile: './examples/cats/formula.ts',
+            },
+            {
+                name: 'Rich Data (Todoist)',
                 content: '',
                 codeFile: './examples/todoist/formula.ts',
             },
         ],
     },
     {
-        name: 'Sync Tables',
+        name: 'Sync tables',
         category: types_1.ExampleCategory.Topic,
         triggerTokens: ['addSyncTable'],
         contentFile: './examples/sync-table/sync_table.md',
@@ -233,6 +248,11 @@ exports.Examples = [
                 name: 'Template',
                 content: '',
                 codeFile: './snippets/sync_table.ts',
+            },
+            {
+                name: 'Cats',
+                content: '',
+                codeFile: './examples/cats/sync_table.ts',
             },
             {
                 name: 'Todoist',
@@ -332,6 +352,22 @@ exports.Examples = [
                 name: 'pack.ts',
                 content: '',
                 codeFile: './examples/todoist/full.ts',
+            },
+        ],
+    },
+    {
+        name: 'Cats',
+        category: types_1.ExampleCategory.Full,
+        triggerTokens: [],
+        contentFile: './examples/cats/README.md',
+        linkData: {
+            type: types_2.UrlType.SamplePage,
+        },
+        exampleSnippets: [
+            {
+                name: 'pack.ts',
+                content: '',
+                codeFile: './examples/cats/full.ts',
             },
         ],
     },

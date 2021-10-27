@@ -1,4 +1,8 @@
-# {{name}}
+---
+title: {{name}}
+---
+
+# {{pageTitle this}}
 
 {{{content}}}
 

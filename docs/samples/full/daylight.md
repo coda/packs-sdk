@@ -1,4 +1,8 @@
-# Daylight
+---
+title: Daylight
+---
+
+# Daylight sample
 
 This Pack provides a `Daylight` formula that determines the daylight, sunrise,
  and sunset at a given location using the [Sunrise Sunset API][api]. It accepts

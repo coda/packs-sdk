@@ -1,8 +1,9 @@
-import type { CompiledAutocompleteSnippet } from './types';
-import type { CompiledExample } from './types';
-import type { CompiledExampleSnippet } from './types';
-import type { Example } from './types';
-import { Examples } from './documentation_config';
+import type {CompiledAutocompleteSnippet} from './types';
+import type {CompiledExample} from './types';
+import type {CompiledExampleSnippet} from './types';
+import type {Example} from './types';
+import {ExampleCategory} from './types';
+import {Examples} from './documentation_config';
 import * as Handlebars from 'handlebars';
 import { Snippets } from './documentation_config';
 import { UrlType } from './types';
@@ -62,6 +63,7 @@ function compileExamples() {
     }
     const compiledExample = {
       name: example.name,
+      category: example.category,
       triggerTokens: example.triggerTokens,
       exampleFooterLink,
       content,
@@ -167,6 +169,20 @@ function stripIndent(text: string) {
 Handlebars.registerHelper('indent', (content, numSpaces) => {
   const indent = ' '.repeat(numSpaces);
   return content.replace(/\n(?!\n)/g, '\n' + indent);
+});
+
+Handlebars.registerHelper('pageTitle', (example: CompiledExample) => {
+  let name = example.name;
+  let suffix = 'sample';
+  if (example.category === ExampleCategory.Topic) {
+    // Use singular version of the name.
+    name = name.replace(/s$/, '');
+    if (example.exampleSnippets.length > 1) {
+      // Use the suffix "samples" if there are more than one.
+      suffix += 's';
+    }
+  }
+  return `${name} ${suffix}`;
 });
 
 main();
