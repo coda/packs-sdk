@@ -1,6 +1,7 @@
 [
   {
-    "name": "Column Formats",
+    "name": "Column formats",
+    "category": "Topic",
     "triggerTokens": [
       "addColumnFormat"
     ],
@@ -31,6 +32,7 @@
   },
   {
     "name": "Authentication",
+    "category": "Topic",
     "triggerTokens": [
       "setSystemAuthentication",
       "setUserAuthentication"
@@ -51,7 +53,8 @@
     ]
   },
   {
-    "name": "Dynamic Sync Tables",
+    "name": "Dynamic sync tables",
+    "category": "Topic",
     "triggerTokens": [
       "addDynamicSyncTable"
     ],
@@ -67,6 +70,7 @@
   },
   {
     "name": "Formulas",
+    "category": "Topic",
     "triggerTokens": [
       "addFormula"
     ],
@@ -91,7 +95,8 @@
     ]
   },
   {
-    "name": "Sync Tables",
+    "name": "Sync tables",
+    "category": "Topic",
     "triggerTokens": [
       "addSyncTable"
     ],
@@ -117,6 +122,7 @@
   },
   {
     "name": "Hello World",
+    "category": "Full",
     "triggerTokens": [],
     "exampleFooterLink": "https://coda.io/@coda/make-a-pack-private-alpha/hello-world-16",
     "content": "This is an example which creates a single formula called Hello, that takes in a string called name and returns “Hello, name !“.",
@@ -130,6 +136,7 @@
   },
   {
     "name": "Daylight",
+    "category": "Full",
     "triggerTokens": [],
     "exampleFooterLink": "https://coda.io/@coda/make-a-pack-private-alpha/daylight-29",
     "content": "This Pack provides a `Daylight` formula that determines the daylight, sunrise,\n and sunset at a given location using the [Sunrise Sunset API][api]. It accepts\n a latitude, longitude, an optional date and returns a rich object (schema) as\n a result. It uses the `Fetcher` to pull data from an external API.\n\n [api]: https://sunrise-sunset.org/api",
@@ -143,6 +150,7 @@
   },
   {
     "name": "Hello Fetcher",
+    "category": "Full",
     "triggerTokens": [],
     "exampleFooterLink": "https://coda.io/@coda/make-a-pack-private-alpha/hello-fetcher-28",
     "content": "This is an example which creates a single formula titled FetchIpsum, which returns a string of lorem ipsum copy.",
@@ -156,6 +164,7 @@
   },
   {
     "name": "Number Array",
+    "category": "Full",
     "triggerTokens": [],
     "exampleFooterLink": "https://coda.io/@coda/make-a-pack-private-alpha/number-array-27",
     "content": "This is an example which creates two formulas that each take in an array of numbers and return the greatest common denominator and least common multiple.",
@@ -169,6 +178,7 @@
   },
   {
     "name": "Todoist",
+    "category": "Full",
     "triggerTokens": [],
     "exampleFooterLink": "https://coda.github.io/packs-sdk/samples/full/todoist",
     "content": "This Pack provides an integration with the task tracking app [Todoist][todoist]. It uses a variety of building blocks to allow users to work with their projects and tasks, including:\n\n- Formulas that provide rich data about an item given its URL.\n- Column formats that automatically apply those formulas to matching URLs.\n- Action formulas that create and update items, for use in button and automations.\n- Sync tables for pulling in all of the user's items.\n\nThe Pack uses OAuth2 to connect to a user's Todoist account, which you can create for free.\n\n[todoist]: https://todoist.com/",
@@ -182,6 +192,7 @@
   },
   {
     "name": "Cats",
+    "category": "Full",
     "triggerTokens": [],
     "exampleFooterLink": "https://coda.github.io/packs-sdk/samples/full/cats",
     "content": "This Pack provides allows you to fetch random cat photos using the [Cat-as-a-service API][cataas]. You can set various parameters for the cat image, such as the width and height, as well as add a text overlay. The Pack provides:\n\n- A formula for fetching a cat photo.\n- A column format that displays the text on top of a cat photo.\n- A sync table that retrieves all available cat photos.\n\n[cataas]: https://cataas.com/",

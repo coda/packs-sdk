@@ -127,7 +127,7 @@ exports.Snippets = [
 ];
 exports.Examples = [
     {
-        name: 'Column Formats',
+        name: 'Column formats',
         category: types_1.ExampleCategory.Topic,
         triggerTokens: ['addColumnFormat'],
         contentFile: './examples/column-format/column_format.md',
@@ -181,7 +181,7 @@ exports.Examples = [
         ],
     },
     {
-        name: 'Dynamic Sync Tables',
+        name: 'Dynamic sync tables',
         category: types_1.ExampleCategory.Topic,
         triggerTokens: ['addDynamicSyncTable'],
         contentFile: './examples/dynamic-sync-table/dynamic_sync_table.md',
@@ -225,7 +225,7 @@ exports.Examples = [
         ],
     },
     {
-        name: 'Sync Tables',
+        name: 'Sync tables',
         category: types_1.ExampleCategory.Topic,
         triggerTokens: ['addSyncTable'],
         contentFile: './examples/sync-table/sync_table.md',
