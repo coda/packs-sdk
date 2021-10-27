@@ -5,8 +5,8 @@ import type {Example} from './types';
 import {ExampleCategory} from './types';
 import {Examples} from './documentation_config';
 import * as Handlebars from 'handlebars';
-import { Snippets } from './documentation_config';
-import { UrlType } from './types';
+import {Snippets} from './documentation_config';
+import {UrlType} from './types';
 import * as fs from 'fs';
 import path from 'path';
 
@@ -76,7 +76,7 @@ function compileExamples() {
   fs.writeFileSync(path.join(DocumentationRoot, 'generated/examples.json'), JSON.stringify(compiledExamples, null, 2));
 }
 
-function getCodeFile(file: string, requireBegin = false): string {
+function getCodeFile(file: string, requireBegin=false): string {
   const data = fs.readFileSync(path.join(DocumentationRoot, file), 'utf8');
   const begin = data.indexOf(CodeBegin);
   if (requireBegin && begin === -1) {
