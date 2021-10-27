@@ -1,11 +1,11 @@
-import type {CompiledAutocompleteSnippet} from './types';
-import type {CompiledExample} from './types';
-import type {CompiledExampleSnippet} from './types';
-import type {Example} from './types';
-import {Examples} from './documentation_config';
+import type { CompiledAutocompleteSnippet } from './types';
+import type { CompiledExample } from './types';
+import type { CompiledExampleSnippet } from './types';
+import type { Example } from './types';
+import { Examples } from './documentation_config';
 import * as Handlebars from 'handlebars';
-import {Snippets} from './documentation_config';
-import {UrlType} from './types';
+import { Snippets } from './documentation_config';
+import { UrlType } from './types';
 import * as fs from 'fs';
 import path from 'path';
 
@@ -74,7 +74,7 @@ function compileExamples() {
   fs.writeFileSync(path.join(DocumentationRoot, 'generated/examples.json'), JSON.stringify(compiledExamples, null, 2));
 }
 
-function getCodeFile(file: string, requireBegin=false): string {
+function getCodeFile(file: string, requireBegin = false): string {
   const data = fs.readFileSync(path.join(DocumentationRoot, file), 'utf8');
   const begin = data.indexOf(CodeBegin);
   if (requireBegin && begin === -1) {
@@ -138,7 +138,7 @@ function getExamplePageName(example: Example) {
 function isValidReferencePath(sdkReferencePath: string): boolean {
   const splitPath = sdkReferencePath.split('#');
   const page = splitPath[0];
-  const file =  page + '.' + PageFileExtension;
+  const file = page + '.' + PageFileExtension;
 
   const filePath = path.join(TypeDocsRoot, file);
 
@@ -155,13 +155,13 @@ function isValidReferencePath(sdkReferencePath: string): boolean {
  */
 function stripIndent(text: string) {
   const match = text.match(/^[ ]*(?=\S)/gm);
-	if (!match) {
+  if (!match) {
     // No indents found, return the original string.
-		return text;
-	}
-	const minIndent = match.reduce((r, a) => Math.min(r, a.length), Infinity);
-	const regex = new RegExp(`^[ \\t]{${minIndent}}`, 'gm');
-	return text.replace(regex, '');
+    return text;
+  }
+  const minIndent = match.reduce((r, a) => Math.min(r, a.length), Infinity);
+  const regex = new RegExp(`^[ \\t]{${minIndent}}`, 'gm');
+  return text.replace(regex, '');
 }
 
 Handlebars.registerHelper('indent', (content, numSpaces) => {
