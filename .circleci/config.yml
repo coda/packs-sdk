@@ -233,7 +233,7 @@ workflows:
           context:
             - dockerhub
           requires:
-            - push-prod-docs
+            - push-staging-docs
       - utils/slack-notify-waiting-for-approval:
           slack_bot_token: ${PUSH_REMINDER_BOT_TOKEN}
           requires:
