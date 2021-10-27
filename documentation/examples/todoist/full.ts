@@ -51,8 +51,8 @@ const ProjectReferenceSchema = coda.makeObjectSchema({
   type: coda.ValueType.Object,
   codaType: coda.ValueHintType.Reference,
   properties: {
-    name: { type: coda.ValueType.String, required: true },
-    projectId: { type: coda.ValueType.Number, required: true },
+    name: {type: coda.ValueType.String, required: true},
+    projectId: {type: coda.ValueType.Number, required: true},
   },
   primary: "name",
   id: "projectId",
@@ -112,8 +112,8 @@ const TaskReferenceSchema = coda.makeObjectSchema({
   type: coda.ValueType.Object,
   codaType: coda.ValueHintType.Reference,
   properties: {
-    name: { type: coda.ValueType.String, required: true },
-    taskId: { type: coda.ValueType.Number, required: true },
+    name: {type: coda.ValueType.String, required: true},
+    taskId: {type: coda.ValueType.Number, required: true},
   },
   primary: "name",
   id: "taskId",
@@ -178,7 +178,7 @@ const TaskSchema = coda.makeObjectSchema({
 /**
  * Convert a Project API response to a Project schema.
  */
-function toProject(project: any, withReferences = false) {
+function toProject(project: any, withReferences=false) {
   let result: any = {
     name: project.name,
     projectId: project.id,
@@ -199,7 +199,7 @@ function toProject(project: any, withReferences = false) {
 /**
  * Convert a Task API response to a Task schema.
  */
-function toTask(task: any, withReferences = false) {
+function toTask(task: any, withReferences=false) {
   let result: any = {
     name: task.content,
     description: task.description,
