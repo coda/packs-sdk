@@ -352,7 +352,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
           type: coda.ParameterType.Number,
           name: "projectId",
           description: "The ID of the project to add it to. If blank, " +
-            "it will be added to the user's Inbox.",
+              "it will be added to the user's Inbox.",
           optional: true,
         }),
       ],

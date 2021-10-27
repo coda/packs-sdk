@@ -15,7 +15,7 @@ module.exports = {
             argsIgnorePattern: 'context|param',
           },
         ],
-        'max-len': ['error', { code: 80 }],
+        'max-len': ['error', {code: 80}],
         quotes: ['error', 'double'],
         'prefer-const': 'off',
         'prefer-let/prefer-let': 2,
