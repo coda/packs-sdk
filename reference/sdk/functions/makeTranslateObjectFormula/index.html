@@ -12,7 +12,7 @@
         <link rel="canonical" href="https://coda.github.io/packs-sdk/reference/sdk/functions/makeTranslateObjectFormula/">
       
       <link rel="icon" href="../../../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.6">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.2.6">
     
     
       
@@ -523,7 +523,7 @@
   
     <li class="md-nav__item">
       <a href="../../../../samples/topic/column-format/" class="md-nav__link">
-        Column Formats
+        Column formats
       </a>
     </li>
   
@@ -535,7 +535,7 @@
   
     <li class="md-nav__item">
       <a href="../../../../samples/topic/dynamic-sync-table/" class="md-nav__link">
-        Dynamic Sync Tables
+        Dynamic sync tables
       </a>
     </li>
   
@@ -559,7 +559,7 @@
   
     <li class="md-nav__item">
       <a href="../../../../samples/topic/sync-table/" class="md-nav__link">
-        Sync Tables
+        Sync tables
       </a>
     </li>
   
@@ -593,6 +593,18 @@
           Full
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../samples/full/cats/" class="md-nav__link">
+        Cats
+      </a>
+    </li>
+  
+
           
             
   
@@ -2358,7 +2370,7 @@
                 
                 
                 <h1 id="function-maketranslateobjectformula">Function: makeTranslateObjectFormula<a class="headerlink" href="#function-maketranslateobjectformula" title="Permanent link">&para;</a></h1>
-<p>▸ <strong>makeTranslateObjectFormula</strong>&lt;<code>ParamDefsT</code>, <code>ResultT</code>>(<code>__namedParameters</code>): { <code>cacheTtlSecs?</code>: <code>number</code> ; <code>connectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a> ; <code>description</code>: <code>string</code> ; <code>examples?</code>: { <code>params</code>: <a href="../../types/PackFormulaValue/"><code>PackFormulaValue</code></a>[] ; <code>result</code>: <a href="../../types/PackFormulaResult/"><code>PackFormulaResult</code></a>  }[] ; <code>extraOAuthScopes?</code>: <code>string</code>[] ; <code>isAction?</code>: <code>boolean</code> ; <code>isExperimental?</code>: <code>boolean</code> ; <code>isSystem?</code>: <code>boolean</code> ; <code>name</code>: <code>string</code> ; <code>network?</code>: <a href="../../interfaces/Network/"><code>Network</code></a> ; <code>parameters</code>: <code>ParamDefsT</code> ; <code>varargParameters?</code>: <a href="../../types/ParamDefs/"><code>ParamDefs</code></a>  } &amp; { <code>execute</code>: (<code>params</code>: <a href="../../types/ParamValues/"><code>ParamValues</code></a>&lt;<code>ParamDefsT</code>>, <code>context</code>: <a href="../../interfaces/ExecutionContext/"><code>ExecutionContext</code></a>) =&gt; <code>Promise</code>&lt;<a href="../../types/SchemaType/"><code>SchemaType</code></a>&lt;<code>ResultT</code>>> ; <code>resultType</code>: <a href="../../enums/Type/#object"><code>object</code></a> ; <code>schema</code>: <code>undefined</code> | <code>ResultT</code>  }</p>
+<p>▸ <strong>makeTranslateObjectFormula</strong>&lt;<code>ParamDefsT</code>, <code>ResultT</code>>(<code>__namedParameters</code>): { <code>cacheTtlSecs?</code>: <code>number</code> ; <code>connectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a> ; <code>description</code>: <code>string</code> ; <code>examples?</code>: { <code>params</code>: <a href="../../types/PackFormulaValue/"><code>PackFormulaValue</code></a>[] ; <code>result</code>: <a href="../../types/PackFormulaResult/"><code>PackFormulaResult</code></a>  }[] ; <code>extraOAuthScopes?</code>: <code>string</code>[] ; <code>isAction?</code>: <code>boolean</code> ; <code>isExperimental?</code>: <code>boolean</code> ; <code>isSystem?</code>: <code>boolean</code> ; <code>name</code>: <code>string</code> ; <code>network?</code>: <a href="../../interfaces/Network/"><code>Network</code></a> ; <code>parameters</code>: <code>ParamDefsT</code> ; <code>varargParameters?</code>: <a href="../../types/ParamDefs/"><code>ParamDefs</code></a>  } &amp; { <code>execute</code>: (<code>params</code>: <a href="../../types/ParamValues/"><code>ParamValues</code></a>&lt;<code>ParamDefsT</code>>, <code>context</code>: <a href="../../interfaces/ExecutionContext/"><code>ExecutionContext</code></a>) =&gt; <code>Promise</code>&lt;<a href="../../types/SchemaType/"><code>SchemaType</code></a>&lt;<code>ResultT</code>>> ; <code>resultType</code>: <a href="../../enums/Type/#object"><code>object</code></a> ; <code>schema</code>: <code>undefined</code> | <code>ResultT</code> = response.schema }</p>
 <h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -2394,7 +2406,7 @@
 </tbody>
 </table>
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h4>
-<p>{ <code>cacheTtlSecs?</code>: <code>number</code> ; <code>connectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a> ; <code>description</code>: <code>string</code> ; <code>examples?</code>: { <code>params</code>: <a href="../../types/PackFormulaValue/"><code>PackFormulaValue</code></a>[] ; <code>result</code>: <a href="../../types/PackFormulaResult/"><code>PackFormulaResult</code></a>  }[] ; <code>extraOAuthScopes?</code>: <code>string</code>[] ; <code>isAction?</code>: <code>boolean</code> ; <code>isExperimental?</code>: <code>boolean</code> ; <code>isSystem?</code>: <code>boolean</code> ; <code>name</code>: <code>string</code> ; <code>network?</code>: <a href="../../interfaces/Network/"><code>Network</code></a> ; <code>parameters</code>: <code>ParamDefsT</code> ; <code>varargParameters?</code>: <a href="../../types/ParamDefs/"><code>ParamDefs</code></a>  } &amp; { <code>execute</code>: (<code>params</code>: <a href="../../types/ParamValues/"><code>ParamValues</code></a>&lt;<code>ParamDefsT</code>>, <code>context</code>: <a href="../../interfaces/ExecutionContext/"><code>ExecutionContext</code></a>) =&gt; <code>Promise</code>&lt;<a href="../../types/SchemaType/"><code>SchemaType</code></a>&lt;<code>ResultT</code>>> ; <code>resultType</code>: <a href="../../enums/Type/#object"><code>object</code></a> ; <code>schema</code>: <code>undefined</code> | <code>ResultT</code>  }</p>
+<p>{ <code>cacheTtlSecs?</code>: <code>number</code> ; <code>connectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a> ; <code>description</code>: <code>string</code> ; <code>examples?</code>: { <code>params</code>: <a href="../../types/PackFormulaValue/"><code>PackFormulaValue</code></a>[] ; <code>result</code>: <a href="../../types/PackFormulaResult/"><code>PackFormulaResult</code></a>  }[] ; <code>extraOAuthScopes?</code>: <code>string</code>[] ; <code>isAction?</code>: <code>boolean</code> ; <code>isExperimental?</code>: <code>boolean</code> ; <code>isSystem?</code>: <code>boolean</code> ; <code>name</code>: <code>string</code> ; <code>network?</code>: <a href="../../interfaces/Network/"><code>Network</code></a> ; <code>parameters</code>: <code>ParamDefsT</code> ; <code>varargParameters?</code>: <a href="../../types/ParamDefs/"><code>ParamDefs</code></a>  } &amp; { <code>execute</code>: (<code>params</code>: <a href="../../types/ParamValues/"><code>ParamValues</code></a>&lt;<code>ParamDefsT</code>>, <code>context</code>: <a href="../../interfaces/ExecutionContext/"><code>ExecutionContext</code></a>) =&gt; <code>Promise</code>&lt;<a href="../../types/SchemaType/"><code>SchemaType</code></a>&lt;<code>ResultT</code>>> ; <code>resultType</code>: <a href="../../enums/Type/#object"><code>object</code></a> ; <code>schema</code>: <code>undefined</code> | <code>ResultT</code> = response.schema }</p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
 <p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1133">api.ts:1133</a></p>
                 

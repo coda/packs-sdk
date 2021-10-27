@@ -12,7 +12,7 @@
         <link rel="canonical" href="https://coda.github.io/packs-sdk/samples/topic/authentication/">
       
       <link rel="icon" href="../../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.6">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.2.6">
     
     
       
@@ -67,7 +67,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#authentication" class="md-skip">
+        <a href="#authentication-samples" class="md-skip">
           Skip to content
         </a>
       
@@ -537,7 +537,7 @@
   
     <li class="md-nav__item">
       <a href="../column-format/" class="md-nav__link">
-        Column Formats
+        Column formats
       </a>
     </li>
   
@@ -549,7 +549,7 @@
   
     <li class="md-nav__item">
       <a href="../dynamic-sync-table/" class="md-nav__link">
-        Dynamic Sync Tables
+        Dynamic sync tables
       </a>
     </li>
   
@@ -573,7 +573,7 @@
   
     <li class="md-nav__item">
       <a href="../sync-table/" class="md-nav__link">
-        Sync Tables
+        Sync tables
       </a>
     </li>
   
@@ -607,6 +607,18 @@
           Full
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/cats/" class="md-nav__link">
+        Cats
+      </a>
+    </li>
+  
+
           
             
   
@@ -2355,7 +2367,7 @@
                   </a>
                 
                 
-                <h1 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h1>
+                <h1 id="authentication-samples">Authentication samples<a class="headerlink" href="#authentication-samples" title="Permanent link">&para;</a></h1>
 <p>The SDK broadly divides authentication into two categories: authentication that is tied to the user of the pack vs authentication that is managed by the system, aka the pack author. In the pack definition the former is known as <code>defaultAuthentication</code> and the latter <code>systemConnectionAuthentication</code>. You will typically specify one or the other in your pack definition, or neither if your pack does not make http requests or those requests do not require authentication.</p>
 <p>Default authentication is the most common. Specify this if each user of your pack should log in with OAuth, or have their own API key, or whatever user-specific token is necessary for the pack to be able to retrieve data that is specific to that user.</p>
 <p>Use system authentication if you as the pack author will provide the necessary tokens to successfully make http requests within your pack. An example would be if your pack returns weather forecasts and the API involved requires an API key, but individual users need not provide their own API key. You as the pack author will register an API key and provide it to Coda, and Coda will apply it to all pack requests regardless of the user.</p>
@@ -2365,7 +2377,7 @@
 <span class="p">});</span>
 </code></pre></div>
 </div>
-<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">Todoist (OAuth2)</label><div class="tabbed-content">
+<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">OAuth2 (Todoist)</label><div class="tabbed-content">
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
 <span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
 
@@ -2396,6 +2408,8 @@
 </code></pre></div>
 </div>
 </div>
+                
+                  
                 
               
               
@@ -2431,13 +2445,13 @@
       
       
         
-        <a href="../column-format/" class="md-footer__link md-footer__link--next" aria-label="Next: Column Formats" rel="next">
+        <a href="../column-format/" class="md-footer__link md-footer__link--next" aria-label="Next: Column formats" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Column Formats
+              Column formats
             </div>
           </div>
           <div class="md-footer__button md-icon">

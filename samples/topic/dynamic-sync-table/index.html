@@ -12,11 +12,11 @@
         <link rel="canonical" href="https://coda.github.io/packs-sdk/samples/topic/dynamic-sync-table/">
       
       <link rel="icon" href="../../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.2.6">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.2.6">
     
     
       
-        <title>Dynamic Sync Tables - Coda Packs SDK</title>
+        <title>Dynamic sync tables - Coda Packs SDK</title>
       
     
     
@@ -67,7 +67,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#dynamic-sync-tables" class="md-skip">
+        <a href="#dynamic-sync-table-sample" class="md-skip">
           Skip to content
         </a>
       
@@ -105,7 +105,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Dynamic Sync Tables
+              Dynamic sync tables
             
           </span>
         </div>
@@ -527,7 +527,7 @@
   
     <li class="md-nav__item">
       <a href="../column-format/" class="md-nav__link">
-        Column Formats
+        Column formats
       </a>
     </li>
   
@@ -548,7 +548,7 @@
       
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Dynamic Sync Tables
+        Dynamic sync tables
       </a>
       
     </li>
@@ -573,7 +573,7 @@
   
     <li class="md-nav__item">
       <a href="../sync-table/" class="md-nav__link">
-        Sync Tables
+        Sync tables
       </a>
     </li>
   
@@ -607,6 +607,18 @@
           Full
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/cats/" class="md-nav__link">
+        Cats
+      </a>
+    </li>
+  
+
           
             
   
@@ -2355,7 +2367,7 @@
                   </a>
                 
                 
-                <h1 id="dynamic-sync-tables">Dynamic Sync Tables<a class="headerlink" href="#dynamic-sync-tables" title="Permanent link">&para;</a></h1>
+                <h1 id="dynamic-sync-table-sample">Dynamic sync table sample<a class="headerlink" href="#dynamic-sync-table-sample" title="Permanent link">&para;</a></h1>
 <p>Most sync tables have schemas that can be statically defined. For example, if you're writing a sync of a user's Google Calendar events, the structure of an Event from the Google Calendar API is well-known and you can write a schema for what your table should contain.</p>
 <p>In certain cases, you may want to sync data whose structure is not known in advance and may depend on the user doing the sync. For example, Coda's Jira pack allows users to sync data from their Jira instance, but Jira lets users create arbitrary custom fields for their Issue objects. So the schema of the Issues sync table is not known in advance; it depends on the Jira account that the user is syncing from.</p>
 <p>Coda supports "dynamic" sync tables for cases like these. Instead of including a static schema in your sync table definition, you include a formula that returns a schema. This formula can use the fetcher to make authenticated http requests to your Pack's API so that you may retrieve any necessary info from that third-party service needed to construct an appropriate schema.</p>
@@ -2429,6 +2441,8 @@
 </div>
 </div>
                 
+                  
+                
               
               
                 
@@ -2447,7 +2461,7 @@
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../column-format/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Column Formats" rel="prev">
+        <a href="../column-format/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Column formats" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -2456,7 +2470,7 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              Column Formats
+              Column formats
             </div>
           </div>
         </a>
