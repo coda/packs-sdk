@@ -12,7 +12,7 @@ Use system authentication if you as the pack author will provide the necessary t
       type: coda.AuthenticationType.HeaderBearerToken,
     });
     ```
-=== "Todoist (OAuth2)"
+=== "OAuth2 (Todoist)"
     ```ts
     import * as coda from "@codahq/packs-sdk";
     export const pack = coda.newPack();
