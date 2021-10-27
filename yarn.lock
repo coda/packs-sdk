@@ -50,6 +50,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@getify/eslint-plugin-proper-arrows@^11.0.3":
+  version "11.0.3"
+  resolved "https://registry.yarnpkg.com/@getify/eslint-plugin-proper-arrows/-/eslint-plugin-proper-arrows-11.0.3.tgz#d2f123c16303ff4c181671eaf6b02aba0fbca48b"
+  integrity sha512-kkcE0HAxATsBOt6f3Pf30PAz6CtUE/qfmpj06+vby4E/653YELfQ/+znfnedfZzY5A2UCcKDHy/7NA/UAh0xUg==
+
 "@humanwhocodes/config-array@^0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.5.0.tgz#1407967d4c6eecd7388f83acf1eaf4d0c6e58ef9"

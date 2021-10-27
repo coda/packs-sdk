@@ -7,8 +7,8 @@ const pack = coda.newPack();
 const MySchema = coda.makeObjectSchema({
   type: coda.ValueType.Object,
   properties: {
-    property1: {type: coda.ValueType.Number},
-    property2: {type: coda.ValueType.String},
+    property1: { type: coda.ValueType.Number },
+    property2: { type: coda.ValueType.String },
     // Add more properties here.
   },
   id: "property1", // Which property above is a unique ID.
@@ -31,7 +31,7 @@ pack.addFormula({
   ],
   resultType: coda.ValueType.Object,
   schema: MySchema,
-  execute: async ([param], context) => {
+  execute: async function ([param], context) {
     return {
       property1: 123,
       property2: param,

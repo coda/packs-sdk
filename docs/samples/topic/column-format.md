@@ -51,7 +51,7 @@ For example, the Weather pack has a column format `Current Weather`; when applie
           optional: true,
         }),
       ],
-      execute: async ([input, byWord = false]) => {
+      execute: async function ([input, byWord = false]) {
         let separator = "";
         if (byWord) {
           separator = " ";
@@ -87,7 +87,7 @@ For example, the Weather pack has a column format `Current Weather`; when applie
       ],
       resultType: coda.ValueType.String,
       codaType: coda.ValueHintType.ImageReference,
-      execute: async ([text], context) => {
+      execute: async function ([text], context) {
         let url = "https://cataas.com/cat/says/" + encodeURIComponent(text);
         url = coda.withQueryParams(url, {
           json: true,

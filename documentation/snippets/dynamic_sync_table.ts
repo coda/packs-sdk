@@ -6,15 +6,15 @@ const pack = coda.newPack();
 
 pack.addDynamicSyncTable({
   name: "<User-visible name for the sync table>",
-  getName: coda.makeMetadataFormula(async context => {
+  getName: async function (context) {
     let datasourceUrl = context.sync!.dynamicUrl!;
     // TODO: Fetch metdata about the datasource and return the name.
     return "<Datasource Name>";
-  }),
-  getSchema: coda.makeMetadataFormula(async context => {
+  },
+  getSchema: async function (context) {
     let datasourceUrl = context.sync!.dynamicUrl!;
     // TODO: Fetch metdata about the datasource and get the list of fields.
-    let propreties = {
+    let properties = {
       // TODO: Create a property for each field.
     };
     let id = "<Determine the field containing a unique ID>";
@@ -30,16 +30,16 @@ pack.addDynamicSyncTable({
           name: "<User-visible name for the column containing the schema>",
           dynamicUrl: datasourceUrl,
         },
-        properties: propreties,
+        properties: properties,
         id: id,
         primary: primary,
         featured: featured,
       }),
     });
-  }),
-  getDisplayUrl: coda.makeMetadataFormula(async context => {
+  },
+  getDisplayUrl: async function (context) {
     return context.sync!.dynamicUrl!;
-  }),
+  },
   formula: {
     name: "<Name of the sync formula, not show to the user>",
     description: "<Help text for the sync formula, not show to the user>",
@@ -51,11 +51,11 @@ pack.addDynamicSyncTable({
       }),
       // Add more parameters here and in the array below.
     ],
-    execute: async ([param], context) => {
+    execute: async function ([param], context) {
       let datasourceUrl = context.sync!.dynamicUrl!;
       let url = "<URL to pull data from>";
       let response = await context.fetcher.fetch({
-        method: "GET", 
+        method: "GET",
         url: url,
       });
       let items = response.body.items;

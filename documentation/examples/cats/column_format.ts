@@ -23,7 +23,7 @@ pack.addFormula({
   ],
   resultType: coda.ValueType.String,
   codaType: coda.ValueHintType.ImageReference,
-  execute: async ([text], context) => {
+  execute: async function ([text], context) {
     let url = "https://cataas.com/cat/says/" + encodeURIComponent(text);
     url = coda.withQueryParams(url, {
       json: true,

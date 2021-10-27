@@ -16,7 +16,7 @@ A **formula (including a button)** is a JavaScript function that will be exposed
         // Add more parameters here and in the array below.
       ],
       resultType: coda.ValueType.String,
-      execute: async ([param], context) => {
+      execute: async function ([param], context) {
         return "Hello " + param;
       },
     });
@@ -47,7 +47,7 @@ A **formula (including a button)** is a JavaScript function that will be exposed
       ],
       resultType: coda.ValueType.String,
       codaType: coda.ValueHintType.ImageReference,
-      execute: async ([text, filter], context) => {
+      execute: async function ([text, filter], context) {
         let url = "https://cataas.com/cat";
         if (text) {
           url += "/says/" + encodeURIComponent(text);

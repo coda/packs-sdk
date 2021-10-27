@@ -30,7 +30,7 @@ Use system authentication if you as the pack author will provide the necessary t
       scopes: ["data:read_write"],
 
       // Determines the display name of the connected account.
-      getConnectionName: async context => {
+      getConnectionName: async function (context) {
         let url = coda.withQueryParams("https://api.todoist.com/sync/v8/sync", {
           resource_types: JSON.stringify(["user"]),
         });

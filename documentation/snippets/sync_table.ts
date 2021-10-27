@@ -7,8 +7,8 @@ const pack = coda.newPack();
 const MySchema = coda.makeObjectSchema({
   type: coda.ValueType.Object,
   properties: {
-    property1: {type: coda.ValueType.Number},
-    property2: {type: coda.ValueType.String},
+    property1: { type: coda.ValueType.Number },
+    property2: { type: coda.ValueType.String },
     // Add more properties here.
   },
   id: "property1", // Which property above is a unique ID.
@@ -33,10 +33,10 @@ pack.addSyncTable({
       }),
       // Add more parameters here and in the array below.
     ],
-    execute: async ([param], context) => {
+    execute: async function ([param], context) {
       let url = "<URL to pull data from>";
       let response = await context.fetcher.fetch({
-        method: "GET", 
+        method: "GET",
         url: url,
       });
       let items = response.body.items;
