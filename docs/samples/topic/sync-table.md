@@ -7,8 +7,8 @@ A **sync table** is how to bring structured data from a third-party into Coda. A
     const MySchema = coda.makeObjectSchema({
       type: coda.ValueType.Object,
       properties: {
-        property1: { type: coda.ValueType.Number },
-        property2: { type: coda.ValueType.String },
+        property1: {type: coda.ValueType.Number},
+        property2: {type: coda.ValueType.String},
         // Add more properties here.
       },
       id: "property1", // Which property above is a unique ID.

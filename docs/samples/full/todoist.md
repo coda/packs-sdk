@@ -66,8 +66,8 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       type: coda.ValueType.Object,
       codaType: coda.ValueHintType.Reference,
       properties: {
-        name: { type: coda.ValueType.String, required: true },
-        projectId: { type: coda.ValueType.Number, required: true },
+        name: {type: coda.ValueType.String, required: true},
+        projectId: {type: coda.ValueType.Number, required: true},
       },
       primary: "name",
       id: "projectId",
@@ -127,8 +127,8 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       type: coda.ValueType.Object,
       codaType: coda.ValueHintType.Reference,
       properties: {
-        name: { type: coda.ValueType.String, required: true },
-        taskId: { type: coda.ValueType.Number, required: true },
+        name: {type: coda.ValueType.String, required: true},
+        taskId: {type: coda.ValueType.Number, required: true},
       },
       primary: "name",
       id: "taskId",
@@ -193,7 +193,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
     /**
      * Convert a Project API response to a Project schema.
      */
-    function toProject(project: any, withReferences = false) {
+    function toProject(project: any, withReferences=false) {
       let result: any = {
         name: project.name,
         projectId: project.id,
@@ -214,7 +214,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
     /**
      * Convert a Task API response to a Task schema.
      */
-    function toTask(task: any, withReferences = false) {
+    function toTask(task: any, withReferences=false) {
       let result: any = {
         name: task.content,
         description: task.description,
