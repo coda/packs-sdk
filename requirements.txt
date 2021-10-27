@@ -5,7 +5,7 @@
 #    pipenv lock --requirements
 #
 
--i https://pypi.org/simple/
+-i https://pypi.org/simple
 bracex==2.2; python_version >= '3.6'
 click==8.0.3; python_version >= '3.6'
 ghp-import==2.0.2

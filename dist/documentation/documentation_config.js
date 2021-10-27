@@ -142,7 +142,17 @@ exports.Examples = [
                 codeFile: './snippets/column_format.ts',
             },
             {
-                name: 'Todoist',
+                name: 'Text (Reverse)',
+                content: '',
+                codeFile: './examples/column-format/reverse.ts',
+            },
+            {
+                name: 'Image (Cats)',
+                content: '',
+                codeFile: './examples/cats/column_format.ts',
+            },
+            {
+                name: 'Rich Data (Todoist)',
                 content: '',
                 codeFile: './examples/todoist/column_format.ts',
             },
@@ -164,7 +174,7 @@ exports.Examples = [
                 codeFile: './snippets/user_authentication.ts',
             },
             {
-                name: 'Todoist (OAuth2)',
+                name: 'OAuth2 (Todoist)',
                 content: '',
                 codeFile: './examples/todoist/auth.ts',
             },
@@ -203,7 +213,12 @@ exports.Examples = [
                 codeFile: './snippets/formula/string_formula.ts',
             },
             {
-                name: 'Todoist',
+                name: 'Image (Cats)',
+                content: '',
+                codeFile: './examples/cats/formula.ts',
+            },
+            {
+                name: 'Rich Data (Todoist)',
                 content: '',
                 codeFile: './examples/todoist/formula.ts',
             },
@@ -223,6 +238,11 @@ exports.Examples = [
                 name: 'Template',
                 content: '',
                 codeFile: './snippets/sync_table.ts',
+            },
+            {
+                name: 'Cats',
+                content: '',
+                codeFile: './examples/cats/sync_table.ts',
             },
             {
                 name: 'Todoist',
@@ -312,6 +332,22 @@ exports.Examples = [
                 name: 'pack.ts',
                 content: '',
                 codeFile: './examples/todoist/full.ts',
+            },
+        ],
+    },
+    {
+        name: 'Cats',
+        category: types_1.ExampleCategory.Full,
+        triggerTokens: [],
+        contentFile: './examples/cats/README.md',
+        linkData: {
+            type: types_2.UrlType.SamplePage,
+        },
+        exampleSnippets: [
+            {
+                name: 'pack.ts',
+                content: '',
+                codeFile: './examples/cats/full.ts',
             },
         ],
     },
