@@ -216,7 +216,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../../guides/advanced/libraries/" class="md-tabs__link">
+      <a href="../../../../guides/advanced/authentication/" class="md-tabs__link">
         Guides
       </a>
     </li>
@@ -273,6 +273,18 @@
   
 
       
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../../../support/" class="md-tabs__link">
+      Support
+    </a>
+  </li>
+
+      
     </ul>
   </div>
 </nav>
@@ -291,9 +303,7 @@
   
 
 
-  
-
-<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../../../.." title="Coda Packs SDK" class="md-nav__button md-logo" aria-label="Coda Packs SDK" data-md-component="logo">
       
@@ -439,6 +449,30 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../../guides/advanced/authentication/" class="md-nav__link">
+        Authentication
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../guides/advanced/fetcher/" class="md-nav__link">
+        Fetching remote data
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../../guides/advanced/libraries/" class="md-nav__link">
         Using libraries
       </a>
@@ -546,6 +580,18 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../../samples/topic/fetcher/" class="md-nav__link">
+        Fetcher
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../../samples/topic/formula/" class="md-nav__link">
         Formulas
       </a>
@@ -613,18 +659,6 @@
     <li class="md-nav__item">
       <a href="../../../../samples/full/daylight/" class="md-nav__link">
         Daylight
-      </a>
-    </li>
-  
-
-          
-            
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../samples/full/hello-fetcher/" class="md-nav__link">
-        Hello Fetcher
       </a>
     </li>
   
@@ -2500,12 +2534,177 @@
   
 
     
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../support/" class="md-nav__link">
+        Support
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
                 </div>
               </div>
             
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hierarchy" class="md-nav__link">
+    Hierarchy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#properties" class="md-nav__link">
+    Properties
+  </a>
+  
+    <nav class="md-nav" aria-label="Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additionalparams" class="md-nav__link">
+    additionalParams
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authorizationurl" class="md-nav__link">
+    authorizationUrl
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defaultconnectiontype" class="md-nav__link">
+    defaultConnectionType
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#endpointdomain" class="md-nav__link">
+    endpointDomain
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#endpointkey" class="md-nav__link">
+    endpointKey
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getconnectionname" class="md-nav__link">
+    getConnectionName
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getconnectionuserid" class="md-nav__link">
+    getConnectionUserId
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instructionsurl" class="md-nav__link">
+    instructionsUrl
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postsetup" class="md-nav__link">
+    postSetup
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requiresendpointurl" class="md-nav__link">
+    requiresEndpointUrl
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scopes" class="md-nav__link">
+    scopes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tokenprefix" class="md-nav__link">
+    tokenPrefix
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tokenqueryparam" class="md-nav__link">
+    tokenQueryParam
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tokenurl" class="md-nav__link">
+    tokenUrl
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type" class="md-nav__link">
+    type
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
             
           
           <div class="md-content" data-md-component="content">
@@ -2726,7 +2925,7 @@ at the end of the OAuth handshake flow.</p>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.instant", "navigation.tabs", "navigation.sections", "navigation.indexes", "toc.integrate"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.409db549.min.js", "version": null}</script>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.instant", "navigation.tabs", "navigation.sections", "navigation.indexes"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../../assets/javascripts/workers/search.409db549.min.js", "version": null}</script>
     
     
       <script src="../../../../assets/javascripts/bundle.756773cc.min.js"></script>

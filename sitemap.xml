@@ -6,12 +6,27 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://coda.github.io/packs-sdk/support/</loc>
+         <lastmod>2021-10-27</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://coda.github.io/packs-sdk/get-started/cli/</loc>
          <lastmod>2021-10-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/get-started/web/</loc>
+         <lastmod>2021-10-27</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://coda.github.io/packs-sdk/guides/advanced/authentication/</loc>
+         <lastmod>2021-10-27</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://coda.github.io/packs-sdk/guides/advanced/fetcher/</loc>
          <lastmod>2021-10-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -641,11 +656,6 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://coda.github.io/packs-sdk/samples/full/hello-fetcher/</loc>
-         <lastmod>2021-10-27</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
          <loc>https://coda.github.io/packs-sdk/samples/full/hello-world/</loc>
          <lastmod>2021-10-27</lastmod>
          <changefreq>daily</changefreq>
@@ -672,6 +682,11 @@
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/samples/topic/dynamic-sync-table/</loc>
+         <lastmod>2021-10-27</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://coda.github.io/packs-sdk/samples/topic/fetcher/</loc>
          <lastmod>2021-10-27</lastmod>
          <changefreq>daily</changefreq>
     </url>
