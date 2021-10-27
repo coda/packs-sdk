@@ -192,6 +192,7 @@
   },
   {
     "name": "Cats",
+    "category": "Full",
     "triggerTokens": [],
     "exampleFooterLink": "https://coda.github.io/packs-sdk/samples/full/cats",
     "content": "This Pack provides allows you to fetch random cat photos using the [Cat-as-a-service API][cataas]. You can set various parameters for the cat image, such as the width and height, as well as add a text overlay. The Pack provides:\n\n- A formula for fetching a cat photo.\n- A column format that displays the text on top of a cat photo.\n- A sync table that retrieves all available cat photos.\n\n[cataas]: https://cataas.com/",

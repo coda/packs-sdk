@@ -150,10 +150,17 @@ Handlebars.registerHelper('indent', (content, numSpaces) => {
 });
 
 Handlebars.registerHelper('pageTitle', (example: CompiledExample) => {
-  const singularName = example.name.replace(/s$/, '');
-  const isMultiple = example.exampleSnippets.length > 1 &&
-      example.category !== ExampleCategory.Full;
-  return `${singularName} sample${isMultiple ? 's' : ''}`;
+  let name = example.name;
+  let suffix = 'sample';
+  if (example.category === ExampleCategory.Topic) {
+    // Use singular version of the name.
+    name = name.replace(/s$/, '');
+    if (example.exampleSnippets.length > 1) {
+      // Use the suffix "samples" if there are more than one.
+      suffix += 's';
+    }
+  }
+  return `${name} ${suffix}`;
 });
 
 main();
