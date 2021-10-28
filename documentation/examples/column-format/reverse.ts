@@ -34,7 +34,7 @@ pack.addFormula({
       optional: true,
     }),
   ],
-  execute: async ([input, byWord = false]) => {
+  execute: async function ([input, byWord = false]) {
     let separator = "";
     if (byWord) {
       separator = " ";

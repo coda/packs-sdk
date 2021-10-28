@@ -19,7 +19,7 @@ pack.addFormula({
   items: {
     type: coda.ValueType.String,
   },
-  execute: async ([param], context) => {
+  execute: async function ([param], context) {
     return ["Hello", param];
   },
 });

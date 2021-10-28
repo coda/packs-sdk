@@ -43,7 +43,7 @@ pack.addSyncTable({
         description: "Only cats with this tag will be selected.",
         optional: true,
         // Pull the list of tags to use for autocomplete from the API.
-        autocomplete: async (context, search) => {
+        autocomplete: async function (context, search) {
           let response = await context.fetcher.fetch({
             method: "GET",
             url: "https://cataas.com/api/tags",
@@ -54,7 +54,7 @@ pack.addSyncTable({
         },
       }),
     ],
-    execute: async ([tag], context) => {
+    execute: async function ([tag], context) {
       let url = coda.withQueryParams("https://cataas.com/api/cats", {
         tags: tag
       });

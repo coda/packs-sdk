@@ -26,7 +26,7 @@ This Pack provides allows you to fetch random cat photos using the [Cat-as-a-ser
       description: "Only cats with this tag will be selected.",
       optional: true,
       // Pull the list of tags to use for autocomplete from the API.
-      autocomplete: async (context, search) => {
+      autocomplete: async function (context, search) {
         let response = await context.fetcher.fetch({
           method: "GET",
           url: "https://cataas.com/api/tags",
@@ -83,7 +83,8 @@ This Pack provides allows you to fetch random cat photos using the [Cat-as-a-ser
       ],
       resultType: coda.ValueType.String,
       codaType: coda.ValueHintType.ImageReference,
-      execute: async ([text, size, color, width, height, filter, tag], context) => {
+      execute: async function ([text, size, color, width, height, filter, tag],
+        context) {
         let url = "https://cataas.com/cat";
         if (tag) {
           url += "/" + tag;
@@ -155,7 +156,7 @@ This Pack provides allows you to fetch random cat photos using the [Cat-as-a-ser
         parameters: [
           TagParameter,
         ],
-        execute: async ([tag], context) => {
+        execute: async function ([tag], context) {
           let url = coda.withQueryParams("https://cataas.com/api/cats", {
             tags: tag
           });

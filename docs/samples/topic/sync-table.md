@@ -37,10 +37,10 @@ A **sync table** is how to bring structured data from a third-party into Coda. A
           }),
           // Add more parameters here and in the array below.
         ],
-        execute: async ([param], context) => {
+        execute: async function ([param], context) {
           let url = "<URL to pull data from>";
           let response = await context.fetcher.fetch({
-            method: "GET", 
+            method: "GET",
             url: url,
           });
           let items = response.body.items;
@@ -99,7 +99,7 @@ A **sync table** is how to bring structured data from a third-party into Coda. A
             description: "Only cats with this tag will be selected.",
             optional: true,
             // Pull the list of tags to use for autocomplete from the API.
-            autocomplete: async (context, search) => {
+            autocomplete: async function (context, search) {
               let response = await context.fetcher.fetch({
                 method: "GET",
                 url: "https://cataas.com/api/tags",
@@ -110,7 +110,7 @@ A **sync table** is how to bring structured data from a third-party into Coda. A
             },
           }),
         ],
-        execute: async ([tag], context) => {
+        execute: async function ([tag], context) {
           let url = coda.withQueryParams("https://cataas.com/api/cats", {
             tags: tag
           });

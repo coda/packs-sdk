@@ -10,7 +10,7 @@ const TagParameter = coda.makeParameter({
   description: "Only cats with this tag will be selected.",
   optional: true,
   // Pull the list of tags to use for autocomplete from the API.
-  autocomplete: async (context, search) => {
+  autocomplete: async function (context, search) {
     let response = await context.fetcher.fetch({
       method: "GET",
       url: "https://cataas.com/api/tags",
@@ -67,7 +67,8 @@ pack.addFormula({
   ],
   resultType: coda.ValueType.String,
   codaType: coda.ValueHintType.ImageReference,
-  execute: async ([text, size, color, width, height, filter, tag], context) => {
+  execute: async function ([text, size, color, width, height, filter, tag],
+    context) {
     let url = "https://cataas.com/cat";
     if (tag) {
       url += "/" + tag;
@@ -139,7 +140,7 @@ pack.addSyncTable({
     parameters: [
       TagParameter,
     ],
-    execute: async ([tag], context) => {
+    execute: async function ([tag], context) {
       let url = coda.withQueryParams("https://cataas.com/api/cats", {
         tags: tag
       });

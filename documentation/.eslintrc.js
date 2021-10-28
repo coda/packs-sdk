@@ -1,5 +1,8 @@
 module.exports = {
-  plugins: ['prefer-let'],
+  plugins: [
+    'prefer-let',
+    '@getify/proper-arrows',
+  ],
   overrides: [
     {
       files: ['examples/**/*.ts', 'snippets/**/*.ts'],
@@ -18,6 +21,8 @@ module.exports = {
         'prefer-let/prefer-let': 2,
         'prefer-template': 'off',
         '@typescript-eslint/restrict-plus-operands': 0,
+        'func-style': ['error', 'declaration'],
+        '@getify/proper-arrows/where': 'error',
       },
     },
   ],

@@ -16,7 +16,7 @@ pack.addFormula({
     // Add more parameters here and in the array below.
   ],
   resultType: coda.ValueType.Boolean,
-  execute: async ([param], context) => {
+  execute: async function ([param], context) {
     return param === "true";
   },
 });

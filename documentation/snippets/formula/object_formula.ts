@@ -31,7 +31,7 @@ pack.addFormula({
   ],
   resultType: coda.ValueType.Object,
   schema: MySchema,
-  execute: async ([param], context) => {
+  execute: async function ([param], context) {
     return {
       property1: 123,
       property2: param,

@@ -33,10 +33,10 @@ pack.addSyncTable({
       }),
       // Add more parameters here and in the array below.
     ],
-    execute: async ([param], context) => {
+    execute: async function ([param], context) {
       let url = "<URL to pull data from>";
       let response = await context.fetcher.fetch({
-        method: "GET", 
+        method: "GET",
         url: url,
       });
       let items = response.body.items;

@@ -48,7 +48,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       scopes: ["data:read_write"],
 
       // Determines the display name of the connected account.
-      getConnectionName: async context => {
+      getConnectionName: async function (context) {
         let url = coda.withQueryParams("https://api.todoist.com/sync/v8/sync", {
           resource_types: JSON.stringify(["user"]),
         });
