@@ -1,8 +1,8 @@
-import fs from 'fs';
 import AWS from 'aws-sdk';
 import type {Arguments} from 'yargs';
 import S3 from 'aws-sdk/clients/s3';
 import {exec as childExec} from 'child_process';
+import fs from 'fs';
 import {print} from '../testing/helpers';
 import {printAndExit} from '../testing/helpers';
 import {printError} from '../testing/helpers';
