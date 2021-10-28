@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const aws_sdk_1 = __importDefault(require("aws-sdk"));
 const s3_1 = __importDefault(require("aws-sdk/clients/s3"));
 const child_process_1 = require("child_process");
+const fs_1 = __importDefault(require("fs"));
 const helpers_1 = require("../testing/helpers");
 const helpers_2 = require("../testing/helpers");
 const helpers_3 = require("../testing/helpers");
@@ -44,20 +45,28 @@ async function pushDocumentation({ env, forceUpload }) {
     const bucket = getS3Bucket(env);
     const versionedKey = getS3DocVersionedKey();
     const latestKey = getS3LatestDocsKey();
+    const baseIndexFileKey = `${PacksSdkBucketRootPath}/index.html`;
     (0, helpers_1.print)(`${env}: Pushing to bucket ${bucket}.`);
     async function pushDocsDirectory(key) {
         await exec(`aws s3 sync --profile ${env} --region ${AwsRegion} ${BaseGeneratedDocsPath} s3://${bucket}/${key} --delete`);
     }
     try {
+        (0, helpers_1.print)(`${env}: Pushing the base index.html redirect file to the base`);
+        // This assumes that we are running this file from the root path.
+        const redirectIndexHtmlStream = fs_1.default.createReadStream('./documentation/redirect-index.html');
+        await s3
+            .upload({ Bucket: bucket, Key: baseIndexFileKey, Body: redirectIndexHtmlStream, ContentType: 'text/html' })
+            .promise();
+        redirectIndexHtmlStream.destroy();
         if (!forceUpload) {
             const obj = await s3.listObjectsV2({ Bucket: bucket, MaxKeys: 1, Prefix: versionedKey }).promise();
             if ((_a = obj.Contents) === null || _a === void 0 ? void 0 : _a.length) {
                 (0, helpers_2.printAndExit)(`${env}: Trying to upload ${package_json_1.version} but folder already exists in S3.`);
             }
         }
-        (0, helpers_1.print)(`${env}:Pushing the current packs-sdk documentation ${versionedKey}...`);
+        (0, helpers_1.print)(`${env}: Pushing the current packs-sdk documentation ${versionedKey}...`);
         await pushDocsDirectory(versionedKey);
-        (0, helpers_1.print)(`${env}:Pushing the current packs-sdk documentation for ${package_json_1.version} to the 'latest' folder...`);
+        (0, helpers_1.print)(`${env}: Pushing the current packs-sdk documentation for ${package_json_1.version} to the 'latest' folder...`);
         await pushDocsDirectory(latestKey);
         (0, helpers_1.print)(`${env}: The current packs-sdk documentation was pushed to ${versionedKey} successfully.`);
     }
