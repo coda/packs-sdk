@@ -1,3 +1,4 @@
+import fs from 'fs';
 import AWS from 'aws-sdk';
 import type {Arguments} from 'yargs';
 import S3 from 'aws-sdk/clients/s3';
@@ -52,6 +53,7 @@ async function pushDocumentation({env, forceUpload}: Arguments<PushDocumentation
   const bucket = getS3Bucket(env);
   const versionedKey = getS3DocVersionedKey();
   const latestKey = getS3LatestDocsKey();
+  const baseIndexFileKey = `${PacksSdkBucketRootPath}/index.html`;
 
   print(`${env}: Pushing to bucket ${bucket}.`);
 
@@ -62,15 +64,23 @@ async function pushDocumentation({env, forceUpload}: Arguments<PushDocumentation
   }
 
   try {
+    print(`${env}: Pushing the base index.html redirect file to the base`);
+    // This assumes that we are running this file from the root path.
+    const redirectIndexHtmlStream = fs.createReadStream('./documentation/redirect-index.html');
+    await s3
+      .upload({Bucket: bucket, Key: baseIndexFileKey, Body: redirectIndexHtmlStream, ContentType: 'text/html'})
+      .promise();
+    redirectIndexHtmlStream.destroy();
+
     if (!forceUpload) {
       const obj = await s3.listObjectsV2({Bucket: bucket, MaxKeys: 1, Prefix: versionedKey}).promise();
       if (obj.Contents?.length) {
         printAndExit(`${env}: Trying to upload ${version} but folder already exists in S3.`);
       }
     }
-    print(`${env}:Pushing the current packs-sdk documentation ${versionedKey}...`);
+    print(`${env}: Pushing the current packs-sdk documentation ${versionedKey}...`);
     await pushDocsDirectory(versionedKey);
-    print(`${env}:Pushing the current packs-sdk documentation for ${version} to the 'latest' folder...`);
+    print(`${env}: Pushing the current packs-sdk documentation for ${version} to the 'latest' folder...`);
     await pushDocsDirectory(latestKey);
     print(`${env}: The current packs-sdk documentation was pushed to ${versionedKey} successfully.`);
   } catch (err: any) {
