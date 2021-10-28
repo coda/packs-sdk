@@ -1,25 +1,27 @@
-import type {CompiledAutocompleteSnippet} from './types';
-import type {CompiledExample} from './types';
-import type {CompiledExampleSnippet} from './types';
-import type {Example} from './types';
-import {ExampleCategory} from './types';
+import type {CompiledAutocompleteSnippet} from '../types';
+import type {CompiledExample} from '../types';
+import type {CompiledExampleSnippet} from '../types';
+import type {Example} from '../types';
+import {ExampleCategory} from '../types';
 import {Examples} from './documentation_config';
 import * as Handlebars from 'handlebars';
 import {Snippets} from './documentation_config';
-import {UrlType} from './types';
+import {UrlType} from '../types';
 import * as fs from 'fs';
 import path from 'path';
 
 const CodeBegin = '// BEGIN\n';
 const CodeEnd = '// END\n';
-const BaseDir = path.join(__dirname, '..');
+const BaseDir = path.join(__dirname, '../../');
 const DocumentationRoot = path.join(BaseDir, 'documentation');
 const TypeDocsRoot = path.join(BaseDir, 'docs');
 const EmbeddedSnippetsRoot = path.join(TypeDocsRoot, 'embedded-snippets');
 const SnippetEmbedTemplate = fs.readFileSync(path.join(DocumentationRoot, 'snippet_embed_template.html'), 'utf8');
 const ExampleDirName = 'samples';
 const ExamplePagesRoot = path.join(TypeDocsRoot, ExampleDirName);
-const ExamplePageTemplate = Handlebars.compile(fs.readFileSync(path.join(DocumentationRoot, 'example_page_template.md'), 'utf8'));
+const ExamplePageTemplate = Handlebars.compile(
+  fs.readFileSync(path.join(DocumentationRoot, 'example_page_template.md'), 'utf8'),
+);
 const SdkReferenceLink = 'https://coda.github.io/packs-sdk';
 const SamplePageLink = `${SdkReferenceLink}/${ExampleDirName}`;
 const PageFileExtension = 'md';
@@ -81,7 +83,7 @@ function compileExamples() {
   fs.writeFileSync(path.join(DocumentationRoot, 'generated/examples.json'), JSON.stringify(compiledExamples, null, 2));
 }
 
-function getCodeFile(file: string, requireBegin=false): string {
+function getCodeFile(file: string, requireBegin = false): string {
   const data = fs.readFileSync(path.join(DocumentationRoot, file), 'utf8');
   const begin = data.indexOf(CodeBegin);
   if (requireBegin && begin === -1) {
@@ -116,7 +118,7 @@ function compileSnippetEmbed(codeFile: string) {
   const snippetFileName = path.basename(codeFile).split('.')[0];
 
   if (!fs.existsSync(snippetDirPath)) {
-    fs.mkdirSync(snippetDirPath, { recursive: true });
+    fs.mkdirSync(snippetDirPath, {recursive: true});
   }
 
   fs.writeFileSync(path.join(snippetDirPath, `${snippetFileName}.html`), exampleSnippetEmbed);
@@ -128,7 +130,7 @@ function compileExamplePage(example: Example, compiledExample: CompiledExample) 
   const pagePath = path.join(ExamplePagesRoot, getExamplePagePath(example));
 
   if (!fs.existsSync(pagePath)) {
-    fs.mkdirSync(pagePath, { recursive: true });
+    fs.mkdirSync(pagePath, {recursive: true});
   }
 
   fs.writeFileSync(path.join(pagePath, pageFileName), examplePageContent);

@@ -134,7 +134,7 @@ compile-samples:
 
 .PHONY: generated-documentation
 generated-documentation: compile-samples
-	node -r ts-node/register documentation/documentation_compiler.ts
+	node -r ts-node/register documentation/scripts/documentation_compiler.ts
 
 .PHONY: typedoc
 typedoc:
@@ -172,19 +172,19 @@ build-mkdocs:
 # make publish-docs-<env> FLAGS=--forceUpload
 .PHONY: publish-docs-adhoc
 publish-docs-adhoc:
-	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push adhoc ${FLAGS})
+	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/scripts/documentation_publisher.ts push adhoc ${FLAGS})
 
 .PHONY: publish-docs-head
 publish-docs-head:
-	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push head ${FLAGS})
+	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/scripts/documentation_publisher.ts push head ${FLAGS})
 
 .PHONY: publish-docs-staging
 publish-docs-staging:
-	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push staging ${FLAGS})
+	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/scripts/documentation_publisher.ts push staging ${FLAGS})
 
 .PHONY: publish-docs-prod
 publish-docs-prod:
-	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/documentation_publisher.ts push prod ${FLAGS})
+	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/scripts/documentation_publisher.ts push prod ${FLAGS})
 
 .PHONY: publish-docs-gh-pages
 publish-docs-gh-pages:
