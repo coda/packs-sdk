@@ -1,4 +1,8 @@
-# Authentication
+---
+title: Authentication
+---
+
+# Authentication samples
 
 The SDK broadly divides authentication into two categories: authentication that is tied to the user of the pack vs authentication that is managed by the system, aka the pack author. In the pack definition the former is known as `defaultAuthentication` and the latter `systemConnectionAuthentication`. You will typically specify one or the other in your pack definition, or neither if your pack does not make http requests or those requests do not require authentication.
 

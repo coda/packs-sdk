@@ -1,6 +1,7 @@
 [
   {
-    "name": "Column Formats",
+    "name": "Column formats",
+    "category": "Topic",
     "triggerTokens": [
       "addColumnFormat"
     ],
@@ -31,6 +32,7 @@
   },
   {
     "name": "Authentication",
+    "category": "Topic",
     "triggerTokens": [
       "setSystemAuthentication",
       "setUserAuthentication"
@@ -51,7 +53,8 @@
     ]
   },
   {
-    "name": "Dynamic Sync Tables",
+    "name": "Dynamic sync tables",
+    "category": "Topic",
     "triggerTokens": [
       "addDynamicSyncTable"
     ],
@@ -67,6 +70,7 @@
   },
   {
     "name": "Formulas",
+    "category": "Topic",
     "triggerTokens": [
       "addFormula"
     ],
@@ -91,7 +95,8 @@
     ]
   },
   {
-    "name": "Sync Tables",
+    "name": "Sync tables",
+    "category": "Topic",
     "triggerTokens": [
       "addSyncTable"
     ],
@@ -116,7 +121,34 @@
     ]
   },
   {
+    "name": "Fetcher",
+    "category": "Topic",
+    "triggerTokens": [
+      "fetch"
+    ],
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/reference/sdk/interfaces/Fetcher",
+    "content": "Communicating with an API or external server is done through the `Fetcher`, a custom interface for making HTTP requests. The fetcher is made available through the `context` object passed in to formulas. The fetcher can only send requests to URLs that have have a domain name that's been registered using `addNetworkDomain`. The fetcher runs asynchronously, and is typically run within an `async` function that will `await` the result.",
+    "exampleSnippets": [
+      {
+        "name": "Template (GET)",
+        "content": "",
+        "code": "let response = await context.fetcher.fetch({\n  method: \"GET\",\n  url: \"<The URL to fetch>\",\n  headers: {\n    \"<HeaderName>\": \"<HeaderValue>\",\n    // Add more headers as needed.\n  },\n});\nlet data = response.body;"
+      },
+      {
+        "name": "Template (POST)",
+        "content": "",
+        "code": "let payload = {\n  // Whatever JSON structure the API expects.\n};\nlet response = await context.fetcher.fetch({\n  method: \"POST\",\n  url: \"<The URL to send the request to>\",\n  headers: {\n    \"Content-Type\": \"application/json\",\n    // Add more headers as needed.\n  },\n  body: JSON.stringify(payload),\n});\nlet data = response.body;"
+      },
+      {
+        "name": "JSON Array (Bacon Ipsum)",
+        "content": "",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// When using the fetcher, this is the domain of the API that your pack makes\n// fetcher requests to.\npack.addNetworkDomain(\"baconipsum.com\");\n\n// This line adds a new formula to this Pack.\npack.addFormula({\n  name: \"BaconIpsum\",\n  description: \"Returns meat-themed lorem ipsum copy.\",\n  parameters: [], // No parameters required.\n  resultType: coda.ValueType.String,\n\n  // This function is declared async to that is can wait for the fetcher to\n  // complete. The context parameter provides access to the fetcher.\n  execute: async function ([], context) {\n    let url = \"https://baconipsum.com/api/?type=meat-and-filler\";\n\n    // The fetcher's fetch method makes the request. The await keyword is used\n    // to wait for the API's response before continuing on through the code.\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: url\n    });\n\n    // The API returns an array of strings, which is automatically parsed by\n    // the fetcher into a JavaScript object.\n    let paragraphs = response.body;\n\n    // Return the paragraphs separated by a blank line.\n    return paragraphs.join(\"\\n\\n\");\n  },\n});"
+      }
+    ]
+  },
+  {
     "name": "Hello World",
+    "category": "Full",
     "triggerTokens": [],
     "exampleFooterLink": "https://coda.io/@coda/make-a-pack-private-alpha/hello-world-16",
     "content": "This is an example which creates a single formula called Hello, that takes in a string called name and returns “Hello, name !“.",
@@ -130,6 +162,7 @@
   },
   {
     "name": "Daylight",
+    "category": "Full",
     "triggerTokens": [],
     "exampleFooterLink": "https://coda.io/@coda/make-a-pack-private-alpha/daylight-29",
     "content": "This Pack provides a `Daylight` formula that determines the daylight, sunrise,\n and sunset at a given location using the [Sunrise Sunset API][api]. It accepts\n a latitude, longitude, an optional date and returns a rich object (schema) as\n a result. It uses the `Fetcher` to pull data from an external API.\n\n [api]: https://sunrise-sunset.org/api",
@@ -142,20 +175,8 @@
     ]
   },
   {
-    "name": "Hello Fetcher",
-    "triggerTokens": [],
-    "exampleFooterLink": "https://coda.io/@coda/make-a-pack-private-alpha/hello-fetcher-28",
-    "content": "This is an example which creates a single formula titled FetchIpsum, which returns a string of lorem ipsum copy.",
-    "exampleSnippets": [
-      {
-        "name": "Hello Fetcher",
-        "content": "",
-        "code": "// This import statement gives you access to all parts of the Coda Packs SDK.\nimport * as coda from \"@codahq/packs-sdk\";\n\n// This line creates your new Pack.\nexport const pack = coda.newPack();\n\n// When using the fetcher, this is the domain of the API that your pack makes\n// fetcher requests to.\npack.addNetworkDomain(\"baconipsum.com\");\n\n// This line adds a new formula to this Pack.\npack.addFormula({\n  // Remember, the formula name cannot have spaces in it.\n  name: \"FetchIpsum\",\n  description: \"A simple fetcher example returning some lorem ipsum copy.\",\n\n  // This formula does not need any user inputs, so the parameters field is\n  // empty.\n  parameters: [],\n\n  // In this formula, we're returning a string.\n  resultType: coda.ValueType.String,\n\n  // Everything inside this execute statement will happen anytime your Coda\n  // formula is called in a doc. An array of all user inputs is passed as the\n  // 1st parameter. The context object is always the 2nd parameter and is used\n  // for fetching data and debugging.\n  execute: async function ([], context) {\n    let url = \"https://baconipsum.com/api/?type=meat-and-filler\";\n\n    // context.fetcher.fetch allows you to pull in external data, specifying\n    // things like the HTTP method and URL.\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: url\n    });\n\n    // The entire body of the response contains the lorem ipsum text to be\n    // returned.\n    return response.body;\n  },\n});"
-      }
-    ]
-  },
-  {
     "name": "Number Array",
+    "category": "Full",
     "triggerTokens": [],
     "exampleFooterLink": "https://coda.io/@coda/make-a-pack-private-alpha/number-array-27",
     "content": "This is an example which creates two formulas that each take in an array of numbers and return the greatest common denominator and least common multiple.",
@@ -169,6 +190,7 @@
   },
   {
     "name": "Todoist",
+    "category": "Full",
     "triggerTokens": [],
     "exampleFooterLink": "https://coda.github.io/packs-sdk/samples/full/todoist",
     "content": "This Pack provides an integration with the task tracking app [Todoist][todoist]. It uses a variety of building blocks to allow users to work with their projects and tasks, including:\n\n- Formulas that provide rich data about an item given its URL.\n- Column formats that automatically apply those formulas to matching URLs.\n- Action formulas that create and update items, for use in button and automations.\n- Sync tables for pulling in all of the user's items.\n\nThe Pack uses OAuth2 to connect to a user's Todoist account, which you can create for free.\n\n[todoist]: https://todoist.com/",
@@ -182,6 +204,7 @@
   },
   {
     "name": "Cats",
+    "category": "Full",
     "triggerTokens": [],
     "exampleFooterLink": "https://coda.github.io/packs-sdk/samples/full/cats",
     "content": "This Pack provides allows you to fetch random cat photos using the [Cat-as-a-service API][cataas]. You can set various parameters for the cat image, such as the width and height, as well as add a text overlay. The Pack provides:\n\n- A formula for fetching a cat photo.\n- A column format that displays the text on top of a cat photo.\n- A sync table that retrieves all available cat photos.\n\n[cataas]: https://cataas.com/",

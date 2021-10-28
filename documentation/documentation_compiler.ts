@@ -2,6 +2,7 @@ import type {CompiledAutocompleteSnippet} from './types';
 import type {CompiledExample} from './types';
 import type {CompiledExampleSnippet} from './types';
 import type {Example} from './types';
+import {ExampleCategory} from './types';
 import {Examples} from './documentation_config';
 import * as Handlebars from 'handlebars';
 import {Snippets} from './documentation_config';
@@ -10,6 +11,7 @@ import * as fs from 'fs';
 import path from 'path';
 
 const CodeBegin = '// BEGIN\n';
+const CodeEnd = '// END\n';
 const BaseDir = path.join(__dirname, '..');
 const DocumentationRoot = path.join(BaseDir, 'documentation');
 const TypeDocsRoot = path.join(BaseDir, 'docs');
@@ -61,6 +63,7 @@ function compileExamples() {
     }
     const compiledExample = {
       name: example.name,
+      category: example.category,
       triggerTokens: example.triggerTokens,
       exampleFooterLink,
       content,
@@ -80,7 +83,9 @@ function getCodeFile(file: string, requireBegin=false): string {
     throw new Error(`Missing "${CodeBegin.trim()}" in file: ${file}`);
   }
   const codeStart = begin >= 0 ? data.indexOf(CodeBegin) + CodeBegin.length : 0;
-  return data.substring(codeStart).trim();
+  const end = data.indexOf(CodeEnd);
+  const codeEnd = end >= 0 ? end : data.length;
+  return stripIndent(data.substring(codeStart, codeEnd)).trim();
 }
 
 function getContentFile(file: string) {
@@ -135,16 +140,49 @@ function getExamplePageName(example: Example) {
 function isValidReferencePath(sdkReferencePath: string): boolean {
   const splitPath = sdkReferencePath.split('#');
   const page = splitPath[0];
-  const file =  page + '.' + PageFileExtension;
+  const file = page + '.' + PageFileExtension;
 
   const filePath = path.join(TypeDocsRoot, file);
 
   return fs.existsSync(filePath);
 }
 
+/**
+ * Un-indents text, removing the shortest common leading whitespace from each
+ * line.
+ * Code adapted from strip-indent (and min-indent). Can't use it directly since
+ * it's an ES Module.
+ * @param text The text to un-indent.
+ * @returns The text with the minimum indent.
+ */
+function stripIndent(text: string) {
+  const match = text.match(/^[ ]*(?=\S)/gm);
+  if (!match) {
+    // No indents found, return the original string.
+    return text;
+  }
+  const minIndent = match.reduce((r, a) => Math.min(r, a.length), Infinity);
+  const regex = new RegExp(`^[ \\t]{${minIndent}}`, 'gm');
+  return text.replace(regex, '');
+}
+
 Handlebars.registerHelper('indent', (content, numSpaces) => {
   const indent = ' '.repeat(numSpaces);
   return content.replace(/\n(?!\n)/g, '\n' + indent);
+});
+
+Handlebars.registerHelper('pageTitle', (example: CompiledExample) => {
+  let name = example.name;
+  let suffix = 'sample';
+  if (example.category === ExampleCategory.Topic) {
+    // Use singular version of the name.
+    name = name.replace(/s$/, '');
+    if (example.exampleSnippets.length > 1) {
+      // Use the suffix "samples" if there are more than one.
+      suffix += 's';
+    }
+  }
+  return `${name} ${suffix}`;
 });
 
 main();

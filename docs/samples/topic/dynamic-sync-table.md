@@ -1,4 +1,8 @@
-# Dynamic Sync Tables
+---
+title: Dynamic sync tables
+---
+
+# Dynamic sync table sample
 
 Most sync tables have schemas that can be statically defined. For example, if you're writing a sync of a user's Google Calendar events, the structure of an Event from the Google Calendar API is well-known and you can write a schema for what your table should contain.
 

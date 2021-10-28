@@ -124,10 +124,20 @@ exports.Snippets = [
         content: 'Creates an object schema definition.',
         codeFile: './snippets/object_schema.ts',
     },
+    {
+        triggerTokens: ['fetch:get'],
+        content: 'Fetches data from an API.',
+        codeFile: './snippets/fetcher/get.ts',
+    },
+    {
+        triggerTokens: ['fetch:post'],
+        content: 'Send data to an API.',
+        codeFile: './snippets/fetcher/post.ts',
+    },
 ];
 exports.Examples = [
     {
-        name: 'Column Formats',
+        name: 'Column formats',
         category: types_1.ExampleCategory.Topic,
         triggerTokens: ['addColumnFormat'],
         contentFile: './examples/column-format/column_format.md',
@@ -181,7 +191,7 @@ exports.Examples = [
         ],
     },
     {
-        name: 'Dynamic Sync Tables',
+        name: 'Dynamic sync tables',
         category: types_1.ExampleCategory.Topic,
         triggerTokens: ['addDynamicSyncTable'],
         contentFile: './examples/dynamic-sync-table/dynamic_sync_table.md',
@@ -225,7 +235,7 @@ exports.Examples = [
         ],
     },
     {
-        name: 'Sync Tables',
+        name: 'Sync tables',
         category: types_1.ExampleCategory.Topic,
         triggerTokens: ['addSyncTable'],
         contentFile: './examples/sync-table/sync_table.md',
@@ -248,6 +258,33 @@ exports.Examples = [
                 name: 'Todoist',
                 content: '',
                 codeFile: './examples/todoist/sync_table.ts',
+            },
+        ],
+    },
+    {
+        name: 'Fetcher',
+        category: types_1.ExampleCategory.Topic,
+        triggerTokens: ['fetch'],
+        contentFile: './examples/fetcher/README.md',
+        linkData: {
+            type: types_2.UrlType.SdkReferencePath,
+            url: '/reference/sdk/interfaces/Fetcher',
+        },
+        exampleSnippets: [
+            {
+                name: 'Template (GET)',
+                content: '',
+                codeFile: './snippets/fetcher/get.ts',
+            },
+            {
+                name: 'Template (POST)',
+                content: '',
+                codeFile: './snippets/fetcher/post.ts',
+            },
+            {
+                name: 'JSON Array (Bacon Ipsum)',
+                content: '',
+                codeFile: './examples/fetcher/bacon_ipsum.ts',
             },
         ],
     },
@@ -282,23 +319,6 @@ exports.Examples = [
                 name: 'Daylight',
                 content: '',
                 codeFile: './examples/daylight/daylight.ts',
-            },
-        ],
-    },
-    {
-        name: 'Hello Fetcher',
-        category: types_1.ExampleCategory.Full,
-        triggerTokens: [],
-        contentFile: './examples/hello_fetcher/hello_fetcher.md',
-        linkData: {
-            type: types_2.UrlType.Web,
-            url: 'https://coda.io/@coda/make-a-pack-private-alpha/hello-fetcher-28',
-        },
-        exampleSnippets: [
-            {
-                name: 'Hello Fetcher',
-                content: '',
-                codeFile: './examples/hello_fetcher/hello_fetcher.ts',
             },
         ],
     },

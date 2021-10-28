@@ -560,7 +560,7 @@ export type VariousSupportedAuthenticationTypes = $Values<Pick<VariousSupportedA
  * format that may augment their experience of working with such values.
  *
  * For example, if you're building a Wikipedia pack, you may write a matcher regular expression
- * that looks for Wikipedia article URLs, if you have a formula that can fetched structured data
+ * that looks for Wikipedia article URLs, if you have a formula that can fetch structured data
  * given an article URL. This would help users discover that there is a pack that can fetch
  * structured data given only a url.
  *
