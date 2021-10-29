@@ -129,6 +129,10 @@ typedoc:
 	# Most options loaded from typedoc.js.
 	${ROOTDIR}/node_modules/.bin/typedoc index.ts --options typedoc.js --out ${ROOTDIR}/docs/reference/sdk
 
+.PHONY: typedoc-progress
+typedoc-progress:
+	${ROOTDIR}/node_modules/.bin/ts-node scripts/tsdoc_progress.ts
+
 .PHONY: docs
 docs: typedoc generated-documentation
 
@@ -137,7 +141,7 @@ view-docs:
 	PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 expect -c 'spawn pipenv run mkdocs serve; expect "Serving on"; exec open "http://localhost:8000"; interact'
 
 ###############################################################################
-### Deployment of documentation ### 
+### Deployment of documentation ###
 
 # This step generates all the documentation for the SDK using mkdocs and dumps the contents in /site
 .PHONY: build-mkdocs
