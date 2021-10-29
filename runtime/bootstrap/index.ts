@@ -247,7 +247,7 @@ export async function registerBundle(
   const bundle = fs.readFileSync(path).toString();
 
   // bundle needs to be converted into a closure to avoid leaking variables to global scope.
-  const script = await isolate.compileScript(`(() => { ${bundle} \n ${stubName} = exports })()`, {
+  const script = await isolate.compileScript(`(() => { ${bundle} \n global.${stubName} = exports })()`, {
     filename: path,
   });
   await script.run(context);
