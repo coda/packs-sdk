@@ -1,6 +1,6 @@
 import type {AWSAccessKeyCredentials} from './auth_types';
 import type {AWSAssumeRoleCredentials} from './auth_types';
-import type {Authentication} from '../types';
+import type {Authentication, CustomAuthentication} from '../types';
 import {AuthenticationType} from '../types';
 import type {BasicPackDefinition} from '../types';
 import type {Credentials} from './auth_types';
@@ -67,6 +67,8 @@ export function setupAuth(manifestDir: string, packDef: BasicPackDefinition, opt
       return handler.handleQueryParam(auth.paramName);
     case AuthenticationType.WebBasic:
       return handler.handleWebBasic();
+    case AuthenticationType.Custom:
+      return handler.handleWebBasic();
     case AuthenticationType.OAuth2:
       ensureExists(packDef.defaultAuthentication, 'OAuth2 only works with defaultAuthentication, not system auth.');
       return handler.handleOAuth2();
@@ -132,6 +134,20 @@ class CredentialHandler {
       password = promptForInput(`Enter the ${passwordPlaceholder} for this Pack:\n`, {mask: true});
     }
     this.storeCredential({endpointUrl, username, password});
+    print('Credentials updated!');
+  }
+
+  handleCustom() {
+    assertCondition(this._authDef.type === AuthenticationType.Custom);
+    this.checkForExistingCredential();
+    const endpointUrl = this.maybePromptForEndpointUrl();
+    const {parameters} = this._authDef;
+    const params: {[key: string]: string} = {};
+    for (const [key, value] of Object.entries(parameters)) {
+      const placeholder = value.placeholder || key;
+      params[key] = promptForInput(`Enter the ${placeholder} for this Pack:\n`, {mask: value.isSensitive});
+    }
+    this.storeCredential({endpointUrl, params});
     print('Credentials updated!');
   }
 
@@ -270,7 +286,7 @@ class CredentialHandler {
     return promptForInput(`Enter the endpoint url for this Pack (for example, ${placeholder}):\n`);
   }
 
-  storeCredential(credentials: Credentials): void {
+  storeCredential<T extends CustomAuthentication = CustomAuthentication>(credentials: Credentials<T>): void {
     storeCredential(this._manifestDir, credentials);
   }
 }

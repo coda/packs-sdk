@@ -354,11 +354,19 @@ const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> 
     service: z.string(),
     ...baseAuthenticationValidators,
   }),
+  [AuthenticationType.Custom]: zodCompleteStrictObject<CustomAuthentication>({
+    type: zodDiscriminant(AuthenticationType.Custom),
+    uxConfig: zodCompleteStrictObject<CustomAuthentication['uxConfig']>({
+      placeholderUsername: z.string().optional(),
+      placeholderPassword: z.string().optional(),
+      usernameOnly: z.boolean().optional(),
+    }).optional(),
+    ...baseAuthenticationValidators,
+  }),
   [AuthenticationType.Various]: zodCompleteStrictObject<VariousAuthentication>({
     type: zodDiscriminant(AuthenticationType.Various),
   }),
 };
-
 const systemAuthenticationTypes: {[key in SystemAuthenticationTypes]: true} = {
   [AuthenticationType.HeaderBearerToken]: true,
   [AuthenticationType.CustomHeaderToken]: true,

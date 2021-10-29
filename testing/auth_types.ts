@@ -1,3 +1,5 @@
+import type {CustomAuthentication} from '../types';
+
 export interface CredentialsFile {
   credentials: Credentials;
 }
@@ -14,6 +16,10 @@ export interface WebBasicCredentials extends BaseCredentials {
   username: string;
   password?: string;
 }
+
+export type CustomCredentials<T extends CustomAuthentication> = BaseCredentials & {
+  params: {[K in keyof T['parameters']]: string | undefined};
+};
 
 export interface QueryParamCredentials extends BaseCredentials {
   paramValue: string;
@@ -45,9 +51,10 @@ export interface AWSAssumeRoleCredentials extends BaseCredentials {
   externalId?: string;
 }
 
-export type Credentials =
+export type Credentials<T extends CustomAuthentication = CustomAuthentication> =
   | TokenCredentials
   | WebBasicCredentials
+  | CustomCredentials<T>
   | QueryParamCredentials
   | MultiQueryParamCredentials
   | OAuth2Credentials

@@ -1,7 +1,7 @@
 import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
 import ClientOAuth2 from 'client-oauth2';
-import type {Credentials} from './auth_types';
+import type {Credentials, CustomCredentials} from './auth_types';
 import type {ExecutionContext} from '../api';
 import type {FetchRequest} from '../api_types';
 import type {FetchResponse} from '../api_types';
@@ -229,6 +229,30 @@ export class AuthenticatingFetcher implements Fetcher {
           form,
           headers: {...headers, Authorization: `Basic ${encodedAuth}`},
         };
+      }
+      case AuthenticationType.Custom: {
+        const request = {
+          url,
+          body,
+          form,
+          headers,
+        };
+        const {params} = this._credentials as CustomCredentials<typeof this._authDef>;
+
+        let requestWithTemplateSubstitutions = JSON.stringify(request);
+        if (requestWithTemplateSubstitutions) {
+          // For awful APIs that require auth parameters in the request body, we have
+          // this scheme where we do template substitution of the body using an unguessable
+          // random token as part of the template key.
+          Object.entries(params).forEach(([key, value]) => {
+            requestWithTemplateSubstitutions = ensureExists(requestWithTemplateSubstitutions).replace(
+              `{{${key}-${this._invocationToken}}}`,
+              value || '',
+            );
+          });
+        }
+
+        return JSON.parse(requestWithTemplateSubstitutions);
       }
       case AuthenticationType.QueryParamToken: {
         const {paramValue} = this._credentials as QueryParamCredentials;

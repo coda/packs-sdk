@@ -80,6 +80,11 @@ export enum AuthenticationType {
    */
   WebBasic = 'WebBasic',
   /**
+   * Authenticate using custom templated values, which you insert into the request. The user provides all the
+   * values you specify, and you have access to them through a templating engine.
+   */
+  Custom = 'Custom',
+  /**
    * Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
    * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
    *
@@ -96,7 +101,7 @@ export enum AuthenticationType {
    *
    * @ignore
    */
-   AWSAssumeRole = 'AWSAssumeRole',
+  AWSAssumeRole = 'AWSAssumeRole',
   /**
    * Authenticate using a Coda REST API token, sent as an HTTP header.
    *
@@ -422,6 +427,35 @@ export interface WebBasicAuthentication extends BaseAuthentication {
   };
 }
 
+export interface CustomAuthParameter {
+  /**
+   * The user-friendly display name for the parameter. Defaults to the key name if not provided.
+   */
+  displayName?: string;
+
+  /**
+   * The placeholder text to show to the user when prompted to enter this value.
+   */
+  placeholder?: string;
+
+  /**
+   * If true, treats the input value as sensitive and masks it.
+   */
+  isSensitive?: boolean;
+}
+
+/**
+ * Authenticate using custom templated parameters, which you insert into the request. The user provides all the
+ * parameters you specify, and you have access to them through a templating engine.
+ */
+export interface CustomAuthentication extends BaseAuthentication {
+  type: AuthenticationType.Custom;
+  /**
+   * Configuration for labels to show in the UI when the user sets up a new acount.
+   */
+  parameters: {[key: string]: CustomAuthParameter};
+}
+
 /**
  * Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
  * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
@@ -471,7 +505,8 @@ export type Authentication =
   | OAuth2Authentication
   | WebBasicAuthentication
   | AWSAccessKeyAuthentication
-  | AWSAssumeRoleAuthentication;
+  | AWSAssumeRoleAuthentication
+  | CustomAuthentication;
 
 type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId'> & {
   /**
@@ -513,7 +548,8 @@ export type AuthenticationDef =
   | AsAuthDef<OAuth2Authentication>
   | AsAuthDef<WebBasicAuthentication>
   | AsAuthDef<AWSAccessKeyAuthentication>
-  | AsAuthDef<AWSAssumeRoleAuthentication>;
+  | AsAuthDef<AWSAssumeRoleAuthentication>
+  | AsAuthDef<CustomAuthentication>;
 
 /**
  * The union of authentication methods that are supported for system authentication,
@@ -526,7 +562,8 @@ export type SystemAuthentication =
   | MultiQueryParamTokenAuthentication
   | WebBasicAuthentication
   | AWSAccessKeyAuthentication
-  | AWSAssumeRoleAuthentication;
+  | AWSAssumeRoleAuthentication
+  | CustomAuthentication;
 
 /**
  * The union of supported system authentication definitions. These represent simplified
@@ -541,7 +578,8 @@ export type SystemAuthenticationDef =
   | AsAuthDef<MultiQueryParamTokenAuthentication>
   | AsAuthDef<WebBasicAuthentication>
   | AsAuthDef<AWSAccessKeyAuthentication>
-  | AsAuthDef<AWSAssumeRoleAuthentication>;
+  | AsAuthDef<AWSAssumeRoleAuthentication>
+  | AsAuthDef<CustomAuthentication>;
 
 /**
  * The subset of valid {@link AuthenticationType} enum values that can be used
