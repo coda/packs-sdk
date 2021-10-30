@@ -17,10 +17,10 @@ describe('Thunk', () => {
 
   it('should bundle and run in an IVM context', async () => {
     const isolate = new ivm.Isolate({memoryLimit: 128});
-
     // context is like a container in ivm concept.
     const ivmContext = await isolate.createContext();
     const jail = ivmContext.global;
+    await jail.set('global', jail.derefInto());
     await jail.set('test', undefined, {copy: true});
 
     await registerBundle(isolate, ivmContext, getThunkPath(), 'test');
