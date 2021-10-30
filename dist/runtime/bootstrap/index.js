@@ -157,7 +157,7 @@ async function registerBundle(isolate, context, path, stubName) {
     // compiling the bundle allows IVM to map the stack trace.
     const bundle = fs_1.default.readFileSync(path).toString();
     // bundle needs to be converted into a closure to avoid leaking variables to global scope.
-    const script = await isolate.compileScript(`(() => { ${bundle} \n global.${stubName} = exports })()`, {
+    const script = await isolate.compileScript(`(() => { ${stubName} = (() => { ${bundle} \n return exports; })(); })()`, {
         filename: path,
     });
     await script.run(context);
