@@ -1,12 +1,12 @@
 import * as coda from '../..';
 
-export const myPack = coda.newPack();
+export const pack = coda.newPack();
 
 function doThrow() {
   throw new Error('test');
 }
 
-myPack.addFormula({
+pack.addFormula({
   name: 'Throw',
   description: 'A Hello World example.',
   parameters: [
@@ -22,5 +22,3 @@ myPack.addFormula({
     return 'Hello ' + name + '!';
   },
 });
-
-export const pack = {...myPack};
