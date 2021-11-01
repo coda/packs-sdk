@@ -429,6 +429,11 @@ export interface WebBasicAuthentication extends BaseAuthentication {
 
 export interface CustomAuthParameter {
   /**
+   * The name used to refer to the parameter. Should match the string for the key in the params mapping.
+   */
+  name: string;
+
+  /**
    * The user-friendly display name for the parameter. Defaults to the key name if not provided.
    */
   displayName?: string;
@@ -442,6 +447,11 @@ export interface CustomAuthParameter {
    * If true, treats the input value as sensitive and masks it.
    */
   isSensitive?: boolean;
+
+  /**
+   * A description shown to the user indicating what value they should provide for this parameter.
+   */
+  description?: boolean;
 }
 
 /**
@@ -453,7 +463,7 @@ export interface CustomAuthentication extends BaseAuthentication {
   /**
    * Configuration for labels to show in the UI when the user sets up a new acount.
    */
-  parameters: {[key: string]: CustomAuthParameter};
+  params: {[key: string]: CustomAuthParameter};
 }
 
 /**

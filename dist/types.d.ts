@@ -1,9 +1,9 @@
-import type { $Values } from './type_utils';
-import type { Formula } from './api';
-import type { MetadataFormula } from './api';
-import type { MetadataFormulaDef } from './api';
-import type { PackFormulas } from './api';
-import type { SyncTable } from './api';
+import type {$Values} from './type_utils';
+import type {Formula} from './api';
+import type {MetadataFormula} from './api';
+import type {MetadataFormulaDef} from './api';
+import type {PackFormulas} from './api';
+import type {SyncTable} from './api';
 /**
  * @deprecated Use `number` in new code.
  */
@@ -12,132 +12,132 @@ export declare type PackId = number;
  * @deprecated
  */
 export declare enum PackCategory {
-    CRM = "CRM",
-    Calendar = "Calendar",
-    Communication = "Communication",
-    DataStorage = "DataStorage",
-    Design = "Design",
-    Financial = "Financial",
-    Fun = "Fun",
-    Geo = "Geo",
-    IT = "IT",
-    Mathematics = "Mathematics",
-    Organization = "Organization",
-    Recruiting = "Recruiting",
-    Shopping = "Shopping",
-    Social = "Social",
-    Sports = "Sports",
-    Travel = "Travel",
-    Weather = "Weather"
+  CRM = 'CRM',
+  Calendar = 'Calendar',
+  Communication = 'Communication',
+  DataStorage = 'DataStorage',
+  Design = 'Design',
+  Financial = 'Financial',
+  Fun = 'Fun',
+  Geo = 'Geo',
+  IT = 'IT',
+  Mathematics = 'Mathematics',
+  Organization = 'Organization',
+  Recruiting = 'Recruiting',
+  Shopping = 'Shopping',
+  Social = 'Social',
+  Sports = 'Sports',
+  Travel = 'Travel',
+  Weather = 'Weather',
 }
 /**
  * Authentication types supported by Coda Packs.
  */
 export declare enum AuthenticationType {
-    /**
-     * Indicates this pack does not use authentication. You may also omit an authentication declaration entirely.
-     */
-    None = "None",
-    /**
-     * Authenticate using an HTTP header of the form `Authorization: Bearer <token>`.
-     */
-    HeaderBearerToken = "HeaderBearerToken",
-    /**
-     * Authenticate using an HTTP header with a custom name and token prefix that you specify.
-     * The header name is defined in the {@link headerName} property.
-     */
-    CustomHeaderToken = "CustomHeaderToken",
-    /**
-     * Authenticate using a token that is passed as a URL parameter with each request, e.g.
-     * https://example.com/api?paramName=token
-     *
-     * The parameter name is defined in the {@link paramName} property.
-     */
-    QueryParamToken = "QueryParamToken",
-    /**
-     * Authenticate using multiple tokens, each passed as a different URL parameter, e.g.
-     * https://example.com/api?param1=token1&param2=token2
-     *
-     * The parameter names are defined in the {@link params} array property.
-     */
-    MultiQueryParamToken = "MultiQueryParamToken",
-    /**
-     * Authenticate using OAuth2. You must specify the authorization URL, token exchange URL, and
-     * scopes here as part of the pack definition. You'll provide the application's client ID and
-     * client secret in the pack management UI, so that these can be stored securely.
-     *
-     * The API must use a (largely) standards-compliant implementation of OAuth2.
-     */
-    OAuth2 = "OAuth2",
-    /**
-     * Authenticate using HTTP Basic authorization. The user provides a username and password
-     * (sometimes optional) which are included as an HTTP header according to the Basic auth standard.
-     *
-     * See https://en.wikipedia.org/wiki/Basic_access_authentication
-     */
-    WebBasic = "WebBasic",
-    /**
-     * Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
-     * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
-     *
-     * This is not yet supported.
-     *
-     * @ignore
-     */
-    AWSAccessKey = "AWSAccessKey",
-    /**
-     * Authenticate to Amazon Web Services by assuming an IAM role.
-     * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
-     *
-     * This is not yet supported.
-     *
-     * @ignore
-     */
-    AWSAssumeRole = "AWSAssumeRole",
-    /**
-     * Authenticate using a Coda REST API token, sent as an HTTP header.
-     *
-     * This is identical to {@link HeaderBearerToken} except the user wil be presented
-     * with a UI to generate an API token rather than needing to paste an arbitrary API
-     * token into a text input.
-     *
-     * This is primarily for use by Coda-authored packs, as it is only relevant for interacting with the
-     * Coda REST API.
-     */
-    CodaApiHeaderBearerToken = "CodaApiHeaderBearerToken",
-    /**
-     * Only for use by Coda-authored packs.
-     *
-     * @ignore
-     */
-    Various = "Various"
+  /**
+   * Indicates this pack does not use authentication. You may also omit an authentication declaration entirely.
+   */
+  None = 'None',
+  /**
+   * Authenticate using an HTTP header of the form `Authorization: Bearer <token>`.
+   */
+  HeaderBearerToken = 'HeaderBearerToken',
+  /**
+   * Authenticate using an HTTP header with a custom name and token prefix that you specify.
+   * The header name is defined in the {@link headerName} property.
+   */
+  CustomHeaderToken = 'CustomHeaderToken',
+  /**
+   * Authenticate using a token that is passed as a URL parameter with each request, e.g.
+   * https://example.com/api?paramName=token
+   *
+   * The parameter name is defined in the {@link paramName} property.
+   */
+  QueryParamToken = 'QueryParamToken',
+  /**
+   * Authenticate using multiple tokens, each passed as a different URL parameter, e.g.
+   * https://example.com/api?param1=token1&param2=token2
+   *
+   * The parameter names are defined in the {@link params} array property.
+   */
+  MultiQueryParamToken = 'MultiQueryParamToken',
+  /**
+   * Authenticate using OAuth2. You must specify the authorization URL, token exchange URL, and
+   * scopes here as part of the pack definition. You'll provide the application's client ID and
+   * client secret in the pack management UI, so that these can be stored securely.
+   *
+   * The API must use a (largely) standards-compliant implementation of OAuth2.
+   */
+  OAuth2 = 'OAuth2',
+  /**
+   * Authenticate using HTTP Basic authorization. The user provides a username and password
+   * (sometimes optional) which are included as an HTTP header according to the Basic auth standard.
+   *
+   * See https://en.wikipedia.org/wiki/Basic_access_authentication
+   */
+  WebBasic = 'WebBasic',
+  /**
+   * Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
+   * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
+   *
+   * This is not yet supported.
+   *
+   * @ignore
+   */
+  AWSAccessKey = 'AWSAccessKey',
+  /**
+   * Authenticate to Amazon Web Services by assuming an IAM role.
+   * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
+   *
+   * This is not yet supported.
+   *
+   * @ignore
+   */
+  AWSAssumeRole = 'AWSAssumeRole',
+  /**
+   * Authenticate using a Coda REST API token, sent as an HTTP header.
+   *
+   * This is identical to {@link HeaderBearerToken} except the user wil be presented
+   * with a UI to generate an API token rather than needing to paste an arbitrary API
+   * token into a text input.
+   *
+   * This is primarily for use by Coda-authored packs, as it is only relevant for interacting with the
+   * Coda REST API.
+   */
+  CodaApiHeaderBearerToken = 'CodaApiHeaderBearerToken',
+  /**
+   * Only for use by Coda-authored packs.
+   *
+   * @ignore
+   */
+  Various = 'Various',
 }
 /**
  * Ways in which a user account can be used with a doc.
  */
 export declare enum DefaultConnectionType {
-    /**
-     * The account can be used by any user in the a doc, but only to read data. The account can't be
-     * used to take actions (i.e. push buttons).
-     */
-    SharedDataOnly = 1,
-    /**
-     * The account can be used by any user in the doc both to retrieve data and to take actions.
-     */
-    Shared = 2,
-    /**
-     * The account can only be used by the Coda user who set up the account, and only to take
-     * actions (i.e. push buttons). Each Coda user that uses the pack will be prompted to
-     * connect their own private (AKA proxy) account. Private accounts can't be used to retrieve
-     * data, because all users in the doc must be able to retrieve the same data.
-     */
-    ProxyActionsOnly = 3
+  /**
+   * The account can be used by any user in the a doc, but only to read data. The account can't be
+   * used to take actions (i.e. push buttons).
+   */
+  SharedDataOnly = 1,
+  /**
+   * The account can be used by any user in the doc both to retrieve data and to take actions.
+   */
+  Shared = 2,
+  /**
+   * The account can only be used by the Coda user who set up the account, and only to take
+   * actions (i.e. push buttons). Each Coda user that uses the pack will be prompted to
+   * connect their own private (AKA proxy) account. Private accounts can't be used to retrieve
+   * data, because all users in the doc must be able to retrieve the same data.
+   */
+  ProxyActionsOnly = 3,
 }
 /**
  * A pack or formula which does not use authentication.
  */
 export interface NoAuthentication {
-    type: AuthenticationType.None;
+  type: AuthenticationType.None;
 }
 /**
  * Configuration for a step that will run after the user sets up a new account
@@ -158,34 +158,34 @@ export interface NoAuthentication {
  * (of the form <instance>.atlassian.net) is stored along with this account.
  */
 export interface SetEndpoint {
-    type: PostSetupType.SetEndpoint;
-    /**
-     * An arbitrary name for this step, to distinguish from other steps of the same type
-     * (exceedingly rare).
-     */
-    name: string;
-    /**
-     * A description to render to the user describing the selection they should be making,
-     * for example, "Choose an instance to use with this account".
-     */
-    description: string;
-    /**
-     * The formula that fetches endpoints for the user
-     * to select from. Like any {@link MetadataFormula}, this formula should return
-     * an array of options, either strings or objects of the form
-     * `{display: '<display name>', value: '<endpoint>'}` if wanting to render a display
-     * label to the user rather than rendering the underlying value directly.
-     */
-    getOptionsFormula: MetadataFormula;
+  type: PostSetupType.SetEndpoint;
+  /**
+   * An arbitrary name for this step, to distinguish from other steps of the same type
+   * (exceedingly rare).
+   */
+  name: string;
+  /**
+   * A description to render to the user describing the selection they should be making,
+   * for example, "Choose an instance to use with this account".
+   */
+  description: string;
+  /**
+   * The formula that fetches endpoints for the user
+   * to select from. Like any {@link MetadataFormula}, this formula should return
+   * an array of options, either strings or objects of the form
+   * `{display: '<display name>', value: '<endpoint>'}` if wanting to render a display
+   * label to the user rather than rendering the underlying value directly.
+   */
+  getOptionsFormula: MetadataFormula;
 }
 /**
  * Enumeration of post-account-setup step types. See {@link PostSetup}.
  */
 export declare enum PostSetupType {
-    /**
-     * See {@link SetEndpoint}.
-     */
-    SetEndpoint = "SetEndPoint"
+  /**
+   * See {@link SetEndpoint}.
+   */
+  SetEndpoint = 'SetEndPoint',
 }
 /**
  * Definitions for optional steps that can happen upon a user completing setup
@@ -196,44 +196,44 @@ export declare enum PostSetupType {
  */
 export declare type PostSetup = SetEndpoint;
 interface BaseAuthentication {
-    getConnectionName?: MetadataFormula;
-    getConnectionUserId?: MetadataFormula;
-    /**
-     * Indicates the defualt manner in which a user's account is expected to be used by this pack,
-     * e.g. is this account used for retrieving data, taking actions, or both.
-     * See https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs#h_40472431f0
-     */
-    defaultConnectionType?: DefaultConnectionType;
-    /**
-     * A link to a help article or other page with more instructions about how to set up an account for this pack.
-     */
-    instructionsUrl?: string;
-    /**
-     * If true, indicates this has pack has a specific endpoint domain for each account, that is used
-     * as the basis of HTTP requests. For example, API requests are made to <custom-subdomain>.example.com
-     * rather than example.com. If true, the user will be prompted to provide their specific endpoint domain
-     * when creating a new account.
-     */
-    requiresEndpointUrl?: boolean;
-    /**
-     * When requiresEndpointUrl is set to true this should be the root domain that all endpoints share.
-     * For example, this value would be "example.com" if specific endpoints looked like {custom-subdomain}.example.com.
-     *
-     * For packs that make requests to multiple domains (uncommon), this should be the domain within
-     * {@link networkDomains} that this configuration applies to.
-     */
-    endpointDomain?: string;
-    /**
-     * One or more setup steps to run after the user has set up the account, before completing installation of the pack.
-     * This is not common.
-     */
-    postSetup?: PostSetup[];
+  getConnectionName?: MetadataFormula;
+  getConnectionUserId?: MetadataFormula;
+  /**
+   * Indicates the defualt manner in which a user's account is expected to be used by this pack,
+   * e.g. is this account used for retrieving data, taking actions, or both.
+   * See https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs#h_40472431f0
+   */
+  defaultConnectionType?: DefaultConnectionType;
+  /**
+   * A link to a help article or other page with more instructions about how to set up an account for this pack.
+   */
+  instructionsUrl?: string;
+  /**
+   * If true, indicates this has pack has a specific endpoint domain for each account, that is used
+   * as the basis of HTTP requests. For example, API requests are made to <custom-subdomain>.example.com
+   * rather than example.com. If true, the user will be prompted to provide their specific endpoint domain
+   * when creating a new account.
+   */
+  requiresEndpointUrl?: boolean;
+  /**
+   * When requiresEndpointUrl is set to true this should be the root domain that all endpoints share.
+   * For example, this value would be "example.com" if specific endpoints looked like {custom-subdomain}.example.com.
+   *
+   * For packs that make requests to multiple domains (uncommon), this should be the domain within
+   * {@link networkDomains} that this configuration applies to.
+   */
+  endpointDomain?: string;
+  /**
+   * One or more setup steps to run after the user has set up the account, before completing installation of the pack.
+   * This is not common.
+   */
+  postSetup?: PostSetup[];
 }
 /**
  * Authenticate using an HTTP header of the form `Authorization: Bearer <token>`.
  */
 export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
-    type: AuthenticationType.HeaderBearerToken;
+  type: AuthenticationType.HeaderBearerToken;
 }
 /**
  * Authenticate using a Coda REST API token, sent as an HTTP header.
@@ -246,36 +246,36 @@ export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
  * Coda REST API.
  */
 export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
-    type: AuthenticationType.CodaApiHeaderBearerToken;
-    /**
-     * If true, does not require a connection to be configured in
-     * order to install the pack.
-     */
-    deferConnectionSetup?: boolean;
-    /**
-     * If true, automatically creates and configures an account with a Coda API token with
-     * default settings when installing the pack: a scoped read-write token, added to the doc
-     * as a shared account that allows actions.
-     */
-    shouldAutoAuthSetup?: boolean;
+  type: AuthenticationType.CodaApiHeaderBearerToken;
+  /**
+   * If true, does not require a connection to be configured in
+   * order to install the pack.
+   */
+  deferConnectionSetup?: boolean;
+  /**
+   * If true, automatically creates and configures an account with a Coda API token with
+   * default settings when installing the pack: a scoped read-write token, added to the doc
+   * as a shared account that allows actions.
+   */
+  shouldAutoAuthSetup?: boolean;
 }
 /**
  * Authenticate using an HTTP header with a custom name and token prefix that you specify.
  * The header name is defined in the {@link headerName} property.
  */
 export interface CustomHeaderTokenAuthentication extends BaseAuthentication {
-    type: AuthenticationType.CustomHeaderToken;
-    /**
-     * The name of the HTTP header.
-     */
-    headerName: string;
-    /**
-     * An optional prefix in the HTTP header value before the actual token. Omit this
-     * if the token is the entirety of the header value.
-     *
-     * The HTTP header will be of the form `<headerName>: <tokenPrefix> <token>`
-     */
-    tokenPrefix?: string;
+  type: AuthenticationType.CustomHeaderToken;
+  /**
+   * The name of the HTTP header.
+   */
+  headerName: string;
+  /**
+   * An optional prefix in the HTTP header value before the actual token. Omit this
+   * if the token is the entirety of the header value.
+   *
+   * The HTTP header will be of the form `<headerName>: <tokenPrefix> <token>`
+   */
+  tokenPrefix?: string;
 }
 /**
  * Authenticate using a token that is passed as a URL parameter with each request, e.g.
@@ -284,12 +284,12 @@ export interface CustomHeaderTokenAuthentication extends BaseAuthentication {
  * The parameter name is defined in the {@link paramName} property.
  */
 export interface QueryParamTokenAuthentication extends BaseAuthentication {
-    type: AuthenticationType.QueryParamToken;
-    /**
-     * The name of the query parameter that will include the token,
-     * e.g. "foo" if a token is passed as "foo=bar".
-     */
-    paramName: string;
+  type: AuthenticationType.QueryParamToken;
+  /**
+   * The name of the query parameter that will include the token,
+   * e.g. "foo" if a token is passed as "foo=bar".
+   */
+  paramName: string;
 }
 /**
  * Authenticate using multiple tokens, each passed as a different URL parameter, e.g.
@@ -298,20 +298,20 @@ export interface QueryParamTokenAuthentication extends BaseAuthentication {
  * The parameter names are defined in the {@link params} array property.
  */
 export interface MultiQueryParamTokenAuthentication extends BaseAuthentication {
-    type: AuthenticationType.MultiQueryParamToken;
+  type: AuthenticationType.MultiQueryParamToken;
+  /**
+   * Names and descriptions of the query parameters used for authentication.
+   */
+  params: Array<{
     /**
-     * Names and descriptions of the query parameters used for authentication.
+     * The name of the query parameter, e.g. "foo" if a token is passed as "foo=bar".
      */
-    params: Array<{
-        /**
-         * The name of the query parameter, e.g. "foo" if a token is passed as "foo=bar".
-         */
-        name: string;
-        /**
-         * A description shown to the user indicating what value they should provide for this parameter.
-         */
-        description: string;
-    }>;
+    name: string;
+    /**
+     * A description shown to the user indicating what value they should provide for this parameter.
+     */
+    description: string;
+  }>;
 }
 /**
  * Authenticate using OAuth2. You must specify the authorization URL, token exchange URL, and
@@ -321,56 +321,56 @@ export interface MultiQueryParamTokenAuthentication extends BaseAuthentication {
  * The API must use a (largely) standards-compliant implementation of OAuth2.
  */
 export interface OAuth2Authentication extends BaseAuthentication {
-    type: AuthenticationType.OAuth2;
-    /**
-     * The URL to which the user will be redirected in order to authorize this pack.
-     * This is typically just a base url with no parameters. Coda will append the `scope`
-     * parameter automatically. If the authorization flow requires additional parameters,
-     * they may be specified using {@link additionalParams}.
-     */
-    authorizationUrl: string;
-    /**
-     * The URL that Coda will hit in order to exchange the temporary code for an access token
-     * at the end of the OAuth handshake flow.
-     */
-    tokenUrl: string;
-    /**
-     * Scopes that are required to use this pack.
-     *
-     * Each API defines its own list of scopes, or none at all. You should consult
-     * the documentation for the API you are connecting to.
-     */
-    scopes?: string[];
-    /**
-     * A custom prefix to be used when passing the access token in the HTTP Authorization
-     * header when making requests. Typically this prefix is `Bearer` which is what will be
-     * used if this value is omitted. However, some services require a different prefix.
-     * When sending authenticated requests, a HTTP header of the form
-     * `Authorization: <tokenPrefix> <token>` will be used.
-     */
-    tokenPrefix?: string;
-    /**
-     * Option custom URL parameters and values that should be included when redirecting the
-     * user to the {@link authorizationUrl}.
-     */
-    additionalParams?: {
-        [key: string]: any;
-    };
-    /**
-     * In rare cases, OAuth providers will return the specific API endpoint domain for the user as
-     * part of the OAuth token exchange response. If so, this is the property in the OAuth
-     * token exchange response JSON body that points to the endpoint.
-     *
-     * The endpoint will be saved along with the account and will be available during execution
-     * as {@link ExecutionContext.endpoint}.
-     */
-    endpointKey?: string;
-    /**
-     * In rare cases, OAuth providers ask that a token is passed as a URL parameter
-     * rather than an HTTP header. If so, this is the name of the URL query parameter
-     * that should contain the token.
-     */
-    tokenQueryParam?: string;
+  type: AuthenticationType.OAuth2;
+  /**
+   * The URL to which the user will be redirected in order to authorize this pack.
+   * This is typically just a base url with no parameters. Coda will append the `scope`
+   * parameter automatically. If the authorization flow requires additional parameters,
+   * they may be specified using {@link additionalParams}.
+   */
+  authorizationUrl: string;
+  /**
+   * The URL that Coda will hit in order to exchange the temporary code for an access token
+   * at the end of the OAuth handshake flow.
+   */
+  tokenUrl: string;
+  /**
+   * Scopes that are required to use this pack.
+   *
+   * Each API defines its own list of scopes, or none at all. You should consult
+   * the documentation for the API you are connecting to.
+   */
+  scopes?: string[];
+  /**
+   * A custom prefix to be used when passing the access token in the HTTP Authorization
+   * header when making requests. Typically this prefix is `Bearer` which is what will be
+   * used if this value is omitted. However, some services require a different prefix.
+   * When sending authenticated requests, a HTTP header of the form
+   * `Authorization: <tokenPrefix> <token>` will be used.
+   */
+  tokenPrefix?: string;
+  /**
+   * Option custom URL parameters and values that should be included when redirecting the
+   * user to the {@link authorizationUrl}.
+   */
+  additionalParams?: {
+    [key: string]: any;
+  };
+  /**
+   * In rare cases, OAuth providers will return the specific API endpoint domain for the user as
+   * part of the OAuth token exchange response. If so, this is the property in the OAuth
+   * token exchange response JSON body that points to the endpoint.
+   *
+   * The endpoint will be saved along with the account and will be available during execution
+   * as {@link ExecutionContext.endpoint}.
+   */
+  endpointKey?: string;
+  /**
+   * In rare cases, OAuth providers ask that a token is passed as a URL parameter
+   * rather than an HTTP header. If so, this is the name of the URL query parameter
+   * that should contain the token.
+   */
+  tokenQueryParam?: string;
 }
 /**
  * Authenticate using HTTP Basic authorization. The user provides a username and password
@@ -379,25 +379,60 @@ export interface OAuth2Authentication extends BaseAuthentication {
  * See https://en.wikipedia.org/wiki/Basic_access_authentication
  */
 export interface WebBasicAuthentication extends BaseAuthentication {
-    type: AuthenticationType.WebBasic;
+  type: AuthenticationType.WebBasic;
+  /**
+   * Configuration for labels to show in the UI when the user sets up a new acount.
+   */
+  uxConfig?: {
     /**
-     * Configuration for labels to show in the UI when the user sets up a new acount.
+     * A placeholder value for the text input where the user will enter a username.
      */
-    uxConfig?: {
-        /**
-         * A placeholder value for the text input where the user will enter a username.
-         */
-        placeholderUsername?: string;
-        /**
-         * A placeholder value for the text input where the user will enter a password.
-         */
-        placeholderPassword?: string;
-        /**
-         * If true, only a username input will be shown to the user.
-         * Some services pass API keys in the username field and do not require a password.
-         */
-        usernameOnly?: boolean;
-    };
+    placeholderUsername?: string;
+    /**
+     * A placeholder value for the text input where the user will enter a password.
+     */
+    placeholderPassword?: string;
+    /**
+     * If true, only a username input will be shown to the user.
+     * Some services pass API keys in the username field and do not require a password.
+     */
+    usernameOnly?: boolean;
+  };
+}
+export interface CustomAuthParameter {
+  /**
+   * The name used to refer to the parameter. Should match the string for the key in the params mapping.
+   */
+  name: string;
+  /**
+   * The user-friendly display name for the parameter. Defaults to the key name if not provided.
+   */
+  displayName?: string;
+  /**
+   * The placeholder text to show to the user when prompted to enter this value.
+   */
+  placeholder?: string;
+  /**
+   * If true, treats the input value as sensitive and masks it.
+   */
+  isSensitive?: boolean;
+  /**
+   * A description shown to the user indicating what value they should provide for this parameter.
+   */
+  description?: boolean;
+}
+/**
+ * Authenticate using custom templated parameters, which you insert into the request. The user provides all the
+ * parameters you specify, and you have access to them through a templating engine.
+ */
+export interface CustomAuthentication extends BaseAuthentication {
+  type: AuthenticationType.Custom;
+  /**
+   * Configuration for labels to show in the UI when the user sets up a new acount.
+   */
+  params: {
+    [key: string]: CustomAuthParameter;
+  };
 }
 /**
  * Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
@@ -408,8 +443,8 @@ export interface WebBasicAuthentication extends BaseAuthentication {
  * @ignore
  */
 export interface AWSAccessKeyAuthentication extends BaseAuthentication {
-    type: AuthenticationType.AWSAccessKey;
-    service: string;
+  type: AuthenticationType.AWSAccessKey;
+  service: string;
 }
 /**
  * Authenticate to Amazon Web Services by assuming an IAM role.
@@ -420,8 +455,8 @@ export interface AWSAccessKeyAuthentication extends BaseAuthentication {
  * @ignore
  */
 export interface AWSAssumeRoleAuthentication extends BaseAuthentication {
-    type: AuthenticationType.AWSAssumeRole;
-    service: string;
+  type: AuthenticationType.AWSAssumeRole;
+  service: string;
 }
 /**
  * Only for use by Coda-authored packs.
@@ -429,33 +464,44 @@ export interface AWSAssumeRoleAuthentication extends BaseAuthentication {
  * @ignore
  */
 export interface VariousAuthentication {
-    type: AuthenticationType.Various;
+  type: AuthenticationType.Various;
 }
 /**
  * The union of supported authentication methods.
  */
-export declare type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication;
+export declare type Authentication =
+  | NoAuthentication
+  | VariousAuthentication
+  | HeaderBearerTokenAuthentication
+  | CodaApiBearerTokenAuthentication
+  | CustomHeaderTokenAuthentication
+  | QueryParamTokenAuthentication
+  | MultiQueryParamTokenAuthentication
+  | OAuth2Authentication
+  | WebBasicAuthentication
+  | AWSAccessKeyAuthentication
+  | AWSAssumeRoleAuthentication;
 declare type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId'> & {
-    /**
-     * A function that is called when a user sets up a new account, that returns a name for
-     * the account to label that account in the UI. The users credentials are applied to any
-     * fetcher requests that this function makes. Typically, this function makes an API call
-     * to an API's "who am I" endpoint and returns a username.
-     *
-     * If omitted, or if the function returns an empty value, the account will be labeled
-     * with the creating user's Coda email address.
-     */
-    getConnectionName?: MetadataFormulaDef;
-    /**
-     * A function that is called when a user sets up a new account, that returns the ID of
-     * that account in the third-party system being called.
-     *
-     * This id is not yet subsequently exposed to pack developers and is mostly for Coda
-     * internal use.
-     *
-     * @ignore
-     */
-    getConnectionUserId?: MetadataFormulaDef;
+  /**
+   * A function that is called when a user sets up a new account, that returns a name for
+   * the account to label that account in the UI. The users credentials are applied to any
+   * fetcher requests that this function makes. Typically, this function makes an API call
+   * to an API's "who am I" endpoint and returns a username.
+   *
+   * If omitted, or if the function returns an empty value, the account will be labeled
+   * with the creating user's Coda email address.
+   */
+  getConnectionName?: MetadataFormulaDef;
+  /**
+   * A function that is called when a user sets up a new account, that returns the ID of
+   * that account in the third-party system being called.
+   *
+   * This id is not yet subsequently exposed to pack developers and is mostly for Coda
+   * internal use.
+   *
+   * @ignore
+   */
+  getConnectionUserId?: MetadataFormulaDef;
 };
 /**
  * The union of supported authentication definitions. These represent simplified configurations
@@ -463,19 +509,44 @@ declare type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionNam
  * a pack definition builder. The builder massages these definitions into the form of
  * an {@link Authentication} value, which is the value Coda ultimately cares about.
  */
-export declare type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication>;
+export declare type AuthenticationDef =
+  | NoAuthentication
+  | VariousAuthentication
+  | AsAuthDef<HeaderBearerTokenAuthentication>
+  | AsAuthDef<CodaApiBearerTokenAuthentication>
+  | AsAuthDef<CustomHeaderTokenAuthentication>
+  | AsAuthDef<QueryParamTokenAuthentication>
+  | AsAuthDef<MultiQueryParamTokenAuthentication>
+  | AsAuthDef<OAuth2Authentication>
+  | AsAuthDef<WebBasicAuthentication>
+  | AsAuthDef<AWSAccessKeyAuthentication>
+  | AsAuthDef<AWSAssumeRoleAuthentication>;
 /**
  * The union of authentication methods that are supported for system authentication,
  * where the pack author provides credentials used in HTTP requests rather than the user.
  */
-export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication;
+export declare type SystemAuthentication =
+  | HeaderBearerTokenAuthentication
+  | CustomHeaderTokenAuthentication
+  | QueryParamTokenAuthentication
+  | MultiQueryParamTokenAuthentication
+  | WebBasicAuthentication
+  | AWSAccessKeyAuthentication
+  | AWSAssumeRoleAuthentication;
 /**
  * The union of supported system authentication definitions. These represent simplified
  * onfigurations a pack developer can specify when calling {@link setSystemAuthentication}
  * when using a pack definition builder. The builder massages these definitions into the form of
  * an {@link SystemAuthentication} value, which is the value Coda ultimately cares about.
  */
-export declare type SystemAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication>;
+export declare type SystemAuthenticationDef =
+  | AsAuthDef<HeaderBearerTokenAuthentication>
+  | AsAuthDef<CustomHeaderTokenAuthentication>
+  | AsAuthDef<QueryParamTokenAuthentication>
+  | AsAuthDef<MultiQueryParamTokenAuthentication>
+  | AsAuthDef<WebBasicAuthentication>
+  | AsAuthDef<AWSAccessKeyAuthentication>
+  | AsAuthDef<AWSAssumeRoleAuthentication>;
 /**
  * The subset of valid {@link AuthenticationType} enum values that can be used
  * when defining {@link SystemAuthentication}.
@@ -484,7 +555,13 @@ export declare type SystemAuthenticationTypes = $Values<Pick<SystemAuthenticatio
 /**
  * @ignore
  */
-export declare type VariousSupportedAuthentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication;
+export declare type VariousSupportedAuthentication =
+  | NoAuthentication
+  | HeaderBearerTokenAuthentication
+  | CustomHeaderTokenAuthentication
+  | QueryParamTokenAuthentication
+  | MultiQueryParamTokenAuthentication
+  | WebBasicAuthentication;
 /**
  * @ignore
  */
@@ -517,93 +594,93 @@ export declare type VariousSupportedAuthenticationTypes = $Values<Pick<VariousSu
  * At present, matchers will only be run on URLs and not other text values.
  */
 export interface Format {
-    /**
-     * The name of this column format. This will show to users in the column type chooser.
-     */
-    name: string;
-    /** @deprecated Namespaces are being removed from the product. */
-    formulaNamespace: string;
-    /**
-     * The name of the formula to invoke for values in columns using this format.
-     * This must correspond to the name of a regular, public formula defined in this pack.
-     */
-    formulaName: string;
-    /** @deprecated No longer needed, will be inferred from the referenced formula. */
-    hasNoConnection?: boolean;
-    /**
-     * A brief, optional explanation of how users should use this format, for example, what kinds
-     * of values they should put in columns using this format.
-     */
-    instructions?: string;
-    /**
-     * A list of regular expressions that match URLs that the formula implementing this format
-     * is capable of handling. As described in {@link Format}, this is a discovery mechanism.
-     */
-    matchers?: RegExp[];
-    /**
-     * @deprecated Currently unused.
-     */
-    placeholder?: string;
+  /**
+   * The name of this column format. This will show to users in the column type chooser.
+   */
+  name: string;
+  /** @deprecated Namespaces are being removed from the product. */
+  formulaNamespace: string;
+  /**
+   * The name of the formula to invoke for values in columns using this format.
+   * This must correspond to the name of a regular, public formula defined in this pack.
+   */
+  formulaName: string;
+  /** @deprecated No longer needed, will be inferred from the referenced formula. */
+  hasNoConnection?: boolean;
+  /**
+   * A brief, optional explanation of how users should use this format, for example, what kinds
+   * of values they should put in columns using this format.
+   */
+  instructions?: string;
+  /**
+   * A list of regular expressions that match URLs that the formula implementing this format
+   * is capable of handling. As described in {@link Format}, this is a discovery mechanism.
+   */
+  matchers?: RegExp[];
+  /**
+   * @deprecated Currently unused.
+   */
+  placeholder?: string;
 }
 /**
  * @ignore
  */
 export declare enum FeatureSet {
-    Basic = "Basic",
-    Pro = "Pro",
-    Team = "Team",
-    Enterprise = "Enterprise"
+  Basic = 'Basic',
+  Pro = 'Pro',
+  Team = 'Team',
+  Enterprise = 'Enterprise',
 }
 /**
  * @ignore
  */
 export declare enum QuotaLimitType {
-    Action = "Action",
-    Getter = "Getter",
-    Sync = "Sync",
-    Metadata = "Metadata"
+  Action = 'Action',
+  Getter = 'Getter',
+  Sync = 'Sync',
+  Metadata = 'Metadata',
 }
 /**
  * @ignore
  */
 export declare enum SyncInterval {
-    Manual = "Manual",
-    Daily = "Daily",
-    Hourly = "Hourly",
-    EveryTenMinutes = "EveryTenMinutes"
+  Manual = 'Manual',
+  Daily = 'Daily',
+  Hourly = 'Hourly',
+  EveryTenMinutes = 'EveryTenMinutes',
 }
 /**
  * @ignore
  */
 export interface SyncQuota {
-    maximumInterval?: SyncInterval;
-    maximumRowCount?: number;
+  maximumInterval?: SyncInterval;
+  maximumRowCount?: number;
 }
 /**
  * @ignore
  */
 export interface Quota {
-    monthlyLimits?: Partial<{
-        [quotaLimitType in QuotaLimitType]: number;
-    }>;
-    maximumSyncInterval?: SyncInterval;
-    sync?: SyncQuota;
+  monthlyLimits?: Partial<{
+    [quotaLimitType in QuotaLimitType]: number;
+  }>;
+  maximumSyncInterval?: SyncInterval;
+  sync?: SyncQuota;
 }
 /**
  * @deprecated Define these in the pack management UI instead.
  *
  */
 export interface RateLimit {
-    operationsPerInterval: number;
-    intervalSeconds: number;
+  operationsPerInterval: number;
+  intervalSeconds: number;
 }
 /**
  * @deprecated Define these in the pack management UI instead.
  *
  */
 export interface RateLimits {
-    overall?: RateLimit;
-    perConnection?: RateLimit;
+  overall?: RateLimit;
+  perConnection?: RateLimit;
 }
 /**
  * A pack definition without an author-defined semantic version, for use in the web
@@ -615,52 +692,52 @@ export declare type BasicPackDefinition = Omit<PackVersionDefinition, 'version'>
  * heart of the implementation of a Pack.
  */
 export interface PackVersionDefinition {
-    /**
-     * The semantic version of the pack. This must be valid semantic version of the form `1`, `1.2`, or `1.2.3`.
-     * When uploading a pack version, the semantic version must be greater than any previously uploaded version.
-     */
-    version: string;
-    /**
-     * If specified, the user must provide personal authentication credentials before using the pack.
-     */
-    defaultAuthentication?: Authentication;
-    /**
-     * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
-     * explicit connection is specified by the user.
-     */
-    systemConnectionAuthentication?: SystemAuthentication;
-    /**
-     * Any domain(s) to which this pack makes fetcher requests. The domains this pack connects to must be
-     * declared up front here, both to clearly communicate to users what a pack is capable of connecting to,
-     * and for security reasons. These network domains are enforced at execution time: any fetcher request
-     * to a domain not listed here will be rejected.
-     *
-     * Only one network domain is allowed by default. If your pack has needs to connect to multiple domains
-     * contact Coda support for approval.
-     */
-    networkDomains?: string[];
-    /**
-     * @deprecated
-     */
-    formulaNamespace?: string;
-    /**
-     * Definitions of this pack's formulas. See {@link Formula}.
-     *
-     * Note that button actions are also defind here. Buttons are simply formulas
-     * with `isAction: true`.
-     *
-     * Note also, this should always be an array of Formulas. The PackFormulas object structure is deprecated
-     * and will be removed shortly.
-     */
-    formulas?: PackFormulas | Formula[];
-    /**
-     * Definitions of this pack's column formats. See {@link Format}.
-     */
-    formats?: Format[];
-    /**
-     * Definitions of this pack's sync tables. See {@link SyncTable}.
-     */
-    syncTables?: SyncTable[];
+  /**
+   * The semantic version of the pack. This must be valid semantic version of the form `1`, `1.2`, or `1.2.3`.
+   * When uploading a pack version, the semantic version must be greater than any previously uploaded version.
+   */
+  version: string;
+  /**
+   * If specified, the user must provide personal authentication credentials before using the pack.
+   */
+  defaultAuthentication?: Authentication;
+  /**
+   * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
+   * explicit connection is specified by the user.
+   */
+  systemConnectionAuthentication?: SystemAuthentication;
+  /**
+   * Any domain(s) to which this pack makes fetcher requests. The domains this pack connects to must be
+   * declared up front here, both to clearly communicate to users what a pack is capable of connecting to,
+   * and for security reasons. These network domains are enforced at execution time: any fetcher request
+   * to a domain not listed here will be rejected.
+   *
+   * Only one network domain is allowed by default. If your pack has needs to connect to multiple domains
+   * contact Coda support for approval.
+   */
+  networkDomains?: string[];
+  /**
+   * @deprecated
+   */
+  formulaNamespace?: string;
+  /**
+   * Definitions of this pack's formulas. See {@link Formula}.
+   *
+   * Note that button actions are also defind here. Buttons are simply formulas
+   * with `isAction: true`.
+   *
+   * Note also, this should always be an array of Formulas. The PackFormulas object structure is deprecated
+   * and will be removed shortly.
+   */
+  formulas?: PackFormulas | Formula[];
+  /**
+   * Definitions of this pack's column formats. See {@link Format}.
+   */
+  formats?: Format[];
+  /**
+   * Definitions of this pack's sync tables. See {@link SyncTable}.
+   */
+  syncTables?: SyncTable[];
 }
 /**
  * @deprecated use `#PackVersionDefinition`
@@ -669,24 +746,24 @@ export interface PackVersionDefinition {
  * This should only be used by legacy Coda pack implementations.
  */
 export interface PackDefinition extends PackVersionDefinition {
-    id: PackId;
-    name: string;
-    shortDescription: string;
-    description: string;
-    permissionsDescription?: string;
-    category?: PackCategory;
-    logoPath: string;
-    enabledConfigName?: string;
-    exampleImages?: string[];
-    exampleVideoIds?: string[];
-    minimumFeatureSet?: FeatureSet;
-    quotas?: Partial<{
-        [featureSet in FeatureSet]: Quota;
-    }>;
-    rateLimits?: RateLimits;
-    /**
-     * Whether this is a pack that will be used by Coda internally and not exposed directly to users.
-     */
-    isSystem?: boolean;
+  id: PackId;
+  name: string;
+  shortDescription: string;
+  description: string;
+  permissionsDescription?: string;
+  category?: PackCategory;
+  logoPath: string;
+  enabledConfigName?: string;
+  exampleImages?: string[];
+  exampleVideoIds?: string[];
+  minimumFeatureSet?: FeatureSet;
+  quotas?: Partial<{
+    [featureSet in FeatureSet]: Quota;
+  }>;
+  rateLimits?: RateLimits;
+  /**
+   * Whether this is a pack that will be used by Coda internally and not exposed directly to users.
+   */
+  isSystem?: boolean;
 }
 export {};

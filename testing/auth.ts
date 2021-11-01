@@ -1,10 +1,11 @@
 import type {AWSAccessKeyCredentials} from './auth_types';
 import type {AWSAssumeRoleCredentials} from './auth_types';
-import type {Authentication, CustomAuthentication} from '../types';
+import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
 import type {BasicPackDefinition} from '../types';
 import type {Credentials} from './auth_types';
 import type {CredentialsFile} from './auth_types';
+import type {CustomAuthentication} from '../types';
 import type {MultiQueryParamCredentials} from './auth_types';
 import type {OAuth2Credentials} from './auth_types';
 import {assertCondition} from '../helpers/ensure';
@@ -141,7 +142,7 @@ class CredentialHandler {
     assertCondition(this._authDef.type === AuthenticationType.Custom);
     this.checkForExistingCredential();
     const endpointUrl = this.maybePromptForEndpointUrl();
-    const {parameters} = this._authDef;
+    const {params: parameters} = this._authDef;
     const params: {[key: string]: string} = {};
     for (const [key, value] of Object.entries(parameters)) {
       const placeholder = value.placeholder || key;

@@ -177,6 +177,25 @@ class AuthenticatingFetcher {
                     headers: { ...headers, Authorization: `Basic ${encodedAuth}` },
                 };
             }
+            case types_1.AuthenticationType.Custom: {
+                const request = {
+                    url,
+                    body,
+                    form,
+                    headers,
+                };
+                const { params } = this._credentials;
+                let requestWithTemplateSubstitutions = JSON.stringify(request);
+                if (requestWithTemplateSubstitutions) {
+                    // For awful APIs that require auth parameters in the request body, we have
+                    // this scheme where we do template substitution of the body using an unguessable
+                    // random token as part of the template key.
+                    Object.entries(params).forEach(([key, value]) => {
+                        requestWithTemplateSubstitutions = (0, ensure_2.ensureExists)(requestWithTemplateSubstitutions).replace(`{{${key}-${this._invocationToken}}}`, value || '');
+                    });
+                }
+                return JSON.parse(requestWithTemplateSubstitutions);
+            }
             case types_1.AuthenticationType.QueryParamToken: {
                 const { paramValue } = this._credentials;
                 return { headers, body, form, url: addQueryParam(url, this._authDef.paramName, paramValue) };

@@ -1,7 +1,8 @@
 import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
 import ClientOAuth2 from 'client-oauth2';
-import type {Credentials, CustomCredentials} from './auth_types';
+import type {Credentials} from './auth_types';
+import type {CustomCredentials} from './auth_types';
 import type {ExecutionContext} from '../api';
 import type {FetchRequest} from '../api_types';
 import type {FetchResponse} from '../api_types';

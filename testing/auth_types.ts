@@ -18,7 +18,7 @@ export interface WebBasicCredentials extends BaseCredentials {
 }
 
 export type CustomCredentials<T extends CustomAuthentication> = BaseCredentials & {
-  params: {[K in keyof T['parameters']]: string | undefined};
+  params: {[K in keyof T['params']]: string | undefined};
 };
 
 export interface QueryParamCredentials extends BaseCredentials {
