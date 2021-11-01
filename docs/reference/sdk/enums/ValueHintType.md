@@ -8,9 +8,12 @@ Synthetic types that instruct Coda how to coerce values from primitives at inges
 
 • **Attachment** = `"attachment"`
 
+Indicates to interpret and render a value as a file attachment. The provided value should be a URL
+pointing to a file of a Coda-supported type. Coda will ingest the file and host it from Coda infrastructure.
+
 #### Defined in
 
-[schema.ts:41](https://github.com/coda/packs-sdk/blob/main/schema.ts#L41)
+[schema.ts:146](https://github.com/coda/packs-sdk/blob/main/schema.ts#L146)
 
 ___
 
@@ -18,9 +21,11 @@ ___
 
 • **Currency** = `"currency"`
 
+Indicates to interpret and render the value as a currency value.
+
 #### Defined in
 
-[schema.ts:33](https://github.com/coda/packs-sdk/blob/main/schema.ts#L33)
+[schema.ts:85](https://github.com/coda/packs-sdk/blob/main/schema.ts#L85)
 
 ___
 
@@ -28,9 +33,11 @@ ___
 
 • **Date** = `"date"`
 
+Indicates to interpret the value as a date (e.g. March 3, 2021).
+
 #### Defined in
 
-[schema.ts:27](https://github.com/coda/packs-sdk/blob/main/schema.ts#L27)
+[schema.ts:45](https://github.com/coda/packs-sdk/blob/main/schema.ts#L45)
 
 ___
 
@@ -38,9 +45,11 @@ ___
 
 • **DateTime** = `"datetime"`
 
+Indicates to interpret the value as a datetime (e.g. March 3, 2021 at 5:24pm).
+
 #### Defined in
 
-[schema.ts:29](https://github.com/coda/packs-sdk/blob/main/schema.ts#L29)
+[schema.ts:53](https://github.com/coda/packs-sdk/blob/main/schema.ts#L53)
 
 ___
 
@@ -48,9 +57,11 @@ ___
 
 • **Duration** = `"duration"`
 
+Indicates to interpret the value as a duration (e.g. 3 hours).
+
 #### Defined in
 
-[schema.ts:30](https://github.com/coda/packs-sdk/blob/main/schema.ts#L30)
+[schema.ts:57](https://github.com/coda/packs-sdk/blob/main/schema.ts#L57)
 
 ___
 
@@ -58,9 +69,12 @@ ___
 
 • **Embed** = `"embed"`
 
+Indicates to interpret and render a value as an embed. The provided value should be a URL pointing
+to an embeddable web page.
+
 #### Defined in
 
-[schema.ts:39](https://github.com/coda/packs-sdk/blob/main/schema.ts#L39)
+[schema.ts:115](https://github.com/coda/packs-sdk/blob/main/schema.ts#L115)
 
 ___
 
@@ -68,9 +82,11 @@ ___
 
 • **Html** = `"html"`
 
+Indicates to interpret a text value as HTML, which will be converted and rendered as Coda rich text.
+
 #### Defined in
 
-[schema.ts:38](https://github.com/coda/packs-sdk/blob/main/schema.ts#L38)
+[schema.ts:110](https://github.com/coda/packs-sdk/blob/main/schema.ts#L110)
 
 ___
 
@@ -78,9 +94,12 @@ ___
 
 • **ImageAttachment** = `"imageAttachment"`
 
+Indicates to interpret and render the value as an image. The provided value should be a URL that
+points to an image. Coda will ingest the image and host it from Coda infrastructure.
+
 #### Defined in
 
-[schema.ts:35](https://github.com/coda/packs-sdk/blob/main/schema.ts#L35)
+[schema.ts:98](https://github.com/coda/packs-sdk/blob/main/schema.ts#L98)
 
 ___
 
@@ -88,9 +107,15 @@ ___
 
 • **ImageReference** = `"image"`
 
+Indicates to interpret and render the value as an image. The provided value should be a URL that
+points to an image. Coda will hotlink to the image when rendering it a doc.
+
+Using [ImageAttachment](ValueHintType.md#imageattachment) is recommended instead, so that the image is always accessible
+and won't appear as broken if the source image is later deleted.
+
 #### Defined in
 
-[schema.ts:34](https://github.com/coda/packs-sdk/blob/main/schema.ts#L34)
+[schema.ts:93](https://github.com/coda/packs-sdk/blob/main/schema.ts#L93)
 
 ___
 
@@ -98,9 +123,11 @@ ___
 
 • **Markdown** = `"markdown"`
 
+Indicates to interpret a text value as Markdown, which will be converted and rendered as Coda rich text.
+
 #### Defined in
 
-[schema.ts:37](https://github.com/coda/packs-sdk/blob/main/schema.ts#L37)
+[schema.ts:106](https://github.com/coda/packs-sdk/blob/main/schema.ts#L106)
 
 ___
 
@@ -108,9 +135,11 @@ ___
 
 • **Percent** = `"percent"`
 
+Indicates to interpret and render the value as a percentage.
+
 #### Defined in
 
-[schema.ts:32](https://github.com/coda/packs-sdk/blob/main/schema.ts#L32)
+[schema.ts:81](https://github.com/coda/packs-sdk/blob/main/schema.ts#L81)
 
 ___
 
@@ -118,9 +147,27 @@ ___
 
 • **Person** = `"person"`
 
+Indicates to interpret and render the value as a Coda person reference. The provided value should be
+an object whose `id` property is an email address, which Coda will try to resolve to a user
+and render an @-reference to the user.
+
+**`example`**
+```
+makeObjectSchema({
+  type: ValueType.Object,
+  codaType: ValueHintType.Person,
+  id: 'email',
+  primary: 'name',
+  properties: {
+    email: {type: ValueType.String, required: true},
+    name: {type: ValueType.String, required: true},
+  },
+});
+```
+
 #### Defined in
 
-[schema.ts:31](https://github.com/coda/packs-sdk/blob/main/schema.ts#L31)
+[schema.ts:77](https://github.com/coda/packs-sdk/blob/main/schema.ts#L77)
 
 ___
 
@@ -128,9 +175,33 @@ ___
 
 • **Reference** = `"reference"`
 
+Indicates to interpret and render the value as a Coda @-reference to a table row. The provided value should
+be an object whose `id` value matches the id of some row in a sync table. The schema where this hint type is
+used must specify an identity that specifies the desired sync table.
+
+Normally a reference schema is constructed from the schema object being referenced using the helper
+[makeReferenceSchemaFromObjectSchema](../functions/makeReferenceSchemaFromObjectSchema.md).
+
+**`example`**
+```
+makeObjectSchema({
+  type: ValueType.Object,
+  codaType: ValueHintType.Reference,
+  identity: {
+    name: "SomeSyncTableIdentity"
+  },
+  id: 'identifier',
+  primary: 'name',
+  properties: {
+    identifier: {type: ValueType.Number, required: true},
+    name: {type: ValueType.String, required: true},
+  },
+});
+```
+
 #### Defined in
 
-[schema.ts:40](https://github.com/coda/packs-sdk/blob/main/schema.ts#L40)
+[schema.ts:141](https://github.com/coda/packs-sdk/blob/main/schema.ts#L141)
 
 ___
 
@@ -138,9 +209,11 @@ ___
 
 • **Scale** = `"scale"`
 
+Indicates to render a numeric value as a scale UI component (e.g. a star rating).
+
 #### Defined in
 
-[schema.ts:43](https://github.com/coda/packs-sdk/blob/main/schema.ts#L43)
+[schema.ts:154](https://github.com/coda/packs-sdk/blob/main/schema.ts#L154)
 
 ___
 
@@ -148,9 +221,11 @@ ___
 
 • **Slider** = `"slider"`
 
+Indicates to render a numeric value as a slider UI component.
+
 #### Defined in
 
-[schema.ts:42](https://github.com/coda/packs-sdk/blob/main/schema.ts#L42)
+[schema.ts:150](https://github.com/coda/packs-sdk/blob/main/schema.ts#L150)
 
 ___
 
@@ -158,9 +233,11 @@ ___
 
 • **Time** = `"time"`
 
+Indicates to interpret the value as a time (e.g. 5:24pm).
+
 #### Defined in
 
-[schema.ts:28](https://github.com/coda/packs-sdk/blob/main/schema.ts#L28)
+[schema.ts:49](https://github.com/coda/packs-sdk/blob/main/schema.ts#L49)
 
 ___
 
@@ -168,6 +245,8 @@ ___
 
 • **Url** = `"url"`
 
+Indicates to interpret and render the value as a URL link.
+
 #### Defined in
 
-[schema.ts:36](https://github.com/coda/packs-sdk/blob/main/schema.ts#L36)
+[schema.ts:102](https://github.com/coda/packs-sdk/blob/main/schema.ts#L102)

@@ -12,13 +12,17 @@
 
 • `Optional` **attribution**: `AttributionNode`[]
 
+Attribution text, images, and/or links that should be rendered along with this value.
+
+See [makeAttributionNode](../functions/makeAttributionNode.md).
+
 #### Inherited from
 
 [IdentityDefinition](IdentityDefinition.md).[attribution](IdentityDefinition.md#attribution)
 
 #### Defined in
 
-[schema.ts:255](https://github.com/coda/packs-sdk/blob/main/schema.ts#L255)
+[schema.ts:406](https://github.com/coda/packs-sdk/blob/main/schema.ts#L406)
 
 ___
 
@@ -32,7 +36,7 @@ ___
 
 #### Defined in
 
-[schema.ts:254](https://github.com/coda/packs-sdk/blob/main/schema.ts#L254)
+[schema.ts:400](https://github.com/coda/packs-sdk/blob/main/schema.ts#L400)
 
 ___
 
@@ -46,7 +50,7 @@ ___
 
 #### Defined in
 
-[schema.ts:253](https://github.com/coda/packs-sdk/blob/main/schema.ts#L253)
+[schema.ts:399](https://github.com/coda/packs-sdk/blob/main/schema.ts#L399)
 
 ___
 
@@ -60,4 +64,4 @@ ___
 
 #### Defined in
 
-[schema.ts:261](https://github.com/coda/packs-sdk/blob/main/schema.ts#L261)
+[schema.ts:412](https://github.com/coda/packs-sdk/blob/main/schema.ts#L412)

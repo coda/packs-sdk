@@ -68,10 +68,29 @@ exports.ParameterTypeInputMap = {
     [ParameterType.HtmlArray]: { type: 'array', items: Type.html },
     [ParameterType.ImageArray]: { type: 'array', items: Type.image },
 };
+/**
+ * Enumeration of requirement states for whether a given formula or sync table requires
+ * a connection (account) to use.
+ */
 var ConnectionRequirement;
 (function (ConnectionRequirement) {
+    /**
+     * Indicates this building block does not make use of an account.
+     */
     ConnectionRequirement["None"] = "none";
+    /**
+     * Indicates that this building block can be used with or without an account.
+     *
+     * An optional parameter will be added to the formula (or sync formula) for the calling user
+     * to specify an account to use.
+     */
     ConnectionRequirement["Optional"] = "optional";
+    /**
+     * Indicates that this building block must be used with an account.
+     *
+     * A required parameter will be added to the formula (or sync formula) for the calling user
+     * to specify an account to use.
+     */
     ConnectionRequirement["Required"] = "required";
 })(ConnectionRequirement = exports.ConnectionRequirement || (exports.ConnectionRequirement = {}));
 /** @deprecated use `ConnectionRequirement` instead */

@@ -9,9 +9,11 @@ or in object schemas.
 
 • **Array** = `"array"`
 
+Indicates a JavaScript array should be returned. The schema of the array items must also be specified.
+
 #### Defined in
 
-[schema.ts:19](https://github.com/coda/packs-sdk/blob/main/schema.ts#L19)
+[schema.ts:31](https://github.com/coda/packs-sdk/blob/main/schema.ts#L31)
 
 ___
 
@@ -19,9 +21,11 @@ ___
 
 • **Boolean** = `"boolean"`
 
+Indicates a JavaScript boolean (true/false) should be returned.
+
 #### Defined in
 
-[schema.ts:16](https://github.com/coda/packs-sdk/blob/main/schema.ts#L16)
+[schema.ts:19](https://github.com/coda/packs-sdk/blob/main/schema.ts#L19)
 
 ___
 
@@ -29,9 +33,11 @@ ___
 
 • **Number** = `"number"`
 
+Indicates a JavaScript number should be returned.
+
 #### Defined in
 
-[schema.ts:17](https://github.com/coda/packs-sdk/blob/main/schema.ts#L17)
+[schema.ts:23](https://github.com/coda/packs-sdk/blob/main/schema.ts#L23)
 
 ___
 
@@ -39,9 +45,11 @@ ___
 
 • **Object** = `"object"`
 
+Indicates a JavaScript object should be returned. The schema of each object property must also be specified.
+
 #### Defined in
 
-[schema.ts:20](https://github.com/coda/packs-sdk/blob/main/schema.ts#L20)
+[schema.ts:35](https://github.com/coda/packs-sdk/blob/main/schema.ts#L35)
 
 ___
 
@@ -49,6 +57,8 @@ ___
 
 • **String** = `"string"`
 
+Indicates a JavaScript string should be returned.
+
 #### Defined in
 
-[schema.ts:18](https://github.com/coda/packs-sdk/blob/main/schema.ts#L18)
+[schema.ts:27](https://github.com/coda/packs-sdk/blob/main/schema.ts#L27)

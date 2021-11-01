@@ -16,10 +16,25 @@ const pascalcase_1 = __importDefault(require("pascalcase"));
  */
 var ValueType;
 (function (ValueType) {
+    /**
+     * Indicates a JavaScript boolean (true/false) should be returned.
+     */
     ValueType["Boolean"] = "boolean";
+    /**
+     * Indicates a JavaScript number should be returned.
+     */
     ValueType["Number"] = "number";
+    /**
+     * Indicates a JavaScript string should be returned.
+     */
     ValueType["String"] = "string";
+    /**
+     * Indicates a JavaScript array should be returned. The schema of the array items must also be specified.
+     */
     ValueType["Array"] = "array";
+    /**
+     * Indicates a JavaScript object should be returned. The schema of each object property must also be specified.
+     */
     ValueType["Object"] = "object";
 })(ValueType = exports.ValueType || (exports.ValueType = {}));
 /**
@@ -27,22 +42,118 @@ var ValueType;
  */
 var ValueHintType;
 (function (ValueHintType) {
+    /**
+     * Indicates to interpret the value as a date (e.g. March 3, 2021).
+     */
     ValueHintType["Date"] = "date";
+    /**
+     * Indicates to interpret the value as a time (e.g. 5:24pm).
+     */
     ValueHintType["Time"] = "time";
+    /**
+     * Indicates to interpret the value as a datetime (e.g. March 3, 2021 at 5:24pm).
+     */
     ValueHintType["DateTime"] = "datetime";
+    /**
+     * Indicates to interpret the value as a duration (e.g. 3 hours).
+     */
     ValueHintType["Duration"] = "duration";
+    /**
+     * Indicates to interpret and render the value as a Coda person reference. The provided value should be
+     * an object whose `id` property is an email address, which Coda will try to resolve to a user
+     * and render an @-reference to the user.
+     *
+     * @example
+     * ```
+     * makeObjectSchema({
+     *   type: ValueType.Object,
+     *   codaType: ValueHintType.Person,
+     *   id: 'email',
+     *   primary: 'name',
+     *   properties: {
+     *     email: {type: ValueType.String, required: true},
+     *     name: {type: ValueType.String, required: true},
+     *   },
+     * });
+     * ```
+     */
     ValueHintType["Person"] = "person";
+    /**
+     * Indicates to interpret and render the value as a percentage.
+     */
     ValueHintType["Percent"] = "percent";
+    /**
+     * Indicates to interpret and render the value as a currency value.
+     */
     ValueHintType["Currency"] = "currency";
+    /**
+     * Indicates to interpret and render the value as an image. The provided value should be a URL that
+     * points to an image. Coda will hotlink to the image when rendering it a doc.
+     *
+     * Using {@link ImageAttachment} is recommended instead, so that the image is always accessible
+     * and won't appear as broken if the source image is later deleted.
+     */
     ValueHintType["ImageReference"] = "image";
+    /**
+     * Indicates to interpret and render the value as an image. The provided value should be a URL that
+     * points to an image. Coda will ingest the image and host it from Coda infrastructure.
+     */
     ValueHintType["ImageAttachment"] = "imageAttachment";
+    /**
+     * Indicates to interpret and render the value as a URL link.
+     */
     ValueHintType["Url"] = "url";
+    /**
+     * Indicates to interpret a text value as Markdown, which will be converted and rendered as Coda rich text.
+     */
     ValueHintType["Markdown"] = "markdown";
+    /**
+     * Indicates to interpret a text value as HTML, which will be converted and rendered as Coda rich text.
+     */
     ValueHintType["Html"] = "html";
+    /**
+     * Indicates to interpret and render a value as an embed. The provided value should be a URL pointing
+     * to an embeddable web page.
+     */
     ValueHintType["Embed"] = "embed";
+    /**
+     * Indicates to interpret and render the value as a Coda @-reference to a table row. The provided value should
+     * be an object whose `id` value matches the id of some row in a sync table. The schema where this hint type is
+     * used must specify an identity that specifies the desired sync table.
+     *
+     * Normally a reference schema is constructed from the schema object being referenced using the helper
+     * {@link makeReferenceSchemaFromObjectSchema}.
+     *
+     * @example
+     * ```
+     * makeObjectSchema({
+     *   type: ValueType.Object,
+     *   codaType: ValueHintType.Reference,
+     *   identity: {
+     *     name: "SomeSyncTableIdentity"
+     *   },
+     *   id: 'identifier',
+     *   primary: 'name',
+     *   properties: {
+     *     identifier: {type: ValueType.Number, required: true},
+     *     name: {type: ValueType.String, required: true},
+     *   },
+     * });
+     * ```
+     */
     ValueHintType["Reference"] = "reference";
+    /**
+     * Indicates to interpret and render a value as a file attachment. The provided value should be a URL
+     * pointing to a file of a Coda-supported type. Coda will ingest the file and host it from Coda infrastructure.
+     */
     ValueHintType["Attachment"] = "attachment";
+    /**
+     * Indicates to render a numeric value as a slider UI component.
+     */
     ValueHintType["Slider"] = "slider";
+    /**
+     * Indicates to render a numeric value as a scale UI component (e.g. a star rating).
+     */
     ValueHintType["Scale"] = "scale";
 })(ValueHintType = exports.ValueHintType || (exports.ValueHintType = {}));
 exports.StringHintValueTypes = [
@@ -68,10 +179,30 @@ exports.NumberHintValueTypes = [
     ValueHintType.Scale,
 ];
 exports.ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference];
+/**
+ * Enumeration of formats supported by schemas that use {@link ValueHintType.Currency}.
+ *
+ * These affect how a numeric value is rendered in docs.
+ */
 var CurrencyFormat;
 (function (CurrencyFormat) {
+    /**
+     * Indicates the value should be rendered as a number with a currency symbol as a prefix, e.g. `$2.50`.
+     */
     CurrencyFormat["Currency"] = "currency";
+    /**
+     * Indicates the value should be rendered as a number with a currency symbol as a prefix, but padded
+     * to allow the numeric values to line up vertically, e.g.
+     *
+     * ```
+     * $       2.50
+     * $      29.99
+     * ```
+     */
     CurrencyFormat["Accounting"] = "accounting";
+    /**
+     * Indicates the value should be rendered as a number without a currency symbol, e.g. `2.50`.
+     */
     CurrencyFormat["Financial"] = "financial";
 })(CurrencyFormat = exports.CurrencyFormat || (exports.CurrencyFormat = {}));
 var ScaleIconSet;
@@ -97,11 +228,26 @@ var ScaleIconSet;
     ScaleIconSet["Checkmark"] = "checkmark";
     ScaleIconSet["LightBulb"] = "lightbulb";
 })(ScaleIconSet = exports.ScaleIconSet || (exports.ScaleIconSet = {}));
+/**
+ * Enumeration of units supported by duration schemas. See {@link maxUnit}.
+ */
 var DurationUnit;
 (function (DurationUnit) {
+    /**
+     * Indications a duration as a number of days.
+     */
     DurationUnit["Days"] = "days";
+    /**
+     * Indications a duration as a number of hours.
+     */
     DurationUnit["Hours"] = "hours";
+    /**
+     * Indications a duration as a number of minutes.
+     */
     DurationUnit["Minutes"] = "minutes";
+    /**
+     * Indications a duration as a number of seconds.
+     */
     DurationUnit["Seconds"] = "seconds";
 })(DurationUnit = exports.DurationUnit || (exports.DurationUnit = {}));
 /**
@@ -116,12 +262,37 @@ exports.SimpleStringHintValueTypes = [
     ValueHintType.Markdown,
     ValueHintType.Url,
 ];
+/**
+ * The type of content in this attribution node.
+ *
+ * Multiple attribution nodes can be rendered all together, for example to have
+ * attribution that contains both text and a logo image.
+ */
 var AttributionNodeType;
 (function (AttributionNodeType) {
+    /**
+     * Text attribution content.
+     */
     AttributionNodeType[AttributionNodeType["Text"] = 1] = "Text";
+    /**
+     * A hyperlink pointing to the data source.
+     */
     AttributionNodeType[AttributionNodeType["Link"] = 2] = "Link";
+    /**
+     * An image, often a logo of the data source.
+     */
     AttributionNodeType[AttributionNodeType["Image"] = 3] = "Image";
 })(AttributionNodeType = exports.AttributionNodeType || (exports.AttributionNodeType = {}));
+/**
+ * A helper for constructing attribution text, links, or images that render along with a Pack value.
+ *
+ * Many APIs have licensing requirements that ask for specific attribution to be included
+ * when using their data. For example, a stock photo API may require attribution text
+ * and a logo.
+ *
+ * Any {@link IdentityDefinition} can include one or more attribution nodes that will be
+ * rendered any time a value with that identity is rendered in a doc.
+ */
 function makeAttributionNode(node) {
     return node;
 }

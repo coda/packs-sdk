@@ -18,7 +18,7 @@ BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:182](https://github.com/coda/packs-sdk/blob/main/schema.ts#L182)
+[schema.ts:313](https://github.com/coda/packs-sdk/blob/main/schema.ts#L313)
 
 ___
 
@@ -32,7 +32,7 @@ BaseStringSchema.description
 
 #### Defined in
 
-[schema.ts:75](https://github.com/coda/packs-sdk/blob/main/schema.ts#L75)
+[schema.ts:186](https://github.com/coda/packs-sdk/blob/main/schema.ts#L186)
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-[schema.ts:184](https://github.com/coda/packs-sdk/blob/main/schema.ts#L184)
+[schema.ts:315](https://github.com/coda/packs-sdk/blob/main/schema.ts#L315)
 
 ___
 
@@ -56,4 +56,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:208](https://github.com/coda/packs-sdk/blob/main/schema.ts#L208)
+[schema.ts:354](https://github.com/coda/packs-sdk/blob/main/schema.ts#L354)

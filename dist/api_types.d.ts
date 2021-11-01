@@ -169,9 +169,28 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
      */
     readonly extraOAuthScopes?: string[];
 }
+/**
+ * Enumeration of requirement states for whether a given formula or sync table requires
+ * a connection (account) to use.
+ */
 export declare enum ConnectionRequirement {
+    /**
+     * Indicates this building block does not make use of an account.
+     */
     None = "none",
+    /**
+     * Indicates that this building block can be used with or without an account.
+     *
+     * An optional parameter will be added to the formula (or sync formula) for the calling user
+     * to specify an account to use.
+     */
     Optional = "optional",
+    /**
+     * Indicates that this building block must be used with an account.
+     *
+     * A required parameter will be added to the formula (or sync formula) for the calling user
+     * to specify an account to use.
+     */
     Required = "required"
 }
 /** @deprecated use `ConnectionRequirement` instead */
