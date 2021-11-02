@@ -5,7 +5,6 @@ import {AuthenticationType} from '../types';
 import type {BasicPackDefinition} from '../types';
 import type {Credentials} from './auth_types';
 import type {CredentialsFile} from './auth_types';
-import type {CustomAuthentication} from '../types';
 import type {MultiQueryParamCredentials} from './auth_types';
 import type {OAuth2Credentials} from './auth_types';
 import {assertCondition} from '../helpers/ensure';
@@ -146,7 +145,7 @@ class CredentialHandler {
     const params: {[key: string]: string} = {};
     for (const [key, value] of Object.entries(parameters)) {
       const placeholder = value.placeholder || key;
-      params[key] = promptForInput(`Enter the ${placeholder} for this Pack:\n`, {mask: value.isSensitive});
+      params[key] = promptForInput(`Enter the ${placeholder} for this Pack:\n`, {mask: true});
     }
     this.storeCredential({endpointUrl, params});
     print('Credentials updated!');
@@ -287,7 +286,7 @@ class CredentialHandler {
     return promptForInput(`Enter the endpoint url for this Pack (for example, ${placeholder}):\n`);
   }
 
-  storeCredential<T extends CustomAuthentication = CustomAuthentication>(credentials: Credentials<T>): void {
+  storeCredential(credentials: Credentials): void {
     storeCredential(this._manifestDir, credentials);
   }
 }

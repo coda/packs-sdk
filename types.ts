@@ -444,14 +444,9 @@ export interface CustomAuthParameter {
   placeholder?: string;
 
   /**
-   * If true, treats the input value as sensitive and masks it.
-   */
-  isSensitive?: boolean;
-
-  /**
    * A description shown to the user indicating what value they should provide for this parameter.
    */
-  description?: boolean;
+  description?: string;
 }
 
 /**
@@ -463,7 +458,7 @@ export interface CustomAuthentication extends BaseAuthentication {
   /**
    * Configuration for labels to show in the UI when the user sets up a new acount.
    */
-  params: {[key: string]: CustomAuthParameter};
+  params: CustomAuthParameter[];
 }
 
 /**

@@ -363,7 +363,6 @@ const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> 
           name: z.string(),
           displayName: z.string().optional(),
           description: z.string().optional(),
-          isSensitive: z.string().optional(),
           placeholder: z.string().optional(),
         }),
       )
