@@ -24,7 +24,7 @@ BaseSchema.description
 
 #### Defined in
 
-[schema.ts:75](https://github.com/coda/packs-sdk/blob/main/schema.ts#L75)
+[schema.ts:186](https://github.com/coda/packs-sdk/blob/main/schema.ts#L186)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-[schema.ts:238](https://github.com/coda/packs-sdk/blob/main/schema.ts#L238)
+[schema.ts:384](https://github.com/coda/packs-sdk/blob/main/schema.ts#L384)
 
 ___
 
@@ -44,4 +44,4 @@ ___
 
 #### Defined in
 
-[schema.ts:237](https://github.com/coda/packs-sdk/blob/main/schema.ts#L237)
+[schema.ts:383](https://github.com/coda/packs-sdk/blob/main/schema.ts#L383)

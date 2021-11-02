@@ -13,10 +13,25 @@ import pascalcase from 'pascalcase';
  * or in object schemas.
  */
 export enum ValueType {
+  /**
+   * Indicates a JavaScript boolean (true/false) should be returned.
+   */
   Boolean = 'boolean',
+  /**
+   * Indicates a JavaScript number should be returned.
+   */
   Number = 'number',
+  /**
+   * Indicates a JavaScript string should be returned.
+   */
   String = 'string',
+  /**
+   * Indicates a JavaScript array should be returned. The schema of the array items must also be specified.
+   */
   Array = 'array',
+  /**
+   * Indicates a JavaScript object should be returned. The schema of each object property must also be specified.
+   */
   Object = 'object',
 }
 
@@ -24,22 +39,118 @@ export enum ValueType {
  * Synthetic types that instruct Coda how to coerce values from primitives at ingestion time.
  */
 export enum ValueHintType {
+  /**
+   * Indicates to interpret the value as a date (e.g. March 3, 2021).
+   */
   Date = 'date',
+  /**
+   * Indicates to interpret the value as a time (e.g. 5:24pm).
+   */
   Time = 'time',
+  /**
+   * Indicates to interpret the value as a datetime (e.g. March 3, 2021 at 5:24pm).
+   */
   DateTime = 'datetime',
+  /**
+   * Indicates to interpret the value as a duration (e.g. 3 hours).
+   */
   Duration = 'duration',
+  /**
+   * Indicates to interpret and render the value as a Coda person reference. The provided value should be
+   * an object whose `id` property is an email address, which Coda will try to resolve to a user
+   * and render an @-reference to the user.
+   *
+   * @example
+   * ```
+   * makeObjectSchema({
+   *   type: ValueType.Object,
+   *   codaType: ValueHintType.Person,
+   *   id: 'email',
+   *   primary: 'name',
+   *   properties: {
+   *     email: {type: ValueType.String, required: true},
+   *     name: {type: ValueType.String, required: true},
+   *   },
+   * });
+   * ```
+   */
   Person = 'person',
+  /**
+   * Indicates to interpret and render the value as a percentage.
+   */
   Percent = 'percent',
+  /**
+   * Indicates to interpret and render the value as a currency value.
+   */
   Currency = 'currency',
+  /**
+   * Indicates to interpret and render the value as an image. The provided value should be a URL that
+   * points to an image. Coda will hotlink to the image when rendering it a doc.
+   *
+   * Using {@link ImageAttachment} is recommended instead, so that the image is always accessible
+   * and won't appear as broken if the source image is later deleted.
+   */
   ImageReference = 'image',
+  /**
+   * Indicates to interpret and render the value as an image. The provided value should be a URL that
+   * points to an image. Coda will ingest the image and host it from Coda infrastructure.
+   */
   ImageAttachment = 'imageAttachment',
+  /**
+   * Indicates to interpret and render the value as a URL link.
+   */
   Url = 'url',
+  /**
+   * Indicates to interpret a text value as Markdown, which will be converted and rendered as Coda rich text.
+   */
   Markdown = 'markdown',
+  /**
+   * Indicates to interpret a text value as HTML, which will be converted and rendered as Coda rich text.
+   */
   Html = 'html',
+  /**
+   * Indicates to interpret and render a value as an embed. The provided value should be a URL pointing
+   * to an embeddable web page.
+   */
   Embed = 'embed',
+  /**
+   * Indicates to interpret and render the value as a Coda @-reference to a table row. The provided value should
+   * be an object whose `id` value matches the id of some row in a sync table. The schema where this hint type is
+   * used must specify an identity that specifies the desired sync table.
+   *
+   * Normally a reference schema is constructed from the schema object being referenced using the helper
+   * {@link makeReferenceSchemaFromObjectSchema}.
+   *
+   * @example
+   * ```
+   * makeObjectSchema({
+   *   type: ValueType.Object,
+   *   codaType: ValueHintType.Reference,
+   *   identity: {
+   *     name: "SomeSyncTableIdentity"
+   *   },
+   *   id: 'identifier',
+   *   primary: 'name',
+   *   properties: {
+   *     identifier: {type: ValueType.Number, required: true},
+   *     name: {type: ValueType.String, required: true},
+   *   },
+   * });
+   * ```
+   */
   Reference = 'reference',
+  /**
+   * Indicates to interpret and render a value as a file attachment. The provided value should be a URL
+   * pointing to a file of a Coda-supported type. Coda will ingest the file and host it from Coda infrastructure.
+   */
   Attachment = 'attachment',
+  /**
+   * Indicates to render a numeric value as a slider UI component.
+   */
   Slider = 'slider',
+  /**
+   * Indicates to render a numeric value as a scale UI component (e.g. a star rating).
+   */
   Scale = 'scale',
 }
 
@@ -119,9 +230,29 @@ export interface NumericDateTimeSchema extends BaseNumberSchema<ValueHintType.Da
   timeFormat?: string;
 }
 
+/**
+ * Enumeration of formats supported by schemas that use {@link ValueHintType.Currency}.
+ *
+ * These affect how a numeric value is rendered in docs.
+ */
 export enum CurrencyFormat {
+  /**
+   * Indicates the value should be rendered as a number with a currency symbol as a prefix, e.g. `$2.50`.
+   */
   Currency = 'currency',
+  /**
+   * Indicates the value should be rendered as a number with a currency symbol as a prefix, but padded
+   * to allow the numeric values to line up vertically, e.g.
+   *
+   * ```
+   * $       2.50
+   * $      29.99
+   * ```
+   */
   Accounting = 'accounting',
+  /**
+   * Indicates the value should be rendered as a number without a currency symbol, e.g. `2.50`.
+   */
   Financial = 'financial',
 }
 
@@ -192,10 +323,25 @@ export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.Dat
   timeFormat?: string;
 }
 
+/**
+ * Enumeration of units supported by duration schemas. See {@link maxUnit}.
+ */
 export enum DurationUnit {
+  /**
+   * Indications a duration as a number of days.
+   */
   Days = 'days',
+  /**
+   * Indications a duration as a number of hours.
+   */
   Hours = 'hours',
+  /**
+   * Indications a duration as a number of minutes.
+   */
   Minutes = 'minutes',
+  /**
+   * Indications a duration as a number of seconds.
+   */
   Seconds = 'seconds',
 }
 
@@ -252,6 +398,11 @@ export type GenericObjectSchema = ObjectSchema<string, string>;
 export interface IdentityDefinition {
   name: string;
   dynamicUrl?: string;
+  /**
+   * Attribution text, images, and/or links that should be rendered along with this value.
+   *
+   * See {@link makeAttributionNode}.
+   */
   attribution?: AttributionNode[];
   // TODO(jonathan): Remove after existing packs go through the v2 upload flow.
   packId?: PackId;
@@ -281,9 +432,24 @@ export interface ObjectSchema<K extends string, L extends string> extends Object
   identity?: Identity;
 }
 
+/**
+ * The type of content in this attribution node.
+ *
+ * Multiple attribution nodes can be rendered all together, for example to have
+ * attribution that contains both text and a logo image.
+ */
 export enum AttributionNodeType {
+  /**
+   * Text attribution content.
+   */
   Text = 1,
+  /**
+   * A hyperlink pointing to the data source.
+   */
   Link,
+  /**
+   * An image, often a logo of the data source.
+   */
   Image,
 }
 
@@ -305,6 +471,17 @@ interface ImageAttributionNode {
 }
 
 type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
+
+/**
+ * A helper for constructing attribution text, links, or images that render along with a Pack value.
+ *
+ * Many APIs have licensing requirements that ask for specific attribution to be included
+ * when using their data. For example, a stock photo API may require attribution text
+ * and a logo.
+ *
+ * Any {@link IdentityDefinition} can include one or more attribution nodes that will be
+ * rendered any time a value with that identity is rendered in a doc.
+ */
 export function makeAttributionNode<T extends AttributionNode>(node: T): T {
   return node;
 }
