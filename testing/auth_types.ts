@@ -16,7 +16,7 @@ export interface WebBasicCredentials extends BaseCredentials {
 }
 
 export type CustomCredentials = BaseCredentials & {
-  params: {[key: string]: string | undefined};
+  params: {[key: string]: string};
 };
 
 export interface QueryParamCredentials extends BaseCredentials {

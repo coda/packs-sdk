@@ -68,7 +68,7 @@ export function setupAuth(manifestDir: string, packDef: BasicPackDefinition, opt
     case AuthenticationType.WebBasic:
       return handler.handleWebBasic();
     case AuthenticationType.Custom:
-      return handler.handleWebBasic();
+      return handler.handleCustom();
     case AuthenticationType.OAuth2:
       ensureExists(packDef.defaultAuthentication, 'OAuth2 only works with defaultAuthentication, not system auth.');
       return handler.handleOAuth2();
@@ -143,9 +143,10 @@ class CredentialHandler {
     const endpointUrl = this.maybePromptForEndpointUrl();
     const {params: parameters} = this._authDef;
     const params: {[key: string]: string} = {};
-    for (const [key, value] of Object.entries(parameters)) {
-      const placeholder = value.placeholder || key;
-      params[key] = promptForInput(`Enter the ${placeholder} for this Pack:\n`, {mask: true});
+    for (const param of parameters) {
+      const {placeholder: paramPlaceholder, name} = param;
+      const placeholder = paramPlaceholder || name;
+      params[name] = promptForInput(`Enter the ${placeholder} for this Pack:\n`, {mask: true});
     }
     this.storeCredential({endpointUrl, params});
     print('Credentials updated!');

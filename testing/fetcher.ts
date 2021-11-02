@@ -238,7 +238,7 @@ export class AuthenticatingFetcher implements Fetcher {
           form,
           headers,
         };
-        const {params} = this._credentials as CustomCredentials<typeof this._authDef>;
+        const {params} = this._credentials as CustomCredentials;
 
         let requestWithTemplateSubstitutions = JSON.stringify(request);
         if (requestWithTemplateSubstitutions) {
