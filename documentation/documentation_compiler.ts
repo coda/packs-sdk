@@ -171,6 +171,10 @@ Handlebars.registerHelper('indent', (content, numSpaces) => {
   return content.replace(/\n(?!\n)/g, '\n' + indent);
 });
 
+Handlebars.registerHelper('isTopic', (example: CompiledExample) => {
+  return example.category === ExampleCategory.Topic;
+});
+
 Handlebars.registerHelper('pageTitle', (example: CompiledExample) => {
   let name = example.name;
   let suffix = 'sample';

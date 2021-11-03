@@ -6,6 +6,7 @@ title: Hello World
 
 This is an example which creates a single formula called Hello, that takes in a string called name and returns “Hello, name !“.
 
+
 === "Hello World"
     ```ts
     /*
@@ -43,8 +44,9 @@ This is an example which creates a single formula called Hello, that takes in a 
       // Everything inside this execute statement will happen anytime your Coda
       // formula is called in a doc. An array of all user inputs is always the 1st
       // parameter.
-      execute: async function ([name]) {
+      execute: async function ([name], context) {
         return "Hello " + name + "!";
       },
     });
     ```
+

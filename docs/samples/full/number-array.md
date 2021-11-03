@@ -6,6 +6,7 @@ title: Number Array
 
 This is an example which creates two formulas that each take in an array of numbers and return the greatest common denominator and least common multiple.
 
+
 === "Number Array"
     ```ts
     // This import statement gives you access to all parts of the Coda Packs SDK.
@@ -77,3 +78,4 @@ This is an example which creates two formulas that each take in an array of numb
       },
     });
     ```
+
