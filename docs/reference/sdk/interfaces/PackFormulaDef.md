@@ -27,7 +27,7 @@ CommonPackFormulaDef.cacheTtlSecs
 
 #### Defined in
 
-[api_types.ts:234](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L234)
+[api_types.ts:286](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L286)
 
 ___
 
@@ -43,7 +43,7 @@ CommonPackFormulaDef.connectionRequirement
 
 #### Defined in
 
-[api_types.ts:226](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L226)
+[api_types.ts:278](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L278)
 
 ___
 
@@ -59,7 +59,7 @@ CommonPackFormulaDef.description
 
 #### Defined in
 
-[api_types.ts:200](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L200)
+[api_types.ts:252](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L252)
 
 ___
 
@@ -75,7 +75,7 @@ CommonPackFormulaDef.examples
 
 #### Defined in
 
-[api_types.ts:215](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L215)
+[api_types.ts:267](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L267)
 
 ___
 
@@ -96,7 +96,7 @@ CommonPackFormulaDef.extraOAuthScopes
 
 #### Defined in
 
-[api_types.ts:256](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L256)
+[api_types.ts:308](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L308)
 
 ___
 
@@ -113,7 +113,7 @@ CommonPackFormulaDef.isAction
 
 #### Defined in
 
-[api_types.ts:221](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L221)
+[api_types.ts:273](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L273)
 
 ___
 
@@ -130,7 +130,7 @@ CommonPackFormulaDef.isExperimental
 
 #### Defined in
 
-[api_types.ts:240](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L240)
+[api_types.ts:292](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L292)
 
 ___
 
@@ -147,7 +147,7 @@ CommonPackFormulaDef.isSystem
 
 #### Defined in
 
-[api_types.ts:246](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L246)
+[api_types.ts:298](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L298)
 
 ___
 
@@ -163,7 +163,7 @@ CommonPackFormulaDef.name
 
 #### Defined in
 
-[api_types.ts:195](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L195)
+[api_types.ts:247](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L247)
 
 ___
 
@@ -179,7 +179,7 @@ CommonPackFormulaDef.network
 
 #### Defined in
 
-[api_types.ts:229](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L229)
+[api_types.ts:281](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L281)
 
 ___
 
@@ -195,7 +195,7 @@ CommonPackFormulaDef.parameters
 
 #### Defined in
 
-[api_types.ts:205](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L205)
+[api_types.ts:257](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L257)
 
 ___
 
@@ -212,7 +212,7 @@ CommonPackFormulaDef.varargParameters
 
 #### Defined in
 
-[api_types.ts:210](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L210)
+[api_types.ts:262](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L262)
 
 ## Methods
 

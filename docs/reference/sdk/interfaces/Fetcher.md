@@ -24,4 +24,4 @@
 
 #### Defined in
 
-[api_types.ts:325](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L325)
+[api_types.ts:377](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L377)

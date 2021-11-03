@@ -1,14 +1,18 @@
 # Enumeration: ParameterType
 
+Enumeration of types of formula parameters. These describe Coda value types (as opposed to JavaScript value types).
+
 ## Enumeration members
 
 ### Boolean
 
 • **Boolean** = `"boolean"`
 
+Indicates a parameter that is a Coda boolean value.
+
 #### Defined in
 
-[api_types.ts:88](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L88)
+[api_types.ts:108](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L108)
 
 ___
 
@@ -16,9 +20,11 @@ ___
 
 • **BooleanArray** = `"booleanArray"`
 
+Indicates a parameter that is a list of Coda boolean values.
+
 #### Defined in
 
-[api_types.ts:95](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L95)
+[api_types.ts:133](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L133)
 
 ___
 
@@ -26,9 +32,11 @@ ___
 
 • **Date** = `"date"`
 
+Indicates a parameter that is a Coda date value (which includes time and datetime values).
+
 #### Defined in
 
-[api_types.ts:89](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L89)
+[api_types.ts:112](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L112)
 
 ___
 
@@ -36,9 +44,16 @@ ___
 
 • **DateArray** = `"dateArray"`
 
+Indicates a parameter that is a list of Coda date values (which includes time and datetime values).
+
+Currently, when such a parameter is used with a sync table formula or an action formula ([isAction](../interfaces/EmptyFormulaDef.md#isaction)),
+which will generate a builder UI for selecting parameters, a date array parameter will always render
+as a date range selector. A date range will always be passed to a pack formula as a list of two
+elements, the beginning of the range and the end of the range.
+
 #### Defined in
 
-[api_types.ts:96](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L96)
+[api_types.ts:142](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L142)
 
 ___
 
@@ -46,9 +61,11 @@ ___
 
 • **Html** = `"html"`
 
+Indicates a parameter that is a Coda rich text value that should be passed to the pack as HTML.
+
 #### Defined in
 
-[api_types.ts:90](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L90)
+[api_types.ts:116](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L116)
 
 ___
 
@@ -56,9 +73,11 @@ ___
 
 • **HtmlArray** = `"htmlArray`"`
 
+Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as HTML.
+
 #### Defined in
 
-[api_types.ts:97](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L97)
+[api_types.ts:146](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L146)
 
 ___
 
@@ -66,9 +85,11 @@ ___
 
 • **Image** = `"image"`
 
+Indicates a parameter that is a Coda image. The pack is passed an image URL.
+
 #### Defined in
 
-[api_types.ts:91](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L91)
+[api_types.ts:120](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L120)
 
 ___
 
@@ -76,9 +97,11 @@ ___
 
 • **ImageArray** = `"imageArray"`
 
+Indicates a parameter that is a list of Coda image values. The pack is passed a list of image URLs.
+
 #### Defined in
 
-[api_types.ts:98](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L98)
+[api_types.ts:150](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L150)
 
 ___
 
@@ -86,9 +109,11 @@ ___
 
 • **Number** = `"number"`
 
+Indicates a parameter that is a Coda number value.
+
 #### Defined in
 
-[api_types.ts:87](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L87)
+[api_types.ts:104](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L104)
 
 ___
 
@@ -96,9 +121,11 @@ ___
 
 • **NumberArray** = `"numberArray"`
 
+Indicates a parameter that is a list of Coda number values.
+
 #### Defined in
 
-[api_types.ts:94](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L94)
+[api_types.ts:129](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L129)
 
 ___
 
@@ -106,9 +133,11 @@ ___
 
 • **String** = `"string"`
 
+Indicates a parameter that is a Coda text value.
+
 #### Defined in
 
-[api_types.ts:86](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L86)
+[api_types.ts:100](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L100)
 
 ___
 
@@ -116,6 +145,8 @@ ___
 
 • **StringArray** = `"stringArray"`
 
+Indicates a parameter that is a list of Coda text values.
+
 #### Defined in
 
-[api_types.ts:93](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L93)
+[api_types.ts:125](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L125)

@@ -1,6 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PrecannedDateRange = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+/**
+ * Markers used internally to represent data types for parameters and return values.
+ * It should not be necessary to ever use these values directly.
+ *
+ * When defining a parameter, use {@link ParameterType}. When defining
+ * a formula return value, or properties within an object return value,
+ * use {@link ValueType}.
+ */
 var Type;
 (function (Type) {
     Type[Type["string"] = 0] = "string";
@@ -39,19 +47,63 @@ exports.imageArray = {
     type: 'array',
     items: Type.image,
 };
+/**
+ * Enumeration of types of formula parameters. These describe Coda value types (as opposed to JavaScript value types).
+ */
 var ParameterType;
 (function (ParameterType) {
+    /**
+     * Indicates a parameter that is a Coda text value.
+     */
     ParameterType["String"] = "string";
+    /**
+     * Indicates a parameter that is a Coda number value.
+     */
     ParameterType["Number"] = "number";
+    /**
+     * Indicates a parameter that is a Coda boolean value.
+     */
     ParameterType["Boolean"] = "boolean";
+    /**
+     * Indicates a parameter that is a Coda date value (which includes time and datetime values).
+     */
     ParameterType["Date"] = "date";
+    /**
+     * Indicates a parameter that is a Coda rich text value that should be passed to the pack as HTML.
+     */
     ParameterType["Html"] = "html";
+    /**
+     * Indicates a parameter that is a Coda image. The pack is passed an image URL.
+     */
     ParameterType["Image"] = "image";
+    /**
+     * Indicates a parameter that is a list of Coda text values.
+     */
     ParameterType["StringArray"] = "stringArray";
+    /**
+     * Indicates a parameter that is a list of Coda number values.
+     */
     ParameterType["NumberArray"] = "numberArray";
+    /**
+     * Indicates a parameter that is a list of Coda boolean values.
+     */
     ParameterType["BooleanArray"] = "booleanArray";
+    /**
+     * Indicates a parameter that is a list of Coda date values (which includes time and datetime values).
+     *
+     * Currently, when such a parameter is used with a sync table formula or an action formula ({@link isAction}),
+     * which will generate a builder UI for selecting parameters, a date array parameter will always render
+     * as a date range selector. A date range will always be passed to a pack formula as a list of two
+     * elements, the beginning of the range and the end of the range.
+     */
     ParameterType["DateArray"] = "dateArray";
+    /**
+     * Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as HTML.
+     */
     ParameterType["HtmlArray"] = "htmlArray`";
+    /**
+     * Indicates a parameter that is a list of Coda image values. The pack is passed a list of image URLs.
+     */
     ParameterType["ImageArray"] = "imageArray";
 })(ParameterType = exports.ParameterType || (exports.ParameterType = {}));
 exports.ParameterTypeInputMap = {
@@ -104,6 +156,22 @@ var NetworkConnection;
 const ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE'];
 // A mapping exists in coda that allows these to show up in the UI.
 // If adding new values here, add them to that mapping and vice versa.
+/**
+ * Special "live" date range values that can be used as the {@link defaultValue}
+ * for a date array parameter.
+ *
+ * Date array parameters are meant to represent date ranges. A date range can
+ * be a fixed range, e.g. April 1, 2020 - May 15, 2020, or it can be a "live"
+ * range, like "last 30 days".
+ *
+ * At execution time, a date range will always be passed to a pack as an
+ * array of two specific dates, but for many use cases, it is necessary
+ * to provide a default value that is a "live" range rather than hardcoded
+ * one. For example, if your pack has a table that syncs recent emails,
+ * you might want to have a date range parameter that default to
+ * "last 7 days". Defaulting to a hardcoded date range would not be useful
+ * and requiring the user to always specify a date range may be inconvenient.
+ */
 var PrecannedDateRange;
 (function (PrecannedDateRange) {
     // Past
@@ -133,5 +201,9 @@ var PrecannedDateRange;
     PrecannedDateRange["Next3Months"] = "next_3_months";
     PrecannedDateRange["Next6Months"] = "next_6_months";
     PrecannedDateRange["NextYear"] = "next_year";
+    /**
+     * Indicates a date range beginning in the very distant past (e.g. 1/1/1, aka 1 A.D.)
+     * and ending in the distant future (e.g. 12/31/3999). Exact dates are subject to change.
+     */
     PrecannedDateRange["Everything"] = "everything";
 })(PrecannedDateRange = exports.PrecannedDateRange || (exports.PrecannedDateRange = {}));

@@ -4,4 +4,4 @@
 
 #### Defined in
 
-[api_types.ts:70](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L70)
+[api_types.ts:78](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L78)

@@ -247,6 +247,11 @@ export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
 	maximum?: number | string;
 	step?: number | string;
 }
+/**
+ * Icons that can be used with a {@link ScaleSchema}.
+ *
+ * For example, to render a star rating, use a {@link ScaleSchema} with `icon: coda.ScaleIconSet.Star`.
+ */
 export declare enum ScaleIconSet {
 	Star = "star",
 	Circle = "circle",
@@ -455,6 +460,14 @@ export declare function makeObjectSchema<K extends string, L extends string, T e
  * schema it provides better code reuse to derive a reference schema instead.
  */
 export declare function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema, identityName?: string): GenericObjectSchema;
+/**
+ * Markers used internally to represent data types for parameters and return values.
+ * It should not be necessary to ever use these values directly.
+ *
+ * When defining a parameter, use {@link ParameterType}. When defining
+ * a formula return value, or properties within an object return value,
+ * use {@link ValueType}.
+ */
 export declare enum Type {
 	string = 0,
 	number = 1,
@@ -481,18 +494,62 @@ export interface TypeMap {
 export declare type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | PackFormulaValue[];
 export declare type PackFormulaResult = $Values<TypeMap> | PackFormulaResult[];
 export declare type TypeOf<T extends PackFormulaResult> = T extends number ? Type.number : T extends string ? Type.string : T extends boolean ? Type.boolean : T extends Date ? Type.date : T extends object ? Type.object : never;
+/**
+ * Enumeration of types of formula parameters. These describe Coda value types (as opposed to JavaScript value types).
+ */
 export declare enum ParameterType {
+	/**
+	 * Indicates a parameter that is a Coda text value.
+	 */
 	String = "string",
+	/**
+	 * Indicates a parameter that is a Coda number value.
+	 */
 	Number = "number",
+	/**
+	 * Indicates a parameter that is a Coda boolean value.
+	 */
 	Boolean = "boolean",
+	/**
+	 * Indicates a parameter that is a Coda date value (which includes time and datetime values).
+	 */
 	Date = "date",
+	/**
+	 * Indicates a parameter that is a Coda rich text value that should be passed to the pack as HTML.
+	 */
 	Html = "html",
+	/**
+	 * Indicates a parameter that is a Coda image. The pack is passed an image URL.
+	 */
 	Image = "image",
+	/**
+	 * Indicates a parameter that is a list of Coda text values.
+	 */
 	StringArray = "stringArray",
+	/**
+	 * Indicates a parameter that is a list of Coda number values.
+	 */
 	NumberArray = "numberArray",
+	/**
+	 * Indicates a parameter that is a list of Coda boolean values.
+	 */
 	BooleanArray = "booleanArray",
+	/**
+	 * Indicates a parameter that is a list of Coda date values (which includes time and datetime values).
+	 *
+	 * Currently, when such a parameter is used with a sync table formula or an action formula ({@link isAction}),
+	 * which will generate a builder UI for selecting parameters, a date array parameter will always render
+	 * as a date range selector. A date range will always be passed to a pack formula as a list of two
+	 * elements, the beginning of the range and the end of the range.
+	 */
 	DateArray = "dateArray",
+	/**
+	 * Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as HTML.
+	 */
 	HtmlArray = "htmlArray`",
+	/**
+	 * Indicates a parameter that is a list of Coda image values. The pack is passed a list of image URLs.
+	 */
 	ImageArray = "imageArray"
 }
 export interface ParameterTypeMap {
@@ -712,6 +769,22 @@ export interface ExecutionContext {
 export interface SyncExecutionContext extends ExecutionContext {
 	readonly sync: Sync;
 }
+/**
+ * Special "live" date range values that can be used as the {@link defaultValue}
+ * for a date array parameter.
+ *
+ * Date array parameters are meant to represent date ranges. A date range can
+ * be a fixed range, e.g. April 1, 2020 - May 15, 2020, or it can be a "live"
+ * range, like "last 30 days".
+ *
+ * At execution time, a date range will always be passed to a pack as an
+ * array of two specific dates, but for many use cases, it is necessary
+ * to provide a default value that is a "live" range rather than hardcoded
+ * one. For example, if your pack has a table that syncs recent emails,
+ * you might want to have a date range parameter that default to
+ * "last 7 days". Defaulting to a hardcoded date range would not be useful
+ * and requiring the user to always specify a date range may be inconvenient.
+ */
 export declare enum PrecannedDateRange {
 	Yesterday = "yesterday",
 	Last7Days = "last_7_days",
@@ -737,6 +810,10 @@ export declare enum PrecannedDateRange {
 	Next3Months = "next_3_months",
 	Next6Months = "next_6_months",
 	NextYear = "next_year",
+	/**
+	 * Indicates a date range beginning in the very distant past (e.g. 1/1/1, aka 1 A.D.)
+	 * and ending in the distant future (e.g. 12/31/3999). Exact dates are subject to change.
+	 */
 	Everything = "everything"
 }
 export declare type ParamMapper<T> = (val: T) => T;
