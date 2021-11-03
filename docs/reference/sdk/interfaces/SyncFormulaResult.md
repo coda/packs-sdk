@@ -16,7 +16,7 @@
 
 #### Defined in
 
-[api.ts:457](https://github.com/coda/packs-sdk/blob/main/api.ts#L457)
+[api.ts:493](https://github.com/coda/packs-sdk/blob/main/api.ts#L493)
 
 ___
 
@@ -26,4 +26,4 @@ ___
 
 #### Defined in
 
-[api.ts:456](https://github.com/coda/packs-sdk/blob/main/api.ts#L456)
+[api.ts:492](https://github.com/coda/packs-sdk/blob/main/api.ts#L492)

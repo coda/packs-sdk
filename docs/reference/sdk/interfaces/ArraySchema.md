@@ -18,13 +18,18 @@
 
 • `Optional` **description**: `string`
 
+A explanation of this object schema property shown to the user in the UI.
+
+If your pack has an object schema with many properties, it may be useful to
+explain the purpose or contents of any property that is not self-evident.
+
 #### Inherited from
 
 BaseSchema.description
 
 #### Defined in
 
-[schema.ts:186](https://github.com/coda/packs-sdk/blob/main/schema.ts#L186)
+[schema.ts:192](https://github.com/coda/packs-sdk/blob/main/schema.ts#L192)
 
 ___
 
@@ -34,7 +39,7 @@ ___
 
 #### Defined in
 
-[schema.ts:389](https://github.com/coda/packs-sdk/blob/main/schema.ts#L389)
+[schema.ts:443](https://github.com/coda/packs-sdk/blob/main/schema.ts#L443)
 
 ___
 
@@ -44,4 +49,4 @@ ___
 
 #### Defined in
 
-[schema.ts:388](https://github.com/coda/packs-sdk/blob/main/schema.ts#L388)
+[schema.ts:442](https://github.com/coda/packs-sdk/blob/main/schema.ts#L442)

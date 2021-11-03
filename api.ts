@@ -54,9 +54,21 @@ export {FetchRequest} from './api_types';
  * and the Coda UI will display the message.
  */
 export class UserVisibleError extends Error {
+  /** @hidden */
   readonly isUserVisible = true;
+  /** @hidden */
   readonly internalError: Error | undefined;
 
+  /**
+   * Use to construct a user-visible error.
+   *
+   * @example
+   * ```
+   * if (!url.startsWith("http")) {
+   *   throw new coda.UserVisibleError("Please provide a valid url.");
+   * }
+   * ```
+   */
   constructor(message?: string, internalError?: Error) {
     super(message);
     this.internalError = internalError;
@@ -68,21 +80,45 @@ interface StatusCodeErrorResponse {
   headers?: {[key: string]: string | string[] | undefined};
 }
 
+// StatusCodeError is a simple version of StatusCodeError in request-promise to keep backwards compatibility.
+// This tries to replicate its exact structure, massaging as necessary to handle the various transforms
+// in our stack.
+//
+// https://github.com/request/promise-core/blob/master/lib/errors.js#L22
 /**
- * StatusCodeError is a simple version of StatusCodeError in request-promise to keep backwards compatibility.
- * This tries to replicate its exact structure, massaging as necessary to handle the various transforms
- * in our stack.
+ * An error that will be thrown by {@link Fetcher.fetch} when the fetcher response has an
+ * HTTP status code of 400 or greater.
  *
- * https://github.com/request/promise-core/blob/master/lib/errors.js#L22
+ * This class largely models the `StatusCodeError` from the (now deprecated) `request-promise` library,
+ * which has a quirky structure.
  */
 export class StatusCodeError extends Error {
+  /**
+   * The name of the error, for identiciation purposes.
+   */
   override name: string = 'StatusCodeError';
+  /**
+   * The HTTP status code, e.g. `404`.
+   */
   statusCode: number;
+  /**
+   * The parsed body of the HTTP response.
+   */
   body: any;
+  /**
+   * Alias for {@link body}.
+   */
   error: any;
+  /**
+   * The original fetcher request used to make this HTTP request.
+   */
   options: FetchRequest;
+  /**
+   * The raw HTTP response, including headers.
+   */
   response: StatusCodeErrorResponse;
 
+  /** @hidden */
   constructor(statusCode: number, body: any, options: FetchRequest, response: StatusCodeErrorResponse) {
     super(`${statusCode} - ${JSON.stringify(body)}`);
     this.statusCode = statusCode;

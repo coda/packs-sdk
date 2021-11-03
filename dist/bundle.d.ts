@@ -178,32 +178,90 @@ export declare type StringHintTypes = typeof StringHintValueTypes[number];
 export declare type NumberHintTypes = typeof NumberHintValueTypes[number];
 export declare type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 export interface BaseSchema {
+	/**
+	 * A explanation of this object schema property shown to the user in the UI.
+	 *
+	 * If your pack has an object schema with many properties, it may be useful to
+	 * explain the purpose or contents of any property that is not self-evident.
+	 */
 	description?: string;
 }
+/**
+ * A schema representing a return value or object property that is a boolean.
+ */
 export interface BooleanSchema extends BaseSchema {
+	/** Identifies this schema as relating to a boolean value. */
 	type: ValueType.Boolean;
 }
+/**
+ * The union of all schemas that can represent number values.
+ */
 export declare type NumberSchema = CurrencySchema | SliderSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema;
 export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
+	/** Identifies this schema as relating to a number value. */
 	type: ValueType.Number;
+	/** An optional type hint instructing Coda about how to interpret or render this value. */
 	codaType?: T;
 }
+/**
+ * A schema representing a return value or object property that is a numeric value,
+ * i.e. a raw number with an optional decimal precision.
+ */
 export interface NumericSchema extends BaseNumberSchema {
+	/** If specified, instructs Coda to render this value as a percentage. */
 	codaType?: ValueHintType.Percent;
+	/** The decimal precision. The number will be rounded to this precision when rendered. */
 	precision?: number;
+	/** If specified, will render thousands separators for large numbers, e.g. `1,234,567.89`. */
 	useThousandsSeparator?: boolean;
 }
+/**
+ * A schema representing a return value or object property that is provided as a number,
+ * which Coda should interpret as a date. The given number should be in seconds since the Unix epoch.
+ */
 export interface NumericDateSchema extends BaseNumberSchema<ValueHintType.Date> {
+	/** Instructs Coda to render this value as a date. */
 	codaType: ValueHintType.Date;
+	/**
+	 * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+	 *
+	 * Only applies when this is used as a sync table property.
+	 */
 	format?: string;
 }
+/**
+ * A schema representing a return value or object property that is provided as a number,
+ * which Coda should interpret as a time. The given number should be in seconds since the Unix epoch.
+ * While this is a full datetime, only the time component will be rendered, so the date used is irrelevant.
+ */
 export interface NumericTimeSchema extends BaseNumberSchema<ValueHintType.Time> {
+	/** Instructs Coda to render this value as a time. */
 	codaType: ValueHintType.Time;
+	/**
+	 * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+	 *
+	 * Only applies when this is used as a sync table property.
+	 */
 	format?: string;
 }
+/**
+ * A schema representing a return value or object property that is provided as a number,
+ * which Coda should interpret as a datetime. The given number should be in seconds since the Unix epoch.
+ */
 export interface NumericDateTimeSchema extends BaseNumberSchema<ValueHintType.DateTime> {
+	/** Instructs Coda to render this value as a datetime. */
 	codaType: ValueHintType.DateTime;
+	/**
+	 * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+	 *
+	 * Only applies when this is used as a sync table property.
+	 */
 	dateFormat?: string;
+	/**
+	 * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+	 *
+	 * Only applies when this is used as a sync table property.
+	 */
 	timeFormat?: string;
 }
 /**
@@ -845,8 +903,20 @@ export interface ResponseHandlerTemplate<T extends Schema> {
  * and the Coda UI will display the message.
  */
 export declare class UserVisibleError extends Error {
+	/** @hidden */
 	readonly isUserVisible = true;
+	/** @hidden */
 	readonly internalError: Error | undefined;
+	/**
+	 * Use to construct a user-visible error.
+	 *
+	 * @example
+	 * ```
+	 * if (!url.startsWith("http")) {
+	 *   throw new coda.UserVisibleError("Please provide a valid url.");
+	 * }
+	 * ```
+	 */
 	constructor(message?: string, internalError?: Error);
 }
 export interface StatusCodeErrorResponse {
@@ -856,19 +926,38 @@ export interface StatusCodeErrorResponse {
 	};
 }
 /**
- * StatusCodeError is a simple version of StatusCodeError in request-promise to keep backwards compatibility.
- * This tries to replicate its exact structure, massaging as necessary to handle the various transforms
- * in our stack.
+ * An error that will be thrown by {@link Fetcher.fetch} when the fetcher response has an
+ * HTTP status code of 400 or greater.
  *
- * https://github.com/request/promise-core/blob/master/lib/errors.js#L22
+ * This class largely models the `StatusCodeError` from the (now deprecated) `request-promise` library,
+ * which has a quirky structure.
  */
 export declare class StatusCodeError extends Error {
+	/**
+	 * The name of the error, for identiciation purposes.
+	 */
 	name: string;
+	/**
+	 * The HTTP status code, e.g. `404`.
+	 */
 	statusCode: number;
+	/**
+	 * The parsed body of the HTTP response.
+	 */
 	body: any;
+	/**
+	 * Alias for {@link body}.
+	 */
 	error: any;
+	/**
+	 * The original fetcher request used to make this HTTP request.
+	 */
 	options: FetchRequest;
+	/**
+	 * The raw HTTP response, including headers.
+	 */
 	response: StatusCodeErrorResponse;
+	/** @hidden */
 	constructor(statusCode: number, body: any, options: FetchRequest, response: StatusCodeErrorResponse);
 }
 /**
@@ -1951,16 +2040,45 @@ export interface PackDefinition extends PackVersionDefinition {
  * ```
  */
 export declare function newPack(definition?: Partial<PackVersionDefinition>): PackDefinitionBuilder;
+/**
+ * A class that assists in constructing a pack definition. Use {@link newPack} to create one.
+ */
 export declare class PackDefinitionBuilder implements BasicPackDefinition {
+	/**
+	 * See {@link PackVersionDefinition.formulas}.
+	 */
 	formulas: Formula[];
+	/**
+	 * See {@link PackVersionDefinition.formats}.
+	 */
 	formats: Format[];
+	/**
+	 * See {@link PackVersionDefinition.syncTables}.
+	 */
 	syncTables: SyncTable[];
+	/**
+	 * See {@link PackVersionDefinition.networkDomains}.
+	 */
 	networkDomains: string[];
+	/**
+	 * See {@link PackVersionDefinition.defaultAuthentication}.
+	 */
 	defaultAuthentication?: Authentication;
+	/**
+	 * See {@link PackVersionDefinition.systemConnectionAuthentication}.
+	 */
 	systemConnectionAuthentication?: SystemAuthentication;
+	/**
+	 * See {@link PackVersionDefinition.version}.
+	 */
 	version?: string;
+	/** @deprecated */
 	formulaNamespace?: string;
 	private _defaultConnectionRequirement;
+	/**
+	 * Constructs a {@link PackDefinitionBuilder}. However, `coda.newPack()` should be used instead
+	 * rather than constructing a builder directly.
+	 */
 	constructor(definition?: Partial<PackVersionDefinition>);
 	/**
 	 * Adds a formula definition to this pack.

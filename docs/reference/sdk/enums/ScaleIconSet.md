@@ -12,7 +12,7 @@ For example, to render a star rating, use a [ScaleSchema](../interfaces/ScaleSch
 
 #### Defined in
 
-[schema.ts:297](https://github.com/coda/packs-sdk/blob/main/schema.ts#L297)
+[schema.ts:351](https://github.com/coda/packs-sdk/blob/main/schema.ts#L351)
 
 ___
 
@@ -22,7 +22,7 @@ ___
 
 #### Defined in
 
-[schema.ts:288](https://github.com/coda/packs-sdk/blob/main/schema.ts#L288)
+[schema.ts:342](https://github.com/coda/packs-sdk/blob/main/schema.ts#L342)
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 #### Defined in
 
-[schema.ts:286](https://github.com/coda/packs-sdk/blob/main/schema.ts#L286)
+[schema.ts:340](https://github.com/coda/packs-sdk/blob/main/schema.ts#L340)
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-[schema.ts:301](https://github.com/coda/packs-sdk/blob/main/schema.ts#L301)
+[schema.ts:355](https://github.com/coda/packs-sdk/blob/main/schema.ts#L355)
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-[schema.ts:291](https://github.com/coda/packs-sdk/blob/main/schema.ts#L291)
+[schema.ts:345](https://github.com/coda/packs-sdk/blob/main/schema.ts#L345)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-[schema.ts:284](https://github.com/coda/packs-sdk/blob/main/schema.ts#L284)
+[schema.ts:338](https://github.com/coda/packs-sdk/blob/main/schema.ts#L338)
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-[schema.ts:299](https://github.com/coda/packs-sdk/blob/main/schema.ts#L299)
+[schema.ts:353](https://github.com/coda/packs-sdk/blob/main/schema.ts#L353)
 
 ___
 
@@ -82,7 +82,7 @@ ___
 
 #### Defined in
 
-[schema.ts:298](https://github.com/coda/packs-sdk/blob/main/schema.ts#L298)
+[schema.ts:352](https://github.com/coda/packs-sdk/blob/main/schema.ts#L352)
 
 ___
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-[schema.ts:295](https://github.com/coda/packs-sdk/blob/main/schema.ts#L295)
+[schema.ts:349](https://github.com/coda/packs-sdk/blob/main/schema.ts#L349)
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-[schema.ts:294](https://github.com/coda/packs-sdk/blob/main/schema.ts#L294)
+[schema.ts:348](https://github.com/coda/packs-sdk/blob/main/schema.ts#L348)
 
 ___
 
@@ -112,7 +112,7 @@ ___
 
 #### Defined in
 
-[schema.ts:287](https://github.com/coda/packs-sdk/blob/main/schema.ts#L287)
+[schema.ts:341](https://github.com/coda/packs-sdk/blob/main/schema.ts#L341)
 
 ___
 
@@ -122,7 +122,7 @@ ___
 
 #### Defined in
 
-[schema.ts:285](https://github.com/coda/packs-sdk/blob/main/schema.ts#L285)
+[schema.ts:339](https://github.com/coda/packs-sdk/blob/main/schema.ts#L339)
 
 ___
 
@@ -132,7 +132,7 @@ ___
 
 #### Defined in
 
-[schema.ts:290](https://github.com/coda/packs-sdk/blob/main/schema.ts#L290)
+[schema.ts:344](https://github.com/coda/packs-sdk/blob/main/schema.ts#L344)
 
 ___
 
@@ -142,7 +142,7 @@ ___
 
 #### Defined in
 
-[schema.ts:302](https://github.com/coda/packs-sdk/blob/main/schema.ts#L302)
+[schema.ts:356](https://github.com/coda/packs-sdk/blob/main/schema.ts#L356)
 
 ___
 
@@ -152,7 +152,7 @@ ___
 
 #### Defined in
 
-[schema.ts:293](https://github.com/coda/packs-sdk/blob/main/schema.ts#L293)
+[schema.ts:347](https://github.com/coda/packs-sdk/blob/main/schema.ts#L347)
 
 ___
 
@@ -162,7 +162,7 @@ ___
 
 #### Defined in
 
-[schema.ts:296](https://github.com/coda/packs-sdk/blob/main/schema.ts#L296)
+[schema.ts:350](https://github.com/coda/packs-sdk/blob/main/schema.ts#L350)
 
 ___
 
@@ -172,7 +172,7 @@ ___
 
 #### Defined in
 
-[schema.ts:292](https://github.com/coda/packs-sdk/blob/main/schema.ts#L292)
+[schema.ts:346](https://github.com/coda/packs-sdk/blob/main/schema.ts#L346)
 
 ___
 
@@ -182,7 +182,7 @@ ___
 
 #### Defined in
 
-[schema.ts:283](https://github.com/coda/packs-sdk/blob/main/schema.ts#L283)
+[schema.ts:337](https://github.com/coda/packs-sdk/blob/main/schema.ts#L337)
 
 ___
 
@@ -192,7 +192,7 @@ ___
 
 #### Defined in
 
-[schema.ts:300](https://github.com/coda/packs-sdk/blob/main/schema.ts#L300)
+[schema.ts:354](https://github.com/coda/packs-sdk/blob/main/schema.ts#L354)
 
 ___
 
@@ -202,4 +202,4 @@ ___
 
 #### Defined in
 
-[schema.ts:289](https://github.com/coda/packs-sdk/blob/main/schema.ts#L289)
+[schema.ts:343](https://github.com/coda/packs-sdk/blob/main/schema.ts#L343)

@@ -1,5 +1,8 @@
 # Interface: NumericSchema
 
+A schema representing a return value or object property that is a numeric value,
+i.e. a raw number with an optional decimal precision.
+
 ## Hierarchy
 
 - `BaseNumberSchema`
@@ -12,13 +15,15 @@
 
 • `Optional` **codaType**: [`Percent`](../enums/ValueHintType.md#percent)
 
+If specified, instructs Coda to render this value as a percentage.
+
 #### Overrides
 
 BaseNumberSchema.codaType
 
 #### Defined in
 
-[schema.ts:208](https://github.com/coda/packs-sdk/blob/main/schema.ts#L208)
+[schema.ts:228](https://github.com/coda/packs-sdk/blob/main/schema.ts#L228)
 
 ___
 
@@ -26,13 +31,18 @@ ___
 
 • `Optional` **description**: `string`
 
+A explanation of this object schema property shown to the user in the UI.
+
+If your pack has an object schema with many properties, it may be useful to
+explain the purpose or contents of any property that is not self-evident.
+
 #### Inherited from
 
 BaseNumberSchema.description
 
 #### Defined in
 
-[schema.ts:186](https://github.com/coda/packs-sdk/blob/main/schema.ts#L186)
+[schema.ts:192](https://github.com/coda/packs-sdk/blob/main/schema.ts#L192)
 
 ___
 
@@ -40,9 +50,11 @@ ___
 
 • `Optional` **precision**: `number`
 
+The decimal precision. The number will be rounded to this precision when rendered.
+
 #### Defined in
 
-[schema.ts:209](https://github.com/coda/packs-sdk/blob/main/schema.ts#L209)
+[schema.ts:230](https://github.com/coda/packs-sdk/blob/main/schema.ts#L230)
 
 ___
 
@@ -50,13 +62,15 @@ ___
 
 • **type**: [`Number`](../enums/ValueType.md#number)
 
+Identifies this schema as relating to a number value.
+
 #### Inherited from
 
 BaseNumberSchema.type
 
 #### Defined in
 
-[schema.ts:203](https://github.com/coda/packs-sdk/blob/main/schema.ts#L203)
+[schema.ts:217](https://github.com/coda/packs-sdk/blob/main/schema.ts#L217)
 
 ___
 
@@ -64,6 +78,8 @@ ___
 
 • `Optional` **useThousandsSeparator**: `boolean`
 
+If specified, will render thousands separators for large numbers, e.g. `1,234,567.89`.
+
 #### Defined in
 
-[schema.ts:210](https://github.com/coda/packs-sdk/blob/main/schema.ts#L210)
+[schema.ts:232](https://github.com/coda/packs-sdk/blob/main/schema.ts#L232)

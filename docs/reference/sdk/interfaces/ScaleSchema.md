@@ -18,7 +18,7 @@ BaseNumberSchema.codaType
 
 #### Defined in
 
-[schema.ts:306](https://github.com/coda/packs-sdk/blob/main/schema.ts#L306)
+[schema.ts:360](https://github.com/coda/packs-sdk/blob/main/schema.ts#L360)
 
 ___
 
@@ -26,13 +26,18 @@ ___
 
 • `Optional` **description**: `string`
 
+A explanation of this object schema property shown to the user in the UI.
+
+If your pack has an object schema with many properties, it may be useful to
+explain the purpose or contents of any property that is not self-evident.
+
 #### Inherited from
 
 BaseNumberSchema.description
 
 #### Defined in
 
-[schema.ts:186](https://github.com/coda/packs-sdk/blob/main/schema.ts#L186)
+[schema.ts:192](https://github.com/coda/packs-sdk/blob/main/schema.ts#L192)
 
 ___
 
@@ -42,7 +47,7 @@ ___
 
 #### Defined in
 
-[schema.ts:308](https://github.com/coda/packs-sdk/blob/main/schema.ts#L308)
+[schema.ts:362](https://github.com/coda/packs-sdk/blob/main/schema.ts#L362)
 
 ___
 
@@ -52,7 +57,7 @@ ___
 
 #### Defined in
 
-[schema.ts:307](https://github.com/coda/packs-sdk/blob/main/schema.ts#L307)
+[schema.ts:361](https://github.com/coda/packs-sdk/blob/main/schema.ts#L361)
 
 ___
 
@@ -60,10 +65,12 @@ ___
 
 • **type**: [`Number`](../enums/ValueType.md#number)
 
+Identifies this schema as relating to a number value.
+
 #### Inherited from
 
 BaseNumberSchema.type
 
 #### Defined in
 
-[schema.ts:203](https://github.com/coda/packs-sdk/blob/main/schema.ts#L203)
+[schema.ts:217](https://github.com/coda/packs-sdk/blob/main/schema.ts#L217)

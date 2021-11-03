@@ -1,5 +1,7 @@
 # Interface: BooleanSchema
 
+A schema representing a return value or object property that is a boolean.
+
 ## Hierarchy
 
 - `BaseSchema`
@@ -12,13 +14,18 @@
 
 • `Optional` **description**: `string`
 
+A explanation of this object schema property shown to the user in the UI.
+
+If your pack has an object schema with many properties, it may be useful to
+explain the purpose or contents of any property that is not self-evident.
+
 #### Inherited from
 
 BaseSchema.description
 
 #### Defined in
 
-[schema.ts:186](https://github.com/coda/packs-sdk/blob/main/schema.ts#L186)
+[schema.ts:192](https://github.com/coda/packs-sdk/blob/main/schema.ts#L192)
 
 ___
 
@@ -26,6 +33,8 @@ ___
 
 • **type**: [`Boolean`](../enums/ValueType.md#boolean)
 
+Identifies this schema as relating to a boolean value.
+
 #### Defined in
 
-[schema.ts:190](https://github.com/coda/packs-sdk/blob/main/schema.ts#L190)
+[schema.ts:200](https://github.com/coda/packs-sdk/blob/main/schema.ts#L200)

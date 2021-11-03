@@ -17,6 +17,15 @@ and the Coda UI will display the message.
 
 • **new UserVisibleError**(`message?`, `internalError?`)
 
+Use to construct a user-visible error.
+
+**`example`**
+```
+if (!url.startsWith("http")) {
+  throw new coda.UserVisibleError("Please provide a valid url.");
+}
+```
+
 #### Parameters
 
 | Name | Type |
@@ -30,24 +39,4 @@ Error.constructor
 
 #### Defined in
 
-[api.ts:60](https://github.com/coda/packs-sdk/blob/main/api.ts#L60)
-
-## Properties
-
-### internalError
-
-• `Readonly` **internalError**: `undefined` \| `Error`
-
-#### Defined in
-
-[api.ts:58](https://github.com/coda/packs-sdk/blob/main/api.ts#L58)
-
-___
-
-### isUserVisible
-
-• `Readonly` **isUserVisible**: ``true``
-
-#### Defined in
-
-[api.ts:57](https://github.com/coda/packs-sdk/blob/main/api.ts#L57)
+[api.ts:72](https://github.com/coda/packs-sdk/blob/main/api.ts#L72)

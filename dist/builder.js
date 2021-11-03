@@ -24,7 +24,14 @@ function newPack(definition) {
     return new PackDefinitionBuilder(definition);
 }
 exports.newPack = newPack;
+/**
+ * A class that assists in constructing a pack definition. Use {@link newPack} to create one.
+ */
 class PackDefinitionBuilder {
+    /**
+     * Constructs a {@link PackDefinitionBuilder}. However, `coda.newPack()` should be used instead
+     * rather than constructing a builder directly.
+     */
     constructor(definition) {
         const { formulas, formats, syncTables, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, } = definition || {};
         this.formulas = Array.isArray(formulas) ? formulas : [];

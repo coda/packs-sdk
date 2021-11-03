@@ -8,7 +8,7 @@
 
 #### Defined in
 
-[api.ts:780](https://github.com/coda/packs-sdk/blob/main/api.ts#L780)
+[api.ts:816](https://github.com/coda/packs-sdk/blob/main/api.ts#L816)
 
 ___
 
@@ -18,4 +18,4 @@ ___
 
 #### Defined in
 
-[api.ts:781](https://github.com/coda/packs-sdk/blob/main/api.ts#L781)
+[api.ts:817](https://github.com/coda/packs-sdk/blob/main/api.ts#L817)
