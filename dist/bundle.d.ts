@@ -181,7 +181,7 @@ export interface BaseSchema {
 	/**
 	 * A explanation of this object schema property shown to the user in the UI.
 	 *
-	 * If your pack has a object schema with many properties, it may be useful to
+	 * If your pack has an object schema with many properties, it may be useful to
 	 * explain the purpose or contents of any property that is not self-evident.
 	 */
 	description?: string;
@@ -942,11 +942,11 @@ export declare class StatusCodeError extends Error {
 	 */
 	statusCode: number;
 	/**
-	 * The raw body of the HTTP response.
+	 * The body of the HTTP response, parsed as a JavaScript object if the contents were JSON data.
 	 */
 	body: any;
 	/**
-	 * A parsed JavaScript object of the HTTP response body, if the body contained JSON data.
+	 * Alias for {@link body}.
 	 */
 	error: any;
 	/**

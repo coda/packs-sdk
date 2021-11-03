@@ -18,7 +18,7 @@ which has a quirky structure.
 
 • **body**: `any`
 
-The raw body of the HTTP response.
+The body of the HTTP response, parsed as a JavaScript object if the contents were JSON data.
 
 #### Defined in
 
@@ -30,7 +30,7 @@ ___
 
 • **error**: `any`
 
-A parsed JavaScript object of the HTTP response body, if the body contained JSON data.
+Alias for [body](../interfaces/FetchRequest.md#body).
 
 #### Defined in
 

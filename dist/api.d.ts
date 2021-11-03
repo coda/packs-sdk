@@ -76,11 +76,11 @@ export declare class StatusCodeError extends Error {
      */
     statusCode: number;
     /**
-     * The raw body of the HTTP response.
+     * The body of the HTTP response, parsed as a JavaScript object if the contents were JSON data.
      */
     body: any;
     /**
-     * A parsed JavaScript object of the HTTP response body, if the body contained JSON data.
+     * Alias for {@link body}.
      */
     error: any;
     /**
