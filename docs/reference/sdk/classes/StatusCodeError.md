@@ -18,7 +18,7 @@ which has a quirky structure.
 
 • **body**: `any`
 
-The body of the HTTP response, parsed as a JavaScript object if the contents were JSON data.
+The parsed body of the HTTP response.
 
 #### Defined in
 

@@ -102,7 +102,7 @@ export class StatusCodeError extends Error {
    */
   statusCode: number;
   /**
-   * The body of the HTTP response, parsed as a JavaScript object if the contents were JSON data.
+   * The parsed body of the HTTP response.
    */
   body: any;
   /**
