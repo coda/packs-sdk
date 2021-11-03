@@ -10,4 +10,4 @@
 
 #### Defined in
 
-[api_types.ts:241](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L241)
+[api_types.ts:239](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L239)

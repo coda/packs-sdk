@@ -73,8 +73,7 @@ var ParameterType;
      */
     ParameterType["Html"] = "html";
     /**
-     * *Not yet supported.* Indicates a parameter that is a Coda image. Eventually, such a parameter will
-     * be passed to the pack as an image URL.
+     * Indicates a parameter that is a Coda image. The pack is passed an image URL.
      */
     ParameterType["Image"] = "image";
     /**
@@ -103,8 +102,7 @@ var ParameterType;
      */
     ParameterType["HtmlArray"] = "htmlArray`";
     /**
-     * *Not yet supported.* Indicates a parameter that is a list of Coda image values. Eventually, such a parameter
-     * will be passed to the pack as a list of image URLs.
+     * Indicates a parameter that is a list of Coda image values. The pack is passed a list of image URLs.
      */
     ParameterType["ImageArray"] = "imageArray";
 })(ParameterType = exports.ParameterType || (exports.ParameterType = {}));

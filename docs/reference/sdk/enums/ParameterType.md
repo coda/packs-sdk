@@ -24,7 +24,7 @@ Indicates a parameter that is a list of Coda boolean values.
 
 #### Defined in
 
-[api_types.ts:134](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L134)
+[api_types.ts:133](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L133)
 
 ___
 
@@ -53,7 +53,7 @@ elements, the beginning of the range and the end of the range.
 
 #### Defined in
 
-[api_types.ts:143](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L143)
+[api_types.ts:142](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L142)
 
 ___
 
@@ -77,7 +77,7 @@ Indicates a parameter that is a list of Coda rich text values that should be pas
 
 #### Defined in
 
-[api_types.ts:147](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L147)
+[api_types.ts:146](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L146)
 
 ___
 
@@ -85,12 +85,11 @@ ___
 
 • **Image** = `"image"`
 
-*Not yet supported.* Indicates a parameter that is a Coda image. Eventually, such a parameter will
-be passed to the pack as an image URL.
+Indicates a parameter that is a Coda image. The pack is passed an image URL.
 
 #### Defined in
 
-[api_types.ts:121](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L121)
+[api_types.ts:120](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L120)
 
 ___
 
@@ -98,12 +97,11 @@ ___
 
 • **ImageArray** = `"imageArray"`
 
-*Not yet supported.* Indicates a parameter that is a list of Coda image values. Eventually, such a parameter
-will be passed to the pack as a list of image URLs.
+Indicates a parameter that is a list of Coda image values. The pack is passed a list of image URLs.
 
 #### Defined in
 
-[api_types.ts:152](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L152)
+[api_types.ts:150](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L150)
 
 ___
 
@@ -127,7 +125,7 @@ Indicates a parameter that is a list of Coda number values.
 
 #### Defined in
 
-[api_types.ts:130](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L130)
+[api_types.ts:129](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L129)
 
 ___
 
@@ -151,4 +149,4 @@ Indicates a parameter that is a list of Coda text values.
 
 #### Defined in
 
-[api_types.ts:126](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L126)
+[api_types.ts:125](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L125)

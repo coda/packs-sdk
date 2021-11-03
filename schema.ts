@@ -277,7 +277,7 @@ export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
 /**
  * Icons that can be used with a {@link ScaleSchema}.
  *
- * For example, to render a star rating, use a {@link ScaleSchema} with `icon: ScaleIconSet.Star`.
+ * For example, to render a star rating, use a {@link ScaleSchema} with `icon: coda.ScaleIconSet.Star`.
  */
 export enum ScaleIconSet {
   Star = 'star',

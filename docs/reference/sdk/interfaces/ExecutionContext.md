@@ -14,7 +14,7 @@
 
 #### Defined in
 
-[api_types.ts:411](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L411)
+[api_types.ts:409](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L409)
 
 ___
 
@@ -24,7 +24,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:409](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L409)
+[api_types.ts:407](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L407)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:412](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L412)
+[api_types.ts:410](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L410)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:417](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L417)
+[api_types.ts:415](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L415)
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:418](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L418)
+[api_types.ts:416](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L416)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:410](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L410)
+[api_types.ts:408](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L408)
 
 ___
 
@@ -74,4 +74,4 @@ ___
 
 #### Defined in
 
-[api_types.ts:413](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L413)
+[api_types.ts:411](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L411)

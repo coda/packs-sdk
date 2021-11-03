@@ -208,7 +208,7 @@ var CurrencyFormat;
 /**
  * Icons that can be used with a {@link ScaleSchema}.
  *
- * For example, to render a star rating, use a {@link ScaleSchema} with `icon: ScaleIconSet.Star`.
+ * For example, to render a star rating, use a {@link ScaleSchema} with `icon: coda.ScaleIconSet.Star`.
  */
 var ScaleIconSet;
 (function (ScaleIconSet) {

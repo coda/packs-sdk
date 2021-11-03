@@ -2,7 +2,7 @@
 
 Icons that can be used with a [ScaleSchema](../interfaces/ScaleSchema.md).
 
-For example, to render a star rating, use a [ScaleSchema](../interfaces/ScaleSchema.md) with `icon: ScaleIconSet.Star`.
+For example, to render a star rating, use a [ScaleSchema](../interfaces/ScaleSchema.md) with `icon: coda.ScaleIconSet.Star`.
 
 ## Enumeration members
 
