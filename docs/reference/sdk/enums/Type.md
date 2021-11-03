@@ -1,5 +1,12 @@
 # Enumeration: Type
 
+Markers used internally to represent data types for parameters and return values.
+It should not be necessary to ever use these values directly.
+
+When defining a parameter, use [ParameterType](ParameterType.md). When defining
+a formula return value, or properties within an object return value,
+use [ValueType](ValueType.md).
+
 ## Enumeration members
 
 ### boolean
@@ -8,7 +15,7 @@
 
 #### Defined in
 
-[api_types.ts:10](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L10)
+[api_types.ts:18](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L18)
 
 ___
 
@@ -18,7 +25,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:11](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L11)
+[api_types.ts:19](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L19)
 
 ___
 
@@ -28,7 +35,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:12](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L12)
+[api_types.ts:20](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L20)
 
 ___
 
@@ -38,7 +45,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:13](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L13)
+[api_types.ts:21](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L21)
 
 ___
 
@@ -48,7 +55,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:8](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L8)
+[api_types.ts:16](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L16)
 
 ___
 
@@ -58,7 +65,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:9](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L9)
+[api_types.ts:17](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L17)
 
 ___
 
@@ -68,4 +75,4 @@ ___
 
 #### Defined in
 
-[api_types.ts:7](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L7)
+[api_types.ts:15](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L15)

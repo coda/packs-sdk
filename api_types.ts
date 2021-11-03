@@ -3,6 +3,14 @@ import type {ArraySchema} from './schema';
 import type {Continuation} from './api';
 import type {MetadataFormula} from './api';
 
+/**
+ * Markers used internally to represent data types for parameters and return values.
+ * It should not be necessary to ever use these values directly.
+ *
+ * When defining a parameter, use {@link ParameterType}. When defining
+ * a formula return value, or properties within an object return value,
+ * use {@link ValueType}.
+ */
 export enum Type {
   string,
   number,
@@ -82,19 +90,65 @@ export type TypeOf<T extends PackFormulaResult> = T extends number
   ? Type.object
   : never;
 
+/**
+ * Enumeration of types of formula parameters. These describe Coda value types (as opposed to JavaScript value types).
+ */
 export enum ParameterType {
+  /**
+   * Indicates a parameter that is a Coda text value.
+   */
   String = 'string',
+  /**
+   * Indicates a parameter that is a Coda number value.
+   */
   Number = 'number',
+  /**
+   * Indicates a parameter that is a Coda boolean value.
+   */
   Boolean = 'boolean',
+  /**
+   * Indicates a parameter that is a Coda date value (which includes time and datetime values).
+   */
   Date = 'date',
+  /**
+   * Indicates a parameter that is a Coda rich text value that should be passed to the pack as HTML.
+   */
   Html = 'html',
+  /**
+   * *Not yet supported.* Indicates a parameter that is a Coda image. Eventually, such a parameter will
+   * be passed to the pack as an image URL.
+   */
   Image = 'image',
 
+  /**
+   * Indicates a parameter that is a list of Coda text values.
+   */
   StringArray = 'stringArray',
+  /**
+   * Indicates a parameter that is a list of Coda number values.
+   */
   NumberArray = 'numberArray',
+  /**
+   * Indicates a parameter that is a list of Coda boolean values.
+   */
   BooleanArray = 'booleanArray',
+  /**
+   * Indicates a parameter that is a list of Coda date values (which includes time and datetime values).
+   *
+   * Currently, when such a parameter is used with a sync table formula or an action formula ({@link isAction}),
+   * which will generate a builder UI for selecting parameters, a date array parameter will always render
+   * as a date range selector. A date range will always be passed to a pack formula as a list of two
+   * elements, the beginning of the range and the end of the range.
+   */
   DateArray = 'dateArray',
+  /**
+   * Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as HTML.
+   */
   HtmlArray = 'htmlArray`',
+  /**
+   * *Not yet supported.* Indicates a parameter that is a list of Coda image values. Eventually, such a parameter
+   * will be passed to the pack as a list of image URLs.
+   */
   ImageArray = 'imageArray',
 }
 
@@ -370,6 +424,22 @@ export interface SyncExecutionContext extends ExecutionContext {
 
 // A mapping exists in coda that allows these to show up in the UI.
 // If adding new values here, add them to that mapping and vice versa.
+/**
+ * Special "live" date range values that can be used as the {@link defaultValue}
+ * for a date array parameter.
+ *
+ * Date array parameters are meant to represent date ranges. A date range can
+ * be a fixed range, e.g. April 1, 2020 - May 15, 2020, or it can be a "live"
+ * range, like "last 30 days".
+ *
+ * At execution time, a date range will always be passed to a pack as an
+ * array of two specific dates, but for many use cases, it is necessary
+ * to provide a default value that is a "live" range rather than hardcoded
+ * one. For example, if your pack has a table that syncs recent emails,
+ * you might want to have a date range parameter that default to
+ * "last 7 days". Defaulting to a hardcoded date range would not be useful
+ * and requiring the user to always specify a date range may be inconvenient.
+ */
 export enum PrecannedDateRange {
   // Past
   Yesterday = 'yesterday',
@@ -401,5 +471,9 @@ export enum PrecannedDateRange {
   Next6Months = 'next_6_months',
   NextYear = 'next_year',
 
+  /**
+   * Indicates a date range beginning in the very distant past (e.g. 1/1/1, aka 1 A.D.)
+   * and ending in the distant future (e.g. 12/31/3999). Exact dates are subject to change.
+   */
   Everything = 'everything',
 }

@@ -14,6 +14,10 @@ interface ReflectionData {
   comment?: {
     shortText: string;
     text?: string;
+    tags?: Array<{
+      tag: string;
+      text?: string;
+    }>;
   };
   sources?: Array<{
     fileName: string;
@@ -34,6 +38,14 @@ function getReflectionData() {
 function traverse(data: ReflectionData): void {
   if (!data.comment) {
     logMissing(data);
+  }
+  if (data.comment?.tags?.find(t => t.tag === 'deprecated')) {
+    return;
+  }
+  // We don't care about traversing children for these nodes.
+  const terminalNames = ['PrecannedDateRange', 'ScaleIconSet', 'Type'];
+  if (terminalNames.includes(data.name)) {
+    return;
   }
   for (const child of data.children || []) {
     traverse(child);

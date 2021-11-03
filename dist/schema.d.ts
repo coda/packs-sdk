@@ -220,6 +220,11 @@ export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
     maximum?: number | string;
     step?: number | string;
 }
+/**
+ * Icons that can be used with a {@link ScaleSchema}.
+ *
+ * For example, to render a star rating, use a {@link ScaleSchema} with `icon: ScaleIconSet.Star`.
+ */
 export declare enum ScaleIconSet {
     Star = "star",
     Circle = "circle",

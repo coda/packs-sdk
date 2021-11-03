@@ -23,7 +23,7 @@ If you have a hardcoded list of valid values, you would only need to use
 
 #### Defined in
 
-[api_types.ts:164](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L164)
+[api_types.ts:218](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L218)
 
 ___
 
@@ -35,7 +35,7 @@ The default value to be used for this parameter if it is not specified by the us
 
 #### Defined in
 
-[api_types.ts:168](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L168)
+[api_types.ts:222](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L222)
 
 ___
 
@@ -47,7 +47,7 @@ A brief description of what this parameter is used for, shown to the user when i
 
 #### Defined in
 
-[api_types.ts:145](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L145)
+[api_types.ts:199](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L199)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:151](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L151)
+[api_types.ts:205](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L205)
 
 ___
 
@@ -69,7 +69,7 @@ The name of the parameter, which will be shown to the user when invoking this fo
 
 #### Defined in
 
-[api_types.ts:137](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L137)
+[api_types.ts:191](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L191)
 
 ___
 
@@ -82,7 +82,7 @@ All optional parameters must come after all non-optional parameters.
 
 #### Defined in
 
-[api_types.ts:150](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L150)
+[api_types.ts:204](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L204)
 
 ___
 
@@ -94,4 +94,4 @@ The data type of this parameter (string, number, etc).
 
 #### Defined in
 
-[api_types.ts:141](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L141)
+[api_types.ts:195](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L195)

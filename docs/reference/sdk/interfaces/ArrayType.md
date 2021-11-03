@@ -14,7 +14,7 @@
 
 #### Defined in
 
-[api_types.ts:20](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L20)
+[api_types.ts:28](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L28)
 
 ___
 
@@ -24,4 +24,4 @@ ___
 
 #### Defined in
 
-[api_types.ts:19](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L19)
+[api_types.ts:27](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L27)

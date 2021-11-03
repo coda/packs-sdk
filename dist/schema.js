@@ -205,6 +205,11 @@ var CurrencyFormat;
      */
     CurrencyFormat["Financial"] = "financial";
 })(CurrencyFormat = exports.CurrencyFormat || (exports.CurrencyFormat = {}));
+/**
+ * Icons that can be used with a {@link ScaleSchema}.
+ *
+ * For example, to render a star rating, use a {@link ScaleSchema} with `icon: ScaleIconSet.Star`.
+ */
 var ScaleIconSet;
 (function (ScaleIconSet) {
     ScaleIconSet["Star"] = "star";
