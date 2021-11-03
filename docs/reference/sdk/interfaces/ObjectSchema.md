@@ -25,7 +25,7 @@ ObjectSchemaDefinition.codaType
 
 #### Defined in
 
-[schema.ts:425](https://github.com/coda/packs-sdk/blob/main/schema.ts#L425)
+[schema.ts:479](https://github.com/coda/packs-sdk/blob/main/schema.ts#L479)
 
 ___
 
@@ -33,13 +33,18 @@ ___
 
 • `Optional` **description**: `string`
 
+A explanation of this object schema property shown to the user in the UI.
+
+If your pack has a object schema with many properties, it may be useful to
+explain the purpose or contents of any property that is not self-evident.
+
 #### Inherited from
 
 ObjectSchemaDefinition.description
 
 #### Defined in
 
-[schema.ts:186](https://github.com/coda/packs-sdk/blob/main/schema.ts#L186)
+[schema.ts:192](https://github.com/coda/packs-sdk/blob/main/schema.ts#L192)
 
 ___
 
@@ -53,7 +58,7 @@ ObjectSchemaDefinition.featured
 
 #### Defined in
 
-[schema.ts:426](https://github.com/coda/packs-sdk/blob/main/schema.ts#L426)
+[schema.ts:480](https://github.com/coda/packs-sdk/blob/main/schema.ts#L480)
 
 ___
 
@@ -67,7 +72,7 @@ ObjectSchemaDefinition.id
 
 #### Defined in
 
-[schema.ts:423](https://github.com/coda/packs-sdk/blob/main/schema.ts#L423)
+[schema.ts:477](https://github.com/coda/packs-sdk/blob/main/schema.ts#L477)
 
 ___
 
@@ -81,7 +86,7 @@ ObjectSchemaDefinition.identity
 
 #### Defined in
 
-[schema.ts:437](https://github.com/coda/packs-sdk/blob/main/schema.ts#L437)
+[schema.ts:491](https://github.com/coda/packs-sdk/blob/main/schema.ts#L491)
 
 ___
 
@@ -95,7 +100,7 @@ ObjectSchemaDefinition.primary
 
 #### Defined in
 
-[schema.ts:424](https://github.com/coda/packs-sdk/blob/main/schema.ts#L424)
+[schema.ts:478](https://github.com/coda/packs-sdk/blob/main/schema.ts#L478)
 
 ___
 
@@ -109,7 +114,7 @@ ObjectSchemaDefinition.properties
 
 #### Defined in
 
-[schema.ts:422](https://github.com/coda/packs-sdk/blob/main/schema.ts#L422)
+[schema.ts:476](https://github.com/coda/packs-sdk/blob/main/schema.ts#L476)
 
 ___
 
@@ -123,4 +128,4 @@ ObjectSchemaDefinition.type
 
 #### Defined in
 
-[schema.ts:421](https://github.com/coda/packs-sdk/blob/main/schema.ts#L421)
+[schema.ts:475](https://github.com/coda/packs-sdk/blob/main/schema.ts#L475)

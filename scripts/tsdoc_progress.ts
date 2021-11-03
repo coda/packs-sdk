@@ -8,19 +8,27 @@ import {spawnSync} from 'child_process';
  */
 
 // Very partial typing
+
+interface Comment {
+  shortText: string;
+  text?: string;
+  tags?: Array<{
+    tag: string;
+    text?: string;
+  }>;
+}
+
 interface ReflectionData {
   name: string;
   kindString: string;
-  comment?: {
-    shortText: string;
-    text?: string;
-    tags?: Array<{
-      tag: string;
-      text?: string;
-    }>;
-  };
+  comment?: Comment;
   sources?: Array<{
     fileName: string;
+    line: number;
+  }>;
+  signatures?: Array<{
+    name: string;
+    comment?: Comment;
   }>;
   children?: ReflectionData[];
 }
@@ -36,7 +44,7 @@ function getReflectionData() {
 }
 
 function traverse(data: ReflectionData): void {
-  if (!data.comment) {
+  if (!hasComment(data)) {
     logMissing(data);
   }
   if (data.comment?.tags?.find(t => t.tag === 'deprecated')) {
@@ -52,9 +60,15 @@ function traverse(data: ReflectionData): void {
   }
 }
 
+function hasComment(data: ReflectionData): boolean {
+  return Boolean(data.comment || data.signatures?.some(sig => sig.comment));
+}
+
 function logMissing(data: ReflectionData): void {
+  const source = data.sources?.[0];
+  const message = `${data.name.padEnd(40)} ${data.kindString.padEnd(30)} ${source?.fileName}:${source?.line}`;
   // eslint-disable-next-line no-console
-  console.log(`${data.name.padEnd(40)} ${data.kindString.padEnd(30)} ${data.sources?.[0].fileName}`);
+  console.log(message);
 }
 
 function main() {

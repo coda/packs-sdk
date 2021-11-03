@@ -25,23 +25,43 @@ const handler_templates_3 = require("./handler_templates");
  * and the Coda UI will display the message.
  */
 class UserVisibleError extends Error {
+    /**
+     * Use to construct a user-visible error.
+     *
+     * @example
+     * ```
+     * if (!url.startsWith("http")) {
+     *   throw new coda.UserVisibleError("Please provide a valid url.");
+     * }
+     * ```
+     */
     constructor(message, internalError) {
         super(message);
+        /** @hidden */
         this.isUserVisible = true;
         this.internalError = internalError;
     }
 }
 exports.UserVisibleError = UserVisibleError;
+// StatusCodeError is a simple version of StatusCodeError in request-promise to keep backwards compatibility.
+// This tries to replicate its exact structure, massaging as necessary to handle the various transforms
+// in our stack.
+//
+// https://github.com/request/promise-core/blob/master/lib/errors.js#L22
 /**
- * StatusCodeError is a simple version of StatusCodeError in request-promise to keep backwards compatibility.
- * This tries to replicate its exact structure, massaging as necessary to handle the various transforms
- * in our stack.
+ * An error that will be thrown by {@link Fetcher.fetch} when the fetcher response has an
+ * HTTP status code of 400 or greater.
  *
- * https://github.com/request/promise-core/blob/master/lib/errors.js#L22
+ * This class largely models the `StatusCodeError` from the (now deprecated) `request-promise` library,
+ * which has a quirky structure.
  */
 class StatusCodeError extends Error {
+    /** @hidden */
     constructor(statusCode, body, options, response) {
         super(`${statusCode} - ${JSON.stringify(body)}`);
+        /**
+         * The name of the error, for identiciation purposes.
+         */
         this.name = 'StatusCodeError';
         this.statusCode = statusCode;
         this.body = body;

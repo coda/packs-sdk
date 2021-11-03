@@ -39,20 +39,49 @@ export function newPack(definition?: Partial<PackVersionDefinition>): PackDefini
   return new PackDefinitionBuilder(definition);
 }
 
+/**
+ * A class that assists in constructing a pack definition. Use {@link newPack} to create one.
+ */
 export class PackDefinitionBuilder implements BasicPackDefinition {
+  /**
+   * See {@link PackVersionDefinition.formulas}.
+   */
   formulas: Formula[];
+  /**
+   * See {@link PackVersionDefinition.formats}.
+   */
   formats: Format[];
+  /**
+   * See {@link PackVersionDefinition.syncTables}.
+   */
   syncTables: SyncTable[];
+  /**
+   * See {@link PackVersionDefinition.networkDomains}.
+   */
   networkDomains: string[];
 
+  /**
+   * See {@link PackVersionDefinition.defaultAuthentication}.
+   */
   defaultAuthentication?: Authentication;
+  /**
+   * See {@link PackVersionDefinition.systemConnectionAuthentication}.
+   */
   systemConnectionAuthentication?: SystemAuthentication;
 
+  /**
+   * See {@link PackVersionDefinition.version}.
+   */
   version?: string;
+  /** @deprecated */
   formulaNamespace?: string;
 
   private _defaultConnectionRequirement: ConnectionRequirement | undefined;
 
+  /**
+   * Constructs a {@link PackDefinitionBuilder}. However, `coda.newPack()` should be used instead
+   * rather than constructing a builder directly.
+   */
   constructor(definition?: Partial<PackVersionDefinition>) {
     const {
       formulas,

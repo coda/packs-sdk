@@ -10,4 +10,4 @@
 
 #### Defined in
 
-[schema.ts:544](https://github.com/coda/packs-sdk/blob/main/schema.ts#L544)
+[schema.ts:598](https://github.com/coda/packs-sdk/blob/main/schema.ts#L598)

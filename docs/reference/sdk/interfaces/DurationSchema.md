@@ -18,7 +18,7 @@ BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:360](https://github.com/coda/packs-sdk/blob/main/schema.ts#L360)
+[schema.ts:414](https://github.com/coda/packs-sdk/blob/main/schema.ts#L414)
 
 ___
 
@@ -26,13 +26,18 @@ ___
 
 • `Optional` **description**: `string`
 
+A explanation of this object schema property shown to the user in the UI.
+
+If your pack has a object schema with many properties, it may be useful to
+explain the purpose or contents of any property that is not self-evident.
+
 #### Inherited from
 
 BaseStringSchema.description
 
 #### Defined in
 
-[schema.ts:186](https://github.com/coda/packs-sdk/blob/main/schema.ts#L186)
+[schema.ts:192](https://github.com/coda/packs-sdk/blob/main/schema.ts#L192)
 
 ___
 
@@ -42,7 +47,7 @@ ___
 
 #### Defined in
 
-[schema.ts:355](https://github.com/coda/packs-sdk/blob/main/schema.ts#L355)
+[schema.ts:409](https://github.com/coda/packs-sdk/blob/main/schema.ts#L409)
 
 ___
 
@@ -52,7 +57,7 @@ ___
 
 #### Defined in
 
-[schema.ts:354](https://github.com/coda/packs-sdk/blob/main/schema.ts#L354)
+[schema.ts:408](https://github.com/coda/packs-sdk/blob/main/schema.ts#L408)
 
 ___
 
@@ -66,4 +71,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:359](https://github.com/coda/packs-sdk/blob/main/schema.ts#L359)
+[schema.ts:413](https://github.com/coda/packs-sdk/blob/main/schema.ts#L413)

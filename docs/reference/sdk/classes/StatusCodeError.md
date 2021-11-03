@@ -1,10 +1,10 @@
 # Class: StatusCodeError
 
-StatusCodeError is a simple version of StatusCodeError in request-promise to keep backwards compatibility.
-This tries to replicate its exact structure, massaging as necessary to handle the various transforms
-in our stack.
+An error that will be thrown by [Fetcher.fetch](../interfaces/Fetcher.md#fetch) when the fetcher response has an
+HTTP status code of 400 or greater.
 
-https://github.com/request/promise-core/blob/master/lib/errors.js#L22
+This class largely models the `StatusCodeError` from the (now deprecated) `request-promise` library,
+which has a quirky structure.
 
 ## Hierarchy
 
@@ -12,38 +12,17 @@ https://github.com/request/promise-core/blob/master/lib/errors.js#L22
 
   ↳ **`StatusCodeError`**
 
-## Constructors
-
-### constructor
-
-• **new StatusCodeError**(`statusCode`, `body`, `options`, `response`)
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `statusCode` | `number` |
-| `body` | `any` |
-| `options` | [`FetchRequest`](../interfaces/FetchRequest.md) |
-| `response` | `StatusCodeErrorResponse` |
-
-#### Overrides
-
-Error.constructor
-
-#### Defined in
-
-[api.ts:86](https://github.com/coda/packs-sdk/blob/main/api.ts#L86)
-
 ## Properties
 
 ### body
 
 • **body**: `any`
 
+The raw body of the HTTP response.
+
 #### Defined in
 
-[api.ts:81](https://github.com/coda/packs-sdk/blob/main/api.ts#L81)
+[api.ts:107](https://github.com/coda/packs-sdk/blob/main/api.ts#L107)
 
 ___
 
@@ -51,9 +30,11 @@ ___
 
 • **error**: `any`
 
+A parsed JavaScript object of the HTTP response body, if the body contained JSON data.
+
 #### Defined in
 
-[api.ts:82](https://github.com/coda/packs-sdk/blob/main/api.ts#L82)
+[api.ts:111](https://github.com/coda/packs-sdk/blob/main/api.ts#L111)
 
 ___
 
@@ -61,13 +42,15 @@ ___
 
 • **name**: `string` = `'StatusCodeError'`
 
+The name of the error, for identiciation purposes.
+
 #### Overrides
 
 Error.name
 
 #### Defined in
 
-[api.ts:79](https://github.com/coda/packs-sdk/blob/main/api.ts#L79)
+[api.ts:99](https://github.com/coda/packs-sdk/blob/main/api.ts#L99)
 
 ___
 
@@ -75,9 +58,11 @@ ___
 
 • **options**: [`FetchRequest`](../interfaces/FetchRequest.md)
 
+The original fetcher request used to make this HTTP request.
+
 #### Defined in
 
-[api.ts:83](https://github.com/coda/packs-sdk/blob/main/api.ts#L83)
+[api.ts:115](https://github.com/coda/packs-sdk/blob/main/api.ts#L115)
 
 ___
 
@@ -85,9 +70,11 @@ ___
 
 • **response**: `StatusCodeErrorResponse`
 
+The raw HTTP response, including headers.
+
 #### Defined in
 
-[api.ts:84](https://github.com/coda/packs-sdk/blob/main/api.ts#L84)
+[api.ts:119](https://github.com/coda/packs-sdk/blob/main/api.ts#L119)
 
 ___
 
@@ -95,6 +82,8 @@ ___
 
 • **statusCode**: `number`
 
+The HTTP status code, e.g. `404`.
+
 #### Defined in
 
-[api.ts:80](https://github.com/coda/packs-sdk/blob/main/api.ts#L80)
+[api.ts:103](https://github.com/coda/packs-sdk/blob/main/api.ts#L103)

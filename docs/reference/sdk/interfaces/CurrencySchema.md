@@ -18,7 +18,7 @@ BaseNumberSchema.codaType
 
 #### Defined in
 
-[schema.ts:260](https://github.com/coda/packs-sdk/blob/main/schema.ts#L260)
+[schema.ts:314](https://github.com/coda/packs-sdk/blob/main/schema.ts#L314)
 
 ___
 
@@ -31,7 +31,7 @@ If the currency code is not supported by Coda, the value will be rendered using 
 
 #### Defined in
 
-[schema.ts:266](https://github.com/coda/packs-sdk/blob/main/schema.ts#L266)
+[schema.ts:320](https://github.com/coda/packs-sdk/blob/main/schema.ts#L320)
 
 ___
 
@@ -39,13 +39,18 @@ ___
 
 • `Optional` **description**: `string`
 
+A explanation of this object schema property shown to the user in the UI.
+
+If your pack has a object schema with many properties, it may be useful to
+explain the purpose or contents of any property that is not self-evident.
+
 #### Inherited from
 
 BaseNumberSchema.description
 
 #### Defined in
 
-[schema.ts:186](https://github.com/coda/packs-sdk/blob/main/schema.ts#L186)
+[schema.ts:192](https://github.com/coda/packs-sdk/blob/main/schema.ts#L192)
 
 ___
 
@@ -55,7 +60,7 @@ ___
 
 #### Defined in
 
-[schema.ts:267](https://github.com/coda/packs-sdk/blob/main/schema.ts#L267)
+[schema.ts:321](https://github.com/coda/packs-sdk/blob/main/schema.ts#L321)
 
 ___
 
@@ -65,7 +70,7 @@ ___
 
 #### Defined in
 
-[schema.ts:261](https://github.com/coda/packs-sdk/blob/main/schema.ts#L261)
+[schema.ts:315](https://github.com/coda/packs-sdk/blob/main/schema.ts#L315)
 
 ___
 
@@ -73,10 +78,12 @@ ___
 
 • **type**: [`Number`](../enums/ValueType.md#number)
 
+Identifies this schema as relating to a number value.
+
 #### Inherited from
 
 BaseNumberSchema.type
 
 #### Defined in
 
-[schema.ts:203](https://github.com/coda/packs-sdk/blob/main/schema.ts#L203)
+[schema.ts:217](https://github.com/coda/packs-sdk/blob/main/schema.ts#L217)

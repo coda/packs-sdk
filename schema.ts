@@ -183,13 +183,26 @@ export type NumberHintTypes = typeof NumberHintValueTypes[number];
 export type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 
 interface BaseSchema {
+  /**
+   * A explanation of this object schema property shown to the user in the UI.
+   *
+   * If your pack has a object schema with many properties, it may be useful to
+   * explain the purpose or contents of any property that is not self-evident.
+   */
   description?: string;
 }
 
+/**
+ * A schema representing a return value or object property that is a boolean.
+ */
 export interface BooleanSchema extends BaseSchema {
+  /** Identifies this schema as relating to a boolean value. */
   type: ValueType.Boolean;
 }
 
+/**
+ * The union of all schemas that can represent number values.
+ */
 export type NumberSchema =
   | CurrencySchema
   | SliderSchema
@@ -200,33 +213,74 @@ export type NumberSchema =
   | NumericDateTimeSchema;
 
 export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
+  /** Identifies this schema as relating to a number value. */
   type: ValueType.Number;
+  /** An optional type hint instructing Coda about how to interpret or render this value. */
   codaType?: T;
 }
 
+/**
+ * A schema representing a return value or object property that is a numeric value,
+ * i.e. a raw number with an optional decimal precision.
+ */
 export interface NumericSchema extends BaseNumberSchema {
+  /** If specified, instructs Coda to render this value as a percentage. */
   codaType?: ValueHintType.Percent; // Can also be undefined if it's a vanilla number
+  /** The decimal precision. The number will be rounded to this precision when rendered. */
   precision?: number;
+  /** If specified, will render thousands separators for large numbers, e.g. `1,234,567.89`. */
   useThousandsSeparator?: boolean;
 }
 
+/**
+ * A schema representing a return value or object property that is provided as a number,
+ * which Coda should interpret as a date. The given number should be in seconds since the Unix epoch.
+ */
 export interface NumericDateSchema extends BaseNumberSchema<ValueHintType.Date> {
+  /** Instructs Coda to render this value as a date. */
   codaType: ValueHintType.Date;
-  // A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+  /**
+   * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+   *
+   * Only applies when this is used as a sync table property.
+   */
   format?: string;
 }
 
+/**
+ * A schema representing a return value or object property that is provided as a number,
+ * which Coda should interpret as a time. The given number should be in seconds since the Unix epoch.
+ * While this is a full datetime, only the time component will be rendered, so the date used is irrelevant.
+ */
 export interface NumericTimeSchema extends BaseNumberSchema<ValueHintType.Time> {
+  /** Instructs Coda to render this value as a time. */
   codaType: ValueHintType.Time;
-  // A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+  /**
+   * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+   *
+   * Only applies when this is used as a sync table property.
+   */
   format?: string;
 }
 
+/**
+ * A schema representing a return value or object property that is provided as a number,
+ * which Coda should interpret as a datetime. The given number should be in seconds since the Unix epoch.
+ */
 export interface NumericDateTimeSchema extends BaseNumberSchema<ValueHintType.DateTime> {
+  /** Instructs Coda to render this value as a datetime. */
   codaType: ValueHintType.DateTime;
-  // A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+  /**
+   * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+   *
+   * Only applies when this is used as a sync table property.
+   */
   dateFormat?: string;
-  // A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+  /**
+   * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+   *
+   * Only applies when this is used as a sync table property.
+   */
   timeFormat?: string;
 }
 

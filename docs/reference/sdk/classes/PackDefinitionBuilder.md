@@ -1,5 +1,7 @@
 # Class: PackDefinitionBuilder
 
+A class that assists in constructing a pack definition. Use [newPack](../functions/newPack.md) to create one.
+
 ## Implements
 
 - [`BasicPackDefinition`](../types/BasicPackDefinition.md)
@@ -10,6 +12,9 @@
 
 • **new PackDefinitionBuilder**(`definition?`)
 
+Constructs a [PackDefinitionBuilder](PackDefinitionBuilder.md). However, `coda.newPack()` should be used instead
+rather than constructing a builder directly.
+
 #### Parameters
 
 | Name | Type |
@@ -18,7 +23,7 @@
 
 #### Defined in
 
-[builder.ts:56](https://github.com/coda/packs-sdk/blob/main/builder.ts#L56)
+[builder.ts:85](https://github.com/coda/packs-sdk/blob/main/builder.ts#L85)
 
 ## Properties
 
@@ -26,13 +31,15 @@
 
 • `Optional` **defaultAuthentication**: [`Authentication`](../types/Authentication.md)
 
+See [PackVersionDefinition.defaultAuthentication](../interfaces/PackVersionDefinition.md#defaultauthentication).
+
 #### Implementation of
 
 BasicPackDefinition.defaultAuthentication
 
 #### Defined in
 
-[builder.ts:48](https://github.com/coda/packs-sdk/blob/main/builder.ts#L48)
+[builder.ts:66](https://github.com/coda/packs-sdk/blob/main/builder.ts#L66)
 
 ___
 
@@ -40,13 +47,15 @@ ___
 
 • **formats**: [`Format`](../interfaces/Format.md)[]
 
+See [PackVersionDefinition.formats](../interfaces/PackVersionDefinition.md#formats).
+
 #### Implementation of
 
 BasicPackDefinition.formats
 
 #### Defined in
 
-[builder.ts:44](https://github.com/coda/packs-sdk/blob/main/builder.ts#L44)
+[builder.ts:53](https://github.com/coda/packs-sdk/blob/main/builder.ts#L53)
 
 ___
 
@@ -54,13 +63,15 @@ ___
 
 • `Optional` **formulaNamespace**: `string`
 
+**`deprecated`**
+
 #### Implementation of
 
 BasicPackDefinition.formulaNamespace
 
 #### Defined in
 
-[builder.ts:52](https://github.com/coda/packs-sdk/blob/main/builder.ts#L52)
+[builder.ts:77](https://github.com/coda/packs-sdk/blob/main/builder.ts#L77)
 
 ___
 
@@ -68,51 +79,11 @@ ___
 
 • **formulas**: (`BooleanPackFormula`<[`ParamDefs`](../types/ParamDefs.md)\> \| `NumericPackFormula`<[`ParamDefs`](../types/ParamDefs.md)\> \| `StringPackFormula`<[`ParamDefs`](../types/ParamDefs.md)\> \| `ObjectPackFormula`<[`ParamDefs`](../types/ParamDefs.md), [`ArraySchema`](../interfaces/ArraySchema.md)<[`Schema`](../types/Schema.md)\>\> \| `ObjectPackFormula`<[`ParamDefs`](../types/ParamDefs.md), [`Schema`](../types/Schema.md)\>)[]
 
+See [PackVersionDefinition.formulas](../interfaces/PackVersionDefinition.md#formulas).
+
 #### Implementation of
 
 BasicPackDefinition.formulas
-
-#### Defined in
-
-[builder.ts:43](https://github.com/coda/packs-sdk/blob/main/builder.ts#L43)
-
-___
-
-### networkDomains
-
-• **networkDomains**: `string`[]
-
-#### Implementation of
-
-BasicPackDefinition.networkDomains
-
-#### Defined in
-
-[builder.ts:46](https://github.com/coda/packs-sdk/blob/main/builder.ts#L46)
-
-___
-
-### syncTables
-
-• **syncTables**: `SyncTable`[]
-
-#### Implementation of
-
-BasicPackDefinition.syncTables
-
-#### Defined in
-
-[builder.ts:45](https://github.com/coda/packs-sdk/blob/main/builder.ts#L45)
-
-___
-
-### systemConnectionAuthentication
-
-• `Optional` **systemConnectionAuthentication**: [`SystemAuthentication`](../types/SystemAuthentication.md)
-
-#### Implementation of
-
-BasicPackDefinition.systemConnectionAuthentication
 
 #### Defined in
 
@@ -120,13 +91,63 @@ BasicPackDefinition.systemConnectionAuthentication
 
 ___
 
+### networkDomains
+
+• **networkDomains**: `string`[]
+
+See [PackVersionDefinition.networkDomains](../interfaces/PackVersionDefinition.md#networkdomains).
+
+#### Implementation of
+
+BasicPackDefinition.networkDomains
+
+#### Defined in
+
+[builder.ts:61](https://github.com/coda/packs-sdk/blob/main/builder.ts#L61)
+
+___
+
+### syncTables
+
+• **syncTables**: `SyncTable`[]
+
+See [PackVersionDefinition.syncTables](../interfaces/PackVersionDefinition.md#synctables).
+
+#### Implementation of
+
+BasicPackDefinition.syncTables
+
+#### Defined in
+
+[builder.ts:57](https://github.com/coda/packs-sdk/blob/main/builder.ts#L57)
+
+___
+
+### systemConnectionAuthentication
+
+• `Optional` **systemConnectionAuthentication**: [`SystemAuthentication`](../types/SystemAuthentication.md)
+
+See [PackVersionDefinition.systemConnectionAuthentication](../interfaces/PackVersionDefinition.md#systemconnectionauthentication).
+
+#### Implementation of
+
+BasicPackDefinition.systemConnectionAuthentication
+
+#### Defined in
+
+[builder.ts:70](https://github.com/coda/packs-sdk/blob/main/builder.ts#L70)
+
+___
+
 ### version
 
 • `Optional` **version**: `string`
 
+See [PackVersionDefinition.version](../interfaces/PackVersionDefinition.md#version).
+
 #### Defined in
 
-[builder.ts:51](https://github.com/coda/packs-sdk/blob/main/builder.ts#L51)
+[builder.ts:75](https://github.com/coda/packs-sdk/blob/main/builder.ts#L75)
 
 ## Methods
 
@@ -158,7 +179,7 @@ pack.addColumnFormat({
 
 #### Defined in
 
-[builder.ts:200](https://github.com/coda/packs-sdk/blob/main/builder.ts#L200)
+[builder.ts:229](https://github.com/coda/packs-sdk/blob/main/builder.ts#L229)
 
 ___
 
@@ -207,7 +228,7 @@ pack.addDynamicSyncTable({
 
 #### Defined in
 
-[builder.ts:173](https://github.com/coda/packs-sdk/blob/main/builder.ts#L173)
+[builder.ts:202](https://github.com/coda/packs-sdk/blob/main/builder.ts#L202)
 
 ___
 
@@ -258,7 +279,7 @@ pack.addFormula({
 
 #### Defined in
 
-[builder.ts:101](https://github.com/coda/packs-sdk/blob/main/builder.ts#L101)
+[builder.ts:130](https://github.com/coda/packs-sdk/blob/main/builder.ts#L130)
 
 ___
 
@@ -294,7 +315,7 @@ pack.addNetworkDomain('example.com');
 
 #### Defined in
 
-[builder.ts:295](https://github.com/coda/packs-sdk/blob/main/builder.ts#L295)
+[builder.ts:324](https://github.com/coda/packs-sdk/blob/main/builder.ts#L324)
 
 ___
 
@@ -341,7 +362,7 @@ pack.addSyncTable({
 
 #### Defined in
 
-[builder.ts:131](https://github.com/coda/packs-sdk/blob/main/builder.ts#L131)
+[builder.ts:160](https://github.com/coda/packs-sdk/blob/main/builder.ts#L160)
 
 ___
 
@@ -377,7 +398,7 @@ pack.setSystemAuthentication({
 
 #### Defined in
 
-[builder.ts:265](https://github.com/coda/packs-sdk/blob/main/builder.ts#L265)
+[builder.ts:294](https://github.com/coda/packs-sdk/blob/main/builder.ts#L294)
 
 ___
 
@@ -417,7 +438,7 @@ pack.setUserAuthentication({
 
 #### Defined in
 
-[builder.ts:226](https://github.com/coda/packs-sdk/blob/main/builder.ts#L226)
+[builder.ts:255](https://github.com/coda/packs-sdk/blob/main/builder.ts#L255)
 
 ___
 
@@ -449,4 +470,4 @@ pack.setVersion('1.2.3');
 
 #### Defined in
 
-[builder.ts:313](https://github.com/coda/packs-sdk/blob/main/builder.ts#L313)
+[builder.ts:342](https://github.com/coda/packs-sdk/blob/main/builder.ts#L342)
