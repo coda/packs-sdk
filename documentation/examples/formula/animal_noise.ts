@@ -23,7 +23,7 @@ pack.addFormula({
       case "sheep":
         return "baa";
       default:
-        throw new coda.UserVisibleError('Unknown animal: ' + animal);
+        throw new coda.UserVisibleError("Unknown animal: " + animal);
     }
   },
 });

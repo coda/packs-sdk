@@ -10,7 +10,7 @@ pack.addFormula({
       type: coda.ParameterType.String,
       name: "gameId",
       description: "The ID of the game on boardgameatlas.com",
-      autocomplete: async function (context, search, metadata) {
+      autocomplete: async function (context, search, parameters) {
         let url = coda.withQueryParams(
           "https://api.boardgameatlas.com/api/search",
           { fuzzy_match: true, name: search });

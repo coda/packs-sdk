@@ -30,7 +30,7 @@ pack.addFormula({
   execute: async function ([start, ...varargs], context) {
     let result = start;
     while (varargs.length > 0) {
-      let label, step;
+      let label; let step;
       // Pull the first set of varargs off the list, and leave the rest.
       [label, step, ...varargs] = varargs;
       result += ` --${label}--> ${step}`;
