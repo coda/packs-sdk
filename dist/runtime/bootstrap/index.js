@@ -150,22 +150,31 @@ async function injectExecutionContext({ context, fetcher, temporaryBlobStorage, 
     await injectAsyncFunction(context, 'executionContext.temporaryBlobStorage.storeUrl', temporaryBlobStorage.storeUrl.bind(temporaryBlobStorage));
 }
 exports.injectExecutionContext = injectExecutionContext;
-async function registerBundle(isolate, context, path, stubName) {
-    // init / reset global.exports for import. Assuming the bundle is following commonJS format.
-    // be aware that we don't support commonJS2 (one of webpack's output format).
+async function registerBundle(isolate, context, path, stubName, requiresManualClosure = true) {
+    // reset global.exports and module.exports to be used by this bundle.
+    // see buildWithES for why we need both global.exports and module.exports.
     await context.global.set('exports', {}, { copy: true });
+    await context.global.set('module', {}, { copy: true });
     // compiling the bundle allows IVM to map the stack trace.
     const bundle = fs_1.default.readFileSync(path).toString();
+    // manual closure will break sourcemap. esp if it's minified.
+    const scriptCode = requiresManualClosure
+        ? `(() => { ${stubName} = (() => { ${bundle} \n return exports; })(); })()`
+        : bundle;
     // bundle needs to be converted into a closure to avoid leaking variables to global scope.
-    const script = await isolate.compileScript(`(() => { ${stubName} = (() => { ${bundle} \n return exports; })(); })()`, {
+    const script = await isolate.compileScript(scriptCode, {
         filename: path,
     });
     await script.run(context);
+    if (!requiresManualClosure) {
+        // see buildWithES for why we need both global.exports and module.exports.
+        await context.eval(`global.${stubName} = {...global.exports, ...module.exports};`);
+    }
 }
 exports.registerBundle = registerBundle;
-async function registerBundles(isolate, context, packBundlePath, thunkBundlePath) {
-    await registerBundle(isolate, context, thunkBundlePath, 'coda');
-    await registerBundle(isolate, context, packBundlePath, 'pack');
+async function registerBundles(isolate, context, packBundlePath, thunkBundlePath, requiresManualClosure = true) {
+    await registerBundle(isolate, context, thunkBundlePath, 'coda', requiresManualClosure);
+    await registerBundle(isolate, context, packBundlePath, 'pack', requiresManualClosure);
 }
 exports.registerBundles = registerBundles;
 function getThunkPath() {

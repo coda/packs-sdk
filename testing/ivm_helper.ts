@@ -30,10 +30,10 @@ export async function setupIvmContext(bundlePath: string, executionContext: Exec
   //
   // TODO(huayang): this is not efficient enough and needs optimization if to be used widely in testing.
   if (fs.existsSync(CompiledHelperBundlePath)) {
-    await registerBundles(isolate, ivmContext, bundleFullPath, CompiledHelperBundlePath);
+    await registerBundles(isolate, ivmContext, bundleFullPath, CompiledHelperBundlePath, false);
   } else if (fs.existsSync(HelperTsSourceFile)) {
     const bundlePath = await buildBundle(HelperTsSourceFile);
-    await registerBundles(isolate, ivmContext, bundleFullPath, bundlePath);
+    await registerBundles(isolate, ivmContext, bundleFullPath, bundlePath, false);
   } else {
     throw new Error('cannot find the execution helper');
   }
