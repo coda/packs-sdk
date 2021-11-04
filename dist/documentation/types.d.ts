@@ -31,6 +31,7 @@ export interface CompiledExample {
     category: ExampleCategory;
     triggerTokens: string[];
     exampleFooterLink: string;
+    learnMoreLink?: string;
     content: string;
     exampleSnippets: CompiledExampleSnippet[];
 }

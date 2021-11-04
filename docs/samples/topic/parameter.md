@@ -7,8 +7,11 @@ title: Parameters
 Coda formulas, actions, and sync tables receive take in user input via parameters. They are required by default, but can by made optional. Variable argument (vararg) parameters can be used to allow for parameters to be set more than once.
 
 
+[Learn More]({{config.site_url.rstrip('/')}}/guides/basics/parameters){ .md-button }
+
 ## Template
 The basic structure of a parameter. This sample is for a string parameter.
+
 ```ts
 coda.makeParameter({
   type: coda.ParameterType.String,
@@ -18,6 +21,7 @@ coda.makeParameter({
 ```
 ## No parameters
 A formula without any parameters. This sample return the name of the current day of the week.
+
 ```ts
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
@@ -37,6 +41,7 @@ pack.addFormula({
 ```
 ## Optional parameters
 A formula with some required and some optional parameters. This sample formats text to look like screaming, with a optional parameters to override how many exclamation points to use and an alternate character to use.
+
 ```ts
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
@@ -72,6 +77,7 @@ pack.addFormula({
 ```
 ## Variable argument parameters
 A formula that accepts a variable number of arguments. This sample draws a simple diagram using text, with an unknown number of arrow labels and steps.
+
 ```ts
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();

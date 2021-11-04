@@ -7,11 +7,16 @@ title: {{name}}
 {{{content}}}
 
 {{#if (isTopic this)}}
+{{! Topic Sample }}
 
-{{! Have a header for each sample in a topic. }}
+{{#if learnMoreLink}}
+[Learn More](\{{config.site_url.rstrip('/')}}{{learnMoreLink}}){ .md-button }
+{{/if}}
+
 {{#each exampleSnippets}}
 ## {{name}}
 {{content}}
+
 ```ts
 {{{code}}}
 ```
@@ -19,7 +24,7 @@ title: {{name}}
 
 {{else}}
 
-{{! For full samples, use a tabs instead. }}
+{{! Full Sample }}
 {{#each exampleSnippets}}
 === "{{name}}"
     ```ts

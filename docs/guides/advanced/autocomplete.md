@@ -14,11 +14,11 @@ If you have a parameter that accepts a defined set of values it's usually best t
 In the formula editor parameter options show up in a the same pane used for other autocomplete. In the actions builder and sync table settings options are presented in a drop down.
 
 === "In the formula editor"
-    <img src="{{ config.site_url }}/images/autocomplete_formula.png" srcset="{{ config.site_url }}/images/autocomplete_formula_2x.png 2x" class="screenshot" alt="Autocomplete in the formula editor">
+    <img src="{{ config.site_url.rstrip('/') }}/images/autocomplete_formula.png" srcset="{{ config.site_url.rstrip('/') }}/images/autocomplete_formula_2x.png 2x" class="screenshot" alt="Autocomplete in the formula editor">
 === "In the action builder"
-    <img src="{{ config.site_url }}/images/autocomplete_action.png" srcset="{{ config.site_url }}/images/autocomplete_action_2x.png 2x" class="screenshot" alt="Autocomplete in the action builder">
+    <img src="{{ config.site_url.rstrip('/') }}/images/autocomplete_action.png" srcset="{{ config.site_url.rstrip('/') }}/images/autocomplete_action_2x.png 2x" class="screenshot" alt="Autocomplete in the action builder">
 === "In the sync table settings"
-    <img src="{{ config.site_url }}/images/autocomplete_sync.png" srcset="{{ config.site_url }}/images/autocomplete_sync_2x.png 2x" class="screenshot" alt="Autocomplete in the sync table settings">
+    <img src="{{ config.site_url.rstrip('/') }}/images/autocomplete_sync.png" srcset="{{ config.site_url.rstrip('/') }}/images/autocomplete_sync_2x.png 2x" class="screenshot" alt="Autocomplete in the sync table settings">
 
 
 

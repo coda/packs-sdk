@@ -7,8 +7,11 @@ title: Autocomplete
 Autocomplete can be configured for a parameter to provide a defined set of options for the user to select from. You can can pass either a static array or use a function to dynamically generate the options.
 
 
+[Learn More]({{config.site_url.rstrip('/')}}/guides/advanced/autocomplete){ .md-button }
+
 ## Simple autocomplete
 A formula with a parameter that provides autocomplete for acceptable values. This sample returns the noise that an animal makes, for a limited set of animals.
+
 ```ts
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
@@ -42,6 +45,7 @@ pack.addFormula({
 ```
 ## Dynamic autocomplete
 A formula with a parameter that provides autocomplete for acceptable values, where the options are pulled dynamically from an API. This sample returns the price for a board game listed on the site Board Game Atlas.
+
 ```ts
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
@@ -89,6 +93,7 @@ pack.setSystemAuthentication({
 ```
 ## Autocomplete on previous parameter
 A formula with a parameter that provides autocomplete for acceptable values, where the options depend on the value of a previous parameter. This sample generates a greeting in either English or Spanish.
+
 ```ts
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();

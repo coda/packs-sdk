@@ -328,7 +328,7 @@ export const Examples: Example[] = [
     contentFile: './examples/fetcher/README.md',
     linkData: {
       type: UrlType.SdkReferencePath,
-      url: '/reference/sdk/interfaces/Fetcher',
+      url: '/guides/advanced/fetcher',
     },
     exampleSnippets: [
       {

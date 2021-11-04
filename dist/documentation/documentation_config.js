@@ -327,7 +327,7 @@ exports.Examples = [
         contentFile: './examples/fetcher/README.md',
         linkData: {
             type: types_2.UrlType.SdkReferencePath,
-            url: '/reference/sdk/interfaces/Fetcher',
+            url: '/guides/advanced/fetcher',
         },
         exampleSnippets: [
             {

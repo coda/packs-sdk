@@ -7,8 +7,11 @@ title: Formulas
 A formula is a JavaScript function that is exposed as a Coda formula, that you can use anywhere in a Coda doc that you can use any built-in formula. Formulas take basic types as input, like strings, numbers, dates, booleans, and arrays of these types, and return any of these types or objects whose properties are any of these types.
 
 
+[Learn More]({{config.site_url.rstrip('/')}}/guides/blocks/formulas){ .md-button }
+
 ## Template
 The basic structure of a formula. This sample takes in a single string parameter and returns a string result.
+
 ```ts
 pack.addFormula({
   name: "<User-visible name of formula>",
@@ -29,6 +32,7 @@ pack.addFormula({
 ```
 ## Image result
 A formula that returns an image. This sample gets a random cat image with an optional text overlay or filter applied.
+
 ```ts
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
@@ -77,6 +81,7 @@ pack.addNetworkDomain("cataas.com");
 ```
 ## Rich data result
 A formula that returns rich data (a schema). This sample gets information about a task in the Todoist application.
+
 ```ts
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();

@@ -63,11 +63,13 @@ function compileExamples() {
         const content = getContentFile(example.contentFile);
         const compiledExampleSnippets = compileExampleSnippets(example);
         let exampleFooterLink = example.linkData.url;
+        let learnMoreLink;
         if (example.linkData.type === types_2.UrlType.SdkReferencePath) {
             if (!isValidReferencePath(exampleFooterLink)) {
                 throw new Error(`${exampleFooterLink} is not a valid path`);
             }
             exampleFooterLink = `${SdkReferenceLink}${exampleFooterLink}`;
+            learnMoreLink = example.linkData.url;
         }
         else if (example.linkData.type === types_2.UrlType.SamplePage) {
             const pagePath = getExamplePagePath(example);
@@ -81,7 +83,9 @@ function compileExamples() {
             name: example.name,
             category: example.category,
             triggerTokens: example.triggerTokens,
+            linkData: example.linkData,
             exampleFooterLink,
+            learnMoreLink,
             content,
             exampleSnippets: compiledExampleSnippets,
         };
