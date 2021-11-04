@@ -7,6 +7,17 @@ exports.join = exports.getQueryParams = exports.withQueryParams = void 0;
 const ensure_1 = require("./ensure");
 const qs_1 = __importDefault(require("qs"));
 const url_parse_1 = __importDefault(require("url-parse"));
+/**
+ * Helper to create a new URL by appending parameters to a base URL.
+ *
+ * The input URL may or may not having existing parameters.
+ *
+ * @example
+ * ```
+ * // Returns `"/someApi/someEndpoint?token=asdf&limit=5"`
+ * let url = withQueryParams("/someApi/someEndpoint", {token: "asdf", limit: 5});
+ * ```
+ */
 function withQueryParams(url, params) {
     if (!params) {
         return url;
@@ -18,6 +29,15 @@ function withQueryParams(url, params) {
     return parsedUrl.toString();
 }
 exports.withQueryParams = withQueryParams;
+/**
+ * Helper to take a URL string and return the parameters (if any) as a JavaScript object.
+ *
+ * @example
+ * ```
+ * // Returns `{token: "asdf", limit: "5"}`
+ * let params = getQueryParams("/someApi/someEndpoint?token=asdf&limit=5");
+ * ```
+ */
 function getQueryParams(url) {
     const parsedUrl = (0, url_parse_1.default)(url);
     // Merge the params together

@@ -1,5 +1,8 @@
 # Interface: SliderSchema
 
+A schema representing a return value or object property that is a number that should
+be rendered as a slider.
+
 ## Hierarchy
 
 - `BaseNumberSchema`<[`Slider`](../enums/ValueHintType.md#slider)\>
@@ -12,13 +15,15 @@
 
 • **codaType**: [`Slider`](../enums/ValueHintType.md#slider)
 
+Instructs Coda to render this value as a slider.
+
 #### Overrides
 
 BaseNumberSchema.codaType
 
 #### Defined in
 
-[schema.ts:325](https://github.com/coda/packs-sdk/blob/main/schema.ts#L325)
+[schema.ts:339](https://github.com/coda/packs-sdk/blob/main/schema.ts#L339)
 
 ___
 
@@ -45,9 +50,11 @@ ___
 
 • `Optional` **maximum**: `string` \| `number`
 
+The maximum value selectable by this slider.
+
 #### Defined in
 
-[schema.ts:327](https://github.com/coda/packs-sdk/blob/main/schema.ts#L327)
+[schema.ts:343](https://github.com/coda/packs-sdk/blob/main/schema.ts#L343)
 
 ___
 
@@ -55,9 +62,11 @@ ___
 
 • `Optional` **minimum**: `string` \| `number`
 
+The minimum value selectable by this slider.
+
 #### Defined in
 
-[schema.ts:326](https://github.com/coda/packs-sdk/blob/main/schema.ts#L326)
+[schema.ts:341](https://github.com/coda/packs-sdk/blob/main/schema.ts#L341)
 
 ___
 
@@ -65,9 +74,11 @@ ___
 
 • `Optional` **step**: `string` \| `number`
 
+The minimum amount the slider can be moved when dragged.
+
 #### Defined in
 
-[schema.ts:328](https://github.com/coda/packs-sdk/blob/main/schema.ts#L328)
+[schema.ts:345](https://github.com/coda/packs-sdk/blob/main/schema.ts#L345)
 
 ___
 

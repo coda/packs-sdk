@@ -16,4 +16,4 @@ Joins all the tokens into a single URL string separated by '/'. Zero length toke
 
 #### Defined in
 
-[helpers/url.ts:27](https://github.com/coda/packs-sdk/blob/main/helpers/url.ts#L27)
+[helpers/url.ts:47](https://github.com/coda/packs-sdk/blob/main/helpers/url.ts#L47)

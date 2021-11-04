@@ -196,7 +196,8 @@ export interface NumericDateSchema extends BaseNumberSchema<ValueHintType.Date> 
     /** Instructs Coda to render this value as a date. */
     codaType: ValueHintType.Date;
     /**
-     * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+     * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format,
+     * used when rendering the value.
      *
      * Only applies when this is used as a sync table property.
      */
@@ -211,7 +212,8 @@ export interface NumericTimeSchema extends BaseNumberSchema<ValueHintType.Time> 
     /** Instructs Coda to render this value as a time. */
     codaType: ValueHintType.Time;
     /**
-     * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+     * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
+     * used when rendering the value.
      *
      * Only applies when this is used as a sync table property.
      */
@@ -231,7 +233,8 @@ export interface NumericDateTimeSchema extends BaseNumberSchema<ValueHintType.Da
      */
     dateFormat?: string;
     /**
-     * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+     * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
+     * used when rendering the value.
      *
      * Only applies when this is used as a sync table property.
      */
@@ -262,20 +265,34 @@ export declare enum CurrencyFormat {
      */
     Financial = "financial"
 }
+/**
+ * A schema representing a return value or object property that is an amount of currency.
+ */
 export interface CurrencySchema extends BaseNumberSchema<ValueHintType.Currency> {
+    /** Instructs Coda to render this value as a currency amount. */
     codaType: ValueHintType.Currency;
+    /** The decimal precision. The value is rounded to this precision when rendered. */
     precision?: number;
-    /***
+    /**
      * A three-letter ISO 4217 currency code, e.g. USD or EUR.
      * If the currency code is not supported by Coda, the value will be rendered using USD.
      */
     currencyCode?: string;
+    /** A render format for further refining how the value is rendered. */
     format?: CurrencyFormat;
 }
+/**
+ * A schema representing a return value or object property that is a number that should
+ * be rendered as a slider.
+ */
 export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
+    /** Instructs Coda to render this value as a slider. */
     codaType: ValueHintType.Slider;
+    /** The minimum value selectable by this slider. */
     minimum?: number | string;
+    /** The maximum value selectable by this slider. */
     maximum?: number | string;
+    /** The minimum amount the slider can be moved when dragged. */
     step?: number | string;
 }
 /**
@@ -305,22 +322,76 @@ export declare enum ScaleIconSet {
     Checkmark = "checkmark",
     LightBulb = "lightbulb"
 }
+/**
+ * A schema representing a return value or object property that is a number that should
+ * be rendered as a scale.
+ *
+ * A scale is a widget with a repeated set of icons, where the number of shaded represents
+ * a numeric value. The canonical example of a scale is a star rating, which might show
+ * 5 star icons, with 3 of them shaded, indicating a value of 3.
+ */
 export interface ScaleSchema extends BaseNumberSchema<ValueHintType.Scale> {
+    /** Instructs Coda to render this value as a scale. */
     codaType: ValueHintType.Scale;
+    /** The number of icons to render. */
     maximum?: number;
+    /** The icon to render. */
     icon?: ScaleIconSet;
 }
+/**
+ * A schema representing a return value or object property that is provided as a string,
+ * which Coda should interpret as a date. Coda is able to flexibly a parse number of formal
+ * and informal string representations of dates. For maximum accuracy, consider using an
+ * ISO 8601 date string (e.g. 2021-10-29): https://en.wikipedia.org/wiki/ISO_8601.
+ */
 export interface StringDateSchema extends BaseStringSchema<ValueHintType.Date> {
+    /** Instructs Coda to render this value as a date. */
     codaType: ValueHintType.Date;
+    /**
+     * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format,
+     * used when rendering the value.
+     *
+     * Only applies when this is used as a sync table property.
+     */
     format?: string;
 }
+/**
+ * A schema representing a return value or object property that is provided as a string,
+ * which Coda should interpret as a time.
+ */
 export interface StringTimeSchema extends BaseStringSchema<ValueHintType.Time> {
+    /** Instructs Coda to render this value as a date. */
     codaType: ValueHintType.Time;
+    /**
+     * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
+     * used when rendering the value.
+     *
+     * Only applies when this is used as a sync table property.
+     */
     format?: string;
 }
+/**
+ * A schema representing a return value or object property that is provided as a string,
+ * which Coda should interpret as a datetime. Coda is able to flexibly a parse number of formal
+ * and informal string representations of dates. For maximum accuracy, consider using an
+ * ISO 8601 datetime string (e.g. 2021-11-03T19:43:58): https://en.wikipedia.org/wiki/ISO_8601.
+ */
 export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.DateTime> {
+    /** Instructs Coda to render this value as a date. */
     codaType: ValueHintType.DateTime;
+    /**
+     * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format,
+     * used when rendering the value.
+     *
+     * Only applies when this is used as a sync table property.
+     */
     dateFormat?: string;
+    /**
+     * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
+     * used when rendering the value.
+     *
+     * Only applies when this is used as a sync table property.
+     */
     timeFormat?: string;
 }
 /**
@@ -344,12 +415,26 @@ export declare enum DurationUnit {
      */
     Seconds = "seconds"
 }
+/**
+ * A schema representing a return value or object property that represents a duration. The value
+ * should be provided as a string like "3 days" or "40 minutes 30 seconds".
+ */
 export interface DurationSchema extends BaseStringSchema<ValueHintType.Duration> {
+    /**
+     * A refinement of {@link maxUnit} to use for rounding the duration when rendering.
+     * Currently only `1` is supported, which is the same as omitting a value.
+     */
     precision?: number;
+    /**
+     * The unit to use for rounding the duration when rendering. For example, if using `DurationUnit.Days`,
+     * and a value of "3 days 4 hours" is provided, it will be rendered as "3 days".
+     */
     maxUnit?: DurationUnit;
 }
 export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
+    /** Identifies this schema as a string. */
     type: ValueType.String;
+    /** An optional type hint instructing Coda about how to interpret or render this value. */
     codaType?: T;
 }
 /**
@@ -360,8 +445,14 @@ export declare type SimpleStringHintTypes = typeof SimpleStringHintValueTypes[nu
 export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStringHintTypes> extends BaseStringSchema<T> {
 }
 export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema | SimpleStringSchema;
+/**
+ * A schema representing a return value or object property that is an array (list) of items.
+ * The items are themselves schema definitions, which may refer to scalars or other objects.
+ */
 export interface ArraySchema<T extends Schema = Schema> extends BaseSchema {
+    /** Identifies this schema as an array. */
     type: ValueType.Array;
+    /** A schema for the items of this array. */
     items: T;
 }
 export interface ObjectSchemaProperty {

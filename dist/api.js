@@ -396,6 +396,37 @@ function simpleAutocomplete(search, options) {
     return Promise.resolve(metadataResults);
 }
 exports.simpleAutocomplete = simpleAutocomplete;
+/**
+ * A helper to search over a list of objects representing candidate search results,
+ * filtering to only those that match a search string, and converting the matching
+ * objects into the format needed for autocomplete results.
+ *
+ * A case-sensitive search is performed over each object's `displayKey` property.
+ *
+ * A common pattern for implementing autocomplete for a formula pattern is to
+ * make a request to an API endpoint that returns a list of all entities,
+ * and then to take the user's partial input and search over those entities
+ * for matches. The helper generalizes this use case.
+ *
+ * @example
+ * ```
+ * coda.makeParameter({
+ *   type: ParameterType.Number,
+ *   name: "userId",
+ *   description: "The ID of a user.",
+ *   autocomplete: async function(context, search) {
+ *     // Suppose this endpoint returns a list of users that have the form
+ *     // `{name: "Jane Doe", userId: 123, email: "jane@doe.com"}`
+ *     const usersResponse = await context.fetcher.fetch("/api/users");
+ *     // This will search over the name property of each object and filter to only
+ *     // those that match. Then it will transform the matching objects into the form
+ *     // `{display: "Jane Doe", value: 123}` which is what is required to render
+ *     // autocomplete responses.
+ *     return coda.autocompleteSearchObjects(search, usersResponse.body, "name", "userId");
+ *   }
+ * });
+ * ```
+ */
 function autocompleteSearchObjects(search, objs, displayKey, valueKey) {
     const normalizedSearch = search.toLowerCase();
     const filtered = objs.filter(o => o[displayKey].toLowerCase().includes(normalizedSearch));
@@ -408,6 +439,11 @@ function autocompleteSearchObjects(search, objs, displayKey, valueKey) {
     return Promise.resolve(metadataResults);
 }
 exports.autocompleteSearchObjects = autocompleteSearchObjects;
+/**
+ * @deprecated If you have a hardcoded array of autocomplete options, simply include that array
+ * as the value of the `autocomplete` property in your parameter definition. There is no longer
+ * any needed to wrap a value with this formula.
+ */
 function makeSimpleAutocompleteMetadataFormula(options) {
     return makeMetadataFormula((context, [search]) => simpleAutocomplete(search, options), {
         // A connection won't be used here, but if the parent formula uses a connection
@@ -557,6 +593,35 @@ function makeDynamicSyncTable({ name, getName: getNameDef, getSchema: getSchemaD
     };
 }
 exports.makeDynamicSyncTable = makeDynamicSyncTable;
+/**
+ * Helper to generate a formula that fetches a list of entities from a given URL and returns them.
+ *
+ * One of the simplest but most common use cases for a pack formula is to make a request to an API
+ * endpoint that returns a list of objects, and then return those objects either as-is
+ * or with slight transformations. The can be accomplished with an `execute` function that does
+ * exactly that, but alternatively you could use `makeTranslateObjectFormula` and an
+ * `execute` implementation will be generated for you.
+ *
+ * @example
+ * ```
+ * makeTranslateObjectFormula({
+ *   name: "Users",
+ *   description: "Returns a list of users."
+ *   // This will generate an `execute` function that makes a GET request to the given URL.
+ *   request: {
+ *     method: 'GET',
+ *     url: 'https://api.example.com/users',
+ *   },
+ *   response: {
+ *     // Suppose the response body has the form `{users: [{ ...user1 }, { ...user2 }]}`.
+ *     // This "projection" key tells the `execute` function that the list of results to return
+ *     // can be found in the object property `users`. If omitted, the response body itself
+ *     // should be the list of results.
+ *     projectKey: 'users',
+ *     schema: UserSchema,
+ *   },
+ * });
+ */
 function makeTranslateObjectFormula({ response, ...definition }) {
     const { request, ...rest } = definition;
     const { parameters } = rest;

@@ -29,4 +29,4 @@ rendered any time a value with that identity is rendered in a doc.
 
 #### Defined in
 
-[schema.ts:544](https://github.com/coda/packs-sdk/blob/main/schema.ts#L544)
+[schema.ts:631](https://github.com/coda/packs-sdk/blob/main/schema.ts#L631)
