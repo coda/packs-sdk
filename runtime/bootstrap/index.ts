@@ -250,7 +250,9 @@ export async function registerBundle(
 
   // manual closure will break sourcemap. esp if it's minified.
   const scriptCode = requiresManualClosure
-    ? `(() => { ${stubName} = (() => { ${bundle} \n return exports; })(); })()`
+    ? // {...exports, ...module.exports} is only necessary when the pack
+      // is bundled with new sdk but runtime is on the old sdk.
+      `(() => { ${stubName} = (() => { ${bundle} \n return {...exports, ...module.exports}; })(); })()`
     : bundle;
 
   // bundle needs to be converted into a closure to avoid leaking variables to global scope.
