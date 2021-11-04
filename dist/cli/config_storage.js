@@ -22,7 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPackId = exports.storePackId = exports.storeCodaApiKey = exports.getApiKey = exports.PACK_ID_FILE_NAME = exports.DEFAULT_API_ENDPOINT = void 0;
+exports.getPackOptions = exports.storePackOptions = exports.getPackId = exports.storePackId = exports.storeCodaApiKey = exports.getApiKey = exports.PackOptionKey = exports.PACK_ID_FILE_NAME = exports.DEFAULT_API_ENDPOINT = void 0;
 const path = __importStar(require("path"));
 const helpers_1 = require("../testing/helpers");
 const url_parse_1 = __importDefault(require("url-parse"));
@@ -30,6 +30,10 @@ const helpers_2 = require("../testing/helpers");
 exports.DEFAULT_API_ENDPOINT = 'https://coda.io';
 const API_KEY_FILE_NAME = '.coda.json';
 exports.PACK_ID_FILE_NAME = '.coda-pack.json';
+var PackOptionKey;
+(function (PackOptionKey) {
+    PackOptionKey["timerStrategy"] = "timerStrategy";
+})(PackOptionKey = exports.PackOptionKey || (exports.PackOptionKey = {}));
 function isDefaultApiEndpoint(apiEndpoint) {
     return apiEndpoint === exports.DEFAULT_API_ENDPOINT;
 }
@@ -101,6 +105,18 @@ function getPackId(manifestDir, codaApiEndpoint) {
     }
 }
 exports.getPackId = getPackId;
+// Merges new options with existing ones, if any.
+function storePackOptions(manifestDir, options) {
+    const fileContents = readPackIdFile(manifestDir) || { packId: -1 };
+    fileContents.options = { ...fileContents.options, ...options };
+    writePacksFile(manifestDir, fileContents);
+}
+exports.storePackOptions = storePackOptions;
+function getPackOptions(manifestDir) {
+    const fileContents = readPackIdFile(manifestDir);
+    return fileContents === null || fileContents === void 0 ? void 0 : fileContents.options;
+}
+exports.getPackOptions = getPackOptions;
 function readPackIdFile(manifestDir) {
     const filename = path.join(manifestDir, exports.PACK_ID_FILE_NAME);
     return (0, helpers_1.readJSONFile)(filename);

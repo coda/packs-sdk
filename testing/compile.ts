@@ -3,6 +3,7 @@ import {ensureUnreachable} from '../helpers/ensure';
 import * as esbuild from 'esbuild';
 import exorcist from 'exorcist';
 import fs from 'fs';
+import {getPackOptions} from '../cli/config_storage';
 import ivm from 'isolated-vm';
 import os from 'os';
 import path from 'path';
@@ -123,8 +124,10 @@ function getTimerShims(timerStrategy: TimerShimStrategy): string[] {
   }
 }
 
-function getInjections({timerStrategy = TimerShimStrategy.None}: CompilePackBundleOptions): string[] {
-  const shims = [...getTimerShims(timerStrategy), `${__dirname}/injections/crypto_shim.js`];
+function getInjections({timerStrategy = TimerShimStrategy.None, manifestPath}: CompilePackBundleOptions): string[] {
+  const options = getPackOptions(manifestPath);
+  const timerStrategyToUse = options?.timerStrategy || timerStrategy;
+  const shims = [...getTimerShims(timerStrategyToUse), `${__dirname}/injections/crypto_shim.js`];
 
   return shims;
 }

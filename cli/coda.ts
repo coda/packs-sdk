@@ -10,6 +10,7 @@ import {handleExecute} from './execute';
 import {handleInit} from './init';
 import {handleRegister} from './register';
 import {handleRelease} from './release';
+import {handleSetOption} from './set_option';
 import {handleUpload} from './upload';
 import {handleValidate} from './validate';
 import yargs from 'yargs';
@@ -180,6 +181,15 @@ if (require.main === module) {
         },
       },
       handler: handleRelease,
+    })
+    .command({
+      command: 'setOption <manifestFile> <option> <value>',
+      describe:
+        'Set a persistent build option for the pack. This will store the option alongside the pack id in ' +
+        'the .coda-pack.json file and it will be used for all builds of the pack. ' +
+        'Currently the only supported option is `timerStrategy`. Valid values are "none", "error", or "fake".\n\n' +
+        'Usage: coda setOption path/to/pack.ts timerStrategy fake',
+      handler: handleSetOption,
     })
     .demandCommand()
     .strict()

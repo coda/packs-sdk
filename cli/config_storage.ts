@@ -1,3 +1,4 @@
+import type {TimerShimStrategy} from '../testing/compile';
 import * as path from 'path';
 import {readJSONFile} from '../testing/helpers';
 import urlParse from 'url-parse';
@@ -14,8 +15,17 @@ export interface ApiKeyFile {
   environmentApiKeys?: {[host: string]: string};
 }
 
+export enum PackOptionKey {
+  timerStrategy = 'timerStrategy',
+}
+
+export interface PackOptions {
+  [PackOptionKey.timerStrategy]?: TimerShimStrategy;
+}
+
 export interface PackIdFile {
   packId: number;
+  options?: PackOptions;
   // Codan-only overrides for storing pack ids for other environments.
   environmentPackIds?: {[host: string]: number};
 }
@@ -85,6 +95,18 @@ export function getPackId(manifestDir: string, codaApiEndpoint: string): number 
     const {host} = urlParse(codaApiEndpoint);
     return fileContents.environmentPackIds?.[host];
   }
+}
+
+// Merges new options with existing ones, if any.
+export function storePackOptions(manifestDir: string, options: PackOptions): void {
+  const fileContents: PackIdFile = readPackIdFile(manifestDir) || {packId: -1};
+  fileContents.options = {...fileContents.options, ...options};
+  writePacksFile(manifestDir, fileContents);
+}
+
+export function getPackOptions(manifestDir: string): PackOptions | undefined {
+  const fileContents = readPackIdFile(manifestDir);
+  return fileContents?.options;
 }
 
 function readPackIdFile(manifestDir: string): PackIdFile | undefined {
