@@ -25,7 +25,7 @@ BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:430](https://github.com/coda/packs-sdk/blob/main/schema.ts#L430)
+[schema.ts:435](https://github.com/coda/packs-sdk/blob/main/schema.ts#L435)
 
 ___
 
@@ -33,13 +33,14 @@ ___
 
 • `Optional` **dateFormat**: `string`
 
-A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format,
+used when rendering the value.
 
 Only applies when this is used as a sync table property.
 
 #### Defined in
 
-[schema.ts:436](https://github.com/coda/packs-sdk/blob/main/schema.ts#L436)
+[schema.ts:442](https://github.com/coda/packs-sdk/blob/main/schema.ts#L442)
 
 ___
 
@@ -66,13 +67,14 @@ ___
 
 • `Optional` **timeFormat**: `string`
 
-A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
+used when rendering the value.
 
 Only applies when this is used as a sync table property.
 
 #### Defined in
 
-[schema.ts:442](https://github.com/coda/packs-sdk/blob/main/schema.ts#L442)
+[schema.ts:449](https://github.com/coda/packs-sdk/blob/main/schema.ts#L449)
 
 ___
 
@@ -88,4 +90,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:486](https://github.com/coda/packs-sdk/blob/main/schema.ts#L486)
+[schema.ts:493](https://github.com/coda/packs-sdk/blob/main/schema.ts#L493)

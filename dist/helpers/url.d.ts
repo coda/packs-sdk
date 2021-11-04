@@ -6,7 +6,7 @@
  * @example
  * ```
  * // Returns `"/someApi/someEndpoint?token=asdf&limit=5"`
- * const url = withQueryParams("/someApi/someEndpoint", {token: "asdf", limit: 5});
+ * let url = withQueryParams("/someApi/someEndpoint", {token: "asdf", limit: 5});
  * ```
  */
 export declare function withQueryParams(url: string, params?: {
@@ -18,7 +18,7 @@ export declare function withQueryParams(url: string, params?: {
  * @example
  * ```
  * // Returns `{token: "asdf", limit: "5"}`
- * const params = getQueryParams("/someApi/someEndpoint?token=asdf&limit=5");
+ * let params = getQueryParams("/someApi/someEndpoint?token=asdf&limit=5");
  * ```
  */
 export declare function getQueryParams(url: string): {

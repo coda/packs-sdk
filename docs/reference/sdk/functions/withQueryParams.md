@@ -9,7 +9,7 @@ The input URL may or may not having existing parameters.
 **`example`**
 ```
 // Returns `"/someApi/someEndpoint?token=asdf&limit=5"`
-const url = withQueryParams("/someApi/someEndpoint", {token: "asdf", limit: 5});
+let url = withQueryParams("/someApi/someEndpoint", {token: "asdf", limit: 5});
 ```
 
 #### Parameters

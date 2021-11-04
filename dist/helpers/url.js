@@ -15,7 +15,7 @@ const url_parse_1 = __importDefault(require("url-parse"));
  * @example
  * ```
  * // Returns `"/someApi/someEndpoint?token=asdf&limit=5"`
- * const url = withQueryParams("/someApi/someEndpoint", {token: "asdf", limit: 5});
+ * let url = withQueryParams("/someApi/someEndpoint", {token: "asdf", limit: 5});
  * ```
  */
 function withQueryParams(url, params) {
@@ -35,7 +35,7 @@ exports.withQueryParams = withQueryParams;
  * @example
  * ```
  * // Returns `{token: "asdf", limit: "5"}`
- * const params = getQueryParams("/someApi/someEndpoint?token=asdf&limit=5");
+ * let params = getQueryParams("/someApi/someEndpoint?token=asdf&limit=5");
  * ```
  */
 function getQueryParams(url) {

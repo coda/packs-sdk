@@ -10,7 +10,7 @@ import urlParse from 'url-parse';
  * @example
  * ```
  * // Returns `"/someApi/someEndpoint?token=asdf&limit=5"`
- * const url = withQueryParams("/someApi/someEndpoint", {token: "asdf", limit: 5});
+ * let url = withQueryParams("/someApi/someEndpoint", {token: "asdf", limit: 5});
  * ```
  */
 export function withQueryParams(url: string, params?: {[key: string]: any}): string {
@@ -31,7 +31,7 @@ export function withQueryParams(url: string, params?: {[key: string]: any}): str
  * @example
  * ```
  * // Returns `{token: "asdf", limit: "5"}`
- * const params = getQueryParams("/someApi/someEndpoint?token=asdf&limit=5");
+ * let params = getQueryParams("/someApi/someEndpoint?token=asdf&limit=5");
  * ```
  */
 export function getQueryParams(url: string): {[key: string]: any} {

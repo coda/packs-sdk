@@ -23,7 +23,7 @@ BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:413](https://github.com/coda/packs-sdk/blob/main/schema.ts#L413)
+[schema.ts:417](https://github.com/coda/packs-sdk/blob/main/schema.ts#L417)
 
 ___
 
@@ -50,13 +50,14 @@ ___
 
 • `Optional` **format**: `string`
 
-A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
+used when rendering the value.
 
 Only applies when this is used as a sync table property.
 
 #### Defined in
 
-[schema.ts:419](https://github.com/coda/packs-sdk/blob/main/schema.ts#L419)
+[schema.ts:424](https://github.com/coda/packs-sdk/blob/main/schema.ts#L424)
 
 ___
 
@@ -72,4 +73,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:486](https://github.com/coda/packs-sdk/blob/main/schema.ts#L486)
+[schema.ts:493](https://github.com/coda/packs-sdk/blob/main/schema.ts#L493)

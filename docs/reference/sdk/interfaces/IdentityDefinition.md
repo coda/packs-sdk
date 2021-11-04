@@ -18,7 +18,7 @@ See [makeAttributionNode](../functions/makeAttributionNode.md).
 
 #### Defined in
 
-[schema.ts:545](https://github.com/coda/packs-sdk/blob/main/schema.ts#L545)
+[schema.ts:552](https://github.com/coda/packs-sdk/blob/main/schema.ts#L552)
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 #### Defined in
 
-[schema.ts:539](https://github.com/coda/packs-sdk/blob/main/schema.ts#L539)
+[schema.ts:546](https://github.com/coda/packs-sdk/blob/main/schema.ts#L546)
 
 ___
 
@@ -38,7 +38,7 @@ ___
 
 #### Defined in
 
-[schema.ts:538](https://github.com/coda/packs-sdk/blob/main/schema.ts#L538)
+[schema.ts:545](https://github.com/coda/packs-sdk/blob/main/schema.ts#L545)
 
 ___
 
@@ -48,4 +48,4 @@ ___
 
 #### Defined in
 
-[schema.ts:547](https://github.com/coda/packs-sdk/blob/main/schema.ts#L547)
+[schema.ts:554](https://github.com/coda/packs-sdk/blob/main/schema.ts#L554)

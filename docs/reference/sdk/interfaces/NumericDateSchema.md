@@ -50,13 +50,14 @@ ___
 
 • `Optional` **format**: `string`
 
-A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format,
+used when rendering the value.
 
 Only applies when this is used as a sync table property.
 
 #### Defined in
 
-[schema.ts:247](https://github.com/coda/packs-sdk/blob/main/schema.ts#L247)
+[schema.ts:248](https://github.com/coda/packs-sdk/blob/main/schema.ts#L248)
 
 ___
 

@@ -7,7 +7,7 @@ Helper to take a URL string and return the parameters (if any) as a JavaScript o
 **`example`**
 ```
 // Returns `{token: "asdf", limit: "5"}`
-const params = getQueryParams("/someApi/someEndpoint?token=asdf&limit=5");
+let params = getQueryParams("/someApi/someEndpoint?token=asdf&limit=5");
 ```
 
 #### Parameters

@@ -196,7 +196,8 @@ export interface NumericDateSchema extends BaseNumberSchema<ValueHintType.Date> 
     /** Instructs Coda to render this value as a date. */
     codaType: ValueHintType.Date;
     /**
-     * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+     * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format,
+     * used when rendering the value.
      *
      * Only applies when this is used as a sync table property.
      */
@@ -211,7 +212,8 @@ export interface NumericTimeSchema extends BaseNumberSchema<ValueHintType.Time> 
     /** Instructs Coda to render this value as a time. */
     codaType: ValueHintType.Time;
     /**
-     * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+     * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
+     * used when rendering the value.
      *
      * Only applies when this is used as a sync table property.
      */
@@ -231,7 +233,8 @@ export interface NumericDateTimeSchema extends BaseNumberSchema<ValueHintType.Da
      */
     dateFormat?: string;
     /**
-     * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+     * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
+     * used when rendering the value.
      *
      * Only applies when this is used as a sync table property.
      */
@@ -345,7 +348,8 @@ export interface StringDateSchema extends BaseStringSchema<ValueHintType.Date> {
     /** Instructs Coda to render this value as a date. */
     codaType: ValueHintType.Date;
     /**
-     * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+     * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format,
+     * used when rendering the value.
      *
      * Only applies when this is used as a sync table property.
      */
@@ -359,7 +363,8 @@ export interface StringTimeSchema extends BaseStringSchema<ValueHintType.Time> {
     /** Instructs Coda to render this value as a date. */
     codaType: ValueHintType.Time;
     /**
-     * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+     * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
+     * used when rendering the value.
      *
      * Only applies when this is used as a sync table property.
      */
@@ -375,13 +380,15 @@ export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.Dat
     /** Instructs Coda to render this value as a date. */
     codaType: ValueHintType.DateTime;
     /**
-     * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+     * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format,
+     * used when rendering the value.
      *
      * Only applies when this is used as a sync table property.
      */
     dateFormat?: string;
     /**
-     * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+     * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format,
+     * used when rendering the value.
      *
      * Only applies when this is used as a sync table property.
      */
