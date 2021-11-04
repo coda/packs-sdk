@@ -232,28 +232,47 @@ export class AuthenticatingFetcher implements Fetcher {
         };
       }
       case AuthenticationType.Custom: {
-        const request = {
-          url,
-          body,
-          form,
-          headers,
-        };
+        let urlWithSubstitutions = url;
+        let bodyWithSubstitutions = body;
+        let formWithSubstitutions = JSON.stringify(form);
+        let headersWithSubstitutions = JSON.stringify(headers);
+
         const {params} = this._credentials as CustomCredentials;
 
-        let requestWithTemplateSubstitutions = JSON.stringify(request);
-        if (requestWithTemplateSubstitutions) {
-          // For awful APIs that require auth parameters in the request body, we have
-          // this scheme where we do template substitution of the body using an unguessable
-          // random token as part of the template key.
-          Object.entries(params).forEach(([key, value]) => {
-            requestWithTemplateSubstitutions = ensureExists(requestWithTemplateSubstitutions).replace(
+        Object.entries(params).forEach(([key, value]) => {
+          if (urlWithSubstitutions) {
+            urlWithSubstitutions = urlWithSubstitutions.replaceAll(
               `{{${key}-${this._invocationToken}}}`,
-              value || '',
+              encodeURIComponent(value),
             );
-          });
-        }
+            urlWithSubstitutions = urlWithSubstitutions.replaceAll(
+              encodeURIComponent(`{{${key}-${this._invocationToken}}}`),
+              encodeURIComponent(value),
+            );
+          }
 
-        return JSON.parse(requestWithTemplateSubstitutions);
+          if (bodyWithSubstitutions) {
+            bodyWithSubstitutions = bodyWithSubstitutions.replaceAll(`{{${key}-${this._invocationToken}}}`, value);
+          }
+
+          if (formWithSubstitutions) {
+            formWithSubstitutions = formWithSubstitutions.replaceAll(`{{${key}-${this._invocationToken}}}`, value);
+          }
+
+          if (headersWithSubstitutions) {
+            headersWithSubstitutions = headersWithSubstitutions.replaceAll(
+              `{{${key}-${this._invocationToken}}}`,
+              value,
+            );
+          }
+        });
+
+        return {
+          url: urlWithSubstitutions,
+          body: bodyWithSubstitutions,
+          form: JSON.parse(formWithSubstitutions),
+          headers: JSON.parse(headersWithSubstitutions),
+        };
       }
       case AuthenticationType.QueryParamToken: {
         const {paramValue} = this._credentials as QueryParamCredentials;

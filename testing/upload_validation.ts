@@ -361,7 +361,7 @@ const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> 
       .array(
         zodCompleteStrictObject<CustomAuthentication['params'][number]>({
           name: z.string(),
-          description: z.string().optional(),
+          description: z.string(),
         }),
       )
       .refine(
