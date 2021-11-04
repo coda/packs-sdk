@@ -16,7 +16,7 @@
 
       require(['vs/editor/editor.main'], function () {
         var editor = monaco.editor.create(document.getElementById('container'), {
-          value: "pack.setUserAuthentication({\n  // Replace None with the authentication type that applies for your pack.\n  type: coda.AuthenticationType.None,\n});",
+          value: "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Formula that gets the current weekday, for example \"Monday\".\npack.addFormula({\n  name: \"CurrentWeekday\",\n  description: \"Get the current day of the week.\",\n  parameters: [],\n  resultType: coda.ValueType.String,\n  execute: async function ([], context) {\n    let now = new Date();\n    let formatter = Intl.DateTimeFormat(\"us-US\", {weekday: \"long\"});\n    return formatter.format(now);\n  },\n});",
           language: 'javascript',
           minimap: {enabled: false},
           readOnly: true,

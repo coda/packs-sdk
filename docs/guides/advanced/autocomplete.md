@@ -1,8 +1,28 @@
-# Autocomplete
+---
+title: Autocomplete
+---
 
-If you have a formula parameter that accepts a limited set of values it's usually best to provide those options using autocomplete. When the user is entering the parameter in the formula editor the autocomplete options are shown.
+# Autocomplete parameter options
 
-[![Icons used to disambiguate formulas][formula_autocomplete]{: .screenshot}][formula_autocomplete]
+If you have a parameter that accepts a defined set of values it's usually best to provide those options using autocomplete. These options are presented to the user in the Coda UI and they can simply click on one instead of entering the value manually.
+
+[View Sample Code][samples]{ .md-button }
+
+
+## Using autocomplete
+
+In the formula editor parameter options show up in a the same pane used for other autocomplete. In the actions builder and sync table settings options are presented in a drop down.
+
+=== "In the formula editor"
+    <img src="{{ config.site_url }}/images/autocomplete_formula.png" srcset="{{ config.site_url }}/images/autocomplete_formula_2x.png 2x" class="screenshot" alt="Autocomplete in the formula editor">
+=== "In the action builder"
+    <img src="{{ config.site_url }}/images/autocomplete_action.png" srcset="{{ config.site_url }}/images/autocomplete_action_2x.png 2x" class="screenshot" alt="Autocomplete in the action builder">
+=== "In the sync table settings"
+    <img src="{{ config.site_url }}/images/autocomplete_sync.png" srcset="{{ config.site_url }}/images/autocomplete_sync_2x.png 2x" class="screenshot" alt="Autocomplete in the sync table settings">
+
+
+
+## Simple options
 
 The simplest way to set this up is to set the `autocomplete` property of the parameter to an array of valid options.
 
@@ -14,6 +34,9 @@ coda.makeParameter({
   autocomplete: ["cow", "pig", "sheep"]
 })
 ```
+
+This option is only available for `String` parameters.
+
 
 ## Custom labels
 
@@ -31,6 +54,9 @@ coda.makeParameter({
   ],
 })
 ```
+
+The values can be either strings or numbers, and should match the type of the parameter.
+
 
 ## Dynamic options
 
@@ -53,6 +79,7 @@ coda.makeParameter({
   },
 }),
 ```
+
 
 ## Accessing previous parameter values
 
@@ -94,9 +121,10 @@ coda.makeParameter({
     },
     ```
 
+
 ## Validation
 
-In the formula editor the autocomplete options are presented to the user, but they not forced to select one and may instead enter their own custom value. If your formula logic requires that the user only select from the autocomplete options you will need to add code to validate their input.
+Users are not forced to select one of the provided autocomplete options and may instead enter their own custom value. If your formula logic requires that the user only select from the autocomplete options you will need to add code to validate the parameter value.
 
 ```ts
 const AnimalOptions = ["cow", "pig", "sheep"];
@@ -120,7 +148,8 @@ pack.addFormula({
 });
 ```
 
+
+[samples]: ../../samples/topic/autocomplete.md
 [destructuring_assignment]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
-[formula_autocomplete]: ../../images/formula_autocomplete.png
 [SimpleAutocompleteOption]: ../../reference/sdk/interfaces/SimpleAutocompleteOption.md
 [autocompleteSearchObjects]: ../../reference/sdk/functions/autocompleteSearchObjects.md

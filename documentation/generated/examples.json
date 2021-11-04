@@ -74,43 +74,13 @@
     "triggerTokens": [
       "addFormula"
     ],
-    "exampleFooterLink": "https://coda.github.io/packs-sdk/reference/sdk/classes/PackDefinitionBuilder#addFormula",
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/guides/blocks/formulas",
     "content": "A formula is a JavaScript function that is exposed as a Coda formula, that you can use anywhere in a Coda doc that you can use any built-in formula. Formulas take basic types as input, like strings, numbers, dates, booleans, and arrays of these types, and return any of these types or objects whose properties are any of these types.",
     "exampleSnippets": [
       {
         "name": "Template",
         "content": "The basic structure of a formula. This sample takes in a single string parameter and returns a string result.",
         "code": "pack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function ([param], context) {\n    return \"Hello \" + param;\n  },\n});"
-      },
-      {
-        "name": "No parameters",
-        "content": "A formula without any parameters. This sample return the name of the current day of the week.",
-        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Formula that gets the current weekday, for example \"Monday\".\npack.addFormula({\n  name: \"CurrentWeekday\",\n  description: \"Get the current day of the week.\",\n  parameters: [],\n  resultType: coda.ValueType.String,\n  execute: async function ([], context) {\n    let now = new Date();\n    let formatter = Intl.DateTimeFormat('us-US', {weekday: 'long'});\n    return formatter.format(now);\n  },\n});"
-      },
-      {
-        "name": "Optional parameters",
-        "content": "A formula with some require and some optional parameters. This sample formats text to look like screaming, with a optional parameters to override how many exclamation points to use and an alternate character to use.",
-        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Formats text to look like screaming. For example, \"Hello\" => \"HELLO!!!\".\npack.addFormula({\n  name: \"Scream\",\n  description: \"Make text uppercase and add exclamation points.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"text\",\n      description: \"The text to scream.\",\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.Number,\n      name: \"volume\",\n      description: \"The number of exclamation points to add.\",\n      optional: true,\n      defaultValue: 3,\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"character\",\n      description: \"The character to repeat.\",\n      optional: true,\n      defaultValue: \"!\",\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function ([text, volume = 3, character = \"!\"], context) {\n    return text.toUpperCase() + character.repeat(volume);\n  },\n});"
-      },
-      {
-        "name": "Variable argument parameters",
-        "content": "A formula that accepts a variable number of arguments. This sample draws a simple diagram using text, with an unknown number of arrow labels and steps.",
-        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Takes an unknown number of steps and labels and outputs a simple diagram.\n// Example: Steps(\"Idea\", \"Experiment\", \"Prototype\", \"Refine\", \"Product\")\n// Result: Idea --Experiment--> Prototype --Refine--> Product\npack.addFormula({\n  name: \"Steps\",\n  description: \"Draws a simple step diagram using text.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"start\",\n      description: \"The starting step.\",\n    }),\n  ],\n  varargParameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"label\",\n      description: \"The label for the arrow.\",\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"step\",\n      description: \"The next step.\",\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function ([start, ...varargs], context) {\n    let result = start;\n    while (varargs.length > 0) {\n      let label, step;\n      // Pull the first set of varargs off the list, and leave the rest.\n      [label, step, ...varargs] = varargs;\n      result += ` --${label}--> ${step}`;\n    }\n    return result;\n  },\n});"
-      },
-      {
-        "name": "Simple autocomplete",
-        "content": "A formula with a parameter that provides autocomplete for acceptable values. This sample returns the noise that an animal makes, for a limited set of animals.",
-        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Returns the noise an animal makes. Ex) \"cow\" => \"moo\".\npack.addFormula({\n  name: \"AnimalNoise\",\n  description: \"Gets the noise than an animal makes.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"animal\",\n      description: \"The selected animal.\",\n      autocomplete: [\"cow\", \"pig\", \"sheep\"],\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function ([animal], context) {\n    switch (animal) {\n      case \"cow\":\n        return \"moo\";\n      case \"pig\":\n        return \"oink\";\n      case \"sheep\":\n        return \"baa\";\n      default:\n        throw new coda.UserVisibleError('Unknown animal: ' + animal);\n    }\n  },\n});"
-      },
-      {
-        "name": "Dynamic autocomplete",
-        "content": "A formula with a parameter that provides autocomplete for acceptable values, where the options are pulled dynamically from an API. This sample returns the price for a board game listed on the site Board Game Atlas.",
-        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Gets the price of a board game by ID, with autocomplete on the ID.\npack.addFormula({\n  name: \"GetPrice\",\n  description: \"Gets the price of a board game.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"gameId\",\n      description: \"The ID of the game on boardgameatlas.com\",\n      autocomplete: async function (context, search, metadata) {\n        let url = coda.withQueryParams(\n          \"https://api.boardgameatlas.com/api/search\",\n          { fuzzy_match: true, name: search });\n        let response = await context.fetcher.fetch({ method: \"GET\", url: url });\n        let results = response.body.games;\n        // Generate an array of autocomplete objects, using the game's name as\n        // the label and it's ID for the value.\n        return coda.autocompleteSearchObjects(search, results, \"name\", \"id\");\n      },\n    }),\n  ],\n  resultType: coda.ValueType.Number,\n  codaType: coda.ValueHintType.Currency,\n  execute: async function ([gameId], context) {\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: \"https://api.boardgameatlas.com/api/search?ids=\" + gameId,\n    });\n    return response.body.games[0].price;\n  },\n});\n\npack.addNetworkDomain(\"boardgameatlas.com\");\n\n// Authenticate using a client ID.\n// See: https://www.boardgameatlas.com/api/docs/apps\npack.setSystemAuthentication({\n  type: coda.AuthenticationType.QueryParamToken,\n  paramName: \"client_id\",\n});"
-      },
-      {
-        "name": "Autocomplete on previous parameter",
-        "content": "A formula with a parameter that provides autocomplete for acceptable values, where the options depend on the value of a previous parameter. This sample generates a greeting in either English or Spanish.",
-        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Greet someone in their language, with the greeting autocomplete adjusting\n// based on the language selected.\npack.addFormula({\n  name: \"Greeting\",\n  description: \"Greet someone.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"language\",\n      description: \"The language to greet them in.\",\n      autocomplete: [\n        { display: \"English\", value: \"en\" },\n        { display: \"Spanish\", value: \"es\" },\n      ],\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"greeting\",\n      description: \"The greeting to use.\",\n      autocomplete: async function (context, search, {language}) {\n        let options;\n        if (language === \"es\") {\n          options = [\"Hola\", \"Buenos días\"];\n        } else {\n          options = [\"Hello\", \"Howdy\"];\n        }\n        return coda.simpleAutocomplete(search, options);\n      },\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"name\",\n      description: \"The name to greet.\",\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  connectionRequirement: coda.ConnectionRequirement.None,\n  execute: async function ([language, greeting, name], context) {\n    let result = greeting + \" \" + name + \"!\";\n    if (language === \"es\") {\n      // Add upside-down exclamation point in the front.\n      result = \"¡\" + result;\n    }\n    return result;\n  },\n});"
       },
       {
         "name": "Image result",
@@ -121,6 +91,63 @@
         "name": "Rich data result",
         "content": "A formula that returns rich data (a schema). This sample gets information about a task in the Todoist application.",
         "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// A schema defining the rich metadata to be returned about each task.\nconst TaskSchema = coda.makeObjectSchema({\n  type: coda.ValueType.Object,\n  properties: {\n    name: {\n      description: \"The name of the task.\",\n      type: coda.ValueType.String,\n      required: true,\n    },\n    description: {\n      description: \"A detailed description of the task.\",\n      type: coda.ValueType.String,\n    },\n    url: {\n      description: \"A link to the task in the Todoist app.\",\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.Url\n    },\n    taskId: {\n      description: \"The ID of the task.\",\n      type: coda.ValueType.Number,\n      required: true,\n    },\n  },\n  primary: \"name\",\n  id: \"taskId\",\n  identity: {\n    name: \"Task\",\n  },\n});\n\n// Formula that looks up rich metadata about a task given it's URL.\npack.addFormula({\n  name: \"GetTaskById\",\n  description: \"Gets a Todoist task by ID\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"taskId\",\n      description: \"The ID of the task\",\n    }),\n  ],\n  resultType: coda.ValueType.Object,\n  schema: TaskSchema,\n\n  execute: async function ([taskId], context) {\n    let response = await context.fetcher.fetch({\n      url: \"https://api.todoist.com/rest/v1/tasks/\" + taskId,\n      method: \"GET\",\n    });\n    let task = response.body;\n    return {\n      name: task.content,\n      description: task.description,\n      url: task.url,\n      taskId: task.id,\n    };\n  },\n});\n\n// Allow the pack to make requests to Todoist.\npack.addNetworkDomain(\"todoist.com\");\n\n// Setup authentication using a Todoist API token.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n  instructionsUrl: \"https://todoist.com/app/settings/integrations\",\n});"
+      }
+    ]
+  },
+  {
+    "name": "Parameters",
+    "category": "Topic",
+    "triggerTokens": [
+      "makeParameter"
+    ],
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/guides/basics/parameters",
+    "content": "Coda formulas, actions, and sync tables receive take in user input via parameters. They are required by default, but can by made optional. Variable argument (vararg) parameters can be used to allow for parameters to be set more than once.",
+    "exampleSnippets": [
+      {
+        "name": "Template",
+        "content": "The basic structure of a parameter. This sample is for a string parameter.",
+        "code": "coda.makeParameter({\n  type: coda.ParameterType.String,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n});"
+      },
+      {
+        "name": "No parameters",
+        "content": "A formula without any parameters. This sample return the name of the current day of the week.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Formula that gets the current weekday, for example \"Monday\".\npack.addFormula({\n  name: \"CurrentWeekday\",\n  description: \"Get the current day of the week.\",\n  parameters: [],\n  resultType: coda.ValueType.String,\n  execute: async function ([], context) {\n    let now = new Date();\n    let formatter = Intl.DateTimeFormat(\"us-US\", {weekday: \"long\"});\n    return formatter.format(now);\n  },\n});"
+      },
+      {
+        "name": "Optional parameters",
+        "content": "A formula with some required and some optional parameters. This sample formats text to look like screaming, with a optional parameters to override how many exclamation points to use and an alternate character to use.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Formats text to look like screaming. For example, \"Hello\" => \"HELLO!!!\".\npack.addFormula({\n  name: \"Scream\",\n  description: \"Make text uppercase and add exclamation points.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"text\",\n      description: \"The text to scream.\",\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.Number,\n      name: \"volume\",\n      description: \"The number of exclamation points to add.\",\n      optional: true,\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"character\",\n      description: \"The character to repeat.\",\n      optional: true,\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function ([text, volume = 3, character = \"!\"], context) {\n    return text.toUpperCase() + character.repeat(volume);\n  },\n});"
+      },
+      {
+        "name": "Variable argument parameters",
+        "content": "A formula that accepts a variable number of arguments. This sample draws a simple diagram using text, with an unknown number of arrow labels and steps.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Takes an unknown number of steps and labels and outputs a simple diagram.\n// Example: Steps(\"Idea\", \"Experiment\", \"Prototype\", \"Refine\", \"Product\")\n// Result: Idea --Experiment--> Prototype --Refine--> Product\npack.addFormula({\n  name: \"Steps\",\n  description: \"Draws a simple step diagram using text.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"start\",\n      description: \"The starting step.\",\n    }),\n  ],\n  varargParameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"label\",\n      description: \"The label for the arrow.\",\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"step\",\n      description: \"The next step.\",\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function ([start, ...varargs], context) {\n    let result = start;\n    while (varargs.length > 0) {\n      let label; let step;\n      // Pull the first set of varargs off the list, and leave the rest.\n      [label, step, ...varargs] = varargs;\n      result += ` --${label}--> ${step}`;\n    }\n    return result;\n  },\n});"
+      }
+    ]
+  },
+  {
+    "name": "Autocomplete",
+    "category": "Topic",
+    "triggerTokens": [
+      "autocomplete"
+    ],
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/guides/advanced/autocomplete",
+    "content": "Autocomplete can be configured for a parameter to provide a defined set of options for the user to select from. You can can pass either a static array or use a function to dynamically generate the options.",
+    "exampleSnippets": [
+      {
+        "name": "Simple autocomplete",
+        "content": "A formula with a parameter that provides autocomplete for acceptable values. This sample returns the noise that an animal makes, for a limited set of animals.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Returns the noise an animal makes. Ex) \"cow\" => \"moo\".\npack.addFormula({\n  name: \"AnimalNoise\",\n  description: \"Gets the noise than an animal makes.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"animal\",\n      description: \"The selected animal.\",\n      autocomplete: [\"cow\", \"pig\", \"sheep\"],\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function ([animal], context) {\n    switch (animal) {\n      case \"cow\":\n        return \"moo\";\n      case \"pig\":\n        return \"oink\";\n      case \"sheep\":\n        return \"baa\";\n      default:\n        throw new coda.UserVisibleError(\"Unknown animal: \" + animal);\n    }\n  },\n});"
+      },
+      {
+        "name": "Dynamic autocomplete",
+        "content": "A formula with a parameter that provides autocomplete for acceptable values, where the options are pulled dynamically from an API. This sample returns the price for a board game listed on the site Board Game Atlas.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Gets the price of a board game by ID, with autocomplete on the ID.\npack.addFormula({\n  name: \"GetPrice\",\n  description: \"Gets the price of a board game.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"gameId\",\n      description: \"The ID of the game on boardgameatlas.com\",\n      autocomplete: async function (context, search, parameters) {\n        let url = coda.withQueryParams(\n          \"https://api.boardgameatlas.com/api/search\",\n          { fuzzy_match: true, name: search });\n        let response = await context.fetcher.fetch({ method: \"GET\", url: url });\n        let results = response.body.games;\n        // Generate an array of autocomplete objects, using the game's name as\n        // the label and it's ID for the value.\n        return coda.autocompleteSearchObjects(search, results, \"name\", \"id\");\n      },\n    }),\n  ],\n  resultType: coda.ValueType.Number,\n  codaType: coda.ValueHintType.Currency,\n  execute: async function ([gameId], context) {\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: \"https://api.boardgameatlas.com/api/search?ids=\" + gameId,\n    });\n    return response.body.games[0].price;\n  },\n});\n\npack.addNetworkDomain(\"boardgameatlas.com\");\n\n// Authenticate using a client ID.\n// See: https://www.boardgameatlas.com/api/docs/apps\npack.setSystemAuthentication({\n  type: coda.AuthenticationType.QueryParamToken,\n  paramName: \"client_id\",\n});"
+      },
+      {
+        "name": "Autocomplete on previous parameter",
+        "content": "A formula with a parameter that provides autocomplete for acceptable values, where the options depend on the value of a previous parameter. This sample generates a greeting in either English or Spanish.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Greet someone in their language, with the greeting autocomplete adjusting\n// based on the language selected.\npack.addFormula({\n  name: \"Greeting\",\n  description: \"Greet someone.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"language\",\n      description: \"The language to greet them in.\",\n      autocomplete: [\n        { display: \"English\", value: \"en\" },\n        { display: \"Spanish\", value: \"es\" },\n      ],\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"greeting\",\n      description: \"The greeting to use.\",\n      autocomplete: async function (context, search, {language}) {\n        let options;\n        if (language === \"es\") {\n          options = [\"Hola\", \"Buenos días\"];\n        } else {\n          options = [\"Hello\", \"Howdy\"];\n        }\n        return coda.simpleAutocomplete(search, options);\n      },\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"name\",\n      description: \"The name to greet.\",\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  connectionRequirement: coda.ConnectionRequirement.None,\n  execute: async function ([language, greeting, name], context) {\n    let result = greeting + \" \" + name + \"!\";\n    if (language === \"es\") {\n      // Add upside-down exclamation point in the front.\n      result = \"¡\" + result;\n    }\n    return result;\n  },\n});"
       }
     ]
   },

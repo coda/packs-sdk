@@ -1,6 +1,41 @@
-# Parameters
+---
+title: Parameters
+---
 
-The primary mechanism for passing data from a Coda document into your Pack is via parameters. You define the parameters in your code and the user fills them with values when they use your Pack. These values are then passed to the formula's `execute` function as the first argument, bundled up as an array.
+# Accept input with parameters
+
+The primary mechanism for passing data from the user or document into your Pack is via parameters. You define the parameters in your code and the user fills them with values when they use your Pack. The same parameters are used for formulas, actions, and sync tables.
+
+[View Sample Code][samples]{ .md-button }
+
+## Using parameters
+
+In the formula editor parameters are entered as comma-separated values, while in the action dialog or sync table side panel they presented as input boxes.
+
+=== "In the formula editor"
+    <img src="{{ config.site_url }}/images/parameter_formula.png" srcset="{{ config.site_url }}/images/parameter_formula_2x.png 2x" class="screenshot" alt="Parameters in the formula editor">
+=== "In the action builder"
+    <img src="{{ config.site_url }}/images/parameter_action.png" srcset="{{ config.site_url }}/images/parameter_action_2x.png 2x" class="screenshot" alt="Parameters in the action builder">
+=== "In the sync table settings"
+    <img src="{{ config.site_url }}/images/parameter_sync.png" srcset="{{ config.site_url }}/images/parameter_sync_2x.png 2x" class="screenshot" alt="Parameters in the sync table settings">
+
+## Defining parameters
+
+The [`parameters`][parameters] property of a formula contains the array of parameter definitions, each one containing information about the parameter. The helper function [`makeParameter()`][makeParameter] is used to create these definitions, and a `type`, `name`, and `description` are required.
+
+```ts
+coda.makeParameter({
+  type: coda.ParameterType.String,
+  name: "type",
+  description: "The type of cookie.",
+})
+```
+
+See [`ParamDef`][ParamDef] for the full set of properties you can define for a parameter.
+
+## Accessing parameter values
+
+At runtime, the values set by the user are passed to the formula's `execute` function as the first argument, bundled up as an array.
 
 ```ts
 pack.addFormula({
@@ -8,17 +43,17 @@ pack.addFormula({
   parameters: [
     coda.makeParameter({
       type: coda.ParameterType.String,
-      name: "word",
-      description: "The word to repeat.",
+      name: "type",
+      description: "The type of cookie.",
     }),
     coda.makeParameter({
       type: coda.ParameterType.Number,
-      name: "count",
-      description: "How many times to repeat it.",
+      name: "num",
+      description: "How many cookies.",
     }),
   ],
   // ...
-  execute: async function ([word, count], context) {
+  execute: async function ([type, num], context) {
     // ...
   },
 });
@@ -65,7 +100,7 @@ pack.addFormula({
 });
 ```
 
-Optional parameters that have not been set by the user will default to the JavaScript value `undefined` in your `execute` function. In many cases it's useful to define a default value for optional parameters. The value set in the `defaultValue` field of the parameter determines what is shown to the user, while the value you set in the `execute` function is the what your code will actually use. It's normally best to keep these two defaults the same.
+Optional parameters that have not been set by the user will default to the JavaScript value `undefined` in your `execute` function. When you initialize your parameter variables in the `execute` function you can assign a default value that will get used when the parameter has not been explicitly set by the user.
 
 ```ts
 --8<-- "examples/formula/scream.ts"
@@ -78,6 +113,24 @@ Scream("What is this", character: "?")
 ```
 
 In this case the `text` and `character` parameters would be set, but the `volume` parameter would be undefined, and therefore use it's default value of `3`.
+
+
+## Suggested values
+
+As a convenience to users of your Pack, you can provide a suggested value for a parameter. When they use your formula the default will be pre-populated in the formula editor, action dialog, etc. The user is then free to edit or replace it this value.
+
+To add a suggested value to a parameter set the field `defaultValue` to the value you'd like to use. The suggested value must be of the same type as the parameter, for example a number parameter must have a number as it's suggested default value.
+
+```ts
+coda.makeParameter({
+  type: coda.ParameterType.Number,
+  name: "days",
+  description: "How many days of data to fetch.",
+  defaultValue: 30,
+})
+```
+
+Currently suggested values are only used for required parameters, and setting them for optional parameters has no effect. To
 
 
 ## Accepting multiple values
@@ -132,6 +185,67 @@ There some important difference between about vararg parameters and standard par
 If you have a parameter that accepts a limited set of values it's usually best to provide those options using autocomplete. See the [Autocomplete guide][autocomplete] for more information.
 
 
+## Reusing parameters
+
+It's often the case that many formulas in a Pack use the same parameter. For example, the [Google Calendar Pack][calendar_pack] has many formulas have a parameter for the calendar to operate on. Rather than redefine the same parameter for each formula, it can be more efficient to define the shared parameter once outside of a formula and then reuse it multiple times.
+
+
+```ts
+const ProjectParam = coda.makeParameter({
+  type: coda.ParameterType.String,
+  name: "projectId",
+  description: "The ID of the project.",
+});
+
+pack.addFormula({
+  name: "GetProject",
+  description: "Get a project.",
+  parameters: [
+    ProjectParam,
+  ],
+  // ...
+});
+
+pack.addFormula({
+  name: "GetTask",
+  description: "Get a task within a project.",
+  parameters: [
+    ProjectParam,
+    coda.makeParameter({
+      type: coda.ParameterType.String,
+      name: "taskId",
+      description: "The ID of the task.",
+    }),
+  ],
+  // ...
+});
+```
+
+
+## Date range parameters
+
+Parameters of the type `DateArray` are often used for date ranges, with the first date representing the start of the range and the second date representing the end. When a `DateArray` parameter is used in an action or sync table the the input box displays a date range picker to make it easier for the user to select a range.
+
+<img src="{{ config.site_url }}/images/parameter_daterange.png" srcset="{{ config.site_url }}/images/parameter_daterange_2x.png 2x" class="screenshot" alt="Date array parameters displayed as a date range picker">
+
+These parameters also support a special set of [suggested values](#suggested-values) that represent date ranges relative to the current date. These are available in the [`PrecannedDateRange`][PrecannedDateRange] enumeration.
+
+```ts
+coda.makeParameter({
+  type: coda.ParameterType.DateArray,
+  name: "dateRange",
+  description: "The date range over which data should be fetched.",
+  defaultValue: coda.PrecannedDateRange.Last30Days,
+})
+```
+
+
+[samples]: ../../samples/topic/parameter.md
+[parameters]: ../../reference/sdk/interfaces/PackFormulaDef.md#parameters
+[makeParameter]: ../../reference/sdk/functions/makeParameter.md
+[ParamDef]: ../../reference/sdk/interfaces/ParamDef.md
 [destructuring_assignment]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
 [mdn_rest]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#assigning_the_rest_of_an_array_to_a_variable
 [autocomplete]: ../advanced/autocomplete.md
+[PrecannedDateRange]: ../../reference/sdk/enums/PrecannedDateRange.md
+[calendar_pack]: https://coda.io/packs/google-calendar-1003/documentation

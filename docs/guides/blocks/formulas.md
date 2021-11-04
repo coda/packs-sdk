@@ -20,7 +20,7 @@ The name of a formula can only contain the letters, numbers, and underscores. By
 
 Formula names must be unique within a Pack, but can be the same as built-in formulas or those in other Packs. When a doc has access to multiple formulas with the same name the Pack's icon is used to distinguish them.
 
-[![Icons used to disambiguate formulas][formula_disambiguation]{: .screenshot}][formula_disambiguation]
+<img src="{{ config.site_url }}/images/formula_disambiguation.png" srcset="{{ config.site_url }}/images/formula_disambiguation_2x.png 2x" class="screenshot" alt="Icons used to disambiguate formulas">
 
 
 ## Parameters
@@ -32,6 +32,8 @@ Formulas can accept parameters, which is the primary way for them to access data
 
 Except [action formulas][actions] that power buttons and automation, all formulas must return a result.
 
+TODO
+
 
 ## Caching
 
@@ -42,8 +44,8 @@ TODO
 
 TODO
 
+
 [samples]: ../../samples/topic/formula.md
 [formulas]: https://coda.io/formulas
-[formula_disambiguation]: ../../images/formula_disambiguation.png
 [parameters]: ../basics/parameters.md
 [actions]: actions.md

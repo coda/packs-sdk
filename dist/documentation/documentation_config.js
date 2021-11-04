@@ -211,26 +211,85 @@ exports.Examples = [
         name: 'Formulas',
         category: types_1.ExampleCategory.Topic,
         triggerTokens: ['addFormula'],
-        contentFile: './examples/formula/formula.md',
+        contentFile: './examples/formula/README.md',
         linkData: {
             type: types_2.UrlType.SdkReferencePath,
-            url: '/reference/sdk/classes/PackDefinitionBuilder#addFormula',
+            url: '/guides/blocks/formulas',
         },
         exampleSnippets: [
             {
                 name: 'Template',
-                content: '',
+                content: 'The basic structure of a formula. This sample takes in a single string parameter and returns a string result.',
                 codeFile: './snippets/formula/string_formula.ts',
             },
             {
-                name: 'Image (Cats)',
-                content: '',
+                name: 'Image result',
+                content: 'A formula that returns an image. This sample gets a random cat image with an optional text overlay or filter applied.',
                 codeFile: './examples/cats/formula.ts',
             },
             {
-                name: 'Rich Data (Todoist)',
-                content: '',
+                name: 'Rich data result',
+                content: 'A formula that returns rich data (a schema). This sample gets information about a task in the Todoist application.',
                 codeFile: './examples/todoist/formula.ts',
+            },
+        ],
+    },
+    {
+        name: 'Parameters',
+        category: types_1.ExampleCategory.Topic,
+        triggerTokens: ['makeParameter'],
+        contentFile: './examples/parameter/README.md',
+        linkData: {
+            type: types_2.UrlType.SdkReferencePath,
+            url: '/guides/basics/parameters',
+        },
+        exampleSnippets: [
+            {
+                name: 'Template',
+                content: 'The basic structure of a parameter. This sample is for a string parameter.',
+                codeFile: './snippets/parameter/string_parameter.ts',
+            },
+            {
+                name: 'No parameters',
+                content: 'A formula without any parameters. This sample return the name of the current day of the week.',
+                codeFile: './examples/parameter/weekday.ts',
+            },
+            {
+                name: 'Optional parameters',
+                content: 'A formula with some required and some optional parameters. This sample formats text to look like screaming, with a optional parameters to override how many exclamation points to use and an alternate character to use.',
+                codeFile: './examples/parameter/scream.ts',
+            },
+            {
+                name: 'Variable argument parameters',
+                content: 'A formula that accepts a variable number of arguments. This sample draws a simple diagram using text, with an unknown number of arrow labels and steps.',
+                codeFile: './examples/parameter/steps.ts',
+            },
+        ],
+    },
+    {
+        name: 'Autocomplete',
+        category: types_1.ExampleCategory.Topic,
+        triggerTokens: ['autocomplete'],
+        contentFile: './examples/autocomplete/README.md',
+        linkData: {
+            type: types_2.UrlType.SdkReferencePath,
+            url: '/guides/advanced/autocomplete',
+        },
+        exampleSnippets: [
+            {
+                name: 'Simple autocomplete',
+                content: 'A formula with a parameter that provides autocomplete for acceptable values. This sample returns the noise that an animal makes, for a limited set of animals.',
+                codeFile: './examples/autocomplete/animal_noise.ts',
+            },
+            {
+                name: 'Dynamic autocomplete',
+                content: 'A formula with a parameter that provides autocomplete for acceptable values, where the options are pulled dynamically from an API. This sample returns the price for a board game listed on the site Board Game Atlas.',
+                codeFile: './examples/autocomplete/board_game_atlas.ts',
+            },
+            {
+                name: 'Autocomplete on previous parameter',
+                content: 'A formula with a parameter that provides autocomplete for acceptable values, where the options depend on the value of a previous parameter. This sample generates a greeting in either English or Spanish.',
+                codeFile: './examples/autocomplete/greeting.ts',
             },
         ],
     },
