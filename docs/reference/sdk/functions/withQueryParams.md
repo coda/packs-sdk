@@ -2,6 +2,16 @@
 
 ▸ **withQueryParams**(`url`, `params?`): `string`
 
+Helper to create a new URL by appending parameters to a base URL.
+
+The input URL may or may not having existing parameters.
+
+**`example`**
+```
+// Returns `"/someApi/someEndpoint?token=asdf&limit=5"`
+const url = withQueryParams("/someApi/someEndpoint", {token: "asdf", limit: 5});
+```
+
 #### Parameters
 
 | Name | Type |
@@ -15,4 +25,4 @@
 
 #### Defined in
 
-[helpers/url.ts:5](https://github.com/coda/packs-sdk/blob/main/helpers/url.ts#L5)
+[helpers/url.ts:16](https://github.com/coda/packs-sdk/blob/main/helpers/url.ts#L16)

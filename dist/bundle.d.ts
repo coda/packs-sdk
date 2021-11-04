@@ -289,20 +289,34 @@ export declare enum CurrencyFormat {
 	 */
 	Financial = "financial"
 }
+/**
+ * A schema representing a return value or object property that is an amount of currency.
+ */
 export interface CurrencySchema extends BaseNumberSchema<ValueHintType.Currency> {
+	/** Instructs Coda to render this value as a currency amount. */
 	codaType: ValueHintType.Currency;
+	/** The decimal precision. The value is rounded to this precision when rendered. */
 	precision?: number;
-	/***
+	/**
 	 * A three-letter ISO 4217 currency code, e.g. USD or EUR.
 	 * If the currency code is not supported by Coda, the value will be rendered using USD.
 	 */
 	currencyCode?: string;
+	/** A render format for further refining how the value is rendered. */
 	format?: CurrencyFormat;
 }
+/**
+ * A schema representing a return value or object property that is a number that should
+ * be rendered as a slider.
+ */
 export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
+	/** Instructs Coda to render this value as a slider. */
 	codaType: ValueHintType.Slider;
+	/** The minimum value selectable by this slider. */
 	minimum?: number | string;
+	/** The maximum value selectable by this slider. */
 	maximum?: number | string;
+	/** The minimum amount the slider can be moved when dragged. */
 	step?: number | string;
 }
 /**
@@ -332,22 +346,72 @@ export declare enum ScaleIconSet {
 	Checkmark = "checkmark",
 	LightBulb = "lightbulb"
 }
+/**
+ * A schema representing a return value or object property that is a number that should
+ * be rendered as a scale.
+ *
+ * A scale is a widget with a repeated set of icons, where the number of shaded represents
+ * a numeric value. The canonical example of a scale is a star rating, which might show
+ * 5 star icons, with 3 of them shaded, indicating a value of 3.
+ */
 export interface ScaleSchema extends BaseNumberSchema<ValueHintType.Scale> {
+	/** Instructs Coda to render this value as a scale. */
 	codaType: ValueHintType.Scale;
+	/** The number of icons to render. */
 	maximum?: number;
+	/** The icon to render. */
 	icon?: ScaleIconSet;
 }
+/**
+ * A schema representing a return value or object property that is provided as a string,
+ * which Coda should interpret as a date. Coda is able to flexibly a parse number of formal
+ * and informal string representations of dates. For maximum accuracy, consider using an
+ * ISO 8601 date string (e.g. 2021-10-29): https://en.wikipedia.org/wiki/ISO_8601.
+ */
 export interface StringDateSchema extends BaseStringSchema<ValueHintType.Date> {
+	/** Instructs Coda to render this value as a date. */
 	codaType: ValueHintType.Date;
+	/**
+	 * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+	 *
+	 * Only applies when this is used as a sync table property.
+	 */
 	format?: string;
 }
+/**
+ * A schema representing a return value or object property that is provided as a string,
+ * which Coda should interpret as a time.
+ */
 export interface StringTimeSchema extends BaseStringSchema<ValueHintType.Time> {
+	/** Instructs Coda to render this value as a date. */
 	codaType: ValueHintType.Time;
+	/**
+	 * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+	 *
+	 * Only applies when this is used as a sync table property.
+	 */
 	format?: string;
 }
+/**
+ * A schema representing a return value or object property that is provided as a string,
+ * which Coda should interpret as a datetime. Coda is able to flexibly a parse number of formal
+ * and informal string representations of dates. For maximum accuracy, consider using an
+ * ISO 8601 datetime string (e.g. 2021-11-03T19:43:58): https://en.wikipedia.org/wiki/ISO_8601.
+ */
 export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.DateTime> {
+	/** Instructs Coda to render this value as a date. */
 	codaType: ValueHintType.DateTime;
+	/**
+	 * A Moment date format string, such as 'MMM D, YYYY', that corresponds to a supported Coda date column format.
+	 *
+	 * Only applies when this is used as a sync table property.
+	 */
 	dateFormat?: string;
+	/**
+	 * A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+	 *
+	 * Only applies when this is used as a sync table property.
+	 */
 	timeFormat?: string;
 }
 /**
@@ -371,12 +435,26 @@ export declare enum DurationUnit {
 	 */
 	Seconds = "seconds"
 }
+/**
+ * A schema representing a return value or object property that represents a duration. The value
+ * should be provided as a string like "3 days" or "40 minutes 30 seconds".
+ */
 export interface DurationSchema extends BaseStringSchema<ValueHintType.Duration> {
+	/**
+	 * A refinement of {@link maxUnit} to use for rounding the duration when rendering.
+	 * Currently only `1` is supported, which is the same as omitting a value.
+	 */
 	precision?: number;
+	/**
+	 * The unit to use for rounding the duration when rendering. For example, if using `DurationUnit.Days`,
+	 * and a value of "3 days 4 hours" is provided, it will be rendered as "3 days".
+	 */
 	maxUnit?: DurationUnit;
 }
 export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
+	/** Identifies this schema as a string. */
 	type: ValueType.String;
+	/** An optional type hint instructing Coda about how to interpret or render this value. */
 	codaType?: T;
 }
 declare const SimpleStringHintValueTypes: readonly [
@@ -392,8 +470,14 @@ export declare type SimpleStringHintTypes = typeof SimpleStringHintValueTypes[nu
 export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStringHintTypes> extends BaseStringSchema<T> {
 }
 export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema | SimpleStringSchema;
+/**
+ * A schema representing a return value or object property that is an array (list) of items.
+ * The items are themselves schema definitions, which may refer to scalars or other objects.
+ */
 export interface ArraySchema<T extends Schema = Schema> extends BaseSchema {
+	/** Identifies this schema as an array. */
 	type: ValueType.Array;
+	/** A schema for the items of this array. */
 	items: T;
 }
 export interface ObjectSchemaProperty {
@@ -1224,7 +1308,43 @@ export interface SimpleAutocompleteOption {
 	value: string | number;
 }
 export declare function simpleAutocomplete(search: string | undefined, options: Array<string | SimpleAutocompleteOption>): Promise<MetadataFormulaObjectResultType[]>;
+/**
+ * A helper to search over a list of objects representing candidate search results,
+ * filtering to only those that match a search string, and converting the matching
+ * objects into the format needed for autocomplete results.
+ *
+ * A case-sensitive search is performed over each object's `displayKey` property.
+ *
+ * A common pattern for implementing autocomplete for a formula pattern is to
+ * make a request to an API endpoint that returns a list of all entities,
+ * and then to take the user's partial input and search over those entities
+ * for matches. The helper generalizes this use case.
+ *
+ * @example
+ * ```
+ * coda.makeParameter({
+ *   type: ParameterType.Number,
+ *   name: "userId",
+ *   description: "The ID of a user.",
+ *   autocomplete: async function(context, search) {
+ *     // Suppose this endpoint returns a list of users that have the form
+ *     // `{name: "Jane Doe", userId: 123, email: "jane@doe.com"}`
+ *     const usersResponse = await context.fetcher.fetch("/api/users");
+ *     // This will search over the name property of each object and filter to only
+ *     // those that match. Then it will transform the matching objects into the form
+ *     // `{display: "Jane Doe", value: 123}` which is what is required to render
+ *     // autocomplete responses.
+ *     return coda.autocompleteSearchObjects(search, usersResponse.body, "name", "userId");
+ *   }
+ * });
+ * ```
+ */
 export declare function autocompleteSearchObjects<T>(search: string, objs: T[], displayKey: keyof T, valueKey: keyof T): Promise<MetadataFormulaObjectResultType[]>;
+/**
+ * @deprecated If you have a hardcoded array of autocomplete options, simply include that array
+ * as the value of the `autocomplete` property in your parameter definition. There is no longer
+ * any needed to wrap a value with this formula.
+ */
 export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | SimpleAutocompleteOption>): MetadataFormula;
 export interface SyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> {
 	/**
@@ -1344,6 +1464,35 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
 	entityName?: string;
 	connectionRequirement?: ConnectionRequirement;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any>;
+/**
+ * Helper to generate a formula that fetches a list of entities from a given URL and returns them.
+ *
+ * One of the simplest but most common use cases for a pack formula is to make a request to an API
+ * endpoint that returns a list of objects, and then return those objects either as-is
+ * or with slight transformations. The can be accomplished with an `execute` function that does
+ * exactly that, but alternatively you could use `makeTranslateObjectFormula` and an
+ * `execute` implementation will be generated for you.
+ *
+ * @example
+ * ```
+ * makeTranslateObjectFormula({
+ *   name: "Users",
+ *   description: "Returns a list of users."
+ *   // This will generate an `execute` function that makes a GET request to the given URL.
+ *   request: {
+ *     method: 'GET',
+ *     url: 'https://api.example.com/users',
+ *   },
+ *   response: {
+ *     // Suppose the response body has the form `{users: [{ ...user1 }, { ...user2 }]}`.
+ *     // This "projection" key tells the `execute` function that the list of results to return
+ *     // can be found in the object property `users`. If omitted, the response body itself
+ *     // should be the list of results.
+ *     projectKey: 'users',
+ *     schema: UserSchema,
+ *   },
+ * });
+ */
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
 	description: string;
 	name: string;
@@ -2298,16 +2447,90 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 }
 /** Further stripped-down version of `PackMetadata` that contains only what the browser needs. */
 export declare type ExternalPackMetadata = ExternalPackVersionMetadata & Pick<PackMetadata, "id" | "name" | "shortDescription" | "description" | "permissionsDescription" | "category" | "logoPath" | "exampleImages" | "exampleVideoIds" | "minimumFeatureSet" | "quotas" | "rateLimits" | "isSystem">;
+/**
+ * Helper to create a new URL by appending parameters to a base URL.
+ *
+ * The input URL may or may not having existing parameters.
+ *
+ * @example
+ * ```
+ * // Returns `"/someApi/someEndpoint?token=asdf&limit=5"`
+ * const url = withQueryParams("/someApi/someEndpoint", {token: "asdf", limit: 5});
+ * ```
+ */
 export declare function withQueryParams(url: string, params?: {
 	[key: string]: any;
 }): string;
+/**
+ * Helper to take a URL string and return the parameters (if any) as a JavaScript object.
+ *
+ * @example
+ * ```
+ * // Returns `{token: "asdf", limit: "5"}`
+ * const params = getQueryParams("/someApi/someEndpoint?token=asdf&limit=5");
+ * ```
+ */
 export declare function getQueryParams(url: string): {
 	[key: string]: any;
 };
 declare function join(...tokens: string[]): string;
+/**
+ * Helper for TypeScript to make sure that handling of code forks is exhaustive,
+ * most commonly with a `switch` statement.
+ *
+ * @example
+ * ```
+ * enum MyEnum {
+ *   Foo = 'Foo',
+ *   Bar = 'Bar',
+ * }
+ *
+ * function handleEnum(value: MyEnum) {
+ *   switch(value) {
+ *     case MyEnum.Foo:
+ *       return 'foo';
+ *     case MyEnum.Bar:
+ *       return 'bar';
+ *     default:
+ *       // This code is unreachable since the two cases above are exhaustive.
+ *       // However, if a third value were added to MyEnum, TypeScript would flag
+ *       // an error at this line, informing you that you need to update this piece of code.
+ *       return ensureUnreachable(value);
+ *   }
+ * }
+ * ```
+ */
 export declare function ensureUnreachable(value: never, message?: string): never;
+/**
+ * Helper to check that a given value is a string, and is not the empty string.
+ * If the value is not a string or is empty, an error will be raised at runtime.
+ */
 export declare function ensureNonEmptyString(value: string | null | undefined, message?: string): string;
+/**
+ * Helper to check that a given value is defined, that is, is neither `undefined` nor `null`.
+ * If the value is `undefined` or `null`, an error will be raised at runtime.
+ *
+ * This is typically used to inform TypeScript that you expect a given value to always exist.
+ * Calling this function refines a type that can otherwise be null or undefined.
+ */
 export declare function ensureExists<T>(value: T | null | undefined, message?: string): T;
+/**
+ * Helper to apply a TypeScript assertion to subsequent code. TypeScript can infer
+ * type information from many expressions, and this helper applies those inferences
+ * to all code that follows call to this function.
+ *
+ * See https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#assertion-functions
+ *
+ * @example
+ * ```
+ * function foo(value: string | number) {
+ *   assertCondtion(typeof value === 'string');
+ *   // TypeScript would otherwise compalin, because `value` could have been number,
+ *   // but the above assertion refines the type based on the `typeof` expression.
+ *   return value.toUpperCase();
+ * }
+ * ```
+ */
 export declare function assertCondition(condition: any, message?: string): asserts condition;
 
 export {

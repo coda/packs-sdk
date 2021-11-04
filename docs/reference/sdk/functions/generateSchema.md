@@ -14,4 +14,4 @@
 
 #### Defined in
 
-[schema.ts:612](https://github.com/coda/packs-sdk/blob/main/schema.ts#L612)
+[schema.ts:692](https://github.com/coda/packs-sdk/blob/main/schema.ts#L692)

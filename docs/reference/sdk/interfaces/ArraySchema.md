@@ -1,5 +1,8 @@
 # Interface: ArraySchema<T\>
 
+A schema representing a return value or object property that is an array (list) of items.
+The items are themselves schema definitions, which may refer to scalars or other objects.
+
 ## Type parameters
 
 | Name | Type |
@@ -37,9 +40,11 @@ ___
 
 • **items**: `T`
 
+A schema for the items of this array.
+
 #### Defined in
 
-[schema.ts:443](https://github.com/coda/packs-sdk/blob/main/schema.ts#L443)
+[schema.ts:523](https://github.com/coda/packs-sdk/blob/main/schema.ts#L523)
 
 ___
 
@@ -47,6 +52,8 @@ ___
 
 • **type**: [`Array`](../enums/ValueType.md#array)
 
+Identifies this schema as an array.
+
 #### Defined in
 
-[schema.ts:442](https://github.com/coda/packs-sdk/blob/main/schema.ts#L442)
+[schema.ts:521](https://github.com/coda/packs-sdk/blob/main/schema.ts#L521)

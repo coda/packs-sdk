@@ -1,5 +1,7 @@
 # Interface: CurrencySchema
 
+A schema representing a return value or object property that is an amount of currency.
+
 ## Hierarchy
 
 - `BaseNumberSchema`<[`Currency`](../enums/ValueHintType.md#currency)\>
@@ -12,13 +14,15 @@
 
 • **codaType**: [`Currency`](../enums/ValueHintType.md#currency)
 
+Instructs Coda to render this value as a currency amount.
+
 #### Overrides
 
 BaseNumberSchema.codaType
 
 #### Defined in
 
-[schema.ts:314](https://github.com/coda/packs-sdk/blob/main/schema.ts#L314)
+[schema.ts:318](https://github.com/coda/packs-sdk/blob/main/schema.ts#L318)
 
 ___
 
@@ -31,7 +35,7 @@ If the currency code is not supported by Coda, the value will be rendered using 
 
 #### Defined in
 
-[schema.ts:320](https://github.com/coda/packs-sdk/blob/main/schema.ts#L320)
+[schema.ts:325](https://github.com/coda/packs-sdk/blob/main/schema.ts#L325)
 
 ___
 
@@ -58,9 +62,11 @@ ___
 
 • `Optional` **format**: [`CurrencyFormat`](../enums/CurrencyFormat.md)
 
+A render format for further refining how the value is rendered.
+
 #### Defined in
 
-[schema.ts:321](https://github.com/coda/packs-sdk/blob/main/schema.ts#L321)
+[schema.ts:327](https://github.com/coda/packs-sdk/blob/main/schema.ts#L327)
 
 ___
 
@@ -68,9 +74,11 @@ ___
 
 • `Optional` **precision**: `number`
 
+The decimal precision. The value is rounded to this precision when rendered.
+
 #### Defined in
 
-[schema.ts:315](https://github.com/coda/packs-sdk/blob/main/schema.ts#L315)
+[schema.ts:320](https://github.com/coda/packs-sdk/blob/main/schema.ts#L320)
 
 ___
 

@@ -1,5 +1,8 @@
 # Interface: StringTimeSchema
 
+A schema representing a return value or object property that is provided as a string,
+which Coda should interpret as a time.
+
 ## Hierarchy
 
 - `BaseStringSchema`<[`Time`](../enums/ValueHintType.md#time)\>
@@ -12,13 +15,15 @@
 
 • **codaType**: [`Time`](../enums/ValueHintType.md#time)
 
+Instructs Coda to render this value as a date.
+
 #### Overrides
 
 BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:372](https://github.com/coda/packs-sdk/blob/main/schema.ts#L372)
+[schema.ts:413](https://github.com/coda/packs-sdk/blob/main/schema.ts#L413)
 
 ___
 
@@ -45,9 +50,13 @@ ___
 
 • `Optional` **format**: `string`
 
+A Moment time format string, such as 'HH:mm:ss', that corresponds to a supported Coda time column format.
+
+Only applies when this is used as a sync table property.
+
 #### Defined in
 
-[schema.ts:374](https://github.com/coda/packs-sdk/blob/main/schema.ts#L374)
+[schema.ts:419](https://github.com/coda/packs-sdk/blob/main/schema.ts#L419)
 
 ___
 
@@ -55,10 +64,12 @@ ___
 
 • **type**: [`String`](../enums/ValueType.md#string)
 
+Identifies this schema as a string.
+
 #### Inherited from
 
 BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:413](https://github.com/coda/packs-sdk/blob/main/schema.ts#L413)
+[schema.ts:486](https://github.com/coda/packs-sdk/blob/main/schema.ts#L486)

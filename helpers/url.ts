@@ -2,6 +2,17 @@ import {ensureNonEmptyString} from './ensure';
 import qs from 'qs';
 import urlParse from 'url-parse';
 
+/**
+ * Helper to create a new URL by appending parameters to a base URL.
+ *
+ * The input URL may or may not having existing parameters.
+ *
+ * @example
+ * ```
+ * // Returns `"/someApi/someEndpoint?token=asdf&limit=5"`
+ * const url = withQueryParams("/someApi/someEndpoint", {token: "asdf", limit: 5});
+ * ```
+ */
 export function withQueryParams(url: string, params?: {[key: string]: any}): string {
   if (!params) {
     return url;
@@ -14,6 +25,15 @@ export function withQueryParams(url: string, params?: {[key: string]: any}): str
   return parsedUrl.toString();
 }
 
+/**
+ * Helper to take a URL string and return the parameters (if any) as a JavaScript object.
+ *
+ * @example
+ * ```
+ * // Returns `{token: "asdf", limit: "5"}`
+ * const params = getQueryParams("/someApi/someEndpoint?token=asdf&limit=5");
+ * ```
+ */
 export function getQueryParams(url: string): {[key: string]: any} {
   const parsedUrl = urlParse(url);
   // Merge the params together
