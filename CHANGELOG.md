@@ -1,5 +1,5 @@
 ## 0.7.0
-- **Breaking Change** Pack bundle format is changed to IIFE. Previously compiled bundles will still be supported for a short period of time.
+- Pack bundle format is changed to IIFE. Previously compiled bundles will still be supported.
 
 ## 0.6.0
 - **Breaking Change** Column Formats must now use only real Regex objects in their `matchers` array.
