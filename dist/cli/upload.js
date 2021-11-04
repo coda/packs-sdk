@@ -90,13 +90,13 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
     }
     const metadata = (0, metadata_1.compilePackMetadata)(manifest);
     let packVersion = manifest.version;
-    if (!packVersion) {
-        const nextPackVersionInfo = await client.getNextPackVersion(packId, {}, { proposedMetadata: JSON.stringify(metadata) });
-        packVersion = nextPackVersionInfo.nextVersion;
-        (0, helpers_5.print)(`Pack version not provided. Generated one for you: version is ${packVersion}`);
-    }
-    metadata.version = packVersion;
     try {
+        if (!packVersion) {
+            const nextPackVersionInfo = await client.getNextPackVersion(packId, {}, { proposedMetadata: JSON.stringify(metadata) });
+            packVersion = nextPackVersionInfo.nextVersion;
+            (0, helpers_5.print)(`Pack version not provided. Generated one for you: version is ${packVersion}`);
+        }
+        metadata.version = packVersion;
         const bundle = (0, helpers_7.readFile)(bundlePath);
         if (!bundle) {
             printAndExit(`Could not find bundle file at path ${bundlePath}`);
