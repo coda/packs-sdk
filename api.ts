@@ -605,9 +605,13 @@ export function makeFormula<
     case ValueType.String: {
       // very strange ts knows that fullDefinition.codaType is StringHintTypes but doesn't know if
       // fullDefinition is StringFormulaDefV2.
-      const {onError: _, resultType: unused, ...rest} = fullDefinition as StringFormulaDefV2<ParamDefsT>;
       const codaType = 'codaType' in fullDefinition ? fullDefinition.codaType : undefined;
+      if ('codaType' in fullDefinition) {
+        delete fullDefinition.codaType;
+      }
       const formulaSchema = 'schema' in fullDefinition ? fullDefinition.schema : undefined;
+
+      const {onError: _, resultType: unused, ...rest} = fullDefinition as StringFormulaDefV2<ParamDefsT>;
       const stringFormula: StringPackFormula<ParamDefsT> = {
         ...rest,
         resultType: Type.string,
@@ -617,9 +621,13 @@ export function makeFormula<
       break;
     }
     case ValueType.Number: {
-      const {onError: _, resultType: unused, ...rest} = fullDefinition as NumericFormulaDefV2<ParamDefsT>;
       const codaType = 'codaType' in fullDefinition ? fullDefinition.codaType : undefined;
+      if ('codaType' in fullDefinition) {
+        delete fullDefinition.codaType;
+      }
       const formulaSchema = 'schema' in fullDefinition ? fullDefinition.schema : undefined;
+
+      const {onError: _, resultType: unused, ...rest} = fullDefinition as NumericFormulaDefV2<ParamDefsT>;
       const numericFormula: NumericPackFormula<ParamDefsT> = {
         ...rest,
         resultType: Type.number,
