@@ -125,7 +125,7 @@ function getTimerShims(timerStrategy: TimerShimStrategy): string[] {
 }
 
 function getInjections({timerStrategy = TimerShimStrategy.None, manifestPath}: CompilePackBundleOptions): string[] {
-  const options = getPackOptions(manifestPath);
+  const options = getPackOptions(path.dirname(manifestPath));
   const timerStrategyToUse = options?.timerStrategy || timerStrategy;
   const shims = [...getTimerShims(timerStrategyToUse), `${__dirname}/injections/crypto_shim.js`];
 
