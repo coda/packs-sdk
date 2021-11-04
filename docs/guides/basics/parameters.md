@@ -13,11 +13,11 @@ The primary mechanism for passing data from the user or document into your Pack 
 In the formula editor parameters are entered as comma-separated values, while in the action dialog or sync table side panel they presented as input boxes.
 
 === "In the formula editor"
-    <img src="{{ config.site_url.rstrip('/') }}/images/parameter_formula.png" srcset="{{ config.site_url.rstrip('/') }}/images/parameter_formula_2x.png 2x" class="screenshot" alt="Parameters in the formula editor">
+    <img src="../../../images/parameter_formula.png" srcset="../../../images/parameter_formula_2x.png 2x" class="screenshot" alt="Parameters in the formula editor">
 === "In the action builder"
-    <img src="{{ config.site_url.rstrip('/') }}/images/parameter_action.png" srcset="{{ config.site_url.rstrip('/') }}/images/parameter_action_2x.png 2x" class="screenshot" alt="Parameters in the action builder">
+    <img src="../../../images/parameter_action.png" srcset="../../../images/parameter_action_2x.png 2x" class="screenshot" alt="Parameters in the action builder">
 === "In the sync table settings"
-    <img src="{{ config.site_url.rstrip('/') }}/images/parameter_sync.png" srcset="{{ config.site_url.rstrip('/') }}/images/parameter_sync_2x.png 2x" class="screenshot" alt="Parameters in the sync table settings">
+    <img src="../../../images/parameter_sync.png" srcset="../../../images/parameter_sync_2x.png 2x" class="screenshot" alt="Parameters in the sync table settings">
 
 ## Defining parameters
 

@@ -20,7 +20,7 @@ The name of a formula can only contain the letters, numbers, and underscores. By
 
 Formula names must be unique within a Pack, but can be the same as built-in formulas or those in other Packs. When a doc has access to multiple formulas with the same name the Pack's icon is used to distinguish them.
 
-<img src="{{ config.site_url }}/images/formula_disambiguation.png" srcset="{{ config.site_url }}/images/formula_disambiguation_2x.png 2x" class="screenshot" alt="Icons used to disambiguate formulas">
+<img src="../../../images/formula_disambiguation.png" srcset="../../../images/formula_disambiguation_2x.png 2x" class="screenshot" alt="Icons used to disambiguate formulas">
 
 
 ## Parameters
