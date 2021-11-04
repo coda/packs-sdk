@@ -2,6 +2,12 @@
 
 - **Breaking Change** Column Formats must now use only real Regex objects in their `matchers` array.
 
+- If your pack uses fake timers (to simulate setTimeout) you can now store this as a persistent
+  build option. Previously, you had to remember to include the flag --timerStrategy=fake any time
+  you used any of the `coda` CLI commands. Now you can run
+  `coda setOption path/to/pack.ts timerStrategy fake` and it will store the option persistently
+  in your `.coda-pack.json` file and use it for all builds.
+
 ## 0.5.0
 
 - **Breaking Change** `context.logger` has been removed. It has been redundant with `console.log`

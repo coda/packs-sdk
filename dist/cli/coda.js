@@ -14,6 +14,7 @@ const execute_1 = require("./execute");
 const init_1 = require("./init");
 const register_1 = require("./register");
 const release_1 = require("./release");
+const set_option_1 = require("./set_option");
 const upload_1 = require("./upload");
 const validate_1 = require("./validate");
 const yargs_1 = __importDefault(require("yargs"));
@@ -181,6 +182,14 @@ if (require.main === module) {
             },
         },
         handler: release_1.handleRelease,
+    })
+        .command({
+        command: 'setOption <manifestFile> <option> <value>',
+        describe: 'Set a persistent build option for the pack. This will store the option alongside the pack id in ' +
+            'the .coda-pack.json file and it will be used for all builds of the pack. ' +
+            'Currently the only supported option is `timerStrategy`. Valid values are "none", "error", or "fake".\n\n' +
+            'Usage: coda setOption path/to/pack.ts timerStrategy fake',
+        handler: set_option_1.handleSetOption,
     })
         .demandCommand()
         .strict()

@@ -28,6 +28,7 @@ const ensure_1 = require("../helpers/ensure");
 const esbuild = __importStar(require("esbuild"));
 const exorcist_1 = __importDefault(require("exorcist"));
 const fs_1 = __importDefault(require("fs"));
+const config_storage_1 = require("../cli/config_storage");
 const isolated_vm_1 = __importDefault(require("isolated-vm"));
 const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
@@ -99,8 +100,10 @@ function getTimerShims(timerStrategy) {
             (0, ensure_1.ensureUnreachable)(timerStrategy);
     }
 }
-function getInjections({ timerStrategy = TimerShimStrategy.None }) {
-    const shims = [...getTimerShims(timerStrategy), `${__dirname}/injections/crypto_shim.js`];
+function getInjections({ timerStrategy = TimerShimStrategy.None, manifestPath }) {
+    const options = (0, config_storage_1.getPackOptions)(path_1.default.dirname(manifestPath));
+    const timerStrategyToUse = (options === null || options === void 0 ? void 0 : options.timerStrategy) || timerStrategy;
+    const shims = [...getTimerShims(timerStrategyToUse), `${__dirname}/injections/crypto_shim.js`];
     return shims;
 }
 async function buildWithES({ lastBundleFilename, outputBundleFilename, options: buildOptions, }) {

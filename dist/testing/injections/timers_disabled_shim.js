@@ -2,10 +2,10 @@
 // so for now we just have this file in js.
 
 const ErrorMessage =
-  `Please use the --timerStrategy=fake flag to enable shimmed timing primitives. Native node timing ` +
+  `Please use \`coda setOption path/to/pack.ts timerStrategy fake\`. Native node timing ` +
   `primitives like setTimeout or setInternal aren't supported in the pack execution sandbox ` +
   `environment. However, if you are using a library that relies upon them, you can use the ` +
-  `--timerStrategy=fake flag to build your pack with shimmed implementations that approximate the native ` +
+  `set an option to build your pack with shimmed implementations that approximate the native ` +
   `behavior. Because of this, be aware that packs that use timing primitives may not work reliably.`
 
 export function setTimeout() { throw new Error(ErrorMessage); }
