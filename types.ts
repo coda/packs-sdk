@@ -434,19 +434,9 @@ export interface CustomAuthParameter {
   name: string;
 
   /**
-   * The user-friendly display name for the parameter. Defaults to the key name if not provided.
-   */
-  displayName?: string;
-
-  /**
-   * The placeholder text to show to the user when prompted to enter this value.
-   */
-  placeholder?: string;
-
-  /**
    * A description shown to the user indicating what value they should provide for this parameter.
    */
-  description?: string;
+  description: string;
 }
 
 /**
