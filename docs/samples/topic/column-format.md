@@ -9,7 +9,7 @@ A **column format** is a custom column type that you apply to any column in any 
 For example, the Weather pack has a column format `Current Weather`; when applied to a column, if you type a city or address into a cell in that column, that location will be used an input to a formula that fetches the current weather at that location, and the resulting object with weather info will be shown in the cell.
 
 
-[Learn More]({{config.site_url.rstrip('/')}}/reference/sdk/classes/PackDefinitionBuilder#addColumnFormat){ .md-button }
+[Learn More](../../../reference/sdk/classes/PackDefinitionBuilder#addColumnFormat){ .md-button }
 
 ## Template
 

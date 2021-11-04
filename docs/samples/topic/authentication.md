@@ -11,7 +11,7 @@ Default authentication is the most common. Specify this if each user of your pac
 Use system authentication if you as the pack author will provide the necessary tokens to successfully make http requests within your pack. An example would be if your pack returns weather forecasts and the API involved requires an API key, but individual users need not provide their own API key. You as the pack author will register an API key and provide it to Coda, and Coda will apply it to all pack requests regardless of the user.
 
 
-[Learn More]({{config.site_url.rstrip('/')}}/reference/sdk/classes/PackDefinitionBuilder#setSystemAuthentication){ .md-button }
+[Learn More](../../../reference/sdk/classes/PackDefinitionBuilder#setSystemAuthentication){ .md-button }
 
 ## Template
 

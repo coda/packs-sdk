@@ -7,7 +7,7 @@ title: Sync tables
 A **sync table** is how to bring structured data from a third-party into Coda. A sync table is a table that you can add to a Coda doc that gets its rows from a third-party data source, that can be refreshed regularly to pull in new or updated data. A sync table is powered by a **formula** that takes parameters that represent sync options and returns an array of objects representing row data. A sync table also includes a schema describing the structure of the returned objects.
 
 
-[Learn More]({{config.site_url.rstrip('/')}}/reference/sdk/classes/PackDefinitionBuilder#addSyncTable){ .md-button }
+[Learn More](../../../reference/sdk/classes/PackDefinitionBuilder#addSyncTable){ .md-button }
 
 ## Template
 

@@ -7,7 +7,7 @@ title: Fetcher
 Communicating with an API or external server is done through the `Fetcher`, a custom interface for making HTTP requests. The fetcher is made available through the `context` object passed in to formulas. The fetcher can only send requests to URLs that have have a domain name that's been registered using `addNetworkDomain`. The fetcher runs asynchronously, and is typically run within an `async` function that will `await` the result.
 
 
-[Learn More]({{config.site_url.rstrip('/')}}/guides/advanced/fetcher){ .md-button }
+[Learn More](../../../guides/advanced/fetcher){ .md-button }
 
 ## Template (GET)
 

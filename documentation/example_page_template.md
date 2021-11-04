@@ -10,7 +10,7 @@ title: {{name}}
 {{! Topic Sample }}
 
 {{#if learnMoreLink}}
-[Learn More](\{{config.site_url.rstrip('/')}}{{learnMoreLink}}){ .md-button }
+[Learn More](../../..{{learnMoreLink}}){ .md-button }
 {{/if}}
 
 {{#each exampleSnippets}}

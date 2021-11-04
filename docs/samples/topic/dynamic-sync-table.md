@@ -17,7 +17,7 @@ There are two subtle variants of dynamic sync tables. A sync table can be dynami
 Alternatively, a sync table can be dynamic because the data source is specific to each instance of the table. If you were building a sync table to sync data from a Google Sheet, the data source would be the API url of a specific sheet. In this case, the sync table will be bound to a `dynamicUrl` that defines the data source. This url will be available to all of the formulas to implement the sync table in the sync context, as `context.sync.dynamicUrl`. To create a sync table that uses dynamic urls, you must implement the `listDynamicUrls` metadata formula in your dynamic sync table definition.
 
 
-[Learn More]({{config.site_url.rstrip('/')}}/reference/sdk/classes/PackDefinitionBuilder#addDynamicSyncTable){ .md-button }
+[Learn More](../../../reference/sdk/classes/PackDefinitionBuilder#addDynamicSyncTable){ .md-button }
 
 ## Template
 
