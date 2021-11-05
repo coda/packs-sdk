@@ -6,68 +6,78 @@ title: Fetcher
 
 Communicating with an API or external server is done through the `Fetcher`, a custom interface for making HTTP requests. The fetcher is made available through the `context` object passed in to formulas. The fetcher can only send requests to URLs that have have a domain name that's been registered using `addNetworkDomain`. The fetcher runs asynchronously, and is typically run within an `async` function that will `await` the result.
 
-=== "Template (GET)"
-    ```ts
+
+[Learn More](../../../guides/advanced/fetcher){ .md-button }
+
+## Template (GET)
+
+
+```ts
+let response = await context.fetcher.fetch({
+  method: "GET",
+  url: "<The URL to fetch>",
+  headers: {
+    "<HeaderName>": "<HeaderValue>",
+    // Add more headers as needed.
+  },
+});
+let data = response.body;
+```
+## Template (POST)
+
+
+```ts
+let payload = {
+  // Whatever JSON structure the API expects.
+};
+let response = await context.fetcher.fetch({
+  method: "POST",
+  url: "<The URL to send the request to>",
+  headers: {
+    "Content-Type": "application/json",
+    // Add more headers as needed.
+  },
+  body: JSON.stringify(payload),
+});
+let data = response.body;
+```
+## JSON Array (Bacon Ipsum)
+
+
+```ts
+import * as coda from "@codahq/packs-sdk";
+export const pack = coda.newPack();
+
+// When using the fetcher, this is the domain of the API that your pack makes
+// fetcher requests to.
+pack.addNetworkDomain("baconipsum.com");
+
+// This line adds a new formula to this Pack.
+pack.addFormula({
+  name: "BaconIpsum",
+  description: "Returns meat-themed lorem ipsum copy.",
+  parameters: [], // No parameters required.
+  resultType: coda.ValueType.String,
+
+  // This function is declared async to that is can wait for the fetcher to
+  // complete. The context parameter provides access to the fetcher.
+  execute: async function ([], context) {
+    let url = "https://baconipsum.com/api/?type=meat-and-filler";
+
+    // The fetcher's fetch method makes the request. The await keyword is used
+    // to wait for the API's response before continuing on through the code.
     let response = await context.fetcher.fetch({
       method: "GET",
-      url: "<The URL to fetch>",
-      headers: {
-        "<HeaderName>": "<HeaderValue>",
-        // Add more headers as needed.
-      },
+      url: url
     });
-    let data = response.body;
-    ```
-=== "Template (POST)"
-    ```ts
-    let payload = {
-      // Whatever JSON structure the API expects.
-    };
-    let response = await context.fetcher.fetch({
-      method: "POST",
-      url: "<The URL to send the request to>",
-      headers: {
-        "Content-Type": "application/json",
-        // Add more headers as needed.
-      },
-      body: JSON.stringify(payload),
-    });
-    let data = response.body;
-    ```
-=== "JSON Array (Bacon Ipsum)"
-    ```ts
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
 
-    // When using the fetcher, this is the domain of the API that your pack makes
-    // fetcher requests to.
-    pack.addNetworkDomain("baconipsum.com");
+    // The API returns an array of strings, which is automatically parsed by
+    // the fetcher into a JavaScript object.
+    let paragraphs = response.body;
 
-    // This line adds a new formula to this Pack.
-    pack.addFormula({
-      name: "BaconIpsum",
-      description: "Returns meat-themed lorem ipsum copy.",
-      parameters: [], // No parameters required.
-      resultType: coda.ValueType.String,
+    // Return the paragraphs separated by a blank line.
+    return paragraphs.join("\n\n");
+  },
+});
+```
 
-      // This function is declared async to that is can wait for the fetcher to
-      // complete. The context parameter provides access to the fetcher.
-      execute: async function ([], context) {
-        let url = "https://baconipsum.com/api/?type=meat-and-filler";
-
-        // The fetcher's fetch method makes the request. The await keyword is used
-        // to wait for the API's response before continuing on through the code.
-        let response = await context.fetcher.fetch({
-          method: "GET",
-          url: url
-        });
-
-        // The API returns an array of strings, which is automatically parsed by
-        // the fetcher into a JavaScript object.
-        let paragraphs = response.body;
-
-        // Return the paragraphs separated by a blank line.
-        return paragraphs.join("\n\n");
-      },
-    });
-    ```

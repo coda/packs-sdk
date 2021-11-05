@@ -12,6 +12,7 @@ This Pack provides allows you to fetch random cat photos using the [Cat-as-a-ser
 
 [cataas]: https://cataas.com/
 
+
 === "pack.ts"
     ```ts
     import * as coda from "@codahq/packs-sdk";
@@ -181,3 +182,4 @@ This Pack provides allows you to fetch random cat photos using the [Cat-as-a-ser
       },
     });
     ```
+

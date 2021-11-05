@@ -148,7 +148,7 @@ docs: typedoc generated-documentation
 
 .PHONY: view-docs
 view-docs:
-	PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 expect -c 'spawn pipenv run mkdocs serve; expect "Serving on"; exec open "http://localhost:8000"; interact'
+	PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 MK_DOCS_SITE_URL=http://localhost:8000/packs-sdk expect -c 'spawn pipenv run mkdocs serve; expect "Serving on"; exec open "http://localhost:8000"; interact'
 
 ###############################################################################
 ### Deployment of documentation ###

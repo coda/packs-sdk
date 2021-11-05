@@ -5,7 +5,12 @@
     "triggerTokens": [
       "addColumnFormat"
     ],
+    "linkData": {
+      "type": "SdkReferencePath",
+      "url": "/reference/sdk/classes/PackDefinitionBuilder#addColumnFormat"
+    },
     "exampleFooterLink": "https://coda.github.io/packs-sdk/reference/sdk/classes/PackDefinitionBuilder#addColumnFormat",
+    "learnMoreLink": "/reference/sdk/classes/PackDefinitionBuilder#addColumnFormat",
     "content": "A **column format** is a custom column type that you apply to any column in any Coda table. A column format tells Coda to interpret the value in a cell by executing a **formula** using that value, typically looking up data related to that value from a third-party API.\n\nFor example, the Weather pack has a column format `Current Weather`; when applied to a column, if you type a city or address into a cell in that column, that location will be used an input to a formula that fetches the current weather at that location, and the resulting object with weather info will be shown in the cell.",
     "exampleSnippets": [
       {
@@ -37,7 +42,12 @@
       "setSystemAuthentication",
       "setUserAuthentication"
     ],
+    "linkData": {
+      "type": "SdkReferencePath",
+      "url": "/reference/sdk/classes/PackDefinitionBuilder#setSystemAuthentication"
+    },
     "exampleFooterLink": "https://coda.github.io/packs-sdk/reference/sdk/classes/PackDefinitionBuilder#setSystemAuthentication",
+    "learnMoreLink": "/reference/sdk/classes/PackDefinitionBuilder#setSystemAuthentication",
     "content": "The SDK broadly divides authentication into two categories: authentication that is tied to the user of the pack vs authentication that is managed by the system, aka the pack author. In the pack definition the former is known as `defaultAuthentication` and the latter `systemConnectionAuthentication`. You will typically specify one or the other in your pack definition, or neither if your pack does not make http requests or those requests do not require authentication.\n\nDefault authentication is the most common. Specify this if each user of your pack should log in with OAuth, or have their own API key, or whatever user-specific token is necessary for the pack to be able to retrieve data that is specific to that user.\n\nUse system authentication if you as the pack author will provide the necessary tokens to successfully make http requests within your pack. An example would be if your pack returns weather forecasts and the API involved requires an API key, but individual users need not provide their own API key. You as the pack author will register an API key and provide it to Coda, and Coda will apply it to all pack requests regardless of the user.",
     "exampleSnippets": [
       {
@@ -58,7 +68,12 @@
     "triggerTokens": [
       "addDynamicSyncTable"
     ],
+    "linkData": {
+      "type": "SdkReferencePath",
+      "url": "/reference/sdk/classes/PackDefinitionBuilder#addDynamicSyncTable"
+    },
     "exampleFooterLink": "https://coda.github.io/packs-sdk/reference/sdk/classes/PackDefinitionBuilder#addDynamicSyncTable",
+    "learnMoreLink": "/reference/sdk/classes/PackDefinitionBuilder#addDynamicSyncTable",
     "content": "Most sync tables have schemas that can be statically defined. For example, if you're writing a sync of a user's Google Calendar events, the structure of an Event from the Google Calendar API is well-known and you can write a schema for what your table should contain.\n\nIn certain cases, you may want to sync data whose structure is not known in advance and may depend on the user doing the sync. For example, Coda's Jira pack allows users to sync data from their Jira instance, but Jira lets users create arbitrary custom fields for their Issue objects. So the schema of the Issues sync table is not known in advance; it depends on the Jira account that the user is syncing from.\n\nCoda supports \"dynamic\" sync tables for cases like these. Instead of including a static schema in your sync table definition, you include a formula that returns a schema. This formula can use the fetcher to make authenticated http requests to your Pack's API so that you may retrieve any necessary info from that third-party service needed to construct an appropriate schema.\n\nTo define a dynamic schema, use the `makeDynamicSyncTable()` wrapper function. You will provide a `getSchema` formula that returns a schema definition. You'll also provide some supporting formulas like `getName`, to return a name in the UI for the table, in case even the name of the entities being synced is dynamic.\n\nThere are two subtle variants of dynamic sync tables. A sync table can be dynamic simply because the shape of the entities being synced vary based on who the current user is. For example, in the Jira example, Jira Issues are synced by hitting the same static Jira API url for Issues, but the schema of the issues returned will be different depending on the configuration of the Jira instance of the calling user.\n\nAlternatively, a sync table can be dynamic because the data source is specific to each instance of the table. If you were building a sync table to sync data from a Google Sheet, the data source would be the API url of a specific sheet. In this case, the sync table will be bound to a `dynamicUrl` that defines the data source. This url will be available to all of the formulas to implement the sync table in the sync context, as `context.sync.dynamicUrl`. To create a sync table that uses dynamic urls, you must implement the `listDynamicUrls` metadata formula in your dynamic sync table definition.",
     "exampleSnippets": [
       {
@@ -74,23 +89,95 @@
     "triggerTokens": [
       "addFormula"
     ],
-    "exampleFooterLink": "https://coda.github.io/packs-sdk/reference/sdk/classes/PackDefinitionBuilder#addFormula",
-    "content": "A **formula (including a button)** is a JavaScript function that will be exposed as a Coda formula, that you can use anywhere in a Coda doc that you can use any normal formula. Formulas take basic Coda types as input, like strings, numbers, dates, booleans, and arrays of these types, and return any of these types or objects whose properties are any of these types. Buttons are just a flavor of a formula with the flag `isAction` activated.",
+    "linkData": {
+      "type": "SdkReferencePath",
+      "url": "/guides/blocks/formulas"
+    },
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/guides/blocks/formulas",
+    "learnMoreLink": "/guides/blocks/formulas",
+    "content": "A formula is a JavaScript function that is exposed as a Coda formula, that you can use anywhere in a Coda doc that you can use any built-in formula. Formulas take basic types as input, like strings, numbers, dates, booleans, and arrays of these types, and return any of these types or objects whose properties are any of these types.",
     "exampleSnippets": [
       {
         "name": "Template",
-        "content": "",
+        "content": "The basic structure of a formula. This sample takes in a single string parameter and returns a string result.",
         "code": "pack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function ([param], context) {\n    return \"Hello \" + param;\n  },\n});"
       },
       {
-        "name": "Image (Cats)",
-        "content": "",
+        "name": "Image result",
+        "content": "A formula that returns an image. This sample gets a random cat image with an optional text overlay or filter applied.",
         "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Formula that fetches a random cat image, with various options.\npack.addFormula({\n  name: \"CatImage\",\n  description: \"Gets a random cat image.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"text\",\n      description: \"Text to display over the image.\",\n      optional: true,\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"filter\",\n      description: \"A filter to apply to the image.\",\n      autocomplete: [\"blur\", \"mono\", \"sepia\", \"negative\", \"paint\", \"pixel\"],\n      optional: true,\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  codaType: coda.ValueHintType.ImageReference,\n  execute: async function ([text, filter], context) {\n    let url = \"https://cataas.com/cat\";\n    if (text) {\n      url += \"/says/\" + encodeURIComponent(text);\n    }\n    url = coda.withQueryParams(url, {\n      filter: filter,\n      json: true,\n    });\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: url,\n      cacheTtlSecs: 0, // Don't cache the result, so we can get a fresh cat.\n    });\n    return \"https://cataas.com\" + response.body.url;\n  },\n});\n\n// Allow the pack to make requests to Cat-as-a-service API.\npack.addNetworkDomain(\"cataas.com\");"
       },
       {
-        "name": "Rich Data (Todoist)",
-        "content": "",
+        "name": "Rich data result",
+        "content": "A formula that returns rich data (a schema). This sample gets information about a task in the Todoist application.",
         "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// A schema defining the rich metadata to be returned about each task.\nconst TaskSchema = coda.makeObjectSchema({\n  type: coda.ValueType.Object,\n  properties: {\n    name: {\n      description: \"The name of the task.\",\n      type: coda.ValueType.String,\n      required: true,\n    },\n    description: {\n      description: \"A detailed description of the task.\",\n      type: coda.ValueType.String,\n    },\n    url: {\n      description: \"A link to the task in the Todoist app.\",\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.Url\n    },\n    taskId: {\n      description: \"The ID of the task.\",\n      type: coda.ValueType.Number,\n      required: true,\n    },\n  },\n  primary: \"name\",\n  id: \"taskId\",\n  identity: {\n    name: \"Task\",\n  },\n});\n\n// Formula that looks up rich metadata about a task given it's URL.\npack.addFormula({\n  name: \"GetTaskById\",\n  description: \"Gets a Todoist task by ID\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"taskId\",\n      description: \"The ID of the task\",\n    }),\n  ],\n  resultType: coda.ValueType.Object,\n  schema: TaskSchema,\n\n  execute: async function ([taskId], context) {\n    let response = await context.fetcher.fetch({\n      url: \"https://api.todoist.com/rest/v1/tasks/\" + taskId,\n      method: \"GET\",\n    });\n    let task = response.body;\n    return {\n      name: task.content,\n      description: task.description,\n      url: task.url,\n      taskId: task.id,\n    };\n  },\n});\n\n// Allow the pack to make requests to Todoist.\npack.addNetworkDomain(\"todoist.com\");\n\n// Setup authentication using a Todoist API token.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n  instructionsUrl: \"https://todoist.com/app/settings/integrations\",\n});"
+      }
+    ]
+  },
+  {
+    "name": "Parameters",
+    "category": "Topic",
+    "triggerTokens": [
+      "makeParameter"
+    ],
+    "linkData": {
+      "type": "SdkReferencePath",
+      "url": "/guides/basics/parameters"
+    },
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/guides/basics/parameters",
+    "learnMoreLink": "/guides/basics/parameters",
+    "content": "Coda formulas, actions, and sync tables receive take in user input via parameters. They are required by default, but can by made optional. Variable argument (vararg) parameters can be used to allow for parameters to be set more than once.",
+    "exampleSnippets": [
+      {
+        "name": "Template",
+        "content": "The basic structure of a parameter. This sample is for a string parameter.",
+        "code": "coda.makeParameter({\n  type: coda.ParameterType.String,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n});"
+      },
+      {
+        "name": "No parameters",
+        "content": "A formula without any parameters. This sample returns the name of the current day of the week.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Formula that gets the current weekday, for example \"Monday\".\npack.addFormula({\n  name: \"CurrentWeekday\",\n  description: \"Get the current day of the week.\",\n  parameters: [],\n  resultType: coda.ValueType.String,\n  execute: async function ([], context) {\n    let now = new Date();\n    let formatter = Intl.DateTimeFormat(\"us-US\", {weekday: \"long\"});\n    return formatter.format(now);\n  },\n});"
+      },
+      {
+        "name": "Optional parameters",
+        "content": "A formula with some required and some optional parameters. This sample formats text to look like screaming, with a optional parameters to override how many exclamation points to use and an alternate character to use.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Formats text to look like screaming. For example, \"Hello\" => \"HELLO!!!\".\npack.addFormula({\n  name: \"Scream\",\n  description: \"Make text uppercase and add exclamation points.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"text\",\n      description: \"The text to scream.\",\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.Number,\n      name: \"volume\",\n      description: \"The number of exclamation points to add.\",\n      optional: true,\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"character\",\n      description: \"The character to repeat.\",\n      optional: true,\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function ([text, volume = 3, character = \"!\"], context) {\n    return text.toUpperCase() + character.repeat(volume);\n  },\n});"
+      },
+      {
+        "name": "Variable argument parameters",
+        "content": "A formula that accepts a variable number of arguments. This sample draws a simple diagram using text, with an unknown number of arrow labels and steps.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Takes an unknown number of steps and labels and outputs a simple diagram.\n// Example: Steps(\"Idea\", \"Experiment\", \"Prototype\", \"Refine\", \"Product\")\n// Result: Idea --Experiment--> Prototype --Refine--> Product\npack.addFormula({\n  name: \"Steps\",\n  description: \"Draws a simple step diagram using text.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"start\",\n      description: \"The starting step.\",\n    }),\n  ],\n  varargParameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"label\",\n      description: \"The label for the arrow.\",\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"step\",\n      description: \"The next step.\",\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function ([start, ...varargs], context) {\n    let result = start;\n    while (varargs.length > 0) {\n      let label; let step;\n      // Pull the first set of varargs off the list, and leave the rest.\n      [label, step, ...varargs] = varargs;\n      result += ` --${label}--> ${step}`;\n    }\n    return result;\n  },\n});"
+      }
+    ]
+  },
+  {
+    "name": "Autocomplete",
+    "category": "Topic",
+    "triggerTokens": [
+      "autocomplete"
+    ],
+    "linkData": {
+      "type": "SdkReferencePath",
+      "url": "/guides/advanced/autocomplete"
+    },
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/guides/advanced/autocomplete",
+    "learnMoreLink": "/guides/advanced/autocomplete",
+    "content": "Autocomplete can be configured for a parameter to provide a defined set of options for the user to select from. You can can pass either a static array or use a function to dynamically generate the options.",
+    "exampleSnippets": [
+      {
+        "name": "Simple autocomplete",
+        "content": "A formula with a parameter that provides autocomplete for acceptable values. This sample returns the noise that an animal makes, for a limited set of animals.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Returns the noise an animal makes. Ex) \"cow\" => \"moo\".\npack.addFormula({\n  name: \"AnimalNoise\",\n  description: \"Gets the noise than an animal makes.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"animal\",\n      description: \"The selected animal.\",\n      autocomplete: [\"cow\", \"pig\", \"sheep\"],\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function ([animal], context) {\n    switch (animal) {\n      case \"cow\":\n        return \"moo\";\n      case \"pig\":\n        return \"oink\";\n      case \"sheep\":\n        return \"baa\";\n      default:\n        throw new coda.UserVisibleError(\"Unknown animal: \" + animal);\n    }\n  },\n});"
+      },
+      {
+        "name": "Dynamic autocomplete",
+        "content": "A formula with a parameter that provides autocomplete for acceptable values, where the options are pulled dynamically from an API. This sample returns the price for a board game listed on the site Board Game Atlas.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Gets the price of a board game by ID, with autocomplete on the ID.\npack.addFormula({\n  name: \"GetPrice\",\n  description: \"Gets the price of a board game.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"gameId\",\n      description: \"The ID of the game on boardgameatlas.com\",\n      autocomplete: async function (context, search, parameters) {\n        let url = coda.withQueryParams(\n          \"https://api.boardgameatlas.com/api/search\",\n          { fuzzy_match: true, name: search });\n        let response = await context.fetcher.fetch({ method: \"GET\", url: url });\n        let results = response.body.games;\n        // Generate an array of autocomplete objects, using the game's name as\n        // the label and its ID for the value.\n        return coda.autocompleteSearchObjects(search, results, \"name\", \"id\");\n      },\n    }),\n  ],\n  resultType: coda.ValueType.Number,\n  codaType: coda.ValueHintType.Currency,\n  execute: async function ([gameId], context) {\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: \"https://api.boardgameatlas.com/api/search?ids=\" + gameId,\n    });\n    return response.body.games[0].price;\n  },\n});\n\npack.addNetworkDomain(\"boardgameatlas.com\");\n\n// Authenticate using a client ID.\n// See: https://www.boardgameatlas.com/api/docs/apps\npack.setSystemAuthentication({\n  type: coda.AuthenticationType.QueryParamToken,\n  paramName: \"client_id\",\n});"
+      },
+      {
+        "name": "Autocomplete on previous parameter",
+        "content": "A formula with a parameter that provides autocomplete for acceptable values, where the options depend on the value of a previous parameter. This sample generates a greeting in either English or Spanish.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Greet someone in their language, with the greeting autocomplete adjusting\n// based on the language selected.\npack.addFormula({\n  name: \"Greeting\",\n  description: \"Greet someone.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"language\",\n      description: \"The language to greet them in.\",\n      autocomplete: [\n        { display: \"English\", value: \"en\" },\n        { display: \"Spanish\", value: \"es\" },\n      ],\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"greeting\",\n      description: \"The greeting to use.\",\n      autocomplete: async function (context, search, {language}) {\n        let options;\n        if (language === \"es\") {\n          options = [\"Hola\", \"Buenos días\"];\n        } else {\n          options = [\"Hello\", \"Howdy\"];\n        }\n        return coda.simpleAutocomplete(search, options);\n      },\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"name\",\n      description: \"The name to greet.\",\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  connectionRequirement: coda.ConnectionRequirement.None,\n  execute: async function ([language, greeting, name], context) {\n    let result = greeting + \" \" + name + \"!\";\n    if (language === \"es\") {\n      // Add upside-down exclamation point in the front.\n      result = \"¡\" + result;\n    }\n    return result;\n  },\n});"
       }
     ]
   },
@@ -100,7 +187,12 @@
     "triggerTokens": [
       "addSyncTable"
     ],
+    "linkData": {
+      "type": "SdkReferencePath",
+      "url": "/reference/sdk/classes/PackDefinitionBuilder#addSyncTable"
+    },
     "exampleFooterLink": "https://coda.github.io/packs-sdk/reference/sdk/classes/PackDefinitionBuilder#addSyncTable",
+    "learnMoreLink": "/reference/sdk/classes/PackDefinitionBuilder#addSyncTable",
     "content": "A **sync table** is how to bring structured data from a third-party into Coda. A sync table is a table that you can add to a Coda doc that gets its rows from a third-party data source, that can be refreshed regularly to pull in new or updated data. A sync table is powered by a **formula** that takes parameters that represent sync options and returns an array of objects representing row data. A sync table also includes a schema describing the structure of the returned objects.",
     "exampleSnippets": [
       {
@@ -126,7 +218,12 @@
     "triggerTokens": [
       "fetch"
     ],
-    "exampleFooterLink": "https://coda.github.io/packs-sdk/reference/sdk/interfaces/Fetcher",
+    "linkData": {
+      "type": "SdkReferencePath",
+      "url": "/guides/advanced/fetcher"
+    },
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/guides/advanced/fetcher",
+    "learnMoreLink": "/guides/advanced/fetcher",
     "content": "Communicating with an API or external server is done through the `Fetcher`, a custom interface for making HTTP requests. The fetcher is made available through the `context` object passed in to formulas. The fetcher can only send requests to URLs that have have a domain name that's been registered using `addNetworkDomain`. The fetcher runs asynchronously, and is typically run within an `async` function that will `await` the result.",
     "exampleSnippets": [
       {
@@ -150,13 +247,17 @@
     "name": "Hello World",
     "category": "Full",
     "triggerTokens": [],
+    "linkData": {
+      "type": "Web",
+      "url": "https://coda.io/@coda/make-a-pack-private-alpha/hello-world-16"
+    },
     "exampleFooterLink": "https://coda.io/@coda/make-a-pack-private-alpha/hello-world-16",
     "content": "This is an example which creates a single formula called Hello, that takes in a string called name and returns “Hello, name !“.",
     "exampleSnippets": [
       {
         "name": "Hello World",
         "content": "",
-        "code": "/*\nStart making Packs!\nTry out the hello world sample below to create your first build.\n*/\n\n// This import statement gives you access to all parts of the Coda Packs SDK.\nimport * as coda from \"@codahq/packs-sdk\";\n\n// This line creates your new Pack.\nexport const pack = coda.newPack();\n\n// Here, we add a new formula to this Pack.\npack.addFormula({\n  // This is the name that will be called in the formula builder.\n  // Remember, your formula name cannot have spaces in it.\n  name: \"Hello\",\n  description: \"A Hello World example.\",\n\n  // If your formula requires one or more inputs, you’ll define them here.\n  // Here, we're creating a string input called “name”.\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"name\",\n      description: \"The name you would like to say hello to.\",\n    }),\n  ],\n\n  // The resultType defines what will be returned in your Coda doc. Here, we're\n  // returning a simple text string.\n  resultType: coda.ValueType.String,\n\n  // Everything inside this execute statement will happen anytime your Coda\n  // formula is called in a doc. An array of all user inputs is always the 1st\n  // parameter.\n  execute: async function ([name]) {\n    return \"Hello \" + name + \"!\";\n  },\n});"
+        "code": "/*\nStart making Packs!\nTry out the hello world sample below to create your first build.\n*/\n\n// This import statement gives you access to all parts of the Coda Packs SDK.\nimport * as coda from \"@codahq/packs-sdk\";\n\n// This line creates your new Pack.\nexport const pack = coda.newPack();\n\n// Here, we add a new formula to this Pack.\npack.addFormula({\n  // This is the name that will be called in the formula builder.\n  // Remember, your formula name cannot have spaces in it.\n  name: \"Hello\",\n  description: \"A Hello World example.\",\n\n  // If your formula requires one or more inputs, you’ll define them here.\n  // Here, we're creating a string input called “name”.\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"name\",\n      description: \"The name you would like to say hello to.\",\n    }),\n  ],\n\n  // The resultType defines what will be returned in your Coda doc. Here, we're\n  // returning a simple text string.\n  resultType: coda.ValueType.String,\n\n  // Everything inside this execute statement will happen anytime your Coda\n  // formula is called in a doc. An array of all user inputs is always the 1st\n  // parameter.\n  execute: async function ([name], context) {\n    return \"Hello \" + name + \"!\";\n  },\n});"
       }
     ]
   },
@@ -164,6 +265,10 @@
     "name": "Daylight",
     "category": "Full",
     "triggerTokens": [],
+    "linkData": {
+      "type": "Web",
+      "url": "https://coda.io/@coda/make-a-pack-private-alpha/daylight-29"
+    },
     "exampleFooterLink": "https://coda.io/@coda/make-a-pack-private-alpha/daylight-29",
     "content": "This Pack provides a `Daylight` formula that determines the daylight, sunrise,\n and sunset at a given location using the [Sunrise Sunset API][api]. It accepts\n a latitude, longitude, an optional date and returns a rich object (schema) as\n a result. It uses the `Fetcher` to pull data from an external API.\n\n [api]: https://sunrise-sunset.org/api",
     "exampleSnippets": [
@@ -178,6 +283,10 @@
     "name": "Number Array",
     "category": "Full",
     "triggerTokens": [],
+    "linkData": {
+      "type": "Web",
+      "url": "https://coda.io/@coda/make-a-pack-private-alpha/number-array-27"
+    },
     "exampleFooterLink": "https://coda.io/@coda/make-a-pack-private-alpha/number-array-27",
     "content": "This is an example which creates two formulas that each take in an array of numbers and return the greatest common denominator and least common multiple.",
     "exampleSnippets": [
@@ -192,6 +301,9 @@
     "name": "Todoist",
     "category": "Full",
     "triggerTokens": [],
+    "linkData": {
+      "type": "SamplePage"
+    },
     "exampleFooterLink": "https://coda.github.io/packs-sdk/samples/full/todoist",
     "content": "This Pack provides an integration with the task tracking app [Todoist][todoist]. It uses a variety of building blocks to allow users to work with their projects and tasks, including:\n\n- Formulas that provide rich data about an item given its URL.\n- Column formats that automatically apply those formulas to matching URLs.\n- Action formulas that create and update items, for use in button and automations.\n- Sync tables for pulling in all of the user's items.\n\nThe Pack uses OAuth2 to connect to a user's Todoist account, which you can create for free.\n\n[todoist]: https://todoist.com/",
     "exampleSnippets": [
@@ -206,6 +318,9 @@
     "name": "Cats",
     "category": "Full",
     "triggerTokens": [],
+    "linkData": {
+      "type": "SamplePage"
+    },
     "exampleFooterLink": "https://coda.github.io/packs-sdk/samples/full/cats",
     "content": "This Pack provides allows you to fetch random cat photos using the [Cat-as-a-service API][cataas]. You can set various parameters for the cat image, such as the width and height, as well as add a text overlay. The Pack provides:\n\n- A formula for fetching a cat photo.\n- A column format that displays the text on top of a cat photo.\n- A sync table that retrieves all available cat photos.\n\n[cataas]: https://cataas.com/",
     "exampleSnippets": [

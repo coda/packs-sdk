@@ -12,7 +12,7 @@ module.exports = {
           'error',
           {
             varsIgnorePattern: 'response|datasourceUrl|MySchema|snippet|data',
-            argsIgnorePattern: 'context|param',
+            argsIgnorePattern: 'context|param|parameters',
           },
         ],
         'max-len': ['error', {code: 80}],

@@ -2,6 +2,8 @@
 
 Many Packs use cases require fetching data from an outside source such as an API, which is done using the custom [`Fetcher`](../../reference/sdk/interfaces/Fetcher.md) interface. Other methods for making network requests in JavaScript (such as `XMLHttpRequest` or libraries like `axios` or `jQuery`) are not supported.
 
+[View Sample Code](../../samples/topic/fetcher.md){ .md-button }
+
 ## Network domains
 
 Before you can start making any requests using the fetcher, your Pack must declare which domain names it is going to communicate with. This can be done using the [`addNetworkDomain()`][addNetworkDomain] method of the pack:

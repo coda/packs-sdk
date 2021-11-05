@@ -48,11 +48,13 @@ function compileExamples() {
     const content = getContentFile(example.contentFile);
     const compiledExampleSnippets = compileExampleSnippets(example);
     let exampleFooterLink = example.linkData.url;
+    let learnMoreLink: string | undefined;
     if (example.linkData.type === UrlType.SdkReferencePath) {
       if (!isValidReferencePath(exampleFooterLink!)) {
         throw new Error(`${exampleFooterLink} is not a valid path`);
       }
       exampleFooterLink = `${SdkReferenceLink}${exampleFooterLink}`;
+      learnMoreLink = example.linkData.url;
     } else if (example.linkData.type === UrlType.SamplePage) {
       const pagePath = getExamplePagePath(example);
       const pageName = getExamplePageName(example).split('.')[0];
@@ -65,7 +67,9 @@ function compileExamples() {
       name: example.name,
       category: example.category,
       triggerTokens: example.triggerTokens,
+      linkData: example.linkData,
       exampleFooterLink,
+      learnMoreLink,
       content,
       exampleSnippets: compiledExampleSnippets,
     };
@@ -169,6 +173,10 @@ function stripIndent(text: string) {
 Handlebars.registerHelper('indent', (content, numSpaces) => {
   const indent = ' '.repeat(numSpaces);
   return content.replace(/\n(?!\n)/g, '\n' + indent);
+});
+
+Handlebars.registerHelper('isTopic', (example: CompiledExample) => {
+  return example.category === ExampleCategory.Topic;
 });
 
 Handlebars.registerHelper('pageTitle', (example: CompiledExample) => {

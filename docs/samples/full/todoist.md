@@ -15,6 +15,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
 
 [todoist]: https://todoist.com/
 
+
 === "pack.ts"
     ```ts
     import * as coda from "@codahq/packs-sdk";
@@ -526,3 +527,4 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       throw new coda.UserVisibleError("Invalid task URL: " + taskUrl);
     }
     ```
+
