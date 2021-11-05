@@ -603,15 +603,14 @@ export function makeFormula<
   let formula: V2PackFormula<ParamDefsT, SchemaT>;
   switch (fullDefinition.resultType) {
     case ValueType.String: {
-      const formulaSchema = 'schema' in fullDefinition ? fullDefinition.schema : undefined;
-
       // very strange ts knows that fullDefinition.codaType is StringHintTypes but doesn't know if
       // fullDefinition is StringFormulaDefV2.
-      const def: StringFormulaDefV2<ParamDefsT> = {
+      const def: StringFormulaDefV2<ParamDefsT> & {codaType?: StringHintTypes; formulaSchema?: StringSchema} = {
         ...fullDefinition,
         codaType: 'codaType' in fullDefinition ? fullDefinition.codaType : undefined,
+        formulaSchema: 'schema' in fullDefinition ? fullDefinition.schema : undefined,
       };
-      const {onError: _, resultType: unused, codaType, ...rest} = def;
+      const {onError: _, resultType: unused, codaType, formulaSchema, ...rest} = def;
       const stringFormula: StringPackFormula<ParamDefsT> = {
         ...rest,
         resultType: Type.string,
@@ -621,13 +620,12 @@ export function makeFormula<
       break;
     }
     case ValueType.Number: {
-      const formulaSchema = 'schema' in fullDefinition ? fullDefinition.schema : undefined;
-
-      const def: NumericFormulaDefV2<ParamDefsT> = {
+      const def: NumericFormulaDefV2<ParamDefsT> & {codaType?: NumberHintTypes; formulaSchema?: NumberSchema} = {
         ...fullDefinition,
         codaType: 'codaType' in fullDefinition ? fullDefinition.codaType : undefined,
+        formulaSchema: 'schema' in fullDefinition ? fullDefinition.schema : undefined,
       };
-      const {onError: _, resultType: unused, codaType, ...rest} = def;
+      const {onError: _, resultType: unused, codaType, formulaSchema, ...rest} = def;
       const numericFormula: NumericPackFormula<ParamDefsT> = {
         ...rest,
         resultType: Type.number,

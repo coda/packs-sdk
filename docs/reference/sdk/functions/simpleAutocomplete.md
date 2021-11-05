@@ -15,4 +15,4 @@
 
 #### Defined in
 
-[api.ts:828](https://github.com/coda/packs-sdk/blob/main/api.ts#L828)
+[api.ts:826](https://github.com/coda/packs-sdk/blob/main/api.ts#L826)

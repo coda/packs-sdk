@@ -16,4 +16,4 @@
 
 #### Defined in
 
-[api.ts:796](https://github.com/coda/packs-sdk/blob/main/api.ts#L796)
+[api.ts:794](https://github.com/coda/packs-sdk/blob/main/api.ts#L794)
