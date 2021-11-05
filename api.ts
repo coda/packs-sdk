@@ -251,7 +251,7 @@ export function wrapMetadataFunction(
 
 type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, 'type' | 'autocomplete'> & {
   type: T;
-  autocomplete?: MetadataFormulaDef | Array<string | SimpleAutocompleteOption>;
+  autocomplete?: MetadataFormulaDef | Array<string | number | SimpleAutocompleteOption>;
 };
 
 /**
@@ -819,18 +819,23 @@ export interface SimpleAutocompleteOption {
 
 export function simpleAutocomplete(
   search: string | undefined,
-  options: Array<string | SimpleAutocompleteOption>,
+  options: Array<string | number | SimpleAutocompleteOption>,
 ): Promise<MetadataFormulaObjectResultType[]> {
   const normalizedSearch = (search || '').toLowerCase();
   const filtered = options.filter(option => {
-    const display = typeof option === 'string' ? option : option.display;
-    return display.toLowerCase().includes(normalizedSearch);
+    const display = typeof option === 'string' || typeof option === 'number' ? option : option.display;
+    return display.toString().toLowerCase().includes(normalizedSearch);
   });
   const metadataResults = filtered.map(option => {
     if (typeof option === 'string') {
       return {
         value: option,
         display: option,
+      };
+    } else if (typeof option === 'number') {
+      return {
+        value: option,
+        display: option.toString(),
       };
     }
     return option;
@@ -892,7 +897,7 @@ export function autocompleteSearchObjects<T>(
  * any needed to wrap a value with this formula.
  */
 export function makeSimpleAutocompleteMetadataFormula(
-  options: Array<string | SimpleAutocompleteOption>,
+  options: Array<string | number | SimpleAutocompleteOption>,
 ): MetadataFormula {
   return makeMetadataFormula((context, [search]) => simpleAutocomplete(search, options), {
     // A connection won't be used here, but if the parent formula uses a connection

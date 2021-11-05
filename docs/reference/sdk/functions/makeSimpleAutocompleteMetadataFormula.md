@@ -10,7 +10,7 @@ any needed to wrap a value with this formula.
 
 | Name | Type |
 | :------ | :------ |
-| `options` | (`string` \| [`SimpleAutocompleteOption`](../interfaces/SimpleAutocompleteOption.md))[] |
+| `options` | (`string` \| `number` \| [`SimpleAutocompleteOption`](../interfaces/SimpleAutocompleteOption.md))[] |
 
 #### Returns
 
@@ -18,4 +18,4 @@ any needed to wrap a value with this formula.
 
 #### Defined in
 
-[api.ts:894](https://github.com/coda/packs-sdk/blob/main/api.ts#L894)
+[api.ts:899](https://github.com/coda/packs-sdk/blob/main/api.ts#L899)
