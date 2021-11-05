@@ -16,7 +16,7 @@
 
       require(['vs/editor/editor.main'], function () {
         var editor = monaco.editor.create(document.getElementById('container'), {
-          value: "pack.setUserAuthentication({\n  // Replace None with the authentication type that applies for your pack.\n  type: coda.AuthenticationType.None,\n});",
+          value: "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Formats text to look like screaming. For example, \"Hello\" => \"HELLO!!!\".\npack.addFormula({\n  name: \"Scream\",\n  description: \"Make text uppercase and add exclamation points.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"text\",\n      description: \"The text to scream.\",\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.Number,\n      name: \"volume\",\n      description: \"The number of exclamation points to add.\",\n      optional: true,\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"character\",\n      description: \"The character to repeat.\",\n      optional: true,\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function ([text, volume = 3, character = \"!\"], context) {\n    return text.toUpperCase() + character.repeat(volume);\n  },\n});",
           language: 'javascript',
           minimap: {enabled: false},
           readOnly: true,
