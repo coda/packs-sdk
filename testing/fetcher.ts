@@ -40,6 +40,10 @@ interface RequestError {
   error?: string;
 }
 
+function getTemplateReplacementValueForKey(key: string, invocationToken: string): string {
+  return `{{${key}-${invocationToken}}}`;
+}
+
 export class AuthenticatingFetcher implements Fetcher {
   private readonly _updateCredentialsCallback: (newCredentials: Credentials) => void | undefined;
   private readonly _authDef: Authentication | undefined;
@@ -218,7 +222,7 @@ export class AuthenticatingFetcher implements Fetcher {
           // random token as part of the template key.
           Object.entries(this._credentials).forEach(([key, value]) => {
             bodyWithTemplateSubstitutions = ensureExists(bodyWithTemplateSubstitutions).replace(
-              `{{${key}-${this._invocationToken}}}`,
+              getTemplateReplacementValueForKey(key, this._invocationToken),
               value,
             );
           });
@@ -242,26 +246,32 @@ export class AuthenticatingFetcher implements Fetcher {
         Object.entries(params).forEach(([key, value]) => {
           if (urlWithSubstitutions) {
             urlWithSubstitutions = urlWithSubstitutions.replaceAll(
-              `{{${key}-${this._invocationToken}}}`,
+              getTemplateReplacementValueForKey(key, this._invocationToken),
               encodeURIComponent(value),
             );
             urlWithSubstitutions = urlWithSubstitutions.replaceAll(
-              encodeURIComponent(`{{${key}-${this._invocationToken}}}`),
+              encodeURIComponent(getTemplateReplacementValueForKey(key, this._invocationToken)),
               encodeURIComponent(value),
             );
           }
 
           if (bodyWithSubstitutions) {
-            bodyWithSubstitutions = bodyWithSubstitutions.replaceAll(`{{${key}-${this._invocationToken}}}`, value);
+            bodyWithSubstitutions = bodyWithSubstitutions.replaceAll(
+              getTemplateReplacementValueForKey(key, this._invocationToken),
+              value,
+            );
           }
 
           if (formWithSubstitutions) {
-            formWithSubstitutions = formWithSubstitutions.replaceAll(`{{${key}-${this._invocationToken}}}`, value);
+            formWithSubstitutions = formWithSubstitutions.replaceAll(
+              getTemplateReplacementValueForKey(key, this._invocationToken),
+              value,
+            );
           }
 
           if (headersWithSubstitutions) {
             headersWithSubstitutions = headersWithSubstitutions.replaceAll(
-              `{{${key}-${this._invocationToken}}}`,
+              getTemplateReplacementValueForKey(key, this._invocationToken),
               value,
             );
           }
