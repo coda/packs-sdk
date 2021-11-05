@@ -165,10 +165,15 @@ export interface DynamicSyncTableDef<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>,
 > extends SyncTableDef<K, L, ParamDefsT, SchemaT> {
+  /** Identifies this sync table as dynamic. */
   isDynamic: true;
+  /** See {@link DynamicSyncTableOptions.getSchema} */
   getSchema: MetadataFormula;
+  /** See {@link DynamicSyncTableOptions.getName} */
   getName: MetadataFormula;
+  /** See {@link DynamicSyncTableOptions.getDisplayUrl} */
   getDisplayUrl: MetadataFormula;
+  /** See {@link DynamicSyncTableOptions.listDynamicUrls} */
   listDynamicUrls?: MetadataFormula;
 }
 
@@ -416,7 +421,13 @@ export interface ObjectArrayFormulaDef<ParamsT extends ParamDefs, SchemaT extend
   response: ResponseHandlerTemplate<SchemaT>;
 }
 
+/**
+ * Inputs to define an "empty" formula, that is, a formula that uses a {@link RequestHandlerTemplate}
+ * to define an implementation for the formula rather than implementing an actual `execute` function
+ * in JavaScript.
+ */
 export interface EmptyFormulaDef<ParamsT extends ParamDefs> extends Omit<PackFormulaDef<ParamsT, string>, 'execute'> {
+  /** A definition of the request and any transformations to make in order to implement this formula. */
   request: RequestHandlerTemplate;
 }
 
@@ -766,8 +777,38 @@ export type FormulaDefinitionV2<
  * than is used internally.
  */
 export interface MetadataFormulaObjectResultType {
+  /** The value displayed to the user in the UI. */
   display: string;
+  /** The value used for the formula argument when the user selects this option. */
   value: string | number;
+  /**
+   * If true, indicates that this result has child results nested underneath it.
+   * This option only applies to {@link listDynamicUrls}. When fetching options
+   * for entities that can be used as dynamic URLs for a dynamic sync table,
+   * some APIs may return data in a hierarchy rather than a flat list of options.
+   *
+   * For example, if your dynamic sync table synced data from a Google Drive file,
+   * you might return a list of folders, and then a user could click on a folder
+   * to view the files within it. When returning folder results, you would set
+   * `hasChildren: true` on them, but omit that on the file results.
+   *
+   * Leaf nodes, that is those without `hasChildren: true`, are ultimately selectable
+   * to create a table. Selecting a result with `hasChildren: true` will invoke
+   * `listDynamicUrls` again with `value` as the second argument.
+   *
+   * That is, your dynamic sync table definition might include:
+   *
+   * ```
+   * listDynamicUrls: async function(context, parentValue) {
+   *   ...
+   * }
+   * ```
+   *
+   * `parentValue` will be undefined the initial time that `listDynamicUrls`
+   * is invoked, but if you return a result with `hasChildren: true` and the user
+   * clicks on it, `listDynamicUrls` will be invoked again, with `parentValue`
+   * as the `value` of the result that was clicked on.
+   */
   hasChildren?: boolean;
 }
 
@@ -1011,7 +1052,16 @@ export interface SyncTableOptions<
    * A set of options used internally by {@link makeDynamicSyncTable}
    */
   dynamicOptions?: {
+    /**
+     * A formula that returns the schema for this table.
+     *
+     * For a dynamic sync table, the value of {@link DynamicSyncTableOptions.getSchema}
+     * is passed through here. For a non-dynamic sync table, you may still implement
+     * this if you table has a schema that varies based on the user account, but
+     * does not require a {@link dynamicUrl}.
+     */
     getSchema?: MetadataFormulaDef;
+    /** See {@link DynamicSyncTableOptions.entityName} */
     entityName?: string;
   };
 }
