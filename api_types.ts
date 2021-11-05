@@ -351,25 +351,81 @@ export interface Network {
 const ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE'] as const;
 export type FetchMethodType = typeof ValidFetchMethods[number];
 
-// Copied from https://developer.mozilla.org/en-US/docs/Web/API/Request
+/**
+ * An HTTP request used with the {@link Fetcher}.
+ *
+ * The structure largely follows https://developer.mozilla.org/en-US/docs/Web/API/Request
+ */
 export interface FetchRequest {
+  /** The HTTP method/verb (e.g. GET or POST). */
   method: FetchMethodType;
+  /**
+   * The URL to connect to. This is typically an absolute URL, but if your
+   * pack uses authentication and {@link requiresEndpointUrl} and so has a unique
+   * endpoint per user account, you may also use a relative URL and Coda will
+   * apply the user's endpoint automatically.
+   */
   url: string;
+  /**
+   * The body of the HTTP request, if any.
+   *
+   * If you are sending a JSON payload, make sure to call `JSON.stringify()` on the object payload.
+   */
   body?: string;
+  /**
+   * Key-value form fields, if submitting to an endpoint expecting a URL-encoded form payload.
+   */
   form?: {[key: string]: string};
+  /**
+   * HTTP headers. You should NOT include authentication headers, as Coda will add them for you.
+   */
   headers?: {[header: string]: string};
-  // Allows explicit caching of the results of this request.
+  /**
+   * A time in seconds that Coda should cache the result of this HTTP request.
+   *
+   * Any time that this pack makes the same FetchRequest, a cached value can be returned
+   * instead of making the HTTP request. If left unspecified, Coda will automatically
+   * cache all GET requests for approximately 5 minutes. To disable the default caching,
+   * set this value to `0`.
+   */
   cacheTtlSecs?: number;
-  // Allows binary responses.
+  /**
+   * Indicates that you expect the response to be binary data, instructing Coda
+   * not to attempt to parse the response in any way. Otherwise, Coda may attempt
+   * to parse the response as a JSON object.
+   */
   isBinaryResponse?: boolean;
-  // Disable authentication
+  /**
+   * If true, Coda will not apply authentication credentials even if this pack is
+   * configured to use authentication. This is very rare, but sometimes you may
+   * wish to make an unauthenticated supporting request as part of a formula implementation.
+   */
   disableAuthentication?: boolean;
 }
 
-// Copied from https://developer.mozilla.org/en-US/docs/Web/API/Response
+/**
+ * The response of a call to {@link Fetcher.fetch}.
+ *
+ * The structure largely follows https://developer.mozilla.org/en-US/docs/Web/API/Response
+ */
 export interface FetchResponse<T extends any = any> {
+  /** The HTTP status code, e.g. `200`. */
   status: number;
+  /**
+   * The body of the response.
+   *
+   * If the response contains JSON data, either because the Content-Type header is application/json
+   * or if the data is JSON-parseable, this will be a parsed JavaScript object.
+   * Similarly, if the response headers are text/xml or application/xml, this will be a parsed
+   * JavaScript object using the `xml2js` library.
+   *
+   * If implicit parsing is undesirable, you may use {@link isBinaryResponse} on the request
+   * to disable any parsing.
+   */
   body?: T;
+  /**
+   * HTTP response headers. The contents of many headers will be redacted for security reasons.
+   */
   headers: {[header: string]: string | string[] | undefined};
 }
 
@@ -382,12 +438,58 @@ export interface FetchResponse<T extends any = any> {
 export interface Fetcher {
   /**
    * Makes an HTTP request.
+   *
+   * If authentication is used with this pack, the user's secret credentials will be
+   * automatically applied to the request (whether in the HTTP headers, as a URL parameter,
+   * or whatever the authentication type dictates). Your invocation of `fetch()` need not
+   * deal with authentication in any way, Coda will handle that entirely on your behalf.
    */
   fetch<T = any>(request: FetchRequest): Promise<FetchResponse<T>>;
 }
 
+/**
+ * A utility for temporarily storing files and images that either require authentication
+ * or are too large to store inline.
+ *
+ * When syncing data from certain APIs, a response object may include the URL of a file or
+ * image that can only be downloaded with the user's authentication credentials. Normally,
+ * you can just return an image or file URL from a formula invocation, and if the schema
+ * indicates that the value represents an attachment, Coda will ingest the data at that URL
+ * and host it from Coda. However, if the URL requires authentication, Coda will be unable
+ * to download the data since this ingestion does not happen within the packs execution
+ * environment.
+ *
+ * The solution is for your pack code to fetch the data at the URL, since the pack
+ * execution environment will apply the user's authentication, and then you can
+ * stash the downloaded value in `TemporaryBlobStorage`, which will return a temporary
+ * URL that you can return from the pack. Coda will be able to ingest the data from
+ * that temporary URL.
+ *
+ * Similarly, suppose your formula generates a very large value like a dynamically-generated
+ * image that you wish to return and have Coda render. Pack return values are meant to be
+ * fairly small, representing human-readable data. Large values like images are meant to
+ * be returned as URLs referencing that data. So rather than return the raw image data,
+ * your pack should use {@link storeBlob} to upload that large data to temporary storage.
+ * You will be returned a URL that you can then return with your formula response, and
+ * Coda will ingest the data from that URL into permanent storage.
+ */
 export interface TemporaryBlobStorage {
+  /**
+   * Fetches the data at the given URL, applying user authentication credentials as appropriate,
+   * and stores it in Coda-hosted temporary storage. Returns a URL for the temporary file
+   * that you should return in your formula response.
+   *
+   * The URL expires after 15 minutes by default, but you may pass a custom expiry, however
+   * Coda reserves the right to ignore long expirations.
+   */
   storeUrl(url: string, opts?: {expiryMs?: number}): Promise<string>;
+  /**
+   * Stores the given data as a file with the given content type in Coda-hosted temporary storage.
+   * Returns a URL for the temporary file that you should return in your formula response.
+   *
+   * The URL expires after 15 minutes by default, but you may pass a custom expiry, however
+   * Coda reserves the right to ignore long expirations.
+   */
   storeBlob(blobData: Buffer, contentType: string, opts?: {expiryMs?: number}): Promise<string>;
 }
 
@@ -440,8 +542,8 @@ export interface ExecutionContext {
    */
   readonly fetcher: Fetcher;
   /**
-   * A utility to fetch files and images that require the pack user's authentication.
-   * See {@link TemporaryBlobStorage}.
+   * A utility to fetch and store files and images that either require the pack user's authentication
+   * or are too large to return inline. See {@link TemporaryBlobStorage}.
    */
   readonly temporaryBlobStorage: TemporaryBlobStorage;
   /**
