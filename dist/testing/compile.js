@@ -106,13 +106,17 @@ function getInjections({ timerStrategy = TimerShimStrategy.None, manifestPath })
     const shims = [...getTimerShims(timerStrategyToUse), `${__dirname}/injections/crypto_shim.js`];
     return shims;
 }
-async function buildWithES({ lastBundleFilename, outputBundleFilename, options: buildOptions, }) {
+async function buildWithES({ lastBundleFilename, outputBundleFilename, options: buildOptions, format, }) {
     const options = {
         banner: { js: "'use strict';" },
         bundle: true,
         entryPoints: [lastBundleFilename],
         outfile: outputBundleFilename,
-        format: 'cjs',
+        format,
+        // This is tricky.
+        // - cjs bundles are adding exports to global.exports.
+        // - if iife bundles add exports to global, require() doesn't work. only module.exports works. idk why.
+        globalName: format === 'iife' ? 'module.exports' : undefined,
         platform: 'node',
         inject: getInjections(buildOptions),
         minify: false,
@@ -138,10 +142,20 @@ outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, timer
         timerStrategy,
     };
     const buildChain = [
-        { builder: buildWithES, outputFilename: esbuildBundleFilename },
+        // this bundles the pack and compiles ts to js (need by browserify).
+        // browserify only recognizes cjs format.
+        { builder: options => buildWithES({ ...options, format: 'cjs' }), outputFilename: esbuildBundleFilename },
+        // this browserify node libraries.
         { builder: browserifyBundle, outputFilename: browserifyBundleFilename },
-        // browserify will add additional symbols that need shim injection.
-        { builder: buildWithES, outputFilename: browserifyWithShimBundleFilename },
+        // run esbuild again to inject shim to new symbols added by browserify.
+        //
+        // also change to iife format here to avoid leaking symbols into global in ivm.
+        // - in NodeJS, require(someModule) is executed in a closure where no local symbols will leak.
+        // - in isolated-vm, however everything is evaluated in the global context and all local variables will leak.
+        //
+        // we used to manually create a closure (e.g. `(() => { ${bundle} })()` ) when loading code into isolated-vm
+        // but that breaks sourcemap (esp if it's minified)
+        { builder: options => buildWithES({ ...options, format: 'iife' }), outputFilename: browserifyWithShimBundleFilename },
     ];
     if (minify) {
         buildChain.push({ builder: uglifyBundle, outputFilename: uglifyBundleFilename });

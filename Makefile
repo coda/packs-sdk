@@ -85,17 +85,27 @@ compile-isolated-vm:
 		else echo "isolated-vm version matches, skipping."; \
 	fi
 
-.PHONY: compile
-compile:
-	${ROOTDIR}/node_modules/.bin/tsc
+.PHONY: compile-thunk
+compile-thunk:
+	# this bundle is loaded into ivm, better to use iife to avoid local symbols leak to global.
 	${ROOTDIR}/node_modules/.bin/esbuild ${ROOTDIR}/runtime/thunk/thunk.ts \
 		--bundle \
 		--outfile=${ROOTDIR}/bundles/thunk_bundle.js \
 		--inject:${ROOTDIR}/testing/injections/buffer_shim.js \
-		--format=cjs \
+		--format=iife \
+		--global-name=module.exports \
 		--banner:js="'use strict';"
+
+.PHONY: compile
+compile:
+	${ROOTDIR}/node_modules/.bin/tsc
+
+	$(MAKE) compile-thunk
+
 	# copy it to dist/ to make it available after packaging.
 	mkdir -p ${ROOTDIR}/dist/bundles/ && cp ${ROOTDIR}/bundles/thunk_bundle.js ${ROOTDIR}/dist/bundles/thunk_bundle.js
+
+	# this bundle is executed by lambda, either cjs or iife format should work.
 	${ROOTDIR}/node_modules/.bin/esbuild ${ROOTDIR}/index.ts \
 		--bundle \
 		--outfile=${ROOTDIR}/dist/bundle.js \
