@@ -381,14 +381,20 @@ exports.makeMetadataFormula = makeMetadataFormula;
 function simpleAutocomplete(search, options) {
     const normalizedSearch = (search || '').toLowerCase();
     const filtered = options.filter(option => {
-        const display = typeof option === 'string' ? option : option.display;
-        return display.toLowerCase().includes(normalizedSearch);
+        const display = typeof option === 'string' || typeof option === 'number' ? option : option.display;
+        return display.toString().toLowerCase().includes(normalizedSearch);
     });
     const metadataResults = filtered.map(option => {
         if (typeof option === 'string') {
             return {
                 value: option,
                 display: option,
+            };
+        }
+        else if (typeof option === 'number') {
+            return {
+                value: option,
+                display: option.toString(),
             };
         }
         return option;

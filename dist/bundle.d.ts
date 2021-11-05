@@ -1131,7 +1131,7 @@ export declare type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, Para
 export declare type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
 export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, "type" | "autocomplete"> & {
 	type: T;
-	autocomplete?: MetadataFormulaDef | Array<string | SimpleAutocompleteOption>;
+	autocomplete?: MetadataFormulaDef | Array<string | number | SimpleAutocompleteOption>;
 };
 /**
  * Create a definition for a parameter for a formula or sync.
@@ -1314,7 +1314,7 @@ export interface SimpleAutocompleteOption {
 	display: string;
 	value: string | number;
 }
-export declare function simpleAutocomplete(search: string | undefined, options: Array<string | SimpleAutocompleteOption>): Promise<MetadataFormulaObjectResultType[]>;
+export declare function simpleAutocomplete(search: string | undefined, options: Array<string | number | SimpleAutocompleteOption>): Promise<MetadataFormulaObjectResultType[]>;
 /**
  * A helper to search over a list of objects representing candidate search results,
  * filtering to only those that match a search string, and converting the matching
@@ -1352,7 +1352,7 @@ export declare function autocompleteSearchObjects<T>(search: string, objs: T[], 
  * as the value of the `autocomplete` property in your parameter definition. There is no longer
  * any needed to wrap a value with this formula.
  */
-export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | SimpleAutocompleteOption>): MetadataFormula;
+export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | number | SimpleAutocompleteOption>): MetadataFormula;
 export interface SyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> {
 	/**
 	 * The name of the sync table. This is shown to users in the Coda UI.

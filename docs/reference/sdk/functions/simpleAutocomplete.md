@@ -7,7 +7,7 @@
 | Name | Type |
 | :------ | :------ |
 | `search` | `undefined` \| `string` |
-| `options` | (`string` \| [`SimpleAutocompleteOption`](../interfaces/SimpleAutocompleteOption.md))[] |
+| `options` | (`string` \| `number` \| [`SimpleAutocompleteOption`](../interfaces/SimpleAutocompleteOption.md))[] |
 
 #### Returns
 
