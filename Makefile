@@ -191,7 +191,7 @@ publish-docs-gh-pages:
 	# Build the docs and push them to the gh-pages branch.
 	# See: https://www.mkdocs.org/user-guide/deploying-your-docs/#github-pages
 	# Including the tag "[ci skip]" in the commit message to prevent CircleCI from building the branch.
-	${PIPENV} run mkdocs gh-deploy --message "Deployed {sha} with MkDocs version: {version} [ci skip]"
+	MK_DOCS_SITE_URL=https://coda.github.io/packs-sdk/ ${PIPENV} run mkdocs gh-deploy --message "Deployed {sha} with MkDocs version: {version} [ci skip]"
 
 ###############################################################################
 
