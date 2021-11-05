@@ -4,7 +4,7 @@ title: Autocomplete
 
 # Autocomplete parameter options
 
-If you have a parameter that accepts a defined set of values it's usually best to provide those options using autocomplete. These options are presented to the user in the Coda UI and they can simply click on one instead of entering the value manually.
+If you have a parameter that accepts a defined set of values it's usually best to provide those options using autocomplete. These options are presented to the user in the Coda UI and they can simply click on one instead of entering the value manually. Autocomplete can be used with `String` and `Number` parameters.
 
 [View Sample Code][samples]{ .md-button }
 
@@ -21,7 +21,6 @@ In the formula editor, parameter options show up in a the same pane used for the
     <img src="../../../images/autocomplete_sync.png" srcset="../../../images/autocomplete_sync_2x.png 2x" class="screenshot" alt="Autocomplete in the sync table settings">
 
 
-
 ## Simple options
 
 The simplest way to set this up is to set the `autocomplete` property of the parameter to an array of valid options.
@@ -34,8 +33,6 @@ coda.makeParameter({
   autocomplete: ["cow", "pig", "sheep"]
 })
 ```
-
-This option is only available for `String` parameters.
 
 
 ## Custom labels
