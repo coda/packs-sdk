@@ -373,7 +373,16 @@ export interface FetchResponse<T extends any = any> {
   headers: {[header: string]: string | string[] | undefined};
 }
 
+/**
+ * A utility that allows you to make HTTP requests from a pack. The fetcher also
+ * handles applying user authentication credentials to each request, if applicable.
+ *
+ * This is only way a pack is able to make HTTP requests, as using other libraries is unsupported.
+ */
 export interface Fetcher {
+  /**
+   * Makes an HTTP request.
+   */
   fetch<T = any>(request: FetchRequest): Promise<FetchResponse<T>>;
 }
 
@@ -382,9 +391,26 @@ export interface TemporaryBlobStorage {
   storeBlob(blobData: Buffer, contentType: string, opts?: {expiryMs?: number}): Promise<string>;
 }
 
+/**
+ * Information about the current sync, part of the {@link SyncExecutionContext} passed to the
+ * `execute` function of every sync formula.
+ */
 export interface Sync {
+  /**
+   * The continuation that was returned from the prior sync invocation. The is the exact
+   * value returned in the `continuation` property of result of the prior sync.
+   */
   continuation?: Continuation;
+  /**
+   * The schema of this sync table, if this is a dynamic sync table. It may be useful to have
+   * access to the dynamically-generated schema of the table instance in order to construct
+   * the response for a dynamic sync table's `execute` function.
+   */
   schema?: ArraySchema;
+  /**
+   * The dynamic URL that backs this sync table, if this is a dynamic sync table.
+   * The dynamic URL is likely necessary for determining which API resources to fetch.
+   */
   dynamicUrl?: string;
 }
 
@@ -403,20 +429,59 @@ export interface InvocationLocation {
   docId?: string;
 }
 
+/**
+ * An object passed to the `execute` function of every formula invocation
+ * with information and utilities for handling the invocation. In particular,
+ * this contains the {@link Fetcher}, which is used for making HTTP requests.
+ */
 export interface ExecutionContext {
+  /**
+   * The {@link Fetcher} used for making HTTP requests.
+   */
   readonly fetcher: Fetcher;
+  /**
+   * A utility to fetch files and images that require the pack user's authentication.
+   * See {@link TemporaryBlobStorage}.
+   */
   readonly temporaryBlobStorage: TemporaryBlobStorage;
+  /**
+   * The base endpoint URL for the user's account, only if applicable. See {@link requiresEndpointUrl}.
+   *
+   * If the API URLs are variable based on the user account, you will need this endpoint
+   * to construct URLs to use with the fetcher. Alternatively, you can use relative URLs
+   * (e.g. "/api/entity") and Coda will include the endpoint for you automatically.
+   */
   readonly endpoint?: string;
+  /**
+   * Information about the Coda environment and doc this formula was invoked from.
+   * This is mostly for Coda internal use and we do not recommend relying on it.
+   */
   readonly invocationLocation: InvocationLocation;
+  /**
+   * The timezone of the doc from which this formula was invoked.
+   */
   readonly timezone: string;
-  // An arbitrary token scoped to only this request invocation.readonly.
-  // Used for things like naming template parameters that will be replaced
-  // by the fetcher in secure way to prevent parameter injection attacks.
+  /**
+   * A random token scoped to only this request invocation.
+   * This is a unique identifier for the invocation, and in particular used with
+   * {@link AuthenticationType.Custom} for naming template parameters that will be
+   * replaced by the fetcher in secure way.
+   */
   readonly invocationToken: string;
+  /**
+   * Information about state of the current sync. Only populated if this is a sync table formula.
+   */
   readonly sync?: Sync;
 }
 
+/**
+ * Sub-class of {@link ExecutionContext} that is passed to the `execute` function of every
+ * sync formula invocation. The only different is that the presence of the `sync` property
+ */
 export interface SyncExecutionContext extends ExecutionContext {
+  /**
+   * Information about state of the current sync.
+   */
   readonly sync: Sync;
 }
 
