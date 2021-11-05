@@ -397,6 +397,9 @@ export interface PackFormulas {
   readonly [namespace: string]: Formula[];
 }
 
+/**
+ * Base type for the inputs for creating a pack formula.
+ */
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult>
   extends CommonPackFormulaDef<ParamsT> {
   execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
@@ -499,11 +502,26 @@ export function isSyncPackFormula(fn: BaseFormula<ParamDefs, any>): fn is Generi
   return Boolean((fn as GenericSyncFormula).isSyncFormula);
 }
 
+/**
+ * The return value from the formula that implements a sync table. Each sync formula invocation
+ * returns one reasonable size page of results. The formula may also return a continuation, indicating
+ * that the sync formula should be invoked again to get a next page of results. Sync functions
+ * are called in a loop until there is no continuation returned.
+ */
 export interface SyncFormulaResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+  /** The list of results from this page. */
   result: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>;
+  /**
+   * A marker indicating where the next sync formula invocation should pick up to get the next page of results.
+   * The contents of this object are entirely of your choosing. Sync formulas are called in a loop
+   * until there is no continuation returned.
+   */
   continuation?: Continuation;
 }
 
+/**
+ * Inputs for creating the formula that implements a sync table.
+ */
 export interface SyncFormulaDef<
   K extends string,
   L extends string,
@@ -820,7 +838,33 @@ export interface MetadataFormulaObjectResultType {
  */
 export type MetadataContext = Record<string, any>;
 
+/**
+ * The type of values that can be returned from a {@link MetadataFormula}.
+ */
 export type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
+/**
+ * A formula that returns metadata relating to a core pack building block, like a sync table,
+ * a formula parameter, or a user account. Examples include {@link getSchema}, {@link getConnectionName},
+ * and {@link autocomplete}.
+ *
+ * Many pack building blocks make use of supporting features that often require JavaScript
+ * or an API request to implement. For example, fetching the list of available autocomplete
+ * options for a formula parameter often requires making an API call. The logic to implement this
+ * and the context required, like a {@link Fetcher} is very similar to that of a pack formula itself,
+ * so metadata formulas intentionally resemble regular formulas.
+ *
+ * A variety of tasks like those mentioned above can all be accomplished with formulas that
+ * share the same structure, so all of these supporting features are defined as `MetadataFormulas`.
+ * You typically do not need to define a `MetadataFormula` explicitly, but rather can simply define
+ * the JavaScript function that implements the formula. Coda will wrap this function with the necessary
+ * formula boilerplate to make it look like a complete Coda formula.
+ *
+ * All metadata functions are passed an {@link ExecutionContext} as the first parameter,
+ * and the optional second parameter is a string whose purpose and value varies depending on
+ * the use case. For example, a metadata formula that implements parameter autocomplete will
+ * be passed the user's current search if the user has started typing to search for a result.
+ * Not all metadata formulas make use of this second parameter.
+ */
 export type MetadataFormula = BaseFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any> & {
   schema?: any;
 };
@@ -859,11 +903,37 @@ export function makeMetadataFormula(
   });
 }
 
+/**
+ * A result from a parameter autocomplete function that pairs a UI display value with
+ * the underlying option that will be used in the formula when selected.
+ */
 export interface SimpleAutocompleteOption {
+  /** Text that will be displayed to the user in UI for this option. */
   display: string;
+  /** The actual value that will get used in the formula if this option is selected. */
   value: string | number;
 }
 
+/**
+ * Utility to search over an array of autocomplete results and return only those that
+ * match the given search string.
+ *
+ * You can do this yourself but this function helps simplify many common scenarios.
+ * Note that if you have a hardcoded list of autocomplete options, you can simply specify
+ * them directly as a list, you need not actually implement an autocomplete function.
+ *
+ * The primary use case here is fetching a list of all possible results from an API
+ * and then refining them using the user's current search string.
+ *
+ * @example
+ * ```
+ * autocomplete: async function(context, search) {
+ *   const response = await context.fetcher.fetch({method: "GET", url: "/api/entities"});
+ *   const allOptions = response.body.entities.map(entity => entity.name);
+ *   return coda.simpleAutocomplete(search, allOptions);
+ * }
+ * ```
+ */
 export function simpleAutocomplete(
   search: string | undefined,
   options: Array<string | number | SimpleAutocompleteOption>,
