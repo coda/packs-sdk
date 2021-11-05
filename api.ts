@@ -603,15 +603,15 @@ export function makeFormula<
   let formula: V2PackFormula<ParamDefsT, SchemaT>;
   switch (fullDefinition.resultType) {
     case ValueType.String: {
-      // very strange ts knows that fullDefinition.codaType is StringHintTypes but doesn't know if
-      // fullDefinition is StringFormulaDefV2.
-      const codaType = 'codaType' in fullDefinition ? fullDefinition.codaType : undefined;
-      if ('codaType' in fullDefinition) {
-        delete fullDefinition.codaType;
-      }
       const formulaSchema = 'schema' in fullDefinition ? fullDefinition.schema : undefined;
 
-      const {onError: _, resultType: unused, ...rest} = fullDefinition as StringFormulaDefV2<ParamDefsT>;
+      // very strange ts knows that fullDefinition.codaType is StringHintTypes but doesn't know if
+      // fullDefinition is StringFormulaDefV2.
+      const def: StringFormulaDefV2<ParamDefsT> = {
+        ...fullDefinition,
+        codaType: 'codaType' in fullDefinition ? fullDefinition.codaType : undefined,
+      };
+      const {onError: _, resultType: unused, codaType, ...rest} = def;
       const stringFormula: StringPackFormula<ParamDefsT> = {
         ...rest,
         resultType: Type.string,
@@ -621,13 +621,13 @@ export function makeFormula<
       break;
     }
     case ValueType.Number: {
-      const codaType = 'codaType' in fullDefinition ? fullDefinition.codaType : undefined;
-      if ('codaType' in fullDefinition) {
-        delete fullDefinition.codaType;
-      }
       const formulaSchema = 'schema' in fullDefinition ? fullDefinition.schema : undefined;
 
-      const {onError: _, resultType: unused, ...rest} = fullDefinition as NumericFormulaDefV2<ParamDefsT>;
+      const def: NumericFormulaDefV2<ParamDefsT> = {
+        ...fullDefinition,
+        codaType: 'codaType' in fullDefinition ? fullDefinition.codaType : undefined,
+      };
+      const {onError: _, resultType: unused, codaType, ...rest} = def;
       const numericFormula: NumericPackFormula<ParamDefsT> = {
         ...rest,
         resultType: Type.number,

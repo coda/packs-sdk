@@ -6,6 +6,8 @@ import type {MetadataFormulaDef} from '../api';
 import type {PackDefinitionBuilder} from '../builder';
 import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
+import type {StringPackFormula} from '../api';
+import {ValueHintType} from '..';
 import {ValueType} from '../schema';
 import {makeMetadataFormula} from '../api';
 import {makeObjectSchema} from '../schema';
@@ -287,6 +289,23 @@ describe('Builder', () => {
       assert.equal(syncTable.getDisplayUrl.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.getSchema.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.listDynamicUrls!.connectionRequirement, ConnectionRequirement.Optional);
+    });
+
+    it('omits codaType as a formula property but preserves it in the schema definition', () => {
+      pack.addFormula({
+        resultType: ValueType.String,
+        codaType: ValueHintType.Html,
+        name: 'MyFormula',
+        description: 'My description.',
+        parameters: [],
+        execute: async ([]) => {
+          return ``;
+        },
+      });
+
+      const formula = pack.formulas[0];
+      assert.isUndefined((formula as any).codaType);
+      assert.equal((formula as unknown as StringPackFormula<any>).schema?.codaType, ValueHintType.Html);
     });
   });
 });
