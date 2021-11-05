@@ -966,7 +966,7 @@ export interface Fetcher {
 }
 /**
  * A utility for temporarily storing files and images that either require authentication
- * or are too large to store inline.
+ * or are too large to return inline.
  *
  * When syncing data from certain APIs, a response object may include the URL of a file or
  * image that can only be downloaded with the user's authentication credentials. Normally,
