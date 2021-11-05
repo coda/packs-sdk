@@ -48,7 +48,7 @@ function compileExamples() {
     const content = getContentFile(example.contentFile);
     const compiledExampleSnippets = compileExampleSnippets(example);
     let exampleFooterLink = example.linkData.url;
-    let learnMoreLink;
+    let learnMoreLink: string | undefined;
     if (example.linkData.type === UrlType.SdkReferencePath) {
       if (!isValidReferencePath(exampleFooterLink!)) {
         throw new Error(`${exampleFooterLink} is not a valid path`);

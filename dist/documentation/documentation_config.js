@@ -251,7 +251,7 @@ exports.Examples = [
             },
             {
                 name: 'No parameters',
-                content: 'A formula without any parameters. This sample return the name of the current day of the week.',
+                content: 'A formula without any parameters. This sample returns the name of the current day of the week.',
                 codeFile: './examples/parameter/weekday.ts',
             },
             {

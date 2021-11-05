@@ -16,7 +16,7 @@ TODO
 
 ## Naming
 
-The name of a formula can only contain the letters, numbers, and underscores. By convention these names should by written in upper camel case, like `DoSomethingCool`.
+The name of a formula can only contain the letters, numbers, and underscores. This restriction exists to ensure that custom formulas are compatible with the Coda Formula Language. By convention formula names are written in upper camel case, like `DoSomethingCool`.
 
 Formula names must be unique within a Pack, but can be the same as built-in formulas or those in other Packs. When a doc has access to multiple formulas with the same name the Pack's icon is used to distinguish them.
 
@@ -29,8 +29,6 @@ Formulas can accept parameters, which is the primary way for them to access data
 
 
 ## Results
-
-Except [action formulas][actions] that power buttons and automation, all formulas must return a result.
 
 TODO
 

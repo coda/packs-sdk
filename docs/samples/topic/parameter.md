@@ -20,7 +20,7 @@ coda.makeParameter({
 });
 ```
 ## No parameters
-A formula without any parameters. This sample return the name of the current day of the week.
+A formula without any parameters. This sample returns the name of the current day of the week.
 
 ```ts
 import * as coda from "@codahq/packs-sdk";
@@ -111,7 +111,8 @@ pack.addFormula({
   execute: async function ([start, ...varargs], context) {
     let result = start;
     while (varargs.length > 0) {
-      let label; let step;
+      let label;
+      let step;
       // Pull the first set of varargs off the list, and leave the rest.
       [label, step, ...varargs] = varargs;
       result += ` --${label}--> ${step}`;
