@@ -47,7 +47,7 @@ wish to make an unauthenticated supporting request as part of a formula implemen
 
 #### Defined in
 
-[api_types.ts:403](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L403)
+[api_types.ts:404](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L404)
 
 ___
 
@@ -89,11 +89,12 @@ ___
 
 Indicates that you expect the response to be binary data, instructing Coda
 not to attempt to parse the response in any way. Otherwise, Coda may attempt
-to parse the response as a JSON object.
+to parse the response as a JSON object. If true, [FetchResponse.body](FetchResponse.md#body)
+will be a NodeJS Buffer.
 
 #### Defined in
 
-[api_types.ts:397](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L397)
+[api_types.ts:398](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L398)
 
 ___
 

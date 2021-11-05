@@ -23,12 +23,12 @@ or if the data is JSON-parseable, this will be a parsed JavaScript object.
 Similarly, if the response headers are text/xml or application/xml, this will be a parsed
 JavaScript object using the `xml2js` library.
 
-If implicit parsing is undesirable, you may use [isBinaryResponse](FetchRequest.md#isbinaryresponse) on the request
-to disable any parsing.
+If implicit parsing is undesirable, you may consider using [isBinaryResponse](FetchRequest.md#isbinaryresponse) on the request
+to disable any parsing. Note however that this will result in the body being a NodeJS Buffer.
 
 #### Defined in
 
-[api_types.ts:425](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L425)
+[api_types.ts:426](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L426)
 
 ___
 
@@ -44,7 +44,7 @@ HTTP response headers. The contents of many headers will be redacted for securit
 
 #### Defined in
 
-[api_types.ts:429](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L429)
+[api_types.ts:430](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L430)
 
 ___
 
@@ -56,4 +56,4 @@ The HTTP status code, e.g. `200`.
 
 #### Defined in
 
-[api_types.ts:413](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L413)
+[api_types.ts:414](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L414)

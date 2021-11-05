@@ -392,7 +392,8 @@ export interface FetchRequest {
   /**
    * Indicates that you expect the response to be binary data, instructing Coda
    * not to attempt to parse the response in any way. Otherwise, Coda may attempt
-   * to parse the response as a JSON object.
+   * to parse the response as a JSON object. If true, {@link FetchResponse.body}
+   * will be a NodeJS Buffer.
    */
   isBinaryResponse?: boolean;
   /**
@@ -419,8 +420,8 @@ export interface FetchResponse<T extends any = any> {
    * Similarly, if the response headers are text/xml or application/xml, this will be a parsed
    * JavaScript object using the `xml2js` library.
    *
-   * If implicit parsing is undesirable, you may use {@link isBinaryResponse} on the request
-   * to disable any parsing.
+   * If implicit parsing is undesirable, you may consider using {@link isBinaryResponse} on the request
+   * to disable any parsing. Note however that this will result in the body being a NodeJS Buffer.
    */
   body?: T;
   /**
