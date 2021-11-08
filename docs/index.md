@@ -5,6 +5,12 @@ hide:
   - toc
 ---
 
-# Welcome
+# Learn how to build your own Pack
 
-Check out the [SDK reference](/packs-sdk/reference/sdk).
+The Coda Pack SDK provides the components and tools you can use to build your own Packs.
+
+[Get Started][get_started]{ .md-button .md-button--primary }
+
+
+[get_started]: get-started/web
+[beta]: https://coda.io/packsbeta
