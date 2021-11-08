@@ -2,7 +2,7 @@
 title: Schemas
 ---
 
-# Structuring data with Schemas
+# Structuring data with schemas
 
 <!-- TODO: Migrate the content to this repo. -->
 [See here][doc] for more information on how to define schemas.
