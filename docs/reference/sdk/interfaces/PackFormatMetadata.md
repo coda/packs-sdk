@@ -21,7 +21,7 @@ Omit.formulaName
 
 #### Defined in
 
-[types.ts:606](https://github.com/coda/packs-sdk/blob/main/types.ts#L606)
+[types.ts:685](https://github.com/coda/packs-sdk/blob/main/types.ts#L685)
 
 ___
 
@@ -37,7 +37,7 @@ Omit.formulaNamespace
 
 #### Defined in
 
-[types.ts:601](https://github.com/coda/packs-sdk/blob/main/types.ts#L601)
+[types.ts:680](https://github.com/coda/packs-sdk/blob/main/types.ts#L680)
 
 ___
 
@@ -53,7 +53,7 @@ Omit.hasNoConnection
 
 #### Defined in
 
-[types.ts:608](https://github.com/coda/packs-sdk/blob/main/types.ts#L608)
+[types.ts:687](https://github.com/coda/packs-sdk/blob/main/types.ts#L687)
 
 ___
 
@@ -70,7 +70,7 @@ Omit.instructions
 
 #### Defined in
 
-[types.ts:613](https://github.com/coda/packs-sdk/blob/main/types.ts#L613)
+[types.ts:692](https://github.com/coda/packs-sdk/blob/main/types.ts#L692)
 
 ___
 
@@ -96,7 +96,7 @@ Omit.name
 
 #### Defined in
 
-[types.ts:599](https://github.com/coda/packs-sdk/blob/main/types.ts#L599)
+[types.ts:678](https://github.com/coda/packs-sdk/blob/main/types.ts#L678)
 
 ___
 
@@ -112,4 +112,4 @@ Omit.placeholder
 
 #### Defined in
 
-[types.ts:622](https://github.com/coda/packs-sdk/blob/main/types.ts#L622)
+[types.ts:701](https://github.com/coda/packs-sdk/blob/main/types.ts#L701)

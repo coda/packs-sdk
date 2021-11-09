@@ -31,7 +31,7 @@ BaseAuthentication.defaultConnectionType
 
 #### Defined in
 
-[types.ts:212](https://github.com/coda/packs-sdk/blob/main/types.ts#L212)
+[types.ts:221](https://github.com/coda/packs-sdk/blob/main/types.ts#L221)
 
 ___
 
@@ -44,7 +44,7 @@ order to install the pack.
 
 #### Defined in
 
-[types.ts:266](https://github.com/coda/packs-sdk/blob/main/types.ts#L266)
+[types.ts:275](https://github.com/coda/packs-sdk/blob/main/types.ts#L275)
 
 ___
 
@@ -64,7 +64,7 @@ BaseAuthentication.endpointDomain
 
 #### Defined in
 
-[types.ts:234](https://github.com/coda/packs-sdk/blob/main/types.ts#L234)
+[types.ts:243](https://github.com/coda/packs-sdk/blob/main/types.ts#L243)
 
 ___
 
@@ -78,7 +78,7 @@ BaseAuthentication.getConnectionName
 
 #### Defined in
 
-[types.ts:204](https://github.com/coda/packs-sdk/blob/main/types.ts#L204)
+[types.ts:213](https://github.com/coda/packs-sdk/blob/main/types.ts#L213)
 
 ___
 
@@ -92,7 +92,7 @@ BaseAuthentication.getConnectionUserId
 
 #### Defined in
 
-[types.ts:205](https://github.com/coda/packs-sdk/blob/main/types.ts#L205)
+[types.ts:214](https://github.com/coda/packs-sdk/blob/main/types.ts#L214)
 
 ___
 
@@ -108,7 +108,7 @@ BaseAuthentication.instructionsUrl
 
 #### Defined in
 
-[types.ts:217](https://github.com/coda/packs-sdk/blob/main/types.ts#L217)
+[types.ts:226](https://github.com/coda/packs-sdk/blob/main/types.ts#L226)
 
 ___
 
@@ -125,7 +125,7 @@ BaseAuthentication.postSetup
 
 #### Defined in
 
-[types.ts:240](https://github.com/coda/packs-sdk/blob/main/types.ts#L240)
+[types.ts:249](https://github.com/coda/packs-sdk/blob/main/types.ts#L249)
 
 ___
 
@@ -144,7 +144,7 @@ BaseAuthentication.requiresEndpointUrl
 
 #### Defined in
 
-[types.ts:225](https://github.com/coda/packs-sdk/blob/main/types.ts#L225)
+[types.ts:234](https://github.com/coda/packs-sdk/blob/main/types.ts#L234)
 
 ___
 
@@ -158,7 +158,7 @@ as a shared account that allows actions.
 
 #### Defined in
 
-[types.ts:272](https://github.com/coda/packs-sdk/blob/main/types.ts#L272)
+[types.ts:281](https://github.com/coda/packs-sdk/blob/main/types.ts#L281)
 
 ___
 
@@ -168,4 +168,4 @@ ___
 
 #### Defined in
 
-[types.ts:261](https://github.com/coda/packs-sdk/blob/main/types.ts#L261)
+[types.ts:270](https://github.com/coda/packs-sdk/blob/main/types.ts#L270)

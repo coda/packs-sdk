@@ -12,7 +12,8 @@ export {newPack} from './builder';
 export {PackDefinitionBuilder} from './builder';
 
 // Authentication types
-export type {AWSSignature4Authentication} from './types';
+export type {AWSAccessKeyAuthentication} from './types';
+export type {AWSAssumeRoleAuthentication} from './types';
 export type {CodaApiBearerTokenAuthentication} from './types';
 export type {CustomAuthentication} from './types';
 export type {CustomHeaderTokenAuthentication} from './types';

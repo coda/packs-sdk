@@ -19,7 +19,20 @@ Coda REST API.
 
 #### Defined in
 
-[types.ts:110](https://github.com/coda/packs-sdk/blob/main/types.ts#L110)
+[types.ts:115](https://github.com/coda/packs-sdk/blob/main/types.ts#L115)
+
+___
+
+### Custom
+
+• **Custom** = `"Custom"`
+
+Authenticate in a custom way by having one or more arbitrary secret values inserted into the request URL, body,
+headers, or the form data using template replacement. See [CustomAuthentication](../interfaces/CustomAuthentication.md).
+
+#### Defined in
+
+[types.ts:86](https://github.com/coda/packs-sdk/blob/main/types.ts#L86)
 
 ___
 
@@ -28,7 +41,7 @@ ___
 • **CustomHeaderToken** = `"CustomHeaderToken"`
 
 Authenticate using an HTTP header with a custom name and token prefix that you specify.
-The header name is defined in the {@link headerName} property.
+The header name is defined in the [headerName](../interfaces/CustomHeaderTokenAuthentication.md#headername) property.
 
 #### Defined in
 
@@ -55,7 +68,7 @@ ___
 Authenticate using multiple tokens, each passed as a different URL parameter, e.g.
 https://example.com/api?param1=token1&param2=token2
 
-The parameter names are defined in the [params](../interfaces/ExternalPackVersionMetadata.md#params) array property.
+The parameter names are defined in the [params](../interfaces/CustomAuthentication.md#params) array property.
 
 #### Defined in
 
@@ -98,7 +111,7 @@ ___
 Authenticate using a token that is passed as a URL parameter with each request, e.g.
 https://example.com/api?paramName=token
 
-The parameter name is defined in the {@link paramName} property.
+The parameter name is defined in the [paramName](../interfaces/QueryParamTokenAuthentication.md#paramname) property.
 
 #### Defined in
 

@@ -10,4 +10,4 @@ A pack or formula which does not use authentication.
 
 #### Defined in
 
-[types.ts:141](https://github.com/coda/packs-sdk/blob/main/types.ts#L141)
+[types.ts:150](https://github.com/coda/packs-sdk/blob/main/types.ts#L150)
