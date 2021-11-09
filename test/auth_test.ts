@@ -843,6 +843,243 @@ describe('Auth', () => {
       it('systemAuth', () => execTest(createPackWithSystemAuth(auth)));
     });
 
+    describe(`${AuthenticationType.Custom}`, async () => {
+      const auth: Authentication = {
+        type: AuthenticationType.Custom,
+        params: [
+          {name: 'secretValue', description: 'Description for param1'},
+          {name: 'secretToken', description: 'Description for param2'},
+        ],
+      };
+      const execTest = async (pack: PackDefinition) => {
+        setupReadline(['secret-value', 'secret-token']);
+        doSetupAuth(pack);
+
+        await executeFetch(pack, 'https://example.com', {result: 'hello'});
+
+        sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+          body: undefined,
+          form: undefined,
+          headers: {
+            'User-Agent': 'Coda-Test-Server-Fetcher',
+          },
+          method: 'GET',
+          url: 'https://example.com',
+          isBinaryResponse: undefined,
+        });
+      };
+      it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
+      it('systemAuth', () => execTest(createPackWithSystemAuth(auth)));
+
+      it('template variable replacement in string body', async () => {
+        setupReadline(['secret-value', 'secret-token']);
+        const pack = createPackWithDefaultAuth(auth, {
+          networkDomains: ['some-url.com'],
+          formulas: [
+            makeFormula({
+              resultType: ValueType.String,
+              name: 'FormulaWithTemplateReplacement',
+              description: '',
+              parameters: [],
+              execute: async (_, context) => {
+                await context.fetcher.fetch({
+                  method: 'GET',
+                  url: 'https://some-url.com',
+                  isBinaryResponse: undefined,
+                  body: `some-body {{secretValue-${context.invocationToken}}} {{secretToken-${context.invocationToken}}}`,
+                });
+                return '';
+              },
+            }),
+          ],
+        });
+        doSetupAuth(pack);
+
+        mockMakeRequest.returns({
+          statusCode: 200,
+          body: JSON.stringify({}),
+          headers: {
+            'content-type': 'application/json',
+          },
+        });
+
+        await executeFormulaFromPackDef(pack, 'FormulaWithTemplateReplacement', [], undefined, undefined, {
+          useRealFetcher: true,
+          manifestPath: MANIFEST_PATH,
+        });
+
+        sinon.assert.calledOnce(mockMakeRequest);
+        assert.equal(mockMakeRequest.getCall(0).args[0].body, 'some-body secret-value secret-token');
+      });
+
+      it('template variable replacement in headers and form', async () => {
+        setupReadline(['secret-value', 'secret-token']);
+
+        const pack = createPackWithDefaultAuth(auth, {
+          networkDomains: ['some-url.com'],
+          formulas: [
+            makeFormula({
+              resultType: ValueType.String,
+              name: 'FormulaWithTemplateReplacement',
+              description: '',
+              parameters: [],
+              execute: async (_, context) => {
+                await context.fetcher.fetch({
+                  method: 'GET',
+                  url: 'https://some-url.com',
+                  isBinaryResponse: undefined,
+                  headers: {
+                    'X-Some-Header': `some-header {{secretValue-${context.invocationToken}}}`,
+                    'X-Some-Header-2': `some-header  {{secretToken-${context.invocationToken}}}`,
+                  },
+                });
+                return '';
+              },
+            }),
+          ],
+        });
+        doSetupAuth(pack);
+
+        mockMakeRequest.returns({
+          statusCode: 200,
+          body: JSON.stringify({}),
+          headers: {
+            'content-type': 'application/json',
+          },
+        });
+
+        await executeFormulaFromPackDef(pack, 'FormulaWithTemplateReplacement', [], undefined, undefined, {
+          useRealFetcher: true,
+          manifestPath: MANIFEST_PATH,
+        });
+
+        sinon.assert.calledOnce(mockMakeRequest);
+        assert.deepEqual(mockMakeRequest.getCall(0).args[0].headers, {
+          'User-Agent': 'Coda-Test-Server-Fetcher',
+          'X-Some-Header': `some-header secret-value`,
+          'X-Some-Header-2': 'some-header  secret-token',
+        });
+      });
+
+      it('template variable replacement in url', async () => {
+        setupReadline(['secret value', 'secret token']);
+
+        const pack = createPackWithDefaultAuth(auth, {
+          networkDomains: ['some-url.com'],
+          formulas: [
+            makeFormula({
+              resultType: ValueType.String,
+              name: 'FormulaWithTemplateReplacement',
+              description: '',
+              parameters: [],
+              execute: async (_, context) => {
+                await context.fetcher.fetch({
+                  method: 'GET',
+                  url: `https://some-url.com/{{secretValue-${context.invocationToken}}}/{{secretToken-${
+                    context.invocationToken
+                  }}}?secretToken=${encodeURIComponent(`{{secretToken-${context.invocationToken}}}`)}`,
+                  isBinaryResponse: undefined,
+                });
+                return '';
+              },
+            }),
+          ],
+        });
+        doSetupAuth(pack);
+
+        mockMakeRequest.returns({
+          statusCode: 200,
+          body: JSON.stringify({}),
+          headers: {
+            'content-type': 'application/json',
+          },
+        });
+
+        await executeFormulaFromPackDef(pack, 'FormulaWithTemplateReplacement', [], undefined, undefined, {
+          useRealFetcher: true,
+          manifestPath: MANIFEST_PATH,
+        });
+
+        sinon.assert.calledOnce(mockMakeRequest);
+        assert.equal(
+          mockMakeRequest.getCall(0).args[0].url,
+          `https://some-url.com/secret%20value/secret%20token?secretToken=secret%20token`,
+        );
+      });
+
+      it('template variable replacement in json body', async () => {
+        setupReadline(['secret-value', 'secret-token']);
+        const pack = createPackWithDefaultAuth(auth, {
+          networkDomains: ['some-url.com'],
+          formulas: [
+            makeFormula({
+              resultType: ValueType.String,
+              name: 'FormulaWithTemplateReplacement',
+              description: '',
+              parameters: [],
+              execute: async (_, context) => {
+                await context.fetcher.fetch({
+                  method: 'GET',
+                  url: 'https://some-url.com',
+                  isBinaryResponse: undefined,
+                  body: JSON.stringify({
+                    foo: 'bar',
+                    username: `{{secretValue-${context.invocationToken}}}`,
+                    password: `{{secretToken-${context.invocationToken}}}`,
+                  }),
+                });
+                return '';
+              },
+            }),
+          ],
+        });
+        doSetupAuth(pack);
+
+        mockMakeRequest.returns({
+          statusCode: 200,
+          body: JSON.stringify({}),
+          headers: {
+            'content-type': 'application/json',
+          },
+        });
+
+        await executeFormulaFromPackDef(pack, 'FormulaWithTemplateReplacement', [], undefined, undefined, {
+          useRealFetcher: true,
+          manifestPath: MANIFEST_PATH,
+        });
+
+        sinon.assert.calledOnce(mockMakeRequest);
+        assert.equal(
+          mockMakeRequest.getCall(0).args[0].body,
+          '{"foo":"bar","username":"secret-value","password":"secret-token"}',
+        );
+      });
+    });
+
+    describe(`${AuthenticationType.Custom}, no auth configured`, async () => {
+      const auth: Authentication = {
+        type: AuthenticationType.Custom,
+        params: [
+          {name: 'secretValue', description: 'Description for param1'},
+          {name: 'secretToken', description: 'Description for param2'},
+        ],
+      };
+
+      const execTest = async (pack: PackDefinition) => {
+        await testHelper.willBeRejectedWith(
+          executeFetch(pack, '/foo?bar=blah', {result: 'hello'}),
+          new RegExp(
+            'Custom authentication is required for this pack, but no local credentials were found. ' +
+              'Run "coda auth path/to/pack/manifest to set up credentials.',
+          ),
+        );
+
+        sinon.assert.notCalled(mockMakeRequest);
+      };
+      it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
+      it('systemAuth', () => execTest(createPackWithSystemAuth(auth)));
+    });
+
     it('disableAuthentication forces auth headers not to be applied', async () => {
       const pack = createFakePack({
         defaultAuthentication: {

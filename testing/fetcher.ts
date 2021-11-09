@@ -44,6 +44,11 @@ function getTemplateReplacementValueForKey(key: string, invocationToken: string)
   return `{{${key}-${invocationToken}}}`;
 }
 
+// Mirrors our utility replaceAll function in `coda` repo.
+function replaceAll(str: string, find: string, replace: string): string {
+  return str.split(find).join(replace);
+}
+
 export class AuthenticatingFetcher implements Fetcher {
   private readonly _updateCredentialsCallback: (newCredentials: Credentials) => void | undefined;
   private readonly _authDef: Authentication | undefined;
@@ -245,32 +250,37 @@ export class AuthenticatingFetcher implements Fetcher {
 
         Object.entries(params).forEach(([key, value]) => {
           if (urlWithSubstitutions) {
-            urlWithSubstitutions = urlWithSubstitutions.replaceAll(
+            urlWithSubstitutions = replaceAll(
+              urlWithSubstitutions,
               getTemplateReplacementValueForKey(key, this._invocationToken),
               encodeURIComponent(value),
             );
-            urlWithSubstitutions = urlWithSubstitutions.replaceAll(
+            urlWithSubstitutions = replaceAll(
+              urlWithSubstitutions,
               encodeURIComponent(getTemplateReplacementValueForKey(key, this._invocationToken)),
               encodeURIComponent(value),
             );
           }
 
           if (bodyWithSubstitutions) {
-            bodyWithSubstitutions = bodyWithSubstitutions.replaceAll(
+            bodyWithSubstitutions = replaceAll(
+              bodyWithSubstitutions,
               getTemplateReplacementValueForKey(key, this._invocationToken),
               value,
             );
           }
 
           if (formWithSubstitutions) {
-            formWithSubstitutions = formWithSubstitutions.replaceAll(
+            formWithSubstitutions = replaceAll(
+              formWithSubstitutions,
               getTemplateReplacementValueForKey(key, this._invocationToken),
               value,
             );
           }
 
           if (headersWithSubstitutions) {
-            headersWithSubstitutions = headersWithSubstitutions.replaceAll(
+            headersWithSubstitutions = replaceAll(
+              headersWithSubstitutions,
               getTemplateReplacementValueForKey(key, this._invocationToken),
               value,
             );
@@ -280,8 +290,8 @@ export class AuthenticatingFetcher implements Fetcher {
         return {
           url: urlWithSubstitutions,
           body: bodyWithSubstitutions,
-          form: JSON.parse(formWithSubstitutions),
-          headers: JSON.parse(headersWithSubstitutions),
+          form: formWithSubstitutions ? JSON.parse(formWithSubstitutions) : undefined,
+          headers: headersWithSubstitutions ? JSON.parse(headersWithSubstitutions) : undefined,
         };
       }
       case AuthenticationType.QueryParamToken: {

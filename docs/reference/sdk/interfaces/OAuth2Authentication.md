@@ -147,7 +147,7 @@ ___
 
 ### postSetup
 
-• `Optional` **postSetup**: `SetEndpoint`[]
+• `Optional` **postSetup**: [`SetEndpoint`](SetEndpoint.md)[]
 
 One or more setup steps to run after the user has set up the account, before completing installation of the pack.
 This is not common.

@@ -452,8 +452,8 @@ export interface CustomAuthParameter {
  * user or system authentication). When constructing a network request, you may indicate where these values should
  * be inserted by our fetcher service using the syntax described below (similar to templating engines).
  *
- * To insert the credentials, simply put `{{<paramName>-<invocationToken>}}` as a string anywhere in your request,
- * where `<paramName>` is the name of the parameter defined in the params mapping and `<invocationToken>` is the
+ * To insert the credentials, simply put `{{\<paramName\>-\<invocationToken\>}}` as a string anywhere in your request,
+ * where `\<paramName\>` is the name of the parameter defined in the params mapping and `\<invocationToken\>` is the
  * secret invocation-specific token provided within the {@link ExecutionContext}. The invocation
  * token is required for security reasons.
  *

@@ -1,15 +1,12 @@
-# Interface: WebBasicAuthentication
+# Interface: HeaderBearerTokenAuthentication
 
-Authenticate using HTTP Basic authorization. The user provides a username and password
-(sometimes optional) which are included as an HTTP header according to the Basic auth standard.
-
-See https://en.wikipedia.org/wiki/Basic_access_authentication
+Authenticate using an HTTP header of the form `Authorization: Bearer <token>`.
 
 ## Hierarchy
 
 - `BaseAuthentication`
 
-  ↳ **`WebBasicAuthentication`**
+  ↳ **`HeaderBearerTokenAuthentication`**
 
 ## Properties
 
@@ -27,7 +24,7 @@ BaseAuthentication.defaultConnectionType
 
 #### Defined in
 
-[types.ts:216](https://github.com/coda/packs-sdk/blob/main/types.ts#L216)
+[types.ts:212](https://github.com/coda/packs-sdk/blob/main/types.ts#L212)
 
 ___
 
@@ -47,7 +44,7 @@ BaseAuthentication.endpointDomain
 
 #### Defined in
 
-[types.ts:238](https://github.com/coda/packs-sdk/blob/main/types.ts#L238)
+[types.ts:234](https://github.com/coda/packs-sdk/blob/main/types.ts#L234)
 
 ___
 
@@ -61,7 +58,7 @@ BaseAuthentication.getConnectionName
 
 #### Defined in
 
-[types.ts:208](https://github.com/coda/packs-sdk/blob/main/types.ts#L208)
+[types.ts:204](https://github.com/coda/packs-sdk/blob/main/types.ts#L204)
 
 ___
 
@@ -75,7 +72,7 @@ BaseAuthentication.getConnectionUserId
 
 #### Defined in
 
-[types.ts:209](https://github.com/coda/packs-sdk/blob/main/types.ts#L209)
+[types.ts:205](https://github.com/coda/packs-sdk/blob/main/types.ts#L205)
 
 ___
 
@@ -91,7 +88,7 @@ BaseAuthentication.instructionsUrl
 
 #### Defined in
 
-[types.ts:221](https://github.com/coda/packs-sdk/blob/main/types.ts#L221)
+[types.ts:217](https://github.com/coda/packs-sdk/blob/main/types.ts#L217)
 
 ___
 
@@ -108,7 +105,7 @@ BaseAuthentication.postSetup
 
 #### Defined in
 
-[types.ts:244](https://github.com/coda/packs-sdk/blob/main/types.ts#L244)
+[types.ts:240](https://github.com/coda/packs-sdk/blob/main/types.ts#L240)
 
 ___
 
@@ -127,34 +124,14 @@ BaseAuthentication.requiresEndpointUrl
 
 #### Defined in
 
-[types.ts:229](https://github.com/coda/packs-sdk/blob/main/types.ts#L229)
+[types.ts:225](https://github.com/coda/packs-sdk/blob/main/types.ts#L225)
 
 ___
 
 ### type
 
-• **type**: [`WebBasic`](../enums/AuthenticationType.md#webbasic)
+• **type**: [`HeaderBearerToken`](../enums/AuthenticationType.md#headerbearertoken)
 
 #### Defined in
 
-[types.ts:403](https://github.com/coda/packs-sdk/blob/main/types.ts#L403)
-
-___
-
-### uxConfig
-
-• `Optional` **uxConfig**: `Object`
-
-Configuration for labels to show in the UI when the user sets up a new acount.
-
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `placeholderPassword?` | `string` | A placeholder value for the text input where the user will enter a password. |
-| `placeholderUsername?` | `string` | A placeholder value for the text input where the user will enter a username. |
-| `usernameOnly?` | `boolean` | If true, only a username input will be shown to the user. Some services pass API keys in the username field and do not require a password. |
-
-#### Defined in
-
-[types.ts:407](https://github.com/coda/packs-sdk/blob/main/types.ts#L407)
+[types.ts:247](https://github.com/coda/packs-sdk/blob/main/types.ts#L247)

@@ -15,7 +15,7 @@ This should only be used by legacy Coda pack implementations.
 
 ### category
 
-• `Optional` **category**: `PackCategory`
+• `Optional` **category**: [`PackCategory`](../enums/PackCategory.md)
 
 #### Defined in
 
@@ -229,7 +229,7 @@ ___
 
 ### rateLimits
 
-• `Optional` **rateLimits**: `RateLimits`
+• `Optional` **rateLimits**: [`RateLimits`](RateLimits.md)
 
 #### Defined in
 

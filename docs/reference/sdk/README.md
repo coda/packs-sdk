@@ -1,4 +1,4 @@
-# @codahq/packs-sdk
+# 
 
 ## Enumerations
 
@@ -9,6 +9,7 @@
 - [DefaultConnectionType](enums/DefaultConnectionType.md)
 - [DurationUnit](enums/DurationUnit.md)
 - [NetworkConnection](enums/NetworkConnection.md)
+- [PackCategory](enums/PackCategory.md)
 - [ParameterType](enums/ParameterType.md)
 - [PostSetupType](enums/PostSetupType.md)
 - [PrecannedDateRange](enums/PrecannedDateRange.md)
@@ -28,8 +29,12 @@
 - [ArraySchema](interfaces/ArraySchema.md)
 - [ArrayType](interfaces/ArrayType.md)
 - [BooleanSchema](interfaces/BooleanSchema.md)
+- [CodaApiBearerTokenAuthentication](interfaces/CodaApiBearerTokenAuthentication.md)
 - [Continuation](interfaces/Continuation.md)
 - [CurrencySchema](interfaces/CurrencySchema.md)
+- [CustomAuthParameter](interfaces/CustomAuthParameter.md)
+- [CustomAuthentication](interfaces/CustomAuthentication.md)
+- [CustomHeaderTokenAuthentication](interfaces/CustomHeaderTokenAuthentication.md)
 - [DurationSchema](interfaces/DurationSchema.md)
 - [DynamicSyncTableDef](interfaces/DynamicSyncTableDef.md)
 - [EmptyFormulaDef](interfaces/EmptyFormulaDef.md)
@@ -39,10 +44,13 @@
 - [FetchResponse](interfaces/FetchResponse.md)
 - [Fetcher](interfaces/Fetcher.md)
 - [Format](interfaces/Format.md)
+- [HeaderBearerTokenAuthentication](interfaces/HeaderBearerTokenAuthentication.md)
 - [Identity](interfaces/Identity.md)
 - [IdentityDefinition](interfaces/IdentityDefinition.md)
 - [MetadataFormulaObjectResultType](interfaces/MetadataFormulaObjectResultType.md)
+- [MultiQueryParamTokenAuthentication](interfaces/MultiQueryParamTokenAuthentication.md)
 - [Network](interfaces/Network.md)
+- [NoAuthentication](interfaces/NoAuthentication.md)
 - [NumericDateSchema](interfaces/NumericDateSchema.md)
 - [NumericDateTimeSchema](interfaces/NumericDateTimeSchema.md)
 - [NumericSchema](interfaces/NumericSchema.md)
@@ -57,7 +65,11 @@
 - [PackFormulasMetadata](interfaces/PackFormulasMetadata.md)
 - [PackVersionDefinition](interfaces/PackVersionDefinition.md)
 - [ParamDef](interfaces/ParamDef.md)
+- [QueryParamTokenAuthentication](interfaces/QueryParamTokenAuthentication.md)
+- [RateLimit](interfaces/RateLimit.md)
+- [RateLimits](interfaces/RateLimits.md)
 - [ScaleSchema](interfaces/ScaleSchema.md)
+- [SetEndpoint](interfaces/SetEndpoint.md)
 - [SimpleAutocompleteOption](interfaces/SimpleAutocompleteOption.md)
 - [SimpleStringSchema](interfaces/SimpleStringSchema.md)
 - [SliderSchema](interfaces/SliderSchema.md)
@@ -73,6 +85,7 @@
 ## Type aliases
 
 - [Authentication](types/Authentication.md)
+- [AuthenticationDef](types/AuthenticationDef.md)
 - [BasicPackDefinition](types/BasicPackDefinition.md)
 - [DefaultValueType](types/DefaultValueType.md)
 - [ExternalObjectPackFormula](types/ExternalObjectPackFormula.md)
@@ -104,10 +117,13 @@
 - [ParamDefs](types/ParamDefs.md)
 - [ParamValues](types/ParamValues.md)
 - [ParamsList](types/ParamsList.md)
+- [PostSetup](types/PostSetup.md)
 - [Schema](types/Schema.md)
 - [SchemaType](types/SchemaType.md)
 - [StringSchema](types/StringSchema.md)
 - [SystemAuthentication](types/SystemAuthentication.md)
+- [SystemAuthenticationDef](types/SystemAuthenticationDef.md)
+- [SystemAuthenticationTypes](types/SystemAuthenticationTypes.md)
 - [TypedPackFormula](types/TypedPackFormula.md)
 
 ## Functions
