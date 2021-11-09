@@ -274,7 +274,8 @@ export class AuthenticatingFetcher implements Fetcher {
           headers: requestHeaders,
         };
       }
-      case AuthenticationType.AWSSignature4:
+      case AuthenticationType.AWSAccessKey:
+      case AuthenticationType.AWSAssumeRole:
       case AuthenticationType.Various:
         throw new Error('Not yet implemented');
 

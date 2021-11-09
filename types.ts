@@ -80,14 +80,23 @@ export enum AuthenticationType {
    */
   WebBasic = 'WebBasic',
   /**
-   * Authenticate with Amazon Web Services using AWS Signature Version 4.
+   * Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
    * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
    *
    * This is not yet supported.
    *
    * @ignore
    */
-  AWSSignature4 = 'AWSSignature4',
+  AWSAccessKey = 'AWSAccessKey',
+  /**
+   * Authenticate to Amazon Web Services by assuming an IAM role.
+   * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
+   *
+   * This is not yet supported.
+   *
+   * @ignore
+   */
+   AWSAssumeRole = 'AWSAssumeRole',
   /**
    * Authenticate using a Coda REST API token, sent as an HTTP header.
    *
@@ -414,15 +423,28 @@ export interface WebBasicAuthentication extends BaseAuthentication {
 }
 
 /**
- * Authenticate with Amazon Web Services using AWS Signature Version 4.
+ * Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
  * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
  *
  * This is not yet supported.
  *
  * @ignore
  */
-export interface AWSSignature4Authentication extends BaseAuthentication {
-  type: AuthenticationType.AWSSignature4;
+export interface AWSAccessKeyAuthentication extends BaseAuthentication {
+  type: AuthenticationType.AWSAccessKey;
+  service: string;
+}
+
+/**
+ * Authenticate to Amazon Web Services by assuming an IAM role.
+ * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
+ *
+ * This is not yet supported.
+ *
+ * @ignore
+ */
+export interface AWSAssumeRoleAuthentication extends BaseAuthentication {
+  type: AuthenticationType.AWSAssumeRole;
   service: string;
 }
 
@@ -448,7 +470,8 @@ export type Authentication =
   | MultiQueryParamTokenAuthentication
   | OAuth2Authentication
   | WebBasicAuthentication
-  | AWSSignature4Authentication;
+  | AWSAccessKeyAuthentication
+  | AWSAssumeRoleAuthentication;
 
 type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId'> & {
   /**
@@ -489,7 +512,8 @@ export type AuthenticationDef =
   | AsAuthDef<MultiQueryParamTokenAuthentication>
   | AsAuthDef<OAuth2Authentication>
   | AsAuthDef<WebBasicAuthentication>
-  | AsAuthDef<AWSSignature4Authentication>;
+  | AsAuthDef<AWSAccessKeyAuthentication>
+  | AsAuthDef<AWSAssumeRoleAuthentication>;
 
 /**
  * The union of authentication methods that are supported for system authentication,
@@ -501,7 +525,8 @@ export type SystemAuthentication =
   | QueryParamTokenAuthentication
   | MultiQueryParamTokenAuthentication
   | WebBasicAuthentication
-  | AWSSignature4Authentication;
+  | AWSAccessKeyAuthentication
+  | AWSAssumeRoleAuthentication;
 
 /**
  * The union of supported system authentication definitions. These represent simplified
@@ -515,7 +540,8 @@ export type SystemAuthenticationDef =
   | AsAuthDef<QueryParamTokenAuthentication>
   | AsAuthDef<MultiQueryParamTokenAuthentication>
   | AsAuthDef<WebBasicAuthentication>
-  | AsAuthDef<AWSSignature4Authentication>;
+  | AsAuthDef<AWSAccessKeyAuthentication>
+  | AsAuthDef<AWSAssumeRoleAuthentication>;
 
 /**
  * The subset of valid {@link AuthenticationType} enum values that can be used

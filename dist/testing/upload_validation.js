@@ -276,8 +276,13 @@ const defaultAuthenticationValidators = {
         }).optional(),
         ...baseAuthenticationValidators,
     }),
-    [types_1.AuthenticationType.AWSSignature4]: zodCompleteStrictObject({
-        type: zodDiscriminant(types_1.AuthenticationType.AWSSignature4),
+    [types_1.AuthenticationType.AWSAccessKey]: zodCompleteStrictObject({
+        type: zodDiscriminant(types_1.AuthenticationType.AWSAccessKey),
+        service: z.string(),
+        ...baseAuthenticationValidators,
+    }),
+    [types_1.AuthenticationType.AWSAssumeRole]: zodCompleteStrictObject({
+        type: zodDiscriminant(types_1.AuthenticationType.AWSAssumeRole),
         service: z.string(),
         ...baseAuthenticationValidators,
     }),
@@ -291,7 +296,8 @@ const systemAuthenticationTypes = {
     [types_1.AuthenticationType.MultiQueryParamToken]: true,
     [types_1.AuthenticationType.QueryParamToken]: true,
     [types_1.AuthenticationType.WebBasic]: true,
-    [types_1.AuthenticationType.AWSSignature4]: true,
+    [types_1.AuthenticationType.AWSAccessKey]: true,
+    [types_1.AuthenticationType.AWSAssumeRole]: true,
 };
 const systemAuthenticationValidators = Object.entries(defaultAuthenticationValidators)
     .filter(([authType]) => authType in systemAuthenticationTypes)

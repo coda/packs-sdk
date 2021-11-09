@@ -1616,14 +1616,28 @@ describe('Pack metadata Validation', () => {
       await validateJson(metadata);
     });
 
-    it('AWSSignature4', async () => {
+    it('AWSAccessKey', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
-          type: AuthenticationType.AWSSignature4,
+          type: AuthenticationType.AWSAccessKey,
           service: 'some-service',
         },
         systemConnectionAuthentication: {
-          type: AuthenticationType.AWSSignature4,
+          type: AuthenticationType.AWSAccessKey,
+          service: 'some-service',
+        },
+      });
+      await validateJson(metadata);
+    });
+
+    it('AWSAssumeRole', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.AWSAssumeRole,
+          service: 'some-service',
+        },
+        systemConnectionAuthentication: {
+          type: AuthenticationType.AWSAssumeRole,
           service: 'some-service',
         },
       });

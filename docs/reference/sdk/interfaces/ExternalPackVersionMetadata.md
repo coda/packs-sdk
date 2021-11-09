@@ -54,7 +54,7 @@ BasePackVersionMetadata.formulaNamespace
 
 #### Defined in
 
-[types.ts:706](https://github.com/coda/packs-sdk/blob/main/types.ts#L706)
+[types.ts:732](https://github.com/coda/packs-sdk/blob/main/types.ts#L732)
 
 ___
 
@@ -96,7 +96,7 @@ BasePackVersionMetadata.networkDomains
 
 #### Defined in
 
-[types.ts:699](https://github.com/coda/packs-sdk/blob/main/types.ts#L699)
+[types.ts:725](https://github.com/coda/packs-sdk/blob/main/types.ts#L725)
 
 ___
 
@@ -123,4 +123,4 @@ BasePackVersionMetadata.version
 
 #### Defined in
 
-[types.ts:680](https://github.com/coda/packs-sdk/blob/main/types.ts#L680)
+[types.ts:706](https://github.com/coda/packs-sdk/blob/main/types.ts#L706)
