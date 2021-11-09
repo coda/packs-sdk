@@ -35,9 +35,21 @@ export interface OAuth2Credentials extends BaseCredentials {
   expires?: string;
 }
 
+export interface AWSAccessKeyCredentials extends BaseCredentials {
+  accessKeyId: string;
+  secretAccessKey: string;
+}
+
+export interface AWSAssumeRoleCredentials extends BaseCredentials {
+  roleArn: string;
+  externalId?: string;
+}
+
 export type Credentials =
   | TokenCredentials
   | WebBasicCredentials
   | QueryParamCredentials
   | MultiQueryParamCredentials
-  | OAuth2Credentials;
+  | OAuth2Credentials
+  | AWSAccessKeyCredentials
+  | AWSAssumeRoleCredentials;

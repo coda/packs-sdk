@@ -1,3 +1,6 @@
+## 0.7.1
+- Update internal authentication mechanisms for interacting with AWS. Not currently available externally.
+
 ## 0.7.0
 - Pack bundle format is changed to IIFE to fix occasional stacktrace misinterpretation. Previously compiled bundles will still be supported but may suffer from inaccurate sourcemap issue until the pack is built with the new SDK.
 
