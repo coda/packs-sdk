@@ -220,7 +220,8 @@ class AuthenticatingFetcher {
                     headers: requestHeaders,
                 };
             }
-            case types_1.AuthenticationType.AWSSignature4:
+            case types_1.AuthenticationType.AWSAccessKey:
+            case types_1.AuthenticationType.AWSAssumeRole:
             case types_1.AuthenticationType.Various:
                 throw new Error('Not yet implemented');
             default:

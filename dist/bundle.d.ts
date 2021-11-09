@@ -1787,14 +1787,23 @@ export declare enum AuthenticationType {
 	 */
 	WebBasic = "WebBasic",
 	/**
-	 * Authenticate with Amazon Web Services using AWS Signature Version 4.
+	 * Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
 	 * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
 	 *
 	 * This is not yet supported.
 	 *
 	 * @ignore
 	 */
-	AWSSignature4 = "AWSSignature4",
+	AWSAccessKey = "AWSAccessKey",
+	/**
+	 * Authenticate to Amazon Web Services by assuming an IAM role.
+	 * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
+	 *
+	 * This is not yet supported.
+	 *
+	 * @ignore
+	 */
+	AWSAssumeRole = "AWSAssumeRole",
 	/**
 	 * Authenticate using a Coda REST API token, sent as an HTTP header.
 	 *
@@ -2101,15 +2110,27 @@ export interface WebBasicAuthentication extends BaseAuthentication {
 	};
 }
 /**
- * Authenticate with Amazon Web Services using AWS Signature Version 4.
+ * Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
  * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
  *
  * This is not yet supported.
  *
  * @ignore
  */
-export interface AWSSignature4Authentication extends BaseAuthentication {
-	type: AuthenticationType.AWSSignature4;
+export interface AWSAccessKeyAuthentication extends BaseAuthentication {
+	type: AuthenticationType.AWSAccessKey;
+	service: string;
+}
+/**
+ * Authenticate to Amazon Web Services by assuming an IAM role.
+ * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
+ *
+ * This is not yet supported.
+ *
+ * @ignore
+ */
+export interface AWSAssumeRoleAuthentication extends BaseAuthentication {
+	type: AuthenticationType.AWSAssumeRole;
 	service: string;
 }
 /**
@@ -2123,7 +2144,7 @@ export interface VariousAuthentication {
 /**
  * The union of supported authentication methods.
  */
-export declare type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSSignature4Authentication;
+export declare type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication;
 export declare type AsAuthDef<T extends BaseAuthentication> = Omit<T, "getConnectionName" | "getConnectionUserId"> & {
 	/**
 	 * A function that is called when a user sets up a new account, that returns a name for
@@ -2152,19 +2173,19 @@ export declare type AsAuthDef<T extends BaseAuthentication> = Omit<T, "getConnec
  * a pack definition builder. The builder massages these definitions into the form of
  * an {@link Authentication} value, which is the value Coda ultimately cares about.
  */
-export declare type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSSignature4Authentication>;
+export declare type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication>;
 /**
  * The union of authentication methods that are supported for system authentication,
  * where the pack author provides credentials used in HTTP requests rather than the user.
  */
-export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSSignature4Authentication;
+export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication;
 /**
  * The union of supported system authentication definitions. These represent simplified
  * onfigurations a pack developer can specify when calling {@link setSystemAuthentication}
  * when using a pack definition builder. The builder massages these definitions into the form of
  * an {@link SystemAuthentication} value, which is the value Coda ultimately cares about.
  */
-export declare type SystemAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSSignature4Authentication>;
+export declare type SystemAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication>;
 /**
  * @ignore
  */

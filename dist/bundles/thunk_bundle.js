@@ -4228,7 +4228,8 @@ module.exports = (() => {
     AuthenticationType2["MultiQueryParamToken"] = "MultiQueryParamToken";
     AuthenticationType2["OAuth2"] = "OAuth2";
     AuthenticationType2["WebBasic"] = "WebBasic";
-    AuthenticationType2["AWSSignature4"] = "AWSSignature4";
+    AuthenticationType2["AWSAccessKey"] = "AWSAccessKey";
+    AuthenticationType2["AWSAssumeRole"] = "AWSAssumeRole";
     AuthenticationType2["CodaApiHeaderBearerToken"] = "CodaApiHeaderBearerToken";
     AuthenticationType2["Various"] = "Various";
   })(AuthenticationType || (AuthenticationType = {}));

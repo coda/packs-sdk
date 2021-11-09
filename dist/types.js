@@ -72,14 +72,23 @@ var AuthenticationType;
      */
     AuthenticationType["WebBasic"] = "WebBasic";
     /**
-     * Authenticate with Amazon Web Services using AWS Signature Version 4.
+     * Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
      * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
      *
      * This is not yet supported.
      *
      * @ignore
      */
-    AuthenticationType["AWSSignature4"] = "AWSSignature4";
+    AuthenticationType["AWSAccessKey"] = "AWSAccessKey";
+    /**
+     * Authenticate to Amazon Web Services by assuming an IAM role.
+     * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
+     *
+     * This is not yet supported.
+     *
+     * @ignore
+     */
+    AuthenticationType["AWSAssumeRole"] = "AWSAssumeRole";
     /**
      * Authenticate using a Coda REST API token, sent as an HTTP header.
      *

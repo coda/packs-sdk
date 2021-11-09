@@ -27,7 +27,7 @@ BaseAuthentication.defaultConnectionType
 
 #### Defined in
 
-[types.ts:207](https://github.com/coda/packs-sdk/blob/main/types.ts#L207)
+[types.ts:216](https://github.com/coda/packs-sdk/blob/main/types.ts#L216)
 
 ___
 
@@ -47,7 +47,7 @@ BaseAuthentication.endpointDomain
 
 #### Defined in
 
-[types.ts:229](https://github.com/coda/packs-sdk/blob/main/types.ts#L229)
+[types.ts:238](https://github.com/coda/packs-sdk/blob/main/types.ts#L238)
 
 ___
 
@@ -61,7 +61,7 @@ BaseAuthentication.getConnectionName
 
 #### Defined in
 
-[types.ts:199](https://github.com/coda/packs-sdk/blob/main/types.ts#L199)
+[types.ts:208](https://github.com/coda/packs-sdk/blob/main/types.ts#L208)
 
 ___
 
@@ -75,7 +75,7 @@ BaseAuthentication.getConnectionUserId
 
 #### Defined in
 
-[types.ts:200](https://github.com/coda/packs-sdk/blob/main/types.ts#L200)
+[types.ts:209](https://github.com/coda/packs-sdk/blob/main/types.ts#L209)
 
 ___
 
@@ -91,7 +91,7 @@ BaseAuthentication.instructionsUrl
 
 #### Defined in
 
-[types.ts:212](https://github.com/coda/packs-sdk/blob/main/types.ts#L212)
+[types.ts:221](https://github.com/coda/packs-sdk/blob/main/types.ts#L221)
 
 ___
 
@@ -108,7 +108,7 @@ BaseAuthentication.postSetup
 
 #### Defined in
 
-[types.ts:235](https://github.com/coda/packs-sdk/blob/main/types.ts#L235)
+[types.ts:244](https://github.com/coda/packs-sdk/blob/main/types.ts#L244)
 
 ___
 
@@ -127,7 +127,7 @@ BaseAuthentication.requiresEndpointUrl
 
 #### Defined in
 
-[types.ts:220](https://github.com/coda/packs-sdk/blob/main/types.ts#L220)
+[types.ts:229](https://github.com/coda/packs-sdk/blob/main/types.ts#L229)
 
 ___
 
@@ -137,7 +137,7 @@ ___
 
 #### Defined in
 
-[types.ts:394](https://github.com/coda/packs-sdk/blob/main/types.ts#L394)
+[types.ts:403](https://github.com/coda/packs-sdk/blob/main/types.ts#L403)
 
 ___
 
@@ -157,4 +157,4 @@ Configuration for labels to show in the UI when the user sets up a new acount.
 
 #### Defined in
 
-[types.ts:398](https://github.com/coda/packs-sdk/blob/main/types.ts#L398)
+[types.ts:407](https://github.com/coda/packs-sdk/blob/main/types.ts#L407)

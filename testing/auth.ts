@@ -1,3 +1,5 @@
+import type {AWSAccessKeyCredentials} from './auth_types';
+import type {AWSAssumeRoleCredentials} from './auth_types';
 import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
 import type {BasicPackDefinition} from '../types';
@@ -68,7 +70,10 @@ export function setupAuth(manifestDir: string, packDef: BasicPackDefinition, opt
     case AuthenticationType.OAuth2:
       ensureExists(packDef.defaultAuthentication, 'OAuth2 only works with defaultAuthentication, not system auth.');
       return handler.handleOAuth2();
-    case AuthenticationType.AWSSignature4:
+    case AuthenticationType.AWSAccessKey:
+      return handler.handleAWSAccessKey();
+    case AuthenticationType.AWSAssumeRole:
+      return handler.handleAWSAssumeRole();
     case AuthenticationType.Various:
       return printAndExit('This authentication type is not yet implemented');
     default:
@@ -224,6 +229,33 @@ class CredentialHandler {
       },
       scopes: requestedScopes,
     });
+  }
+
+  handleAWSAccessKey() {
+    assertCondition(this._authDef.type === AuthenticationType.AWSAccessKey);
+    const existingCredentials = this.checkForExistingCredential() as AWSAccessKeyCredentials | undefined;
+
+    const newAccessKeyId = promptForInput(`Enter the AWS Access Key Id for this Pack:\n`);
+    const newSecretAccessKey = promptForInput(`Enter the AWS Secret Access Key for this Pack:\n`, {mask: true});
+
+    const accessKeyId = ensureNonEmptyString(newAccessKeyId || existingCredentials?.accessKeyId);
+    const secretAccessKey = ensureNonEmptyString(newSecretAccessKey || existingCredentials?.secretAccessKey);
+
+    this.storeCredential({accessKeyId, secretAccessKey});
+    print('Credentials updated!');
+  }
+
+  handleAWSAssumeRole() {
+    assertCondition(this._authDef.type === AuthenticationType.AWSAssumeRole);
+    const existingCredentials = this.checkForExistingCredential() as AWSAssumeRoleCredentials | undefined;
+
+    const newRoleArn = promptForInput(`Enter the AWS Role ARN for this Pack:\n`);
+    const externalId = promptForInput(`[Optional] Enter the External ID for this Pack:\n`, {mask: true});
+
+    const roleArn = ensureNonEmptyString(newRoleArn || existingCredentials?.roleArn);
+
+    this.storeCredential({roleArn, externalId});
+    print('Credentials updated!');
   }
 
   private maybePromptForEndpointUrl() {

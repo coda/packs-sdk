@@ -19,7 +19,7 @@ Coda REST API.
 
 #### Defined in
 
-[types.ts:101](https://github.com/coda/packs-sdk/blob/main/types.ts#L101)
+[types.ts:110](https://github.com/coda/packs-sdk/blob/main/types.ts#L110)
 
 ___
 

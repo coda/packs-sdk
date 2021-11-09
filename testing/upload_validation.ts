@@ -1,4 +1,5 @@
-import type {AWSSignature4Authentication} from '../types';
+import type {AWSAccessKeyAuthentication} from '../types';
+import type {AWSAssumeRoleAuthentication} from '../types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import {AuthenticationType} from '../types';
@@ -343,8 +344,13 @@ const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> 
     }).optional(),
     ...baseAuthenticationValidators,
   }),
-  [AuthenticationType.AWSSignature4]: zodCompleteStrictObject<AWSSignature4Authentication>({
-    type: zodDiscriminant(AuthenticationType.AWSSignature4),
+  [AuthenticationType.AWSAccessKey]: zodCompleteStrictObject<AWSAccessKeyAuthentication>({
+    type: zodDiscriminant(AuthenticationType.AWSAccessKey),
+    service: z.string(),
+    ...baseAuthenticationValidators,
+  }),
+  [AuthenticationType.AWSAssumeRole]: zodCompleteStrictObject<AWSAssumeRoleAuthentication>({
+    type: zodDiscriminant(AuthenticationType.AWSAssumeRole),
     service: z.string(),
     ...baseAuthenticationValidators,
   }),
@@ -359,7 +365,8 @@ const systemAuthenticationTypes: {[key in SystemAuthenticationTypes]: true} = {
   [AuthenticationType.MultiQueryParamToken]: true,
   [AuthenticationType.QueryParamToken]: true,
   [AuthenticationType.WebBasic]: true,
-  [AuthenticationType.AWSSignature4]: true,
+  [AuthenticationType.AWSAccessKey]: true,
+  [AuthenticationType.AWSAssumeRole]: true,
 };
 
 const systemAuthenticationValidators = Object.entries(defaultAuthenticationValidators)
