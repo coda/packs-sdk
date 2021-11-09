@@ -20,6 +20,13 @@ const xml2js_1 = __importDefault(require("xml2js"));
 const FetcherUserAgent = 'Coda-Test-Server-Fetcher';
 const MaxContentLengthBytes = 25 * 1024 * 1024;
 const HeadersToStrip = ['authorization'];
+function getTemplateReplacementValueForKey(key, invocationToken) {
+    return `{{${key}-${invocationToken}}}`;
+}
+// Mirrors our utility replaceAll function in `coda` repo.
+function replaceAll(str, find, replace) {
+    return str.split(find).join(replace);
+}
 class AuthenticatingFetcher {
     constructor(updateCredentialsCallback, authDef, networkDomains, credentials, invocationToken) {
         this._updateCredentialsCallback = updateCredentialsCallback;
@@ -167,7 +174,7 @@ class AuthenticatingFetcher {
                     // this scheme where we do template substitution of the body using an unguessable
                     // random token as part of the template key.
                     Object.entries(this._credentials).forEach(([key, value]) => {
-                        bodyWithTemplateSubstitutions = (0, ensure_2.ensureExists)(bodyWithTemplateSubstitutions).replace(`{{${key}-${this._invocationToken}}}`, value);
+                        bodyWithTemplateSubstitutions = (0, ensure_2.ensureExists)(bodyWithTemplateSubstitutions).replace(getTemplateReplacementValueForKey(key, this._invocationToken), value);
                     });
                 }
                 return {
@@ -185,24 +192,24 @@ class AuthenticatingFetcher {
                 const { params } = this._credentials;
                 Object.entries(params).forEach(([key, value]) => {
                     if (urlWithSubstitutions) {
-                        urlWithSubstitutions = urlWithSubstitutions.replaceAll(`{{${key}-${this._invocationToken}}}`, encodeURIComponent(value));
-                        urlWithSubstitutions = urlWithSubstitutions.replaceAll(encodeURIComponent(`{{${key}-${this._invocationToken}}}`), encodeURIComponent(value));
+                        urlWithSubstitutions = replaceAll(urlWithSubstitutions, getTemplateReplacementValueForKey(key, this._invocationToken), encodeURIComponent(value));
+                        urlWithSubstitutions = replaceAll(urlWithSubstitutions, encodeURIComponent(getTemplateReplacementValueForKey(key, this._invocationToken)), encodeURIComponent(value));
                     }
                     if (bodyWithSubstitutions) {
-                        bodyWithSubstitutions = bodyWithSubstitutions.replaceAll(`{{${key}-${this._invocationToken}}}`, value);
+                        bodyWithSubstitutions = replaceAll(bodyWithSubstitutions, getTemplateReplacementValueForKey(key, this._invocationToken), value);
                     }
                     if (formWithSubstitutions) {
-                        formWithSubstitutions = formWithSubstitutions.replaceAll(`{{${key}-${this._invocationToken}}}`, value);
+                        formWithSubstitutions = replaceAll(formWithSubstitutions, getTemplateReplacementValueForKey(key, this._invocationToken), value);
                     }
                     if (headersWithSubstitutions) {
-                        headersWithSubstitutions = headersWithSubstitutions.replaceAll(`{{${key}-${this._invocationToken}}}`, value);
+                        headersWithSubstitutions = replaceAll(headersWithSubstitutions, getTemplateReplacementValueForKey(key, this._invocationToken), value);
                     }
                 });
                 return {
                     url: urlWithSubstitutions,
                     body: bodyWithSubstitutions,
-                    form: JSON.parse(formWithSubstitutions),
-                    headers: JSON.parse(headersWithSubstitutions),
+                    form: formWithSubstitutions ? JSON.parse(formWithSubstitutions) : undefined,
+                    headers: headersWithSubstitutions ? JSON.parse(headersWithSubstitutions) : undefined,
                 };
             }
             case types_1.AuthenticationType.QueryParamToken: {

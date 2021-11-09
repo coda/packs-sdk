@@ -59,7 +59,7 @@ ___
 
 A random token scoped to only this request invocation.
 This is a unique identifier for the invocation, and in particular used with
-{@link AuthenticationType.Custom} for naming template parameters that will be
+[AuthenticationType.Custom](../enums/AuthenticationType.md#custom) for naming template parameters that will be
 replaced by the fetcher in secure way.
 
 #### Defined in
