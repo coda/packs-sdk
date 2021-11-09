@@ -598,8 +598,11 @@ export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boo
 export declare type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
 export declare function generateSchema(obj: ValidTypes): Schema;
 export declare function makeSchema<T extends Schema>(schema: T): T;
-export declare function makeObjectSchema<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>>(schemaDef: T): T & {
+export declare function makeObjectSchema<K extends string, L extends string, T extends Omit<ObjectSchemaDefinition<K, L>, "type">>(schemaDef: T & {
+	type?: ValueType.Object;
+}): T & {
 	identity?: Identity;
+	type: ValueType.Object;
 };
 /**
  * Convenience for creating a reference object schema from an existing schema for the

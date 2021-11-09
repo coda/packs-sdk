@@ -1,6 +1,6 @@
 # Function: makeObjectSchema
 
-▸ **makeObjectSchema**<`K`, `L`, `T`\>(`schemaDef`): `T` & { `identity?`: [`Identity`](../interfaces/Identity.md)  }
+▸ **makeObjectSchema**<`K`, `L`, `T`\>(`schemaDef`): `T` & { `identity?`: [`Identity`](../interfaces/Identity.md) ; `type`: [`Object`](../enums/ValueType.md#object)  }
 
 #### Type parameters
 
@@ -8,17 +8,17 @@
 | :------ | :------ |
 | `K` | extends `string` |
 | `L` | extends `string` |
-| `T` | extends `ObjectSchemaDefinition`<`K`, `L`, `T`\> |
+| `T` | extends `Omit`<`ObjectSchemaDefinition`<`K`, `L`\>, ``"type"``\> |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `schemaDef` | `T` |
+| `schemaDef` | `T` & { `type?`: [`Object`](../enums/ValueType.md#object)  } |
 
 #### Returns
 
-`T` & { `identity?`: [`Identity`](../interfaces/Identity.md)  }
+`T` & { `identity?`: [`Identity`](../interfaces/Identity.md) ; `type`: [`Object`](../enums/ValueType.md#object)  }
 
 #### Defined in
 
