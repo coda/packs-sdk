@@ -23,6 +23,8 @@ const HeadersToStrip = ['authorization'];
 function getTemplateReplacementValueForKey(key, invocationToken) {
     return `{{${key}-${invocationToken}}}`;
 }
+// NOTE(spencer): this becomes available in the string prototype with ES2021. Remove
+// and migrate over when we change to that target.
 // Mirrors our utility replaceAll function in `coda` repo.
 function replaceAll(str, find, replace) {
     return str.split(find).join(replace);
@@ -36,6 +38,7 @@ class AuthenticatingFetcher {
         this._invocationToken = invocationToken;
     }
     async fetch(request, isRetry) {
+        var _a;
         const { url, headers, body, form } = this._applyAuthentication(request);
         this._validateHost(url);
         let response;
@@ -98,11 +101,27 @@ class AuthenticatingFetcher {
         catch (e) {
             // Ignore if we cannot parse.
         }
-        const responseHeaders = { ...response.headers };
+        let responseHeaders = { ...response.headers };
         for (const key of Object.keys(responseHeaders)) {
             if (HeadersToStrip.includes(key.toLocaleLowerCase())) {
                 // In case any services echo back sensitive headers, remove them so pack code can't see them.
                 delete responseHeaders[key];
+            }
+        }
+        // Replace sensitive template values so that pack code can't see them.
+        if (((_a = this._authDef) === null || _a === void 0 ? void 0 : _a.type) === types_1.AuthenticationType.Custom) {
+            const { params } = this._credentials;
+            if (responseBody) {
+                Object.values(params).forEach(value => {
+                    responseBody = replaceAll(responseBody, value, '<<REDACTED BY CODA>>');
+                });
+            }
+            if (responseHeaders) {
+                let responseHeadersStr = JSON.stringify(responseHeaders);
+                Object.values(params).forEach(value => {
+                    responseHeadersStr = replaceAll(responseHeadersStr, value, '<<REDACTED BY CODA>>');
+                });
+                responseHeaders = JSON.parse(responseHeadersStr);
             }
         }
         return {
