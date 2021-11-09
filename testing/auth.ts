@@ -5,6 +5,7 @@ import {AuthenticationType} from '../types';
 import type {BasicPackDefinition} from '../types';
 import type {Credentials} from './auth_types';
 import type {CredentialsFile} from './auth_types';
+import type {CustomAuthParameter} from '../types';
 import type {CustomCredentials} from './auth_types';
 import type {MultiQueryParamCredentials} from './auth_types';
 import type {OAuth2Credentials} from './auth_types';
@@ -138,16 +139,11 @@ class CredentialHandler {
     print('Credentials updated!');
   }
 
-  handleCustom(
-    paramDefs: Array<{
-      name: string;
-      description: string;
-    }>,
-  ) {
+  handleCustom(paramDefs: CustomAuthParameter[]) {
     assertCondition(this._authDef.type === AuthenticationType.Custom);
     if (paramDefs.length === 0) {
       printAndExit(
-        `Please define one or more entries for "params" in the defaultAuthentication section of this Pack definition.`,
+        `Please define one or more entries for "params" in the setUserAuthentication or setSystemAuthentication section of this Pack definition.`,
       );
     }
     this.checkForExistingCredential();
@@ -171,7 +167,7 @@ class CredentialHandler {
   handleQueryParam(paramName: string) {
     if (!paramName) {
       printAndExit(
-        `Please provide a paramName attribute in the defaultAuthentication section of this Pack definition.`,
+        `Please provide a paramName attribute in the setUserAuthentication or setSystemAuthentication section of this Pack definition.`,
       );
     }
     this.checkForExistingCredential();
@@ -191,7 +187,7 @@ class CredentialHandler {
   ) {
     if (paramDefs.length === 0) {
       printAndExit(
-        `Please define one or more entries for "params" in the defaultAuthentication section of this Pack definition.`,
+        `Please define one or more entries for "params" in the setUserAuthentication or setSystemAuthentication section of this Pack definition.`,
       );
     }
 

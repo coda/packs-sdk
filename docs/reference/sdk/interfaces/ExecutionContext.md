@@ -16,7 +16,7 @@ this contains the [Fetcher](Fetcher.md), which is used for making HTTP requests.
 
 • `Optional` `Readonly` **endpoint**: `string`
 
-The base endpoint URL for the user's account, only if applicable. See [requiresEndpointUrl](OAuth2Authentication.md#requiresendpointurl).
+The base endpoint URL for the user's account, only if applicable. See [requiresEndpointUrl](CodaApiBearerTokenAuthentication.md#requiresendpointurl).
 
 If the API URLs are variable based on the user account, you will need this endpoint
 to construct URLs to use with the fetcher. Alternatively, you can use relative URLs
