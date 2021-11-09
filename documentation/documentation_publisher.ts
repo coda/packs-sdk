@@ -3,11 +3,11 @@ import type {Arguments} from 'yargs';
 import S3 from 'aws-sdk/clients/s3';
 import {exec as childExec} from 'child_process';
 import fs from 'fs';
+import path from 'path';
 import {print} from '../testing/helpers';
 import {printAndExit} from '../testing/helpers';
 import {printError} from '../testing/helpers';
 import {promisify} from 'util';
-import {version} from '../package.json';
 import yargs from 'yargs';
 
 const exec = promisify(childExec);
@@ -35,8 +35,13 @@ function getS3Bucket(env: string): string {
   return `coda-us-west-2-${env}-${DocumentationBucket}`;
 }
 
+function getSDKVersion(): string {
+  const packageFile = fs.readFileSync(path.join(__dirname, '../package.json'));
+  return JSON.parse(packageFile.toString()).version;
+}
+
 function getS3DocVersionedKey(): string {
-  return `${PacksSdkBucketRootPath}/${version}`;
+  return `${PacksSdkBucketRootPath}/${getSDKVersion()}`;
 }
 
 function getS3LatestDocsKey(): string {
@@ -75,12 +80,12 @@ async function pushDocumentation({env, forceUpload}: Arguments<PushDocumentation
     if (!forceUpload) {
       const obj = await s3.listObjectsV2({Bucket: bucket, MaxKeys: 1, Prefix: versionedKey}).promise();
       if (obj.Contents?.length) {
-        printAndExit(`${env}: Trying to upload ${version} but folder already exists in S3.`);
+        printAndExit(`${env}: Trying to upload ${getSDKVersion()} but folder already exists in S3.`);
       }
     }
     print(`${env}: Pushing the current packs-sdk documentation ${versionedKey}...`);
     await pushDocsDirectory(versionedKey);
-    print(`${env}: Pushing the current packs-sdk documentation for ${version} to the 'latest' folder...`);
+    print(`${env}: Pushing the current packs-sdk documentation for ${getSDKVersion()} to the 'latest' folder...`);
     await pushDocsDirectory(latestKey);
     print(`${env}: The current packs-sdk documentation was pushed to ${versionedKey} successfully.`);
   } catch (err: any) {

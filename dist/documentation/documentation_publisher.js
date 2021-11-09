@@ -7,11 +7,11 @@ const aws_sdk_1 = __importDefault(require("aws-sdk"));
 const s3_1 = __importDefault(require("aws-sdk/clients/s3"));
 const child_process_1 = require("child_process");
 const fs_1 = __importDefault(require("fs"));
+const path_1 = __importDefault(require("path"));
 const helpers_1 = require("../testing/helpers");
 const helpers_2 = require("../testing/helpers");
 const helpers_3 = require("../testing/helpers");
 const util_1 = require("util");
-const package_json_1 = require("../package.json");
 const yargs_1 = __importDefault(require("yargs"));
 const exec = (0, util_1.promisify)(child_process_1.exec);
 const AwsRegion = 'us-west-2';
@@ -33,8 +33,12 @@ function getS3Service(env) {
 function getS3Bucket(env) {
     return `coda-us-west-2-${env}-${DocumentationBucket}`;
 }
+function getSDKVersion() {
+    const packageFile = fs_1.default.readFileSync(path_1.default.join(__dirname, '../package.json'));
+    return JSON.parse(packageFile.toString()).version;
+}
 function getS3DocVersionedKey() {
-    return `${PacksSdkBucketRootPath}/${package_json_1.version}`;
+    return `${PacksSdkBucketRootPath}/${getSDKVersion()}`;
 }
 function getS3LatestDocsKey() {
     return `${PacksSdkBucketRootPath}/latest`;
@@ -61,12 +65,12 @@ async function pushDocumentation({ env, forceUpload }) {
         if (!forceUpload) {
             const obj = await s3.listObjectsV2({ Bucket: bucket, MaxKeys: 1, Prefix: versionedKey }).promise();
             if ((_a = obj.Contents) === null || _a === void 0 ? void 0 : _a.length) {
-                (0, helpers_2.printAndExit)(`${env}: Trying to upload ${package_json_1.version} but folder already exists in S3.`);
+                (0, helpers_2.printAndExit)(`${env}: Trying to upload ${getSDKVersion()} but folder already exists in S3.`);
             }
         }
         (0, helpers_1.print)(`${env}: Pushing the current packs-sdk documentation ${versionedKey}...`);
         await pushDocsDirectory(versionedKey);
-        (0, helpers_1.print)(`${env}: Pushing the current packs-sdk documentation for ${package_json_1.version} to the 'latest' folder...`);
+        (0, helpers_1.print)(`${env}: Pushing the current packs-sdk documentation for ${getSDKVersion()} to the 'latest' folder...`);
         await pushDocsDirectory(latestKey);
         (0, helpers_1.print)(`${env}: The current packs-sdk documentation was pushed to ${versionedKey} successfully.`);
     }
