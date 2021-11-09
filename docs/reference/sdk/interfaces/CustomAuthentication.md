@@ -9,12 +9,15 @@ author to define one or more secret values that the user or you as the pack auth
 user or system authentication). When constructing a network request, you may indicate where these values should
 be inserted by our fetcher service using the syntax described below (similar to templating engines).
 
-To insert the credentials, simply put `{{\<paramName\>-\<invocationToken\>}}` as a string anywhere in your request,
-where `\<paramName\>` is the name of the parameter defined in the params mapping and `\<invocationToken\>` is the
+{% raw %}
+To insert the credentials, simply put `{{<paramName>-<invocationToken>}}` as a string anywhere in your request,
+where `<paramName>` is the name of the parameter defined in the params mapping and `<invocationToken>` is the
 secret invocation-specific token provided within the [ExecutionContext](ExecutionContext.md). The invocation
 token is required for security reasons.
+{% endraw %}
 
 **`example`**
+```
 // Suppose you're using an API that requires a secret id in the request URL,
 // and a different secret value in the request body. You can define a Custom authentication
 // configuration with two params:
@@ -26,7 +29,6 @@ token is required for security reasons.
 //
 // A real-world example of an API that would require this is the Plaid API (https://plaid.com/docs/api/products/#auth)
 // See the use of `secret`, `client_id`, and `access_token` parameters in the body.
-```
 execute: async function([], context) {
   let secretIdTemplateName = "secretId-" + context.invocationToken;
   let urlWithSecret = "/api/entities/{{" + secretIdTemplateName + "}}"
@@ -134,21 +136,21 @@ ___
 
 ### params
 
-• **params**: [`CustomAuthParameter`](CustomAuthParameter.md)[]
+• **params**: `CustomAuthParameter`[]
 
 An array of parameters that must be provided for new connection accounts to authenticate this pack.
-These parameters can then be referenced via the [CustomAuthParameter.name](CustomAuthParameter.md#name) property for template
+These parameters can then be referenced via the {@link CustomAuthParameter.name} property for template
 replacement inside the constructed network request.
 
 #### Defined in
 
-[types.ts:486](https://github.com/coda/packs-sdk/blob/main/types.ts#L486)
+[types.ts:488](https://github.com/coda/packs-sdk/blob/main/types.ts#L488)
 
 ___
 
 ### postSetup
 
-• `Optional` **postSetup**: [`SetEndpoint`](SetEndpoint.md)[]
+• `Optional` **postSetup**: `SetEndpoint`[]
 
 One or more setup steps to run after the user has set up the account, before completing installation of the pack.
 This is not common.
@@ -188,4 +190,4 @@ ___
 
 #### Defined in
 
-[types.ts:480](https://github.com/coda/packs-sdk/blob/main/types.ts#L480)
+[types.ts:482](https://github.com/coda/packs-sdk/blob/main/types.ts#L482)

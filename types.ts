@@ -452,12 +452,15 @@ export interface CustomAuthParameter {
  * user or system authentication). When constructing a network request, you may indicate where these values should
  * be inserted by our fetcher service using the syntax described below (similar to templating engines).
  *
- * To insert the credentials, simply put `{{\<paramName\>-\<invocationToken\>}}` as a string anywhere in your request,
- * where `\<paramName\>` is the name of the parameter defined in the params mapping and `\<invocationToken\>` is the
+ * {% raw %}
+ * To insert the credentials, simply put `{{<paramName>-<invocationToken>}}` as a string anywhere in your request,
+ * where `<paramName>` is the name of the parameter defined in the params mapping and `<invocationToken>` is the
  * secret invocation-specific token provided within the {@link ExecutionContext}. The invocation
  * token is required for security reasons.
+ * {% endraw %}
  *
  * @example
+ * ```
  * // Suppose you're using an API that requires a secret id in the request URL,
  * // and a different secret value in the request body. You can define a Custom authentication
  * // configuration with two params:
@@ -469,7 +472,6 @@ export interface CustomAuthParameter {
  * //
  * // A real-world example of an API that would require this is the Plaid API (https://plaid.com/docs/api/products/#auth)
  * // See the use of `secret`, `client_id`, and `access_token` parameters in the body.
- * ```
  * execute: async function([], context) {
  *   let secretIdTemplateName = "secretId-" + context.invocationToken;
  *   let urlWithSecret = "/api/entities/{{" + secretIdTemplateName + "}}"

@@ -1,4 +1,4 @@
-# 
+# @codahq/packs-sdk
 
 ## Enumerations
 
@@ -9,7 +9,6 @@
 - [DefaultConnectionType](enums/DefaultConnectionType.md)
 - [DurationUnit](enums/DurationUnit.md)
 - [NetworkConnection](enums/NetworkConnection.md)
-- [PackCategory](enums/PackCategory.md)
 - [ParameterType](enums/ParameterType.md)
 - [PostSetupType](enums/PostSetupType.md)
 - [PrecannedDateRange](enums/PrecannedDateRange.md)
@@ -32,7 +31,6 @@
 - [CodaApiBearerTokenAuthentication](interfaces/CodaApiBearerTokenAuthentication.md)
 - [Continuation](interfaces/Continuation.md)
 - [CurrencySchema](interfaces/CurrencySchema.md)
-- [CustomAuthParameter](interfaces/CustomAuthParameter.md)
 - [CustomAuthentication](interfaces/CustomAuthentication.md)
 - [CustomHeaderTokenAuthentication](interfaces/CustomHeaderTokenAuthentication.md)
 - [DurationSchema](interfaces/DurationSchema.md)
@@ -66,10 +64,7 @@
 - [PackVersionDefinition](interfaces/PackVersionDefinition.md)
 - [ParamDef](interfaces/ParamDef.md)
 - [QueryParamTokenAuthentication](interfaces/QueryParamTokenAuthentication.md)
-- [RateLimit](interfaces/RateLimit.md)
-- [RateLimits](interfaces/RateLimits.md)
 - [ScaleSchema](interfaces/ScaleSchema.md)
-- [SetEndpoint](interfaces/SetEndpoint.md)
 - [SimpleAutocompleteOption](interfaces/SimpleAutocompleteOption.md)
 - [SimpleStringSchema](interfaces/SimpleStringSchema.md)
 - [SliderSchema](interfaces/SliderSchema.md)
@@ -85,7 +80,6 @@
 ## Type aliases
 
 - [Authentication](types/Authentication.md)
-- [AuthenticationDef](types/AuthenticationDef.md)
 - [BasicPackDefinition](types/BasicPackDefinition.md)
 - [DefaultValueType](types/DefaultValueType.md)
 - [ExternalObjectPackFormula](types/ExternalObjectPackFormula.md)
@@ -117,13 +111,10 @@
 - [ParamDefs](types/ParamDefs.md)
 - [ParamValues](types/ParamValues.md)
 - [ParamsList](types/ParamsList.md)
-- [PostSetup](types/PostSetup.md)
 - [Schema](types/Schema.md)
 - [SchemaType](types/SchemaType.md)
 - [StringSchema](types/StringSchema.md)
 - [SystemAuthentication](types/SystemAuthentication.md)
-- [SystemAuthenticationDef](types/SystemAuthenticationDef.md)
-- [SystemAuthenticationTypes](types/SystemAuthenticationTypes.md)
 - [TypedPackFormula](types/TypedPackFormula.md)
 
 ## Functions

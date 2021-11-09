@@ -3,7 +3,7 @@
 Authenticate using multiple tokens, each passed as a different URL parameter, e.g.
 https://example.com/api?param1=token1&param2=token2
 
-The parameter names are defined in the [params](MultiQueryParamTokenAuthentication.md#params) array property.
+The parameter names are defined in the [params](CustomAuthentication.md#params) array property.
 
 ## Hierarchy
 
@@ -109,7 +109,7 @@ ___
 
 ### postSetup
 
-• `Optional` **postSetup**: [`SetEndpoint`](SetEndpoint.md)[]
+• `Optional` **postSetup**: `SetEndpoint`[]
 
 One or more setup steps to run after the user has set up the account, before completing installation of the pack.
 This is not common.
