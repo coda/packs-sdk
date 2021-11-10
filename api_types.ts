@@ -240,6 +240,9 @@ export type DefaultValueType<T extends UnionType> = T extends ArrayType<Type.dat
   ? TypeOfMap<T> | PrecannedDateRange
   : TypeOfMap<T>;
 
+/**
+ * Inputs for creating a formula that are common between regular formulas and sync table formulas.
+ */
 export interface CommonPackFormulaDef<T extends ParamDefs> {
   /**
    * The name of the formula, used to invoke it.

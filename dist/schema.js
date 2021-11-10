@@ -310,6 +310,19 @@ function isArray(val) {
     return Boolean(val && val.type === ValueType.Array);
 }
 exports.isArray = isArray;
+/**
+ * Utility that examines a JavaScript value and attempts to infer a schema definition
+ * that describes it.
+ *
+ * It is vastly preferable to define a schema manually. A clear and accurate schema is one of the
+ * fundamentals of a good pack. However, for data that is truly dynamic for which a schema can't
+ * be known in advance nor can a function be written to generate a dynamic schema from other
+ * inputs, it may be useful to us this helper to sniff the return value and generate a basic
+ * inferred schema from it.
+ *
+ * This utility does NOT attempt to determine {@link id} or {@link primary} attributes for
+ * an object schema, those are left undefined.
+ */
 function generateSchema(obj) {
     if (Array.isArray(obj)) {
         if (obj.length === 0) {
@@ -342,11 +355,53 @@ function generateSchema(obj) {
     return (0, ensure_3.ensureUnreachable)(obj);
 }
 exports.generateSchema = generateSchema;
+/**
+ * A wrapper for creating any schema definition.
+ *
+ * If you are creating a schema for an object (as opposed to a scalar or array),
+ * use the more specific {@link makeObjectSchema}.
+ *
+ * It is always recommended to use wrapper functions for creating top-level schema
+ * objects rather than specifying object literals. Wrappers validate your schemas
+ * at creation time, provide better TypeScript type inference, and can reduce
+ * boilerplate.
+ *
+ * At this time, this wrapper provides only better TypeScript type inference,
+ * but it may do validation in a future SDK version.
+ *
+ * @example
+ * ```
+ * coda.makeSchema({
+ *   type: coda.ValueType.Array,
+ *   items: {type: coda.ValueType.String},
+ * });
+ * ```
+ */
 function makeSchema(schema) {
     return schema;
 }
 exports.makeSchema = makeSchema;
 exports.PlaceholderIdentityPackId = -1;
+/**
+ * A wrapper for creating a schema definition for an object value.
+ *
+ * It is always recommended to use wrapper functions for creating top-level schema
+ * objects rather than specifying object literals. Wrappers validate your schemas
+ * at creation time, provide better TypeScript type inference, and can reduce
+ * boilerplate.
+ *
+ * @example
+ * ```
+ * coda.makeObjectSchema({
+ *   id: "email",
+ *   primary: "name",
+ *   properties: {
+ *     email: {type: coda.ValueType.String, required: true},
+ *     name: {type: coda.ValueType.String, required: true},
+ *   },
+ * });
+ * ```
+ */
 function makeObjectSchema(schemaDef) {
     const schema = { ...schemaDef, type: ValueType.Object };
     validateObjectSchema(schema);

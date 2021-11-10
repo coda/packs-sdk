@@ -38,9 +38,11 @@ ___
 
 • **getDisplayUrl**: [`MetadataFormula`](../types/MetadataFormula.md)
 
+See {@link DynamicSyncTableOptions.getDisplayUrl}
+
 #### Defined in
 
-[api.ts:171](https://github.com/coda/packs-sdk/blob/main/api.ts#L171)
+[api.ts:175](https://github.com/coda/packs-sdk/blob/main/api.ts#L175)
 
 ___
 
@@ -48,9 +50,11 @@ ___
 
 • **getName**: [`MetadataFormula`](../types/MetadataFormula.md)
 
+See {@link DynamicSyncTableOptions.getName}
+
 #### Defined in
 
-[api.ts:170](https://github.com/coda/packs-sdk/blob/main/api.ts#L170)
+[api.ts:173](https://github.com/coda/packs-sdk/blob/main/api.ts#L173)
 
 ___
 
@@ -58,13 +62,15 @@ ___
 
 • **getSchema**: [`MetadataFormula`](../types/MetadataFormula.md)
 
+See {@link DynamicSyncTableOptions.getSchema}
+
 #### Overrides
 
 [SyncTableDef](SyncTableDef.md).[getSchema](SyncTableDef.md#getschema)
 
 #### Defined in
 
-[api.ts:169](https://github.com/coda/packs-sdk/blob/main/api.ts#L169)
+[api.ts:171](https://github.com/coda/packs-sdk/blob/main/api.ts#L171)
 
 ___
 
@@ -86,9 +92,11 @@ ___
 
 • **isDynamic**: ``true``
 
+Identifies this sync table as dynamic.
+
 #### Defined in
 
-[api.ts:168](https://github.com/coda/packs-sdk/blob/main/api.ts#L168)
+[api.ts:169](https://github.com/coda/packs-sdk/blob/main/api.ts#L169)
 
 ___
 
@@ -96,9 +104,11 @@ ___
 
 • `Optional` **listDynamicUrls**: [`MetadataFormula`](../types/MetadataFormula.md)
 
+See {@link DynamicSyncTableOptions.listDynamicUrls}
+
 #### Defined in
 
-[api.ts:172](https://github.com/coda/packs-sdk/blob/main/api.ts#L172)
+[api.ts:177](https://github.com/coda/packs-sdk/blob/main/api.ts#L177)
 
 ___
 

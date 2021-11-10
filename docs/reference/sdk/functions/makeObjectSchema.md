@@ -2,6 +2,25 @@
 
 ▸ **makeObjectSchema**<`K`, `L`, `T`\>(`schemaDef`): `T` & { `identity?`: [`Identity`](../interfaces/Identity.md) ; `type`: [`Object`](../enums/ValueType.md#object)  }
 
+A wrapper for creating a schema definition for an object value.
+
+It is always recommended to use wrapper functions for creating top-level schema
+objects rather than specifying object literals. Wrappers validate your schemas
+at creation time, provide better TypeScript type inference, and can reduce
+boilerplate.
+
+**`example`**
+```
+coda.makeObjectSchema({
+  id: "email",
+  primary: "name",
+  properties: {
+    email: {type: coda.ValueType.String, required: true},
+    name: {type: coda.ValueType.String, required: true},
+  },
+});
+```
+
 #### Type parameters
 
 | Name | Type |
@@ -22,4 +41,4 @@
 
 #### Defined in
 
-[schema.ts:735](https://github.com/coda/packs-sdk/blob/main/schema.ts#L735)
+[schema.ts:797](https://github.com/coda/packs-sdk/blob/main/schema.ts#L797)

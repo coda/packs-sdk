@@ -165,10 +165,15 @@ export interface DynamicSyncTableDef<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>,
 > extends SyncTableDef<K, L, ParamDefsT, SchemaT> {
+  /** Identifies this sync table as dynamic. */
   isDynamic: true;
+  /** See {@link DynamicSyncTableOptions.getSchema} */
   getSchema: MetadataFormula;
+  /** See {@link DynamicSyncTableOptions.getName} */
   getName: MetadataFormula;
+  /** See {@link DynamicSyncTableOptions.getDisplayUrl} */
   getDisplayUrl: MetadataFormula;
+  /** See {@link DynamicSyncTableOptions.listDynamicUrls} */
   listDynamicUrls?: MetadataFormula;
 }
 
@@ -392,6 +397,9 @@ export interface PackFormulas {
   readonly [namespace: string]: Formula[];
 }
 
+/**
+ * Base type for the inputs for creating a pack formula.
+ */
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult>
   extends CommonPackFormulaDef<ParamsT> {
   execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
@@ -416,7 +424,13 @@ export interface ObjectArrayFormulaDef<ParamsT extends ParamDefs, SchemaT extend
   response: ResponseHandlerTemplate<SchemaT>;
 }
 
+/**
+ * Inputs to define an "empty" formula, that is, a formula that uses a {@link RequestHandlerTemplate}
+ * to define an implementation for the formula rather than implementing an actual `execute` function
+ * in JavaScript.
+ */
 export interface EmptyFormulaDef<ParamsT extends ParamDefs> extends Omit<PackFormulaDef<ParamsT, string>, 'execute'> {
+  /** A definition of the request and any transformations to make in order to implement this formula. */
   request: RequestHandlerTemplate;
 }
 
@@ -471,6 +485,13 @@ type V2PackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema = Schema
   | ObjectPackFormula<ParamDefsT, ArraySchema<SchemaT>>
   | ObjectPackFormula<ParamDefsT, SchemaT>;
 
+/**
+ * The union of types that represent formula definitions, including standard formula definitions,
+ * metadata formulas, and the formulas that implement sync tables.
+ *
+ * It should be very uncommon to need to use this type, it is most common in meta analysis of the
+ * contents of a pack for for Coda internal use.
+ */
 export type TypedPackFormula = Formula | GenericSyncFormula;
 
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
@@ -488,11 +509,26 @@ export function isSyncPackFormula(fn: BaseFormula<ParamDefs, any>): fn is Generi
   return Boolean((fn as GenericSyncFormula).isSyncFormula);
 }
 
+/**
+ * The return value from the formula that implements a sync table. Each sync formula invocation
+ * returns one reasonable size page of results. The formula may also return a continuation, indicating
+ * that the sync formula should be invoked again to get a next page of results. Sync functions
+ * are called repeatedly until there is no continuation returned.
+ */
 export interface SyncFormulaResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+  /** The list of results from this page. */
   result: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>;
+  /**
+   * A marker indicating where the next sync formula invocation should pick up to get the next page of results.
+   * The contents of this object are entirely of your choosing. Sync formulas are called repeatedly
+   * until there is no continuation returned.
+   */
   continuation?: Continuation;
 }
 
+/**
+ * Inputs for creating the formula that implements a sync table.
+ */
 export interface SyncFormulaDef<
   K extends string,
   L extends string,
@@ -766,8 +802,38 @@ export type FormulaDefinitionV2<
  * than is used internally.
  */
 export interface MetadataFormulaObjectResultType {
+  /** The value displayed to the user in the UI. */
   display: string;
+  /** The value used for the formula argument when the user selects this option. */
   value: string | number;
+  /**
+   * If true, indicates that this result has child results nested underneath it.
+   * This option only applies to {@link listDynamicUrls}. When fetching options
+   * for entities that can be used as dynamic URLs for a dynamic sync table,
+   * some APIs may return data in a hierarchy rather than a flat list of options.
+   *
+   * For example, if your dynamic sync table synced data from a Google Drive file,
+   * you might return a list of folders, and then a user could click on a folder
+   * to view the files within it. When returning folder results, you would set
+   * `hasChildren: true` on them, but omit that on the file results.
+   *
+   * Leaf nodes, that is those without `hasChildren: true`, are ultimately selectable
+   * to create a table. Selecting a result with `hasChildren: true` will invoke
+   * `listDynamicUrls` again with `value` as the second argument.
+   *
+   * That is, your dynamic sync table definition might include:
+   *
+   * ```
+   * listDynamicUrls: async function(context, parentValue) {
+   *   ...
+   * }
+   * ```
+   *
+   * `parentValue` will be undefined the initial time that `listDynamicUrls`
+   * is invoked, but if you return a result with `hasChildren: true` and the user
+   * clicks on it, `listDynamicUrls` will be invoked again, with `parentValue`
+   * as the `value` of the result that was clicked on.
+   */
   hasChildren?: boolean;
 }
 
@@ -779,7 +845,39 @@ export interface MetadataFormulaObjectResultType {
  */
 export type MetadataContext = Record<string, any>;
 
+/**
+ * The type of values that can be returned from a {@link MetadataFormula}.
+ */
 export type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
+/**
+ * A formula that returns metadata relating to a core pack building block, like a sync table,
+ * a formula parameter, or a user account. Examples include {@link getSchema}, {@link getConnectionName},
+ * and {@link autocomplete}.
+ *
+ * Many pack building blocks make use of supporting features that often require JavaScript
+ * or an API request to implement. For example, fetching the list of available autocomplete
+ * options for a formula parameter often requires making an API call. The logic to implement this
+ * and the context required, like a {@link Fetcher} is very similar to that of a pack formula itself,
+ * so metadata formulas intentionally resemble regular formulas.
+ *
+ * A variety of tasks like those mentioned above can all be accomplished with formulas that
+ * share the same structure, so all of these supporting features are defined as `MetadataFormulas`.
+ * You typically do not need to define a `MetadataFormula` explicitly, but rather can simply define
+ * the JavaScript function that implements the formula. Coda will wrap this function with the necessary
+ * formula boilerplate to make it look like a complete Coda formula.
+ *
+ * All metadata functions are passed an {@link ExecutionContext} as the first parameter,
+ * and the optional second parameter is a string whose purpose and value varies depending on
+ * the use case. For example, a metadata formula that implements parameter autocomplete will
+ * be passed the user's current search if the user has started typing to search for a result.
+ * Not all metadata formulas make use of this second parameter.
+ *
+ * Autocomplete metadata functions are also passed a third parameter, which is a dictionary
+ * that has the values the user has specified for each of the other parameters in the formula
+ * (if any), so that the autocomplete options for one parameter can depend on the current
+ * values of the others. This is dictionary mapping the names of each parameter to its
+ * current value.
+ */
 export type MetadataFormula = BaseFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any> & {
   schema?: any;
 };
@@ -791,6 +889,18 @@ export type MetadataFunction = <K extends string, L extends string>(
 ) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<K, L>>;
 export type MetadataFormulaDef = MetadataFormula | MetadataFunction;
 
+/**
+ * A wrapper that generates a formula definition from the function that implements a metadata formula.
+ * It is uncommon to ever need to call this directly, normally you would just define the JavaScript
+ * function implementation, and Coda will wrap it with this to generate a full metadata formula
+ * definition.
+ *
+ * All function-like behavior in a pack is ultimately implemented using formulas, like you would
+ * define using {@link makeFormula}. That is, a formula with a name, description, parameter list,
+ * and an `execute` function body. This includes supporting utilities like paramter autocomplete functions.
+ * This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
+ * it is shaped like a Coda formula to be used at runtime.
+ */
 export function makeMetadataFormula(
   execute: MetadataFunction,
   options?: {connectionRequirement?: ConnectionRequirement},
@@ -818,11 +928,37 @@ export function makeMetadataFormula(
   });
 }
 
+/**
+ * A result from a parameter autocomplete function that pairs a UI display value with
+ * the underlying option that will be used in the formula when selected.
+ */
 export interface SimpleAutocompleteOption {
+  /** Text that will be displayed to the user in UI for this option. */
   display: string;
+  /** The actual value that will get used in the formula if this option is selected. */
   value: string | number;
 }
 
+/**
+ * Utility to search over an array of autocomplete results and return only those that
+ * match the given search string.
+ *
+ * You can do this yourself but this function helps simplify many common scenarios.
+ * Note that if you have a hardcoded list of autocomplete options, you can simply specify
+ * them directly as a list, you need not actually implement an autocomplete function.
+ *
+ * The primary use case here is fetching a list of all possible results from an API
+ * and then refining them using the user's current search string.
+ *
+ * @example
+ * ```
+ * autocomplete: async function(context, search) {
+ *   const response = await context.fetcher.fetch({method: "GET", url: "/api/entities"});
+ *   const allOptions = response.body.entities.map(entity => entity.name);
+ *   return coda.simpleAutocomplete(search, allOptions);
+ * }
+ * ```
+ */
 export function simpleAutocomplete(
   search: string | undefined,
   options: Array<string | number | SimpleAutocompleteOption>,
@@ -1011,7 +1147,16 @@ export interface SyncTableOptions<
    * A set of options used internally by {@link makeDynamicSyncTable}
    */
   dynamicOptions?: {
+    /**
+     * A formula that returns the schema for this table.
+     *
+     * For a dynamic sync table, the value of {@link DynamicSyncTableOptions.getSchema}
+     * is passed through here. For a non-dynamic sync table, you may still implement
+     * this if you table has a schema that varies based on the user account, but
+     * does not require a {@link dynamicUrl}.
+     */
     getSchema?: MetadataFormulaDef;
+    /** See {@link DynamicSyncTableOptions.entityName} */
     entityName?: string;
   };
 }
@@ -1162,6 +1307,25 @@ export function makeSyncTableLegacy<
   return makeSyncTable({name, identityName: '', schema, formula, connectionRequirement, dynamicOptions});
 }
 
+/**
+ * Creates a dynamic sync table definition.
+ *
+ * @example
+ * ```
+ * coda.makeDynamicSyncTable({
+ *   name: "MySyncTable",
+ *   getName: async function(context) => {
+ *     const response = await context.fetcher.fetch({method: "GET", url: context.sync.dynamicUrl});
+ *     return response.body.name;
+ *   },
+ *   getName: async function(context) => {
+ *     const response = await context.fetcher.fetch({method: "GET", url: context.sync.dynamicUrl});
+ *     return response.body.browserLink;
+ *   },
+ *   ...
+ * });
+ * ```
+ */
 export function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({
   name,
   getName: getNameDef,
@@ -1272,6 +1436,28 @@ export function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT
   });
 }
 
+// TODO(jonathan/ekoleda): Flesh out a guide for empty formulas if this is something we care to support.
+// We probably also need the builder's addFormula() method to support empty formula defs if it doesn't already.
+/**
+ * Creates the definition of an "empty" formula, that is, a formula that uses a {@link RequestHandlerTemplate}
+ * to define an implementation for the formula rather than implementing an actual `execute` function
+ * in JavaScript.
+ *
+ * @example
+ * ```
+ * coda.makeEmptyFormula({
+    name: "GetWidget",
+    description: "Gets a widget.",
+    request: {
+      url: "https://example.com/widgets/{id}",
+      method: "GET",
+    },
+    parameters: [
+      coda.makeParameter({type: coda.ParameterType.Number, name: "id", description: "The ID of the widget to get."}),
+    ],
+  }),
+ * ```
+ */
 export function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: EmptyFormulaDef<ParamDefsT>) {
   const {request, ...rest} = definition;
   const {parameters} = rest;

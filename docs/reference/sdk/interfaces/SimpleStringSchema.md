@@ -1,5 +1,8 @@
 # Interface: SimpleStringSchema<T\>
 
+A schema whose underlying value is a string, along with an optional hint about how Coda
+should interpret that string.
+
 ## Type parameters
 
 | Name | Type |
