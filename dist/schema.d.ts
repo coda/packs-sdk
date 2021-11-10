@@ -466,9 +466,15 @@ export interface ObjectSchemaProperty {
     fromKey?: string;
     required?: boolean;
 }
+/**
+ * The type of the {@link properties} in the definition of an object schema.
+ * This is essentially a dictionary mapping the name of a property to a schema
+ * definition for that property.
+ */
 export declare type ObjectSchemaProperties<K extends string = never> = {
     [K2 in K | string]: Schema & ObjectSchemaProperty;
 };
+/** @hidden */
 export declare type GenericObjectSchema = ObjectSchema<string, string>;
 export interface IdentityDefinition {
     name: string;
@@ -543,6 +549,9 @@ declare type AttributionNode = TextAttributionNode | LinkAttributionNode | Image
  * rendered any time a value with that identity is rendered in a doc.
  */
 export declare function makeAttributionNode<T extends AttributionNode>(node: T): T;
+/**
+ * The union of all of the schema types supported for return values and object properties.
+ */
 export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
 export declare function isObject(val?: Schema): val is GenericObjectSchema;
 export declare function isArray(val?: Schema): val is ArraySchema;
@@ -571,6 +580,22 @@ declare type ObjectSchemaNoFromKeyType<T extends ObjectSchemaDefinition<any, any
     } ? K : never;
 }>>;
 declare type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = ObjectSchemaNoFromKeyType<T> & SchemaFromKeyWildCard<T>;
+/**
+ * A TypeScript helper that parses the expected `execute` function return type from a given schema.
+ * That is, given a schema, this utility will produce the type that an `execute` function should return
+ * in order to fulfill the schema.
+ *
+ * For example, `SchemaType<NumberSchema>` produces the type `number`.
+ *
+ * For an object schema, this will for the most part return an object matching the schema
+ * but if the schema uses {@link `fromKey`} then this utility will be unable to infer
+ * that the return value type should use the property names given in the `fromKey`
+ * attribute, and will simply relax any property name type-checking in such a case.
+ *
+ * This utility is very optional and only useful for advanced cases of strong typing.
+ * It can be helpful for adding type-checking for the return value of an `execute` function
+ * to ensure that it matches the schema you have declared for that formula.
+ */
 export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? StringHintTypeToSchemaType<T['codaType']> : T extends ArraySchema ? Array<SchemaType<T['items']>> : T extends GenericObjectSchema ? ObjectSchemaType<T> : never;
 export declare type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
 /**
