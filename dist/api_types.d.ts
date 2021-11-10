@@ -21,8 +21,13 @@ export declare enum Type {
     image = 6
 }
 export declare type ParamType = Exclude<Type, Type.object>;
+/**
+ * The type of a parameter or return value that is an array.
+ */
 export interface ArrayType<T extends Type> {
+    /** Identifies this type as an array. */
     type: 'array';
+    /** The type of the items in this array. */
     items: T;
 }
 export declare function isArrayType(obj: any): obj is ArrayType<any>;

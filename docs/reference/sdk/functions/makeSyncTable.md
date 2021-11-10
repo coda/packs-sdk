@@ -20,7 +20,7 @@ See [Normalization](/index.html#normalization) for more information about schema
 | `L` | extends `string` |
 | `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
 | `SchemaDefT` | extends `ObjectSchemaDefinition`<`K`, `L`, `SchemaDefT`\> |
-| `SchemaT` | extends `ObjectSchemaDefinition`<`K`, `L`, `SchemaT`\> & { `identity?`: [`Identity`](../interfaces/Identity.md)  } |
+| `SchemaT` | extends `ObjectSchemaDefinition`<`K`, `L`, `SchemaT`\> & { `identity?`: `Identity`  } |
 
 #### Parameters
 
@@ -34,4 +34,4 @@ See [Normalization](/index.html#normalization) for more information about schema
 
 #### Defined in
 
-[api.ts:1242](https://github.com/coda/packs-sdk/blob/main/api.ts#L1242)
+[api.ts:1247](https://github.com/coda/packs-sdk/blob/main/api.ts#L1247)

@@ -148,10 +148,15 @@ export interface SyncTableDef<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>,
 > {
+  /** See {@link SyncTableOptions.name} */
   name: string;
+  /** See {@link SyncTableOptions.schema} */
   schema: SchemaT;
+  /** See {@link SyncTableOptions.formula} */
   getter: SyncFormula<K, L, ParamDefsT, SchemaT>;
+  /** See {@link SyncTableOptions.dynamicOptions.getSchema} */
   getSchema?: MetadataFormula;
+  /** See {@link SyncTableOptions.dynamicOptions.entityName} */
   entityName?: string;
 }
 

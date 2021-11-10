@@ -99,10 +99,15 @@ export declare class StatusCodeError extends Error {
  * instead, define sync tables using {@link makeSyncTable}.
  */
 export interface SyncTableDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> {
+    /** See {@link SyncTableOptions.name} */
     name: string;
+    /** See {@link SyncTableOptions.schema} */
     schema: SchemaT;
+    /** See {@link SyncTableOptions.formula} */
     getter: SyncFormula<K, L, ParamDefsT, SchemaT>;
+    /** See {@link SyncTableOptions.dynamicOptions.getSchema} */
     getSchema?: MetadataFormula;
+    /** See {@link SyncTableOptions.dynamicOptions.entityName} */
     entityName?: string;
 }
 /**

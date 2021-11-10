@@ -348,7 +348,7 @@ pack.addSyncTable({
 | `K` | extends `string` |
 | `L` | extends `string` |
 | `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
-| `SchemaT` | extends [`ObjectSchema`](../interfaces/ObjectSchema.md)<`K`, `L`, `SchemaT`\> |
+| `SchemaT` | extends `ObjectSchema`<`K`, `L`, `SchemaT`\> |
 
 #### Parameters
 

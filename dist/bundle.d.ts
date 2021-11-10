@@ -494,8 +494,47 @@ export interface ArraySchema<T extends Schema = Schema> extends BaseSchema {
 	/** A schema for the items of this array. */
 	items: T;
 }
+/**
+ * Fields that may be set on a schema property in the {@link properties} definition
+ * of an object schema.
+ */
 export interface ObjectSchemaProperty {
+	/**
+	 * The name of a field in a return value object that should be re-mapped to this property.
+	 * This provides a way to rename fields from API responses without writing code.
+	 *
+	 * Suppose that you're fetching an object from an API that has a property called "duration".
+	 * But in your pack, you'd like the value to be called "durationSeconds" to be more precise.
+	 * You could write code in your `execute` function to relabel the field, but you could
+	 * also use `fromKey` and Coda will do it for you.
+	 *
+	 * Suppose your `execute` function looked like this:
+	 * ```
+	 * execute: async function(context) {
+	 *   const response = await context.fetcher.fetch({method: "GET", url: "/api/some-entity"});
+	 *   // Suppose the body of the response looks like {duration: 123, name: "foo"}.
+	 *   return response.body;
+	 * }
+	 * ```
+	 *
+	 * You can define your schema like this:
+	 * ```
+	 * coda.makeObjectSchema({
+	 *   properties: {
+	 *     name: {type: coda.ValueType.String},
+	 *     durationSeconds: {type: coda.ValueType.Number, fromKey: "duration"},
+	 *   },
+	 * });
+	 * ```
+	 *
+	 * This tells Coda to transform your formula's return value, creating a field "durationSeconds"
+	 * whose value comes another field called "duration".
+	 */
 	fromKey?: string;
+	/**
+	 * When true, indicates that an object return value for a formula that has this schema must
+	 * include a non-empty value for this property.
+	 */
 	required?: boolean;
 }
 /**
@@ -508,8 +547,33 @@ export declare type ObjectSchemaProperties<K extends string = never> = {
 };
 /** @hidden */
 export declare type GenericObjectSchema = ObjectSchema<string, string>;
+/**
+ * An identifier for a schema, allowing other schemas to reference it.
+ *
+ * You may optionally specify an {@link identity} when defining an object schema.
+ * This signals that this schema represents an important named entity in the context of your pack.
+ * Schemas with identities may be referenced by other schemas, in which case Coda
+ * will render such values as @-references in the doc, allowing you to create relationships
+ * between entities.
+ *
+ * Every sync table's top-level schema is required to have an identity. However, an identity
+ * will be created on your behalf using the {@link identityName} that you provide in the sync
+ * table definition, so you needn't explicitly create on unless desired.
+ */
 export interface IdentityDefinition {
+	/**
+	 * The name of this entity. This is an arbitrary name but should be unique within your pack.
+	 * For example, if you are defining a schema that represents a user object, "User" would be a good identity name.
+	 */
 	name: string;
+	/**
+	 * The dynamic URL, this is a schema for a dynamic sync table. When returning a schema from the {@link getSchema}
+	 * formula of a dynamic sync table, you must include the dynamic URL of that table, so that rows
+	 * in this table may be distinguished from rows in another dynamic instance of the same table.
+	 *
+	 * When creating a reference to a dynamic sync table, you must include the dynamic URL of the table
+	 * you wish to reference, again to distinguish which table instance you are trying to reference.
+	 */
 	dynamicUrl?: string;
 	/**
 	 * Attribution text, images, and/or links that should be rendered along with this value.
@@ -517,21 +581,60 @@ export interface IdentityDefinition {
 	 * See {@link makeAttributionNode}.
 	 */
 	attribution?: AttributionNode[];
-	packId?: PackId;
+	/** The ID of another pack, if you are trying to reference a value from different pack. */
+	packId?: number;
 }
+/** @hidden */
 export interface Identity extends IdentityDefinition {
 	packId: PackId;
 }
+/**
+ * A schema definition for an object value (a value with key-value pairs).
+ */
 export interface ObjectSchemaDefinition<K extends string, L extends string> extends BaseSchema {
+	/** Identifies this schema as an object schema. */
 	type: ValueType.Object;
+	/** Definintion of the key-value pairs in this object. */
 	properties: ObjectSchemaProperties<K | L>;
+	/**
+	 * The name of a property within {@link properties} that represents a unique id for this object.
+	 * Sync table schemas must specify an id property, which uniquely identify each synced row.
+	 */
 	id?: K;
+	/**
+	 * The name of a property within {@link properties} that be used to label this object in the UI.
+	 * Object values can contain many properties and the Coda UI will display them as a "chip"
+	 * with only the value of the "primary" property used as the chip's label. The other properties
+	 * can be seen when hovering over the chip.
+	 */
 	primary?: K;
+	/**
+	 * A hint for how Coda should interpret and render this object value.
+	 *
+	 * For example, an object can represent a person (user) in a Coda doc, with properties for the
+	 * email address of the person and their name. Using `ValueHintType.Person` tells Coda to
+	 * render such a value as an @-reference to that person, rather than a basic object schip.
+	 */
 	codaType?: ObjectHintTypes;
+	/**
+	 * A list of property names from within {@link properties} for the "featured" properties
+	 * of this object, used in sync tables. When a sync table is first added to a document,
+	 * columns are created for each of the featured properties. The user can easily add additional
+	 * columns for any other properties, as desired.
+	 *
+	 * This distinction exists for cases where a sync table may include dozens of properties,
+	 * which would create a very wide table that is difficult to use. Featuring properties
+	 * allows a sync table to be created with the most useful columns created by default,
+	 * and the user can add additional columns as they find them useful.
+	 *
+	 * Non-featured properties can always be referenced in formulas regardless of whether column
+	 * projections have been created for them.
+	 */
 	featured?: L[];
 	identity?: IdentityDefinition;
 }
 export declare type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
+/** @hidden */
 export interface ObjectSchema<K extends string, L extends string> extends ObjectSchemaDefinition<K, L> {
 	identity?: Identity;
 }
@@ -716,8 +819,13 @@ export declare enum Type {
 	html = 5,
 	image = 6
 }
+/**
+ * The type of a parameter or return value that is an array.
+ */
 export interface ArrayType<T extends Type> {
+	/** Identifies this type as an array. */
 	type: "array";
+	/** The type of the items in this array. */
 	items: T;
 }
 export declare type UnionType = ArrayType<Type> | Type;
@@ -1347,10 +1455,15 @@ export declare class StatusCodeError extends Error {
  * instead, define sync tables using {@link makeSyncTable}.
  */
 export interface SyncTableDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> {
+	/** See {@link SyncTableOptions.name} */
 	name: string;
+	/** See {@link SyncTableOptions.schema} */
 	schema: SchemaT;
+	/** See {@link SyncTableOptions.formula} */
 	getter: SyncFormula<K, L, ParamDefsT, SchemaT>;
+	/** See {@link SyncTableOptions.dynamicOptions.getSchema} */
 	getSchema?: MetadataFormula;
+	/** See {@link SyncTableOptions.dynamicOptions.entityName} */
 	entityName?: string;
 }
 /**

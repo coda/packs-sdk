@@ -1,10 +1,16 @@
 # Interface: IdentityDefinition
 
-## Hierarchy
+An identifier for a schema, allowing other schemas to reference it.
 
-- **`IdentityDefinition`**
+You may optionally specify an {@link identity} when defining an object schema.
+This signals that this schema represents an important named entity in the context of your pack.
+Schemas with identities may be referenced by other schemas, in which case Coda
+will render such values as @-references in the doc, allowing you to create relationships
+between entities.
 
-  ↳ [`Identity`](Identity.md)
+Every sync table's top-level schema is required to have an identity. However, an identity
+will be created on your behalf using the {@link identityName} that you provide in the sync
+table definition, so you needn't explicitly create on unless desired.
 
 ## Properties
 
@@ -18,7 +24,7 @@ See [makeAttributionNode](../functions/makeAttributionNode.md).
 
 #### Defined in
 
-[schema.ts:565](https://github.com/coda/packs-sdk/blob/main/schema.ts#L565)
+[schema.ts:632](https://github.com/coda/packs-sdk/blob/main/schema.ts#L632)
 
 ___
 
@@ -26,9 +32,16 @@ ___
 
 • `Optional` **dynamicUrl**: `string`
 
+The dynamic URL, this is a schema for a dynamic sync table. When returning a schema from the {@link getSchema}
+formula of a dynamic sync table, you must include the dynamic URL of that table, so that rows
+in this table may be distinguished from rows in another dynamic instance of the same table.
+
+When creating a reference to a dynamic sync table, you must include the dynamic URL of the table
+you wish to reference, again to distinguish which table instance you are trying to reference.
+
 #### Defined in
 
-[schema.ts:559](https://github.com/coda/packs-sdk/blob/main/schema.ts#L559)
+[schema.ts:626](https://github.com/coda/packs-sdk/blob/main/schema.ts#L626)
 
 ___
 
@@ -36,9 +49,12 @@ ___
 
 • **name**: `string`
 
+The name of this entity. This is an arbitrary name but should be unique within your pack.
+For example, if you are defining a schema that represents a user object, "User" would be a good identity name.
+
 #### Defined in
 
-[schema.ts:558](https://github.com/coda/packs-sdk/blob/main/schema.ts#L558)
+[schema.ts:615](https://github.com/coda/packs-sdk/blob/main/schema.ts#L615)
 
 ___
 
@@ -46,6 +62,8 @@ ___
 
 • `Optional` **packId**: `number`
 
+The ID of another pack, if you are trying to reference a value from different pack.
+
 #### Defined in
 
-[schema.ts:567](https://github.com/coda/packs-sdk/blob/main/schema.ts#L567)
+[schema.ts:634](https://github.com/coda/packs-sdk/blob/main/schema.ts#L634)

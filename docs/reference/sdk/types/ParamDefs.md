@@ -6,4 +6,4 @@ The type for the complete set of parameter definitions for a fomrula.
 
 #### Defined in
 
-[api_types.ts:239](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L239)
+[api_types.ts:244](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L244)
