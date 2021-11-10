@@ -1,4 +1,7 @@
 import type {AWSAccessKeyCredentials} from './auth_types';
+import type {AWSAssumeRoleCredentials} from './auth_types';
+import type {Credentials as AWSCredentials} from '@aws-sdk/types';
+import {AssumeRoleCommand} from '@aws-sdk/client-sts';
 import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
 import ClientOAuth2 from 'client-oauth2';
@@ -12,6 +15,7 @@ import type {MultiQueryParamCredentials} from './auth_types';
 import type {OAuth2Credentials} from './auth_types';
 import type {QueryParamCredentials} from './auth_types';
 import type {Response} from 'request';
+import {STSClient} from '@aws-sdk/client-sts';
 import {Sha256} from '@aws-crypto/sha256-js';
 import {SignatureV4} from '@aws-sdk/signature-v4';
 import type {SyncExecutionContext} from '../api_types';
@@ -373,46 +377,87 @@ export class AuthenticatingFetcher implements Fetcher {
       case AuthenticationType.AWSAccessKey: {
         const {accessKeyId, secretAccessKey} = this._credentials as AWSAccessKeyCredentials;
         const {service} = this._authDef;
-        const {hostname, pathname, protocol, searchParams} = new URL(url);
-        const query = Object.fromEntries(searchParams.entries());
-
-        const region = this._getAwsRegion({service, hostname});
-        
-        const sig = new SignatureV4({
-          applyChecksum: true,
-          credentials: {
-            accessKeyId,
-            secretAccessKey,
-          },
-          region,
-          service,
-          sha256: Sha256,
-        });
-
-        const result = await sig.sign({
-          method,
-          headers: headers || {},
-          body,
-          protocol,
-          hostname,
-          path: pathname,
-          query,
-        });
-
+        const credentials: AWSCredentials = {
+          accessKeyId,
+          secretAccessKey,
+        };
+        const resultHeaders = await this._signAwsRequest({
+          body, method, url, service, headers: headers || {}, credentials});
         return {
           url,
           body,
           form,
-          headers: result.headers,
+          headers: resultHeaders,
         };
       }
-      case AuthenticationType.AWSAssumeRole:
+      case AuthenticationType.AWSAssumeRole: {
+        const {roleArn, externalId} = this._credentials as AWSAssumeRoleCredentials;
+        const {service} = this._authDef;
+        const {hostname} = new URL(url);
+        const region = this._getAwsRegion({service, hostname});
+
+        const client = new STSClient({region});
+        const command = new AssumeRoleCommand({
+          RoleSessionName: FetcherUserAgent,
+          RoleArn: roleArn,
+          ExternalId: externalId,
+        });
+        const assumeRoleResult = await client.send(command);
+        const credentials: AWSCredentials = {
+          accessKeyId: ensureExists(assumeRoleResult.Credentials?.AccessKeyId),
+          secretAccessKey: ensureExists(assumeRoleResult.Credentials?.SecretAccessKey),
+          sessionToken: assumeRoleResult.Credentials?.SessionToken,
+          expiration: assumeRoleResult.Credentials?.Expiration,
+        };
+        const resultHeaders = await this._signAwsRequest({
+          body, method, url, service, headers: headers || {}, credentials});
+        return {
+          url,
+          body,
+          form,
+          headers: resultHeaders,
+        };
+      }
       case AuthenticationType.Various:
         throw new Error('Not yet implemented');
 
       default:
         return ensureUnreachable(this._authDef);
     }
+  }
+
+  private async _signAwsRequest({body, credentials, headers, method, service, url}: {
+    body?: any;
+    credentials: AWSCredentials;
+    headers: {[key: string]: string};
+    method: string;
+    service: string;
+    url: string;
+  }): Promise<{[key: string]: string}> {
+    const {hostname, pathname, protocol, searchParams} = new URL(url);
+    const query = Object.fromEntries(searchParams.entries());
+
+    const region = this._getAwsRegion({service, hostname});
+    
+    const sig = new SignatureV4({
+      applyChecksum: true,
+      credentials,
+      region,
+      service,
+      sha256: Sha256,
+    });
+
+    const result = await sig.sign({
+      method,
+      headers: headers || {},
+      body,
+      protocol,
+      hostname,
+      path: pathname,
+      query,
+    });
+
+    return result.headers;
   }
 
   private _getAwsRegion({service, hostname}: {service: string; hostname: string}): string {
