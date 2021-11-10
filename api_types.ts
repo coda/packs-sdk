@@ -75,7 +75,13 @@ interface TypeMap {
   [Type.image]: string;
 }
 
+/**
+ * The union of types for arguments to the `execute` function for a formula.
+ */
 export type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | PackFormulaValue[];
+/**
+ * The union of types that can be returned by the `execute` function for a formula.
+ */
 export type PackFormulaResult = $Values<TypeMap> | PackFormulaResult[];
 
 export type TypeOf<T extends PackFormulaResult> = T extends number
@@ -182,6 +188,9 @@ export const ParameterTypeInputMap: Record<ParameterType, UnionType> = {
   [ParameterType.ImageArray]: {type: 'array', items: Type.image},
 };
 
+/**
+ * The definition of a formula parameter.
+ */
 export interface ParamDef<T extends UnionType> {
   /**
    * The name of the parameter, which will be shown to the user when invoking this formula.
@@ -200,6 +209,7 @@ export interface ParamDef<T extends UnionType> {
    * All optional parameters must come after all non-optional parameters.
    */
   optional?: boolean;
+  /** @hidden */
   hidden?: boolean; // TODO: remove? Seems unused.
   /**
    * A {@link MetadataFormula} that returns valid values for this parameter, optionally matching a search
@@ -220,10 +230,17 @@ export interface ParamDef<T extends UnionType> {
   defaultValue?: DefaultValueType<T>;
 }
 
+/** @hidden */
 export type ParamArgs<T extends UnionType> = Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
 
+/**
+ * The type for the complete set of parameter definitions for a fomrula.
+ */
 export type ParamDefs = [ParamDef<UnionType>, ...Array<ParamDef<UnionType>>] | [];
 
+// TODO(jonathan): See if we can get rid of this, it seems just like ParamDefs
+// but less specific. It's only use on the `coda` side and ParamDefs might work just as well.
+/** @hidden */
 export type ParamsList = Array<ParamDef<UnionType>>;
 
 type TypeOfMap<T extends UnionType> = T extends Type
@@ -232,10 +249,17 @@ type TypeOfMap<T extends UnionType> = T extends Type
   ? Array<TypeMap[V]>
   : never;
 
+/**
+ * The type for the set of argument values that are passed to formula's `execute` function, based on
+ * the parameter defintion for that formula.
+ */
 export type ParamValues<ParamDefsT extends ParamDefs> = {
   [K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
 } & any[]; // NOTE(oleg): we need this to avoid "must have a '[Symbol.iterator]()' method that returns an iterator."
 
+/**
+ * The type of values that are allowable to be used as a {@link defaultValue} for a parameter.
+ */
 export type DefaultValueType<T extends UnionType> = T extends ArrayType<Type.date>
   ? TypeOfMap<T> | PrecannedDateRange
   : TypeOfMap<T>;
@@ -352,6 +376,7 @@ export interface Network {
 
 // Fetcher APIs
 const ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE'] as const;
+/** The type of the HTTP methods (verbs) supported by the fetcher. */
 export type FetchMethodType = typeof ValidFetchMethods[number];
 
 /**

@@ -10,6 +10,12 @@ import type {PackVersionDefinition} from './types';
 import type {PostSetup} from './types';
 import type {SyncTable} from './api';
 
+// TODO(jonathan): Anything in this file that gets exported in index.ts should probably
+// be removed from there and put into a separate entrypoint. These types should
+// only need to be used by `coda` code that handles implementation and rendering
+// of pack listings.
+
+/** @hidden */
 export type PackSyncTable = Omit<
   SyncTable,
   'getter' | 'getName' | 'getSchema' | 'listDynamicUrls' | 'getDisplayUrl'
@@ -23,18 +29,22 @@ export type PackSyncTable = Omit<
   listDynamicUrls?: MetadataFormulaMetadata;
 };
 
+/** @hidden */
 export interface PackFormatMetadata extends Omit<Format, 'matchers'> {
   matchers: string[];
 }
 
+/** @hidden */
 export interface PackFormulasMetadata {
   [namespace: string]: PackFormulaMetadata[];
 }
 
+/** @hidden */
 export type PostSetupMetadata = Omit<PostSetup, 'getOptionsFormula'> & {
   getOptionsFormula: MetadataFormulaMetadata;
 };
 
+/** @hidden */
 export type AuthenticationMetadata = DistributiveOmit<
   Authentication,
   'getConnectionName' | 'getConnectionUserId' | 'postSetup'
@@ -44,7 +54,8 @@ export type AuthenticationMetadata = DistributiveOmit<
   postSetup?: PostSetupMetadata[];
 };
 
-/** Stripped-down version of `PackVersionDefinition` that doesn't contain formula definitions. */
+// Stripped-down version of `PackVersionDefinition` that doesn't contain formula definitions.
+/** @hidden */
 export type PackVersionMetadata = Omit<
   PackVersionDefinition,
   'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'
@@ -56,7 +67,8 @@ export type PackVersionMetadata = Omit<
   defaultAuthentication?: AuthenticationMetadata;
 };
 
-/** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
+// Stripped-down version of `PackDefinition` that doesn't contain formula definitions.
+/** @hidden */
 export type PackMetadata = PackVersionMetadata &
   Pick<
     PackDefinition,
@@ -78,12 +90,19 @@ export type PackMetadata = PackVersionMetadata &
 
 // Re-exported values for use in browser code.
 
+/** @hidden */
 export type ExternalPackAuthenticationType = AuthenticationType;
+/** @hidden */
 export type ExternalPackFormulas = PackFormulasMetadata | PackFormulaMetadata[];
+/** @hidden */
 export type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
+/** @hidden */
 export type ExternalPackFormula = PackFormulaMetadata;
+/** @hidden */
 export type ExternalPackFormat = Format;
+/** @hidden */
 export type ExternalPackFormatMetadata = PackFormatMetadata;
+/** @hidden */
 export type ExternalSyncTable = PackSyncTable;
 
 type BasePackVersionMetadata = Omit<
@@ -91,7 +110,8 @@ type BasePackVersionMetadata = Omit<
   'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables'
 >;
 
-/** Further stripped-down version of `PackVersionMetadata` that contains only what the browser needs. */
+// Further stripped-down version of `PackVersionMetadata` that contains only what the browser needs.
+/** @hidden */
 export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
   authentication: {
     type: ExternalPackAuthenticationType;
@@ -110,7 +130,8 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
   syncTables?: ExternalSyncTable[];
 }
 
-/** Further stripped-down version of `PackMetadata` that contains only what the browser needs. */
+// Further stripped-down version of `PackMetadata` that contains only what the browser needs.
+/** @hidden */
 export type ExternalPackMetadata = ExternalPackVersionMetadata &
   Pick<
     PackMetadata,
@@ -129,6 +150,7 @@ export type ExternalPackMetadata = ExternalPackVersionMetadata &
     | 'isSystem'
   >;
 
+/** @hidden */
 export interface PackUpload {
   // PackMetadata is only for legacy packs. This should be removed once
   // all the feature's we're relying on from legacy pack defs like quotas

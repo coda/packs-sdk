@@ -393,6 +393,9 @@ export function check(condition: boolean, msg: string) {
   }
 }
 
+/**
+ * @deprecated Formulas should now only be defined as an array, as namespaces are deprecated.
+ */
 export interface PackFormulas {
   readonly [namespace: string]: Formula[];
 }
@@ -464,6 +467,13 @@ export type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Sche
 
 // can't use a map (e.g. ResultTypeToFormulaTypeMap<ParamDefs, SchemaT>[ResultT]) here since
 // ParamDefsT isn't propagated correctly.
+/**
+ * A pack formula, complete with metadata about the formula like its name, description, and parameters,
+ * as well as the implementation of that formula.
+ *
+ * This is the type for an actual user-facing formula, rather than other formula-shaped resources within a
+ * pack, like an autocomplete metadata formula or a sync getter formula.
+ */
 export type Formula<
   ParamDefsT extends ParamDefs = ParamDefs,
   ResultT extends FormulaResultValueType = FormulaResultValueType,
@@ -495,8 +505,11 @@ type V2PackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema = Schema
 export type TypedPackFormula = Formula | GenericSyncFormula;
 
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
+/** @hidden */
 export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
+/** @hidden */
 export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
+
 export function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata {
   return fn.resultType === Type.object;
 }

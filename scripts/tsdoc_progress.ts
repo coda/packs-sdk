@@ -44,7 +44,7 @@ function getReflectionData() {
 }
 
 function traverse(data: ReflectionData): void {
-  if (!hasComment(data)) {
+  if (!hasComment(data) && data.kindString !== 'Project') {
     logMissing(data);
   }
   if (data.comment?.tags?.find(t => t.tag === 'deprecated')) {
