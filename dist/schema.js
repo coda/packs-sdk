@@ -348,12 +348,13 @@ function makeSchema(schema) {
 exports.makeSchema = makeSchema;
 exports.PlaceholderIdentityPackId = -1;
 function makeObjectSchema(schemaDef) {
-    validateObjectSchema(schemaDef);
+    const schema = { ...schemaDef, type: ValueType.Object };
+    validateObjectSchema(schema);
     // TODO(jonathan): Enable after existing packs go through the v2 upload flow.
     // if (schema.identity) {
     //   schema.identity = {...schema.identity, packId: PlaceholderIdentityPackId};
     // }
-    return schemaDef;
+    return schema;
 }
 exports.makeObjectSchema = makeObjectSchema;
 function validateObjectSchema(schema) {
