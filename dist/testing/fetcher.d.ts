@@ -17,6 +17,7 @@ export declare class AuthenticatingFetcher implements Fetcher {
     private _isOAuth401;
     private _refreshOAuthCredentials;
     private _applyAuthentication;
+    private _signAwsRequest;
     private _getAwsRegion;
     private _applyAndValidateEndpoint;
     private _validateHost;
