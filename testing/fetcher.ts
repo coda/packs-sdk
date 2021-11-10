@@ -1,3 +1,4 @@
+import type {AWSAccessKeyCredentials} from './auth_types';
 import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
 import ClientOAuth2 from 'client-oauth2';
@@ -11,6 +12,8 @@ import type {MultiQueryParamCredentials} from './auth_types';
 import type {OAuth2Credentials} from './auth_types';
 import type {QueryParamCredentials} from './auth_types';
 import type {Response} from 'request';
+import {Sha256} from '@aws-crypto/sha256-js';
+import {SignatureV4} from '@aws-sdk/signature-v4';
 import type {SyncExecutionContext} from '../api_types';
 import type {TemporaryBlobStorage} from '../api_types';
 import type {TokenCredentials} from './auth_types';
@@ -73,7 +76,7 @@ export class AuthenticatingFetcher implements Fetcher {
   }
 
   async fetch<T = any>(request: FetchRequest, isRetry?: boolean): Promise<FetchResponse<T>> {
-    const {url, headers, body, form} = this._applyAuthentication(request);
+    const {url, headers, body, form} = await this._applyAuthentication(request);
     this._validateHost(url);
 
     let response: Response | undefined;
@@ -224,13 +227,14 @@ export class AuthenticatingFetcher implements Fetcher {
     this._updateCredentialsCallback(this._credentials);
   }
 
-  private _applyAuthentication({
+  private async _applyAuthentication({
+    method,
     url: rawUrl,
     headers,
     body,
     form,
     disableAuthentication,
-  }: FetchRequest): Pick<FetchRequest, 'url' | 'headers' | 'body' | 'form'> {
+  }: FetchRequest): Promise<Pick<FetchRequest, 'url' | 'headers' | 'body' | 'form'>> {
     if (!this._authDef || this._authDef.type === AuthenticationType.None || disableAuthentication) {
       return {url: rawUrl, headers, body, form};
     }
@@ -366,7 +370,42 @@ export class AuthenticatingFetcher implements Fetcher {
           headers: requestHeaders,
         };
       }
-      case AuthenticationType.AWSAccessKey:
+      case AuthenticationType.AWSAccessKey: {
+        const {accessKeyId, secretAccessKey} = this._credentials as AWSAccessKeyCredentials;
+        const {service} = this._authDef;
+        const {hostname, pathname, protocol, searchParams} = new URL(url);
+        const query = Object.fromEntries(searchParams.entries());
+
+        const region = this._getAwsRegion({service, hostname});
+        
+        const sig = new SignatureV4({
+          applyChecksum: true,
+          credentials: {
+            accessKeyId,
+            secretAccessKey,
+          },
+          region,
+          service,
+          sha256: Sha256,
+        });
+
+        const result = await sig.sign({
+          method,
+          headers: headers || {},
+          body,
+          protocol,
+          hostname,
+          path: pathname,
+          query,
+        });
+
+        return {
+          url,
+          body,
+          form,
+          headers: result.headers,
+        };
+      }
       case AuthenticationType.AWSAssumeRole:
       case AuthenticationType.Various:
         throw new Error('Not yet implemented');
@@ -374,6 +413,21 @@ export class AuthenticatingFetcher implements Fetcher {
       default:
         return ensureUnreachable(this._authDef);
     }
+  }
+
+  private _getAwsRegion({service, hostname}: {service: string; hostname: string}): string {
+    // Global services typically live in us-east-1, so sign for that region.
+    if (['iam', 'cloudfront', 'globalaccelerator', 'route53', 'sts'].includes(service)) {
+      return 'us-east-1';
+    }
+  
+    // AWS URLs are typically of the form serviceName.region.amazonaws.com, but can have more parts in front.
+    const parts = hostname.split('.');
+    if (parts.length < 4) {
+      return 'us-east-1';
+    }
+  
+    return parts[parts.length - 3];
   }
 
   private _applyAndValidateEndpoint(rawUrl: string): string {
