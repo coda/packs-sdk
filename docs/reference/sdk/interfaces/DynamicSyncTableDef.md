@@ -10,7 +10,7 @@ instead, define dynamic sync tables using [makeDynamicSyncTable](../functions/ma
 | `K` | extends `string` |
 | `L` | extends `string` |
 | `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
-| `SchemaT` | extends [`ObjectSchema`](ObjectSchema.md)<`K`, `L`\> |
+| `SchemaT` | extends `ObjectSchema`<`K`, `L`\> |
 
 ## Hierarchy
 
@@ -24,13 +24,15 @@ instead, define dynamic sync tables using [makeDynamicSyncTable](../functions/ma
 
 • `Optional` **entityName**: `string`
 
+See {@link SyncTableOptions.dynamicOptions.entityName}
+
 #### Inherited from
 
 [SyncTableDef](SyncTableDef.md).[entityName](SyncTableDef.md#entityname)
 
 #### Defined in
 
-[api.ts:155](https://github.com/coda/packs-sdk/blob/main/api.ts#L155)
+[api.ts:160](https://github.com/coda/packs-sdk/blob/main/api.ts#L160)
 
 ___
 
@@ -42,7 +44,7 @@ See {@link DynamicSyncTableOptions.getDisplayUrl}
 
 #### Defined in
 
-[api.ts:175](https://github.com/coda/packs-sdk/blob/main/api.ts#L175)
+[api.ts:180](https://github.com/coda/packs-sdk/blob/main/api.ts#L180)
 
 ___
 
@@ -54,7 +56,7 @@ See {@link DynamicSyncTableOptions.getName}
 
 #### Defined in
 
-[api.ts:173](https://github.com/coda/packs-sdk/blob/main/api.ts#L173)
+[api.ts:178](https://github.com/coda/packs-sdk/blob/main/api.ts#L178)
 
 ___
 
@@ -70,7 +72,7 @@ See {@link DynamicSyncTableOptions.getSchema}
 
 #### Defined in
 
-[api.ts:171](https://github.com/coda/packs-sdk/blob/main/api.ts#L171)
+[api.ts:176](https://github.com/coda/packs-sdk/blob/main/api.ts#L176)
 
 ___
 
@@ -78,13 +80,15 @@ ___
 
 • **getter**: `SyncFormula`<`K`, `L`, `ParamDefsT`, `SchemaT`\>
 
+See {@link SyncTableOptions.formula}
+
 #### Inherited from
 
 [SyncTableDef](SyncTableDef.md).[getter](SyncTableDef.md#getter)
 
 #### Defined in
 
-[api.ts:153](https://github.com/coda/packs-sdk/blob/main/api.ts#L153)
+[api.ts:156](https://github.com/coda/packs-sdk/blob/main/api.ts#L156)
 
 ___
 
@@ -96,7 +100,7 @@ Identifies this sync table as dynamic.
 
 #### Defined in
 
-[api.ts:169](https://github.com/coda/packs-sdk/blob/main/api.ts#L169)
+[api.ts:174](https://github.com/coda/packs-sdk/blob/main/api.ts#L174)
 
 ___
 
@@ -108,7 +112,7 @@ See {@link DynamicSyncTableOptions.listDynamicUrls}
 
 #### Defined in
 
-[api.ts:177](https://github.com/coda/packs-sdk/blob/main/api.ts#L177)
+[api.ts:182](https://github.com/coda/packs-sdk/blob/main/api.ts#L182)
 
 ___
 
@@ -116,13 +120,15 @@ ___
 
 • **name**: `string`
 
+See {@link SyncTableOptions.name}
+
 #### Inherited from
 
 [SyncTableDef](SyncTableDef.md).[name](SyncTableDef.md#name)
 
 #### Defined in
 
-[api.ts:151](https://github.com/coda/packs-sdk/blob/main/api.ts#L151)
+[api.ts:152](https://github.com/coda/packs-sdk/blob/main/api.ts#L152)
 
 ___
 
@@ -130,10 +136,12 @@ ___
 
 • **schema**: `SchemaT`
 
+See {@link SyncTableOptions.schema}
+
 #### Inherited from
 
 [SyncTableDef](SyncTableDef.md).[schema](SyncTableDef.md#schema)
 
 #### Defined in
 
-[api.ts:152](https://github.com/coda/packs-sdk/blob/main/api.ts#L152)
+[api.ts:154](https://github.com/coda/packs-sdk/blob/main/api.ts#L154)

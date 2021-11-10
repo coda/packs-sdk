@@ -10,7 +10,7 @@ instead, define sync tables using [makeSyncTable](../functions/makeSyncTable.md)
 | `K` | extends `string` |
 | `L` | extends `string` |
 | `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
-| `SchemaT` | extends [`ObjectSchema`](ObjectSchema.md)<`K`, `L`\> |
+| `SchemaT` | extends `ObjectSchema`<`K`, `L`\> |
 
 ## Hierarchy
 
@@ -24,9 +24,11 @@ instead, define sync tables using [makeSyncTable](../functions/makeSyncTable.md)
 
 • `Optional` **entityName**: `string`
 
+See {@link SyncTableOptions.dynamicOptions.entityName}
+
 #### Defined in
 
-[api.ts:155](https://github.com/coda/packs-sdk/blob/main/api.ts#L155)
+[api.ts:160](https://github.com/coda/packs-sdk/blob/main/api.ts#L160)
 
 ___
 
@@ -34,9 +36,11 @@ ___
 
 • `Optional` **getSchema**: [`MetadataFormula`](../types/MetadataFormula.md)
 
+See {@link SyncTableOptions.dynamicOptions.getSchema}
+
 #### Defined in
 
-[api.ts:154](https://github.com/coda/packs-sdk/blob/main/api.ts#L154)
+[api.ts:158](https://github.com/coda/packs-sdk/blob/main/api.ts#L158)
 
 ___
 
@@ -44,9 +48,11 @@ ___
 
 • **getter**: `SyncFormula`<`K`, `L`, `ParamDefsT`, `SchemaT`\>
 
+See {@link SyncTableOptions.formula}
+
 #### Defined in
 
-[api.ts:153](https://github.com/coda/packs-sdk/blob/main/api.ts#L153)
+[api.ts:156](https://github.com/coda/packs-sdk/blob/main/api.ts#L156)
 
 ___
 
@@ -54,9 +60,11 @@ ___
 
 • **name**: `string`
 
+See {@link SyncTableOptions.name}
+
 #### Defined in
 
-[api.ts:151](https://github.com/coda/packs-sdk/blob/main/api.ts#L151)
+[api.ts:152](https://github.com/coda/packs-sdk/blob/main/api.ts#L152)
 
 ___
 
@@ -64,6 +72,8 @@ ___
 
 • **schema**: `SchemaT`
 
+See {@link SyncTableOptions.schema}
+
 #### Defined in
 
-[api.ts:152](https://github.com/coda/packs-sdk/blob/main/api.ts#L152)
+[api.ts:154](https://github.com/coda/packs-sdk/blob/main/api.ts#L154)
