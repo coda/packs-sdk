@@ -732,17 +732,23 @@ export function makeSchema<T extends Schema>(schema: T): T {
 
 export const PlaceholderIdentityPackId = -1;
 
-export function makeObjectSchema<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>>(
-  schemaDef: T,
+export function makeObjectSchema<
+  K extends string,
+  L extends string,
+  T extends Omit<ObjectSchemaDefinition<K, L>, 'type'>,
+>(
+  schemaDef: T & {type?: ValueType.Object},
 ): T & {
   identity?: Identity;
+  type: ValueType.Object;
 } {
-  validateObjectSchema(schemaDef);
+  const schema: ObjectSchemaDefinition<K, L> = {...schemaDef, type: ValueType.Object};
+  validateObjectSchema(schema);
   // TODO(jonathan): Enable after existing packs go through the v2 upload flow.
   // if (schema.identity) {
   //   schema.identity = {...schema.identity, packId: PlaceholderIdentityPackId};
   // }
-  return schemaDef as any;
+  return schema as any;
 }
 
 function validateObjectSchema<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>>(schema: T) {

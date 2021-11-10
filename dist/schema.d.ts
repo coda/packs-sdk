@@ -569,8 +569,11 @@ export declare type ValidTypes = boolean | number | string | object | boolean[] 
 export declare function generateSchema(obj: ValidTypes): Schema;
 export declare function makeSchema<T extends Schema>(schema: T): T;
 export declare const PlaceholderIdentityPackId = -1;
-export declare function makeObjectSchema<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>>(schemaDef: T): T & {
+export declare function makeObjectSchema<K extends string, L extends string, T extends Omit<ObjectSchemaDefinition<K, L>, 'type'>>(schemaDef: T & {
+    type?: ValueType.Object;
+}): T & {
     identity?: Identity;
+    type: ValueType.Object;
 };
 export declare function normalizeSchemaKey(key: string): string;
 export declare function normalizeSchema<T extends Schema>(schema: T): T;
