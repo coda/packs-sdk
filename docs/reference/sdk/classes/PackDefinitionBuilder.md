@@ -194,13 +194,13 @@ In the web editor, the `/DynamicSyncTable` shortcut will insert a snippet of a s
 **`example`**
 ```
 pack.addDynamicSyncTable({
-  name: 'MySyncTable',
-  getName: async (context) => {
-    const response = await context.fetcher.fetch({method: 'GET', url: context.sync.dynamicUrl});
+  name: "MySyncTable",
+  getName: async funciton (context) => {
+    const response = await context.fetcher.fetch({method: "GET", url: context.sync.dynamicUrl});
     return response.body.name;
   },
-  getName: async (context) => {
-    const response = await context.fetcher.fetch({method: 'GET', url: context.sync.dynamicUrl});
+  getName: async function (context) => {
+    const response = await context.fetcher.fetch({method: "GET", url: context.sync.dynamicUrl});
     return response.body.browserLink;
   },
   ...

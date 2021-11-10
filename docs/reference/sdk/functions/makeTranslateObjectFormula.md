@@ -49,4 +49,4 @@ makeTranslateObjectFormula({
 
 #### Defined in
 
-[api.ts:1245](https://github.com/coda/packs-sdk/blob/main/api.ts#L1245)
+[api.ts:1403](https://github.com/coda/packs-sdk/blob/main/api.ts#L1403)

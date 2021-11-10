@@ -2,6 +2,24 @@
 
 ▸ **makeDynamicSyncTable**<`K`, `L`, `ParamDefsT`\>(`__namedParameters`): [`DynamicSyncTableDef`](../interfaces/DynamicSyncTableDef.md)<`K`, `L`, `ParamDefsT`, `any`\>
 
+Creates a dynamic sync table definition.
+
+**`example`**
+```
+coda.makeDynamicSyncTable({
+  name: "MySyncTable",
+  getName: async function(context) => {
+    const response = await context.fetcher.fetch({method: "GET", url: context.sync.dynamicUrl});
+    return response.body.name;
+  },
+  getName: async function(context) => {
+    const response = await context.fetcher.fetch({method: "GET", url: context.sync.dynamicUrl});
+    return response.body.browserLink;
+  },
+  ...
+});
+```
+
 #### Type parameters
 
 | Name | Type |
@@ -30,4 +48,4 @@
 
 #### Defined in
 
-[api.ts:1165](https://github.com/coda/packs-sdk/blob/main/api.ts#L1165)
+[api.ts:1323](https://github.com/coda/packs-sdk/blob/main/api.ts#L1323)

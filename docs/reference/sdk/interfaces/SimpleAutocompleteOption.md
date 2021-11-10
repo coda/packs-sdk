@@ -1,14 +1,19 @@
 # Interface: SimpleAutocompleteOption
 
+A result from a parameter autocomplete function that pairs a UI display value with
+the underlying option that will be used in the formula when selected.
+
 ## Properties
 
 ### display
 
 • **display**: `string`
 
+Text that will be displayed to the user in UI for this option.
+
 #### Defined in
 
-[api.ts:822](https://github.com/coda/packs-sdk/blob/main/api.ts#L822)
+[api.ts:931](https://github.com/coda/packs-sdk/blob/main/api.ts#L931)
 
 ___
 
@@ -16,6 +21,8 @@ ___
 
 • **value**: `string` \| `number`
 
+The actual value that will get used in the formula if this option is selected.
+
 #### Defined in
 
-[api.ts:823](https://github.com/coda/packs-sdk/blob/main/api.ts#L823)
+[api.ts:933](https://github.com/coda/packs-sdk/blob/main/api.ts#L933)

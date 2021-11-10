@@ -1,5 +1,7 @@
 # Interface: PackFormulaDef<ParamsT, ResultT\>
 
+Base type for the inputs for creating a pack formula.
+
 ## Type parameters
 
 | Name | Type |
@@ -27,7 +29,7 @@ CommonPackFormulaDef.cacheTtlSecs
 
 #### Defined in
 
-[api_types.ts:286](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L286)
+[api_types.ts:289](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L289)
 
 ___
 
@@ -43,7 +45,7 @@ CommonPackFormulaDef.connectionRequirement
 
 #### Defined in
 
-[api_types.ts:278](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L278)
+[api_types.ts:281](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L281)
 
 ___
 
@@ -59,7 +61,7 @@ CommonPackFormulaDef.description
 
 #### Defined in
 
-[api_types.ts:252](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L252)
+[api_types.ts:255](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L255)
 
 ___
 
@@ -75,7 +77,7 @@ CommonPackFormulaDef.examples
 
 #### Defined in
 
-[api_types.ts:267](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L267)
+[api_types.ts:270](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L270)
 
 ___
 
@@ -96,7 +98,7 @@ CommonPackFormulaDef.extraOAuthScopes
 
 #### Defined in
 
-[api_types.ts:308](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L308)
+[api_types.ts:311](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L311)
 
 ___
 
@@ -113,7 +115,7 @@ CommonPackFormulaDef.isAction
 
 #### Defined in
 
-[api_types.ts:273](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L273)
+[api_types.ts:276](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L276)
 
 ___
 
@@ -130,7 +132,7 @@ CommonPackFormulaDef.isExperimental
 
 #### Defined in
 
-[api_types.ts:292](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L292)
+[api_types.ts:295](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L295)
 
 ___
 
@@ -147,7 +149,7 @@ CommonPackFormulaDef.isSystem
 
 #### Defined in
 
-[api_types.ts:298](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L298)
+[api_types.ts:301](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L301)
 
 ___
 
@@ -163,7 +165,7 @@ CommonPackFormulaDef.name
 
 #### Defined in
 
-[api_types.ts:247](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L247)
+[api_types.ts:250](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L250)
 
 ___
 
@@ -179,7 +181,7 @@ CommonPackFormulaDef.network
 
 #### Defined in
 
-[api_types.ts:281](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L281)
+[api_types.ts:284](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L284)
 
 ___
 
@@ -195,7 +197,7 @@ CommonPackFormulaDef.parameters
 
 #### Defined in
 
-[api_types.ts:257](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L257)
+[api_types.ts:260](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L260)
 
 ___
 
@@ -212,7 +214,7 @@ CommonPackFormulaDef.varargParameters
 
 #### Defined in
 
-[api_types.ts:262](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L262)
+[api_types.ts:265](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L265)
 
 ## Methods
 
@@ -233,4 +235,4 @@ CommonPackFormulaDef.varargParameters
 
 #### Defined in
 
-[api.ts:397](https://github.com/coda/packs-sdk/blob/main/api.ts#L397)
+[api.ts:405](https://github.com/coda/packs-sdk/blob/main/api.ts#L405)

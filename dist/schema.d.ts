@@ -442,8 +442,15 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
  */
 export declare const SimpleStringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url];
 export declare type SimpleStringHintTypes = typeof SimpleStringHintValueTypes[number];
+/**
+ * A schema whose underlying value is a string, along with an optional hint about how Coda
+ * should interpret that string.
+ */
 export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStringHintTypes> extends BaseStringSchema<T> {
 }
+/**
+ * The union of schema definition types whose underlying value is a string.
+ */
 export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema | SimpleStringSchema;
 /**
  * A schema representing a return value or object property that is an array (list) of items.
@@ -566,9 +573,61 @@ declare type ObjectSchemaNoFromKeyType<T extends ObjectSchemaDefinition<any, any
 declare type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = ObjectSchemaNoFromKeyType<T> & SchemaFromKeyWildCard<T>;
 export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? StringHintTypeToSchemaType<T['codaType']> : T extends ArraySchema ? Array<SchemaType<T['items']>> : T extends GenericObjectSchema ? ObjectSchemaType<T> : never;
 export declare type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
+/**
+ * Utility that examines a JavaScript value and attempts to infer a schema definition
+ * that describes it.
+ *
+ * It is vastly preferable to define a schema manually. A clear and accurate schema is one of the
+ * fundamentals of a good pack. However, for data that is truly dynamic for which a schema can't
+ * be known in advance nor can a function be written to generate a dynamic schema from other
+ * inputs, it may be useful to us this helper to sniff the return value and generate a basic
+ * inferred schema from it.
+ */
 export declare function generateSchema(obj: ValidTypes): Schema;
+/**
+ * A wrapper for creating any schema definition.
+ *
+ * If you are creating a schema for an object (as opposed to a scalar or array),
+ * use the more specific {@link makeObjectSchema}.
+ *
+ * It is always recommended to use wrapper functions for creating top-level schema
+ * objects rather than specifying object literals. Wrappers validate your schemas
+ * at creation time, provide better TypeScript type inference, and can reduce
+ * boilerplate.
+ *
+ * At this time, this wrapper provides only better TypeScript type inference,
+ * but it may do validation in a future SDK version.
+ *
+ * @example
+ * ```
+ * coda.makeSchema({
+ *   type: coda.ValueType.Array,
+ *   items: {type: coda.ValueType.String},
+ * });
+ * ```
+ */
 export declare function makeSchema<T extends Schema>(schema: T): T;
 export declare const PlaceholderIdentityPackId = -1;
+/**
+ * A wrapper for creating a schema definition for an object value.
+ *
+ * It is always recommended to use wrapper functions for creating top-level schema
+ * objects rather than specifying object literals. Wrappers validate your schemas
+ * at creation time, provide better TypeScript type inference, and can reduce
+ * boilerplate.
+ *
+ * @example
+ * ```
+ * coda.makeObjectSchema({
+ *   id: "email",
+ *   primary: "name",
+ *   properties: {
+ *     email: {type: coda.ValueType.String, required: true},
+ *     name: {type: coda.ValueType.String, required: true},
+ *   },
+ * });
+ * ```
+ */
 export declare function makeObjectSchema<K extends string, L extends string, T extends Omit<ObjectSchemaDefinition<K, L>, 'type'>>(schemaDef: T & {
     type?: ValueType.Object;
 }): T & {

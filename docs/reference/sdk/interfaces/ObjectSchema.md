@@ -25,7 +25,7 @@ ObjectSchemaDefinition.codaType
 
 #### Defined in
 
-[schema.ts:566](https://github.com/coda/packs-sdk/blob/main/schema.ts#L566)
+[schema.ts:573](https://github.com/coda/packs-sdk/blob/main/schema.ts#L573)
 
 ___
 
@@ -58,7 +58,7 @@ ObjectSchemaDefinition.featured
 
 #### Defined in
 
-[schema.ts:567](https://github.com/coda/packs-sdk/blob/main/schema.ts#L567)
+[schema.ts:574](https://github.com/coda/packs-sdk/blob/main/schema.ts#L574)
 
 ___
 
@@ -72,7 +72,7 @@ ObjectSchemaDefinition.id
 
 #### Defined in
 
-[schema.ts:564](https://github.com/coda/packs-sdk/blob/main/schema.ts#L564)
+[schema.ts:571](https://github.com/coda/packs-sdk/blob/main/schema.ts#L571)
 
 ___
 
@@ -86,7 +86,7 @@ ObjectSchemaDefinition.identity
 
 #### Defined in
 
-[schema.ts:578](https://github.com/coda/packs-sdk/blob/main/schema.ts#L578)
+[schema.ts:585](https://github.com/coda/packs-sdk/blob/main/schema.ts#L585)
 
 ___
 
@@ -100,7 +100,7 @@ ObjectSchemaDefinition.primary
 
 #### Defined in
 
-[schema.ts:565](https://github.com/coda/packs-sdk/blob/main/schema.ts#L565)
+[schema.ts:572](https://github.com/coda/packs-sdk/blob/main/schema.ts#L572)
 
 ___
 
@@ -114,7 +114,7 @@ ObjectSchemaDefinition.properties
 
 #### Defined in
 
-[schema.ts:563](https://github.com/coda/packs-sdk/blob/main/schema.ts#L563)
+[schema.ts:570](https://github.com/coda/packs-sdk/blob/main/schema.ts#L570)
 
 ___
 
@@ -128,4 +128,4 @@ ObjectSchemaDefinition.type
 
 #### Defined in
 
-[schema.ts:562](https://github.com/coda/packs-sdk/blob/main/schema.ts#L562)
+[schema.ts:569](https://github.com/coda/packs-sdk/blob/main/schema.ts#L569)

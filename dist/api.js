@@ -359,6 +359,18 @@ function makeFormula(fullDefinition) {
     return maybeRewriteConnectionForFormula(formula, fullDefinition.connectionRequirement);
 }
 exports.makeFormula = makeFormula;
+/**
+ * A wrapper that generates a formula definition from the function that implements a metadata formula.
+ * It is uncommon to ever need to call this directly, normally you would just define the JavaScript
+ * function implementation, and Coda will wrap it with this to generate a full metadata formula
+ * definition.
+ *
+ * All function-like behavior in a pack is ultimately implemented using formulas, like you would
+ * define using {@link makeFormula}. That is, a formula with a name, description, parameter list,
+ * and an `execute` function body. This includes supporting utilities like paramter autocomplete functions.
+ * This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
+ * it is shaped like a Coda formula to be used at runtime.
+ */
 function makeMetadataFormula(execute, options) {
     return makeObjectFormula({
         name: 'getMetadata',
@@ -384,6 +396,26 @@ function makeMetadataFormula(execute, options) {
     });
 }
 exports.makeMetadataFormula = makeMetadataFormula;
+/**
+ * Utility to search over an array of autocomplete results and return only those that
+ * match the given search string.
+ *
+ * You can do this yourself but this function helps simplify many common scenarios.
+ * Note that if you have a hardcoded list of autocomplete options, you can simply specify
+ * them directly as a list, you need not actually implement an autocomplete function.
+ *
+ * The primary use case here is fetching a list of all possible results from an API
+ * and then refining them using the user's current search string.
+ *
+ * @example
+ * ```
+ * autocomplete: async function(context, search) {
+ *   const response = await context.fetcher.fetch({method: "GET", url: "/api/entities"});
+ *   const allOptions = response.body.entities.map(entity => entity.name);
+ *   return coda.simpleAutocomplete(search, allOptions);
+ * }
+ * ```
+ */
 function simpleAutocomplete(search, options) {
     const normalizedSearch = (search || '').toLowerCase();
     const filtered = options.filter(option => {
@@ -572,6 +604,25 @@ function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynam
     return makeSyncTable({ name, identityName: '', schema, formula, connectionRequirement, dynamicOptions });
 }
 exports.makeSyncTableLegacy = makeSyncTableLegacy;
+/**
+ * Creates a dynamic sync table definition.
+ *
+ * @example
+ * ```
+ * coda.makeDynamicSyncTable({
+ *   name: "MySyncTable",
+ *   getName: async function(context) => {
+ *     const response = await context.fetcher.fetch({method: "GET", url: context.sync.dynamicUrl});
+ *     return response.body.name;
+ *   },
+ *   getName: async function(context) => {
+ *     const response = await context.fetcher.fetch({method: "GET", url: context.sync.dynamicUrl});
+ *     return response.body.browserLink;
+ *   },
+ *   ...
+ * });
+ * ```
+ */
 function makeDynamicSyncTable({ name, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, }) {
     const fakeSchema = (0, schema_2.makeObjectSchema)({
         // This schema is useless... just creating a stub here but the client will use
@@ -659,6 +710,28 @@ function makeTranslateObjectFormula({ response, ...definition }) {
     });
 }
 exports.makeTranslateObjectFormula = makeTranslateObjectFormula;
+// TODO(jonathan/ekoleda): Flesh out a guide for empty formulas if this is something we care to support.
+// We probably also need the builder's addFormula() method to support empty formula defs if it doesn't already.
+/**
+ * Creates the definition of an "empty" formula, that is, a formula that uses a {@link RequestHandlerTemplate}
+ * to define an implementation for the formula rather than implementing an actual `execute` function
+ * in JavaScript.
+ *
+ * @example
+ * ```
+ * coda.makeEmptyFormula({
+    name: "GetWidget",
+    description: "Gets a widget.",
+    request: {
+      url: "https://example.com/widgets/{id}",
+      method: "GET",
+    },
+    parameters: [
+      coda.makeParameter({type: coda.ParameterType.Number, name: "id", description: "The ID of the widget to get."}),
+    ],
+  }),
+ * ```
+ */
 function makeEmptyFormula(definition) {
     const { request, ...rest } = definition;
     const { parameters } = rest;
