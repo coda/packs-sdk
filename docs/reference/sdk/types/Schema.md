@@ -1,7 +1,9 @@
 # Type alias: Schema
 
-Ƭ **Schema**: [`BooleanSchema`](../interfaces/BooleanSchema.md) \| [`NumberSchema`](NumberSchema.md) \| [`StringSchema`](StringSchema.md) \| [`ArraySchema`](../interfaces/ArraySchema.md) \| [`GenericObjectSchema`](GenericObjectSchema.md)
+Ƭ **Schema**: [`BooleanSchema`](../interfaces/BooleanSchema.md) \| [`NumberSchema`](NumberSchema.md) \| [`StringSchema`](StringSchema.md) \| [`ArraySchema`](../interfaces/ArraySchema.md) \| `GenericObjectSchema`
+
+The union of all of the schema types supported for return values and object properties.
 
 #### Defined in
 
-[schema.ts:642](https://github.com/coda/packs-sdk/blob/main/schema.ts#L642)
+[schema.ts:651](https://github.com/coda/packs-sdk/blob/main/schema.ts#L651)

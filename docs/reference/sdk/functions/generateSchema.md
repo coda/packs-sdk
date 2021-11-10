@@ -26,4 +26,4 @@ an object schema, those are left undefined.
 
 #### Defined in
 
-[schema.ts:719](https://github.com/coda/packs-sdk/blob/main/schema.ts#L719)
+[schema.ts:737](https://github.com/coda/packs-sdk/blob/main/schema.ts#L737)

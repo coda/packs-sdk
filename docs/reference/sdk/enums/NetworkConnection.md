@@ -10,7 +10,7 @@
 
 #### Defined in
 
-[api_types.ts:341](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L341)
+[api_types.ts:365](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L365)
 
 ___
 
@@ -20,7 +20,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:342](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L342)
+[api_types.ts:366](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L366)
 
 ___
 
@@ -30,4 +30,4 @@ ___
 
 #### Defined in
 
-[api_types.ts:343](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L343)
+[api_types.ts:367](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L367)

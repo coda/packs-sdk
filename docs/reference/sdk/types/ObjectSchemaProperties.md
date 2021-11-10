@@ -2,6 +2,10 @@
 
 Ƭ **ObjectSchemaProperties**<`K`\>: { [K2 in K \| string]: Schema & ObjectSchemaProperty }
 
+The type of the [properties](../interfaces/ObjectSchema.md#properties) in the definition of an object schema.
+This is essentially a dictionary mapping the name of a property to a schema
+definition for that property.
+
 #### Type parameters
 
 | Name | Type |
@@ -10,4 +14,4 @@
 
 #### Defined in
 
-[schema.ts:545](https://github.com/coda/packs-sdk/blob/main/schema.ts#L545)
+[schema.ts:550](https://github.com/coda/packs-sdk/blob/main/schema.ts#L550)

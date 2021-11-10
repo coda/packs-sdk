@@ -2,6 +2,9 @@
 
 Ƭ **ParamValues**<`ParamDefsT`\>: { [K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T\> ? TypeOfMap<T\> : never } & `any`[]
 
+The type for the set of argument values that are passed to formula's `execute` function, based on
+the parameter defintion for that formula.
+
 #### Type parameters
 
 | Name | Type |
@@ -10,4 +13,4 @@
 
 #### Defined in
 
-[api_types.ts:235](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L235)
+[api_types.ts:256](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L256)
