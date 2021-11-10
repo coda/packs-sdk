@@ -2,6 +2,8 @@
 
 Ƭ **DefaultValueType**<`T`\>: `T` extends [`ArrayType`](../interfaces/ArrayType.md)<[`date`](../enums/Type.md#date)\> ? `TypeOfMap`<`T`\> \| [`PrecannedDateRange`](../enums/PrecannedDateRange.md) : `TypeOfMap`<`T`\>
 
+The type of values that are allowable to be used as a [defaultValue](../interfaces/ParamDef.md#defaultvalue) for a parameter.
+
 #### Type parameters
 
 | Name | Type |
@@ -10,4 +12,4 @@
 
 #### Defined in
 
-[api_types.ts:239](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L239)
+[api_types.ts:263](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L263)

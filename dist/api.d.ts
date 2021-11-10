@@ -217,6 +217,9 @@ export declare function makeImageParameter(name: string, description: string, ar
 export declare function makeImageArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.image>>): ParamDef<ArrayType<Type.image>>;
 export declare function makeUserVisibleError(msg: string): UserVisibleError;
 export declare function check(condition: boolean, msg: string): void;
+/**
+ * @deprecated Formulas should now only be defined as an array, as namespaces are deprecated.
+ */
 export interface PackFormulas {
     readonly [namespace: string]: Formula[];
 }
@@ -265,6 +268,13 @@ export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT exte
     schema?: SchemaT;
     execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<object> | object;
 };
+/**
+ * A pack formula, complete with metadata about the formula like its name, description, and parameters,
+ * as well as the implementation of that formula.
+ *
+ * This is the type for an actual user-facing formula, rather than other formula-shaped resources within a
+ * pack, like an autocomplete metadata formula or a sync getter formula.
+ */
 export declare type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT extends FormulaResultValueType = FormulaResultValueType, SchemaT extends Schema = Schema> = ResultT extends ValueType.String ? StringPackFormula<ParamDefsT> : ResultT extends ValueType.Number ? NumericPackFormula<ParamDefsT> : ResultT extends ValueType.Boolean ? BooleanPackFormula<ParamDefsT> : ResultT extends ValueType.Array ? ObjectPackFormula<ParamDefsT, ArraySchema<SchemaT>> : ObjectPackFormula<ParamDefsT, SchemaT>;
 /**
  * The union of types that represent formula definitions, including standard formula definitions,
@@ -275,7 +285,9 @@ export declare type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT ex
  */
 export declare type TypedPackFormula = Formula | GenericSyncFormula;
 export declare type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
+/** @hidden */
 export declare type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
+/** @hidden */
 export declare type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
 export declare function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata;
 export declare function isStringPackFormula(fn: BaseFormula<ParamDefs, any>): fn is StringPackFormula<ParamDefs>;

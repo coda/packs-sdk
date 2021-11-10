@@ -13,7 +13,7 @@ Text that will be displayed to the user in UI for this option.
 
 #### Defined in
 
-[api.ts:937](https://github.com/coda/packs-sdk/blob/main/api.ts#L937)
+[api.ts:950](https://github.com/coda/packs-sdk/blob/main/api.ts#L950)
 
 ___
 
@@ -25,4 +25,4 @@ The actual value that will get used in the formula if this option is selected.
 
 #### Defined in
 
-[api.ts:939](https://github.com/coda/packs-sdk/blob/main/api.ts#L939)
+[api.ts:952](https://github.com/coda/packs-sdk/blob/main/api.ts#L952)

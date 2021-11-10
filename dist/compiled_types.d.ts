@@ -9,6 +9,7 @@ import type { PackFormulaMetadata } from './api';
 import type { PackVersionDefinition } from './types';
 import type { PostSetup } from './types';
 import type { SyncTable } from './api';
+/** @hidden */
 export declare type PackSyncTable = Omit<SyncTable, 'getter' | 'getName' | 'getSchema' | 'listDynamicUrls' | 'getDisplayUrl'> & {
     getter: PackFormulaMetadata;
     isDynamic?: boolean;
@@ -18,38 +19,49 @@ export declare type PackSyncTable = Omit<SyncTable, 'getter' | 'getName' | 'getS
     getDisplayUrl?: MetadataFormulaMetadata;
     listDynamicUrls?: MetadataFormulaMetadata;
 };
+/** @hidden */
 export interface PackFormatMetadata extends Omit<Format, 'matchers'> {
     matchers: string[];
 }
+/** @hidden */
 export interface PackFormulasMetadata {
     [namespace: string]: PackFormulaMetadata[];
 }
+/** @hidden */
 export declare type PostSetupMetadata = Omit<PostSetup, 'getOptionsFormula'> & {
     getOptionsFormula: MetadataFormulaMetadata;
 };
+/** @hidden */
 export declare type AuthenticationMetadata = DistributiveOmit<Authentication, 'getConnectionName' | 'getConnectionUserId' | 'postSetup'> & {
     getConnectionName?: MetadataFormulaMetadata;
     getConnectionUserId?: MetadataFormulaMetadata;
     postSetup?: PostSetupMetadata[];
 };
-/** Stripped-down version of `PackVersionDefinition` that doesn't contain formula definitions. */
+/** @hidden */
 export declare type PackVersionMetadata = Omit<PackVersionDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {
     formulas: PackFormulasMetadata | PackFormulaMetadata[];
     formats: PackFormatMetadata[];
     syncTables: PackSyncTable[];
     defaultAuthentication?: AuthenticationMetadata;
 };
-/** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
+/** @hidden */
 export declare type PackMetadata = PackVersionMetadata & Pick<PackDefinition, 'id' | 'name' | 'shortDescription' | 'description' | 'permissionsDescription' | 'category' | 'logoPath' | 'exampleImages' | 'exampleVideoIds' | 'minimumFeatureSet' | 'quotas' | 'rateLimits' | 'enabledConfigName' | 'isSystem'>;
+/** @hidden */
 export declare type ExternalPackAuthenticationType = AuthenticationType;
+/** @hidden */
 export declare type ExternalPackFormulas = PackFormulasMetadata | PackFormulaMetadata[];
+/** @hidden */
 export declare type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
+/** @hidden */
 export declare type ExternalPackFormula = PackFormulaMetadata;
+/** @hidden */
 export declare type ExternalPackFormat = Format;
+/** @hidden */
 export declare type ExternalPackFormatMetadata = PackFormatMetadata;
+/** @hidden */
 export declare type ExternalSyncTable = PackSyncTable;
 declare type BasePackVersionMetadata = Omit<PackVersionMetadata, 'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables'>;
-/** Further stripped-down version of `PackVersionMetadata` that contains only what the browser needs. */
+/** @hidden */
 export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
     authentication: {
         type: ExternalPackAuthenticationType;
@@ -68,8 +80,9 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
     formats?: ExternalPackFormat[];
     syncTables?: ExternalSyncTable[];
 }
-/** Further stripped-down version of `PackMetadata` that contains only what the browser needs. */
+/** @hidden */
 export declare type ExternalPackMetadata = ExternalPackVersionMetadata & Pick<PackMetadata, 'id' | 'name' | 'shortDescription' | 'description' | 'permissionsDescription' | 'category' | 'logoPath' | 'exampleImages' | 'exampleVideoIds' | 'minimumFeatureSet' | 'quotas' | 'rateLimits' | 'isSystem'>;
+/** @hidden */
 export interface PackUpload {
     metadata: PackVersionMetadata | PackMetadata;
     sdkVersion: string;

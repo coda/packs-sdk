@@ -1,6 +1,6 @@
 # Function: makeReferenceSchemaFromObjectSchema
 
-▸ **makeReferenceSchemaFromObjectSchema**(`schema`, `identityName?`): [`GenericObjectSchema`](../types/GenericObjectSchema.md)
+▸ **makeReferenceSchemaFromObjectSchema**(`schema`, `identityName?`): `GenericObjectSchema`
 
 Convenience for creating a reference object schema from an existing schema for the
 object. Copies over the identity, id, and primary from the schema, and the subset of
@@ -12,13 +12,13 @@ schema it provides better code reuse to derive a reference schema instead.
 
 | Name | Type |
 | :------ | :------ |
-| `schema` | [`GenericObjectSchema`](../types/GenericObjectSchema.md) |
+| `schema` | `GenericObjectSchema` |
 | `identityName?` | `string` |
 
 #### Returns
 
-[`GenericObjectSchema`](../types/GenericObjectSchema.md)
+`GenericObjectSchema`
 
 #### Defined in
 
-[schema.ts:903](https://github.com/coda/packs-sdk/blob/main/schema.ts#L903)
+[schema.ts:921](https://github.com/coda/packs-sdk/blob/main/schema.ts#L921)

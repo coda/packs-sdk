@@ -8,6 +8,8 @@ A pack or formula which does not use authentication.
 
 • **type**: [`None`](../enums/AuthenticationType.md#none)
 
+Identifies this as not using authentication. You may also omit any definition to achieve the same result.
+
 #### Defined in
 
-[types.ts:150](https://github.com/coda/packs-sdk/blob/main/types.ts#L150)
+[types.ts:151](https://github.com/coda/packs-sdk/blob/main/types.ts#L151)
