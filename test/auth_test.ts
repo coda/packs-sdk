@@ -851,23 +851,26 @@ describe('Auth', () => {
           {name: 'secretToken', description: 'Description for param2'},
         ],
       };
+
       const execTest = async (pack: PackDefinition) => {
         setupReadline(['secret-value', 'secret-token']);
         doSetupAuth(pack);
 
-        await executeFetch(pack, 'https://example.com', {result: 'hello'});
+        sinon.assert.calledWithExactly(
+          mockPromptForInput,
+          "Enter the value to use for the 'secretValue' (Description for param1) parameter for this Pack:\n",
+          {mask: true},
+        );
+        sinon.assert.calledWithExactly(
+          mockPromptForInput,
+          "Enter the value to use for the 'secretToken' (Description for param2) parameter for this Pack:\n",
+          {mask: true},
+        );
+        sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
-        sinon.assert.calledOnceWithExactly(mockMakeRequest, {
-          body: undefined,
-          form: undefined,
-          headers: {
-            'User-Agent': 'Coda-Test-Server-Fetcher',
-          },
-          method: 'GET',
-          url: 'https://example.com',
-          isBinaryResponse: undefined,
-        });
+        assertCredentialsFileExactly({params: {secretValue: 'secret-value', secretToken: 'secret-token'}});
       };
+
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
       it('systemAuth', () => execTest(createPackWithSystemAuth(auth)));
 
