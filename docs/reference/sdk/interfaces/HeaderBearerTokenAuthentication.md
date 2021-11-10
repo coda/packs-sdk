@@ -1,15 +1,12 @@
-# Interface: WebBasicAuthentication
+# Interface: HeaderBearerTokenAuthentication
 
-Authenticate using HTTP Basic authorization. The user provides a username and password
-(sometimes optional) which are included as an HTTP header according to the Basic auth standard.
-
-See https://en.wikipedia.org/wiki/Basic_access_authentication
+Authenticate using an HTTP header of the form `Authorization: Bearer <token>`.
 
 ## Hierarchy
 
 - `BaseAuthentication`
 
-  ↳ **`WebBasicAuthentication`**
+  ↳ **`HeaderBearerTokenAuthentication`**
 
 ## Properties
 
@@ -133,28 +130,8 @@ ___
 
 ### type
 
-• **type**: [`WebBasic`](../enums/AuthenticationType.md#webbasic)
+• **type**: [`HeaderBearerToken`](../enums/AuthenticationType.md#headerbearertoken)
 
 #### Defined in
 
-[types.ts:408](https://github.com/coda/packs-sdk/blob/main/types.ts#L408)
-
-___
-
-### uxConfig
-
-• `Optional` **uxConfig**: `Object`
-
-Configuration for labels to show in the UI when the user sets up a new acount.
-
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `placeholderPassword?` | `string` | A placeholder value for the text input where the user will enter a password. |
-| `placeholderUsername?` | `string` | A placeholder value for the text input where the user will enter a username. |
-| `usernameOnly?` | `boolean` | If true, only a username input will be shown to the user. Some services pass API keys in the username field and do not require a password. |
-
-#### Defined in
-
-[types.ts:412](https://github.com/coda/packs-sdk/blob/main/types.ts#L412)
+[types.ts:256](https://github.com/coda/packs-sdk/blob/main/types.ts#L256)

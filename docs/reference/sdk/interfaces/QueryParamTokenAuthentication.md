@@ -1,15 +1,15 @@
-# Interface: WebBasicAuthentication
+# Interface: QueryParamTokenAuthentication
 
-Authenticate using HTTP Basic authorization. The user provides a username and password
-(sometimes optional) which are included as an HTTP header according to the Basic auth standard.
+Authenticate using a token that is passed as a URL parameter with each request, e.g.
+https://example.com/api?paramName=token
 
-See https://en.wikipedia.org/wiki/Basic_access_authentication
+The parameter name is defined in the [paramName](QueryParamTokenAuthentication.md#paramname) property.
 
 ## Hierarchy
 
 - `BaseAuthentication`
 
-  ↳ **`WebBasicAuthentication`**
+  ↳ **`QueryParamTokenAuthentication`**
 
 ## Properties
 
@@ -95,6 +95,19 @@ BaseAuthentication.instructionsUrl
 
 ___
 
+### paramName
+
+• **paramName**: `string`
+
+The name of the query parameter that will include the token,
+e.g. "foo" if a token is passed as "foo=bar".
+
+#### Defined in
+
+[types.ts:315](https://github.com/coda/packs-sdk/blob/main/types.ts#L315)
+
+___
+
 ### postSetup
 
 • `Optional` **postSetup**: `SetEndpoint`[]
@@ -133,28 +146,8 @@ ___
 
 ### type
 
-• **type**: [`WebBasic`](../enums/AuthenticationType.md#webbasic)
+• **type**: [`QueryParamToken`](../enums/AuthenticationType.md#queryparamtoken)
 
 #### Defined in
 
-[types.ts:408](https://github.com/coda/packs-sdk/blob/main/types.ts#L408)
-
-___
-
-### uxConfig
-
-• `Optional` **uxConfig**: `Object`
-
-Configuration for labels to show in the UI when the user sets up a new acount.
-
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `placeholderPassword?` | `string` | A placeholder value for the text input where the user will enter a password. |
-| `placeholderUsername?` | `string` | A placeholder value for the text input where the user will enter a username. |
-| `usernameOnly?` | `boolean` | If true, only a username input will be shown to the user. Some services pass API keys in the username field and do not require a password. |
-
-#### Defined in
-
-[types.ts:412](https://github.com/coda/packs-sdk/blob/main/types.ts#L412)
+[types.ts:310](https://github.com/coda/packs-sdk/blob/main/types.ts#L310)

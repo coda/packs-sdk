@@ -3,18 +3,29 @@ export type {Authentication} from './types';
 export {AuthenticationType} from './types';
 export type {BasicPackDefinition} from './types';
 export {DefaultConnectionType} from './types';
-export type {OAuth2Authentication} from './types';
 export type {Format} from './types';
 export type {PackDefinition} from './types';
 export type {PackId} from './types';
 export type {PackVersionDefinition} from './types';
 export {PostSetupType} from './types';
-export type {SystemAuthentication} from './types';
-export type {WebBasicAuthentication} from './types';
-export type {VariousAuthentication} from './types';
-export type {VariousSupportedAuthentication} from './types';
 export {newPack} from './builder';
 export {PackDefinitionBuilder} from './builder';
+
+// Authentication types
+export type {AWSAccessKeyAuthentication} from './types';
+export type {AWSAssumeRoleAuthentication} from './types';
+export type {CodaApiBearerTokenAuthentication} from './types';
+export type {CustomAuthentication} from './types';
+export type {CustomHeaderTokenAuthentication} from './types';
+export type {HeaderBearerTokenAuthentication} from './types';
+export type {MultiQueryParamTokenAuthentication} from './types';
+export type {NoAuthentication} from './types';
+export type {OAuth2Authentication} from './types';
+export type {QueryParamTokenAuthentication} from './types';
+export type {SystemAuthentication} from './types';
+export type {VariousAuthentication} from './types';
+export type {VariousSupportedAuthentication} from './types';
+export type {WebBasicAuthentication} from './types';
 
 // Compiler interfaces
 export type {PackFormatMetadata} from './compiled_types';

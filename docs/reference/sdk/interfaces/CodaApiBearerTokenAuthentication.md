@@ -1,15 +1,19 @@
-# Interface: WebBasicAuthentication
+# Interface: CodaApiBearerTokenAuthentication
 
-Authenticate using HTTP Basic authorization. The user provides a username and password
-(sometimes optional) which are included as an HTTP header according to the Basic auth standard.
+Authenticate using a Coda REST API token, sent as an HTTP header.
 
-See https://en.wikipedia.org/wiki/Basic_access_authentication
+This is identical to [HeaderBearerToken](../enums/AuthenticationType.md#headerbearertoken) except the user wil be presented
+with a UI to generate an API token rather than needing to paste an arbitrary API
+token into a text input.
+
+This is primarily for use by Coda-authored packs, as it is only relevant for interacting with the
+Coda REST API.
 
 ## Hierarchy
 
 - `BaseAuthentication`
 
-  ↳ **`WebBasicAuthentication`**
+  ↳ **`CodaApiBearerTokenAuthentication`**
 
 ## Properties
 
@@ -28,6 +32,19 @@ BaseAuthentication.defaultConnectionType
 #### Defined in
 
 [types.ts:221](https://github.com/coda/packs-sdk/blob/main/types.ts#L221)
+
+___
+
+### deferConnectionSetup
+
+• `Optional` **deferConnectionSetup**: `boolean`
+
+If true, does not require a connection to be configured in
+order to install the pack.
+
+#### Defined in
+
+[types.ts:275](https://github.com/coda/packs-sdk/blob/main/types.ts#L275)
 
 ___
 
@@ -131,30 +148,24 @@ BaseAuthentication.requiresEndpointUrl
 
 ___
 
-### type
+### shouldAutoAuthSetup
 
-• **type**: [`WebBasic`](../enums/AuthenticationType.md#webbasic)
+• `Optional` **shouldAutoAuthSetup**: `boolean`
+
+If true, automatically creates and configures an account with a Coda API token with
+default settings when installing the pack: a scoped read-write token, added to the doc
+as a shared account that allows actions.
 
 #### Defined in
 
-[types.ts:408](https://github.com/coda/packs-sdk/blob/main/types.ts#L408)
+[types.ts:281](https://github.com/coda/packs-sdk/blob/main/types.ts#L281)
 
 ___
 
-### uxConfig
+### type
 
-• `Optional` **uxConfig**: `Object`
-
-Configuration for labels to show in the UI when the user sets up a new acount.
-
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `placeholderPassword?` | `string` | A placeholder value for the text input where the user will enter a password. |
-| `placeholderUsername?` | `string` | A placeholder value for the text input where the user will enter a username. |
-| `usernameOnly?` | `boolean` | If true, only a username input will be shown to the user. Some services pass API keys in the username field and do not require a password. |
+• **type**: [`CodaApiHeaderBearerToken`](../enums/AuthenticationType.md#codaapiheaderbearertoken)
 
 #### Defined in
 
-[types.ts:412](https://github.com/coda/packs-sdk/blob/main/types.ts#L412)
+[types.ts:270](https://github.com/coda/packs-sdk/blob/main/types.ts#L270)

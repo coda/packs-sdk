@@ -9,6 +9,7 @@ import type {CodaApiBearerTokenAuthentication} from '../types';
 import {ConnectionRequirement} from '../api_types';
 import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '..';
+import type {CustomAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import {DefaultConnectionType} from '../types';
 import type {DurationSchema} from '../schema';
@@ -354,11 +355,28 @@ const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> 
     service: z.string(),
     ...baseAuthenticationValidators,
   }),
+  [AuthenticationType.Custom]: zodCompleteStrictObject<CustomAuthentication>({
+    type: zodDiscriminant(AuthenticationType.Custom),
+    params: z
+      .array(
+        zodCompleteStrictObject<CustomAuthentication['params'][number]>({
+          name: z.string(),
+          description: z.string(),
+        }),
+      )
+      .refine(
+        params => {
+          const keys = params.map(param => param.name);
+          return keys.length === new Set(keys).size;
+        },
+        {message: 'Duplicated parameter names in the mutli-query-token authentication config'},
+      ),
+    ...baseAuthenticationValidators,
+  }),
   [AuthenticationType.Various]: zodCompleteStrictObject<VariousAuthentication>({
     type: zodDiscriminant(AuthenticationType.Various),
   }),
 };
-
 const systemAuthenticationTypes: {[key in SystemAuthenticationTypes]: true} = {
   [AuthenticationType.HeaderBearerToken]: true,
   [AuthenticationType.CustomHeaderToken]: true,
@@ -367,6 +385,7 @@ const systemAuthenticationTypes: {[key in SystemAuthenticationTypes]: true} = {
   [AuthenticationType.WebBasic]: true,
   [AuthenticationType.AWSAccessKey]: true,
   [AuthenticationType.AWSAssumeRole]: true,
+  [AuthenticationType.Custom]: true,
 };
 
 const systemAuthenticationValidators = Object.entries(defaultAuthenticationValidators)

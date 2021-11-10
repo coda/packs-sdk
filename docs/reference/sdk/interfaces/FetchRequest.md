@@ -115,7 +115,7 @@ ___
 • **url**: `string`
 
 The URL to connect to. This is typically an absolute URL, but if your
-pack uses authentication and [requiresEndpointUrl](OAuth2Authentication.md#requiresendpointurl) and so has a unique
+pack uses authentication and [requiresEndpointUrl](CodaApiBearerTokenAuthentication.md#requiresendpointurl) and so has a unique
 endpoint per user account, you may also use a relative URL and Coda will
 apply the user's endpoint automatically.
 

@@ -286,6 +286,19 @@ const defaultAuthenticationValidators = {
         service: z.string(),
         ...baseAuthenticationValidators,
     }),
+    [types_1.AuthenticationType.Custom]: zodCompleteStrictObject({
+        type: zodDiscriminant(types_1.AuthenticationType.Custom),
+        params: z
+            .array(zodCompleteStrictObject({
+            name: z.string(),
+            description: z.string(),
+        }))
+            .refine(params => {
+            const keys = params.map(param => param.name);
+            return keys.length === new Set(keys).size;
+        }, { message: 'Duplicated parameter names in the mutli-query-token authentication config' }),
+        ...baseAuthenticationValidators,
+    }),
     [types_1.AuthenticationType.Various]: zodCompleteStrictObject({
         type: zodDiscriminant(types_1.AuthenticationType.Various),
     }),
@@ -298,6 +311,7 @@ const systemAuthenticationTypes = {
     [types_1.AuthenticationType.WebBasic]: true,
     [types_1.AuthenticationType.AWSAccessKey]: true,
     [types_1.AuthenticationType.AWSAssumeRole]: true,
+    [types_1.AuthenticationType.Custom]: true,
 };
 const systemAuthenticationValidators = Object.entries(defaultAuthenticationValidators)
     .filter(([authType]) => authType in systemAuthenticationTypes)

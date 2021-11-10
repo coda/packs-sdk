@@ -16,7 +16,7 @@ this contains the [Fetcher](Fetcher.md), which is used for making HTTP requests.
 
 • `Optional` `Readonly` **endpoint**: `string`
 
-The base endpoint URL for the user's account, only if applicable. See [requiresEndpointUrl](OAuth2Authentication.md#requiresendpointurl).
+The base endpoint URL for the user's account, only if applicable. See [requiresEndpointUrl](CodaApiBearerTokenAuthentication.md#requiresendpointurl).
 
 If the API URLs are variable based on the user account, you will need this endpoint
 to construct URLs to use with the fetcher. Alternatively, you can use relative URLs
@@ -59,7 +59,7 @@ ___
 
 A random token scoped to only this request invocation.
 This is a unique identifier for the invocation, and in particular used with
-{@link AuthenticationType.Custom} for naming template parameters that will be
+[AuthenticationType.Custom](../enums/AuthenticationType.md#custom) for naming template parameters that will be
 replaced by the fetcher in secure way.
 
 #### Defined in

@@ -72,6 +72,11 @@ var AuthenticationType;
      */
     AuthenticationType["WebBasic"] = "WebBasic";
     /**
+     * Authenticate in a custom way by having one or more arbitrary secret values inserted into the request URL, body,
+     * headers, or the form data using template replacement. See {@link CustomAuthentication}.
+     */
+    AuthenticationType["Custom"] = "Custom";
+    /**
      * Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
      * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
      *

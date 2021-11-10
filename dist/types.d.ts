@@ -77,6 +77,11 @@ export declare enum AuthenticationType {
      */
     WebBasic = "WebBasic",
     /**
+     * Authenticate in a custom way by having one or more arbitrary secret values inserted into the request URL, body,
+     * headers, or the form data using template replacement. See {@link CustomAuthentication}.
+     */
+    Custom = "Custom",
+    /**
      * Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
      * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
      *
@@ -400,6 +405,73 @@ export interface WebBasicAuthentication extends BaseAuthentication {
     };
 }
 /**
+ * Parameters for the {@link CustomAuthentication} authentication type.
+ */
+export interface CustomAuthParameter {
+    /**
+     * The name used to refer to this parameter and to generate the template replacement string.
+     */
+    name: string;
+    /**
+     * A description shown to the user indicating what value they should provide for this parameter.
+     */
+    description: string;
+}
+/**
+ * Authenticate for custom, non-standard API authentication schemes by inserting one or more arbitrary secret values
+ * into the request (the body, URL, headers, or form data) using template replacement.
+ *
+ * Some APIs use non-standard authentication schemes which often require secret credentials to be put in specific places
+ * in the request URL or request body. Custom authentication supports many of these cases by allowing you as the pack
+ * author to define one or more secret values that the user or you as the pack author must provide (depending on
+ * user or system authentication). When constructing a network request, you may indicate where these values should
+ * be inserted by our fetcher service using the syntax described below (similar to templating engines).
+ *
+ * {% raw %}
+ * To insert the credentials, simply put `{{<paramName>-<invocationToken>}}` as a string anywhere in your request,
+ * where `<paramName>` is the name of the parameter defined in the params mapping and `<invocationToken>` is the
+ * secret invocation-specific token provided within the {@link ExecutionContext}. The invocation
+ * token is required for security reasons.
+ * {% endraw %}
+ *
+ * @example
+ * ```
+ * // Suppose you're using an API that requires a secret id in the request URL,
+ * // and a different secret value in the request body. You can define a Custom authentication
+ * // configuration with two params:
+ * // params: [{name: 'secretId', description: 'Secret id'},
+ * //          {name: 'secretValue', description: 'Secret value'}])
+ * // The user or the pack author will be prompted to specify a value for each of these when setting up an account.
+ * // In the `execute` body of your formula, you can specify where those values are inserted in the request using
+ * // the template replacement syntax shown above.
+ * //
+ * // A real-world example of an API that would require this is the Plaid API (https://plaid.com/docs/api/products/#auth)
+ * // See the use of `secret`, `client_id`, and `access_token` parameters in the body.
+ * execute: async function([], context) {
+ *   let secretIdTemplateName = "secretId-" + context.invocationToken;
+ *   let urlWithSecret = "/api/entities/{{" + secretIdTemplateName + "}}"
+ *
+ *   let secretValueTemplateName = "secretValue-" + context.invocationToken;
+ *   let bodyWithSecret = JSON.stringify({
+ *     key: "{{" + secretValueTemplateName + "}}",
+ *     otherBodyParam: "foo",
+ *   });
+ *
+ *   let response = await context.fetcher.fetch({method: "GET", url: urlWithSecret, body: bodyWithSecret});
+ *   ...
+ * }
+ * ```
+ */
+export interface CustomAuthentication extends BaseAuthentication {
+    type: AuthenticationType.Custom;
+    /**
+     * An array of parameters that must be provided for new connection accounts to authenticate this pack.
+     * These parameters can then be referenced via the {@link CustomAuthParameter.name} property for template
+     * replacement inside the constructed network request.
+     */
+    params: CustomAuthParameter[];
+}
+/**
  * Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
  * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
  *
@@ -434,7 +506,7 @@ export interface VariousAuthentication {
 /**
  * The union of supported authentication methods.
  */
-export declare type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication;
+export declare type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication;
 declare type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId'> & {
     /**
      * A function that is called when a user sets up a new account, that returns a name for
@@ -463,19 +535,19 @@ declare type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionNam
  * a pack definition builder. The builder massages these definitions into the form of
  * an {@link Authentication} value, which is the value Coda ultimately cares about.
  */
-export declare type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication>;
+export declare type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<CustomAuthentication>;
 /**
  * The union of authentication methods that are supported for system authentication,
  * where the pack author provides credentials used in HTTP requests rather than the user.
  */
-export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication;
+export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication;
 /**
  * The union of supported system authentication definitions. These represent simplified
  * onfigurations a pack developer can specify when calling {@link setSystemAuthentication}
  * when using a pack definition builder. The builder massages these definitions into the form of
  * an {@link SystemAuthentication} value, which is the value Coda ultimately cares about.
  */
-export declare type SystemAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication>;
+export declare type SystemAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<CustomAuthentication>;
 /**
  * The subset of valid {@link AuthenticationType} enum values that can be used
  * when defining {@link SystemAuthentication}.

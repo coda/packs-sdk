@@ -63,6 +63,8 @@ function setupAuth(manifestDir, packDef, opts = {}) {
             return handler.handleQueryParam(auth.paramName);
         case types_1.AuthenticationType.WebBasic:
             return handler.handleWebBasic();
+        case types_1.AuthenticationType.Custom:
+            return handler.handleCustom(auth.params);
         case types_1.AuthenticationType.OAuth2:
             (0, ensure_2.ensureExists)(packDef.defaultAuthentication, 'OAuth2 only works with defaultAuthentication, not system auth.');
             return handler.handleOAuth2();
@@ -117,9 +119,28 @@ class CredentialHandler {
         this.storeCredential({ endpointUrl, username, password });
         (0, helpers_2.print)('Credentials updated!');
     }
+    handleCustom(paramDefs) {
+        (0, ensure_1.assertCondition)(this._authDef.type === types_1.AuthenticationType.Custom);
+        if (paramDefs.length === 0) {
+            (0, helpers_3.printAndExit)(`Please define one or more entries for "params" in the setUserAuthentication or setSystemAuthentication section of this Pack definition.`);
+        }
+        this.checkForExistingCredential();
+        const endpointUrl = this.maybePromptForEndpointUrl();
+        const { params: parameters } = this._authDef;
+        const credentials = { endpointUrl, params: {} };
+        for (const param of parameters) {
+            const { description, name } = param;
+            const descriptionText = description ? ` (${description})` : '';
+            credentials.params[name] = (0, helpers_4.promptForInput)(`Enter the value to use for the '${name}'${descriptionText} parameter for this Pack:\n`, {
+                mask: true,
+            });
+        }
+        this.storeCredential(credentials);
+        (0, helpers_2.print)('Credentials updated!');
+    }
     handleQueryParam(paramName) {
         if (!paramName) {
-            (0, helpers_3.printAndExit)(`Please provide a paramName attribute in the defaultAuthentication section of this Pack definition.`);
+            (0, helpers_3.printAndExit)(`Please provide a paramName attribute in the setUserAuthentication or setSystemAuthentication section of this Pack definition.`);
         }
         this.checkForExistingCredential();
         const endpointUrl = this.maybePromptForEndpointUrl();
@@ -131,7 +152,7 @@ class CredentialHandler {
     }
     handleMultiQueryParams(paramDefs) {
         if (paramDefs.length === 0) {
-            (0, helpers_3.printAndExit)(`Please define one or more entries for "params" in the defaultAuthentication section of this Pack definition.`);
+            (0, helpers_3.printAndExit)(`Please define one or more entries for "params" in the setUserAuthentication or setSystemAuthentication section of this Pack definition.`);
         }
         this.checkForExistingCredential();
         const endpointUrl = this.maybePromptForEndpointUrl();

@@ -15,6 +15,10 @@ export interface WebBasicCredentials extends BaseCredentials {
   password?: string;
 }
 
+export type CustomCredentials = BaseCredentials & {
+  params: {[key: string]: string};
+};
+
 export interface QueryParamCredentials extends BaseCredentials {
   paramValue: string;
 }
@@ -48,6 +52,7 @@ export interface AWSAssumeRoleCredentials extends BaseCredentials {
 export type Credentials =
   | TokenCredentials
   | WebBasicCredentials
+  | CustomCredentials
   | QueryParamCredentials
   | MultiQueryParamCredentials
   | OAuth2Credentials

@@ -27,7 +27,7 @@ user to the [authorizationUrl](OAuth2Authentication.md#authorizationurl).
 
 #### Defined in
 
-[types.ts:376](https://github.com/coda/packs-sdk/blob/main/types.ts#L376)
+[types.ts:381](https://github.com/coda/packs-sdk/blob/main/types.ts#L381)
 
 ___
 
@@ -42,7 +42,7 @@ they may be specified using [additionalParams](OAuth2Authentication.md#additiona
 
 #### Defined in
 
-[types.ts:351](https://github.com/coda/packs-sdk/blob/main/types.ts#L351)
+[types.ts:356](https://github.com/coda/packs-sdk/blob/main/types.ts#L356)
 
 ___
 
@@ -60,7 +60,7 @@ BaseAuthentication.defaultConnectionType
 
 #### Defined in
 
-[types.ts:216](https://github.com/coda/packs-sdk/blob/main/types.ts#L216)
+[types.ts:221](https://github.com/coda/packs-sdk/blob/main/types.ts#L221)
 
 ___
 
@@ -80,7 +80,7 @@ BaseAuthentication.endpointDomain
 
 #### Defined in
 
-[types.ts:238](https://github.com/coda/packs-sdk/blob/main/types.ts#L238)
+[types.ts:243](https://github.com/coda/packs-sdk/blob/main/types.ts#L243)
 
 ___
 
@@ -97,7 +97,7 @@ as [ExecutionContext.endpoint](ExecutionContext.md#endpoint).
 
 #### Defined in
 
-[types.ts:386](https://github.com/coda/packs-sdk/blob/main/types.ts#L386)
+[types.ts:391](https://github.com/coda/packs-sdk/blob/main/types.ts#L391)
 
 ___
 
@@ -111,7 +111,7 @@ BaseAuthentication.getConnectionName
 
 #### Defined in
 
-[types.ts:208](https://github.com/coda/packs-sdk/blob/main/types.ts#L208)
+[types.ts:213](https://github.com/coda/packs-sdk/blob/main/types.ts#L213)
 
 ___
 
@@ -125,7 +125,7 @@ BaseAuthentication.getConnectionUserId
 
 #### Defined in
 
-[types.ts:209](https://github.com/coda/packs-sdk/blob/main/types.ts#L209)
+[types.ts:214](https://github.com/coda/packs-sdk/blob/main/types.ts#L214)
 
 ___
 
@@ -141,7 +141,7 @@ BaseAuthentication.instructionsUrl
 
 #### Defined in
 
-[types.ts:221](https://github.com/coda/packs-sdk/blob/main/types.ts#L221)
+[types.ts:226](https://github.com/coda/packs-sdk/blob/main/types.ts#L226)
 
 ___
 
@@ -158,7 +158,7 @@ BaseAuthentication.postSetup
 
 #### Defined in
 
-[types.ts:244](https://github.com/coda/packs-sdk/blob/main/types.ts#L244)
+[types.ts:249](https://github.com/coda/packs-sdk/blob/main/types.ts#L249)
 
 ___
 
@@ -177,7 +177,7 @@ BaseAuthentication.requiresEndpointUrl
 
 #### Defined in
 
-[types.ts:229](https://github.com/coda/packs-sdk/blob/main/types.ts#L229)
+[types.ts:234](https://github.com/coda/packs-sdk/blob/main/types.ts#L234)
 
 ___
 
@@ -192,7 +192,7 @@ the documentation for the API you are connecting to.
 
 #### Defined in
 
-[types.ts:363](https://github.com/coda/packs-sdk/blob/main/types.ts#L363)
+[types.ts:368](https://github.com/coda/packs-sdk/blob/main/types.ts#L368)
 
 ___
 
@@ -208,7 +208,7 @@ When sending authenticated requests, a HTTP header of the form
 
 #### Defined in
 
-[types.ts:371](https://github.com/coda/packs-sdk/blob/main/types.ts#L371)
+[types.ts:376](https://github.com/coda/packs-sdk/blob/main/types.ts#L376)
 
 ___
 
@@ -222,7 +222,7 @@ that should contain the token.
 
 #### Defined in
 
-[types.ts:393](https://github.com/coda/packs-sdk/blob/main/types.ts#L393)
+[types.ts:398](https://github.com/coda/packs-sdk/blob/main/types.ts#L398)
 
 ___
 
@@ -235,7 +235,7 @@ at the end of the OAuth handshake flow.
 
 #### Defined in
 
-[types.ts:356](https://github.com/coda/packs-sdk/blob/main/types.ts#L356)
+[types.ts:361](https://github.com/coda/packs-sdk/blob/main/types.ts#L361)
 
 ___
 
@@ -245,4 +245,4 @@ ___
 
 #### Defined in
 
-[types.ts:344](https://github.com/coda/packs-sdk/blob/main/types.ts#L344)
+[types.ts:349](https://github.com/coda/packs-sdk/blob/main/types.ts#L349)

@@ -2,6 +2,7 @@ import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
 import ClientOAuth2 from 'client-oauth2';
 import type {Credentials} from './auth_types';
+import type {CustomCredentials} from './auth_types';
 import type {ExecutionContext} from '../api';
 import type {FetchRequest} from '../api_types';
 import type {FetchResponse} from '../api_types';
@@ -37,6 +38,17 @@ interface RequestError {
   name?: string;
   statusCode?: number;
   error?: string;
+}
+
+function getTemplateReplacementValueForKey(key: string, invocationToken: string): string {
+  return `{{${key}-${invocationToken}}}`;
+}
+
+// NOTE(spencer): this becomes available in the string prototype with ES2021. Remove
+// and migrate over when we change to that target.
+// Mirrors our utility replaceAll function in `coda` repo.
+function replaceAll(str: string, find: string, replace: string): string {
+  return str.split(find).join(replace);
 }
 
 export class AuthenticatingFetcher implements Fetcher {
@@ -126,11 +138,37 @@ export class AuthenticatingFetcher implements Fetcher {
       // Ignore if we cannot parse.
     }
 
-    const responseHeaders = {...response.headers};
+    let responseHeaders = {...response.headers};
     for (const key of Object.keys(responseHeaders)) {
       if (HeadersToStrip.includes(key.toLocaleLowerCase())) {
         // In case any services echo back sensitive headers, remove them so pack code can't see them.
         delete responseHeaders[key];
+      }
+    }
+
+    // Replace sensitive template values so that pack code can't see them.
+    if (this._authDef?.type === AuthenticationType.Custom) {
+      const {params} = this._credentials as CustomCredentials;
+      if (responseBody) {
+        if (typeof responseBody === 'object') {
+          let responseBodyStr = JSON.stringify(responseHeaders);
+          Object.values(params).forEach(value => {
+            responseBodyStr = replaceAll(responseBodyStr, value, '<<REDACTED BY CODA>>');
+          });
+          responseBody = JSON.parse(responseBodyStr);
+        } else if (typeof responseBody === 'string') {
+          Object.values(params).forEach(value => {
+            responseBody = replaceAll(responseBody, value, '<<REDACTED BY CODA>>');
+          });
+        }
+      }
+
+      if (responseHeaders) {
+        let responseHeadersStr = JSON.stringify(responseHeaders);
+        Object.values(params).forEach(value => {
+          responseHeadersStr = replaceAll(responseHeadersStr, value, '<<REDACTED BY CODA>>');
+        });
+        responseHeaders = JSON.parse(responseHeadersStr);
       }
     }
 
@@ -217,7 +255,7 @@ export class AuthenticatingFetcher implements Fetcher {
           // random token as part of the template key.
           Object.entries(this._credentials).forEach(([key, value]) => {
             bodyWithTemplateSubstitutions = ensureExists(bodyWithTemplateSubstitutions).replace(
-              `{{${key}-${this._invocationToken}}}`,
+              getTemplateReplacementValueForKey(key, this._invocationToken),
               value,
             );
           });
@@ -228,6 +266,60 @@ export class AuthenticatingFetcher implements Fetcher {
           body: bodyWithTemplateSubstitutions,
           form,
           headers: {...headers, Authorization: `Basic ${encodedAuth}`},
+        };
+      }
+      case AuthenticationType.Custom: {
+        let urlWithSubstitutions = url;
+        let bodyWithSubstitutions = body;
+        let formWithSubstitutions = JSON.stringify(form);
+        let headersWithSubstitutions = JSON.stringify(headers);
+
+        const {params} = this._credentials as CustomCredentials;
+
+        Object.entries(params).forEach(([key, value]) => {
+          if (urlWithSubstitutions) {
+            urlWithSubstitutions = replaceAll(
+              urlWithSubstitutions,
+              getTemplateReplacementValueForKey(key, this._invocationToken),
+              encodeURIComponent(value),
+            );
+            urlWithSubstitutions = replaceAll(
+              urlWithSubstitutions,
+              encodeURIComponent(getTemplateReplacementValueForKey(key, this._invocationToken)),
+              encodeURIComponent(value),
+            );
+          }
+
+          if (bodyWithSubstitutions) {
+            bodyWithSubstitutions = replaceAll(
+              bodyWithSubstitutions,
+              getTemplateReplacementValueForKey(key, this._invocationToken),
+              value,
+            );
+          }
+
+          if (formWithSubstitutions) {
+            formWithSubstitutions = replaceAll(
+              formWithSubstitutions,
+              getTemplateReplacementValueForKey(key, this._invocationToken),
+              value,
+            );
+          }
+
+          if (headersWithSubstitutions) {
+            headersWithSubstitutions = replaceAll(
+              headersWithSubstitutions,
+              getTemplateReplacementValueForKey(key, this._invocationToken),
+              value,
+            );
+          }
+        });
+
+        return {
+          url: urlWithSubstitutions,
+          body: bodyWithSubstitutions,
+          form: formWithSubstitutions ? JSON.parse(formWithSubstitutions) : undefined,
+          headers: headersWithSubstitutions ? JSON.parse(headersWithSubstitutions) : undefined,
         };
       }
       case AuthenticationType.QueryParamToken: {

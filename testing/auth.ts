@@ -5,6 +5,8 @@ import {AuthenticationType} from '../types';
 import type {BasicPackDefinition} from '../types';
 import type {Credentials} from './auth_types';
 import type {CredentialsFile} from './auth_types';
+import type {CustomAuthParameter} from '../types';
+import type {CustomCredentials} from './auth_types';
 import type {MultiQueryParamCredentials} from './auth_types';
 import type {OAuth2Credentials} from './auth_types';
 import {assertCondition} from '../helpers/ensure';
@@ -67,6 +69,8 @@ export function setupAuth(manifestDir: string, packDef: BasicPackDefinition, opt
       return handler.handleQueryParam(auth.paramName);
     case AuthenticationType.WebBasic:
       return handler.handleWebBasic();
+    case AuthenticationType.Custom:
+      return handler.handleCustom(auth.params);
     case AuthenticationType.OAuth2:
       ensureExists(packDef.defaultAuthentication, 'OAuth2 only works with defaultAuthentication, not system auth.');
       return handler.handleOAuth2();
@@ -135,10 +139,35 @@ class CredentialHandler {
     print('Credentials updated!');
   }
 
+  handleCustom(paramDefs: CustomAuthParameter[]) {
+    assertCondition(this._authDef.type === AuthenticationType.Custom);
+    if (paramDefs.length === 0) {
+      printAndExit(
+        `Please define one or more entries for "params" in the setUserAuthentication or setSystemAuthentication section of this Pack definition.`,
+      );
+    }
+    this.checkForExistingCredential();
+    const endpointUrl = this.maybePromptForEndpointUrl();
+    const {params: parameters} = this._authDef;
+    const credentials: CustomCredentials = {endpointUrl, params: {}};
+    for (const param of parameters) {
+      const {description, name} = param;
+      const descriptionText = description ? ` (${description})` : '';
+      credentials.params[name] = promptForInput(
+        `Enter the value to use for the '${name}'${descriptionText} parameter for this Pack:\n`,
+        {
+          mask: true,
+        },
+      );
+    }
+    this.storeCredential(credentials);
+    print('Credentials updated!');
+  }
+
   handleQueryParam(paramName: string) {
     if (!paramName) {
       printAndExit(
-        `Please provide a paramName attribute in the defaultAuthentication section of this Pack definition.`,
+        `Please provide a paramName attribute in the setUserAuthentication or setSystemAuthentication section of this Pack definition.`,
       );
     }
     this.checkForExistingCredential();
@@ -158,7 +187,7 @@ class CredentialHandler {
   ) {
     if (paramDefs.length === 0) {
       printAndExit(
-        `Please define one or more entries for "params" in the defaultAuthentication section of this Pack definition.`,
+        `Please define one or more entries for "params" in the setUserAuthentication or setSystemAuthentication section of this Pack definition.`,
       );
     }
 
