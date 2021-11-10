@@ -319,6 +319,9 @@ exports.isArray = isArray;
  * be known in advance nor can a function be written to generate a dynamic schema from other
  * inputs, it may be useful to us this helper to sniff the return value and generate a basic
  * inferred schema from it.
+ *
+ * This utility does NOT attempt to determine {@link id} or {@link primary} attributes for
+ * an object schema, those are left undefined.
  */
 function generateSchema(obj) {
     if (Array.isArray(obj)) {

@@ -513,14 +513,14 @@ export function isSyncPackFormula(fn: BaseFormula<ParamDefs, any>): fn is Generi
  * The return value from the formula that implements a sync table. Each sync formula invocation
  * returns one reasonable size page of results. The formula may also return a continuation, indicating
  * that the sync formula should be invoked again to get a next page of results. Sync functions
- * are called in a loop until there is no continuation returned.
+ * are called repeatedly until there is no continuation returned.
  */
 export interface SyncFormulaResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
   /** The list of results from this page. */
   result: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>;
   /**
    * A marker indicating where the next sync formula invocation should pick up to get the next page of results.
-   * The contents of this object are entirely of your choosing. Sync formulas are called in a loop
+   * The contents of this object are entirely of your choosing. Sync formulas are called repeatedly
    * until there is no continuation returned.
    */
   continuation?: Continuation;
@@ -871,6 +871,12 @@ export type MetadataFormulaResultType = string | number | MetadataFormulaObjectR
  * the use case. For example, a metadata formula that implements parameter autocomplete will
  * be passed the user's current search if the user has started typing to search for a result.
  * Not all metadata formulas make use of this second parameter.
+ *
+ * Autocomplete metadata functions are also passed a third parameter, which is a dictionary
+ * that has the values the user has specified for each of the other parameters in the formula
+ * (if any), so that the autocomplete options for one parameter can depend on the current
+ * values of the others. This is dictionary mapping the names of each parameter to its
+ * current value.
  */
 export type MetadataFormula = BaseFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any> & {
   schema?: any;

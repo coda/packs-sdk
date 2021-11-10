@@ -11,6 +11,9 @@ be known in advance nor can a function be written to generate a dynamic schema f
 inputs, it may be useful to us this helper to sniff the return value and generate a basic
 inferred schema from it.
 
+This utility does NOT attempt to determine [id](../interfaces/PackDefinition.md#id) or [primary](../interfaces/ObjectSchema.md#primary) attributes for
+an object schema, those are left undefined.
+
 #### Parameters
 
 | Name | Type |
@@ -23,4 +26,4 @@ inferred schema from it.
 
 #### Defined in
 
-[schema.ts:716](https://github.com/coda/packs-sdk/blob/main/schema.ts#L716)
+[schema.ts:719](https://github.com/coda/packs-sdk/blob/main/schema.ts#L719)

@@ -3,7 +3,7 @@
 The return value from the formula that implements a sync table. Each sync formula invocation
 returns one reasonable size page of results. The formula may also return a continuation, indicating
 that the sync formula should be invoked again to get a next page of results. Sync functions
-are called in a loop until there is no continuation returned.
+are called repeatedly until there is no continuation returned.
 
 ## Type parameters
 
@@ -20,7 +20,7 @@ are called in a loop until there is no continuation returned.
 • `Optional` **continuation**: [`Continuation`](Continuation.md)
 
 A marker indicating where the next sync formula invocation should pick up to get the next page of results.
-The contents of this object are entirely of your choosing. Sync formulas are called in a loop
+The contents of this object are entirely of your choosing. Sync formulas are called repeatedly
 until there is no continuation returned.
 
 #### Defined in
