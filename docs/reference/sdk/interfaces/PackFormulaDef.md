@@ -222,6 +222,8 @@ CommonPackFormulaDef.varargParameters
 
 ▸ **execute**(`params`, `context`): `ResultT` \| `Promise`<`ResultT`\>
 
+The JavaScript function that implements this formula
+
 #### Parameters
 
 | Name | Type |
@@ -235,4 +237,4 @@ CommonPackFormulaDef.varargParameters
 
 #### Defined in
 
-[api.ts:413](https://github.com/coda/packs-sdk/blob/main/api.ts#L413)
+[api.ts:414](https://github.com/coda/packs-sdk/blob/main/api.ts#L414)
