@@ -22,3 +22,10 @@ pack.addFormula({
     return 'Hello ' + name + '!';
   },
 });
+
+pack.addColumnFormat({
+  name: 'test',
+  formulaName: 'Throw',
+  formulaNamespace: 'deprecated',
+  matchers: [/https:\/\/testregex/],
+});

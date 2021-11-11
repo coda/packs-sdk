@@ -1,6 +1,6 @@
 # Type alias: ExternalPackFormat
 
-Ƭ **ExternalPackFormat**: [`Format`](../interfaces/Format.md)
+Ƭ **ExternalPackFormat**: `Omit`<[`Format`](../interfaces/Format.md), ``"matchers"``\> & { `matchers?`: `string`[]  }
 
 #### Defined in
 

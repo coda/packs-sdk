@@ -82,7 +82,7 @@ export type ExternalPackAuthenticationType = AuthenticationType;
 export type ExternalPackFormulas = PackFormulasMetadata | PackFormulaMetadata[];
 export type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
 export type ExternalPackFormula = PackFormulaMetadata;
-export type ExternalPackFormat = Format;
+export type ExternalPackFormat = Omit<Format, 'matchers'> & {matchers?: string[]};
 export type ExternalPackFormatMetadata = PackFormatMetadata;
 export type ExternalSyncTable = PackSyncTable;
 
