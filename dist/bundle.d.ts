@@ -1566,6 +1566,7 @@ export interface PackFormulas {
  * Base type for the inputs for creating a pack formula.
  */
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult> extends CommonPackFormulaDef<ParamsT> {
+	/** The JavaScript function that implements this formula */
 	execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
 }
 export interface ObjectArrayFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema> extends Omit<PackFormulaDef<ParamsT, SchemaType<SchemaT>>, "execute"> {
@@ -1638,6 +1639,13 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
  * Inputs for creating the formula that implements a sync table.
  */
 export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> extends CommonPackFormulaDef<ParamDefsT> {
+	/**
+	 * The JavaScript function that implements this sync.
+	 *
+	 * This function takes in parameters and a sync context which may have a continuation
+	 * from a previous invocation, and fetches and returns one page of results, as well
+	 * as another continuation if there are more result to fetch.
+	 */
 	execute(params: ParamValues<ParamDefsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<K, L, SchemaT>>;
 }
 export declare type SyncFormula<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {

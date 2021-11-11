@@ -410,6 +410,7 @@ export interface PackFormulas {
  */
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult>
   extends CommonPackFormulaDef<ParamsT> {
+  /** The JavaScript function that implements this formula */
   execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
 }
 
@@ -553,6 +554,13 @@ export interface SyncFormulaDef<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchemaDefinition<K, L>,
 > extends CommonPackFormulaDef<ParamDefsT> {
+  /**
+   * The JavaScript function that implements this sync.
+   *
+   * This function takes in parameters and a sync context which may have a continuation
+   * from a previous invocation, and fetches and returns one page of results, as well
+   * as another continuation if there are more result to fetch.
+   */
   execute(params: ParamValues<ParamDefsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<K, L, SchemaT>>;
 }
 
