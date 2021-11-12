@@ -2033,6 +2033,20 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_5_1_5">
@@ -2095,6 +2109,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../interfaces/CodaApiBearerTokenAuthentication/" class="md-nav__link">
+        Interface: CodaApiBearerTokenAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../interfaces/Continuation/" class="md-nav__link">
         Interface: Continuation
       </a>
@@ -2111,6 +2139,34 @@
     <li class="md-nav__item">
       <a href="../../interfaces/CurrencySchema/" class="md-nav__link">
         Interface: CurrencySchema
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/CustomAuthentication/" class="md-nav__link">
+        Interface: CustomAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/CustomHeaderTokenAuthentication/" class="md-nav__link">
+        Interface: CustomHeaderTokenAuthentication
       </a>
     </li>
   
@@ -2249,6 +2305,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../interfaces/HeaderBearerTokenAuthentication/" class="md-nav__link">
+        Interface: HeaderBearerTokenAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../interfaces/Identity/" class="md-nav__link">
         Interface: Identity
       </a>
@@ -2291,8 +2361,36 @@
   
   
     <li class="md-nav__item">
+      <a href="../../interfaces/MultiQueryParamTokenAuthentication/" class="md-nav__link">
+        Interface: MultiQueryParamTokenAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../interfaces/Network/" class="md-nav__link">
         Interface: Network
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/NoAuthentication/" class="md-nav__link">
+        Interface: NoAuthentication
       </a>
     </li>
   
@@ -2489,6 +2587,20 @@
     <li class="md-nav__item">
       <a href="../../interfaces/ParamDef/" class="md-nav__link">
         Interface: ParamDef<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/QueryParamTokenAuthentication/" class="md-nav__link">
+        Interface: QueryParamTokenAuthentication
       </a>
     </li>
   
@@ -3363,6 +3475,22 @@
                 
                 <h1 id="function-makeemptyformula">Function: makeEmptyFormula<a class="headerlink" href="#function-makeemptyformula" title="Permanent link">&para;</a></h1>
 <p>▸ <strong>makeEmptyFormula</strong>&lt;<code>ParamDefsT</code>>(<code>definition</code>): { <code>cacheTtlSecs?</code>: <code>number</code> ; <code>connectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a> ; <code>description</code>: <code>string</code> ; <code>examples?</code>: { <code>params</code>: <a href="../../types/PackFormulaValue/"><code>PackFormulaValue</code></a>[] ; <code>result</code>: <a href="../../types/PackFormulaResult/"><code>PackFormulaResult</code></a>  }[] ; <code>extraOAuthScopes?</code>: <code>string</code>[] ; <code>isAction?</code>: <code>boolean</code> ; <code>isExperimental?</code>: <code>boolean</code> ; <code>isSystem?</code>: <code>boolean</code> ; <code>name</code>: <code>string</code> ; <code>network?</code>: <a href="../../interfaces/Network/"><code>Network</code></a> ; <code>parameters</code>: <code>ParamDefsT</code> ; <code>varargParameters?</code>: <a href="../../types/ParamDefs/"><code>ParamDefs</code></a>  } &amp; { <code>execute</code>: (<code>params</code>: <a href="../../types/ParamValues/"><code>ParamValues</code></a>&lt;<code>ParamDefsT</code>>, <code>context</code>: <a href="../../interfaces/ExecutionContext/"><code>ExecutionContext</code></a>) =&gt; <code>Promise</code>&lt;<code>string</code>> ; <code>resultType</code>: <a href="../../enums/Type/#string"><code>string</code></a>  }</p>
+<p>Creates the definition of an "empty" formula, that is, a formula that uses a {@link RequestHandlerTemplate}
+to define an implementation for the formula rather than implementing an actual <code>execute</code> function
+in JavaScript.</p>
+<p><strong><code>example</code></strong>
+<div class="highlight"><pre><span></span><code>coda.makeEmptyFormula({
+name: &quot;GetWidget&quot;,
+description: &quot;Gets a widget.&quot;,
+request: {
+url: &quot;https://example.com/widgets/{id}&quot;,
+method: &quot;GET&quot;,
+},
+parameters: [
+coda.makeParameter({type: coda.ParameterType.Number, name: &quot;id&quot;, description: &quot;The ID of the widget to get.&quot;}),
+],
+}),
+</code></pre></div></p>
 <h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -3396,7 +3524,7 @@
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h4>
 <p>{ <code>cacheTtlSecs?</code>: <code>number</code> ; <code>connectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a> ; <code>description</code>: <code>string</code> ; <code>examples?</code>: { <code>params</code>: <a href="../../types/PackFormulaValue/"><code>PackFormulaValue</code></a>[] ; <code>result</code>: <a href="../../types/PackFormulaResult/"><code>PackFormulaResult</code></a>  }[] ; <code>extraOAuthScopes?</code>: <code>string</code>[] ; <code>isAction?</code>: <code>boolean</code> ; <code>isExperimental?</code>: <code>boolean</code> ; <code>isSystem?</code>: <code>boolean</code> ; <code>name</code>: <code>string</code> ; <code>network?</code>: <a href="../../interfaces/Network/"><code>Network</code></a> ; <code>parameters</code>: <code>ParamDefsT</code> ; <code>varargParameters?</code>: <a href="../../types/ParamDefs/"><code>ParamDefs</code></a>  } &amp; { <code>execute</code>: (<code>params</code>: <a href="../../types/ParamValues/"><code>ParamValues</code></a>&lt;<code>ParamDefsT</code>>, <code>context</code>: <a href="../../interfaces/ExecutionContext/"><code>ExecutionContext</code></a>) =&gt; <code>Promise</code>&lt;<code>string</code>> ; <code>resultType</code>: <a href="../../enums/Type/#string"><code>string</code></a>  }</p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1275">api.ts:1275</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1461">api.ts:1461</a></p>
                 
               
               

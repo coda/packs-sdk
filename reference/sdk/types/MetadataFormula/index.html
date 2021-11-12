@@ -2021,6 +2021,20 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_5_1_5">
@@ -2083,6 +2097,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../interfaces/CodaApiBearerTokenAuthentication/" class="md-nav__link">
+        Interface: CodaApiBearerTokenAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../interfaces/Continuation/" class="md-nav__link">
         Interface: Continuation
       </a>
@@ -2099,6 +2127,34 @@
     <li class="md-nav__item">
       <a href="../../interfaces/CurrencySchema/" class="md-nav__link">
         Interface: CurrencySchema
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/CustomAuthentication/" class="md-nav__link">
+        Interface: CustomAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/CustomHeaderTokenAuthentication/" class="md-nav__link">
+        Interface: CustomHeaderTokenAuthentication
       </a>
     </li>
   
@@ -2237,6 +2293,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../interfaces/HeaderBearerTokenAuthentication/" class="md-nav__link">
+        Interface: HeaderBearerTokenAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../interfaces/Identity/" class="md-nav__link">
         Interface: Identity
       </a>
@@ -2279,8 +2349,36 @@
   
   
     <li class="md-nav__item">
+      <a href="../../interfaces/MultiQueryParamTokenAuthentication/" class="md-nav__link">
+        Interface: MultiQueryParamTokenAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../interfaces/Network/" class="md-nav__link">
         Interface: Network
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/NoAuthentication/" class="md-nav__link">
+        Interface: NoAuthentication
       </a>
     </li>
   
@@ -2477,6 +2575,20 @@
     <li class="md-nav__item">
       <a href="../../interfaces/ParamDef/" class="md-nav__link">
         Interface: ParamDef<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/QueryParamTokenAuthentication/" class="md-nav__link">
+        Interface: QueryParamTokenAuthentication
       </a>
     </li>
   
@@ -3363,8 +3475,31 @@
                 
                 <h1 id="type-alias-metadataformula">Type alias: MetadataFormula<a class="headerlink" href="#type-alias-metadataformula" title="Permanent link">&para;</a></h1>
 <p>Ƭ <strong>MetadataFormula</strong>: <code>BaseFormula</code>&lt;[<a href="../../interfaces/ParamDef/"><code>ParamDef</code></a>&lt;<a href="../../enums/Type/#string"><code>string</code></a>>, <a href="../../interfaces/ParamDef/"><code>ParamDef</code></a>&lt;<a href="../../enums/Type/#string"><code>string</code></a>>], <code>any</code>> &amp; { <code>schema?</code>: <code>any</code>  }</p>
+<p>A formula that returns metadata relating to a core pack building block, like a sync table,
+a formula parameter, or a user account. Examples include {@link getSchema}, {@link getConnectionName},
+and <a href="../../interfaces/ParamDef/#autocomplete">autocomplete</a>.</p>
+<p>Many pack building blocks make use of supporting features that often require JavaScript
+or an API request to implement. For example, fetching the list of available autocomplete
+options for a formula parameter often requires making an API call. The logic to implement this
+and the context required, like a <a href="../../interfaces/Fetcher/">Fetcher</a> is very similar to that of a pack formula itself,
+so metadata formulas intentionally resemble regular formulas.</p>
+<p>A variety of tasks like those mentioned above can all be accomplished with formulas that
+share the same structure, so all of these supporting features are defined as <code>MetadataFormulas</code>.
+You typically do not need to define a <code>MetadataFormula</code> explicitly, but rather can simply define
+the JavaScript function that implements the formula. Coda will wrap this function with the necessary
+formula boilerplate to make it look like a complete Coda formula.</p>
+<p>All metadata functions are passed an <a href="../../interfaces/ExecutionContext/">ExecutionContext</a> as the first parameter,
+and the optional second parameter is a string whose purpose and value varies depending on
+the use case. For example, a metadata formula that implements parameter autocomplete will
+be passed the user's current search if the user has started typing to search for a result.
+Not all metadata formulas make use of this second parameter.</p>
+<p>Autocomplete metadata functions are also passed a third parameter, which is a dictionary
+that has the values the user has specified for each of the other parameters in the formula
+(if any), so that the autocomplete options for one parameter can depend on the current
+values of the others. This is dictionary mapping the names of each parameter to its
+current value.</p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L783">api.ts:783</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L881">api.ts:881</a></p>
                 
               
               

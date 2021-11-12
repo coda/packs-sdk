@@ -1385,6 +1385,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#custom" class="md-nav__link">
+    Custom
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#customheadertoken" class="md-nav__link">
     CustomHeaderToken
   </a>
@@ -2127,6 +2134,20 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_5_1_5">
@@ -2189,6 +2210,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../interfaces/CodaApiBearerTokenAuthentication/" class="md-nav__link">
+        Interface: CodaApiBearerTokenAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../interfaces/Continuation/" class="md-nav__link">
         Interface: Continuation
       </a>
@@ -2205,6 +2240,34 @@
     <li class="md-nav__item">
       <a href="../../interfaces/CurrencySchema/" class="md-nav__link">
         Interface: CurrencySchema
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/CustomAuthentication/" class="md-nav__link">
+        Interface: CustomAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/CustomHeaderTokenAuthentication/" class="md-nav__link">
+        Interface: CustomHeaderTokenAuthentication
       </a>
     </li>
   
@@ -2343,6 +2406,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../interfaces/HeaderBearerTokenAuthentication/" class="md-nav__link">
+        Interface: HeaderBearerTokenAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../interfaces/Identity/" class="md-nav__link">
         Interface: Identity
       </a>
@@ -2385,8 +2462,36 @@
   
   
     <li class="md-nav__item">
+      <a href="../../interfaces/MultiQueryParamTokenAuthentication/" class="md-nav__link">
+        Interface: MultiQueryParamTokenAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../interfaces/Network/" class="md-nav__link">
         Interface: Network
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/NoAuthentication/" class="md-nav__link">
+        Interface: NoAuthentication
       </a>
     </li>
   
@@ -2583,6 +2688,20 @@
     <li class="md-nav__item">
       <a href="../../interfaces/ParamDef/" class="md-nav__link">
         Interface: ParamDef<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/QueryParamTokenAuthentication/" class="md-nav__link">
+        Interface: QueryParamTokenAuthentication
       </a>
     </li>
   
@@ -3462,6 +3581,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#custom" class="md-nav__link">
+    Custom
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#customheadertoken" class="md-nav__link">
     CustomHeaderToken
   </a>
@@ -3544,33 +3670,40 @@ token into a text input.</p>
 <p>This is primarily for use by Coda-authored packs, as it is only relevant for interacting with the
 Coda REST API.</p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L101">types.ts:101</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L115">types.ts:115</a></p>
+<hr />
+<h3 id="custom">Custom<a class="headerlink" href="#custom" title="Permanent link">&para;</a></h3>
+<p>• <strong>Custom</strong> = <code>"Custom"</code></p>
+<p>Authenticate in a custom way by having one or more arbitrary secret values inserted into the request URL, body,
+headers, or the form data using template replacement. See <a href="../../interfaces/CustomAuthentication/">CustomAuthentication</a>.</p>
+<h4 id="defined-in_1">Defined in<a class="headerlink" href="#defined-in_1" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L86">types.ts:86</a></p>
 <hr />
 <h3 id="customheadertoken">CustomHeaderToken<a class="headerlink" href="#customheadertoken" title="Permanent link">&para;</a></h3>
 <p>• <strong>CustomHeaderToken</strong> = <code>"CustomHeaderToken"</code></p>
 <p>Authenticate using an HTTP header with a custom name and token prefix that you specify.
-The header name is defined in the {@link headerName} property.</p>
-<h4 id="defined-in_1">Defined in<a class="headerlink" href="#defined-in_1" title="Permanent link">&para;</a></h4>
+The header name is defined in the <a href="../../interfaces/CustomHeaderTokenAuthentication/#headername">headerName</a> property.</p>
+<h4 id="defined-in_2">Defined in<a class="headerlink" href="#defined-in_2" title="Permanent link">&para;</a></h4>
 <p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L52">types.ts:52</a></p>
 <hr />
 <h3 id="headerbearertoken">HeaderBearerToken<a class="headerlink" href="#headerbearertoken" title="Permanent link">&para;</a></h3>
 <p>• <strong>HeaderBearerToken</strong> = <code>"HeaderBearerToken"</code></p>
 <p>Authenticate using an HTTP header of the form <code>Authorization: Bearer &lt;token&gt;</code>.</p>
-<h4 id="defined-in_2">Defined in<a class="headerlink" href="#defined-in_2" title="Permanent link">&para;</a></h4>
+<h4 id="defined-in_3">Defined in<a class="headerlink" href="#defined-in_3" title="Permanent link">&para;</a></h4>
 <p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L47">types.ts:47</a></p>
 <hr />
 <h3 id="multiqueryparamtoken">MultiQueryParamToken<a class="headerlink" href="#multiqueryparamtoken" title="Permanent link">&para;</a></h3>
 <p>• <strong>MultiQueryParamToken</strong> = <code>"MultiQueryParamToken"</code></p>
 <p>Authenticate using multiple tokens, each passed as a different URL parameter, e.g.
 https://example.com/api?param1=token1&amp;param2=token2</p>
-<p>The parameter names are defined in the <a href="../../interfaces/ExternalPackVersionMetadata/#params">params</a> array property.</p>
-<h4 id="defined-in_3">Defined in<a class="headerlink" href="#defined-in_3" title="Permanent link">&para;</a></h4>
+<p>The parameter names are defined in the <a href="../../interfaces/CustomAuthentication/#params">params</a> array property.</p>
+<h4 id="defined-in_4">Defined in<a class="headerlink" href="#defined-in_4" title="Permanent link">&para;</a></h4>
 <p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L66">types.ts:66</a></p>
 <hr />
 <h3 id="none">None<a class="headerlink" href="#none" title="Permanent link">&para;</a></h3>
 <p>• <strong>None</strong> = <code>"None"</code></p>
 <p>Indicates this pack does not use authentication. You may also omit an authentication declaration entirely.</p>
-<h4 id="defined-in_4">Defined in<a class="headerlink" href="#defined-in_4" title="Permanent link">&para;</a></h4>
+<h4 id="defined-in_5">Defined in<a class="headerlink" href="#defined-in_5" title="Permanent link">&para;</a></h4>
 <p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L43">types.ts:43</a></p>
 <hr />
 <h3 id="oauth2">OAuth2<a class="headerlink" href="#oauth2" title="Permanent link">&para;</a></h3>
@@ -3579,15 +3712,15 @@ https://example.com/api?param1=token1&amp;param2=token2</p>
 scopes here as part of the pack definition. You'll provide the application's client ID and
 client secret in the pack management UI, so that these can be stored securely.</p>
 <p>The API must use a (largely) standards-compliant implementation of OAuth2.</p>
-<h4 id="defined-in_5">Defined in<a class="headerlink" href="#defined-in_5" title="Permanent link">&para;</a></h4>
+<h4 id="defined-in_6">Defined in<a class="headerlink" href="#defined-in_6" title="Permanent link">&para;</a></h4>
 <p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L74">types.ts:74</a></p>
 <hr />
 <h3 id="queryparamtoken">QueryParamToken<a class="headerlink" href="#queryparamtoken" title="Permanent link">&para;</a></h3>
 <p>• <strong>QueryParamToken</strong> = <code>"QueryParamToken"</code></p>
 <p>Authenticate using a token that is passed as a URL parameter with each request, e.g.
 https://example.com/api?paramName=token</p>
-<p>The parameter name is defined in the {@link paramName} property.</p>
-<h4 id="defined-in_6">Defined in<a class="headerlink" href="#defined-in_6" title="Permanent link">&para;</a></h4>
+<p>The parameter name is defined in the <a href="../../interfaces/QueryParamTokenAuthentication/#paramname">paramName</a> property.</p>
+<h4 id="defined-in_7">Defined in<a class="headerlink" href="#defined-in_7" title="Permanent link">&para;</a></h4>
 <p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L59">types.ts:59</a></p>
 <hr />
 <h3 id="webbasic">WebBasic<a class="headerlink" href="#webbasic" title="Permanent link">&para;</a></h3>
@@ -3595,7 +3728,7 @@ https://example.com/api?paramName=token</p>
 <p>Authenticate using HTTP Basic authorization. The user provides a username and password
 (sometimes optional) which are included as an HTTP header according to the Basic auth standard.</p>
 <p>See https://en.wikipedia.org/wiki/Basic_access_authentication</p>
-<h4 id="defined-in_7">Defined in<a class="headerlink" href="#defined-in_7" title="Permanent link">&para;</a></h4>
+<h4 id="defined-in_8">Defined in<a class="headerlink" href="#defined-in_8" title="Permanent link">&para;</a></h4>
 <p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L81">types.ts:81</a></p>
                 
               

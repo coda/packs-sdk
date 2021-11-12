@@ -2033,6 +2033,20 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_5_1_5">
@@ -2095,6 +2109,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../interfaces/CodaApiBearerTokenAuthentication/" class="md-nav__link">
+        Interface: CodaApiBearerTokenAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../interfaces/Continuation/" class="md-nav__link">
         Interface: Continuation
       </a>
@@ -2111,6 +2139,34 @@
     <li class="md-nav__item">
       <a href="../../interfaces/CurrencySchema/" class="md-nav__link">
         Interface: CurrencySchema
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/CustomAuthentication/" class="md-nav__link">
+        Interface: CustomAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/CustomHeaderTokenAuthentication/" class="md-nav__link">
+        Interface: CustomHeaderTokenAuthentication
       </a>
     </li>
   
@@ -2249,6 +2305,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../interfaces/HeaderBearerTokenAuthentication/" class="md-nav__link">
+        Interface: HeaderBearerTokenAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../interfaces/Identity/" class="md-nav__link">
         Interface: Identity
       </a>
@@ -2291,8 +2361,36 @@
   
   
     <li class="md-nav__item">
+      <a href="../../interfaces/MultiQueryParamTokenAuthentication/" class="md-nav__link">
+        Interface: MultiQueryParamTokenAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../interfaces/Network/" class="md-nav__link">
         Interface: Network
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/NoAuthentication/" class="md-nav__link">
+        Interface: NoAuthentication
       </a>
     </li>
   
@@ -2489,6 +2587,20 @@
     <li class="md-nav__item">
       <a href="../../interfaces/ParamDef/" class="md-nav__link">
         Interface: ParamDef<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/QueryParamTokenAuthentication/" class="md-nav__link">
+        Interface: QueryParamTokenAuthentication
       </a>
     </li>
   
@@ -3362,7 +3474,22 @@
                 
                 
                 <h1 id="function-makeobjectschema">Function: makeObjectSchema<a class="headerlink" href="#function-makeobjectschema" title="Permanent link">&para;</a></h1>
-<p>▸ <strong>makeObjectSchema</strong>&lt;<code>K</code>, <code>L</code>, <code>T</code>>(<code>schemaDef</code>): <code>T</code> &amp; { <code>identity?</code>: <a href="../../interfaces/Identity/"><code>Identity</code></a>  }</p>
+<p>▸ <strong>makeObjectSchema</strong>&lt;<code>K</code>, <code>L</code>, <code>T</code>>(<code>schemaDef</code>): <code>T</code> &amp; { <code>identity?</code>: <a href="../../interfaces/Identity/"><code>Identity</code></a> ; <code>type</code>: <a href="../../enums/ValueType/#object"><code>Object</code></a>  }</p>
+<p>A wrapper for creating a schema definition for an object value.</p>
+<p>It is always recommended to use wrapper functions for creating top-level schema
+objects rather than specifying object literals. Wrappers validate your schemas
+at creation time, provide better TypeScript type inference, and can reduce
+boilerplate.</p>
+<p><strong><code>example</code></strong>
+<div class="highlight"><pre><span></span><code>coda.makeObjectSchema({
+  id: &quot;email&quot;,
+  primary: &quot;name&quot;,
+  properties: {
+    email: {type: coda.ValueType.String, required: true},
+    name: {type: coda.ValueType.String, required: true},
+  },
+});
+</code></pre></div></p>
 <h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -3382,7 +3509,7 @@
 </tr>
 <tr>
 <td align="left"><code>T</code></td>
-<td align="left">extends <code>ObjectSchemaDefinition</code>&lt;<code>K</code>, <code>L</code>, <code>T</code>></td>
+<td align="left">extends <code>Omit</code>&lt;<code>ObjectSchemaDefinition</code>&lt;<code>K</code>, <code>L</code>>, <code>"type"</code>></td>
 </tr>
 </tbody>
 </table>
@@ -3397,14 +3524,14 @@
 <tbody>
 <tr>
 <td align="left"><code>schemaDef</code></td>
-<td align="left"><code>T</code></td>
+<td align="left"><code>T</code> &amp; { <code>type?</code>: <a href="../../enums/ValueType/#object"><code>Object</code></a>  }</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h4>
-<p><code>T</code> &amp; { <code>identity?</code>: <a href="../../interfaces/Identity/"><code>Identity</code></a>  }</p>
+<p><code>T</code> &amp; { <code>identity?</code>: <a href="../../interfaces/Identity/"><code>Identity</code></a> ; <code>type</code>: <a href="../../enums/ValueType/#object"><code>Object</code></a>  }</p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L735">schema.ts:735</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L797">schema.ts:797</a></p>
                 
               
               

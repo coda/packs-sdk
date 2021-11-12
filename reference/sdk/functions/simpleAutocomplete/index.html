@@ -2033,6 +2033,20 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_5_1_5">
@@ -2095,6 +2109,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../interfaces/CodaApiBearerTokenAuthentication/" class="md-nav__link">
+        Interface: CodaApiBearerTokenAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../interfaces/Continuation/" class="md-nav__link">
         Interface: Continuation
       </a>
@@ -2111,6 +2139,34 @@
     <li class="md-nav__item">
       <a href="../../interfaces/CurrencySchema/" class="md-nav__link">
         Interface: CurrencySchema
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/CustomAuthentication/" class="md-nav__link">
+        Interface: CustomAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/CustomHeaderTokenAuthentication/" class="md-nav__link">
+        Interface: CustomHeaderTokenAuthentication
       </a>
     </li>
   
@@ -2249,6 +2305,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../interfaces/HeaderBearerTokenAuthentication/" class="md-nav__link">
+        Interface: HeaderBearerTokenAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../interfaces/Identity/" class="md-nav__link">
         Interface: Identity
       </a>
@@ -2291,8 +2361,36 @@
   
   
     <li class="md-nav__item">
+      <a href="../../interfaces/MultiQueryParamTokenAuthentication/" class="md-nav__link">
+        Interface: MultiQueryParamTokenAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../interfaces/Network/" class="md-nav__link">
         Interface: Network
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/NoAuthentication/" class="md-nav__link">
+        Interface: NoAuthentication
       </a>
     </li>
   
@@ -2489,6 +2587,20 @@
     <li class="md-nav__item">
       <a href="../../interfaces/ParamDef/" class="md-nav__link">
         Interface: ParamDef<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/QueryParamTokenAuthentication/" class="md-nav__link">
+        Interface: QueryParamTokenAuthentication
       </a>
     </li>
   
@@ -3363,6 +3475,20 @@
                 
                 <h1 id="function-simpleautocomplete">Function: simpleAutocomplete<a class="headerlink" href="#function-simpleautocomplete" title="Permanent link">&para;</a></h1>
 <p>▸ <strong>simpleAutocomplete</strong>(<code>search</code>, <code>options</code>): <code>Promise</code>&lt;<a href="../../interfaces/MetadataFormulaObjectResultType/"><code>MetadataFormulaObjectResultType</code></a>[]></p>
+<p>Utility to search over an array of autocomplete results and return only those that
+match the given search string.</p>
+<p>You can do this yourself but this function helps simplify many common scenarios.
+Note that if you have a hardcoded list of autocomplete options, you can simply specify
+them directly as a list, you need not actually implement an autocomplete function.</p>
+<p>The primary use case here is fetching a list of all possible results from an API
+and then refining them using the user's current search string.</p>
+<p><strong><code>example</code></strong>
+<div class="highlight"><pre><span></span><code>autocomplete: async function(context, search) {
+  const response = await context.fetcher.fetch({method: &quot;GET&quot;, url: &quot;/api/entities&quot;});
+  const allOptions = response.body.entities.map(entity =&gt; entity.name);
+  return coda.simpleAutocomplete(search, allOptions);
+}
+</code></pre></div></p>
 <h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -3385,7 +3511,7 @@
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h4>
 <p><code>Promise</code>&lt;<a href="../../interfaces/MetadataFormulaObjectResultType/"><code>MetadataFormulaObjectResultType</code></a>[]></p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L826">api.ts:826</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L962">api.ts:962</a></p>
                 
               
               
