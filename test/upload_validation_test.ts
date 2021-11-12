@@ -1269,6 +1269,27 @@ describe('Pack metadata Validation', () => {
         ]);
       });
 
+      it('unknown key in properties', async () => {
+        const metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          primary: 'primary',
+          properties: {
+            primary: {type: ValueType.Number, required: true, foo: true} as any,
+          },
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: "Unrecognized key(s) in object: 'foo'",
+            path: 'formulas[0].schema.properties.Primary',
+          },
+          {
+            message: 'Could not find any valid schema for this value.',
+            path: 'formulas[0].schema.properties.Primary',
+          },
+        ]);
+      });
+
       it('featured field not among properties', async () => {
         const metadata = metadataForFormulaWithObjectSchema({
           type: ValueType.Object,
