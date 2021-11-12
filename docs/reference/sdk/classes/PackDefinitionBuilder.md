@@ -271,7 +271,7 @@ pack.addFormula({
 
 | Name | Type |
 | :------ | :------ |
-| `definition` | `FormulaDefinitionV2`<`ParamDefsT`, `ResultT`, `SchemaT`\> |
+| `definition` | { `resultType`: `ResultT`  } & `FormulaDefinitionV2`<`ParamDefsT`, `ResultT`, `SchemaT`\> |
 
 #### Returns
 

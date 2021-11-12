@@ -128,7 +128,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * ```
    */
   addFormula<ParamDefsT extends ParamDefs, ResultT extends FormulaResultValueType, SchemaT extends Schema>(
-    definition: FormulaDefinitionV2<ParamDefsT, ResultT, SchemaT>,
+    definition: {resultType: ResultT} & FormulaDefinitionV2<ParamDefsT, ResultT, SchemaT>,
   ): this {
     const formula = makeFormula<ParamDefsT, ResultT, SchemaT>({
       ...definition,

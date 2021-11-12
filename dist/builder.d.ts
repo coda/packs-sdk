@@ -92,7 +92,9 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * });
      * ```
      */
-    addFormula<ParamDefsT extends ParamDefs, ResultT extends FormulaResultValueType, SchemaT extends Schema>(definition: FormulaDefinitionV2<ParamDefsT, ResultT, SchemaT>): this;
+    addFormula<ParamDefsT extends ParamDefs, ResultT extends FormulaResultValueType, SchemaT extends Schema>(definition: {
+        resultType: ResultT;
+    } & FormulaDefinitionV2<ParamDefsT, ResultT, SchemaT>): this;
     /**
      * Adds a sync table definition to this pack.
      *
