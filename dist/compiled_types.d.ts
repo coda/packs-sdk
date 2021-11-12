@@ -45,7 +45,9 @@ export declare type ExternalPackAuthenticationType = AuthenticationType;
 export declare type ExternalPackFormulas = PackFormulasMetadata | PackFormulaMetadata[];
 export declare type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
 export declare type ExternalPackFormula = PackFormulaMetadata;
-export declare type ExternalPackFormat = Format;
+export declare type ExternalPackFormat = Omit<Format, 'matchers'> & {
+    matchers?: string[];
+};
 export declare type ExternalPackFormatMetadata = PackFormatMetadata;
 export declare type ExternalSyncTable = PackSyncTable;
 declare type BasePackVersionMetadata = Omit<PackVersionMetadata, 'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables'>;

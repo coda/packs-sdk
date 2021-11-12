@@ -34,7 +34,7 @@ ___
 
 ### formats
 
-• `Optional` **formats**: [`Format`](Format.md)[]
+• `Optional` **formats**: [`ExternalPackFormat`](../types/ExternalPackFormat.md)[]
 
 #### Defined in
 
