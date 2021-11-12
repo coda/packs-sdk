@@ -394,25 +394,25 @@ const basePropertyValidators = {
     fromKey: z.string().optional(),
     required: z.boolean().optional(),
 };
-const booleanPropertySchema = zodCompleteObject({
+const booleanPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_8.ValueType.Boolean),
     ...basePropertyValidators,
 });
-const numericPropertySchema = zodCompleteObject({
+const numericPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_8.ValueType.Number),
     codaType: zodDiscriminant(schema_7.ValueHintType.Percent).optional(),
     precision: z.number().optional(),
     useThousandsSeparator: z.boolean().optional(),
     ...basePropertyValidators,
 });
-const scalePropertySchema = zodCompleteObject({
+const scalePropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_8.ValueType.Number),
     codaType: zodDiscriminant(schema_7.ValueHintType.Scale),
     maximum: z.number().optional(),
     icon: z.nativeEnum(schema_5.ScaleIconSet).optional(),
     ...basePropertyValidators,
 });
-const sliderPropertySchema = zodCompleteObject({
+const sliderPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_8.ValueType.Number),
     codaType: zodDiscriminant(schema_7.ValueHintType.Slider),
     maximum: z.number().optional(),
@@ -420,7 +420,7 @@ const sliderPropertySchema = zodCompleteObject({
     step: z.number().optional(),
     ...basePropertyValidators,
 });
-const currencyPropertySchema = zodCompleteObject({
+const currencyPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_8.ValueType.Number),
     codaType: zodDiscriminant(schema_7.ValueHintType.Currency),
     precision: z.number().optional(),
@@ -428,19 +428,19 @@ const currencyPropertySchema = zodCompleteObject({
     format: z.nativeEnum(schema_2.CurrencyFormat).optional(),
     ...basePropertyValidators,
 });
-const numericDatePropertySchema = zodCompleteObject({
+const numericDatePropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_8.ValueType.Number),
     codaType: zodDiscriminant(schema_7.ValueHintType.Date),
     format: z.string().optional(),
     ...basePropertyValidators,
 });
-const numericTimePropertySchema = zodCompleteObject({
+const numericTimePropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_8.ValueType.Number),
     codaType: zodDiscriminant(schema_7.ValueHintType.Time),
     format: z.string().optional(),
     ...basePropertyValidators,
 });
-const numericDateTimePropertySchema = zodCompleteObject({
+const numericDateTimePropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_8.ValueType.Number),
     codaType: zodDiscriminant(schema_7.ValueHintType.DateTime),
     dateFormat: z.string().optional(),
@@ -461,31 +461,31 @@ const numericPackFormulaSchema = zodCompleteObject({
     resultType: zodDiscriminant(api_types_3.Type.number),
     schema: numberPropertySchema.optional(),
 });
-const simpleStringPropertySchema = zodCompleteObject({
+const simpleStringPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_8.ValueType.String),
     codaType: z.enum([...schema_6.SimpleStringHintValueTypes]).optional(),
     ...basePropertyValidators,
 });
-const stringDatePropertySchema = zodCompleteObject({
+const stringDatePropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_8.ValueType.String),
     codaType: zodDiscriminant(schema_7.ValueHintType.Date),
     format: z.string().optional(),
     ...basePropertyValidators,
 });
-const stringTimePropertySchema = zodCompleteObject({
+const stringTimePropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_8.ValueType.String),
     codaType: zodDiscriminant(schema_7.ValueHintType.Time),
     format: z.string().optional(),
     ...basePropertyValidators,
 });
-const stringDateTimePropertySchema = zodCompleteObject({
+const stringDateTimePropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_8.ValueType.String),
     codaType: zodDiscriminant(schema_7.ValueHintType.DateTime),
     dateFormat: z.string().optional(),
     timeFormat: z.string().optional(),
     ...basePropertyValidators,
 });
-const durationPropertySchema = zodCompleteObject({
+const durationPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_8.ValueType.String),
     codaType: zodDiscriminant(schema_7.ValueHintType.Duration),
     precision: z.number().optional(),
