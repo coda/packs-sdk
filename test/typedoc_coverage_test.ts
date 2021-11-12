@@ -43,37 +43,44 @@ function getReflectionData() {
   return JSON.parse(fs.readFileSync(tempfile, 'utf-8'));
 }
 
-function traverse(data: ReflectionData): void {
+function traverse(data: ReflectionData): ReflectionData[] {
+  const entitiesWithMissingTypedoc: ReflectionData[] = [];
   if (!hasComment(data) && data.kindString !== 'Project') {
-    logMissing(data);
+    entitiesWithMissingTypedoc.push(data);
   }
   if (data.comment?.tags?.find(t => t.tag === 'deprecated')) {
-    return;
+    return entitiesWithMissingTypedoc;
   }
   // We don't care about traversing children for these nodes.
   const terminalNames = ['PrecannedDateRange', 'ScaleIconSet', 'Type'];
   if (terminalNames.includes(data.name)) {
-    return;
+    return entitiesWithMissingTypedoc;
   }
   for (const child of data.children || []) {
-    traverse(child);
+    const missingOnChild = traverse(child);
+    entitiesWithMissingTypedoc.push(...missingOnChild);
   }
+  return entitiesWithMissingTypedoc;
 }
 
 function hasComment(data: ReflectionData): boolean {
   return Boolean(data.comment || data.signatures?.some(sig => sig.comment));
 }
 
-function logMissing(data: ReflectionData): void {
+function messageForEntity(data: ReflectionData): string {
   const source = data.sources?.[0];
-  const message = `${data.name.padEnd(40)} ${data.kindString.padEnd(30)} ${source?.fileName}:${source?.line}`;
-  // eslint-disable-next-line no-console
-  console.log(message);
+  return `${data.name.padEnd(40)} ${data.kindString.padEnd(30)} ${source?.fileName}:${source?.line}`;
 }
 
-function main() {
-  const data = getReflectionData();
-  traverse(data);
-}
-
-main();
+describe('TypeDoc coverage', () => {
+  it('all reachable entities are documented', () => {
+    const data = getReflectionData();
+    const missing = traverse(data);
+    if (missing.length > 0) {
+      const message =
+        'The following entities are missing TypeDoc documentation. Please add doc comments for them.\n\n' +
+        missing.map(messageForEntity).join('\n');
+      assert.fail(message);
+    }
+  });
+});
