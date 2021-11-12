@@ -219,7 +219,7 @@ interface BaseAuthentication {
    * to an API's "who am I" endpoint and returns a username.
    *
    * If omitted, or if the function returns an empty value, the account will be labeled
-   * with the creating user's Coda email address.
+   * with the creating user's Coda username.
    */
   getConnectionName?: MetadataFormula;
   /**

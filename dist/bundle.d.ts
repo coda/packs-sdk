@@ -550,14 +550,14 @@ export declare type GenericObjectSchema = ObjectSchema<string, string>;
 /**
  * An identifier for a schema, allowing other schemas to reference it.
  *
- * You may optionally specify an {@link identity} when defining an object schema.
+ * You may optionally specify an {@link ObjectSchemaDefinition.identity} when defining an object schema.
  * This signals that this schema represents an important named entity in the context of your pack.
  * Schemas with identities may be referenced by other schemas, in which case Coda
  * will render such values as @-references in the doc, allowing you to create relationships
  * between entities.
  *
  * Every sync table's top-level schema is required to have an identity. However, an identity
- * will be created on your behalf using the {@link identityName} that you provide in the sync
+ * will be created on your behalf using the {@link SyncTableOptions.identityName} that you provide in the sync
  * table definition, so you needn't explicitly create on unless desired.
  */
 export interface IdentityDefinition {
@@ -567,7 +567,7 @@ export interface IdentityDefinition {
 	 */
 	name: string;
 	/**
-	 * The dynamic URL, this is a schema for a dynamic sync table. When returning a schema from the {@link getSchema}
+	 * The dynamic URL, if this is a schema for a dynamic sync table. When returning a schema from the {@link getSchema}
 	 * formula of a dynamic sync table, you must include the dynamic URL of that table, so that rows
 	 * in this table may be distinguished from rows in another dynamic instance of the same table.
 	 *
@@ -2352,7 +2352,7 @@ export interface BaseAuthentication {
 	 * to an API's "who am I" endpoint and returns a username.
 	 *
 	 * If omitted, or if the function returns an empty value, the account will be labeled
-	 * with the creating user's Coda email address.
+	 * with the creating user's Coda username.
 	 */
 	getConnectionName?: MetadataFormula;
 	/**
