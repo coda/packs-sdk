@@ -872,10 +872,6 @@ describe('Pack metadata Validation', () => {
             path: 'syncTables[0].schema.identity.name',
           },
           {
-            message: 'Could not find any valid schema for this value.',
-            path: 'syncTables[0].getter.schema.items',
-          },
-          {
             message:
               'Invalid name. Identity names can only contain ' +
               'alphanumeric characters, underscores, and dashes, and no spaces.',
@@ -1383,7 +1379,7 @@ describe('Pack metadata Validation', () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: 'Invalid',
+            message: 'Invalid input',
             path: 'formats[0].matchers[0]',
           },
         ]);
@@ -1872,10 +1868,6 @@ describe('Pack metadata Validation', () => {
       });
       const err = validateAndAssertFails(arraySchema);
       assert.deepEqual(err.validationErrors, [
-        {
-          path: 'items',
-          message: 'Could not find any valid schema for this value.',
-        },
         {
           path: 'items.identity.name',
           message:
