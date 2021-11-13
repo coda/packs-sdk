@@ -190,9 +190,15 @@ function zodCompleteStrictObject(shape) {
     return z.strictObject(shape);
 }
 function zodDiscriminant(value) {
-    return z.union([z.string(), z.number(), z.boolean(), z.undefined()]).refine(data => data === value, {
-        message: 'Non-matching discriminant',
-        params: { customErrorCode: CustomErrorCode.NonMatchingDiscriminant },
+    return z.union([z.string(), z.number(), z.boolean(), z.undefined()]).superRefine((data, context) => {
+        if (data !== value) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: 'Non-matching discriminant',
+                params: { customErrorCode: CustomErrorCode.NonMatchingDiscriminant },
+                fatal: true,
+            });
+        }
     });
 }
 function zodUnionInput(schemas) {
@@ -661,7 +667,7 @@ const formatMetadataSchema = zodCompleteObject({
     hasNoConnection: z.boolean().optional(),
     instructions: z.string().optional(),
     placeholder: z.string().optional(),
-    matchers: z.array(z.string().regex(exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX).refine(validateFormatMatcher)),
+    matchers: z.array(z.string().refine(validateFormatMatcher)),
 });
 const syncFormulaSchema = zodCompleteObject({
     schema: arrayPropertySchema.optional(),
@@ -792,7 +798,7 @@ function validateFormatMatcher(value) {
     try {
         const parsed = value.match(exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX);
         if (!parsed) {
-            throw new Error('Column matcher not recognized as a regex');
+            return false;
         }
         const [, pattern, flags] = parsed;
         new RegExp(pattern, flags);
