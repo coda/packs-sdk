@@ -494,16 +494,86 @@ export interface ArraySchema<T extends Schema = Schema> extends BaseSchema {
 	/** A schema for the items of this array. */
 	items: T;
 }
+/**
+ * Fields that may be set on a schema property in the {@link properties} definition
+ * of an object schema.
+ */
 export interface ObjectSchemaProperty {
+	/**
+	 * The name of a field in a return value object that should be re-mapped to this property.
+	 * This provides a way to rename fields from API responses without writing code.
+	 *
+	 * Suppose that you're fetching an object from an API that has a property called "duration".
+	 * But in your pack, you'd like the value to be called "durationSeconds" to be more precise.
+	 * You could write code in your `execute` function to relabel the field, but you could
+	 * also use `fromKey` and Coda will do it for you.
+	 *
+	 * Suppose your `execute` function looked like this:
+	 * ```
+	 * execute: async function(context) {
+	 *   const response = await context.fetcher.fetch({method: "GET", url: "/api/some-entity"});
+	 *   // Suppose the body of the response looks like {duration: 123, name: "foo"}.
+	 *   return response.body;
+	 * }
+	 * ```
+	 *
+	 * You can define your schema like this:
+	 * ```
+	 * coda.makeObjectSchema({
+	 *   properties: {
+	 *     name: {type: coda.ValueType.String},
+	 *     durationSeconds: {type: coda.ValueType.Number, fromKey: "duration"},
+	 *   },
+	 * });
+	 * ```
+	 *
+	 * This tells Coda to transform your formula's return value, creating a field "durationSeconds"
+	 * whose value comes another field called "duration".
+	 */
 	fromKey?: string;
+	/**
+	 * When true, indicates that an object return value for a formula that has this schema must
+	 * include a non-empty value for this property.
+	 */
 	required?: boolean;
 }
+/**
+ * The type of the {@link properties} in the definition of an object schema.
+ * This is essentially a dictionary mapping the name of a property to a schema
+ * definition for that property.
+ */
 export declare type ObjectSchemaProperties<K extends string = never> = {
 	[K2 in K | string]: Schema & ObjectSchemaProperty;
 };
+/** @hidden */
 export declare type GenericObjectSchema = ObjectSchema<string, string>;
+/**
+ * An identifier for a schema, allowing other schemas to reference it.
+ *
+ * You may optionally specify an {@link ObjectSchemaDefinition.identity} when defining an object schema.
+ * This signals that this schema represents an important named entity in the context of your pack.
+ * Schemas with identities may be referenced by other schemas, in which case Coda
+ * will render such values as @-references in the doc, allowing you to create relationships
+ * between entities.
+ *
+ * Every sync table's top-level schema is required to have an identity. However, an identity
+ * will be created on your behalf using the {@link SyncTableOptions.identityName} that you provide in the sync
+ * table definition, so you needn't explicitly create on unless desired.
+ */
 export interface IdentityDefinition {
+	/**
+	 * The name of this entity. This is an arbitrary name but should be unique within your pack.
+	 * For example, if you are defining a schema that represents a user object, "User" would be a good identity name.
+	 */
 	name: string;
+	/**
+	 * The dynamic URL, if this is a schema for a dynamic sync table. When returning a schema from the {@link getSchema}
+	 * formula of a dynamic sync table, you must include the dynamic URL of that table, so that rows
+	 * in this table may be distinguished from rows in another dynamic instance of the same table.
+	 *
+	 * When creating a reference to a dynamic sync table, you must include the dynamic URL of the table
+	 * you wish to reference, again to distinguish which table instance you are trying to reference.
+	 */
 	dynamicUrl?: string;
 	/**
 	 * Attribution text, images, and/or links that should be rendered along with this value.
@@ -511,21 +581,64 @@ export interface IdentityDefinition {
 	 * See {@link makeAttributionNode}.
 	 */
 	attribution?: AttributionNode[];
-	packId?: PackId;
+	/** The ID of another pack, if you are trying to reference a value from different pack. */
+	packId?: number;
 }
+/** The runtime version of IdentityDefinition with a pack ID injected. */
 export interface Identity extends IdentityDefinition {
-	packId: PackId;
+	packId: number;
 }
+/**
+ * A schema definition for an object value (a value with key-value pairs).
+ */
 export interface ObjectSchemaDefinition<K extends string, L extends string> extends BaseSchema {
+	/** Identifies this schema as an object schema. */
 	type: ValueType.Object;
+	/** Definintion of the key-value pairs in this object. */
 	properties: ObjectSchemaProperties<K | L>;
+	/**
+	 * The name of a property within {@link properties} that represents a unique id for this object.
+	 * Sync table schemas must specify an id property, which uniquely identify each synced row.
+	 */
 	id?: K;
+	/**
+	 * The name of a property within {@link properties} that be used to label this object in the UI.
+	 * Object values can contain many properties and the Coda UI will display them as a "chip"
+	 * with only the value of the "primary" property used as the chip's label. The other properties
+	 * can be seen when hovering over the chip.
+	 */
 	primary?: K;
+	/**
+	 * A hint for how Coda should interpret and render this object value.
+	 *
+	 * For example, an object can represent a person (user) in a Coda doc, with properties for the
+	 * email address of the person and their name. Using `ValueHintType.Person` tells Coda to
+	 * render such a value as an @-reference to that person, rather than a basic object schip.
+	 */
 	codaType?: ObjectHintTypes;
+	/**
+	 * A list of property names from within {@link properties} for the "featured" properties
+	 * of this object, used in sync tables. When a sync table is first added to a document,
+	 * columns are created for each of the featured properties. The user can easily add additional
+	 * columns for any other properties, as desired.
+	 *
+	 * This distinction exists for cases where a sync table may include dozens of properties,
+	 * which would create a very wide table that is difficult to use. Featuring properties
+	 * allows a sync table to be created with the most useful columns created by default,
+	 * and the user can add additional columns as they find them useful.
+	 *
+	 * Non-featured properties can always be referenced in formulas regardless of whether column
+	 * projections have been created for them.
+	 */
 	featured?: L[];
+	/**
+	 * An identity for this schema, if this schema is important enough to be named and referenced.
+	 * See {@link IdentityDefinition}.
+	 */
 	identity?: IdentityDefinition;
 }
 export declare type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
+/** @hidden */
 export interface ObjectSchema<K extends string, L extends string> extends ObjectSchemaDefinition<K, L> {
 	identity?: Identity;
 }
@@ -575,6 +688,9 @@ export declare type AttributionNode = TextAttributionNode | LinkAttributionNode 
  * rendered any time a value with that identity is rendered in a doc.
  */
 export declare function makeAttributionNode<T extends AttributionNode>(node: T): T;
+/**
+ * The union of all of the schema types supported for return values and object properties.
+ */
 export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
 export declare type PickOptional<T, K extends keyof T> = Partial<T> & {
 	[P in K]: T[P];
@@ -601,6 +717,22 @@ export declare type ObjectSchemaNoFromKeyType<T extends ObjectSchemaDefinition<a
 	} ? K : never;
 }>>;
 export declare type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = ObjectSchemaNoFromKeyType<T> & SchemaFromKeyWildCard<T>;
+/**
+ * A TypeScript helper that parses the expected `execute` function return type from a given schema.
+ * That is, given a schema, this utility will produce the type that an `execute` function should return
+ * in order to fulfill the schema.
+ *
+ * For example, `SchemaType<NumberSchema>` produces the type `number`.
+ *
+ * For an object schema, this will for the most part return an object matching the schema
+ * but if the schema uses {@link `fromKey`} then this utility will be unable to infer
+ * that the return value type should use the property names given in the `fromKey`
+ * attribute, and will simply relax any property name type-checking in such a case.
+ *
+ * This utility is very optional and only useful for advanced cases of strong typing.
+ * It can be helpful for adding type-checking for the return value of an `execute` function
+ * to ensure that it matches the schema you have declared for that formula.
+ */
 export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? StringHintTypeToSchemaType<T["codaType"]> : T extends ArraySchema ? Array<SchemaType<T["items"]>> : T extends GenericObjectSchema ? ObjectSchemaType<T> : never;
 export declare type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
 /**
@@ -691,8 +823,13 @@ export declare enum Type {
 	html = 5,
 	image = 6
 }
+/**
+ * The type of a parameter or return value that is an array.
+ */
 export interface ArrayType<T extends Type> {
+	/** Identifies this type as an array. */
 	type: "array";
+	/** The type of the items in this array. */
 	items: T;
 }
 export declare type UnionType = ArrayType<Type> | Type;
@@ -705,7 +842,13 @@ export interface TypeMap {
 	[Type.html]: string;
 	[Type.image]: string;
 }
+/**
+ * The union of types for arguments to the `execute` function for a formula.
+ */
 export declare type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | PackFormulaValue[];
+/**
+ * The union of types that can be returned by the `execute` function for a formula.
+ */
 export declare type PackFormulaResult = $Values<TypeMap> | PackFormulaResult[];
 export declare type TypeOf<T extends PackFormulaResult> = T extends number ? Type.number : T extends string ? Type.string : T extends boolean ? Type.boolean : T extends Date ? Type.date : T extends object ? Type.object : never;
 /**
@@ -780,6 +923,9 @@ export interface ParameterTypeMap {
 	[ParameterType.HtmlArray]: ArrayType<Type.html>;
 	[ParameterType.ImageArray]: ArrayType<Type.image>;
 }
+/**
+ * The definition of a formula parameter.
+ */
 export interface ParamDef<T extends UnionType> {
 	/**
 	 * The name of the parameter, which will be shown to the user when invoking this formula.
@@ -798,6 +944,7 @@ export interface ParamDef<T extends UnionType> {
 	 * All optional parameters must come after all non-optional parameters.
 	 */
 	optional?: boolean;
+	/** @hidden */
 	hidden?: boolean;
 	/**
 	 * A {@link MetadataFormula} that returns valid values for this parameter, optionally matching a search
@@ -815,16 +962,27 @@ export interface ParamDef<T extends UnionType> {
 	 */
 	defaultValue?: DefaultValueType<T>;
 }
+/**
+ * The type for the complete set of parameter definitions for a fomrula.
+ */
 export declare type ParamDefs = [
 	ParamDef<UnionType>,
 	...Array<ParamDef<UnionType>>
 ] | [
 ];
+/** @hidden */
 export declare type ParamsList = Array<ParamDef<UnionType>>;
 export declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : T extends ArrayType<infer V> ? Array<TypeMap[V]> : never;
+/**
+ * The type for the set of argument values that are passed to formula's `execute` function, based on
+ * the parameter defintion for that formula.
+ */
 export declare type ParamValues<ParamDefsT extends ParamDefs> = {
 	[K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
 } & any[];
+/**
+ * The type of values that are allowable to be used as a {@link defaultValue} for a parameter.
+ */
 export declare type DefaultValueType<T extends UnionType> = T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
 /**
  * Inputs for creating a formula that are common between regular formulas and sync table formulas.
@@ -932,6 +1090,7 @@ declare const ValidFetchMethods: readonly [
 	"PUT",
 	"DELETE"
 ];
+/** The type of the HTTP methods (verbs) supported by the fetcher. */
 export declare type FetchMethodType = typeof ValidFetchMethods[number];
 /**
  * An HTTP request used with the {@link Fetcher}.
@@ -1296,14 +1455,19 @@ export declare class StatusCodeError extends Error {
 	constructor(statusCode: number, body: any, options: FetchRequest, response: StatusCodeErrorResponse);
 }
 /**
- * Type definition for a Sync Table. Should not be necessary to use directly,
+ * The result of defining a sync table. Should not be necessary to use directly,
  * instead, define sync tables using {@link makeSyncTable}.
  */
 export interface SyncTableDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> {
+	/** See {@link SyncTableOptions.name} */
 	name: string;
+	/** See {@link SyncTableOptions.schema} */
 	schema: SchemaT;
+	/** See {@link SyncTableOptions.formula} */
 	getter: SyncFormula<K, L, ParamDefsT, SchemaT>;
+	/** See {@link SyncTableOptions.dynamicOptions.getSchema} */
 	getSchema?: MetadataFormula;
+	/** See {@link SyncTableOptions.dynamicOptions.entityName} */
 	entityName?: string;
 }
 /**
@@ -1396,6 +1560,9 @@ export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<Pa
  * ```
  */
 export declare function makeParameter<T extends ParameterType>(paramDefinition: ParameterOptions<T>): ParamDef<ParameterTypeMap[T]>;
+/**
+ * @deprecated Formulas should now only be defined as an array, as namespaces are deprecated.
+ */
 export interface PackFormulas {
 	readonly [namespace: string]: Formula[];
 }
@@ -1403,6 +1570,7 @@ export interface PackFormulas {
  * Base type for the inputs for creating a pack formula.
  */
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult> extends CommonPackFormulaDef<ParamsT> {
+	/** The JavaScript function that implements this formula */
 	execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
 }
 export interface ObjectArrayFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema> extends Omit<PackFormulaDef<ParamsT, SchemaType<SchemaT>>, "execute"> {
@@ -1434,6 +1602,13 @@ export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT exte
 	schema?: SchemaT;
 	execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<object> | object;
 };
+/**
+ * A pack formula, complete with metadata about the formula like its name, description, and parameters,
+ * as well as the implementation of that formula.
+ *
+ * This is the type for an actual user-facing formula, rather than other formula-shaped resources within a
+ * pack, like an autocomplete metadata formula or a sync getter formula.
+ */
 export declare type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT extends FormulaResultValueType = FormulaResultValueType, SchemaT extends Schema = Schema> = ResultT extends ValueType.String ? StringPackFormula<ParamDefsT> : ResultT extends ValueType.Number ? NumericPackFormula<ParamDefsT> : ResultT extends ValueType.Boolean ? BooleanPackFormula<ParamDefsT> : ResultT extends ValueType.Array ? ObjectPackFormula<ParamDefsT, ArraySchema<SchemaT>> : ObjectPackFormula<ParamDefsT, SchemaT>;
 /**
  * The union of types that represent formula definitions, including standard formula definitions,
@@ -1444,7 +1619,9 @@ export declare type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT ex
  */
 export declare type TypedPackFormula = Formula | GenericSyncFormula;
 export declare type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
+/** @hidden */
 export declare type PackFormulaMetadata = Omit<TypedPackFormula, "execute">;
+/** @hidden */
 export declare type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, "execute">;
 /**
  * The return value from the formula that implements a sync table. Each sync formula invocation
@@ -1466,6 +1643,13 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
  * Inputs for creating the formula that implements a sync table.
  */
 export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> extends CommonPackFormulaDef<ParamDefsT> {
+	/**
+	 * The JavaScript function that implements this sync.
+	 *
+	 * This function takes in parameters and a sync context which may have a continuation
+	 * from a previous invocation, and fetches and returns one page of results, as well
+	 * as another continuation if there are more result to fetch.
+	 */
 	execute(params: ParamValues<ParamDefsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<K, L, SchemaT>>;
 }
 export declare type SyncFormula<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
@@ -1733,6 +1917,9 @@ export declare function autocompleteSearchObjects<T>(search: string, objs: T[], 
  * any needed to wrap a value with this formula.
  */
 export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | number | SimpleAutocompleteOption>): MetadataFormula;
+/**
+ * Input options for defining a sync table. See {@link makeSyncTable}.
+ */
 export interface SyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> {
 	/**
 	 * The name of the sync table. This is shown to users in the Coda UI.
@@ -2104,6 +2291,7 @@ export declare enum DefaultConnectionType {
  * A pack or formula which does not use authentication.
  */
 export interface NoAuthentication {
+	/** Identifies this as not using authentication. You may also omit any definition to achieve the same result. */
 	type: AuthenticationType.None;
 }
 /**
@@ -2125,6 +2313,7 @@ export interface NoAuthentication {
  * (of the form <instance>.atlassian.net) is stored along with this account.
  */
 export interface SetEndpoint {
+	/** Identifies this as a SetEndpoint step. */
 	type: PostSetupType.SetEndpoint;
 	/**
 	 * An arbitrary name for this step, to distinguish from other steps of the same type
@@ -2163,7 +2352,25 @@ export declare enum PostSetupType {
  */
 export declare type PostSetup = SetEndpoint;
 export interface BaseAuthentication {
+	/**
+	 * A function that is called when a user sets up a new account, that returns a name for
+	 * the account to label that account in the UI. The users credentials are applied to any
+	 * fetcher requests that this function makes. Typically, this function makes an API call
+	 * to an API's "who am I" endpoint and returns a username.
+	 *
+	 * If omitted, or if the function returns an empty value, the account will be labeled
+	 * with the creating user's Coda username.
+	 */
 	getConnectionName?: MetadataFormula;
+	/**
+	 * A function that is called when a user sets up a new account, that returns the ID of
+	 * that account in the third-party system being called.
+	 *
+	 * This id is not yet subsequently exposed to pack developers and is mostly for Coda
+	 * internal use.
+	 *
+	 * @ignore
+	 */
 	getConnectionUserId?: MetadataFormula;
 	/**
 	 * Indicates the defualt manner in which a user's account is expected to be used by this pack,
@@ -2200,6 +2407,7 @@ export interface BaseAuthentication {
  * Authenticate using an HTTP header of the form `Authorization: Bearer <token>`.
  */
 export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
+	/** Identifies this as HeaderBearerToken authentication. */
 	type: AuthenticationType.HeaderBearerToken;
 }
 /**
@@ -2213,6 +2421,7 @@ export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
  * Coda REST API.
  */
 export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
+	/** Identifies this as CodaApiHeaderBearerToken authentication. */
 	type: AuthenticationType.CodaApiHeaderBearerToken;
 	/**
 	 * If true, does not require a connection to be configured in
@@ -2231,6 +2440,7 @@ export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
  * The header name is defined in the {@link headerName} property.
  */
 export interface CustomHeaderTokenAuthentication extends BaseAuthentication {
+	/** Identifies this as CustomHeaderToken authentication. */
 	type: AuthenticationType.CustomHeaderToken;
 	/**
 	 * The name of the HTTP header.
@@ -2251,6 +2461,7 @@ export interface CustomHeaderTokenAuthentication extends BaseAuthentication {
  * The parameter name is defined in the {@link paramName} property.
  */
 export interface QueryParamTokenAuthentication extends BaseAuthentication {
+	/** Identifies this as QueryParamToken authentication. */
 	type: AuthenticationType.QueryParamToken;
 	/**
 	 * The name of the query parameter that will include the token,
@@ -2265,6 +2476,7 @@ export interface QueryParamTokenAuthentication extends BaseAuthentication {
  * The parameter names are defined in the {@link params} array property.
  */
 export interface MultiQueryParamTokenAuthentication extends BaseAuthentication {
+	/** Identifies this as MultiQueryParamToken authentication. */
 	type: AuthenticationType.MultiQueryParamToken;
 	/**
 	 * Names and descriptions of the query parameters used for authentication.
@@ -2288,6 +2500,7 @@ export interface MultiQueryParamTokenAuthentication extends BaseAuthentication {
  * The API must use a (largely) standards-compliant implementation of OAuth2.
  */
 export interface OAuth2Authentication extends BaseAuthentication {
+	/** Identifies this as OAuth2 authentication. */
 	type: AuthenticationType.OAuth2;
 	/**
 	 * The URL to which the user will be redirected in order to authorize this pack.
@@ -2346,6 +2559,7 @@ export interface OAuth2Authentication extends BaseAuthentication {
  * See https://en.wikipedia.org/wiki/Basic_access_authentication
  */
 export interface WebBasicAuthentication extends BaseAuthentication {
+	/** Identifies this as WebBasic authentication. */
 	type: AuthenticationType.WebBasic;
 	/**
 	 * Configuration for labels to show in the UI when the user sets up a new acount.
@@ -2425,6 +2639,7 @@ export interface CustomAuthParameter {
  * ```
  */
 export interface CustomAuthentication extends BaseAuthentication {
+	/** Identifies this as Custom authentication. */
 	type: AuthenticationType.Custom;
 	/**
 	 * An array of parameters that must be provided for new connection accounts to authenticate this pack.
@@ -2442,6 +2657,7 @@ export interface CustomAuthentication extends BaseAuthentication {
  * @ignore
  */
 export interface AWSAccessKeyAuthentication extends BaseAuthentication {
+	/** Identifies this as AWSAccessKey authentication. */
 	type: AuthenticationType.AWSAccessKey;
 	service: string;
 }
@@ -2454,6 +2670,7 @@ export interface AWSAccessKeyAuthentication extends BaseAuthentication {
  * @ignore
  */
 export interface AWSAssumeRoleAuthentication extends BaseAuthentication {
+	/** Identifies this as AWSAssumeRole authentication. */
 	type: AuthenticationType.AWSAssumeRole;
 	service: string;
 }
@@ -2463,6 +2680,7 @@ export interface AWSAssumeRoleAuthentication extends BaseAuthentication {
  * @ignore
  */
 export interface VariousAuthentication {
+	/** Identifies this as Various authentication. */
 	type: AuthenticationType.Various;
 }
 /**
@@ -2470,25 +2688,9 @@ export interface VariousAuthentication {
  */
 export declare type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication;
 export declare type AsAuthDef<T extends BaseAuthentication> = Omit<T, "getConnectionName" | "getConnectionUserId"> & {
-	/**
-	 * A function that is called when a user sets up a new account, that returns a name for
-	 * the account to label that account in the UI. The users credentials are applied to any
-	 * fetcher requests that this function makes. Typically, this function makes an API call
-	 * to an API's "who am I" endpoint and returns a username.
-	 *
-	 * If omitted, or if the function returns an empty value, the account will be labeled
-	 * with the creating user's Coda email address.
-	 */
+	/** See {@link BaseAuthentication.getConnectionName} */
 	getConnectionName?: MetadataFormulaDef;
-	/**
-	 * A function that is called when a user sets up a new account, that returns the ID of
-	 * that account in the third-party system being called.
-	 *
-	 * This id is not yet subsequently exposed to pack developers and is mostly for Coda
-	 * internal use.
-	 *
-	 * @ignore
-	 */
+	/** See {@link BaseAuthentication.getConnectionUserId} */
 	getConnectionUserId?: MetadataFormulaDef;
 };
 /**
@@ -2916,6 +3118,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	setVersion(version: string): this;
 	private _setDefaultConnectionRequirement;
 }
+/** @hidden */
 export declare type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "getDisplayUrl"> & {
 	getter: PackFormulaMetadata;
 	isDynamic?: boolean;
@@ -2925,40 +3128,51 @@ export declare type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getS
 	getDisplayUrl?: MetadataFormulaMetadata;
 	listDynamicUrls?: MetadataFormulaMetadata;
 };
+/** @hidden */
 export interface PackFormatMetadata extends Omit<Format, "matchers"> {
 	matchers: string[];
 }
+/** @hidden */
 export interface PackFormulasMetadata {
 	[namespace: string]: PackFormulaMetadata[];
 }
+/** @hidden */
 export declare type PostSetupMetadata = Omit<PostSetup, "getOptionsFormula"> & {
 	getOptionsFormula: MetadataFormulaMetadata;
 };
+/** @hidden */
 export declare type AuthenticationMetadata = DistributiveOmit<Authentication, "getConnectionName" | "getConnectionUserId" | "postSetup"> & {
 	getConnectionName?: MetadataFormulaMetadata;
 	getConnectionUserId?: MetadataFormulaMetadata;
 	postSetup?: PostSetupMetadata[];
 };
-/** Stripped-down version of `PackVersionDefinition` that doesn't contain formula definitions. */
+/** @hidden */
 export declare type PackVersionMetadata = Omit<PackVersionDefinition, "formulas" | "formats" | "defaultAuthentication" | "syncTables"> & {
 	formulas: PackFormulasMetadata | PackFormulaMetadata[];
 	formats: PackFormatMetadata[];
 	syncTables: PackSyncTable[];
 	defaultAuthentication?: AuthenticationMetadata;
 };
-/** Stripped-down version of `PackDefinition` that doesn't contain formula definitions. */
+/** @hidden */
 export declare type PackMetadata = PackVersionMetadata & Pick<PackDefinition, "id" | "name" | "shortDescription" | "description" | "permissionsDescription" | "category" | "logoPath" | "exampleImages" | "exampleVideoIds" | "minimumFeatureSet" | "quotas" | "rateLimits" | "enabledConfigName" | "isSystem">;
+/** @hidden */
 export declare type ExternalPackAuthenticationType = AuthenticationType;
+/** @hidden */
 export declare type ExternalPackFormulas = PackFormulasMetadata | PackFormulaMetadata[];
+/** @hidden */
 export declare type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
+/** @hidden */
 export declare type ExternalPackFormula = PackFormulaMetadata;
+/** @hidden */
 export declare type ExternalPackFormat = Omit<Format, "matchers"> & {
 	matchers?: string[];
 };
+/** @hidden */
 export declare type ExternalPackFormatMetadata = PackFormatMetadata;
+/** @hidden */
 export declare type ExternalSyncTable = PackSyncTable;
 export declare type BasePackVersionMetadata = Omit<PackVersionMetadata, "defaultAuthentication" | "systemConnectionAuthentication" | "formulas" | "formats" | "syncTables">;
-/** Further stripped-down version of `PackVersionMetadata` that contains only what the browser needs. */
+/** @hidden */
 export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 	authentication: {
 		type: ExternalPackAuthenticationType;
@@ -2977,7 +3191,7 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 	formats?: ExternalPackFormat[];
 	syncTables?: ExternalSyncTable[];
 }
-/** Further stripped-down version of `PackMetadata` that contains only what the browser needs. */
+/** @hidden */
 export declare type ExternalPackMetadata = ExternalPackVersionMetadata & Pick<PackMetadata, "id" | "name" | "shortDescription" | "description" | "permissionsDescription" | "category" | "logoPath" | "exampleImages" | "exampleVideoIds" | "minimumFeatureSet" | "quotas" | "rateLimits" | "isSystem">;
 /**
  * Helper to create a new URL by appending parameters to a base URL.

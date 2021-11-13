@@ -25,7 +25,7 @@ BaseAuthentication.defaultConnectionType
 
 #### Defined in
 
-[types.ts:221](https://github.com/coda/packs-sdk/blob/main/types.ts#L221)
+[types.ts:241](https://github.com/coda/packs-sdk/blob/main/types.ts#L241)
 
 ___
 
@@ -45,7 +45,7 @@ BaseAuthentication.endpointDomain
 
 #### Defined in
 
-[types.ts:243](https://github.com/coda/packs-sdk/blob/main/types.ts#L243)
+[types.ts:263](https://github.com/coda/packs-sdk/blob/main/types.ts#L263)
 
 ___
 
@@ -53,27 +53,21 @@ ___
 
 • `Optional` **getConnectionName**: [`MetadataFormula`](../types/MetadataFormula.md)
 
+A function that is called when a user sets up a new account, that returns a name for
+the account to label that account in the UI. The users credentials are applied to any
+fetcher requests that this function makes. Typically, this function makes an API call
+to an API's "who am I" endpoint and returns a username.
+
+If omitted, or if the function returns an empty value, the account will be labeled
+with the creating user's Coda username.
+
 #### Inherited from
 
 BaseAuthentication.getConnectionName
 
 #### Defined in
 
-[types.ts:213](https://github.com/coda/packs-sdk/blob/main/types.ts#L213)
-
-___
-
-### getConnectionUserId
-
-• `Optional` **getConnectionUserId**: [`MetadataFormula`](../types/MetadataFormula.md)
-
-#### Inherited from
-
-BaseAuthentication.getConnectionUserId
-
-#### Defined in
-
-[types.ts:214](https://github.com/coda/packs-sdk/blob/main/types.ts#L214)
+[types.ts:224](https://github.com/coda/packs-sdk/blob/main/types.ts#L224)
 
 ___
 
@@ -85,7 +79,7 @@ The name of the HTTP header.
 
 #### Defined in
 
-[types.ts:293](https://github.com/coda/packs-sdk/blob/main/types.ts#L293)
+[types.ts:316](https://github.com/coda/packs-sdk/blob/main/types.ts#L316)
 
 ___
 
@@ -101,7 +95,7 @@ BaseAuthentication.instructionsUrl
 
 #### Defined in
 
-[types.ts:226](https://github.com/coda/packs-sdk/blob/main/types.ts#L226)
+[types.ts:246](https://github.com/coda/packs-sdk/blob/main/types.ts#L246)
 
 ___
 
@@ -118,7 +112,7 @@ BaseAuthentication.postSetup
 
 #### Defined in
 
-[types.ts:249](https://github.com/coda/packs-sdk/blob/main/types.ts#L249)
+[types.ts:269](https://github.com/coda/packs-sdk/blob/main/types.ts#L269)
 
 ___
 
@@ -137,7 +131,7 @@ BaseAuthentication.requiresEndpointUrl
 
 #### Defined in
 
-[types.ts:234](https://github.com/coda/packs-sdk/blob/main/types.ts#L234)
+[types.ts:254](https://github.com/coda/packs-sdk/blob/main/types.ts#L254)
 
 ___
 
@@ -152,7 +146,7 @@ The HTTP header will be of the form `<headerName>: <tokenPrefix> <token>`
 
 #### Defined in
 
-[types.ts:300](https://github.com/coda/packs-sdk/blob/main/types.ts#L300)
+[types.ts:323](https://github.com/coda/packs-sdk/blob/main/types.ts#L323)
 
 ___
 
@@ -160,6 +154,8 @@ ___
 
 • **type**: [`CustomHeaderToken`](../enums/AuthenticationType.md#customheadertoken)
 
+Identifies this as CustomHeaderToken authentication.
+
 #### Defined in
 
-[types.ts:289](https://github.com/coda/packs-sdk/blob/main/types.ts#L289)
+[types.ts:312](https://github.com/coda/packs-sdk/blob/main/types.ts#L312)

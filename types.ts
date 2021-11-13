@@ -147,6 +147,7 @@ export enum DefaultConnectionType {
  * A pack or formula which does not use authentication.
  */
 export interface NoAuthentication {
+  /** Identifies this as not using authentication. You may also omit any definition to achieve the same result. */
   type: AuthenticationType.None;
 }
 
@@ -169,6 +170,7 @@ export interface NoAuthentication {
  * (of the form <instance>.atlassian.net) is stored along with this account.
  */
 export interface SetEndpoint {
+  /** Identifies this as a SetEndpoint step. */
   type: PostSetupType.SetEndpoint;
   /**
    * An arbitrary name for this step, to distinguish from other steps of the same type
@@ -210,7 +212,25 @@ export enum PostSetupType {
 export type PostSetup = SetEndpoint;
 
 interface BaseAuthentication {
+  /**
+   * A function that is called when a user sets up a new account, that returns a name for
+   * the account to label that account in the UI. The users credentials are applied to any
+   * fetcher requests that this function makes. Typically, this function makes an API call
+   * to an API's "who am I" endpoint and returns a username.
+   *
+   * If omitted, or if the function returns an empty value, the account will be labeled
+   * with the creating user's Coda username.
+   */
   getConnectionName?: MetadataFormula;
+  /**
+   * A function that is called when a user sets up a new account, that returns the ID of
+   * that account in the third-party system being called.
+   *
+   * This id is not yet subsequently exposed to pack developers and is mostly for Coda
+   * internal use.
+   *
+   * @ignore
+   */
   getConnectionUserId?: MetadataFormula;
 
   /**
@@ -253,6 +273,7 @@ interface BaseAuthentication {
  * Authenticate using an HTTP header of the form `Authorization: Bearer <token>`.
  */
 export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
+  /** Identifies this as HeaderBearerToken authentication. */
   type: AuthenticationType.HeaderBearerToken;
 }
 
@@ -267,6 +288,7 @@ export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
  * Coda REST API.
  */
 export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
+  /** Identifies this as CodaApiHeaderBearerToken authentication. */
   type: AuthenticationType.CodaApiHeaderBearerToken;
   /**
    * If true, does not require a connection to be configured in
@@ -286,6 +308,7 @@ export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
  * The header name is defined in the {@link headerName} property.
  */
 export interface CustomHeaderTokenAuthentication extends BaseAuthentication {
+  /** Identifies this as CustomHeaderToken authentication. */
   type: AuthenticationType.CustomHeaderToken;
   /**
    * The name of the HTTP header.
@@ -307,6 +330,7 @@ export interface CustomHeaderTokenAuthentication extends BaseAuthentication {
  * The parameter name is defined in the {@link paramName} property.
  */
 export interface QueryParamTokenAuthentication extends BaseAuthentication {
+  /** Identifies this as QueryParamToken authentication. */
   type: AuthenticationType.QueryParamToken;
   /**
    * The name of the query parameter that will include the token,
@@ -322,6 +346,7 @@ export interface QueryParamTokenAuthentication extends BaseAuthentication {
  * The parameter names are defined in the {@link params} array property.
  */
 export interface MultiQueryParamTokenAuthentication extends BaseAuthentication {
+  /** Identifies this as MultiQueryParamToken authentication. */
   type: AuthenticationType.MultiQueryParamToken;
   /**
    * Names and descriptions of the query parameters used for authentication.
@@ -346,6 +371,7 @@ export interface MultiQueryParamTokenAuthentication extends BaseAuthentication {
  * The API must use a (largely) standards-compliant implementation of OAuth2.
  */
 export interface OAuth2Authentication extends BaseAuthentication {
+  /** Identifies this as OAuth2 authentication. */
   type: AuthenticationType.OAuth2;
   /**
    * The URL to which the user will be redirected in order to authorize this pack.
@@ -405,6 +431,7 @@ export interface OAuth2Authentication extends BaseAuthentication {
  * See https://en.wikipedia.org/wiki/Basic_access_authentication
  */
 export interface WebBasicAuthentication extends BaseAuthentication {
+  /** Identifies this as WebBasic authentication. */
   type: AuthenticationType.WebBasic;
   /**
    * Configuration for labels to show in the UI when the user sets up a new acount.
@@ -488,6 +515,7 @@ export interface CustomAuthParameter {
  * ```
  */
 export interface CustomAuthentication extends BaseAuthentication {
+  /** Identifies this as Custom authentication. */
   type: AuthenticationType.Custom;
   /**
    * An array of parameters that must be provided for new connection accounts to authenticate this pack.
@@ -506,6 +534,7 @@ export interface CustomAuthentication extends BaseAuthentication {
  * @ignore
  */
 export interface AWSAccessKeyAuthentication extends BaseAuthentication {
+  /** Identifies this as AWSAccessKey authentication. */
   type: AuthenticationType.AWSAccessKey;
   service: string;
 }
@@ -519,6 +548,7 @@ export interface AWSAccessKeyAuthentication extends BaseAuthentication {
  * @ignore
  */
 export interface AWSAssumeRoleAuthentication extends BaseAuthentication {
+  /** Identifies this as AWSAssumeRole authentication. */
   type: AuthenticationType.AWSAssumeRole;
   service: string;
 }
@@ -529,6 +559,7 @@ export interface AWSAssumeRoleAuthentication extends BaseAuthentication {
  * @ignore
  */
 export interface VariousAuthentication {
+  /** Identifies this as Various authentication. */
   type: AuthenticationType.Various;
 }
 
@@ -550,25 +581,9 @@ export type Authentication =
   | CustomAuthentication;
 
 type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId'> & {
-  /**
-   * A function that is called when a user sets up a new account, that returns a name for
-   * the account to label that account in the UI. The users credentials are applied to any
-   * fetcher requests that this function makes. Typically, this function makes an API call
-   * to an API's "who am I" endpoint and returns a username.
-   *
-   * If omitted, or if the function returns an empty value, the account will be labeled
-   * with the creating user's Coda email address.
-   */
+  /** See {@link BaseAuthentication.getConnectionName} */
   getConnectionName?: MetadataFormulaDef;
-  /**
-   * A function that is called when a user sets up a new account, that returns the ID of
-   * that account in the third-party system being called.
-   *
-   * This id is not yet subsequently exposed to pack developers and is mostly for Coda
-   * internal use.
-   *
-   * @ignore
-   */
+  /** See {@link BaseAuthentication.getConnectionUserId} */
   getConnectionUserId?: MetadataFormulaDef;
 };
 

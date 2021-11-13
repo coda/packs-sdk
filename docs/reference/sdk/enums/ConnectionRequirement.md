@@ -13,7 +13,7 @@ Indicates this building block does not make use of an account.
 
 #### Defined in
 
-[api_types.ts:322](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L322)
+[api_types.ts:351](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L351)
 
 ___
 
@@ -28,7 +28,7 @@ to specify an account to use.
 
 #### Defined in
 
-[api_types.ts:329](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L329)
+[api_types.ts:358](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L358)
 
 ___
 
@@ -43,4 +43,4 @@ to specify an account to use.
 
 #### Defined in
 
-[api_types.ts:336](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L336)
+[api_types.ts:365](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L365)

@@ -19,14 +19,14 @@ See [Normalization](/index.html#normalization) for more information about schema
 | `K` | extends `string` |
 | `L` | extends `string` |
 | `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
-| `SchemaDefT` | extends `ObjectSchemaDefinition`<`K`, `L`, `SchemaDefT`\> |
-| `SchemaT` | extends `ObjectSchemaDefinition`<`K`, `L`, `SchemaT`\> & { `identity?`: [`Identity`](../interfaces/Identity.md)  } |
+| `SchemaDefT` | extends [`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)<`K`, `L`, `SchemaDefT`\> |
+| `SchemaT` | extends [`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)<`K`, `L`, `SchemaT`\> & { `identity?`: [`Identity`](../interfaces/Identity.md)  } |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `__namedParameters` | `SyncTableOptions`<`K`, `L`, `ParamDefsT`, `SchemaDefT`\> |
+| `__namedParameters` | [`SyncTableOptions`](../interfaces/SyncTableOptions.md)<`K`, `L`, `ParamDefsT`, `SchemaDefT`\> |
 
 #### Returns
 
@@ -34,4 +34,4 @@ See [Normalization](/index.html#normalization) for more information about schema
 
 #### Defined in
 
-[api.ts:1229](https://github.com/coda/packs-sdk/blob/main/api.ts#L1229)
+[api.ts:1258](https://github.com/coda/packs-sdk/blob/main/api.ts#L1258)

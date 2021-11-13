@@ -2,6 +2,8 @@
 
 Ƭ **ParamDefs**: [[`ParamDef`](../interfaces/ParamDef.md)<`UnionType`\>, ...ParamDef<UnionType\>[]] \| []
 
+The type for the complete set of parameter definitions for a fomrula.
+
 #### Defined in
 
-[api_types.ts:225](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L225)
+[api_types.ts:244](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L244)

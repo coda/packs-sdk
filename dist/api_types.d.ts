@@ -21,8 +21,13 @@ export declare enum Type {
     image = 6
 }
 export declare type ParamType = Exclude<Type, Type.object>;
+/**
+ * The type of a parameter or return value that is an array.
+ */
 export interface ArrayType<T extends Type> {
+    /** Identifies this type as an array. */
     type: 'array';
+    /** The type of the items in this array. */
     items: T;
 }
 export declare function isArrayType(obj: any): obj is ArrayType<any>;
@@ -42,7 +47,13 @@ interface TypeMap {
     [Type.html]: string;
     [Type.image]: string;
 }
+/**
+ * The union of types for arguments to the `execute` function for a formula.
+ */
 export declare type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | PackFormulaValue[];
+/**
+ * The union of types that can be returned by the `execute` function for a formula.
+ */
 export declare type PackFormulaResult = $Values<TypeMap> | PackFormulaResult[];
 export declare type TypeOf<T extends PackFormulaResult> = T extends number ? Type.number : T extends string ? Type.string : T extends boolean ? Type.boolean : T extends Date ? Type.date : T extends object ? Type.object : never;
 /**
@@ -118,6 +129,9 @@ export interface ParameterTypeMap {
     [ParameterType.ImageArray]: ArrayType<Type.image>;
 }
 export declare const ParameterTypeInputMap: Record<ParameterType, UnionType>;
+/**
+ * The definition of a formula parameter.
+ */
 export interface ParamDef<T extends UnionType> {
     /**
      * The name of the parameter, which will be shown to the user when invoking this formula.
@@ -136,6 +150,7 @@ export interface ParamDef<T extends UnionType> {
      * All optional parameters must come after all non-optional parameters.
      */
     optional?: boolean;
+    /** @hidden */
     hidden?: boolean;
     /**
      * A {@link MetadataFormula} that returns valid values for this parameter, optionally matching a search
@@ -153,13 +168,25 @@ export interface ParamDef<T extends UnionType> {
      */
     defaultValue?: DefaultValueType<T>;
 }
+/** @hidden */
 export declare type ParamArgs<T extends UnionType> = Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
+/**
+ * The type for the complete set of parameter definitions for a fomrula.
+ */
 export declare type ParamDefs = [ParamDef<UnionType>, ...Array<ParamDef<UnionType>>] | [];
+/** @hidden */
 export declare type ParamsList = Array<ParamDef<UnionType>>;
 declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : T extends ArrayType<infer V> ? Array<TypeMap[V]> : never;
+/**
+ * The type for the set of argument values that are passed to formula's `execute` function, based on
+ * the parameter defintion for that formula.
+ */
 export declare type ParamValues<ParamDefsT extends ParamDefs> = {
     [K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
 } & any[];
+/**
+ * The type of values that are allowable to be used as a {@link defaultValue} for a parameter.
+ */
 export declare type DefaultValueType<T extends UnionType> = T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
 /**
  * Inputs for creating a formula that are common between regular formulas and sync table formulas.
@@ -261,6 +288,7 @@ export interface Network {
     readonly connection?: NetworkConnection;
 }
 declare const ValidFetchMethods: readonly ["GET", "PATCH", "POST", "PUT", "DELETE"];
+/** The type of the HTTP methods (verbs) supported by the fetcher. */
 export declare type FetchMethodType = typeof ValidFetchMethods[number];
 /**
  * An HTTP request used with the {@link Fetcher}.

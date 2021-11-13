@@ -95,14 +95,19 @@ export declare class StatusCodeError extends Error {
     constructor(statusCode: number, body: any, options: FetchRequest, response: StatusCodeErrorResponse);
 }
 /**
- * Type definition for a Sync Table. Should not be necessary to use directly,
+ * The result of defining a sync table. Should not be necessary to use directly,
  * instead, define sync tables using {@link makeSyncTable}.
  */
 export interface SyncTableDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> {
+    /** See {@link SyncTableOptions.name} */
     name: string;
+    /** See {@link SyncTableOptions.schema} */
     schema: SchemaT;
+    /** See {@link SyncTableOptions.formula} */
     getter: SyncFormula<K, L, ParamDefsT, SchemaT>;
+    /** See {@link SyncTableOptions.dynamicOptions.getSchema} */
     getSchema?: MetadataFormula;
+    /** See {@link SyncTableOptions.dynamicOptions.entityName} */
     entityName?: string;
 }
 /**
@@ -217,6 +222,9 @@ export declare function makeImageParameter(name: string, description: string, ar
 export declare function makeImageArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.image>>): ParamDef<ArrayType<Type.image>>;
 export declare function makeUserVisibleError(msg: string): UserVisibleError;
 export declare function check(condition: boolean, msg: string): void;
+/**
+ * @deprecated Formulas should now only be defined as an array, as namespaces are deprecated.
+ */
 export interface PackFormulas {
     readonly [namespace: string]: Formula[];
 }
@@ -224,6 +232,7 @@ export interface PackFormulas {
  * Base type for the inputs for creating a pack formula.
  */
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult> extends CommonPackFormulaDef<ParamsT> {
+    /** The JavaScript function that implements this formula */
     execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
 }
 export interface StringFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaDef<ParamsT> {
@@ -265,6 +274,13 @@ export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT exte
     schema?: SchemaT;
     execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<object> | object;
 };
+/**
+ * A pack formula, complete with metadata about the formula like its name, description, and parameters,
+ * as well as the implementation of that formula.
+ *
+ * This is the type for an actual user-facing formula, rather than other formula-shaped resources within a
+ * pack, like an autocomplete metadata formula or a sync getter formula.
+ */
 export declare type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT extends FormulaResultValueType = FormulaResultValueType, SchemaT extends Schema = Schema> = ResultT extends ValueType.String ? StringPackFormula<ParamDefsT> : ResultT extends ValueType.Number ? NumericPackFormula<ParamDefsT> : ResultT extends ValueType.Boolean ? BooleanPackFormula<ParamDefsT> : ResultT extends ValueType.Array ? ObjectPackFormula<ParamDefsT, ArraySchema<SchemaT>> : ObjectPackFormula<ParamDefsT, SchemaT>;
 /**
  * The union of types that represent formula definitions, including standard formula definitions,
@@ -275,7 +291,9 @@ export declare type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT ex
  */
 export declare type TypedPackFormula = Formula | GenericSyncFormula;
 export declare type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
+/** @hidden */
 export declare type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
+/** @hidden */
 export declare type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
 export declare function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata;
 export declare function isStringPackFormula(fn: BaseFormula<ParamDefs, any>): fn is StringPackFormula<ParamDefs>;
@@ -300,6 +318,13 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
  * Inputs for creating the formula that implements a sync table.
  */
 export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> extends CommonPackFormulaDef<ParamDefsT> {
+    /**
+     * The JavaScript function that implements this sync.
+     *
+     * This function takes in parameters and a sync context which may have a continuation
+     * from a previous invocation, and fetches and returns one page of results, as well
+     * as another continuation if there are more result to fetch.
+     */
     execute(params: ParamValues<ParamDefsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<K, L, SchemaT>>;
 }
 export declare type SyncFormula<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
@@ -579,6 +604,9 @@ export declare function autocompleteSearchObjects<T>(search: string, objs: T[], 
  */
 export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | number | SimpleAutocompleteOption>): MetadataFormula;
 export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
+/**
+ * Input options for defining a sync table. See {@link makeSyncTable}.
+ */
 export interface SyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> {
     /**
      * The name of the sync table. This is shown to users in the Coda UI.
@@ -759,8 +787,8 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
  * });
  */
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
-    name: string;
     description: string;
+    name: string;
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
     examples?: {
@@ -800,8 +828,8 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
  * ```
  */
 export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: EmptyFormulaDef<ParamDefsT>): {
-    name: string;
     description: string;
+    name: string;
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
     examples?: {

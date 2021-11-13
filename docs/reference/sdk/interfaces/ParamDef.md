@@ -1,5 +1,7 @@
 # Interface: ParamDef<T\>
 
+The definition of a formula parameter.
+
 ## Type parameters
 
 | Name | Type |
@@ -23,7 +25,7 @@ If you have a hardcoded list of valid values, you would only need to use
 
 #### Defined in
 
-[api_types.ts:216](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L216)
+[api_types.ts:231](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L231)
 
 ___
 
@@ -35,7 +37,7 @@ The default value to be used for this parameter if it is not specified by the us
 
 #### Defined in
 
-[api_types.ts:220](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L220)
+[api_types.ts:235](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L235)
 
 ___
 
@@ -47,17 +49,7 @@ A brief description of what this parameter is used for, shown to the user when i
 
 #### Defined in
 
-[api_types.ts:197](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L197)
-
-___
-
-### hidden
-
-• `Optional` **hidden**: `boolean`
-
-#### Defined in
-
-[api_types.ts:203](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L203)
+[api_types.ts:211](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L211)
 
 ___
 
@@ -69,7 +61,7 @@ The name of the parameter, which will be shown to the user when invoking this fo
 
 #### Defined in
 
-[api_types.ts:189](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L189)
+[api_types.ts:203](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L203)
 
 ___
 
@@ -82,7 +74,7 @@ All optional parameters must come after all non-optional parameters.
 
 #### Defined in
 
-[api_types.ts:202](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L202)
+[api_types.ts:216](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L216)
 
 ___
 
@@ -94,4 +86,4 @@ The data type of this parameter (string, number, etc).
 
 #### Defined in
 
-[api_types.ts:193](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L193)
+[api_types.ts:207](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L207)

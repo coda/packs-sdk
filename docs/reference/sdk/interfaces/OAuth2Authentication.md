@@ -27,7 +27,7 @@ user to the [authorizationUrl](OAuth2Authentication.md#authorizationurl).
 
 #### Defined in
 
-[types.ts:381](https://github.com/coda/packs-sdk/blob/main/types.ts#L381)
+[types.ts:407](https://github.com/coda/packs-sdk/blob/main/types.ts#L407)
 
 ___
 
@@ -42,7 +42,7 @@ they may be specified using [additionalParams](OAuth2Authentication.md#additiona
 
 #### Defined in
 
-[types.ts:356](https://github.com/coda/packs-sdk/blob/main/types.ts#L356)
+[types.ts:382](https://github.com/coda/packs-sdk/blob/main/types.ts#L382)
 
 ___
 
@@ -60,7 +60,7 @@ BaseAuthentication.defaultConnectionType
 
 #### Defined in
 
-[types.ts:221](https://github.com/coda/packs-sdk/blob/main/types.ts#L221)
+[types.ts:241](https://github.com/coda/packs-sdk/blob/main/types.ts#L241)
 
 ___
 
@@ -80,7 +80,7 @@ BaseAuthentication.endpointDomain
 
 #### Defined in
 
-[types.ts:243](https://github.com/coda/packs-sdk/blob/main/types.ts#L243)
+[types.ts:263](https://github.com/coda/packs-sdk/blob/main/types.ts#L263)
 
 ___
 
@@ -97,7 +97,7 @@ as [ExecutionContext.endpoint](ExecutionContext.md#endpoint).
 
 #### Defined in
 
-[types.ts:391](https://github.com/coda/packs-sdk/blob/main/types.ts#L391)
+[types.ts:417](https://github.com/coda/packs-sdk/blob/main/types.ts#L417)
 
 ___
 
@@ -105,27 +105,21 @@ ___
 
 • `Optional` **getConnectionName**: [`MetadataFormula`](../types/MetadataFormula.md)
 
+A function that is called when a user sets up a new account, that returns a name for
+the account to label that account in the UI. The users credentials are applied to any
+fetcher requests that this function makes. Typically, this function makes an API call
+to an API's "who am I" endpoint and returns a username.
+
+If omitted, or if the function returns an empty value, the account will be labeled
+with the creating user's Coda username.
+
 #### Inherited from
 
 BaseAuthentication.getConnectionName
 
 #### Defined in
 
-[types.ts:213](https://github.com/coda/packs-sdk/blob/main/types.ts#L213)
-
-___
-
-### getConnectionUserId
-
-• `Optional` **getConnectionUserId**: [`MetadataFormula`](../types/MetadataFormula.md)
-
-#### Inherited from
-
-BaseAuthentication.getConnectionUserId
-
-#### Defined in
-
-[types.ts:214](https://github.com/coda/packs-sdk/blob/main/types.ts#L214)
+[types.ts:224](https://github.com/coda/packs-sdk/blob/main/types.ts#L224)
 
 ___
 
@@ -141,7 +135,7 @@ BaseAuthentication.instructionsUrl
 
 #### Defined in
 
-[types.ts:226](https://github.com/coda/packs-sdk/blob/main/types.ts#L226)
+[types.ts:246](https://github.com/coda/packs-sdk/blob/main/types.ts#L246)
 
 ___
 
@@ -158,7 +152,7 @@ BaseAuthentication.postSetup
 
 #### Defined in
 
-[types.ts:249](https://github.com/coda/packs-sdk/blob/main/types.ts#L249)
+[types.ts:269](https://github.com/coda/packs-sdk/blob/main/types.ts#L269)
 
 ___
 
@@ -177,7 +171,7 @@ BaseAuthentication.requiresEndpointUrl
 
 #### Defined in
 
-[types.ts:234](https://github.com/coda/packs-sdk/blob/main/types.ts#L234)
+[types.ts:254](https://github.com/coda/packs-sdk/blob/main/types.ts#L254)
 
 ___
 
@@ -192,7 +186,7 @@ the documentation for the API you are connecting to.
 
 #### Defined in
 
-[types.ts:368](https://github.com/coda/packs-sdk/blob/main/types.ts#L368)
+[types.ts:394](https://github.com/coda/packs-sdk/blob/main/types.ts#L394)
 
 ___
 
@@ -208,7 +202,7 @@ When sending authenticated requests, a HTTP header of the form
 
 #### Defined in
 
-[types.ts:376](https://github.com/coda/packs-sdk/blob/main/types.ts#L376)
+[types.ts:402](https://github.com/coda/packs-sdk/blob/main/types.ts#L402)
 
 ___
 
@@ -222,7 +216,7 @@ that should contain the token.
 
 #### Defined in
 
-[types.ts:398](https://github.com/coda/packs-sdk/blob/main/types.ts#L398)
+[types.ts:424](https://github.com/coda/packs-sdk/blob/main/types.ts#L424)
 
 ___
 
@@ -235,7 +229,7 @@ at the end of the OAuth handshake flow.
 
 #### Defined in
 
-[types.ts:361](https://github.com/coda/packs-sdk/blob/main/types.ts#L361)
+[types.ts:387](https://github.com/coda/packs-sdk/blob/main/types.ts#L387)
 
 ___
 
@@ -243,6 +237,8 @@ ___
 
 • **type**: [`OAuth2`](../enums/AuthenticationType.md#oauth2)
 
+Identifies this as OAuth2 authentication.
+
 #### Defined in
 
-[types.ts:349](https://github.com/coda/packs-sdk/blob/main/types.ts#L349)
+[types.ts:375](https://github.com/coda/packs-sdk/blob/main/types.ts#L375)

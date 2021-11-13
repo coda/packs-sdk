@@ -139,7 +139,7 @@ export class StatusCodeError extends Error {
 }
 
 /**
- * Type definition for a Sync Table. Should not be necessary to use directly,
+ * The result of defining a sync table. Should not be necessary to use directly,
  * instead, define sync tables using {@link makeSyncTable}.
  */
 export interface SyncTableDef<
@@ -148,10 +148,15 @@ export interface SyncTableDef<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>,
 > {
+  /** See {@link SyncTableOptions.name} */
   name: string;
+  /** See {@link SyncTableOptions.schema} */
   schema: SchemaT;
+  /** See {@link SyncTableOptions.formula} */
   getter: SyncFormula<K, L, ParamDefsT, SchemaT>;
+  /** See {@link SyncTableOptions.dynamicOptions.getSchema} */
   getSchema?: MetadataFormula;
+  /** See {@link SyncTableOptions.dynamicOptions.entityName} */
   entityName?: string;
 }
 
@@ -393,6 +398,9 @@ export function check(condition: boolean, msg: string) {
   }
 }
 
+/**
+ * @deprecated Formulas should now only be defined as an array, as namespaces are deprecated.
+ */
 export interface PackFormulas {
   readonly [namespace: string]: Formula[];
 }
@@ -402,6 +410,7 @@ export interface PackFormulas {
  */
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult>
   extends CommonPackFormulaDef<ParamsT> {
+  /** The JavaScript function that implements this formula */
   execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
 }
 
@@ -464,6 +473,13 @@ export type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Sche
 
 // can't use a map (e.g. ResultTypeToFormulaTypeMap<ParamDefs, SchemaT>[ResultT]) here since
 // ParamDefsT isn't propagated correctly.
+/**
+ * A pack formula, complete with metadata about the formula like its name, description, and parameters,
+ * as well as the implementation of that formula.
+ *
+ * This is the type for an actual user-facing formula, rather than other formula-shaped resources within a
+ * pack, like an autocomplete metadata formula or a sync getter formula.
+ */
 export type Formula<
   ParamDefsT extends ParamDefs = ParamDefs,
   ResultT extends FormulaResultValueType = FormulaResultValueType,
@@ -495,8 +511,11 @@ type V2PackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema = Schema
 export type TypedPackFormula = Formula | GenericSyncFormula;
 
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
+/** @hidden */
 export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
+/** @hidden */
 export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
+
 export function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata {
   return fn.resultType === Type.object;
 }
@@ -535,6 +554,13 @@ export interface SyncFormulaDef<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchemaDefinition<K, L>,
 > extends CommonPackFormulaDef<ParamDefsT> {
+  /**
+   * The JavaScript function that implements this sync.
+   *
+   * This function takes in parameters and a sync context which may have a continuation
+   * from a previous invocation, and fetches and returns one page of results, as well
+   * as another continuation if there are more result to fetch.
+   */
   execute(params: ParamValues<ParamDefsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<K, L, SchemaT>>;
 }
 
@@ -1100,6 +1126,9 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
   }) as ObjectPackFormula<ParamDefsT, SchemaT>;
 }
 
+/**
+ * Input options for defining a sync table. See {@link makeSyncTable}.
+ */
 export interface SyncTableOptions<
   K extends string,
   L extends string,

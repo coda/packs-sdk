@@ -27,7 +27,7 @@ coda.makeObjectSchema({
 | :------ | :------ |
 | `K` | extends `string` |
 | `L` | extends `string` |
-| `T` | extends `Omit`<`ObjectSchemaDefinition`<`K`, `L`\>, ``"type"``\> |
+| `T` | extends `Omit`<[`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)<`K`, `L`\>, ``"type"``\> |
 
 #### Parameters
 
@@ -41,4 +41,4 @@ coda.makeObjectSchema({
 
 #### Defined in
 
-[schema.ts:797](https://github.com/coda/packs-sdk/blob/main/schema.ts#L797)
+[schema.ts:926](https://github.com/coda/packs-sdk/blob/main/schema.ts#L926)
