@@ -1279,10 +1279,6 @@ describe('Pack metadata Validation', () => {
             message: "Unrecognized key(s) in object: 'foo'",
             path: 'formulas[0].schema.properties.Primary',
           },
-          {
-            message: 'Could not find any valid schema for this value.',
-            path: 'formulas[0].schema.properties.Primary',
-          },
         ]);
       });
 
