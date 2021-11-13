@@ -1,22 +1,12 @@
-# Interface: IdentityDefinition
+# Interface: Identity
 
-An identifier for a schema, allowing other schemas to reference it.
-
-You may optionally specify an [ObjectSchemaDefinition.identity](ObjectSchemaDefinition.md#identity) when defining an object schema.
-This signals that this schema represents an important named entity in the context of your pack.
-Schemas with identities may be referenced by other schemas, in which case Coda
-will render such values as @-references in the doc, allowing you to create relationships
-between entities.
-
-Every sync table's top-level schema is required to have an identity. However, an identity
-will be created on your behalf using the [SyncTableOptions.identityName](SyncTableOptions.md#identityname) that you provide in the sync
-table definition, so you needn't explicitly create on unless desired.
+The runtime version of IdentityDefinition with a pack ID injected.
 
 ## Hierarchy
 
-- **`IdentityDefinition`**
+- [`IdentityDefinition`](IdentityDefinition.md)
 
-  ↳ [`Identity`](Identity.md)
+  ↳ **`Identity`**
 
 ## Properties
 
@@ -27,6 +17,10 @@ table definition, so you needn't explicitly create on unless desired.
 Attribution text, images, and/or links that should be rendered along with this value.
 
 See [makeAttributionNode](../functions/makeAttributionNode.md).
+
+#### Inherited from
+
+[IdentityDefinition](IdentityDefinition.md).[attribution](IdentityDefinition.md#attribution)
 
 #### Defined in
 
@@ -45,6 +39,10 @@ in this table may be distinguished from rows in another dynamic instance of the 
 When creating a reference to a dynamic sync table, you must include the dynamic URL of the table
 you wish to reference, again to distinguish which table instance you are trying to reference.
 
+#### Inherited from
+
+[IdentityDefinition](IdentityDefinition.md).[dynamicUrl](IdentityDefinition.md#dynamicurl)
+
 #### Defined in
 
 [schema.ts:625](https://github.com/coda/packs-sdk/blob/main/schema.ts#L625)
@@ -58,6 +56,10 @@ ___
 The name of this entity. This is an arbitrary name but should be unique within your pack.
 For example, if you are defining a schema that represents a user object, "User" would be a good identity name.
 
+#### Inherited from
+
+[IdentityDefinition](IdentityDefinition.md).[name](IdentityDefinition.md#name)
+
 #### Defined in
 
 [schema.ts:614](https://github.com/coda/packs-sdk/blob/main/schema.ts#L614)
@@ -66,10 +68,14 @@ ___
 
 ### packId
 
-• `Optional` **packId**: `number`
+• **packId**: `number`
 
 The ID of another pack, if you are trying to reference a value from different pack.
 
+#### Overrides
+
+[IdentityDefinition](IdentityDefinition.md).[packId](IdentityDefinition.md#packid)
+
 #### Defined in
 
-[schema.ts:633](https://github.com/coda/packs-sdk/blob/main/schema.ts#L633)
+[schema.ts:638](https://github.com/coda/packs-sdk/blob/main/schema.ts#L638)

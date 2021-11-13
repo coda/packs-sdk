@@ -11,7 +11,7 @@ are called repeatedly until there is no continuation returned.
 | :------ | :------ |
 | `K` | extends `string` |
 | `L` | extends `string` |
-| `SchemaT` | extends `ObjectSchemaDefinition`<`K`, `L`\> |
+| `SchemaT` | extends [`ObjectSchemaDefinition`](ObjectSchemaDefinition.md)<`K`, `L`\> |
 
 ## Properties
 

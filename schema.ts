@@ -1,5 +1,4 @@
 import type {$Values} from './type_utils';
-import type {PackId} from './types';
 import {assertCondition} from './helpers/ensure';
 import {ensureExists} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
@@ -634,10 +633,9 @@ export interface IdentityDefinition {
   packId?: number;
 }
 
-// Runtime version of IdentityDefinition with a pack id injected.
-/** @hidden */
+/** The runtime version of IdentityDefinition with a pack ID injected. */
 export interface Identity extends IdentityDefinition {
-  packId: PackId;
+  packId: number;
 }
 
 /**
@@ -683,6 +681,10 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
    * projections have been created for them.
    */
   featured?: L[];
+  /**
+   * An identity for this schema, if this schema is important enough to be named and referenced.
+   * See {@link IdentityDefinition}.
+   */
   identity?: IdentityDefinition;
 }
 

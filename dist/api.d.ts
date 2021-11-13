@@ -95,7 +95,7 @@ export declare class StatusCodeError extends Error {
     constructor(statusCode: number, body: any, options: FetchRequest, response: StatusCodeErrorResponse);
 }
 /**
- * Type definition for a Sync Table. Should not be necessary to use directly,
+ * The result of defining a sync table. Should not be necessary to use directly,
  * instead, define sync tables using {@link makeSyncTable}.
  */
 export interface SyncTableDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> {
@@ -604,6 +604,9 @@ export declare function autocompleteSearchObjects<T>(search: string, objs: T[], 
  */
 export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | number | SimpleAutocompleteOption>): MetadataFormula;
 export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
+/**
+ * Input options for defining a sync table. See {@link makeSyncTable}.
+ */
 export interface SyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> {
     /**
      * The name of the sync table. This is shown to users in the Coda UI.
@@ -784,8 +787,8 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
  * });
  */
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
-    name: string;
     description: string;
+    name: string;
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
     examples?: {
@@ -825,8 +828,8 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
  * ```
  */
 export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: EmptyFormulaDef<ParamDefsT>): {
-    name: string;
     description: string;
+    name: string;
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
     examples?: {

@@ -1,6 +1,6 @@
 # Interface: SyncTableDef<K, L, ParamDefsT, SchemaT\>
 
-Type definition for a Sync Table. Should not be necessary to use directly,
+The result of defining a sync table. Should not be necessary to use directly,
 instead, define sync tables using [makeSyncTable](../functions/makeSyncTable.md).
 
 ## Type parameters
@@ -48,7 +48,7 @@ ___
 
 • **getter**: `SyncFormula`<`K`, `L`, `ParamDefsT`, `SchemaT`\>
 
-See {@link SyncTableOptions.formula}
+See [SyncTableOptions.formula](SyncTableOptions.md#formula)
 
 #### Defined in
 
@@ -60,7 +60,7 @@ ___
 
 • **name**: `string`
 
-See {@link SyncTableOptions.name}
+See [SyncTableOptions.name](SyncTableOptions.md#name)
 
 #### Defined in
 
@@ -72,7 +72,7 @@ ___
 
 • **schema**: `SchemaT`
 
-See {@link SyncTableOptions.schema}
+See [SyncTableOptions.schema](SyncTableOptions.md#schema)
 
 #### Defined in
 

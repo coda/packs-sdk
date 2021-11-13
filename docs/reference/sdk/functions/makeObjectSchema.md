@@ -1,6 +1,6 @@
 # Function: makeObjectSchema
 
-▸ **makeObjectSchema**<`K`, `L`, `T`\>(`schemaDef`): `T` & { `identity?`: `Identity` ; `type`: [`Object`](../enums/ValueType.md#object)  }
+▸ **makeObjectSchema**<`K`, `L`, `T`\>(`schemaDef`): `T` & { `identity?`: [`Identity`](../interfaces/Identity.md) ; `type`: [`Object`](../enums/ValueType.md#object)  }
 
 A wrapper for creating a schema definition for an object value.
 
@@ -27,7 +27,7 @@ coda.makeObjectSchema({
 | :------ | :------ |
 | `K` | extends `string` |
 | `L` | extends `string` |
-| `T` | extends `Omit`<`ObjectSchemaDefinition`<`K`, `L`\>, ``"type"``\> |
+| `T` | extends `Omit`<[`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)<`K`, `L`\>, ``"type"``\> |
 
 #### Parameters
 
@@ -37,8 +37,8 @@ coda.makeObjectSchema({
 
 #### Returns
 
-`T` & { `identity?`: `Identity` ; `type`: [`Object`](../enums/ValueType.md#object)  }
+`T` & { `identity?`: [`Identity`](../interfaces/Identity.md) ; `type`: [`Object`](../enums/ValueType.md#object)  }
 
 #### Defined in
 
-[schema.ts:924](https://github.com/coda/packs-sdk/blob/main/schema.ts#L924)
+[schema.ts:926](https://github.com/coda/packs-sdk/blob/main/schema.ts#L926)

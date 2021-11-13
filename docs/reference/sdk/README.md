@@ -42,6 +42,7 @@
 - [Fetcher](interfaces/Fetcher.md)
 - [Format](interfaces/Format.md)
 - [HeaderBearerTokenAuthentication](interfaces/HeaderBearerTokenAuthentication.md)
+- [Identity](interfaces/Identity.md)
 - [IdentityDefinition](interfaces/IdentityDefinition.md)
 - [MetadataFormulaObjectResultType](interfaces/MetadataFormulaObjectResultType.md)
 - [MultiQueryParamTokenAuthentication](interfaces/MultiQueryParamTokenAuthentication.md)
@@ -52,6 +53,7 @@
 - [NumericSchema](interfaces/NumericSchema.md)
 - [NumericTimeSchema](interfaces/NumericTimeSchema.md)
 - [OAuth2Authentication](interfaces/OAuth2Authentication.md)
+- [ObjectSchemaDefinition](interfaces/ObjectSchemaDefinition.md)
 - [ObjectSchemaProperty](interfaces/ObjectSchemaProperty.md)
 - [PackDefinition](interfaces/PackDefinition.md)
 - [PackFormulaDef](interfaces/PackFormulaDef.md)
@@ -69,6 +71,7 @@
 - [SyncExecutionContext](interfaces/SyncExecutionContext.md)
 - [SyncFormulaResult](interfaces/SyncFormulaResult.md)
 - [SyncTableDef](interfaces/SyncTableDef.md)
+- [SyncTableOptions](interfaces/SyncTableOptions.md)
 - [TemporaryBlobStorage](interfaces/TemporaryBlobStorage.md)
 - [WebBasicAuthentication](interfaces/WebBasicAuthentication.md)
 

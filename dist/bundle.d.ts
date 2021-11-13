@@ -584,9 +584,9 @@ export interface IdentityDefinition {
 	/** The ID of another pack, if you are trying to reference a value from different pack. */
 	packId?: number;
 }
-/** @hidden */
+/** The runtime version of IdentityDefinition with a pack ID injected. */
 export interface Identity extends IdentityDefinition {
-	packId: PackId;
+	packId: number;
 }
 /**
  * A schema definition for an object value (a value with key-value pairs).
@@ -631,6 +631,10 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * projections have been created for them.
 	 */
 	featured?: L[];
+	/**
+	 * An identity for this schema, if this schema is important enough to be named and referenced.
+	 * See {@link IdentityDefinition}.
+	 */
 	identity?: IdentityDefinition;
 }
 export declare type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
@@ -1451,7 +1455,7 @@ export declare class StatusCodeError extends Error {
 	constructor(statusCode: number, body: any, options: FetchRequest, response: StatusCodeErrorResponse);
 }
 /**
- * Type definition for a Sync Table. Should not be necessary to use directly,
+ * The result of defining a sync table. Should not be necessary to use directly,
  * instead, define sync tables using {@link makeSyncTable}.
  */
 export interface SyncTableDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> {
@@ -1913,6 +1917,9 @@ export declare function autocompleteSearchObjects<T>(search: string, objs: T[], 
  * any needed to wrap a value with this formula.
  */
 export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | number | SimpleAutocompleteOption>): MetadataFormula;
+/**
+ * Input options for defining a sync table. See {@link makeSyncTable}.
+ */
 export interface SyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> {
 	/**
 	 * The name of the sync table. This is shown to users in the Coda UI.

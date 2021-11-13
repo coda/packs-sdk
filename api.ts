@@ -139,7 +139,7 @@ export class StatusCodeError extends Error {
 }
 
 /**
- * Type definition for a Sync Table. Should not be necessary to use directly,
+ * The result of defining a sync table. Should not be necessary to use directly,
  * instead, define sync tables using {@link makeSyncTable}.
  */
 export interface SyncTableDef<
@@ -1126,6 +1126,9 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
   }) as ObjectPackFormula<ParamDefsT, SchemaT>;
 }
 
+/**
+ * Input options for defining a sync table. See {@link makeSyncTable}.
+ */
 export interface SyncTableOptions<
   K extends string,
   L extends string,

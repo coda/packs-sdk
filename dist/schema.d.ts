@@ -1,5 +1,4 @@
 import type { $Values } from './type_utils';
-import type { PackId } from './types';
 /**
  * The set of primitive value types that can be used as return values for formulas
  * or in object schemas.
@@ -552,9 +551,9 @@ export interface IdentityDefinition {
     /** The ID of another pack, if you are trying to reference a value from different pack. */
     packId?: number;
 }
-/** @hidden */
+/** The runtime version of IdentityDefinition with a pack ID injected. */
 export interface Identity extends IdentityDefinition {
-    packId: PackId;
+    packId: number;
 }
 /**
  * A schema definition for an object value (a value with key-value pairs).
@@ -599,6 +598,10 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      * projections have been created for them.
      */
     featured?: L[];
+    /**
+     * An identity for this schema, if this schema is important enough to be named and referenced.
+     * See {@link IdentityDefinition}.
+     */
     identity?: IdentityDefinition;
 }
 export declare type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;

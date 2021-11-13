@@ -80,7 +80,7 @@ ___
 
 • **getter**: `SyncFormula`<`K`, `L`, `ParamDefsT`, `SchemaT`\>
 
-See {@link SyncTableOptions.formula}
+See [SyncTableOptions.formula](SyncTableOptions.md#formula)
 
 #### Inherited from
 
@@ -120,7 +120,7 @@ ___
 
 • **name**: `string`
 
-See {@link SyncTableOptions.name}
+See [SyncTableOptions.name](SyncTableOptions.md#name)
 
 #### Inherited from
 
@@ -136,7 +136,7 @@ ___
 
 • **schema**: `SchemaT`
 
-See {@link SyncTableOptions.schema}
+See [SyncTableOptions.schema](SyncTableOptions.md#schema)
 
 #### Inherited from
 

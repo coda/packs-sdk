@@ -1,6 +1,6 @@
 # Interface: ObjectSchemaProperty
 
-Fields that may be set on a schema property in the {@link properties} definition
+Fields that may be set on a schema property in the [properties](ObjectSchemaDefinition.md#properties) definition
 of an object schema.
 
 ## Properties
@@ -41,7 +41,7 @@ whose value comes another field called "duration".
 
 #### Defined in
 
-[schema.ts:576](https://github.com/coda/packs-sdk/blob/main/schema.ts#L576)
+[schema.ts:575](https://github.com/coda/packs-sdk/blob/main/schema.ts#L575)
 
 ___
 
@@ -54,4 +54,4 @@ include a non-empty value for this property.
 
 #### Defined in
 
-[schema.ts:581](https://github.com/coda/packs-sdk/blob/main/schema.ts#L581)
+[schema.ts:580](https://github.com/coda/packs-sdk/blob/main/schema.ts#L580)
