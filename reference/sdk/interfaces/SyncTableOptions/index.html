@@ -9,14 +9,14 @@
       
       
       
-        <link rel="canonical" href="https://coda.github.io/packs-sdk/reference/sdk/interfaces/ObjectSchema/">
+        <link rel="canonical" href="https://coda.github.io/packs-sdk/reference/sdk/interfaces/SyncTableOptions/">
       
       <link rel="icon" href="../../../../assets/favicon.png">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.6">
     
     
       
-        <title>Interface: ObjectSchema - Coda Pack SDK</title>
+        <title>Interface: SyncTableOptions - Coda Pack SDK</title>
       
     
     
@@ -67,7 +67,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-objectschemak-l" class="md-skip">
+        <a href="#interface-synctableoptionsk-l-paramdefst-schemat" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Interface: ObjectSchema<K, L\>
+              Interface: SyncTableOptions<K, L, ParamDefsT, SchemaT\>
             
           </span>
         </div>
@@ -829,6 +829,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_4_1">
@@ -879,6 +881,20 @@
     <li class="md-nav__item">
       <a href="../../../../samples/topic/column-format/" class="md-nav__link">
         Column formats
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../samples/topic/data-type/" class="md-nav__link">
+        Data types
       </a>
     </li>
   
@@ -2033,10 +2049,6 @@
         
           
         
-          
-        
-          
-        
       
       
         <label class="md-nav__link" for="__nav_5_1_5">
@@ -2213,20 +2225,6 @@
     <li class="md-nav__item">
       <a href="../ExecutionContext/" class="md-nav__link">
         Interface: ExecutionContext
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../ExternalPackVersionMetadata/" class="md-nav__link">
-        Interface: ExternalPackVersionMetadata
       </a>
     </li>
   
@@ -2461,129 +2459,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Interface: ObjectSchema<K, L\>
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        Interface: ObjectSchema<K, L\>
+    <li class="md-nav__item">
+      <a href="../ObjectSchemaDefinition/" class="md-nav__link">
+        Interface: ObjectSchemaDefinition<K, L\>
       </a>
-      
-        
-
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#type-parameters" class="md-nav__link">
-    Type parameters
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hierarchy" class="md-nav__link">
-    Hierarchy
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#properties" class="md-nav__link">
-    Properties
-  </a>
-  
-    <nav class="md-nav" aria-label="Properties">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#codatype" class="md-nav__link">
-    codaType
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#description" class="md-nav__link">
-    description
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#featured" class="md-nav__link">
-    featured
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#id" class="md-nav__link">
-    id
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#identity" class="md-nav__link">
-    identity
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#primary" class="md-nav__link">
-    primary
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#properties_1" class="md-nav__link">
-    properties
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#type" class="md-nav__link">
-    type
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2623,20 +2503,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../PackFormatMetadata/" class="md-nav__link">
-        Interface: PackFormatMetadata
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../PackFormulaDef/" class="md-nav__link">
         Interface: PackFormulaDef<ParamsT, ResultT\>
       </a>
@@ -2653,20 +2519,6 @@
     <li class="md-nav__item">
       <a href="../PackFormulas/" class="md-nav__link">
         Interface: PackFormulas
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../PackFormulasMetadata/" class="md-nav__link">
-        Interface: PackFormulasMetadata
       </a>
     </li>
   
@@ -2859,6 +2711,117 @@
               
   
   
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Interface: SyncTableOptions<K, L, ParamDefsT, SchemaT\>
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Interface: SyncTableOptions<K, L, ParamDefsT, SchemaT\>
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#type-parameters" class="md-nav__link">
+    Type parameters
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#properties" class="md-nav__link">
+    Properties
+  </a>
+  
+    <nav class="md-nav" aria-label="Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connectionrequirement" class="md-nav__link">
+    connectionRequirement
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamicoptions" class="md-nav__link">
+    dynamicOptions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#formula" class="md-nav__link">
+    formula
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identityname" class="md-nav__link">
+    identityName
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#name" class="md-nav__link">
+    name
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#schema" class="md-nav__link">
+    schema
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
   
     <li class="md-nav__item">
       <a href="../TemporaryBlobStorage/" class="md-nav__link">
@@ -2903,32 +2866,6 @@
       
       
       
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
         
           
         
@@ -3040,104 +2977,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../types/ExternalObjectPackFormula/" class="md-nav__link">
-        Type alias: ExternalObjectPackFormula
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../types/ExternalPackFormat/" class="md-nav__link">
-        Type alias: ExternalPackFormat
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../types/ExternalPackFormatMetadata/" class="md-nav__link">
-        Type alias: ExternalPackFormatMetadata
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../types/ExternalPackFormula/" class="md-nav__link">
-        Type alias: ExternalPackFormula
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../types/ExternalPackFormulas/" class="md-nav__link">
-        Type alias: ExternalPackFormulas
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../types/ExternalPackMetadata/" class="md-nav__link">
-        Type alias: ExternalPackMetadata
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../types/ExternalSyncTable/" class="md-nav__link">
-        Type alias: ExternalSyncTable
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../types/FetchMethodType/" class="md-nav__link">
         Type alias: FetchMethodType
       </a>
@@ -3168,20 +3007,6 @@
     <li class="md-nav__item">
       <a href="../../types/GenericDynamicSyncTable/" class="md-nav__link">
         Type alias: GenericDynamicSyncTable
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../types/GenericObjectSchema/" class="md-nav__link">
-        Type alias: GenericObjectSchema
       </a>
     </li>
   
@@ -3306,20 +3131,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../types/PackFormulaMetadata/" class="md-nav__link">
-        Type alias: PackFormulaMetadata
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../types/PackFormulaResult/" class="md-nav__link">
         Type alias: PackFormulaResult
       </a>
@@ -3362,48 +3173,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../types/PackMetadata/" class="md-nav__link">
-        Type alias: PackMetadata
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../types/PackSyncTable/" class="md-nav__link">
-        Type alias: PackSyncTable
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../types/PackVersionMetadata/" class="md-nav__link">
-        Type alias: PackVersionMetadata
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../types/ParamDefs/" class="md-nav__link">
         Type alias: ParamDefs
       </a>
@@ -3420,20 +3189,6 @@
     <li class="md-nav__item">
       <a href="../../types/ParamValues/" class="md-nav__link">
         Type alias: ParamValues<ParamDefsT\>
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../types/ParamsList/" class="md-nav__link">
-        Type alias: ParamsList
       </a>
     </li>
   
@@ -3580,13 +3335,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#hierarchy" class="md-nav__link">
-    Hierarchy
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#properties" class="md-nav__link">
     Properties
   </a>
@@ -3595,57 +3343,43 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#codatype" class="md-nav__link">
-    codaType
+  <a href="#connectionrequirement" class="md-nav__link">
+    connectionRequirement
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#description" class="md-nav__link">
-    description
+  <a href="#dynamicoptions" class="md-nav__link">
+    dynamicOptions
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#featured" class="md-nav__link">
-    featured
+  <a href="#formula" class="md-nav__link">
+    formula
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#id" class="md-nav__link">
-    id
+  <a href="#identityname" class="md-nav__link">
+    identityName
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#identity" class="md-nav__link">
-    identity
+  <a href="#name" class="md-nav__link">
+    name
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#primary" class="md-nav__link">
-    primary
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#properties_1" class="md-nav__link">
-    properties
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#type" class="md-nav__link">
-    type
+  <a href="#schema" class="md-nav__link">
+    schema
   </a>
   
 </li>
@@ -3667,12 +3401,13 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/coda/packs-sdk/blob/main/docs/reference/sdk/interfaces/ObjectSchema.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/coda/packs-sdk/blob/main/docs/reference/sdk/interfaces/SyncTableOptions.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                <h1 id="interface-objectschemak-l">Interface: ObjectSchema&lt;K, L><a class="headerlink" href="#interface-objectschemak-l" title="Permanent link">&para;</a></h1>
+                <h1 id="interface-synctableoptionsk-l-paramdefst-schemat">Interface: SyncTableOptions&lt;K, L, ParamDefsT, SchemaT><a class="headerlink" href="#interface-synctableoptionsk-l-paramdefst-schemat" title="Permanent link">&para;</a></h1>
+<p>Input options for defining a sync table. See <a href="../../functions/makeSyncTable/">makeSyncTable</a>.</p>
 <h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -3690,72 +3425,89 @@
 <td align="left"><code>L</code></td>
 <td align="left">extends <code>string</code></td>
 </tr>
+<tr>
+<td align="left"><code>ParamDefsT</code></td>
+<td align="left">extends <a href="../../types/ParamDefs/"><code>ParamDefs</code></a></td>
+</tr>
+<tr>
+<td align="left"><code>SchemaT</code></td>
+<td align="left">extends <a href="../ObjectSchemaDefinition/"><code>ObjectSchemaDefinition</code></a>&lt;<code>K</code>, <code>L</code>></td>
+</tr>
 </tbody>
 </table>
-<h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">&para;</a></h2>
-<ul>
-<li><code>ObjectSchemaDefinition</code>&lt;<code>K</code>, <code>L</code>></li>
-</ul>
-<p>↳ <strong><code>ObjectSchema</code></strong></p>
 <h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h2>
-<h3 id="codatype">codaType<a class="headerlink" href="#codatype" title="Permanent link">&para;</a></h3>
-<p>• <code>Optional</code> <strong>codaType</strong>: <a href="../../enums/ValueHintType/#person"><code>Person</code></a> | <a href="../../enums/ValueHintType/#reference"><code>Reference</code></a></p>
-<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">&para;</a></h4>
-<p>ObjectSchemaDefinition.codaType</p>
+<h3 id="connectionrequirement">connectionRequirement<a class="headerlink" href="#connectionrequirement" title="Permanent link">&para;</a></h3>
+<p>• <code>Optional</code> <strong>connectionRequirement</strong>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a></p>
+<p>A <a href="../../enums/ConnectionRequirement/">ConnectionRequirement</a> that will be used for all formulas contained within
+this sync table (including autocomplete formulas).</p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L573">schema.ts:573</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1174">api.ts:1174</a></p>
 <hr />
-<h3 id="description">description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h3>
-<p>• <code>Optional</code> <strong>description</strong>: <code>string</code></p>
-<p>A explanation of this object schema property shown to the user in the UI.</p>
-<p>If your pack has an object schema with many properties, it may be useful to
-explain the purpose or contents of any property that is not self-evident.</p>
-<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">&para;</a></h4>
-<p>ObjectSchemaDefinition.description</p>
+<h3 id="dynamicoptions">dynamicOptions<a class="headerlink" href="#dynamicoptions" title="Permanent link">&para;</a></h3>
+<p>• <code>Optional</code> <strong>dynamicOptions</strong>: <code>Object</code></p>
+<p>A set of options used internally by <a href="../../functions/makeDynamicSyncTable/">makeDynamicSyncTable</a></p>
+<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>entityName?</code></td>
+<td align="left"><code>string</code></td>
+<td DynamicSyncTableOptions.entityName="DynamicSyncTableOptions.entityName" _link="@link" align="left">See</td>
+</tr>
+<tr>
+<td align="left"><code>getSchema?</code></td>
+<td align="left"><code>MetadataFormulaDef</code></td>
+<td align="left">A formula that returns the schema for this table.  For a dynamic sync table, the value of {@link DynamicSyncTableOptions.getSchema} is passed through here. For a non-dynamic sync table, you may still implement this if you table has a schema that varies based on the user account, but does not require a <a href="../Identity/#dynamicurl">dynamicUrl</a>.</td>
+</tr>
+</tbody>
+</table>
 <h4 id="defined-in_1">Defined in<a class="headerlink" href="#defined-in_1" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L192">schema.ts:192</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1178">api.ts:1178</a></p>
 <hr />
-<h3 id="featured">featured<a class="headerlink" href="#featured" title="Permanent link">&para;</a></h3>
-<p>• <code>Optional</code> <strong>featured</strong>: <code>L</code>[]</p>
-<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">&para;</a></h4>
-<p>ObjectSchemaDefinition.featured</p>
+<h3 id="formula">formula<a class="headerlink" href="#formula" title="Permanent link">&para;</a></h3>
+<p>• <strong>formula</strong>: <code>SyncFormulaDef</code>&lt;<code>K</code>, <code>L</code>, <code>ParamDefsT</code>, <code>SchemaT</code>></p>
+<p>The definition of the formula that implements this sync. This is a Coda packs formula
+that returns an array of objects fitting the given schema and optionally a <a href="../Continuation/">Continuation</a>.
+(The {@link SyncFormulaDef.name} is redundant and should be the same as the <code>name</code> parameter here.
+These will eventually be consolidated.)</p>
 <h4 id="defined-in_2">Defined in<a class="headerlink" href="#defined-in_2" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L574">schema.ts:574</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1169">api.ts:1169</a></p>
 <hr />
-<h3 id="id">id<a class="headerlink" href="#id" title="Permanent link">&para;</a></h3>
-<p>• <code>Optional</code> <strong>id</strong>: <code>K</code></p>
-<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">&para;</a></h4>
-<p>ObjectSchemaDefinition.id</p>
+<h3 id="identityname">identityName<a class="headerlink" href="#identityname" title="Permanent link">&para;</a></h3>
+<p>• <strong>identityName</strong>: <code>string</code></p>
+<p>The "unique identifier" for the entity being synced. This will serve as the unique id for this
+table, and must be unique across other sync tables for your pack. This is often the singular
+form of the table name, e.g. if your table name was 'Products' you might choose 'Product'
+as the identity name.</p>
+<p>When returning objects from other syncs or formulas, you may create Coda references to objects
+in this table by defining an <a href="../Identity/">Identity</a> in that schema that refers to this identity name.</p>
+<p>For example, if your identity name was 'Product', another formula or sync could return
+shell objects that reference rows in this table, so long as they contain the id
+of the object, and the schema is declared as <code>{identity: {name: 'Products'}}</code>.</p>
 <h4 id="defined-in_3">Defined in<a class="headerlink" href="#defined-in_3" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L571">schema.ts:571</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1157">api.ts:1157</a></p>
 <hr />
-<h3 id="identity">identity<a class="headerlink" href="#identity" title="Permanent link">&para;</a></h3>
-<p>• <code>Optional</code> <strong>identity</strong>: <a href="../Identity/"><code>Identity</code></a></p>
-<h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">&para;</a></h4>
-<p>ObjectSchemaDefinition.identity</p>
+<h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">&para;</a></h3>
+<p>• <strong>name</strong>: <code>string</code></p>
+<p>The name of the sync table. This is shown to users in the Coda UI.
+This should describe the entities being synced. For example, a sync table that syncs products
+from an e-commerce platform should be called 'Products'. This name must not contain spaces.</p>
 <h4 id="defined-in_4">Defined in<a class="headerlink" href="#defined-in_4" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L585">schema.ts:585</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1143">api.ts:1143</a></p>
 <hr />
-<h3 id="primary">primary<a class="headerlink" href="#primary" title="Permanent link">&para;</a></h3>
-<p>• <code>Optional</code> <strong>primary</strong>: <code>K</code></p>
-<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">&para;</a></h4>
-<p>ObjectSchemaDefinition.primary</p>
+<h3 id="schema">schema<a class="headerlink" href="#schema" title="Permanent link">&para;</a></h3>
+<p>• <strong>schema</strong>: <code>SchemaT</code></p>
+<p>The definition of the schema that describes a single response object. For example, the
+schema for a single product. The sync formula will return an array of objects that fit this schema.</p>
 <h4 id="defined-in_5">Defined in<a class="headerlink" href="#defined-in_5" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L572">schema.ts:572</a></p>
-<hr />
-<h3 id="properties_1">properties<a class="headerlink" href="#properties_1" title="Permanent link">&para;</a></h3>
-<p>• <strong>properties</strong>: <a href="../../types/ObjectSchemaProperties/"><code>ObjectSchemaProperties</code></a>&lt;<code>K</code> | <code>L</code>></p>
-<h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">&para;</a></h4>
-<p>ObjectSchemaDefinition.properties</p>
-<h4 id="defined-in_6">Defined in<a class="headerlink" href="#defined-in_6" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L570">schema.ts:570</a></p>
-<hr />
-<h3 id="type">type<a class="headerlink" href="#type" title="Permanent link">&para;</a></h3>
-<p>• <strong>type</strong>: <a href="../../enums/ValueType/#object"><code>Object</code></a></p>
-<h4 id="inherited-from_6">Inherited from<a class="headerlink" href="#inherited-from_6" title="Permanent link">&para;</a></h4>
-<p>ObjectSchemaDefinition.type</p>
-<h4 id="defined-in_7">Defined in<a class="headerlink" href="#defined-in_7" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L569">schema.ts:569</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1162">api.ts:1162</a></p>
                 
               
               
@@ -3775,7 +3527,7 @@ explain the purpose or contents of any property that is not self-evident.</p>
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../OAuth2Authentication/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Interface: OAuth2Authentication" rel="prev">
+        <a href="../SyncTableDef/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Interface: SyncTableDef&lt;K, L, ParamDefsT, SchemaT\&gt;" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -3784,20 +3536,20 @@ explain the purpose or contents of any property that is not self-evident.</p>
               <span class="md-footer__direction">
                 Previous
               </span>
-              Interface: OAuth2Authentication
+              Interface: SyncTableDef<K, L, ParamDefsT, SchemaT\>
             </div>
           </div>
         </a>
       
       
         
-        <a href="../ObjectSchemaProperty/" class="md-footer__link md-footer__link--next" aria-label="Next: Interface: ObjectSchemaProperty" rel="next">
+        <a href="../TemporaryBlobStorage/" class="md-footer__link md-footer__link--next" aria-label="Next: Interface: TemporaryBlobStorage" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Interface: ObjectSchemaProperty
+              Interface: TemporaryBlobStorage
             </div>
           </div>
           <div class="md-footer__button md-icon">

@@ -2,6 +2,7 @@
 [data-md-color-scheme="coda"] {
   --md-primary-fg-color: #006838; /* Emerald */
   --md-accent-fg-color: #EE5A29; /* Tomato Soup */
+  --md-code-hl-color: #FFE6C9; /* Peach */
 }
 
 /* Don't use link colors in the announcement banner, for readability. */
@@ -17,5 +18,5 @@ img.inline-icon {
 
 img.screenshot {
   border-radius: 8px;
-  box-shadow: 0 0 24px rgba(0,0,0,var(--opacity-shadow-normal,.15));  
+  box-shadow: 0 0 24px rgba(0,0,0,var(--opacity-shadow-normal,.15));
 }
