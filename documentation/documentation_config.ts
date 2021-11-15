@@ -349,6 +349,53 @@ export const Examples: Example[] = [
     ],
   },
   {
+    name: 'Data types',
+    category: ExampleCategory.Topic,
+    triggerTokens: ['resultType', 'type'],
+    contentFile: './examples/data-type/README.md',
+    linkData: {
+      type: UrlType.SdkReferencePath,
+      url: '/guides/basics/data-types',
+    },
+    exampleSnippets: [
+      {
+        name: 'Template (String)',
+        content: 'The basic structure of a formula that returns a string.',
+        codeFile: './snippets/formula/string_formula.ts',
+      },
+      {
+        name: 'Template (Number)',
+        content: 'The basic structure of a formula that returns a number.',
+        codeFile: './snippets/formula/numeric_formula.ts',
+      },
+      {
+        name: 'Template (boolean)',
+        content: 'The basic structure of a formula that returns a boolean.',
+        codeFile: './snippets/formula/boolean_formula.ts',
+      },
+      {
+        name: 'Template (Array)',
+        content: 'The basic structure of a formula that returns an array.',
+        codeFile: './snippets/formula/array_formula.ts',
+      },
+      {
+        name: 'Template (Object)',
+        content: 'The basic structure of a formula that returns an object.',
+        codeFile: './snippets/formula/object_formula.ts',
+      },
+      {
+        name: 'Markdown',
+        content: 'A formula that returns markdown content. This sample returns the contents of the README.md file from a GitHub repository.',
+        codeFile: './examples/data-type/readme.ts',
+      },
+      {
+        name: 'HTML',
+        content: 'A formula that returns HTML content. This sample returns HTML with every word of the input string bolded.',
+        codeFile: './examples/data-type/alt_bold.ts',
+      },
+    ],
+  },
+  {
     name: 'Hello World',
     category: ExampleCategory.Full,
     triggerTokens: [],
