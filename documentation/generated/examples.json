@@ -244,6 +244,58 @@
     ]
   },
   {
+    "name": "Data types",
+    "category": "Topic",
+    "triggerTokens": [
+      "resultType",
+      "type"
+    ],
+    "linkData": {
+      "type": "SdkReferencePath",
+      "url": "/guides/basics/data-types"
+    },
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/guides/basics/data-types",
+    "learnMoreLink": "/guides/basics/data-types",
+    "content": "Packs can return various types of values, and apply hints that tell Coda how to display that data. Formulas and schema properties must declare the these types upfront, and the values you return in your code must match.",
+    "exampleSnippets": [
+      {
+        "name": "Template (String)",
+        "content": "The basic structure of a formula that returns a string.",
+        "code": "pack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function ([param], context) {\n    return \"Hello \" + param;\n  },\n});"
+      },
+      {
+        "name": "Template (Number)",
+        "content": "The basic structure of a formula that returns a number.",
+        "code": "pack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.Number,\n  execute: async function ([param], context) {\n    return param.length;\n  },\n});"
+      },
+      {
+        "name": "Template (boolean)",
+        "content": "The basic structure of a formula that returns a boolean.",
+        "code": "pack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.Boolean,\n  execute: async function ([param], context) {\n    return param === \"true\";\n  },\n});"
+      },
+      {
+        "name": "Template (Array)",
+        "content": "The basic structure of a formula that returns an array.",
+        "code": "pack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.Array,\n  items: {\n    type: coda.ValueType.String,\n  },\n  execute: async function ([param], context) {\n    return [\"Hello\", param];\n  },\n});"
+      },
+      {
+        "name": "Template (Object)",
+        "content": "The basic structure of a formula that returns an object.",
+        "code": "const MySchema = coda.makeObjectSchema({\n  type: coda.ValueType.Object,\n  properties: {\n    property1: {type: coda.ValueType.Number},\n    property2: {type: coda.ValueType.String},\n    // Add more properties here.\n  },\n  id: \"property1\", // Which property above is a unique ID.\n  primary: \"property2\", // Which property above to display by default.\n  identity: {\n    name: \"<User-visible name>\",\n  },\n});\n\npack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.Object,\n  schema: MySchema,\n  execute: async function ([param], context) {\n    return {\n      property1: 123,\n      property2: param,\n    };\n  },\n});"
+      },
+      {
+        "name": "Markdown",
+        "content": "A formula that returns markdown content. This sample returns the contents of the README.md file from a GitHub repository.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Returns the contents of GitHub repo's README.md file as markdown.\npack.addFormula({\n  name: \"GetReadme\",\n  description: \"Gets the content of a GitHub repo's README.md file.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"repo\",\n      description: \"The repo to read from.\",\n      defaultValue: \"coda/packs-sdk\"\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  codaType: coda.ValueHintType.Markdown,\n  execute: async function ([repo], context) {\n    let url = `https://raw.githubusercontent.com/${repo}/HEAD/README.md`\n    let result = await context.fetcher.fetch({\n      method: \"GET\",\n      url: url,\n    });\n    return result.body;\n  },\n});\n\npack.addNetworkDomain(\"raw.githubusercontent.com\");"
+      },
+      {
+        "name": "HTML",
+        "content": "A formula that returns HTML content. This sample returns HTML with every word of the input string bolded.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Returns HTML with every other word of the input text bolded.\npack.addFormula({\n  name: \"AlternatingBold\",\n  description: \"Bold every other word.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"text\",\n      description: \"The text to bold.\",\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  codaType: coda.ValueHintType.Html,\n  execute: async function ([text], context) {\n    let words = text.split(\" \");\n    for (let i = 0; i < words.length; i++) {\n      if (i % 2 == 0) {\n        words[i] = `<b>${words[i]}</b>`\n      }\n    }\n    return words.join(\" \");\n  },\n});"
+      }
+    ]
+  },
+  {
     "name": "Hello World",
     "category": "Full",
     "triggerTokens": [],

@@ -1,0 +1,1 @@
+Packs can return various types of values, and apply hints that tell Coda how to display that data. Formulas and schema properties must declare the these types upfront, and the values you return in your code must match.
