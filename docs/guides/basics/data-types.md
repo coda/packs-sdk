@@ -11,7 +11,7 @@ Pack formulas are written in JavaScript and can return standard JavaScript data 
 
 ## Value types
 
-The core, underlying type of a value is referred to as it's value type. The enumeration [`ValueType`][ValueType] defines the set of supported types, and they correspond to basic data types in JavaScript.
+The core, underlying type of a value is referred to as its value type. The enumeration [`ValueType`][ValueType] defines the set of supported types, and they correspond to basic data types in JavaScript.
 
 For a formula the value type is specified in the `resultType` property, and for schemas it's specified in the `type` property. The type specified must match the type of the value returned by your code.
 
@@ -51,7 +51,6 @@ Structured data can be returned using the [`Object`][Object] value type. These o
 
 ```ts
 const MySchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
   properties: {
     property1: { type: coda.ValueType.String },
     property2: { type: coda.ValueType.Number },
@@ -94,14 +93,14 @@ pack.addFormula({
 
 ### Markdown {. #markdown}
 
-The [`Markdown`][hint_markdown] value hint indicates that Coda should render the returned string as markdown. The value can contain [basic markdown syntax][markdown], but extensions used by other applications (like tables, emoji, etc) are not supported.
+The [`Markdown`][hint_markdown] value hint indicates that Coda should parse the returned string as markdown as render it as rich text. The value can contain [basic markdown syntax][markdown], but extensions used by other applications (like tables, emoji, etc) are not supported.
 
 <!-- TODO: Fully document the allowed markup. -->
 
 
 ### HTML
 
-The [`Html`][hint_html] value hint indicates that Coda should render the returned string as HTML. Code only supports a small subset of HTML markup, limited to the basic formatting you can accomplish in [markdown](#markdown).
+The [`Html`][hint_html] value hint indicates that Coda should parse the returned string as HTML and render it as rich text. Code only supports a small subset of HTML markup, limited to the basic formatting you can accomplish in [markdown](#markdown).
 
 <!-- TODO: Fully document the allowed markup. -->
 
@@ -149,11 +148,10 @@ The [`Embed`][Embed] value hint can be used to embed external content in the Cod
 
 ### People
 
-The [`Person`][Person] value hint can be used to @-reference a Coda user account. This hint can be applied to `Object` values, where the object has a property that specifies the user's email address. The email address must be contained within the property of the object that is listed as it's `id` within the schema definition, and that property must be marked as `required`.
+The [`Person`][Person] value hint can be used to @-reference a Coda user account. This hint can be applied to `Object` values, where the object has a property that specifies the user's email address. The email address must be contained within the property of the object that is listed as its `id` within the schema definition, and that property must be marked as `required`.
 
 ```ts
 const MyPersonSchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
   codaType: coda.ValueHintType.Person,
   properties: {
     name: {type: coda.ValueType.String},
@@ -213,8 +211,7 @@ The columns of a Coda table are strongly typed, and the data types in the Pack S
 When used in a schema definition, some value types and value hints support additional formatting options. For example, `Number` types support a [`precision`][precision] property that controls how many decimal places to show.
 
 ```ts
-const PersonSchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
+const DoorSchema = coda.makeObjectSchema({
   properties: {
     heightInMeters: {type: coda.ValueType.Number, precision: 3},
     // ...
