@@ -9,6 +9,10 @@ Formulas are one of the most basic building blocks in Coda; used to calculate va
 [View Sample Code][samples]{ .md-button }
 
 
+!!! note
+    Actions are created using formulas annotated with `isAction: true`. Action formulas are very similar to calculation formulas, but differ in some important ways. To learn more about these differences see the [Actions guide][actions].
+
+
 ## Structure of a formula
 
 A formula definition consists of a set of key-value pairs, which specify the various settings for the formula. Most of these settings are metadata, such as the name, description, parameters and result type. The actual code that is run each time the formula recalculated is specified using in the `execute` key.
@@ -18,7 +22,7 @@ A formula definition consists of a set of key-value pairs, which specify the var
 
 ## Naming
 
-The name of a formula can only contain the letters, numbers, and underscores. This restriction exists to ensure that custom formulas are compatible with the Coda Formula Language. By convention formula names are written in upper camel case, like `DoSomethingCool`.
+The name of a formula can only contain letters, numbers, and underscores. This restriction exists to ensure that custom formulas are compatible with the Coda Formula Language. By convention formula names are written in upper camel case, like `DoSomethingCool`.
 
 Formula names must be unique within a Pack, but can be the same as built-in formulas or those in other Packs. When a doc has access to multiple formulas with the same name the Pack's icon is used to distinguish them.
 
@@ -37,7 +41,7 @@ All formulas must return a result, which is a single value matching the type spe
 
 ## Authentication
 
-Formulas can use [authentication][authentication] to fetch private data. When using [system authentication][system_auth] there is no change to the user experience, but when you use [user authentication][user_auth] the formula editor will be automatically updated to prompt for a connected account. The connected account will appear as the first parameter of the formula, but it's value is not passed to your formula's `execute` method.
+Formulas can use [authentication][authentication] to fetch private data. When using [system authentication][system_auth] there is no change to the user experience, but when you use [user authentication][user_auth] the formula editor will be automatically updated to prompt for a connected account. The connected account will appear as the first parameter of the formula, but its value is not passed to your formula's `execute` method.
 
 === "Formula editor"
     <img src="../../../images/formula_account.png" srcset="../../../images/formula_account_2x.png 2x" class="screenshot" alt="Account parameter in formula editor">
@@ -73,7 +77,7 @@ While it's possible to use multiple accounts within a document, each instance of
 
 ## Caching
 
-For performance reasons all formula results are cached by default. If your formula is called again with the same parameters, the result will be loaded from the cache instead of re-running your code. Building or releasing a new version of your Pack will invalidate this cache, ensuring you get fresh results using your new code.
+For performance reasons all formula results are cached by default. If your formula is called again with the same parameters, Coda will attempt to load the result from the cache instead of re-running your code. Building or releasing a new version of your Pack will invalidate this cache, ensuring you get fresh results using your new code.
 
 You can adjust the caching behavior by setting the [`cacheTtlSecs`][cacheTtlSecs] field on the formula definition, which specifies for how many seconds the result should be cached. To disable caching for a formula set `cacheTtlSecs` to zero.
 

@@ -303,7 +303,7 @@ try {
 
 ## Authentication
 
-The [authentication][authentication] you configure for your Pack is automatically applied to fetcher requests, with no extra code needed. For example, if you have setup `HeaderBearer` authentication, an `Authorization` header with the user's token will be automatically added to your fetcher requests. This is only done for formulas that use a connected account: those that have a `connectionRequirement` of `REQUIRED`, or `OPTIONAL` and the user opted to selected an account.
+The [authentication][authentication] you configure for your Pack is automatically applied to fetcher requests, with no extra code needed. For example, if you have set up `HeaderBearer` authentication, an `Authorization` header with the user's token will be automatically added to your fetcher requests. This is only done for formulas that use a connected account: those that have a `connectionRequirement` of `REQUIRED`, or `OPTIONAL` and the user opted to selected an account.
 
 To disable this behavior for a specific request within a formula, set the `fetch` option `disableAuthentication: true`.
 
