@@ -22,7 +22,7 @@ this sync table (including autocomplete formulas).
 
 #### Defined in
 
-[api.ts:1174](https://github.com/coda/packs-sdk/blob/main/api.ts#L1174)
+[api.ts:1205](https://github.com/coda/packs-sdk/blob/main/api.ts#L1205)
 
 ___
 
@@ -36,27 +36,27 @@ A set of options used internally by [makeDynamicSyncTable](../functions/makeDyna
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `entityName?` | `string` | See {@link DynamicSyncTableOptions.entityName} |
-| `getSchema?` | `MetadataFormulaDef` | A formula that returns the schema for this table.  For a dynamic sync table, the value of {@link DynamicSyncTableOptions.getSchema} is passed through here. For a non-dynamic sync table, you may still implement this if you table has a schema that varies based on the user account, but does not require a [dynamicUrl](Identity.md#dynamicurl). |
+| `entityName?` | `string` | See [DynamicSyncTableOptions.entityName](DynamicSyncTableOptions.md#entityname) |
+| `getSchema?` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) | A formula that returns the schema for this table.  For a dynamic sync table, the value of [DynamicSyncTableOptions.getSchema](DynamicSyncTableOptions.md#getschema) is passed through here. For a non-dynamic sync table, you may still implement this if you table has a schema that varies based on the user account, but does not require a [dynamicUrl](Identity.md#dynamicurl). |
 
 #### Defined in
 
-[api.ts:1178](https://github.com/coda/packs-sdk/blob/main/api.ts#L1178)
+[api.ts:1209](https://github.com/coda/packs-sdk/blob/main/api.ts#L1209)
 
 ___
 
 ### formula
 
-• **formula**: `SyncFormulaDef`<`K`, `L`, `ParamDefsT`, `SchemaT`\>
+• **formula**: [`SyncFormulaDef`](SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\>
 
 The definition of the formula that implements this sync. This is a Coda packs formula
 that returns an array of objects fitting the given schema and optionally a [Continuation](Continuation.md).
-(The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
+(The [SyncFormulaDef.name](SyncFormulaDef.md#name) is redundant and should be the same as the `name` parameter here.
 These will eventually be consolidated.)
 
 #### Defined in
 
-[api.ts:1169](https://github.com/coda/packs-sdk/blob/main/api.ts#L1169)
+[api.ts:1200](https://github.com/coda/packs-sdk/blob/main/api.ts#L1200)
 
 ___
 
@@ -78,7 +78,7 @@ of the object, and the schema is declared as `{identity: {name: 'Products'}}`.
 
 #### Defined in
 
-[api.ts:1157](https://github.com/coda/packs-sdk/blob/main/api.ts#L1157)
+[api.ts:1188](https://github.com/coda/packs-sdk/blob/main/api.ts#L1188)
 
 ___
 
@@ -92,7 +92,7 @@ from an e-commerce platform should be called 'Products'. This name must not cont
 
 #### Defined in
 
-[api.ts:1143](https://github.com/coda/packs-sdk/blob/main/api.ts#L1143)
+[api.ts:1174](https://github.com/coda/packs-sdk/blob/main/api.ts#L1174)
 
 ___
 
@@ -105,4 +105,4 @@ schema for a single product. The sync formula will return an array of objects th
 
 #### Defined in
 
-[api.ts:1162](https://github.com/coda/packs-sdk/blob/main/api.ts#L1162)
+[api.ts:1193](https://github.com/coda/packs-sdk/blob/main/api.ts#L1193)

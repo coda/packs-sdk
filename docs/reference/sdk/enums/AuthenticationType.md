@@ -4,6 +4,34 @@ Authentication types supported by Coda Packs.
 
 ## Enumeration members
 
+### AWSAccessKey
+
+• **AWSAccessKey** = `"AWSAccessKey"`
+
+Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
+See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
+
+#### Defined in
+
+[types.ts:91](https://github.com/coda/packs-sdk/blob/main/types.ts#L91)
+
+___
+
+### AWSAssumeRole
+
+• **AWSAssumeRole** = `"AWSAssumeRole"`
+
+Authenticate to Amazon Web Services by assuming an IAM role.
+See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
+
+This is not yet supported.
+
+#### Defined in
+
+[types.ts:98](https://github.com/coda/packs-sdk/blob/main/types.ts#L98)
+
+___
+
 ### CodaApiHeaderBearerToken
 
 • **CodaApiHeaderBearerToken** = `"CodaApiHeaderBearerToken"`
@@ -19,7 +47,7 @@ Coda REST API.
 
 #### Defined in
 
-[types.ts:115](https://github.com/coda/packs-sdk/blob/main/types.ts#L115)
+[types.ts:109](https://github.com/coda/packs-sdk/blob/main/types.ts#L109)
 
 ___
 
@@ -116,6 +144,18 @@ The parameter name is defined in the [paramName](../interfaces/QueryParamTokenAu
 #### Defined in
 
 [types.ts:59](https://github.com/coda/packs-sdk/blob/main/types.ts#L59)
+
+___
+
+### Various
+
+• **Various** = `"Various"`
+
+Only for use by Coda-authored packs.
+
+#### Defined in
+
+[types.ts:113](https://github.com/coda/packs-sdk/blob/main/types.ts#L113)
 
 ___
 

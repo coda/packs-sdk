@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PrecannedDateRange = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.PrecannedDateRange = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
@@ -152,8 +152,8 @@ var NetworkConnection;
     NetworkConnection["Optional"] = "optional";
     NetworkConnection["Required"] = "required";
 })(NetworkConnection = exports.NetworkConnection || (exports.NetworkConnection = {}));
-// Fetcher APIs
-const ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE'];
+/** The HTTP methods (verbs) supported by the fetcher. */
+exports.ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE'];
 // A mapping exists in coda that allows these to show up in the UI.
 // If adding new values here, add them to that mapping and vice versa.
 /**

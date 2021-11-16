@@ -7,4 +7,4 @@ editor where Coda will manage versioning on behalf of the pack author.
 
 #### Defined in
 
-[types.ts:802](https://github.com/coda/packs-sdk/blob/main/types.ts#L802)
+[types.ts:788](https://github.com/coda/packs-sdk/blob/main/types.ts#L788)

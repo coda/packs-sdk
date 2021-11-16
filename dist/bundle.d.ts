@@ -1081,7 +1081,8 @@ export interface Network {
 	readonly requiresConnection?: boolean;
 	readonly connection?: NetworkConnection;
 }
-declare const ValidFetchMethods: readonly [
+/** The HTTP methods (verbs) supported by the fetcher. */
+export declare const ValidFetchMethods: readonly [
 	"GET",
 	"PATCH",
 	"POST",
@@ -1540,6 +1541,7 @@ export declare type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, Para
  * for defining a sync table.
  */
 export declare type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
+/** Options you can specify when defining a parameter using {@link makeParameter}. */
 export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, "type" | "autocomplete"> & {
 	type: T;
 	autocomplete?: MetadataFormulaDef | Array<string | number | SimpleAutocompleteOption>;
@@ -1571,31 +1573,50 @@ export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackF
 	/** The JavaScript function that implements this formula */
 	execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
 }
+/**
+ * Inputs to declaratively define a formula that returns a list of objects.
+ * That is, a formula that doesn't require code, which like an {@link EmptyFormulaDef} uses
+ * a {@link RequestHandlerTemplate} to describe the request to be made, but also includes a
+ * {@link ResponseHandlerTemplate} to describe the schema of the returned objects.
+ * These take the place of implementing a JavaScript `execute` function.
+ *
+ * This type is generally not used directly, but describes the inputs to {@link makeTranslateObjectFormula}.
+ */
 export interface ObjectArrayFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema> extends Omit<PackFormulaDef<ParamsT, SchemaType<SchemaT>>, "execute"> {
+	/** A definition of the request and any parameter transformations to make in order to implement this formula. */
 	request: RequestHandlerTemplate;
+	/** A definition of the schema for the object list returned by this function. */
 	response: ResponseHandlerTemplate<SchemaT>;
 }
 /**
  * Inputs to define an "empty" formula, that is, a formula that uses a {@link RequestHandlerTemplate}
  * to define an implementation for the formula rather than implementing an actual `execute` function
- * in JavaScript.
+ * in JavaScript. An empty formula returns a string. To return a list of objects, see
+ * {@link ObjectArrayFormulaDef}.
+ *
+ * This type is generally not used directly, but describes the inputs to {@link makeEmptyFormula}.
  */
 export interface EmptyFormulaDef<ParamsT extends ParamDefs> extends Omit<PackFormulaDef<ParamsT, string>, "execute"> {
-	/** A definition of the request and any transformations to make in order to implement this formula. */
+	/** A definition of the request and any parameter transformations to make in order to implement this formula. */
 	request: RequestHandlerTemplate;
 }
+/** The base class for pack formula descriptors. Subclasses vary based on the return type of the formula. */
 export declare type BaseFormula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = PackFormulaDef<ParamDefsT, ResultT> & {
 	resultType: TypeOf<ResultT>;
 };
+/** A pack formula that returns a number. */
 export declare type NumericPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, number> & {
 	schema?: NumberSchema;
 };
+/** A pack formula that returns a boolean. */
 export declare type BooleanPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, boolean> & {
 	schema?: BooleanSchema;
 };
+/** A pack formula that returns a string. */
 export declare type StringPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, SchemaType<StringSchema>> & {
 	schema?: StringSchema;
 };
+/** A pack formula that returns a JavaScript object. */
 export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Omit<BaseFormula<ParamDefsT, SchemaType<SchemaT>>, "execute"> & {
 	schema?: SchemaT;
 	execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<object> | object;
@@ -1650,6 +1671,12 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
 	 */
 	execute(params: ParamValues<ParamDefsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<K, L, SchemaT>>;
 }
+/**
+ * The result of defining the formula that implements a sync table.
+ *
+ * There is no need to use this type directly. You provid a {@link SyncFormulaDef} as an
+ * input to {@link makeSyncTable} which outputs definitions of this type.
+ */
 export declare type SyncFormula<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
 	resultType: TypeOf<SchemaType<SchemaT>>;
 	isSyncFormula: true;
@@ -1830,6 +1857,11 @@ export declare type MetadataFormula = BaseFormula<[
 };
 export declare type MetadataFormulaMetadata = Omit<MetadataFormula, "execute">;
 export declare type MetadataFunction = <K extends string, L extends string>(context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<K, L>>;
+/**
+ * The type of values that will be accepted as a metadata formula definition. This can either
+ * be the JavaScript function that implements a metadata formula (strongly recommended)
+ * or a full metadata formula definition (mostly supported for legacy code).
+ */
 export declare type MetadataFormulaDef = MetadataFormula | MetadataFunction;
 /**
  * A wrapper that generates a formula definition from the function that implements a metadata formula.
@@ -1973,6 +2005,9 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 		entityName?: string;
 	};
 }
+/**
+ * Options provided when defining a dynamic sync table.
+ */
 export interface DynamicSyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> {
 	/**
 	 * The name of the dynamic sync table. This is shown to users in the Coda UI
@@ -2231,10 +2266,6 @@ export declare enum AuthenticationType {
 	/**
 	 * Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
 	 * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
-	 *
-	 * This is not yet supported.
-	 *
-	 * @ignore
 	 */
 	AWSAccessKey = "AWSAccessKey",
 	/**
@@ -2242,8 +2273,6 @@ export declare enum AuthenticationType {
 	 * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
 	 *
 	 * This is not yet supported.
-	 *
-	 * @ignore
 	 */
 	AWSAssumeRole = "AWSAssumeRole",
 	/**
@@ -2259,8 +2288,6 @@ export declare enum AuthenticationType {
 	CodaApiHeaderBearerToken = "CodaApiHeaderBearerToken",
 	/**
 	 * Only for use by Coda-authored packs.
-	 *
-	 * @ignore
 	 */
 	Various = "Various"
 }
@@ -2662,14 +2689,11 @@ export interface CustomAuthentication extends BaseAuthentication {
 /**
  * Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
  * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
- *
- * This is not yet supported.
- *
- * @ignore
  */
 export interface AWSAccessKeyAuthentication extends BaseAuthentication {
 	/** Identifies this as AWSAccessKey authentication. */
 	type: AuthenticationType.AWSAccessKey;
+	/** The AWS service to authenticate with, like "s3", "iam", or "route53". */
 	service: string;
 }
 /**
@@ -2677,18 +2701,15 @@ export interface AWSAccessKeyAuthentication extends BaseAuthentication {
  * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
  *
  * This is not yet supported.
- *
- * @ignore
  */
 export interface AWSAssumeRoleAuthentication extends BaseAuthentication {
 	/** Identifies this as AWSAssumeRole authentication. */
 	type: AuthenticationType.AWSAssumeRole;
+	/** The AWS service to authenticate with, like "s3", "iam", or "route53". */
 	service: string;
 }
 /**
  * Only for use by Coda-authored packs.
- *
- * @ignore
  */
 export interface VariousAuthentication {
 	/** Identifies this as Various authentication. */

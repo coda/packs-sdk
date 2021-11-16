@@ -35,11 +35,11 @@ coda.makeDynamicSyncTable({
 | `__namedParameters` | `Object` |
 | `__namedParameters.connectionRequirement?` | [`ConnectionRequirement`](../enums/ConnectionRequirement.md) |
 | `__namedParameters.entityName?` | `string` |
-| `__namedParameters.formula` | `SyncFormulaDef`<`K`, `L`, `ParamDefsT`, `any`\> |
-| `__namedParameters.getDisplayUrl` | `MetadataFormulaDef` |
-| `__namedParameters.getName` | `MetadataFormulaDef` |
-| `__namedParameters.getSchema` | `MetadataFormulaDef` |
-| `__namedParameters.listDynamicUrls?` | `MetadataFormulaDef` |
+| `__namedParameters.formula` | [`SyncFormulaDef`](../interfaces/SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `any`\> |
+| `__namedParameters.getDisplayUrl` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
+| `__namedParameters.getName` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
+| `__namedParameters.getSchema` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
+| `__namedParameters.listDynamicUrls?` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
 | `__namedParameters.name` | `string` |
 
 #### Returns
@@ -48,4 +48,4 @@ coda.makeDynamicSyncTable({
 
 #### Defined in
 
-[api.ts:1358](https://github.com/coda/packs-sdk/blob/main/api.ts#L1358)
+[api.ts:1392](https://github.com/coda/packs-sdk/blob/main/api.ts#L1392)

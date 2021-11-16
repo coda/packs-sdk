@@ -84,10 +84,6 @@ export declare enum AuthenticationType {
     /**
      * Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
      * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
-     *
-     * This is not yet supported.
-     *
-     * @ignore
      */
     AWSAccessKey = "AWSAccessKey",
     /**
@@ -95,8 +91,6 @@ export declare enum AuthenticationType {
      * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
      *
      * This is not yet supported.
-     *
-     * @ignore
      */
     AWSAssumeRole = "AWSAssumeRole",
     /**
@@ -112,8 +106,6 @@ export declare enum AuthenticationType {
     CodaApiHeaderBearerToken = "CodaApiHeaderBearerToken",
     /**
      * Only for use by Coda-authored packs.
-     *
-     * @ignore
      */
     Various = "Various"
 }
@@ -515,14 +507,11 @@ export interface CustomAuthentication extends BaseAuthentication {
 /**
  * Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
  * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
- *
- * This is not yet supported.
- *
- * @ignore
  */
 export interface AWSAccessKeyAuthentication extends BaseAuthentication {
     /** Identifies this as AWSAccessKey authentication. */
     type: AuthenticationType.AWSAccessKey;
+    /** The AWS service to authenticate with, like "s3", "iam", or "route53". */
     service: string;
 }
 /**
@@ -530,18 +519,15 @@ export interface AWSAccessKeyAuthentication extends BaseAuthentication {
  * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
  *
  * This is not yet supported.
- *
- * @ignore
  */
 export interface AWSAssumeRoleAuthentication extends BaseAuthentication {
     /** Identifies this as AWSAssumeRole authentication. */
     type: AuthenticationType.AWSAssumeRole;
+    /** The AWS service to authenticate with, like "s3", "iam", or "route53". */
     service: string;
 }
 /**
  * Only for use by Coda-authored packs.
- *
- * @ignore
  */
 export interface VariousAuthentication {
     /** Identifies this as Various authentication. */

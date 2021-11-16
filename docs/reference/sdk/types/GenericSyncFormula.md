@@ -1,6 +1,6 @@
 # Type alias: GenericSyncFormula
 
-Ƭ **GenericSyncFormula**: `SyncFormula`<`any`, `any`, [`ParamDefs`](ParamDefs.md), `any`\>
+Ƭ **GenericSyncFormula**: [`SyncFormula`](SyncFormula.md)<`any`, `any`, [`ParamDefs`](ParamDefs.md), `any`\>
 
 Type definition for the formula that implements a sync table.
 Should not be necessary to use directly, see [makeSyncTable](../functions/makeSyncTable.md)

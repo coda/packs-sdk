@@ -41,7 +41,7 @@ makeTranslateObjectFormula({
 
 | Name | Type |
 | :------ | :------ |
-| `__namedParameters` | `ObjectArrayFormulaDef`<`ParamDefsT`, `ResultT`\> |
+| `__namedParameters` | [`ObjectArrayFormulaDef`](../interfaces/ObjectArrayFormulaDef.md)<`ParamDefsT`, `ResultT`\> |
 
 #### Returns
 
@@ -49,4 +49,4 @@ makeTranslateObjectFormula({
 
 #### Defined in
 
-[api.ts:1438](https://github.com/coda/packs-sdk/blob/main/api.ts#L1438)
+[api.ts:1472](https://github.com/coda/packs-sdk/blob/main/api.ts#L1472)

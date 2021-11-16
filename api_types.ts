@@ -379,8 +379,8 @@ export interface Network {
   readonly connection?: NetworkConnection;
 }
 
-// Fetcher APIs
-const ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE'] as const;
+/** The HTTP methods (verbs) supported by the fetcher. */
+export const ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE'] as const;
 /** The type of the HTTP methods (verbs) supported by the fetcher. */
 export type FetchMethodType = typeof ValidFetchMethods[number];
 

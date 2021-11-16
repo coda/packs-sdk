@@ -15,7 +15,7 @@ sync formula invocation. The only different is that the presence of the `sync` p
 
 • `Optional` `Readonly` **endpoint**: `string`
 
-The base endpoint URL for the user's account, only if applicable. See [requiresEndpointUrl](CodaApiBearerTokenAuthentication.md#requiresendpointurl).
+The base endpoint URL for the user's account, only if applicable. See [requiresEndpointUrl](AWSAccessKeyAuthentication.md#requiresendpointurl).
 
 If the API URLs are variable based on the user account, you will need this endpoint
 to construct URLs to use with the fetcher. Alternatively, you can use relative URLs
@@ -85,7 +85,7 @@ ___
 
 ### sync
 
-• `Readonly` **sync**: `Sync`
+• `Readonly` **sync**: [`Sync`](Sync.md)
 
 Information about state of the current sync.
 

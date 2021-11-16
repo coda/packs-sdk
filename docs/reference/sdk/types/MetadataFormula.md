@@ -1,6 +1,6 @@
 # Type alias: MetadataFormula
 
-Ƭ **MetadataFormula**: `BaseFormula`<[[`ParamDef`](../interfaces/ParamDef.md)<[`string`](../enums/Type.md#string)\>, [`ParamDef`](../interfaces/ParamDef.md)<[`string`](../enums/Type.md#string)\>], `any`\> & { `schema?`: `any`  }
+Ƭ **MetadataFormula**: [`BaseFormula`](BaseFormula.md)<[[`ParamDef`](../interfaces/ParamDef.md)<[`string`](../enums/Type.md#string)\>, [`ParamDef`](../interfaces/ParamDef.md)<[`string`](../enums/Type.md#string)\>], `any`\> & { `schema?`: `any`  }
 
 A formula that returns metadata relating to a core pack building block, like a sync table,
 a formula parameter, or a user account. Examples include {@link getSchema}, {@link getConnectionName},
@@ -32,4 +32,4 @@ current value.
 
 #### Defined in
 
-[api.ts:907](https://github.com/coda/packs-sdk/blob/main/api.ts#L907)
+[api.ts:933](https://github.com/coda/packs-sdk/blob/main/api.ts#L933)

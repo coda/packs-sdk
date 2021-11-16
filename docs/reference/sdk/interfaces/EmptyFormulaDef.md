@@ -2,7 +2,10 @@
 
 Inputs to define an "empty" formula, that is, a formula that uses a {@link RequestHandlerTemplate}
 to define an implementation for the formula rather than implementing an actual `execute` function
-in JavaScript.
+in JavaScript. An empty formula returns a string. To return a list of objects, see
+[ObjectArrayFormulaDef](ObjectArrayFormulaDef.md).
+
+This type is generally not used directly, but describes the inputs to [makeEmptyFormula](../functions/makeEmptyFormula.md).
 
 ## Type parameters
 
@@ -206,11 +209,11 @@ ___
 
 • **request**: `RequestHandlerTemplate`
 
-A definition of the request and any transformations to make in order to implement this formula.
+A definition of the request and any parameter transformations to make in order to implement this formula.
 
 #### Defined in
 
-[api.ts:443](https://github.com/coda/packs-sdk/blob/main/api.ts#L443)
+[api.ts:458](https://github.com/coda/packs-sdk/blob/main/api.ts#L458)
 
 ___
 

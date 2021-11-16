@@ -15,6 +15,7 @@ export {PackDefinitionBuilder} from './builder';
 export type {AWSAccessKeyAuthentication} from './types';
 export type {AWSAssumeRoleAuthentication} from './types';
 export type {CodaApiBearerTokenAuthentication} from './types';
+export type {CustomAuthParameter} from './types';
 export type {CustomAuthentication} from './types';
 export type {CustomHeaderTokenAuthentication} from './types';
 export type {HeaderBearerTokenAuthentication} from './types';
@@ -74,6 +75,7 @@ export type {PackFormulaResult} from './api_types';
 export type {ParamDef} from './api_types';
 export type {ParamDefs} from './api_types';
 export type {ParamValues} from './api_types';
+export type {ParameterOptions} from './api';
 export {ParameterType} from './api_types';
 export type {ParamsList} from './api_types';
 export {PrecannedDateRange} from './api_types';
@@ -151,3 +153,25 @@ export {makeAttributionNode} from './schema';
 export {makeObjectSchema} from './schema';
 export {makeReferenceSchemaFromObjectSchema} from './schema';
 export {makeSchema} from './schema';
+
+// Exports for intermediate entities we want included in the TypeDoc documentation
+// but otherwise wouldn't care about including as top-level exports of the SDK
+
+export {ValidFetchMethods} from './api_types';
+
+export {BaseFormula} from './api';
+export {BooleanPackFormula} from './api';
+export {NumericPackFormula} from './api';
+export {ObjectPackFormula} from './api';
+export {StringPackFormula} from './api';
+
+export {DynamicSyncTableOptions} from './api';
+export {MetadataFormulaDef} from './api';
+export {ObjectArrayFormulaDef} from './api';
+export {SyncFormula} from './api';
+export {SyncFormulaDef} from './api';
+export {SyncTable} from './api';
+
+export {SetEndpoint} from './types';
+export {Sync} from './api_types';
+export {SystemAuthenticationDef} from './types';
