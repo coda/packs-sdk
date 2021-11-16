@@ -2612,17 +2612,22 @@ export interface CustomAuthParameter {
  *
  * @example
  * ```
+ * {% raw %}
  * // Suppose you're using an API that requires a secret id in the request URL,
- * // and a different secret value in the request body. You can define a Custom authentication
- * // configuration with two params:
+ * // and a different secret value in the request body. You can define a Custom
+ * // authentication configuration with two params:
  * // params: [{name: 'secretId', description: 'Secret id'},
  * //          {name: 'secretValue', description: 'Secret value'}])
- * // The user or the pack author will be prompted to specify a value for each of these when setting up an account.
- * // In the `execute` body of your formula, you can specify where those values are inserted in the request using
- * // the template replacement syntax shown above.
+ * // The user or the pack author will be prompted to specify a value for each
+ * // of these when setting up an account.
+ * // In the `execute` body of your formula, you can specify where those values
+ * // are inserted in the request using the template replacement syntax shown
+ * // above.
  * //
- * // A real-world example of an API that would require this is the Plaid API (https://plaid.com/docs/api/products/#auth)
- * // See the use of `secret`, `client_id`, and `access_token` parameters in the body.
+ * // A real-world example of an API that would require this is the Plaid API
+ * // (https://plaid.com/docs/api/products/#auth).
+ * // See the use of `secret`, `client_id`, and `access_token` parameters in the
+ * // body.
  * execute: async function([], context) {
  *   let secretIdTemplateName = "secretId-" + context.invocationToken;
  *   let urlWithSecret = "/api/entities/{{" + secretIdTemplateName + "}}"
@@ -2633,9 +2638,14 @@ export interface CustomAuthParameter {
  *     otherBodyParam: "foo",
  *   });
  *
- *   let response = await context.fetcher.fetch({method: "GET", url: urlWithSecret, body: bodyWithSecret});
- *   ...
+ *   let response = await context.fetcher.fetch({
+ *     method: "GET",
+ *     url: urlWithSecret,
+ *     body: bodyWithSecret
+ *   });
+ *   // ...
  * }
+ * {% endraw %}
  * ```
  */
 export interface CustomAuthentication extends BaseAuthentication {
