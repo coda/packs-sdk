@@ -303,7 +303,7 @@ try {
 
 ## Authentication
 
-The authentication you configure for your Pack is automatically applied to fetcher requests, with no extra code needed. For example, if you have setup `HeaderBearer` authentication, an `Authorization` header with the user's token will be automatically added to your fetcher requests. This is only done for formulas that use a connected account: those that have a `connectionRequirement` of `REQUIRED`, or `OPTIONAL` and the user opted to selected an account.
+The [authentication][authentication] you configure for your Pack is automatically applied to fetcher requests, with no extra code needed. For example, if you have setup `HeaderBearer` authentication, an `Authorization` header with the user's token will be automatically added to your fetcher requests. This is only done for formulas that use a connected account: those that have a `connectionRequirement` of `REQUIRED`, or `OPTIONAL` and the user opted to selected an account.
 
 To disable this behavior for a specific request within a formula, set the `fetch` option `disableAuthentication: true`.
 
@@ -318,6 +318,19 @@ let response = await context.fetcher.fetch({
 ## Caching
 
 For performance reasons the Packs runtime caches the HTTP responses of fetcher requests, meaning that your code may not always be getting the latest response from the server. You can adjust this behavior by setting the [`cacheTtlSecs`][cacheTtlSecs] field in the fetch request, which specifies for how many seconds the response should be cached. To disable caching for a request set that value to zero.
+
+!!! info
+    In addition to caching fetcher responses, Coda also caches the results of [formula executions][formula_cache]. To get truly fresh results you may need to disable that caching as well.
+
+
+## Rate limits
+
+Making a request to an external API can be expensive, either due to quotas, computing resources, or monetary cost. To help prevent your code from making too many expensive API calls you can set up rate limits for your Pack. To configure these, open the Pack editor and click on **Settings** > **Add rate limits**.
+
+<img src="../../../images/rate_limits.png" srcset="../../../images/rate_limits_2x.png 2x" class="screenshot" alt="Rate limit dialog.">
+
+You can set a total rate limit across all users of your Pack, or if your Pack uses [authentication][authentication] you can also set a per-user rate limit. When the limit is reached your formula will pause for a bit to see if more quota becomes available, and if not eventually fail with an error.
+
 
 
 [addNetworkDomain]: ../../reference/sdk/classes/PackDefinitionBuilder.md#addnetworkdomain
@@ -334,3 +347,5 @@ For performance reasons the Packs runtime caches the HTTP responses of fetcher r
 [withQueryParams]: ../../reference/sdk/functions/withQueryParams
 [stringify]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
 [cacheTtlSecs]: ../../reference/sdk/interfaces/FetchRequest.md#cacheTtlSecs
+[formula_cache]: ../blocks/formulas.md#caching
+[authentication]: ../advanced/authentication.md
