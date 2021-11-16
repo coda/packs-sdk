@@ -37,7 +37,7 @@ All formulas must return a result, which is a single value matching the type spe
 
 ## Authentication
 
-Formulas can use authentication to fetch private data. When using [system authentication][system_auth] there is no change to the user experience, but when you use [user authentication][user_auth] the formula editor will be automatically updated to prompt for a connected account. The connected account will appear as the first parameter of the formula, but it's value is not passed to your formula's `execute` method.
+Formulas can use [authentication][authentication] to fetch private data. When using [system authentication][system_auth] there is no change to the user experience, but when you use [user authentication][user_auth] the formula editor will be automatically updated to prompt for a connected account. The connected account will appear as the first parameter of the formula, but it's value is not passed to your formula's `execute` method.
 
 === "Formula editor"
     <img src="../../../images/formula_account.png" srcset="../../../images/formula_account_2x.png 2x" class="screenshot" alt="Account parameter in formula editor">
