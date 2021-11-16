@@ -18,17 +18,22 @@ token is required for security reasons.
 
 **`example`**
 ```
+{% raw %}
 // Suppose you're using an API that requires a secret id in the request URL,
-// and a different secret value in the request body. You can define a Custom authentication
-// configuration with two params:
+// and a different secret value in the request body. You can define a Custom
+// authentication configuration with two params:
 // params: [{name: 'secretId', description: 'Secret id'},
 //          {name: 'secretValue', description: 'Secret value'}])
-// The user or the pack author will be prompted to specify a value for each of these when setting up an account.
-// In the `execute` body of your formula, you can specify where those values are inserted in the request using
-// the template replacement syntax shown above.
+// The user or the pack author will be prompted to specify a value for each
+// of these when setting up an account.
+// In the `execute` body of your formula, you can specify where those values
+// are inserted in the request using the template replacement syntax shown
+// above.
 //
-// A real-world example of an API that would require this is the Plaid API (https://plaid.com/docs/api/products/#auth)
-// See the use of `secret`, `client_id`, and `access_token` parameters in the body.
+// A real-world example of an API that would require this is the Plaid API
+// (https://plaid.com/docs/api/products/#auth).
+// See the use of `secret`, `client_id`, and `access_token` parameters in the
+// body.
 execute: async function([], context) {
   let secretIdTemplateName = "secretId-" + context.invocationToken;
   let urlWithSecret = "/api/entities/{{" + secretIdTemplateName + "}}"
@@ -39,9 +44,14 @@ execute: async function([], context) {
     otherBodyParam: "foo",
   });
 
-  let response = await context.fetcher.fetch({method: "GET", url: urlWithSecret, body: bodyWithSecret});
-  ...
+  let response = await context.fetcher.fetch({
+    method: "GET",
+    url: urlWithSecret,
+    body: bodyWithSecret
+  });
+  // ...
 }
+{% endraw %}
 ```
 
 ## Hierarchy
@@ -138,7 +148,7 @@ replacement inside the constructed network request.
 
 #### Defined in
 
-[types.ts:525](https://github.com/coda/packs-sdk/blob/main/types.ts#L525)
+[types.ts:535](https://github.com/coda/packs-sdk/blob/main/types.ts#L535)
 
 ___
 
@@ -186,4 +196,4 @@ Identifies this as Custom authentication.
 
 #### Defined in
 
-[types.ts:519](https://github.com/coda/packs-sdk/blob/main/types.ts#L519)
+[types.ts:529](https://github.com/coda/packs-sdk/blob/main/types.ts#L529)
