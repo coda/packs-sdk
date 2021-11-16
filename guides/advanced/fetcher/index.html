@@ -875,6 +875,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#rate-limits" class="md-nav__link">
+    Rate limits
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3537,6 +3544,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#rate-limits" class="md-nav__link">
+    Rate limits
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3789,7 +3803,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
-<p>The authentication you configure for your Pack is automatically applied to fetcher requests, with no extra code needed. For example, if you have setup <code>HeaderBearer</code> authentication, an <code>Authorization</code> header with the user's token will be automatically added to your fetcher requests. This is only done for formulas that use a connected account: those that have a <code>connectionRequirement</code> of <code>REQUIRED</code>, or <code>OPTIONAL</code> and the user opted to selected an account.</p>
+<p>The <a href="../authentication/">authentication</a> you configure for your Pack is automatically applied to fetcher requests, with no extra code needed. For example, if you have set up <code>HeaderBearer</code> authentication, an <code>Authorization</code> header with the user's token will be automatically added to your fetcher requests. This is only done for formulas that use a connected account: those that have a <code>connectionRequirement</code> of <code>REQUIRED</code>, or <code>OPTIONAL</code> and the user opted to selected an account.</p>
 <p>To disable this behavior for a specific request within a formula, set the <code>fetch</code> option <code>disableAuthentication: true</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
   <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
@@ -3799,6 +3813,14 @@
 </code></pre></div>
 <h2 id="caching">Caching<a class="headerlink" href="#caching" title="Permanent link">&para;</a></h2>
 <p>For performance reasons the Packs runtime caches the HTTP responses of fetcher requests, meaning that your code may not always be getting the latest response from the server. You can adjust this behavior by setting the <a href="../../../reference/sdk/interfaces/FetchRequest/#cacheTtlSecs"><code>cacheTtlSecs</code></a> field in the fetch request, which specifies for how many seconds the response should be cached. To disable caching for a request set that value to zero.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>In addition to caching fetcher responses, Coda also caches the results of <a href="../../blocks/formulas/#caching">formula executions</a>. To get truly fresh results you may need to disable that caching as well.</p>
+</div>
+<h2 id="rate-limits">Rate limits<a class="headerlink" href="#rate-limits" title="Permanent link">&para;</a></h2>
+<p>Making a request to an external API can be expensive, either due to quotas, computing resources, or monetary cost. To help prevent your code from making too many expensive API calls you can set up rate limits for your Pack. To configure these, open the Pack editor and click on <strong>Settings</strong> &gt; <strong>Add rate limits</strong>.</p>
+<p><img src="../../../images/rate_limits.png" srcset="../../../images/rate_limits_2x.png 2x" class="screenshot" alt="Rate limit dialog."></p>
+<p>You can set a total rate limit across all users of your Pack, or if your Pack uses <a href="../authentication/">authentication</a> you can also set a per-user rate limit. When the limit is reached your formula will pause for a bit to see if more quota becomes available, and if not eventually fail with an error.</p>
                 
               
               

@@ -565,6 +565,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    Authentication
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#caching" class="md-nav__link">
     Caching
   </a>
@@ -3334,6 +3341,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    Authentication
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#caching" class="md-nav__link">
     Caching
   </a>
@@ -3367,20 +3381,63 @@
                 <h1 id="add-custom-formulas">Add custom formulas<a class="headerlink" href="#add-custom-formulas" title="Permanent link">&para;</a></h1>
 <p>Formulas are one of the most basic building blocks in Coda; used to calculate values, filter tables, and so much more. Coda provides a wide array of <a href="https://coda.io/formulas">built-in formulas</a>, and using Packs you can add your own custom formulas. Once your Pack is installed in a doc you can use those custom formulas anywhere, intermingling them with built-in formulas or those from other Packs.</p>
 <p><a class="md-button" href="../../../samples/topic/formula/">View Sample Code</a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Actions are created using formulas annotated with <code>isAction: true</code>. Action formulas are very similar to calculation formulas, but differ in some important ways. To learn more about these differences see the <a href="../actions/">Actions guide</a>.</p>
+</div>
 <h2 id="structure-of-a-formula">Structure of a formula<a class="headerlink" href="#structure-of-a-formula" title="Permanent link">&para;</a></h2>
-<p>TODO</p>
+<p>A formula definition consists of a set of key-value pairs, which specify the various settings for the formula. Most of these settings are metadata, such as the name, description, parameters and result type. The actual code that is run each time the formula recalculated is specified using in the <code>execute</code> key.</p>
+<p><img src="../../../images/formula_structure.png" srcset="../../../images/formula_structure_2x.png 2x" class="screenshot" alt="Mapping of formula coda to formula editor."></p>
 <h2 id="naming">Naming<a class="headerlink" href="#naming" title="Permanent link">&para;</a></h2>
-<p>The name of a formula can only contain the letters, numbers, and underscores. This restriction exists to ensure that custom formulas are compatible with the Coda Formula Language. By convention formula names are written in upper camel case, like <code>DoSomethingCool</code>.</p>
+<p>The name of a formula can only contain letters, numbers, and underscores. This restriction exists to ensure that custom formulas are compatible with the Coda Formula Language. By convention formula names are written in upper camel case, like <code>DoSomethingCool</code>.</p>
 <p>Formula names must be unique within a Pack, but can be the same as built-in formulas or those in other Packs. When a doc has access to multiple formulas with the same name the Pack's icon is used to distinguish them.</p>
 <p><img src="../../../images/formula_disambiguation.png" srcset="../../../images/formula_disambiguation_2x.png 2x" class="screenshot" alt="Icons used to disambiguate formulas"></p>
 <h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
 <p>Formulas can accept parameters, which is the primary way for them to access data from the document. See the <a href="../../basics/parameters/">Parameters guide</a> for more information and examples.</p>
 <h2 id="results">Results<a class="headerlink" href="#results" title="Permanent link">&para;</a></h2>
-<p>TODO</p>
+<p>All formulas must return a result, which is a single value matching the type specified in the <code>resultType</code> property of the formula definition. See the <a href="../../basics/data-types/">Data types guide</a> for more information on the type of values that can be returned.</p>
+<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
+<p>Formulas can use <a href="../../advanced/authentication/">authentication</a> to fetch private data. When using <a href="../../../reference/sdk/classes/PackDefinitionBuilder/#setsystemauthentication">system authentication</a> there is no change to the user experience, but when you use <a href="../../../reference/sdk/classes/PackDefinitionBuilder/#setuserauthentication">user authentication</a> the formula editor will be automatically updated to prompt for a connected account. The connected account will appear as the first parameter of the formula, but its value is not passed to your formula's <code>execute</code> method.</p>
+<div class="tabbed-set" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">Formula editor</label><div class="tabbed-content">
+<p><img src="../../../images/formula_account.png" srcset="../../../images/formula_account_2x.png 2x" class="screenshot" alt="Account parameter in formula editor"></p>
+</div>
+<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">Code</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="nx">pack</span><span class="p">.</span><span class="nx">setUserAuthentication</span><span class="p">({</span>
+  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">AuthenticationType</span><span class="p">.</span><span class="nx">HeaderBearerToken</span><span class="p">,</span>
+  <span class="nx">instructionsUrl</span><span class="o">:</span> <span class="s2">&quot;https://todoist.com/app/settings/integrations&quot;</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addFormula</span><span class="p">({</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;GetTask&quot;</span><span class="p">,</span>
+  <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Gets a Todoist task by URL&quot;</span><span class="p">,</span>
+  <span class="nx">parameters</span><span class="o">:</span> <span class="p">[</span>
+    <span class="nx">coda</span><span class="p">.</span><span class="nx">makeParameter</span><span class="p">({</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ParameterType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;url&quot;</span><span class="p">,</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The URL of the task&quot;</span><span class="p">,</span>
+    <span class="p">}),</span>
+  <span class="p">],</span>
+  <span class="c1">// ...</span>
+  <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">url</span><span class="p">],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+</code></pre></div>
+</div>
+</div>
+<p>By default if a Pack defines an authentication method then all formulas will require a connected account. You can change this behavior using the <a href="../../../reference/sdk/interfaces/PackFormulaDef/#connectionrequirement"><code>connectionRequirement</code></a> property of the formula definition. Setting it to <code>Optional</code> makes the user account optional, and <code>None</code> removes the account parameter completely.</p>
+<p>While it's possible to use multiple accounts within a document, each instance of the formula must use a specific account. It isn't possible to have a formula that uses the account of whichever user is currently viewing the document. It's important for collaboration that all users in a Coda doc have access to the same data.</p>
 <h2 id="caching">Caching<a class="headerlink" href="#caching" title="Permanent link">&para;</a></h2>
-<p>TODO</p>
+<p>For performance reasons all formula results are cached by default. If your formula is called again with the same parameters, Coda will attempt to load the result from the cache instead of re-running your code. Building or releasing a new version of your Pack will invalidate this cache, ensuring you get fresh results using your new code.</p>
+<p>You can adjust the caching behavior by setting the <a href="../../../reference/sdk/interfaces/PackFormulaDef/#cachettlsecs"><code>cacheTtlSecs</code></a> field on the formula definition, which specifies for how many seconds the result should be cached. To disable caching for a formula set <code>cacheTtlSecs</code> to zero.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>In addition to caching formula results, Coda also caches the <a href="../../advanced/fetcher/#caching">fetcher responses</a>. To get truly fresh results you may need to disable that caching as well.</p>
+</div>
 <h2 id="recalculation">Recalculation<a class="headerlink" href="#recalculation" title="Permanent link">&para;</a></h2>
-<p>TODO</p>
+<p>Coda has complex logic that determines when formula results need to be recalculated. Formulas will always recalculate when the parameter values change, but it will also happen periodically for other reasons including routine maintenance. In general you shouldn't make any assumptions about how often your formula will be run. If running your formula is expensive in some way (API cost, etc) make sure to use <a href="#caching">caching</a> and <a href="../../advanced/fetcher/#ratelimits">rate limits</a> to limit the impact of recalculation.</p>
+<p>Building or releasing a new version of your Pack doesn't automatically cause existing formulas to recalculate, so users may still see old results for a while. In the <strong>Settings</strong> tab of the Pack's side panel there is a "Refresh now" button (<strong>⟳</strong>) that allows users to recalculate all formulas using the Pack. Pack makers also have access to the <strong>Auto-refresh when version changes</strong> toggle, which will do this automatically for the current window for each new Pack version.</p>
+<p><img src="../../../images/settings_recalc.png" srcset="../../../images/settings_recalc_2x.png 2x" class="screenshot" alt="Recalculation settings in the Pack side panel"></p>
                 
                   
                 

@@ -3448,28 +3448,36 @@ secret invocation-specific token provided within the <a href="../ExecutionContex
 token is required for security reasons.</p>
 <p><strong><code>example</code></strong>
 <div class="highlight"><pre><span></span><code>// Suppose you&#39;re using an API that requires a secret id in the request URL,
-// and a different secret value in the request body. You can define a Custom authentication
-// configuration with two params:
+// and a different secret value in the request body. You can define a Custom
+// authentication configuration with two params:
 // params: [{name: &#39;secretId&#39;, description: &#39;Secret id&#39;},
 //          {name: &#39;secretValue&#39;, description: &#39;Secret value&#39;}])
-// The user or the pack author will be prompted to specify a value for each of these when setting up an account.
-// In the `execute` body of your formula, you can specify where those values are inserted in the request using
-// the template replacement syntax shown above.
+// The user or the pack author will be prompted to specify a value for each
+// of these when setting up an account.
+// In the `execute` body of your formula, you can specify where those values
+// are inserted in the request using the template replacement syntax shown
+// above.
 //
-// A real-world example of an API that would require this is the Plaid API (https://plaid.com/docs/api/products/#auth)
-// See the use of `secret`, `client_id`, and `access_token` parameters in the body.
+// A real-world example of an API that would require this is the Plaid API
+// (https://plaid.com/docs/api/products/#auth).
+// See the use of `secret`, `client_id`, and `access_token` parameters in the
+// body.
 execute: async function([], context) {
   let secretIdTemplateName = &quot;secretId-&quot; + context.invocationToken;
-  let urlWithSecret = &quot;/api/entities/ + secretIdTemplateName + &quot;
+  let urlWithSecret = &quot;/api/entities/{{&quot; + secretIdTemplateName + &quot;}}&quot;
 
   let secretValueTemplateName = &quot;secretValue-&quot; + context.invocationToken;
   let bodyWithSecret = JSON.stringify({
-    key: &quot; + secretValueTemplateName + &quot;,
+    key: &quot;{{&quot; + secretValueTemplateName + &quot;}}&quot;,
     otherBodyParam: &quot;foo&quot;,
   });
 
-  let response = await context.fetcher.fetch({method: &quot;GET&quot;, url: urlWithSecret, body: bodyWithSecret});
-  ...
+  let response = await context.fetcher.fetch({
+    method: &quot;GET&quot;,
+    url: urlWithSecret,
+    body: bodyWithSecret
+  });
+  // ...
 }
 </code></pre></div></p>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">&para;</a></h2>
@@ -3526,7 +3534,7 @@ with the creating user's Coda username.</p>
 These parameters can then be referenced via the {@link CustomAuthParameter.name} property for template
 replacement inside the constructed network request.</p>
 <h4 id="defined-in_4">Defined in<a class="headerlink" href="#defined-in_4" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L525">types.ts:525</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L535">types.ts:535</a></p>
 <hr />
 <h3 id="postsetup">postSetup<a class="headerlink" href="#postsetup" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>postSetup</strong>: <code>SetEndpoint</code>[]</p>
@@ -3552,7 +3560,7 @@ when creating a new account.</p>
 <p>• <strong>type</strong>: <a href="../../enums/AuthenticationType/#custom"><code>Custom</code></a></p>
 <p>Identifies this as Custom authentication.</p>
 <h4 id="defined-in_7">Defined in<a class="headerlink" href="#defined-in_7" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L519">types.ts:519</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L529">types.ts:529</a></p>
                 
               
               
