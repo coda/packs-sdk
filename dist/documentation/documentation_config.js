@@ -235,6 +235,33 @@ exports.Examples = [
         ],
     },
     {
+        name: 'Actions',
+        category: types_1.ExampleCategory.Topic,
+        triggerTokens: ['isAction'],
+        contentFile: './examples/action/README.md',
+        linkData: {
+            type: types_2.UrlType.SdkReferencePath,
+            url: '/guides/blocks/actions',
+        },
+        exampleSnippets: [
+            {
+                name: 'Template',
+                content: 'The basic structure of an action. This sample takes in a single string parameter and returns the string "OK".',
+                codeFile: './snippets/formula/action_formula.ts',
+            },
+            {
+                name: 'Random value',
+                content: 'A formula that returns a random value. This sample rolls virtual dice and returns the results.',
+                codeFile: './examples/action/dice.ts',
+            },
+            {
+                name: 'Post to API',
+                content: 'A formula that posts data to an external API. This sample creates a new task in the Todoist app.',
+                codeFile: './examples/todoist/action.ts',
+            },
+        ],
+    },
+    {
         name: 'Parameters',
         category: types_1.ExampleCategory.Topic,
         triggerTokens: ['makeParameter'],

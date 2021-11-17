@@ -115,6 +115,37 @@
     ]
   },
   {
+    "name": "Actions",
+    "category": "Topic",
+    "triggerTokens": [
+      "isAction"
+    ],
+    "linkData": {
+      "type": "SdkReferencePath",
+      "url": "/guides/blocks/actions"
+    },
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/guides/blocks/actions",
+    "learnMoreLink": "/guides/blocks/actions",
+    "content": "Actions are special types of formulas that power buttons and automations. They usually send data to an external API, but can also be used for other one-time calculations.",
+    "exampleSnippets": [
+      {
+        "name": "Template",
+        "content": "The basic structure of an action. This sample takes in a single string parameter and returns the string \"OK\".",
+        "code": "pack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.String,\n  isAction: true,\n  execute: async function ([param], context) {\n    // TODO: Do something.\n    return \"OK\";\n  },\n});"
+      },
+      {
+        "name": "Random value",
+        "content": "A formula that returns a random value. This sample rolls virtual dice and returns the results.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Rolls virtual dice and returns the resulting numbers. Use it with a button in\n// table and store the results in another column.\npack.addFormula({\n  name: \"RollDice\",\n  description: \"Roll some virtual dice.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.Number,\n      name: \"quantity\",\n      description: \"How many dice to roll.\",\n      defaultValue: 1,\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.Number,\n      name: \"sides\",\n      description: \"How many sides the dice have.\",\n      defaultValue: 6,\n    }),\n  ],\n  resultType: coda.ValueType.Array,\n  items: {\n    type: coda.ValueType.Number,\n  },\n  isAction: true,\n  execute: async function ([quantity, sides], context) {\n    let results = [];\n    for (let i = 0; i < quantity; i++) {\n      let roll = Math.ceil(Math.random() * sides);\n      results.push(roll);\n    }\n    return results;\n  },\n});"
+      },
+      {
+        "name": "Post to API",
+        "content": "A formula that posts data to an external API. This sample creates a new task in the Todoist app.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Action formula (for buttons and automations) that adds a new task in Todoist.\npack.addFormula({\n  name: \"AddTask\",\n  description: \"Add a new task.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"name\",\n      description: \"The name of the task.\",\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  isAction: true,\n\n  execute: async function ([name], context) {\n    let response = await context.fetcher.fetch({\n      url: \"https://api.todoist.com/rest/v1/tasks\",\n      method: \"POST\",\n      headers: {\n        \"Content-Type\": \"application/json\",\n      },\n      body: JSON.stringify({\n        content: name,\n      }),\n    });\n    // Return values are optional but recommended. Returning a URL or other\n    // unique identifier is recommended when creating a new entity.\n    return response.body.url;\n  },\n});\n\n// Allow the pack to make requests to Todoist.\npack.addNetworkDomain(\"todoist.com\");\n\n// Setup authentication using a Todoist API token.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n  instructionsUrl: \"https://todoist.com/app/settings/integrations\",\n});"
+      }
+    ]
+  },
+  {
     "name": "Parameters",
     "category": "Topic",
     "triggerTokens": [
