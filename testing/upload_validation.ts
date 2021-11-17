@@ -800,7 +800,7 @@ const formulaMetadataSchema = z
 
 const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   name: z.string(),
-  formulaNamespace: z.string(), // Will be removed once we deprecate namespace objects.
+  formulaNamespace: z.string().optional(), // Will be removed once we deprecate namespace objects.
   formulaName: z.string(),
   hasNoConnection: z.boolean().optional(),
   instructions: z.string().optional(),

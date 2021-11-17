@@ -608,7 +608,7 @@ export interface Format {
      */
     name: string;
     /** @deprecated Namespaces are being removed from the product. */
-    formulaNamespace: string;
+    formulaNamespace?: string;
     /**
      * The name of the formula to invoke for values in columns using this format.
      * This must correspond to the name of a regular, public formula defined in this pack.
