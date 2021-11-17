@@ -35,11 +35,17 @@ interface ReflectionData {
 
 function getReflectionData() {
   const tempfile = path.join(os.tmpdir(), `typedoc.json`);
-  const command = `node_modules/.bin/typedoc index.ts --options typedoc.js --json ${tempfile} > /dev/null 2>&1`;
-  spawnSync(command, {
+  const command = `node_modules/.bin/typedoc index.ts --options typedoc.js --json ${tempfile} > /dev/null`;
+  const response = spawnSync(command, {
     shell: true,
-    stdio: 'inherit',
   });
+  // Ideally we would just use TypeDoc's --treatWarningsAsErrors flag, but it appears not to be working.
+  const stdErr = response.stderr.toString();
+  if (stdErr) {
+    throw new Error(
+      `Treating warnings as errors. Some references entities are likely not included in the documentation\n` + stdErr,
+    );
+  }
   return JSON.parse(fs.readFileSync(tempfile, 'utf-8'));
 }
 
