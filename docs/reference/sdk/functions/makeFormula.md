@@ -67,7 +67,7 @@ makeFormula({
 
 | Name | Type |
 | :------ | :------ |
-| `fullDefinition` | `FormulaDefinitionV2`<`ParamDefsT`, `ResultT`, `SchemaT`\> |
+| `fullDefinition` | [`FormulaDefinition`](../types/FormulaDefinition.md)<`ParamDefsT`, `ResultT`, `SchemaT`\> |
 
 #### Returns
 
@@ -75,4 +75,4 @@ makeFormula({
 
 #### Defined in
 
-[api.ts:686](https://github.com/coda/packs-sdk/blob/main/api.ts#L686)
+[api.ts:691](https://github.com/coda/packs-sdk/blob/main/api.ts#L691)

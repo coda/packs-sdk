@@ -21,4 +21,4 @@ schema it provides better code reuse to derive a reference schema instead.
 
 #### Defined in
 
-[schema.ts:1032](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1032)
+[schema.ts:1090](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1090)

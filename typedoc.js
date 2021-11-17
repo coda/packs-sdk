@@ -16,26 +16,23 @@ module.exports = {
 
   intentionallyNotExported: [
     // TODO(jonathan): Export and document these.
-    'AttributionNode',
-    'FormulaDefinitionV2',
     'FormulaResultValueType',
-    'GenericObjectSchema',
-    'InvocationLocation',
-    'MetadataFunction',
-    'ObjectSchema',
-    'ObjectSchemaDefinitionType',
-    'ObjectSchemaType',
     'RequestHandlerTemplate',
     'ResponseHandlerTemplate',
-    'StatusCodeErrorResponse',
-    'ValidTypes',
 
     // Internal intermediate or helper types that we probably don't care to export or document.
     '$Values',
     'AsAuthDef',
+    'GenericObjectSchema',
+    'NumberHintValueTypes',
+    'ObjectHintValueTypes',
+    'ObjectSchema',
+    'ObjectSchemaDefinitionType',
+    'ObjectSchemaType',
     'ParameterTypeMap',
     'SimpleStringHintTypes',
     'StringHintTypeToSchemaType',
+    'StringHintValueTypes',
     'TypeMap',
     'TypeOf',
     'TypeOfMap',

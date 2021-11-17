@@ -15,6 +15,8 @@ Base type for the inputs for creating a pack formula.
 
   ↳ **`PackFormulaDef`**
 
+  ↳↳ [`BaseFormulaDef`](BaseFormulaDef.md)
+
 ## Properties
 
 ### cacheTtlSecs
@@ -237,4 +239,4 @@ The JavaScript function that implements this formula
 
 #### Defined in
 
-[api.ts:415](https://github.com/coda/packs-sdk/blob/main/api.ts#L415)
+[api.ts:420](https://github.com/coda/packs-sdk/blob/main/api.ts#L420)

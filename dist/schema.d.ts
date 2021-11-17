@@ -146,8 +146,11 @@ export declare enum ValueHintType {
 export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url];
 export declare const NumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Percent, ValueHintType.Currency, ValueHintType.Slider, ValueHintType.Scale];
 export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference];
+/**  The subset of {@link ValueHintType} that can be used with a string value. */
 export declare type StringHintTypes = typeof StringHintValueTypes[number];
+/**  The subset of {@link ValueHintType} that can be used with a number value. */
 export declare type NumberHintTypes = typeof NumberHintValueTypes[number];
+/**  The subset of {@link ValueHintType} that can be used with an object value. */
 export declare type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 interface BaseSchema {
     /**
@@ -629,21 +632,75 @@ export declare enum AttributionNodeType {
      */
     Image = 3
 }
-interface TextAttributionNode {
+/**
+ * An attribution node that simply renders some text.
+ *
+ * This might be used to attribute the data source.
+ *
+ * @example
+ * ```
+ * coda.makeAttributionNode({
+ *   type: coda.AttributionNodeType.Text,
+ *   text: "Data provided by FooCorp.",
+ * });
+ * ```
+ */
+export interface TextAttributionNode {
+    /** Identifies this as a text attribution node. */
     type: AttributionNodeType.Text;
+    /** The text to render with the pack value. */
     text: string;
 }
-interface LinkAttributionNode {
+/**
+ * An attribution node that renders a hyperlink.
+ *
+ * This might be used to attribute the data source and link back to the home page
+ * of the data source or directly to the source data.
+ *
+ * @example
+ * ```
+ * coda.makeAttributionNode({
+ *   type: coda.AttributionNodeType.Link,
+ *   anchorUrl: "https://foocorp.com",
+ *   anchorText: "Data provided by FooCorp.",
+ * });
+ * ```
+ */
+export interface LinkAttributionNode {
+    /** Identifies this as a link attribution node. */
     type: AttributionNodeType.Link;
+    /** The URL to link to. */
     anchorUrl: string;
+    /** The text of the hyperlink. */
     anchorText: string;
 }
-interface ImageAttributionNode {
+/**
+ * An attribution node that renders as a hyperlinked image.
+ *
+ * This is often the logo of the data source along with a link back to the home page
+ * of the data source or directly to the source data.
+ *
+ * @example
+ * ```
+ * coda.makeAttributionNode({
+ *   type: coda.AttributionNodeType.Image,
+ *   anchorUrl: "https://foocorp.com",
+ *   imageUrl: "https://foocorp.com/assets/logo.png",
+ * });
+ * ```
+ */
+export interface ImageAttributionNode {
+    /** Identifies this as an image attribution node. */
     type: AttributionNodeType.Image;
+    /** The URL to link to. */
     anchorUrl: string;
+    /** The URL of the image to render. */
     imageUrl: string;
 }
-declare type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
+/**
+ * Union of attribution node types for rendering attribution for a pack value. See {@link makeAttributionNode}.
+ */
+export declare type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
 /**
  * A helper for constructing attribution text, links, or images that render along with a Pack value.
  *
@@ -703,7 +760,8 @@ declare type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = Obje
  * to ensure that it matches the schema you have declared for that formula.
  */
 export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? StringHintTypeToSchemaType<T['codaType']> : T extends ArraySchema ? Array<SchemaType<T['items']>> : T extends GenericObjectSchema ? ObjectSchemaType<T> : never;
-export declare type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
+/** Primitive types for which {@link generateSchema} can infer a schema. */
+export declare type InferrableTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
 /**
  * Utility that examines a JavaScript value and attempts to infer a schema definition
  * that describes it.
@@ -717,7 +775,7 @@ export declare type ValidTypes = boolean | number | string | object | boolean[] 
  * This utility does NOT attempt to determine {@link id} or {@link primary} attributes for
  * an object schema, those are left undefined.
  */
-export declare function generateSchema(obj: ValidTypes): Schema;
+export declare function generateSchema(obj: InferrableTypes): Schema;
 /**
  * A wrapper for creating any schema definition.
  *

@@ -172,8 +172,11 @@ declare const ObjectHintValueTypes: readonly [
 	ValueHintType.Person,
 	ValueHintType.Reference
 ];
+/**  The subset of {@link ValueHintType} that can be used with a string value. */
 export declare type StringHintTypes = typeof StringHintValueTypes[number];
+/**  The subset of {@link ValueHintType} that can be used with a number value. */
 export declare type NumberHintTypes = typeof NumberHintValueTypes[number];
+/**  The subset of {@link ValueHintType} that can be used with an object value. */
 export declare type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 export interface BaseSchema {
 	/**
@@ -660,20 +663,74 @@ export declare enum AttributionNodeType {
 	 */
 	Image = 3
 }
+/**
+ * An attribution node that simply renders some text.
+ *
+ * This might be used to attribute the data source.
+ *
+ * @example
+ * ```
+ * coda.makeAttributionNode({
+ *   type: coda.AttributionNodeType.Text,
+ *   text: "Data provided by FooCorp.",
+ * });
+ * ```
+ */
 export interface TextAttributionNode {
+	/** Identifies this as a text attribution node. */
 	type: AttributionNodeType.Text;
+	/** The text to render with the pack value. */
 	text: string;
 }
+/**
+ * An attribution node that renders a hyperlink.
+ *
+ * This might be used to attribute the data source and link back to the home page
+ * of the data source or directly to the source data.
+ *
+ * @example
+ * ```
+ * coda.makeAttributionNode({
+ *   type: coda.AttributionNodeType.Link,
+ *   anchorUrl: "https://foocorp.com",
+ *   anchorText: "Data provided by FooCorp.",
+ * });
+ * ```
+ */
 export interface LinkAttributionNode {
+	/** Identifies this as a link attribution node. */
 	type: AttributionNodeType.Link;
+	/** The URL to link to. */
 	anchorUrl: string;
+	/** The text of the hyperlink. */
 	anchorText: string;
 }
+/**
+ * An attribution node that renders as a hyperlinked image.
+ *
+ * This is often the logo of the data source along with a link back to the home page
+ * of the data source or directly to the source data.
+ *
+ * @example
+ * ```
+ * coda.makeAttributionNode({
+ *   type: coda.AttributionNodeType.Image,
+ *   anchorUrl: "https://foocorp.com",
+ *   imageUrl: "https://foocorp.com/assets/logo.png",
+ * });
+ * ```
+ */
 export interface ImageAttributionNode {
+	/** Identifies this as an image attribution node. */
 	type: AttributionNodeType.Image;
+	/** The URL to link to. */
 	anchorUrl: string;
+	/** The URL of the image to render. */
 	imageUrl: string;
 }
+/**
+ * Union of attribution node types for rendering attribution for a pack value. See {@link makeAttributionNode}.
+ */
 export declare type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
 /**
  * A helper for constructing attribution text, links, or images that render along with a Pack value.
@@ -732,7 +789,8 @@ export declare type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>>
  * to ensure that it matches the schema you have declared for that formula.
  */
 export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? StringHintTypeToSchemaType<T["codaType"]> : T extends ArraySchema ? Array<SchemaType<T["items"]>> : T extends GenericObjectSchema ? ObjectSchemaType<T> : never;
-export declare type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
+/** Primitive types for which {@link generateSchema} can infer a schema. */
+export declare type InferrableTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
 /**
  * Utility that examines a JavaScript value and attempts to infer a schema definition
  * that describes it.
@@ -746,7 +804,7 @@ export declare type ValidTypes = boolean | number | string | object | boolean[] 
  * This utility does NOT attempt to determine {@link id} or {@link primary} attributes for
  * an object schema, those are left undefined.
  */
-export declare function generateSchema(obj: ValidTypes): Schema;
+export declare function generateSchema(obj: InferrableTypes): Schema;
 /**
  * A wrapper for creating any schema definition.
  *
@@ -1262,8 +1320,17 @@ export interface Sync {
 	 */
 	dynamicUrl?: string;
 }
+/**
+ * Information about the Coda environment and doc this formula was invoked from.
+ * This is mostly for Coda internal use and we do not recommend relying on it.
+ */
 export interface InvocationLocation {
+	/** The base URL of the Coda environment executing this formula. Only for Coda internal use. */
 	protocolAndHost: string;
+	/**
+	 * The ID of the Coda doc this formula was invoked from, if any.
+	 * This may be removed in a future version of the SDK so should not be relied upon.
+	 */
 	docId?: string;
 }
 /**
@@ -1412,8 +1479,13 @@ export declare class UserVisibleError extends Error {
 	 */
 	constructor(message?: string, internalError?: Error);
 }
+/**
+ * The raw HTTP response from a {@link StatusCodeError}.
+ */
 export interface StatusCodeErrorResponse {
+	/** The raw body of the HTTP error response. */
 	body?: any;
+	/** The headers from the HTTP error response. Many header values are redacted by Coda. */
 	headers?: {
 		[key: string]: string | string[] | undefined;
 	};
@@ -1736,11 +1808,24 @@ export declare type SyncFormula<K extends string, L extends string, ParamDefsT e
  * });
  * ```
  */
-export declare function makeFormula<ParamDefsT extends ParamDefs, ResultT extends FormulaResultValueType, SchemaT extends Schema = Schema>(fullDefinition: FormulaDefinitionV2<ParamDefsT, ResultT, SchemaT>): Formula<ParamDefsT, ResultT, SchemaT>;
-export interface BaseFormulaDefV2<ParamDefsT extends ParamDefs, ResultT extends string | number | boolean | object> extends PackFormulaDef<ParamDefsT, ResultT> {
+export declare function makeFormula<ParamDefsT extends ParamDefs, ResultT extends FormulaResultValueType, SchemaT extends Schema = Schema>(fullDefinition: FormulaDefinition<ParamDefsT, ResultT, SchemaT>): Formula<ParamDefsT, ResultT, SchemaT>;
+/**
+ * Base type for formula definitions accepted by {@link makeFormula}.
+ */
+export interface BaseFormulaDef<ParamDefsT extends ParamDefs, ResultT extends string | number | boolean | object> extends PackFormulaDef<ParamDefsT, ResultT> {
+	/**
+	 * If specified, will catch errors in the {@link execute} function and call this
+	 * function with the error, instead of letting them throw and the formula failing.
+	 *
+	 * This is helpful for writing common error handling into a singular helper function
+	 * that can then be applied to many different formulas in a pack.
+	 */
 	onError?(error: Error): any;
 }
-export declare type StringFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, string> & {
+/**
+ * A definition accepted by {@link makeFormula} for a formula that returns a string.
+ */
+export declare type StringFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<ParamDefsT, string> & {
 	resultType: ValueType.String;
 	execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<string> | string;
 } & ({
@@ -1748,7 +1833,10 @@ export declare type StringFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormu
 } | {
 	codaType?: StringHintTypes;
 });
-export declare type NumericFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, number> & {
+/**
+ * A definition accepted by {@link makeFormula} for a formula that returns a number.
+ */
+export declare type NumericFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<ParamDefsT, number> & {
 	resultType: ValueType.Number;
 	execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<number> | number;
 } & ({
@@ -1756,20 +1844,32 @@ export declare type NumericFormulaDefV2<ParamDefsT extends ParamDefs> = BaseForm
 } | {
 	codaType?: NumberHintTypes;
 });
-export declare type BooleanFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, boolean> & {
+/**
+ * A definition accepted by {@link makeFormula} for a formula that returns a boolean.
+ */
+export declare type BooleanFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<ParamDefsT, boolean> & {
 	resultType: ValueType.Boolean;
 	execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<boolean> | boolean;
 };
-export declare type ArrayFormulaDefV2<ParamDefsT extends ParamDefs, SchemaT extends Schema> = BaseFormulaDefV2<ParamDefsT, SchemaType<ArraySchema<SchemaT>>> & {
+/**
+ * A definition accepted by {@link makeFormula} for a formula that returns an array.
+ */
+export declare type ArrayFormulaDef<ParamDefsT extends ParamDefs, SchemaT extends Schema> = BaseFormulaDef<ParamDefsT, SchemaType<ArraySchema<SchemaT>>> & {
 	resultType: ValueType.Array;
 	items: SchemaT;
 };
-export declare type ObjectFormulaDefV2<ParamDefsT extends ParamDefs, SchemaT extends Schema> = BaseFormulaDefV2<ParamDefsT, SchemaType<SchemaT>> & {
+/**
+ * A definition accepted by {@link makeFormula} for a formula that returns an object.
+ */
+export declare type ObjectFormulaDef<ParamDefsT extends ParamDefs, SchemaT extends Schema> = BaseFormulaDef<ParamDefsT, SchemaType<SchemaT>> & {
 	resultType: ValueType.Object;
 	schema: SchemaT;
 };
 export declare type FormulaResultValueType = ValueType.String | ValueType.Number | ValueType.Boolean | ValueType.Array | ValueType.Object;
-export declare type FormulaDefinitionV2<ParamDefsT extends ParamDefs, ResultT extends FormulaResultValueType, SchemaT extends Schema> = ResultT extends ValueType.String ? StringFormulaDefV2<ParamDefsT> : ResultT extends ValueType.Number ? NumericFormulaDefV2<ParamDefsT> : ResultT extends ValueType.Boolean ? BooleanFormulaDefV2<ParamDefsT> : ResultT extends ValueType.Array ? ArrayFormulaDefV2<ParamDefsT, SchemaT> : ObjectFormulaDefV2<ParamDefsT, SchemaT>;
+/**
+ * A formula definition accepted by {@link makeFormula}.
+ */
+export declare type FormulaDefinition<ParamDefsT extends ParamDefs, ResultT extends FormulaResultValueType, SchemaT extends Schema> = ResultT extends ValueType.String ? StringFormulaDef<ParamDefsT> : ResultT extends ValueType.Number ? NumericFormulaDef<ParamDefsT> : ResultT extends ValueType.Boolean ? BooleanFormulaDef<ParamDefsT> : ResultT extends ValueType.Array ? ArrayFormulaDef<ParamDefsT, SchemaT> : ObjectFormulaDef<ParamDefsT, SchemaT>;
 /**
  * The return type for a metadata formula that should return a different display to the user
  * than is used internally.
@@ -1856,6 +1956,9 @@ export declare type MetadataFormula = BaseFormula<[
 	schema?: any;
 };
 export declare type MetadataFormulaMetadata = Omit<MetadataFormula, "execute">;
+/**
+ * A JavaScript function that can implement a {@link MetadataFormulaDef}.
+ */
 export declare type MetadataFunction = <K extends string, L extends string>(context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<K, L>>;
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
@@ -3017,7 +3120,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 */
 	addFormula<ParamDefsT extends ParamDefs, ResultT extends FormulaResultValueType, SchemaT extends Schema>(definition: {
 		resultType: ResultT;
-	} & FormulaDefinitionV2<ParamDefsT, ResultT, SchemaT>): this;
+	} & FormulaDefinition<ParamDefsT, ResultT, SchemaT>): this;
 	/**
 	 * Adds a sync table definition to this pack.
 	 *

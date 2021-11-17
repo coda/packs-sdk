@@ -15,7 +15,7 @@ rendered any time a value with that identity is rendered in a doc.
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends `AttributionNode` |
+| `T` | extends [`AttributionNode`](../types/AttributionNode.md) |
 
 #### Parameters
 
@@ -29,4 +29,4 @@ rendered any time a value with that identity is rendered in a doc.
 
 #### Defined in
 
-[schema.ts:755](https://github.com/coda/packs-sdk/blob/main/schema.ts#L755)
+[schema.ts:812](https://github.com/coda/packs-sdk/blob/main/schema.ts#L812)
