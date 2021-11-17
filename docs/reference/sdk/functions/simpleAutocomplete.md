@@ -34,4 +34,4 @@ autocomplete: async function(context, search) {
 
 #### Defined in
 
-[api.ts:1053](https://github.com/coda/packs-sdk/blob/main/api.ts#L1053)
+[api.ts:1044](https://github.com/coda/packs-sdk/blob/main/api.ts#L1044)

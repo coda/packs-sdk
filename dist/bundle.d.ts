@@ -1698,7 +1698,7 @@ export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT exte
  * This is the type for an actual user-facing formula, rather than other formula-shaped resources within a
  * pack, like an autocomplete metadata formula or a sync getter formula.
  */
-export declare type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT extends FormulaResultValueType = FormulaResultValueType, SchemaT extends Schema = Schema> = ResultT extends ValueType.String ? StringPackFormula<ParamDefsT> : ResultT extends ValueType.Number ? NumericPackFormula<ParamDefsT> : ResultT extends ValueType.Boolean ? BooleanPackFormula<ParamDefsT> : ResultT extends ValueType.Array ? ObjectPackFormula<ParamDefsT, ArraySchema<SchemaT>> : ObjectPackFormula<ParamDefsT, SchemaT>;
+export declare type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT extends ValueType = ValueType, SchemaT extends Schema = Schema> = ResultT extends ValueType.String ? StringPackFormula<ParamDefsT> : ResultT extends ValueType.Number ? NumericPackFormula<ParamDefsT> : ResultT extends ValueType.Boolean ? BooleanPackFormula<ParamDefsT> : ResultT extends ValueType.Array ? ObjectPackFormula<ParamDefsT, ArraySchema<SchemaT>> : ObjectPackFormula<ParamDefsT, SchemaT>;
 /**
  * The union of types that represent formula definitions, including standard formula definitions,
  * metadata formulas, and the formulas that implement sync tables.
@@ -1806,7 +1806,7 @@ export declare type SyncFormula<K extends string, L extends string, ParamDefsT e
  * });
  * ```
  */
-export declare function makeFormula<ParamDefsT extends ParamDefs, ResultT extends FormulaResultValueType, SchemaT extends Schema = Schema>(fullDefinition: FormulaDefinition<ParamDefsT, ResultT, SchemaT>): Formula<ParamDefsT, ResultT, SchemaT>;
+export declare function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueType, SchemaT extends Schema = Schema>(fullDefinition: FormulaDefinition<ParamDefsT, ResultT, SchemaT>): Formula<ParamDefsT, ResultT, SchemaT>;
 /**
  * Base type for formula definitions accepted by {@link makeFormula}.
  */
@@ -1863,11 +1863,10 @@ export declare type ObjectFormulaDef<ParamDefsT extends ParamDefs, SchemaT exten
 	resultType: ValueType.Object;
 	schema: SchemaT;
 };
-export declare type FormulaResultValueType = ValueType.String | ValueType.Number | ValueType.Boolean | ValueType.Array | ValueType.Object;
 /**
  * A formula definition accepted by {@link makeFormula}.
  */
-export declare type FormulaDefinition<ParamDefsT extends ParamDefs, ResultT extends FormulaResultValueType, SchemaT extends Schema> = ResultT extends ValueType.String ? StringFormulaDef<ParamDefsT> : ResultT extends ValueType.Number ? NumericFormulaDef<ParamDefsT> : ResultT extends ValueType.Boolean ? BooleanFormulaDef<ParamDefsT> : ResultT extends ValueType.Array ? ArrayFormulaDef<ParamDefsT, SchemaT> : ObjectFormulaDef<ParamDefsT, SchemaT>;
+export declare type FormulaDefinition<ParamDefsT extends ParamDefs, ResultT extends ValueType, SchemaT extends Schema> = ResultT extends ValueType.String ? StringFormulaDef<ParamDefsT> : ResultT extends ValueType.Number ? NumericFormulaDef<ParamDefsT> : ResultT extends ValueType.Boolean ? BooleanFormulaDef<ParamDefsT> : ResultT extends ValueType.Array ? ArrayFormulaDef<ParamDefsT, SchemaT> : ObjectFormulaDef<ParamDefsT, SchemaT>;
 /**
  * The return type for a metadata formula that should return a different display to the user
  * than is used internally.
@@ -3116,7 +3115,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * });
 	 * ```
 	 */
-	addFormula<ParamDefsT extends ParamDefs, ResultT extends FormulaResultValueType, SchemaT extends Schema>(definition: {
+	addFormula<ParamDefsT extends ParamDefs, ResultT extends ValueType, SchemaT extends Schema>(definition: {
 		resultType: ResultT;
 	} & FormulaDefinition<ParamDefsT, ResultT, SchemaT>): this;
 	/**
