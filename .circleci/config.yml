@@ -180,7 +180,7 @@ jobs:
           command: 'make publish-docs-prod FLAGS=--forceUpload'
       # TODO: add a probe step here to validate?
   
-  publish-npm:
+  publish-to-npm:
     executor: default_build_environment
     working_directory: ~/repo
 
@@ -278,9 +278,8 @@ workflows:
           type: approval
           requires:
             - push-prod-docs
-      - publish-npm-package:
+      - publish-to-npm:
           context:
             - dockerhub
           requires:
             - wait-for-approval-npm-publish
-            - publish-npm
