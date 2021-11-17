@@ -179,6 +179,18 @@ jobs:
           name: Deploy Prod
           command: 'make publish-docs-prod FLAGS=--forceUpload'
       # TODO: add a probe step here to validate?
+  
+  publish-npm:
+    executor: default_build_environment
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - bootstrap_node
+      - bootstrap_pipenv
+      - run:
+          name: 'Publish NPM'
+          command: make npm-publish
 
 workflows:
   version: 2
@@ -252,4 +264,23 @@ workflows:
           requires:
             - wait-for-approval
             - build-docs-prod
-      # TODO: add publish NPM package with approval?
+      - utils/slack-notify-waiting-for-approval:
+          name: "slack-notify-waiting-for-approval-npm-publish" 
+          slack_bot_token: ${PUSH_REMINDER_BOT_TOKEN}
+          requires:
+            - push-prod-docs
+          context:
+            - util
+      - wait-for-approval:
+          name: "wait-for-approval-npm-publish" 
+          context:
+            - dockerhub
+          type: approval
+          requires:
+            - push-prod-docs
+      - publish-npm-package:
+          context:
+            - dockerhub
+          requires:
+            - wait-for-approval-npm-publish
+            - publish-npm
