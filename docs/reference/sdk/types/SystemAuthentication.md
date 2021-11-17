@@ -7,4 +7,4 @@ where the pack author provides credentials used in HTTP requests rather than the
 
 #### Defined in
 
-[types.ts:624](https://github.com/coda/packs-sdk/blob/main/types.ts#L624)
+[types.ts:627](https://github.com/coda/packs-sdk/blob/main/types.ts#L627)

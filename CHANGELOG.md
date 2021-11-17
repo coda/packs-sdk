@@ -2,6 +2,35 @@
 
 - Update internal authentication mechanisms for interacting with AWS. Not currently available externally.
 - `makeObjectSchema` no longer requires you to redundantly specify `type: ValueType.Object` in your schema definition.
+- Added support for `AuthenticationType.Custom` which formalizes the ability to use templating to insert secret credentials onto network requests that previously relied on `AuthenticationType.WebBasic`. This enables authenticating with APIs that use non-standard authentication methods. See an example of using this new authentication method below.
+  ```typescript
+  // pack authentication
+  pack.setSystemAuthentication({
+    type: AuthenticationType.Custom, 
+    params: [{name: 'secretId', description: 'Secret id'},
+            {name: 'secretValue', description: 'Secret value'}])
+  });
+  // ...
+  // in a formula or sync table
+  execute: async function([], context) {
+    let secretIdTemplateName = "secretId-" + context.invocationToken;
+    let urlWithSecret = "/api/entities/{{" + secretIdTemplateName + "}}"
+    let secretValueTemplateName = "secretValue-" + context.invocationToken;
+    let secretHeader = 'Authorization  {{"' + secretValueTemplateName + '"}}';
+    let bodyWithSecret = JSON.stringify({
+      key: "{{" + secretValueTemplateName + "}}",
+      otherBodyParam: "foo",
+    });
+    let response = await context.fetcher.fetch({
+      method: "GET",
+      url: urlWithSecret,
+      body: bodyWithSecret,
+      headers: {
+        'X-Custom-Authorization-Header': secretHeader,
+      }
+    });
+  }
+  ```
 
 ## 0.7.0
 
