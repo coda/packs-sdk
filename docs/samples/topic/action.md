@@ -54,7 +54,7 @@ pack.addFormula({
     coda.makeParameter({
       type: coda.ParameterType.Number,
       name: "sides",
-      description: "How many sides to the dice have.",
+      description: "How many sides the dice have.",
       defaultValue: 6,
     }),
   ],

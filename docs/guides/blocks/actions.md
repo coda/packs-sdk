@@ -46,7 +46,9 @@ Parameters in actions work the same as they do in other formulas, but may appear
 
 ## Results
 
-Actions can return a value but aren't required to. When the action is used by a button in a table column, the result can be stored in another column of the same table. For this reason it's a best practice to return some value, so that other formulas or conditional formatting can check that column and know when the action is complete. For example, if your action is creating an item in an external API you could return the URL or ID of the new item.
+Although actions are typically used to send data rather than calculate a value, like all formulas they are required to return a result. When the action is used by a button in a table column, the result can be stored in another column of the same table. This allows other formulas or conditional formatting to check that column and know when the action is complete.
+
+If your action is creating an item in an external API you could return the URL or ID of the new item.
 
 ```ts
 pack.addFormula({
@@ -63,7 +65,7 @@ pack.addFormula({
 });
 ```
 
-See the [Data types guide][data-types] for more information on the type of values that can be returned.
+In some cases there is no meaningful result, in which case the convention is to return the string "OK". See the [Data types guide][data-types] for more information on the type of values that can be returned.
 
 
 ## Authentication
@@ -80,6 +82,7 @@ Unlike other formulas, actions are never cached or automatically recalculated. T
 
 [help_buttons]: https://help.coda.io/en/articles/2033889-overview-of-buttons
 [help_automations]: https://help.coda.io/en/articles/2423860-automations-in-coda
+[fetcher]: ../advanced/fetcher.md
 [samples]: ../../samples/topic/action.md
 [formulas]: formulas.md
 [parameters]: ../basics/parameters.md
