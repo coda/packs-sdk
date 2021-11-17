@@ -79,10 +79,6 @@ var AuthenticationType;
     /**
      * Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
      * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
-     *
-     * This is not yet supported.
-     *
-     * @ignore
      */
     AuthenticationType["AWSAccessKey"] = "AWSAccessKey";
     /**
@@ -90,8 +86,6 @@ var AuthenticationType;
      * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
      *
      * This is not yet supported.
-     *
-     * @ignore
      */
     AuthenticationType["AWSAssumeRole"] = "AWSAssumeRole";
     /**
@@ -107,8 +101,6 @@ var AuthenticationType;
     AuthenticationType["CodaApiHeaderBearerToken"] = "CodaApiHeaderBearerToken";
     /**
      * Only for use by Coda-authored packs.
-     *
-     * @ignore
      */
     AuthenticationType["Various"] = "Various";
 })(AuthenticationType = exports.AuthenticationType || (exports.AuthenticationType = {}));

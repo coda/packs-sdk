@@ -259,7 +259,8 @@ export function wrapMetadataFunction(
   return typeof fnOrFormula === 'function' ? makeMetadataFormula(fnOrFormula) : fnOrFormula;
 }
 
-type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, 'type' | 'autocomplete'> & {
+/** Options you can specify when defining a parameter using {@link makeParameter}. */
+export type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, 'type' | 'autocomplete'> & {
   type: T;
   autocomplete?: MetadataFormulaDef | Array<string | number | SimpleAutocompleteOption>;
 };
@@ -427,22 +428,37 @@ export interface ObjectResultFormulaDef<ParamsT extends ParamDefs, SchemaT exten
   response?: ResponseHandlerTemplate<SchemaT>;
 }
 
+/**
+ * Inputs to declaratively define a formula that returns a list of objects.
+ * That is, a formula that doesn't require code, which like an {@link EmptyFormulaDef} uses
+ * a {@link RequestHandlerTemplate} to describe the request to be made, but also includes a
+ * {@link ResponseHandlerTemplate} to describe the schema of the returned objects.
+ * These take the place of implementing a JavaScript `execute` function.
+ *
+ * This type is generally not used directly, but describes the inputs to {@link makeTranslateObjectFormula}.
+ */
 export interface ObjectArrayFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema>
   extends Omit<PackFormulaDef<ParamsT, SchemaType<SchemaT>>, 'execute'> {
+  /** A definition of the request and any parameter transformations to make in order to implement this formula. */
   request: RequestHandlerTemplate;
+  /** A definition of the schema for the object list returned by this function. */
   response: ResponseHandlerTemplate<SchemaT>;
 }
 
 /**
  * Inputs to define an "empty" formula, that is, a formula that uses a {@link RequestHandlerTemplate}
  * to define an implementation for the formula rather than implementing an actual `execute` function
- * in JavaScript.
+ * in JavaScript. An empty formula returns a string. To return a list of objects, see
+ * {@link ObjectArrayFormulaDef}.
+ *
+ * This type is generally not used directly, but describes the inputs to {@link makeEmptyFormula}.
  */
 export interface EmptyFormulaDef<ParamsT extends ParamDefs> extends Omit<PackFormulaDef<ParamsT, string>, 'execute'> {
-  /** A definition of the request and any transformations to make in order to implement this formula. */
+  /** A definition of the request and any parameter transformations to make in order to implement this formula. */
   request: RequestHandlerTemplate;
 }
 
+/** The base class for pack formula descriptors. Subclasses vary based on the return type of the formula. */
 export type BaseFormula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = PackFormulaDef<
   ParamDefsT,
   ResultT
@@ -450,18 +466,22 @@ export type BaseFormula<ParamDefsT extends ParamDefs, ResultT extends PackFormul
   resultType: TypeOf<ResultT>;
 };
 
+/** A pack formula that returns a number. */
 export type NumericPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, number> & {
   schema?: NumberSchema;
 };
 
+/** A pack formula that returns a boolean. */
 export type BooleanPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, boolean> & {
   schema?: BooleanSchema;
 };
 
+/** A pack formula that returns a string. */
 export type StringPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, SchemaType<StringSchema>> & {
   schema?: StringSchema;
 };
 
+/** A pack formula that returns a JavaScript object. */
 export type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Omit<
   BaseFormula<ParamDefsT, SchemaType<SchemaT>>,
   'execute'
@@ -564,6 +584,12 @@ export interface SyncFormulaDef<
   execute(params: ParamValues<ParamDefsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<K, L, SchemaT>>;
 }
 
+/**
+ * The result of defining the formula that implements a sync table.
+ *
+ * There is no need to use this type directly. You provid a {@link SyncFormulaDef} as an
+ * input to {@link makeSyncTable} which outputs definitions of this type.
+ */
 export type SyncFormula<
   K extends string,
   L extends string,
@@ -913,6 +939,11 @@ export type MetadataFunction = <K extends string, L extends string>(
   search: string,
   formulaContext?: MetadataContext,
 ) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<K, L>>;
+/**
+ * The type of values that will be accepted as a metadata formula definition. This can either
+ * be the JavaScript function that implements a metadata formula (strongly recommended)
+ * or a full metadata formula definition (mostly supported for legacy code).
+ */
 export type MetadataFormulaDef = MetadataFormula | MetadataFunction;
 
 /**
@@ -1190,6 +1221,9 @@ export interface SyncTableOptions<
   };
 }
 
+/**
+ * Options provided when defining a dynamic sync table.
+ */
 export interface DynamicSyncTableOptions<
   K extends string,
   L extends string,

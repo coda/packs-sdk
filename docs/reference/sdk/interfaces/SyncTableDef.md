@@ -46,7 +46,7 @@ ___
 
 ### getter
 
-• **getter**: `SyncFormula`<`K`, `L`, `ParamDefsT`, `SchemaT`\>
+• **getter**: [`SyncFormula`](../types/SyncFormula.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\>
 
 See [SyncTableOptions.formula](SyncTableOptions.md#formula)
 

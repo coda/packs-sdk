@@ -1,6 +1,6 @@
 # Type alias: FetchMethodType
 
-Ƭ **FetchMethodType**: typeof `ValidFetchMethods`[`number`]
+Ƭ **FetchMethodType**: typeof [`ValidFetchMethods`](../variables/ValidFetchMethods.md)[`number`]
 
 The type of the HTTP methods (verbs) supported by the fetcher.
 

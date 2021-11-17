@@ -24,7 +24,7 @@ BaseAuthentication.defaultConnectionType
 
 #### Defined in
 
-[types.ts:241](https://github.com/coda/packs-sdk/blob/main/types.ts#L241)
+[types.ts:233](https://github.com/coda/packs-sdk/blob/main/types.ts#L233)
 
 ___
 
@@ -44,7 +44,7 @@ BaseAuthentication.endpointDomain
 
 #### Defined in
 
-[types.ts:263](https://github.com/coda/packs-sdk/blob/main/types.ts#L263)
+[types.ts:255](https://github.com/coda/packs-sdk/blob/main/types.ts#L255)
 
 ___
 
@@ -66,7 +66,7 @@ BaseAuthentication.getConnectionName
 
 #### Defined in
 
-[types.ts:224](https://github.com/coda/packs-sdk/blob/main/types.ts#L224)
+[types.ts:216](https://github.com/coda/packs-sdk/blob/main/types.ts#L216)
 
 ___
 
@@ -82,13 +82,13 @@ BaseAuthentication.instructionsUrl
 
 #### Defined in
 
-[types.ts:246](https://github.com/coda/packs-sdk/blob/main/types.ts#L246)
+[types.ts:238](https://github.com/coda/packs-sdk/blob/main/types.ts#L238)
 
 ___
 
 ### postSetup
 
-• `Optional` **postSetup**: `SetEndpoint`[]
+• `Optional` **postSetup**: [`SetEndpoint`](SetEndpoint.md)[]
 
 One or more setup steps to run after the user has set up the account, before completing installation of the pack.
 This is not common.
@@ -99,7 +99,7 @@ BaseAuthentication.postSetup
 
 #### Defined in
 
-[types.ts:269](https://github.com/coda/packs-sdk/blob/main/types.ts#L269)
+[types.ts:261](https://github.com/coda/packs-sdk/blob/main/types.ts#L261)
 
 ___
 
@@ -118,7 +118,7 @@ BaseAuthentication.requiresEndpointUrl
 
 #### Defined in
 
-[types.ts:254](https://github.com/coda/packs-sdk/blob/main/types.ts#L254)
+[types.ts:246](https://github.com/coda/packs-sdk/blob/main/types.ts#L246)
 
 ___
 
@@ -130,4 +130,4 @@ Identifies this as HeaderBearerToken authentication.
 
 #### Defined in
 
-[types.ts:277](https://github.com/coda/packs-sdk/blob/main/types.ts#L277)
+[types.ts:269](https://github.com/coda/packs-sdk/blob/main/types.ts#L269)
