@@ -37,8 +37,8 @@ token is required for security reasons.
 execute: async function([], context) {
   let secretIdTemplateName = "secretId-" + context.invocationToken;
   let urlWithSecret = "/api/entities/{{" + secretIdTemplateName + "}}"
-
   let secretValueTemplateName = "secretValue-" + context.invocationToken;
+  let secretHeader = 'Authorization  {{"' + secretValueTemplateName + '"}}';
   let bodyWithSecret = JSON.stringify({
     key: "{{" + secretValueTemplateName + "}}",
     otherBodyParam: "foo",
@@ -47,7 +47,10 @@ execute: async function([], context) {
   let response = await context.fetcher.fetch({
     method: "GET",
     url: urlWithSecret,
-    body: bodyWithSecret
+    body: bodyWithSecret,
+    headers: {
+      'X-Custom-Authorization-Header': secretHeader,
+    },
   });
   // ...
 }
@@ -148,7 +151,7 @@ replacement inside the constructed network request.
 
 #### Defined in
 
-[types.ts:535](https://github.com/coda/packs-sdk/blob/main/types.ts#L535)
+[types.ts:538](https://github.com/coda/packs-sdk/blob/main/types.ts#L538)
 
 ___
 
@@ -196,4 +199,4 @@ Identifies this as Custom authentication.
 
 #### Defined in
 
-[types.ts:529](https://github.com/coda/packs-sdk/blob/main/types.ts#L529)
+[types.ts:532](https://github.com/coda/packs-sdk/blob/main/types.ts#L532)

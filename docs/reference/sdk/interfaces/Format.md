@@ -37,7 +37,7 @@ This must correspond to the name of a regular, public formula defined in this pa
 
 #### Defined in
 
-[types.ts:710](https://github.com/coda/packs-sdk/blob/main/types.ts#L710)
+[types.ts:713](https://github.com/coda/packs-sdk/blob/main/types.ts#L713)
 
 ___
 
@@ -49,7 +49,7 @@ ___
 
 #### Defined in
 
-[types.ts:705](https://github.com/coda/packs-sdk/blob/main/types.ts#L705)
+[types.ts:708](https://github.com/coda/packs-sdk/blob/main/types.ts#L708)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[types.ts:712](https://github.com/coda/packs-sdk/blob/main/types.ts#L712)
+[types.ts:715](https://github.com/coda/packs-sdk/blob/main/types.ts#L715)
 
 ___
 
@@ -74,7 +74,7 @@ of values they should put in columns using this format.
 
 #### Defined in
 
-[types.ts:717](https://github.com/coda/packs-sdk/blob/main/types.ts#L717)
+[types.ts:720](https://github.com/coda/packs-sdk/blob/main/types.ts#L720)
 
 ___
 
@@ -87,7 +87,7 @@ is capable of handling. As described in [Format](Format.md), this is a discovery
 
 #### Defined in
 
-[types.ts:722](https://github.com/coda/packs-sdk/blob/main/types.ts#L722)
+[types.ts:725](https://github.com/coda/packs-sdk/blob/main/types.ts#L725)
 
 ___
 
@@ -99,7 +99,7 @@ The name of this column format. This will show to users in the column type choos
 
 #### Defined in
 
-[types.ts:703](https://github.com/coda/packs-sdk/blob/main/types.ts#L703)
+[types.ts:706](https://github.com/coda/packs-sdk/blob/main/types.ts#L706)
 
 ___
 
@@ -111,4 +111,4 @@ ___
 
 #### Defined in
 
-[types.ts:726](https://github.com/coda/packs-sdk/blob/main/types.ts#L726)
+[types.ts:729](https://github.com/coda/packs-sdk/blob/main/types.ts#L729)

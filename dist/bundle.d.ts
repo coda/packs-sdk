@@ -2629,8 +2629,8 @@ export interface CustomAuthParameter {
  * execute: async function([], context) {
  *   let secretIdTemplateName = "secretId-" + context.invocationToken;
  *   let urlWithSecret = "/api/entities/{{" + secretIdTemplateName + "}}"
- *
  *   let secretValueTemplateName = "secretValue-" + context.invocationToken;
+ *   let secretHeader = 'Authorization  {{"' + secretValueTemplateName + '"}}';
  *   let bodyWithSecret = JSON.stringify({
  *     key: "{{" + secretValueTemplateName + "}}",
  *     otherBodyParam: "foo",
@@ -2639,7 +2639,10 @@ export interface CustomAuthParameter {
  *   let response = await context.fetcher.fetch({
  *     method: "GET",
  *     url: urlWithSecret,
- *     body: bodyWithSecret
+ *     body: bodyWithSecret,
+ *     headers: {
+ *       'X-Custom-Authorization-Header': secretHeader,
+ *     },
  *   });
  *   // ...
  * }
