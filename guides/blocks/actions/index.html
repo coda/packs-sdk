@@ -67,7 +67,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#add-custom-actions" class="md-skip">
+        <a href="#add-custom-actions-for-buttons-and-automations" class="md-skip">
           Skip to content
         </a>
       
@@ -241,7 +241,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../samples/topic/authentication/" class="md-tabs__link">
+      <a href="../../../samples/topic/action/" class="md-tabs__link">
         Samples
       </a>
     </li>
@@ -525,9 +525,76 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Actions
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         Actions
       </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#using-actions" class="md-nav__link">
+    Using actions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-actions" class="md-nav__link">
+    Creating actions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    Parameters
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#results" class="md-nav__link">
+    Results
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    Authentication
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caching-recalculation" class="md-nav__link">
+    Caching &amp; recalculation
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -845,6 +912,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_4_1">
@@ -858,6 +927,20 @@
           By topic
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/topic/action/" class="md-nav__link">
+        Actions
+      </a>
+    </li>
+  
+
+            
           
             
               
@@ -1165,6 +1248,8 @@
         
           
             
+          
+        
           
         
           
@@ -2057,6 +2142,24 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_5_1_5">
@@ -2070,6 +2173,34 @@
           Interfaces
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/AWSAccessKeyAuthentication/" class="md-nav__link">
+        Interface: AWSAccessKeyAuthentication
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/AWSAssumeRoleAuthentication/" class="md-nav__link">
+        Interface: AWSAssumeRoleAuthentication
+      </a>
+    </li>
+  
+
+            
           
             
               
@@ -2161,6 +2292,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/CustomAuthParameter/" class="md-nav__link">
+        Interface: CustomAuthParameter
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/CustomAuthentication/" class="md-nav__link">
         Interface: CustomAuthentication
       </a>
@@ -2205,6 +2350,20 @@
     <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/DynamicSyncTableDef/" class="md-nav__link">
         Interface: DynamicSyncTableDef<K, L, ParamDefsT, SchemaT\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/DynamicSyncTableOptions/" class="md-nav__link">
+        Interface: DynamicSyncTableOptions<K, L, ParamDefsT, SchemaT\>
       </a>
     </li>
   
@@ -2469,6 +2628,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/ObjectArrayFormulaDef/" class="md-nav__link">
+        Interface: ObjectArrayFormulaDef<ParamsT, SchemaT\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/ObjectSchemaDefinition/" class="md-nav__link">
         Interface: ObjectSchemaDefinition<K, L\>
       </a>
@@ -2595,6 +2768,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/SetEndpoint/" class="md-nav__link">
+        Interface: SetEndpoint
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/SimpleAutocompleteOption/" class="md-nav__link">
         Interface: SimpleAutocompleteOption
       </a>
@@ -2679,8 +2866,36 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/Sync/" class="md-nav__link">
+        Interface: Sync
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/SyncExecutionContext/" class="md-nav__link">
         Interface: SyncExecutionContext
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/SyncFormulaDef/" class="md-nav__link">
+        Interface: SyncFormulaDef<K, L, ParamDefsT, SchemaT\>
       </a>
     </li>
   
@@ -2737,6 +2952,20 @@
     <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/TemporaryBlobStorage/" class="md-nav__link">
         Interface: TemporaryBlobStorage
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/VariousAuthentication/" class="md-nav__link">
+        Interface: VariousAuthentication
       </a>
     </li>
   
@@ -2826,6 +3055,26 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_5_1_6">
@@ -2860,8 +3109,36 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/sdk/types/BaseFormula/" class="md-nav__link">
+        Type alias: BaseFormula<ParamDefsT, ResultT\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/sdk/types/BasicPackDefinition/" class="md-nav__link">
         Type alias: BasicPackDefinition
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/types/BooleanPackFormula/" class="md-nav__link">
+        Type alias: BooleanPackFormula<ParamDefsT\>
       </a>
     </li>
   
@@ -3000,6 +3277,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/sdk/types/MetadataFormulaDef/" class="md-nav__link">
+        Type alias: MetadataFormulaDef
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/sdk/types/MetadataFormulaResultType/" class="md-nav__link">
         Type alias: MetadataFormulaResultType
       </a>
@@ -3016,6 +3307,34 @@
     <li class="md-nav__item">
       <a href="../../../reference/sdk/types/NumberSchema/" class="md-nav__link">
         Type alias: NumberSchema
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/types/NumericPackFormula/" class="md-nav__link">
+        Type alias: NumericPackFormula<ParamDefsT\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/types/ObjectPackFormula/" class="md-nav__link">
+        Type alias: ObjectPackFormula<ParamDefsT, SchemaT\>
       </a>
     </li>
   
@@ -3112,6 +3431,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/sdk/types/ParameterOptions/" class="md-nav__link">
+        Type alias: ParameterOptions<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/sdk/types/Schema/" class="md-nav__link">
         Type alias: Schema
       </a>
@@ -3140,8 +3473,50 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/sdk/types/StringPackFormula/" class="md-nav__link">
+        Type alias: StringPackFormula<ParamDefsT\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/sdk/types/StringSchema/" class="md-nav__link">
         Type alias: StringSchema
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/types/SyncFormula/" class="md-nav__link">
+        Type alias: SyncFormula<K, L, ParamDefsT, SchemaT\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/types/SyncTable/" class="md-nav__link">
+        Type alias: SyncTable
       </a>
     </li>
   
@@ -3168,8 +3543,73 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/sdk/types/SystemAuthenticationDef/" class="md-nav__link">
+        Type alias: SystemAuthenticationDef
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/sdk/types/TypedPackFormula/" class="md-nav__link">
         Type alias: TypedPackFormula
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_1_7" type="checkbox" id="__nav_5_1_7" >
+      
+      
+      
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_5_1_7">
+          Variables
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Variables" data-md-level="3">
+        <label class="md-nav__title" for="__nav_5_1_7">
+          <span class="md-nav__icon md-icon"></span>
+          Variables
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/variables/ValidFetchMethods/" class="md-nav__link">
+        Variable: ValidFetchMethods
       </a>
     </li>
   
@@ -3232,6 +3672,56 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#using-actions" class="md-nav__link">
+    Using actions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-actions" class="md-nav__link">
+    Creating actions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    Parameters
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#results" class="md-nav__link">
+    Results
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    Authentication
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caching-recalculation" class="md-nav__link">
+    Caching &amp; recalculation
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3247,8 +3737,57 @@
                   </a>
                 
                 
-                <h1 id="add-custom-actions">Add custom actions<a class="headerlink" href="#add-custom-actions" title="Permanent link">&para;</a></h1>
-<p>TODO</p>
+                <h1 id="add-custom-actions-for-buttons-and-automations">Add custom actions for buttons and automations<a class="headerlink" href="#add-custom-actions-for-buttons-and-automations" title="Permanent link">&para;</a></h1>
+<p>In Coda users can take actions directly within their documents, using native <a href="https://help.coda.io/en/articles/2033889-overview-of-buttons">buttons</a> and <a href="https://help.coda.io/en/articles/2423860-automations-in-coda">automations</a>. Packs can provide custom actions which users can use when building out their doc. These actions often use the <a href="../../advanced/fetcher/">fetcher</a> to send data to an external API, but they can also be used for other one-time calculations.</p>
+<p><a class="md-button" href="../../../samples/topic/action/">View Sample Code</a></p>
+<h2 id="using-actions">Using actions<a class="headerlink" href="#using-actions" title="Permanent link">&para;</a></h2>
+<p>Actions provided by Packs appear as choices in the button and automation dialogs along-side built-in actions. Actions can also be used in the formula editor for those buttons and automations.</p>
+<div class="tabbed-set" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">In a button</label><div class="tabbed-content">
+<p><img src="../../../images/actions_button.png" srcset="../../../images/actions_button_2x.png 2x" class="screenshot" alt="Selecting an action for a button"></p>
+</div>
+<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">In an automation</label><div class="tabbed-content">
+<p><img src="../../../images/actions_automation.png" srcset="../../../images/actions_automation_2x.png 2x" class="screenshot" alt="Selecting an action for an automation"></p>
+</div>
+<input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><label for="__tabbed_1_3">In the formula editor</label><div class="tabbed-content">
+<p><img src="../../../images/actions_formula.png" srcset="../../../images/actions_formula_2x.png 2x" class="screenshot" alt="Using actions in the formula editor."></p>
+</div>
+</div>
+<h2 id="creating-actions">Creating actions<a class="headerlink" href="#creating-actions" title="Permanent link">&para;</a></h2>
+<p>Actions are just a special type of formula, and to create an action simply add a formula to your Pack with the property <code>isAction: true</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="nx">pack</span><span class="p">.</span><span class="nx">addFormula</span><span class="p">({</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;DoSomething&quot;</span><span class="p">,</span>
+  <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Does something neat.&quot;</span><span class="p">,</span>
+  <span class="nx">isAction</span>: <span class="kt">true</span><span class="p">,</span>
+  <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>If you aren't already familiar with creating formulas, read the <a href="../formulas/">Formulas guide</a> first. The rest of this guide will clarify how action formulas differ from calculation formulas.</p>
+<h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
+<p>Parameters in actions work the same as they do in other formulas, but may appear differently depending on the context. The button and automation configuration dialogs by default will present the parameters as input boxes, although the user has the option to switch the formula editor as well. See the <a href="../../basics/parameters/">Parameters guide</a> for more information and examples.</p>
+<h2 id="results">Results<a class="headerlink" href="#results" title="Permanent link">&para;</a></h2>
+<p>Although actions are typically used to send data rather than calculate a value, like all formulas they are required to return a result. When the action is used by a button in a table column, the result can be stored in another column of the same table. This allows other formulas or conditional formatting to check that column and know when the action is complete.</p>
+<p>If your action is creating an item in an external API you could return the URL or ID of the new item.</p>
+<div class="highlight"><pre><span></span><code><span class="nx">pack</span><span class="p">.</span><span class="nx">addFormula</span><span class="p">({</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;AddThing&quot;</span><span class="p">,</span>
+  <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Add a new thing.&quot;</span><span class="p">,</span>
+  <span class="nx">resultType</span>: <span class="kt">coda.ValueType.String</span><span class="p">,</span>
+  <span class="nx">isAction</span>: <span class="kt">true</span><span class="p">,</span>
+  <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span> <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;...&quot;</span> <span class="p">});</span>
+    <span class="c1">// Return values are optional but recommended. Returning a URL or other</span>
+    <span class="c1">// unique identifier is recommended when creating a new entity.</span>
+    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">url</span><span class="p">;</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>In some cases there is no meaningful result, in which case the convention is to return the string "OK". See the <a href="../../basics/data-types/">Data types guide</a> for more information on the type of values that can be returned.</p>
+<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
+<p>Actions can use authentication to access private resources, but unlike other formulas they aren't required to always use a specific user account. For actions, the account parameter will include the special option "User's private account". When this option is selected, each user that presses the button will take the action using one of their connected accounts, or be prompted to create an account if they don't have one set up already.</p>
+<p><img src="../../../images/actions_private_account.png" srcset="../../../images/actions_private_account_2x.png 2x" class="screenshot" alt="Private account option for actions"></p>
+<h2 id="caching-recalculation">Caching &amp; recalculation<a class="headerlink" href="#caching-recalculation" title="Permanent link">&para;</a></h2>
+<p>Unlike other formulas, actions are never cached or automatically recalculated. The action is only run when the button is pressed or automation triggered, and the code is run each time, even if the inputs haven't changed.</p>
                 
                   
                 
