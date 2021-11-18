@@ -576,7 +576,7 @@ function makeSyncTable({ name, identityName, schema: schemaDef, formula, connect
     }
     const responseHandler = (0, handler_templates_1.generateObjectResponseHandler)({ schema: formulaSchema });
     const execute = async function exec(params, context) {
-        const { result, continuation } = await wrappedExecute(params, context);
+        const { result, continuation } = (await wrappedExecute(params, context)) || {};
         const appliedSchema = context.sync.schema;
         return {
             result: responseHandler({ body: result || [], status: 200, headers: {} }, appliedSchema),
