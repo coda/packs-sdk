@@ -9,8 +9,8 @@ of the data source or directly to the source data.
 ```
 coda.makeAttributionNode({
   type: coda.AttributionNodeType.Link,
-  anchorUrl: "https://foocorp.com",
-  anchorText: "Data provided by FooCorp.",
+  anchorUrl: "https://example.com",
+  anchorText: "Data provided by ExampleCorp.",
 });
 ```
 

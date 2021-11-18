@@ -8,7 +8,7 @@ This might be used to attribute the data source.
 ```
 coda.makeAttributionNode({
   type: coda.AttributionNodeType.Text,
-  text: "Data provided by FooCorp.",
+  text: "Data provided by ExampleCorp.",
 });
 ```
 

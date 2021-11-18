@@ -672,7 +672,7 @@ export declare enum AttributionNodeType {
  * ```
  * coda.makeAttributionNode({
  *   type: coda.AttributionNodeType.Text,
- *   text: "Data provided by FooCorp.",
+ *   text: "Data provided by ExampleCorp.",
  * });
  * ```
  */
@@ -692,8 +692,8 @@ export interface TextAttributionNode {
  * ```
  * coda.makeAttributionNode({
  *   type: coda.AttributionNodeType.Link,
- *   anchorUrl: "https://foocorp.com",
- *   anchorText: "Data provided by FooCorp.",
+ *   anchorUrl: "https://example.com",
+ *   anchorText: "Data provided by ExampleCorp.",
  * });
  * ```
  */
@@ -715,8 +715,8 @@ export interface LinkAttributionNode {
  * ```
  * coda.makeAttributionNode({
  *   type: coda.AttributionNodeType.Image,
- *   anchorUrl: "https://foocorp.com",
- *   imageUrl: "https://foocorp.com/assets/logo.png",
+ *   anchorUrl: "https://example.com",
+ *   imageUrl: "https://example.com/assets/logo.png",
  * });
  * ```
  */
@@ -1321,15 +1321,13 @@ export interface Sync {
 	dynamicUrl?: string;
 }
 /**
- * Information about the Coda environment and doc this formula was invoked from.
- * This is mostly for Coda internal use and we do not recommend relying on it.
+ * Information about the Coda environment and doc this formula was invoked from, for Coda internal use.
  */
 export interface InvocationLocation {
 	/** The base URL of the Coda environment executing this formula. Only for Coda internal use. */
 	protocolAndHost: string;
 	/**
-	 * The ID of the Coda doc this formula was invoked from, if any.
-	 * This may be removed in a future version of the SDK so should not be relied upon.
+	 * @deprecated This will be removed in a future version of the SDK.
 	 */
 	docId?: string;
 }

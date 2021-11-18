@@ -735,7 +735,7 @@ export enum AttributionNodeType {
  * ```
  * coda.makeAttributionNode({
  *   type: coda.AttributionNodeType.Text,
- *   text: "Data provided by FooCorp.",
+ *   text: "Data provided by ExampleCorp.",
  * });
  * ```
  */
@@ -756,8 +756,8 @@ export interface TextAttributionNode {
  * ```
  * coda.makeAttributionNode({
  *   type: coda.AttributionNodeType.Link,
- *   anchorUrl: "https://foocorp.com",
- *   anchorText: "Data provided by FooCorp.",
+ *   anchorUrl: "https://example.com",
+ *   anchorText: "Data provided by ExampleCorp.",
  * });
  * ```
  */
@@ -780,8 +780,8 @@ export interface LinkAttributionNode {
  * ```
  * coda.makeAttributionNode({
  *   type: coda.AttributionNodeType.Image,
- *   anchorUrl: "https://foocorp.com",
- *   imageUrl: "https://foocorp.com/assets/logo.png",
+ *   anchorUrl: "https://example.com",
+ *   imageUrl: "https://example.com/assets/logo.png",
  * });
  * ```
  */

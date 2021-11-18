@@ -9,8 +9,8 @@ of the data source or directly to the source data.
 ```
 coda.makeAttributionNode({
   type: coda.AttributionNodeType.Image,
-  anchorUrl: "https://foocorp.com",
-  imageUrl: "https://foocorp.com/assets/logo.png",
+  anchorUrl: "https://example.com",
+  imageUrl: "https://example.com/assets/logo.png",
 });
 ```
 
