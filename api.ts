@@ -75,8 +75,13 @@ export class UserVisibleError extends Error {
   }
 }
 
-interface StatusCodeErrorResponse {
+/**
+ * The raw HTTP response from a {@link StatusCodeError}.
+ */
+export interface StatusCodeErrorResponse {
+  /** The raw body of the HTTP error response. */
   body?: any;
+  /** The headers from the HTTP error response. Many header values are redacted by Coda. */
   headers?: {[key: string]: string | string[] | undefined};
 }
 
@@ -415,7 +420,7 @@ export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackF
   execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
 }
 
-export interface StringFormulaDef<ParamsT extends ParamDefs> extends CommonPackFormulaDef<ParamsT> {
+export interface StringFormulaDefLegacy<ParamsT extends ParamDefs> extends CommonPackFormulaDef<ParamsT> {
   execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<string> | string;
   response?: {
     schema: StringSchema;
@@ -620,7 +625,7 @@ export function makeNumericFormula<ParamDefsT extends ParamDefs>(
  * @param definition The definition of a formula that returns a string.
  */
 export function makeStringFormula<ParamDefsT extends ParamDefs>(
-  definition: StringFormulaDef<ParamDefsT>,
+  definition: StringFormulaDefLegacy<ParamDefsT>,
 ): StringPackFormula<ParamDefsT> {
   const {response} = definition;
   return Object.assign({}, definition, {
@@ -687,13 +692,13 @@ export function makeFormula<
   ParamDefsT extends ParamDefs,
   ResultT extends FormulaResultValueType,
   SchemaT extends Schema = Schema,
->(fullDefinition: FormulaDefinitionV2<ParamDefsT, ResultT, SchemaT>): Formula<ParamDefsT, ResultT, SchemaT> {
+>(fullDefinition: FormulaDefinition<ParamDefsT, ResultT, SchemaT>): Formula<ParamDefsT, ResultT, SchemaT> {
   let formula: V2PackFormula<ParamDefsT, SchemaT>;
   switch (fullDefinition.resultType) {
     case ValueType.String: {
       // very strange ts knows that fullDefinition.codaType is StringHintTypes but doesn't know if
       // fullDefinition is StringFormulaDefV2.
-      const def: StringFormulaDefV2<ParamDefsT> & {codaType?: StringHintTypes; formulaSchema?: StringSchema} = {
+      const def: StringFormulaDef<ParamDefsT> & {codaType?: StringHintTypes; formulaSchema?: StringSchema} = {
         ...fullDefinition,
         codaType: 'codaType' in fullDefinition ? fullDefinition.codaType : undefined,
         formulaSchema: 'schema' in fullDefinition ? fullDefinition.schema : undefined,
@@ -708,7 +713,7 @@ export function makeFormula<
       break;
     }
     case ValueType.Number: {
-      const def: NumericFormulaDefV2<ParamDefsT> & {codaType?: NumberHintTypes; formulaSchema?: NumberSchema} = {
+      const def: NumericFormulaDef<ParamDefsT> & {codaType?: NumberHintTypes; formulaSchema?: NumberSchema} = {
         ...fullDefinition,
         codaType: 'codaType' in fullDefinition ? fullDefinition.codaType : undefined,
         formulaSchema: 'schema' in fullDefinition ? fullDefinition.schema : undefined,
@@ -723,7 +728,7 @@ export function makeFormula<
       break;
     }
     case ValueType.Boolean: {
-      const {onError: _, resultType: unused, ...rest} = fullDefinition as BooleanFormulaDefV2<ParamDefsT>;
+      const {onError: _, resultType: unused, ...rest} = fullDefinition as BooleanFormulaDef<ParamDefsT>;
       const booleanFormula: BooleanPackFormula<ParamDefsT> = {
         ...rest,
         resultType: Type.boolean,
@@ -732,7 +737,7 @@ export function makeFormula<
       break;
     }
     case ValueType.Array: {
-      const {onError: _, resultType: unused, items, ...rest} = fullDefinition as ArrayFormulaDefV2<ParamDefsT, SchemaT>;
+      const {onError: _, resultType: unused, items, ...rest} = fullDefinition as ArrayFormulaDef<ParamDefsT, SchemaT>;
       const arrayFormula: ObjectPackFormula<ParamDefsT, ArraySchema<SchemaT>> = {
         ...rest,
         // TypeOf<SchemaType<ArraySchema<SchemaT>>> is always Type.object but TS can't infer this.
@@ -743,12 +748,7 @@ export function makeFormula<
       break;
     }
     case ValueType.Object: {
-      const {
-        onError: _,
-        resultType: unused,
-        schema,
-        ...rest
-      } = fullDefinition as ObjectFormulaDefV2<ParamDefsT, SchemaT>;
+      const {onError: _, resultType: unused, schema, ...rest} = fullDefinition as ObjectFormulaDef<ParamDefsT, SchemaT>;
 
       // need a force cast since execute has a different return value due to key normalization.
       const objectFormula = {
@@ -791,27 +791,49 @@ export function makeFormula<
   >;
 }
 
-interface BaseFormulaDefV2<ParamDefsT extends ParamDefs, ResultT extends string | number | boolean | object>
+/**
+ * Base type for formula definitions accepted by {@link makeFormula}.
+ */
+export interface BaseFormulaDef<ParamDefsT extends ParamDefs, ResultT extends string | number | boolean | object>
   extends PackFormulaDef<ParamDefsT, ResultT> {
+  /**
+   * If specified, will catch errors in the {@link execute} function and call this
+   * function with the error, instead of letting them throw and the formula failing.
+   *
+   * This is helpful for writing common error handling into a singular helper function
+   * that can then be applied to many different formulas in a pack.
+   */
   onError?(error: Error): any;
 }
 
-type StringFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, string> & {
+/**
+ * A definition accepted by {@link makeFormula} for a formula that returns a string.
+ */
+export type StringFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<ParamDefsT, string> & {
   resultType: ValueType.String;
   execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<string> | string;
 } & ({schema?: StringSchema} | {codaType?: StringHintTypes});
 
-type NumericFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, number> & {
+/**
+ * A definition accepted by {@link makeFormula} for a formula that returns a number.
+ */
+export type NumericFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<ParamDefsT, number> & {
   resultType: ValueType.Number;
   execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<number> | number;
 } & ({schema?: NumberSchema} | {codaType?: NumberHintTypes});
 
-type BooleanFormulaDefV2<ParamDefsT extends ParamDefs> = BaseFormulaDefV2<ParamDefsT, boolean> & {
+/**
+ * A definition accepted by {@link makeFormula} for a formula that returns a boolean.
+ */
+export type BooleanFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<ParamDefsT, boolean> & {
   resultType: ValueType.Boolean;
   execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<boolean> | boolean;
 };
 
-type ArrayFormulaDefV2<ParamDefsT extends ParamDefs, SchemaT extends Schema> = BaseFormulaDefV2<
+/**
+ * A definition accepted by {@link makeFormula} for a formula that returns an array.
+ */
+export type ArrayFormulaDef<ParamDefsT extends ParamDefs, SchemaT extends Schema> = BaseFormulaDef<
   ParamDefsT,
   SchemaType<ArraySchema<SchemaT>>
 > & {
@@ -819,7 +841,10 @@ type ArrayFormulaDefV2<ParamDefsT extends ParamDefs, SchemaT extends Schema> = B
   items: SchemaT;
 };
 
-type ObjectFormulaDefV2<ParamDefsT extends ParamDefs, SchemaT extends Schema> = BaseFormulaDefV2<
+/**
+ * A definition accepted by {@link makeFormula} for a formula that returns an object.
+ */
+export type ObjectFormulaDef<ParamDefsT extends ParamDefs, SchemaT extends Schema> = BaseFormulaDef<
   ParamDefsT,
   SchemaType<SchemaT>
 > & {
@@ -835,19 +860,22 @@ export type FormulaResultValueType =
   | ValueType.Object;
 
 // can't use a map here since ParamDefsT isn't propagated correctly.
-export type FormulaDefinitionV2<
+/**
+ * A formula definition accepted by {@link makeFormula}.
+ */
+export type FormulaDefinition<
   ParamDefsT extends ParamDefs,
   ResultT extends FormulaResultValueType,
   SchemaT extends Schema,
 > = ResultT extends ValueType.String
-  ? StringFormulaDefV2<ParamDefsT>
+  ? StringFormulaDef<ParamDefsT>
   : ResultT extends ValueType.Number
-  ? NumericFormulaDefV2<ParamDefsT>
+  ? NumericFormulaDef<ParamDefsT>
   : ResultT extends ValueType.Boolean
-  ? BooleanFormulaDefV2<ParamDefsT>
+  ? BooleanFormulaDef<ParamDefsT>
   : ResultT extends ValueType.Array
-  ? ArrayFormulaDefV2<ParamDefsT, SchemaT>
-  : ObjectFormulaDefV2<ParamDefsT, SchemaT>;
+  ? ArrayFormulaDef<ParamDefsT, SchemaT>
+  : ObjectFormulaDef<ParamDefsT, SchemaT>;
 
 /**
  * The return type for a metadata formula that should return a different display to the user
@@ -933,12 +961,18 @@ export type MetadataFormulaResultType = string | number | MetadataFormulaObjectR
 export type MetadataFormula = BaseFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any> & {
   schema?: any;
 };
+
 export type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
+
+/**
+ * A JavaScript function that can implement a {@link MetadataFormulaDef}.
+ */
 export type MetadataFunction = <K extends string, L extends string>(
   context: ExecutionContext,
   search: string,
   formulaContext?: MetadataContext,
 ) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<K, L>>;
+
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
  * be the JavaScript function that implements a metadata formula (strongly recommended)

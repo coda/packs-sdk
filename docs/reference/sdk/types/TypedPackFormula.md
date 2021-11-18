@@ -10,4 +10,4 @@ contents of a pack for for Coda internal use.
 
 #### Defined in
 
-[api.ts:531](https://github.com/coda/packs-sdk/blob/main/api.ts#L531)
+[api.ts:536](https://github.com/coda/packs-sdk/blob/main/api.ts#L536)

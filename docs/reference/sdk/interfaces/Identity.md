@@ -12,7 +12,7 @@ The runtime version of IdentityDefinition with a pack ID injected.
 
 ### attribution
 
-• `Optional` **attribution**: `AttributionNode`[]
+• `Optional` **attribution**: [`AttributionNode`](../types/AttributionNode.md)[]
 
 Attribution text, images, and/or links that should be rendered along with this value.
 
@@ -24,7 +24,7 @@ See [makeAttributionNode](../functions/makeAttributionNode.md).
 
 #### Defined in
 
-[schema.ts:631](https://github.com/coda/packs-sdk/blob/main/schema.ts#L631)
+[schema.ts:634](https://github.com/coda/packs-sdk/blob/main/schema.ts#L634)
 
 ___
 
@@ -45,7 +45,7 @@ you wish to reference, again to distinguish which table instance you are trying 
 
 #### Defined in
 
-[schema.ts:625](https://github.com/coda/packs-sdk/blob/main/schema.ts#L625)
+[schema.ts:628](https://github.com/coda/packs-sdk/blob/main/schema.ts#L628)
 
 ___
 
@@ -62,7 +62,7 @@ For example, if you are defining a schema that represents a user object, "User" 
 
 #### Defined in
 
-[schema.ts:614](https://github.com/coda/packs-sdk/blob/main/schema.ts#L614)
+[schema.ts:617](https://github.com/coda/packs-sdk/blob/main/schema.ts#L617)
 
 ___
 
@@ -78,4 +78,4 @@ The ID of another pack, if you are trying to reference a value from different pa
 
 #### Defined in
 
-[schema.ts:638](https://github.com/coda/packs-sdk/blob/main/schema.ts#L638)
+[schema.ts:641](https://github.com/coda/packs-sdk/blob/main/schema.ts#L641)

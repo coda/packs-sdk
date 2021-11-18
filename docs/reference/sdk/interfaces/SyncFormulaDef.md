@@ -243,4 +243,4 @@ as another continuation if there are more result to fetch.
 
 #### Defined in
 
-[api.ts:584](https://github.com/coda/packs-sdk/blob/main/api.ts#L584)
+[api.ts:589](https://github.com/coda/packs-sdk/blob/main/api.ts#L589)

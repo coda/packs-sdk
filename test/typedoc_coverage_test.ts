@@ -31,6 +31,9 @@ interface ReflectionData {
     comment?: Comment;
   }>;
   children?: ReflectionData[];
+  type?: {
+    declaration: ReflectionData;
+  };
 }
 
 function getReflectionData() {
@@ -70,7 +73,11 @@ function traverse(data: ReflectionData): ReflectionData[] {
 }
 
 function hasComment(data: ReflectionData): boolean {
-  return Boolean(data.comment || data.signatures?.some(sig => sig.comment));
+  return Boolean(
+    data.comment ||
+      data.signatures?.some(sig => sig.comment) ||
+      (data.type?.declaration.name === '__type' && data.type.declaration.signatures?.some(sig => sig.comment)),
+  );
 }
 
 function messageForEntity(data: ReflectionData): string {

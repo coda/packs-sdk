@@ -6,4 +6,4 @@ The union of all schemas that can represent number values.
 
 #### Defined in
 
-[schema.ts:205](https://github.com/coda/packs-sdk/blob/main/schema.ts#L205)
+[schema.ts:208](https://github.com/coda/packs-sdk/blob/main/schema.ts#L208)
