@@ -7,7 +7,7 @@ The items are themselves schema definitions, which may refer to scalars or other
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends [`Schema`](../types/Schema.md) = [`Schema`](../types/Schema.md) |
+| `T` | extends [`Schema`](../types/Schema.md)[`Schema`](../types/Schema.md) |
 
 ## Hierarchy
 

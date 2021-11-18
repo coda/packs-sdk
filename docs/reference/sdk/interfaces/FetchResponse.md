@@ -8,7 +8,7 @@ The structure largely follows https://developer.mozilla.org/en-US/docs/Web/API/R
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends `any` = `any` |
+| `T` | extends `any``any` |
 
 ## Properties
 
