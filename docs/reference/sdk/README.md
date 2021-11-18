@@ -70,6 +70,8 @@
 - [PackVersionDefinition](interfaces/PackVersionDefinition.md)
 - [ParamDef](interfaces/ParamDef.md)
 - [QueryParamTokenAuthentication](interfaces/QueryParamTokenAuthentication.md)
+- [RequestHandlerTemplate](interfaces/RequestHandlerTemplate.md)
+- [ResponseHandlerTemplate](interfaces/ResponseHandlerTemplate.md)
 - [ScaleSchema](interfaces/ScaleSchema.md)
 - [SetEndpoint](interfaces/SetEndpoint.md)
 - [SimpleAutocompleteOption](interfaces/SimpleAutocompleteOption.md)

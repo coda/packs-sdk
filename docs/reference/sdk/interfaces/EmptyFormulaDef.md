@@ -1,6 +1,6 @@
 # Interface: EmptyFormulaDef<ParamsT\>
 
-Inputs to define an "empty" formula, that is, a formula that uses a {@link RequestHandlerTemplate}
+Inputs to define an "empty" formula, that is, a formula that uses a [RequestHandlerTemplate](RequestHandlerTemplate.md)
 to define an implementation for the formula rather than implementing an actual `execute` function
 in JavaScript. An empty formula returns a string. To return a list of objects, see
 [ObjectArrayFormulaDef](ObjectArrayFormulaDef.md).
@@ -207,7 +207,7 @@ ___
 
 ### request
 
-• **request**: `RequestHandlerTemplate`
+• **request**: [`RequestHandlerTemplate`](RequestHandlerTemplate.md)
 
 A definition of the request and any parameter transformations to make in order to implement this formula.
 

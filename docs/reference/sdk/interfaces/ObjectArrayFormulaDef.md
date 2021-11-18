@@ -2,8 +2,8 @@
 
 Inputs to declaratively define a formula that returns a list of objects.
 That is, a formula that doesn't require code, which like an [EmptyFormulaDef](EmptyFormulaDef.md) uses
-a {@link RequestHandlerTemplate} to describe the request to be made, but also includes a
-{@link ResponseHandlerTemplate} to describe the schema of the returned objects.
+a [RequestHandlerTemplate](RequestHandlerTemplate.md) to describe the request to be made, but also includes a
+[ResponseHandlerTemplate](ResponseHandlerTemplate.md) to describe the schema of the returned objects.
 These take the place of implementing a JavaScript `execute` function.
 
 This type is generally not used directly, but describes the inputs to [makeTranslateObjectFormula](../functions/makeTranslateObjectFormula.md).
@@ -209,7 +209,7 @@ ___
 
 ### request
 
-• **request**: `RequestHandlerTemplate`
+• **request**: [`RequestHandlerTemplate`](RequestHandlerTemplate.md)
 
 A definition of the request and any parameter transformations to make in order to implement this formula.
 
@@ -221,7 +221,7 @@ ___
 
 ### response
 
-• **response**: `ResponseHandlerTemplate`<`SchemaT`\>
+• **response**: [`ResponseHandlerTemplate`](ResponseHandlerTemplate.md)<`SchemaT`\>
 
 A definition of the schema for the object list returned by this function.
 
