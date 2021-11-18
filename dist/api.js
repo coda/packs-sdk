@@ -341,7 +341,7 @@ function makeFormula(fullDefinition) {
         const wrappedExecute = formula.execute;
         formula.execute = async function (params, context) {
             const result = await wrappedExecute(params, context);
-            return (0, handler_templates_3.transformBody)(result, (0, ensure_1.ensureExists)(formula.schema));
+            return (0, handler_templates_3.transformBody)(result, (0, ensure_1.ensureExists)(formula.schema, `Please define a schema for your "${formula.name}" formula.`));
         };
     }
     const onError = fullDefinition.onError;
@@ -532,7 +532,7 @@ function makeObjectFormula({ response, ...definition }) {
                     throw err;
                 }
             }
-            return responseHandler({ body: (0, ensure_1.ensureExists)(result), status: 200, headers: {} });
+            return responseHandler({ body: result || {}, status: 200, headers: {} });
         };
     }
     return Object.assign({}, definition, {
@@ -579,7 +579,7 @@ function makeSyncTable({ name, identityName, schema: schemaDef, formula, connect
         const { result, continuation } = await wrappedExecute(params, context);
         const appliedSchema = context.sync.schema;
         return {
-            result: responseHandler({ body: (0, ensure_1.ensureExists)(result), status: 200, headers: {} }, appliedSchema),
+            result: responseHandler({ body: result || [], status: 200, headers: {} }, appliedSchema),
             continuation,
         };
     };
