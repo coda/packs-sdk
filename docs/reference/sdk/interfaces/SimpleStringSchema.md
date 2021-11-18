@@ -7,7 +7,7 @@ should interpret that string.
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends `SimpleStringHintTypes``SimpleStringHintTypes` |
+| `T` | extends `SimpleStringHintTypes` = `SimpleStringHintTypes` |
 
 ## Hierarchy
 

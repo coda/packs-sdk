@@ -10,7 +10,7 @@ definition for that property.
 
 | Name | Type |
 | :------ | :------ |
-| `K` | extends `string``never` |
+| `K` | extends `string` = `never` |
 
 #### Defined in
 

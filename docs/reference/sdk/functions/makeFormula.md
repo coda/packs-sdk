@@ -61,7 +61,7 @@ makeFormula({
 | :------ | :------ |
 | `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
 | `ResultT` | extends `FormulaResultValueType` |
-| `SchemaT` | extends [`Schema`](../types/Schema.md)[`Schema`](../types/Schema.md) |
+| `SchemaT` | extends [`Schema`](../types/Schema.md) = [`Schema`](../types/Schema.md) |
 
 #### Parameters
 

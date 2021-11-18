@@ -12,9 +12,9 @@ pack, like an autocomplete metadata formula or a sync getter formula.
 
 | Name | Type |
 | :------ | :------ |
-| `ParamDefsT` | extends [`ParamDefs`](ParamDefs.md)[`ParamDefs`](ParamDefs.md) |
-| `ResultT` | extends `FormulaResultValueType``FormulaResultValueType` |
-| `SchemaT` | extends [`Schema`](Schema.md)[`Schema`](Schema.md) |
+| `ParamDefsT` | extends [`ParamDefs`](ParamDefs.md) = [`ParamDefs`](ParamDefs.md) |
+| `ResultT` | extends `FormulaResultValueType` = `FormulaResultValueType` |
+| `SchemaT` | extends [`Schema`](Schema.md) = [`Schema`](Schema.md) |
 
 #### Defined in
 
