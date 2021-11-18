@@ -12,4 +12,4 @@ A definition accepted by [makeFormula](../functions/makeFormula.md) for a formul
 
 #### Defined in
 
-[api.ts:810](https://github.com/coda/packs-sdk/blob/main/api.ts#L810)
+[api.ts:813](https://github.com/coda/packs-sdk/blob/main/api.ts#L813)

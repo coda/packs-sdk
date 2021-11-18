@@ -4,6 +4,7 @@ import {createFakePack} from '../test_utils';
 import {makeFormula} from '../../api';
 import {makeNumericFormula} from '../../api';
 import {makeNumericParameter} from '../../api';
+import {makeObjectFormula} from '../../api';
 import {makeObjectSchema} from '../../schema';
 import {makeStringFormula} from '../../api';
 import {makeStringParameter} from '../../api';
@@ -76,6 +77,17 @@ export const manifest: PackDefinition = createFakePack({
       parameters: [],
       execute: ([]) => {
         return v4();
+      },
+    }),
+    makeObjectFormula({
+      name: 'Person',
+      description: 'Returns a random UUID inside an object.',
+      examples: [],
+      response: {schema: fakePersonSchema},
+      parameters: [makeStringParameter('name', 'The name to search for.')],
+      execute: ([name]) => {
+        const students = [{name: 'Alice'}, {name: 'Bob'}];
+        return students.find(student => student.name === name) as any;
       },
     }),
   ],

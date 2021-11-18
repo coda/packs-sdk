@@ -18,4 +18,4 @@ any needed to wrap a value with this formula.
 
 #### Defined in
 
-[api.ts:1123](https://github.com/coda/packs-sdk/blob/main/api.ts#L1123)
+[api.ts:1126](https://github.com/coda/packs-sdk/blob/main/api.ts#L1126)
