@@ -16,7 +16,6 @@ module.exports = {
 
   intentionallyNotExported: [
     // TODO(jonathan): Export and document these.
-    'FormulaResultValueType',
     'RequestHandlerTemplate',
     'ResponseHandlerTemplate',
 

@@ -507,7 +507,7 @@ export type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Sche
  */
 export type Formula<
   ParamDefsT extends ParamDefs = ParamDefs,
-  ResultT extends FormulaResultValueType = FormulaResultValueType,
+  ResultT extends ValueType = ValueType,
   SchemaT extends Schema = Schema,
 > = ResultT extends ValueType.String
   ? StringPackFormula<ParamDefsT>
@@ -688,11 +688,9 @@ export function makeStringFormula<ParamDefsT extends ParamDefs>(
  * });
  * ```
  */
-export function makeFormula<
-  ParamDefsT extends ParamDefs,
-  ResultT extends FormulaResultValueType,
-  SchemaT extends Schema = Schema,
->(fullDefinition: FormulaDefinition<ParamDefsT, ResultT, SchemaT>): Formula<ParamDefsT, ResultT, SchemaT> {
+export function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueType, SchemaT extends Schema = Schema>(
+  fullDefinition: FormulaDefinition<ParamDefsT, ResultT, SchemaT>,
+): Formula<ParamDefsT, ResultT, SchemaT> {
   let formula: V2PackFormula<ParamDefsT, SchemaT>;
   switch (fullDefinition.resultType) {
     case ValueType.String: {
@@ -852,20 +850,13 @@ export type ObjectFormulaDef<ParamDefsT extends ParamDefs, SchemaT extends Schem
   schema: SchemaT;
 };
 
-export type FormulaResultValueType =
-  | ValueType.String
-  | ValueType.Number
-  | ValueType.Boolean
-  | ValueType.Array
-  | ValueType.Object;
-
 // can't use a map here since ParamDefsT isn't propagated correctly.
 /**
  * A formula definition accepted by {@link makeFormula}.
  */
 export type FormulaDefinition<
   ParamDefsT extends ParamDefs,
-  ResultT extends FormulaResultValueType,
+  ResultT extends ValueType,
   SchemaT extends Schema,
 > = ResultT extends ValueType.String
   ? StringFormulaDef<ParamDefsT>

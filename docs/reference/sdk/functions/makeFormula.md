@@ -60,7 +60,7 @@ makeFormula({
 | Name | Type |
 | :------ | :------ |
 | `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
-| `ResultT` | extends `FormulaResultValueType` |
+| `ResultT` | extends [`ValueType`](../enums/ValueType.md) |
 | `SchemaT` | extends [`Schema`](../types/Schema.md) = [`Schema`](../types/Schema.md) |
 
 #### Parameters

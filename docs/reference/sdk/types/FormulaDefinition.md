@@ -9,9 +9,9 @@ A formula definition accepted by [makeFormula](../functions/makeFormula.md).
 | Name | Type |
 | :------ | :------ |
 | `ParamDefsT` | extends [`ParamDefs`](ParamDefs.md) |
-| `ResultT` | extends `FormulaResultValueType` |
+| `ResultT` | extends [`ValueType`](../enums/ValueType.md) |
 | `SchemaT` | extends [`Schema`](Schema.md) |
 
 #### Defined in
 
-[api.ts:866](https://github.com/coda/packs-sdk/blob/main/api.ts#L866)
+[api.ts:857](https://github.com/coda/packs-sdk/blob/main/api.ts#L857)
