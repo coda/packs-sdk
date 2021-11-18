@@ -4146,7 +4146,7 @@
 <p>A <a href="../../enums/ConnectionRequirement/">ConnectionRequirement</a> that will be used for all formulas contained within
 this sync table (including autocomplete formulas).</p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1312">api.ts:1312</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1303">api.ts:1303</a></p>
 <hr />
 <h3 id="entityname">entityName<a class="headerlink" href="#entityname" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>entityName</strong>: <code>string</code></p>
@@ -4154,7 +4154,7 @@ this sync table (including autocomplete formulas).</p>
 the column in this table that contains the synced data. If you don't provide an <code>entityName</code>, the value
 of <code>identity.name</code> from your schema will be used instead, so in most cases you don't need to provide this.</p>
 <h4 id="defined-in_1">Defined in<a class="headerlink" href="#defined-in_1" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1307">api.ts:1307</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1298">api.ts:1298</a></p>
 <hr />
 <h3 id="formula">formula<a class="headerlink" href="#formula" title="Permanent link">&para;</a></h3>
 <p>• <strong>formula</strong>: <a href="../SyncFormulaDef/"><code>SyncFormulaDef</code></a>&lt;<code>K</code>, <code>L</code>, <code>ParamDefsT</code>, <code>SchemaT</code>></p>
@@ -4163,7 +4163,7 @@ that returns an array of objects fitting the given schema and optionally a <a hr
 (The <a href="../SyncFormulaDef/#name">SyncFormulaDef.name</a> is redundant and should be the same as the <code>name</code> parameter here.
 These will eventually be consolidated.)</p>
 <h4 id="defined-in_2">Defined in<a class="headerlink" href="#defined-in_2" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1301">api.ts:1301</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1292">api.ts:1292</a></p>
 <hr />
 <h3 id="getdisplayurl">getDisplayUrl<a class="headerlink" href="#getdisplayurl" title="Permanent link">&para;</a></h3>
 <p>• <strong>getDisplayUrl</strong>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a></p>
@@ -4172,26 +4172,26 @@ resource being synced. The Coda UI links to this url as the source
 of the table data. This is typically a browser-friendly form of the
 <code>dynamicUrl</code>, which is typically an API url.</p>
 <h4 id="defined-in_3">Defined in<a class="headerlink" href="#defined-in_3" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1289">api.ts:1289</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1280">api.ts:1280</a></p>
 <hr />
 <h3 id="getname">getName<a class="headerlink" href="#getname" title="Permanent link">&para;</a></h3>
 <p>• <strong>getName</strong>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a></p>
 <p>A formula that returns the name of this table.</p>
 <h4 id="defined-in_4">Defined in<a class="headerlink" href="#defined-in_4" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1278">api.ts:1278</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1269">api.ts:1269</a></p>
 <hr />
 <h3 id="getschema">getSchema<a class="headerlink" href="#getschema" title="Permanent link">&para;</a></h3>
 <p>• <strong>getSchema</strong>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a></p>
 <p>A formula that returns the schema for this table.</p>
 <h4 id="defined-in_5">Defined in<a class="headerlink" href="#defined-in_5" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1282">api.ts:1282</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1273">api.ts:1273</a></p>
 <hr />
 <h3 id="listdynamicurls">listDynamicUrls<a class="headerlink" href="#listdynamicurls" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>listDynamicUrls</strong>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a></p>
 <p>A formula that returns a list of available dynamic urls that can be
 used to create an instance of this dynamic sync table.</p>
 <h4 id="defined-in_6">Defined in<a class="headerlink" href="#defined-in_6" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1294">api.ts:1294</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1285">api.ts:1285</a></p>
 <hr />
 <h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">&para;</a></h3>
 <p>• <strong>name</strong>: <code>string</code></p>
@@ -4201,7 +4201,7 @@ This should describe the category of entities being synced. The actual
 table name once added to the doc will be dynamic, it will be whatever value
 is returned by the <code>getName</code> formula.</p>
 <h4 id="defined-in_7">Defined in<a class="headerlink" href="#defined-in_7" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1274">api.ts:1274</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1265">api.ts:1265</a></p>
                 
               
               
