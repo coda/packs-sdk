@@ -4,7 +4,7 @@ title: Column Formats
 
 # Add custom column formats
 
-A column format is a custom column type that you apply to any column in any Coda table. It changes how the values within that column are interpreted and displayed, while still allowing users to quickly edit the underlying value.
+A column format is a custom column type that you can apply to any column in any Coda table. It changes how the values within that column are interpreted and displayed, while still allowing users to quickly edit the underlying value.
 
 [View Sample Code][samples]{ .md-button }
 
