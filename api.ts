@@ -766,7 +766,10 @@ export function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueT
     const wrappedExecute = formula.execute;
     formula.execute = async function (params: ParamValues<ParamDefsT>, context: ExecutionContext) {
       const result = await wrappedExecute(params, context);
-      return transformBody(result, ensureExists(formula.schema));
+      return transformBody(
+        result,
+        ensureExists(formula.schema, `Please define a schema for your "${formula.name}" formula.`),
+      );
     };
   }
 
@@ -1169,7 +1172,7 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
           throw err;
         }
       }
-      return responseHandler({body: ensureExists(result), status: 200, headers: {}}) as
+      return responseHandler({body: result || {}, status: 200, headers: {}}) as
         | SchemaType<SchemaT>
         | Array<SchemaType<SchemaT>>;
     };
@@ -1356,7 +1359,7 @@ export function makeSyncTable<
     const {result, continuation} = await wrappedExecute(params, context);
     const appliedSchema = context.sync.schema;
     return {
-      result: responseHandler({body: ensureExists(result), status: 200, headers: {}}, appliedSchema),
+      result: responseHandler({body: result || [], status: 200, headers: {}}, appliedSchema),
       continuation,
     } as SyncFormulaResult<K, L, SchemaT>;
   };
