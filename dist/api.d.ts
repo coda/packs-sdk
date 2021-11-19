@@ -110,9 +110,9 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
     schema: SchemaT;
     /** See {@link SyncTableOptions.formula} */
     getter: SyncFormula<K, L, ParamDefsT, SchemaT>;
-    /** See {@link SyncTableOptions.dynamicOptions.getSchema} */
+    /** See {@link DynamicOptions.getSchema} */
     getSchema?: MetadataFormula;
-    /** See {@link SyncTableOptions.dynamicOptions.entityName} */
+    /** See {@link DynamicOptions.entityName} */
     entityName?: string;
 }
 /**
@@ -503,8 +503,8 @@ export interface MetadataFormulaObjectResultType {
     value: string | number;
     /**
      * If true, indicates that this result has child results nested underneath it.
-     * This option only applies to {@link listDynamicUrls}. When fetching options
-     * for entities that can be used as dynamic URLs for a dynamic sync table,
+     * This option only applies to {@link DynamicSyncTableOptions.listDynamicUrls}.
+     * When fetching options for entities that can be used as dynamic URLs for a dynamic sync table,
      * some APIs may return data in a hierarchy rather than a flat list of options.
      *
      * For example, if your dynamic sync table synced data from a Google Drive file,
@@ -544,8 +544,8 @@ export declare type MetadataContext = Record<string, any>;
 export declare type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
 /**
  * A formula that returns metadata relating to a core pack building block, like a sync table,
- * a formula parameter, or a user account. Examples include {@link getSchema}, {@link getConnectionName},
- * and {@link autocomplete}.
+ * a formula parameter, or a user account. Examples include {@link DynamicOptions.getSchema},
+ * {@link BaseAuthentication.getConnectionName}, and {@link autocomplete}.
  *
  * Many pack building blocks make use of supporting features that often require JavaScript
  * or an API request to implement. For example, fetching the list of available autocomplete
@@ -671,6 +671,23 @@ export declare function autocompleteSearchObjects<T>(search: string, objs: T[], 
 export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | number | SimpleAutocompleteOption>): MetadataFormula;
 export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
 /**
+ * A set of options used internally by {@link makeDynamicSyncTable}, or for static
+ * sync tables that have a dynamic schema.
+ */
+export interface DynamicOptions {
+    /**
+     * A formula that returns the schema for this table.
+     *
+     * For a dynamic sync table, the value of {@link DynamicSyncTableOptions.getSchema}
+     * is passed through here. For a non-dynamic sync table, you may still implement
+     * this if you table has a schema that varies based on the user account, but
+     * does not require a {@link dynamicUrl}.
+     */
+    getSchema?: MetadataFormulaDef;
+    /** See {@link DynamicSyncTableOptions.entityName} */
+    entityName?: string;
+}
+/**
  * Input options for defining a sync table. See {@link makeSyncTable}.
  */
 export interface SyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> {
@@ -712,21 +729,10 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
      */
     connectionRequirement?: ConnectionRequirement;
     /**
-     * A set of options used internally by {@link makeDynamicSyncTable}
+     * A set of options used internally by {@link makeDynamicSyncTable}, or for static
+     * sync tables that have a dynamic schema.
      */
-    dynamicOptions?: {
-        /**
-         * A formula that returns the schema for this table.
-         *
-         * For a dynamic sync table, the value of {@link DynamicSyncTableOptions.getSchema}
-         * is passed through here. For a non-dynamic sync table, you may still implement
-         * this if you table has a schema that varies based on the user account, but
-         * does not require a {@link dynamicUrl}.
-         */
-        getSchema?: MetadataFormulaDef;
-        /** See {@link DynamicSyncTableOptions.entityName} */
-        entityName?: string;
-    };
+    dynamicOptions?: DynamicOptions;
 }
 /**
  * Options provided when defining a dynamic sync table.
