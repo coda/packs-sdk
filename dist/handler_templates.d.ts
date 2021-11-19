@@ -27,7 +27,7 @@ import type { SchemaType } from './schema';
  *         return value.toLowerCase();
  *       },
  *     },
- *     queryParams: ["id", "format"],
+ *     queryParams: ["format"],
  *   },
  * });
  * ```

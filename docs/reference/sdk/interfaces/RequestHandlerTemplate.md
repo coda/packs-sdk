@@ -21,7 +21,7 @@ coda.makeTranslateObjectFormula({
         return value.toLowerCase();
       },
     },
-    queryParams: ["id", "format"],
+    queryParams: ["format"],
   },
 });
 ```

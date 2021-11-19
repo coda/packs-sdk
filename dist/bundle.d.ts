@@ -1454,7 +1454,7 @@ export declare enum PrecannedDateRange {
  *         return value.toLowerCase();
  *       },
  *     },
- *     queryParams: ["id", "format"],
+ *     queryParams: ["format"],
  *   },
  * });
  * ```

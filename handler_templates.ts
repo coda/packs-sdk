@@ -35,7 +35,7 @@ import {withQueryParams} from './helpers/url';
  *         return value.toLowerCase();
  *       },
  *     },
- *     queryParams: ["id", "format"],
+ *     queryParams: ["format"],
  *   },
  * });
  * ```
