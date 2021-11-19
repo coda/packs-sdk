@@ -1544,7 +1544,7 @@ export declare type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
 /** Options you can specify when defining a parameter using {@link makeParameter}. */
 export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, "type" | "autocomplete"> & {
 	type: T;
-	autocomplete?: MetadataFormulaDef | Array<string | number | SimpleAutocompleteOption>;
+	autocomplete?: T extends ParameterType.Number | ParameterType.String ? MetadataFormulaDef | Array<TypeMap[ParameterTypeMap[T]] | SimpleAutocompleteOption<T>> : undefined;
 };
 /**
  * Create a definition for a parameter for a formula or sync.
@@ -1882,11 +1882,11 @@ export declare function makeMetadataFormula(execute: MetadataFunction, options?:
  * A result from a parameter autocomplete function that pairs a UI display value with
  * the underlying option that will be used in the formula when selected.
  */
-export interface SimpleAutocompleteOption {
+export interface SimpleAutocompleteOption<T extends ParameterType.Number | ParameterType.String> {
 	/** Text that will be displayed to the user in UI for this option. */
 	display: string;
 	/** The actual value that will get used in the formula if this option is selected. */
-	value: string | number;
+	value: TypeMap[ParameterTypeMap[T]];
 }
 /**
  * Utility to search over an array of autocomplete results and return only those that
@@ -1908,7 +1908,7 @@ export interface SimpleAutocompleteOption {
  * }
  * ```
  */
-export declare function simpleAutocomplete(search: string | undefined, options: Array<string | number | SimpleAutocompleteOption>): Promise<MetadataFormulaObjectResultType[]>;
+export declare function simpleAutocomplete<T extends ParameterType.Number | ParameterType.String>(search: string | undefined, options: Array<TypeMap[ParameterTypeMap[T]] | SimpleAutocompleteOption<T>>): Promise<MetadataFormulaObjectResultType[]>;
 /**
  * A helper to search over a list of objects representing candidate search results,
  * filtering to only those that match a search string, and converting the matching
@@ -1946,7 +1946,7 @@ export declare function autocompleteSearchObjects<T>(search: string, objs: T[], 
  * as the value of the `autocomplete` property in your parameter definition. There is no longer
  * any needed to wrap a value with this formula.
  */
-export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | number | SimpleAutocompleteOption>): MetadataFormula;
+export declare function makeSimpleAutocompleteMetadataFormula<T extends ParameterType.Number | ParameterType.String>(options: Array<TypeMap[ParameterTypeMap[T]] | SimpleAutocompleteOption<T>>): MetadataFormula;
 /**
  * Input options for defining a sync table. See {@link makeSyncTable}.
  */

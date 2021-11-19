@@ -1,7 +1,13 @@
-# Interface: SimpleAutocompleteOption
+# Interface: SimpleAutocompleteOption<T\>
 
 A result from a parameter autocomplete function that pairs a UI display value with
 the underlying option that will be used in the formula when selected.
+
+## Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends [`Number`](../enums/ParameterType.md#number) \| [`String`](../enums/ParameterType.md#string) |
 
 ## Properties
 
@@ -13,16 +19,16 @@ Text that will be displayed to the user in UI for this option.
 
 #### Defined in
 
-[api.ts:994](https://github.com/coda/packs-sdk/blob/main/api.ts#L994)
+[api.ts:1001](https://github.com/coda/packs-sdk/blob/main/api.ts#L1001)
 
 ___
 
 ### value
 
-• **value**: `string` \| `number`
+• **value**: `TypeMap`[`ParameterTypeMap`[`T`]]
 
 The actual value that will get used in the formula if this option is selected.
 
 #### Defined in
 
-[api.ts:996](https://github.com/coda/packs-sdk/blob/main/api.ts#L996)
+[api.ts:1003](https://github.com/coda/packs-sdk/blob/main/api.ts#L1003)

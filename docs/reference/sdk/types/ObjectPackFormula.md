@@ -13,4 +13,4 @@ A pack formula that returns a JavaScript object.
 
 #### Defined in
 
-[api.ts:485](https://github.com/coda/packs-sdk/blob/main/api.ts#L485)
+[api.ts:492](https://github.com/coda/packs-sdk/blob/main/api.ts#L492)

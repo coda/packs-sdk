@@ -8,4 +8,4 @@ or a full metadata formula definition (mostly supported for legacy code).
 
 #### Defined in
 
-[api.ts:947](https://github.com/coda/packs-sdk/blob/main/api.ts#L947)
+[api.ts:954](https://github.com/coda/packs-sdk/blob/main/api.ts#L954)

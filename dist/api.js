@@ -111,11 +111,14 @@ exports.wrapMetadataFunction = wrapMetadataFunction;
 function makeParameter(paramDefinition) {
     const { type, autocomplete: autocompleteDefOrItems, ...rest } = paramDefinition;
     const actualType = api_types_2.ParameterTypeInputMap[type];
-    let autocompleteDef = autocompleteDefOrItems;
-    if (Array.isArray(autocompleteDef)) {
-        autocompleteDef = makeSimpleAutocompleteMetadataFormula(autocompleteDef);
+    let autocomplete;
+    if (Array.isArray(autocompleteDefOrItems)) {
+        const autocompleteDef = makeSimpleAutocompleteMetadataFormula(autocompleteDefOrItems);
+        autocomplete = wrapMetadataFunction(autocompleteDef);
     }
-    const autocomplete = wrapMetadataFunction(autocompleteDef);
+    else {
+        autocomplete = wrapMetadataFunction(autocompleteDefOrItems);
+    }
     return Object.freeze({ ...rest, autocomplete, type: actualType });
 }
 exports.makeParameter = makeParameter;
@@ -422,21 +425,21 @@ function simpleAutocomplete(search, options) {
         const display = typeof option === 'string' || typeof option === 'number' ? option : option.display;
         return display.toString().toLowerCase().includes(normalizedSearch);
     });
-    const metadataResults = filtered.map(option => {
+    const metadataResults = [];
+    for (const option of filtered) {
         if (typeof option === 'string') {
-            return {
+            metadataResults.push({
                 value: option,
                 display: option,
-            };
+            });
         }
         else if (typeof option === 'number') {
-            return {
+            metadataResults.push({
                 value: option,
                 display: option.toString(),
-            };
+            });
         }
-        return option;
-    });
+    }
     return Promise.resolve(metadataResults);
 }
 exports.simpleAutocomplete = simpleAutocomplete;

@@ -1,6 +1,6 @@
 # Function: simpleAutocomplete
 
-▸ **simpleAutocomplete**(`search`, `options`): `Promise`<[`MetadataFormulaObjectResultType`](../interfaces/MetadataFormulaObjectResultType.md)[]\>
+▸ **simpleAutocomplete**<`T`\>(`search`, `options`): `Promise`<[`MetadataFormulaObjectResultType`](../interfaces/MetadataFormulaObjectResultType.md)[]\>
 
 Utility to search over an array of autocomplete results and return only those that
 match the given search string.
@@ -21,12 +21,18 @@ autocomplete: async function(context, search) {
 }
 ```
 
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends [`String`](../enums/ParameterType.md#string) \| [`Number`](../enums/ParameterType.md#number) |
+
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `search` | `undefined` \| `string` |
-| `options` | (`string` \| `number` \| [`SimpleAutocompleteOption`](../interfaces/SimpleAutocompleteOption.md))[] |
+| `options` | (`TypeMap`[`ParameterTypeMap`[`T`]] \| [`SimpleAutocompleteOption`](../interfaces/SimpleAutocompleteOption.md)<`T`\>)[] |
 
 #### Returns
 
@@ -34,4 +40,4 @@ autocomplete: async function(context, search) {
 
 #### Defined in
 
-[api.ts:1019](https://github.com/coda/packs-sdk/blob/main/api.ts#L1019)
+[api.ts:1026](https://github.com/coda/packs-sdk/blob/main/api.ts#L1026)
