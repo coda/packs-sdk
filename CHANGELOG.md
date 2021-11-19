@@ -1,3 +1,7 @@
+## 0.7.2
+
+- Fixed missing schema description in compiled metadata.
+
 ## 0.7.1
 
 - Update internal authentication mechanisms for interacting with AWS. Not currently available externally.

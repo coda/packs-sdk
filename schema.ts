@@ -1073,6 +1073,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
       properties: normalized,
       identity: schema.identity,
       codaType: schema.codaType,
+      description: schema.description,
     } as T;
 
     return normalizedSchema;
