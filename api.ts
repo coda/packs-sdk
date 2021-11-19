@@ -1072,6 +1072,8 @@ export function simpleAutocomplete<T extends ParameterType.Number | ParameterTyp
         value: option,
         display: option.toString(),
       });
+    } else {
+      metadataResults.push(option);
     }
   }
 
