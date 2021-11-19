@@ -14,7 +14,7 @@ import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
 import {PostSetupType} from '../types';
 import {ScaleIconSet} from '../schema';
-import type {StringFormulaDef} from '../api';
+import type {StringFormulaDefLegacy} from '../api';
 import {Type} from '../api_types';
 import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
@@ -80,7 +80,7 @@ describe('Pack metadata Validation', () => {
           description: '',
           execute: () => '',
           parameters: [],
-        } as StringFormulaDef<any>),
+        } as StringFormulaDefLegacy<any>),
       ],
     });
     const result = await validateJson({

@@ -560,8 +560,15 @@ export interface Logger {
   error(message: string, ...args: LoggerParamType[]): void;
 }
 
+/**
+ * Information about the Coda environment and doc this formula was invoked from, for Coda internal use.
+ */
 export interface InvocationLocation {
+  /** The base URL of the Coda environment executing this formula. Only for Coda internal use. */
   protocolAndHost: string;
+  /**
+   * @deprecated This will be removed in a future version of the SDK.
+   */
   docId?: string;
 }
 

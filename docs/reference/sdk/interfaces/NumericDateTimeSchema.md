@@ -23,7 +23,7 @@ BaseNumberSchema.codaType
 
 #### Defined in
 
-[schema.ts:273](https://github.com/coda/packs-sdk/blob/main/schema.ts#L273)
+[schema.ts:276](https://github.com/coda/packs-sdk/blob/main/schema.ts#L276)
 
 ___
 
@@ -37,7 +37,7 @@ Only applies when this is used as a sync table property.
 
 #### Defined in
 
-[schema.ts:279](https://github.com/coda/packs-sdk/blob/main/schema.ts#L279)
+[schema.ts:282](https://github.com/coda/packs-sdk/blob/main/schema.ts#L282)
 
 ___
 
@@ -56,7 +56,7 @@ BaseNumberSchema.description
 
 #### Defined in
 
-[schema.ts:191](https://github.com/coda/packs-sdk/blob/main/schema.ts#L191)
+[schema.ts:194](https://github.com/coda/packs-sdk/blob/main/schema.ts#L194)
 
 ___
 
@@ -71,7 +71,7 @@ Only applies when this is used as a sync table property.
 
 #### Defined in
 
-[schema.ts:286](https://github.com/coda/packs-sdk/blob/main/schema.ts#L286)
+[schema.ts:289](https://github.com/coda/packs-sdk/blob/main/schema.ts#L289)
 
 ___
 
@@ -87,4 +87,4 @@ BaseNumberSchema.type
 
 #### Defined in
 
-[schema.ts:216](https://github.com/coda/packs-sdk/blob/main/schema.ts#L216)
+[schema.ts:219](https://github.com/coda/packs-sdk/blob/main/schema.ts#L219)

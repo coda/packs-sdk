@@ -60,14 +60,14 @@ makeFormula({
 | Name | Type |
 | :------ | :------ |
 | `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
-| `ResultT` | extends `FormulaResultValueType` |
+| `ResultT` | extends [`ValueType`](../enums/ValueType.md) |
 | `SchemaT` | extends [`Schema`](../types/Schema.md) = [`Schema`](../types/Schema.md) |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `fullDefinition` | `FormulaDefinitionV2`<`ParamDefsT`, `ResultT`, `SchemaT`\> |
+| `fullDefinition` | [`FormulaDefinition`](../types/FormulaDefinition.md)<`ParamDefsT`, `ResultT`, `SchemaT`\> |
 
 #### Returns
 
@@ -75,4 +75,4 @@ makeFormula({
 
 #### Defined in
 
-[api.ts:693](https://github.com/coda/packs-sdk/blob/main/api.ts#L693)
+[api.ts:698](https://github.com/coda/packs-sdk/blob/main/api.ts#L698)

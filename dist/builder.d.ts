@@ -5,8 +5,7 @@ import { ConnectionRequirement } from './api_types';
 import type { DynamicSyncTableOptions } from './api';
 import type { Format } from './types';
 import type { Formula } from './api';
-import type { FormulaDefinitionV2 } from './api';
-import type { FormulaResultValueType } from './api';
+import type { FormulaDefinition } from './api';
 import type { ObjectSchema } from './schema';
 import type { ObjectSchemaDefinition } from './schema';
 import type { PackVersionDefinition } from './types';
@@ -16,6 +15,7 @@ import type { SyncTable } from './api';
 import type { SyncTableOptions } from './api';
 import type { SystemAuthentication } from './types';
 import type { SystemAuthenticationDef } from './types';
+import type { ValueType } from './schema';
 /**
  * Creates a new skeleton pack definition that can be added to.
  *
@@ -92,9 +92,9 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * });
      * ```
      */
-    addFormula<ParamDefsT extends ParamDefs, ResultT extends FormulaResultValueType, SchemaT extends Schema>(definition: {
+    addFormula<ParamDefsT extends ParamDefs, ResultT extends ValueType, SchemaT extends Schema>(definition: {
         resultType: ResultT;
-    } & FormulaDefinitionV2<ParamDefsT, ResultT, SchemaT>): this;
+    } & FormulaDefinition<ParamDefsT, ResultT, SchemaT>): this;
     /**
      * Adds a sync table definition to this pack.
      *

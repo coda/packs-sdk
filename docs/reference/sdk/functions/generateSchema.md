@@ -18,7 +18,7 @@ an object schema, those are left undefined.
 
 | Name | Type |
 | :------ | :------ |
-| `obj` | `ValidTypes` |
+| `obj` | [`InferrableTypes`](../types/InferrableTypes.md) |
 
 #### Returns
 
@@ -26,4 +26,4 @@ an object schema, those are left undefined.
 
 #### Defined in
 
-[schema.ts:848](https://github.com/coda/packs-sdk/blob/main/schema.ts#L848)
+[schema.ts:906](https://github.com/coda/packs-sdk/blob/main/schema.ts#L906)

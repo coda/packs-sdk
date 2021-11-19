@@ -31,15 +31,24 @@ interface ReflectionData {
     comment?: Comment;
   }>;
   children?: ReflectionData[];
+  type?: {
+    declaration: ReflectionData;
+  };
 }
 
 function getReflectionData() {
   const tempfile = path.join(os.tmpdir(), `typedoc.json`);
-  const command = `node_modules/.bin/typedoc index.ts --options typedoc.js --json ${tempfile} > /dev/null 2>&1`;
-  spawnSync(command, {
+  const command = `node_modules/.bin/typedoc index.ts --options typedoc.js --json ${tempfile} > /dev/null`;
+  const response = spawnSync(command, {
     shell: true,
-    stdio: 'inherit',
   });
+  // Ideally we would just use TypeDoc's --treatWarningsAsErrors flag, but it appears not to be working.
+  const stdErr = response.stderr.toString();
+  if (stdErr) {
+    throw new Error(
+      `Treating warnings as errors. Some references entities are likely not included in the documentation\n` + stdErr,
+    );
+  }
   return JSON.parse(fs.readFileSync(tempfile, 'utf-8'));
 }
 
@@ -64,7 +73,11 @@ function traverse(data: ReflectionData): ReflectionData[] {
 }
 
 function hasComment(data: ReflectionData): boolean {
-  return Boolean(data.comment || data.signatures?.some(sig => sig.comment));
+  return Boolean(
+    data.comment ||
+      data.signatures?.some(sig => sig.comment) ||
+      (data.type?.declaration.name === '__type' && data.type.declaration.signatures?.some(sig => sig.comment)),
+  );
 }
 
 function messageForEntity(data: ReflectionData): string {

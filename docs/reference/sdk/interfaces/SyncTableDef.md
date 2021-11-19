@@ -28,7 +28,7 @@ See {@link SyncTableOptions.dynamicOptions.entityName}
 
 #### Defined in
 
-[api.ts:161](https://github.com/coda/packs-sdk/blob/main/api.ts#L161)
+[api.ts:166](https://github.com/coda/packs-sdk/blob/main/api.ts#L166)
 
 ___
 
@@ -40,7 +40,7 @@ See {@link SyncTableOptions.dynamicOptions.getSchema}
 
 #### Defined in
 
-[api.ts:159](https://github.com/coda/packs-sdk/blob/main/api.ts#L159)
+[api.ts:164](https://github.com/coda/packs-sdk/blob/main/api.ts#L164)
 
 ___
 
@@ -52,7 +52,7 @@ See [SyncTableOptions.formula](SyncTableOptions.md#formula)
 
 #### Defined in
 
-[api.ts:157](https://github.com/coda/packs-sdk/blob/main/api.ts#L157)
+[api.ts:162](https://github.com/coda/packs-sdk/blob/main/api.ts#L162)
 
 ___
 
@@ -64,7 +64,7 @@ See [SyncTableOptions.name](SyncTableOptions.md#name)
 
 #### Defined in
 
-[api.ts:153](https://github.com/coda/packs-sdk/blob/main/api.ts#L153)
+[api.ts:158](https://github.com/coda/packs-sdk/blob/main/api.ts#L158)
 
 ___
 
@@ -76,4 +76,4 @@ See [SyncTableOptions.schema](SyncTableOptions.md#schema)
 
 #### Defined in
 
-[api.ts:155](https://github.com/coda/packs-sdk/blob/main/api.ts#L155)
+[api.ts:160](https://github.com/coda/packs-sdk/blob/main/api.ts#L160)
