@@ -5,7 +5,7 @@ See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-reques
 
 ## Hierarchy
 
-- `BaseAuthentication`
+- [`BaseAuthentication`](BaseAuthentication.md)
 
   ↳ **`AWSAccessKeyAuthentication`**
 
@@ -15,17 +15,17 @@ See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-reques
 
 • `Optional` **defaultConnectionType**: [`DefaultConnectionType`](../enums/DefaultConnectionType.md)
 
-Indicates the defualt manner in which a user's account is expected to be used by this pack,
+Indicates the default manner in which a user's account is expected to be used by this pack,
 e.g. is this account used for retrieving data, taking actions, or both.
 See https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs#h_40472431f0
 
 #### Inherited from
 
-BaseAuthentication.defaultConnectionType
+[BaseAuthentication](BaseAuthentication.md).[defaultConnectionType](BaseAuthentication.md#defaultconnectiontype)
 
 #### Defined in
 
-[types.ts:233](https://github.com/coda/packs-sdk/blob/main/types.ts#L233)
+[types.ts:236](https://github.com/coda/packs-sdk/blob/main/types.ts#L236)
 
 ___
 
@@ -41,11 +41,11 @@ For packs that make requests to multiple domains (uncommon), this should be the 
 
 #### Inherited from
 
-BaseAuthentication.endpointDomain
+[BaseAuthentication](BaseAuthentication.md).[endpointDomain](BaseAuthentication.md#endpointdomain)
 
 #### Defined in
 
-[types.ts:255](https://github.com/coda/packs-sdk/blob/main/types.ts#L255)
+[types.ts:258](https://github.com/coda/packs-sdk/blob/main/types.ts#L258)
 
 ___
 
@@ -63,11 +63,11 @@ with the creating user's Coda username.
 
 #### Inherited from
 
-BaseAuthentication.getConnectionName
+[BaseAuthentication](BaseAuthentication.md).[getConnectionName](BaseAuthentication.md#getconnectionname)
 
 #### Defined in
 
-[types.ts:216](https://github.com/coda/packs-sdk/blob/main/types.ts#L216)
+[types.ts:219](https://github.com/coda/packs-sdk/blob/main/types.ts#L219)
 
 ___
 
@@ -79,11 +79,11 @@ A link to a help article or other page with more instructions about how to set u
 
 #### Inherited from
 
-BaseAuthentication.instructionsUrl
+[BaseAuthentication](BaseAuthentication.md).[instructionsUrl](BaseAuthentication.md#instructionsurl)
 
 #### Defined in
 
-[types.ts:238](https://github.com/coda/packs-sdk/blob/main/types.ts#L238)
+[types.ts:241](https://github.com/coda/packs-sdk/blob/main/types.ts#L241)
 
 ___
 
@@ -96,11 +96,11 @@ This is not common.
 
 #### Inherited from
 
-BaseAuthentication.postSetup
+[BaseAuthentication](BaseAuthentication.md).[postSetup](BaseAuthentication.md#postsetup)
 
 #### Defined in
 
-[types.ts:261](https://github.com/coda/packs-sdk/blob/main/types.ts#L261)
+[types.ts:264](https://github.com/coda/packs-sdk/blob/main/types.ts#L264)
 
 ___
 
@@ -115,11 +115,11 @@ when creating a new account.
 
 #### Inherited from
 
-BaseAuthentication.requiresEndpointUrl
+[BaseAuthentication](BaseAuthentication.md).[requiresEndpointUrl](BaseAuthentication.md#requiresendpointurl)
 
 #### Defined in
 
-[types.ts:246](https://github.com/coda/packs-sdk/blob/main/types.ts#L246)
+[types.ts:249](https://github.com/coda/packs-sdk/blob/main/types.ts#L249)
 
 ___
 
@@ -131,7 +131,7 @@ The AWS service to authenticate with, like "s3", "iam", or "route53".
 
 #### Defined in
 
-[types.ts:541](https://github.com/coda/packs-sdk/blob/main/types.ts#L541)
+[types.ts:544](https://github.com/coda/packs-sdk/blob/main/types.ts#L544)
 
 ___
 
@@ -143,4 +143,4 @@ Identifies this as AWSAccessKey authentication.
 
 #### Defined in
 
-[types.ts:539](https://github.com/coda/packs-sdk/blob/main/types.ts#L539)
+[types.ts:542](https://github.com/coda/packs-sdk/blob/main/types.ts#L542)

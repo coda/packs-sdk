@@ -22,26 +22,20 @@ this sync table (including autocomplete formulas).
 
 #### Defined in
 
-[api.ts:1241](https://github.com/coda/packs-sdk/blob/main/api.ts#L1241)
+[api.ts:1261](https://github.com/coda/packs-sdk/blob/main/api.ts#L1261)
 
 ___
 
 ### dynamicOptions
 
-• `Optional` **dynamicOptions**: `Object`
+• `Optional` **dynamicOptions**: [`DynamicOptions`](DynamicOptions.md)
 
-A set of options used internally by [makeDynamicSyncTable](../functions/makeDynamicSyncTable.md)
-
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `entityName?` | `string` | See [DynamicSyncTableOptions.entityName](DynamicSyncTableOptions.md#entityname) |
-| `getSchema?` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) | A formula that returns the schema for this table.  For a dynamic sync table, the value of [DynamicSyncTableOptions.getSchema](DynamicSyncTableOptions.md#getschema) is passed through here. For a non-dynamic sync table, you may still implement this if you table has a schema that varies based on the user account, but does not require a [dynamicUrl](Identity.md#dynamicurl). |
+A set of options used internally by [makeDynamicSyncTable](../functions/makeDynamicSyncTable.md), or for static
+sync tables that have a dynamic schema.
 
 #### Defined in
 
-[api.ts:1245](https://github.com/coda/packs-sdk/blob/main/api.ts#L1245)
+[api.ts:1266](https://github.com/coda/packs-sdk/blob/main/api.ts#L1266)
 
 ___
 
@@ -56,7 +50,7 @@ These will eventually be consolidated.)
 
 #### Defined in
 
-[api.ts:1236](https://github.com/coda/packs-sdk/blob/main/api.ts#L1236)
+[api.ts:1256](https://github.com/coda/packs-sdk/blob/main/api.ts#L1256)
 
 ___
 
@@ -78,7 +72,7 @@ of the object, and the schema is declared as `{identity: {name: 'Products'}}`.
 
 #### Defined in
 
-[api.ts:1224](https://github.com/coda/packs-sdk/blob/main/api.ts#L1224)
+[api.ts:1244](https://github.com/coda/packs-sdk/blob/main/api.ts#L1244)
 
 ___
 
@@ -92,7 +86,7 @@ from an e-commerce platform should be called 'Products'. This name must not cont
 
 #### Defined in
 
-[api.ts:1210](https://github.com/coda/packs-sdk/blob/main/api.ts#L1210)
+[api.ts:1230](https://github.com/coda/packs-sdk/blob/main/api.ts#L1230)
 
 ___
 
@@ -105,4 +99,4 @@ schema for a single product. The sync formula will return an array of objects th
 
 #### Defined in
 
-[api.ts:1229](https://github.com/coda/packs-sdk/blob/main/api.ts#L1229)
+[api.ts:1249](https://github.com/coda/packs-sdk/blob/main/api.ts#L1249)

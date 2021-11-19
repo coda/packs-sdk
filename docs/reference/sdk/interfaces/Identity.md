@@ -24,7 +24,7 @@ See [makeAttributionNode](../functions/makeAttributionNode.md).
 
 #### Defined in
 
-[schema.ts:634](https://github.com/coda/packs-sdk/blob/main/schema.ts#L634)
+[schema.ts:635](https://github.com/coda/packs-sdk/blob/main/schema.ts#L635)
 
 ___
 
@@ -32,8 +32,9 @@ ___
 
 • `Optional` **dynamicUrl**: `string`
 
-The dynamic URL, if this is a schema for a dynamic sync table. When returning a schema from the {@link getSchema}
-formula of a dynamic sync table, you must include the dynamic URL of that table, so that rows
+The dynamic URL, if this is a schema for a dynamic sync table. When returning a schema from the
+[DynamicSyncTableOptions.getSchema](DynamicSyncTableOptions.md#getschema) formula of a dynamic sync table, you must include
+the dynamic URL of that table, so that rows
 in this table may be distinguished from rows in another dynamic instance of the same table.
 
 When creating a reference to a dynamic sync table, you must include the dynamic URL of the table
@@ -45,7 +46,7 @@ you wish to reference, again to distinguish which table instance you are trying 
 
 #### Defined in
 
-[schema.ts:628](https://github.com/coda/packs-sdk/blob/main/schema.ts#L628)
+[schema.ts:629](https://github.com/coda/packs-sdk/blob/main/schema.ts#L629)
 
 ___
 
@@ -78,4 +79,4 @@ The ID of another pack, if you are trying to reference a value from different pa
 
 #### Defined in
 
-[schema.ts:641](https://github.com/coda/packs-sdk/blob/main/schema.ts#L641)
+[schema.ts:642](https://github.com/coda/packs-sdk/blob/main/schema.ts#L642)

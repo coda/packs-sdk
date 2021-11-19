@@ -471,6 +471,7 @@ function normalizeSchema(schema) {
             properties: normalized,
             identity: schema.identity,
             codaType: schema.codaType,
+            description: schema.description,
         };
         return normalizedSchema;
     }

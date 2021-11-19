@@ -22,8 +22,8 @@ ___
 • `Optional` **hasChildren**: `boolean`
 
 If true, indicates that this result has child results nested underneath it.
-This option only applies to {@link listDynamicUrls}. When fetching options
-for entities that can be used as dynamic URLs for a dynamic sync table,
+This option only applies to [DynamicSyncTableOptions.listDynamicUrls](DynamicSyncTableOptions.md#listdynamicurls).
+When fetching options for entities that can be used as dynamic URLs for a dynamic sync table,
 some APIs may return data in a hierarchy rather than a flat list of options.
 
 For example, if your dynamic sync table synced data from a Google Drive file,

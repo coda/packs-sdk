@@ -96,4 +96,13 @@ describe('TypeDoc coverage', () => {
       assert.fail(message);
     }
   });
+
+  it('no broken links', () => {
+    const command = 'grep -R @link docs/reference/sdk/*';
+    const response = spawnSync(command, {shell: true});
+    const matches = response.stdout.toString();
+    if (matches.trim()) {
+      assert.fail(`Found broken @link references in SDK reference documentation:\n${matches}`);
+    }
+  });
 });

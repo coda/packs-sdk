@@ -618,8 +618,9 @@ export interface IdentityDefinition {
   // TODO(jonathan): Inject the dynamicUrl at runtime like we do the packId so that pack makers
   // don't have to it themselves.
   /**
-   * The dynamic URL, if this is a schema for a dynamic sync table. When returning a schema from the {@link getSchema}
-   * formula of a dynamic sync table, you must include the dynamic URL of that table, so that rows
+   * The dynamic URL, if this is a schema for a dynamic sync table. When returning a schema from the
+   * {@link DynamicSyncTableOptions.getSchema} formula of a dynamic sync table, you must include
+   * the dynamic URL of that table, so that rows
    * in this table may be distinguished from rows in another dynamic instance of the same table.
    *
    * When creating a reference to a dynamic sync table, you must include the dynamic URL of the table
@@ -867,7 +868,7 @@ type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = ObjectSchema
  * For example, `SchemaType<NumberSchema>` produces the type `number`.
  *
  * For an object schema, this will for the most part return an object matching the schema
- * but if the schema uses {@link `fromKey`} then this utility will be unable to infer
+ * but if the schema uses {@link fromKey} then this utility will be unable to infer
  * that the return value type should use the property names given in the `fromKey`
  * attribute, and will simply relax any property name type-checking in such a case.
  *
@@ -1073,6 +1074,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
       properties: normalized,
       identity: schema.identity,
       codaType: schema.codaType,
+      description: schema.description,
     } as T;
 
     return normalizedSchema;

@@ -24,7 +24,7 @@ instead, define sync tables using [makeSyncTable](../functions/makeSyncTable.md)
 
 • `Optional` **entityName**: `string`
 
-See {@link SyncTableOptions.dynamicOptions.entityName}
+See [DynamicOptions.entityName](DynamicOptions.md#entityname)
 
 #### Defined in
 
@@ -36,7 +36,7 @@ ___
 
 • `Optional` **getSchema**: [`MetadataFormula`](../types/MetadataFormula.md)
 
-See {@link SyncTableOptions.dynamicOptions.getSchema}
+See [DynamicOptions.getSchema](DynamicOptions.md#getschema)
 
 #### Defined in
 

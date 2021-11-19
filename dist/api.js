@@ -439,6 +439,9 @@ function simpleAutocomplete(search, options) {
                 display: option.toString(),
             });
         }
+        else {
+            metadataResults.push(option);
+        }
     }
     return Promise.resolve(metadataResults);
 }
