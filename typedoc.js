@@ -15,10 +15,6 @@ module.exports = {
   allReflectionsHaveOwnDocument: true,
 
   intentionallyNotExported: [
-    // TODO(jonathan): Export and document these.
-    'RequestHandlerTemplate',
-    'ResponseHandlerTemplate',
-
     // Internal intermediate or helper types that we probably don't care to export or document.
     '$Values',
     'AsAuthDef',
