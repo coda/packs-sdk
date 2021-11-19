@@ -10,7 +10,7 @@ Actions are special types of formulas that power buttons and automations. They u
 [Learn More](../../../guides/blocks/actions){ .md-button }
 
 ## Template
-The basic structure of an action. This sample takes in a single string parameter and returns the string &quot;OK&quot;.
+The basic structure of an action. This sample takes in a single string parameter and returns the string &quot;OK&quot; when the action is complete.
 
 ```ts
 pack.addFormula({

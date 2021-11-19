@@ -17,7 +17,7 @@ it is shaped like a Coda formula to be used at runtime.
 
 | Name | Type |
 | :------ | :------ |
-| `execute` | `MetadataFunction` |
+| `execute` | [`MetadataFunction`](../types/MetadataFunction.md) |
 | `options?` | `Object` |
 | `options.connectionRequirement?` | [`ConnectionRequirement`](../enums/ConnectionRequirement.md) |
 
@@ -27,4 +27,4 @@ it is shaped like a Coda formula to be used at runtime.
 
 #### Defined in
 
-[api.ts:961](https://github.com/coda/packs-sdk/blob/main/api.ts#L961)
+[api.ts:989](https://github.com/coda/packs-sdk/blob/main/api.ts#L989)

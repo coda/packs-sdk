@@ -177,8 +177,11 @@ export const NumberHintValueTypes = [
 ] as const;
 export const ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference] as const;
 
+/**  The subset of {@link ValueHintType} that can be used with a string value. */
 export type StringHintTypes = typeof StringHintValueTypes[number];
+/**  The subset of {@link ValueHintType} that can be used with a number value. */
 export type NumberHintTypes = typeof NumberHintValueTypes[number];
+/**  The subset of {@link ValueHintType} that can be used with an object value. */
 export type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 
 interface BaseSchema {
@@ -723,24 +726,78 @@ export enum AttributionNodeType {
   Image,
 }
 
-interface TextAttributionNode {
+/**
+ * An attribution node that simply renders some text.
+ *
+ * This might be used to attribute the data source.
+ *
+ * @example
+ * ```
+ * coda.makeAttributionNode({
+ *   type: coda.AttributionNodeType.Text,
+ *   text: "Data provided by ExampleCorp.",
+ * });
+ * ```
+ */
+export interface TextAttributionNode {
+  /** Identifies this as a text attribution node. */
   type: AttributionNodeType.Text;
+  /** The text to render with the pack value. */
   text: string;
 }
 
-interface LinkAttributionNode {
+/**
+ * An attribution node that renders a hyperlink.
+ *
+ * This might be used to attribute the data source and link back to the home page
+ * of the data source or directly to the source data.
+ *
+ * @example
+ * ```
+ * coda.makeAttributionNode({
+ *   type: coda.AttributionNodeType.Link,
+ *   anchorUrl: "https://example.com",
+ *   anchorText: "Data provided by ExampleCorp.",
+ * });
+ * ```
+ */
+export interface LinkAttributionNode {
+  /** Identifies this as a link attribution node. */
   type: AttributionNodeType.Link;
+  /** The URL to link to. */
   anchorUrl: string;
+  /** The text of the hyperlink. */
   anchorText: string;
 }
 
-interface ImageAttributionNode {
+/**
+ * An attribution node that renders as a hyperlinked image.
+ *
+ * This is often the logo of the data source along with a link back to the home page
+ * of the data source or directly to the source data.
+ *
+ * @example
+ * ```
+ * coda.makeAttributionNode({
+ *   type: coda.AttributionNodeType.Image,
+ *   anchorUrl: "https://example.com",
+ *   imageUrl: "https://example.com/assets/logo.png",
+ * });
+ * ```
+ */
+export interface ImageAttributionNode {
+  /** Identifies this as an image attribution node. */
   type: AttributionNodeType.Image;
+  /** The URL to link to. */
   anchorUrl: string;
+  /** The URL of the image to render. */
   imageUrl: string;
 }
 
-type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
+/**
+ * Union of attribution node types for rendering attribution for a pack value. See {@link makeAttributionNode}.
+ */
+export type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
 
 /**
  * A helper for constructing attribution text, links, or images that render along with a Pack value.
@@ -830,7 +887,8 @@ export type SchemaType<T extends Schema> = T extends BooleanSchema
   ? ObjectSchemaType<T>
   : never;
 
-export type ValidTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
+/** Primitive types for which {@link generateSchema} can infer a schema. */
+export type InferrableTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
 
 /**
  * Utility that examines a JavaScript value and attempts to infer a schema definition
@@ -845,7 +903,7 @@ export type ValidTypes = boolean | number | string | object | boolean[] | number
  * This utility does NOT attempt to determine {@link id} or {@link primary} attributes for
  * an object schema, those are left undefined.
  */
-export function generateSchema(obj: ValidTypes): Schema {
+export function generateSchema(obj: InferrableTypes): Schema {
   if (Array.isArray(obj)) {
     if (obj.length === 0) {
       throw new Error('Must have representative value.');

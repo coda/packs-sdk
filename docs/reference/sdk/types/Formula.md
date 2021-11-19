@@ -13,9 +13,9 @@ pack, like an autocomplete metadata formula or a sync getter formula.
 | Name | Type |
 | :------ | :------ |
 | `ParamDefsT` | extends [`ParamDefs`](ParamDefs.md) = [`ParamDefs`](ParamDefs.md) |
-| `ResultT` | extends `FormulaResultValueType` = `FormulaResultValueType` |
+| `ResultT` | extends [`ValueType`](../enums/ValueType.md) = [`ValueType`](../enums/ValueType.md) |
 | `SchemaT` | extends [`Schema`](Schema.md) = [`Schema`](Schema.md) |
 
 #### Defined in
 
-[api.ts:503](https://github.com/coda/packs-sdk/blob/main/api.ts#L503)
+[api.ts:508](https://github.com/coda/packs-sdk/blob/main/api.ts#L508)

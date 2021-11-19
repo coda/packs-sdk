@@ -12,4 +12,4 @@ A pack formula that returns a boolean.
 
 #### Defined in
 
-[api.ts:475](https://github.com/coda/packs-sdk/blob/main/api.ts#L475)
+[api.ts:480](https://github.com/coda/packs-sdk/blob/main/api.ts#L480)

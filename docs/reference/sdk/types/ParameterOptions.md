@@ -12,4 +12,4 @@ Options you can specify when defining a parameter using [makeParameter](../funct
 
 #### Defined in
 
-[api.ts:263](https://github.com/coda/packs-sdk/blob/main/api.ts#L263)
+[api.ts:268](https://github.com/coda/packs-sdk/blob/main/api.ts#L268)

@@ -140,30 +140,40 @@ exports.Examples = [
         name: 'Column formats',
         category: types_1.ExampleCategory.Topic,
         triggerTokens: ['addColumnFormat'],
-        contentFile: './examples/column-format/column_format.md',
+        contentFile: './examples/column-format/README.md',
         linkData: {
             type: types_2.UrlType.SdkReferencePath,
-            url: '/reference/sdk/classes/PackDefinitionBuilder#addColumnFormat',
+            url: '/guides/blocks/column-formats',
         },
         exampleSnippets: [
             {
                 name: 'Template',
-                content: '',
+                content: 'The basic structure of a column format.',
                 codeFile: './snippets/column_format.ts',
             },
             {
                 name: 'Text (Reverse)',
-                content: '',
+                content: 'A column format that formats text. This sample displays the text in the cell in reverse.',
                 codeFile: './examples/column-format/reverse.ts',
             },
             {
+                name: 'Text (Roman Numeral)',
+                content: 'A column format that formats a number as text. This sample displays the number in the cell as a Roman numeral.',
+                codeFile: './examples/column-format/roman_numeral.ts',
+            },
+            {
+                name: 'Text (Progress Bar)',
+                content: 'A column format that formats a number as graphic. This sample displays the number in the cell as a progress bar.',
+                codeFile: './examples/column-format/progress_bar.ts',
+            },
+            {
                 name: 'Image (Cats)',
-                content: '',
+                content: 'A column format that formats text as an image. This sample displays the text in the cell as an overlay on a random image of a cat.',
                 codeFile: './examples/cats/column_format.ts',
             },
             {
-                name: 'Rich Data (Todoist)',
-                content: '',
+                name: 'Rich data (Todoist)',
+                content: 'A column format that formats a URL as rich data. This sample displays the URL of the Todoist task in the cell as a rich data chip.',
                 codeFile: './examples/todoist/column_format.ts',
             },
         ],
@@ -246,7 +256,7 @@ exports.Examples = [
         exampleSnippets: [
             {
                 name: 'Template',
-                content: 'The basic structure of an action. This sample takes in a single string parameter and returns the string "OK".',
+                content: 'The basic structure of an action. This sample takes in a single string parameter and returns the string "OK" when the action is complete.',
                 codeFile: './snippets/formula/action_formula.ts',
             },
             {
