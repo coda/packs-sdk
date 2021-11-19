@@ -1186,7 +1186,8 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
 }
 
 /**
- * A set of options used internally by {@link makeDynamicSyncTable}
+ * A set of options used internally by {@link makeDynamicSyncTable}, or for static
+ * sync tables that have a dynamic schema.
  */
 export interface DynamicOptions {
   /**
@@ -1249,7 +1250,8 @@ export interface SyncTableOptions<
    */
   connectionRequirement?: ConnectionRequirement;
   /**
-   * A set of options used internally by {@link makeDynamicSyncTable}
+   * A set of options used internally by {@link makeDynamicSyncTable}, or for static
+   * sync tables that have a dynamic schema.
    */
   dynamicOptions?: DynamicOptions;
 }

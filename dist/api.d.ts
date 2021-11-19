@@ -671,7 +671,8 @@ export declare function autocompleteSearchObjects<T>(search: string, objs: T[], 
 export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | number | SimpleAutocompleteOption>): MetadataFormula;
 export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
 /**
- * A set of options used internally by {@link makeDynamicSyncTable}
+ * A set of options used internally by {@link makeDynamicSyncTable}, or for static
+ * sync tables that have a dynamic schema.
  */
 export interface DynamicOptions {
     /**
@@ -728,7 +729,8 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
      */
     connectionRequirement?: ConnectionRequirement;
     /**
-     * A set of options used internally by {@link makeDynamicSyncTable}
+     * A set of options used internally by {@link makeDynamicSyncTable}, or for static
+     * sync tables that have a dynamic schema.
      */
     dynamicOptions?: DynamicOptions;
 }

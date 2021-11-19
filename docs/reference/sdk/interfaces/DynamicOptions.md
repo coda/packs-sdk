@@ -1,6 +1,7 @@
 # Interface: DynamicOptions
 
-A set of options used internally by [makeDynamicSyncTable](../functions/makeDynamicSyncTable.md)
+A set of options used internally by [makeDynamicSyncTable](../functions/makeDynamicSyncTable.md), or for static
+sync tables that have a dynamic schema.
 
 ## Properties
 
@@ -12,7 +13,7 @@ See [DynamicSyncTableOptions.entityName](DynamicSyncTableOptions.md#entityname)
 
 #### Defined in
 
-[api.ts:1202](https://github.com/coda/packs-sdk/blob/main/api.ts#L1202)
+[api.ts:1203](https://github.com/coda/packs-sdk/blob/main/api.ts#L1203)
 
 ___
 
@@ -29,4 +30,4 @@ does not require a [dynamicUrl](Identity.md#dynamicurl).
 
 #### Defined in
 
-[api.ts:1200](https://github.com/coda/packs-sdk/blob/main/api.ts#L1200)
+[api.ts:1201](https://github.com/coda/packs-sdk/blob/main/api.ts#L1201)
