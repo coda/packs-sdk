@@ -22,26 +22,19 @@ this sync table (including autocomplete formulas).
 
 #### Defined in
 
-[api.ts:1233](https://github.com/coda/packs-sdk/blob/main/api.ts#L1233)
+[api.ts:1250](https://github.com/coda/packs-sdk/blob/main/api.ts#L1250)
 
 ___
 
 ### dynamicOptions
 
-• `Optional` **dynamicOptions**: `Object`
+• `Optional` **dynamicOptions**: [`DynamicOptions`](DynamicOptions.md)
 
 A set of options used internally by [makeDynamicSyncTable](../functions/makeDynamicSyncTable.md)
 
-#### Type declaration
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `entityName?` | `string` | See [DynamicSyncTableOptions.entityName](DynamicSyncTableOptions.md#entityname) |
-| `getSchema?` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) | A formula that returns the schema for this table.  For a dynamic sync table, the value of [DynamicSyncTableOptions.getSchema](DynamicSyncTableOptions.md#getschema) is passed through here. For a non-dynamic sync table, you may still implement this if you table has a schema that varies based on the user account, but does not require a [dynamicUrl](Identity.md#dynamicurl). |
-
 #### Defined in
 
-[api.ts:1237](https://github.com/coda/packs-sdk/blob/main/api.ts#L1237)
+[api.ts:1254](https://github.com/coda/packs-sdk/blob/main/api.ts#L1254)
 
 ___
 
@@ -56,7 +49,7 @@ These will eventually be consolidated.)
 
 #### Defined in
 
-[api.ts:1228](https://github.com/coda/packs-sdk/blob/main/api.ts#L1228)
+[api.ts:1245](https://github.com/coda/packs-sdk/blob/main/api.ts#L1245)
 
 ___
 
@@ -78,7 +71,7 @@ of the object, and the schema is declared as `{identity: {name: 'Products'}}`.
 
 #### Defined in
 
-[api.ts:1216](https://github.com/coda/packs-sdk/blob/main/api.ts#L1216)
+[api.ts:1233](https://github.com/coda/packs-sdk/blob/main/api.ts#L1233)
 
 ___
 
@@ -92,7 +85,7 @@ from an e-commerce platform should be called 'Products'. This name must not cont
 
 #### Defined in
 
-[api.ts:1202](https://github.com/coda/packs-sdk/blob/main/api.ts#L1202)
+[api.ts:1219](https://github.com/coda/packs-sdk/blob/main/api.ts#L1219)
 
 ___
 
@@ -105,4 +98,4 @@ schema for a single product. The sync formula will return an array of objects th
 
 #### Defined in
 
-[api.ts:1221](https://github.com/coda/packs-sdk/blob/main/api.ts#L1221)
+[api.ts:1238](https://github.com/coda/packs-sdk/blob/main/api.ts#L1238)

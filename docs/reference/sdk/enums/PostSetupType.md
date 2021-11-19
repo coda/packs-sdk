@@ -1,6 +1,6 @@
 # Enumeration: PostSetupType
 
-Enumeration of post-account-setup step types. See {@link PostSetup}.
+Enumeration of post-account-setup step types. See [PostSetup](../types/PostSetup.md).
 
 ## Enumeration members
 

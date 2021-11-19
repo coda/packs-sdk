@@ -203,7 +203,10 @@ export enum PostSetupType {
  */
 export type PostSetup = SetEndpoint;
 
-interface BaseAuthentication {
+/**
+ * Base interface for authentication definitions.
+ */
+export interface BaseAuthentication {
   /**
    * A function that is called when a user sets up a new account, that returns a name for
    * the account to label that account in the UI. The users credentials are applied to any
@@ -218,7 +221,7 @@ interface BaseAuthentication {
    * A function that is called when a user sets up a new account, that returns the ID of
    * that account in the third-party system being called.
    *
-   * This id is not yet subsequently exposed to pack developers and is mostly for Coda
+   * This ID is not yet subsequently exposed to pack developers and is mostly for Coda
    * internal use.
    *
    * @ignore
@@ -226,7 +229,7 @@ interface BaseAuthentication {
   getConnectionUserId?: MetadataFormula;
 
   /**
-   * Indicates the defualt manner in which a user's account is expected to be used by this pack,
+   * Indicates the default manner in which a user's account is expected to be used by this pack,
    * e.g. is this account used for retrieving data, taking actions, or both.
    * See https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs#h_40472431f0
    */

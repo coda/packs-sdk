@@ -568,8 +568,9 @@ export interface IdentityDefinition {
 	 */
 	name: string;
 	/**
-	 * The dynamic URL, if this is a schema for a dynamic sync table. When returning a schema from the {@link getSchema}
-	 * formula of a dynamic sync table, you must include the dynamic URL of that table, so that rows
+	 * The dynamic URL, if this is a schema for a dynamic sync table. When returning a schema from the
+	 * {@link DynamicSyncTableOptions.getSchema} formula of a dynamic sync table, you must include
+	 * the dynamic URL of that table, so that rows
 	 * in this table may be distinguished from rows in another dynamic instance of the same table.
 	 *
 	 * When creating a reference to a dynamic sync table, you must include the dynamic URL of the table
@@ -780,7 +781,7 @@ export declare type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>>
  * For example, `SchemaType<NumberSchema>` produces the type `number`.
  *
  * For an object schema, this will for the most part return an object matching the schema
- * but if the schema uses {@link `fromKey`} then this utility will be unable to infer
+ * but if the schema uses {@link fromKey} then this utility will be unable to infer
  * that the return value type should use the property names given in the `fromKey`
  * attribute, and will simply relax any property name type-checking in such a case.
  *
@@ -1648,9 +1649,9 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
 	schema: SchemaT;
 	/** See {@link SyncTableOptions.formula} */
 	getter: SyncFormula<K, L, ParamDefsT, SchemaT>;
-	/** See {@link SyncTableOptions.dynamicOptions.getSchema} */
+	/** See {@link DynamicOptions.getSchema} */
 	getSchema?: MetadataFormula;
-	/** See {@link SyncTableOptions.dynamicOptions.entityName} */
+	/** See {@link DynamicOptions.entityName} */
 	entityName?: string;
 }
 /**
@@ -1992,8 +1993,8 @@ export interface MetadataFormulaObjectResultType {
 	value: string | number;
 	/**
 	 * If true, indicates that this result has child results nested underneath it.
-	 * This option only applies to {@link listDynamicUrls}. When fetching options
-	 * for entities that can be used as dynamic URLs for a dynamic sync table,
+	 * This option only applies to {@link DynamicSyncTableOptions.listDynamicUrls}.
+	 * When fetching options for entities that can be used as dynamic URLs for a dynamic sync table,
 	 * some APIs may return data in a hierarchy rather than a flat list of options.
 	 *
 	 * For example, if your dynamic sync table synced data from a Google Drive file,
@@ -2033,8 +2034,8 @@ export declare type MetadataContext = Record<string, any>;
 export declare type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
 /**
  * A formula that returns metadata relating to a core pack building block, like a sync table,
- * a formula parameter, or a user account. Examples include {@link getSchema}, {@link getConnectionName},
- * and {@link autocomplete}.
+ * a formula parameter, or a user account. Examples include {@link DynamicOptions.getSchema},
+ * {@link BaseAuthentication.getConnectionName}, and {@link autocomplete}.
  *
  * Many pack building blocks make use of supporting features that often require JavaScript
  * or an API request to implement. For example, fetching the list of available autocomplete
@@ -2162,6 +2163,22 @@ export declare function autocompleteSearchObjects<T>(search: string, objs: T[], 
  */
 export declare function makeSimpleAutocompleteMetadataFormula(options: Array<string | number | SimpleAutocompleteOption>): MetadataFormula;
 /**
+ * A set of options used internally by {@link makeDynamicSyncTable}
+ */
+export interface DynamicOptions {
+	/**
+	 * A formula that returns the schema for this table.
+	 *
+	 * For a dynamic sync table, the value of {@link DynamicSyncTableOptions.getSchema}
+	 * is passed through here. For a non-dynamic sync table, you may still implement
+	 * this if you table has a schema that varies based on the user account, but
+	 * does not require a {@link dynamicUrl}.
+	 */
+	getSchema?: MetadataFormulaDef;
+	/** See {@link DynamicSyncTableOptions.entityName} */
+	entityName?: string;
+}
+/**
  * Input options for defining a sync table. See {@link makeSyncTable}.
  */
 export interface SyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> {
@@ -2205,19 +2222,7 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	/**
 	 * A set of options used internally by {@link makeDynamicSyncTable}
 	 */
-	dynamicOptions?: {
-		/**
-		 * A formula that returns the schema for this table.
-		 *
-		 * For a dynamic sync table, the value of {@link DynamicSyncTableOptions.getSchema}
-		 * is passed through here. For a non-dynamic sync table, you may still implement
-		 * this if you table has a schema that varies based on the user account, but
-		 * does not require a {@link dynamicUrl}.
-		 */
-		getSchema?: MetadataFormulaDef;
-		/** See {@link DynamicSyncTableOptions.entityName} */
-		entityName?: string;
-	};
+	dynamicOptions?: DynamicOptions;
 }
 /**
  * Options provided when defining a dynamic sync table.
@@ -2590,6 +2595,9 @@ export declare enum PostSetupType {
  * use cases and step types in the future.
  */
 export declare type PostSetup = SetEndpoint;
+/**
+ * Base interface for authentication definitions.
+ */
 export interface BaseAuthentication {
 	/**
 	 * A function that is called when a user sets up a new account, that returns a name for
@@ -2605,14 +2613,14 @@ export interface BaseAuthentication {
 	 * A function that is called when a user sets up a new account, that returns the ID of
 	 * that account in the third-party system being called.
 	 *
-	 * This id is not yet subsequently exposed to pack developers and is mostly for Coda
+	 * This ID is not yet subsequently exposed to pack developers and is mostly for Coda
 	 * internal use.
 	 *
 	 * @ignore
 	 */
 	getConnectionUserId?: MetadataFormula;
 	/**
-	 * Indicates the defualt manner in which a user's account is expected to be used by this pack,
+	 * Indicates the default manner in which a user's account is expected to be used by this pack,
 	 * e.g. is this account used for retrieving data, taking actions, or both.
 	 * See https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs#h_40472431f0
 	 */

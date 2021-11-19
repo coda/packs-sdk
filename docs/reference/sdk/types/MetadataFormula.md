@@ -3,8 +3,8 @@
 Ƭ **MetadataFormula**: [`BaseFormula`](BaseFormula.md)<[[`ParamDef`](../interfaces/ParamDef.md)<[`string`](../enums/Type.md#string)\>, [`ParamDef`](../interfaces/ParamDef.md)<[`string`](../enums/Type.md#string)\>], `any`\> & { `schema?`: `any`  }
 
 A formula that returns metadata relating to a core pack building block, like a sync table,
-a formula parameter, or a user account. Examples include {@link getSchema}, {@link getConnectionName},
-and [autocomplete](../interfaces/ParamDef.md#autocomplete).
+a formula parameter, or a user account. Examples include [DynamicOptions.getSchema](../interfaces/DynamicOptions.md#getschema),
+[BaseAuthentication.getConnectionName](../interfaces/BaseAuthentication.md#getconnectionname), and [autocomplete](../interfaces/ParamDef.md#autocomplete).
 
 Many pack building blocks make use of supporting features that often require JavaScript
 or an API request to implement. For example, fetching the list of available autocomplete

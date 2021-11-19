@@ -24,7 +24,7 @@ instead, define dynamic sync tables using [makeDynamicSyncTable](../functions/ma
 
 • `Optional` **entityName**: `string`
 
-See {@link SyncTableOptions.dynamicOptions.entityName}
+See [DynamicOptions.entityName](DynamicOptions.md#entityname)
 
 #### Inherited from
 
