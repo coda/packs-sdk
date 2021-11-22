@@ -68,7 +68,7 @@ export declare function executeSyncFormulaFromPackDef<T extends object = any>(pa
  * including the continuation, for inspection.
  */
 export declare function executeSyncFormulaFromPackDefSingleIteration(packDef: BasicPackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<GenericSyncFormulaResult>;
-export declare function executeMetadataFormula(formula: MetadataFormula, metadataParams?: {
+export declare function executeMetadataFormula(formula: MetadataFormula<any>, metadataParams?: {
     search?: string;
     formulaContext?: MetadataContext;
 }, context?: ExecutionContext): Promise<any>;

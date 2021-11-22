@@ -1,6 +1,6 @@
 # Function: makeParameter
 
-▸ **makeParameter**<`T`\>(`paramDefinition`): [`ParamDef`](../interfaces/ParamDef.md)<`ParameterTypeMap`[`T`]\>
+▸ **makeParameter**<`T`, `AutoCompleteResultT`\>(`paramDefinition`): [`ParamDef`](../interfaces/ParamDef.md)<`ParameterTypeMap`[`T`]\>
 
 Create a definition for a parameter for a formula or sync.
 
@@ -19,12 +19,13 @@ makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', descriptio
 | Name | Type |
 | :------ | :------ |
 | `T` | extends [`ParameterType`](../enums/ParameterType.md) |
+| `AutoCompleteResultT` | extends `any` |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `paramDefinition` | [`ParameterOptions`](../types/ParameterOptions.md)<`T`\> |
+| `paramDefinition` | [`ParameterOptions`](../types/ParameterOptions.md)<`T`, `AutoCompleteResultT`\> |
 
 #### Returns
 
@@ -32,4 +33,4 @@ makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', descriptio
 
 #### Defined in
 
-[api.ts:289](https://github.com/coda/packs-sdk/blob/main/api.ts#L289)
+[api.ts:318](https://github.com/coda/packs-sdk/blob/main/api.ts#L318)

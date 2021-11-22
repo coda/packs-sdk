@@ -61,13 +61,15 @@ pack.addFormula({
       description: "The ID of the game on boardgameatlas.com",
       autocomplete: async function (context, search, parameters) {
         let url = coda.withQueryParams(
-          "https://api.boardgameatlas.com/api/search",
-          { fuzzy_match: true, name: search });
-        let response = await context.fetcher.fetch({ method: "GET", url: url });
-        let results = response.body.games;
-        // Generate an array of autocomplete objects, using the game's name as
+          "https://api.boardgameatlas.com/api/search", 
+          {fuzzy_match: true, name: search},
+        );
+        let response = await context.fetcher.fetch({method: "GET", url: url});
+        let results = response.body.games as Array<{name: string; id: string}>;
+        // Generate an array of autocomplete objects, using the game"s name as
         // the label and its ID for the value.
-        return coda.autocompleteSearchObjects(search, results, "name", "id");
+        return coda.autocompleteSearchObjects(
+          search, results, "name", "id") as any;
       },
     }),
   ],

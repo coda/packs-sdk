@@ -1,19 +1,18 @@
-# Type alias: MetadataFunction
+# Type alias: MetadataFunction<ResultT\>
 
-Ƭ **MetadataFunction**: <K, L\>(`context`: [`ExecutionContext`](../interfaces/ExecutionContext.md), `search`: `string`, `formulaContext?`: [`MetadataContext`](MetadataContext.md)) => `Promise`<[`MetadataFormulaResultType`](MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/ArraySchema.md) \| `ObjectSchema`<`K`, `L`\>\>
+Ƭ **MetadataFunction**<`ResultT`\>: (`context`: [`ExecutionContext`](../interfaces/ExecutionContext.md), `search`: `string`, `formulaContext?`: [`MetadataContext`](MetadataContext.md)) => `Promise`<`ResultT`\>
 
-#### Type declaration
-
-▸ <`K`, `L`\>(`context`, `search`, `formulaContext?`): `Promise`<[`MetadataFormulaResultType`](MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/ArraySchema.md) \| `ObjectSchema`<`K`, `L`\>\>
-
-A JavaScript function that can implement a [MetadataFormulaDef](MetadataFormulaDef.md).
-
-##### Type parameters
+#### Type parameters
 
 | Name | Type |
 | :------ | :------ |
-| `K` | extends `string` |
-| `L` | extends `string` |
+| `ResultT` | extends `MetadataFunctionReturnType`<`any`, `any`\> |
+
+#### Type declaration
+
+▸ (`context`, `search`, `formulaContext?`): `Promise`<`ResultT`\>
+
+A JavaScript function that can implement a [MetadataFormulaDef](MetadataFormulaDef.md).
 
 ##### Parameters
 
@@ -25,8 +24,8 @@ A JavaScript function that can implement a [MetadataFormulaDef](MetadataFormulaD
 
 ##### Returns
 
-`Promise`<[`MetadataFormulaResultType`](MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/ArraySchema.md) \| `ObjectSchema`<`K`, `L`\>\>
+`Promise`<`ResultT`\>
 
 #### Defined in
 
-[api.ts:971](https://github.com/coda/packs-sdk/blob/main/api.ts#L971)
+[api.ts:1030](https://github.com/coda/packs-sdk/blob/main/api.ts#L1030)

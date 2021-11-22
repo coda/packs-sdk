@@ -31,7 +31,7 @@ See https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs#h_4
 
 #### Defined in
 
-[types.ts:236](https://github.com/coda/packs-sdk/blob/main/types.ts#L236)
+[types.ts:238](https://github.com/coda/packs-sdk/blob/main/types.ts#L238)
 
 ___
 
@@ -44,7 +44,7 @@ order to install the pack.
 
 #### Defined in
 
-[types.ts:292](https://github.com/coda/packs-sdk/blob/main/types.ts#L292)
+[types.ts:294](https://github.com/coda/packs-sdk/blob/main/types.ts#L294)
 
 ___
 
@@ -64,13 +64,13 @@ For packs that make requests to multiple domains (uncommon), this should be the 
 
 #### Defined in
 
-[types.ts:258](https://github.com/coda/packs-sdk/blob/main/types.ts#L258)
+[types.ts:260](https://github.com/coda/packs-sdk/blob/main/types.ts#L260)
 
 ___
 
 ### getConnectionName
 
-• `Optional` **getConnectionName**: [`MetadataFormula`](../types/MetadataFormula.md)
+• `Optional` **getConnectionName**: [`MetadataFormula`](../types/MetadataFormula.md)<`string`\>
 
 A function that is called when a user sets up a new account, that returns a name for
 the account to label that account in the UI. The users credentials are applied to any
@@ -86,7 +86,7 @@ with the creating user's Coda username.
 
 #### Defined in
 
-[types.ts:219](https://github.com/coda/packs-sdk/blob/main/types.ts#L219)
+[types.ts:221](https://github.com/coda/packs-sdk/blob/main/types.ts#L221)
 
 ___
 
@@ -102,7 +102,7 @@ A link to a help article or other page with more instructions about how to set u
 
 #### Defined in
 
-[types.ts:241](https://github.com/coda/packs-sdk/blob/main/types.ts#L241)
+[types.ts:243](https://github.com/coda/packs-sdk/blob/main/types.ts#L243)
 
 ___
 
@@ -119,7 +119,7 @@ This is not common.
 
 #### Defined in
 
-[types.ts:264](https://github.com/coda/packs-sdk/blob/main/types.ts#L264)
+[types.ts:266](https://github.com/coda/packs-sdk/blob/main/types.ts#L266)
 
 ___
 
@@ -138,7 +138,7 @@ when creating a new account.
 
 #### Defined in
 
-[types.ts:249](https://github.com/coda/packs-sdk/blob/main/types.ts#L249)
+[types.ts:251](https://github.com/coda/packs-sdk/blob/main/types.ts#L251)
 
 ___
 
@@ -152,7 +152,7 @@ as a shared account that allows actions.
 
 #### Defined in
 
-[types.ts:298](https://github.com/coda/packs-sdk/blob/main/types.ts#L298)
+[types.ts:300](https://github.com/coda/packs-sdk/blob/main/types.ts#L300)
 
 ___
 
@@ -164,4 +164,4 @@ Identifies this as CodaApiHeaderBearerToken authentication.
 
 #### Defined in
 
-[types.ts:287](https://github.com/coda/packs-sdk/blob/main/types.ts#L287)
+[types.ts:289](https://github.com/coda/packs-sdk/blob/main/types.ts#L289)

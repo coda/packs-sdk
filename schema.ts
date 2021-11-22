@@ -988,7 +988,7 @@ export function makeObjectSchema<
   T extends Omit<ObjectSchemaDefinition<K, L>, 'type'>,
 >(
   schemaDef: T & {type?: ValueType.Object},
-): T & {
+): Omit<T, 'identity'> & {
   identity?: Identity;
   type: ValueType.Object;
 } {

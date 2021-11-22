@@ -6,6 +6,7 @@ import type {Formula} from '../api';
 import type {GenericSyncTable} from '../api';
 import type {MetadataFormula} from '../api';
 import type {MetadataFormulaMetadata} from '../api';
+import type {MetadataFunctionReturnType} from '../api';
 import type {PackDefinition} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
 import type {PackFormulaMetadata} from '../api';
@@ -112,7 +113,9 @@ function compileDefaultAuthenticationMetadata(
   };
 }
 
-function compileMetadataFormulaMetadata(formula: MetadataFormula | undefined): MetadataFormulaMetadata | undefined {
+function compileMetadataFormulaMetadata<ResultT extends MetadataFunctionReturnType<any, any>>(
+  formula: MetadataFormula<ResultT> | undefined,
+): MetadataFormulaMetadata<ResultT> | undefined {
   if (!formula) {
     return;
   }

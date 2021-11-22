@@ -60,6 +60,7 @@ function doFindAndExecutePackFunction(params, formulaSpec, manifest, executionCo
                 case types_3.MetadataFormulaType.ParameterAutocomplete:
                     const parentFormula = findParentFormula(manifest, formulaSpec);
                     if (parentFormula) {
+                        // TODO(huayang): this may return a regular value instead of promise.
                         return parentFormula.execute(params, executionContext);
                     }
                     break;

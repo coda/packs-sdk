@@ -12,7 +12,7 @@ The definition of a formula parameter.
 
 ### autocomplete
 
-• `Optional` **autocomplete**: [`MetadataFormula`](../types/MetadataFormula.md)
+• `Optional` **autocomplete**: `T` extends [`string`](../enums/Type.md#string) ? [`MetadataFormula`](../types/MetadataFormula.md)<`AutocompleteDefReturnType`<[`string`](../enums/Type.md#string)\>\> : `T` extends [`number`](../enums/Type.md#number) ? [`MetadataFormula`](../types/MetadataFormula.md)<`AutocompleteDefReturnType`<[`number`](../enums/Type.md#number)\>\> : `undefined`
 
 A [MetadataFormula](../types/MetadataFormula.md) that returns valid values for this parameter, optionally matching a search
 query. This can be useful both if there are a fixed number of valid values for the parameter,
@@ -25,7 +25,7 @@ If you have a hardcoded list of valid values, you would only need to use
 
 #### Defined in
 
-[api_types.ts:231](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L231)
+[api_types.ts:232](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L232)
 
 ___
 
@@ -37,7 +37,7 @@ The default value to be used for this parameter if it is not specified by the us
 
 #### Defined in
 
-[api_types.ts:235](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L235)
+[api_types.ts:240](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L240)
 
 ___
 
@@ -49,7 +49,7 @@ A brief description of what this parameter is used for, shown to the user when i
 
 #### Defined in
 
-[api_types.ts:211](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L211)
+[api_types.ts:212](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L212)
 
 ___
 
@@ -61,7 +61,7 @@ The name of the parameter, which will be shown to the user when invoking this fo
 
 #### Defined in
 
-[api_types.ts:203](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L203)
+[api_types.ts:204](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L204)
 
 ___
 
@@ -74,7 +74,7 @@ All optional parameters must come after all non-optional parameters.
 
 #### Defined in
 
-[api_types.ts:216](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L216)
+[api_types.ts:217](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L217)
 
 ___
 
@@ -86,4 +86,4 @@ The data type of this parameter (string, number, etc).
 
 #### Defined in
 
-[api_types.ts:207](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L207)
+[api_types.ts:208](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L208)

@@ -203,8 +203,8 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     K extends string,
     L extends string,
     ParamDefsT extends ParamDefs,
-    SchemaT extends ObjectSchemaDefinition<K, L>,
-  >(definition: DynamicSyncTableOptions<K, L, ParamDefsT, SchemaT>): this {
+    SchemaDefT extends ObjectSchemaDefinition<K, L>,
+  >(definition: DynamicSyncTableOptions<K, L, ParamDefsT, SchemaDefT>): this {
     const dynamicSyncTable = makeDynamicSyncTable({
       ...definition,
       connectionRequirement: definition.connectionRequirement || this._defaultConnectionRequirement,

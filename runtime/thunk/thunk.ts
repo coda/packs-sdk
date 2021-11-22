@@ -62,7 +62,7 @@ function doFindAndExecutePackFunction<T extends FormulaSpecification>(
     }
     case FormulaType.Sync: {
       const formula = findSyncFormula(manifest, formulaSpec.formulaName);
-      return formula.execute(params, executionContext as SyncExecutionContext);
+      return formula.execute(params, executionContext as SyncExecutionContext) as any;
     }
     case FormulaType.Metadata: {
       switch (formulaSpec.metadataFormulaType) {
@@ -72,7 +72,10 @@ function doFindAndExecutePackFunction<T extends FormulaSpecification>(
             defaultAuthentication?.type !== AuthenticationType.Various &&
             defaultAuthentication?.getConnectionName
           ) {
-            return defaultAuthentication.getConnectionName.execute(params as any, executionContext as ExecutionContext);
+            return defaultAuthentication.getConnectionName.execute(
+              params as any,
+              executionContext as ExecutionContext,
+            ) as any;
           }
           break;
         case MetadataFormulaType.GetConnectionUserId:
@@ -84,13 +87,14 @@ function doFindAndExecutePackFunction<T extends FormulaSpecification>(
             return defaultAuthentication.getConnectionUserId.execute(
               params as any,
               executionContext as ExecutionContext,
-            );
+            ) as any;
           }
           break;
         case MetadataFormulaType.ParameterAutocomplete:
           const parentFormula = findParentFormula(manifest, formulaSpec);
           if (parentFormula) {
-            return parentFormula.execute(params as any, executionContext);
+            // TODO(huayang): this may return a regular value instead of promise.
+            return parentFormula.execute(params as any, executionContext) as any;
           }
           break;
         case MetadataFormulaType.PostSetupSetEndpoint:
@@ -103,7 +107,7 @@ function doFindAndExecutePackFunction<T extends FormulaSpecification>(
               step => step.type === PostSetupType.SetEndpoint && step.name === formulaSpec.stepName,
             );
             if (setupStep) {
-              return setupStep.getOptionsFormula.execute(params as any, executionContext);
+              return setupStep.getOptionsFormula.execute(params as any, executionContext) as any;
             }
           }
           break;
@@ -114,7 +118,7 @@ function doFindAndExecutePackFunction<T extends FormulaSpecification>(
           if (syncTables) {
             const syncTable = syncTables.find(table => table.name === formulaSpec.syncTableName);
             if (syncTable) {
-              let formula: MetadataFormula | undefined;
+              let formula: MetadataFormula<any> | undefined;
               if (isDynamicSyncTable(syncTable)) {
                 switch (formulaSpec.metadataFormulaType) {
                   case MetadataFormulaType.SyncListDynamicUrls:

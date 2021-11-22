@@ -38,7 +38,7 @@ ___
 
 ### getDisplayUrl
 
-• **getDisplayUrl**: [`MetadataFormula`](../types/MetadataFormula.md)
+• **getDisplayUrl**: [`MetadataFormula`](../types/MetadataFormula.md)<`string`\>
 
 See [DynamicSyncTableOptions.getDisplayUrl](DynamicSyncTableOptions.md#getdisplayurl)
 
@@ -50,7 +50,7 @@ ___
 
 ### getName
 
-• **getName**: [`MetadataFormula`](../types/MetadataFormula.md)
+• **getName**: [`MetadataFormula`](../types/MetadataFormula.md)<`string`\>
 
 See [DynamicSyncTableOptions.getName](DynamicSyncTableOptions.md#getname)
 
@@ -62,7 +62,7 @@ ___
 
 ### getSchema
 
-• **getSchema**: [`MetadataFormula`](../types/MetadataFormula.md)
+• **getSchema**: [`MetadataFormula`](../types/MetadataFormula.md)<`any`\>
 
 See [DynamicSyncTableOptions.getSchema](DynamicSyncTableOptions.md#getschema)
 
@@ -106,7 +106,7 @@ ___
 
 ### listDynamicUrls
 
-• `Optional` **listDynamicUrls**: [`MetadataFormula`](../types/MetadataFormula.md)
+• `Optional` **listDynamicUrls**: [`MetadataFormula`](../types/MetadataFormula.md)<[`MetadataFormulaResultType`](../types/MetadataFormulaResultType.md)[]\>
 
 See [DynamicSyncTableOptions.listDynamicUrls](DynamicSyncTableOptions.md#listdynamicurls)
 

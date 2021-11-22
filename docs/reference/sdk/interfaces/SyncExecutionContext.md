@@ -27,7 +27,7 @@ to construct URLs to use with the fetcher. Alternatively, you can use relative U
 
 #### Defined in
 
-[api_types.ts:597](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L597)
+[api_types.ts:602](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L602)
 
 ___
 
@@ -43,7 +43,7 @@ The [Fetcher](Fetcher.md) used for making HTTP requests.
 
 #### Defined in
 
-[api_types.ts:584](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L584)
+[api_types.ts:589](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L589)
 
 ___
 
@@ -60,7 +60,7 @@ This is mostly for Coda internal use and we do not recommend relying on it.
 
 #### Defined in
 
-[api_types.ts:602](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L602)
+[api_types.ts:607](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L607)
 
 ___
 
@@ -79,7 +79,7 @@ replaced by the fetcher in secure way.
 
 #### Defined in
 
-[api_types.ts:613](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L613)
+[api_types.ts:618](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L618)
 
 ___
 
@@ -95,7 +95,7 @@ Information about state of the current sync.
 
 #### Defined in
 
-[api_types.ts:628](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L628)
+[api_types.ts:633](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L633)
 
 ___
 
@@ -112,7 +112,7 @@ or are too large to return inline. See [TemporaryBlobStorage](TemporaryBlobStora
 
 #### Defined in
 
-[api_types.ts:589](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L589)
+[api_types.ts:594](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L594)
 
 ___
 
@@ -128,4 +128,4 @@ The timezone of the doc from which this formula was invoked.
 
 #### Defined in
 
-[api_types.ts:606](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L606)
+[api_types.ts:611](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L611)

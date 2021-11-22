@@ -12,4 +12,4 @@ A pack formula that returns a string.
 
 #### Defined in
 
-[api.ts:492](https://github.com/coda/packs-sdk/blob/main/api.ts#L492)
+[api.ts:522](https://github.com/coda/packs-sdk/blob/main/api.ts#L522)

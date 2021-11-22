@@ -1,8 +1,10 @@
 import './test_helper';
+import type {ArraySchema} from '..';
 import {AuthenticationType} from '../types';
 import {ConnectionRequirement} from '../api_types';
 import type {DynamicSyncTableDef} from '../api';
 import type {MetadataFormulaDef} from '../api';
+import type {MetadataFormulaResultType} from '..';
 import type {PackDefinitionBuilder} from '../builder';
 import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
@@ -80,10 +82,10 @@ describe('Builder', () => {
       listDynamicUrls,
     }: {
       connectionRequirement?: ConnectionRequirement;
-      getName: MetadataFormulaDef;
-      getSchema: MetadataFormulaDef;
-      getDisplayUrl: MetadataFormulaDef;
-      listDynamicUrls: MetadataFormulaDef;
+      getName: MetadataFormulaDef<string>;
+      getSchema: MetadataFormulaDef<any>;
+      getDisplayUrl: MetadataFormulaDef<string>;
+      listDynamicUrls: MetadataFormulaDef<MetadataFormulaResultType[]>;
     },
   ) {
     pack_.addDynamicSyncTable({
@@ -236,7 +238,9 @@ describe('Builder', () => {
       addDummyDynamicSyncTable(pack, {
         getName: makeMetadataFormula(async () => 'name'),
         getDisplayUrl: makeMetadataFormula(async () => 'display-url'),
-        getSchema: makeMetadataFormula(async () => makeSchema({type: ValueType.Array, items: dummyObjectSchema})),
+        getSchema: makeMetadataFormula(async () =>
+          makeSchema<ArraySchema>({type: ValueType.Array, items: dummyObjectSchema}),
+        ),
         listDynamicUrls: makeMetadataFormula(async () => ['url']),
       });
       const syncTable = pack.syncTables[0] as DynamicSyncTableDef<any, any, any, any>;
@@ -250,7 +254,9 @@ describe('Builder', () => {
       addDummyDynamicSyncTable(pack, {
         getName: makeMetadataFormula(async () => 'name'),
         getDisplayUrl: makeMetadataFormula(async () => 'display-url'),
-        getSchema: makeMetadataFormula(async () => makeSchema({type: ValueType.Array, items: dummyObjectSchema})),
+        getSchema: makeMetadataFormula(async () =>
+          makeSchema<ArraySchema>({type: ValueType.Array, items: dummyObjectSchema}),
+        ),
         listDynamicUrls: makeMetadataFormula(async () => ['url']),
       });
       pack.setUserAuthentication({
@@ -275,9 +281,12 @@ describe('Builder', () => {
         getDisplayUrl: makeMetadataFormula(async () => 'display-url', {
           connectionRequirement: ConnectionRequirement.None,
         }),
-        getSchema: makeMetadataFormula(async () => makeSchema({type: ValueType.Array, items: dummyObjectSchema}), {
-          connectionRequirement: ConnectionRequirement.None,
-        }),
+        getSchema: makeMetadataFormula(
+          async () => makeSchema<ArraySchema>({type: ValueType.Array, items: dummyObjectSchema}),
+          {
+            connectionRequirement: ConnectionRequirement.None,
+          },
+        ),
         listDynamicUrls: makeMetadataFormula(async () => ['url'], {connectionRequirement: ConnectionRequirement.None}),
       });
       pack.setUserAuthentication({

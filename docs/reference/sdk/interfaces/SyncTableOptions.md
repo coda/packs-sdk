@@ -1,4 +1,4 @@
-# Interface: SyncTableOptions<K, L, ParamDefsT, SchemaT\>
+# Interface: SyncTableOptions<K, L, ParamDefsT, SchemaDefT\>
 
 Input options for defining a sync table. See [makeSyncTable](../functions/makeSyncTable.md).
 
@@ -9,7 +9,7 @@ Input options for defining a sync table. See [makeSyncTable](../functions/makeSy
 | `K` | extends `string` |
 | `L` | extends `string` |
 | `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
-| `SchemaT` | extends [`ObjectSchemaDefinition`](ObjectSchemaDefinition.md)<`K`, `L`\> |
+| `SchemaDefT` | extends [`ObjectSchemaDefinition`](ObjectSchemaDefinition.md)<`K`, `L`\> |
 
 ## Properties
 
@@ -22,7 +22,7 @@ this sync table (including autocomplete formulas).
 
 #### Defined in
 
-[api.ts:1261](https://github.com/coda/packs-sdk/blob/main/api.ts#L1261)
+[api.ts:1336](https://github.com/coda/packs-sdk/blob/main/api.ts#L1336)
 
 ___
 
@@ -35,13 +35,13 @@ sync tables that have a dynamic schema.
 
 #### Defined in
 
-[api.ts:1266](https://github.com/coda/packs-sdk/blob/main/api.ts#L1266)
+[api.ts:1341](https://github.com/coda/packs-sdk/blob/main/api.ts#L1341)
 
 ___
 
 ### formula
 
-• **formula**: [`SyncFormulaDef`](SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\>
+• **formula**: [`SyncFormulaDef`](SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `SchemaDefT`\>
 
 The definition of the formula that implements this sync. This is a Coda packs formula
 that returns an array of objects fitting the given schema and optionally a [Continuation](Continuation.md).
@@ -50,7 +50,7 @@ These will eventually be consolidated.)
 
 #### Defined in
 
-[api.ts:1256](https://github.com/coda/packs-sdk/blob/main/api.ts#L1256)
+[api.ts:1331](https://github.com/coda/packs-sdk/blob/main/api.ts#L1331)
 
 ___
 
@@ -72,7 +72,7 @@ of the object, and the schema is declared as `{identity: {name: 'Products'}}`.
 
 #### Defined in
 
-[api.ts:1244](https://github.com/coda/packs-sdk/blob/main/api.ts#L1244)
+[api.ts:1319](https://github.com/coda/packs-sdk/blob/main/api.ts#L1319)
 
 ___
 
@@ -86,17 +86,17 @@ from an e-commerce platform should be called 'Products'. This name must not cont
 
 #### Defined in
 
-[api.ts:1230](https://github.com/coda/packs-sdk/blob/main/api.ts#L1230)
+[api.ts:1305](https://github.com/coda/packs-sdk/blob/main/api.ts#L1305)
 
 ___
 
 ### schema
 
-• **schema**: `SchemaT`
+• **schema**: `SchemaDefT`
 
 The definition of the schema that describes a single response object. For example, the
 schema for a single product. The sync formula will return an array of objects that fit this schema.
 
 #### Defined in
 
-[api.ts:1249](https://github.com/coda/packs-sdk/blob/main/api.ts#L1249)
+[api.ts:1324](https://github.com/coda/packs-sdk/blob/main/api.ts#L1324)

@@ -405,7 +405,7 @@ export async function executeSyncFormulaFromPackDefSingleIteration(
 }
 
 export async function executeMetadataFormula(
-  formula: MetadataFormula,
+  formula: MetadataFormula<any>,
   metadataParams: {
     search?: string;
     formulaContext?: MetadataContext;

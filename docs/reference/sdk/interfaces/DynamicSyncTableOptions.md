@@ -1,4 +1,4 @@
-# Interface: DynamicSyncTableOptions<K, L, ParamDefsT, SchemaT\>
+# Interface: DynamicSyncTableOptions<K, L, ParamDefsT, SchemaDefT\>
 
 Options provided when defining a dynamic sync table.
 
@@ -9,7 +9,7 @@ Options provided when defining a dynamic sync table.
 | `K` | extends `string` |
 | `L` | extends `string` |
 | `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
-| `SchemaT` | extends [`ObjectSchemaDefinition`](ObjectSchemaDefinition.md)<`K`, `L`\> |
+| `SchemaDefT` | extends [`ObjectSchemaDefinition`](ObjectSchemaDefinition.md)<`K`, `L`\> |
 
 ## Properties
 
@@ -22,7 +22,7 @@ this sync table (including autocomplete formulas).
 
 #### Defined in
 
-[api.ts:1323](https://github.com/coda/packs-sdk/blob/main/api.ts#L1323)
+[api.ts:1398](https://github.com/coda/packs-sdk/blob/main/api.ts#L1398)
 
 ___
 
@@ -36,13 +36,13 @@ of `identity.name` from your schema will be used instead, so in most cases you d
 
 #### Defined in
 
-[api.ts:1318](https://github.com/coda/packs-sdk/blob/main/api.ts#L1318)
+[api.ts:1393](https://github.com/coda/packs-sdk/blob/main/api.ts#L1393)
 
 ___
 
 ### formula
 
-• **formula**: [`SyncFormulaDef`](SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\>
+• **formula**: [`SyncFormulaDef`](SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `SchemaDefT`\>
 
 The definition of the formula that implements this sync. This is a Coda packs formula
 that returns an array of objects fitting the given schema and optionally a [Continuation](Continuation.md).
@@ -51,13 +51,13 @@ These will eventually be consolidated.)
 
 #### Defined in
 
-[api.ts:1312](https://github.com/coda/packs-sdk/blob/main/api.ts#L1312)
+[api.ts:1387](https://github.com/coda/packs-sdk/blob/main/api.ts#L1387)
 
 ___
 
 ### getDisplayUrl
 
-• **getDisplayUrl**: [`MetadataFormulaDef`](../types/MetadataFormulaDef.md)
+• **getDisplayUrl**: [`MetadataFormulaDef`](../types/MetadataFormulaDef.md)<`string`\>
 
 A formula that that returns a browser-friendly url representing the
 resource being synced. The Coda UI links to this url as the source
@@ -66,44 +66,44 @@ of the table data. This is typically a browser-friendly form of the
 
 #### Defined in
 
-[api.ts:1300](https://github.com/coda/packs-sdk/blob/main/api.ts#L1300)
+[api.ts:1375](https://github.com/coda/packs-sdk/blob/main/api.ts#L1375)
 
 ___
 
 ### getName
 
-• **getName**: [`MetadataFormulaDef`](../types/MetadataFormulaDef.md)
+• **getName**: [`MetadataFormulaDef`](../types/MetadataFormulaDef.md)<`string`\>
 
 A formula that returns the name of this table.
 
 #### Defined in
 
-[api.ts:1289](https://github.com/coda/packs-sdk/blob/main/api.ts#L1289)
+[api.ts:1364](https://github.com/coda/packs-sdk/blob/main/api.ts#L1364)
 
 ___
 
 ### getSchema
 
-• **getSchema**: [`MetadataFormulaDef`](../types/MetadataFormulaDef.md)
+• **getSchema**: [`MetadataFormulaDef`](../types/MetadataFormulaDef.md)<`any`\>
 
 A formula that returns the schema for this table.
 
 #### Defined in
 
-[api.ts:1293](https://github.com/coda/packs-sdk/blob/main/api.ts#L1293)
+[api.ts:1368](https://github.com/coda/packs-sdk/blob/main/api.ts#L1368)
 
 ___
 
 ### listDynamicUrls
 
-• `Optional` **listDynamicUrls**: [`MetadataFormulaDef`](../types/MetadataFormulaDef.md)
+• `Optional` **listDynamicUrls**: [`MetadataFormulaDef`](../types/MetadataFormulaDef.md)<[`MetadataFormulaResultType`](../types/MetadataFormulaResultType.md)[]\>
 
 A formula that returns a list of available dynamic urls that can be
 used to create an instance of this dynamic sync table.
 
 #### Defined in
 
-[api.ts:1305](https://github.com/coda/packs-sdk/blob/main/api.ts#L1305)
+[api.ts:1380](https://github.com/coda/packs-sdk/blob/main/api.ts#L1380)
 
 ___
 
@@ -119,4 +119,4 @@ is returned by the `getName` formula.
 
 #### Defined in
 
-[api.ts:1285](https://github.com/coda/packs-sdk/blob/main/api.ts#L1285)
+[api.ts:1360](https://github.com/coda/packs-sdk/blob/main/api.ts#L1360)

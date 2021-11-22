@@ -4,19 +4,20 @@ exports.maybeRewriteConnectionForFormula = exports.makeEmptyFormula = exports.ma
 const api_types_1 = require("./api_types");
 const api_types_2 = require("./api_types");
 const api_types_3 = require("./api_types");
-const schema_1 = require("./schema");
 const api_types_4 = require("./api_types");
+const schema_1 = require("./schema");
 const api_types_5 = require("./api_types");
+const api_types_6 = require("./api_types");
 const ensure_1 = require("./helpers/ensure");
 const ensure_2 = require("./helpers/ensure");
 const handler_templates_1 = require("./handler_templates");
 const handler_templates_2 = require("./handler_templates");
-const api_types_6 = require("./api_types");
 const api_types_7 = require("./api_types");
+const api_types_8 = require("./api_types");
 const schema_2 = require("./schema");
 const schema_3 = require("./schema");
-const api_types_8 = require("./api_types");
 const api_types_9 = require("./api_types");
+const api_types_10 = require("./api_types");
 const handler_templates_3 = require("./handler_templates");
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
@@ -95,6 +96,16 @@ function wrapMetadataFunction(fnOrFormula) {
     return typeof fnOrFormula === 'function' ? makeMetadataFormula(fnOrFormula) : fnOrFormula;
 }
 exports.wrapMetadataFunction = wrapMetadataFunction;
+function makeAutocomplete(autocomplete) {
+    if (Array.isArray(autocomplete)) {
+        const autocompleteDef = makeSimpleAutocompleteMetadataFormula(autocomplete);
+        // TODO(huayang):
+        return wrapMetadataFunction(autocompleteDef);
+    }
+    else {
+        return wrapMetadataFunction(autocomplete);
+    }
+}
 /**
  * Create a definition for a parameter for a formula or sync.
  *
@@ -109,66 +120,65 @@ exports.wrapMetadataFunction = wrapMetadataFunction;
  * ```
  */
 function makeParameter(paramDefinition) {
-    const { type, autocomplete: autocompleteDefOrItems, ...rest } = paramDefinition;
-    const actualType = api_types_2.ParameterTypeInputMap[type];
     let autocomplete;
-    if (Array.isArray(autocompleteDefOrItems)) {
-        const autocompleteDef = makeSimpleAutocompleteMetadataFormula(autocompleteDefOrItems);
-        autocomplete = wrapMetadataFunction(autocompleteDef);
+    if (paramDefinition.type === api_types_2.ParameterType.Number || paramDefinition.type === api_types_2.ParameterType.String) {
+        if (paramDefinition.autocomplete) {
+            // can't get rid of this type cast for some reason.
+            autocomplete = makeAutocomplete(paramDefinition.autocomplete);
+        }
     }
-    else {
-        autocomplete = wrapMetadataFunction(autocompleteDefOrItems);
-    }
-    return Object.freeze({ ...rest, autocomplete, type: actualType });
+    const actualType = api_types_3.ParameterTypeInputMap[paramDefinition.type];
+    // TODO(huayang)
+    return Object.freeze({ ...paramDefinition, autocomplete, type: actualType });
 }
 exports.makeParameter = makeParameter;
 // Other parameter helpers below here are obsolete given the above generate parameter makers.
 function makeStringParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_3.Type.string });
+    return Object.freeze({ ...args, name, description, type: api_types_4.Type.string });
 }
 exports.makeStringParameter = makeStringParameter;
 function makeStringArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_9.stringArray });
+    return Object.freeze({ ...args, name, description, type: api_types_10.stringArray });
 }
 exports.makeStringArrayParameter = makeStringArrayParameter;
 function makeNumericParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_3.Type.number });
+    return Object.freeze({ ...args, name, description, type: api_types_4.Type.number });
 }
 exports.makeNumericParameter = makeNumericParameter;
 function makeNumericArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_8.numberArray });
+    return Object.freeze({ ...args, name, description, type: api_types_9.numberArray });
 }
 exports.makeNumericArrayParameter = makeNumericArrayParameter;
 function makeBooleanParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_3.Type.boolean });
+    return Object.freeze({ ...args, name, description, type: api_types_4.Type.boolean });
 }
 exports.makeBooleanParameter = makeBooleanParameter;
 function makeBooleanArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_4.booleanArray });
+    return Object.freeze({ ...args, name, description, type: api_types_5.booleanArray });
 }
 exports.makeBooleanArrayParameter = makeBooleanArrayParameter;
 function makeDateParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_3.Type.date });
+    return Object.freeze({ ...args, name, description, type: api_types_4.Type.date });
 }
 exports.makeDateParameter = makeDateParameter;
 function makeDateArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_5.dateArray });
+    return Object.freeze({ ...args, name, description, type: api_types_6.dateArray });
 }
 exports.makeDateArrayParameter = makeDateArrayParameter;
 function makeHtmlParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_3.Type.html });
+    return Object.freeze({ ...args, name, description, type: api_types_4.Type.html });
 }
 exports.makeHtmlParameter = makeHtmlParameter;
 function makeHtmlArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_6.htmlArray });
+    return Object.freeze({ ...args, name, description, type: api_types_7.htmlArray });
 }
 exports.makeHtmlArrayParameter = makeHtmlArrayParameter;
 function makeImageParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_3.Type.image });
+    return Object.freeze({ ...args, name, description, type: api_types_4.Type.image });
 }
 exports.makeImageParameter = makeImageParameter;
 function makeImageArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_7.imageArray });
+    return Object.freeze({ ...args, name, description, type: api_types_8.imageArray });
 }
 exports.makeImageArrayParameter = makeImageArrayParameter;
 function makeUserVisibleError(msg) {
@@ -182,11 +192,11 @@ function check(condition, msg) {
 }
 exports.check = check;
 function isObjectPackFormula(fn) {
-    return fn.resultType === api_types_3.Type.object;
+    return fn.resultType === api_types_4.Type.object;
 }
 exports.isObjectPackFormula = isObjectPackFormula;
 function isStringPackFormula(fn) {
-    return fn.resultType === api_types_3.Type.string;
+    return fn.resultType === api_types_4.Type.string;
 }
 exports.isStringPackFormula = isStringPackFormula;
 function isSyncPackFormula(fn) {
@@ -200,7 +210,7 @@ exports.isSyncPackFormula = isSyncPackFormula;
  * @param definition The definition of a formula that returns a number.
  */
 function makeNumericFormula(definition) {
-    return Object.assign({}, definition, { resultType: api_types_3.Type.number });
+    return Object.assign({}, definition, { resultType: api_types_4.Type.number });
 }
 exports.makeNumericFormula = makeNumericFormula;
 /**
@@ -212,7 +222,7 @@ exports.makeNumericFormula = makeNumericFormula;
 function makeStringFormula(definition) {
     const { response } = definition;
     return Object.assign({}, definition, {
-        resultType: api_types_3.Type.string,
+        resultType: api_types_4.Type.string,
         ...(response && { schema: response.schema }),
     });
 }
@@ -285,7 +295,7 @@ function makeFormula(fullDefinition) {
             const { onError: _, resultType: unused, codaType, formulaSchema, ...rest } = def;
             const stringFormula = {
                 ...rest,
-                resultType: api_types_3.Type.string,
+                resultType: api_types_4.Type.string,
                 schema: formulaSchema || (codaType ? { type: schema_1.ValueType.String, codaType } : undefined),
             };
             formula = stringFormula;
@@ -300,7 +310,7 @@ function makeFormula(fullDefinition) {
             const { onError: _, resultType: unused, codaType, formulaSchema, ...rest } = def;
             const numericFormula = {
                 ...rest,
-                resultType: api_types_3.Type.number,
+                resultType: api_types_4.Type.number,
                 schema: formulaSchema || (codaType ? { type: schema_1.ValueType.Number, codaType } : undefined),
             };
             formula = numericFormula;
@@ -310,7 +320,7 @@ function makeFormula(fullDefinition) {
             const { onError: _, resultType: unused, ...rest } = fullDefinition;
             const booleanFormula = {
                 ...rest,
-                resultType: api_types_3.Type.boolean,
+                resultType: api_types_4.Type.boolean,
             };
             formula = booleanFormula;
             break;
@@ -320,7 +330,7 @@ function makeFormula(fullDefinition) {
             const arrayFormula = {
                 ...rest,
                 // TypeOf<SchemaType<ArraySchema<SchemaT>>> is always Type.object but TS can't infer this.
-                resultType: api_types_3.Type.object,
+                resultType: api_types_4.Type.object,
                 schema: (0, schema_3.normalizeSchema)({ type: schema_1.ValueType.Array, items }),
             };
             formula = arrayFormula;
@@ -331,7 +341,7 @@ function makeFormula(fullDefinition) {
             // need a force cast since execute has a different return value due to key normalization.
             const objectFormula = {
                 ...rest,
-                resultType: api_types_3.Type.object,
+                resultType: api_types_4.Type.object,
                 schema: (0, schema_3.normalizeSchema)(schema),
             };
             formula = objectFormula;
@@ -396,7 +406,7 @@ function makeMetadataFormula(execute, options) {
         ],
         examples: [],
         connectionRequirement: (options === null || options === void 0 ? void 0 : options.connectionRequirement) || api_types_1.ConnectionRequirement.Required,
-    });
+    }); // TODO(huayang)
 }
 exports.makeMetadataFormula = makeMetadataFormula;
 /**
@@ -495,6 +505,7 @@ exports.autocompleteSearchObjects = autocompleteSearchObjects;
  * any needed to wrap a value with this formula.
  */
 function makeSimpleAutocompleteMetadataFormula(options) {
+    // TODO(huayang): fix this.
     return makeMetadataFormula((context, [search]) => simpleAutocomplete(search, options), {
         // A connection won't be used here, but if the parent formula uses a connection
         // the execution code is going to try to pass it here. We should fix that.
@@ -542,7 +553,7 @@ function makeObjectFormula({ response, ...definition }) {
         };
     }
     return Object.assign({}, definition, {
-        resultType: api_types_3.Type.object,
+        resultType: api_types_4.Type.object,
         execute,
         schema,
     });
@@ -569,6 +580,7 @@ function makeSyncTable({ name, identityName, schema: schemaDef, formula, connect
         schemaDef.identity = { name: identityName };
     }
     const getSchema = wrapMetadataFunction(getSchemaDef);
+    // force casting to SchemaT isn't totally correct but it doens't break in runtime.
     const schema = (0, schema_2.makeObjectSchema)(schemaDef);
     const formulaSchema = getSchema
         ? undefined
@@ -599,7 +611,7 @@ function makeSyncTable({ name, identityName, schema: schemaDef, formula, connect
             schema: formulaSchema,
             isSyncFormula: true,
             connectionRequirement: definition.connectionRequirement || connectionRequirement,
-            resultType: api_types_3.Type.object,
+            resultType: api_types_4.Type.object,
         },
         getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
         entityName,
@@ -642,6 +654,7 @@ function makeDynamicSyncTable({ name, getName: getNameDef, getSchema: getSchemaD
         },
     });
     const getName = wrapMetadataFunction(getNameDef);
+    // schemaDefT can't be assigned to schemaT directly. but this doesn't seem to break in runtime.
     const getSchema = wrapMetadataFunction(getSchemaDef);
     const getDisplayUrl = wrapMetadataFunction(getDisplayUrlDef);
     const listDynamicUrls = wrapMetadataFunction(listDynamicUrlsDef);
@@ -711,7 +724,7 @@ function makeTranslateObjectFormula({ response, ...definition }) {
     }
     return Object.assign({}, rest, {
         execute,
-        resultType: api_types_3.Type.object,
+        resultType: api_types_4.Type.object,
         schema: response.schema,
     });
 }
@@ -747,7 +760,7 @@ function makeEmptyFormula(definition) {
     }
     return Object.assign({}, rest, {
         execute,
-        resultType: api_types_3.Type.string,
+        resultType: api_types_4.Type.string,
     });
 }
 exports.makeEmptyFormula = makeEmptyFormula;

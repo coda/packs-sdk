@@ -1,6 +1,6 @@
 # Function: autocompleteSearchObjects
 
-▸ **autocompleteSearchObjects**<`T`\>(`search`, `objs`, `displayKey`, `valueKey`): `Promise`<[`MetadataFormulaObjectResultType`](../interfaces/MetadataFormulaObjectResultType.md)[]\>
+▸ **autocompleteSearchObjects**<`T`\>(`search`, `objs`, `displayKey`, `valueKey`): `Promise`<{ `display`: `string` ; `value`: `number` \| `string`  }[]\>
 
 A helper to search over a list of objects representing candidate search results,
 filtering to only those that match a search string, and converting the matching
@@ -49,8 +49,8 @@ coda.makeParameter({
 
 #### Returns
 
-`Promise`<[`MetadataFormulaObjectResultType`](../interfaces/MetadataFormulaObjectResultType.md)[]\>
+`Promise`<{ `display`: `string` ; `value`: `number` \| `string`  }[]\>
 
 #### Defined in
 
-[api.ts:1114](https://github.com/coda/packs-sdk/blob/main/api.ts#L1114)
+[api.ts:1187](https://github.com/coda/packs-sdk/blob/main/api.ts#L1187)

@@ -823,7 +823,7 @@ export declare const PlaceholderIdentityPackId = -1;
  */
 export declare function makeObjectSchema<K extends string, L extends string, T extends Omit<ObjectSchemaDefinition<K, L>, 'type'>>(schemaDef: T & {
     type?: ValueType.Object;
-}): T & {
+}): Omit<T, 'identity'> & {
     identity?: Identity;
     type: ValueType.Object;
 };

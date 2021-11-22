@@ -20,7 +20,7 @@ describe('API test', () => {
         name: 'Whatever',
         connectionRequirement: ConnectionRequirement.Optional,
         getName: makeMetadataFormula(async () => 'sup'),
-        getSchema: makeMetadataFormula(async () =>
+        getSchema: makeMetadataFormula<schema.ArraySchema>(async () =>
           schema.makeSchema({
             type: ValueType.Array,
             items: schema.makeSchema({type: ValueType.Object, properties: {}}),
@@ -31,9 +31,9 @@ describe('API test', () => {
         formula: {
           name: 'Whatever',
           description: 'Whatever',
-          parameters: [makeStringParameter('arg', 'whatever', {autocomplete: makeMetadataFormula(async () => 'Hi')})],
+          parameters: [makeStringParameter('arg', 'whatever', {autocomplete: makeMetadataFormula(async () => ['Hi'])})],
           varargParameters: [
-            makeStringParameter('whatever', 'arg', {autocomplete: makeMetadataFormula(async () => 'Hi')}),
+            makeStringParameter('whatever', 'arg', {autocomplete: makeMetadataFormula(async () => ['Hi'])}),
           ],
           async execute() {
             return {result: []};

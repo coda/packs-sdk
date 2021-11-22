@@ -1,6 +1,6 @@
 # Function: makeSimpleAutocompleteMetadataFormula
 
-▸ **makeSimpleAutocompleteMetadataFormula**<`T`\>(`options`): [`MetadataFormula`](../types/MetadataFormula.md)
+▸ **makeSimpleAutocompleteMetadataFormula**<`AutoCompleteResultT`\>(`options`): [`MetadataFormula`](../types/MetadataFormula.md)<`AutoCompleteResultT`\>
 
 **`deprecated`** If you have a hardcoded array of autocomplete options, simply include that array
 as the value of the `autocomplete` property in your parameter definition. There is no longer
@@ -10,18 +10,18 @@ any needed to wrap a value with this formula.
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends [`String`](../enums/ParameterType.md#string) \| [`Number`](../enums/ParameterType.md#number) |
+| `AutoCompleteResultT` | extends (`string` \| `number` \| [`SimpleAutocompleteOption`](../types/SimpleAutocompleteOption.md)<[`String`](../enums/ParameterType.md#string) \| [`Number`](../enums/ParameterType.md#number)\>)[] |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `options` | (`TypeMap`[`ParameterTypeMap`[`T`]] \| [`SimpleAutocompleteOption`](../interfaces/SimpleAutocompleteOption.md)<`T`\>)[] |
+| `options` | `AutoCompleteResultT` |
 
 #### Returns
 
-[`MetadataFormula`](../types/MetadataFormula.md)
+[`MetadataFormula`](../types/MetadataFormula.md)<`AutoCompleteResultT`\>
 
 #### Defined in
 
-[api.ts:1136](https://github.com/coda/packs-sdk/blob/main/api.ts#L1136)
+[api.ts:1210](https://github.com/coda/packs-sdk/blob/main/api.ts#L1210)

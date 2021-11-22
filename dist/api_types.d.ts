@@ -1,6 +1,7 @@
 /// <reference types="node" />
 import type { $Values } from './type_utils';
 import type { ArraySchema } from './schema';
+import type { AutocompleteDefReturnType } from './api';
 import type { Continuation } from './api';
 import type { MetadataFormula } from './api';
 /**
@@ -162,7 +163,7 @@ export interface ParamDef<T extends UnionType> {
      * If you have a hardcoded list of valid values, you would only need to use
      * {@link makeSimpleAutocompleteMetadataFormula}.
      */
-    autocomplete?: MetadataFormula;
+    autocomplete?: T extends Type.string ? MetadataFormula<AutocompleteDefReturnType<Type.string>> : T extends Type.number ? MetadataFormula<AutocompleteDefReturnType<Type.number>> : undefined;
     /**
      * The default value to be used for this parameter if it is not specified by the user.
      */
