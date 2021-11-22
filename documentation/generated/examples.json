@@ -172,7 +172,7 @@
       {
         "name": "Template",
         "content": "The basic structure of a parameter. This sample is for a string parameter.",
-        "code": "coda.makeParameter({\n  type: coda.ParameterType.String,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n});"
+        "code": "coda.makeParameter({\n  type: coda.ParameterType.String,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
       },
       {
         "name": "No parameters",
