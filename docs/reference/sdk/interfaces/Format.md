@@ -43,7 +43,7 @@ ___
 
 ### formulaNamespace
 
-• **formulaNamespace**: `string`
+• `Optional` **formulaNamespace**: `string`
 
 **`deprecated`** Namespaces are being removed from the product.
 
