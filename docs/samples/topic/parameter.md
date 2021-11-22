@@ -17,7 +17,7 @@ coda.makeParameter({
   type: coda.ParameterType.String,
   name: "<User-visible name of parameter>",
   description: "<Help text for the parameter>",
-});
+}),
 ```
 ## No parameters
 A formula without any parameters. This sample returns the name of the current day of the week.

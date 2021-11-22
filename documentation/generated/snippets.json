@@ -88,7 +88,7 @@
       "StringParameter"
     ],
     "content": "Creates a string parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.String,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n});"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.String,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
   },
   {
     "triggerTokens": [
@@ -97,7 +97,7 @@
       "BooleanParameter"
     ],
     "content": "Creates a boolean parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.Boolean,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n});"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.Boolean,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
   },
   {
     "triggerTokens": [
@@ -106,7 +106,7 @@
       "DateParameter"
     ],
     "content": "Creates a date parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.Date,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n});"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.Date,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
   },
   {
     "triggerTokens": [
@@ -115,7 +115,7 @@
       "HtmlParameter"
     ],
     "content": "Creates a html parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.Html,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n});"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.Html,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
   },
   {
     "triggerTokens": [
@@ -124,7 +124,7 @@
       "ImageParameter"
     ],
     "content": "Creates a image parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.Image,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n});"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.Image,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
   },
   {
     "triggerTokens": [
@@ -133,7 +133,7 @@
       "NumberParameter"
     ],
     "content": "Creates a number parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.Number,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n});"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.Number,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
   },
   {
     "triggerTokens": [
@@ -142,7 +142,7 @@
       "StringArrayParameter"
     ],
     "content": "Creates a string array parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.StringArray,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n});"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.StringArray,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
   },
   {
     "triggerTokens": [
@@ -151,7 +151,7 @@
       "BooleanArrayParameter"
     ],
     "content": "Creates a boolean array parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.BooleanArray,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n});"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.BooleanArray,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
   },
   {
     "triggerTokens": [
@@ -160,7 +160,7 @@
       "DateArrayParameter"
     ],
     "content": "Creates a date array parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.DateArray,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n});"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.DateArray,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
   },
   {
     "triggerTokens": [
@@ -169,7 +169,7 @@
       "HtmlArrayParameter"
     ],
     "content": "Creates a html array parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.HtmlArray,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n});"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.HtmlArray,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
   },
   {
     "triggerTokens": [
@@ -178,7 +178,7 @@
       "ImageArrayParameter"
     ],
     "content": "Creates a image array parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.ImageArray,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n});"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.ImageArray,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
   },
   {
     "triggerTokens": [
@@ -187,7 +187,7 @@
       "NumberArrayParameter"
     ],
     "content": "Creates a number array parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.NumberArray,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n});"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.NumberArray,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
   },
   {
     "triggerTokens": [
