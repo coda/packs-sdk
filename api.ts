@@ -27,6 +27,7 @@ import type {StringHintTypes} from './schema';
 import type {StringSchema} from './schema';
 import type {SyncExecutionContext} from './api_types';
 import {Type} from './api_types';
+import type {TypeMap} from './api_types';
 import type {TypeOf} from './api_types';
 import type {UnionType} from './api_types';
 import {ValueType} from './schema';
@@ -267,7 +268,9 @@ export function wrapMetadataFunction(
 /** Options you can specify when defining a parameter using {@link makeParameter}. */
 export type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, 'type' | 'autocomplete'> & {
   type: T;
-  autocomplete?: MetadataFormulaDef | Array<string | number | SimpleAutocompleteOption>;
+  autocomplete?: T extends ParameterType.Number | ParameterType.String
+    ? MetadataFormulaDef | Array<TypeMap[ParameterTypeMap[T]] | SimpleAutocompleteOption<T>>
+    : undefined;
 };
 
 /**
@@ -288,11 +291,15 @@ export function makeParameter<T extends ParameterType>(
 ): ParamDef<ParameterTypeMap[T]> {
   const {type, autocomplete: autocompleteDefOrItems, ...rest} = paramDefinition;
   const actualType = ParameterTypeInputMap[type] as ParameterTypeMap[T];
-  let autocompleteDef = autocompleteDefOrItems;
-  if (Array.isArray(autocompleteDef)) {
-    autocompleteDef = makeSimpleAutocompleteMetadataFormula(autocompleteDef);
+  let autocomplete: MetadataFormula | undefined;
+
+  if (Array.isArray(autocompleteDefOrItems)) {
+    const autocompleteDef = makeSimpleAutocompleteMetadataFormula(autocompleteDefOrItems);
+    autocomplete = wrapMetadataFunction(autocompleteDef);
+  } else {
+    autocomplete = wrapMetadataFunction(autocompleteDefOrItems);
   }
-  const autocomplete = wrapMetadataFunction(autocompleteDef);
+
   return Object.freeze({...rest, autocomplete, type: actualType});
 }
 
@@ -1017,11 +1024,11 @@ export function makeMetadataFormula(
  * A result from a parameter autocomplete function that pairs a UI display value with
  * the underlying option that will be used in the formula when selected.
  */
-export interface SimpleAutocompleteOption {
+export interface SimpleAutocompleteOption<T extends ParameterType.Number | ParameterType.String> {
   /** Text that will be displayed to the user in UI for this option. */
   display: string;
   /** The actual value that will get used in the formula if this option is selected. */
-  value: string | number;
+  value: TypeMap[ParameterTypeMap[T]];
 }
 
 /**
@@ -1044,29 +1051,32 @@ export interface SimpleAutocompleteOption {
  * }
  * ```
  */
-export function simpleAutocomplete(
+export function simpleAutocomplete<T extends ParameterType.Number | ParameterType.String>(
   search: string | undefined,
-  options: Array<string | number | SimpleAutocompleteOption>,
+  options: Array<TypeMap[ParameterTypeMap[T]] | SimpleAutocompleteOption<T>>,
 ): Promise<MetadataFormulaObjectResultType[]> {
   const normalizedSearch = (search || '').toLowerCase();
   const filtered = options.filter(option => {
     const display = typeof option === 'string' || typeof option === 'number' ? option : option.display;
     return display.toString().toLowerCase().includes(normalizedSearch);
   });
-  const metadataResults = filtered.map(option => {
+  const metadataResults: MetadataFormulaObjectResultType[] = [];
+  for (const option of filtered) {
     if (typeof option === 'string') {
-      return {
+      metadataResults.push({
         value: option,
         display: option,
-      };
+      });
     } else if (typeof option === 'number') {
-      return {
+      metadataResults.push({
         value: option,
         display: option.toString(),
-      };
+      });
+    } else {
+      metadataResults.push(option);
     }
-    return option;
-  });
+  }
+
   return Promise.resolve(metadataResults);
 }
 
@@ -1123,8 +1133,8 @@ export function autocompleteSearchObjects<T>(
  * as the value of the `autocomplete` property in your parameter definition. There is no longer
  * any needed to wrap a value with this formula.
  */
-export function makeSimpleAutocompleteMetadataFormula(
-  options: Array<string | number | SimpleAutocompleteOption>,
+export function makeSimpleAutocompleteMetadataFormula<T extends ParameterType.Number | ParameterType.String>(
+  options: Array<TypeMap[ParameterTypeMap[T]] | SimpleAutocompleteOption<T>>,
 ): MetadataFormula {
   return makeMetadataFormula((context, [search]) => simpleAutocomplete(search, options), {
     // A connection won't be used here, but if the parent formula uses a connection

@@ -22,7 +22,7 @@ this sync table (including autocomplete formulas).
 
 #### Defined in
 
-[api.ts:1251](https://github.com/coda/packs-sdk/blob/main/api.ts#L1251)
+[api.ts:1261](https://github.com/coda/packs-sdk/blob/main/api.ts#L1261)
 
 ___
 
@@ -35,7 +35,7 @@ sync tables that have a dynamic schema.
 
 #### Defined in
 
-[api.ts:1256](https://github.com/coda/packs-sdk/blob/main/api.ts#L1256)
+[api.ts:1266](https://github.com/coda/packs-sdk/blob/main/api.ts#L1266)
 
 ___
 
@@ -50,7 +50,7 @@ These will eventually be consolidated.)
 
 #### Defined in
 
-[api.ts:1246](https://github.com/coda/packs-sdk/blob/main/api.ts#L1246)
+[api.ts:1256](https://github.com/coda/packs-sdk/blob/main/api.ts#L1256)
 
 ___
 
@@ -72,7 +72,7 @@ of the object, and the schema is declared as `{identity: {name: 'Products'}}`.
 
 #### Defined in
 
-[api.ts:1234](https://github.com/coda/packs-sdk/blob/main/api.ts#L1234)
+[api.ts:1244](https://github.com/coda/packs-sdk/blob/main/api.ts#L1244)
 
 ___
 
@@ -86,7 +86,7 @@ from an e-commerce platform should be called 'Products'. This name must not cont
 
 #### Defined in
 
-[api.ts:1220](https://github.com/coda/packs-sdk/blob/main/api.ts#L1220)
+[api.ts:1230](https://github.com/coda/packs-sdk/blob/main/api.ts#L1230)
 
 ___
 
@@ -99,4 +99,4 @@ schema for a single product. The sync formula will return an array of objects th
 
 #### Defined in
 
-[api.ts:1239](https://github.com/coda/packs-sdk/blob/main/api.ts#L1239)
+[api.ts:1249](https://github.com/coda/packs-sdk/blob/main/api.ts#L1249)

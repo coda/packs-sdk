@@ -13,7 +13,7 @@ See [DynamicSyncTableOptions.entityName](DynamicSyncTableOptions.md#entityname)
 
 #### Defined in
 
-[api.ts:1203](https://github.com/coda/packs-sdk/blob/main/api.ts#L1203)
+[api.ts:1213](https://github.com/coda/packs-sdk/blob/main/api.ts#L1213)
 
 ___
 
@@ -30,4 +30,4 @@ does not require a [dynamicUrl](Identity.md#dynamicurl).
 
 #### Defined in
 
-[api.ts:1201](https://github.com/coda/packs-sdk/blob/main/api.ts#L1201)
+[api.ts:1211](https://github.com/coda/packs-sdk/blob/main/api.ts#L1211)

@@ -38,7 +38,7 @@ export declare const booleanArray: ArrayType<Type.boolean>;
 export declare const dateArray: ArrayType<Type.date>;
 export declare const htmlArray: ArrayType<Type.html>;
 export declare const imageArray: ArrayType<Type.image>;
-interface TypeMap {
+export interface TypeMap {
     [Type.number]: number;
     [Type.string]: string;
     [Type.object]: object;

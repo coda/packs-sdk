@@ -70,7 +70,7 @@ export const imageArray: ArrayType<Type.image> = {
 };
 
 // Mapping from our type enum to the JS types they are manifested as.
-interface TypeMap {
+export interface TypeMap {
   [Type.number]: number;
   [Type.string]: string;
   [Type.object]: object;
