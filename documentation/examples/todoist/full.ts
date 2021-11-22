@@ -48,7 +48,6 @@ pack.setUserAuthentication({
 // schema, but that doesn't work in this case since a Project itself can contain
 // a reference to a parent project.
 const ProjectReferenceSchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
   codaType: coda.ValueHintType.Reference,
   properties: {
     name: {type: coda.ValueType.String, required: true},
@@ -62,7 +61,6 @@ const ProjectReferenceSchema = coda.makeObjectSchema({
 });
 
 const ProjectSchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
   codaType: coda.ValueHintType.Reference,
   properties: {
     name: {
@@ -109,7 +107,6 @@ const ProjectSchema = coda.makeObjectSchema({
 // schema, but that doesn't work in this case since a Project itself can contain
 // a reference to a parent project.
 const TaskReferenceSchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
   codaType: coda.ValueHintType.Reference,
   properties: {
     name: {type: coda.ValueType.String, required: true},
@@ -123,7 +120,6 @@ const TaskReferenceSchema = coda.makeObjectSchema({
 });
 
 const TaskSchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
   properties: {
     name: {
       description: "The name of the task.",

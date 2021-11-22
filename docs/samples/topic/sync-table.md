@@ -14,7 +14,6 @@ A **sync table** is how to bring structured data from a third-party into Coda. A
 
 ```ts
 const MySchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
   properties: {
     property1: {type: coda.ValueType.Number},
     property2: {type: coda.ValueType.String},
@@ -66,7 +65,6 @@ export const pack = coda.newPack();
 
 // Schema for a Cat image.
 const CatSchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
   properties: {
     image: {
       type: coda.ValueType.String,
@@ -154,7 +152,6 @@ export const pack = coda.newPack();
 
 // A schema defining the data in the sync table.
 const TaskSchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
   properties: {
     name: {
       description: "The name of the task.",

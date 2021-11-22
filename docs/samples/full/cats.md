@@ -121,7 +121,6 @@ This Pack provides allows you to fetch random cat photos using the [Cat-as-a-ser
 
     // Schema for a Cat image.
     const CatSchema = coda.makeObjectSchema({
-      type: coda.ValueType.Object,
       properties: {
         image: {
           type: coda.ValueType.String,

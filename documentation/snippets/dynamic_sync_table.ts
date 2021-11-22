@@ -8,12 +8,12 @@ pack.addDynamicSyncTable({
   name: "<User-visible name for the sync table>",
   getName: async function (context) {
     let datasourceUrl = context.sync!.dynamicUrl!;
-    // TODO: Fetch metdata about the datasource and return the name.
+    // TODO: Fetch metadata about the data source and return the name.
     return "<Datasource Name>";
   },
   getSchema: async function (context) {
     let datasourceUrl = context.sync!.dynamicUrl!;
-    // TODO: Fetch metdata about the datasource and get the list of fields.
+    // TODO: Fetch metadata about the data source and get the list of fields.
     let properties = {
       // TODO: Create a property for each field.
     };
@@ -25,7 +25,6 @@ pack.addDynamicSyncTable({
     return coda.makeSchema({
       type: coda.ValueType.Array,
       items: coda.makeObjectSchema({
-        type: coda.ValueType.Object,
         identity: {
           name: "<User-visible name for the column containing the schema>",
           dynamicUrl: datasourceUrl,
