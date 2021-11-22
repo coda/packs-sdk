@@ -101,7 +101,6 @@ The basic structure of a formula that returns an object.
 
 ```ts
 const MySchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
   properties: {
     property1: {type: coda.ValueType.Number},
     property2: {type: coda.ValueType.String},

@@ -22,7 +22,6 @@ pack.addColumnFormat({
 
 // A schema defining the rich metadata to be returned.
 const TaskSchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
   properties: {
     name: {
       description: "The name of the task.",

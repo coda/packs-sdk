@@ -3,7 +3,6 @@ export const pack = coda.newPack();
 
 // Schema for a Cat image.
 const CatSchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
   properties: {
     image: {
       type: coda.ValueType.String,

@@ -3,7 +3,6 @@ export const pack = coda.newPack();
 
 // A schema defining the data in the sync table.
 const TaskSchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
   properties: {
     name: {
       description: "The name of the task.",

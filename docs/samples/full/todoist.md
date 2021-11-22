@@ -68,7 +68,6 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
     // schema, but that doesn't work in this case since a Project itself can contain
     // a reference to a parent project.
     const ProjectReferenceSchema = coda.makeObjectSchema({
-      type: coda.ValueType.Object,
       codaType: coda.ValueHintType.Reference,
       properties: {
         name: {type: coda.ValueType.String, required: true},
@@ -82,7 +81,6 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
     });
 
     const ProjectSchema = coda.makeObjectSchema({
-      type: coda.ValueType.Object,
       codaType: coda.ValueHintType.Reference,
       properties: {
         name: {
@@ -129,7 +127,6 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
     // schema, but that doesn't work in this case since a Project itself can contain
     // a reference to a parent project.
     const TaskReferenceSchema = coda.makeObjectSchema({
-      type: coda.ValueType.Object,
       codaType: coda.ValueHintType.Reference,
       properties: {
         name: {type: coda.ValueType.String, required: true},
@@ -143,7 +140,6 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
     });
 
     const TaskSchema = coda.makeObjectSchema({
-      type: coda.ValueType.Object,
       properties: {
         name: {
           description: "The name of the task.",

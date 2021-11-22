@@ -17,7 +17,6 @@ pack.addNetworkDomain("sunrise-sunset.org");
 // Define a schema that will be used to bundle up the multiple pieces of data
 // our formula will return. In the Coda doc this will be displayed as a chip.
 const SunSchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
   properties: {
     // The values we return are simple strings, but we use the codaType field to
     // to tell Coda to interpret them as durations and time values.

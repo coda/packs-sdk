@@ -3,7 +3,6 @@ import * as coda from "@codahq/packs-sdk";
 // BEGIN
 
 const MySchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
   properties: {
     property1: {type: coda.ValueType.Number},
     property2: {type: coda.ValueType.String},

@@ -3,7 +3,6 @@ export const pack = coda.newPack();
 
 // A schema defining the rich metadata to be returned about each task.
 const TaskSchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
   properties: {
     name: {
       description: "The name of the task.",
