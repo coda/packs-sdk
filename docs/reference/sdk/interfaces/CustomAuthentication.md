@@ -105,7 +105,7 @@ ___
 
 ### getConnectionName
 
-• `Optional` **getConnectionName**: [`MetadataFormula`](../types/MetadataFormula.md)
+• `Optional` **getConnectionName**: [`MetadataFormula`](../types/MetadataFormula.md)<`any`\>
 
 A function that is called when a user sets up a new account, that returns a name for
 the account to label that account in the UI. The users credentials are applied to any

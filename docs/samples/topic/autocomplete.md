@@ -47,27 +47,28 @@ pack.addFormula({
 A formula with a parameter that provides autocomplete for acceptable values, where the options are pulled dynamically from an API. This sample returns the price for a board game listed on the site Board Game Atlas.
 
 ```ts
-import * as coda from "@codahq/packs-sdk";
+import * as coda from '@codahq/packs-sdk';
 export const pack = coda.newPack();
 
 // Gets the price of a board game by ID, with autocomplete on the ID.
 pack.addFormula({
-  name: "GetPrice",
-  description: "Gets the price of a board game.",
+  name: 'GetPrice',
+  description: 'Gets the price of a board game.',
   parameters: [
     coda.makeParameter({
       type: coda.ParameterType.String,
-      name: "gameId",
-      description: "The ID of the game on boardgameatlas.com",
+      name: 'gameId',
+      description: 'The ID of the game on boardgameatlas.com',
       autocomplete: async function (context, search, parameters) {
-        let url = coda.withQueryParams(
-          "https://api.boardgameatlas.com/api/search",
-          { fuzzy_match: true, name: search });
-        let response = await context.fetcher.fetch({ method: "GET", url: url });
-        let results = response.body.games;
+        let url = coda.withQueryParams('https://api.boardgameatlas.com/api/search', {
+          fuzzy_match: true,
+          name: search,
+        });
+        let response = await context.fetcher.fetch({method: 'GET', url: url});
+        let results: Array<{name: string; id: string}> = response.body.games;
         // Generate an array of autocomplete objects, using the game's name as
         // the label and its ID for the value.
-        return coda.autocompleteSearchObjects(search, results, "name", "id");
+        return coda.autocompleteSearchObjects<{name: string; id: string}, string>(search, results, 'name', 'id');
       },
     }),
   ],
@@ -75,71 +76,71 @@ pack.addFormula({
   codaType: coda.ValueHintType.Currency,
   execute: async function ([gameId], context) {
     let response = await context.fetcher.fetch({
-      method: "GET",
-      url: "https://api.boardgameatlas.com/api/search?ids=" + gameId,
+      method: 'GET',
+      url: 'https://api.boardgameatlas.com/api/search?ids=' + gameId,
     });
     return response.body.games[0].price;
   },
 });
 
-pack.addNetworkDomain("boardgameatlas.com");
+pack.addNetworkDomain('boardgameatlas.com');
 
 // Authenticate using a client ID.
 // See: https://www.boardgameatlas.com/api/docs/apps
 pack.setSystemAuthentication({
   type: coda.AuthenticationType.QueryParamToken,
-  paramName: "client_id",
+  paramName: 'client_id',
 });
 ```
 ## Autocomplete on previous parameter
 A formula with a parameter that provides autocomplete for acceptable values, where the options depend on the value of a previous parameter. This sample generates a greeting in either English or Spanish.
 
 ```ts
-import * as coda from "@codahq/packs-sdk";
+import * as coda from '@codahq/packs-sdk';
 export const pack = coda.newPack();
 
 // Greet someone in their language, with the greeting autocomplete adjusting
 // based on the language selected.
 pack.addFormula({
-  name: "Greeting",
-  description: "Greet someone.",
+  name: 'Greeting',
+  description: 'Greet someone.',
   parameters: [
     coda.makeParameter({
       type: coda.ParameterType.String,
-      name: "language",
-      description: "The language to greet them in.",
+      name: 'language',
+      description: 'The language to greet them in.',
       autocomplete: [
-        { display: "English", value: "en" },
-        { display: "Spanish", value: "es" },
+        {display: 'English', value: 'en'},
+        {display: 'Spanish', value: 'es'},
       ],
     }),
     coda.makeParameter({
       type: coda.ParameterType.String,
-      name: "greeting",
-      description: "The greeting to use.",
+      name: 'greeting',
+      description: 'The greeting to use.',
       autocomplete: async function (context, search, {language}) {
         let options;
-        if (language === "es") {
-          options = ["Hola", "Buenos días"];
+        if (language === 'es') {
+          options = ['Hola', 'Buenos días'];
         } else {
-          options = ["Hello", "Howdy"];
+          options = ['Hello', 'Howdy'];
         }
-        return coda.simpleAutocomplete(search, options);
+        return coda.simpleAutocomplete<coda.ParameterType.String>(search, options);
       },
     }),
     coda.makeParameter({
       type: coda.ParameterType.String,
-      name: "name",
-      description: "The name to greet.",
+      name: 'name',
+      description: 'The name to greet.',
     }),
   ],
   resultType: coda.ValueType.String,
   connectionRequirement: coda.ConnectionRequirement.None,
   execute: async function ([language, greeting, name], context) {
-    let result = greeting + " " + name + "!";
-    if (language === "es") {
+    let result = greeting + ' ' + name + '!';
+    if (language === 'es') {
       // Add upside-down exclamation point in the front.
-      result = "¡" + result;
+      result = '¡' + result;
     }
     return result;
   },

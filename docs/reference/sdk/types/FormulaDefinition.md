@@ -14,4 +14,8 @@ A formula definition accepted by [makeFormula](../functions/makeFormula.md).
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:867](https://github.com/coda/packs-sdk/blob/main/api.ts#L867)
+=======
+[api.ts:875](https://github.com/coda/packs-sdk/blob/main/api.ts#L875)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

@@ -215,7 +215,11 @@ A definition of the request and any parameter transformations to make in order t
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:455](https://github.com/coda/packs-sdk/blob/main/api.ts#L455)
+=======
+[api.ts:463](https://github.com/coda/packs-sdk/blob/main/api.ts#L463)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))
 
 ___
 
@@ -227,7 +231,11 @@ A definition of the schema for the object list returned by this function.
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:457](https://github.com/coda/packs-sdk/blob/main/api.ts#L457)
+=======
+[api.ts:465](https://github.com/coda/packs-sdk/blob/main/api.ts#L465)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))
 
 ___
 

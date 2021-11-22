@@ -1,6 +1,10 @@
 # Function: simpleAutocomplete
 
+<<<<<<< HEAD
 ▸ **simpleAutocomplete**<`T`\>(`search`, `options`): `Promise`<[`MetadataFormulaObjectResultType`](../interfaces/MetadataFormulaObjectResultType.md)[]\>
+=======
+▸ **simpleAutocomplete**<`T`\>(`search`, `options`): `Promise`<[`MetadataFormulaObjectResultType`](../interfaces/MetadataFormulaObjectResultType.md)<`TypeMap`[`ParameterTypeMap`[`T`]]\>[]\>
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))
 
 Utility to search over an array of autocomplete results and return only those that
 match the given search string.
@@ -32,12 +36,20 @@ autocomplete: async function(context, search) {
 | Name | Type |
 | :------ | :------ |
 | `search` | `undefined` \| `string` |
+<<<<<<< HEAD
 | `options` | (`TypeMap`[`ParameterTypeMap`[`T`]] \| [`SimpleAutocompleteOption`](../interfaces/SimpleAutocompleteOption.md)<`T`\>)[] |
+=======
+| `options` | `AutocompleteReturnType`<`T`\> |
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))
 
 #### Returns
 
-`Promise`<[`MetadataFormulaObjectResultType`](../interfaces/MetadataFormulaObjectResultType.md)[]\>
+`Promise`<[`MetadataFormulaObjectResultType`](../interfaces/MetadataFormulaObjectResultType.md)<`TypeMap`[`ParameterTypeMap`[`T`]]\>[]\>
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:1054](https://github.com/coda/packs-sdk/blob/main/api.ts#L1054)
+=======
+[api.ts:1071](https://github.com/coda/packs-sdk/blob/main/api.ts#L1071)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

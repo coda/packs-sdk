@@ -8,4 +8,8 @@ or a full metadata formula definition (mostly supported for legacy code).
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:982](https://github.com/coda/packs-sdk/blob/main/api.ts#L982)
+=======
+[api.ts:999](https://github.com/coda/packs-sdk/blob/main/api.ts#L999)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

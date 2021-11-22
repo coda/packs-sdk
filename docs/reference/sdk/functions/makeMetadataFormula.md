@@ -1,6 +1,6 @@
 # Function: makeMetadataFormula
 
-▸ **makeMetadataFormula**(`execute`, `options?`): [`MetadataFormula`](../types/MetadataFormula.md)
+▸ **makeMetadataFormula**<`ResultT`\>(`execute`, `options?`): [`MetadataFormula`](../types/MetadataFormula.md)<`ResultT`\>
 
 A wrapper that generates a formula definition from the function that implements a metadata formula.
 It is uncommon to ever need to call this directly, normally you would just define the JavaScript
@@ -13,18 +13,28 @@ and an `execute` function body. This includes supporting utilities like paramter
 This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
 it is shaped like a Coda formula to be used at runtime.
 
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ResultT` | extends [`PackFormulaResult`](../types/PackFormulaResult.md) = `any` |
+
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `execute` | [`MetadataFunction`](../types/MetadataFunction.md) |
+| `execute` | [`MetadataFunction`](../types/MetadataFunction.md)<`string`, `string`, `any`\> |
 | `options?` | `Object` |
 | `options.connectionRequirement?` | [`ConnectionRequirement`](../enums/ConnectionRequirement.md) |
 
 #### Returns
 
-[`MetadataFormula`](../types/MetadataFormula.md)
+[`MetadataFormula`](../types/MetadataFormula.md)<`ResultT`\>
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:996](https://github.com/coda/packs-sdk/blob/main/api.ts#L996)
+=======
+[api.ts:1013](https://github.com/coda/packs-sdk/blob/main/api.ts#L1013)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

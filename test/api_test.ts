@@ -1,5 +1,6 @@
 import './test_helper';
 import type {ArrayType} from '../api_types';
+import type {AutocompleteReturnType} from '../api';
 import {ConnectionRequirement} from '../api_types';
 import {ParameterType} from '../api_types';
 import {StatusCodeError} from '../api';
@@ -213,7 +214,7 @@ describe('API test', () => {
         type: ParameterType.String,
         name: 'p',
         description: '',
-        autocomplete: makeMetadataFormula(
+        autocomplete: makeMetadataFormula<AutocompleteReturnType<ParameterType.String>>(
           async (context, search) => {
             context.fetcher!;
             return [{display: search, value: search}];

@@ -18,4 +18,8 @@ input to [makeSyncTable](../functions/makeSyncTable.md) which outputs definition
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:605](https://github.com/coda/packs-sdk/blob/main/api.ts#L605)
+=======
+[api.ts:613](https://github.com/coda/packs-sdk/blob/main/api.ts#L613)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

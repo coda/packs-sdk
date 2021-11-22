@@ -32,4 +32,8 @@ makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', descriptio
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:289](https://github.com/coda/packs-sdk/blob/main/api.ts#L289)
+=======
+[api.ts:297](https://github.com/coda/packs-sdk/blob/main/api.ts#L297)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

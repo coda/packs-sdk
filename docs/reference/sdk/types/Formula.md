@@ -18,4 +18,8 @@ pack, like an autocomplete metadata formula or a sync getter formula.
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:515](https://github.com/coda/packs-sdk/blob/main/api.ts#L515)
+=======
+[api.ts:523](https://github.com/coda/packs-sdk/blob/main/api.ts#L523)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

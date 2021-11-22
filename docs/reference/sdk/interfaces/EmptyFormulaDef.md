@@ -213,7 +213,11 @@ A definition of the request and any parameter transformations to make in order t
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:470](https://github.com/coda/packs-sdk/blob/main/api.ts#L470)
+=======
+[api.ts:478](https://github.com/coda/packs-sdk/blob/main/api.ts#L478)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))
 
 ___
 

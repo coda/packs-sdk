@@ -1,7 +1,13 @@
-# Interface: MetadataFormulaObjectResultType
+# Interface: MetadataFormulaObjectResultType<T\>
 
 The return type for a metadata formula that should return a different display to the user
 than is used internally.
+
+## Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends `string` \| `number` = `string` \| `number` |
 
 ## Properties
 
@@ -13,7 +19,11 @@ The value displayed to the user in the UI.
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:887](https://github.com/coda/packs-sdk/blob/main/api.ts#L887)
+=======
+[api.ts:895](https://github.com/coda/packs-sdk/blob/main/api.ts#L895)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))
 
 ___
 
@@ -50,16 +60,24 @@ as the `value` of the result that was clicked on.
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:918](https://github.com/coda/packs-sdk/blob/main/api.ts#L918)
+=======
+[api.ts:926](https://github.com/coda/packs-sdk/blob/main/api.ts#L926)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))
 
 ___
 
 ### value
 
-• **value**: `string` \| `number`
+• **value**: `T`
 
 The value used for the formula argument when the user selects this option.
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:889](https://github.com/coda/packs-sdk/blob/main/api.ts#L889)
+=======
+[api.ts:897](https://github.com/coda/packs-sdk/blob/main/api.ts#L897)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

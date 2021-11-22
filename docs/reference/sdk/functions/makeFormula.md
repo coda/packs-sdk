@@ -75,4 +75,8 @@ makeFormula({
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:698](https://github.com/coda/packs-sdk/blob/main/api.ts#L698)
+=======
+[api.ts:706](https://github.com/coda/packs-sdk/blob/main/api.ts#L706)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

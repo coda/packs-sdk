@@ -34,4 +34,12 @@ See [Normalization](/index.html#normalization) for more information about schema
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:1337](https://github.com/coda/packs-sdk/blob/main/api.ts#L1337)
+=======
+<<<<<<< HEAD
+[api.ts:1337](https://github.com/coda/packs-sdk/blob/main/api.ts#L1337)
+=======
+[api.ts:1345](https://github.com/coda/packs-sdk/blob/main/api.ts#L1345)
+>>>>>>> cb191bf0 (tmp)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

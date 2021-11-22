@@ -243,4 +243,8 @@ as another continuation if there are more result to fetch.
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:596](https://github.com/coda/packs-sdk/blob/main/api.ts#L596)
+=======
+[api.ts:604](https://github.com/coda/packs-sdk/blob/main/api.ts#L604)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

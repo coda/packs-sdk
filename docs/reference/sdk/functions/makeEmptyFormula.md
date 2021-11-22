@@ -39,4 +39,12 @@ coda.makeParameter({type: coda.ParameterType.Number, name: "id", description: "T
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:1569](https://github.com/coda/packs-sdk/blob/main/api.ts#L1569)
+=======
+<<<<<<< HEAD
+[api.ts:1569](https://github.com/coda/packs-sdk/blob/main/api.ts#L1569)
+=======
+[api.ts:1577](https://github.com/coda/packs-sdk/blob/main/api.ts#L1577)
+>>>>>>> cb191bf0 (tmp)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

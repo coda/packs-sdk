@@ -9,4 +9,8 @@ values are provided in this context object.
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:927](https://github.com/coda/packs-sdk/blob/main/api.ts#L927)
+=======
+[api.ts:935](https://github.com/coda/packs-sdk/blob/main/api.ts#L935)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

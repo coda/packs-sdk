@@ -13,4 +13,8 @@ A definition accepted by [makeFormula](../functions/makeFormula.md) for a formul
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:855](https://github.com/coda/packs-sdk/blob/main/api.ts#L855)
+=======
+[api.ts:863](https://github.com/coda/packs-sdk/blob/main/api.ts#L863)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

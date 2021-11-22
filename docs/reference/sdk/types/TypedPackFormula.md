@@ -10,4 +10,8 @@ contents of a pack for for Coda internal use.
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:543](https://github.com/coda/packs-sdk/blob/main/api.ts#L543)
+=======
+[api.ts:551](https://github.com/coda/packs-sdk/blob/main/api.ts#L551)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

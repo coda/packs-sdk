@@ -25,7 +25,11 @@ until there is no continuation returned.
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:577](https://github.com/coda/packs-sdk/blob/main/api.ts#L577)
+=======
+[api.ts:585](https://github.com/coda/packs-sdk/blob/main/api.ts#L585)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))
 
 ___
 
@@ -37,4 +41,8 @@ The list of results from this page.
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:571](https://github.com/coda/packs-sdk/blob/main/api.ts#L571)
+=======
+[api.ts:579](https://github.com/coda/packs-sdk/blob/main/api.ts#L579)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

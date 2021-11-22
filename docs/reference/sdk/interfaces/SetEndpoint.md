@@ -34,7 +34,7 @@ ___
 
 ### getOptionsFormula
 
-• **getOptionsFormula**: [`MetadataFormula`](../types/MetadataFormula.md)
+• **getOptionsFormula**: [`MetadataFormula`](../types/MetadataFormula.md)<`any`\>
 
 The formula that fetches endpoints for the user
 to select from. Like any [MetadataFormula](../types/MetadataFormula.md), this formula should return

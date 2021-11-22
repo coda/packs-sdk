@@ -1,19 +1,20 @@
-# Type alias: MetadataFunction
+# Type alias: MetadataFunction<K, L, ResultT\>
 
-Ƭ **MetadataFunction**: <K, L\>(`context`: [`ExecutionContext`](../interfaces/ExecutionContext.md), `search`: `string`, `formulaContext?`: [`MetadataContext`](MetadataContext.md)) => `Promise`<[`MetadataFormulaResultType`](MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/ArraySchema.md) \| `ObjectSchema`<`K`, `L`\>\>
+Ƭ **MetadataFunction**<`K`, `L`, `ResultT`\>: (`context`: [`ExecutionContext`](../interfaces/ExecutionContext.md), `search`: `string`, `formulaContext?`: [`MetadataContext`](MetadataContext.md)) => `Promise`<`ResultT`\>
 
-#### Type declaration
-
-▸ <`K`, `L`\>(`context`, `search`, `formulaContext?`): `Promise`<[`MetadataFormulaResultType`](MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/ArraySchema.md) \| `ObjectSchema`<`K`, `L`\>\>
-
-A JavaScript function that can implement a [MetadataFormulaDef](MetadataFormulaDef.md).
-
-##### Type parameters
+#### Type parameters
 
 | Name | Type |
 | :------ | :------ |
-| `K` | extends `string` |
-| `L` | extends `string` |
+| `K` | extends `string` = `string` |
+| `L` | extends `string` = `string` |
+| `ResultT` | extends `MetadataFunctionReturnType`<`K`, `L`\> = `MetadataFunctionReturnType`<`K`, `L`\> |
+
+#### Type declaration
+
+▸ (`context`, `search`, `formulaContext?`): `Promise`<`ResultT`\>
+
+A JavaScript function that can implement a [MetadataFormulaDef](MetadataFormulaDef.md).
 
 ##### Parameters
 
@@ -25,8 +26,12 @@ A JavaScript function that can implement a [MetadataFormulaDef](MetadataFormulaD
 
 ##### Returns
 
-`Promise`<[`MetadataFormulaResultType`](MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/ArraySchema.md) \| `ObjectSchema`<`K`, `L`\>\>
+`Promise`<`ResultT`\>
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:971](https://github.com/coda/packs-sdk/blob/main/api.ts#L971)
+=======
+[api.ts:988](https://github.com/coda/packs-sdk/blob/main/api.ts#L988)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

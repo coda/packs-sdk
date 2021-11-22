@@ -1,6 +1,6 @@
-# Type alias: MetadataFormula
+# Type alias: MetadataFormula<ResultT\>
 
-Ƭ **MetadataFormula**: [`BaseFormula`](BaseFormula.md)<[[`ParamDef`](../interfaces/ParamDef.md)<[`string`](../enums/Type.md#string)\>, [`ParamDef`](../interfaces/ParamDef.md)<[`string`](../enums/Type.md#string)\>], `any`\> & { `schema?`: `any`  }
+Ƭ **MetadataFormula**<`ResultT`\>: [`BaseFormula`](BaseFormula.md)<[[`ParamDef`](../interfaces/ParamDef.md)<[`string`](../enums/Type.md#string)\>, [`ParamDef`](../interfaces/ParamDef.md)<[`string`](../enums/Type.md#string)\>], `ResultT`\> & { `schema?`: `any`  }
 
 A formula that returns metadata relating to a core pack building block, like a sync table,
 a formula parameter, or a user account. Examples include [DynamicOptions.getSchema](../interfaces/DynamicOptions.md#getschema),
@@ -30,6 +30,16 @@ that has the values the user has specified for each of the other parameters in t
 values of the others. This is dictionary mapping the names of each parameter to its
 current value.
 
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ResultT` | extends [`PackFormulaResult`](PackFormulaResult.md) = `any` |
+
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:962](https://github.com/coda/packs-sdk/blob/main/api.ts#L962)
+=======
+[api.ts:970](https://github.com/coda/packs-sdk/blob/main/api.ts#L970)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

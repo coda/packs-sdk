@@ -22,7 +22,15 @@ this sync table (including autocomplete formulas).
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:1261](https://github.com/coda/packs-sdk/blob/main/api.ts#L1261)
+=======
+<<<<<<< HEAD
+[api.ts:1261](https://github.com/coda/packs-sdk/blob/main/api.ts#L1261)
+=======
+[api.ts:1258](https://github.com/coda/packs-sdk/blob/main/api.ts#L1258)
+>>>>>>> cb191bf0 (tmp)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))
 
 ___
 
@@ -35,7 +43,15 @@ sync tables that have a dynamic schema.
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:1266](https://github.com/coda/packs-sdk/blob/main/api.ts#L1266)
+=======
+<<<<<<< HEAD
+[api.ts:1266](https://github.com/coda/packs-sdk/blob/main/api.ts#L1266)
+=======
+[api.ts:1262](https://github.com/coda/packs-sdk/blob/main/api.ts#L1262)
+>>>>>>> cb191bf0 (tmp)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))
 
 ___
 
@@ -50,7 +66,15 @@ These will eventually be consolidated.)
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:1256](https://github.com/coda/packs-sdk/blob/main/api.ts#L1256)
+=======
+<<<<<<< HEAD
+[api.ts:1256](https://github.com/coda/packs-sdk/blob/main/api.ts#L1256)
+=======
+[api.ts:1253](https://github.com/coda/packs-sdk/blob/main/api.ts#L1253)
+>>>>>>> cb191bf0 (tmp)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))
 
 ___
 
@@ -72,7 +96,15 @@ of the object, and the schema is declared as `{identity: {name: 'Products'}}`.
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:1244](https://github.com/coda/packs-sdk/blob/main/api.ts#L1244)
+=======
+<<<<<<< HEAD
+[api.ts:1244](https://github.com/coda/packs-sdk/blob/main/api.ts#L1244)
+=======
+[api.ts:1241](https://github.com/coda/packs-sdk/blob/main/api.ts#L1241)
+>>>>>>> cb191bf0 (tmp)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))
 
 ___
 
@@ -86,7 +118,15 @@ from an e-commerce platform should be called 'Products'. This name must not cont
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:1230](https://github.com/coda/packs-sdk/blob/main/api.ts#L1230)
+=======
+<<<<<<< HEAD
+[api.ts:1230](https://github.com/coda/packs-sdk/blob/main/api.ts#L1230)
+=======
+[api.ts:1227](https://github.com/coda/packs-sdk/blob/main/api.ts#L1227)
+>>>>>>> cb191bf0 (tmp)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))
 
 ___
 
@@ -99,4 +139,12 @@ schema for a single product. The sync formula will return an array of objects th
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:1249](https://github.com/coda/packs-sdk/blob/main/api.ts#L1249)
+=======
+<<<<<<< HEAD
+[api.ts:1249](https://github.com/coda/packs-sdk/blob/main/api.ts#L1249)
+=======
+[api.ts:1246](https://github.com/coda/packs-sdk/blob/main/api.ts#L1246)
+>>>>>>> cb191bf0 (tmp)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

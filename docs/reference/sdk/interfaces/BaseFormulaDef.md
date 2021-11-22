@@ -241,7 +241,11 @@ The JavaScript function that implements this formula
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:427](https://github.com/coda/packs-sdk/blob/main/api.ts#L427)
+=======
+[api.ts:435](https://github.com/coda/packs-sdk/blob/main/api.ts#L435)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))
 
 ___
 
@@ -267,4 +271,8 @@ that can then be applied to many different formulas in a pack.
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:814](https://github.com/coda/packs-sdk/blob/main/api.ts#L814)
+=======
+[api.ts:822](https://github.com/coda/packs-sdk/blob/main/api.ts#L822)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

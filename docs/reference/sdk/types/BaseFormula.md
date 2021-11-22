@@ -13,4 +13,8 @@ The base class for pack formula descriptors. Subclasses vary based on the return
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:474](https://github.com/coda/packs-sdk/blob/main/api.ts#L474)
+=======
+[api.ts:482](https://github.com/coda/packs-sdk/blob/main/api.ts#L482)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))

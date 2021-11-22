@@ -49,4 +49,12 @@ makeTranslateObjectFormula({
 
 #### Defined in
 
+<<<<<<< HEAD
 [api.ts:1517](https://github.com/coda/packs-sdk/blob/main/api.ts#L1517)
+=======
+<<<<<<< HEAD
+[api.ts:1517](https://github.com/coda/packs-sdk/blob/main/api.ts#L1517)
+=======
+[api.ts:1525](https://github.com/coda/packs-sdk/blob/main/api.ts#L1525)
+>>>>>>> cb191bf0 (tmp)
+>>>>>>> 33154897 (restrict param autocomplete to only string & number, and respect param type in autocomplete shape (#1572))
