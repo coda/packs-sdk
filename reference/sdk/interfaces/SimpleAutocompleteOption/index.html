@@ -67,7 +67,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-simpleautocompleteoption" class="md-skip">
+        <a href="#interface-simpleautocompleteoptiont" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Interface: SimpleAutocompleteOption
+              Interface: SimpleAutocompleteOption<T\>
             
           </span>
         </div>
@@ -654,6 +654,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_3_3">
@@ -704,6 +706,20 @@
     <li class="md-nav__item">
       <a href="../../../../guides/advanced/cli/" class="md-nav__link">
         Using the CLI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../guides/advanced/dynamic-sync-tables/" class="md-nav__link">
+        Dynamic sync tables
       </a>
     </li>
   
@@ -1036,6 +1052,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_4_2">
@@ -1072,6 +1090,20 @@
     <li class="md-nav__item">
       <a href="../../../../samples/full/daylight/" class="md-nav__link">
         Daylight
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../samples/full/dnd/" class="md-nav__link">
+        Dungeons and Dragons
       </a>
     </li>
   
@@ -2113,6 +2145,14 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_5_1_5">
@@ -2177,6 +2217,20 @@
     <li class="md-nav__item">
       <a href="../ArrayType/" class="md-nav__link">
         Interface: ArrayType<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BaseAuthentication/" class="md-nav__link">
+        Interface: BaseAuthentication
       </a>
     </li>
   
@@ -2303,6 +2357,20 @@
     <li class="md-nav__item">
       <a href="../DurationSchema/" class="md-nav__link">
         Interface: DurationSchema
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamicOptions/" class="md-nav__link">
+        Interface: DynamicOptions
       </a>
     </li>
   
@@ -2763,6 +2831,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../RequestHandlerTemplate/" class="md-nav__link">
+        Interface: RequestHandlerTemplate
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ResponseHandlerTemplate/" class="md-nav__link">
+        Interface: ResponseHandlerTemplate<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../ScaleSchema/" class="md-nav__link">
         Interface: ScaleSchema
       </a>
@@ -2801,12 +2897,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Interface: SimpleAutocompleteOption
+          Interface: SimpleAutocompleteOption<T\>
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Interface: SimpleAutocompleteOption
+        Interface: SimpleAutocompleteOption<T\>
       </a>
       
         
@@ -2824,6 +2920,13 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#type-parameters" class="md-nav__link">
+    Type parameters
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#properties" class="md-nav__link">
@@ -3105,6 +3208,8 @@
       
       
       
+        
+          
         
           
         
@@ -3708,6 +3813,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../types/PostSetup/" class="md-nav__link">
+        Type alias: PostSetup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../types/Schema/" class="md-nav__link">
         Type alias: Schema
       </a>
@@ -3970,6 +4089,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#type-parameters" class="md-nav__link">
+    Type parameters
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#properties" class="md-nav__link">
     Properties
   </a>
@@ -4013,21 +4139,36 @@
                   </a>
                 
                 
-                <h1 id="interface-simpleautocompleteoption">Interface: SimpleAutocompleteOption<a class="headerlink" href="#interface-simpleautocompleteoption" title="Permanent link">&para;</a></h1>
+                <h1 id="interface-simpleautocompleteoptiont">Interface: SimpleAutocompleteOption&lt;T><a class="headerlink" href="#interface-simpleautocompleteoptiont" title="Permanent link">&para;</a></h1>
 <p>A result from a parameter autocomplete function that pairs a UI display value with
 the underlying option that will be used in the formula when selected.</p>
+<h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>T</code></td>
+<td align="left">extends <a href="../../enums/ParameterType/#number"><code>Number</code></a> | <a href="../../enums/ParameterType/#string"><code>String</code></a></td>
+</tr>
+</tbody>
+</table>
 <h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h2>
 <h3 id="display">display<a class="headerlink" href="#display" title="Permanent link">&para;</a></h3>
 <p>• <strong>display</strong>: <code>string</code></p>
 <p>Text that will be displayed to the user in UI for this option.</p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1019">api.ts:1019</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1029">api.ts:1029</a></p>
 <hr />
 <h3 id="value">value<a class="headerlink" href="#value" title="Permanent link">&para;</a></h3>
-<p>• <strong>value</strong>: <code>string</code> | <code>number</code></p>
+<p>• <strong>value</strong>: <code>TypeMap</code>[<code>ParameterTypeMap</code>[<code>T</code>]]</p>
 <p>The actual value that will get used in the formula if this option is selected.</p>
 <h4 id="defined-in_1">Defined in<a class="headerlink" href="#defined-in_1" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1021">api.ts:1021</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1031">api.ts:1031</a></p>
                 
               
               

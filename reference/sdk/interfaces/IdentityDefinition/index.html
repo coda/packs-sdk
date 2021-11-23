@@ -654,6 +654,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_3_3">
@@ -704,6 +706,20 @@
     <li class="md-nav__item">
       <a href="../../../../guides/advanced/cli/" class="md-nav__link">
         Using the CLI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../guides/advanced/dynamic-sync-tables/" class="md-nav__link">
+        Dynamic sync tables
       </a>
     </li>
   
@@ -1036,6 +1052,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_4_2">
@@ -1072,6 +1090,20 @@
     <li class="md-nav__item">
       <a href="../../../../samples/full/daylight/" class="md-nav__link">
         Daylight
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../samples/full/dnd/" class="md-nav__link">
+        Dungeons and Dragons
       </a>
     </li>
   
@@ -2113,6 +2145,14 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_5_1_5">
@@ -2177,6 +2217,20 @@
     <li class="md-nav__item">
       <a href="../ArrayType/" class="md-nav__link">
         Interface: ArrayType<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BaseAuthentication/" class="md-nav__link">
+        Interface: BaseAuthentication
       </a>
     </li>
   
@@ -2303,6 +2357,20 @@
     <li class="md-nav__item">
       <a href="../DurationSchema/" class="md-nav__link">
         Interface: DurationSchema
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamicOptions/" class="md-nav__link">
+        Interface: DynamicOptions
       </a>
     </li>
   
@@ -2846,6 +2914,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../RequestHandlerTemplate/" class="md-nav__link">
+        Interface: RequestHandlerTemplate
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ResponseHandlerTemplate/" class="md-nav__link">
+        Interface: ResponseHandlerTemplate<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../ScaleSchema/" class="md-nav__link">
         Interface: ScaleSchema
       </a>
@@ -2875,7 +2971,7 @@
   
     <li class="md-nav__item">
       <a href="../SimpleAutocompleteOption/" class="md-nav__link">
-        Interface: SimpleAutocompleteOption
+        Interface: SimpleAutocompleteOption<T\>
       </a>
     </li>
   
@@ -3126,6 +3222,8 @@
       
       
       
+        
+          
         
           
         
@@ -3729,6 +3827,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../types/PostSetup/" class="md-nav__link">
+        Type alias: PostSetup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../types/Schema/" class="md-nav__link">
         Type alias: Schema
       </a>
@@ -4076,17 +4188,18 @@ table definition, so you needn't explicitly create on unless desired.</p>
 <p>Attribution text, images, and/or links that should be rendered along with this value.</p>
 <p>See <a href="../../functions/makeAttributionNode/">makeAttributionNode</a>.</p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L634">schema.ts:634</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L635">schema.ts:635</a></p>
 <hr />
 <h3 id="dynamicurl">dynamicUrl<a class="headerlink" href="#dynamicurl" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>dynamicUrl</strong>: <code>string</code></p>
-<p>The dynamic URL, if this is a schema for a dynamic sync table. When returning a schema from the {@link getSchema}
-formula of a dynamic sync table, you must include the dynamic URL of that table, so that rows
+<p>The dynamic URL, if this is a schema for a dynamic sync table. When returning a schema from the
+<a href="../DynamicSyncTableOptions/#getschema">DynamicSyncTableOptions.getSchema</a> formula of a dynamic sync table, you must include
+the dynamic URL of that table, so that rows
 in this table may be distinguished from rows in another dynamic instance of the same table.</p>
 <p>When creating a reference to a dynamic sync table, you must include the dynamic URL of the table
 you wish to reference, again to distinguish which table instance you are trying to reference.</p>
 <h4 id="defined-in_1">Defined in<a class="headerlink" href="#defined-in_1" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L628">schema.ts:628</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L629">schema.ts:629</a></p>
 <hr />
 <h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">&para;</a></h3>
 <p>• <strong>name</strong>: <code>string</code></p>
@@ -4099,7 +4212,7 @@ For example, if you are defining a schema that represents a user object, "User" 
 <p>• <code>Optional</code> <strong>packId</strong>: <code>number</code></p>
 <p>The ID of another pack, if you are trying to reference a value from different pack.</p>
 <h4 id="defined-in_3">Defined in<a class="headerlink" href="#defined-in_3" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L636">schema.ts:636</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/schema.ts#L637">schema.ts:637</a></p>
                 
               
               

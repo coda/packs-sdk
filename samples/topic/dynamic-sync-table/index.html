@@ -654,6 +654,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_3_3">
@@ -704,6 +706,20 @@
     <li class="md-nav__item">
       <a href="../../../guides/advanced/cli/" class="md-nav__link">
         Using the CLI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/advanced/dynamic-sync-tables/" class="md-nav__link">
+        Dynamic sync tables
       </a>
     </li>
   
@@ -1082,6 +1098,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_4_2">
@@ -1118,6 +1136,20 @@
     <li class="md-nav__item">
       <a href="../../full/daylight/" class="md-nav__link">
         Daylight
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/dnd/" class="md-nav__link">
+        Dungeons and Dragons
       </a>
     </li>
   
@@ -2153,6 +2185,14 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_5_1_5">
@@ -2217,6 +2257,20 @@
     <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/ArrayType/" class="md-nav__link">
         Interface: ArrayType<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/BaseAuthentication/" class="md-nav__link">
+        Interface: BaseAuthentication
       </a>
     </li>
   
@@ -2343,6 +2397,20 @@
     <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/DurationSchema/" class="md-nav__link">
         Interface: DurationSchema
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/DynamicOptions/" class="md-nav__link">
+        Interface: DynamicOptions
       </a>
     </li>
   
@@ -2803,6 +2871,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/RequestHandlerTemplate/" class="md-nav__link">
+        Interface: RequestHandlerTemplate
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/ResponseHandlerTemplate/" class="md-nav__link">
+        Interface: ResponseHandlerTemplate<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/ScaleSchema/" class="md-nav__link">
         Interface: ScaleSchema
       </a>
@@ -2832,7 +2928,7 @@
   
     <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/SimpleAutocompleteOption/" class="md-nav__link">
-        Interface: SimpleAutocompleteOption
+        Interface: SimpleAutocompleteOption<T\>
       </a>
     </li>
   
@@ -3083,6 +3179,8 @@
       
       
       
+        
+          
         
           
         
@@ -3686,6 +3784,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/sdk/types/PostSetup/" class="md-nav__link">
+        Type alias: PostSetup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/sdk/types/Schema/" class="md-nav__link">
         Type alias: Schema
       </a>
@@ -3984,12 +4096,12 @@
   <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;&lt;User-visible name for the sync table&gt;&quot;</span><span class="p">,</span>
   <span class="nx">getName</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">let</span> <span class="nx">datasourceUrl</span> <span class="o">=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">sync</span><span class="o">!</span><span class="p">.</span><span class="nx">dynamicUrl</span><span class="o">!</span><span class="p">;</span>
-    <span class="c1">// TODO: Fetch metdata about the datasource and return the name.</span>
+    <span class="c1">// TODO: Fetch metadata about the data source and return the name.</span>
     <span class="k">return</span> <span class="s2">&quot;&lt;Datasource Name&gt;&quot;</span><span class="p">;</span>
   <span class="p">},</span>
   <span class="nx">getSchema</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">let</span> <span class="nx">datasourceUrl</span> <span class="o">=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">sync</span><span class="o">!</span><span class="p">.</span><span class="nx">dynamicUrl</span><span class="o">!</span><span class="p">;</span>
-    <span class="c1">// TODO: Fetch metdata about the datasource and get the list of fields.</span>
+    <span class="c1">// TODO: Fetch metadata about the data source and get the list of fields.</span>
     <span class="kd">let</span> <span class="nx">properties</span> <span class="o">=</span> <span class="p">{</span>
       <span class="c1">// TODO: Create a property for each field.</span>
     <span class="p">};</span>
@@ -4001,7 +4113,6 @@
     <span class="k">return</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeSchema</span><span class="p">({</span>
       <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Array</span><span class="p">,</span>
       <span class="nx">items</span>: <span class="kt">coda.makeObjectSchema</span><span class="p">({</span>
-        <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
         <span class="nx">identity</span><span class="o">:</span> <span class="p">{</span>
           <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;&lt;User-visible name for the column containing the schema&gt;&quot;</span><span class="p">,</span>
           <span class="nx">dynamicUrl</span>: <span class="kt">datasourceUrl</span><span class="p">,</span>

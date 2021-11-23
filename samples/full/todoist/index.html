@@ -654,6 +654,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_3_3">
@@ -704,6 +706,20 @@
     <li class="md-nav__item">
       <a href="../../../guides/advanced/cli/" class="md-nav__link">
         Using the CLI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/advanced/dynamic-sync-tables/" class="md-nav__link">
+        Dynamic sync tables
       </a>
     </li>
   
@@ -1040,6 +1056,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_4_2">
@@ -1076,6 +1094,20 @@
     <li class="md-nav__item">
       <a href="../daylight/" class="md-nav__link">
         Daylight
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dnd/" class="md-nav__link">
+        Dungeons and Dragons
       </a>
     </li>
   
@@ -2121,6 +2153,14 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_5_1_5">
@@ -2185,6 +2225,20 @@
     <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/ArrayType/" class="md-nav__link">
         Interface: ArrayType<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/BaseAuthentication/" class="md-nav__link">
+        Interface: BaseAuthentication
       </a>
     </li>
   
@@ -2311,6 +2365,20 @@
     <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/DurationSchema/" class="md-nav__link">
         Interface: DurationSchema
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/DynamicOptions/" class="md-nav__link">
+        Interface: DynamicOptions
       </a>
     </li>
   
@@ -2771,6 +2839,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/RequestHandlerTemplate/" class="md-nav__link">
+        Interface: RequestHandlerTemplate
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/ResponseHandlerTemplate/" class="md-nav__link">
+        Interface: ResponseHandlerTemplate<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/ScaleSchema/" class="md-nav__link">
         Interface: ScaleSchema
       </a>
@@ -2800,7 +2896,7 @@
   
     <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/SimpleAutocompleteOption/" class="md-nav__link">
-        Interface: SimpleAutocompleteOption
+        Interface: SimpleAutocompleteOption<T\>
       </a>
     </li>
   
@@ -3051,6 +3147,8 @@
       
       
       
+        
+          
         
           
         
@@ -3654,6 +3752,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/sdk/types/PostSetup/" class="md-nav__link">
+        Type alias: PostSetup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/sdk/types/Schema/" class="md-nav__link">
         Type alias: Schema
       </a>
@@ -3984,7 +4096,6 @@
 <span class="c1">// schema, but that doesn&#39;t work in this case since a Project itself can contain</span>
 <span class="c1">// a reference to a parent project.</span>
 <span class="kd">const</span> <span class="nx">ProjectReferenceSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
-  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
   <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Reference</span><span class="p">,</span>
   <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">name</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span> <span class="nx">required</span>: <span class="kt">true</span><span class="p">},</span>
@@ -3998,7 +4109,6 @@
 <span class="p">});</span>
 
 <span class="kd">const</span> <span class="nx">ProjectSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
-  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
   <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Reference</span><span class="p">,</span>
   <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">name</span><span class="o">:</span> <span class="p">{</span>
@@ -4045,7 +4155,6 @@
 <span class="c1">// schema, but that doesn&#39;t work in this case since a Project itself can contain</span>
 <span class="c1">// a reference to a parent project.</span>
 <span class="kd">const</span> <span class="nx">TaskReferenceSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
-  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
   <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Reference</span><span class="p">,</span>
   <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">name</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span> <span class="nx">required</span>: <span class="kt">true</span><span class="p">},</span>
@@ -4059,7 +4168,6 @@
 <span class="p">});</span>
 
 <span class="kd">const</span> <span class="nx">TaskSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
-  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
   <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">name</span><span class="o">:</span> <span class="p">{</span>
       <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The name of the task.&quot;</span><span class="p">,</span>

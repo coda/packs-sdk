@@ -2,922 +2,957 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://coda.github.io/packs-sdk/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/support/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/get-started/cli/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/get-started/web/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/guides/troubleshooting/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/guides/advanced/authentication/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/guides/advanced/autocomplete/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/guides/advanced/cli/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://coda.github.io/packs-sdk/guides/advanced/dynamic-sync-tables/</loc>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/guides/advanced/fetcher/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/guides/advanced/libraries/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/guides/advanced/schemas/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/guides/basics/data-types/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/guides/basics/parameters/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/guides/blocks/actions/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/guides/blocks/column-formats/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/guides/blocks/formulas/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/guides/blocks/sync-tables/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/classes/PackDefinitionBuilder/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/classes/StatusCodeError/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/classes/UserVisibleError/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/enums/AttributionNodeType/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/enums/AuthenticationType/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/enums/ConnectionRequirement/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/enums/CurrencyFormat/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/enums/DefaultConnectionType/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/enums/DurationUnit/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/enums/NetworkConnection/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/enums/ParameterType/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/enums/PostSetupType/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/enums/PrecannedDateRange/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/enums/ScaleIconSet/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/enums/Type/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/enums/ValueHintType/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/enums/ValueType/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/assertCondition/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/autocompleteSearchObjects/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/ensureExists/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/ensureNonEmptyString/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/ensureUnreachable/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/generateSchema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/getQueryParams/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/joinUrl/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/makeAttributionNode/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/makeDynamicSyncTable/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/makeEmptyFormula/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/makeFormula/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/makeMetadataFormula/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/makeObjectSchema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/makeParameter/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/makeReferenceSchemaFromObjectSchema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/makeSchema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/makeSimpleAutocompleteMetadataFormula/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/makeSyncTable/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/makeTranslateObjectFormula/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/newPack/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/simpleAutocomplete/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/functions/withQueryParams/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/AWSAccessKeyAuthentication/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/AWSAssumeRoleAuthentication/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/ArraySchema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/ArrayType/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/BaseAuthentication/</loc>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/BaseFormulaDef/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/BooleanSchema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/CodaApiBearerTokenAuthentication/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/Continuation/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/CurrencySchema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/CustomAuthParameter/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/CustomAuthentication/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/CustomHeaderTokenAuthentication/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/DurationSchema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/DynamicOptions/</loc>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/DynamicSyncTableDef/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/DynamicSyncTableOptions/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/EmptyFormulaDef/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/ExecutionContext/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/FetchRequest/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/FetchResponse/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/Fetcher/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/Format/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/HeaderBearerTokenAuthentication/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/Identity/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/IdentityDefinition/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/ImageAttributionNode/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/InvocationLocation/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/LinkAttributionNode/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/MetadataFormulaObjectResultType/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/MultiQueryParamTokenAuthentication/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/Network/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/NoAuthentication/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/NumericDateSchema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/NumericDateTimeSchema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/NumericSchema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/NumericTimeSchema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/OAuth2Authentication/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/ObjectArrayFormulaDef/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/ObjectSchemaDefinition/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/ObjectSchemaProperty/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/PackDefinition/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/PackFormulaDef/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/PackFormulas/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/PackVersionDefinition/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/ParamDef/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/QueryParamTokenAuthentication/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/RequestHandlerTemplate/</loc>
+         <lastmod>2021-11-23</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/ResponseHandlerTemplate/</loc>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/ScaleSchema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/SetEndpoint/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/SimpleAutocompleteOption/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/SimpleStringSchema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/SliderSchema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/StatusCodeErrorResponse/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/StringDateSchema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/StringDateTimeSchema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/StringTimeSchema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/Sync/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/SyncExecutionContext/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/SyncFormulaDef/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/SyncFormulaResult/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/SyncTableDef/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/SyncTableOptions/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/TemporaryBlobStorage/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/TextAttributionNode/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/VariousAuthentication/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/interfaces/WebBasicAuthentication/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/ArrayFormulaDef/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/AttributionNode/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/Authentication/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/BaseFormula/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/BasicPackDefinition/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/BooleanFormulaDef/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/BooleanPackFormula/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/DefaultValueType/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/FetchMethodType/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/Formula/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/FormulaDefinition/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/GenericDynamicSyncTable/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/GenericSyncFormula/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/GenericSyncFormulaResult/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/GenericSyncTable/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/InferrableTypes/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/MetadataContext/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/MetadataFormula/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/MetadataFormulaDef/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/MetadataFormulaResultType/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/MetadataFunction/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/NumberHintTypes/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/NumberSchema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/NumericFormulaDef/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/NumericPackFormula/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/ObjectFormulaDef/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/ObjectHintTypes/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/ObjectPackFormula/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/ObjectSchemaProperties/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/PackFormulaResult/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/PackFormulaValue/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/PackId/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/ParamDefs/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/ParamValues/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/ParameterOptions/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://coda.github.io/packs-sdk/reference/sdk/types/PostSetup/</loc>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/Schema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/SchemaType/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/StringFormulaDef/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/StringHintTypes/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/StringPackFormula/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/StringSchema/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/SyncFormula/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/SyncTable/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/SystemAuthentication/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/SystemAuthenticationDef/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/types/TypedPackFormula/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/reference/sdk/variables/ValidFetchMethods/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/samples/full/cats/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/samples/full/daylight/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://coda.github.io/packs-sdk/samples/full/dnd/</loc>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/samples/full/hello-world/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/samples/full/number-array/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/samples/full/todoist/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/samples/topic/action/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/samples/topic/authentication/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/samples/topic/autocomplete/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/samples/topic/column-format/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/samples/topic/data-type/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/samples/topic/dynamic-sync-table/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/samples/topic/fetcher/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/samples/topic/formula/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/samples/topic/parameter/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://coda.github.io/packs-sdk/samples/topic/sync-table/</loc>
-         <lastmod>2021-11-18</lastmod>
+         <lastmod>2021-11-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>

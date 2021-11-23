@@ -654,6 +654,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_3_3">
@@ -704,6 +706,20 @@
     <li class="md-nav__item">
       <a href="../../../../guides/advanced/cli/" class="md-nav__link">
         Using the CLI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../guides/advanced/dynamic-sync-tables/" class="md-nav__link">
+        Dynamic sync tables
       </a>
     </li>
   
@@ -1036,6 +1052,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_4_2">
@@ -1072,6 +1090,20 @@
     <li class="md-nav__item">
       <a href="../../../../samples/full/daylight/" class="md-nav__link">
         Daylight
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../samples/full/dnd/" class="md-nav__link">
+        Dungeons and Dragons
       </a>
     </li>
   
@@ -2113,6 +2145,14 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_5_1_5">
@@ -2177,6 +2217,20 @@
     <li class="md-nav__item">
       <a href="../ArrayType/" class="md-nav__link">
         Interface: ArrayType<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BaseAuthentication/" class="md-nav__link">
+        Interface: BaseAuthentication
       </a>
     </li>
   
@@ -2303,6 +2357,20 @@
     <li class="md-nav__item">
       <a href="../DurationSchema/" class="md-nav__link">
         Interface: DurationSchema
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamicOptions/" class="md-nav__link">
+        Interface: DynamicOptions
       </a>
     </li>
   
@@ -2763,6 +2831,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../RequestHandlerTemplate/" class="md-nav__link">
+        Interface: RequestHandlerTemplate
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ResponseHandlerTemplate/" class="md-nav__link">
+        Interface: ResponseHandlerTemplate<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../ScaleSchema/" class="md-nav__link">
         Interface: ScaleSchema
       </a>
@@ -2792,7 +2888,7 @@
   
     <li class="md-nav__item">
       <a href="../SimpleAutocompleteOption/" class="md-nav__link">
-        Interface: SimpleAutocompleteOption
+        Interface: SimpleAutocompleteOption<T\>
       </a>
     </li>
   
@@ -3140,6 +3236,8 @@
       
       
       
+        
+          
         
           
         
@@ -3743,6 +3841,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../types/PostSetup/" class="md-nav__link">
+        Type alias: PostSetup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../types/Schema/" class="md-nav__link">
         Type alias: Schema
       </a>
@@ -4118,35 +4230,14 @@
 <p>A <a href="../../enums/ConnectionRequirement/">ConnectionRequirement</a> that will be used for all formulas contained within
 this sync table (including autocomplete formulas).</p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1230">api.ts:1230</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1261">api.ts:1261</a></p>
 <hr />
 <h3 id="dynamicoptions">dynamicOptions<a class="headerlink" href="#dynamicoptions" title="Permanent link">&para;</a></h3>
-<p>• <code>Optional</code> <strong>dynamicOptions</strong>: <code>Object</code></p>
-<p>A set of options used internally by <a href="../../functions/makeDynamicSyncTable/">makeDynamicSyncTable</a></p>
-<h4 id="type-declaration">Type declaration<a class="headerlink" href="#type-declaration" title="Permanent link">&para;</a></h4>
-<table>
-<thead>
-<tr>
-<th align="left">Name</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>entityName?</code></td>
-<td align="left"><code>string</code></td>
-<td align="left">See <a href="../DynamicSyncTableOptions/#entityname">DynamicSyncTableOptions.entityName</a></td>
-</tr>
-<tr>
-<td align="left"><code>getSchema?</code></td>
-<td align="left"><a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a></td>
-<td align="left">A formula that returns the schema for this table.  For a dynamic sync table, the value of <a href="../DynamicSyncTableOptions/#getschema">DynamicSyncTableOptions.getSchema</a> is passed through here. For a non-dynamic sync table, you may still implement this if you table has a schema that varies based on the user account, but does not require a <a href="../Identity/#dynamicurl">dynamicUrl</a>.</td>
-</tr>
-</tbody>
-</table>
+<p>• <code>Optional</code> <strong>dynamicOptions</strong>: <a href="../DynamicOptions/"><code>DynamicOptions</code></a></p>
+<p>A set of options used internally by <a href="../../functions/makeDynamicSyncTable/">makeDynamicSyncTable</a>, or for static
+sync tables that have a dynamic schema.</p>
 <h4 id="defined-in_1">Defined in<a class="headerlink" href="#defined-in_1" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1234">api.ts:1234</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1266">api.ts:1266</a></p>
 <hr />
 <h3 id="formula">formula<a class="headerlink" href="#formula" title="Permanent link">&para;</a></h3>
 <p>• <strong>formula</strong>: <a href="../SyncFormulaDef/"><code>SyncFormulaDef</code></a>&lt;<code>K</code>, <code>L</code>, <code>ParamDefsT</code>, <code>SchemaT</code>></p>
@@ -4155,7 +4246,7 @@ that returns an array of objects fitting the given schema and optionally a <a hr
 (The <a href="../SyncFormulaDef/#name">SyncFormulaDef.name</a> is redundant and should be the same as the <code>name</code> parameter here.
 These will eventually be consolidated.)</p>
 <h4 id="defined-in_2">Defined in<a class="headerlink" href="#defined-in_2" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1225">api.ts:1225</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1256">api.ts:1256</a></p>
 <hr />
 <h3 id="identityname">identityName<a class="headerlink" href="#identityname" title="Permanent link">&para;</a></h3>
 <p>• <strong>identityName</strong>: <code>string</code></p>
@@ -4169,7 +4260,7 @@ in this table by defining an <a href="../Identity/">Identity</a> in that schema 
 shell objects that reference rows in this table, so long as they contain the id
 of the object, and the schema is declared as <code>{identity: {name: 'Products'}}</code>.</p>
 <h4 id="defined-in_3">Defined in<a class="headerlink" href="#defined-in_3" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1213">api.ts:1213</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1244">api.ts:1244</a></p>
 <hr />
 <h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">&para;</a></h3>
 <p>• <strong>name</strong>: <code>string</code></p>
@@ -4177,14 +4268,14 @@ of the object, and the schema is declared as <code>{identity: {name: 'Products'}
 This should describe the entities being synced. For example, a sync table that syncs products
 from an e-commerce platform should be called 'Products'. This name must not contain spaces.</p>
 <h4 id="defined-in_4">Defined in<a class="headerlink" href="#defined-in_4" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1199">api.ts:1199</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1230">api.ts:1230</a></p>
 <hr />
 <h3 id="schema">schema<a class="headerlink" href="#schema" title="Permanent link">&para;</a></h3>
 <p>• <strong>schema</strong>: <code>SchemaT</code></p>
 <p>The definition of the schema that describes a single response object. For example, the
 schema for a single product. The sync formula will return an array of objects that fit this schema.</p>
 <h4 id="defined-in_5">Defined in<a class="headerlink" href="#defined-in_5" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1218">api.ts:1218</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1249">api.ts:1249</a></p>
                 
               
               

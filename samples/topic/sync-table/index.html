@@ -654,6 +654,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_3_3">
@@ -704,6 +706,20 @@
     <li class="md-nav__item">
       <a href="../../../guides/advanced/cli/" class="md-nav__link">
         Using the CLI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/advanced/dynamic-sync-tables/" class="md-nav__link">
+        Dynamic sync tables
       </a>
     </li>
   
@@ -1041,15 +1057,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cats" class="md-nav__link">
-    Cats
+  <a href="#with-parameter-cats" class="md-nav__link">
+    With parameter (Cats)
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#todoist" class="md-nav__link">
-    Todoist
+  <a href="#with-continuation-dungeons-and-dragons" class="md-nav__link">
+    With continuation (Dungeons and Dragons)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#with-authentication-todoist" class="md-nav__link">
+    With authentication (Todoist)
   </a>
   
 </li>
@@ -1085,6 +1108,8 @@
       
       
       
+        
+          
         
           
         
@@ -1132,6 +1157,20 @@
     <li class="md-nav__item">
       <a href="../../full/daylight/" class="md-nav__link">
         Daylight
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/dnd/" class="md-nav__link">
+        Dungeons and Dragons
       </a>
     </li>
   
@@ -2167,6 +2206,14 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_5_1_5">
@@ -2231,6 +2278,20 @@
     <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/ArrayType/" class="md-nav__link">
         Interface: ArrayType<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/BaseAuthentication/" class="md-nav__link">
+        Interface: BaseAuthentication
       </a>
     </li>
   
@@ -2357,6 +2418,20 @@
     <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/DurationSchema/" class="md-nav__link">
         Interface: DurationSchema
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/DynamicOptions/" class="md-nav__link">
+        Interface: DynamicOptions
       </a>
     </li>
   
@@ -2817,6 +2892,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/RequestHandlerTemplate/" class="md-nav__link">
+        Interface: RequestHandlerTemplate
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/ResponseHandlerTemplate/" class="md-nav__link">
+        Interface: ResponseHandlerTemplate<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/ScaleSchema/" class="md-nav__link">
         Interface: ScaleSchema
       </a>
@@ -2846,7 +2949,7 @@
   
     <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/SimpleAutocompleteOption/" class="md-nav__link">
-        Interface: SimpleAutocompleteOption
+        Interface: SimpleAutocompleteOption<T\>
       </a>
     </li>
   
@@ -3097,6 +3200,8 @@
       
       
       
+        
+          
         
           
         
@@ -3700,6 +3805,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/sdk/types/PostSetup/" class="md-nav__link">
+        Type alias: PostSetup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/sdk/types/Schema/" class="md-nav__link">
         Type alias: Schema
       </a>
@@ -3969,15 +4088,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cats" class="md-nav__link">
-    Cats
+  <a href="#with-parameter-cats" class="md-nav__link">
+    With parameter (Cats)
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#todoist" class="md-nav__link">
-    Todoist
+  <a href="#with-continuation-dungeons-and-dragons" class="md-nav__link">
+    With continuation (Dungeons and Dragons)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#with-authentication-todoist" class="md-nav__link">
+    With authentication (Todoist)
   </a>
   
 </li>
@@ -4001,10 +4127,10 @@
                 
                 <h1 id="sync-table-samples">Sync table samples<a class="headerlink" href="#sync-table-samples" title="Permanent link">&para;</a></h1>
 <p>A <strong>sync table</strong> is how to bring structured data from a third-party into Coda. A sync table is a table that you can add to a Coda doc that gets its rows from a third-party data source, that can be refreshed regularly to pull in new or updated data. A sync table is powered by a <strong>formula</strong> that takes parameters that represent sync options and returns an array of objects representing row data. A sync table also includes a schema describing the structure of the returned objects.</p>
-<p><a class="md-button" href="../../../reference/sdk/classes/PackDefinitionBuilder#addSyncTable">Learn More</a></p>
+<p><a class="md-button" href="../../../guides/blocks/sync-tables">Learn More</a></p>
 <h2 id="template">Template<a class="headerlink" href="#template" title="Permanent link">&para;</a></h2>
+<p>The basic structure of a sync table.</p>
 <div class="highlight"><pre><span></span><code><span class="kd">const</span> <span class="nx">MySchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
-  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
   <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">property1</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">},</span>
     <span class="nx">property2</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
@@ -4047,13 +4173,13 @@
   <span class="p">},</span>
 <span class="p">});</span>
 </code></pre></div>
-<h2 id="cats">Cats<a class="headerlink" href="#cats" title="Permanent link">&para;</a></h2>
+<h2 id="with-parameter-cats">With parameter (Cats)<a class="headerlink" href="#with-parameter-cats" title="Permanent link">&para;</a></h2>
+<p>A sync table that uses a parameter. This sample syncs cat photos from the CatAAS API.</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
 <span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
 
 <span class="c1">// Schema for a Cat image.</span>
 <span class="kd">const</span> <span class="nx">CatSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
-  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
   <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">image</span><span class="o">:</span> <span class="p">{</span>
       <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
@@ -4132,13 +4258,136 @@
 <span class="c1">// Allow the pack to make requests to Cat-as-a-service API.</span>
 <span class="nx">pack</span><span class="p">.</span><span class="nx">addNetworkDomain</span><span class="p">(</span><span class="s2">&quot;cataas.com&quot;</span><span class="p">);</span>
 </code></pre></div>
-<h2 id="todoist">Todoist<a class="headerlink" href="#todoist" title="Permanent link">&para;</a></h2>
+<h2 id="with-continuation-dungeons-and-dragons">With continuation (Dungeons and Dragons)<a class="headerlink" href="#with-continuation-dungeons-and-dragons" title="Permanent link">&para;</a></h2>
+<p>A sync table that uses continuations to sync data using multiple executions. This sample syncs the spells available in Dungeons and Dragons.</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
+
+<span class="c1">// How many spells to fetch in each sync formula execution.</span>
+<span class="kd">const</span> <span class="nx">BATCH_SIZE</span> <span class="o">=</span> <span class="mf">20</span><span class="p">;</span>
+
+<span class="c1">// Allow requests to the DND API.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addNetworkDomain</span><span class="p">(</span><span class="s2">&quot;dnd5eapi.co&quot;</span><span class="p">);</span>
+
+<span class="c1">// Schema that defines the metadata to return for each spell. Shared by the</span>
+<span class="c1">// formula, column format, and sync table.</span>
+<span class="kd">let</span> <span class="nx">SpellSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
+  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
+  <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
+    <span class="nx">description</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
+    <span class="nx">higher_level</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
+    <span class="nx">level</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">},</span>
+    <span class="nx">range</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
+    <span class="nx">material</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
+    <span class="nx">duration</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
+    <span class="nx">casting_time</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
+    <span class="nx">attack_type</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
+    <span class="nx">damage_type</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
+    <span class="nx">index</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
+  <span class="p">},</span>
+  <span class="nx">primary</span><span class="o">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+  <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;index&quot;</span><span class="p">,</span>
+  <span class="nx">featured</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;level&quot;</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span><span class="p">],</span>
+  <span class="nx">identity</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Spell&quot;</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Reformat the API response for a spell to fit the schema.</span>
+<span class="kd">function</span> <span class="nx">formatSpell</span><span class="p">(</span><span class="nx">spell</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="c1">// Start with all of the properties in the API response.</span>
+    <span class="p">...</span><span class="nx">spell</span><span class="p">,</span>
+    <span class="nx">description</span>: <span class="kt">spell.desc?.join</span><span class="p">(</span><span class="s2">&quot;\n&quot;</span><span class="p">),</span>
+    <span class="nx">higher_level</span>: <span class="kt">spell.higher_level?.join</span><span class="p">(</span><span class="s2">&quot;\n&quot;</span><span class="p">),</span>
+    <span class="nx">damage_type</span>: <span class="kt">spell.damage?.damage_type?.name</span><span class="p">,</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// A sync table that displays all spells available in the API.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addSyncTable</span><span class="p">({</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Spells&quot;</span><span class="p">,</span>
+  <span class="nx">identityName</span><span class="o">:</span> <span class="s2">&quot;Spell&quot;</span><span class="p">,</span>
+  <span class="nx">schema</span>: <span class="kt">SpellSchema</span><span class="p">,</span>
+  <span class="nx">formula</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;SyncSpells&quot;</span><span class="p">,</span>
+    <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Sync all the spells.&quot;</span><span class="p">,</span>
+    <span class="nx">connectionRequirement</span>: <span class="kt">coda.ConnectionRequirement.None</span><span class="p">,</span>
+    <span class="nx">parameters</span><span class="o">:</span> <span class="p">[],</span>
+    <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// Get the list of all spells.</span>
+      <span class="kd">let</span> <span class="nx">listUrl</span> <span class="o">=</span> <span class="s2">&quot;https://www.dnd5eapi.co/api/spells&quot;</span><span class="p">;</span>
+      <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+        <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+        <span class="nx">url</span>: <span class="kt">listUrl</span><span class="p">,</span>
+      <span class="p">});</span>
+      <span class="kd">let</span> <span class="nx">results</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">results</span><span class="p">;</span>
+
+      <span class="c1">// If there is a previous continuation, start from the index contained</span>
+      <span class="c1">// within, otherwise start at zero.</span>
+      <span class="kd">let</span> <span class="nx">index</span>: <span class="kt">number</span> <span class="o">=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">sync</span><span class="p">.</span><span class="nx">continuation</span><span class="o">?</span><span class="p">.</span><span class="nx">index</span> <span class="kr">as</span> <span class="kt">number</span> <span class="o">||</span> <span class="mf">0</span><span class="p">;</span>
+
+      <span class="c1">// Get a batch of results, starting from the index determined above.</span>
+      <span class="kd">let</span> <span class="nx">batch</span> <span class="o">=</span> <span class="nx">results</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">index</span> <span class="o">+</span> <span class="nx">BATCH_SIZE</span><span class="p">);</span>
+
+      <span class="c1">// Fetch the spells for the batch of results.</span>
+      <span class="kd">let</span> <span class="nx">spells</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetchSpells</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">,</span> <span class="nx">batch</span><span class="p">);</span>
+
+      <span class="c1">// Move the index forward.</span>
+      <span class="nx">index</span> <span class="o">+=</span> <span class="nx">BATCH_SIZE</span><span class="p">;</span>
+
+      <span class="c1">// If there are more results to process, create a new continuation.</span>
+      <span class="kd">let</span> <span class="nx">continuation</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">index</span> <span class="o">&lt;=</span> <span class="nx">results</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">continuation</span> <span class="o">=</span> <span class="p">{</span>
+          <span class="nx">index</span>: <span class="kt">index</span><span class="p">,</span>
+        <span class="p">};</span>
+      <span class="p">}</span>
+
+      <span class="c1">// Return the batch of spells and the next continuation, if any.</span>
+      <span class="k">return</span> <span class="p">{</span>
+        <span class="nx">result</span>: <span class="kt">spells</span><span class="p">,</span>
+        <span class="nx">continuation</span>: <span class="kt">continuation</span><span class="p">,</span>
+      <span class="p">};</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Fetch a batch of spells from the API and return them formatted to match the</span>
+<span class="c1">// schema. This utility function is shared by the formula and sync table.</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">fetchSpells</span><span class="p">(</span><span class="nx">fetcher</span>: <span class="kt">coda.Fetcher</span><span class="p">,</span> <span class="nx">spellResults</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">requests</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">spellResult</span> <span class="k">of</span> <span class="nx">spellResults</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Add on the domain.</span>
+    <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;https://www.dnd5eapi.co&quot;</span> <span class="o">+</span> <span class="nx">spellResult</span><span class="p">.</span><span class="nx">url</span><span class="p">;</span>
+    <span class="c1">// Put the request in the list. Don&quot;t use await here, since we want them to</span>
+    <span class="c1">// run at the same time.</span>
+    <span class="kd">let</span> <span class="nx">request</span> <span class="o">=</span> <span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+      <span class="nx">url</span>: <span class="kt">url</span>
+    <span class="p">});</span>
+    <span class="nx">requests</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">request</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// Wait for all of the requests to finish.</span>
+  <span class="kd">let</span> <span class="nx">responses</span> <span class="o">=</span> <span class="k">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="nx">requests</span><span class="p">);</span>
+
+  <span class="c1">// Format the API responses and return them.</span>
+  <span class="kd">let</span> <span class="nx">spells</span> <span class="o">=</span> <span class="p">[];</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">response</span> <span class="k">of</span> <span class="nx">responses</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">spells</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">formatSpell</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">spells</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="with-authentication-todoist">With authentication (Todoist)<a class="headerlink" href="#with-authentication-todoist" title="Permanent link">&para;</a></h2>
+<p>A sync table that pulls from an API using authentication. This sample syncs the tasks from a user&#x27;s Todoist account.</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
 <span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
 
 <span class="c1">// A schema defining the data in the sync table.</span>
 <span class="kd">const</span> <span class="nx">TaskSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
-  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
   <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">name</span><span class="o">:</span> <span class="p">{</span>
       <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The name of the task.&quot;</span><span class="p">,</span>

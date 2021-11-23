@@ -719,6 +719,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_3_3">
@@ -769,6 +771,20 @@
     <li class="md-nav__item">
       <a href="../../guides/advanced/cli/" class="md-nav__link">
         Using the CLI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/advanced/dynamic-sync-tables/" class="md-nav__link">
+        Dynamic sync tables
       </a>
     </li>
   
@@ -1101,6 +1117,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_4_2">
@@ -1137,6 +1155,20 @@
     <li class="md-nav__item">
       <a href="../../samples/full/daylight/" class="md-nav__link">
         Daylight
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/full/dnd/" class="md-nav__link">
+        Dungeons and Dragons
       </a>
     </li>
   
@@ -2172,6 +2204,14 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_5_1_5">
@@ -2236,6 +2276,20 @@
     <li class="md-nav__item">
       <a href="../../reference/sdk/interfaces/ArrayType/" class="md-nav__link">
         Interface: ArrayType<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sdk/interfaces/BaseAuthentication/" class="md-nav__link">
+        Interface: BaseAuthentication
       </a>
     </li>
   
@@ -2362,6 +2416,20 @@
     <li class="md-nav__item">
       <a href="../../reference/sdk/interfaces/DurationSchema/" class="md-nav__link">
         Interface: DurationSchema
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sdk/interfaces/DynamicOptions/" class="md-nav__link">
+        Interface: DynamicOptions
       </a>
     </li>
   
@@ -2822,6 +2890,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../reference/sdk/interfaces/RequestHandlerTemplate/" class="md-nav__link">
+        Interface: RequestHandlerTemplate
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sdk/interfaces/ResponseHandlerTemplate/" class="md-nav__link">
+        Interface: ResponseHandlerTemplate<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../reference/sdk/interfaces/ScaleSchema/" class="md-nav__link">
         Interface: ScaleSchema
       </a>
@@ -2851,7 +2947,7 @@
   
     <li class="md-nav__item">
       <a href="../../reference/sdk/interfaces/SimpleAutocompleteOption/" class="md-nav__link">
-        Interface: SimpleAutocompleteOption
+        Interface: SimpleAutocompleteOption<T\>
       </a>
     </li>
   
@@ -3102,6 +3198,8 @@
       
       
       
+        
+          
         
           
         
@@ -3705,6 +3803,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../reference/sdk/types/PostSetup/" class="md-nav__link">
+        Type alias: PostSetup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../reference/sdk/types/Schema/" class="md-nav__link">
         Type alias: Schema
       </a>
@@ -4022,8 +4134,7 @@
 <p>The Pack Studio is built right in to the Coda application. To get there:</p>
 <ol>
 <li>Open <a href="https://coda.io/docs">Coda</a> in your browser.</li>
-<li>Click on the name of your workspace in the navigation menu on the left.</li>
-<li>Click on <strong>Packs</strong> in the header.</li>
+<li>Click on <strong>Packs</strong> in the navigation menu on the left. If you are a member of multiple workspaces you will need to select a workspace first.</li>
 <li>Click the <strong>New Pack</strong> button in the upper right.</li>
 </ol>
 <p>You are now in the Pack Studio, ready to start building!</p>
@@ -4090,12 +4201,15 @@
 </li>
 <li>
 <p>In the Pack's panel, click the <strong>Settings</strong> tab.</p>
-<p>The <strong>Currently Installed</strong> version of the Pack should now read <strong>Version 2</strong>.</p>
+<p>The <strong>INSTALLED</strong> version of the Pack should now read <strong>v2</strong>.</p>
 <details class="info"><summary>Re-opening the Pack's panel</summary><p>If you have navigated away from the Pack's panel, click <strong>Explore</strong>, <strong>Packs &amp; import</strong>, and then your Pack name.</p>
 </details>
 </li>
 <li>
-<p>Click the <strong>Refresh now</strong> <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4a8 8 0 0 0-8 8 8 8 0 0 0 8 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18a6 6 0 0 1-6-6 6 6 0 0 1 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></span> button.</p>
+<p>Click the <strong>Open Pack maker tools</strong> button.</p>
+</li>
+<li>
+<p>In the Pack maker tools bar, click the three dots icon <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2m0-6a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2m0-6a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2z"/></svg></span> and then <strong><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4a8 8 0 0 0-8 8 8 8 0 0 0 8 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18a6 6 0 0 1-6-6 6 6 0 0 1 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></span> Refresh Pack formulas and tables</strong>.</p>
 <p>A <strong>Syncing...</strong> indicator will appear at the top of the screen while the formulas are being refreshed.</p>
 </li>
 </ol>
@@ -4103,7 +4217,7 @@
 <p><a href="../../images/web_ide_rebuild.gif"><img alt="!How to make a change to your Pack" class="screenshot" src="../../images/web_ide_rebuild.gif" /></a></p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>To avoid having to hit the refresh button on every update, toggle on the setting <strong>Auto-Refresh When Version Changes</strong>.</p>
+<p>To avoid having to manually refresh the formulas on every update, click the gear icon <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4m0 2a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2 2 2 0 0 0-2-2m-2 12c-.25 0-.46-.18-.5-.42l-.37-2.65c-.63-.25-1.17-.59-1.69-.99l-2.49 1.01c-.22.08-.49 0-.61-.22l-2-3.46a.493.493 0 0 1 .12-.64l2.11-1.66L4.5 12l.07-1-2.11-1.63a.493.493 0 0 1-.12-.64l2-3.46c.12-.22.39-.31.61-.22l2.49 1c.52-.39 1.06-.73 1.69-.98l.37-2.65c.04-.24.25-.42.5-.42h4c.25 0 .46.18.5.42l.37 2.65c.63.25 1.17.59 1.69.98l2.49-1c.22-.09.49 0 .61.22l2 3.46c.13.22.07.49-.12.64L19.43 11l.07 1-.07 1 2.11 1.63c.19.15.25.42.12.64l-2 3.46c-.12.22-.39.31-.61.22l-2.49-1c-.52.39-1.06.73-1.69.98l-.37 2.65c-.04.24-.25.42-.5.42h-4m1.25-18-.37 2.61c-1.2.25-2.26.89-3.03 1.78L5.44 7.35l-.75 1.3L6.8 10.2a5.55 5.55 0 0 0 0 3.6l-2.12 1.56.75 1.3 2.43-1.04c.77.88 1.82 1.52 3.01 1.76l.37 2.62h1.52l.37-2.61c1.19-.25 2.24-.89 3.01-1.77l2.43 1.04.75-1.3-2.12-1.55c.4-1.17.4-2.44 0-3.61l2.11-1.55-.75-1.3-2.41 1.04a5.42 5.42 0 0 0-3.03-1.77L12.75 4h-1.5z"/></svg></span> in the Pack maker toolbar and toggle on the <strong>AUTO-REFRESH</strong>  setting.</p>
 </div>
                 
                   

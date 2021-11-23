@@ -67,7 +67,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#add-custom-sync-tables" class="md-skip">
+        <a href="#add-sync-tables" class="md-skip">
           Skip to content
         </a>
       
@@ -555,9 +555,117 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Sync tables
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         Sync tables
       </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#using-sync-tables" class="md-nav__link">
+    Using sync tables
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-sync-table" class="md-nav__link">
+    Creating a sync table
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating a sync table">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#define-the-schema" class="md-nav__link">
+    Define the schema
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#define-the-sync-table" class="md-nav__link">
+    Define the sync table
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#write-the-sync-formula" class="md-nav__link">
+    Write the sync formula
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#naming" class="md-nav__link">
+    Naming
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identity" class="md-nav__link">
+    Identity
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#row-limits" class="md-nav__link">
+    Row limits
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#longrunning" class="md-nav__link">
+    Long-running syncs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actions" class="md-nav__link">
+    Approximating two-way sync with actions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#account-specific-fields" class="md-nav__link">
+    Account-specific fields
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -668,6 +776,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_3_3">
@@ -718,6 +828,20 @@
     <li class="md-nav__item">
       <a href="../../advanced/cli/" class="md-nav__link">
         Using the CLI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/dynamic-sync-tables/" class="md-nav__link">
+        Dynamic sync tables
       </a>
     </li>
   
@@ -1050,6 +1174,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_4_2">
@@ -1086,6 +1212,20 @@
     <li class="md-nav__item">
       <a href="../../../samples/full/daylight/" class="md-nav__link">
         Daylight
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/full/dnd/" class="md-nav__link">
+        Dungeons and Dragons
       </a>
     </li>
   
@@ -2121,6 +2261,14 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_5_1_5">
@@ -2185,6 +2333,20 @@
     <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/ArrayType/" class="md-nav__link">
         Interface: ArrayType<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/BaseAuthentication/" class="md-nav__link">
+        Interface: BaseAuthentication
       </a>
     </li>
   
@@ -2311,6 +2473,20 @@
     <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/DurationSchema/" class="md-nav__link">
         Interface: DurationSchema
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/DynamicOptions/" class="md-nav__link">
+        Interface: DynamicOptions
       </a>
     </li>
   
@@ -2771,6 +2947,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/RequestHandlerTemplate/" class="md-nav__link">
+        Interface: RequestHandlerTemplate
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/interfaces/ResponseHandlerTemplate/" class="md-nav__link">
+        Interface: ResponseHandlerTemplate<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/ScaleSchema/" class="md-nav__link">
         Interface: ScaleSchema
       </a>
@@ -2800,7 +3004,7 @@
   
     <li class="md-nav__item">
       <a href="../../../reference/sdk/interfaces/SimpleAutocompleteOption/" class="md-nav__link">
-        Interface: SimpleAutocompleteOption
+        Interface: SimpleAutocompleteOption<T\>
       </a>
     </li>
   
@@ -3051,6 +3255,8 @@
       
       
       
+        
+          
         
           
         
@@ -3654,6 +3860,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/sdk/types/PostSetup/" class="md-nav__link">
+        Type alias: PostSetup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/sdk/types/Schema/" class="md-nav__link">
         Type alias: Schema
       </a>
@@ -3909,6 +4129,97 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#using-sync-tables" class="md-nav__link">
+    Using sync tables
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-a-sync-table" class="md-nav__link">
+    Creating a sync table
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating a sync table">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#define-the-schema" class="md-nav__link">
+    Define the schema
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#define-the-sync-table" class="md-nav__link">
+    Define the sync table
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#write-the-sync-formula" class="md-nav__link">
+    Write the sync formula
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#naming" class="md-nav__link">
+    Naming
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identity" class="md-nav__link">
+    Identity
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#row-limits" class="md-nav__link">
+    Row limits
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#longrunning" class="md-nav__link">
+    Long-running syncs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actions" class="md-nav__link">
+    Approximating two-way sync with actions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#account-specific-fields" class="md-nav__link">
+    Account-specific fields
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -3924,9 +4235,151 @@
                   </a>
                 
                 
-                <h1 id="add-custom-sync-tables">Add custom sync tables<a class="headerlink" href="#add-custom-sync-tables" title="Permanent link">&para;</a></h1>
-<!-- TODO: Migrate the content to this repo. -->
-<p><a href="https://coda.io/d/Pack-Studio-Beta_dUBjm8jbi39/Building-with-the-SDK_suP0J#_luz8Y">See here</a> for more information on how to build sync tables.</p>
+                <h1 id="add-sync-tables">Add sync tables<a class="headerlink" href="#add-sync-tables" title="Permanent link">&para;</a></h1>
+<p>Tables are one of the most powerful features of Coda, and many times users use them to track items that are also represented in other systems. For example, you may have a table of upcoming events, each of which is already listed in a company calendar. Sync tables allow you to define a special type of table where the rows are automatically synced from an external data source such as an API. Users can define their own additional columns on these tables, making it easy to blend centralized data with local information.</p>
+<p><a class="md-button" href="../../../samples/topic/sync-table/">View Sample Code</a></p>
+<h2 id="using-sync-tables">Using sync tables<a class="headerlink" href="#using-sync-tables" title="Permanent link">&para;</a></h2>
+<p>Sync tables are added directly to the document, usually by dragging them in from the side panel. Navigate to <strong>Explore</strong> &gt; <strong>Packs &amp; import</strong> &gt; <strong>{Pack name}</strong> and drag the table into the canvas.</p>
+<p><img src="../../../images/sync_table_use.gif" class="screenshot" alt="Dragging in a sync table"></p>
+<p>If the sync table doesn't have any required parameters it will start syncing immediately, otherwise you'll have to configure it first. The data in the table can be synced manually or set up to sync automatically at regular intervals.</p>
+<div class="admonition info">
+<p class="admonition-title">Multiple syncs</p>
+<p>Each sync table can only be added once to a document. If you want to sync data from multiple accounts or with different parameters you can add additional syncs to the table. In the table options pane click the <strong>Add another sync</strong> button and configure the settings. The results from all syncs will be appended to the same table, but you can use views and filters on that table to display them separately.</p>
+</div>
+<h2 id="creating-a-sync-table">Creating a sync table<a class="headerlink" href="#creating-a-sync-table" title="Permanent link">&para;</a></h2>
+<p>A sync table consists of three main parts: the schema for each row of data, the sync table definition, and the formula that populates the table.</p>
+<h3 id="define-the-schema">Define the schema<a class="headerlink" href="#define-the-schema" title="Permanent link">&para;</a></h3>
+<p>Each row in a sync table corresponds to an item in an external data source. For example, the <a href="../../../samples/full/todoist/">Todoist sample</a> has one sync table for tasks and another for projects. For each table you must define a schema that represents the data you'll be syncing for that item. See the <a href="../../advanced/schemas/">Schemas guide</a> for more information about defining and using schemas.</p>
+<p>The item is displayed as a chip in the first column of the sync table, and it contains the complete set of synced data. Properties of the schema designated as <a href="../../../reference/sdk/interfaces/ObjectSchemaDefinition/#featured"><code>featured</code></a> are automatically broken out into their own columns, but these can be removed or added to by the user later.</p>
+<p>The schema used in a sync table can be shared by other building blocks in your Pack, like a formula or column format. Even when the schema is only used by the sync table, we recommend you define it as a separate variable in your code for readability and future reuse.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span> <span class="nx">TaskSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
+  <span class="c1">// ...</span>
+<span class="p">});</span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Dynamic schemas</p>
+<p>For some data sources it isn't possible to know the shape of the data upfront, and it can only be determined at runtime. In these cases instead of defining your schema upfront you can generate it dynamically. See the <a href="../../advanced/dynamic-sync-tables/">Dynamic sync tables</a> guide for more information.</p>
+</div>
+<h3 id="define-the-sync-table">Define the sync table<a class="headerlink" href="#define-the-sync-table" title="Permanent link">&para;</a></h3>
+<p>The sync table itself is defined using the <code>addSyncTable()</code> method:</p>
+<div class="highlight"><pre><span></span><code><span class="nx">pack</span><span class="p">.</span><span class="nx">addSyncTable</span><span class="p">({</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Tasks&quot;</span><span class="p">,</span>
+  <span class="nx">schema</span>: <span class="kt">TaskSchema</span><span class="p">,</span>
+  <span class="nx">identityName</span><span class="o">:</span> <span class="s2">&quot;Task&quot;</span><span class="p">,</span>
+  <span class="nx">formula</span><span class="o">:</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>It includes the name of the sync table, the schema for each row, and other metadata. The <code>identityName</code> property will be explained in the <a href="#identity">Identity</a> section below.</p>
+<h3 id="write-the-sync-formula">Write the sync formula<a class="headerlink" href="#write-the-sync-formula" title="Permanent link">&para;</a></h3>
+<p>Inside each sync table definition is a formula definition, detailing the hidden formula used to sync data into the sync table. If you aren't already familiar with creating formulas, read the <a href="../formulas/">Formulas guide</a> first.</p>
+<div class="highlight"><pre><span></span><code><span class="nx">pack</span><span class="p">.</span><span class="nx">addSyncTable</span><span class="p">({</span>
+  <span class="c1">// ...</span>
+  <span class="nx">formula</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;SyncTasks&quot;</span><span class="p">,</span>
+    <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Sync the user&#39;s tasks.&quot;</span><span class="p">,</span>
+    <span class="nx">parameters</span><span class="o">:</span> <span class="p">[],</span>
+    <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1">// ...</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>This formula fetches items from the external data source, adjust them to fit the schema, and returns them. The return value must be a <a href="../../../reference/sdk/interfaces/SyncFormulaResult/"><code>SyncFormulaResult</code></a>, which is an object where the <code>result</code> property contains the array of item objects.</p>
+<div class="highlight"><pre><span></span><code><span class="nx">pack</span><span class="p">.</span><span class="nx">addSyncTable</span><span class="p">({</span>
+  <span class="c1">// ...</span>
+  <span class="nx">formula</span><span class="o">:</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+    <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;&lt;URL to pull data from&gt;&quot;</span><span class="p">;</span>
+      <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+        <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+        <span class="nx">url</span>: <span class="kt">url</span><span class="p">,</span>
+      <span class="p">});</span>
+      <span class="kd">let</span> <span class="nx">items</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">items</span><span class="p">;</span>
+      <span class="c1">// Adjust the items to fit the schema if required.</span>
+      <span class="k">return</span> <span class="p">{</span>
+        <span class="nx">result</span>: <span class="kt">items</span><span class="p">,</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>On each sync your code must return the full set of items, and Coda will determine how to update existing rows, remove old rows, etc. This could take a long time for large datasets or slow APIs, and the <a href="#longrunning">Long-running syncs</a> section has more information on how to handle this.</p>
+<h2 id="naming">Naming<a class="headerlink" href="#naming" title="Permanent link">&para;</a></h2>
+<p>The name of a sync table can only contain letters, numbers, and underscores. By convention sync table names are written in upper camel case, like <code>BugReports</code>. In some areas of the UI, such as the settings pane, the name will be rewritten to add spaces ("BugReports" =&gt; "Bug Reports") for readability. We recommend that you don't prefix your table with the name of your Pack, as that is done automatically in some contexts.</p>
+<h2 id="identity">Identity<a class="headerlink" href="#identity" title="Permanent link">&para;</a></h2>
+<p>Every sync table is required to specify an <a href="../../../reference/sdk/interfaces/SyncTableOptions/#identityname"><code>identityName</code></a>, which is a unique identifier for the item being synced in that table. By convention this is usually the singular form of the name of the item being synced. For instance, a "Tasks" table would use an identity name of "Task". This identity name is used to reference the table when <a href="../../advanced/schemas/#references">creating row references</a> or <a href="#actions">updating rows with actions</a>.</p>
+<p>By default the identity name is also used as the column name for the first column of the sync table, which contains the synced item as a chip. You can use a different name for the column by setting <a href="../../reference/sdk/interfaces/SyncTableOptions/#dynamicoptions"><code>dynamicOptions.entityName</code></a> on the sync table.</p>
+<h2 id="row-limits">Row limits<a class="headerlink" href="#row-limits" title="Permanent link">&para;</a></h2>
+<p>Each sync table has a user-defined maximum number of rows, which defaults to 1000 but can be set as high as 10,000. Any items returned by your sync table beyond that limit will be dropped.</p>
+<h2 id="longrunning">Long-running syncs<a class="headerlink" href="#longrunning" title="Permanent link">&para;</a></h2>
+<p>The sync formula that populates a sync table will timeout after a minute, but for some data sources it may take longer to retrieve all the results. In these cases you can utilize the continuation mechanism of sync tables to break your sync up into multiple executions. A continuation is like a save point, allowing you to record where you left off and then pick up again later.</p>
+<p>If at the end of an execution there are more items left to sync, return a custom continuation object along with the synced items. Coda will then re-run your sync formula, passing in the previous continuation object. The synced items from each execution will be appended to the table. This process will continue until no continuation object is returned or the table reaches the row limit.</p>
+<div class="highlight"><pre><span></span><code><span class="nx">pack</span><span class="p">.</span><span class="nx">addSyncTable</span><span class="p">({</span>
+  <span class="c1">// ...</span>
+  <span class="nx">formula</span><span class="o">:</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+    <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">let</span> <span class="nx">previousContinuation</span> <span class="o">=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">sync</span><span class="p">.</span><span class="nx">continuation</span><span class="p">;</span>
+      <span class="c1">// If there is a previous continuation, pick up where you left off.</span>
+      <span class="c1">// Otherwise start from the beginning.</span>
+
+      <span class="c1">// Sync some items...</span>
+
+      <span class="kd">let</span> <span class="nx">nextContinuation</span> <span class="o">=</span> <span class="kc">undefined</span><span class="p">;</span>
+      <span class="c1">// Determine if there are more items left to sync...</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">moreItemsLeft</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">nextContinuation</span> <span class="o">=</span> <span class="p">{</span>
+          <span class="c1">// Save your place...</span>
+        <span class="p">};</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="p">{</span>
+        <span class="nx">result</span>: <span class="kt">items</span><span class="p">,</span>
+        <span class="nx">continuation</span>: <span class="kt">nextContinuation</span><span class="p">,</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+</code></pre></div>
+<p>The contents of the continuation are flexible and will depend on the API to the external data source, but usually involve offsets or page tokens. The continuation must be an object of type <a href="../../../reference/sdk/interfaces/Continuation/"><code>Continuation</code></a>, which allows for storing string and number values. Continuations are not designed for persisting large amounts of data between executions, so we recommend against using a task queue pattern.</p>
+<p>Check out the <a href="../../../samples/full/dnd/">Dungeons and Dragons sample</a> to see a working example of how to use continuations in a sync table.</p>
+<h2 id="actions">Approximating two-way sync with actions<a class="headerlink" href="#actions" title="Permanent link">&para;</a></h2>
+<p>The sync process used by sync tables is one-way only; data is pulled in from an external source and is displayed in a read-only column. It's not possible to directly edit the items in the sync table and sync the changes back out.</p>
+<p>You can approximate a two-way sync using buttons with <a href="../actions/">custom actions</a>. For example, the <a href="../../../samples/full/todoist/">Todoist sample</a> has an <code>UpdateTask</code> action that updates the name of a task. Sync tables can't include buttons directly, but Makers can add them on to a sync table and sample docs can demonstrate this pattern.</p>
+<p>If an action updates an item that has been synced, it’s natural to want to see the row for that synced item get updated immediately, rather than having to wait for the next sync. To address this, you can have an action formula return an <a href="../../basics/data-types/#objects">Object</a>, representing the item after the changes have been applied. If this object uses the same schema as a sync table, when the formula completes, Coda will look for a row in that sync table and update the row’s value with the return value of the action. The schema must have the <code>identity.name</code> field populated and it must match the <code>identityName</code> field of the sync table.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span> <span class="nx">TaskSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
+  <span class="c1">// ...</span>
+  <span class="nx">identity</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Task&quot;</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addSyncTable</span><span class="p">({</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Tasks&quot;</span><span class="p">,</span>
+  <span class="nx">schema</span>: <span class="kt">TaskSchema</span><span class="p">,</span>
+  <span class="nx">identityName</span><span class="o">:</span> <span class="s2">&quot;Task&quot;</span><span class="p">,</span>
+  <span class="c1">// ...</span>
+<span class="p">});</span>
+
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addFormula</span><span class="p">({</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;UpdateTask&quot;</span><span class="p">,</span>
+  <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Updates the name of a task.&quot;</span><span class="p">,</span>
+  <span class="c1">// ...</span>
+  <span class="nx">resultType</span>: <span class="kt">coda.ValueType.Object</span><span class="p">,</span>
+  <span class="nx">schema</span>: <span class="kt">TaskSchema</span><span class="p">,</span>
+  <span class="nx">isAction</span>: <span class="kt">true</span><span class="p">,</span>
+  <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">taskId</span><span class="p">,</span> <span class="nx">name</span><span class="p">],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Call the API to update the task and get back the updated content.</span>
+    <span class="kd">let</span> <span class="nx">task</span> <span class="o">=</span> <span class="nx">updateTask</span><span class="p">(</span><span class="nx">taskId</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">context</span><span class="p">);</span>
+    <span class="c1">// The existing row will be updated with this value.</span>
+    <span class="k">return</span> <span class="nx">task</span><span class="p">;</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+</code></pre></div>
+<h2 id="account-specific-fields">Account-specific fields<a class="headerlink" href="#account-specific-fields" title="Permanent link">&para;</a></h2>
+<p>Some APIs vary the shape of the data returned based on the account being accessed. For example, an issue tracker may allow users to define custom fields for their bug reports, which the API also returns. A sync table must have a defined schema that represents the data for each item, but it is possible to expand that schema to accommodate these variations by using a dynamic schema. See the <a href="../../advanced/dynamic-sync-tables/">Dynamic sync tables guide</a> for more information on how to use this feature.</p>
                 
                   
                 

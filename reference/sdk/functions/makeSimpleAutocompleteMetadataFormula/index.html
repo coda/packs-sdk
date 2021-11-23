@@ -654,6 +654,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_3_3">
@@ -704,6 +706,20 @@
     <li class="md-nav__item">
       <a href="../../../../guides/advanced/cli/" class="md-nav__link">
         Using the CLI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../guides/advanced/dynamic-sync-tables/" class="md-nav__link">
+        Dynamic sync tables
       </a>
     </li>
   
@@ -1036,6 +1052,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_4_2">
@@ -1072,6 +1090,20 @@
     <li class="md-nav__item">
       <a href="../../../../samples/full/daylight/" class="md-nav__link">
         Daylight
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../samples/full/dnd/" class="md-nav__link">
+        Dungeons and Dragons
       </a>
     </li>
   
@@ -2123,6 +2155,14 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_5_1_5">
@@ -2187,6 +2227,20 @@
     <li class="md-nav__item">
       <a href="../../interfaces/ArrayType/" class="md-nav__link">
         Interface: ArrayType<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/BaseAuthentication/" class="md-nav__link">
+        Interface: BaseAuthentication
       </a>
     </li>
   
@@ -2313,6 +2367,20 @@
     <li class="md-nav__item">
       <a href="../../interfaces/DurationSchema/" class="md-nav__link">
         Interface: DurationSchema
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/DynamicOptions/" class="md-nav__link">
+        Interface: DynamicOptions
       </a>
     </li>
   
@@ -2773,6 +2841,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../interfaces/RequestHandlerTemplate/" class="md-nav__link">
+        Interface: RequestHandlerTemplate
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../interfaces/ResponseHandlerTemplate/" class="md-nav__link">
+        Interface: ResponseHandlerTemplate<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../interfaces/ScaleSchema/" class="md-nav__link">
         Interface: ScaleSchema
       </a>
@@ -2802,7 +2898,7 @@
   
     <li class="md-nav__item">
       <a href="../../interfaces/SimpleAutocompleteOption/" class="md-nav__link">
-        Interface: SimpleAutocompleteOption
+        Interface: SimpleAutocompleteOption<T\>
       </a>
     </li>
   
@@ -3053,6 +3149,8 @@
       
       
       
+        
+          
         
           
         
@@ -3656,6 +3754,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../types/PostSetup/" class="md-nav__link">
+        Type alias: PostSetup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../types/Schema/" class="md-nav__link">
         Type alias: Schema
       </a>
@@ -3927,10 +4039,25 @@
                 
                 
                 <h1 id="function-makesimpleautocompletemetadataformula">Function: makeSimpleAutocompleteMetadataFormula<a class="headerlink" href="#function-makesimpleautocompletemetadataformula" title="Permanent link">&para;</a></h1>
-<p>▸ <strong>makeSimpleAutocompleteMetadataFormula</strong>(<code>options</code>): <a href="../../types/MetadataFormula/"><code>MetadataFormula</code></a></p>
+<p>▸ <strong>makeSimpleAutocompleteMetadataFormula</strong>&lt;<code>T</code>>(<code>options</code>): <a href="../../types/MetadataFormula/"><code>MetadataFormula</code></a></p>
 <p><strong><code>deprecated</code></strong> If you have a hardcoded array of autocomplete options, simply include that array
 as the value of the <code>autocomplete</code> property in your parameter definition. There is no longer
 any needed to wrap a value with this formula.</p>
+<h4 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th align="left">Name</th>
+<th align="left">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>T</code></td>
+<td align="left">extends <a href="../../enums/ParameterType/#string"><code>String</code></a> | <a href="../../enums/ParameterType/#number"><code>Number</code></a></td>
+</tr>
+</tbody>
+</table>
 <h4 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -3942,14 +4069,14 @@ any needed to wrap a value with this formula.</p>
 <tbody>
 <tr>
 <td align="left"><code>options</code></td>
-<td align="left">(<code>string</code> | <code>number</code> | <a href="../../interfaces/SimpleAutocompleteOption/"><code>SimpleAutocompleteOption</code></a>)[]</td>
+<td align="left">(<code>TypeMap</code>[<code>ParameterTypeMap</code>[<code>T</code>]] | <a href="../../interfaces/SimpleAutocompleteOption/"><code>SimpleAutocompleteOption</code></a>&lt;<code>T</code>>)[]</td>
 </tr>
 </tbody>
 </table>
 <h4 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h4>
 <p><a href="../../types/MetadataFormula/"><code>MetadataFormula</code></a></p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1123">api.ts:1123</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L1136">api.ts:1136</a></p>
                 
               
               

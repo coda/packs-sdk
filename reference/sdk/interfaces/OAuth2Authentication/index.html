@@ -654,6 +654,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_3_3">
@@ -704,6 +706,20 @@
     <li class="md-nav__item">
       <a href="../../../../guides/advanced/cli/" class="md-nav__link">
         Using the CLI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../guides/advanced/dynamic-sync-tables/" class="md-nav__link">
+        Dynamic sync tables
       </a>
     </li>
   
@@ -1036,6 +1052,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_4_2">
@@ -1072,6 +1090,20 @@
     <li class="md-nav__item">
       <a href="../../../../samples/full/daylight/" class="md-nav__link">
         Daylight
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../samples/full/dnd/" class="md-nav__link">
+        Dungeons and Dragons
       </a>
     </li>
   
@@ -2113,6 +2145,14 @@
         
           
         
+          
+        
+          
+        
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_5_1_5">
@@ -2177,6 +2217,20 @@
     <li class="md-nav__item">
       <a href="../ArrayType/" class="md-nav__link">
         Interface: ArrayType<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BaseAuthentication/" class="md-nav__link">
+        Interface: BaseAuthentication
       </a>
     </li>
   
@@ -2303,6 +2357,20 @@
     <li class="md-nav__item">
       <a href="../DurationSchema/" class="md-nav__link">
         Interface: DurationSchema
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamicOptions/" class="md-nav__link">
+        Interface: DynamicOptions
       </a>
     </li>
   
@@ -2916,6 +2984,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../RequestHandlerTemplate/" class="md-nav__link">
+        Interface: RequestHandlerTemplate
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ResponseHandlerTemplate/" class="md-nav__link">
+        Interface: ResponseHandlerTemplate<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../ScaleSchema/" class="md-nav__link">
         Interface: ScaleSchema
       </a>
@@ -2945,7 +3041,7 @@
   
     <li class="md-nav__item">
       <a href="../SimpleAutocompleteOption/" class="md-nav__link">
-        Interface: SimpleAutocompleteOption
+        Interface: SimpleAutocompleteOption<T\>
       </a>
     </li>
   
@@ -3196,6 +3292,8 @@
       
       
       
+        
+          
         
           
         
@@ -3799,6 +3897,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../types/PostSetup/" class="md-nav__link">
+        Type alias: PostSetup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../types/Schema/" class="md-nav__link">
         Type alias: Schema
       </a>
@@ -4202,7 +4314,7 @@ client secret in the pack management UI, so that these can be stored securely.</
 <p>The API must use a (largely) standards-compliant implementation of OAuth2.</p>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">&para;</a></h2>
 <ul>
-<li><code>BaseAuthentication</code></li>
+<li><a href="../BaseAuthentication/"><code>BaseAuthentication</code></a></li>
 </ul>
 <p>↳ <strong><code>OAuth2Authentication</code></strong></p>
 <h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h2>
@@ -4213,7 +4325,7 @@ user to the <a href="./#authorizationurl">authorizationUrl</a>.</p>
 <h4 id="index-signature">Index signature<a class="headerlink" href="#index-signature" title="Permanent link">&para;</a></h4>
 <p>▪ [key: <code>string</code>]: <code>any</code></p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L399">types.ts:399</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L402">types.ts:402</a></p>
 <hr />
 <h3 id="authorizationurl">authorizationUrl<a class="headerlink" href="#authorizationurl" title="Permanent link">&para;</a></h3>
 <p>• <strong>authorizationUrl</strong>: <code>string</code></p>
@@ -4222,17 +4334,17 @@ This is typically just a base url with no parameters. Coda will append the <code
 parameter automatically. If the authorization flow requires additional parameters,
 they may be specified using <a href="./#additionalparams">additionalParams</a>.</p>
 <h4 id="defined-in_1">Defined in<a class="headerlink" href="#defined-in_1" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L374">types.ts:374</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L377">types.ts:377</a></p>
 <hr />
 <h3 id="defaultconnectiontype">defaultConnectionType<a class="headerlink" href="#defaultconnectiontype" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>defaultConnectionType</strong>: <a href="../../enums/DefaultConnectionType/"><code>DefaultConnectionType</code></a></p>
-<p>Indicates the defualt manner in which a user's account is expected to be used by this pack,
+<p>Indicates the default manner in which a user's account is expected to be used by this pack,
 e.g. is this account used for retrieving data, taking actions, or both.
 See https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs#h_40472431f0</p>
 <h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">&para;</a></h4>
-<p>BaseAuthentication.defaultConnectionType</p>
+<p><a href="../BaseAuthentication/">BaseAuthentication</a>.<a href="../BaseAuthentication/#defaultconnectiontype">defaultConnectionType</a></p>
 <h4 id="defined-in_2">Defined in<a class="headerlink" href="#defined-in_2" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L233">types.ts:233</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L236">types.ts:236</a></p>
 <hr />
 <h3 id="endpointdomain">endpointDomain<a class="headerlink" href="#endpointdomain" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>endpointDomain</strong>: <code>string</code></p>
@@ -4241,9 +4353,9 @@ For example, this value would be "example.com" if specific endpoints looked like
 <p>For packs that make requests to multiple domains (uncommon), this should be the domain within
 <a href="../PackDefinition/#networkdomains">networkDomains</a> that this configuration applies to.</p>
 <h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">&para;</a></h4>
-<p>BaseAuthentication.endpointDomain</p>
+<p><a href="../BaseAuthentication/">BaseAuthentication</a>.<a href="../BaseAuthentication/#endpointdomain">endpointDomain</a></p>
 <h4 id="defined-in_3">Defined in<a class="headerlink" href="#defined-in_3" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L255">types.ts:255</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L258">types.ts:258</a></p>
 <hr />
 <h3 id="endpointkey">endpointKey<a class="headerlink" href="#endpointkey" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>endpointKey</strong>: <code>string</code></p>
@@ -4253,7 +4365,7 @@ token exchange response JSON body that points to the endpoint.</p>
 <p>The endpoint will be saved along with the account and will be available during execution
 as <a href="../ExecutionContext/#endpoint">ExecutionContext.endpoint</a>.</p>
 <h4 id="defined-in_4">Defined in<a class="headerlink" href="#defined-in_4" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L409">types.ts:409</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L412">types.ts:412</a></p>
 <hr />
 <h3 id="getconnectionname">getConnectionName<a class="headerlink" href="#getconnectionname" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>getConnectionName</strong>: <a href="../../types/MetadataFormula/"><code>MetadataFormula</code></a></p>
@@ -4264,26 +4376,26 @@ to an API's "who am I" endpoint and returns a username.</p>
 <p>If omitted, or if the function returns an empty value, the account will be labeled
 with the creating user's Coda username.</p>
 <h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">&para;</a></h4>
-<p>BaseAuthentication.getConnectionName</p>
+<p><a href="../BaseAuthentication/">BaseAuthentication</a>.<a href="../BaseAuthentication/#getconnectionname">getConnectionName</a></p>
 <h4 id="defined-in_5">Defined in<a class="headerlink" href="#defined-in_5" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L216">types.ts:216</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L219">types.ts:219</a></p>
 <hr />
 <h3 id="instructionsurl">instructionsUrl<a class="headerlink" href="#instructionsurl" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>instructionsUrl</strong>: <code>string</code></p>
 <p>A link to a help article or other page with more instructions about how to set up an account for this pack.</p>
 <h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">&para;</a></h4>
-<p>BaseAuthentication.instructionsUrl</p>
+<p><a href="../BaseAuthentication/">BaseAuthentication</a>.<a href="../BaseAuthentication/#instructionsurl">instructionsUrl</a></p>
 <h4 id="defined-in_6">Defined in<a class="headerlink" href="#defined-in_6" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L238">types.ts:238</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L241">types.ts:241</a></p>
 <hr />
 <h3 id="postsetup">postSetup<a class="headerlink" href="#postsetup" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>postSetup</strong>: <a href="../SetEndpoint/"><code>SetEndpoint</code></a>[]</p>
 <p>One or more setup steps to run after the user has set up the account, before completing installation of the pack.
 This is not common.</p>
 <h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">&para;</a></h4>
-<p>BaseAuthentication.postSetup</p>
+<p><a href="../BaseAuthentication/">BaseAuthentication</a>.<a href="../BaseAuthentication/#postsetup">postSetup</a></p>
 <h4 id="defined-in_7">Defined in<a class="headerlink" href="#defined-in_7" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L261">types.ts:261</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L264">types.ts:264</a></p>
 <hr />
 <h3 id="requiresendpointurl">requiresEndpointUrl<a class="headerlink" href="#requiresendpointurl" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>requiresEndpointUrl</strong>: <code>boolean</code></p>
@@ -4292,9 +4404,9 @@ as the basis of HTTP requests. For example, API requests are made to <custom-sub
 rather than example.com. If true, the user will be prompted to provide their specific endpoint domain
 when creating a new account.</p>
 <h4 id="inherited-from_5">Inherited from<a class="headerlink" href="#inherited-from_5" title="Permanent link">&para;</a></h4>
-<p>BaseAuthentication.requiresEndpointUrl</p>
+<p><a href="../BaseAuthentication/">BaseAuthentication</a>.<a href="../BaseAuthentication/#requiresendpointurl">requiresEndpointUrl</a></p>
 <h4 id="defined-in_8">Defined in<a class="headerlink" href="#defined-in_8" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L246">types.ts:246</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L249">types.ts:249</a></p>
 <hr />
 <h3 id="scopes">scopes<a class="headerlink" href="#scopes" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>scopes</strong>: <code>string</code>[]</p>
@@ -4302,7 +4414,7 @@ when creating a new account.</p>
 <p>Each API defines its own list of scopes, or none at all. You should consult
 the documentation for the API you are connecting to.</p>
 <h4 id="defined-in_9">Defined in<a class="headerlink" href="#defined-in_9" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L386">types.ts:386</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L389">types.ts:389</a></p>
 <hr />
 <h3 id="tokenprefix">tokenPrefix<a class="headerlink" href="#tokenprefix" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>tokenPrefix</strong>: <code>string</code></p>
@@ -4312,7 +4424,7 @@ used if this value is omitted. However, some services require a different prefix
 When sending authenticated requests, a HTTP header of the form
 <code>Authorization: &lt;tokenPrefix&gt; &lt;token&gt;</code> will be used.</p>
 <h4 id="defined-in_10">Defined in<a class="headerlink" href="#defined-in_10" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L394">types.ts:394</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L397">types.ts:397</a></p>
 <hr />
 <h3 id="tokenqueryparam">tokenQueryParam<a class="headerlink" href="#tokenqueryparam" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>tokenQueryParam</strong>: <code>string</code></p>
@@ -4320,20 +4432,20 @@ When sending authenticated requests, a HTTP header of the form
 rather than an HTTP header. If so, this is the name of the URL query parameter
 that should contain the token.</p>
 <h4 id="defined-in_11">Defined in<a class="headerlink" href="#defined-in_11" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L416">types.ts:416</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L419">types.ts:419</a></p>
 <hr />
 <h3 id="tokenurl">tokenUrl<a class="headerlink" href="#tokenurl" title="Permanent link">&para;</a></h3>
 <p>• <strong>tokenUrl</strong>: <code>string</code></p>
 <p>The URL that Coda will hit in order to exchange the temporary code for an access token
 at the end of the OAuth handshake flow.</p>
 <h4 id="defined-in_12">Defined in<a class="headerlink" href="#defined-in_12" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L379">types.ts:379</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L382">types.ts:382</a></p>
 <hr />
 <h3 id="type">type<a class="headerlink" href="#type" title="Permanent link">&para;</a></h3>
 <p>• <strong>type</strong>: <a href="../../enums/AuthenticationType/#oauth2"><code>OAuth2</code></a></p>
 <p>Identifies this as OAuth2 authentication.</p>
 <h4 id="defined-in_13">Defined in<a class="headerlink" href="#defined-in_13" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L367">types.ts:367</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L370">types.ts:370</a></p>
                 
               
               
