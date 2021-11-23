@@ -103,7 +103,7 @@ pack.addSyncTable({
 });
 ```
 
-On each sync your code must returns the full set of items, and Coda will determine how to update existing rows, remove old rows, etc. This could take a long time for large datasets or slow APIs, and the [Long-running syncs](#longrunning) section has more information on how to handle this.
+On each sync your code must return the full set of items, and Coda will determine how to update existing rows, remove old rows, etc. This could take a long time for large datasets or slow APIs, and the [Long-running syncs](#longrunning) section has more information on how to handle this.
 
 
 ## Naming
@@ -195,7 +195,7 @@ pack.addFormula({
   execute: async function ([taskId, name], context) {
     // Call the API to update the task and get back the updated content.
     let task = updateTask(taskId, name, context);
-    // This
+    // The existing row will be updated with this value.
     return task;
   },
 });
