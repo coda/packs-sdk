@@ -1,6 +1,6 @@
 # Type alias: GenericDynamicSyncTable
 
-Ƭ **GenericDynamicSyncTable**: [`DynamicSyncTableDef`](../interfaces/DynamicSyncTableDef.md)<`any`, `any`, [`ParamDefs`](ParamDefs.md), `any`\>
+Ƭ **GenericDynamicSyncTable**: [`DynamicSyncTable`](../interfaces/DynamicSyncTable.md)<`any`, `any`, [`ParamDefs`](ParamDefs.md), `any`\>
 
 Type definition for a dynamic sync table.
 Should not be necessary to use directly, see [makeDynamicSyncTable](../functions/makeDynamicSyncTable.md)

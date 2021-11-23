@@ -14,7 +14,7 @@ import type {CustomHeaderTokenAuthentication} from '../types';
 import {DefaultConnectionType} from '../types';
 import type {DurationSchema} from '../schema';
 import {DurationUnit} from '../schema';
-import type {DynamicSyncTableDef} from '../api';
+import type {DynamicSyncTable} from '../api';
 import {FeatureSet} from '../types';
 import type {HeaderBearerTokenAuthentication} from '../types';
 import type {Identity} from '../schema';
@@ -833,9 +833,7 @@ const genericSyncTableSchema = zodCompleteObject<GenericSyncTableDef & {isDynami
   getSchema: formulaMetadataSchema.optional(),
 }).strict();
 
-const genericDynamicSyncTableSchema = zodCompleteObject<
-  DynamicSyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>
->({
+const genericDynamicSyncTableSchema = zodCompleteObject<DynamicSyncTable<any, any, ParamDefs, ObjectSchema<any, any>>>({
   ...baseSyncTableSchema,
   isDynamic: zodDiscriminant(true),
   getName: formulaMetadataSchema,

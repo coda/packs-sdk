@@ -334,7 +334,7 @@ describe('Execution', () => {
         type: AuthenticationType.HeaderBearerToken,
         getConnectionName: makeMetadataFormula(async context => {
           const response = await context.fetcher.fetch({method: 'GET', url: 'https://example.com/whoami'});
-          return response.body.username;
+          return response.body.username as string;
         }),
       },
       formulaNamespace: 'Fake',

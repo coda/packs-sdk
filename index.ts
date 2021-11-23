@@ -53,7 +53,7 @@ export {ConnectionRequirement} from './api_types';
 export type {Continuation} from './api';
 export type {DefaultValueType} from './api_types';
 export type {DynamicOptions} from './api';
-export type {DynamicSyncTableDef} from './api';
+export type {DynamicSyncTable} from './api';
 export type {EmptyFormulaDef} from './api';
 export type {ExecutionContext} from './api_types';
 export type {Fetcher} from './api_types';

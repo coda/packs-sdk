@@ -1,22 +1,22 @@
-# Interface: DynamicSyncTableDef<K, L, ParamDefsT, SchemaT\>
+# Interface: DynamicSyncTable<K, L, ParamDefsT, SchemaT\>
 
 Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
 instead, define dynamic sync tables using [makeDynamicSyncTable](../functions/makeDynamicSyncTable.md).
 
 ## Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `K` | extends `string` |
-| `L` | extends `string` |
+| Name         | Type                                         |
+| :----------- | :------------------------------------------- |
+| `K`          | extends `string`                             |
+| `L`          | extends `string`                             |
 | `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
-| `SchemaT` | extends `ObjectSchema`<`K`, `L`\> |
+| `SchemaT`    | extends `ObjectSchema`<`K`, `L`\>            |
 
 ## Hierarchy
 
 - [`SyncTableDef`](SyncTableDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\>
 
-  ↳ **`DynamicSyncTableDef`**
+  ↳ **`DynamicSyncTable`**
 
 ## Properties
 

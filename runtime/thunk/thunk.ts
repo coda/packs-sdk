@@ -72,7 +72,10 @@ function doFindAndExecutePackFunction<T extends FormulaSpecification>(
             defaultAuthentication?.type !== AuthenticationType.Various &&
             defaultAuthentication?.getConnectionName
           ) {
-            return defaultAuthentication.getConnectionName.execute(params as any, executionContext as ExecutionContext);
+            return defaultAuthentication.getConnectionName.execute(
+              params as any,
+              executionContext as ExecutionContext,
+            ) as any;
           }
           break;
         case MetadataFormulaType.GetConnectionUserId:
@@ -84,7 +87,7 @@ function doFindAndExecutePackFunction<T extends FormulaSpecification>(
             return defaultAuthentication.getConnectionUserId.execute(
               params as any,
               executionContext as ExecutionContext,
-            );
+            ) as any;
           }
           break;
         case MetadataFormulaType.ParameterAutocomplete:
@@ -135,7 +138,7 @@ function doFindAndExecutePackFunction<T extends FormulaSpecification>(
               } else if (formulaSpec.metadataFormulaType === MetadataFormulaType.SyncGetSchema) {
                 // Certain sync tables (Jira Issues, canonically) are not "dynamic" but have a getSchema formula
                 // in order to augment a static base schema with dynamic properties.
-                formula = syncTable.getSchema;
+                formula = syncTable.getSchema as any;
               }
               if (formula) {
                 return formula.execute(params as any, executionContext);

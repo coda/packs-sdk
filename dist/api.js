@@ -375,7 +375,7 @@ exports.makeFormula = makeFormula;
  * it is shaped like a Coda formula to be used at runtime.
  */
 function makeMetadataFormula(execute, options) {
-    return makeObjectFormula({
+    const formula = makeObjectFormula({
         name: 'getMetadata',
         description: 'Gets metadata',
         // Formula context is serialized here because we do not want to pass objects into
@@ -397,6 +397,12 @@ function makeMetadataFormula(execute, options) {
         examples: [],
         connectionRequirement: (options === null || options === void 0 ? void 0 : options.connectionRequirement) || api_types_1.ConnectionRequirement.Required,
     });
+    return {
+        ...formula,
+        execute(params, context) {
+            return Promise.resolve(formula.execute(params, context));
+        },
+    };
 }
 exports.makeMetadataFormula = makeMetadataFormula;
 /**
@@ -539,6 +545,8 @@ function makeObjectFormula({ response, ...definition }) {
                 }
             }
             return responseHandler({ body: result || {}, status: 200, headers: {} });
+            // | SchemaType<SchemaT>
+            // | Array<SchemaType<SchemaT>>;
         };
     }
     return Object.assign({}, definition, {

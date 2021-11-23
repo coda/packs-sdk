@@ -40,7 +40,7 @@
 - [CustomHeaderTokenAuthentication](interfaces/CustomHeaderTokenAuthentication.md)
 - [DurationSchema](interfaces/DurationSchema.md)
 - [DynamicOptions](interfaces/DynamicOptions.md)
-- [DynamicSyncTableDef](interfaces/DynamicSyncTableDef.md)
+- [DynamicSyncTable](interfaces/DynamicSyncTable.md)
 - [DynamicSyncTableOptions](interfaces/DynamicSyncTableOptions.md)
 - [EmptyFormulaDef](interfaces/EmptyFormulaDef.md)
 - [ExecutionContext](interfaces/ExecutionContext.md)

@@ -24,7 +24,7 @@ describe('API test', () => {
           schema.makeSchema({
             type: ValueType.Array,
             items: schema.makeSchema({type: ValueType.Object, properties: {}}),
-          }),
+          } as schema.ArraySchema),
         ),
         getDisplayUrl: makeMetadataFormula(async () => 'sup'),
         listDynamicUrls: makeMetadataFormula(async () => []),

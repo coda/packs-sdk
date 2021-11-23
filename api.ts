@@ -149,6 +149,7 @@ export class StatusCodeError extends Error {
  * instead, define sync tables using {@link makeSyncTable}.
  */
 export interface SyncTableDef<
+  // TODO(huayang): this isn't a user def.
   K extends string,
   L extends string,
   ParamDefsT extends ParamDefs,
@@ -170,7 +171,7 @@ export interface SyncTableDef<
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
  * instead, define dynamic sync tables using {@link makeDynamicSyncTable}.
  */
-export interface DynamicSyncTableDef<
+export interface DynamicSyncTable<
   K extends string,
   L extends string,
   ParamDefsT extends ParamDefs,
@@ -181,9 +182,9 @@ export interface DynamicSyncTableDef<
   /** See {@link DynamicSyncTableOptions.getSchema} */
   getSchema: MetadataFormula;
   /** See {@link DynamicSyncTableOptions.getName} */
-  getName: MetadataFormula;
+  getName: MetadataFormula<string>;
   /** See {@link DynamicSyncTableOptions.getDisplayUrl} */
-  getDisplayUrl: MetadataFormula;
+  getDisplayUrl: MetadataFormula<string>;
   /** See {@link DynamicSyncTableOptions.listDynamicUrls} */
   listDynamicUrls?: MetadataFormula;
 }
@@ -238,7 +239,7 @@ export type GenericSyncTable = SyncTableDef<any, any, ParamDefs, any>;
  * Should not be necessary to use directly, see {@link makeDynamicSyncTable}
  * for defining a sync table.
  */
-export type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, ParamDefs, any>;
+export type GenericDynamicSyncTable = DynamicSyncTable<any, any, ParamDefs, any>;
 /**
  * Union of type definitions for sync tables..
  * Should not be necessary to use directly, see {@link makeSyncTable} or {@link makeDynamicSyncTable}
@@ -434,10 +435,9 @@ export interface StringFormulaDefLegacy<ParamsT extends ParamDefs> extends Commo
   };
 }
 
-export interface ObjectResultFormulaDef<ParamsT extends ParamDefs, SchemaT extends Schema>
-  extends PackFormulaDef<ParamsT, object | object[]> {
-  execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<object> | object;
-  response?: ResponseHandlerTemplate<SchemaT>;
+export interface ObjectResultFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult>
+  extends PackFormulaDef<ParamsT, ResultT> {
+  response?: ResponseHandlerTemplate<any>;
 }
 
 /**
@@ -494,13 +494,15 @@ export type StringPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamD
 };
 
 /** A pack formula that returns a JavaScript object. */
-export type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Omit<
-  BaseFormula<ParamDefsT, SchemaType<SchemaT>>,
-  'execute'
-> & {
+export type ObjectPackFormula<
+  ParamDefsT extends ParamDefs,
+  SchemaT extends Schema,
+  ResultT extends PackFormulaResult = SchemaType<SchemaT> | Array<SchemaType<SchemaT>>,
+  ActualResultT = ResultT extends string ? ResultT : object,
+> = Omit<BaseFormula<ParamDefsT, ResultT>, 'execute'> & {
   schema?: SchemaT;
   // object formula execute result property key will be normalized.
-  execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<object> | object;
+  execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<ActualResultT> | ActualResultT;
 };
 
 // can't use a map (e.g. ResultTypeToFormulaTypeMap<ParamDefs, SchemaT>[ResultT]) here since
@@ -882,11 +884,11 @@ export type FormulaDefinition<
  * The return type for a metadata formula that should return a different display to the user
  * than is used internally.
  */
-export interface MetadataFormulaObjectResultType {
+export interface MetadataFormulaObjectResultType<T extends string | number = string | number> {
   /** The value displayed to the user in the UI. */
   display: string;
   /** The value used for the formula argument when the user selects this option. */
-  value: string | number;
+  value: T;
   /**
    * If true, indicates that this result has child results nested underneath it.
    * This option only applies to {@link DynamicSyncTableOptions.listDynamicUrls}.
@@ -926,10 +928,17 @@ export interface MetadataFormulaObjectResultType {
  */
 export type MetadataContext = Record<string, any>;
 
+export type MetadataFunctionResultType =
+  | string
+  | MetadataFormulaResultType[]
+  | ArraySchema
+  | ObjectSchemaDefinition<any, any>;
+
 /**
  * The type of values that can be returned from a {@link MetadataFormula}.
  */
 export type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
+
 /**
  * A formula that returns metadata relating to a core pack building block, like a sync table,
  * a formula parameter, or a user account. Examples include {@link DynamicOptions.getSchema},
@@ -959,7 +968,10 @@ export type MetadataFormulaResultType = string | number | MetadataFormulaObjectR
  * values of the others. This is dictionary mapping the names of each parameter to its
  * current value.
  */
-export type MetadataFormula = BaseFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any> & {
+export type MetadataFormula<T extends MetadataFunctionResultType = any> = BaseFormula<
+  [ParamDef<Type.string>, ParamDef<Type.string>],
+  T extends string ? T : any
+> & {
   schema?: any;
 };
 
@@ -968,18 +980,27 @@ export type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
 /**
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
  */
-export type MetadataFunction = <K extends string, L extends string>(
+export type MetadataFunction<T extends MetadataFunctionResultType = any> = (
   context: ExecutionContext,
   search: string,
   formulaContext?: MetadataContext,
-) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<K, L>>;
+) => Promise<T>;
+
+/**
+ * A JavaScript function that can implement a {@link MetadataFormulaDef}.
+ */
+export type MetadataFunctionDef<T extends MetadataFunctionResultType = any> = (
+  context: ExecutionContext,
+  search: string,
+  formulaContext?: MetadataContext,
+) => Promise<T>;
 
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
  * be the JavaScript function that implements a metadata formula (strongly recommended)
  * or a full metadata formula definition (mostly supported for legacy code).
  */
-export type MetadataFormulaDef = MetadataFormula | MetadataFunction;
+export type MetadataFormulaDef<T extends MetadataFunctionResultType = any> = MetadataFormula<T> | MetadataFunction<T>;
 
 /**
  * A wrapper that generates a formula definition from the function that implements a metadata formula.
@@ -993,23 +1014,23 @@ export type MetadataFormulaDef = MetadataFormula | MetadataFunction;
  * This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
  * it is shaped like a Coda formula to be used at runtime.
  */
-export function makeMetadataFormula(
-  execute: MetadataFunction,
+export function makeMetadataFormula<T extends MetadataFunctionResultType = any>(
+  execute: MetadataFunctionDef<T>,
   options?: {connectionRequirement?: ConnectionRequirement},
-): MetadataFormula {
-  return makeObjectFormula({
+): MetadataFormula<T extends string ? T : any> {
+  const formula = makeObjectFormula({
     name: 'getMetadata',
     description: 'Gets metadata',
     // Formula context is serialized here because we do not want to pass objects into
     // regular pack functions (which this is)
-    execute([search, serializedFormulaContext], context) {
+    execute([search, serializedFormulaContext], context): Promise<T> {
       let formulaContext = {};
       try {
         formulaContext = JSON.parse(serializedFormulaContext);
       } catch (err: any) {
         //  Ignore.
       }
-      return execute(context, search, formulaContext) as any;
+      return execute(context, search, formulaContext);
     },
     parameters: [
       makeStringParameter('search', 'Metadata to search for', {optional: true}),
@@ -1018,6 +1039,16 @@ export function makeMetadataFormula(
     examples: [],
     connectionRequirement: options?.connectionRequirement || ConnectionRequirement.Required,
   });
+
+  return {
+    ...formula,
+    execute(
+      params: ParamValues<[ParamDef<Type.string>, ParamDef<Type.string>]>,
+      context: ExecutionContext,
+    ): Promise<T extends string ? T : any> {
+      return Promise.resolve(formula.execute(params, context));
+    },
+  };
 }
 
 /**
@@ -1151,10 +1182,14 @@ function isResponseExampleTemplate(obj: any): obj is {example: SchemaType<any>} 
   return obj && obj.example;
 }
 
-export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({
+export function makeObjectFormula<
+  ParamDefsT extends ParamDefs,
+  ResultT extends PackFormulaResult,
+  SchemaT extends Schema,
+>({
   response,
   ...definition
-}: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT> {
+}: ObjectResultFormulaDef<ParamDefsT, ResultT>): ObjectPackFormula<ParamDefsT, SchemaT, ResultT> {
   let schema: Schema | undefined;
   if (response) {
     if (isResponseHandlerTemplate(response) && response.schema) {
@@ -1172,7 +1207,7 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
     const wrappedExecute = execute;
     const responseHandler = generateObjectResponseHandler(response);
     execute = async function exec(params: ParamValues<ParamDefsT>, context: ExecutionContext) {
-      let result: object;
+      let result: ResultT;
       try {
         result = await wrappedExecute(params, context);
       } catch (err: any) {
@@ -1182,9 +1217,9 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
           throw err;
         }
       }
-      return responseHandler({body: result || {}, status: 200, headers: {}}) as
-        | SchemaType<SchemaT>
-        | Array<SchemaType<SchemaT>>;
+      return responseHandler({body: result || {}, status: 200, headers: {}}) as ResultT;
+      // | SchemaType<SchemaT>
+      // | Array<SchemaType<SchemaT>>;
     };
   }
 
@@ -1192,7 +1227,7 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
     resultType: Type.object,
     execute,
     schema,
-  }) as ObjectPackFormula<ParamDefsT, SchemaT>;
+  }) as ObjectPackFormula<ParamDefsT, SchemaT, ResultT>;
 }
 
 /**
@@ -1286,7 +1321,7 @@ export interface DynamicSyncTableOptions<
   /**
    * A formula that returns the name of this table.
    */
-  getName: MetadataFormulaDef;
+  getName: MetadataFormulaDef<string>;
   /**
    * A formula that returns the schema for this table.
    */
@@ -1297,7 +1332,7 @@ export interface DynamicSyncTableOptions<
    * of the table data. This is typically a browser-friendly form of the
    * `dynamicUrl`, which is typically an API url.
    */
-  getDisplayUrl: MetadataFormulaDef;
+  getDisplayUrl: MetadataFormulaDef<string>;
   /**
    * A formula that returns a list of available dynamic urls that can be
    * used to create an instance of this dynamic sync table.
@@ -1445,14 +1480,14 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   connectionRequirement,
 }: {
   name: string;
-  getName: MetadataFormulaDef;
+  getName: MetadataFormulaDef<string>;
   getSchema: MetadataFormulaDef;
   formula: SyncFormulaDef<K, L, ParamDefsT, any>;
-  getDisplayUrl: MetadataFormulaDef;
+  getDisplayUrl: MetadataFormulaDef<string>;
   listDynamicUrls?: MetadataFormulaDef;
   entityName?: string;
   connectionRequirement?: ConnectionRequirement;
-}): DynamicSyncTableDef<K, L, ParamDefsT, any> {
+}): DynamicSyncTable<K, L, ParamDefsT, any> {
   const fakeSchema: any = makeObjectSchema({
     // This schema is useless... just creating a stub here but the client will use
     // the dynamic one.
@@ -1482,7 +1517,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
     getDisplayUrl: maybeRewriteConnectionForFormula(getDisplayUrl, connectionRequirement),
     listDynamicUrls: maybeRewriteConnectionForFormula(listDynamicUrls, connectionRequirement),
     getName: maybeRewriteConnectionForFormula(getName, connectionRequirement),
-  } as DynamicSyncTableDef<K, L, ParamDefsT, any>;
+  } as DynamicSyncTable<K, L, ParamDefsT, any>;
 }
 
 /**

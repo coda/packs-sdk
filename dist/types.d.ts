@@ -207,7 +207,7 @@ export interface BaseAuthentication {
      * If omitted, or if the function returns an empty value, the account will be labeled
      * with the creating user's Coda username.
      */
-    getConnectionName?: MetadataFormula;
+    getConnectionName?: MetadataFormula<string>;
     /**
      * A function that is called when a user sets up a new account, that returns the ID of
      * that account in the third-party system being called.
@@ -217,7 +217,7 @@ export interface BaseAuthentication {
      *
      * @ignore
      */
-    getConnectionUserId?: MetadataFormula;
+    getConnectionUserId?: MetadataFormula<string>;
     /**
      * Indicates the default manner in which a user's account is expected to be used by this pack,
      * e.g. is this account used for retrieving data, taking actions, or both.
@@ -542,9 +542,9 @@ export interface VariousAuthentication {
 export declare type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication;
 declare type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId'> & {
     /** See {@link BaseAuthentication.getConnectionName} */
-    getConnectionName?: MetadataFormulaDef;
+    getConnectionName?: MetadataFormulaDef<string>;
     /** See {@link BaseAuthentication.getConnectionUserId} */
-    getConnectionUserId?: MetadataFormulaDef;
+    getConnectionUserId?: MetadataFormulaDef<string>;
 };
 /**
  * The union of supported authentication definitions. These represent simplified configurations

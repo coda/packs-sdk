@@ -5,18 +5,18 @@ instead, define sync tables using [makeSyncTable](../functions/makeSyncTable.md)
 
 ## Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `K` | extends `string` |
-| `L` | extends `string` |
+| Name         | Type                                         |
+| :----------- | :------------------------------------------- |
+| `K`          | extends `string`                             |
+| `L`          | extends `string`                             |
 | `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
-| `SchemaT` | extends `ObjectSchema`<`K`, `L`\> |
+| `SchemaT`    | extends `ObjectSchema`<`K`, `L`\>            |
 
 ## Hierarchy
 
 - **`SyncTableDef`**
 
-  ↳ [`DynamicSyncTableDef`](DynamicSyncTableDef.md)
+  ↳ [`DynamicSyncTable`](DynamicSyncTable.md)
 
 ## Properties
 
