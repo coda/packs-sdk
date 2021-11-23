@@ -1,6 +1,8 @@
 ## 0.7.2
 
 - Fixed missing schema description in compiled metadata.
+- Fixed the fetcher to properly recognize more XML content type headers and parse those responses int objects using `xml2js`.
+  - Previously only `text/xml` and `application/xml` were recognized, but headers like `application/atom+xml` were ignored and response bodies returned as strings.
 
 ## 0.7.1
 
@@ -10,7 +12,7 @@
   ```typescript
   // pack authentication
   pack.setSystemAuthentication({
-    type: AuthenticationType.Custom, 
+    type: AuthenticationType.Custom,
     params: [{name: 'secretId', description: 'Secret id'},
             {name: 'secretValue', description: 'Secret value'}])
   });
