@@ -34,7 +34,7 @@ ___
 
 ### getSchema
 
-• `Optional` **getSchema**: [`MetadataFormula`](../types/MetadataFormula.md)
+• `Optional` **getSchema**: [`MetadataFormula`](../types/MetadataFormula.md)<[`ArraySchema`](ArraySchema.md)<[`Schema`](../types/Schema.md)\>\>
 
 See [DynamicOptions.getSchema](DynamicOptions.md#getschema)
 

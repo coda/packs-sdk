@@ -1,8 +1,11 @@
 import './test_helper';
+import type {ArraySchema} from '../schema';
 import {AuthenticationType} from '../types';
 import {ConnectionRequirement} from '../api_types';
 import type {DynamicSyncTableDef} from '../api';
+import type {GenericObjectSchema} from '../schema';
 import type {MetadataFormulaDef} from '../api';
+import type {MetadataFormulaResultType} from '../api';
 import type {PackDefinitionBuilder} from '../builder';
 import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
@@ -80,10 +83,10 @@ describe('Builder', () => {
       listDynamicUrls,
     }: {
       connectionRequirement?: ConnectionRequirement;
-      getName: MetadataFormulaDef;
-      getSchema: MetadataFormulaDef;
-      getDisplayUrl: MetadataFormulaDef;
-      listDynamicUrls: MetadataFormulaDef;
+      getName: MetadataFormulaDef<string>;
+      getSchema: MetadataFormulaDef<ArraySchema<GenericObjectSchema>>;
+      getDisplayUrl: MetadataFormulaDef<string>;
+      listDynamicUrls: MetadataFormulaDef<Array<MetadataFormulaResultType<string>> | string[]>;
     },
   ) {
     pack_.addDynamicSyncTable({
@@ -239,7 +242,7 @@ describe('Builder', () => {
         getSchema: makeMetadataFormula(async () => makeSchema({type: ValueType.Array, items: dummyObjectSchema})),
         listDynamicUrls: makeMetadataFormula(async () => ['url']),
       });
-      const syncTable = pack.syncTables[0] as DynamicSyncTableDef<any, any, any, any>;
+      const syncTable = pack.syncTables[0] as DynamicSyncTableDef<any, any, any>;
       assert.equal(syncTable.getName.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.getDisplayUrl.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.getSchema.connectionRequirement, ConnectionRequirement.Optional);
@@ -257,7 +260,7 @@ describe('Builder', () => {
         type: AuthenticationType.HeaderBearerToken,
         defaultConnectionRequirement: ConnectionRequirement.Optional,
       });
-      const syncTable = pack.syncTables[0] as DynamicSyncTableDef<any, any, any, any>;
+      const syncTable = pack.syncTables[0] as DynamicSyncTableDef<any, any, any>;
       assert.equal(syncTable.getName.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.getDisplayUrl.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.getSchema.connectionRequirement, ConnectionRequirement.Optional);
@@ -284,7 +287,7 @@ describe('Builder', () => {
         type: AuthenticationType.HeaderBearerToken,
         defaultConnectionRequirement: ConnectionRequirement.Optional,
       });
-      const syncTable = pack.syncTables[0] as DynamicSyncTableDef<any, any, any, any>;
+      const syncTable = pack.syncTables[0] as DynamicSyncTableDef<any, any, any>;
       assert.equal(syncTable.getName.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.getDisplayUrl.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.getSchema.connectionRequirement, ConnectionRequirement.Optional);

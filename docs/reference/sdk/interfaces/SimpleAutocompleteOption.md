@@ -7,7 +7,7 @@ the underlying option that will be used in the formula when selected.
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends [`Number`](../enums/ParameterType.md#number) \| [`String`](../enums/ParameterType.md#string) |
+| `T` | extends `number` \| `string` |
 
 ## Properties
 
@@ -19,16 +19,16 @@ Text that will be displayed to the user in UI for this option.
 
 #### Defined in
 
-[api.ts:1029](https://github.com/coda/packs-sdk/blob/main/api.ts#L1029)
+[api.ts:1059](https://github.com/coda/packs-sdk/blob/main/api.ts#L1059)
 
 ___
 
 ### value
 
-• **value**: `TypeMap`[`ParameterTypeMap`[`T`]]
+• **value**: `T`
 
 The actual value that will get used in the formula if this option is selected.
 
 #### Defined in
 
-[api.ts:1031](https://github.com/coda/packs-sdk/blob/main/api.ts#L1031)
+[api.ts:1061](https://github.com/coda/packs-sdk/blob/main/api.ts#L1061)

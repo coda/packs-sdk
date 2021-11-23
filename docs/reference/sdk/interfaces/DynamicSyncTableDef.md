@@ -1,4 +1,4 @@
-# Interface: DynamicSyncTableDef<K, L, ParamDefsT, SchemaT\>
+# Interface: DynamicSyncTableDef<K, L, ParamDefsT\>
 
 Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
 instead, define dynamic sync tables using [makeDynamicSyncTable](../functions/makeDynamicSyncTable.md).
@@ -10,11 +10,10 @@ instead, define dynamic sync tables using [makeDynamicSyncTable](../functions/ma
 | `K` | extends `string` |
 | `L` | extends `string` |
 | `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
-| `SchemaT` | extends `ObjectSchema`<`K`, `L`\> |
 
 ## Hierarchy
 
-- [`SyncTableDef`](SyncTableDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\>
+- [`SyncTableDef`](SyncTableDef.md)<`K`, `L`, `ParamDefsT`, `any`\>
 
   ↳ **`DynamicSyncTableDef`**
 
@@ -38,31 +37,31 @@ ___
 
 ### getDisplayUrl
 
-• **getDisplayUrl**: [`MetadataFormula`](../types/MetadataFormula.md)
+• **getDisplayUrl**: [`MetadataFormula`](../types/MetadataFormula.md)<`string`\>
 
 See [DynamicSyncTableOptions.getDisplayUrl](DynamicSyncTableOptions.md#getdisplayurl)
 
 #### Defined in
 
-[api.ts:186](https://github.com/coda/packs-sdk/blob/main/api.ts#L186)
+[api.ts:182](https://github.com/coda/packs-sdk/blob/main/api.ts#L182)
 
 ___
 
 ### getName
 
-• **getName**: [`MetadataFormula`](../types/MetadataFormula.md)
+• **getName**: [`MetadataFormula`](../types/MetadataFormula.md)<`string`\>
 
 See [DynamicSyncTableOptions.getName](DynamicSyncTableOptions.md#getname)
 
 #### Defined in
 
-[api.ts:184](https://github.com/coda/packs-sdk/blob/main/api.ts#L184)
+[api.ts:180](https://github.com/coda/packs-sdk/blob/main/api.ts#L180)
 
 ___
 
 ### getSchema
 
-• **getSchema**: [`MetadataFormula`](../types/MetadataFormula.md)
+• **getSchema**: [`MetadataFormula`](../types/MetadataFormula.md)<[`ArraySchema`](ArraySchema.md)<[`Schema`](../types/Schema.md)\>\>
 
 See [DynamicSyncTableOptions.getSchema](DynamicSyncTableOptions.md#getschema)
 
@@ -72,13 +71,13 @@ See [DynamicSyncTableOptions.getSchema](DynamicSyncTableOptions.md#getschema)
 
 #### Defined in
 
-[api.ts:182](https://github.com/coda/packs-sdk/blob/main/api.ts#L182)
+[api.ts:178](https://github.com/coda/packs-sdk/blob/main/api.ts#L178)
 
 ___
 
 ### getter
 
-• **getter**: [`SyncFormula`](../types/SyncFormula.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\>
+• **getter**: [`SyncFormula`](../types/SyncFormula.md)<`K`, `L`, `ParamDefsT`, `any`\>
 
 See [SyncTableOptions.formula](SyncTableOptions.md#formula)
 
@@ -100,19 +99,19 @@ Identifies this sync table as dynamic.
 
 #### Defined in
 
-[api.ts:180](https://github.com/coda/packs-sdk/blob/main/api.ts#L180)
+[api.ts:176](https://github.com/coda/packs-sdk/blob/main/api.ts#L176)
 
 ___
 
 ### listDynamicUrls
 
-• `Optional` **listDynamicUrls**: [`MetadataFormula`](../types/MetadataFormula.md)
+• `Optional` **listDynamicUrls**: [`MetadataFormula`](../types/MetadataFormula.md)<`string`[] \| [`MetadataFormulaResultType`](../types/MetadataFormulaResultType.md)<`string`\>[]\>
 
 See [DynamicSyncTableOptions.listDynamicUrls](DynamicSyncTableOptions.md#listdynamicurls)
 
 #### Defined in
 
-[api.ts:188](https://github.com/coda/packs-sdk/blob/main/api.ts#L188)
+[api.ts:184](https://github.com/coda/packs-sdk/blob/main/api.ts#L184)
 
 ___
 
@@ -134,7 +133,7 @@ ___
 
 ### schema
 
-• **schema**: `SchemaT`
+• **schema**: `any`
 
 See [SyncTableOptions.schema](SyncTableOptions.md#schema)
 

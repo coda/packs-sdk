@@ -19,7 +19,7 @@ If specified, the user must provide personal authentication credentials before u
 
 #### Defined in
 
-[types.ts:806](https://github.com/coda/packs-sdk/blob/main/types.ts#L806)
+[types.ts:808](https://github.com/coda/packs-sdk/blob/main/types.ts#L808)
 
 ___
 
@@ -31,7 +31,7 @@ Definitions of this pack's column formats. See [Format](Format.md).
 
 #### Defined in
 
-[types.ts:842](https://github.com/coda/packs-sdk/blob/main/types.ts#L842)
+[types.ts:844](https://github.com/coda/packs-sdk/blob/main/types.ts#L844)
 
 ___
 
@@ -43,7 +43,7 @@ ___
 
 #### Defined in
 
-[types.ts:828](https://github.com/coda/packs-sdk/blob/main/types.ts#L828)
+[types.ts:830](https://github.com/coda/packs-sdk/blob/main/types.ts#L830)
 
 ___
 
@@ -61,7 +61,7 @@ and will be removed shortly.
 
 #### Defined in
 
-[types.ts:838](https://github.com/coda/packs-sdk/blob/main/types.ts#L838)
+[types.ts:840](https://github.com/coda/packs-sdk/blob/main/types.ts#L840)
 
 ___
 
@@ -79,7 +79,7 @@ contact Coda support for approval.
 
 #### Defined in
 
-[types.ts:821](https://github.com/coda/packs-sdk/blob/main/types.ts#L821)
+[types.ts:823](https://github.com/coda/packs-sdk/blob/main/types.ts#L823)
 
 ___
 
@@ -91,7 +91,7 @@ Definitions of this pack's sync tables. See [SyncTable](../types/SyncTable.md).
 
 #### Defined in
 
-[types.ts:846](https://github.com/coda/packs-sdk/blob/main/types.ts#L846)
+[types.ts:848](https://github.com/coda/packs-sdk/blob/main/types.ts#L848)
 
 ___
 
@@ -104,7 +104,7 @@ explicit connection is specified by the user.
 
 #### Defined in
 
-[types.ts:811](https://github.com/coda/packs-sdk/blob/main/types.ts#L811)
+[types.ts:813](https://github.com/coda/packs-sdk/blob/main/types.ts#L813)
 
 ___
 
@@ -117,4 +117,4 @@ When uploading a pack version, the semantic version must be greater than any pre
 
 #### Defined in
 
-[types.ts:802](https://github.com/coda/packs-sdk/blob/main/types.ts#L802)
+[types.ts:804](https://github.com/coda/packs-sdk/blob/main/types.ts#L804)

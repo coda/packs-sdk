@@ -72,7 +72,10 @@ function doFindAndExecutePackFunction<T extends FormulaSpecification>(
             defaultAuthentication?.type !== AuthenticationType.Various &&
             defaultAuthentication?.getConnectionName
           ) {
-            return defaultAuthentication.getConnectionName.execute(params as any, executionContext as ExecutionContext);
+            return defaultAuthentication.getConnectionName.execute(
+              params as any,
+              executionContext as ExecutionContext,
+            ) as any;
           }
           break;
         case MetadataFormulaType.GetConnectionUserId:
@@ -84,7 +87,7 @@ function doFindAndExecutePackFunction<T extends FormulaSpecification>(
             return defaultAuthentication.getConnectionUserId.execute(
               params as any,
               executionContext as ExecutionContext,
-            );
+            ) as any;
           }
           break;
         case MetadataFormulaType.ParameterAutocomplete:
@@ -103,7 +106,7 @@ function doFindAndExecutePackFunction<T extends FormulaSpecification>(
               step => step.type === PostSetupType.SetEndpoint && step.name === formulaSpec.stepName,
             );
             if (setupStep) {
-              return setupStep.getOptionsFormula.execute(params as any, executionContext);
+              return setupStep.getOptionsFormula.execute(params as any, executionContext) as any;
             }
           }
           break;
@@ -114,7 +117,7 @@ function doFindAndExecutePackFunction<T extends FormulaSpecification>(
           if (syncTables) {
             const syncTable = syncTables.find(table => table.name === formulaSpec.syncTableName);
             if (syncTable) {
-              let formula: MetadataFormula | undefined;
+              let formula: MetadataFormula<any> | undefined;
               if (isDynamicSyncTable(syncTable)) {
                 switch (formulaSpec.metadataFormulaType) {
                   case MetadataFormulaType.SyncListDynamicUrls:

@@ -161,7 +161,7 @@ export interface SyncTableDef<
   /** See {@link SyncTableOptions.formula} */
   getter: SyncFormula<K, L, ParamDefsT, SchemaT>;
   /** See {@link DynamicOptions.getSchema} */
-  getSchema?: MetadataFormula;
+  getSchema?: MetadataFormula<ArraySchema>;
   /** See {@link DynamicOptions.entityName} */
   entityName?: string;
 }
@@ -170,22 +170,18 @@ export interface SyncTableDef<
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
  * instead, define dynamic sync tables using {@link makeDynamicSyncTable}.
  */
-export interface DynamicSyncTableDef<
-  K extends string,
-  L extends string,
-  ParamDefsT extends ParamDefs,
-  SchemaT extends ObjectSchema<K, L>,
-> extends SyncTableDef<K, L, ParamDefsT, SchemaT> {
+export interface DynamicSyncTableDef<K extends string, L extends string, ParamDefsT extends ParamDefs>
+  extends SyncTableDef<K, L, ParamDefsT, any> {
   /** Identifies this sync table as dynamic. */
   isDynamic: true;
   /** See {@link DynamicSyncTableOptions.getSchema} */
-  getSchema: MetadataFormula;
+  getSchema: MetadataFormula<ArraySchema>;
   /** See {@link DynamicSyncTableOptions.getName} */
-  getName: MetadataFormula;
+  getName: MetadataFormula<string>;
   /** See {@link DynamicSyncTableOptions.getDisplayUrl} */
-  getDisplayUrl: MetadataFormula;
+  getDisplayUrl: MetadataFormula<string>;
   /** See {@link DynamicSyncTableOptions.listDynamicUrls} */
-  listDynamicUrls?: MetadataFormula;
+  listDynamicUrls?: MetadataFormula<Array<MetadataFormulaResultType<string>> | string[]>;
 }
 
 /**
@@ -238,7 +234,7 @@ export type GenericSyncTable = SyncTableDef<any, any, ParamDefs, any>;
  * Should not be necessary to use directly, see {@link makeDynamicSyncTable}
  * for defining a sync table.
  */
-export type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, ParamDefs, any>;
+export type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, ParamDefs>;
 /**
  * Union of type definitions for sync tables..
  * Should not be necessary to use directly, see {@link makeSyncTable} or {@link makeDynamicSyncTable}
@@ -259,17 +255,24 @@ export function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDy
   return 'isDynamic' in syncTable;
 }
 
-export function wrapMetadataFunction(
-  fnOrFormula: MetadataFormula | MetadataFunction | undefined,
-): MetadataFormula | undefined {
+export function wrapMetadataFunction<ResultT extends MetadataFunctionResultType>(
+  fnOrFormula: MetadataFormula<ResultT> | MetadataFunction<ResultT> | undefined,
+): MetadataFormula<ResultT> | undefined {
   return typeof fnOrFormula === 'function' ? makeMetadataFormula(fnOrFormula) : fnOrFormula;
 }
+
+/**
+ * Type definition of autocomplete return.
+ */
+export type AutoCompleteFunctionDefReturnType<T extends number | string> = Array<T | SimpleAutocompleteOption<T>>;
 
 /** Options you can specify when defining a parameter using {@link makeParameter}. */
 export type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, 'type' | 'autocomplete'> & {
   type: T;
   autocomplete?: T extends ParameterType.Number | ParameterType.String
-    ? MetadataFormulaDef | Array<TypeMap[ParameterTypeMap[T]] | SimpleAutocompleteOption<T>>
+    ?
+        | MetadataFormulaDef<AutoCompleteFunctionDefReturnType<TypeMap[ParameterTypeMap[T]]>>
+        | AutoCompleteFunctionDefReturnType<TypeMap[ParameterTypeMap[T]]>
     : undefined;
 };
 
@@ -291,16 +294,18 @@ export function makeParameter<T extends ParameterType>(
 ): ParamDef<ParameterTypeMap[T]> {
   const {type, autocomplete: autocompleteDefOrItems, ...rest} = paramDefinition;
   const actualType = ParameterTypeInputMap[type] as ParameterTypeMap[T];
-  let autocomplete: MetadataFormula | undefined;
+  let autocomplete;
 
   if (Array.isArray(autocompleteDefOrItems)) {
-    const autocompleteDef = makeSimpleAutocompleteMetadataFormula(autocompleteDefOrItems);
+    // need the force casting here since we don't check if the param type is number or string.
+    const autocompleteDef = makeSimpleAutocompleteMetadataFormula(autocompleteDefOrItems as any);
     autocomplete = wrapMetadataFunction(autocompleteDef);
   } else {
-    autocomplete = wrapMetadataFunction(autocompleteDefOrItems);
+    // need the force casting here since we don't check if the param type is number or string.
+    autocomplete = wrapMetadataFunction(autocompleteDefOrItems as any);
   }
 
-  return Object.freeze({...rest, autocomplete, type: actualType});
+  return Object.freeze({...rest, autocomplete, type: actualType}) as any;
 }
 
 // Other parameter helpers below here are obsolete given the above generate parameter makers.
@@ -882,11 +887,11 @@ export type FormulaDefinition<
  * The return type for a metadata formula that should return a different display to the user
  * than is used internally.
  */
-export interface MetadataFormulaObjectResultType {
+export interface MetadataFormulaObjectResultType<T extends string | number = string | number> {
   /** The value displayed to the user in the UI. */
   display: string;
   /** The value used for the formula argument when the user selects this option. */
-  value: string | number;
+  value: T;
   /**
    * If true, indicates that this result has child results nested underneath it.
    * This option only applies to {@link DynamicSyncTableOptions.listDynamicUrls}.
@@ -929,7 +934,9 @@ export type MetadataContext = Record<string, any>;
 /**
  * The type of values that can be returned from a {@link MetadataFormula}.
  */
-export type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
+export type MetadataFormulaResultType<T extends string | number = string | number> =
+  | T
+  | MetadataFormulaObjectResultType<T>;
 /**
  * A formula that returns metadata relating to a core pack building block, like a sync table,
  * a formula parameter, or a user account. Examples include {@link DynamicOptions.getSchema},
@@ -959,27 +966,45 @@ export type MetadataFormulaResultType = string | number | MetadataFormulaObjectR
  * values of the others. This is dictionary mapping the names of each parameter to its
  * current value.
  */
-export type MetadataFormula = BaseFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any> & {
+export type MetadataFormula<ResultT extends MetadataFunctionResultType> = BaseFormula<
+  [ParamDef<Type.string>, ParamDef<Type.string>],
+  ResultT
+> & {
   schema?: any;
 };
 
-export type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
+export type MetadataFormulaMetadata<ResultT extends MetadataFunctionResultType = any> = Omit<
+  MetadataFormula<ResultT>,
+  'execute'
+>;
 
 /**
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
  */
-export type MetadataFunction = <K extends string, L extends string>(
+export type MetadataFunction<ResultT extends MetadataFunctionResultType> = (
   context: ExecutionContext,
   search: string,
   formulaContext?: MetadataContext,
-) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<K, L>>;
+) => Promise<ResultT>;
 
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
  * be the JavaScript function that implements a metadata formula (strongly recommended)
  * or a full metadata formula definition (mostly supported for legacy code).
  */
-export type MetadataFormulaDef = MetadataFormula | MetadataFunction;
+export type MetadataFormulaDef<ResultT extends MetadataFunctionResultType> =
+  | MetadataFormula<ResultT>
+  | MetadataFunction<ResultT>;
+
+/**
+ * Type definition of metadata formula returns.
+ */
+export type MetadataFunctionResultType =
+  | string
+  | number
+  | MetadataFormulaResultType[]
+  | ArraySchema
+  | ObjectSchemaDefinition<any, any>;
 
 /**
  * A wrapper that generates a formula definition from the function that implements a metadata formula.
@@ -993,11 +1018,11 @@ export type MetadataFormulaDef = MetadataFormula | MetadataFunction;
  * This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
  * it is shaped like a Coda formula to be used at runtime.
  */
-export function makeMetadataFormula(
-  execute: MetadataFunction,
+export function makeMetadataFormula<ResultT extends MetadataFunctionResultType>(
+  execute: MetadataFunction<ResultT>,
   options?: {connectionRequirement?: ConnectionRequirement},
-): MetadataFormula {
-  return makeObjectFormula({
+): MetadataFormula<ResultT> {
+  const formula = {
     name: 'getMetadata',
     description: 'Gets metadata',
     // Formula context is serialized here because we do not want to pass objects into
@@ -1009,7 +1034,7 @@ export function makeMetadataFormula(
       } catch (err: any) {
         //  Ignore.
       }
-      return execute(context, search, formulaContext) as any;
+      return execute(context, search, formulaContext);
     },
     parameters: [
       makeStringParameter('search', 'Metadata to search for', {optional: true}),
@@ -1017,18 +1042,23 @@ export function makeMetadataFormula(
     ],
     examples: [],
     connectionRequirement: options?.connectionRequirement || ConnectionRequirement.Required,
-  });
+  } as Omit<MetadataFormula<ResultT>, 'resultType'>;
+
+  // We don't have a real resultType. This has always been set as Type.object in the past.
+  // Adding a real resultType is a breaking change that almost all metadata formulas will be
+  // affected.
+  return {resultType: Type.object, ...formula} as unknown as MetadataFormula<ResultT>;
 }
 
 /**
  * A result from a parameter autocomplete function that pairs a UI display value with
  * the underlying option that will be used in the formula when selected.
  */
-export interface SimpleAutocompleteOption<T extends ParameterType.Number | ParameterType.String> {
+export interface SimpleAutocompleteOption<T extends number | string> {
   /** Text that will be displayed to the user in UI for this option. */
   display: string;
   /** The actual value that will get used in the formula if this option is selected. */
-  value: TypeMap[ParameterTypeMap[T]];
+  value: T;
 }
 
 /**
@@ -1051,10 +1081,10 @@ export interface SimpleAutocompleteOption<T extends ParameterType.Number | Param
  * }
  * ```
  */
-export function simpleAutocomplete<T extends ParameterType.Number | ParameterType.String>(
+export function simpleAutocomplete<T extends number | string>(
   search: string | undefined,
-  options: Array<TypeMap[ParameterTypeMap[T]] | SimpleAutocompleteOption<T>>,
-): Promise<MetadataFormulaObjectResultType[]> {
+  options: Array<T | SimpleAutocompleteOption<T>>,
+): Promise<Array<MetadataFormulaObjectResultType<T>>> {
   const normalizedSearch = (search || '').toLowerCase();
   const filtered = options.filter(option => {
     const display = typeof option === 'string' || typeof option === 'number' ? option : option.display;
@@ -1077,7 +1107,7 @@ export function simpleAutocomplete<T extends ParameterType.Number | ParameterTyp
     }
   }
 
-  return Promise.resolve(metadataResults);
+  return Promise.resolve(metadataResults as Array<MetadataFormulaObjectResultType<T>>);
 }
 
 /**
@@ -1111,12 +1141,14 @@ export function simpleAutocomplete<T extends ParameterType.Number | ParameterTyp
  * });
  * ```
  */
-export function autocompleteSearchObjects<T>(
+// we had to fallback OptionT to string since there's no easy way to tell type of T[valueKey] in
+// typescript.
+export function autocompleteSearchObjects<OptionT extends string | number = string, T = any>(
   search: string,
   objs: T[],
   displayKey: keyof T,
   valueKey: keyof T,
-): Promise<MetadataFormulaObjectResultType[]> {
+): Promise<Array<MetadataFormulaObjectResultType<OptionT>>> {
   const normalizedSearch = search.toLowerCase();
   const filtered = objs.filter(o => (o[displayKey] as any).toLowerCase().includes(normalizedSearch));
   const metadataResults = filtered.map(o => {
@@ -1133,10 +1165,10 @@ export function autocompleteSearchObjects<T>(
  * as the value of the `autocomplete` property in your parameter definition. There is no longer
  * any needed to wrap a value with this formula.
  */
-export function makeSimpleAutocompleteMetadataFormula<T extends ParameterType.Number | ParameterType.String>(
-  options: Array<TypeMap[ParameterTypeMap[T]] | SimpleAutocompleteOption<T>>,
-): MetadataFormula {
-  return makeMetadataFormula((context, [search]) => simpleAutocomplete(search, options), {
+export function makeSimpleAutocompleteMetadataFormula<T extends number | string>(
+  options: Array<T | SimpleAutocompleteOption<T>>,
+): MetadataFormula<Array<MetadataFormulaObjectResultType<T>>> {
+  return makeMetadataFormula((context, [search]) => simpleAutocomplete<T>(search, options), {
     // A connection won't be used here, but if the parent formula uses a connection
     // the execution code is going to try to pass it here. We should fix that.
     connectionRequirement: ConnectionRequirement.Optional,
@@ -1208,7 +1240,7 @@ export interface DynamicOptions {
    * this if you table has a schema that varies based on the user account, but
    * does not require a {@link dynamicUrl}.
    */
-  getSchema?: MetadataFormulaDef;
+  getSchema?: MetadataFormulaDef<ArraySchema>;
   /** See {@link DynamicSyncTableOptions.entityName} */
   entityName?: string;
 }
@@ -1286,23 +1318,23 @@ export interface DynamicSyncTableOptions<
   /**
    * A formula that returns the name of this table.
    */
-  getName: MetadataFormulaDef;
+  getName: MetadataFormulaDef<string>;
   /**
    * A formula that returns the schema for this table.
    */
-  getSchema: MetadataFormulaDef;
+  getSchema: MetadataFormulaDef<ArraySchema>;
   /**
    * A formula that that returns a browser-friendly url representing the
    * resource being synced. The Coda UI links to this url as the source
    * of the table data. This is typically a browser-friendly form of the
    * `dynamicUrl`, which is typically an API url.
    */
-  getDisplayUrl: MetadataFormulaDef;
+  getDisplayUrl: MetadataFormulaDef<string>;
   /**
    * A formula that returns a list of available dynamic urls that can be
    * used to create an instance of this dynamic sync table.
    */
-  listDynamicUrls?: MetadataFormulaDef;
+  listDynamicUrls?: MetadataFormulaDef<Array<MetadataFormulaResultType<string>> | string[]>;
   /**
    * The definition of the formula that implements this sync. This is a Coda packs formula
    * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
@@ -1357,11 +1389,9 @@ export function makeSyncTable<
   } else if (identityName) {
     schemaDef.identity = {name: identityName};
   }
-  const getSchema = wrapMetadataFunction(getSchemaDef);
+  const getSchema = wrapMetadataFunction(getSchemaDef) as MetadataFormula<ArraySchema<SchemaT>> | undefined;
   const schema = makeObjectSchema<K, L, SchemaDefT>(schemaDef) as SchemaT;
-  const formulaSchema = getSchema
-    ? undefined
-    : normalizeSchema<ArraySchema<Schema>>({type: ValueType.Array, items: schema});
+  const formulaSchema = getSchema ? undefined : normalizeSchema<ArraySchema>({type: ValueType.Array, items: schema});
   const {identity, id, primary} = schema;
   if (!(primary && id && identity)) {
     throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
@@ -1408,7 +1438,7 @@ export function makeSyncTableLegacy<
   formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
   connectionRequirement?: ConnectionRequirement,
   dynamicOptions: {
-    getSchema?: MetadataFormula;
+    getSchema?: MetadataFormula<ArraySchema>;
     entityName?: string;
   } = {},
 ): SyncTableDef<K, L, ParamDefsT, SchemaT> {
@@ -1445,14 +1475,14 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   connectionRequirement,
 }: {
   name: string;
-  getName: MetadataFormulaDef;
-  getSchema: MetadataFormulaDef;
+  getName: MetadataFormulaDef<string>;
+  getSchema: MetadataFormulaDef<ArraySchema>;
   formula: SyncFormulaDef<K, L, ParamDefsT, any>;
-  getDisplayUrl: MetadataFormulaDef;
-  listDynamicUrls?: MetadataFormulaDef;
+  getDisplayUrl: MetadataFormulaDef<string>;
+  listDynamicUrls?: MetadataFormulaDef<Array<MetadataFormulaResultType<string>> | string[]>;
   entityName?: string;
   connectionRequirement?: ConnectionRequirement;
-}): DynamicSyncTableDef<K, L, ParamDefsT, any> {
+}): DynamicSyncTableDef<K, L, ParamDefsT> {
   const fakeSchema: any = makeObjectSchema({
     // This schema is useless... just creating a stub here but the client will use
     // the dynamic one.
@@ -1482,7 +1512,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
     getDisplayUrl: maybeRewriteConnectionForFormula(getDisplayUrl, connectionRequirement),
     listDynamicUrls: maybeRewriteConnectionForFormula(listDynamicUrls, connectionRequirement),
     getName: maybeRewriteConnectionForFormula(getName, connectionRequirement),
-  } as DynamicSyncTableDef<K, L, ParamDefsT, any>;
+  } as DynamicSyncTableDef<K, L, ParamDefsT>;
 }
 
 /**

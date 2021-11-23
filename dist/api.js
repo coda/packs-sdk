@@ -113,10 +113,12 @@ function makeParameter(paramDefinition) {
     const actualType = api_types_2.ParameterTypeInputMap[type];
     let autocomplete;
     if (Array.isArray(autocompleteDefOrItems)) {
+        // need the force casting here since we don't check if the param type is number or string.
         const autocompleteDef = makeSimpleAutocompleteMetadataFormula(autocompleteDefOrItems);
         autocomplete = wrapMetadataFunction(autocompleteDef);
     }
     else {
+        // need the force casting here since we don't check if the param type is number or string.
         autocomplete = wrapMetadataFunction(autocompleteDefOrItems);
     }
     return Object.freeze({ ...rest, autocomplete, type: actualType });
@@ -375,7 +377,7 @@ exports.makeFormula = makeFormula;
  * it is shaped like a Coda formula to be used at runtime.
  */
 function makeMetadataFormula(execute, options) {
-    return makeObjectFormula({
+    const formula = {
         name: 'getMetadata',
         description: 'Gets metadata',
         // Formula context is serialized here because we do not want to pass objects into
@@ -396,7 +398,11 @@ function makeMetadataFormula(execute, options) {
         ],
         examples: [],
         connectionRequirement: (options === null || options === void 0 ? void 0 : options.connectionRequirement) || api_types_1.ConnectionRequirement.Required,
-    });
+    };
+    // We don't have a real resultType. This has always been set as Type.object in the past.
+    // Adding a real resultType is a breaking change that almost all metadata formulas will be
+    // affected.
+    return { resultType: api_types_3.Type.object, ...formula };
 }
 exports.makeMetadataFormula = makeMetadataFormula;
 /**
@@ -477,6 +483,8 @@ exports.simpleAutocomplete = simpleAutocomplete;
  * });
  * ```
  */
+// we had to fallback OptionT to string since there's no easy way to tell type of T[valueKey] in
+// typescript.
 function autocompleteSearchObjects(search, objs, displayKey, valueKey) {
     const normalizedSearch = search.toLowerCase();
     const filtered = objs.filter(o => o[displayKey].toLowerCase().includes(normalizedSearch));
@@ -570,9 +578,7 @@ function makeSyncTable({ name, identityName, schema: schemaDef, formula, connect
     }
     const getSchema = wrapMetadataFunction(getSchemaDef);
     const schema = (0, schema_2.makeObjectSchema)(schemaDef);
-    const formulaSchema = getSchema
-        ? undefined
-        : (0, schema_3.normalizeSchema)({ type: schema_1.ValueType.Array, items: schema });
+    const formulaSchema = getSchema ? undefined : (0, schema_3.normalizeSchema)({ type: schema_1.ValueType.Array, items: schema });
     const { identity, id, primary } = schema;
     if (!(primary && id && identity)) {
         throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);

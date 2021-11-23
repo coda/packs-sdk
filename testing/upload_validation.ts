@@ -833,9 +833,7 @@ const genericSyncTableSchema = zodCompleteObject<GenericSyncTableDef & {isDynami
   getSchema: formulaMetadataSchema.optional(),
 }).strict();
 
-const genericDynamicSyncTableSchema = zodCompleteObject<
-  DynamicSyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>
->({
+const genericDynamicSyncTableSchema = zodCompleteObject<DynamicSyncTableDef<any, any, ParamDefs>>({
   ...baseSyncTableSchema,
   isDynamic: zodDiscriminant(true),
   getName: formulaMetadataSchema,

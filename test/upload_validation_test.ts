@@ -513,8 +513,8 @@ describe('Pack metadata Validation', () => {
           getName: makeMetadataFormula(async () => {
             return '';
           }),
-          getSchema: makeMetadataFormula(async () => {
-            return '';
+          getSchema: makeMetadataFormula<ArraySchema<Omit<ObjectSchemaDefinition<any, any>, 'identity'>>>(async () => {
+            return [] as any;
           }),
           formula: {
             name: 'SyncTable',
@@ -785,8 +785,8 @@ describe('Pack metadata Validation', () => {
           getName: makeMetadataFormula(async () => {
             return '';
           }),
-          getSchema: makeMetadataFormula(async () => {
-            return '';
+          getSchema: makeMetadataFormula<ArraySchema<Omit<ObjectSchemaDefinition<any, any>, 'identity'>>>(async () => {
+            return [] as any;
           }),
           formula: {
             name: 'SyncTable',
@@ -818,8 +818,8 @@ describe('Pack metadata Validation', () => {
           getName: makeMetadataFormula(async () => {
             return '';
           }),
-          getSchema: makeMetadataFormula(async () => {
-            return '';
+          getSchema: makeMetadataFormula<ArraySchema<Omit<ObjectSchemaDefinition<any, any>, 'identity'>>>(async () => {
+            return [] as any;
           }),
           formula: {} as any, // broken
           getDisplayUrl: makeMetadataFormula(async () => {
@@ -943,8 +943,8 @@ describe('Pack metadata Validation', () => {
         getName: makeMetadataFormula(async () => {
           return '';
         }),
-        getSchema: makeMetadataFormula(async () => {
-          return '';
+        getSchema: makeMetadataFormula<ArraySchema<Omit<ObjectSchemaDefinition<any, any>, 'identity'>>>(async () => {
+          return [] as any;
         }),
         formula: {
           name: 'SyncTable',
@@ -964,8 +964,8 @@ describe('Pack metadata Validation', () => {
         getName: makeMetadataFormula(async () => {
           return '';
         }),
-        getSchema: makeMetadataFormula(async () => {
-          return '';
+        getSchema: makeMetadataFormula<ArraySchema<Omit<ObjectSchemaDefinition<any, any>, 'identity'>>>(async () => {
+          return [] as any;
         }),
         formula: {
           name: 'SyncTable',

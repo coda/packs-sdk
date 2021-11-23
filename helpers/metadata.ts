@@ -112,7 +112,9 @@ function compileDefaultAuthenticationMetadata(
   };
 }
 
-function compileMetadataFormulaMetadata(formula: MetadataFormula | undefined): MetadataFormulaMetadata | undefined {
+function compileMetadataFormulaMetadata(
+  formula: MetadataFormula<any> | undefined,
+): MetadataFormulaMetadata<any> | undefined {
   if (!formula) {
     return;
   }

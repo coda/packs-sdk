@@ -1,6 +1,6 @@
 # Function: makeDynamicSyncTable
 
-▸ **makeDynamicSyncTable**<`K`, `L`, `ParamDefsT`\>(`__namedParameters`): [`DynamicSyncTableDef`](../interfaces/DynamicSyncTableDef.md)<`K`, `L`, `ParamDefsT`, `any`\>
+▸ **makeDynamicSyncTable**<`K`, `L`, `ParamDefsT`\>(`__namedParameters`): [`DynamicSyncTableDef`](../interfaces/DynamicSyncTableDef.md)<`K`, `L`, `ParamDefsT`\>
 
 Creates a dynamic sync table definition.
 
@@ -36,16 +36,16 @@ coda.makeDynamicSyncTable({
 | `__namedParameters.connectionRequirement?` | [`ConnectionRequirement`](../enums/ConnectionRequirement.md) |
 | `__namedParameters.entityName?` | `string` |
 | `__namedParameters.formula` | [`SyncFormulaDef`](../interfaces/SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `any`\> |
-| `__namedParameters.getDisplayUrl` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
-| `__namedParameters.getName` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
-| `__namedParameters.getSchema` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
-| `__namedParameters.listDynamicUrls?` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
+| `__namedParameters.getDisplayUrl` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md)<`string`\> |
+| `__namedParameters.getName` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md)<`string`\> |
+| `__namedParameters.getSchema` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md)<[`ArraySchema`](../interfaces/ArraySchema.md)<[`Schema`](../types/Schema.md)\>\> |
+| `__namedParameters.listDynamicUrls?` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md)<`string`[] \| [`MetadataFormulaResultType`](../types/MetadataFormulaResultType.md)<`string`\>[]\> |
 | `__namedParameters.name` | `string` |
 
 #### Returns
 
-[`DynamicSyncTableDef`](../interfaces/DynamicSyncTableDef.md)<`K`, `L`, `ParamDefsT`, `any`\>
+[`DynamicSyncTableDef`](../interfaces/DynamicSyncTableDef.md)<`K`, `L`, `ParamDefsT`\>
 
 #### Defined in
 
-[api.ts:1437](https://github.com/coda/packs-sdk/blob/main/api.ts#L1437)
+[api.ts:1467](https://github.com/coda/packs-sdk/blob/main/api.ts#L1467)

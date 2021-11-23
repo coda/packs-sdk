@@ -1,5 +1,6 @@
 import type {$Values} from './type_utils';
 import type {ArraySchema} from './schema';
+import type {AutoCompleteFunctionDefReturnType} from './api';
 import type {Continuation} from './api';
 import type {MetadataFormula} from './api';
 
@@ -228,7 +229,13 @@ export interface ParamDef<T extends UnionType> {
    */
   // TODO: Allow authors to optionally specify an array of string or array of display/value pairs here
   // and we'll wrap this into an autocomplete formula on their behalf.
-  autocomplete?: MetadataFormula;
+  autocomplete?: MetadataFormula<
+    T extends Type.number
+      ? AutoCompleteFunctionDefReturnType<number>
+      : T extends Type.string
+      ? AutoCompleteFunctionDefReturnType<string>
+      : any
+  >;
   /**
    * The default value to be used for this parameter if it is not specified by the user.
    */

@@ -1,8 +1,10 @@
+import type {ArraySchema} from './schema';
 import type {Authentication} from './types';
 import type {AuthenticationType} from './types';
 import type {DistributiveOmit} from './type_utils';
 import type {Format} from './types';
 import type {MetadataFormulaMetadata} from './api';
+import type {MetadataFormulaResultType} from './api';
 import type {ObjectPackFormulaMetadata} from './api';
 import type {PackDefinition} from './types';
 import type {PackFormulaMetadata} from './api';
@@ -23,10 +25,10 @@ export type PackSyncTable = Omit<
   getter: PackFormulaMetadata;
   isDynamic?: boolean;
   hasDynamicSchema?: boolean;
-  getSchema?: MetadataFormulaMetadata;
-  getName?: MetadataFormulaMetadata;
-  getDisplayUrl?: MetadataFormulaMetadata;
-  listDynamicUrls?: MetadataFormulaMetadata;
+  getSchema?: MetadataFormulaMetadata<ArraySchema>;
+  getName?: MetadataFormulaMetadata<string>;
+  getDisplayUrl?: MetadataFormulaMetadata<string>;
+  listDynamicUrls?: MetadataFormulaMetadata<Array<MetadataFormulaResultType<string>> | string[]>;
 };
 
 /** @hidden */
@@ -41,7 +43,7 @@ export interface PackFormulasMetadata {
 
 /** @hidden */
 export type PostSetupMetadata = Omit<PostSetup, 'getOptionsFormula'> & {
-  getOptionsFormula: MetadataFormulaMetadata;
+  getOptionsFormula: MetadataFormulaMetadata<Array<MetadataFormulaResultType<string>>>;
 };
 
 /** @hidden */
@@ -49,8 +51,8 @@ export type AuthenticationMetadata = DistributiveOmit<
   Authentication,
   'getConnectionName' | 'getConnectionUserId' | 'postSetup'
 > & {
-  getConnectionName?: MetadataFormulaMetadata;
-  getConnectionUserId?: MetadataFormulaMetadata;
+  getConnectionName?: MetadataFormulaMetadata<string>;
+  getConnectionUserId?: MetadataFormulaMetadata<string>;
   postSetup?: PostSetupMetadata[];
 };
 

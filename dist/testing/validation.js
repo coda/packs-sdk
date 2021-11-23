@@ -298,7 +298,8 @@ function validateObject(result, schema, context) {
     }
     const idValue = schema.id && schema.id in result ? result[schema.id] : undefined;
     // Some objects will return an id field of 0, but other falsy values (i.e. '') are more likely to be actual errors
-    if (schema.id && schema.id in result &&
+    if (schema.id &&
+        schema.id in result &&
         (!objectUtils.isDefined(idValue) || (!idValue && !ACCEPTED_FALSY_VALUES.includes(idValue)))) {
         errors.push({
             message: `Schema declares "${schema.id}" as an id property but an empty value was found in result.`,

@@ -12,7 +12,7 @@ Indicates a parameter that is a Coda boolean value.
 
 #### Defined in
 
-[api_types.ts:119](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L119)
+[api_types.ts:120](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L120)
 
 ___
 
@@ -24,7 +24,7 @@ Indicates a parameter that is a list of Coda boolean values.
 
 #### Defined in
 
-[api_types.ts:144](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L144)
+[api_types.ts:145](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L145)
 
 ___
 
@@ -36,7 +36,7 @@ Indicates a parameter that is a Coda date value (which includes time and datetim
 
 #### Defined in
 
-[api_types.ts:123](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L123)
+[api_types.ts:124](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L124)
 
 ___
 
@@ -53,7 +53,7 @@ elements, the beginning of the range and the end of the range.
 
 #### Defined in
 
-[api_types.ts:153](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L153)
+[api_types.ts:154](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L154)
 
 ___
 
@@ -65,7 +65,7 @@ Indicates a parameter that is a Coda rich text value that should be passed to th
 
 #### Defined in
 
-[api_types.ts:127](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L127)
+[api_types.ts:128](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L128)
 
 ___
 
@@ -77,7 +77,7 @@ Indicates a parameter that is a list of Coda rich text values that should be pas
 
 #### Defined in
 
-[api_types.ts:157](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L157)
+[api_types.ts:158](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L158)
 
 ___
 
@@ -89,7 +89,7 @@ Indicates a parameter that is a Coda image. The pack is passed an image URL.
 
 #### Defined in
 
-[api_types.ts:131](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L131)
+[api_types.ts:132](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L132)
 
 ___
 
@@ -101,7 +101,7 @@ Indicates a parameter that is a list of Coda image values. The pack is passed a 
 
 #### Defined in
 
-[api_types.ts:161](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L161)
+[api_types.ts:162](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L162)
 
 ___
 
@@ -113,7 +113,7 @@ Indicates a parameter that is a Coda number value.
 
 #### Defined in
 
-[api_types.ts:115](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L115)
+[api_types.ts:116](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L116)
 
 ___
 
@@ -125,7 +125,7 @@ Indicates a parameter that is a list of Coda number values.
 
 #### Defined in
 
-[api_types.ts:140](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L140)
+[api_types.ts:141](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L141)
 
 ___
 
@@ -137,7 +137,7 @@ Indicates a parameter that is a Coda text value.
 
 #### Defined in
 
-[api_types.ts:111](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L111)
+[api_types.ts:112](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L112)
 
 ___
 
@@ -149,4 +149,4 @@ Indicates a parameter that is a list of Coda text values.
 
 #### Defined in
 
-[api_types.ts:136](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L136)
+[api_types.ts:137](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L137)

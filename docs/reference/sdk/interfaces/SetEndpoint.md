@@ -28,13 +28,13 @@ for example, "Choose an instance to use with this account".
 
 #### Defined in
 
-[types.ts:176](https://github.com/coda/packs-sdk/blob/main/types.ts#L176)
+[types.ts:177](https://github.com/coda/packs-sdk/blob/main/types.ts#L177)
 
 ___
 
 ### getOptionsFormula
 
-• **getOptionsFormula**: [`MetadataFormula`](../types/MetadataFormula.md)
+• **getOptionsFormula**: [`MetadataFormula`](../types/MetadataFormula.md)<[`MetadataFormulaResultType`](../types/MetadataFormulaResultType.md)<`string`\>[]\>
 
 The formula that fetches endpoints for the user
 to select from. Like any [MetadataFormula](../types/MetadataFormula.md), this formula should return
@@ -44,7 +44,7 @@ label to the user rather than rendering the underlying value directly.
 
 #### Defined in
 
-[types.ts:184](https://github.com/coda/packs-sdk/blob/main/types.ts#L184)
+[types.ts:186](https://github.com/coda/packs-sdk/blob/main/types.ts#L186)
 
 ___
 
@@ -57,7 +57,7 @@ An arbitrary name for this step, to distinguish from other steps of the same typ
 
 #### Defined in
 
-[types.ts:171](https://github.com/coda/packs-sdk/blob/main/types.ts#L171)
+[types.ts:172](https://github.com/coda/packs-sdk/blob/main/types.ts#L172)
 
 ___
 
@@ -69,4 +69,4 @@ Identifies this as a SetEndpoint step.
 
 #### Defined in
 
-[types.ts:166](https://github.com/coda/packs-sdk/blob/main/types.ts#L166)
+[types.ts:167](https://github.com/coda/packs-sdk/blob/main/types.ts#L167)

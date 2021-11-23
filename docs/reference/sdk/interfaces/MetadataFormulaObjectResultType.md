@@ -1,7 +1,13 @@
-# Interface: MetadataFormulaObjectResultType
+# Interface: MetadataFormulaObjectResultType<T\>
 
 The return type for a metadata formula that should return a different display to the user
 than is used internally.
+
+## Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends `string` \| `number` = `string` \| `number` |
 
 ## Properties
 
@@ -13,7 +19,7 @@ The value displayed to the user in the UI.
 
 #### Defined in
 
-[api.ts:887](https://github.com/coda/packs-sdk/blob/main/api.ts#L887)
+[api.ts:892](https://github.com/coda/packs-sdk/blob/main/api.ts#L892)
 
 ___
 
@@ -50,16 +56,16 @@ as the `value` of the result that was clicked on.
 
 #### Defined in
 
-[api.ts:918](https://github.com/coda/packs-sdk/blob/main/api.ts#L918)
+[api.ts:923](https://github.com/coda/packs-sdk/blob/main/api.ts#L923)
 
 ___
 
 ### value
 
-• **value**: `string` \| `number`
+• **value**: `T`
 
 The value used for the formula argument when the user selects this option.
 
 #### Defined in
 
-[api.ts:889](https://github.com/coda/packs-sdk/blob/main/api.ts#L889)
+[api.ts:894](https://github.com/coda/packs-sdk/blob/main/api.ts#L894)

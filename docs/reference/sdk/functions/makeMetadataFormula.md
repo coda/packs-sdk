@@ -1,6 +1,6 @@
 # Function: makeMetadataFormula
 
-▸ **makeMetadataFormula**(`execute`, `options?`): [`MetadataFormula`](../types/MetadataFormula.md)
+▸ **makeMetadataFormula**<`ResultT`\>(`execute`, `options?`): [`MetadataFormula`](../types/MetadataFormula.md)<`ResultT`\>
 
 A wrapper that generates a formula definition from the function that implements a metadata formula.
 It is uncommon to ever need to call this directly, normally you would just define the JavaScript
@@ -13,18 +13,24 @@ and an `execute` function body. This includes supporting utilities like paramter
 This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
 it is shaped like a Coda formula to be used at runtime.
 
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ResultT` | extends `MetadataFunctionResultType` |
+
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `execute` | [`MetadataFunction`](../types/MetadataFunction.md) |
+| `execute` | [`MetadataFunction`](../types/MetadataFunction.md)<`ResultT`\> |
 | `options?` | `Object` |
 | `options.connectionRequirement?` | [`ConnectionRequirement`](../enums/ConnectionRequirement.md) |
 
 #### Returns
 
-[`MetadataFormula`](../types/MetadataFormula.md)
+[`MetadataFormula`](../types/MetadataFormula.md)<`ResultT`\>
 
 #### Defined in
 
-[api.ts:996](https://github.com/coda/packs-sdk/blob/main/api.ts#L996)
+[api.ts:1021](https://github.com/coda/packs-sdk/blob/main/api.ts#L1021)

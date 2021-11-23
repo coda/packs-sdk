@@ -12,4 +12,4 @@ Identifies this as not using authentication. You may also omit any definition to
 
 #### Defined in
 
-[types.ts:143](https://github.com/coda/packs-sdk/blob/main/types.ts#L143)
+[types.ts:144](https://github.com/coda/packs-sdk/blob/main/types.ts#L144)

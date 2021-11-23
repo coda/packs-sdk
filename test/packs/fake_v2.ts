@@ -33,6 +33,40 @@ pack.addFormula({
 });
 
 pack.addFormula({
+  name: 'String',
+  description: 'A formula that returns a string',
+  parameters: [
+    coda.makeParameter({
+      type: coda.ParameterType.String,
+      name: 'name',
+      description: 'the name of the pereson',
+      autocomplete: async () => ['a', 'b', 'c'],
+    }),
+  ],
+  resultType: coda.ValueType.String,
+  execute: async ([name]) => {
+    return name;
+  },
+});
+
+pack.addFormula({
+  name: 'StringWithObjectAutocomplete',
+  description: 'A formula that returns a string',
+  parameters: [
+    coda.makeParameter({
+      type: coda.ParameterType.String,
+      name: 'name',
+      description: 'the name of the pereson',
+      autocomplete: async () => [{display: 'a', value: 'b'}],
+    }),
+  ],
+  resultType: coda.ValueType.String,
+  execute: async ([name]) => {
+    return name;
+  },
+});
+
+pack.addFormula({
   name: 'Throw',
   description: 'A Hello World example.',
   parameters: [

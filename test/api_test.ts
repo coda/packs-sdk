@@ -31,9 +31,9 @@ describe('API test', () => {
         formula: {
           name: 'Whatever',
           description: 'Whatever',
-          parameters: [makeStringParameter('arg', 'whatever', {autocomplete: makeMetadataFormula(async () => 'Hi')})],
+          parameters: [makeStringParameter('arg', 'whatever', {autocomplete: makeMetadataFormula(async () => ['Hi'])})],
           varargParameters: [
-            makeStringParameter('whatever', 'arg', {autocomplete: makeMetadataFormula(async () => 'Hi')}),
+            makeStringParameter('whatever', 'arg', {autocomplete: makeMetadataFormula(async () => ['Hi'])}),
           ],
           async execute() {
             return {result: []};

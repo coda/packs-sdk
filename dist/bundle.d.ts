@@ -1013,7 +1013,7 @@ export interface ParamDef<T extends UnionType> {
 	 * If you have a hardcoded list of valid values, you would only need to use
 	 * {@link makeSimpleAutocompleteMetadataFormula}.
 	 */
-	autocomplete?: MetadataFormula;
+	autocomplete?: MetadataFormula<T extends Type.number ? AutoCompleteFunctionDefReturnType<number> : T extends Type.string ? AutoCompleteFunctionDefReturnType<string> : any>;
 	/**
 	 * The default value to be used for this parameter if it is not specified by the user.
 	 */
@@ -1650,7 +1650,7 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
 	/** See {@link SyncTableOptions.formula} */
 	getter: SyncFormula<K, L, ParamDefsT, SchemaT>;
 	/** See {@link DynamicOptions.getSchema} */
-	getSchema?: MetadataFormula;
+	getSchema?: MetadataFormula<ArraySchema>;
 	/** See {@link DynamicOptions.entityName} */
 	entityName?: string;
 }
@@ -1658,17 +1658,17 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
  * instead, define dynamic sync tables using {@link makeDynamicSyncTable}.
  */
-export interface DynamicSyncTableDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> extends SyncTableDef<K, L, ParamDefsT, SchemaT> {
+export interface DynamicSyncTableDef<K extends string, L extends string, ParamDefsT extends ParamDefs> extends SyncTableDef<K, L, ParamDefsT, any> {
 	/** Identifies this sync table as dynamic. */
 	isDynamic: true;
 	/** See {@link DynamicSyncTableOptions.getSchema} */
-	getSchema: MetadataFormula;
+	getSchema: MetadataFormula<ArraySchema>;
 	/** See {@link DynamicSyncTableOptions.getName} */
-	getName: MetadataFormula;
+	getName: MetadataFormula<string>;
 	/** See {@link DynamicSyncTableOptions.getDisplayUrl} */
-	getDisplayUrl: MetadataFormula;
+	getDisplayUrl: MetadataFormula<string>;
 	/** See {@link DynamicSyncTableOptions.listDynamicUrls} */
-	listDynamicUrls?: MetadataFormula;
+	listDynamicUrls?: MetadataFormula<Array<MetadataFormulaResultType<string>> | string[]>;
 }
 /**
  * Container for arbitrary data about which page of data to retrieve in this sync invocation.
@@ -1719,17 +1719,21 @@ export declare type GenericSyncTable = SyncTableDef<any, any, ParamDefs, any>;
  * Should not be necessary to use directly, see {@link makeDynamicSyncTable}
  * for defining a sync table.
  */
-export declare type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, ParamDefs, any>;
+export declare type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, ParamDefs>;
 /**
  * Union of type definitions for sync tables..
  * Should not be necessary to use directly, see {@link makeSyncTable} or {@link makeDynamicSyncTable}
  * for defining a sync table.
  */
 export declare type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
+/**
+ * Type definition of autocomplete return.
+ */
+export declare type AutoCompleteFunctionDefReturnType<T extends number | string> = Array<T | SimpleAutocompleteOption<T>>;
 /** Options you can specify when defining a parameter using {@link makeParameter}. */
 export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, "type" | "autocomplete"> & {
 	type: T;
-	autocomplete?: T extends ParameterType.Number | ParameterType.String ? MetadataFormulaDef | Array<TypeMap[ParameterTypeMap[T]] | SimpleAutocompleteOption<T>> : undefined;
+	autocomplete?: T extends ParameterType.Number | ParameterType.String ? MetadataFormulaDef<AutoCompleteFunctionDefReturnType<TypeMap[ParameterTypeMap[T]]>> | AutoCompleteFunctionDefReturnType<TypeMap[ParameterTypeMap[T]]> : undefined;
 };
 /**
  * Create a definition for a parameter for a formula or sync.
@@ -1986,11 +1990,11 @@ export declare type FormulaDefinition<ParamDefsT extends ParamDefs, ResultT exte
  * The return type for a metadata formula that should return a different display to the user
  * than is used internally.
  */
-export interface MetadataFormulaObjectResultType {
+export interface MetadataFormulaObjectResultType<T extends string | number = string | number> {
 	/** The value displayed to the user in the UI. */
 	display: string;
 	/** The value used for the formula argument when the user selects this option. */
-	value: string | number;
+	value: T;
 	/**
 	 * If true, indicates that this result has child results nested underneath it.
 	 * This option only applies to {@link DynamicSyncTableOptions.listDynamicUrls}.
@@ -2031,7 +2035,7 @@ export declare type MetadataContext = Record<string, any>;
 /**
  * The type of values that can be returned from a {@link MetadataFormula}.
  */
-export declare type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
+export declare type MetadataFormulaResultType<T extends string | number = string | number> = T | MetadataFormulaObjectResultType<T>;
 /**
  * A formula that returns metadata relating to a core pack building block, like a sync table,
  * a formula parameter, or a user account. Examples include {@link DynamicOptions.getSchema},
@@ -2061,23 +2065,27 @@ export declare type MetadataFormulaResultType = string | number | MetadataFormul
  * values of the others. This is dictionary mapping the names of each parameter to its
  * current value.
  */
-export declare type MetadataFormula = BaseFormula<[
+export declare type MetadataFormula<ResultT extends MetadataFunctionResultType> = BaseFormula<[
 	ParamDef<Type.string>,
 	ParamDef<Type.string>
-], any> & {
+], ResultT> & {
 	schema?: any;
 };
-export declare type MetadataFormulaMetadata = Omit<MetadataFormula, "execute">;
+export declare type MetadataFormulaMetadata<ResultT extends MetadataFunctionResultType = any> = Omit<MetadataFormula<ResultT>, "execute">;
 /**
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
  */
-export declare type MetadataFunction = <K extends string, L extends string>(context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<K, L>>;
+export declare type MetadataFunction<ResultT extends MetadataFunctionResultType> = (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<ResultT>;
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
  * be the JavaScript function that implements a metadata formula (strongly recommended)
  * or a full metadata formula definition (mostly supported for legacy code).
  */
-export declare type MetadataFormulaDef = MetadataFormula | MetadataFunction;
+export declare type MetadataFormulaDef<ResultT extends MetadataFunctionResultType> = MetadataFormula<ResultT> | MetadataFunction<ResultT>;
+/**
+ * Type definition of metadata formula returns.
+ */
+export declare type MetadataFunctionResultType = string | number | MetadataFormulaResultType[] | ArraySchema | ObjectSchemaDefinition<any, any>;
 /**
  * A wrapper that generates a formula definition from the function that implements a metadata formula.
  * It is uncommon to ever need to call this directly, normally you would just define the JavaScript
@@ -2090,18 +2098,18 @@ export declare type MetadataFormulaDef = MetadataFormula | MetadataFunction;
  * This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
  * it is shaped like a Coda formula to be used at runtime.
  */
-export declare function makeMetadataFormula(execute: MetadataFunction, options?: {
+export declare function makeMetadataFormula<ResultT extends MetadataFunctionResultType>(execute: MetadataFunction<ResultT>, options?: {
 	connectionRequirement?: ConnectionRequirement;
-}): MetadataFormula;
+}): MetadataFormula<ResultT>;
 /**
  * A result from a parameter autocomplete function that pairs a UI display value with
  * the underlying option that will be used in the formula when selected.
  */
-export interface SimpleAutocompleteOption<T extends ParameterType.Number | ParameterType.String> {
+export interface SimpleAutocompleteOption<T extends number | string> {
 	/** Text that will be displayed to the user in UI for this option. */
 	display: string;
 	/** The actual value that will get used in the formula if this option is selected. */
-	value: TypeMap[ParameterTypeMap[T]];
+	value: T;
 }
 /**
  * Utility to search over an array of autocomplete results and return only those that
@@ -2123,7 +2131,7 @@ export interface SimpleAutocompleteOption<T extends ParameterType.Number | Param
  * }
  * ```
  */
-export declare function simpleAutocomplete<T extends ParameterType.Number | ParameterType.String>(search: string | undefined, options: Array<TypeMap[ParameterTypeMap[T]] | SimpleAutocompleteOption<T>>): Promise<MetadataFormulaObjectResultType[]>;
+export declare function simpleAutocomplete<T extends number | string>(search: string | undefined, options: Array<T | SimpleAutocompleteOption<T>>): Promise<Array<MetadataFormulaObjectResultType<T>>>;
 /**
  * A helper to search over a list of objects representing candidate search results,
  * filtering to only those that match a search string, and converting the matching
@@ -2155,13 +2163,13 @@ export declare function simpleAutocomplete<T extends ParameterType.Number | Para
  * });
  * ```
  */
-export declare function autocompleteSearchObjects<T>(search: string, objs: T[], displayKey: keyof T, valueKey: keyof T): Promise<MetadataFormulaObjectResultType[]>;
+export declare function autocompleteSearchObjects<OptionT extends string | number = string, T = any>(search: string, objs: T[], displayKey: keyof T, valueKey: keyof T): Promise<Array<MetadataFormulaObjectResultType<OptionT>>>;
 /**
  * @deprecated If you have a hardcoded array of autocomplete options, simply include that array
  * as the value of the `autocomplete` property in your parameter definition. There is no longer
  * any needed to wrap a value with this formula.
  */
-export declare function makeSimpleAutocompleteMetadataFormula<T extends ParameterType.Number | ParameterType.String>(options: Array<TypeMap[ParameterTypeMap[T]] | SimpleAutocompleteOption<T>>): MetadataFormula;
+export declare function makeSimpleAutocompleteMetadataFormula<T extends number | string>(options: Array<T | SimpleAutocompleteOption<T>>): MetadataFormula<Array<MetadataFormulaObjectResultType<T>>>;
 /**
  * A set of options used internally by {@link makeDynamicSyncTable}, or for static
  * sync tables that have a dynamic schema.
@@ -2175,7 +2183,7 @@ export interface DynamicOptions {
 	 * this if you table has a schema that varies based on the user account, but
 	 * does not require a {@link dynamicUrl}.
 	 */
-	getSchema?: MetadataFormulaDef;
+	getSchema?: MetadataFormulaDef<ArraySchema>;
 	/** See {@link DynamicSyncTableOptions.entityName} */
 	entityName?: string;
 }
@@ -2241,23 +2249,23 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	/**
 	 * A formula that returns the name of this table.
 	 */
-	getName: MetadataFormulaDef;
+	getName: MetadataFormulaDef<string>;
 	/**
 	 * A formula that returns the schema for this table.
 	 */
-	getSchema: MetadataFormulaDef;
+	getSchema: MetadataFormulaDef<ArraySchema>;
 	/**
 	 * A formula that that returns a browser-friendly url representing the
 	 * resource being synced. The Coda UI links to this url as the source
 	 * of the table data. This is typically a browser-friendly form of the
 	 * `dynamicUrl`, which is typically an API url.
 	 */
-	getDisplayUrl: MetadataFormulaDef;
+	getDisplayUrl: MetadataFormulaDef<string>;
 	/**
 	 * A formula that returns a list of available dynamic urls that can be
 	 * used to create an instance of this dynamic sync table.
 	 */
-	listDynamicUrls?: MetadataFormulaDef;
+	listDynamicUrls?: MetadataFormulaDef<Array<MetadataFormulaResultType<string>> | string[]>;
 	/**
 	 * The definition of the formula that implements this sync. This is a Coda packs formula
 	 * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
@@ -2312,14 +2320,14 @@ export declare function makeSyncTable<K extends string, L extends string, ParamD
  */
 export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ name, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, }: {
 	name: string;
-	getName: MetadataFormulaDef;
-	getSchema: MetadataFormulaDef;
+	getName: MetadataFormulaDef<string>;
+	getSchema: MetadataFormulaDef<ArraySchema>;
 	formula: SyncFormulaDef<K, L, ParamDefsT, any>;
-	getDisplayUrl: MetadataFormulaDef;
-	listDynamicUrls?: MetadataFormulaDef;
+	getDisplayUrl: MetadataFormulaDef<string>;
+	listDynamicUrls?: MetadataFormulaDef<Array<MetadataFormulaResultType<string>> | string[]>;
 	entityName?: string;
 	connectionRequirement?: ConnectionRequirement;
-}): DynamicSyncTableDef<K, L, ParamDefsT, any>;
+}): DynamicSyncTableDef<K, L, ParamDefsT>;
 /**
  * Helper to generate a formula that fetches a list of entities from a given URL and returns them.
  *
@@ -2578,7 +2586,7 @@ export interface SetEndpoint {
 	 * `{display: '<display name>', value: '<endpoint>'}` if wanting to render a display
 	 * label to the user rather than rendering the underlying value directly.
 	 */
-	getOptionsFormula: MetadataFormula;
+	getOptionsFormula: MetadataFormula<Array<MetadataFormulaResultType<string>>>;
 }
 /**
  * Enumeration of post-account-setup step types. See {@link PostSetup}.
@@ -2610,7 +2618,7 @@ export interface BaseAuthentication {
 	 * If omitted, or if the function returns an empty value, the account will be labeled
 	 * with the creating user's Coda username.
 	 */
-	getConnectionName?: MetadataFormula;
+	getConnectionName?: MetadataFormula<string>;
 	/**
 	 * A function that is called when a user sets up a new account, that returns the ID of
 	 * that account in the third-party system being called.
@@ -2620,7 +2628,7 @@ export interface BaseAuthentication {
 	 *
 	 * @ignore
 	 */
-	getConnectionUserId?: MetadataFormula;
+	getConnectionUserId?: MetadataFormula<string>;
 	/**
 	 * Indicates the default manner in which a user's account is expected to be used by this pack,
 	 * e.g. is this account used for retrieving data, taking actions, or both.
@@ -2945,9 +2953,9 @@ export interface VariousAuthentication {
 export declare type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication;
 export declare type AsAuthDef<T extends BaseAuthentication> = Omit<T, "getConnectionName" | "getConnectionUserId"> & {
 	/** See {@link BaseAuthentication.getConnectionName} */
-	getConnectionName?: MetadataFormulaDef;
+	getConnectionName?: MetadataFormulaDef<string>;
 	/** See {@link BaseAuthentication.getConnectionUserId} */
-	getConnectionUserId?: MetadataFormulaDef;
+	getConnectionUserId?: MetadataFormulaDef<string>;
 };
 /**
  * The union of supported authentication definitions. These represent simplified configurations
@@ -3379,10 +3387,10 @@ export declare type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getS
 	getter: PackFormulaMetadata;
 	isDynamic?: boolean;
 	hasDynamicSchema?: boolean;
-	getSchema?: MetadataFormulaMetadata;
-	getName?: MetadataFormulaMetadata;
-	getDisplayUrl?: MetadataFormulaMetadata;
-	listDynamicUrls?: MetadataFormulaMetadata;
+	getSchema?: MetadataFormulaMetadata<ArraySchema>;
+	getName?: MetadataFormulaMetadata<string>;
+	getDisplayUrl?: MetadataFormulaMetadata<string>;
+	listDynamicUrls?: MetadataFormulaMetadata<Array<MetadataFormulaResultType<string>> | string[]>;
 };
 /** @hidden */
 export interface PackFormatMetadata extends Omit<Format, "matchers"> {
@@ -3394,12 +3402,12 @@ export interface PackFormulasMetadata {
 }
 /** @hidden */
 export declare type PostSetupMetadata = Omit<PostSetup, "getOptionsFormula"> & {
-	getOptionsFormula: MetadataFormulaMetadata;
+	getOptionsFormula: MetadataFormulaMetadata<Array<MetadataFormulaResultType<string>>>;
 };
 /** @hidden */
 export declare type AuthenticationMetadata = DistributiveOmit<Authentication, "getConnectionName" | "getConnectionUserId" | "postSetup"> & {
-	getConnectionName?: MetadataFormulaMetadata;
-	getConnectionUserId?: MetadataFormulaMetadata;
+	getConnectionName?: MetadataFormulaMetadata<string>;
+	getConnectionUserId?: MetadataFormulaMetadata<string>;
 	postSetup?: PostSetupMetadata[];
 };
 /** @hidden */

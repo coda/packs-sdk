@@ -12,7 +12,7 @@ Information about the Coda environment and doc this formula was invoked from, fo
 
 #### Defined in
 
-[api_types.ts:572](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L572)
+[api_types.ts:579](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L579)
 
 ___
 
@@ -24,4 +24,4 @@ The base URL of the Coda environment executing this formula. Only for Coda inter
 
 #### Defined in
 
-[api_types.ts:568](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L568)
+[api_types.ts:575](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L575)

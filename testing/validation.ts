@@ -341,8 +341,11 @@ function validateObject<ResultT extends Record<string, unknown>>(
 
   const idValue = schema.id && schema.id in result ? result[schema.id] : undefined;
   // Some objects will return an id field of 0, but other falsy values (i.e. '') are more likely to be actual errors
-  if (schema.id && schema.id in result && 
-    (!objectUtils.isDefined(idValue) || (!idValue && !ACCEPTED_FALSY_VALUES.includes(idValue)))) {
+  if (
+    schema.id &&
+    schema.id in result &&
+    (!objectUtils.isDefined(idValue) || (!idValue && !ACCEPTED_FALSY_VALUES.includes(idValue)))
+  ) {
     errors.push({
       message: `Schema declares "${schema.id}" as an id property but an empty value was found in result.`,
     });
@@ -352,7 +355,7 @@ function validateObject<ResultT extends Record<string, unknown>>(
 
 function validateArray<ResultT extends any>(
   result: ResultT,
-  schema: ArraySchema<Schema>,
+  schema: ArraySchema,
   context: ResultValidationContext,
 ): ValidationError[] {
   if (!Array.isArray(result)) {

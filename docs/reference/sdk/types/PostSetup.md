@@ -10,4 +10,4 @@ use cases and step types in the future.
 
 #### Defined in
 
-[types.ts:204](https://github.com/coda/packs-sdk/blob/main/types.ts#L204)
+[types.ts:206](https://github.com/coda/packs-sdk/blob/main/types.ts#L206)
