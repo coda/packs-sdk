@@ -130,8 +130,7 @@ export class AuthenticatingFetcher implements Fetcher {
     }
 
     try {
-      const contentType = response.headers['content-type'];
-      if (contentType && (contentType.includes('text/xml') || contentType.includes('application/xml'))) {
+      if (isXmlContentType(response.headers['content-type'])) {
         responseBody = await xml2js.parseStringPromise(responseBody, {explicitRoot: false});
       } else {
         responseBody = JSON.parse(responseBody);
@@ -382,7 +381,13 @@ export class AuthenticatingFetcher implements Fetcher {
           secretAccessKey,
         };
         const resultHeaders = await this._signAwsRequest({
-          body, method, url, service, headers: headers || {}, credentials});
+          body,
+          method,
+          url,
+          service,
+          headers: headers || {},
+          credentials,
+        });
         return {
           url,
           body,
@@ -410,7 +415,13 @@ export class AuthenticatingFetcher implements Fetcher {
           expiration: assumeRoleResult.Credentials?.Expiration,
         };
         const resultHeaders = await this._signAwsRequest({
-          body, method, url, service, headers: headers || {}, credentials});
+          body,
+          method,
+          url,
+          service,
+          headers: headers || {},
+          credentials,
+        });
         return {
           url,
           body,
@@ -426,7 +437,14 @@ export class AuthenticatingFetcher implements Fetcher {
     }
   }
 
-  private async _signAwsRequest({body, credentials, headers, method, service, url}: {
+  private async _signAwsRequest({
+    body,
+    credentials,
+    headers,
+    method,
+    service,
+    url,
+  }: {
     body?: any;
     credentials: AWSCredentials;
     headers: {[key: string]: string};
@@ -438,7 +456,7 @@ export class AuthenticatingFetcher implements Fetcher {
     const query = Object.fromEntries(searchParams.entries());
 
     const region = this._getAwsRegion({service, hostname});
-    
+
     const sig = new SignatureV4({
       applyChecksum: true,
       credentials,
@@ -465,13 +483,13 @@ export class AuthenticatingFetcher implements Fetcher {
     if (['iam', 'cloudfront', 'globalaccelerator', 'route53', 'sts'].includes(service)) {
       return 'us-east-1';
     }
-  
+
     // AWS URLs are typically of the form serviceName.region.amazonaws.com, but can have more parts in front.
     const parts = hostname.split('.');
     if (parts.length < 4) {
       return 'us-east-1';
     }
-  
+
     return parts[parts.length - 3];
   }
 
@@ -609,4 +627,14 @@ function addQueryParam(url: string, param: string, value: string): string {
     parsedUrl.searchParams.set(key, entryValue);
   }
   return parsedUrl.href;
+}
+
+const ApplicationXmlRegexp = /application\/(\S+\+)?xml/;
+
+function isXmlContentType(contentTypeHeader: string | undefined): boolean {
+  if (!contentTypeHeader) {
+    return false;
+  }
+  const header = contentTypeHeader.toLocaleLowerCase();
+  return header.includes('text/xml') || ApplicationXmlRegexp.test(header);
 }
