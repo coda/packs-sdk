@@ -8,3 +8,8 @@ title: Schemas
 [See here][doc] for more information on how to define schemas.
 
 [doc]: https://coda.io/d/Pack-Studio-Beta_dUBjm8jbi39/Building-with-the-SDK_suP0J#_lupyh
+
+
+## References
+
+TODO

@@ -335,25 +335,30 @@ export const Examples: Example[] = [
     name: 'Sync tables',
     category: ExampleCategory.Topic,
     triggerTokens: ['addSyncTable'],
-    contentFile: './examples/sync-table/sync_table.md',
+    contentFile: './examples/sync-table/README.md',
     linkData: {
       type: UrlType.SdkReferencePath,
-      url: '/reference/sdk/classes/PackDefinitionBuilder#addSyncTable',
+      url: '/guides/blocks/sync-tables',
     },
     exampleSnippets: [
       {
         name: 'Template',
-        content: '',
+        content: 'The basic structure of a sync table.',
         codeFile: './snippets/sync_table.ts',
       },
       {
-        name: 'Cats',
-        content: '',
+        name: 'With parameter (Cats)',
+        content: 'A sync table that uses a parameter. This sample syncs cat photos from the CatAAS API.',
         codeFile: './examples/cats/sync_table.ts',
       },
       {
-        name: 'Todoist',
-        content: '',
+        name: 'With continuation (Dungeons and Dragons)',
+        content: 'A sync table that uses continuations to sync data using multiple executions. This sample syncs the spells available in Dungeons and Dragons.',
+        codeFile: './examples/dnd/sync_table.ts',
+      },
+      {
+        name: 'With authentication (Todoist)',
+        content: 'A sync table that pulls from an API using authentication. This sample syncs the tasks from a user\'s Todoist account.',
         codeFile: './examples/todoist/sync_table.ts',
       },
     ],
@@ -512,6 +517,22 @@ export const Examples: Example[] = [
         name: 'pack.ts',
         content: '',
         codeFile: './examples/cats/full.ts',
+      },
+    ],
+  },
+  {
+    name: 'Dungeons and Dragons',
+    category: ExampleCategory.Full,
+    triggerTokens: [],
+    contentFile: './examples/dnd/README.md',
+    linkData: {
+      type: UrlType.SamplePage,
+    },
+    exampleSnippets: [
+      {
+        name: 'pack.ts',
+        content: '',
+        codeFile: './examples/dnd/full.ts',
       },
     ],
   },
