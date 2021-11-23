@@ -219,7 +219,7 @@ ___
 
 ### quotas
 
-• `Optional` **quotas**: `Partial`<`Object`\>
+• `Optional` **quotas**: `Partial`<{ `Basic`: `Quota` ; `Enterprise`: `Quota` ; `Pro`: `Quota` ; `Team`: `Quota`  }\>
 
 #### Defined in
 
