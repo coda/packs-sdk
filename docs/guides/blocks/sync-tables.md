@@ -80,7 +80,7 @@ pack.addSyncTable({
 });
 ```
 
-This formula fetches items from the external data source, adjust them to fit the schema, and returns them. The return value must be a [`SyncFormulaResult`][SyncFormulaResult], which is an object where `result` property contains the array of item objects.
+This formula fetches items from the external data source, adjust them to fit the schema, and returns them. The return value must be a [`SyncFormulaResult`][SyncFormulaResult], which is an object where the `result` property contains the array of item objects.
 
 ```ts
 pack.addSyncTable({
@@ -103,7 +103,7 @@ pack.addSyncTable({
 });
 ```
 
-Your formula must return the full set of items on each sync, and Coda will determine how to update existing rows, remove old rows, etc. This could take a long time for large datasets or slow APIs, and the [Long-running syncs](#longrunning) section has more information on how to handle this.
+On each sync your code must returns the full set of items, and Coda will determine how to update existing rows, remove old rows, etc. This could take a long time for large datasets or slow APIs, and the [Long-running syncs](#longrunning) section has more information on how to handle this.
 
 
 ## Naming
@@ -120,7 +120,7 @@ By default the identity name is also used as the column name for the first colum
 
 ## Row limits
 
-Each sync table has a used-defined maximum number of rows, which defaults to 1000 but can be set as high as 10,000. Any items returned by your sync table beyond that limit will be dropped.
+Each sync table has a user-defined maximum number of rows, which defaults to 1000 but can be set as high as 10,000. Any items returned by your sync table beyond that limit will be dropped.
 
 
 ## Long-running syncs {: #longrunning}
@@ -145,7 +145,7 @@ pack.addSyncTable({
       // Determine if there are more items left to sync...
       if (moreItemsLeft) {
         nextContinuation = {
-          // Save you place...
+          // Save your place...
         };
       }
       return {
