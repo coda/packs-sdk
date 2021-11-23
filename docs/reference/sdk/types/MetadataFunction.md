@@ -6,7 +6,7 @@
 
 | Name | Type |
 | :------ | :------ |
-| `ResultT` | extends `MetadataFunctionResultType` |
+| `ResultT` | extends [`MetadataFunctionResultType`](MetadataFunctionResultType.md) |
 
 #### Type declaration
 

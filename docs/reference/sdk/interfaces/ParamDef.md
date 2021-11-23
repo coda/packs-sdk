@@ -12,7 +12,7 @@ The definition of a formula parameter.
 
 ### autocomplete
 
-• `Optional` **autocomplete**: [`MetadataFormula`](../types/MetadataFormula.md)<`T` extends [`number`](../enums/Type.md#number) ? `AutoCompleteFunctionDefReturnType`<`number`\> : `T` extends [`string`](../enums/Type.md#string) ? `AutoCompleteFunctionDefReturnType`<`string`\> : `any`\>
+• `Optional` **autocomplete**: [`MetadataFormula`](../types/MetadataFormula.md)<`T` extends [`number`](../enums/Type.md#number) ? [`AutoCompleteFunctionDefReturnType`](../types/AutoCompleteFunctionDefReturnType.md)<`number`\> : `T` extends [`string`](../enums/Type.md#string) ? [`AutoCompleteFunctionDefReturnType`](../types/AutoCompleteFunctionDefReturnType.md)<`string`\> : `any`\>
 
 A [MetadataFormula](../types/MetadataFormula.md) that returns valid values for this parameter, optionally matching a search
 query. This can be useful both if there are a fixed number of valid values for the parameter,

@@ -17,7 +17,7 @@ it is shaped like a Coda formula to be used at runtime.
 
 | Name | Type |
 | :------ | :------ |
-| `ResultT` | extends `MetadataFunctionResultType` |
+| `ResultT` | extends [`MetadataFunctionResultType`](../types/MetadataFunctionResultType.md) |
 
 #### Parameters
 

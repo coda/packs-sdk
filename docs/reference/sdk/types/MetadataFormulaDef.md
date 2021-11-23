@@ -10,7 +10,7 @@ or a full metadata formula definition (mostly supported for legacy code).
 
 | Name | Type |
 | :------ | :------ |
-| `ResultT` | extends `MetadataFunctionResultType` |
+| `ResultT` | extends [`MetadataFunctionResultType`](MetadataFunctionResultType.md) |
 
 #### Defined in
 

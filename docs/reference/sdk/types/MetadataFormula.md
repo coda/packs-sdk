@@ -34,7 +34,7 @@ current value.
 
 | Name | Type |
 | :------ | :------ |
-| `ResultT` | extends `MetadataFunctionResultType` |
+| `ResultT` | extends [`MetadataFunctionResultType`](MetadataFunctionResultType.md) |
 
 #### Defined in
 

@@ -71,6 +71,7 @@ export type {MetadataFormulaObjectResultType} from './api';
 export type {MetadataFormulaResultType} from './api';
 export type {MetadataFormula} from './api';
 export type {MetadataFunction} from './api';
+export type {MetadataFunctionResultType} from './api';
 export type {Network} from './api_types';
 export {NetworkConnection} from './api_types';
 export type {PackFormulaDef} from './api';
@@ -108,6 +109,7 @@ export {makeParameter} from './api';
 
 // Autocomplete helpers.
 export type {SimpleAutocompleteOption} from './api';
+export type {AutoCompleteFunctionDefReturnType} from './api';
 export {autocompleteSearchObjects} from './api';
 export {makeSimpleAutocompleteMetadataFormula} from './api';
 export {simpleAutocomplete} from './api';
