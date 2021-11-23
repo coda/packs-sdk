@@ -16,8 +16,7 @@ If you're new to Coda, [sign up](https://coda.io/signup) for a free account and 
 The Pack Studio is built right in to the Coda application. To get there:
 
 1. Open [Coda](https://coda.io/docs) in your browser.
-1. Click on the name of your workspace in the navigation menu on the left.
-1. Click on **Packs** in the header.
+1. Click on **Packs** in the navigation menu on the left. If you are a member of multiple workspaces you will need to select a workspace first.
 1. Click the **New Pack** button in the upper right.
 
 You are now in the Pack Studio, ready to start building!
@@ -69,12 +68,13 @@ Now that you have your Pack up and running let's make a change to how it works.
 
 1. In the Pack's panel, click the **Settings** tab.
 
-    The **Currently Installed** version of the Pack should now read **Version 2**.
+    The **INSTALLED** version of the Pack should now read **v2**.
 
     ??? info "Re-opening the Pack's panel"
         If you have navigated away from the Pack's panel, click **Explore**, **Packs & import**, and then your Pack name.
 
-1. Click the **Refresh now** :material-refresh: button.
+1. Click the **Open Pack maker tools** button.
+1. In the Pack maker tools bar, click the three dots icon :material-dots-vertical: and then **:material-refresh: Refresh Pack formulas and tables**.
 
     A **Syncing...** indicator will appear at the top of the screen while the formulas are being refreshed.
 
@@ -84,4 +84,4 @@ Your formula result should now be `Howdy World`.
 [web_ide_rebuild]: ../images/web_ide_rebuild.gif
 
 !!! tip
-    To avoid having to hit the refresh button on every update, toggle on the setting **Auto-Refresh When Version Changes**.
+    To avoid having to manually refresh the formulas on every update, click the gear icon :material-cog-outline: in the Pack maker toolbar and toggle on the **AUTO-REFRESH**  setting.
