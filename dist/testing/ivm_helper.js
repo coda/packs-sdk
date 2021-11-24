@@ -21,7 +21,7 @@ async function setupIvmContext(bundlePath, executionContext) {
     // creating an isolate with 128M memory limit.
     const isolate = new isolated_vm_1.default.Isolate({ memoryLimit: IsolateMemoryLimit });
     const ivmContext = await (0, bootstrap_1.createIsolateContext)(isolate);
-    const bundleFullPath = bundlePath.startsWith('/') ? bundlePath : path_1.default.join(process.cwd(), bundlePath);
+    const bundleFullPath = path_1.default.isAbsolute(bundlePath) ? bundlePath : path_1.default.join(process.cwd(), bundlePath);
     // If the ivm helper is running by node, the compiled execution_helper bundle should be ready at the
     // dist/ directory described by CompiledHelperBundlePath. If the ivm helper is running by mocha, the
     // bundle file may not be available or update-to-date, so we'd always compile it first from
