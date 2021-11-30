@@ -1,3 +1,7 @@
+### 0.7.3
+
+- Fixed a typo that broke local fetcher testing with a pack using the `AuthenticationType.Custom` authentication.
+
 ## 0.7.2
 
 - Fixed missing schema description in compiled metadata.

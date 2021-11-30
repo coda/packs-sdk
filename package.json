@@ -1,6 +1,6 @@
 {
   "name": "@codahq/packs-sdk",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "license": "MIT",
   "engines": {
     "node": ">=14.17.x"

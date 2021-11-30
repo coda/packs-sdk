@@ -116,7 +116,7 @@ class AuthenticatingFetcher {
             const { params } = this._credentials;
             if (responseBody) {
                 if (typeof responseBody === 'object') {
-                    let responseBodyStr = JSON.stringify(responseHeaders);
+                    let responseBodyStr = JSON.stringify(responseBody);
                     Object.values(params).forEach(value => {
                         responseBodyStr = replaceAll(responseBodyStr, value, '<<REDACTED BY CODA>>');
                     });
