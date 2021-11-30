@@ -441,7 +441,7 @@ const commonPackFormulaSchema = {
   examples: z
     .array(
       z.object({
-        params: z.union([primitiveUnion, z.array(primitiveUnion)]),
+        params: z.array(z.union([primitiveUnion, z.array(primitiveUnion)])),
         result: z.any(),
       }),
     )

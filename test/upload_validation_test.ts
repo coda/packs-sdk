@@ -1460,6 +1460,38 @@ describe('Pack metadata Validation', () => {
         ]);
       });
     });
+
+    it('scalar parameter examples', async () => {
+      const formula = makeFormula({
+        resultType: ValueType.String,
+        name: 'Test',
+        description: '',
+        parameters: [makeParameter({type: ParameterType.String, name: 'myParam', description: ''})],
+        execute: ([param1]) => param1[0],
+        examples: [{params: ['param'], result: 'result'}],
+      });
+      const metadata = createFakePackVersionMetadata({
+        formulas: [formula],
+        formulaNamespace: 'ignored',
+      });
+      await validateJson(metadata);
+    });
+
+    it('array parameter examples', async () => {
+      const formula = makeFormula({
+        resultType: ValueType.String,
+        name: 'Test',
+        description: '',
+        parameters: [makeParameter({type: ParameterType.StringArray, name: 'myParam', description: ''})],
+        execute: ([param1]) => param1[0],
+        examples: [{params: [['item1']], result: 'item1'}],
+      });
+      const metadata = createFakePackVersionMetadata({
+        formulas: [formula],
+        formulaNamespace: 'ignored',
+      });
+      await validateJson(metadata);
+    });
   });
 
   describe('Authentication', () => {
