@@ -1,6 +1,7 @@
 ### 0.7.3
 
 - Fixed a typo that broke local fetcher testing with a pack using the `AuthenticationType.Custom` authentication.
+- Fixed a bug where `examples` using array parameters would fail upload validation.
 
 ## 0.7.2
 
