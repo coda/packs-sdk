@@ -2356,7 +2356,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 	varargParameters?: ParamDefs | undefined;
 	examples?: {
 		params: (PackFormulaValue | undefined)[];
-		result: PackFormulaResult;
+		result: PackFormulaResult; /** Options you can specify when defining a parameter using {@link makeParameter}. */
 	}[] | undefined;
 	isAction?: boolean | undefined;
 	connectionRequirement?: ConnectionRequirement | undefined;
@@ -2397,7 +2397,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
 	varargParameters?: ParamDefs | undefined;
 	examples?: {
 		params: (PackFormulaValue | undefined)[];
-		result: PackFormulaResult;
+		result: PackFormulaResult; /** Options you can specify when defining a parameter using {@link makeParameter}. */
 	}[] | undefined;
 	isAction?: boolean | undefined;
 	connectionRequirement?: ConnectionRequirement | undefined;

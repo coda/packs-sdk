@@ -22,7 +22,7 @@ this sync table (including autocomplete formulas).
 
 #### Defined in
 
-[api.ts:1323](https://github.com/coda/packs-sdk/blob/main/api.ts#L1323)
+[api.ts:1328](https://github.com/coda/packs-sdk/blob/main/api.ts#L1328)
 
 ___
 
@@ -36,7 +36,7 @@ of `identity.name` from your schema will be used instead, so in most cases you d
 
 #### Defined in
 
-[api.ts:1318](https://github.com/coda/packs-sdk/blob/main/api.ts#L1318)
+[api.ts:1323](https://github.com/coda/packs-sdk/blob/main/api.ts#L1323)
 
 ___
 
@@ -51,7 +51,7 @@ These will eventually be consolidated.)
 
 #### Defined in
 
-[api.ts:1312](https://github.com/coda/packs-sdk/blob/main/api.ts#L1312)
+[api.ts:1317](https://github.com/coda/packs-sdk/blob/main/api.ts#L1317)
 
 ___
 
@@ -66,7 +66,7 @@ of the table data. This is typically a browser-friendly form of the
 
 #### Defined in
 
-[api.ts:1300](https://github.com/coda/packs-sdk/blob/main/api.ts#L1300)
+[api.ts:1305](https://github.com/coda/packs-sdk/blob/main/api.ts#L1305)
 
 ___
 
@@ -78,7 +78,7 @@ A formula that returns the name of this table.
 
 #### Defined in
 
-[api.ts:1289](https://github.com/coda/packs-sdk/blob/main/api.ts#L1289)
+[api.ts:1294](https://github.com/coda/packs-sdk/blob/main/api.ts#L1294)
 
 ___
 
@@ -90,7 +90,7 @@ A formula that returns the schema for this table.
 
 #### Defined in
 
-[api.ts:1293](https://github.com/coda/packs-sdk/blob/main/api.ts#L1293)
+[api.ts:1298](https://github.com/coda/packs-sdk/blob/main/api.ts#L1298)
 
 ___
 
@@ -103,7 +103,7 @@ used to create an instance of this dynamic sync table.
 
 #### Defined in
 
-[api.ts:1305](https://github.com/coda/packs-sdk/blob/main/api.ts#L1305)
+[api.ts:1310](https://github.com/coda/packs-sdk/blob/main/api.ts#L1310)
 
 ___
 
@@ -119,4 +119,4 @@ is returned by the `getName` formula.
 
 #### Defined in
 
-[api.ts:1285](https://github.com/coda/packs-sdk/blob/main/api.ts#L1285)
+[api.ts:1290](https://github.com/coda/packs-sdk/blob/main/api.ts#L1290)

@@ -261,8 +261,9 @@ export function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDy
 
 export function wrapMetadataFunction(
   fnOrFormula: MetadataFormula | MetadataFunction | undefined,
+  options?: {connectionRequirement?: ConnectionRequirement},
 ): MetadataFormula | undefined {
-  return typeof fnOrFormula === 'function' ? makeMetadataFormula(fnOrFormula) : fnOrFormula;
+  return typeof fnOrFormula === 'function' ? makeMetadataFormula(fnOrFormula, options) : fnOrFormula;
 }
 
 /** Options you can specify when defining a parameter using {@link makeParameter}. */
@@ -295,9 +296,11 @@ export function makeParameter<T extends ParameterType>(
 
   if (Array.isArray(autocompleteDefOrItems)) {
     const autocompleteDef = makeSimpleAutocompleteMetadataFormula(autocompleteDefOrItems);
-    autocomplete = wrapMetadataFunction(autocompleteDef);
+    autocomplete = wrapMetadataFunction(autocompleteDef, {connectionRequirement: ConnectionRequirement.Optional});
   } else {
-    autocomplete = wrapMetadataFunction(autocompleteDefOrItems);
+    autocomplete = wrapMetadataFunction(autocompleteDefOrItems, {
+      connectionRequirement: ConnectionRequirement.Optional,
+    });
   }
 
   return Object.freeze({...rest, autocomplete, type: actualType});
@@ -1016,6 +1019,8 @@ export function makeMetadataFormula(
       makeStringParameter('formulaContext', 'Serialized JSON for metadata', {optional: true}),
     ],
     examples: [],
+    // alternatively should we change this default to ConnectionRequirement.Optional? I can imagine someone
+    // testing/playing with a metadata formula without a connection.
     connectionRequirement: options?.connectionRequirement || ConnectionRequirement.Required,
   });
 }
