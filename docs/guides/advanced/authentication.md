@@ -148,7 +148,7 @@ Many APIs use tokens or keys for authentication. Per-user tokens are typically g
 
     [View Sample Code][sample_query_param]{ .md-button }
 
-When using per-user authorization, the user will be prompted to enter their token when connecting their account.
+When using per-user authentication, the user will be prompted to enter their token when connecting their account.
 
 <img src="../../../images/auth_token.png" srcset="../../../images/auth_token_2x.png 2x" class="screenshot" alt="Users entering an auth token">
 
