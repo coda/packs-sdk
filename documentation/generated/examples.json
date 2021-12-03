@@ -54,21 +54,61 @@
     ],
     "linkData": {
       "type": "SdkReferencePath",
-      "url": "/reference/sdk/classes/PackDefinitionBuilder#setSystemAuthentication"
+      "url": "/guides/advanced/authentication"
     },
-    "exampleFooterLink": "https://coda.github.io/packs-sdk/reference/sdk/classes/PackDefinitionBuilder#setSystemAuthentication",
-    "learnMoreLink": "/reference/sdk/classes/PackDefinitionBuilder#setSystemAuthentication",
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/guides/advanced/authentication",
+    "learnMoreLink": "/guides/advanced/authentication",
     "content": "The SDK broadly divides authentication into two categories: authentication that is tied to the user of the pack vs authentication that is managed by the system, aka the pack author. In the pack definition the former is known as `defaultAuthentication` and the latter `systemConnectionAuthentication`. You will typically specify one or the other in your pack definition, or neither if your pack does not make http requests or those requests do not require authentication.\n\nDefault authentication is the most common. Specify this if each user of your pack should log in with OAuth, or have their own API key, or whatever user-specific token is necessary for the pack to be able to retrieve data that is specific to that user.\n\nUse system authentication if you as the pack author will provide the necessary tokens to successfully make http requests within your pack. An example would be if your pack returns weather forecasts and the API involved requires an API key, but individual users need not provide their own API key. You as the pack author will register an API key and provide it to Coda, and Coda will apply it to all pack requests regardless of the user.",
     "exampleSnippets": [
       {
-        "name": "Template",
-        "content": "",
+        "name": "Template (Per-user)",
+        "content": "The basic structure of per-user authentication.",
         "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n});"
       },
       {
-        "name": "OAuth2 (Todoist)",
-        "content": "",
-        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Allow the pack to make requests to Todoist.\npack.addNetworkDomain(\"todoist.com\");\n\n// Adds OAuth2 authentication for the Todoist API.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  // OAuth2 URLs and scopes are found in the the Todoist OAuth guide:\n  // https://developer.todoist.com/guides/#oauth\n  authorizationUrl: \"https://todoist.com/oauth/authorize\",\n  tokenUrl: \"https://todoist.com/oauth/access_token\",\n  scopes: [\"data:read_write\"],\n\n  // Determines the display name of the connected account.\n  getConnectionName: async function (context) {\n    let url = coda.withQueryParams(\"https://api.todoist.com/sync/v8/sync\", {\n      resource_types: JSON.stringify([\"user\"]),\n    });\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: url,\n    });\n    return response.body.user?.full_name;\n  },\n});"
+        "name": "Template (System-wide)",
+        "content": "The basic structure of system-wide authentication.",
+        "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n});"
+      },
+      {
+        "name": "Authorization header",
+        "content": "Authentication that passes a long-lived token in the Authorization header using the \"Bearer\" scheme. This sample connects to the Todoist API.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Todoist API, using a personal API token in\n// an \"Authorization: Bearer ...\" header.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n  instructionsUrl: \"https://todoist.com/app/settings/integrations\",\n\n  // Determines the display name of the connected account.\n  getConnectionName: async function (context) {\n    let url = coda.withQueryParams(\"https://api.todoist.com/sync/v8/sync\", {\n      resource_types: JSON.stringify([\"user\"]),\n    });\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: url,\n    });\n    return response.body.user?.full_name;\n  },\n});\n\n// Allow the pack to make requests to Todoist.\npack.addNetworkDomain(\"todoist.com\");"
+      },
+      {
+        "name": "Custom header",
+        "content": "Authentication that passes a long-lived token in a custom header. This sample connects to RapidAPI.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// System-wide authentication to RapidAPI, using an API key in a custom header.\n// See https://docs.rapidapi.com/docs/keys#how-to-find-your-api-key.\npack.setSystemAuthentication({\n  type: coda.AuthenticationType.CustomHeaderToken,\n  headerName: \"X-RapidAPI-Key\",\n});\n\n// Allow the pack to make requests to RapidAPI.\npack.addNetworkDomain(\"rapidapi.com\");"
+      },
+      {
+        "name": "Query parameter",
+        "content": "Authentication that passes a long-lived token in a query parameter. This sample connects to the Giphy API.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// System-wide authentication to the Giphy API, using an API key in the query\n// string. See https://support.giphy.com/hc/en-us/articles/360020283431.\npack.setSystemAuthentication({\n  type: coda.AuthenticationType.QueryParamToken,\n  paramName: \"api_key\",\n});\n\n// Allow the pack to make requests to Giphy.\npack.addNetworkDomain(\"giphy.com\");"
+      },
+      {
+        "name": "Username and password",
+        "content": "Authentication that passes a username and password in the Authorization header using the \"Basic\" scheme. This sample connects to the Twilio API.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Twilio API, using an Account SID and token in\n// an \"Authorization: Basic ...\" header.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.WebBasic,\n  instructionsUrl: \"https://www.twilio.com/docs/sms/api#sms-api-authentication\",\n\n  // Use Twilio-specific placeholders for the username and password fields.\n  uxConfig: {\n    placeholderUsername: \"Account SID\",\n    placeholderPassword: \"Auth Token\",\n  },\n\n  // Determines the display name of the connected account.\n  getConnectionName: async function(context) {\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: \"https://api.twilio.com/2010-04-01/Accounts.json\",\n    });\n    // Return the name of the main account.\n    return response.body.accounts[0].friendly_name;\n  },\n});\n\n// Allow the pack to make requests to Twilio.\npack.addNetworkDomain(\"twilio.com\");"
+      },
+      {
+        "name": "OAuth2",
+        "content": "Authentication that uses an OAuth2 flow. This sample connects to the Todoist API.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Todoist API, using an OAuth2 flow.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  // OAuth2 URLs and scopes are found in the the Todoist OAuth guide:\n  // https://developer.todoist.com/guides/#oauth\n  authorizationUrl: \"https://todoist.com/oauth/authorize\",\n  tokenUrl: \"https://todoist.com/oauth/access_token\",\n  scopes: [\"data:read_write\"],\n\n  // Determines the display name of the connected account.\n  getConnectionName: async function (context) {\n    let url = coda.withQueryParams(\"https://api.todoist.com/sync/v8/sync\", {\n      resource_types: JSON.stringify([\"user\"]),\n    });\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: url,\n    });\n    return response.body.user?.full_name;\n  },\n});\n\n// Allow the pack to make requests to Todoist.\npack.addNetworkDomain(\"todoist.com\");"
+      },
+      {
+        "name": "Manual endpoint",
+        "content": "Authentication that requires users to enter the endpoint URL for their account. This sample connects to the Okta API.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Okta API, using a custom token prefix and\n// account-specific endpoints.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.CustomHeaderToken,\n  headerName: \"Authorization\",\n  tokenPrefix: \"SSWS\",\n\n  // Ask users for their Okta subdomain.\n  requiresEndpointUrl: true,\n  endpointDomain: \"okta.com\",\n\n  // Determines the display name of the connected account.\n  getConnectionName: async function(context) {\n    // Retrieve the endpoint that the user set.\n    let endpoint = context.endpoint;\n    let url = endpoint + \"/api/v1/org\";\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: url,\n    });\n    return response.body.companyName;\n  },\n});\n\n// Allow the pack to make requests to Okta.\npack.addNetworkDomain(\"okta.com\");"
+      },
+      {
+        "name": "Automatic endpoint",
+        "content": "Authentication that automatically determines the account-specific endpoint URL during the OAuth2 flow. This sample connects to the Salesforce API.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Salesforce API, using OAuth2 and an\n// automatically determined account-specific endpoint.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  authorizationUrl: \"https://login.salesforce.com/services/oauth2/authorize\",\n  tokenUrl: \"https://login.salesforce.com/services/oauth2/token\",\n  scopes: [\"id\", \"api\", \"refresh_token\"],\n  additionalParams: {\n    prompt: \"consent\",\n  },\n\n  // Each account is associated with an instance URL, returned in the OAuth\n  // token response.\n  requiresEndpointUrl: true,\n  endpointDomain: \"salesforce.com\",\n  endpointKey: \"instance_url\",\n\n  // Determines the display name of the connected account.\n  getConnectionName: async function (context) {\n    // Relative URLs have the endpoint URL automatically prepended.\n    let url = \"/services/oauth2/userinfo\";\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: url,\n    });\n    return response.body.name;\n  },\n});\n\n// Allow the pack to make requests to Salesforce.\npack.addNetworkDomain(\"salesforce.com\");"
+      },
+      {
+        "name": "User-selected endpoint",
+        "content": "Authentication that presents a list of endpoints to the user for them to select one. This sample connects to the Jira API.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Jira API, using OAuth2 with a post-submit step\n// to select the instance to connect to.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  authorizationUrl: \"https://auth.atlassian.com/authorize\",\n  tokenUrl: \"https://auth.atlassian.com/oauth/token\",\n  scopes: [\"offline_access\", \"read:jira-user\", \"read:jira-work\"],\n  additionalParams: {\n    audience: \"api.atlassian.com\",\n    prompt: \"consent\",\n    response_type: \"code\",\n  },\n\n  // After approving access, the user should select which instance they want to\n  // connect to.\n  requiresEndpointUrl: true,\n  endpointDomain: \"atlassian.com\",\n  postSetup: [{\n    type: coda.PostSetupType.SetEndpoint,\n    name: \"SelectEndpoint\",\n    description: \"Select the site to connect to:\",\n    // Determine the list of sites they have access to.\n    getOptionsFormula: async function (context) {\n      let url = \"https://api.atlassian.com/oauth/token/accessible-resources\";\n      let response = await context.fetcher.fetch({\n        method: \"GET\",\n        url: url,\n      });\n      let sites = response.body;\n      return sites.map(site => {\n        // Constructing an endpoint URL from the site ID.\n        let url = \"https://api.atlassian.com/ex/jira/\" + site.id;\n        return { display: site.name, value: url };\n      });\n    },\n  }],\n\n  // Determines the display name of the connected account.\n  getConnectionName: async function (context) {\n    // This function is run twice: once before the site has been selected and\n    // again after. When the site hasn't been selected yet, return a generic\n    // name.\n    if (!context.endpoint) {\n      return \"Jira\";\n    }\n    // Include both the name of the user and server.\n    let server = await getServer(context);\n    let user = await getUser(context)\n    return `${user.displayName} (${server.serverTitle})`;\n  },\n});\n\n// Get information about the Jira server.\nasync function getServer(context: coda.ExecutionContext) {\n  let url = \"/rest/api/3/serverInfo\";\n  let response = await context.fetcher.fetch({\n    method: \"GET\",\n    url: url,\n  });\n  return response.body;\n}\n\n// Get information about the Jira user.\nasync function getUser(context: coda.ExecutionContext) {\n  let url = \"/rest/api/3/myself\";\n  let response = await context.fetcher.fetch({\n    method: \"GET\",\n    url: url,\n  });\n  return response.body;\n}\n\n// Allow the pack to make requests to Jira.\npack.addNetworkDomain(\"atlassian.com\");"
       }
     ]
   },

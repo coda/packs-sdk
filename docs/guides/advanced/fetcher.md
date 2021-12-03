@@ -1,8 +1,8 @@
 # Fetching remote data
 
-Many Packs use cases require fetching data from an outside source such as an API, which is done using the custom [`Fetcher`](../../reference/sdk/interfaces/Fetcher.md) interface. Other methods for making network requests in JavaScript (such as `XMLHttpRequest` or libraries like `axios` or `jQuery`) are not supported.
+Many Packs use cases require fetching data from an outside source such as an API, which is done using the custom [`Fetcher`][Fetcher] interface. Other methods for making network requests in JavaScript (such as `XMLHttpRequest` or libraries like `axios` or `jQuery`) are not supported.
 
-[View Sample Code](../../samples/topic/fetcher.md){ .md-button }
+[View Sample Code][samples]{ .md-button }
 
 ## Network domains
 
@@ -332,7 +332,8 @@ Making a request to an external API can be expensive, either due to quotas, comp
 You can set a total rate limit across all users of your Pack, or if your Pack uses [authentication][authentication] you can also set a per-user rate limit. When the limit is reached your formula will pause for a bit to see if more quota becomes available, and if not eventually fail with an error.
 
 
-
+[Fetcher]: ../../reference/sdk/interfaces/Fetcher.md
+[samples]: ../../samples/topic/fetcher.md
 [addNetworkDomain]: ../../reference/sdk/classes/PackDefinitionBuilder.md#addnetworkdomain
 [support]: ../../support.md
 [ExecutionContext]: ../../reference/sdk/interfaces/ExecutionContext/
