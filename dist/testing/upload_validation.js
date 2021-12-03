@@ -356,7 +356,15 @@ const commonPackFormulaSchema = {
     description: z.string(),
     examples: z
         .array(z.object({
-        params: z.array(z.union([primitiveUnion, z.array(primitiveUnion), z.undefined()])),
+        params: z.array(z.union([
+            primitiveUnion,
+            z.array(primitiveUnion),
+            z.undefined(),
+            // Our TS only accepts undefined for optional params, but when an upload gets JSONified
+            // and there is an undefined value in array, it gets serialized to null so we have
+            // to accept it here.
+            z.null(),
+        ])),
         result: z.any(),
     }))
         .optional(),
