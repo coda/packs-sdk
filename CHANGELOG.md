@@ -2,6 +2,7 @@
 
 - Fixed a typo that broke local fetcher testing with a pack using the `AuthenticationType.Custom` authentication.
 - Fixed a bug where `examples` using array parameters would fail upload validation.
+- Fixed an inconsistency where `SetEndpoint.getOptionsFormulas` required using the obsolete `makeMetadataFormula` wrapper instead of allowing you to provide a raw function.
 
 ## 0.7.2
 
