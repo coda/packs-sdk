@@ -11,7 +11,7 @@ One of the key use cases for Packs is integrating Coda with other apps and servi
 
 ## Using a Pack with authentication
 
-Packs that use system-wide authentication (all users use the Pack makers's credentials) don't require any additional setup and can be used just like Packs without any authentication.
+Packs that use system-wide authentication (all users use the Pack makers's credentials) don't require any additional setup by the user, and can be used just like Packs without any authentication.
 
 Packs that support per-user authentication require some additional setup. Users must sign in to their accounts and connect them to Coda, as well as choose which account to authenticate with when using the building blocks from that Pack.
 
@@ -78,7 +78,7 @@ The types of authentication supported, as well as the additional settings, are d
 
 ## Authentication types
 
-Coda supports a fixed set of authentication types which cover the most common patterns that APIs use. It's not possible to implement a completely custom authentication scheme, as Coda alone has access to the user's credentials. If your API's authentication needs can't be met by any of these types please [contact support][support].
+Coda supports a fixed set of authentication types which cover the most common patterns that APIs use. In addition you can define your own form of [custom token authentication](#custom-tokens) to support more complex scenarios. It's not possible to write completely custom authentication code however, as Coda alone has access to the user's credentials. If your API's authentication needs can't be met by any of these types please [contact support][support].
 
 The sections below will cover some of the most common types of authentication, and you can see the full set in the [`AuthenticationType`][AuthenticationType] enum.
 
@@ -445,6 +445,7 @@ You can automatically extract this value and use it as the endpoint URL by setti
 
 ```ts
 pack.setUserAuthentication({
+  type: coda.AuthenticationType.OAuth2,
   // ...
   endpointKey: "site_url",
 });
