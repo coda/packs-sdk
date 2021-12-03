@@ -938,15 +938,71 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#template" class="md-nav__link">
-    Template
+  <a href="#template-per-user" class="md-nav__link">
+    Template (Per-user)
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#oauth2-todoist" class="md-nav__link">
-    OAuth2 (Todoist)
+  <a href="#template-system-wide" class="md-nav__link">
+    Template (System-wide)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authorization-header" class="md-nav__link">
+    Authorization header
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-header" class="md-nav__link">
+    Custom header
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query-parameter" class="md-nav__link">
+    Query parameter
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#username-and-password" class="md-nav__link">
+    Username and password
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#oauth2" class="md-nav__link">
+    OAuth2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-endpoint" class="md-nav__link">
+    Manual endpoint
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#automatic-endpoint" class="md-nav__link">
+    Automatic endpoint
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-selected-endpoint" class="md-nav__link">
+    User-selected endpoint
   </a>
   
 </li>
@@ -3281,6 +3337,10 @@
         
           
         
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_5_1_6">
@@ -3805,6 +3865,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/sdk/types/PostSetupDef/" class="md-nav__link">
+        Type alias: PostSetupDef
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/sdk/types/Schema/" class="md-nav__link">
         Type alias: Schema
       </a>
@@ -3821,6 +3895,20 @@
     <li class="md-nav__item">
       <a href="../../../reference/sdk/types/SchemaType/" class="md-nav__link">
         Type alias: SchemaType<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/sdk/types/SetEndpointDef/" class="md-nav__link">
+        Type alias: SetEndpointDef
       </a>
     </li>
   
@@ -4067,15 +4155,71 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#template" class="md-nav__link">
-    Template
+  <a href="#template-per-user" class="md-nav__link">
+    Template (Per-user)
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#oauth2-todoist" class="md-nav__link">
-    OAuth2 (Todoist)
+  <a href="#template-system-wide" class="md-nav__link">
+    Template (System-wide)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authorization-header" class="md-nav__link">
+    Authorization header
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-header" class="md-nav__link">
+    Custom header
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query-parameter" class="md-nav__link">
+    Query parameter
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#username-and-password" class="md-nav__link">
+    Username and password
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#oauth2" class="md-nav__link">
+    OAuth2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-endpoint" class="md-nav__link">
+    Manual endpoint
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#automatic-endpoint" class="md-nav__link">
+    Automatic endpoint
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-selected-endpoint" class="md-nav__link">
+    User-selected endpoint
   </a>
   
 </li>
@@ -4101,20 +4245,113 @@
 <p>The SDK broadly divides authentication into two categories: authentication that is tied to the user of the pack vs authentication that is managed by the system, aka the pack author. In the pack definition the former is known as <code>defaultAuthentication</code> and the latter <code>systemConnectionAuthentication</code>. You will typically specify one or the other in your pack definition, or neither if your pack does not make http requests or those requests do not require authentication.</p>
 <p>Default authentication is the most common. Specify this if each user of your pack should log in with OAuth, or have their own API key, or whatever user-specific token is necessary for the pack to be able to retrieve data that is specific to that user.</p>
 <p>Use system authentication if you as the pack author will provide the necessary tokens to successfully make http requests within your pack. An example would be if your pack returns weather forecasts and the API involved requires an API key, but individual users need not provide their own API key. You as the pack author will register an API key and provide it to Coda, and Coda will apply it to all pack requests regardless of the user.</p>
-<p><a class="md-button" href="../../../reference/sdk/classes/PackDefinitionBuilder#setSystemAuthentication">Learn More</a></p>
-<h2 id="template">Template<a class="headerlink" href="#template" title="Permanent link">&para;</a></h2>
+<p><a class="md-button" href="../../../guides/advanced/authentication">Learn More</a></p>
+<h2 id="template-per-user">Template (Per-user)<a class="headerlink" href="#template-per-user" title="Permanent link">&para;</a></h2>
+<p>The basic structure of per-user authentication.</p>
 <div class="highlight"><pre><span></span><code><span class="nx">pack</span><span class="p">.</span><span class="nx">setUserAuthentication</span><span class="p">({</span>
   <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">AuthenticationType</span><span class="p">.</span><span class="nx">HeaderBearerToken</span><span class="p">,</span>
 <span class="p">});</span>
 </code></pre></div>
-<h2 id="oauth2-todoist">OAuth2 (Todoist)<a class="headerlink" href="#oauth2-todoist" title="Permanent link">&para;</a></h2>
+<h2 id="template-system-wide">Template (System-wide)<a class="headerlink" href="#template-system-wide" title="Permanent link">&para;</a></h2>
+<p>The basic structure of system-wide authentication.</p>
+<div class="highlight"><pre><span></span><code><span class="nx">pack</span><span class="p">.</span><span class="nx">setSystemAuthentication</span><span class="p">({</span>
+  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">AuthenticationType</span><span class="p">.</span><span class="nx">HeaderBearerToken</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre></div>
+<h2 id="authorization-header">Authorization header<a class="headerlink" href="#authorization-header" title="Permanent link">&para;</a></h2>
+<p>Authentication that passes a long-lived token in the Authorization header using the &quot;Bearer&quot; scheme. This sample connects to the Todoist API.</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
 <span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
 
+<span class="c1">// Per-user authentication to the Todoist API, using a personal API token in</span>
+<span class="c1">// an &quot;Authorization: Bearer ...&quot; header.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">setUserAuthentication</span><span class="p">({</span>
+  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">AuthenticationType</span><span class="p">.</span><span class="nx">HeaderBearerToken</span><span class="p">,</span>
+  <span class="nx">instructionsUrl</span><span class="o">:</span> <span class="s2">&quot;https://todoist.com/app/settings/integrations&quot;</span><span class="p">,</span>
+
+  <span class="c1">// Determines the display name of the connected account.</span>
+  <span class="nx">getConnectionName</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">withQueryParams</span><span class="p">(</span><span class="s2">&quot;https://api.todoist.com/sync/v8/sync&quot;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">resource_types</span>: <span class="kt">JSON.stringify</span><span class="p">([</span><span class="s2">&quot;user&quot;</span><span class="p">]),</span>
+    <span class="p">});</span>
+    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+      <span class="nx">url</span>: <span class="kt">url</span><span class="p">,</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">user</span><span class="o">?</span><span class="p">.</span><span class="nx">full_name</span><span class="p">;</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
 <span class="c1">// Allow the pack to make requests to Todoist.</span>
 <span class="nx">pack</span><span class="p">.</span><span class="nx">addNetworkDomain</span><span class="p">(</span><span class="s2">&quot;todoist.com&quot;</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="custom-header">Custom header<a class="headerlink" href="#custom-header" title="Permanent link">&para;</a></h2>
+<p>Authentication that passes a long-lived token in a custom header. This sample connects to RapidAPI.</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
 
-<span class="c1">// Adds OAuth2 authentication for the Todoist API.</span>
+<span class="c1">// System-wide authentication to RapidAPI, using an API key in a custom header.</span>
+<span class="c1">// See https://docs.rapidapi.com/docs/keys#how-to-find-your-api-key.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">setSystemAuthentication</span><span class="p">({</span>
+  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">AuthenticationType</span><span class="p">.</span><span class="nx">CustomHeaderToken</span><span class="p">,</span>
+  <span class="nx">headerName</span><span class="o">:</span> <span class="s2">&quot;X-RapidAPI-Key&quot;</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="c1">// Allow the pack to make requests to RapidAPI.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addNetworkDomain</span><span class="p">(</span><span class="s2">&quot;rapidapi.com&quot;</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="query-parameter">Query parameter<a class="headerlink" href="#query-parameter" title="Permanent link">&para;</a></h2>
+<p>Authentication that passes a long-lived token in a query parameter. This sample connects to the Giphy API.</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
+
+<span class="c1">// System-wide authentication to the Giphy API, using an API key in the query</span>
+<span class="c1">// string. See https://support.giphy.com/hc/en-us/articles/360020283431.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">setSystemAuthentication</span><span class="p">({</span>
+  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">AuthenticationType</span><span class="p">.</span><span class="nx">QueryParamToken</span><span class="p">,</span>
+  <span class="nx">paramName</span><span class="o">:</span> <span class="s2">&quot;api_key&quot;</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="c1">// Allow the pack to make requests to Giphy.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addNetworkDomain</span><span class="p">(</span><span class="s2">&quot;giphy.com&quot;</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="username-and-password">Username and password<a class="headerlink" href="#username-and-password" title="Permanent link">&para;</a></h2>
+<p>Authentication that passes a username and password in the Authorization header using the &quot;Basic&quot; scheme. This sample connects to the Twilio API.</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
+
+<span class="c1">// Per-user authentication to the Twilio API, using an Account SID and token in</span>
+<span class="c1">// an &quot;Authorization: Basic ...&quot; header.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">setUserAuthentication</span><span class="p">({</span>
+  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">AuthenticationType</span><span class="p">.</span><span class="nx">WebBasic</span><span class="p">,</span>
+  <span class="nx">instructionsUrl</span><span class="o">:</span> <span class="s2">&quot;https://www.twilio.com/docs/sms/api#sms-api-authentication&quot;</span><span class="p">,</span>
+
+  <span class="c1">// Use Twilio-specific placeholders for the username and password fields.</span>
+  <span class="nx">uxConfig</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">placeholderUsername</span><span class="o">:</span> <span class="s2">&quot;Account SID&quot;</span><span class="p">,</span>
+    <span class="nx">placeholderPassword</span><span class="o">:</span> <span class="s2">&quot;Auth Token&quot;</span><span class="p">,</span>
+  <span class="p">},</span>
+
+  <span class="c1">// Determines the display name of the connected account.</span>
+  <span class="nx">getConnectionName</span>: <span class="kt">async</span> <span class="kd">function</span><span class="p">(</span><span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+      <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;https://api.twilio.com/2010-04-01/Accounts.json&quot;</span><span class="p">,</span>
+    <span class="p">});</span>
+    <span class="c1">// Return the name of the main account.</span>
+    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">accounts</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">friendly_name</span><span class="p">;</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Allow the pack to make requests to Twilio.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addNetworkDomain</span><span class="p">(</span><span class="s2">&quot;twilio.com&quot;</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="oauth2">OAuth2<a class="headerlink" href="#oauth2" title="Permanent link">&para;</a></h2>
+<p>Authentication that uses an OAuth2 flow. This sample connects to the Todoist API.</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
+
+<span class="c1">// Per-user authentication to the Todoist API, using an OAuth2 flow.</span>
 <span class="nx">pack</span><span class="p">.</span><span class="nx">setUserAuthentication</span><span class="p">({</span>
   <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">AuthenticationType</span><span class="p">.</span><span class="nx">OAuth2</span><span class="p">,</span>
   <span class="c1">// OAuth2 URLs and scopes are found in the the Todoist OAuth guide:</span>
@@ -4135,6 +4372,158 @@
     <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">user</span><span class="o">?</span><span class="p">.</span><span class="nx">full_name</span><span class="p">;</span>
   <span class="p">},</span>
 <span class="p">});</span>
+
+<span class="c1">// Allow the pack to make requests to Todoist.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addNetworkDomain</span><span class="p">(</span><span class="s2">&quot;todoist.com&quot;</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="manual-endpoint">Manual endpoint<a class="headerlink" href="#manual-endpoint" title="Permanent link">&para;</a></h2>
+<p>Authentication that requires users to enter the endpoint URL for their account. This sample connects to the Okta API.</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
+
+<span class="c1">// Per-user authentication to the Okta API, using a custom token prefix and</span>
+<span class="c1">// account-specific endpoints.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">setUserAuthentication</span><span class="p">({</span>
+  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">AuthenticationType</span><span class="p">.</span><span class="nx">CustomHeaderToken</span><span class="p">,</span>
+  <span class="nx">headerName</span><span class="o">:</span> <span class="s2">&quot;Authorization&quot;</span><span class="p">,</span>
+  <span class="nx">tokenPrefix</span><span class="o">:</span> <span class="s2">&quot;SSWS&quot;</span><span class="p">,</span>
+
+  <span class="c1">// Ask users for their Okta subdomain.</span>
+  <span class="nx">requiresEndpointUrl</span>: <span class="kt">true</span><span class="p">,</span>
+  <span class="nx">endpointDomain</span><span class="o">:</span> <span class="s2">&quot;okta.com&quot;</span><span class="p">,</span>
+
+  <span class="c1">// Determines the display name of the connected account.</span>
+  <span class="nx">getConnectionName</span>: <span class="kt">async</span> <span class="kd">function</span><span class="p">(</span><span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Retrieve the endpoint that the user set.</span>
+    <span class="kd">let</span> <span class="nx">endpoint</span> <span class="o">=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">endpoint</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">endpoint</span> <span class="o">+</span> <span class="s2">&quot;/api/v1/org&quot;</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+      <span class="nx">url</span>: <span class="kt">url</span><span class="p">,</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">companyName</span><span class="p">;</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Allow the pack to make requests to Okta.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addNetworkDomain</span><span class="p">(</span><span class="s2">&quot;okta.com&quot;</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="automatic-endpoint">Automatic endpoint<a class="headerlink" href="#automatic-endpoint" title="Permanent link">&para;</a></h2>
+<p>Authentication that automatically determines the account-specific endpoint URL during the OAuth2 flow. This sample connects to the Salesforce API.</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
+
+<span class="c1">// Per-user authentication to the Salesforce API, using OAuth2 and an</span>
+<span class="c1">// automatically determined account-specific endpoint.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">setUserAuthentication</span><span class="p">({</span>
+  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">AuthenticationType</span><span class="p">.</span><span class="nx">OAuth2</span><span class="p">,</span>
+  <span class="nx">authorizationUrl</span><span class="o">:</span> <span class="s2">&quot;https://login.salesforce.com/services/oauth2/authorize&quot;</span><span class="p">,</span>
+  <span class="nx">tokenUrl</span><span class="o">:</span> <span class="s2">&quot;https://login.salesforce.com/services/oauth2/token&quot;</span><span class="p">,</span>
+  <span class="nx">scopes</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;api&quot;</span><span class="p">,</span> <span class="s2">&quot;refresh_token&quot;</span><span class="p">],</span>
+  <span class="nx">additionalParams</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">prompt</span><span class="o">:</span> <span class="s2">&quot;consent&quot;</span><span class="p">,</span>
+  <span class="p">},</span>
+
+  <span class="c1">// Each account is associated with an instance URL, returned in the OAuth</span>
+  <span class="c1">// token response.</span>
+  <span class="nx">requiresEndpointUrl</span>: <span class="kt">true</span><span class="p">,</span>
+  <span class="nx">endpointDomain</span><span class="o">:</span> <span class="s2">&quot;salesforce.com&quot;</span><span class="p">,</span>
+  <span class="nx">endpointKey</span><span class="o">:</span> <span class="s2">&quot;instance_url&quot;</span><span class="p">,</span>
+
+  <span class="c1">// Determines the display name of the connected account.</span>
+  <span class="nx">getConnectionName</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Relative URLs have the endpoint URL automatically prepended.</span>
+    <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;/services/oauth2/userinfo&quot;</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+      <span class="nx">url</span>: <span class="kt">url</span><span class="p">,</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Allow the pack to make requests to Salesforce.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addNetworkDomain</span><span class="p">(</span><span class="s2">&quot;salesforce.com&quot;</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="user-selected-endpoint">User-selected endpoint<a class="headerlink" href="#user-selected-endpoint" title="Permanent link">&para;</a></h2>
+<p>Authentication that presents a list of endpoints to the user for them to select one. This sample connects to the Jira API.</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
+
+<span class="c1">// Per-user authentication to the Jira API, using OAuth2 with a post-submit step</span>
+<span class="c1">// to select the instance to connect to.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">setUserAuthentication</span><span class="p">({</span>
+  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">AuthenticationType</span><span class="p">.</span><span class="nx">OAuth2</span><span class="p">,</span>
+  <span class="nx">authorizationUrl</span><span class="o">:</span> <span class="s2">&quot;https://auth.atlassian.com/authorize&quot;</span><span class="p">,</span>
+  <span class="nx">tokenUrl</span><span class="o">:</span> <span class="s2">&quot;https://auth.atlassian.com/oauth/token&quot;</span><span class="p">,</span>
+  <span class="nx">scopes</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;offline_access&quot;</span><span class="p">,</span> <span class="s2">&quot;read:jira-user&quot;</span><span class="p">,</span> <span class="s2">&quot;read:jira-work&quot;</span><span class="p">],</span>
+  <span class="nx">additionalParams</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">audience</span><span class="o">:</span> <span class="s2">&quot;api.atlassian.com&quot;</span><span class="p">,</span>
+    <span class="nx">prompt</span><span class="o">:</span> <span class="s2">&quot;consent&quot;</span><span class="p">,</span>
+    <span class="nx">response_type</span><span class="o">:</span> <span class="s2">&quot;code&quot;</span><span class="p">,</span>
+  <span class="p">},</span>
+
+  <span class="c1">// After approving access, the user should select which instance they want to</span>
+  <span class="c1">// connect to.</span>
+  <span class="nx">requiresEndpointUrl</span>: <span class="kt">true</span><span class="p">,</span>
+  <span class="nx">endpointDomain</span><span class="o">:</span> <span class="s2">&quot;atlassian.com&quot;</span><span class="p">,</span>
+  <span class="nx">postSetup</span><span class="o">:</span> <span class="p">[{</span>
+    <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">PostSetupType</span><span class="p">.</span><span class="nx">SetEndpoint</span><span class="p">,</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;SelectEndpoint&quot;</span><span class="p">,</span>
+    <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Select the site to connect to:&quot;</span><span class="p">,</span>
+    <span class="c1">// Determine the list of sites they have access to.</span>
+    <span class="nx">getOptionsFormula</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;https://api.atlassian.com/oauth/token/accessible-resources&quot;</span><span class="p">;</span>
+      <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+        <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+        <span class="nx">url</span>: <span class="kt">url</span><span class="p">,</span>
+      <span class="p">});</span>
+      <span class="kd">let</span> <span class="nx">sites</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>
+      <span class="k">return</span> <span class="nx">sites</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">site</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="c1">// Constructing an endpoint URL from the site ID.</span>
+        <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;https://api.atlassian.com/ex/jira/&quot;</span> <span class="o">+</span> <span class="nx">site</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+        <span class="k">return</span> <span class="p">{</span> <span class="nx">display</span>: <span class="kt">site.name</span><span class="p">,</span> <span class="nx">value</span>: <span class="kt">url</span> <span class="p">};</span>
+      <span class="p">});</span>
+    <span class="p">},</span>
+  <span class="p">}],</span>
+
+  <span class="c1">// Determines the display name of the connected account.</span>
+  <span class="nx">getConnectionName</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// This function is run twice: once before the site has been selected and</span>
+    <span class="c1">// again after. When the site hasn&#39;t been selected yet, return a generic</span>
+    <span class="c1">// name.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">context</span><span class="p">.</span><span class="nx">endpoint</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="s2">&quot;Jira&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// Include both the name of the user and server.</span>
+    <span class="kd">let</span> <span class="nx">server</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">getServer</span><span class="p">(</span><span class="nx">context</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">getUser</span><span class="p">(</span><span class="nx">context</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sb">`</span><span class="si">${</span><span class="nx">user</span><span class="p">.</span><span class="nx">displayName</span><span class="si">}</span><span class="sb"> (</span><span class="si">${</span><span class="nx">server</span><span class="p">.</span><span class="nx">serverTitle</span><span class="si">}</span><span class="sb">)`</span><span class="p">;</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Get information about the Jira server.</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">getServer</span><span class="p">(</span><span class="nx">context</span>: <span class="kt">coda.ExecutionContext</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;/rest/api/3/serverInfo&quot;</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+    <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+    <span class="nx">url</span>: <span class="kt">url</span><span class="p">,</span>
+  <span class="p">});</span>
+  <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Get information about the Jira user.</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">getUser</span><span class="p">(</span><span class="nx">context</span>: <span class="kt">coda.ExecutionContext</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;/rest/api/3/myself&quot;</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+    <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+    <span class="nx">url</span>: <span class="kt">url</span><span class="p">,</span>
+  <span class="p">});</span>
+  <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Allow the pack to make requests to Jira.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addNetworkDomain</span><span class="p">(</span><span class="s2">&quot;atlassian.com&quot;</span><span class="p">);</span>
 </code></pre></div>
                 
                   

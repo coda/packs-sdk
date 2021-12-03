@@ -3434,6 +3434,10 @@
         
           
         
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_5_1_6">
@@ -3958,6 +3962,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../types/PostSetupDef/" class="md-nav__link">
+        Type alias: PostSetupDef
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../types/Schema/" class="md-nav__link">
         Type alias: Schema
       </a>
@@ -3974,6 +3992,20 @@
     <li class="md-nav__item">
       <a href="../../types/SchemaType/" class="md-nav__link">
         Type alias: SchemaType<T\>
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../types/SetEndpointDef/" class="md-nav__link">
+        Type alias: SetEndpointDef
       </a>
     </li>
   
@@ -4682,7 +4714,7 @@ to connect to multiple domains, contact Coda Support for approval.</p>
 <h4 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">&para;</a></h4>
 <p><a href="./"><code>PackDefinitionBuilder</code></a></p>
 <h4 id="defined-in_12">Defined in<a class="headerlink" href="#defined-in_12" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L324">builder.ts:324</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L337">builder.ts:337</a></p>
 <hr />
 <h3 id="addsynctable">addSyncTable<a class="headerlink" href="#addsynctable" title="Permanent link">&para;</a></h3>
 <p>▸ <strong>addSyncTable</strong>&lt;<code>K</code>, <code>L</code>, <code>ParamDefsT</code>, <code>SchemaT</code>>(<code>__namedParameters</code>): <a href="./"><code>PackDefinitionBuilder</code></a></p>
@@ -4778,7 +4810,7 @@ authentication definition.</p>
 <h4 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">&para;</a></h4>
 <p><a href="./"><code>PackDefinitionBuilder</code></a></p>
 <h4 id="defined-in_14">Defined in<a class="headerlink" href="#defined-in_14" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L294">builder.ts:294</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L298">builder.ts:298</a></p>
 <hr />
 <h3 id="setuserauthentication">setUserAuthentication<a class="headerlink" href="#setuserauthentication" title="Permanent link">&para;</a></h3>
 <p>▸ <strong>setUserAuthentication</strong>(<code>authDef</code>): <a href="./"><code>PackDefinitionBuilder</code></a></p>
@@ -4807,7 +4839,7 @@ this method.</p>
 <tbody>
 <tr>
 <td align="left"><code>authDef</code></td>
-<td align="left"><a href="../../interfaces/NoAuthentication/"><code>NoAuthentication</code></a> &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <a href="../../interfaces/VariousAuthentication/"><code>VariousAuthentication</code></a> &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/HeaderBearerTokenAuthentication/"><code>HeaderBearerTokenAuthentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code>> &amp; { <code>getConnectionName?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>getConnectionUserId?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a>  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/CodaApiBearerTokenAuthentication/"><code>CodaApiBearerTokenAuthentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code>> &amp; { <code>getConnectionName?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>getConnectionUserId?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a>  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/CustomHeaderTokenAuthentication/"><code>CustomHeaderTokenAuthentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code>> &amp; { <code>getConnectionName?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>getConnectionUserId?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a>  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/QueryParamTokenAuthentication/"><code>QueryParamTokenAuthentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code>> &amp; { <code>getConnectionName?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>getConnectionUserId?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a>  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/MultiQueryParamTokenAuthentication/"><code>MultiQueryParamTokenAuthentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code>> &amp; { <code>getConnectionName?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>getConnectionUserId?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a>  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/OAuth2Authentication/"><code>OAuth2Authentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code>> &amp; { <code>getConnectionName?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>getConnectionUserId?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a>  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/WebBasicAuthentication/"><code>WebBasicAuthentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code>> &amp; { <code>getConnectionName?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>getConnectionUserId?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a>  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/AWSAccessKeyAuthentication/"><code>AWSAccessKeyAuthentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code>> &amp; { <code>getConnectionName?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>getConnectionUserId?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a>  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/AWSAssumeRoleAuthentication/"><code>AWSAssumeRoleAuthentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code>> &amp; { <code>getConnectionName?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>getConnectionUserId?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a>  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/CustomAuthentication/"><code>CustomAuthentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code>> &amp; { <code>getConnectionName?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>getConnectionUserId?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a>  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  }</td>
+<td align="left"><a href="../../interfaces/NoAuthentication/"><code>NoAuthentication</code></a> &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <a href="../../interfaces/VariousAuthentication/"><code>VariousAuthentication</code></a> &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/HeaderBearerTokenAuthentication/"><code>HeaderBearerTokenAuthentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code> | <code>"postSetup"</code>> &amp; { <code>getConnectionName?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>getConnectionUserId?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>postSetup?</code>: <a href="../../types/SetEndpointDef/"><code>SetEndpointDef</code></a>[]  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/CodaApiBearerTokenAuthentication/"><code>CodaApiBearerTokenAuthentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code> | <code>"postSetup"</code>> &amp; { <code>getConnectionName?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>getConnectionUserId?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>postSetup?</code>: <a href="../../types/SetEndpointDef/"><code>SetEndpointDef</code></a>[]  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/CustomHeaderTokenAuthentication/"><code>CustomHeaderTokenAuthentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code> | <code>"postSetup"</code>> &amp; { <code>getConnectionName?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>getConnectionUserId?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>postSetup?</code>: <a href="../../types/SetEndpointDef/"><code>SetEndpointDef</code></a>[]  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/QueryParamTokenAuthentication/"><code>QueryParamTokenAuthentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code> | <code>"postSetup"</code>> &amp; { <code>getConnectionName?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>getConnectionUserId?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>postSetup?</code>: <a href="../../types/SetEndpointDef/"><code>SetEndpointDef</code></a>[]  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/MultiQueryParamTokenAuthentication/"><code>MultiQueryParamTokenAuthentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code> | <code>"postSetup"</code>> &amp; { <code>getConnectionName?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>getConnectionUserId?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>postSetup?</code>: <a href="../../types/SetEndpointDef/"><code>SetEndpointDef</code></a>[]  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/OAuth2Authentication/"><code>OAuth2Authentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code> | <code>"postSetup"</code>> &amp; { <code>getConnectionName?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>getConnectionUserId?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>postSetup?</code>: <a href="../../types/SetEndpointDef/"><code>SetEndpointDef</code></a>[]  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/WebBasicAuthentication/"><code>WebBasicAuthentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code> | <code>"postSetup"</code>> &amp; { <code>getConnectionName?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>getConnectionUserId?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>postSetup?</code>: <a href="../../types/SetEndpointDef/"><code>SetEndpointDef</code></a>[]  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/AWSAccessKeyAuthentication/"><code>AWSAccessKeyAuthentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code> | <code>"postSetup"</code>> &amp; { <code>getConnectionName?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>getConnectionUserId?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>postSetup?</code>: <a href="../../types/SetEndpointDef/"><code>SetEndpointDef</code></a>[]  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/AWSAssumeRoleAuthentication/"><code>AWSAssumeRoleAuthentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code> | <code>"postSetup"</code>> &amp; { <code>getConnectionName?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>getConnectionUserId?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>postSetup?</code>: <a href="../../types/SetEndpointDef/"><code>SetEndpointDef</code></a>[]  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  } &amp; <code>Omit</code>&lt;<a href="../../interfaces/CustomAuthentication/"><code>CustomAuthentication</code></a>, <code>"getConnectionName"</code> | <code>"getConnectionUserId"</code> | <code>"postSetup"</code>> &amp; { <code>getConnectionName?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>getConnectionUserId?</code>: <a href="../../types/MetadataFormulaDef/"><code>MetadataFormulaDef</code></a> ; <code>postSetup?</code>: <a href="../../types/SetEndpointDef/"><code>SetEndpointDef</code></a>[]  } &amp; { <code>defaultConnectionRequirement?</code>: <a href="../../enums/ConnectionRequirement/"><code>ConnectionRequirement</code></a>  }</td>
 </tr>
 </tbody>
 </table>
@@ -4844,7 +4876,7 @@ each time you build a version.</p>
 <h4 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">&para;</a></h4>
 <p><a href="./"><code>PackDefinitionBuilder</code></a></p>
 <h4 id="defined-in_16">Defined in<a class="headerlink" href="#defined-in_16" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L342">builder.ts:342</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/builder.ts#L355">builder.ts:355</a></p>
                 
               
               
