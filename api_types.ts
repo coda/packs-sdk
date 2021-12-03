@@ -296,7 +296,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
   /**
    * Sample inputs and outputs demonstrating usage of this formula.
    */
-  readonly examples?: Array<{params: PackFormulaValue[]; result: PackFormulaResult}>;
+  readonly examples?: Array<{params: Array<PackFormulaValue | undefined>; result: PackFormulaResult}>;
 
   /**
    * Does this formula take an action (vs retrieve data or make a calculation)?

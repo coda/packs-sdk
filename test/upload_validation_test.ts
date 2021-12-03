@@ -1492,6 +1492,47 @@ describe('Pack metadata Validation', () => {
       });
       await validateJson(metadata);
     });
+
+    it('example with undefined for optional param', async () => {
+      const formula = makeFormula({
+        name: 'DoStuff',
+        description: 'Do some stuff',
+        parameters: [
+          makeParameter({
+            type: ParameterType.String,
+            name: 'first',
+            description: 'The first param',
+          }),
+          makeParameter({
+            type: ParameterType.String,
+            name: 'second',
+            description: 'The second param',
+            optional: true,
+          }),
+          makeParameter({
+            type: ParameterType.String,
+            name: 'third',
+            description: 'The third param',
+            optional: true,
+          }),
+        ],
+        resultType: ValueType.String,
+        examples: [
+          {
+            params: ['a', undefined, 'c'],
+            result: 'cool',
+          },
+        ],
+        async execute() {
+          return 'whatever';
+        },
+      });
+      const metadata = createFakePackVersionMetadata({
+        formulas: [formula],
+        formulaNamespace: 'ignored',
+      });
+      await validateJson(metadata);
+    });
   });
 
   describe('Authentication', () => {

@@ -868,7 +868,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
     examples?: {
-        params: import("./api_types").PackFormulaValue[];
+        params: (import("./api_types").PackFormulaValue | undefined)[];
         result: PackFormulaResult;
     }[] | undefined;
     isAction?: boolean | undefined;
@@ -909,7 +909,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
     examples?: {
-        params: import("./api_types").PackFormulaValue[];
+        params: (import("./api_types").PackFormulaValue | undefined)[];
         result: PackFormulaResult;
     }[] | undefined;
     isAction?: boolean | undefined;
