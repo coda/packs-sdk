@@ -467,7 +467,7 @@ pack.setUserAuthentication({
     name: "SelectEndpoint",
     description: "Select the site to connect to:",
     // Generate the list of endpoint options.
-    getOptionsFormula: coda.makeMetadataFormula(async function (context) {
+    getOptionsFormula: async function (context) {
       // Make a request to the API to retrieve the sites they can access.
       let response = await context.fetcher.fetch({
         method: "GET",
@@ -477,7 +477,7 @@ pack.setUserAuthentication({
       return sites.map(site => {
         return { display: site.name, value: site.url };
       });
-    }),
+    },
   }],
 });
 ```

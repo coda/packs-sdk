@@ -23,7 +23,7 @@ pack.setUserAuthentication({
     name: "SelectEndpoint",
     description: "Select the site to connect to:",
     // Determine the list of sites they have access to.
-    getOptionsFormula: coda.makeMetadataFormula(async function (context) {
+    getOptionsFormula: async function (context) {
       let url = "https://api.atlassian.com/oauth/token/accessible-resources";
       let response = await context.fetcher.fetch({
         method: "GET",
@@ -35,7 +35,7 @@ pack.setUserAuthentication({
         let url = "https://api.atlassian.com/ex/jira/" + site.id;
         return { display: site.name, value: url };
       });
-    }),
+    },
   }],
 
   // Determines the display name of the connected account.
