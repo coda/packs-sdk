@@ -21,7 +21,7 @@ export async function setupIvmContext(bundlePath: string, executionContext: Exec
   const isolate = new ivm.Isolate({memoryLimit: IsolateMemoryLimit});
   const ivmContext = await createIsolateContext(isolate);
 
-  const bundleFullPath = bundlePath.startsWith('/') ? bundlePath : path.join(process.cwd(), bundlePath);
+  const bundleFullPath = path.isAbsolute(bundlePath) ? bundlePath : path.join(process.cwd(), bundlePath);
 
   // If the ivm helper is running by node, the compiled execution_helper bundle should be ready at the
   // dist/ directory described by CompiledHelperBundlePath. If the ivm helper is running by mocha, the

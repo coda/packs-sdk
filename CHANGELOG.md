@@ -1,6 +1,15 @@
+### 0.7.3
+
+- Fixed a typo that broke local fetcher testing with a pack using the `AuthenticationType.Custom` authentication.
+- Fixed a bug where `examples` using array parameters would fail upload validation.
+- Fixed an inconsistency where `SetEndpoint.getOptionsFormulas` required using the obsolete `makeMetadataFormula` wrapper instead of allowing you to provide a raw function.
+
 ## 0.7.2
 
 - Fixed missing schema description in compiled metadata.
+- Fixed the fetcher to properly recognize more XML content type headers and parse those responses int objects using `xml2js`.
+  - Previously only `text/xml` and `application/xml` were recognized, but headers like `application/atom+xml` were ignored and response bodies returned as strings.
+- Fixed `coda init` and `coda execute` to stop throwing errors on Windows.
 
 ## 0.7.1
 
@@ -10,7 +19,7 @@
   ```typescript
   // pack authentication
   pack.setSystemAuthentication({
-    type: AuthenticationType.Custom, 
+    type: AuthenticationType.Custom,
     params: [{name: 'secretId', description: 'Secret id'},
             {name: 'secretValue', description: 'Secret value'}])
   });

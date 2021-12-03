@@ -1,6 +1,6 @@
 {
   "name": "@codahq/packs-sdk",
-  "version": "0.7.1",
+  "version": "0.7.3",
   "license": "MIT",
   "engines": {
     "node": ">=14.17.x"
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@aws-crypto/sha256-js": "^2.0.0",
-    "@aws-sdk/client-sts": "^3.42.0",
+    "@aws-sdk/client-sts": "^3.43.0",
     "@aws-sdk/signature-v4": "^3.40.0",
     "browserify": "^17.0.0",
     "client-oauth2": "^4.3.3",
@@ -60,7 +60,7 @@
     "@types/mime": "^2.0.3",
     "@types/mocha": "^9.0.0",
     "@types/mock-fs": "^4.13.1",
-    "@types/node": "^16.11.9",
+    "@types/node": "^16.11.11",
     "@types/pascalcase": "^1.0.1",
     "@types/qs": "^6.9.7",
     "@types/readline-sync": "1.4.4",
@@ -73,10 +73,10 @@
     "@types/uuid": "^8.3.3",
     "@types/xml2js": "^0.4.9",
     "@types/yargs": "^17.0.7",
-    "@typescript-eslint/eslint-plugin": "5.4.0",
-    "@typescript-eslint/experimental-utils": "5.4.0",
-    "@typescript-eslint/parser": "5.4.0",
-    "aws-sdk": "^2.1034.0",
+    "@typescript-eslint/eslint-plugin": "5.5.0",
+    "@typescript-eslint/experimental-utils": "5.5.0",
+    "@typescript-eslint/parser": "5.5.0",
+    "aws-sdk": "^2.1039.0",
     "buffer": "^6.0.3",
     "chai": "^4.3.4",
     "dts-bundle-generator": "^6.1.0",
@@ -90,11 +90,12 @@
     "mock-fs": "^5.1.2",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.4.0",
-    "typedoc": "^0.22.9",
+    "typedoc": "^0.22.10",
     "typedoc-plugin-markdown": "^3.11.7"
   },
   "resolutions": {
     "ansi-regex": "^5.0.1",
+    "jsprim": "^2.0.2",
     "marked": "^2.0.0"
   }
 }

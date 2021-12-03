@@ -25,7 +25,7 @@ export function isTestCommand() {
 }
 
 export function makeManifestFullPath(manifestPath: string): string {
-  return manifestPath.startsWith('/') ? manifestPath : path.join(process.cwd(), manifestPath);
+  return path.isAbsolute(manifestPath) ? manifestPath : path.join(process.cwd(), manifestPath);
 }
 
 // Packs today do not have both defaultAuth and systemAuth specs, so this helper gets

@@ -90,8 +90,7 @@ class AuthenticatingFetcher {
             throw new Error(`Response body is too large for Coda. Body is ${responseBody.length} bytes.`);
         }
         try {
-            const contentType = response.headers['content-type'];
-            if (contentType && (contentType.includes('text/xml') || contentType.includes('application/xml'))) {
+            if (isXmlContentType(response.headers['content-type'])) {
                 responseBody = await xml2js_1.default.parseStringPromise(responseBody, { explicitRoot: false });
             }
             else {
@@ -117,7 +116,7 @@ class AuthenticatingFetcher {
             const { params } = this._credentials;
             if (responseBody) {
                 if (typeof responseBody === 'object') {
-                    let responseBodyStr = JSON.stringify(responseHeaders);
+                    let responseBodyStr = JSON.stringify(responseBody);
                     Object.values(params).forEach(value => {
                         responseBodyStr = replaceAll(responseBodyStr, value, '<<REDACTED BY CODA>>');
                     });
@@ -296,7 +295,12 @@ class AuthenticatingFetcher {
                     secretAccessKey,
                 };
                 const resultHeaders = await this._signAwsRequest({
-                    body, method, url, service, headers: headers || {}, credentials
+                    body,
+                    method,
+                    url,
+                    service,
+                    headers: headers || {},
+                    credentials,
                 });
                 return {
                     url,
@@ -324,7 +328,12 @@ class AuthenticatingFetcher {
                     expiration: (_d = assumeRoleResult.Credentials) === null || _d === void 0 ? void 0 : _d.Expiration,
                 };
                 const resultHeaders = await this._signAwsRequest({
-                    body, method, url, service, headers: headers || {}, credentials
+                    body,
+                    method,
+                    url,
+                    service,
+                    headers: headers || {},
+                    credentials,
                 });
                 return {
                     url,
@@ -339,7 +348,7 @@ class AuthenticatingFetcher {
                 return (0, ensure_4.ensureUnreachable)(this._authDef);
         }
     }
-    async _signAwsRequest({ body, credentials, headers, method, service, url }) {
+    async _signAwsRequest({ body, credentials, headers, method, service, url, }) {
         const { hostname, pathname, protocol, searchParams } = new url_1.URL(url);
         const query = Object.fromEntries(searchParams.entries());
         const region = this._getAwsRegion({ service, hostname });
@@ -473,4 +482,12 @@ function addQueryParam(url, param, value) {
         parsedUrl.searchParams.set(key, entryValue);
     }
     return parsedUrl.href;
+}
+const ApplicationXmlRegexp = /application\/(\S+\+)?xml/;
+function isXmlContentType(contentTypeHeader) {
+    if (!contentTypeHeader) {
+        return false;
+    }
+    const header = contentTypeHeader.toLocaleLowerCase();
+    return header.includes('text/xml') || ApplicationXmlRegexp.test(header);
 }
