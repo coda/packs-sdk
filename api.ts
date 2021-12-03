@@ -297,7 +297,22 @@ export function makeParameter<T extends ParameterType>(
     const autocompleteDef = makeSimpleAutocompleteMetadataFormula(autocompleteDefOrItems);
     autocomplete = wrapMetadataFunction(autocompleteDef);
   } else {
-    autocomplete = wrapMetadataFunction(autocompleteDefOrItems);
+    const wrappedFunc =
+      typeof autocompleteDefOrItems === 'function'
+        ? async (context: ExecutionContext, search: string, formulaContext?: MetadataContext | undefined) => {
+            const result = await autocompleteDefOrItems(context, search, formulaContext);
+            if (Array.isArray(result) && ['string', 'number'].includes(typeof result?.[0])) {
+              return (result as Array<string | number>).map(value => ({
+                display: value,
+                value,
+              })) as Array<SimpleAutocompleteOption<ParameterType.Number | ParameterType.String>>;
+            } else {
+              return result;
+            }
+          }
+        : autocompleteDefOrItems;
+    // need the force casting here since we don't check if the param type is number or string.
+    autocomplete = wrapMetadataFunction(wrappedFunc as any);
   }
 
   return Object.freeze({...rest, autocomplete, type: actualType});

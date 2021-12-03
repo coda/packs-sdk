@@ -117,7 +117,22 @@ function makeParameter(paramDefinition) {
         autocomplete = wrapMetadataFunction(autocompleteDef);
     }
     else {
-        autocomplete = wrapMetadataFunction(autocompleteDefOrItems);
+        const wrappedFunc = typeof autocompleteDefOrItems === 'function'
+            ? async (context, search, formulaContext) => {
+                const result = await autocompleteDefOrItems(context, search, formulaContext);
+                if (Array.isArray(result) && ['string', 'number'].includes(typeof (result === null || result === void 0 ? void 0 : result[0]))) {
+                    return result.map(value => ({
+                        display: value,
+                        value,
+                    }));
+                }
+                else {
+                    return result;
+                }
+            }
+            : autocompleteDefOrItems;
+        // need the force casting here since we don't check if the param type is number or string.
+        autocomplete = wrapMetadataFunction(wrappedFunc);
     }
     return Object.freeze({ ...rest, autocomplete, type: actualType });
 }
