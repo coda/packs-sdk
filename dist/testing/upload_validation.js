@@ -356,7 +356,7 @@ const commonPackFormulaSchema = {
     description: z.string(),
     examples: z
         .array(z.object({
-        params: z.array(z.union([primitiveUnion, z.array(primitiveUnion)])),
+        params: z.array(z.union([primitiveUnion, z.array(primitiveUnion), z.undefined()])),
         result: z.any(),
     }))
         .optional(),

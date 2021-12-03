@@ -213,7 +213,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
      * Sample inputs and outputs demonstrating usage of this formula.
      */
     readonly examples?: Array<{
-        params: PackFormulaValue[];
+        params: Array<PackFormulaValue | undefined>;
         result: PackFormulaResult;
     }>;
     /**

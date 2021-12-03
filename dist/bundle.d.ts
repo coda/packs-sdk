@@ -1066,7 +1066,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 	 * Sample inputs and outputs demonstrating usage of this formula.
 	 */
 	readonly examples?: Array<{
-		params: PackFormulaValue[];
+		params: Array<PackFormulaValue | undefined>;
 		result: PackFormulaResult;
 	}>;
 	/**
@@ -2355,7 +2355,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 	parameters: ParamDefsT;
 	varargParameters?: ParamDefs | undefined;
 	examples?: {
-		params: PackFormulaValue[];
+		params: (PackFormulaValue | undefined)[];
 		result: PackFormulaResult;
 	}[] | undefined;
 	isAction?: boolean | undefined;
@@ -2396,7 +2396,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
 	parameters: ParamDefsT;
 	varargParameters?: ParamDefs | undefined;
 	examples?: {
-		params: PackFormulaValue[];
+		params: (PackFormulaValue | undefined)[];
 		result: PackFormulaResult;
 	}[] | undefined;
 	isAction?: boolean | undefined;
