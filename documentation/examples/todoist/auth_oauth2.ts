@@ -1,10 +1,7 @@
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
-// Allow the pack to make requests to Todoist.
-pack.addNetworkDomain("todoist.com");
-
-// Adds OAuth2 authentication for the Todoist API.
+// Per-user authentication to the Todoist API, using an OAuth2 flow.
 pack.setUserAuthentication({
   type: coda.AuthenticationType.OAuth2,
   // OAuth2 URLs and scopes are found in the the Todoist OAuth guide:
@@ -25,3 +22,6 @@ pack.setUserAuthentication({
     return response.body.user?.full_name;
   },
 });
+
+// Allow the pack to make requests to Todoist.
+pack.addNetworkDomain("todoist.com");

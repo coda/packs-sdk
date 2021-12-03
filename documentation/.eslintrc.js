@@ -23,6 +23,7 @@ module.exports = {
         '@typescript-eslint/restrict-plus-operands': 0,
         'func-style': ['error', 'declaration'],
         '@getify/proper-arrows/where': 'error',
+        'prefer-arrow-callback': 'off',
       },
     },
   ],

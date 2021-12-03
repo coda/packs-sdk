@@ -185,18 +185,58 @@ exports.Examples = [
         contentFile: './examples/authentication/authentication.md',
         linkData: {
             type: types_2.UrlType.SdkReferencePath,
-            url: '/reference/sdk/classes/PackDefinitionBuilder#setSystemAuthentication',
+            url: '/guides/advanced/authentication',
         },
         exampleSnippets: [
             {
-                name: 'Template',
-                content: '',
+                name: 'Template (Per-user)',
+                content: 'The basic structure of per-user authentication.',
                 codeFile: './snippets/user_authentication.ts',
             },
             {
-                name: 'OAuth2 (Todoist)',
-                content: '',
-                codeFile: './examples/todoist/auth.ts',
+                name: 'Template (System-wide)',
+                content: 'The basic structure of system-wide authentication.',
+                codeFile: './snippets/system_authentication.ts',
+            },
+            {
+                name: 'Authorization header',
+                content: 'Authentication that passes a long-lived token in the Authorization header using the "Bearer" scheme. This sample connects to the Todoist API.',
+                codeFile: './examples/todoist/auth_bearer.ts',
+            },
+            {
+                name: 'Custom header',
+                content: 'Authentication that passes a long-lived token in a custom header. This sample connects to RapidAPI.',
+                codeFile: './examples/authentication/rapidapi.ts',
+            },
+            {
+                name: 'Query parameter',
+                content: 'Authentication that passes a long-lived token in a query parameter. This sample connects to the Giphy API.',
+                codeFile: './examples/authentication/giphy.ts',
+            },
+            {
+                name: 'Username and password',
+                content: 'Authentication that passes a username and password in the Authorization header using the "Basic" scheme. This sample connects to the Twilio API.',
+                codeFile: './examples/authentication/twilio.ts',
+            },
+            {
+                name: 'OAuth2',
+                content: 'Authentication that uses an OAuth2 flow. This sample connects to the Todoist API.',
+                codeFile: './examples/todoist/auth_oauth2.ts',
+            },
+            {
+                name: 'Manual endpoint',
+                content: 'Authentication that requires users to enter the endpoint URL for their account. This sample connects to the Okta API.',
+                codeFile: './examples/authentication/okta.ts',
+            },
+            {
+                name: 'Automatic endpoint',
+                content: 'Authentication that automatically determines the account-specific endpoint URL during the OAuth2 flow. This sample connects to the Salesforce API.',
+                codeFile: './examples/authentication/salesforce.ts',
+            },
+            {
+                name: 'User-selected endpoint',
+                content: 'Authentication that presents a list of endpoints to the user for them to select one. This sample connects to the Jira API.',
+                codeFile: './examples/authentication/jira.ts',
             },
         ],
     },
