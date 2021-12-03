@@ -178,6 +178,14 @@ export interface SetEndpoint {
     getOptionsFormula: MetadataFormula;
 }
 /**
+ * Simplified configuration for {@link SetEndpoint} that a pack developer can specify when calling
+ * {@link setUserAuthentication} or {@link setSystemAuthentication}.
+ */
+export declare type SetEndpointDef = Omit<SetEndpoint, 'getOptionsFormula'> & {
+    /** See {@link SetEndpoint.getOptionsFormula} */
+    getOptionsFormula: MetadataFormulaDef;
+};
+/**
  * Enumeration of post-account-setup step types. See {@link PostSetup}.
  */
 export declare enum PostSetupType {
@@ -194,6 +202,11 @@ export declare enum PostSetupType {
  * use cases and step types in the future.
  */
 export declare type PostSetup = SetEndpoint;
+/**
+ * Simplified configuration for {@link PostSetup} that a pack developer can specify when calling
+ * {@link setUserAuthentication} or {@link setSystemAuthentication}.
+ */
+export declare type PostSetupDef = SetEndpointDef;
 /**
  * Base interface for authentication definitions.
  */
@@ -540,11 +553,13 @@ export interface VariousAuthentication {
  * The union of supported authentication methods.
  */
 export declare type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication;
-declare type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId'> & {
+declare type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId' | 'postSetup'> & {
     /** See {@link BaseAuthentication.getConnectionName} */
     getConnectionName?: MetadataFormulaDef;
     /** See {@link BaseAuthentication.getConnectionUserId} */
     getConnectionUserId?: MetadataFormulaDef;
+    /** {@link BaseAuthentication.postSetup} */
+    postSetup?: PostSetupDef[];
 };
 /**
  * The union of supported authentication definitions. These represent simplified configurations

@@ -180,10 +180,13 @@ class PackDefinitionBuilder {
             this.defaultAuthentication = authentication;
         }
         else {
-            const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, ...rest } = authentication;
+            const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, postSetup: postSetupDef, ...rest } = authentication;
             const getConnectionName = (0, api_6.wrapMetadataFunction)(getConnectionNameDef);
             const getConnectionUserId = (0, api_6.wrapMetadataFunction)(getConnectionUserIdDef);
-            this.defaultAuthentication = { ...rest, getConnectionName, getConnectionUserId };
+            const postSetup = postSetupDef === null || postSetupDef === void 0 ? void 0 : postSetupDef.map(step => {
+                return { ...step, getOptionsFormula: (0, api_6.wrapMetadataFunction)(step.getOptionsFormula) };
+            });
+            this.defaultAuthentication = { ...rest, getConnectionName, getConnectionUserId, postSetup };
         }
         if (authentication.type !== types_1.AuthenticationType.None) {
             this._setDefaultConnectionRequirement(defaultConnectionRequirement);
@@ -208,10 +211,18 @@ class PackDefinitionBuilder {
      * ```
      */
     setSystemAuthentication(systemAuthentication) {
-        const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, ...rest } = systemAuthentication;
+        const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, postSetup: postSetupDef, ...rest } = systemAuthentication;
         const getConnectionName = (0, api_6.wrapMetadataFunction)(getConnectionNameDef);
         const getConnectionUserId = (0, api_6.wrapMetadataFunction)(getConnectionUserIdDef);
-        this.systemConnectionAuthentication = { ...rest, getConnectionName, getConnectionUserId };
+        const postSetup = postSetupDef === null || postSetupDef === void 0 ? void 0 : postSetupDef.map(step => {
+            return { ...step, getOptionsFormula: (0, api_6.wrapMetadataFunction)(step.getOptionsFormula) };
+        });
+        this.systemConnectionAuthentication = {
+            ...rest,
+            getConnectionName,
+            getConnectionUserId,
+            postSetup,
+        };
         return this;
     }
     /**

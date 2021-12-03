@@ -181,8 +181,17 @@ export interface SetEndpoint {
    * `{display: '<display name>', value: '<endpoint>'}` if wanting to render a display
    * label to the user rather than rendering the underlying value directly.
    */
-  getOptionsFormula: MetadataFormula; // TODO: Allow users to define this using MetadataFormulaDef shorthand.
+  getOptionsFormula: MetadataFormula;
 }
+
+/**
+ * Simplified configuration for {@link SetEndpoint} that a pack developer can specify when calling
+ * {@link setUserAuthentication} or {@link setSystemAuthentication}.
+ */
+export type SetEndpointDef = Omit<SetEndpoint, 'getOptionsFormula'> & {
+  /** See {@link SetEndpoint.getOptionsFormula} */
+  getOptionsFormula: MetadataFormulaDef;
+};
 
 /**
  * Enumeration of post-account-setup step types. See {@link PostSetup}.
@@ -202,6 +211,12 @@ export enum PostSetupType {
  * use cases and step types in the future.
  */
 export type PostSetup = SetEndpoint;
+
+/**
+ * Simplified configuration for {@link PostSetup} that a pack developer can specify when calling
+ * {@link setUserAuthentication} or {@link setSystemAuthentication}.
+ */
+export type PostSetupDef = SetEndpointDef;
 
 /**
  * Base interface for authentication definitions.
@@ -582,11 +597,13 @@ export type Authentication =
   | AWSAssumeRoleAuthentication
   | CustomAuthentication;
 
-type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId'> & {
+type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId' | 'postSetup'> & {
   /** See {@link BaseAuthentication.getConnectionName} */
   getConnectionName?: MetadataFormulaDef;
   /** See {@link BaseAuthentication.getConnectionUserId} */
   getConnectionUserId?: MetadataFormulaDef;
+  /** {@link BaseAuthentication.postSetup} */
+  postSetup?: PostSetupDef[];
 };
 
 /**

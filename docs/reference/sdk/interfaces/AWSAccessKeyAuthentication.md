@@ -25,7 +25,7 @@ See https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs#h_4
 
 #### Defined in
 
-[types.ts:236](https://github.com/coda/packs-sdk/blob/main/types.ts#L236)
+[types.ts:251](https://github.com/coda/packs-sdk/blob/main/types.ts#L251)
 
 ___
 
@@ -45,7 +45,7 @@ For packs that make requests to multiple domains (uncommon), this should be the 
 
 #### Defined in
 
-[types.ts:258](https://github.com/coda/packs-sdk/blob/main/types.ts#L258)
+[types.ts:273](https://github.com/coda/packs-sdk/blob/main/types.ts#L273)
 
 ___
 
@@ -67,7 +67,7 @@ with the creating user's Coda username.
 
 #### Defined in
 
-[types.ts:219](https://github.com/coda/packs-sdk/blob/main/types.ts#L219)
+[types.ts:234](https://github.com/coda/packs-sdk/blob/main/types.ts#L234)
 
 ___
 
@@ -83,7 +83,7 @@ A link to a help article or other page with more instructions about how to set u
 
 #### Defined in
 
-[types.ts:241](https://github.com/coda/packs-sdk/blob/main/types.ts#L241)
+[types.ts:256](https://github.com/coda/packs-sdk/blob/main/types.ts#L256)
 
 ___
 
@@ -100,7 +100,7 @@ This is not common.
 
 #### Defined in
 
-[types.ts:264](https://github.com/coda/packs-sdk/blob/main/types.ts#L264)
+[types.ts:279](https://github.com/coda/packs-sdk/blob/main/types.ts#L279)
 
 ___
 
@@ -119,7 +119,7 @@ when creating a new account.
 
 #### Defined in
 
-[types.ts:249](https://github.com/coda/packs-sdk/blob/main/types.ts#L249)
+[types.ts:264](https://github.com/coda/packs-sdk/blob/main/types.ts#L264)
 
 ___
 
@@ -131,7 +131,7 @@ The AWS service to authenticate with, like "s3", "iam", or "route53".
 
 #### Defined in
 
-[types.ts:544](https://github.com/coda/packs-sdk/blob/main/types.ts#L544)
+[types.ts:559](https://github.com/coda/packs-sdk/blob/main/types.ts#L559)
 
 ___
 
@@ -143,4 +143,4 @@ Identifies this as AWSAccessKey authentication.
 
 #### Defined in
 
-[types.ts:542](https://github.com/coda/packs-sdk/blob/main/types.ts#L542)
+[types.ts:557](https://github.com/coda/packs-sdk/blob/main/types.ts#L557)
