@@ -260,11 +260,15 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       const {
         getConnectionName: getConnectionNameDef,
         getConnectionUserId: getConnectionUserIdDef,
+        postSetup: postSetupDef,
         ...rest
       } = authentication;
       const getConnectionName = wrapMetadataFunction(getConnectionNameDef);
       const getConnectionUserId = wrapMetadataFunction(getConnectionUserIdDef);
-      this.defaultAuthentication = {...rest, getConnectionName, getConnectionUserId} as Authentication;
+      const postSetup = postSetupDef?.map(step => {
+        return {...step, getOptionsFormula: wrapMetadataFunction(step.getOptionsFormula)};
+      });
+      this.defaultAuthentication = {...rest, getConnectionName, getConnectionUserId, postSetup} as Authentication;
     }
 
     if (authentication.type !== AuthenticationType.None) {
@@ -295,11 +299,20 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     const {
       getConnectionName: getConnectionNameDef,
       getConnectionUserId: getConnectionUserIdDef,
+      postSetup: postSetupDef,
       ...rest
     } = systemAuthentication;
     const getConnectionName = wrapMetadataFunction(getConnectionNameDef);
     const getConnectionUserId = wrapMetadataFunction(getConnectionUserIdDef);
-    this.systemConnectionAuthentication = {...rest, getConnectionName, getConnectionUserId} as SystemAuthentication;
+    const postSetup = postSetupDef?.map(step => {
+      return {...step, getOptionsFormula: wrapMetadataFunction(step.getOptionsFormula)};
+    });
+    this.systemConnectionAuthentication = {
+      ...rest,
+      getConnectionName,
+      getConnectionUserId,
+      postSetup,
+    } as SystemAuthentication;
 
     return this;
   }

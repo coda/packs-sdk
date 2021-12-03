@@ -27,7 +27,7 @@ See https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs#h_4
 
 #### Defined in
 
-[types.ts:236](https://github.com/coda/packs-sdk/blob/main/types.ts#L236)
+[types.ts:251](https://github.com/coda/packs-sdk/blob/main/types.ts#L251)
 
 ___
 
@@ -47,7 +47,7 @@ For packs that make requests to multiple domains (uncommon), this should be the 
 
 #### Defined in
 
-[types.ts:258](https://github.com/coda/packs-sdk/blob/main/types.ts#L258)
+[types.ts:273](https://github.com/coda/packs-sdk/blob/main/types.ts#L273)
 
 ___
 
@@ -69,7 +69,7 @@ with the creating user's Coda username.
 
 #### Defined in
 
-[types.ts:219](https://github.com/coda/packs-sdk/blob/main/types.ts#L219)
+[types.ts:234](https://github.com/coda/packs-sdk/blob/main/types.ts#L234)
 
 ___
 
@@ -85,7 +85,7 @@ A link to a help article or other page with more instructions about how to set u
 
 #### Defined in
 
-[types.ts:241](https://github.com/coda/packs-sdk/blob/main/types.ts#L241)
+[types.ts:256](https://github.com/coda/packs-sdk/blob/main/types.ts#L256)
 
 ___
 
@@ -98,7 +98,7 @@ e.g. "foo" if a token is passed as "foo=bar".
 
 #### Defined in
 
-[types.ts:334](https://github.com/coda/packs-sdk/blob/main/types.ts#L334)
+[types.ts:349](https://github.com/coda/packs-sdk/blob/main/types.ts#L349)
 
 ___
 
@@ -115,7 +115,7 @@ This is not common.
 
 #### Defined in
 
-[types.ts:264](https://github.com/coda/packs-sdk/blob/main/types.ts#L264)
+[types.ts:279](https://github.com/coda/packs-sdk/blob/main/types.ts#L279)
 
 ___
 
@@ -134,7 +134,7 @@ when creating a new account.
 
 #### Defined in
 
-[types.ts:249](https://github.com/coda/packs-sdk/blob/main/types.ts#L249)
+[types.ts:264](https://github.com/coda/packs-sdk/blob/main/types.ts#L264)
 
 ___
 
@@ -146,4 +146,4 @@ Identifies this as QueryParamToken authentication.
 
 #### Defined in
 
-[types.ts:329](https://github.com/coda/packs-sdk/blob/main/types.ts#L329)
+[types.ts:344](https://github.com/coda/packs-sdk/blob/main/types.ts#L344)

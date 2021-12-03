@@ -6,9 +6,11 @@ import type {MetadataFormulaDef} from '../api';
 import type {PackDefinitionBuilder} from '../builder';
 import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
+import {PostSetupType} from '..';
 import type {StringPackFormula} from '../api';
 import {ValueHintType} from '..';
 import {ValueType} from '../schema';
+import {assertCondition} from '..';
 import {makeMetadataFormula} from '../api';
 import {makeObjectSchema} from '../schema';
 import {makeParameter} from '../api';
@@ -306,6 +308,48 @@ describe('Builder', () => {
       const formula = pack.formulas[0];
       assert.isUndefined((formula as any).codaType);
       assert.equal((formula as unknown as StringPackFormula<any>).schema?.codaType, ValueHintType.Html);
+    });
+  });
+
+  describe('metadata formula shorthand syntax', () => {
+    it('SetEndpoint.getOptionsFormula, user authentication', () => {
+      pack.setUserAuthentication({
+        type: AuthenticationType.HeaderBearerToken,
+        postSetup: [
+          {
+            type: PostSetupType.SetEndpoint,
+            name: 'set-endpoint',
+            description: 'sets endpoint',
+            getOptionsFormula: async () => [{display: 'Display', value: 'value'}],
+          },
+        ],
+      });
+      assertCondition(pack.defaultAuthentication?.type === AuthenticationType.HeaderBearerToken);
+      const {postSetup} = pack.defaultAuthentication;
+      assert.ok(postSetup);
+      // Make sure we converted the shorthand function into a full formula def.
+      assert.ok(postSetup?.[0].getOptionsFormula.name);
+      assert.ok(postSetup?.[0].getOptionsFormula.execute);
+    });
+
+    it('SetEndpoint.getOptionsFormula, system authentication', () => {
+      pack.setSystemAuthentication({
+        type: AuthenticationType.HeaderBearerToken,
+        postSetup: [
+          {
+            type: PostSetupType.SetEndpoint,
+            name: 'set-endpoint',
+            description: 'sets endpoint',
+            getOptionsFormula: async () => [{display: 'Display', value: 'value'}],
+          },
+        ],
+      });
+      assertCondition(pack.systemConnectionAuthentication?.type === AuthenticationType.HeaderBearerToken);
+      const {postSetup} = pack.systemConnectionAuthentication;
+      assert.ok(postSetup);
+      // Make sure we converted the shorthand function into a full formula def.
+      assert.ok(postSetup?.[0].getOptionsFormula.name);
+      assert.ok(postSetup?.[0].getOptionsFormula.execute);
     });
   });
 });

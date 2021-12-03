@@ -8,6 +8,7 @@ export type {PackDefinition} from './types';
 export type {PackId} from './types';
 export type {PackVersionDefinition} from './types';
 export type {PostSetup} from './types';
+export type {PostSetupDef} from './types';
 export {PostSetupType} from './types';
 export {newPack} from './builder';
 export {PackDefinitionBuilder} from './builder';
@@ -190,6 +191,7 @@ export {SyncFormulaDef} from './api';
 export {SyncTable} from './api';
 
 export {SetEndpoint} from './types';
+export {SetEndpointDef} from './types';
 export {Sync} from './api_types';
 export {SystemAuthenticationDef} from './types';
 
