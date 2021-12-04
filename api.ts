@@ -1021,7 +1021,7 @@ export function makeMetadataFormula(
     examples: [],
     // alternatively should we change this default to ConnectionRequirement.Optional? I can imagine someone
     // testing/playing with a metadata formula without a connection.
-    connectionRequirement: options?.connectionRequirement || ConnectionRequirement.Required,
+    connectionRequirement: options?.connectionRequirement || ConnectionRequirement.Optional,
   });
 }
 

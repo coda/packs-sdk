@@ -399,7 +399,7 @@ function makeMetadataFormula(execute, options) {
         examples: [],
         // alternatively should we change this default to ConnectionRequirement.Optional? I can imagine someone
         // testing/playing with a metadata formula without a connection.
-        connectionRequirement: (options === null || options === void 0 ? void 0 : options.connectionRequirement) || api_types_1.ConnectionRequirement.Required,
+        connectionRequirement: (options === null || options === void 0 ? void 0 : options.connectionRequirement) || api_types_1.ConnectionRequirement.Optional,
     });
 }
 exports.makeMetadataFormula = makeMetadataFormula;
