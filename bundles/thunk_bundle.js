@@ -2307,7 +2307,7 @@ module.exports = (() => {
         "%IteratorPrototype%": hasSymbols ? getProto(getProto([][Symbol.iterator]())) : undefined2,
         "%JSON%": typeof JSON === "object" ? JSON : undefined2,
         "%Map%": typeof Map === "undefined" ? undefined2 : Map,
-        "%MapIteratorPrototype%": typeof Map === "undefined" || !hasSymbols ? undefined2 : getProto(new Map()[Symbol.iterator]()),
+        "%MapIteratorPrototype%": typeof Map === "undefined" || !hasSymbols ? undefined2 : getProto((/* @__PURE__ */ new Map())[Symbol.iterator]()),
         "%Math%": Math,
         "%Number%": Number,
         "%Object%": Object,
@@ -2320,7 +2320,7 @@ module.exports = (() => {
         "%Reflect%": typeof Reflect === "undefined" ? undefined2 : Reflect,
         "%RegExp%": RegExp,
         "%Set%": typeof Set === "undefined" ? undefined2 : Set,
-        "%SetIteratorPrototype%": typeof Set === "undefined" || !hasSymbols ? undefined2 : getProto(new Set()[Symbol.iterator]()),
+        "%SetIteratorPrototype%": typeof Set === "undefined" || !hasSymbols ? undefined2 : getProto((/* @__PURE__ */ new Set())[Symbol.iterator]()),
         "%SharedArrayBuffer%": typeof SharedArrayBuffer === "undefined" ? undefined2 : SharedArrayBuffer,
         "%String%": String,
         "%StringIteratorPrototype%": hasSymbols ? getProto(""[Symbol.iterator]()) : undefined2,
@@ -4199,28 +4199,7 @@ module.exports = (() => {
 
   // types.ts
   init_buffer_shim();
-  var PackCategory;
-  (function(PackCategory2) {
-    PackCategory2["CRM"] = "CRM";
-    PackCategory2["Calendar"] = "Calendar";
-    PackCategory2["Communication"] = "Communication";
-    PackCategory2["DataStorage"] = "DataStorage";
-    PackCategory2["Design"] = "Design";
-    PackCategory2["Financial"] = "Financial";
-    PackCategory2["Fun"] = "Fun";
-    PackCategory2["Geo"] = "Geo";
-    PackCategory2["IT"] = "IT";
-    PackCategory2["Mathematics"] = "Mathematics";
-    PackCategory2["Organization"] = "Organization";
-    PackCategory2["Recruiting"] = "Recruiting";
-    PackCategory2["Shopping"] = "Shopping";
-    PackCategory2["Social"] = "Social";
-    PackCategory2["Sports"] = "Sports";
-    PackCategory2["Travel"] = "Travel";
-    PackCategory2["Weather"] = "Weather";
-  })(PackCategory || (PackCategory = {}));
-  var AuthenticationType;
-  (function(AuthenticationType2) {
+  var AuthenticationType = /* @__PURE__ */ ((AuthenticationType2) => {
     AuthenticationType2["None"] = "None";
     AuthenticationType2["HeaderBearerToken"] = "HeaderBearerToken";
     AuthenticationType2["CustomHeaderToken"] = "CustomHeaderToken";
@@ -4233,49 +4212,22 @@ module.exports = (() => {
     AuthenticationType2["AWSAssumeRole"] = "AWSAssumeRole";
     AuthenticationType2["CodaApiHeaderBearerToken"] = "CodaApiHeaderBearerToken";
     AuthenticationType2["Various"] = "Various";
-  })(AuthenticationType || (AuthenticationType = {}));
-  var DefaultConnectionType;
-  (function(DefaultConnectionType2) {
-    DefaultConnectionType2[DefaultConnectionType2["SharedDataOnly"] = 1] = "SharedDataOnly";
-    DefaultConnectionType2[DefaultConnectionType2["Shared"] = 2] = "Shared";
-    DefaultConnectionType2[DefaultConnectionType2["ProxyActionsOnly"] = 3] = "ProxyActionsOnly";
-  })(DefaultConnectionType || (DefaultConnectionType = {}));
-  var PostSetupType;
-  (function(PostSetupType2) {
+    return AuthenticationType2;
+  })(AuthenticationType || {});
+  var PostSetupType = /* @__PURE__ */ ((PostSetupType2) => {
     PostSetupType2["SetEndpoint"] = "SetEndPoint";
-  })(PostSetupType || (PostSetupType = {}));
-  var FeatureSet;
-  (function(FeatureSet2) {
-    FeatureSet2["Basic"] = "Basic";
-    FeatureSet2["Pro"] = "Pro";
-    FeatureSet2["Team"] = "Team";
-    FeatureSet2["Enterprise"] = "Enterprise";
-  })(FeatureSet || (FeatureSet = {}));
-  var QuotaLimitType;
-  (function(QuotaLimitType2) {
-    QuotaLimitType2["Action"] = "Action";
-    QuotaLimitType2["Getter"] = "Getter";
-    QuotaLimitType2["Sync"] = "Sync";
-    QuotaLimitType2["Metadata"] = "Metadata";
-  })(QuotaLimitType || (QuotaLimitType = {}));
-  var SyncInterval;
-  (function(SyncInterval2) {
-    SyncInterval2["Manual"] = "Manual";
-    SyncInterval2["Daily"] = "Daily";
-    SyncInterval2["Hourly"] = "Hourly";
-    SyncInterval2["EveryTenMinutes"] = "EveryTenMinutes";
-  })(SyncInterval || (SyncInterval = {}));
+    return PostSetupType2;
+  })(PostSetupType || {});
 
   // runtime/types.ts
   init_buffer_shim();
-  var FormulaType;
-  (function(FormulaType2) {
+  var FormulaType = /* @__PURE__ */ ((FormulaType2) => {
     FormulaType2["Standard"] = "Standard";
     FormulaType2["Sync"] = "Sync";
     FormulaType2["Metadata"] = "Metadata";
-  })(FormulaType || (FormulaType = {}));
-  var MetadataFormulaType;
-  (function(MetadataFormulaType2) {
+    return FormulaType2;
+  })(FormulaType || {});
+  var MetadataFormulaType = /* @__PURE__ */ ((MetadataFormulaType2) => {
     MetadataFormulaType2["GetConnectionName"] = "GetConnectionName";
     MetadataFormulaType2["GetConnectionUserId"] = "GetConnectionUserId";
     MetadataFormulaType2["ParameterAutocomplete"] = "ParameterAutocomplete";
@@ -4284,92 +4236,28 @@ module.exports = (() => {
     MetadataFormulaType2["SyncGetDisplayUrl"] = "SyncGetDisplayUrl";
     MetadataFormulaType2["SyncGetTableName"] = "SyncGetTableName";
     MetadataFormulaType2["SyncGetSchema"] = "SyncGetSchema";
-  })(MetadataFormulaType || (MetadataFormulaType = {}));
+    return MetadataFormulaType2;
+  })(MetadataFormulaType || {});
 
   // api.ts
   init_buffer_shim();
 
   // api_types.ts
   init_buffer_shim();
-  var Type;
-  (function(Type2) {
-    Type2[Type2["string"] = 0] = "string";
-    Type2[Type2["number"] = 1] = "number";
-    Type2[Type2["object"] = 2] = "object";
-    Type2[Type2["boolean"] = 3] = "boolean";
-    Type2[Type2["date"] = 4] = "date";
-    Type2[Type2["html"] = 5] = "html";
-    Type2[Type2["image"] = 6] = "image";
-  })(Type || (Type = {}));
-  var ParameterType;
-  (function(ParameterType2) {
-    ParameterType2["String"] = "string";
-    ParameterType2["Number"] = "number";
-    ParameterType2["Boolean"] = "boolean";
-    ParameterType2["Date"] = "date";
-    ParameterType2["Html"] = "html";
-    ParameterType2["Image"] = "image";
-    ParameterType2["StringArray"] = "stringArray";
-    ParameterType2["NumberArray"] = "numberArray";
-    ParameterType2["BooleanArray"] = "booleanArray";
-    ParameterType2["DateArray"] = "dateArray";
-    ParameterType2["HtmlArray"] = "htmlArray`";
-    ParameterType2["ImageArray"] = "imageArray";
-  })(ParameterType || (ParameterType = {}));
   var ParameterTypeInputMap = {
-    [ParameterType.String]: 0,
-    [ParameterType.Number]: 1,
-    [ParameterType.Boolean]: 3,
-    [ParameterType.Date]: 4,
-    [ParameterType.Html]: 5,
-    [ParameterType.Image]: 6,
-    [ParameterType.StringArray]: { type: "array", items: 0 },
-    [ParameterType.NumberArray]: { type: "array", items: 1 },
-    [ParameterType.BooleanArray]: { type: "array", items: 3 },
-    [ParameterType.DateArray]: { type: "array", items: 4 },
-    [ParameterType.HtmlArray]: { type: "array", items: 5 },
-    [ParameterType.ImageArray]: { type: "array", items: 6 }
+    ["string" /* String */]: 0 /* string */,
+    ["number" /* Number */]: 1 /* number */,
+    ["boolean" /* Boolean */]: 3 /* boolean */,
+    ["date" /* Date */]: 4 /* date */,
+    ["html" /* Html */]: 5 /* html */,
+    ["image" /* Image */]: 6 /* image */,
+    ["stringArray" /* StringArray */]: { type: "array", items: 0 /* string */ },
+    ["numberArray" /* NumberArray */]: { type: "array", items: 1 /* number */ },
+    ["booleanArray" /* BooleanArray */]: { type: "array", items: 3 /* boolean */ },
+    ["dateArray" /* DateArray */]: { type: "array", items: 4 /* date */ },
+    ["htmlArray`" /* HtmlArray */]: { type: "array", items: 5 /* html */ },
+    ["imageArray" /* ImageArray */]: { type: "array", items: 6 /* image */ }
   };
-  var ConnectionRequirement;
-  (function(ConnectionRequirement2) {
-    ConnectionRequirement2["None"] = "none";
-    ConnectionRequirement2["Optional"] = "optional";
-    ConnectionRequirement2["Required"] = "required";
-  })(ConnectionRequirement || (ConnectionRequirement = {}));
-  var NetworkConnection;
-  (function(NetworkConnection2) {
-    NetworkConnection2["None"] = "none";
-    NetworkConnection2["Optional"] = "optional";
-    NetworkConnection2["Required"] = "required";
-  })(NetworkConnection || (NetworkConnection = {}));
-  var PrecannedDateRange;
-  (function(PrecannedDateRange2) {
-    PrecannedDateRange2["Yesterday"] = "yesterday";
-    PrecannedDateRange2["Last7Days"] = "last_7_days";
-    PrecannedDateRange2["Last30Days"] = "last_30_days";
-    PrecannedDateRange2["LastWeek"] = "last_week";
-    PrecannedDateRange2["LastMonth"] = "last_month";
-    PrecannedDateRange2["Last3Months"] = "last_3_months";
-    PrecannedDateRange2["Last6Months"] = "last_6_months";
-    PrecannedDateRange2["LastYear"] = "last_year";
-    PrecannedDateRange2["Today"] = "today";
-    PrecannedDateRange2["ThisWeek"] = "this_week";
-    PrecannedDateRange2["ThisWeekStart"] = "this_week_start";
-    PrecannedDateRange2["ThisMonth"] = "this_month";
-    PrecannedDateRange2["ThisMonthStart"] = "this_month_start";
-    PrecannedDateRange2["ThisYearStart"] = "this_year_start";
-    PrecannedDateRange2["YearToDate"] = "year_to_date";
-    PrecannedDateRange2["ThisYear"] = "this_year";
-    PrecannedDateRange2["Tomorrow"] = "tomorrow";
-    PrecannedDateRange2["Next7Days"] = "next_7_days";
-    PrecannedDateRange2["Next30Days"] = "next_30_days";
-    PrecannedDateRange2["NextWeek"] = "next_week";
-    PrecannedDateRange2["NextMonth"] = "next_month";
-    PrecannedDateRange2["Next3Months"] = "next_3_months";
-    PrecannedDateRange2["Next6Months"] = "next_6_months";
-    PrecannedDateRange2["NextYear"] = "next_year";
-    PrecannedDateRange2["Everything"] = "everything";
-  })(PrecannedDateRange || (PrecannedDateRange = {}));
 
   // schema.ts
   init_buffer_shim();
@@ -4379,108 +4267,6 @@ module.exports = (() => {
 
   // schema.ts
   var import_pascalcase = __toModule(require_pascalcase());
-  var ValueType;
-  (function(ValueType2) {
-    ValueType2["Boolean"] = "boolean";
-    ValueType2["Number"] = "number";
-    ValueType2["String"] = "string";
-    ValueType2["Array"] = "array";
-    ValueType2["Object"] = "object";
-  })(ValueType || (ValueType = {}));
-  var ValueHintType;
-  (function(ValueHintType2) {
-    ValueHintType2["Date"] = "date";
-    ValueHintType2["Time"] = "time";
-    ValueHintType2["DateTime"] = "datetime";
-    ValueHintType2["Duration"] = "duration";
-    ValueHintType2["Person"] = "person";
-    ValueHintType2["Percent"] = "percent";
-    ValueHintType2["Currency"] = "currency";
-    ValueHintType2["ImageReference"] = "image";
-    ValueHintType2["ImageAttachment"] = "imageAttachment";
-    ValueHintType2["Url"] = "url";
-    ValueHintType2["Markdown"] = "markdown";
-    ValueHintType2["Html"] = "html";
-    ValueHintType2["Embed"] = "embed";
-    ValueHintType2["Reference"] = "reference";
-    ValueHintType2["Attachment"] = "attachment";
-    ValueHintType2["Slider"] = "slider";
-    ValueHintType2["Scale"] = "scale";
-  })(ValueHintType || (ValueHintType = {}));
-  var StringHintValueTypes = [
-    ValueHintType.Attachment,
-    ValueHintType.Date,
-    ValueHintType.Time,
-    ValueHintType.DateTime,
-    ValueHintType.Duration,
-    ValueHintType.Embed,
-    ValueHintType.Html,
-    ValueHintType.ImageReference,
-    ValueHintType.ImageAttachment,
-    ValueHintType.Markdown,
-    ValueHintType.Url
-  ];
-  var NumberHintValueTypes = [
-    ValueHintType.Date,
-    ValueHintType.Time,
-    ValueHintType.DateTime,
-    ValueHintType.Percent,
-    ValueHintType.Currency,
-    ValueHintType.Slider,
-    ValueHintType.Scale
-  ];
-  var ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference];
-  var CurrencyFormat;
-  (function(CurrencyFormat2) {
-    CurrencyFormat2["Currency"] = "currency";
-    CurrencyFormat2["Accounting"] = "accounting";
-    CurrencyFormat2["Financial"] = "financial";
-  })(CurrencyFormat || (CurrencyFormat = {}));
-  var ScaleIconSet;
-  (function(ScaleIconSet2) {
-    ScaleIconSet2["Star"] = "star";
-    ScaleIconSet2["Circle"] = "circle";
-    ScaleIconSet2["Fire"] = "fire";
-    ScaleIconSet2["Bug"] = "bug";
-    ScaleIconSet2["Diamond"] = "diamond";
-    ScaleIconSet2["Bell"] = "bell";
-    ScaleIconSet2["ThumbsUp"] = "thumbsup";
-    ScaleIconSet2["Heart"] = "heart";
-    ScaleIconSet2["Chili"] = "chili";
-    ScaleIconSet2["Smiley"] = "smiley";
-    ScaleIconSet2["Lightning"] = "lightning";
-    ScaleIconSet2["Currency"] = "currency";
-    ScaleIconSet2["Coffee"] = "coffee";
-    ScaleIconSet2["Person"] = "person";
-    ScaleIconSet2["Battery"] = "battery";
-    ScaleIconSet2["Cocktail"] = "cocktail";
-    ScaleIconSet2["Cloud"] = "cloud";
-    ScaleIconSet2["Sun"] = "sun";
-    ScaleIconSet2["Checkmark"] = "checkmark";
-    ScaleIconSet2["LightBulb"] = "lightbulb";
-  })(ScaleIconSet || (ScaleIconSet = {}));
-  var DurationUnit;
-  (function(DurationUnit2) {
-    DurationUnit2["Days"] = "days";
-    DurationUnit2["Hours"] = "hours";
-    DurationUnit2["Minutes"] = "minutes";
-    DurationUnit2["Seconds"] = "seconds";
-  })(DurationUnit || (DurationUnit = {}));
-  var SimpleStringHintValueTypes = [
-    ValueHintType.Attachment,
-    ValueHintType.Embed,
-    ValueHintType.Html,
-    ValueHintType.ImageReference,
-    ValueHintType.ImageAttachment,
-    ValueHintType.Markdown,
-    ValueHintType.Url
-  ];
-  var AttributionNodeType;
-  (function(AttributionNodeType2) {
-    AttributionNodeType2[AttributionNodeType2["Text"] = 1] = "Text";
-    AttributionNodeType2[AttributionNodeType2["Link"] = 2] = "Link";
-    AttributionNodeType2[AttributionNodeType2["Image"] = 3] = "Image";
-  })(AttributionNodeType || (AttributionNodeType = {}));
 
   // handler_templates.ts
   init_buffer_shim();
@@ -4554,19 +4340,19 @@ module.exports = (() => {
 
   // runtime/common/marshaling/constants.ts
   init_buffer_shim();
-  var CodaMarshalerType;
-  (function(CodaMarshalerType2) {
+  var CodaMarshalerType = /* @__PURE__ */ ((CodaMarshalerType2) => {
     CodaMarshalerType2["Error"] = "Error";
     CodaMarshalerType2["Buffer"] = "Buffer";
     CodaMarshalerType2["Number"] = "Number";
     CodaMarshalerType2["Date"] = "Date";
-  })(CodaMarshalerType || (CodaMarshalerType = {}));
-  var MarshalingInjectedKeys;
-  (function(MarshalingInjectedKeys2) {
+    return CodaMarshalerType2;
+  })(CodaMarshalerType || {});
+  var MarshalingInjectedKeys = /* @__PURE__ */ ((MarshalingInjectedKeys2) => {
     MarshalingInjectedKeys2["CodaMarshaler"] = "__coda_marshaler__";
     MarshalingInjectedKeys2["ErrorClassName"] = "__error_class_name__";
     MarshalingInjectedKeys2["ErrorClassType"] = "__error_class_type__";
-  })(MarshalingInjectedKeys || (MarshalingInjectedKeys = {}));
+    return MarshalingInjectedKeys2;
+  })(MarshalingInjectedKeys || {});
 
   // runtime/common/marshaling/marshal_buffer.ts
   function marshalBuffer(val) {
@@ -4603,12 +4389,6 @@ module.exports = (() => {
 
   // runtime/common/marshaling/marshal_errors.ts
   init_buffer_shim();
-  var ErrorClassType;
-  (function(ErrorClassType2) {
-    ErrorClassType2["System"] = "System";
-    ErrorClassType2["Coda"] = "Coda";
-    ErrorClassType2["Other"] = "Other";
-  })(ErrorClassType || (ErrorClassType = {}));
   var recognizableSystemErrorClasses = [
     Error,
     EvalError,
@@ -4623,12 +4403,12 @@ module.exports = (() => {
   ];
   function getErrorClassType(err) {
     if (recognizableSystemErrorClasses.some((cls) => cls === err.constructor)) {
-      return ErrorClassType.System;
+      return "System" /* System */;
     }
     if (recognizableCodaErrorClasses.some((cls) => cls === err.constructor)) {
-      return ErrorClassType.Coda;
+      return "Coda" /* Coda */;
     }
-    return ErrorClassType.Other;
+    return "Other" /* Other */;
   }
   function marshalError(err) {
     if (!(err instanceof Error)) {
@@ -4648,10 +4428,10 @@ module.exports = (() => {
   function getErrorClass(errorClassType, name) {
     let errorClasses;
     switch (errorClassType) {
-      case ErrorClassType.System:
+      case "System" /* System */:
         errorClasses = recognizableSystemErrorClasses;
         break;
-      case ErrorClassType.Coda:
+      case "Coda" /* Coda */:
         errorClasses = recognizableCodaErrorClasses;
         break;
       default:
