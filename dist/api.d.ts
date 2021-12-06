@@ -195,9 +195,7 @@ export declare type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
  */
 export declare function isUserVisibleError(error: Error): error is UserVisibleError;
 export declare function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDynamicSyncTable;
-export declare function wrapMetadataFunction(fnOrFormula: MetadataFormula | MetadataFunction | undefined, options?: {
-    connectionRequirement?: ConnectionRequirement;
-}): MetadataFormula | undefined;
+export declare function wrapMetadataFunction(fnOrFormula: MetadataFormula | MetadataFunction | undefined): MetadataFormula | undefined;
 /** Options you can specify when defining a parameter using {@link makeParameter}. */
 export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, 'type' | 'autocomplete'> & {
     type: T;
@@ -871,7 +869,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     varargParameters?: ParamDefs | undefined;
     examples?: {
         params: (import("./api_types").PackFormulaValue | undefined)[];
-        result: PackFormulaResult; /** Options you can specify when defining a parameter using {@link makeParameter}. */
+        result: PackFormulaResult;
     }[] | undefined;
     isAction?: boolean | undefined;
     connectionRequirement?: ConnectionRequirement | undefined;
@@ -912,7 +910,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
     varargParameters?: ParamDefs | undefined;
     examples?: {
         params: (import("./api_types").PackFormulaValue | undefined)[];
-        result: PackFormulaResult; /** Options you can specify when defining a parameter using {@link makeParameter}. */
+        result: PackFormulaResult;
     }[] | undefined;
     isAction?: boolean | undefined;
     connectionRequirement?: ConnectionRequirement | undefined;

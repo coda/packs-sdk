@@ -1,3 +1,7 @@
+### 0.8.0
+
+- **Breaking Change** Connection requirement of metadata formulas are now set to optional. If your pack is using sematic versions, this will likely lead to a major version bump in your next release.
+
 ### 0.7.3
 
 - Fixed a typo that broke local fetcher testing with a pack using the `AuthenticationType.Custom` authentication.
