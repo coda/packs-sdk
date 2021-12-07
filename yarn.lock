@@ -1815,10 +1815,10 @@ domain-browser@^1.2.0:
   resolved "https://registry.yarnpkg.com/domain-browser/-/domain-browser-1.2.0.tgz#3d31f50191a6749dd1375a7f522e823d42e54eda"
   integrity sha512-jnjyiM6eRyZl2H+W8Q/zLMA481hzi0eszAaBUzIVnmYVDBbnLxVNnfu1HgEBvCbL+71FrxMl3E6lpKH7Ge3OXA==
 
-dts-bundle-generator@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/dts-bundle-generator/-/dts-bundle-generator-6.1.0.tgz#3e35df2882b11950613cfe8df8afbe602dede845"
-  integrity sha512-9MGbhZExuN75zq8ImoM7iVeGUavjtGw+UIfbaNRWZ+Jq4Nw2MN5OLuSrA1EnWlmZakTZRCx1CMo1zqBQ9+HP9g==
+dts-bundle-generator@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/dts-bundle-generator/-/dts-bundle-generator-6.2.0.tgz#356d9f8d144b21d0432861703455975a1dce97e7"
+  integrity sha512-9OA6gG7G/pYxz4UPgMpz0IYrzz7guP4gc5pZyUhV2mnAwmlgplRBkCoCQgPN81+8pirI02/PZRX7SRAPJbUt8w==
   dependencies:
     typescript ">=3.0.1"
     yargs "^17.2.1"
