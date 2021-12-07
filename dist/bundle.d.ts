@@ -1694,7 +1694,9 @@ export interface DynamicSyncTableDef<K extends string, L extends string, ParamDe
  * ```
  */
 export interface Continuation {
-	[key: string]: string | number;
+	[key: string]: string | number | {
+		[key: string]: string | number;
+	};
 }
 /**
  * Type definition for the formula that implements a sync table.
