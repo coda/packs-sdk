@@ -1,6 +1,6 @@
 ### 0.8.0
 
-- **Breaking Change** Connection requirement of metadata formulas are now set to optional. If your pack is using sematic versions, this will likely lead to a major version bump in your next release.
+- **Breaking Change** The connection requirement for metadata formulas now defaults to optional instead of required. If your pack is using sematic versions, this will likely lead to a major version bump in your next release.
 
 ### 0.7.3
 
