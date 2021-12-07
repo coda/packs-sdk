@@ -1016,7 +1016,7 @@ export function makeMetadataFormula(
       makeStringParameter('formulaContext', 'Serialized JSON for metadata', {optional: true}),
     ],
     examples: [],
-    connectionRequirement: options?.connectionRequirement || ConnectionRequirement.Required,
+    connectionRequirement: options?.connectionRequirement || ConnectionRequirement.Optional,
   });
 }
 

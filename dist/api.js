@@ -395,7 +395,7 @@ function makeMetadataFormula(execute, options) {
             makeStringParameter('formulaContext', 'Serialized JSON for metadata', { optional: true }),
         ],
         examples: [],
-        connectionRequirement: (options === null || options === void 0 ? void 0 : options.connectionRequirement) || api_types_1.ConnectionRequirement.Required,
+        connectionRequirement: (options === null || options === void 0 ? void 0 : options.connectionRequirement) || api_types_1.ConnectionRequirement.Optional,
     });
 }
 exports.makeMetadataFormula = makeMetadataFormula;
