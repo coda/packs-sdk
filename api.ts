@@ -212,7 +212,7 @@ export interface DynamicSyncTableDef<
  * ```
  */
 export interface Continuation {
-  [key: string]: string | number;
+  [key: string]: string | number | {[key: string]: string | number};
 }
 
 /**

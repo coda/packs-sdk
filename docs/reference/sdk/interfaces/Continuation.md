@@ -24,4 +24,4 @@ Examples:
 
 ## Indexable
 
-▪ [key: `string`]: `string` \| `number`
+▪ [key: `string`]: `string` \| `number` \| { [key: string]: `string` \| `number`;  }
