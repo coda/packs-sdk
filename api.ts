@@ -1117,6 +1117,10 @@ export function autocompleteSearchObjects<T>(
   displayKey: keyof T,
   valueKey: keyof T,
 ): Promise<MetadataFormulaObjectResultType[]> {
+  if (typeof search !== 'string') {
+    throw new TypeError(`Exepcting a string for "search" parameter but received ${search}`);
+  }
+
   const normalizedSearch = search.toLowerCase();
   const filtered = objs.filter(o => (o[displayKey] as any).toLowerCase().includes(normalizedSearch));
   const metadataResults = filtered.map(o => {

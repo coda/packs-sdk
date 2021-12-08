@@ -478,6 +478,9 @@ exports.simpleAutocomplete = simpleAutocomplete;
  * ```
  */
 function autocompleteSearchObjects(search, objs, displayKey, valueKey) {
+    if (typeof search !== 'string') {
+        throw new TypeError(`Exepcting a string for "search" parameter but received ${search}`);
+    }
     const normalizedSearch = search.toLowerCase();
     const filtered = objs.filter(o => o[displayKey].toLowerCase().includes(normalizedSearch));
     const metadataResults = filtered.map(o => {
