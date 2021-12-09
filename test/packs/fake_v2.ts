@@ -1,3 +1,4 @@
+import {FormatType} from '../../types';
 import * as coda from '../..';
 
 export const pack = coda.newPack();
@@ -51,6 +52,7 @@ pack.addFormula({
 
 pack.addColumnFormat({
   name: 'test',
+  type: FormatType.ColumnFormatType,
   formulaName: 'Throw',
   formulaNamespace: 'deprecated',
   matchers: [/https:\/\/testregex/],

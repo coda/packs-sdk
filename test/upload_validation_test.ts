@@ -5,6 +5,7 @@ import {ConnectionRequirement} from '../api_types';
 import {CurrencyFormat} from '..';
 import {DefaultConnectionType} from '../types';
 import {DurationUnit} from '..';
+import {FormatType} from '../types';
 import type {Formula} from '../api';
 import type {ObjectSchemaDefinition} from '../schema';
 import type {PackFormulaMetadata} from '../api';
@@ -1328,6 +1329,7 @@ describe('Pack metadata Validation', () => {
           formats: [
             {
               name: 'MyFormat',
+              type: FormatType.ColumnFormatType,
               formulaNamespace: 'MyNamespace',
               formulaName: 'MyFormula',
               hasNoConnection: true,
@@ -1354,6 +1356,7 @@ describe('Pack metadata Validation', () => {
           formats: [
             {
               name: 'MyFormat',
+              type: FormatType.ColumnFormatType,
               formulaNamespace: 'MyNamespace',
               formulaName: 'Unknown',
               matchers: ['/some compiled regex/i'],
@@ -1385,6 +1388,7 @@ describe('Pack metadata Validation', () => {
             {
               name: 'MyFormat',
               formulaNamespace: 'MyNamespace',
+              type: FormatType.ColumnFormatType,
               formulaName: 'MyFormula',
               hasNoConnection: true,
               instructions: 'some instructions',
@@ -1419,6 +1423,7 @@ describe('Pack metadata Validation', () => {
               formulaNamespace: 'MyNamespace',
               formulaName: 'MyFormula',
               matchers: ['/some compiled regex/i'],
+              type: FormatType.ColumnFormatType,
             },
           ],
         });
@@ -1448,6 +1453,7 @@ describe('Pack metadata Validation', () => {
               formulaNamespace: 'MyNamespace',
               formulaName: 'MyFormula',
               matchers: ['/some compiled regex/i'],
+              type: FormatType.ColumnFormatType,
             },
           ],
         });

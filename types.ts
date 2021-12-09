@@ -705,20 +705,20 @@ export type VariousSupportedAuthenticationTypes = $Values<Pick<VariousSupportedA
  *
  * At present, matchers will only be run on URLs and not other text values.
  */
+
+export enum FormatType {
+  ColumnFormatType = 'ColumnFormat',
+  ControlFormatType = 'ControlFormat',
+};
+
 export interface Format {
+  type?: FormatType;
   /**
-   * The name of this column format. This will show to users in the column type chooser.
+   * The name of this column/control format. This will show to users in the column type chooser.
    */
   name: string;
   /** @deprecated Namespaces are being removed from the product. */
-  formulaNamespace?: string;
-  /**
-   * The name of the formula to invoke for values in columns using this format.
-   * This must correspond to the name of a regular, public formula defined in this pack.
-   */
-  formulaName: string;
-  /** @deprecated No longer needed, will be inferred from the referenced formula. */
-  hasNoConnection?: boolean;
+  formulaNamespace: string;
   /**
    * A brief, optional explanation of how users should use this format, for example, what kinds
    * of values they should put in columns using this format.
@@ -733,7 +733,15 @@ export interface Format {
    * @deprecated Currently unused.
    */
   placeholder?: string;
-}
+  /**
+   * The name of the formula to invoke for values in columns using this format.
+   * This must correspond to the name of a regular, public formula defined in this pack.
+   */
+  formulaName: string;
+  /** @deprecated No longer needed, will be inferred from the referenced formula. */
+  hasNoConnection?: boolean;
+  embedUrl?: string;
+};
 
 /**
  * @ignore

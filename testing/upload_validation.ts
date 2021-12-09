@@ -816,6 +816,8 @@ const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   instructions: z.string().optional(),
   placeholder: z.string().optional(),
   matchers: z.array(z.string().refine(validateFormatMatcher)),
+  embedUrl: z.string().optional(),
+  type: z.string().optional(),
 });
 
 const syncFormulaSchema = zodCompleteObject<Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute'>>({

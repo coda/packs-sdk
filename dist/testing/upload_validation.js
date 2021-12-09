@@ -676,6 +676,8 @@ const formatMetadataSchema = zodCompleteObject({
     instructions: z.string().optional(),
     placeholder: z.string().optional(),
     matchers: z.array(z.string().refine(validateFormatMatcher)),
+    embedUrl: z.string().optional(),
+    type: z.string().optional(),
 });
 const syncFormulaSchema = zodCompleteObject({
     schema: arrayPropertySchema.optional(),
