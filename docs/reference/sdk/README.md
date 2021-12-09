@@ -8,6 +8,7 @@
 - [CurrencyFormat](enums/CurrencyFormat.md)
 - [DefaultConnectionType](enums/DefaultConnectionType.md)
 - [DurationUnit](enums/DurationUnit.md)
+- [FormatType](enums/FormatType.md)
 - [NetworkConnection](enums/NetworkConnection.md)
 - [ParameterType](enums/ParameterType.md)
 - [PostSetupType](enums/PostSetupType.md)

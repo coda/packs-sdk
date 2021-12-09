@@ -101,7 +101,7 @@ ___
 
 ### type
 
-• `Optional` **type**: `FormatType`
+• `Optional` **type**: [`FormatType`](../enums/FormatType.md)
 
 #### Defined in
 

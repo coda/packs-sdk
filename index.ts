@@ -3,6 +3,7 @@ export type {Authentication} from './types';
 export {AuthenticationType} from './types';
 export type {BasicPackDefinition} from './types';
 export {DefaultConnectionType} from './types';
+export {FormatType} from './types';
 export type {Format} from './types';
 export type {PackDefinition} from './types';
 export type {PackId} from './types';
