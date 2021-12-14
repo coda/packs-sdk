@@ -47,7 +47,7 @@ pack.addSyncTable({
         url: url,
       });
 
-      let results: any[] = [];
+      let results = [];
       for (let task of response.body) {
         results.push({
           name: task.content,

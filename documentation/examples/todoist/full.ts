@@ -443,7 +443,7 @@ pack.addSyncTable({
         url: url,
       });
 
-      let results: any[] = [];
+      let results = [];
       for (let project of response.body) {
         results.push(toProject(project, true));
       }
@@ -469,7 +469,7 @@ pack.addSyncTable({
         url: url,
       });
 
-      let results: any[] = [];
+      let results = [];
       for (let task of response.body) {
         results.push(toTask(task, true));
       }
