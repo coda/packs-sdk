@@ -15,15 +15,8 @@ Coda supports a fixed set of authentication types which cover the most common pa
 The basic structure of per-user authentication.
 
 ```ts
-// When registering your app in the API's developer console set the redirect URL
-// to: https://coda.io/packsAuth/oauth2
-// After building your Pack, remember to visit the Settings tab to set your
-// client ID and secret.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
-  // The following two URLs are will be found in the API's documentation.
-  authorizationUrl: "<Authorization URL>",
-  tokenUrl: "<Token URL>",
+  type: coda.AuthenticationType.HeaderBearerToken,
 });
 ```
 ## Template (System-wide)

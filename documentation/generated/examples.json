@@ -63,7 +63,7 @@
       {
         "name": "Template (Per-user)",
         "content": "The basic structure of per-user authentication.",
-        "code": "// When registering your app in the API's developer console set the redirect URL\n// to: https://coda.io/packsAuth/oauth2\n// After building your Pack, remember to visit the Settings tab to set your\n// client ID and secret.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  // The following two URLs are will be found in the API's documentation.\n  authorizationUrl: \"<Authorization URL>\",\n  tokenUrl: \"<Token URL>\",\n});"
+        "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n});"
       },
       {
         "name": "Template (System-wide)",

@@ -196,7 +196,7 @@ exports.Examples = [
             {
                 name: 'Template (Per-user)',
                 content: 'The basic structure of per-user authentication.',
-                codeFile: './snippets//authentication/user.ts',
+                codeFile: './snippets/authentication/user.ts',
             },
             {
                 name: 'Template (System-wide)',
