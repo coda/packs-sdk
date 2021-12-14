@@ -183,7 +183,7 @@ export const Examples: Example[] = [
     name: 'Authentication',
     category: ExampleCategory.Topic,
     triggerTokens: ['setSystemAuthentication', 'setUserAuthentication'],
-    contentFile: './examples/authentication/authentication.md',
+    contentFile: './examples/authentication/README.md',
     linkData: {
       type: UrlType.SdkReferencePath,
       url: '/guides/advanced/authentication',
