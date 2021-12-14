@@ -62,7 +62,7 @@ pack.addSyncTable({
         url: url,
       });
       let cats = response.body;
-      let result: any = [];
+      let result = [];
       for (let cat of cats) {
         result.push({
           image: "https://cataas.com/cat/" + cat.id,

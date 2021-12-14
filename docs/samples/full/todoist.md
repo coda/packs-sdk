@@ -463,7 +463,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
             url: url,
           });
 
-          let results: any[] = [];
+          let results = [];
           for (let project of response.body) {
             results.push(toProject(project, true));
           }
@@ -489,7 +489,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
             url: url,
           });
 
-          let results: any[] = [];
+          let results = [];
           for (let task of response.body) {
             results.push(toTask(task, true));
           }
