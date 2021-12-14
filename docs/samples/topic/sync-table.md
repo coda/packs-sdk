@@ -124,7 +124,7 @@ pack.addSyncTable({
         url: url,
       });
       let cats = response.body;
-      let result: any = [];
+      let result = [];
       for (let cat of cats) {
         result.push({
           image: "https://cataas.com/cat/" + cat.id,
@@ -321,7 +321,7 @@ pack.addSyncTable({
         url: url,
       });
 
-      let results: any[] = [];
+      let results = [];
       for (let task of response.body) {
         results.push({
           name: task.content,
