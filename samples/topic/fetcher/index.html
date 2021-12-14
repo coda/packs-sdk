@@ -4150,10 +4150,6 @@
 <div class="highlight"><pre><span></span><code><span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
   <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
   <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;&lt;The URL to fetch&gt;&quot;</span><span class="p">,</span>
-  <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span>
-    <span class="s2">&quot;&lt;HeaderName&gt;&quot;</span><span class="o">:</span> <span class="s2">&quot;&lt;HeaderValue&gt;&quot;</span><span class="p">,</span>
-    <span class="c1">// Add more headers as needed.</span>
-  <span class="p">},</span>
 <span class="p">});</span>
 <span class="kd">let</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>
 </code></pre></div>
@@ -4164,10 +4160,6 @@
 <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
   <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
   <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;&lt;The URL to send the request to&gt;&quot;</span><span class="p">,</span>
-  <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span>
-    <span class="s2">&quot;Content-Type&quot;</span><span class="o">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
-    <span class="c1">// Add more headers as needed.</span>
-  <span class="p">},</span>
   <span class="nx">body</span>: <span class="kt">JSON.stringify</span><span class="p">(</span><span class="nx">payload</span><span class="p">),</span>
 <span class="p">});</span>
 <span class="kd">let</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>

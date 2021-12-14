@@ -4242,9 +4242,8 @@
                 
                 
                 <h1 id="authentication-samples">Authentication samples<a class="headerlink" href="#authentication-samples" title="Permanent link">&para;</a></h1>
-<p>The SDK broadly divides authentication into two categories: authentication that is tied to the user of the pack vs authentication that is managed by the system, aka the pack author. In the pack definition the former is known as <code>defaultAuthentication</code> and the latter <code>systemConnectionAuthentication</code>. You will typically specify one or the other in your pack definition, or neither if your pack does not make http requests or those requests do not require authentication.</p>
-<p>Default authentication is the most common. Specify this if each user of your pack should log in with OAuth, or have their own API key, or whatever user-specific token is necessary for the pack to be able to retrieve data that is specific to that user.</p>
-<p>Use system authentication if you as the pack author will provide the necessary tokens to successfully make http requests within your pack. An example would be if your pack returns weather forecasts and the API involved requires an API key, but individual users need not provide their own API key. You as the pack author will register an API key and provide it to Coda, and Coda will apply it to all pack requests regardless of the user.</p>
+<p>Adding authentication to your Pack allows you to pass credentials with your API requests. Simply specify the type of authentication to use and Coda will collect the credentials from the user, store them, and apply them to Fetcher requests. Per-user authentication is the most common, where each user connects to their own account, while system-wide authentication is used in cases where the Pack maker's keys are used for all users.</p>
+<p>Coda supports a fixed set of authentication types which cover the most common patterns that APIs use. In addition you can define your own form of custom token authentication to support more complex scenarios. It's not possible to write completely custom authentication code however, as Coda alone has access to the user's credentials.</p>
 <p><a class="md-button" href="../../../guides/advanced/authentication">Learn More</a></p>
 <h2 id="template-per-user">Template (Per-user)<a class="headerlink" href="#template-per-user" title="Permanent link">&para;</a></h2>
 <p>The basic structure of per-user authentication.</p>
@@ -4352,6 +4351,8 @@
 <span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
 
 <span class="c1">// Per-user authentication to the Todoist API, using an OAuth2 flow.</span>
+<span class="c1">// When registering for a client ID and secret, use the callback URL</span>
+<span class="c1">// https://coda.io/packsAuth/oauth2.</span>
 <span class="nx">pack</span><span class="p">.</span><span class="nx">setUserAuthentication</span><span class="p">({</span>
   <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">AuthenticationType</span><span class="p">.</span><span class="nx">OAuth2</span><span class="p">,</span>
   <span class="c1">// OAuth2 URLs and scopes are found in the the Todoist OAuth guide:</span>
