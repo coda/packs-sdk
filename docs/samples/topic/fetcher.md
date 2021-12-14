@@ -16,10 +16,6 @@ Communicating with an API or external server is done through the `Fetcher`, a cu
 let response = await context.fetcher.fetch({
   method: "GET",
   url: "<The URL to fetch>",
-  headers: {
-    "<HeaderName>": "<HeaderValue>",
-    // Add more headers as needed.
-  },
 });
 let data = response.body;
 ```
@@ -33,10 +29,6 @@ let payload = {
 let response = await context.fetcher.fetch({
   method: "POST",
   url: "<The URL to send the request to>",
-  headers: {
-    "Content-Type": "application/json",
-    // Add more headers as needed.
-  },
   body: JSON.stringify(payload),
 });
 let data = response.body;

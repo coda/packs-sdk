@@ -63,7 +63,7 @@
       {
         "name": "Template (Per-user)",
         "content": "The basic structure of per-user authentication.",
-        "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n});"
+        "code": "// When registering your app in the API's developer console set the redirect URL\n// to: https://coda.io/packsAuth/oauth2\n// After building your Pack, remember to visit the Settings tab to set your\n// client ID and secret.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  // The following two URLs are will be found in the API's documentation.\n  authorizationUrl: \"<Authorization URL>\",\n  tokenUrl: \"<Token URL>\",\n});"
       },
       {
         "name": "Template (System-wide)",
@@ -93,7 +93,7 @@
       {
         "name": "OAuth2",
         "content": "Authentication that uses an OAuth2 flow. This sample connects to the Todoist API.",
-        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Todoist API, using an OAuth2 flow.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  // OAuth2 URLs and scopes are found in the the Todoist OAuth guide:\n  // https://developer.todoist.com/guides/#oauth\n  authorizationUrl: \"https://todoist.com/oauth/authorize\",\n  tokenUrl: \"https://todoist.com/oauth/access_token\",\n  scopes: [\"data:read_write\"],\n\n  // Determines the display name of the connected account.\n  getConnectionName: async function (context) {\n    let url = coda.withQueryParams(\"https://api.todoist.com/sync/v8/sync\", {\n      resource_types: JSON.stringify([\"user\"]),\n    });\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: url,\n    });\n    return response.body.user?.full_name;\n  },\n});\n\n// Allow the pack to make requests to Todoist.\npack.addNetworkDomain(\"todoist.com\");"
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Todoist API, using an OAuth2 flow.\n// When registering for a client ID and secret, use the callback URL\n// https://coda.io/packsAuth/oauth2.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  // OAuth2 URLs and scopes are found in the the Todoist OAuth guide:\n  // https://developer.todoist.com/guides/#oauth\n  authorizationUrl: \"https://todoist.com/oauth/authorize\",\n  tokenUrl: \"https://todoist.com/oauth/access_token\",\n  scopes: [\"data:read_write\"],\n\n  // Determines the display name of the connected account.\n  getConnectionName: async function (context) {\n    let url = coda.withQueryParams(\"https://api.todoist.com/sync/v8/sync\", {\n      resource_types: JSON.stringify([\"user\"]),\n    });\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: url,\n    });\n    return response.body.user?.full_name;\n  },\n});\n\n// Allow the pack to make requests to Todoist.\npack.addNetworkDomain(\"todoist.com\");"
       },
       {
         "name": "Manual endpoint",
@@ -315,12 +315,12 @@
       {
         "name": "Template (GET)",
         "content": "",
-        "code": "let response = await context.fetcher.fetch({\n  method: \"GET\",\n  url: \"<The URL to fetch>\",\n  headers: {\n    \"<HeaderName>\": \"<HeaderValue>\",\n    // Add more headers as needed.\n  },\n});\nlet data = response.body;"
+        "code": "let response = await context.fetcher.fetch({\n  method: \"GET\",\n  url: \"<The URL to fetch>\",\n});\nlet data = response.body;"
       },
       {
         "name": "Template (POST)",
         "content": "",
-        "code": "let payload = {\n  // Whatever JSON structure the API expects.\n};\nlet response = await context.fetcher.fetch({\n  method: \"POST\",\n  url: \"<The URL to send the request to>\",\n  headers: {\n    \"Content-Type\": \"application/json\",\n    // Add more headers as needed.\n  },\n  body: JSON.stringify(payload),\n});\nlet data = response.body;"
+        "code": "let payload = {\n  // Whatever JSON structure the API expects.\n};\nlet response = await context.fetcher.fetch({\n  method: \"POST\",\n  url: \"<The URL to send the request to>\",\n  body: JSON.stringify(payload),\n});\nlet data = response.body;"
       },
       {
         "name": "JSON Array (Bacon Ipsum)",

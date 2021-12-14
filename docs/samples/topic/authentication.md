@@ -15,8 +15,15 @@ Coda supports a fixed set of authentication types which cover the most common pa
 The basic structure of per-user authentication.
 
 ```ts
+// When registering your app in the API's developer console set the redirect URL
+// to: https://coda.io/packsAuth/oauth2
+// After building your Pack, remember to visit the Settings tab to set your
+// client ID and secret.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: coda.AuthenticationType.OAuth2,
+  // The following two URLs are will be found in the API's documentation.
+  authorizationUrl: "<Authorization URL>",
+  tokenUrl: "<Token URL>",
 });
 ```
 ## Template (System-wide)
@@ -131,6 +138,8 @@ import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
 // Per-user authentication to the Todoist API, using an OAuth2 flow.
+// When registering for a client ID and secret, use the callback URL
+// https://coda.io/packsAuth/oauth2.
 pack.setUserAuthentication({
   type: coda.AuthenticationType.OAuth2,
   // OAuth2 URLs and scopes are found in the the Todoist OAuth guide:

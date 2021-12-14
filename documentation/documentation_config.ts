@@ -5,27 +5,27 @@ import {UrlType} from './types';
 
 export const Snippets: AutocompleteSnippet[] = [
   {
-    triggerTokens: ['addStringFormula', 'makeStringFormula', 'StringFormula', 'addFormula'],
+    triggerTokens: ['addFormula:string', 'addStringFormula', 'makeStringFormula', 'StringFormula', 'addFormula'],
     content: 'Adds a Coda formula which will return a text string in the doc.',
     codeFile: './snippets/formula/string_formula.ts',
   },
   {
-    triggerTokens: ['addArrayFormula', 'makeArrayFormula', 'ArrayFormula'],
+    triggerTokens: ['addFormula:array', 'addArrayFormula', 'makeArrayFormula', 'ArrayFormula'],
     content: 'Adds a Coda formula which will return a text string in the doc.',
     codeFile: './snippets/formula/array_formula.ts',
   },
   {
-    triggerTokens: ['addBooleanFormula', 'makeBooleanFormula', 'BooleanFormula'],
+    triggerTokens: ['addFormula:boolean', 'addBooleanFormula', 'makeBooleanFormula', 'BooleanFormula'],
     content: 'Adds a Coda formula which will return true or false in the doc.',
     codeFile: './snippets/formula/boolean_formula.ts',
   },
   {
-    triggerTokens: ['addNumericFormula', 'makeNumericFormula', 'NumericFormula'],
+    triggerTokens: ['addFormula:number', 'addNumericFormula', 'makeNumericFormula', 'NumericFormula'],
     content: 'Adds a Coda formula which will return a number in the doc.',
     codeFile: './snippets/formula/numeric_formula.ts',
   },
   {
-    triggerTokens: ['addObjectFormula', 'makeObjectFormula', 'ObjectFormula'],
+    triggerTokens: ['addFormula:object', 'addObjectFormula', 'makeObjectFormula', 'ObjectFormula'],
     content: 'Adds a Coda formula which will return an object in the doc.',
     codeFile: './snippets/formula/object_formula.ts',
   },
@@ -36,13 +36,18 @@ export const Snippets: AutocompleteSnippet[] = [
   },
   {
     triggerTokens: ['setUserAuthentication', 'addUserAuthentication', 'UserAuthentication'],
-    content: 'Adds a Coda formula which will return an object in the doc.',
-    codeFile: './snippets/user_authentication.ts',
+    content: 'Sets per-user authentication for the Pack.',
+    codeFile: './snippets/authentication/user.ts',
+  },
+  {
+    triggerTokens: ['setUserAuthentication:OAuth2', 'OAuth2Authentication'],
+    content: 'Sets per-user OAuth2 authentication for the Pack.',
+    codeFile: './snippets/authentication/oauth2.ts',
   },
   {
     triggerTokens: ['setSystemAuthentication', 'addSystemAuthentication', 'SystemAuthentication'],
-    content: 'Adds a Coda formula which will return an object in the doc.',
-    codeFile: './snippets/system_authentication.ts',
+    content: 'Sets system-wide authentication for the Pack.',
+    codeFile: './snippets/authentication/system.ts',
   },
   {
     triggerTokens: ['addNetworkDomain', 'makeNetworkDomain', 'NetworkDomain'],
@@ -50,62 +55,62 @@ export const Snippets: AutocompleteSnippet[] = [
     codeFile: './snippets/network_domain.ts',
   },
   {
-    triggerTokens: ['makeStringParameter', 'addStringParameter', 'StringParameter'],
+    triggerTokens: ['makeParameter:string', 'makeStringParameter', 'addStringParameter', 'StringParameter'],
     content: 'Creates a string parameter.',
     codeFile: './snippets/parameter/string_parameter.ts',
   },
   {
-    triggerTokens: ['makeBooleanParameter', 'addBooleanParameter', 'BooleanParameter'],
+    triggerTokens: ['makeParameter:boolean', 'makeBooleanParameter', 'addBooleanParameter', 'BooleanParameter'],
     content: 'Creates a boolean parameter.',
     codeFile: './snippets/parameter/boolean_parameter.ts',
   },
   {
-    triggerTokens: ['makeDateParameter', 'addDateParameter', 'DateParameter'],
+    triggerTokens: ['makeParameter:date', 'makeDateParameter', 'addDateParameter', 'DateParameter'],
     content: 'Creates a date parameter.',
     codeFile: './snippets/parameter/date_parameter.ts',
   },
   {
-    triggerTokens: ['makeHtmlParameter', 'addHtmlParameter', 'HtmlParameter'],
+    triggerTokens: ['makeParameter:html', 'makeHtmlParameter', 'addHtmlParameter', 'HtmlParameter'],
     content: 'Creates a html parameter.',
     codeFile: './snippets/parameter/html_parameter.ts',
   },
   {
-    triggerTokens: ['makeImageParameter', 'addImageParameter', 'ImageParameter'],
+    triggerTokens: ['makeParameter:image', 'makeImageParameter', 'addImageParameter', 'ImageParameter'],
     content: 'Creates a image parameter.',
     codeFile: './snippets/parameter/image_parameter.ts',
   },
   {
-    triggerTokens: ['makeNumberParameter', 'addNumberParameter', 'NumberParameter'],
+    triggerTokens: ['makeParameter:number', 'makeNumberParameter', 'addNumberParameter', 'NumberParameter'],
     content: 'Creates a number parameter.',
     codeFile: './snippets/parameter/number_parameter.ts',
   },
   {
-    triggerTokens: ['makeStringArrayParameter', 'addStringArrayParameter', 'StringArrayParameter'],
+    triggerTokens: ['makeParameter:string[]', 'makeStringArrayParameter', 'addStringArrayParameter', 'StringArrayParameter'],
     content: 'Creates a string array parameter.',
     codeFile: './snippets/parameter/array/string_array_parameter.ts',
   },
   {
-    triggerTokens: ['makeBooleanArrayParameter', 'addBooleanArrayParameter', 'BooleanArrayParameter'],
+    triggerTokens: ['makeParameter:boolean[]', 'makeBooleanArrayParameter', 'addBooleanArrayParameter', 'BooleanArrayParameter'],
     content: 'Creates a boolean array parameter.',
     codeFile: './snippets/parameter/array/boolean_array_parameter.ts',
   },
   {
-    triggerTokens: ['makeDateArrayParameter', 'addDateArrayParameter', 'DateArrayParameter'],
+    triggerTokens: ['makeParameter:date[]', 'makeDateArrayParameter', 'addDateArrayParameter', 'DateArrayParameter'],
     content: 'Creates a date array parameter.',
     codeFile: './snippets/parameter/array/date_array_parameter.ts',
   },
   {
-    triggerTokens: ['makeHtmlArrayParameter', 'addHtmlArrayParameter', 'HtmlArrayParameter'],
+    triggerTokens: ['makeParameter:html[]', 'makeHtmlArrayParameter', 'addHtmlArrayParameter', 'HtmlArrayParameter'],
     content: 'Creates a html array parameter.',
     codeFile: './snippets/parameter/array/html_array_parameter.ts',
   },
   {
-    triggerTokens: ['makeImageArrayParameter', 'addImageArrayParameter', 'ImageArrayParameter'],
+    triggerTokens: ['makeParameter:image[]', 'makeImageArrayParameter', 'addImageArrayParameter', 'ImageArrayParameter'],
     content: 'Creates a image array parameter.',
     codeFile: './snippets/parameter/array/image_array_parameter.ts',
   },
   {
-    triggerTokens: ['makeNumberArrayParameter', 'addNumberArrayParameter', 'NumberArrayParameter'],
+    triggerTokens: ['makeParameter:number[]', 'makeNumberArrayParameter', 'addNumberArrayParameter', 'NumberArrayParameter'],
     content: 'Creates a number array parameter.',
     codeFile: './snippets/parameter/array/number_array_parameter.ts',
   },
@@ -192,12 +197,12 @@ export const Examples: Example[] = [
       {
         name: 'Template (Per-user)',
         content: 'The basic structure of per-user authentication.',
-        codeFile: './snippets/user_authentication.ts',
+        codeFile: './snippets//authentication/user.ts',
       },
       {
         name: 'Template (System-wide)',
         content: 'The basic structure of system-wide authentication.',
-        codeFile: './snippets/system_authentication.ts',
+        codeFile: './snippets/authentication/system.ts',
       },
       {
         name: 'Authorization header',

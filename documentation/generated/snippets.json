@@ -1,6 +1,7 @@
 [
   {
     "triggerTokens": [
+      "addFormula:string",
       "addStringFormula",
       "makeStringFormula",
       "StringFormula",
@@ -11,6 +12,7 @@
   },
   {
     "triggerTokens": [
+      "addFormula:array",
       "addArrayFormula",
       "makeArrayFormula",
       "ArrayFormula"
@@ -20,6 +22,7 @@
   },
   {
     "triggerTokens": [
+      "addFormula:boolean",
       "addBooleanFormula",
       "makeBooleanFormula",
       "BooleanFormula"
@@ -29,6 +32,7 @@
   },
   {
     "triggerTokens": [
+      "addFormula:number",
       "addNumericFormula",
       "makeNumericFormula",
       "NumericFormula"
@@ -38,6 +42,7 @@
   },
   {
     "triggerTokens": [
+      "addFormula:object",
       "addObjectFormula",
       "makeObjectFormula",
       "ObjectFormula"
@@ -60,7 +65,15 @@
       "addUserAuthentication",
       "UserAuthentication"
     ],
-    "content": "Adds a Coda formula which will return an object in the doc.",
+    "content": "Sets per-user authentication for the Pack.",
+    "code": "// When registering your app in the API's developer console set the redirect URL\n// to: https://coda.io/packsAuth/oauth2\n// After building your Pack, remember to visit the Settings tab to set your\n// client ID and secret.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  // The following two URLs are will be found in the API's documentation.\n  authorizationUrl: \"<Authorization URL>\",\n  tokenUrl: \"<Token URL>\",\n});"
+  },
+  {
+    "triggerTokens": [
+      "setUserAuthentication:OAuth2",
+      "OAuth2Authentication"
+    ],
+    "content": "Sets per-user OAuth2 authentication for the Pack.",
     "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n});"
   },
   {
@@ -69,7 +82,7 @@
       "addSystemAuthentication",
       "SystemAuthentication"
     ],
-    "content": "Adds a Coda formula which will return an object in the doc.",
+    "content": "Sets system-wide authentication for the Pack.",
     "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n});"
   },
   {
@@ -83,6 +96,7 @@
   },
   {
     "triggerTokens": [
+      "makeParameter:string",
       "makeStringParameter",
       "addStringParameter",
       "StringParameter"
@@ -92,6 +106,7 @@
   },
   {
     "triggerTokens": [
+      "makeParameter:boolean",
       "makeBooleanParameter",
       "addBooleanParameter",
       "BooleanParameter"
@@ -101,6 +116,7 @@
   },
   {
     "triggerTokens": [
+      "makeParameter:date",
       "makeDateParameter",
       "addDateParameter",
       "DateParameter"
@@ -110,6 +126,7 @@
   },
   {
     "triggerTokens": [
+      "makeParameter:html",
       "makeHtmlParameter",
       "addHtmlParameter",
       "HtmlParameter"
@@ -119,6 +136,7 @@
   },
   {
     "triggerTokens": [
+      "makeParameter:image",
       "makeImageParameter",
       "addImageParameter",
       "ImageParameter"
@@ -128,6 +146,7 @@
   },
   {
     "triggerTokens": [
+      "makeParameter:number",
       "makeNumberParameter",
       "addNumberParameter",
       "NumberParameter"
@@ -137,6 +156,7 @@
   },
   {
     "triggerTokens": [
+      "makeParameter:string[]",
       "makeStringArrayParameter",
       "addStringArrayParameter",
       "StringArrayParameter"
@@ -146,6 +166,7 @@
   },
   {
     "triggerTokens": [
+      "makeParameter:boolean[]",
       "makeBooleanArrayParameter",
       "addBooleanArrayParameter",
       "BooleanArrayParameter"
@@ -155,6 +176,7 @@
   },
   {
     "triggerTokens": [
+      "makeParameter:date[]",
       "makeDateArrayParameter",
       "addDateArrayParameter",
       "DateArrayParameter"
@@ -164,6 +186,7 @@
   },
   {
     "triggerTokens": [
+      "makeParameter:html[]",
       "makeHtmlArrayParameter",
       "addHtmlArrayParameter",
       "HtmlArrayParameter"
@@ -173,6 +196,7 @@
   },
   {
     "triggerTokens": [
+      "makeParameter:image[]",
       "makeImageArrayParameter",
       "addImageArrayParameter",
       "ImageArrayParameter"
@@ -182,6 +206,7 @@
   },
   {
     "triggerTokens": [
+      "makeParameter:number[]",
       "makeNumberArrayParameter",
       "addNumberArrayParameter",
       "NumberArrayParameter"
@@ -221,13 +246,13 @@
       "fetch:get"
     ],
     "content": "Fetches data from an API.",
-    "code": "let response = await context.fetcher.fetch({\n  method: \"GET\",\n  url: \"<The URL to fetch>\",\n  headers: {\n    \"<HeaderName>\": \"<HeaderValue>\",\n    // Add more headers as needed.\n  },\n});\nlet data = response.body;"
+    "code": "let response = await context.fetcher.fetch({\n  method: \"GET\",\n  url: \"<The URL to fetch>\",\n});\nlet data = response.body;"
   },
   {
     "triggerTokens": [
       "fetch:post"
     ],
     "content": "Send data to an API.",
-    "code": "let payload = {\n  // Whatever JSON structure the API expects.\n};\nlet response = await context.fetcher.fetch({\n  method: \"POST\",\n  url: \"<The URL to send the request to>\",\n  headers: {\n    \"Content-Type\": \"application/json\",\n    // Add more headers as needed.\n  },\n  body: JSON.stringify(payload),\n});\nlet data = response.body;"
+    "code": "let payload = {\n  // Whatever JSON structure the API expects.\n};\nlet response = await context.fetcher.fetch({\n  method: \"POST\",\n  url: \"<The URL to send the request to>\",\n  body: JSON.stringify(payload),\n});\nlet data = response.body;"
   }
 ]
