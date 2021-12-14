@@ -8,10 +8,6 @@ async function snippet(context: coda.ExecutionContext) {
   let response = await context.fetcher.fetch({
     method: "POST",
     url: "<The URL to send the request to>",
-    headers: {
-      "Content-Type": "application/json",
-      // Add more headers as needed.
-    },
     body: JSON.stringify(payload),
   });
   let data = response.body;

@@ -2,6 +2,8 @@ import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
 // Per-user authentication to the Todoist API, using an OAuth2 flow.
+// When registering for a client ID and secret, use the callback URL
+// https://coda.io/packsAuth/oauth2.
 pack.setUserAuthentication({
   type: coda.AuthenticationType.OAuth2,
   // OAuth2 URLs and scopes are found in the the Todoist OAuth guide:
