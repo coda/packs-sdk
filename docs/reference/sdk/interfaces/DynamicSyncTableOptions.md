@@ -22,7 +22,21 @@ this sync table (including autocomplete formulas).
 
 #### Defined in
 
-[api.ts:1335](https://github.com/coda/packs-sdk/blob/main/api.ts#L1335)
+[api.ts:1341](https://github.com/coda/packs-sdk/blob/main/api.ts#L1341)
+
+___
+
+### description
+
+• `Optional` **description**: `string`
+
+The description of the dynamic sync table. This is shown to users in the Coda UI
+when listing what build blocks are contained within this pack.
+This should describe what the dynamic sync table does in a more detailed language.
+
+#### Defined in
+
+[api.ts:1303](https://github.com/coda/packs-sdk/blob/main/api.ts#L1303)
 
 ___
 
@@ -36,7 +50,7 @@ of `identity.name` from your schema will be used instead, so in most cases you d
 
 #### Defined in
 
-[api.ts:1330](https://github.com/coda/packs-sdk/blob/main/api.ts#L1330)
+[api.ts:1336](https://github.com/coda/packs-sdk/blob/main/api.ts#L1336)
 
 ___
 
@@ -51,7 +65,7 @@ These will eventually be consolidated.)
 
 #### Defined in
 
-[api.ts:1324](https://github.com/coda/packs-sdk/blob/main/api.ts#L1324)
+[api.ts:1330](https://github.com/coda/packs-sdk/blob/main/api.ts#L1330)
 
 ___
 
@@ -66,7 +80,7 @@ of the table data. This is typically a browser-friendly form of the
 
 #### Defined in
 
-[api.ts:1312](https://github.com/coda/packs-sdk/blob/main/api.ts#L1312)
+[api.ts:1318](https://github.com/coda/packs-sdk/blob/main/api.ts#L1318)
 
 ___
 
@@ -78,7 +92,7 @@ A formula that returns the name of this table.
 
 #### Defined in
 
-[api.ts:1301](https://github.com/coda/packs-sdk/blob/main/api.ts#L1301)
+[api.ts:1307](https://github.com/coda/packs-sdk/blob/main/api.ts#L1307)
 
 ___
 
@@ -90,7 +104,7 @@ A formula that returns the schema for this table.
 
 #### Defined in
 
-[api.ts:1305](https://github.com/coda/packs-sdk/blob/main/api.ts#L1305)
+[api.ts:1311](https://github.com/coda/packs-sdk/blob/main/api.ts#L1311)
 
 ___
 
@@ -103,7 +117,7 @@ used to create an instance of this dynamic sync table.
 
 #### Defined in
 
-[api.ts:1317](https://github.com/coda/packs-sdk/blob/main/api.ts#L1317)
+[api.ts:1323](https://github.com/coda/packs-sdk/blob/main/api.ts#L1323)
 
 ___
 

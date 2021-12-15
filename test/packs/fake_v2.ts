@@ -75,3 +75,44 @@ pack.addSyncTable({
     },
   },
 });
+
+pack.addSyncTable({
+  name: 'Foos',
+  description: 'FooDesc',
+  identityName: 'Foo',
+  schema: coda.makeObjectSchema({
+    type: coda.ValueType.Object,
+    id: 'foo',
+    primary: 'foo',
+    properties: {foo: {type: coda.ValueType.String}},
+  }),
+  formula: {
+    name: 'Ignored',
+    description: '',
+    parameters: [],
+    execute: async () => {
+      return {result: []};
+    },
+  },
+});
+
+pack.addDynamicSyncTable({
+  name: 'FooDyns',
+  description: 'FooDynDesc',
+  getName: coda.makeMetadataFormula(async () => 'name'),
+  getDisplayUrl: coda.makeMetadataFormula(async () => 'display url'),
+  getSchema: coda.makeMetadataFormula(async () => {
+    return coda.makeSchema({
+      type: coda.ValueType.Array,
+      items: {type: coda.ValueType.Object, properties: {}},
+    });
+  }),
+  formula: {
+    name: 'Ignored',
+    description: '',
+    parameters: [],
+    execute: async () => {
+      return {result: []};
+    },
+  },
+});

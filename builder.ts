@@ -159,6 +159,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({
     name,
+    description,
     identityName,
     schema,
     formula,
@@ -168,6 +169,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     const connectionRequirementToUse = connectionRequirement || this._defaultConnectionRequirement;
     const syncTable = makeSyncTable({
       name,
+      description,
       identityName,
       schema,
       formula,

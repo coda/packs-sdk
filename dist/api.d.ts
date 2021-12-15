@@ -758,6 +758,12 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
      */
     name: string;
     /**
+     * The description of the dynamic sync table. This is shown to users in the Coda UI
+     * when listing what build blocks are contained within this pack.
+     * This should describe what the dynamic sync table does in a more detailed language.
+     */
+    description?: string;
+    /**
      * A formula that returns the name of this table.
      */
     getName: MetadataFormulaDef;

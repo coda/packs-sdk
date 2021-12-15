@@ -94,10 +94,11 @@ class PackDefinitionBuilder {
      * });
      * ```
      */
-    addSyncTable({ name, identityName, schema, formula, connectionRequirement, dynamicOptions = {}, }) {
+    addSyncTable({ name, description, identityName, schema, formula, connectionRequirement, dynamicOptions = {}, }) {
         const connectionRequirementToUse = connectionRequirement || this._defaultConnectionRequirement;
         const syncTable = (0, api_4.makeSyncTable)({
             name,
+            description,
             identityName,
             schema,
             formula,

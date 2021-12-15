@@ -2249,6 +2249,12 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	 */
 	name: string;
 	/**
+	 * The description of the dynamic sync table. This is shown to users in the Coda UI
+	 * when listing what build blocks are contained within this pack.
+	 * This should describe what the dynamic sync table does in a more detailed language.
+	 */
+	description?: string;
+	/**
 	 * A formula that returns the name of this table.
 	 */
 	getName: MetadataFormulaDef;
@@ -3287,7 +3293,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * });
 	 * ```
 	 */
-	addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({ name, identityName, schema, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this;
+	addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({ name, description, identityName, schema, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this;
 	/**
 	 * Adds a dynamic sync table definition to this pack.
 	 *
