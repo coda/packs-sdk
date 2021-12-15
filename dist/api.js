@@ -562,7 +562,7 @@ exports.makeObjectFormula = makeObjectFormula;
  *
  * See [Normalization](/index.html#normalization) for more information about schema normalization.
  */
-function makeSyncTable({ name, identityName, schema: schemaDef, formula, connectionRequirement, dynamicOptions = {}, }) {
+function makeSyncTable({ name, description, identityName, schema: schemaDef, formula, connectionRequirement, dynamicOptions = {}, }) {
     const { getSchema: getSchemaDef, entityName } = dynamicOptions;
     const { execute: wrappedExecute, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
     if (schemaDef.identity) {
@@ -594,6 +594,7 @@ function makeSyncTable({ name, identityName, schema: schemaDef, formula, connect
     };
     return {
         name,
+        description,
         schema: (0, schema_3.normalizeSchema)(schema),
         getter: {
             ...definition,
@@ -632,7 +633,7 @@ exports.makeSyncTableLegacy = makeSyncTableLegacy;
  * });
  * ```
  */
-function makeDynamicSyncTable({ name, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, }) {
+function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, }) {
     const fakeSchema = (0, schema_2.makeObjectSchema)({
         // This schema is useless... just creating a stub here but the client will use
         // the dynamic one.
@@ -650,6 +651,7 @@ function makeDynamicSyncTable({ name, getName: getNameDef, getSchema: getSchemaD
     const listDynamicUrls = wrapMetadataFunction(listDynamicUrlsDef);
     const table = makeSyncTable({
         name,
+        description,
         identityName: '',
         schema: fakeSchema,
         formula,

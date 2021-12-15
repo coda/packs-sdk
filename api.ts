@@ -156,6 +156,8 @@ export interface SyncTableDef<
 > {
   /** See {@link SyncTableOptions.name} */
   name: string;
+  /** See {@link SyncTableOptions.description} */
+  description?: string;
   /** See {@link SyncTableOptions.schema} */
   schema: SchemaT;
   /** See {@link SyncTableOptions.formula} */
@@ -1233,6 +1235,12 @@ export interface SyncTableOptions<
    */
   name: string;
   /**
+   * The description of the sync table. This is shown to users in the Coda UI.
+   * This should describe what the sync table does in more detailed languages. For example, the
+   * description for a 'Products' sync table could be: 'Returns products from the e-commerce platform.'
+   */
+  description?: string;
+  /**
    * The "unique identifier" for the entity being synced. This will serve as the unique id for this
    * table, and must be unique across other sync tables for your pack. This is often the singular
    * form of the table name, e.g. if your table name was 'Products' you might choose 'Product'
@@ -1348,6 +1356,7 @@ export function makeSyncTable<
   },
 >({
   name,
+  description,
   identityName,
   schema: schemaDef,
   formula,
@@ -1386,6 +1395,7 @@ export function makeSyncTable<
   };
   return {
     name,
+    description,
     schema: normalizeSchema(schema),
     getter: {
       ...definition,
@@ -1440,6 +1450,7 @@ export function makeSyncTableLegacy<
  */
 export function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({
   name,
+  description,
   getName: getNameDef,
   getSchema: getSchemaDef,
   getDisplayUrl: getDisplayUrlDef,
@@ -1449,6 +1460,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   connectionRequirement,
 }: {
   name: string;
+  description?: string;
   getName: MetadataFormulaDef;
   getSchema: MetadataFormulaDef;
   formula: SyncFormulaDef<K, L, ParamDefsT, any>;
@@ -1474,6 +1486,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   const listDynamicUrls = wrapMetadataFunction(listDynamicUrlsDef);
   const table = makeSyncTable({
     name,
+    description,
     identityName: '',
     schema: fakeSchema,
     formula,

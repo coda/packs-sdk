@@ -1645,6 +1645,8 @@ export declare class StatusCodeError extends Error {
 export interface SyncTableDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> {
 	/** See {@link SyncTableOptions.name} */
 	name: string;
+	/** See {@link SyncTableOptions.description} */
+	description?: string;
 	/** See {@link SyncTableOptions.schema} */
 	schema: SchemaT;
 	/** See {@link SyncTableOptions.formula} */
@@ -2192,6 +2194,12 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	 */
 	name: string;
 	/**
+	 * The description of the sync table. This is shown to users in the Coda UI.
+	 * This should describe what the sync table does in more detailed languages. For example, the
+	 * description for a 'Products' sync table could be: 'Returns products from the e-commerce platform.'
+	 */
+	description?: string;
+	/**
 	 * The "unique identifier" for the entity being synced. This will serve as the unique id for this
 	 * table, and must be unique across other sync tables for your pack. This is often the singular
 	 * form of the table name, e.g. if your table name was 'Products' you might choose 'Product'
@@ -2292,7 +2300,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
 	identity?: Identity;
-}>({ name, identityName, schema: schemaDef, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
+}>({ name, description, identityName, schema: schemaDef, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
 /**
  * Creates a dynamic sync table definition.
  *
@@ -2312,8 +2320,9 @@ export declare function makeSyncTable<K extends string, L extends string, ParamD
  * });
  * ```
  */
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ name, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, }: {
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ name, description, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, }: {
 	name: string;
+	description?: string;
 	getName: MetadataFormulaDef;
 	getSchema: MetadataFormulaDef;
 	formula: SyncFormulaDef<K, L, ParamDefsT, any>;

@@ -827,6 +827,7 @@ const syncFormulaSchema = zodCompleteObject<Omit<SyncFormula<any, any, ParamDefs
 
 const baseSyncTableSchema = {
   name: z.string().nonempty(),
+  description: z.string().optional(),
   schema: genericObjectSchema,
   getter: syncFormulaSchema,
   entityName: z.string().optional(),

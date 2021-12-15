@@ -27,4 +27,4 @@ it is shaped like a Coda formula to be used at runtime.
 
 #### Defined in
 
-[api.ts:996](https://github.com/coda/packs-sdk/blob/main/api.ts#L996)
+[api.ts:998](https://github.com/coda/packs-sdk/blob/main/api.ts#L998)
