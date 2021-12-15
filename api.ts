@@ -1236,7 +1236,7 @@ export interface SyncTableOptions<
   name: string;
   /**
    * The description of the sync table. This is shown to users in the Coda UI.
-   * This should describe what the sync table does in more detailed languages. For example, the
+   * This should describe what the sync table does in more detailed language. For example, the
    * description for a 'Products' sync table could be: 'Returns products from the e-commerce platform.'
    */
   description?: string;
