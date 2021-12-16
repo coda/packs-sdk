@@ -1,6 +1,7 @@
 ### 0.8.0
 
 - **Breaking Change** The connection requirement for metadata formulas now defaults to optional instead of required. If your pack is using sematic versions, this will likely lead to a major version bump in your next release.
+- An optional "description" field is added to sync table definition, that will be used to display in the UI.
 
 ### 0.7.3
 
