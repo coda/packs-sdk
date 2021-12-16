@@ -26,12 +26,12 @@ const SunSchema = coda.makeObjectSchema({
       codaType: coda.ValueHintType.Duration,
     },
     sunriseUTC: {
-      description: "When the sun will rise (in UTC)",
+      description: "When the sun will rise (in UTC).",
       type: coda.ValueType.String,
       codaType: coda.ValueHintType.Time,
     },
     sunsetUTC: {
-      description: "When the sun will set (in UTC)",
+      description: "When the sun will set (in UTC).",
       type: coda.ValueType.String,
       codaType: coda.ValueHintType.Time,
     },

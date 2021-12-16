@@ -123,7 +123,7 @@ This Pack allows you to fetch random cat photos using the [Cat-as-a-service API]
     const CatSchema = coda.makeObjectSchema({
       properties: {
         image: {
-          description: "The cat image..",
+          description: "The cat image.",
           type: coda.ValueType.String,
           codaType: coda.ValueHintType.ImageReference,
         },

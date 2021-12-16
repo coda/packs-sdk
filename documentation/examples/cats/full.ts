@@ -106,7 +106,7 @@ pack.addColumnFormat({
 const CatSchema = coda.makeObjectSchema({
   properties: {
     image: {
-      description: "The cat image..",
+      description: "The cat image.",
       type: coda.ValueType.String,
       codaType: coda.ValueHintType.ImageReference,
     },
