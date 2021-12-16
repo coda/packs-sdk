@@ -44,6 +44,8 @@ pack.addFormula({
 });
 ```
 
+The resulting array is represented as a [`List`][formula_list] in the Coda formula language.
+
 
 ### Objects
 
@@ -72,6 +74,14 @@ pack.addFormula({
   },
 });
 ```
+
+Objects are displayed in the doc as a "chip", a small rectangle with rounded corners. A primary value is displayed within the chip, with additional properties of object shown on hover.
+
+<img src="../../../images/data_types_object_hover.png" srcset="../../../images/data_types_object_hover_2x.png 2x" class="screenshot" alt="Hovering over an object chip">
+
+Like Coda tables, the fields within an object can be accessed using dot notation.
+
+<img src="../../../images/data_types_object_dot.png" srcset="../../../images/data_types_object_dot_2x.png 2x" class="screenshot" alt="Using dot notation to access the properties of the object">
 
 
 ## Value hints
@@ -208,7 +218,7 @@ The columns of a Coda table are strongly typed, and the data types in the Pack S
 
 ## Formatting options
 
-When used in a schema definition, some value types and value hints support additional formatting options. For example, `Number` types support a [`precision`][precision] property that controls how many decimal places to show.
+When used in a sync table, some value types and value hints support additional formatting options. For example, `Number` types support a [`precision`][precision] property that controls how many decimal places to show.
 
 ```ts
 const DoorSchema = coda.makeObjectSchema({
@@ -285,3 +295,4 @@ The full set of formatting options for a given value type and hint can be found 
 [StringTimeSchema]: ../../reference/sdk/interfaces/StringTimeSchema.md
 [StringDateTimeSchema]: ../../reference/sdk/interfaces/StringDateTimeSchema.md
 [DurationSchema]: ../../reference/sdk/interfaces/DurationSchema.md
+[formula_list]: https://coda.io/formulas#List

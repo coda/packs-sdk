@@ -37,14 +37,17 @@ This Pack provides a `Daylight` formula that determines the daylight, sunrise,
         // The values we return are simple strings, but we use the codaType field to
         // to tell Coda to interpret them as durations and time values.
         daylight: {
+          description: "How much daylight there will be.",
           type: coda.ValueType.String,
           codaType: coda.ValueHintType.Duration,
         },
         sunriseUTC: {
+          description: "When the sun will rise (in UTC)",
           type: coda.ValueType.String,
           codaType: coda.ValueHintType.Time,
         },
         sunsetUTC: {
+          description: "When the sun will set (in UTC)",
           type: coda.ValueType.String,
           codaType: coda.ValueHintType.Time,
         },
