@@ -4,7 +4,7 @@ title: Sync tables
 
 # Add sync tables
 
-Tables are one of the most powerful features of Coda, and many times users use them to track items that are also represented in other systems. For example, you may have a table of upcoming events, each of which is already listed in a company calendar. Sync tables allow you to define a special type of table where the rows are automatically synced from an external data source such as an API. Users can define their own additional columns on these tables, making it easy to blend centralized data with local information.
+Tables are one of the most powerful features of Coda, and many times people use them to track items that are also represented in other systems. For example, you may have a table of upcoming events, each of which is already listed in a company calendar. Sync tables allow you to define a special type of table where the rows are automatically synced from an external data source such as an API.
 
 [View Sample Code][samples]{ .md-button }
 

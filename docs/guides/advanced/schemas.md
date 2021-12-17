@@ -49,7 +49,7 @@ Schemas are created using the [`makeSchema`][makeSchema] method.
 
 ```ts
 let NumberSchema = coda.makeSchema({
-  type: coda.ValeType.Number,
+  type: coda.ValueType.Number,
 });
 ```
 
@@ -81,6 +81,20 @@ pack.addFormula({
     We recommend against defining object schemas inline, as they can get quite long and are likely to be reused within the Pack.
 
 
+## Data types
+
+The primary role of a schema is to define the type of data that will be returned. This is done by specifying a value type and optionally a value hint. The value type corresponds to the JavaScript type that will be returned, and the value hint indicates how Coda should interpret that value. These are set using the `type` and `codaType` field respectively.
+
+```ts
+let DateSchema = coda.makeSchema({
+  type: coda.ValueType.String,
+  codaType: coda.ValueHintType.Date,
+});
+```
+
+See the [Data types guide][data_types] for more information about the supported value types and value hints.
+
+
 ## Object schemas
 
 The most common form of schema you'll need to define are object schemas. They are often used to bundle together multiple pieces of data returned by an API.
@@ -88,7 +102,7 @@ The most common form of schema you'll need to define are object schemas. They ar
 
 ### Properties
 
-The individual properties of the object are defined using the `properties` field of the schema. It contains a set of key value/pairs, where the key is the names of the property and the value is a schema describing the property.
+The individual properties of the object are defined using the `properties` field of the schema. It contains a set of key value/pairs, where the key is the name of the property and the value is a schema describing the property.
 
 ```ts
 let PersonSchema = coda.makeObjectSchema({
@@ -140,7 +154,7 @@ pack.addFormula({
   resultType: coda.ValueType.Object,
   schema: LocationSchema,
   execute: async function([], context) {
-    let location = fetchLocationFromAPI(context);
+    let location = await fetchLocationFromAPI(context);
     // Return the API response as-is.
     return location;
   },
@@ -164,7 +178,7 @@ pack.addFormula({
   resultType: coda.ValueType.Object,
   schema: LocationSchema,
   execute: async function([], context) {
-    let location = fetchLocationFromAPI(context);
+    let location = await fetchLocationFromAPI(context);
     // Return the API response as-is.
     return location;
   },
@@ -188,7 +202,7 @@ pack.addFormula({
   resultType: coda.ValueType.Object,
   schema: LocationSchema,
   execute: async function([], context) {
-    let location = fetchLocationFromAPI(context);
+    let location = await fetchLocationFromAPI(context);
     // Return a new object that matches the schema.
     return {
       latitude: location.latDeg,
@@ -236,7 +250,7 @@ pack.addFormula({
   resultType: coda.ValueType.Object,
   schema: LocationSchema,
   execute: async function([], context) {
-    let location = fetchLocationFromAPI(context);
+    let location = await fetchLocationFromAPI(context);
     return {
       city: location.city,
       state: location.state,
@@ -315,9 +329,9 @@ let MovieSchema = coda.makeObjectSchema({
 
 ### Schema identity
 
-When used in a sync table the object schema itself must have a unique identifier, know as it's identity. This acts like a namespace for the schema, allowing the system to distinguish objects that have the same ID.
+When used in a sync table the object schema itself must have a unique identifier, know as its identity. This acts like a namespace for the schema, allowing the system to distinguish objects that have the same ID.
 
-Sync table definitions have an `identityName` field you can use to easily set this. However, in some cases you also need to set the identity in the schema itself by adding an `identity` to your schema and setting it's `name` field.
+Sync table definitions have an `identityName` field you can use to easily set this. However, in some cases you also need to set the identity in the schema itself by adding an `identity` to your schema and setting its `name` field.
 
 ```ts
 let MovieSchema = coda.makeObjectSchema({
@@ -328,10 +342,10 @@ let MovieSchema = coda.makeObjectSchema({
 });
 ```
 
-You can select what name your like, but it must be unique within your Pack. You can read more about how identities are used by sync tables in the [sync tables guide][sync_tables_identity].
+You can select what name you like, but it must be unique within your Pack. You can read more about how identities are used by sync tables in the [sync tables guide][sync_tables_identity].
 
 !!! info
-    The presence of a schema identity also controls how the object appears and behaves in the page. Specifically, objects with identities will display the Pack's icon in the chip, and when used in a column format the **Add column** button will appear next to each property.
+    The presence of a schema identity also controls how the object appears and behaves in the page. Named schemas are seen as more important to your Pack and given a more prominent UI treatment. Specifically, objects with identities will display the Pack's icon in the chip, and when used in a column format the **Add column** button will appear next to each property.
 
 
 ### Featured columns
@@ -352,7 +366,7 @@ let MovieSchema = coda.makeObjectSchema({
     },
   },
   // When creating the sync table, automatically add columns for these fields.
-  featured: ["directory", "actors"],
+  featured: ["director", "actors"],
   // ...
 });
 ```
@@ -415,6 +429,7 @@ In your sync formula you only need to populate the fields of the reference objec
 
 
 [samples]: ../../samples/topic/schema.md
+[data_types]: ../basics/data-types.md
 [sync_tables]: ../blocks/sync-tables.md
 [makeSchema]: ../../reference/sdk/functions/makeSchema.md
 [makeObjectSchema]: ../../reference/sdk/functions/makeObjectSchema.md
