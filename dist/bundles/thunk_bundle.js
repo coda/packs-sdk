@@ -3417,6 +3417,7 @@ module.exports = (() => {
         }
       };
       var isArray2 = Array.isArray;
+      var split = String.prototype.split;
       var push = Array.prototype.push;
       var pushToArray = function(arr, valueOrArray) {
         push.apply(arr, isArray2(valueOrArray) ? valueOrArray : [valueOrArray]);
@@ -3444,10 +3445,25 @@ module.exports = (() => {
       var isNonNullishPrimitive = function isNonNullishPrimitive2(v) {
         return typeof v === "string" || typeof v === "number" || typeof v === "boolean" || typeof v === "symbol" || typeof v === "bigint";
       };
+      var sentinel = {};
       var stringify = function stringify2(object, prefix, generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter, sort, allowDots, serializeDate, format, formatter, encodeValuesOnly, charset, sideChannel) {
         var obj = object;
-        if (sideChannel.has(object)) {
-          throw new RangeError("Cyclic object value");
+        var tmpSc = sideChannel;
+        var step = 0;
+        var findFlag = false;
+        while ((tmpSc = tmpSc.get(sentinel)) !== void 0 && !findFlag) {
+          var pos = tmpSc.get(object);
+          step += 1;
+          if (typeof pos !== "undefined") {
+            if (pos === step) {
+              throw new RangeError("Cyclic object value");
+            } else {
+              findFlag = true;
+            }
+          }
+          if (typeof tmpSc.get(sentinel) === "undefined") {
+            step = 0;
+          }
         }
         if (typeof filter === "function") {
           obj = filter(prefix, obj);
@@ -3470,6 +3486,14 @@ module.exports = (() => {
         if (isNonNullishPrimitive(obj) || utils.isBuffer(obj)) {
           if (encoder) {
             var keyValue = encodeValuesOnly ? prefix : encoder(prefix, defaults.encoder, charset, "key", format);
+            if (generateArrayPrefix === "comma" && encodeValuesOnly) {
+              var valuesArray = split.call(String(obj), ",");
+              var valuesJoined = "";
+              for (var i = 0; i < valuesArray.length; ++i) {
+                valuesJoined += (i === 0 ? "" : ",") + formatter(encoder(valuesArray[i], defaults.encoder, charset, "value", format));
+              }
+              return [formatter(keyValue) + "=" + valuesJoined];
+            }
             return [formatter(keyValue) + "=" + formatter(encoder(obj, defaults.encoder, charset, "value", format))];
           }
           return [formatter(prefix) + "=" + formatter(String(obj))];
@@ -3487,15 +3511,16 @@ module.exports = (() => {
           var keys = Object.keys(obj);
           objKeys = sort ? keys.sort(sort) : keys;
         }
-        for (var i = 0; i < objKeys.length; ++i) {
-          var key = objKeys[i];
+        for (var j = 0; j < objKeys.length; ++j) {
+          var key = objKeys[j];
           var value = typeof key === "object" && key.value !== void 0 ? key.value : obj[key];
           if (skipNulls && value === null) {
             continue;
           }
           var keyPrefix = isArray2(obj) ? typeof generateArrayPrefix === "function" ? generateArrayPrefix(prefix, key) : prefix : prefix + (allowDots ? "." + key : "[" + key + "]");
-          sideChannel.set(object, true);
+          sideChannel.set(object, step);
           var valueSideChannel = getSideChannel();
+          valueSideChannel.set(sentinel, sideChannel);
           pushToArray(values, stringify2(value, keyPrefix, generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter, sort, allowDots, serializeDate, format, formatter, encodeValuesOnly, charset, valueSideChannel));
         }
         return values;
