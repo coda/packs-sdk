@@ -25,7 +25,7 @@ if (require.main === module) {
       handler: handleExecute,
       builder: {
         fetch: {
-          boolean: true,
+          boolean: false,
           desc: 'Actually fetch http requests instead of using mocks. Run "coda auth" first to set up credentials.',
         },
         vm: {
