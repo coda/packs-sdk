@@ -1,7 +1,6 @@
 # MkDocs options.
 # See: https://www.mkdocs.org/user-guide/configuration/
 site_name: Coda Pack SDK
-# TODO(spencer): Update with new url
 site_url: !ENV MK_DOCS_SITE_URL
 repo_url: https://github.com/coda/packs-sdk
 repo_name: coda/packs-sdk

@@ -86,8 +86,7 @@ jobs:
           command: make docs
       - run:
           name: "MkDocs"
-          # TODO(spencer): Update with new url
-          command: MK_DOCS_SITE_URL="https://head.coda.io/developers/temp-developer-docs/packs/latest/" make build-mkdocs
+          command: MK_DOCS_SITE_URL="https://head.coda.io/packs/build/packs/latest/" make build-mkdocs
       - persist_to_workspace:
           root: ~/repo
           paths:
@@ -107,8 +106,7 @@ jobs:
           command: make docs
       - run:
           name: "MkDocs"
-          # TODO(spencer): Update with new url
-          command: MK_DOCS_SITE_URL="https://staging.coda.io/developers/temp-developer-docs/packs/latest/" make build-mkdocs
+          command: MK_DOCS_SITE_URL="https://staging.coda.io/packs/build/packs/latest/" make build-mkdocs
       - persist_to_workspace:
           root: ~/repo
           paths:
@@ -128,8 +126,7 @@ jobs:
           command: make docs
       - run:
           name: "MkDocs"
-          # TODO(spencer): Update with new url
-          command: MK_DOCS_SITE_URL="https://coda.io/developers/temp-developer-docs/packs/latest/" make build-mkdocs
+          command: MK_DOCS_SITE_URL="https://coda.io/packs/build/packs/latest/" make build-mkdocs
       - persist_to_workspace:
           root: ~/repo
           paths:
