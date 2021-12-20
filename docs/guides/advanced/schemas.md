@@ -64,7 +64,7 @@ let MySchema = coda.makeObjectSchema({
 });
 ```
 
-The `makeSchema` or `makeObjectSchema` methods should still be used when defining the schema inline where it is used.
+Schemas can also be declared inline in the formula or sync table where they are used.
 
 ```ts
 pack.addFormula({
