@@ -35,6 +35,7 @@
 - [CodaApiBearerTokenAuthentication](interfaces/CodaApiBearerTokenAuthentication.md)
 - [Continuation](interfaces/Continuation.md)
 - [CurrencySchema](interfaces/CurrencySchema.md)
+- [CustomAuthHeaderDigestTransform](interfaces/CustomAuthHeaderDigestTransform.md)
 - [CustomAuthParameter](interfaces/CustomAuthParameter.md)
 - [CustomAuthentication](interfaces/CustomAuthentication.md)
 - [CustomHeaderTokenAuthentication](interfaces/CustomHeaderTokenAuthentication.md)

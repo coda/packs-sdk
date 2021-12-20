@@ -24,6 +24,7 @@ import type {TokenCredentials} from './auth_types';
 import {URL} from 'url';
 import type {WebBasicCredentials} from './auth_types';
 import {assertCondition} from '../helpers/ensure';
+import {createHash} from 'crypto';
 import {ensureExists} from '../helpers/ensure';
 import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
@@ -282,6 +283,7 @@ export class AuthenticatingFetcher implements Fetcher {
         let headersWithSubstitutions = JSON.stringify(headers);
 
         const {params} = this._credentials as CustomCredentials;
+        const {digestTransform} = this._authDef;
 
         Object.entries(params).forEach(([key, value]) => {
           if (urlWithSubstitutions) {
@@ -322,11 +324,20 @@ export class AuthenticatingFetcher implements Fetcher {
           }
         });
 
+        const newHeaders: FetchRequest['headers'] = headersWithSubstitutions ? JSON.parse(headersWithSubstitutions) : undefined;
+        if (newHeaders && digestTransform) {
+          const {algorithm, header} = digestTransform;
+          const headerValue = newHeaders[header];
+          if (headerValue) {
+            newHeaders[header] = createHash(algorithm).update(headerValue, 'utf-8').digest('hex')
+          }
+        }
+
         return {
           url: urlWithSubstitutions,
           body: bodyWithSubstitutions,
           form: formWithSubstitutions ? JSON.parse(formWithSubstitutions) : undefined,
-          headers: headersWithSubstitutions ? JSON.parse(headersWithSubstitutions) : undefined,
+          headers: newHeaders,
         };
       }
       case AuthenticationType.QueryParamToken: {

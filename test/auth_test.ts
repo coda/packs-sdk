@@ -964,6 +964,58 @@ describe('Auth', () => {
         });
       });
 
+      it('template variable replacement in headers with digest transform', async () => {
+        setupReadline(['secret-value', 'secret-token']);
+
+        const authWithTransform: Authentication = {...auth, digestTransform: {
+          header: 'X-Some-Header',
+          algorithm: 'sha1',
+        }};
+
+        const pack = createPackWithDefaultAuth(authWithTransform, {
+          networkDomains: ['some-url.com'],
+          formulas: [
+            makeFormula({
+              resultType: ValueType.String,
+              name: 'FormulaWithTemplateDigestReplacement',
+              description: '',
+              parameters: [],
+              execute: async (_, context) => {
+                await context.fetcher.fetch({
+                  method: 'GET',
+                  url: 'https://some-url.com',
+                  isBinaryResponse: undefined,
+                  headers: {
+                    'X-Some-Header': `session-key:{{secretValue-${context.invocationToken}}}:{{secretToken-${context.invocationToken}}}`,
+                  },
+                });
+                return '';
+              },
+            }),
+          ],
+        });
+        doSetupAuth(pack);
+
+        mockMakeRequest.returns({
+          statusCode: 200,
+          body: JSON.stringify({}),
+          headers: {
+            'content-type': 'application/json',
+          },
+        });
+
+        await executeFormulaFromPackDef(pack, 'FormulaWithTemplateDigestReplacement', [], undefined, undefined, {
+          useRealFetcher: true,
+          manifestPath: MANIFEST_PATH,
+        });
+
+        sinon.assert.calledOnce(mockMakeRequest);
+        assert.deepEqual(mockMakeRequest.getCall(0).args[0].headers, {
+          'User-Agent': 'Coda-Test-Server-Fetcher',
+          'X-Some-Header': '2c74b0b90597a5cf66b38f1d93b6cf19c379e750',
+        });
+      });
+
       it('template variable replacement in url', async () => {
         setupReadline(['secret value', 'secret token']);
 

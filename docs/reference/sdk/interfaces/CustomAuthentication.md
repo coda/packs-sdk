@@ -83,6 +83,20 @@ See https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs#h_4
 
 ___
 
+### digestTransform
+
+• `Optional` **digestTransform**: [`CustomAuthHeaderDigestTransform`](CustomAuthHeaderDigestTransform.md)
+
+An optional header hex digest transform that will be performed once template replacement is complete.
+The header [CustomAuthHeaderDigestTransform.header](CustomAuthHeaderDigestTransform.md#header) will be transformed using the specified hex
+digest [CustomAuthHeaderDigestTransform.algorithm](CustomAuthHeaderDigestTransform.md#algorithm).
+
+#### Defined in
+
+[types.ts:568](https://github.com/coda/packs-sdk/blob/main/types.ts#L568)
+
+___
+
 ### endpointDomain
 
 • `Optional` **endpointDomain**: `string`
@@ -151,7 +165,7 @@ replacement inside the constructed network request.
 
 #### Defined in
 
-[types.ts:548](https://github.com/coda/packs-sdk/blob/main/types.ts#L548)
+[types.ts:562](https://github.com/coda/packs-sdk/blob/main/types.ts#L562)
 
 ___
 
@@ -199,4 +213,4 @@ Identifies this as Custom authentication.
 
 #### Defined in
 
-[types.ts:542](https://github.com/coda/packs-sdk/blob/main/types.ts#L542)
+[types.ts:556](https://github.com/coda/packs-sdk/blob/main/types.ts#L556)

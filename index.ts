@@ -18,6 +18,7 @@ export type {AWSAccessKeyAuthentication} from './types';
 export type {AWSAssumeRoleAuthentication} from './types';
 export type {BaseAuthentication} from './types';
 export type {CodaApiBearerTokenAuthentication} from './types';
+export type {CustomAuthHeaderDigestTransform} from './types';
 export type {CustomAuthParameter} from './types';
 export type {CustomAuthentication} from './types';
 export type {CustomHeaderTokenAuthentication} from './types';

@@ -131,7 +131,7 @@ The AWS service to authenticate with, like "s3", "iam", or "route53".
 
 #### Defined in
 
-[types.ts:559](https://github.com/coda/packs-sdk/blob/main/types.ts#L559)
+[types.ts:579](https://github.com/coda/packs-sdk/blob/main/types.ts#L579)
 
 ___
 
@@ -143,4 +143,4 @@ Identifies this as AWSAccessKey authentication.
 
 #### Defined in
 
-[types.ts:557](https://github.com/coda/packs-sdk/blob/main/types.ts#L557)
+[types.ts:577](https://github.com/coda/packs-sdk/blob/main/types.ts#L577)

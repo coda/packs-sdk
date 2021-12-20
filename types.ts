@@ -480,6 +480,20 @@ export interface CustomAuthParameter {
 }
 
 /**
+* An optional header hext digest transform for the {@link CustomAuthentication} authentication type.
+*/
+export interface CustomAuthHeaderDigestTransform {
+  /**
+   * The header on which the hex digest should be applied.
+   */
+  header: string;
+  /**
+   * The hash digest algorithm to apply to the header value.
+   */
+   algorithm: 'md5' | 'sha1' | 'sha256' | 'sha512'
+} 
+
+/**
  * Authenticate for custom, non-standard API authentication schemes by inserting one or more arbitrary secret values
  * into the request (the body, URL, headers, or form data) using template replacement.
  *
@@ -546,6 +560,12 @@ export interface CustomAuthentication extends BaseAuthentication {
    * replacement inside the constructed network request.
    */
   params: CustomAuthParameter[];
+  /**
+   * An optional header hex digest transform that will be performed once template replacement is complete. 
+   * The header {@link CustomAuthHeaderDigestTransform.header} will be transformed using the specified hex
+   * digest {@link CustomAuthHeaderDigestTransform.algorithm}.
+   */
+  digestTransform?: CustomAuthHeaderDigestTransform
 }
 
 /**

@@ -377,6 +377,10 @@ const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> 
         },
         {message: 'Duplicated parameter names in the mutli-query-token authentication config'},
       ),
+    digestTransform: zodCompleteStrictObject<CustomAuthentication['digestTransform']>({
+      algorithm: z.string(),
+      header: z.string(),
+    }).optional(),
     ...baseAuthenticationValidators,
   }),
   [AuthenticationType.Various]: zodCompleteStrictObject<VariousAuthentication>({
