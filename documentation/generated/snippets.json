@@ -18,7 +18,7 @@
       "ArrayFormula"
     ],
     "content": "Adds a Coda formula which will return a text string in the doc.",
-    "code": "pack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.Array,\n  items: {\n    type: coda.ValueType.String,\n  },\n  execute: async function ([param], context) {\n    return [\"Hello\", param];\n  },\n});"
+    "code": "pack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.Array,\n  items: coda.makeSchema({\n    type: coda.ValueType.String,\n  }),\n  execute: async function ([param], context) {\n    return [\"Hello\", param];\n  },\n});"
   },
   {
     "triggerTokens": [

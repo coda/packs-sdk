@@ -64,15 +64,15 @@ let MySchema = coda.makeObjectSchema({
 });
 ```
 
-The `makeSchema` or `makeObjectSchema` call can be omitted if the schema is defined inline where it is used.
+The `makeSchema` or `makeObjectSchema` methods should still be used when defining the schema inline where it is used.
 
 ```ts
 pack.addFormula({
   // ...
   resultType: coda.ValueType.Array,
-  items: {
+  items: coda.makeSchema({
     type: coda.ValeType.Number,
-  },
+  }),
   // ...
 });
 ```

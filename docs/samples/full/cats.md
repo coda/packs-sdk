@@ -130,7 +130,7 @@ This Pack allows you to fetch random cat photos using the [Cat-as-a-service API]
         tags: {
           description: "The tags used to categorize this cat.",
           type: coda.ValueType.Array,
-          items: { type: coda.ValueType.String },
+          items: coda.makeSchema({ type: coda.ValueType.String }),
         },
         created: {
           description: "When the cat image was added.",

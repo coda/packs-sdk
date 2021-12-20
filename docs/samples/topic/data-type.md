@@ -88,9 +88,9 @@ pack.addFormula({
     // Add more parameters here and in the array below.
   ],
   resultType: coda.ValueType.Array,
-  items: {
+  items: coda.makeSchema({
     type: coda.ValueType.String,
-  },
+  }),
   execute: async function ([param], context) {
     return ["Hello", param];
   },
