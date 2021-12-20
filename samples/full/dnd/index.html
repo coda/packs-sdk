@@ -867,6 +867,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_4_1">
@@ -1001,6 +1003,20 @@
     <li class="md-nav__item">
       <a href="../../topic/parameter/" class="md-nav__link">
         Parameters
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../topic/schema/" class="md-nav__link">
+        Schemas
       </a>
     </li>
   
@@ -4090,17 +4106,54 @@
 <span class="kd">let</span> <span class="nx">SpellSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
   <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
   <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
-    <span class="nx">name</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
-    <span class="nx">description</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
-    <span class="nx">higher_level</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
-    <span class="nx">level</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">},</span>
-    <span class="nx">range</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
-    <span class="nx">material</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
-    <span class="nx">duration</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
-    <span class="nx">casting_time</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
-    <span class="nx">attack_type</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
-    <span class="nx">damage_type</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
-    <span class="nx">index</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The spell name.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">description</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;A description of the spell.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">higher_level</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;A description for casting the spell at a higher level.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">level</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The level of the spell.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">range</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The range of the spell.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">material</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The material component for the spell to be cast.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">duration</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;How long the spell effect lasts.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="c1">// Not using the Duration value hint, since this can contain values like</span>
+      <span class="c1">// &quot;Instantaneous&quot;.</span>
+    <span class="p">},</span>
+    <span class="nx">casting_time</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;How long it takes for the spell to activate.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="c1">// Not using the Duration value hint, since this can contain values like</span>
+      <span class="c1">// &quot;1 action&quot;.</span>
+    <span class="p">},</span>
+    <span class="nx">attack_type</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The attack type of the spell.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">damage_type</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The damage type of the spell.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">index</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;A unique identifier for the spell.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+    <span class="p">},</span>
   <span class="p">},</span>
   <span class="nx">primary</span><span class="o">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
   <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;index&quot;</span><span class="p">,</span>

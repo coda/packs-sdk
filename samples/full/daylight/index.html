@@ -867,6 +867,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_4_1">
@@ -1001,6 +1003,20 @@
     <li class="md-nav__item">
       <a href="../../topic/parameter/" class="md-nav__link">
         Parameters
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../topic/schema/" class="md-nav__link">
+        Schemas
       </a>
     </li>
   
@@ -4097,14 +4113,17 @@
     <span class="c1">// The values we return are simple strings, but we use the codaType field to</span>
     <span class="c1">// to tell Coda to interpret them as durations and time values.</span>
     <span class="nx">daylight</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;How much daylight there will be.&quot;</span><span class="p">,</span>
       <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
       <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Duration</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="nx">sunriseUTC</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;When the sun will rise (in UTC).&quot;</span><span class="p">,</span>
       <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
       <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Time</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="nx">sunsetUTC</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;When the sun will set (in UTC).&quot;</span><span class="p">,</span>
       <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
       <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Time</span><span class="p">,</span>
     <span class="p">},</span>

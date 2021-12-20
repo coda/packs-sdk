@@ -869,6 +869,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_4_1">
@@ -1013,6 +1015,20 @@
               
   
   
+  
+    <li class="md-nav__item">
+      <a href="../schema/" class="md-nav__link">
+        Schemas
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
     
   
   
@@ -1057,22 +1073,29 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#with-parameter-cats" class="md-nav__link">
-    With parameter (Cats)
+  <a href="#with-parameter" class="md-nav__link">
+    With parameter
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#with-continuation-dungeons-and-dragons" class="md-nav__link">
-    With continuation (Dungeons and Dragons)
+  <a href="#with-continuation" class="md-nav__link">
+    With continuation
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#with-authentication-todoist" class="md-nav__link">
-    With authentication (Todoist)
+  <a href="#with-authentication" class="md-nav__link">
+    With authentication
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#with-row-references" class="md-nav__link">
+    With row references
   </a>
   
 </li>
@@ -4120,22 +4143,29 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#with-parameter-cats" class="md-nav__link">
-    With parameter (Cats)
+  <a href="#with-parameter" class="md-nav__link">
+    With parameter
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#with-continuation-dungeons-and-dragons" class="md-nav__link">
-    With continuation (Dungeons and Dragons)
+  <a href="#with-continuation" class="md-nav__link">
+    With continuation
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#with-authentication-todoist" class="md-nav__link">
-    With authentication (Todoist)
+  <a href="#with-authentication" class="md-nav__link">
+    With authentication
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#with-row-references" class="md-nav__link">
+    With row references
   </a>
   
 </li>
@@ -4205,7 +4235,7 @@
   <span class="p">},</span>
 <span class="p">});</span>
 </code></pre></div>
-<h2 id="with-parameter-cats">With parameter (Cats)<a class="headerlink" href="#with-parameter-cats" title="Permanent link">&para;</a></h2>
+<h2 id="with-parameter">With parameter<a class="headerlink" href="#with-parameter" title="Permanent link">&para;</a></h2>
 <p>A sync table that uses a parameter. This sample syncs cat photos from the CatAAS API.</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
 <span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
@@ -4219,7 +4249,7 @@
     <span class="p">},</span>
     <span class="nx">tags</span><span class="o">:</span> <span class="p">{</span>
       <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Array</span><span class="p">,</span>
-      <span class="nx">items</span><span class="o">:</span> <span class="p">{</span> <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span> <span class="p">},</span>
+      <span class="nx">items</span>: <span class="kt">coda.makeSchema</span><span class="p">({</span> <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span> <span class="p">}),</span>
     <span class="p">},</span>
     <span class="nx">created</span><span class="o">:</span> <span class="p">{</span>
       <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
@@ -4290,7 +4320,7 @@
 <span class="c1">// Allow the pack to make requests to Cat-as-a-service API.</span>
 <span class="nx">pack</span><span class="p">.</span><span class="nx">addNetworkDomain</span><span class="p">(</span><span class="s2">&quot;cataas.com&quot;</span><span class="p">);</span>
 </code></pre></div>
-<h2 id="with-continuation-dungeons-and-dragons">With continuation (Dungeons and Dragons)<a class="headerlink" href="#with-continuation-dungeons-and-dragons" title="Permanent link">&para;</a></h2>
+<h2 id="with-continuation">With continuation<a class="headerlink" href="#with-continuation" title="Permanent link">&para;</a></h2>
 <p>A sync table that uses continuations to sync data using multiple executions. This sample syncs the spells available in Dungeons and Dragons.</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
 <span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
@@ -4306,17 +4336,54 @@
 <span class="kd">let</span> <span class="nx">SpellSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
   <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Object</span><span class="p">,</span>
   <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
-    <span class="nx">name</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
-    <span class="nx">description</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
-    <span class="nx">higher_level</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
-    <span class="nx">level</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">},</span>
-    <span class="nx">range</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
-    <span class="nx">material</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
-    <span class="nx">duration</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
-    <span class="nx">casting_time</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
-    <span class="nx">attack_type</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
-    <span class="nx">damage_type</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
-    <span class="nx">index</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">},</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The spell name.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">description</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;A description of the spell.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">higher_level</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;A description for casting the spell at a higher level.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">level</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The level of the spell.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">range</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The range of the spell.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">material</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The material component for the spell to be cast.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">duration</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;How long the spell effect lasts.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="c1">// Not using the Duration value hint, since this can contain values like</span>
+      <span class="c1">// &quot;Instantaneous&quot;.</span>
+    <span class="p">},</span>
+    <span class="nx">casting_time</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;How long it takes for the spell to activate.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="c1">// Not using the Duration value hint, since this can contain values like</span>
+      <span class="c1">// &quot;1 action&quot;.</span>
+    <span class="p">},</span>
+    <span class="nx">attack_type</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The attack type of the spell.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">damage_type</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The damage type of the spell.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">index</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;A unique identifier for the spell.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+    <span class="p">},</span>
   <span class="p">},</span>
   <span class="nx">primary</span><span class="o">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
   <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;index&quot;</span><span class="p">,</span>
@@ -4413,7 +4480,7 @@
   <span class="k">return</span> <span class="nx">spells</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div>
-<h2 id="with-authentication-todoist">With authentication (Todoist)<a class="headerlink" href="#with-authentication-todoist" title="Permanent link">&para;</a></h2>
+<h2 id="with-authentication">With authentication<a class="headerlink" href="#with-authentication" title="Permanent link">&para;</a></h2>
 <p>A sync table that pulls from an API using authentication. This sample syncs the tasks from a user&#x27;s Todoist account.</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
 <span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
@@ -4489,6 +4556,156 @@
   <span class="nx">instructionsUrl</span><span class="o">:</span> <span class="s2">&quot;https://todoist.com/app/settings/integrations&quot;</span><span class="p">,</span>
 <span class="p">});</span>
 </code></pre></div>
+<h2 id="with-row-references">With row references<a class="headerlink" href="#with-row-references" title="Permanent link">&para;</a></h2>
+<p>A sync table that contains a reference to a row in another sync table. This sample syncs the tasks from a user&#x27;s Todoist account.</p>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">coda</span> <span class="kr">from</span> <span class="s2">&quot;@codahq/packs-sdk&quot;</span><span class="p">;</span>
+<span class="k">export</span> <span class="kd">const</span> <span class="nx">pack</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">newPack</span><span class="p">();</span>
+
+<span class="c1">// A schema defining the data in the Projects sync table.</span>
+<span class="kd">const</span> <span class="nx">ProjectSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
+  <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The name of the project.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="nx">required</span>: <span class="kt">true</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">url</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;A link to the project in the Todoist app.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Url</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">projectId</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The ID of the project.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">,</span>
+      <span class="nx">required</span>: <span class="kt">true</span><span class="p">,</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+  <span class="nx">primary</span><span class="o">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+  <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;projectId&quot;</span><span class="p">,</span>
+  <span class="nx">featured</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">],</span>
+  <span class="nx">identity</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Project&quot;</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// A reference schema, allowing other sync tables to link to rows in the</span>
+<span class="c1">// Projects sync table.</span>
+<span class="kd">const</span> <span class="nx">ProjectReferenceSchema</span> <span class="o">=</span>
+    <span class="nx">coda</span><span class="p">.</span><span class="nx">makeReferenceSchemaFromObjectSchema</span><span class="p">(</span><span class="nx">ProjectSchema</span><span class="p">);</span>
+
+<span class="c1">// A schema defining the data in the Tasks sync table.</span>
+<span class="kd">const</span> <span class="nx">TaskSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
+  <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The name of the task.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="nx">required</span>: <span class="kt">true</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">description</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;A detailed description of the task.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">url</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;A link to the task in the Todoist app.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">String</span><span class="p">,</span>
+      <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Url</span>
+    <span class="p">},</span>
+    <span class="c1">// Reference a project from the Projects sync table.</span>
+    <span class="nx">project</span>: <span class="kt">ProjectReferenceSchema</span><span class="p">,</span>
+    <span class="nx">taskId</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The ID of the task.&quot;</span><span class="p">,</span>
+      <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">,</span>
+      <span class="nx">required</span>: <span class="kt">true</span><span class="p">,</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+  <span class="nx">primary</span><span class="o">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+  <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;taskId&quot;</span><span class="p">,</span>
+  <span class="nx">featured</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;project&quot;</span><span class="p">],</span>
+  <span class="nx">identity</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Task&quot;</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// The definition and logic for the Projects sync table.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addSyncTable</span><span class="p">({</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Projects&quot;</span><span class="p">,</span>
+  <span class="nx">schema</span>: <span class="kt">ProjectSchema</span><span class="p">,</span>
+  <span class="nx">identityName</span><span class="o">:</span> <span class="s2">&quot;Project&quot;</span><span class="p">,</span>
+  <span class="nx">formula</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;SyncProjects&quot;</span><span class="p">,</span>
+    <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Sync projects&quot;</span><span class="p">,</span>
+    <span class="nx">parameters</span><span class="o">:</span> <span class="p">[],</span>
+    <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;https://api.todoist.com/rest/v1/projects&quot;</span><span class="p">;</span>
+      <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+        <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+        <span class="nx">url</span>: <span class="kt">url</span><span class="p">,</span>
+      <span class="p">});</span>
+
+      <span class="kd">let</span> <span class="nx">results</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">project</span> <span class="k">of</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">results</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+          <span class="nx">name</span>: <span class="kt">project.name</span><span class="p">,</span>
+          <span class="nx">url</span>: <span class="kt">project.url</span><span class="p">,</span>
+          <span class="nx">projectId</span>: <span class="kt">project.id</span><span class="p">,</span>
+        <span class="p">});</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="p">{</span>
+        <span class="nx">result</span>: <span class="kt">results</span><span class="p">,</span>
+      <span class="p">};</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// The definition and logic for the Tasks sync table.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addSyncTable</span><span class="p">({</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Tasks&quot;</span><span class="p">,</span>
+  <span class="nx">schema</span>: <span class="kt">TaskSchema</span><span class="p">,</span>
+  <span class="nx">identityName</span><span class="o">:</span> <span class="s2">&quot;Task&quot;</span><span class="p">,</span>
+  <span class="nx">formula</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;SyncTasks&quot;</span><span class="p">,</span>
+    <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;Sync tasks&quot;</span><span class="p">,</span>
+    <span class="nx">parameters</span><span class="o">:</span> <span class="p">[],</span>
+    <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">let</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;https://api.todoist.com/rest/v1/tasks&quot;</span><span class="p">;</span>
+      <span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+        <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+        <span class="nx">url</span>: <span class="kt">url</span><span class="p">,</span>
+      <span class="p">});</span>
+
+      <span class="kd">let</span> <span class="nx">results</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">task</span> <span class="k">of</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nx">item</span>: <span class="kt">any</span> <span class="o">=</span> <span class="p">{</span>
+          <span class="nx">name</span>: <span class="kt">task.content</span><span class="p">,</span>
+          <span class="nx">description</span>: <span class="kt">task.description</span><span class="p">,</span>
+          <span class="nx">url</span>: <span class="kt">task.url</span><span class="p">,</span>
+          <span class="nx">taskId</span>: <span class="kt">task.id</span><span class="p">,</span>
+        <span class="p">};</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">task</span><span class="p">.</span><span class="nx">project_id</span><span class="p">)</span> <span class="p">{</span>
+          <span class="c1">// Add a reference to the parent project in the Projects table.</span>
+          <span class="nx">item</span><span class="p">.</span><span class="nx">project</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nx">projectId</span>: <span class="kt">task.project_id</span><span class="p">,</span>
+            <span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;Not found&quot;</span><span class="p">,</span>  <span class="c1">// Placeholder name, if not synced yet.</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="nx">results</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">item</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="p">{</span>
+        <span class="nx">result</span>: <span class="kt">results</span><span class="p">,</span>
+      <span class="p">};</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="c1">// Allow the pack to make requests to Todoist.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">addNetworkDomain</span><span class="p">(</span><span class="s2">&quot;todoist.com&quot;</span><span class="p">);</span>
+
+<span class="c1">// Setup authentication using a Todoist API token.</span>
+<span class="nx">pack</span><span class="p">.</span><span class="nx">setUserAuthentication</span><span class="p">({</span>
+  <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">AuthenticationType</span><span class="p">.</span><span class="nx">HeaderBearerToken</span><span class="p">,</span>
+  <span class="nx">instructionsUrl</span><span class="o">:</span> <span class="s2">&quot;https://todoist.com/app/settings/integrations&quot;</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre></div>
                 
                   
                 
@@ -4510,7 +4727,7 @@
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../parameter/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Parameters" rel="prev">
+        <a href="../schema/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Schemas" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -4519,7 +4736,7 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              Parameters
+              Schemas
             </div>
           </div>
         </a>

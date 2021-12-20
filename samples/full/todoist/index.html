@@ -867,6 +867,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_4_1">
@@ -1001,6 +1003,20 @@
     <li class="md-nav__item">
       <a href="../../topic/parameter/" class="md-nav__link">
         Parameters
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../topic/schema/" class="md-nav__link">
+        Schemas
       </a>
     </li>
   
@@ -4141,7 +4157,6 @@
 <span class="p">});</span>
 
 <span class="kd">const</span> <span class="nx">ProjectSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
-  <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Reference</span><span class="p">,</span>
   <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">name</span><span class="o">:</span> <span class="p">{</span>
       <span class="nx">description</span><span class="o">:</span> <span class="s2">&quot;The name of the project.&quot;</span><span class="p">,</span>
@@ -4184,8 +4199,8 @@
 
 <span class="c1">// A reference to a synced Task. Usually you can use</span>
 <span class="c1">// `coda.makeReferenceSchemaFromObjectSchema` to generate these from the primary</span>
-<span class="c1">// schema, but that doesn&#39;t work in this case since a Project itself can contain</span>
-<span class="c1">// a reference to a parent project.</span>
+<span class="c1">// schema, but that doesn&#39;t work in this case since a task itself can contain</span>
+<span class="c1">// a reference to a parent task.</span>
 <span class="kd">const</span> <span class="nx">TaskReferenceSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
   <span class="nx">codaType</span>: <span class="kt">coda.ValueHintType.Reference</span><span class="p">,</span>
   <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>

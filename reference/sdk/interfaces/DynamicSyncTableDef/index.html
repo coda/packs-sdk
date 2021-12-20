@@ -865,6 +865,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_4_1">
@@ -999,6 +1001,20 @@
     <li class="md-nav__item">
       <a href="../../../../samples/topic/parameter/" class="md-nav__link">
         Parameters
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../samples/topic/schema/" class="md-nav__link">
+        Schemas
       </a>
     </li>
   
@@ -2438,6 +2454,13 @@
   
     <nav class="md-nav" aria-label="Properties">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    description
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#entityname" class="md-nav__link">
@@ -4199,6 +4222,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    description
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#entityname" class="md-nav__link">
     entityName
   </a>
@@ -4319,69 +4349,77 @@ instead, define dynamic sync tables using <a href="../../functions/makeDynamicSy
 </ul>
 <p>↳ <strong><code>DynamicSyncTableDef</code></strong></p>
 <h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h2>
+<h3 id="description">description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h3>
+<p>• <code>Optional</code> <strong>description</strong>: <code>string</code></p>
+<p>See <a href="../SyncTableOptions/#description">SyncTableOptions.description</a></p>
+<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">&para;</a></h4>
+<p><a href="../SyncTableDef/">SyncTableDef</a>.<a href="../SyncTableDef/#description">description</a></p>
+<h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L160">api.ts:160</a></p>
+<hr />
 <h3 id="entityname">entityName<a class="headerlink" href="#entityname" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>entityName</strong>: <code>string</code></p>
 <p>See <a href="../DynamicOptions/#entityname">DynamicOptions.entityName</a></p>
-<h4 id="inherited-from">Inherited from<a class="headerlink" href="#inherited-from" title="Permanent link">&para;</a></h4>
+<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">&para;</a></h4>
 <p><a href="../SyncTableDef/">SyncTableDef</a>.<a href="../SyncTableDef/#entityname">entityName</a></p>
-<h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L166">api.ts:166</a></p>
+<h4 id="defined-in_1">Defined in<a class="headerlink" href="#defined-in_1" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L168">api.ts:168</a></p>
 <hr />
 <h3 id="getdisplayurl">getDisplayUrl<a class="headerlink" href="#getdisplayurl" title="Permanent link">&para;</a></h3>
 <p>• <strong>getDisplayUrl</strong>: <a href="../../types/MetadataFormula/"><code>MetadataFormula</code></a></p>
 <p>See <a href="../DynamicSyncTableOptions/#getdisplayurl">DynamicSyncTableOptions.getDisplayUrl</a></p>
-<h4 id="defined-in_1">Defined in<a class="headerlink" href="#defined-in_1" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L186">api.ts:186</a></p>
+<h4 id="defined-in_2">Defined in<a class="headerlink" href="#defined-in_2" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L188">api.ts:188</a></p>
 <hr />
 <h3 id="getname">getName<a class="headerlink" href="#getname" title="Permanent link">&para;</a></h3>
 <p>• <strong>getName</strong>: <a href="../../types/MetadataFormula/"><code>MetadataFormula</code></a></p>
 <p>See <a href="../DynamicSyncTableOptions/#getname">DynamicSyncTableOptions.getName</a></p>
-<h4 id="defined-in_2">Defined in<a class="headerlink" href="#defined-in_2" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L184">api.ts:184</a></p>
+<h4 id="defined-in_3">Defined in<a class="headerlink" href="#defined-in_3" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L186">api.ts:186</a></p>
 <hr />
 <h3 id="getschema">getSchema<a class="headerlink" href="#getschema" title="Permanent link">&para;</a></h3>
 <p>• <strong>getSchema</strong>: <a href="../../types/MetadataFormula/"><code>MetadataFormula</code></a></p>
 <p>See <a href="../DynamicSyncTableOptions/#getschema">DynamicSyncTableOptions.getSchema</a></p>
 <h4 id="overrides">Overrides<a class="headerlink" href="#overrides" title="Permanent link">&para;</a></h4>
 <p><a href="../SyncTableDef/">SyncTableDef</a>.<a href="../SyncTableDef/#getschema">getSchema</a></p>
-<h4 id="defined-in_3">Defined in<a class="headerlink" href="#defined-in_3" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L182">api.ts:182</a></p>
+<h4 id="defined-in_4">Defined in<a class="headerlink" href="#defined-in_4" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L184">api.ts:184</a></p>
 <hr />
 <h3 id="getter">getter<a class="headerlink" href="#getter" title="Permanent link">&para;</a></h3>
 <p>• <strong>getter</strong>: <a href="../../types/SyncFormula/"><code>SyncFormula</code></a>&lt;<code>K</code>, <code>L</code>, <code>ParamDefsT</code>, <code>SchemaT</code>></p>
 <p>See <a href="../SyncTableOptions/#formula">SyncTableOptions.formula</a></p>
-<h4 id="inherited-from_1">Inherited from<a class="headerlink" href="#inherited-from_1" title="Permanent link">&para;</a></h4>
+<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">&para;</a></h4>
 <p><a href="../SyncTableDef/">SyncTableDef</a>.<a href="../SyncTableDef/#getter">getter</a></p>
-<h4 id="defined-in_4">Defined in<a class="headerlink" href="#defined-in_4" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L162">api.ts:162</a></p>
+<h4 id="defined-in_5">Defined in<a class="headerlink" href="#defined-in_5" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L164">api.ts:164</a></p>
 <hr />
 <h3 id="isdynamic">isDynamic<a class="headerlink" href="#isdynamic" title="Permanent link">&para;</a></h3>
 <p>• <strong>isDynamic</strong>: <code>true</code></p>
 <p>Identifies this sync table as dynamic.</p>
-<h4 id="defined-in_5">Defined in<a class="headerlink" href="#defined-in_5" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L180">api.ts:180</a></p>
+<h4 id="defined-in_6">Defined in<a class="headerlink" href="#defined-in_6" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L182">api.ts:182</a></p>
 <hr />
 <h3 id="listdynamicurls">listDynamicUrls<a class="headerlink" href="#listdynamicurls" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>listDynamicUrls</strong>: <a href="../../types/MetadataFormula/"><code>MetadataFormula</code></a></p>
 <p>See <a href="../DynamicSyncTableOptions/#listdynamicurls">DynamicSyncTableOptions.listDynamicUrls</a></p>
-<h4 id="defined-in_6">Defined in<a class="headerlink" href="#defined-in_6" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L188">api.ts:188</a></p>
+<h4 id="defined-in_7">Defined in<a class="headerlink" href="#defined-in_7" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L190">api.ts:190</a></p>
 <hr />
 <h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">&para;</a></h3>
 <p>• <strong>name</strong>: <code>string</code></p>
 <p>See <a href="../SyncTableOptions/#name">SyncTableOptions.name</a></p>
-<h4 id="inherited-from_2">Inherited from<a class="headerlink" href="#inherited-from_2" title="Permanent link">&para;</a></h4>
+<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">&para;</a></h4>
 <p><a href="../SyncTableDef/">SyncTableDef</a>.<a href="../SyncTableDef/#name">name</a></p>
-<h4 id="defined-in_7">Defined in<a class="headerlink" href="#defined-in_7" title="Permanent link">&para;</a></h4>
+<h4 id="defined-in_8">Defined in<a class="headerlink" href="#defined-in_8" title="Permanent link">&para;</a></h4>
 <p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L158">api.ts:158</a></p>
 <hr />
 <h3 id="schema">schema<a class="headerlink" href="#schema" title="Permanent link">&para;</a></h3>
 <p>• <strong>schema</strong>: <code>SchemaT</code></p>
 <p>See <a href="../SyncTableOptions/#schema">SyncTableOptions.schema</a></p>
-<h4 id="inherited-from_3">Inherited from<a class="headerlink" href="#inherited-from_3" title="Permanent link">&para;</a></h4>
+<h4 id="inherited-from_4">Inherited from<a class="headerlink" href="#inherited-from_4" title="Permanent link">&para;</a></h4>
 <p><a href="../SyncTableDef/">SyncTableDef</a>.<a href="../SyncTableDef/#schema">schema</a></p>
-<h4 id="defined-in_8">Defined in<a class="headerlink" href="#defined-in_8" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L160">api.ts:160</a></p>
+<h4 id="defined-in_9">Defined in<a class="headerlink" href="#defined-in_9" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api.ts#L162">api.ts:162</a></p>
                 
               
               

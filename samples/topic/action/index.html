@@ -869,6 +869,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_4_1">
@@ -1059,6 +1061,20 @@
     <li class="md-nav__item">
       <a href="../parameter/" class="md-nav__link">
         Parameters
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../schema/" class="md-nav__link">
+        Schemas
       </a>
     </li>
   
@@ -4192,9 +4208,9 @@
     <span class="p">}),</span>
   <span class="p">],</span>
   <span class="nx">resultType</span>: <span class="kt">coda.ValueType.Array</span><span class="p">,</span>
-  <span class="nx">items</span><span class="o">:</span> <span class="p">{</span>
+  <span class="nx">items</span>: <span class="kt">coda.makeSchema</span><span class="p">({</span>
     <span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">,</span>
-  <span class="p">},</span>
+  <span class="p">}),</span>
   <span class="nx">isAction</span>: <span class="kt">true</span><span class="p">,</span>
   <span class="nx">execute</span>: <span class="kt">async</span> <span class="kd">function</span> <span class="p">([</span><span class="nx">quantity</span><span class="p">,</span> <span class="nx">sides</span><span class="p">],</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">let</span> <span class="nx">results</span> <span class="o">=</span> <span class="p">[];</span>

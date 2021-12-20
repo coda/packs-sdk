@@ -1014,6 +1014,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_4_1">
@@ -1148,6 +1150,20 @@
     <li class="md-nav__item">
       <a href="../../../samples/topic/parameter/" class="md-nav__link">
         Parameters
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/topic/schema/" class="md-nav__link">
+        Schemas
       </a>
     </li>
   
@@ -4348,6 +4364,7 @@
   <span class="c1">// ...</span>
 <span class="p">});</span>
 </code></pre></div>
+<p>The resulting array is represented as a <a href="https://coda.io/formulas#List"><code>List</code></a> in the Coda formula language.</p>
 <h3 id="objects">Objects<a class="headerlink" href="#objects" title="Permanent link">&para;</a></h3>
 <p>Structured data can be returned using the <a href="../../../reference/sdk/enums/ValueType/#Object"><code>Object</code></a> value type. These objects must conform to an existing schema, as specified in the <code>schema</code> property. See the <a href="../../advanced/schemas/">Schemas guide</a> for more information about defining and using schemas.</p>
 <div class="highlight"><pre><span></span><code><span class="kd">const</span> <span class="nx">MySchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
@@ -4372,6 +4389,10 @@
   <span class="p">},</span>
 <span class="p">});</span>
 </code></pre></div>
+<p>Objects are displayed in the doc as a "chip", a small rectangle with rounded corners. A primary value is displayed within the chip, with additional properties of object shown on hover.</p>
+<p><img src="../../../images/data_types_object_hover.png" srcset="../../../images/data_types_object_hover_2x.png 2x" class="screenshot" alt="Hovering over an object chip"></p>
+<p>Like Coda tables, the fields within an object can be accessed using dot notation.</p>
+<p><img src="../../../images/data_types_object_dot.png" srcset="../../../images/data_types_object_dot_2x.png 2x" class="screenshot" alt="Using dot notation to access the properties of the object"></p>
 <h2 id="value-hints">Value hints<a class="headerlink" href="#value-hints" title="Permanent link">&para;</a></h2>
 <p>To indicate that Coda should display your value in a more meaningful way you can set a value hint. The enumeration <a href="../../../reference/sdk/enums/ValueHintType/"><code>ValueHintType</code></a> defines the set of supported value hints, which correspond to the <a href="https://help.coda.io/en/articles/1235680-overview-of-column-formats">column formats</a> in Coda. The value hint is set one using the <code>codaType</code> property of a formula or schema. Hints can only be used with certain value types, for example the <code>Percent</code> value hint can only be used with the <code>Number</code> value type.</p>
 <div class="highlight"><pre><span></span><code><span class="nx">pack</span><span class="p">.</span><span class="nx">addFormula</span><span class="p">({</span>
@@ -4611,7 +4632,7 @@
 </tbody>
 </table>
 <h2 id="formatting-options">Formatting options<a class="headerlink" href="#formatting-options" title="Permanent link">&para;</a></h2>
-<p>When used in a schema definition, some value types and value hints support additional formatting options. For example, <code>Number</code> types support a <a href="../../reference/sdk/interfaces/NumericSchema.md/#precision"><code>precision</code></a> property that controls how many decimal places to show.</p>
+<p>When used in a sync table, some value types and value hints support additional formatting options. For example, <code>Number</code> types support a <a href="../../reference/sdk/interfaces/NumericSchema.md/#precision"><code>precision</code></a> property that controls how many decimal places to show.</p>
 <div class="highlight"><pre><span></span><code><span class="kd">const</span> <span class="nx">DoorSchema</span> <span class="o">=</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">makeObjectSchema</span><span class="p">({</span>
   <span class="nx">properties</span><span class="o">:</span> <span class="p">{</span>
     <span class="nx">heightInMeters</span><span class="o">:</span> <span class="p">{</span><span class="kr">type</span><span class="o">:</span> <span class="nx">coda</span><span class="p">.</span><span class="nx">ValueType</span><span class="p">.</span><span class="nb">Number</span><span class="p">,</span> <span class="nx">precision</span>: <span class="kt">3</span><span class="p">},</span>
