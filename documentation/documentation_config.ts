@@ -392,19 +392,24 @@ export const Examples: Example[] = [
         codeFile: './snippets/sync_table.ts',
       },
       {
-        name: 'With parameter (Cats)',
+        name: 'With parameter',
         content: 'A sync table that uses a parameter. This sample syncs cat photos from the CatAAS API.',
         codeFile: './examples/cats/sync_table.ts',
       },
       {
-        name: 'With continuation (Dungeons and Dragons)',
+        name: 'With continuation',
         content: 'A sync table that uses continuations to sync data using multiple executions. This sample syncs the spells available in Dungeons and Dragons.',
         codeFile: './examples/dnd/sync_table.ts',
       },
       {
-        name: 'With authentication (Todoist)',
+        name: 'With authentication',
         content: 'A sync table that pulls from an API using authentication. This sample syncs the tasks from a user\'s Todoist account.',
         codeFile: './examples/todoist/sync_table.ts',
+      },
+      {
+        name: 'With row references',
+        content: 'A sync table that contains a reference to a row in another sync table. This sample syncs the tasks from a user\'s Todoist account.',
+        codeFile: './examples/todoist/reference.ts',
       },
     ],
   },
@@ -479,6 +484,38 @@ export const Examples: Example[] = [
         name: 'HTML',
         content: 'A formula that returns HTML content. This sample returns HTML with every word of the input string bolded.',
         codeFile: './examples/data-type/alt_bold.ts',
+      },
+    ],
+  },
+  {
+    name: 'Schemas',
+    category: ExampleCategory.Topic,
+    triggerTokens: ['makeSchema', 'makeObjectSchema'],
+    contentFile: './examples/schema/README.md',
+    linkData: {
+      type: UrlType.SdkReferencePath,
+      url: '/guides/advanced/schemas',
+    },
+    exampleSnippets: [
+      {
+        name: 'Template (Object Schema)',
+        content: 'The basic structure of an object schema.',
+        codeFile: './snippets/object_schema.ts',
+      },
+      {
+        name: 'For formula',
+        content: 'An object schema used by a formula. This sample defines the schema for information about the daylight at a given location.',
+        codeFile: './examples/daylight/schema.ts',
+      },
+      {
+        name: 'For sync table',
+        content: 'An object schema used by a sync table. This sample defines the schema for the information about a spell in Dungeons and Dragons.',
+        codeFile: './examples/dnd/schema.ts',
+      },
+      {
+        name: 'With self-reference',
+        content: 'An object schema used by a sync table, that includes a row reference to itself. This sample defines the schema for a task in Todoist, where tasks can have parent tasks.',
+        codeFile: './examples/todoist/schema.ts',
       },
     ],
   },

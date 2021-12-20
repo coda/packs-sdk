@@ -10,7 +10,7 @@ const CatSchema = coda.makeObjectSchema({
     },
     tags: {
       type: coda.ValueType.Array,
-      items: { type: coda.ValueType.String },
+      items: coda.makeSchema({ type: coda.ValueType.String }),
     },
     created: {
       type: coda.ValueType.String,

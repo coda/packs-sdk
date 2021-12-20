@@ -4,7 +4,7 @@ title: Sync tables
 
 # Add sync tables
 
-Tables are one of the most powerful features of Coda, and many times users use them to track items that are also represented in other systems. For example, you may have a table of upcoming events, each of which is already listed in a company calendar. Sync tables allow you to define a special type of table where the rows are automatically synced from an external data source such as an API. Users can define their own additional columns on these tables, making it easy to blend centralized data with local information.
+Tables are one of the most powerful features of Coda, and many times people use them to track items that are also represented in other systems. For example, you may have a table of upcoming events, each of which is already listed in a company calendar. Sync tables allow you to define a special type of table where the rows are automatically synced from an external data source such as an API.
 
 [View Sample Code][samples]{ .md-button }
 
@@ -113,7 +113,7 @@ The name of a sync table can only contain letters, numbers, and underscores. By 
 
 ## Identity
 
-Every sync table is required to specify an [`identityName`][identityName], which is a unique identifier for the item being synced in that table. By convention this is usually the singular form of the name of the item being synced. For instance, a "Tasks" table would use an identity name of "Task". This identity name is used to reference the table when [creating row references][schema_references] or [updating rows with actions](#actions).
+Every sync table is required to specify an [`identityName`][identityName], which is a unique identifier for the type of item being synced in that table. By convention this is usually the singular form of the name of the item being synced. For instance, a "Tasks" table would use an identity name of "Task". This identity name is used to reference the table when [creating row references](#references) or [updating rows with actions](#actions).
 
 By default the identity name is also used as the column name for the first column of the sync table, which contains the synced item as a chip. You can use a different name for the column by setting [`dynamicOptions.entityName`][dynamicOptions] on the sync table.
 
@@ -159,7 +159,7 @@ pack.addSyncTable({
 
 The contents of the continuation are flexible and will depend on the API to the external data source, but usually involve offsets or page tokens. The continuation must be an object of type [`Continuation`][Continuation], which allows for storing string and number values. Continuations are not designed for persisting large amounts of data between executions, so we recommend against using a task queue pattern.
 
-Check out the [Dungeons and Dragons sample][sample_dnd] to see a working example of how to use continuations in a sync table.
+[View Sample Code][sample_continuation]{ .md-button }
 
 
 ## Approximating two-way sync with actions {: #actions}
@@ -202,6 +202,19 @@ pack.addFormula({
 ```
 
 
+## Referencing rows from other sync tables {: #references}
+
+It's often the case that the different synced items in a Pack are related to each other. For example, a Pack may have sync tables for projects and tasks, where each task belongs to a single project. Using references you can connect these two tables together. References in sync tables work like [Lookup columns][hc_lookups] in regular tables.
+
+A reference must specify the identity of the target table as well as the ID of the target row. If that row has already been synced to the doc, then the reference is replaced with the data from that row. Otherwise a grayed out chip is displayed, indicating that the referenced row hasn't been synced yet.
+
+<img src="../../../images/sync_table_reference.png" srcset="../../../images/sync_table_reference_2x.png 2x" class="screenshot" alt="How sync table references look in the doc">
+
+See the [Schemas guide][schema_references] for more information on how to create references in your table schema.
+
+[View Sample Code][sample_reference]{ .md-button }
+
+
 ## Account-specific fields
 
 Some APIs vary the shape of the data returned based on the account being accessed. For example, an issue tracker may allow users to define custom fields for their bug reports, which the API also returns. A sync table must have a defined schema that represents the data for each item, but it is possible to expand that schema to accommodate these variations by using a dynamic schema. See the [Dynamic sync tables guide][dynamic_sync_tables] for more information on how to use this feature.
@@ -222,4 +235,6 @@ Some APIs vary the shape of the data returned based on the account being accesse
 [actions]: actions.md
 [data_type_object]: ../basics/data-types.md#objects
 [dynamic_sync_tables]: ../advanced/dynamic-sync-tables.md
-[sample_dnd]: ../../samples/full/dnd.md
+[hc_lookups]: https://help.coda.io/en/articles/1385997-using-lookups#the-lookup-column-format
+[sample_continuation]: ../../samples/topic/sync-table.md#with-continuation
+[sample_reference]: ../../samples/topic/sync-table.md#with-row-references

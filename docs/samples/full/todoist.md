@@ -81,7 +81,6 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
     });
 
     const ProjectSchema = coda.makeObjectSchema({
-      codaType: coda.ValueHintType.Reference,
       properties: {
         name: {
           description: "The name of the project.",
@@ -124,8 +123,8 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
 
     // A reference to a synced Task. Usually you can use
     // `coda.makeReferenceSchemaFromObjectSchema` to generate these from the primary
-    // schema, but that doesn't work in this case since a Project itself can contain
-    // a reference to a parent project.
+    // schema, but that doesn't work in this case since a task itself can contain
+    // a reference to a parent task.
     const TaskReferenceSchema = coda.makeObjectSchema({
       codaType: coda.ValueHintType.Reference,
       properties: {

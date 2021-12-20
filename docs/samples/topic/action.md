@@ -59,9 +59,9 @@ pack.addFormula({
     }),
   ],
   resultType: coda.ValueType.Array,
-  items: {
+  items: coda.makeSchema({
     type: coda.ValueType.Number,
-  },
+  }),
   isAction: true,
   execute: async function ([quantity, sides], context) {
     let results = [];
