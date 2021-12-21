@@ -11,15 +11,20 @@ const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTokenExchange, scopes, }) {
     // TODO: Handle endpointKey.
-    const { authorizationUrl, tokenUrl, additionalParams } = authDef;
+    const { authorizationUrl, tokenUrl, additionalParams, scopeDelimiter } = authDef;
     // Use the manifest's scopes as a default.
     const requestedScopes = scopes && scopes.length > 0 ? scopes : authDef.scopes;
+    // ClientOAuth2 doesn't support a scope delimiter, so just hack a fake single pre-delimited scope
+    // if there's a custom delimiter involved.
+    const scopeArray = requestedScopes && scopeDelimiter && scopeDelimiter !== ' '
+        ? [requestedScopes.join(scopeDelimiter)]
+        : requestedScopes;
     const oauth2Client = new client_oauth2_1.default({
         clientId,
         clientSecret,
         authorizationUri: authorizationUrl,
         accessTokenUri: tokenUrl,
-        scopes: requestedScopes,
+        scopes: scopeArray,
         redirectUri: makeRedirectUrl(port),
         query: additionalParams,
     });

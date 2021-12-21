@@ -27,7 +27,7 @@ user to the [authorizationUrl](OAuth2Authentication.md#authorizationurl).
 
 #### Defined in
 
-[types.ts:417](https://github.com/coda/packs-sdk/blob/main/types.ts#L417)
+[types.ts:424](https://github.com/coda/packs-sdk/blob/main/types.ts#L424)
 
 ___
 
@@ -97,7 +97,7 @@ as [ExecutionContext.endpoint](ExecutionContext.md#endpoint).
 
 #### Defined in
 
-[types.ts:427](https://github.com/coda/packs-sdk/blob/main/types.ts#L427)
+[types.ts:434](https://github.com/coda/packs-sdk/blob/main/types.ts#L434)
 
 ___
 
@@ -175,6 +175,21 @@ when creating a new account.
 
 ___
 
+### scopeDelimiter
+
+• `Optional` **scopeDelimiter**: `string`
+
+The delimiter to use when joining [scopes](OAuth2Authentication.md#scopes) when generating authorization URLs.
+
+The OAuth2 standard is to use spaces to delimit scopes, and Coda will do that by default.
+If the API you are using requires a different delimiter, say a comma, specify it here.
+
+#### Defined in
+
+[types.ts:411](https://github.com/coda/packs-sdk/blob/main/types.ts#L411)
+
+___
+
 ### scopes
 
 • `Optional` **scopes**: `string`[]
@@ -202,7 +217,7 @@ When sending authenticated requests, a HTTP header of the form
 
 #### Defined in
 
-[types.ts:412](https://github.com/coda/packs-sdk/blob/main/types.ts#L412)
+[types.ts:419](https://github.com/coda/packs-sdk/blob/main/types.ts#L419)
 
 ___
 
@@ -216,7 +231,7 @@ that should contain the token.
 
 #### Defined in
 
-[types.ts:434](https://github.com/coda/packs-sdk/blob/main/types.ts#L434)
+[types.ts:441](https://github.com/coda/packs-sdk/blob/main/types.ts#L441)
 
 ___
 

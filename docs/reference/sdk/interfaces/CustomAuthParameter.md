@@ -12,7 +12,7 @@ A description shown to the user indicating what value they should provide for th
 
 #### Defined in
 
-[types.ts:479](https://github.com/coda/packs-sdk/blob/main/types.ts#L479)
+[types.ts:486](https://github.com/coda/packs-sdk/blob/main/types.ts#L486)
 
 ___
 
@@ -24,4 +24,4 @@ The name used to refer to this parameter and to generate the template replacemen
 
 #### Defined in
 
-[types.ts:474](https://github.com/coda/packs-sdk/blob/main/types.ts#L474)
+[types.ts:481](https://github.com/coda/packs-sdk/blob/main/types.ts#L481)
