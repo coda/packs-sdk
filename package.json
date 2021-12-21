@@ -60,7 +60,7 @@
     "@types/mime": "^2.0.3",
     "@types/mocha": "^9.0.0",
     "@types/mock-fs": "^4.13.1",
-    "@types/node": "^16.11.12",
+    "@types/node": "^17.0.2",
     "@types/pascalcase": "^1.0.1",
     "@types/qs": "^6.9.7",
     "@types/readline-sync": "1.4.4",
