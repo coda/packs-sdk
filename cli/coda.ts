@@ -58,7 +58,7 @@ if (require.main === module) {
         extraOAuthScopes: {
           alias: 'extra_oauth_scopes',
           string: true,
-          default: '',
+          default: undefined,
           desc:
             `Scopes to request beyond those listed in the manifest, for specific formulas that ` +
             `need extra permissions. Example: --extra_oauth_scopes='first second third'`,

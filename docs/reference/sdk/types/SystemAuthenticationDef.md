@@ -9,4 +9,4 @@ an [SystemAuthentication](SystemAuthentication.md) value, which is the value Cod
 
 #### Defined in
 
-[types.ts:649](https://github.com/coda/packs-sdk/blob/main/types.ts#L649)
+[types.ts:656](https://github.com/coda/packs-sdk/blob/main/types.ts#L656)
