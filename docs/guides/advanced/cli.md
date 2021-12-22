@@ -117,17 +117,6 @@ coda execute path/to/pack.ts Items --dynamicUrl=https://example.com/api/table
 ```
 
 
-### Fetching {: #fetch}
-
-By default, `coda execute` will use a mock fetcher for any http requests that your formulas make. If you wish to actually make http requests, use the `--fetch` flag, for example:
-
-```sh
-coda execute --fetch src/pack.ts GetPrice "widgets"
-```
-
-Your http requests will commonly require authentication in order to succeed, which the coda execute utility supports. See the [Authentication section](#authentication) for more information on how to set this up.
-
-
 ## Authentication {: #authentication}
 
 The SDK will help you set up authentication in your development environment so that you can execute Pack formulas with authentication applied to them. This allows you to run your code end-to-end including making fetcher requests to external APIs.
@@ -140,7 +129,7 @@ coda auth path/to/pack.ts
 
 The utility will inspect your Pack definition to see what kind of authentication you have defined, and then it will prompt you to provide in the console the necessary token(s) or other parameters required by your authorization type. If you are using `OAuth2`, after you provide the necessary configuration info, it will launch an OAuth flow in your browser. The resulting credentials you provide will be stored in a file `.coda-credentials.json` in the same directory as your Pack definition.
 
-The credentials will be automatically applied to your fetch requests when you execute a Pack from the CLI or a test. For more information, see the sections on [Using the --fetch option](#fetch) and [Integration tests][integration].
+The credentials will be automatically applied to your fetch requests when you execute a Pack from the CLI or a test. For more information on using the fetcher in tests, see the [Integration tests][integration] section.
 
 
 ## Uploading Packs
@@ -165,7 +154,7 @@ When you’ve implemented your Pack and are ready to upload it to Coda for the f
 coda create path/to/pack.ts
 ```
 
-This will create a new empty Pack on Coda’s servers. It will print out the url of the Pack Studio page in the Coda UI, and store the newly-assigned Pack ID in a hidden file `.coda-pack.json` in the same directory as your Pack definition. (This allows you to put multiple Pack definitions in the same repo, as long as they’re in different directories.) The ID in this file will be used subsequent CLI commands for managing your Pack.
+This will create a new empty Pack on Coda’s servers. It will print out the url of the Pack Studio page in the Coda UI, and store the newly-assigned Pack ID in a hidden file `.coda-pack.json` in the same directory as your Pack definition. (This allows you to put multiple Pack definitions in the same repo, as long as they’re in different directories.) The ID in this file will be used in subsequent CLI commands for managing your Pack.
 
 This command accepts optional flags for specifying a name and description for the Pack. You can always set or update the name and description in the Pack management UI later.
 
