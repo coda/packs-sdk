@@ -656,6 +656,8 @@
         
           
         
+          
+        
       
       
         <label class="md-nav__link" for="__nav_3_3">
@@ -762,6 +764,20 @@
     <li class="md-nav__item">
       <a href="../../../../guides/advanced/schemas/" class="md-nav__link">
         Schemas
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../guides/advanced/testing/" class="md-nav__link">
+        Testing
       </a>
     </li>
   
@@ -2820,6 +2836,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#scopedelimiter" class="md-nav__link">
+    scopeDelimiter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#scopes" class="md-nav__link">
     scopes
   </a>
@@ -4299,6 +4322,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#scopedelimiter" class="md-nav__link">
+    scopeDelimiter
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#scopes" class="md-nav__link">
     scopes
   </a>
@@ -4373,7 +4403,7 @@ user to the <a href="./#authorizationurl">authorizationUrl</a>.</p>
 <h4 id="index-signature">Index signature<a class="headerlink" href="#index-signature" title="Permanent link">&para;</a></h4>
 <p>▪ [key: <code>string</code>]: <code>any</code></p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L417">types.ts:417</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L424">types.ts:424</a></p>
 <hr />
 <h3 id="authorizationurl">authorizationUrl<a class="headerlink" href="#authorizationurl" title="Permanent link">&para;</a></h3>
 <p>• <strong>authorizationUrl</strong>: <code>string</code></p>
@@ -4413,7 +4443,7 @@ token exchange response JSON body that points to the endpoint.</p>
 <p>The endpoint will be saved along with the account and will be available during execution
 as <a href="../ExecutionContext/#endpoint">ExecutionContext.endpoint</a>.</p>
 <h4 id="defined-in_4">Defined in<a class="headerlink" href="#defined-in_4" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L427">types.ts:427</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L434">types.ts:434</a></p>
 <hr />
 <h3 id="getconnectionname">getConnectionName<a class="headerlink" href="#getconnectionname" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>getConnectionName</strong>: <a href="../../types/MetadataFormula/"><code>MetadataFormula</code></a></p>
@@ -4456,12 +4486,20 @@ when creating a new account.</p>
 <h4 id="defined-in_8">Defined in<a class="headerlink" href="#defined-in_8" title="Permanent link">&para;</a></h4>
 <p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L264">types.ts:264</a></p>
 <hr />
+<h3 id="scopedelimiter">scopeDelimiter<a class="headerlink" href="#scopedelimiter" title="Permanent link">&para;</a></h3>
+<p>• <code>Optional</code> <strong>scopeDelimiter</strong>: <code>string</code></p>
+<p>The delimiter to use when joining <a href="./#scopes">scopes</a> when generating authorization URLs.</p>
+<p>The OAuth2 standard is to use spaces to delimit scopes, and Coda will do that by default.
+If the API you are using requires a different delimiter, say a comma, specify it here.</p>
+<h4 id="defined-in_9">Defined in<a class="headerlink" href="#defined-in_9" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L411">types.ts:411</a></p>
+<hr />
 <h3 id="scopes">scopes<a class="headerlink" href="#scopes" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>scopes</strong>: <code>string</code>[]</p>
 <p>Scopes that are required to use this pack.</p>
 <p>Each API defines its own list of scopes, or none at all. You should consult
 the documentation for the API you are connecting to.</p>
-<h4 id="defined-in_9">Defined in<a class="headerlink" href="#defined-in_9" title="Permanent link">&para;</a></h4>
+<h4 id="defined-in_10">Defined in<a class="headerlink" href="#defined-in_10" title="Permanent link">&para;</a></h4>
 <p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L404">types.ts:404</a></p>
 <hr />
 <h3 id="tokenprefix">tokenPrefix<a class="headerlink" href="#tokenprefix" title="Permanent link">&para;</a></h3>
@@ -4471,28 +4509,28 @@ header when making requests. Typically this prefix is <code>Bearer</code> which 
 used if this value is omitted. However, some services require a different prefix.
 When sending authenticated requests, a HTTP header of the form
 <code>Authorization: &lt;tokenPrefix&gt; &lt;token&gt;</code> will be used.</p>
-<h4 id="defined-in_10">Defined in<a class="headerlink" href="#defined-in_10" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L412">types.ts:412</a></p>
+<h4 id="defined-in_11">Defined in<a class="headerlink" href="#defined-in_11" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L419">types.ts:419</a></p>
 <hr />
 <h3 id="tokenqueryparam">tokenQueryParam<a class="headerlink" href="#tokenqueryparam" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>tokenQueryParam</strong>: <code>string</code></p>
 <p>In rare cases, OAuth providers ask that a token is passed as a URL parameter
 rather than an HTTP header. If so, this is the name of the URL query parameter
 that should contain the token.</p>
-<h4 id="defined-in_11">Defined in<a class="headerlink" href="#defined-in_11" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L434">types.ts:434</a></p>
+<h4 id="defined-in_12">Defined in<a class="headerlink" href="#defined-in_12" title="Permanent link">&para;</a></h4>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L441">types.ts:441</a></p>
 <hr />
 <h3 id="tokenurl">tokenUrl<a class="headerlink" href="#tokenurl" title="Permanent link">&para;</a></h3>
 <p>• <strong>tokenUrl</strong>: <code>string</code></p>
 <p>The URL that Coda will hit in order to exchange the temporary code for an access token
 at the end of the OAuth handshake flow.</p>
-<h4 id="defined-in_12">Defined in<a class="headerlink" href="#defined-in_12" title="Permanent link">&para;</a></h4>
+<h4 id="defined-in_13">Defined in<a class="headerlink" href="#defined-in_13" title="Permanent link">&para;</a></h4>
 <p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L397">types.ts:397</a></p>
 <hr />
 <h3 id="type">type<a class="headerlink" href="#type" title="Permanent link">&para;</a></h3>
 <p>• <strong>type</strong>: <a href="../../enums/AuthenticationType/#oauth2"><code>OAuth2</code></a></p>
 <p>Identifies this as OAuth2 authentication.</p>
-<h4 id="defined-in_13">Defined in<a class="headerlink" href="#defined-in_13" title="Permanent link">&para;</a></h4>
+<h4 id="defined-in_14">Defined in<a class="headerlink" href="#defined-in_14" title="Permanent link">&para;</a></h4>
 <p><a href="https://github.com/coda/packs-sdk/blob/main/types.ts#L385">types.ts:385</a></p>
                 
               
