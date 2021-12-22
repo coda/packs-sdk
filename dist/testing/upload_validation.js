@@ -884,15 +884,15 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
     });
 })
     .refine(data => {
-    var _a, _b;
+    var _a, _b, _c;
     const usesAuthentication = (data.defaultAuthentication && data.defaultAuthentication.type !== types_1.AuthenticationType.None) ||
         data.systemConnectionAuthentication;
-    if (!usesAuthentication || ((_a = data.networkDomains) === null || _a === void 0 ? void 0 : _a.length)) {
+    if (!usesAuthentication || ((_a = data.networkDomains) === null || _a === void 0 ? void 0 : _a.length) || ((_b = data.defaultAuthentication) === null || _b === void 0 ? void 0 : _b.requiresEndpointUrl)) {
         return true;
     }
     // Various is an internal authentication type that's only applicable to whitelisted Pack Ids.
     // Skipping validation here to let it exempt from network domains.
-    if (((_b = data.defaultAuthentication) === null || _b === void 0 ? void 0 : _b.type) === types_1.AuthenticationType.Various) {
+    if (((_c = data.defaultAuthentication) === null || _c === void 0 ? void 0 : _c.type) === types_1.AuthenticationType.Various) {
         return true;
     }
     return false;

@@ -1781,8 +1781,20 @@ describe('Pack metadata Validation', () => {
 
     it('various auth type exempt from networkDomains requirement', async () => {
       const metadata = createFakePackVersionMetadata({
+        networkDomains: [],
         defaultAuthentication: {
           type: AuthenticationType.Various,
+        },
+      });
+      await validateJson(metadata);
+    });
+
+    it('requiresEndpointUrl exempt from networkDomains requirement', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: [],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          requiresEndpointUrl: true,
         },
       });
       await validateJson(metadata);
