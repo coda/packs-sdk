@@ -1,3 +1,6 @@
+---
+title: @codahq/packs-sdk
+---
 # @codahq/packs-sdk
 
 ## Enumerations

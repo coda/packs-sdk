@@ -29,8 +29,9 @@ const helpers_1 = require("../testing/helpers");
 const BaseDir = path_1.default.join(__dirname, '..');
 const TypeDocsRoot = path_1.default.join(BaseDir, 'docs/reference/sdk');
 const MarkdownPattern = path_1.default.join(TypeDocsRoot, '**/*.md');
-// Matches "Type: Name" and "Type: Name<Template Stuff>".
-const TitleRegex = /^# .+?\:\s*(.*?)(?:<.+>)?$/m;
+// Extracts the name from "# Name", "# Type: Name", and
+// "# Type: Name<Template Stuff>".
+const TitleRegex = /^# (?:.+?\:\s*)?(.*?)(?:<.+>)?$/m;
 async function main() {
     const files = await getFiles();
     const promises = [];
@@ -65,7 +66,7 @@ async function addFrontmatter(file) {
     }
     const match = content.match(TitleRegex);
     if (!match) {
-        (0, helpers_1.print)(`Title doesn't need fixing: ${file}`);
+        (0, helpers_1.print)(`Title not found: ${file}`);
         return;
     }
     const title = match[1];
