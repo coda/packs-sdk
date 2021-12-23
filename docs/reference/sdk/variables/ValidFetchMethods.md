@@ -1,3 +1,6 @@
+---
+title: ValidFetchMethods
+---
 # Variable: ValidFetchMethods
 
 • **ValidFetchMethods**: readonly [``"GET"``, ``"PATCH"``, ``"POST"``, ``"PUT"``, ``"DELETE"``]

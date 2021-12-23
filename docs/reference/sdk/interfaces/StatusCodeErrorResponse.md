@@ -1,3 +1,6 @@
+---
+title: StatusCodeErrorResponse
+---
 # Interface: StatusCodeErrorResponse
 
 The raw HTTP response from a [StatusCodeError](../classes/StatusCodeError.md).

@@ -1,3 +1,6 @@
+---
+title: makeEmptyFormula
+---
 # Function: makeEmptyFormula
 
 ▸ **makeEmptyFormula**<`ParamDefsT`\>(`definition`): { `cacheTtlSecs?`: `number` ; `connectionRequirement?`: [`ConnectionRequirement`](../enums/ConnectionRequirement.md) ; `description`: `string` ; `examples?`: { `params`: (`undefined` \| [`PackFormulaValue`](../types/PackFormulaValue.md))[] ; `result`: [`PackFormulaResult`](../types/PackFormulaResult.md)  }[] ; `extraOAuthScopes?`: `string`[] ; `isAction?`: `boolean` ; `isExperimental?`: `boolean` ; `isSystem?`: `boolean` ; `name`: `string` ; `network?`: [`Network`](../interfaces/Network.md) ; `parameters`: `ParamDefsT` ; `varargParameters?`: [`ParamDefs`](../types/ParamDefs.md)  } & { `execute`: (`params`: [`ParamValues`](../types/ParamValues.md)<`ParamDefsT`\>, `context`: [`ExecutionContext`](../interfaces/ExecutionContext.md)) => `Promise`<`string`\> ; `resultType`: [`string`](../enums/Type.md#string)  }

@@ -1,3 +1,6 @@
+---
+title: ObjectSchemaProperty
+---
 # Interface: ObjectSchemaProperty
 
 Fields that may be set on a schema property in the [properties](ObjectSchemaDefinition.md#properties) definition

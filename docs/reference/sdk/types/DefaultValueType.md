@@ -1,3 +1,6 @@
+---
+title: DefaultValueType
+---
 # Type alias: DefaultValueType<T\>
 
 Ƭ **DefaultValueType**<`T`\>: `T` extends [`ArrayType`](../interfaces/ArrayType.md)<[`date`](../enums/Type.md#date)\> ? `TypeOfMap`<`T`\> \| [`PrecannedDateRange`](../enums/PrecannedDateRange.md) : `TypeOfMap`<`T`\>

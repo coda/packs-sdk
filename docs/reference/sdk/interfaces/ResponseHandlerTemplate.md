@@ -1,3 +1,6 @@
+---
+title: ResponseHandlerTemplate
+---
 # Interface: ResponseHandlerTemplate<T\>
 
 Configuration for how to handle the response for a code-free formula definition

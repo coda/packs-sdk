@@ -1,3 +1,6 @@
+---
+title: BaseFormulaDef
+---
 # Interface: BaseFormulaDef<ParamDefsT, ResultT\>
 
 Base type for formula definitions accepted by [makeFormula](../functions/makeFormula.md).

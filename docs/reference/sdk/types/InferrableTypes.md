@@ -1,3 +1,6 @@
+---
+title: InferrableTypes
+---
 # Type alias: InferrableTypes
 
 Ƭ **InferrableTypes**: `boolean` \| `number` \| `string` \| `object` \| `boolean`[] \| `number`[] \| `string`[] \| `object`[]

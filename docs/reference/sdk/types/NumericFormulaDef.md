@@ -1,3 +1,6 @@
+---
+title: NumericFormulaDef
+---
 # Type alias: NumericFormulaDef<ParamDefsT\>
 
 Ƭ **NumericFormulaDef**<`ParamDefsT`\>: [`BaseFormulaDef`](../interfaces/BaseFormulaDef.md)<`ParamDefsT`, `number`\> & { `resultType`: [`Number`](../enums/ValueType.md#number) ; `execute`: (`params`: [`ParamValues`](ParamValues.md)<`ParamDefsT`\>, `context`: [`ExecutionContext`](../interfaces/ExecutionContext.md)) => `number` \| `Promise`<`number`\>  } & { `schema?`: [`NumberSchema`](NumberSchema.md)  } \| { `codaType?`: [`NumberHintTypes`](NumberHintTypes.md)  }

@@ -1,3 +1,6 @@
+---
+title: PostSetupType
+---
 # Enumeration: PostSetupType
 
 Enumeration of post-account-setup step types. See [PostSetup](../types/PostSetup.md).

@@ -1,3 +1,6 @@
+---
+title: EmptyFormulaDef
+---
 # Interface: EmptyFormulaDef<ParamsT\>
 
 Inputs to define an "empty" formula, that is, a formula that uses a [RequestHandlerTemplate](RequestHandlerTemplate.md)

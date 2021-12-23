@@ -1,3 +1,6 @@
+---
+title: ScaleIconSet
+---
 # Enumeration: ScaleIconSet
 
 Icons that can be used with a [ScaleSchema](../interfaces/ScaleSchema.md).

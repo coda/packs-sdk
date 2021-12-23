@@ -1,3 +1,6 @@
+---
+title: PackFormulaResult
+---
 # Type alias: PackFormulaResult
 
 Ƭ **PackFormulaResult**: `$Values`<`TypeMap`\> \| [`PackFormulaResult`](PackFormulaResult.md)[]

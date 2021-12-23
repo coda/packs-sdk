@@ -1,3 +1,6 @@
+---
+title: makeObjectSchema
+---
 # Function: makeObjectSchema
 
 ▸ **makeObjectSchema**<`K`, `L`, `T`\>(`schemaDef`): `T` & { `identity?`: [`Identity`](../interfaces/Identity.md) ; `type`: [`Object`](../enums/ValueType.md#object)  }

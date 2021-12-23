@@ -1,3 +1,6 @@
+---
+title: CustomHeaderTokenAuthentication
+---
 # Interface: CustomHeaderTokenAuthentication
 
 Authenticate using an HTTP header with a custom name and token prefix that you specify.

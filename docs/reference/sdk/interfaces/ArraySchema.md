@@ -1,3 +1,6 @@
+---
+title: ArraySchema
+---
 # Interface: ArraySchema<T\>
 
 A schema representing a return value or object property that is an array (list) of items.

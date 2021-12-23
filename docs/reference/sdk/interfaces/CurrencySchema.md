@@ -1,3 +1,6 @@
+---
+title: CurrencySchema
+---
 # Interface: CurrencySchema
 
 A schema representing a return value or object property that is an amount of currency.

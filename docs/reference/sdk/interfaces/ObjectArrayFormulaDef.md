@@ -1,3 +1,6 @@
+---
+title: ObjectArrayFormulaDef
+---
 # Interface: ObjectArrayFormulaDef<ParamsT, SchemaT\>
 
 Inputs to declaratively define a formula that returns a list of objects.

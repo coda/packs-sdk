@@ -1,3 +1,6 @@
+---
+title: NumberHintTypes
+---
 # Type alias: NumberHintTypes
 
 Ƭ **NumberHintTypes**: typeof `NumberHintValueTypes`[`number`]

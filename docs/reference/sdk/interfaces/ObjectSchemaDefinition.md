@@ -1,3 +1,6 @@
+---
+title: ObjectSchemaDefinition
+---
 # Interface: ObjectSchemaDefinition<K, L\>
 
 A schema definition for an object value (a value with key-value pairs).

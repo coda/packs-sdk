@@ -1,3 +1,6 @@
+---
+title: SyncTable
+---
 # Type alias: SyncTable
 
 Ƭ **SyncTable**: [`GenericSyncTable`](GenericSyncTable.md) \| [`GenericDynamicSyncTable`](GenericDynamicSyncTable.md)

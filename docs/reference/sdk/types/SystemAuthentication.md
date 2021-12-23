@@ -1,3 +1,6 @@
+---
+title: SystemAuthentication
+---
 # Type alias: SystemAuthentication
 
 Ƭ **SystemAuthentication**: [`HeaderBearerTokenAuthentication`](../interfaces/HeaderBearerTokenAuthentication.md) \| [`CustomHeaderTokenAuthentication`](../interfaces/CustomHeaderTokenAuthentication.md) \| [`QueryParamTokenAuthentication`](../interfaces/QueryParamTokenAuthentication.md) \| [`MultiQueryParamTokenAuthentication`](../interfaces/MultiQueryParamTokenAuthentication.md) \| [`WebBasicAuthentication`](../interfaces/WebBasicAuthentication.md) \| [`AWSAccessKeyAuthentication`](../interfaces/AWSAccessKeyAuthentication.md) \| [`AWSAssumeRoleAuthentication`](../interfaces/AWSAssumeRoleAuthentication.md) \| [`CustomAuthentication`](../interfaces/CustomAuthentication.md)

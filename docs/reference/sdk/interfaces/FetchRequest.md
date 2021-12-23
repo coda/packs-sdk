@@ -1,3 +1,6 @@
+---
+title: FetchRequest
+---
 # Interface: FetchRequest
 
 An HTTP request used with the [Fetcher](Fetcher.md).

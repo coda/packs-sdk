@@ -1,3 +1,6 @@
+---
+title: ensureNonEmptyString
+---
 # Function: ensureNonEmptyString
 
 ▸ **ensureNonEmptyString**(`value`, `message?`): `string`

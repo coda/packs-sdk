@@ -1,3 +1,6 @@
+---
+title: makeSyncTable
+---
 # Function: makeSyncTable
 
 ▸ **makeSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaDefT`, `SchemaT`\>(`__namedParameters`): [`SyncTableDef`](../interfaces/SyncTableDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\>

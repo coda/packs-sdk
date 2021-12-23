@@ -1,3 +1,6 @@
+---
+title: PackId
+---
 # Type alias: PackId
 
 Ƭ **PackId**: `number`

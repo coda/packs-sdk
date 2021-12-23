@@ -1,3 +1,6 @@
+---
+title: SimpleAutocompleteOption
+---
 # Interface: SimpleAutocompleteOption<T\>
 
 A result from a parameter autocomplete function that pairs a UI display value with

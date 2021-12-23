@@ -1,3 +1,6 @@
+---
+title: MetadataFormulaObjectResultType
+---
 # Interface: MetadataFormulaObjectResultType
 
 The return type for a metadata formula that should return a different display to the user

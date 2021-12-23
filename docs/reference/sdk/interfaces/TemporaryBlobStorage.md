@@ -1,3 +1,6 @@
+---
+title: TemporaryBlobStorage
+---
 # Interface: TemporaryBlobStorage
 
 A utility for temporarily storing files and images that either require authentication

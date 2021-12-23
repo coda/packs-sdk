@@ -1,3 +1,6 @@
+---
+title: ConnectionRequirement
+---
 # Enumeration: ConnectionRequirement
 
 Enumeration of requirement states for whether a given formula or sync table requires

@@ -1,3 +1,6 @@
+---
+title: PackVersionDefinition
+---
 # Interface: PackVersionDefinition
 
 The definition of the contents of a Pack at a specific version. This is the

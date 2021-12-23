@@ -1,3 +1,6 @@
+---
+title: BaseFormula
+---
 # Type alias: BaseFormula<ParamDefsT, ResultT\>
 
 Ƭ **BaseFormula**<`ParamDefsT`, `ResultT`\>: [`PackFormulaDef`](../interfaces/PackFormulaDef.md)<`ParamDefsT`, `ResultT`\> & { `resultType`: `TypeOf`<`ResultT`\>  }

@@ -1,3 +1,6 @@
+---
+title: GenericSyncTable
+---
 # Type alias: GenericSyncTable
 
 Ƭ **GenericSyncTable**: [`SyncTableDef`](../interfaces/SyncTableDef.md)<`any`, `any`, [`ParamDefs`](ParamDefs.md), `any`\>

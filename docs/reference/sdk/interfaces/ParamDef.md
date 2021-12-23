@@ -1,3 +1,6 @@
+---
+title: ParamDef
+---
 # Interface: ParamDef<T\>
 
 The definition of a formula parameter.

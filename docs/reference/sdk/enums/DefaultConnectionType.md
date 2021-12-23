@@ -1,3 +1,6 @@
+---
+title: DefaultConnectionType
+---
 # Enumeration: DefaultConnectionType
 
 Ways in which a user account can be used with a doc.

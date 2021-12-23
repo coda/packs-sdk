@@ -1,3 +1,6 @@
+---
+title: PackFormulaValue
+---
 # Type alias: PackFormulaValue
 
 Ƭ **PackFormulaValue**: `$Values`<`Omit`<`TypeMap`, [`object`](../enums/Type.md#object)\>\> \| [`PackFormulaValue`](PackFormulaValue.md)[]

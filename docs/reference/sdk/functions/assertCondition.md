@@ -1,3 +1,6 @@
+---
+title: assertCondition
+---
 # Function: assertCondition
 
 ▸ **assertCondition**(`condition`, `message?`): asserts condition

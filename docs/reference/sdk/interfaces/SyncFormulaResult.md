@@ -1,3 +1,6 @@
+---
+title: SyncFormulaResult
+---
 # Interface: SyncFormulaResult<K, L, SchemaT\>
 
 The return value from the formula that implements a sync table. Each sync formula invocation

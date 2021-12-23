@@ -1,3 +1,6 @@
+---
+title: CustomAuthentication
+---
 # Interface: CustomAuthentication
 
 Authenticate for custom, non-standard API authentication schemes by inserting one or more arbitrary secret values

@@ -1,3 +1,6 @@
+---
+title: DurationUnit
+---
 # Enumeration: DurationUnit
 
 Enumeration of units supported by duration schemas. See [maxUnit](../interfaces/DurationSchema.md#maxunit).

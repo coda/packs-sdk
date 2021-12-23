@@ -1,3 +1,6 @@
+---
+title: FetchMethodType
+---
 # Type alias: FetchMethodType
 
 Ƭ **FetchMethodType**: typeof [`ValidFetchMethods`](../variables/ValidFetchMethods.md)[`number`]

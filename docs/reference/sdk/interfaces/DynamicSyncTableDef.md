@@ -1,3 +1,6 @@
+---
+title: DynamicSyncTableDef
+---
 # Interface: DynamicSyncTableDef<K, L, ParamDefsT, SchemaT\>
 
 Type definition for a Dynamic Sync Table. Should not be necessary to use directly,

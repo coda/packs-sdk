@@ -1,3 +1,6 @@
+---
+title: SystemAuthenticationDef
+---
 # Type alias: SystemAuthenticationDef
 
 Ƭ **SystemAuthenticationDef**: `AsAuthDef`<[`HeaderBearerTokenAuthentication`](../interfaces/HeaderBearerTokenAuthentication.md)\> \| `AsAuthDef`<[`CustomHeaderTokenAuthentication`](../interfaces/CustomHeaderTokenAuthentication.md)\> \| `AsAuthDef`<[`QueryParamTokenAuthentication`](../interfaces/QueryParamTokenAuthentication.md)\> \| `AsAuthDef`<[`MultiQueryParamTokenAuthentication`](../interfaces/MultiQueryParamTokenAuthentication.md)\> \| `AsAuthDef`<[`WebBasicAuthentication`](../interfaces/WebBasicAuthentication.md)\> \| `AsAuthDef`<[`AWSAccessKeyAuthentication`](../interfaces/AWSAccessKeyAuthentication.md)\> \| `AsAuthDef`<[`AWSAssumeRoleAuthentication`](../interfaces/AWSAssumeRoleAuthentication.md)\> \| `AsAuthDef`<[`CustomAuthentication`](../interfaces/CustomAuthentication.md)\>

@@ -1,3 +1,6 @@
+---
+title: StringFormulaDef
+---
 # Type alias: StringFormulaDef<ParamDefsT\>
 
 Ƭ **StringFormulaDef**<`ParamDefsT`\>: [`BaseFormulaDef`](../interfaces/BaseFormulaDef.md)<`ParamDefsT`, `string`\> & { `resultType`: [`String`](../enums/ValueType.md#string) ; `execute`: (`params`: [`ParamValues`](ParamValues.md)<`ParamDefsT`\>, `context`: [`ExecutionContext`](../interfaces/ExecutionContext.md)) => `string` \| `Promise`<`string`\>  } & { `schema?`: [`StringSchema`](StringSchema.md)  } \| { `codaType?`: [`StringHintTypes`](StringHintTypes.md)  }

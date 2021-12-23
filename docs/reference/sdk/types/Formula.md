@@ -1,3 +1,6 @@
+---
+title: Formula
+---
 # Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
 
 Ƭ **Formula**<`ParamDefsT`, `ResultT`, `SchemaT`\>: `ResultT` extends [`String`](../enums/ValueType.md#string) ? [`StringPackFormula`](StringPackFormula.md)<`ParamDefsT`\> : `ResultT` extends [`Number`](../enums/ValueType.md#number) ? [`NumericPackFormula`](NumericPackFormula.md)<`ParamDefsT`\> : `ResultT` extends [`Boolean`](../enums/ValueType.md#boolean) ? [`BooleanPackFormula`](BooleanPackFormula.md)<`ParamDefsT`\> : `ResultT` extends [`Array`](../enums/ValueType.md#array) ? [`ObjectPackFormula`](ObjectPackFormula.md)<`ParamDefsT`, [`ArraySchema`](../interfaces/ArraySchema.md)<`SchemaT`\>\> : [`ObjectPackFormula`](ObjectPackFormula.md)<`ParamDefsT`, `SchemaT`\>

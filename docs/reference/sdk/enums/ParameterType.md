@@ -1,3 +1,6 @@
+---
+title: ParameterType
+---
 # Enumeration: ParameterType
 
 Enumeration of types of formula parameters. These describe Coda value types (as opposed to JavaScript value types).

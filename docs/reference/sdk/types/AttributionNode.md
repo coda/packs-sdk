@@ -1,3 +1,6 @@
+---
+title: AttributionNode
+---
 # Type alias: AttributionNode
 
 Ƭ **AttributionNode**: [`TextAttributionNode`](../interfaces/TextAttributionNode.md) \| [`LinkAttributionNode`](../interfaces/LinkAttributionNode.md) \| [`ImageAttributionNode`](../interfaces/ImageAttributionNode.md)

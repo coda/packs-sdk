@@ -1,3 +1,6 @@
+---
+title: PackDefinitionBuilder
+---
 # Class: PackDefinitionBuilder
 
 A class that assists in constructing a pack definition. Use [newPack](../functions/newPack.md) to create one.

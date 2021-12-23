@@ -1,3 +1,6 @@
+---
+title: PackFormulaDef
+---
 # Interface: PackFormulaDef<ParamsT, ResultT\>
 
 Base type for the inputs for creating a pack formula.

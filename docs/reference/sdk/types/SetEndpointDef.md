@@ -1,3 +1,6 @@
+---
+title: SetEndpointDef
+---
 # Type alias: SetEndpointDef
 
 Ƭ **SetEndpointDef**: `Omit`<[`SetEndpoint`](../interfaces/SetEndpoint.md), ``"getOptionsFormula"``\> & { `getOptionsFormula`: [`MetadataFormulaDef`](MetadataFormulaDef.md)  }

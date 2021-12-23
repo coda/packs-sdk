@@ -1,3 +1,6 @@
+---
+title: MetadataFunction
+---
 # Type alias: MetadataFunction
 
 Ƭ **MetadataFunction**: <K, L\>(`context`: [`ExecutionContext`](../interfaces/ExecutionContext.md), `search`: `string`, `formulaContext?`: [`MetadataContext`](MetadataContext.md)) => `Promise`<[`MetadataFormulaResultType`](MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/ArraySchema.md) \| `ObjectSchema`<`K`, `L`\>\>

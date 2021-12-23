@@ -1,3 +1,6 @@
+---
+title: OAuth2Authentication
+---
 # Interface: OAuth2Authentication
 
 Authenticate using OAuth2. You must specify the authorization URL, token exchange URL, and

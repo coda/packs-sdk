@@ -1,3 +1,6 @@
+---
+title: makeReferenceSchemaFromObjectSchema
+---
 # Function: makeReferenceSchemaFromObjectSchema
 
 ▸ **makeReferenceSchemaFromObjectSchema**(`schema`, `identityName?`): `GenericObjectSchema`

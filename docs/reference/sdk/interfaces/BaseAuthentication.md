@@ -1,3 +1,6 @@
+---
+title: BaseAuthentication
+---
 # Interface: BaseAuthentication
 
 Base interface for authentication definitions.

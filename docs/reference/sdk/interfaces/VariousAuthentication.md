@@ -1,3 +1,6 @@
+---
+title: VariousAuthentication
+---
 # Interface: VariousAuthentication
 
 Only for use by Coda-authored packs.

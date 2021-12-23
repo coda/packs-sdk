@@ -1,3 +1,6 @@
+---
+title: Sync
+---
 # Interface: Sync
 
 Information about the current sync, part of the [SyncExecutionContext](SyncExecutionContext.md) passed to the

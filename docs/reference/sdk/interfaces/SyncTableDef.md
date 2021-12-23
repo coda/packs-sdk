@@ -1,3 +1,6 @@
+---
+title: SyncTableDef
+---
 # Interface: SyncTableDef<K, L, ParamDefsT, SchemaT\>
 
 The result of defining a sync table. Should not be necessary to use directly,

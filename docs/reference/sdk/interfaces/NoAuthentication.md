@@ -1,3 +1,6 @@
+---
+title: NoAuthentication
+---
 # Interface: NoAuthentication
 
 A pack or formula which does not use authentication.

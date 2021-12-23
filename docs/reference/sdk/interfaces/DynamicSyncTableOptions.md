@@ -1,3 +1,6 @@
+---
+title: DynamicSyncTableOptions
+---
 # Interface: DynamicSyncTableOptions<K, L, ParamDefsT, SchemaT\>
 
 Options provided when defining a dynamic sync table.

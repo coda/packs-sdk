@@ -1,3 +1,6 @@
+---
+title: BooleanPackFormula
+---
 # Type alias: BooleanPackFormula<ParamDefsT\>
 
 Ƭ **BooleanPackFormula**<`ParamDefsT`\>: [`BaseFormula`](BaseFormula.md)<`ParamDefsT`, `boolean`\> & { `schema?`: [`BooleanSchema`](../interfaces/BooleanSchema.md)  }

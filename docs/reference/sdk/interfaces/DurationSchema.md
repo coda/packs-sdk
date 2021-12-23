@@ -1,3 +1,6 @@
+---
+title: DurationSchema
+---
 # Interface: DurationSchema
 
 A schema representing a return value or object property that represents a duration. The value

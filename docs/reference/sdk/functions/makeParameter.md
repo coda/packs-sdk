@@ -1,3 +1,6 @@
+---
+title: makeParameter
+---
 # Function: makeParameter
 
 ▸ **makeParameter**<`T`\>(`paramDefinition`): [`ParamDef`](../interfaces/ParamDef.md)<`ParameterTypeMap`[`T`]\>

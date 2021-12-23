@@ -1,3 +1,6 @@
+---
+title: CurrencyFormat
+---
 # Enumeration: CurrencyFormat
 
 Enumeration of formats supported by schemas that use [ValueHintType.Currency](ValueHintType.md#currency).

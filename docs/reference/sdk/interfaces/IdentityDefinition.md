@@ -1,3 +1,6 @@
+---
+title: IdentityDefinition
+---
 # Interface: IdentityDefinition
 
 An identifier for a schema, allowing other schemas to reference it.

@@ -1,3 +1,6 @@
+---
+title: AWSAccessKeyAuthentication
+---
 # Interface: AWSAccessKeyAuthentication
 
 Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.

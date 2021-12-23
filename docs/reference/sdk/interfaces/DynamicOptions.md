@@ -1,3 +1,6 @@
+---
+title: DynamicOptions
+---
 # Interface: DynamicOptions
 
 A set of options used internally by [makeDynamicSyncTable](../functions/makeDynamicSyncTable.md), or for static
