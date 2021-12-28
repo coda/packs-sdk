@@ -252,7 +252,7 @@ export class AuthenticatingFetcher implements Fetcher {
 
     switch (this._authDef.type) {
       case AuthenticationType.WebBasic: {
-        const {username, password} = this._credentials as WebBasicCredentials;
+        const {username, password = ''} = this._credentials as WebBasicCredentials;
         const encodedAuth = Buffer.from(`${username}:${password}`).toString('base64');
 
         let bodyWithTemplateSubstitutions = body;
