@@ -784,7 +784,7 @@ describe('Auth', () => {
         sinon.assert.calledOnceWithExactly(mockMakeRequest, {
           body: undefined,
           form: undefined,
-          headers: {Authorization: 'Basic c29tZS11c2VybmFtZTp1bmRlZmluZWQ=', 'User-Agent': 'Coda-Test-Server-Fetcher'},
+          headers: {Authorization: 'Basic c29tZS11c2VybmFtZTo=', 'User-Agent': 'Coda-Test-Server-Fetcher'},
           method: 'GET',
           url: 'https://example.com',
           isBinaryResponse: undefined,

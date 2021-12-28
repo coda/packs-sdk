@@ -198,7 +198,7 @@ class AuthenticatingFetcher {
         const url = this._applyAndValidateEndpoint(rawUrl);
         switch (this._authDef.type) {
             case types_1.AuthenticationType.WebBasic: {
-                const { username, password } = this._credentials;
+                const { username, password = '' } = this._credentials;
                 const encodedAuth = Buffer.from(`${username}:${password}`).toString('base64');
                 let bodyWithTemplateSubstitutions = body;
                 if (bodyWithTemplateSubstitutions) {
