@@ -73,7 +73,7 @@
     "@types/uuid": "^8.3.3",
     "@types/xml2js": "^0.4.9",
     "@types/yargs": "^17.0.7",
-    "@typescript-eslint/eslint-plugin": "5.7.0",
+    "@typescript-eslint/eslint-plugin": "5.8.1",
     "@typescript-eslint/experimental-utils": "5.7.0",
     "@typescript-eslint/parser": "5.7.0",
     "aws-sdk": "^2.1046.0",
