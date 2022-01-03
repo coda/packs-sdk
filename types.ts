@@ -509,8 +509,8 @@ export interface CustomAuthParameter {
  * // Suppose you're using an API that requires a secret id in the request URL,
  * // and a different secret value in the request body. You can define a Custom
  * // authentication configuration with two params:
- * // params: [{name: 'secretId', description: 'Secret id'},
- * //          {name: 'secretValue', description: 'Secret value'}])
+ * // params: [{name: "secretId", description: "Secret id"},
+ * //          {name: "secretValue", description: "Secret value"}])
  * // The user or the pack author will be prompted to specify a value for each
  * // of these when setting up an account.
  * // In the `execute` body of your formula, you can specify where those values
@@ -525,7 +525,7 @@ export interface CustomAuthParameter {
  *   let secretIdTemplateName = "secretId-" + context.invocationToken;
  *   let urlWithSecret = "/api/entities/{{" + secretIdTemplateName + "}}"
  *   let secretValueTemplateName = "secretValue-" + context.invocationToken;
- *   let secretHeader = 'Authorization  {{"' + secretValueTemplateName + '"}}';
+ *   let secretHeader = "Authorization  {{" + secretValueTemplateName + "}}";
  *   let bodyWithSecret = JSON.stringify({
  *     key: "{{" + secretValueTemplateName + "}}",
  *     otherBodyParam: "foo",
@@ -536,7 +536,7 @@ export interface CustomAuthParameter {
  *     url: urlWithSecret,
  *     body: bodyWithSecret,
  *     headers: {
- *       'X-Custom-Authorization-Header': secretHeader,
+ *       "X-Custom-Authorization-Header": secretHeader,
  *     },
  *   });
  *   // ...
