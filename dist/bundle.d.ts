@@ -2806,7 +2806,7 @@ export interface OAuth2Authentication extends BaseAuthentication {
 	 * The OAuth2 standard is to use spaces to delimit scopes, and Coda will do that by default.
 	 * If the API you are using requires a different delimiter, say a comma, specify it here.
 	 */
-	scopeDelimiter?: string;
+	scopeDelimiter?: " " | "," | ";";
 	/**
 	 * A custom prefix to be used when passing the access token in the HTTP Authorization
 	 * header when making requests. Typically this prefix is `Bearer` which is what will be
