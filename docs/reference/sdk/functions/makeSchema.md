@@ -1,3 +1,6 @@
+---
+title: makeSchema
+---
 # Function: makeSchema
 
 ▸ **makeSchema**<`T`\>(`schema`): `T`

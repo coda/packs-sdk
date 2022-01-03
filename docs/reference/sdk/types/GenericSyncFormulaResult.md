@@ -1,3 +1,6 @@
+---
+title: GenericSyncFormulaResult
+---
 # Type alias: GenericSyncFormulaResult
 
 Ƭ **GenericSyncFormulaResult**: [`SyncFormulaResult`](../interfaces/SyncFormulaResult.md)<`any`, `any`, `any`\>

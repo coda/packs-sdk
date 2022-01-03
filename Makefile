@@ -139,6 +139,7 @@ typedoc:
 	# Most options loaded from typedoc.js.
 	# If you changes this, also update the similar command in typedoc_coverage_test.ts.
 	${ROOTDIR}/node_modules/.bin/typedoc index.ts --options typedoc.js --out ${ROOTDIR}/docs/reference/sdk
+	node -r ts-node/register documentation/typedoc_post_process.ts
 
 .PHONY: docs
 docs: typedoc generated-documentation

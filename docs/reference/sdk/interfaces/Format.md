@@ -1,3 +1,6 @@
+---
+title: Format
+---
 # Interface: Format
 
 Definition for a custom column type that users can apply to any column in any Coda table.

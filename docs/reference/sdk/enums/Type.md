@@ -1,3 +1,6 @@
+---
+title: Type
+---
 # Enumeration: Type
 
 Markers used internally to represent data types for parameters and return values.

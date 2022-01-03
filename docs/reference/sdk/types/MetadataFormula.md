@@ -1,3 +1,6 @@
+---
+title: MetadataFormula
+---
 # Type alias: MetadataFormula
 
 Ƭ **MetadataFormula**: [`BaseFormula`](BaseFormula.md)<[[`ParamDef`](../interfaces/ParamDef.md)<[`string`](../enums/Type.md#string)\>, [`ParamDef`](../interfaces/ParamDef.md)<[`string`](../enums/Type.md#string)\>], `any`\> & { `schema?`: `any`  }

@@ -1,3 +1,6 @@
+---
+title: WebBasicAuthentication
+---
 # Interface: WebBasicAuthentication
 
 Authenticate using HTTP Basic authorization. The user provides a username and password

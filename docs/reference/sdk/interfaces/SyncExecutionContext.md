@@ -1,3 +1,6 @@
+---
+title: SyncExecutionContext
+---
 # Interface: SyncExecutionContext
 
 Sub-class of [ExecutionContext](ExecutionContext.md) that is passed to the `execute` function of every

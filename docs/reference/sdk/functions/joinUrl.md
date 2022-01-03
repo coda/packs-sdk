@@ -1,3 +1,6 @@
+---
+title: joinUrl
+---
 # Function: joinUrl
 
 ▸ **joinUrl**(...`tokens`): `string`

@@ -1,3 +1,6 @@
+---
+title: SyncFormulaDef
+---
 # Interface: SyncFormulaDef<K, L, ParamDefsT, SchemaT\>
 
 Inputs for creating the formula that implements a sync table.

@@ -1,3 +1,6 @@
+---
+title: ObjectPackFormula
+---
 # Type alias: ObjectPackFormula<ParamDefsT, SchemaT\>
 
 Ƭ **ObjectPackFormula**<`ParamDefsT`, `SchemaT`\>: `Omit`<[`BaseFormula`](BaseFormula.md)<`ParamDefsT`, [`SchemaType`](SchemaType.md)<`SchemaT`\>\>, ``"execute"``\> & { `schema?`: `SchemaT` ; `execute`: (`params`: [`ParamValues`](ParamValues.md)<`ParamDefsT`\>, `context`: [`ExecutionContext`](../interfaces/ExecutionContext.md)) => `object` \| `Promise`<`object`\>  }

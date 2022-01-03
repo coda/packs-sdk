@@ -1,3 +1,6 @@
+---
+title: makeSimpleAutocompleteMetadataFormula
+---
 # Function: makeSimpleAutocompleteMetadataFormula
 
 ▸ **makeSimpleAutocompleteMetadataFormula**<`T`\>(`options`): [`MetadataFormula`](../types/MetadataFormula.md)

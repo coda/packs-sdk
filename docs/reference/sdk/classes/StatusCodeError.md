@@ -1,3 +1,6 @@
+---
+title: StatusCodeError
+---
 # Class: StatusCodeError
 
 An error that will be thrown by [Fetcher.fetch](../interfaces/Fetcher.md#fetch) when the fetcher response has an

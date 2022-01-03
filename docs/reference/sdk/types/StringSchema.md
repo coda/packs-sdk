@@ -1,3 +1,6 @@
+---
+title: StringSchema
+---
 # Type alias: StringSchema
 
 Ƭ **StringSchema**: [`StringDateSchema`](../interfaces/StringDateSchema.md) \| [`StringTimeSchema`](../interfaces/StringTimeSchema.md) \| [`StringDateTimeSchema`](../interfaces/StringDateTimeSchema.md) \| [`DurationSchema`](../interfaces/DurationSchema.md) \| [`SimpleStringSchema`](../interfaces/SimpleStringSchema.md)

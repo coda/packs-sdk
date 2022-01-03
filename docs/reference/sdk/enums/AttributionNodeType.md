@@ -1,3 +1,6 @@
+---
+title: AttributionNodeType
+---
 # Enumeration: AttributionNodeType
 
 The type of content in this attribution node.

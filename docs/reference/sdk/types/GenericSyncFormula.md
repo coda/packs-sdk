@@ -1,3 +1,6 @@
+---
+title: GenericSyncFormula
+---
 # Type alias: GenericSyncFormula
 
 Ƭ **GenericSyncFormula**: [`SyncFormula`](SyncFormula.md)<`any`, `any`, [`ParamDefs`](ParamDefs.md), `any`\>

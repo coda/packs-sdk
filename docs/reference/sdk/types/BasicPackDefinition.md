@@ -1,3 +1,6 @@
+---
+title: BasicPackDefinition
+---
 # Type alias: BasicPackDefinition
 
 Ƭ **BasicPackDefinition**: `Omit`<[`PackVersionDefinition`](../interfaces/PackVersionDefinition.md), ``"version"``\>

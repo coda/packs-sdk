@@ -1,3 +1,6 @@
+---
+title: ExecutionContext
+---
 # Interface: ExecutionContext
 
 An object passed to the `execute` function of every formula invocation

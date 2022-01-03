@@ -1,3 +1,6 @@
+---
+title: StringHintTypes
+---
 # Type alias: StringHintTypes
 
 Ƭ **StringHintTypes**: typeof `StringHintValueTypes`[`number`]

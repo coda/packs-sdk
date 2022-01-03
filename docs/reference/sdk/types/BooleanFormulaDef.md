@@ -1,3 +1,6 @@
+---
+title: BooleanFormulaDef
+---
 # Type alias: BooleanFormulaDef<ParamDefsT\>
 
 Ƭ **BooleanFormulaDef**<`ParamDefsT`\>: [`BaseFormulaDef`](../interfaces/BaseFormulaDef.md)<`ParamDefsT`, `boolean`\> & { `resultType`: [`Boolean`](../enums/ValueType.md#boolean) ; `execute`: (`params`: [`ParamValues`](ParamValues.md)<`ParamDefsT`\>, `context`: [`ExecutionContext`](../interfaces/ExecutionContext.md)) => `boolean` \| `Promise`<`boolean`\>  }

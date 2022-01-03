@@ -1,3 +1,6 @@
+---
+title: UserVisibleError
+---
 # Class: UserVisibleError
 
 An error whose message will be shown to the end user in the UI when it occurs.

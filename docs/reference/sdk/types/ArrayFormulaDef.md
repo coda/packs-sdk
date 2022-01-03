@@ -1,3 +1,6 @@
+---
+title: ArrayFormulaDef
+---
 # Type alias: ArrayFormulaDef<ParamDefsT, SchemaT\>
 
 Ƭ **ArrayFormulaDef**<`ParamDefsT`, `SchemaT`\>: [`BaseFormulaDef`](../interfaces/BaseFormulaDef.md)<`ParamDefsT`, [`SchemaType`](SchemaType.md)<[`ArraySchema`](../interfaces/ArraySchema.md)<`SchemaT`\>\>\> & { `items`: `SchemaT` ; `resultType`: [`Array`](../enums/ValueType.md#array)  }

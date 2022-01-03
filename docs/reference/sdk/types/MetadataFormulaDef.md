@@ -1,3 +1,6 @@
+---
+title: MetadataFormulaDef
+---
 # Type alias: MetadataFormulaDef
 
 Ƭ **MetadataFormulaDef**: [`MetadataFormula`](MetadataFormula.md) \| [`MetadataFunction`](MetadataFunction.md)

@@ -1,3 +1,6 @@
+---
+title: Continuation
+---
 # Interface: Continuation
 
 Container for arbitrary data about which page of data to retrieve in this sync invocation.

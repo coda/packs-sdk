@@ -1,3 +1,6 @@
+---
+title: PrecannedDateRange
+---
 # Enumeration: PrecannedDateRange
 
 Special "live" date range values that can be used as the [defaultValue](../interfaces/ParamDef.md#defaultvalue)

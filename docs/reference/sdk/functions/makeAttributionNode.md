@@ -1,3 +1,6 @@
+---
+title: makeAttributionNode
+---
 # Function: makeAttributionNode
 
 ▸ **makeAttributionNode**<`T`\>(`node`): `T`

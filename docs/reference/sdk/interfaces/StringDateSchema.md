@@ -1,3 +1,6 @@
+---
+title: StringDateSchema
+---
 # Interface: StringDateSchema
 
 A schema representing a return value or object property that is provided as a string,

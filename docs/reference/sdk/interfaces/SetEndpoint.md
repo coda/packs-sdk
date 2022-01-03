@@ -1,3 +1,6 @@
+---
+title: SetEndpoint
+---
 # Interface: SetEndpoint
 
 Configuration for a step that will run after the user sets up a new account

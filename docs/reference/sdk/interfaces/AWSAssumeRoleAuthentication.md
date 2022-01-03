@@ -1,3 +1,6 @@
+---
+title: AWSAssumeRoleAuthentication
+---
 # Interface: AWSAssumeRoleAuthentication
 
 Authenticate to Amazon Web Services by assuming an IAM role.

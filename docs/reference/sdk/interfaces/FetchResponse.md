@@ -1,3 +1,6 @@
+---
+title: FetchResponse
+---
 # Interface: FetchResponse<T\>
 
 The response of a call to [Fetcher.fetch](Fetcher.md#fetch).

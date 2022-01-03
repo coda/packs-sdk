@@ -1,3 +1,6 @@
+---
+title: ArrayType
+---
 # Interface: ArrayType<T\>
 
 The type of a parameter or return value that is an array.

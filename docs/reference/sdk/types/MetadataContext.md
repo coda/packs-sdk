@@ -1,3 +1,6 @@
+---
+title: MetadataContext
+---
 # Type alias: MetadataContext
 
 Ƭ **MetadataContext**: `Record`<`string`, `any`\>

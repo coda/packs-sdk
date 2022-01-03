@@ -1,3 +1,6 @@
+---
+title: Identity
+---
 # Interface: Identity
 
 The runtime version of IdentityDefinition with a pack ID injected.

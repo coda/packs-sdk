@@ -1,3 +1,6 @@
+---
+title: RequestHandlerTemplate
+---
 # Interface: RequestHandlerTemplate
 
 Configuration for how to construct an HTTP request for a code-free formula definition

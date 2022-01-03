@@ -1,3 +1,6 @@
+---
+title: PostSetupDef
+---
 # Type alias: PostSetupDef
 
 Ƭ **PostSetupDef**: [`SetEndpointDef`](SetEndpointDef.md)

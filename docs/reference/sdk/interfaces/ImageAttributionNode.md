@@ -1,3 +1,6 @@
+---
+title: ImageAttributionNode
+---
 # Interface: ImageAttributionNode
 
 An attribution node that renders as a hyperlinked image.

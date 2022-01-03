@@ -1,3 +1,6 @@
+---
+title: QueryParamTokenAuthentication
+---
 # Interface: QueryParamTokenAuthentication
 
 Authenticate using a token that is passed as a URL parameter with each request, e.g.

@@ -1,3 +1,6 @@
+---
+title: NetworkConnection
+---
 # Enumeration: NetworkConnection
 
 **`deprecated`** use `ConnectionRequirement` instead

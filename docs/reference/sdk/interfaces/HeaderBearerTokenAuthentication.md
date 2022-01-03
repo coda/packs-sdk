@@ -1,3 +1,6 @@
+---
+title: HeaderBearerTokenAuthentication
+---
 # Interface: HeaderBearerTokenAuthentication
 
 Authenticate using an HTTP header of the form `Authorization: Bearer <token>`.

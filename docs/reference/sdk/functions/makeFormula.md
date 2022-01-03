@@ -1,3 +1,6 @@
+---
+title: makeFormula
+---
 # Function: makeFormula
 
 ▸ **makeFormula**<`ParamDefsT`, `ResultT`, `SchemaT`\>(`fullDefinition`): [`Formula`](../types/Formula.md)<`ParamDefsT`, `ResultT`, `SchemaT`\>

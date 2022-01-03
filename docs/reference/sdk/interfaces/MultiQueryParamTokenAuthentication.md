@@ -1,3 +1,6 @@
+---
+title: MultiQueryParamTokenAuthentication
+---
 # Interface: MultiQueryParamTokenAuthentication
 
 Authenticate using multiple tokens, each passed as a different URL parameter, e.g.

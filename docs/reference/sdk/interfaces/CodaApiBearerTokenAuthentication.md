@@ -1,3 +1,6 @@
+---
+title: CodaApiBearerTokenAuthentication
+---
 # Interface: CodaApiBearerTokenAuthentication
 
 Authenticate using a Coda REST API token, sent as an HTTP header.

@@ -1,3 +1,6 @@
+---
+title: PackDefinition
+---
 # Interface: PackDefinition
 
 **`deprecated`** use `#PackVersionDefinition`

@@ -1,3 +1,6 @@
+---
+title: withQueryParams
+---
 # Function: withQueryParams
 
 ▸ **withQueryParams**(`url`, `params?`): `string`

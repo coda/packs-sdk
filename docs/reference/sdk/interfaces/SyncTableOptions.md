@@ -1,3 +1,6 @@
+---
+title: SyncTableOptions
+---
 # Interface: SyncTableOptions<K, L, ParamDefsT, SchemaT\>
 
 Input options for defining a sync table. See [makeSyncTable](../functions/makeSyncTable.md).

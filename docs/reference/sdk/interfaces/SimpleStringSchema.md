@@ -1,3 +1,6 @@
+---
+title: SimpleStringSchema
+---
 # Interface: SimpleStringSchema<T\>
 
 A schema whose underlying value is a string, along with an optional hint about how Coda

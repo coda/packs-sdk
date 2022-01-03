@@ -1,3 +1,6 @@
+---
+title: Fetcher
+---
 # Interface: Fetcher
 
 A utility that allows you to make HTTP requests from a pack. The fetcher also

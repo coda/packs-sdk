@@ -1,3 +1,6 @@
+---
+title: NumericPackFormula
+---
 # Type alias: NumericPackFormula<ParamDefsT\>
 
 Ƭ **NumericPackFormula**<`ParamDefsT`\>: [`BaseFormula`](BaseFormula.md)<`ParamDefsT`, `number`\> & { `schema?`: [`NumberSchema`](NumberSchema.md)  }

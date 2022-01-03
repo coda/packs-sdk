@@ -1,3 +1,6 @@
+---
+title: simpleAutocomplete
+---
 # Function: simpleAutocomplete
 
 ▸ **simpleAutocomplete**<`T`\>(`search`, `options`): `Promise`<[`MetadataFormulaObjectResultType`](../interfaces/MetadataFormulaObjectResultType.md)[]\>

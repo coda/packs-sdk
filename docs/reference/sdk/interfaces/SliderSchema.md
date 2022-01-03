@@ -1,3 +1,6 @@
+---
+title: SliderSchema
+---
 # Interface: SliderSchema
 
 A schema representing a return value or object property that is a number that should

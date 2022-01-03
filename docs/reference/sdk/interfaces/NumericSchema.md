@@ -1,3 +1,6 @@
+---
+title: NumericSchema
+---
 # Interface: NumericSchema
 
 A schema representing a return value or object property that is a numeric value,

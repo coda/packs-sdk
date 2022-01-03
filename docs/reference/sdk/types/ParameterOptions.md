@@ -1,3 +1,6 @@
+---
+title: ParameterOptions
+---
 # Type alias: ParameterOptions<T\>
 
 Ƭ **ParameterOptions**<`T`\>: `Omit`<[`ParamDef`](../interfaces/ParamDef.md)<`ParameterTypeMap`[`T`]\>, ``"type"`` \| ``"autocomplete"``\> & { `autocomplete?`: `T` extends [`Number`](../enums/ParameterType.md#number) \| [`String`](../enums/ParameterType.md#string) ? [`MetadataFormulaDef`](MetadataFormulaDef.md) \| (`TypeMap`[`ParameterTypeMap`[`T`]] \| [`SimpleAutocompleteOption`](../interfaces/SimpleAutocompleteOption.md)<`T`\>)[] : `undefined` ; `type`: `T`  }

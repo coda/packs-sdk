@@ -1,3 +1,6 @@
+---
+title: PostSetup
+---
 # Type alias: PostSetup
 
 Ƭ **PostSetup**: [`SetEndpoint`](../interfaces/SetEndpoint.md)

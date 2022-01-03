@@ -1,3 +1,6 @@
+---
+title: TextAttributionNode
+---
 # Interface: TextAttributionNode
 
 An attribution node that simply renders some text.

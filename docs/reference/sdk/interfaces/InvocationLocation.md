@@ -1,3 +1,6 @@
+---
+title: InvocationLocation
+---
 # Interface: InvocationLocation
 
 Information about the Coda environment and doc this formula was invoked from, for Coda internal use.

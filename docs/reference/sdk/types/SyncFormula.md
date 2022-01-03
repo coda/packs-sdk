@@ -1,3 +1,6 @@
+---
+title: SyncFormula
+---
 # Type alias: SyncFormula<K, L, ParamDefsT, SchemaT\>
 
 Ƭ **SyncFormula**<`K`, `L`, `ParamDefsT`, `SchemaT`\>: [`SyncFormulaDef`](../interfaces/SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\> & { `isSyncFormula`: ``true`` ; `resultType`: `TypeOf`<[`SchemaType`](SchemaType.md)<`SchemaT`\>\> ; `schema?`: [`ArraySchema`](../interfaces/ArraySchema.md)  }

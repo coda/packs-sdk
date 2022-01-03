@@ -1,3 +1,6 @@
+---
+title: StringPackFormula
+---
 # Type alias: StringPackFormula<ParamDefsT\>
 
 Ƭ **StringPackFormula**<`ParamDefsT`\>: [`BaseFormula`](BaseFormula.md)<`ParamDefsT`, [`SchemaType`](SchemaType.md)<[`StringSchema`](StringSchema.md)\>\> & { `schema?`: [`StringSchema`](StringSchema.md)  }

@@ -1,3 +1,6 @@
+---
+title: AuthenticationType
+---
 # Enumeration: AuthenticationType
 
 Authentication types supported by Coda Packs.

@@ -1,3 +1,6 @@
+---
+title: ObjectFormulaDef
+---
 # Type alias: ObjectFormulaDef<ParamDefsT, SchemaT\>
 
 Ƭ **ObjectFormulaDef**<`ParamDefsT`, `SchemaT`\>: [`BaseFormulaDef`](../interfaces/BaseFormulaDef.md)<`ParamDefsT`, [`SchemaType`](SchemaType.md)<`SchemaT`\>\> & { `resultType`: [`Object`](../enums/ValueType.md#object) ; `schema`: `SchemaT`  }

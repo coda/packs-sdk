@@ -1,3 +1,6 @@
+---
+title: LinkAttributionNode
+---
 # Interface: LinkAttributionNode
 
 An attribution node that renders a hyperlink.

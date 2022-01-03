@@ -1,3 +1,6 @@
+---
+title: ObjectHintTypes
+---
 # Type alias: ObjectHintTypes
 
 Ƭ **ObjectHintTypes**: typeof `ObjectHintValueTypes`[`number`]

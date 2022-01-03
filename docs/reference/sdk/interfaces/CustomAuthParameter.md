@@ -1,3 +1,6 @@
+---
+title: CustomAuthParameter
+---
 # Interface: CustomAuthParameter
 
 Parameters for the [CustomAuthentication](CustomAuthentication.md) authentication type.

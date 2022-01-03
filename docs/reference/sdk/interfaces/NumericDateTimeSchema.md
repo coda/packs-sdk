@@ -1,3 +1,6 @@
+---
+title: NumericDateTimeSchema
+---
 # Interface: NumericDateTimeSchema
 
 A schema representing a return value or object property that is provided as a number,

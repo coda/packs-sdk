@@ -1,3 +1,6 @@
+---
+title: newPack
+---
 # Function: newPack
 
 ▸ **newPack**(`definition?`): [`PackDefinitionBuilder`](../classes/PackDefinitionBuilder.md)
