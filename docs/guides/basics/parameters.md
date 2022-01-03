@@ -175,6 +175,9 @@ There are some important differences between vararg parameters and standard para
 - You can't provide a default value, since the user must always enter an explicit value.
 - You can have more than one, but if so the user is required to enter complete sets of values. For example, if you have two vararg parameters `a` and `b`, the user can't provide a value for `a` without also providing a value for `b`. These pairs of parameters can then be repeated multiple times: `Foo("a1", "b1", "a2", "b2")`.
 
+??? bug "Not available in actions builder or sync table settings"
+    At the moment, vararg parameters can only be set in the formula editor. In the action dialog users can switch from the default structured editor to the formula editor, but there is no way to set them for sync tables. <!-- go/bug/20828 -->
+
 ```ts
 --8<-- "examples/parameter/steps.ts"
 ```

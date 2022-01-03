@@ -4,6 +4,7 @@ Many Packs use cases require fetching data from an outside source such as an API
 
 [View Sample Code][samples]{ .md-button }
 
+
 ## Network domains
 
 Before you can start making any requests using the fetcher, your Pack must declare which domain names it is going to communicate with. This can be done using the [`addNetworkDomain()`][addNetworkDomain] method of the pack:
@@ -15,6 +16,7 @@ pack.addNetworkDomain("example.com");
 The fetcher can to communicate with URLs on that domain and all sub-domains. It's usually best select the root domain of the service you are working with. For example, if you want to make requests to `api.example.com`, add the network domain `example.com`, in case you later determine you need to access related content on `images.example.com`, etc.
 
 By default a Pack is only allowed to register a single domain. This is done to limit abuse potential and provide transparency to users. If your use case requires making requests to multiple domains you may request an exemption by [contacting support][support].
+
 
 ## Accessing the fetcher
 
@@ -42,6 +44,7 @@ coda.makeParameter({
 }),
 ```
 
+
 ## Making requests
 
 The fetcher has only one method, [`fetch`][fetch], which accepts an object containing the settings of the request. The `method` and `url` fields are required, with other fields like `headers` and `body` as optional. You can see the full list of supported fields in the [`FetchRequest` interface][FetchRequest].
@@ -67,6 +70,7 @@ pack.addFormula({
   },
 });
 ```
+
 
 ### In parallel
 
@@ -98,6 +102,7 @@ pack.addFormula({
 });
 ```
 
+
 ## Sending data
 
 Many API requests involve sending data to an external server, usually using a `POST` or `PUT` request. To do so using the fetcher, just set the `method` property to the desired method and pass the data you want to send in `body` property. You'll usually want to set a `Content-Type` header as well, which tells the server what format the data is in.
@@ -112,6 +117,7 @@ let response = await context.fetcher.fetch({
   body: "This is some plain text.",
 });
 ```
+
 
 ### JSON
 
@@ -131,6 +137,7 @@ let response = await context.fetcher.fetch({
 });
 ```
 
+
 ### Form data
 
 To send data to a server that expects form input (`application/x-www-form-urlencoded`) use the `form` property of the request. It takes key-value pairs and automatically encodes, passes them in the body, and sets the correct `Content-Type` header.
@@ -149,6 +156,7 @@ let response = await context.fetcher.fetch({
 
 Sending attachments (`multipart/form-data`) is not supported.
 
+
 ### URL query parameters
 
 To send data in the URL query parameters, simply append those parameters to the URL passed to the fetcher. For example, `http://www.example.com?foo=bar&thing=true`. The SDK provides a helper function, [`coda.withQueryParams()`][withQueryParams] that simplifies the process of encoding and appending query parameters to a URL.
@@ -164,13 +172,16 @@ let response = await context.fetcher.fetch({
 });
 ```
 
+
 ### Binary
 
 Sending binary data (files, images, etc) is currently not supported by the fetcher.
 
+
 ## Working with responses
 
 If your request was successful it will return a [`FetchResponse`][fetchresponse] object, which contains the status code, headers, and body of the response. Depending on the format of the response (determined by the `Content-Type` header) the body may already be parsed for you.
+
 
 ### Text
 
@@ -185,6 +196,7 @@ let html = response.body;
 let bodyStart = html.indexOf('<body>');
 ```
 
+
 ### JSON
 
 Responses with the content type `application/json` will be automatically parsed into a JavaScript object. This allows you to start accessing the data without needing to first call `JSON.parse()`.
@@ -198,6 +210,7 @@ let parsed = response.body;
 // How you access data in the parsed JSON object depends on the contents.
 let rate = parsed.rates["USD"];
 ```
+
 
 ### XML
 
@@ -258,6 +271,7 @@ let usd = parsed.data.find(item => item.code[0] === "USD")
 let rate = usd.rate[0];
 ```
 
+
 ### Binary
 
 When fetching binary data, enable the request option `isBinaryResponse` to let the fetcher know that it shouldn't try to parse the server response. When binary responses are enabled the `body` field of the response object will contain a [Node.js `Buffer`][buffer].
@@ -271,6 +285,7 @@ let response = await context.fetcher.fetch({
 let buffer = response.body;
 let byteLength = buffer.length;
 ```
+
 
 ### Errors
 
@@ -301,6 +316,18 @@ try {
 }
 ```
 
+
+### Headers
+
+The HTTP headers returned with the response can be accessed using the `headers` field of the response. The header names will all be lowercase, regardless of how they are returned by the server.
+
+```
+let contentType = response.headers["content-type"];
+```
+
+Unless it's a known safe header, all the header values will be redacted by Coda (contain the value `<<<REDACTED by Coda>>>` instead of the actual value). To request that a specific header by unredacted you will need to [contact support][support].
+
+
 ## Authentication
 
 The [authentication][authentication] you configure for your Pack is automatically applied to fetcher requests, with no extra code needed. For example, if you have set up `HeaderBearer` authentication, an `Authorization` header with the user's token will be automatically added to your fetcher requests. This is only done for formulas that use a connected account: those that have a `connectionRequirement` of `REQUIRED`, or `OPTIONAL` and the user opted to selected an account.
@@ -317,7 +344,7 @@ let response = await context.fetcher.fetch({
 
 ## Caching
 
-For performance reasons the Packs runtime caches the HTTP responses of fetcher requests, meaning that your code may not always be getting the latest response from the server. You can adjust this behavior by setting the [`cacheTtlSecs`][cacheTtlSecs] field in the fetch request, which specifies for how many seconds the response should be cached. To disable caching for a request set that value to zero.
+For performance reasons the Packs runtime caches the HTTP responses for `GET` requests, meaning that your code may not always be getting the latest response from the server. You can adjust this behavior by setting the [`cacheTtlSecs`][cacheTtlSecs] field in the fetch request, which specifies for how many seconds the response should be cached. To disable caching for a request set that value to zero.
 
 !!! info
     In addition to caching fetcher responses, Coda also caches the results of [formula executions][formula_cache]. To get truly fresh results you may need to disable that caching as well.

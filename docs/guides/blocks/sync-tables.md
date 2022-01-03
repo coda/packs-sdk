@@ -20,6 +20,8 @@ If the sync table doesn't have any required parameters it will start syncing imm
 !!! info "Multiple syncs"
     Each sync table can only be added once to a document. If you want to sync data from multiple accounts or with different parameters you can add additional syncs to the table. In the table options pane click the **Add another sync** button and configure the settings. The results from all syncs will be appended to the same table, but you can use views and filters on that table to display them separately.
 
+The data in the table is synced with the external source automatically on a schedule (at most hourly). In the table's **Options** pane users can set the sync frequency or start a manual sync. It is not possible to configure a button or automation to start a sync.
+
 
 ## Creating a sync table
 
