@@ -267,7 +267,7 @@ const defaultAuthenticationValidators = {
         authorizationUrl: z.string(),
         tokenUrl: z.string(),
         scopes: z.array(z.string()).optional(),
-        scopeDelimiter: z.string().optional(),
+        scopeDelimiter: z.enum([' ', ',', ';']).optional(),
         tokenPrefix: z.string().optional(),
         additionalParams: z.record(z.any()).optional(),
         endpointKey: z.string().optional(),

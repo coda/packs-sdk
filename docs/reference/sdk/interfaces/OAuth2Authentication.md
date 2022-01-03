@@ -177,7 +177,7 @@ ___
 
 ### scopeDelimiter
 
-• `Optional` **scopeDelimiter**: `string`
+• `Optional` **scopeDelimiter**: ``" "`` \| ``","`` \| ``";"``
 
 The delimiter to use when joining [scopes](OAuth2Authentication.md#scopes) when generating authorization URLs.
 
