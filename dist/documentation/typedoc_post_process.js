@@ -33,22 +33,12 @@ const MarkdownPattern = path_1.default.join(TypeDocsRoot, '**/*.md');
 // "# Type: Name<Template Stuff>".
 const TitleRegex = /^# (?:.+?\:\s*)?(.*?)(?:<.+>)?$/m;
 async function main() {
-    const files = await getFiles();
+    const files = glob_1.default.sync(MarkdownPattern, {});
     const promises = [];
     for (const file of files) {
         promises.push(process(file));
     }
     await Promise.all(promises);
-}
-async function getFiles() {
-    return new Promise((resolve, reject) => {
-        (0, glob_1.default)(MarkdownPattern, {}, (err, files) => {
-            if (err) {
-                reject(err);
-            }
-            resolve(files);
-        });
-    });
 }
 async function process(file) {
     return addFrontmatter(file);

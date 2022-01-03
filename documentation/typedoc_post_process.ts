@@ -11,21 +11,12 @@ const MarkdownPattern = path.join(TypeDocsRoot, '**/*.md');
 const TitleRegex = /^# (?:.+?\:\s*)?(.*?)(?:<.+>)?$/m;
 
 async function main(): Promise<void> {
-  const files = await getFiles();
+  const files = glob.sync(MarkdownPattern, {})
   const promises = [];
   for (const file of files) {
     promises.push(process(file));
   }
   await Promise.all(promises);
-}
-
-async function getFiles(): Promise<string[]> {
-  return new Promise((resolve, reject) => {
-    glob(MarkdownPattern, {}, (err, files) => {
-      if (err) {reject(err);}
-      resolve(files);
-    })
-  });
 }
 
 async function process(file: string) {
