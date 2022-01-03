@@ -319,13 +319,13 @@ try {
 
 ### Headers
 
-The HTTP headers returned with the response can be accessed using the `headers` field of the response. The header names will all be lowercase, regardless of how they are returned by the server.
+The HTTP headers returned can be accessed using the `headers` field of the response. The header names will all be lowercase, regardless of how they are sent by the server.
 
 ```
 let contentType = response.headers["content-type"];
 ```
 
-Unless it's a known safe header, all the header values will be redacted by Coda (contain the value `<<<REDACTED by Coda>>>` instead of the actual value). To request that a specific header by unredacted you will need to [contact support][support].
+Unless it's a known safe header, all the header values will be redacted by Coda (contain the value `<<<REDACTED by Coda>>>` instead of the actual value). To request that a specific header be unredacted you will need to [contact support][support].
 
 
 ## Authentication
