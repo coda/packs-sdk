@@ -862,9 +862,28 @@ const syncTableSchema = z.union([genericDynamicSyncTableSchema, genericSyncTable
 // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
 // schema we actually use.)
 const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata>({
-  version: z
-    .string()
-    .regex(/^\d+(\.\d+){0,2}$/, 'Pack versions must use semantic versioning, e.g. "1", "1.0" or "1.0.0".'),
+  version: z.string().refine(
+    version => {
+      const match = version.match(/^(\d+)(\.\d+)?(\.\d+)?$/);
+      if (!match || match.length < 2) {
+        return false;
+      }
+      for (let i = 1; i < match.length; i++) {
+        // Unless all 3 semantic version fields are specified, there will be blank match groups.
+        if (match[i] === undefined) {
+          break;
+        }
+        // The first group won't have a prefix '.'
+        const versionNumber = i === 1 ? match[i] : match[i].substring(1);
+        // Version numbers must not be bigger than a postgres integer.
+        if (Number(versionNumber) > 2_147_483_647) {
+          return false;
+        }
+      }
+      return true;
+    },
+    {message: 'Pack versions must use semantic versioning, e.g. "1", "1.0" or "1.0.0".'},
+  ),
   defaultAuthentication: z.union(zodUnionInput(Object.values(defaultAuthenticationValidators))).optional(),
   networkDomains: z
     .array(

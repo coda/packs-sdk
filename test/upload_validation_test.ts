@@ -106,7 +106,7 @@ describe('Pack metadata Validation', () => {
   });
 
   it('valid versions', async () => {
-    for (const version of ['1', '1.0', '1.0.0']) {
+    for (const version of ['1', '1.0', '1.0.0', '2147483647', '0.0.2147483647']) {
       const metadata = createFakePackVersionMetadata({version});
       const result = await validateJson(metadata);
       assert.ok(result, `Expected version identifier "${version}" to be valid.`);
@@ -114,7 +114,7 @@ describe('Pack metadata Validation', () => {
   });
 
   it('invalid versions', async () => {
-    for (const version of ['', 'foo', 'unversioned', '-1', '1.0.0.0', '1.0.0-beta']) {
+    for (const version of ['', 'foo', 'unversioned', '-1', '1.0.0.0', '1.0.0-beta', '3000000000', '0.3000000000']) {
       const metadata = createFakePackVersionMetadata({version});
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
