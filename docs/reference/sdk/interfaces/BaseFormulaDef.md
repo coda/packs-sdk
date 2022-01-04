@@ -252,7 +252,7 @@ ___
 
 ▸ `Optional` **onError**(`error`): `any`
 
-If specified, will catch errors in the [execute](PackFormulaDef.md#execute) function and call this
+If specified, will catch errors in the [execute](BaseFormulaDef.md#execute) function and call this
 function with the error, instead of letting them throw and the formula failing.
 
 This is helpful for writing common error handling into a singular helper function

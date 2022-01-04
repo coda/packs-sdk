@@ -33,7 +33,7 @@ ___
 
 • **error**: `any`
 
-Alias for [body](../interfaces/FetchRequest.md#body).
+Alias for [body](StatusCodeError.md#body).
 
 #### Defined in
 
