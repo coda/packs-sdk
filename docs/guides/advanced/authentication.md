@@ -504,7 +504,6 @@ The step's `getOptionsFormula` works like [dynamic autocomplete][autocomplete_dy
 [sample_automatic_endpoint]: ../../samples/topic/authentication.md#automatic-endpoint
 [sample_selected_endpoint]: ../../samples/topic/authentication.md#selected-endpoint
 
-[doc]: https://coda.io/d/Pack-Studio-Beta_dUBjm8jbi39/Building-with-the-SDK_suP0J#_lutgF
 [hc_account_sharing]: https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs
 [account_settings]: https://coda.io/account
 [AuthenticationType]: ../../reference/sdk/enums/AuthenticationType.md
