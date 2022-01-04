@@ -114,15 +114,16 @@ describe('Pack metadata Validation', () => {
   });
 
   it('invalid versions', async () => {
-    for (const version of ['', 'foo', 'unversioned', '-1', '1.0.0.0', '1.0.0-beta', '3000000000', '0.3000000000']) {
+    async function expectFailureWith(version: string, message: string) {
       const metadata = createFakePackVersionMetadata({version});
       const err = await validateJsonAndAssertFails(metadata);
-      assert.deepEqual(err.validationErrors, [
-        {
-          path: 'version',
-          message: 'Pack versions must use semantic versioning, e.g. "1", "1.0" or "1.0.0".',
-        },
-      ]);
+      assert.deepEqual(err.validationErrors, [{path: 'version', message}]);
+    }
+    for (const version of ['', 'foo', 'unversioned', '-1', '1.0.0.0', '1.0.0-beta']) {
+      await expectFailureWith(version, 'Pack versions must use semantic versioning, e.g. "1", "1.0" or "1.0.0".');
+    }
+    for (const version of ['3000000000', '0.3000000000']) {
+      await expectFailureWith(version, 'Pack version number too large');
     }
   });
 
