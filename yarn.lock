@@ -898,10 +898,10 @@
   dependencies:
     source-map "^0.6.1"
 
-"@types/url-parse@^1.4.5":
-  version "1.4.5"
-  resolved "https://registry.npmjs.org/@types/url-parse/-/url-parse-1.4.5.tgz"
-  integrity sha512-8Wje3itJpk/FX+QItca9vjNLjGx5jlEYBw/CpMi03Fphk2DSVeZDUqWTE81BeCI5Bl6Z+zmA1O9L/8e3ZUSeLg==
+"@types/url-parse@^1.4.6":
+  version "1.4.6"
+  resolved "https://registry.yarnpkg.com/@types/url-parse/-/url-parse-1.4.6.tgz#46b044f24ee5200c3b1ef6a98214d1d451f4dab8"
+  integrity sha512-Xo6pU78oG9NNk5UJaumUXzrwu9hPiVN2N83mcdXQ1C3/R037fMPlVCh+LqP/2BELXMnlQH0sKec0u33ZnktqHQ==
 
 "@types/uuid@^8.3.3":
   version "8.3.3"
