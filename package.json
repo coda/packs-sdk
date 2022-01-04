@@ -45,7 +45,7 @@
     "url-parse": "^1.5.4",
     "uuid": "^8.3.2",
     "xml2js": "^0.4.23",
-    "yargs": "^17.3.0",
+    "yargs": "^17.3.1",
     "zod": "3.11.6"
   },
   "devDependencies": {
