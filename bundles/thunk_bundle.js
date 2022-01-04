@@ -4117,7 +4117,7 @@ module.exports = (() => {
         url.username = url.password = "";
         if (url.auth) {
           instruction = url.auth.split(":");
-          url.username = instruction[0] || "";
+          url.username = instruction[0];
           url.password = instruction[1] || "";
         }
         url.origin = url.protocol !== "file:" && isSpecial(url.protocol) && url.host ? url.protocol + "//" + url.host : "null";
@@ -4171,14 +4171,21 @@ module.exports = (() => {
               url[part] = value;
             }
             break;
-          default:
-            url[part] = value;
+          case "username":
+          case "password":
+            url[part] = encodeURIComponent(value);
+            break;
+          case "auth":
+            var splits = value.split(":");
+            url.username = splits[0];
+            url.password = splits.length === 2 ? splits[1] : "";
         }
         for (var i = 0; i < rules.length; i++) {
           var ins = rules[i];
           if (ins[4])
             url[ins[1]] = url[ins[1]].toLowerCase();
         }
+        url.auth = url.password ? url.username + ":" + url.password : url.username;
         url.origin = url.protocol !== "file:" && isSpecial(url.protocol) && url.host ? url.protocol + "//" + url.host : "null";
         url.href = url.toString();
         return url;
@@ -4189,11 +4196,14 @@ module.exports = (() => {
         var query, url = this, protocol = url.protocol;
         if (protocol && protocol.charAt(protocol.length - 1) !== ":")
           protocol += ":";
-        var result = protocol + (url.slashes || isSpecial(url.protocol) ? "//" : "");
+        var result = protocol + (url.protocol && url.slashes || isSpecial(url.protocol) ? "//" : "");
         if (url.username) {
           result += url.username;
           if (url.password)
             result += ":" + url.password;
+          result += "@";
+        } else if (url.password) {
+          result += ":" + url.password;
           result += "@";
         }
         result += url.host + url.pathname;
