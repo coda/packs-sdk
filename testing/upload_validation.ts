@@ -1050,7 +1050,7 @@ const legacyPackMetadataSchema = validateFormulas(
       const usesAuthentication =
         (data.defaultAuthentication && data.defaultAuthentication.type !== AuthenticationType.None) ||
         data.systemConnectionAuthentication;
-      if (!usesAuthentication || data.networkDomains?.length) {
+      if (!usesAuthentication || data.networkDomains?.length || data.defaultAuthentication?.requiresEndpointUrl) {
         return true;
       }
 
