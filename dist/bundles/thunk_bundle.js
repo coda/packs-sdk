@@ -9,27 +9,31 @@ module.exports = (() => {
   var __hasOwnProp = Object.prototype.hasOwnProperty;
   var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
   var __esm = (fn, res) => function __init() {
-    return fn && (res = (0, fn[Object.keys(fn)[0]])(fn = 0)), res;
+    return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
   };
   var __commonJS = (cb, mod) => function __require() {
-    return mod || (0, cb[Object.keys(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
   };
   var __export = (target, all) => {
-    __markAsModule(target);
     for (var name in all)
       __defProp(target, name, { get: all[name], enumerable: true });
   };
-  var __reExport = (target, module, desc) => {
+  var __reExport = (target, module, copyDefault, desc) => {
     if (module && typeof module === "object" || typeof module === "function") {
       for (let key of __getOwnPropNames(module))
-        if (!__hasOwnProp.call(target, key) && key !== "default")
+        if (!__hasOwnProp.call(target, key) && (copyDefault || key !== "default"))
           __defProp(target, key, { get: () => module[key], enumerable: !(desc = __getOwnPropDesc(module, key)) || desc.enumerable });
     }
     return target;
   };
-  var __toModule = (module) => {
-    return __reExport(__markAsModule(__defProp(module != null ? __create(__getProtoOf(module)) : {}, "default", module && module.__esModule && "default" in module ? { get: () => module.default, enumerable: true } : { value: module, enumerable: true })), module);
+  var __toESM = (module, isNodeMode) => {
+    return __reExport(__markAsModule(__defProp(module != null ? __create(__getProtoOf(module)) : {}, "default", !isNodeMode && module && module.__esModule ? { get: () => module.default, enumerable: true } : { value: module, enumerable: true })), module);
   };
+  var __toCommonJS = /* @__PURE__ */ ((cache) => {
+    return (module, temp) => {
+      return cache && cache.get(module) || (temp = __reExport(__markAsModule({}), module, 1), cache && cache.set(module, temp), temp);
+    };
+  })(typeof WeakMap !== "undefined" ? /* @__PURE__ */ new WeakMap() : 0);
 
   // node_modules/base64-js/index.js
   var require_base64_js = __commonJS({
@@ -3226,7 +3230,7 @@ module.exports = (() => {
         }
       };
       var arrayToObject = function arrayToObject2(source, options) {
-        var obj = options && options.plainObjects ? Object.create(null) : {};
+        var obj = options && options.plainObjects ? /* @__PURE__ */ Object.create(null) : {};
         for (var i = 0; i < source.length; ++i) {
           if (typeof source[i] !== "undefined") {
             obj[i] = source[i];
@@ -3718,7 +3722,7 @@ module.exports = (() => {
           if (root === "[]" && options.parseArrays) {
             obj = [].concat(leaf);
           } else {
-            obj = options.plainObjects ? Object.create(null) : {};
+            obj = options.plainObjects ? /* @__PURE__ */ Object.create(null) : {};
             var cleanRoot = root.charAt(0) === "[" && root.charAt(root.length - 1) === "]" ? root.slice(1, -1) : root;
             var index = parseInt(cleanRoot, 10);
             if (!options.parseArrays && cleanRoot === "") {
@@ -3800,10 +3804,10 @@ module.exports = (() => {
       module.exports = function(str, opts) {
         var options = normalizeParseOptions(opts);
         if (str === "" || str === null || typeof str === "undefined") {
-          return options.plainObjects ? Object.create(null) : {};
+          return options.plainObjects ? /* @__PURE__ */ Object.create(null) : {};
         }
         var tempObj = typeof str === "string" ? parseValues(str, options) : str;
-        var obj = options.plainObjects ? Object.create(null) : {};
+        var obj = options.plainObjects ? /* @__PURE__ */ Object.create(null) : {};
         var keys = Object.keys(tempObj);
         for (var i = 0; i < keys.length; ++i) {
           var key = keys[i];
@@ -4224,45 +4228,9 @@ module.exports = (() => {
 
   // types.ts
   init_buffer_shim();
-  var AuthenticationType = /* @__PURE__ */ ((AuthenticationType2) => {
-    AuthenticationType2["None"] = "None";
-    AuthenticationType2["HeaderBearerToken"] = "HeaderBearerToken";
-    AuthenticationType2["CustomHeaderToken"] = "CustomHeaderToken";
-    AuthenticationType2["QueryParamToken"] = "QueryParamToken";
-    AuthenticationType2["MultiQueryParamToken"] = "MultiQueryParamToken";
-    AuthenticationType2["OAuth2"] = "OAuth2";
-    AuthenticationType2["WebBasic"] = "WebBasic";
-    AuthenticationType2["Custom"] = "Custom";
-    AuthenticationType2["AWSAccessKey"] = "AWSAccessKey";
-    AuthenticationType2["AWSAssumeRole"] = "AWSAssumeRole";
-    AuthenticationType2["CodaApiHeaderBearerToken"] = "CodaApiHeaderBearerToken";
-    AuthenticationType2["Various"] = "Various";
-    return AuthenticationType2;
-  })(AuthenticationType || {});
-  var PostSetupType = /* @__PURE__ */ ((PostSetupType2) => {
-    PostSetupType2["SetEndpoint"] = "SetEndPoint";
-    return PostSetupType2;
-  })(PostSetupType || {});
 
   // runtime/types.ts
   init_buffer_shim();
-  var FormulaType = /* @__PURE__ */ ((FormulaType2) => {
-    FormulaType2["Standard"] = "Standard";
-    FormulaType2["Sync"] = "Sync";
-    FormulaType2["Metadata"] = "Metadata";
-    return FormulaType2;
-  })(FormulaType || {});
-  var MetadataFormulaType = /* @__PURE__ */ ((MetadataFormulaType2) => {
-    MetadataFormulaType2["GetConnectionName"] = "GetConnectionName";
-    MetadataFormulaType2["GetConnectionUserId"] = "GetConnectionUserId";
-    MetadataFormulaType2["ParameterAutocomplete"] = "ParameterAutocomplete";
-    MetadataFormulaType2["PostSetupSetEndpoint"] = "PostSetupSetEndpoint";
-    MetadataFormulaType2["SyncListDynamicUrls"] = "SyncListDynamicUrls";
-    MetadataFormulaType2["SyncGetDisplayUrl"] = "SyncGetDisplayUrl";
-    MetadataFormulaType2["SyncGetTableName"] = "SyncGetTableName";
-    MetadataFormulaType2["SyncGetSchema"] = "SyncGetSchema";
-    return MetadataFormulaType2;
-  })(MetadataFormulaType || {});
 
   // api.ts
   init_buffer_shim();
@@ -4291,16 +4259,16 @@ module.exports = (() => {
   init_buffer_shim();
 
   // schema.ts
-  var import_pascalcase = __toModule(require_pascalcase());
+  var import_pascalcase = __toESM(require_pascalcase());
 
   // handler_templates.ts
   init_buffer_shim();
-  var import_clone = __toModule(require_clone());
+  var import_clone = __toESM(require_clone());
 
   // helpers/url.ts
   init_buffer_shim();
-  var import_qs = __toModule(require_lib());
-  var import_url_parse = __toModule(require_url_parse());
+  var import_qs = __toESM(require_lib());
+  var import_url_parse = __toESM(require_url_parse());
 
   // api.ts
   var StatusCodeError = class extends Error {
@@ -4365,31 +4333,18 @@ module.exports = (() => {
 
   // runtime/common/marshaling/constants.ts
   init_buffer_shim();
-  var CodaMarshalerType = /* @__PURE__ */ ((CodaMarshalerType2) => {
-    CodaMarshalerType2["Error"] = "Error";
-    CodaMarshalerType2["Buffer"] = "Buffer";
-    CodaMarshalerType2["Number"] = "Number";
-    CodaMarshalerType2["Date"] = "Date";
-    return CodaMarshalerType2;
-  })(CodaMarshalerType || {});
-  var MarshalingInjectedKeys = /* @__PURE__ */ ((MarshalingInjectedKeys2) => {
-    MarshalingInjectedKeys2["CodaMarshaler"] = "__coda_marshaler__";
-    MarshalingInjectedKeys2["ErrorClassName"] = "__error_class_name__";
-    MarshalingInjectedKeys2["ErrorClassType"] = "__error_class_type__";
-    return MarshalingInjectedKeys2;
-  })(MarshalingInjectedKeys || {});
 
   // runtime/common/marshaling/marshal_buffer.ts
   function marshalBuffer(val) {
     if (val instanceof Buffer2) {
       return {
         data: [...Uint8Array.from(val)],
-        [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Buffer
+        ["__coda_marshaler__" /* CodaMarshaler */]: "Buffer" /* Buffer */
       };
     }
   }
   function unmarshalBuffer(val) {
-    if (typeof val !== "object" || val[MarshalingInjectedKeys.CodaMarshaler] !== CodaMarshalerType.Buffer) {
+    if (typeof val !== "object" || val["__coda_marshaler__" /* CodaMarshaler */] !== "Buffer" /* Buffer */) {
       return;
     }
     return Buffer2.from(val.data);
@@ -4401,12 +4356,12 @@ module.exports = (() => {
     if (val instanceof Date) {
       return {
         date: val.toJSON(),
-        [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Date
+        ["__coda_marshaler__" /* CodaMarshaler */]: "Date" /* Date */
       };
     }
   }
   function unmarshalDate(val) {
-    if (typeof val !== "object" || val[MarshalingInjectedKeys.CodaMarshaler] !== CodaMarshalerType.Date) {
+    if (typeof val !== "object" || val["__coda_marshaler__" /* CodaMarshaler */] !== "Date" /* Date */) {
       return;
     }
     return new Date(Date.parse(val.date));
@@ -4444,9 +4399,9 @@ module.exports = (() => {
       name,
       stack,
       message,
-      [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Error,
-      [MarshalingInjectedKeys.ErrorClassName]: err.constructor.name,
-      [MarshalingInjectedKeys.ErrorClassType]: getErrorClassType(err),
+      ["__coda_marshaler__" /* CodaMarshaler */]: "Error" /* Error */,
+      ["__error_class_name__" /* ErrorClassName */]: err.constructor.name,
+      ["__error_class_type__" /* ErrorClassType */]: getErrorClassType(err),
       ...args
     };
   }
@@ -4465,16 +4420,16 @@ module.exports = (() => {
     return errorClasses.find((cls) => cls.name === name) || Error;
   }
   function unmarshalError(val) {
-    if (typeof val !== "object" || val[MarshalingInjectedKeys.CodaMarshaler] !== CodaMarshalerType.Error) {
+    if (typeof val !== "object" || val["__coda_marshaler__" /* CodaMarshaler */] !== "Error" /* Error */) {
       return;
     }
     const {
       name,
       stack,
       message,
-      [MarshalingInjectedKeys.ErrorClassName]: errorClassName,
-      [MarshalingInjectedKeys.CodaMarshaler]: _,
-      [MarshalingInjectedKeys.ErrorClassType]: errorClassType,
+      ["__error_class_name__" /* ErrorClassName */]: errorClassName,
+      ["__coda_marshaler__" /* CodaMarshaler */]: _,
+      ["__error_class_type__" /* ErrorClassType */]: errorClassType,
       ...otherProperties
     } = val;
     const ErrorClass = getErrorClass(errorClassType, errorClassName);
@@ -4494,12 +4449,12 @@ module.exports = (() => {
     if (typeof val === "number" && (isNaN(val) || val === Infinity)) {
       return {
         data: val.toString(),
-        [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Number
+        ["__coda_marshaler__" /* CodaMarshaler */]: "Number" /* Number */
       };
     }
   }
   function unmarshalNumber(val) {
-    if (typeof val !== "object" || val[MarshalingInjectedKeys.CodaMarshaler] !== CodaMarshalerType.Number) {
+    if (typeof val !== "object" || val["__coda_marshaler__" /* CodaMarshaler */] !== "Number" /* Number */) {
       return;
     }
     return Number(val.data);
@@ -4610,66 +4565,66 @@ module.exports = (() => {
   function doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext) {
     const { syncTables, defaultAuthentication } = manifest;
     switch (formulaSpec.type) {
-      case FormulaType.Standard: {
+      case "Standard" /* Standard */: {
         const formula = findFormula(manifest, formulaSpec.formulaName);
         return formula.execute(params, executionContext);
       }
-      case FormulaType.Sync: {
+      case "Sync" /* Sync */: {
         const formula = findSyncFormula(manifest, formulaSpec.formulaName);
         return formula.execute(params, executionContext);
       }
-      case FormulaType.Metadata: {
+      case "Metadata" /* Metadata */: {
         switch (formulaSpec.metadataFormulaType) {
-          case MetadataFormulaType.GetConnectionName:
-            if ((defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== AuthenticationType.None && (defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== AuthenticationType.Various && (defaultAuthentication == null ? void 0 : defaultAuthentication.getConnectionName)) {
+          case "GetConnectionName" /* GetConnectionName */:
+            if ((defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== "None" /* None */ && (defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== "Various" /* Various */ && (defaultAuthentication == null ? void 0 : defaultAuthentication.getConnectionName)) {
               return defaultAuthentication.getConnectionName.execute(params, executionContext);
             }
             break;
-          case MetadataFormulaType.GetConnectionUserId:
-            if ((defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== AuthenticationType.None && (defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== AuthenticationType.Various && (defaultAuthentication == null ? void 0 : defaultAuthentication.getConnectionUserId)) {
+          case "GetConnectionUserId" /* GetConnectionUserId */:
+            if ((defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== "None" /* None */ && (defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== "Various" /* Various */ && (defaultAuthentication == null ? void 0 : defaultAuthentication.getConnectionUserId)) {
               return defaultAuthentication.getConnectionUserId.execute(params, executionContext);
             }
             break;
-          case MetadataFormulaType.ParameterAutocomplete:
+          case "ParameterAutocomplete" /* ParameterAutocomplete */:
             const parentFormula = findParentFormula(manifest, formulaSpec);
             if (parentFormula) {
               return parentFormula.execute(params, executionContext);
             }
             break;
-          case MetadataFormulaType.PostSetupSetEndpoint:
-            if ((defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== AuthenticationType.None && (defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== AuthenticationType.Various && (defaultAuthentication == null ? void 0 : defaultAuthentication.postSetup)) {
-              const setupStep = defaultAuthentication.postSetup.find((step) => step.type === PostSetupType.SetEndpoint && step.name === formulaSpec.stepName);
+          case "PostSetupSetEndpoint" /* PostSetupSetEndpoint */:
+            if ((defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== "None" /* None */ && (defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== "Various" /* Various */ && (defaultAuthentication == null ? void 0 : defaultAuthentication.postSetup)) {
+              const setupStep = defaultAuthentication.postSetup.find((step) => step.type === "SetEndPoint" /* SetEndpoint */ && step.name === formulaSpec.stepName);
               if (setupStep) {
                 return setupStep.getOptionsFormula.execute(params, executionContext);
               }
             }
             break;
-          case MetadataFormulaType.SyncListDynamicUrls:
-          case MetadataFormulaType.SyncGetDisplayUrl:
-          case MetadataFormulaType.SyncGetTableName:
-          case MetadataFormulaType.SyncGetSchema:
+          case "SyncListDynamicUrls" /* SyncListDynamicUrls */:
+          case "SyncGetDisplayUrl" /* SyncGetDisplayUrl */:
+          case "SyncGetTableName" /* SyncGetTableName */:
+          case "SyncGetSchema" /* SyncGetSchema */:
             if (syncTables) {
               const syncTable = syncTables.find((table) => table.name === formulaSpec.syncTableName);
               if (syncTable) {
                 let formula;
                 if (isDynamicSyncTable(syncTable)) {
                   switch (formulaSpec.metadataFormulaType) {
-                    case MetadataFormulaType.SyncListDynamicUrls:
+                    case "SyncListDynamicUrls" /* SyncListDynamicUrls */:
                       formula = syncTable.listDynamicUrls;
                       break;
-                    case MetadataFormulaType.SyncGetDisplayUrl:
+                    case "SyncGetDisplayUrl" /* SyncGetDisplayUrl */:
                       formula = syncTable.getDisplayUrl;
                       break;
-                    case MetadataFormulaType.SyncGetTableName:
+                    case "SyncGetTableName" /* SyncGetTableName */:
                       formula = syncTable.getName;
                       break;
-                    case MetadataFormulaType.SyncGetSchema:
+                    case "SyncGetSchema" /* SyncGetSchema */:
                       formula = syncTable.getSchema;
                       break;
                     default:
                       return ensureSwitchUnreachable(formulaSpec);
                   }
-                } else if (formulaSpec.metadataFormulaType === MetadataFormulaType.SyncGetSchema) {
+                } else if (formulaSpec.metadataFormulaType === "SyncGetSchema" /* SyncGetSchema */) {
                   formula = syncTable.getSchema;
                 }
                 if (formula) {
@@ -4692,13 +4647,13 @@ module.exports = (() => {
     const { formulas, syncTables } = manifest;
     let formula;
     switch (formulaSpec.parentFormulaType) {
-      case FormulaType.Standard:
+      case "Standard" /* Standard */:
         if (formulas) {
           const namespacedFormulas = Array.isArray(formulas) ? formulas : Object.values(formulas)[0];
           formula = namespacedFormulas.find((defn) => defn.name === formulaSpec.parentFormulaName);
         }
         break;
-      case FormulaType.Sync:
+      case "Sync" /* Sync */:
         if (syncTables) {
           const syncTable = syncTables.find((table) => table.getter.name === formulaSpec.parentFormulaName);
           formula = syncTable == null ? void 0 : syncTable.getter;
@@ -4738,7 +4693,7 @@ module.exports = (() => {
       });
     }
   }
-  return thunk_exports;
+  return __toCommonJS(thunk_exports);
 })();
 /*!
  * The buffer module from node.js, for the browser.
