@@ -6,7 +6,7 @@ title: MultiQueryParamTokenAuthentication
 Authenticate using multiple tokens, each passed as a different URL parameter, e.g.
 https://example.com/api?param1=token1&param2=token2
 
-The parameter names are defined in the [params](CustomAuthentication.md#params) array property.
+The parameter names are defined in the [params](MultiQueryParamTokenAuthentication.md#params) array property.
 
 ## Hierarchy
 
