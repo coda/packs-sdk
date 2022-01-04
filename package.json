@@ -42,7 +42,7 @@
     "stacktrace-parser": "^0.1.10",
     "typescript": "^4.5.4",
     "uglify-js": "^3.14.5",
-    "url-parse": "^1.5.3",
+    "url-parse": "^1.5.4",
     "uuid": "^8.3.2",
     "xml2js": "^0.4.23",
     "yargs": "^17.3.0",
