@@ -11,6 +11,12 @@ const PacksExamplesDirectory = 'node_modules/@codahq/packs-examples';
 const GitIgnore = `.coda.json
 .coda-credentials.json
 `;
+function addPatches() {
+    (0, helpers_1.spawnProcess)(`npm set-script postinstall "npx patch-package"`);
+    fs_extra_1.default.mkdirpSync('patches');
+    fs_extra_1.default.copySync(`${PacksExamplesDirectory}/patches`, path_1.default.join(process.cwd(), 'patches'));
+    (0, helpers_1.spawnProcess)(`npm run-script postinstall`);
+}
 async function handleInit() {
     let isPacksExamplesInstalled;
     try {
@@ -31,6 +37,8 @@ async function handleInit() {
         .map(dependency => `${dependency}@${devDependencies[dependency]}`)
         .join(' ');
     (0, helpers_1.spawnProcess)(`npm install --save-dev ${devDependencyPackages}`);
+    // https://staging.coda.io/d/Quality-Tracker_d-GJF-DmEUK/Bugs_sucBW#Bugs_tuq-W/r20768&modal=true
+    addPatches();
     fs_extra_1.default.copySync(`${PacksExamplesDirectory}/examples/template`, process.cwd());
     // npm removes .gitignore files when installing a package, so we can't simply put the .gitignore
     // in the template example alongside the other files. So we just create it explicitly

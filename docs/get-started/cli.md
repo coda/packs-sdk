@@ -34,6 +34,8 @@ The instructions below assume some familiarity with the terminal / command promp
 1. Install the Pack SDK.
 
     ```sh
+    # We suggest to use NodeJS 16+
+    npm init
     npm install @codahq/packs-sdk
     ```
 

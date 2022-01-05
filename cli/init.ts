@@ -8,6 +8,15 @@ const GitIgnore = `.coda.json
 .coda-credentials.json
 `;
 
+function addPatches() {
+  spawnProcess(`npm set-script postinstall "npx patch-package"`);
+
+  fs.mkdirpSync('patches');
+  fs.copySync(`${PacksExamplesDirectory}/patches`, path.join(process.cwd(), 'patches'));
+
+  spawnProcess(`npm run-script postinstall`);
+}
+
 export async function handleInit() {
   let isPacksExamplesInstalled: boolean;
   try {
@@ -29,6 +38,9 @@ export async function handleInit() {
     .map(dependency => `${dependency}@${devDependencies[dependency]}`)
     .join(' ');
   spawnProcess(`npm install --save-dev ${devDependencyPackages}`);
+
+  // https://staging.coda.io/d/Quality-Tracker_d-GJF-DmEUK/Bugs_sucBW#Bugs_tuq-W/r20768&modal=true
+  addPatches();
 
   fs.copySync(`${PacksExamplesDirectory}/examples/template`, process.cwd());
   // npm removes .gitignore files when installing a package, so we can't simply put the .gitignore
