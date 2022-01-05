@@ -1,5 +1,6 @@
 import AWS from 'aws-sdk';
 import type {Arguments} from 'yargs';
+import CloudFront from 'aws-sdk/clients/cloudfront';
 import S3 from 'aws-sdk/clients/s3';
 import {exec as childExec} from 'child_process';
 import fs from 'fs';
@@ -12,6 +13,7 @@ import yargs from 'yargs';
 
 const exec = promisify(childExec);
 
+const DocumentationRoot = '/packs/build';
 const AwsRegion = 'us-west-2';
 const BaseGeneratedDocsPath = 'site';
 const DocumentationBucket = 'developer-documentation';
@@ -31,8 +33,23 @@ function getS3Service(env: string): S3 {
   return new S3(config);
 }
 
+function getCloudfrontService(env: string): CloudFront {
+  const config: CloudFront.ClientConfiguration = {
+    signatureVersion: 'v4',
+    region: AwsRegion,
+    credentials: new AWS.SharedIniFileCredentials({profile: env}),
+    computeChecksums: true,
+  };
+  return new CloudFront(config);
+}
+
 function getS3Bucket(env: string): string {
   return `coda-us-west-2-${env}-${DocumentationBucket}`;
+}
+
+function getOriginDomainName(env: string): string {
+  const domainName = env !== 'prod' ? `${env}.coda.io` : 'coda.io';
+  return `origin.${domainName}`;
 }
 
 function getSDKVersion(): string {
@@ -55,10 +72,12 @@ interface PushDocumentationArgs {
 
 async function pushDocumentation({env, forceUpload}: Arguments<PushDocumentationArgs>): Promise<void> {
   const s3 = getS3Service(env);
+  const cloudfront = getCloudfrontService(env);
   const bucket = getS3Bucket(env);
   const versionedKey = getS3DocVersionedKey();
   const latestKey = getS3LatestDocsKey();
   const baseIndexFileKey = `${PacksSdkBucketRootPath}/index.html`;
+  const now = Date.now().toString();
 
   print(`${env}: Pushing to bucket ${bucket}.`);
 
@@ -88,6 +107,30 @@ async function pushDocumentation({env, forceUpload}: Arguments<PushDocumentation
     print(`${env}: Pushing the current packs-sdk documentation for ${getSDKVersion()} to the 'latest' folder...`);
     await pushDocsDirectory(latestKey);
     print(`${env}: The current packs-sdk documentation was pushed to ${versionedKey} successfully.`);
+
+    print(`${env}: Finding Cloudfront distribution for documentation...`);
+    const distributions = await cloudfront.listDistributions().promise();
+    const docsDistribution = distributions.DistributionList?.Items?.find(distr =>
+      distr.Origins.Items.some(origin => origin.DomainName === getOriginDomainName(env)),
+    );
+    if (!docsDistribution) {
+      return printAndExit(`${env}: Could not find Cloudfront distribution for documentation.`);
+    }
+    print(`${env}: Creating Cloudfront invalidation for 'latest' folder...`);
+    const docsLatestPath = `${DocumentationRoot}/latest`;
+    await cloudfront
+      .createInvalidation({
+        DistributionId: docsDistribution.Id,
+        InvalidationBatch: {
+          CallerReference: now,
+          Paths: {
+            Quantity: 1,
+            Items: [docsLatestPath],
+          },
+        },
+      })
+      .promise();
+    print(`${env}: Successfully invalidated the '${docsLatestPath}' folder on ${getOriginDomainName(env)}...`);
   } catch (err: any) {
     if (err?.code === 'CredentialsError' || err?.code === 'ExpiredToken') {
       printError(`Credentials not found, invalid, or expired! Try running 'prodaccess'.`);
