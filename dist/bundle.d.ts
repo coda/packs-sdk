@@ -1001,8 +1001,6 @@ export interface ParamDef<T extends UnionType> {
 	 * All optional parameters must come after all non-optional parameters.
 	 */
 	optional?: boolean;
-	/** @hidden */
-	hidden?: boolean;
 	/**
 	 * A {@link MetadataFormula} that returns valid values for this parameter, optionally matching a search
 	 * query. This can be useful both if there are a fixed number of valid values for the parameter,
