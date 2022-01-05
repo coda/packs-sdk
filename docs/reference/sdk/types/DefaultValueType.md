@@ -15,4 +15,4 @@ The type of values that are allowable to be used as a [defaultValue](../interfac
 
 #### Defined in
 
-[api_types.ts:268](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L268)
+[api_types.ts:266](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L266)
