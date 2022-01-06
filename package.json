@@ -3,7 +3,7 @@
   "version": "0.8.0",
   "license": "MIT",
   "engines": {
-    "node": ">=14.17.x"
+    "node": ">=16.13.x"
   },
   "main": "dist/index.js",
   "bin": {
