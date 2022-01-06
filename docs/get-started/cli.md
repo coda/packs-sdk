@@ -22,6 +22,9 @@ Make sure you have `node` and `npm` available on your machine. These two tools o
 
 The instructions below assume some familiarity with the terminal / command prompt. If you aren't used to using this interface consult the help material for your operating system.
 
+Lastly, one of the libraries used by the SDK requires that your machine has some additional developer tooling installed. If you have done other software development you may already have them on your machine, but if not please consult their [help documentation][isolated_vm_requirements] for the packages that need to be installed.
+
+
 ## Set up the Pack structure
 
 1. Create a directory for your new Pack.
@@ -38,9 +41,6 @@ The instructions below assume some familiarity with the terminal / command promp
     ```
 
     The Pack SDK includes both the `coda` CLI as well as the libraries and type definitions needed to build Packs.
-
-    ??? warning "Additional requirements"
-        If the installation fails with an error about missing `make` or `g++` then you may have to install some [additional libraries][isolated_vm_requirements].
 
 
 1. Create the file structure for your Pack.
