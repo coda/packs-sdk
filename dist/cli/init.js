@@ -37,7 +37,7 @@ async function handleInit() {
         .map(dependency => `${dependency}@${devDependencies[dependency]}`)
         .join(' ');
     (0, helpers_1.spawnProcess)(`npm install --save-dev ${devDependencyPackages}`);
-    // https://staging.coda.io/d/Quality-Tracker_d-GJF-DmEUK/Bugs_sucBW#Bugs_tuq-W/r20768&modal=true
+    // developers may run in NodeJs 16 where some packages need to be patched to avoid warnings.
     addPatches();
     fs_extra_1.default.copySync(`${PacksExamplesDirectory}/examples/template`, process.cwd());
     // npm removes .gitignore files when installing a package, so we can't simply put the .gitignore
