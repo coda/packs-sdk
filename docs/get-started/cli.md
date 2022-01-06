@@ -39,6 +39,10 @@ The instructions below assume some familiarity with the terminal / command promp
 
     The Pack SDK includes both the `coda` CLI as well as the libraries and type definitions needed to build Packs.
 
+    ??? warning "Additional requirements"
+        If the installation fails with an error about missing `make` or `g++` then you may have to install some [additional libraries][isolated_vm_requirements].
+
+
 1. Create the file structure for your Pack.
 
     ```sh
@@ -193,3 +197,6 @@ Your formula result should now be `Howdy World`.
 
 !!! tip
     To avoid having to hit the refresh button on every update, toggle on the setting **Auto-Refresh When Version Changes**.
+
+
+[isolated_vm_requirements]: https://github.com/laverdet/isolated-vm#requirements
