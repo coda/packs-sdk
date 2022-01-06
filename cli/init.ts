@@ -39,7 +39,7 @@ export async function handleInit() {
     .join(' ');
   spawnProcess(`npm install --save-dev ${devDependencyPackages}`);
 
-  // https://staging.coda.io/d/Quality-Tracker_d-GJF-DmEUK/Bugs_sucBW#Bugs_tuq-W/r20768&modal=true
+  // developers may run in NodeJs 16 where some packages need to be patched to avoid warnings.
   addPatches();
 
   fs.copySync(`${PacksExamplesDirectory}/examples/template`, process.cwd());
