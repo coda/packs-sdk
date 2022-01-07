@@ -27,10 +27,10 @@ const coda_1 = require("../helpers/external-api/coda");
 const path_1 = __importDefault(require("path"));
 const helpers_1 = require("../testing/helpers");
 const child_process_1 = require("child_process");
-function spawnProcess(command) {
+function spawnProcess(command, { stdio = 'inherit' } = {}) {
     return (0, child_process_1.spawnSync)(command, {
         shell: true,
-        stdio: 'inherit',
+        stdio,
     });
 }
 exports.spawnProcess = spawnProcess;

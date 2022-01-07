@@ -20,6 +20,11 @@ function addPatches() {
 }
 
 export async function handleInit() {
+  const npmVersion = parseInt(spawnProcess('npm -v').stdout.toString().trim().split('.', 1)[0], 10);
+  if (npmVersion < 7) {
+    throw new Error(`Your npm version is older than 7. Please upgrade npm to at least 7 with "npm install npm@7"`);
+  }
+
   let isPacksExamplesInstalled: boolean;
   try {
     const listNpmPackages = spawnProcess('npm list @codahq/packs-examples');

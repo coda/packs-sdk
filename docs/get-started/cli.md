@@ -33,15 +33,14 @@ The instructions below assume some familiarity with the terminal / command promp
 
 1. Install the Pack SDK.
 
-    ```sh
-    # We suggest to use NodeJS 16+
+    ```sh    
     npm init
     npm install @codahq/packs-sdk
     ```
 
     The Pack SDK includes both the `coda` CLI as well as the libraries and type definitions needed to build Packs.
 
-1. Create the file structure for your Pack.
+2. Create the file structure for your Pack.
 
     ```sh
     npx coda init

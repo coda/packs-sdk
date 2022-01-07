@@ -2,7 +2,8 @@
 import type { Authentication } from '../types';
 import type { BasicPackDefinition } from '../types';
 import { Client } from '../helpers/external-api/coda';
-export declare function spawnProcess(command: string): import("child_process").SpawnSyncReturns<Buffer>;
+import type { SpawnSyncOptionsWithBufferEncoding } from 'child_process';
+export declare function spawnProcess(command: string, { stdio }?: SpawnSyncOptionsWithBufferEncoding): import("child_process").SpawnSyncReturns<Buffer>;
 export declare function createCodaClient(apiToken: string, protocolAndHost?: string): Client;
 export declare function formatEndpoint(endpoint: string): string;
 export declare function isTestCommand(): boolean;
