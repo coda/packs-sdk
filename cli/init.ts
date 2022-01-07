@@ -11,10 +11,11 @@ const GitIgnore = `.coda.json
 function addPatches() {
   spawnProcess(`npm set-script postinstall "npx patch-package"`);
 
-  fs.mkdirpSync('patches');
-  fs.copySync(`${PacksExamplesDirectory}/patches`, path.join(process.cwd(), 'patches'));
+  spawnProcess(
+    `grep -v '"main":' node_modules/mold-source-map/package.json > node_modules/mold-source-map/package.json`,
+  );
 
-  spawnProcess(`npm run-script postinstall`);
+  spawnProcess(`npx patch-package --exclude 'nothing' mold-source-map`);
 }
 
 export async function handleInit() {
