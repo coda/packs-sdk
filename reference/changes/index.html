@@ -46,7 +46,25 @@
 
     
     
-  <meta name="robots" content="noindex">
+<!-- TODO: should shape these up and should cater to specific page -->
+<meta name="description" content="Documentation for the SDK to build Coda Packs." />
+<meta name="image" content="https://cdn.coda.io/external/img/doc-banner-compressed-2x-v2.jpg" />
+<meta http-equiv="refresh" content="0; url=https://coda.io/packs/build/" />
+
+<!-- Twitter tags -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@coda_hq" />
+<meta name="twitter:title" content="Coda Pack SDK" />
+<meta name="twitter:description" content="Documentation for the SDK to build Coda Packs." />
+<meta name="twitter:image" content="https://cdn.coda.io/external/img/doc-banner-compressed-2x-v2.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<!-- Open graph tags -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Coda Pack SDK" />
+<meta property="og:title" content="Coda Pack SDK" />
+<meta property="og:description" content="Documentation for the SDK to build Coda Packs." />
+<meta property="og:image" content="https://cdn.coda.io/external/img/doc-banner-compressed-2x-v2.jpg" />
 
   </head>
   
@@ -76,10 +94,8 @@
       
         <aside class="md-banner md-announce">
           <div class="md-banner__inner md-announce__inner md-grid md-typeset">
-            
-  The Pack SDK is currently in a limited beta.
-  <a href="https://coda.io/packsbeta">Click here</a> to learn more and apply.
-
+             The Pack SDK is currently in a limited beta.
+<a href="https://coda.io/packsbeta">Click here</a> to learn more and apply. 
           </div>
         </aside>
       
@@ -4525,6 +4541,7 @@
 <li>An optional "description" field is added to sync table definition, that will be used to display in the UI.</li>
 <li>You no longer need to use the <code>--fetch</code> flag with <code>coda execute</code> to use a real fetcher. Set <code>--no-fetch</code> to use a mock fetcher (the old default behavior).</li>
 <li>OAuth2 authentication now supports a <code>scopeDelimiter</code> option for non-compliant APIs that use something other than a space to delimit OAuth scopes in authorization URLs.</li>
+<li>Deprecated <code>hidden</code> field is now fully removed on formula parameter.</li>
 </ul>
 <h3 id="073">0.7.3<a class="headerlink" href="#073" title="Permanent link">&para;</a></h3>
 <ul>

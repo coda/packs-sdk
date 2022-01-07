@@ -46,7 +46,25 @@
 
     
     
-  <meta name="robots" content="noindex">
+<!-- TODO: should shape these up and should cater to specific page -->
+<meta name="description" content="Documentation for the SDK to build Coda Packs." />
+<meta name="image" content="https://cdn.coda.io/external/img/doc-banner-compressed-2x-v2.jpg" />
+<meta http-equiv="refresh" content="0; url=https://coda.io/packs/build/" />
+
+<!-- Twitter tags -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@coda_hq" />
+<meta name="twitter:title" content="Coda Pack SDK" />
+<meta name="twitter:description" content="Documentation for the SDK to build Coda Packs." />
+<meta name="twitter:image" content="https://cdn.coda.io/external/img/doc-banner-compressed-2x-v2.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<!-- Open graph tags -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Coda Pack SDK" />
+<meta property="og:title" content="Coda Pack SDK" />
+<meta property="og:description" content="Documentation for the SDK to build Coda Packs." />
+<meta property="og:image" content="https://cdn.coda.io/external/img/doc-banner-compressed-2x-v2.jpg" />
 
   </head>
   
@@ -76,10 +94,8 @@
       
         <aside class="md-banner md-announce">
           <div class="md-banner__inner md-announce__inner md-grid md-typeset">
-            
-  The Pack SDK is currently in a limited beta.
-  <a href="https://coda.io/packsbeta">Click here</a> to learn more and apply.
-
+             The Pack SDK is currently in a limited beta.
+<a href="https://coda.io/packsbeta">Click here</a> to learn more and apply. 
           </div>
         </aside>
       
@@ -4203,8 +4219,24 @@
                 
                 <h1 id="how-to-troubleshoot-your-code">How to troubleshoot your code<a class="headerlink" href="#how-to-troubleshoot-your-code" title="Permanent link">&para;</a></h1>
 <h2 id="logging">Logging<a class="headerlink" href="#logging" title="Permanent link">&para;</a></h2>
-<!-- TODO: Migrate the content to this repo. -->
-<p><a href="https://coda.io/d/Pack-Studio-Beta_dUBjm8jbi39/Building-with-the-SDK_suP0J#_lujrM">See here</a> for more information on logging.</p>
+<p>You can log messages using the standard JavaScript logging method, <code>console.log()</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span> <span class="nx">response</span> <span class="o">=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">fetcher</span><span class="p">.</span><span class="nx">fetch</span><span class="p">({</span>
+  <span class="nx">method</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+  <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;https://api.example.com/items&quot;</span>
+<span class="p">});</span>
+<span class="kd">let</span> <span class="nx">items</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">items</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Retrieved %s items.&quot;</span><span class="p">,</span> <span class="nx">items</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+</code></pre></div>
+<p>When executing a Pack locally these logs will be written to the console, and when run in a doc they will be visible in the Pack maker tools. This can be useful for debugging during development as well as in production.</p>
+<p>The Packs runtime only includes a subset of the <a href="https://developer.mozilla.org/en-US/docs/Web/API/console">full <code>console</code> methods</a>, specifically:</p>
+<ul>
+<li><code>console.debug()</code></li>
+<li><code>console.error()</code></li>
+<li><code>console.info()</code></li>
+<li><code>console.log()</code></li>
+<li><code>console.trace()</code></li>
+<li><code>console.warn()</code></li>
+</ul>
 <h2 id="common-errors">Common errors<a class="headerlink" href="#common-errors" title="Permanent link">&para;</a></h2>
 <h3 id="the-given-domain-domain-does-not-resolve-to-a-public-ip"><code>The given domain &lt;domain&gt; does not resolve to a public IP</code><a class="headerlink" href="#the-given-domain-domain-does-not-resolve-to-a-public-ip" title="Permanent link">&para;</a></h3>
 <p>This error indicates that the domain you provided in an <code>addNetworkDomain()</code> call doesn't resolved to an accessible IP address. This could be due to a typo in the domain name. However there are some cases where a service assigns IP addresses to subdomains (<code>foo.example.com</code>) but not the root domain you are trying to add (<code>example.com</code>). If that is the case, either add the subdomain or <a href="../../support/">contact support</a> to have the root domain manually added to your Pack.</p>

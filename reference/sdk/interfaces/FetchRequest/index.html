@@ -46,7 +46,25 @@
 
     
     
-  <meta name="robots" content="noindex">
+<!-- TODO: should shape these up and should cater to specific page -->
+<meta name="description" content="Documentation for the SDK to build Coda Packs." />
+<meta name="image" content="https://cdn.coda.io/external/img/doc-banner-compressed-2x-v2.jpg" />
+<meta http-equiv="refresh" content="0; url=https://coda.io/packs/build/" />
+
+<!-- Twitter tags -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@coda_hq" />
+<meta name="twitter:title" content="Coda Pack SDK" />
+<meta name="twitter:description" content="Documentation for the SDK to build Coda Packs." />
+<meta name="twitter:image" content="https://cdn.coda.io/external/img/doc-banner-compressed-2x-v2.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<!-- Open graph tags -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Coda Pack SDK" />
+<meta property="og:title" content="Coda Pack SDK" />
+<meta property="og:description" content="Documentation for the SDK to build Coda Packs." />
+<meta property="og:image" content="https://cdn.coda.io/external/img/doc-banner-compressed-2x-v2.jpg" />
 
   </head>
   
@@ -76,10 +94,8 @@
       
         <aside class="md-banner md-announce">
           <div class="md-banner__inner md-announce__inner md-grid md-typeset">
-            
-  The Pack SDK is currently in a limited beta.
-  <a href="https://coda.io/packsbeta">Click here</a> to learn more and apply.
-
+             The Pack SDK is currently in a limited beta.
+<a href="https://coda.io/packsbeta">Click here</a> to learn more and apply. 
           </div>
         </aside>
       
@@ -4298,7 +4314,7 @@
 <p>The body of the HTTP request, if any.</p>
 <p>If you are sending a JSON payload, make sure to call <code>JSON.stringify()</code> on the object payload.</p>
 <h4 id="defined-in">Defined in<a class="headerlink" href="#defined-in" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api_types.ts#L407">api_types.ts:407</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api_types.ts#L405">api_types.ts:405</a></p>
 <hr />
 <h3 id="cachettlsecs">cacheTtlSecs<a class="headerlink" href="#cachettlsecs" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>cacheTtlSecs</strong>: <code>number</code></p>
@@ -4308,7 +4324,7 @@ instead of making the HTTP request. If left unspecified, Coda will automatically
 cache all GET requests for approximately 5 minutes. To disable the default caching,
 set this value to <code>0</code>.</p>
 <h4 id="defined-in_1">Defined in<a class="headerlink" href="#defined-in_1" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api_types.ts#L424">api_types.ts:424</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api_types.ts#L422">api_types.ts:422</a></p>
 <hr />
 <h3 id="disableauthentication">disableAuthentication<a class="headerlink" href="#disableauthentication" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>disableAuthentication</strong>: <code>boolean</code></p>
@@ -4316,7 +4332,7 @@ set this value to <code>0</code>.</p>
 configured to use authentication. This is very rare, but sometimes you may
 wish to make an unauthenticated supporting request as part of a formula implementation.</p>
 <h4 id="defined-in_2">Defined in<a class="headerlink" href="#defined-in_2" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api_types.ts#L437">api_types.ts:437</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api_types.ts#L435">api_types.ts:435</a></p>
 <hr />
 <h3 id="form">form<a class="headerlink" href="#form" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>form</strong>: <code>Object</code></p>
@@ -4324,7 +4340,7 @@ wish to make an unauthenticated supporting request as part of a formula implemen
 <h4 id="index-signature">Index signature<a class="headerlink" href="#index-signature" title="Permanent link">&para;</a></h4>
 <p>▪ [key: <code>string</code>]: <code>string</code></p>
 <h4 id="defined-in_3">Defined in<a class="headerlink" href="#defined-in_3" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api_types.ts#L411">api_types.ts:411</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api_types.ts#L409">api_types.ts:409</a></p>
 <hr />
 <h3 id="headers">headers<a class="headerlink" href="#headers" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>headers</strong>: <code>Object</code></p>
@@ -4332,7 +4348,7 @@ wish to make an unauthenticated supporting request as part of a formula implemen
 <h4 id="index-signature_1">Index signature<a class="headerlink" href="#index-signature_1" title="Permanent link">&para;</a></h4>
 <p>▪ [header: <code>string</code>]: <code>string</code></p>
 <h4 id="defined-in_4">Defined in<a class="headerlink" href="#defined-in_4" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api_types.ts#L415">api_types.ts:415</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api_types.ts#L413">api_types.ts:413</a></p>
 <hr />
 <h3 id="isbinaryresponse">isBinaryResponse<a class="headerlink" href="#isbinaryresponse" title="Permanent link">&para;</a></h3>
 <p>• <code>Optional</code> <strong>isBinaryResponse</strong>: <code>boolean</code></p>
@@ -4341,13 +4357,13 @@ not to attempt to parse the response in any way. Otherwise, Coda may attempt
 to parse the response as a JSON object. If true, <a href="../FetchResponse/#body">FetchResponse.body</a>
 will be a NodeJS Buffer.</p>
 <h4 id="defined-in_5">Defined in<a class="headerlink" href="#defined-in_5" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api_types.ts#L431">api_types.ts:431</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api_types.ts#L429">api_types.ts:429</a></p>
 <hr />
 <h3 id="method">method<a class="headerlink" href="#method" title="Permanent link">&para;</a></h3>
 <p>• <strong>method</strong>: <code>"GET"</code> | <code>"PATCH"</code> | <code>"POST"</code> | <code>"PUT"</code> | <code>"DELETE"</code></p>
 <p>The HTTP method/verb (e.g. GET or POST).</p>
 <h4 id="defined-in_6">Defined in<a class="headerlink" href="#defined-in_6" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api_types.ts#L394">api_types.ts:394</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api_types.ts#L392">api_types.ts:392</a></p>
 <hr />
 <h3 id="url">url<a class="headerlink" href="#url" title="Permanent link">&para;</a></h3>
 <p>• <strong>url</strong>: <code>string</code></p>
@@ -4356,7 +4372,7 @@ pack uses authentication and <a href="../AWSAccessKeyAuthentication/#requiresend
 endpoint per user account, you may also use a relative URL and Coda will
 apply the user's endpoint automatically.</p>
 <h4 id="defined-in_7">Defined in<a class="headerlink" href="#defined-in_7" title="Permanent link">&para;</a></h4>
-<p><a href="https://github.com/coda/packs-sdk/blob/main/api_types.ts#L401">api_types.ts:401</a></p>
+<p><a href="https://github.com/coda/packs-sdk/blob/main/api_types.ts#L399">api_types.ts:399</a></p>
                 
                   
                 
