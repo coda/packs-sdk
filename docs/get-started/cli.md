@@ -36,12 +36,12 @@ Lastly, one of the libraries used by the SDK requires that your machine has some
 
 1. Install the Pack SDK.
 
-    ```sh
+    ```sh    
+    npm init
     npm install @codahq/packs-sdk
     ```
 
     The Pack SDK includes both the `coda` CLI as well as the libraries and type definitions needed to build Packs.
-
 
 1. Create the file structure for your Pack.
 

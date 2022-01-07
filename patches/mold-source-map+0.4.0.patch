@@ -1,0 +1,12 @@
+diff --git a/node_modules/mold-source-map/package.json b/node_modules/mold-source-map/package.json
+index 6ae458d..97230a0 100644
+--- a/node_modules/mold-source-map/package.json
++++ b/node_modules/mold-source-map/package.json
+@@ -2,7 +2,6 @@
+   "name": "mold-source-map",
+   "version": "0.4.0",
+   "description": "Mold a source map that is almost perfect for you into one that is.",
+-  "main": "mold-source-map.js",
+   "scripts": {
+     "test": "tap test/*.js"
+   },

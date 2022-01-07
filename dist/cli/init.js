@@ -11,7 +11,25 @@ const PacksExamplesDirectory = 'node_modules/@codahq/packs-examples';
 const GitIgnore = `.coda.json
 .coda-credentials.json
 `;
+function updateMoldSourceMap() {
+    // unfortuanately Windows has no grep.
+    const packageFileName = 'node_modules/mold-source-map/package.json';
+    const lines = fs_extra_1.default.readFileSync(packageFileName).toString().split('\n');
+    const validLines = lines.filter(line => !line.includes('"main":'));
+    fs_extra_1.default.writeFileSync(packageFileName, validLines.join('\n'));
+}
+function addPatches() {
+    (0, helpers_1.spawnProcess)(`npm set-script postinstall "npx patch-package"`);
+    updateMoldSourceMap();
+    (0, helpers_1.spawnProcess)(`npx patch-package --exclude 'nothing' mold-source-map`);
+}
 async function handleInit() {
+    // stdout looks like `8.1.2\n`.
+    const npmVersion = parseInt((0, helpers_1.spawnProcess)('npm -v', { stdio: 'pipe' }).stdout.toString().trim().split('.', 1)[0], 10);
+    if (npmVersion < 7) {
+        // need npm 7 to support "npm set-script"
+        throw new Error(`Your npm version is older than 7. Please upgrade npm to at least 7 with "npm install -g npm@7"`);
+    }
     let isPacksExamplesInstalled;
     try {
         const listNpmPackages = (0, helpers_1.spawnProcess)('npm list @codahq/packs-examples');
@@ -31,6 +49,8 @@ async function handleInit() {
         .map(dependency => `${dependency}@${devDependencies[dependency]}`)
         .join(' ');
     (0, helpers_1.spawnProcess)(`npm install --save-dev ${devDependencyPackages}`);
+    // developers may run in NodeJs 16 where some packages need to be patched to avoid warnings.
+    addPatches();
     fs_extra_1.default.copySync(`${PacksExamplesDirectory}/examples/template`, process.cwd());
     // npm removes .gitignore files when installing a package, so we can't simply put the .gitignore
     // in the template example alongside the other files. So we just create it explicitly
