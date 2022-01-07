@@ -17,7 +17,9 @@ const DocumentationRoot = '/packs/build';
 const AwsRegion = 'us-west-2';
 const BaseGeneratedDocsPath = 'site';
 const DocumentationBucket = 'developer-documentation';
-const PacksSdkBucketRootPath = 'packs';
+// NOTE(spencer): we are getting rid of the redundant "packs"
+// bucket, so there is no root path outside of the bucket above.
+// const PacksSdkBucketRootPath = 'packs';
 
 function handleError(e: Error) {
   printAndExit(`${e.message} ${e.stack || ''}`);
@@ -58,11 +60,11 @@ function getSDKVersion(): string {
 }
 
 function getS3DocVersionedKey(): string {
-  return `${PacksSdkBucketRootPath}/${getSDKVersion()}`;
+  return `${getSDKVersion()}`;
 }
 
 function getS3LatestDocsKey(): string {
-  return `${PacksSdkBucketRootPath}/latest`;
+  return `latest`;
 }
 
 interface PushDocumentationArgs {
