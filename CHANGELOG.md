@@ -4,6 +4,7 @@
 - An optional "description" field is added to sync table definition, that will be used to display in the UI.
 - You no longer need to use the `--fetch` flag with `coda execute` to use a real fetcher. Set `--no-fetch` to use a mock fetcher (the old default behavior).
 - OAuth2 authentication now supports a `scopeDelimiter` option for non-compliant APIs that use something other than a space to delimit OAuth scopes in authorization URLs.
+- Deprecated `hidden` field is now fully removed on formula parameter.
 
 ### 0.7.3
 

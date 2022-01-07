@@ -76,6 +76,8 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
         postSetup?: PostSetupMetadata[];
         deferConnectionSetup?: boolean;
         shouldAutoAuthSetup?: boolean;
+        oauthScopes?: string[];
+        oauthAuthorizationUrl?: string;
     };
     instructionsUrl?: string;
     formulas?: ExternalPackFormulas;

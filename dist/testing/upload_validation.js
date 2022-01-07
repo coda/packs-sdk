@@ -345,7 +345,6 @@ const paramDefValidator = zodCompleteObject({
     }),
     description: z.string(),
     optional: z.boolean().optional(),
-    hidden: z.boolean().optional(),
     autocomplete: z.unknown(),
     defaultValue: z.unknown(),
 });

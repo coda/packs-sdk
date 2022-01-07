@@ -28,7 +28,7 @@ If you have a hardcoded list of valid values, you would only need to use
 
 #### Defined in
 
-[api_types.ts:231](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L231)
+[api_types.ts:229](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L229)
 
 ___
 
@@ -40,7 +40,7 @@ The default value to be used for this parameter if it is not specified by the us
 
 #### Defined in
 
-[api_types.ts:235](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L235)
+[api_types.ts:233](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L233)
 
 ___
 

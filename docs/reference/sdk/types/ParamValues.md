@@ -16,4 +16,4 @@ the parameter defintion for that formula.
 
 #### Defined in
 
-[api_types.ts:261](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L261)
+[api_types.ts:259](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L259)
