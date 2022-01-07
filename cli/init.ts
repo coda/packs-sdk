@@ -8,13 +8,18 @@ const GitIgnore = `.coda.json
 .coda-credentials.json
 `;
 
+function updateMoldSourceMap() {
+  // unfortuanately Windows has no grep.
+  const packageFileName = 'node_modules/mold-source-map/package.json';
+  const lines = fs.readFileSync(packageFileName).toString().split('\n');
+  const validLines = lines.filter(line => !line.includes('"main":'));
+  fs.writeFileSync(packageFileName, validLines.join('\n'));
+}
+
 function addPatches() {
   spawnProcess(`npm set-script postinstall "npx patch-package"`);
 
-  spawnProcess(
-    `grep -v '"main":' node_modules/mold-source-map/package.json > node_modules/mold-source-map/package.json.new`,
-  );
-  spawnProcess(`mv node_modules/mold-source-map/package.json.new node_modules/mold-source-map/package.json`);
+  updateMoldSourceMap();
 
   spawnProcess(`npx patch-package --exclude 'nothing' mold-source-map`);
 }

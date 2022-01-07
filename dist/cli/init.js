@@ -11,10 +11,16 @@ const PacksExamplesDirectory = 'node_modules/@codahq/packs-examples';
 const GitIgnore = `.coda.json
 .coda-credentials.json
 `;
+function updateMoldSourceMap() {
+    // unfortuanately Windows has no grep.
+    const packageFileName = 'node_modules/mold-source-map/package.json';
+    const lines = fs_extra_1.default.readFileSync(packageFileName).toString().split('\n');
+    const validLines = lines.filter(line => !line.includes('"main":'));
+    fs_extra_1.default.writeFileSync(packageFileName, validLines.join('\n'));
+}
 function addPatches() {
     (0, helpers_1.spawnProcess)(`npm set-script postinstall "npx patch-package"`);
-    (0, helpers_1.spawnProcess)(`grep -v '"main":' node_modules/mold-source-map/package.json > node_modules/mold-source-map/package.json.new`);
-    (0, helpers_1.spawnProcess)(`mv node_modules/mold-source-map/package.json.new node_modules/mold-source-map/package.json`);
+    updateMoldSourceMap();
     (0, helpers_1.spawnProcess)(`npx patch-package --exclude 'nothing' mold-source-map`);
 }
 async function handleInit() {
