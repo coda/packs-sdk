@@ -22,6 +22,9 @@ Make sure you have `node` and `npm` available on your machine. These two tools o
 
 The instructions below assume some familiarity with the terminal / command prompt. If you aren't used to using this interface consult the help material for your operating system.
 
+Lastly, one of the libraries used by the SDK requires that your machine has some additional developer tooling installed. If you have done other software development you may already have them on your machine, but if not please consult their [help documentation][isolated_vm_requirements] for the packages that need to be installed.
+
+
 ## Set up the Pack structure
 
 1. Create a directory for your new Pack.
@@ -38,6 +41,7 @@ The instructions below assume some familiarity with the terminal / command promp
     ```
 
     The Pack SDK includes both the `coda` CLI as well as the libraries and type definitions needed to build Packs.
+
 
 1. Create the file structure for your Pack.
 
@@ -193,3 +197,6 @@ Your formula result should now be `Howdy World`.
 
 !!! tip
     To avoid having to hit the refresh button on every update, toggle on the setting **Auto-Refresh When Version Changes**.
+
+
+[isolated_vm_requirements]: https://github.com/laverdet/isolated-vm#requirements
