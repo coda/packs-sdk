@@ -20,7 +20,8 @@ function addPatches() {
 }
 
 export async function handleInit() {
-  const npmVersion = parseInt(spawnProcess('npm -v').stdout.toString().trim().split('.', 1)[0], 10);
+  // stdout looks like `8.1.2\n`.
+  const npmVersion = parseInt(spawnProcess('npm -v', {stdio: 'pipe'}).stdout.toString().trim().split('.', 1)[0], 10);
   if (npmVersion < 7) {
     throw new Error(`Your npm version is older than 7. Please upgrade npm to at least 7 with "npm install npm@7"`);
   }

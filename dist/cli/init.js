@@ -18,7 +18,8 @@ function addPatches() {
     (0, helpers_1.spawnProcess)(`npx patch-package --exclude 'nothing' mold-source-map`);
 }
 async function handleInit() {
-    const npmVersion = parseInt((0, helpers_1.spawnProcess)('npm -v').stdout.toString().trim().split('.', 1)[0], 10);
+    // stdout looks like `8.1.2\n`.
+    const npmVersion = parseInt((0, helpers_1.spawnProcess)('npm -v', { stdio: 'pipe' }).stdout.toString().trim().split('.', 1)[0], 10);
     if (npmVersion < 7) {
         throw new Error(`Your npm version is older than 7. Please upgrade npm to at least 7 with "npm install npm@7"`);
     }
