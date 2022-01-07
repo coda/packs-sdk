@@ -13,7 +13,8 @@ const GitIgnore = `.coda.json
 `;
 function addPatches() {
     (0, helpers_1.spawnProcess)(`npm set-script postinstall "npx patch-package"`);
-    (0, helpers_1.spawnProcess)(`grep -v '"main":' node_modules/mold-source-map/package.json > node_modules/mold-source-map/package.json`);
+    (0, helpers_1.spawnProcess)(`grep -v '"main":' node_modules/mold-source-map/package.json > node_modules/mold-source-map/package.json.new`);
+    (0, helpers_1.spawnProcess)(`mv node_modules/mold-source-map/package.json.new node_modules/mold-source-map/package.json`);
     (0, helpers_1.spawnProcess)(`npx patch-package --exclude 'nothing' mold-source-map`);
 }
 async function handleInit() {

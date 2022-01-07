@@ -12,8 +12,9 @@ function addPatches() {
   spawnProcess(`npm set-script postinstall "npx patch-package"`);
 
   spawnProcess(
-    `grep -v '"main":' node_modules/mold-source-map/package.json > node_modules/mold-source-map/package.json`,
+    `grep -v '"main":' node_modules/mold-source-map/package.json > node_modules/mold-source-map/package.json.new`,
   );
+  spawnProcess(`mv node_modules/mold-source-map/package.json.new node_modules/mold-source-map/package.json`);
 
   spawnProcess(`npx patch-package --exclude 'nothing' mold-source-map`);
 }
