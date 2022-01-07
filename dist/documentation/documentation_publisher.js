@@ -19,7 +19,9 @@ const DocumentationRoot = '/packs/build';
 const AwsRegion = 'us-west-2';
 const BaseGeneratedDocsPath = 'site';
 const DocumentationBucket = 'developer-documentation';
-const PacksSdkBucketRootPath = 'packs';
+// NOTE(spencer): we are getting rid of the redundant "packs"
+// bucket, so there is no root path outside of the bucket above.
+// const PacksSdkBucketRootPath = 'packs';
 function handleError(e) {
     (0, helpers_2.printAndExit)(`${e.message} ${e.stack || ''}`);
 }
@@ -53,10 +55,10 @@ function getSDKVersion() {
     return JSON.parse(packageFile.toString()).version;
 }
 function getS3DocVersionedKey() {
-    return `${PacksSdkBucketRootPath}/${getSDKVersion()}`;
+    return `${getSDKVersion()}`;
 }
 function getS3LatestDocsKey() {
-    return `${PacksSdkBucketRootPath}/latest`;
+    return `latest`;
 }
 async function pushDocumentation({ env, forceUpload }) {
     var _a, _b, _c;
@@ -65,7 +67,7 @@ async function pushDocumentation({ env, forceUpload }) {
     const bucket = getS3Bucket(env);
     const versionedKey = getS3DocVersionedKey();
     const latestKey = getS3LatestDocsKey();
-    const baseIndexFileKey = `${PacksSdkBucketRootPath}/index.html`;
+    const baseIndexFileKey = `index.html`;
     const now = Date.now().toString();
     (0, helpers_1.print)(`${env}: Pushing to bucket ${bucket}.`);
     async function pushDocsDirectory(key) {

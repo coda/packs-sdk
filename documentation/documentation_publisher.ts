@@ -78,7 +78,7 @@ async function pushDocumentation({env, forceUpload}: Arguments<PushDocumentation
   const bucket = getS3Bucket(env);
   const versionedKey = getS3DocVersionedKey();
   const latestKey = getS3LatestDocsKey();
-  const baseIndexFileKey = `${PacksSdkBucketRootPath}/index.html`;
+  const baseIndexFileKey = `index.html`;
   const now = Date.now().toString();
 
   print(`${env}: Pushing to bucket ${bucket}.`);
