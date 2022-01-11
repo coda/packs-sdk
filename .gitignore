@@ -9,3 +9,4 @@ yarn-error.log
 local-docs
 site
 .coda-pack.json
+.coda-credentials.json

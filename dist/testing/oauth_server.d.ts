@@ -1,3 +1,4 @@
+import 'isomorphic-fetch';
 import type { OAuth2Authentication } from '../types';
 interface AfterTokenExchangeParams {
     accessToken: string;

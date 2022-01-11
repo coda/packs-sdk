@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.newFetcherSyncExecutionContext = exports.newFetcherExecutionContext = exports.requestHelper = exports.AuthenticatingFetcher = void 0;
 const client_sts_1 = require("@aws-sdk/client-sts");
 const types_1 = require("../types");
-const client_oauth2_1 = __importDefault(require("client-oauth2"));
+const constants_1 = require("./constants");
 const client_sts_2 = require("@aws-sdk/client-sts");
 const sha256_js_1 = require("@aws-crypto/sha256-js");
 const signature_v4_1 = require("@aws-sdk/signature-v4");
@@ -148,7 +148,7 @@ class AuthenticatingFetcher {
         if (!this._authDef || !this._credentials || !this._updateCredentialsCallback) {
             return false;
         }
-        if (requestFailure.statusCode !== 401 || this._authDef.type !== types_1.AuthenticationType.OAuth2) {
+        if (requestFailure.statusCode !== constants_1.HttpStatusCode.Unauthorized || this._authDef.type !== types_1.AuthenticationType.OAuth2) {
             return false;
         }
         const { accessToken, refreshToken } = this._credentials;
@@ -165,22 +165,46 @@ class AuthenticatingFetcher {
         const { clientId, clientSecret, accessToken, refreshToken, scopes } = this._credentials;
         (0, ensure_1.assertCondition)(accessToken);
         (0, ensure_1.assertCondition)(refreshToken);
-        const { authorizationUrl, tokenUrl, additionalParams } = this._authDef;
-        const oauth2Client = new client_oauth2_1.default({
-            clientId,
-            clientSecret,
-            authorizationUri: authorizationUrl,
-            accessTokenUri: tokenUrl,
-            scopes,
-            query: additionalParams,
+        const { tokenUrl } = this._authDef;
+        const params = {
+            grant_type: 'refresh_token',
+            refresh_token: refreshToken,
+            client_id: clientId,
+        };
+        const headers = new Headers({
+            'Content-Type': 'application/x-www-form-urlencoded',
+            accept: 'application/json',
         });
-        const oauthToken = oauth2Client.createToken(accessToken, refreshToken, {});
-        const refreshedToken = await oauthToken.refresh();
+        const formParams = new URLSearchParams();
+        const formParamsWithSecret = new URLSearchParams();
+        for (const [key, value] of Object.entries(params)) {
+            formParams.append(key, value.toString());
+            formParamsWithSecret.append(key, value.toString());
+        }
+        formParamsWithSecret.append('client_secret', clientSecret);
+        let oauthResponse = await fetch(tokenUrl, {
+            method: 'POST',
+            body: formParamsWithSecret,
+            headers,
+        });
+        if (oauthResponse.status === constants_1.HttpStatusCode.Unauthorized) {
+            // see testing/oauth_server.ts why we retry with header auth.
+            headers.append('Authorization', `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString('base64')}`);
+            oauthResponse = await fetch(tokenUrl, {
+                method: 'POST',
+                body: formParams,
+                headers,
+            });
+        }
+        if (!oauthResponse.ok) {
+            new Error(`OAuth provider returns error ${oauthResponse.status} ${oauthResponse.text}`);
+        }
+        const { access_token: newAccessToken, refresh_token: newRefreshToken, ...data } = await oauthResponse.json();
         const newCredentials = {
             ...this._credentials,
-            accessToken: refreshedToken.accessToken,
-            refreshToken: refreshedToken.refreshToken,
-            expires: (0, helpers_1.getExpirationDate)(Number(refreshedToken.data.expires_in)).toString(),
+            accessToken: newAccessToken,
+            refreshToken: newRefreshToken || refreshToken,
+            expires: (0, helpers_1.getExpirationDate)(Number(data.expires_in)).toString(),
             scopes,
         };
         this._credentials = newCredentials;
