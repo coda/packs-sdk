@@ -24,7 +24,7 @@
     "browserify": "^17.0.0",
     "clone": "^2.1.2",
     "es6-promise": "^4.2.8",
-    "esbuild": "^0.14.10",
+    "esbuild": "^0.14.11",
     "exorcist": "^2.0.0",
     "express": "4.17.2",
     "fs-extra": "^10.0.0",
