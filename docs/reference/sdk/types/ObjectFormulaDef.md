@@ -1,5 +1,5 @@
 ---
-title: ObjectFormulaDef
+title: "ObjectFormulaDef"
 ---
 # Type alias: ObjectFormulaDef<ParamDefsT, SchemaT\>
 

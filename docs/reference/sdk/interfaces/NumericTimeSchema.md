@@ -1,5 +1,5 @@
 ---
-title: NumericTimeSchema
+title: "NumericTimeSchema"
 ---
 # Interface: NumericTimeSchema
 

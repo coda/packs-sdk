@@ -1,5 +1,5 @@
 ---
-title: PostSetupDef
+title: "PostSetupDef"
 ---
 # Type alias: PostSetupDef
 

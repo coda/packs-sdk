@@ -1,5 +1,5 @@
 ---
-title: PackFormulaResult
+title: "PackFormulaResult"
 ---
 # Type alias: PackFormulaResult
 

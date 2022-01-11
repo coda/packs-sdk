@@ -1,5 +1,5 @@
 ---
-title: AWSAccessKeyAuthentication
+title: "AWSAccessKeyAuthentication"
 ---
 # Interface: AWSAccessKeyAuthentication
 

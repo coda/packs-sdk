@@ -1,5 +1,5 @@
 ---
-title: AWSAssumeRoleAuthentication
+title: "AWSAssumeRoleAuthentication"
 ---
 # Interface: AWSAssumeRoleAuthentication
 

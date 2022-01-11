@@ -1,5 +1,5 @@
 ---
-title: OAuth2Authentication
+title: "OAuth2Authentication"
 ---
 # Interface: OAuth2Authentication
 

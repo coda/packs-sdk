@@ -1,5 +1,5 @@
 ---
-title: BasicPackDefinition
+title: "BasicPackDefinition"
 ---
 # Type alias: BasicPackDefinition
 

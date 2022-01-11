@@ -1,5 +1,5 @@
 ---
-title: QueryParamTokenAuthentication
+title: "QueryParamTokenAuthentication"
 ---
 # Interface: QueryParamTokenAuthentication
 

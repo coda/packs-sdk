@@ -1,5 +1,5 @@
 ---
-title: makeFormula
+title: "makeFormula"
 ---
 # Function: makeFormula
 

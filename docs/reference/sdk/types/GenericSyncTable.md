@@ -1,5 +1,5 @@
 ---
-title: GenericSyncTable
+title: "GenericSyncTable"
 ---
 # Type alias: GenericSyncTable
 

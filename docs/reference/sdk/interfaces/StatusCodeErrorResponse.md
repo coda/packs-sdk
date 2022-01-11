@@ -1,5 +1,5 @@
 ---
-title: StatusCodeErrorResponse
+title: "StatusCodeErrorResponse"
 ---
 # Interface: StatusCodeErrorResponse
 

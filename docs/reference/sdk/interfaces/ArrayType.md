@@ -1,5 +1,5 @@
 ---
-title: ArrayType
+title: "ArrayType"
 ---
 # Interface: ArrayType<T\>
 

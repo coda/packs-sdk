@@ -1,5 +1,5 @@
 ---
-title: ObjectPackFormula
+title: "ObjectPackFormula"
 ---
 # Type alias: ObjectPackFormula<ParamDefsT, SchemaT\>
 

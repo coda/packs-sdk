@@ -1,5 +1,5 @@
 ---
-title: ScaleSchema
+title: "ScaleSchema"
 ---
 # Interface: ScaleSchema
 

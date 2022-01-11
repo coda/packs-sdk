@@ -1,5 +1,5 @@
 ---
-title: WebBasicAuthentication
+title: "WebBasicAuthentication"
 ---
 # Interface: WebBasicAuthentication
 

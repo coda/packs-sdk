@@ -1,5 +1,5 @@
 ---
-title: ensureExists
+title: "ensureExists"
 ---
 # Function: ensureExists
 

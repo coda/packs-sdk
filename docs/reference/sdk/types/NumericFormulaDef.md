@@ -1,5 +1,5 @@
 ---
-title: NumericFormulaDef
+title: "NumericFormulaDef"
 ---
 # Type alias: NumericFormulaDef<ParamDefsT\>
 

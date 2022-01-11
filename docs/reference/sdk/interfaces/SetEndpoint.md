@@ -1,5 +1,5 @@
 ---
-title: SetEndpoint
+title: "SetEndpoint"
 ---
 # Interface: SetEndpoint
 

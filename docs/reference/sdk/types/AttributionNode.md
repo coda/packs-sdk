@@ -1,5 +1,5 @@
 ---
-title: AttributionNode
+title: "AttributionNode"
 ---
 # Type alias: AttributionNode
 

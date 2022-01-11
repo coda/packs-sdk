@@ -1,5 +1,5 @@
 ---
-title: makeParameter
+title: "makeParameter"
 ---
 # Function: makeParameter
 

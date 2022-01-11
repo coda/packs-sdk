@@ -1,5 +1,5 @@
 ---
-title: FetchMethodType
+title: "FetchMethodType"
 ---
 # Type alias: FetchMethodType
 

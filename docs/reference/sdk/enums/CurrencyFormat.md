@@ -1,5 +1,5 @@
 ---
-title: CurrencyFormat
+title: "CurrencyFormat"
 ---
 # Enumeration: CurrencyFormat
 

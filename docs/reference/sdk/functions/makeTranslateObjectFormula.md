@@ -1,5 +1,5 @@
 ---
-title: makeTranslateObjectFormula
+title: "makeTranslateObjectFormula"
 ---
 # Function: makeTranslateObjectFormula
 

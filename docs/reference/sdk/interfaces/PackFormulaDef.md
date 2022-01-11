@@ -1,5 +1,5 @@
 ---
-title: PackFormulaDef
+title: "PackFormulaDef"
 ---
 # Interface: PackFormulaDef<ParamsT, ResultT\>
 

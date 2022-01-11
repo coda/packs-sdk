@@ -1,5 +1,5 @@
 ---
-title: TextAttributionNode
+title: "TextAttributionNode"
 ---
 # Interface: TextAttributionNode
 

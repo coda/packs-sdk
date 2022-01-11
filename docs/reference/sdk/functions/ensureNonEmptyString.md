@@ -1,5 +1,5 @@
 ---
-title: ensureNonEmptyString
+title: "ensureNonEmptyString"
 ---
 # Function: ensureNonEmptyString
 

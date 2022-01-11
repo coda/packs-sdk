@@ -1,5 +1,5 @@
 ---
-title: makeReferenceSchemaFromObjectSchema
+title: "makeReferenceSchemaFromObjectSchema"
 ---
 # Function: makeReferenceSchemaFromObjectSchema
 

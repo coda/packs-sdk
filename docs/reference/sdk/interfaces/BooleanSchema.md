@@ -1,5 +1,5 @@
 ---
-title: BooleanSchema
+title: "BooleanSchema"
 ---
 # Interface: BooleanSchema
 

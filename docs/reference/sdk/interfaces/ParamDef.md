@@ -1,5 +1,5 @@
 ---
-title: ParamDef
+title: "ParamDef"
 ---
 # Interface: ParamDef<T\>
 

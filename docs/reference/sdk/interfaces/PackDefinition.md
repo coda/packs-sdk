@@ -1,5 +1,5 @@
 ---
-title: PackDefinition
+title: "PackDefinition"
 ---
 # Interface: PackDefinition
 

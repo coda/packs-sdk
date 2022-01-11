@@ -1,5 +1,5 @@
 ---
-title: StringDateTimeSchema
+title: "StringDateTimeSchema"
 ---
 # Interface: StringDateTimeSchema
 

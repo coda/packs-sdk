@@ -1,5 +1,5 @@
 ---
-title: newPack
+title: "newPack"
 ---
 # Function: newPack
 

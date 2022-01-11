@@ -1,5 +1,5 @@
 ---
-title: MetadataFormulaResultType
+title: "MetadataFormulaResultType"
 ---
 # Type alias: MetadataFormulaResultType
 

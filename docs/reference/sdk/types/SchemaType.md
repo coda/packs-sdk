@@ -1,5 +1,5 @@
 ---
-title: SchemaType
+title: "SchemaType"
 ---
 # Type alias: SchemaType<T\>
 

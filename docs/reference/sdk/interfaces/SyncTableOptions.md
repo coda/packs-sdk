@@ -1,5 +1,5 @@
 ---
-title: SyncTableOptions
+title: "SyncTableOptions"
 ---
 # Interface: SyncTableOptions<K, L, ParamDefsT, SchemaT\>
 

@@ -1,5 +1,5 @@
 ---
-title: SimpleStringSchema
+title: "SimpleStringSchema"
 ---
 # Interface: SimpleStringSchema<T\>
 

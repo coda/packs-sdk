@@ -1,5 +1,5 @@
 ---
-title: ArraySchema
+title: "ArraySchema"
 ---
 # Interface: ArraySchema<T\>
 

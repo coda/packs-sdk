@@ -1,5 +1,5 @@
 ---
-title: makeDynamicSyncTable
+title: "makeDynamicSyncTable"
 ---
 # Function: makeDynamicSyncTable
 

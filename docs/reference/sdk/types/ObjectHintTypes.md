@@ -1,5 +1,5 @@
 ---
-title: ObjectHintTypes
+title: "ObjectHintTypes"
 ---
 # Type alias: ObjectHintTypes
 

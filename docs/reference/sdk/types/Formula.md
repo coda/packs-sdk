@@ -1,5 +1,5 @@
 ---
-title: Formula
+title: "Formula"
 ---
 # Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
 

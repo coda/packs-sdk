@@ -1,5 +1,5 @@
 ---
-title: ScaleIconSet
+title: "ScaleIconSet"
 ---
 # Enumeration: ScaleIconSet
 

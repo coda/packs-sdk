@@ -1,5 +1,5 @@
 ---
-title: SetEndpointDef
+title: "SetEndpointDef"
 ---
 # Type alias: SetEndpointDef
 

@@ -1,5 +1,5 @@
 ---
-title: DefaultConnectionType
+title: "DefaultConnectionType"
 ---
 # Enumeration: DefaultConnectionType
 
