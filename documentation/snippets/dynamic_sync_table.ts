@@ -6,13 +6,19 @@ const pack = coda.newPack();
 
 pack.addDynamicSyncTable({
   name: "<User-visible name for the sync table>",
+  listDynamicUrls: async function (context) {
+    // TODO: Fetch the list of data sources the user can connect to.
+    return [
+      { display: "<Datasource Name>", value: "<Datasource URL>" },
+    ];
+  },
   getName: async function (context) {
-    let datasourceUrl = context.sync!.dynamicUrl!;
+    let datasourceUrl = context.sync.dynamicUrl!;
     // TODO: Fetch metadata about the data source and return the name.
     return "<Datasource Name>";
   },
   getSchema: async function (context) {
-    let datasourceUrl = context.sync!.dynamicUrl!;
+    let datasourceUrl = context.sync.dynamicUrl!;
     // TODO: Fetch metadata about the data source and get the list of fields.
     let properties = {
       // TODO: Create a property for each field.
@@ -37,7 +43,7 @@ pack.addDynamicSyncTable({
     });
   },
   getDisplayUrl: async function (context) {
-    return context.sync!.dynamicUrl!;
+    return context.sync.dynamicUrl!;
   },
   formula: {
     name: "<Name of the sync formula, not show to the user>",
@@ -51,7 +57,7 @@ pack.addDynamicSyncTable({
       // Add more parameters here and in the array below.
     ],
     execute: async function ([param], context) {
-      let datasourceUrl = context.sync!.dynamicUrl!;
+      let datasourceUrl = context.sync.dynamicUrl!;
       let url = "<URL to pull data from>";
       let response = await context.fetcher.fetch({
         method: "GET",

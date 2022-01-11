@@ -249,7 +249,7 @@ exports.Examples = [
         name: 'Dynamic sync tables',
         category: types_1.ExampleCategory.Topic,
         triggerTokens: ['addDynamicSyncTable'],
-        contentFile: './examples/dynamic-sync-table/dynamic_sync_table.md',
+        contentFile: './examples/dynamic-sync-table/README.md',
         linkData: {
             type: types_2.UrlType.SdkReferencePath,
             url: '/reference/sdk/classes/PackDefinitionBuilder#addDynamicSyncTable',
@@ -259,6 +259,11 @@ exports.Examples = [
                 name: 'Template',
                 content: '',
                 codeFile: './snippets/dynamic_sync_table.ts',
+            },
+            {
+                name: 'With URL list',
+                content: 'A sync table that presents a list of URLs to select from. This sample shows responses to a Typeform form.',
+                codeFile: './examples/dynamic-sync-table/typeform.ts',
             },
         ],
     },
