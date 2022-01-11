@@ -42,6 +42,21 @@ plugins:
     # See: https://squidfunk.github.io/mkdocs-material/reference/variables/
     - macros
 
+extra:
+  # Social icons for the footer.
+  social:
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/coda_hq
+    - icon: fontawesome/brands/youtube
+      link: https://www.youtube.com/channel/UC73YRwUcAjAW_euaGzDUAzg
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/codainc/mycompany/
+    - icon: fontawesome/brands/facebook
+      link: https://www.facebook.com/codahq/
+
+# Copyright that appears in the footer.
+copyright: "Copyright © 2022 Coda. All rights reserved."
+
 # Material theme options.
 # See: https://squidfunk.github.io/mkdocs-material/
 theme:
