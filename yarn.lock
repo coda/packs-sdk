@@ -1194,10 +1194,10 @@ available-typed-arrays@^1.0.2:
   resolved "https://registry.npmjs.org/available-typed-arrays/-/available-typed-arrays-1.0.4.tgz"
   integrity sha512-SA5mXJWrId1TaQjfxUYghbqQ/hYioKmLJvPJyDuYRtXXenFNMjj4hSSt1Cf1xsuXSXrtxrVC5Ot4eU6cOtBDdA==
 
-aws-sdk@*, aws-sdk@^2.1049.0:
-  version "2.1049.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1049.0.tgz#8146dcdf3a1ab603e50ff961169ee8abc537d48e"
-  integrity sha512-+wls9iNlotMeoZepwgR0yPzXsjXzr2ijoi5ERmsPWfMTFMHkm6INndBtSkm6fpu/NZnl+7EaPPES2yhaqnhoJg==
+aws-sdk@*, aws-sdk@^2.1055.0:
+  version "2.1055.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1055.0.tgz#07beb86650d5a313f7c899807c51b12b5e2f4117"
+  integrity sha512-99drH3mvXakw9we8Rs2cDQmi2pS7PVAC9pvTlB7lHPUwLYftMlko5cFMceZxvTHeyLkdvg98iNIHI3hbnzitoQ==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
