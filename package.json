@@ -73,7 +73,7 @@
     "@types/sinon": "^10.0.6",
     "@types/uglify-js": "^3.13.1",
     "@types/url-parse": "^1.4.6",
-    "@types/uuid": "^8.3.3",
+    "@types/uuid": "^8.3.4",
     "@types/xml2js": "^0.4.9",
     "@types/yargs": "^17.0.7",
     "@typescript-eslint/eslint-plugin": "5.9.0",
