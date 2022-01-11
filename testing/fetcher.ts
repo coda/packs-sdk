@@ -10,6 +10,7 @@ import type {ExecutionContext} from '../api';
 import type {FetchRequest} from '../api_types';
 import type {FetchResponse} from '../api_types';
 import type {Fetcher} from '../api_types';
+import {HttpStatusCode} from './constants';
 import type {MultiQueryParamCredentials} from './auth_types';
 import type {OAuth2Credentials} from './auth_types';
 import type {QueryParamCredentials} from './auth_types';
@@ -190,7 +191,7 @@ export class AuthenticatingFetcher implements Fetcher {
     if (!this._authDef || !this._credentials || !this._updateCredentialsCallback) {
       return false;
     }
-    if (requestFailure.statusCode !== 401 || this._authDef.type !== AuthenticationType.OAuth2) {
+    if (requestFailure.statusCode !== HttpStatusCode.Unauthorized || this._authDef.type !== AuthenticationType.OAuth2) {
       return false;
     }
     const {accessToken, refreshToken} = this._credentials as OAuth2Credentials;
@@ -213,7 +214,6 @@ export class AuthenticatingFetcher implements Fetcher {
       grant_type: 'refresh_token',
       refresh_token: refreshToken,
       client_id: clientId,
-      client_secret: clientSecret,
     };
 
     const headers = new Headers({
@@ -222,15 +222,28 @@ export class AuthenticatingFetcher implements Fetcher {
     });
 
     const formParams = new URLSearchParams();
+    const formParamsWithSecret = new URLSearchParams();
     for (const [key, value] of Object.entries(params)) {
       formParams.append(key, value.toString());
+      formParamsWithSecret.append(key, value.toString());
     }
+    formParamsWithSecret.append('client_secret', clientSecret);
 
-    const oauthResponse = await fetch(tokenUrl, {
+    let oauthResponse = await fetch(tokenUrl, {
       method: 'POST',
-      body: formParams,
+      body: formParamsWithSecret,
       headers,
     });
+
+    if (oauthResponse.status === HttpStatusCode.Unauthorized) {
+      // see testing/oauth_server.ts why we retry with header auth.
+      headers.append('Authorization', `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString('base64')}`);
+      oauthResponse = await fetch(tokenUrl, {
+        method: 'POST',
+        body: formParams,
+        headers,
+      });
+    }
 
     if (!oauthResponse.ok) {
       new Error(`OAuth provider returns error ${oauthResponse.status} ${oauthResponse.text}`);

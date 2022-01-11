@@ -16,7 +16,7 @@ pack.setUserAuthentication({
   },
 
   async getConnectionName(context) {
-    const response = await context.fetcher!.fetch({
+    const response = await context.fetcher.fetch({
       method: 'GET',
       url: 'https://www.googleapis.com/oauth2/v2/userinfo',
       headers: {
@@ -33,7 +33,7 @@ pack.addFormula({
   parameters: [],
   resultType: coda.ValueType.String,
   execute: async ([], context) => {
-    const response = await context.fetcher!.fetch({
+    const response = await context.fetcher.fetch({
       method: 'GET',
       url: 'https://www.googleapis.com/oauth2/v2/userinfo',
       headers: {

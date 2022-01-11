@@ -1,4 +1,5 @@
 import 'isomorphic-fetch';
+import {HttpStatusCode} from './constants';
 import type {OAuth2Authentication} from '../types';
 import {exec} from 'child_process';
 import express from 'express';
@@ -47,7 +48,6 @@ export function launchOAuthServerFlow({
       grant_type: 'authorization_code',
       code,
       client_id: clientId,
-      client_secret: clientSecret,
       redirect_uri: redirectUri,
     };
 
@@ -57,15 +57,34 @@ export function launchOAuthServerFlow({
     });
 
     const formParams = new URLSearchParams();
+    const formParamsWithSecret = new URLSearchParams();
     for (const [key, value] of Object.entries(params)) {
       formParams.append(key, value.toString());
+      formParamsWithSecret.append(key, value.toString());
     }
 
-    const oauthResponse = await fetch(tokenUrl, {
+    formParamsWithSecret.append('client_secret', clientSecret);
+
+    let oauthResponse = await fetch(tokenUrl, {
       method: 'POST',
-      body: formParams,
+      body: formParamsWithSecret,
       headers,
     });
+
+    if (oauthResponse.status === HttpStatusCode.Unauthorized) {
+      // https://datatracker.ietf.org/doc/html/rfc6749#section-3.2.1 doesn't specify how exactly client secret is
+      // passed to the oauth provider. https://datatracker.ietf.org/doc/html/rfc6749#section-2.3 says that client should
+      // NOT has more than one auth methods.
+      //
+      // To workaround with OAuth provider that uses different auth method, we fallback to header auth if body param
+      // auth fails with 401. This is the same behavior in production.
+      headers.append('Authorization', `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString('base64')}`);
+      oauthResponse = await fetch(tokenUrl, {
+        method: 'POST',
+        body: formParams,
+        headers,
+      });
+    }
 
     if (!oauthResponse.ok) {
       new Error(`OAuth provider returns error ${oauthResponse.status} ${oauthResponse.text}`);
