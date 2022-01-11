@@ -1,10 +1,11 @@
-import ClientOAuth2 from 'client-oauth2';
+import 'isomorphic-fetch';
 import type {OAuth2Authentication} from '../types';
 import {exec} from 'child_process';
 import express from 'express';
 import {getExpirationDate} from './helpers';
 import type * as http from 'http';
 import {print} from './helpers';
+import {withQueryParams} from '../helpers/url';
 
 interface AfterTokenExchangeParams {
   accessToken: string;
@@ -13,6 +14,12 @@ interface AfterTokenExchangeParams {
 }
 
 export type AfterTokenExchangeCallback = (params: AfterTokenExchangeParams) => void;
+
+interface TokenCallbackResponse {
+  accessToken: string;
+  refreshToken?: string;
+  data: {[key: string]: string};
+}
 
 export function launchOAuthServerFlow({
   clientId,
@@ -33,30 +40,57 @@ export function launchOAuthServerFlow({
   const {authorizationUrl, tokenUrl, additionalParams, scopeDelimiter} = authDef;
   // Use the manifest's scopes as a default.
   const requestedScopes = scopes && scopes.length > 0 ? scopes : authDef.scopes;
-  // ClientOAuth2 doesn't support a scope delimiter, so just hack a fake single pre-delimited scope
-  // if there's a custom delimiter involved.
-  const scopeArray =
-    requestedScopes && scopeDelimiter && scopeDelimiter !== ' '
-      ? [requestedScopes.join(scopeDelimiter)]
-      : requestedScopes;
-  const oauth2Client = new ClientOAuth2({
-    clientId,
-    clientSecret,
-    authorizationUri: authorizationUrl,
-    accessTokenUri: tokenUrl,
-    scopes: scopeArray,
-    redirectUri: makeRedirectUrl(port),
-    query: additionalParams,
+  const scope = requestedScopes ? requestedScopes.join(scopeDelimiter || ' ') : requestedScopes;
+  const redirectUri = makeRedirectUrl(port);
+  const callback = async (code: string): Promise<TokenCallbackResponse> => {
+    const params = {
+      grant_type: 'authorization_code',
+      code,
+      client_id: clientId,
+      client_secret: clientSecret,
+      redirect_uri: redirectUri,
+    };
+
+    const headers = new Headers({
+      'Content-Type': 'application/x-www-form-urlencoded',
+      accept: 'application/json',
+    });
+
+    const formParams = new URLSearchParams();
+    for (const [key, value] of Object.entries(params)) {
+      formParams.append(key, value.toString());
+    }
+
+    const oauthResponse = await fetch(tokenUrl, {
+      method: 'POST',
+      body: formParams,
+      headers,
+    });
+
+    if (!oauthResponse.ok) {
+      new Error(`OAuth provider returns error ${oauthResponse.status} ${oauthResponse.text}`);
+    }
+
+    const {access_token: accessToken, refresh_token: refreshToken, ...data} = await oauthResponse.json();
+
+    return {accessToken, refreshToken, data};
+  };
+  const serverContainer = new OAuthServerContainer(callback, afterTokenExchange, port);
+
+  const authorizationUri = withQueryParams(authorizationUrl, {
+    scope,
+    client_id: clientId,
+    redirect_uri: redirectUri,
+    response_type: 'code',
+    ...(additionalParams || {}),
   });
-  const serverContainer = new OAuthServerContainer(oauth2Client, afterTokenExchange, port);
 
   const launchCallback = () => {
-    const authUrl = oauth2Client.code.getUri();
     print(
       `OAuth server running at http://localhost:${port}.\n` +
-        `Complete the auth flow in your browser. If it does not open automatically, visit ${authUrl}`,
+        `Complete the auth flow in your browser. If it does not open automatically, visit ${authorizationUri}`,
     );
-    exec(`open "${authUrl}"`);
+    exec(`open "${authorizationUri}"`);
   };
 
   serverContainer.start(launchCallback);
@@ -68,25 +102,36 @@ export function makeRedirectUrl(port: number): string {
 
 class OAuthServerContainer {
   private readonly _port: number;
-  private readonly _oauth2Client: ClientOAuth2;
   private readonly _afterTokenExchange: AfterTokenExchangeCallback;
   private _server: http.Server | undefined;
+  private _tokenCallback: (code: string) => Promise<TokenCallbackResponse>;
 
-  constructor(oauth2Client: ClientOAuth2, afterTokenExchange: AfterTokenExchangeCallback, port: number) {
+  constructor(
+    tokenCallback: (code: string) => Promise<TokenCallbackResponse>,
+    afterTokenExchange: AfterTokenExchangeCallback,
+    port: number,
+  ) {
+    this._tokenCallback = tokenCallback;
     this._port = port;
-    this._oauth2Client = oauth2Client;
     this._afterTokenExchange = afterTokenExchange;
   }
 
   start(launchCallback: () => void) {
     const app = express();
     app.get('/oauth', async (req, res) => {
-      const tokenData = await this._oauth2Client.code.getToken(req.originalUrl);
-      const {accessToken, refreshToken, data} = tokenData;
-      const expires = data.expires_in && getExpirationDate(Number(data.expires_in)).toString();
-      this._afterTokenExchange({accessToken, refreshToken, expires});
-      setTimeout(() => this.shutDown(), 10);
-      return res.send('OAuth authentication is complete! You can close this browser tab.');
+      const code = new URL(req.originalUrl, 'http://localhost').searchParams.get('code');
+
+      setTimeout(() => this.shutDown(), 1000);
+
+      if (code) {
+        const tokenData = await this._tokenCallback(code);
+        const {accessToken, refreshToken, data} = tokenData;
+        const expires = data.expires_in && getExpirationDate(Number(data.expires_in)).toString();
+        this._afterTokenExchange({accessToken, refreshToken, expires});
+        return res.send('OAuth authentication is complete! You can close this browser tab.');
+      }
+
+      return res.send(`Invalid authorization code received: ${code}`);
     });
     this._server = app.listen(this._port, launchCallback);
   }

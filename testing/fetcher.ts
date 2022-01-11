@@ -4,7 +4,6 @@ import type {Credentials as AWSCredentials} from '@aws-sdk/types';
 import {AssumeRoleCommand} from '@aws-sdk/client-sts';
 import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
-import ClientOAuth2 from 'client-oauth2';
 import type {Credentials} from './auth_types';
 import type {CustomCredentials} from './auth_types';
 import type {ExecutionContext} from '../api';
@@ -208,22 +207,42 @@ export class AuthenticatingFetcher implements Fetcher {
     const {clientId, clientSecret, accessToken, refreshToken, scopes} = this._credentials as OAuth2Credentials;
     assertCondition(accessToken);
     assertCondition(refreshToken);
-    const {authorizationUrl, tokenUrl, additionalParams} = this._authDef;
-    const oauth2Client = new ClientOAuth2({
-      clientId,
-      clientSecret,
-      authorizationUri: authorizationUrl,
-      accessTokenUri: tokenUrl,
-      scopes,
-      query: additionalParams,
+    const {tokenUrl} = this._authDef;
+
+    const params = {
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken,
+      client_id: clientId,
+      client_secret: clientSecret,
+    };
+
+    const headers = new Headers({
+      'Content-Type': 'application/x-www-form-urlencoded',
+      accept: 'application/json',
     });
-    const oauthToken = oauth2Client.createToken(accessToken, refreshToken, {});
-    const refreshedToken = await oauthToken.refresh();
+
+    const formParams = new URLSearchParams();
+    for (const [key, value] of Object.entries(params)) {
+      formParams.append(key, value.toString());
+    }
+
+    const oauthResponse = await fetch(tokenUrl, {
+      method: 'POST',
+      body: formParams,
+      headers,
+    });
+
+    if (!oauthResponse.ok) {
+      new Error(`OAuth provider returns error ${oauthResponse.status} ${oauthResponse.text}`);
+    }
+
+    const {access_token: newAccessToken, refresh_token: newRefreshToken, ...data} = await oauthResponse.json();
+
     const newCredentials: Credentials = {
       ...this._credentials,
-      accessToken: refreshedToken.accessToken,
-      refreshToken: refreshedToken.refreshToken,
-      expires: getExpirationDate(Number(refreshedToken.data.expires_in)).toString(),
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken || refreshToken,
+      expires: getExpirationDate(Number(data.expires_in)).toString(),
       scopes,
     };
     this._credentials = newCredentials;
