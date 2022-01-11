@@ -1,5 +1,5 @@
 ---
-title: BooleanPackFormula
+title: "BooleanPackFormula"
 ---
 # Type alias: BooleanPackFormula<ParamDefsT\>
 

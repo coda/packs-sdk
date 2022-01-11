@@ -1,5 +1,5 @@
 ---
-title: Sync
+title: "Sync"
 ---
 # Interface: Sync
 

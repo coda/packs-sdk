@@ -1,5 +1,5 @@
 ---
-title: makeAttributionNode
+title: "makeAttributionNode"
 ---
 # Function: makeAttributionNode
 

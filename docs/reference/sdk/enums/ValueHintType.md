@@ -1,5 +1,5 @@
 ---
-title: ValueHintType
+title: "ValueHintType"
 ---
 # Enumeration: ValueHintType
 

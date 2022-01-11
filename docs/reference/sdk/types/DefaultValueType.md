@@ -1,5 +1,5 @@
 ---
-title: DefaultValueType
+title: "DefaultValueType"
 ---
 # Type alias: DefaultValueType<T\>
 

@@ -1,5 +1,5 @@
 ---
-title: TemporaryBlobStorage
+title: "TemporaryBlobStorage"
 ---
 # Interface: TemporaryBlobStorage
 

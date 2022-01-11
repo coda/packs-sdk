@@ -1,5 +1,5 @@
 ---
-title: ObjectArrayFormulaDef
+title: "ObjectArrayFormulaDef"
 ---
 # Interface: ObjectArrayFormulaDef<ParamsT, SchemaT\>
 

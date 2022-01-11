@@ -1,5 +1,5 @@
 ---
-title: CustomAuthentication
+title: "CustomAuthentication"
 ---
 # Interface: CustomAuthentication
 

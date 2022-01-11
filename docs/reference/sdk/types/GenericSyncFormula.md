@@ -1,5 +1,5 @@
 ---
-title: GenericSyncFormula
+title: "GenericSyncFormula"
 ---
 # Type alias: GenericSyncFormula
 

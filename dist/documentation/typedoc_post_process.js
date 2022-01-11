@@ -60,7 +60,7 @@ async function addFrontmatter(file) {
         return;
     }
     const title = match[1];
-    const frontmatter = `---\ntitle: ${title}\n---\n`;
+    const frontmatter = `---\ntitle: "${title}"\n---\n`;
     return fs.promises.writeFile(file, frontmatter + content);
 }
 main().catch(helpers_1.print);

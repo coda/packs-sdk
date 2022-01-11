@@ -1,5 +1,5 @@
 ---
-title: EmptyFormulaDef
+title: "EmptyFormulaDef"
 ---
 # Interface: EmptyFormulaDef<ParamsT\>
 

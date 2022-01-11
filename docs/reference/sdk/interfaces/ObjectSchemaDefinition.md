@@ -1,5 +1,5 @@
 ---
-title: ObjectSchemaDefinition
+title: "ObjectSchemaDefinition"
 ---
 # Interface: ObjectSchemaDefinition<K, L\>
 

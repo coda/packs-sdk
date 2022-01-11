@@ -1,5 +1,5 @@
 ---
-title: InferrableTypes
+title: "InferrableTypes"
 ---
 # Type alias: InferrableTypes
 

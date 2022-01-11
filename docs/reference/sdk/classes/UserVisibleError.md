@@ -1,5 +1,5 @@
 ---
-title: UserVisibleError
+title: "UserVisibleError"
 ---
 # Class: UserVisibleError
 

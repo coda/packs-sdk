@@ -1,5 +1,5 @@
 ---
-title: ParameterOptions
+title: "ParameterOptions"
 ---
 # Type alias: ParameterOptions<T\>
 

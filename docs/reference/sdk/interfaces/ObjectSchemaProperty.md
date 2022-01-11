@@ -1,5 +1,5 @@
 ---
-title: ObjectSchemaProperty
+title: "ObjectSchemaProperty"
 ---
 # Interface: ObjectSchemaProperty
 

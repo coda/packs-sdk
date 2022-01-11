@@ -1,5 +1,5 @@
 ---
-title: NetworkConnection
+title: "NetworkConnection"
 ---
 # Enumeration: NetworkConnection
 

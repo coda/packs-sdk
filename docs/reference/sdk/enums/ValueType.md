@@ -1,5 +1,5 @@
 ---
-title: ValueType
+title: "ValueType"
 ---
 # Enumeration: ValueType
 

@@ -1,5 +1,5 @@
 ---
-title: SyncFormulaDef
+title: "SyncFormulaDef"
 ---
 # Interface: SyncFormulaDef<K, L, ParamDefsT, SchemaT\>
 

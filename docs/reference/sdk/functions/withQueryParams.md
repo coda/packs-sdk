@@ -1,5 +1,5 @@
 ---
-title: withQueryParams
+title: "withQueryParams"
 ---
 # Function: withQueryParams
 

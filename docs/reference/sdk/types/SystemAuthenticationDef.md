@@ -1,5 +1,5 @@
 ---
-title: SystemAuthenticationDef
+title: "SystemAuthenticationDef"
 ---
 # Type alias: SystemAuthenticationDef
 

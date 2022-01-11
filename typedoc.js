@@ -1,6 +1,7 @@
 // Typedoc settings.
 // See: https://typedoc.org/guides/options/
 module.exports = {
+  name: "Pack SDK Reference",
   excludeExternals: true,
   excludePrivate: true,
   excludeProtected: true,

@@ -1,5 +1,5 @@
 ---
-title: NumberHintTypes
+title: "NumberHintTypes"
 ---
 # Type alias: NumberHintTypes
 

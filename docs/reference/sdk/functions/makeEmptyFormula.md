@@ -1,5 +1,5 @@
 ---
-title: makeEmptyFormula
+title: "makeEmptyFormula"
 ---
 # Function: makeEmptyFormula
 

@@ -1,5 +1,5 @@
 ---
-title: CurrencySchema
+title: "CurrencySchema"
 ---
 # Interface: CurrencySchema
 

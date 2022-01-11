@@ -1,5 +1,5 @@
 ---
-title: PackVersionDefinition
+title: "PackVersionDefinition"
 ---
 # Interface: PackVersionDefinition
 

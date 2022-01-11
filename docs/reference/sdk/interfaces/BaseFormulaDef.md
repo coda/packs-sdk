@@ -1,5 +1,5 @@
 ---
-title: BaseFormulaDef
+title: "BaseFormulaDef"
 ---
 # Interface: BaseFormulaDef<ParamDefsT, ResultT\>
 

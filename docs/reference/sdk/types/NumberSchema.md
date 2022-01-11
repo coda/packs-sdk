@@ -1,5 +1,5 @@
 ---
-title: NumberSchema
+title: "NumberSchema"
 ---
 # Type alias: NumberSchema
 

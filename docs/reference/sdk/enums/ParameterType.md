@@ -1,5 +1,5 @@
 ---
-title: ParameterType
+title: "ParameterType"
 ---
 # Enumeration: ParameterType
 

@@ -1,5 +1,5 @@
 ---
-title: StringSchema
+title: "StringSchema"
 ---
 # Type alias: StringSchema
 

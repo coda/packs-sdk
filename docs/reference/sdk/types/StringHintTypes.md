@@ -1,5 +1,5 @@
 ---
-title: StringHintTypes
+title: "StringHintTypes"
 ---
 # Type alias: StringHintTypes
 

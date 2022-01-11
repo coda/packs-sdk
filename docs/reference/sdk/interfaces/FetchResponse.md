@@ -1,5 +1,5 @@
 ---
-title: FetchResponse
+title: "FetchResponse"
 ---
 # Interface: FetchResponse<T\>
 

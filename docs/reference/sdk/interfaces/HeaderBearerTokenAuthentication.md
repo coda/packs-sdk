@@ -1,5 +1,5 @@
 ---
-title: HeaderBearerTokenAuthentication
+title: "HeaderBearerTokenAuthentication"
 ---
 # Interface: HeaderBearerTokenAuthentication
 

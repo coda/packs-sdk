@@ -1,5 +1,5 @@
 ---
-title: Type
+title: "Type"
 ---
 # Enumeration: Type
 

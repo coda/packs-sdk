@@ -1,5 +1,5 @@
 ---
-title: generateSchema
+title: "generateSchema"
 ---
 # Function: generateSchema
 

@@ -1,7 +1,7 @@
 ---
-title: @codahq/packs-sdk
+title: "Pack SDK Reference"
 ---
-# @codahq/packs-sdk
+# Pack SDK Reference
 
 ## Enumerations
 

@@ -1,5 +1,5 @@
 ---
-title: makeSchema
+title: "makeSchema"
 ---
 # Function: makeSchema
 

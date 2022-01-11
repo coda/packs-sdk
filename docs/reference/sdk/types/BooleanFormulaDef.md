@@ -1,5 +1,5 @@
 ---
-title: BooleanFormulaDef
+title: "BooleanFormulaDef"
 ---
 # Type alias: BooleanFormulaDef<ParamDefsT\>
 

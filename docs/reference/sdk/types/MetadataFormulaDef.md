@@ -1,5 +1,5 @@
 ---
-title: MetadataFormulaDef
+title: "MetadataFormulaDef"
 ---
 # Type alias: MetadataFormulaDef
 

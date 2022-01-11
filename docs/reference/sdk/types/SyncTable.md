@@ -1,5 +1,5 @@
 ---
-title: SyncTable
+title: "SyncTable"
 ---
 # Type alias: SyncTable
 

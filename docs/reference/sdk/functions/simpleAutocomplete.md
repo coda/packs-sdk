@@ -1,5 +1,5 @@
 ---
-title: simpleAutocomplete
+title: "simpleAutocomplete"
 ---
 # Function: simpleAutocomplete
 

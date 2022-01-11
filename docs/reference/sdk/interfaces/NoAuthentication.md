@@ -1,5 +1,5 @@
 ---
-title: NoAuthentication
+title: "NoAuthentication"
 ---
 # Interface: NoAuthentication
 

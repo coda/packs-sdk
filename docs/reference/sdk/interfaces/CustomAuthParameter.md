@@ -1,5 +1,5 @@
 ---
-title: CustomAuthParameter
+title: "CustomAuthParameter"
 ---
 # Interface: CustomAuthParameter
 

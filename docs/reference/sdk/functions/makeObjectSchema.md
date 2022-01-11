@@ -1,5 +1,5 @@
 ---
-title: makeObjectSchema
+title: "makeObjectSchema"
 ---
 # Function: makeObjectSchema
 

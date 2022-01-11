@@ -1,5 +1,5 @@
 ---
-title: makeSimpleAutocompleteMetadataFormula
+title: "makeSimpleAutocompleteMetadataFormula"
 ---
 # Function: makeSimpleAutocompleteMetadataFormula
 

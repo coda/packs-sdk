@@ -1,5 +1,5 @@
 ---
-title: MetadataFunction
+title: "MetadataFunction"
 ---
 # Type alias: MetadataFunction
 

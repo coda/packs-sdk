@@ -40,7 +40,7 @@ async function addFrontmatter(file: string): Promise<void> {
     return;
   }
   const title = match![1];
-  const frontmatter = `---\ntitle: ${title}\n---\n`;
+  const frontmatter = `---\ntitle: "${title}"\n---\n`;
   return fs.promises.writeFile(file, frontmatter + content);
 }
 

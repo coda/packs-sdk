@@ -1,5 +1,5 @@
 ---
-title: CustomHeaderTokenAuthentication
+title: "CustomHeaderTokenAuthentication"
 ---
 # Interface: CustomHeaderTokenAuthentication
 

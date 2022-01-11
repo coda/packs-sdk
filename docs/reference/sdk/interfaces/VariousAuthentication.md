@@ -1,5 +1,5 @@
 ---
-title: VariousAuthentication
+title: "VariousAuthentication"
 ---
 # Interface: VariousAuthentication
 
