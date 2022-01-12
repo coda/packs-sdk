@@ -1,6 +1,7 @@
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
+// Say Hello to the given name.
 pack.addFormula({
   name: "Hello",
   description: "A Hello World example.",

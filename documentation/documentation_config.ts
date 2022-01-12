@@ -466,7 +466,7 @@ export const Examples: Example[] = [
         codeFile: './snippets/formula/numeric_formula.ts',
       },
       {
-        name: 'Template (boolean)',
+        name: 'Template (Boolean)',
         content: 'The basic structure of a formula that returns a boolean.',
         codeFile: './snippets/formula/boolean_formula.ts',
       },
@@ -481,6 +481,21 @@ export const Examples: Example[] = [
         codeFile: './snippets/formula/object_formula.ts',
       },
       {
+        name: 'Percent',
+        content: 'A formula that returns a number formatted as a percent value. This sample converts a number of slices of pizza into a percentage eaten.',
+        codeFile: './examples/data-type/pizza_eaten.ts',
+      },
+      {
+        name: 'Currency',
+        content: 'A formula that returns a number formatted as a currency value. This sample converts from another currency to US dollars.',
+        codeFile: './examples/data-type/to_usd.ts',
+      },
+      {
+        name: 'Date and time',
+        content: 'A formula that returns a date and time, passed as a string. This sample adds five minutes onto the given date and time.',
+        codeFile: './examples/data-type/five_mins_late.ts',
+      },
+      {
         name: 'Markdown',
         content: 'A formula that returns markdown content. This sample returns the contents of the README.md file from a GitHub repository.',
         codeFile: './examples/data-type/readme.ts',
@@ -489,6 +504,16 @@ export const Examples: Example[] = [
         name: 'HTML',
         content: 'A formula that returns HTML content. This sample returns HTML with every word of the input string bolded.',
         codeFile: './examples/data-type/alt_bold.ts',
+      },
+      {
+        name: 'Embed',
+        content: 'A formula that a URL to embed. This sample returns an embed of the infamous YouTube video for "Never Gonna Give You Up" by Rick Astley.',
+        codeFile: './examples/data-type/rick_roll.ts',
+      },
+      {
+        name: 'Image',
+        content: 'A formula that returns an image, as a reference. This sample returns a random photo of a cat.',
+        codeFile: './examples/cats/formula.ts',
       },
     ],
   },

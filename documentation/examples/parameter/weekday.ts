@@ -9,7 +9,10 @@ pack.addFormula({
   resultType: coda.ValueType.String,
   execute: async function ([], context) {
     let now = new Date();
-    let formatter = Intl.DateTimeFormat("us-US", {weekday: "long"});
+    let formatter = Intl.DateTimeFormat("us-US", {
+      timeZone: context.timezone,
+      weekday: "long",
+    });
     return formatter.format(now);
   },
 });
