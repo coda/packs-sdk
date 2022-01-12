@@ -5,7 +5,7 @@
  * available at https://coda.io/developers/apis/v1
  *
  * Version: v1
- * Hash: 3aa501d45272807675d21bf05be9126605ebf1b875aca82ff56b077a3111af4d
+ * Hash: e8edcd565f1c5ea5e9f682b9b9df68563d730643a6e9477a997cf57baa7d8f4c
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Client = exports.isResponseError = exports.ResponseError = void 0;
@@ -543,6 +543,14 @@ class Client {
         };
         const { pageToken, ...rest } = allParams;
         const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}/docs/${docId}/logs`, pageToken ? { pageToken } : rest);
+        return this._makeRequest('GET', codaUrl);
+    }
+    async listGroupedPackLogs(packId, docId, params = {}) {
+        const allParams = {
+            ...params,
+        };
+        const { pageToken, ...rest } = allParams;
+        const codaUrl = (0, url_1.withQueryParams)(`${this.protocolAndHost}/apis/v1/packs/${packId}/docs/${docId}/groupedLogs`, pageToken ? { pageToken } : rest);
         return this._makeRequest('GET', codaUrl);
     }
 }

@@ -9,8 +9,8 @@
 
 import 'es6-promise/auto';
 import 'isomorphic-fetch';
-import {withQueryParams} from '@kr-modules/js-core/utils/url';
-import * as types from '@kr-modules/common/external-api/gen-types/v1';
+import {withQueryParams} from '../url';
+import * as types from './v1';
 
 export class ResponseError extends Error {
   response: Response;

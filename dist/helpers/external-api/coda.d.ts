@@ -3,7 +3,7 @@
  * available at https://coda.io/developers/apis/v1
  *
  * Version: v1
- * Hash: 3aa501d45272807675d21bf05be9126605ebf1b875aca82ff56b077a3111af4d
+ * Hash: e8edcd565f1c5ea5e9f682b9b9df68563d730643a6e9477a997cf57baa7d8f4c
  */
 import 'es6-promise/auto';
 import 'isomorphic-fetch';
@@ -57,7 +57,9 @@ export declare class Client {
         limit?: number;
         pageToken?: string;
     }): Promise<types.PublicApiTableList>;
-    getTable(docId: string, tableIdOrName: string, params?: {}): Promise<types.PublicApiTable>;
+    getTable(docId: string, tableIdOrName: string, params?: {
+        useUpdatedTableLayouts?: boolean;
+    }): Promise<types.PublicApiTable>;
     listColumns(docId: string, tableIdOrName: string, params?: {
         visibleOnly?: boolean;
         limit?: number;
@@ -177,14 +179,25 @@ export declare class Client {
         limit?: number;
         pageToken?: string;
     }): Promise<types.PublicApiPackListingList>;
-    getPackListing(packId: number, params?: {}): Promise<types.PublicApiPackListingDetail>;
+    getPackListing(packId: number, params?: {
+        workspaceId?: string;
+    }): Promise<types.PublicApiPackListingDetail>;
     listPackLogs(packId: number, docId: string, params?: {
         logTypes?: string;
         beforeTimestamp?: string;
         afterTimestamp?: string;
         order?: string;
         q?: string;
+        requestIds?: string;
         limit?: number;
         pageToken?: string;
     }): Promise<types.PublicApiPackLogsList>;
+    listGroupedPackLogs(packId: number, docId: string, params?: {
+        beforeTimestamp?: string;
+        afterTimestamp?: string;
+        order?: string;
+        q?: string;
+        limit?: number;
+        pageToken?: string;
+    }): Promise<types.PublicApiGroupedPackLogsList>;
 }
