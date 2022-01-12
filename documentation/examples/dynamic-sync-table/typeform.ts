@@ -53,7 +53,7 @@ pack.addDynamicSyncTable({
 
     // These properties are the same for all forms.
     let properties: any = {
-      submitted: {
+      submittedAt: {
         type: coda.ValueType.String,
         codaType: coda.ValueHintType.DateTime,
       },
@@ -62,7 +62,7 @@ pack.addDynamicSyncTable({
       },
     };
     // Use them as the display value and ID of the rows.
-    let primary = "submitted";
+    let primary = "submittedAt";
     let id = "responseId";
 
     // For each field in the form, add a property to the schema.
@@ -126,7 +126,7 @@ pack.addDynamicSyncTable({
       for (let formResponse of formResponses) {
         // Include the metadata common to all forms.
         let row = {
-          submitted: formResponse.submitted_at,
+          submittedAt: formResponse.submitted_at,
           responseId: formResponse.response_id,
         };
 
@@ -164,6 +164,7 @@ async function getForm(context, url) {
   let response = await context.fetcher.fetch({
     method: "GET",
     url: url,
+    // Disable HTTP caching, so we always get the latest result.
     cacheTtlSecs: 0,
   });
   return response.body;
