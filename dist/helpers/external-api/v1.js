@@ -3,10 +3,10 @@
  * This file is auto-generated from OpenAPI definitions by `make build-openapi`. Do not edit manually.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PublicApiFeatureSet = exports.PublicApiLogLevel = exports.PublicApiPackLogType = exports.PublicApiPackLogRequestType = exports.PublicApiPackConnectionType = exports.PublicApiPackDiscoverability = exports.PublicApiPackAssetType = exports.PublicApiPackAccessType = exports.PublicApiPackPrincipalType = exports.PublicApiPacksSortBy = exports.PublicApiDocAnalyticsScale = exports.PublicApiWorkspaceUserRole = exports.PublicApiTableType = exports.PublicApiSortBy = exports.PublicApiControlType = exports.PublicApiValueFormat = exports.PublicApiRowsSortBy = exports.PublicApiImageStatus = exports.PublicApiLinkedDataType = exports.PublicApiColumnFormatType = exports.PublicApiIconSet = exports.PublicApiDurationUnit = exports.PublicApiEmailDisplayType = exports.PublicApiCurrencyFormatType = exports.PublicApiSortDirection = exports.PublicApiLayout = exports.PublicApiDocPublishMode = exports.PublicApiAccessType = exports.PublicApiPrincipalType = exports.PublicApiType = exports.OpenApiSpecVersion = exports.OpenApiSpecHash = void 0;
+exports.PublicApiFeatureSet = exports.PublicApiLogLevel = exports.PublicApiPackLogType = exports.PublicApiPackLogRequestType = exports.PublicApiPackConnectionType = exports.PublicApiPackDiscoverability = exports.PublicApiPackSource = exports.PublicApiPackAssetType = exports.PublicApiPackAccessType = exports.PublicApiPackPrincipalType = exports.PublicApiPacksSortBy = exports.PublicApiDocAnalyticsScale = exports.PublicApiWorkspaceUserRole = exports.PublicApiTableType = exports.PublicApiSortBy = exports.PublicApiControlType = exports.PublicApiValueFormat = exports.PublicApiRowsSortBy = exports.PublicApiImageStatus = exports.PublicApiLinkedDataType = exports.PublicApiColumnFormatType = exports.PublicApiIconSet = exports.PublicApiDurationUnit = exports.PublicApiEmailDisplayType = exports.PublicApiCurrencyFormatType = exports.PublicApiSortDirection = exports.PublicApiLayout = exports.PublicApiDocPublishMode = exports.PublicApiAccessType = exports.PublicApiPrincipalType = exports.PublicApiType = exports.OpenApiSpecVersion = exports.OpenApiSpecHash = void 0;
 /* eslint-disable */
-exports.OpenApiSpecHash = '3aa501d45272807675d21bf05be9126605ebf1b875aca82ff56b077a3111af4d';
-exports.OpenApiSpecVersion = '1.2.1';
+exports.OpenApiSpecHash = 'e8edcd565f1c5ea5e9f682b9b9df68563d730643a6e9477a997cf57baa7d8f4c';
+exports.OpenApiSpecVersion = '1.2.3';
 /**
  * A constant identifying the type of the resource.
  */
@@ -78,6 +78,8 @@ var PublicApiLayout;
     PublicApiLayout["BubbleChart"] = "bubbleChart";
     PublicApiLayout["Calendar"] = "calendar";
     PublicApiLayout["Card"] = "card";
+    PublicApiLayout["Detail"] = "detail";
+    PublicApiLayout["Form"] = "form";
     PublicApiLayout["GanttChart"] = "ganttChart";
     PublicApiLayout["LineChart"] = "lineChart";
     PublicApiLayout["MasterDetail"] = "masterDetail";
@@ -173,6 +175,7 @@ var PublicApiColumnFormatType;
     PublicApiColumnFormatType["Select"] = "select";
     PublicApiColumnFormatType["PackObject"] = "packObject";
     PublicApiColumnFormatType["Reaction"] = "reaction";
+    PublicApiColumnFormatType["Canvas"] = "canvas";
     PublicApiColumnFormatType["Other"] = "other";
 })(PublicApiColumnFormatType = exports.PublicApiColumnFormatType || (exports.PublicApiColumnFormatType = {}));
 /**
@@ -285,6 +288,11 @@ var PublicApiPackAssetType;
     PublicApiPackAssetType["Cover"] = "cover";
     PublicApiPackAssetType["ExampleImage"] = "exampleImage";
 })(PublicApiPackAssetType = exports.PublicApiPackAssetType || (exports.PublicApiPackAssetType = {}));
+var PublicApiPackSource;
+(function (PublicApiPackSource) {
+    PublicApiPackSource["Web"] = "web";
+    PublicApiPackSource["Cli"] = "cli";
+})(PublicApiPackSource = exports.PublicApiPackSource || (exports.PublicApiPackSource = {}));
 /**
  * Widest principal a Pack is available to.
  */
@@ -302,6 +310,7 @@ var PublicApiPackConnectionType;
     PublicApiPackConnectionType["Header"] = "header";
     PublicApiPackConnectionType["UrlParam"] = "urlParam";
     PublicApiPackConnectionType["HttpBasic"] = "httpBasic";
+    PublicApiPackConnectionType["Custom"] = "custom";
 })(PublicApiPackConnectionType = exports.PublicApiPackConnectionType || (exports.PublicApiPackConnectionType = {}));
 /**
  * The context request type where a Pack log is generated.

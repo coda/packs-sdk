@@ -4,9 +4,9 @@
 
 /* eslint-disable */
 
-export const OpenApiSpecHash = '3aa501d45272807675d21bf05be9126605ebf1b875aca82ff56b077a3111af4d';
+export const OpenApiSpecHash = 'e8edcd565f1c5ea5e9f682b9b9df68563d730643a6e9477a997cf57baa7d8f4c';
 
-export const OpenApiSpecVersion = '1.2.1';
+export const OpenApiSpecVersion = '1.2.3';
 
 /**
  * A constant identifying the type of the resource.
@@ -560,6 +560,8 @@ export enum PublicApiLayout {
   BubbleChart = 'bubbleChart',
   Calendar = 'calendar',
   Card = 'card',
+  Detail = 'detail',
+  Form = 'form',
   GanttChart = 'ganttChart',
   LineChart = 'lineChart',
   MasterDetail = 'masterDetail',
@@ -1030,6 +1032,7 @@ export enum PublicApiColumnFormatType {
   Select = 'select',
   PackObject = 'packObject',
   Reaction = 'reaction',
+  Canvas = 'canvas',
   Other = 'other',
 }
 
@@ -1658,6 +1661,10 @@ export interface PublicApiPublishingCategory {
    * The name of the category.
    */
   categoryName: string;
+  /**
+   * The URL identifier of the category.
+   */
+  categorySlug: string;
 }
 
 /**
@@ -2407,6 +2414,11 @@ export interface PublicApiPackReleaseList {
   nextPageLink?: PublicApiNextPageLink & string;
 }
 
+export enum PublicApiPackSource {
+  Web = 'web',
+  Cli = 'cli',
+}
+
 /**
  * Information indicating where to upload the Pack source code, and an endpoint to mark the upload as complete.
  */
@@ -2497,6 +2509,10 @@ export interface PublicApiPackListing {
    * Publishing Categories associated with this Pack.
    */
   categories: PublicApiPublishingCategory[];
+  /**
+   * Makers associated with this Pack.
+   */
+  makers: PublicApiMakerSummary[];
   minimumFeatureSet?: PublicApiFeatureSet;
   unrestrictedFeatureSet?: PublicApiFeatureSet;
   /**
@@ -2545,6 +2561,10 @@ export interface PublicApiPackListingDetail {
    * Publishing Categories associated with this Pack.
    */
   categories: PublicApiPublishingCategory[];
+  /**
+   * Makers associated with this Pack.
+   */
+  makers: PublicApiMakerSummary[];
   minimumFeatureSet?: PublicApiFeatureSet;
   unrestrictedFeatureSet?: PublicApiFeatureSet;
   /**
@@ -2556,10 +2576,6 @@ export interface PublicApiPackListingDetail {
    */
   releaseId?: number;
   discoverability: PublicApiPackDiscoverability;
-  /**
-   * Makers associated with this Pack.
-   */
-  makers: PublicApiMakerSummary[];
   /**
    * The access capabilities the current user has for this Pack.
    */
@@ -2586,7 +2602,8 @@ export interface PublicApiPackListingList {
 export type PublicApiPackSystemConnectionMetadata =
   | PublicApiPackConnectionHeaderMetadata
   | PublicApiPackConnectionUrlParamMetadata
-  | PublicApiPackConnectionHttpBasicMetadata;
+  | PublicApiPackConnectionHttpBasicMetadata
+  | PublicApiPackConnectionCustomMetadata;
 
 /**
  * The Pack OAuth configuration metadata.
@@ -2663,6 +2680,7 @@ export enum PublicApiPackConnectionType {
   Header = 'header',
   UrlParam = 'urlParam',
   HttpBasic = 'httpBasic',
+  Custom = 'custom',
 }
 
 /**
@@ -2671,7 +2689,8 @@ export enum PublicApiPackConnectionType {
 export type PublicApiPackSystemConnectionCredentials =
   | PublicApiPackConnectionHeaderCredentials
   | PublicApiPackConnectionUrlParamCredentials
-  | PublicApiPackConnectionHttpBasicCredentials;
+  | PublicApiPackConnectionHttpBasicCredentials
+  | PublicApiPackConnectionCustomCredentials;
 
 export interface PublicApiPackConnectionHeaderMetadata {
   type: PublicApiPackConnectionType.Header;
@@ -2696,6 +2715,25 @@ export interface PublicApiPackConnectionHttpBasicMetadata {
   maskedPassword?: string;
 }
 
+export interface PublicApiPackConnectionCustomMetadata {
+  type: PublicApiPackConnectionType.Custom;
+  /**
+   * An array of objects containing the parameter key and masked value.
+   */
+  params: {
+    key: string;
+    maskedValue: string;
+  }[];
+  /**
+   * The domain corresponding to the pre-authorized network domain in the pack.
+   */
+  domain: string;
+  /**
+   * An array containing the keys of parameters specified by the authentication config.
+   */
+  presetKeys: string[];
+}
+
 export interface PublicApiPackConnectionHeaderCredentials {
   type: PublicApiPackConnectionType.Header;
   token: string;
@@ -2713,6 +2751,14 @@ export interface PublicApiPackConnectionHttpBasicCredentials {
   type: PublicApiPackConnectionType.HttpBasic;
   username: string;
   password?: string;
+}
+
+export interface PublicApiPackConnectionCustomCredentials {
+  type: PublicApiPackConnectionType.Custom;
+  params: {
+    key: string;
+    value: string;
+  }[];
 }
 
 export interface PublicApiPackConnectionHeaderPatch {
@@ -2735,6 +2781,27 @@ export interface PublicApiPackConnectionHttpBasicPatch {
 }
 
 /**
+ * List of grouped Pack logs.
+ */
+export interface PublicApiGroupedPackLogsList {
+  items: PublicApiGroupedPackLog[];
+  nextPageToken?: PublicApiNextPageToken;
+  nextPageLink?: PublicApiNextPageLink & string;
+  /**
+   * This flag will be set to true if the result doens't include all the related logs.
+   */
+  incompleteRelatedLogs: boolean;
+}
+
+export interface PublicApiPackConnectionCustomPatch {
+  type: PublicApiPackConnectionType.Custom;
+  paramsToPatch?: {
+    key: string;
+    value: string;
+  }[];
+}
+
+/**
  * List of Pack logs.
  */
 export interface PublicApiPackLogsList {
@@ -2742,6 +2809,11 @@ export interface PublicApiPackLogsList {
   nextPageToken?: PublicApiNextPageToken;
   nextPageLink?: PublicApiNextPageLink & string;
 }
+
+/**
+ * A record of grouped Pack log.
+ */
+export type PublicApiGroupedPackLog = PublicApiGroupedPackInvocationLog | PublicApiPackAuthLog;
 
 /**
  * A record of Pack log.
@@ -2777,6 +2849,30 @@ export interface PublicApiPackLogContext {
    * Unique identifier of this log record.
    */
   logId: string;
+  /**
+   * Doc canvas object id where the formula was fired from.
+   */
+  docObjectId?: string;
+  /**
+   * Doc canvas row id where the formula was fired from.
+   */
+  docRowId?: string;
+  /**
+   * Doc canvas column id where the formula was fired from.
+   */
+  docColumnId?: string;
+  /**
+   * True if this is an execution of a sync table which received a pagination parameter.
+   */
+  isContinuedSyncTable?: boolean;
+  /**
+   * If this formula invocation was for a parameter auto-complete, this names the parameter.
+   */
+  autocompleteParameterName?: string;
+  /**
+   * If this formula was invoked by something other than a user action, this should say what that was.
+   */
+  invocationSource?: string;
 }
 
 /**
@@ -2799,11 +2895,29 @@ export interface PublicApiPackInvocationLog {
   type: PublicApiPackLogType.Invocation;
   context: PublicApiPackLogContext;
   /**
+   * True if the formula returned a prior result without executing.
+   */
+  cacheHit?: boolean;
+  /**
+   * Duration of the formula exeuction in miliseconds.
+   */
+  duration?: number;
+  /**
    * Error info if this invocation resulted in an error.
    */
   error?: {
     message: string;
+    stack?: string;
   };
+}
+
+/**
+ * Grouped logs ofthe invocations of the Pack.
+ */
+export interface PublicApiGroupedPackInvocationLog {
+  type: PublicApiPackLogType.Invocation;
+  invocationLog: PublicApiPackInvocationLog;
+  relatedLogs: PublicApiPackLog[];
 }
 
 /**
@@ -2913,7 +3027,8 @@ export enum PublicApiFeatureSet {
 export type PublicApiPatchPackSystemConnectionRequest =
   | PublicApiPackConnectionHeaderPatch
   | PublicApiPackConnectionUrlParamPatch
-  | PublicApiPackConnectionHttpBasicPatch;
+  | PublicApiPackConnectionHttpBasicPatch
+  | PublicApiPackConnectionCustomPatch;
 
 /**
  * Request to set the Pack OAuth configuration.
@@ -3128,6 +3243,10 @@ export interface PublicApiPackAssetUploadCompleteResponse {
  */
 export interface PublicApiPackSourceCodeUploadCompleteRequest {
   filename: string;
+  /**
+   * A SHA-256 hash of the source code used to identify duplicate uploads.
+   */
+  codeHash: string;
 }
 
 /**
@@ -3148,6 +3267,7 @@ export interface PublicApiCreatePackVersionRequest {
    * Developer notes of the new Pack version.
    */
   notes?: string;
+  source?: PublicApiPackSource;
   [k: string]: unknown;
 }
 

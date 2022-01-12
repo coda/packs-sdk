@@ -23,6 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleUpload = void 0;
+const v1_1 = require("../helpers/external-api/v1");
 const compile_1 = require("../testing/compile");
 const metadata_1 = require("../helpers/metadata");
 const crypto_1 = require("../helpers/crypto");
@@ -131,7 +132,7 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
         await uploadPack(uploadUrl, uploadPayload, headers);
         logger.info('Validating upload...');
         try {
-            await client.packVersionUploadComplete(packId, packVersion, {}, { notes });
+            await client.packVersionUploadComplete(packId, packVersion, {}, { notes, source: v1_1.PublicApiPackSource.Cli });
         }
         catch (err) {
             if ((0, coda_1.isResponseError)(err)) {

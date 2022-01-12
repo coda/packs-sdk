@@ -1,6 +1,7 @@
 ### 0.8.0
 
 - **Breaking Change** The connection requirement for metadata formulas now defaults to optional instead of required. If your pack is using sematic versions, this will likely lead to a major version bump in your next release.
+- **Breaking Change** Updated `coda upload` to use new parameters to tag the source of Pack version uploads as coming from the CLI.
 - An optional "description" field is added to sync table definition, that will be used to display in the UI.
 - You no longer need to use the `--fetch` flag with `coda execute` to use a real fetcher. Set `--no-fetch` to use a mock fetcher (the old default behavior).
 - OAuth2 authentication now supports a `scopeDelimiter` option for non-compliant APIs that use something other than a space to delimit OAuth scopes in authorization URLs.
