@@ -229,7 +229,7 @@ The columns of a Coda table are strongly typed, and the data types in the Pack S
 
 ## Formatting options
 
-Some value types and hints support additional formatting options. For example, `Number` types support a [`precision`][precision] option that controls how many decimal places to show, and `Currency` supports a `currencyCode` option that determine the currency symbol to show. These options are set in a schema, and for a formula result this may meaning adding a `schema` property to the formula definition.
+Some value types and hints support additional formatting options. For example, `Number` types support a [`precision`][precision] option that controls how many decimal places to show, and `Currency` supports a [`currencyCode`][currencyCode] option that determine the currency symbol to show. These options are set in a schema, and for a formula result this may meaning adding a `schema` property to the formula definition.
 
 === "Formula"
 
@@ -310,7 +310,8 @@ The full set of formatting options for a given value type and hint can be found 
 [embed_force]: https://help.coda.io/en/articles/1211364-embedding-content-in-your-doc#using-the-force-parameter
 [column_formats]: https://help.coda.io/en/articles/1235680-overview-of-column-formats
 [actions]: ../blocks/actions.md
-[precision]: ../../reference/sdk/interfaces/NumericSchema.md/#precision
+[precision]: ../../reference/sdk/interfaces/NumericSchema.md#precision
+[currencyCode]: ../../reference/sdk/interfaces/CurrencySchema.md#currencycode
 [NumericSchema]: ../../reference/sdk/interfaces/NumericSchema.md
 [CurrencySchema]: ../../reference/sdk/interfaces/CurrencySchema.md
 [SliderSchema]: ../../reference/sdk/interfaces/SliderSchema.md
