@@ -2,6 +2,7 @@ import type {Arguments} from 'yargs';
 import type {Logger} from '../api_types';
 import type {PackUpload} from '../compiled_types';
 import type {PackVersionDefinition} from '..';
+import {PublicApiPackSource} from '../helpers/external-api/v1';
 import type {PublicApiPackVersionUploadInfo} from '../helpers/external-api/v1';
 import type {TimerShimStrategy} from '../testing/compile';
 import {compilePackBundle} from '../testing/compile';
@@ -154,7 +155,7 @@ export async function handleUpload({
 
     logger.info('Validating upload...');
     try {
-      await client.packVersionUploadComplete(packId, packVersion, {}, {notes});
+      await client.packVersionUploadComplete(packId, packVersion, {}, {notes, source: PublicApiPackSource.Cli});
     } catch (err: any) {
       if (isResponseError(err)) {
         printAndExit(`Error while finalizing pack version: ${await formatResponseError(err)}`);

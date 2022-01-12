@@ -4,13 +4,13 @@
  * available at https://coda.io/developers/apis/v1
  *
  * Version: v1
- * Hash: 3aa501d45272807675d21bf05be9126605ebf1b875aca82ff56b077a3111af4d
+ * Hash: e8edcd565f1c5ea5e9f682b9b9df68563d730643a6e9477a997cf57baa7d8f4c
  */
 
 import 'es6-promise/auto';
 import 'isomorphic-fetch';
-import {withQueryParams} from '../url';
-import * as types from './v1';
+import {withQueryParams} from '@kr-modules/js-core/utils/url';
+import * as types from '@kr-modules/common/external-api/gen-types/v1';
 
 export class ResponseError extends Error {
   response: Response;
@@ -236,7 +236,13 @@ export class Client {
     return this._makeRequest('GET', codaUrl);
   }
 
-  async getTable(docId: string, tableIdOrName: string, params: {} = {}): Promise<types.PublicApiTable> {
+  async getTable(
+    docId: string,
+    tableIdOrName: string,
+    params: {
+      useUpdatedTableLayouts?: boolean;
+    } = {},
+  ): Promise<types.PublicApiTable> {
     const allParams = {
       ...params,
     };
@@ -985,7 +991,12 @@ export class Client {
     return this._makeRequest('GET', codaUrl);
   }
 
-  async getPackListing(packId: number, params: {} = {}): Promise<types.PublicApiPackListingDetail> {
+  async getPackListing(
+    packId: number,
+    params: {
+      workspaceId?: string;
+    } = {},
+  ): Promise<types.PublicApiPackListingDetail> {
     const allParams = {
       ...params,
     };
@@ -1002,6 +1013,7 @@ export class Client {
       afterTimestamp?: string;
       order?: string;
       q?: string;
+      requestIds?: string;
       limit?: number;
       pageToken?: string;
     } = {},
@@ -1012,6 +1024,29 @@ export class Client {
     const {pageToken, ...rest} = allParams;
     const codaUrl = withQueryParams(
       `${this.protocolAndHost}/apis/v1/packs/${packId}/docs/${docId}/logs`,
+      pageToken ? {pageToken} : rest,
+    );
+    return this._makeRequest('GET', codaUrl);
+  }
+
+  async listGroupedPackLogs(
+    packId: number,
+    docId: string,
+    params: {
+      beforeTimestamp?: string;
+      afterTimestamp?: string;
+      order?: string;
+      q?: string;
+      limit?: number;
+      pageToken?: string;
+    } = {},
+  ): Promise<types.PublicApiGroupedPackLogsList> {
+    const allParams = {
+      ...params,
+    };
+    const {pageToken, ...rest} = allParams;
+    const codaUrl = withQueryParams(
+      `${this.protocolAndHost}/apis/v1/packs/${packId}/docs/${docId}/groupedLogs`,
       pageToken ? {pageToken} : rest,
     );
     return this._makeRequest('GET', codaUrl);
