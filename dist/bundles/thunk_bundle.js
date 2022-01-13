@@ -3517,7 +3517,7 @@ module.exports = (() => {
         }
         for (var j = 0; j < objKeys.length; ++j) {
           var key = objKeys[j];
-          var value = typeof key === "object" && typeof key.value !== "undefined" ? key.value : obj[key];
+          var value = typeof key === "object" && key.value !== void 0 ? key.value : obj[key];
           if (skipNulls && value === null) {
             continue;
           }
@@ -3533,7 +3533,7 @@ module.exports = (() => {
         if (!opts) {
           return defaults;
         }
-        if (opts.encoder !== null && typeof opts.encoder !== "undefined" && typeof opts.encoder !== "function") {
+        if (opts.encoder !== null && opts.encoder !== void 0 && typeof opts.encoder !== "function") {
           throw new TypeError("Encoder has to be a function.");
         }
         var charset = opts.charset || defaults.charset;
@@ -3730,7 +3730,7 @@ module.exports = (() => {
             } else if (!isNaN(index) && root !== cleanRoot && String(index) === cleanRoot && index >= 0 && (options.parseArrays && index <= options.arrayLimit)) {
               obj = [];
               obj[index] = leaf;
-            } else if (cleanRoot !== "__proto__") {
+            } else {
               obj[cleanRoot] = leaf;
             }
           }

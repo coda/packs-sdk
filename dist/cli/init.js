@@ -39,8 +39,7 @@ async function handleInit() {
         isPacksExamplesInstalled = false;
     }
     if (!isPacksExamplesInstalled) {
-        // TODO(jonathan): Switch this to a regular https repo url when the repo becomes public.
-        const installCommand = `npm install git+ssh://github.com/coda/packs-examples.git`;
+        const installCommand = `npm install https://github.com/coda/packs-examples.git`;
         (0, helpers_1.spawnProcess)(installCommand);
     }
     const packageJson = JSON.parse(fs_extra_1.default.readFileSync(path_1.default.join(PacksExamplesDirectory, 'package.json'), 'utf-8'));
