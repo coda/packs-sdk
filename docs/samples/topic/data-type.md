@@ -311,7 +311,7 @@ pack.addFormula({
   parameters: [],
   resultType: coda.ValueType.String,
   codaType: coda.ValueHintType.Embed,
-  execute: async function ([param], context) {
+  execute: async function ([], context) {
     return "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
   },
 });
