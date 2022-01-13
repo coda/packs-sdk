@@ -101,20 +101,33 @@ To indicate that Coda should display your value in a more meaningful way you can
 
 ```ts
 pack.addFormula({
+  name: "HalfWayThere",
   // ...
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.Markdown,
+  resultType: coda.ValueType.Number,
+  codaType: coda.ValueHintType.Percent,
   execute: async function ([], context) {
-    return "This _is_ **markdown**";
+    return 50;
   },
 });
 ```
 
-[View all types][ValueHintType]{ .md-button }
+[View all hints][ValueHintType]{ .md-button }
+
 
 ### Markdown {. #markdown}
 
 The [`Markdown`][hint_markdown] value hint indicates that Coda should parse the returned string as markdown as render it as rich text. The value can contain [basic markdown syntax][markdown], but extensions used by other applications (like tables, emoji, etc) are not supported.
+
+```ts
+pack.addFormula({
+  // ...
+  resultType: coda.ValueType.String,
+  codaType: coda.ValueHintType.Markdown,
+  execute: async function ([], context) {
+    return "This is _so_ **cool**!";
+  },
+});
+```
 
 <!-- TODO: Fully document the allowed markup. -->
 
@@ -123,30 +136,85 @@ The [`Markdown`][hint_markdown] value hint indicates that Coda should parse the 
 
 The [`Html`][hint_html] value hint indicates that Coda should parse the returned string as HTML and render it as rich text. Code only supports a small subset of HTML markup, limited to the basic formatting you can accomplish in [markdown](#markdown).
 
+```ts
+pack.addFormula({
+  // ...
+  resultType: coda.ValueType.String,
+  codaType: coda.ValueHintType.Html,
+  execute: async function ([], context) {
+    return "This is <i>so</i> <b>cool</b>!";
+  },
+});
+```
+
 <!-- TODO: Fully document the allowed markup. -->
 
 
 ### Dates and times
 
-The [`Date`][Date], [`Time`][Time], and [`DateTime`][DateTime] value hints can be applied to either `String` or `Number` values. When used with a string value, Coda attempts to parse the value, and is able to parse a wide variety of date and time formats. For maximum compatibility however use the [ISO 8601][ISO_8601] format. When used with a number value, the number should contain the number of seconds since the [Unix epoch][unix_epoch] (00:00:00 UTC on 1 January 1970).
+The [`Date`][Date], [`Time`][Time], and [`DateTime`][DateTime] value hints can be applied to either `String` or `Number` values.
+
+When used with a string value, Coda attempts to parse the value, and is able to parse a wide variety of date and time formats. For maximum compatibility however use the [ISO 8601][ISO_8601] format. When using a JavaScript `Date` object this can be obtained by calling `toISOString()`.
+
+When used with a number value, the number should contain the number of seconds since the [Unix epoch][unix_epoch] (00:00:00 UTC on 1 January 1970). When using a JavaScript `Date` object this can be obtained by calling `getTime()`.
+
+=== "From String"
+
+    ```ts
+    pack.addFormula({
+      // ...
+      resultType: coda.ValueType.String,
+      codaType: coda.ValueHintType.DateTime,
+      execute: async function ([], context) {
+        let now = new Date();
+        return now.toISOString();
+      },
+    });
+    ```
+
+=== "From Number"
+
+    ```ts
+    pack.addFormula({
+      // ...
+      resultType: coda.ValueType.Number,
+      codaType: coda.ValueHintType.DateTime,
+      execute: async function ([], context) {
+        let now = new Date();
+        return now.getTime();
+      },
+    });
+    ```
 
 !!! warning
-    These value hints currently only work correctly within a sync table. When used outside of a sync table both the date and time parts of the returned date will be visible.
+    The `Date` and `Time` value hints currently only work correctly within a sync table. When used outside of a sync table both the date and time parts of the returned date will be visible, as if `DateTime` was used.
 
 
 ### Durations
 
 The [`Duration`][Duration] value hint represents an amount of time, rather than a specific time. It can only be applied to `String` values, and those strings must match one of a few formats:
 
-| Example                     | Result              | Notes                        |
-|-----------------------------|---------------------|------------------------------|
-| 6                           | 6 days              | A single number is days.     |
-| 6:01                        | 6 hrs 1 min         | Hours and minutes.           |
-| 6:01:15                     | 6 hrs 1 min 15 secs | Hours, minutes, and seconds. |
-| 6 hours 1 minute 15 seconds | 5 hrs 1 min 15 secs | Full units.                  |
-| 6 hrs 1 min 15 secs         | 5 hrs 1 min 15 secs | Abbreviated units.           |
-| 6 hrs, 1 min, 15 secs       | 5 hrs 1 min 15 secs | Commas allowed.              |
-| 0.25 days, 1 min, 15 secs   | 5 hrs 1 min 15 secs | Fractional amounts allowed.  |
+| Example                     | Result              | Notes                           |
+|-----------------------------|---------------------|---------------------------------|
+| 6                           | 6 days              | A single number is days.        |
+| 6:01                        | 6 hrs 1 min         | Hours and minutes.              |
+| 6:01:15                     | 6 hrs 1 min 15 secs | Hours, minutes, and seconds.    |
+| 6 hours 1 minute 15 seconds | 5 hrs 1 min 15 secs | Full units.                     |
+| 6 hrs 1 min 15 secs         | 5 hrs 1 min 15 secs | Abbreviated units.              |
+| 6 hrs, 1 min, 15 secs       | 5 hrs 1 min 15 secs | Commas allowed.                 |
+| 0.25 days, 1 min, 15 secs   | 5 hrs 1 min 15 secs | Fractional amounts allowed.     |
+| 72000 minutes               | 50 days             | Don't use thousands separators. |
+
+```ts
+pack.addFormula({
+  // ...
+  resultType: coda.ValueType.String,
+  codaType: coda.ValueHintType.Duration,
+  execute: async function ([], context) {
+    return "525600 minutes";
+  },
+});
+```
 
 
 ### Images
@@ -155,6 +223,17 @@ There are two different value hints for image: [`ImageReference`][ImageReference
 
 Image attachments should be used in most cases, but an image reference may make more sense if you expect the image to be updated often and want to ensure the doc is always using the latest image.
 
+```ts
+pack.addFormula({
+  // ...
+  resultType: coda.ValueType.String,
+  codaType: coda.ValueHintType.ImageReference,
+  execute: async function ([], context) {
+    return "https://via.placeholder.com/150";
+  },
+});
+```
+
 !!! warning
     Image attachments currently only work correctly within a sync table. When used outside of a sync table they behave like image references and load the image from the source URL.
 
@@ -162,6 +241,17 @@ Image attachments should be used in most cases, but an image reference may make 
 ### Embedded content
 
 The [`Embed`][Embed] value hint can be used to embed external content in the Coda doc. This value hint can be applied to `String` values, where the string contains the URL to the external content. The URL must be compatible with our embed provider, [Iframely][iframely], which supports the [oEmbed protocol][oEmbed].
+
+```ts
+pack.addFormula({
+  // ...
+  resultType: coda.ValueType.String,
+  codaType: coda.ValueHintType.Embed,
+  execute: async function ([], context) {
+    return "https://www.youtube.com/watch?v=oLYZv68M3Kg";
+  },
+});
+```
 
 !!! info "Force not available"
     The `=Embed()` Coda formula supports a [`force: true` option][embed_force] that allows you to skip Iframely and load the content directly in an iframe. This option isn't currently available for the `Embed` value hint.
@@ -191,7 +281,7 @@ When no Coda user with the given email address is found the object will render a
 
 ### Row reference
 
-The [`Reference`][Reference] value hint can be used to reference a row in a sync table. See the [Schemas guide][schemas] for more information about defining and using schema references.
+The [`Reference`][Reference] value hint can be used to reference a row in a sync table. See the [Schemas guide][schemas_references] for more information about defining and using schema references.
 
 !!! warning
     This value hint currently only work correctly within a sync table. When used outside of a sync table it will render as a normal object chip, as if no value hint was applied.
@@ -281,6 +371,7 @@ The full set of formatting options for a given value type and hint can be found 
 [samples]: ../../samples/topic/data-type.md
 [formulas]: ../blocks/formulas.md
 [schemas]: ../advanced/schemas.md
+[schemas_references]: ../advanced/schemas.md#references
 [ValueType]: ../../reference/sdk/enums/ValueType.md
 [Number]: ../../reference/sdk/enums/ValueType.md#Number
 [Array]: ../../reference/sdk/enums/ValueType.md#Array
