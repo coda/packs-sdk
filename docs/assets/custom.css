@@ -20,3 +20,15 @@ img.screenshot {
   border-radius: 8px;
   box-shadow: 0 0 24px rgba(0,0,0,var(--opacity-shadow-normal,.15));
 }
+
+li.yes, li.no {
+  padding-left: 0.5rem;
+}
+
+li.yes {
+  list-style-type: "✅";
+}
+
+li.no {
+  list-style-type: "❌";
+}

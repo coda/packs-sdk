@@ -110,7 +110,22 @@ On each sync your code must return the full set of items, and Coda will determin
 
 ## Naming
 
-The name of a sync table can only contain letters, numbers, and underscores. By convention sync table names are written in upper camel case, like `BugReports`. In some areas of the UI, such as the settings pane, the name will be rewritten to add spaces ("BugReports" => "Bug Reports") for readability. We recommend that you don't prefix your table with the name of your Pack, as that is done automatically in some contexts.
+The name of a sync table is visible to the user, and can only contain letters, numbers, and underscores. We recommend following these conventions:
+
+- Select a plural noun corresponding to the item represented by each row. For example, `Products` or `Sales`.
+  {: .yes}
+- For multiple words, use upper camel case. For example, `BugReports`.
+  {: .yes}
+- Don't include the Pack name in the name of the table. For example, use `Tasks` instead of `TodoistTasks`.
+  {: .no}
+- Don't use adjectives in sync table names. For example, `ActiveProducts` or `RecentSales`.<br>
+  In these cases it is better to have a single sync table for all items of the same type, and then add parameters that allow users to filter by certain criteria.
+  {: .no}
+
+In some areas of the UI, such as the settings pane, the name will be rewritten to add spaces ("BugReports" => "Bug Reports") for readability.
+
+!!! warning
+    Changing the name of a sync table will break any existing docs that use it. When creating your Pack select your names carefully.
 
 
 ## Identity

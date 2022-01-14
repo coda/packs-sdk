@@ -39,6 +39,23 @@ pack.addFormula({
 If you aren't already familiar with creating formulas, read the [Formulas guide][formulas] first. The rest of this guide will clarify how action formulas differ from calculation formulas.
 
 
+## Naming
+
+Like all formulas, action formula names can only contain letters, numbers, and underscores. We also recommend following these conventions:
+
+- Select a verb-noun pair that corresponds to the corresponding action and target of the action. For example, `DeleteFile` or `AddTask`.<br>
+  {: .yes}
+- If you Pack primarily works with a single type of item, you may omit the noun. For example, `Tweet` or `MarkComplete`.<br>
+  {: .yes}
+- For multiple words, use upper camel case. For example, `SendEmail` or `CreateBugReport`.
+  {: .yes}
+- Don't include the Pack name in the name of the column format. For example, use `CreateTask` instead of `CreateTodoistTask`.
+  {: .no}
+
+!!! warning
+    Changing the name of an action formula will break any existing docs that use it. When creating your Pack select your names carefully.
+
+
 ## Parameters
 
 Parameters in actions work the same as they do in other formulas, but may appear differently depending on the context. The button and automation configuration dialogs by default will present the parameters as input boxes, although the user has the option to switch the formula editor as well. See the [Parameters guide][parameters] for more information and examples.
