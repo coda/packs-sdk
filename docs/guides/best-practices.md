@@ -27,7 +27,7 @@ While it's easy to get started building a Pack, there are lots of options to exp
 
 - [x] Follow the guidance on [sync table naming][sync_tables_naming].
 - [x] [Add parameters][sync_tables_parameters] to sync tables to allow for filtering. Filtering is particularly important when a table can return a large number of rows.
-- [x] Consider the [caching_behavior][sync_tables_caching] of your sync tables. Most fetcher requests should have their caching reduced or disabled to ensure the latest results are synced.
+- [x] Consider the [caching behavior][sync_tables_caching] of your sync tables. Most fetcher requests should have their caching reduced or disabled to ensure the latest results are synced.
 
 
 
