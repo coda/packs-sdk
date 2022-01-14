@@ -22,11 +22,25 @@ A formula definition consists of a set of key-value pairs, which specify the var
 
 ## Naming
 
-The name of a formula can only contain letters, numbers, and underscores. This restriction exists to ensure that custom formulas are compatible with the Coda Formula Language. By convention formula names are written in upper camel case, like `DoSomethingCool`.
+The name of a formula can only contain letters, numbers, and underscores. This restriction exists to ensure that custom formulas are compatible with the Coda Formula Language. We also recommend following these conventions:
+
+- For formulas that fetch or generate data, select a noun that corresponds to the output, using a plural if multiple can be returned. For example, `Chart` or `Tasks`.
+  {: .yes}
+- For formulas that transform data, select a verb that corresponds to the transformation. For example, `Reverse` or `Truncate`.
+  {: .yes}
+- For multiple words, use upper camel case. For example, `BugReport` or `DeletedFiles`.
+  {: .yes}
+- Don't include the Pack name in the name of the formula. For example, use `Task` instead of `TodoistTask`.
+  {: .no}
+- Avoid prefixes like `Get`, `Lookup`, or `Query`. For example, use `Tasks` instead of `GetTasks`.
+  {: .no}
 
 Formula names must be unique within a Pack, but can be the same as built-in formulas or those in other Packs. When a doc has access to multiple formulas with the same name the Pack's icon is used to distinguish them.
 
 <img src="../../../images/formula_disambiguation.png" srcset="../../../images/formula_disambiguation_2x.png 2x" class="screenshot" alt="Icons used to disambiguate formulas">
+
+!!! warning
+    Changing the name of a formula will break any existing docs that use it. When creating your Pack select your names carefully.
 
 
 ## Parameters
@@ -93,6 +107,52 @@ Building or releasing a new version of your Pack doesn't automatically cause exi
 
 <img src="../../../images/settings_recalc.png" srcset="../../../images/settings_recalc_2x.png 2x" class="screenshot" alt="Recalculation settings in the Pack side panel">
 
+
+## Examples
+
+Coda automatically generates user documentation for your formulas based on the names and descriptions you assign. To demonstrate how the formula should be used you can add entries to the `examples` array. Each example is a structured object containing a set of parameters and the corresponding result, with the types matching those defined in your formula.
+
+=== "Formula documentation"
+
+    <img src="../../../images/formula_examples.png" srcset="../../../images/formula_examples_2x.png 2x" class="screenshot" alt="Formula examples in the generated documentation">
+
+=== "Code"
+
+    ```ts
+    pack.addFormula({
+      name: "ToUSD",
+      description: "Convert from a different currency to US dollars.",
+      parameters: [
+        coda.makeParameter({
+          type: coda.ParameterType.Number,
+          name: "amount",
+          description: "The amount to convert."
+        }),
+        coda.makeParameter({
+          type: coda.ParameterType.String,
+          name: "from",
+          description: "The currency to convert from."
+        }),
+      ],
+      resultType: coda.ValueType.Number,
+      examples: [
+        { params: [10, "EUR"], result: 11.44 },
+        { params: [12.25, "CAD"], result: 9.80 },
+      ],
+      // ...
+    });
+    ```
+
+The parameter values are passed in the order they are defined in the formula, and all required parameters must be included. Pass the value `undefined` for any optional parameters you want to skip over.
+
+```ts
+examples: [
+  // Set only the first parameter.
+  { params: ["Hello"], result: "HELLO!!!" },
+  // Set the first and third parameter.
+  { params: ["Hello", undefined, "?"], result: "HELLO???" },
+],
+```
 
 
 [samples]: ../../samples/topic/formula.md

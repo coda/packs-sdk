@@ -28,6 +28,8 @@ markdown_extensions:
       check_paths: true
   - pymdownx.superfences
   - pymdownx.tabbed
+  - pymdownx.tasklist:
+      custom_checkbox: true
   - toc:
       permalink: true
       # Don't show TOC entries for h4 and below, as it clutters the TOC in the reference docs.

@@ -292,6 +292,11 @@ exports.Examples = [
                 content: 'A formula that returns rich data (a schema). This sample gets information about a task in the Todoist application.',
                 codeFile: './examples/todoist/formula.ts',
             },
+            {
+                name: 'With examples',
+                content: 'A formula that includes examples of how to use it. This sample formats text to look like screaming, with a optional parameters to override how many exclamation points to use and an alternate character to use.',
+                codeFile: './examples/parameter/scream.ts',
+            },
         ],
     },
     {

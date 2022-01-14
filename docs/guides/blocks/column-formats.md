@@ -38,6 +38,24 @@ pack.addFormula({
 
 If you aren't already familiar with creating formulas, read the [Formulas guide][formulas] first.
 
+!!! warning
+    Changing the formula used by the column format will break any existing docs that use it.
+
+
+## Naming
+
+Unlike other building blocks, column format names can include spaces and special characters. We recommend following these conventions:
+
+- Select a singular noun corresponding the output in the cell. For example, `Task` or `Event`.
+  {: .yes}
+- For multiple words, use spaces and title case. For example, `Progress Bar` or `Reversed Text`.
+  {: .yes}
+- Don't include the Pack name in the name of the column format. For example, use `Task` instead of `TodoistTask`.
+  {: .no}
+
+!!! info
+    You can change the name of the column format without breaking existing docs that use it.
+
 
 ## Parameters
 
