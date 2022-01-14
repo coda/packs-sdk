@@ -366,7 +366,7 @@ export const Examples: Example[] = [
     contentFile: './examples/autocomplete/README.md',
     linkData: {
       type: UrlType.SdkReferencePath,
-      url: '/guides/advanced/autocomplete',
+      url: '/guides/basics/parameters/autocomplete',
     },
     exampleSnippets: [
       {

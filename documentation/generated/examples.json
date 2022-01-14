@@ -249,10 +249,10 @@
     ],
     "linkData": {
       "type": "SdkReferencePath",
-      "url": "/guides/advanced/autocomplete"
+      "url": "/guides/basics/parameters/autocomplete"
     },
-    "exampleFooterLink": "https://coda.github.io/packs-sdk/guides/advanced/autocomplete",
-    "learnMoreLink": "/guides/advanced/autocomplete",
+    "exampleFooterLink": "https://coda.github.io/packs-sdk/guides/basics/parameters/autocomplete",
+    "learnMoreLink": "/guides/basics/parameters/autocomplete",
     "content": "Autocomplete can be configured for a parameter to provide a defined set of options for the user to select from. You can can pass either a static array or use a function to dynamically generate the options.",
     "exampleSnippets": [
       {
