@@ -222,7 +222,7 @@ Although a lot of Pack management can be done through the CLI, there are still s
 
 
 [libraries]: libraries.md
-[quickstart_cli]: ../../get-started/cli.md
-[sync_tables]: ../blocks/sync-tables.md
+[quickstart_cli]: ../../tutorials/get-started/cli.md
+[sync_tables]: ../blocks/sync-tables/index.md
 [integration]: testing.md#integration
 [isolated_vm_requirements]: https://github.com/laverdet/isolated-vm#requirements

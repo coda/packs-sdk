@@ -2,5 +2,5 @@ nav:
   - formulas.md
   - actions.md
   - column-formats.md
-  - sync-tables.md
+  - sync-tables
   - ...

@@ -523,4 +523,4 @@ The step's `getOptionsFormula` works like [dynamic autocomplete][autocomplete_dy
 [oauth2_client]: https://www.oauth.com/oauth2-servers/access-tokens/client-credentials/
 [getConnectionName]: ../../reference/sdk/interfaces/BaseAuthentication.md#getconnectionname
 [network_domains]: fetcher.md#network-domains
-[autocomplete_dynamic]: autocomplete.md#dynamic-options
+[autocomplete_dynamic]: ../basics/parameters/autocomplete.md#dynamic-options

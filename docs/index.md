@@ -12,5 +12,5 @@ The Coda Pack SDK provides the components and tools you can use to build your ow
 [Get Started][get_started]{ .md-button .md-button--primary }
 
 
-[get_started]: get-started/web
+[get_started]: tutorials/get-started/web.md
 [beta]: https://coda.io/packsbeta

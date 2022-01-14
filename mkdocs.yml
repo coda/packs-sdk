@@ -34,6 +34,7 @@ markdown_extensions:
       permalink: true
       # Don't show TOC entries for h4 and below, as it clutters the TOC in the reference docs.
       toc_depth: 1-3
+
 plugins:
     - search
     # Navigation enhancements.
@@ -43,6 +44,18 @@ plugins:
     # Variables in markdown.
     # See: https://squidfunk.github.io/mkdocs-material/reference/variables/
     - macros
+    - redirects:
+        redirect_maps:
+          # 2022-01-14: Reorganize guides and tutorials.
+          "guides/advanced/autocomplete.md": "guides/basics/parameters/autocomplete.md"
+          "guides/advanced/dynamic-sync-tables.md": "guides/blocks/sync-tables/dynamic.md"
+          "guides/advanced/cli.md": "guides/development/cli.md"
+          "guides/advanced/libraries.md": "guides/development/libraries.md"
+          "guides/advanced/testing.md": "guides/development/testing.md"
+          "guides/troubleshooting.md": "guides/development/troubleshooting.md"
+          "get-started/cli.md": "tutorials/get-started/cli.md"
+          "get-started/web.md": "tutorials/get-started/web.md"
+
 
 extra:
   # Social icons for the footer.

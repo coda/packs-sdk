@@ -243,12 +243,12 @@ coda.makeParameter({
 ```
 
 
-[samples]: ../../samples/topic/parameter.md
-[parameters]: ../../reference/sdk/interfaces/PackFormulaDef.md#parameters
-[makeParameter]: ../../reference/sdk/functions/makeParameter.md
-[ParamDef]: ../../reference/sdk/interfaces/ParamDef.md
+[samples]: ../../../samples/topic/parameter.md
+[parameters]: ../../../reference/sdk/interfaces/PackFormulaDef.md#parameters
+[makeParameter]: ../../../reference/sdk/functions/makeParameter.md
+[ParamDef]: ../../../reference/sdk/interfaces/ParamDef.md
 [destructuring_assignment]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
 [mdn_rest]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#assigning_the_rest_of_an_array_to_a_variable
-[autocomplete]: ../advanced/autocomplete.md
-[PrecannedDateRange]: ../../reference/sdk/enums/PrecannedDateRange.md
+[autocomplete]: autocomplete.md
+[PrecannedDateRange]: ../../../reference/sdk/enums/PrecannedDateRange.md
 [calendar_pack]: https://coda.io/packs/google-calendar-1003/documentation

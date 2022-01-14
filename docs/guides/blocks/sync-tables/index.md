@@ -252,22 +252,22 @@ It's recommended that you reduce or disable [HTTP caching][fetcher_caching] of t
 
 
 
-[samples]: ../../samples/topic/sync-table.md
+[samples]: ../../../samples/topic/sync-table.md
 [help_center]: https://help.coda.io/en/articles/3213629-using-packs-tables-to-sync-your-data-into-coda
-[sample_todoist]: ../../samples/full/todoist.md
-[schemas]: ../advanced/schemas.md
-[featured]: ../../reference/sdk/interfaces/ObjectSchemaDefinition.md#featured
-[formulas]: formulas.md
-[SyncFormulaResult]: ../../reference/sdk/interfaces/SyncFormulaResult.md
-[Continuation]: ../../reference/sdk/interfaces/Continuation.md
-[identityName]: ../../reference/sdk/interfaces/SyncTableOptions.md#identityname
-[schema_references]: ../advanced/schemas.md#references
-[dynamicOptions]: ../../reference/sdk/interfaces/SyncTableOptions/#dynamicoptions
-[actions]: actions.md
-[data_type_object]: ../basics/data-types.md#objects
-[dynamic_sync_tables]: ../advanced/dynamic-sync-tables.md
+[sample_todoist]: ../../../samples/full/todoist.md
+[schemas]: ../../advanced/schemas.md
+[featured]: ../../../reference/sdk/interfaces/ObjectSchemaDefinition.md#featured
+[formulas]: ../formulas.md
+[SyncFormulaResult]: ../../../reference/sdk/interfaces/SyncFormulaResult.md
+[Continuation]: ../../../reference/sdk/interfaces/Continuation.md
+[identityName]: ../../../reference/sdk/interfaces/SyncTableOptions.md#identityname
+[schema_references]: ../../advanced/schemas.md#references
+[dynamicOptions]: ../../../reference/sdk/interfaces/SyncTableOptions/#dynamicoptions
+[actions]: ../actions.md
+[data_type_object]: ../../basics/data-types.md#objects
+[dynamic_sync_tables]: dynamic.md
 [hc_lookups]: https://help.coda.io/en/articles/1385997-using-lookups#the-lookup-column-format
-[sample_continuation]: ../../samples/topic/sync-table.md#with-continuation
-[sample_reference]: ../../samples/topic/sync-table.md#with-row-references
-[parmeters]: ../basics/parameters.md
-[fetcher_caching]: ../advanced/fetcher.md#caching
+[sample_continuation]: ../../../samples/topic/sync-table.md#with-continuation
+[sample_reference]: ../../../samples/topic/sync-table.md#with-row-references
+[parmeters]: ../../basics/parameters/index.md
+[fetcher_caching]: ../../advanced/fetcher.md#caching

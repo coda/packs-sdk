@@ -1,5 +1,5 @@
 ---
-title: Dynamic sync tables
+title: Dynamic schemas
 ---
 
 # Creating sync tables with dynamic schemas

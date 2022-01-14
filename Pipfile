@@ -11,6 +11,7 @@ mkdocs = "*"
 mkdocs-material = "*"
 mkdocs-awesome-pages-plugin = "*"
 mkdocs-macros-plugin = "*"
+mkdocs-redirects = "*"
 
 [dev-packages]
 

@@ -10,7 +10,7 @@ Although it takes a little longer to get started, building Packs on your local m
 - You can use your own version control system, such as [GitHub](https://github.com).
 - You can use popular JavaScript libraries[^1], such as those in [NPM](https://www.npmjs.com/).
 
-[^1]: Not all libraries available on NPM are compatible with the Pack SDK. See the [Using libraries](../guides/advanced/libraries.md) guide for more information.
+[^1]: Not all libraries available on NPM are compatible with the Pack SDK. See the [Using libraries](../../guides/development/libraries.md) guide for more information.
 
 Local development is enabled through the `coda` command line tool (CLI). Keep reading to learn how to install the CLI and use it to build a Pack.
 
@@ -36,7 +36,7 @@ Lastly, one of the libraries used by the SDK requires that your machine has some
 
 1. Install the Pack SDK.
 
-    ```sh    
+    ```sh
     npm init
     npm install @codahq/packs-sdk
     ```
@@ -149,7 +149,7 @@ Your new Pack is now available to use in all your docs, and you can install it j
 1. Open [Coda](https://coda.io/docs) in your browser.
 1. Click the **+ New doc** button and select **Start with a blank page**.
 
---8<-- "get-started/.use.md"
+--8<-- "tutorials/get-started/.use.md"
 
 ## Update the Pack
 

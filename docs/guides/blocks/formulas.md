@@ -157,7 +157,7 @@ examples: [
 
 [samples]: ../../samples/topic/formula.md
 [formulas]: https://coda.io/formulas
-[parameters]: ../basics/parameters.md
+[parameters]: ../basics/parameters/index.md
 [actions]: actions.md
 [data-types]: ../basics/data-types.md
 [cacheTtlSecs]: ../../reference/sdk/interfaces/PackFormulaDef.md#cachettlsecs

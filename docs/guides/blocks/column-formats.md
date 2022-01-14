@@ -100,7 +100,7 @@ Only Packs already installed in the document will have their matchers used. If m
 
 [samples]: ../../samples/topic/column-format.md
 [formulas]: formulas.md
-[parameters]: ../basics/parameters.md
+[parameters]: ../basics/parameters/index.md
 [data-types]: ../basics/data-types.md
 [mdn_regex]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
 [fetcher_network_domain]: ../advanced/fetcher.md#network-domains

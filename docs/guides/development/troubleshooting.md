@@ -47,5 +47,5 @@ These errors can occur when installing the SDK locally, specifically during the 
 
 
 [mdn_console]: https://developer.mozilla.org/en-US/docs/Web/API/console
-[support]: ../support.md
+[support]: ../../support.md
 [isolated_vm_requirements]: https://github.com/laverdet/isolated-vm#requirements

@@ -102,5 +102,5 @@ Unlike other formulas, actions are never cached or automatically recalculated. T
 [fetcher]: ../advanced/fetcher.md
 [samples]: ../../samples/topic/action.md
 [formulas]: formulas.md
-[parameters]: ../basics/parameters.md
+[parameters]: ../basics/parameters/index.md
 [data-types]: ../basics/data-types.md
