@@ -39,9 +39,34 @@ pack.addSyncTable({
   formula: {
     name: "SyncTasks",
     description: "Sync tasks",
-    parameters: [],
-    execute: async function ([], context) {
-      let url = "https://api.todoist.com/rest/v1/tasks";
+    parameters: [
+      coda.makeParameter({
+        type: coda.ParameterType.String,
+        name: "filter",
+        description: "A supported filter string. See the Todoist help center.",
+        optional: true,
+      }),
+      coda.makeParameter({
+        type: coda.ParameterType.String,
+        name: "project",
+        description: "Limit tasks to a specific project.",
+        optional: true,
+        autocomplete: async function (context, search) {
+          let url = "https://api.todoist.com/rest/v1/projects";
+          let response = await context.fetcher.fetch({
+            method: "GET",
+            url: url,
+          });
+          let projects = response.body;
+          return coda.autocompleteSearchObjects(search, projects, "name", "id");
+        }
+      }),
+    ],
+    execute: async function ([filter, project], context) {
+      let url = coda.withQueryParams("https://api.todoist.com/rest/v1/tasks", {
+        filter: filter,
+        project_id: project,
+      });
       let response = await context.fetcher.fetch({
         method: "GET",
         url: url,
