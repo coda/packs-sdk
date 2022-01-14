@@ -1,7 +1,4 @@
-###############################################################################
-# This is temporary script to update the docs while our CI is disabled due to 
-# security.
-###############################################################################
+# temporary script before we move to CI
 
 # head
 MK_DOCS_SITE_URL="https://head.coda.io/packs/build/latest/" make build-mkdocs
