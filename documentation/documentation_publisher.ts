@@ -126,8 +126,8 @@ async function pushDocumentation({env, forceUpload}: Arguments<PushDocumentation
         InvalidationBatch: {
           CallerReference: now,
           Paths: {
-            Quantity: 1,
-            Items: [docsLatestPath],
+            Quantity: 2,
+            Items: [docsLatestPath, docsLatestPath + '/*'],
           },
         },
       })
