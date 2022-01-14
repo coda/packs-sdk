@@ -3187,7 +3187,6 @@ export interface PackDefinition extends PackVersionDefinition {
 	permissionsDescription?: string;
 	category?: PackCategory;
 	logoPath: string;
-	enabledConfigName?: string;
 	exampleImages?: string[];
 	exampleVideoIds?: string[];
 	minimumFeatureSet?: FeatureSet;
@@ -3447,7 +3446,7 @@ export declare type PackVersionMetadata = Omit<PackVersionDefinition, "formulas"
 	defaultAuthentication?: AuthenticationMetadata;
 };
 /** @hidden */
-export declare type PackMetadata = PackVersionMetadata & Pick<PackDefinition, "id" | "name" | "shortDescription" | "description" | "permissionsDescription" | "category" | "logoPath" | "exampleImages" | "exampleVideoIds" | "minimumFeatureSet" | "quotas" | "rateLimits" | "enabledConfigName" | "isSystem">;
+export declare type PackMetadata = PackVersionMetadata & Pick<PackDefinition, "id" | "name" | "shortDescription" | "description" | "permissionsDescription" | "category" | "logoPath" | "exampleImages" | "exampleVideoIds" | "minimumFeatureSet" | "quotas" | "rateLimits" | "isSystem">;
 /** @hidden */
 export declare type ExternalPackAuthenticationType = AuthenticationType;
 /** @hidden */

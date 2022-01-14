@@ -52,23 +52,13 @@ ___
 
 ___
 
-### enabledConfigName
-
-• `Optional` **enabledConfigName**: `string`
-
-#### Defined in
-
-[types.ts:887](https://github.com/coda/packs-sdk/blob/main/types.ts#L887)
-
-___
-
 ### exampleImages
 
 • `Optional` **exampleImages**: `string`[]
 
 #### Defined in
 
-[types.ts:888](https://github.com/coda/packs-sdk/blob/main/types.ts#L888)
+[types.ts:887](https://github.com/coda/packs-sdk/blob/main/types.ts#L887)
 
 ___
 
@@ -78,7 +68,7 @@ ___
 
 #### Defined in
 
-[types.ts:889](https://github.com/coda/packs-sdk/blob/main/types.ts#L889)
+[types.ts:888](https://github.com/coda/packs-sdk/blob/main/types.ts#L888)
 
 ___
 
@@ -154,7 +144,7 @@ Whether this is a pack that will be used by Coda internally and not exposed dire
 
 #### Defined in
 
-[types.ts:896](https://github.com/coda/packs-sdk/blob/main/types.ts#L896)
+[types.ts:895](https://github.com/coda/packs-sdk/blob/main/types.ts#L895)
 
 ___
 
@@ -174,7 +164,7 @@ ___
 
 #### Defined in
 
-[types.ts:890](https://github.com/coda/packs-sdk/blob/main/types.ts#L890)
+[types.ts:889](https://github.com/coda/packs-sdk/blob/main/types.ts#L889)
 
 ___
 
@@ -226,7 +216,7 @@ ___
 
 #### Defined in
 
-[types.ts:891](https://github.com/coda/packs-sdk/blob/main/types.ts#L891)
+[types.ts:890](https://github.com/coda/packs-sdk/blob/main/types.ts#L890)
 
 ___
 
@@ -236,7 +226,7 @@ ___
 
 #### Defined in
 
-[types.ts:892](https://github.com/coda/packs-sdk/blob/main/types.ts#L892)
+[types.ts:891](https://github.com/coda/packs-sdk/blob/main/types.ts#L891)
 
 ___
 

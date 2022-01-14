@@ -993,7 +993,6 @@ const legacyPackMetadataSchema = validateFormulas(
     permissionsDescription: z.string().optional(),
     category: z.nativeEnum(PackCategory).optional(),
     logoPath: z.string().optional(),
-    enabledConfigName: z.string().optional(),
     exampleImages: z.array(z.string()).optional(),
     exampleVideoIds: z.array(z.string()).optional(),
     minimumFeatureSet: z.nativeEnum(FeatureSet).optional(),
