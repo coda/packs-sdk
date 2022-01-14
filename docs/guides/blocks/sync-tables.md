@@ -139,7 +139,7 @@ By default the identity name is also used as the column name for the first colum
 
 The parameters defined on the sync formula are exposed to users as criteria in the sync table options. See the [parameters guide][parameters] for more information about how parameters are defined and displayed.
 
-In most sync tables parameters are used to allow users to filter the results in the sync table. Although users can always add filters to the resulting table to hide certain rows, it's faster and simpler to do that filtering in the sync formula itself.
+In most sync tables, parameters are used to allow users to filter the results in the sync table. Although users can always add filters to the resulting table to hide certain rows, it's faster and simpler to do that filtering in the sync formula itself.
 
 
 ## Row limits
@@ -248,7 +248,7 @@ Some APIs vary the shape of the data returned based on the account being accesse
 
 A sync table is not a live view into an external data source, but rather a snapshot of the data stored at the time of the last sync. Unlike formulas which are recalculated automatically when the parameters change, changes to sync table parameters will only be reflected during the next sync.
 
-It's recommended that you reduce or disable [HTTP caching][fetch_caching] of the fetcher requests used to populate your sync table. When users manually resync a table they expect the latest results, and HTTP caching can interfere with that. Caching may still be appropriate for requests that retrieve the same data during each sync formula execution.
+It's recommended that you reduce or disable [HTTP caching][fetcher_caching] of the fetcher requests used to populate your sync table. When users manually resync a table they expect the latest results, and HTTP caching can interfere with that. Caching may still be appropriate for requests that retrieve the same data during each sync formula execution.
 
 
 
@@ -270,3 +270,4 @@ It's recommended that you reduce or disable [HTTP caching][fetch_caching] of the
 [sample_continuation]: ../../samples/topic/sync-table.md#with-continuation
 [sample_reference]: ../../samples/topic/sync-table.md#with-row-references
 [parmeters]: ../basics/parameters.md
+[fetcher_caching]: ../advanced/fetcher.md#caching
