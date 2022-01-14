@@ -76,7 +76,7 @@ Column formats can use authentication to access private resources. The account u
 <img src="../../../images/column_format_options.png" srcset="../../../images/column_format_options_2x.png 2x" class="screenshot" alt="Selecting the account in the column format options">
 
 
-## Automatic formatting
+## Automatic formatting {: .matchers}
 
 When creating a new column, Coda tries to guess the type of the column based on the first data entered. Column formats from Packs can be included in this process by declaring matchers. Matchers are [regular expressions][mdn_regex] that define which cell values the column format should be applied to. If one of the regular expressions matches the cell value the column format will be applied automatically.
 
