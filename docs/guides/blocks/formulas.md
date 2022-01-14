@@ -30,7 +30,11 @@ The name of a formula can only contain letters, numbers, and underscores. This r
   {: .yes}
 - For multiple words, use upper camel case. For example, `BugReport` or `DeletedFiles`.
   {: .yes}
+<<<<<<< HEAD
 - Don't include the Pack name in the name of the formula. For example, use `Task` instead of `TodoistTask`.
+=======
+- Don't include the Pack name in the name of the column format. For example, use `Task` instead of `TodoistTask`.
+>>>>>>> a94439b5 (Add best practices on naming and examples)
   {: .no}
 - Avoid prefixes like `Get`, `Lookup`, or `Query`. For example, use `Tasks` instead of `GetTasks`.
   {: .no}
