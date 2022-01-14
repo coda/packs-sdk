@@ -30,7 +30,7 @@ The name of a formula can only contain letters, numbers, and underscores. This r
   {: .yes}
 - For multiple words, use upper camel case. For example, `BugReport` or `DeletedFiles`.
   {: .yes}
-- Don't include the Pack name in the name of the column format. For example, use `Task` instead of `TodoistTask`.
+- Don't include the Pack name in the name of the formula. For example, use `Task` instead of `TodoistTask`.
   {: .no}
 - Avoid prefixes like `Get`, `Lookup`, or `Query`. For example, use `Tasks` instead of `GetTasks`.
   {: .no}
@@ -143,7 +143,16 @@ Coda automatically generates user documentation for your formulas based on the n
     });
     ```
 
+The parameter values are passed in the order they are defined in the formula, and all required parameters must be included. Pass the value `undefined` for any optional parameters you want to skip over.
 
+```ts
+examples: [
+  // Set only the first parameter.
+  { params: ["Hello"], result: "HELLO!!!" },
+  // Set the first and third parameter.
+  { params: ["Hello", undefined, "?"], result: "HELLO???" },
+],
+```
 
 
 [samples]: ../../samples/topic/formula.md
