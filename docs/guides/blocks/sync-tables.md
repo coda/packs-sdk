@@ -135,6 +135,13 @@ Every sync table is required to specify an [`identityName`][identityName], which
 By default the identity name is also used as the column name for the first column of the sync table, which contains the synced item as a chip. You can use a different name for the column by setting [`dynamicOptions.entityName`][dynamicOptions] on the sync table.
 
 
+## Parameters
+
+The parameters defined on the sync formula are exposed to users as criteria in the sync table options. See the [parameters guide][parameters] for more information about how parameters are defined and displayed.
+
+In most sync tables, parameters are used to allow users to filter the results in the sync table. Although users can always add filters to the resulting table to hide certain rows, it's faster and simpler to do that filtering in the sync formula itself.
+
+
 ## Row limits
 
 Each sync table has a user-defined maximum number of rows, which defaults to 1000 but can be set as high as 10,000. Any items returned by your sync table beyond that limit will be dropped.
@@ -237,6 +244,13 @@ See the [Schemas guide][schema_references] for more information on how to create
 Some APIs vary the shape of the data returned based on the account being accessed. For example, an issue tracker may allow users to define custom fields for their bug reports, which the API also returns. A sync table must have a defined schema that represents the data for each item, but it is possible to expand that schema to accommodate these variations by using a dynamic schema. See the [Dynamic sync tables guide][dynamic_sync_tables] for more information on how to use this feature.
 
 
+## Caching & recalculation {: #caching}
+
+A sync table is not a live view into an external data source, but rather a snapshot of the data stored at the time of the last sync. Unlike formulas which are recalculated automatically when the parameters change, changes to sync table parameters will only be reflected during the next sync.
+
+It's recommended that you reduce or disable [HTTP caching][fetcher_caching] of the fetcher requests used to populate your sync table. When users manually resync a table they expect the latest results, and HTTP caching can interfere with that. Caching may still be appropriate for requests that retrieve the same data during each sync formula execution.
+
+
 
 [samples]: ../../samples/topic/sync-table.md
 [help_center]: https://help.coda.io/en/articles/3213629-using-packs-tables-to-sync-your-data-into-coda
@@ -255,3 +269,5 @@ Some APIs vary the shape of the data returned based on the account being accesse
 [hc_lookups]: https://help.coda.io/en/articles/1385997-using-lookups#the-lookup-column-format
 [sample_continuation]: ../../samples/topic/sync-table.md#with-continuation
 [sample_reference]: ../../samples/topic/sync-table.md#with-row-references
+[parmeters]: ../basics/parameters.md
+[fetcher_caching]: ../advanced/fetcher.md#caching
