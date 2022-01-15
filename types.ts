@@ -884,7 +884,6 @@ export interface PackDefinition extends PackVersionDefinition {
   permissionsDescription?: string;
   category?: PackCategory;
   logoPath: string;
-  enabledConfigName?: string;
   exampleImages?: string[];
   exampleVideoIds?: string[];
   minimumFeatureSet?: FeatureSet;

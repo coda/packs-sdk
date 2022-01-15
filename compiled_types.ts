@@ -84,7 +84,6 @@ export type PackMetadata = PackVersionMetadata &
     | 'minimumFeatureSet'
     | 'quotas'
     | 'rateLimits'
-    | 'enabledConfigName'
     | 'isSystem'
   >;
 
