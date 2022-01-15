@@ -73,3 +73,12 @@ export function join(...tokens: string[]): string {
 
   return combined;
 }
+
+/** ID of the node in a returned SVG file that is targeted when Dark Mode is enabled in Coda. */
+export const SvgDarkModeFragmentId = 'DarkMode';
+
+/** Prefix to use for base-64 encoded SVGs returned by formulas. */
+export const SvgDataUrlPrefix = 'data:image/svg+xml;base64,';
+
+/** Prefix to use for base-64 encoded SVGs (that support Dark Mode) returned by formulas. */
+export const SvgDataUrlPrefixWithDarkModeSupport = 'data:image/svg+xml;supportsDarkMode=1;base64,';

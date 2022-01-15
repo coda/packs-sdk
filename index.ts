@@ -117,6 +117,9 @@ export {simpleAutocomplete} from './api';
 export {getQueryParams} from './helpers/url';
 export {join as joinUrl} from './helpers/url';
 export {withQueryParams} from './helpers/url';
+export {SvgDarkModeFragmentId} from './helpers/url';
+export {SvgDataUrlPrefix} from './helpers/url';
+export {SvgDataUrlPrefixWithDarkModeSupport} from './helpers/url';
 
 // General Utilities
 export {assertCondition} from './helpers/ensure';

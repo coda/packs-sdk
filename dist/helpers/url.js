@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.join = exports.getQueryParams = exports.withQueryParams = void 0;
+exports.SvgDataUrlPrefixWithDarkModeSupport = exports.SvgDataUrlPrefix = exports.SvgDarkModeFragmentId = exports.join = exports.getQueryParams = exports.withQueryParams = void 0;
 const ensure_1 = require("./ensure");
 const qs_1 = __importDefault(require("qs"));
 const url_parse_1 = __importDefault(require("url-parse"));
@@ -74,3 +74,9 @@ function join(...tokens) {
     return combined;
 }
 exports.join = join;
+/** ID of the node in a returned SVG file that is targeted when Dark Mode is enabled in Coda. */
+exports.SvgDarkModeFragmentId = 'DarkMode';
+/** Prefix to use for base-64 encoded SVGs returned by formulas. */
+exports.SvgDataUrlPrefix = 'data:image/svg+xml;base64,';
+/** Prefix to use for base-64 encoded SVGs (that support Dark Mode) returned by formulas. */
+exports.SvgDataUrlPrefixWithDarkModeSupport = 'data:image/svg+xml;supportsDarkMode=1;base64,';

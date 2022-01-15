@@ -151,6 +151,9 @@ title: "Pack SDK Reference"
 
 ## Variables
 
+- [SvgDarkModeFragmentId](variables/SvgDarkModeFragmentId.md)
+- [SvgDataUrlPrefix](variables/SvgDataUrlPrefix.md)
+- [SvgDataUrlPrefixWithDarkModeSupport](variables/SvgDataUrlPrefixWithDarkModeSupport.md)
 - [ValidFetchMethods](variables/ValidFetchMethods.md)
 
 ## Functions
