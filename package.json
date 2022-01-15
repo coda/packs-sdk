@@ -14,9 +14,6 @@
     "type": "git",
     "url": "https://github.com/coda/packs-sdk"
   },
-  "scripts": {
-    "postinstall": "npx patch-package"
-  },
   "dependencies": {
     "@aws-crypto/sha256-js": "^2.0.1",
     "@aws-sdk/client-sts": "^3.46.0",
