@@ -23,6 +23,7 @@ const ExamplePageTemplate = Handlebars.compile(fs.readFileSync(path.join(Documen
 const SdkReferenceLink = 'https://coda.github.io/packs-sdk';
 const SamplePageLink = `${SdkReferenceLink}/${ExampleDirName}`;
 const PageFileExtension = 'md';
+const IndexPageFilename = 'index.md'
 
 function main() {
   compileAutocompleteSnippets();
@@ -144,12 +145,20 @@ function getExamplePageName(example: Example) {
 function isValidReferencePath(sdkReferencePath: string): boolean {
   const splitPath = sdkReferencePath.split('#');
   const page = splitPath[0];
+
   const file = page + '.' + PageFileExtension;
-
   const filePath = path.join(TypeDocsRoot, file);
+  const fileExists = fs.existsSync(filePath);
+  if (fileExists) {
+    return true;
+  }
 
-  return fs.existsSync(filePath);
+  // Check if there is an index file in a directory.
+  const indexFile = path.join(page, IndexPageFilename);
+  const indexFilePath = path.join(TypeDocsRoot, indexFile);
+  return fs.existsSync(indexFilePath);
 }
+
 
 /**
  * Un-indents text, removing the shortest common leading whitespace from each

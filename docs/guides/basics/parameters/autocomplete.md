@@ -14,11 +14,11 @@ If you have a parameter that accepts a defined set of values it's usually best t
 In the formula editor, parameter options show up in a the same pane used for the autocompletion of built-in elements of the Coda Formula Language. In the actions builder and sync table settings options are presented in a drop down.
 
 === "In the formula editor"
-    <img src="../../../images/autocomplete_formula.png" srcset="../../../images/autocomplete_formula_2x.png 2x" class="screenshot" alt="Autocomplete in the formula editor">
+    <img src="../../../../images/autocomplete_formula.png" srcset="../../../../images/autocomplete_formula_2x.png 2x" class="screenshot" alt="Autocomplete in the formula editor">
 === "In the action builder"
-    <img src="../../../images/autocomplete_action.png" srcset="../../../images/autocomplete_action_2x.png 2x" class="screenshot" alt="Autocomplete in the action builder">
+    <img src="../../../../images/autocomplete_action.png" srcset="../../../../images/autocomplete_action_2x.png 2x" class="screenshot" alt="Autocomplete in the action builder">
 === "In the sync table settings"
-    <img src="../../../images/autocomplete_sync.png" srcset="../../../images/autocomplete_sync_2x.png 2x" class="screenshot" alt="Autocomplete in the sync table settings">
+    <img src="../../../../images/autocomplete_sync.png" srcset="../../../../images/autocomplete_sync_2x.png 2x" class="screenshot" alt="Autocomplete in the sync table settings">
 
 
 ## Simple options
@@ -146,7 +146,7 @@ pack.addFormula({
 ```
 
 
-[samples]: ../../samples/topic/autocomplete.md
+[samples]: ../../../samples/topic/autocomplete.md
 [destructuring_assignment]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
-[SimpleAutocompleteOption]: ../../reference/sdk/interfaces/SimpleAutocompleteOption.md
-[autocompleteSearchObjects]: ../../reference/sdk/functions/autocompleteSearchObjects.md
+[SimpleAutocompleteOption]: ../../../reference/sdk/interfaces/SimpleAutocompleteOption.md
+[autocompleteSearchObjects]: ../../../reference/sdk/functions/autocompleteSearchObjects.md

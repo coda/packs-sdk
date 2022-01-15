@@ -46,11 +46,11 @@ While it's easy to get started building a Pack, there are lots of options to exp
 [column_formats]: blocks/column-formats.md
 [column_formats_naming]: blocks/column-formats.md#naming
 [column_formats_matchers]: blocks/column-formats.md#matchers
-[sync_tables_naming]: blocks/sync-tables.md#naming
-[sync_tables_caching]: blocks/sync-tables.md#caching
-[sync_tables_parameters]: blocks/sync-tables.md#parameters
+[sync_tables_naming]: blocks/sync-tables/index.md#naming
+[sync_tables_caching]: blocks/sync-tables/index.md#caching
+[sync_tables_parameters]: blocks/sync-tables/index.md#parameters
 [formulas_examples]: blocks/formulas.md#examples
-[parameter_suggested_value]: basics/parameters.md#suggested-values
+[parameter_suggested_value]: basics/parameters/index.md#suggested-values
 [instructionsUrl]: ../reference/sdk/interfaces/BaseAuthentication.md#instructionsurl
 [UserVisibleError]: ../reference/sdk/classes/UserVisibleError.md
 [SyncTableOptions.description]: ../reference/sdk/interfaces/SyncTableOptions.md#description

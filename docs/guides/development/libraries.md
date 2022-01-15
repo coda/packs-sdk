@@ -27,7 +27,7 @@ import _ from 'lodash';
 !!! info
     How to import the library may vary; consult the library's documentation for the correct syntax.
 
-[get_started_cli]: ../../get-started/cli.md
+[get_started_cli]: ../../tutorials/get-started/cli.md
 [lodash]: https://lodash.com/
 
 ## Library compatibility

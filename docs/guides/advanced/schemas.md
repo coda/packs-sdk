@@ -430,11 +430,11 @@ In your sync formula you only need to populate the fields of the reference objec
 
 [samples]: ../../samples/topic/schema.md
 [data_types]: ../basics/data-types.md
-[sync_tables]: ../blocks/sync-tables.md
+[sync_tables]: ../blocks/sync-tables/index.md
 [makeSchema]: ../../reference/sdk/functions/makeSchema.md
 [makeObjectSchema]: ../../reference/sdk/functions/makeObjectSchema.md
-[sync_tables_identity]: ../blocks/sync-tables.md#identity
+[sync_tables_identity]: ../blocks/sync-tables/index.md#identity
 [todoist]: ../../samples/full/todoist.md
 [makeReferenceSchemaFromObjectSchema]: ../../reference/sdk/functions/makeReferenceSchemaFromObjectSchema.md
-[sync_tables_references]: ../blocks/sync-tables.md#references
+[sync_tables_references]: ../blocks/sync-tables/index.md#references
 [data_types_objects]: ../basics/data-types.md#objects
