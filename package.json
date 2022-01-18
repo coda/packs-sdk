@@ -100,6 +100,6 @@
   "resolutions": {
     "ansi-regex": "^5.0.1",
     "jsprim": "^2.0.2",
-    "marked": "^2.0.0"
+    "marked": "^4.0.10"
   }
 }
