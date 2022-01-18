@@ -1,4 +1,4 @@
-import type {Arguments} from 'yargs';
+import type {ArgumentsCamelCase} from 'yargs';
 import type {BasicPackDefinition} from '..';
 import type {PackVersionDefinition} from '..';
 import {build} from './build';
@@ -27,7 +27,7 @@ export async function handleRelease({
   packVersion: explicitPackVersion,
   codaApiEndpoint,
   notes,
-}: Arguments<ReleaseArgs>) {
+}: ArgumentsCamelCase<ReleaseArgs>) {
   const manifestDir = path.dirname(manifestFile);
   const apiKey = getApiKey(codaApiEndpoint);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);

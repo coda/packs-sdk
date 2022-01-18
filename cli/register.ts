@@ -1,4 +1,4 @@
-import type {Arguments} from 'yargs';
+import type {ArgumentsCamelCase} from 'yargs';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {isResponseError} from '../helpers/external-api/coda';
@@ -13,7 +13,7 @@ interface RegisterArgs {
   codaApiEndpoint: string;
 }
 
-export async function handleRegister({apiToken, codaApiEndpoint}: Arguments<RegisterArgs>) {
+export async function handleRegister({apiToken, codaApiEndpoint}: ArgumentsCamelCase<RegisterArgs>) {
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   if (!apiToken) {
     // TODO: deal with auto-open on devbox setups

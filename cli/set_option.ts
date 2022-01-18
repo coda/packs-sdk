@@ -1,4 +1,4 @@
-import type {Arguments} from 'yargs';
+import type {ArgumentsCamelCase} from 'yargs';
 import {PackOptionKey} from './config_storage';
 import type {PackOptions} from './config_storage';
 import {TimerShimStrategy} from '../testing/compile';
@@ -14,7 +14,7 @@ interface SetOptionArgs {
   value: string;
 }
 
-export async function handleSetOption({manifestFile, option, value}: Arguments<SetOptionArgs>) {
+export async function handleSetOption({manifestFile, option, value}: ArgumentsCamelCase<SetOptionArgs>) {
   const manifestDir = path.dirname(manifestFile);
   const options = validateOption(option, value);
   storePackOptions(manifestDir, options);

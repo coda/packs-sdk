@@ -1,4 +1,4 @@
-import type {Arguments} from 'yargs';
+import type {ArgumentsCamelCase} from 'yargs';
 import type {TimerShimStrategy} from '../testing/compile';
 import {compilePackBundle} from '../testing/compile';
 import {executeFormulaOrSyncFromCLI} from '../testing/execution';
@@ -23,7 +23,7 @@ export async function handleExecute({
   vm,
   dynamicUrl,
   timerStrategy,
-}: Arguments<ExecuteArgs>) {
+}: ArgumentsCamelCase<ExecuteArgs>) {
   const fullManifestPath = makeManifestFullPath(manifestPath);
   const {bundlePath, bundleSourceMapPath} = await compilePackBundle({
     manifestPath: fullManifestPath,
