@@ -1,4 +1,4 @@
-import type { Arguments } from 'yargs';
+import type { ArgumentsCamelCase } from 'yargs';
 import type { TimerShimStrategy } from '../testing/compile';
 export interface ExecuteArgs {
     manifestPath: string;
@@ -9,4 +9,4 @@ export interface ExecuteArgs {
     dynamicUrl?: string;
     timerStrategy: TimerShimStrategy;
 }
-export declare function handleExecute({ manifestPath, formulaName, params, fetch, vm, dynamicUrl, timerStrategy, }: Arguments<ExecuteArgs>): Promise<void>;
+export declare function handleExecute({ manifestPath, formulaName, params, fetch, vm, dynamicUrl, timerStrategy, }: ArgumentsCamelCase<ExecuteArgs>): Promise<void>;

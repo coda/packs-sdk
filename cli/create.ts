@@ -1,4 +1,4 @@
-import type {Arguments} from 'yargs';
+import type {ArgumentsCamelCase} from 'yargs';
 import {PACK_ID_FILE_NAME} from './config_storage';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
@@ -27,7 +27,7 @@ export async function handleCreate({
   name,
   description,
   workspace,
-}: Arguments<CreateArgs>) {
+}: ArgumentsCamelCase<CreateArgs>) {
   await createPack(manifestFile, codaApiEndpoint, {name, description, workspace});
 }
 

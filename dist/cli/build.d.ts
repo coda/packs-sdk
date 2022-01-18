@@ -1,4 +1,4 @@
-import type { Arguments } from 'yargs';
+import type { ArgumentsCamelCase } from 'yargs';
 import type { TimerShimStrategy } from '../testing/compile';
 interface BuildArgs {
     manifestFile: string;
@@ -6,7 +6,7 @@ interface BuildArgs {
     minify: boolean;
     timerStrategy: TimerShimStrategy;
 }
-export declare function handleBuild({ outputDir, manifestFile, minify, timerStrategy }: Arguments<BuildArgs>): Promise<void>;
+export declare function handleBuild({ outputDir, manifestFile, minify, timerStrategy }: ArgumentsCamelCase<BuildArgs>): Promise<void>;
 export declare function build(manifestFile: string, { timerStrategy }?: {
     timerStrategy?: TimerShimStrategy;
 }): Promise<string>;

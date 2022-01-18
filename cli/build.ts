@@ -1,4 +1,4 @@
-import type {Arguments} from 'yargs';
+import type {ArgumentsCamelCase} from 'yargs';
 import type {TimerShimStrategy} from '../testing/compile';
 import {compilePackBundle} from '../testing/compile';
 import {print} from '../testing/helpers';
@@ -10,7 +10,7 @@ interface BuildArgs {
   timerStrategy: TimerShimStrategy;
 }
 
-export async function handleBuild({outputDir, manifestFile, minify, timerStrategy}: Arguments<BuildArgs>) {
+export async function handleBuild({outputDir, manifestFile, minify, timerStrategy}: ArgumentsCamelCase<BuildArgs>) {
   const {bundlePath, intermediateOutputDirectory} = await compilePackBundle({
     manifestPath: manifestFile,
     minify,

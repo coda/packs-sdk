@@ -1,4 +1,4 @@
-import type {Arguments} from 'yargs';
+import type {ArgumentsCamelCase} from 'yargs';
 import type {PackMetadataValidationError} from '../testing/upload_validation';
 import type {PackVersionDefinition} from '..';
 import type {PackVersionMetadata} from '../compiled_types';
@@ -14,7 +14,7 @@ interface ValidateArgs {
   manifestFile: string;
 }
 
-export async function handleValidate({manifestFile}: Arguments<ValidateArgs>) {
+export async function handleValidate({manifestFile}: ArgumentsCamelCase<ValidateArgs>) {
   const fullManifestPath = makeManifestFullPath(manifestFile);
   const {bundlePath} = await compilePackBundle({manifestPath: fullManifestPath, minify: false});
   const manifest = await importManifest<PackVersionDefinition>(bundlePath);

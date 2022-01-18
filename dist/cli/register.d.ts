@@ -1,7 +1,7 @@
-import type { Arguments } from 'yargs';
+import type { ArgumentsCamelCase } from 'yargs';
 interface RegisterArgs {
     apiToken?: string;
     codaApiEndpoint: string;
 }
-export declare function handleRegister({ apiToken, codaApiEndpoint }: Arguments<RegisterArgs>): Promise<never>;
+export declare function handleRegister({ apiToken, codaApiEndpoint }: ArgumentsCamelCase<RegisterArgs>): Promise<never>;
 export {};
