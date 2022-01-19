@@ -1,3 +1,7 @@
+### 0.8.1
+
+- Removed postinstall to avoid patching failure for npm 6 or older versions.
+
 ### 0.8.0
 
 - **Breaking Change** The connection requirement for metadata formulas now defaults to optional instead of required. If your pack is using sematic versions, this will likely lead to a major version bump in your next release.
