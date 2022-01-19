@@ -94,8 +94,8 @@
     "mock-fs": "^5.1.2",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.4.0",
-    "typedoc": "^0.22.10",
-    "typedoc-plugin-markdown": "^3.11.11"
+    "typedoc": "^0.22.11",
+    "typedoc-plugin-markdown": "^3.11.12"
   },
   "resolutions": {
     "ansi-regex": "^5.0.1",
