@@ -558,10 +558,9 @@ export const Examples: Example[] = [
     name: 'Hello World',
     category: ExampleCategory.Full,
     triggerTokens: [],
-    contentFile: './examples/hello_world/hello_world.md',
+    contentFile: './examples/hello_world/README.md',
     linkData: {
-      type: UrlType.Web,
-      url: 'https://coda.io/@coda/make-a-pack-private-alpha/hello-world-16',
+      type: UrlType.SamplePage,
     },
     exampleSnippets: [
       {
@@ -575,33 +574,31 @@ export const Examples: Example[] = [
     name: 'Daylight',
     category: ExampleCategory.Full,
     triggerTokens: [],
-    contentFile: './examples/daylight/daylight.md',
+    contentFile: './examples/daylight/README.md',
     linkData: {
-      type: UrlType.Web,
-      url: 'https://coda.io/@coda/make-a-pack-private-alpha/daylight-29',
+      type: UrlType.SamplePage,
     },
     exampleSnippets: [
       {
-        name: 'Daylight',
+        name: 'pack.ts',
         content: '',
         codeFile: './examples/daylight/daylight.ts',
       },
     ],
   },
   {
-    name: 'Number Array',
+    name: 'Math',
     category: ExampleCategory.Full,
     triggerTokens: [],
-    contentFile: './examples/number_array/number_array.md',
+    contentFile: './examples/math/README.md',
     linkData: {
-      type: UrlType.Web,
-      url: 'https://coda.io/@coda/make-a-pack-private-alpha/number-array-27',
+      type: UrlType.SamplePage,
     },
     exampleSnippets: [
       {
-        name: 'Number Array',
+        name: 'pack.ts',
         content: '',
-        codeFile: './examples/number_array/number_array.ts',
+        codeFile: './examples/math/math.ts',
       },
     ],
   },
@@ -609,7 +606,7 @@ export const Examples: Example[] = [
     name: 'Todoist',
     category: ExampleCategory.Full,
     triggerTokens: [],
-    contentFile: './examples/todoist/full.md',
+    contentFile: './examples/todoist/README.md',
     linkData: {
       type: UrlType.SamplePage,
     },

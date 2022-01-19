@@ -12,7 +12,7 @@ This Pack provides a `Daylight` formula that determines the daylight, sunrise,
  [api]: https://sunrise-sunset.org/api
 
 
-=== "Daylight"
+=== "pack.ts"
     ```ts
     /**
      * This Pack provides a "Daylight" formula that determines the daylight,
