@@ -52,7 +52,7 @@ pack.addDynamicSyncTable({
     let form = await getForm(context, formUrl);
 
     // These properties are the same for all forms.
-    let properties: any = {
+    let properties: coda.ObjectSchemaProperties = {
       submittedAt: {
         type: coda.ValueType.String,
         codaType: coda.ValueHintType.DateTime,
