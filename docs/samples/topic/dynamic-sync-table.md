@@ -39,7 +39,7 @@ pack.addDynamicSyncTable({
   getSchema: async function (context) {
     let datasourceUrl = context.sync.dynamicUrl!;
     // TODO: Fetch metadata about the data source and get the list of fields.
-    let properties = {
+    let properties: coda.ObjectSchemaProperties = {
       // TODO: Create a property for each field.
     };
     let id = "<Determine the field containing a unique ID>";
@@ -149,7 +149,7 @@ pack.addDynamicSyncTable({
     let form = await getForm(context, formUrl);
 
     // These properties are the same for all forms.
-    let properties: any = {
+    let properties: coda.ObjectSchemaProperties = {
       submittedAt: {
         type: coda.ValueType.String,
         codaType: coda.ValueHintType.DateTime,
