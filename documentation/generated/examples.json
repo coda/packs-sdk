@@ -466,7 +466,7 @@
       "type": "SamplePage"
     },
     "exampleFooterLink": "https://coda.github.io/packs-sdk/samples/full/hello-world",
-    "content": "This is an example which creates a single formula called Hello, that takes in a string called name and returns “Hello, name !“.",
+    "content": "This is an example which creates a single formula called `Hello`, that takes in a string called `name` and returns `“Hello, <name>!“`.",
     "exampleSnippets": [
       {
         "name": "Hello World",
