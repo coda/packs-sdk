@@ -29,9 +29,3 @@ export declare function getQueryParams(url: string): {
  * @param tokens Zero or more tokens to be combined. If token doesn't end with '/', one will be added as the separator
  */
 export declare function join(...tokens: string[]): string;
-/** ID of the node in a returned SVG file that is targeted when Dark Mode is enabled in Coda. */
-export declare const SvgDarkModeFragmentId = "DarkMode";
-/** Prefix to use for base-64 encoded SVGs returned by formulas. */
-export declare const SvgDataUrlPrefix = "data:image/svg+xml;base64,";
-/** Prefix to use for base-64 encoded SVGs (that support Dark Mode) returned by formulas. */
-export declare const SvgDataUrlPrefixWithDarkModeSupport = "data:image/svg+xml;supportsDarkMode=1;base64,";
