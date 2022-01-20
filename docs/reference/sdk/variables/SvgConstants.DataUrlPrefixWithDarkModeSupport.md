@@ -11,4 +11,4 @@ Prefix to use for base-64 encoded SVGs (that support Dark Mode) returned by form
 
 #### Defined in
 
-helpers/svg.ts:11
+[helpers/svg.ts:11](https://github.com/coda/packs-sdk/blob/main/helpers/svg.ts#L11)
