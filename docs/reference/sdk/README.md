@@ -3,6 +3,10 @@ title: "Pack SDK Reference"
 ---
 # Pack SDK Reference
 
+## Namespaces
+
+- [SvgConstants](modules/SvgConstants.md)
+
 ## Enumerations
 
 - [AttributionNodeType](enums/AttributionNodeType.md)
