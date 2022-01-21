@@ -322,7 +322,7 @@ Here is a demonstration of this approach, showing some dummy values.
     ```json
     {
       "id": "abc123",
-      "value: 525,
+      "value": 525,
     }
     ```
 === "Sync Formula Result"
