@@ -67,7 +67,7 @@ pack.addDynamicSyncTable({
       // Adjust the items to fit the schema if required.
       return {
         result: items,
-      }
+      };
     },
   },
 });

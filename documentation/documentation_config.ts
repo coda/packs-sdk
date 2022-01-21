@@ -253,7 +253,7 @@ export const Examples: Example[] = [
     contentFile: './examples/dynamic-sync-table/README.md',
     linkData: {
       type: UrlType.SdkReferencePath,
-      url: '/reference/sdk/classes/PackDefinitionBuilder#addDynamicSyncTable',
+      url: '/guides/blocks/sync-tables/dynamic',
     },
     exampleSnippets: [
       {
