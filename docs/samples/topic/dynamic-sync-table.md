@@ -4,9 +4,9 @@ title: Dynamic sync tables
 
 # Dynamic sync table samples
 
-Dynamic sync tables allow you to bring data from an external data source into your doc, even when the structure of that data is not known in advance. Instead of including a static schema in your sync table definition, you include a `getSchema` method that returns a schema based on the dataset the user selects. It can use the fetcher to make authenticated HTTP requests to an API so that you can determine the shape of the data.
+Dynamic sync tables allow you to bring data from an external data source into your doc, even when the structure of that data is not known in advance. Instead of including a static schema in your sync table definition, you include a `getSchema` function that returns a schema based on the dataset the user selects. It can use the fetcher to make authenticated HTTP requests to an API so that you can determine the shape of the data.
 
-Dynamic sync tables typically provide list all of the datasets that the user has access to, using the `listDynamicUrls` method. Once a user selects a dataset from the side panel it will be available to other method in `context.sync.dynamicUrl`. The dynamic sync table must also provide a user-visible URL for the selected dataset (using `getDisplayUrl`) and a name for the resulting table on the page (using `getName`).
+Dynamic sync tables typically provide a list all of the datasets that the user has access to, using the `listDynamicUrls` function. Once a user selects a dataset from the side panel it will be available to other functions in `context.sync.dynamicUrl`. The dynamic sync table must also provide a user-visible URL for the selected dataset (using `getDisplayUrl`) and a name for the resulting table on the page (using `getName`).
 
 
 [Learn More](../../../guides/blocks/sync-tables/dynamic){ .md-button }
