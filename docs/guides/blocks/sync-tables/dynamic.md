@@ -4,7 +4,7 @@ title: Dynamic sync tables
 
 # Creating sync tables with dynamic schemas
 
-Sync tables are designed to bring records from an external data source into Coda, but sometimes those records don't have a predefined structure. For example, a task tracking application may allow each project to define it's own set of custom fields. To bring this type of data into Coda you can create a dynamic sync table, which allows the columns in the table to adapt to the dataset that is being synced.
+Sync tables are designed to bring records from an external data source into Coda, but sometimes those records don't have a predefined structure. For example, a task tracking application may allow each project to define its own set of custom fields. To bring this type of data into Coda you can create a dynamic sync table, which allows the columns in the table to adapt to the dataset that is being synced.
 
 [View Sample Code][samples]{ .md-button }
 
@@ -89,7 +89,7 @@ pack.addDynamicSyncTable({
 });
 ```
 
-The URL you choose to represent the dataset is arbitrary, and is not directly exposed to the user. Most Packs choose to use an API endpoint URL for ease of development. The URL shown to users is generated using the [`getDisplayUrl`](#display-url) method.
+You can choose any URL to represent the dataset, and is not directly exposed to the user. Most Packs choose an API endpoint URL for ease of development, but you could also select a more user-friendly URL. The URL shown to users is generated using the [`getDisplayUrl`](#display-url) method.
 
 The selected URL is made available to all further methods via [`context.sync.dynamicUrl`][dynamicUrl].
 
