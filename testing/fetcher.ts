@@ -288,12 +288,12 @@ export class AuthenticatingFetcher implements Fetcher {
         const encodedAuth = Buffer.from(`${username}:${password}`).toString('base64');
 
         let bodyWithTemplateSubstitutions = body;
-        if (bodyWithTemplateSubstitutions) {
+        if (typeof bodyWithTemplateSubstitutions === 'string') {
           // For awful APIs that require auth parameters in the request body, we have
           // this scheme where we do template substitution of the body using an unguessable
           // random token as part of the template key.
           Object.entries(this._credentials).forEach(([key, value]) => {
-            bodyWithTemplateSubstitutions = ensureExists(bodyWithTemplateSubstitutions).replace(
+            bodyWithTemplateSubstitutions = ensureExists(bodyWithTemplateSubstitutions as string).replace(
               getTemplateReplacementValueForKey(key, this._invocationToken),
               value,
             );
@@ -329,9 +329,9 @@ export class AuthenticatingFetcher implements Fetcher {
             );
           }
 
-          if (bodyWithSubstitutions) {
+          if (typeof bodyWithSubstitutions === 'string') {
             bodyWithSubstitutions = replaceAll(
-              bodyWithSubstitutions,
+              bodyWithSubstitutions as string,
               getTemplateReplacementValueForKey(key, this._invocationToken),
               value,
             );

@@ -402,7 +402,7 @@ export interface FetchRequest {
    *
    * If you are sending a JSON payload, make sure to call `JSON.stringify()` on the object payload.
    */
-  body?: string;
+  body?: string | Buffer;
   /**
    * Key-value form fields, if submitting to an endpoint expecting a URL-encoded form payload.
    */

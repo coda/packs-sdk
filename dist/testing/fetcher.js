@@ -225,7 +225,7 @@ class AuthenticatingFetcher {
                 const { username, password = '' } = this._credentials;
                 const encodedAuth = Buffer.from(`${username}:${password}`).toString('base64');
                 let bodyWithTemplateSubstitutions = body;
-                if (bodyWithTemplateSubstitutions) {
+                if (typeof bodyWithTemplateSubstitutions === 'string') {
                     // For awful APIs that require auth parameters in the request body, we have
                     // this scheme where we do template substitution of the body using an unguessable
                     // random token as part of the template key.
@@ -251,7 +251,7 @@ class AuthenticatingFetcher {
                         urlWithSubstitutions = replaceAll(urlWithSubstitutions, getTemplateReplacementValueForKey(key, this._invocationToken), encodeURIComponent(value));
                         urlWithSubstitutions = replaceAll(urlWithSubstitutions, encodeURIComponent(getTemplateReplacementValueForKey(key, this._invocationToken)), encodeURIComponent(value));
                     }
-                    if (bodyWithSubstitutions) {
+                    if (typeof bodyWithSubstitutions === 'string') {
                         bodyWithSubstitutions = replaceAll(bodyWithSubstitutions, getTemplateReplacementValueForKey(key, this._invocationToken), value);
                     }
                     if (formWithSubstitutions) {

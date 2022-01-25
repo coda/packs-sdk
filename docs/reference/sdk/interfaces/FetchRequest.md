@@ -11,7 +11,7 @@ The structure largely follows https://developer.mozilla.org/en-US/docs/Web/API/R
 
 ### body
 
-• `Optional` **body**: `string`
+• `Optional` **body**: `string` \| `Buffer`
 
 The body of the HTTP request, if any.
 
