@@ -123,29 +123,43 @@ JavaScript Date objects can only represent a specific moment at time. This means
     TODO: All dates and times in a document are relative to it's configured timezone.
 
 
-### Corresponding column types
+### Lists
 
-| Column type   | Supported | Recommended   | Notes                                               |
-| ------------- | --------- | ------------- | --------------------------------------------------- |
-| Text          | ✅ Yes    | `String`      | Use `Html` if the formatting is important.          |
-| Select list   | ✅ Yes    | `StringArray` | Works for both single and multi-value select lists. |
-| Number        | ✅ Yes    | `Number`      |                                                     |
-| Percent       | ✅ Yes    | `Number`      | Passed as a fraction.                               |
-| Currency      | ✅ Yes    | `Number`      | Use `String` to get currency symbol.                |
-| Slider        | ✅ Yes    | `Number`      |                                                     |
-| Scale         | ✅ Yes    | `Number`      |                                                     |
-| Date          | ✅ Yes    | `String`      | See the [Dates & times][dates] guide.               |
-| Time          | ✅ Yes    | `Number`      | See the [Dates & times][dates] guide.               |
-| Date and time | ✅ Yes    | `Date`        | See the [Dates & times][dates] guide.               |
-| Duration      | ✅ Yes    | `Number`      | See the [Dates & times][dates] guide.               |
-| Checkbox      | ✅ Yes    | `Boolean`     |                                                     |
-| People        | ❌ No     |               |                                                     |
-| Reaction      | ❌ No     |               |                                                     |
-| Button        | ❌ No     |               |                                                     |
-| Image         | ✅ Yes    | `ImageArray`  | Image column can contain multiple images.           |
-| Image URL     | ✅ Yes    | `Image`       |                                                     |
-| File          | ❌ No     |               |                                                     |
-| Lookup        | ❌ No     |               |                                                     |
+Each of the parameter types described above has an array variant that allows you to pass a list of values of that type. For example, `StringArray` and `NumberArray`. All of the values in the list must be of the same type.
+
+
+### Objects
+
+Pack formulas can return structured data as [Objects][data_types_objects], but it's not possible to pass those values as parameters. You can pass their properties individually using the parameter types described above, but that can get verbose if the objects are large. A more common pattern is to have a unique identifier for each object (which is required by sync tables anyway) and pass that property of the object to other formulas that need to reference it.
+
+
+### Recommended types
+
+The table below shows the recommended parameter type to use with various types of Coda column and values.
+
+| Type          | Supported | Recommended   | Notes                                                             |
+| ------------- | --------- | ------------- | ----------------------------------------------------------------- |
+| Text          | ✅ Yes    | `String`      | Use `Html` if the formatting is important.                        |
+| Select list   | ✅ Yes    | `StringArray` | Works for both single and multi-value select lists.               |
+| Number        | ✅ Yes    | `Number`      |                                                                   |
+| Percent       | ✅ Yes    | `Number`      | Passed as a fraction.                                             |
+| Currency      | ✅ Yes    | `Number`      | Use `String` to get currency symbol.                              |
+| Slider        | ✅ Yes    | `Number`      |                                                                   |
+| Scale         | ✅ Yes    | `Number`      |                                                                   |
+| Date          | ✅ Yes    | `String`      | See the [Dates & times][dates] guide.                             |
+| Time          | ✅ Yes    | `Number`      | See the [Dates & times][dates] guide.                             |
+| Date and time | ✅ Yes    | `Date`        | See the [Dates & times][dates] guide.                             |
+| Duration      | ✅ Yes    | `Number`      | See the [Dates & times][dates] guide.                             |
+| Checkbox      | ✅ Yes    | `Boolean`     |                                                                   |
+| People        | ❌ No     |               | Use `String` to get the person's name.                            |
+| Reaction      | ❌ No     |               | Use `StringArray` to get the names of the people that reacted.    |
+| Button        | ❌ No     |               |                                                                   |
+| Image         | ✅ Yes    | `ImageArray`  | Image column can contain multiple images.                         |
+| Image URL     | ✅ Yes    | `Image`       |                                                                   |
+| File          | ❌ No     |               | Using `Image` will work, but show an error in the formula editor. |
+| Lookup        | ❌ No     |               | Use `String` to get the display name of the row.                  |
+| Table         | ❌ No     |               | You can't pass an entire table, pass individual columns instead.  |
+| Page          | ✅ Yes    | `Html`        |                                                                   |
 
 
 ## Optional parameters
@@ -341,3 +355,4 @@ coda.makeParameter({
 [serial_number]: http://www.cpearson.com/excel/datetime.htm
 [unix_epoch]: https://en.wikipedia.org/wiki/Unix_time
 [dates]: ../../advanced/dates.md
+[data_types_objects]: ../../basics/data-types.md#objects
