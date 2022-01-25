@@ -20,7 +20,7 @@ By default a Pack is only allowed to register a single domain. This is done to l
 
 ## Accessing the fetcher
 
-The fetcher is made available in the `execute` method of a formula through the [`context`][ExecutionContext] object. This object is the second parameter of the `execute` method, after the array of formula parameters set by the user:
+The fetcher is made available in the `execute` function of a formula through the [`context`][ExecutionContext] object. This object is the second parameter of the `execute` function, after the array of formula parameters set by the user:
 
 ```ts
 pack.addFormula({

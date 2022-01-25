@@ -38,6 +38,12 @@ While it's easy to get started building a Pack, there are lots of options to exp
 - [x] Throw a [`UserVisibleError`][UserVisibleError] for bad input or when an expected type of error occurs. This allows you to provide a more informative error message to the user.
 
 
+## Launching
+
+- [x] Follow the recommendations in the [Best Practices for Launching your Pack][launching] guide.
+- [x] Learn about [Promotion Best Practices][promotion].
+
+
 
 [formulas_naming]: blocks/formulas.md#naming
 [formulas_caching]: blocks/formulas.md#caching
@@ -54,3 +60,5 @@ While it's easy to get started building a Pack, there are lots of options to exp
 [instructionsUrl]: ../reference/sdk/interfaces/BaseAuthentication.md#instructionsurl
 [UserVisibleError]: ../reference/sdk/classes/UserVisibleError.md
 [SyncTableOptions.description]: ../reference/sdk/interfaces/SyncTableOptions.md#description
+[launching]: https://coda.io/@joebauer/best-practices-for-launching-your-pack
+[promotion]: https://coda.io/@hector/promotion-best-practices

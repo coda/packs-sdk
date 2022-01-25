@@ -262,7 +262,7 @@ pack.addFormula({
 ```
 
 
-### Property name normalization
+### Property name normalization {: #normalization}
 
 To ensure compatibility with the Coda Formula Language and consistency across Packs, all property names are normalized to a standard format before they are shown to the user. This process removes all punctuation and whitespace and reformats the name to upper camel case (AKA PascalCase). For example, `fooBar`, `foo_bar`, and `foo bar` will all be normalized to `FooBar`. This normalization happens after your Pack is run, and you should refer to the non-normalized property names throughout your code.
 

@@ -113,10 +113,13 @@ export {autocompleteSearchObjects} from './api';
 export {makeSimpleAutocompleteMetadataFormula} from './api';
 export {simpleAutocomplete} from './api';
 
-// Execution helpers.
+// URL helpers.
 export {getQueryParams} from './helpers/url';
 export {join as joinUrl} from './helpers/url';
 export {withQueryParams} from './helpers/url';
+
+// SVG constants.
+export {SvgConstants} from './helpers/svg';
 
 // General Utilities
 export {assertCondition} from './helpers/ensure';

@@ -89,11 +89,22 @@ This will execute the formula and print the output to the terminal. (A quick rem
 
 The `coda execute` utility will look at your Pack definition to determine the types of your parameters and will interpret your arguments accordingly. For example, if your formula takes a string and you pass `123` as an argument on the command line, it will know to interpret that as a string. But if your formula takes a number, it will interpret `123` as a number before executing the formula.
 
-To pass array parameters to `coda execute`, use a comma separated string. For example, [1,2,3] should be passed with this format:
-
 ```sh
-npx coda execute src/pack.ts GetAverage "1,2,3"
+# String
+npx coda execute src/pack.ts MyFormula "Hello"
+# Number
+npx coda execute src/pack.ts MyFormula "42"
+# Boolean
+npx coda execute src/pack.ts MyFormula "true"
+# Date
+npx coda execute src/pack.ts MyFormula "1955-11-12T22:04:00-08:00"
+# Image
+npx coda execute src/pack.ts MyFormula "https://codahosted.io/..."
+# HTML
+npx coda execute src/pack.ts MyFormula "Hello <b>World</b>"
 ```
+
+To pass array parameters to `coda execute`, use a comma separated string. For example, `[1, 2, 3]` should be passed as `"1,2,3"`.
 
 
 ### Running Syncs
