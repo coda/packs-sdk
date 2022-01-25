@@ -117,10 +117,10 @@ Use the `Date` parameter type to pass a date value to your formula. Coda will au
 JavaScript Date objects can only represent a specific moment at time. This means that they can't easily represent less specific concepts like a day (regardless of time), a time (regardless of day), or duration. Coda handles those column types using the following logic:
 
 - **Date** values will be converted into a datetime representing midnight on that day in the document's timezone.
-- **Time** and **Duration** values will be converted a datetime that is that much time past the [Unix epoch][unix_epoch] (00:00:00 UTC on 1 January 1970). For example, "12 hours" will be passed as `"1899-12-30T17:00:00.000Z"`.
+- **Time** and **Duration** values will be converted a datetime that is that much time past midnight on 1899-12-30[^1], in the document's timezone. For example, "12 hours" in a document set to UTC will be passed as `1899-12-30T12:00:00.000Z`.
 
-!!! info Dates and timezones
-    TODO: All dates and times in a document are relative to it's configured timezone.
+!!! warning "Dates and timezones"
+    Because of how timezones work in Coda and JavaScript, the date passed into the parameter may appear different in your Pack code. See the [Dates & times][dates] guide for more information.
 
 
 ### Lists
