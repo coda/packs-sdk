@@ -133,35 +133,6 @@ Each of the parameter types described above has an array variant that allows you
 Pack formulas can return structured data as [Objects][data_types_objects], but it's not possible to pass those values as parameters. You can pass their properties individually using the parameter types described above, but that can get verbose if the objects are large. A more common pattern is to have a unique identifier for each object (which is required by sync tables anyway) and pass that property of the object to other formulas that need to reference it.
 
 
-### Recommended types
-
-The table below shows the recommended parameter type to use with various types of Coda column and values.
-
-| Type          | Supported | Recommended   | Notes                                                             |
-| ------------- | --------- | ------------- | ----------------------------------------------------------------- |
-| Text          | ✅ Yes    | `String`      | Use `Html` if the formatting is important.                        |
-| Select list   | ✅ Yes    | `StringArray` | Works for both single and multi-value select lists.               |
-| Number        | ✅ Yes    | `Number`      |                                                                   |
-| Percent       | ✅ Yes    | `Number`      | Passed as a fraction.                                             |
-| Currency      | ✅ Yes    | `Number`      | Use `String` to get currency symbol.                              |
-| Slider        | ✅ Yes    | `Number`      |                                                                   |
-| Scale         | ✅ Yes    | `Number`      |                                                                   |
-| Date          | ✅ Yes    | `String`      | See the [Dates & times][dates] guide.                             |
-| Time          | ✅ Yes    | `Number`      | See the [Dates & times][dates] guide.                             |
-| Date and time | ✅ Yes    | `Date`        | See the [Dates & times][dates] guide.                             |
-| Duration      | ✅ Yes    | `Number`      | See the [Dates & times][dates] guide.                             |
-| Checkbox      | ✅ Yes    | `Boolean`     |                                                                   |
-| People        | ❌ No     |               | Use `String` to get the person's name.                            |
-| Reaction      | ❌ No     |               | Use `StringArray` to get the names of the people that reacted.    |
-| Button        | ❌ No     |               |                                                                   |
-| Image         | ✅ Yes    | `ImageArray`  | Image column can contain multiple images.                         |
-| Image URL     | ✅ Yes    | `Image`       |                                                                   |
-| File          | ❌ No     |               | Using `Image` will work, but show an error in the formula editor. |
-| Lookup        | ❌ No     |               | Use `String` to get the display name of the row.                  |
-| Table         | ❌ No     |               | You can't pass an entire table, pass individual columns instead.  |
-| Page          | ✅ Yes    | `Html`        |                                                                   |
-
-
 ## Optional parameters
 
 By default all parameters you define are required. To make a parameter optional simply add `optional: true` to your parameter definition. Optional parameters are shown to the user but not required in order for the formula to execute.  Optional parameters must be defined after all of the required parameters, and like required parameters their order is reflected in the Coda formula editor and the array of values passed to the `execute` function.
@@ -331,6 +302,36 @@ coda.makeParameter({
   defaultValue: coda.PrecannedDateRange.Last30Days,
 })
 ```
+
+
+## Recommended parameter types
+
+The table below shows the recommended parameter type to use with various types of Coda columns and values.
+
+| Type          | Supported | Recommended   | Notes                                                             |
+| ------------- | --------- | ------------- | ----------------------------------------------------------------- |
+| Text          | ✅ Yes    | `String`      | Use `Html` if the formatting is important.                        |
+| Select list   | ✅ Yes    | `StringArray` | Works for both single and multi-value select lists.               |
+| Number        | ✅ Yes    | `Number`      |                                                                   |
+| Percent       | ✅ Yes    | `Number`      | Passed as a fraction.                                             |
+| Currency      | ✅ Yes    | `Number`      | Use `String` to get currency symbol.                              |
+| Slider        | ✅ Yes    | `Number`      |                                                                   |
+| Scale         | ✅ Yes    | `Number`      |                                                                   |
+| Date          | ✅ Yes    | `String`      | See the [Dates & times][dates] guide.                             |
+| Time          | ✅ Yes    | `Number`      | See the [Dates & times][dates] guide.                             |
+| Date and time | ✅ Yes    | `Date`        | See the [Dates & times][dates] guide.                             |
+| Duration      | ✅ Yes    | `Number`      | See the [Dates & times][dates] guide.                             |
+| Checkbox      | ✅ Yes    | `Boolean`     |                                                                   |
+| People        | ❌ No     |               | Use `String` to get the person's name.                            |
+| Reaction      | ❌ No     |               | Use `StringArray` to get the names of the people that reacted.    |
+| Button        | ❌ No     |               |                                                                   |
+| Image         | ✅ Yes    | `ImageArray`  | Image column can contain multiple images.                         |
+| Image URL     | ✅ Yes    | `Image`       |                                                                   |
+| File          | ❌ No     |               | Using `Image` will work, but show an error in the formula editor. |
+| Lookup        | ❌ No     |               | Use `String` to get the display name of the row.                  |
+| Table         | ❌ No     |               | You can't pass an entire table, pass individual columns instead.  |
+| Page          | ✅ Yes    | `Html`        |                                                                   |
+
 
 
 [^1]: The representation is known as ["serial number"][serial_number] and is common to all major spreadsheet applications.
