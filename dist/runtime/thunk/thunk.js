@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleFetcherStatusError = exports.handleError = exports.handleErrorAsync = exports.ensureSwitchUnreachable = exports.findAndExecutePackFunction = exports.unmarshalValue = exports.marshalValue = void 0;
 const types_1 = require("../../types");
+const buffer_1 = require("buffer");
 const types_2 = require("../types");
 const types_3 = require("../types");
 const types_4 = require("../../types");
@@ -20,6 +21,8 @@ Object.defineProperty(exports, "unmarshalValue", { enumerable: true, get: functi
  */
 async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, shouldWrapError = true) {
     try {
+        // in case the pack bundle is compiled in the browser, Buffer may not be browserified yet.
+        global.Buffer = buffer_1.Buffer;
         return await doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext);
     }
     catch (err) {
