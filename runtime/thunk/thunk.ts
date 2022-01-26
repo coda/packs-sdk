@@ -40,7 +40,9 @@ export async function findAndExecutePackFunction<T extends FormulaSpecification>
 ): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
   try {
     // in case the pack bundle is compiled in the browser, Buffer may not be browserified yet.
-    global.Buffer = Buffer;
+    if (!global.Buffer) {
+      global.Buffer = Buffer;
+    }
 
     return await doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext);
   } catch (err: any) {

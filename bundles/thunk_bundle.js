@@ -4570,7 +4570,9 @@ module.exports = (() => {
   // runtime/thunk/thunk.ts
   async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, shouldWrapError = true) {
     try {
-      global.Buffer = import_buffer.Buffer;
+      if (!global.Buffer) {
+        global.Buffer = import_buffer.Buffer;
+      }
       return await doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext);
     } catch (err) {
       throw shouldWrapError ? wrapError(err) : err;

@@ -22,7 +22,9 @@ Object.defineProperty(exports, "unmarshalValue", { enumerable: true, get: functi
 async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, shouldWrapError = true) {
     try {
         // in case the pack bundle is compiled in the browser, Buffer may not be browserified yet.
-        global.Buffer = buffer_1.Buffer;
+        if (!global.Buffer) {
+            global.Buffer = buffer_1.Buffer;
+        }
         return await doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext);
     }
     catch (err) {
