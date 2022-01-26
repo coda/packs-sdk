@@ -114,7 +114,7 @@ Use the `Boolean` parameter type to pass a boolean (true/false) to your formula.
 
 Use the `Date` parameter type to pass a date value to your formula. Coda will automatically apply the [`ToDateTime()`][ToDateTime] formula to the input and pass it to the `execute` function as a [JavaScript Date][mdn_date].
 
-JavaScript Date objects can only represent a specific moment at time. This means that they can't easily represent less specific concepts like a day (regardless of time), a time (regardless of day), or duration. Coda handles those column types using the following logic:
+JavaScript Date objects can only represent a specific moment in time. This means that they can't easily represent less specific concepts like a day (regardless of time), a time (regardless of day), or duration. Coda handles those column types using the following logic:
 
 - **Date** values will be converted into a datetime representing midnight on that day in the document's timezone.
 - **Time** and **Duration** values will be converted a datetime that is that much time past midnight on 1899-12-30[^1], in the document's timezone. For example, "12 hours" in a document set to UTC will be passed as `1899-12-30T12:00:00.000Z`.
@@ -130,7 +130,9 @@ Each of the parameter types described above has an array variant that allows you
 
 ### Objects
 
-Pack formulas can return structured data as [Objects][data_types_objects], but it's not possible to pass those values as parameters. You can pass their properties individually using the parameter types described above, but that can get verbose if the objects are large. A more common pattern is to have a unique identifier for each object (which is required by sync tables anyway) and pass that property of the object to other formulas that need to reference it.
+Pack formulas can return structured data as [Objects][data_types_objects], but it's not possible to pass them as parameters. Users can't construct objects in the Coda formula language, so in general they don't make for a great input type.
+
+If your Pack returns an object in one formula that you'd like to use an input to another formula, instead of passing the entire object you can just pass it's unique ID. For example, the [Todoist Pack][samples_todoist] contains a `Tasks` sync table which returns `Task` objects. The `MarkAsComplete()` formula only takes the task's ID as input instead of the entire object.
 
 
 ## Optional parameters
@@ -328,7 +330,7 @@ The table below shows the recommended parameter type to use with various types o
 | Image         | ✅ Yes    | `ImageArray`  | Image column can contain multiple images.                         |
 | Image URL     | ✅ Yes    | `Image`       |                                                                   |
 | File          | ❌ No     |               | Using `Image` will work, but show an error in the formula editor. |
-| Lookup        | ❌ No     |               | Use `String` to get the display name of the row.                  |
+| Lookup        | ❌ No     |               | Use `StringArray` to get the display name of the row(s).          |
 | Table         | ❌ No     |               | You can't pass an entire table, pass individual columns instead.  |
 | Page          | ✅ Yes    | `Html`        |                                                                   |
 
@@ -357,3 +359,4 @@ The table below shows the recommended parameter type to use with various types o
 [unix_epoch]: https://en.wikipedia.org/wiki/Unix_time
 [dates]: ../../advanced/dates.md
 [data_types_objects]: ../../basics/data-types.md#objects
+[samples_todoist]: ../../../samples/full/todoist.md
