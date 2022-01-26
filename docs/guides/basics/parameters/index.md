@@ -132,7 +132,7 @@ Each of the parameter types described above has an array variant that allows you
 
 Pack formulas can return structured data as [Objects][data_types_objects], but it's not possible to pass them as parameters. Users can't construct objects in the Coda formula language, so in general they don't make for a great input type.
 
-If your Pack returns an object in one formula that you'd like to use an input to another formula, instead of passing the entire object you can just pass it's unique ID. For example, the [Todoist Pack][samples_todoist] contains a `Tasks` sync table which returns `Task` objects. The `MarkAsComplete()` formula only takes the task's ID as input instead of the entire object.
+If your Pack returns an object in one formula that you'd like to use an input to another formula, instead of passing the entire object you can just pass its unique ID. For example, the [Todoist Pack][samples_todoist] contains a `Tasks` sync table which returns `Task` objects. The `MarkAsComplete()` formula only takes the task's ID as input instead of the entire object.
 
 
 ## Optional parameters
@@ -175,14 +175,14 @@ When using a formula with optional parameters, the user may choose to set those 
 Scream("What is this", character: "?")
 ```
 
-In this case the `text` and `character` parameters would be set, but the `volume` parameter would be undefined, and therefore use it's default value of `3`.
+In this case the `text` and `character` parameters would be set, but the `volume` parameter would be undefined, and therefore use its default value of `3`.
 
 
 ## Suggested values
 
 As a convenience to users of your Pack, you can provide a suggested value for a parameter. When they use your formula the default will be pre-populated in the formula editor, action dialog, etc. The user is then free to edit or replace it this value.
 
-To add a suggested value to a parameter set the field `defaultValue` to the value you'd like to use. The suggested value must be of the same type as the parameter, for example a number parameter must have a number as it's suggested default value.
+To add a suggested value to a parameter set the field `defaultValue` to the value you'd like to use. The suggested value must be of the same type as the parameter, for example a number parameter must have a number as its suggested default value.
 
 ```ts
 coda.makeParameter({
