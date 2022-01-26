@@ -72,6 +72,69 @@ The order that you define the parameters determines the order they are passed in
     ```
 
 
+## Parameter types {: #types}
+
+When defining a parameter you must specify what type of data the parameter will accept. The enum [`ParameterType`][ParameterType] lists all of the allowed parameter types.
+
+
+### Plain text
+
+Use the `String` parameter to pass a plain text value to your formula. Coda will automatically apply the [`ToText()`][ToText] formula to the input and pass it to the `execute` function as a [JavaScript String][mdn_string].
+
+String parameters are compatible with almost every column type in Coda, as most have a text representation. At times a string parameter may be better than a more semantically accurate type, as it allows you to access the value as shown to the user.
+
+
+### Rich text
+
+Use the `Html` parameter type to pass text values with formatting included. Coda will convert the formatting to an equivalent block of HTML markup, and pass it to the `execute` function as a [JavaScript String][mdn_string].
+
+Like string parameters, HTML parameters can accept a wide array of column types. The generated HTML may be quite different than how it displays in Coda however, and is closer to what you'd get if you pasted that value into another rich text editor.
+
+!!! warning "HTML markup may change"
+    The generated HTML for a given value is not a stable API surface that you should rely on. We may change it at any time without warning, so we don't recommend that you parse it to extract information. Use it for display purposes only.
+
+
+### Numbers
+
+Use the `Number` parameter type to pass a number to your formula. Coda will automatically apply the [`ToNumber()`][ToNumber] formula to the input and pass it to the `execute` function as a [JavaScript Number][mdn_number].
+
+The number equivalent for some column types may not be obvious. Specifically:
+
+- **Percent** values will be converted into the equivalent fraction. For example, "75%" will be passed as `0.75`.
+- **Date** and **Date and time** values will be converted into the number of days since 1899-12-30[^1]. For example, "1955-11-12" will be passed as `20405`.
+- **Time** and **Duration** values will be converted into a number of days. For example, "12 hrs" will be passed as `0.5`.
+
+
+### Booleans
+
+Use the `Boolean` parameter type to pass a boolean (true/false) to your formula. Coda will pass the value to the `execute` function as a [JavaScript Boolean][mdn_boolean].
+
+
+### Dates
+
+Use the `Date` parameter type to pass a date value to your formula. Coda will automatically apply the [`ToDateTime()`][ToDateTime] formula to the input and pass it to the `execute` function as a [JavaScript Date][mdn_date].
+
+JavaScript Date objects can only represent a specific moment in time. This means that they can't easily represent less specific concepts like a day (regardless of time), a time (regardless of day), or duration. Coda handles those column types using the following logic:
+
+- **Date** values will be converted into a datetime representing midnight on that day in the document's timezone.
+- **Time** and **Duration** values will be converted a datetime that is that much time past midnight on 1899-12-30[^1], in the document's timezone. For example, "12 hours" in a document set to UTC will be passed as `1899-12-30T12:00:00.000Z`.
+
+!!! warning "Dates and timezones"
+    Because of how timezones work in Coda and JavaScript, the date passed into the parameter may appear different in your Pack code. See the [Dates & times][dates] guide for more information.
+
+
+### Lists
+
+Each of the parameter types described above has an array variant that allows you to pass a list of values of that type. For example, `StringArray` and `NumberArray`. All of the values in the list must be of the same type.
+
+
+### Objects
+
+Pack formulas can return structured data as [Objects][data_types_objects], but it's not possible to pass them as parameters. Users can't construct objects in the Coda formula language, so in general they don't make for a great input type.
+
+If your Pack returns an object in one formula that you'd like to use an input to another formula, instead of passing the entire object you can just pass its unique ID. For example, the [Todoist Pack][samples_todoist] contains a `Tasks` sync table which returns `Task` objects. The `MarkAsComplete()` formula only takes the task's ID as input instead of the entire object.
+
+
 ## Optional parameters
 
 By default all parameters you define are required. To make a parameter optional simply add `optional: true` to your parameter definition. Optional parameters are shown to the user but not required in order for the formula to execute.  Optional parameters must be defined after all of the required parameters, and like required parameters their order is reflected in the Coda formula editor and the array of values passed to the `execute` function.
@@ -112,14 +175,14 @@ When using a formula with optional parameters, the user may choose to set those 
 Scream("What is this", character: "?")
 ```
 
-In this case the `text` and `character` parameters would be set, but the `volume` parameter would be undefined, and therefore use it's default value of `3`.
+In this case the `text` and `character` parameters would be set, but the `volume` parameter would be undefined, and therefore use its default value of `3`.
 
 
 ## Suggested values
 
 As a convenience to users of your Pack, you can provide a suggested value for a parameter. When they use your formula the default will be pre-populated in the formula editor, action dialog, etc. The user is then free to edit or replace it this value.
 
-To add a suggested value to a parameter set the field `defaultValue` to the value you'd like to use. The suggested value must be of the same type as the parameter, for example a number parameter must have a number as it's suggested default value.
+To add a suggested value to a parameter set the field `defaultValue` to the value you'd like to use. The suggested value must be of the same type as the parameter, for example a number parameter must have a number as its suggested default value.
 
 ```ts
 coda.makeParameter({
@@ -243,6 +306,38 @@ coda.makeParameter({
 ```
 
 
+## Recommended parameter types
+
+The table below shows the recommended parameter type to use with various types of Coda columns and values.
+
+| Type          | Supported | Recommended   | Notes                                                             |
+| ------------- | --------- | ------------- | ----------------------------------------------------------------- |
+| Text          | ✅ Yes    | `String`      | Use `Html` if the formatting is important.                        |
+| Select list   | ✅ Yes    | `StringArray` | Works for both single and multi-value select lists.               |
+| Number        | ✅ Yes    | `Number`      |                                                                   |
+| Percent       | ✅ Yes    | `Number`      | Passed as a fraction.                                             |
+| Currency      | ✅ Yes    | `Number`      | Use `String` to get currency symbol.                              |
+| Slider        | ✅ Yes    | `Number`      |                                                                   |
+| Scale         | ✅ Yes    | `Number`      |                                                                   |
+| Date          | ✅ Yes    | `String`      | See the [Dates & times][dates] guide.                             |
+| Time          | ✅ Yes    | `Number`      | See the [Dates & times][dates] guide.                             |
+| Date and time | ✅ Yes    | `Date`        | See the [Dates & times][dates] guide.                             |
+| Duration      | ✅ Yes    | `Number`      | See the [Dates & times][dates] guide.                             |
+| Checkbox      | ✅ Yes    | `Boolean`     |                                                                   |
+| People        | ❌ No     |               | Use `String` to get the person's name.                            |
+| Reaction      | ❌ No     |               | Use `StringArray` to get the names of the people that reacted.    |
+| Button        | ❌ No     |               |                                                                   |
+| Image         | ✅ Yes    | `ImageArray`  | Image column can contain multiple images.                         |
+| Image URL     | ✅ Yes    | `Image`       |                                                                   |
+| File          | ❌ No     |               | Using `Image` will work, but show an error in the formula editor. |
+| Lookup        | ❌ No     |               | Use `StringArray` to get the display name of the row(s).          |
+| Table         | ❌ No     |               | You can't pass an entire table, pass individual columns instead.  |
+| Page          | ✅ Yes    | `Html`        |                                                                   |
+
+
+
+[^1]: The representation is known as ["serial number"][serial_number] and is common to all major spreadsheet applications.
+
 [samples]: ../../../samples/topic/parameter.md
 [parameters]: ../../../reference/sdk/interfaces/PackFormulaDef.md#parameters
 [makeParameter]: ../../../reference/sdk/functions/makeParameter.md
@@ -252,3 +347,16 @@ coda.makeParameter({
 [autocomplete]: autocomplete.md
 [PrecannedDateRange]: ../../../reference/sdk/enums/PrecannedDateRange.md
 [calendar_pack]: https://coda.io/packs/google-calendar-1003/documentation
+[ParameterType]: ../../../reference/sdk/enums/ParameterType.md
+[ToText]: https://coda.io/formulas#ToText
+[ToNumber]: https://coda.io/formulas#ToNumber
+[ToDateTime]: https://coda.io/formulas#ToDateTime
+[mdn_string]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
+[mdn_number]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number
+[mdn_boolean]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[mdn_date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
+[serial_number]: http://www.cpearson.com/excel/datetime.htm
+[unix_epoch]: https://en.wikipedia.org/wiki/Unix_time
+[dates]: ../../advanced/dates.md
+[data_types_objects]: ../../basics/data-types.md#objects
+[samples_todoist]: ../../../samples/full/todoist.md
