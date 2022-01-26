@@ -331,7 +331,7 @@ export class AuthenticatingFetcher implements Fetcher {
 
           if (typeof bodyWithSubstitutions === 'string') {
             bodyWithSubstitutions = replaceAll(
-              bodyWithSubstitutions as string,
+              bodyWithSubstitutions,
               getTemplateReplacementValueForKey(key, this._invocationToken),
               value,
             );
