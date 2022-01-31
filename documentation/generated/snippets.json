@@ -57,7 +57,7 @@
       "ColumnFormat"
     ],
     "content": "Adds a custom column type that you apply to any column in any Coda table.",
-    "code": "pack.addColumnFormat({\n  name: \"<User-visible name>\",\n  instructions: \"<Help text for the format>\",\n  formulaName: \"<Name of the formula to run>\",\n  formulaNamespace: \"Deprecated\", // Will be removed shortly\n});"
+    "code": "pack.addColumnFormat({\n  name: \"<User-visible name>\",\n  instructions: \"<Help text for the format>\",\n  formulaName: \"<Name of the formula to run>\",\n  matchers: [\n    // If formatting a URL, a regular expression that matches that URL.\n  ],\n});"
   },
   {
     "triggerTokens": [
