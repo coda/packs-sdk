@@ -19,7 +19,9 @@ pack.addColumnFormat({
   name: "<User-visible name>",
   instructions: "<Help text for the format>",
   formulaName: "<Name of the formula to run>",
-  formulaNamespace: "Deprecated", // Will be removed shortly
+  matchers: [
+    // If formatting a URL, a regular expression that matches that URL.
+  ],
 });
 ```
 ## Text (Reverse)
@@ -33,11 +35,10 @@ export const pack = coda.newPack();
 // column in reverse order.
 pack.addColumnFormat({
   name: "Reversed Text",
+  instructions: "Whatever text you enter into this column will be reversed.",
   // The formula "Reverse()" (defined below) will be run on the content of the
   // column to determine it's display value.
   formulaName: "Reverse",
-  formulaNamespace: "Deprecated", // Will be removed shortly.
-  instructions: "Whatever text you enter into this column will be reversed.",
 });
 
 // Adds a formula to this Pack to reverse text. It is used by the column format
@@ -84,7 +85,6 @@ pack.addColumnFormat({
   name: "Roman Numeral",
   instructions: "Displays the number as a Roman numeral.",
   formulaName: "RomanNumeral",
-  formulaNamespace: "Deprecated", // Will be removed shortly
 });
 
 // Adds a formula to this Pack to convert a number to a Roman numeral. It is
@@ -134,7 +134,6 @@ pack.addColumnFormat({
   name: "Progress Bar",
   instructions: "Draws a progress bar with the given percentage.",
   formulaName: "ProgressBar",
-  formulaNamespace: "Deprecated", // Will be removed shortly
 });
 
 // Adds a formula to this Pack to draw a number as a progress bar. It is used by
