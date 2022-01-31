@@ -7,7 +7,6 @@ pack.addColumnFormat({
   name: "Roman Numeral",
   instructions: "Displays the number as a Roman numeral.",
   formulaName: "RomanNumeral",
-  formulaNamespace: "Deprecated", // Will be removed shortly
 });
 
 // Adds a formula to this Pack to convert a number to a Roman numeral. It is

@@ -7,7 +7,6 @@ pack.addColumnFormat({
   name: "Progress Bar",
   instructions: "Draws a progress bar with the given percentage.",
   formulaName: "ProgressBar",
-  formulaNamespace: "Deprecated", // Will be removed shortly
 });
 
 // Adds a formula to this Pack to draw a number as a progress bar. It is used by

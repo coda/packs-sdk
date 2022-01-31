@@ -5,11 +5,10 @@ export const pack = coda.newPack();
 // column in reverse order.
 pack.addColumnFormat({
   name: "Reversed Text",
+  instructions: "Whatever text you enter into this column will be reversed.",
   // The formula "Reverse()" (defined below) will be run on the content of the
   // column to determine it's display value.
   formulaName: "Reverse",
-  formulaNamespace: "Deprecated", // Will be removed shortly.
-  instructions: "Whatever text you enter into this column will be reversed.",
 });
 
 // Adds a formula to this Pack to reverse text. It is used by the column format
