@@ -69,7 +69,7 @@
     "@types/sha.js": "^2.4.0",
     "@types/sinon": "^10.0.6",
     "@types/uglify-js": "^3.13.1",
-    "@types/url-parse": "^1.4.6",
+    "@types/url-parse": "^1.4.7",
     "@types/uuid": "^8.3.4",
     "@types/xml2js": "^0.4.9",
     "@types/yargs": "^17.0.8",
