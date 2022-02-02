@@ -41,13 +41,13 @@ This Pack provides a `Daylight` formula that determines the daylight, sunrise,
           type: coda.ValueType.String,
           codaType: coda.ValueHintType.Duration,
         },
-        sunriseUTC: {
-          description: "When the sun will rise (in UTC).",
+        sunrise: {
+          description: "When the sun will rise (in the document's timezone).",
           type: coda.ValueType.String,
           codaType: coda.ValueHintType.Time,
         },
-        sunsetUTC: {
-          description: "When the sun will set (in UTC).",
+        sunset: {
+          description: "When the sun will set (in the document's timezone).",
           type: coda.ValueType.String,
           codaType: coda.ValueHintType.Time,
         },
@@ -97,41 +97,36 @@ This Pack provides a `Daylight` formula that determines the daylight, sunrise,
         // Default to today if no date is provided.
         let lookupDate = date || new Date();
 
-        // Format date to yyyy-mm-dd format as required by this API.
-        let formattedDate = lookupDate.toISOString().split("T")[0];
+        // Format the date parameter to a date string in the correct timezone.
+        let formattedDate = lookupDate.toLocaleDateString("en", {
+          timeZone: context.timezone, // Use the timezone of the doc (important!).
+        });
 
         // Create the URL to fetch, using the helper function coda.withQueryParams
         // to add on query parameters (ex: "?lat=40.123...").
         let url = coda.withQueryParams("https://api.sunrise-sunset.org/json", {
           lat: lat,
           lng: lng,
-          date: formattedDate
+          date: formattedDate,
+          formatted: 0,
         });
 
         // Fetch the URL and get the response.
         let response = await context.fetcher.fetch({
           method: "GET",
-          url: url
+          url: url,
         });
 
         // The JSON returned by the API is parsed automatically and available in
         // `response.body`. Here we pull out the content in the "results" key.
         let results = response.body.results;
 
-        // Re-format the day_length string to [h] hrs [m] mins [s] secs to work as a
-        // duration.
-        let hours = results.day_length.split(":")[0];
-        let mins = results.day_length.split(":")[1];
-        let secs = results.day_length.split(":")[2];
-
-        let daylight = `${hours} hrs ${mins} mins ${secs} secs`;
-
         // Return the final object. The keys here must match with the properties
         // defined above in the schema.
         return {
-          daylight: daylight,
-          sunriseUTC: response.body.results.sunrise,
-          sunsetUTC: response.body.results.sunset,
+          daylight: results.day_length + " seconds",
+          sunrise: results.sunrise,
+          sunset: results.sunset,
         };
       },
     });
