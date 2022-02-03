@@ -498,7 +498,7 @@ export const Examples: Example[] = [
       {
         name: 'Date and time',
         content: 'A formula that returns a date and time, passed as a string. This sample adds five minutes onto the given date and time.',
-        codeFile: './examples/data-type/five_mins_late.ts',
+        codeFile: './examples/dates/five_mins_late.ts',
       },
       {
         name: 'Markdown',
@@ -551,6 +551,43 @@ export const Examples: Example[] = [
         name: 'With self-reference',
         content: 'An object schema used by a sync table, that includes a row reference to itself. This sample defines the schema for a task in Todoist, where tasks can have parent tasks.',
         codeFile: './examples/todoist/schema.ts',
+      },
+    ],
+  },
+  {
+    name: 'Dates and times',
+    category: ExampleCategory.Topic,
+    triggerTokens: ['Date', 'Time', 'DateTime'],
+    contentFile: './examples/dates/README.md',
+    linkData: {
+      type: UrlType.SdkReferencePath,
+      url: '/guides/advanced/timezones',
+    },
+    exampleSnippets: [
+      {
+        name: 'Local date',
+        content: 'A formula that requires getting a date in the document\'s timezone. This sample determines if the year of a given date would make for good New Years Eve glasses (has two or more zeros).',
+        codeFile: './examples/dates/nye_glasses.ts',
+      },
+      {
+        name: 'Local time',
+        content: 'A formula that requires getting a time in the document\'s timezone. This sample shows a time using the military format (ex: "0900 hours").',
+        codeFile: './examples/dates/military_time.ts',
+      },
+      {
+        name: 'Local date and time',
+        content: 'A formula that requires getting a date and time in the document\'s timezone. This sample determines if all of the digits are the same (ex: 1/1/11 1:11).',
+        codeFile: './examples/dates/same_digit.ts',
+      },
+      {
+        name: 'Send to API',
+        content: 'A formula that requires sending a date to an API. This sample use the Calendarific API to get the holidays on a given date.',
+        codeFile: './examples/dates/holidays.ts',
+      },
+      {
+        name: 'Time math',
+        content: 'A formula that computes a relative time. This sample adds five minutes onto an input date and time.',
+        codeFile: './examples/dates/five_mins_late.ts',
       },
     ],
   },

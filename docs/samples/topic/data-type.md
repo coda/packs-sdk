@@ -224,12 +224,13 @@ pack.addFormula({
       description: "The input date and time.",
     }),
   ],
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.DateTime,
+  // Return the result as the number of seconds since the epoch.
+  resultType: coda.ValueType.Number,
+  codaType: coda.ValueHintType.Time,
   execute: async function ([input], context) {
-    let result = new Date(input.getTime());
-    result.setMinutes(result.getMinutes() + 5);
-    return result.toISOString();
+    let seconds = input.getTime() / 1000;
+    seconds += 5 * 60; // Add five minutes, as seconds.
+    return seconds;
   },
 });
 ```

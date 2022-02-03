@@ -150,13 +150,13 @@ pack.addFormula({
 <!-- TODO: Fully document the allowed markup. -->
 
 
-### Dates and times
+### Dates and times {: .dates}
 
 The [`Date`][Date], [`Time`][Time], and [`DateTime`][DateTime] value hints can be applied to either `String` or `Number` values.
 
-When used with a string value, Coda attempts to parse the value, and is able to parse a wide variety of date and time formats. For maximum compatibility however use the [ISO 8601][ISO_8601] format. When using a JavaScript `Date` object this can be obtained by calling `toISOString()`.
+When used with a string value, Coda attempts to parse the value, and is able to parse a wide variety of date and time formats. For maximum compatibility however use the [ISO 8601][ISO_8601] format. When using a JavaScript `Date` object this can be obtained by calling `toISOString()`. If the string doesn't include a timezone identifier or offset then Coda will assume it's already in the timezone of the document. See the [Timezones guide][timezones] for more information about how timezones affect return values.
 
-When used with a number value, the number should contain the number of seconds since the [Unix epoch][unix_epoch] (00:00:00 UTC on 1 January 1970). When using a JavaScript `Date` object this can be obtained by calling `getTime()`.
+When used with a number value, the number should contain the number of seconds since the [Unix epoch][unix_epoch] (00:00:00 UTC on 1 January 1970). When using a JavaScript `Date` object this can be obtained by calling `getTime()` and dividing by 1000.
 
 === "From String"
 
@@ -181,7 +181,7 @@ When used with a number value, the number should contain the number of seconds s
       codaType: coda.ValueHintType.DateTime,
       execute: async function ([], context) {
         let now = new Date();
-        return now.getTime();
+        return now.getTime() / 1000;
       },
     });
     ```
@@ -190,7 +190,7 @@ When used with a number value, the number should contain the number of seconds s
     The `Date` and `Time` value hints currently only work correctly within a sync table. When used outside of a sync table both the date and time parts of the returned date will be visible, as if `DateTime` was used.
 
 
-### Durations
+### Durations {: .durations}
 
 The [`Duration`][Duration] value hint represents an amount of time, rather than a specific time. It can only be applied to `String` values, and those strings must match one of a few formats:
 
@@ -199,11 +199,13 @@ The [`Duration`][Duration] value hint represents an amount of time, rather than 
 | 6                           | 6 days              | A single number is days.        |
 | 6:01                        | 6 hrs 1 min         | Hours and minutes.              |
 | 6:01:15                     | 6 hrs 1 min 15 secs | Hours, minutes, and seconds.    |
-| 6 hours 1 minute 15 seconds | 5 hrs 1 min 15 secs | Full units.                     |
-| 6 hrs 1 min 15 secs         | 5 hrs 1 min 15 secs | Abbreviated units.              |
-| 6 hrs, 1 min, 15 secs       | 5 hrs 1 min 15 secs | Commas allowed.                 |
-| 0.25 days, 1 min, 15 secs   | 5 hrs 1 min 15 secs | Fractional amounts allowed.     |
+| 6 hours 1 minute 15 seconds | 6 hrs 1 min 15 secs | Full units.                     |
+| 6 hrs 1 min 15 secs         | 6 hrs 1 min 15 secs | Abbreviated units.              |
+| 6 hrs, 1 min, 15 secs       | 6 hrs 1 min 15 secs | Commas allowed.                 |
+| 0.25 days, 1 min, 15 secs   | 6 hrs 1 min 15 secs | Fractional amounts allowed.     |
 | 72000 minutes               | 50 days             | Don't use thousands separators. |
+
+Any duration value your Pack returns will automatically be converted into its most user-friendly form by Coda. For example, `3600 seconds` will be shown to the user as **1 hr**.
 
 ```ts
 pack.addFormula({

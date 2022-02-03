@@ -110,17 +110,17 @@ The number equivalent for some column types may not be obvious. Specifically:
 Use the `Boolean` parameter type to pass a boolean (true/false) to your formula. Coda will pass the value to the `execute` function as a [JavaScript Boolean][mdn_boolean].
 
 
-### Dates
+### Dates {: .dates}
 
 Use the `Date` parameter type to pass a date value to your formula. Coda will automatically apply the [`ToDateTime()`][ToDateTime] formula to the input and pass it to the `execute` function as a [JavaScript Date][mdn_date].
 
 JavaScript Date objects can only represent a specific moment in time. This means that they can't easily represent less specific concepts like a day (regardless of time), a time (regardless of day), or duration. Coda handles those column types using the following logic:
 
 - **Date** values will be converted into a datetime representing midnight on that day in the document's timezone.
-- **Time** and **Duration** values will be converted a datetime that is that much time past midnight on 1899-12-30[^1], in the document's timezone. For example, "12 hours" in a document set to UTC will be passed as `1899-12-30T12:00:00.000Z`.
+- **Time** and **Duration** values will be converted a datetime that is that much time past midnight on 1899-12-30[^1], in the document's timezone. For example, the duration "12 hours" in a document set to "America/New York" will be passed as `Sat Dec 30 1899 12:00:00 GMT-0500 (Eastern Standard Time)`.
 
-!!! warning "Dates and timezones"
-    Because of how timezones work in Coda and JavaScript, the date passed into the parameter may appear different in your Pack code. See the [Dates & times][dates] guide for more information.
+!!! warning "Timezone shifting"
+    Because of how timezones work in Coda and JavaScript, the date passed into the parameter may appear different in your Pack code. See the [Timezones guide][timezones] for more information.
 
 
 ### Lists
@@ -319,10 +319,10 @@ The table below shows the recommended parameter type to use with various types o
 | Currency      | ✅ Yes    | `Number`      | Use `String` to get currency symbol.                              |
 | Slider        | ✅ Yes    | `Number`      |                                                                   |
 | Scale         | ✅ Yes    | `Number`      |                                                                   |
-| Date          | ✅ Yes    | `String`      | See the [Dates & times][dates] guide.                             |
-| Time          | ✅ Yes    | `Number`      | See the [Dates & times][dates] guide.                             |
-| Date and time | ✅ Yes    | `Date`        | See the [Dates & times][dates] guide.                             |
-| Duration      | ✅ Yes    | `Number`      | See the [Dates & times][dates] guide.                             |
+| Date          | ✅ Yes    | `Date`        |                                                                   |
+| Time          | ✅ Yes    | `Date`        |                                                                   |
+| Date and time | ✅ Yes    | `Date`        |                                                                   |
+| Duration      | ✅ Yes    | `Number`      |                                                                   |
 | Checkbox      | ✅ Yes    | `Boolean`     |                                                                   |
 | People        | ❌ No     |               | Use `String` to get the person's name.                            |
 | Reaction      | ❌ No     |               | Use `StringArray` to get the names of the people that reacted.    |
@@ -357,6 +357,6 @@ The table below shows the recommended parameter type to use with various types o
 [mdn_date]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
 [serial_number]: http://www.cpearson.com/excel/datetime.htm
 [unix_epoch]: https://en.wikipedia.org/wiki/Unix_time
-[dates]: ../../advanced/dates.md
+[timezones]: ../../advanced/timezones.md
 [data_types_objects]: ../../basics/data-types.md#objects
 [samples_todoist]: ../../../samples/full/todoist.md
