@@ -1,5 +1,6 @@
 ---
 title: Formulas
+description: "Formulas are one of the most basic building blocks in Coda, and using Packs you can add your own custom ones."
 ---
 
 # Add custom formulas
