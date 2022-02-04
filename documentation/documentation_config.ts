@@ -687,4 +687,20 @@ export const Examples: Example[] = [
       },
     ],
   },
+  {
+    name: 'GitHub',
+    category: ExampleCategory.Full,
+    triggerTokens: [],
+    contentFile: './examples/github/README.md',
+    linkData: {
+      type: UrlType.SamplePage,
+    },
+    exampleSnippets: [
+      {
+        name: 'pack.ts',
+        content: '',
+        codeFile: './examples/github/full.ts',
+      },
+    ],
+  },
 ];

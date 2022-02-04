@@ -686,4 +686,20 @@ exports.Examples = [
             },
         ],
     },
+    {
+        name: 'GitHub',
+        category: types_1.ExampleCategory.Full,
+        triggerTokens: [],
+        contentFile: './examples/github/README.md',
+        linkData: {
+            type: types_2.UrlType.SamplePage,
+        },
+        exampleSnippets: [
+            {
+                name: 'pack.ts',
+                content: '',
+                codeFile: './examples/github/full.ts',
+            },
+        ],
+    },
 ];
