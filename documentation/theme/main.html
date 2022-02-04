@@ -3,24 +3,18 @@
 {% block extrahead %}
 
 {% set title = config.site_name %}
-{% if page and page.toc|first is defined %}
+{% if page.toc|first is defined %}
   {% set title = page.toc.items[0].title ~ " - " ~ title %}
-{% elif page and page.meta and page.meta.title %}
+{% elif page.meta and page.meta.title %}
     {% set title = page.meta.title ~ " - " ~ title %}
-{% elif page and page.title and not page.is_homepage %}
+{% elif page.title and not page.is_homepage %}
   {% set title = page.title ~ " - " ~ title %}
 {% endif %}
 
 {% set description = config.site_description %}
-{% if page and page.meta and page.meta.description %}
+{% if page.meta and page.meta.description %}
   {% set description = page.meta.description %}
 {% endif %}
-
-{% set url =  config.site_url %}
-{% if page %}
-  {% set url =  page.canonical_url %}
-{% endif %}
-
 
 <meta name="description" content="{{ description }}" />
 <meta name="image" content="https://cdn.coda.io/external/img/doc-banner-compressed-2x-v2.jpg" />
@@ -30,7 +24,7 @@
 <meta name="twitter:site" content="@coda_hq" />
 <meta name="twitter:title" content="{{ title }}" />
 <meta name="twitter:description" content="{{ description }}" />
-<meta name="twitter:url" content="{{ url }}" />
+<meta name="twitter:url" content="{{ page.canonical_url }}" />
 <meta name="twitter:image" content="https://cdn.coda.io/external/img/doc-banner-compressed-2x-v2.jpg" />
 <meta name="twitter:card" content="summary_large_image" />
 
@@ -39,7 +33,7 @@
 <meta property="og:site_name" content="{{ config.site_name }}" />
 <meta property="og:title" content="{{ title }}" />
 <meta property="og:description" content="{{ description }}" />
-<meta property="og:url" content="{{ url }}" />
+<meta property="og:url" content="{{ page.canonical_url }}" />
 <meta property="og:image" content="https://cdn.coda.io/external/img/doc-banner-compressed-2x-v2.jpg" />
 {% endblock %}
 
