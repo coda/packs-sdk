@@ -71,7 +71,7 @@ pack.addFormula({
     // Remove the colon separating the hours and minutes.
     formatted = formatted.replace(":", "");
     return formatted + " hours";
-  }
+  },
 });
 ```
 ## Local date and time
@@ -127,7 +127,7 @@ const HolidaySchema = coda.makeObjectSchema({
     locations: { type: coda.ValueType.String },
     type: {
       type: coda.ValueType.Array,
-      items: { type: coda.ValueType.String }
+      items: { type: coda.ValueType.String },
     },
   },
   primary: "name",

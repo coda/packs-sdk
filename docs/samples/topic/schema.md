@@ -17,8 +17,8 @@ The basic structure of an object schema.
 ```ts
 const MySchema = coda.makeObjectSchema({
   properties: {
-    property1: {type: coda.ValueType.Number},
-    property2: {type: coda.ValueType.String},
+    property1: { type: coda.ValueType.Number },
+    property2: { type: coda.ValueType.String },
     // Add more properties here.
   },
   id: "property1", // Which property above is a unique ID.
@@ -140,8 +140,8 @@ export const pack = coda.newPack();
 const TaskReferenceSchema = coda.makeObjectSchema({
   codaType: coda.ValueHintType.Reference,
   properties: {
-    name: {type: coda.ValueType.String, required: true},
-    taskId: {type: coda.ValueType.Number, required: true},
+    name: { type: coda.ValueType.String, required: true },
+    taskId: { type: coda.ValueType.Number, required: true },
   },
   primary: "name",
   id: "taskId",
@@ -165,7 +165,7 @@ const TaskSchema = coda.makeObjectSchema({
     url: {
       description: "A link to the task in the Todoist app.",
       type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url
+      codaType: coda.ValueHintType.Url,
     },
     taskId: {
       description: "The ID of the task.",

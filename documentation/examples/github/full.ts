@@ -27,7 +27,7 @@ pack.setUserAuthentication({
       url: "https://api.github.com/user",
     });
     return response.body.login;
-  }
+  },
 });
 
 // A schema that defines a repo object.
@@ -141,7 +141,7 @@ pack.addSyncTable({
       return {
         result: repos,
         continuation: continuation,
-      }
+      };
     },
   },
 });
@@ -155,5 +155,5 @@ function parseRepoUrl(url) {
   return {
     owner: match[1],
     name: match[2],
-  }
+  };
 }

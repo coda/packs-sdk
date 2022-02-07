@@ -152,7 +152,7 @@ pack.addFormula({
   resultType: coda.ValueType.String,
   execute: async function ([percentage], context) {
     if (percentage < 0 || percentage > 1) {
-      throw new coda.UserVisibleError("Percentage must be between 0 and 1.")
+      throw new coda.UserVisibleError("Percentage must be between 0 and 1.");
     }
     let chars = Math.floor(percentage * 10);
     return "⬛".repeat(chars) + "⬜".repeat(10 - chars);
@@ -246,7 +246,7 @@ const TaskSchema = coda.makeObjectSchema({
     url: {
       description: "A link to the task in the Todoist app.",
       type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url
+      codaType: coda.ValueHintType.Url,
     },
     taskId: {
       description: "The ID of the task.",

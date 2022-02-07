@@ -34,7 +34,7 @@ This Pack contains a few mathematical formulas, including the [greatest common d
       execute: async function ([numbers]) {
         // Handle the error case where the list is empty.
         if (numbers.length === 0) {
-          throw new coda.UserVisibleError("The list cannot be empty.")
+          throw new coda.UserVisibleError("The list cannot be empty.");
         }
 
         // Handle the error case where all the numbers are zeros.
@@ -63,7 +63,7 @@ This Pack contains a few mathematical formulas, including the [greatest common d
       execute: async function ([numbers]) {
         // Handle the error case where the list is empty.
         if (numbers.length === 0) {
-          throw new coda.UserVisibleError("The list cannot be empty.")
+          throw new coda.UserVisibleError("The list cannot be empty.");
         }
 
         // Handle the error case where the list contains a zero.

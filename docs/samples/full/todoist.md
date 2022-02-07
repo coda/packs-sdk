@@ -70,8 +70,8 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
     const ProjectReferenceSchema = coda.makeObjectSchema({
       codaType: coda.ValueHintType.Reference,
       properties: {
-        name: {type: coda.ValueType.String, required: true},
-        projectId: {type: coda.ValueType.Number, required: true},
+        name: { type: coda.ValueType.String, required: true },
+        projectId: { type: coda.ValueType.Number, required: true },
       },
       primary: "name",
       id: "projectId",
@@ -128,8 +128,8 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
     const TaskReferenceSchema = coda.makeObjectSchema({
       codaType: coda.ValueHintType.Reference,
       properties: {
-        name: {type: coda.ValueType.String, required: true},
-        taskId: {type: coda.ValueType.Number, required: true},
+        name: { type: coda.ValueType.String, required: true },
+        taskId: { type: coda.ValueType.Number, required: true },
       },
       primary: "name",
       id: "taskId",
@@ -152,7 +152,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         url: {
           description: "A link to the task in the Todoist app.",
           type: coda.ValueType.String,
-          codaType: coda.ValueHintType.Url
+          codaType: coda.ValueHintType.Url,
         },
         order: {
           description: "The position of the task in the project or parent task.",
@@ -500,7 +500,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
               });
               let projects = response.body;
               return coda.autocompleteSearchObjects(search, projects, "name", "id");
-            }
+            },
           }),
         ],
         execute: async function ([filter, project], context) {

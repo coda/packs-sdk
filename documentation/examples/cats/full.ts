@@ -144,7 +144,7 @@ pack.addSyncTable({
     ],
     execute: async function ([tag], context) {
       let url = coda.withQueryParams("https://cataas.com/api/cats", {
-        tags: tag
+        tags: tag,
       });
       let response = await context.fetcher.fetch({
         method: "GET",

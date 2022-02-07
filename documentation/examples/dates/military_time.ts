@@ -25,5 +25,5 @@ pack.addFormula({
     // Remove the colon separating the hours and minutes.
     formatted = formatted.replace(":", "");
     return formatted + " hours";
-  }
+  },
 });

@@ -9,7 +9,7 @@ const HolidaySchema = coda.makeObjectSchema({
     locations: { type: coda.ValueType.String },
     type: {
       type: coda.ValueType.Array,
-      items: { type: coda.ValueType.String }
+      items: { type: coda.ValueType.String },
     },
   },
   primary: "name",

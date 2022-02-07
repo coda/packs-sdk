@@ -101,7 +101,7 @@ const TaskSchema = coda.makeObjectSchema({
     url: {
       description: "A link to the task in the Todoist app.",
       type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url
+      codaType: coda.ValueHintType.Url,
     },
     taskId: {
       description: "The ID of the task.",
@@ -186,10 +186,10 @@ pack.addFormula({
   ],
   resultType: coda.ValueType.String,
   examples: [
-    {params: ["Hello"], result: "HELLO!!!"},
-    {params: ["Hello", 5], result: "HELLO!!!!!"},
-    {params: ["Hello", undefined, "?"], result: "HELLO???"},
-    {params: ["Hello", 5, "?"], result: "HELLO?????"},
+    { params: ["Hello"], result: "HELLO!!!" },
+    { params: ["Hello", 5], result: "HELLO!!!!!" },
+    { params: ["Hello", undefined, "?"], result: "HELLO???" },
+    { params: ["Hello", 5, "?"], result: "HELLO?????" },
   ],
   execute: async function ([text, volume = 3, character = "!"], context) {
     return text.toUpperCase() + character.repeat(volume);

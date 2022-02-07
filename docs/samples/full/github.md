@@ -48,7 +48,7 @@ The Pack uses OAuth2 to connect to a user's GitHub account. A more extensive Git
           url: "https://api.github.com/user",
         });
         return response.body.login;
-      }
+      },
     });
 
     // A schema that defines a repo object.
@@ -162,7 +162,7 @@ The Pack uses OAuth2 to connect to a user's GitHub account. A more extensive Git
           return {
             result: repos,
             continuation: continuation,
-          }
+          };
         },
       },
     });
@@ -176,7 +176,7 @@ The Pack uses OAuth2 to connect to a user's GitHub account. A more extensive Git
       return {
         owner: match[1],
         name: match[2],
-      }
+      };
     }
     ```
 
