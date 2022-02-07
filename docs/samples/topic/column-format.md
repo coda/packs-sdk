@@ -172,7 +172,6 @@ pack.addColumnFormat({
   name: "Cat Image",
   instructions: "Displays the text over the image of a random cat.",
   formulaName: "CatImage",
-  formulaNamespace: "Deprecated", // Will be removed shortly
 });
 
 // Formula that fetches a random cat image, with various options.
@@ -225,7 +224,6 @@ pack.addColumnFormat({
   name: "Task",
   // The formula "GetTask" below will get run on the cell value.
   formulaName: "GetTask",
-  formulaNamespace: "Deprecated",
   // If the first values entered into a new column match these patterns then
   // this column format will be automatically applied.
   matchers: TaskUrlPatterns,

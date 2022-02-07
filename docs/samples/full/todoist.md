@@ -297,14 +297,12 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
     pack.addColumnFormat({
       name: "Project",
       formulaName: "GetProject",
-      formulaNamespace: "Deprecated",
       matchers: ProjectUrlPatterns,
     });
 
     pack.addColumnFormat({
       name: "Task",
       formulaName: "GetTask",
-      formulaNamespace: "Deprecated",
       matchers: TaskUrlPatterns,
     });
 

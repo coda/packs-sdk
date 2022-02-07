@@ -277,14 +277,12 @@ pack.addFormula({
 pack.addColumnFormat({
   name: "Project",
   formulaName: "GetProject",
-  formulaNamespace: "Deprecated",
   matchers: ProjectUrlPatterns,
 });
 
 pack.addColumnFormat({
   name: "Task",
   formulaName: "GetTask",
-  formulaNamespace: "Deprecated",
   matchers: TaskUrlPatterns,
 });
 

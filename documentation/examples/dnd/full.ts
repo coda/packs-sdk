@@ -124,7 +124,6 @@ pack.addColumnFormat({
   name: "Spell",
   instructions: "Displays information about the spell with this name.",
   formulaName: "LookupSpell",
-  formulaNamespace: "Deprecated", // Will be removed shortly
 });
 
 // A sync table that displays all spells available in the API.

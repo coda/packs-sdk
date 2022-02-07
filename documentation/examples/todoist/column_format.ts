@@ -14,7 +14,6 @@ pack.addColumnFormat({
   name: "Task",
   // The formula "GetTask" below will get run on the cell value.
   formulaName: "GetTask",
-  formulaNamespace: "Deprecated",
   // If the first values entered into a new column match these patterns then
   // this column format will be automatically applied.
   matchers: TaskUrlPatterns,

@@ -99,7 +99,6 @@ pack.addColumnFormat({
   name: "Cat Image",
   instructions: "Displays the text over the image of a random cat.",
   formulaName: "CatImage",
-  formulaNamespace: "Deprecated", // Will be removed shortly
 });
 
 // Schema for a Cat image.
