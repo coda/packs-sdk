@@ -19,7 +19,7 @@ pack.addFormula({
   execute: async function ([numbers]) {
     // Handle the error case where the list is empty.
     if (numbers.length === 0) {
-      throw new coda.UserVisibleError("The list cannot be empty.")
+      throw new coda.UserVisibleError("The list cannot be empty.");
     }
 
     // Handle the error case where all the numbers are zeros.
@@ -48,7 +48,7 @@ pack.addFormula({
   execute: async function ([numbers]) {
     // Handle the error case where the list is empty.
     if (numbers.length === 0) {
-      throw new coda.UserVisibleError("The list cannot be empty.")
+      throw new coda.UserVisibleError("The list cannot be empty.");
     }
 
     // Handle the error case where the list contains a zero.

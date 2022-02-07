@@ -25,7 +25,7 @@ pack.addFormula({
   resultType: coda.ValueType.String,
   execute: async function ([percentage], context) {
     if (percentage < 0 || percentage > 1) {
-      throw new coda.UserVisibleError("Percentage must be between 0 and 1.")
+      throw new coda.UserVisibleError("Percentage must be between 0 and 1.");
     }
     let chars = Math.floor(percentage * 10);
     return "⬛".repeat(chars) + "⬜".repeat(10 - chars);

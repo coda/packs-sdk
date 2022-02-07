@@ -24,6 +24,9 @@ module.exports = {
         'func-style': ['error', 'declaration'],
         '@getify/proper-arrows/where': 'error',
         'prefer-arrow-callback': 'off',
+        'object-curly-spacing': ['error', 'always'],
+        'comma-dangle': ['error', 'always-multiline'],
+        'semi': ['error', 'always',]
       },
     },
   ],

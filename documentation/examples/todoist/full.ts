@@ -50,8 +50,8 @@ pack.setUserAuthentication({
 const ProjectReferenceSchema = coda.makeObjectSchema({
   codaType: coda.ValueHintType.Reference,
   properties: {
-    name: {type: coda.ValueType.String, required: true},
-    projectId: {type: coda.ValueType.Number, required: true},
+    name: { type: coda.ValueType.String, required: true },
+    projectId: { type: coda.ValueType.Number, required: true },
   },
   primary: "name",
   id: "projectId",
@@ -108,8 +108,8 @@ const ProjectSchema = coda.makeObjectSchema({
 const TaskReferenceSchema = coda.makeObjectSchema({
   codaType: coda.ValueHintType.Reference,
   properties: {
-    name: {type: coda.ValueType.String, required: true},
-    taskId: {type: coda.ValueType.Number, required: true},
+    name: { type: coda.ValueType.String, required: true },
+    taskId: { type: coda.ValueType.Number, required: true },
   },
   primary: "name",
   id: "taskId",
@@ -132,7 +132,7 @@ const TaskSchema = coda.makeObjectSchema({
     url: {
       description: "A link to the task in the Todoist app.",
       type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url
+      codaType: coda.ValueHintType.Url,
     },
     order: {
       description: "The position of the task in the project or parent task.",
@@ -480,7 +480,7 @@ pack.addSyncTable({
           });
           let projects = response.body;
           return coda.autocompleteSearchObjects(search, projects, "name", "id");
-        }
+        },
       }),
     ],
     execute: async function ([filter, project], context) {
