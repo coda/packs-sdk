@@ -116,7 +116,6 @@ This Pack allows you to fetch random cat photos using the [Cat-as-a-service API]
       name: "Cat Image",
       instructions: "Displays the text over the image of a random cat.",
       formulaName: "CatImage",
-      formulaNamespace: "Deprecated", // Will be removed shortly
     });
 
     // Schema for a Cat image.
