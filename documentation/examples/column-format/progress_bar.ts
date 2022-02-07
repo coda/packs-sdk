@@ -7,7 +7,6 @@ pack.addColumnFormat({
   name: "Progress Bar",
   instructions: "Draws a progress bar with the given percentage.",
   formulaName: "ProgressBar",
-  formulaNamespace: "Deprecated", // Will be removed shortly
 });
 
 // Adds a formula to this Pack to draw a number as a progress bar. It is used by
@@ -26,7 +25,7 @@ pack.addFormula({
   resultType: coda.ValueType.String,
   execute: async function ([percentage], context) {
     if (percentage < 0 || percentage > 1) {
-      throw new coda.UserVisibleError("Percentage must be between 0 and 1.")
+      throw new coda.UserVisibleError("Percentage must be between 0 and 1.");
     }
     let chars = Math.floor(percentage * 10);
     return "⬛".repeat(chars) + "⬜".repeat(10 - chars);

@@ -1,5 +1,6 @@
 ---
 title: Formulas
+description: "Formulas are one of the most basic building blocks in Coda, and using Packs you can add your own custom ones."
 ---
 
 # Add custom formulas
@@ -55,7 +56,7 @@ All formulas must return a result, which is a single value matching the type spe
 
 ## Authentication
 
-Formulas can use [authentication][authentication] to fetch private data. When using [system authentication][system_auth] there is no change to the user experience, but when you use [user authentication][user_auth] the formula editor will be automatically updated to prompt for a connected account. The connected account will appear as the first parameter of the formula, but its value is not passed to your formula's `execute` method.
+Formulas can use [authentication][authentication] to fetch private data. When using [system authentication][system_auth] there is no change to the user experience, but when you use [user authentication][user_auth] the formula editor will be automatically updated to prompt for a connected account. The connected account will appear as the first parameter of the formula, but its value is not passed to your formula's `execute` function.
 
 === "Formula editor"
     <img src="../../../images/formula_account.png" srcset="../../../images/formula_account_2x.png 2x" class="screenshot" alt="Account parameter in formula editor">

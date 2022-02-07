@@ -77,7 +77,7 @@ function formatSpell(spell) {
     description: spell.desc?.join("\n"),
     higher_level: spell.higher_level?.join("\n"),
     damage_type: spell.damage?.damage_type?.name,
-  }
+  };
 }
 
 // A formula that looks up a spell given a name, returning the first result.
@@ -187,7 +187,7 @@ async function fetchSpells(fetcher: coda.Fetcher, spellResults) {
     // run at the same time.
     let request = fetcher.fetch({
       method: "GET",
-      url: url
+      url: url,
     });
     requests.push(request);
   }

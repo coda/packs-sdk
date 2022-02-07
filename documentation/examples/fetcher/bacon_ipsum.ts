@@ -21,7 +21,7 @@ pack.addFormula({
     // to wait for the API's response before continuing on through the code.
     let response = await context.fetcher.fetch({
       method: "GET",
-      url: url
+      url: url,
     });
 
     // The API returns an array of strings, which is automatically parsed by

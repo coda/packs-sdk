@@ -10,8 +10,8 @@ export const pack = coda.newPack();
 const TaskReferenceSchema = coda.makeObjectSchema({
   codaType: coda.ValueHintType.Reference,
   properties: {
-    name: {type: coda.ValueType.String, required: true},
-    taskId: {type: coda.ValueType.Number, required: true},
+    name: { type: coda.ValueType.String, required: true },
+    taskId: { type: coda.ValueType.Number, required: true },
   },
   primary: "name",
   id: "taskId",
@@ -35,7 +35,7 @@ const TaskSchema = coda.makeObjectSchema({
     url: {
       description: "A link to the task in the Todoist app.",
       type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url
+      codaType: coda.ValueHintType.Url,
     },
     taskId: {
       description: "The ID of the task.",

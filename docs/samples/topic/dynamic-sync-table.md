@@ -4,20 +4,12 @@ title: Dynamic sync tables
 
 # Dynamic sync table samples
 
-Most sync tables have schemas that can be statically defined. For example, if you're writing a sync of a user's Google Calendar events, the structure of an Event from the Google Calendar API is well-known and you can write a schema for what your table should contain.
+Dynamic sync tables allow you to bring data from an external data source into your doc, even when the structure of that data is not known in advance. Instead of including a static schema in your sync table definition, you include a `getSchema` function that returns a schema based on the dataset the user selects. It can use the fetcher to make authenticated HTTP requests to an API so that you can determine the shape of the data.
 
-In certain cases, you may want to sync data whose structure is not known in advance and may depend on the user doing the sync. For example, Coda's Jira pack allows users to sync data from their Jira instance, but Jira lets users create arbitrary custom fields for their Issue objects. So the schema of the Issues sync table is not known in advance; it depends on the Jira account that the user is syncing from.
-
-Coda supports "dynamic" sync tables for cases like these. Instead of including a static schema in your sync table definition, you include a formula that returns a schema. This formula can use the fetcher to make authenticated http requests to your Pack's API so that you may retrieve any necessary info from that third-party service needed to construct an appropriate schema.
-
-To define a dynamic schema, use the `makeDynamicSyncTable()` wrapper function. You will provide a `getSchema` formula that returns a schema definition. You'll also provide some supporting formulas like `getName`, to return a name in the UI for the table, in case even the name of the entities being synced is dynamic.
-
-There are two subtle variants of dynamic sync tables. A sync table can be dynamic simply because the shape of the entities being synced vary based on who the current user is. For example, in the Jira example, Jira Issues are synced by hitting the same static Jira API url for Issues, but the schema of the issues returned will be different depending on the configuration of the Jira instance of the calling user.
-
-Alternatively, a sync table can be dynamic because the data source is specific to each instance of the table. If you were building a sync table to sync data from a Google Sheet, the data source would be the API url of a specific sheet. In this case, the sync table will be bound to a `dynamicUrl` that defines the data source. This url will be available to all of the formulas to implement the sync table in the sync context, as `context.sync.dynamicUrl`. To create a sync table that uses dynamic urls, you must implement the `listDynamicUrls` metadata formula in your dynamic sync table definition.
+Dynamic sync tables typically provide a list all of the datasets that the user has access to, using the `listDynamicUrls` function. Once a user selects a dataset from the side panel it will be available to other functions in `context.sync.dynamicUrl`. The dynamic sync table must also provide a user-visible URL for the selected dataset (using `getDisplayUrl`) and a name for the resulting table on the page (using `getName`).
 
 
-[Learn More](../../../reference/sdk/classes/PackDefinitionBuilder#addDynamicSyncTable){ .md-button }
+[Learn More](../../../guides/blocks/sync-tables/dynamic){ .md-button }
 
 ## Template
 
@@ -39,7 +31,7 @@ pack.addDynamicSyncTable({
   getSchema: async function (context) {
     let datasourceUrl = context.sync.dynamicUrl!;
     // TODO: Fetch metadata about the data source and get the list of fields.
-    let properties = {
+    let properties: coda.ObjectSchemaProperties = {
       // TODO: Create a property for each field.
     };
     let id = "<Determine the field containing a unique ID>";
@@ -86,7 +78,7 @@ pack.addDynamicSyncTable({
       // Adjust the items to fit the schema if required.
       return {
         result: items,
-      }
+      };
     },
   },
 });
@@ -149,7 +141,7 @@ pack.addDynamicSyncTable({
     let form = await getForm(context, formUrl);
 
     // These properties are the same for all forms.
-    let properties: any = {
+    let properties: coda.ObjectSchemaProperties = {
       submittedAt: {
         type: coda.ValueType.String,
         codaType: coda.ValueHintType.DateTime,
@@ -166,9 +158,9 @@ pack.addDynamicSyncTable({
     let featured = [];
     for (let field of form.fields) {
       // Format the field name into a valid property name.
-      let name = getPropertyName(field.title);
+      let name = getPropertyName(field);
       // Generate a schema for the field and add it to the set of properties.
-      properties[name] = getSchema(field);
+      properties[name] = getPropertySchema(field);
       // Mark the property as featured (included in the table by default).
       featured.push(name);
     }
@@ -229,10 +221,10 @@ pack.addDynamicSyncTable({
 
         // For each answer, add it to the row.
         for (let answer of formResponse.answers) {
-          let value = getValue(answer);
-          // Store the answer based on the field ID. See the use of `fromKey` in
-          // `getSchema` below.
-          row[answer.field.id] = value;
+          // Get the key to return the value in.
+          let key = getPropertyKey(answer.field);
+          let value = getPropertyValue(answer);
+          row[key] = value;
         }
         rows.push(row);
       }
@@ -251,7 +243,7 @@ pack.addDynamicSyncTable({
       return {
         result: rows,
         continuation: continuation,
-      }
+      };
     },
   },
 });
@@ -268,21 +260,19 @@ async function getForm(context, url) {
 }
 
 // Generates a property name given a field title.
-function getPropertyName(title) {
-  return title
+function getPropertyName(field) {
+  return field.title
     // Replace placeholders with an X.
-    .replace(/\{\{.*?\}\}/g, "X")
-    // Remove all characters that aren't letters, numbers or spaces.
-    .replace(/[^\w\s]/g, "");
+    .replace(/\{\{.*?\}\}/g, "X");
 }
 
 // Generates a property schema based on a Typeform field.
-function getSchema(field) {
+function getPropertySchema(field) {
   let schema: any = {
     // Use the field's full title as it's description.
     description: field.title,
     // The sync formula will return the value keyed using the field's ID.
-    fromKey: field.id,
+    fromKey: getPropertyKey(field),
   };
 
   // Set the schema type depending on the field type.
@@ -304,7 +294,7 @@ function getSchema(field) {
       if (isMultiselect) {
         schema.type = coda.ValueType.Array;
         schema.items = {
-          type: coda.ValueType.String
+          type: coda.ValueType.String,
         };
       } else {
         schema.type = coda.ValueType.String;
@@ -318,8 +308,14 @@ function getSchema(field) {
   return schema;
 }
 
+// Gets the key to use for this field when returning the value in the sync
+// formula.
+function getPropertyKey(field) {
+  return field.id;
+}
+
 // Gets the value from a Typeform answer.
-function getValue(answer) {
+function getPropertyValue(answer) {
   switch (answer.type) {
     case "choice":
       return answer.choice.label;

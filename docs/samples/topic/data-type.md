@@ -102,8 +102,8 @@ The basic structure of a formula that returns an object.
 ```ts
 const MySchema = coda.makeObjectSchema({
   properties: {
-    property1: {type: coda.ValueType.Number},
-    property2: {type: coda.ValueType.String},
+    property1: { type: coda.ValueType.Number },
+    property2: { type: coda.ValueType.String },
     // Add more properties here.
   },
   id: "property1", // Which property above is a unique ID.
@@ -224,12 +224,13 @@ pack.addFormula({
       description: "The input date and time.",
     }),
   ],
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.DateTime,
+  // Return the result as the number of seconds since the epoch.
+  resultType: coda.ValueType.Number,
+  codaType: coda.ValueHintType.Time,
   execute: async function ([input], context) {
-    let result = new Date(input.getTime());
-    result.setMinutes(result.getMinutes() + 5);
-    return result.toISOString();
+    let seconds = input.getTime() / 1000;
+    seconds += 5 * 60; // Add five minutes, as seconds.
+    return seconds;
   },
 });
 ```
@@ -249,13 +250,13 @@ pack.addFormula({
       type: coda.ParameterType.String,
       name: "repo",
       description: "The repo to read from.",
-      defaultValue: "coda/packs-sdk"
+      defaultValue: "coda/packs-sdk",
     }),
   ],
   resultType: coda.ValueType.String,
   codaType: coda.ValueHintType.Markdown,
   execute: async function ([repo], context) {
-    let url = `https://raw.githubusercontent.com/${repo}/HEAD/README.md`
+    let url = `https://raw.githubusercontent.com/${repo}/HEAD/README.md`;
     let result = await context.fetcher.fetch({
       method: "GET",
       url: url,

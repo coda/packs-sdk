@@ -46,6 +46,14 @@ This error indicates that the domain you provided in an `addNetworkDomain()` cal
 These errors can occur when installing the SDK locally, specifically during the installation of the `isolated-vm` dependency. They indicate that certain required developer tools are not present on the machine. See the [help documentation][isolated_vm_requirements] for this library for more information on how to install these missing packages on your machine.
 
 
+### Invalid action
+
+- `Unable to execute invalid action`
+
+This error will appear at the bottom of the screen after pressing a button, and indicates that the formula used in the button isn't a valid action. In order for a formula to be used as an action within a button, it must be defined with `isAction: true`. See the [Actions guide][actions_create] for more information.
+
+
 [mdn_console]: https://developer.mozilla.org/en-US/docs/Web/API/console
 [support]: ../../support.md
 [isolated_vm_requirements]: https://github.com/laverdet/isolated-vm#requirements
+[actions_create]: ../blocks/actions.md#creating-actions

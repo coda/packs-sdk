@@ -102,6 +102,7 @@ export { simpleAutocomplete } from './api';
 export { getQueryParams } from './helpers/url';
 export { join as joinUrl } from './helpers/url';
 export { withQueryParams } from './helpers/url';
+export { SvgConstants } from './helpers/svg';
 export { assertCondition } from './helpers/ensure';
 export { ensureExists } from './helpers/ensure';
 export { ensureNonEmptyString } from './helpers/ensure';

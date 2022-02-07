@@ -6,8 +6,8 @@ const pack = coda.newPack();
 
 const MySchema = coda.makeObjectSchema({
   properties: {
-    property1: {type: coda.ValueType.Number},
-    property2: {type: coda.ValueType.String},
+    property1: { type: coda.ValueType.Number },
+    property2: { type: coda.ValueType.String },
     // Add more properties here.
   },
   id: "property1", // Which property above is a unique ID.
@@ -42,7 +42,7 @@ pack.addSyncTable({
       // Adjust the items to fit the schema if required.
       return {
         result: items,
-      }
+      };
     },
   },
 });

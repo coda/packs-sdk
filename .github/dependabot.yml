@@ -5,8 +5,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
-      interval: 'weekly'
-      day: 'tuesday'
+      interval: 'monthly'
     open-pull-requests-limit: 50
     reviewers:
-      - "coda/ecosystem"
+      - "coda/packs"

@@ -301,6 +301,10 @@ However if the API provider deviates too far from the OAuth 2.0 specification it
 
     No configuration is required, Coda will try them both to see what works.
 
+??? warning "OAuth 1.0a not supported"
+    Coda doesn't currently support the older 1.0 or 1.0a versions of the OAuth specification. If you would like to connect to an API that only supports these versions of the standard please [contact support][support] so that we can continue to gauge interest.
+
+
 <!-- TODO: Progressive OAuth -->
 
 

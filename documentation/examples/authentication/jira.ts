@@ -48,7 +48,7 @@ pack.setUserAuthentication({
     }
     // Include both the name of the user and server.
     let server = await getServer(context);
-    let user = await getUser(context)
+    let user = await getUser(context);
     return `${user.displayName} (${server.serverTitle})`;
   },
 });

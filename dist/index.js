@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ValidFetchMethods = exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = exports.makeObjectSchema = exports.makeAttributionNode = exports.generateSchema = exports.ValueType = exports.ValueHintType = exports.ScaleIconSet = exports.DurationUnit = exports.CurrencyFormat = exports.AttributionNodeType = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeParameter = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makeMetadataFormula = exports.UserVisibleError = exports.Type = exports.StatusCodeError = exports.PrecannedDateRange = exports.ParameterType = exports.NetworkConnection = exports.ConnectionRequirement = exports.PackDefinitionBuilder = exports.newPack = exports.PostSetupType = exports.DefaultConnectionType = exports.AuthenticationType = void 0;
+exports.ValidFetchMethods = exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = exports.makeObjectSchema = exports.makeAttributionNode = exports.generateSchema = exports.ValueType = exports.ValueHintType = exports.ScaleIconSet = exports.DurationUnit = exports.CurrencyFormat = exports.AttributionNodeType = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.SvgConstants = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeParameter = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makeMetadataFormula = exports.UserVisibleError = exports.Type = exports.StatusCodeError = exports.PrecannedDateRange = exports.ParameterType = exports.NetworkConnection = exports.ConnectionRequirement = exports.PackDefinitionBuilder = exports.newPack = exports.PostSetupType = exports.DefaultConnectionType = exports.AuthenticationType = void 0;
 var types_1 = require("./types");
 Object.defineProperty(exports, "AuthenticationType", { enumerable: true, get: function () { return types_1.AuthenticationType; } });
 var types_2 = require("./types");
@@ -46,13 +46,16 @@ var api_11 = require("./api");
 Object.defineProperty(exports, "makeSimpleAutocompleteMetadataFormula", { enumerable: true, get: function () { return api_11.makeSimpleAutocompleteMetadataFormula; } });
 var api_12 = require("./api");
 Object.defineProperty(exports, "simpleAutocomplete", { enumerable: true, get: function () { return api_12.simpleAutocomplete; } });
-// Execution helpers.
+// URL helpers.
 var url_1 = require("./helpers/url");
 Object.defineProperty(exports, "getQueryParams", { enumerable: true, get: function () { return url_1.getQueryParams; } });
 var url_2 = require("./helpers/url");
 Object.defineProperty(exports, "joinUrl", { enumerable: true, get: function () { return url_2.join; } });
 var url_3 = require("./helpers/url");
 Object.defineProperty(exports, "withQueryParams", { enumerable: true, get: function () { return url_3.withQueryParams; } });
+// SVG constants.
+var svg_1 = require("./helpers/svg");
+Object.defineProperty(exports, "SvgConstants", { enumerable: true, get: function () { return svg_1.SvgConstants; } });
 // General Utilities
 var ensure_1 = require("./helpers/ensure");
 Object.defineProperty(exports, "assertCondition", { enumerable: true, get: function () { return ensure_1.assertCondition; } });

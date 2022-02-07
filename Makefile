@@ -105,6 +105,9 @@ compile:
 	# copy it to dist/ to make it available after packaging.
 	mkdir -p ${ROOTDIR}/dist/bundles/ && cp ${ROOTDIR}/bundles/thunk_bundle.js ${ROOTDIR}/dist/bundles/thunk_bundle.js
 
+	# copy buffer.d.ts to be used by monaco browser.
+	cp ${ROOTDIR}/node_modules/buffer/index.d.ts ${ROOTDIR}/dist/buffer.d.ts
+
 	# this bundle is executed by lambda, either cjs or iife format should work.
 	${ROOTDIR}/node_modules/.bin/esbuild ${ROOTDIR}/index.ts \
 		--bundle \

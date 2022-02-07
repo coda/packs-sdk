@@ -241,7 +241,7 @@ See the [Schemas guide][schema_references] for more information on how to create
 
 ## Account-specific fields
 
-Some APIs vary the shape of the data returned based on the account being accessed. For example, an issue tracker may allow users to define custom fields for their bug reports, which the API also returns. A sync table must have a defined schema that represents the data for each item, but it is possible to expand that schema to accommodate these variations by using a dynamic schema. See the [Dynamic sync tables guide][dynamic_sync_tables] for more information on how to use this feature.
+Some APIs vary the shape of the data returned based on the account being accessed. For example, an issue tracker may allow users to define custom fields for their bug reports, which the API also returns. A sync table must have a defined schema that represents the data for each item, but it is possible to expand that schema to accommodate these variations by using a dynamic schema. See the [Dynamic sync tables guide][dynamic_sync_tables_schema_only] for more information on how to use this feature.
 
 
 ## Caching & recalculation {: #caching}
@@ -266,6 +266,7 @@ It's recommended that you reduce or disable [HTTP caching][fetcher_caching] of t
 [actions]: ../actions.md
 [data_type_object]: ../../basics/data-types.md#objects
 [dynamic_sync_tables]: dynamic.md
+[dynamic_sync_tables_schema_only]: dynamic.md#schema-only
 [hc_lookups]: https://help.coda.io/en/articles/1385997-using-lookups#the-lookup-column-format
 [sample_continuation]: ../../../samples/topic/sync-table.md#with-continuation
 [sample_reference]: ../../../samples/topic/sync-table.md#with-row-references

@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk';
-import type {Arguments} from 'yargs';
+import type {ArgumentsCamelCase} from 'yargs';
 import CloudFront from 'aws-sdk/clients/cloudfront';
 import S3 from 'aws-sdk/clients/s3';
 import {exec as childExec} from 'child_process';
@@ -72,7 +72,7 @@ interface PushDocumentationArgs {
   forceUpload: boolean;
 }
 
-async function pushDocumentation({env, forceUpload}: Arguments<PushDocumentationArgs>): Promise<void> {
+async function pushDocumentation({env, forceUpload}: ArgumentsCamelCase<PushDocumentationArgs>): Promise<void> {
   const s3 = getS3Service(env);
   const cloudfront = getCloudfrontService(env);
   const bucket = getS3Bucket(env);

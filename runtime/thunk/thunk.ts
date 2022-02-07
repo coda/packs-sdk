@@ -1,5 +1,6 @@
 import {AuthenticationType} from '../../types';
 import type {BasicPackDefinition} from '../../types';
+import {Buffer} from 'buffer';
 import type {ExecutionContext} from '../../api_types';
 import type {FetchRequest} from '../../api_types';
 import type {FetchResponse} from '../../api_types';
@@ -38,6 +39,11 @@ export async function findAndExecutePackFunction<T extends FormulaSpecification>
   shouldWrapError: boolean = true,
 ): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
   try {
+    // in case the pack bundle is compiled in the browser, Buffer may not be browserified yet.
+    if (!global.Buffer) {
+      global.Buffer = Buffer;
+    }
+
     return await doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext);
   } catch (err: any) {
     // all errors should be marshaled to avoid IVM dropping essential fields / name.

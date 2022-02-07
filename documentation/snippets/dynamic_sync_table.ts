@@ -20,7 +20,7 @@ pack.addDynamicSyncTable({
   getSchema: async function (context) {
     let datasourceUrl = context.sync.dynamicUrl!;
     // TODO: Fetch metadata about the data source and get the list of fields.
-    let properties = {
+    let properties: coda.ObjectSchemaProperties = {
       // TODO: Create a property for each field.
     };
     let id = "<Determine the field containing a unique ID>";
@@ -67,7 +67,7 @@ pack.addDynamicSyncTable({
       // Adjust the items to fit the schema if required.
       return {
         result: items,
-      }
+      };
     },
   },
 });

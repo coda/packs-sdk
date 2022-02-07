@@ -8,5 +8,7 @@ pack.addColumnFormat({
   name: "<User-visible name>",
   instructions: "<Help text for the format>",
   formulaName: "<Name of the formula to run>",
-  formulaNamespace: "Deprecated", // Will be removed shortly
+  matchers: [
+    // If formatting a URL, a regular expression that matches that URL.
+  ],
 });

@@ -20,7 +20,7 @@ pack.addFormula({
       type: coda.ParameterType.String,
       name: "greeting",
       description: "The greeting to use.",
-      autocomplete: async function (context, search, {language}) {
+      autocomplete: async function (context, search, { language }) {
         let options;
         if (language === "es") {
           options = ["Hola", "Buenos días"];

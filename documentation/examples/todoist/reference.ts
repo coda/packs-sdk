@@ -48,7 +48,7 @@ const TaskSchema = coda.makeObjectSchema({
     url: {
       description: "A link to the task in the Todoist app.",
       type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url
+      codaType: coda.ValueHintType.Url,
     },
     // Reference a project from the Projects sync table.
     project: ProjectReferenceSchema,
@@ -126,7 +126,7 @@ pack.addSyncTable({
           item.project = {
             projectId: task.project_id,
             name: "Not found",  // Placeholder name, if not synced yet.
-          }
+          };
         }
         results.push(item);
       }

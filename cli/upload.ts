@@ -1,4 +1,4 @@
-import type {Arguments} from 'yargs';
+import type {ArgumentsCamelCase} from 'yargs';
 import type {Logger} from '../api_types';
 import type {PackUpload} from '../compiled_types';
 import type {PackVersionDefinition} from '..';
@@ -53,7 +53,7 @@ export async function handleUpload({
   codaApiEndpoint,
   notes,
   timerStrategy,
-}: Arguments<UploadArgs>) {
+}: ArgumentsCamelCase<UploadArgs>) {
   const logger = console;
   function printAndExit(message: string): never {
     cleanup(intermediateOutputDirectory, logger);

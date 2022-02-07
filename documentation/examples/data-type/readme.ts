@@ -10,13 +10,13 @@ pack.addFormula({
       type: coda.ParameterType.String,
       name: "repo",
       description: "The repo to read from.",
-      defaultValue: "coda/packs-sdk"
+      defaultValue: "coda/packs-sdk",
     }),
   ],
   resultType: coda.ValueType.String,
   codaType: coda.ValueHintType.Markdown,
   execute: async function ([repo], context) {
-    let url = `https://raw.githubusercontent.com/${repo}/HEAD/README.md`
+    let url = `https://raw.githubusercontent.com/${repo}/HEAD/README.md`;
     let result = await context.fetcher.fetch({
       method: "GET",
       url: url,

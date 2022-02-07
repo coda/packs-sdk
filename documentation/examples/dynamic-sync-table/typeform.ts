@@ -52,7 +52,7 @@ pack.addDynamicSyncTable({
     let form = await getForm(context, formUrl);
 
     // These properties are the same for all forms.
-    let properties: any = {
+    let properties: coda.ObjectSchemaProperties = {
       submittedAt: {
         type: coda.ValueType.String,
         codaType: coda.ValueHintType.DateTime,
@@ -69,9 +69,9 @@ pack.addDynamicSyncTable({
     let featured = [];
     for (let field of form.fields) {
       // Format the field name into a valid property name.
-      let name = getPropertyName(field.title);
+      let name = getPropertyName(field);
       // Generate a schema for the field and add it to the set of properties.
-      properties[name] = getSchema(field);
+      properties[name] = getPropertySchema(field);
       // Mark the property as featured (included in the table by default).
       featured.push(name);
     }
@@ -132,10 +132,10 @@ pack.addDynamicSyncTable({
 
         // For each answer, add it to the row.
         for (let answer of formResponse.answers) {
-          let value = getValue(answer);
-          // Store the answer based on the field ID. See the use of `fromKey` in
-          // `getSchema` below.
-          row[answer.field.id] = value;
+          // Get the key to return the value in.
+          let key = getPropertyKey(answer.field);
+          let value = getPropertyValue(answer);
+          row[key] = value;
         }
         rows.push(row);
       }
@@ -154,7 +154,7 @@ pack.addDynamicSyncTable({
       return {
         result: rows,
         continuation: continuation,
-      }
+      };
     },
   },
 });
@@ -171,21 +171,19 @@ async function getForm(context, url) {
 }
 
 // Generates a property name given a field title.
-function getPropertyName(title) {
-  return title
+function getPropertyName(field) {
+  return field.title
     // Replace placeholders with an X.
-    .replace(/\{\{.*?\}\}/g, "X")
-    // Remove all characters that aren't letters, numbers or spaces.
-    .replace(/[^\w\s]/g, "");
+    .replace(/\{\{.*?\}\}/g, "X");
 }
 
 // Generates a property schema based on a Typeform field.
-function getSchema(field) {
+function getPropertySchema(field) {
   let schema: any = {
     // Use the field's full title as it's description.
     description: field.title,
     // The sync formula will return the value keyed using the field's ID.
-    fromKey: field.id,
+    fromKey: getPropertyKey(field),
   };
 
   // Set the schema type depending on the field type.
@@ -207,7 +205,7 @@ function getSchema(field) {
       if (isMultiselect) {
         schema.type = coda.ValueType.Array;
         schema.items = {
-          type: coda.ValueType.String
+          type: coda.ValueType.String,
         };
       } else {
         schema.type = coda.ValueType.String;
@@ -221,8 +219,14 @@ function getSchema(field) {
   return schema;
 }
 
+// Gets the key to use for this field when returning the value in the sync
+// formula.
+function getPropertyKey(field) {
+  return field.id;
+}
+
 // Gets the value from a Typeform answer.
-function getValue(answer) {
+function getPropertyValue(answer) {
   switch (answer.type) {
     case "choice":
       return answer.choice.label;

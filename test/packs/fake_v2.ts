@@ -101,27 +101,7 @@ pack.addColumnFormat({
 pack.addSyncTable({
   name: 'Foos',
   description: 'FooDesc',
-  identityName: 'Foo',
-  schema: coda.makeObjectSchema({
-    type: coda.ValueType.Object,
-    id: 'foo',
-    primary: 'foo',
-    properties: {foo: {type: coda.ValueType.String}},
-  }),
-  formula: {
-    name: 'Ignored',
-    description: '',
-    parameters: [],
-    execute: async () => {
-      return {result: []};
-    },
-  },
-});
-
-pack.addSyncTable({
-  name: 'Foos',
-  description: 'FooDesc',
-  identityName: 'Foo',
+  identityName: 'FooObject',
   schema: coda.makeObjectSchema({
     type: coda.ValueType.Object,
     id: 'foo',
