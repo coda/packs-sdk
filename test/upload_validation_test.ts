@@ -1573,8 +1573,27 @@ describe('Pack metadata Validation', () => {
           deferConnectionSetup: true,
           shouldAutoAuthSetup: true,
         },
+        networkDomains: ['coda.io'],
       });
       await validateJson(metadata);
+    });
+
+    it('CodaApiHeaderBearerToken, invalid domain', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.CodaApiHeaderBearerToken,
+          deferConnectionSetup: true,
+          shouldAutoAuthSetup: true,
+        },
+        networkDomains: ['coda.io', 'other.domain'],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'CodaApiHeaderBearerToken can only be used for coda.io domains',
+          path: 'networkDomains',
+        },
+      ]);
     });
 
     it('CustomHeaderToken', async () => {

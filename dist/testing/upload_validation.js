@@ -775,6 +775,14 @@ function validateFormulas(schema) {
         }
         return true;
     }, { message: 'A formula namespace must be provided whenever formulas are defined.', path: ['formulaNamespace'] })
+        .refine(metadata => {
+        var _a, _b;
+        return !(((_a = metadata.defaultAuthentication) === null || _a === void 0 ? void 0 : _a.type) === types_1.AuthenticationType.CodaApiHeaderBearerToken &&
+            ((_b = metadata.networkDomains) === null || _b === void 0 ? void 0 : _b.some((domain) => !['coda.io', 'codahosted.io', 'localhost', 'calc-grpc-proxy'].includes(domain))));
+    }, {
+        message: 'CodaApiHeaderBearerToken can only be used for coda.io domains',
+        path: ['networkDomains'],
+    })
         .superRefine((data, context) => {
         const formulas = (data.formulas || []);
         (data.formats || []).forEach((format, i) => {
