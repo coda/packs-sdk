@@ -102,8 +102,8 @@ The basic structure of a formula that returns an object.
 ```ts
 const MySchema = coda.makeObjectSchema({
   properties: {
-    property1: {type: coda.ValueType.Number},
-    property2: {type: coda.ValueType.String},
+    property1: { type: coda.ValueType.Number },
+    property2: { type: coda.ValueType.String },
     // Add more properties here.
   },
   id: "property1", // Which property above is a unique ID.
@@ -250,13 +250,13 @@ pack.addFormula({
       type: coda.ParameterType.String,
       name: "repo",
       description: "The repo to read from.",
-      defaultValue: "coda/packs-sdk"
+      defaultValue: "coda/packs-sdk",
     }),
   ],
   resultType: coda.ValueType.String,
   codaType: coda.ValueHintType.Markdown,
   execute: async function ([repo], context) {
-    let url = `https://raw.githubusercontent.com/${repo}/HEAD/README.md`
+    let url = `https://raw.githubusercontent.com/${repo}/HEAD/README.md`;
     let result = await context.fetcher.fetch({
       method: "GET",
       url: url,

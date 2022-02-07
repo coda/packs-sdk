@@ -15,8 +15,8 @@ The basic structure of a sync table.
 ```ts
 const MySchema = coda.makeObjectSchema({
   properties: {
-    property1: {type: coda.ValueType.Number},
-    property2: {type: coda.ValueType.String},
+    property1: { type: coda.ValueType.Number },
+    property2: { type: coda.ValueType.String },
     // Add more properties here.
   },
   id: "property1", // Which property above is a unique ID.
@@ -51,7 +51,7 @@ pack.addSyncTable({
       // Adjust the items to fit the schema if required.
       return {
         result: items,
-      }
+      };
     },
   },
 });
@@ -117,7 +117,7 @@ pack.addSyncTable({
     ],
     execute: async function ([tag], context) {
       let url = coda.withQueryParams("https://cataas.com/api/cats", {
-        tags: tag
+        tags: tag,
       });
       let response = await context.fetcher.fetch({
         method: "GET",
@@ -226,7 +226,7 @@ function formatSpell(spell) {
     description: spell.desc?.join("\n"),
     higher_level: spell.higher_level?.join("\n"),
     damage_type: spell.damage?.damage_type?.name,
-  }
+  };
 }
 
 // A sync table that displays all spells available in the API.
@@ -289,7 +289,7 @@ async function fetchSpells(fetcher: coda.Fetcher, spellResults) {
     // run at the same time.
     let request = fetcher.fetch({
       method: "GET",
-      url: url
+      url: url,
     });
     requests.push(request);
   }
@@ -327,7 +327,7 @@ const TaskSchema = coda.makeObjectSchema({
     url: {
       description: "A link to the task in the Todoist app.",
       type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url
+      codaType: coda.ValueHintType.Url,
     },
     taskId: {
       description: "The ID of the task.",
@@ -370,7 +370,7 @@ pack.addSyncTable({
           });
           let projects = response.body;
           return coda.autocompleteSearchObjects(search, projects, "name", "id");
-        }
+        },
       }),
     ],
     execute: async function ([filter, project], context) {
@@ -462,7 +462,7 @@ const TaskSchema = coda.makeObjectSchema({
     url: {
       description: "A link to the task in the Todoist app.",
       type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url
+      codaType: coda.ValueHintType.Url,
     },
     // Reference a project from the Projects sync table.
     project: ProjectReferenceSchema,
@@ -540,7 +540,7 @@ pack.addSyncTable({
           item.project = {
             projectId: task.project_id,
             name: "Not found",  // Placeholder name, if not synced yet.
-          }
+          };
         }
         results.push(item);
       }

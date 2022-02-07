@@ -294,7 +294,7 @@ function getPropertySchema(field) {
       if (isMultiselect) {
         schema.type = coda.ValueType.Array;
         schema.items = {
-          type: coda.ValueType.String
+          type: coda.ValueType.String,
         };
       } else {
         schema.type = coda.ValueType.String;
