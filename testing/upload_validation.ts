@@ -936,6 +936,19 @@ function validateFormulas(schema: z.ZodObject<any>) {
       },
       {message: 'A formula namespace must be provided whenever formulas are defined.', path: ['formulaNamespace']},
     )
+    .refine(
+      metadata =>
+        !(
+          metadata.defaultAuthentication?.type === AuthenticationType.CodaApiHeaderBearerToken &&
+          metadata.networkDomains?.some(
+            (domain: string) => !['coda.io', 'codahosted.io', 'localhost', 'calc-grpc-proxy'].includes(domain),
+          )
+        ),
+      {
+        message: 'CodaApiHeaderBearerToken can only be used for coda.io domains',
+        path: ['networkDomains'],
+      },
+    )
     .superRefine((data, context) => {
       const formulas = (data.formulas || []) as PackFormulaMetadata[];
       ((data.formats as any[]) || []).forEach((format, i) => {
