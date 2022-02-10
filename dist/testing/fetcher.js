@@ -114,20 +114,6 @@ class AuthenticatingFetcher {
         // Replace sensitive template values so that pack code can't see them.
         if (((_a = this._authDef) === null || _a === void 0 ? void 0 : _a.type) === types_1.AuthenticationType.Custom) {
             const { params } = this._credentials;
-            if (responseBody) {
-                if (typeof responseBody === 'object') {
-                    let responseBodyStr = JSON.stringify(responseBody);
-                    Object.values(params).forEach(value => {
-                        responseBodyStr = replaceAll(responseBodyStr, value, '<<REDACTED BY CODA>>');
-                    });
-                    responseBody = JSON.parse(responseBodyStr);
-                }
-                else if (typeof responseBody === 'string') {
-                    Object.values(params).forEach(value => {
-                        responseBody = replaceAll(responseBody, value, '<<REDACTED BY CODA>>');
-                    });
-                }
-            }
             if (responseHeaders) {
                 let responseHeadersStr = JSON.stringify(responseHeaders);
                 Object.values(params).forEach(value => {
