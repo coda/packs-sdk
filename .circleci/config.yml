@@ -51,7 +51,7 @@ commands:
           key: v2-dependencies-{{ checksum "package.json" }}
   bootstrap_aws_cli:
     steps:
-      - run: make bootstrap_aws_creds
+      - run: make bootstrap-aws-context-creds-ci
       - aws-cli/install
 
 jobs:
@@ -198,10 +198,10 @@ workflows:
             branches:
               only:
                 - release
+                - /jc-.*/ # Temporary, forcing jobs to run on my branch
       - utils/cancel-older-awaiting-approvals:
           context:
-            - dockerhub
-            - util
+            - circleci
           circle_token: ${CIRCLECI_TOKEN}
           requires:
             - build
@@ -212,6 +212,7 @@ workflows:
             - build
       - push-head-docs:
           context:
+            - aws-head
             - dockerhub
           requires:
             - build-docs-head
@@ -222,6 +223,7 @@ workflows:
             - push-head-docs      
       - push-staging-docs:
           context:
+            - aws-staging
             - dockerhub
           requires:
             - push-head-docs
@@ -232,19 +234,18 @@ workflows:
           requires:
             - push-staging-docs
       - utils/slack-notify-waiting-for-approval:
+          context:
+            - slack
           slack_bot_token: ${PUSH_REMINDER_BOT_TOKEN}
           requires:
             - push-staging-docs
-          context:
-            - util
       - wait-for-approval:
-          context:
-            - dockerhub
           type: approval
           requires:
             - push-staging-docs
       - push-prod-docs:
           context:
+            - aws-prod
             - dockerhub
           requires:
             - wait-for-approval
