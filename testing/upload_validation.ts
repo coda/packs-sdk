@@ -1,6 +1,6 @@
 import type {AWSAccessKeyAuthentication} from '../types';
 import type {AWSAssumeRoleAuthentication} from '../types';
-import type {ArraySchema} from '../schema';
+import type {ArraySchema, StringEmbedSchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import {AuthenticationType} from '../types';
 import type {BooleanPackFormula} from '../api';
@@ -632,12 +632,20 @@ const durationPropertySchema = zodCompleteStrictObject<DurationSchema & ObjectSc
   ...basePropertyValidators,
 });
 
+const embedPropertySchema = zodCompleteStrictObject<StringEmbedSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.String),
+  codaType: zodDiscriminant(ValueHintType.Time),
+  force: z.boolean().optional(),
+  ...basePropertyValidators,
+});
+
 const stringPropertySchema = z.union([
   simpleStringPropertySchema,
   stringDatePropertySchema,
   stringTimePropertySchema,
   stringDateTimePropertySchema,
   durationPropertySchema,
+  embedPropertySchema,
 ]);
 
 const stringPackFormulaSchema = zodCompleteObject<Omit<StringPackFormula<any>, 'execute'>>({

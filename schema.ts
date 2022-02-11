@@ -410,6 +410,20 @@ export interface StringDateSchema extends BaseStringSchema<ValueHintType.Date> {
   format?: string;
 }
 
+export interface StringEmbedSchema extends BaseStringSchema<ValueHintType.Embed> {
+  /** Instructs Coda to render this value as an embed. */
+  codaType: ValueHintType.Embed;
+  /**
+   * Toggle whether to try to force embed the content in Coda. Should be kept to false for most cases.
+   *
+   * By default, we use an external provider that supports and normalizes embeds for different sites. If you are trying
+   * to embed a non-common site or one that is not supported by this provider,
+   * you can set this to `true` to tell Coda to force render the embed. This renders a sandboxed iframe for the embed
+   * but requires user consent to actually display the embed.
+   */
+  force?: boolean;
+}
+
 /**
  * A schema representing a return value or object property that is provided as a string,
  * which Coda should interpret as a time.
@@ -526,7 +540,8 @@ export type StringSchema =
   | StringTimeSchema
   | StringDateTimeSchema
   | DurationSchema
-  | SimpleStringSchema;
+  | SimpleStringSchema
+  | StringEmbedSchema;
 
 /**
  * A schema representing a return value or object property that is an array (list) of items.
