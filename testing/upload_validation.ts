@@ -1,6 +1,6 @@
 import type {AWSAccessKeyAuthentication} from '../types';
 import type {AWSAssumeRoleAuthentication} from '../types';
-import type {ArraySchema, StringEmbedSchema} from '../schema';
+import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import {AuthenticationType} from '../types';
 import type {BooleanPackFormula} from '../api';
@@ -48,6 +48,7 @@ import type {SimpleStringSchema} from '../schema';
 import type {SliderSchema} from '..';
 import type {StringDateSchema} from '../schema';
 import type {StringDateTimeSchema} from '../schema';
+import type {StringEmbedSchema} from '../schema';
 import type {StringPackFormula} from '../api';
 import type {StringTimeSchema} from '../schema';
 import type {SyncFormula} from '../api';
