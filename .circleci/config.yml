@@ -198,7 +198,6 @@ workflows:
             branches:
               only:
                 - release
-                - /jc-.*/ # Temporary, forcing jobs to run on my branch
       - utils/cancel-older-awaiting-approvals:
           context:
             - circleci
