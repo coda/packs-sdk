@@ -51,7 +51,7 @@ commands:
           key: v2-dependencies-{{ checksum "package.json" }}
   bootstrap_aws_cli:
     steps:
-      - run: make bootstrap-aws-context-creds-ci
+      - utils/boostrap-aws-context-creds
       - aws-cli/install
 
 jobs:
