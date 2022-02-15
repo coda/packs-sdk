@@ -516,7 +516,6 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
  */
 export const SimpleStringHintValueTypes = [
   ValueHintType.Attachment,
-  ValueHintType.Embed,
   ValueHintType.Html,
   ValueHintType.ImageReference,
   ValueHintType.ImageAttachment,
@@ -540,8 +539,8 @@ export type StringSchema =
   | StringTimeSchema
   | StringDateTimeSchema
   | DurationSchema
-  | SimpleStringSchema
-  | StringEmbedSchema;
+  | StringEmbedSchema
+  | SimpleStringSchema;
 
 /**
  * A schema representing a return value or object property that is an array (list) of items.

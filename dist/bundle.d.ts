@@ -480,7 +480,6 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
 }
 declare const SimpleStringHintValueTypes: readonly [
 	ValueHintType.Attachment,
-	ValueHintType.Embed,
 	ValueHintType.Html,
 	ValueHintType.ImageReference,
 	ValueHintType.ImageAttachment,
@@ -497,7 +496,7 @@ export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStri
 /**
  * The union of schema definition types whose underlying value is a string.
  */
-export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema | SimpleStringSchema | StringEmbedSchema;
+export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema | StringEmbedSchema | SimpleStringSchema;
 /**
  * A schema representing a return value or object property that is an array (list) of items.
  * The items are themselves schema definitions, which may refer to scalars or other objects.

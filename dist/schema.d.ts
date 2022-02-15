@@ -455,7 +455,7 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
 /**
  * The subset of StringHintTypes that don't have specific schema attributes.
  */
-export declare const SimpleStringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url];
+export declare const SimpleStringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url];
 export declare type SimpleStringHintTypes = typeof SimpleStringHintValueTypes[number];
 /**
  * A schema whose underlying value is a string, along with an optional hint about how Coda
@@ -466,7 +466,7 @@ export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStri
 /**
  * The union of schema definition types whose underlying value is a string.
  */
-export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema | SimpleStringSchema | StringEmbedSchema;
+export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema | StringEmbedSchema | SimpleStringSchema;
 /**
  * A schema representing a return value or object property that is an array (list) of items.
  * The items are themselves schema definitions, which may refer to scalars or other objects.

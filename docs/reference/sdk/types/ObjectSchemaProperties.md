@@ -17,4 +17,4 @@ definition for that property.
 
 #### Defined in
 
-[schema.ts:606](https://github.com/coda/packs-sdk/blob/main/schema.ts#L606)
+[schema.ts:605](https://github.com/coda/packs-sdk/blob/main/schema.ts#L605)
