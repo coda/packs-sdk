@@ -37,17 +37,6 @@ _bootstrap-python:
 _bootstrap-githooks: clean-githooks
 	-(cd ${ROOTDIR}; scripts/dev/git-hooks.sh --install)
 
-# Each CI context can inject an AWS credential to the environment.
-# Unpack all context variables required and combine into a single credentials file.
-# Should only be needed for CI rather than locally.
-.PHONY: bootstrap-aws-context-creds-ci
-bootstrap-aws-context-creds-ci:
-	rm -f ~/.aws/credentials
-	mkdir -p ~/.aws
-	set | grep ^CTX_AWS_BASE_64_CREDS_ | cut -d= -f2- | while read -r base64creds; do \
-		echo $$base64creds | base64 -d >> ~/.aws/credentials; \
-	done;
-
 .PHONY: bootstrap
 bootstrap:
 	$(MAKE) MAKEFLAGS= _bootstrap-node
