@@ -635,7 +635,7 @@ const durationPropertySchema = zodCompleteStrictObject<DurationSchema & ObjectSc
 
 const embedPropertySchema = zodCompleteStrictObject<StringEmbedSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.String),
-  codaType: zodDiscriminant(ValueHintType.Time),
+  codaType: zodDiscriminant(ValueHintType.Embed),
   force: z.boolean().optional(),
   ...basePropertyValidators,
 });

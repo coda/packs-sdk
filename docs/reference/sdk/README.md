@@ -89,6 +89,7 @@ title: "Pack SDK Reference"
 - [StatusCodeErrorResponse](interfaces/StatusCodeErrorResponse.md)
 - [StringDateSchema](interfaces/StringDateSchema.md)
 - [StringDateTimeSchema](interfaces/StringDateTimeSchema.md)
+- [StringEmbedSchema](interfaces/StringEmbedSchema.md)
 - [StringTimeSchema](interfaces/StringTimeSchema.md)
 - [Sync](interfaces/Sync.md)
 - [SyncExecutionContext](interfaces/SyncExecutionContext.md)

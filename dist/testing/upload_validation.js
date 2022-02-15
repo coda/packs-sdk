@@ -522,7 +522,7 @@ const durationPropertySchema = zodCompleteStrictObject({
 });
 const embedPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_8.ValueType.String),
-    codaType: zodDiscriminant(schema_7.ValueHintType.Time),
+    codaType: zodDiscriminant(schema_7.ValueHintType.Embed),
     force: z.boolean().optional(),
     ...basePropertyValidators,
 });
