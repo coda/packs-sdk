@@ -48,6 +48,7 @@ import type {SimpleStringSchema} from '../schema';
 import type {SliderSchema} from '..';
 import type {StringDateSchema} from '../schema';
 import type {StringDateTimeSchema} from '../schema';
+import type {StringEmbedSchema} from '../schema';
 import type {StringPackFormula} from '../api';
 import type {StringTimeSchema} from '../schema';
 import type {SyncFormula} from '../api';
@@ -632,12 +633,20 @@ const durationPropertySchema = zodCompleteStrictObject<DurationSchema & ObjectSc
   ...basePropertyValidators,
 });
 
+const embedPropertySchema = zodCompleteStrictObject<StringEmbedSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.String),
+  codaType: zodDiscriminant(ValueHintType.Embed),
+  force: z.boolean().optional(),
+  ...basePropertyValidators,
+});
+
 const stringPropertySchema = z.union([
   simpleStringPropertySchema,
   stringDatePropertySchema,
   stringTimePropertySchema,
   stringDateTimePropertySchema,
   durationPropertySchema,
+  embedPropertySchema,
 ]);
 
 const stringPackFormulaSchema = zodCompleteObject<Omit<StringPackFormula<any>, 'execute'>>({
