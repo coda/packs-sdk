@@ -27,17 +27,15 @@ For general questions about Packs, or advice on how to build them, we recommend 
 
 ## Problems or bugs
 
-If you are experiencing a problem with your Pack or have identified a bug you should reach out to the Coda Support team. Send an email to [help+packs@coda.io][support_email], and include the following information:
+If you are experiencing a problem with your Pack or have identified a bug you can reach out to the Coda Partners team. Send an email to [parnters@coda.io][partners_email], and include the following information:
 
-- The ID of your Pack (visible in the Pack Studio URL).
-- A link to a doc where the error occurred (and [share it with support][hc_share]).
+- The URL of your Pack in the Pack Studio.
+- The URL of a doc where the error occurred (make sure to [share it with support][hc_share]).
 - Any relevant error messages or snippets of code.
 
-The support team is generally available 8AM - 5PM PT, Monday through Friday, and aim to reply to inquiries within 1 business day (although volumes and response times may vary).
-
-<a href="mailto:help+packs@coda.io" class="md-button md-button--primary">Email support</a>
+<a href="mailto:partners@coda.io" class="md-button md-button--primary">Send email</a>
 
 
 [community_packs]: https://community.coda.io/c/developers-central/coda-packs/15
-[support_email]: mailto:help+packs@coda.io
+[partners_email]: mailto:partners@coda.io
 [hc_share]: https://help.coda.io/en/articles/1137949-sharing-your-doc#h_5061fdf96a
