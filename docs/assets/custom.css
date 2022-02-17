@@ -11,6 +11,11 @@
   text-decoration: underline;
 }
 
+/* Ensure <button> and <a> buttons have the same height. */
+.md-button {
+  line-height: 1.6em;
+}
+
 /* Size in-line image to be the same size as the text. */
 img.inline-icon {
   height: 1em;
