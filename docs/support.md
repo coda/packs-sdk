@@ -10,7 +10,7 @@ We use a mixture of different platforms to provide support to Pack makers, so re
 
 
 
-## Questions and advice
+## Questions or advice
 
 For general questions about Packs, or advice on how to build them, we recommend you post in the [Coda Community "Packs" category][community_packs]. Codans actively monitor the community and answer questions, as well as other Pack makers that have experience with the platform. Posting questions and answers in a public forum helps build up a knowledge base of information that helps everyone.
 
