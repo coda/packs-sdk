@@ -3930,13 +3930,13 @@ module.exports = (() => {
       init_buffer_shim();
       var required = require_requires_port();
       var qs2 = require_querystringify();
+      var CRHTLF = /[\n\r\t]/g;
       var slashes = /^[A-Za-z][A-Za-z0-9+-.]*:\/\//;
       var protocolre = /^([a-z][a-z0-9.+-]*:)?(\/\/)?([\\/]+)?([\S\s]*)/i;
       var windowsDriveLetter = /^[a-zA-Z]:/;
-      var whitespace = "[\\x09\\x0A\\x0B\\x0C\\x0D\\x20\\xA0\\u1680\\u180E\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\\u2028\\u2029\\uFEFF]";
-      var left = new RegExp("^" + whitespace + "+");
+      var whitespace = /^[ \f\n\r\t\v\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+/;
       function trimLeft(str) {
-        return (str ? str : "").toString().replace(left, "");
+        return (str ? str : "").toString().replace(whitespace, "");
       }
       var rules = [
         ["#", "hash"],
@@ -3987,6 +3987,7 @@ module.exports = (() => {
       }
       function extractProtocol(address, location) {
         address = trimLeft(address);
+        address = address.replace(CRHTLF, "");
         location = location || {};
         var match = protocolre.exec(address);
         var protocol = match[1] ? match[1].toLowerCase() : "";
@@ -4055,6 +4056,7 @@ module.exports = (() => {
       }
       function Url(address, location, parser) {
         address = trimLeft(address);
+        address = address.replace(CRHTLF, "");
         if (!(this instanceof Url)) {
           return new Url(address, location, parser);
         }
@@ -4085,7 +4087,8 @@ module.exports = (() => {
           if (parse !== parse) {
             url[key] = address;
           } else if (typeof parse === "string") {
-            if (~(index = address.indexOf(parse))) {
+            index = parse === "@" ? address.lastIndexOf(parse) : address.indexOf(parse);
+            if (~index) {
               if (typeof instruction[2] === "number") {
                 url[key] = address.slice(0, index);
                 address = address.slice(index + instruction[2]);
@@ -4116,9 +4119,16 @@ module.exports = (() => {
         }
         url.username = url.password = "";
         if (url.auth) {
-          instruction = url.auth.split(":");
-          url.username = instruction[0];
-          url.password = instruction[1] || "";
+          index = url.auth.indexOf(":");
+          if (~index) {
+            url.username = url.auth.slice(0, index);
+            url.username = encodeURIComponent(decodeURIComponent(url.username));
+            url.password = url.auth.slice(index + 1);
+            url.password = encodeURIComponent(decodeURIComponent(url.password));
+          } else {
+            url.username = encodeURIComponent(decodeURIComponent(url.auth));
+          }
+          url.auth = url.password ? url.username + ":" + url.password : url.username;
         }
         url.origin = url.protocol !== "file:" && isSpecial(url.protocol) && url.host ? url.protocol + "//" + url.host : "null";
         url.href = url.toString();
@@ -4176,9 +4186,15 @@ module.exports = (() => {
             url[part] = encodeURIComponent(value);
             break;
           case "auth":
-            var splits = value.split(":");
-            url.username = splits[0];
-            url.password = splits.length === 2 ? splits[1] : "";
+            var index = value.indexOf(":");
+            if (~index) {
+              url.username = value.slice(0, index);
+              url.username = encodeURIComponent(decodeURIComponent(url.username));
+              url.password = value.slice(index + 1);
+              url.password = encodeURIComponent(decodeURIComponent(url.password));
+            } else {
+              url.username = encodeURIComponent(decodeURIComponent(value));
+            }
         }
         for (var i = 0; i < rules.length; i++) {
           var ins = rules[i];
