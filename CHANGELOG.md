@@ -1,6 +1,7 @@
 ### 0.8.1
 
 - Removed postinstall to avoid patching failure for npm 6 or older versions.
+- Added `StringEmbedSchema` to handle configuration on how embed values appear in docs
 
 ### 0.8.0
 
