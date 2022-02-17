@@ -3,6 +3,11 @@ title: "StringEmbedSchema"
 ---
 # Interface: StringEmbedSchema
 
+A schema representing a return value or object property that is provided as a string,
+which Coda should interpret as an embed value (e.g. a URL). Coda uses an external provider (iframely)
+to handle all embeds by default. If there is no support for a given embed that you want to use,
+you will need to use the `force` option which falls back to a generic iframe.
+
 ## Hierarchy
 
 - `BaseStringSchema`<[`Embed`](../enums/ValueHintType.md#embed)\>
@@ -23,7 +28,7 @@ BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:415](https://github.com/coda/packs-sdk/blob/main/schema.ts#L415)
+[schema.ts:421](https://github.com/coda/packs-sdk/blob/main/schema.ts#L421)
 
 ___
 
@@ -59,7 +64,7 @@ but requires user consent per-domain to actually display the embed.
 
 #### Defined in
 
-[schema.ts:424](https://github.com/coda/packs-sdk/blob/main/schema.ts#L424)
+[schema.ts:430](https://github.com/coda/packs-sdk/blob/main/schema.ts#L430)
 
 ___
 
@@ -75,4 +80,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:509](https://github.com/coda/packs-sdk/blob/main/schema.ts#L509)
+[schema.ts:515](https://github.com/coda/packs-sdk/blob/main/schema.ts#L515)

@@ -394,7 +394,7 @@ export interface ScaleSchema extends BaseNumberSchema<ValueHintType.Scale> {
 
 /**
  * A schema representing a return value or object property that is provided as a string,
- * which Coda should interpret as a date. Coda is able to flexibly a parse number of formal
+ * which Coda should interpret as a date. Coda is able to flexibly parse a number of formal
  * and informal string representations of dates. For maximum accuracy, consider using an
  * ISO 8601 date string (e.g. 2021-10-29): https://en.wikipedia.org/wiki/ISO_8601.
  */
@@ -410,6 +410,12 @@ export interface StringDateSchema extends BaseStringSchema<ValueHintType.Date> {
   format?: string;
 }
 
+/**
+ * A schema representing a return value or object property that is provided as a string,
+ * which Coda should interpret as an embed value (e.g. a URL). Coda uses an external provider (iframely)
+ * to handle all embeds by default. If there is no support for a given embed that you want to use,
+ * you will need to use the `force` option which falls back to a generic iframe.
+ */
 export interface StringEmbedSchema extends BaseStringSchema<ValueHintType.Embed> {
   /** Instructs Coda to render this value as an embed. */
   codaType: ValueHintType.Embed;
