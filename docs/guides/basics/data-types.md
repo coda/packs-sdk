@@ -219,7 +219,7 @@ pack.addFormula({
 ```
 
 
-### Images
+### Images {: #images}
 
 There are two different value hints for image: [`ImageReference`][ImageReference] and [`ImageAttachment`][ImageAttachment]. Both of these are applied to string values, where the string contains the URL of the image. For image references, the image is always loaded from the source URL. For image attachments, Coda copies the image from the source URL into the document and shows that local copy.
 
@@ -236,8 +236,32 @@ pack.addFormula({
 });
 ```
 
-!!! warning
+!!! bug
     Image attachments currently only work correctly within a sync table. When used outside of a sync table they behave like image references and load the image from the source URL.
+
+
+### Files {: #files}
+
+Similar to `ImageAttachment` mentioned above, you can return other file types using the value hint `Attachment`. This hint is also applied to string values, where the string contains the URL of the file. Coda copies the file from the source URL into the document and uses that local copy.
+
+```ts
+const DealSchema = coda.makeObjectSchema({
+  properties: {
+    // ...
+    contract: {
+      type: coda.ValueType.String,
+      codaType: coda.ValueHintType.Attachment,
+    },
+  },
+  // ...
+});
+```
+
+!!! bug
+    Attachments currently only work within a sync table.
+    <!-- https://golinks.io/bug/21522 -->
+    Additionally, file attachments may by shown with the wrong file name.
+    <!-- https://golinks.io/bug/21523 -->
 
 
 ### Embedded content
