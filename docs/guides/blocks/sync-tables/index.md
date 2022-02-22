@@ -144,7 +144,7 @@ In most sync tables, parameters are used to allow users to filter the results in
 
 ## Row limits
 
-Each sync table has a user-defined maximum number of rows, which defaults to 1000 but can be set as high as 10,000. Any items returned by your sync table beyond that limit will be dropped.
+Each sync table has a user-defined maximum number of rows, which defaults to 1000 but can be set as high as 10,000. Once a sync table reaches the limit Coda will stop the sync (even if the code returned a [continuation](#longrunning)) and truncate the resulting rows to fit within the limit.
 
 
 ## Long-running syncs {: #longrunning}

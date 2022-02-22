@@ -322,10 +322,13 @@ try {
 The HTTP headers returned can be accessed using the `headers` field of the response. The header names are normalized (changed to lowercase) for convenience, so you can access them consistently regardless of how they are sent by the server.
 
 ```
-let contentType = response.headers["content-type"];
+let contentType = response.headers["content-type"].toString();
 ```
 
 Unless it's a known safe header, all the header values will be redacted by Coda (contain the value `<<<REDACTED by Coda>>>` instead of the actual value). To request that a specific header be unredacted you will need to [contact support][support].
+
+!!! info "Multiple header values"
+    A server may return multiple headers with the same name. In this case, the header value will be a string array instead of a single string. As per [the spec][spec_headers], this should only happen for headers that return comma-separated values. Adding a `.toString()` call after retrieving the header value is an easy way to collapse both cases down to a single string.
 
 
 ## Authentication
@@ -377,3 +380,4 @@ You can set a total rate limit across all users of your Pack, or if your Pack us
 [cacheTtlSecs]: ../../reference/sdk/interfaces/FetchRequest.md#cacheTtlSecs
 [formula_cache]: ../blocks/formulas.md#caching
 [authentication]: ../advanced/authentication.md
+[spec_headers]: https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
