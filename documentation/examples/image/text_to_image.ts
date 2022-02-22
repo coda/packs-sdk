@@ -35,7 +35,7 @@ pack.addFormula({
     `.trim();
     // Encode the markup as base64.
     let encoded = Buffer.from(svg).toString("base64");
-    // Return the SVG as a data URI.
+    // Return the SVG as a data URL.
     return coda.SvgConstants.DataUrlPrefix + encoded;
   },
 });

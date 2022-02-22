@@ -11,9 +11,11 @@ You can upload images and files to a Coda doc, including in a table using dedica
 
 ## Parameters and result types
 
-Formulas can accept an image as a parameter using the parameter type `Image`, which is then passed to the `execute` function as a URL. It currently isn't possible to pass non-image files however. See the [Parameters guide][parameters_images] for more information.
+Formulas can accept an image as a parameter using the parameter type `Image`, which is then passed to the `execute` function as a URL. Likewise, formulas can return images as URLs, using the hint type `ImageReference` or `ImageAttachment`. When using an image reference the image is always loaded from the source URL, while for attachments Coda copies the image from the source URL into the document and shows that local copy. Image attachments should be used in most cases, but an image reference may make more sense if you expect the image to be updated often and want to ensure the doc is always using the latest image.
 
-Likewise, formulas can return images and files as URLs, using the hint types `ImageReference`, `ImageAttachment`, or `Attachment`. See the [Data types guide][data_types_images] for more information.
+It currently isn't possible to pass non-image files as parameters. Files can be returned as URLs however, using the `Attachment` value hint.
+
+See the [Parameters][parameters_images] and [Data types][data_types_images] guides for more information.
 
 
 ## Expiring images {: #expiring}
@@ -57,7 +59,7 @@ return temporaryImageUrl;
 
 [Scalable Vector Graphics (SVG)][mdn_svg] is an XML-based markup language for drawing images, and Packs can generate SVGs to create custom visualizations. For example, the [Latex Pack][pack_latex] uses a JavaScript library to generate SVG images of math equations.
 
-Instead of storing SVG images in temporary blob storage, you can instead encode them to a base64 string and return them as a [Data URl][mdn_data_urls]
+Instead of storing SVG images in temporary blob storage, you can instead encode them to a base64 string and return them as a [Data URL][mdn_data_urls]
 
 ```ts
 let svg = "...";
@@ -65,8 +67,8 @@ let encoded = Buffer.from(svg).toString("base64");
 return coda.SvgConstants.DataUrlPrefix + encoded;
 ```
 
-!!! warning
-    Data URLs should only be used for relatively small images, like SVGs. Returning large images as data URLs can cause performance issues in the document.
+!!! danger "Data URL Size"
+    Data URLs should only be used for very small images, like simple SVGs. Returning large images as data URLs can cause performance issues or even break the document they are used in.
 
 
 ### Dark mode
