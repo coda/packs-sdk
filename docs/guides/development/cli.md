@@ -231,7 +231,7 @@ Although a lot of Pack management can be done through the CLI, there are still s
 - Editing your Pack's listing page (name, icon, etc).
 
 
-## Migrating from Web IDE
+## Migrating from the Web IDE
 
 It's possible to start development of a Pack in the Pack Studio Web IDE and later migrate to using the CLI. For example, to take advantage of an NPM library, which isn't possible in the Web IDE.
 
