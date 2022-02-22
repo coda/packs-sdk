@@ -173,7 +173,7 @@ let response = await context.fetcher.fetch({
 ```
 
 
-### Binary
+### Binary {: #binary-body}
 
 Sending binary data (files, images, etc) is currently not supported by the fetcher.
 
@@ -272,7 +272,7 @@ let rate = usd.rate[0];
 ```
 
 
-### Binary
+### Binary {: #binary-response}
 
 When fetching binary data, enable the request option `isBinaryResponse` to let the fetcher know that it shouldn't try to parse the server response. When binary responses are enabled the `body` field of the response object will contain a [Node.js `Buffer`][buffer].
 
