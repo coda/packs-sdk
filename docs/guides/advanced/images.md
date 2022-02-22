@@ -11,7 +11,9 @@ You can upload images and files to a Coda doc, including in a table using dedica
 
 ## Parameters and result types
 
-Formulas can accept an image as a parameter using the parameter type `Image`, which is then passed to the `execute` function as a URL. Likewise, formulas can return images as URLs, using the hint type `ImageReference` or `ImageAttachment`. When using an image reference the image is always loaded from the source URL, while for attachments Coda copies the image from the source URL into the document and shows that local copy. Image attachments should be used in most cases, but an image reference may make more sense if you expect the image to be updated often and want to ensure the doc is always using the latest image.
+Formulas can accept an image as a parameter using the parameter type `Image`, which is then passed to the `execute` function as a URL. Likewise, formulas can return images as URLs, using the hint type `ImageReference` or `ImageAttachment`. When using an image reference the image is always loaded from the source URL, while for attachments Coda copies the image from the source URL into the document and shows that local copy.
+
+Image attachments should be used in most cases. An image reference may make more sense if you expect the image to be updated often and want to ensure the doc is always using the latest copy, or when contractually obligated to hotlink to the image.
 
 It currently isn't possible to pass non-image files as parameters. Files can be returned as URLs however, using the `Attachment` value hint.
 

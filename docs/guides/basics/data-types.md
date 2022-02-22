@@ -223,7 +223,7 @@ pack.addFormula({
 
 There are two different value hints for image: [`ImageReference`][ImageReference] and [`ImageAttachment`][ImageAttachment]. Both of these are applied to string values, where the string contains the URL of the image. For image references, the image is always loaded from the source URL. For image attachments, Coda copies the image from the source URL into the document and shows that local copy.
 
-Image attachments should be used in most cases, but an image reference may make more sense if you expect the image to be updated often and want to ensure the doc is always using the latest image.
+Image attachments should be used in most cases. An image reference may make more sense if you expect the image to be updated often and want to ensure the doc is always using the latest copy, or when contractually obligated to hotlink to the image.
 
 ```ts
 pack.addFormula({
