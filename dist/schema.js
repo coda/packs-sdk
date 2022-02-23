@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.PlaceholderIdentityPackId = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.PlaceholderIdentityPackId = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const ensure_2 = require("./helpers/ensure");
 const ensure_3 = require("./helpers/ensure");
@@ -58,6 +58,10 @@ var ValueHintType;
      * Indicates to interpret the value as a duration (e.g. 3 hours).
      */
     ValueHintType["Duration"] = "duration";
+    /**
+     * Indicates to interpret the value as an email address (e.g. joe@foo.com).
+     */
+    ValueHintType["Email"] = "email";
     /**
      * Indicates to interpret and render the value as a Coda person reference. The provided value should be
      * an object whose `id` property is an email address, which Coda will try to resolve to a user
@@ -162,6 +166,7 @@ exports.StringHintValueTypes = [
     ValueHintType.Time,
     ValueHintType.DateTime,
     ValueHintType.Duration,
+    ValueHintType.Email,
     ValueHintType.Embed,
     ValueHintType.Html,
     ValueHintType.ImageReference,
@@ -234,6 +239,50 @@ var ScaleIconSet;
     ScaleIconSet["LightBulb"] = "lightbulb";
 })(ScaleIconSet = exports.ScaleIconSet || (exports.ScaleIconSet = {}));
 /**
+ * Display types that can be used with an {@link EmailSchema}.
+ */
+var EmailDisplayType;
+(function (EmailDisplayType) {
+    /**
+     * Display both icon and email (default).
+     */
+    EmailDisplayType["IconAndEmail"] = "iconAndEmail";
+    /**
+     * Display icon only.
+     */
+    EmailDisplayType["IconOnly"] = "iconOnly";
+    /**
+     * Display email address only.
+     */
+    EmailDisplayType["EmailOnly"] = "emailOnly";
+})(EmailDisplayType = exports.EmailDisplayType || (exports.EmailDisplayType = {}));
+/**
+ * Display types that can be used with a {@link LinkSchema}.
+ */
+var LinkDisplayType;
+(function (LinkDisplayType) {
+    /**
+     * Display icon only.
+     */
+    LinkDisplayType["IconOnly"] = "IconOnly";
+    /**
+     * Display url.
+     */
+    LinkDisplayType["Url"] = "URL";
+    /**
+     * Display web page title.
+     */
+    LinkDisplayType["Title"] = "Title";
+    /**
+     * Display the referenced web page as a card.
+     */
+    LinkDisplayType["Card"] = "Card";
+    /**
+     * Display the referenced web page as an embed.
+     */
+    LinkDisplayType["Embed"] = "Embed";
+})(LinkDisplayType = exports.LinkDisplayType || (exports.LinkDisplayType = {}));
+/**
  * Enumeration of units supported by duration schemas. See {@link maxUnit}.
  */
 var DurationUnit;
@@ -265,6 +314,7 @@ exports.SimpleStringHintValueTypes = [
     ValueHintType.ImageAttachment,
     ValueHintType.Markdown,
     ValueHintType.Url,
+    ValueHintType.Email,
 ];
 /**
  * The type of content in this attribution node.

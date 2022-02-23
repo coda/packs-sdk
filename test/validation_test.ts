@@ -27,6 +27,7 @@ describe('Property validation in objects', () => {
       bool: {type: ValueType.Boolean},
       date: {type: ValueType.String, codaType: ValueHintType.Date},
       url: {type: ValueType.String, codaType: ValueHintType.Url},
+      email: {type: ValueType.String, codaType: ValueHintType.Email},
       slider: {
         type: ValueType.Number,
         codaType: ValueHintType.Slider,
@@ -143,6 +144,19 @@ describe('Property validation in objects', () => {
     },
   });
 
+  const fakeEmailFormula = makeObjectFormula({
+    name: 'Email',
+    description: 'Returns the string you passed in.',
+    examples: [],
+    parameters: [makeStringParameter('string', 'Pass in a string (malformed is ok)')],
+    execute: async ([stringParam]) => {
+      return {email: stringParam};
+    },
+    response: {
+      schema: fakeSchema,
+    },
+  });
+
   const fakeArrayFormula = makeObjectFormula({
     name: 'GetNames',
     description: 'Returns the names you passed in.',
@@ -205,6 +219,7 @@ describe('Property validation in objects', () => {
       fakeSliderFormula,
       fakeScaleFormula,
       fakeUrlFormula,
+      fakeEmailFormula,
       fakeArrayFormula,
       fakePeopleFormula,
       fakeReferenceFormula,
@@ -286,6 +301,17 @@ describe('Property validation in objects', () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Url', ['jasiofjsdofjiaof']),
       /The following errors were found when validating the result of the formula "Url":\nProperty with codaType "url" must be a valid HTTP\(S\) url, but got "jasiofjsdofjiaof"./,
+    );
+  });
+
+  it('validates properly formatted email', async () => {
+    await executeFormulaFromPackDef(fakePack, 'Email', ['jim@foo.com']);
+  });
+
+  it('rejects improperly formatted email', async () => {
+    await testHelper.willBeRejectedWith(
+      executeFormulaFromPackDef(fakePack, 'Email', ['derp']),
+      /The following errors were found when validating the result of the formula "Email":\nProperty with codaType "email" must be a valid email address, but got "derp"./,
     );
   });
 
