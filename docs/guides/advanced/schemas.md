@@ -185,6 +185,26 @@ pack.addFormula({
 });
 ```
 
+??? "Using `fromKey` with existing schemas"
+    When mapping a response field to an existing schema, it isn't clear where to put the `fromKey` field. The best approach is to use the [spread operator (`...`)][mdn_spread_object] to copy the schema and then add on the `fromKey` field.
+
+    ```ts
+    let PersonSchema = coda.makeObjectSchema({
+      // ...
+    });
+
+    let MovieSchema = coda.makeObjectSchema({
+      properties: {
+        director: {
+          ...PersonSchema,
+          fromKey: "director_info",
+        },
+        // ...
+      },
+      // ...
+    });
+    ```
+
 The `fromKey` field works for simple renaming, but doesn't handle more complex cases such as pulling up a nested field. A more flexible approach is to rearrange the data from the API before you return it to ensure it matches the schema.
 
 ```ts
@@ -438,3 +458,4 @@ In your sync formula you only need to populate the fields of the reference objec
 [makeReferenceSchemaFromObjectSchema]: ../../reference/sdk/functions/makeReferenceSchemaFromObjectSchema.md
 [sync_tables_references]: ../blocks/sync-tables/index.md#references
 [data_types_objects]: ../basics/data-types.md#objects
+[mdn_spread_object]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#spread_in_object_literals
