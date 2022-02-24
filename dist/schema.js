@@ -266,7 +266,7 @@ var LinkDisplayType;
      */
     LinkDisplayType["IconOnly"] = "IconOnly";
     /**
-     * Display url.
+     * Display URL.
      */
     LinkDisplayType["Url"] = "URL";
     /**

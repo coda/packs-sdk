@@ -421,11 +421,11 @@ export enum EmailDisplayType {
  * A schema representing a return value or object property that is an email address.
  *
  * An email address can be represented visually as an icon, an icon plus the email address, or
- * the just the email address.  Auto-complete against previously typed domain names is
+ * the just the email address.  Autocomplete against previously typed domain names is
  * also an option in the user interface.
  */
 export interface EmailSchema extends BaseStringSchema<ValueHintType.Email> {
-  /** Instructs Coda to render this value as a scale. */
+  /** Instructs Coda to render this value as an email address. */
   codaType: ValueHintType.Email;
   /** How the email should be displayed in the UI. */
   display?: EmailDisplayType;
@@ -443,7 +443,7 @@ export enum LinkDisplayType {
   IconOnly = 'IconOnly',
 
   /**
-   * Display url.
+   * Display URL.
    */
   Url = 'URL',
 
@@ -464,14 +464,14 @@ export enum LinkDisplayType {
 }
 
 /**
- * A schema representing a return value or object property that is an hyperlink.
+ * A schema representing a return value or object property that is a hyperlink.
  *
- * The link can be displayed in the UI in five different ways, as per the above enumeration.
+ * The link can be displayed in the UI in multiple ways, as per the above enumeration.
  */
 export interface LinkSchema extends BaseStringSchema<ValueHintType.Url> {
-  /** Instructs Coda to render this value as a scale. */
+  /** Instructs Coda to render this value as a hyperlink. */
   codaType: ValueHintType.Url;
-  /** How the url should be displayed in the UI. */
+  /** How the URL should be displayed in the UI. */
   display?: LinkDisplayType;
 }
 
