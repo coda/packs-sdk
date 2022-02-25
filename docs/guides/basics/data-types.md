@@ -195,7 +195,7 @@ When used with a number value, the number should contain the number of seconds s
 The [`Duration`][Duration] value hint represents an amount of time, rather than a specific time. It can only be applied to `String` values, and those strings must match one of a few formats:
 
 | Example                     | Result              | Notes                           |
-|-----------------------------|---------------------|---------------------------------|
+| --------------------------- | ------------------- | ------------------------------- |
 | 6                           | 6 days              | A single number is days.        |
 | 6:01                        | 6 hrs 1 min         | Hours and minutes.              |
 | 6:01:15                     | 6 hrs 1 min 15 secs | Hours, minutes, and seconds.    |
@@ -315,29 +315,32 @@ The [`Reference`][Reference] value hint can be used to reference a row in a sync
 
 ## Corresponding column types
 
-The columns of a Coda table are strongly typed, and the data types in the Pack SDK roughly correspond to those same types. The table below indicates the corresponding value type and value hint that corresponds to a each column type.
+The columns of a Coda table are strongly typed, and the data types in the Pack SDK roughly correspond to those same types. The table below indicates the value type and value hint that corresponds to a each column type.
 
 | Column type   | Supported | Value type           | Value hint        |
-|---------------|-----------|----------------------|-------------------|
-| Text          | ✅ Yes     | `String`             |                   |
-| Select list   | ❌ No      |                      |                   |
-| Number        | ✅ Yes     | `Number`             |                   |
-| Percent       | ✅ Yes     | `Number`             | `Percent`         |
-| Currency      | ✅ Yes     | `Number`             | `Currency`        |
-| Slider        | ✅ Yes     | `Number`             | `Slider`          |
-| Scale         | ✅ Yes     | `Number`             | `Scale`           |
-| Date          | ✅ Yes     | `String` or `Number` | `Date`            |
-| Time          | ✅ Yes     | `String` or `Number` | `Time`            |
-| Date and time | ✅ Yes     | `String` or `Number` | `DateTime`        |
-| Duration      | ✅ Yes     | `String`             | `Duration`        |
-| Checkbox      | ✅ Yes     | `Boolean`            |                   |
-| People        | ✅ Yes     | `Object`             | `Person`          |
-| Reaction      | ❌ No      |                      |                   |
-| Button        | ❌ No[^1]  |                      |                   |
-| Image         | ✅ Yes     | `String`             | `ImageAttachment` |
-| Image URL     | ✅ Yes     | `String`             | `ImageReference`  |
-| File          | ✅ Yes     | `String`             | `Attachment`      |
-| Lookup        | ✅ Yes     | `Object`             | `Reference`       |
+| ------------- | --------- | -------------------- | ----------------- |
+| Text          | ✅ Yes    | `String`             |                   |
+| Link          | ✅ Yes    | `String`             | `Url`             |
+| Canvas        | ❌ No     |                      |                   |
+| Select list   | ❌ No     |                      |                   |
+| Number        | ✅ Yes    | `Number`             |                   |
+| Percent       | ✅ Yes    | `Number`             | `Percent`         |
+| Currency      | ✅ Yes    | `Number`             | `Currency`        |
+| Slider        | ✅ Yes    | `Number`             | `Slider`          |
+| Scale         | ✅ Yes    | `Number`             | `Scale`           |
+| Date          | ✅ Yes    | `String` or `Number` | `Date`            |
+| Time          | ✅ Yes    | `String` or `Number` | `Time`            |
+| Date and time | ✅ Yes    | `String` or `Number` | `DateTime`        |
+| Duration      | ✅ Yes    | `String`             | `Duration`        |
+| Checkbox      | ✅ Yes    | `Boolean`            |                   |
+| People        | ✅ Yes    | `Object`             | `Person`          |
+| Email         | ❌ No     |                      |                   |
+| Reaction      | ❌ No     |                      |                   |
+| Button        | ❌ No[^1] |                      |                   |
+| Image         | ✅ Yes    | `String`             | `ImageAttachment` |
+| Image URL     | ✅ Yes    | `String`             | `ImageReference`  |
+| File          | ✅ Yes    | `String`             | `Attachment`      |
+| Lookup        | ✅ Yes    | `Object`             | `Reference`       |
 
 
 [^1]: While a Pack can't return a button directly, it can provide [actions][actions] that a user can use to power their buttons.
@@ -378,7 +381,7 @@ Some value types and hints support additional formatting options. For example, `
 The full set of formatting options for a given value type and hint can be found in the corresponding schema definition.
 
 | Value type           | Value hint | Formatting options                               |
-|----------------------|------------|--------------------------------------------------|
+| -------------------- | ---------- | ------------------------------------------------ |
 | `Number`             |            | [`NumericSchema`][NumericSchema]                 |
 | `Number`             | `Percent`  | [`NumericSchema`][NumericSchema]                 |
 | `Number`             | `Currency` | [`CurrencySchema`][CurrencySchema]               |
