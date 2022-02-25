@@ -362,6 +362,15 @@ Making a request to an external API can be expensive, either due to quotas, comp
 You can set a total rate limit across all users of your Pack, or if your Pack uses [authentication][authentication] you can also set a per-user rate limit. When the limit is reached your formula will pause for a bit to see if more quota becomes available, and if not eventually fail with an error.
 
 
+## IP addresses
+
+HTTP requests originating from Packs will come from a few different IP addresses. The specific set of addresses will change over time, and without prior warning. You can query the current set of IP addresses by doing a DNS lookup on the domain `egress.coda.io`.
+
+```sh
+dig +short egress.coda.io
+```
+
+
 [Fetcher]: ../../reference/sdk/interfaces/Fetcher.md
 [samples]: ../../samples/topic/fetcher.md
 [addNetworkDomain]: ../../reference/sdk/classes/PackDefinitionBuilder.md#addnetworkdomain
