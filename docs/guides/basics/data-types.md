@@ -218,6 +218,21 @@ pack.addFormula({
 });
 ```
 
+### Percentages
+
+Formulas that return a result as a percentage can use the value type `Number` and the value hint [`Percent`][Percent]. Return a fraction in your code and the doc will display the equivalent percentage.
+
+```ts
+pack.addFormula({
+  // ...
+  resultType: coda.ValueType.Number,
+  codaType: coda.ValueHintType.Percent,
+  execute: async function ([], context) {
+    return 0.5; // Displayed as "50%" in the doc.
+  },
+});
+```
+
 
 ### Images {: #images}
 
@@ -380,20 +395,21 @@ Some value types and hints support additional formatting options. For example, `
 
 The full set of formatting options for a given value type and hint can be found in the corresponding schema definition.
 
-| Value type           | Value hint | Formatting options                               |
-| -------------------- | ---------- | ------------------------------------------------ |
-| `Number`             |            | [`NumericSchema`][NumericSchema]                 |
-| `Number`             | `Percent`  | [`NumericSchema`][NumericSchema]                 |
-| `Number`             | `Currency` | [`CurrencySchema`][CurrencySchema]               |
-| `Number`             | `Slider`   | [`SliderSchema`][SliderSchema]                   |
-| `Number`             | `Scale`    | [`ScaleSchema`][ScaleSchema]                     |
-| `Number`             | `Date`     | [`NumericDateSchema`][NumericDateSchema]         |
-| `Number`             | `Time`     | [`NumericTimeSchema`][NumericTimeSchema]         |
-| `Number`             | `DateTime` | [`NumericDateTimeSchema`][NumericDateTimeSchema] |
-| `String` or `Number` | `Date`     | [`StringDateSchema`][StringDateSchema]           |
-| `String` or `Number` | `Time`     | [`StringTimeSchema`][StringTimeSchema]           |
-| `String` or `Number` | `DateTime` | [`StringDateTimeSchema`][StringDateTimeSchema]   |
-| `String`             | `Duration` | [`DurationSchema`][DurationSchema]               |
+| Value type | Value hint | Formatting options                               |
+| ---------- | ---------- | ------------------------------------------------ |
+| `Number`   |            | [`NumericSchema`][NumericSchema]                 |
+| `Number`   | `Percent`  | [`NumericSchema`][NumericSchema]                 |
+| `Number`   | `Currency` | [`CurrencySchema`][CurrencySchema]               |
+| `Number`   | `Slider`   | [`SliderSchema`][SliderSchema]                   |
+| `Number`   | `Scale`    | [`ScaleSchema`][ScaleSchema]                     |
+| `Number`   | `Date`     | [`NumericDateSchema`][NumericDateSchema]         |
+| `Number`   | `Time`     | [`NumericTimeSchema`][NumericTimeSchema]         |
+| `Number`   | `DateTime` | [`NumericDateTimeSchema`][NumericDateTimeSchema] |
+| `String`   | `Date`     | [`StringDateSchema`][StringDateSchema]           |
+| `String`   | `Time`     | [`StringTimeSchema`][StringTimeSchema]           |
+| `String`   | `DateTime` | [`StringDateTimeSchema`][StringDateTimeSchema]   |
+| `String`   | `Duration` | [`DurationSchema`][DurationSchema]               |
+|`String`|`Embed`|[`StringEmbedSchema`][StringEmbedSchema]
 
 
 
@@ -443,4 +459,5 @@ The full set of formatting options for a given value type and hint can be found 
 [StringTimeSchema]: ../../reference/sdk/interfaces/StringTimeSchema.md
 [StringDateTimeSchema]: ../../reference/sdk/interfaces/StringDateTimeSchema.md
 [DurationSchema]: ../../reference/sdk/interfaces/DurationSchema.md
+[StringEmbedSchema]: ../../reference/sdk/interfaces/StringEmbedSchema.md
 [formula_list]: https://coda.io/formulas#List
