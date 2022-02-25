@@ -320,6 +320,8 @@ The table below shows the recommended parameter type to use with various types o
 | Type          | Supported | Recommended   | Notes                                                             |
 | ------------- | --------- | ------------- | ----------------------------------------------------------------- |
 | Text          | ✅ Yes    | `String`      | Use `Html` if the formatting is important.                        |
+| Link          | ✅ Yes    | `String`      |                                                                   |
+| Canvas        | ✅ Yes    | `Html`        | Use `String` to discard formatting.                               |
 | Select list   | ✅ Yes    | `StringArray` | Works for both single and multi-value select lists.               |
 | Number        | ✅ Yes    | `Number`      |                                                                   |
 | Percent       | ✅ Yes    | `Number`      | Passed as a fraction.                                             |
@@ -332,6 +334,7 @@ The table below shows the recommended parameter type to use with various types o
 | Duration      | ✅ Yes    | `Number`      |                                                                   |
 | Checkbox      | ✅ Yes    | `Boolean`     |                                                                   |
 | People        | ❌ No     |               | Use `String` to get the person's name.                            |
+| Email         | ✅ Yes    | `String`      |                                                                   |
 | Reaction      | ❌ No     |               | Use `StringArray` to get the names of the people that reacted.    |
 | Button        | ❌ No     |               |                                                                   |
 | Image         | ✅ Yes    | `ImageArray`  | Image column can contain multiple images.                         |
