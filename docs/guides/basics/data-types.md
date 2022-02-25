@@ -409,7 +409,7 @@ The full set of formatting options for a given value type and hint can be found 
 | `String`   | `Time`     | [`StringTimeSchema`][StringTimeSchema]           |
 | `String`   | `DateTime` | [`StringDateTimeSchema`][StringDateTimeSchema]   |
 | `String`   | `Duration` | [`DurationSchema`][DurationSchema]               |
-|`String`|`Embed`|[`StringEmbedSchema`][StringEmbedSchema]
+| `String`   | `Embed`    | [`StringEmbedSchema`][StringEmbedSchema]         |
 
 
 
