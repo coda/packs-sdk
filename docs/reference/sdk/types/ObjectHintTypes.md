@@ -9,4 +9,4 @@ The subset of [ValueHintType](../enums/ValueHintType.md) that can be used with a
 
 #### Defined in
 
-[schema.ts:185](https://github.com/coda/packs-sdk/blob/main/schema.ts#L185)
+[schema.ts:190](https://github.com/coda/packs-sdk/blob/main/schema.ts#L190)

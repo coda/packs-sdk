@@ -18,7 +18,7 @@ An image, often a logo of the data source.
 
 #### Defined in
 
-[schema.ts:747](https://github.com/coda/packs-sdk/blob/main/schema.ts#L747)
+[schema.ts:833](https://github.com/coda/packs-sdk/blob/main/schema.ts#L833)
 
 ___
 
@@ -30,7 +30,7 @@ A hyperlink pointing to the data source.
 
 #### Defined in
 
-[schema.ts:743](https://github.com/coda/packs-sdk/blob/main/schema.ts#L743)
+[schema.ts:829](https://github.com/coda/packs-sdk/blob/main/schema.ts#L829)
 
 ___
 
@@ -42,4 +42,4 @@ Text attribution content.
 
 #### Defined in
 
-[schema.ts:739](https://github.com/coda/packs-sdk/blob/main/schema.ts#L739)
+[schema.ts:825](https://github.com/coda/packs-sdk/blob/main/schema.ts#L825)

@@ -264,23 +264,23 @@ var LinkDisplayType;
     /**
      * Display icon only.
      */
-    LinkDisplayType["IconOnly"] = "IconOnly";
+    LinkDisplayType["IconOnly"] = "iconOnly";
     /**
      * Display URL.
      */
-    LinkDisplayType["Url"] = "URL";
+    LinkDisplayType["Url"] = "url";
     /**
      * Display web page title.
      */
-    LinkDisplayType["Title"] = "Title";
+    LinkDisplayType["Title"] = "title";
     /**
      * Display the referenced web page as a card.
      */
-    LinkDisplayType["Card"] = "Card";
+    LinkDisplayType["Card"] = "card";
     /**
      * Display the referenced web page as an embed.
      */
-    LinkDisplayType["Embed"] = "Embed";
+    LinkDisplayType["Embed"] = "embed";
 })(LinkDisplayType = exports.LinkDisplayType || (exports.LinkDisplayType = {}));
 /**
  * Enumeration of units supported by duration schemas. See {@link maxUnit}.

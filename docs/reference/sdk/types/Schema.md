@@ -9,4 +9,4 @@ The union of all of the schema types supported for return values and object prop
 
 #### Defined in
 
-[schema.ts:840](https://github.com/coda/packs-sdk/blob/main/schema.ts#L840)
+[schema.ts:926](https://github.com/coda/packs-sdk/blob/main/schema.ts#L926)
