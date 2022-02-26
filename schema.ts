@@ -440,27 +440,27 @@ export enum LinkDisplayType {
   /**
    * Display icon only.
    */
-  IconOnly = 'IconOnly',
+  IconOnly = 'iconOnly',
 
   /**
    * Display URL.
    */
-  Url = 'URL',
+  Url = 'url',
 
   /**
    * Display web page title.
    */
-  Title = 'Title',
+  Title = 'title',
 
   /**
    * Display the referenced web page as a card.
    */
-  Card = 'Card',
+  Card = 'card',
 
   /**
    * Display the referenced web page as an embed.
    */
-  Embed = 'Embed',
+  Embed = 'embed',
 }
 
 /**

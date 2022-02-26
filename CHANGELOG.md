@@ -1,3 +1,7 @@
+### 0.9.0
+- **Breaking Change** ValueHintType.Url will now create a column of type "Link" instead of "Text".
+- Added ValueHintType.Email for new column type "Email".
+
 ### 0.8.2
 
 - Added `coda whoami` command to see API token details.
