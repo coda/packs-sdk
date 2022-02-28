@@ -281,7 +281,7 @@ const DealSchema = coda.makeObjectSchema({
 
 ### Embedded content
 
-The [`Embed`][Embed] value hint can be used to embed external content in the Coda doc. This value hint can be applied to `String` values, where the string contains the URL to the external content. The URL must be compatible with our embed provider, [Iframely][iframely], which supports the [oEmbed protocol][oEmbed].
+The [`Embed`][Embed] value hint can be used to embed external content in the Coda doc. This value hint can be applied to `String` values, where the string contains the URL to the external content.
 
 ```ts
 pack.addFormula({
