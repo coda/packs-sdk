@@ -3947,7 +3947,7 @@ module.exports = (() => {
         ["/", "pathname"],
         ["@", "auth", 1],
         [NaN, "host", void 0, 1, 1],
-        [/:(\d+)$/, "port", void 0, 1],
+        [/:(\d*)$/, "port", void 0, 1],
         [NaN, "hostname", void 0, 1, 1]
       ];
       var ignore = { hash: 1, query: 1 };
@@ -4209,7 +4209,7 @@ module.exports = (() => {
       function toString(stringify) {
         if (!stringify || typeof stringify !== "function")
           stringify = qs2.stringify;
-        var query, url = this, protocol = url.protocol;
+        var query, url = this, host = url.host, protocol = url.protocol;
         if (protocol && protocol.charAt(protocol.length - 1) !== ":")
           protocol += ":";
         var result = protocol + (url.protocol && url.slashes || isSpecial(url.protocol) ? "//" : "");
@@ -4221,8 +4221,12 @@ module.exports = (() => {
         } else if (url.password) {
           result += ":" + url.password;
           result += "@";
+        } else if (url.protocol !== "file:" && isSpecial(url.protocol) && !host && url.pathname !== "/") {
+          result += "@";
         }
-        result += url.host + url.pathname;
+        if (host[host.length - 1] === ":")
+          host += ":";
+        result += host + url.pathname;
         query = typeof url.query === "object" ? stringify(url.query) : url.query;
         if (query)
           result += query.charAt(0) !== "?" ? "?" + query : query;
