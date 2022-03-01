@@ -38,7 +38,7 @@ async function handleRelease({ manifestFile, packVersion: explicitPackVersion, c
     const apiKey = (0, config_storage_1.getApiKey)(codaApiEndpoint);
     const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
     if (!apiKey) {
-        return (0, helpers_4.printAndExit)('Missing API key. Please run `coda register <apiKey>` to register one.');
+        return (0, helpers_4.printAndExit)('Missing API key. Please run `coda register` to register one.');
     }
     const packId = (0, config_storage_2.getPackId)(manifestDir, codaApiEndpoint);
     if (!packId) {

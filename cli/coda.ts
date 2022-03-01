@@ -8,6 +8,7 @@ import {handleBuild} from './build';
 import {handleCreate} from './create';
 import {handleExecute} from './execute';
 import {handleInit} from './init';
+import {handleLink} from './link';
 import {handleRegister} from './register';
 import {handleRelease} from './release';
 import {handleSetOption} from './set_option';
@@ -156,6 +157,18 @@ if (require.main === module) {
         },
       },
       handler: handleCreate,
+    })
+    .command({
+      command: 'link <manifestDir> <packIdOrUrl>',
+      describe: "Link to a pre-existing Pack ID on Coda's servers",
+      builder: {
+        codaApiEndpoint: {
+          string: true,
+          hidden: true,
+          default: DEFAULT_API_ENDPOINT,
+        },
+      },
+      handler: handleLink,
     })
     .command({
       command: 'validate <manifestFile>',

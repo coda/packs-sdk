@@ -12,6 +12,7 @@ const build_1 = require("./build");
 const create_1 = require("./create");
 const execute_1 = require("./execute");
 const init_1 = require("./init");
+const link_1 = require("./link");
 const register_1 = require("./register");
 const release_1 = require("./release");
 const set_option_1 = require("./set_option");
@@ -158,6 +159,18 @@ if (require.main === module) {
             },
         },
         handler: create_1.handleCreate,
+    })
+        .command({
+        command: 'link <manifestDir> <packIdOrUrl>',
+        describe: "Link to a pre-existing Pack ID on Coda's servers",
+        builder: {
+            codaApiEndpoint: {
+                string: true,
+                hidden: true,
+                default: config_storage_1.DEFAULT_API_ENDPOINT,
+            },
+        },
+        handler: link_1.handleLink,
     })
         .command({
         command: 'validate <manifestFile>',
