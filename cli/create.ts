@@ -42,7 +42,7 @@ export async function createPack(
   // flow if they don't have a Coda API token.
   const apiKey = getApiKey(codaApiEndpoint);
   if (!apiKey) {
-    printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
+    printAndExit('Missing API key. Please run `coda register` to register one.');
   }
 
   if (!fs.existsSync(manifestFile)) {

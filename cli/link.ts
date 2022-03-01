@@ -3,26 +3,21 @@ import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {getApiKey} from './config_storage';
 import {getPackId} from './config_storage';
+import {isResponseError} from '../helpers/external-api/coda';
 import {printAndExit} from '../testing/helpers';
 import {promptForInput} from '../testing/helpers';
 import {storePackId} from './config_storage';
 
 // Regular expression that matches coda.io/p/<packId> or <packId>.
-const PackUrlRegex = /^(?:https:\/\/(?:[^/]*)coda.io(?:\:[0-9]+)?\/p\/)?([0-9]+)(:?[^0-9]*)$/;
+const PackEditUrlRegex = /^https:\/\/(?:[^/]*)coda.io(?:\:[0-9]+)?\/p\/([0-9]+)(:?[^0-9].*)?$/;
+const PackGalleryUrlRegex = /^https:\/\/(?:[^/]*)coda.io(?:\:[0-9]+)?\/packs\/[^/]*-([0-9]+)$/;
+const PackPlainIdRegex = /^([0-9]+)$/;
+const PackRegexes = [PackEditUrlRegex, PackGalleryUrlRegex, PackPlainIdRegex];
 
 interface LinkArgs {
   manifestDir: string;
   codaApiEndpoint: string;
   packIdOrUrl: string;
-}
-
-export function parsePackIdOrUrl(packIdOrUrl: string): number | null {
-  const match = packIdOrUrl.match(PackUrlRegex);
-  if (!match) {
-    return null;
-  }
-  const matchedNumber = match[1];
-  return Number(matchedNumber);
 }
 
 export async function handleLink({manifestDir, codaApiEndpoint, packIdOrUrl}: ArgumentsCamelCase<LinkArgs>) {
@@ -33,23 +28,35 @@ export async function handleLink({manifestDir, codaApiEndpoint, packIdOrUrl}: Ar
   // the server and ask people if they want to download after linking.
   const apiKey = getApiKey(codaApiEndpoint);
   if (!apiKey) {
-    printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
+    return printAndExit('Missing API key. Please run `coda register` to register one.');
   }
 
   const codaClient = createCodaClient(apiKey, formattedEndpoint);
   const packId = parsePackIdOrUrl(packIdOrUrl);
   if (packId === null) {
-    printAndExit(`packIdOrUrl must be a pack ID or URL, not ${packIdOrUrl}`);
+    return printAndExit(`packIdOrUrl must be a pack ID or URL, not ${packIdOrUrl}`);
   }
 
   // Verify that the user has edit access to the pack. Currently only editors
   // can call getPack().
-  await codaClient.getPack(packId);
+  try {
+    await codaClient.getPack(packId);
+  } catch (err: any) {
+    if (isResponseError(err)) {
+      switch (err.response.status) {
+        case 401:
+        case 403:
+        case 404:
+          return printAndExit("You don't have permission to edit this pack");
+      }
+    }
+    throw err;
+  }
 
   const existingPackId = getPackId(manifestDir, codaApiEndpoint);
   if (existingPackId) {
     if (existingPackId === packId) {
-      printAndExit(`Already associated with pack ${existingPackId}. No change needed`, 0);
+      return printAndExit(`Already associated with pack ${existingPackId}. No change needed`, 0);
     }
 
     const input = promptForInput(
@@ -62,4 +69,15 @@ export async function handleLink({manifestDir, codaApiEndpoint, packIdOrUrl}: Ar
 
   storePackId(manifestDir, packId, codaApiEndpoint);
   return printAndExit(`Linked successfully!`, 0);
+}
+
+export function parsePackIdOrUrl(packIdOrUrl: string): number | null {
+  for (const regex of PackRegexes) {
+    const match = packIdOrUrl.match(regex);
+    if (match) {
+      const matchedNumber = match[1];
+      return Number(matchedNumber);
+    }
+  }
+  return null;
 }

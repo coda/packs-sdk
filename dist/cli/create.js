@@ -47,7 +47,7 @@ async function createPack(manifestFile, codaApiEndpoint, { name, description, wo
     // flow if they don't have a Coda API token.
     const apiKey = (0, config_storage_2.getApiKey)(codaApiEndpoint);
     if (!apiKey) {
-        (0, helpers_3.printAndExit)('Missing API key. Please run `coda register <apiKey>` to register one.');
+        (0, helpers_3.printAndExit)('Missing API key. Please run `coda register` to register one.');
     }
     if (!fs_1.default.existsSync(manifestFile)) {
         return (0, helpers_3.printAndExit)(`${manifestFile} is not a valid pack definition file. Check the filename and try again.`);

@@ -89,7 +89,7 @@ export async function handleUpload({
 
   const apiKey = getApiKey(codaApiEndpoint);
   if (!apiKey) {
-    printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
+    printAndExit('Missing API key. Please run `coda register` to register one.');
   }
 
   const client = createCodaClient(apiKey, formattedEndpoint);
