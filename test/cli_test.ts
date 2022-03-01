@@ -19,8 +19,16 @@ describe('CLI', () => {
     it('correctly parses valid IDs', () => {
       assert.equal(parsePackIdOrUrl('1234'), 1234);
       assert.equal(parsePackIdOrUrl('https://coda.io/p/1234'), 1234);
+
+      // This in invalid but the regex allows it for now.
+      assert.equal(parsePackIdOrUrl('https://coda.io/p/1234/5678'), 1234);
+
       assert.equal(parsePackIdOrUrl('https://coda.io/p/1234?section=listing'), 1234);
       assert.equal(parsePackIdOrUrl('https://subdomain.coda.io:6780/p/1234?section=listing'), 1234);
+      assert.equal(parsePackIdOrUrl('https://coda.io/packs/foo-1234'), 1234);
+      assert.equal(parsePackIdOrUrl('https://subdomain.coda.io:6789/packs/foo-1234'), 1234);
+
+      assert.equal(parsePackIdOrUrl('https://coda.io/packs/foo-bar-1234-5678'), 5678);
     });
 
     it('rejects bad IDs', () => {
@@ -28,9 +36,10 @@ describe('CLI', () => {
       assert.equal(parsePackIdOrUrl('12 34'), null);
       assert.equal(parsePackIdOrUrl(''), null);
       assert.equal(parsePackIdOrUrl('-10'), null);
-      assert.equal(parsePackIdOrUrl('https://coda.io/p/1234/5678'), null);
       assert.equal(parsePackIdOrUrl('https://coda.io/d/1234'), null);
       assert.equal(parsePackIdOrUrl('https://codadoc.io/p/1234'), null);
+      assert.equal(parsePackIdOrUrl('https://coda.io/packs/foo'), null);
+      assert.equal(parsePackIdOrUrl('https://coda.io/packs/foo-1234/5678'), null);
     });
   });
 });
