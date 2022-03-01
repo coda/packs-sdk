@@ -62,12 +62,12 @@ describe('CLI', () => {
       };
       assert.equal(
         formatWhoami(nonScopedToken),
-        `You are Some Name (email@example.com) using token "This Token's Name" which is scoped to all your packs.`,
+        `You are Some Name (email@example.com) using token "This Token's Name"`,
       );
 
       assert.equal(
         formatWhoami({...nonScopedToken, scoped: true}),
-        `You are Some Name (email@example.com) using token "This Token's Name" which is scoped to a specific pack.`,
+        `You are Some Name (email@example.com) using token "This Token's Name"`,
       );
     });
   });

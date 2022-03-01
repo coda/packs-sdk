@@ -37,10 +37,7 @@ export async function handleWhoami({apiToken, codaApiEndpoint}: ArgumentsCamelCa
 }
 
 export function formatWhoami(user: PublicApiUser) {
-  const {name, loginId, scoped, tokenName} = user;
+  const {name, loginId, tokenName} = user;
 
-  return (
-    `You are ${name} (${loginId}) using token "${tokenName}" ` +
-    `which is scoped to ${scoped ? 'a specific pack.' : 'all your packs.'}`
-  );
+  return `You are ${name} (${loginId}) using token "${tokenName}"`;
 }

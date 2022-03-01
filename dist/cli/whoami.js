@@ -30,8 +30,7 @@ async function handleWhoami({ apiToken, codaApiEndpoint }) {
 }
 exports.handleWhoami = handleWhoami;
 function formatWhoami(user) {
-    const { name, loginId, scoped, tokenName } = user;
-    return (`You are ${name} (${loginId}) using token "${tokenName}" ` +
-        `which is scoped to ${scoped ? 'a specific pack.' : 'all your packs.'}`);
+    const { name, loginId, tokenName } = user;
+    return `You are ${name} (${loginId}) using token "${tokenName}"`;
 }
 exports.formatWhoami = formatWhoami;
