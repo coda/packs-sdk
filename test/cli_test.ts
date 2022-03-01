@@ -62,12 +62,12 @@ describe('CLI', () => {
       };
       assert.equal(
         formatWhoami(nonScopedToken),
-        `You are Some Name (email@example.com) using token "This Token's Name"`,
+        `You are Some Name (email@example.com) using non-scoped token "This Token's Name"`,
       );
 
       assert.equal(
         formatWhoami({...nonScopedToken, scoped: true}),
-        `You are Some Name (email@example.com) using token "This Token's Name"`,
+        `You are Some Name (email@example.com) using scoped token "This Token's Name"`,
       );
     });
   });
