@@ -281,7 +281,7 @@ const DealSchema = coda.makeObjectSchema({
 
 ### Embedded content
 
-The [`Embed`][Embed] value hint can be used to embed external content in the Coda doc. This value hint can be applied to `String` values, where the string contains the URL to the external content. The URL must be compatible with our embed provider, [Iframely][iframely], which supports the [oEmbed protocol][oEmbed].
+The [`Embed`][Embed] value hint can be used to embed external content in the Coda doc. This value hint can be applied to `String` values, where the string contains the URL to the external content.
 
 ```ts
 pack.addFormula({
@@ -294,8 +294,7 @@ pack.addFormula({
 });
 ```
 
-!!! info "Force not available"
-    The `=Embed()` Coda formula supports a [`force: true` option][embed_force] that allows you to skip Iframely and load the content directly in an iframe. This option isn't currently available for the `Embed` value hint.
+Read the [Embedding content][embeds] guide to learn more.
 
 
 ### People
@@ -461,3 +460,4 @@ The full set of formatting options for a given value type and hint can be found 
 [DurationSchema]: ../../reference/sdk/interfaces/DurationSchema.md
 [StringEmbedSchema]: ../../reference/sdk/interfaces/StringEmbedSchema.md
 [formula_list]: https://coda.io/formulas#List
+[embeds]: ../advanced/embeds.md
