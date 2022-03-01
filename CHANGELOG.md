@@ -1,7 +1,7 @@
 ### 0.8.3
 
-- Added `whoami` command to see API token details.
-- Added `link` command to set up upload for an existing Pack ID instead of creating a new one.
+- Added `coda whoami` command to see API token details.
+- Added `coda link` command to set up upload for an existing Pack ID instead of creating a new one.
 
 ### 0.8.2
 
