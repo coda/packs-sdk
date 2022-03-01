@@ -71,7 +71,7 @@ Now that you have your Pack up and running let's make a change to how it works.
     The **INSTALLED** version of the Pack should now read **v2**.
 
     ??? info "Re-opening the Pack's panel"
-        If you have navigated away from the Pack's panel, click **Explore**, **Packs & import**, and then your Pack name.
+        If you have navigated away from the Pack's panel, click {{ coda.pack_panel_clicks }}.
 
 1. Click the **Open Pack maker tools** button.
 1. In the Pack maker tools bar, click the three dots icon :material-dots-vertical: and then **:material-refresh: Refresh Pack formulas and tables**.

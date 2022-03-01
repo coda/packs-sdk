@@ -1,0 +1,108 @@
+# Pack maker tools
+
+While the Pack Studio and Pack CLI are used to develop a Pack, the primary way to monitor and interact with a Pack once it is installed in a document is via the Pack maker tools. It is a pane along the bottom of a Coda document that provides information about the Packs installed in the doc that you have edit access to.
+
+
+## How to access
+
+There are a few different ways to open the Pack maker tools.
+
+=== "Doc menu"
+    Click the three dots icon to the right of the doc's name and select **Toggle Pack maker tools**.
+
+    <img src="../../../images/pmt_open_doc.png" srcset="../../../images/pmt_open_doc_2x.png 2x" class="screenshot" alt="Open Pack maker tools from doc menu">
+
+=== "Pack side panel"
+    Open the side panel for a Pack ({{ coda.pack_panel_clicks }}) and click the button **Open Pack maker tools**. This option is only visible for users with edit access to the Pack.
+
+    <img src="../../../images/pmt_open_panel.png" srcset="../../../images/pmt_open_panel_2x.png 2x" class="screenshot" alt="Open Pack maker tools from Pack panel">
+
+=== "Error message"
+    Hover over the broken Pack formula and click **View error details**. This option is only visible for users with edit access to the Pack.
+
+    <img src="../../../images/pmt_open_error.png" srcset="../../../images/pmt_open_error_2x.png 2x" class="screenshot" alt="Open Pack maker tools from a formula error">
+
+The Pack maker tools opens in the document as a panel at the bottom of the document, that you can resize or close.
+
+<img src="../../../images/pmt_overview.png" srcset="../../../images/pmt_overview_2x.png 2x" class="screenshot" alt="The Pack maker tools">
+
+
+## Selecting the Pack
+
+The Pack maker tools only works with one Pack at a time. To change the selected Pack you can click the Pack name at the top of the panel and select a new one from the dropdown. You'll only be able to select Packs that are installed in the document and that you have edit access to.
+
+<img src="../../../images/pmt_select.png" srcset="../../../images/pmt_select_2x.png 2x" class="screenshot" alt="Change the selected Pack">
+
+
+## Logs
+
+The primary feature of the Pack maker tools is the ability to look at the logs for your Pack. The Pack maker tools will only show the log entries for the selected Pack within the current doc. If you need to see the log entries for your Pack within another doc, you'll first need to get access to that document.
+
+New logs entries are displayed automatically, usually a few seconds after the Pack is run. There is no need to refresh the page or open and close and Pack maker tools. Logs are kept for approximately two weeks, after which they are no longer available.
+
+
+### Executions
+
+The logs for your Pack are grouped by execution, in reverse chronological order (latest executions at the top).
+
+<img src="../../../images/pmt_overview.png" srcset="../../../images/pmt_overview_2x.png 2x" class="screenshot" alt="Execution logs">
+
+A new execution is logged each time your Pack is run, for example when a formula is calculated or a button is pressed. When a sync table syncs you'll see an execution for the initial sync, and additional execution for each continuation of the sync. Additionally, while a user is working in the formula editor your Pack's formula may be run multiple times in order to generate a preview.
+
+Each execution has a brief description, if it was successful or failed, approximately when it was run, and what version of the Pack was run (if not the latest).
+
+
+### Entries
+
+Clicking on an execution expands it to reveal individual log entries.
+
+<img src="../../../images/pmt_entries.png" srcset="../../../images/pmt_entries_2x.png 2x" class="screenshot" alt="Log entries">
+
+The first entry will always be an **Overview** of the execution. Additional entries are shown in reverse chronological order (latest executions at the top), and are added when your Pack makes a fetcher request or [logs a message][troubleshooting_logging]. If you Pack encounters an error the execution will stop and no further log entries will be added.
+
+
+### Details
+
+Clicking on a log entry expands it to reveal additional details.
+
+<img src="../../../images/pmt_details.png" srcset="../../../images/pmt_details_2x.png 2x" class="screenshot" alt="Log entry details">
+
+These details include information you can use directly (**Pack Version**, etc), as well as internal version that may be useful when working with Coda support (**Request ID**, etc). The **Overview** log entry will include a **Duration** field containing the total execution time.
+
+Failed executions will include some additional detail in the **Overview** entry.
+
+<img src="../../../images/pmt_details_error.png" srcset="../../../images/pmt_details_error_2x.png 2x" class="screenshot" alt="Log entry details for a failed execution">
+
+Specifically the **Error** field will include the error message, and the **Stack trace** field will include the line number where the error happened (`code.ts:18:23` means line 18, character 23).
+
+
+### Searching
+
+You can search for logs using the magnifying glass icon at the top of the panel.
+
+<img src="../../../images/pmt_search.png" srcset="../../../images/pmt_search_2x.png 2x" class="screenshot" alt="Searching for log entries">
+
+Search results are no longer grouped by execution, but instead a flat list of entries from across all executions. You can expand an entry and click the **View related logs** link to view all of the log entries from that execution.
+
+
+## Settings
+
+The Pack maker tools also lets you adjust a few developer-specific settings for the Pack. You can access these settings by clicking the gear icon at the top of the panel.
+
+<img src="../../../images/pmt_settings.png" srcset="../../../images/pmt_settings_2x.png 2x" class="screenshot" alt="Pack settings for the doc">
+
+**Installed in this doc**
+:   Which version of the Pack to use in the doc. This allows you to test new versions of your Pack before releasing them, or roll back to previous versions to reproduce a bug. It's recommended to use **Latest Version** while developing your Pack.
+
+**Auto-refresh formulas & tables**
+:   If you enable this setting and have selected **Latest version** above, whenever you build a new version of your Pack all of the formulas and sync tables in the doc will be automatically refreshed. This only applies to the current session (browser tab), so you'll need to turn it back on if you refresh the page or open the doc again later.
+
+
+## Additional options
+
+A few additional options are available under the three dots menu at the top of the panel. These are mostly quick links that let you jump between the various assets of the Pack, but also small utilities.
+
+<img src="../../../images/pmt_additional.png" srcset="../../../images/pmt_additional_2x.png 2x" class="screenshot" alt="Additional options in the Pack maker tools">
+
+
+[troubleshooting_logging]: troubleshooting.md#logging
