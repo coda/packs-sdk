@@ -22,8 +22,6 @@ interface LinkArgs {
 
 export async function handleLink({manifestDir, codaApiEndpoint, packIdOrUrl}: ArgumentsCamelCase<LinkArgs>) {
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
-  // TODO(dweitzman): Redirect to the `coda register` if there's not
-  // an existing Coda API token.
   // TODO(dweitzman): Add a download command to fetch the latest code from
   // the server and ask people if they want to download after linking.
   const apiKey = getApiKey(codaApiEndpoint);

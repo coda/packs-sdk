@@ -16,8 +16,6 @@ const PackPlainIdRegex = /^([0-9]+)$/;
 const PackRegexes = [PackEditUrlRegex, PackGalleryUrlRegex, PackPlainIdRegex];
 async function handleLink({ manifestDir, codaApiEndpoint, packIdOrUrl }) {
     const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
-    // TODO(dweitzman): Redirect to the `coda register` if there's not
-    // an existing Coda API token.
     // TODO(dweitzman): Add a download command to fetch the latest code from
     // the server and ask people if they want to download after linking.
     const apiKey = (0, config_storage_1.getApiKey)(codaApiEndpoint);
