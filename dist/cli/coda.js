@@ -9,6 +9,7 @@ const auth_1 = require("../testing/auth");
 const compile_1 = require("../testing/compile");
 const auth_2 = require("./auth");
 const build_1 = require("./build");
+const clone_1 = require("./clone");
 const create_1 = require("./create");
 const execute_1 = require("./execute");
 const init_1 = require("./init");
@@ -74,6 +75,24 @@ if (require.main === module) {
         command: 'init',
         describe: 'Initialize an empty Pack',
         handler: init_1.handleInit,
+    })
+        .command({
+        command: 'clone <packIdOrUrl>',
+        describe: 'Clone an existing web pack',
+        builder: {
+            // NOTE: yargs doesn't like "version" as a flag name since that's reserved.
+            // Seems like you can override that behavior, but "packVersion" seems fine.
+            packVersion: {
+                string: true,
+                desc: 'A build version from which to to download code. Defaults to the latest build.',
+            },
+            codaApiEndpoint: {
+                string: true,
+                hidden: true,
+                default: config_storage_1.DEFAULT_API_ENDPOINT,
+            },
+        },
+        handler: clone_1.handleClone,
     })
         .command({
         command: 'register [apiToken]',

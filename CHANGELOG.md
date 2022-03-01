@@ -1,3 +1,7 @@
+### 0.8.3
+
+- Added "coda clone --version <packVersion> <packId>", similar to "coda init" but for packs that were already created in a browser.
+
 ### 0.8.2
 
 - Added `coda whoami` command to see API token details.

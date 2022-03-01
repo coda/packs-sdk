@@ -5,6 +5,7 @@ import {DEFAULT_OAUTH_SERVER_PORT} from '../testing/auth';
 import {TimerShimStrategy} from '../testing/compile';
 import {handleAuth} from './auth';
 import {handleBuild} from './build';
+import {handleClone} from './clone';
 import {handleCreate} from './create';
 import {handleExecute} from './execute';
 import {handleInit} from './init';
@@ -72,6 +73,24 @@ if (require.main === module) {
       command: 'init',
       describe: 'Initialize an empty Pack',
       handler: handleInit,
+    })
+    .command({
+      command: 'clone <packIdOrUrl>',
+      describe: 'Clone an existing web pack',
+      builder: {
+        // NOTE: yargs doesn't like "version" as a flag name since that's reserved.
+        // Seems like you can override that behavior, but "packVersion" seems fine.
+        packVersion: {
+          string: true,
+          desc: 'A build version from which to to download code. Defaults to the latest build.',
+        },
+        codaApiEndpoint: {
+          string: true,
+          hidden: true,
+          default: DEFAULT_API_ENDPOINT,
+        },
+      },
+      handler: handleClone,
     })
     .command({
       command: 'register [apiToken]',
