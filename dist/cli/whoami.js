@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleWhoami = void 0;
+exports.formatWhoami = exports.handleWhoami = void 0;
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const config_storage_1 = require("./config_storage");
@@ -17,8 +17,8 @@ async function handleWhoami({ apiToken, codaApiEndpoint }) {
     }
     const client = (0, helpers_1.createCodaClient)(apiToken, formattedEndpoint);
     try {
-        const { name, loginId, workspace } = await client.whoami();
-        return (0, helpers_3.printAndExit)(`You are ${name} (${loginId}) in workspace ${workspace.id}`, 0);
+        const response = await client.whoami();
+        return (0, helpers_3.printAndExit)(formatWhoami(response), 0);
     }
     catch (err) {
         if ((0, coda_1.isResponseError)(err)) {
@@ -29,3 +29,9 @@ async function handleWhoami({ apiToken, codaApiEndpoint }) {
     }
 }
 exports.handleWhoami = handleWhoami;
+function formatWhoami(user) {
+    const { name, loginId, scoped, tokenName } = user;
+    return (`You are ${name} (${loginId}) using token "${tokenName}" ` +
+        `which is scoped to ${scoped ? 'a specific pack.' : 'all your packs.'}`);
+}
+exports.formatWhoami = formatWhoami;

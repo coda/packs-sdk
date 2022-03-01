@@ -1,4 +1,5 @@
 import type {ArgumentsCamelCase} from 'yargs';
+import type {PublicApiUser} from '../helpers/external-api/v1';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {getApiKey} from './config_storage';
@@ -23,9 +24,8 @@ export async function handleWhoami({apiToken, codaApiEndpoint}: ArgumentsCamelCa
   const client = createCodaClient(apiToken, formattedEndpoint);
 
   try {
-    const {name, loginId, workspace} = await client.whoami();
-
-    return printAndExit(`You are ${name} (${loginId}) in workspace ${workspace.id}`, 0);
+    const response = await client.whoami();
+    return printAndExit(formatWhoami(response), 0);
   } catch (err: any) {
     if (isResponseError(err)) {
       return printAndExit(`Invalid API token provided.`);
@@ -34,4 +34,13 @@ export async function handleWhoami({apiToken, codaApiEndpoint}: ArgumentsCamelCa
     const errors = [`Unexpected error while checking owner of API token: ${err}`, tryParseSystemError(err)];
     return printAndExit(errors.join('\n'));
   }
+}
+
+export function formatWhoami(user: PublicApiUser) {
+  const {name, loginId, scoped, tokenName} = user;
+
+  return (
+    `You are ${name} (${loginId}) using token "${tokenName}" ` +
+    `which is scoped to ${scoped ? 'a specific pack.' : 'all your packs.'}`
+  );
 }
