@@ -9,6 +9,7 @@ edit_uri: https://github.com/coda/packs-sdk/blob/main/docs
 docs_dir: docs
 extra_css:
   - assets/custom.css
+
 markdown_extensions:
   - admonition
   - attr_list
@@ -59,7 +60,6 @@ plugins:
           "get-started/cli.md": "tutorials/get-started/cli.md"
           "get-started/web.md": "tutorials/get-started/web.md"
 
-
 extra:
   # Social icons for the footer.
   social:
@@ -75,7 +75,6 @@ extra:
   # Custom variables.
   coda:
     pack_panel_clicks: "**Insert** > **Packs** > **{Pack name}**"
-
 
 # Copyright that appears in the footer.
 copyright: "Copyright © 2022 Coda. All rights reserved."
