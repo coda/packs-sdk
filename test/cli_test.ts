@@ -1,5 +1,7 @@
 import type {PackVersionDefinition} from '../types';
+import {PublicApiType} from '../helpers/external-api/v1';
 import {compilePackMetadata} from '../helpers/metadata';
+import {formatWhoami} from '../cli/whoami';
 import {parsePackIdOrUrl} from '../cli/link';
 
 describe('CLI', () => {
@@ -40,6 +42,33 @@ describe('CLI', () => {
       assert.equal(parsePackIdOrUrl('https://codadoc.io/p/1234'), null);
       assert.equal(parsePackIdOrUrl('https://coda.io/packs/foo'), null);
       assert.equal(parsePackIdOrUrl('https://coda.io/packs/foo-1234/5678'), null);
+    });
+  });
+
+  describe('format whoami result', () => {
+    it('represents the token', () => {
+      const nonScopedToken = {
+        name: 'Some Name',
+        loginId: 'email@example.com',
+        scoped: false,
+        tokenName: "This Token's Name",
+        type: PublicApiType.User as const,
+        href: 'some link',
+        workspace: {
+          id: 'abc',
+          type: PublicApiType.Workspace as const,
+          browserLink: 'browser link',
+        },
+      };
+      assert.equal(
+        formatWhoami(nonScopedToken),
+        `You are Some Name (email@example.com) using non-scoped token "This Token's Name"`,
+      );
+
+      assert.equal(
+        formatWhoami({...nonScopedToken, scoped: true}),
+        `You are Some Name (email@example.com) using scoped token "This Token's Name"`,
+      );
     });
   });
 });

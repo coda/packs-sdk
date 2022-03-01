@@ -18,6 +18,7 @@ const release_1 = require("./release");
 const set_option_1 = require("./set_option");
 const upload_1 = require("./upload");
 const validate_1 = require("./validate");
+const whoami_1 = require("./whoami");
 const yargs_1 = __importDefault(require("yargs"));
 if (require.main === module) {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -84,6 +85,18 @@ if (require.main === module) {
             },
         },
         handler: register_1.handleRegister,
+    })
+        .command({
+        command: 'whoami [apiToken]',
+        describe: 'Looks up information about the API token that is registered in this environment',
+        builder: {
+            codaApiEndpoint: {
+                string: true,
+                hidden: true,
+                default: config_storage_1.DEFAULT_API_ENDPOINT,
+            },
+        },
+        handler: whoami_1.handleWhoami,
     })
         .command({
         command: 'build <manifestFile>',

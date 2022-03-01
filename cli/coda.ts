@@ -14,6 +14,7 @@ import {handleRelease} from './release';
 import {handleSetOption} from './set_option';
 import {handleUpload} from './upload';
 import {handleValidate} from './validate';
+import {handleWhoami} from './whoami';
 import yargs from 'yargs';
 
 if (require.main === module) {
@@ -82,6 +83,18 @@ if (require.main === module) {
         },
       },
       handler: handleRegister,
+    })
+    .command({
+      command: 'whoami [apiToken]',
+      describe: 'Looks up information about the API token that is registered in this environment',
+      builder: {
+        codaApiEndpoint: {
+          string: true,
+          hidden: true,
+          default: DEFAULT_API_ENDPOINT,
+        },
+      },
+      handler: handleWhoami,
     })
     .command({
       command: 'build <manifestFile>',

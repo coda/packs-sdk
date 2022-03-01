@@ -20,7 +20,7 @@ async function handleLink({ manifestDir, codaApiEndpoint, packIdOrUrl }) {
     // the server and ask people if they want to download after linking.
     const apiKey = (0, config_storage_1.getApiKey)(codaApiEndpoint);
     if (!apiKey) {
-        return (0, helpers_3.printAndExit)('Missing API key. Please run `coda register` to register one.');
+        return (0, helpers_3.printAndExit)('Missing API token. Please run `coda register` to register one.');
     }
     const codaClient = (0, helpers_1.createCodaClient)(apiKey, formattedEndpoint);
     const packId = parsePackIdOrUrl(packIdOrUrl);
