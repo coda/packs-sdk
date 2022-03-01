@@ -4326,10 +4326,10 @@ typedarray@^0.0.6:
   resolved "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typedoc-plugin-markdown@^3.11.12:
-  version "3.11.12"
-  resolved "https://registry.yarnpkg.com/typedoc-plugin-markdown/-/typedoc-plugin-markdown-3.11.12.tgz#04f4740534d19728696a5c0ccc35f319bcb93b31"
-  integrity sha512-gb/RuzgZ1zCnRUOqUg6firIqU7xDs9s7hq0vlU/gAsFfVCnpl3NTM9vPyPON75nnpfVFCxr/hmKQ01k1CYY/Qg==
+typedoc-plugin-markdown@^3.11.14:
+  version "3.11.14"
+  resolved "https://registry.yarnpkg.com/typedoc-plugin-markdown/-/typedoc-plugin-markdown-3.11.14.tgz#2a7a04abd50b8f1e5d46793061d70229d504d2cd"
+  integrity sha512-lh47OQvl0079nB18YL9wuTRRhMpjo300SZKfx/xpQY8qG+GINeSxTod95QBELeI0NP81sNtUbemRDrn5nyef4Q==
   dependencies:
     handlebars "^4.7.7"
 
