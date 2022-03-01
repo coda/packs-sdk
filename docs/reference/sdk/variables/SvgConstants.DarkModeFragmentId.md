@@ -5,7 +5,7 @@ title: "DarkModeFragmentId"
 
 [SvgConstants](../modules/SvgConstants.md).DarkModeFragmentId
 
-• **DarkModeFragmentId**: ``"DarkMode"``
+• `Const` **DarkModeFragmentId**: ``"DarkMode"``
 
 ID of the node in a returned SVG file that is targeted when Dark Mode is enabled in Coda.
 
