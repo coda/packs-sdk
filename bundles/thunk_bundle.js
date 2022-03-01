@@ -3930,13 +3930,14 @@ module.exports = (() => {
       init_buffer_shim();
       var required = require_requires_port();
       var qs2 = require_querystringify();
+      var controlOrWhitespace = /^[\x00-\x20\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+/;
       var CRHTLF = /[\n\r\t]/g;
       var slashes = /^[A-Za-z][A-Za-z0-9+-.]*:\/\//;
+      var port = /:\d+$/;
       var protocolre = /^([a-z][a-z0-9.+-]*:)?(\/\/)?([\\/]+)?([\S\s]*)/i;
       var windowsDriveLetter = /^[a-zA-Z]:/;
-      var whitespace = /^[ \f\n\r\t\v\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+/;
       function trimLeft(str) {
-        return (str ? str : "").toString().replace(whitespace, "");
+        return (str ? str : "").toString().replace(controlOrWhitespace, "");
       }
       var rules = [
         ["#", "hash"],
@@ -4159,7 +4160,7 @@ module.exports = (() => {
             break;
           case "host":
             url[part] = value;
-            if (/:\d+$/.test(value)) {
+            if (port.test(value)) {
               value = value.split(":");
               url.port = value.pop();
               url.hostname = value.join(":");
@@ -4224,8 +4225,9 @@ module.exports = (() => {
         } else if (url.protocol !== "file:" && isSpecial(url.protocol) && !host && url.pathname !== "/") {
           result += "@";
         }
-        if (host[host.length - 1] === ":")
+        if (host[host.length - 1] === ":" || port.test(url.hostname) && !url.port) {
           host += ":";
+        }
         result += host + url.pathname;
         query = typeof url.query === "object" ? stringify(url.query) : url.query;
         if (query)
