@@ -3,7 +3,7 @@ title: "ValidFetchMethods"
 ---
 # Variable: ValidFetchMethods
 
-• **ValidFetchMethods**: readonly [``"GET"``, ``"PATCH"``, ``"POST"``, ``"PUT"``, ``"DELETE"``]
+• `Const` **ValidFetchMethods**: readonly [``"GET"``, ``"PATCH"``, ``"POST"``, ``"PUT"``, ``"DELETE"``]
 
 The HTTP methods (verbs) supported by the fetcher.
 

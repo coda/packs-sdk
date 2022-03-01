@@ -5,7 +5,7 @@ title: "DataUrlPrefixWithDarkModeSupport"
 
 [SvgConstants](../modules/SvgConstants.md).DataUrlPrefixWithDarkModeSupport
 
-• **DataUrlPrefixWithDarkModeSupport**: ``"data:image/svg+xml;supportsDarkMode=1;base64,"``
+• `Const` **DataUrlPrefixWithDarkModeSupport**: ``"data:image/svg+xml;supportsDarkMode=1;base64,"``
 
 Prefix to use for base-64 encoded SVGs (that support Dark Mode) returned by formulas.
 
