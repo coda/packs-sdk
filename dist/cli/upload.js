@@ -82,7 +82,7 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
     const codaPacksSDKVersion = packageJson.version;
     const apiKey = (0, config_storage_1.getApiKey)(codaApiEndpoint);
     if (!apiKey) {
-        printAndExit('Missing API key. Please run `coda register` to register one.');
+        printAndExit('Missing API token. Please run `coda register` to register one.');
     }
     const client = (0, helpers_1.createCodaClient)(apiKey, formattedEndpoint);
     const packId = (0, config_storage_2.getPackId)(manifestDir, codaApiEndpoint);

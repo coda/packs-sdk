@@ -86,7 +86,7 @@ if (require.main === module) {
     })
     .command({
       command: 'whoami [apiToken]',
-      describe: 'Looks up the api token owner',
+      describe: 'Looks up information about the API token that is registered in this environment',
       builder: {
         codaApiEndpoint: {
           string: true,

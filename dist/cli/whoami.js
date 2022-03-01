@@ -12,13 +12,13 @@ async function handleWhoami({ apiToken, codaApiEndpoint }) {
     if (!apiToken) {
         apiToken = (0, config_storage_1.getApiKey)(codaApiEndpoint);
         if (!apiToken) {
-            return (0, helpers_3.printAndExit)('Missing API key. Please run `coda register` to register one.');
+            return (0, helpers_3.printAndExit)('Missing API token. Please run `coda register` to register one.');
         }
     }
     const client = (0, helpers_1.createCodaClient)(apiToken, formattedEndpoint);
     try {
         const { name, loginId, workspace } = await client.whoami();
-        (0, helpers_3.printAndExit)(`You are ${name} (${loginId}) in workspace ${workspace.id}`, 0);
+        return (0, helpers_3.printAndExit)(`You are ${name} (${loginId}) in workspace ${workspace.id}`, 0);
     }
     catch (err) {
         if ((0, coda_1.isResponseError)(err)) {

@@ -16,7 +16,7 @@ export async function handleWhoami({apiToken, codaApiEndpoint}: ArgumentsCamelCa
   if (!apiToken) {
     apiToken = getApiKey(codaApiEndpoint);
     if (!apiToken) {
-      return printAndExit('Missing API key. Please run `coda register` to register one.');
+      return printAndExit('Missing API token. Please run `coda register` to register one.');
     }
   }
 
@@ -25,7 +25,7 @@ export async function handleWhoami({apiToken, codaApiEndpoint}: ArgumentsCamelCa
   try {
     const {name, loginId, workspace} = await client.whoami();
 
-    printAndExit(`You are ${name} (${loginId}) in workspace ${workspace.id}`, 0);
+    return printAndExit(`You are ${name} (${loginId}) in workspace ${workspace.id}`, 0);
   } catch (err: any) {
     if (isResponseError(err)) {
       return printAndExit(`Invalid API token provided.`);

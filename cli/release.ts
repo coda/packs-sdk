@@ -33,7 +33,7 @@ export async function handleRelease({
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
 
   if (!apiKey) {
-    return printAndExit('Missing API key. Please run `coda register` to register one.');
+    return printAndExit('Missing API token. Please run `coda register` to register one.');
   }
 
   const packId = getPackId(manifestDir, codaApiEndpoint);
