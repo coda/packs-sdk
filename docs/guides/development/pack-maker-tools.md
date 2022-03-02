@@ -22,7 +22,7 @@ There are a few different ways to open the Pack maker tools.
 
     <img src="../../../images/pmt_open_error.png" srcset="../../../images/pmt_open_error_2x.png 2x" class="screenshot" alt="Open Pack maker tools from a formula error">
 
-The Pack maker tools opens in the document as a panel at the bottom of the document, that you can resize or close.
+The Pack maker tools opens in the document as a panel at the bottom of the document. You can freely resize or close this panel.
 
 <img src="../../../images/pmt_overview.png" srcset="../../../images/pmt_overview_2x.png 2x" class="screenshot" alt="The Pack maker tools">
 
@@ -38,7 +38,7 @@ The Pack maker tools only works with one Pack at a time. To change the selected 
 
 The primary feature of the Pack maker tools is the ability to look at the logs for your Pack. The Pack maker tools will only show the log entries for the selected Pack within the current doc. If you need to see the log entries for your Pack within another doc, you'll first need to get access to that document.
 
-New logs entries are displayed automatically, usually a few seconds after the Pack is run. There is no need to refresh the page or open and close and Pack maker tools. Logs are kept for approximately two weeks, after which they are no longer available.
+New log entries are displayed automatically, usually a few seconds after the Pack is run. There is no need to refresh the page or open and close and Pack maker tools. Logs are kept for approximately two weeks, after which they are no longer available.
 
 
 ### Executions
