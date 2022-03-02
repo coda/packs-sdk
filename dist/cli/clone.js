@@ -57,7 +57,7 @@ async function handleClone({ packIdOrUrl, codaApiEndpoint, packVersion }) {
         throw err;
     }
     if (!sourceCode) {
-        (0, helpers_3.print)(`Unable to download typescript source for Pack version ${packVersion}. Packs built with the SDK can't be cloned.`);
+        (0, helpers_3.print)(`Unable to download source for Pack version ${packVersion}. Packs built using the CLI can't be cloned.`);
         const shouldInitializeWithoutDownload = (0, helpers_5.promptForInput)('Do you want to continue initializing with template starter code instead (y/N)?');
         if (!shouldInitializeWithoutDownload.toLocaleLowerCase().startsWith('y')) {
             return process.exit(1);
@@ -79,7 +79,7 @@ function maybeHandleClientError(err) {
             case 401:
             case 403:
             case 404:
-                return (0, helpers_4.printAndExit)("You don't seem to have permission to edit this pack");
+                return (0, helpers_4.printAndExit)("You don't have permission to edit this pack.");
         }
     }
 }

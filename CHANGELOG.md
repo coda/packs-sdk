@@ -1,6 +1,6 @@
 ### 0.8.3
 
-- Added "coda clone --version <packVersion> <packId>", similar to "coda init" but for packs that were already created in a browser.
+- Added "coda clone --version <packVersion> <packId>", similar to "coda init" but for packs that were already created in the Pack Studio.
 
 ### 0.8.2
 

@@ -65,9 +65,7 @@ export async function handleClone({packIdOrUrl, codaApiEndpoint, packVersion}: A
   }
 
   if (!sourceCode) {
-    print(
-      `Unable to download typescript source for Pack version ${packVersion}. Packs built with the SDK can't be cloned.`,
-    );
+    print(`Unable to download source for Pack version ${packVersion}. Packs built using the CLI can't be cloned.`);
 
     const shouldInitializeWithoutDownload = promptForInput(
       'Do you want to continue initializing with template starter code instead (y/N)?',
@@ -96,7 +94,7 @@ function maybeHandleClientError(err: any) {
       case 401:
       case 403:
       case 404:
-        return printAndExit("You don't seem to have permission to edit this pack");
+        return printAndExit("You don't have permission to edit this pack.");
     }
   }
 }
