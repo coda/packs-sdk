@@ -1,10 +1,7 @@
-### 0.8.3
+### 0.8.2
 
 - Added `coda whoami` command to see API token details.
 - Added `coda link` command to set up upload for an existing Pack ID instead of creating a new one.
-
-### 0.8.2
-
 - Added `StringEmbedSchema` to handle configuration on how embed values appear in docs
 
 ### 0.8.1
