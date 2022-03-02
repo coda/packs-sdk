@@ -11,7 +11,7 @@ Sync tables are designed to bring records from an external data source into Coda
 
 ## Using dynamic sync tables
 
-Adding a dynamic sync table to a doc is similar to adding a regular sync table, but with an additional step of selecting the specific dataset to sync from. Start by navigating to **Explore** > **Packs & import** > **{Pack name}** and clicking on the the table in the side panel. This will expand a section below the table that displays the specific datasets that the user has access to. Then drag one of these datasets onto the page.
+Adding a dynamic sync table to a doc is similar to adding a regular sync table, but with an additional step of selecting the specific dataset to sync from. Start by navigating to {{ coda.pack_panel_clicks }} and clicking on the the table in the side panel. This will expand a section below the table that displays the specific datasets that the user has access to. Then drag one of these datasets onto the page.
 
 <img src="../../../../images/dynamic_sync_table_usage.gif" class="screenshot" alt="Adding a dynamic sync table to a doc">
 

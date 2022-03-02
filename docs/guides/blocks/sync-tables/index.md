@@ -11,7 +11,7 @@ Tables are one of the most powerful features of Coda, and many times people use 
 
 ## Using sync tables
 
-Sync tables are added directly to the document, usually by dragging them in from the side panel. Navigate to **Explore** > **Packs & import** > **{Pack name}** and drag the table into the canvas.
+Sync tables are added directly to the document, usually by dragging them in from the side panel. Navigate to {{ coda.pack_panel_clicks }} and drag the table into the canvas.
 
 <img src="../../../images/sync_table_use.gif" class="screenshot" alt="Dragging in a sync table">
 

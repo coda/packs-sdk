@@ -17,7 +17,7 @@ let items = response.body.items;
 console.log("Retrieved %s items.", items.length);
 ```
 
-When executing a Pack locally these logs will be written to the console, and when run in a doc they will be visible in the Pack maker tools. This can be useful for debugging during development as well as in production.
+When executing a Pack locally these logs will be written to the console, and when run in a doc they will be visible in the [Pack maker tools][pmt]. This can be useful for debugging during development as well as in production.
 
 The Packs runtime only includes a subset of the [full `console` methods][mdn_console], specifically:
 
@@ -57,3 +57,4 @@ This error will appear at the bottom of the screen after pressing a button, and 
 [support]: ../../support.md
 [isolated_vm_requirements]: https://github.com/laverdet/isolated-vm#requirements
 [actions_create]: ../blocks/actions.md#creating-actions
+[pmt]: pack-maker-tools.md
