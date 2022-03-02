@@ -47,9 +47,16 @@ The logs for your Pack are grouped by execution, in reverse chronological order 
 
 <img src="../../../images/pmt_overview.png" srcset="../../../images/pmt_overview_2x.png 2x" class="screenshot" alt="Execution logs">
 
-A new execution is logged each time your Pack is run, for example when a formula is calculated or a button is pressed. When a sync table syncs you'll see an execution for the initial sync, and additional execution for each continuation of the sync. Additionally, while a user is working in the formula editor your Pack's formula may be run multiple times in order to generate a preview.
-
 Each execution has a brief description, if it was successful or failed, approximately when it was run, and what version of the Pack was run (if not the latest).
+
+A new execution is logged each time your Pack is run, for example when a formula is calculated or a button is pressed. When a sync table syncs you'll see an execution for the initial sync, and additional execution for each continuation of the sync.
+
+!!! info "Duplicate executions"
+    When looking at the logs you may see duplicate executions for the same formula. Some common reasons for this include:
+
+    - Using the formula editor, which runs formulas multiple times as you type to generate a preview of the result.
+    - The doc being open in multiple tabs.
+    - The Coda backend running a recalculation as a part of normal operation.
 
 
 ### Entries
@@ -67,7 +74,7 @@ Clicking on a log entry expands it to reveal additional details.
 
 <img src="../../../images/pmt_details.png" srcset="../../../images/pmt_details_2x.png 2x" class="screenshot" alt="Log entry details">
 
-These details include information you can use directly (**Pack Version**, etc), as well as internal version that may be useful when working with Coda support (**Request ID**, etc). The **Overview** log entry will include a **Duration** field containing the total execution time.
+These details include information you can use directly (**Pack Version**, etc), as well as internal details that may be useful when working with Coda support (**Request ID**, etc). The **Overview** log entry will include a **Duration** field containing the total execution time.
 
 Failed executions will include some additional detail in the **Overview** entry.
 
