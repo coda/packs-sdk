@@ -55,7 +55,7 @@ A new invocation is logged each time your Pack is run, for example when a formul
     When looking at the logs you may see duplicate invocations for the same formula. Some common reasons for this include:
 
     - Using the formula editor, which runs formulas multiple times as you type to generate a preview of the result.
-    - The doc being open in multiple tabs.
+    - Multiple users have the doc open at the same time (each browser will run the formula).
     - The Coda backend running a recalculation as a part of normal operation.
 
 
