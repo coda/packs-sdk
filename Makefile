@@ -244,7 +244,7 @@ npm-publish:
 	@echo "Checking for uncommitted/untracked changes..." && test -z "`git status --porcelain | grep -vE 'M (CHANGELOG\.md|version\.txt)'`" || \
 		(echo "Refusing to publish with these uncommitted/untracked changes:" && \
 		git status --porcelain | grep -vE 'M (CHANGELOG\.md|version\.txt)' && false)
-	# @echo "Checking for main branch..." && test main = "`git rev-parse --abbrev-ref HEAD`" || \
+	@echo "Checking for main branch..." && test main = "`git rev-parse --abbrev-ref HEAD`" || \
 		(echo "Refusing to publish from non-main branch `git rev-parse --abbrev-ref HEAD`" && false)
 	@echo "Checking for unpushed commits..." && git fetch
 	@test "" = "`git cherry`" || (echo "Refusing to publish with unpushed commits" && false)
