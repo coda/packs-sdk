@@ -16,12 +16,12 @@ const helpers_3 = require("../testing/helpers");
 const helpers_4 = require("../testing/helpers");
 const helpers_5 = require("../testing/helpers");
 const config_storage_2 = require("./config_storage");
-async function handleClone({ packIdOrUrl, codaApiEndpoint, packVersion }) {
+async function handleClone({ packIdOrUrl, codaApiEndpoint }) {
+    const manifestDir = process.cwd();
     const packId = (0, link_1.parsePackIdOrUrl)(packIdOrUrl);
     if (!packId) {
         return (0, helpers_4.printAndExit)(`Not a valid pack ID or URL: ${packIdOrUrl}`);
     }
-    const manifestDir = process.cwd();
     const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
     const apiKey = (0, config_storage_1.getApiKey)(codaApiEndpoint);
     if (!apiKey) {
@@ -35,18 +35,17 @@ async function handleClone({ packIdOrUrl, codaApiEndpoint, packVersion }) {
         }
     }
     const client = (0, helpers_1.createCodaClient)(apiKey, formattedEndpoint);
-    if (!packVersion) {
-        try {
-            const maybeVersion = await getPackLatestVersion(client, packId);
-            if (!maybeVersion) {
-                return (0, helpers_4.printAndExit)(`No built versions found for pack ${packId}. Only built versions can be cloned.`);
-            }
-            packVersion = maybeVersion;
+    let packVersion;
+    try {
+        const maybeVersion = await getPackLatestVersion(client, packId);
+        if (!maybeVersion) {
+            return (0, helpers_4.printAndExit)(`No built versions found for pack ${packId}. Only built versions can be cloned.`);
         }
-        catch (err) {
-            maybeHandleClientError(err);
-            throw err;
-        }
+        packVersion = maybeVersion;
+    }
+    catch (err) {
+        maybeHandleClientError(err);
+        throw err;
     }
     let sourceCode;
     try {
@@ -69,7 +68,7 @@ async function handleClone({ packIdOrUrl, codaApiEndpoint, packVersion }) {
     (0, helpers_3.print)(`Fetched source at version ${packVersion}`);
     await (0, init_1.handleInit)();
     (0, config_storage_2.storePackId)(manifestDir, packId, codaApiEndpoint);
-    fs_extra_1.default.writeFileSync(path_1.default.join(process.cwd(), 'pack.ts'), sourceCode);
+    fs_extra_1.default.writeFileSync(path_1.default.join(manifestDir, 'pack.ts'), sourceCode);
     (0, helpers_4.printAndExit)("Successfully updated pack.ts with the Pack's code!", 0);
 }
 exports.handleClone = handleClone;

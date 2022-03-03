@@ -19,12 +19,12 @@ interface CloneArgs {
   packVersion?: string;
 }
 
-export async function handleClone({packIdOrUrl, codaApiEndpoint, packVersion}: ArgumentsCamelCase<CloneArgs>) {
+export async function handleClone({packIdOrUrl, codaApiEndpoint}: ArgumentsCamelCase<CloneArgs>) {
+  const manifestDir = process.cwd();
   const packId = parsePackIdOrUrl(packIdOrUrl);
   if (!packId) {
     return printAndExit(`Not a valid pack ID or URL: ${packIdOrUrl}`);
   }
-  const manifestDir = process.cwd();
 
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
 
@@ -43,17 +43,16 @@ export async function handleClone({packIdOrUrl, codaApiEndpoint, packVersion}: A
 
   const client = createCodaClient(apiKey, formattedEndpoint);
 
-  if (!packVersion) {
-    try {
-      const maybeVersion = await getPackLatestVersion(client, packId);
-      if (!maybeVersion) {
-        return printAndExit(`No built versions found for pack ${packId}. Only built versions can be cloned.`);
-      }
-      packVersion = maybeVersion;
-    } catch (err: any) {
-      maybeHandleClientError(err);
-      throw err;
+  let packVersion: string;
+  try {
+    const maybeVersion = await getPackLatestVersion(client, packId);
+    if (!maybeVersion) {
+      return printAndExit(`No built versions found for pack ${packId}. Only built versions can be cloned.`);
     }
+    packVersion = maybeVersion;
+  } catch (err: any) {
+    maybeHandleClientError(err);
+    throw err;
   }
 
   let sourceCode: string | null;
@@ -84,7 +83,7 @@ export async function handleClone({packIdOrUrl, codaApiEndpoint, packVersion}: A
   await handleInit();
   storePackId(manifestDir, packId, codaApiEndpoint);
 
-  fs.writeFileSync(path.join(process.cwd(), 'pack.ts'), sourceCode);
+  fs.writeFileSync(path.join(manifestDir, 'pack.ts'), sourceCode);
   printAndExit("Successfully updated pack.ts with the Pack's code!", 0);
 }
 

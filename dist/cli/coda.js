@@ -78,14 +78,8 @@ if (require.main === module) {
     })
         .command({
         command: 'clone <packIdOrUrl>',
-        describe: 'Clone an existing web pack',
+        describe: 'Clone an existing Pack that was created using Pack Studio',
         builder: {
-            // NOTE: yargs doesn't like "version" as a flag name since that's reserved.
-            // Seems like you can override that behavior, but "packVersion" seems fine.
-            packVersion: {
-                string: true,
-                desc: 'A build version from which to to download code. Defaults to the latest build.',
-            },
             codaApiEndpoint: {
                 string: true,
                 hidden: true,

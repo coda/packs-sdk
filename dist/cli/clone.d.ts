@@ -4,5 +4,5 @@ interface CloneArgs {
     codaApiEndpoint: string;
     packVersion?: string;
 }
-export declare function handleClone({ packIdOrUrl, codaApiEndpoint, packVersion }: ArgumentsCamelCase<CloneArgs>): Promise<undefined>;
+export declare function handleClone({ packIdOrUrl, codaApiEndpoint }: ArgumentsCamelCase<CloneArgs>): Promise<undefined>;
 export {};
