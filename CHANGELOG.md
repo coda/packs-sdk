@@ -1,12 +1,9 @@
-### 0.8.3
-
-- Added "coda clone <packId>", similar to "coda init" but for packs that were already created in the Pack Studio.
-
 ### 0.8.2
 
 - Added `coda whoami` command to see API token details.
 - Added `coda link` command to set up upload for an existing Pack ID instead of creating a new one.
 - Added `StringEmbedSchema` to handle configuration on how embed values appear in docs
+- Added "coda clone <packId>", similar to "coda init" but for packs that were already created in the Pack Studio.
 
 ### 0.8.1
 
