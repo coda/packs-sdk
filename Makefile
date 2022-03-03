@@ -236,9 +236,9 @@ validate-no-changes: clean compile docs
 npm-publish:
 	# this set is taken from esbuild's process https://github.com/evanw/esbuild/blob/master/Makefile#L330
 	@npm --version > /dev/null || (echo "The 'npm' command must be in your path to publish" && false)
-	@echo "Checking for uncommitted/untracked changes..." && test -z "`git status --porcelain | grep -vE 'M (CHANGELOG\.md|version\.txt)'`" || \
+	@echo "Checking for uncommitted/untracked changes..." && test -z "`git status --porcelain | grep -vE 'M (CHANGELOG\.md|package\.json)'`" || \
 		(echo "Refusing to publish with these uncommitted/untracked changes:" && \
-		git status --porcelain | grep -vE 'M (CHANGELOG\.md|version\.txt)' && false)
+		git status --porcelain | grep -vE 'M (CHANGELOG\.md|package\.json)' && false)
 	@echo "Checking for main branch..." && test main = "`git rev-parse --abbrev-ref HEAD`" || \
 		(echo "Refusing to publish from non-main branch `git rev-parse --abbrev-ref HEAD`" && false)
 	@echo "Checking for unpushed commits..." && git fetch
