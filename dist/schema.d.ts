@@ -342,7 +342,7 @@ export interface ScaleSchema extends BaseNumberSchema<ValueHintType.Scale> {
 }
 /**
  * A schema representing a return value or object property that is provided as a string,
- * which Coda should interpret as a date. Coda is able to flexibly a parse number of formal
+ * which Coda should interpret as a date. Coda is able to flexibly parse a number of formal
  * and informal string representations of dates. For maximum accuracy, consider using an
  * ISO 8601 date string (e.g. 2021-10-29): https://en.wikipedia.org/wiki/ISO_8601.
  */
@@ -356,6 +356,25 @@ export interface StringDateSchema extends BaseStringSchema<ValueHintType.Date> {
      * Only applies when this is used as a sync table property.
      */
     format?: string;
+}
+/**
+ * A schema representing a return value or object property that is provided as a string,
+ * which Coda should interpret as an embed value (e.g. a URL). Coda uses an external provider (iframely)
+ * to handle all embeds by default. If there is no support for a given embed that you want to use,
+ * you will need to use the `force` option which falls back to a generic iframe.
+ */
+export interface StringEmbedSchema extends BaseStringSchema<ValueHintType.Embed> {
+    /** Instructs Coda to render this value as an embed. */
+    codaType: ValueHintType.Embed;
+    /**
+     * Toggle whether to try to force embed the content in Coda. Should be kept to false for most cases.
+     *
+     * By default, we use an external provider (iframely) that supports and normalizes embeds for different sites.
+     * If you are trying to embed an uncommon site or one that is not supported by them,
+     * you can set this to `true` to tell Coda to force render the embed. This renders a sandboxed iframe for the embed
+     * but requires user consent per-domain to actually display the embed.
+     */
+    force?: boolean;
 }
 /**
  * A schema representing a return value or object property that is provided as a string,
@@ -442,7 +461,7 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
 /**
  * The subset of StringHintTypes that don't have specific schema attributes.
  */
-export declare const SimpleStringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url];
+export declare const SimpleStringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url];
 export declare type SimpleStringHintTypes = typeof SimpleStringHintValueTypes[number];
 /**
  * A schema whose underlying value is a string, along with an optional hint about how Coda
@@ -453,7 +472,7 @@ export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStri
 /**
  * The union of schema definition types whose underlying value is a string.
  */
-export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema | SimpleStringSchema;
+export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema | StringEmbedSchema | SimpleStringSchema;
 /**
  * A schema representing a return value or object property that is an array (list) of items.
  * The items are themselves schema definitions, which may refer to scalars or other objects.

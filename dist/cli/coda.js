@@ -9,14 +9,17 @@ const auth_1 = require("../testing/auth");
 const compile_1 = require("../testing/compile");
 const auth_2 = require("./auth");
 const build_1 = require("./build");
+const clone_1 = require("./clone");
 const create_1 = require("./create");
 const execute_1 = require("./execute");
 const init_1 = require("./init");
+const link_1 = require("./link");
 const register_1 = require("./register");
 const release_1 = require("./release");
 const set_option_1 = require("./set_option");
 const upload_1 = require("./upload");
 const validate_1 = require("./validate");
+const whoami_1 = require("./whoami");
 const yargs_1 = __importDefault(require("yargs"));
 if (require.main === module) {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -28,8 +31,9 @@ if (require.main === module) {
         handler: execute_1.handleExecute,
         builder: {
             fetch: {
-                boolean: false,
+                boolean: true,
                 desc: 'Actually fetch http requests instead of using mocks. Run "coda auth" first to set up credentials.',
+                default: true,
             },
             vm: {
                 boolean: true,
@@ -73,6 +77,18 @@ if (require.main === module) {
         handler: init_1.handleInit,
     })
         .command({
+        command: 'clone <packIdOrUrl>',
+        describe: 'Clone an existing Pack that was created using Pack Studio',
+        builder: {
+            codaApiEndpoint: {
+                string: true,
+                hidden: true,
+                default: config_storage_1.DEFAULT_API_ENDPOINT,
+            },
+        },
+        handler: clone_1.handleClone,
+    })
+        .command({
         command: 'register [apiToken]',
         describe: 'Register API token to publish a Pack',
         builder: {
@@ -83,6 +99,18 @@ if (require.main === module) {
             },
         },
         handler: register_1.handleRegister,
+    })
+        .command({
+        command: 'whoami [apiToken]',
+        describe: 'Looks up information about the API token that is registered in this environment',
+        builder: {
+            codaApiEndpoint: {
+                string: true,
+                hidden: true,
+                default: config_storage_1.DEFAULT_API_ENDPOINT,
+            },
+        },
+        handler: whoami_1.handleWhoami,
     })
         .command({
         command: 'build <manifestFile>',
@@ -158,6 +186,18 @@ if (require.main === module) {
             },
         },
         handler: create_1.handleCreate,
+    })
+        .command({
+        command: 'link <manifestDir> <packIdOrUrl>',
+        describe: "Link to a pre-existing Pack ID on Coda's servers",
+        builder: {
+            codaApiEndpoint: {
+                string: true,
+                hidden: true,
+                default: config_storage_1.DEFAULT_API_ENDPOINT,
+            },
+        },
+        handler: link_1.handleLink,
     })
         .command({
         command: 'validate <manifestFile>',

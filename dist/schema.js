@@ -260,7 +260,6 @@ var DurationUnit;
  */
 exports.SimpleStringHintValueTypes = [
     ValueHintType.Attachment,
-    ValueHintType.Embed,
     ValueHintType.Html,
     ValueHintType.ImageReference,
     ValueHintType.ImageAttachment,

@@ -231,6 +231,26 @@ Although a lot of Pack management can be done through the CLI, there are still s
 - Editing your Pack's listing page (name, icon, etc).
 
 
+## Migrating from the Web IDE
+
+It's possible to start development of a Pack in the Pack Studio Web IDE and later migrate to using the CLI. For example, to take advantage of an NPM library, which isn't possible in the Web IDE.
+
+To migrate, follow all of the steps described in the [Getting started tutorial][quickstart_cli] up until the point of running `npx coda create`. Instead, manually create a file in the same directory as the pack definition called `.coda-pack.json` with the following content:
+
+```json
+{
+  "packId": 123456
+}
+```
+
+Replace `123456` with the ID of your existing Pack. You can find this ID in the Pack Studio URL:
+
+```
+https://coda.io/p/123456
+```
+
+Then replace the contents of `pack.ts` with your existing code from the Web IDE and continue on with the tutorial. Once you run `npx coda upload` the Pack will start using your local code.
+
 
 [libraries]: libraries.md
 [quickstart_cli]: ../../tutorials/get-started/cli.md

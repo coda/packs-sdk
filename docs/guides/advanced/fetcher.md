@@ -5,7 +5,7 @@ Many Packs use cases require fetching data from an outside source such as an API
 [View Sample Code][samples]{ .md-button }
 
 
-## Network domains
+## Network domains {: #network-domains}
 
 Before you can start making any requests using the fetcher, your Pack must declare which domain names it is going to communicate with. This can be done using the [`addNetworkDomain()`][addNetworkDomain] method of the pack:
 
@@ -15,7 +15,7 @@ pack.addNetworkDomain("example.com");
 
 The fetcher can to communicate with URLs on that domain and all sub-domains. It's usually best select the root domain of the service you are working with. For example, if you want to make requests to `api.example.com`, add the network domain `example.com`, in case you later determine you need to access related content on `images.example.com`, etc.
 
-By default a Pack is only allowed to register a single domain. This is done to limit abuse potential and provide transparency to users. If your use case requires making requests to multiple domains you may request an exemption by [contacting support][support].
+By default a Pack is only allowed to register a single domain. This is done to limit abuse potential and provide transparency to users. If you want to combine data from multiple sources we recommend building multiple Packs and using the features of a Coda doc to bring them together. If however your use case requires making requests to multiple domains from a single Pack you may request an exemption by [contacting support][support_network_domains].
 
 
 ## Accessing the fetcher
@@ -173,7 +173,7 @@ let response = await context.fetcher.fetch({
 ```
 
 
-### Binary
+### Binary {: #binary-body}
 
 Sending binary data (files, images, etc) is currently not supported by the fetcher.
 
@@ -272,7 +272,7 @@ let rate = usd.rate[0];
 ```
 
 
-### Binary
+### Binary {: #binary-response}
 
 When fetching binary data, enable the request option `isBinaryResponse` to let the fetcher know that it shouldn't try to parse the server response. When binary responses are enabled the `body` field of the response object will contain a [Node.js `Buffer`][buffer].
 
@@ -322,10 +322,13 @@ try {
 The HTTP headers returned can be accessed using the `headers` field of the response. The header names are normalized (changed to lowercase) for convenience, so you can access them consistently regardless of how they are sent by the server.
 
 ```
-let contentType = response.headers["content-type"];
+let contentType = response.headers["content-type"].toString();
 ```
 
 Unless it's a known safe header, all the header values will be redacted by Coda (contain the value `<<<REDACTED by Coda>>>` instead of the actual value). To request that a specific header be unredacted you will need to [contact support][support].
+
+!!! info "Multiple header values"
+    A server may return multiple headers with the same name. In this case, the header value will be a string array instead of a single string. As per [the spec][spec_headers], this should only happen for headers that return comma-separated values. Adding a `.toString()` call after retrieving the header value is an easy way to collapse both cases down to a single string.
 
 
 ## Authentication
@@ -359,10 +362,20 @@ Making a request to an external API can be expensive, either due to quotas, comp
 You can set a total rate limit across all users of your Pack, or if your Pack uses [authentication][authentication] you can also set a per-user rate limit. When the limit is reached your formula will pause for a bit to see if more quota becomes available, and if not eventually fail with an error.
 
 
+## IP addresses
+
+HTTP requests originating from Packs will come from a few different IP addresses. The specific set of addresses will change over time, and without prior warning. You can query the current set of IP addresses by doing a DNS lookup on the domain `egress.coda.io`.
+
+```sh
+dig +short egress.coda.io
+```
+
+
 [Fetcher]: ../../reference/sdk/interfaces/Fetcher.md
 [samples]: ../../samples/topic/fetcher.md
 [addNetworkDomain]: ../../reference/sdk/classes/PackDefinitionBuilder.md#addnetworkdomain
 [support]: ../../support.md
+[support_network_domains]: ../../support.md#network-domains
 [ExecutionContext]: ../../reference/sdk/interfaces/ExecutionContext/
 [fetch]: ../../reference/sdk/interfaces/Fetcher.md#fetch
 [FetchRequest]: ../../reference/sdk/interfaces/FetchRequest.md
@@ -377,3 +390,4 @@ You can set a total rate limit across all users of your Pack, or if your Pack us
 [cacheTtlSecs]: ../../reference/sdk/interfaces/FetchRequest.md#cacheTtlSecs
 [formula_cache]: ../blocks/formulas.md#caching
 [authentication]: ../advanced/authentication.md
+[spec_headers]: https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2

@@ -11,7 +11,7 @@ Tables are one of the most powerful features of Coda, and many times people use 
 
 ## Using sync tables
 
-Sync tables are added directly to the document, usually by dragging them in from the side panel. Navigate to **Explore** > **Packs & import** > **{Pack name}** and drag the table into the canvas.
+Sync tables are added directly to the document, usually by dragging them in from the side panel. Navigate to {{ coda.pack_panel_clicks }} and drag the table into the canvas.
 
 <img src="../../../images/sync_table_use.gif" class="screenshot" alt="Dragging in a sync table">
 
@@ -144,7 +144,7 @@ In most sync tables, parameters are used to allow users to filter the results in
 
 ## Row limits
 
-Each sync table has a user-defined maximum number of rows, which defaults to 1000 but can be set as high as 10,000. Any items returned by your sync table beyond that limit will be dropped.
+Each sync table has a user-defined maximum number of rows, which defaults to 1000 but can be set as high as 10,000. Once a sync table reaches the limit Coda will stop the sync (even if the code returned a [continuation](#longrunning)) and truncate the resulting rows to fit within the limit.
 
 
 ## Long-running syncs {: #longrunning}

@@ -357,6 +357,11 @@ export const Examples: Example[] = [
         content: 'A formula that accepts a variable number of arguments. This sample draws a simple diagram using text, with an unknown number of arrow labels and steps.',
         codeFile: './examples/parameter/steps.ts',
       },
+      {
+        name: 'Image parameter',
+        content: 'A formula that takes an image as a parameter. This sample returns the file size of an image.',
+        codeFile: './examples/image/file_size.ts',
+      },
     ],
   },
   {
@@ -588,6 +593,48 @@ export const Examples: Example[] = [
         name: 'Time math',
         content: 'A formula that computes a relative time. This sample adds five minutes onto an input date and time.',
         codeFile: './examples/dates/five_mins_late.ts',
+      },
+    ],
+  },
+  {
+    name: 'Images',
+    category: ExampleCategory.Topic,
+    triggerTokens: ['ImageReference', 'ImageAttachment', 'Image', 'ImageArray'],
+    contentFile: './examples/image/README.md',
+    linkData: {
+      type: UrlType.SdkReferencePath,
+      url: '/guides/advanced/images',
+    },
+    exampleSnippets: [
+      {
+        name: 'Image parameter',
+        content: 'A formula that takes an image as a parameter. This sample returns the file size of an image.',
+        codeFile: './examples/image/file_size.ts',
+      },
+      {
+        name: 'Image result',
+        content: 'A formula that return an external image. This sample returns a random photo of a cat.',
+        codeFile: './examples/cats/formula.ts',
+      },
+      {
+        name: 'Attach image data',
+        content: 'A sync table that includes images sourced from raw data. This sample syncs files from Dropbox, including their thumbnail images.',
+        codeFile: './examples/image/dropbox.ts',
+      },
+      {
+        name: 'Attach private images',
+        content: 'A sync table that includes images sourced from private URLs. This sample syncs files from Google Drive, including their thumbnail images.',
+        codeFile: './examples/image/google_drive.ts',
+      },
+      {
+        name: 'Generated SVG',
+        content: 'A formula that generated an SVG, and returns it as a data URI. This sample generates an image from the text provided.',
+        codeFile: './examples/image/text_to_image.ts',
+      },
+      {
+        name: 'Dark mode SVG',
+        content: 'A formula that generates an SVG that adapts if dark mode is enabled. This sample generates an image with static text, which changes color when dark mode is enabled.',
+        codeFile: './examples/image/hello_dark_mode.ts',
       },
     ],
   },

@@ -9,7 +9,7 @@ Every Coda document has a **Timezone** setting in the **Region** section of the 
 Packs don't have a configurable timezone however, and all date and time operations in Pack code run in [Coordinated Universal Time (UTC)][wikipedia_utc]. The timezone of the document is passed to Pack formulas as [`context.timezone`][ExecutionContext_timezone], containing an [IANA timezone identifier][wikipedia_tz] (ex: `America/New_York`).
 
 
-## Timezone shifting {: .shifting}
+## Timezone shifting {: #shifting}
 
 Any date or time values passed into a Pack are shifted from the doc's timezone to UTC. For example, the value "11/12/1955, 10:04 PM" in a document with the timezone set to "America/Los Angeles" will be passed to a Pack as `1955-11-13T06:04:00.000Z`. While this accurately represents the exact same moment in time, you'll notice that the day and hour values have changed due to the change in timezone.
 
@@ -19,7 +19,7 @@ Any date or time values passed into a Pack are shifted from the doc's timezone t
 Likewise when returning a date or time value Coda will shift the value back. When the value represents an exact moment in time (either a number of seconds since the epoch or a full date and time string with a timezone identifier) it will be shifted to that equivalent moment in the document's timezone. However, if the Pack returns a string which represents a relative date or time (it's just a date or time, or has to timezone identifier) it will be assumed that it's already in the timezone of the document and won't be shifted.
 
 
-## Working with timezones {: .working}
+## Working with timezones {: #working}
 
 Because of timezone shifting you often can't use the `Date` objects in Packs like you would in other environments. Getter methods like `getHour()` or `getDate()` will return those values in a UTC context, which may be different than what the user has entered. Likewise setter methods like `setHour()` or `setDate()` won't work correctly, as they aren't aware of the daylight savings time rules in the document's timezone.
 

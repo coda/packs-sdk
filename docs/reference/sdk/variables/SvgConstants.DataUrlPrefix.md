@@ -5,7 +5,7 @@ title: "DataUrlPrefix"
 
 [SvgConstants](../modules/SvgConstants.md).DataUrlPrefix
 
-• **DataUrlPrefix**: ``"data:image/svg+xml;base64,"``
+• `Const` **DataUrlPrefix**: ``"data:image/svg+xml;base64,"``
 
 Prefix to use for base-64 encoded SVGs returned by formulas.
 

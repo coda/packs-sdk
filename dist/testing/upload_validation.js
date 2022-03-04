@@ -520,12 +520,19 @@ const durationPropertySchema = zodCompleteStrictObject({
     maxUnit: z.nativeEnum(schema_3.DurationUnit).optional(),
     ...basePropertyValidators,
 });
+const embedPropertySchema = zodCompleteStrictObject({
+    type: zodDiscriminant(schema_8.ValueType.String),
+    codaType: zodDiscriminant(schema_7.ValueHintType.Embed),
+    force: z.boolean().optional(),
+    ...basePropertyValidators,
+});
 const stringPropertySchema = z.union([
     simpleStringPropertySchema,
     stringDatePropertySchema,
     stringTimePropertySchema,
     stringDateTimePropertySchema,
     durationPropertySchema,
+    embedPropertySchema,
 ]);
 const stringPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,

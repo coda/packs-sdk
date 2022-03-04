@@ -5,14 +5,17 @@ import {DEFAULT_OAUTH_SERVER_PORT} from '../testing/auth';
 import {TimerShimStrategy} from '../testing/compile';
 import {handleAuth} from './auth';
 import {handleBuild} from './build';
+import {handleClone} from './clone';
 import {handleCreate} from './create';
 import {handleExecute} from './execute';
 import {handleInit} from './init';
+import {handleLink} from './link';
 import {handleRegister} from './register';
 import {handleRelease} from './release';
 import {handleSetOption} from './set_option';
 import {handleUpload} from './upload';
 import {handleValidate} from './validate';
+import {handleWhoami} from './whoami';
 import yargs from 'yargs';
 
 if (require.main === module) {
@@ -25,8 +28,9 @@ if (require.main === module) {
       handler: handleExecute,
       builder: {
         fetch: {
-          boolean: false,
+          boolean: true,
           desc: 'Actually fetch http requests instead of using mocks. Run "coda auth" first to set up credentials.',
+          default: true,
         },
         vm: {
           boolean: true,
@@ -71,6 +75,18 @@ if (require.main === module) {
       handler: handleInit,
     })
     .command({
+      command: 'clone <packIdOrUrl>',
+      describe: 'Clone an existing Pack that was created using Pack Studio',
+      builder: {
+        codaApiEndpoint: {
+          string: true,
+          hidden: true,
+          default: DEFAULT_API_ENDPOINT,
+        },
+      },
+      handler: handleClone,
+    })
+    .command({
       command: 'register [apiToken]',
       describe: 'Register API token to publish a Pack',
       builder: {
@@ -81,6 +97,18 @@ if (require.main === module) {
         },
       },
       handler: handleRegister,
+    })
+    .command({
+      command: 'whoami [apiToken]',
+      describe: 'Looks up information about the API token that is registered in this environment',
+      builder: {
+        codaApiEndpoint: {
+          string: true,
+          hidden: true,
+          default: DEFAULT_API_ENDPOINT,
+        },
+      },
+      handler: handleWhoami,
     })
     .command({
       command: 'build <manifestFile>',
@@ -156,6 +184,18 @@ if (require.main === module) {
         },
       },
       handler: handleCreate,
+    })
+    .command({
+      command: 'link <manifestDir> <packIdOrUrl>',
+      describe: "Link to a pre-existing Pack ID on Coda's servers",
+      builder: {
+        codaApiEndpoint: {
+          string: true,
+          hidden: true,
+          default: DEFAULT_API_ENDPOINT,
+        },
+      },
+      handler: handleLink,
     })
     .command({
       command: 'validate <manifestFile>',

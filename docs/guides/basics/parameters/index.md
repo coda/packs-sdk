@@ -110,7 +110,7 @@ The number equivalent for some column types may not be obvious. Specifically:
 Use the `Boolean` parameter type to pass a boolean (true/false) to your formula. Coda will pass the value to the `execute` function as a [JavaScript Boolean][mdn_boolean].
 
 
-### Dates {: .dates}
+### Dates {: #dates}
 
 Use the `Date` parameter type to pass a date value to your formula. Coda will automatically apply the [`ToDateTime()`][ToDateTime] formula to the input and pass it to the `execute` function as a [JavaScript Date][mdn_date].
 
@@ -121,6 +121,13 @@ JavaScript Date objects can only represent a specific moment in time. This means
 
 !!! warning "Timezone shifting"
     Because of how timezones work in Coda and JavaScript, the date passed into the parameter may appear different in your Pack code. See the [Timezones guide][timezones] for more information.
+
+
+### Images {: #images}
+
+Use the `Image` parameter type to pass an image to your formula. The value passed to the `execute` function will be the URL of that image.
+
+Images that the user uploaded to the doc will be hosted on the `codahosted.io` domain and don't require authentication to access. If you need access to the binary content of the image you'll need to use the [fetcher][fetcher_binary_response] to retrieve it. Since you must declare the [network domains][network_domains] the fetcher will access, it's not possible to access the binary content of images coming from an **Image URL** column.
 
 
 ### Lists
@@ -313,6 +320,8 @@ The table below shows the recommended parameter type to use with various types o
 | Type          | Supported | Recommended   | Notes                                                             |
 | ------------- | --------- | ------------- | ----------------------------------------------------------------- |
 | Text          | ✅ Yes    | `String`      | Use `Html` if the formatting is important.                        |
+| Link          | ✅ Yes    | `String`      |                                                                   |
+| Canvas        | ✅ Yes    | `Html`        | Use `String` to discard formatting.                               |
 | Select list   | ✅ Yes    | `StringArray` | Works for both single and multi-value select lists.               |
 | Number        | ✅ Yes    | `Number`      |                                                                   |
 | Percent       | ✅ Yes    | `Number`      | Passed as a fraction.                                             |
@@ -325,6 +334,7 @@ The table below shows the recommended parameter type to use with various types o
 | Duration      | ✅ Yes    | `Number`      |                                                                   |
 | Checkbox      | ✅ Yes    | `Boolean`     |                                                                   |
 | People        | ❌ No     |               | Use `String` to get the person's name.                            |
+| Email         | ✅ Yes    | `String`      |                                                                   |
 | Reaction      | ❌ No     |               | Use `StringArray` to get the names of the people that reacted.    |
 | Button        | ❌ No     |               |                                                                   |
 | Image         | ✅ Yes    | `ImageArray`  | Image column can contain multiple images.                         |
@@ -360,3 +370,5 @@ The table below shows the recommended parameter type to use with various types o
 [timezones]: ../../advanced/timezones.md
 [data_types_objects]: ../../basics/data-types.md#objects
 [samples_todoist]: ../../../samples/full/todoist.md
+[fetcher_binary_response]: ../../advanced/fetcher.md#binary-response
+[network_domains]: ../../advanced/fetcher.md#network-domains

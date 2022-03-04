@@ -195,7 +195,7 @@ When used with a number value, the number should contain the number of seconds s
 The [`Duration`][Duration] value hint represents an amount of time, rather than a specific time. It can only be applied to `String` values, and those strings must match one of a few formats:
 
 | Example                     | Result              | Notes                           |
-|-----------------------------|---------------------|---------------------------------|
+| --------------------------- | ------------------- | ------------------------------- |
 | 6                           | 6 days              | A single number is days.        |
 | 6:01                        | 6 hrs 1 min         | Hours and minutes.              |
 | 6:01:15                     | 6 hrs 1 min 15 secs | Hours, minutes, and seconds.    |
@@ -218,12 +218,27 @@ pack.addFormula({
 });
 ```
 
+### Percentages
 
-### Images
+Formulas that return a result as a percentage can use the value type `Number` and the value hint [`Percent`][Percent]. Return a fraction in your code and the doc will display the equivalent percentage.
+
+```ts
+pack.addFormula({
+  // ...
+  resultType: coda.ValueType.Number,
+  codaType: coda.ValueHintType.Percent,
+  execute: async function ([], context) {
+    return 0.5; // Displayed as "50%" in the doc.
+  },
+});
+```
+
+
+### Images {: #images}
 
 There are two different value hints for image: [`ImageReference`][ImageReference] and [`ImageAttachment`][ImageAttachment]. Both of these are applied to string values, where the string contains the URL of the image. For image references, the image is always loaded from the source URL. For image attachments, Coda copies the image from the source URL into the document and shows that local copy.
 
-Image attachments should be used in most cases, but an image reference may make more sense if you expect the image to be updated often and want to ensure the doc is always using the latest image.
+Image attachments should be used in most cases. An image reference may make more sense if you expect the image to be updated often and want to ensure the doc is always using the latest copy, or when contractually obligated to hotlink to the image.
 
 ```ts
 pack.addFormula({
@@ -236,13 +251,37 @@ pack.addFormula({
 });
 ```
 
-!!! warning
+!!! bug
     Image attachments currently only work correctly within a sync table. When used outside of a sync table they behave like image references and load the image from the source URL.
+
+
+### Files {: #files}
+
+Similar to `ImageAttachment` mentioned above, you can return other file types using the value hint `Attachment`. This hint is also applied to string values, where the string contains the URL of the file. Coda copies the file from the source URL into the document and uses that local copy.
+
+```ts
+const DealSchema = coda.makeObjectSchema({
+  properties: {
+    // ...
+    contract: {
+      type: coda.ValueType.String,
+      codaType: coda.ValueHintType.Attachment,
+    },
+  },
+  // ...
+});
+```
+
+!!! bug
+    Attachments currently only work within a sync table.
+    <!-- https://golinks.io/bug/21522 -->
+    Additionally, file attachments may by shown with the wrong file name.
+    <!-- https://golinks.io/bug/21523 -->
 
 
 ### Embedded content
 
-The [`Embed`][Embed] value hint can be used to embed external content in the Coda doc. This value hint can be applied to `String` values, where the string contains the URL to the external content. The URL must be compatible with our embed provider, [Iframely][iframely], which supports the [oEmbed protocol][oEmbed].
+The [`Embed`][Embed] value hint can be used to embed external content in the Coda doc. This value hint can be applied to `String` values, where the string contains the URL to the external content.
 
 ```ts
 pack.addFormula({
@@ -255,8 +294,7 @@ pack.addFormula({
 });
 ```
 
-!!! info "Force not available"
-    The `=Embed()` Coda formula supports a [`force: true` option][embed_force] that allows you to skip Iframely and load the content directly in an iframe. This option isn't currently available for the `Embed` value hint.
+Read the [Embedding content][embeds] guide to learn more.
 
 
 ### People
@@ -291,29 +329,32 @@ The [`Reference`][Reference] value hint can be used to reference a row in a sync
 
 ## Corresponding column types
 
-The columns of a Coda table are strongly typed, and the data types in the Pack SDK roughly correspond to those same types. The table below indicates the corresponding value type and value hint that corresponds to a each column type.
+The columns of a Coda table are strongly typed, and the data types in the Pack SDK roughly correspond to those same types. The table below indicates the value type and value hint that corresponds to a each column type.
 
 | Column type   | Supported | Value type           | Value hint        |
-|---------------|-----------|----------------------|-------------------|
-| Text          | ✅ Yes     | `String`             |                   |
-| Select list   | ❌ No      |                      |                   |
-| Number        | ✅ Yes     | `Number`             |                   |
-| Percent       | ✅ Yes     | `Number`             | `Percent`         |
-| Currency      | ✅ Yes     | `Number`             | `Currency`        |
-| Slider        | ✅ Yes     | `Number`             | `Slider`          |
-| Scale         | ✅ Yes     | `Number`             | `Scale`           |
-| Date          | ✅ Yes     | `String` or `Number` | `Date`            |
-| Time          | ✅ Yes     | `String` or `Number` | `Time`            |
-| Date and time | ✅ Yes     | `String` or `Number` | `DateTime`        |
-| Duration      | ✅ Yes     | `String`             | `Duration`        |
-| Checkbox      | ✅ Yes     | `Boolean`            |                   |
-| People        | ✅ Yes     | `Object`             | `Person`          |
-| Reaction      | ❌ No      |                      |                   |
-| Button        | ❌ No[^1]  |                      |                   |
-| Image         | ✅ Yes     | `String`             | `ImageAttachment` |
-| Image URL     | ✅ Yes     | `String`             | `ImageReference`  |
-| File          | ✅ Yes     | `String`             | `Attachment`      |
-| Lookup        | ✅ Yes     | `Object`             | `Reference`       |
+| ------------- | --------- | -------------------- | ----------------- |
+| Text          | ✅ Yes    | `String`             |                   |
+| Link          | ✅ Yes    | `String`             | `Url`             |
+| Canvas        | ❌ No     |                      |                   |
+| Select list   | ❌ No     |                      |                   |
+| Number        | ✅ Yes    | `Number`             |                   |
+| Percent       | ✅ Yes    | `Number`             | `Percent`         |
+| Currency      | ✅ Yes    | `Number`             | `Currency`        |
+| Slider        | ✅ Yes    | `Number`             | `Slider`          |
+| Scale         | ✅ Yes    | `Number`             | `Scale`           |
+| Date          | ✅ Yes    | `String` or `Number` | `Date`            |
+| Time          | ✅ Yes    | `String` or `Number` | `Time`            |
+| Date and time | ✅ Yes    | `String` or `Number` | `DateTime`        |
+| Duration      | ✅ Yes    | `String`             | `Duration`        |
+| Checkbox      | ✅ Yes    | `Boolean`            |                   |
+| People        | ✅ Yes    | `Object`             | `Person`          |
+| Email         | ❌ No     |                      |                   |
+| Reaction      | ❌ No     |                      |                   |
+| Button        | ❌ No[^1] |                      |                   |
+| Image         | ✅ Yes    | `String`             | `ImageAttachment` |
+| Image URL     | ✅ Yes    | `String`             | `ImageReference`  |
+| File          | ✅ Yes    | `String`             | `Attachment`      |
+| Lookup        | ✅ Yes    | `Object`             | `Reference`       |
 
 
 [^1]: While a Pack can't return a button directly, it can provide [actions][actions] that a user can use to power their buttons.
@@ -353,20 +394,21 @@ Some value types and hints support additional formatting options. For example, `
 
 The full set of formatting options for a given value type and hint can be found in the corresponding schema definition.
 
-| Value type           | Value hint | Formatting options                               |
-|----------------------|------------|--------------------------------------------------|
-| `Number`             |            | [`NumericSchema`][NumericSchema]                 |
-| `Number`             | `Percent`  | [`NumericSchema`][NumericSchema]                 |
-| `Number`             | `Currency` | [`CurrencySchema`][CurrencySchema]               |
-| `Number`             | `Slider`   | [`SliderSchema`][SliderSchema]                   |
-| `Number`             | `Scale`    | [`ScaleSchema`][ScaleSchema]                     |
-| `Number`             | `Date`     | [`NumericDateSchema`][NumericDateSchema]         |
-| `Number`             | `Time`     | [`NumericTimeSchema`][NumericTimeSchema]         |
-| `Number`             | `DateTime` | [`NumericDateTimeSchema`][NumericDateTimeSchema] |
-| `String` or `Number` | `Date`     | [`StringDateSchema`][StringDateSchema]           |
-| `String` or `Number` | `Time`     | [`StringTimeSchema`][StringTimeSchema]           |
-| `String` or `Number` | `DateTime` | [`StringDateTimeSchema`][StringDateTimeSchema]   |
-| `String`             | `Duration` | [`DurationSchema`][DurationSchema]               |
+| Value type | Value hint | Formatting options                               |
+| ---------- | ---------- | ------------------------------------------------ |
+| `Number`   |            | [`NumericSchema`][NumericSchema]                 |
+| `Number`   | `Percent`  | [`NumericSchema`][NumericSchema]                 |
+| `Number`   | `Currency` | [`CurrencySchema`][CurrencySchema]               |
+| `Number`   | `Slider`   | [`SliderSchema`][SliderSchema]                   |
+| `Number`   | `Scale`    | [`ScaleSchema`][ScaleSchema]                     |
+| `Number`   | `Date`     | [`NumericDateSchema`][NumericDateSchema]         |
+| `Number`   | `Time`     | [`NumericTimeSchema`][NumericTimeSchema]         |
+| `Number`   | `DateTime` | [`NumericDateTimeSchema`][NumericDateTimeSchema] |
+| `String`   | `Date`     | [`StringDateSchema`][StringDateSchema]           |
+| `String`   | `Time`     | [`StringTimeSchema`][StringTimeSchema]           |
+| `String`   | `DateTime` | [`StringDateTimeSchema`][StringDateTimeSchema]   |
+| `String`   | `Duration` | [`DurationSchema`][DurationSchema]               |
+| `String`   | `Embed`    | [`StringEmbedSchema`][StringEmbedSchema]         |
 
 
 
@@ -416,4 +458,6 @@ The full set of formatting options for a given value type and hint can be found 
 [StringTimeSchema]: ../../reference/sdk/interfaces/StringTimeSchema.md
 [StringDateTimeSchema]: ../../reference/sdk/interfaces/StringDateTimeSchema.md
 [DurationSchema]: ../../reference/sdk/interfaces/DurationSchema.md
+[StringEmbedSchema]: ../../reference/sdk/interfaces/StringEmbedSchema.md
 [formula_list]: https://coda.io/formulas#List
+[embeds]: ../advanced/embeds.md

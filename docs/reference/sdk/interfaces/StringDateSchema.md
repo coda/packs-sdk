@@ -4,7 +4,7 @@ title: "StringDateSchema"
 # Interface: StringDateSchema
 
 A schema representing a return value or object property that is provided as a string,
-which Coda should interpret as a date. Coda is able to flexibly a parse number of formal
+which Coda should interpret as a date. Coda is able to flexibly parse a number of formal
 and informal string representations of dates. For maximum accuracy, consider using an
 ISO 8601 date string (e.g. 2021-10-29): https://en.wikipedia.org/wiki/ISO_8601.
 
@@ -78,4 +78,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:495](https://github.com/coda/packs-sdk/blob/main/schema.ts#L495)
+[schema.ts:515](https://github.com/coda/packs-sdk/blob/main/schema.ts#L515)

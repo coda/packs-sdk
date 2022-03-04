@@ -135,6 +135,7 @@ export type { Schema } from './schema';
 export type { SchemaType } from './schema';
 export type { SliderSchema } from './schema';
 export type { StringDateSchema } from './schema';
+export type { StringEmbedSchema } from './schema';
 export type { StringDateTimeSchema } from './schema';
 export type { StringSchema } from './schema';
 export type { SimpleStringSchema } from './schema';
