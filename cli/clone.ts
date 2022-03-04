@@ -16,7 +16,6 @@ import {storePackId} from './config_storage';
 interface CloneArgs {
   packIdOrUrl: string;
   codaApiEndpoint: string;
-  packVersion?: string;
 }
 
 export async function handleClone({packIdOrUrl, codaApiEndpoint}: ArgumentsCamelCase<CloneArgs>) {
@@ -30,10 +29,10 @@ export async function handleClone({packIdOrUrl, codaApiEndpoint}: ArgumentsCamel
 
   const apiKey = getApiKey(codaApiEndpoint);
   if (!apiKey) {
-    printAndExit('Missing API key. Please run `coda register <apiKey>` to register one.');
+    return printAndExit('Missing API token. Please run `coda register <apiKey>` to register one.');
   }
 
-  const codeAlreadyExists = fs.existsSync(path.join(process.cwd(), 'pack.ts'));
+  const codeAlreadyExists = fs.existsSync(path.join(manifestDir, 'pack.ts'));
   if (codeAlreadyExists) {
     const shouldOverwrite = promptForInput('A pack.ts file already exists. Do you want to overwrite it? (y/N)?');
     if (!shouldOverwrite.toLocaleLowerCase().startsWith('y')) {
@@ -43,13 +42,12 @@ export async function handleClone({packIdOrUrl, codaApiEndpoint}: ArgumentsCamel
 
   const client = createCodaClient(apiKey, formattedEndpoint);
 
-  let packVersion: string;
+  let packVersion: string | null;
   try {
-    const maybeVersion = await getPackLatestVersion(client, packId);
-    if (!maybeVersion) {
+    packVersion = await getPackLatestVersion(client, packId);
+    if (!packVersion) {
       return printAndExit(`No built versions found for pack ${packId}. Only built versions can be cloned.`);
     }
-    packVersion = maybeVersion;
   } catch (err: any) {
     maybeHandleClientError(err);
     throw err;
@@ -125,6 +123,5 @@ async function getPackSource(client: Client, packId: number, version: string) {
   if (response.status >= 400) {
     return printAndExit(`Error while fetching pack source code: ${response.statusText}`);
   }
-  const sourceCode = await response.text();
-  return sourceCode;
+  return response.text();
 }

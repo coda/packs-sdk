@@ -25,9 +25,9 @@ async function handleClone({ packIdOrUrl, codaApiEndpoint }) {
     const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
     const apiKey = (0, config_storage_1.getApiKey)(codaApiEndpoint);
     if (!apiKey) {
-        (0, helpers_4.printAndExit)('Missing API key. Please run `coda register <apiKey>` to register one.');
+        return (0, helpers_4.printAndExit)('Missing API token. Please run `coda register <apiKey>` to register one.');
     }
-    const codeAlreadyExists = fs_extra_1.default.existsSync(path_1.default.join(process.cwd(), 'pack.ts'));
+    const codeAlreadyExists = fs_extra_1.default.existsSync(path_1.default.join(manifestDir, 'pack.ts'));
     if (codeAlreadyExists) {
         const shouldOverwrite = (0, helpers_5.promptForInput)('A pack.ts file already exists. Do you want to overwrite it? (y/N)?');
         if (!shouldOverwrite.toLocaleLowerCase().startsWith('y')) {
@@ -37,11 +37,10 @@ async function handleClone({ packIdOrUrl, codaApiEndpoint }) {
     const client = (0, helpers_1.createCodaClient)(apiKey, formattedEndpoint);
     let packVersion;
     try {
-        const maybeVersion = await getPackLatestVersion(client, packId);
-        if (!maybeVersion) {
+        packVersion = await getPackLatestVersion(client, packId);
+        if (!packVersion) {
             return (0, helpers_4.printAndExit)(`No built versions found for pack ${packId}. Only built versions can be cloned.`);
         }
-        packVersion = maybeVersion;
     }
     catch (err) {
         maybeHandleClientError(err);
@@ -105,6 +104,5 @@ async function getPackSource(client, packId, version) {
     if (response.status >= 400) {
         return (0, helpers_4.printAndExit)(`Error while fetching pack source code: ${response.statusText}`);
     }
-    const sourceCode = await response.text();
-    return sourceCode;
+    return response.text();
 }
