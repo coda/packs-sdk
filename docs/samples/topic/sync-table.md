@@ -28,6 +28,7 @@ const MySchema = coda.makeObjectSchema({
 
 pack.addSyncTable({
   name: "<User-visible name for the sync table>",
+  description: "<User-visible description for the sync table>",
   identityName: "<User-visible name for the column containing the schema>",
   schema: MySchema,
   formula: {
