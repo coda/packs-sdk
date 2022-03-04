@@ -185,10 +185,10 @@ workflows:
       - build:
           context:
             - dockerhub
-          # filters:
-          #   branches:
-          #     only:
-          #       - main
+          filters:
+            branches:
+              only:
+                - main
       - utils/cancel-older-awaiting-approvals:
           context:
             - circleci
