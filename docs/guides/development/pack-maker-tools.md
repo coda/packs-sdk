@@ -92,7 +92,7 @@ You can search for logs using the magnifying glass icon at the top of the panel.
 Search results are no longer grouped by invocation, but instead a flat list of entries from across all invocations. You can expand an entry and click the **View related logs** link to view all of the log entries from that invocation.
 
 
-## Settings
+## Settings {: #settings}
 
 The Pack maker tools also lets you adjust a few developer-specific settings for the Pack. You can access these settings by clicking the gear icon at the top of the panel.
 
