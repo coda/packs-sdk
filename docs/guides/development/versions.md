@@ -33,7 +33,7 @@ pack.setVersion("1.0.5");
 There are some restrictions to the version numbers you can select however:
 
 - The version numbers must increase with each new build / upload.
-- The version numbers must follow the [SemVer standard][semver].
+- The version numbers must follow the [SemVer standard][semver], meaning them must be of the form `1`, `1.2`, or `1.2.3`.
 - If you make a user-visible change to your Pack Coda will enforce standards on your version number:
     - A new minor version if you make a backwards-compatible change (add a new building block or parameter, etc).
     - A new major version if you make a backwards-incompatible change (add a new request parameter, remove a building block, etc).
@@ -59,7 +59,7 @@ A new release is created when:
 
 - You click the **Release** button in the Pack Studio web editor.
 - You click the **Release version** option in the **History** tab of the Pack Studio.
-- You run the `npx code release` command using the Pack CLI.
+- You run the `npx coda release` command using the Pack CLI.
 
 Each release is just a pointer an existing Pack version, so to release new code you must create a version first and then release it. Additionally, each new release must use a newer version than that of the current release.
 
@@ -68,6 +68,11 @@ Each release is just a pointer an existing Pack version, so to release new code 
 To determine which version of your Pack a given release corresponds to, visit the **History** section of the Pack Studio. Release numbers will be displayed next to their corresponding version, and the **Released** tab can be used to filter the versions to just those that were released.
 
 <img src="../../../images/versions_releases.png" srcset="../../../images/versions_releases_2x.png 2x" class="screenshot" alt="Versions tagged with release">
+
+
+### Rollout
+
+Creating a new release only takes a moment, but it can take much longer for it to reach your users. A few minutes after you create the release Coda begins the process of upgrading existing docs that use your Pack to the new release. This process can take anywhere from a few minutes to a few hours, depending on how many docs need to be processed.
 
 
 ### Rollbacks
