@@ -19,6 +19,18 @@ Information about the Coda environment and doc this formula was invoked from, fo
 
 ___
 
+### packId
+
+• `Optional` **packId**: `number`
+
+The ID of the pack executing this formula.
+
+#### Defined in
+
+[api_types.ts:573](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L573)
+
+___
+
 ### protocolAndHost
 
 • **protocolAndHost**: `string`

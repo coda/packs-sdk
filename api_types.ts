@@ -568,6 +568,9 @@ export interface InvocationLocation {
    * @deprecated This will be removed in a future version of the SDK.
    */
   docId?: string;
+
+  /** The ID of the pack executing this formula. */
+  packId?: number;
 }
 
 /**
