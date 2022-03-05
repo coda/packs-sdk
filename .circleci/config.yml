@@ -180,6 +180,16 @@ jobs:
 workflows:
   version: 2
 
+  commit-validation:
+    jobs:
+      - build:
+          context:
+            - dockerhub
+          filters:
+            branches:
+              ignore:
+                - main
+
   commit-validation-and-deploy-docs:
     jobs:
       - build:
