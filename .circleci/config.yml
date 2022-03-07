@@ -179,7 +179,8 @@ jobs:
 
 workflows:
   version: 2
-  commit_validation:
+
+  commit-validation:
     jobs:
       - build:
           context:
@@ -187,9 +188,9 @@ workflows:
           filters:
             branches:
               ignore:
-                - release
+                - main
 
-  build-and-deploy-docs:
+  commit-validation-and-deploy-docs:
     jobs:
       - build:
           context:
@@ -197,18 +198,22 @@ workflows:
           filters:
             branches:
               only:
-                - release
+                - main
       - utils/cancel-older-awaiting-approvals:
           context:
             - circleci
           circle_token: ${CIRCLECI_TOKEN}
           requires:
             - build
+      - wait-for-docs-approval:
+          type: approval
+          requires:
+            - utils/cancel-older-awaiting-approvals
       - build-docs-head:
           context:
             - dockerhub
           requires:  
-            - build
+            - wait-for-docs-approval
       - push-head-docs:
           context:
             - aws-head
