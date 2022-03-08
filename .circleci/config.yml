@@ -61,6 +61,7 @@ jobs:
 
     steps:
       - checkout
+      - base-tools/install
       - bootstrap_node
       - bootstrap_pipenv
       - run:
