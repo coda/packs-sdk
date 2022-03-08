@@ -32,7 +32,7 @@ render such a value as an @-reference to that person, rather than a basic object
 
 #### Defined in
 
-[schema.ts:692](https://github.com/coda/packs-sdk/blob/main/schema.ts#L692)
+[schema.ts:778](https://github.com/coda/packs-sdk/blob/main/schema.ts#L778)
 
 ___
 
@@ -51,7 +51,7 @@ BaseSchema.description
 
 #### Defined in
 
-[schema.ts:194](https://github.com/coda/packs-sdk/blob/main/schema.ts#L194)
+[schema.ts:199](https://github.com/coda/packs-sdk/blob/main/schema.ts#L199)
 
 ___
 
@@ -74,7 +74,7 @@ projections have been created for them.
 
 #### Defined in
 
-[schema.ts:707](https://github.com/coda/packs-sdk/blob/main/schema.ts#L707)
+[schema.ts:793](https://github.com/coda/packs-sdk/blob/main/schema.ts#L793)
 
 ___
 
@@ -87,7 +87,7 @@ Sync table schemas must specify an id property, which uniquely identify each syn
 
 #### Defined in
 
-[schema.ts:677](https://github.com/coda/packs-sdk/blob/main/schema.ts#L677)
+[schema.ts:763](https://github.com/coda/packs-sdk/blob/main/schema.ts#L763)
 
 ___
 
@@ -100,7 +100,7 @@ See [IdentityDefinition](IdentityDefinition.md).
 
 #### Defined in
 
-[schema.ts:712](https://github.com/coda/packs-sdk/blob/main/schema.ts#L712)
+[schema.ts:798](https://github.com/coda/packs-sdk/blob/main/schema.ts#L798)
 
 ___
 
@@ -115,7 +115,7 @@ can be seen when hovering over the chip.
 
 #### Defined in
 
-[schema.ts:684](https://github.com/coda/packs-sdk/blob/main/schema.ts#L684)
+[schema.ts:770](https://github.com/coda/packs-sdk/blob/main/schema.ts#L770)
 
 ___
 
@@ -127,7 +127,7 @@ Definintion of the key-value pairs in this object.
 
 #### Defined in
 
-[schema.ts:672](https://github.com/coda/packs-sdk/blob/main/schema.ts#L672)
+[schema.ts:758](https://github.com/coda/packs-sdk/blob/main/schema.ts#L758)
 
 ___
 
@@ -139,4 +139,4 @@ Identifies this schema as an object schema.
 
 #### Defined in
 
-[schema.ts:670](https://github.com/coda/packs-sdk/blob/main/schema.ts#L670)
+[schema.ts:756](https://github.com/coda/packs-sdk/blob/main/schema.ts#L756)

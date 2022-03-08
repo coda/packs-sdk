@@ -15,7 +15,7 @@ Indications a duration as a number of days.
 
 #### Defined in
 
-[schema.ts:481](https://github.com/coda/packs-sdk/blob/main/schema.ts#L481)
+[schema.ts:564](https://github.com/coda/packs-sdk/blob/main/schema.ts#L564)
 
 ___
 
@@ -27,7 +27,7 @@ Indications a duration as a number of hours.
 
 #### Defined in
 
-[schema.ts:485](https://github.com/coda/packs-sdk/blob/main/schema.ts#L485)
+[schema.ts:568](https://github.com/coda/packs-sdk/blob/main/schema.ts#L568)
 
 ___
 
@@ -39,7 +39,7 @@ Indications a duration as a number of minutes.
 
 #### Defined in
 
-[schema.ts:489](https://github.com/coda/packs-sdk/blob/main/schema.ts#L489)
+[schema.ts:572](https://github.com/coda/packs-sdk/blob/main/schema.ts#L572)
 
 ___
 
@@ -51,4 +51,4 @@ Indications a duration as a number of seconds.
 
 #### Defined in
 
-[schema.ts:493](https://github.com/coda/packs-sdk/blob/main/schema.ts#L493)
+[schema.ts:576](https://github.com/coda/packs-sdk/blob/main/schema.ts#L576)

@@ -15,9 +15,13 @@ import {DefaultConnectionType} from '../types';
 import type {DurationSchema} from '../schema';
 import {DurationUnit} from '../schema';
 import type {DynamicSyncTableDef} from '../api';
+import {EmailDisplayType} from '../schema';
+import type {EmailSchema} from '../schema';
 import {FeatureSet} from '../types';
 import type {HeaderBearerTokenAuthentication} from '../types';
 import type {Identity} from '../schema';
+import {LinkDisplayType} from '../schema';
+import type {LinkSchema} from '../schema';
 import type {MultiQueryParamTokenAuthentication} from '../types';
 import type {Network} from '../api_types';
 import {NetworkConnection} from '../api_types';
@@ -640,6 +644,21 @@ const embedPropertySchema = zodCompleteStrictObject<StringEmbedSchema & ObjectSc
   ...basePropertyValidators,
 });
 
+const emailPropertySchema = zodCompleteStrictObject<EmailSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.String),
+  codaType: zodDiscriminant(ValueHintType.Email),
+  display: z.nativeEnum(EmailDisplayType).optional(),
+  autocomplete: z.boolean().optional(),
+  ...basePropertyValidators,
+});
+
+const linkPropertySchema = zodCompleteStrictObject<LinkSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.String),
+  codaType: zodDiscriminant(ValueHintType.Url),
+  display: z.nativeEnum(LinkDisplayType).optional(),
+  ...basePropertyValidators,
+});
+
 const stringPropertySchema = z.union([
   simpleStringPropertySchema,
   stringDatePropertySchema,
@@ -647,6 +666,8 @@ const stringPropertySchema = z.union([
   stringDateTimePropertySchema,
   durationPropertySchema,
   embedPropertySchema,
+  emailPropertySchema,
+  linkPropertySchema,
 ]);
 
 const stringPackFormulaSchema = zodCompleteObject<Omit<StringPackFormula<any>, 'execute'>>({

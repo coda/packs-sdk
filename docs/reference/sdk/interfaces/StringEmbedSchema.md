@@ -28,7 +28,7 @@ BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:421](https://github.com/coda/packs-sdk/blob/main/schema.ts#L421)
+[schema.ts:504](https://github.com/coda/packs-sdk/blob/main/schema.ts#L504)
 
 ___
 
@@ -47,7 +47,7 @@ BaseStringSchema.description
 
 #### Defined in
 
-[schema.ts:194](https://github.com/coda/packs-sdk/blob/main/schema.ts#L194)
+[schema.ts:199](https://github.com/coda/packs-sdk/blob/main/schema.ts#L199)
 
 ___
 
@@ -64,7 +64,7 @@ but requires user consent per-domain to actually display the embed.
 
 #### Defined in
 
-[schema.ts:430](https://github.com/coda/packs-sdk/blob/main/schema.ts#L430)
+[schema.ts:513](https://github.com/coda/packs-sdk/blob/main/schema.ts#L513)
 
 ___
 
@@ -80,4 +80,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:515](https://github.com/coda/packs-sdk/blob/main/schema.ts#L515)
+[schema.ts:598](https://github.com/coda/packs-sdk/blob/main/schema.ts#L598)

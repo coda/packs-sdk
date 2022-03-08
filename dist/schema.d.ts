@@ -46,6 +46,10 @@ export declare enum ValueHintType {
      */
     Duration = "duration",
     /**
+     * Indicates to interpret the value as an email address (e.g. joe@foo.com).
+     */
+    Email = "email",
+    /**
      * Indicates to interpret and render the value as a Coda person reference. The provided value should be
      * an object whose `id` property is an email address, which Coda will try to resolve to a user
      * and render an @-reference to the user.
@@ -143,7 +147,7 @@ export declare enum ValueHintType {
      */
     Scale = "scale"
 }
-export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url];
+export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Email, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url];
 export declare const NumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Percent, ValueHintType.Currency, ValueHintType.Slider, ValueHintType.Scale];
 export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference];
 /**  The subset of {@link ValueHintType} that can be used with a string value. */
@@ -341,6 +345,74 @@ export interface ScaleSchema extends BaseNumberSchema<ValueHintType.Scale> {
     icon?: ScaleIconSet;
 }
 /**
+ * Display types that can be used with an {@link EmailSchema}.
+ */
+export declare enum EmailDisplayType {
+    /**
+     * Display both icon and email (default).
+     */
+    IconAndEmail = "iconAndEmail",
+    /**
+     * Display icon only.
+     */
+    IconOnly = "iconOnly",
+    /**
+     * Display email address only.
+     */
+    EmailOnly = "emailOnly"
+}
+/**
+ * A schema representing a return value or object property that is an email address.
+ *
+ * An email address can be represented visually as an icon, an icon plus the email address, or
+ * the just the email address.  Autocomplete against previously typed domain names is
+ * also an option in the user interface.
+ */
+export interface EmailSchema extends BaseStringSchema<ValueHintType.Email> {
+    /** Instructs Coda to render this value as an email address. */
+    codaType: ValueHintType.Email;
+    /** How the email should be displayed in the UI. */
+    display?: EmailDisplayType;
+    /** Whether to auto-complete the email domain during user input. */
+    autocomplete?: boolean;
+}
+/**
+ * Display types that can be used with a {@link LinkSchema}.
+ */
+export declare enum LinkDisplayType {
+    /**
+     * Display icon only.
+     */
+    IconOnly = "iconOnly",
+    /**
+     * Display URL.
+     */
+    Url = "url",
+    /**
+     * Display web page title.
+     */
+    Title = "title",
+    /**
+     * Display the referenced web page as a card.
+     */
+    Card = "card",
+    /**
+     * Display the referenced web page as an embed.
+     */
+    Embed = "embed"
+}
+/**
+ * A schema representing a return value or object property that is a hyperlink.
+ *
+ * The link can be displayed in the UI in multiple ways, as per the above enumeration.
+ */
+export interface LinkSchema extends BaseStringSchema<ValueHintType.Url> {
+    /** Instructs Coda to render this value as a hyperlink. */
+    codaType: ValueHintType.Url;
+    /** How the URL should be displayed in the UI. */
+    display?: LinkDisplayType;
+}
+/**
  * A schema representing a return value or object property that is provided as a string,
  * which Coda should interpret as a date. Coda is able to flexibly parse a number of formal
  * and informal string representations of dates. For maximum accuracy, consider using an
@@ -461,7 +533,7 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
 /**
  * The subset of StringHintTypes that don't have specific schema attributes.
  */
-export declare const SimpleStringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url];
+export declare const SimpleStringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url, ValueHintType.Email];
 export declare type SimpleStringHintTypes = typeof SimpleStringHintValueTypes[number];
 /**
  * A schema whose underlying value is a string, along with an optional hint about how Coda
@@ -472,7 +544,7 @@ export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStri
 /**
  * The union of schema definition types whose underlying value is a string.
  */
-export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema | StringEmbedSchema | SimpleStringSchema;
+export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema | EmailSchema | LinkSchema | StringEmbedSchema | SimpleStringSchema;
 /**
  * A schema representing a return value or object property that is an array (list) of items.
  * The items are themselves schema definitions, which may refer to scalars or other objects.

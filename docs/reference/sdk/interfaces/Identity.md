@@ -27,7 +27,7 @@ See [makeAttributionNode](../functions/makeAttributionNode.md).
 
 #### Defined in
 
-[schema.ts:655](https://github.com/coda/packs-sdk/blob/main/schema.ts#L655)
+[schema.ts:741](https://github.com/coda/packs-sdk/blob/main/schema.ts#L741)
 
 ___
 
@@ -49,7 +49,7 @@ you wish to reference, again to distinguish which table instance you are trying 
 
 #### Defined in
 
-[schema.ts:649](https://github.com/coda/packs-sdk/blob/main/schema.ts#L649)
+[schema.ts:735](https://github.com/coda/packs-sdk/blob/main/schema.ts#L735)
 
 ___
 
@@ -66,7 +66,7 @@ For example, if you are defining a schema that represents a user object, "User" 
 
 #### Defined in
 
-[schema.ts:637](https://github.com/coda/packs-sdk/blob/main/schema.ts#L637)
+[schema.ts:723](https://github.com/coda/packs-sdk/blob/main/schema.ts#L723)
 
 ___
 
@@ -82,4 +82,4 @@ The ID of another pack, if you are trying to reference a value from different pa
 
 #### Defined in
 
-[schema.ts:662](https://github.com/coda/packs-sdk/blob/main/schema.ts#L662)
+[schema.ts:748](https://github.com/coda/packs-sdk/blob/main/schema.ts#L748)

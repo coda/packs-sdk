@@ -1,38 +1,33 @@
 ---
-title: "SimpleStringSchema"
+title: "LinkSchema"
 ---
-# Interface: SimpleStringSchema<T\>
+# Interface: LinkSchema
 
-A schema whose underlying value is a string, along with an optional hint about how Coda
-should interpret that string.
+A schema representing a return value or object property that is a hyperlink.
 
-## Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `SimpleStringHintTypes` = `SimpleStringHintTypes` |
+The link can be displayed in the UI in multiple ways, as per the above enumeration.
 
 ## Hierarchy
 
-- `BaseStringSchema`<`T`\>
+- `BaseStringSchema`<[`Url`](../enums/ValueHintType.md#url)\>
 
-  ↳ **`SimpleStringSchema`**
+  ↳ **`LinkSchema`**
 
 ## Properties
 
 ### codaType
 
-• `Optional` **codaType**: `T`
+• **codaType**: [`Url`](../enums/ValueHintType.md#url)
 
-An optional type hint instructing Coda about how to interpret or render this value.
+Instructs Coda to render this value as a hyperlink.
 
-#### Inherited from
+#### Overrides
 
 BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:600](https://github.com/coda/packs-sdk/blob/main/schema.ts#L600)
+[schema.ts:473](https://github.com/coda/packs-sdk/blob/main/schema.ts#L473)
 
 ___
 
@@ -52,6 +47,18 @@ BaseStringSchema.description
 #### Defined in
 
 [schema.ts:199](https://github.com/coda/packs-sdk/blob/main/schema.ts#L199)
+
+___
+
+### display
+
+• `Optional` **display**: [`LinkDisplayType`](../enums/LinkDisplayType.md)
+
+How the URL should be displayed in the UI.
+
+#### Defined in
+
+[schema.ts:475](https://github.com/coda/packs-sdk/blob/main/schema.ts#L475)
 
 ___
 

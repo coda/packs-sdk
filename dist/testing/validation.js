@@ -152,6 +152,9 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                 case schema_1.ValueHintType.Url:
                     const urlErrorMessage = tryParseUrl(result, schema);
                     return urlErrorMessage ? [urlErrorMessage] : [];
+                case schema_1.ValueHintType.Email:
+                    const emailErrorMessage = tryParseEmail(result, schema);
+                    return emailErrorMessage ? [emailErrorMessage] : [];
                 case schema_1.ValueHintType.Date:
                 case schema_1.ValueHintType.DateTime:
                     const dateTimeErrorMessage = tryParseDateTimeString(result, schema);
@@ -210,6 +213,14 @@ function tryParseUrl(result, schema) {
     }
     catch (error) {
         return invalidUrlError;
+    }
+}
+function tryParseEmail(result, schema) {
+    const invalidEmailError = {
+        message: `Property with codaType "${schema.codaType}" must be a valid email address, but got "${result}".`,
+    };
+    if (!(0, string_1.isEmail)(result)) {
+        return invalidEmailError;
     }
 }
 function tryParseSlider(result, schema) {
