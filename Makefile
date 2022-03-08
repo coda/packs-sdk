@@ -53,6 +53,9 @@ bootstrap:
 lint:
 	find . -name "*.ts" | grep -v /dist/ | grep -v /node_modules/ | grep -v .d.ts | xargs ${ROOTDIR}/node_modules/.bin/eslint
 
+	# Markdown lint.
+	npx remark docs --quiet --frail --ignore-pattern 'docs/reference/*'
+
 .PHONY: lint-fix
 lint-fix:
 	find . -name "*.ts" | grep -v /dist/ | grep -v /node_modules/ | grep -v .d.ts | xargs ${ROOTDIR}/node_modules/.bin/eslint --fix

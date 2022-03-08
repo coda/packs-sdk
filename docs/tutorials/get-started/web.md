@@ -22,7 +22,7 @@ The Pack Studio is built right in to the Coda application. To get there:
 You are now in the Pack Studio, ready to start building!
 
 [![How to navigate to the Pack Studio][web_ide_navigate]{: .screenshot}][web_ide_navigate]
-[web_ide_navigate]: ../../images/web_ide_navigate.gif
+
 
 ## Create a Pack from sample code
 
@@ -41,7 +41,7 @@ Next we'll use the Pack Studio to build that code and get it ready to use:
 Your Pack is now built and ready to use!
 
 [![How to build your Pack][web_ide_build]{: .screenshot}][web_ide_build]
-[web_ide_build]: ../../images/web_ide_build.gif
+
 
 ## Install and use the Pack
 
@@ -81,7 +81,11 @@ Now that you have your Pack up and running let's make a change to how it works.
 Your formula result should now be `Howdy World`.
 
 [![!How to make a change to your Pack][web_ide_rebuild]{: .screenshot}][web_ide_rebuild]
-[web_ide_rebuild]: ../../images/web_ide_rebuild.gif
 
 !!! tip
     To avoid having to manually refresh the formulas on every update, click the gear icon :material-cog-outline: in the Pack maker toolbar and toggle on the **AUTO-REFRESH**  setting.
+
+
+[web_ide_navigate]: ../../images/web_ide_navigate.gif
+[web_ide_build]: ../../images/web_ide_build.gif
+[web_ide_rebuild]: ../../images/web_ide_rebuild.gif

@@ -422,6 +422,7 @@ The full set of formatting options for a given value type and hint can be found 
 [Object]: ../../reference/sdk/enums/ValueType.md#Object
 [ValueHintType]: ../../reference/sdk/enums/ValueHintType.md
 [Date]: ../../reference/sdk/enums/ValueHintType.md#Date
+[Percent]: ../../reference/sdk/enums/ValueHintType.md#Percent
 [Time]: ../../reference/sdk/enums/ValueHintType.md#Time
 [DateTime]: ../../reference/sdk/enums/ValueHintType.md#DateTime
 [Duration]: ../../reference/sdk/enums/ValueHintType.md#Duration
@@ -461,3 +462,4 @@ The full set of formatting options for a given value type and hint can be found 
 [StringEmbedSchema]: ../../reference/sdk/interfaces/StringEmbedSchema.md
 [formula_list]: https://coda.io/formulas#List
 [embeds]: ../advanced/embeds.md
+[timezones]: ../advanced/timezones.md
