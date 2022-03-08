@@ -1,4 +1,4 @@
-### 0.9.0
+### Unreleased
 - **Breaking Change** ValueHintType.Url will now create a column of type "Link" instead of "Text".
 - Added ValueHintType.Email for new column type "Email".
 
