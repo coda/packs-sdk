@@ -272,3 +272,4 @@ It's recommended that you reduce or disable [HTTP caching][fetcher_caching] of t
 [sample_reference]: ../../../samples/topic/sync-table.md#with-row-references
 [parmeters]: ../../basics/parameters/index.md
 [fetcher_caching]: ../../advanced/fetcher.md#caching
+[parameters]: ../../basics/parameters.md

@@ -27,7 +27,7 @@ For general questions about Packs, or advice on how to build them, we recommend 
 
 ## Problems or bugs
 
-If you are experiencing a problem with your Pack or have identified a bug you can reach out to the Coda Partners team. Send an email to [parnters@coda.io][partners_email], and include the following information:
+If you are experiencing a problem with your Pack or have identified a bug you can reach out to the Coda Partners team. Send an email to [partners@coda.io][partners_email], and include the following information:
 
 - The URL of your Pack in the Pack Studio.
 - The URL of a doc where the error occurred (make sure to [share it with support][hc_share]).
