@@ -30,8 +30,14 @@ _bootstrap-node:
 .PHONY: _bootstrap-python
 _bootstrap-python:
 	${PIPENV} sync
+
+.PHONY: _bootstrap-python-requirements
+_bootstrap-python-requirements:
 	# Ensure requirements.txt (used by Read the Docs) is in sync.
+	# Keep this separate from _bootstrap-python since the output changes based
+	# on the version of pipenv installed.
 	${PIPENV} lock -r > requirements.txt
+
 
 .PHONY: _bootstrap-githooks
 _bootstrap-githooks: clean-githooks
@@ -41,6 +47,7 @@ _bootstrap-githooks: clean-githooks
 bootstrap:
 	$(MAKE) MAKEFLAGS= _bootstrap-node
 	$(MAKE) MAKEFLAGS= _bootstrap-python
+	$(MAKE) MAKEFLAGS= _bootstrap-python-requirements
 	$(MAKE) MAKEFLAGS= _bootstrap-githooks
 	echo
 	echo '  make bootstrap complete!'
