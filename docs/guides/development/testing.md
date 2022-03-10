@@ -18,7 +18,7 @@ Packs built using the web editor in the Pack Studio can only be run and tested i
 We recommend building out a dedicated doc for testing, which you can use to validate that your Pack is working as expected. Use your Pack with a variety of inputs, and compare the output to an expected value.
 
 
-## On your local machine
+## On your local machine {: #local}
 
 When developing locally using the [`coda` CLI][cli], you can leverage some utilities in the SDK to help you write unit tests and integration tests for your Pack. These utilities include:
 
