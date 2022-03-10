@@ -85,9 +85,21 @@ So for example, if your Pack definition was in `src/pack.ts` and you wanted to c
 npx coda execute src/pack.ts Hello "World"
 ```
 
-This will execute the formula and print the output to the terminal. (A quick reminder, if your arguments have spaces or special characters in them, put them in quotation marks when specifying them on the command line.)
+This will execute the formula and print the output to the terminal.
 
-The `coda execute` utility will look at your Pack definition to determine the types of your parameters and will interpret your arguments accordingly. For example, if your formula takes a string and you pass `123` as an argument on the command line, it will know to interpret that as a string. But if your formula takes a number, it will interpret `123` as a number before executing the formula.
+
+### Passing parameters
+
+To pass parameters to a formula when using `coda execute`, include them as separate arguments after the formula name. Like with all Coda formulas, parameters are passed positionally.
+
+```sh
+npx coda execute src/pack.ts MyFormula "one" "two" "three"
+```
+
+!!! note "Wrap arguments in quotes"
+    If your arguments have spaces or special characters in them, make sure to put them in quotation marks when specifying them on the command line.
+
+The CLI will look at your Pack definition to determine the types of your parameters and will interpret your arguments accordingly. For example, if your formula takes a string and you pass `123` as an argument on the command line, it will know to interpret that as a string. But if your formula takes a number, it will interpret `123` as a number before executing the formula.
 
 ```sh
 # String
@@ -104,12 +116,26 @@ npx coda execute src/pack.ts MyFormula "https://codahosted.io/..."
 npx coda execute src/pack.ts MyFormula "Hello <b>World</b>"
 ```
 
-To pass array parameters to `coda execute`, use a comma separated string. For example, `[1, 2, 3]` should be passed as `"1,2,3"`.
+To pass array parameters, use a single argument for the parameter separating the values by a comma. For example, the argument `[1, 2, 3]` should be passed as `"1,2,3"`.
+
+```sh
+# StringArray
+npx coda execute src/pack.ts MyFormula "apple,banana,carrot"
+# NumberArray
+npx coda execute src/pack.ts MyFormula "1,1,2,3,5,8"
+# BooleanArray
+npx coda execute src/pack.ts MyFormula "true,false,true"
+# DateArray
+npx coda execute src/pack.ts MyFormula "1985-10-26,1955-11-12"
+```
+
+!!! warning "Can't escape commas"
+    It currently isn't possible to escape commas in `StringArray` parameter values. To test your formula with arrays of strings containing commas you'll need to either [write a test case][testing] or [upload](#upload) it to Coda's servers and try it in a real doc.
 
 
 ### Running Syncs
 
-The above example shows how to execute a regular Pack formula. Executing a sync is almost identical:
+The above examples shows how to execute a regular Pack formula. Executing a sync is almost identical:
 
 ```sh
 npx coda execute path/to/pack.ts <sync name> [params..]
@@ -148,7 +174,7 @@ The utility will inspect your Pack definition to see what kind of authentication
 The credentials will be automatically applied to your fetch requests when you execute a Pack from the CLI or a test. For more information on using the fetcher in tests, see the [Integration tests][integration] section.
 
 
-## Uploading Packs
+## Uploading Packs {: #upload}
 
 All of the commands shown so far have only affected your local machine. To get the Pack running on Coda's servers you'll need to use some of the commands below.
 
@@ -257,3 +283,4 @@ Then replace the contents of `pack.ts` with your existing code from the web edit
 [sync_tables]: ../blocks/sync-tables/index.md
 [integration]: testing.md#integration
 [isolated_vm_requirements]: https://github.com/laverdet/isolated-vm#requirements
+[testing]: testing.md#local
