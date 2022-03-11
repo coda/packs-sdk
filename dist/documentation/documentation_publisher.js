@@ -99,7 +99,7 @@ async function pushDocumentation({ env, forceUpload }) {
             return (0, helpers_2.printAndExit)(`${env}: Could not find Cloudfront distribution for documentation.`);
         }
         (0, helpers_1.print)(`${env}: Creating Cloudfront invalidation for 'latest' folder...`);
-        const docsLatestPath = `${DocumentationRoot}/latest`;
+        const docsLatestPath = `${DocumentationRoot}/latest*`;
         await cloudfront
             .createInvalidation({
             DistributionId: docsDistribution.Id,
