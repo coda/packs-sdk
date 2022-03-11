@@ -11,7 +11,7 @@ const MarkdownPattern = path.join(TypeDocsRoot, '**/*.md');
 const TitleRegex = /^# (?:.+?\:\s*)?(.*?)(?:<.+>)?$/m;
 
 async function main(): Promise<void> {
-  const files = glob.sync(MarkdownPattern, {})
+  const files = glob.sync(MarkdownPattern, {});
   const promises = [];
   for (const file of files) {
     promises.push(process(file));

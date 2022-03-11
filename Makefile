@@ -104,6 +104,7 @@ compile:
 	${ROOTDIR}/node_modules/.bin/tsc
 
 	$(MAKE) compile-thunk
+	$(MAKE) compile-documentation-scripts
 
 	# copy it to dist/ to make it available after packaging.
 	mkdir -p ${ROOTDIR}/dist/bundles/ && cp ${ROOTDIR}/bundles/thunk_bundle.js ${ROOTDIR}/dist/bundles/thunk_bundle.js
@@ -127,6 +128,10 @@ compile:
 	$(MAKE) compile-isolated-vm
 	# copy these esm format js files to dist directly.
 	cp -r ${ROOTDIR}/testing/injections ${ROOTDIR}/dist/testing/
+
+.PHONY: compile-documentation-scripts
+compile-documentation-scripts:
+	${ROOTDIR}/node_modules/.bin/tsc --project tsconfig.scripts.json
 
 .PHONY: compile-samples
 compile-samples:
