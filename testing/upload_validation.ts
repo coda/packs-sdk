@@ -292,6 +292,7 @@ const baseAuthenticationValidators = {
   endpointDomain: z.string().optional(),
   // The items are technically a discriminated union type but that union currently only has one member.
   postSetup: z.array(setEndpointPostSetupValidator).optional(),
+  networkDomain: z.string().optional(),
 };
 
 const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> = {
@@ -1155,4 +1156,36 @@ const legacyPackMetadataSchema = validateFormulas(
         "Specify the domain that your pack makes http requests to using `networkDomains: ['example.com']`",
       path: ['networkDomains'],
     },
-  );
+  )
+  .superRefine((data, context) => {
+    if (!data.defaultAuthentication) {
+      return;
+    }
+    // Pack has multiple network domains and uses authentication.
+    if (data.defaultAuthentication.requiresEndpointUrl || data.defaultAuthentication.type === AuthenticationType.None) {
+      // We're ok if there's a user-supplied endpoint domain if auth is just being disabled explicitly.
+      return;
+    }
+
+    if (!data.defaultAuthentication.networkDomain) {
+      if (data.networkDomains?.length > 1) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['defaultAuthentication.networkDomain'],
+          message:
+            'This pack uses multiple network domains and must set one as a `networkDomain` in setUserAuthentication()',
+        });
+      }
+      return;
+    }
+
+    // Pack has multiple network domains and user auth. The code needs to clarify which domain gets the auth headers.
+    if (!data.networkDomains?.includes(data.defaultAuthentication.networkDomain)) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['defaultAuthentication.networkDomain'],
+        message: 'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
+      });
+      return;
+    }
+  });

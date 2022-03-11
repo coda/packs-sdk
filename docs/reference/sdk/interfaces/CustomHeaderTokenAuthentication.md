@@ -82,7 +82,7 @@ The name of the HTTP header.
 
 #### Defined in
 
-[types.ts:326](https://github.com/coda/packs-sdk/blob/main/types.ts#L326)
+[types.ts:332](https://github.com/coda/packs-sdk/blob/main/types.ts#L332)
 
 ___
 
@@ -99,6 +99,23 @@ A link to a help article or other page with more instructions about how to set u
 #### Defined in
 
 [types.ts:256](https://github.com/coda/packs-sdk/blob/main/types.ts#L256)
+
+___
+
+### networkDomain
+
+• `Optional` **networkDomain**: `string`
+
+Which domain should get auth credentials, when a pack is configured with multiple domains.
+Packs configured with only one domain or with requiredsEndpointUrl set to true can omit this.
+
+#### Inherited from
+
+[BaseAuthentication](BaseAuthentication.md).[networkDomain](BaseAuthentication.md#networkdomain)
+
+#### Defined in
+
+[types.ts:285](https://github.com/coda/packs-sdk/blob/main/types.ts#L285)
 
 ___
 
@@ -149,7 +166,7 @@ The HTTP header will be of the form `<headerName>: <tokenPrefix> <token>`
 
 #### Defined in
 
-[types.ts:333](https://github.com/coda/packs-sdk/blob/main/types.ts#L333)
+[types.ts:339](https://github.com/coda/packs-sdk/blob/main/types.ts#L339)
 
 ___
 
@@ -161,4 +178,4 @@ Identifies this as CustomHeaderToken authentication.
 
 #### Defined in
 
-[types.ts:322](https://github.com/coda/packs-sdk/blob/main/types.ts#L322)
+[types.ts:328](https://github.com/coda/packs-sdk/blob/main/types.ts#L328)

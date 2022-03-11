@@ -92,6 +92,23 @@ A link to a help article or other page with more instructions about how to set u
 
 ___
 
+### networkDomain
+
+• `Optional` **networkDomain**: `string`
+
+Which domain should get auth credentials, when a pack is configured with multiple domains.
+Packs configured with only one domain or with requiredsEndpointUrl set to true can omit this.
+
+#### Inherited from
+
+[BaseAuthentication](BaseAuthentication.md).[networkDomain](BaseAuthentication.md#networkdomain)
+
+#### Defined in
+
+[types.ts:285](https://github.com/coda/packs-sdk/blob/main/types.ts#L285)
+
+___
+
 ### postSetup
 
 • `Optional` **postSetup**: [`SetEndpoint`](SetEndpoint.md)[]
@@ -136,7 +153,7 @@ Identifies this as WebBasic authentication.
 
 #### Defined in
 
-[types.ts:452](https://github.com/coda/packs-sdk/blob/main/types.ts#L452)
+[types.ts:458](https://github.com/coda/packs-sdk/blob/main/types.ts#L458)
 
 ___
 
@@ -156,4 +173,4 @@ Configuration for labels to show in the UI when the user sets up a new acount.
 
 #### Defined in
 
-[types.ts:456](https://github.com/coda/packs-sdk/blob/main/types.ts#L456)
+[types.ts:462](https://github.com/coda/packs-sdk/blob/main/types.ts#L462)

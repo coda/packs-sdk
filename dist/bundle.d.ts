@@ -2771,6 +2771,11 @@ export interface BaseAuthentication {
 	 * This is not common.
 	 */
 	postSetup?: PostSetup[];
+	/**
+	 * Which domain should get auth credentials, when a pack is configured with multiple domains.
+	 * Packs configured with only one domain or with requiredsEndpointUrl set to true can omit this.
+	 */
+	networkDomain?: string;
 }
 /**
  * Authenticate using an HTTP header of the form `Authorization: Bearer <token>`.
@@ -3572,6 +3577,7 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 		oauthScopes?: string[];
 		oauthAuthorizationUrl?: string;
 		oauthTokenUrl?: string;
+		networkDomain?: string;
 	};
 	instructionsUrl?: string;
 	formulas?: ExternalPackFormulas;

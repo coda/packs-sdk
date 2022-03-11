@@ -277,6 +277,12 @@ export interface BaseAuthentication {
    * This is not common.
    */
   postSetup?: PostSetup[];
+
+  /**
+   * Which domain should get auth credentials, when a pack is configured with multiple domains.
+   * Packs configured with only one domain or with requiredsEndpointUrl set to true can omit this.
+   */
+  networkDomain?: string;
 }
 
 /**

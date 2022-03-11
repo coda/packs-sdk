@@ -10,7 +10,7 @@ function compilePackMetadata(manifest) {
     const compiledFormulas = (formulas && compileFormulasMetadata(formulas)) || (Array.isArray(formulas) || !formulas ? [] : {});
     // Note: we do not need to compile systemConnectionAuthentication metadata because it doesn't contain formulas,
     // so we can pass it through directly as metadata.
-    const defaultAuthenticationMetadata = compileDefaultAuthenticationMetadata(defaultAuthentication);
+    const defaultAuthenticationMetadata = compileDefaultAuthenticationMetadata(defaultAuthentication, manifest.networkDomains);
     const metadata = {
         ...definition,
         defaultAuthentication: defaultAuthenticationMetadata,
@@ -67,12 +67,19 @@ function compileSyncTable(syncTable) {
         getter: getterRest,
     };
 }
-function compileDefaultAuthenticationMetadata(authentication) {
+function compileDefaultAuthenticationMetadata(authentication, networkDomains) {
     if (!authentication) {
         return;
     }
     if (authentication.type === types_1.AuthenticationType.None || authentication.type === types_1.AuthenticationType.Various) {
         return authentication;
+    }
+    // User credentials must be explicitly pinned to exactly one domain so they can be invalidated if the pack
+    // owner changes the network domain. For simplicity and backwards compatibility, the authentication networkDomain
+    // can be omitted if there's exactly one call to setNetworkDomain elsewhere in the pack: we can safely assume
+    // authentication wants to be pinned to that same domain.
+    if (!authentication.networkDomain && networkDomains && networkDomains.length === 1) {
+        authentication.networkDomain = networkDomains[0];
     }
     const { getConnectionName, getConnectionUserId, postSetup, ...rest } = authentication;
     return {

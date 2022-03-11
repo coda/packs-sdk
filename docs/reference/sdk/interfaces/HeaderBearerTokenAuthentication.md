@@ -89,6 +89,23 @@ A link to a help article or other page with more instructions about how to set u
 
 ___
 
+### networkDomain
+
+• `Optional` **networkDomain**: `string`
+
+Which domain should get auth credentials, when a pack is configured with multiple domains.
+Packs configured with only one domain or with requiredsEndpointUrl set to true can omit this.
+
+#### Inherited from
+
+[BaseAuthentication](BaseAuthentication.md).[networkDomain](BaseAuthentication.md#networkdomain)
+
+#### Defined in
+
+[types.ts:285](https://github.com/coda/packs-sdk/blob/main/types.ts#L285)
+
+___
+
 ### postSetup
 
 • `Optional` **postSetup**: [`SetEndpoint`](SetEndpoint.md)[]
@@ -133,4 +150,4 @@ Identifies this as HeaderBearerToken authentication.
 
 #### Defined in
 
-[types.ts:287](https://github.com/coda/packs-sdk/blob/main/types.ts#L287)
+[types.ts:293](https://github.com/coda/packs-sdk/blob/main/types.ts#L293)

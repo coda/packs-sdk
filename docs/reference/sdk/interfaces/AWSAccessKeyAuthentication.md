@@ -90,6 +90,23 @@ A link to a help article or other page with more instructions about how to set u
 
 ___
 
+### networkDomain
+
+• `Optional` **networkDomain**: `string`
+
+Which domain should get auth credentials, when a pack is configured with multiple domains.
+Packs configured with only one domain or with requiredsEndpointUrl set to true can omit this.
+
+#### Inherited from
+
+[BaseAuthentication](BaseAuthentication.md).[networkDomain](BaseAuthentication.md#networkdomain)
+
+#### Defined in
+
+[types.ts:285](https://github.com/coda/packs-sdk/blob/main/types.ts#L285)
+
+___
+
 ### postSetup
 
 • `Optional` **postSetup**: [`SetEndpoint`](SetEndpoint.md)[]
@@ -134,7 +151,7 @@ The AWS service to authenticate with, like "s3", "iam", or "route53".
 
 #### Defined in
 
-[types.ts:566](https://github.com/coda/packs-sdk/blob/main/types.ts#L566)
+[types.ts:572](https://github.com/coda/packs-sdk/blob/main/types.ts#L572)
 
 ___
 
@@ -146,4 +163,4 @@ Identifies this as AWSAccessKey authentication.
 
 #### Defined in
 
-[types.ts:564](https://github.com/coda/packs-sdk/blob/main/types.ts#L564)
+[types.ts:570](https://github.com/coda/packs-sdk/blob/main/types.ts#L570)
