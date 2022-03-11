@@ -6,19 +6,20 @@ title: On your local machine
 
 Although it takes a little longer to get started, building Packs on your local machine has some advantages over the the web-based editor:
 
-- You can use your own code editing tools, such as [Visual Studio Code](https://code.visualstudio.com/).
-- You can use your own version control system, such as [GitHub](https://github.com).
-- You can use popular JavaScript libraries[^1], such as those in [NPM](https://www.npmjs.com/).
+- You can use your own code editing tools, such as [Visual Studio Code][vs_code].
+- You can use your own version control system, such as [GitHub][github].
+- You can use popular JavaScript libraries[^1], such as those in [NPM][npm].
 
-[^1]: Not all libraries available on NPM are compatible with the Pack SDK. See the [Using libraries](../../guides/development/libraries.md) guide for more information.
+[^1]: Not all libraries available on NPM are compatible with the Pack SDK. See the [Using libraries][libraries] guide for more information.
 
 Local development is enabled through the `coda` command line tool (CLI). Keep reading to learn how to install the CLI and use it to build a Pack.
 
+
 ## Before you get started
 
-To create a Pack you will need a Coda account, with [Doc Maker access](https://help.coda.io/en/articles/3388781-members-and-roles) in your workspace. If you're new to Coda, [sign up](https://coda.io/signup) for a free account and you'll automatically be made a Doc Maker in your personal workspace.
+To create a Pack you will need a Coda account, with [Doc Maker access][hc_doc_maker] in your workspace. If you're new to Coda, [sign up][sign_up] for a free account and you'll automatically be made a Doc Maker in your personal workspace.
 
-Make sure you have `node` and `npm` available on your machine. These two tools often come bundled together, and more information on how to install them is available in the [npm docs](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+Make sure you have `node` and `npm` available on your machine. These two tools often come bundled together, and more information on how to install them is available in the [npm docs][npm_install].
 
 The instructions below assume some familiarity with the terminal / command prompt. If you aren't used to using this interface consult the help material for your operating system.
 
@@ -49,7 +50,7 @@ Lastly, one of the libraries used by the SDK requires that your machine has some
     npx coda init
     ```
 
-    The `coda init` command creates the basic skeleton of a Pack based off of our [template Pack](https://github.com/coda/packs-examples/tree/main/examples/template). It's not required, but it's a fast way to get started.
+    The `coda init` command creates the basic skeleton of a Pack based off of our [template Pack][template_pack]. It's not required, but it's a fast way to get started.
 
 Your directory should now contain the following files:
 
@@ -60,6 +61,7 @@ Your directory should now contain the following files:
 * `package.json` - The project's dependencies from NPM (standard for Node.js projects).
 * `schemas.ts` - A place to define the schemas (structured data types) used by your Pack.
 * `types.ts` - A place to define TypeScript types for the data used by your Pack.
+
 
 ## Add code to the Pack
 
@@ -74,19 +76,22 @@ Replace the contents of `pack.ts` with the following code, which adds a "Hello" 
 
 Take a moment to read through the code and comments and get an understanding of how a formula is structured.
 
+
 ## Test the Pack locally
 
 One of the advantages of developing locally is that you can test your Pack code without having to upload it to Coda's servers. Let's test the new `Hello` formula you just added:
 
 ```shell
-npx coda execute pack.ts Hello "world"
+npx coda execute pack.ts Hello "World"
 ```
 
-If everything works correctly this should output `Hello world!`.
+If everything works correctly this should output `Hello World!`.
+
 
 ## Upload the Pack
 
 So far everything you've built only exists on your local machine, and Coda has no knowledge of it. To see it working in a real doc you'll need to upload your Pack to Coda's servers.
+
 
 ### Register an API token
 
@@ -111,7 +116,8 @@ The `coda` CLI uses the Coda API under the hood to upload your code, and likewis
 This will create a new file `.coda.json` in your working directory that contains the API token.
 
 ??? warning "Don't check in .coda.json"
-    If you use a version control system you will likely want to make sure this file isn't check in, as the token within provides access to your account. For example, if using Git, add `.coda.json` to your [`.gitignore` file](https://git-scm.com/docs/gitignore).
+    If you use a version control system you will likely want to make sure this file isn't check in, as the token within provides access to your account. For example, if using Git, add `.coda.json` to your [`.gitignore` file][gitignore].
+
 
 ### Create the Pack
 
@@ -126,6 +132,7 @@ npx coda create pack.ts --name "Hello World" --description "My first Pack."
 
 This will create a new, empty Pack on Coda's servers and output its URL in the Pack Studio. It stores the Pack's ID in the new file `.coda-pack.json`.
 
+
 ### Upload the first version
 
 Now that you've established access and created the empty Pack, you're finally ready to upload your code.
@@ -138,18 +145,29 @@ npx coda upload pack.ts --notes "Initial version."
     If you open your Pack in the online Pack Studio code editor you'll see a message like:
 
     ```ts
-    // Some boilerplate when failed to load source code
+    // Failed to load source code.
     ```
 
     This is expected, since the CLI will only upload the built Pack and not the source code.
 
+
 ## Install and use the Pack
 
 Your new Pack is now available to use in all your docs, and you can install it just any other Pack. Let's create a new document and install it:
-1. Open [Coda](https://coda.io/docs) in your browser.
+
+1. Open [Coda][coda_home] in your browser.
+
 1. Click the **+ New doc** button and select **Start with a blank page**.
 
+1. In your doc, click **Insert**, then **Packs**.
+2. Find your new Pack, **Hello World**, and click on it.
+
+    This will open a dialog with more information about the Pack.
+
+3. Click the **Install** button in the upper right.
+
 --8<-- "tutorials/get-started/.use.md"
+
 
 ## Update the Pack
 
@@ -167,10 +185,10 @@ Now that you have your Pack up and running let's make a change to how it works.
 1. Run your code locally to ensure it works:
 
     ```shell
-    npx coda execute pack.ts Hello "world"
+    npx coda execute pack.ts Hello "World"
     ```
 
-    This should output `Howdy world!`.
+    This should output `Howdy World!`.
 
 1. Run `coda upload` again to upload a new version.
 
@@ -180,23 +198,20 @@ Now that you have your Pack up and running let's make a change to how it works.
 
 1. When the upload has completed, switch back to your test document.
 
-    You'll notice that the formula is still returning `Hello World`, and that's because formulas aren't automatically recalculated when you update your Pack code.
+    You'll notice that the formula is still returning `Hello World!`, and that's because formulas aren't automatically recalculated when you update your Pack code.
 
-1. In the Pack's panel, click the **Settings** tab.
-
-    The **Currently Installed** version of the Pack should now read **Version 1.0.1**.
-
-    ??? info "Re-opening the Pack's panel"
-        If you have navigated away from the Pack's panel, click {{ coda.pack_panel_clicks }}.
-
-1. Click the **Refresh now** :material-refresh: button.
-
-    A **Syncing...** indicator will appear at the top of the screen while the formulas are being refreshed.
-
-Your formula result should now be `Howdy World`.
-
-!!! tip
-    To avoid having to hit the refresh button on every update, toggle on the setting **Auto-Refresh When Version Changes**.
+--8<-- "tutorials/get-started/.rebuild.md"
 
 
+[vs_code]: https://code.visualstudio.com/
+[github]: https://github.com
+[npm]: https://www.npmjs.com/
+[libraries]: ../../guides/development/libraries.md
+[hc_doc_maker]: https://help.coda.io/en/articles/3388781-members-and-roles
+[sign_up]: https://coda.io/signup
+[npm_install]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 [isolated_vm_requirements]: https://github.com/laverdet/isolated-vm#requirements
+[template_pack]: https://github.com/coda/packs-examples/tree/main/examples/template
+[gitignore]: https://git-scm.com/docs/gitignore
+[coda_home]: https://coda.io/docs
+[rebuild]: ../../images/cli_rebuild.gif
