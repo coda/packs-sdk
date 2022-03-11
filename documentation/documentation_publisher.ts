@@ -119,7 +119,7 @@ async function pushDocumentation({env, forceUpload}: ArgumentsCamelCase<PushDocu
       return printAndExit(`${env}: Could not find Cloudfront distribution for documentation.`);
     }
     print(`${env}: Creating Cloudfront invalidation for 'latest' folder...`);
-    const docsLatestPath = `${DocumentationRoot}/latest`;
+    const docsLatestPath = `${DocumentationRoot}/latest*`;
     await cloudfront
       .createInvalidation({
         DistributionId: docsDistribution.Id,
