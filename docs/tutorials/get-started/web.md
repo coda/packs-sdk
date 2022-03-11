@@ -50,20 +50,7 @@ Your Pack is now built and ready to use!
 
 The Pack can now be installed in any of your docs, and the test doc you created comes with the Pack pre-installed. Now let's use your new Pack in the document.
 
-1. Drag the **Hello** formula from the panel on the right into your doc.
-
-    ??? info "Alternative: Type the formula"
-        Place your cursor in the doc and type `=Hello`, and then press the tab key to select formula from your Pack.
-
-1. Complete the formula by passing in a **name** value, such as `Hello("World")`, and hit enter.
-
-If everything has gone right you should see the result `Hello World!` as the output of your formula.
-
-[![!How to install and use the Pack][web_ide_use]{: .screenshot}][web_ide_use]
-[web_ide_use]: ../../images/web_ide_use.gif
-
-!!! tip
-    For a more personalized message, try changing the formula to `Hello(User())`.
+--8<-- "tutorials/get-started/.use.md"
 
 
 ## Update the Pack
