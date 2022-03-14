@@ -21,14 +21,14 @@ The easiest way to get started it to follow the tutorial [Get started on your lo
 [View Tutorial][quickstart_cli]{ .md-button }
 
 
-### Requirements
+### Requirements {: #requirements}
 
 The CLI requires that you have `node` and `npm` installed. We also recommend developing with TypeScript, in which case, make sure that you have TypeScript and `ts-node` installed.
 
 The CLI makes use of the NPM package `isolated-vm` to provide emulation of the Packs execution environment. This package has its [own requirements][isolated_vm_requirements] that you may also need to install.
 
 
-### Installing
+### Installing {: #install}
 
 The `coda` CLI comes bundled with the Pack SDK. There are a few options for how to install it.
 
@@ -179,9 +179,9 @@ The credentials will be automatically applied to your fetch requests when you ex
 All of the commands shown so far have only affected your local machine. To get the Pack running on Coda's servers you'll need to use some of the commands below.
 
 
-### Registering an API Key
+### Registering an API token {: #register}
 
-All of the Pack upload commands work with the Coda API to upload your Pack, and hence require an API key to identify you as the user. Simply run this command, and you’ll be given a link to the Coda Account page to create an API token, which you can then paste in the terminal. You API key will be saved in a hidden local file named `.coda.json` in your current directory, to be used with future commands.
+All of the Pack upload commands work with the Coda API to upload your Pack, and hence require an API token to identify you as the user. Simply run this command, and you’ll be given a link to the Coda Account page to create an API token, which you can then paste in the terminal. You API token will be saved in a hidden local file named `.coda.json` in your current directory, to be used with future commands.
 
 ```sh
 npx coda register
@@ -261,21 +261,23 @@ Although a lot of Pack management can be done through the CLI, there are still s
 
 It's possible to start development of a Pack in the Pack Studio web editor and later migrate to using the CLI. For example, to take advantage of an NPM library, which isn't possible in the web editor.
 
-To migrate, follow all of the steps described in the [Getting started tutorial][quickstart_cli] up until the point of running `npx coda create`. Instead, manually create a file in the same directory as the pack definition called `.coda-pack.json` with the following content:
+To migrate, first make sure you have the [required software](#requirements) installed. Then create a new directory for the Pack, [install the SDK](#install), and [register an API token](#register). Finally run `coda clone` passing in the URL of the Pack.
 
-```json
-{
-  "packId": 123456
-}
+```sh
+npx coda clone "https://coda.io/p/123456"
 ```
 
-Replace `123456` with the ID of your existing Pack. You can find this ID in the Pack Studio URL:
+This will initialize the directory with the recommended file structure, download your existing Pack code into `pack.ts`, and create a `.coda-pack.json` file that links them together.
 
-```
-https://coda.io/p/123456
-```
+!!! info "Link only"
+    If you've already setup your local project and just need to link it to the existing Pack use the `coda link` command instead. It will create the `.coda-pack.json` file and nothing else.
 
-Then replace the contents of `pack.ts` with your existing code from the web editor and continue on with the tutorial. Once you run `npx coda upload` the Pack will start using your local code.
+    ```sh
+    npx coda link "https://coda.io/p/123456"
+    ```
+
+The next time you run `coda upload` your Pack will be updated to use the local code. You can always get back to the previous code you wrote in the Pack Studio by visiting the [**History** tab][versions_history].
+
 
 
 [libraries]: libraries.md
@@ -284,3 +286,4 @@ Then replace the contents of `pack.ts` with your existing code from the web edit
 [integration]: testing.md#integration
 [isolated_vm_requirements]: https://github.com/laverdet/isolated-vm#requirements
 [testing]: testing.md#local
+[versions_history]: versions.md#history
