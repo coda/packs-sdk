@@ -1,7 +1,7 @@
-import type {AutocompleteSnippet} from './types';
-import type {Example} from './types';
-import {ExampleCategory} from './types';
-import {UrlType} from './types';
+import type {AutocompleteSnippet} from '../types';
+import type {Example} from '../types';
+import {ExampleCategory} from '../types';
+import {UrlType} from '../types';
 
 export const Snippets: AutocompleteSnippet[] = [
   {

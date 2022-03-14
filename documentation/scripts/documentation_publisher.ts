@@ -5,9 +5,9 @@ import S3 from 'aws-sdk/clients/s3';
 import {exec as childExec} from 'child_process';
 import fs from 'fs';
 import path from 'path';
-import {print} from '../testing/helpers';
-import {printAndExit} from '../testing/helpers';
-import {printError} from '../testing/helpers';
+import {print} from '../../testing/helpers';
+import {printAndExit} from '../../testing/helpers';
+import {printError} from '../../testing/helpers';
 import {promisify} from 'util';
 import yargs from 'yargs';
 
@@ -55,7 +55,7 @@ function getOriginDomainName(env: string): string {
 }
 
 function getSDKVersion(): string {
-  const packageFile = fs.readFileSync(path.join(__dirname, '../package.json'));
+  const packageFile = fs.readFileSync(path.join(__dirname, '../../package.json'));
   return JSON.parse(packageFile.toString()).version;
 }
 
