@@ -250,7 +250,8 @@ release:
 	# @echo "Checking for unpushed commits..." && git fetch
 	# @test "" = "`git cherry`" || (echo "Refusing to publish with unpushed commits" && false)
 
-	npx release-it --npm.tag=latest
+	# TODO(spencer): support specifying version and passing in here, takes in `minor`, `major`, or `patch`.
+	npx release-it --npm.tag=latest --ci 
 
 # TODO(spencer): after new releaes flow is in use, remove this
 .PHONY: npm-publish
