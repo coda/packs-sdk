@@ -250,7 +250,7 @@ release:
 	# @echo "Checking for unpushed commits..." && git fetch
 	# @test "" = "`git cherry`" || (echo "Refusing to publish with unpushed commits" && false)
 
-	npx release-it --npm.tag=public
+	npx release-it --npm.tag=latest
 
 # TODO(spencer): after new releaes flow is in use, remove this
 .PHONY: npm-publish
