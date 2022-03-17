@@ -1,0 +1,13 @@
+{
+  "git": {
+    "commitMessage": "packs-sdk: release v${version}"
+  },
+  "github": {
+    "release": true
+  },
+  "plugins": {
+    "@release-it/keep-a-changelog": {
+      "filename": "CHANGELOG.md"
+    }
+  }
+}
