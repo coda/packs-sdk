@@ -604,6 +604,22 @@ export type Authentication =
   | AWSAssumeRoleAuthentication
   | CustomAuthentication;
 
+/** @ignore */
+export interface AuthenticationTypeMap {
+  [AuthenticationType.None]: NoAuthentication;
+  [AuthenticationType.Various]: VariousAuthentication;
+  [AuthenticationType.HeaderBearerToken]: HeaderBearerTokenAuthentication;
+  [AuthenticationType.CodaApiHeaderBearerToken]: CodaApiBearerTokenAuthentication;
+  [AuthenticationType.CustomHeaderToken]: CustomHeaderTokenAuthentication;
+  [AuthenticationType.QueryParamToken]: QueryParamTokenAuthentication;
+  [AuthenticationType.MultiQueryParamToken]: MultiQueryParamTokenAuthentication;
+  [AuthenticationType.OAuth2]: OAuth2Authentication;
+  [AuthenticationType.WebBasic]: WebBasicAuthentication;
+  [AuthenticationType.AWSAccessKey]: AWSAccessKeyAuthentication;
+  [AuthenticationType.AWSAssumeRole]: AWSAssumeRoleAuthentication;
+  [AuthenticationType.Custom]: CustomAuthentication;
+}
+
 type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId' | 'postSetup'> & {
   /** See {@link BaseAuthentication.getConnectionName} */
   getConnectionName?: MetadataFormulaDef;
