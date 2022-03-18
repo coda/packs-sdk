@@ -7,7 +7,6 @@ module.exports = (() => {
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
-  var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
   var __esm = (fn, res) => function __init() {
     return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
   };
@@ -18,22 +17,16 @@ module.exports = (() => {
     for (var name in all)
       __defProp(target, name, { get: all[name], enumerable: true });
   };
-  var __reExport = (target, module, copyDefault, desc) => {
-    if (module && typeof module === "object" || typeof module === "function") {
-      for (let key of __getOwnPropNames(module))
-        if (!__hasOwnProp.call(target, key) && (copyDefault || key !== "default"))
-          __defProp(target, key, { get: () => module[key], enumerable: !(desc = __getOwnPropDesc(module, key)) || desc.enumerable });
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
     }
-    return target;
+    return to;
   };
-  var __toESM = (module, isNodeMode) => {
-    return __reExport(__markAsModule(__defProp(module != null ? __create(__getProtoOf(module)) : {}, "default", !isNodeMode && module && module.__esModule ? { get: () => module.default, enumerable: true } : { value: module, enumerable: true })), module);
-  };
-  var __toCommonJS = /* @__PURE__ */ ((cache) => {
-    return (module, temp) => {
-      return cache && cache.get(module) || (temp = __reExport(__markAsModule({}), module, 1), cache && cache.set(module, temp), temp);
-    };
-  })(typeof WeakMap !== "undefined" ? /* @__PURE__ */ new WeakMap() : 0);
+  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target, mod));
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
   // node_modules/base64-js/index.js
   var require_base64_js = __commonJS({
@@ -2610,18 +2603,42 @@ module.exports = (() => {
       var booleanValueOf = Boolean.prototype.valueOf;
       var objectToString = Object.prototype.toString;
       var functionToString = Function.prototype.toString;
-      var match = String.prototype.match;
+      var $match = String.prototype.match;
+      var $slice = String.prototype.slice;
+      var $replace = String.prototype.replace;
+      var $toUpperCase = String.prototype.toUpperCase;
+      var $toLowerCase = String.prototype.toLowerCase;
+      var $test = RegExp.prototype.test;
+      var $concat = Array.prototype.concat;
+      var $join = Array.prototype.join;
+      var $arrSlice = Array.prototype.slice;
+      var $floor = Math.floor;
       var bigIntValueOf = typeof BigInt === "function" ? BigInt.prototype.valueOf : null;
       var gOPS = Object.getOwnPropertySymbols;
       var symToString = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? Symbol.prototype.toString : null;
       var hasShammedSymbols = typeof Symbol === "function" && typeof Symbol.iterator === "object";
+      var toStringTag = typeof Symbol === "function" && Symbol.toStringTag && (typeof Symbol.toStringTag === hasShammedSymbols ? "object" : "symbol") ? Symbol.toStringTag : null;
       var isEnumerable = Object.prototype.propertyIsEnumerable;
       var gPO = (typeof Reflect === "function" ? Reflect.getPrototypeOf : Object.getPrototypeOf) || ([].__proto__ === Array.prototype ? function(O) {
         return O.__proto__;
       } : null);
+      function addNumericSeparator(num, str) {
+        if (num === Infinity || num === -Infinity || num !== num || num && num > -1e3 && num < 1e3 || $test.call(/e/, str)) {
+          return str;
+        }
+        var sepRegex = /[0-9](?=(?:[0-9]{3})+(?![0-9]))/g;
+        if (typeof num === "number") {
+          var int = num < 0 ? -$floor(-num) : $floor(num);
+          if (int !== num) {
+            var intStr = String(int);
+            var dec = $slice.call(str, intStr.length + 1);
+            return $replace.call(intStr, sepRegex, "$&_") + "." + $replace.call($replace.call(dec, /([0-9]{3})/g, "$&_"), /_$/, "");
+          }
+        }
+        return $replace.call(str, sepRegex, "$&_");
+      }
       var inspectCustom = require_util().custom;
       var inspectSymbol = inspectCustom && isSymbol(inspectCustom) ? inspectCustom : null;
-      var toStringTag = typeof Symbol === "function" && typeof Symbol.toStringTag !== "undefined" ? Symbol.toStringTag : null;
       module.exports = function inspect_(obj, options, depth, seen) {
         var opts = options || {};
         if (has(opts, "quoteStyle") && (opts.quoteStyle !== "single" && opts.quoteStyle !== "double")) {
@@ -2631,12 +2648,16 @@ module.exports = (() => {
           throw new TypeError('option "maxStringLength", if provided, must be a positive integer, Infinity, or `null`');
         }
         var customInspect = has(opts, "customInspect") ? opts.customInspect : true;
-        if (typeof customInspect !== "boolean") {
-          throw new TypeError('option "customInspect", if provided, must be `true` or `false`');
+        if (typeof customInspect !== "boolean" && customInspect !== "symbol") {
+          throw new TypeError("option \"customInspect\", if provided, must be `true`, `false`, or `'symbol'`");
         }
         if (has(opts, "indent") && opts.indent !== null && opts.indent !== "	" && !(parseInt(opts.indent, 10) === opts.indent && opts.indent > 0)) {
-          throw new TypeError('options "indent" must be "\\t", an integer > 0, or `null`');
+          throw new TypeError('option "indent" must be "\\t", an integer > 0, or `null`');
         }
+        if (has(opts, "numericSeparator") && typeof opts.numericSeparator !== "boolean") {
+          throw new TypeError('option "numericSeparator", if provided, must be `true` or `false`');
+        }
+        var numericSeparator = opts.numericSeparator;
         if (typeof obj === "undefined") {
           return "undefined";
         }
@@ -2653,10 +2674,12 @@ module.exports = (() => {
           if (obj === 0) {
             return Infinity / obj > 0 ? "0" : "-0";
           }
-          return String(obj);
+          var str = String(obj);
+          return numericSeparator ? addNumericSeparator(obj, str) : str;
         }
         if (typeof obj === "bigint") {
-          return String(obj) + "n";
+          var bigIntStr = String(obj) + "n";
+          return numericSeparator ? addNumericSeparator(obj, bigIntStr) : bigIntStr;
         }
         var maxDepth = typeof opts.depth === "undefined" ? 5 : opts.depth;
         if (typeof depth === "undefined") {
@@ -2673,7 +2696,7 @@ module.exports = (() => {
         }
         function inspect(value, from, noIndent) {
           if (from) {
-            seen = seen.slice();
+            seen = $arrSlice.call(seen);
             seen.push(from);
           }
           if (noIndent) {
@@ -2690,14 +2713,14 @@ module.exports = (() => {
         if (typeof obj === "function") {
           var name = nameOf(obj);
           var keys = arrObjKeys(obj, inspect);
-          return "[Function" + (name ? ": " + name : " (anonymous)") + "]" + (keys.length > 0 ? " { " + keys.join(", ") + " }" : "");
+          return "[Function" + (name ? ": " + name : " (anonymous)") + "]" + (keys.length > 0 ? " { " + $join.call(keys, ", ") + " }" : "");
         }
         if (isSymbol(obj)) {
-          var symString = hasShammedSymbols ? String(obj).replace(/^(Symbol\(.*\))_[^)]*$/, "$1") : symToString.call(obj);
+          var symString = hasShammedSymbols ? $replace.call(String(obj), /^(Symbol\(.*\))_[^)]*$/, "$1") : symToString.call(obj);
           return typeof obj === "object" && !hasShammedSymbols ? markBoxed(symString) : symString;
         }
         if (isElement(obj)) {
-          var s = "<" + String(obj.nodeName).toLowerCase();
+          var s = "<" + $toLowerCase.call(String(obj.nodeName));
           var attrs = obj.attributes || [];
           for (var i = 0; i < attrs.length; i++) {
             s += " " + attrs[i].name + "=" + wrapQuotes(quote(attrs[i].value), "double", opts);
@@ -2706,7 +2729,7 @@ module.exports = (() => {
           if (obj.childNodes && obj.childNodes.length) {
             s += "...";
           }
-          s += "</" + String(obj.nodeName).toLowerCase() + ">";
+          s += "</" + $toLowerCase.call(String(obj.nodeName)) + ">";
           return s;
         }
         if (isArray2(obj)) {
@@ -2717,19 +2740,22 @@ module.exports = (() => {
           if (indent && !singleLineValues(xs)) {
             return "[" + indentedJoin(xs, indent) + "]";
           }
-          return "[ " + xs.join(", ") + " ]";
+          return "[ " + $join.call(xs, ", ") + " ]";
         }
         if (isError(obj)) {
           var parts = arrObjKeys(obj, inspect);
+          if ("cause" in obj && !isEnumerable.call(obj, "cause")) {
+            return "{ [" + String(obj) + "] " + $join.call($concat.call("[cause]: " + inspect(obj.cause), parts), ", ") + " }";
+          }
           if (parts.length === 0) {
             return "[" + String(obj) + "]";
           }
-          return "{ [" + String(obj) + "] " + parts.join(", ") + " }";
+          return "{ [" + String(obj) + "] " + $join.call(parts, ", ") + " }";
         }
         if (typeof obj === "object" && customInspect) {
           if (inspectSymbol && typeof obj[inspectSymbol] === "function") {
             return obj[inspectSymbol]();
-          } else if (typeof obj.inspect === "function") {
+          } else if (customInspect !== "symbol" && typeof obj.inspect === "function") {
             return obj.inspect();
           }
         }
@@ -2772,16 +2798,16 @@ module.exports = (() => {
           var ys = arrObjKeys(obj, inspect);
           var isPlainObject = gPO ? gPO(obj) === Object.prototype : obj instanceof Object || obj.constructor === Object;
           var protoTag = obj instanceof Object ? "" : "null prototype";
-          var stringTag = !isPlainObject && toStringTag && Object(obj) === obj && toStringTag in obj ? toStr(obj).slice(8, -1) : protoTag ? "Object" : "";
+          var stringTag = !isPlainObject && toStringTag && Object(obj) === obj && toStringTag in obj ? $slice.call(toStr(obj), 8, -1) : protoTag ? "Object" : "";
           var constructorTag = isPlainObject || typeof obj.constructor !== "function" ? "" : obj.constructor.name ? obj.constructor.name + " " : "";
-          var tag = constructorTag + (stringTag || protoTag ? "[" + [].concat(stringTag || [], protoTag || []).join(": ") + "] " : "");
+          var tag = constructorTag + (stringTag || protoTag ? "[" + $join.call($concat.call([], stringTag || [], protoTag || []), ": ") + "] " : "");
           if (ys.length === 0) {
             return tag + "{}";
           }
           if (indent) {
             return tag + "{" + indentedJoin(ys, indent) + "}";
           }
-          return tag + "{ " + ys.join(", ") + " }";
+          return tag + "{ " + $join.call(ys, ", ") + " }";
         }
         return String(obj);
       };
@@ -2790,7 +2816,7 @@ module.exports = (() => {
         return quoteChar + s + quoteChar;
       }
       function quote(s) {
-        return String(s).replace(/"/g, "&quot;");
+        return $replace.call(String(s), /"/g, "&quot;");
       }
       function isArray2(obj) {
         return toStr(obj) === "[object Array]" && (!toStringTag || !(typeof obj === "object" && toStringTag in obj));
@@ -2854,7 +2880,7 @@ module.exports = (() => {
         if (f.name) {
           return f.name;
         }
-        var m = match.call(functionToString.call(f), /^function\s*([\w$]+)/);
+        var m = $match.call(functionToString.call(f), /^function\s*([\w$]+)/);
         if (m) {
           return m[1];
         }
@@ -2959,9 +2985,9 @@ module.exports = (() => {
         if (str.length > opts.maxStringLength) {
           var remaining = str.length - opts.maxStringLength;
           var trailer = "... " + remaining + " more character" + (remaining > 1 ? "s" : "");
-          return inspectString(str.slice(0, opts.maxStringLength), opts) + trailer;
+          return inspectString($slice.call(str, 0, opts.maxStringLength), opts) + trailer;
         }
-        var s = str.replace(/(['\\])/g, "\\$1").replace(/[\x00-\x1f]/g, lowbyte);
+        var s = $replace.call($replace.call(str, /(['\\])/g, "\\$1"), /[\x00-\x1f]/g, lowbyte);
         return wrapQuotes(s, "single", opts);
       }
       function lowbyte(c) {
@@ -2976,7 +3002,7 @@ module.exports = (() => {
         if (x) {
           return "\\" + x;
         }
-        return "\\x" + (n < 16 ? "0" : "") + n.toString(16).toUpperCase();
+        return "\\x" + (n < 16 ? "0" : "") + $toUpperCase.call(n.toString(16));
       }
       function markBoxed(str) {
         return "Object(" + str + ")";
@@ -2985,7 +3011,7 @@ module.exports = (() => {
         return type + " { ? }";
       }
       function collectionOf(type, size, entries, indent) {
-        var joinedEntries = indent ? indentedJoin(entries, indent) : entries.join(", ");
+        var joinedEntries = indent ? indentedJoin(entries, indent) : $join.call(entries, ", ");
         return type + " (" + size + ") {" + joinedEntries + "}";
       }
       function singleLineValues(xs) {
@@ -3001,13 +3027,13 @@ module.exports = (() => {
         if (opts.indent === "	") {
           baseIndent = "	";
         } else if (typeof opts.indent === "number" && opts.indent > 0) {
-          baseIndent = Array(opts.indent + 1).join(" ");
+          baseIndent = $join.call(Array(opts.indent + 1), " ");
         } else {
           return null;
         }
         return {
           base: baseIndent,
-          prev: Array(depth + 1).join(baseIndent)
+          prev: $join.call(Array(depth + 1), baseIndent)
         };
       }
       function indentedJoin(xs, indent) {
@@ -3015,7 +3041,7 @@ module.exports = (() => {
           return "";
         }
         var lineJoiner = "\n" + indent.prev + indent.base;
-        return lineJoiner + xs.join("," + lineJoiner) + "\n" + indent.prev;
+        return lineJoiner + $join.call(xs, "," + lineJoiner) + "\n" + indent.prev;
       }
       function arrObjKeys(obj, inspect) {
         var isArr = isArray2(obj);
@@ -3043,7 +3069,7 @@ module.exports = (() => {
           }
           if (hasShammedSymbols && symMap["$" + key] instanceof Symbol) {
             continue;
-          } else if (/[^\w$]/.test(key)) {
+          } else if ($test.call(/[^\w$]/, key)) {
             xs.push(inspect(key, obj) + ": " + inspect(obj[key], obj));
           } else {
             xs.push(key + ": " + inspect(obj[key], obj));
