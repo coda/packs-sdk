@@ -98,6 +98,15 @@ Currently only URL patterns are fully supported, and the Pack must declare a cor
 Only Packs already installed in the document will have their matchers used. If multiple column formats both match the cell input then Coda will choose one arbitrarily. If the user doesn't want to use the column format they can manually change it afterwords.
 
 
+### On the canvas
+
+If your column format has matchers defined it can also affect how links are displayed on the canvas. When editing the display settings for a link, if it matches a column format there will be a new option to display it using the Pack.
+
+<img src="../../../images/column_format_canvas.png" srcset="../../../images/column_format_canvas_2x.png 2x" class="screenshot" alt="Selecting the account in the column format options">
+
+When selected, this will wrap the link in a call to the formula that backs the column format. For example, using the Todoist column format above, a Todoist URL would be wrapped in a `=GetTask()` formula.
+
+
 [samples]: ../../samples/topic/column-format.md
 [formulas]: formulas.md
 [parameters]: ../basics/parameters/index.md
