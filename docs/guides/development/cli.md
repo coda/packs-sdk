@@ -63,7 +63,7 @@ You can now access the CLI in any directory by typing the command `coda`.
 
 ### Create Pack definition
 
-Run `coda init` to initialize an empty project with the recommended file structure and install the suggested npm dependencies.
+Run `coda init` to initialize an empty project with the recommended settings and dependencies.
 
 
 ## Running code locally
@@ -248,6 +248,20 @@ npx coda release path/to/pack.ts --notes "Added the formula MyNewFormula."
 -->
 
 
+## Recommended file structure
+
+When using the CLI to build a Pack you can split your code into multiple files, which can be really useful for large or complex Packs. You can organize your code however you like, as long as there is a file that exports the Pack definition with the name `pack` (typically named `pack.ts`).
+
+Coda engineers have built dozens of Packs over the years, and have settled on a the recommended file structure below:
+
+* `helpers.ts` - A place to define helper functions used by your Pack.
+* `pack.ts` - The core Pack definition, where all of the formulas, sync tables, and other building blocks are added.
+* `schemas.ts` - A place to define the schemas (structured data types) used by your Pack.
+* `types.ts` - A place to define TypeScript types for the data used by your Pack.
+
+To see this pattern in action check out the [CLI example Packs][github_examples] on GitHub.
+
+
 ## When to use Pack Studio
 
 Although a lot of Pack management can be done through the CLI, there are still some tasks that require you to visit the Pack Studio web interface. These include:
@@ -267,7 +281,7 @@ To migrate, first make sure you have the [required software](#requirements) inst
 npx coda clone "https://coda.io/p/123456"
 ```
 
-This will initialize the directory with the recommended file structure, download your existing Pack code into `pack.ts`, and create a `.coda-pack.json` file that links them together.
+This will initialize the directory with the recommended settings and dependencies, download your existing Pack code into `pack.ts`, and create a `.coda-pack.json` file that links them together.
 
 !!! info "Link only"
     If you've already setup your local project and just need to link it to the existing Pack use the `coda link` command instead. It will create the `.coda-pack.json` file and nothing else.
@@ -287,3 +301,4 @@ The next time you run `coda upload` your Pack will be updated to use the local c
 [isolated_vm_requirements]: https://github.com/laverdet/isolated-vm#requirements
 [testing]: testing.md#local
 [versions_history]: versions.md#history
+[github_examples]: https://github.com/coda/packs-examples

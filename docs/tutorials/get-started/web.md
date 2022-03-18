@@ -73,6 +73,14 @@ Now that you have your Pack up and running let's make a change to how it works.
 --8<-- "tutorials/get-started/.rebuild.md"
 
 
+## Next steps
+
+You've built your fist Pack, congrats! 🎉 Now that you have some experience with the mechanics of building and using Packs, here are some recommended next steps:
+
+- Learn about Pack basics by reading through the [available guides][guides].
+- Check out the [code samples][samples] to see examples of specific Pack features as well as complete sample Packs.
+
+
 [coda_sign_up]: https://coda.io/signup
 [hc_doc_maker]: https://help.coda.io/en/articles/3388781-members-and-roles
 [coda_home]: https://coda.io/docs
@@ -80,3 +88,5 @@ Now that you have your Pack up and running let's make a change to how it works.
 [web_ide_build]: ../../images/web_ide_build.gif
 [samples_hello_world]: ../../samples/full/hello-world.md
 [rebuild]: ../../images/web_ide_rebuild.gif
+[samples]: ../../samples/topic/formula.md
+[guides]: ../../guides/blocks/formulas.md
