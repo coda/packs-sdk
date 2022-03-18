@@ -6,8 +6,7 @@ To learn more, see [our SDK documentation](https://coda.io/packs/build) or join 
 
 ## Publishing Changes Process
 
-Adjustments to the `CHANGELOG.md` file should be marked under `### Unreleased` until a release commit is made that updates `package.json` and `CHANGELOG.md` file with a new, later version, and publishes the new version to NPM using `make npm-publish`. 
+Adjustments to the `CHANGELOG.md` file should be marked under `### Unreleased` until a release commit is made that updates `package.json` and `CHANGELOG.md` file with a new, later version, and publishes the new version to NPM using `make release`. 
 
 ### CHANGELOG
-Our `CHANGELOG.md` file follows the 
-Our changelog follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) standards, where there is a “Unreleased” section at the top for any unreleased changes. Upon release, it is named according to a semantic versioning system and dated.
+Our `CHANGELOG.md` follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) standards, where there is a “Unreleased” section at the top for any unreleased changes. Upon release, it is named according to a semantic versioning system and dated.
