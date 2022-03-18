@@ -59,13 +59,11 @@ Lastly, one of the libraries used by the SDK requires that your machine has some
 
 Your directory should now contain the following files:
 
-* `helpers.ts` - A place to define helper functions used by your Pack.
-* `node_modules` - The dependencies downloaded from NPM (standard for Node.js projects).
-* `pack.ts` - The core Pack definition, where all of the formulas, sync tables, and other building blocks are added.
-* `package-lock.json` - The versions of the dependencies downloaded from NPM (standard for Node.js projects).
-* `package.json` - The project's dependencies from NPM (standard for Node.js projects).
-* `schemas.ts` - A place to define the schemas (structured data types) used by your Pack.
-* `types.ts` - A place to define TypeScript types for the data used by your Pack.
+- `node_modules` - The dependencies downloaded from NPM (standard for Node.js projects).
+- `pack.ts` - The core Pack definition, where all of the formulas, sync tables, and other building blocks are added.
+- `package-lock.json` - The versions of the dependencies downloaded from NPM (standard for Node.js projects).
+- `package.json` - The project's dependencies from NPM (standard for Node.js projects).
+- `tsconfig.json` - The TypeScript settings for the project (standard for TypeScript projects).
 
 
 ## Add code to the Pack
@@ -208,6 +206,16 @@ Now that you have your Pack up and running let's make a change to how it works.
 --8<-- "tutorials/get-started/.rebuild.md"
 
 
+## Next steps
+
+You've built your fist Pack, congrats! 🎉 Now that you have some experience with the mechanics of building and using Packs, here are some recommended next steps:
+
+- Learn about Pack basics by reading through the [available guides][guides].
+- Check out the [example Packs][github_examples] built using the CLI, as well as the other [code samples][samples].
+- Dive deeper into the command line tool by reading the [CLI guide][cli].
+
+
+
 [vs_code]: https://code.visualstudio.com/
 [github]: https://github.com
 [npm]: https://www.npmjs.com/
@@ -220,3 +228,7 @@ Now that you have your Pack up and running let's make a change to how it works.
 [gitignore]: https://git-scm.com/docs/gitignore
 [coda_home]: https://coda.io/docs
 [rebuild]: ../../images/cli_rebuild.gif
+[cli]: ../../guides/development/cli.md
+[github_examples]: https://github.com/coda/packs-examples
+[samples]: ../../samples/topic/formula.md
+[guides]: ../../guides/blocks/formulas.md
