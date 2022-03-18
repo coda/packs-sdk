@@ -237,6 +237,23 @@ validate-no-changes: clean compile docs
 		exit 1; \
 	fi
 
+.PHONY: release
+release:
+	# this set is taken from esbuild's process https://github.com/evanw/esbuild/blob/master/Makefile#L330
+	@npm --version > /dev/null || (echo "The 'npm' command must be in your path to publish" && false)
+	@echo "Checking for uncommitted/untracked changes..." && test -z "`git status --porcelain | grep -vE ''`" || \
+		(echo "Refusing to publish with these uncommitted/untracked changes:" && \
+		git status --porcelain | grep -vE '' && false)
+	# TODO(spencer): uncomment below when we move to auto release flow	
+	# @echo "Checking for main branch..." && test main = "`git rev-parse --abbrev-ref HEAD`" || \
+	# 	(echo "Refusing to publish from non-main branch `git rev-parse --abbrev-ref HEAD`" && false)
+	# @echo "Checking for unpushed commits..." && git fetch
+	# @test "" = "`git cherry`" || (echo "Refusing to publish with unpushed commits" && false)
+
+	# TODO(spencer): support specifying version and passing in here, takes in `minor`, `major`, or `patch`.
+	npx release-it --npm.tag=latest --ci 
+
+# TODO(spencer): after new releaes flow is in use, remove this
 .PHONY: npm-publish
 npm-publish:
 	npm publish --tag alpha --tag latest --access public
