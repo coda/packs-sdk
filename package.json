@@ -105,6 +105,7 @@
     "ansi-regex": "^5.0.1",
     "jsprim": "^2.0.2",
     "marked": "^4.0.10",
+    "minimist": "^1.2.6",
     "nanoid": "^3.1.31"
   },
   "remarkConfig": {
