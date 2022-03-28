@@ -12,19 +12,29 @@ export function coerceParams(formula: TypedPackFormula, args: ParamValues<ParamD
   const {parameters, varargParameters} = formula;
   const coerced: ParamValues<ParamDefs> = [];
   let varargIndex = 0;
-  for (let i = 0; i < args.length; i++) {
+
+  for (let i = 0; i < parameters.length; i++) {
+    const paramValue = args[i];
     const paramDef = parameters[i];
-    if (paramDef) {
-      coerced.push(coerceParamValue(paramDef, args[i]));
+    if (paramValue !== undefined) {
+      coerced.push(coerceParamValue(paramDef, paramValue));
     } else {
-      if (varargParameters) {
-        const varargDef = varargParameters[varargIndex];
-        coerced.push(coerceParamValue(varargDef, args[i]));
-        varargIndex = (varargIndex + 1) % varargParameters.length;
-      } else {
-        // More args given than are defined, just return them as-is, we'll validate later.
-        coerced.push(args[i]);
+      if (!paramDef.optional) {
+        throw new Error(`Missing required parameter ${paramDef.name}`);
       }
+
+      coerced.push(paramDef.defaultValue);
+    }
+  }
+
+  for (let i = parameters.length; i < args.length; i++) {
+    if (varargParameters) {
+      const varargDef = varargParameters[varargIndex];
+      coerced.push(coerceParamValue(varargDef, args[i]));
+      varargIndex = (varargIndex + 1) % varargParameters.length;
+    } else {
+      // More args given than are defined, just return them as-is, we'll validate later.
+      coerced.push(args[i]);
     }
   }
   return coerced;

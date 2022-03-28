@@ -75,6 +75,25 @@ pack.addFormula({
 });
 
 pack.addFormula({
+  name: 'formulaWithOptionalParameter',
+  description: 'A formula with optional parameter and default value',
+  parameters: [
+    coda.makeParameter({
+      type: coda.ParameterType.String,
+      name: 'name',
+      description: 'the name of the pereson',
+      optional: true,
+      defaultValue: 'Bob',
+    }),
+  ],
+  resultType: coda.ValueType.Object,
+  schema: fakePersonSchema,
+  execute: async ([name]) => {
+    return {name};
+  },
+});
+
+pack.addFormula({
   name: 'Throw',
   description: 'A Hello World example.',
   parameters: [
