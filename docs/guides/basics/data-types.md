@@ -39,28 +39,54 @@ For a formula the value type is specified in the `resultType` property, and for 
 [View all types][ValueType]{ .md-button }
 
 
-### Arrays
+### Strings
 
-Lists of data can be returned using the [`Array`][Array] value type. You must also specify the value type of the items in the array, using the `items` property.
+Text values can be returned as [JavaScript strings][mdn_string] using the [`String`][String] value type.
 
 ```ts
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.Array,
-  items: { type: coda.ValueType.String },
+  resultType: coda.ValueType.String,
   execute: async function ([], context) {
-    return ["This", "is", "a", "string", "array"];
+    return "Hello World!";
   },
-  // ...
 });
 ```
 
-The resulting array is represented as a [`List`][formula_list] in the Coda formula language.
+
+### Numbers
+
+Number values can be returned as [JavaScript numbers][mdn_number] using the [`Number`][Number] value type.
+
+```ts
+pack.addFormula({
+  // ...
+  resultType: coda.ValueType.Number,
+  execute: async function ([], context) {
+    return 42;
+  },
+});
+```
+
+
+### Booleans
+
+True or false values can be returned as [JavaScript booleans][mdn_boolean] using the [`Boolean`][Boolean] value type.
+
+```ts
+pack.addFormula({
+  // ...
+  resultType: coda.ValueType.Boolean,
+  execute: async function ([], context) {
+    return true;
+  },
+});
+```
 
 
 ### Objects
 
-Structured data can be returned using the [`Object`][Object] value type. These objects must conform to an existing schema, as specified in the `schema` property. See the [Schemas guide][schemas] for more information about defining and using schemas.
+Structured data can be returned as [JavaScript objects][mdn_object] using the [`Object`][Object] value type. These objects must conform to an defined schema, as specified in the `schema` property. See the [Schemas guide][schemas] for more information about defining and using schemas.
 
 ```ts
 const MySchema = coda.makeObjectSchema({
@@ -93,6 +119,48 @@ Objects are displayed in the doc as a "chip", a small rectangle with rounded cor
 Like Coda tables, the fields within an object can be accessed using dot notation.
 
 <img src="../../../images/data_types_object_dot.png" srcset="../../../images/data_types_object_dot_2x.png 2x" class="screenshot" alt="Using dot notation to access the properties of the object">
+
+
+### Arrays
+
+Lists of data can be returned as [JavaScript arrays][mdn_array] using the [`Array`][Array] value type. The resulting array is represented as a [`List`][formula_list] in the Coda formula language.
+
+You must also specify the [schema][schemas] of the items in the array, using the `items` property. For arrays of simple data you can define the schema inline, supplying only the `type` key.
+
+```ts
+pack.addFormula({
+  // ...
+  resultType: coda.ValueType.Array,
+  items: { type: coda.ValueType.String },
+  execute: async function ([], context) {
+    return ["This", "is", "a", "string", "array"];
+  },
+});
+```
+
+For arrays of objects, set `items` to the full object schema.
+
+```ts
+const MySchema = coda.makeObjectSchema({
+  properties: {
+    property1: { type: coda.ValueType.String },
+    property2: { type: coda.ValueType.Number },
+  },
+  // ...
+});
+
+pack.addFormula({
+  // ...
+  resultType: coda.ValueType.Array,
+  items: MySchema,
+  execute: async function ([], context) {
+    return [
+      { property1: "This is a string", property2: 42 },
+      { property1: "Another string", property2: 100 },
+    ];
+  },
+});
+```
 
 
 ## Value hints
@@ -417,7 +485,9 @@ The full set of formatting options for a given value type and hint can be found 
 [schemas]: ../advanced/schemas.md
 [schemas_references]: ../advanced/schemas.md#references
 [ValueType]: ../../reference/sdk/enums/ValueType.md
+[String]: ../../reference/sdk/enums/ValueType.md#String
 [Number]: ../../reference/sdk/enums/ValueType.md#Number
+[Boolean]: ../../reference/sdk/enums/ValueType.md#Boolean
 [Array]: ../../reference/sdk/enums/ValueType.md#Array
 [Object]: ../../reference/sdk/enums/ValueType.md#Object
 [ValueHintType]: ../../reference/sdk/enums/ValueHintType.md
@@ -463,3 +533,8 @@ The full set of formatting options for a given value type and hint can be found 
 [formula_list]: https://coda.io/formulas#List
 [embeds]: ../advanced/embeds.md
 [timezones]: ../advanced/timezones.md
+[mdn_string]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
+[mdn_number]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number
+[mdn_boolean]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[mdn_array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
+[mdn_object]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object

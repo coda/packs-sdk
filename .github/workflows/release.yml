@@ -1,0 +1,28 @@
+
+on: 
+  workflow_dispatch:
+    inputs:
+      increment:
+        description: 'Release version increment'     
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major 
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: git config
+        run: |
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+      - run: make release $INCREMENT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INCREMENT: ${{ github.event.inputs.increment }}

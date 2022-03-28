@@ -1,19 +1,22 @@
-### Unreleased
+# Changelog
+This changelog keeps track of all changes to the packs-sdk. We follow conventions from [keepachangelog](https://keepachangelog.com/en/1.0.0/).
+
+## [0.9.0] - 2022-03-17
 - **Breaking Change** ValueHintType.Url will now create a column of type "Link" instead of "Text".
 - Added ValueHintType.Email for new column type "Email".
 
-### 0.8.2
+## [0.8.2]
 
 - Added `coda whoami` command to see API token details.
 - Added `coda link` command to set up upload for an existing Pack ID instead of creating a new one.
 - Added `StringEmbedSchema` to handle configuration on how embed values appear in docs
 - Added "coda clone <packId>", similar to "coda init" but for packs that were already created in the Pack Studio.
 
-### 0.8.1
+## 0.8.1
 
 - Removed postinstall to avoid patching failure for npm 6 or older versions.
 
-### 0.8.0
+## 0.8.0
 
 - **Breaking Change** The connection requirement for metadata formulas now defaults to optional instead of required. If your pack is using sematic versions, this will likely lead to a major version bump in your next release.
 - **Breaking Change** Updated `coda upload` to use new parameters to tag the source of Pack version uploads as coming from the CLI.
@@ -22,7 +25,7 @@
 - OAuth2 authentication now supports a `scopeDelimiter` option for non-compliant APIs that use something other than a space to delimit OAuth scopes in authorization URLs.
 - Deprecated `hidden` field is now fully removed on formula parameter.
 
-### 0.7.3
+## 0.7.3
 
 - Fixed a typo that broke local fetcher testing with a pack using the `AuthenticationType.Custom` authentication.
 - Fixed a bug where `examples` using array parameters would fail upload validation.
