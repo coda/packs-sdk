@@ -86,7 +86,7 @@ pack.addFormula({
 
 ### Objects
 
-Structured data can be returned as [JavaScript objects][mdn_object] using the [`Object`][Object] value type. These objects must conform to an existing schema, as specified in the `schema` property. See the [Schemas guide][schemas] for more information about defining and using schemas.
+Structured data can be returned as [JavaScript objects][mdn_object] using the [`Object`][Object] value type. These objects must conform to an defined schema, as specified in the `schema` property. See the [Schemas guide][schemas] for more information about defining and using schemas.
 
 ```ts
 const MySchema = coda.makeObjectSchema({
