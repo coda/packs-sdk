@@ -48,7 +48,7 @@ These are the mapped names if you are using [nameMapping](RequestHandlerTemplate
 
 #### Defined in
 
-[handler_templates.ts:108](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L108)
+[handler_templates.ts:109](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L109)
 
 ___
 
@@ -61,7 +61,7 @@ will be merged into this object, and the resulting object will be stringified an
 
 #### Defined in
 
-[handler_templates.ts:98](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L98)
+[handler_templates.ts:99](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L99)
 
 ___
 
@@ -77,7 +77,7 @@ Any HTTP headers to include in the request.
 
 #### Defined in
 
-[handler_templates.ts:62](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L62)
+[handler_templates.ts:63](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L63)
 
 ___
 
@@ -92,7 +92,7 @@ assumed to be JSON.
 
 #### Defined in
 
-[handler_templates.ts:60](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L60)
+[handler_templates.ts:61](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L61)
 
 ___
 
@@ -115,7 +115,7 @@ than how you present them to users.
 
 #### Defined in
 
-[handler_templates.ts:73](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L73)
+[handler_templates.ts:74](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L74)
 
 ___
 
@@ -133,7 +133,7 @@ These are the mapped names if you are using [nameMapping](RequestHandlerTemplate
 
 #### Defined in
 
-[handler_templates.ts:93](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L93)
+[handler_templates.ts:94](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L94)
 
 ___
 
@@ -155,7 +155,7 @@ that should be used in the request.
 
 #### Defined in
 
-[handler_templates.ts:83](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L83)
+[handler_templates.ts:84](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L84)
 
 ___
 
@@ -170,4 +170,4 @@ formula parameters, e.g. "https://example.com/api/{name}".
 
 #### Defined in
 
-[handler_templates.ts:53](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L53)
+[handler_templates.ts:54](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L54)

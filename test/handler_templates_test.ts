@@ -118,10 +118,7 @@ describe('handler templates', () => {
           ],
           status: 200,
         }),
-        [
-          {someThing: 42, cool_thing: 123},
-          {someThing: 321},
-        ] as any,
+        [{someThing: 42, cool_thing: 123}, {someThing: 321}] as any,
       );
     });
 
@@ -139,6 +136,19 @@ describe('handler templates', () => {
         {someThing: 42, cool_thing: 123},
         handler({headers: {}, body: {some_thing: 42, cool_thing: 123}, status: 200}),
       );
+    });
+
+    it('remaps keys for object, with fromKey reused', () => {
+      const handler = generateObjectResponseHandler({
+        schema: {
+          type: ValueType.Object,
+          properties: {
+            someThing: {type: ValueType.Number, fromKey: 'some_thing'},
+            cool_thing: {type: ValueType.Number, fromKey: 'some_thing'},
+          },
+        },
+      });
+      assert.deepEqual({someThing: 42, cool_thing: 42}, handler({headers: {}, body: {some_thing: 42}, status: 200}));
     });
 
     it('removes extraneous keys', () => {

@@ -41,7 +41,7 @@ will return `response.body.items`.
 
 #### Defined in
 
-[handler_templates.ts:140](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L140)
+[handler_templates.ts:141](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L141)
 
 ___
 
@@ -53,7 +53,7 @@ The schema of the objects being returned.
 
 #### Defined in
 
-[handler_templates.ts:117](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L117)
+[handler_templates.ts:118](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L118)
 
 ## Methods
 
@@ -76,4 +76,4 @@ instead of letting them throw and the formula failing.
 
 #### Defined in
 
-[handler_templates.ts:145](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L145)
+[handler_templates.ts:146](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L146)

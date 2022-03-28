@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateObjectResponseHandler = exports.transformBody = exports.generateRequestHandler = void 0;
 const clone_1 = __importDefault(require("clone"));
+const object_utils_1 = require("./helpers/object_utils");
 const ensure_1 = require("./helpers/ensure");
 const schema_1 = require("./schema");
 const schema_2 = require("./schema");
@@ -124,7 +125,8 @@ function mapKeys(obj, schema) {
     const remappedKeys = new Map();
     for (const key in properties) {
         if (properties.hasOwnProperty(key) && properties[key].fromKey) {
-            remappedKeys.set((0, ensure_1.ensureExists)(properties[key].fromKey), key);
+            const fromKey = (0, ensure_1.ensureExists)(properties[key].fromKey);
+            remappedKeys.set(fromKey, [...(remappedKeys.get(fromKey) || []), key]);
         }
     }
     const remappedObject = {};
@@ -132,18 +134,20 @@ function mapKeys(obj, schema) {
         if (!obj.hasOwnProperty(key)) {
             continue;
         }
-        const newKey = remappedKeys.get(key) || key;
-        if (!schema.properties[newKey]) {
-            continue;
-        }
-        remappedObject[newKey] = obj[key];
-        const keySchema = schema.properties[newKey];
-        const currentValue = remappedObject[newKey];
-        if (Array.isArray(currentValue) && (0, schema_1.isArray)(keySchema) && (0, schema_2.isObject)(keySchema.items)) {
-            remappedObject[newKey] = currentValue.map(val => mapKeys(val, keySchema.items));
-        }
-        else if (typeof currentValue === 'object' && (0, schema_2.isObject)(keySchema)) {
-            remappedObject[newKey] = mapKeys(currentValue, keySchema);
+        const mappedKeys = remappedKeys.get(key) || [key];
+        for (const newKey of mappedKeys) {
+            if (!schema.properties[newKey]) {
+                continue;
+            }
+            remappedObject[newKey] = mappedKeys.length > 1 ? (0, object_utils_1.deepCopy)(obj[key]) : obj[key];
+            const keySchema = schema.properties[newKey];
+            const currentValue = remappedObject[newKey];
+            if (Array.isArray(currentValue) && (0, schema_1.isArray)(keySchema) && (0, schema_2.isObject)(keySchema.items)) {
+                remappedObject[newKey] = currentValue.map(val => mapKeys(val, keySchema.items));
+            }
+            else if (typeof currentValue === 'object' && (0, schema_2.isObject)(keySchema)) {
+                remappedObject[newKey] = mapKeys(currentValue, keySchema);
+            }
         }
     }
     return remappedObject;

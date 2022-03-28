@@ -8,6 +8,7 @@ import type {ParamDefs} from './api_types';
 import type {Schema} from './schema';
 import type {SchemaType} from './schema';
 import clone from 'clone';
+import {deepCopy} from './helpers/object_utils';
 import {ensureExists} from './helpers/ensure';
 import {isArray} from './schema';
 import {isObject} from './schema';
@@ -285,10 +286,11 @@ function mapKeys(obj: {[key: string]: any}, schema?: Schema): object {
   const {properties} = schema;
 
   // Look at the properties of the schema and invert any keys if present.
-  const remappedKeys: Map<string, string> = new Map();
+  const remappedKeys: Map<string, string[]> = new Map();
   for (const key in properties) {
     if (properties.hasOwnProperty(key) && (properties[key] as ObjectSchemaProperty).fromKey) {
-      remappedKeys.set(ensureExists((properties[key] as ObjectSchemaProperty).fromKey), key);
+      const fromKey = ensureExists((properties[key] as ObjectSchemaProperty).fromKey);
+      remappedKeys.set(fromKey, [...(remappedKeys.get(fromKey) || []), key]);
     }
   }
 
@@ -298,17 +300,19 @@ function mapKeys(obj: {[key: string]: any}, schema?: Schema): object {
       continue;
     }
 
-    const newKey = remappedKeys.get(key) || key;
-    if (!schema.properties[newKey]) {
-      continue;
-    }
-    remappedObject[newKey] = obj[key];
-    const keySchema = schema.properties[newKey];
-    const currentValue = remappedObject[newKey];
-    if (Array.isArray(currentValue) && isArray(keySchema) && isObject(keySchema.items)) {
-      remappedObject[newKey] = currentValue.map(val => mapKeys(val, keySchema.items));
-    } else if (typeof currentValue === 'object' && isObject(keySchema)) {
-      remappedObject[newKey] = mapKeys(currentValue, keySchema);
+    const mappedKeys = remappedKeys.get(key) || [key];
+    for (const newKey of mappedKeys) {
+      if (!schema.properties[newKey]) {
+        continue;
+      }
+      remappedObject[newKey] = mappedKeys.length > 1 ? deepCopy(obj[key]) : obj[key];
+      const keySchema = schema.properties[newKey];
+      const currentValue = remappedObject[newKey];
+      if (Array.isArray(currentValue) && isArray(keySchema) && isObject(keySchema.items)) {
+        remappedObject[newKey] = currentValue.map(val => mapKeys(val, keySchema.items));
+      } else if (typeof currentValue === 'object' && isObject(keySchema)) {
+        remappedObject[newKey] = mapKeys(currentValue, keySchema);
+      }
     }
   }
   return remappedObject;
