@@ -4300,6 +4300,9 @@ module.exports = (() => {
   init_buffer_shim();
   var import_clone = __toESM(require_clone());
 
+  // helpers/object_utils.ts
+  init_buffer_shim();
+
   // helpers/url.ts
   init_buffer_shim();
   var import_qs = __toESM(require_lib());
