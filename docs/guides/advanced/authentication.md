@@ -378,7 +378,7 @@ This function is run after the user has entered their credentials, and the crede
 
 ## Account-specific endpoints {: #endpoints}
 
-Some services host a unique subdomain for each account, and require that API requests be sent to that subdomain. For example, a user may access the service at `vandelay.example.com` and the API requests should be sent to `vandelay.example.com/api`. This is supported in Packs using account-specific endpoints.
+Some services host a unique domain or subdomain for each account, and require that API requests be sent there. For example, a user may access the service at `vandelay.example.com` and the API requests should be sent to `vandelay.example.com/api`. This is supported in Packs using account-specific endpoints.
 
 The endpoint URL is determined using one of the methods in the sections below. Once set it's available in your formulas and functions via `context.endpoint`.
 
@@ -410,7 +410,7 @@ pack.addFormula({
 
 ### Entering manually
 
-To require the user to enter the endpoint URL, set the `requiresEndpointUrl` field to `true`. For additional validation you can also set the `endpointDomain` field to the root domain that all subdomains share,
+To require the user to enter the endpoint URL, set the `requiresEndpointUrl` field to `true`. If you are expecting a subdomain, for additional validation set the `endpointDomain` field to the root domain that all subdomains share.
 
 ```ts
 pack.setUserAuthentication({
@@ -419,9 +419,6 @@ pack.setUserAuthentication({
   endpointDomain: "example.com",
 });
 ```
-
-!!! warning "Endpoint domain must match network domain"
-    The `endpointDomain` field is used to validate the endpoint URL entered by the user, but doesn't impact which domains your Pack can make requests to. This is controlled by the separate [network domain][network_domains], and in practice these two domains are often set to the same value.
 
 When the user connects to their account they will now also be asked to provide the endpoint URL for their account.
 
@@ -495,6 +492,12 @@ The step's `getOptionsFormula` works like [dynamic autocomplete][autocomplete_dy
 !!! warning "Connection name generated twice"
     When using this feature the [`getConnectionName` function](#setting-account-names) is run multiple times: once before the endpoint is selected and again after. Make sure your code works correctly in both cases. Before the endpoint is available you can return a generic name, which will get overwritten later.
 
+
+### Network domains
+
+Typically a Pack can only make HTTP requests to the [network domains][network_domains] it declares. If the selected endpoint URL is outside of the Pack's declared domains then requests to it will fail. The `endpointDomain` field in the authentication settings can be used to validate manually entered endpoints provided by users, helping to prevent mistakes.
+
+There are services however where each account is associated with a distinct domain, instead of a sub-domain of a common root domain. This makes it impossible to declare them ahead of time as network domains. In these cases you can omit network domain declaration from your Pack, which will allow it to make requests to the account's endpoint URL (and only that URL) regardless of domain.
 
 
 
