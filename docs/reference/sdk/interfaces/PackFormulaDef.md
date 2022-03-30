@@ -242,4 +242,4 @@ The JavaScript function that implements this formula
 
 #### Defined in
 
-[api.ts:429](https://github.com/coda/packs-sdk/blob/main/api.ts#L429)
+[api.ts:460](https://github.com/coda/packs-sdk/blob/main/api.ts#L460)

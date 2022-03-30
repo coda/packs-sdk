@@ -5,7 +5,7 @@ const compile_1 = require("../testing/compile");
 const execution_1 = require("../testing/execution");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
-async function handleExecute({ manifestPath, formulaName, params, fetch, vm, dynamicUrl, timerStrategy, }) {
+async function handleExecute({ manifestPath, formulaName, params, fetch, vm, dynamicUrl, timerStrategy, getSchema, }) {
     const fullManifestPath = (0, helpers_2.makeManifestFullPath)(manifestPath);
     const { bundlePath, bundleSourceMapPath } = await (0, compile_1.compilePackBundle)({
         manifestPath: fullManifestPath,
@@ -22,6 +22,7 @@ async function handleExecute({ manifestPath, formulaName, params, fetch, vm, dyn
         dynamicUrl,
         bundleSourceMapPath,
         bundlePath,
+        getSchema,
         contextOptions: { useRealFetcher: fetch },
     });
 }

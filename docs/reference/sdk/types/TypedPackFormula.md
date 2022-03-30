@@ -13,4 +13,4 @@ contents of a pack for for Coda internal use.
 
 #### Defined in
 
-[api.ts:545](https://github.com/coda/packs-sdk/blob/main/api.ts#L545)
+[api.ts:576](https://github.com/coda/packs-sdk/blob/main/api.ts#L576)

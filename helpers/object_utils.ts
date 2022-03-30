@@ -32,3 +32,10 @@ export function isNil<T>(obj: T | null | undefined): obj is null | undefined {
 export function deepCopy<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj));
 }
+
+export function isPromise<T>(obj: any): obj is Promise<T> {
+  // This method should generally be avoided but can be used for high throughput / performance
+  // sensitive cases where avoiding wrapping of a value inside a Promise and conditionally handling
+  // both cases (non-Promise and Promise) leads to performance gains.  I.e. limit this to formula engine
+  return obj && typeof obj === 'object' && 'then' in obj;
+}

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.maybeRewriteConnectionForFormula = exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.wrapMetadataFunction = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.StatusCodeError = exports.UserVisibleError = void 0;
+exports.maybeRewriteConnectionForFormula = exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.wrapGetSchema = exports.wrapMetadataFunction = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.StatusCodeError = exports.UserVisibleError = void 0;
 const api_types_1 = require("./api_types");
 const api_types_2 = require("./api_types");
 const api_types_3 = require("./api_types");
@@ -13,6 +13,7 @@ const handler_templates_1 = require("./handler_templates");
 const handler_templates_2 = require("./handler_templates");
 const api_types_6 = require("./api_types");
 const api_types_7 = require("./api_types");
+const object_utils_1 = require("./helpers/object_utils");
 const schema_2 = require("./schema");
 const schema_3 = require("./schema");
 const api_types_8 = require("./api_types");
@@ -95,6 +96,32 @@ function wrapMetadataFunction(fnOrFormula) {
     return typeof fnOrFormula === 'function' ? makeMetadataFormula(fnOrFormula) : fnOrFormula;
 }
 exports.wrapMetadataFunction = wrapMetadataFunction;
+function transformSchema(schema) {
+    if ((schema === null || schema === void 0 ? void 0 : schema.type) === schema_1.ValueType.Array) {
+        return schema;
+    }
+    else {
+        return {
+            type: schema_1.ValueType.Array,
+            items: schema,
+        };
+    }
+}
+function wrapGetSchema(getSchema) {
+    return (getSchema && {
+        ...getSchema,
+        execute(params, context) {
+            const schema = getSchema.execute(params, context);
+            if ((0, object_utils_1.isPromise)(schema)) {
+                return schema.then(value => transformSchema(value));
+            }
+            else {
+                return transformSchema(schema);
+            }
+        },
+    });
+}
+exports.wrapGetSchema = wrapGetSchema;
 /**
  * Create a definition for a parameter for a formula or sync.
  *
@@ -571,7 +598,7 @@ function makeSyncTable({ name, description, identityName, schema: schemaDef, for
     else if (identityName) {
         schemaDef.identity = { name: identityName };
     }
-    const getSchema = wrapMetadataFunction(getSchemaDef);
+    const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
     const schema = (0, schema_2.makeObjectSchema)(schemaDef);
     const formulaSchema = getSchema
         ? undefined
@@ -646,7 +673,7 @@ function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchem
         },
     });
     const getName = wrapMetadataFunction(getNameDef);
-    const getSchema = wrapMetadataFunction(getSchemaDef);
+    const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
     const getDisplayUrl = wrapMetadataFunction(getDisplayUrlDef);
     const listDynamicUrls = wrapMetadataFunction(listDynamicUrlsDef);
     const table = makeSyncTable({

@@ -8,3 +8,4 @@ export declare function isDefined<T>(obj: T | null | undefined): obj is T;
  */
 export declare function isNil<T>(obj: T | null | undefined): obj is null | undefined;
 export declare function deepCopy<T>(obj: T): T;
+export declare function isPromise<T>(obj: any): obj is Promise<T>;

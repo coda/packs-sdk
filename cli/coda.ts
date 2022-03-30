@@ -37,6 +37,11 @@ if (require.main === module) {
           desc: 'Execute the requested command in a virtual machine that mimics the environment Coda uses to execute Packs.',
           default: true,
         },
+        getSchema: {
+          boolean: true,
+          desc: 'Execute getSchema of a sync table instead of calling the execute method.',
+          default: false,
+        },
         dynamicUrl: {
           string: true,
           desc: 'For a dynamic sync table with a variable source location, specify the URL to test here.',
