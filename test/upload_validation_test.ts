@@ -358,6 +358,7 @@ describe('Pack metadata Validation', () => {
       });
       const metadata = createFakePackVersionMetadata({
         formulas: [formulaToMetadata(formula)],
+        formulaNamespace: 'MyNamespace',
         defaultAuthentication: {
           type: AuthenticationType.None,
         },
@@ -365,7 +366,7 @@ describe('Pack metadata Validation', () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: 'Formula should not set connectionRequirement for no-auth Packs.',
+          message: 'Formulas cannot set a connectionRequirement when the Pack does not use user authentication.',
           path: 'formulas[0]',
         },
       ]);
@@ -404,7 +405,8 @@ describe('Pack metadata Validation', () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: 'Sync table formula should not set connectionRequirement for no-auth Packs.',
+          message:
+            'Sync table formulas cannot set a connectionRequirement when the Pack does not use user authentication.',
           path: 'syncTables[0].getter.connectionRequirement',
         },
       ]);

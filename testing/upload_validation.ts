@@ -990,7 +990,7 @@ function validateFormulas(schema: z.ZodObject<any>) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
             path: ['formulas', i],
-            message: 'Formula should not set connectionRequirement for no-auth Packs.',
+            message: 'Formulas cannot set a connectionRequirement when the Pack does not use user authentication.',
           });
         }
       });
@@ -1001,7 +1001,8 @@ function validateFormulas(schema: z.ZodObject<any>) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
             path: ['syncTables', i, 'getter', 'connectionRequirement'],
-            message: 'Sync table formula should not set connectionRequirement for no-auth Packs.',
+            message:
+              'Sync table formulas cannot set a connectionRequirement when the Pack does not use user authentication.',
           });
         }
       });
