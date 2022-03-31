@@ -347,6 +347,69 @@ describe('Pack metadata Validation', () => {
       }
     });
 
+    it('reject formulas with connectionRequirement for no-auth packs', async () => {
+      const formula = makeStringFormula({
+        name: 'MyFormula',
+        description: 'My description',
+        examples: [],
+        parameters: [makeStringParameter('myParam', 'param description')],
+        connectionRequirement: ConnectionRequirement.Required,
+        execute: () => '',
+      });
+      const metadata = createFakePackVersionMetadata({
+        formulas: [formulaToMetadata(formula)],
+        defaultAuthentication: {
+          type: AuthenticationType.None,
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'Formula should not set connectionRequirement for no-auth Packs.',
+          path: 'formulas[0]',
+        },
+      ]);
+    });
+
+    it('reject sync table formulas with connectionRequirement for no-auth packs', async () => {
+      const syncTable = makeSyncTable({
+        name: 'SyncTable',
+        identityName: 'Sync',
+        schema: makeObjectSchema({
+          type: ValueType.Object,
+          primary: 'foo',
+          id: 'foo',
+          identity: {packId: 424242, name: 'foo'},
+          properties: {
+            Foo: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'SyncTable',
+          description: 'A simple sync table',
+          connectionRequirement: ConnectionRequirement.Required,
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+      });
+      const metadata = createFakePackVersionMetadata({
+        syncTables: [syncTable],
+        defaultAuthentication: {
+          type: AuthenticationType.None,
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'Sync table formula should not set connectionRequirement for no-auth Packs.',
+          path: 'syncTables[0].getter.connectionRequirement',
+        },
+      ]);
+    });
+
     // Evidently we allow this.
     it('valid object formula with no schema', async () => {
       const formula = makeObjectFormula({
