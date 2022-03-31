@@ -808,6 +808,31 @@ function validateFormulas(schema) {
         path: ['networkDomains'],
     })
         .superRefine((data, context) => {
+        if (data.defaultAuthentication && data.defaultAuthentication.type !== types_1.AuthenticationType.None) {
+            return;
+        }
+        // if the pack has no default authentication, make sure all formulas don't set connection requirements.
+        (data.formulas || []).forEach((formula, i) => {
+            if (formula.connectionRequirement && formula.connectionRequirement !== api_types_1.ConnectionRequirement.None) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['formulas', i],
+                    message: 'Formulas cannot set a connectionRequirement when the Pack does not use user authentication.',
+                });
+            }
+        });
+        (data.syncTables || []).forEach((syncTable, i) => {
+            const connectionRequirement = syncTable.getter.connectionRequirement;
+            if (connectionRequirement && connectionRequirement !== api_types_1.ConnectionRequirement.None) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['syncTables', i, 'getter', 'connectionRequirement'],
+                    message: 'Sync table formulas cannot set a connectionRequirement when the Pack does not use user authentication.',
+                });
+            }
+        });
+    })
+        .superRefine((data, context) => {
         const formulas = (data.formulas || []);
         (data.formats || []).forEach((format, i) => {
             var _a;

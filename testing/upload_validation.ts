@@ -980,6 +980,34 @@ function validateFormulas(schema: z.ZodObject<any>) {
       },
     )
     .superRefine((data, context) => {
+      if (data.defaultAuthentication && data.defaultAuthentication.type !== AuthenticationType.None) {
+        return;
+      }
+
+      // if the pack has no default authentication, make sure all formulas don't set connection requirements.
+      ((data.formulas || []) as PackFormulaMetadata[]).forEach((formula, i) => {
+        if (formula.connectionRequirement && formula.connectionRequirement !== ConnectionRequirement.None) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['formulas', i],
+            message: 'Formulas cannot set a connectionRequirement when the Pack does not use user authentication.',
+          });
+        }
+      });
+
+      ((data.syncTables as any[]) || []).forEach((syncTable, i) => {
+        const connectionRequirement = syncTable.getter.connectionRequirement;
+        if (connectionRequirement && connectionRequirement !== ConnectionRequirement.None) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['syncTables', i, 'getter', 'connectionRequirement'],
+            message:
+              'Sync table formulas cannot set a connectionRequirement when the Pack does not use user authentication.',
+          });
+        }
+      });
+    })
+    .superRefine((data, context) => {
       const formulas = (data.formulas || []) as PackFormulaMetadata[];
       ((data.formats as any[]) || []).forEach((format, i) => {
         const formula = formulas.find(f => f.name === format.formulaName);
