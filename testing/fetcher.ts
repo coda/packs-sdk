@@ -84,6 +84,7 @@ export class AuthenticatingFetcher implements Fetcher {
     try {
       return await this._fetch(request, false);
     } catch (err: any) {
+      // allow error to be passed through isolated-vm boundary.
       throw wrapError(err);
     }
   }

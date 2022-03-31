@@ -47,6 +47,7 @@ class AuthenticatingFetcher {
             return await this._fetch(request, false);
         }
         catch (err) {
+            // allow error to be passed through isolated-vm boundary.
             throw (0, marshaling_1.wrapError)(err);
         }
     }
