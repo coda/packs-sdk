@@ -3,20 +3,13 @@ title: "MetadataFunction"
 ---
 # Type alias: MetadataFunction
 
-Ƭ **MetadataFunction**: <K, L\>(`context`: [`ExecutionContext`](../interfaces/ExecutionContext.md), `search`: `string`, `formulaContext?`: [`MetadataContext`](MetadataContext.md)) => `Promise`<[`MetadataFormulaResultType`](MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/ArraySchema.md) \| `ObjectSchema`<`K`, `L`\>\>
+Ƭ **MetadataFunction**: (`context`: [`ExecutionContext`](../interfaces/ExecutionContext.md), `search`: `string`, `formulaContext?`: [`MetadataContext`](MetadataContext.md)) => `Promise`<[`MetadataFormulaResultType`](MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/ArraySchema.md) \| `ObjectSchema`<`any`, `any`\>\>
 
 #### Type declaration
 
-▸ <`K`, `L`\>(`context`, `search`, `formulaContext?`): `Promise`<[`MetadataFormulaResultType`](MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/ArraySchema.md) \| `ObjectSchema`<`K`, `L`\>\>
+▸ (`context`, `search`, `formulaContext?`): `Promise`<[`MetadataFormulaResultType`](MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/ArraySchema.md) \| `ObjectSchema`<`any`, `any`\>\>
 
 A JavaScript function that can implement a [MetadataFormulaDef](MetadataFormulaDef.md).
-
-##### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `K` | extends `string` |
-| `L` | extends `string` |
 
 ##### Parameters
 
@@ -28,8 +21,8 @@ A JavaScript function that can implement a [MetadataFormulaDef](MetadataFormulaD
 
 ##### Returns
 
-`Promise`<[`MetadataFormulaResultType`](MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/ArraySchema.md) \| `ObjectSchema`<`K`, `L`\>\>
+`Promise`<[`MetadataFormulaResultType`](MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/ArraySchema.md) \| `ObjectSchema`<`any`, `any`\>\>
 
 #### Defined in
 
-[api.ts:973](https://github.com/coda/packs-sdk/blob/main/api.ts#L973)
+[api.ts:1006](https://github.com/coda/packs-sdk/blob/main/api.ts#L1006)

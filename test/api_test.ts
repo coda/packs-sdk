@@ -74,6 +74,41 @@ describe('API test', () => {
       });
       assert.equal(ConnectionRequirement.Optional, table.getter.connectionRequirement);
     });
+
+    describe('getSchema', () => {
+      const makeTable = (s: schema.ArraySchema | schema.ObjectSchema<any, any>) =>
+        makeDynamicSyncTable({
+          name: 'Whatever',
+          connectionRequirement: ConnectionRequirement.Optional,
+          getName: makeMetadataFormula(async () => 'sup'),
+          getSchema: async () => s,
+          getDisplayUrl: makeMetadataFormula(async () => 'sup'),
+          listDynamicUrls: makeMetadataFormula(async () => []),
+          formula: {
+            name: 'Whatever',
+            description: 'Whatever',
+            parameters: [makeStringParameter('arg', 'whatever', {autocomplete: makeMetadataFormula(async () => 'Hi')})],
+            varargParameters: [
+              makeStringParameter('whatever', 'arg', {autocomplete: makeMetadataFormula(async () => 'Hi')}),
+            ],
+            async execute() {
+              return {result: []};
+            },
+          },
+        });
+
+      it('wraps', async () => {
+        const table = makeTable({type: ValueType.Object, properties: {}});
+        const schema = await table.getSchema.execute([] as any, {} as any);
+        assert.deepEqual(schema, {type: 'array', items: {type: 'object', properties: {}}});
+      });
+
+      it('no wraps for array schema', async () => {
+        const table = makeTable({type: ValueType.Array, items: {type: ValueType.Object, properties: {}}});
+        const schema = await table.getSchema.execute([] as any, {} as any);
+        assert.deepEqual(schema, {type: 'array', items: {type: 'object', properties: {}}});
+      });
+    });
   });
 
   describe('makeFormula', () => {

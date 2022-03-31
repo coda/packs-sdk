@@ -12,4 +12,4 @@ values are provided in this context object.
 
 #### Defined in
 
-[api.ts:929](https://github.com/coda/packs-sdk/blob/main/api.ts#L929)
+[api.ts:962](https://github.com/coda/packs-sdk/blob/main/api.ts#L962)

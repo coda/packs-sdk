@@ -32,3 +32,10 @@ export function isNil<T>(obj: T | null | undefined): obj is null | undefined {
 export function deepCopy<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj));
 }
+
+/**
+ * Returns whethere the value is a Promise.
+ */
+export function isPromise<T>(obj: any): obj is Promise<T> {
+  return obj && typeof obj === 'object' && 'then' in obj;
+}
