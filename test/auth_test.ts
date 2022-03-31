@@ -19,6 +19,7 @@ import {requestHelper} from '../testing/fetcher';
 import {setupAuth} from '../testing/auth';
 import sinon from 'sinon';
 import {storeCredential} from '../testing/auth';
+import {unwrapError} from '../runtime/common/marshaling';
 
 const MANIFEST_PATH = '.';
 
@@ -391,10 +392,14 @@ describe('Auth', () => {
           'content-type': Buffer.isBuffer(responseBody) ? 'application/octet-stream' : 'application/json',
         },
       });
-      return executeFormulaFromPackDef(packDef, formulaName, [url], undefined, undefined, {
-        useRealFetcher: true,
-        manifestPath: MANIFEST_PATH,
-      });
+      try {
+        return await executeFormulaFromPackDef(packDef, formulaName, [url], undefined, undefined, {
+          useRealFetcher: true,
+          manifestPath: MANIFEST_PATH,
+        });
+      } catch (err: any) {
+        throw unwrapError(err);
+      }
     }
 
     it(`no authentication`, async () => {
