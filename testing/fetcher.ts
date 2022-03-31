@@ -32,6 +32,7 @@ import {print} from './helpers';
 import requestPromise from 'request-promise-native';
 import urlParse from 'url-parse';
 import {v4} from 'uuid';
+import {wrapError} from '../runtime/common/marshaling';
 import xml2js from 'xml2js';
 
 const FetcherUserAgent = 'Coda-Test-Server-Fetcher';
@@ -79,7 +80,15 @@ export class AuthenticatingFetcher implements Fetcher {
     this._invocationToken = invocationToken;
   }
 
-  async fetch<T = any>(request: FetchRequest, isRetry?: boolean): Promise<FetchResponse<T>> {
+  async fetch<T = any>(request: FetchRequest): Promise<FetchResponse<T>> {
+    try {
+      return await this._fetch(request, false);
+    } catch (err: any) {
+      throw wrapError(err);
+    }
+  }
+
+  private async _fetch<T = any>(request: FetchRequest, isRetry?: boolean): Promise<FetchResponse<T>> {
     const {url, headers, body, form} = await this._applyAuthentication(request);
     this._validateHost(url);
 
@@ -120,7 +129,7 @@ export class AuthenticatingFetcher implements Fetcher {
       // We have successfully refreshed OAuth credentials, now retry query.
       // If this retry fails, it's good that we will throw this new error
       // instead of the original error.
-      return this.fetch(request, true);
+      return this._fetch(request, true);
     }
 
     let responseBody = response.body;

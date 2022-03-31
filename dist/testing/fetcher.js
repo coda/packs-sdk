@@ -20,6 +20,7 @@ const helpers_2 = require("./helpers");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
 const url_parse_1 = __importDefault(require("url-parse"));
 const uuid_1 = require("uuid");
+const marshaling_1 = require("../runtime/common/marshaling");
 const xml2js_1 = __importDefault(require("xml2js"));
 const FetcherUserAgent = 'Coda-Test-Server-Fetcher';
 const MaxContentLengthBytes = 25 * 1024 * 1024;
@@ -41,7 +42,15 @@ class AuthenticatingFetcher {
         this._credentials = credentials;
         this._invocationToken = invocationToken;
     }
-    async fetch(request, isRetry) {
+    async fetch(request) {
+        try {
+            return await this._fetch(request, false);
+        }
+        catch (err) {
+            throw (0, marshaling_1.wrapError)(err);
+        }
+    }
+    async _fetch(request, isRetry) {
         var _a;
         const { url, headers, body, form } = await this._applyAuthentication(request);
         this._validateHost(url);
@@ -83,7 +92,7 @@ class AuthenticatingFetcher {
             // We have successfully refreshed OAuth credentials, now retry query.
             // If this retry fails, it's good that we will throw this new error
             // instead of the original error.
-            return this.fetch(request, true);
+            return this._fetch(request, true);
         }
         let responseBody = response.body;
         if (responseBody && responseBody.length >= MaxContentLengthBytes) {

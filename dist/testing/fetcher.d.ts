@@ -13,7 +13,8 @@ export declare class AuthenticatingFetcher implements Fetcher {
     private _credentials;
     private readonly _invocationToken;
     constructor(updateCredentialsCallback: (newCredentials: Credentials) => void | undefined, authDef: Authentication | undefined, networkDomains: string[] | undefined, credentials: Credentials | undefined, invocationToken: string);
-    fetch<T = any>(request: FetchRequest, isRetry?: boolean): Promise<FetchResponse<T>>;
+    fetch<T = any>(request: FetchRequest): Promise<FetchResponse<T>>;
+    private _fetch;
     private _isOAuth401;
     private _refreshOAuthCredentials;
     private _applyAuthentication;

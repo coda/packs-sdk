@@ -3,6 +3,7 @@ import * as coda from '../..';
 export const pack = coda.newPack();
 
 pack.addNetworkDomain('googleapis.com');
+pack.addNetworkDomain('httpbin.org');
 
 pack.setUserAuthentication({
   type: coda.AuthenticationType.OAuth2,
@@ -136,5 +137,23 @@ pack.addDynamicSyncTable({
     execute: async () => {
       return {result: []};
     },
+  },
+});
+
+pack.addFormula({
+  name: 'StatusCodeError',
+  description: '',
+  parameters: [],
+  resultType: coda.ValueType.String,
+  execute: async ([], context) => {
+    try {
+      await context.fetcher.fetch({
+        method: 'GET',
+        url: 'http://httpbin.org/status/404',
+      });
+      throw new coda.UserVisibleError("Didn't 404.");
+    } catch (error: any) {
+      return `Name: ${error.name}, Status Code: ${error.statusCode}`;
+    }
   },
 });
