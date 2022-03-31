@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deepCopy = exports.isNil = exports.isDefined = exports.deepFreeze = void 0;
+exports.isPromise = exports.deepCopy = exports.isNil = exports.isDefined = exports.deepFreeze = void 0;
 function deepFreeze(obj) {
     Object.freeze(obj);
     for (const k of Object.keys(obj)) {
@@ -32,3 +32,10 @@ function deepCopy(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
 exports.deepCopy = deepCopy;
+/**
+ * Returns whethere the value is a Promise.
+ */
+function isPromise(obj) {
+    return obj && typeof obj === 'object' && 'then' in obj;
+}
+exports.isPromise = isPromise;
