@@ -25,7 +25,7 @@ this sync table (including autocomplete formulas).
 
 #### Defined in
 
-[api.ts:1372](https://github.com/coda/packs-sdk/blob/main/api.ts#L1372)
+[api.ts:1374](https://github.com/coda/packs-sdk/blob/main/api.ts#L1374)
 
 ___
 
@@ -39,7 +39,7 @@ This should describe what the dynamic sync table does in a more detailed languag
 
 #### Defined in
 
-[api.ts:1334](https://github.com/coda/packs-sdk/blob/main/api.ts#L1334)
+[api.ts:1336](https://github.com/coda/packs-sdk/blob/main/api.ts#L1336)
 
 ___
 
@@ -53,7 +53,7 @@ of `identity.name` from your schema will be used instead, so in most cases you d
 
 #### Defined in
 
-[api.ts:1367](https://github.com/coda/packs-sdk/blob/main/api.ts#L1367)
+[api.ts:1369](https://github.com/coda/packs-sdk/blob/main/api.ts#L1369)
 
 ___
 
@@ -68,7 +68,7 @@ These will eventually be consolidated.)
 
 #### Defined in
 
-[api.ts:1361](https://github.com/coda/packs-sdk/blob/main/api.ts#L1361)
+[api.ts:1363](https://github.com/coda/packs-sdk/blob/main/api.ts#L1363)
 
 ___
 
@@ -83,7 +83,7 @@ of the table data. This is typically a browser-friendly form of the
 
 #### Defined in
 
-[api.ts:1349](https://github.com/coda/packs-sdk/blob/main/api.ts#L1349)
+[api.ts:1351](https://github.com/coda/packs-sdk/blob/main/api.ts#L1351)
 
 ___
 
@@ -95,7 +95,7 @@ A formula that returns the name of this table.
 
 #### Defined in
 
-[api.ts:1338](https://github.com/coda/packs-sdk/blob/main/api.ts#L1338)
+[api.ts:1340](https://github.com/coda/packs-sdk/blob/main/api.ts#L1340)
 
 ___
 
@@ -107,7 +107,7 @@ A formula that returns the schema for this table.
 
 #### Defined in
 
-[api.ts:1342](https://github.com/coda/packs-sdk/blob/main/api.ts#L1342)
+[api.ts:1344](https://github.com/coda/packs-sdk/blob/main/api.ts#L1344)
 
 ___
 
@@ -120,7 +120,7 @@ used to create an instance of this dynamic sync table.
 
 #### Defined in
 
-[api.ts:1354](https://github.com/coda/packs-sdk/blob/main/api.ts#L1354)
+[api.ts:1356](https://github.com/coda/packs-sdk/blob/main/api.ts#L1356)
 
 ___
 
@@ -136,4 +136,4 @@ is returned by the `getName` formula.
 
 #### Defined in
 
-[api.ts:1328](https://github.com/coda/packs-sdk/blob/main/api.ts#L1328)
+[api.ts:1330](https://github.com/coda/packs-sdk/blob/main/api.ts#L1330)

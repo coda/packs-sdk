@@ -27,4 +27,4 @@ any needed to wrap a value with this formula.
 
 #### Defined in
 
-[api.ts:1173](https://github.com/coda/packs-sdk/blob/main/api.ts#L1173)
+[api.ts:1175](https://github.com/coda/packs-sdk/blob/main/api.ts#L1175)

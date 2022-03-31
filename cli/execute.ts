@@ -11,7 +11,6 @@ export interface ExecuteArgs {
   params: string[];
   fetch?: boolean;
   vm?: boolean;
-  getSchema?: boolean;
   dynamicUrl?: string;
   timerStrategy: TimerShimStrategy;
 }
@@ -24,7 +23,6 @@ export async function handleExecute({
   vm,
   dynamicUrl,
   timerStrategy,
-  getSchema,
 }: ArgumentsCamelCase<ExecuteArgs>) {
   const fullManifestPath = makeManifestFullPath(manifestPath);
   const {bundlePath, bundleSourceMapPath} = await compilePackBundle({
@@ -42,7 +40,6 @@ export async function handleExecute({
     dynamicUrl,
     bundleSourceMapPath,
     bundlePath,
-    getSchema,
     contextOptions: {useRealFetcher: fetch},
   });
 }

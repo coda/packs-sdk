@@ -6,14 +6,12 @@ import {FormulaType} from '../runtime/types';
 import type {GenericSyncFormulaResult} from '../api';
 import type {MetadataContext} from '../api';
 import type {MetadataFormula} from '../api';
-import {MetadataFormulaType} from '../runtime/types';
 import type {PackFormulaResult} from '../api_types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
 import type {StandardFormulaSpecification} from '../runtime/types';
 import type {SyncExecutionContext} from '../api_types';
 import type {SyncFormulaSpecification} from '../runtime/types';
-import type {SyncMetadataFormulaSpecification} from '../runtime/types';
 import type {TypedPackFormula} from '../api';
 import {coerceParams} from './coercion';
 import {executeThunk} from '../runtime/bootstrap';
@@ -129,7 +127,6 @@ export async function executeFormulaOrSyncFromCLI({
   manifest,
   manifestPath,
   vm,
-  getSchema,
   dynamicUrl,
   bundleSourceMapPath,
   bundlePath,
@@ -140,7 +137,6 @@ export async function executeFormulaOrSyncFromCLI({
   manifest: BasicPackDefinition;
   manifestPath: string;
   vm?: boolean;
-  getSchema?: boolean;
   dynamicUrl?: string;
   bundleSourceMapPath: string;
   bundlePath: string;
@@ -167,26 +163,10 @@ export async function executeFormulaOrSyncFromCLI({
     if (!(syncFormula || formula)) {
       throw new Error(`Could not find a formula or sync named "${formulaName}".`);
     }
-
-    let formulaSpecification:
-      | SyncFormulaSpecification
-      | StandardFormulaSpecification
-      | SyncMetadataFormulaSpecification;
-    if (getSchema) {
-      if (!syncFormula) {
-        throw new Error(`--getSchema option only works with sync tables.`);
-      }
-      formulaSpecification = {
-        type: FormulaType.Metadata,
-        metadataFormulaType: MetadataFormulaType.SyncGetSchema,
-        syncTableName: formulaName,
-      };
-    } else {
-      formulaSpecification = {
-        type: syncFormula ? FormulaType.Sync : FormulaType.Standard,
-        formulaName,
-      };
-    }
+    const formulaSpecification: SyncFormulaSpecification | StandardFormulaSpecification = {
+      type: syncFormula ? FormulaType.Sync : FormulaType.Standard,
+      formulaName,
+    };
 
     if (formulaSpecification.type === FormulaType.Sync) {
       const result = [];
@@ -271,7 +251,7 @@ export class VMError {
 }
 
 async function executeFormulaOrSyncWithRawParamsInVM<
-  T extends SyncFormulaSpecification | StandardFormulaSpecification | SyncMetadataFormulaSpecification,
+  T extends SyncFormulaSpecification | StandardFormulaSpecification,
 >({
   formulaSpecification,
   params: rawParams,
@@ -289,24 +269,19 @@ async function executeFormulaOrSyncWithRawParamsInVM<
 
   const manifest = await importManifest(bundlePath);
   let params: ParamValues<ParamDefs>;
-  switch (formulaSpecification.type) {
-    case FormulaType.Standard: {
-      const formula = findFormula(manifest, formulaSpecification.formulaName);
-      params = coerceParams(formula, rawParams as any);
-    }
-    case FormulaType.Sync: {
-      const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName);
-      params = coerceParams(syncFormula, rawParams as any);
-    }
-    case FormulaType.Metadata:
-      params = [];
+  if (formulaSpecification.type === FormulaType.Standard) {
+    const formula = findFormula(manifest, formulaSpecification.formulaName);
+    params = coerceParams(formula, rawParams as any);
+  } else {
+    const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName);
+    params = coerceParams(syncFormula, rawParams as any);
   }
 
   return executeThunk(ivmContext, {params, formulaSpec: formulaSpecification}, bundlePath, bundleSourceMapPath);
 }
 
 export async function executeFormulaOrSyncWithRawParams<
-  T extends SyncFormulaSpecification | StandardFormulaSpecification | SyncMetadataFormulaSpecification,
+  T extends StandardFormulaSpecification | SyncFormulaSpecification,
 >({
   formulaSpecification,
   params: rawParams,
@@ -319,17 +294,12 @@ export async function executeFormulaOrSyncWithRawParams<
   executionContext: SyncExecutionContext;
 }): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
   let params: ParamValues<ParamDefs>;
-  switch (formulaSpecification.type) {
-    case FormulaType.Standard: {
-      const formula = findFormula(manifest, formulaSpecification.formulaName);
-      params = coerceParams(formula, rawParams as any);
-    }
-    case FormulaType.Sync: {
-      const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName);
-      params = coerceParams(syncFormula, rawParams as any);
-    }
-    case FormulaType.Metadata:
-      params = [];
+  if (formulaSpecification.type === FormulaType.Standard) {
+    const formula = findFormula(manifest, formulaSpecification.formulaName);
+    params = coerceParams(formula, rawParams as any);
+  } else {
+    const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName);
+    params = coerceParams(syncFormula, rawParams as any);
   }
 
   return findAndExecutePackFunction(params, formulaSpecification, manifest, executionContext);

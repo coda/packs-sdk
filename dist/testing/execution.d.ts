@@ -10,7 +10,6 @@ import type { ParamValues } from '../api_types';
 import type { StandardFormulaSpecification } from '../runtime/types';
 import type { SyncExecutionContext } from '../api_types';
 import type { SyncFormulaSpecification } from '../runtime/types';
-import type { SyncMetadataFormulaSpecification } from '../runtime/types';
 import util from 'util';
 export interface ExecuteOptions {
     validateParams?: boolean;
@@ -21,13 +20,12 @@ export interface ContextOptions {
     manifestPath?: string;
 }
 export declare function executeFormulaFromPackDef<T extends PackFormulaResult | GenericSyncFormulaResult = any>(packDef: BasicPackDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<T>;
-export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, getSchema, dynamicUrl, bundleSourceMapPath, bundlePath, contextOptions, }: {
+export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, bundleSourceMapPath, bundlePath, contextOptions, }: {
     formulaName: string;
     params: string[];
     manifest: BasicPackDefinition;
     manifestPath: string;
     vm?: boolean;
-    getSchema?: boolean;
     dynamicUrl?: string;
     bundleSourceMapPath: string;
     bundlePath: string;
@@ -46,7 +44,7 @@ export declare class VMError {
     constructor(name: string, message: string, stack: string);
     [util.inspect.custom](): string;
 }
-export declare function executeFormulaOrSyncWithRawParams<T extends SyncFormulaSpecification | StandardFormulaSpecification | SyncMetadataFormulaSpecification>({ formulaSpecification, params: rawParams, manifest, executionContext, }: {
+export declare function executeFormulaOrSyncWithRawParams<T extends StandardFormulaSpecification | SyncFormulaSpecification>({ formulaSpecification, params: rawParams, manifest, executionContext, }: {
     formulaSpecification: T;
     params: string[];
     manifest: BasicPackDefinition;

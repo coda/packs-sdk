@@ -9,4 +9,4 @@ The type of values that can be returned from a [MetadataFormula](MetadataFormula
 
 #### Defined in
 
-[api.ts:965](https://github.com/coda/packs-sdk/blob/main/api.ts#L965)
+[api.ts:967](https://github.com/coda/packs-sdk/blob/main/api.ts#L967)

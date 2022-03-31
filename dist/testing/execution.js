@@ -24,7 +24,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = void 0;
 const types_1 = require("../runtime/types");
-const types_2 = require("../runtime/types");
 const coercion_1 = require("./coercion");
 const bootstrap_1 = require("../runtime/bootstrap");
 const helpers_1 = require("../runtime/common/helpers");
@@ -86,7 +85,7 @@ async function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, para
     return findAndExecutePackFunction(params, { type: types_1.FormulaType.Standard, formulaName: resolveFormulaNameWithNamespace(formulaNameWithNamespace) }, packDef, executionContext || (0, mocks_1.newMockExecutionContext)(), options);
 }
 exports.executeFormulaFromPackDef = executeFormulaFromPackDef;
-async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, getSchema, dynamicUrl, bundleSourceMapPath, bundlePath, contextOptions = {}, }) {
+async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, bundleSourceMapPath, bundlePath, contextOptions = {}, }) {
     try {
         const { useRealFetcher } = contextOptions;
         const credentials = useRealFetcher && manifestPath ? getCredentials(manifestPath) : undefined;
@@ -101,23 +100,10 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
         if (!(syncFormula || formula)) {
             throw new Error(`Could not find a formula or sync named "${formulaName}".`);
         }
-        let formulaSpecification;
-        if (getSchema) {
-            if (!syncFormula) {
-                throw new Error(`--getSchema option only works with sync tables.`);
-            }
-            formulaSpecification = {
-                type: types_1.FormulaType.Metadata,
-                metadataFormulaType: types_2.MetadataFormulaType.SyncGetSchema,
-                syncTableName: formulaName,
-            };
-        }
-        else {
-            formulaSpecification = {
-                type: syncFormula ? types_1.FormulaType.Sync : types_1.FormulaType.Standard,
-                formulaName,
-            };
-        }
+        const formulaSpecification = {
+            type: syncFormula ? types_1.FormulaType.Sync : types_1.FormulaType.Standard,
+            formulaName,
+        };
         if (formulaSpecification.type === types_1.FormulaType.Sync) {
             const result = [];
             let iterations = 1;
@@ -186,33 +172,25 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
     const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
     const manifest = await (0, helpers_4.importManifest)(bundlePath);
     let params;
-    switch (formulaSpecification.type) {
-        case types_1.FormulaType.Standard: {
-            const formula = (0, helpers_1.findFormula)(manifest, formulaSpecification.formulaName);
-            params = (0, coercion_1.coerceParams)(formula, rawParams);
-        }
-        case types_1.FormulaType.Sync: {
-            const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName);
-            params = (0, coercion_1.coerceParams)(syncFormula, rawParams);
-        }
-        case types_1.FormulaType.Metadata:
-            params = [];
+    if (formulaSpecification.type === types_1.FormulaType.Standard) {
+        const formula = (0, helpers_1.findFormula)(manifest, formulaSpecification.formulaName);
+        params = (0, coercion_1.coerceParams)(formula, rawParams);
+    }
+    else {
+        const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName);
+        params = (0, coercion_1.coerceParams)(syncFormula, rawParams);
     }
     return (0, bootstrap_1.executeThunk)(ivmContext, { params, formulaSpec: formulaSpecification }, bundlePath, bundleSourceMapPath);
 }
 async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params: rawParams, manifest, executionContext, }) {
     let params;
-    switch (formulaSpecification.type) {
-        case types_1.FormulaType.Standard: {
-            const formula = (0, helpers_1.findFormula)(manifest, formulaSpecification.formulaName);
-            params = (0, coercion_1.coerceParams)(formula, rawParams);
-        }
-        case types_1.FormulaType.Sync: {
-            const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName);
-            params = (0, coercion_1.coerceParams)(syncFormula, rawParams);
-        }
-        case types_1.FormulaType.Metadata:
-            params = [];
+    if (formulaSpecification.type === types_1.FormulaType.Standard) {
+        const formula = (0, helpers_1.findFormula)(manifest, formulaSpecification.formulaName);
+        params = (0, coercion_1.coerceParams)(formula, rawParams);
+    }
+    else {
+        const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName);
+        params = (0, coercion_1.coerceParams)(syncFormula, rawParams);
     }
     return findAndExecutePackFunction(params, formulaSpecification, manifest, executionContext);
 }

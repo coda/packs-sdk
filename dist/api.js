@@ -96,7 +96,7 @@ function wrapMetadataFunction(fnOrFormula) {
     return typeof fnOrFormula === 'function' ? makeMetadataFormula(fnOrFormula) : fnOrFormula;
 }
 exports.wrapMetadataFunction = wrapMetadataFunction;
-function transformSchema(schema) {
+function transformToArraySchema(schema) {
     if ((schema === null || schema === void 0 ? void 0 : schema.type) === schema_1.ValueType.Array) {
         return schema;
     }
@@ -108,18 +108,21 @@ function transformSchema(schema) {
     }
 }
 function wrapGetSchema(getSchema) {
-    return (getSchema && {
+    if (!getSchema) {
+        return;
+    }
+    return {
         ...getSchema,
         execute(params, context) {
             const schema = getSchema.execute(params, context);
             if ((0, object_utils_1.isPromise)(schema)) {
-                return schema.then(value => transformSchema(value));
+                return schema.then(value => transformToArraySchema(value));
             }
             else {
-                return transformSchema(schema);
+                return transformToArraySchema(schema);
             }
         },
-    });
+    };
 }
 exports.wrapGetSchema = wrapGetSchema;
 /**
@@ -673,7 +676,7 @@ function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchem
         },
     });
     const getName = wrapMetadataFunction(getNameDef);
-    const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
+    const getSchema = wrapMetadataFunction(getSchemaDef);
     const getDisplayUrl = wrapMetadataFunction(getDisplayUrlDef);
     const listDynamicUrls = wrapMetadataFunction(listDynamicUrlsDef);
     const table = makeSyncTable({

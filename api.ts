@@ -268,7 +268,7 @@ export function wrapMetadataFunction(
   return typeof fnOrFormula === 'function' ? makeMetadataFormula(fnOrFormula) : fnOrFormula;
 }
 
-function transformSchema<ResultT extends PackFormulaResult>(schema?: any): ResultT {
+function transformToArraySchema<ResultT extends PackFormulaResult>(schema?: any): ResultT {
   if (schema?.type === ValueType.Array) {
     return schema;
   } else {
@@ -280,22 +280,24 @@ function transformSchema<ResultT extends PackFormulaResult>(schema?: any): Resul
 }
 
 export function wrapGetSchema(getSchema: MetadataFormula | undefined): MetadataFormula | undefined {
-  return (
-    getSchema && {
-      ...getSchema,
-      execute<ParamsT extends [ParamDef<Type.string>, ParamDef<Type.string>], ResultT extends PackFormulaResult>(
-        params: ParamValues<ParamsT>,
-        context: ExecutionContext,
-      ): Promise<ResultT> | ResultT {
-        const schema = getSchema.execute(params, context);
-        if (isPromise<ResultT>(schema)) {
-          return schema.then(value => transformSchema(value));
-        } else {
-          return transformSchema(schema);
-        }
-      },
-    }
-  );
+  if (!getSchema) {
+    return;
+  }
+
+  return {
+    ...getSchema,
+    execute<ParamsT extends [ParamDef<Type.string>, ParamDef<Type.string>], ResultT extends PackFormulaResult>(
+      params: ParamValues<ParamsT>,
+      context: ExecutionContext,
+    ): Promise<ResultT> | ResultT {
+      const schema = getSchema.execute(params, context);
+      if (isPromise<ResultT>(schema)) {
+        return schema.then(value => transformToArraySchema(value));
+      } else {
+        return transformToArraySchema(schema);
+      }
+    },
+  };
 }
 
 /** Options you can specify when defining a parameter using {@link makeParameter}. */
@@ -1518,7 +1520,7 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
     },
   });
   const getName = wrapMetadataFunction(getNameDef);
-  const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
+  const getSchema = wrapMetadataFunction(getSchemaDef);
   const getDisplayUrl = wrapMetadataFunction(getDisplayUrlDef);
   const listDynamicUrls = wrapMetadataFunction(listDynamicUrlsDef);
   const table = makeSyncTable({
