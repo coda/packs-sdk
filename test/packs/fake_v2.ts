@@ -121,20 +121,24 @@ pack.addSyncTable({
 pack.addDynamicSyncTable({
   name: 'FooDyns',
   description: 'FooDynDesc',
-  getName: coda.makeMetadataFormula(async () => 'name'),
-  getDisplayUrl: coda.makeMetadataFormula(async () => 'display url'),
-  getSchema: coda.makeMetadataFormula(async () => {
-    return coda.makeSchema({
-      type: coda.ValueType.Array,
-      items: {type: coda.ValueType.Object, properties: {}},
-    });
-  }),
+  getName: async () => 'name',
+  getDisplayUrl: async () => 'display url',
+  getSchema: async () => {
+    return {
+      type: coda.ValueType.Object,
+      primary: 'name',
+      id: 'name',
+      properties: {
+        name: {type: coda.ValueType.String, required: true} as any,
+      },
+    };
+  },
   formula: {
     name: 'Ignored',
     description: '',
     parameters: [],
     execute: async () => {
-      return {result: []};
+      return {result: [{name: 'alice'}, {name: 'bob'}]};
     },
   },
 });

@@ -39,6 +39,7 @@ import {generateObjectResponseHandler} from './handler_templates';
 import {generateRequestHandler} from './handler_templates';
 import {htmlArray} from './api_types';
 import {imageArray} from './api_types';
+import {isPromise} from './helpers/object_utils';
 import {makeObjectSchema} from './schema';
 import {normalizeSchema} from './schema';
 import {numberArray} from './api_types';
@@ -265,6 +266,38 @@ export function wrapMetadataFunction(
   fnOrFormula: MetadataFormula | MetadataFunction | undefined,
 ): MetadataFormula | undefined {
   return typeof fnOrFormula === 'function' ? makeMetadataFormula(fnOrFormula) : fnOrFormula;
+}
+
+function transformToArraySchema<ResultT extends PackFormulaResult>(schema?: any): ResultT {
+  if (schema?.type === ValueType.Array) {
+    return schema;
+  } else {
+    return {
+      type: ValueType.Array,
+      items: schema,
+    } as ResultT;
+  }
+}
+
+export function wrapGetSchema(getSchema: MetadataFormula | undefined): MetadataFormula | undefined {
+  if (!getSchema) {
+    return;
+  }
+
+  return {
+    ...getSchema,
+    execute<ParamsT extends [ParamDef<Type.string>, ParamDef<Type.string>], ResultT extends PackFormulaResult>(
+      params: ParamValues<ParamsT>,
+      context: ExecutionContext,
+    ): Promise<ResultT> | ResultT {
+      const schema = getSchema.execute(params, context);
+      if (isPromise<ResultT>(schema)) {
+        return schema.then(value => transformToArraySchema(value));
+      } else {
+        return transformToArraySchema(schema);
+      }
+    },
+  };
 }
 
 /** Options you can specify when defining a parameter using {@link makeParameter}. */
@@ -970,11 +1003,11 @@ export type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
 /**
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
  */
-export type MetadataFunction = <K extends string, L extends string>(
+export type MetadataFunction = (
   context: ExecutionContext,
   search: string,
   formulaContext?: MetadataContext,
-) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<K, L>>;
+) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
 
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
@@ -1376,7 +1409,7 @@ export function makeSyncTable<
   } else if (identityName) {
     schemaDef.identity = {name: identityName};
   }
-  const getSchema = wrapMetadataFunction(getSchemaDef);
+  const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
   const schema = makeObjectSchema<K, L, SchemaDefT>(schemaDef) as SchemaT;
   const formulaSchema = getSchema
     ? undefined

@@ -21,4 +21,4 @@ input to [makeSyncTable](../functions/makeSyncTable.md) which outputs definition
 
 #### Defined in
 
-[api.ts:607](https://github.com/coda/packs-sdk/blob/main/api.ts#L607)
+[api.ts:640](https://github.com/coda/packs-sdk/blob/main/api.ts#L640)
