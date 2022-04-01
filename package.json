@@ -98,7 +98,7 @@
     "remark-lint-no-undefined-references": "^4.1.1",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.6.0",
-    "typedoc": "^0.22.12",
+    "typedoc": "^0.22.13",
     "typedoc-plugin-markdown": "^3.11.14"
   },
   "resolutions": {
