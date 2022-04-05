@@ -733,7 +733,7 @@ const genericDynamicSyncTableSchema = zodCompleteObject({
 const syncTableSchema = z.union([genericDynamicSyncTableSchema, genericSyncTableSchema])
     .superRefine((data, context) => {
     const syncTable = data;
-    if (syncTable.getter.varargParameters) {
+    if (syncTable.getter.varargParameters && syncTable.getter.varargParameters.length > 0) {
         context.addIssue({
             code: z.ZodIssueCode.custom,
             path: ['getter', 'varargParameters'],

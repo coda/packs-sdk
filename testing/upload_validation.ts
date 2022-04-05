@@ -890,7 +890,7 @@ const syncTableSchema = z.union([genericDynamicSyncTableSchema, genericSyncTable
   .superRefine((data, context) => {
     const syncTable = data as SyncTable;
 
-    if (syncTable.getter.varargParameters) {
+    if (syncTable.getter.varargParameters && syncTable.getter.varargParameters.length > 0) {
       context.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['getter', 'varargParameters'],
