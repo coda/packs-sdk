@@ -1,6 +1,10 @@
 # Changelog
 This changelog keeps track of all changes to the packs-sdk. We follow conventions from [keepachangelog](https://keepachangelog.com/en/1.0.0/).
 
+### Unreleased
+- **Breaking Change** Added a validation rule that prevents the usage of varargsParameters for sync table getters
+which are not currently supported in the UI.
+
 ## [0.9.0] - 2022-03-17
 - **Breaking Change** ValueHintType.Url will now create a column of type "Link" instead of "Text".
 - Added ValueHintType.Email for new column type "Email".

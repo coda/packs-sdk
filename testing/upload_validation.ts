@@ -56,6 +56,7 @@ import type {StringEmbedSchema} from '../schema';
 import type {StringPackFormula} from '../api';
 import type {StringTimeSchema} from '../schema';
 import type {SyncFormula} from '../api';
+import type {SyncTable} from '../api';
 import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
 import {Type} from '../api_types';
@@ -885,7 +886,19 @@ const genericDynamicSyncTableSchema = zodCompleteObject<
   getSchema: formulaMetadataSchema,
 }).strict();
 
-const syncTableSchema = z.union([genericDynamicSyncTableSchema, genericSyncTableSchema]);
+const syncTableSchema = z.union([genericDynamicSyncTableSchema, genericSyncTableSchema])
+  .superRefine((data, context) => {
+    const syncTable = data as SyncTable;
+
+    if (syncTable.getter.varargParameters && syncTable.getter.varargParameters.length > 0) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['getter', 'varargParameters'],
+        message:
+          'Sync table formulas do not currently support varargParameters.',
+      });
+    }
+});
 
 // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
 // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
@@ -995,7 +1008,7 @@ function validateFormulas(schema: z.ZodObject<any>) {
         }
       });
 
-      ((data.syncTables as any[]) || []).forEach((syncTable, i) => {
+      ((data.syncTables as SyncTable[]) || []).forEach((syncTable, i) => {
         const connectionRequirement = syncTable.getter.connectionRequirement;
         if (connectionRequirement && connectionRequirement !== ConnectionRequirement.None) {
           context.addIssue({
