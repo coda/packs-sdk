@@ -412,6 +412,46 @@ describe('Pack metadata Validation', () => {
       ]);
     });
 
+    it('reject sync table formulas with varargParameters', async () => {
+      const syncTable = makeSyncTable({
+        name: 'SyncTable',
+        identityName: 'Sync',
+        schema: makeObjectSchema({
+          type: ValueType.Object,
+          primary: 'foo',
+          id: 'foo',
+          identity: {packId: 424242, name: 'foo'},
+          properties: {
+            Foo: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'SyncTable',
+          description: 'A simple sync table',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          varargParameters: [makeParameter({type: ParameterType.String, name: 'param', description: 'param'})],
+          examples: [],
+        },
+      });
+      const metadata = createFakePackVersionMetadata({
+        syncTables: [syncTable],
+        defaultAuthentication: {
+          type: AuthenticationType.None,
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message:
+            'Sync table formulas do not currently support varargParameters.',
+          path: 'syncTables[0].getter.varargParameters',
+        },
+      ]);
+    });
+
     // Evidently we allow this.
     it('valid object formula with no schema', async () => {
       const formula = makeObjectFormula({
