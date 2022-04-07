@@ -305,7 +305,38 @@ However if the API provider deviates too far from the OAuth 2.0 specification it
     Coda doesn't currently support the older 1.0 or 1.0a versions of the OAuth specification. If you would like to connect to an API that only supports these versions of the standard please [contact support][support] so that we can continue to gauge interest.
 
 
-<!-- TODO: Progressive OAuth -->
+#### Incremental OAuth
+
+If your Pack includes a lot of features you may likewise need to request a lot of scopes during authentication, which can scare away new users. An alternative approach is to use incremental authorization, where you start out only requesting a small initial set of scopes and request more as the user starts using features that require them.
+
+Incremental authorization is made possible in Packs using the formula field [`extraOAuthScopes`][extraOAuthScopes]. You can use it to specify additional scopes that are needed in order to run that specific formula.
+
+```ts
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.OAuth2,
+  // ...
+  scopes: ["read"],
+});
+
+// ...
+
+pack.addFormula({
+  name: "UpdateItem",
+  // ...
+  isAction: true,
+  extraOAuthScopes: ["update"],
+  // ...
+});
+```
+
+When the Pack above is installed the user will only be required to grant access to the `read` scope. However, when they try to use the `UpdateItem` action formula they will then be prompted grant additional access to the `write` scope. This prompt is displayed as a pop-up dialog at the bottom of the doc:
+
+<img src="../../../images/auth_oauth_incremental.png" srcset="../../../images/auth_oauth_incremental_2x.png 2x" class="screenshot" alt="Prompting the user for additional permissions">
+
+When the user signs in again they will be prompted to approve the additional scopes, after which they will be able to use the formula successfully.
+
+!!! info "401 response required"
+    Even if a formula specifies `extraOAuthScopes`, Coda will first try to run the formula using the existing credentials. The user will only be prompted to approve additional scopes if the formula fails with a 401 "Unauthorized" response from the API. If the API you are connecting to returns a different response code on failure you won't be able to take advantage of the incremental authorization feature.
 
 
 ## Requiring authentication
@@ -531,3 +562,4 @@ There are services however where each account is associated with a distinct doma
 [getConnectionName]: ../../reference/sdk/interfaces/BaseAuthentication.md#getconnectionname
 [network_domains]: fetcher.md#network-domains
 [autocomplete_dynamic]: ../basics/parameters/autocomplete.md#dynamic-options
+[extraOAuthScopes]: ../../reference/sdk/interfaces/BaseFormulaDef.md#extraoauthscopes
