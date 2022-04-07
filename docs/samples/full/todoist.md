@@ -46,7 +46,8 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       // https://developer.todoist.com/guides/#oauth
       authorizationUrl: "https://todoist.com/oauth/authorize",
       tokenUrl: "https://todoist.com/oauth/access_token",
-      scopes: ["data:read_write"],
+      scopes: ["data:read"],
+      scopeDelimiter: ",",
 
       // Determines the display name of the connected account.
       getConnectionName: async function (context) {
@@ -321,6 +322,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       ],
       resultType: coda.ValueType.String,
       isAction: true,
+      extraOAuthScopes: ["data:read_write"],
 
       execute: async function ([name], context) {
         let response = await context.fetcher.fetch({
@@ -356,6 +358,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       ],
       resultType: coda.ValueType.String,
       isAction: true,
+      extraOAuthScopes: ["data:read_write"],
 
       execute: async function ([name, projectId], context) {
         let response = await context.fetcher.fetch({
@@ -391,6 +394,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       resultType: coda.ValueType.Object,
       schema: TaskSchema,
       isAction: true,
+      extraOAuthScopes: ["data:read_write"],
 
       execute: async function ([taskId, name], context) {
         let url = "https://api.todoist.com/rest/v1/tasks/" + taskId;
@@ -427,6 +431,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       ],
       resultType: coda.ValueType.String,
       isAction: true,
+      extraOAuthScopes: ["data:read_write"],
 
       execute: async function ([taskId], context) {
         let url = "https://api.todoist.com/rest/v1/tasks/" + taskId + "/close";
