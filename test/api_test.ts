@@ -20,6 +20,7 @@ describe('API test', () => {
         name: 'Whatever',
         connectionRequirement: ConnectionRequirement.Optional,
         getName: makeMetadataFormula(async () => 'sup'),
+        identityName: 'Whatever',
         getSchema: makeMetadataFormula(async () =>
           schema.makeSchema({
             type: ValueType.Array,
@@ -81,6 +82,7 @@ describe('API test', () => {
           name: 'Whatever',
           connectionRequirement: ConnectionRequirement.Optional,
           getName: makeMetadataFormula(async () => 'sup'),
+          identityName: 'Whatever',
           getSchema: async () => s,
           getDisplayUrl: makeMetadataFormula(async () => 'sup'),
           listDynamicUrls: makeMetadataFormula(async () => []),
@@ -108,6 +110,84 @@ describe('API test', () => {
         const schema = await table.getSchema.execute([] as any, {} as any);
         assert.deepEqual(schema, {type: 'array', items: {type: 'object', properties: {}}});
       });
+    });
+  });
+
+  describe('makeSyncTable', () => {
+    it('identityName persists', () => {
+      const table = makeSyncTable({
+        name: 'SomeSync',
+        identityName: 'MyIdentityName',
+        schema: schema.makeObjectSchema({
+          type: ValueType.Object,
+          id: 'id',
+          primary: 'id',
+          properties: {id: {type: ValueType.String}},
+        }),
+        formula: {
+          name: 'Whatever',
+          description: 'Whatever',
+          parameters: [],
+          async execute() {
+            return {result: []};
+          },
+        },
+      });
+      assert.equal(table.identityName, 'MyIdentityName');
+      assert.equal(table.schema.identity?.name, 'MyIdentityName');
+
+      // If the identityName is the same as identity.name that should be ok.
+      const table2 = makeSyncTable({
+        name: 'SomeSync',
+        identityName: 'MyIdentityName',
+        schema: schema.makeObjectSchema({
+          type: ValueType.Object,
+          id: 'id',
+          primary: 'id',
+          properties: {id: {type: ValueType.String}},
+          identity: {
+            name: 'MyIdentityName',
+          },
+        }),
+        formula: {
+          name: 'Whatever',
+          description: 'Whatever',
+          parameters: [],
+          async execute() {
+            return {result: []};
+          },
+        },
+      });
+      assert.equal(table2.identityName, 'MyIdentityName');
+      assert.equal(table.schema.identity?.name, 'MyIdentityName');
+    });
+
+    it('identityName cannot conflict with identity.name', () => {
+      assert.throw(
+        () =>
+          makeSyncTable({
+            name: 'SomeSync',
+            identityName: 'MyIdentityName',
+            schema: schema.makeObjectSchema({
+              type: ValueType.Object,
+              id: 'id',
+              primary: 'id',
+              properties: {id: {type: ValueType.String}},
+              identity: {
+                name: 'ConflictingIdentity',
+              },
+            }),
+            formula: {
+              name: 'Whatever',
+              description: 'Whatever',
+              parameters: [],
+              async execute() {
+                return {result: []};
+              },
+            },
+          }),
+        "Sync table defines an identityName that conflicts with its schema's identity.name",
+      );
     });
   });
 

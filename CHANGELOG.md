@@ -4,6 +4,13 @@ This changelog keeps track of all changes to the packs-sdk. We follow convention
 
 ### Unreleased
 
+- **Breaking Change** The `identityName` field is now required on every sync table, even ones with dynamic schemas.
+Furthermore, if a sync table's `identityName` conflicts with the `identity.name` of its schema, there will be a
+validation error when creating a build (before it would silently override the `identity.name`). The upside is that
+the schemas for sync tables will never need to specify the `identity` field at all. Even on dynamically generated
+schemas, Coda can inject a full `identity` at run-time now that `identityName` will be set on every sync table.
+The only remaining use of the `identity` field on an object schema is when you want to produce an object that is
+a reference to an object from a sync table.
 - **Breaking Change** Added a validation rule that prevents the usage of varargsParameters for sync table getters
   which are not currently supported in the UI.
 - **Future Breaking Change** The properties `id`, `primary`, and `featured` of object schemas will be renamed to `idProperty`, `displayProperty`, and `featuredProperties`, respectively, to better clarify that their values refer to property names within the schema. During a migration period, you may use either name; the original names are now marked as deprecated and will be removed at a future date, no earlier than May 1, 2022.

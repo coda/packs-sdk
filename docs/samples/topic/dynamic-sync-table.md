@@ -26,6 +26,7 @@ pack.addDynamicSyncTable({
     // TODO: Fetch metadata about the data source and return the name.
     return "<Datasource Name>";
   },
+  identityName: "<User-visible name for the column containing the schema>",
   getSchema: async function (context) {
     let datasourceUrl = context.sync.dynamicUrl!;
     // TODO: Fetch metadata about the data source and get the list of fields.
@@ -133,6 +134,8 @@ pack.addDynamicSyncTable({
     return form._links.display;
   },
 
+  identityName: "FormResponse",
+
   // Returns the schema of the table, given the selected URL.
   getSchema: async function (context) {
     let formUrl = context.sync.dynamicUrl;
@@ -166,13 +169,9 @@ pack.addDynamicSyncTable({
     // Assemble the schema for each row.
     let schema = coda.makeObjectSchema({
       properties: properties,
-      displayProperty: primary,
-      idProperty: id,
-      featuredProperties: featured,
-      identity: {
-        name: "FormResponse",
-        dynamicUrl: formUrl,
-      },
+      primary: primary,
+      id: id,
+      featured: featured,
     });
 
     // Return an array schema as the result.

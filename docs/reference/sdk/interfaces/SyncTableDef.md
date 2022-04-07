@@ -31,7 +31,7 @@ See [DynamicOptions.defaultAddDynamicColumns](DynamicOptions.md#defaultadddynami
 
 #### Defined in
 
-[api.ts:172](https://github.com/coda/packs-sdk/blob/main/api.ts#L172)
+[api.ts:174](https://github.com/coda/packs-sdk/blob/main/api.ts#L174)
 
 ___
 
@@ -55,7 +55,7 @@ See [DynamicOptions.entityName](DynamicOptions.md#entityname)
 
 #### Defined in
 
-[api.ts:170](https://github.com/coda/packs-sdk/blob/main/api.ts#L170)
+[api.ts:172](https://github.com/coda/packs-sdk/blob/main/api.ts#L172)
 
 ___
 
@@ -67,7 +67,7 @@ See [DynamicOptions.getSchema](DynamicOptions.md#getschema)
 
 #### Defined in
 
-[api.ts:168](https://github.com/coda/packs-sdk/blob/main/api.ts#L168)
+[api.ts:170](https://github.com/coda/packs-sdk/blob/main/api.ts#L170)
 
 ___
 
@@ -76,6 +76,18 @@ ___
 • **getter**: [`SyncFormula`](../types/SyncFormula.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\>
 
 See [SyncTableOptions.formula](SyncTableOptions.md#formula)
+
+#### Defined in
+
+[api.ts:168](https://github.com/coda/packs-sdk/blob/main/api.ts#L168)
+
+___
+
+### identityName
+
+• **identityName**: `string`
+
+See [SyncTableOptions.identityName](SyncTableOptions.md#identityname)
 
 #### Defined in
 

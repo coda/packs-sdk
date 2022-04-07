@@ -5,6 +5,7 @@ import {ConnectionRequirement} from '../api_types';
 import {CurrencyFormat} from '..';
 import {DurationUnit} from '..';
 import type {Formula} from '../api';
+import type {GenericSyncTable} from '../api';
 import type {ObjectSchemaDefinition} from '../schema';
 import type {PackFormulaMetadata} from '../api';
 import type {PackMetadataValidationError} from '../testing/upload_validation';
@@ -380,7 +381,6 @@ describe('Pack metadata Validation', () => {
           type: ValueType.Object,
           primary: 'foo',
           id: 'foo',
-          identity: {packId: 424242, name: 'foo'},
           properties: {
             Foo: {type: ValueType.String},
           },
@@ -420,7 +420,6 @@ describe('Pack metadata Validation', () => {
           type: ValueType.Object,
           primary: 'foo',
           id: 'foo',
-          identity: {packId: 424242, name: 'foo'},
           properties: {
             Foo: {type: ValueType.String},
           },
@@ -590,7 +589,6 @@ describe('Pack metadata Validation', () => {
             type: ValueType.Object,
             primary: 'foo',
             id: 'foo',
-            identity: {packId: 424242, name: 'foo'},
             properties: {
               Foo: {type: ValueType.String},
             },
@@ -621,6 +619,7 @@ describe('Pack metadata Validation', () => {
           getSchema: makeMetadataFormula(async () => {
             return '';
           }),
+          identityName: 'DefaultIdentity',
           formula: {
             name: 'SyncTable',
             description: 'Sync table',
@@ -639,6 +638,7 @@ describe('Pack metadata Validation', () => {
           syncTables: [syncTable],
         });
         await validateJson(metadata);
+        assert.equal(metadata.syncTables?.[0].identityName, 'DefaultIdentity');
       });
 
       it('valid sync table with nested object schema', async () => {
@@ -649,7 +649,6 @@ describe('Pack metadata Validation', () => {
             type: ValueType.Object,
             primary: 'foo',
             id: 'foo',
-            identity: {packId: 424242, name: 'foo'},
             properties: {
               foo: {type: ValueType.String},
               child: makeObjectSchema({
@@ -720,20 +719,22 @@ describe('Pack metadata Validation', () => {
         assert.deepEqual(schema.identity, {name: 'SomeIdentity'});
       });
 
-      it('identityName overwrites schema identity if both present', async () => {
-        const syncTable = makeSyncTable({
+      it('identityName cannot conflict with schema identity if both present', async () => {
+        // api_test.ts already tests that makeSyncTable won't let this happen, but we still
+        // need to test our raw metadata validation.
+        const syncTable: GenericSyncTable = {
           name: 'SyncTable',
-          identityName: 'SomeIdentity',
+          identityName: 'IdentityA',
           schema: makeObjectSchema({
             type: ValueType.Object,
             primary: 'foo',
             id: 'foo',
-            identity: {name: 'IgnoredName'},
+            identity: {name: 'IdentityB'},
             properties: {
-              Foo: {type: ValueType.String},
+              foo: {type: ValueType.String},
             },
           }),
-          formula: {
+          getter: {
             name: 'SyncTable',
             description: 'A simple sync table',
             async execute([], _context) {
@@ -741,20 +742,25 @@ describe('Pack metadata Validation', () => {
             },
             parameters: [],
             examples: [],
+            isSyncFormula: true,
+            resultType: Type.object,
           },
-        });
+        };
 
         const metadata = createFakePack({
           syncTables: [syncTable],
         });
-        const validatedMetadata = await validateJson(metadata);
-
-        const {schema} = validatedMetadata.syncTables[0];
-        assert.ok(schema);
-        assert.deepEqual(schema.identity, {name: 'SomeIdentity'});
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message:
+              'Sync table "SyncTable" defines identityName "IdentityA" that conflicts with its schema\'s identity.name "IdentityB".',
+            path: 'syncTables',
+          },
+        ]);
       });
 
-      it('legacy wrapper does not overwrite inline identity name', async () => {
+      it('legacy wrapper requires inline identity name', async () => {
         const syncTable = makeSyncTableLegacy(
           'SyncTable',
           makeObjectSchema({
@@ -782,9 +788,122 @@ describe('Pack metadata Validation', () => {
         });
         const validatedMetadata = await validateJson(metadata);
 
-        const {schema} = validatedMetadata.syncTables[0];
+        const {schema, identityName} = validatedMetadata.syncTables[0];
         assert.ok(schema);
         assert.deepEqual(schema.identity, {name: 'LegacyName'});
+        assert.equal(identityName, 'LegacyName');
+
+        assert.throws(() => {
+          makeSyncTableLegacy(
+            'SyncTable',
+            makeObjectSchema({
+              type: ValueType.Object,
+              primary: 'foo',
+              id: 'foo',
+              identity: {name: ''}, // Blank name
+              properties: {
+                Foo: {type: ValueType.String},
+              },
+            }),
+            {
+              name: 'SyncTable',
+              description: 'A simple sync table',
+              async execute([], _context) {
+                return {result: []};
+              },
+              parameters: [],
+              examples: [],
+            },
+          );
+        }, 'Legacy sync tables must specify identity.name');
+
+        assert.throws(() => {
+          makeSyncTableLegacy(
+            'SyncTable',
+            makeObjectSchema({
+              type: ValueType.Object,
+              primary: 'foo',
+              id: 'foo',
+              // Missing identity
+              properties: {
+                Foo: {type: ValueType.String},
+              },
+            }),
+            {
+              name: 'SyncTable',
+              description: 'A simple sync table',
+              async execute([], _context) {
+                return {result: []};
+              },
+              parameters: [],
+              examples: [],
+            },
+          );
+        }, 'Legacy sync tables must specify identity.name');
+      });
+
+      it('identityName is required on sync tables', async () => {
+        // Not defined inline because I want to bypass Typescript errors, since many pack makers won't
+        // be using Typescript.
+        const syncTableArgs: any = {
+          name: 'SyncTable',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute() {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        };
+        assert.throws(
+          () => makeSyncTable(syncTableArgs),
+          'Sync table schemas should have defined properties for identity, id and primary',
+        );
+
+        // If you bypass makeSyncTable, the metadata validation should still catch this
+        const syncTable: any = {
+          name: 'SyncTable',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              foo: {type: ValueType.String},
+            },
+          }),
+          getter: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute() {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+            isSyncFormula: true,
+            resultType: Type.object,
+          },
+        };
+
+        const metadata = createFakePack({
+          syncTables: [syncTable],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Required',
+            path: 'syncTables[0].identityName',
+          },
+        ]);
       });
 
       it('identity name matches property', async () => {
@@ -830,7 +949,6 @@ describe('Pack metadata Validation', () => {
             type: ValueType.Object,
             primary: 'foo',
             id: 'foo',
-            identity: {name: 'foo'},
             properties: {
               Foo: {type: ValueType.Number, codaType: ValueHintType.Scale, maximum: 5, icon: ScaleIconSet.Star},
               Bar: {type: ValueType.String, codaType: ValueHintType.Date, format: 'MMM D, YYYY'},
@@ -890,6 +1008,7 @@ describe('Pack metadata Validation', () => {
           getName: makeMetadataFormula(async () => {
             return '';
           }),
+          identityName: 'Identity',
           getSchema: makeMetadataFormula(async () => {
             return '';
           }),
@@ -923,6 +1042,7 @@ describe('Pack metadata Validation', () => {
           getName: makeMetadataFormula(async () => {
             return '';
           }),
+          identityName: 'Identity',
           getSchema: makeMetadataFormula(async () => {
             return '';
           }),
@@ -994,7 +1114,6 @@ describe('Pack metadata Validation', () => {
           type: ValueType.Object,
           primary: 'foo',
           id: 'foo',
-          identity: {packId: 424242, name: 'foo'},
           properties: {
             Foo: {type: ValueType.String},
           },
@@ -1015,7 +1134,6 @@ describe('Pack metadata Validation', () => {
           type: ValueType.Object,
           primary: 'foo',
           id: 'foo',
-          identity: {packId: 424242, name: 'foo'},
           properties: {
             Foo: {type: ValueType.String},
           },
@@ -1040,14 +1158,14 @@ describe('Pack metadata Validation', () => {
           path: 'syncTables',
         },
       ]);
-    });
 
-    it('duplicate sync table identity names not triggered for dynamic sync tables', async () => {
-      const syncTable1 = makeDynamicSyncTable({
+      // Check dynamic sync tables too
+      const dynSyncTable1 = makeDynamicSyncTable({
         name: 'DynamicSyncTable1',
         getName: makeMetadataFormula(async () => {
           return '';
         }),
+        identityName: 'DynamicIdentity',
         getSchema: makeMetadataFormula(async () => {
           return '';
         }),
@@ -1064,11 +1182,12 @@ describe('Pack metadata Validation', () => {
           return '';
         }),
       });
-      const syncTable2 = makeDynamicSyncTable({
+      const dynSyncTable2 = makeDynamicSyncTable({
         name: 'DynamicSyncTable2',
         getName: makeMetadataFormula(async () => {
           return '';
         }),
+        identityName: 'DynamicIdentity',
         getSchema: makeMetadataFormula(async () => {
           return '';
         }),
@@ -1085,10 +1204,16 @@ describe('Pack metadata Validation', () => {
           return '';
         }),
       });
-      const metadata = createFakePack({
-        syncTables: [syncTable1, syncTable2],
+      const dynMetadata = createFakePack({
+        syncTables: [dynSyncTable1, dynSyncTable2],
       });
-      await validateJson(metadata);
+      const dynErr = await validateJsonAndAssertFails(dynMetadata);
+      assert.deepEqual(dynErr.validationErrors, [
+        {
+          message: 'Sync table identity names must be unique. Found duplicate name "DynamicIdentity".',
+          path: 'syncTables',
+        },
+      ]);
     });
 
     it('duplicate sync table names', async () => {
@@ -1099,7 +1224,6 @@ describe('Pack metadata Validation', () => {
           type: ValueType.Object,
           primary: 'foo',
           id: 'foo',
-          identity: {packId: 424242, name: 'foo'},
           properties: {
             Foo: {type: ValueType.String},
           },
@@ -1120,7 +1244,6 @@ describe('Pack metadata Validation', () => {
           type: ValueType.Object,
           primary: 'foo',
           id: 'foo',
-          identity: {packId: 424242, name: 'foo'},
           properties: {
             Foo: {type: ValueType.String},
           },
@@ -1155,7 +1278,6 @@ describe('Pack metadata Validation', () => {
           type: ValueType.Object,
           primary: 'foo',
           id: 'foo',
-          identity: {packId: 424242, name: 'foo'},
           properties: {
             Foo: {type: ValueType.String},
           },
@@ -1191,7 +1313,6 @@ describe('Pack metadata Validation', () => {
           type: ValueType.Object,
           primary: 'foo',
           id: 'foo',
-          identity: {packId: 424242, name: 'foo'},
           properties: {
             Foo: {type: ValueType.String},
           },

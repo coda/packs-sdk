@@ -244,7 +244,7 @@ The JavaScript function that implements this formula
 
 #### Defined in
 
-[api.ts:465](https://github.com/coda/packs-sdk/blob/main/api.ts#L465)
+[api.ts:467](https://github.com/coda/packs-sdk/blob/main/api.ts#L467)
 
 ___
 
@@ -270,4 +270,4 @@ that can then be applied to many different formulas in a pack.
 
 #### Defined in
 
-[api.ts:852](https://github.com/coda/packs-sdk/blob/main/api.ts#L852)
+[api.ts:854](https://github.com/coda/packs-sdk/blob/main/api.ts#L854)

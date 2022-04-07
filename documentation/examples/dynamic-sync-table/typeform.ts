@@ -46,6 +46,8 @@ pack.addDynamicSyncTable({
     return form._links.display;
   },
 
+  identityName: "FormResponse",
+
   // Returns the schema of the table, given the selected URL.
   getSchema: async function (context) {
     let formUrl = context.sync.dynamicUrl;
@@ -79,13 +81,9 @@ pack.addDynamicSyncTable({
     // Assemble the schema for each row.
     let schema = coda.makeObjectSchema({
       properties: properties,
-      displayProperty: primary,
-      idProperty: id,
-      featuredProperties: featured,
-      identity: {
-        name: "FormResponse",
-        dynamicUrl: formUrl,
-      },
+      primary: primary,
+      id: id,
+      featured: featured,
     });
 
     // Return an array schema as the result.

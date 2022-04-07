@@ -596,11 +596,17 @@ exports.makeObjectFormula = makeObjectFormula;
 function makeSyncTable({ name, description, identityName, schema: schemaDef, formula, connectionRequirement, dynamicOptions = {}, }) {
     const { getSchema: getSchemaDef, entityName, defaultAddDynamicColumns } = dynamicOptions;
     const { execute: wrappedExecute, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
-    if (schemaDef.identity) {
-        schemaDef.identity = { ...schemaDef.identity, name: identityName || schemaDef.identity.name };
-    }
-    else if (identityName) {
-        schemaDef.identity = { name: identityName };
+    // We don't fail on a missing identityName because the legacy functions don't set it.
+    if (identityName) {
+        if (schemaDef.identity) {
+            if (schemaDef.identity.name && schemaDef.identity.name !== identityName) {
+                throw new Error("Sync table defines an identityName that conflicts with its schema's identity.name");
+            }
+            schemaDef.identity = { ...schemaDef.identity, name: identityName };
+        }
+        else {
+            schemaDef.identity = { name: identityName };
+        }
     }
     const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
     const schema = (0, schema_2.makeObjectSchema)(schemaDef);
@@ -627,6 +633,7 @@ function makeSyncTable({ name, description, identityName, schema: schemaDef, for
         name,
         description,
         schema: (0, schema_3.normalizeSchema)(schema),
+        identityName,
         getter: {
             ...definition,
             cacheTtlSecs: 0,
@@ -643,7 +650,18 @@ function makeSyncTable({ name, description, identityName, schema: schemaDef, for
 }
 exports.makeSyncTable = makeSyncTable;
 function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynamicOptions = {}) {
-    return makeSyncTable({ name, identityName: '', schema, formula, connectionRequirement, dynamicOptions });
+    var _a;
+    if (!((_a = schema.identity) === null || _a === void 0 ? void 0 : _a.name)) {
+        throw new Error('Legacy sync tables must specify identity.name');
+    }
+    return makeSyncTable({
+        name,
+        identityName: schema.identity.name,
+        schema,
+        formula,
+        connectionRequirement,
+        dynamicOptions,
+    });
 }
 exports.makeSyncTableLegacy = makeSyncTableLegacy;
 /**
@@ -665,14 +683,14 @@ exports.makeSyncTableLegacy = makeSyncTableLegacy;
  * });
  * ```
  */
-function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, }) {
+function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, identityName, placeholderSchema: placeholderSchemaInput, }) {
     const placeholderSchema = placeholderSchemaInput ||
         // default placeholder only shows a column of id, which will be replaced later by the dynamic schema.
         (0, schema_2.makeObjectSchema)({
             type: schema_1.ValueType.Object,
             idProperty: 'id',
             displayProperty: 'id',
-            identity: { name },
+            identity: { name: identityName },
             properties: {
                 id: { type: schema_1.ValueType.String },
             },
@@ -684,7 +702,7 @@ function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchem
     const table = makeSyncTable({
         name,
         description,
-        identityName: '',
+        identityName,
         schema: placeholderSchema,
         formula,
         connectionRequirement,

@@ -92,6 +92,7 @@ describe('Builder', () => {
       name: 'Foos',
       connectionRequirement,
       getName,
+      identityName: 'Foo',
       getSchema,
       getDisplayUrl,
       listDynamicUrls,

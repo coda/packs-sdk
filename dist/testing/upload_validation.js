@@ -732,6 +732,7 @@ const genericSyncTableSchema = zodCompleteObject({
     // it in the validator like this helps zod flag it in the way we need.
     isDynamic: zodDiscriminant(false).optional(),
     getSchema: formulaMetadataSchema.optional(),
+    identityName: z.string(),
 }).strict();
 const genericDynamicSyncTableSchema = zodCompleteObject({
     ...baseSyncTableSchema,
@@ -740,6 +741,7 @@ const genericDynamicSyncTableSchema = zodCompleteObject({
     getDisplayUrl: formulaMetadataSchema,
     listDynamicUrls: formulaMetadataSchema.optional(),
     getSchema: formulaMetadataSchema,
+    identityName: z.string(),
 }).strict();
 const syncTableSchema = z
     .union([genericDynamicSyncTableSchema, genericSyncTableSchema])
@@ -780,7 +782,19 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject({
         .optional()
         .default([])
         .superRefine((data, context) => {
-        const identityNames = data.map(tableDef => tableDef.schema.identity.name);
+        var _a, _b;
+        const identityNames = [];
+        for (const tableDef of data) {
+            if (tableDef.identityName && ((_a = tableDef.schema.identity) === null || _a === void 0 ? void 0 : _a.name)) {
+                if (tableDef.identityName !== tableDef.schema.identity.name) {
+                    context.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        message: `Sync table "${tableDef.name}" defines identityName "${tableDef.identityName}" that conflicts with its schema's identity.name "${tableDef.schema.identity.name}".`,
+                    });
+                }
+            }
+            identityNames.push((_b = tableDef.schema.identity) === null || _b === void 0 ? void 0 : _b.name);
+        }
         for (const dupe of getNonUniqueElements(identityNames)) {
             context.addIssue({
                 code: z.ZodIssueCode.custom,

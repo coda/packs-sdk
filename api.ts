@@ -162,6 +162,8 @@ export interface SyncTableDef<
   description?: string;
   /** See {@link SyncTableOptions.schema} */
   schema: SchemaT;
+  /** See {@link SyncTableOptions.identityName} */
+  identityName: string;
   /** See {@link SyncTableOptions.formula} */
   getter: SyncFormula<K, L, ParamDefsT, SchemaT>;
   /** See {@link DynamicOptions.getSchema} */
@@ -1355,6 +1357,14 @@ export interface DynamicSyncTableOptions<
    */
   getDisplayUrl: MetadataFormulaDef;
   /**
+   * See {@link SyncTableOptions.identityName} for an introduction.
+   *
+   * Every dynamic schema generated from this dynamic sync table definition should all use the same name
+   * for their identity. Code that refers to objects in these tables will use the dynamicUrl to
+   * differentiate which exact table to use.
+   */
+  identityName: string;
+  /**
    * A formula that returns a list of available dynamic urls that can be
    * used to create an instance of this dynamic sync table.
    */
@@ -1432,10 +1442,16 @@ export function makeSyncTable<
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {getSchema: getSchemaDef, entityName, defaultAddDynamicColumns} = dynamicOptions;
   const {execute: wrappedExecute, ...definition} = maybeRewriteConnectionForFormula(formula, connectionRequirement);
-  if (schemaDef.identity) {
-    schemaDef.identity = {...schemaDef.identity, name: identityName || schemaDef.identity.name};
-  } else if (identityName) {
-    schemaDef.identity = {name: identityName};
+  // We don't fail on a missing identityName because the legacy functions don't set it.
+  if (identityName) {
+    if (schemaDef.identity) {
+      if (schemaDef.identity.name && schemaDef.identity.name !== identityName) {
+        throw new Error("Sync table defines an identityName that conflicts with its schema's identity.name");
+      }
+      schemaDef.identity = {...schemaDef.identity, name: identityName};
+    } else {
+      schemaDef.identity = {name: identityName};
+    }
   }
   const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
   const schema = makeObjectSchema<K, L, SchemaDefT>(schemaDef) as SchemaT;
@@ -1464,6 +1480,7 @@ export function makeSyncTable<
     name,
     description,
     schema: normalizeSchema(schema),
+    identityName,
     getter: {
       ...definition,
       cacheTtlSecs: 0,
@@ -1494,7 +1511,17 @@ export function makeSyncTableLegacy<
     entityName?: string;
   } = {},
 ): SyncTableDef<K, L, ParamDefsT, SchemaT> {
-  return makeSyncTable({name, identityName: '', schema, formula, connectionRequirement, dynamicOptions});
+  if (!schema.identity?.name) {
+    throw new Error('Legacy sync tables must specify identity.name');
+  }
+  return makeSyncTable({
+    name,
+    identityName: schema.identity.name,
+    schema,
+    formula,
+    connectionRequirement,
+    dynamicOptions,
+  });
 }
 
 /**
@@ -1532,6 +1559,7 @@ export function makeDynamicSyncTable<
   entityName,
   connectionRequirement,
   defaultAddDynamicColumns,
+  identityName,
   placeholderSchema: placeholderSchemaInput,
 }: {
   name: string;
@@ -1545,6 +1573,7 @@ export function makeDynamicSyncTable<
   connectionRequirement?: ConnectionRequirement;
   defaultAddDynamicColumns?: boolean;
   placeholderSchema?: SchemaT;
+  identityName: string;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any> {
   const placeholderSchema: any =
     placeholderSchemaInput ||
@@ -1553,7 +1582,7 @@ export function makeDynamicSyncTable<
       type: ValueType.Object,
       idProperty: 'id',
       displayProperty: 'id',
-      identity: {name},
+      identity: {name: identityName},
       properties: {
         id: {type: ValueType.String},
       },
@@ -1565,7 +1594,7 @@ export function makeDynamicSyncTable<
   const table = makeSyncTable({
     name,
     description,
-    identityName: '',
+    identityName,
     schema: placeholderSchema,
     formula,
     connectionRequirement,
