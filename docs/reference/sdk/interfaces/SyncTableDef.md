@@ -35,6 +35,18 @@ See [SyncTableOptions.description](SyncTableOptions.md#description)
 
 ___
 
+### doNotAddNewSyncColumns
+
+• `Optional` **doNotAddNewSyncColumns**: `boolean`
+
+See [DynamicOptions.doNotAddNewSyncColumns](DynamicOptions.md#donotaddnewsynccolumns)
+
+#### Defined in
+
+[api.ts:171](https://github.com/coda/packs-sdk/blob/main/api.ts#L171)
+
+___
+
 ### entityName
 
 • `Optional` **entityName**: `string`

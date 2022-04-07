@@ -713,6 +713,7 @@ const baseSyncTableSchema = {
     schema: genericObjectSchema,
     getter: syncFormulaSchema,
     entityName: z.string().optional(),
+    doNotAddNewSyncColumns: z.boolean().optional(),
 };
 const genericSyncTableSchema = zodCompleteObject({
     ...baseSyncTableSchema,
@@ -730,7 +731,8 @@ const genericDynamicSyncTableSchema = zodCompleteObject({
     listDynamicUrls: formulaMetadataSchema.optional(),
     getSchema: formulaMetadataSchema,
 }).strict();
-const syncTableSchema = z.union([genericDynamicSyncTableSchema, genericSyncTableSchema])
+const syncTableSchema = z
+    .union([genericDynamicSyncTableSchema, genericSyncTableSchema])
     .superRefine((data, context) => {
     const syncTable = data;
     if (syncTable.getter.varargParameters && syncTable.getter.varargParameters.length > 0) {

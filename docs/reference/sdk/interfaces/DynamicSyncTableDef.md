@@ -39,6 +39,22 @@ See [SyncTableOptions.description](SyncTableOptions.md#description)
 
 ___
 
+### doNotAddNewSyncColumns
+
+• `Optional` **doNotAddNewSyncColumns**: `boolean`
+
+See [DynamicOptions.doNotAddNewSyncColumns](DynamicOptions.md#donotaddnewsynccolumns)
+
+#### Inherited from
+
+[SyncTableDef](SyncTableDef.md).[doNotAddNewSyncColumns](SyncTableDef.md#donotaddnewsynccolumns)
+
+#### Defined in
+
+[api.ts:171](https://github.com/coda/packs-sdk/blob/main/api.ts#L171)
+
+___
+
 ### entityName
 
 • `Optional` **entityName**: `string`
@@ -63,7 +79,7 @@ See [DynamicSyncTableOptions.getDisplayUrl](DynamicSyncTableOptions.md#getdispla
 
 #### Defined in
 
-[api.ts:189](https://github.com/coda/packs-sdk/blob/main/api.ts#L189)
+[api.ts:191](https://github.com/coda/packs-sdk/blob/main/api.ts#L191)
 
 ___
 
@@ -75,7 +91,7 @@ See [DynamicSyncTableOptions.getName](DynamicSyncTableOptions.md#getname)
 
 #### Defined in
 
-[api.ts:187](https://github.com/coda/packs-sdk/blob/main/api.ts#L187)
+[api.ts:189](https://github.com/coda/packs-sdk/blob/main/api.ts#L189)
 
 ___
 
@@ -91,7 +107,7 @@ See [DynamicSyncTableOptions.getSchema](DynamicSyncTableOptions.md#getschema)
 
 #### Defined in
 
-[api.ts:185](https://github.com/coda/packs-sdk/blob/main/api.ts#L185)
+[api.ts:187](https://github.com/coda/packs-sdk/blob/main/api.ts#L187)
 
 ___
 
@@ -119,7 +135,7 @@ Identifies this sync table as dynamic.
 
 #### Defined in
 
-[api.ts:183](https://github.com/coda/packs-sdk/blob/main/api.ts#L183)
+[api.ts:185](https://github.com/coda/packs-sdk/blob/main/api.ts#L185)
 
 ___
 
@@ -131,7 +147,7 @@ See [DynamicSyncTableOptions.listDynamicUrls](DynamicSyncTableOptions.md#listdyn
 
 #### Defined in
 
-[api.ts:191](https://github.com/coda/packs-sdk/blob/main/api.ts#L191)
+[api.ts:193](https://github.com/coda/packs-sdk/blob/main/api.ts#L193)
 
 ___
 

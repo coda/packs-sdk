@@ -167,6 +167,8 @@ export interface SyncTableDef<
   getSchema?: MetadataFormula;
   /** See {@link DynamicOptions.entityName} */
   entityName?: string;
+  /** See {@link DynamicOptions.doNotAddNewSyncColumns} */
+  doNotAddNewSyncColumns?: boolean;
 }
 
 /**
@@ -1250,6 +1252,8 @@ export interface DynamicOptions {
   getSchema?: MetadataFormulaDef;
   /** See {@link DynamicSyncTableOptions.entityName} */
   entityName?: string;
+  /** See {@link DynamicSyncTableOptions.doNotAddNewSyncColumns} */
+  doNotAddNewSyncColumns?: boolean;
 }
 
 /**
@@ -1372,6 +1376,16 @@ export interface DynamicSyncTableOptions<
    * this sync table (including autocomplete formulas).
    */
   connectionRequirement?: ConnectionRequirement;
+  /**
+   * If the sync table should add newly found columns to the canvas. By setting this to true (user can
+   * still change this later), newly found columns will be hidden by default. The hidden columns can
+   * be revealed manually.
+   */
+  doNotAddNewSyncColumns?: boolean;
+  /**
+   * Optional placeholder schema before the dynamic schema is retrieved.
+   */
+  schema?: SchemaT;
 }
 
 /**
@@ -1402,7 +1416,7 @@ export function makeSyncTable<
   connectionRequirement,
   dynamicOptions = {},
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
-  const {getSchema: getSchemaDef, entityName} = dynamicOptions;
+  const {getSchema: getSchemaDef, entityName, doNotAddNewSyncColumns} = dynamicOptions;
   const {execute: wrappedExecute, ...definition} = maybeRewriteConnectionForFormula(formula, connectionRequirement);
   if (schemaDef.identity) {
     schemaDef.identity = {...schemaDef.identity, name: identityName || schemaDef.identity.name};
@@ -1447,6 +1461,7 @@ export function makeSyncTable<
     },
     getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
     entityName,
+    doNotAddNewSyncColumns,
   };
 }
 
@@ -1487,7 +1502,12 @@ export function makeSyncTableLegacy<
  * });
  * ```
  */
-export function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({
+export function makeDynamicSyncTable<
+  K extends string,
+  L extends string,
+  ParamDefsT extends ParamDefs,
+  SchemaT extends ObjectSchemaDefinition<K, L>,
+>({
   name,
   description,
   getName: getNameDef,
@@ -1497,6 +1517,8 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   listDynamicUrls: listDynamicUrlsDef,
   entityName,
   connectionRequirement,
+  doNotAddNewSyncColumns,
+  schema,
 }: {
   name: string;
   description?: string;
@@ -1507,18 +1529,21 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   listDynamicUrls?: MetadataFormulaDef;
   entityName?: string;
   connectionRequirement?: ConnectionRequirement;
+  doNotAddNewSyncColumns?: boolean;
+  schema?: SchemaT;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any> {
-  const fakeSchema: any = makeObjectSchema({
-    // This schema is useless... just creating a stub here but the client will use
-    // the dynamic one.
-    type: ValueType.Object,
-    id: 'id',
-    primary: 'id',
-    identity: {name},
-    properties: {
-      id: {type: ValueType.String},
-    },
-  });
+  const placeholderSchema: any =
+    schema ||
+    // default placeholder only shows a column of id, which will be replaced later by the dynamic schema.
+    makeObjectSchema({
+      type: ValueType.Object,
+      id: 'id',
+      primary: 'id',
+      identity: {name},
+      properties: {
+        id: {type: ValueType.String},
+      },
+    });
   const getName = wrapMetadataFunction(getNameDef);
   const getSchema = wrapMetadataFunction(getSchemaDef);
   const getDisplayUrl = wrapMetadataFunction(getDisplayUrlDef);
@@ -1527,10 +1552,10 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
     name,
     description,
     identityName: '',
-    schema: fakeSchema,
+    schema: placeholderSchema,
     formula,
     connectionRequirement,
-    dynamicOptions: {getSchema, entityName},
+    dynamicOptions: {getSchema, entityName, doNotAddNewSyncColumns},
   });
   return {
     ...table,

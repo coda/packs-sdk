@@ -39,7 +39,7 @@ function marshalError(err) {
     /**
      * typical Error instance has 3 special & common fields that doesn't get serialized in JSON.stringify:
      *  - name
-     *  - stac
+     *  - stack
      *  - message
      */
     const { name, stack, message, ...args } = err;

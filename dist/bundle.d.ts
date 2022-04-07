@@ -1745,6 +1745,8 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
 	getSchema?: MetadataFormula;
 	/** See {@link DynamicOptions.entityName} */
 	entityName?: string;
+	/** See {@link DynamicOptions.doNotAddNewSyncColumns} */
+	doNotAddNewSyncColumns?: boolean;
 }
 /**
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
@@ -2272,6 +2274,8 @@ export interface DynamicOptions {
 	getSchema?: MetadataFormulaDef;
 	/** See {@link DynamicSyncTableOptions.entityName} */
 	entityName?: string;
+	/** See {@link DynamicSyncTableOptions.doNotAddNewSyncColumns} */
+	doNotAddNewSyncColumns?: boolean;
 }
 /**
  * Input options for defining a sync table. See {@link makeSyncTable}.
@@ -2382,6 +2386,16 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	 * this sync table (including autocomplete formulas).
 	 */
 	connectionRequirement?: ConnectionRequirement;
+	/**
+	 * If the sync table should add newly found columns to the canvas. By setting this to true (user can
+	 * still change this later), newly found columns will be hidden by default. The hidden columns can
+	 * be revealed manually.
+	 */
+	doNotAddNewSyncColumns?: boolean;
+	/**
+	 * Optional placeholder schema before the dynamic schema is retrieved.
+	 */
+	schema?: SchemaT;
 }
 /**
  * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
@@ -2416,7 +2430,7 @@ export declare function makeSyncTable<K extends string, L extends string, ParamD
  * });
  * ```
  */
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ name, description, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, }: {
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>>({ name, description, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, doNotAddNewSyncColumns, schema, }: {
 	name: string;
 	description?: string;
 	getName: MetadataFormulaDef;
@@ -2426,6 +2440,8 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
 	listDynamicUrls?: MetadataFormulaDef;
 	entityName?: string;
 	connectionRequirement?: ConnectionRequirement;
+	doNotAddNewSyncColumns?: boolean;
+	schema?: SchemaT;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any>;
 /**
  * Helper to generate a formula that fetches a list of entities from a given URL and returns them.
