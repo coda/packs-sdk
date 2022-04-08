@@ -887,7 +887,8 @@ const genericDynamicSyncTableSchema = zodCompleteObject<
   getSchema: formulaMetadataSchema,
 }).strict();
 
-const syncTableSchema = z.union([genericDynamicSyncTableSchema, genericSyncTableSchema])
+const syncTableSchema = z
+  .union([genericDynamicSyncTableSchema, genericSyncTableSchema])
   .superRefine((data, context) => {
     const syncTable = data as SyncTable;
 
@@ -895,11 +896,10 @@ const syncTableSchema = z.union([genericDynamicSyncTableSchema, genericSyncTable
       context.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['getter', 'varargParameters'],
-        message:
-          'Sync table formulas do not currently support varargParameters.',
+        message: 'Sync table formulas do not currently support varargParameters.',
       });
     }
-});
+  });
 
 // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
 // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
@@ -1157,18 +1157,25 @@ const legacyPackMetadataSchema = validateFormulas(
       path: ['networkDomains'],
     },
   )
-  .superRefine((data, context) => {
-    if (!data.defaultAuthentication) {
+  .superRefine((untypedData, context) => {
+    // Check that packs with multiple network domains explicitly choose which domain gets auth.
+
+    const data = untypedData as PackVersionMetadata;
+    if (
+      !data.defaultAuthentication ||
+      data.defaultAuthentication.type === AuthenticationType.Various ||
+      data.defaultAuthentication.type === AuthenticationType.None
+    ) {
       return;
     }
-    // Pack has multiple network domains and uses authentication.
-    if (data.defaultAuthentication.requiresEndpointUrl || data.defaultAuthentication.type === AuthenticationType.None) {
-      // We're ok if there's a user-supplied endpoint domain if auth is just being disabled explicitly.
+
+    if (data.defaultAuthentication.requiresEndpointUrl) {
+      // We're ok if there's a user-supplied endpoint domain.
       return;
     }
 
     if (!data.defaultAuthentication.networkDomain) {
-      if (data.networkDomains?.length > 1) {
+      if (data.networkDomains && data.networkDomains.length > 1) {
         context.addIssue({
           code: z.ZodIssueCode.custom,
           path: ['defaultAuthentication.networkDomain'],
