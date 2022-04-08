@@ -41,6 +41,7 @@ const schema_10 = require("../schema");
 const ensure_1 = require("../helpers/ensure");
 const object_utils_1 = require("../helpers/object_utils");
 const schema_11 = require("../schema");
+const migration_1 = require("../helpers/migration");
 const z = __importStar(require("zod"));
 /**
  * The uncompiled column format matchers will be expected to be actual regex objects,
@@ -620,9 +621,12 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     type: zodDiscriminant(schema_10.ValueType.Object),
     description: z.string().optional(),
     id: z.string().optional(),
+    idProperty: z.string().optional(),
     primary: z.string().optional(),
+    primaryProperty: z.string().optional(),
     codaType: z.enum([...schema_6.ObjectHintValueTypes]).optional(),
     featured: z.array(z.string()).optional(),
+    featuredProperties: z.array(z.string()).optional(),
     identity: zodCompleteObject({
         // Stupid hack to hardcode a pack id that will get replaced at upload time.
         // TODO(jonathan): Enable after existing packs go through the v2 upload flow.
@@ -646,14 +650,20 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
         });
     }
 })
-    .refine(data => (0, object_utils_1.isNil)(data.id) || data.id in data.properties, {
+    .refine(data => {
+    const schemaHelper = (0, migration_1.objectSchemaHelper)(data);
+    return (0, object_utils_1.isNil)(schemaHelper.id) || schemaHelper.id in schemaHelper.properties;
+}, {
     message: 'The "id" property must appear as a key in the "properties" object.',
 })
-    .refine(data => (0, object_utils_1.isNil)(data.primary) || data.primary in data.properties, {
-    message: 'The "primary" property must appear as a key in the "properties" object.',
+    .refine(data => {
+    const schemaHelper = (0, migration_1.objectSchemaHelper)(data);
+    return (0, object_utils_1.isNil)(schemaHelper.primary) || schemaHelper.primary in schemaHelper.properties;
+}, {
+    message: 'The "primaryProperty" property must appear as a key in the "properties" object.',
 })
     .superRefine((data, context) => {
-    (data.featured || []).forEach((f, i) => {
+    ((0, migration_1.objectSchemaHelper)(data).featured || []).forEach((f, i) => {
         if (!(f in data.properties)) {
             context.addIssue({
                 code: z.ZodIssueCode.custom,

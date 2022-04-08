@@ -17,6 +17,7 @@ const object_utils_1 = require("./helpers/object_utils");
 const schema_2 = require("./schema");
 const schema_3 = require("./schema");
 const api_types_8 = require("./api_types");
+const migration_1 = require("./helpers/migration");
 const api_types_9 = require("./api_types");
 const handler_templates_3 = require("./handler_templates");
 /**
@@ -606,9 +607,9 @@ function makeSyncTable({ name, description, identityName, schema: schemaDef, for
     const formulaSchema = getSchema
         ? undefined
         : (0, schema_3.normalizeSchema)({ type: schema_1.ValueType.Array, items: schema });
-    const { identity, id, primary } = schema;
+    const { identity, id, primary } = (0, migration_1.objectSchemaHelper)(schema);
     if (!(primary && id && identity)) {
-        throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
+        throw new Error(`Sync table schemas should have defined properties for identity, idProperty and primaryProperty`);
     }
     if (name.includes(' ')) {
         throw new Error('Sync table name should not include spaces');
@@ -669,8 +670,8 @@ function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchem
         // default placeholder only shows a column of id, which will be replaced later by the dynamic schema.
         (0, schema_2.makeObjectSchema)({
             type: schema_1.ValueType.Object,
-            id: 'id',
-            primary: 'id',
+            idProperty: 'id',
+            primaryProperty: 'id',
             identity: { name },
             properties: {
                 id: { type: schema_1.ValueType.String },

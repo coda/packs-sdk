@@ -1256,8 +1256,8 @@ describe('Pack metadata Validation', () => {
       it('valid object formula with schema', async () => {
         const metadata = metadataForFormulaWithObjectSchema({
           type: ValueType.Object,
-          id: 'id',
-          primary: 'primary',
+          idProperty: 'id',
+          primaryProperty: 'primary',
           identity: {
             name: 'IdentityName',
           },
@@ -1340,7 +1340,7 @@ describe('Pack metadata Validation', () => {
       it('id not among properties', async () => {
         const metadata = metadataForFormulaWithObjectSchema({
           type: ValueType.Object,
-          id: 'garbage',
+          idProperty: 'garbage',
           properties: {
             id: {type: ValueType.Number, required: true},
           },
@@ -1357,7 +1357,7 @@ describe('Pack metadata Validation', () => {
       it('primary not among properties', async () => {
         const metadata = metadataForFormulaWithObjectSchema({
           type: ValueType.Object,
-          primary: 'garbage',
+          primaryProperty: 'garbage',
           properties: {
             primary: {type: ValueType.Number, required: true},
           },
@@ -1365,7 +1365,7 @@ describe('Pack metadata Validation', () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: 'The "primary" property must appear as a key in the "properties" object.',
+            message: 'The "primaryProperty" property must appear as a key in the "properties" object.',
             path: 'formulas[0].schema',
           },
         ]);
@@ -1374,7 +1374,7 @@ describe('Pack metadata Validation', () => {
       it('unknown key in properties', async () => {
         const metadata = metadataForFormulaWithObjectSchema({
           type: ValueType.Object,
-          primary: 'primary',
+          primaryProperty: 'primary',
           properties: {
             primary: {type: ValueType.Number, required: true, foo: true} as any,
           },
@@ -1391,7 +1391,7 @@ describe('Pack metadata Validation', () => {
       it('featured field not among properties', async () => {
         const metadata = metadataForFormulaWithObjectSchema({
           type: ValueType.Object,
-          featured: ['name', 'foo'],
+          featuredProperties: ['name', 'foo'],
           properties: {
             name: {type: ValueType.Number, required: true},
           },

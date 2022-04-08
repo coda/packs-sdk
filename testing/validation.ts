@@ -24,6 +24,7 @@ import {isDefined} from '../helpers/object_utils';
 import {isEmail} from '../helpers/string';
 import {isObject} from '../schema';
 import {isObjectPackFormula} from '../api';
+import {objectSchemaHelper} from '../helpers/migration';
 import * as objectUtils from '../helpers/object_utils';
 import urlParse from 'url-parse';
 
@@ -261,7 +262,7 @@ function tryParseScale(result: unknown, schema: ScaleSchema) {
 }
 
 function tryParsePerson(result: any, schema: GenericObjectSchema) {
-  const {id} = schema;
+  const {id} = objectSchemaHelper(schema);
   const validId = ensureExists(id);
   const idError = checkFieldInResult(result, validId);
   if (idError) {
@@ -351,12 +352,16 @@ function validateObject<ResultT extends Record<string, unknown>>(
     }
   }
 
-  const idValue = schema.id && schema.id in result ? result[schema.id] : undefined;
+  const schemaHelper = objectSchemaHelper(schema);
+  const idValue = schemaHelper.id && schemaHelper.id in result ? result[schemaHelper.id] : undefined;
   // Some objects will return an id field of 0, but other falsy values (i.e. '') are more likely to be actual errors
-  if (schema.id && schema.id in result && 
-    (!objectUtils.isDefined(idValue) || (!idValue && !ACCEPTED_FALSY_VALUES.includes(idValue)))) {
+  if (
+    schemaHelper.id &&
+    schemaHelper.id in result &&
+    (!objectUtils.isDefined(idValue) || (!idValue && !ACCEPTED_FALSY_VALUES.includes(idValue)))
+  ) {
     errors.push({
-      message: `Schema declares "${schema.id}" as an id property but an empty value was found in result.`,
+      message: `Schema declares "${schemaHelper.id}" as an id property but an empty value was found in result.`,
     });
   }
   return errors;

@@ -15,7 +15,7 @@ The raw body of the HTTP error response.
 
 #### Defined in
 
-[api.ts:85](https://github.com/coda/packs-sdk/blob/main/api.ts#L85)
+[api.ts:86](https://github.com/coda/packs-sdk/blob/main/api.ts#L86)
 
 ___
 
@@ -31,4 +31,4 @@ The headers from the HTTP error response. Many header values are redacted by Cod
 
 #### Defined in
 
-[api.ts:87](https://github.com/coda/packs-sdk/blob/main/api.ts#L87)
+[api.ts:88](https://github.com/coda/packs-sdk/blob/main/api.ts#L88)

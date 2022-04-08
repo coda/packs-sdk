@@ -16,7 +16,7 @@ Indicates a JavaScript array should be returned. The schema of the array items m
 
 #### Defined in
 
-[schema.ts:30](https://github.com/coda/packs-sdk/blob/main/schema.ts#L30)
+[schema.ts:31](https://github.com/coda/packs-sdk/blob/main/schema.ts#L31)
 
 ___
 
@@ -28,7 +28,7 @@ Indicates a JavaScript boolean (true/false) should be returned.
 
 #### Defined in
 
-[schema.ts:18](https://github.com/coda/packs-sdk/blob/main/schema.ts#L18)
+[schema.ts:19](https://github.com/coda/packs-sdk/blob/main/schema.ts#L19)
 
 ___
 
@@ -40,7 +40,7 @@ Indicates a JavaScript number should be returned.
 
 #### Defined in
 
-[schema.ts:22](https://github.com/coda/packs-sdk/blob/main/schema.ts#L22)
+[schema.ts:23](https://github.com/coda/packs-sdk/blob/main/schema.ts#L23)
 
 ___
 
@@ -52,7 +52,7 @@ Indicates a JavaScript object should be returned. The schema of each object prop
 
 #### Defined in
 
-[schema.ts:34](https://github.com/coda/packs-sdk/blob/main/schema.ts#L34)
+[schema.ts:35](https://github.com/coda/packs-sdk/blob/main/schema.ts#L35)
 
 ___
 
@@ -64,4 +64,4 @@ Indicates a JavaScript string should be returned.
 
 #### Defined in
 
-[schema.ts:26](https://github.com/coda/packs-sdk/blob/main/schema.ts#L26)
+[schema.ts:27](https://github.com/coda/packs-sdk/blob/main/schema.ts#L27)

@@ -36,6 +36,7 @@ const object_utils_1 = require("../helpers/object_utils");
 const string_1 = require("../helpers/string");
 const schema_4 = require("../schema");
 const api_1 = require("../api");
+const migration_1 = require("../helpers/migration");
 const objectUtils = __importStar(require("../helpers/object_utils"));
 const url_parse_1 = __importDefault(require("url-parse"));
 function validateParams(formula, args) {
@@ -247,7 +248,7 @@ function tryParseScale(result, schema) {
     }
 }
 function tryParsePerson(result, schema) {
-    const { id } = schema;
+    const { id } = (0, migration_1.objectSchemaHelper)(schema);
     const validId = (0, ensure_1.ensureExists)(id);
     const idError = checkFieldInResult(result, validId);
     if (idError) {
@@ -307,12 +308,14 @@ function validateObject(result, schema, context) {
             errors.push(...propertyLevelErrors);
         }
     }
-    const idValue = schema.id && schema.id in result ? result[schema.id] : undefined;
+    const schemaHelper = (0, migration_1.objectSchemaHelper)(schema);
+    const idValue = schemaHelper.id && schemaHelper.id in result ? result[schemaHelper.id] : undefined;
     // Some objects will return an id field of 0, but other falsy values (i.e. '') are more likely to be actual errors
-    if (schema.id && schema.id in result &&
+    if (schemaHelper.id &&
+        schemaHelper.id in result &&
         (!objectUtils.isDefined(idValue) || (!idValue && !ACCEPTED_FALSY_VALUES.includes(idValue)))) {
         errors.push({
-            message: `Schema declares "${schema.id}" as an id property but an empty value was found in result.`,
+            message: `Schema declares "${schemaHelper.id}" as an id property but an empty value was found in result.`,
         });
     }
     return errors;

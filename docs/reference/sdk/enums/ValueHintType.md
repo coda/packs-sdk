@@ -16,7 +16,7 @@ pointing to a file of a Coda-supported type. Coda will ingest the file and host 
 
 #### Defined in
 
-[schema.ts:149](https://github.com/coda/packs-sdk/blob/main/schema.ts#L149)
+[schema.ts:150](https://github.com/coda/packs-sdk/blob/main/schema.ts#L150)
 
 ___
 
@@ -28,7 +28,7 @@ Indicates to interpret and render the value as a currency value.
 
 #### Defined in
 
-[schema.ts:88](https://github.com/coda/packs-sdk/blob/main/schema.ts#L88)
+[schema.ts:89](https://github.com/coda/packs-sdk/blob/main/schema.ts#L89)
 
 ___
 
@@ -40,7 +40,7 @@ Indicates to interpret the value as a date (e.g. March 3, 2021).
 
 #### Defined in
 
-[schema.ts:44](https://github.com/coda/packs-sdk/blob/main/schema.ts#L44)
+[schema.ts:45](https://github.com/coda/packs-sdk/blob/main/schema.ts#L45)
 
 ___
 
@@ -52,7 +52,7 @@ Indicates to interpret the value as a datetime (e.g. March 3, 2021 at 5:24pm).
 
 #### Defined in
 
-[schema.ts:52](https://github.com/coda/packs-sdk/blob/main/schema.ts#L52)
+[schema.ts:53](https://github.com/coda/packs-sdk/blob/main/schema.ts#L53)
 
 ___
 
@@ -64,7 +64,7 @@ Indicates to interpret the value as a duration (e.g. 3 hours).
 
 #### Defined in
 
-[schema.ts:56](https://github.com/coda/packs-sdk/blob/main/schema.ts#L56)
+[schema.ts:57](https://github.com/coda/packs-sdk/blob/main/schema.ts#L57)
 
 ___
 
@@ -76,7 +76,7 @@ Indicates to interpret the value as an email address (e.g. joe@foo.com).
 
 #### Defined in
 
-[schema.ts:60](https://github.com/coda/packs-sdk/blob/main/schema.ts#L60)
+[schema.ts:61](https://github.com/coda/packs-sdk/blob/main/schema.ts#L61)
 
 ___
 
@@ -89,7 +89,7 @@ to an embeddable web page.
 
 #### Defined in
 
-[schema.ts:118](https://github.com/coda/packs-sdk/blob/main/schema.ts#L118)
+[schema.ts:119](https://github.com/coda/packs-sdk/blob/main/schema.ts#L119)
 
 ___
 
@@ -101,7 +101,7 @@ Indicates to interpret a text value as HTML, which will be converted and rendere
 
 #### Defined in
 
-[schema.ts:113](https://github.com/coda/packs-sdk/blob/main/schema.ts#L113)
+[schema.ts:114](https://github.com/coda/packs-sdk/blob/main/schema.ts#L114)
 
 ___
 
@@ -114,7 +114,7 @@ points to an image. Coda will ingest the image and host it from Coda infrastruct
 
 #### Defined in
 
-[schema.ts:101](https://github.com/coda/packs-sdk/blob/main/schema.ts#L101)
+[schema.ts:102](https://github.com/coda/packs-sdk/blob/main/schema.ts#L102)
 
 ___
 
@@ -130,7 +130,7 @@ and won't appear as broken if the source image is later deleted.
 
 #### Defined in
 
-[schema.ts:96](https://github.com/coda/packs-sdk/blob/main/schema.ts#L96)
+[schema.ts:97](https://github.com/coda/packs-sdk/blob/main/schema.ts#L97)
 
 ___
 
@@ -142,7 +142,7 @@ Indicates to interpret a text value as Markdown, which will be converted and ren
 
 #### Defined in
 
-[schema.ts:109](https://github.com/coda/packs-sdk/blob/main/schema.ts#L109)
+[schema.ts:110](https://github.com/coda/packs-sdk/blob/main/schema.ts#L110)
 
 ___
 
@@ -154,7 +154,7 @@ Indicates to interpret and render the value as a percentage.
 
 #### Defined in
 
-[schema.ts:84](https://github.com/coda/packs-sdk/blob/main/schema.ts#L84)
+[schema.ts:85](https://github.com/coda/packs-sdk/blob/main/schema.ts#L85)
 
 ___
 
@@ -182,7 +182,7 @@ makeObjectSchema({
 
 #### Defined in
 
-[schema.ts:80](https://github.com/coda/packs-sdk/blob/main/schema.ts#L80)
+[schema.ts:81](https://github.com/coda/packs-sdk/blob/main/schema.ts#L81)
 
 ___
 
@@ -216,7 +216,7 @@ makeObjectSchema({
 
 #### Defined in
 
-[schema.ts:144](https://github.com/coda/packs-sdk/blob/main/schema.ts#L144)
+[schema.ts:145](https://github.com/coda/packs-sdk/blob/main/schema.ts#L145)
 
 ___
 
@@ -228,7 +228,7 @@ Indicates to render a numeric value as a scale UI component (e.g. a star rating)
 
 #### Defined in
 
-[schema.ts:157](https://github.com/coda/packs-sdk/blob/main/schema.ts#L157)
+[schema.ts:158](https://github.com/coda/packs-sdk/blob/main/schema.ts#L158)
 
 ___
 
@@ -240,7 +240,7 @@ Indicates to render a numeric value as a slider UI component.
 
 #### Defined in
 
-[schema.ts:153](https://github.com/coda/packs-sdk/blob/main/schema.ts#L153)
+[schema.ts:154](https://github.com/coda/packs-sdk/blob/main/schema.ts#L154)
 
 ___
 
@@ -252,7 +252,7 @@ Indicates to interpret the value as a time (e.g. 5:24pm).
 
 #### Defined in
 
-[schema.ts:48](https://github.com/coda/packs-sdk/blob/main/schema.ts#L48)
+[schema.ts:49](https://github.com/coda/packs-sdk/blob/main/schema.ts#L49)
 
 ___
 
@@ -264,4 +264,4 @@ Indicates to interpret and render the value as a URL link.
 
 #### Defined in
 
-[schema.ts:105](https://github.com/coda/packs-sdk/blob/main/schema.ts#L105)
+[schema.ts:106](https://github.com/coda/packs-sdk/blob/main/schema.ts#L106)

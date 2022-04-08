@@ -28,7 +28,7 @@ BaseSchema.description
 
 #### Defined in
 
-[schema.ts:199](https://github.com/coda/packs-sdk/blob/main/schema.ts#L199)
+[schema.ts:200](https://github.com/coda/packs-sdk/blob/main/schema.ts#L200)
 
 ___
 
@@ -40,4 +40,4 @@ Identifies this schema as relating to a boolean value.
 
 #### Defined in
 
-[schema.ts:207](https://github.com/coda/packs-sdk/blob/main/schema.ts#L207)
+[schema.ts:208](https://github.com/coda/packs-sdk/blob/main/schema.ts#L208)
