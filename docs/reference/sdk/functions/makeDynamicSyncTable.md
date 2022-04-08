@@ -39,7 +39,7 @@ coda.makeDynamicSyncTable({
 | `__namedParameters` | `Object` |
 | `__namedParameters.connectionRequirement?` | [`ConnectionRequirement`](../enums/ConnectionRequirement.md) |
 | `__namedParameters.description?` | `string` |
-| `__namedParameters.doNotAddNewSyncColumnsByDefault?` | `boolean` |
+| `__namedParameters.disableNewColumnsOnSyncByDefault?` | `boolean` |
 | `__namedParameters.entityName?` | `string` |
 | `__namedParameters.formula` | [`SyncFormulaDef`](../interfaces/SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `any`\> |
 | `__namedParameters.getDisplayUrl` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
@@ -55,4 +55,4 @@ coda.makeDynamicSyncTable({
 
 #### Defined in
 
-[api.ts:1513](https://github.com/coda/packs-sdk/blob/main/api.ts#L1513)
+[api.ts:1516](https://github.com/coda/packs-sdk/blob/main/api.ts#L1516)

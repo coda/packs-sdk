@@ -35,11 +35,11 @@ See [SyncTableOptions.description](SyncTableOptions.md#description)
 
 ___
 
-### doNotAddNewSyncColumnsByDefault
+### disableNewColumnsOnSyncByDefault
 
-• `Optional` **doNotAddNewSyncColumnsByDefault**: `boolean`
+• `Optional` **disableNewColumnsOnSyncByDefault**: `boolean`
 
-See [DynamicOptions.doNotAddNewSyncColumnsByDefault](DynamicOptions.md#donotaddnewsynccolumnsbydefault)
+See [DynamicOptions.disableNewColumnsOnSyncByDefault](DynamicOptions.md#disablenewcolumnsonsyncbydefault)
 
 #### Defined in
 

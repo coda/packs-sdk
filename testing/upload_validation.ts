@@ -862,7 +862,7 @@ const baseSyncTableSchema = {
   schema: genericObjectSchema,
   getter: syncFormulaSchema,
   entityName: z.string().optional(),
-  doNotAddNewSyncColumnsByDefault: z.boolean().optional(),
+  disableNewColumnsOnSyncByDefault: z.boolean().optional(),
 };
 
 type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;

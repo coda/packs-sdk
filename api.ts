@@ -167,8 +167,8 @@ export interface SyncTableDef<
   getSchema?: MetadataFormula;
   /** See {@link DynamicOptions.entityName} */
   entityName?: string;
-  /** See {@link DynamicOptions.doNotAddNewSyncColumnsByDefault} */
-  doNotAddNewSyncColumnsByDefault?: boolean;
+  /** See {@link DynamicOptions.disableNewColumnsOnSyncByDefault} */
+  disableNewColumnsOnSyncByDefault?: boolean;
 }
 
 /**
@@ -1252,8 +1252,8 @@ export interface DynamicOptions {
   getSchema?: MetadataFormulaDef;
   /** See {@link DynamicSyncTableOptions.entityName} */
   entityName?: string;
-  /** See {@link DynamicSyncTableOptions.doNotAddNewSyncColumnsByDefault} */
-  doNotAddNewSyncColumnsByDefault?: boolean;
+  /** See {@link DynamicSyncTableOptions.disableNewColumnsOnSyncByDefault} */
+  disableNewColumnsOnSyncByDefault?: boolean;
 }
 
 /**
@@ -1377,21 +1377,24 @@ export interface DynamicSyncTableOptions<
    */
   connectionRequirement?: ConnectionRequirement;
   /**
-   * If true, when subsequent syncs discover new schema fields, these fields will not automatically be
-   * added as new columns on the table. The user can still manually add columns for these new fields.
+   * If true, when subsequent syncs discover new schema properties, these properties will not automatically be
+   * added as new columns on the table. The user can still manually add columns for these new properties.
    * This only applies to tables that use dynamic schemas.
    *
    * When tables with dynamic schemas are synced, the {@link getSchema} formula is run each time,
    * which may return a schema that is different than that from the last sync. The default behavior
-   * is that any schema fields that are new in this sync are automatically added as new columns,
+   * is that any schema properties that are new in this sync are automatically added as new columns,
    * so they are apparent to the user. However, in rare cases when schemas change frequently,
    * this can cause the number of columns to grow quickly and become overwhelming. Setting this
    * value to true leaves the columns unchanged and puts the choice of what columns to display
    * into the hands of the user.
    */
-  doNotAddNewSyncColumnsByDefault?: boolean;
+  disableNewColumnsOnSyncByDefault?: boolean;
   /**
    * Optional placeholder schema before the dynamic schema is retrieved.
+   *
+   * If {@link DynamicSyncTableOptions.disableNewColumnsOnSyncByDefault) is true, only featured columns
+   * in placeholderSchema will be rendered by default after the sync.
    */
   placeholderSchema?: SchemaT;
 }
@@ -1424,7 +1427,7 @@ export function makeSyncTable<
   connectionRequirement,
   dynamicOptions = {},
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
-  const {getSchema: getSchemaDef, entityName, doNotAddNewSyncColumnsByDefault} = dynamicOptions;
+  const {getSchema: getSchemaDef, entityName, disableNewColumnsOnSyncByDefault} = dynamicOptions;
   const {execute: wrappedExecute, ...definition} = maybeRewriteConnectionForFormula(formula, connectionRequirement);
   if (schemaDef.identity) {
     schemaDef.identity = {...schemaDef.identity, name: identityName || schemaDef.identity.name};
@@ -1469,7 +1472,7 @@ export function makeSyncTable<
     },
     getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
     entityName,
-    doNotAddNewSyncColumnsByDefault,
+    disableNewColumnsOnSyncByDefault,
   };
 }
 
@@ -1525,7 +1528,7 @@ export function makeDynamicSyncTable<
   listDynamicUrls: listDynamicUrlsDef,
   entityName,
   connectionRequirement,
-  doNotAddNewSyncColumnsByDefault,
+  disableNewColumnsOnSyncByDefault,
   placeholderSchema: placeholderSchemaInput,
 }: {
   name: string;
@@ -1537,7 +1540,7 @@ export function makeDynamicSyncTable<
   listDynamicUrls?: MetadataFormulaDef;
   entityName?: string;
   connectionRequirement?: ConnectionRequirement;
-  doNotAddNewSyncColumnsByDefault?: boolean;
+  disableNewColumnsOnSyncByDefault?: boolean;
   placeholderSchema?: SchemaT;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any> {
   const placeholderSchema: any =
@@ -1563,7 +1566,7 @@ export function makeDynamicSyncTable<
     schema: placeholderSchema,
     formula,
     connectionRequirement,
-    dynamicOptions: {getSchema, entityName, doNotAddNewSyncColumnsByDefault},
+    dynamicOptions: {getSchema, entityName, disableNewColumnsOnSyncByDefault},
   });
   return {
     ...table,
