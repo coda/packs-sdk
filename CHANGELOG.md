@@ -4,6 +4,7 @@ This changelog keeps track of all changes to the packs-sdk. We follow convention
 ### Unreleased
 - **Breaking Change** Added a validation rule that prevents the usage of varargsParameters for sync table getters
 which are not currently supported in the UI.
+- Added "force" option to `LinkSchema` for `LinkDisplayType.Embed`.
 
 ## [0.9.0] - 2022-03-17
 - **Breaking Change** ValueHintType.Url will now create a column of type "Link" instead of "Text".
