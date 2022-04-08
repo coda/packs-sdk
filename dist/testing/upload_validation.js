@@ -731,7 +731,8 @@ const genericDynamicSyncTableSchema = zodCompleteObject({
     listDynamicUrls: formulaMetadataSchema.optional(),
     getSchema: formulaMetadataSchema,
 }).strict();
-const syncTableSchema = z.union([genericDynamicSyncTableSchema, genericSyncTableSchema])
+const syncTableSchema = z
+    .union([genericDynamicSyncTableSchema, genericSyncTableSchema])
     .superRefine((data, context) => {
     const syncTable = data;
     if (syncTable.getter.varargParameters && syncTable.getter.varargParameters.length > 0) {
@@ -970,18 +971,21 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
         "Specify the domain that your pack makes http requests to using `networkDomains: ['example.com']`",
     path: ['networkDomains'],
 })
-    .superRefine((data, context) => {
-    var _a, _b;
-    if (!data.defaultAuthentication) {
+    .superRefine((untypedData, context) => {
+    // Check that packs with multiple network domains explicitly choose which domain gets auth.
+    var _a;
+    const data = untypedData;
+    if (!data.defaultAuthentication ||
+        data.defaultAuthentication.type === types_1.AuthenticationType.Various ||
+        data.defaultAuthentication.type === types_1.AuthenticationType.None) {
         return;
     }
-    // Pack has multiple network domains and uses authentication.
-    if (data.defaultAuthentication.requiresEndpointUrl || data.defaultAuthentication.type === types_1.AuthenticationType.None) {
-        // We're ok if there's a user-supplied endpoint domain if auth is just being disabled explicitly.
+    if (data.defaultAuthentication.requiresEndpointUrl) {
+        // We're ok if there's a user-supplied endpoint domain.
         return;
     }
     if (!data.defaultAuthentication.networkDomain) {
-        if (((_a = data.networkDomains) === null || _a === void 0 ? void 0 : _a.length) > 1) {
+        if (data.networkDomains && data.networkDomains.length > 1) {
             context.addIssue({
                 code: z.ZodIssueCode.custom,
                 path: ['defaultAuthentication.networkDomain'],
@@ -991,7 +995,7 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
         return;
     }
     // Pack has multiple network domains and user auth. The code needs to clarify which domain gets the auth headers.
-    if (!((_b = data.networkDomains) === null || _b === void 0 ? void 0 : _b.includes(data.defaultAuthentication.networkDomain))) {
+    if (!((_a = data.networkDomains) === null || _a === void 0 ? void 0 : _a.includes(data.defaultAuthentication.networkDomain))) {
         context.addIssue({
             code: z.ZodIssueCode.custom,
             path: ['defaultAuthentication.networkDomain'],
