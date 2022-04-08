@@ -9,4 +9,4 @@ The union of schema definition types whose underlying value is a string.
 
 #### Defined in
 
-[schema.ts:627](https://github.com/coda/packs-sdk/blob/main/schema.ts#L627)
+[schema.ts:629](https://github.com/coda/packs-sdk/blob/main/schema.ts#L629)

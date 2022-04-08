@@ -47,7 +47,7 @@ A schema for the items of this array.
 
 #### Defined in
 
-[schema.ts:645](https://github.com/coda/packs-sdk/blob/main/schema.ts#L645)
+[schema.ts:647](https://github.com/coda/packs-sdk/blob/main/schema.ts#L647)
 
 ___
 
@@ -59,4 +59,4 @@ Identifies this schema as an array.
 
 #### Defined in
 
-[schema.ts:643](https://github.com/coda/packs-sdk/blob/main/schema.ts#L643)
+[schema.ts:645](https://github.com/coda/packs-sdk/blob/main/schema.ts#L645)

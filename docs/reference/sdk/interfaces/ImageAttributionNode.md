@@ -27,7 +27,7 @@ The URL to link to.
 
 #### Defined in
 
-[schema.ts:899](https://github.com/coda/packs-sdk/blob/main/schema.ts#L899)
+[schema.ts:901](https://github.com/coda/packs-sdk/blob/main/schema.ts#L901)
 
 ___
 
@@ -39,7 +39,7 @@ The URL of the image to render.
 
 #### Defined in
 
-[schema.ts:901](https://github.com/coda/packs-sdk/blob/main/schema.ts#L901)
+[schema.ts:903](https://github.com/coda/packs-sdk/blob/main/schema.ts#L903)
 
 ___
 
@@ -51,4 +51,4 @@ Identifies this as an image attribution node.
 
 #### Defined in
 
-[schema.ts:897](https://github.com/coda/packs-sdk/blob/main/schema.ts#L897)
+[schema.ts:899](https://github.com/coda/packs-sdk/blob/main/schema.ts#L899)
