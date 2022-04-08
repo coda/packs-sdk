@@ -329,7 +329,7 @@ pack.addFormula({
 });
 ```
 
-When the Pack above is installed the user will only be required to grant access to the `read` scope. However, when they try to use the `UpdateItem` action formula and it fails they will then be prompted grant additional access to the `write` scope. This prompt is displayed as a pop-up dialog at the bottom of the doc:
+When the Pack above is installed the user will only be required to grant access to the `read` scope. However, when they try to use the `UpdateItem` action formula and it fails they will then be prompted to grant additional access to the `write` scope. This prompt is displayed as a pop-up dialog at the bottom of the doc:
 
 <img src="../../../images/auth_oauth_incremental.png" srcset="../../../images/auth_oauth_incremental_2x.png 2x" class="screenshot" alt="Prompting the user for additional permissions">
 
