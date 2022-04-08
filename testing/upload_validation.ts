@@ -657,6 +657,7 @@ const linkPropertySchema = zodCompleteStrictObject<LinkSchema & ObjectSchemaProp
   type: zodDiscriminant(ValueType.String),
   codaType: zodDiscriminant(ValueHintType.Url),
   display: z.nativeEnum(LinkDisplayType).optional(),
+  force: z.boolean().optional(),
   ...basePropertyValidators,
 });
 
