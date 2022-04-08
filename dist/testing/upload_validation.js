@@ -713,7 +713,7 @@ const baseSyncTableSchema = {
     schema: genericObjectSchema,
     getter: syncFormulaSchema,
     entityName: z.string().optional(),
-    disableNewColumnsOnSyncByDefault: z.boolean().optional(),
+    disableNewColumnsOnSync: z.boolean().optional(),
 };
 const genericSyncTableSchema = zodCompleteObject({
     ...baseSyncTableSchema,

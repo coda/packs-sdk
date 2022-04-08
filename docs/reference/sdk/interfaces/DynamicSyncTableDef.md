@@ -39,15 +39,15 @@ See [SyncTableOptions.description](SyncTableOptions.md#description)
 
 ___
 
-### disableNewColumnsOnSyncByDefault
+### disableNewColumnsOnSync
 
-• `Optional` **disableNewColumnsOnSyncByDefault**: `boolean`
+• `Optional` **disableNewColumnsOnSync**: `boolean`
 
-See [DynamicOptions.disableNewColumnsOnSyncByDefault](DynamicOptions.md#disablenewcolumnsonsyncbydefault)
+See [DynamicOptions.disableNewColumnsOnSync](DynamicOptions.md#disablenewcolumnsonsync)
 
 #### Inherited from
 
-[SyncTableDef](SyncTableDef.md).[disableNewColumnsOnSyncByDefault](SyncTableDef.md#disablenewcolumnsonsyncbydefault)
+[SyncTableDef](SyncTableDef.md).[disableNewColumnsOnSync](SyncTableDef.md#disablenewcolumnsonsync)
 
 #### Defined in
 

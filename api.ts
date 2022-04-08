@@ -167,8 +167,8 @@ export interface SyncTableDef<
   getSchema?: MetadataFormula;
   /** See {@link DynamicOptions.entityName} */
   entityName?: string;
-  /** See {@link DynamicOptions.disableNewColumnsOnSyncByDefault} */
-  disableNewColumnsOnSyncByDefault?: boolean;
+  /** See {@link DynamicOptions.disableNewColumnsOnSync} */
+  disableNewColumnsOnSync?: boolean;
 }
 
 /**
@@ -1252,8 +1252,8 @@ export interface DynamicOptions {
   getSchema?: MetadataFormulaDef;
   /** See {@link DynamicSyncTableOptions.entityName} */
   entityName?: string;
-  /** See {@link DynamicSyncTableOptions.disableNewColumnsOnSyncByDefault} */
-  disableNewColumnsOnSyncByDefault?: boolean;
+  /** See {@link DynamicSyncTableOptions.disableNewColumnsOnSync} */
+  disableNewColumnsOnSync?: boolean;
 }
 
 /**
@@ -1389,11 +1389,11 @@ export interface DynamicSyncTableOptions<
    * value to true leaves the columns unchanged and puts the choice of what columns to display
    * into the hands of the user.
    */
-  disableNewColumnsOnSyncByDefault?: boolean;
+  disableNewColumnsOnSync?: boolean;
   /**
    * Optional placeholder schema before the dynamic schema is retrieved.
    *
-   * If {@link DynamicSyncTableOptions.disableNewColumnsOnSyncByDefault) is true, only featured columns
+   * If `disableNewColumnsOnSync` is true, only featured columns
    * in placeholderSchema will be rendered by default after the sync.
    */
   placeholderSchema?: SchemaT;
@@ -1427,7 +1427,7 @@ export function makeSyncTable<
   connectionRequirement,
   dynamicOptions = {},
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
-  const {getSchema: getSchemaDef, entityName, disableNewColumnsOnSyncByDefault} = dynamicOptions;
+  const {getSchema: getSchemaDef, entityName, disableNewColumnsOnSync} = dynamicOptions;
   const {execute: wrappedExecute, ...definition} = maybeRewriteConnectionForFormula(formula, connectionRequirement);
   if (schemaDef.identity) {
     schemaDef.identity = {...schemaDef.identity, name: identityName || schemaDef.identity.name};
@@ -1472,7 +1472,7 @@ export function makeSyncTable<
     },
     getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
     entityName,
-    disableNewColumnsOnSyncByDefault,
+    disableNewColumnsOnSync,
   };
 }
 
@@ -1528,7 +1528,7 @@ export function makeDynamicSyncTable<
   listDynamicUrls: listDynamicUrlsDef,
   entityName,
   connectionRequirement,
-  disableNewColumnsOnSyncByDefault,
+  disableNewColumnsOnSync,
   placeholderSchema: placeholderSchemaInput,
 }: {
   name: string;
@@ -1540,7 +1540,7 @@ export function makeDynamicSyncTable<
   listDynamicUrls?: MetadataFormulaDef;
   entityName?: string;
   connectionRequirement?: ConnectionRequirement;
-  disableNewColumnsOnSyncByDefault?: boolean;
+  disableNewColumnsOnSync?: boolean;
   placeholderSchema?: SchemaT;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any> {
   const placeholderSchema: any =
@@ -1566,7 +1566,7 @@ export function makeDynamicSyncTable<
     schema: placeholderSchema,
     formula,
     connectionRequirement,
-    dynamicOptions: {getSchema, entityName, disableNewColumnsOnSyncByDefault},
+    dynamicOptions: {getSchema, entityName, disableNewColumnsOnSync},
   });
   return {
     ...table,

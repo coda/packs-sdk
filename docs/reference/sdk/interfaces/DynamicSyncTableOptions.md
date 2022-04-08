@@ -43,9 +43,9 @@ This should describe what the dynamic sync table does in a more detailed languag
 
 ___
 
-### disableNewColumnsOnSyncByDefault
+### disableNewColumnsOnSync
 
-• `Optional` **disableNewColumnsOnSyncByDefault**: `boolean`
+• `Optional` **disableNewColumnsOnSync**: `boolean`
 
 If true, when subsequent syncs discover new schema properties, these properties will not automatically be
 added as new columns on the table. The user can still manually add columns for these new properties.
@@ -168,7 +168,7 @@ ___
 
 Optional placeholder schema before the dynamic schema is retrieved.
 
-If {@link DynamicSyncTableOptions.disableNewColumnsOnSyncByDefault) is true, only featured columns
+If `disableNewColumnsOnSync` is true, only featured columns
 in placeholderSchema will be rendered by default after the sync.
 
 #### Defined in

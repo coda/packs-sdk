@@ -117,8 +117,8 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
     getSchema?: MetadataFormula;
     /** See {@link DynamicOptions.entityName} */
     entityName?: string;
-    /** See {@link DynamicOptions.disableNewColumnsOnSyncByDefault} */
-    disableNewColumnsOnSyncByDefault?: boolean;
+    /** See {@link DynamicOptions.disableNewColumnsOnSync} */
+    disableNewColumnsOnSync?: boolean;
 }
 /**
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
@@ -694,8 +694,8 @@ export interface DynamicOptions {
     getSchema?: MetadataFormulaDef;
     /** See {@link DynamicSyncTableOptions.entityName} */
     entityName?: string;
-    /** See {@link DynamicSyncTableOptions.disableNewColumnsOnSyncByDefault} */
-    disableNewColumnsOnSyncByDefault?: boolean;
+    /** See {@link DynamicSyncTableOptions.disableNewColumnsOnSync} */
+    disableNewColumnsOnSync?: boolean;
 }
 /**
  * Input options for defining a sync table. See {@link makeSyncTable}.
@@ -819,11 +819,11 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
      * value to true leaves the columns unchanged and puts the choice of what columns to display
      * into the hands of the user.
      */
-    disableNewColumnsOnSyncByDefault?: boolean;
+    disableNewColumnsOnSync?: boolean;
     /**
      * Optional placeholder schema before the dynamic schema is retrieved.
      *
-     * If {@link DynamicSyncTableOptions.disableNewColumnsOnSyncByDefault) is true, only featured columns
+     * If `disableNewColumnsOnSync` is true, only featured columns
      * in placeholderSchema will be rendered by default after the sync.
      */
     placeholderSchema?: SchemaT;
@@ -865,7 +865,7 @@ export declare function makeSyncTableLegacy<K extends string, L extends string, 
  * });
  * ```
  */
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>>({ name, description, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, disableNewColumnsOnSyncByDefault, placeholderSchema: placeholderSchemaInput, }: {
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>>({ name, description, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, disableNewColumnsOnSync, placeholderSchema: placeholderSchemaInput, }: {
     name: string;
     description?: string;
     getName: MetadataFormulaDef;
@@ -875,7 +875,7 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
     listDynamicUrls?: MetadataFormulaDef;
     entityName?: string;
     connectionRequirement?: ConnectionRequirement;
-    disableNewColumnsOnSyncByDefault?: boolean;
+    disableNewColumnsOnSync?: boolean;
     placeholderSchema?: SchemaT;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any>;
 /**

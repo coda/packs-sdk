@@ -8,11 +8,11 @@ sync tables that have a dynamic schema.
 
 ## Properties
 
-### disableNewColumnsOnSyncByDefault
+### disableNewColumnsOnSync
 
-• `Optional` **disableNewColumnsOnSyncByDefault**: `boolean`
+• `Optional` **disableNewColumnsOnSync**: `boolean`
 
-See [DynamicSyncTableOptions.disableNewColumnsOnSyncByDefault](DynamicSyncTableOptions.md#disablenewcolumnsonsyncbydefault)
+See [DynamicSyncTableOptions.disableNewColumnsOnSync](DynamicSyncTableOptions.md#disablenewcolumnsonsync)
 
 #### Defined in
 
