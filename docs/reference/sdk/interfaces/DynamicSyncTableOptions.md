@@ -43,11 +43,11 @@ This should describe what the dynamic sync table does in a more detailed languag
 
 ___
 
-### doNotAddNewSyncColumns
+### doNotAddNewSyncColumnsByDefault
 
-• `Optional` **doNotAddNewSyncColumns**: `boolean`
+• `Optional` **doNotAddNewSyncColumnsByDefault**: `boolean`
 
-If true, when subsequent syncs discover new schema fields, these fields will not automatically
+If true, when subsequent syncs discover new schema fields, these fields will not automatically be
 added as new columns on the table. The user can still manually add columns for these new fields.
 This only applies to tables that use dynamic schemas.
 

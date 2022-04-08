@@ -39,15 +39,15 @@ See [SyncTableOptions.description](SyncTableOptions.md#description)
 
 ___
 
-### doNotAddNewSyncColumns
+### doNotAddNewSyncColumnsByDefault
 
-• `Optional` **doNotAddNewSyncColumns**: `boolean`
+• `Optional` **doNotAddNewSyncColumnsByDefault**: `boolean`
 
-See [DynamicOptions.doNotAddNewSyncColumns](DynamicOptions.md#donotaddnewsynccolumns)
+See [DynamicOptions.doNotAddNewSyncColumnsByDefault](DynamicOptions.md#donotaddnewsynccolumnsbydefault)
 
 #### Inherited from
 
-[SyncTableDef](SyncTableDef.md).[doNotAddNewSyncColumns](SyncTableDef.md#donotaddnewsynccolumns)
+[SyncTableDef](SyncTableDef.md).[doNotAddNewSyncColumnsByDefault](SyncTableDef.md#donotaddnewsynccolumnsbydefault)
 
 #### Defined in
 
