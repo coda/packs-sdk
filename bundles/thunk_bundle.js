@@ -4525,7 +4525,7 @@ module.exports = (() => {
   }
   function processValue(val, depth = 0) {
     if (depth >= MaxTraverseDepth) {
-      throw new Error("marshaling value is too deep or containing circular strcture");
+      return val;
     }
     if (val === void 0) {
       return HACK_UNDEFINED_JSON_VALUE;

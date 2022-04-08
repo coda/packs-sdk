@@ -42,7 +42,9 @@ function deserialize(_: string, val: any): any {
 
 function processValue(val: any, depth: number = 0): any {
   if (depth >= MaxTraverseDepth) {
-    throw new Error('marshaling value is too deep or containing circular strcture');
+    // this is either a circular reference or a super nested value that we mostly likely
+    // don't care about marshalling.
+    return val;
   }
 
   if (val === undefined) {

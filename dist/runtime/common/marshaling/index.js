@@ -36,7 +36,9 @@ function deserialize(_, val) {
 }
 function processValue(val, depth = 0) {
     if (depth >= MaxTraverseDepth) {
-        throw new Error('marshaling value is too deep or containing circular strcture');
+        // this is either a circular reference or a super nested value that we mostly likely
+        // don't care about marshalling.
+        return val;
     }
     if (val === undefined) {
         return HACK_UNDEFINED_JSON_VALUE;
