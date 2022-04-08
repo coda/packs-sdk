@@ -26,7 +26,8 @@ pack.setUserAuthentication({
   // https://developer.todoist.com/guides/#oauth
   authorizationUrl: "https://todoist.com/oauth/authorize",
   tokenUrl: "https://todoist.com/oauth/access_token",
-  scopes: ["data:read_write"],
+  scopes: ["data:read"],
+  scopeDelimiter: ",",
 
   // Determines the display name of the connected account.
   getConnectionName: async function (context) {
@@ -301,6 +302,7 @@ pack.addFormula({
   ],
   resultType: coda.ValueType.String,
   isAction: true,
+  extraOAuthScopes: ["data:read_write"],
 
   execute: async function ([name], context) {
     let response = await context.fetcher.fetch({
@@ -336,6 +338,7 @@ pack.addFormula({
   ],
   resultType: coda.ValueType.String,
   isAction: true,
+  extraOAuthScopes: ["data:read_write"],
 
   execute: async function ([name, projectId], context) {
     let response = await context.fetcher.fetch({
@@ -371,6 +374,7 @@ pack.addFormula({
   resultType: coda.ValueType.Object,
   schema: TaskSchema,
   isAction: true,
+  extraOAuthScopes: ["data:read_write"],
 
   execute: async function ([taskId, name], context) {
     let url = "https://api.todoist.com/rest/v1/tasks/" + taskId;
@@ -407,6 +411,7 @@ pack.addFormula({
   ],
   resultType: coda.ValueType.String,
   isAction: true,
+  extraOAuthScopes: ["data:read_write"],
 
   execute: async function ([taskId], context) {
     let url = "https://api.todoist.com/rest/v1/tasks/" + taskId + "/close";

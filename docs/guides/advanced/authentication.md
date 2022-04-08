@@ -305,7 +305,35 @@ However if the API provider deviates too far from the OAuth 2.0 specification it
     Coda doesn't currently support the older 1.0 or 1.0a versions of the OAuth specification. If you would like to connect to an API that only supports these versions of the standard please [contact support][support] so that we can continue to gauge interest.
 
 
-<!-- TODO: Progressive OAuth -->
+#### Incremental OAuth
+
+As your pack grows you may find that you need to request more OAuth scopes than you initially did when your existing users connected. Coda allows new scopes to be added to Pack OAuth settings in a non-breaking way: we don't prompt the user to re-authorize until they try to use a Pack feature that fails. Once that happens, we notice that the connection the user was using was created with a stale list of OAuth scopes and we prompt them to re-authenticate it to get your new scopes.
+
+Even when you do know all of the scopes you need, you may not want to request them all at once. An approval screen with a long list of permissions can be intimidating to new users and some my choose to abandon your Pack. In these cases you may want to use incremental authorization, made possible in Packs by the formula field [`extraOAuthScopes`][extraOAuthScopes]. You can use it to specify additional scopes that are needed in order to run a specific formula.
+
+```ts
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.OAuth2,
+  // ...
+  scopes: ["read"],
+});
+
+// ...
+
+pack.addFormula({
+  name: "UpdateItem",
+  // ...
+  isAction: true,
+  extraOAuthScopes: ["update"],
+  // ...
+});
+```
+
+When the Pack above is installed the user will only be required to grant access to the `read` scope. However, when they try to use the `UpdateItem` action formula and it fails they will then be prompted to grant additional access to the `write` scope. This prompt is displayed as a pop-up dialog at the bottom of the doc:
+
+<img src="../../../images/auth_oauth_incremental.png" srcset="../../../images/auth_oauth_incremental_2x.png 2x" class="screenshot" alt="Prompting the user for additional permissions">
+
+When the user signs in again they will be prompted to approve the additional scopes, after which they will be able to use the formula successfully.
 
 
 ## Requiring authentication
@@ -531,3 +559,4 @@ There are services however where each account is associated with a distinct doma
 [getConnectionName]: ../../reference/sdk/interfaces/BaseAuthentication.md#getconnectionname
 [network_domains]: fetcher.md#network-domains
 [autocomplete_dynamic]: ../basics/parameters/autocomplete.md#dynamic-options
+[extraOAuthScopes]: ../../reference/sdk/interfaces/BaseFormulaDef.md#extraoauthscopes
