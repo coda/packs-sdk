@@ -307,9 +307,9 @@ However if the API provider deviates too far from the OAuth 2.0 specification it
 
 #### Incremental OAuth
 
-If your Pack includes a lot of features you may likewise need to request a lot of scopes during authentication, which can scare away new users. An alternative approach is to use incremental authorization, where you start out only requesting a small initial set of scopes and request more as the user starts using features that require them.
+As your pack grows you may find that you need to request more OAuth scopes than you initially did when your existing users connected. Coda allows new scopes to be added to Pack OAuth settings in a non-breaking way: we don't prompt the user to re-authorize until they try to use a Pack feature that fails. Once that happens, we notice that the connection the user was using was created with a stale list of OAuth scopes and we prompt them to re-authenticate it to get your new scopes.
 
-Incremental authorization is made possible in Packs using the formula field [`extraOAuthScopes`][extraOAuthScopes]. You can use it to specify additional scopes that are needed in order to run that specific formula.
+Even when you do know all of the scopes you need, you may not want to request them all at once. An approval screen with a long list of permissions can be intimidating to new users and some my choose to abandon your Pack. In these cases you may want to use incremental authorization, made possible in Packs by the formula field [`extraOAuthScopes`][extraOAuthScopes]. You can use it to specify additional scopes that are needed in order to run a specific formula.
 
 ```ts
 pack.setUserAuthentication({
@@ -329,14 +329,11 @@ pack.addFormula({
 });
 ```
 
-When the Pack above is installed the user will only be required to grant access to the `read` scope. However, when they try to use the `UpdateItem` action formula they will then be prompted grant additional access to the `write` scope. This prompt is displayed as a pop-up dialog at the bottom of the doc:
+When the Pack above is installed the user will only be required to grant access to the `read` scope. However, when they try to use the `UpdateItem` action formula and it fails they will then be prompted grant additional access to the `write` scope. This prompt is displayed as a pop-up dialog at the bottom of the doc:
 
 <img src="../../../images/auth_oauth_incremental.png" srcset="../../../images/auth_oauth_incremental_2x.png 2x" class="screenshot" alt="Prompting the user for additional permissions">
 
 When the user signs in again they will be prompted to approve the additional scopes, after which they will be able to use the formula successfully.
-
-!!! info "401 response required"
-    Even if a formula specifies `extraOAuthScopes`, Coda will first try to run the formula using the existing credentials. The user will only be prompted to approve additional scopes if the formula fails with a 401 "Unauthorized" response from the API. If the API you are connecting to returns a different response code on failure you won't be able to take advantage of the incremental authorization feature.
 
 
 ## Requiring authentication
