@@ -71,6 +71,18 @@ See [SyncTableOptions.formula](SyncTableOptions.md#formula)
 
 ___
 
+### hideNewColumnsByDefault
+
+• `Optional` **hideNewColumnsByDefault**: `boolean`
+
+See [DynamicOptions.hideNewColumnsByDefault](DynamicOptions.md#hidenewcolumnsbydefault)
+
+#### Defined in
+
+[api.ts:171](https://github.com/coda/packs-sdk/blob/main/api.ts#L171)
+
+___
+
 ### name
 
 • **name**: `string`

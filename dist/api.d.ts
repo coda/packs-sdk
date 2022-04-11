@@ -117,6 +117,8 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
     getSchema?: MetadataFormula;
     /** See {@link DynamicOptions.entityName} */
     entityName?: string;
+    /** See {@link DynamicOptions.hideNewColumnsByDefault} */
+    hideNewColumnsByDefault?: boolean;
 }
 /**
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
@@ -692,6 +694,8 @@ export interface DynamicOptions {
     getSchema?: MetadataFormulaDef;
     /** See {@link DynamicSyncTableOptions.entityName} */
     entityName?: string;
+    /** See {@link DynamicSyncTableOptions.hideNewColumnsByDefault} */
+    hideNewColumnsByDefault?: boolean;
 }
 /**
  * Input options for defining a sync table. See {@link makeSyncTable}.
@@ -802,6 +806,27 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
      * this sync table (including autocomplete formulas).
      */
     connectionRequirement?: ConnectionRequirement;
+    /**
+     * If true, when subsequent syncs discover new schema properties, these properties will not automatically be
+     * added as new columns on the table. The user can still manually add columns for these new properties.
+     * This only applies to tables that use dynamic schemas.
+     *
+     * When tables with dynamic schemas are synced, the {@link getSchema} formula is run each time,
+     * which may return a schema that is different than that from the last sync. The default behavior
+     * is that any schema properties that are new in this sync are automatically added as new columns,
+     * so they are apparent to the user. However, in rare cases when schemas change frequently,
+     * this can cause the number of columns to grow quickly and become overwhelming. Setting this
+     * value to true leaves the columns unchanged and puts the choice of what columns to display
+     * into the hands of the user.
+     */
+    hideNewColumnsByDefault?: boolean;
+    /**
+     * Optional placeholder schema before the dynamic schema is retrieved.
+     *
+     * If `hideNewColumnsByDefault` is true, only featured columns
+     * in placeholderSchema will be rendered by default after the sync.
+     */
+    placeholderSchema?: SchemaT;
 }
 /**
  * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
@@ -840,7 +865,7 @@ export declare function makeSyncTableLegacy<K extends string, L extends string, 
  * });
  * ```
  */
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({ name, description, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, }: {
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>>({ name, description, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, hideNewColumnsByDefault, placeholderSchema: placeholderSchemaInput, }: {
     name: string;
     description?: string;
     getName: MetadataFormulaDef;
@@ -850,6 +875,8 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
     listDynamicUrls?: MetadataFormulaDef;
     entityName?: string;
     connectionRequirement?: ConnectionRequirement;
+    hideNewColumnsByDefault?: boolean;
+    placeholderSchema?: SchemaT;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any>;
 /**
  * Helper to generate a formula that fetches a list of entities from a given URL and returns them.

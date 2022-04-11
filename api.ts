@@ -167,6 +167,8 @@ export interface SyncTableDef<
   getSchema?: MetadataFormula;
   /** See {@link DynamicOptions.entityName} */
   entityName?: string;
+  /** See {@link DynamicOptions.hideNewColumnsByDefault} */
+  hideNewColumnsByDefault?: boolean;
 }
 
 /**
@@ -1250,6 +1252,8 @@ export interface DynamicOptions {
   getSchema?: MetadataFormulaDef;
   /** See {@link DynamicSyncTableOptions.entityName} */
   entityName?: string;
+  /** See {@link DynamicSyncTableOptions.hideNewColumnsByDefault} */
+  hideNewColumnsByDefault?: boolean;
 }
 
 /**
@@ -1372,6 +1376,27 @@ export interface DynamicSyncTableOptions<
    * this sync table (including autocomplete formulas).
    */
   connectionRequirement?: ConnectionRequirement;
+  /**
+   * If true, when subsequent syncs discover new schema properties, these properties will not automatically be
+   * added as new columns on the table. The user can still manually add columns for these new properties.
+   * This only applies to tables that use dynamic schemas.
+   *
+   * When tables with dynamic schemas are synced, the {@link getSchema} formula is run each time,
+   * which may return a schema that is different than that from the last sync. The default behavior
+   * is that any schema properties that are new in this sync are automatically added as new columns,
+   * so they are apparent to the user. However, in rare cases when schemas change frequently,
+   * this can cause the number of columns to grow quickly and become overwhelming. Setting this
+   * value to true leaves the columns unchanged and puts the choice of what columns to display
+   * into the hands of the user.
+   */
+  hideNewColumnsByDefault?: boolean;
+  /**
+   * Optional placeholder schema before the dynamic schema is retrieved.
+   *
+   * If `hideNewColumnsByDefault` is true, only featured columns
+   * in placeholderSchema will be rendered by default after the sync.
+   */
+  placeholderSchema?: SchemaT;
 }
 
 /**
@@ -1402,7 +1427,7 @@ export function makeSyncTable<
   connectionRequirement,
   dynamicOptions = {},
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
-  const {getSchema: getSchemaDef, entityName} = dynamicOptions;
+  const {getSchema: getSchemaDef, entityName, hideNewColumnsByDefault} = dynamicOptions;
   const {execute: wrappedExecute, ...definition} = maybeRewriteConnectionForFormula(formula, connectionRequirement);
   if (schemaDef.identity) {
     schemaDef.identity = {...schemaDef.identity, name: identityName || schemaDef.identity.name};
@@ -1447,6 +1472,7 @@ export function makeSyncTable<
     },
     getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
     entityName,
+    hideNewColumnsByDefault,
   };
 }
 
@@ -1487,7 +1513,12 @@ export function makeSyncTableLegacy<
  * });
  * ```
  */
-export function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs>({
+export function makeDynamicSyncTable<
+  K extends string,
+  L extends string,
+  ParamDefsT extends ParamDefs,
+  SchemaT extends ObjectSchemaDefinition<K, L>,
+>({
   name,
   description,
   getName: getNameDef,
@@ -1497,6 +1528,8 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   listDynamicUrls: listDynamicUrlsDef,
   entityName,
   connectionRequirement,
+  hideNewColumnsByDefault,
+  placeholderSchema: placeholderSchemaInput,
 }: {
   name: string;
   description?: string;
@@ -1507,18 +1540,21 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
   listDynamicUrls?: MetadataFormulaDef;
   entityName?: string;
   connectionRequirement?: ConnectionRequirement;
+  hideNewColumnsByDefault?: boolean;
+  placeholderSchema?: SchemaT;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any> {
-  const fakeSchema: any = makeObjectSchema({
-    // This schema is useless... just creating a stub here but the client will use
-    // the dynamic one.
-    type: ValueType.Object,
-    id: 'id',
-    primary: 'id',
-    identity: {name},
-    properties: {
-      id: {type: ValueType.String},
-    },
-  });
+  const placeholderSchema: any =
+    placeholderSchemaInput ||
+    // default placeholder only shows a column of id, which will be replaced later by the dynamic schema.
+    makeObjectSchema({
+      type: ValueType.Object,
+      id: 'id',
+      primary: 'id',
+      identity: {name},
+      properties: {
+        id: {type: ValueType.String},
+      },
+    });
   const getName = wrapMetadataFunction(getNameDef);
   const getSchema = wrapMetadataFunction(getSchemaDef);
   const getDisplayUrl = wrapMetadataFunction(getDisplayUrlDef);
@@ -1527,10 +1563,10 @@ export function makeDynamicSyncTable<K extends string, L extends string, ParamDe
     name,
     description,
     identityName: '',
-    schema: fakeSchema,
+    schema: placeholderSchema,
     formula,
     connectionRequirement,
-    dynamicOptions: {getSchema, entityName},
+    dynamicOptions: {getSchema, entityName, hideNewColumnsByDefault},
   });
   return {
     ...table,

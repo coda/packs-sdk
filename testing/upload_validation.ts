@@ -863,6 +863,7 @@ const baseSyncTableSchema = {
   schema: genericObjectSchema,
   getter: syncFormulaSchema,
   entityName: z.string().optional(),
+  hideNewColumnsByDefault: z.boolean().optional(),
 };
 
 type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;
@@ -887,7 +888,8 @@ const genericDynamicSyncTableSchema = zodCompleteObject<
   getSchema: formulaMetadataSchema,
 }).strict();
 
-const syncTableSchema = z.union([genericDynamicSyncTableSchema, genericSyncTableSchema])
+const syncTableSchema = z
+  .union([genericDynamicSyncTableSchema, genericSyncTableSchema])
   .superRefine((data, context) => {
     const syncTable = data as SyncTable;
 
@@ -895,11 +897,10 @@ const syncTableSchema = z.union([genericDynamicSyncTableSchema, genericSyncTable
       context.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['getter', 'varargParameters'],
-        message:
-          'Sync table formulas do not currently support varargParameters.',
+        message: 'Sync table formulas do not currently support varargParameters.',
       });
     }
-});
+  });
 
 // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
 // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level

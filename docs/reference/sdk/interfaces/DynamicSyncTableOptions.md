@@ -25,7 +25,7 @@ this sync table (including autocomplete formulas).
 
 #### Defined in
 
-[api.ts:1374](https://github.com/coda/packs-sdk/blob/main/api.ts#L1374)
+[api.ts:1378](https://github.com/coda/packs-sdk/blob/main/api.ts#L1378)
 
 ___
 
@@ -39,7 +39,7 @@ This should describe what the dynamic sync table does in a more detailed languag
 
 #### Defined in
 
-[api.ts:1336](https://github.com/coda/packs-sdk/blob/main/api.ts#L1336)
+[api.ts:1340](https://github.com/coda/packs-sdk/blob/main/api.ts#L1340)
 
 ___
 
@@ -53,7 +53,7 @@ of `identity.name` from your schema will be used instead, so in most cases you d
 
 #### Defined in
 
-[api.ts:1369](https://github.com/coda/packs-sdk/blob/main/api.ts#L1369)
+[api.ts:1373](https://github.com/coda/packs-sdk/blob/main/api.ts#L1373)
 
 ___
 
@@ -68,7 +68,7 @@ These will eventually be consolidated.)
 
 #### Defined in
 
-[api.ts:1363](https://github.com/coda/packs-sdk/blob/main/api.ts#L1363)
+[api.ts:1367](https://github.com/coda/packs-sdk/blob/main/api.ts#L1367)
 
 ___
 
@@ -83,7 +83,7 @@ of the table data. This is typically a browser-friendly form of the
 
 #### Defined in
 
-[api.ts:1351](https://github.com/coda/packs-sdk/blob/main/api.ts#L1351)
+[api.ts:1355](https://github.com/coda/packs-sdk/blob/main/api.ts#L1355)
 
 ___
 
@@ -95,7 +95,7 @@ A formula that returns the name of this table.
 
 #### Defined in
 
-[api.ts:1340](https://github.com/coda/packs-sdk/blob/main/api.ts#L1340)
+[api.ts:1344](https://github.com/coda/packs-sdk/blob/main/api.ts#L1344)
 
 ___
 
@@ -107,7 +107,29 @@ A formula that returns the schema for this table.
 
 #### Defined in
 
-[api.ts:1344](https://github.com/coda/packs-sdk/blob/main/api.ts#L1344)
+[api.ts:1348](https://github.com/coda/packs-sdk/blob/main/api.ts#L1348)
+
+___
+
+### hideNewColumnsByDefault
+
+• `Optional` **hideNewColumnsByDefault**: `boolean`
+
+If true, when subsequent syncs discover new schema properties, these properties will not automatically be
+added as new columns on the table. The user can still manually add columns for these new properties.
+This only applies to tables that use dynamic schemas.
+
+When tables with dynamic schemas are synced, the [getSchema](DynamicSyncTableOptions.md#getschema) formula is run each time,
+which may return a schema that is different than that from the last sync. The default behavior
+is that any schema properties that are new in this sync are automatically added as new columns,
+so they are apparent to the user. However, in rare cases when schemas change frequently,
+this can cause the number of columns to grow quickly and become overwhelming. Setting this
+value to true leaves the columns unchanged and puts the choice of what columns to display
+into the hands of the user.
+
+#### Defined in
+
+[api.ts:1392](https://github.com/coda/packs-sdk/blob/main/api.ts#L1392)
 
 ___
 
@@ -120,7 +142,7 @@ used to create an instance of this dynamic sync table.
 
 #### Defined in
 
-[api.ts:1356](https://github.com/coda/packs-sdk/blob/main/api.ts#L1356)
+[api.ts:1360](https://github.com/coda/packs-sdk/blob/main/api.ts#L1360)
 
 ___
 
@@ -136,4 +158,19 @@ is returned by the `getName` formula.
 
 #### Defined in
 
-[api.ts:1330](https://github.com/coda/packs-sdk/blob/main/api.ts#L1330)
+[api.ts:1334](https://github.com/coda/packs-sdk/blob/main/api.ts#L1334)
+
+___
+
+### placeholderSchema
+
+• `Optional` **placeholderSchema**: `SchemaT`
+
+Optional placeholder schema before the dynamic schema is retrieved.
+
+If `hideNewColumnsByDefault` is true, only featured columns
+in placeholderSchema will be rendered by default after the sync.
+
+#### Defined in
+
+[api.ts:1399](https://github.com/coda/packs-sdk/blob/main/api.ts#L1399)

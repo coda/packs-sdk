@@ -3,7 +3,7 @@ title: "makeDynamicSyncTable"
 ---
 # Function: makeDynamicSyncTable
 
-▸ **makeDynamicSyncTable**<`K`, `L`, `ParamDefsT`\>(`__namedParameters`): [`DynamicSyncTableDef`](../interfaces/DynamicSyncTableDef.md)<`K`, `L`, `ParamDefsT`, `any`\>
+▸ **makeDynamicSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaT`\>(`__namedParameters`): [`DynamicSyncTableDef`](../interfaces/DynamicSyncTableDef.md)<`K`, `L`, `ParamDefsT`, `any`\>
 
 Creates a dynamic sync table definition.
 
@@ -30,6 +30,7 @@ coda.makeDynamicSyncTable({
 | `K` | extends `string` |
 | `L` | extends `string` |
 | `ParamDefsT` | extends [`ParamDefs`](../types/ParamDefs.md) |
+| `SchemaT` | extends [`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)<`K`, `L`, `SchemaT`\> |
 
 #### Parameters
 
@@ -43,8 +44,10 @@ coda.makeDynamicSyncTable({
 | `__namedParameters.getDisplayUrl` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
 | `__namedParameters.getName` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
 | `__namedParameters.getSchema` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
+| `__namedParameters.hideNewColumnsByDefault?` | `boolean` |
 | `__namedParameters.listDynamicUrls?` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
 | `__namedParameters.name` | `string` |
+| `__namedParameters.placeholderSchema?` | `SchemaT` |
 
 #### Returns
 
@@ -52,4 +55,4 @@ coda.makeDynamicSyncTable({
 
 #### Defined in
 
-[api.ts:1490](https://github.com/coda/packs-sdk/blob/main/api.ts#L1490)
+[api.ts:1516](https://github.com/coda/packs-sdk/blob/main/api.ts#L1516)

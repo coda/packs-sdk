@@ -63,7 +63,7 @@ See [DynamicSyncTableOptions.getDisplayUrl](DynamicSyncTableOptions.md#getdispla
 
 #### Defined in
 
-[api.ts:189](https://github.com/coda/packs-sdk/blob/main/api.ts#L189)
+[api.ts:191](https://github.com/coda/packs-sdk/blob/main/api.ts#L191)
 
 ___
 
@@ -75,7 +75,7 @@ See [DynamicSyncTableOptions.getName](DynamicSyncTableOptions.md#getname)
 
 #### Defined in
 
-[api.ts:187](https://github.com/coda/packs-sdk/blob/main/api.ts#L187)
+[api.ts:189](https://github.com/coda/packs-sdk/blob/main/api.ts#L189)
 
 ___
 
@@ -91,7 +91,7 @@ See [DynamicSyncTableOptions.getSchema](DynamicSyncTableOptions.md#getschema)
 
 #### Defined in
 
-[api.ts:185](https://github.com/coda/packs-sdk/blob/main/api.ts#L185)
+[api.ts:187](https://github.com/coda/packs-sdk/blob/main/api.ts#L187)
 
 ___
 
@@ -111,6 +111,22 @@ See [SyncTableOptions.formula](SyncTableOptions.md#formula)
 
 ___
 
+### hideNewColumnsByDefault
+
+• `Optional` **hideNewColumnsByDefault**: `boolean`
+
+See [DynamicOptions.hideNewColumnsByDefault](DynamicOptions.md#hidenewcolumnsbydefault)
+
+#### Inherited from
+
+[SyncTableDef](SyncTableDef.md).[hideNewColumnsByDefault](SyncTableDef.md#hidenewcolumnsbydefault)
+
+#### Defined in
+
+[api.ts:171](https://github.com/coda/packs-sdk/blob/main/api.ts#L171)
+
+___
+
 ### isDynamic
 
 • **isDynamic**: ``true``
@@ -119,7 +135,7 @@ Identifies this sync table as dynamic.
 
 #### Defined in
 
-[api.ts:183](https://github.com/coda/packs-sdk/blob/main/api.ts#L183)
+[api.ts:185](https://github.com/coda/packs-sdk/blob/main/api.ts#L185)
 
 ___
 
@@ -131,7 +147,7 @@ See [DynamicSyncTableOptions.listDynamicUrls](DynamicSyncTableOptions.md#listdyn
 
 #### Defined in
 
-[api.ts:191](https://github.com/coda/packs-sdk/blob/main/api.ts#L191)
+[api.ts:193](https://github.com/coda/packs-sdk/blob/main/api.ts#L193)
 
 ___
 

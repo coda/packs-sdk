@@ -593,7 +593,7 @@ exports.makeObjectFormula = makeObjectFormula;
  * See [Normalization](/index.html#normalization) for more information about schema normalization.
  */
 function makeSyncTable({ name, description, identityName, schema: schemaDef, formula, connectionRequirement, dynamicOptions = {}, }) {
-    const { getSchema: getSchemaDef, entityName } = dynamicOptions;
+    const { getSchema: getSchemaDef, entityName, hideNewColumnsByDefault } = dynamicOptions;
     const { execute: wrappedExecute, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
     if (schemaDef.identity) {
         schemaDef.identity = { ...schemaDef.identity, name: identityName || schemaDef.identity.name };
@@ -637,6 +637,7 @@ function makeSyncTable({ name, description, identityName, schema: schemaDef, for
         },
         getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
         entityName,
+        hideNewColumnsByDefault,
     };
 }
 exports.makeSyncTable = makeSyncTable;
@@ -663,18 +664,18 @@ exports.makeSyncTableLegacy = makeSyncTableLegacy;
  * });
  * ```
  */
-function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, }) {
-    const fakeSchema = (0, schema_2.makeObjectSchema)({
-        // This schema is useless... just creating a stub here but the client will use
-        // the dynamic one.
-        type: schema_1.ValueType.Object,
-        id: 'id',
-        primary: 'id',
-        identity: { name },
-        properties: {
-            id: { type: schema_1.ValueType.String },
-        },
-    });
+function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, hideNewColumnsByDefault, placeholderSchema: placeholderSchemaInput, }) {
+    const placeholderSchema = placeholderSchemaInput ||
+        // default placeholder only shows a column of id, which will be replaced later by the dynamic schema.
+        (0, schema_2.makeObjectSchema)({
+            type: schema_1.ValueType.Object,
+            id: 'id',
+            primary: 'id',
+            identity: { name },
+            properties: {
+                id: { type: schema_1.ValueType.String },
+            },
+        });
     const getName = wrapMetadataFunction(getNameDef);
     const getSchema = wrapMetadataFunction(getSchemaDef);
     const getDisplayUrl = wrapMetadataFunction(getDisplayUrlDef);
@@ -683,10 +684,10 @@ function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchem
         name,
         description,
         identityName: '',
-        schema: fakeSchema,
+        schema: placeholderSchema,
         formula,
         connectionRequirement,
-        dynamicOptions: { getSchema, entityName },
+        dynamicOptions: { getSchema, entityName, hideNewColumnsByDefault },
     });
     return {
         ...table,
