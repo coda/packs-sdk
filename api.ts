@@ -167,8 +167,8 @@ export interface SyncTableDef<
   getSchema?: MetadataFormula;
   /** See {@link DynamicOptions.entityName} */
   entityName?: string;
-  /** See {@link DynamicOptions.doNotCreateNewColumnsByDefault} */
-  doNotCreateNewColumnsByDefault?: boolean;
+  /** See {@link DynamicOptions.defaultAddDynamicColumns} */
+  defaultAddDynamicColumns?: boolean;
 }
 
 /**
@@ -1252,8 +1252,8 @@ export interface DynamicOptions {
   getSchema?: MetadataFormulaDef;
   /** See {@link DynamicSyncTableOptions.entityName} */
   entityName?: string;
-  /** See {@link DynamicSyncTableOptions.doNotCreateNewColumnsByDefault} */
-  doNotCreateNewColumnsByDefault?: boolean;
+  /** See {@link DynamicSyncTableOptions.defaultAddDynamicColumns} */
+  defaultAddDynamicColumns?: boolean;
 }
 
 /**
@@ -1377,7 +1377,9 @@ export interface DynamicSyncTableOptions<
    */
   connectionRequirement?: ConnectionRequirement;
   /**
-   * If true, when subsequent syncs discover new schema properties, these properties will not automatically be
+   * Default is true.
+   *
+   * If false, when subsequent syncs discover new schema properties, these properties will not automatically be
    * added as new columns on the table. The user can still manually add columns for these new properties.
    * This only applies to tables that use dynamic schemas.
    *
@@ -1386,14 +1388,14 @@ export interface DynamicSyncTableOptions<
    * is that any schema properties that are new in this sync are automatically added as new columns,
    * so they are apparent to the user. However, in rare cases when schemas change frequently,
    * this can cause the number of columns to grow quickly and become overwhelming. Setting this
-   * value to true leaves the columns unchanged and puts the choice of what columns to display
+   * value to false leaves the columns unchanged and puts the choice of what columns to display
    * into the hands of the user.
    */
-  doNotCreateNewColumnsByDefault?: boolean;
+  defaultAddDynamicColumns?: boolean;
   /**
    * Optional placeholder schema before the dynamic schema is retrieved.
    *
-   * If `doNotCreateNewColumnsByDefault` is true, only featured columns
+   * If `defaultAddDynamicColumns` is false, only featured columns
    * in placeholderSchema will be rendered by default after the sync.
    */
   placeholderSchema?: SchemaT;
@@ -1427,7 +1429,7 @@ export function makeSyncTable<
   connectionRequirement,
   dynamicOptions = {},
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
-  const {getSchema: getSchemaDef, entityName, doNotCreateNewColumnsByDefault} = dynamicOptions;
+  const {getSchema: getSchemaDef, entityName, defaultAddDynamicColumns} = dynamicOptions;
   const {execute: wrappedExecute, ...definition} = maybeRewriteConnectionForFormula(formula, connectionRequirement);
   if (schemaDef.identity) {
     schemaDef.identity = {...schemaDef.identity, name: identityName || schemaDef.identity.name};
@@ -1472,7 +1474,7 @@ export function makeSyncTable<
     },
     getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
     entityName,
-    doNotCreateNewColumnsByDefault,
+    defaultAddDynamicColumns,
   };
 }
 
@@ -1528,7 +1530,7 @@ export function makeDynamicSyncTable<
   listDynamicUrls: listDynamicUrlsDef,
   entityName,
   connectionRequirement,
-  doNotCreateNewColumnsByDefault,
+  defaultAddDynamicColumns,
   placeholderSchema: placeholderSchemaInput,
 }: {
   name: string;
@@ -1540,7 +1542,7 @@ export function makeDynamicSyncTable<
   listDynamicUrls?: MetadataFormulaDef;
   entityName?: string;
   connectionRequirement?: ConnectionRequirement;
-  doNotCreateNewColumnsByDefault?: boolean;
+  defaultAddDynamicColumns?: boolean;
   placeholderSchema?: SchemaT;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any> {
   const placeholderSchema: any =
@@ -1566,7 +1568,7 @@ export function makeDynamicSyncTable<
     schema: placeholderSchema,
     formula,
     connectionRequirement,
-    dynamicOptions: {getSchema, entityName, doNotCreateNewColumnsByDefault},
+    dynamicOptions: {getSchema, entityName, defaultAddDynamicColumns},
   });
   return {
     ...table,
