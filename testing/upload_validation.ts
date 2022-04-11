@@ -292,6 +292,7 @@ const baseAuthenticationValidators = {
   endpointDomain: z.string().optional(),
   // The items are technically a discriminated union type but that union currently only has one member.
   postSetup: z.array(setEndpointPostSetupValidator).optional(),
+  networkDomain: z.string().optional(),
 };
 
 const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> = {
@@ -1157,4 +1158,43 @@ const legacyPackMetadataSchema = validateFormulas(
         "Specify the domain that your pack makes http requests to using `networkDomains: ['example.com']`",
       path: ['networkDomains'],
     },
-  );
+  )
+  .superRefine((untypedData, context) => {
+    // Check that packs with multiple network domains explicitly choose which domain gets auth.
+
+    const data = untypedData as PackVersionMetadata;
+    if (
+      !data.defaultAuthentication ||
+      data.defaultAuthentication.type === AuthenticationType.Various ||
+      data.defaultAuthentication.type === AuthenticationType.None
+    ) {
+      return;
+    }
+
+    if (data.defaultAuthentication.requiresEndpointUrl) {
+      // We're ok if there's a user-supplied endpoint domain.
+      return;
+    }
+
+    if (!data.defaultAuthentication.networkDomain) {
+      if (data.networkDomains && data.networkDomains.length > 1) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['defaultAuthentication.networkDomain'],
+          message:
+            'This pack uses multiple network domains and must set one as a `networkDomain` in setUserAuthentication()',
+        });
+      }
+      return;
+    }
+
+    // Pack has multiple network domains and user auth. The code needs to clarify which domain gets the auth headers.
+    if (!data.networkDomains?.includes(data.defaultAuthentication.networkDomain)) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['defaultAuthentication.networkDomain'],
+        message: 'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
+      });
+      return;
+    }
+  });

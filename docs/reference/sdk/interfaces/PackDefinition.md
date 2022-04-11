@@ -22,7 +22,7 @@ This should only be used by legacy Coda pack implementations.
 
 #### Defined in
 
-[types.ts:901](https://github.com/coda/packs-sdk/blob/main/types.ts#L901)
+[types.ts:907](https://github.com/coda/packs-sdk/blob/main/types.ts#L907)
 
 ___
 
@@ -38,7 +38,7 @@ If specified, the user must provide personal authentication credentials before u
 
 #### Defined in
 
-[types.ts:846](https://github.com/coda/packs-sdk/blob/main/types.ts#L846)
+[types.ts:852](https://github.com/coda/packs-sdk/blob/main/types.ts#L852)
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in
 
-[types.ts:899](https://github.com/coda/packs-sdk/blob/main/types.ts#L899)
+[types.ts:905](https://github.com/coda/packs-sdk/blob/main/types.ts#L905)
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 #### Defined in
 
-[types.ts:903](https://github.com/coda/packs-sdk/blob/main/types.ts#L903)
+[types.ts:909](https://github.com/coda/packs-sdk/blob/main/types.ts#L909)
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 #### Defined in
 
-[types.ts:904](https://github.com/coda/packs-sdk/blob/main/types.ts#L904)
+[types.ts:910](https://github.com/coda/packs-sdk/blob/main/types.ts#L910)
 
 ___
 
@@ -84,7 +84,7 @@ Definitions of this pack's column formats. See [Format](Format.md).
 
 #### Defined in
 
-[types.ts:882](https://github.com/coda/packs-sdk/blob/main/types.ts#L882)
+[types.ts:888](https://github.com/coda/packs-sdk/blob/main/types.ts#L888)
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 #### Defined in
 
-[types.ts:868](https://github.com/coda/packs-sdk/blob/main/types.ts#L868)
+[types.ts:874](https://github.com/coda/packs-sdk/blob/main/types.ts#L874)
 
 ___
 
@@ -122,7 +122,7 @@ and will be removed shortly.
 
 #### Defined in
 
-[types.ts:878](https://github.com/coda/packs-sdk/blob/main/types.ts#L878)
+[types.ts:884](https://github.com/coda/packs-sdk/blob/main/types.ts#L884)
 
 ___
 
@@ -132,7 +132,7 @@ ___
 
 #### Defined in
 
-[types.ts:896](https://github.com/coda/packs-sdk/blob/main/types.ts#L896)
+[types.ts:902](https://github.com/coda/packs-sdk/blob/main/types.ts#L902)
 
 ___
 
@@ -144,7 +144,7 @@ Whether this is a pack that will be used by Coda internally and not exposed dire
 
 #### Defined in
 
-[types.ts:911](https://github.com/coda/packs-sdk/blob/main/types.ts#L911)
+[types.ts:917](https://github.com/coda/packs-sdk/blob/main/types.ts#L917)
 
 ___
 
@@ -154,7 +154,7 @@ ___
 
 #### Defined in
 
-[types.ts:902](https://github.com/coda/packs-sdk/blob/main/types.ts#L902)
+[types.ts:908](https://github.com/coda/packs-sdk/blob/main/types.ts#L908)
 
 ___
 
@@ -164,7 +164,7 @@ ___
 
 #### Defined in
 
-[types.ts:905](https://github.com/coda/packs-sdk/blob/main/types.ts#L905)
+[types.ts:911](https://github.com/coda/packs-sdk/blob/main/types.ts#L911)
 
 ___
 
@@ -174,7 +174,7 @@ ___
 
 #### Defined in
 
-[types.ts:897](https://github.com/coda/packs-sdk/blob/main/types.ts#L897)
+[types.ts:903](https://github.com/coda/packs-sdk/blob/main/types.ts#L903)
 
 ___
 
@@ -196,7 +196,7 @@ contact Coda support for approval.
 
 #### Defined in
 
-[types.ts:861](https://github.com/coda/packs-sdk/blob/main/types.ts#L861)
+[types.ts:867](https://github.com/coda/packs-sdk/blob/main/types.ts#L867)
 
 ___
 
@@ -206,7 +206,7 @@ ___
 
 #### Defined in
 
-[types.ts:900](https://github.com/coda/packs-sdk/blob/main/types.ts#L900)
+[types.ts:906](https://github.com/coda/packs-sdk/blob/main/types.ts#L906)
 
 ___
 
@@ -216,7 +216,7 @@ ___
 
 #### Defined in
 
-[types.ts:906](https://github.com/coda/packs-sdk/blob/main/types.ts#L906)
+[types.ts:912](https://github.com/coda/packs-sdk/blob/main/types.ts#L912)
 
 ___
 
@@ -226,7 +226,7 @@ ___
 
 #### Defined in
 
-[types.ts:907](https://github.com/coda/packs-sdk/blob/main/types.ts#L907)
+[types.ts:913](https://github.com/coda/packs-sdk/blob/main/types.ts#L913)
 
 ___
 
@@ -236,7 +236,7 @@ ___
 
 #### Defined in
 
-[types.ts:898](https://github.com/coda/packs-sdk/blob/main/types.ts#L898)
+[types.ts:904](https://github.com/coda/packs-sdk/blob/main/types.ts#L904)
 
 ___
 
@@ -252,7 +252,7 @@ Definitions of this pack's sync tables. See [SyncTable](../types/SyncTable.md).
 
 #### Defined in
 
-[types.ts:886](https://github.com/coda/packs-sdk/blob/main/types.ts#L886)
+[types.ts:892](https://github.com/coda/packs-sdk/blob/main/types.ts#L892)
 
 ___
 
@@ -269,7 +269,7 @@ explicit connection is specified by the user.
 
 #### Defined in
 
-[types.ts:851](https://github.com/coda/packs-sdk/blob/main/types.ts#L851)
+[types.ts:857](https://github.com/coda/packs-sdk/blob/main/types.ts#L857)
 
 ___
 
@@ -286,4 +286,4 @@ When uploading a pack version, the semantic version must be greater than any pre
 
 #### Defined in
 
-[types.ts:842](https://github.com/coda/packs-sdk/blob/main/types.ts#L842)
+[types.ts:848](https://github.com/coda/packs-sdk/blob/main/types.ts#L848)

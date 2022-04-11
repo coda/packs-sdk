@@ -21,6 +21,7 @@ import {ValueType} from '../schema';
 import {createFakePack} from './test_utils';
 import {createFakePackFormulaMetadata} from './test_utils';
 import {createFakePackVersionMetadata} from './test_utils';
+import {deepCopy} from '../helpers/object_utils';
 import {makeDynamicSyncTable} from '../api';
 import {makeFormula} from '../api';
 import {makeMetadataFormula} from '../api';
@@ -445,8 +446,7 @@ describe('Pack metadata Validation', () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message:
-            'Sync table formulas do not currently support varargParameters.',
+          message: 'Sync table formulas do not currently support varargParameters.',
           path: 'syncTables[0].getter.varargParameters',
         },
       ]);
@@ -1689,10 +1689,13 @@ describe('Pack metadata Validation', () => {
           type: AuthenticationType.CodaApiHeaderBearerToken,
           deferConnectionSetup: true,
           shouldAutoAuthSetup: true,
+          networkDomain: 'other.domain',
         },
         networkDomains: ['coda.io', 'other.domain'],
       });
       const err = await validateJsonAndAssertFails(metadata);
+      // TODO(dweitzman): Get rid of this error when credential pinning is launched
+      // as long as the selected auth domain is coda.io
       assert.deepEqual(err.validationErrors, [
         {
           message: 'CodaApiHeaderBearerToken can only be used for coda.io domains',
@@ -1885,6 +1888,52 @@ describe('Pack metadata Validation', () => {
           path: 'networkDomains',
         },
       ]);
+    });
+
+    it('missing networkDomains when specifying authentication', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['foo.com', 'bar.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message:
+            'This pack uses multiple network domains and must set one as a `networkDomain` in setUserAuthentication()',
+          path: 'defaultAuthentication.networkDomain',
+        },
+      ]);
+    });
+
+    it('bad networkDomains when specifying authentication', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['foo.com', 'bar.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          networkDomain: 'baz.com',
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
+          path: 'defaultAuthentication.networkDomain',
+        },
+      ]);
+    });
+
+    it('good networkDomains when specifying authentication', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['foo.com', 'bar.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          networkDomain: 'bar.com',
+        },
+      });
+      const result = await validateJson(deepCopy(metadata));
+      assert.deepEqual(result, metadata);
     });
 
     it('empty networkDomains when specifying authentication', async () => {

@@ -30,7 +30,7 @@ user to the [authorizationUrl](OAuth2Authentication.md#authorizationurl).
 
 #### Defined in
 
-[types.ts:424](https://github.com/coda/packs-sdk/blob/main/types.ts#L424)
+[types.ts:430](https://github.com/coda/packs-sdk/blob/main/types.ts#L430)
 
 ___
 
@@ -45,7 +45,7 @@ they may be specified using [additionalParams](OAuth2Authentication.md#additiona
 
 #### Defined in
 
-[types.ts:392](https://github.com/coda/packs-sdk/blob/main/types.ts#L392)
+[types.ts:398](https://github.com/coda/packs-sdk/blob/main/types.ts#L398)
 
 ___
 
@@ -100,7 +100,7 @@ as [ExecutionContext.endpoint](ExecutionContext.md#endpoint).
 
 #### Defined in
 
-[types.ts:434](https://github.com/coda/packs-sdk/blob/main/types.ts#L434)
+[types.ts:440](https://github.com/coda/packs-sdk/blob/main/types.ts#L440)
 
 ___
 
@@ -139,6 +139,23 @@ A link to a help article or other page with more instructions about how to set u
 #### Defined in
 
 [types.ts:256](https://github.com/coda/packs-sdk/blob/main/types.ts#L256)
+
+___
+
+### networkDomain
+
+• `Optional` **networkDomain**: `string`
+
+Which domain should get auth credentials, when a pack is configured with multiple domains.
+Packs configured with only one domain or with requiredsEndpointUrl set to true can omit this.
+
+#### Inherited from
+
+[BaseAuthentication](BaseAuthentication.md).[networkDomain](BaseAuthentication.md#networkdomain)
+
+#### Defined in
+
+[types.ts:285](https://github.com/coda/packs-sdk/blob/main/types.ts#L285)
 
 ___
 
@@ -189,7 +206,7 @@ If the API you are using requires a different delimiter, say a comma, specify it
 
 #### Defined in
 
-[types.ts:411](https://github.com/coda/packs-sdk/blob/main/types.ts#L411)
+[types.ts:417](https://github.com/coda/packs-sdk/blob/main/types.ts#L417)
 
 ___
 
@@ -204,7 +221,7 @@ the documentation for the API you are connecting to.
 
 #### Defined in
 
-[types.ts:404](https://github.com/coda/packs-sdk/blob/main/types.ts#L404)
+[types.ts:410](https://github.com/coda/packs-sdk/blob/main/types.ts#L410)
 
 ___
 
@@ -220,7 +237,7 @@ When sending authenticated requests, a HTTP header of the form
 
 #### Defined in
 
-[types.ts:419](https://github.com/coda/packs-sdk/blob/main/types.ts#L419)
+[types.ts:425](https://github.com/coda/packs-sdk/blob/main/types.ts#L425)
 
 ___
 
@@ -234,7 +251,7 @@ that should contain the token.
 
 #### Defined in
 
-[types.ts:441](https://github.com/coda/packs-sdk/blob/main/types.ts#L441)
+[types.ts:447](https://github.com/coda/packs-sdk/blob/main/types.ts#L447)
 
 ___
 
@@ -247,7 +264,7 @@ at the end of the OAuth handshake flow.
 
 #### Defined in
 
-[types.ts:397](https://github.com/coda/packs-sdk/blob/main/types.ts#L397)
+[types.ts:403](https://github.com/coda/packs-sdk/blob/main/types.ts#L403)
 
 ___
 
@@ -259,4 +276,4 @@ Identifies this as OAuth2 authentication.
 
 #### Defined in
 
-[types.ts:385](https://github.com/coda/packs-sdk/blob/main/types.ts#L385)
+[types.ts:391](https://github.com/coda/packs-sdk/blob/main/types.ts#L391)

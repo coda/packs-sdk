@@ -144,6 +144,23 @@ A link to a help article or other page with more instructions about how to set u
 
 ___
 
+### networkDomain
+
+• `Optional` **networkDomain**: `string`
+
+Which domain should get auth credentials, when a pack is configured with multiple domains.
+Packs configured with only one domain or with requiredsEndpointUrl set to true can omit this.
+
+#### Inherited from
+
+[BaseAuthentication](BaseAuthentication.md).[networkDomain](BaseAuthentication.md#networkdomain)
+
+#### Defined in
+
+[types.ts:285](https://github.com/coda/packs-sdk/blob/main/types.ts#L285)
+
+___
+
 ### params
 
 • **params**: [`CustomAuthParameter`](CustomAuthParameter.md)[]
@@ -154,7 +171,7 @@ replacement inside the constructed network request.
 
 #### Defined in
 
-[types.ts:555](https://github.com/coda/packs-sdk/blob/main/types.ts#L555)
+[types.ts:561](https://github.com/coda/packs-sdk/blob/main/types.ts#L561)
 
 ___
 
@@ -202,4 +219,4 @@ Identifies this as Custom authentication.
 
 #### Defined in
 
-[types.ts:549](https://github.com/coda/packs-sdk/blob/main/types.ts#L549)
+[types.ts:555](https://github.com/coda/packs-sdk/blob/main/types.ts#L555)

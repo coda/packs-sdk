@@ -92,6 +92,23 @@ A link to a help article or other page with more instructions about how to set u
 
 ___
 
+### networkDomain
+
+• `Optional` **networkDomain**: `string`
+
+Which domain should get auth credentials, when a pack is configured with multiple domains.
+Packs configured with only one domain or with requiredsEndpointUrl set to true can omit this.
+
+#### Inherited from
+
+[BaseAuthentication](BaseAuthentication.md).[networkDomain](BaseAuthentication.md#networkdomain)
+
+#### Defined in
+
+[types.ts:285](https://github.com/coda/packs-sdk/blob/main/types.ts#L285)
+
+___
+
 ### paramName
 
 • **paramName**: `string`
@@ -101,7 +118,7 @@ e.g. "foo" if a token is passed as "foo=bar".
 
 #### Defined in
 
-[types.ts:349](https://github.com/coda/packs-sdk/blob/main/types.ts#L349)
+[types.ts:355](https://github.com/coda/packs-sdk/blob/main/types.ts#L355)
 
 ___
 
@@ -149,4 +166,4 @@ Identifies this as QueryParamToken authentication.
 
 #### Defined in
 
-[types.ts:344](https://github.com/coda/packs-sdk/blob/main/types.ts#L344)
+[types.ts:350](https://github.com/coda/packs-sdk/blob/main/types.ts#L350)
