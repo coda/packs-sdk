@@ -10,4 +10,4 @@ Simplified configuration for [SetEndpoint](../enums/PostSetupType.md#setendpoint
 
 #### Defined in
 
-[types.ts:191](https://github.com/coda/packs-sdk/blob/main/types.ts#L191)
+[types.ts:169](https://github.com/coda/packs-sdk/blob/main/types.ts#L169)

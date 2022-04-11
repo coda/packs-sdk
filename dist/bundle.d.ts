@@ -2655,27 +2655,6 @@ export declare enum AuthenticationType {
 	Various = "Various"
 }
 /**
- * Ways in which a user account can be used with a doc.
- */
-export declare enum DefaultConnectionType {
-	/**
-	 * The account can be used by any user in the a doc, but only to read data. The account can't be
-	 * used to take actions (i.e. push buttons).
-	 */
-	SharedDataOnly = 1,
-	/**
-	 * The account can be used by any user in the doc both to retrieve data and to take actions.
-	 */
-	Shared = 2,
-	/**
-	 * The account can only be used by the Coda user who set up the account, and only to take
-	 * actions (i.e. push buttons). Each Coda user that uses the pack will be prompted to
-	 * connect their own private (AKA proxy) account. Private accounts can't be used to retrieve
-	 * data, because all users in the doc must be able to retrieve the same data.
-	 */
-	ProxyActionsOnly = 3
-}
-/**
  * A pack or formula which does not use authentication.
  */
 export interface NoAuthentication {
@@ -2776,12 +2755,6 @@ export interface BaseAuthentication {
 	 * @ignore
 	 */
 	getConnectionUserId?: MetadataFormula;
-	/**
-	 * Indicates the default manner in which a user's account is expected to be used by this pack,
-	 * e.g. is this account used for retrieving data, taking actions, or both.
-	 * See https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs#h_40472431f0
-	 */
-	defaultConnectionType?: DefaultConnectionType;
 	/**
 	 * A link to a help article or other page with more instructions about how to set up an account for this pack.
 	 */

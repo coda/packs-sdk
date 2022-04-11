@@ -13,4 +13,4 @@ use cases and step types in the future.
 
 #### Defined in
 
-[types.ts:213](https://github.com/coda/packs-sdk/blob/main/types.ts#L213)
+[types.ts:191](https://github.com/coda/packs-sdk/blob/main/types.ts#L191)

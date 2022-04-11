@@ -13,7 +13,6 @@ title: "Pack SDK Reference"
 - [AuthenticationType](enums/AuthenticationType.md)
 - [ConnectionRequirement](enums/ConnectionRequirement.md)
 - [CurrencyFormat](enums/CurrencyFormat.md)
-- [DefaultConnectionType](enums/DefaultConnectionType.md)
 - [DurationUnit](enums/DurationUnit.md)
 - [EmailDisplayType](enums/EmailDisplayType.md)
 - [LinkDisplayType](enums/LinkDisplayType.md)
