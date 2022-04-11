@@ -771,8 +771,8 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
   /**
    * The name of a property within {@link properties} that be used to label this object in the UI.
    * Object values can contain many properties and the Coda UI will display them as a "chip"
-   * with only the value of the "primary" property used as the chip's label. The other properties
-   * can be seen when hovering over the chip.
+   * with only the value of the "displayProperty" property used as the chip's display label.
+   * The other properties can be seen when hovering over the chip.
    */
   displayProperty?: K;
   /**
@@ -1016,7 +1016,7 @@ export type InferrableTypes = boolean | number | string | object | boolean[] | n
  * inputs, it may be useful to us this helper to sniff the return value and generate a basic
  * inferred schema from it.
  *
- * This utility does NOT attempt to determine {@link id} or {@link primary} attributes for
+ * This utility does NOT attempt to determine {@link idProperty} or {@link displayProperty} attributes for
  * an object schema, those are left undefined.
  */
 export function generateSchema(obj: InferrableTypes): Schema {

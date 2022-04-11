@@ -61,8 +61,8 @@ ___
 
 The name of a property within [properties](ObjectSchemaDefinition.md#properties) that be used to label this object in the UI.
 Object values can contain many properties and the Coda UI will display them as a "chip"
-with only the value of the "primary" property used as the chip's label. The other properties
-can be seen when hovering over the chip.
+with only the value of the "displayProperty" property used as the chip's display label.
+The other properties can be seen when hovering over the chip.
 
 #### Defined in
 
