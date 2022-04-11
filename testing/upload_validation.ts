@@ -766,7 +766,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     id: z.string().optional(),
     idProperty: z.string().optional(),
     primary: z.string().optional(),
-    primaryProperty: z.string().optional(),
+    displayProperty: z.string().optional(),
     codaType: z.enum([...ObjectHintValueTypes]).optional(),
     featured: z.array(z.string()).optional(),
     featuredProperties: z.array(z.string()).optional(),
@@ -808,7 +808,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
         return isNil(schemaHelper.primary) || schemaHelper.primary in schemaHelper.properties;
       },
       {
-        message: 'The "primaryProperty" property must appear as a key in the "properties" object.',
+        message: 'The "displayProperty" property must appear as a key in the "properties" object.',
       },
     )
     .superRefine((data, context) => {

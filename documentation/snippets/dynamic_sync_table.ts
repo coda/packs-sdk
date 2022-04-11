@@ -35,7 +35,7 @@ pack.addDynamicSyncTable({
         },
         properties: properties,
         idProperty: id,
-        primaryProperty: primary,
+        displayProperty: primary,
         featuredProperties: featured,
       }),
     });

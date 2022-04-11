@@ -67,7 +67,10 @@ pack.addFormula({
   ],
   resultType: coda.ValueType.String,
   codaType: coda.ValueHintType.ImageReference,
-  execute: async function ([text, size, color, width, height, filter, tag], context) {
+  execute: async function (
+    [text, size, color, width, height, filter, tag],
+    context,
+    ) {
     let url = "https://cataas.com/cat";
     if (tag) {
       url += "/" + tag;
@@ -120,7 +123,7 @@ const CatSchema = coda.makeObjectSchema({
     },
     id: { type: coda.ValueType.String },
   },
-  primaryProperty: "image",
+  displayProperty: "image",
   idProperty: "id",
   featuredProperties: ["tags"],
   identity: {

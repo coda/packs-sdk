@@ -21,7 +21,7 @@ const FileSchema = coda.makeObjectSchema({
       fromKey: "id",
     },
   },
-  primaryProperty: "name",
+  displayProperty: "name",
   idProperty: "fileId",
 });
 

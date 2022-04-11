@@ -19,9 +19,7 @@ pack.addDynamicSyncTable({
   name: "<User-visible name for the sync table>",
   listDynamicUrls: async function (context) {
     // TODO: Fetch the list of data sources the user can connect to.
-    return [
-      { display: "<Datasource Name>", value: "<Datasource URL>" },
-    ];
+    return [{ display: "<Datasource Name>", value: "<Datasource URL>" }];
   },
   getName: async function (context) {
     let datasourceUrl = context.sync.dynamicUrl!;
@@ -47,9 +45,9 @@ pack.addDynamicSyncTable({
           dynamicUrl: datasourceUrl,
         },
         properties: properties,
-        id: id,
-        primary: primary,
-        featured: featured,
+        idProperty: id,
+        displayProperty: primary,
+        featuredProperties: featured,
       }),
     });
   },
@@ -168,9 +166,9 @@ pack.addDynamicSyncTable({
     // Assemble the schema for each row.
     let schema = coda.makeObjectSchema({
       properties: properties,
-      primary: primary,
-      id: id,
-      featured: featured,
+      displayProperty: primary,
+      idProperty: id,
+      featuredProperties: featured,
       identity: {
         name: "FormResponse",
         dynamicUrl: formUrl,
@@ -261,9 +259,11 @@ async function getForm(context, url) {
 
 // Generates a property name given a field title.
 function getPropertyName(field) {
-  return field.title
-    // Replace placeholders with an X.
-    .replace(/\{\{.*?\}\}/g, "X");
+  return (
+    field.title
+      // Replace placeholders with an X.
+      .replace(/\{\{.*?\}\}/g, "X")
+  );
 }
 
 // Generates a property schema based on a Typeform field.

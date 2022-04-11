@@ -16,7 +16,7 @@ export class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>
   }
 
   get primary(): string | undefined {
-    return this._schema.primaryProperty ?? this._schema.primary;
+    return this._schema.displayProperty ?? this._schema.primary;
   }
 
   get featured(): string[] | undefined {

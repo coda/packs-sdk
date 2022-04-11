@@ -1442,7 +1442,7 @@ export function makeSyncTable<
     : normalizeSchema<ArraySchema<Schema>>({type: ValueType.Array, items: schema});
   const {identity, id, primary} = objectSchemaHelper(schema);
   if (!(primary && id && identity)) {
-    throw new Error(`Sync table schemas should have defined properties for identity, idProperty and primaryProperty`);
+    throw new Error(`Sync table schemas should have defined properties for identity, idProperty and displayProperty`);
   }
 
   if (name.includes(' ')) {
@@ -1550,7 +1550,7 @@ export function makeDynamicSyncTable<
     makeObjectSchema({
       type: ValueType.Object,
       idProperty: 'id',
-      primaryProperty: 'id',
+      displayProperty: 'id',
       identity: {name},
       properties: {
         id: {type: ValueType.String},

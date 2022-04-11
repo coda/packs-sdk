@@ -23,7 +23,7 @@ The Pack uses OAuth2 to connect to a user's GitHub account. A more extensive Git
     export const pack = coda.newPack();
 
     // Regular expression used to parse repo URLs.
-    const RepoUrlRegex = new RegExp("^https://github\.com/([^/]+)\/([^/]+)");
+    const RepoUrlRegex = new RegExp("^https://github.com/([^/]+)/([^/]+)");
 
     // How many items to fetch per-page when making API list requests.
     const PageSize = 50;
@@ -67,9 +67,9 @@ The Pack uses OAuth2 to connect to a user's GitHub account. A more extensive Git
         forks: { type: coda.ValueType.Number, fromKey: "forks_count" },
         stars: { type: coda.ValueType.Number, fromKey: "stargazers_count" },
       },
-      primary: "name",
-      id: "id",
-      featured: ["description", "watchers", "forks", "stars"],
+      displayProperty: "name",
+      idProperty: "id",
+      featuredProperties: ["description", "watchers", "forks", "stars"],
     });
 
     // A formula to fetch information about a repo.
@@ -139,7 +139,7 @@ The Pack uses OAuth2 to connect to a user's GitHub account. A more extensive Git
         parameters: [],
         execute: async function ([], context) {
           // Get the page to start from.
-          let page = context.sync.continuation?.page as number || 1;
+          let page = (context.sync.continuation?.page as number) || 1;
 
           // Fetch a page of repos from the GitHub API.
           let url = coda.withQueryParams("https://api.github.com/user/repos", {

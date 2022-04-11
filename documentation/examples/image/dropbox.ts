@@ -21,7 +21,7 @@ const FileSchema = coda.makeObjectSchema({
     fileId: { type: coda.ValueType.String, fromKey: "id" },
   },
   idProperty: "fileId",
-  primaryProperty: "name",
+  displayProperty: "name",
 });
 
 // Sync table for files.

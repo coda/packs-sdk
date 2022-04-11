@@ -15,7 +15,7 @@ class ObjectSchemaHelper {
     }
     get primary() {
         var _a;
-        return (_a = this._schema.primaryProperty) !== null && _a !== void 0 ? _a : this._schema.primary;
+        return (_a = this._schema.displayProperty) !== null && _a !== void 0 ? _a : this._schema.primary;
     }
     get featured() {
         var _a;

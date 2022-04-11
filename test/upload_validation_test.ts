@@ -1257,7 +1257,7 @@ describe('Pack metadata Validation', () => {
         const metadata = metadataForFormulaWithObjectSchema({
           type: ValueType.Object,
           idProperty: 'id',
-          primaryProperty: 'primary',
+          displayProperty: 'primary',
           identity: {
             name: 'IdentityName',
           },
@@ -1357,7 +1357,7 @@ describe('Pack metadata Validation', () => {
       it('primary not among properties', async () => {
         const metadata = metadataForFormulaWithObjectSchema({
           type: ValueType.Object,
-          primaryProperty: 'garbage',
+          displayProperty: 'garbage',
           properties: {
             primary: {type: ValueType.Number, required: true},
           },
@@ -1365,7 +1365,7 @@ describe('Pack metadata Validation', () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: 'The "primaryProperty" property must appear as a key in the "properties" object.',
+            message: 'The "displayProperty" property must appear as a key in the "properties" object.',
             path: 'formulas[0].schema',
           },
         ]);
@@ -1374,7 +1374,7 @@ describe('Pack metadata Validation', () => {
       it('unknown key in properties', async () => {
         const metadata = metadataForFormulaWithObjectSchema({
           type: ValueType.Object,
-          primaryProperty: 'primary',
+          displayProperty: 'primary',
           properties: {
             primary: {type: ValueType.Number, required: true, foo: true} as any,
           },

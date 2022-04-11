@@ -52,7 +52,7 @@ const ProjectReferenceSchema = coda.makeObjectSchema({
     name: { type: coda.ValueType.String, required: true },
     projectId: { type: coda.ValueType.Number, required: true },
   },
-  primaryProperty: "name",
+  displayProperty: "name",
   idProperty: "projectId",
   identity: {
     name: "Project",
@@ -92,7 +92,7 @@ const ProjectSchema = coda.makeObjectSchema({
     // References only work in sync tables.
     parentProject: ProjectReferenceSchema,
   },
-  primaryProperty: "name",
+  displayProperty: "name",
   idProperty: "projectId",
   featuredProperties: ["url"],
   identity: {
@@ -110,7 +110,7 @@ const TaskReferenceSchema = coda.makeObjectSchema({
     name: { type: coda.ValueType.String, required: true },
     taskId: { type: coda.ValueType.Number, required: true },
   },
-  primaryProperty: "name",
+  displayProperty: "name",
   idProperty: "taskId",
   identity: {
     name: "Task",
@@ -161,7 +161,7 @@ const TaskSchema = coda.makeObjectSchema({
     // References only work in sync tables.
     parentTask: TaskReferenceSchema,
   },
-  primaryProperty: "name",
+  displayProperty: "name",
   idProperty: "taskId",
   featuredProperties: ["project", "url"],
   identity: {
@@ -326,7 +326,8 @@ pack.addFormula({
     coda.makeParameter({
       type: coda.ParameterType.Number,
       name: "projectId",
-      description: "The ID of the project to add it to. If blank, " + "it will be added to the user's Inbox.",
+      description: "The ID of the project to add it to. If blank, " +
+      "it will be added to the user's Inbox.",
       optional: true,
     }),
   ],

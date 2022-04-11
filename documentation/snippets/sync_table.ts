@@ -11,7 +11,7 @@ const MySchema = coda.makeObjectSchema({
     // Add more properties here.
   },
   idProperty: "property1", // Which property above is a unique ID.
-  primaryProperty: "property2", // Which property above to display by default.
+  displayProperty: "property2", // Which property above to display by default.
   identity: {
     name: "<User-visible name for the column containing the schema>",
   },

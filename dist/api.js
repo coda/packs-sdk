@@ -609,7 +609,7 @@ function makeSyncTable({ name, description, identityName, schema: schemaDef, for
         : (0, schema_3.normalizeSchema)({ type: schema_1.ValueType.Array, items: schema });
     const { identity, id, primary } = (0, migration_1.objectSchemaHelper)(schema);
     if (!(primary && id && identity)) {
-        throw new Error(`Sync table schemas should have defined properties for identity, idProperty and primaryProperty`);
+        throw new Error(`Sync table schemas should have defined properties for identity, idProperty and displayProperty`);
     }
     if (name.includes(' ')) {
         throw new Error('Sync table name should not include spaces');
@@ -671,7 +671,7 @@ function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchem
         (0, schema_2.makeObjectSchema)({
             type: schema_1.ValueType.Object,
             idProperty: 'id',
-            primaryProperty: 'id',
+            displayProperty: 'id',
             identity: { name },
             properties: {
                 id: { type: schema_1.ValueType.String },

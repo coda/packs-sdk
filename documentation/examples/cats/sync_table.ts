@@ -18,7 +18,7 @@ const CatSchema = coda.makeObjectSchema({
     },
     id: { type: coda.ValueType.String },
   },
-  primaryProperty: "image",
+  displayProperty: "image",
   idProperty: "id",
   featuredProperties: ["tags"],
   identity: {

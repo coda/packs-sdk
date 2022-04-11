@@ -13,7 +13,7 @@ const TaskReferenceSchema = coda.makeObjectSchema({
     name: { type: coda.ValueType.String, required: true },
     taskId: { type: coda.ValueType.Number, required: true },
   },
-  primaryProperty: "name",
+  displayProperty: "name",
   idProperty: "taskId",
   identity: {
     name: "Task",
@@ -46,7 +46,7 @@ const TaskSchema = coda.makeObjectSchema({
     // References only work in sync tables.
     parentTask: TaskReferenceSchema,
   },
-  primaryProperty: "name",
+  displayProperty: "name",
   idProperty: "taskId",
   featuredProperties: ["description", "url"],
   identity: {

@@ -61,7 +61,7 @@ let SpellSchema = coda.makeObjectSchema({
       type: coda.ValueType.String,
     },
   },
-  primaryProperty: "name",
+  displayProperty: "name",
   idProperty: "index",
   featuredProperties: ["description", "level", "range"],
   identity: {
@@ -96,7 +96,10 @@ pack.addFormula({
   schema: SpellSchema,
   execute: async function ([name], context) {
     // Search for spells that match the name provided.
-    let searchUrl = coda.withQueryParams("https://www.dnd5eapi.co/api/spells/", { name: name });
+    let searchUrl = coda.withQueryParams(
+      "https://www.dnd5eapi.co/api/spells/",
+      { name: name },
+      );
     let response = await context.fetcher.fetch({
       method: "GET",
       url: searchUrl,

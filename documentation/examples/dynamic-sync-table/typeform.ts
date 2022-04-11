@@ -79,7 +79,7 @@ pack.addDynamicSyncTable({
     // Assemble the schema for each row.
     let schema = coda.makeObjectSchema({
       properties: properties,
-      primaryProperty: primary,
+      displayProperty: primary,
       idProperty: id,
       featuredProperties: featured,
       identity: {

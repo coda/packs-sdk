@@ -46,7 +46,7 @@ const RepoSchema = coda.makeObjectSchema({
     forks: { type: coda.ValueType.Number, fromKey: "forks_count" },
     stars: { type: coda.ValueType.Number, fromKey: "stargazers_count" },
   },
-  primaryProperty: "name",
+  displayProperty: "name",
   idProperty: "id",
   featuredProperties: ["description", "watchers", "forks", "stars"],
 });

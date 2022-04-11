@@ -55,6 +55,21 @@ BaseSchema.description
 
 ___
 
+### displayProperty
+
+• `Optional` **displayProperty**: `K`
+
+The name of a property within [properties](ObjectSchemaDefinition.md#properties) that be used to label this object in the UI.
+Object values can contain many properties and the Coda UI will display them as a "chip"
+with only the value of the "primary" property used as the chip's label. The other properties
+can be seen when hovering over the chip.
+
+#### Defined in
+
+[schema.ts:777](https://github.com/coda/packs-sdk/blob/main/schema.ts#L777)
+
+___
+
 ### featured
 
 • `Optional` **featured**: `L`[]
@@ -132,26 +147,11 @@ ___
 
 • `Optional` **primary**: `K`
 
-**`deprecated`** Use [primaryProperty](ObjectSchemaDefinition.md#primaryproperty)
+**`deprecated`** Use [displayProperty](ObjectSchemaDefinition.md#displayproperty)
 
 #### Defined in
 
 [schema.ts:770](https://github.com/coda/packs-sdk/blob/main/schema.ts#L770)
-
-___
-
-### primaryProperty
-
-• `Optional` **primaryProperty**: `K`
-
-The name of a property within [properties](ObjectSchemaDefinition.md#properties) that be used to label this object in the UI.
-Object values can contain many properties and the Coda UI will display them as a "chip"
-with only the value of the "primary" property used as the chip's label. The other properties
-can be seen when hovering over the chip.
-
-#### Defined in
-
-[schema.ts:777](https://github.com/coda/packs-sdk/blob/main/schema.ts#L777)
 
 ___
 

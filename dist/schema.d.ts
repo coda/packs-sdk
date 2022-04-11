@@ -667,7 +667,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      * Sync table schemas must specify an id property, which uniquely identify each synced row.
      */
     idProperty?: K;
-    /** @deprecated Use {@link primaryProperty} */
+    /** @deprecated Use {@link displayProperty} */
     primary?: K;
     /**
      * The name of a property within {@link properties} that be used to label this object in the UI.
@@ -675,7 +675,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      * with only the value of the "primary" property used as the chip's label. The other properties
      * can be seen when hovering over the chip.
      */
-    primaryProperty?: K;
+    displayProperty?: K;
     /**
      * A hint for how Coda should interpret and render this object value.
      *

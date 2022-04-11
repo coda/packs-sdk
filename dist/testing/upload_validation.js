@@ -623,7 +623,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     id: z.string().optional(),
     idProperty: z.string().optional(),
     primary: z.string().optional(),
-    primaryProperty: z.string().optional(),
+    displayProperty: z.string().optional(),
     codaType: z.enum([...schema_6.ObjectHintValueTypes]).optional(),
     featured: z.array(z.string()).optional(),
     featuredProperties: z.array(z.string()).optional(),
@@ -660,7 +660,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     const schemaHelper = (0, migration_1.objectSchemaHelper)(data);
     return (0, object_utils_1.isNil)(schemaHelper.primary) || schemaHelper.primary in schemaHelper.properties;
 }, {
-    message: 'The "primaryProperty" property must appear as a key in the "properties" object.',
+    message: 'The "displayProperty" property must appear as a key in the "properties" object.',
 })
     .superRefine((data, context) => {
     ((0, migration_1.objectSchemaHelper)(data).featured || []).forEach((f, i) => {

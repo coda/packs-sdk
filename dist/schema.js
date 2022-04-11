@@ -517,7 +517,7 @@ function normalizeSchema(schema) {
             type: ValueType.Object,
             idProperty: id ? normalizeSchemaKey(id) : undefined,
             featuredProperties: featured ? featured.map(normalizeSchemaKey) : undefined,
-            primaryProperty: primary ? normalizeSchemaKey(primary) : undefined,
+            displayProperty: primary ? normalizeSchemaKey(primary) : undefined,
             properties: normalized,
             identity: schema.identity,
             codaType: schema.codaType,
@@ -548,7 +548,7 @@ function makeReferenceSchemaFromObjectSchema(schema, identityName) {
         type,
         idProperty: id,
         identity: identity || { name: (0, ensure_2.ensureExists)(identityName) },
-        primaryProperty: primary,
+        displayProperty: primary,
         properties: referenceProperties,
     });
 }
