@@ -84,8 +84,10 @@ This Pack allows you to fetch random cat photos using the [Cat-as-a-service API]
       ],
       resultType: coda.ValueType.String,
       codaType: coda.ValueHintType.ImageReference,
-      execute: async function ([text, size, color, width, height, filter, tag],
-        context) {
+      execute: async function (
+        [text, size, color, width, height, filter, tag],
+        context,
+        ) {
         let url = "https://cataas.com/cat";
         if (tag) {
           url += "/" + tag;
@@ -138,9 +140,9 @@ This Pack allows you to fetch random cat photos using the [Cat-as-a-service API]
         },
         id: { type: coda.ValueType.String },
       },
-      primary: "image",
-      id: "id",
-      featured: ["tags"],
+      displayProperty: "image",
+      idProperty: "id",
+      featuredProperties: ["tags"],
       identity: {
         name: "Cat",
       },
@@ -155,9 +157,7 @@ This Pack allows you to fetch random cat photos using the [Cat-as-a-service API]
       formula: {
         name: "SyncCats",
         description: "Syncs the cats.",
-        parameters: [
-          TagParameter,
-        ],
+        parameters: [TagParameter],
         execute: async function ([tag], context) {
           let url = coda.withQueryParams("https://cataas.com/api/cats", {
             tags: tag,
@@ -173,7 +173,7 @@ This Pack allows you to fetch random cat photos using the [Cat-as-a-service API]
               image: "https://cataas.com/cat/" + cat.id,
               tags: cat.tags,
               created: cat.created_at,
-              id: cat.id,
+              idProperty: cat.id,
             });
           }
           return {

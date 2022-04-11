@@ -61,9 +61,9 @@ let SpellSchema = coda.makeObjectSchema({
       type: coda.ValueType.String,
     },
   },
-  primary: "name",
-  id: "index",
-  featured: ["description", "level", "range"],
+  displayProperty: "name",
+  idProperty: "index",
+  featuredProperties: ["description", "level", "range"],
   identity: {
     name: "Spell",
   },
@@ -96,8 +96,10 @@ pack.addFormula({
   schema: SpellSchema,
   execute: async function ([name], context) {
     // Search for spells that match the name provided.
-    let searchUrl = coda.withQueryParams("https://www.dnd5eapi.co/api/spells/",
-      { name: name });
+    let searchUrl = coda.withQueryParams(
+      "https://www.dnd5eapi.co/api/spells/",
+      { name: name },
+      );
     let response = await context.fetcher.fetch({
       method: "GET",
       url: searchUrl,
@@ -136,7 +138,7 @@ pack.addSyncTable({
     description: "Sync all the spells.",
     connectionRequirement: coda.ConnectionRequirement.None,
     parameters: [],
-    execute: async function([], context) {
+    execute: async function ([], context) {
       // Get the list of all spells.
       let listUrl = "https://www.dnd5eapi.co/api/spells";
       let response = await context.fetcher.fetch({
@@ -147,7 +149,7 @@ pack.addSyncTable({
 
       // If there is a previous continuation, start from the index contained
       // within, otherwise start at zero.
-      let index: number = context.sync.continuation?.index as number || 0;
+      let index: number = (context.sync.continuation?.index as number) || 0;
 
       // Get a batch of results, starting from the index determined above.
       let batch = results.slice(index, index + BATCH_SIZE);

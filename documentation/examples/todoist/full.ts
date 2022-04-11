@@ -1,6 +1,5 @@
 import * as coda from "@codahq/packs-sdk";
 
-
 // Constants.
 
 const ProjectUrlPatterns: RegExp[] = [
@@ -12,7 +11,6 @@ const TaskUrlPatterns: RegExp[] = [
   new RegExp("^https://todoist.com/app/project/[0-9]+/task/([0-9]+)$"),
   new RegExp("^https://todoist.com/showTask\\?id=([0-9]+)"),
 ];
-
 
 // Pack setup.
 
@@ -54,8 +52,8 @@ const ProjectReferenceSchema = coda.makeObjectSchema({
     name: { type: coda.ValueType.String, required: true },
     projectId: { type: coda.ValueType.Number, required: true },
   },
-  primary: "name",
-  id: "projectId",
+  displayProperty: "name",
+  idProperty: "projectId",
   identity: {
     name: "Project",
   },
@@ -94,9 +92,9 @@ const ProjectSchema = coda.makeObjectSchema({
     // References only work in sync tables.
     parentProject: ProjectReferenceSchema,
   },
-  primary: "name",
-  id: "projectId",
-  featured: ["url"],
+  displayProperty: "name",
+  idProperty: "projectId",
+  featuredProperties: ["url"],
   identity: {
     name: "Project",
   },
@@ -112,8 +110,8 @@ const TaskReferenceSchema = coda.makeObjectSchema({
     name: { type: coda.ValueType.String, required: true },
     taskId: { type: coda.ValueType.Number, required: true },
   },
-  primary: "name",
-  id: "taskId",
+  displayProperty: "name",
+  idProperty: "taskId",
   identity: {
     name: "Task",
   },
@@ -163,9 +161,9 @@ const TaskSchema = coda.makeObjectSchema({
     // References only work in sync tables.
     parentTask: TaskReferenceSchema,
   },
-  primary: "name",
-  id: "taskId",
-  featured: ["project", "url"],
+  displayProperty: "name",
+  idProperty: "taskId",
+  featuredProperties: ["project", "url"],
   identity: {
     name: "Task",
   },
@@ -174,7 +172,7 @@ const TaskSchema = coda.makeObjectSchema({
 /**
  * Convert a Project API response to a Project schema.
  */
-function toProject(project: any, withReferences=false) {
+function toProject(project: any, withReferences = false) {
   let result: any = {
     name: project.name,
     projectId: project.id,
@@ -186,7 +184,7 @@ function toProject(project: any, withReferences=false) {
   if (withReferences && project.parent_id) {
     result.parentProject = {
       projectId: project.parent_id,
-      name: "Not found",  // If sync'ed, the real name will be shown instead.
+      name: "Not found", // If sync'ed, the real name will be shown instead.
     };
   }
   return result;
@@ -195,7 +193,7 @@ function toProject(project: any, withReferences=false) {
 /**
  * Convert a Task API response to a Task schema.
  */
-function toTask(task: any, withReferences=false) {
+function toTask(task: any, withReferences = false) {
   let result: any = {
     name: task.content,
     description: task.description,
@@ -210,19 +208,18 @@ function toTask(task: any, withReferences=false) {
     // Add a reference to the corresponding row in the Projects sync table.
     result.project = {
       projectId: task.project_id,
-      name: "Not found",  // If sync'ed, the real name will be shown instead.
+      name: "Not found", // If sync'ed, the real name will be shown instead.
     };
     if (task.parent_id) {
       // Add a reference to the corresponding row in the Tasks sync table.
       result.parentTask = {
         taskId: task.parent_id,
-        name: "Not found",  // If sync'ed, the real name will be shown instead.
+        name: "Not found", // If sync'ed, the real name will be shown instead.
       };
     }
   }
   return result;
 }
-
 
 // Formulas (read-only).
 
@@ -272,7 +269,6 @@ pack.addFormula({
   },
 });
 
-
 // Column Formats.
 
 pack.addColumnFormat({
@@ -286,7 +282,6 @@ pack.addColumnFormat({
   formulaName: "GetTask",
   matchers: TaskUrlPatterns,
 });
-
 
 // Action formulas (buttons/automations).
 
@@ -332,7 +327,7 @@ pack.addFormula({
       type: coda.ParameterType.Number,
       name: "projectId",
       description: "The ID of the project to add it to. If blank, " +
-          "it will be added to the user's Inbox.",
+      "it will be added to the user's Inbox.",
       optional: true,
     }),
   ],
@@ -393,7 +388,7 @@ pack.addFormula({
     let response = await context.fetcher.fetch({
       url: url,
       method: "GET",
-      cacheTtlSecs: 0,  // Ensure we are getting the latest data.
+      cacheTtlSecs: 0, // Ensure we are getting the latest data.
     });
     return toTask(response.body);
   },
@@ -425,7 +420,6 @@ pack.addFormula({
     return "OK";
   },
 });
-
 
 // Sync tables.
 
@@ -506,7 +500,6 @@ pack.addSyncTable({
     },
   },
 });
-
 
 // Helper functions.
 

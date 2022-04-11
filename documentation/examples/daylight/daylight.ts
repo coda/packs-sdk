@@ -37,7 +37,7 @@ const SunSchema = coda.makeObjectSchema({
     },
   },
   // Which of the properties defined above will be shown inside the chip.
-  primary: "daylight",
+  displayProperty: "daylight",
 });
 
 // Add a "Daylight" formula to the Pack.

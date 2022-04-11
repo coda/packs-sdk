@@ -26,7 +26,7 @@ BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:602](https://github.com/coda/packs-sdk/blob/main/schema.ts#L602)
+[schema.ts:603](https://github.com/coda/packs-sdk/blob/main/schema.ts#L603)
 
 ___
 
@@ -45,7 +45,7 @@ BaseStringSchema.description
 
 #### Defined in
 
-[schema.ts:199](https://github.com/coda/packs-sdk/blob/main/schema.ts#L199)
+[schema.ts:200](https://github.com/coda/packs-sdk/blob/main/schema.ts#L200)
 
 ___
 
@@ -58,7 +58,7 @@ and a value of "3 days 4 hours" is provided, it will be rendered as "3 days".
 
 #### Defined in
 
-[schema.ts:595](https://github.com/coda/packs-sdk/blob/main/schema.ts#L595)
+[schema.ts:596](https://github.com/coda/packs-sdk/blob/main/schema.ts#L596)
 
 ___
 
@@ -71,7 +71,7 @@ Currently only `1` is supported, which is the same as omitting a value.
 
 #### Defined in
 
-[schema.ts:590](https://github.com/coda/packs-sdk/blob/main/schema.ts#L590)
+[schema.ts:591](https://github.com/coda/packs-sdk/blob/main/schema.ts#L591)
 
 ___
 
@@ -87,4 +87,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:600](https://github.com/coda/packs-sdk/blob/main/schema.ts#L600)
+[schema.ts:601](https://github.com/coda/packs-sdk/blob/main/schema.ts#L601)

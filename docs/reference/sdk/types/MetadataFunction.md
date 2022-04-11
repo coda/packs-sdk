@@ -25,4 +25,4 @@ A JavaScript function that can implement a [MetadataFormulaDef](MetadataFormulaD
 
 #### Defined in
 
-[api.ts:1008](https://github.com/coda/packs-sdk/blob/main/api.ts#L1008)
+[api.ts:1009](https://github.com/coda/packs-sdk/blob/main/api.ts#L1009)

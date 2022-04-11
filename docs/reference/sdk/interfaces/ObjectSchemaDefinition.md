@@ -32,7 +32,7 @@ render such a value as an @-reference to that person, rather than a basic object
 
 #### Defined in
 
-[schema.ts:780](https://github.com/coda/packs-sdk/blob/main/schema.ts#L780)
+[schema.ts:785](https://github.com/coda/packs-sdk/blob/main/schema.ts#L785)
 
 ___
 
@@ -51,13 +51,40 @@ BaseSchema.description
 
 #### Defined in
 
-[schema.ts:199](https://github.com/coda/packs-sdk/blob/main/schema.ts#L199)
+[schema.ts:200](https://github.com/coda/packs-sdk/blob/main/schema.ts#L200)
+
+___
+
+### displayProperty
+
+• `Optional` **displayProperty**: `K`
+
+The name of a property within [properties](ObjectSchemaDefinition.md#properties) that be used to label this object in the UI.
+Object values can contain many properties and the Coda UI will display them as a "chip"
+with only the value of the "displayProperty" property used as the chip's display label.
+The other properties can be seen when hovering over the chip.
+
+#### Defined in
+
+[schema.ts:777](https://github.com/coda/packs-sdk/blob/main/schema.ts#L777)
 
 ___
 
 ### featured
 
 • `Optional` **featured**: `L`[]
+
+**`deprecated`** Use [featuredProperties](ObjectSchemaDefinition.md#featuredproperties)
+
+#### Defined in
+
+[schema.ts:787](https://github.com/coda/packs-sdk/blob/main/schema.ts#L787)
+
+___
+
+### featuredProperties
+
+• `Optional` **featuredProperties**: `L`[]
 
 A list of property names from within [properties](ObjectSchemaDefinition.md#properties) for the "featured" properties
 of this object, used in sync tables. When a sync table is first added to a document,
@@ -74,7 +101,7 @@ projections have been created for them.
 
 #### Defined in
 
-[schema.ts:795](https://github.com/coda/packs-sdk/blob/main/schema.ts#L795)
+[schema.ts:802](https://github.com/coda/packs-sdk/blob/main/schema.ts#L802)
 
 ___
 
@@ -82,12 +109,24 @@ ___
 
 • `Optional` **id**: `K`
 
+**`deprecated`** Use [idProperty](ObjectSchemaDefinition.md#idproperty)
+
+#### Defined in
+
+[schema.ts:763](https://github.com/coda/packs-sdk/blob/main/schema.ts#L763)
+
+___
+
+### idProperty
+
+• `Optional` **idProperty**: `K`
+
 The name of a property within [properties](ObjectSchemaDefinition.md#properties) that represents a unique id for this object.
 Sync table schemas must specify an id property, which uniquely identify each synced row.
 
 #### Defined in
 
-[schema.ts:765](https://github.com/coda/packs-sdk/blob/main/schema.ts#L765)
+[schema.ts:768](https://github.com/coda/packs-sdk/blob/main/schema.ts#L768)
 
 ___
 
@@ -100,7 +139,7 @@ See [IdentityDefinition](IdentityDefinition.md).
 
 #### Defined in
 
-[schema.ts:800](https://github.com/coda/packs-sdk/blob/main/schema.ts#L800)
+[schema.ts:807](https://github.com/coda/packs-sdk/blob/main/schema.ts#L807)
 
 ___
 
@@ -108,14 +147,11 @@ ___
 
 • `Optional` **primary**: `K`
 
-The name of a property within [properties](ObjectSchemaDefinition.md#properties) that be used to label this object in the UI.
-Object values can contain many properties and the Coda UI will display them as a "chip"
-with only the value of the "primary" property used as the chip's label. The other properties
-can be seen when hovering over the chip.
+**`deprecated`** Use [displayProperty](ObjectSchemaDefinition.md#displayproperty)
 
 #### Defined in
 
-[schema.ts:772](https://github.com/coda/packs-sdk/blob/main/schema.ts#L772)
+[schema.ts:770](https://github.com/coda/packs-sdk/blob/main/schema.ts#L770)
 
 ___
 
@@ -127,7 +163,7 @@ Definintion of the key-value pairs in this object.
 
 #### Defined in
 
-[schema.ts:760](https://github.com/coda/packs-sdk/blob/main/schema.ts#L760)
+[schema.ts:761](https://github.com/coda/packs-sdk/blob/main/schema.ts#L761)
 
 ___
 
@@ -139,4 +175,4 @@ Identifies this schema as an object schema.
 
 #### Defined in
 
-[schema.ts:758](https://github.com/coda/packs-sdk/blob/main/schema.ts#L758)
+[schema.ts:759](https://github.com/coda/packs-sdk/blob/main/schema.ts#L759)

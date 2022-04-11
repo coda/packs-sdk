@@ -8,9 +8,7 @@ pack.addDynamicSyncTable({
   name: "<User-visible name for the sync table>",
   listDynamicUrls: async function (context) {
     // TODO: Fetch the list of data sources the user can connect to.
-    return [
-      { display: "<Datasource Name>", value: "<Datasource URL>" },
-    ];
+    return [{ display: "<Datasource Name>", value: "<Datasource URL>" }];
   },
   getName: async function (context) {
     let datasourceUrl = context.sync.dynamicUrl!;
@@ -36,9 +34,9 @@ pack.addDynamicSyncTable({
           dynamicUrl: datasourceUrl,
         },
         properties: properties,
-        id: id,
-        primary: primary,
-        featured: featured,
+        idProperty: id,
+        displayProperty: primary,
+        featuredProperties: featured,
       }),
     });
   },

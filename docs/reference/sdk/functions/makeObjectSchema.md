@@ -44,4 +44,4 @@ coda.makeObjectSchema({
 
 #### Defined in
 
-[schema.ts:1093](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1093)
+[schema.ts:1100](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1100)

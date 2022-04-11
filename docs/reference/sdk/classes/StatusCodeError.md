@@ -25,7 +25,7 @@ The parsed body of the HTTP response.
 
 #### Defined in
 
-[api.ts:114](https://github.com/coda/packs-sdk/blob/main/api.ts#L114)
+[api.ts:115](https://github.com/coda/packs-sdk/blob/main/api.ts#L115)
 
 ___
 
@@ -37,7 +37,7 @@ Alias for [body](StatusCodeError.md#body).
 
 #### Defined in
 
-[api.ts:118](https://github.com/coda/packs-sdk/blob/main/api.ts#L118)
+[api.ts:119](https://github.com/coda/packs-sdk/blob/main/api.ts#L119)
 
 ___
 
@@ -53,7 +53,7 @@ Error.name
 
 #### Defined in
 
-[api.ts:106](https://github.com/coda/packs-sdk/blob/main/api.ts#L106)
+[api.ts:107](https://github.com/coda/packs-sdk/blob/main/api.ts#L107)
 
 ___
 
@@ -65,7 +65,7 @@ The original fetcher request used to make this HTTP request.
 
 #### Defined in
 
-[api.ts:122](https://github.com/coda/packs-sdk/blob/main/api.ts#L122)
+[api.ts:123](https://github.com/coda/packs-sdk/blob/main/api.ts#L123)
 
 ___
 
@@ -77,7 +77,7 @@ The raw HTTP response, including headers.
 
 #### Defined in
 
-[api.ts:126](https://github.com/coda/packs-sdk/blob/main/api.ts#L126)
+[api.ts:127](https://github.com/coda/packs-sdk/blob/main/api.ts#L127)
 
 ___
 
@@ -89,4 +89,4 @@ The HTTP status code, e.g. `404`.
 
 #### Defined in
 
-[api.ts:110](https://github.com/coda/packs-sdk/blob/main/api.ts#L110)
+[api.ts:111](https://github.com/coda/packs-sdk/blob/main/api.ts#L111)

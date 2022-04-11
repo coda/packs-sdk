@@ -20,7 +20,6 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
     ```ts
     import * as coda from "@codahq/packs-sdk";
 
-
     // Constants.
 
     const ProjectUrlPatterns: RegExp[] = [
@@ -32,7 +31,6 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       new RegExp("^https://todoist.com/app/project/[0-9]+/task/([0-9]+)$"),
       new RegExp("^https://todoist.com/showTask\\?id=([0-9]+)"),
     ];
-
 
     // Pack setup.
 
@@ -74,8 +72,8 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         name: { type: coda.ValueType.String, required: true },
         projectId: { type: coda.ValueType.Number, required: true },
       },
-      primary: "name",
-      id: "projectId",
+      displayProperty: "name",
+      idProperty: "projectId",
       identity: {
         name: "Project",
       },
@@ -114,9 +112,9 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         // References only work in sync tables.
         parentProject: ProjectReferenceSchema,
       },
-      primary: "name",
-      id: "projectId",
-      featured: ["url"],
+      displayProperty: "name",
+      idProperty: "projectId",
+      featuredProperties: ["url"],
       identity: {
         name: "Project",
       },
@@ -132,8 +130,8 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         name: { type: coda.ValueType.String, required: true },
         taskId: { type: coda.ValueType.Number, required: true },
       },
-      primary: "name",
-      id: "taskId",
+      displayProperty: "name",
+      idProperty: "taskId",
       identity: {
         name: "Task",
       },
@@ -183,9 +181,9 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         // References only work in sync tables.
         parentTask: TaskReferenceSchema,
       },
-      primary: "name",
-      id: "taskId",
-      featured: ["project", "url"],
+      displayProperty: "name",
+      idProperty: "taskId",
+      featuredProperties: ["project", "url"],
       identity: {
         name: "Task",
       },
@@ -194,7 +192,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
     /**
      * Convert a Project API response to a Project schema.
      */
-    function toProject(project: any, withReferences=false) {
+    function toProject(project: any, withReferences = false) {
       let result: any = {
         name: project.name,
         projectId: project.id,
@@ -206,7 +204,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       if (withReferences && project.parent_id) {
         result.parentProject = {
           projectId: project.parent_id,
-          name: "Not found",  // If sync'ed, the real name will be shown instead.
+          name: "Not found", // If sync'ed, the real name will be shown instead.
         };
       }
       return result;
@@ -215,7 +213,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
     /**
      * Convert a Task API response to a Task schema.
      */
-    function toTask(task: any, withReferences=false) {
+    function toTask(task: any, withReferences = false) {
       let result: any = {
         name: task.content,
         description: task.description,
@@ -230,19 +228,18 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         // Add a reference to the corresponding row in the Projects sync table.
         result.project = {
           projectId: task.project_id,
-          name: "Not found",  // If sync'ed, the real name will be shown instead.
+          name: "Not found", // If sync'ed, the real name will be shown instead.
         };
         if (task.parent_id) {
           // Add a reference to the corresponding row in the Tasks sync table.
           result.parentTask = {
             taskId: task.parent_id,
-            name: "Not found",  // If sync'ed, the real name will be shown instead.
+            name: "Not found", // If sync'ed, the real name will be shown instead.
           };
         }
       }
       return result;
     }
-
 
     // Formulas (read-only).
 
@@ -292,7 +289,6 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       },
     });
 
-
     // Column Formats.
 
     pack.addColumnFormat({
@@ -306,7 +302,6 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       formulaName: "GetTask",
       matchers: TaskUrlPatterns,
     });
-
 
     // Action formulas (buttons/automations).
 
@@ -352,7 +347,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
           type: coda.ParameterType.Number,
           name: "projectId",
           description: "The ID of the project to add it to. If blank, " +
-              "it will be added to the user's Inbox.",
+          "it will be added to the user's Inbox.",
           optional: true,
         }),
       ],
@@ -413,7 +408,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         let response = await context.fetcher.fetch({
           url: url,
           method: "GET",
-          cacheTtlSecs: 0,  // Ensure we are getting the latest data.
+          cacheTtlSecs: 0, // Ensure we are getting the latest data.
         });
         return toTask(response.body);
       },
@@ -445,7 +440,6 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         return "OK";
       },
     });
-
 
     // Sync tables.
 
@@ -526,7 +520,6 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         },
       },
     });
-
 
     // Helper functions.
 
