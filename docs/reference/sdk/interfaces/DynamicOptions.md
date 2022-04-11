@@ -8,18 +8,6 @@ sync tables that have a dynamic schema.
 
 ## Properties
 
-### disableNewColumnsOnSync
-
-• `Optional` **disableNewColumnsOnSync**: `boolean`
-
-See [DynamicSyncTableOptions.disableNewColumnsOnSync](DynamicSyncTableOptions.md#disablenewcolumnsonsync)
-
-#### Defined in
-
-[api.ts:1256](https://github.com/coda/packs-sdk/blob/main/api.ts#L1256)
-
-___
-
 ### entityName
 
 • `Optional` **entityName**: `string`
@@ -46,3 +34,15 @@ does not require a [dynamicUrl](Identity.md#dynamicurl).
 #### Defined in
 
 [api.ts:1252](https://github.com/coda/packs-sdk/blob/main/api.ts#L1252)
+
+___
+
+### hideNewColumnsByDefault
+
+• `Optional` **hideNewColumnsByDefault**: `boolean`
+
+See [DynamicSyncTableOptions.hideNewColumnsByDefault](DynamicSyncTableOptions.md#hidenewcolumnsbydefault)
+
+#### Defined in
+
+[api.ts:1256](https://github.com/coda/packs-sdk/blob/main/api.ts#L1256)
