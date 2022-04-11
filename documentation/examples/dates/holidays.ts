@@ -12,7 +12,7 @@ const HolidaySchema = coda.makeObjectSchema({
       items: { type: coda.ValueType.String },
     },
   },
-  primary: "name",
+  primaryProperty: "name",
 });
 
 // Gets the holidays happening in the selected country on a given day.
@@ -31,8 +31,7 @@ pack.addFormula({
           url: "https://calendarific.com/api/v2/countries",
         });
         let countries = response.body.response.countries;
-        return coda.autocompleteSearchObjects(search, countries,
-          "country_name", "iso-3166");
+        return coda.autocompleteSearchObjects(search, countries, "country_name", "iso-3166");
       },
     }),
     coda.makeParameter({

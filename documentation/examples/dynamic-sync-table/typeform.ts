@@ -79,9 +79,9 @@ pack.addDynamicSyncTable({
     // Assemble the schema for each row.
     let schema = coda.makeObjectSchema({
       properties: properties,
-      primary: primary,
-      id: id,
-      featured: featured,
+      primaryProperty: primary,
+      idProperty: id,
+      featuredProperties: featured,
       identity: {
         name: "FormResponse",
         dynamicUrl: formUrl,
@@ -172,9 +172,11 @@ async function getForm(context, url) {
 
 // Generates a property name given a field title.
 function getPropertyName(field) {
-  return field.title
-    // Replace placeholders with an X.
-    .replace(/\{\{.*?\}\}/g, "X");
+  return (
+    field.title
+      // Replace placeholders with an X.
+      .replace(/\{\{.*?\}\}/g, "X")
+  );
 }
 
 // Generates a property schema based on a Typeform field.

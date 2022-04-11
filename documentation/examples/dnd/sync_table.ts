@@ -61,9 +61,9 @@ let SpellSchema = coda.makeObjectSchema({
       type: coda.ValueType.String,
     },
   },
-  primary: "name",
-  id: "index",
-  featured: ["description", "level", "range"],
+  primaryProperty: "name",
+  idProperty: "index",
+  featuredProperties: ["description", "level", "range"],
   identity: {
     name: "Spell",
   },
@@ -101,7 +101,7 @@ pack.addSyncTable({
 
       // If there is a previous continuation, start from the index contained
       // within, otherwise start at zero.
-      let index: number = context.sync.continuation?.index as number || 0;
+      let index: number = (context.sync.continuation?.index as number) || 0;
 
       // Get a batch of results, starting from the index determined above.
       let batch = results.slice(index, index + BATCH_SIZE);
