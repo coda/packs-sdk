@@ -438,6 +438,8 @@ export interface LinkSchema extends BaseStringSchema<ValueHintType.Url> {
 	codaType: ValueHintType.Url;
 	/** How the URL should be displayed in the UI. */
 	display?: LinkDisplayType;
+	/** Whether to force client embedding (only for LinkDisplayType.Embed) - for example, if user login required. */
+	force?: boolean;
 }
 /**
  * A schema representing a return value or object property that is provided as a string,

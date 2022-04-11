@@ -62,6 +62,18 @@ How the URL should be displayed in the UI.
 
 ___
 
+### force
+
+• `Optional` **force**: `boolean`
+
+Whether to force client embedding (only for LinkDisplayType.Embed) - for example, if user login required.
+
+#### Defined in
+
+[schema.ts:477](https://github.com/coda/packs-sdk/blob/main/schema.ts#L477)
+
+___
+
 ### type
 
 • **type**: [`String`](../enums/ValueType.md#string)
@@ -74,4 +86,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:598](https://github.com/coda/packs-sdk/blob/main/schema.ts#L598)
+[schema.ts:600](https://github.com/coda/packs-sdk/blob/main/schema.ts#L600)
