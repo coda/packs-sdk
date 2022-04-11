@@ -35,6 +35,18 @@ See [SyncTableOptions.description](SyncTableOptions.md#description)
 
 ___
 
+### doNotCreateNewColumnsByDefault
+
+• `Optional` **doNotCreateNewColumnsByDefault**: `boolean`
+
+See [DynamicOptions.doNotCreateNewColumnsByDefault](DynamicOptions.md#donotcreatenewcolumnsbydefault)
+
+#### Defined in
+
+[api.ts:171](https://github.com/coda/packs-sdk/blob/main/api.ts#L171)
+
+___
+
 ### entityName
 
 • `Optional` **entityName**: `string`
@@ -68,18 +80,6 @@ See [SyncTableOptions.formula](SyncTableOptions.md#formula)
 #### Defined in
 
 [api.ts:165](https://github.com/coda/packs-sdk/blob/main/api.ts#L165)
-
-___
-
-### hideNewColumnsByDefault
-
-• `Optional` **hideNewColumnsByDefault**: `boolean`
-
-See [DynamicOptions.hideNewColumnsByDefault](DynamicOptions.md#hidenewcolumnsbydefault)
-
-#### Defined in
-
-[api.ts:171](https://github.com/coda/packs-sdk/blob/main/api.ts#L171)
 
 ___
 

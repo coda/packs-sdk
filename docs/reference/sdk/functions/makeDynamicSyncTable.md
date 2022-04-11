@@ -39,12 +39,12 @@ coda.makeDynamicSyncTable({
 | `__namedParameters` | `Object` |
 | `__namedParameters.connectionRequirement?` | [`ConnectionRequirement`](../enums/ConnectionRequirement.md) |
 | `__namedParameters.description?` | `string` |
+| `__namedParameters.doNotCreateNewColumnsByDefault?` | `boolean` |
 | `__namedParameters.entityName?` | `string` |
 | `__namedParameters.formula` | [`SyncFormulaDef`](../interfaces/SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `any`\> |
 | `__namedParameters.getDisplayUrl` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
 | `__namedParameters.getName` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
 | `__namedParameters.getSchema` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
-| `__namedParameters.hideNewColumnsByDefault?` | `boolean` |
 | `__namedParameters.listDynamicUrls?` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
 | `__namedParameters.name` | `string` |
 | `__namedParameters.placeholderSchema?` | `SchemaT` |
