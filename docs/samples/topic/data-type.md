@@ -106,8 +106,8 @@ const MySchema = coda.makeObjectSchema({
     property2: { type: coda.ValueType.String },
     // Add more properties here.
   },
-  id: "property1", // Which property above is a unique ID.
-  primary: "property2", // Which property above to display by default.
+  idProperty: "property1", // Which property above is a unique ID.
+  displayProperty: "property2", // Which property above to display by default.
   identity: {
     name: "<User-visible name>",
   },

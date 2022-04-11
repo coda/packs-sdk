@@ -24,9 +24,9 @@ const TaskSchema = coda.makeObjectSchema({
       required: true,
     },
   },
-  primary: "name",
-  id: "taskId",
-  featured: ["description", "url"],
+  displayProperty: "name",
+  idProperty: "taskId",
+  featuredProperties: ["description", "url"],
   identity: {
     name: "Task",
   },

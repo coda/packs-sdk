@@ -132,8 +132,8 @@ const FileSchema = coda.makeObjectSchema({
     },
     fileId: { type: coda.ValueType.String, fromKey: "id" },
   },
-  id: "fileId",
-  primary: "name",
+  idProperty: "fileId",
+  displayProperty: "name",
 });
 
 // Sync table for files.
@@ -175,7 +175,7 @@ pack.addSyncTable({
           job = Promise.resolve(undefined);
         }
         jobs.push(job);
-      };
+      }
 
       // Wait for all the jobs to complete, then copy the temporary URLs back
       // into the file objects.
@@ -241,7 +241,7 @@ async function getThumbnails(paths, context: coda.ExecutionContext) {
   let url = "https://content.dropboxapi.com/2/files/get_thumbnail_batch";
 
   // Create a request entry for each file path.
-  let entries  = [];
+  let entries = [];
   for (let path of paths) {
     let entry = {
       path: path,
@@ -308,8 +308,8 @@ const FileSchema = coda.makeObjectSchema({
       fromKey: "id",
     },
   },
-  primary: "name",
-  id: "fileId",
+  displayProperty: "name",
+  idProperty: "fileId",
 });
 
 // Sync table for files.
@@ -356,7 +356,7 @@ pack.addSyncTable({
           job = Promise.resolve(undefined);
         }
         jobs.push(job);
-      };
+      }
 
       // Wait for all the jobs to complete, then copy the temporary URLs back
       // into the file objects.
@@ -385,9 +385,7 @@ pack.setUserAuthentication({
   type: coda.AuthenticationType.OAuth2,
   authorizationUrl: "https://accounts.google.com/o/oauth2/v2/auth",
   tokenUrl: "https://oauth2.googleapis.com/token",
-  scopes: [
-    "https://www.googleapis.com/auth/drive.readonly",
-  ],
+  scopes: ["https://www.googleapis.com/auth/drive.readonly"],
   additionalParams: {
     access_type: "offline",
     prompt: "consent",

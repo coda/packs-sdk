@@ -28,4 +28,4 @@ to ensure that it matches the schema you have declared for that formula.
 
 #### Defined in
 
-[schema.ts:987](https://github.com/coda/packs-sdk/blob/main/schema.ts#L987)
+[schema.ts:994](https://github.com/coda/packs-sdk/blob/main/schema.ts#L994)

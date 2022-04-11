@@ -4293,6 +4293,9 @@ module.exports = (() => {
   // helpers/ensure.ts
   init_buffer_shim();
 
+  // helpers/migration.ts
+  init_buffer_shim();
+
   // schema.ts
   var import_pascalcase = __toESM(require_pascalcase());
 

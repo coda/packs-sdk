@@ -9,4 +9,4 @@ The union of all schemas that can represent number values.
 
 #### Defined in
 
-[schema.ts:213](https://github.com/coda/packs-sdk/blob/main/schema.ts#L213)
+[schema.ts:214](https://github.com/coda/packs-sdk/blob/main/schema.ts#L214)

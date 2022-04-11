@@ -53,7 +53,7 @@ This Pack provides a `Daylight` formula that determines the daylight, sunrise,
         },
       },
       // Which of the properties defined above will be shown inside the chip.
-      primary: "daylight",
+      displayProperty: "daylight",
     });
 
     // Add a "Daylight" formula to the Pack.

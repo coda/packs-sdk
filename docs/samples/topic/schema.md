@@ -21,8 +21,8 @@ const MySchema = coda.makeObjectSchema({
     property2: { type: coda.ValueType.String },
     // Add more properties here.
   },
-  id: "property1", // Which property above is a unique ID.
-  primary: "property2", // Which property above to display by default.
+  idProperty: "property1", // Which property above is a unique ID.
+  displayProperty: "property2", // Which property above to display by default.
   identity: {
     name: "<User-visible name of the schema>",
   },
@@ -55,7 +55,7 @@ const SunSchema = coda.makeObjectSchema({
     },
   },
   // Which of the properties defined above will be shown inside the chip.
-  primary: "daylight",
+  displayProperty: "daylight",
 });
 ```
 ## For sync table
@@ -118,9 +118,9 @@ let SpellSchema = coda.makeObjectSchema({
       type: coda.ValueType.String,
     },
   },
-  primary: "name",
-  id: "index",
-  featured: ["description", "level", "range"],
+  displayProperty: "name",
+  idProperty: "index",
+  featuredProperties: ["description", "level", "range"],
   identity: {
     name: "Spell",
   },
@@ -143,8 +143,8 @@ const TaskReferenceSchema = coda.makeObjectSchema({
     name: { type: coda.ValueType.String, required: true },
     taskId: { type: coda.ValueType.Number, required: true },
   },
-  primary: "name",
-  id: "taskId",
+  displayProperty: "name",
+  idProperty: "taskId",
   identity: {
     name: "Task",
   },
@@ -176,9 +176,9 @@ const TaskSchema = coda.makeObjectSchema({
     // References only work in sync tables.
     parentTask: TaskReferenceSchema,
   },
-  primary: "name",
-  id: "taskId",
-  featured: ["description", "url"],
+  displayProperty: "name",
+  idProperty: "taskId",
+  featuredProperties: ["description", "url"],
   identity: {
     name: "Task",
   },

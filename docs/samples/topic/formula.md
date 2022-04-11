@@ -109,8 +109,8 @@ const TaskSchema = coda.makeObjectSchema({
       required: true,
     },
   },
-  primary: "name",
-  id: "taskId",
+  displayProperty: "name",
+  idProperty: "taskId",
   identity: {
     name: "Task",
   },

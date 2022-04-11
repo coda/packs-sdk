@@ -67,8 +67,10 @@ pack.addFormula({
   ],
   resultType: coda.ValueType.String,
   codaType: coda.ValueHintType.ImageReference,
-  execute: async function ([text, size, color, width, height, filter, tag],
-    context) {
+  execute: async function (
+    [text, size, color, width, height, filter, tag],
+    context,
+    ) {
     let url = "https://cataas.com/cat";
     if (tag) {
       url += "/" + tag;
@@ -121,9 +123,9 @@ const CatSchema = coda.makeObjectSchema({
     },
     id: { type: coda.ValueType.String },
   },
-  primary: "image",
-  id: "id",
-  featured: ["tags"],
+  displayProperty: "image",
+  idProperty: "id",
+  featuredProperties: ["tags"],
   identity: {
     name: "Cat",
   },
@@ -138,9 +140,7 @@ pack.addSyncTable({
   formula: {
     name: "SyncCats",
     description: "Syncs the cats.",
-    parameters: [
-      TagParameter,
-    ],
+    parameters: [TagParameter],
     execute: async function ([tag], context) {
       let url = coda.withQueryParams("https://cataas.com/api/cats", {
         tags: tag,
@@ -156,7 +156,7 @@ pack.addSyncTable({
           image: "https://cataas.com/cat/" + cat.id,
           tags: cat.tags,
           created: cat.created_at,
-          id: cat.id,
+          idProperty: cat.id,
         });
       }
       return {

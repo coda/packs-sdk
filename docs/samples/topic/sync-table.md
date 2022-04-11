@@ -19,8 +19,8 @@ const MySchema = coda.makeObjectSchema({
     property2: { type: coda.ValueType.String },
     // Add more properties here.
   },
-  id: "property1", // Which property above is a unique ID.
-  primary: "property2", // Which property above to display by default.
+  idProperty: "property1", // Which property above is a unique ID.
+  displayProperty: "property2", // Which property above to display by default.
   identity: {
     name: "<User-visible name for the column containing the schema>",
   },
@@ -81,9 +81,9 @@ const CatSchema = coda.makeObjectSchema({
     },
     id: { type: coda.ValueType.String },
   },
-  primary: "image",
-  id: "id",
-  featured: ["tags"],
+  displayProperty: "image",
+  idProperty: "id",
+  featuredProperties: ["tags"],
   identity: {
     name: "Cat",
   },
@@ -131,7 +131,7 @@ pack.addSyncTable({
           image: "https://cataas.com/cat/" + cat.id,
           tags: cat.tags,
           created: cat.created_at,
-          id: cat.id,
+          idProperty: cat.id,
         });
       }
       return {
@@ -211,9 +211,9 @@ let SpellSchema = coda.makeObjectSchema({
       type: coda.ValueType.String,
     },
   },
-  primary: "name",
-  id: "index",
-  featured: ["description", "level", "range"],
+  displayProperty: "name",
+  idProperty: "index",
+  featuredProperties: ["description", "level", "range"],
   identity: {
     name: "Spell",
   },
@@ -251,7 +251,7 @@ pack.addSyncTable({
 
       // If there is a previous continuation, start from the index contained
       // within, otherwise start at zero.
-      let index: number = context.sync.continuation?.index as number || 0;
+      let index: number = (context.sync.continuation?.index as number) || 0;
 
       // Get a batch of results, starting from the index determined above.
       let batch = results.slice(index, index + BATCH_SIZE);
@@ -336,9 +336,9 @@ const TaskSchema = coda.makeObjectSchema({
       required: true,
     },
   },
-  primary: "name",
-  id: "taskId",
-  featured: ["description", "url"],
+  displayProperty: "name",
+  idProperty: "taskId",
+  featuredProperties: ["description", "url"],
   identity: {
     name: "Task",
   },
@@ -435,9 +435,9 @@ const ProjectSchema = coda.makeObjectSchema({
       required: true,
     },
   },
-  primary: "name",
-  id: "projectId",
-  featured: ["url"],
+  displayProperty: "name",
+  idProperty: "projectId",
+  featuredProperties: ["url"],
   identity: {
     name: "Project",
   },
@@ -445,8 +445,8 @@ const ProjectSchema = coda.makeObjectSchema({
 
 // A reference schema, allowing other sync tables to link to rows in the
 // Projects sync table.
-const ProjectReferenceSchema =
-    coda.makeReferenceSchemaFromObjectSchema(ProjectSchema);
+const ProjectReferenceSchema = coda.makeReferenceSchemaFromObjectSchema(
+  ProjectSchema);
 
 // A schema defining the data in the Tasks sync table.
 const TaskSchema = coda.makeObjectSchema({
@@ -473,9 +473,9 @@ const TaskSchema = coda.makeObjectSchema({
       required: true,
     },
   },
-  primary: "name",
-  id: "taskId",
-  featured: ["description", "url", "project"],
+  displayProperty: "name",
+  idProperty: "taskId",
+  featuredProperties: ["description", "url", "project"],
   identity: {
     name: "Task",
   },
@@ -540,7 +540,7 @@ pack.addSyncTable({
           // Add a reference to the parent project in the Projects table.
           item.project = {
             projectId: task.project_id,
-            name: "Not found",  // Placeholder name, if not synced yet.
+            name: "Not found", // Placeholder name, if not synced yet.
           };
         }
         results.push(item);

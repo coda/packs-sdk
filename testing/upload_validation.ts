@@ -18,6 +18,7 @@ import type {DynamicSyncTableDef} from '../api';
 import {EmailDisplayType} from '../schema';
 import type {EmailSchema} from '../schema';
 import {FeatureSet} from '../types';
+import type {GenericObjectSchema} from '..';
 import type {HeaderBearerTokenAuthentication} from '../types';
 import type {Identity} from '../schema';
 import {LinkDisplayType} from '../schema';
@@ -69,6 +70,7 @@ import type {WebBasicAuthentication} from '../types';
 import {assertCondition} from '../helpers/ensure';
 import {isNil} from '../helpers/object_utils';
 import {makeSchema} from '../schema';
+import {objectSchemaHelper} from '../helpers/migration';
 import * as z from 'zod';
 
 /**
@@ -762,9 +764,12 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     type: zodDiscriminant(ValueType.Object),
     description: z.string().optional(),
     id: z.string().optional(),
+    idProperty: z.string().optional(),
     primary: z.string().optional(),
+    displayProperty: z.string().optional(),
     codaType: z.enum([...ObjectHintValueTypes]).optional(),
     featured: z.array(z.string()).optional(),
+    featuredProperties: z.array(z.string()).optional(),
     identity: zodCompleteObject<Identity>({
       // Stupid hack to hardcode a pack id that will get replaced at upload time.
       // TODO(jonathan): Enable after existing packs go through the v2 upload flow.
@@ -788,14 +793,26 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
         });
       }
     })
-    .refine(data => isNil(data.id) || data.id in data.properties, {
-      message: 'The "id" property must appear as a key in the "properties" object.',
-    })
-    .refine(data => isNil(data.primary) || data.primary in data.properties, {
-      message: 'The "primary" property must appear as a key in the "properties" object.',
-    })
+    .refine(
+      data => {
+        const schemaHelper = objectSchemaHelper(data as GenericObjectSchema);
+        return isNil(schemaHelper.id) || schemaHelper.id in schemaHelper.properties;
+      },
+      {
+        message: 'The "id" property must appear as a key in the "properties" object.',
+      },
+    )
+    .refine(
+      data => {
+        const schemaHelper = objectSchemaHelper(data as GenericObjectSchema);
+        return isNil(schemaHelper.primary) || schemaHelper.primary in schemaHelper.properties;
+      },
+      {
+        message: 'The "displayProperty" property must appear as a key in the "properties" object.',
+      },
+    )
     .superRefine((data, context) => {
-      ((data.featured as string[]) || []).forEach((f, i) => {
+      (objectSchemaHelper(data as GenericObjectSchema).featured || []).forEach((f, i) => {
         if (!(f in data.properties)) {
           context.addIssue({
             code: z.ZodIssueCode.custom,

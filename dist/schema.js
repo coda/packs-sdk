@@ -7,6 +7,7 @@ exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.
 const ensure_1 = require("./helpers/ensure");
 const ensure_2 = require("./helpers/ensure");
 const ensure_3 = require("./helpers/ensure");
+const migration_1 = require("./helpers/migration");
 const pascalcase_1 = __importDefault(require("pascalcase"));
 // Defines a subset of the JSON Object schema for use in annotating API results.
 // http://json-schema.org/latest/json-schema-core.html#rfc.section.8.2
@@ -369,7 +370,7 @@ exports.isArray = isArray;
  * inputs, it may be useful to us this helper to sniff the return value and generate a basic
  * inferred schema from it.
  *
- * This utility does NOT attempt to determine {@link id} or {@link primary} attributes for
+ * This utility does NOT attempt to determine {@link idProperty} or {@link displayProperty} attributes for
  * an object schema, those are left undefined.
  */
 function generateSchema(obj) {
@@ -463,7 +464,7 @@ function makeObjectSchema(schemaDef) {
 exports.makeObjectSchema = makeObjectSchema;
 function validateObjectSchema(schema) {
     if (schema.codaType === ValueHintType.Reference) {
-        const { id, identity, primary } = schema;
+        const { id, identity, primary } = (0, migration_1.objectSchemaHelper)(schema);
         checkRequiredFieldInObjectSchema(id, 'id', schema.codaType);
         checkRequiredFieldInObjectSchema(identity, 'identity', schema.codaType);
         checkRequiredFieldInObjectSchema(primary, 'primary', schema.codaType);
@@ -471,7 +472,7 @@ function validateObjectSchema(schema) {
         checkSchemaPropertyIsRequired((0, ensure_2.ensureExists)(primary), schema);
     }
     if (schema.codaType === ValueHintType.Person) {
-        const { id } = schema;
+        const { id } = (0, migration_1.objectSchemaHelper)(schema);
         checkRequiredFieldInObjectSchema(id, 'id', schema.codaType);
         checkSchemaPropertyIsRequired((0, ensure_2.ensureExists)(id), schema);
     }
@@ -502,7 +503,7 @@ function normalizeSchema(schema) {
     }
     else if (isObject(schema)) {
         const normalized = {};
-        const { id, primary, featured } = schema;
+        const { id, primary, featured } = (0, migration_1.objectSchemaHelper)(schema);
         for (const key of Object.keys(schema.properties)) {
             const normalizedKey = normalizeSchemaKey(key);
             const props = schema.properties[key];
@@ -514,9 +515,9 @@ function normalizeSchema(schema) {
         }
         const normalizedSchema = {
             type: ValueType.Object,
-            id: id ? normalizeSchemaKey(id) : undefined,
-            featured: featured ? featured.map(normalizeSchemaKey) : undefined,
-            primary: primary ? normalizeSchemaKey(primary) : undefined,
+            idProperty: id ? normalizeSchemaKey(id) : undefined,
+            featuredProperties: featured ? featured.map(normalizeSchemaKey) : undefined,
+            displayProperty: primary ? normalizeSchemaKey(primary) : undefined,
             properties: normalized,
             identity: schema.identity,
             codaType: schema.codaType,
@@ -535,7 +536,7 @@ exports.normalizeSchema = normalizeSchema;
  * schema it provides better code reuse to derive a reference schema instead.
  */
 function makeReferenceSchemaFromObjectSchema(schema, identityName) {
-    const { type, id, primary, identity, properties } = schema;
+    const { type, id, primary, identity, properties } = (0, migration_1.objectSchemaHelper)(schema);
     (0, ensure_2.ensureExists)(identity || identityName, 'Source schema must have an identity field, or you must provide an identity name for the reference.');
     const validId = (0, ensure_2.ensureExists)(id);
     const referenceProperties = { [validId]: properties[validId] };
@@ -545,9 +546,9 @@ function makeReferenceSchemaFromObjectSchema(schema, identityName) {
     return makeObjectSchema({
         codaType: ValueHintType.Reference,
         type,
-        id,
+        idProperty: id,
         identity: identity || { name: (0, ensure_2.ensureExists)(identityName) },
-        primary,
+        displayProperty: primary,
         properties: referenceProperties,
     });
 }

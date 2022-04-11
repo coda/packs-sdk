@@ -692,18 +692,22 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	type: ValueType.Object;
 	/** Definintion of the key-value pairs in this object. */
 	properties: ObjectSchemaProperties<K | L>;
+	/** @deprecated Use {@link idProperty} */
+	id?: K;
 	/**
 	 * The name of a property within {@link properties} that represents a unique id for this object.
 	 * Sync table schemas must specify an id property, which uniquely identify each synced row.
 	 */
-	id?: K;
+	idProperty?: K;
+	/** @deprecated Use {@link displayProperty} */
+	primary?: K;
 	/**
 	 * The name of a property within {@link properties} that be used to label this object in the UI.
 	 * Object values can contain many properties and the Coda UI will display them as a "chip"
-	 * with only the value of the "primary" property used as the chip's label. The other properties
-	 * can be seen when hovering over the chip.
+	 * with only the value of the "displayProperty" property used as the chip's display label.
+	 * The other properties can be seen when hovering over the chip.
 	 */
-	primary?: K;
+	displayProperty?: K;
 	/**
 	 * A hint for how Coda should interpret and render this object value.
 	 *
@@ -712,6 +716,8 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * render such a value as an @-reference to that person, rather than a basic object schip.
 	 */
 	codaType?: ObjectHintTypes;
+	/** @deprecated Use {@link featuredProperties} */
+	featured?: L[];
 	/**
 	 * A list of property names from within {@link properties} for the "featured" properties
 	 * of this object, used in sync tables. When a sync table is first added to a document,
@@ -726,7 +732,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * Non-featured properties can always be referenced in formulas regardless of whether column
 	 * projections have been created for them.
 	 */
-	featured?: L[];
+	featuredProperties?: L[];
 	/**
 	 * An identity for this schema, if this schema is important enough to be named and referenced.
 	 * See {@link IdentityDefinition}.
@@ -896,7 +902,7 @@ export declare type InferrableTypes = boolean | number | string | object | boole
  * inputs, it may be useful to us this helper to sniff the return value and generate a basic
  * inferred schema from it.
  *
- * This utility does NOT attempt to determine {@link id} or {@link primary} attributes for
+ * This utility does NOT attempt to determine {@link idProperty} or {@link displayProperty} attributes for
  * an object schema, those are left undefined.
  */
 export declare function generateSchema(obj: InferrableTypes): Schema;

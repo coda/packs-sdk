@@ -35,4 +35,4 @@ makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', descriptio
 
 #### Defined in
 
-[api.ts:326](https://github.com/coda/packs-sdk/blob/main/api.ts#L326)
+[api.ts:327](https://github.com/coda/packs-sdk/blob/main/api.ts#L327)

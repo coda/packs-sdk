@@ -43,6 +43,7 @@ import {isPromise} from './helpers/object_utils';
 import {makeObjectSchema} from './schema';
 import {normalizeSchema} from './schema';
 import {numberArray} from './api_types';
+import {objectSchemaHelper} from './helpers/migration';
 import {stringArray} from './api_types';
 import {transformBody} from './handler_templates';
 
@@ -1441,9 +1442,9 @@ export function makeSyncTable<
   const formulaSchema = getSchema
     ? undefined
     : normalizeSchema<ArraySchema<Schema>>({type: ValueType.Array, items: schema});
-  const {identity, id, primary} = schema;
+  const {identity, id, primary} = objectSchemaHelper(schema);
   if (!(primary && id && identity)) {
-    throw new Error(`Sync table schemas should have defined properties for identity, id and primary`);
+    throw new Error(`Sync table schemas should have defined properties for identity, idProperty and displayProperty`);
   }
 
   if (name.includes(' ')) {
@@ -1550,8 +1551,8 @@ export function makeDynamicSyncTable<
     // default placeholder only shows a column of id, which will be replaced later by the dynamic schema.
     makeObjectSchema({
       type: ValueType.Object,
-      id: 'id',
-      primary: 'id',
+      idProperty: 'id',
+      displayProperty: 'id',
       identity: {name},
       properties: {
         id: {type: ValueType.String},
