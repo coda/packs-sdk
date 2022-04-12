@@ -19,6 +19,7 @@ export enum Type {
   date,
   html,
   image,
+  file,
 }
 
 export type ParamType = Exclude<Type, Type.object>;
@@ -69,6 +70,11 @@ export const imageArray: ArrayType<Type.image> = {
   items: Type.image,
 };
 
+export const fileArray: ArrayType<Type.file> = {
+  type: 'array',
+  items: Type.file,
+};
+
 // Mapping from our type enum to the JS types they are manifested as.
 export interface TypeMap {
   [Type.number]: number;
@@ -78,6 +84,7 @@ export interface TypeMap {
   [Type.date]: Date;
   [Type.html]: string;
   [Type.image]: string;
+  [Type.file]: string;
 }
 
 /**
@@ -129,6 +136,10 @@ export enum ParameterType {
    * Indicates a parameter that is a Coda image. The pack is passed an image URL.
    */
   Image = 'image',
+  /**
+   * Indicates a file that is a Coda file. The pack is passed a file URL.
+   */
+  File = 'file',
 
   /**
    * Indicates a parameter that is a list of Coda text values.
@@ -159,6 +170,10 @@ export enum ParameterType {
    * Indicates a parameter that is a list of Coda image values. The pack is passed a list of image URLs.
    */
   ImageArray = 'imageArray',
+  /**
+   * Indicates a parameter that is a list of Coda file values. The pack is passed a list of file URLs.
+   */
+  FileArray = 'fileArray',
 }
 
 export interface ParameterTypeMap {
@@ -168,6 +183,7 @@ export interface ParameterTypeMap {
   [ParameterType.Date]: Type.date;
   [ParameterType.Html]: Type.html;
   [ParameterType.Image]: Type.image;
+  [ParameterType.File]: Type.file;
 
   [ParameterType.StringArray]: ArrayType<Type.string>;
   [ParameterType.NumberArray]: ArrayType<Type.number>;
@@ -175,6 +191,7 @@ export interface ParameterTypeMap {
   [ParameterType.DateArray]: ArrayType<Type.date>;
   [ParameterType.HtmlArray]: ArrayType<Type.html>;
   [ParameterType.ImageArray]: ArrayType<Type.image>;
+  [ParameterType.FileArray]: ArrayType<Type.file>;
 }
 
 export const ParameterTypeInputMap: Record<ParameterType, UnionType> = {
@@ -184,6 +201,7 @@ export const ParameterTypeInputMap: Record<ParameterType, UnionType> = {
   [ParameterType.Date]: Type.date,
   [ParameterType.Html]: Type.html,
   [ParameterType.Image]: Type.image,
+  [ParameterType.File]: Type.file,
 
   [ParameterType.StringArray]: {type: 'array', items: Type.string},
   [ParameterType.NumberArray]: {type: 'array', items: Type.number},
@@ -191,6 +209,7 @@ export const ParameterTypeInputMap: Record<ParameterType, UnionType> = {
   [ParameterType.DateArray]: {type: 'array', items: Type.date},
   [ParameterType.HtmlArray]: {type: 'array', items: Type.html},
   [ParameterType.ImageArray]: {type: 'array', items: Type.image},
+  [ParameterType.FileArray]: {type: 'array', items: Type.file},
 };
 
 /**

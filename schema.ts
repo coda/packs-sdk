@@ -88,6 +88,19 @@ export enum ValueHintType {
    */
   Currency = 'currency',
   /**
+   * Indicates to interpret and render the value as a file. The provided value should be a URL that
+   * points to a file. Coda will hotlink to the file when rendering it a doc.
+   *
+   * Using {@link FileAttachment} is recommended instead, so that the file is always accessible
+   * and won't appear as broken if the source file is later deleted.
+  */
+  FileReference = 'file',
+  /**
+   * Indicates to interpret and render a value as a file attachment. The provided value should be a URL
+   * pointing to a file of a Coda-supported type. Coda will ingest the file and host it from Coda infrastructure.
+  */
+  FileAttachment = 'fileAttachment',
+  /**
    * Indicates to interpret and render the value as an image. The provided value should be a URL that
    * points to an image. Coda will hotlink to the image when rendering it a doc.
    *
@@ -144,11 +157,6 @@ export enum ValueHintType {
    */
   Reference = 'reference',
   /**
-   * Indicates to interpret and render a value as a file attachment. The provided value should be a URL
-   * pointing to a file of a Coda-supported type. Coda will ingest the file and host it from Coda infrastructure.
-   */
-  Attachment = 'attachment',
-  /**
    * Indicates to render a numeric value as a slider UI component.
    */
   Slider = 'slider',
@@ -159,13 +167,14 @@ export enum ValueHintType {
 }
 
 export const StringHintValueTypes = [
-  ValueHintType.Attachment,
   ValueHintType.Date,
   ValueHintType.Time,
   ValueHintType.DateTime,
   ValueHintType.Duration,
   ValueHintType.Email,
   ValueHintType.Embed,
+  ValueHintType.FileReference,
+  ValueHintType.FileAttachment,
   ValueHintType.Html,
   ValueHintType.ImageReference,
   ValueHintType.ImageAttachment,
@@ -607,7 +616,8 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
  * The subset of StringHintTypes that don't have specific schema attributes.
  */
 export const SimpleStringHintValueTypes = [
-  ValueHintType.Attachment,
+  ValueHintType.FileReference,
+  ValueHintType.FileAttachment,
   ValueHintType.Html,
   ValueHintType.ImageReference,
   ValueHintType.ImageAttachment,

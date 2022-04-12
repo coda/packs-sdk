@@ -42,4 +42,4 @@ coda.makeParameter({type: coda.ParameterType.Number, name: "id", description: "T
 
 #### Defined in
 
-[api.ts:1698](https://github.com/coda/packs-sdk/blob/main/api.ts#L1698)
+[api.ts:1715](https://github.com/coda/packs-sdk/blob/main/api.ts#L1715)

@@ -54,6 +54,7 @@ function coerceParam(type: Type, value: any): any {
     case Type.object:
       return JSON.parse(value);
     case Type.html:
+    case Type.file:
     case Type.image:
     case Type.string:
       return value;

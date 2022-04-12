@@ -87,6 +87,8 @@ function validateResultType(resultType, result) {
             return checkType(result instanceof Date, 'date', result);
         case api_types_1.Type.html:
             return checkType(typeOfResult === 'string', 'html', result);
+        case api_types_1.Type.file:
+            return checkType(typeOfResult === 'string', 'file', result);
         case api_types_1.Type.image:
             return checkType(typeOfResult === 'string', 'image', result);
         case api_types_1.Type.number:
@@ -146,7 +148,8 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                 return errors;
             }
             switch (schema.codaType) {
-                case schema_1.ValueHintType.Attachment:
+                case schema_1.ValueHintType.FileReference:
+                case schema_1.ValueHintType.FileAttachment:
                 case schema_1.ValueHintType.Embed:
                 case schema_1.ValueHintType.ImageReference:
                 case schema_1.ValueHintType.ImageAttachment:

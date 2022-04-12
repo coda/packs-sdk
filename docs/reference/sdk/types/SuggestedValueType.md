@@ -15,4 +15,4 @@ The type of values that are allowable to be used as a [suggestedValue](../interf
 
 #### Defined in
 
-[api_types.ts:270](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L270)
+[api_types.ts:289](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L289)

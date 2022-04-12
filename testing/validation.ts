@@ -84,6 +84,8 @@ function validateResultType<ResultT extends any>(resultType: Type, result: Resul
       return checkType(result instanceof Date, 'date', result);
     case Type.html:
       return checkType(typeOfResult === 'string', 'html', result);
+    case Type.file:
+      return checkType(typeOfResult === 'string', 'file', result);
     case Type.image:
       return checkType(typeOfResult === 'string', 'image', result);
     case Type.number:
@@ -154,7 +156,8 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
         return errors;
       }
       switch (schema.codaType) {
-        case ValueHintType.Attachment:
+        case ValueHintType.FileReference:
+        case ValueHintType.FileAttachment:
         case ValueHintType.Embed:
         case ValueHintType.ImageReference:
         case ValueHintType.ImageAttachment:
