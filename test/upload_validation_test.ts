@@ -1588,7 +1588,7 @@ describe('Pack metadata Validation', () => {
         name: 'Test',
         description: '',
         parameters: [makeParameter({type: ParameterType.StringArray, name: 'myParam', description: ''})],
-        execute: ([param1]) => param1[0],
+        execute: ([param1]) => param1[0] ?? '',
         examples: [{params: [['item1']], result: 'item1'}],
       });
       const metadata = createFakePackVersionMetadata({

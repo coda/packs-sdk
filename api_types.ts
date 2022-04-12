@@ -249,7 +249,7 @@ export type ParamsList = Array<ParamDef<UnionType>>;
 type TypeOfMap<T extends UnionType> = T extends Type
   ? TypeMap[T]
   : T extends ArrayType<infer V>
-  ? Array<TypeMap[V]>
+  ? Array<TypeMap[V] | undefined>
   : never;
 
 /**

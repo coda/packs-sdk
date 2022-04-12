@@ -174,7 +174,7 @@ export declare type ParamArgs<T extends UnionType> = Omit<ParamDef<T>, 'descript
 export declare type ParamDefs = [ParamDef<UnionType>, ...Array<ParamDef<UnionType>>] | [];
 /** @hidden */
 export declare type ParamsList = Array<ParamDef<UnionType>>;
-declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : T extends ArrayType<infer V> ? Array<TypeMap[V]> : never;
+declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : T extends ArrayType<infer V> ? Array<TypeMap[V] | undefined> : never;
 /**
  * The type for the set of argument values that are passed to formula's `execute` function, based on
  * the parameter defintion for that formula.
