@@ -3,7 +3,6 @@ import type {ArraySchema} from '../schema';
 import {AuthenticationType} from '../types';
 import {ConnectionRequirement} from '../api_types';
 import {CurrencyFormat} from '..';
-import {DefaultConnectionType} from '../types';
 import {DurationUnit} from '..';
 import type {Formula} from '../api';
 import type {ObjectSchemaDefinition} from '../schema';
@@ -1655,14 +1654,12 @@ describe('Pack metadata Validation', () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.HeaderBearerToken,
-          defaultConnectionType: DefaultConnectionType.Shared,
           instructionsUrl: 'some-url',
           requiresEndpointUrl: false,
           endpointDomain: 'some-endpoint',
         },
         systemConnectionAuthentication: {
           type: AuthenticationType.HeaderBearerToken,
-          defaultConnectionType: DefaultConnectionType.Shared,
           instructionsUrl: 'some-url',
           requiresEndpointUrl: false,
           endpointDomain: 'some-endpoint',
