@@ -68,24 +68,6 @@ execute: async function([], context) {
 
 ## Properties
 
-### defaultConnectionType
-
-• `Optional` **defaultConnectionType**: [`DefaultConnectionType`](../enums/DefaultConnectionType.md)
-
-Indicates the default manner in which a user's account is expected to be used by this pack,
-e.g. is this account used for retrieving data, taking actions, or both.
-See https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs#h_40472431f0
-
-#### Inherited from
-
-[BaseAuthentication](BaseAuthentication.md).[defaultConnectionType](BaseAuthentication.md#defaultconnectiontype)
-
-#### Defined in
-
-[types.ts:251](https://github.com/coda/packs-sdk/blob/main/types.ts#L251)
-
-___
-
 ### endpointDomain
 
 • `Optional` **endpointDomain**: `string`
@@ -102,7 +84,7 @@ For packs that make requests to multiple domains (uncommon), this should be the 
 
 #### Defined in
 
-[types.ts:273](https://github.com/coda/packs-sdk/blob/main/types.ts#L273)
+[types.ts:244](https://github.com/coda/packs-sdk/blob/main/types.ts#L244)
 
 ___
 
@@ -124,7 +106,7 @@ with the creating user's Coda username.
 
 #### Defined in
 
-[types.ts:234](https://github.com/coda/packs-sdk/blob/main/types.ts#L234)
+[types.ts:212](https://github.com/coda/packs-sdk/blob/main/types.ts#L212)
 
 ___
 
@@ -140,7 +122,7 @@ A link to a help article or other page with more instructions about how to set u
 
 #### Defined in
 
-[types.ts:256](https://github.com/coda/packs-sdk/blob/main/types.ts#L256)
+[types.ts:227](https://github.com/coda/packs-sdk/blob/main/types.ts#L227)
 
 ___
 
@@ -157,7 +139,7 @@ Packs configured with only one domain or with requiredsEndpointUrl set to true c
 
 #### Defined in
 
-[types.ts:285](https://github.com/coda/packs-sdk/blob/main/types.ts#L285)
+[types.ts:256](https://github.com/coda/packs-sdk/blob/main/types.ts#L256)
 
 ___
 
@@ -171,7 +153,7 @@ replacement inside the constructed network request.
 
 #### Defined in
 
-[types.ts:561](https://github.com/coda/packs-sdk/blob/main/types.ts#L561)
+[types.ts:532](https://github.com/coda/packs-sdk/blob/main/types.ts#L532)
 
 ___
 
@@ -188,7 +170,7 @@ This is not common.
 
 #### Defined in
 
-[types.ts:279](https://github.com/coda/packs-sdk/blob/main/types.ts#L279)
+[types.ts:250](https://github.com/coda/packs-sdk/blob/main/types.ts#L250)
 
 ___
 
@@ -207,7 +189,7 @@ when creating a new account.
 
 #### Defined in
 
-[types.ts:264](https://github.com/coda/packs-sdk/blob/main/types.ts#L264)
+[types.ts:235](https://github.com/coda/packs-sdk/blob/main/types.ts#L235)
 
 ___
 
@@ -219,4 +201,4 @@ Identifies this as Custom authentication.
 
 #### Defined in
 
-[types.ts:555](https://github.com/coda/packs-sdk/blob/main/types.ts#L555)
+[types.ts:526](https://github.com/coda/packs-sdk/blob/main/types.ts#L526)

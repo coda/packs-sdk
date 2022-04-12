@@ -24,15 +24,14 @@ const schema_1 = require("../schema");
 const types_1 = require("../types");
 const api_types_1 = require("../api_types");
 const schema_2 = require("../schema");
-const types_2 = require("../types");
 const schema_3 = require("../schema");
 const schema_4 = require("../schema");
-const types_3 = require("../types");
+const types_2 = require("../types");
 const schema_5 = require("../schema");
 const api_types_2 = require("../api_types");
 const schema_6 = require("../schema");
+const types_3 = require("../types");
 const types_4 = require("../types");
-const types_5 = require("../types");
 const schema_7 = require("../schema");
 const schema_8 = require("../schema");
 const api_types_3 = require("../api_types");
@@ -209,7 +208,7 @@ function zodUnionInput(schemas) {
     return schemas;
 }
 const setEndpointPostSetupValidator = zodCompleteObject({
-    type: zodDiscriminant(types_5.PostSetupType.SetEndpoint),
+    type: zodDiscriminant(types_4.PostSetupType.SetEndpoint),
     name: z.string(),
     description: z.string(),
     // TODO(jonathan): Remove this from the metadata object, only needs to be present in the full bundle.
@@ -220,7 +219,6 @@ const baseAuthenticationValidators = {
     // in the full bundle, not the metadata.
     getConnectionName: z.unknown().optional(),
     getConnectionUserId: z.unknown().optional(),
-    defaultConnectionType: z.nativeEnum(types_2.DefaultConnectionType).optional(),
     instructionsUrl: z.string().optional(),
     requiresEndpointUrl: z.boolean().optional(),
     endpointDomain: z.string().optional(),
@@ -910,11 +908,11 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
     shortDescription: z.string().nonempty().optional(),
     description: z.string().nonempty().optional(),
     permissionsDescription: z.string().optional(),
-    category: z.nativeEnum(types_4.PackCategory).optional(),
+    category: z.nativeEnum(types_3.PackCategory).optional(),
     logoPath: z.string().optional(),
     exampleImages: z.array(z.string()).optional(),
     exampleVideoIds: z.array(z.string()).optional(),
-    minimumFeatureSet: z.nativeEnum(types_3.FeatureSet).optional(),
+    minimumFeatureSet: z.nativeEnum(types_2.FeatureSet).optional(),
     quotas: z.any().optional(),
     rateLimits: z.any().optional(),
     isSystem: z.boolean().optional(),

@@ -11,7 +11,6 @@ import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '..';
 import type {CustomAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
-import {DefaultConnectionType} from '../types';
 import type {DurationSchema} from '../schema';
 import {DurationUnit} from '../schema';
 import type {DynamicSyncTableDef} from '../api';
@@ -288,7 +287,6 @@ const baseAuthenticationValidators = {
   // in the full bundle, not the metadata.
   getConnectionName: z.unknown().optional(),
   getConnectionUserId: z.unknown().optional(),
-  defaultConnectionType: z.nativeEnum(DefaultConnectionType).optional(),
   instructionsUrl: z.string().optional(),
   requiresEndpointUrl: z.boolean().optional(),
   endpointDomain: z.string().optional(),
