@@ -29,6 +29,30 @@ this sync table (including autocomplete formulas).
 
 ___
 
+### defaultAddDynamicColumns
+
+• `Optional` **defaultAddDynamicColumns**: `boolean`
+
+Default is true.
+
+If false, when subsequent syncs discover new schema properties, these properties will not automatically be
+added as new columns on the table. The user can still manually add columns for these new properties.
+This only applies to tables that use dynamic schemas.
+
+When tables with dynamic schemas are synced, the [getSchema](DynamicSyncTableOptions.md#getschema) formula is run each time,
+which may return a schema that is different than that from the last sync. The default behavior
+is that any schema properties that are new in this sync are automatically added as new columns,
+so they are apparent to the user. However, in rare cases when schemas change frequently,
+this can cause the number of columns to grow quickly and become overwhelming. Setting this
+value to false leaves the columns unchanged and puts the choice of what columns to display
+into the hands of the user.
+
+#### Defined in
+
+[api.ts:1395](https://github.com/coda/packs-sdk/blob/main/api.ts#L1395)
+
+___
+
 ### description
 
 • `Optional` **description**: `string`
@@ -111,28 +135,6 @@ A formula that returns the schema for this table.
 
 ___
 
-### hideNewColumnsByDefault
-
-• `Optional` **hideNewColumnsByDefault**: `boolean`
-
-If true, when subsequent syncs discover new schema properties, these properties will not automatically be
-added as new columns on the table. The user can still manually add columns for these new properties.
-This only applies to tables that use dynamic schemas.
-
-When tables with dynamic schemas are synced, the [getSchema](DynamicSyncTableOptions.md#getschema) formula is run each time,
-which may return a schema that is different than that from the last sync. The default behavior
-is that any schema properties that are new in this sync are automatically added as new columns,
-so they are apparent to the user. However, in rare cases when schemas change frequently,
-this can cause the number of columns to grow quickly and become overwhelming. Setting this
-value to true leaves the columns unchanged and puts the choice of what columns to display
-into the hands of the user.
-
-#### Defined in
-
-[api.ts:1393](https://github.com/coda/packs-sdk/blob/main/api.ts#L1393)
-
-___
-
 ### listDynamicUrls
 
 • `Optional` **listDynamicUrls**: [`MetadataFormulaDef`](../types/MetadataFormulaDef.md)
@@ -168,9 +170,9 @@ ___
 
 Optional placeholder schema before the dynamic schema is retrieved.
 
-If `hideNewColumnsByDefault` is true, only featured columns
+If `defaultAddDynamicColumns` is false, only featured columns
 in placeholderSchema will be rendered by default after the sync.
 
 #### Defined in
 
-[api.ts:1400](https://github.com/coda/packs-sdk/blob/main/api.ts#L1400)
+[api.ts:1402](https://github.com/coda/packs-sdk/blob/main/api.ts#L1402)

@@ -23,6 +23,22 @@ instead, define dynamic sync tables using [makeDynamicSyncTable](../functions/ma
 
 ## Properties
 
+### defaultAddDynamicColumns
+
+• `Optional` **defaultAddDynamicColumns**: `boolean`
+
+See [DynamicOptions.defaultAddDynamicColumns](DynamicOptions.md#defaultadddynamiccolumns)
+
+#### Inherited from
+
+[SyncTableDef](SyncTableDef.md).[defaultAddDynamicColumns](SyncTableDef.md#defaultadddynamiccolumns)
+
+#### Defined in
+
+[api.ts:172](https://github.com/coda/packs-sdk/blob/main/api.ts#L172)
+
+___
+
 ### description
 
 • `Optional` **description**: `string`
@@ -108,22 +124,6 @@ See [SyncTableOptions.formula](SyncTableOptions.md#formula)
 #### Defined in
 
 [api.ts:166](https://github.com/coda/packs-sdk/blob/main/api.ts#L166)
-
-___
-
-### hideNewColumnsByDefault
-
-• `Optional` **hideNewColumnsByDefault**: `boolean`
-
-See [DynamicOptions.hideNewColumnsByDefault](DynamicOptions.md#hidenewcolumnsbydefault)
-
-#### Inherited from
-
-[SyncTableDef](SyncTableDef.md).[hideNewColumnsByDefault](SyncTableDef.md#hidenewcolumnsbydefault)
-
-#### Defined in
-
-[api.ts:172](https://github.com/coda/packs-sdk/blob/main/api.ts#L172)
 
 ___
 

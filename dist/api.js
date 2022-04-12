@@ -594,7 +594,7 @@ exports.makeObjectFormula = makeObjectFormula;
  * See [Normalization](/index.html#normalization) for more information about schema normalization.
  */
 function makeSyncTable({ name, description, identityName, schema: schemaDef, formula, connectionRequirement, dynamicOptions = {}, }) {
-    const { getSchema: getSchemaDef, entityName, hideNewColumnsByDefault } = dynamicOptions;
+    const { getSchema: getSchemaDef, entityName, defaultAddDynamicColumns } = dynamicOptions;
     const { execute: wrappedExecute, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
     if (schemaDef.identity) {
         schemaDef.identity = { ...schemaDef.identity, name: identityName || schemaDef.identity.name };
@@ -638,7 +638,7 @@ function makeSyncTable({ name, description, identityName, schema: schemaDef, for
         },
         getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
         entityName,
-        hideNewColumnsByDefault,
+        defaultAddDynamicColumns,
     };
 }
 exports.makeSyncTable = makeSyncTable;
@@ -665,7 +665,7 @@ exports.makeSyncTableLegacy = makeSyncTableLegacy;
  * });
  * ```
  */
-function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, hideNewColumnsByDefault, placeholderSchema: placeholderSchemaInput, }) {
+function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, }) {
     const placeholderSchema = placeholderSchemaInput ||
         // default placeholder only shows a column of id, which will be replaced later by the dynamic schema.
         (0, schema_2.makeObjectSchema)({
@@ -688,7 +688,7 @@ function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchem
         schema: placeholderSchema,
         formula,
         connectionRequirement,
-        dynamicOptions: { getSchema, entityName, hideNewColumnsByDefault },
+        dynamicOptions: { getSchema, entityName, defaultAddDynamicColumns },
     });
     return {
         ...table,
