@@ -34,9 +34,9 @@ ___
 
 ### defaultValue
 
-• `Optional` **defaultValue**: [`DefaultValueType`](../types/DefaultValueType.md)<`T`\>
+• `Optional` **defaultValue**: [`SuggestedValueType`](../types/SuggestedValueType.md)<`T`\>
 
-The default value to be used for this parameter if it is not specified by the user.
+**`deprecated`** This will be removed in a future version of the SDK. Use [suggestedValue](ParamDef.md#suggestedvalue) instead.
 
 #### Defined in
 
@@ -78,6 +78,18 @@ All optional parameters must come after all non-optional parameters.
 #### Defined in
 
 [api_types.ts:216](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L216)
+
+___
+
+### suggestedValue
+
+• `Optional` **suggestedValue**: [`SuggestedValueType`](../types/SuggestedValueType.md)<`T`\>
+
+The suggested value to be prepopulated for this parameter if it is not specified by the user.
+
+#### Defined in
+
+[api_types.ts:237](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L237)
 
 ___
 

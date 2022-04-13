@@ -11,6 +11,7 @@ This changelog keeps track of all changes to the packs-sdk. We follow convention
 - **Breaking Change** Removed dead code related to `defaultConnectionType`. This was an unused feature and should not have been previously referenced.
 - **Future Breaking Change** `SetEndpoint.getOptionsFormula` has been renamed `SetEndpoint.getOptions` for clarity.
 - **Future Breaking Change** The `attribution` property is moving from being a child field on `identity` within an object schema to just being a top-level field on the object schema.
+- **Future Breaking Change** The `defaultValue` property of parameter definitions will be renamed to `suggestedValue` to reflect that these are values that do not act as a true default but rather prepopulates a value when used. 
 
 ## [0.9.0] - 2022-03-17
 

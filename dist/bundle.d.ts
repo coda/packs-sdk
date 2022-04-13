@@ -1115,9 +1115,13 @@ export interface ParamDef<T extends UnionType> {
 	 */
 	autocomplete?: MetadataFormula;
 	/**
-	 * The default value to be used for this parameter if it is not specified by the user.
+	 * @deprecated This will be removed in a future version of the SDK. Use {@link suggestedValue} instead.
 	 */
-	defaultValue?: DefaultValueType<T>;
+	defaultValue?: SuggestedValueType<T>;
+	/**
+	 * The suggested value to be prepopulated for this parameter if it is not specified by the user.
+	 */
+	suggestedValue?: SuggestedValueType<T>;
 }
 /**
  * The type for the complete set of parameter definitions for a fomrula.
@@ -1138,9 +1142,9 @@ export declare type ParamValues<ParamDefsT extends ParamDefs> = {
 	[K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
 } & any[];
 /**
- * The type of values that are allowable to be used as a {@link defaultValue} for a parameter.
+ * The type of values that are allowable to be used as a {@link suggestedValue} for a parameter.
  */
-export declare type DefaultValueType<T extends UnionType> = T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
+export declare type SuggestedValueType<T extends UnionType> = T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
 /**
  * Inputs for creating a formula that are common between regular formulas and sync table formulas.
  */
@@ -1487,7 +1491,7 @@ export interface SyncExecutionContext extends ExecutionContext {
 	readonly sync: Sync;
 }
 /**
- * Special "live" date range values that can be used as the {@link defaultValue}
+ * Special "live" date range values that can be used as the {@link suggestedValue}
  * for a date array parameter.
  *
  * Date array parameters are meant to represent date ranges. A date range can
@@ -2490,8 +2494,8 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
  * });
  */
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
-	name: string;
 	description: string;
+	name: string;
 	parameters: ParamDefsT;
 	varargParameters?: ParamDefs | undefined;
 	examples?: {
@@ -2531,8 +2535,8 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
  * ```
  */
 export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: EmptyFormulaDef<ParamDefsT>): {
-	name: string;
 	description: string;
+	name: string;
 	parameters: ParamDefsT;
 	varargParameters?: ParamDefs | undefined;
 	examples?: {

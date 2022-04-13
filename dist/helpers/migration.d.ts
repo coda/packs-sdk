@@ -1,7 +1,10 @@
 import type { ObjectSchemaDefinition } from '../schema';
+import type { ParamDef } from '../api_types';
 import type { PostSetupMetadata } from '../compiled_types';
 import type { SetEndpoint } from '../types';
 import type { SetEndpointDef } from '../types';
+import type { SuggestedValueType } from '../api_types';
+import type { UnionType } from '../api_types';
 export declare function objectSchemaHelper<T extends ObjectSchemaDefinition<string, string>>(schema: T): ObjectSchemaHelper<T>;
 declare class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
     private readonly _schema;
@@ -13,6 +16,12 @@ declare class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string
     get properties(): import("../schema").ObjectSchemaProperties<string>;
     get type(): import("../schema").ValueType.Object;
     get attribution(): import("../schema").AttributionNode[] | undefined;
+}
+export declare function paramDefHelper<S extends UnionType, T extends ParamDef<S>>(def: T): ParamDefHelper<S, T>;
+declare class ParamDefHelper<S extends UnionType, T extends ParamDef<S>> {
+    private readonly _def;
+    constructor(def: T);
+    get defaultValue(): SuggestedValueType<S> | undefined;
 }
 export declare function setEndpointHelper(step: SetEndpoint): SetEndpointHelper;
 declare class SetEndpointHelper {

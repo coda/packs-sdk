@@ -106,7 +106,7 @@ This Pack allows you to fetch information about spells in th game Dungeons and D
           type: coda.ParameterType.String,
           name: "name",
           description: "The name of the spell.",
-          defaultValue: "Acid Arrow",
+          suggestedValue: "Acid Arrow",
         }),
       ],
       resultType: coda.ValueType.Object,

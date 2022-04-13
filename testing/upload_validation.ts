@@ -439,8 +439,9 @@ const paramDefValidator = zodCompleteObject<ParamDef<any>>({
     ),
   description: z.string(),
   optional: z.boolean().optional(),
-  autocomplete: z.unknown(),
-  defaultValue: z.unknown(),
+  autocomplete: z.unknown().optional(),
+  defaultValue: z.unknown().optional(),
+  suggestedValue: z.unknown().optional(),
 });
 
 const commonPackFormulaSchema = {
