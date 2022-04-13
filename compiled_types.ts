@@ -52,8 +52,9 @@ export interface PackFormulasMetadata {
 }
 
 /** @hidden */
-export type PostSetupMetadata = Omit<PostSetup, 'getOptionsFormula'> & {
-  getOptionsFormula: MetadataFormulaMetadata;
+export type PostSetupMetadata = Omit<PostSetup, 'getOptions' | 'getOptionsFormula'> & {
+  getOptions?: MetadataFormulaMetadata; // TODO(packs-dev): Make this required after migration.
+  getOptionsFormula?: MetadataFormulaMetadata;
 };
 
 /** @hidden */

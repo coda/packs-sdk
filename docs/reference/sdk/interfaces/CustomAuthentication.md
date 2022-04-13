@@ -84,7 +84,7 @@ For packs that make requests to multiple domains (uncommon), this should be the 
 
 #### Defined in
 
-[types.ts:244](https://github.com/coda/packs-sdk/blob/main/types.ts#L244)
+[types.ts:248](https://github.com/coda/packs-sdk/blob/main/types.ts#L248)
 
 ___
 
@@ -106,7 +106,7 @@ with the creating user's Coda username.
 
 #### Defined in
 
-[types.ts:212](https://github.com/coda/packs-sdk/blob/main/types.ts#L212)
+[types.ts:216](https://github.com/coda/packs-sdk/blob/main/types.ts#L216)
 
 ___
 
@@ -122,7 +122,7 @@ A link to a help article or other page with more instructions about how to set u
 
 #### Defined in
 
-[types.ts:227](https://github.com/coda/packs-sdk/blob/main/types.ts#L227)
+[types.ts:231](https://github.com/coda/packs-sdk/blob/main/types.ts#L231)
 
 ___
 
@@ -139,7 +139,7 @@ Packs configured with only one domain or with requiredsEndpointUrl set to true c
 
 #### Defined in
 
-[types.ts:256](https://github.com/coda/packs-sdk/blob/main/types.ts#L256)
+[types.ts:260](https://github.com/coda/packs-sdk/blob/main/types.ts#L260)
 
 ___
 
@@ -153,7 +153,7 @@ replacement inside the constructed network request.
 
 #### Defined in
 
-[types.ts:532](https://github.com/coda/packs-sdk/blob/main/types.ts#L532)
+[types.ts:536](https://github.com/coda/packs-sdk/blob/main/types.ts#L536)
 
 ___
 
@@ -170,7 +170,7 @@ This is not common.
 
 #### Defined in
 
-[types.ts:250](https://github.com/coda/packs-sdk/blob/main/types.ts#L250)
+[types.ts:254](https://github.com/coda/packs-sdk/blob/main/types.ts#L254)
 
 ___
 
@@ -189,7 +189,7 @@ when creating a new account.
 
 #### Defined in
 
-[types.ts:235](https://github.com/coda/packs-sdk/blob/main/types.ts#L235)
+[types.ts:239](https://github.com/coda/packs-sdk/blob/main/types.ts#L239)
 
 ___
 
@@ -201,4 +201,4 @@ Identifies this as Custom authentication.
 
 #### Defined in
 
-[types.ts:526](https://github.com/coda/packs-sdk/blob/main/types.ts#L526)
+[types.ts:530](https://github.com/coda/packs-sdk/blob/main/types.ts#L530)

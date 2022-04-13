@@ -9,6 +9,7 @@ This changelog keeps track of all changes to the packs-sdk. We follow convention
 - **Future Breaking Change** The properties `id`, `primary`, and `featured` of object schemas will be renamed to `idProperty`, `displayProperty`, and `featuredProperties`, respectively, to better clarify that their values refer to property names within the schema. During a migration period, you may use either name; the original names are now marked as deprecated and will be removed at a future date, no earlier than May 1, 2022.
 - Added "force" option to `LinkSchema` for `LinkDisplayType.Embed`.
 - **Breaking Change** Removed dead code related to `defaultConnectionType`. This was an unused feature and should not have been previously referenced.
+- **Future Breaking Change** `SetEndpoint.getOptionsFormula` has been renamed `SetEndpoint.getOptions` for clarity.
 
 ## [0.9.0] - 2022-03-17
 
