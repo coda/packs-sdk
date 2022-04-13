@@ -1,4 +1,5 @@
 import type {ObjectSchemaDefinition} from '../schema';
+import type {PostSetupMetadata} from '../compiled_types';
 import type {SetEndpoint} from '../types';
 import type {SetEndpointDef} from '../types';
 import {ensureExists} from '../helpers/ensure';
@@ -7,7 +8,7 @@ export function objectSchemaHelper<T extends ObjectSchemaDefinition<string, stri
   return new ObjectSchemaHelper(schema);
 }
 
-export class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
+class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
   private readonly _schema: T;
 
   constructor(schema: T) {
@@ -43,7 +44,7 @@ export function setEndpointHelper(step: SetEndpoint) {
   return new SetEndpointHelper(step);
 }
 
-export class SetEndpointHelper {
+class SetEndpointHelper {
   private readonly _step: SetEndpoint;
 
   constructor(step: SetEndpoint) {
@@ -59,7 +60,7 @@ export function setEndpointDefHelper(step: SetEndpointDef) {
   return new SetEndpointDefHelper(step);
 }
 
-export class SetEndpointDefHelper {
+class SetEndpointDefHelper {
   private readonly _step: SetEndpointDef;
 
   constructor(step: SetEndpointDef) {
@@ -68,5 +69,21 @@ export class SetEndpointDefHelper {
 
   get getOptions() {
     return ensureExists(this._step.getOptions ?? this._step.getOptionsFormula);
+  }
+}
+
+export function postSetupMetadataHelper(metadata: PostSetupMetadata) {
+  return new PostSetupMetadataHelper(metadata);
+}
+
+class PostSetupMetadataHelper {
+  private readonly _metadata: PostSetupMetadata;
+
+  constructor(metadata: PostSetupMetadata) {
+    this._metadata = metadata;
+  }
+
+  get getOptions() {
+    return ensureExists(this._metadata.getOptions ?? this._metadata.getOptionsFormula);
   }
 }
