@@ -92,7 +92,13 @@ While it's possible to use multiple accounts within a document, each instance of
 
 ## Caching
 
-For performance reasons all formula results are cached by default. If your formula is called again with the same parameters, Coda will attempt to load the result from the cache instead of re-running your code. Building or releasing a new version of your Pack will invalidate this cache, ensuring you get fresh results using your new code.
+For performance reasons formula results are cached by default. If your formula is called again with the same parameters, Coda will attempt to load the result from the cache instead of re-running your code. Building or releasing a new version of your Pack will invalidate this cache, ensuring you get fresh results using your new code.
+
+The following types of formulas are never cached:
+
+- [Action formulas][actions]
+- [Sync formulas][sync_formula]
+- Formulas that result in an error
 
 You can adjust the caching behavior by setting the [`cacheTtlSecs`][cacheTtlSecs] field on the formula definition, which specifies for how many seconds the result should be cached. To disable caching for a formula set `cacheTtlSecs` to zero.
 

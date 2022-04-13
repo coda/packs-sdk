@@ -9,6 +9,8 @@ Coda uses the 3rd party service [Iframely][iframely] to handle embeds. Many popu
 
 If you want to add embed support to your own application follow the instructions in the [Iframely documentation][iframely_docs]. This is most commonly done by adding support for the [oEmbed specification][oembed], which is used by many platforms. Once that is complete, [submit your application][iframely_submit] to Iframely to have it added to their registry.
 
+The iframe containing the embed is sandboxed by default has limited permissions (for example, it's can't present content fullscreen). If you need access to additional iframe sandbox permissions please [contact support][support].
+
 !!! note "User embeds"
     Users can [embed content in their docs][help_center_embed] directly, without Packs, using the `/embed` slash command or the `=Embed()` formula. Even if you aren't planning to build a Pack you may want to support embeds for your users that manually embed the content in their docs.
 
@@ -72,3 +74,4 @@ Once approved, Coda attempts to load the URL int an `<iframe>` element with [san
 [mdn_iframe_sandbox]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox
 [mdn_xfo]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
 [mdn_csp]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
+[support]: ../../support.md

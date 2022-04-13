@@ -127,7 +127,9 @@ JavaScript Date objects can only represent a specific moment in time. This means
 
 Use the `Image` parameter type to pass an image to your formula. The value passed to the `execute` function will be the URL of that image.
 
-Images that the user uploaded to the doc will be hosted on the `codahosted.io` domain and don't require authentication to access. If you need access to the binary content of the image you'll need to use the [fetcher][fetcher_binary_response] to retrieve it. Since you must declare the [network domains][network_domains] the fetcher will access, it's not possible to access the binary content of images coming from an **Image URL** column.
+Images that the user uploaded to the doc will be hosted on the `codahosted.io` domain and don't require authentication to access. These URLs are temporary, and you should not rely on them being accessible after the Pack execution has completed.
+
+If you need access to the binary content of the image you'll need to use the [fetcher][fetcher_binary_response] to retrieve it. The fetcher is automatically allowed access to the `codahosted.io` domain, so no need to declare it as a [network domain][network_domains]. It's not possible to access the binary content of images coming from an **Image URL** column, since they can come from any domain.
 
 
 ### Lists
