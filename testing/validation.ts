@@ -156,8 +156,7 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
         return errors;
       }
       switch (schema.codaType) {
-        case ValueHintType.FileReference:
-        case ValueHintType.FileAttachment:
+        case ValueHintType.Attachment:
         case ValueHintType.Embed:
         case ValueHintType.ImageReference:
         case ValueHintType.ImageAttachment:

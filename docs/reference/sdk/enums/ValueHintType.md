@@ -7,6 +7,19 @@ Synthetic types that instruct Coda how to coerce values from primitives at inges
 
 ## Enumeration members
 
+### Attachment
+
+• **Attachment** = `"attachment"`
+
+Indicates to interpret and render a value as a file attachment. The provided value should be a URL
+pointing to a file of a Coda-supported type. Coda will ingest the file and host it from Coda infrastructure.
+
+#### Defined in
+
+[schema.ts:150](https://github.com/coda/packs-sdk/blob/main/schema.ts#L150)
+
+___
+
 ### Currency
 
 • **Currency** = `"currency"`
@@ -76,36 +89,7 @@ to an embeddable web page.
 
 #### Defined in
 
-[schema.ts:132](https://github.com/coda/packs-sdk/blob/main/schema.ts#L132)
-
-___
-
-### FileAttachment
-
-• **FileAttachment** = `"fileAttachment"`
-
-Indicates to interpret and render a value as a file attachment. The provided value should be a URL
-pointing to a file of a Coda-supported type. Coda will ingest the file and host it from Coda infrastructure.
-
-#### Defined in
-
-[schema.ts:102](https://github.com/coda/packs-sdk/blob/main/schema.ts#L102)
-
-___
-
-### FileReference
-
-• **FileReference** = `"file"`
-
-Indicates to interpret and render the value as a file. The provided value should be a URL that
-points to a file. Coda will hotlink to the file when rendering it a doc.
-
-Using [FileAttachment](ValueHintType.md#fileattachment) is recommended instead, so that the file is always accessible
-and won't appear as broken if the source file is later deleted.
-
-#### Defined in
-
-[schema.ts:97](https://github.com/coda/packs-sdk/blob/main/schema.ts#L97)
+[schema.ts:119](https://github.com/coda/packs-sdk/blob/main/schema.ts#L119)
 
 ___
 
@@ -117,7 +101,7 @@ Indicates to interpret a text value as HTML, which will be converted and rendere
 
 #### Defined in
 
-[schema.ts:127](https://github.com/coda/packs-sdk/blob/main/schema.ts#L127)
+[schema.ts:114](https://github.com/coda/packs-sdk/blob/main/schema.ts#L114)
 
 ___
 
@@ -130,7 +114,7 @@ points to an image. Coda will ingest the image and host it from Coda infrastruct
 
 #### Defined in
 
-[schema.ts:115](https://github.com/coda/packs-sdk/blob/main/schema.ts#L115)
+[schema.ts:102](https://github.com/coda/packs-sdk/blob/main/schema.ts#L102)
 
 ___
 
@@ -146,7 +130,7 @@ and won't appear as broken if the source image is later deleted.
 
 #### Defined in
 
-[schema.ts:110](https://github.com/coda/packs-sdk/blob/main/schema.ts#L110)
+[schema.ts:97](https://github.com/coda/packs-sdk/blob/main/schema.ts#L97)
 
 ___
 
@@ -158,7 +142,7 @@ Indicates to interpret a text value as Markdown, which will be converted and ren
 
 #### Defined in
 
-[schema.ts:123](https://github.com/coda/packs-sdk/blob/main/schema.ts#L123)
+[schema.ts:110](https://github.com/coda/packs-sdk/blob/main/schema.ts#L110)
 
 ___
 
@@ -232,7 +216,7 @@ makeObjectSchema({
 
 #### Defined in
 
-[schema.ts:158](https://github.com/coda/packs-sdk/blob/main/schema.ts#L158)
+[schema.ts:145](https://github.com/coda/packs-sdk/blob/main/schema.ts#L145)
 
 ___
 
@@ -244,7 +228,7 @@ Indicates to render a numeric value as a scale UI component (e.g. a star rating)
 
 #### Defined in
 
-[schema.ts:166](https://github.com/coda/packs-sdk/blob/main/schema.ts#L166)
+[schema.ts:158](https://github.com/coda/packs-sdk/blob/main/schema.ts#L158)
 
 ___
 
@@ -256,7 +240,7 @@ Indicates to render a numeric value as a slider UI component.
 
 #### Defined in
 
-[schema.ts:162](https://github.com/coda/packs-sdk/blob/main/schema.ts#L162)
+[schema.ts:154](https://github.com/coda/packs-sdk/blob/main/schema.ts#L154)
 
 ___
 
@@ -280,4 +264,4 @@ Indicates to interpret and render the value as a URL link.
 
 #### Defined in
 
-[schema.ts:119](https://github.com/coda/packs-sdk/blob/main/schema.ts#L119)
+[schema.ts:106](https://github.com/coda/packs-sdk/blob/main/schema.ts#L106)

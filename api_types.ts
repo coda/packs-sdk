@@ -137,7 +137,7 @@ export enum ParameterType {
    */
   Image = 'image',
   /**
-   * Indicates a file that is a Coda file. The pack is passed a file URL.
+   * Indicates a parameter that is a Coda file. The pack is passed a file URL.
    */
   File = 'file',
 
