@@ -42,7 +42,7 @@ Packs can extend Coda in four specific ways:
 
     Packs can add new [column formats][help_format], which control how values are displayed within a table. They can simply reformat the data or enrich it with related information from an external source.
 
-    The screenshot below shows a column format from the Google Calendar Pack that displays rich information about an event provided it's URL.
+    The screenshot below shows a column format from the Google Calendar Pack that displays rich information about an event provided its URL.
 
     <img src="../../images/overview_column_format.png" srcset="../../images/overview_column_format_2x.png 2x" class="screenshot" alt="A custom column format">
 
@@ -70,7 +70,7 @@ You will need to have a basic understanding of JavaScript or TypeScript to be su
 
 ## How do Packs work?
 
-Each Pack is it's own [serverless application][wikipedia_serverless], fully managed and run by Coda. All you have to do is write the code and we'll take care of the rest.
+Each Pack is its own [serverless application][wikipedia_serverless], fully managed and run by Coda. All you have to do is write the code and we'll take care of the rest.
 
 All Pack code is run on the server, ensuring a consistent and secure environment. Each execution of a Pack can run for at most a minute, but there are features that allow for longer running operations.
 
