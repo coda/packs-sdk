@@ -379,7 +379,7 @@ pack.addFormula({
 ```
 
 
-## Setting account names
+## Setting account names {: #name}
 
 By default the accounts that users connect to will be given the same name as their Coda account. While this works fine the majority of the time, if they are connecting to a team account or multiple accounts it is not very helpful. Therefore we strongly recommend that you implement a [`getConnectionName`][getConnectionName] function in your authentication configuration to set a more meaningful account name. This is typically done by making a Fetcher request to a user information endpoint in the API and then returning the name of the account.
 

@@ -34,9 +34,14 @@ While it's easy to get started building a Pack, there are lots of options to exp
 - [x] Set a few [featured columns][schemas_featured_columns] on your schema, for the most commonly used properties.
 
 
+## Authentication
+
+- [x] Set a meaningful [account name][auth_name] by implementing the `getConnectionName` function. This helps users that connect to multiple accounts distinguish them.
+- [x] Make sure to set the [`instructionsUrl`][instructionsUrl] field. Direct user to a help center article that provides information about where they can find the required tokens or credentials.
+
+
 ## General
 
-- [x] When using per-user authentication, make sure to set the [`instructionsUrl`][instructionsUrl] field. Direct user to a help center article that provides information about where they can find the required tokens or credentials.
 - [x] Throw a [`UserVisibleError`][UserVisibleError] for bad input or when an expected type of error occurs. This allows you to provide a more informative error message to the user.
 - [x] If accepting or returning an index value, start counting at 1. Although JavaScript is 0-based, Coda formula language is 1-based.
 
@@ -67,3 +72,4 @@ While it's easy to get started building a Pack, there are lots of options to exp
 [promotion]: https://coda.io/@hector/promotion-best-practices
 [schemas_row_identifier]: advanced/schemas.md#row-identifier
 [schemas_featured_columns]: advanced/schemas.md#featured-columns
+[auth_name]: advanced/authentication.md#name

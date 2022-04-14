@@ -53,6 +53,15 @@ These errors can occur when installing the SDK locally, specifically during the 
 This error will appear at the bottom of the screen after pressing a button, and indicates that the formula used in the button isn't a valid action. In order for a formula to be used as an action within a button, it must be defined with `isAction: true`. See the [Actions guide][actions_create] for more information.
 
 
+### HTTP response too large
+
+<!-- https://golinks.io/bug/22358 -->
+
+- `RESOURCE_EXHAUSTED: Received message larger than max`
+
+This error indicates that a fetcher request got back a response that is larger than the Packs runtime allows. If you are querying an external API for records, see if you can use a limit or paging parameter to get back a smaller response. If you need to work with large files you'll need to build an application outside of Packs that processes them. If you only need a small increase in the size limit you can [contact support][support] to request an adjustment.
+
+
 [mdn_console]: https://developer.mozilla.org/en-US/docs/Web/API/console
 [support]: ../../support.md
 [isolated_vm_requirements]: https://github.com/laverdet/isolated-vm#requirements

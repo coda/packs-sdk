@@ -64,7 +64,7 @@ pack.addSyncTable({
 It includes the name of the sync table, the schema for each row, and other metadata. The `identityName` property will be explained in the [Identity](#identity) section below.
 
 
-### Write the sync formula
+### Write the sync formula {: #formula}
 
 Inside each sync table definition is a formula definition, detailing the hidden formula used to sync data into the sync table. If you aren't already familiar with creating formulas, read the [Formulas guide][formulas] first.
 
