@@ -14,10 +14,11 @@ module.exports = {
     project: ['./tsconfig.eslint.json'],
     sourceType: 'module',
   },
-  plugins: ['ban', 'filenames', 'local', '@typescript-eslint'],
+  plugins: ['ban', 'filenames', 'local', '@typescript-eslint', 'deprecation'],
   settings: {},
   rules: {
     '@typescript-eslint/restrict-plus-operands': 'error',
+    "deprecation/deprecation": "warn",
     'max-len': [
       'error',
       {
