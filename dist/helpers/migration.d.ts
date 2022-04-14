@@ -12,6 +12,7 @@ declare class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string
     get identity(): import("../schema").IdentityDefinition | undefined;
     get properties(): import("../schema").ObjectSchemaProperties<string>;
     get type(): import("../schema").ValueType.Object;
+    get attribution(): import("../schema").AttributionNode[] | undefined;
 }
 export declare function setEndpointHelper(step: SetEndpoint): SetEndpointHelper;
 declare class SetEndpointHelper {

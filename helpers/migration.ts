@@ -38,6 +38,10 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
   get type() {
     return this._schema.type;
   }
+
+  get attribution() {
+    return this._schema.attribution ?? this._schema.identity?.attribution;
+  }
 }
 
 export function setEndpointHelper(step: SetEndpoint) {

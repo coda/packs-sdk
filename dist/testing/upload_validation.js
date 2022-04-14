@@ -615,6 +615,9 @@ function isValidIdentityName(packId, name) {
     }
     return isValidObjectId(name);
 }
+const attributionSchema = z
+    .array(z.union([textAttributionNodeSchema, linkAttributionNodeSchema, imageAttributionNodeSchema]))
+    .optional();
 const genericObjectSchema = z.lazy(() => zodCompleteObject({
     ...basePropertyValidators,
     type: zodDiscriminant(schema_10.ValueType.Object),
@@ -633,10 +636,9 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
         packId: z.number().optional(),
         name: z.string().nonempty(),
         dynamicUrl: z.string().optional(),
-        attribution: z
-            .array(z.union([textAttributionNodeSchema, linkAttributionNodeSchema, imageAttributionNodeSchema]))
-            .optional(),
+        attribution: attributionSchema,
     }).optional(),
+    attribution: attributionSchema,
     properties: z.record(objectPropertyUnionSchema),
 })
     .superRefine((data, context) => {

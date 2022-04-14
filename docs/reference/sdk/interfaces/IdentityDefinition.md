@@ -27,13 +27,11 @@ table definition, so you needn't explicitly create on unless desired.
 
 • `Optional` **attribution**: [`AttributionNode`](../types/AttributionNode.md)[]
 
-Attribution text, images, and/or links that should be rendered along with this value.
-
-See [makeAttributionNode](../functions/makeAttributionNode.md).
+**`deprecated`** See [ObjectSchemaDefinition.attribution](ObjectSchemaDefinition.md#attribution)
 
 #### Defined in
 
-[schema.ts:744](https://github.com/coda/packs-sdk/blob/main/schema.ts#L744)
+[schema.ts:742](https://github.com/coda/packs-sdk/blob/main/schema.ts#L742)
 
 ___
 
@@ -76,4 +74,4 @@ The ID of another pack, if you are trying to reference a value from different pa
 
 #### Defined in
 
-[schema.ts:746](https://github.com/coda/packs-sdk/blob/main/schema.ts#L746)
+[schema.ts:740](https://github.com/coda/packs-sdk/blob/main/schema.ts#L740)
