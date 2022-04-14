@@ -736,14 +736,10 @@ export interface IdentityDefinition {
    * you wish to reference, again to distinguish which table instance you are trying to reference.
    */
   dynamicUrl?: string;
-  /**
-   * Attribution text, images, and/or links that should be rendered along with this value.
-   *
-   * See {@link makeAttributionNode}.
-   */
-  attribution?: AttributionNode[];
   /** The ID of another pack, if you are trying to reference a value from different pack. */
   packId?: number;
+  /** @deprecated See {@link ObjectSchemaDefinition.attribution} */
+  attribution?: AttributionNode[];
 }
 
 /** The runtime version of IdentityDefinition with a pack ID injected. */
@@ -805,6 +801,12 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
    * See {@link IdentityDefinition}.
    */
   identity?: IdentityDefinition;
+  /**
+   * Attribution text, images, and/or links that should be rendered along with this value.
+   *
+   * See {@link makeAttributionNode}.
+   */
+  attribution?: AttributionNode[];
 }
 
 export type ObjectSchemaDefinitionType<

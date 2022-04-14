@@ -9,4 +9,4 @@ Primitive types for which [generateSchema](../functions/generateSchema.md) can i
 
 #### Defined in
 
-[schema.ts:1007](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1007)
+[schema.ts:1009](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1009)

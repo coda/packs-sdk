@@ -10,6 +10,7 @@ This changelog keeps track of all changes to the packs-sdk. We follow convention
 - Added "force" option to `LinkSchema` for `LinkDisplayType.Embed`.
 - **Breaking Change** Removed dead code related to `defaultConnectionType`. This was an unused feature and should not have been previously referenced.
 - **Future Breaking Change** `SetEndpoint.getOptionsFormula` has been renamed `SetEndpoint.getOptions` for clarity.
+- **Future Breaking Change** The `attribution` property is moving from being a child field on `identity` within an object schema to just being a top-level field on the object schema.
 
 ## [0.9.0] - 2022-03-17
 
