@@ -31,6 +31,10 @@ class ObjectSchemaHelper {
     get type() {
         return this._schema.type;
     }
+    get attribution() {
+        var _a, _b;
+        return (_a = this._schema.attribution) !== null && _a !== void 0 ? _a : (_b = this._schema.identity) === null || _b === void 0 ? void 0 : _b.attribution;
+    }
 }
 function setEndpointHelper(step) {
     return new SetEndpointHelper(step);
