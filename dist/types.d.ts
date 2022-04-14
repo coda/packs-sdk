@@ -154,15 +154,19 @@ export interface SetEndpoint {
      * `{display: '<display name>', value: '<endpoint>'}` if wanting to render a display
      * label to the user rather than rendering the underlying value directly.
      */
-    getOptionsFormula: MetadataFormula;
+    getOptions?: MetadataFormula;
+    /** @deprecated Use {@link getOptions} */
+    getOptionsFormula?: MetadataFormula;
 }
 /**
  * Simplified configuration for {@link SetEndpoint} that a pack developer can specify when calling
  * {@link setUserAuthentication} or {@link setSystemAuthentication}.
  */
-export declare type SetEndpointDef = Omit<SetEndpoint, 'getOptionsFormula'> & {
+export declare type SetEndpointDef = Omit<SetEndpoint, 'getOptions' | 'getOptionsFormula'> & {
+    /** See {@link SetEndpoint.getOptions} */
+    getOptions?: MetadataFormulaDef;
     /** See {@link SetEndpoint.getOptionsFormula} */
-    getOptionsFormula: MetadataFormulaDef;
+    getOptionsFormula?: MetadataFormulaDef;
 };
 /**
  * Enumeration of post-account-setup step types. See {@link PostSetup}.

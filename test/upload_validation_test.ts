@@ -1786,7 +1786,7 @@ describe('Pack metadata Validation', () => {
               type: PostSetupType.SetEndpoint,
               name: 'setEndpoint',
               description: 'some description',
-              getOptionsFormula: {} as any,
+              getOptions: {} as any,
             },
           ],
         },

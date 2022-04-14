@@ -40,8 +40,9 @@ export interface PackFormulasMetadata {
     [namespace: string]: PackFormulaMetadata[];
 }
 /** @hidden */
-export declare type PostSetupMetadata = Omit<PostSetup, 'getOptionsFormula'> & {
-    getOptionsFormula: MetadataFormulaMetadata;
+export declare type PostSetupMetadata = Omit<PostSetup, 'getOptions' | 'getOptionsFormula'> & {
+    getOptions?: MetadataFormulaMetadata;
+    getOptionsFormula?: MetadataFormulaMetadata;
 };
 /** @hidden */
 export declare type AuthenticationMetadata = DistributiveOmit<Authentication, 'getConnectionName' | 'getConnectionUserId' | 'postSetup'> & {

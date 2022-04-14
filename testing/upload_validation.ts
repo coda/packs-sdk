@@ -279,8 +279,12 @@ const setEndpointPostSetupValidator = zodCompleteObject<SetEndpoint>({
   name: z.string(),
   description: z.string(),
   // TODO(jonathan): Remove this from the metadata object, only needs to be present in the full bundle.
-  getOptionsFormula: z.unknown(),
-});
+  getOptions: z.unknown().optional(),
+  getOptionsFormula: z.unknown().optional(),
+}).refine(
+  data => data.getOptions || data.getOptionsFormula,
+  'Either getOptions or getOptionsFormula must be specified.',
+);
 
 const baseAuthenticationValidators = {
   // TODO(jonathan): Remove these after fixing/exporting types for Authentication metadata, as they're only present

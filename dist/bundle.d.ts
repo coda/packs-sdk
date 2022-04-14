@@ -2494,8 +2494,8 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
  * });
  */
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
-	description: string;
 	name: string;
+	description: string;
 	parameters: ParamDefsT;
 	varargParameters?: ParamDefs | undefined;
 	examples?: {
@@ -2535,8 +2535,8 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
  * ```
  */
 export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: EmptyFormulaDef<ParamDefsT>): {
-	description: string;
 	name: string;
+	description: string;
 	parameters: ParamDefsT;
 	varargParameters?: ParamDefs | undefined;
 	examples?: {
@@ -2701,15 +2701,19 @@ export interface SetEndpoint {
 	 * `{display: '<display name>', value: '<endpoint>'}` if wanting to render a display
 	 * label to the user rather than rendering the underlying value directly.
 	 */
-	getOptionsFormula: MetadataFormula;
+	getOptions?: MetadataFormula;
+	/** @deprecated Use {@link getOptions} */
+	getOptionsFormula?: MetadataFormula;
 }
 /**
  * Simplified configuration for {@link SetEndpoint} that a pack developer can specify when calling
  * {@link setUserAuthentication} or {@link setSystemAuthentication}.
  */
-export declare type SetEndpointDef = Omit<SetEndpoint, "getOptionsFormula"> & {
+export declare type SetEndpointDef = Omit<SetEndpoint, "getOptions" | "getOptionsFormula"> & {
+	/** See {@link SetEndpoint.getOptions} */
+	getOptions?: MetadataFormulaDef;
 	/** See {@link SetEndpoint.getOptionsFormula} */
-	getOptionsFormula: MetadataFormulaDef;
+	getOptionsFormula?: MetadataFormulaDef;
 };
 /**
  * Enumeration of post-account-setup step types. See {@link PostSetup}.
@@ -3536,8 +3540,9 @@ export interface PackFormulasMetadata {
 	[namespace: string]: PackFormulaMetadata[];
 }
 /** @hidden */
-export declare type PostSetupMetadata = Omit<PostSetup, "getOptionsFormula"> & {
-	getOptionsFormula: MetadataFormulaMetadata;
+export declare type PostSetupMetadata = Omit<PostSetup, "getOptions" | "getOptionsFormula"> & {
+	getOptions?: MetadataFormulaMetadata;
+	getOptionsFormula?: MetadataFormulaMetadata;
 };
 /** @hidden */
 export declare type AuthenticationMetadata = DistributiveOmit<Authentication, "getConnectionName" | "getConnectionUserId" | "postSetup"> & {

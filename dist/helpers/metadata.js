@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.compilePackMetadata = void 0;
 const types_1 = require("../types");
-const ensure_1 = require("./ensure");
 const api_1 = require("../api");
+const migration_1 = require("./migration");
 function compilePackMetadata(manifest) {
     const { formats, formulas, formulaNamespace, syncTables, defaultAuthentication, ...definition } = manifest;
     const compiledFormats = compileFormatsMetadata(formats || []);
@@ -90,9 +90,9 @@ function compileMetadataFormulaMetadata(formula) {
     return rest;
 }
 function compilePostSetupStepMetadata(step) {
-    const { getOptionsFormula, ...rest } = step;
+    const { getOptions, getOptionsFormula, ...rest } = step;
     return {
         ...rest,
-        getOptionsFormula: (0, ensure_1.ensureExists)(compileMetadataFormulaMetadata(getOptionsFormula)),
+        getOptions: compileMetadataFormulaMetadata((0, migration_1.setEndpointHelper)(step).getOptions),
     };
 }

@@ -30,7 +30,7 @@ user to the [authorizationUrl](OAuth2Authentication.md#authorizationurl).
 
 #### Defined in
 
-[types.ts:401](https://github.com/coda/packs-sdk/blob/main/types.ts#L401)
+[types.ts:405](https://github.com/coda/packs-sdk/blob/main/types.ts#L405)
 
 ___
 
@@ -45,7 +45,7 @@ they may be specified using [additionalParams](OAuth2Authentication.md#additiona
 
 #### Defined in
 
-[types.ts:369](https://github.com/coda/packs-sdk/blob/main/types.ts#L369)
+[types.ts:373](https://github.com/coda/packs-sdk/blob/main/types.ts#L373)
 
 ___
 
@@ -65,7 +65,7 @@ For packs that make requests to multiple domains (uncommon), this should be the 
 
 #### Defined in
 
-[types.ts:244](https://github.com/coda/packs-sdk/blob/main/types.ts#L244)
+[types.ts:248](https://github.com/coda/packs-sdk/blob/main/types.ts#L248)
 
 ___
 
@@ -82,7 +82,7 @@ as [ExecutionContext.endpoint](ExecutionContext.md#endpoint).
 
 #### Defined in
 
-[types.ts:411](https://github.com/coda/packs-sdk/blob/main/types.ts#L411)
+[types.ts:415](https://github.com/coda/packs-sdk/blob/main/types.ts#L415)
 
 ___
 
@@ -104,7 +104,7 @@ with the creating user's Coda username.
 
 #### Defined in
 
-[types.ts:212](https://github.com/coda/packs-sdk/blob/main/types.ts#L212)
+[types.ts:216](https://github.com/coda/packs-sdk/blob/main/types.ts#L216)
 
 ___
 
@@ -120,7 +120,7 @@ A link to a help article or other page with more instructions about how to set u
 
 #### Defined in
 
-[types.ts:227](https://github.com/coda/packs-sdk/blob/main/types.ts#L227)
+[types.ts:231](https://github.com/coda/packs-sdk/blob/main/types.ts#L231)
 
 ___
 
@@ -137,7 +137,7 @@ Packs configured with only one domain or with requiredsEndpointUrl set to true c
 
 #### Defined in
 
-[types.ts:256](https://github.com/coda/packs-sdk/blob/main/types.ts#L256)
+[types.ts:260](https://github.com/coda/packs-sdk/blob/main/types.ts#L260)
 
 ___
 
@@ -154,7 +154,7 @@ This is not common.
 
 #### Defined in
 
-[types.ts:250](https://github.com/coda/packs-sdk/blob/main/types.ts#L250)
+[types.ts:254](https://github.com/coda/packs-sdk/blob/main/types.ts#L254)
 
 ___
 
@@ -173,7 +173,7 @@ when creating a new account.
 
 #### Defined in
 
-[types.ts:235](https://github.com/coda/packs-sdk/blob/main/types.ts#L235)
+[types.ts:239](https://github.com/coda/packs-sdk/blob/main/types.ts#L239)
 
 ___
 
@@ -188,7 +188,7 @@ If the API you are using requires a different delimiter, say a comma, specify it
 
 #### Defined in
 
-[types.ts:388](https://github.com/coda/packs-sdk/blob/main/types.ts#L388)
+[types.ts:392](https://github.com/coda/packs-sdk/blob/main/types.ts#L392)
 
 ___
 
@@ -203,7 +203,7 @@ the documentation for the API you are connecting to.
 
 #### Defined in
 
-[types.ts:381](https://github.com/coda/packs-sdk/blob/main/types.ts#L381)
+[types.ts:385](https://github.com/coda/packs-sdk/blob/main/types.ts#L385)
 
 ___
 
@@ -219,7 +219,7 @@ When sending authenticated requests, a HTTP header of the form
 
 #### Defined in
 
-[types.ts:396](https://github.com/coda/packs-sdk/blob/main/types.ts#L396)
+[types.ts:400](https://github.com/coda/packs-sdk/blob/main/types.ts#L400)
 
 ___
 
@@ -233,7 +233,7 @@ that should contain the token.
 
 #### Defined in
 
-[types.ts:418](https://github.com/coda/packs-sdk/blob/main/types.ts#L418)
+[types.ts:422](https://github.com/coda/packs-sdk/blob/main/types.ts#L422)
 
 ___
 
@@ -246,7 +246,7 @@ at the end of the OAuth handshake flow.
 
 #### Defined in
 
-[types.ts:374](https://github.com/coda/packs-sdk/blob/main/types.ts#L374)
+[types.ts:378](https://github.com/coda/packs-sdk/blob/main/types.ts#L378)
 
 ___
 
@@ -258,4 +258,4 @@ Identifies this as OAuth2 authentication.
 
 #### Defined in
 
-[types.ts:362](https://github.com/coda/packs-sdk/blob/main/types.ts#L362)
+[types.ts:366](https://github.com/coda/packs-sdk/blob/main/types.ts#L366)

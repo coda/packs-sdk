@@ -35,9 +35,9 @@ for example, "Choose an instance to use with this account".
 
 ___
 
-### getOptionsFormula
+### getOptions
 
-• **getOptionsFormula**: [`MetadataFormula`](../types/MetadataFormula.md)
+• `Optional` **getOptions**: [`MetadataFormula`](../types/MetadataFormula.md)
 
 The formula that fetches endpoints for the user
 to select from. Like any [MetadataFormula](../types/MetadataFormula.md), this formula should return
@@ -48,6 +48,18 @@ label to the user rather than rendering the underlying value directly.
 #### Defined in
 
 [types.ts:162](https://github.com/coda/packs-sdk/blob/main/types.ts#L162)
+
+___
+
+### getOptionsFormula
+
+• `Optional` **getOptionsFormula**: [`MetadataFormula`](../types/MetadataFormula.md)
+
+**`deprecated`** Use [getOptions](SetEndpoint.md#getoptions)
+
+#### Defined in
+
+[types.ts:164](https://github.com/coda/packs-sdk/blob/main/types.ts#L164)
 
 ___
 

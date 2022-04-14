@@ -26,7 +26,7 @@ rather than constructing a builder directly.
 
 #### Defined in
 
-[builder.ts:85](https://github.com/coda/packs-sdk/blob/main/builder.ts#L85)
+[builder.ts:86](https://github.com/coda/packs-sdk/blob/main/builder.ts#L86)
 
 ## Properties
 
@@ -42,7 +42,7 @@ BasicPackDefinition.defaultAuthentication
 
 #### Defined in
 
-[builder.ts:66](https://github.com/coda/packs-sdk/blob/main/builder.ts#L66)
+[builder.ts:67](https://github.com/coda/packs-sdk/blob/main/builder.ts#L67)
 
 ___
 
@@ -58,7 +58,7 @@ BasicPackDefinition.formats
 
 #### Defined in
 
-[builder.ts:53](https://github.com/coda/packs-sdk/blob/main/builder.ts#L53)
+[builder.ts:54](https://github.com/coda/packs-sdk/blob/main/builder.ts#L54)
 
 ___
 
@@ -74,7 +74,7 @@ BasicPackDefinition.formulaNamespace
 
 #### Defined in
 
-[builder.ts:77](https://github.com/coda/packs-sdk/blob/main/builder.ts#L77)
+[builder.ts:78](https://github.com/coda/packs-sdk/blob/main/builder.ts#L78)
 
 ___
 
@@ -90,7 +90,7 @@ BasicPackDefinition.formulas
 
 #### Defined in
 
-[builder.ts:49](https://github.com/coda/packs-sdk/blob/main/builder.ts#L49)
+[builder.ts:50](https://github.com/coda/packs-sdk/blob/main/builder.ts#L50)
 
 ___
 
@@ -106,7 +106,7 @@ BasicPackDefinition.networkDomains
 
 #### Defined in
 
-[builder.ts:61](https://github.com/coda/packs-sdk/blob/main/builder.ts#L61)
+[builder.ts:62](https://github.com/coda/packs-sdk/blob/main/builder.ts#L62)
 
 ___
 
@@ -122,7 +122,7 @@ BasicPackDefinition.syncTables
 
 #### Defined in
 
-[builder.ts:57](https://github.com/coda/packs-sdk/blob/main/builder.ts#L57)
+[builder.ts:58](https://github.com/coda/packs-sdk/blob/main/builder.ts#L58)
 
 ___
 
@@ -138,7 +138,7 @@ BasicPackDefinition.systemConnectionAuthentication
 
 #### Defined in
 
-[builder.ts:70](https://github.com/coda/packs-sdk/blob/main/builder.ts#L70)
+[builder.ts:71](https://github.com/coda/packs-sdk/blob/main/builder.ts#L71)
 
 ___
 
@@ -150,7 +150,7 @@ See [PackVersionDefinition.version](../interfaces/PackVersionDefinition.md#versi
 
 #### Defined in
 
-[builder.ts:75](https://github.com/coda/packs-sdk/blob/main/builder.ts#L75)
+[builder.ts:76](https://github.com/coda/packs-sdk/blob/main/builder.ts#L76)
 
 ## Methods
 
@@ -182,7 +182,7 @@ pack.addColumnFormat({
 
 #### Defined in
 
-[builder.ts:231](https://github.com/coda/packs-sdk/blob/main/builder.ts#L231)
+[builder.ts:232](https://github.com/coda/packs-sdk/blob/main/builder.ts#L232)
 
 ___
 
@@ -231,7 +231,7 @@ pack.addDynamicSyncTable({
 
 #### Defined in
 
-[builder.ts:204](https://github.com/coda/packs-sdk/blob/main/builder.ts#L204)
+[builder.ts:205](https://github.com/coda/packs-sdk/blob/main/builder.ts#L205)
 
 ___
 
@@ -282,7 +282,7 @@ pack.addFormula({
 
 #### Defined in
 
-[builder.ts:130](https://github.com/coda/packs-sdk/blob/main/builder.ts#L130)
+[builder.ts:131](https://github.com/coda/packs-sdk/blob/main/builder.ts#L131)
 
 ___
 
@@ -318,7 +318,7 @@ pack.addNetworkDomain('example.com');
 
 #### Defined in
 
-[builder.ts:339](https://github.com/coda/packs-sdk/blob/main/builder.ts#L339)
+[builder.ts:340](https://github.com/coda/packs-sdk/blob/main/builder.ts#L340)
 
 ___
 
@@ -365,7 +365,7 @@ pack.addSyncTable({
 
 #### Defined in
 
-[builder.ts:160](https://github.com/coda/packs-sdk/blob/main/builder.ts#L160)
+[builder.ts:161](https://github.com/coda/packs-sdk/blob/main/builder.ts#L161)
 
 ___
 
@@ -401,7 +401,7 @@ pack.setSystemAuthentication({
 
 #### Defined in
 
-[builder.ts:300](https://github.com/coda/packs-sdk/blob/main/builder.ts#L300)
+[builder.ts:301](https://github.com/coda/packs-sdk/blob/main/builder.ts#L301)
 
 ___
 
@@ -441,7 +441,7 @@ pack.setUserAuthentication({
 
 #### Defined in
 
-[builder.ts:257](https://github.com/coda/packs-sdk/blob/main/builder.ts#L257)
+[builder.ts:258](https://github.com/coda/packs-sdk/blob/main/builder.ts#L258)
 
 ___
 
@@ -473,4 +473,4 @@ pack.setVersion('1.2.3');
 
 #### Defined in
 
-[builder.ts:357](https://github.com/coda/packs-sdk/blob/main/builder.ts#L357)
+[builder.ts:358](https://github.com/coda/packs-sdk/blob/main/builder.ts#L358)
