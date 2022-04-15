@@ -816,6 +816,10 @@ export type BasicPackDefinition = Omit<PackVersionDefinition, 'version'>;
  */
 export interface PackVersionDefinition {
   /**
+   * The version of the SDK that generated this definition.
+   */
+  sdkVersion?: string; // TODO: Make this non-nullable someday when older SDK versions are no longer supported.
+  /**
    * The semantic version of the pack. This must be valid semantic version of the form `1`, `1.2`, or `1.2.3`.
    * When uploading a pack version, the semantic version must be greater than any previously uploaded version.
    */
@@ -851,7 +855,7 @@ export interface PackVersionDefinition {
    *
    * Note that button actions are also defined here. Buttons are simply formulas
    * with `isAction: true`.
-   * 
+   *
    */
   formulas?: Formula[];
   /**

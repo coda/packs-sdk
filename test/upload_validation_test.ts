@@ -128,6 +128,36 @@ describe('Pack metadata Validation', () => {
     }
   });
 
+  it('valid sdk versions', async () => {
+    for (const sdkVersion of [undefined, '0.9.0', '0.9.100', '0.10.10']) {
+      const metadata = createFakePackVersionMetadata({sdkVersion});
+      const result = await validateJson(metadata);
+      assert.ok(result, `Expected version blah identifier "${sdkVersion}" to be valid.`);
+    }
+  });
+
+  it('invalid sdk versions', async () => {
+    for (const sdkVersion of ['1.2.3.4', 'foo', '1.a']) {
+      const metadata = createFakePackVersionMetadata({sdkVersion});
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {path: 'sdkVersion', message: 'SDK versions must use semantic versioning, e.g. "1.0.0".'},
+      ]);
+    }
+
+    for (const sdkVersion of ['1.0.0', '0.11.0']) {
+      const metadata = createFakePackVersionMetadata({sdkVersion});
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [{path: 'sdkVersion', message: 'SDK version number too large'}]);
+    }
+
+    for (const sdkVersion of ['0.1.0', '0.8.0']) {
+      const metadata = createFakePackVersionMetadata({sdkVersion});
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [{path: 'sdkVersion', message: 'SDK version number too small'}]);
+    }
+  });
+
   it('formula namespace not required when formulas absent', async () => {
     const metadata = createFakePackVersionMetadata({formulas: undefined, formulaNamespace: undefined});
     await validateJson(metadata);
@@ -2069,6 +2099,18 @@ describe('Pack metadata Validation', () => {
           path: 'defaultAuthentication.networkDomain',
         },
       ]);
+    });
+
+    it('missing networkDomains when specifying authentication allowed for old SDK versions', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['foo.com', 'bar.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+        },
+        sdkVersion: '0.9.0',
+      });
+      const validated = await validateJson(metadata);
+      assert.deepEqual(validated, metadata);
     });
 
     it('bad networkDomains when specifying authentication', async () => {

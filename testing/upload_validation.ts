@@ -67,9 +67,12 @@ import type {VariousAuthentication} from '../types';
 import type {VariousSupportedAuthenticationTypes} from '../types';
 import type {WebBasicAuthentication} from '../types';
 import {assertCondition} from '../helpers/ensure';
+import {currentSDKVersion} from '../helpers/sdk_version';
+import {ensureExists} from '../helpers/ensure';
 import {isNil} from '../helpers/object_utils';
 import {makeSchema} from '../schema';
 import {objectSchemaHelper} from '../helpers/migration';
+import semver from 'semver';
 import * as z from 'zod';
 
 /**
@@ -932,6 +935,36 @@ const syncTableSchema = z
 // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
 // schema we actually use.)
 const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata>({
+  sdkVersion: z
+    .string()
+    .superRefine((version, ctx) => {
+      if (!semver.valid(version)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'SDK versions must use semantic versioning, e.g. "1.0.0".',
+        });
+        return;
+      }
+
+      const nextMinorRelease = ensureExists(semver.inc(currentSDKVersion(), 'minor'));
+      if (semver.gte(version, nextMinorRelease)) {
+        // Version numbers must not be bigger than a patch of the latest SDK release.
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'SDK version number too large',
+        });
+      }
+      if (semver.lt(version, '0.9.0')) {
+        // Version numbers were introduced to the metadata in 0.9.0 and shouldn't be smaller than that.
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'SDK version number too small',
+        });
+      }
+    })
+    // Old SDK metadata may not set the version, but we need to be able to parse and validate metadata from
+    // older SDK versions during server-side uploads.
+    .optional(),
   version: z
     .string()
     .regex(/^\d+(\.\d+){0,2}$/, 'Pack versions must use semantic versioning, e.g. "1", "1.0" or "1.0.0".')
@@ -1199,6 +1232,14 @@ const legacyPackMetadataSchema = validateFormulas(
     // Check that packs with multiple network domains explicitly choose which domain gets auth.
 
     const data = untypedData as PackVersionMetadata;
+
+    if (!data.sdkVersion || !semver.satisfies(data.sdkVersion, '>0.9.0')) {
+      // Allow a window where server-side validation accepts metadata from older SDK versions
+      // that isn't in the latest format. We can force upgrades by turning off the ability to
+      // upload from old SDK versions.
+      return;
+    }
+
     if (
       !data.defaultAuthentication ||
       data.defaultAuthentication.type === AuthenticationType.Various ||

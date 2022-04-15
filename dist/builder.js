@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PackDefinitionBuilder = exports.newPack = void 0;
 const types_1 = require("./types");
 const api_types_1 = require("./api_types");
+const sdk_version_1 = require("./helpers/sdk_version");
 const api_1 = require("./api");
 const api_2 = require("./api");
 const api_3 = require("./api");
@@ -34,7 +35,7 @@ class PackDefinitionBuilder {
      * rather than constructing a builder directly.
      */
     constructor(definition) {
-        const { formulas, formats, syncTables, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, } = definition || {};
+        const { formulas, formats, syncTables, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, sdkVersion, formulaNamespace, } = definition || {};
         this.formulas = formulas || [];
         this.formats = formats || [];
         this.syncTables = syncTables || [];
@@ -42,6 +43,7 @@ class PackDefinitionBuilder {
         this.defaultAuthentication = defaultAuthentication;
         this.systemConnectionAuthentication = systemConnectionAuthentication;
         this.version = version;
+        this.sdkVersion = sdkVersion || (0, sdk_version_1.currentSDKVersion)();
         this.formulaNamespace = formulaNamespace || 'Deprecated';
     }
     /**

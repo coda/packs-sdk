@@ -18,6 +18,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.zodErrorDetailToValidationError = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
 const schema_1 = require("../schema");
@@ -41,6 +44,7 @@ const ensure_1 = require("../helpers/ensure");
 const object_utils_1 = require("../helpers/object_utils");
 const schema_11 = require("../schema");
 const migration_1 = require("../helpers/migration");
+const semver_1 = __importDefault(require("semver"));
 const z = __importStar(require("zod"));
 /**
  * The uncompiled column format matchers will be expected to be actual regex objects,
@@ -764,6 +768,15 @@ const syncTableSchema = z
 // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
 // schema we actually use.)
 const unrefinedPackVersionMetadataSchema = zodCompleteObject({
+    sdkVersion: z
+        .string()
+        .regex(/^\d+(\.\d+){0,2}$/, 'SDK versions must use semantic versioning, e.g. "1", "1.0" or "1.0.0".')
+        .refine(
+    // Version numbers must not be bigger than a postgres integer.
+    version => version.split('.').filter(part => Number(part) > 2147483647).length === 0, 'SDK version number too large')
+        // Old SDK metadata may not set the version, but we need to be able to parse and validate metadata from
+        // older SDK versions during server-side uploads.
+        .optional(),
     version: z
         .string()
         .regex(/^\d+(\.\d+){0,2}$/, 'Pack versions must use semantic versioning, e.g. "1", "1.0" or "1.0.0".')
@@ -1004,6 +1017,12 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
     // Check that packs with multiple network domains explicitly choose which domain gets auth.
     var _a;
     const data = untypedData;
+    if (!data.sdkVersion || !semver_1.default.satisfies(data.sdkVersion, '>0.9.0')) {
+        // Allow a window where server-side validation accepts metadata from older SDK versions
+        // that isn't in the latest format. We can force upgrades by turning off the ability to
+        // upload from old SDK versions.
+        return;
+    }
     if (!data.defaultAuthentication ||
         data.defaultAuthentication.type === types_1.AuthenticationType.Various ||
         data.defaultAuthentication.type === types_1.AuthenticationType.None) {
