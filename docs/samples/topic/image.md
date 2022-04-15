@@ -414,7 +414,7 @@ pack.addFormula({
       type: coda.ParameterType.String,
       name: "text",
       description: "The text to include in the image.",
-      defaultValue: "Hello World!",
+      suggestedValue: "Hello World!",
     }),
     coda.makeParameter({
       type: coda.ParameterType.String,

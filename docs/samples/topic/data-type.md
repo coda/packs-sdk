@@ -250,7 +250,7 @@ pack.addFormula({
       type: coda.ParameterType.String,
       name: "repo",
       description: "The repo to read from.",
-      defaultValue: "coda/packs-sdk",
+      suggestedValue: "coda/packs-sdk",
     }),
   ],
   resultType: coda.ValueType.String,

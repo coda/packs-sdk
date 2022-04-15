@@ -17,7 +17,7 @@ value returned in the `continuation` property of result of the prior sync.
 
 #### Defined in
 
-[api_types.ts:537](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L537)
+[api_types.ts:541](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L541)
 
 ___
 
@@ -30,7 +30,7 @@ The dynamic URL is likely necessary for determining which API resources to fetch
 
 #### Defined in
 
-[api_types.ts:548](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L548)
+[api_types.ts:552](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L552)
 
 ___
 
@@ -44,4 +44,4 @@ the response for a dynamic sync table's `execute` function.
 
 #### Defined in
 
-[api_types.ts:543](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L543)
+[api_types.ts:547](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L547)

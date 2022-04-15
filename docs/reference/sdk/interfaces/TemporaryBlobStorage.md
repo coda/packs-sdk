@@ -55,7 +55,7 @@ Coda reserves the right to ignore long expirations.
 
 #### Defined in
 
-[api_types.ts:525](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L525)
+[api_types.ts:529](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L529)
 
 ___
 
@@ -84,4 +84,4 @@ Coda reserves the right to ignore long expirations.
 
 #### Defined in
 
-[api_types.ts:517](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L517)
+[api_types.ts:521](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L521)

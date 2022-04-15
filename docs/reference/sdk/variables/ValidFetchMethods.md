@@ -9,4 +9,4 @@ The HTTP methods (verbs) supported by the fetcher.
 
 #### Defined in
 
-[api_types.ts:381](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L381)
+[api_types.ts:385](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L385)

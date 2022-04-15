@@ -157,7 +157,7 @@ exports.ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE'];
 // A mapping exists in coda that allows these to show up in the UI.
 // If adding new values here, add them to that mapping and vice versa.
 /**
- * Special "live" date range values that can be used as the {@link defaultValue}
+ * Special "live" date range values that can be used as the {@link suggestedValue}
  * for a date array parameter.
  *
  * Date array parameters are meant to represent date ranges. A date range can
