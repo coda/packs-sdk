@@ -594,7 +594,11 @@ class AuthenticatingBlobStorage implements TemporaryBlobStorage {
     return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${v4()}`;
   }
 
-  async storeBlob(_blobData: Buffer, _contentType: string, _opts?: {expiryMs?: number}): Promise<string> {
+  async storeBlob(
+    _blobData: Buffer,
+    _contentType: string,
+    _opts?: {expiryMs?: number; downloadsAs?: string},
+  ): Promise<string> {
     return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${v4()}`;
   }
 }

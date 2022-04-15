@@ -2,16 +2,25 @@
 
 This changelog keeps track of all changes to the packs-sdk. We follow conventions from [keepachangelog](https://keepachangelog.com/en/1.0.0/).
 
-### Unreleased
+## [Unreleased]
+
+### Added
+
+- Added "force" option to `LinkSchema` for `LinkDisplayType.Embed`.
+- Added "downloadFilename" option to `storeBlob` and `storeUrl` in `TemporaryBlobStorage` to specify the file name that it should download as when opening the temporary url.
+
+### Changed
 
 - **Breaking Change** Added a validation rule that prevents the usage of varargsParameters for sync table getters
   which are not currently supported in the UI.
 - **Future Breaking Change** The properties `id`, `primary`, and `featured` of object schemas will be renamed to `idProperty`, `displayProperty`, and `featuredProperties`, respectively, to better clarify that their values refer to property names within the schema. During a migration period, you may use either name; the original names are now marked as deprecated and will be removed at a future date, no earlier than May 1, 2022.
-- Added "force" option to `LinkSchema` for `LinkDisplayType.Embed`.
-- **Breaking Change** Removed dead code related to `defaultConnectionType`. This was an unused feature and should not have been previously referenced.
 - **Future Breaking Change** `SetEndpoint.getOptionsFormula` has been renamed `SetEndpoint.getOptions` for clarity.
 - **Future Breaking Change** The `attribution` property is moving from being a child field on `identity` within an object schema to just being a top-level field on the object schema.
-- **Future Breaking Change** The `defaultValue` property of parameter definitions will be renamed to `suggestedValue` to reflect that these are values that do not act as a true default but rather prepopulates a value when used. 
+- **Future Breaking Change** The `defaultValue` property of parameter definitions will be renamed to `suggestedValue` to reflect that these are values that do not act as a true default but rather prepopulates a value when used.
+
+### Removed
+
+- **Breaking Change** Removed dead code related to `defaultConnectionType`. This was an unused feature and should not have been previously referenced.
 
 ## [0.9.0] - 2022-03-17
 
