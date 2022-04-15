@@ -1389,7 +1389,8 @@ export interface TemporaryBlobStorage {
 	 * The URL expires after 15 minutes by default, but you may pass a custom expiry, however
 	 * Coda reserves the right to ignore long expirations.
 	 *
-	 * You can control what the file downloads as if opened in a browser using the `downloadAs` parameter.
+	 * If the `downloadAs` parameter is specified, the data will be interpreted as a file (`attachment` content
+	 * disposition) that will be downloaded when accessed as the file name provided.
 	 */
 	storeUrl(url: string, opts?: {
 		expiryMs?: number;
@@ -1402,7 +1403,8 @@ export interface TemporaryBlobStorage {
 	 * The URL expires after 15 minutes by default, but you may pass a custom expiry, however
 	 * Coda reserves the right to ignore long expirations.
 	 *
-	 * You can control what the file downloads as if opened in a browser using the `downloadAs` parameter.
+	 * If the `downloadAs` parameter is specified, the data will be interpreted as a file (`attachment` content
+	 * disposition) that will be downloaded when accessed as the file name provided.
 	 */
 	storeBlob(blobData: Buffer, contentType: string, opts?: {
 		expiryMs?: number;
