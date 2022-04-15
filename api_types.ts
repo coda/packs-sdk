@@ -517,16 +517,20 @@ export interface TemporaryBlobStorage {
    *
    * The URL expires after 15 minutes by default, but you may pass a custom expiry, however
    * Coda reserves the right to ignore long expirations.
+   *
+   * You can control what the file downloads as if opened in a browser using the `downloadAs` parameter.
    */
-  storeUrl(url: string, opts?: {expiryMs?: number}): Promise<string>;
+  storeUrl(url: string, opts?: {expiryMs?: number; downloadAs?: string}): Promise<string>;
   /**
    * Stores the given data as a file with the given content type in Coda-hosted temporary storage.
    * Returns a URL for the temporary file that you should return in your formula response.
    *
    * The URL expires after 15 minutes by default, but you may pass a custom expiry, however
    * Coda reserves the right to ignore long expirations.
+   *
+   * You can control what the file downloads as if opened in a browser using the `downloadAs` parameter.
    */
-  storeBlob(blobData: Buffer, contentType: string, opts?: {expiryMs?: number}): Promise<string>;
+  storeBlob(blobData: Buffer, contentType: string, opts?: {expiryMs?: number; downloadAs?: string}): Promise<string>;
 }
 
 /**
