@@ -10,7 +10,7 @@ hide:
 <section class="landing-row" markdown>
 
 <div class="landing-item" markdown>
-## :material-toy-brick-outline: Let’s build building blocks together
+## :material-toy-brick-outline: Let’s build building blocks together.
 
 A Pack is an extension that adds new powers to your doc. Packs work by supplementing the core building blocks of Coda, so you can customize how your doc looks, works, and integrates.
 
@@ -30,13 +30,13 @@ With a little JavaScript, anyone can create and publish a Pack to the Gallery. A
 <section class="landing-row landing-row-reverse" markdown>
 
 <div class="landing-item" markdown>
-## :octicons-stopwatch-16: Build your first Pack in minutes
+## :octicons-stopwatch-16: Build your first Pack in minutes.
 
 Using Coda's Pack Studio you can author, build, and deploy your Pack all from your browser. Nothing to download or install.
 
 Our templates and examples make it easy to get started, and in minutes you'll have built your first Pack and installed it in a doc.
 
-[Get Started][get_started]{ .md-button .md-button--primary }
+[Get started][get_started]{ .md-button .md-button--primary }
 </div>
 
 <div class="landing-item" markdown>
@@ -80,21 +80,21 @@ Our passionate community of Pack makers and Coda experts can help answer your qu
 <section class="landing-row" markdown>
 
 <div class="landing-item" markdown>
-## :fontawesome-regular-lightbulb: Get inspired
+## :fontawesome-regular-lightbulb: Get inspired.
 
 Coda makers have been busy building Packs of all types, and many have published their work to the Gallery. Try installing a few Packs to get a sense for what you could build.
 
-[Browse the gallery][gallery]{ .md-button }
+[Browse the Gallery][gallery]{ .md-button }
 </div>
 
 <div class="landing-item" markdown>
-![Packs in the gallery](images/home_gallery.png)
+![Packs in the Gallery](images/home_gallery.png)
 </div>
 
 </section>
 
 <style>
-  /* Hide the title and edit button */
+  /* Hide the title and edit button on this page. */
   .md-content h1,
   .md-content a.md-content__button {
     display: none;
