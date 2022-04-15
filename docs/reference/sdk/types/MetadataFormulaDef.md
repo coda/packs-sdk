@@ -11,4 +11,4 @@ or a full metadata formula definition (mostly supported for legacy code).
 
 #### Defined in
 
-[api.ts:1010](https://github.com/coda/packs-sdk/blob/main/api.ts#L1010)
+[api.ts:1013](https://github.com/coda/packs-sdk/blob/main/api.ts#L1013)

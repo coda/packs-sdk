@@ -1851,6 +1851,9 @@ export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<Pa
  * ```
  */
 export declare function makeParameter<T extends ParameterType>(paramDefinition: ParameterOptions<T>): ParamDef<ParameterTypeMap[T]>;
+/**
+ * Base type for the inputs for creating a pack formula.
+ */
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult> extends CommonPackFormulaDef<ParamsT> {
 	/** The JavaScript function that implements this formula */
 	execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
@@ -3548,7 +3551,9 @@ export declare type PackVersionMetadata = Omit<PackVersionDefinition, "formulas"
 export declare type PackMetadata = PackVersionMetadata & Pick<PackDefinition, "id" | "name" | "shortDescription" | "description" | "permissionsDescription" | "category" | "logoPath" | "exampleImages" | "exampleVideoIds" | "minimumFeatureSet" | "quotas" | "rateLimits" | "isSystem">;
 /** @hidden */
 export declare type ExternalPackAuthenticationType = AuthenticationType;
+/** @hidden */
 export declare type ExternalPackFormulas = PackFormulaMetadata[];
+/** @hidden */
 export declare type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
 /** @hidden */
 export declare type ExternalPackFormula = PackFormulaMetadata;

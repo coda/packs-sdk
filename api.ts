@@ -449,6 +449,9 @@ export function check(condition: boolean, msg: string) {
   }
 }
 
+/**
+ * Base type for the inputs for creating a pack formula.
+ */
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult>
   extends CommonPackFormulaDef<ParamsT> {
   /** The JavaScript function that implements this formula */

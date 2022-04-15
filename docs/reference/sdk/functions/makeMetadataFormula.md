@@ -30,4 +30,4 @@ it is shaped like a Coda formula to be used at runtime.
 
 #### Defined in
 
-[api.ts:1024](https://github.com/coda/packs-sdk/blob/main/api.ts#L1024)
+[api.ts:1027](https://github.com/coda/packs-sdk/blob/main/api.ts#L1027)

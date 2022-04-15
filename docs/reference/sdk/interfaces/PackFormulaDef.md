@@ -3,6 +3,8 @@ title: "PackFormulaDef"
 ---
 # Interface: PackFormulaDef<ParamsT, ResultT\>
 
+Base type for the inputs for creating a pack formula.
+
 ## Type parameters
 
 | Name | Type |
@@ -240,4 +242,4 @@ The JavaScript function that implements this formula
 
 #### Defined in
 
-[api.ts:455](https://github.com/coda/packs-sdk/blob/main/api.ts#L455)
+[api.ts:458](https://github.com/coda/packs-sdk/blob/main/api.ts#L458)

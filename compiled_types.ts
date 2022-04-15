@@ -124,7 +124,9 @@ export type PackMetadata = PackVersionMetadata &
 
 /** @hidden */
 export type ExternalPackAuthenticationType = AuthenticationType;
+/** @hidden */
 export type ExternalPackFormulas = PackFormulaMetadata[];
+/** @hidden */
 export type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
 /** @hidden */
 export type ExternalPackFormula = PackFormulaMetadata;

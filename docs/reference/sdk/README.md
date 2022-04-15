@@ -114,8 +114,6 @@ title: "Pack SDK Reference"
 - [BooleanFormulaDef](types/BooleanFormulaDef.md)
 - [BooleanPackFormula](types/BooleanPackFormula.md)
 - [DefaultValueType](types/DefaultValueType.md)
-- [ExternalObjectPackFormula](types/ExternalObjectPackFormula.md)
-- [ExternalPackFormulas](types/ExternalPackFormulas.md)
 - [FetchMethodType](types/FetchMethodType.md)
 - [Formula](types/Formula.md)
 - [FormulaDefinition](types/FormulaDefinition.md)

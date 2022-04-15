@@ -16,7 +16,7 @@ The value displayed to the user in the UI.
 
 #### Defined in
 
-[api.ts:915](https://github.com/coda/packs-sdk/blob/main/api.ts#L915)
+[api.ts:918](https://github.com/coda/packs-sdk/blob/main/api.ts#L918)
 
 ___
 
@@ -53,7 +53,7 @@ as the `value` of the result that was clicked on.
 
 #### Defined in
 
-[api.ts:946](https://github.com/coda/packs-sdk/blob/main/api.ts#L946)
+[api.ts:949](https://github.com/coda/packs-sdk/blob/main/api.ts#L949)
 
 ___
 
@@ -65,4 +65,4 @@ The value used for the formula argument when the user selects this option.
 
 #### Defined in
 
-[api.ts:917](https://github.com/coda/packs-sdk/blob/main/api.ts#L917)
+[api.ts:920](https://github.com/coda/packs-sdk/blob/main/api.ts#L920)
