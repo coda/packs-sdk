@@ -40,6 +40,9 @@ Returns a URL for the temporary file that you should return in your formula resp
 The URL expires after 15 minutes by default, but you may pass a custom expiry, however
 Coda reserves the right to ignore long expirations.
 
+If the `downloadFilename` parameter is specified, the data will be interpreted as a file (`attachment` content
+disposition) that will be downloaded when accessed as the file name provided.
+
 #### Parameters
 
 | Name | Type |
@@ -47,6 +50,7 @@ Coda reserves the right to ignore long expirations.
 | `blobData` | `Buffer` |
 | `contentType` | `string` |
 | `opts?` | `Object` |
+| `opts.downloadFilename?` | `string` |
 | `opts.expiryMs?` | `number` |
 
 #### Returns
@@ -55,7 +59,7 @@ Coda reserves the right to ignore long expirations.
 
 #### Defined in
 
-[api_types.ts:529](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L529)
+[api_types.ts:535](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L535)
 
 ___
 
@@ -70,12 +74,16 @@ that you should return in your formula response.
 The URL expires after 15 minutes by default, but you may pass a custom expiry, however
 Coda reserves the right to ignore long expirations.
 
+If the `downloadFilename` parameter is specified, the data will be interpreted as a file (`attachment` content
+disposition) that will be downloaded when accessed as the file name provided.
+
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `url` | `string` |
 | `opts?` | `Object` |
+| `opts.downloadFilename?` | `string` |
 | `opts.expiryMs?` | `number` |
 
 #### Returns
@@ -84,4 +92,4 @@ Coda reserves the right to ignore long expirations.
 
 #### Defined in
 
-[api_types.ts:521](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L521)
+[api_types.ts:524](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L524)

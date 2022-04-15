@@ -7,7 +7,7 @@ This changelog keeps track of all changes to the packs-sdk. We follow convention
 ### Added
 
 - Added "force" option to `LinkSchema` for `LinkDisplayType.Embed`.
-- Added "downloadsAs" option to `storeBlob` and `storeUrl` in `TemporaryBlobStorage` to specify the file name that it should download as when opening the temporary url.
+- Added "downloadFilename" option to `storeBlob` and `storeUrl` in `TemporaryBlobStorage` to specify the file name that it should download as when opening the temporary url.
 
 ### Changed
 
@@ -16,7 +16,7 @@ This changelog keeps track of all changes to the packs-sdk. We follow convention
 - **Future Breaking Change** The properties `id`, `primary`, and `featured` of object schemas will be renamed to `idProperty`, `displayProperty`, and `featuredProperties`, respectively, to better clarify that their values refer to property names within the schema. During a migration period, you may use either name; the original names are now marked as deprecated and will be removed at a future date, no earlier than May 1, 2022.
 - **Future Breaking Change** `SetEndpoint.getOptionsFormula` has been renamed `SetEndpoint.getOptions` for clarity.
 - **Future Breaking Change** The `attribution` property is moving from being a child field on `identity` within an object schema to just being a top-level field on the object schema.
-- **Future Breaking Change** The `defaultValue` property of parameter definitions will be renamed to `suggestedValue` to reflect that these are values that do not act as a true default but rather prepopulates a value when used. 
+- **Future Breaking Change** The `defaultValue` property of parameter definitions will be renamed to `suggestedValue` to reflect that these are values that do not act as a true default but rather prepopulates a value when used.
 
 ### Removed
 
