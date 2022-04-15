@@ -78,7 +78,6 @@ title: "Pack SDK Reference"
 - [ObjectSchemaProperty](interfaces/ObjectSchemaProperty.md)
 - [PackDefinition](interfaces/PackDefinition.md)
 - [PackFormulaDef](interfaces/PackFormulaDef.md)
-- [PackFormulas](interfaces/PackFormulas.md)
 - [PackVersionDefinition](interfaces/PackVersionDefinition.md)
 - [ParamDef](interfaces/ParamDef.md)
 - [QueryParamTokenAuthentication](interfaces/QueryParamTokenAuthentication.md)

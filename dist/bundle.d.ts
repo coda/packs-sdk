@@ -1852,12 +1852,6 @@ export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<Pa
  */
 export declare function makeParameter<T extends ParameterType>(paramDefinition: ParameterOptions<T>): ParamDef<ParameterTypeMap[T]>;
 /**
- * @deprecated Formulas should now only be defined as an array, as namespaces are deprecated.
- */
-export interface PackFormulas {
-	readonly [namespace: string]: Formula[];
-}
-/**
  * Base type for the inputs for creating a pack formula.
  */
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult> extends CommonPackFormulaDef<ParamsT> {
@@ -3270,13 +3264,11 @@ export interface PackVersionDefinition {
 	/**
 	 * Definitions of this pack's formulas. See {@link Formula}.
 	 *
-	 * Note that button actions are also defind here. Buttons are simply formulas
+	 * Note that button actions are also defined here. Buttons are simply formulas
 	 * with `isAction: true`.
 	 *
-	 * Note also, this should always be an array of Formulas. The PackFormulas object structure is deprecated
-	 * and will be removed shortly.
 	 */
-	formulas?: PackFormulas | Formula[];
+	formulas?: Formula[];
 	/**
 	 * Definitions of this pack's column formats. See {@link Format}.
 	 */
@@ -3538,10 +3530,6 @@ export interface PackFormatMetadata extends Omit<Format, "matchers"> {
 	matchers: string[];
 }
 /** @hidden */
-export interface PackFormulasMetadata {
-	[namespace: string]: PackFormulaMetadata[];
-}
-/** @hidden */
 export declare type PostSetupMetadata = Omit<PostSetup, "getOptions" | "getOptionsFormula"> & {
 	getOptions?: MetadataFormulaMetadata;
 	getOptionsFormula?: MetadataFormulaMetadata;
@@ -3554,7 +3542,7 @@ export declare type AuthenticationMetadata = DistributiveOmit<Authentication, "g
 };
 /** @hidden */
 export declare type PackVersionMetadata = Omit<PackVersionDefinition, "formulas" | "formats" | "defaultAuthentication" | "syncTables"> & {
-	formulas: PackFormulasMetadata | PackFormulaMetadata[];
+	formulas: PackFormulaMetadata[];
 	formats: PackFormatMetadata[];
 	syncTables: PackSyncTable[];
 	defaultAuthentication?: AuthenticationMetadata;
@@ -3564,7 +3552,7 @@ export declare type PackMetadata = PackVersionMetadata & Pick<PackDefinition, "i
 /** @hidden */
 export declare type ExternalPackAuthenticationType = AuthenticationType;
 /** @hidden */
-export declare type ExternalPackFormulas = PackFormulasMetadata | PackFormulaMetadata[];
+export declare type ExternalPackFormulas = PackFormulaMetadata[];
 /** @hidden */
 export declare type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
 /** @hidden */

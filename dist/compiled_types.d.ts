@@ -36,10 +36,6 @@ export interface PackFormatMetadata extends Omit<Format, 'matchers'> {
     matchers: string[];
 }
 /** @hidden */
-export interface PackFormulasMetadata {
-    [namespace: string]: PackFormulaMetadata[];
-}
-/** @hidden */
 export declare type PostSetupMetadata = Omit<PostSetup, 'getOptions' | 'getOptionsFormula'> & {
     getOptions?: MetadataFormulaMetadata;
     getOptionsFormula?: MetadataFormulaMetadata;
@@ -73,7 +69,7 @@ export interface AuthenticationMetadataTypeMap {
 }
 /** @hidden */
 export declare type PackVersionMetadata = Omit<PackVersionDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {
-    formulas: PackFormulasMetadata | PackFormulaMetadata[];
+    formulas: PackFormulaMetadata[];
     formats: PackFormatMetadata[];
     syncTables: PackSyncTable[];
     defaultAuthentication?: AuthenticationMetadata;
@@ -83,7 +79,7 @@ export declare type PackMetadata = PackVersionMetadata & Pick<PackDefinition, 'i
 /** @hidden */
 export declare type ExternalPackAuthenticationType = AuthenticationType;
 /** @hidden */
-export declare type ExternalPackFormulas = PackFormulasMetadata | PackFormulaMetadata[];
+export declare type ExternalPackFormulas = PackFormulaMetadata[];
 /** @hidden */
 export declare type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
 /** @hidden */

@@ -9,4 +9,4 @@ The union of supported authentication methods.
 
 #### Defined in
 
-[types.ts:574](https://github.com/coda/packs-sdk/blob/main/types.ts#L574)
+[types.ts:573](https://github.com/coda/packs-sdk/blob/main/types.ts#L573)

@@ -1,15 +1,12 @@
 import type {Formula} from '../api';
 import type {PackDefinition} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
-import type {PackFormulaMetadata} from '../api';
-import type {PackFormulas} from '../api';
-import type {PackFormulasMetadata} from '../compiled_types';
 import type {PackMetadata} from '../compiled_types';
 import type {PackSyncTable} from '../compiled_types';
 
 // Used to avoid needing promises when exporting fake `PackMetadata`s.
 export interface FakePackDefinition extends Omit<PackDefinition, 'formulas'> {
-  formulas?: PackFormulas | Formula[];
+  formulas?: Formula[];
 }
 
 export function fakeDefinitionToDefinition(def: FakePackDefinition): PackDefinition {
@@ -24,23 +21,10 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
     syncTables: originalSyncTables,
     ...packMetadata
   } = def;
-
-  let formulas: PackFormulasMetadata | PackFormulaMetadata[];
-  if (Array.isArray(originalFormulas)) {
-    formulas = originalFormulas!.map(formula => {
-      const {execute, ...formulaMetadata} = formula;
-      return formulaMetadata;
-    });
-  } else {
-    // TODO: @alan-fang delete once all packs have been migrated to use formulaNamespace
-    formulas = {};
-    for (const namespace of Object.keys(originalFormulas || {})) {
-      formulas[namespace] = originalFormulas![namespace]!.map(formula => {
-        const {execute, ...formulaMetadata} = formula;
-        return formulaMetadata;
-      });
-    }
-  }
+  const formulas = originalFormulas!.map(formula => {
+    const {execute, ...formulaMetadata} = formula;
+    return formulaMetadata;
+  });
 
   const formats: PackFormatMetadata[] = [];
   for (const {matchers, ...format} of originalFormats || []) {

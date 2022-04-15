@@ -30,7 +30,7 @@ For packs that make requests to multiple domains (uncommon), this should be the 
 
 #### Defined in
 
-[types.ts:248](https://github.com/coda/packs-sdk/blob/main/types.ts#L248)
+[types.ts:247](https://github.com/coda/packs-sdk/blob/main/types.ts#L247)
 
 ___
 
@@ -52,7 +52,7 @@ with the creating user's Coda username.
 
 #### Defined in
 
-[types.ts:216](https://github.com/coda/packs-sdk/blob/main/types.ts#L216)
+[types.ts:215](https://github.com/coda/packs-sdk/blob/main/types.ts#L215)
 
 ___
 
@@ -64,7 +64,7 @@ The name of the HTTP header.
 
 #### Defined in
 
-[types.ts:307](https://github.com/coda/packs-sdk/blob/main/types.ts#L307)
+[types.ts:306](https://github.com/coda/packs-sdk/blob/main/types.ts#L306)
 
 ___
 
@@ -80,7 +80,7 @@ A link to a help article or other page with more instructions about how to set u
 
 #### Defined in
 
-[types.ts:231](https://github.com/coda/packs-sdk/blob/main/types.ts#L231)
+[types.ts:230](https://github.com/coda/packs-sdk/blob/main/types.ts#L230)
 
 ___
 
@@ -97,7 +97,7 @@ Packs configured with only one domain or with requiredsEndpointUrl set to true c
 
 #### Defined in
 
-[types.ts:260](https://github.com/coda/packs-sdk/blob/main/types.ts#L260)
+[types.ts:259](https://github.com/coda/packs-sdk/blob/main/types.ts#L259)
 
 ___
 
@@ -114,7 +114,7 @@ This is not common.
 
 #### Defined in
 
-[types.ts:254](https://github.com/coda/packs-sdk/blob/main/types.ts#L254)
+[types.ts:253](https://github.com/coda/packs-sdk/blob/main/types.ts#L253)
 
 ___
 
@@ -133,7 +133,7 @@ when creating a new account.
 
 #### Defined in
 
-[types.ts:239](https://github.com/coda/packs-sdk/blob/main/types.ts#L239)
+[types.ts:238](https://github.com/coda/packs-sdk/blob/main/types.ts#L238)
 
 ___
 
@@ -148,7 +148,7 @@ The HTTP header will be of the form `<headerName>: <tokenPrefix> <token>`
 
 #### Defined in
 
-[types.ts:314](https://github.com/coda/packs-sdk/blob/main/types.ts#L314)
+[types.ts:313](https://github.com/coda/packs-sdk/blob/main/types.ts#L313)
 
 ___
 
@@ -160,4 +160,4 @@ Identifies this as CustomHeaderToken authentication.
 
 #### Defined in
 
-[types.ts:303](https://github.com/coda/packs-sdk/blob/main/types.ts#L303)
+[types.ts:302](https://github.com/coda/packs-sdk/blob/main/types.ts#L302)

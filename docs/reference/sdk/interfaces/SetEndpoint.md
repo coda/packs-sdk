@@ -31,7 +31,7 @@ for example, "Choose an instance to use with this account".
 
 #### Defined in
 
-[types.ts:154](https://github.com/coda/packs-sdk/blob/main/types.ts#L154)
+[types.ts:153](https://github.com/coda/packs-sdk/blob/main/types.ts#L153)
 
 ___
 
@@ -47,7 +47,7 @@ label to the user rather than rendering the underlying value directly.
 
 #### Defined in
 
-[types.ts:162](https://github.com/coda/packs-sdk/blob/main/types.ts#L162)
+[types.ts:161](https://github.com/coda/packs-sdk/blob/main/types.ts#L161)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[types.ts:164](https://github.com/coda/packs-sdk/blob/main/types.ts#L164)
+[types.ts:163](https://github.com/coda/packs-sdk/blob/main/types.ts#L163)
 
 ___
 
@@ -72,7 +72,7 @@ An arbitrary name for this step, to distinguish from other steps of the same typ
 
 #### Defined in
 
-[types.ts:149](https://github.com/coda/packs-sdk/blob/main/types.ts#L149)
+[types.ts:148](https://github.com/coda/packs-sdk/blob/main/types.ts#L148)
 
 ___
 
@@ -84,4 +84,4 @@ Identifies this as a SetEndpoint step.
 
 #### Defined in
 
-[types.ts:144](https://github.com/coda/packs-sdk/blob/main/types.ts#L144)
+[types.ts:143](https://github.com/coda/packs-sdk/blob/main/types.ts#L143)

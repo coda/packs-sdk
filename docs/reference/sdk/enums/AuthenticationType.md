@@ -16,7 +16,7 @@ See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-reques
 
 #### Defined in
 
-[types.ts:91](https://github.com/coda/packs-sdk/blob/main/types.ts#L91)
+[types.ts:90](https://github.com/coda/packs-sdk/blob/main/types.ts#L90)
 
 ___
 
@@ -31,7 +31,7 @@ This is not yet supported.
 
 #### Defined in
 
-[types.ts:98](https://github.com/coda/packs-sdk/blob/main/types.ts#L98)
+[types.ts:97](https://github.com/coda/packs-sdk/blob/main/types.ts#L97)
 
 ___
 
@@ -50,7 +50,7 @@ Coda REST API.
 
 #### Defined in
 
-[types.ts:109](https://github.com/coda/packs-sdk/blob/main/types.ts#L109)
+[types.ts:108](https://github.com/coda/packs-sdk/blob/main/types.ts#L108)
 
 ___
 
@@ -63,7 +63,7 @@ headers, or the form data using template replacement. See [CustomAuthentication]
 
 #### Defined in
 
-[types.ts:86](https://github.com/coda/packs-sdk/blob/main/types.ts#L86)
+[types.ts:85](https://github.com/coda/packs-sdk/blob/main/types.ts#L85)
 
 ___
 
@@ -76,7 +76,7 @@ The header name is defined in the [headerName](../interfaces/CustomHeaderTokenAu
 
 #### Defined in
 
-[types.ts:52](https://github.com/coda/packs-sdk/blob/main/types.ts#L52)
+[types.ts:51](https://github.com/coda/packs-sdk/blob/main/types.ts#L51)
 
 ___
 
@@ -88,7 +88,7 @@ Authenticate using an HTTP header of the form `Authorization: Bearer <token>`.
 
 #### Defined in
 
-[types.ts:47](https://github.com/coda/packs-sdk/blob/main/types.ts#L47)
+[types.ts:46](https://github.com/coda/packs-sdk/blob/main/types.ts#L46)
 
 ___
 
@@ -103,7 +103,7 @@ The parameter names are defined in the [params](../interfaces/CustomAuthenticati
 
 #### Defined in
 
-[types.ts:66](https://github.com/coda/packs-sdk/blob/main/types.ts#L66)
+[types.ts:65](https://github.com/coda/packs-sdk/blob/main/types.ts#L65)
 
 ___
 
@@ -115,7 +115,7 @@ Indicates this pack does not use authentication. You may also omit an authentica
 
 #### Defined in
 
-[types.ts:43](https://github.com/coda/packs-sdk/blob/main/types.ts#L43)
+[types.ts:42](https://github.com/coda/packs-sdk/blob/main/types.ts#L42)
 
 ___
 
@@ -131,7 +131,7 @@ The API must use a (largely) standards-compliant implementation of OAuth2.
 
 #### Defined in
 
-[types.ts:74](https://github.com/coda/packs-sdk/blob/main/types.ts#L74)
+[types.ts:73](https://github.com/coda/packs-sdk/blob/main/types.ts#L73)
 
 ___
 
@@ -146,7 +146,7 @@ The parameter name is defined in the [paramName](../interfaces/QueryParamTokenAu
 
 #### Defined in
 
-[types.ts:59](https://github.com/coda/packs-sdk/blob/main/types.ts#L59)
+[types.ts:58](https://github.com/coda/packs-sdk/blob/main/types.ts#L58)
 
 ___
 
@@ -158,7 +158,7 @@ Only for use by Coda-authored packs.
 
 #### Defined in
 
-[types.ts:113](https://github.com/coda/packs-sdk/blob/main/types.ts#L113)
+[types.ts:112](https://github.com/coda/packs-sdk/blob/main/types.ts#L112)
 
 ___
 
@@ -173,4 +173,4 @@ See https://en.wikipedia.org/wiki/Basic_access_authentication
 
 #### Defined in
 
-[types.ts:81](https://github.com/coda/packs-sdk/blob/main/types.ts#L81)
+[types.ts:80](https://github.com/coda/packs-sdk/blob/main/types.ts#L80)

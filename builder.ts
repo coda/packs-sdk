@@ -94,7 +94,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       version,
       formulaNamespace,
     } = definition || {};
-    this.formulas = Array.isArray(formulas) ? formulas : [];
+    this.formulas = formulas || [];
     this.formats = formats || [];
     this.syncTables = syncTables || [];
     this.networkDomains = networkDomains || [];

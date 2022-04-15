@@ -450,13 +450,6 @@ export function check(condition: boolean, msg: string) {
 }
 
 /**
- * @deprecated Formulas should now only be defined as an array, as namespaces are deprecated.
- */
-export interface PackFormulas {
-  readonly [namespace: string]: Formula[];
-}
-
-/**
  * Base type for the inputs for creating a pack formula.
  */
 export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult>
