@@ -5,12 +5,108 @@ hide:
   - toc
 ---
 
-# Learn how to build your own Pack
+# Build Packs for Coda
 
-The Coda Pack SDK provides the components and tools you can use to build your own Packs.
+<section class="landing-row" markdown>
+
+<div class="landing-item" markdown>
+## :material-toy-brick-outline: Let’s build building blocks together
+
+A Pack is an extension that adds new powers to your doc. Packs work by supplementing the core building blocks of Coda, so you can customize how your doc looks, works, and integrates.
+
+With a little JavaScript, anyone can create and publish a Pack to the Gallery. All you need to do is write the code and Coda will deploy and host the Pack for you.
+
+[Learn more][overview]{ .md-button .md-button--primary }
+</div>
+
+<div class="landing-item" markdown>
+![Packs usage demo](images/home_demo.gif)
+</div>
+
+</section>
+
+---
+
+<section class="landing-row landing-row-reverse" markdown>
+
+<div class="landing-item" markdown>
+## :octicons-stopwatch-16: Build your first Pack in minutes
+
+Using Coda's Pack Studio you can author, build, and deploy your Pack all from your browser. Nothing to download or install.
+
+Our templates and examples make it easy to get started, and in minutes you'll have built your first Pack and installed it in a doc.
 
 [Get Started][get_started]{ .md-button .md-button--primary }
+</div>
+
+<div class="landing-item" markdown>
+![Pack building demo](images/web_ide_build.gif)
+</div>
+
+</section>
+
+<br>
+
+<section class="landing-row landing-box-row" markdown>
+
+<div class="landing-item" markdown>
+### :octicons-terminal-16: Command line tool
+
+Use the CLI to develop Packs on your local machine, where you can use the IDE, tooling, and version control of your choice.
+
+[Install CLI][cli]{ .md-button }
+</div>
+
+<div class="landing-item" markdown>
+### :material-application-braces-outline: Sample code
+
+From Math to GitHub to Cat Photos, we've got dozens of examples written covering all major aspects of the SDK.
+
+[Browse samples][samples]{ .md-button }
+</div>
+
+<div class="landing-item" markdown>
+### :fontawesome-solid-people-group: Community
+
+Our passionate community of Pack makers and Coda experts can help answer your questions or share tips to get you started.
+
+[Join the community][community]{ .md-button }
+</div>
+
+</section>
+
+<br>
+
+<section class="landing-row" markdown>
+
+<div class="landing-item" markdown>
+## :fontawesome-regular-lightbulb: Get inspired
+
+Coda makers have been busy building Packs of all types, and many have published their work to the Gallery. Try installing a few Packs to get a sense for what you could build.
+
+[Browse the gallery][gallery]{ .md-button }
+</div>
+
+<div class="landing-item" markdown>
+![Packs in the gallery](images/home_gallery.png)
+</div>
+
+</section>
+
+<style>
+  /* Hide the title and edit button */
+  .md-content h1,
+  .md-content a.md-content__button {
+    display: none;
+  }
+</style>
 
 
+[overview]: guides/overview.md
 [get_started]: tutorials/get-started/web.md
+[cli]: guides/development/cli.md
 [beta]: https://coda.io/packsbeta
+[samples]: samples/full/hello-world.md
+[changelog]: reference/changes.md
+[community]: https://community.coda.io/c/developers-central/making-packs/15
+[gallery]: https://coda.io/gallery?filter=packs
