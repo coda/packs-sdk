@@ -160,7 +160,7 @@ function getNonUniqueElements<T>(items: T[]): T[] {
   return nonUnique;
 }
 
-function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[] {
+export function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[] {
   // Top-level errors for union types are totally useless, they just say "invalid input",
   // but they do record all of the specific errors when trying each element of the union,
   // so we filter out the errors that were just due to non-matches of the discriminant
