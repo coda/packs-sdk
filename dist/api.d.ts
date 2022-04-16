@@ -111,6 +111,13 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
     description?: string;
     /** See {@link SyncTableOptions.schema} */
     schema: SchemaT;
+    /**
+     * The `identityName` is persisted for all sync tables so that a dynamic schema
+     * can be annotated with an identity automatically.
+     *
+     * See {@link SyncTableOptions.identityName} for more details.
+     */
+    identityName?: string;
     /** See {@link SyncTableOptions.formula} */
     getter: SyncFormula<K, L, ParamDefsT, SchemaT>;
     /** See {@link DynamicOptions.getSchema} */
@@ -767,6 +774,16 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
      */
     getName: MetadataFormulaDef;
     /**
+     * See {@link SyncTableOptions.identityName} for an introduction.
+     *
+     * Every dynamic schema generated from this dynamic sync table definition should all use the same name
+     * for their identity. Code that refers to objects in these tables will use the dynamicUrl to
+     * differentiate which exact table to use.
+     *
+     * FUTURE BREAKING CHANGE: This will become required for all new Pack version builds & uploads.
+     */
+    identityName?: string;
+    /**
      * A formula that returns the schema for this table.
      */
     getSchema: MetadataFormulaDef;
@@ -861,11 +878,12 @@ export declare function makeSyncTableLegacy<K extends string, L extends string, 
  * });
  * ```
  */
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>>({ name, description, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, }: {
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>>({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, }: {
     name: string;
     description?: string;
     getName: MetadataFormulaDef;
     getSchema: MetadataFormulaDef;
+    identityName?: string;
     formula: SyncFormulaDef<K, L, ParamDefsT, any>;
     getDisplayUrl: MetadataFormulaDef;
     listDynamicUrls?: MetadataFormulaDef;

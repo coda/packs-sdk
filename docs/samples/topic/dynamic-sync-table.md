@@ -26,6 +26,7 @@ pack.addDynamicSyncTable({
     // TODO: Fetch metadata about the data source and return the name.
     return "<Datasource Name>";
   },
+  identityName: "<User-visible name for the column containing the schema>",
   getSchema: async function (context) {
     let datasourceUrl = context.sync.dynamicUrl!;
     // TODO: Fetch metadata about the data source and get the list of fields.

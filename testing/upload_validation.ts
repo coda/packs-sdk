@@ -888,6 +888,8 @@ const baseSyncTableSchema = {
   getter: syncFormulaSchema,
   entityName: z.string().optional(),
   defaultAddDynamicColumns: z.boolean().optional(),
+  // TODO(patrick): After migration period, this will become required.
+  identityName: z.string().optional(),
 };
 
 type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;
@@ -957,7 +959,18 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata
     .optional()
     .default([])
     .superRefine((data, context) => {
-      const identityNames = data.map(tableDef => tableDef.schema.identity.name);
+      const identityNames: string[] = [];
+      for (const tableDef of data) {
+        if (tableDef.identityName && tableDef.schema.identity?.name) {
+          if (tableDef.identityName !== tableDef.schema.identity.name) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `Sync table "${tableDef.name}" defines identityName "${tableDef.identityName}" that conflicts with its schema's identity.name "${tableDef.schema.identity.name}".`,
+            });
+          }
+        }
+        identityNames.push(tableDef.schema.identity?.name);
+      }
       for (const dupe of getNonUniqueElements(identityNames)) {
         context.addIssue({
           code: z.ZodIssueCode.custom,
