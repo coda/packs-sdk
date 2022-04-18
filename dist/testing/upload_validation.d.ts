@@ -3,6 +3,7 @@ import type { ObjectSchema } from '../schema';
 import type { PackVersionMetadata } from '../compiled_types';
 import type { ValidationError } from './types';
 import type { VariousAuthentication } from '../types';
+import * as z from 'zod';
 /**
  * The uncompiled column format matchers will be expected to be actual regex objects,
  * and when we compile the pack / stringify it to json, we will store the .toString()
@@ -18,3 +19,4 @@ export declare class PackMetadataValidationError extends Error {
 export declare function validatePackVersionMetadata(metadata: Record<string, any>): Promise<PackVersionMetadata>;
 export declare function validateVariousAuthenticationMetadata(auth: any): VariousAuthentication;
 export declare function validateSyncTableSchema(schema: any): ArraySchema<ObjectSchema<any, any>>;
+export declare function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[];

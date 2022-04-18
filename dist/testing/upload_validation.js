@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
+exports.zodErrorDetailToValidationError = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
 const schema_1 = require("../schema");
 const types_1 = require("../types");
 const api_types_1 = require("../api_types");
@@ -173,6 +173,7 @@ function zodErrorDetailToValidationError(subError) {
         },
     ];
 }
+exports.zodErrorDetailToValidationError = zodErrorDetailToValidationError;
 function zodPathToPathString(zodPath) {
     const parts = [];
     zodPath.forEach((zodPathPart, i) => {
