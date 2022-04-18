@@ -31,7 +31,7 @@ See [DynamicOptions.defaultAddDynamicColumns](DynamicOptions.md#defaultadddynami
 
 #### Defined in
 
-[api.ts:172](https://github.com/coda/packs-sdk/blob/main/api.ts#L172)
+[api.ts:179](https://github.com/coda/packs-sdk/blob/main/api.ts#L179)
 
 ___
 
@@ -55,7 +55,7 @@ See [DynamicOptions.entityName](DynamicOptions.md#entityname)
 
 #### Defined in
 
-[api.ts:170](https://github.com/coda/packs-sdk/blob/main/api.ts#L170)
+[api.ts:177](https://github.com/coda/packs-sdk/blob/main/api.ts#L177)
 
 ___
 
@@ -67,7 +67,7 @@ See [DynamicOptions.getSchema](DynamicOptions.md#getschema)
 
 #### Defined in
 
-[api.ts:168](https://github.com/coda/packs-sdk/blob/main/api.ts#L168)
+[api.ts:175](https://github.com/coda/packs-sdk/blob/main/api.ts#L175)
 
 ___
 
@@ -79,7 +79,22 @@ See [SyncTableOptions.formula](SyncTableOptions.md#formula)
 
 #### Defined in
 
-[api.ts:166](https://github.com/coda/packs-sdk/blob/main/api.ts#L166)
+[api.ts:173](https://github.com/coda/packs-sdk/blob/main/api.ts#L173)
+
+___
+
+### identityName
+
+• `Optional` **identityName**: `string`
+
+The `identityName` is persisted for all sync tables so that a dynamic schema
+can be annotated with an identity automatically.
+
+See [SyncTableOptions.identityName](SyncTableOptions.md#identityname) for more details.
+
+#### Defined in
+
+[api.ts:171](https://github.com/coda/packs-sdk/blob/main/api.ts#L171)
 
 ___
 
