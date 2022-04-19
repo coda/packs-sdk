@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
+exports.zodErrorDetailToValidationError = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
 const schema_1 = require("../schema");
 const types_1 = require("../types");
 const api_types_1 = require("../api_types");
@@ -173,6 +173,7 @@ function zodErrorDetailToValidationError(subError) {
         },
     ];
 }
+exports.zodErrorDetailToValidationError = zodErrorDetailToValidationError;
 function zodPathToPathString(zodPath) {
     const parts = [];
     zodPath.forEach((zodPathPart, i) => {
@@ -212,8 +213,9 @@ const setEndpointPostSetupValidator = zodCompleteObject({
     name: z.string(),
     description: z.string(),
     // TODO(jonathan): Remove this from the metadata object, only needs to be present in the full bundle.
-    getOptionsFormula: z.unknown(),
-});
+    getOptions: z.unknown().optional(),
+    getOptionsFormula: z.unknown().optional(),
+}).refine(data => data.getOptions || data.getOptionsFormula, 'Either getOptions or getOptionsFormula must be specified.');
 const baseAuthenticationValidators = {
     // TODO(jonathan): Remove these after fixing/exporting types for Authentication metadata, as they're only present
     // in the full bundle, not the metadata.
@@ -347,8 +349,9 @@ const paramDefValidator = zodCompleteObject({
     }),
     description: z.string(),
     optional: z.boolean().optional(),
-    autocomplete: z.unknown(),
-    defaultValue: z.unknown(),
+    autocomplete: z.unknown().optional(),
+    defaultValue: z.unknown().optional(),
+    suggestedValue: z.unknown().optional(),
 });
 const commonPackFormulaSchema = {
     // It would be preferable to use validateFormulaName here, but we have to exempt legacy packs with sync tables
@@ -614,6 +617,9 @@ function isValidIdentityName(packId, name) {
     }
     return isValidObjectId(name);
 }
+const attributionSchema = z
+    .array(z.union([textAttributionNodeSchema, linkAttributionNodeSchema, imageAttributionNodeSchema]))
+    .optional();
 const genericObjectSchema = z.lazy(() => zodCompleteObject({
     ...basePropertyValidators,
     type: zodDiscriminant(schema_10.ValueType.Object),
@@ -632,10 +638,9 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
         packId: z.number().optional(),
         name: z.string().nonempty(),
         dynamicUrl: z.string().optional(),
-        attribution: z
-            .array(z.union([textAttributionNodeSchema, linkAttributionNodeSchema, imageAttributionNodeSchema]))
-            .optional(),
+        attribution: attributionSchema,
     }).optional(),
+    attribution: attributionSchema,
     properties: z.record(objectPropertyUnionSchema),
 })
     .superRefine((data, context) => {
@@ -724,6 +729,8 @@ const baseSyncTableSchema = {
     getter: syncFormulaSchema,
     entityName: z.string().optional(),
     defaultAddDynamicColumns: z.boolean().optional(),
+    // TODO(patrick): After migration period, this will become required.
+    identityName: z.string().optional(),
 };
 const genericSyncTableSchema = zodCompleteObject({
     ...baseSyncTableSchema,
@@ -780,7 +787,19 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject({
         .optional()
         .default([])
         .superRefine((data, context) => {
-        const identityNames = data.map(tableDef => tableDef.schema.identity.name);
+        var _a, _b;
+        const identityNames = [];
+        for (const tableDef of data) {
+            if (tableDef.identityName && ((_a = tableDef.schema.identity) === null || _a === void 0 ? void 0 : _a.name)) {
+                if (tableDef.identityName !== tableDef.schema.identity.name) {
+                    context.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        message: `Sync table "${tableDef.name}" defines identityName "${tableDef.identityName}" that conflicts with its schema's identity.name "${tableDef.schema.identity.name}".`,
+                    });
+                }
+            }
+            identityNames.push((_b = tableDef.schema.identity) === null || _b === void 0 ? void 0 : _b.name);
+        }
         for (const dupe of getNonUniqueElements(identityNames)) {
             context.addIssue({
                 code: z.ZodIssueCode.custom,

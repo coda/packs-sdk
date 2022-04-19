@@ -23,7 +23,7 @@ pack.setUserAuthentication({
     name: "SelectEndpoint",
     description: "Select the site to connect to:",
     // Determine the list of sites they have access to.
-    getOptionsFormula: async function (context) {
+    getOptions: async function (context) {
       let url = "https://api.atlassian.com/oauth/token/accessible-resources";
       let response = await context.fetcher.fetch({
         method: "GET",

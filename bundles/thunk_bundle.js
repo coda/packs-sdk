@@ -4271,9 +4271,30 @@ module.exports = (() => {
 
   // helpers/ensure.ts
   init_buffer_shim();
+  function ensureExists(value, message) {
+    if (typeof value === "undefined" || value === null) {
+      throw new (getErrorConstructor(message))(message || `Expected value for ${String(value)}`);
+    }
+    return value;
+  }
+  function getErrorConstructor(message) {
+    return message ? UserVisibleError : Error;
+  }
 
   // helpers/migration.ts
   init_buffer_shim();
+  function setEndpointHelper(step) {
+    return new SetEndpointHelper(step);
+  }
+  var SetEndpointHelper = class {
+    constructor(step) {
+      this._step = step;
+    }
+    get getOptions() {
+      var _a;
+      return ensureExists((_a = this._step.getOptions) != null ? _a : this._step.getOptionsFormula);
+    }
+  };
 
   // schema.ts
   var import_pascalcase = __toESM(require_pascalcase());
@@ -4291,6 +4312,13 @@ module.exports = (() => {
   var import_url_parse = __toESM(require_url_parse());
 
   // api.ts
+  var UserVisibleError = class extends Error {
+    constructor(message, internalError) {
+      super(message);
+      this.isUserVisible = true;
+      this.internalError = internalError;
+    }
+  };
   var StatusCodeError = class extends Error {
     constructor(statusCode, body, options, response) {
       super(`${statusCode} - ${JSON.stringify(body)}`);
@@ -4618,7 +4646,7 @@ module.exports = (() => {
             if ((defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== "None" /* None */ && (defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== "Various" /* Various */ && (defaultAuthentication == null ? void 0 : defaultAuthentication.postSetup)) {
               const setupStep = defaultAuthentication.postSetup.find((step) => step.type === "SetEndPoint" /* SetEndpoint */ && step.name === formulaSpec.stepName);
               if (setupStep) {
-                return setupStep.getOptionsFormula.execute(params, executionContext);
+                return setEndpointHelper(setupStep).getOptions.execute(params, executionContext);
               }
             }
             break;
@@ -4672,8 +4700,7 @@ module.exports = (() => {
     switch (formulaSpec.parentFormulaType) {
       case "Standard" /* Standard */:
         if (formulas) {
-          const namespacedFormulas = Array.isArray(formulas) ? formulas : Object.values(formulas)[0];
-          formula = namespacedFormulas.find((defn) => defn.name === formulaSpec.parentFormulaName);
+          formula = formulas.find((defn) => defn.name === formulaSpec.parentFormulaName);
         }
         break;
       case "Sync" /* Sync */:

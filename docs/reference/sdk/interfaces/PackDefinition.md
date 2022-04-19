@@ -22,7 +22,7 @@ This should only be used by legacy Coda pack implementations.
 
 #### Defined in
 
-[types.ts:878](https://github.com/coda/packs-sdk/blob/main/types.ts#L878)
+[types.ts:879](https://github.com/coda/packs-sdk/blob/main/types.ts#L879)
 
 ___
 
@@ -38,7 +38,7 @@ If specified, the user must provide personal authentication credentials before u
 
 #### Defined in
 
-[types.ts:823](https://github.com/coda/packs-sdk/blob/main/types.ts#L823)
+[types.ts:826](https://github.com/coda/packs-sdk/blob/main/types.ts#L826)
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in
 
-[types.ts:876](https://github.com/coda/packs-sdk/blob/main/types.ts#L876)
+[types.ts:877](https://github.com/coda/packs-sdk/blob/main/types.ts#L877)
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 #### Defined in
 
-[types.ts:880](https://github.com/coda/packs-sdk/blob/main/types.ts#L880)
+[types.ts:881](https://github.com/coda/packs-sdk/blob/main/types.ts#L881)
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 #### Defined in
 
-[types.ts:881](https://github.com/coda/packs-sdk/blob/main/types.ts#L881)
+[types.ts:882](https://github.com/coda/packs-sdk/blob/main/types.ts#L882)
 
 ___
 
@@ -84,7 +84,7 @@ Definitions of this pack's column formats. See [Format](Format.md).
 
 #### Defined in
 
-[types.ts:859](https://github.com/coda/packs-sdk/blob/main/types.ts#L859)
+[types.ts:860](https://github.com/coda/packs-sdk/blob/main/types.ts#L860)
 
 ___
 
@@ -100,21 +100,18 @@ ___
 
 #### Defined in
 
-[types.ts:845](https://github.com/coda/packs-sdk/blob/main/types.ts#L845)
+[types.ts:848](https://github.com/coda/packs-sdk/blob/main/types.ts#L848)
 
 ___
 
 ### formulas
 
-• `Optional` **formulas**: [`PackFormulas`](PackFormulas.md) \| ([`BooleanPackFormula`](../types/BooleanPackFormula.md)<[`ParamDefs`](../types/ParamDefs.md)\> \| [`NumericPackFormula`](../types/NumericPackFormula.md)<[`ParamDefs`](../types/ParamDefs.md)\> \| [`StringPackFormula`](../types/StringPackFormula.md)<[`ParamDefs`](../types/ParamDefs.md)\> \| [`ObjectPackFormula`](../types/ObjectPackFormula.md)<[`ParamDefs`](../types/ParamDefs.md), [`ArraySchema`](ArraySchema.md)<[`Schema`](../types/Schema.md)\>\> \| [`ObjectPackFormula`](../types/ObjectPackFormula.md)<[`ParamDefs`](../types/ParamDefs.md), [`Schema`](../types/Schema.md)\>)[]
+• `Optional` **formulas**: ([`BooleanPackFormula`](../types/BooleanPackFormula.md)<[`ParamDefs`](../types/ParamDefs.md)\> \| [`NumericPackFormula`](../types/NumericPackFormula.md)<[`ParamDefs`](../types/ParamDefs.md)\> \| [`StringPackFormula`](../types/StringPackFormula.md)<[`ParamDefs`](../types/ParamDefs.md)\> \| [`ObjectPackFormula`](../types/ObjectPackFormula.md)<[`ParamDefs`](../types/ParamDefs.md), [`ArraySchema`](ArraySchema.md)<[`Schema`](../types/Schema.md)\>\> \| [`ObjectPackFormula`](../types/ObjectPackFormula.md)<[`ParamDefs`](../types/ParamDefs.md), [`Schema`](../types/Schema.md)\>)[]
 
 Definitions of this pack's formulas. See [Formula](../types/Formula.md).
 
-Note that button actions are also defind here. Buttons are simply formulas
+Note that button actions are also defined here. Buttons are simply formulas
 with `isAction: true`.
-
-Note also, this should always be an array of Formulas. The PackFormulas object structure is deprecated
-and will be removed shortly.
 
 #### Inherited from
 
@@ -122,7 +119,7 @@ and will be removed shortly.
 
 #### Defined in
 
-[types.ts:855](https://github.com/coda/packs-sdk/blob/main/types.ts#L855)
+[types.ts:856](https://github.com/coda/packs-sdk/blob/main/types.ts#L856)
 
 ___
 
@@ -132,7 +129,7 @@ ___
 
 #### Defined in
 
-[types.ts:873](https://github.com/coda/packs-sdk/blob/main/types.ts#L873)
+[types.ts:874](https://github.com/coda/packs-sdk/blob/main/types.ts#L874)
 
 ___
 
@@ -144,7 +141,7 @@ Whether this is a pack that will be used by Coda internally and not exposed dire
 
 #### Defined in
 
-[types.ts:888](https://github.com/coda/packs-sdk/blob/main/types.ts#L888)
+[types.ts:889](https://github.com/coda/packs-sdk/blob/main/types.ts#L889)
 
 ___
 
@@ -154,7 +151,7 @@ ___
 
 #### Defined in
 
-[types.ts:879](https://github.com/coda/packs-sdk/blob/main/types.ts#L879)
+[types.ts:880](https://github.com/coda/packs-sdk/blob/main/types.ts#L880)
 
 ___
 
@@ -164,7 +161,7 @@ ___
 
 #### Defined in
 
-[types.ts:882](https://github.com/coda/packs-sdk/blob/main/types.ts#L882)
+[types.ts:883](https://github.com/coda/packs-sdk/blob/main/types.ts#L883)
 
 ___
 
@@ -174,7 +171,7 @@ ___
 
 #### Defined in
 
-[types.ts:874](https://github.com/coda/packs-sdk/blob/main/types.ts#L874)
+[types.ts:875](https://github.com/coda/packs-sdk/blob/main/types.ts#L875)
 
 ___
 
@@ -196,7 +193,7 @@ contact Coda support for approval.
 
 #### Defined in
 
-[types.ts:838](https://github.com/coda/packs-sdk/blob/main/types.ts#L838)
+[types.ts:841](https://github.com/coda/packs-sdk/blob/main/types.ts#L841)
 
 ___
 
@@ -206,7 +203,7 @@ ___
 
 #### Defined in
 
-[types.ts:877](https://github.com/coda/packs-sdk/blob/main/types.ts#L877)
+[types.ts:878](https://github.com/coda/packs-sdk/blob/main/types.ts#L878)
 
 ___
 
@@ -216,7 +213,7 @@ ___
 
 #### Defined in
 
-[types.ts:883](https://github.com/coda/packs-sdk/blob/main/types.ts#L883)
+[types.ts:884](https://github.com/coda/packs-sdk/blob/main/types.ts#L884)
 
 ___
 
@@ -226,7 +223,7 @@ ___
 
 #### Defined in
 
-[types.ts:884](https://github.com/coda/packs-sdk/blob/main/types.ts#L884)
+[types.ts:885](https://github.com/coda/packs-sdk/blob/main/types.ts#L885)
 
 ___
 
@@ -236,7 +233,7 @@ ___
 
 #### Defined in
 
-[types.ts:875](https://github.com/coda/packs-sdk/blob/main/types.ts#L875)
+[types.ts:876](https://github.com/coda/packs-sdk/blob/main/types.ts#L876)
 
 ___
 
@@ -252,7 +249,7 @@ Definitions of this pack's sync tables. See [SyncTable](../types/SyncTable.md).
 
 #### Defined in
 
-[types.ts:863](https://github.com/coda/packs-sdk/blob/main/types.ts#L863)
+[types.ts:864](https://github.com/coda/packs-sdk/blob/main/types.ts#L864)
 
 ___
 
@@ -269,7 +266,7 @@ explicit connection is specified by the user.
 
 #### Defined in
 
-[types.ts:828](https://github.com/coda/packs-sdk/blob/main/types.ts#L828)
+[types.ts:831](https://github.com/coda/packs-sdk/blob/main/types.ts#L831)
 
 ___
 
@@ -286,4 +283,4 @@ When uploading a pack version, the semantic version must be greater than any pre
 
 #### Defined in
 
-[types.ts:819](https://github.com/coda/packs-sdk/blob/main/types.ts#L819)
+[types.ts:822](https://github.com/coda/packs-sdk/blob/main/types.ts#L822)

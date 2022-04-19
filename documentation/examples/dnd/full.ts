@@ -89,7 +89,7 @@ pack.addFormula({
       type: coda.ParameterType.String,
       name: "name",
       description: "The name of the spell.",
-      defaultValue: "Acid Arrow",
+      suggestedValue: "Acid Arrow",
     }),
   ],
   resultType: coda.ValueType.Object,

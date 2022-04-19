@@ -503,7 +503,7 @@ function normalizeSchema(schema) {
     }
     else if (isObject(schema)) {
         const normalized = {};
-        const { id, primary, featured } = (0, migration_1.objectSchemaHelper)(schema);
+        const { id, primary, featured, idProperty, displayProperty, featuredProperties } = schema;
         for (const key of Object.keys(schema.properties)) {
             const normalizedKey = normalizeSchemaKey(key);
             const props = schema.properties[key];
@@ -515,13 +515,17 @@ function normalizeSchema(schema) {
         }
         const normalizedSchema = {
             type: ValueType.Object,
-            idProperty: id ? normalizeSchemaKey(id) : undefined,
-            featuredProperties: featured ? featured.map(normalizeSchemaKey) : undefined,
-            displayProperty: primary ? normalizeSchemaKey(primary) : undefined,
+            id: id ? normalizeSchemaKey(id) : undefined,
+            featured: featured ? featured.map(normalizeSchemaKey) : undefined,
+            primary: primary ? normalizeSchemaKey(primary) : undefined,
+            idProperty: idProperty ? normalizeSchemaKey(idProperty) : undefined,
+            featuredProperties: featuredProperties ? featuredProperties.map(normalizeSchemaKey) : undefined,
+            displayProperty: displayProperty ? normalizeSchemaKey(displayProperty) : undefined,
             properties: normalized,
             identity: schema.identity,
             codaType: schema.codaType,
             description: schema.description,
+            attribution: schema.attribution,
         };
         return normalizedSchema;
     }

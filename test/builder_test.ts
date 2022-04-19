@@ -312,7 +312,7 @@ describe('Builder', () => {
   });
 
   describe('metadata formula shorthand syntax', () => {
-    it('SetEndpoint.getOptionsFormula, user authentication', () => {
+    it('SetEndpoint.getOptions, user authentication', () => {
       pack.setUserAuthentication({
         type: AuthenticationType.HeaderBearerToken,
         postSetup: [
@@ -320,7 +320,7 @@ describe('Builder', () => {
             type: PostSetupType.SetEndpoint,
             name: 'set-endpoint',
             description: 'sets endpoint',
-            getOptionsFormula: async () => [{display: 'Display', value: 'value'}],
+            getOptions: async () => [{display: 'Display', value: 'value'}],
           },
         ],
       });
@@ -328,11 +328,11 @@ describe('Builder', () => {
       const {postSetup} = pack.defaultAuthentication;
       assert.ok(postSetup);
       // Make sure we converted the shorthand function into a full formula def.
-      assert.ok(postSetup?.[0].getOptionsFormula.name);
-      assert.ok(postSetup?.[0].getOptionsFormula.execute);
+      assert.ok(postSetup?.[0].getOptions!.name);
+      assert.ok(postSetup?.[0].getOptions!.execute);
     });
 
-    it('SetEndpoint.getOptionsFormula, system authentication', () => {
+    it('SetEndpoint.getOptions, system authentication', () => {
       pack.setSystemAuthentication({
         type: AuthenticationType.HeaderBearerToken,
         postSetup: [
@@ -340,7 +340,7 @@ describe('Builder', () => {
             type: PostSetupType.SetEndpoint,
             name: 'set-endpoint',
             description: 'sets endpoint',
-            getOptionsFormula: async () => [{display: 'Display', value: 'value'}],
+            getOptions: async () => [{display: 'Display', value: 'value'}],
           },
         ],
       });
@@ -348,8 +348,8 @@ describe('Builder', () => {
       const {postSetup} = pack.systemConnectionAuthentication;
       assert.ok(postSetup);
       // Make sure we converted the shorthand function into a full formula def.
-      assert.ok(postSetup?.[0].getOptionsFormula.name);
-      assert.ok(postSetup?.[0].getOptionsFormula.execute);
+      assert.ok(postSetup?.[0].getOptions!.name);
+      assert.ok(postSetup?.[0].getOptions!.execute);
     });
   });
 });

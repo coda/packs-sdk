@@ -22,6 +22,7 @@ import {makeDynamicSyncTable} from './api';
 import {makeFormula} from './api';
 import {makeSyncTable} from './api';
 import {maybeRewriteConnectionForFormula} from './api';
+import {setEndpointDefHelper} from './helpers/migration';
 import {wrapMetadataFunction} from './api';
 
 /**
@@ -93,7 +94,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       version,
       formulaNamespace,
     } = definition || {};
-    this.formulas = Array.isArray(formulas) ? formulas : [];
+    this.formulas = formulas || [];
     this.formats = formats || [];
     this.syncTables = syncTables || [];
     this.networkDomains = networkDomains || [];
@@ -268,7 +269,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       const getConnectionName = wrapMetadataFunction(getConnectionNameDef);
       const getConnectionUserId = wrapMetadataFunction(getConnectionUserIdDef);
       const postSetup = postSetupDef?.map(step => {
-        return {...step, getOptionsFormula: wrapMetadataFunction(step.getOptionsFormula)};
+        return {...step, getOptions: wrapMetadataFunction(setEndpointDefHelper(step).getOptions)};
       });
       this.defaultAuthentication = {...rest, getConnectionName, getConnectionUserId, postSetup} as Authentication;
     }
@@ -307,7 +308,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     const getConnectionName = wrapMetadataFunction(getConnectionNameDef);
     const getConnectionUserId = wrapMetadataFunction(getConnectionUserIdDef);
     const postSetup = postSetupDef?.map(step => {
-      return {...step, getOptionsFormula: wrapMetadataFunction(step.getOptionsFormula)};
+      return {...step, getOptions: wrapMetadataFunction(setEndpointDefHelper(step).getOptions)};
     });
     this.systemConnectionAuthentication = {
       ...rest,

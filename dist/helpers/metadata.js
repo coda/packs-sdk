@@ -2,12 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.compilePackMetadata = void 0;
 const types_1 = require("../types");
-const ensure_1 = require("./ensure");
 const api_1 = require("../api");
+const migration_1 = require("./migration");
 function compilePackMetadata(manifest) {
     const { formats, formulas, formulaNamespace, syncTables, defaultAuthentication, ...definition } = manifest;
     const compiledFormats = compileFormatsMetadata(formats || []);
-    const compiledFormulas = (formulas && compileFormulasMetadata(formulas)) || (Array.isArray(formulas) || !formulas ? [] : {});
+    const compiledFormulas = (formulas && compileFormulasMetadata(formulas)) || [];
     // Note: we do not need to compile systemConnectionAuthentication metadata because it doesn't contain formulas,
     // so we can pass it through directly as metadata.
     const defaultAuthenticationMetadata = compileDefaultAuthenticationMetadata(defaultAuthentication);
@@ -31,17 +31,7 @@ function compileFormatsMetadata(formats) {
     });
 }
 function compileFormulasMetadata(formulas) {
-    const formulasMetadata = Array.isArray(formulas) || !formulas ? [] : {};
-    // TODO: @alan-fang delete once we move packs off of PackFormulas
-    if (Array.isArray(formulas)) {
-        formulasMetadata.push(...formulas.map(compileFormulaMetadata));
-    }
-    else {
-        for (const namespace of Object.keys(formulas)) {
-            formulasMetadata[namespace] = formulas[namespace].map(compileFormulaMetadata);
-        }
-    }
-    return formulasMetadata;
+    return formulas.map(compileFormulaMetadata);
 }
 function compileFormulaMetadata(formula) {
     const { execute, ...rest } = formula;
@@ -90,9 +80,9 @@ function compileMetadataFormulaMetadata(formula) {
     return rest;
 }
 function compilePostSetupStepMetadata(step) {
-    const { getOptionsFormula, ...rest } = step;
+    const { getOptions, getOptionsFormula, ...rest } = step;
     return {
         ...rest,
-        getOptionsFormula: (0, ensure_1.ensureExists)(compileMetadataFormulaMetadata(getOptionsFormula)),
+        getOptions: compileMetadataFormulaMetadata((0, migration_1.setEndpointHelper)(step).getOptions),
     };
 }

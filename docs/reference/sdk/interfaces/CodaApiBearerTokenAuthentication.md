@@ -29,7 +29,7 @@ order to install the pack.
 
 #### Defined in
 
-[types.ts:284](https://github.com/coda/packs-sdk/blob/main/types.ts#L284)
+[types.ts:287](https://github.com/coda/packs-sdk/blob/main/types.ts#L287)
 
 ___
 
@@ -49,7 +49,7 @@ For packs that make requests to multiple domains (uncommon), this should be the 
 
 #### Defined in
 
-[types.ts:244](https://github.com/coda/packs-sdk/blob/main/types.ts#L244)
+[types.ts:247](https://github.com/coda/packs-sdk/blob/main/types.ts#L247)
 
 ___
 
@@ -71,7 +71,7 @@ with the creating user's Coda username.
 
 #### Defined in
 
-[types.ts:212](https://github.com/coda/packs-sdk/blob/main/types.ts#L212)
+[types.ts:215](https://github.com/coda/packs-sdk/blob/main/types.ts#L215)
 
 ___
 
@@ -87,7 +87,7 @@ A link to a help article or other page with more instructions about how to set u
 
 #### Defined in
 
-[types.ts:227](https://github.com/coda/packs-sdk/blob/main/types.ts#L227)
+[types.ts:230](https://github.com/coda/packs-sdk/blob/main/types.ts#L230)
 
 ___
 
@@ -104,7 +104,7 @@ Packs configured with only one domain or with requiredsEndpointUrl set to true c
 
 #### Defined in
 
-[types.ts:256](https://github.com/coda/packs-sdk/blob/main/types.ts#L256)
+[types.ts:259](https://github.com/coda/packs-sdk/blob/main/types.ts#L259)
 
 ___
 
@@ -121,7 +121,7 @@ This is not common.
 
 #### Defined in
 
-[types.ts:250](https://github.com/coda/packs-sdk/blob/main/types.ts#L250)
+[types.ts:253](https://github.com/coda/packs-sdk/blob/main/types.ts#L253)
 
 ___
 
@@ -140,7 +140,7 @@ when creating a new account.
 
 #### Defined in
 
-[types.ts:235](https://github.com/coda/packs-sdk/blob/main/types.ts#L235)
+[types.ts:238](https://github.com/coda/packs-sdk/blob/main/types.ts#L238)
 
 ___
 
@@ -154,7 +154,7 @@ as a shared account that allows actions.
 
 #### Defined in
 
-[types.ts:290](https://github.com/coda/packs-sdk/blob/main/types.ts#L290)
+[types.ts:293](https://github.com/coda/packs-sdk/blob/main/types.ts#L293)
 
 ___
 
@@ -166,4 +166,4 @@ Identifies this as CodaApiHeaderBearerToken authentication.
 
 #### Defined in
 
-[types.ts:279](https://github.com/coda/packs-sdk/blob/main/types.ts#L279)
+[types.ts:282](https://github.com/coda/packs-sdk/blob/main/types.ts#L282)

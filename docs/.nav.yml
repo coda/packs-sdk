@@ -1,7 +1,7 @@
 nav:
   - index.md
-  - tutorials
   - guides
+  - tutorials
   - samples
   - reference
   - support.md

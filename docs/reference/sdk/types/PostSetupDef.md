@@ -10,4 +10,4 @@ Simplified configuration for [PostSetup](PostSetup.md) that a pack developer can
 
 #### Defined in
 
-[types.ts:197](https://github.com/coda/packs-sdk/blob/main/types.ts#L197)
+[types.ts:200](https://github.com/coda/packs-sdk/blob/main/types.ts#L200)

@@ -2,7 +2,6 @@ import type {$Values} from './type_utils';
 import type {Formula} from './api';
 import type {MetadataFormula} from './api';
 import type {MetadataFormulaDef} from './api';
-import type {PackFormulas} from './api';
 import type {SyncTable} from './api';
 
 /**
@@ -159,16 +158,20 @@ export interface SetEndpoint {
    * `{display: '<display name>', value: '<endpoint>'}` if wanting to render a display
    * label to the user rather than rendering the underlying value directly.
    */
-  getOptionsFormula: MetadataFormula;
+  getOptions?: MetadataFormula; // TODO(packs-dev): Make this required after migration.
+  /** @deprecated Use {@link getOptions} */
+  getOptionsFormula?: MetadataFormula;
 }
 
 /**
  * Simplified configuration for {@link SetEndpoint} that a pack developer can specify when calling
  * {@link setUserAuthentication} or {@link setSystemAuthentication}.
  */
-export type SetEndpointDef = Omit<SetEndpoint, 'getOptionsFormula'> & {
+export type SetEndpointDef = Omit<SetEndpoint, 'getOptions' | 'getOptionsFormula'> & {
+  /** See {@link SetEndpoint.getOptions} */
+  getOptions?: MetadataFormulaDef;
   /** See {@link SetEndpoint.getOptionsFormula} */
-  getOptionsFormula: MetadataFormulaDef;
+  getOptionsFormula?: MetadataFormulaDef;
 };
 
 /**
@@ -846,13 +849,11 @@ export interface PackVersionDefinition {
   /**
    * Definitions of this pack's formulas. See {@link Formula}.
    *
-   * Note that button actions are also defind here. Buttons are simply formulas
+   * Note that button actions are also defined here. Buttons are simply formulas
    * with `isAction: true`.
-   *
-   * Note also, this should always be an array of Formulas. The PackFormulas object structure is deprecated
-   * and will be removed shortly.
+   * 
    */
-  formulas?: PackFormulas | Formula[];
+  formulas?: Formula[];
   /**
    * Definitions of this pack's column formats. See {@link Format}.
    */

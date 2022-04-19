@@ -228,9 +228,13 @@ export interface ParamDef<T extends UnionType> {
   // and we'll wrap this into an autocomplete formula on their behalf.
   autocomplete?: MetadataFormula;
   /**
-   * The default value to be used for this parameter if it is not specified by the user.
+   * @deprecated This will be removed in a future version of the SDK. Use {@link suggestedValue} instead.
    */
-  defaultValue?: DefaultValueType<T>;
+  defaultValue?: SuggestedValueType<T>;
+  /**
+   * The suggested value to be prepopulated for this parameter if it is not specified by the user.
+   */
+  suggestedValue?: SuggestedValueType<T>;
 }
 
 /** @hidden */
@@ -261,9 +265,9 @@ export type ParamValues<ParamDefsT extends ParamDefs> = {
 } & any[]; // NOTE(oleg): we need this to avoid "must have a '[Symbol.iterator]()' method that returns an iterator."
 
 /**
- * The type of values that are allowable to be used as a {@link defaultValue} for a parameter.
+ * The type of values that are allowable to be used as a {@link suggestedValue} for a parameter.
  */
-export type DefaultValueType<T extends UnionType> = T extends ArrayType<Type.date>
+export type SuggestedValueType<T extends UnionType> = T extends ArrayType<Type.date>
   ? TypeOfMap<T> | PrecannedDateRange
   : TypeOfMap<T>;
 
@@ -513,16 +517,26 @@ export interface TemporaryBlobStorage {
    *
    * The URL expires after 15 minutes by default, but you may pass a custom expiry, however
    * Coda reserves the right to ignore long expirations.
+   *
+   * If the `downloadFilename` parameter is specified, the data will be interpreted as a file (`attachment` content
+   * disposition) that will be downloaded when accessed as the file name provided.
    */
-  storeUrl(url: string, opts?: {expiryMs?: number}): Promise<string>;
+  storeUrl(url: string, opts?: {expiryMs?: number; downloadFilename?: string}): Promise<string>;
   /**
    * Stores the given data as a file with the given content type in Coda-hosted temporary storage.
    * Returns a URL for the temporary file that you should return in your formula response.
    *
    * The URL expires after 15 minutes by default, but you may pass a custom expiry, however
    * Coda reserves the right to ignore long expirations.
+   *
+   * If the `downloadFilename` parameter is specified, the data will be interpreted as a file (`attachment` content
+   * disposition) that will be downloaded when accessed as the file name provided.
    */
-  storeBlob(blobData: Buffer, contentType: string, opts?: {expiryMs?: number}): Promise<string>;
+  storeBlob(
+    blobData: Buffer,
+    contentType: string,
+    opts?: {expiryMs?: number; downloadFilename?: string},
+  ): Promise<string>;
 }
 
 /**
@@ -629,7 +643,7 @@ export interface SyncExecutionContext extends ExecutionContext {
 // A mapping exists in coda that allows these to show up in the UI.
 // If adding new values here, add them to that mapping and vice versa.
 /**
- * Special "live" date range values that can be used as the {@link defaultValue}
+ * Special "live" date range values that can be used as the {@link suggestedValue}
  * for a date array parameter.
  *
  * Date array parameters are meant to represent date ranges. A date range can

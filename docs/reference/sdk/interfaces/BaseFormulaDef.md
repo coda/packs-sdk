@@ -32,7 +32,7 @@ How long formulas running with the same values should cache their results for.
 
 #### Defined in
 
-[api_types.ts:316](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L316)
+[api_types.ts:320](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L320)
 
 ___
 
@@ -48,7 +48,7 @@ Does this formula require a connection (aka an account)?
 
 #### Defined in
 
-[api_types.ts:308](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L308)
+[api_types.ts:312](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L312)
 
 ___
 
@@ -64,7 +64,7 @@ A brief description of what the formula does.
 
 #### Defined in
 
-[api_types.ts:282](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L282)
+[api_types.ts:286](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L286)
 
 ___
 
@@ -80,7 +80,7 @@ Sample inputs and outputs demonstrating usage of this formula.
 
 #### Defined in
 
-[api_types.ts:297](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L297)
+[api_types.ts:301](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L301)
 
 ___
 
@@ -101,7 +101,7 @@ so an end user must have both sets of permissions.
 
 #### Defined in
 
-[api_types.ts:338](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L338)
+[api_types.ts:342](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L342)
 
 ___
 
@@ -118,7 +118,7 @@ Actions are presented as buttons in the Coda UI.
 
 #### Defined in
 
-[api_types.ts:303](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L303)
+[api_types.ts:307](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L307)
 
 ___
 
@@ -135,7 +135,7 @@ The formula can still be invoked by manually typing its full name.
 
 #### Defined in
 
-[api_types.ts:322](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L322)
+[api_types.ts:326](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L326)
 
 ___
 
@@ -152,7 +152,7 @@ Not for use by packs that are not authored by Coda.
 
 #### Defined in
 
-[api_types.ts:328](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L328)
+[api_types.ts:332](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L332)
 
 ___
 
@@ -168,7 +168,7 @@ The name of the formula, used to invoke it.
 
 #### Defined in
 
-[api_types.ts:277](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L277)
+[api_types.ts:281](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L281)
 
 ___
 
@@ -184,7 +184,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:311](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L311)
+[api_types.ts:315](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L315)
 
 ___
 
@@ -200,7 +200,7 @@ The parameter inputs to the formula, if any.
 
 #### Defined in
 
-[api_types.ts:287](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L287)
+[api_types.ts:291](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L291)
 
 ___
 
@@ -217,7 +217,7 @@ numbers of inputs.
 
 #### Defined in
 
-[api_types.ts:292](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L292)
+[api_types.ts:296](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L296)
 
 ## Methods
 

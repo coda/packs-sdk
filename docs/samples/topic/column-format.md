@@ -59,7 +59,7 @@ pack.addFormula({
       type: coda.ParameterType.Boolean,
       name: "byWord",
       description: "Reverse the text word-by-word.",
-      defaultValue: false,
+      suggestedValue: false,
       optional: true,
     }),
   ],

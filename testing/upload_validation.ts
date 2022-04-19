@@ -160,7 +160,7 @@ function getNonUniqueElements<T>(items: T[]): T[] {
   return nonUnique;
 }
 
-function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[] {
+export function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[] {
   // Top-level errors for union types are totally useless, they just say "invalid input",
   // but they do record all of the specific errors when trying each element of the union,
   // so we filter out the errors that were just due to non-matches of the discriminant
@@ -279,8 +279,12 @@ const setEndpointPostSetupValidator = zodCompleteObject<SetEndpoint>({
   name: z.string(),
   description: z.string(),
   // TODO(jonathan): Remove this from the metadata object, only needs to be present in the full bundle.
-  getOptionsFormula: z.unknown(),
-});
+  getOptions: z.unknown().optional(),
+  getOptionsFormula: z.unknown().optional(),
+}).refine(
+  data => data.getOptions || data.getOptionsFormula,
+  'Either getOptions or getOptionsFormula must be specified.',
+);
 
 const baseAuthenticationValidators = {
   // TODO(jonathan): Remove these after fixing/exporting types for Authentication metadata, as they're only present
@@ -435,8 +439,9 @@ const paramDefValidator = zodCompleteObject<ParamDef<any>>({
     ),
   description: z.string(),
   optional: z.boolean().optional(),
-  autocomplete: z.unknown(),
-  defaultValue: z.unknown(),
+  autocomplete: z.unknown().optional(),
+  defaultValue: z.unknown().optional(),
+  suggestedValue: z.unknown().optional(),
 });
 
 const commonPackFormulaSchema = {
@@ -756,6 +761,10 @@ function isValidIdentityName(packId: number | undefined, name: string): boolean 
   return isValidObjectId(name);
 }
 
+const attributionSchema = z
+  .array(z.union([textAttributionNodeSchema, linkAttributionNodeSchema, imageAttributionNodeSchema]))
+  .optional();
+
 const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
   zodCompleteObject<ObjectSchema<any, any>>({
     ...basePropertyValidators,
@@ -775,10 +784,9 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
       packId: z.number().optional(),
       name: z.string().nonempty(),
       dynamicUrl: z.string().optional(),
-      attribution: z
-        .array(z.union([textAttributionNodeSchema, linkAttributionNodeSchema, imageAttributionNodeSchema]))
-        .optional(),
+      attribution: attributionSchema,
     }).optional(),
+    attribution: attributionSchema,
     properties: z.record(objectPropertyUnionSchema),
   })
     .superRefine((data, context) => {
@@ -880,6 +888,8 @@ const baseSyncTableSchema = {
   getter: syncFormulaSchema,
   entityName: z.string().optional(),
   defaultAddDynamicColumns: z.boolean().optional(),
+  // TODO(patrick): After migration period, this will become required.
+  identityName: z.string().optional(),
 };
 
 type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;
@@ -949,7 +959,18 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata
     .optional()
     .default([])
     .superRefine((data, context) => {
-      const identityNames = data.map(tableDef => tableDef.schema.identity.name);
+      const identityNames: string[] = [];
+      for (const tableDef of data) {
+        if (tableDef.identityName && tableDef.schema.identity?.name) {
+          if (tableDef.identityName !== tableDef.schema.identity.name) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `Sync table "${tableDef.name}" defines identityName "${tableDef.identityName}" that conflicts with its schema's identity.name "${tableDef.schema.identity.name}".`,
+            });
+          }
+        }
+        identityNames.push(tableDef.schema.identity?.name);
+      }
       for (const dupe of getNonUniqueElements(identityNames)) {
         context.addIssue({
           code: z.ZodIssueCode.custom,

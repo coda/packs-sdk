@@ -736,14 +736,10 @@ export interface IdentityDefinition {
    * you wish to reference, again to distinguish which table instance you are trying to reference.
    */
   dynamicUrl?: string;
-  /**
-   * Attribution text, images, and/or links that should be rendered along with this value.
-   *
-   * See {@link makeAttributionNode}.
-   */
-  attribution?: AttributionNode[];
   /** The ID of another pack, if you are trying to reference a value from different pack. */
   packId?: number;
+  /** @deprecated See {@link ObjectSchemaDefinition.attribution} */
+  attribution?: AttributionNode[];
 }
 
 /** The runtime version of IdentityDefinition with a pack ID injected. */
@@ -805,6 +801,12 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
    * See {@link IdentityDefinition}.
    */
   identity?: IdentityDefinition;
+  /**
+   * Attribution text, images, and/or links that should be rendered along with this value.
+   *
+   * See {@link makeAttributionNode}.
+   */
+  attribution?: AttributionNode[];
 }
 
 export type ObjectSchemaDefinitionType<
@@ -1171,7 +1173,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     } as T;
   } else if (isObject(schema)) {
     const normalized: ObjectSchemaProperties = {};
-    const {id, primary, featured} = objectSchemaHelper(schema);
+    const {id, primary, featured, idProperty, displayProperty, featuredProperties} = schema;
     for (const key of Object.keys(schema.properties)) {
       const normalizedKey = normalizeSchemaKey(key);
       const props = schema.properties[key];
@@ -1183,13 +1185,17 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     }
     const normalizedSchema = {
       type: ValueType.Object,
-      idProperty: id ? normalizeSchemaKey(id) : undefined,
-      featuredProperties: featured ? featured.map(normalizeSchemaKey) : undefined,
-      displayProperty: primary ? normalizeSchemaKey(primary) : undefined,
+      id: id ? normalizeSchemaKey(id) : undefined,
+      featured: featured ? featured.map(normalizeSchemaKey) : undefined,
+      primary: primary ? normalizeSchemaKey(primary) : undefined,
+      idProperty: idProperty ? normalizeSchemaKey(idProperty) : undefined,
+      featuredProperties: featuredProperties ? featuredProperties.map(normalizeSchemaKey) : undefined,
+      displayProperty: displayProperty ? normalizeSchemaKey(displayProperty) : undefined,
       properties: normalized,
       identity: schema.identity,
       codaType: schema.codaType,
       description: schema.description,
+      attribution: schema.attribution,
     } as T;
 
     return normalizedSchema;

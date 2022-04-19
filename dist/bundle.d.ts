@@ -671,14 +671,10 @@ export interface IdentityDefinition {
 	 * you wish to reference, again to distinguish which table instance you are trying to reference.
 	 */
 	dynamicUrl?: string;
-	/**
-	 * Attribution text, images, and/or links that should be rendered along with this value.
-	 *
-	 * See {@link makeAttributionNode}.
-	 */
-	attribution?: AttributionNode[];
 	/** The ID of another pack, if you are trying to reference a value from different pack. */
 	packId?: number;
+	/** @deprecated See {@link ObjectSchemaDefinition.attribution} */
+	attribution?: AttributionNode[];
 }
 /** The runtime version of IdentityDefinition with a pack ID injected. */
 export interface Identity extends IdentityDefinition {
@@ -738,6 +734,12 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * See {@link IdentityDefinition}.
 	 */
 	identity?: IdentityDefinition;
+	/**
+	 * Attribution text, images, and/or links that should be rendered along with this value.
+	 *
+	 * See {@link makeAttributionNode}.
+	 */
+	attribution?: AttributionNode[];
 }
 export declare type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */
@@ -1113,9 +1115,13 @@ export interface ParamDef<T extends UnionType> {
 	 */
 	autocomplete?: MetadataFormula;
 	/**
-	 * The default value to be used for this parameter if it is not specified by the user.
+	 * @deprecated This will be removed in a future version of the SDK. Use {@link suggestedValue} instead.
 	 */
-	defaultValue?: DefaultValueType<T>;
+	defaultValue?: SuggestedValueType<T>;
+	/**
+	 * The suggested value to be prepopulated for this parameter if it is not specified by the user.
+	 */
+	suggestedValue?: SuggestedValueType<T>;
 }
 /**
  * The type for the complete set of parameter definitions for a fomrula.
@@ -1136,9 +1142,9 @@ export declare type ParamValues<ParamDefsT extends ParamDefs> = {
 	[K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
 } & any[];
 /**
- * The type of values that are allowable to be used as a {@link defaultValue} for a parameter.
+ * The type of values that are allowable to be used as a {@link suggestedValue} for a parameter.
  */
-export declare type DefaultValueType<T extends UnionType> = T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
+export declare type SuggestedValueType<T extends UnionType> = T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
 /**
  * Inputs for creating a formula that are common between regular formulas and sync table formulas.
  */
@@ -1382,9 +1388,13 @@ export interface TemporaryBlobStorage {
 	 *
 	 * The URL expires after 15 minutes by default, but you may pass a custom expiry, however
 	 * Coda reserves the right to ignore long expirations.
+	 *
+	 * If the `downloadFilename` parameter is specified, the data will be interpreted as a file (`attachment` content
+	 * disposition) that will be downloaded when accessed as the file name provided.
 	 */
 	storeUrl(url: string, opts?: {
 		expiryMs?: number;
+		downloadFilename?: string;
 	}): Promise<string>;
 	/**
 	 * Stores the given data as a file with the given content type in Coda-hosted temporary storage.
@@ -1392,9 +1402,13 @@ export interface TemporaryBlobStorage {
 	 *
 	 * The URL expires after 15 minutes by default, but you may pass a custom expiry, however
 	 * Coda reserves the right to ignore long expirations.
+	 *
+	 * If the `downloadFilename` parameter is specified, the data will be interpreted as a file (`attachment` content
+	 * disposition) that will be downloaded when accessed as the file name provided.
 	 */
 	storeBlob(blobData: Buffer, contentType: string, opts?: {
 		expiryMs?: number;
+		downloadFilename?: string;
 	}): Promise<string>;
 }
 /**
@@ -1485,7 +1499,7 @@ export interface SyncExecutionContext extends ExecutionContext {
 	readonly sync: Sync;
 }
 /**
- * Special "live" date range values that can be used as the {@link defaultValue}
+ * Special "live" date range values that can be used as the {@link suggestedValue}
  * for a date array parameter.
  *
  * Date array parameters are meant to represent date ranges. A date range can
@@ -1747,6 +1761,13 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
 	description?: string;
 	/** See {@link SyncTableOptions.schema} */
 	schema: SchemaT;
+	/**
+	 * The `identityName` is persisted for all sync tables so that a dynamic schema
+	 * can be annotated with an identity automatically.
+	 *
+	 * See {@link SyncTableOptions.identityName} for more details.
+	 */
+	identityName?: string;
 	/** See {@link SyncTableOptions.formula} */
 	getter: SyncFormula<K, L, ParamDefsT, SchemaT>;
 	/** See {@link DynamicOptions.getSchema} */
@@ -1849,12 +1870,6 @@ export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<Pa
  * ```
  */
 export declare function makeParameter<T extends ParameterType>(paramDefinition: ParameterOptions<T>): ParamDef<ParameterTypeMap[T]>;
-/**
- * @deprecated Formulas should now only be defined as an array, as namespaces are deprecated.
- */
-export interface PackFormulas {
-	readonly [namespace: string]: Formula[];
-}
 /**
  * Base type for the inputs for creating a pack formula.
  */
@@ -2361,6 +2376,16 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	 */
 	getName: MetadataFormulaDef;
 	/**
+	 * See {@link SyncTableOptions.identityName} for an introduction.
+	 *
+	 * Every dynamic schema generated from this dynamic sync table definition should all use the same name
+	 * for their identity. Code that refers to objects in these tables will use the dynamicUrl to
+	 * differentiate which exact table to use.
+	 *
+	 * FUTURE BREAKING CHANGE: This will become required for all new Pack version builds & uploads.
+	 */
+	identityName?: string;
+	/**
 	 * A formula that returns the schema for this table.
 	 */
 	getSchema: MetadataFormulaDef;
@@ -2451,11 +2476,12 @@ export declare function makeSyncTable<K extends string, L extends string, ParamD
  * });
  * ```
  */
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>>({ name, description, getName: getNameDef, getSchema: getSchemaDef, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, }: {
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>>({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, }: {
 	name: string;
 	description?: string;
 	getName: MetadataFormulaDef;
 	getSchema: MetadataFormulaDef;
+	identityName?: string;
 	formula: SyncFormulaDef<K, L, ParamDefsT, any>;
 	getDisplayUrl: MetadataFormulaDef;
 	listDynamicUrls?: MetadataFormulaDef;
@@ -2701,15 +2727,19 @@ export interface SetEndpoint {
 	 * `{display: '<display name>', value: '<endpoint>'}` if wanting to render a display
 	 * label to the user rather than rendering the underlying value directly.
 	 */
-	getOptionsFormula: MetadataFormula;
+	getOptions?: MetadataFormula;
+	/** @deprecated Use {@link getOptions} */
+	getOptionsFormula?: MetadataFormula;
 }
 /**
  * Simplified configuration for {@link SetEndpoint} that a pack developer can specify when calling
  * {@link setUserAuthentication} or {@link setSystemAuthentication}.
  */
-export declare type SetEndpointDef = Omit<SetEndpoint, "getOptionsFormula"> & {
+export declare type SetEndpointDef = Omit<SetEndpoint, "getOptions" | "getOptionsFormula"> & {
+	/** See {@link SetEndpoint.getOptions} */
+	getOptions?: MetadataFormulaDef;
 	/** See {@link SetEndpoint.getOptionsFormula} */
-	getOptionsFormula: MetadataFormulaDef;
+	getOptionsFormula?: MetadataFormulaDef;
 };
 /**
  * Enumeration of post-account-setup step types. See {@link PostSetup}.
@@ -3264,13 +3294,11 @@ export interface PackVersionDefinition {
 	/**
 	 * Definitions of this pack's formulas. See {@link Formula}.
 	 *
-	 * Note that button actions are also defind here. Buttons are simply formulas
+	 * Note that button actions are also defined here. Buttons are simply formulas
 	 * with `isAction: true`.
 	 *
-	 * Note also, this should always be an array of Formulas. The PackFormulas object structure is deprecated
-	 * and will be removed shortly.
 	 */
-	formulas?: PackFormulas | Formula[];
+	formulas?: Formula[];
 	/**
 	 * Definitions of this pack's column formats. See {@link Format}.
 	 */
@@ -3532,12 +3560,9 @@ export interface PackFormatMetadata extends Omit<Format, "matchers"> {
 	matchers: string[];
 }
 /** @hidden */
-export interface PackFormulasMetadata {
-	[namespace: string]: PackFormulaMetadata[];
-}
-/** @hidden */
-export declare type PostSetupMetadata = Omit<PostSetup, "getOptionsFormula"> & {
-	getOptionsFormula: MetadataFormulaMetadata;
+export declare type PostSetupMetadata = Omit<PostSetup, "getOptions" | "getOptionsFormula"> & {
+	getOptions?: MetadataFormulaMetadata;
+	getOptionsFormula?: MetadataFormulaMetadata;
 };
 /** @hidden */
 export declare type AuthenticationMetadata = DistributiveOmit<Authentication, "getConnectionName" | "getConnectionUserId" | "postSetup"> & {
@@ -3547,7 +3572,7 @@ export declare type AuthenticationMetadata = DistributiveOmit<Authentication, "g
 };
 /** @hidden */
 export declare type PackVersionMetadata = Omit<PackVersionDefinition, "formulas" | "formats" | "defaultAuthentication" | "syncTables"> & {
-	formulas: PackFormulasMetadata | PackFormulaMetadata[];
+	formulas: PackFormulaMetadata[];
 	formats: PackFormatMetadata[];
 	syncTables: PackSyncTable[];
 	defaultAuthentication?: AuthenticationMetadata;
@@ -3557,7 +3582,7 @@ export declare type PackMetadata = PackVersionMetadata & Pick<PackDefinition, "i
 /** @hidden */
 export declare type ExternalPackAuthenticationType = AuthenticationType;
 /** @hidden */
-export declare type ExternalPackFormulas = PackFormulasMetadata | PackFormulaMetadata[];
+export declare type ExternalPackFormulas = PackFormulaMetadata[];
 /** @hidden */
 export declare type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
 /** @hidden */

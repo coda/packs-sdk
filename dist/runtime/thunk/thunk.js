@@ -10,6 +10,7 @@ const api_1 = require("../../api");
 const helpers_1 = require("../common/helpers");
 const helpers_2 = require("../common/helpers");
 const api_2 = require("../../api");
+const migration_1 = require("../../helpers/migration");
 const marshaling_1 = require("../common/marshaling");
 const marshaling_2 = require("../common/marshaling");
 var marshaling_3 = require("../common/marshaling");
@@ -74,7 +75,7 @@ function doFindAndExecutePackFunction(params, formulaSpec, manifest, executionCo
                         (defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.postSetup)) {
                         const setupStep = defaultAuthentication.postSetup.find(step => step.type === types_4.PostSetupType.SetEndpoint && step.name === formulaSpec.stepName);
                         if (setupStep) {
-                            return setupStep.getOptionsFormula.execute(params, executionContext);
+                            return (0, migration_1.setEndpointHelper)(setupStep).getOptions.execute(params, executionContext);
                         }
                     }
                     break;
@@ -132,8 +133,7 @@ function findParentFormula(manifest, formulaSpec) {
     switch (formulaSpec.parentFormulaType) {
         case types_2.FormulaType.Standard:
             if (formulas) {
-                const namespacedFormulas = Array.isArray(formulas) ? formulas : Object.values(formulas)[0];
-                formula = namespacedFormulas.find(defn => defn.name === formulaSpec.parentFormulaName);
+                formula = formulas.find(defn => defn.name === formulaSpec.parentFormulaName);
             }
             break;
         case types_2.FormulaType.Sync:

@@ -8,6 +8,7 @@ const api_2 = require("./api");
 const api_3 = require("./api");
 const api_4 = require("./api");
 const api_5 = require("./api");
+const migration_1 = require("./helpers/migration");
 const api_6 = require("./api");
 /**
  * Creates a new skeleton pack definition that can be added to.
@@ -34,7 +35,7 @@ class PackDefinitionBuilder {
      */
     constructor(definition) {
         const { formulas, formats, syncTables, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, } = definition || {};
-        this.formulas = Array.isArray(formulas) ? formulas : [];
+        this.formulas = formulas || [];
         this.formats = formats || [];
         this.syncTables = syncTables || [];
         this.networkDomains = networkDomains || [];
@@ -185,7 +186,7 @@ class PackDefinitionBuilder {
             const getConnectionName = (0, api_6.wrapMetadataFunction)(getConnectionNameDef);
             const getConnectionUserId = (0, api_6.wrapMetadataFunction)(getConnectionUserIdDef);
             const postSetup = postSetupDef === null || postSetupDef === void 0 ? void 0 : postSetupDef.map(step => {
-                return { ...step, getOptionsFormula: (0, api_6.wrapMetadataFunction)(step.getOptionsFormula) };
+                return { ...step, getOptions: (0, api_6.wrapMetadataFunction)((0, migration_1.setEndpointDefHelper)(step).getOptions) };
             });
             this.defaultAuthentication = { ...rest, getConnectionName, getConnectionUserId, postSetup };
         }
@@ -216,7 +217,7 @@ class PackDefinitionBuilder {
         const getConnectionName = (0, api_6.wrapMetadataFunction)(getConnectionNameDef);
         const getConnectionUserId = (0, api_6.wrapMetadataFunction)(getConnectionUserIdDef);
         const postSetup = postSetupDef === null || postSetupDef === void 0 ? void 0 : postSetupDef.map(step => {
-            return { ...step, getOptionsFormula: (0, api_6.wrapMetadataFunction)(step.getOptionsFormula) };
+            return { ...step, getOptions: (0, api_6.wrapMetadataFunction)((0, migration_1.setEndpointDefHelper)(step).getOptions) };
         });
         this.systemConnectionAuthentication = {
             ...rest,

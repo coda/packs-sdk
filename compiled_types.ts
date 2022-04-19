@@ -47,13 +47,9 @@ export interface PackFormatMetadata extends Omit<Format, 'matchers'> {
 }
 
 /** @hidden */
-export interface PackFormulasMetadata {
-  [namespace: string]: PackFormulaMetadata[];
-}
-
-/** @hidden */
-export type PostSetupMetadata = Omit<PostSetup, 'getOptionsFormula'> & {
-  getOptionsFormula: MetadataFormulaMetadata;
+export type PostSetupMetadata = Omit<PostSetup, 'getOptions' | 'getOptionsFormula'> & {
+  getOptions?: MetadataFormulaMetadata; // TODO(packs-dev): Make this required after migration.
+  getOptionsFormula?: MetadataFormulaMetadata;
 };
 
 /** @hidden */
@@ -98,8 +94,7 @@ export type PackVersionMetadata = Omit<
   PackVersionDefinition,
   'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'
 > & {
-  // TODO: @alan-fang once all packs are using formulaNamespace, delete PackFormulasMetadata.
-  formulas: PackFormulasMetadata | PackFormulaMetadata[];
+  formulas: PackFormulaMetadata[];
   formats: PackFormatMetadata[];
   syncTables: PackSyncTable[];
   defaultAuthentication?: AuthenticationMetadata;
@@ -130,7 +125,7 @@ export type PackMetadata = PackVersionMetadata &
 /** @hidden */
 export type ExternalPackAuthenticationType = AuthenticationType;
 /** @hidden */
-export type ExternalPackFormulas = PackFormulasMetadata | PackFormulaMetadata[];
+export type ExternalPackFormulas = PackFormulaMetadata[];
 /** @hidden */
 export type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
 /** @hidden */
