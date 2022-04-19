@@ -2106,6 +2106,7 @@ describe('Pack metadata Validation', () => {
         networkDomains: ['foo.com', 'bar.com'],
         defaultAuthentication: {
           type: AuthenticationType.HeaderBearerToken,
+          // A newer sdkVersion would need to set the networkDomain here.
         },
         sdkVersion: '0.9.0',
       });
