@@ -84,6 +84,8 @@ function validateResultType<ResultT extends any>(resultType: Type, result: Resul
       return checkType(result instanceof Date, 'date', result);
     case Type.html:
       return checkType(typeOfResult === 'string', 'html', result);
+    case Type.file:
+      return checkType(typeOfResult === 'string', 'file', result);
     case Type.image:
       return checkType(typeOfResult === 'string', 'image', result);
     case Type.number:

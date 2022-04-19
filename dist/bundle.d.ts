@@ -139,7 +139,7 @@ export declare enum ValueHintType {
 	/**
 	 * Indicates to interpret and render a value as a file attachment. The provided value should be a URL
 	 * pointing to a file of a Coda-supported type. Coda will ingest the file and host it from Coda infrastructure.
-	 */
+	*/
 	Attachment = "attachment",
 	/**
 	 * Indicates to render a numeric value as a slider UI component.
@@ -980,7 +980,8 @@ export declare enum Type {
 	boolean = 3,
 	date = 4,
 	html = 5,
-	image = 6
+	image = 6,
+	file = 7
 }
 /**
  * The type of a parameter or return value that is an array.
@@ -1000,6 +1001,7 @@ export interface TypeMap {
 	[Type.date]: Date;
 	[Type.html]: string;
 	[Type.image]: string;
+	[Type.file]: string;
 }
 /**
  * The union of types for arguments to the `execute` function for a formula.
@@ -1039,6 +1041,10 @@ export declare enum ParameterType {
 	 */
 	Image = "image",
 	/**
+	 * Indicates a parameter that is a Coda file. The pack is passed a file URL.
+	 */
+	File = "file",
+	/**
 	 * Indicates a parameter that is a list of Coda text values.
 	 */
 	StringArray = "stringArray",
@@ -1066,7 +1072,11 @@ export declare enum ParameterType {
 	/**
 	 * Indicates a parameter that is a list of Coda image values. The pack is passed a list of image URLs.
 	 */
-	ImageArray = "imageArray"
+	ImageArray = "imageArray",
+	/**
+	 * Indicates a parameter that is a list of Coda file values. The pack is passed a list of file URLs.
+	 */
+	FileArray = "fileArray"
 }
 export interface ParameterTypeMap {
 	[ParameterType.String]: Type.string;
@@ -1075,12 +1085,14 @@ export interface ParameterTypeMap {
 	[ParameterType.Date]: Type.date;
 	[ParameterType.Html]: Type.html;
 	[ParameterType.Image]: Type.image;
+	[ParameterType.File]: Type.file;
 	[ParameterType.StringArray]: ArrayType<Type.string>;
 	[ParameterType.NumberArray]: ArrayType<Type.number>;
 	[ParameterType.BooleanArray]: ArrayType<Type.boolean>;
 	[ParameterType.DateArray]: ArrayType<Type.date>;
 	[ParameterType.HtmlArray]: ArrayType<Type.html>;
 	[ParameterType.ImageArray]: ArrayType<Type.image>;
+	[ParameterType.FileArray]: ArrayType<Type.file>;
 }
 /**
  * The definition of a formula parameter.

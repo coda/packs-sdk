@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PrecannedDateRange = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.PrecannedDateRange = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
@@ -18,6 +18,7 @@ var Type;
     Type[Type["date"] = 4] = "date";
     Type[Type["html"] = 5] = "html";
     Type[Type["image"] = 6] = "image";
+    Type[Type["file"] = 7] = "file";
 })(Type = exports.Type || (exports.Type = {}));
 function isArrayType(obj) {
     return obj && obj.type === 'array' && typeof obj.items === 'number';
@@ -46,6 +47,10 @@ exports.htmlArray = {
 exports.imageArray = {
     type: 'array',
     items: Type.image,
+};
+exports.fileArray = {
+    type: 'array',
+    items: Type.file,
 };
 /**
  * Enumeration of types of formula parameters. These describe Coda value types (as opposed to JavaScript value types).
@@ -77,6 +82,10 @@ var ParameterType;
      */
     ParameterType["Image"] = "image";
     /**
+     * Indicates a parameter that is a Coda file. The pack is passed a file URL.
+     */
+    ParameterType["File"] = "file";
+    /**
      * Indicates a parameter that is a list of Coda text values.
      */
     ParameterType["StringArray"] = "stringArray";
@@ -105,6 +114,10 @@ var ParameterType;
      * Indicates a parameter that is a list of Coda image values. The pack is passed a list of image URLs.
      */
     ParameterType["ImageArray"] = "imageArray";
+    /**
+     * Indicates a parameter that is a list of Coda file values. The pack is passed a list of file URLs.
+     */
+    ParameterType["FileArray"] = "fileArray";
 })(ParameterType = exports.ParameterType || (exports.ParameterType = {}));
 exports.ParameterTypeInputMap = {
     [ParameterType.String]: Type.string,
@@ -113,12 +126,14 @@ exports.ParameterTypeInputMap = {
     [ParameterType.Date]: Type.date,
     [ParameterType.Html]: Type.html,
     [ParameterType.Image]: Type.image,
+    [ParameterType.File]: Type.file,
     [ParameterType.StringArray]: { type: 'array', items: Type.string },
     [ParameterType.NumberArray]: { type: 'array', items: Type.number },
     [ParameterType.BooleanArray]: { type: 'array', items: Type.boolean },
     [ParameterType.DateArray]: { type: 'array', items: Type.date },
     [ParameterType.HtmlArray]: { type: 'array', items: Type.html },
     [ParameterType.ImageArray]: { type: 'array', items: Type.image },
+    [ParameterType.FileArray]: { type: 'array', items: Type.file },
 };
 /**
  * Enumeration of requirement states for whether a given formula or sync table requires

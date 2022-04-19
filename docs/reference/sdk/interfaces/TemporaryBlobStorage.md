@@ -59,7 +59,7 @@ disposition) that will be downloaded when accessed as the file name provided.
 
 #### Defined in
 
-[api_types.ts:535](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L535)
+[api_types.ts:554](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L554)
 
 ___
 
@@ -92,4 +92,4 @@ disposition) that will be downloaded when accessed as the file name provided.
 
 #### Defined in
 
-[api_types.ts:524](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L524)
+[api_types.ts:543](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L543)

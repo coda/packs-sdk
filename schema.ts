@@ -146,7 +146,7 @@ export enum ValueHintType {
   /**
    * Indicates to interpret and render a value as a file attachment. The provided value should be a URL
    * pointing to a file of a Coda-supported type. Coda will ingest the file and host it from Coda infrastructure.
-   */
+  */
   Attachment = 'attachment',
   /**
    * Indicates to render a numeric value as a slider UI component.

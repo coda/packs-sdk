@@ -19,6 +19,8 @@ This changelog keeps track of all changes to the packs-sdk. We follow convention
 - **Future Breaking Change** `SetEndpoint.getOptionsFormula` has been renamed `SetEndpoint.getOptions` for clarity.
 - **Future Breaking Change** The `attribution` property is moving from being a child field on `identity` within an object schema to just being a top-level field on the object schema.
 - **Future Breaking Change** The `defaultValue` property of parameter definitions will be renamed to `suggestedValue` to reflect that these are values that do not act as a true default but rather prepopulates a value when used.
+- **Future Breaking Change** Added support for files as parameters with `ParameterType.File`. Previously, files could be used as parameters by using the `ParameterType.Image` parameter type, but an error would show in the formula builder. In the future, this error may be enforced such that only image files will be allowed to be used when a parameter is specified to be a `ParameterType.Image`.
+ 
 
 ### Removed
 

@@ -35,6 +35,7 @@ import {booleanArray} from './api_types';
 import {dateArray} from './api_types';
 import {ensureExists} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
+import {fileArray} from './api_types';
 import {generateObjectResponseHandler} from './handler_templates';
 import {generateRequestHandler} from './handler_templates';
 import {htmlArray} from './api_types';
@@ -444,6 +445,22 @@ export function makeImageArrayParameter(
   args: ParamArgs<ArrayType<Type.image>> = {},
 ): ParamDef<ArrayType<Type.image>> {
   return Object.freeze({...args, name, description, type: imageArray});
+}
+
+export function makeFileParameter(
+  name: string,
+  description: string,
+  args: ParamArgs<Type.file> = {},
+): ParamDef<Type.file> {
+  return Object.freeze({...args, name, description, type: Type.file as Type.file});
+}
+
+export function makeFileArrayParameter(
+  name: string,
+  description: string,
+  args: ParamArgs<ArrayType<Type.file>> = {},
+): ParamDef<ArrayType<Type.file>> {
+  return Object.freeze({...args, name, description, type: fileArray});
 }
 
 export function makeUserVisibleError(msg: string): UserVisibleError {
