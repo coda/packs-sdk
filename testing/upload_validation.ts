@@ -1234,9 +1234,9 @@ const legacyPackMetadataSchema = validateFormulas(
     const data = untypedData as PackVersionMetadata;
 
     if (!data.sdkVersion || !semver.satisfies(data.sdkVersion, '>0.9.0')) {
-      // Allow a window where server-side validation accepts metadata from older SDK versions
-      // that isn't in the latest format. We can force upgrades by turning off the ability to
-      // upload from old SDK versions.
+      // A recent SDK on the server SDK can skip this check if the client's SDK
+      // was too old. We should eventually disallow excessively old SDK versions in
+      // uploads.
       return;
     }
 
