@@ -9,4 +9,4 @@ The type for the complete set of parameter definitions for a fomrula.
 
 #### Defined in
 
-[api_types.ts:253](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L253)
+[api_types.ts:272](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L272)

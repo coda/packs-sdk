@@ -9,4 +9,4 @@ The union of types for arguments to the `execute` function for a formula.
 
 #### Defined in
 
-[api_types.ts:93](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L93)
+[api_types.ts:100](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L100)

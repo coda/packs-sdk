@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.maybeRewriteConnectionForFormula = exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.wrapGetSchema = exports.wrapMetadataFunction = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.StatusCodeError = exports.UserVisibleError = void 0;
+exports.maybeRewriteConnectionForFormula = exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeFileArrayParameter = exports.makeFileParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.wrapGetSchema = exports.wrapMetadataFunction = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.StatusCodeError = exports.UserVisibleError = void 0;
 const api_types_1 = require("./api_types");
 const api_types_2 = require("./api_types");
 const api_types_3 = require("./api_types");
@@ -9,16 +9,17 @@ const api_types_4 = require("./api_types");
 const api_types_5 = require("./api_types");
 const ensure_1 = require("./helpers/ensure");
 const ensure_2 = require("./helpers/ensure");
+const api_types_6 = require("./api_types");
 const handler_templates_1 = require("./handler_templates");
 const handler_templates_2 = require("./handler_templates");
-const api_types_6 = require("./api_types");
 const api_types_7 = require("./api_types");
+const api_types_8 = require("./api_types");
 const object_utils_1 = require("./helpers/object_utils");
 const schema_2 = require("./schema");
 const schema_3 = require("./schema");
-const api_types_8 = require("./api_types");
-const migration_1 = require("./helpers/migration");
 const api_types_9 = require("./api_types");
+const migration_1 = require("./helpers/migration");
+const api_types_10 = require("./api_types");
 const handler_templates_3 = require("./handler_templates");
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
@@ -159,7 +160,7 @@ function makeStringParameter(name, description, args = {}) {
 }
 exports.makeStringParameter = makeStringParameter;
 function makeStringArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_9.stringArray });
+    return Object.freeze({ ...args, name, description, type: api_types_10.stringArray });
 }
 exports.makeStringArrayParameter = makeStringArrayParameter;
 function makeNumericParameter(name, description, args = {}) {
@@ -167,7 +168,7 @@ function makeNumericParameter(name, description, args = {}) {
 }
 exports.makeNumericParameter = makeNumericParameter;
 function makeNumericArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_8.numberArray });
+    return Object.freeze({ ...args, name, description, type: api_types_9.numberArray });
 }
 exports.makeNumericArrayParameter = makeNumericArrayParameter;
 function makeBooleanParameter(name, description, args = {}) {
@@ -191,7 +192,7 @@ function makeHtmlParameter(name, description, args = {}) {
 }
 exports.makeHtmlParameter = makeHtmlParameter;
 function makeHtmlArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_6.htmlArray });
+    return Object.freeze({ ...args, name, description, type: api_types_7.htmlArray });
 }
 exports.makeHtmlArrayParameter = makeHtmlArrayParameter;
 function makeImageParameter(name, description, args = {}) {
@@ -199,9 +200,17 @@ function makeImageParameter(name, description, args = {}) {
 }
 exports.makeImageParameter = makeImageParameter;
 function makeImageArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_7.imageArray });
+    return Object.freeze({ ...args, name, description, type: api_types_8.imageArray });
 }
 exports.makeImageArrayParameter = makeImageArrayParameter;
+function makeFileParameter(name, description, args = {}) {
+    return Object.freeze({ ...args, name, description, type: api_types_3.Type.file });
+}
+exports.makeFileParameter = makeFileParameter;
+function makeFileArrayParameter(name, description, args = {}) {
+    return Object.freeze({ ...args, name, description, type: api_types_6.fileArray });
+}
+exports.makeFileArrayParameter = makeFileArrayParameter;
 function makeUserVisibleError(msg) {
     return new UserVisibleError(msg);
 }

@@ -16,7 +16,7 @@ See [DynamicSyncTableOptions.defaultAddDynamicColumns](DynamicSyncTableOptions.m
 
 #### Defined in
 
-[api.ts:1258](https://github.com/coda/packs-sdk/blob/main/api.ts#L1258)
+[api.ts:1275](https://github.com/coda/packs-sdk/blob/main/api.ts#L1275)
 
 ___
 
@@ -28,7 +28,7 @@ See [DynamicSyncTableOptions.entityName](DynamicSyncTableOptions.md#entityname)
 
 #### Defined in
 
-[api.ts:1256](https://github.com/coda/packs-sdk/blob/main/api.ts#L1256)
+[api.ts:1273](https://github.com/coda/packs-sdk/blob/main/api.ts#L1273)
 
 ___
 
@@ -45,4 +45,4 @@ does not require a [dynamicUrl](Identity.md#dynamicurl).
 
 #### Defined in
 
-[api.ts:1254](https://github.com/coda/packs-sdk/blob/main/api.ts#L1254)
+[api.ts:1271](https://github.com/coda/packs-sdk/blob/main/api.ts#L1271)

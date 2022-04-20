@@ -21,7 +21,7 @@ If true, this array will accept empty values as `undefined` for non-string types
 
 #### Defined in
 
-[api_types.ts:35](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L35)
+[api_types.ts:36](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L36)
 
 ___
 
@@ -33,7 +33,7 @@ The type of the items in this array.
 
 #### Defined in
 
-[api_types.ts:33](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L33)
+[api_types.ts:34](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L34)
 
 ___
 
@@ -45,4 +45,4 @@ Identifies this type as an array.
 
 #### Defined in
 
-[api_types.ts:31](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L31)
+[api_types.ts:32](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L32)

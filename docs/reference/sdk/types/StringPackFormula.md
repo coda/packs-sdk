@@ -15,4 +15,4 @@ A pack formula that returns a string.
 
 #### Defined in
 
-[api.ts:531](https://github.com/coda/packs-sdk/blob/main/api.ts#L531)
+[api.ts:548](https://github.com/coda/packs-sdk/blob/main/api.ts#L548)

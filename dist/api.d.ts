@@ -242,6 +242,8 @@ export declare function makeHtmlParameter(name: string, description: string, arg
 export declare function makeHtmlArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.html>>): ParamDef<ArrayType<Type.html>>;
 export declare function makeImageParameter(name: string, description: string, args?: ParamArgs<Type.image>): ParamDef<Type.image>;
 export declare function makeImageArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.image>>): ParamDef<ArrayType<Type.image>>;
+export declare function makeFileParameter(name: string, description: string, args?: ParamArgs<Type.file>): ParamDef<Type.file>;
+export declare function makeFileArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.file>>): ParamDef<ArrayType<Type.file>>;
 export declare function makeUserVisibleError(msg: string): UserVisibleError;
 export declare function check(condition: boolean, msg: string): void;
 /**

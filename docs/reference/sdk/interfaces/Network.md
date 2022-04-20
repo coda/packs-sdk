@@ -13,7 +13,7 @@ title: "Network"
 
 #### Defined in
 
-[api_types.ts:390](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L390)
+[api_types.ts:409](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L409)
 
 ___
 
@@ -23,7 +23,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:388](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L388)
+[api_types.ts:407](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L407)
 
 ___
 
@@ -33,4 +33,4 @@ ___
 
 #### Defined in
 
-[api_types.ts:389](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L389)
+[api_types.ts:408](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L408)

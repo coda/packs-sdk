@@ -13,7 +13,7 @@ title: "NetworkConnection"
 
 #### Defined in
 
-[api_types.ts:381](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L381)
+[api_types.ts:400](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L400)
 
 ___
 
@@ -23,7 +23,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:382](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L382)
+[api_types.ts:401](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L401)
 
 ___
 
@@ -33,4 +33,4 @@ ___
 
 #### Defined in
 
-[api_types.ts:383](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L383)
+[api_types.ts:402](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L402)

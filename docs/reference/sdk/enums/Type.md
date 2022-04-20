@@ -32,6 +32,16 @@ ___
 
 ___
 
+### file
+
+• **file** = `7`
+
+#### Defined in
+
+[api_types.ts:22](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L22)
+
+___
+
 ### html
 
 • **html** = `5`
