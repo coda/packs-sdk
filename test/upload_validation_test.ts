@@ -2356,4 +2356,140 @@ describe('Pack metadata Validation', () => {
       assert.ok(objectSchemaResult);
     });
   });
+
+  describe('deprecation warnings', () => {
+    const sdkVersionTriggeringDeprecationWarnings = '0.10.0';
+
+    it('deprecated schema properties in formula schema', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'ignored',
+        formulas: [
+          {
+            schema: makeObjectSchema({
+              id: 'id',
+              primary: 'primary',
+              featured: ['id', 'primary'],
+              properties: {
+                id: {type: ValueType.String},
+                primary: {type: ValueType.String},
+                featured: {type: ValueType.String},
+              },
+            }),
+            name: 'MyFormula',
+            description: 'Formula description',
+            parameters: [],
+            examples: [],
+            resultType: Type.object,
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'formulas[0].id',
+          message: 'Property name "id" is no longer accepted. Use "idProperty" instead.',
+        },
+        {
+          path: 'formulas[0].primary',
+          message: 'Property name "primary" is no longer accepted. Use "displayProperty" instead.',
+        },
+        {
+          path: 'formulas[0].featured',
+          message: 'Property name "featured" is no longer accepted. Use "featuredProperties" instead.',
+        },
+      ]);
+    });
+
+    it('deprecated schema properties in sync table schema', async () => {
+      const syncTable = makeSyncTable({
+        name: 'SyncTable',
+        identityName: 'Sync',
+        schema: makeObjectSchema({
+          id: 'id',
+          primary: 'primary',
+          featured: ['id', 'primary'],
+          properties: {
+            id: {type: ValueType.String},
+            primary: {type: ValueType.String},
+            featured: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'SyncTable',
+          description: 'A simple sync table',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+      });
+      const metadata = createFakePackVersionMetadata({
+        syncTables: [syncTable],
+        defaultAuthentication: {
+          type: AuthenticationType.None,
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'syncTables[0].id',
+          message: 'Property name "id" is no longer accepted. Use "idProperty" instead.',
+        },
+        {
+          path: 'syncTables[0].primary',
+          message: 'Property name "primary" is no longer accepted. Use "displayProperty" instead.',
+        },
+        {
+          path: 'syncTables[0].featured',
+          message: 'Property name "featured" is no longer accepted. Use "featuredProperties" instead.',
+        },
+      ]);
+    });
+
+    it('deprecated schema properties in nested schema', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'ignored',
+        formulas: [
+          {
+            schema: makeObjectSchema({
+              properties: {
+                childObj: makeObjectSchema({
+                  id: 'id',
+                  properties: {
+                    id: {type: ValueType.String},
+                  },
+                }),
+                childArr: {
+                  type: ValueType.Array,
+                  items: makeObjectSchema({
+                    primary: 'primary',
+                    properties: {
+                      primary: {type: ValueType.String},
+                    },
+                  }),
+                },
+              },
+            }),
+            name: 'MyFormula',
+            description: 'Formula description',
+            parameters: [],
+            examples: [],
+            resultType: Type.object,
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'formulas[0].childObj.id',
+          message: 'Property name "id" is no longer accepted. Use "idProperty" instead.',
+        },
+        {
+          path: 'formulas[0].childArr.items.primary',
+          message: 'Property name "primary" is no longer accepted. Use "displayProperty" instead.',
+        },
+      ]);
+    });
+  });
 });

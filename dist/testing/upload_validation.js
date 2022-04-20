@@ -41,8 +41,10 @@ const api_types_3 = require("../api_types");
 const schema_9 = require("../schema");
 const schema_10 = require("../schema");
 const ensure_1 = require("../helpers/ensure");
-const object_utils_1 = require("../helpers/object_utils");
 const schema_11 = require("../schema");
+const object_utils_1 = require("../helpers/object_utils");
+const schema_12 = require("../schema");
+const schema_13 = require("../schema");
 const migration_1 = require("../helpers/migration");
 const semver_1 = __importDefault(require("semver"));
 const z = __importStar(require("zod"));
@@ -65,14 +67,14 @@ class PackMetadataValidationError extends Error {
     }
 }
 exports.PackMetadataValidationError = PackMetadataValidationError;
-async function validatePackVersionMetadata(metadata, sdkVersion) {
+async function validatePackVersionMetadata(metadata, sdkVersion, { warningMode } = {}) {
     let combinedSchema = legacyPackMetadataSchema;
     // Server-side validation may be running a different SDK version than the pack maker
     // is using, so some breaking changes to metadata validation can be set up to only
     // take effect before or after an SDK version bump.
     if (sdkVersion) {
         for (const { versionRange, schemaExtend } of packMetadataSchemaBySdkVersion) {
-            if (semver_1.default.satisfies(sdkVersion, versionRange)) {
+            if (warningMode || semver_1.default.satisfies(sdkVersion, versionRange)) {
                 combinedSchema = schemaExtend(combinedSchema);
             }
         }
@@ -103,7 +105,7 @@ function validateSyncTableSchema(schema) {
         return validated.data;
     }
     // In case this was an ObjectSchema (describing a single row), wrap it up as an ArraySchema.
-    const syntheticArraySchema = (0, schema_11.makeSchema)({
+    const syntheticArraySchema = (0, schema_13.makeSchema)({
         type: schema_10.ValueType.Array,
         items: schema,
     });
@@ -1056,4 +1058,67 @@ const packMetadataSchemaBySdkVersion = [
             });
         },
     },
+    {
+        versionRange: '>0.9.0',
+        schemaExtend: schema => {
+            return schema.superRefine((untypedData, context) => {
+                const data = untypedData;
+                data.formulas.forEach((formula, i) => {
+                    if (formula.schema) {
+                        validateSchemaDeprecatedFields(formula.schema, ['formulas', i], context);
+                    }
+                });
+                data.syncTables.forEach((syncTable, i) => {
+                    validateSchemaDeprecatedFields(syncTable.schema, ['syncTables', i], context);
+                });
+            });
+        },
+    },
 ];
+function validateSchemaDeprecatedFields(schema, pathPrefix, context) {
+    if ((0, schema_12.isObject)(schema)) {
+        validateObjectSchemaDeprecatedFields(schema, pathPrefix, context);
+    }
+    if ((0, schema_11.isArray)(schema)) {
+        validateSchemaDeprecatedFields(schema.items, [...pathPrefix, 'items'], context);
+    }
+}
+function validateObjectSchemaDeprecatedFields(schema, pathPrefix, context) {
+    validateDeprecatedProperty({
+        obj: schema,
+        oldName: 'id',
+        newName: 'idProperty',
+        pathPrefix,
+        context,
+    });
+    validateDeprecatedProperty({
+        obj: schema,
+        oldName: 'primary',
+        newName: 'displayProperty',
+        pathPrefix,
+        context,
+    });
+    validateDeprecatedProperty({
+        obj: schema,
+        oldName: 'featured',
+        newName: 'featuredProperties',
+        pathPrefix,
+        context,
+    });
+    for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
+        validateSchemaDeprecatedFields(childSchema, [...pathPrefix, propertyName], context);
+    }
+}
+function validateDeprecatedProperty({ obj, oldName, newName, pathPrefix, context, }) {
+    if (obj[oldName] !== undefined) {
+        let message = `Property name "${oldName}" is no longer accepted.`;
+        if (newName) {
+            message += ` Use "${newName}" instead.`;
+        }
+        context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: [...pathPrefix, oldName],
+            message,
+        });
+    }
+}

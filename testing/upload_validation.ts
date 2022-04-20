@@ -46,6 +46,7 @@ import {PostSetupType} from '../types';
 import type {QueryParamTokenAuthentication} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {ScaleSchema} from '..';
+import type {Schema} from '..';
 import type {SetEndpoint} from '../types';
 import {SimpleStringHintValueTypes} from '../schema';
 import type {SimpleStringSchema} from '../schema';
@@ -67,7 +68,9 @@ import type {VariousAuthentication} from '../types';
 import type {VariousSupportedAuthenticationTypes} from '../types';
 import type {WebBasicAuthentication} from '../types';
 import {assertCondition} from '../helpers/ensure';
+import {isArray} from '../schema';
 import {isNil} from '../helpers/object_utils';
+import {isObject} from '../schema';
 import {makeSchema} from '../schema';
 import {objectSchemaHelper} from '../helpers/migration';
 import semver from 'semver';
@@ -99,6 +102,7 @@ export class PackMetadataValidationError extends Error {
 export async function validatePackVersionMetadata(
   metadata: Record<string, any>,
   sdkVersion: string | undefined,
+  {warningMode}: {warningMode?: boolean} = {},
 ): Promise<PackVersionMetadata> {
   let combinedSchema: z.ZodType<Partial<PackVersionMetadata>> = legacyPackMetadataSchema;
 
@@ -107,7 +111,7 @@ export async function validatePackVersionMetadata(
   // take effect before or after an SDK version bump.
   if (sdkVersion) {
     for (const {versionRange, schemaExtend} of packMetadataSchemaBySdkVersion) {
-      if (semver.satisfies(sdkVersion, versionRange)) {
+      if (warningMode || semver.satisfies(sdkVersion, versionRange)) {
         combinedSchema = schemaExtend(combinedSchema);
       }
     }
@@ -1265,4 +1269,90 @@ const packMetadataSchemaBySdkVersion: SchemaExtension[] = [
       });
     },
   },
+  {
+    versionRange: '>0.9.0',
+    schemaExtend: schema => {
+      return schema.superRefine((untypedData, context) => {
+        const data = untypedData as PackVersionMetadata;
+        data.formulas.forEach((formula, i) => {
+          if (formula.schema) {
+            validateSchemaDeprecatedFields(formula.schema, ['formulas', i], context);
+          }
+        });
+        data.syncTables.forEach((syncTable, i) => {
+          validateSchemaDeprecatedFields(syncTable.schema, ['syncTables', i], context);
+        });
+      });
+    },
+  },
 ];
+
+function validateSchemaDeprecatedFields(
+  schema: Schema,
+  pathPrefix: Array<string | number>,
+  context: z.RefinementCtx,
+): void {
+  if (isObject(schema)) {
+    validateObjectSchemaDeprecatedFields(schema, pathPrefix, context);
+  }
+  if (isArray(schema)) {
+    validateSchemaDeprecatedFields(schema.items, [...pathPrefix, 'items'], context);
+  }
+}
+
+function validateObjectSchemaDeprecatedFields(
+  schema: GenericObjectSchema,
+  pathPrefix: Array<string | number>,
+  context: z.RefinementCtx,
+): void {
+  validateDeprecatedProperty({
+    obj: schema,
+    oldName: 'id',
+    newName: 'idProperty',
+    pathPrefix,
+    context,
+  });
+  validateDeprecatedProperty({
+    obj: schema,
+    oldName: 'primary',
+    newName: 'displayProperty',
+    pathPrefix,
+    context,
+  });
+  validateDeprecatedProperty({
+    obj: schema,
+    oldName: 'featured',
+    newName: 'featuredProperties',
+    pathPrefix,
+    context,
+  });
+  for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
+    validateSchemaDeprecatedFields(childSchema, [...pathPrefix, propertyName], context);
+  }
+}
+
+function validateDeprecatedProperty<T extends {}>({
+  obj,
+  oldName,
+  newName,
+  pathPrefix,
+  context,
+}: {
+  obj: T;
+  oldName: string;
+  newName?: string;
+  pathPrefix: Array<string | number>;
+  context: z.RefinementCtx;
+}) {
+  if (obj[oldName as keyof T] !== undefined) {
+    let message = `Property name "${oldName}" is no longer accepted.`;
+    if (newName) {
+      message += ` Use "${newName}" instead.`;
+    }
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: [...pathPrefix, oldName],
+      message,
+    });
+  }
+}
