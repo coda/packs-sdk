@@ -1212,12 +1212,18 @@ const legacyPackMetadataSchema = validateFormulas(
       path: ['networkDomains'],
     },
   );
-const packMetadataSchemaBySdkVersion = [
+
+interface SchemaExtension {
+  versionRange: string;
+  schemaExtend: (schema: z.ZodType<Partial<PackVersionMetadata>>) => z.ZodType<Partial<PackVersionMetadata>>;
+}
+
+const packMetadataSchemaBySdkVersion: SchemaExtension[] = [
   {
     // Check that packs with multiple network domains explicitly choose which domain gets auth.
     // This is a backward-incompatible validation that takes effect in any pack release after 0.9.0.
     versionRange: '>0.9.0',
-    schemaExtend: (schema: z.ZodType<Partial<PackVersionMetadata>>) => {
+    schemaExtend: schema => {
       return schema.superRefine((untypedData, context) => {
         const data = untypedData as PackVersionMetadata;
 
