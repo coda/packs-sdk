@@ -851,7 +851,7 @@ export interface PackVersionDefinition {
    *
    * Note that button actions are also defined here. Buttons are simply formulas
    * with `isAction: true`.
-   * 
+   *
    */
   formulas?: Formula[];
   /**

@@ -40,12 +40,15 @@ import {validateSyncTableSchema} from '../testing/upload_validation';
 import {validateVariousAuthenticationMetadata} from '../testing/upload_validation';
 
 describe('Pack metadata Validation', () => {
-  async function validateJson(obj: Record<string, any>) {
-    return validatePackVersionMetadata(obj);
+  async function validateJson(obj: Record<string, any>, sdkVersion?: string) {
+    const packageJson = await import('' + '../package.json');
+    const codaPacksSDKVersion = packageJson.version as string;
+
+    return validatePackVersionMetadata(obj, sdkVersion === null ? codaPacksSDKVersion : sdkVersion);
   }
 
-  async function validateJsonAndAssertFails(obj: Record<string, any>) {
-    const err = await testHelper.willBeRejectedWith(validateJson(obj), /Pack metadata failed validation/);
+  async function validateJsonAndAssertFails(obj: Record<string, any>, sdkVersion?: string) {
+    const err = await testHelper.willBeRejectedWith(validateJson(obj, sdkVersion), /Pack metadata failed validation/);
     return err as PackMetadataValidationError;
   }
 
@@ -2061,7 +2064,7 @@ describe('Pack metadata Validation', () => {
           type: AuthenticationType.HeaderBearerToken,
         },
       });
-      const err = await validateJsonAndAssertFails(metadata);
+      const err = await validateJsonAndAssertFails(metadata, '0.9.1');
       assert.deepEqual(err.validationErrors, [
         {
           message:
@@ -2069,6 +2072,18 @@ describe('Pack metadata Validation', () => {
           path: 'defaultAuthentication.networkDomain',
         },
       ]);
+    });
+
+    it('missing networkDomains when specifying authentication allowed for old SDK versions', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['foo.com', 'bar.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          // A newer sdkVersion would need to set the networkDomain here.
+        },
+      });
+      const validated = await validateJson(metadata, '0.9.0');
+      assert.deepEqual(validated, metadata);
     });
 
     it('bad networkDomains when specifying authentication', async () => {
@@ -2079,7 +2094,7 @@ describe('Pack metadata Validation', () => {
           networkDomain: 'baz.com',
         },
       });
-      const err = await validateJsonAndAssertFails(metadata);
+      const err = await validateJsonAndAssertFails(metadata, '0.9.1');
       assert.deepEqual(err.validationErrors, [
         {
           message: 'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',

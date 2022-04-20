@@ -18,6 +18,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.zodErrorDetailToValidationError = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
 const schema_1 = require("../schema");
@@ -41,6 +44,7 @@ const ensure_1 = require("../helpers/ensure");
 const object_utils_1 = require("../helpers/object_utils");
 const schema_11 = require("../schema");
 const migration_1 = require("../helpers/migration");
+const semver_1 = __importDefault(require("semver"));
 const z = __importStar(require("zod"));
 /**
  * The uncompiled column format matchers will be expected to be actual regex objects,
@@ -61,10 +65,21 @@ class PackMetadataValidationError extends Error {
     }
 }
 exports.PackMetadataValidationError = PackMetadataValidationError;
-async function validatePackVersionMetadata(metadata) {
+async function validatePackVersionMetadata(metadata, sdkVersion) {
+    let combinedSchema = legacyPackMetadataSchema;
+    // Server-side validation may be running a different SDK version than the pack maker
+    // is using, so some breaking changes to metadata validation can be set up to only
+    // take effect before or after an SDK version bump.
+    if (sdkVersion) {
+        for (const { versionRange, schemaExtend } of packMetadataSchemaBySdkVersion) {
+            if (semver_1.default.satisfies(sdkVersion, versionRange)) {
+                combinedSchema = schemaExtend(combinedSchema);
+            }
+        }
+    }
     // For now we use legacyPackMetadataSchema as the top-level object we validate. As soon as we migrate all of our
     // first-party pack definitions to only use versioned fields, we can use packVersionMetadataSchema  here.
-    const validated = legacyPackMetadataSchema.safeParse(metadata);
+    const validated = combinedSchema.safeParse(metadata);
     if (!validated.success) {
         throw new PackMetadataValidationError('Pack metadata failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
     }
@@ -999,37 +1014,46 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
     message: 'This pack uses authentication but did not declare a network domain. ' +
         "Specify the domain that your pack makes http requests to using `networkDomains: ['example.com']`",
     path: ['networkDomains'],
-})
-    .superRefine((untypedData, context) => {
-    // Check that packs with multiple network domains explicitly choose which domain gets auth.
-    var _a;
-    const data = untypedData;
-    if (!data.defaultAuthentication ||
-        data.defaultAuthentication.type === types_1.AuthenticationType.Various ||
-        data.defaultAuthentication.type === types_1.AuthenticationType.None) {
-        return;
-    }
-    if (data.defaultAuthentication.requiresEndpointUrl) {
-        // We're ok if there's a user-supplied endpoint domain.
-        return;
-    }
-    if (!data.defaultAuthentication.networkDomain) {
-        if (data.networkDomains && data.networkDomains.length > 1) {
-            context.addIssue({
-                code: z.ZodIssueCode.custom,
-                path: ['defaultAuthentication.networkDomain'],
-                message: 'This pack uses multiple network domains and must set one as a `networkDomain` in setUserAuthentication()',
-            });
-        }
-        return;
-    }
-    // Pack has multiple network domains and user auth. The code needs to clarify which domain gets the auth headers.
-    if (!((_a = data.networkDomains) === null || _a === void 0 ? void 0 : _a.includes(data.defaultAuthentication.networkDomain))) {
-        context.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ['defaultAuthentication.networkDomain'],
-            message: 'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
-        });
-        return;
-    }
 });
+const packMetadataSchemaBySdkVersion = [
+    {
+        // Check that packs with multiple network domains explicitly choose which domain gets auth.
+        // This is a backward-incompatible validation that takes effect in any pack release after 0.9.0.
+        versionRange: '>0.9.0',
+        schemaExtend: schema => {
+            return schema.superRefine((untypedData, context) => {
+                var _a;
+                const data = untypedData;
+                if (!data.defaultAuthentication ||
+                    data.defaultAuthentication.type === types_1.AuthenticationType.Various ||
+                    data.defaultAuthentication.type === types_1.AuthenticationType.None) {
+                    return;
+                }
+                if (data.defaultAuthentication.requiresEndpointUrl) {
+                    // We're ok if there's a user-supplied endpoint domain.
+                    return;
+                }
+                if (!data.defaultAuthentication.networkDomain) {
+                    if (data.networkDomains && data.networkDomains.length > 1) {
+                        context.addIssue({
+                            code: z.ZodIssueCode.custom,
+                            path: ['defaultAuthentication.networkDomain'],
+                            message: 'This pack uses multiple network domains and must set one as a `networkDomain` in setUserAuthentication()',
+                        });
+                    }
+                    return;
+                }
+                // Pack has multiple network domains and user auth. The code needs to clarify which domain gets the auth
+                // headers.
+                if (!((_a = data.networkDomains) === null || _a === void 0 ? void 0 : _a.includes(data.defaultAuthentication.networkDomain))) {
+                    context.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        path: ['defaultAuthentication.networkDomain'],
+                        message: 'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
+                    });
+                    return;
+                }
+            });
+        },
+    },
+];
