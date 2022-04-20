@@ -13,6 +13,7 @@ This changelog keeps track of all changes to the packs-sdk. We follow convention
 
 - **Breaking Change** Added a validation rule that prevents the usage of varargsParameters for sync table getters
   which are not currently supported in the UI.
+- **Breaking Change** Packs with multiple network domains and user authentication must select only one of those domains to receive the authentication headers/parameters.
 - **Future Breaking Change** The properties `id`, `primary`, and `featured` of object schemas will be renamed to `idProperty`, `displayProperty`, and `featuredProperties`, respectively, to better clarify that their values refer to property names within the schema. During a migration period, you may use either name; the original names are now marked as deprecated and will be removed at a future date, no earlier than May 1, 2022.
 - **Breaking Change** The `identityName` field of a sync table formerly silently overrode the `identity.name` of the table's schema (if present). Now, if those 2 values are both present, they must be equal. We recommend only specifying `identity.name` on reference schemas.
 - **Future Breaking Change** Dynamic sync tables will require `identityName` like static sync tables do, and `identityName` will override `identity.name` in dynamic schemas. In fact, `identity` in sync table schemas will be entirely unnecessary, except for the use case of constructing references to objects in other sync tables.
@@ -20,7 +21,7 @@ This changelog keeps track of all changes to the packs-sdk. We follow convention
 - **Future Breaking Change** The `attribution` property is moving from being a child field on `identity` within an object schema to just being a top-level field on the object schema.
 - **Future Breaking Change** The `defaultValue` property of parameter definitions will be renamed to `suggestedValue` to reflect that these are values that do not act as a true default but rather prepopulates a value when used.
 - **Future Breaking Change** Added support for files as parameters with `ParameterType.File`. Previously, files could be used as parameters by using the `ParameterType.Image` parameter type, but an error would show in the formula builder. In the future, this error may be enforced such that only image files will be allowed to be used when a parameter is specified to be a `ParameterType.Image`.
- 
+- **Future Breaking Change** Fetcher will automatically decompress responses with a gzip or deflate content encoding.
 
 ### Removed
 
