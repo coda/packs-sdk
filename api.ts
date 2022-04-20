@@ -6,6 +6,7 @@ import {ConnectionRequirement} from './api_types';
 import type {ExecutionContext} from './api_types';
 import type {FetchRequest} from './api_types';
 import type {Identity} from './schema';
+import type {NullableArrayType} from './api_types';
 import type {NumberHintTypes} from './schema';
 import type {NumberSchema} from './schema';
 import type {ObjectSchema} from './schema';
@@ -378,7 +379,7 @@ export function makeNumericArrayParameter(
   name: string,
   description: string,
   args: ParamArgs<ArrayType<Type.number>> = {},
-): ParamDef<ArrayType<Type.number>> {
+): ParamDef<NullableArrayType<Type.number>> {
   return Object.freeze({...args, name, description, type: numberArray});
 }
 

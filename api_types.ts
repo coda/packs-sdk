@@ -31,6 +31,12 @@ export interface ArrayType<T extends Type> {
   type: 'array';
   /** The type of the items in this array. */
   items: T;
+  /** If true, this array will accept empty values as `undefined` for non-string types. */
+  allowEmpty?: boolean;
+}
+
+export interface NullableArrayType<T extends Type> extends ArrayType<T> {
+  allowEmpty: true;
 }
 
 export function isArrayType(obj: any): obj is ArrayType<any> {
@@ -44,9 +50,10 @@ export const stringArray: ArrayType<Type.string> = {
   items: Type.string,
 };
 
-export const numberArray: ArrayType<Type.number> = {
+export const numberArray: NullableArrayType<Type.number> = {
   type: 'array',
   items: Type.number,
+  allowEmpty: true,
 };
 
 export const booleanArray: ArrayType<Type.boolean> = {
@@ -170,7 +177,7 @@ export interface ParameterTypeMap {
   [ParameterType.Image]: Type.image;
 
   [ParameterType.StringArray]: ArrayType<Type.string>;
-  [ParameterType.NumberArray]: ArrayType<Type.number>;
+  [ParameterType.NumberArray]: NullableArrayType<Type.number>;
   [ParameterType.BooleanArray]: ArrayType<Type.boolean>;
   [ParameterType.DateArray]: ArrayType<Type.date>;
   [ParameterType.HtmlArray]: ArrayType<Type.html>;
@@ -186,7 +193,7 @@ export const ParameterTypeInputMap: Record<ParameterType, UnionType> = {
   [ParameterType.Image]: Type.image,
 
   [ParameterType.StringArray]: {type: 'array', items: Type.string},
-  [ParameterType.NumberArray]: {type: 'array', items: Type.number},
+  [ParameterType.NumberArray]: {type: 'array', items: Type.number, allowEmpty: true},
   [ParameterType.BooleanArray]: {type: 'array', items: Type.boolean},
   [ParameterType.DateArray]: {type: 'array', items: Type.date},
   [ParameterType.HtmlArray]: {type: 'array', items: Type.html},
@@ -253,7 +260,9 @@ export type ParamsList = Array<ParamDef<UnionType>>;
 type TypeOfMap<T extends UnionType> = T extends Type
   ? TypeMap[T]
   : T extends ArrayType<infer V>
-  ? Array<TypeMap[V] | undefined>
+  ? T extends NullableArrayType<infer V>
+    ? Array<TypeMap[V] | undefined>
+    : Array<TypeMap[V]>
   : never;
 
 /**

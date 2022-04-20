@@ -29,11 +29,16 @@ export interface ArrayType<T extends Type> {
     type: 'array';
     /** The type of the items in this array. */
     items: T;
+    /** If true, this array will accept empty values as `undefined` for non-string types. */
+    allowEmpty?: boolean;
+}
+export interface NullableArrayType<T extends Type> extends ArrayType<T> {
+    allowEmpty: true;
 }
 export declare function isArrayType(obj: any): obj is ArrayType<any>;
 export declare type UnionType = ArrayType<Type> | Type;
 export declare const stringArray: ArrayType<Type.string>;
-export declare const numberArray: ArrayType<Type.number>;
+export declare const numberArray: NullableArrayType<Type.number>;
 export declare const booleanArray: ArrayType<Type.boolean>;
 export declare const dateArray: ArrayType<Type.date>;
 export declare const htmlArray: ArrayType<Type.html>;
@@ -122,7 +127,7 @@ export interface ParameterTypeMap {
     [ParameterType.Html]: Type.html;
     [ParameterType.Image]: Type.image;
     [ParameterType.StringArray]: ArrayType<Type.string>;
-    [ParameterType.NumberArray]: ArrayType<Type.number>;
+    [ParameterType.NumberArray]: NullableArrayType<Type.number>;
     [ParameterType.BooleanArray]: ArrayType<Type.boolean>;
     [ParameterType.DateArray]: ArrayType<Type.date>;
     [ParameterType.HtmlArray]: ArrayType<Type.html>;
@@ -178,7 +183,7 @@ export declare type ParamArgs<T extends UnionType> = Omit<ParamDef<T>, 'descript
 export declare type ParamDefs = [ParamDef<UnionType>, ...Array<ParamDef<UnionType>>] | [];
 /** @hidden */
 export declare type ParamsList = Array<ParamDef<UnionType>>;
-declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : T extends ArrayType<infer V> ? Array<TypeMap[V] | undefined> : never;
+declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : T extends ArrayType<infer V> ? T extends NullableArrayType<infer V> ? Array<TypeMap[V] | undefined> : Array<TypeMap[V]> : never;
 /**
  * The type for the set of argument values that are passed to formula's `execute` function, based on
  * the parameter defintion for that formula.

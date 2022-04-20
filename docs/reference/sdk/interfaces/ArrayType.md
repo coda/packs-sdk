@@ -13,6 +13,18 @@ The type of a parameter or return value that is an array.
 
 ## Properties
 
+### allowEmpty
+
+• `Optional` **allowEmpty**: `boolean`
+
+If true, this array will accept empty values as `undefined` for non-string types.
+
+#### Defined in
+
+[api_types.ts:35](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L35)
+
+___
+
 ### items
 
 • **items**: `T`

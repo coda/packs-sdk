@@ -30,6 +30,7 @@ exports.stringArray = {
 exports.numberArray = {
     type: 'array',
     items: Type.number,
+    allowEmpty: true,
 };
 exports.booleanArray = {
     type: 'array',
@@ -114,7 +115,7 @@ exports.ParameterTypeInputMap = {
     [ParameterType.Html]: Type.html,
     [ParameterType.Image]: Type.image,
     [ParameterType.StringArray]: { type: 'array', items: Type.string },
-    [ParameterType.NumberArray]: { type: 'array', items: Type.number },
+    [ParameterType.NumberArray]: { type: 'array', items: Type.number, allowEmpty: true },
     [ParameterType.BooleanArray]: { type: 'array', items: Type.boolean },
     [ParameterType.DateArray]: { type: 'array', items: Type.date },
     [ParameterType.HtmlArray]: { type: 'array', items: Type.html },
