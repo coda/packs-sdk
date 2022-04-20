@@ -41,6 +41,8 @@ const api_types_3 = require("../api_types");
 const schema_9 = require("../schema");
 const schema_10 = require("../schema");
 const ensure_1 = require("../helpers/ensure");
+const sdk_version_1 = require("../helpers/sdk_version");
+const ensure_2 = require("../helpers/ensure");
 const object_utils_1 = require("../helpers/object_utils");
 const schema_11 = require("../schema");
 const migration_1 = require("../helpers/migration");
@@ -770,10 +772,30 @@ const syncTableSchema = z
 const unrefinedPackVersionMetadataSchema = zodCompleteObject({
     sdkVersion: z
         .string()
-        .regex(/^\d+(\.\d+){0,2}$/, 'SDK versions must use semantic versioning, e.g. "1", "1.0" or "1.0.0".')
-        .refine(
-    // Version numbers must not be bigger than a postgres integer.
-    version => version.split('.').filter(part => Number(part) > 2147483647).length === 0, 'SDK version number too large')
+        .superRefine((version, ctx) => {
+        if (!semver_1.default.valid(version)) {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: 'SDK versions must use semantic versioning, e.g. "1.0.0".',
+            });
+            return;
+        }
+        const nextMinorRelease = (0, ensure_2.ensureExists)(semver_1.default.inc((0, sdk_version_1.currentSDKVersion)(), 'minor'));
+        if (semver_1.default.gte(version, nextMinorRelease)) {
+            // Version numbers must not be bigger than a patch of the latest SDK release.
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: 'SDK version number too large',
+            });
+        }
+        if (semver_1.default.lt(version, '0.9.0')) {
+            // Version numbers were introduced to the metadata in 0.9.0 and shouldn't be smaller than that.
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: 'SDK version number too small',
+            });
+        }
+    })
         // Old SDK metadata may not set the version, but we need to be able to parse and validate metadata from
         // older SDK versions during server-side uploads.
         .optional(),
@@ -1018,9 +1040,9 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
     var _a;
     const data = untypedData;
     if (!data.sdkVersion || !semver_1.default.satisfies(data.sdkVersion, '>0.9.0')) {
-        // Allow a window where server-side validation accepts metadata from older SDK versions
-        // that isn't in the latest format. We can force upgrades by turning off the ability to
-        // upload from old SDK versions.
+        // A recent SDK on the server SDK can skip this check if the client's SDK
+        // was too old. We should eventually disallow excessively old SDK versions in
+        // uploads.
         return;
     }
     if (!data.defaultAuthentication ||
