@@ -17,7 +17,6 @@ import type {SyncTableOptions} from './api';
 import type {SystemAuthentication} from './types';
 import type {SystemAuthenticationDef} from './types';
 import type {ValueType} from './schema';
-import {currentSDKVersion} from './helpers/sdk_version';
 import {isDynamicSyncTable} from './api';
 import {makeDynamicSyncTable} from './api';
 import {makeFormula} from './api';
@@ -75,12 +74,6 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * See {@link PackVersionDefinition.version}.
    */
   version?: string;
-
-  /**
-   * See {@link PackVersionDefinition.sdkVersion}.
-   */
-  sdkVersion?: string;
-
   /** @deprecated */
   formulaNamespace?: string;
 
@@ -99,7 +92,6 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       defaultAuthentication,
       systemConnectionAuthentication,
       version,
-      sdkVersion,
       formulaNamespace,
     } = definition || {};
     this.formulas = formulas || [];
@@ -109,7 +101,6 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     this.defaultAuthentication = defaultAuthentication;
     this.systemConnectionAuthentication = systemConnectionAuthentication;
     this.version = version;
-    this.sdkVersion = sdkVersion || currentSDKVersion();
     this.formulaNamespace = formulaNamespace || 'Deprecated';
   }
 

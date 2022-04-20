@@ -6,6 +6,7 @@ import type {ValidationError} from '../testing/types';
 import {compilePackBundle} from '../testing/compile';
 import {compilePackMetadata} from '../helpers/metadata';
 import {importManifest} from './helpers';
+import {isTestCommand} from './helpers';
 import {makeManifestFullPath} from './helpers';
 import {printAndExit} from '../testing/helpers';
 import {validatePackVersionMetadata} from '../testing/upload_validation';
@@ -29,8 +30,12 @@ export async function handleValidate({manifestFile}: ArgumentsCamelCase<Validate
 }
 
 export async function validateMetadata(metadata: PackVersionMetadata) {
+  // Since package.json isn't in dist, we grab it from the root directory instead.
+  const packageJson = await import(isTestCommand() ? '../package.json' : '../../package.json');
+  const codaPacksSDKVersion = packageJson.version as string;
+
   try {
-    await validatePackVersionMetadata(metadata);
+    await validatePackVersionMetadata(metadata, codaPacksSDKVersion);
   } catch (e: any) {
     const packMetadataValidationError = e as PackMetadataValidationError;
     const validationErrors = packMetadataValidationError.validationErrors?.map(makeErrorMessage).join('\n');

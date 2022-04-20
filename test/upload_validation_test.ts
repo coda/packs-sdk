@@ -21,6 +21,7 @@ import {ValueType} from '../schema';
 import {createFakePack} from './test_utils';
 import {createFakePackFormulaMetadata} from './test_utils';
 import {createFakePackVersionMetadata} from './test_utils';
+import {currentSDKVersion} from '../helpers/sdk_version';
 import {deepCopy} from '../helpers/object_utils';
 import {makeDynamicSyncTable} from '../api';
 import {makeFormula} from '../api';
@@ -40,8 +41,14 @@ import {validateSyncTableSchema} from '../testing/upload_validation';
 import {validateVariousAuthenticationMetadata} from '../testing/upload_validation';
 
 describe('Pack metadata Validation', () => {
+  let sdkVersion: string;
+
+  beforeEach(() => {
+    sdkVersion = currentSDKVersion();
+  });
+
   async function validateJson(obj: Record<string, any>) {
-    return validatePackVersionMetadata(obj);
+    return validatePackVersionMetadata(obj, sdkVersion);
   }
 
   async function validateJsonAndAssertFails(obj: Record<string, any>) {
@@ -125,36 +132,6 @@ describe('Pack metadata Validation', () => {
     }
     for (const version of ['3000000000', '0.3000000000']) {
       await expectFailureWith(version, 'Pack version number too large');
-    }
-  });
-
-  it('valid sdk versions', async () => {
-    for (const sdkVersion of [undefined, '0.9.0', '0.9.100', '0.10.10']) {
-      const metadata = createFakePackVersionMetadata({sdkVersion});
-      const result = await validateJson(metadata);
-      assert.ok(result, `Expected version blah identifier "${sdkVersion}" to be valid.`);
-    }
-  });
-
-  it('invalid sdk versions', async () => {
-    for (const sdkVersion of ['1.2.3.4', 'foo', '1.a']) {
-      const metadata = createFakePackVersionMetadata({sdkVersion});
-      const err = await validateJsonAndAssertFails(metadata);
-      assert.deepEqual(err.validationErrors, [
-        {path: 'sdkVersion', message: 'SDK versions must use semantic versioning, e.g. "1.0.0".'},
-      ]);
-    }
-
-    for (const sdkVersion of ['1.0.0', '0.11.0']) {
-      const metadata = createFakePackVersionMetadata({sdkVersion});
-      const err = await validateJsonAndAssertFails(metadata);
-      assert.deepEqual(err.validationErrors, [{path: 'sdkVersion', message: 'SDK version number too large'}]);
-    }
-
-    for (const sdkVersion of ['0.1.0', '0.8.0']) {
-      const metadata = createFakePackVersionMetadata({sdkVersion});
-      const err = await validateJsonAndAssertFails(metadata);
-      assert.deepEqual(err.validationErrors, [{path: 'sdkVersion', message: 'SDK version number too small'}]);
     }
   });
 
@@ -2108,8 +2085,8 @@ describe('Pack metadata Validation', () => {
           type: AuthenticationType.HeaderBearerToken,
           // A newer sdkVersion would need to set the networkDomain here.
         },
-        sdkVersion: '0.9.0',
       });
+      sdkVersion = '0.9.0';
       const validated = await validateJson(metadata);
       assert.deepEqual(validated, metadata);
     });

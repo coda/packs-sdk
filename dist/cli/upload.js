@@ -28,7 +28,6 @@ const compile_1 = require("../testing/compile");
 const metadata_1 = require("../helpers/metadata");
 const crypto_1 = require("../helpers/crypto");
 const helpers_1 = require("./helpers");
-const sdk_version_1 = require("../helpers/sdk_version");
 const helpers_2 = require("./helpers");
 const errors_1 = require("./errors");
 const errors_2 = require("./errors");
@@ -37,11 +36,12 @@ const config_storage_1 = require("./config_storage");
 const config_storage_2 = require("./config_storage");
 const helpers_3 = require("./helpers");
 const coda_1 = require("../helpers/external-api/coda");
+const helpers_4 = require("./helpers");
 const os_1 = __importDefault(require("os"));
 const path = __importStar(require("path"));
-const helpers_4 = require("../testing/helpers");
 const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
+const helpers_7 = require("../testing/helpers");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
 const errors_3 = require("./errors");
 const uuid_1 = require("uuid");
@@ -58,7 +58,7 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
     const logger = console;
     function printAndExit(message) {
         cleanup(intermediateOutputDirectory, logger);
-        (0, helpers_5.printAndExit)(message);
+        (0, helpers_6.printAndExit)(message);
     }
     const manifestDir = path.dirname(manifestFile);
     const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
@@ -77,7 +77,9 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
         timerStrategy,
     });
     const manifest = await (0, helpers_3.importManifest)(bundlePath);
-    const codaPacksSDKVersion = (0, sdk_version_1.currentSDKVersion)();
+    // Since package.json isn't in dist, we grab it from the root directory instead.
+    const packageJson = await Promise.resolve().then(() => __importStar(require((0, helpers_4.isTestCommand)() ? '../package.json' : '../../package.json')));
+    const codaPacksSDKVersion = packageJson.version;
     const apiKey = (0, config_storage_1.getApiKey)(codaApiEndpoint);
     if (!apiKey) {
         printAndExit('Missing API token. Please run `coda register` to register one.');
@@ -93,14 +95,14 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
         if (!packVersion) {
             const nextPackVersionInfo = await client.getNextPackVersion(packId, {}, { proposedMetadata: JSON.stringify(metadata) });
             packVersion = nextPackVersionInfo.nextVersion;
-            (0, helpers_4.print)(`Pack version not provided. Generated one for you: version is ${packVersion}`);
+            (0, helpers_5.print)(`Pack version not provided. Generated one for you: version is ${packVersion}`);
         }
         metadata.version = packVersion;
-        const bundle = (0, helpers_6.readFile)(bundlePath);
+        const bundle = (0, helpers_7.readFile)(bundlePath);
         if (!bundle) {
             printAndExit(`Could not find bundle file at path ${bundlePath}`);
         }
-        const sourceMap = (0, helpers_6.readFile)(bundleSourceMapPath);
+        const sourceMap = (0, helpers_7.readFile)(bundleSourceMapPath);
         if (!sourceMap) {
             printAndExit(`Could not find bundle source map at path ${bundleSourceMapPath}`);
         }
@@ -155,6 +157,6 @@ async function uploadPack(uploadUrl, uploadPayload, headers) {
         });
     }
     catch (err) {
-        (0, helpers_5.printAndExit)(`Error in uploading Pack to signed url: ${(0, errors_1.formatError)(err)}`);
+        (0, helpers_6.printAndExit)(`Error in uploading Pack to signed url: ${(0, errors_1.formatError)(err)}`);
     }
 }

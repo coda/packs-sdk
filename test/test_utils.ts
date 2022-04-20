@@ -9,7 +9,6 @@ import {deepFreeze} from '../helpers/object_utils';
 
 const BaseFakePack = {
   version: '42.42.42',
-  sdkVersion: '0.9.1',
   formats: [],
   formulas: [],
   syncTables: [],

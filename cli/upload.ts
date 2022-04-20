@@ -9,7 +9,6 @@ import {compilePackBundle} from '../testing/compile';
 import {compilePackMetadata} from '../helpers/metadata';
 import {computeSha256} from '../helpers/crypto';
 import {createCodaClient} from './helpers';
-import {currentSDKVersion} from '../helpers/sdk_version';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
 import {formatResponseError} from './errors';
@@ -18,6 +17,7 @@ import {getApiKey} from './config_storage';
 import {getPackId} from './config_storage';
 import {importManifest} from './helpers';
 import {isResponseError} from '../helpers/external-api/coda';
+import {isTestCommand} from './helpers';
 import os from 'os';
 import * as path from 'path';
 import {print} from '../testing/helpers';
@@ -83,7 +83,9 @@ export async function handleUpload({
 
   const manifest = await importManifest<PackVersionDefinition>(bundlePath);
 
-  const codaPacksSDKVersion = currentSDKVersion();
+  // Since package.json isn't in dist, we grab it from the root directory instead.
+  const packageJson = await import(isTestCommand() ? '../package.json' : '../../package.json');
+  const codaPacksSDKVersion = packageJson.version as string;
 
   const apiKey = getApiKey(codaApiEndpoint);
   if (!apiKey) {
