@@ -105,7 +105,7 @@ jobs:
       - bootstrap_pipenv
       - run:
           name: 'Typedoc'
-          command: make docs
+          command: DOC_GIT_REVISION="git rev-parse HEAD" make docs
       - run:
           name: "MkDocs"
           command: MK_DOCS_SITE_URL="https://staging.coda.io/packs/build/latest/" make build-mkdocs
@@ -125,7 +125,7 @@ jobs:
       - bootstrap_pipenv
       - run:
           name: 'Typedoc'
-          command: make docs
+          command: DOC_GIT_REVISION="git rev-parse HEAD" make docs
       - run:
           name: "MkDocs"
           command: MK_DOCS_SITE_URL="https://coda.io/packs/build/latest/" make build-mkdocs
