@@ -168,7 +168,7 @@ function makeNumericParameter(name, description, args = {}) {
 }
 exports.makeNumericParameter = makeNumericParameter;
 function makeNumericArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_9.numberArray });
+    return Object.freeze({ ...args, name, description, type: api_types_9.numberArray, allowEmpty: true });
 }
 exports.makeNumericArrayParameter = makeNumericArrayParameter;
 function makeBooleanParameter(name, description, args = {}) {

@@ -25,6 +25,7 @@ import {deepCopy} from '../helpers/object_utils';
 import {makeDynamicSyncTable} from '../api';
 import {makeFormula} from '../api';
 import {makeMetadataFormula} from '../api';
+import {makeNumericArrayParameter} from '../api';
 import {makeNumericFormula} from '../api';
 import {makeNumericParameter} from '../api';
 import {makeObjectFormula} from '../api';
@@ -35,6 +36,7 @@ import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
 import {makeSyncTable} from '../api';
 import {makeSyncTableLegacy} from '../api';
+import {numberArray} from '../api_types';
 import {validatePackVersionMetadata} from '../testing/upload_validation';
 import {validateSyncTableSchema} from '../testing/upload_validation';
 import {validateVariousAuthenticationMetadata} from '../testing/upload_validation';
@@ -215,14 +217,20 @@ describe('Pack metadata Validation', () => {
         name: 'MyFormula',
         description: 'My description',
         examples: [],
-        parameters: [makeStringParameter('myParam', 'param description')],
+        parameters: [
+          makeStringParameter('myParam', 'param description'),
+          makeNumericArrayParameter('numberArray1', 'description'),
+          makeParameter({type: ParameterType.NumberArray, name: 'numberArray2', description: 'A list of numbers'}),
+        ],
         execute: () => ['hello'],
       });
       const metadata = createFakePackVersionMetadata({
         formulas: [formulaToMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
-      await validateJson(metadata);
+      const validatedMetadata = await validateJson(metadata);
+      assert.deepEqual(validatedMetadata.formulas[0].parameters[1]?.type, numberArray);
+      assert.deepEqual(validatedMetadata.formulas[0].parameters[2]?.type, numberArray);
     });
 
     it('valid object array formula', async () => {

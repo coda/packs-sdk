@@ -381,7 +381,7 @@ export function makeNumericArrayParameter(
   description: string,
   args: ParamArgs<ArrayType<Type.number>> = {},
 ): ParamDef<NullableArrayType<Type.number>> {
-  return Object.freeze({...args, name, description, type: numberArray});
+  return Object.freeze({...args, name, description, type: numberArray, allowEmpty: true});
 }
 
 export function makeBooleanParameter(

@@ -428,7 +428,14 @@ const primitiveUnion = z.union([z.number(), z.string(), z.boolean(), z.date()]);
 const paramDefValidator = zodCompleteObject<ParamDef<any>>({
   name: z.string(),
   type: z
-    .union([z.nativeEnum(Type), z.object({type: zodDiscriminant('array'), items: z.nativeEnum(Type)})])
+    .union([
+      z.nativeEnum(Type),
+      z.object({
+        type: zodDiscriminant('array'),
+        items: z.nativeEnum(Type),
+        allowEmpty: z.boolean().optional(),
+      }),
+    ])
     .refine(
       paramType =>
         paramType !== Type.object &&
