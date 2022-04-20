@@ -41,7 +41,7 @@ import {validateVariousAuthenticationMetadata} from '../testing/upload_validatio
 
 describe('Pack metadata Validation', () => {
   async function validateJson(obj: Record<string, any>, sdkVersion?: string) {
-    const packageJson = await import('../package.json');
+    const packageJson = await import('' + '../package.json');
     const codaPacksSDKVersion = packageJson.version as string;
 
     return validatePackVersionMetadata(obj, sdkVersion === null ? codaPacksSDKVersion : sdkVersion);
