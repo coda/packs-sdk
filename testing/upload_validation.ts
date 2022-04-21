@@ -1276,11 +1276,11 @@ const packMetadataSchemaBySdkVersion: SchemaExtension[] = [
         const data = untypedData as PackVersionMetadata;
         data.formulas.forEach((formula, i) => {
           if (formula.schema) {
-            validateSchemaDeprecatedFields(formula.schema, ['formulas', i], context);
+            validateSchemaDeprecatedFields(formula.schema, ['formulas', i, 'schema'], context);
           }
         });
         data.syncTables.forEach((syncTable, i) => {
-          validateSchemaDeprecatedFields(syncTable.schema, ['syncTables', i], context);
+          validateSchemaDeprecatedFields(syncTable.schema, ['syncTables', i, 'schema'], context);
         });
       });
     },
@@ -1327,7 +1327,7 @@ function validateObjectSchemaDeprecatedFields(
     context,
   });
   for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
-    validateSchemaDeprecatedFields(childSchema, [...pathPrefix, propertyName], context);
+    validateSchemaDeprecatedFields(childSchema, [...pathPrefix, 'properties', propertyName], context);
   }
 }
 
