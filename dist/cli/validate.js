@@ -27,7 +27,7 @@ const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
 const helpers_4 = require("../testing/helpers");
 const upload_validation_1 = require("../testing/upload_validation");
-async function handleValidate({ manifestFile }) {
+async function handleValidate({ manifestFile, checkDeprecationWarnings }) {
     const fullManifestPath = (0, helpers_3.makeManifestFullPath)(manifestFile);
     const { bundlePath } = await (0, compile_1.compilePackBundle)({ manifestPath: fullManifestPath, minify: false });
     const manifest = await (0, helpers_1.importManifest)(bundlePath);
@@ -36,11 +36,11 @@ async function handleValidate({ manifestFile }) {
         manifest.version = '1';
     }
     const metadata = (0, metadata_1.compilePackMetadata)(manifest);
-    return validateMetadata(metadata);
+    return validateMetadata(metadata, { checkDeprecationWarnings });
 }
 exports.handleValidate = handleValidate;
-async function validateMetadata(metadata) {
-    var _a;
+async function validateMetadata(metadata, { checkDeprecationWarnings = true } = {}) {
+    var _a, _b;
     // Since package.json isn't in dist, we grab it from the root directory instead.
     const packageJson = await Promise.resolve().then(() => __importStar(require((0, helpers_2.isTestCommand)() ? '../package.json' : '../../package.json')));
     const codaPacksSDKVersion = packageJson.version;
@@ -52,11 +52,28 @@ async function validateMetadata(metadata) {
         const validationErrors = (_a = packMetadataValidationError.validationErrors) === null || _a === void 0 ? void 0 : _a.map(makeErrorMessage).join('\n');
         (0, helpers_4.printAndExit)(`${e.message}: \n${validationErrors}`);
     }
+    if (!checkDeprecationWarnings) {
+        return;
+    }
+    try {
+        await (0, upload_validation_1.validatePackVersionMetadata)(metadata, codaPacksSDKVersion, { warningMode: true });
+    }
+    catch (e) {
+        const packMetadataValidationError = e;
+        const deprecationWarnings = (_b = packMetadataValidationError.validationErrors) === null || _b === void 0 ? void 0 : _b.map(makeWarningMessage).join('\n');
+        (0, helpers_4.printAndExit)(`Your Pack is using deprecated properties or features: \n${deprecationWarnings}`, 0);
+    }
 }
 exports.validateMetadata = validateMetadata;
 function makeErrorMessage({ path, message }) {
     if (path) {
         return `Error in field at path "${path}": ${message}`;
+    }
+    return message;
+}
+function makeWarningMessage({ path, message }) {
+    if (path) {
+        return `Warning in field at path "${path}": ${message} This will become an error in a future SDK version.`;
     }
     return message;
 }
