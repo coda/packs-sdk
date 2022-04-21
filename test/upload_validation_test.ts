@@ -2386,15 +2386,15 @@ describe('Pack metadata Validation', () => {
       const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
       assert.deepEqual(err.validationErrors, [
         {
-          path: 'formulas[0].id',
+          path: 'formulas[0].schema.id',
           message: 'Property name "id" is no longer accepted. Use "idProperty" instead.',
         },
         {
-          path: 'formulas[0].primary',
+          path: 'formulas[0].schema.primary',
           message: 'Property name "primary" is no longer accepted. Use "displayProperty" instead.',
         },
         {
-          path: 'formulas[0].featured',
+          path: 'formulas[0].schema.featured',
           message: 'Property name "featured" is no longer accepted. Use "featuredProperties" instead.',
         },
       ]);
@@ -2433,15 +2433,15 @@ describe('Pack metadata Validation', () => {
       const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
       assert.deepEqual(err.validationErrors, [
         {
-          path: 'syncTables[0].id',
+          path: 'syncTables[0].schema.id',
           message: 'Property name "id" is no longer accepted. Use "idProperty" instead.',
         },
         {
-          path: 'syncTables[0].primary',
+          path: 'syncTables[0].schema.primary',
           message: 'Property name "primary" is no longer accepted. Use "displayProperty" instead.',
         },
         {
-          path: 'syncTables[0].featured',
+          path: 'syncTables[0].schema.featured',
           message: 'Property name "featured" is no longer accepted. Use "featuredProperties" instead.',
         },
       ]);
@@ -2482,11 +2482,11 @@ describe('Pack metadata Validation', () => {
       const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
       assert.deepEqual(err.validationErrors, [
         {
-          path: 'formulas[0].childObj.id',
+          path: 'formulas[0].schema.properties.childObj.id',
           message: 'Property name "id" is no longer accepted. Use "idProperty" instead.',
         },
         {
-          path: 'formulas[0].childArr.items.primary',
+          path: 'formulas[0].schema.properties.childArr.items.primary',
           message: 'Property name "primary" is no longer accepted. Use "displayProperty" instead.',
         },
       ]);
