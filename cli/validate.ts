@@ -13,9 +13,10 @@ import {validatePackVersionMetadata} from '../testing/upload_validation';
 
 interface ValidateArgs {
   manifestFile: string;
+  checkDeprecationWarnings: boolean;
 }
 
-export async function handleValidate({manifestFile}: ArgumentsCamelCase<ValidateArgs>) {
+export async function handleValidate({manifestFile, checkDeprecationWarnings}: ArgumentsCamelCase<ValidateArgs>) {
   const fullManifestPath = makeManifestFullPath(manifestFile);
   const {bundlePath} = await compilePackBundle({manifestPath: fullManifestPath, minify: false});
   const manifest = await importManifest<PackVersionDefinition>(bundlePath);
@@ -26,10 +27,13 @@ export async function handleValidate({manifestFile}: ArgumentsCamelCase<Validate
   }
 
   const metadata = compilePackMetadata(manifest);
-  return validateMetadata(metadata);
+  return validateMetadata(metadata, {checkDeprecationWarnings});
 }
 
-export async function validateMetadata(metadata: PackVersionMetadata) {
+export async function validateMetadata(
+  metadata: PackVersionMetadata,
+  {checkDeprecationWarnings = true}: {checkDeprecationWarnings?: boolean} = {},
+) {
   // Since package.json isn't in dist, we grab it from the root directory instead.
   const packageJson = await import(isTestCommand() ? '../package.json' : '../../package.json');
   const codaPacksSDKVersion = packageJson.version as string;
@@ -41,11 +45,30 @@ export async function validateMetadata(metadata: PackVersionMetadata) {
     const validationErrors = packMetadataValidationError.validationErrors?.map(makeErrorMessage).join('\n');
     printAndExit(`${e.message}: \n${validationErrors}`);
   }
+
+  if (!checkDeprecationWarnings) {
+    return;
+  }
+
+  try {
+    await validatePackVersionMetadata(metadata, codaPacksSDKVersion, {warningMode: true});
+  } catch (e: any) {
+    const packMetadataValidationError = e as PackMetadataValidationError;
+    const deprecationWarnings = packMetadataValidationError.validationErrors?.map(makeWarningMessage).join('\n');
+    printAndExit(`Your Pack is using deprecated properties or features: \n${deprecationWarnings}`, 0);
+  }
 }
 
 function makeErrorMessage({path, message}: ValidationError): string {
   if (path) {
     return `Error in field at path "${path}": ${message}`;
+  }
+  return message;
+}
+
+function makeWarningMessage({path, message}: ValidationError): string {
+  if (path) {
+    return `Warning in field at path "${path}": ${message} This will become an error in a future SDK version.`;
   }
   return message;
 }
