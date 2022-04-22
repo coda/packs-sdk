@@ -2491,5 +2491,82 @@ describe('Pack metadata Validation', () => {
         },
       ]);
     });
+
+    it('deprecated defaultValue in formula params', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'ignored',
+        formulas: [
+          {
+            name: 'MyFormula',
+            description: 'Formula description',
+            parameters: [{name: 'param', description: '', type: Type.string, defaultValue: 'foo'}],
+            varargParameters: [{name: 'otherParam', description: '', type: Type.string, defaultValue: 'foo'}],
+            resultType: Type.string,
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'formulas[0].parameters[0].defaultValue',
+          message: 'Property name "defaultValue" is no longer accepted. Use "suggestedValue" instead.',
+        },
+        {
+          path: 'formulas[0].varargParameters[0].defaultValue',
+          message: 'Property name "defaultValue" is no longer accepted. Use "suggestedValue" instead.',
+        },
+      ]);
+    });
+
+    it('deprecated defaultValue in sync table getter params', async () => {
+      const syncTable = makeSyncTable({
+        name: 'SyncTable',
+        identityName: 'Sync',
+        schema: makeObjectSchema({
+          idProperty: 'id',
+          displayProperty: 'primary',
+          properties: {
+            id: {type: ValueType.String},
+            primary: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'MyFormula',
+          description: 'Formula description',
+          parameters: [{name: 'param', description: '', type: Type.string, defaultValue: 'foo'}],
+          async execute() {
+            return {result: []};
+          },
+        },
+      });
+      const metadata = createFakePackVersionMetadata({
+        syncTables: [syncTable],
+      });
+      const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'syncTables[0].getter.parameters[0].defaultValue',
+          message: 'Property name "defaultValue" is no longer accepted. Use "suggestedValue" instead.',
+        },
+      ]);
+    });
+
+    it('deprecated getOptionsFormula', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          postSetup: [
+            {type: PostSetupType.SetEndpoint, getOptionsFormula: {} as any, name: 'StepName', description: ''},
+          ],
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'defaultAuthentication.postSetup[0].getOptionsFormula',
+          message: 'Property name "getOptionsFormula" is no longer accepted. Use "getOptions" instead.',
+        },
+      ]);
+    });
   });
 });

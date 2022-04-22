@@ -61,6 +61,7 @@ import type {SyncTable} from '../api';
 import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
 import {Type} from '../api_types';
+import type {UnionType} from '../api_types';
 import type {ValidationError} from './types';
 import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
@@ -1275,13 +1276,40 @@ const packMetadataSchemaBySdkVersion: SchemaExtension[] = [
       return schema.superRefine((untypedData, context) => {
         const data = untypedData as PackVersionMetadata;
         data.formulas.forEach((formula, i) => {
+          formula.parameters.forEach((param, j) => {
+            validateDeprecatedParameterFields(param, ['formulas', i, 'parameters', j], context);
+          });
+          (formula.varargParameters || []).forEach((param, j) => {
+            validateDeprecatedParameterFields(param, ['formulas', i, 'varargParameters', j], context);
+          });
           if (formula.schema) {
             validateSchemaDeprecatedFields(formula.schema, ['formulas', i, 'schema'], context);
           }
         });
         data.syncTables.forEach((syncTable, i) => {
-          validateSchemaDeprecatedFields(syncTable.schema, ['syncTables', i, 'schema'], context);
+          syncTable.getter.parameters.forEach((param, j) => {
+            validateDeprecatedParameterFields(param, ['syncTables', i, 'getter', 'parameters', j], context);
+          });
+          (syncTable.getter.varargParameters || []).forEach((param, j) => {
+            validateDeprecatedParameterFields(param, ['syncTables', i, 'getter', 'varargParameters', j], context);
+          });
+
+          const schemaPathPrefix = ['syncTables', i, 'schema'];
+          validateSchemaDeprecatedFields(syncTable.schema, schemaPathPrefix, context);
         });
+
+        const {defaultAuthentication: auth} = data;
+        if (auth && auth.type !== AuthenticationType.None && auth.postSetup) {
+          auth.postSetup.forEach((step, i) => {
+            validateDeprecatedProperty({
+              obj: step,
+              oldName: 'getOptionsFormula',
+              newName: 'getOptions',
+              pathPrefix: ['defaultAuthentication', 'postSetup', i],
+              context,
+            });
+          });
+        }
       });
     },
   },
@@ -1326,6 +1354,17 @@ function validateObjectSchemaDeprecatedFields(
     pathPrefix,
     context,
   });
+
+  if (schema.identity?.attribution) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: [...pathPrefix, 'identity', 'attribution'],
+      message:
+        'Attribution has moved and is no longer nested in the Identity object. ' +
+        'Instead of specifying `schema.identity.attribution`, simply specify `schema.attribution`.',
+    });
+  }
+
   for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
     validateSchemaDeprecatedFields(childSchema, [...pathPrefix, 'properties', propertyName], context);
   }
@@ -1355,4 +1394,18 @@ function validateDeprecatedProperty<T extends {}>({
       message,
     });
   }
+}
+
+function validateDeprecatedParameterFields<T extends UnionType>(
+  param: ParamDef<T>,
+  pathPrefix: Array<string | number>,
+  context: z.RefinementCtx,
+) {
+  validateDeprecatedProperty({
+    obj: param,
+    oldName: 'defaultValue',
+    newName: 'suggestedValue',
+    pathPrefix,
+    context,
+  });
 }
