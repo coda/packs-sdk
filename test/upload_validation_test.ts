@@ -1,5 +1,6 @@
 import {testHelper} from './test_helper';
 import type {ArraySchema} from '../schema';
+import {AttributionNodeType} from '..';
 import {AuthenticationType} from '../types';
 import {ConnectionRequirement} from '../api_types';
 import {CurrencyFormat} from '..';
@@ -22,6 +23,7 @@ import {createFakePack} from './test_utils';
 import {createFakePackFormulaMetadata} from './test_utils';
 import {createFakePackVersionMetadata} from './test_utils';
 import {deepCopy} from '../helpers/object_utils';
+import {makeAttributionNode} from '..';
 import {makeDynamicSyncTable} from '../api';
 import {makeFormula} from '../api';
 import {makeMetadataFormula} from '../api';
@@ -2565,6 +2567,38 @@ describe('Pack metadata Validation', () => {
         {
           path: 'defaultAuthentication.postSetup[0].getOptionsFormula',
           message: 'Property name "getOptionsFormula" is no longer accepted. Use "getOptions" instead.',
+        },
+      ]);
+    });
+
+    it('deprecated attribution within identity', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'ignored',
+        formulas: [
+          {
+            schema: makeObjectSchema({
+              identity: {
+                name: 'Foo',
+                attribution: [makeAttributionNode({type: AttributionNodeType.Text, text: 'foo'})],
+              },
+              properties: {
+                id: {type: ValueType.String},
+              },
+            }),
+            name: 'MyFormula',
+            description: 'Formula description',
+            parameters: [],
+            resultType: Type.object,
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'formulas[0].schema.identity.attribution',
+          message:
+            'Attribution has moved and is no longer nested in the Identity object. ' +
+            'Instead of specifying `schema.identity.attribution`, simply specify `schema.attribution`.',
         },
       ]);
     });
