@@ -115,7 +115,7 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
         const uploadPayload = JSON.stringify(upload);
         const bundleHash = (0, crypto_1.computeSha256)(uploadPayload);
         logger.info('Validating Pack metadata...');
-        await (0, validate_1.validateMetadata)(metadata);
+        await (0, validate_1.validateMetadata)(metadata, { checkDeprecationWarnings: false });
         logger.info('Registering new Pack version...');
         let registerResponse;
         try {
@@ -131,14 +131,23 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
         logger.info('Uploading Pack...');
         await uploadPack(uploadUrl, uploadPayload, headers);
         logger.info('Validating upload...');
+        let uploadCompleteResponse;
         try {
-            await client.packVersionUploadComplete(packId, packVersion, {}, { notes, source: v1_1.PublicApiPackSource.Cli });
+            uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion, {}, { notes, source: v1_1.PublicApiPackSource.Cli });
         }
         catch (err) {
             if ((0, coda_1.isResponseError)(err)) {
                 printAndExit(`Error while finalizing pack version: ${await (0, errors_2.formatResponseError)(err)}`);
             }
             throw err;
+        }
+        const { deprecationWarnings } = uploadCompleteResponse;
+        if (deprecationWarnings) {
+            (0, helpers_5.print)('\nYour Pack version uploaded successfully. ' +
+                'However, your Pack is using deprecated properties or features that will become errors in a future SDK version.\n');
+            for (const { path, message } of deprecationWarnings) {
+                (0, helpers_5.print)(`Warning in field at path "${path}": ${message}`);
+            }
         }
     }
     catch (err) {

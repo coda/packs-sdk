@@ -4,7 +4,7 @@
  * available at https://coda.io/developers/apis/v1
  *
  * Version: v1
- * Hash: e8edcd565f1c5ea5e9f682b9b9df68563d730643a6e9477a997cf57baa7d8f4c
+ * Hash: 3cb65a92b168c432b6eb8cad28cd0cc16911c3536d86f2d256c7ddb6007de8ad
  */
 
 import 'es6-promise/auto';
@@ -96,6 +96,20 @@ export class Client {
     };
     const codaUrl = withQueryParams(`${this.protocolAndHost}/apis/v1/docs`, allParams);
     return this._makeRequest('POST', codaUrl, JSON.stringify(payload));
+  }
+
+  async getDocsCount(
+    params: {
+      isPublished?: boolean;
+      isOwner?: boolean;
+      workspaceId?: string;
+    } = {},
+  ): Promise<types.PublicApiCountResponse> {
+    const allParams = {
+      ...params,
+    };
+    const codaUrl = withQueryParams(`${this.protocolAndHost}/apis/v1/docs/count`, allParams);
+    return this._makeRequest('GET', codaUrl);
   }
 
   async getDoc(docId: string, params: {} = {}): Promise<types.PublicApiDoc> {
@@ -506,12 +520,28 @@ export class Client {
     return this._makeRequest('GET', codaUrl);
   }
 
+  async triggerWebhookAutomation(
+    docId: string,
+    ruleId: string,
+    params: {} = {},
+    payload: types.PublicApiWebhookTriggerPayload,
+  ): Promise<types.PublicApiWebhookTriggerResult> {
+    const allParams = {
+      ...params,
+    };
+    const codaUrl = withQueryParams(
+      `${this.protocolAndHost}/apis/v1/docs/${docId}/hooks/automation/${ruleId}`,
+      allParams,
+    );
+    return this._makeRequest('POST', codaUrl, JSON.stringify(payload));
+  }
+
   async listDocAnalytics(
     params: {
       isPublished?: boolean;
       sinceDate?: string;
       untilDate?: string;
-      scale?: types.PublicApiDocAnalyticsScale;
+      scale?: types.PublicApiAnalyticsScale;
       limit?: number;
       pageToken?: string;
     } = {},
@@ -521,6 +551,110 @@ export class Client {
     };
     const {pageToken, ...rest} = allParams;
     const codaUrl = withQueryParams(`${this.protocolAndHost}/apis/v1/analytics/docs`, pageToken ? {pageToken} : rest);
+    return this._makeRequest('GET', codaUrl);
+  }
+
+  async listDocAnalyticsDeprecated(
+    params: {
+      isPublished?: boolean;
+      sinceDate?: string;
+      untilDate?: string;
+      scale?: types.PublicApiAnalyticsScale;
+      limit?: number;
+      pageToken?: string;
+    } = {},
+  ): Promise<types.PublicApiDeprecatedDocAnalyticsCollection> {
+    const allParams = {
+      ...params,
+    };
+    const {pageToken, ...rest} = allParams;
+    const codaUrl = withQueryParams(
+      `${this.protocolAndHost}/apis/v1/analytics/docs/legacy`,
+      pageToken ? {pageToken} : rest,
+    );
+    return this._makeRequest('GET', codaUrl);
+  }
+
+  async listDocAnalyticsSummary(
+    params: {
+      isPublished?: boolean;
+      sinceDate?: string;
+      untilDate?: string;
+      limit?: number;
+      pageToken?: string;
+    } = {},
+  ): Promise<types.PublicApiDocAnalyticsSummary> {
+    const allParams = {
+      ...params,
+    };
+    const {pageToken, ...rest} = allParams;
+    const codaUrl = withQueryParams(
+      `${this.protocolAndHost}/apis/v1/analytics/docs/summary`,
+      pageToken ? {pageToken} : rest,
+    );
+    return this._makeRequest('GET', codaUrl);
+  }
+
+  async listPackAnalytics(
+    params: {
+      packIds?: string;
+      workspaceId?: string;
+      sinceDate?: string;
+      untilDate?: string;
+      scale?: types.PublicApiAnalyticsScale;
+      orderBy?: types.PublicApiPackAnalyticsOrderBy;
+      direction?: types.PublicApiSortDirection;
+      limit?: number;
+      pageToken?: string;
+    } = {},
+  ): Promise<types.PublicApiPackAnalyticsCollection> {
+    const allParams = {
+      ...params,
+    };
+    const {pageToken, ...rest} = allParams;
+    const codaUrl = withQueryParams(`${this.protocolAndHost}/apis/v1/analytics/packs`, pageToken ? {pageToken} : rest);
+    return this._makeRequest('GET', codaUrl);
+  }
+
+  async listPackAnalyticsSummary(
+    params: {
+      packIds?: string;
+      workspaceId?: string;
+      sinceDate?: string;
+      untilDate?: string;
+      limit?: number;
+      pageToken?: string;
+    } = {},
+  ): Promise<types.PublicApiPackAnalyticsSummary> {
+    const allParams = {
+      ...params,
+    };
+    const {pageToken, ...rest} = allParams;
+    const codaUrl = withQueryParams(
+      `${this.protocolAndHost}/apis/v1/analytics/packs/summary`,
+      pageToken ? {pageToken} : rest,
+    );
+    return this._makeRequest('GET', codaUrl);
+  }
+
+  async listPackFormulaAnalytics(
+    packId: number,
+    params: {
+      sinceDate?: string;
+      untilDate?: string;
+      scale?: types.PublicApiAnalyticsScale;
+      limit?: number;
+      pageToken?: string;
+    } = {},
+  ): Promise<types.PublicApiPackFormulaAnalyticsCollection> {
+    const allParams = {
+      ...params,
+    };
+    const {pageToken, ...rest} = allParams;
+    const codaUrl = withQueryParams(
+      `${this.protocolAndHost}/apis/v1/analytics/packs/${packId}/formulas`,
+      pageToken ? {pageToken} : rest,
+    );
     return this._makeRequest('GET', codaUrl);
   }
 
@@ -577,7 +711,10 @@ export class Client {
     params: {
       accessType?: types.PublicApiPackAccessType;
       sortBy?: types.PublicApiPacksSortBy;
-      workspaceId?: string;
+      onlyWorkspaceId?: string;
+      excludePublicPacks?: boolean;
+      excludeIndividualAcls?: boolean;
+      excludeWorkspaceAcls?: boolean;
       limit?: number;
       pageToken?: string;
     } = {},
@@ -619,6 +756,14 @@ export class Client {
     };
     const codaUrl = withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}`, allParams);
     return this._makeRequest('PATCH', codaUrl, JSON.stringify(payload));
+  }
+
+  async deletePack(packId: number, params: {} = {}): Promise<types.PublicApiDeletePackResponse> {
+    const allParams = {
+      ...params,
+    };
+    const codaUrl = withQueryParams(`${this.protocolAndHost}/apis/v1/packs/${packId}`, allParams);
+    return this._makeRequest('DELETE', codaUrl);
   }
 
   async listPackVersions(
@@ -978,7 +1123,12 @@ export class Client {
     params: {
       packAccessTypes?: types.PublicApiPackAccessTypes;
       packIds?: string;
+      onlyWorkspaceId?: string;
       excludePublicPacks?: boolean;
+      excludeWorkspaceAcls?: boolean;
+      excludeIndividualAcls?: boolean;
+      orderBy?: types.PublicApiPackListingsSortBy;
+      direction?: types.PublicApiSortDirection;
       limit?: number;
       pageToken?: string;
     } = {},
@@ -1049,6 +1199,20 @@ export class Client {
       `${this.protocolAndHost}/apis/v1/packs/${packId}/docs/${docId}/groupedLogs`,
       pageToken ? {pageToken} : rest,
     );
+    return this._makeRequest('GET', codaUrl);
+  }
+
+  async getPackCount(
+    params: {
+      isPublished?: boolean;
+      accessType?: types.PublicApiPackAccessType;
+      excludePublicPacks?: boolean;
+    } = {},
+  ): Promise<types.PublicApiCountResponse> {
+    const allParams = {
+      ...params,
+    };
+    const codaUrl = withQueryParams(`${this.protocolAndHost}/apis/v1/packs/count`, allParams);
     return this._makeRequest('GET', codaUrl);
   }
 }

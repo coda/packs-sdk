@@ -3,7 +3,7 @@
  * available at https://coda.io/developers/apis/v1
  *
  * Version: v1
- * Hash: e8edcd565f1c5ea5e9f682b9b9df68563d730643a6e9477a997cf57baa7d8f4c
+ * Hash: 3cb65a92b168c432b6eb8cad28cd0cc16911c3536d86f2d256c7ddb6007de8ad
  */
 import 'es6-promise/auto';
 import 'isomorphic-fetch';
@@ -37,6 +37,11 @@ export declare class Client {
         pageToken?: string;
     }): Promise<types.PublicApiDocList>;
     createDoc(params: {} | undefined, payload: types.PublicApiDocCreate): Promise<types.PublicApiDoc>;
+    getDocsCount(params?: {
+        isPublished?: boolean;
+        isOwner?: boolean;
+        workspaceId?: string;
+    }): Promise<types.PublicApiCountResponse>;
     getDoc(docId: string, params?: {}): Promise<types.PublicApiDoc>;
     deleteDoc(docId: string, params?: {}): Promise<types.PublicApiDocDelete>;
     getSharingMetadata(docId: string, params?: {}): Promise<types.PublicApiAcl>;
@@ -106,14 +111,56 @@ export declare class Client {
         degradeGracefully?: boolean;
     }): Promise<types.PublicApiApiLink>;
     getMutationStatus(requestId: string, params?: {}): Promise<types.PublicApiMutationStatus>;
+    triggerWebhookAutomation(docId: string, ruleId: string, params: {} | undefined, payload: types.PublicApiWebhookTriggerPayload): Promise<types.PublicApiWebhookTriggerResult>;
     listDocAnalytics(params?: {
         isPublished?: boolean;
         sinceDate?: string;
         untilDate?: string;
-        scale?: types.PublicApiDocAnalyticsScale;
+        scale?: types.PublicApiAnalyticsScale;
         limit?: number;
         pageToken?: string;
     }): Promise<types.PublicApiDocAnalyticsCollection>;
+    listDocAnalyticsDeprecated(params?: {
+        isPublished?: boolean;
+        sinceDate?: string;
+        untilDate?: string;
+        scale?: types.PublicApiAnalyticsScale;
+        limit?: number;
+        pageToken?: string;
+    }): Promise<types.PublicApiDeprecatedDocAnalyticsCollection>;
+    listDocAnalyticsSummary(params?: {
+        isPublished?: boolean;
+        sinceDate?: string;
+        untilDate?: string;
+        limit?: number;
+        pageToken?: string;
+    }): Promise<types.PublicApiDocAnalyticsSummary>;
+    listPackAnalytics(params?: {
+        packIds?: string;
+        workspaceId?: string;
+        sinceDate?: string;
+        untilDate?: string;
+        scale?: types.PublicApiAnalyticsScale;
+        orderBy?: types.PublicApiPackAnalyticsOrderBy;
+        direction?: types.PublicApiSortDirection;
+        limit?: number;
+        pageToken?: string;
+    }): Promise<types.PublicApiPackAnalyticsCollection>;
+    listPackAnalyticsSummary(params?: {
+        packIds?: string;
+        workspaceId?: string;
+        sinceDate?: string;
+        untilDate?: string;
+        limit?: number;
+        pageToken?: string;
+    }): Promise<types.PublicApiPackAnalyticsSummary>;
+    listPackFormulaAnalytics(packId: number, params?: {
+        sinceDate?: string;
+        untilDate?: string;
+        scale?: types.PublicApiAnalyticsScale;
+        limit?: number;
+        pageToken?: string;
+    }): Promise<types.PublicApiPackFormulaAnalyticsCollection>;
     listWorkspaceMembers(workspaceId: string, params?: {
         includedRoles?: string;
         limit?: number;
@@ -127,13 +174,17 @@ export declare class Client {
     listPacks(params?: {
         accessType?: types.PublicApiPackAccessType;
         sortBy?: types.PublicApiPacksSortBy;
-        workspaceId?: string;
+        onlyWorkspaceId?: string;
+        excludePublicPacks?: boolean;
+        excludeIndividualAcls?: boolean;
+        excludeWorkspaceAcls?: boolean;
         limit?: number;
         pageToken?: string;
     }): Promise<types.PublicApiPackSummaryList>;
     createPack(params: {} | undefined, payload: types.PublicApiCreatePackRequest): Promise<types.PublicApiCreatePackResponse>;
     getPack(packId: number, params?: {}): Promise<types.PublicApiPack>;
     updatePack(packId: number, params: {} | undefined, payload: types.PublicApiUpdatePackRequest): Promise<types.PublicApiPack>;
+    deletePack(packId: number, params?: {}): Promise<types.PublicApiDeletePackResponse>;
     listPackVersions(packId: number, params?: {
         limit?: number;
         pageToken?: string;
@@ -175,7 +226,12 @@ export declare class Client {
     listPackListings(params?: {
         packAccessTypes?: types.PublicApiPackAccessTypes;
         packIds?: string;
+        onlyWorkspaceId?: string;
         excludePublicPacks?: boolean;
+        excludeWorkspaceAcls?: boolean;
+        excludeIndividualAcls?: boolean;
+        orderBy?: types.PublicApiPackListingsSortBy;
+        direction?: types.PublicApiSortDirection;
         limit?: number;
         pageToken?: string;
     }): Promise<types.PublicApiPackListingList>;
@@ -200,4 +256,9 @@ export declare class Client {
         limit?: number;
         pageToken?: string;
     }): Promise<types.PublicApiGroupedPackLogsList>;
+    getPackCount(params?: {
+        isPublished?: boolean;
+        accessType?: types.PublicApiPackAccessType;
+        excludePublicPacks?: boolean;
+    }): Promise<types.PublicApiCountResponse>;
 }

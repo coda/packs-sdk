@@ -1,8 +1,8 @@
 /**
  * This file is auto-generated from OpenAPI definitions by `make build-openapi`. Do not edit manually.
  */
-export declare const OpenApiSpecHash = "e8edcd565f1c5ea5e9f682b9b9df68563d730643a6e9477a997cf57baa7d8f4c";
-export declare const OpenApiSpecVersion = "1.2.3";
+export declare const OpenApiSpecHash = "3cb65a92b168c432b6eb8cad28cd0cc16911c3536d86f2d256c7ddb6007de8ad";
+export declare const OpenApiSpecVersion = "1.2.5";
 /**
  * A constant identifying the type of the resource.
  */
@@ -10,17 +10,23 @@ export declare enum PublicApiType {
     AclMetadata = "aclMetadata",
     AclPermissions = "aclPermissions",
     ApiLink = "apiLink",
+    Automation = "automation",
     Column = "column",
     Control = "control",
     Doc = "doc",
     DocAnalytics = "docAnalytics",
+    DocAnalyticsSummary = "docAnalyticsSummary",
+    DocAnalyticsV2 = "docAnalyticsV2",
     Folder = "folder",
     Formula = "formula",
     MutationStatus = "mutationStatus",
     Pack = "pack",
     PackAclPermissions = "packAclPermissions",
+    PackAnalytics = "packAnalytics",
+    PackAnalyticsSummary = "packAnalyticsSummary",
     PackAsset = "packAsset",
     PackCategory = "packCategory",
+    PackFormulaAnalytics = "packFormulaAnalytics",
     PackLog = "packLog",
     PackMaker = "packMaker",
     PackOauthConfig = "packOauthConfig",
@@ -574,6 +580,15 @@ export interface PublicApiValidationError {
     message: string;
 }
 /**
+ * A response that represents a count
+ */
+export interface PublicApiCountResponse {
+    /**
+     * The count of an item.
+     */
+    count: number;
+}
+/**
  * Reference to a table or view.
  */
 export interface PublicApiTableReference {
@@ -829,6 +844,26 @@ export declare enum PublicApiEmailDisplayType {
     EmailOnly = "emailOnly"
 }
 /**
+ * Format of a link column.
+ */
+export declare type PublicApiLinkColumnFormat = PublicApiSimpleColumnFormat & {
+    display?: PublicApiLinkDisplayType;
+    /**
+     * Force embeds to render on the client instead of the server (for sites that require user login).
+     */
+    force?: boolean;
+};
+/**
+ * How a link should be displayed in the user interface.
+ */
+export declare enum PublicApiLinkDisplayType {
+    IconOnly = "iconOnly",
+    Url = "url",
+    Title = "title",
+    Card = "card",
+    Embed = "embed"
+}
+/**
  * Format of a time column.
  */
 export declare type PublicApiTimeColumnFormat = PublicApiSimpleColumnFormat & {
@@ -933,7 +968,7 @@ export declare type PublicApiScaleColumnFormat = PublicApiSimpleColumnFormat & {
 /**
  * Format of a column.
  */
-export declare type PublicApiColumnFormat = PublicApiButtonColumnFormat | PublicApiDateColumnFormat | PublicApiDateTimeColumnFormat | PublicApiDurationColumnFormat | PublicApiEmailColumnFormat | PublicApiCurrencyColumnFormat | PublicApiNumericColumnFormat | PublicApiReferenceColumnFormat | PublicApiSimpleColumnFormat | PublicApiScaleColumnFormat | PublicApiSliderColumnFormat | PublicApiTimeColumnFormat;
+export declare type PublicApiColumnFormat = PublicApiButtonColumnFormat | PublicApiDateColumnFormat | PublicApiDateTimeColumnFormat | PublicApiDurationColumnFormat | PublicApiEmailColumnFormat | PublicApiLinkColumnFormat | PublicApiCurrencyColumnFormat | PublicApiNumericColumnFormat | PublicApiReferenceColumnFormat | PublicApiSimpleColumnFormat | PublicApiScaleColumnFormat | PublicApiSliderColumnFormat | PublicApiTimeColumnFormat;
 /**
  * Format type of the column
  */
@@ -949,6 +984,7 @@ export declare enum PublicApiColumnFormatType {
     Time = "time",
     Duration = "duration",
     Email = "email",
+    Link = "link",
     Slider = "slider",
     Scale = "scale",
     Image = "image",
@@ -1289,8 +1325,11 @@ export declare type PublicApiRowsDeleteResult = PublicApiDocumentMutateResponse 
 export interface PublicApiRowsUpsert {
     rows: PublicApiRowEdit[];
     /**
+     * Optional unique row IDs to make the request idempotent. Must match the row id format.
+     */
+    rowIds?: string[];
+    /**
      * Optional column IDs, URLs, or names (fragile and discouraged), specifying columns to be used as upsert keys.
-     *
      */
     keyColumns?: string[];
 }
@@ -1541,7 +1580,7 @@ export interface PublicApiPublishingCategory {
     /**
      * The URL identifier of the category.
      */
-    categorySlug: string;
+    categorySlug?: string;
 }
 /**
  * Info about the maker
@@ -1725,6 +1764,16 @@ export interface PublicApiMutationStatus {
     completed: boolean;
 }
 /**
+ * Payload for webhook trigger
+ */
+export interface PublicApiWebhookTriggerPayload {
+    [k: string]: unknown;
+}
+/**
+ * The result of triggering a webhook
+ */
+export declare type PublicApiWebhookTriggerResult = PublicApiDocumentMutateResponse & {};
+/**
  * Reference to a Coda folder.
  */
 export interface PublicApiFolderReference {
@@ -1905,9 +1954,17 @@ export interface PublicApiChangeRoleResult {
     roleChangedAt: string;
 }
 /**
+ * List of analytics for Coda docs over a date range.
+ */
+export interface PublicApiDeprecatedDocAnalyticsCollection {
+    items: PublicApiDeprecatedDocAnalyticsItem[];
+    nextPageToken?: PublicApiNextPageToken;
+    nextPageLink?: PublicApiNextPageLink & string;
+}
+/**
  * Analytics data for a Coda doc.
  */
-export interface PublicApiDocAnalyticsItem {
+export interface PublicApiDeprecatedDocAnalyticsItem {
     doc: PublicApiDocReference & {
         /**
          * Title of the doc.
@@ -1944,6 +2001,13 @@ export interface PublicApiDocAnalyticsItem {
     sessionsOther: number;
 }
 /**
+ * Analytics data for a Coda doc.
+ */
+export interface PublicApiDocAnalyticsItem {
+    doc: PublicApiDocAnalyticsDetails;
+    metrics: PublicApiDocAnalyticsMetrics[];
+}
+/**
  * List of analytics for Coda docs over a date range.
  */
 export interface PublicApiDocAnalyticsCollection {
@@ -1952,11 +2016,295 @@ export interface PublicApiDocAnalyticsCollection {
     nextPageLink?: PublicApiNextPageLink & string;
 }
 /**
+ * Analytics metrics for a Coda Doc.
+ */
+export interface PublicApiDocAnalyticsMetrics {
+    /**
+     * Date of the analytics data.
+     */
+    date: string;
+    /**
+     * Number of times the doc was viewed.
+     */
+    views: number;
+    /**
+     * Number of times the doc was copied.
+     */
+    copies: number;
+    /**
+     * Number of times the doc was liked.
+     */
+    likes: number;
+    /**
+     * Number of unique visitors to this doc from a mobile device.
+     */
+    sessionsMobile: number;
+    /**
+     * Number of unique visitors to this doc from a desktop device.
+     */
+    sessionsDesktop: number;
+    /**
+     * Number of unique visitors to this doc from an unknown device type.
+     */
+    sessionsOther: number;
+}
+export declare type PublicApiDocAnalyticsDetails = PublicApiDocReference & {
+    /**
+     * The name of the doc.
+     */
+    title: string;
+    icon?: PublicApiIcon;
+    /**
+     * Publish time for this doc.
+     */
+    publishTimestamp: number;
+};
+/**
+ * Summarized metrics for Coda docs.
+ */
+export interface PublicApiDocAnalyticsSummary {
+    /**
+     * Total number of sessions across all docs.
+     */
+    totalSessions: number;
+}
+/**
+ * Metadata about a Pack relevant to analytics.
+ */
+export interface PublicApiPackAnalyticsDetails {
+    /**
+     * ID of the Pack.
+     */
+    id: number;
+    /**
+     * The name of the Pack.
+     */
+    name: string;
+    /**
+     * The link to the logo of the Pack.
+     */
+    logoUrl?: string;
+    /**
+     * Creation time of the Pack.
+     */
+    createdAt: string;
+}
+/**
+ * List of analytics for Coda Packs over a date range.
+ */
+export interface PublicApiPackAnalyticsCollection {
+    items: PublicApiPackAnalyticsItem[];
+    nextPageToken?: PublicApiNextPageToken;
+    nextPageLink?: PublicApiNextPageLink & string;
+}
+/**
+ * Analytics data for a Coda Pack.
+ */
+export interface PublicApiPackAnalyticsItem {
+    pack: PublicApiPackAnalyticsDetails;
+    metrics: PublicApiPackAnalyticsMetrics[];
+}
+/**
+ * Analytics metrics for a Coda Pack.
+ */
+export interface PublicApiPackAnalyticsMetrics {
+    /**
+     * Date of the analytics data.
+     */
+    date: string;
+    /**
+     * Number of unique documents that have installed this Pack.
+     */
+    docInstalls: number;
+    /**
+     * Number of unique workspaces that have installed this Pack.
+     */
+    workspaceInstalls: number;
+    /**
+     * Number of times regular formulas have been called.
+     */
+    numFormulaInvocations: number;
+    /**
+     * Number of times action formulas have been called.
+     */
+    numActionInvocations: number;
+    /**
+     * Number of times sync table formulas have been called.
+     */
+    numSyncInvocations: number;
+    /**
+     * Number of times metadata formulas have been called.
+     */
+    numMetadataInvocations: number;
+    /**
+     * Number of unique docs that have invoked a formula from this Pack in the past day.
+     */
+    docsActivelyUsing: number;
+    /**
+     * Number of unique docs that have invoked a formula from this Pack in the past 7 days.
+     */
+    docsActivelyUsing7Day: number;
+    /**
+     * Number of unique docs that have invoked a formula from this Pack in the past 30 days.
+     */
+    docsActivelyUsing30Day: number;
+    /**
+     * Number of unique docs that have invoked a formula from this Pack in the past 90 days.
+     */
+    docsActivelyUsing90Day: number;
+    /**
+     * Number of unique docs that have invoked a formula from this Pack ever.
+     */
+    docsActivelyUsingAllTime: number;
+    /**
+     * Number of unique workspaces that have invoked a formula from this Pack in the past day.
+     */
+    workspacesActivelyUsing: number;
+    /**
+     * Number of unique workspaces that have invoked a formula from this Pack in the past 7 days.
+     */
+    workspacesActivelyUsing7Day: number;
+    /**
+     * Number of unique workspaces that have invoked a formula from this Pack in the past 30 days.
+     */
+    workspacesActivelyUsing30Day: number;
+    /**
+     * Number of unique workspaces that have invoked a formula from this Pack in the past 90 days.
+     */
+    workspacesActivelyUsing90Day: number;
+    /**
+     * Number of unique workspaces that have invoked a formula from this Pack ever.
+     */
+    workspacesActivelyUsingAllTime: number;
+}
+/**
+ * Determines how the Pack analytics returned are sorted.
+ */
+export declare enum PublicApiPackAnalyticsOrderBy {
+    AnalyticsDate = "date",
+    PackId = "packId",
+    Name = "name",
+    CreatedAt = "createdAt",
+    DocInstalls = "docInstalls",
+    WorkspaceInstalls = "workspaceInstalls",
+    NumFormulaInvocations = "numFormulaInvocations",
+    NumActionInvocations = "numActionInvocations",
+    NumSyncInvocations = "numSyncInvocations",
+    NumMetadataInvocations = "numMetadataInvocations",
+    DocsActivelyUsing = "docsActivelyUsing",
+    DocsActivelyUsing7Day = "docsActivelyUsing7Day",
+    DocsActivelyUsing30Day = "docsActivelyUsing30Day",
+    DocsActivelyUsing90Day = "docsActivelyUsing90Day",
+    DocsActivelyUsingAllTime = "docsActivelyUsingAllTime",
+    WorkspacesActivelyUsing = "workspacesActivelyUsing",
+    WorkspacesActivelyUsing7Day = "workspacesActivelyUsing7Day",
+    WorkspacesActivelyUsing30Day = "workspacesActivelyUsing30Day",
+    WorkspacesActivelyUsing90Day = "workspacesActivelyUsing90Day",
+    WorkspacesActivelyUsingAllTime = "workspacesActivelyUsingAllTime"
+}
+/**
+ * Summary analytics for Packs.
+ */
+export interface PublicApiPackAnalyticsSummary {
+    /**
+     * The times this Pack was installed in docs.
+     */
+    totalDocInstalls: number;
+    /**
+     * The times this Pack was installed in workspaces.
+     */
+    totalWorkspaceInstalls: number;
+    /**
+     * The number of times formulas in this Pack were invoked.
+     */
+    totalInvocations: number;
+}
+/**
  * Quantization period over which to view analytics.
  */
-export declare enum PublicApiDocAnalyticsScale {
-    Day = "daily",
+export declare enum PublicApiAnalyticsScale {
+    Daily = "daily",
     Cumulative = "cumulative"
+}
+/**
+ * Analytics metrics for a Coda Pack formula.
+ */
+export interface PublicApiPackFormulaAnalyticsMetrics {
+    /**
+     * Date of the analytics data.
+     */
+    date: string;
+    /**
+     * Number of times this formula has been invoked.
+     */
+    formulaInvocations: number;
+    /**
+     * Number of errors from invocations.
+     */
+    errors: number;
+    /**
+     * Median latency of an invocation in milliseconds. Only present for daily metrics.
+     */
+    medianLatencyMs?: number;
+    /**
+     * Median response size in bytes. Only present for daily metrics.
+     */
+    medianResponseSizeBytes?: number;
+    /**
+     * Number of unique docs that have invoked a formula from this Pack in the past day.
+     */
+    docsActivelyUsing: number;
+    /**
+     * Number of unique docs that have invoked a formula from this Pack in the past 7 days.
+     */
+    docsActivelyUsing7Day: number;
+    /**
+     * Number of unique docs that have invoked a formula from this Pack in the past 30 days.
+     */
+    docsActivelyUsing30Day: number;
+    /**
+     * Number of unique docs that have invoked a formula from this Pack in the past 90 days.
+     */
+    docsActivelyUsing90Day: number;
+    /**
+     * Number of unique docs that have invoked a formula from this Pack ever.
+     */
+    docsActivelyUsingAllTime: number;
+    /**
+     * Number of unique workspaces that have invoked a formula from this Pack in the past day.
+     */
+    workspacesActivelyUsing: number;
+    /**
+     * Number of unique workspaces that have invoked a formula from this Pack in the past 7 days.
+     */
+    workspacesActivelyUsing7Day: number;
+    /**
+     * Number of unique workspaces that have invoked a formula from this Pack in the past 30 days.
+     */
+    workspacesActivelyUsing30Day: number;
+    /**
+     * Number of unique workspaces that have invoked a formula from this Pack in the past 90 days.
+     */
+    workspacesActivelyUsing90Day: number;
+    /**
+     * Number of unique workspaces that have invoked a formula from this Pack ever.
+     */
+    workspacesActivelyUsingAllTime: number;
+}
+/**
+ * Analytics data for a Coda Pack formula.
+ */
+export interface PublicApiPackFormulaAnalyticsItem {
+    formula: PublicApiPackFormulaIdentifier;
+    metrics: PublicApiPackFormulaAnalyticsMetrics[];
+}
+/**
+ * A collection of analytics for Coda Packs formulas over a date range.
+ */
+export interface PublicApiPackFormulaAnalyticsCollection {
+    items: PublicApiPackFormulaAnalyticsItem[];
+    nextPageToken?: PublicApiNextPageToken;
+    nextPageLink?: PublicApiNextPageLink & string;
 }
 /**
  * Details about a Pack.
@@ -1998,8 +2346,21 @@ export interface PublicApiPack {
      * A contact email for the Pack.
      */
     supportEmail?: string;
+    /**
+     * A Terms of Service URL for the Pack.
+     */
+    termsOfServiceUrl?: string;
+    /**
+     * A Privacy Policy URL for the Pack.
+     */
+    privacyPolicyUrl?: string;
+    /**
+     * A Featured Doc URL for the Pack.
+     */
+    featuredDocUrl?: string;
     overallRateLimit?: PublicApiPackRateLimit;
     perConnectionRateLimit?: PublicApiPackRateLimit;
+    featuredDocStatus?: PublicApiFeaturedDocStatus;
 }
 /**
  * Summary of a Pack.
@@ -2041,6 +2402,18 @@ export interface PublicApiPackSummary {
      * A contact email for the Pack.
      */
     supportEmail?: string;
+    /**
+     * A Terms of Service URL for the Pack.
+     */
+    termsOfServiceUrl?: string;
+    /**
+     * A Privacy Policy URL for the Pack.
+     */
+    privacyPolicyUrl?: string;
+    /**
+     * A Featured Doc URL for the Pack.
+     */
+    featuredDocUrl?: string;
 }
 /**
  * List of Pack summaries.
@@ -2070,6 +2443,15 @@ export declare enum PublicApiPacksSortBy {
     Title = "title",
     CreatedAt = "createdAt",
     UpdatedAt = "updatedAt"
+}
+/**
+ * Determines how the Pack listings returned are sorted.
+ */
+export declare enum PublicApiPackListingsSortBy {
+    PackId = "packId",
+    Name = "name",
+    PackVersion = "packVersion",
+    PackVersionModifiedAt = "packVersionModifiedAt"
 }
 /**
  * Information indicating where to upload the Pack version definition.
@@ -2192,6 +2574,7 @@ export interface PublicApiPackVersion {
      * The semantic format of the Pack version.
      */
     packVersion: string;
+    source?: PublicApiPackSource;
 }
 /**
  * List of Pack versions.
@@ -2306,6 +2689,10 @@ export interface PublicApiPackListing {
      */
     packVersion: string;
     /**
+     * The current release number of the Pack if released, otherwise undefined.
+     */
+    releaseId?: number;
+    /**
      * The link to the logo of the Pack.
      */
     logoUrl: string;
@@ -2329,6 +2716,18 @@ export interface PublicApiPackListing {
      * A contact email for the Pack.
      */
     supportEmail?: string;
+    /**
+     * A Terms of Service URL for the Pack.
+     */
+    termsOfServiceUrl?: string;
+    /**
+     * A Privacy Policy URL for the Pack.
+     */
+    privacyPolicyUrl?: string;
+    /**
+     * A Featured Doc ID for the Pack.
+     */
+    featuredDocId?: string;
     /**
      * Publishing Categories associated with this Pack.
      */
@@ -2357,6 +2756,10 @@ export interface PublicApiPackListingDetail {
      */
     packVersion: string;
     /**
+     * The current release number of the Pack if released, otherwise undefined.
+     */
+    releaseId?: number;
+    /**
      * The link to the logo of the Pack.
      */
     logoUrl: string;
@@ -2381,6 +2784,18 @@ export interface PublicApiPackListingDetail {
      */
     supportEmail?: string;
     /**
+     * A Terms of Service URL for the Pack.
+     */
+    termsOfServiceUrl?: string;
+    /**
+     * A Privacy Policy URL for the Pack.
+     */
+    privacyPolicyUrl?: string;
+    /**
+     * A Featured Doc ID for the Pack.
+     */
+    featuredDocId?: string;
+    /**
      * Publishing Categories associated with this Pack.
      */
     categories: PublicApiPublishingCategory[];
@@ -2394,10 +2809,6 @@ export interface PublicApiPackListingDetail {
      * The url where complete metadata about the contents of the Pack version can be downloaded.
      */
     externalMetadataUrl: string;
-    /**
-     * The release number of the Pack version if it has one.
-     */
-    releaseId?: number;
     discoverability: PublicApiPackDiscoverability;
     /**
      * The access capabilities the current user has for this Pack.
@@ -2707,7 +3118,15 @@ export interface PublicApiGroupedPackInvocationLog {
 export interface PublicApiPackFetcherLog {
     type: PublicApiPackLogType.Fetcher;
     context: PublicApiPackLogContext;
+    /**
+     * The number of bytes in the HTTP request sent
+     */
+    requestSizeBytes?: number;
     responseCode?: number;
+    /**
+     * The number of bytes in the HTTP response received
+     */
+    responseSizeBytes?: number;
     method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
     /**
      * base url of the fetcher request, with all query parameters stripped off.
@@ -2796,6 +3215,29 @@ export declare enum PublicApiFeatureSet {
     Enterprise = "Enterprise"
 }
 /**
+ * Status of featured doc in pack listing.
+ */
+export declare enum PublicApiFeaturedDocStatus {
+    DocInaccessibleOrDoesNotExist = "docInaccessibleOrDoesNotExist",
+    InvalidPublishedDocUrl = "invalidPublishedDocUrl"
+}
+export interface PublicApiPackFormulaIdentifier {
+    /**
+     * The Pack formula name.
+     */
+    name: string;
+    type: PublicApiPackFormulaType;
+}
+/**
+ * The pack formula type.
+ */
+export declare enum PublicApiPackFormulaType {
+    Action = "action",
+    Formula = "formula",
+    Sync = "sync",
+    Metadata = "metadata"
+}
+/**
  * The request to patch pack system connection credentials.
  */
 export declare type PublicApiPatchPackSystemConnectionRequest = PublicApiPackConnectionHeaderPatch | PublicApiPackConnectionUrlParamPatch | PublicApiPackConnectionHttpBasicPatch | PublicApiPackConnectionCustomPatch;
@@ -2803,8 +3245,8 @@ export declare type PublicApiPatchPackSystemConnectionRequest = PublicApiPackCon
  * Request to set the Pack OAuth configuration.
  */
 export interface PublicApiSetPackOauthConfigRequest {
-    clientId: string;
-    clientSecret: string;
+    clientId?: string;
+    clientSecret?: string;
 }
 /**
  * The request to set pack system connection credentials.
@@ -2820,7 +3262,14 @@ export interface PublicApiRegisterPackVersionRequest {
      * The SHA-256 hash of the file to be uploaded.
      */
     bundleHash: string;
-    [k: string]: unknown;
+    /**
+     * Internal field for cross-environment pack import.
+     */
+    dangerouslyAllowCrossEnvPack?: boolean;
+    /**
+     * Internal field that allows the api to use the non-latest pack version.
+     */
+    dangerouslyAllowNonLatestVersionNumber?: boolean;
 }
 /**
  * Payload for updating a Pack.
@@ -2880,11 +3329,29 @@ export interface PublicApiUpdatePackRequest {
      * A contact email for the Pack.
      */
     supportEmail?: string;
+    /**
+     * A Terms of Service URL for the Pack.
+     */
+    termsOfServiceUrl?: string;
+    /**
+     * A Privacy Policy URL for the Pack.
+     */
+    privacyPolicyUrl?: string;
+    /**
+     * A Featured Doc URL for the Pack.
+     */
+    featuredDocUrl?: string;
 }
 /**
  * Confirmation of successful Pack version creation.
  */
 export interface PublicApiCreatePackVersionResponse {
+    deprecationWarnings?: PublicApiValidationError[];
+}
+/**
+ * Confirmation of successful Pack deletion.
+ */
+export interface PublicApiDeletePackResponse {
 }
 /**
  * Confirmation of successfully retrieving Pack makers.
@@ -3022,7 +3489,10 @@ export interface PublicApiCreatePackVersionRequest {
      */
     notes?: string;
     source?: PublicApiPackSource;
-    [k: string]: unknown;
+    /**
+     * Internal field for cross-environment pack import.
+     */
+    dangerouslyAllowCrossEnvPack?: boolean;
 }
 /**
  * Payload for creating a new Pack release.
@@ -3036,7 +3506,10 @@ export interface PublicApiCreatePackReleaseRequest {
      * Developers notes.
      */
     releaseNotes?: string;
-    [k: string]: unknown;
+    /**
+     * Internal field for cross-environment pack import.
+     */
+    dangerouslyAllowCrossEnvPack?: boolean;
 }
 /**
  * Payload for a Pack asset upload.

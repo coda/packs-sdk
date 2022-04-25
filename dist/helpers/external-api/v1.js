@@ -3,10 +3,10 @@
  * This file is auto-generated from OpenAPI definitions by `make build-openapi`. Do not edit manually.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PublicApiFeatureSet = exports.PublicApiLogLevel = exports.PublicApiPackLogType = exports.PublicApiPackLogRequestType = exports.PublicApiPackConnectionType = exports.PublicApiPackDiscoverability = exports.PublicApiPackSource = exports.PublicApiPackAssetType = exports.PublicApiPackAccessType = exports.PublicApiPackPrincipalType = exports.PublicApiPacksSortBy = exports.PublicApiDocAnalyticsScale = exports.PublicApiWorkspaceUserRole = exports.PublicApiTableType = exports.PublicApiSortBy = exports.PublicApiControlType = exports.PublicApiValueFormat = exports.PublicApiRowsSortBy = exports.PublicApiImageStatus = exports.PublicApiLinkedDataType = exports.PublicApiColumnFormatType = exports.PublicApiIconSet = exports.PublicApiDurationUnit = exports.PublicApiEmailDisplayType = exports.PublicApiCurrencyFormatType = exports.PublicApiSortDirection = exports.PublicApiLayout = exports.PublicApiDocPublishMode = exports.PublicApiAccessType = exports.PublicApiPrincipalType = exports.PublicApiType = exports.OpenApiSpecVersion = exports.OpenApiSpecHash = void 0;
+exports.PublicApiPackFormulaType = exports.PublicApiFeaturedDocStatus = exports.PublicApiFeatureSet = exports.PublicApiLogLevel = exports.PublicApiPackLogType = exports.PublicApiPackLogRequestType = exports.PublicApiPackConnectionType = exports.PublicApiPackDiscoverability = exports.PublicApiPackSource = exports.PublicApiPackAssetType = exports.PublicApiPackAccessType = exports.PublicApiPackPrincipalType = exports.PublicApiPackListingsSortBy = exports.PublicApiPacksSortBy = exports.PublicApiAnalyticsScale = exports.PublicApiPackAnalyticsOrderBy = exports.PublicApiWorkspaceUserRole = exports.PublicApiTableType = exports.PublicApiSortBy = exports.PublicApiControlType = exports.PublicApiValueFormat = exports.PublicApiRowsSortBy = exports.PublicApiImageStatus = exports.PublicApiLinkedDataType = exports.PublicApiColumnFormatType = exports.PublicApiIconSet = exports.PublicApiDurationUnit = exports.PublicApiLinkDisplayType = exports.PublicApiEmailDisplayType = exports.PublicApiCurrencyFormatType = exports.PublicApiSortDirection = exports.PublicApiLayout = exports.PublicApiDocPublishMode = exports.PublicApiAccessType = exports.PublicApiPrincipalType = exports.PublicApiType = exports.OpenApiSpecVersion = exports.OpenApiSpecHash = void 0;
 /* eslint-disable */
-exports.OpenApiSpecHash = 'e8edcd565f1c5ea5e9f682b9b9df68563d730643a6e9477a997cf57baa7d8f4c';
-exports.OpenApiSpecVersion = '1.2.3';
+exports.OpenApiSpecHash = '3cb65a92b168c432b6eb8cad28cd0cc16911c3536d86f2d256c7ddb6007de8ad';
+exports.OpenApiSpecVersion = '1.2.5';
 /**
  * A constant identifying the type of the resource.
  */
@@ -15,17 +15,23 @@ var PublicApiType;
     PublicApiType["AclMetadata"] = "aclMetadata";
     PublicApiType["AclPermissions"] = "aclPermissions";
     PublicApiType["ApiLink"] = "apiLink";
+    PublicApiType["Automation"] = "automation";
     PublicApiType["Column"] = "column";
     PublicApiType["Control"] = "control";
     PublicApiType["Doc"] = "doc";
     PublicApiType["DocAnalytics"] = "docAnalytics";
+    PublicApiType["DocAnalyticsSummary"] = "docAnalyticsSummary";
+    PublicApiType["DocAnalyticsV2"] = "docAnalyticsV2";
     PublicApiType["Folder"] = "folder";
     PublicApiType["Formula"] = "formula";
     PublicApiType["MutationStatus"] = "mutationStatus";
     PublicApiType["Pack"] = "pack";
     PublicApiType["PackAclPermissions"] = "packAclPermissions";
+    PublicApiType["PackAnalytics"] = "packAnalytics";
+    PublicApiType["PackAnalyticsSummary"] = "packAnalyticsSummary";
     PublicApiType["PackAsset"] = "packAsset";
     PublicApiType["PackCategory"] = "packCategory";
+    PublicApiType["PackFormulaAnalytics"] = "packFormulaAnalytics";
     PublicApiType["PackLog"] = "packLog";
     PublicApiType["PackMaker"] = "packMaker";
     PublicApiType["PackOauthConfig"] = "packOauthConfig";
@@ -115,6 +121,17 @@ var PublicApiEmailDisplayType;
     PublicApiEmailDisplayType["EmailOnly"] = "emailOnly";
 })(PublicApiEmailDisplayType = exports.PublicApiEmailDisplayType || (exports.PublicApiEmailDisplayType = {}));
 /**
+ * How a link should be displayed in the user interface.
+ */
+var PublicApiLinkDisplayType;
+(function (PublicApiLinkDisplayType) {
+    PublicApiLinkDisplayType["IconOnly"] = "iconOnly";
+    PublicApiLinkDisplayType["Url"] = "url";
+    PublicApiLinkDisplayType["Title"] = "title";
+    PublicApiLinkDisplayType["Card"] = "card";
+    PublicApiLinkDisplayType["Embed"] = "embed";
+})(PublicApiLinkDisplayType = exports.PublicApiLinkDisplayType || (exports.PublicApiLinkDisplayType = {}));
+/**
  * A time unit used as part of a duration value.
  */
 var PublicApiDurationUnit;
@@ -166,6 +183,7 @@ var PublicApiColumnFormatType;
     PublicApiColumnFormatType["Time"] = "time";
     PublicApiColumnFormatType["Duration"] = "duration";
     PublicApiColumnFormatType["Email"] = "email";
+    PublicApiColumnFormatType["Link"] = "link";
     PublicApiColumnFormatType["Slider"] = "slider";
     PublicApiColumnFormatType["Scale"] = "scale";
     PublicApiColumnFormatType["Image"] = "image";
@@ -251,13 +269,39 @@ var PublicApiWorkspaceUserRole;
     PublicApiWorkspaceUserRole["Editor"] = "Editor";
 })(PublicApiWorkspaceUserRole = exports.PublicApiWorkspaceUserRole || (exports.PublicApiWorkspaceUserRole = {}));
 /**
+ * Determines how the Pack analytics returned are sorted.
+ */
+var PublicApiPackAnalyticsOrderBy;
+(function (PublicApiPackAnalyticsOrderBy) {
+    PublicApiPackAnalyticsOrderBy["AnalyticsDate"] = "date";
+    PublicApiPackAnalyticsOrderBy["PackId"] = "packId";
+    PublicApiPackAnalyticsOrderBy["Name"] = "name";
+    PublicApiPackAnalyticsOrderBy["CreatedAt"] = "createdAt";
+    PublicApiPackAnalyticsOrderBy["DocInstalls"] = "docInstalls";
+    PublicApiPackAnalyticsOrderBy["WorkspaceInstalls"] = "workspaceInstalls";
+    PublicApiPackAnalyticsOrderBy["NumFormulaInvocations"] = "numFormulaInvocations";
+    PublicApiPackAnalyticsOrderBy["NumActionInvocations"] = "numActionInvocations";
+    PublicApiPackAnalyticsOrderBy["NumSyncInvocations"] = "numSyncInvocations";
+    PublicApiPackAnalyticsOrderBy["NumMetadataInvocations"] = "numMetadataInvocations";
+    PublicApiPackAnalyticsOrderBy["DocsActivelyUsing"] = "docsActivelyUsing";
+    PublicApiPackAnalyticsOrderBy["DocsActivelyUsing7Day"] = "docsActivelyUsing7Day";
+    PublicApiPackAnalyticsOrderBy["DocsActivelyUsing30Day"] = "docsActivelyUsing30Day";
+    PublicApiPackAnalyticsOrderBy["DocsActivelyUsing90Day"] = "docsActivelyUsing90Day";
+    PublicApiPackAnalyticsOrderBy["DocsActivelyUsingAllTime"] = "docsActivelyUsingAllTime";
+    PublicApiPackAnalyticsOrderBy["WorkspacesActivelyUsing"] = "workspacesActivelyUsing";
+    PublicApiPackAnalyticsOrderBy["WorkspacesActivelyUsing7Day"] = "workspacesActivelyUsing7Day";
+    PublicApiPackAnalyticsOrderBy["WorkspacesActivelyUsing30Day"] = "workspacesActivelyUsing30Day";
+    PublicApiPackAnalyticsOrderBy["WorkspacesActivelyUsing90Day"] = "workspacesActivelyUsing90Day";
+    PublicApiPackAnalyticsOrderBy["WorkspacesActivelyUsingAllTime"] = "workspacesActivelyUsingAllTime";
+})(PublicApiPackAnalyticsOrderBy = exports.PublicApiPackAnalyticsOrderBy || (exports.PublicApiPackAnalyticsOrderBy = {}));
+/**
  * Quantization period over which to view analytics.
  */
-var PublicApiDocAnalyticsScale;
-(function (PublicApiDocAnalyticsScale) {
-    PublicApiDocAnalyticsScale["Day"] = "daily";
-    PublicApiDocAnalyticsScale["Cumulative"] = "cumulative";
-})(PublicApiDocAnalyticsScale = exports.PublicApiDocAnalyticsScale || (exports.PublicApiDocAnalyticsScale = {}));
+var PublicApiAnalyticsScale;
+(function (PublicApiAnalyticsScale) {
+    PublicApiAnalyticsScale["Daily"] = "daily";
+    PublicApiAnalyticsScale["Cumulative"] = "cumulative";
+})(PublicApiAnalyticsScale = exports.PublicApiAnalyticsScale || (exports.PublicApiAnalyticsScale = {}));
 /**
  * Determines how the Packs returned are sorted.
  */
@@ -267,6 +311,16 @@ var PublicApiPacksSortBy;
     PublicApiPacksSortBy["CreatedAt"] = "createdAt";
     PublicApiPacksSortBy["UpdatedAt"] = "updatedAt";
 })(PublicApiPacksSortBy = exports.PublicApiPacksSortBy || (exports.PublicApiPacksSortBy = {}));
+/**
+ * Determines how the Pack listings returned are sorted.
+ */
+var PublicApiPackListingsSortBy;
+(function (PublicApiPackListingsSortBy) {
+    PublicApiPackListingsSortBy["PackId"] = "packId";
+    PublicApiPackListingsSortBy["Name"] = "name";
+    PublicApiPackListingsSortBy["PackVersion"] = "packVersion";
+    PublicApiPackListingsSortBy["PackVersionModifiedAt"] = "packVersionModifiedAt";
+})(PublicApiPackListingsSortBy = exports.PublicApiPackListingsSortBy || (exports.PublicApiPackListingsSortBy = {}));
 /**
  * Type of Pack permissions.
  */
@@ -358,3 +412,21 @@ var PublicApiFeatureSet;
     PublicApiFeatureSet["Team"] = "Team";
     PublicApiFeatureSet["Enterprise"] = "Enterprise";
 })(PublicApiFeatureSet = exports.PublicApiFeatureSet || (exports.PublicApiFeatureSet = {}));
+/**
+ * Status of featured doc in pack listing.
+ */
+var PublicApiFeaturedDocStatus;
+(function (PublicApiFeaturedDocStatus) {
+    PublicApiFeaturedDocStatus["DocInaccessibleOrDoesNotExist"] = "docInaccessibleOrDoesNotExist";
+    PublicApiFeaturedDocStatus["InvalidPublishedDocUrl"] = "invalidPublishedDocUrl";
+})(PublicApiFeaturedDocStatus = exports.PublicApiFeaturedDocStatus || (exports.PublicApiFeaturedDocStatus = {}));
+/**
+ * The pack formula type.
+ */
+var PublicApiPackFormulaType;
+(function (PublicApiPackFormulaType) {
+    PublicApiPackFormulaType["Action"] = "action";
+    PublicApiPackFormulaType["Formula"] = "formula";
+    PublicApiPackFormulaType["Sync"] = "sync";
+    PublicApiPackFormulaType["Metadata"] = "metadata";
+})(PublicApiPackFormulaType = exports.PublicApiPackFormulaType || (exports.PublicApiPackFormulaType = {}));
