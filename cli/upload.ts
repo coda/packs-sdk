@@ -171,7 +171,7 @@ export async function handleUpload({
     }
 
     const {deprecationWarnings} = uploadCompleteResponse;
-    if (deprecationWarnings) {
+    if (deprecationWarnings?.length) {
       print(
         '\nYour Pack version uploaded successfully. ' +
           'However, your Pack is using deprecated properties or features that will become errors in a future SDK version.\n',

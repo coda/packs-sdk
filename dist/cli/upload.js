@@ -142,7 +142,7 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
             throw err;
         }
         const { deprecationWarnings } = uploadCompleteResponse;
-        if (deprecationWarnings) {
+        if (deprecationWarnings === null || deprecationWarnings === void 0 ? void 0 : deprecationWarnings.length) {
             (0, helpers_5.print)('\nYour Pack version uploaded successfully. ' +
                 'However, your Pack is using deprecated properties or features that will become errors in a future SDK version.\n');
             for (const { path, message } of deprecationWarnings) {
