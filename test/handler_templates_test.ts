@@ -175,7 +175,7 @@ describe('handler templates', () => {
             someThing: {type: ValueType.Number, fromKey: 'some_thing'},
             cool_thing: {type: ValueType.Number},
           },
-          includeUndefinedProperties: true,
+          includeUnspecifiedProperties: true,
         },
       });
       assert.deepEqual(

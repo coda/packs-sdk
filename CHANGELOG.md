@@ -8,7 +8,7 @@ This changelog keeps track of all changes to the packs-sdk. We follow convention
 
 - Added "force" option to `LinkSchema` for `LinkDisplayType.Embed`.
 - Added "downloadFilename" option to `storeBlob` and `storeUrl` in `TemporaryBlobStorage` to specify the file name that it should download as when opening the temporary url.
-- Added "downloadFilenameincludeUndefinedProperties" option to `makeObjectscheam` that will retain properties on objects that are not defined within the object's schema.
+- Added "includeUnspecifiedProperties" option to `makeObjectSchema` that will retain properties on objects that are not defined within the object's schema.
 
 ### Changed
 
