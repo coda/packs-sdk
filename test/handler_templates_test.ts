@@ -167,6 +167,23 @@ describe('handler templates', () => {
       );
     });
 
+    it('retains extraneous keys when specified', () => {
+      const handler = generateObjectResponseHandler({
+        schema: {
+          type: ValueType.Object,
+          properties: {
+            someThing: {type: ValueType.Number, fromKey: 'some_thing'},
+            cool_thing: {type: ValueType.Number},
+          },
+          includeUnknownProperties: true,
+        },
+      });
+      assert.deepEqual(
+        {someThing: 42, cool_thing: 123, another_thing: 42},
+        handler({headers: {}, body: {some_thing: 42, cool_thing: 123, another_thing: 42}, status: 200}),
+      );
+    });
+
     it('remaps nested keys', () => {
       const handler = generateObjectResponseHandler({
         schema: {
