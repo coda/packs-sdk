@@ -157,12 +157,12 @@ See [IdentityDefinition](IdentityDefinition.md).
 
 ___
 
-### includeUnspecifiedProperties
+### includeUnknownProperties
 
-• `Optional` **includeUnspecifiedProperties**: `boolean`
+• `Optional` **includeUnknownProperties**: `boolean`
 
 Specifies that object instances with this schema can contain additional properties not defined
-in the schema, and that the packs infrastructure should retain these unspecified properties
+in the schema, and that the packs infrastructure should retain these unknown properties
 rather than stripping them.
 
 Properties not declared in the schema will not work properly in Coda: they cannot be

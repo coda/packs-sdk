@@ -809,14 +809,14 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
   attribution?: AttributionNode[];
   /**
    * Specifies that object instances with this schema can contain additional properties not defined
-   * in the schema, and that the packs infrastructure should retain these unspecified properties
+   * in the schema, and that the packs infrastructure should retain these unknown properties
    * rather than stripping them.
    * 
    * Properties not declared in the schema will not work properly in Coda: they cannot be
    * used natively in the formula language and will not have correct types in Coda. But, in certain 
    * scenarios they can be useful.
    */
-  includeUnspecifiedProperties?: boolean;
+  includeUnknownProperties?: boolean;
 }
 
 export type ObjectSchemaDefinitionType<

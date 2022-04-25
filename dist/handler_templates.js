@@ -136,7 +136,7 @@ function mapKeys(obj, schema) {
         }
         const mappedKeys = remappedKeys.get(key) || [key];
         for (const newKey of mappedKeys) {
-            if (!schema.properties[newKey] && !schema.includeUnspecifiedProperties) {
+            if (!schema.properties[newKey] && !schema.includeUnknownProperties) {
                 continue;
             }
             remappedObject[newKey] = mappedKeys.length > 1 ? (0, object_utils_1.deepCopy)(obj[key]) : obj[key];
