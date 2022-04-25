@@ -200,6 +200,13 @@ if (require.main === module) {
     .command({
       command: 'validate <manifestFile>',
       describe: 'Validate your Pack definition',
+      builder: {
+        checkDeprecationWarnings: {
+          boolean: true,
+          desc: 'Also check for warnings about deprecated properties and features that will become errors in a future SDK version.',
+          default: true,
+        },
+      },
       handler: handleValidate,
     })
     .command({

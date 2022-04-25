@@ -16,7 +16,9 @@ export declare class PackMetadataValidationError extends Error {
     readonly validationErrors: ValidationError[] | undefined;
     constructor(message: string, originalError?: Error, validationErrors?: ValidationError[]);
 }
-export declare function validatePackVersionMetadata(metadata: Record<string, any>): Promise<PackVersionMetadata>;
+export declare function validatePackVersionMetadata(metadata: Record<string, any>, sdkVersion: string | undefined, { warningMode }?: {
+    warningMode?: boolean;
+}): Promise<PackVersionMetadata>;
 export declare function validateVariousAuthenticationMetadata(auth: any): VariousAuthentication;
 export declare function validateSyncTableSchema(schema: any): ArraySchema<ObjectSchema<any, any>>;
 export declare function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[];

@@ -46,6 +46,7 @@ import {PostSetupType} from '../types';
 import type {QueryParamTokenAuthentication} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {ScaleSchema} from '..';
+import type {Schema} from '..';
 import type {SetEndpoint} from '../types';
 import {SimpleStringHintValueTypes} from '../schema';
 import type {SimpleStringSchema} from '../schema';
@@ -60,6 +61,7 @@ import type {SyncTable} from '../api';
 import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
 import {Type} from '../api_types';
+import type {UnionType} from '../api_types';
 import type {ValidationError} from './types';
 import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
@@ -67,9 +69,12 @@ import type {VariousAuthentication} from '../types';
 import type {VariousSupportedAuthenticationTypes} from '../types';
 import type {WebBasicAuthentication} from '../types';
 import {assertCondition} from '../helpers/ensure';
+import {isArray} from '../schema';
 import {isNil} from '../helpers/object_utils';
+import {isObject} from '../schema';
 import {makeSchema} from '../schema';
 import {objectSchemaHelper} from '../helpers/migration';
+import semver from 'semver';
 import * as z from 'zod';
 
 /**
@@ -95,10 +100,27 @@ export class PackMetadataValidationError extends Error {
   }
 }
 
-export async function validatePackVersionMetadata(metadata: Record<string, any>): Promise<PackVersionMetadata> {
+export async function validatePackVersionMetadata(
+  metadata: Record<string, any>,
+  sdkVersion: string | undefined,
+  {warningMode}: {warningMode?: boolean} = {},
+): Promise<PackVersionMetadata> {
+  let combinedSchema: z.ZodType<Partial<PackVersionMetadata>> = legacyPackMetadataSchema;
+
+  // Server-side validation may be running a different SDK version than the pack maker
+  // is using, so some breaking changes to metadata validation can be set up to only
+  // take effect before or after an SDK version bump.
+  if (sdkVersion) {
+    for (const {versionRange, schemaExtend} of packMetadataSchemaBySdkVersion) {
+      if (warningMode || semver.satisfies(sdkVersion, versionRange)) {
+        combinedSchema = schemaExtend(combinedSchema);
+      }
+    }
+  }
+
   // For now we use legacyPackMetadataSchema as the top-level object we validate. As soon as we migrate all of our
   // first-party pack definitions to only use versioned fields, we can use packVersionMetadataSchema  here.
-  const validated = legacyPackMetadataSchema.safeParse(metadata);
+  const validated = combinedSchema.safeParse(metadata);
   if (!validated.success) {
     throw new PackMetadataValidationError(
       'Pack metadata failed validation',
@@ -795,6 +817,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     }).optional(),
     attribution: attributionSchema,
     properties: z.record(objectPropertyUnionSchema),
+    includeUnknownProperties: z.boolean().optional(),
   })
     .superRefine((data, context) => {
       if (!isValidIdentityName(data.identity?.packId, data.identity?.name as string)) {
@@ -1201,43 +1224,196 @@ const legacyPackMetadataSchema = validateFormulas(
         "Specify the domain that your pack makes http requests to using `networkDomains: ['example.com']`",
       path: ['networkDomains'],
     },
-  )
-  .superRefine((untypedData, context) => {
+  );
+
+interface SchemaExtension {
+  versionRange: string;
+  schemaExtend: (schema: z.ZodType<Partial<PackVersionMetadata>>) => z.ZodType<Partial<PackVersionMetadata>>;
+}
+
+const packMetadataSchemaBySdkVersion: SchemaExtension[] = [
+  {
     // Check that packs with multiple network domains explicitly choose which domain gets auth.
+    // This is a backward-incompatible validation that takes effect in any pack release after 0.9.0.
+    versionRange: '>0.9.0',
+    schemaExtend: schema => {
+      return schema.superRefine((untypedData, context) => {
+        const data = untypedData as PackVersionMetadata;
 
-    const data = untypedData as PackVersionMetadata;
-    if (
-      !data.defaultAuthentication ||
-      data.defaultAuthentication.type === AuthenticationType.Various ||
-      data.defaultAuthentication.type === AuthenticationType.None
-    ) {
-      return;
-    }
+        if (
+          !data.defaultAuthentication ||
+          data.defaultAuthentication.type === AuthenticationType.Various ||
+          data.defaultAuthentication.type === AuthenticationType.None
+        ) {
+          return;
+        }
 
-    if (data.defaultAuthentication.requiresEndpointUrl) {
-      // We're ok if there's a user-supplied endpoint domain.
-      return;
-    }
+        if (data.defaultAuthentication.requiresEndpointUrl) {
+          // We're ok if there's a user-supplied endpoint domain.
+          return;
+        }
 
-    if (!data.defaultAuthentication.networkDomain) {
-      if (data.networkDomains && data.networkDomains.length > 1) {
-        context.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ['defaultAuthentication.networkDomain'],
-          message:
-            'This pack uses multiple network domains and must set one as a `networkDomain` in setUserAuthentication()',
-        });
-      }
-      return;
-    }
+        if (!data.defaultAuthentication.networkDomain) {
+          if (data.networkDomains && data.networkDomains.length > 1) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ['defaultAuthentication.networkDomain'],
+              message:
+                'This pack uses multiple network domains and must set one as a `networkDomain` in setUserAuthentication()',
+            });
+          }
+          return;
+        }
 
-    // Pack has multiple network domains and user auth. The code needs to clarify which domain gets the auth headers.
-    if (!data.networkDomains?.includes(data.defaultAuthentication.networkDomain)) {
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['defaultAuthentication.networkDomain'],
-        message: 'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
+        // Pack has multiple network domains and user auth. The code needs to clarify which domain gets the auth
+        // headers.
+        if (!data.networkDomains?.includes(data.defaultAuthentication.networkDomain)) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['defaultAuthentication.networkDomain'],
+            message: 'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
+          });
+          return;
+        }
       });
-      return;
-    }
+    },
+  },
+  {
+    versionRange: '>0.9.0',
+    schemaExtend: schema => {
+      return schema.superRefine((untypedData, context) => {
+        const data = untypedData as PackVersionMetadata;
+        data.formulas.forEach((formula, i) => {
+          formula.parameters.forEach((param, j) => {
+            validateDeprecatedParameterFields(param, ['formulas', i, 'parameters', j], context);
+          });
+          (formula.varargParameters || []).forEach((param, j) => {
+            validateDeprecatedParameterFields(param, ['formulas', i, 'varargParameters', j], context);
+          });
+          if (formula.schema) {
+            validateSchemaDeprecatedFields(formula.schema, ['formulas', i, 'schema'], context);
+          }
+        });
+        data.syncTables.forEach((syncTable, i) => {
+          syncTable.getter.parameters.forEach((param, j) => {
+            validateDeprecatedParameterFields(param, ['syncTables', i, 'getter', 'parameters', j], context);
+          });
+          (syncTable.getter.varargParameters || []).forEach((param, j) => {
+            validateDeprecatedParameterFields(param, ['syncTables', i, 'getter', 'varargParameters', j], context);
+          });
+
+          const schemaPathPrefix = ['syncTables', i, 'schema'];
+          validateSchemaDeprecatedFields(syncTable.schema, schemaPathPrefix, context);
+        });
+
+        const {defaultAuthentication: auth} = data;
+        if (auth && auth.type !== AuthenticationType.None && auth.postSetup) {
+          auth.postSetup.forEach((step, i) => {
+            validateDeprecatedProperty({
+              obj: step,
+              oldName: 'getOptionsFormula',
+              newName: 'getOptions',
+              pathPrefix: ['defaultAuthentication', 'postSetup', i],
+              context,
+            });
+          });
+        }
+      });
+    },
+  },
+];
+
+function validateSchemaDeprecatedFields(
+  schema: Schema,
+  pathPrefix: Array<string | number>,
+  context: z.RefinementCtx,
+): void {
+  if (isObject(schema)) {
+    validateObjectSchemaDeprecatedFields(schema, pathPrefix, context);
+  }
+  if (isArray(schema)) {
+    validateSchemaDeprecatedFields(schema.items, [...pathPrefix, 'items'], context);
+  }
+}
+
+function validateObjectSchemaDeprecatedFields(
+  schema: GenericObjectSchema,
+  pathPrefix: Array<string | number>,
+  context: z.RefinementCtx,
+): void {
+  validateDeprecatedProperty({
+    obj: schema,
+    oldName: 'id',
+    newName: 'idProperty',
+    pathPrefix,
+    context,
   });
+  validateDeprecatedProperty({
+    obj: schema,
+    oldName: 'primary',
+    newName: 'displayProperty',
+    pathPrefix,
+    context,
+  });
+  validateDeprecatedProperty({
+    obj: schema,
+    oldName: 'featured',
+    newName: 'featuredProperties',
+    pathPrefix,
+    context,
+  });
+
+  if (schema.identity?.attribution) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: [...pathPrefix, 'identity', 'attribution'],
+      message:
+        'Attribution has moved and is no longer nested in the Identity object. ' +
+        'Instead of specifying `schema.identity.attribution`, simply specify `schema.attribution`.',
+    });
+  }
+
+  for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
+    validateSchemaDeprecatedFields(childSchema, [...pathPrefix, 'properties', propertyName], context);
+  }
+}
+
+function validateDeprecatedProperty<T extends {}>({
+  obj,
+  oldName,
+  newName,
+  pathPrefix,
+  context,
+}: {
+  obj: T;
+  oldName: string;
+  newName?: string;
+  pathPrefix: Array<string | number>;
+  context: z.RefinementCtx;
+}) {
+  if (obj[oldName as keyof T] !== undefined) {
+    let message = `Property name "${oldName}" is no longer accepted.`;
+    if (newName) {
+      message += ` Use "${newName}" instead.`;
+    }
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: [...pathPrefix, oldName],
+      message,
+    });
+  }
+}
+
+function validateDeprecatedParameterFields<T extends UnionType>(
+  param: ParamDef<T>,
+  pathPrefix: Array<string | number>,
+  context: z.RefinementCtx,
+) {
+  validateDeprecatedProperty({
+    obj: param,
+    oldName: 'defaultValue',
+    newName: 'suggestedValue',
+    pathPrefix,
+    context,
+  });
+}

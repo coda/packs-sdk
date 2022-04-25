@@ -2,6 +2,7 @@ import type {ArgumentsCamelCase} from 'yargs';
 import type {Logger} from '../api_types';
 import type {PackUpload} from '../compiled_types';
 import type {PackVersionDefinition} from '..';
+import type {PublicApiCreatePackVersionResponse} from '../helpers/external-api/v1';
 import {PublicApiPackSource} from '../helpers/external-api/v1';
 import type {PublicApiPackVersionUploadInfo} from '../helpers/external-api/v1';
 import type {TimerShimStrategy} from '../testing/compile';
@@ -135,7 +136,7 @@ export async function handleUpload({
     const bundleHash = computeSha256(uploadPayload);
 
     logger.info('Validating Pack metadata...');
-    await validateMetadata(metadata);
+    await validateMetadata(metadata, {checkDeprecationWarnings: false});
 
     logger.info('Registering new Pack version...');
     let registerResponse: PublicApiPackVersionUploadInfo;
@@ -154,13 +155,30 @@ export async function handleUpload({
     await uploadPack(uploadUrl, uploadPayload, headers);
 
     logger.info('Validating upload...');
+    let uploadCompleteResponse: PublicApiCreatePackVersionResponse;
     try {
-      await client.packVersionUploadComplete(packId, packVersion, {}, {notes, source: PublicApiPackSource.Cli});
+      uploadCompleteResponse = await client.packVersionUploadComplete(
+        packId,
+        packVersion,
+        {},
+        {notes, source: PublicApiPackSource.Cli},
+      );
     } catch (err: any) {
       if (isResponseError(err)) {
         printAndExit(`Error while finalizing pack version: ${await formatResponseError(err)}`);
       }
       throw err;
+    }
+
+    const {deprecationWarnings} = uploadCompleteResponse;
+    if (deprecationWarnings?.length) {
+      print(
+        '\nYour Pack version uploaded successfully. ' +
+          'However, your Pack is using deprecated properties or features that will become errors in a future SDK version.\n',
+      );
+      for (const {path, message} of deprecationWarnings) {
+        print(`Warning in field at path "${path}": ${message}`);
+      }
     }
   } catch (err: any) {
     const errors = [`Unexpected error during Pack upload: ${formatError(err)}`, tryParseSystemError(err)];

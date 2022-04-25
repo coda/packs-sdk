@@ -1,5 +1,6 @@
 import {testHelper} from './test_helper';
 import type {ArraySchema} from '../schema';
+import {AttributionNodeType} from '..';
 import {AuthenticationType} from '../types';
 import {ConnectionRequirement} from '../api_types';
 import {CurrencyFormat} from '..';
@@ -22,6 +23,7 @@ import {createFakePack} from './test_utils';
 import {createFakePackFormulaMetadata} from './test_utils';
 import {createFakePackVersionMetadata} from './test_utils';
 import {deepCopy} from '../helpers/object_utils';
+import {makeAttributionNode} from '..';
 import {makeDynamicSyncTable} from '../api';
 import {makeFormula} from '../api';
 import {makeMetadataFormula} from '../api';
@@ -42,12 +44,15 @@ import {validateSyncTableSchema} from '../testing/upload_validation';
 import {validateVariousAuthenticationMetadata} from '../testing/upload_validation';
 
 describe('Pack metadata Validation', () => {
-  async function validateJson(obj: Record<string, any>) {
-    return validatePackVersionMetadata(obj);
+  async function validateJson(obj: Record<string, any>, sdkVersion?: string) {
+    const packageJson = await import('' + '../package.json');
+    const codaPacksSDKVersion = packageJson.version as string;
+
+    return validatePackVersionMetadata(obj, sdkVersion === null ? codaPacksSDKVersion : sdkVersion);
   }
 
-  async function validateJsonAndAssertFails(obj: Record<string, any>) {
-    const err = await testHelper.willBeRejectedWith(validateJson(obj), /Pack metadata failed validation/);
+  async function validateJsonAndAssertFails(obj: Record<string, any>, sdkVersion?: string) {
+    const err = await testHelper.willBeRejectedWith(validateJson(obj, sdkVersion), /Pack metadata failed validation/);
     return err as PackMetadataValidationError;
   }
 
@@ -2069,7 +2074,7 @@ describe('Pack metadata Validation', () => {
           type: AuthenticationType.HeaderBearerToken,
         },
       });
-      const err = await validateJsonAndAssertFails(metadata);
+      const err = await validateJsonAndAssertFails(metadata, '0.9.1');
       assert.deepEqual(err.validationErrors, [
         {
           message:
@@ -2077,6 +2082,18 @@ describe('Pack metadata Validation', () => {
           path: 'defaultAuthentication.networkDomain',
         },
       ]);
+    });
+
+    it('missing networkDomains when specifying authentication allowed for old SDK versions', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['foo.com', 'bar.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          // A newer sdkVersion would need to set the networkDomain here.
+        },
+      });
+      const validated = await validateJson(metadata, '0.9.0');
+      assert.deepEqual(validated, metadata);
     });
 
     it('bad networkDomains when specifying authentication', async () => {
@@ -2087,7 +2104,7 @@ describe('Pack metadata Validation', () => {
           networkDomain: 'baz.com',
         },
       });
-      const err = await validateJsonAndAssertFails(metadata);
+      const err = await validateJsonAndAssertFails(metadata, '0.9.1');
       assert.deepEqual(err.validationErrors, [
         {
           message: 'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
@@ -2347,6 +2364,251 @@ describe('Pack metadata Validation', () => {
       assert.ok(arraySchemaResult);
       const objectSchemaResult = validateSyncTableSchema(itemSchema);
       assert.ok(objectSchemaResult);
+    });
+  });
+
+  describe('deprecation warnings', () => {
+    const sdkVersionTriggeringDeprecationWarnings = '0.10.0';
+
+    it('deprecated schema properties in formula schema', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'ignored',
+        formulas: [
+          {
+            schema: makeObjectSchema({
+              id: 'id',
+              primary: 'primary',
+              featured: ['id', 'primary'],
+              properties: {
+                id: {type: ValueType.String},
+                primary: {type: ValueType.String},
+                featured: {type: ValueType.String},
+              },
+            }),
+            name: 'MyFormula',
+            description: 'Formula description',
+            parameters: [],
+            examples: [],
+            resultType: Type.object,
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'formulas[0].schema.id',
+          message: 'Property name "id" is no longer accepted. Use "idProperty" instead.',
+        },
+        {
+          path: 'formulas[0].schema.primary',
+          message: 'Property name "primary" is no longer accepted. Use "displayProperty" instead.',
+        },
+        {
+          path: 'formulas[0].schema.featured',
+          message: 'Property name "featured" is no longer accepted. Use "featuredProperties" instead.',
+        },
+      ]);
+    });
+
+    it('deprecated schema properties in sync table schema', async () => {
+      const syncTable = makeSyncTable({
+        name: 'SyncTable',
+        identityName: 'Sync',
+        schema: makeObjectSchema({
+          id: 'id',
+          primary: 'primary',
+          featured: ['id', 'primary'],
+          properties: {
+            id: {type: ValueType.String},
+            primary: {type: ValueType.String},
+            featured: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'SyncTable',
+          description: 'A simple sync table',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+      });
+      const metadata = createFakePackVersionMetadata({
+        syncTables: [syncTable],
+        defaultAuthentication: {
+          type: AuthenticationType.None,
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'syncTables[0].schema.id',
+          message: 'Property name "id" is no longer accepted. Use "idProperty" instead.',
+        },
+        {
+          path: 'syncTables[0].schema.primary',
+          message: 'Property name "primary" is no longer accepted. Use "displayProperty" instead.',
+        },
+        {
+          path: 'syncTables[0].schema.featured',
+          message: 'Property name "featured" is no longer accepted. Use "featuredProperties" instead.',
+        },
+      ]);
+    });
+
+    it('deprecated schema properties in nested schema', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'ignored',
+        formulas: [
+          {
+            schema: makeObjectSchema({
+              properties: {
+                childObj: makeObjectSchema({
+                  id: 'id',
+                  properties: {
+                    id: {type: ValueType.String},
+                  },
+                }),
+                childArr: {
+                  type: ValueType.Array,
+                  items: makeObjectSchema({
+                    primary: 'primary',
+                    properties: {
+                      primary: {type: ValueType.String},
+                    },
+                  }),
+                },
+              },
+            }),
+            name: 'MyFormula',
+            description: 'Formula description',
+            parameters: [],
+            examples: [],
+            resultType: Type.object,
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'formulas[0].schema.properties.childObj.id',
+          message: 'Property name "id" is no longer accepted. Use "idProperty" instead.',
+        },
+        {
+          path: 'formulas[0].schema.properties.childArr.items.primary',
+          message: 'Property name "primary" is no longer accepted. Use "displayProperty" instead.',
+        },
+      ]);
+    });
+
+    it('deprecated defaultValue in formula params', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'ignored',
+        formulas: [
+          {
+            name: 'MyFormula',
+            description: 'Formula description',
+            parameters: [{name: 'param', description: '', type: Type.string, defaultValue: 'foo'}],
+            varargParameters: [{name: 'otherParam', description: '', type: Type.string, defaultValue: 'foo'}],
+            resultType: Type.string,
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'formulas[0].parameters[0].defaultValue',
+          message: 'Property name "defaultValue" is no longer accepted. Use "suggestedValue" instead.',
+        },
+        {
+          path: 'formulas[0].varargParameters[0].defaultValue',
+          message: 'Property name "defaultValue" is no longer accepted. Use "suggestedValue" instead.',
+        },
+      ]);
+    });
+
+    it('deprecated defaultValue in sync table getter params', async () => {
+      const syncTable = makeSyncTable({
+        name: 'SyncTable',
+        identityName: 'Sync',
+        schema: makeObjectSchema({
+          idProperty: 'id',
+          displayProperty: 'primary',
+          properties: {
+            id: {type: ValueType.String},
+            primary: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'MyFormula',
+          description: 'Formula description',
+          parameters: [{name: 'param', description: '', type: Type.string, defaultValue: 'foo'}],
+          async execute() {
+            return {result: []};
+          },
+        },
+      });
+      const metadata = createFakePackVersionMetadata({
+        syncTables: [syncTable],
+      });
+      const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'syncTables[0].getter.parameters[0].defaultValue',
+          message: 'Property name "defaultValue" is no longer accepted. Use "suggestedValue" instead.',
+        },
+      ]);
+    });
+
+    it('deprecated getOptionsFormula', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          postSetup: [
+            {type: PostSetupType.SetEndpoint, getOptionsFormula: {} as any, name: 'StepName', description: ''},
+          ],
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'defaultAuthentication.postSetup[0].getOptionsFormula',
+          message: 'Property name "getOptionsFormula" is no longer accepted. Use "getOptions" instead.',
+        },
+      ]);
+    });
+
+    it('deprecated attribution within identity', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'ignored',
+        formulas: [
+          {
+            schema: makeObjectSchema({
+              identity: {
+                name: 'Foo',
+                attribution: [makeAttributionNode({type: AttributionNodeType.Text, text: 'foo'})],
+              },
+              properties: {
+                id: {type: ValueType.String},
+              },
+            }),
+            name: 'MyFormula',
+            description: 'Formula description',
+            parameters: [],
+            resultType: Type.object,
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'formulas[0].schema.identity.attribution',
+          message:
+            'Attribution has moved and is no longer nested in the Identity object. ' +
+            'Instead of specifying `schema.identity.attribution`, simply specify `schema.attribution`.',
+        },
+      ]);
     });
   });
 });
