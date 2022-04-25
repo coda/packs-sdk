@@ -30,21 +30,21 @@ export interface ArrayType<T extends Type> {
     type: 'array';
     /** The type of the items in this array. */
     items: T;
-    /** If true, this array will accept empty values as `undefined` for non-string types. */
+    /** If true, this array will accept empty or unrecognized values as `undefined`. */
     allowEmpty?: boolean;
 }
-export interface NullableArrayType<T extends Type> extends ArrayType<T> {
+export interface SparseArrayType<T extends Type> extends ArrayType<T> {
     allowEmpty: true;
 }
 export declare function isArrayType(obj: any): obj is ArrayType<any>;
 export declare type UnionType = ArrayType<Type> | Type;
-export declare const stringArray: ArrayType<Type.string>;
-export declare const numberArray: NullableArrayType<Type.number>;
-export declare const booleanArray: ArrayType<Type.boolean>;
-export declare const dateArray: ArrayType<Type.date>;
-export declare const htmlArray: ArrayType<Type.html>;
-export declare const imageArray: ArrayType<Type.image>;
-export declare const fileArray: ArrayType<Type.file>;
+export declare const stringArray: SparseArrayType<Type.string>;
+export declare const numberArray: SparseArrayType<Type.number>;
+export declare const booleanArray: SparseArrayType<Type.boolean>;
+export declare const dateArray: SparseArrayType<Type.date>;
+export declare const htmlArray: SparseArrayType<Type.html>;
+export declare const imageArray: SparseArrayType<Type.image>;
+export declare const fileArray: SparseArrayType<Type.file>;
 export interface TypeMap {
     [Type.number]: number;
     [Type.string]: string;
@@ -138,13 +138,13 @@ export interface ParameterTypeMap {
     [ParameterType.Html]: Type.html;
     [ParameterType.Image]: Type.image;
     [ParameterType.File]: Type.file;
-    [ParameterType.StringArray]: ArrayType<Type.string>;
-    [ParameterType.NumberArray]: NullableArrayType<Type.number>;
-    [ParameterType.BooleanArray]: ArrayType<Type.boolean>;
-    [ParameterType.DateArray]: ArrayType<Type.date>;
-    [ParameterType.HtmlArray]: ArrayType<Type.html>;
-    [ParameterType.ImageArray]: ArrayType<Type.image>;
-    [ParameterType.FileArray]: ArrayType<Type.file>;
+    [ParameterType.StringArray]: SparseArrayType<Type.string>;
+    [ParameterType.NumberArray]: SparseArrayType<Type.number>;
+    [ParameterType.BooleanArray]: SparseArrayType<Type.boolean>;
+    [ParameterType.DateArray]: SparseArrayType<Type.date>;
+    [ParameterType.HtmlArray]: SparseArrayType<Type.html>;
+    [ParameterType.ImageArray]: SparseArrayType<Type.image>;
+    [ParameterType.FileArray]: SparseArrayType<Type.file>;
 }
 export declare const ParameterTypeInputMap: Record<ParameterType, UnionType>;
 /**
@@ -196,7 +196,7 @@ export declare type ParamArgs<T extends UnionType> = Omit<ParamDef<T>, 'descript
 export declare type ParamDefs = [ParamDef<UnionType>, ...Array<ParamDef<UnionType>>] | [];
 /** @hidden */
 export declare type ParamsList = Array<ParamDef<UnionType>>;
-declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : T extends ArrayType<infer V> ? T extends NullableArrayType<infer V> ? Array<TypeMap[V] | undefined> : Array<TypeMap[V]> : never;
+declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : T extends ArrayType<infer V> ? T extends SparseArrayType<infer V> ? Array<TypeMap[V] | undefined> : Array<TypeMap[V]> : never;
 /**
  * The type for the set of argument values that are passed to formula's `execute` function, based on
  * the parameter defintion for that formula.

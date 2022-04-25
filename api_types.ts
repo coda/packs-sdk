@@ -32,11 +32,11 @@ export interface ArrayType<T extends Type> {
   type: 'array';
   /** The type of the items in this array. */
   items: T;
-  /** If true, this array will accept empty values as `undefined` for non-string types. */
+  /** If true, this array will accept empty or unrecognized values as `undefined`. */
   allowEmpty?: boolean;
 }
 
-export interface NullableArrayType<T extends Type> extends ArrayType<T> {
+export interface SparseArrayType<T extends Type> extends ArrayType<T> {
   allowEmpty: true;
 }
 
@@ -46,40 +46,46 @@ export function isArrayType(obj: any): obj is ArrayType<any> {
 
 export type UnionType = ArrayType<Type> | Type;
 
-export const stringArray: ArrayType<Type.string> = {
+export const stringArray: SparseArrayType<Type.string> = {
   type: 'array',
   items: Type.string,
+  allowEmpty: true,
 };
 
-export const numberArray: NullableArrayType<Type.number> = {
+export const numberArray: SparseArrayType<Type.number> = {
   type: 'array',
   items: Type.number,
   allowEmpty: true,
 };
 
-export const booleanArray: ArrayType<Type.boolean> = {
+export const booleanArray: SparseArrayType<Type.boolean> = {
   type: 'array',
   items: Type.boolean,
+  allowEmpty: true,
 };
 
-export const dateArray: ArrayType<Type.date> = {
+export const dateArray: SparseArrayType<Type.date> = {
   type: 'array',
   items: Type.date,
+  allowEmpty: true,
 };
 
-export const htmlArray: ArrayType<Type.html> = {
+export const htmlArray: SparseArrayType<Type.html> = {
   type: 'array',
   items: Type.html,
+  allowEmpty: true,
 };
 
-export const imageArray: ArrayType<Type.image> = {
+export const imageArray: SparseArrayType<Type.image> = {
   type: 'array',
   items: Type.image,
+  allowEmpty: true,
 };
 
-export const fileArray: ArrayType<Type.file> = {
+export const fileArray: SparseArrayType<Type.file> = {
   type: 'array',
   items: Type.file,
+  allowEmpty: true,
 };
 
 // Mapping from our type enum to the JS types they are manifested as.
@@ -192,13 +198,13 @@ export interface ParameterTypeMap {
   [ParameterType.Image]: Type.image;
   [ParameterType.File]: Type.file;
 
-  [ParameterType.StringArray]: ArrayType<Type.string>;
-  [ParameterType.NumberArray]: NullableArrayType<Type.number>;
-  [ParameterType.BooleanArray]: ArrayType<Type.boolean>;
-  [ParameterType.DateArray]: ArrayType<Type.date>;
-  [ParameterType.HtmlArray]: ArrayType<Type.html>;
-  [ParameterType.ImageArray]: ArrayType<Type.image>;
-  [ParameterType.FileArray]: ArrayType<Type.file>;
+  [ParameterType.StringArray]: SparseArrayType<Type.string>;
+  [ParameterType.NumberArray]: SparseArrayType<Type.number>;
+  [ParameterType.BooleanArray]: SparseArrayType<Type.boolean>;
+  [ParameterType.DateArray]: SparseArrayType<Type.date>;
+  [ParameterType.HtmlArray]: SparseArrayType<Type.html>;
+  [ParameterType.ImageArray]: SparseArrayType<Type.image>;
+  [ParameterType.FileArray]: SparseArrayType<Type.file>;
 }
 
 export const ParameterTypeInputMap: Record<ParameterType, UnionType> = {
@@ -210,13 +216,13 @@ export const ParameterTypeInputMap: Record<ParameterType, UnionType> = {
   [ParameterType.Image]: Type.image,
   [ParameterType.File]: Type.file,
 
-  [ParameterType.StringArray]: {type: 'array', items: Type.string},
+  [ParameterType.StringArray]: {type: 'array', items: Type.string, allowEmpty: true},
   [ParameterType.NumberArray]: {type: 'array', items: Type.number, allowEmpty: true},
-  [ParameterType.BooleanArray]: {type: 'array', items: Type.boolean},
-  [ParameterType.DateArray]: {type: 'array', items: Type.date},
-  [ParameterType.HtmlArray]: {type: 'array', items: Type.html},
-  [ParameterType.ImageArray]: {type: 'array', items: Type.image},
-  [ParameterType.FileArray]: {type: 'array', items: Type.file},
+  [ParameterType.BooleanArray]: {type: 'array', items: Type.boolean, allowEmpty: true},
+  [ParameterType.DateArray]: {type: 'array', items: Type.date, allowEmpty: true},
+  [ParameterType.HtmlArray]: {type: 'array', items: Type.html, allowEmpty: true},
+  [ParameterType.ImageArray]: {type: 'array', items: Type.image, allowEmpty: true},
+  [ParameterType.FileArray]: {type: 'array', items: Type.file, allowEmpty: true},
 };
 
 /**
@@ -279,7 +285,7 @@ export type ParamsList = Array<ParamDef<UnionType>>;
 type TypeOfMap<T extends UnionType> = T extends Type
   ? TypeMap[T]
   : T extends ArrayType<infer V>
-  ? T extends NullableArrayType<infer V>
+  ? T extends SparseArrayType<infer V>
     ? Array<TypeMap[V] | undefined>
     : Array<TypeMap[V]>
   : never;

@@ -6,7 +6,6 @@ import {ConnectionRequirement} from './api_types';
 import type {ExecutionContext} from './api_types';
 import type {FetchRequest} from './api_types';
 import type {Identity} from './schema';
-import type {NullableArrayType} from './api_types';
 import type {NumberHintTypes} from './schema';
 import type {NumberSchema} from './schema';
 import type {ObjectSchema} from './schema';
@@ -24,6 +23,7 @@ import type {RequestHandlerTemplate} from './handler_templates';
 import type {ResponseHandlerTemplate} from './handler_templates';
 import type {Schema} from './schema';
 import type {SchemaType} from './schema';
+import type {SparseArrayType} from './api_types';
 import type {StringHintTypes} from './schema';
 import type {StringSchema} from './schema';
 import type {SyncExecutionContext} from './api_types';
@@ -364,7 +364,7 @@ export function makeStringArrayParameter(
   name: string,
   description: string,
   args: ParamArgs<ArrayType<Type.string>> = {},
-): ParamDef<ArrayType<Type.string>> {
+): ParamDef<SparseArrayType<Type.string>> {
   return Object.freeze({...args, name, description, type: stringArray});
 }
 
@@ -380,8 +380,8 @@ export function makeNumericArrayParameter(
   name: string,
   description: string,
   args: ParamArgs<ArrayType<Type.number>> = {},
-): ParamDef<NullableArrayType<Type.number>> {
-  return Object.freeze({...args, name, description, type: numberArray, allowEmpty: true});
+): ParamDef<SparseArrayType<Type.number>> {
+  return Object.freeze({...args, name, description, type: numberArray});
 }
 
 export function makeBooleanParameter(
@@ -396,7 +396,7 @@ export function makeBooleanArrayParameter(
   name: string,
   description: string,
   args: ParamArgs<ArrayType<Type.boolean>> = {},
-): ParamDef<ArrayType<Type.boolean>> {
+): ParamDef<SparseArrayType<Type.boolean>> {
   return Object.freeze({...args, name, description, type: booleanArray});
 }
 
@@ -412,7 +412,7 @@ export function makeDateArrayParameter(
   name: string,
   description: string,
   args: ParamArgs<ArrayType<Type.date>> = {},
-): ParamDef<ArrayType<Type.date>> {
+): ParamDef<SparseArrayType<Type.date>> {
   return Object.freeze({...args, name, description, type: dateArray});
 }
 
@@ -428,7 +428,7 @@ export function makeHtmlArrayParameter(
   name: string,
   description: string,
   args: ParamArgs<ArrayType<Type.html>> = {},
-): ParamDef<ArrayType<Type.html>> {
+): ParamDef<SparseArrayType<Type.html>> {
   return Object.freeze({...args, name, description, type: htmlArray});
 }
 
@@ -444,7 +444,7 @@ export function makeImageArrayParameter(
   name: string,
   description: string,
   args: ParamArgs<ArrayType<Type.image>> = {},
-): ParamDef<ArrayType<Type.image>> {
+): ParamDef<SparseArrayType<Type.image>> {
   return Object.freeze({...args, name, description, type: imageArray});
 }
 
@@ -460,7 +460,7 @@ export function makeFileArrayParameter(
   name: string,
   description: string,
   args: ParamArgs<ArrayType<Type.file>> = {},
-): ParamDef<ArrayType<Type.file>> {
+): ParamDef<SparseArrayType<Type.file>> {
   return Object.freeze({...args, name, description, type: fileArray});
 }
 

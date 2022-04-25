@@ -17,7 +17,7 @@ The type of a parameter or return value that is an array.
 
 • `Optional` **allowEmpty**: `boolean`
 
-If true, this array will accept empty values as `undefined` for non-string types.
+If true, this array will accept empty or unrecognized values as `undefined`.
 
 #### Defined in
 

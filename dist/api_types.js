@@ -27,6 +27,7 @@ exports.isArrayType = isArrayType;
 exports.stringArray = {
     type: 'array',
     items: Type.string,
+    allowEmpty: true,
 };
 exports.numberArray = {
     type: 'array',
@@ -36,22 +37,27 @@ exports.numberArray = {
 exports.booleanArray = {
     type: 'array',
     items: Type.boolean,
+    allowEmpty: true,
 };
 exports.dateArray = {
     type: 'array',
     items: Type.date,
+    allowEmpty: true,
 };
 exports.htmlArray = {
     type: 'array',
     items: Type.html,
+    allowEmpty: true,
 };
 exports.imageArray = {
     type: 'array',
     items: Type.image,
+    allowEmpty: true,
 };
 exports.fileArray = {
     type: 'array',
     items: Type.file,
+    allowEmpty: true,
 };
 /**
  * Enumeration of types of formula parameters. These describe Coda value types (as opposed to JavaScript value types).
@@ -128,13 +134,13 @@ exports.ParameterTypeInputMap = {
     [ParameterType.Html]: Type.html,
     [ParameterType.Image]: Type.image,
     [ParameterType.File]: Type.file,
-    [ParameterType.StringArray]: { type: 'array', items: Type.string },
+    [ParameterType.StringArray]: { type: 'array', items: Type.string, allowEmpty: true },
     [ParameterType.NumberArray]: { type: 'array', items: Type.number, allowEmpty: true },
-    [ParameterType.BooleanArray]: { type: 'array', items: Type.boolean },
-    [ParameterType.DateArray]: { type: 'array', items: Type.date },
-    [ParameterType.HtmlArray]: { type: 'array', items: Type.html },
-    [ParameterType.ImageArray]: { type: 'array', items: Type.image },
-    [ParameterType.FileArray]: { type: 'array', items: Type.file },
+    [ParameterType.BooleanArray]: { type: 'array', items: Type.boolean, allowEmpty: true },
+    [ParameterType.DateArray]: { type: 'array', items: Type.date, allowEmpty: true },
+    [ParameterType.HtmlArray]: { type: 'array', items: Type.html, allowEmpty: true },
+    [ParameterType.ImageArray]: { type: 'array', items: Type.image, allowEmpty: true },
+    [ParameterType.FileArray]: { type: 'array', items: Type.file, allowEmpty: true },
 };
 /**
  * Enumeration of requirement states for whether a given formula or sync table requires

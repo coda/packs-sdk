@@ -1001,10 +1001,10 @@ export interface ArrayType<T extends Type> {
 	type: "array";
 	/** The type of the items in this array. */
 	items: T;
-	/** If true, this array will accept empty values as `undefined` for non-string types. */
+	/** If true, this array will accept empty or unrecognized values as `undefined`. */
 	allowEmpty?: boolean;
 }
-export interface NullableArrayType<T extends Type> extends ArrayType<T> {
+export interface SparseArrayType<T extends Type> extends ArrayType<T> {
 	allowEmpty: true;
 }
 export declare type UnionType = ArrayType<Type> | Type;
@@ -1101,13 +1101,13 @@ export interface ParameterTypeMap {
 	[ParameterType.Html]: Type.html;
 	[ParameterType.Image]: Type.image;
 	[ParameterType.File]: Type.file;
-	[ParameterType.StringArray]: ArrayType<Type.string>;
-	[ParameterType.NumberArray]: NullableArrayType<Type.number>;
-	[ParameterType.BooleanArray]: ArrayType<Type.boolean>;
-	[ParameterType.DateArray]: ArrayType<Type.date>;
-	[ParameterType.HtmlArray]: ArrayType<Type.html>;
-	[ParameterType.ImageArray]: ArrayType<Type.image>;
-	[ParameterType.FileArray]: ArrayType<Type.file>;
+	[ParameterType.StringArray]: SparseArrayType<Type.string>;
+	[ParameterType.NumberArray]: SparseArrayType<Type.number>;
+	[ParameterType.BooleanArray]: SparseArrayType<Type.boolean>;
+	[ParameterType.DateArray]: SparseArrayType<Type.date>;
+	[ParameterType.HtmlArray]: SparseArrayType<Type.html>;
+	[ParameterType.ImageArray]: SparseArrayType<Type.image>;
+	[ParameterType.FileArray]: SparseArrayType<Type.file>;
 }
 /**
  * The definition of a formula parameter.
@@ -1160,7 +1160,7 @@ export declare type ParamDefs = [
 ];
 /** @hidden */
 export declare type ParamsList = Array<ParamDef<UnionType>>;
-export declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : T extends ArrayType<infer V> ? T extends NullableArrayType<infer V> ? Array<TypeMap[V] | undefined> : Array<TypeMap[V]> : never;
+export declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : T extends ArrayType<infer V> ? T extends SparseArrayType<infer V> ? Array<TypeMap[V] | undefined> : Array<TypeMap[V]> : never;
 /**
  * The type for the set of argument values that are passed to formula's `execute` function, based on
  * the parameter defintion for that formula.
