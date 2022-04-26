@@ -115,6 +115,7 @@ var PostSetupType;
     PostSetupType["SetEndpoint"] = "SetEndPoint";
 })(PostSetupType = exports.PostSetupType || (exports.PostSetupType = {}));
 /**
+ * @deprecated
  * @ignore
  */
 var FeatureSet;
@@ -126,6 +127,7 @@ var FeatureSet;
 })(FeatureSet = exports.FeatureSet || (exports.FeatureSet = {}));
 /**
  * @ignore
+ * @deprecated
  */
 var QuotaLimitType;
 (function (QuotaLimitType) {
@@ -136,6 +138,7 @@ var QuotaLimitType;
 })(QuotaLimitType = exports.QuotaLimitType || (exports.QuotaLimitType = {}));
 /**
  * @ignore
+ * @deprecated
  */
 var SyncInterval;
 (function (SyncInterval) {

@@ -37,4 +37,4 @@ See [Normalization](/index.html#normalization) for more information about schema
 
 #### Defined in
 
-[api.ts:1459](https://github.com/coda/packs-sdk/blob/main/api.ts#L1459)
+[api.ts:1466](https://github.com/coda/packs-sdk/blob/main/api.ts#L1466)

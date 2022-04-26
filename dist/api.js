@@ -82,6 +82,8 @@ class StatusCodeError extends Error {
 }
 exports.StatusCodeError = StatusCodeError;
 /**
+ * @deprecated
+ *
  * Helper to determine if an error is considered user-visible and can be shown in the UI.
  * See {@link UserVisibleError}.
  * @param error Any error object.
@@ -250,6 +252,8 @@ function isSyncPackFormula(fn) {
 }
 exports.isSyncPackFormula = isSyncPackFormula;
 /**
+ * @deprecated
+ *
  * Helper for returning the definition of a formula that returns a number. Adds result type information
  * to a generic formula definition.
  *
@@ -260,6 +264,8 @@ function makeNumericFormula(definition) {
 }
 exports.makeNumericFormula = makeNumericFormula;
 /**
+ * @deprecated
+ *
  * Helper for returning the definition of a formula that returns a string. Adds result type information
  * to a generic formula definition.
  *
@@ -567,6 +573,7 @@ function isResponseHandlerTemplate(obj) {
 function isResponseExampleTemplate(obj) {
     return obj && obj.example;
 }
+/** @deprecated */
 function makeObjectFormula({ response, ...definition }) {
     let schema;
     if (response) {
@@ -675,6 +682,7 @@ function makeSyncTable({ name, description, identityName, schema: schemaDef, for
     };
 }
 exports.makeSyncTable = makeSyncTable;
+/** @deprecated */
 function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynamicOptions = {}) {
     var _a;
     if (!((_a = schema.identity) === null || _a === void 0 ? void 0 : _a.name)) {

@@ -15,4 +15,4 @@ A pack formula that returns a boolean.
 
 #### Defined in
 
-[api.ts:558](https://github.com/coda/packs-sdk/blob/main/api.ts#L558)
+[api.ts:560](https://github.com/coda/packs-sdk/blob/main/api.ts#L560)

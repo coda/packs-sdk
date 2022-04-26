@@ -3284,6 +3284,7 @@ declare enum SyncInterval {
 }
 /**
  * @ignore
+ * @deprecated
  */
 export interface SyncQuota {
 	maximumInterval?: SyncInterval;
@@ -3291,6 +3292,7 @@ export interface SyncQuota {
 }
 /**
  * @ignore
+ * @deprecated
  */
 export interface Quota {
 	monthlyLimits?: Partial<{
@@ -3301,7 +3303,6 @@ export interface Quota {
 }
 /**
  * @deprecated Define these in the pack management UI instead.
- *
  */
 export interface RateLimit {
 	operationsPerInterval: number;
@@ -3309,7 +3310,6 @@ export interface RateLimit {
 }
 /**
  * @deprecated Define these in the pack management UI instead.
- *
  */
 export interface RateLimits {
 	overall?: RateLimit;
