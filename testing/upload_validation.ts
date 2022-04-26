@@ -1227,8 +1227,8 @@ interface SchemaExtension {
 const packMetadataSchemaBySdkVersion: SchemaExtension[] = [
   {
     // Check that packs with multiple network domains explicitly choose which domain gets auth.
-    // This is a backward-incompatible validation that takes effect in any pack release after 0.9.0.
-    versionRange: '>0.9.0',
+    // This is a backward-incompatible validation that takes effect in any pack release after 1.0.0.
+    versionRange: '>=1.0.0',
     schemaExtend: schema => {
       return schema.superRefine((untypedData, context) => {
         const data = untypedData as PackVersionMetadata;
@@ -1272,7 +1272,7 @@ const packMetadataSchemaBySdkVersion: SchemaExtension[] = [
     },
   },
   {
-    versionRange: '>0.9.0',
+    versionRange: '>=1.0.0',
     schemaExtend: schema => {
       return schema.superRefine((untypedData, context) => {
         const data = untypedData as PackVersionMetadata;
