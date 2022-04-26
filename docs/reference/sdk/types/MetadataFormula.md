@@ -35,4 +35,4 @@ current value.
 
 #### Defined in
 
-[api.ts:1017](https://github.com/coda/packs-sdk/blob/main/api.ts#L1017)
+[api.ts:1033](https://github.com/coda/packs-sdk/blob/main/api.ts#L1033)

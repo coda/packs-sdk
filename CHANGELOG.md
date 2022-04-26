@@ -9,6 +9,7 @@ This changelog keeps track of all changes to the packs-sdk. We follow convention
 - Added "force" option to `LinkSchema` for `LinkDisplayType.Embed`.
 - Added "downloadFilename" option to `storeBlob` and `storeUrl` in `TemporaryBlobStorage` to specify the file name that it should download as when opening the temporary url.
 - Added "includeUnknownProperties" option to `makeObjectSchema` that will retain properties on objects that are not defined within the object's schema.
+- Added "SparseStringArray", "SparseNumberArray", "SparseBooleanArray", "SparseDateArray", "SparseHtmlArray", "SparseImageArray" and "SparseFileArray" to `ParameterType` that accepts empty values.
 - `coda validate` will now print warnings if your Pack definition is using properties or features that will be deprecated in a future SDK version. You may add the `--no-checkDeprecationWarnings` flag if you don't want this output.
 - `coda upload` will now print warnings if your Pack definition is using properties or features that will be deprecated in a future SDK version. These are purely to alert you to upcoming changes that will affect you, your Pack will continue to upload and execute in the meantime.
 

@@ -142,3 +142,25 @@ pack.addDynamicSyncTable({
     },
   },
 });
+
+pack.addFormula({
+  name: 'Sum',
+  description: 'A formula that adds all params together',
+  parameters: [
+    coda.makeParameter({
+      type: coda.ParameterType.SparseNumberArray,
+      name: 'numbers',
+      description: 'A list of numbers',
+    }),
+  ],
+  resultType: coda.ValueType.Number,
+  execute: async ([numbers]) => {
+    let sum = 0;
+    for (const number of numbers) {
+      if (number) {
+        sum += number;
+      }
+    }
+    return sum;
+  },
+});

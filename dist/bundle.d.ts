@@ -139,7 +139,7 @@ export declare enum ValueHintType {
 	/**
 	 * Indicates to interpret and render a value as a file attachment. The provided value should be a URL
 	 * pointing to a file of a Coda-supported type. Coda will ingest the file and host it from Coda infrastructure.
-	*/
+	 */
 	Attachment = "attachment",
 	/**
 	 * Indicates to render a numeric value as a slider UI component.
@@ -1001,6 +1001,11 @@ export interface ArrayType<T extends Type> {
 	type: "array";
 	/** The type of the items in this array. */
 	items: T;
+	/** If true, this array will accept empty or unrecognized values as `undefined`. */
+	allowEmpty?: boolean;
+}
+export interface SparseArrayType<T extends Type> extends ArrayType<T> {
+	allowEmpty: true;
 }
 export declare type UnionType = ArrayType<Type> | Type;
 export interface TypeMap {
@@ -1059,13 +1064,25 @@ export declare enum ParameterType {
 	 */
 	StringArray = "stringArray",
 	/**
+	 * {@link StringArray} that accepts unparsable values as `undefined`.
+	 */
+	SparseStringArray = "sparseStringArray",
+	/**
 	 * Indicates a parameter that is a list of Coda number values.
 	 */
 	NumberArray = "numberArray",
 	/**
+	 * {@link NumberArray} that accepts unparsable values as `undefined`.
+	 */
+	SparseNumberArray = "sparseNumberArray",
+	/**
 	 * Indicates a parameter that is a list of Coda boolean values.
 	 */
 	BooleanArray = "booleanArray",
+	/**
+	 * {@link BooleanArray} that accepts unparsable values as `undefined`.
+	 */
+	SparseBooleanArray = "sparseBooleanArray",
 	/**
 	 * Indicates a parameter that is a list of Coda date values (which includes time and datetime values).
 	 *
@@ -1076,17 +1093,33 @@ export declare enum ParameterType {
 	 */
 	DateArray = "dateArray",
 	/**
+	 * {@link DateArray} that accepts unparsable values as `undefined`.
+	 */
+	SparseDateArray = "sparseDateArray",
+	/**
 	 * Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as HTML.
 	 */
 	HtmlArray = "htmlArray`",
+	/**
+	 * {@link HtmlArray} that accepts unparsable values as `undefined`.
+	 */
+	SparseHtmlArray = "sparseHtmlArray",
 	/**
 	 * Indicates a parameter that is a list of Coda image values. The pack is passed a list of image URLs.
 	 */
 	ImageArray = "imageArray",
 	/**
+	 * {@link ImageArray} that accepts unparsable values as `undefined`.
+	 */
+	SparseImageArray = "sparseImageArray",
+	/**
 	 * Indicates a parameter that is a list of Coda file values. The pack is passed a list of file URLs.
 	 */
-	FileArray = "fileArray"
+	FileArray = "fileArray",
+	/**
+	 * {@link FileArray} that accepts unparsable values as `undefined`.
+	 */
+	SparseFileArray = "sparseFileArray"
 }
 export interface ParameterTypeMap {
 	[ParameterType.String]: Type.string;
@@ -1103,6 +1136,13 @@ export interface ParameterTypeMap {
 	[ParameterType.HtmlArray]: ArrayType<Type.html>;
 	[ParameterType.ImageArray]: ArrayType<Type.image>;
 	[ParameterType.FileArray]: ArrayType<Type.file>;
+	[ParameterType.SparseStringArray]: SparseArrayType<Type.string>;
+	[ParameterType.SparseNumberArray]: SparseArrayType<Type.number>;
+	[ParameterType.SparseBooleanArray]: SparseArrayType<Type.boolean>;
+	[ParameterType.SparseDateArray]: SparseArrayType<Type.date>;
+	[ParameterType.SparseHtmlArray]: SparseArrayType<Type.html>;
+	[ParameterType.SparseImageArray]: SparseArrayType<Type.image>;
+	[ParameterType.SparseFileArray]: SparseArrayType<Type.file>;
 }
 /**
  * The definition of a formula parameter.
@@ -1155,7 +1195,7 @@ export declare type ParamDefs = [
 ];
 /** @hidden */
 export declare type ParamsList = Array<ParamDef<UnionType>>;
-export declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : T extends ArrayType<infer V> ? Array<TypeMap[V]> : never;
+export declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : T extends ArrayType<infer V> ? T extends SparseArrayType<infer V> ? Array<TypeMap[V] | undefined> : Array<TypeMap[V]> : never;
 /**
  * The type for the set of argument values that are passed to formula's `execute` function, based on
  * the parameter defintion for that formula.

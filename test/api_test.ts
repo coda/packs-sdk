@@ -278,6 +278,16 @@ describe('API test', () => {
       });
     });
 
+    it('sparse array inferred from makeParameter with array param', () => {
+      makeFormula({
+        resultType: ValueType.String,
+        name: 'Test',
+        description: '',
+        parameters: [makeParameter({type: ParameterType.SparseStringArray, name: 'myParam', description: ''})],
+        execute: ([param]) => param[0] ?? 'undefined',
+      });
+    });
+
     it('strong typing inferred from makeParameter with multiple params', () => {
       makeFormula({
         resultType: ValueType.String,

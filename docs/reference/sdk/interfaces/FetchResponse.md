@@ -31,7 +31,7 @@ to disable any parsing. Note however that this will result in the body being a N
 
 #### Defined in
 
-[api_types.ts:480](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L480)
+[api_types.ts:539](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L539)
 
 ___
 
@@ -47,7 +47,7 @@ HTTP response headers. The contents of many headers will be redacted for securit
 
 #### Defined in
 
-[api_types.ts:484](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L484)
+[api_types.ts:543](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L543)
 
 ___
 
@@ -59,4 +59,4 @@ The HTTP status code, e.g. `200`.
 
 #### Defined in
 
-[api_types.ts:468](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L468)
+[api_types.ts:527](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L527)

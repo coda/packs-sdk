@@ -359,7 +359,14 @@ const primitiveUnion = z.union([z.number(), z.string(), z.boolean(), z.date()]);
 const paramDefValidator = zodCompleteObject({
     name: z.string(),
     type: z
-        .union([z.nativeEnum(api_types_3.Type), z.object({ type: zodDiscriminant('array'), items: z.nativeEnum(api_types_3.Type) })])
+        .union([
+        z.nativeEnum(api_types_3.Type),
+        z.object({
+            type: zodDiscriminant('array'),
+            items: z.nativeEnum(api_types_3.Type),
+            allowEmpty: z.boolean().optional(),
+        }),
+    ])
         .refine(paramType => paramType !== api_types_3.Type.object &&
         !(typeof paramType === 'object' && paramType.type === 'array' && paramType.items === api_types_3.Type.object), {
         message: 'Object parameters are not currently supported.',

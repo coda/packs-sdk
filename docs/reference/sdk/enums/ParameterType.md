@@ -15,7 +15,7 @@ Indicates a parameter that is a Coda boolean value.
 
 #### Defined in
 
-[api_types.ts:126](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L126)
+[api_types.ts:139](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L139)
 
 ___
 
@@ -27,7 +27,7 @@ Indicates a parameter that is a list of Coda boolean values.
 
 #### Defined in
 
-[api_types.ts:155](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L155)
+[api_types.ts:176](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L176)
 
 ___
 
@@ -39,7 +39,7 @@ Indicates a parameter that is a Coda date value (which includes time and datetim
 
 #### Defined in
 
-[api_types.ts:130](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L130)
+[api_types.ts:143](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L143)
 
 ___
 
@@ -56,7 +56,7 @@ elements, the beginning of the range and the end of the range.
 
 #### Defined in
 
-[api_types.ts:164](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L164)
+[api_types.ts:189](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L189)
 
 ___
 
@@ -68,7 +68,7 @@ Indicates a parameter that is a Coda file. The pack is passed a file URL.
 
 #### Defined in
 
-[api_types.ts:142](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L142)
+[api_types.ts:155](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L155)
 
 ___
 
@@ -80,7 +80,7 @@ Indicates a parameter that is a list of Coda file values. The pack is passed a l
 
 #### Defined in
 
-[api_types.ts:176](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L176)
+[api_types.ts:213](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L213)
 
 ___
 
@@ -92,7 +92,7 @@ Indicates a parameter that is a Coda rich text value that should be passed to th
 
 #### Defined in
 
-[api_types.ts:134](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L134)
+[api_types.ts:147](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L147)
 
 ___
 
@@ -104,7 +104,7 @@ Indicates a parameter that is a list of Coda rich text values that should be pas
 
 #### Defined in
 
-[api_types.ts:168](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L168)
+[api_types.ts:197](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L197)
 
 ___
 
@@ -116,7 +116,7 @@ Indicates a parameter that is a Coda image. The pack is passed an image URL.
 
 #### Defined in
 
-[api_types.ts:138](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L138)
+[api_types.ts:151](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L151)
 
 ___
 
@@ -128,7 +128,7 @@ Indicates a parameter that is a list of Coda image values. The pack is passed a 
 
 #### Defined in
 
-[api_types.ts:172](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L172)
+[api_types.ts:205](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L205)
 
 ___
 
@@ -140,7 +140,7 @@ Indicates a parameter that is a Coda number value.
 
 #### Defined in
 
-[api_types.ts:122](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L122)
+[api_types.ts:135](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L135)
 
 ___
 
@@ -152,7 +152,91 @@ Indicates a parameter that is a list of Coda number values.
 
 #### Defined in
 
-[api_types.ts:151](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L151)
+[api_types.ts:168](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L168)
+
+___
+
+### SparseBooleanArray
+
+• **SparseBooleanArray** = `"sparseBooleanArray"`
+
+[BooleanArray](ParameterType.md#booleanarray) that accepts unparsable values as `undefined`.
+
+#### Defined in
+
+[api_types.ts:180](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L180)
+
+___
+
+### SparseDateArray
+
+• **SparseDateArray** = `"sparseDateArray"`
+
+[DateArray](ParameterType.md#datearray) that accepts unparsable values as `undefined`.
+
+#### Defined in
+
+[api_types.ts:193](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L193)
+
+___
+
+### SparseFileArray
+
+• **SparseFileArray** = `"sparseFileArray"`
+
+[FileArray](ParameterType.md#filearray) that accepts unparsable values as `undefined`.
+
+#### Defined in
+
+[api_types.ts:217](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L217)
+
+___
+
+### SparseHtmlArray
+
+• **SparseHtmlArray** = `"sparseHtmlArray"`
+
+[HtmlArray](ParameterType.md#htmlarray) that accepts unparsable values as `undefined`.
+
+#### Defined in
+
+[api_types.ts:201](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L201)
+
+___
+
+### SparseImageArray
+
+• **SparseImageArray** = `"sparseImageArray"`
+
+[ImageArray](ParameterType.md#imagearray) that accepts unparsable values as `undefined`.
+
+#### Defined in
+
+[api_types.ts:209](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L209)
+
+___
+
+### SparseNumberArray
+
+• **SparseNumberArray** = `"sparseNumberArray"`
+
+[NumberArray](ParameterType.md#numberarray) that accepts unparsable values as `undefined`.
+
+#### Defined in
+
+[api_types.ts:172](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L172)
+
+___
+
+### SparseStringArray
+
+• **SparseStringArray** = `"sparseStringArray"`
+
+[StringArray](ParameterType.md#stringarray) that accepts unparsable values as `undefined`.
+
+#### Defined in
+
+[api_types.ts:164](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L164)
 
 ___
 
@@ -164,7 +248,7 @@ Indicates a parameter that is a Coda text value.
 
 #### Defined in
 
-[api_types.ts:118](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L118)
+[api_types.ts:131](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L131)
 
 ___
 
@@ -176,4 +260,4 @@ Indicates a parameter that is a list of Coda text values.
 
 #### Defined in
 
-[api_types.ts:147](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L147)
+[api_types.ts:160](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L160)

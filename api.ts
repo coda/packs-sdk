@@ -351,6 +351,7 @@ export function makeParameter<T extends ParameterType>(
 
 // Other parameter helpers below here are obsolete given the above generate parameter makers.
 
+/** @deprecated */
 export function makeStringParameter(
   name: string,
   description: string,
@@ -359,6 +360,7 @@ export function makeStringParameter(
   return Object.freeze({...args, name, description, type: Type.string as Type.string});
 }
 
+/** @deprecated */
 export function makeStringArrayParameter(
   name: string,
   description: string,
@@ -367,6 +369,7 @@ export function makeStringArrayParameter(
   return Object.freeze({...args, name, description, type: stringArray});
 }
 
+/** @deprecated */
 export function makeNumericParameter(
   name: string,
   description: string,
@@ -375,6 +378,7 @@ export function makeNumericParameter(
   return Object.freeze({...args, name, description, type: Type.number as Type.number});
 }
 
+/** @deprecated */
 export function makeNumericArrayParameter(
   name: string,
   description: string,
@@ -383,6 +387,7 @@ export function makeNumericArrayParameter(
   return Object.freeze({...args, name, description, type: numberArray});
 }
 
+/** @deprecated */
 export function makeBooleanParameter(
   name: string,
   description: string,
@@ -391,6 +396,7 @@ export function makeBooleanParameter(
   return Object.freeze({...args, name, description, type: Type.boolean as Type.boolean});
 }
 
+/** @deprecated */
 export function makeBooleanArrayParameter(
   name: string,
   description: string,
@@ -399,6 +405,7 @@ export function makeBooleanArrayParameter(
   return Object.freeze({...args, name, description, type: booleanArray});
 }
 
+/** @deprecated */
 export function makeDateParameter(
   name: string,
   description: string,
@@ -407,6 +414,7 @@ export function makeDateParameter(
   return Object.freeze({...args, name, description, type: Type.date as Type.date});
 }
 
+/** @deprecated */
 export function makeDateArrayParameter(
   name: string,
   description: string,
@@ -415,6 +423,7 @@ export function makeDateArrayParameter(
   return Object.freeze({...args, name, description, type: dateArray});
 }
 
+/** @deprecated */
 export function makeHtmlParameter(
   name: string,
   description: string,
@@ -423,6 +432,7 @@ export function makeHtmlParameter(
   return Object.freeze({...args, name, description, type: Type.html as Type.html});
 }
 
+/** @deprecated */
 export function makeHtmlArrayParameter(
   name: string,
   description: string,
@@ -431,6 +441,7 @@ export function makeHtmlArrayParameter(
   return Object.freeze({...args, name, description, type: htmlArray});
 }
 
+/** @deprecated */
 export function makeImageParameter(
   name: string,
   description: string,
@@ -439,6 +450,7 @@ export function makeImageParameter(
   return Object.freeze({...args, name, description, type: Type.image as Type.image});
 }
 
+/** @deprecated */
 export function makeImageArrayParameter(
   name: string,
   description: string,
@@ -447,6 +459,7 @@ export function makeImageArrayParameter(
   return Object.freeze({...args, name, description, type: imageArray});
 }
 
+/** @deprecated */
 export function makeFileParameter(
   name: string,
   description: string,
@@ -455,6 +468,7 @@ export function makeFileParameter(
   return Object.freeze({...args, name, description, type: Type.file as Type.file});
 }
 
+/** @deprecated */
 export function makeFileArrayParameter(
   name: string,
   description: string,
@@ -463,10 +477,12 @@ export function makeFileArrayParameter(
   return Object.freeze({...args, name, description, type: fileArray});
 }
 
+/** @deprecated */
 export function makeUserVisibleError(msg: string): UserVisibleError {
   return new UserVisibleError(msg);
 }
 
+/** @deprecated */
 export function check(condition: boolean, msg: string) {
   if (!condition) {
     throw makeUserVisibleError(msg);

@@ -32,6 +32,12 @@ export interface ArrayType<T extends Type> {
   type: 'array';
   /** The type of the items in this array. */
   items: T;
+  /** If true, this array will accept empty or unrecognized values as `undefined`. */
+  allowEmpty?: boolean;
+}
+
+export interface SparseArrayType<T extends Type> extends ArrayType<T> {
+  allowEmpty: true;
 }
 
 export function isArrayType(obj: any): obj is ArrayType<any> {
@@ -40,36 +46,43 @@ export function isArrayType(obj: any): obj is ArrayType<any> {
 
 export type UnionType = ArrayType<Type> | Type;
 
+/** @deprecated */
 export const stringArray: ArrayType<Type.string> = {
   type: 'array',
   items: Type.string,
 };
 
+/** @deprecated */
 export const numberArray: ArrayType<Type.number> = {
   type: 'array',
   items: Type.number,
 };
 
+/** @deprecated */
 export const booleanArray: ArrayType<Type.boolean> = {
   type: 'array',
   items: Type.boolean,
 };
 
+/** @deprecated */
 export const dateArray: ArrayType<Type.date> = {
   type: 'array',
   items: Type.date,
 };
 
+/** @deprecated */
 export const htmlArray: ArrayType<Type.html> = {
   type: 'array',
   items: Type.html,
 };
 
+/** @deprecated */
 export const imageArray: ArrayType<Type.image> = {
   type: 'array',
   items: Type.image,
 };
 
+/** @deprecated */
 export const fileArray: ArrayType<Type.file> = {
   type: 'array',
   items: Type.file,
@@ -146,13 +159,25 @@ export enum ParameterType {
    */
   StringArray = 'stringArray',
   /**
+   * {@link StringArray} that accepts unparsable values as `undefined`.
+   */
+  SparseStringArray = 'sparseStringArray',
+  /**
    * Indicates a parameter that is a list of Coda number values.
    */
   NumberArray = 'numberArray',
   /**
+   * {@link NumberArray} that accepts unparsable values as `undefined`.
+   */
+  SparseNumberArray = 'sparseNumberArray',
+  /**
    * Indicates a parameter that is a list of Coda boolean values.
    */
   BooleanArray = 'booleanArray',
+  /**
+   * {@link BooleanArray} that accepts unparsable values as `undefined`.
+   */
+  SparseBooleanArray = 'sparseBooleanArray',
   /**
    * Indicates a parameter that is a list of Coda date values (which includes time and datetime values).
    *
@@ -163,17 +188,33 @@ export enum ParameterType {
    */
   DateArray = 'dateArray',
   /**
+   * {@link DateArray} that accepts unparsable values as `undefined`.
+   */
+  SparseDateArray = 'sparseDateArray',
+  /**
    * Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as HTML.
    */
   HtmlArray = 'htmlArray`',
+  /**
+   * {@link HtmlArray} that accepts unparsable values as `undefined`.
+   */
+  SparseHtmlArray = 'sparseHtmlArray',
   /**
    * Indicates a parameter that is a list of Coda image values. The pack is passed a list of image URLs.
    */
   ImageArray = 'imageArray',
   /**
+   * {@link ImageArray} that accepts unparsable values as `undefined`.
+   */
+  SparseImageArray = 'sparseImageArray',
+  /**
    * Indicates a parameter that is a list of Coda file values. The pack is passed a list of file URLs.
    */
   FileArray = 'fileArray',
+  /**
+   * {@link FileArray} that accepts unparsable values as `undefined`.
+   */
+  SparseFileArray = 'sparseFileArray',
 }
 
 export interface ParameterTypeMap {
@@ -192,6 +233,14 @@ export interface ParameterTypeMap {
   [ParameterType.HtmlArray]: ArrayType<Type.html>;
   [ParameterType.ImageArray]: ArrayType<Type.image>;
   [ParameterType.FileArray]: ArrayType<Type.file>;
+
+  [ParameterType.SparseStringArray]: SparseArrayType<Type.string>;
+  [ParameterType.SparseNumberArray]: SparseArrayType<Type.number>;
+  [ParameterType.SparseBooleanArray]: SparseArrayType<Type.boolean>;
+  [ParameterType.SparseDateArray]: SparseArrayType<Type.date>;
+  [ParameterType.SparseHtmlArray]: SparseArrayType<Type.html>;
+  [ParameterType.SparseImageArray]: SparseArrayType<Type.image>;
+  [ParameterType.SparseFileArray]: SparseArrayType<Type.file>;
 }
 
 export const ParameterTypeInputMap: Record<ParameterType, UnionType> = {
@@ -210,6 +259,14 @@ export const ParameterTypeInputMap: Record<ParameterType, UnionType> = {
   [ParameterType.HtmlArray]: {type: 'array', items: Type.html},
   [ParameterType.ImageArray]: {type: 'array', items: Type.image},
   [ParameterType.FileArray]: {type: 'array', items: Type.file},
+
+  [ParameterType.SparseStringArray]: {type: 'array', items: Type.string, allowEmpty: true},
+  [ParameterType.SparseNumberArray]: {type: 'array', items: Type.number, allowEmpty: true},
+  [ParameterType.SparseBooleanArray]: {type: 'array', items: Type.boolean, allowEmpty: true},
+  [ParameterType.SparseDateArray]: {type: 'array', items: Type.date, allowEmpty: true},
+  [ParameterType.SparseHtmlArray]: {type: 'array', items: Type.html, allowEmpty: true},
+  [ParameterType.SparseImageArray]: {type: 'array', items: Type.image, allowEmpty: true},
+  [ParameterType.SparseFileArray]: {type: 'array', items: Type.file, allowEmpty: true},
 };
 
 /**
@@ -272,7 +329,9 @@ export type ParamsList = Array<ParamDef<UnionType>>;
 type TypeOfMap<T extends UnionType> = T extends Type
   ? TypeMap[T]
   : T extends ArrayType<infer V>
-  ? Array<TypeMap[V]>
+  ? T extends SparseArrayType<infer V>
+    ? Array<TypeMap[V] | undefined>
+    : Array<TypeMap[V]>
   : never;
 
 /**
