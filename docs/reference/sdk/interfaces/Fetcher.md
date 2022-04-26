@@ -39,4 +39,4 @@ deal with authentication in any way, Coda will handle that entirely on your beha
 
 #### Defined in
 
-[api_types.ts:517](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L517)
+[api_types.ts:561](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L561)

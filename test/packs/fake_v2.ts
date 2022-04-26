@@ -148,7 +148,7 @@ pack.addFormula({
   description: 'A formula that adds all params together',
   parameters: [
     coda.makeParameter({
-      type: coda.ParameterType.NumberArray,
+      type: coda.ParameterType.SparseNumberArray,
       name: 'numbers',
       description: 'A list of numbers',
     }),

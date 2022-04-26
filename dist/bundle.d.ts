@@ -1064,13 +1064,25 @@ export declare enum ParameterType {
 	 */
 	StringArray = "stringArray",
 	/**
+	 * {@link StringArray} that accepts unparsable values as `undefined`.
+	 */
+	SparseStringArray = "sparseStringArray",
+	/**
 	 * Indicates a parameter that is a list of Coda number values.
 	 */
 	NumberArray = "numberArray",
 	/**
+	 * {@link NumberArray} that accepts unparsable values as `undefined`.
+	 */
+	SparseNumberArray = "sparseNumberArray",
+	/**
 	 * Indicates a parameter that is a list of Coda boolean values.
 	 */
 	BooleanArray = "booleanArray",
+	/**
+	 * {@link BooleanArray} that accepts unparsable values as `undefined`.
+	 */
+	SparseBooleanArray = "sparseBooleanArray",
 	/**
 	 * Indicates a parameter that is a list of Coda date values (which includes time and datetime values).
 	 *
@@ -1081,17 +1093,33 @@ export declare enum ParameterType {
 	 */
 	DateArray = "dateArray",
 	/**
+	 * {@link DateArray} that accepts unparsable values as `undefined`.
+	 */
+	SparseDateArray = "sparseDateArray",
+	/**
 	 * Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as HTML.
 	 */
 	HtmlArray = "htmlArray`",
+	/**
+	 * {@link HtmlArray} that accepts unparsable values as `undefined`.
+	 */
+	SparseHtmlArray = "sparseHtmlArray",
 	/**
 	 * Indicates a parameter that is a list of Coda image values. The pack is passed a list of image URLs.
 	 */
 	ImageArray = "imageArray",
 	/**
+	 * {@link ImageArray} that accepts unparsable values as `undefined`.
+	 */
+	SparseImageArray = "sparseImageArray",
+	/**
 	 * Indicates a parameter that is a list of Coda file values. The pack is passed a list of file URLs.
 	 */
-	FileArray = "fileArray"
+	FileArray = "fileArray",
+	/**
+	 * {@link FileArray} that accepts unparsable values as `undefined`.
+	 */
+	SparseFileArray = "sparseFileArray"
 }
 export interface ParameterTypeMap {
 	[ParameterType.String]: Type.string;
@@ -1101,13 +1129,20 @@ export interface ParameterTypeMap {
 	[ParameterType.Html]: Type.html;
 	[ParameterType.Image]: Type.image;
 	[ParameterType.File]: Type.file;
-	[ParameterType.StringArray]: SparseArrayType<Type.string>;
-	[ParameterType.NumberArray]: SparseArrayType<Type.number>;
-	[ParameterType.BooleanArray]: SparseArrayType<Type.boolean>;
-	[ParameterType.DateArray]: SparseArrayType<Type.date>;
-	[ParameterType.HtmlArray]: SparseArrayType<Type.html>;
-	[ParameterType.ImageArray]: SparseArrayType<Type.image>;
-	[ParameterType.FileArray]: SparseArrayType<Type.file>;
+	[ParameterType.StringArray]: ArrayType<Type.string>;
+	[ParameterType.NumberArray]: ArrayType<Type.number>;
+	[ParameterType.BooleanArray]: ArrayType<Type.boolean>;
+	[ParameterType.DateArray]: ArrayType<Type.date>;
+	[ParameterType.HtmlArray]: ArrayType<Type.html>;
+	[ParameterType.ImageArray]: ArrayType<Type.image>;
+	[ParameterType.FileArray]: ArrayType<Type.file>;
+	[ParameterType.SparseStringArray]: SparseArrayType<Type.string>;
+	[ParameterType.SparseNumberArray]: SparseArrayType<Type.number>;
+	[ParameterType.SparseBooleanArray]: SparseArrayType<Type.boolean>;
+	[ParameterType.SparseDateArray]: SparseArrayType<Type.date>;
+	[ParameterType.SparseHtmlArray]: SparseArrayType<Type.html>;
+	[ParameterType.SparseImageArray]: SparseArrayType<Type.image>;
+	[ParameterType.SparseFileArray]: SparseArrayType<Type.file>;
 }
 /**
  * The definition of a formula parameter.

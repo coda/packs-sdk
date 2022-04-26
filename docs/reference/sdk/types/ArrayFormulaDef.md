@@ -16,4 +16,4 @@ A definition accepted by [makeFormula](../functions/makeFormula.md) for a formul
 
 #### Defined in
 
-[api.ts:900](https://github.com/coda/packs-sdk/blob/main/api.ts#L900)
+[api.ts:915](https://github.com/coda/packs-sdk/blob/main/api.ts#L915)

@@ -23,7 +23,6 @@ import type {RequestHandlerTemplate} from './handler_templates';
 import type {ResponseHandlerTemplate} from './handler_templates';
 import type {Schema} from './schema';
 import type {SchemaType} from './schema';
-import type {SparseArrayType} from './api_types';
 import type {StringHintTypes} from './schema';
 import type {StringSchema} from './schema';
 import type {SyncExecutionContext} from './api_types';
@@ -352,6 +351,7 @@ export function makeParameter<T extends ParameterType>(
 
 // Other parameter helpers below here are obsolete given the above generate parameter makers.
 
+/** @deprecated */
 export function makeStringParameter(
   name: string,
   description: string,
@@ -360,14 +360,16 @@ export function makeStringParameter(
   return Object.freeze({...args, name, description, type: Type.string as Type.string});
 }
 
+/** @deprecated */
 export function makeStringArrayParameter(
   name: string,
   description: string,
   args: ParamArgs<ArrayType<Type.string>> = {},
-): ParamDef<SparseArrayType<Type.string>> {
+): ParamDef<ArrayType<Type.string>> {
   return Object.freeze({...args, name, description, type: stringArray});
 }
 
+/** @deprecated */
 export function makeNumericParameter(
   name: string,
   description: string,
@@ -376,14 +378,16 @@ export function makeNumericParameter(
   return Object.freeze({...args, name, description, type: Type.number as Type.number});
 }
 
+/** @deprecated */
 export function makeNumericArrayParameter(
   name: string,
   description: string,
   args: ParamArgs<ArrayType<Type.number>> = {},
-): ParamDef<SparseArrayType<Type.number>> {
+): ParamDef<ArrayType<Type.number>> {
   return Object.freeze({...args, name, description, type: numberArray});
 }
 
+/** @deprecated */
 export function makeBooleanParameter(
   name: string,
   description: string,
@@ -392,14 +396,16 @@ export function makeBooleanParameter(
   return Object.freeze({...args, name, description, type: Type.boolean as Type.boolean});
 }
 
+/** @deprecated */
 export function makeBooleanArrayParameter(
   name: string,
   description: string,
   args: ParamArgs<ArrayType<Type.boolean>> = {},
-): ParamDef<SparseArrayType<Type.boolean>> {
+): ParamDef<ArrayType<Type.boolean>> {
   return Object.freeze({...args, name, description, type: booleanArray});
 }
 
+/** @deprecated */
 export function makeDateParameter(
   name: string,
   description: string,
@@ -408,14 +414,16 @@ export function makeDateParameter(
   return Object.freeze({...args, name, description, type: Type.date as Type.date});
 }
 
+/** @deprecated */
 export function makeDateArrayParameter(
   name: string,
   description: string,
   args: ParamArgs<ArrayType<Type.date>> = {},
-): ParamDef<SparseArrayType<Type.date>> {
+): ParamDef<ArrayType<Type.date>> {
   return Object.freeze({...args, name, description, type: dateArray});
 }
 
+/** @deprecated */
 export function makeHtmlParameter(
   name: string,
   description: string,
@@ -424,14 +432,16 @@ export function makeHtmlParameter(
   return Object.freeze({...args, name, description, type: Type.html as Type.html});
 }
 
+/** @deprecated */
 export function makeHtmlArrayParameter(
   name: string,
   description: string,
   args: ParamArgs<ArrayType<Type.html>> = {},
-): ParamDef<SparseArrayType<Type.html>> {
+): ParamDef<ArrayType<Type.html>> {
   return Object.freeze({...args, name, description, type: htmlArray});
 }
 
+/** @deprecated */
 export function makeImageParameter(
   name: string,
   description: string,
@@ -440,14 +450,16 @@ export function makeImageParameter(
   return Object.freeze({...args, name, description, type: Type.image as Type.image});
 }
 
+/** @deprecated */
 export function makeImageArrayParameter(
   name: string,
   description: string,
   args: ParamArgs<ArrayType<Type.image>> = {},
-): ParamDef<SparseArrayType<Type.image>> {
+): ParamDef<ArrayType<Type.image>> {
   return Object.freeze({...args, name, description, type: imageArray});
 }
 
+/** @deprecated */
 export function makeFileParameter(
   name: string,
   description: string,
@@ -456,18 +468,21 @@ export function makeFileParameter(
   return Object.freeze({...args, name, description, type: Type.file as Type.file});
 }
 
+/** @deprecated */
 export function makeFileArrayParameter(
   name: string,
   description: string,
   args: ParamArgs<ArrayType<Type.file>> = {},
-): ParamDef<SparseArrayType<Type.file>> {
+): ParamDef<ArrayType<Type.file>> {
   return Object.freeze({...args, name, description, type: fileArray});
 }
 
+/** @deprecated */
 export function makeUserVisibleError(msg: string): UserVisibleError {
   return new UserVisibleError(msg);
 }
 
+/** @deprecated */
 export function check(condition: boolean, msg: string) {
   if (!condition) {
     throw makeUserVisibleError(msg);

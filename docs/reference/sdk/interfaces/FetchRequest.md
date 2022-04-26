@@ -19,7 +19,7 @@ If you are sending a JSON payload, make sure to call `JSON.stringify()` on the o
 
 #### Defined in
 
-[api_types.ts:443](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L443)
+[api_types.ts:487](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L487)
 
 ___
 
@@ -36,7 +36,7 @@ set this value to `0`.
 
 #### Defined in
 
-[api_types.ts:460](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L460)
+[api_types.ts:504](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L504)
 
 ___
 
@@ -50,7 +50,7 @@ wish to make an unauthenticated supporting request as part of a formula implemen
 
 #### Defined in
 
-[api_types.ts:473](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L473)
+[api_types.ts:517](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L517)
 
 ___
 
@@ -66,7 +66,7 @@ Key-value form fields, if submitting to an endpoint expecting a URL-encoded form
 
 #### Defined in
 
-[api_types.ts:447](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L447)
+[api_types.ts:491](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L491)
 
 ___
 
@@ -82,7 +82,7 @@ HTTP headers. You should NOT include authentication headers, as Coda will add th
 
 #### Defined in
 
-[api_types.ts:451](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L451)
+[api_types.ts:495](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L495)
 
 ___
 
@@ -97,7 +97,7 @@ will be a NodeJS Buffer.
 
 #### Defined in
 
-[api_types.ts:467](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L467)
+[api_types.ts:511](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L511)
 
 ___
 
@@ -109,7 +109,7 @@ The HTTP method/verb (e.g. GET or POST).
 
 #### Defined in
 
-[api_types.ts:430](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L430)
+[api_types.ts:474](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L474)
 
 ___
 
@@ -124,4 +124,4 @@ apply the user's endpoint automatically.
 
 #### Defined in
 
-[api_types.ts:437](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L437)
+[api_types.ts:481](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L481)

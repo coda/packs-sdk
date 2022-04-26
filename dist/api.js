@@ -155,66 +155,82 @@ function makeParameter(paramDefinition) {
 }
 exports.makeParameter = makeParameter;
 // Other parameter helpers below here are obsolete given the above generate parameter makers.
+/** @deprecated */
 function makeStringParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_3.Type.string });
 }
 exports.makeStringParameter = makeStringParameter;
+/** @deprecated */
 function makeStringArrayParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_10.stringArray });
 }
 exports.makeStringArrayParameter = makeStringArrayParameter;
+/** @deprecated */
 function makeNumericParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_3.Type.number });
 }
 exports.makeNumericParameter = makeNumericParameter;
+/** @deprecated */
 function makeNumericArrayParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_9.numberArray });
 }
 exports.makeNumericArrayParameter = makeNumericArrayParameter;
+/** @deprecated */
 function makeBooleanParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_3.Type.boolean });
 }
 exports.makeBooleanParameter = makeBooleanParameter;
+/** @deprecated */
 function makeBooleanArrayParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_4.booleanArray });
 }
 exports.makeBooleanArrayParameter = makeBooleanArrayParameter;
+/** @deprecated */
 function makeDateParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_3.Type.date });
 }
 exports.makeDateParameter = makeDateParameter;
+/** @deprecated */
 function makeDateArrayParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_5.dateArray });
 }
 exports.makeDateArrayParameter = makeDateArrayParameter;
+/** @deprecated */
 function makeHtmlParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_3.Type.html });
 }
 exports.makeHtmlParameter = makeHtmlParameter;
+/** @deprecated */
 function makeHtmlArrayParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_7.htmlArray });
 }
 exports.makeHtmlArrayParameter = makeHtmlArrayParameter;
+/** @deprecated */
 function makeImageParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_3.Type.image });
 }
 exports.makeImageParameter = makeImageParameter;
+/** @deprecated */
 function makeImageArrayParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_8.imageArray });
 }
 exports.makeImageArrayParameter = makeImageArrayParameter;
+/** @deprecated */
 function makeFileParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_3.Type.file });
 }
 exports.makeFileParameter = makeFileParameter;
+/** @deprecated */
 function makeFileArrayParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_6.fileArray });
 }
 exports.makeFileArrayParameter = makeFileArrayParameter;
+/** @deprecated */
 function makeUserVisibleError(msg) {
     return new UserVisibleError(msg);
 }
 exports.makeUserVisibleError = makeUserVisibleError;
+/** @deprecated */
 function check(condition, msg) {
     if (!condition) {
         throw makeUserVisibleError(msg);

@@ -24,40 +24,40 @@ function isArrayType(obj) {
     return obj && obj.type === 'array' && typeof obj.items === 'number';
 }
 exports.isArrayType = isArrayType;
+/** @deprecated */
 exports.stringArray = {
     type: 'array',
     items: Type.string,
-    allowEmpty: true,
 };
+/** @deprecated */
 exports.numberArray = {
     type: 'array',
     items: Type.number,
-    allowEmpty: true,
 };
+/** @deprecated */
 exports.booleanArray = {
     type: 'array',
     items: Type.boolean,
-    allowEmpty: true,
 };
+/** @deprecated */
 exports.dateArray = {
     type: 'array',
     items: Type.date,
-    allowEmpty: true,
 };
+/** @deprecated */
 exports.htmlArray = {
     type: 'array',
     items: Type.html,
-    allowEmpty: true,
 };
+/** @deprecated */
 exports.imageArray = {
     type: 'array',
     items: Type.image,
-    allowEmpty: true,
 };
+/** @deprecated */
 exports.fileArray = {
     type: 'array',
     items: Type.file,
-    allowEmpty: true,
 };
 /**
  * Enumeration of types of formula parameters. These describe Coda value types (as opposed to JavaScript value types).
@@ -97,13 +97,25 @@ var ParameterType;
      */
     ParameterType["StringArray"] = "stringArray";
     /**
+     * {@link StringArray} that accepts unparsable values as `undefined`.
+     */
+    ParameterType["SparseStringArray"] = "sparseStringArray";
+    /**
      * Indicates a parameter that is a list of Coda number values.
      */
     ParameterType["NumberArray"] = "numberArray";
     /**
+     * {@link NumberArray} that accepts unparsable values as `undefined`.
+     */
+    ParameterType["SparseNumberArray"] = "sparseNumberArray";
+    /**
      * Indicates a parameter that is a list of Coda boolean values.
      */
     ParameterType["BooleanArray"] = "booleanArray";
+    /**
+     * {@link BooleanArray} that accepts unparsable values as `undefined`.
+     */
+    ParameterType["SparseBooleanArray"] = "sparseBooleanArray";
     /**
      * Indicates a parameter that is a list of Coda date values (which includes time and datetime values).
      *
@@ -114,17 +126,33 @@ var ParameterType;
      */
     ParameterType["DateArray"] = "dateArray";
     /**
+     * {@link DateArray} that accepts unparsable values as `undefined`.
+     */
+    ParameterType["SparseDateArray"] = "sparseDateArray";
+    /**
      * Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as HTML.
      */
     ParameterType["HtmlArray"] = "htmlArray`";
+    /**
+     * {@link HtmlArray} that accepts unparsable values as `undefined`.
+     */
+    ParameterType["SparseHtmlArray"] = "sparseHtmlArray";
     /**
      * Indicates a parameter that is a list of Coda image values. The pack is passed a list of image URLs.
      */
     ParameterType["ImageArray"] = "imageArray";
     /**
+     * {@link ImageArray} that accepts unparsable values as `undefined`.
+     */
+    ParameterType["SparseImageArray"] = "sparseImageArray";
+    /**
      * Indicates a parameter that is a list of Coda file values. The pack is passed a list of file URLs.
      */
     ParameterType["FileArray"] = "fileArray";
+    /**
+     * {@link FileArray} that accepts unparsable values as `undefined`.
+     */
+    ParameterType["SparseFileArray"] = "sparseFileArray";
 })(ParameterType = exports.ParameterType || (exports.ParameterType = {}));
 exports.ParameterTypeInputMap = {
     [ParameterType.String]: Type.string,
@@ -134,13 +162,20 @@ exports.ParameterTypeInputMap = {
     [ParameterType.Html]: Type.html,
     [ParameterType.Image]: Type.image,
     [ParameterType.File]: Type.file,
-    [ParameterType.StringArray]: { type: 'array', items: Type.string, allowEmpty: true },
-    [ParameterType.NumberArray]: { type: 'array', items: Type.number, allowEmpty: true },
-    [ParameterType.BooleanArray]: { type: 'array', items: Type.boolean, allowEmpty: true },
-    [ParameterType.DateArray]: { type: 'array', items: Type.date, allowEmpty: true },
-    [ParameterType.HtmlArray]: { type: 'array', items: Type.html, allowEmpty: true },
-    [ParameterType.ImageArray]: { type: 'array', items: Type.image, allowEmpty: true },
-    [ParameterType.FileArray]: { type: 'array', items: Type.file, allowEmpty: true },
+    [ParameterType.StringArray]: { type: 'array', items: Type.string },
+    [ParameterType.NumberArray]: { type: 'array', items: Type.number },
+    [ParameterType.BooleanArray]: { type: 'array', items: Type.boolean },
+    [ParameterType.DateArray]: { type: 'array', items: Type.date },
+    [ParameterType.HtmlArray]: { type: 'array', items: Type.html },
+    [ParameterType.ImageArray]: { type: 'array', items: Type.image },
+    [ParameterType.FileArray]: { type: 'array', items: Type.file },
+    [ParameterType.SparseStringArray]: { type: 'array', items: Type.string, allowEmpty: true },
+    [ParameterType.SparseNumberArray]: { type: 'array', items: Type.number, allowEmpty: true },
+    [ParameterType.SparseBooleanArray]: { type: 'array', items: Type.boolean, allowEmpty: true },
+    [ParameterType.SparseDateArray]: { type: 'array', items: Type.date, allowEmpty: true },
+    [ParameterType.SparseHtmlArray]: { type: 'array', items: Type.html, allowEmpty: true },
+    [ParameterType.SparseImageArray]: { type: 'array', items: Type.image, allowEmpty: true },
+    [ParameterType.SparseFileArray]: { type: 'array', items: Type.file, allowEmpty: true },
 };
 /**
  * Enumeration of requirement states for whether a given formula or sync table requires

@@ -22,7 +22,6 @@ import type { RequestHandlerTemplate } from './handler_templates';
 import type { ResponseHandlerTemplate } from './handler_templates';
 import type { Schema } from './schema';
 import type { SchemaType } from './schema';
-import type { SparseArrayType } from './api_types';
 import type { StringHintTypes } from './schema';
 import type { StringSchema } from './schema';
 import type { SyncExecutionContext } from './api_types';
@@ -230,21 +229,37 @@ export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<Pa
  * ```
  */
 export declare function makeParameter<T extends ParameterType>(paramDefinition: ParameterOptions<T>): ParamDef<ParameterTypeMap[T]>;
+/** @deprecated */
 export declare function makeStringParameter(name: string, description: string, args?: ParamArgs<Type.string>): ParamDef<Type.string>;
-export declare function makeStringArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.string>>): ParamDef<SparseArrayType<Type.string>>;
+/** @deprecated */
+export declare function makeStringArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.string>>): ParamDef<ArrayType<Type.string>>;
+/** @deprecated */
 export declare function makeNumericParameter(name: string, description: string, args?: ParamArgs<Type.number>): ParamDef<Type.number>;
-export declare function makeNumericArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.number>>): ParamDef<SparseArrayType<Type.number>>;
+/** @deprecated */
+export declare function makeNumericArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.number>>): ParamDef<ArrayType<Type.number>>;
+/** @deprecated */
 export declare function makeBooleanParameter(name: string, description: string, args?: ParamArgs<Type.boolean>): ParamDef<Type.boolean>;
-export declare function makeBooleanArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.boolean>>): ParamDef<SparseArrayType<Type.boolean>>;
+/** @deprecated */
+export declare function makeBooleanArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.boolean>>): ParamDef<ArrayType<Type.boolean>>;
+/** @deprecated */
 export declare function makeDateParameter(name: string, description: string, args?: ParamArgs<Type.date>): ParamDef<Type.date>;
-export declare function makeDateArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.date>>): ParamDef<SparseArrayType<Type.date>>;
+/** @deprecated */
+export declare function makeDateArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.date>>): ParamDef<ArrayType<Type.date>>;
+/** @deprecated */
 export declare function makeHtmlParameter(name: string, description: string, args?: ParamArgs<Type.html>): ParamDef<Type.html>;
-export declare function makeHtmlArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.html>>): ParamDef<SparseArrayType<Type.html>>;
+/** @deprecated */
+export declare function makeHtmlArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.html>>): ParamDef<ArrayType<Type.html>>;
+/** @deprecated */
 export declare function makeImageParameter(name: string, description: string, args?: ParamArgs<Type.image>): ParamDef<Type.image>;
-export declare function makeImageArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.image>>): ParamDef<SparseArrayType<Type.image>>;
+/** @deprecated */
+export declare function makeImageArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.image>>): ParamDef<ArrayType<Type.image>>;
+/** @deprecated */
 export declare function makeFileParameter(name: string, description: string, args?: ParamArgs<Type.file>): ParamDef<Type.file>;
-export declare function makeFileArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.file>>): ParamDef<SparseArrayType<Type.file>>;
+/** @deprecated */
+export declare function makeFileArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.file>>): ParamDef<ArrayType<Type.file>>;
+/** @deprecated */
 export declare function makeUserVisibleError(msg: string): UserVisibleError;
+/** @deprecated */
 export declare function check(condition: boolean, msg: string): void;
 /**
  * Base type for the inputs for creating a pack formula.
