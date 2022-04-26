@@ -261,6 +261,8 @@ export type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, ParamDefs, a
 export type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
 
 /**
+ * @deprecated
+ *
  * Helper to determine if an error is considered user-visible and can be shown in the UI.
  * See {@link UserVisibleError}.
  * @param error Any error object.
@@ -685,6 +687,8 @@ export type SyncFormula<
 };
 
 /**
+ * @deprecated
+ *
  * Helper for returning the definition of a formula that returns a number. Adds result type information
  * to a generic formula definition.
  *
@@ -697,6 +701,8 @@ export function makeNumericFormula<ParamDefsT extends ParamDefs>(
 }
 
 /**
+ * @deprecated
+ *
  * Helper for returning the definition of a formula that returns a string. Adds result type information
  * to a generic formula definition.
  *
@@ -1226,6 +1232,7 @@ function isResponseExampleTemplate(obj: any): obj is {example: SchemaType<any>} 
   return obj && obj.example;
 }
 
+/** @deprecated */
 export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({
   response,
   ...definition
@@ -1532,6 +1539,7 @@ export function makeSyncTable<
   };
 }
 
+/** @deprecated */
 export function makeSyncTableLegacy<
   K extends string,
   L extends string,
