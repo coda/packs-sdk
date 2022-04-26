@@ -202,8 +202,6 @@ export declare type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, Para
  */
 export declare type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
 /**
- * @deprecated
- *
  * Helper to determine if an error is considered user-visible and can be shown in the UI.
  * See {@link UserVisibleError}.
  * @param error Any error object.

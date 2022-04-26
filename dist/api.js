@@ -82,8 +82,6 @@ class StatusCodeError extends Error {
 }
 exports.StatusCodeError = StatusCodeError;
 /**
- * @deprecated
- *
  * Helper to determine if an error is considered user-visible and can be shown in the UI.
  * See {@link UserVisibleError}.
  * @param error Any error object.
