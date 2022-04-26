@@ -391,6 +391,8 @@ export declare type SyncFormula<K extends string, L extends string, ParamDefsT e
     schema?: ArraySchema;
 };
 /**
+ * @deprecated
+ *
  * Helper for returning the definition of a formula that returns a number. Adds result type information
  * to a generic formula definition.
  *
@@ -398,6 +400,8 @@ export declare type SyncFormula<K extends string, L extends string, ParamDefsT e
  */
 export declare function makeNumericFormula<ParamDefsT extends ParamDefs>(definition: PackFormulaDef<ParamDefsT, number>): NumericPackFormula<ParamDefsT>;
 /**
+ * @deprecated
+ *
  * Helper for returning the definition of a formula that returns a string. Adds result type information
  * to a generic formula definition.
  *
@@ -696,6 +700,7 @@ export declare function autocompleteSearchObjects<T>(search: string, objs: T[], 
  * any needed to wrap a value with this formula.
  */
 export declare function makeSimpleAutocompleteMetadataFormula<T extends ParameterType.Number | ParameterType.String>(options: Array<TypeMap[ParameterTypeMap[T]] | SimpleAutocompleteOption<T>>): MetadataFormula;
+/** @deprecated */
 export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
 /**
  * A set of options used internally by {@link makeDynamicSyncTable}, or for static
@@ -873,6 +878,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
     identity?: Identity;
 }>({ name, description, identityName, schema: schemaDef, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
+/** @deprecated */
 export declare function makeSyncTableLegacy<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT>, connectionRequirement?: ConnectionRequirement, dynamicOptions?: {
     getSchema?: MetadataFormula;
     entityName?: string;

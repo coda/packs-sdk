@@ -653,6 +653,7 @@ export interface Format {
     placeholder?: string;
 }
 /**
+ * @deprecated
  * @ignore
  */
 export declare enum FeatureSet {
@@ -663,6 +664,7 @@ export declare enum FeatureSet {
 }
 /**
  * @ignore
+ * @deprecated
  */
 export declare enum QuotaLimitType {
     Action = "Action",
@@ -672,6 +674,7 @@ export declare enum QuotaLimitType {
 }
 /**
  * @ignore
+ * @deprecated
  */
 export declare enum SyncInterval {
     Manual = "Manual",
@@ -681,6 +684,7 @@ export declare enum SyncInterval {
 }
 /**
  * @ignore
+ * @deprecated
  */
 export interface SyncQuota {
     maximumInterval?: SyncInterval;
@@ -688,6 +692,7 @@ export interface SyncQuota {
 }
 /**
  * @ignore
+ * @deprecated
  */
 export interface Quota {
     monthlyLimits?: Partial<{
@@ -698,7 +703,6 @@ export interface Quota {
 }
 /**
  * @deprecated Define these in the pack management UI instead.
- *
  */
 export interface RateLimit {
     operationsPerInterval: number;
@@ -706,7 +710,6 @@ export interface RateLimit {
 }
 /**
  * @deprecated Define these in the pack management UI instead.
- *
  */
 export interface RateLimits {
     overall?: RateLimit;
