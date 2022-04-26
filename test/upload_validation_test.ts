@@ -2066,7 +2066,7 @@ describe('Pack metadata Validation', () => {
           type: AuthenticationType.HeaderBearerToken,
         },
       });
-      const err = await validateJsonAndAssertFails(metadata, '0.9.1');
+      const err = await validateJsonAndAssertFails(metadata, '1.0.0');
       assert.deepEqual(err.validationErrors, [
         {
           message:
@@ -2096,7 +2096,7 @@ describe('Pack metadata Validation', () => {
           networkDomain: 'baz.com',
         },
       });
-      const err = await validateJsonAndAssertFails(metadata, '0.9.1');
+      const err = await validateJsonAndAssertFails(metadata, '1.0.0');
       assert.deepEqual(err.validationErrors, [
         {
           message: 'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
@@ -2360,7 +2360,7 @@ describe('Pack metadata Validation', () => {
   });
 
   describe('deprecation warnings', () => {
-    const sdkVersionTriggeringDeprecationWarnings = '0.10.0';
+    const sdkVersionTriggeringDeprecationWarnings = '1.0.0';
 
     it('deprecated schema properties in formula schema', async () => {
       const metadata = createFakePackVersionMetadata({
