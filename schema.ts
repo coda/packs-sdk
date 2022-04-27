@@ -1206,6 +1206,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
       codaType: schema.codaType,
       description: schema.description,
       attribution: schema.attribution,
+      includeUnknownProperties: schema.includeUnknownProperties,
     } as T;
 
     return normalizedSchema;
