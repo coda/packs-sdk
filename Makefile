@@ -11,6 +11,9 @@ ISOLATED_VM_VERSION=$(shell node -p -e $(ISOLATED_VM_VERSION_COMMAND))
 
 PIPENV := PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 pipenv
 
+DOC_GIT_REVISION ?= main
+
+
 # Aliases
 bs: bootstrap
 
@@ -149,7 +152,7 @@ typedoc:
 	fi
 	# Most options loaded from typedoc.js.
 	# If you changes this, also update the similar command in typedoc_coverage_test.ts.
-	${ROOTDIR}/node_modules/.bin/typedoc index.ts --options typedoc.js --out ${ROOTDIR}/docs/reference/sdk
+	${ROOTDIR}/node_modules/.bin/typedoc index.ts --options typedoc.js --gitRevision "${DOC_GIT_REVISION}" --out ${ROOTDIR}/docs/reference/sdk
 	node -r ts-node/register documentation/typedoc_post_process.ts
 
 .PHONY: docs
