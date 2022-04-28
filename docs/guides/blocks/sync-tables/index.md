@@ -32,7 +32,7 @@ A sync table consists of three main parts: the schema for each row of data, the 
 
 Each row in a sync table corresponds to an item in an external data source. For example, the [Todoist sample][sample_todoist] has one sync table for tasks and another for projects. For each table you must define a schema that represents the data you'll be syncing for that item. See the [Schemas guide][schemas] for more information about defining and using schemas.
 
-The item is displayed as a chip in the first column of the sync table, and it contains the complete set of synced data. Properties of the schema designated as [`featured`][featured] are automatically broken out into their own columns, but these can be removed or added to by the user later.
+The item is displayed as a chip in the first column of the sync table, and it contains the complete set of synced data. Properties of the schema designated as [`featuredProperties`][featured] are automatically broken out into their own columns, but these can be removed or added to by the user later.
 
 The schema used in a sync table can be shared by other building blocks in your Pack, like a formula or column format. Even when the schema is only used by the sync table, we recommend you define it as a separate variable in your code for readability and future reuse.
 
@@ -128,7 +128,7 @@ In some areas of the UI, such as the settings pane, the name will be rewritten t
     Changing the name of a sync table will break any existing docs that use it. When creating your Pack select your names carefully.
 
 
-## Identity
+## Identity {: #identity}
 
 Every sync table is required to specify an [`identityName`][identityName], which is a unique identifier for the type of item being synced in that table. By convention this is usually the singular form of the name of the item being synced. For instance, a "Tasks" table would use an identity name of "Task". This identity name is used to reference the table when [creating row references](#references) or [updating rows with actions](#actions).
 
@@ -256,7 +256,7 @@ It's recommended that you reduce or disable [HTTP caching][fetcher_caching] of t
 [help_center]: https://help.coda.io/en/articles/3213629-using-packs-tables-to-sync-your-data-into-coda
 [sample_todoist]: ../../../samples/full/todoist.md
 [schemas]: ../../advanced/schemas.md
-[featured]: ../../../reference/sdk/interfaces/ObjectSchemaDefinition.md#featured
+[featured]: ../../../reference/sdk/interfaces/ObjectSchemaDefinition.md#featuredproperties
 [formulas]: ../formulas.md
 [SyncFormulaResult]: ../../../reference/sdk/interfaces/SyncFormulaResult.md
 [Continuation]: ../../../reference/sdk/interfaces/Continuation.md

@@ -8,6 +8,7 @@ const PageSize = 100;
 pack.addDynamicSyncTable({
   name: "FormResponses",
   description: "Responses to a form.",
+  identityName: "FormResponse",
 
   // Returns the URLs of the available forms. The user will select one when they
   // add the table to their doc. The selected URL will be passed as
@@ -62,30 +63,26 @@ pack.addDynamicSyncTable({
       },
     };
     // Use them as the display value and ID of the rows.
-    let primary = "submittedAt";
-    let id = "responseId";
+    let displayProperty = "submittedAt";
+    let idProperty = "responseId";
 
     // For each field in the form, add a property to the schema.
-    let featured = [];
+    let featuredProperties = [];
     for (let field of form.fields) {
       // Format the field name into a valid property name.
       let name = getPropertyName(field);
       // Generate a schema for the field and add it to the set of properties.
       properties[name] = getPropertySchema(field);
       // Mark the property as featured (included in the table by default).
-      featured.push(name);
+      featuredProperties.push(name);
     }
 
     // Assemble the schema for each row.
     let schema = coda.makeObjectSchema({
       properties: properties,
-      displayProperty: primary,
-      idProperty: id,
-      featuredProperties: featured,
-      identity: {
-        name: "FormResponse",
-        dynamicUrl: formUrl,
-      },
+      displayProperty: displayProperty,
+      idProperty: idProperty,
+      featuredProperties: featuredProperties,
     });
 
     // Return an array schema as the result.

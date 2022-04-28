@@ -123,13 +123,13 @@ JavaScript Date objects can only represent a specific moment in time. This means
     Because of how timezones work in Coda and JavaScript, the date passed into the parameter may appear different in your Pack code. See the [Timezones guide][timezones] for more information.
 
 
-### Images {: #images}
+### Images and files {: #images}
 
-Use the `Image` parameter type to pass an image to your formula. The value passed to the `execute` function will be the URL of that image.
+Use the `Image` parameter type to pass an image to your formula, and the `File` type for files. The value passed to the `execute` function will be the URL of that image or file.
 
-Images that the user uploaded to the doc will be hosted on the `codahosted.io` domain and don't require authentication to access. These URLs are temporary, and you should not rely on them being accessible after the Pack execution has completed.
+Images and files that the user uploaded to the doc will be hosted on the `codahosted.io` domain and don't require authentication to access. These URLs are temporary, and you should not rely on them being accessible after the Pack execution has completed.
 
-If you need access to the binary content of the image you'll need to use the [fetcher][fetcher_binary_response] to retrieve it. The fetcher is automatically allowed access to the `codahosted.io` domain, so no need to declare it as a [network domain][network_domains]. It's not possible to access the binary content of images coming from an **Image URL** column, since they can come from any domain.
+If you need access to the binary content of the image or file you'll need to use the [fetcher][fetcher_binary_response] to retrieve it. The fetcher is automatically allowed access to the `codahosted.io` domain, so no need to declare it as a [network domain][network_domains]. It's not possible to access the binary content of images coming from an **Image URL** column, since they can come from any domain.
 
 
 ### Lists
@@ -187,25 +187,25 @@ Scream("What is this", character: "?")
 In this case the `text` and `character` parameters would be set, but the `volume` parameter would be undefined, and therefore use its default value of `3`.
 
 
-## Suggested values
+## Suggested values {: #suggested}
 
 As a convenience to users of your Pack, you can provide a suggested value for a parameter. When they use your formula the default will be pre-populated in the formula editor, action dialog, etc. The user is then free to edit or replace it this value.
 
-To add a suggested value to a parameter set the field `defaultValue` to the value you'd like to use. The suggested value must be of the same type as the parameter, for example a number parameter must have a number as its suggested default value.
+To add a suggested value to a parameter set the field `suggestedValue` to the value you'd like to use. The suggested value must be of the same type as the parameter, for example a number parameter must have a number as its suggested default value.
 
 ```ts
 coda.makeParameter({
   type: coda.ParameterType.Number,
   name: "days",
   description: "How many days of data to fetch.",
-  defaultValue: 30,
+  suggestedValue: 30,
 })
 ```
 
 Currently suggested values are only used for required parameters, and setting them for optional parameters has no effect.
 
 
-## Accepting multiple values
+## Accepting multiple values {: #vararg}
 
 For some formulas you may want to allow the user to enter multiple values for a parameter. You could use an array parameter for this case but a more user-friendly approach may be to use variable argument (vararg) parameters. These are parameters that you allow the user to repeat as many times as needed.
 
@@ -303,14 +303,14 @@ Parameters of the type `DateArray` are often used for date ranges, with the firs
 
 <img src="../../../images/parameter_daterange.png" srcset="../../../images/parameter_daterange_2x.png 2x" class="screenshot" alt="Date array parameters displayed as a date range picker">
 
-These parameters also support a special set of [suggested values](#suggested-values) that represent date ranges relative to the current date. These are available in the [`PrecannedDateRange`][PrecannedDateRange] enumeration.
+These parameters also support a special set of [suggested values](#suggested) that represent date ranges relative to the current date. These are available in the [`PrecannedDateRange`][PrecannedDateRange] enumeration.
 
 ```ts
 coda.makeParameter({
   type: coda.ParameterType.DateArray,
   name: "dateRange",
   description: "The date range over which data should be fetched.",
-  defaultValue: coda.PrecannedDateRange.Last30Days,
+  suggestedValue: coda.PrecannedDateRange.Last30Days,
 })
 ```
 
@@ -341,7 +341,7 @@ The table below shows the recommended parameter type to use with various types o
 | Button        | ❌ No     |               |                                                                   |
 | Image         | ✅ Yes    | `ImageArray`  | Image column can contain multiple images.                         |
 | Image URL     | ✅ Yes    | `Image`       |                                                                   |
-| File          | ❌ No     |               | Using `Image` will work, but show an error in the formula editor. |
+| File          | ✅ Yes    | `FileArray`   | File columns can contain multiple files.                          |
 | Lookup        | ❌ No     |               | Use `StringArray` to get the display name of the row(s).          |
 | Table         | ❌ No     |               | You can't pass an entire table, pass individual columns instead.  |
 | Page          | ✅ Yes    | `Html`        |                                                                   |

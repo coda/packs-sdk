@@ -33,7 +33,7 @@ pack.setUserAuthentication({
 // A schema that defines a repo object.
 const RepoSchema = coda.makeObjectSchema({
   properties: {
-    id: { type: coda.ValueType.Number },
+    repoId: { type: coda.ValueType.Number, fromKey: "id" },
     name: { type: coda.ValueType.String },
     fullName: { type: coda.ValueType.String, fromKey: "full_name" },
     description: { type: coda.ValueType.String },
@@ -47,7 +47,7 @@ const RepoSchema = coda.makeObjectSchema({
     stars: { type: coda.ValueType.Number, fromKey: "stargazers_count" },
   },
   displayProperty: "name",
-  idProperty: "id",
+  idProperty: "repoId",
   featuredProperties: ["description", "watchers", "forks", "stars"],
 });
 

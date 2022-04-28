@@ -9,4 +9,4 @@ Constants for working with SVG images.
 
 - [DarkModeFragmentId](../variables/SvgConstants.DarkModeFragmentId.md)
 - [DataUrlPrefix](../variables/SvgConstants.DataUrlPrefix.md)
-- [DataUrlPrefixWithDarkModeSupport](../variables/SvgConstants.DataUrlPrefixWithDarkModeSupport.md)
+- [DataUrlPrefixWithDarkModeSupport](../variables/SvgConstants.DataUrlPrefixWithDarkModesupport/index.md)

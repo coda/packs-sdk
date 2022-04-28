@@ -356,12 +356,8 @@ pack.addFormula({
 });
 ```
 
-<<<<<<< HEAD
 
 ## Setting account names {: #name}
-=======
-## Setting account names
->>>>>>> 02d8b46b (Rename SetEndpoint.getOptionsFormula to getOptions. Allow both during migration.)
 
 By default the accounts that users connect to will be given the same name as their Coda account. While this works fine the majority of the time, if they are connecting to a team account or multiple accounts it is not very helpful. Therefore we strongly recommend that you implement a [`getConnectionName`][getconnectionname] function in your authentication configuration to set a more meaningful account name. This is typically done by making a Fetcher request to a user information endpoint in the API and then returning the name of the account.
 
@@ -461,7 +457,7 @@ pack.setUserAuthentication({
 
 [View Sample Code][sample_automatic_endpoint]{ .md-button }
 
-### Prompting for user selection
+### Prompting for user selection {: #setendpoint}
 
 If the service allows the same user account to access multiple endpoints, and those endpoints can be determined with an API call, then you can prompt the user to select the endpoint they wish to connect to. This is accomplished using a `postSetup` step of the type `SetEndpoint`.
 
@@ -506,6 +502,7 @@ Typically a Pack can only make HTTP requests to the [network domains][network_do
 
 There are services however where each account is associated with a distinct domain, instead of a sub-domain of a common root domain. This makes it impossible to declare them ahead of time as network domains. In these cases you can omit network domain declaration from your Pack, which will allow it to make requests to the account's endpoint URL (and only that URL) regardless of domain.
 
+
 [samples]: ../../samples/topic/authentication.md
 [sample_auth_header]: ../../samples/topic/authentication.md#authorization-header
 [sample_custom_header]: ../../samples/topic/authentication.md#custom-header
@@ -518,7 +515,7 @@ There are services however where each account is associated with a distinct doma
 [hc_account_sharing]: https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs
 [account_settings]: https://coda.io/account
 [authenticationtype]: ../../reference/sdk/enums/AuthenticationType.md
-[support]: ../../support.md
+[support]: ../../support/index.md
 [coda_api_auth]: https://coda.io/developers/apis/v1#section/Authentication
 [headerbearertoken]: ../../reference/sdk/enums/AuthenticationType.md#headerbearertoken
 [customheadertoken]: ../../reference/sdk/enums/AuthenticationType.md#customheadertoken

@@ -63,7 +63,7 @@ This error indicates that a fetcher request got back a response that is larger t
 
 
 [mdn_console]: https://developer.mozilla.org/en-US/docs/Web/API/console
-[support]: ../../support.md
+[support]: ../../support/index.md
 [isolated_vm_requirements]: https://github.com/laverdet/isolated-vm#requirements
 [actions_create]: ../blocks/actions.md#creating-actions
 [pmt]: pack-maker-tools.md

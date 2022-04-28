@@ -1,7 +1,5 @@
 ---
 title: Support
-hide:
-  - navigation
 ---
 
 # How to get help

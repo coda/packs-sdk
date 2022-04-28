@@ -16,10 +16,10 @@ const CatSchema = coda.makeObjectSchema({
       type: coda.ValueType.String,
       codaType: coda.ValueHintType.DateTime,
     },
-    id: { type: coda.ValueType.String },
+    catId: { type: coda.ValueType.String },
   },
   displayProperty: "image",
-  idProperty: "id",
+  idProperty: "catId",
   featuredProperties: ["tags"],
   identity: {
     name: "Cat",
@@ -68,7 +68,7 @@ pack.addSyncTable({
           image: "https://cataas.com/cat/" + cat.id,
           tags: cat.tags,
           created: cat.created_at,
-          idProperty: cat.id,
+          catId: cat.id,
         });
       }
       return {
