@@ -7,7 +7,7 @@ title: Migration
 While the Packs team strives to maintain backwards compatibility between SDK versions, there may occasionally be times where you need to change your code to work with a new SDK version. This page will include instructions on how to perform the migration. A detailed list of all changes in the SDK can be found in the [Changelog][changelog].
 
 
-## 0.9.0 => 0.11.0
+## Version 0.11.0
 
 In preparation for a public launch, we intentionally introduced a number of breaking changes to make the SDK easier to use and understand. We hope to avoid breaking changes on this scale in the future.
 
