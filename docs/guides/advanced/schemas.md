@@ -95,7 +95,7 @@ let DateSchema = coda.makeSchema({
 See the [Data types guide][data_types] for more information about the supported value types and value hints.
 
 
-## Object schemas
+## Object schemas {: #object}
 
 The most common form of schema you'll need to define are object schemas. They are often used to bundle together multiple pieces of data returned by an API.
 
@@ -346,9 +346,12 @@ let MovieSchema = coda.makeObjectSchema({
 
 ### Schema identity
 
-When used in a sync table the object schema itself must have a unique identifier, know as its identity. This acts like a namespace for the schema, allowing the system to distinguish objects that have the same ID.
+Sync tables have an `identityName` field which defines the [unique identifier][sync_tables_identity] for that table, and a schema that defines the shape of the data in each row. In some cases you need to set the identity name of the sync table in the schema itself:
 
-Sync table definitions have an `identityName` field you can use to easily set this. However, in some cases you also need to set the identity in the schema itself by adding an `identity` to your schema and setting its `name` field.
+- Manually constructing a [reference schema](#references).
+- Returning an object schema in an action formula to [approximate two-way sync][sync_tables_actions].
+
+This can be done by adding an `identity` to your schema and setting its `name` field.
 
 ```ts
 let MovieSchema = coda.makeObjectSchema({
@@ -358,8 +361,6 @@ let MovieSchema = coda.makeObjectSchema({
   },
 });
 ```
-
-You can select what name you like, but it must be unique within your Pack. You can read more about how identities are used by sync tables in the [sync tables guide][sync_tables_identity].
 
 !!! info
     The presence of a schema identity also controls how the object appears and behaves in the page. Named schemas are seen as more important to your Pack and given a more prominent UI treatment. Specifically, objects with identities will display the Pack's icon in the chip, and when used in a column format the **Add column** button will appear next to each property.
@@ -396,14 +397,14 @@ let MovieSchema = coda.makeObjectSchema({
 
 Reference schemas are used by sync tables to create lookups between tables. See the [Sync tables guide][sync_tables_references] for more information on how row references work.
 
-The simplest way to create a reference schema is to use the helper function [`makeReferenceSchemaFromObjectSchema`][makeReferenceSchemaFromObjectSchema]. Simply pass in the full schema and it will be converted to a reference schema.
+The simplest way to create a reference schema is to use the helper function [`makeReferenceSchemaFromObjectSchema`][makeReferenceSchemaFromObjectSchema]. Simply pass in the full schema and sync table's `identityName` and it will be converted to a reference schema.
 
 ```ts
 let PersonReferenceSchema =
-    coda.makeReferenceSchemaFromObjectSchema(PersonSchema);
+    coda.makeReferenceSchemaFromObjectSchema(PersonSchema, "Person");
 ```
 
-In some instances you may have to create the reference schema manually however, like when you want a row to be able to reference other rows in the same table. A reference schema is an object schema with the `codaType` field set to `Reference`. It must specify both an `idProperty` and `displayProperty`, and those properties must be marked as `required`. It must also have an `identity` set, with the name matching that of the schema used by the target sync table.
+In some instances you may have to create the reference schema manually however, like when you want a row to be able to reference other rows in the same table. A reference schema is an object schema with the `codaType` field set to `Reference`. It must specify both an `idProperty` and `displayProperty`, and those properties must be marked as `required`. It must also have an `identity` set, with the name matching the `identityName` of the target sync table.
 
 ```ts
 let PersonReferenceSchema = coda.makeObjectSchema({
@@ -456,3 +457,4 @@ In your sync formula you only need to populate the fields of the reference objec
 [sync_tables_references]: ../blocks/sync-tables/index.md#references
 [data_types_objects]: ../basics/data-types.md#objects
 [mdn_spread_object]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#spread_in_object_literals
+[sync_tables_actions]: ../blocks/sync-tables/index.md#actions
