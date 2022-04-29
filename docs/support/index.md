@@ -14,11 +14,11 @@ For general questions about Packs, or advice on how to build them, we recommend 
 
 <form action="https://community.coda.io/search">
   <p>
-    <input type="text" name="q" id="q" value="#developers-central:making-packs " class="md-input md-input--stretch"/>
+    <input type="text" name="q" id="q" value="#making-packs " class="md-input md-input--stretch"/>
   </p>
   <p>
     <button type="submit" class="md-button">Search existing questions</button>
-    <a href="https://community.coda.io/new-topic?category=developers-central/making-packs" class="md-button md-button--primary">Post a new question</a>
+    <a href="https://community.coda.io/new-topic?category=making-packs" class="md-button md-button--primary">Post a new question</a>
   </p>
 </form>
 
