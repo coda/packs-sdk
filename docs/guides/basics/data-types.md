@@ -112,7 +112,7 @@ pack.addFormula({
 });
 ```
 
-Objects are displayed in the doc as a "chip", a small rectangle with rounded corners. A primary value is displayed within the chip, with additional properties of object shown on hover.
+Objects are displayed in the doc as a "chip", a small rectangle with rounded corners. The display value is shown within the chip, with additional properties of object shown on hover.
 
 <img src="../../../images/data_types_object_hover.png" srcset="../../../images/data_types_object_hover_2x.png 2x" class="screenshot" alt="Hovering over an object chip">
 
@@ -367,7 +367,7 @@ Read the [Embedding content][embeds] guide to learn more.
 
 ### People
 
-The [`Person`][Person] value hint can be used to @-reference a Coda user account. This hint can be applied to `Object` values, where the object has a property that specifies the user's email address. The email address must be contained within the property of the object that is listed as its `id` within the schema definition, and that property must be marked as `required`.
+The [`Person`][Person] value hint can be used to @-reference a Coda user account. This hint can be applied to `Object` values, where the object has a property that specifies the user's email address. The email address must be contained within the property of the object that is listed as its `idProperty` within the schema definition, and that property must be marked as `required`.
 
 ```ts
 const MyPersonSchema = coda.makeObjectSchema({
@@ -376,8 +376,8 @@ const MyPersonSchema = coda.makeObjectSchema({
     name: {type: coda.ValueType.String},
     email: { type: coda.ValueType.String, required: true },
   },
-  primary: "name",
-  id: "email",
+  displayProperty: "name",
+  idProperty: "email",
 });
 ```
 

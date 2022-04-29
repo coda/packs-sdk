@@ -131,7 +131,7 @@ pack.addSyncTable({
           image: "https://cataas.com/cat/" + cat.id,
           tags: cat.tags,
           created: cat.created_at,
-          idProperty: cat.id,
+          id: cat.id,
         });
       }
       return {

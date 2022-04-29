@@ -23,12 +23,13 @@ Creating a dynamic sync table can be a bit of an involved process, and it requir
 
 ### Define the table
 
-The dynamic sync table is defined using the [`addDynamicSyncTable()`][addDynamicSyncTable] method. The `name` is user visible and should follow the [naming conventions][sync_tables_naming] of regular sync tables. The `description` is not required but recommended.
+The dynamic sync table is defined using the [`addDynamicSyncTable()`][addDynamicSyncTable] method. The `name` is user visible and should follow the [naming conventions][sync_tables_naming] of regular sync tables. The `description` is not required but recommended. An `identityName` is required, and defines the [identity][sync_tables_identity] of the table.
 
 ```ts
 pack.addDynamicSyncTable({
   name: "Tasks",
   description: "The tasks in the selected project.",
+  identityName: "Task",
   listDynamicUrls: async function (context) {
     // Return the datasets the user has access to.
     // ...
@@ -53,12 +54,6 @@ pack.addDynamicSyncTable({
 ```
 
 More information the the various components of the dynamic sync table are described in the sections below.
-
-!!! bug
-    It is a known issue that dynamic sync tables assume and require user authentication. Ensure that the Pack has a form of user authentication defined and that the `connectionRequirement` of the sync table is configured to use it (the default).
-    <!-- https://golinks.io/bug/19815 -->
-    <!-- https://golinks.io/bug/19713 -->
-    <!-- https://golinks.io/bug/19710 -->
 
 
 ### Generate the URL list
@@ -142,7 +137,7 @@ The [`getSchema`][getSchema] function is responsible for generating the schema t
 
 In order to generate the schema you must have a way of determining the shape of the data for the selected dataset. Some APIs provide endpoints that allow you to query metadata about a dataset, such as which fields are available and what type of data they contain. Alternatively you can query the first row of data and infer this information based on the results.
 
-The schema you generate must have all of the same fields as those used in a regular sync table, such as `properties`, `id`, and `primary`. In addition it must include an [`identity` definition][schemas_identity], which specifies the unique ID of the table. This identity typically includes the `dynamicUrl`, to distinguish it from other datasets.
+The schema you generate must have all of the same fields as those used in a regular sync table, such as `properties`, `idProperty`, and `displayProperty`.
 
 ```ts
 pack.addDynamicSyncTable({
@@ -165,31 +160,27 @@ pack.addDynamicSyncTable({
       taskId: { type: coda.ValueType.String },
     };
     // Use them as the display value and ID of the rows.
-    let primary = "name";
-    let id = "taskId";
+    let displayProperty = "name";
+    let idProperty = "taskId";
 
     // For each custom field defined in the project, add a property to the
     // schema.
-    let featured = [];
+    let featuredProperties = [];
     for (let customField of projectMetadata.customFields) {
       // Generate a property name for the custom field.
       let name = getPropertyName(customField);
       // Generate a schema for the field and add it to the set of properties.
       properties[name] = getPropertySchema(customField);
       // Mark the property as featured (included in the table by default).
-      featured.push(name);
+      featuredProperties.push(name);
     }
 
     // Assemble the schema for each row.
     let schema = coda.makeObjectSchema({
       properties: properties,
-      primary: primary,
-      id: id,
-      featured: featured,
-      identity: {
-        name: "Task",
-        dynamicUrl: projectUrl,
-      },
+      displayProperty: displayProperty,
+      idProperty: idProperty,
+      featuredProperties: featuredProperties,
     });
 
     // Return an array schema as the result.
@@ -336,7 +327,7 @@ Here is a demonstration of this approach, showing some dummy values.
 
 ## Stable identifiers
 
-A sync table schema requires that you set both a `primary` and `id` property, which determine the display name and unique ID for a row respectively. Some APIs provide predictable values that can serve these roles, like a task object with a consistent `name` and `id` field in addition to a variable number of custom fields. However other datasets may contain only custom fields, and it's not clear which if any of them can be used this way.
+A sync table schema requires that you set both the `displayProperty` and `idProperty` fields, which determine the display name and unique ID for a row respectively. Some APIs provide predictable values that can serve these roles, like a task object with a consistent `name` and `id` field in addition to a variable number of custom fields. However other datasets may contain only custom fields, and it's not clear which if any of them can be used this way.
 
 There currently isn't a good solution for dealing with datasets without stable, unique IDs for each row. It's possible to use a generated row number, hash, or random string to act as the unique ID, but those aren't guaranteed to remain stable across syncs. Without a stable identifier some of the features of a sync table, such as companion columns and @-references, won't work correctly.
 
@@ -406,12 +397,6 @@ pack.addSyncTable({
 });
 ```
 
-!!! bug
-    There is a known issue when using multiple syncs with one of these tables. If the syncs use different accounts, and therefore have different sets of custom fields, the resulting table will not display correctly.
-    <!-- https://golinks.io/bug/20474 -->
-
-
-
 
 [samples]: ../../../samples/topic/dynamic-sync-table.md
 [sync_tables_naming]: index.md#naming
@@ -426,3 +411,4 @@ pack.addSyncTable({
 [getDisplayUrl]: ../../../reference/sdk/interfaces/DynamicSyncTableOptions.md#getdisplayurl
 [getSchema]: ../../../reference/sdk/interfaces/DynamicSyncTableOptions.md#getschema
 [dynamicUrl]: ../../../reference/sdk/interfaces/Sync.md#dynamicurl
+[sync_tables_identity]: index.md#identity

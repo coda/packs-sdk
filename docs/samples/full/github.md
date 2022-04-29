@@ -54,7 +54,7 @@ The Pack uses OAuth2 to connect to a user's GitHub account. A more extensive Git
     // A schema that defines a repo object.
     const RepoSchema = coda.makeObjectSchema({
       properties: {
-        id: { type: coda.ValueType.Number },
+        repoId: { type: coda.ValueType.Number, fromKey: "id" },
         name: { type: coda.ValueType.String },
         fullName: { type: coda.ValueType.String, fromKey: "full_name" },
         description: { type: coda.ValueType.String },
@@ -68,7 +68,7 @@ The Pack uses OAuth2 to connect to a user's GitHub account. A more extensive Git
         stars: { type: coda.ValueType.Number, fromKey: "stargazers_count" },
       },
       displayProperty: "name",
-      idProperty: "id",
+      idProperty: "repoId",
       featuredProperties: ["description", "watchers", "forks", "stars"],
     });
 

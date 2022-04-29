@@ -17,6 +17,9 @@ The fetcher can to communicate with URLs on that domain and all sub-domains. It'
 
 By default a Pack is only allowed to register a single domain. This is done to limit abuse potential and provide transparency to users. If you want to combine data from multiple sources we recommend building multiple Packs and using the features of a Coda doc to bring them together. If however your use case requires making requests to multiple domains from a single Pack you may request an exemption by [contacting support][support_network_domains].
 
+!!! info "Multiple domains and authentication"
+    If you are using multiple network domains and use an authentication mechanism, you'll need to set the `networkDomain` field of the authentication configuration to specify which domain it should be appied to. Authentication credentials can only be applied to a single domain.
+
 
 ## Accessing the fetcher
 
@@ -374,8 +377,8 @@ dig +short egress.coda.io
 [Fetcher]: ../../reference/sdk/interfaces/Fetcher.md
 [samples]: ../../samples/topic/fetcher.md
 [addNetworkDomain]: ../../reference/sdk/classes/PackDefinitionBuilder.md#addnetworkdomain
-[support]: ../../support.md
-[support_network_domains]: ../../support.md#network-domains
+[support]: ../../support/index.md
+[support_network_domains]: ../../support/index.md#network-domains
 [ExecutionContext]: ../../reference/sdk/interfaces/ExecutionContext/
 [fetch]: ../../reference/sdk/interfaces/Fetcher.md#fetch
 [FetchRequest]: ../../reference/sdk/interfaces/FetchRequest.md

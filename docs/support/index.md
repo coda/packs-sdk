@@ -1,7 +1,5 @@
 ---
 title: Support
-hide:
-  - navigation
 ---
 
 # How to get help
@@ -45,4 +43,4 @@ By default all Packs are limited to only a single [network domain][fetcher_netwo
 [community_packs]: https://community.coda.io/c/15
 [partners_email]: mailto:partners@coda.io
 [hc_share]: https://help.coda.io/en/articles/1137949-sharing-your-doc#h_5061fdf96a
-[fetcher_network_domains]: guides/advanced/fetcher.md#network-domains
+[fetcher_network_domains]: ../guides/advanced/fetcher.md#network-domains

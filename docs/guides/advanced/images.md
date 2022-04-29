@@ -15,7 +15,7 @@ Formulas can accept an image as a parameter using the parameter type `Image`, wh
 
 Image attachments should be used in most cases. An image reference may make more sense if you expect the image to be updated often and want to ensure the doc is always using the latest copy, or when contractually obligated to hotlink to the image.
 
-It currently isn't possible to pass non-image files as parameters. Files can be returned as URLs however, using the `Attachment` value hint.
+Files work very much the same as images, with the `File` parameter type and for input and the `Attachment` value hint for output.
 
 See the [Parameters][parameters_images] and [Data types][data_types_images] guides for more information.
 

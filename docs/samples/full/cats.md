@@ -173,7 +173,7 @@ This Pack allows you to fetch random cat photos using the [Cat-as-a-service API]
               image: "https://cataas.com/cat/" + cat.id,
               tags: cat.tags,
               created: cat.created_at,
-              idProperty: cat.id,
+              id: cat.id,
             });
           }
           return {

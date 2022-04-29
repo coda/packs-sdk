@@ -22,22 +22,18 @@ pack.addDynamicSyncTable({
     let properties: coda.ObjectSchemaProperties = {
       // TODO: Create a property for each field.
     };
-    let id = "<Determine the field containing a unique ID>";
-    let primary = "<Determine the field containing the display value>";
-    let featured = [
+    let idProperty = "<Determine the field containing a unique ID>";
+    let displayProperty = "<Determine the field containing the display value>";
+    let featuredProperties = [
       // TODO: Determine which fields to show in the table by default.
     ];
     return coda.makeSchema({
       type: coda.ValueType.Array,
       items: coda.makeObjectSchema({
-        identity: {
-          name: "<User-visible name for the column containing the schema>",
-          dynamicUrl: datasourceUrl,
-        },
         properties: properties,
-        idProperty: id,
-        displayProperty: primary,
-        featuredProperties: featured,
+        idProperty: idProperty,
+        displayProperty: displayProperty,
+        featuredProperties: featuredProperties,
       }),
     });
   },

@@ -60,7 +60,7 @@ let MySchema = coda.makeObjectSchema({
   properties: {
     name: {type: coda.ValueType.String},
   },
-  primary: "name",
+  displayProperty: "name",
 });
 ```
 
@@ -95,7 +95,7 @@ let DateSchema = coda.makeSchema({
 See the [Data types guide][data_types] for more information about the supported value types and value hints.
 
 
-## Object schemas
+## Object schemas {: #object}
 
 The most common form of schema you'll need to define are object schemas. They are often used to bundle together multiple pieces of data returned by an API.
 
@@ -235,7 +235,7 @@ pack.addFormula({
 
 ### Display value
 
-Object schemas must define what value should be displayed within the chip when it is rendered in the doc. This is done by setting the `primary` field to the name of the property containing the value to display.
+Object schemas must define what value should be displayed within the chip when it is rendered in the doc. This is done by setting the `displayProperty` field to the name of the property containing the value to display.
 
 ```ts
 let MovieSchema = coda.makeObjectSchema({
@@ -243,7 +243,7 @@ let MovieSchema = coda.makeObjectSchema({
     title: { type: coda.ValueType.String },
     // ...
   },
-  primary: "title",
+  displayProperty: "title",
   // ...
 });
 ```
@@ -261,7 +261,7 @@ properties: {
     display: { type: coda.ValueType.String },
     // ...
   },
-  primary: "display",
+  displayProperty: "display",
   // ...
 });
 
@@ -289,32 +289,29 @@ To ensure compatibility with the Coda Formula Language and consistency across Pa
 The normalized name of a property is shown in the formula editor, but it also impacts the display name of that property elsewhere in the doc. In the hover dialog and in sync table columns the normalized name is again converted, this time from upper camel case to space-separated. For example, the normalized property `FooBar` will be displayed as "Foo Bar".
 
 
-### Data attribution
+### Data attribution {: #attribution}
 
-The terms of service for some APIs require you to provide visual attribution when you display their data. This can be accommodated in Packs using the `attribution` field of the schema's identity. You can include a mix of text, links, and images which will be displayed when the user hovers over the object's chip.
+The terms of service for some APIs require you to provide visual attribution when you display their data. This can be accommodated in Packs using the `attribution` field of the schema. You can include a mix of text, links, and images which will be displayed when the user hovers over the object's chip.
 
 ```ts
 let TaskSchema = coda.makeObjectSchema({
   // ...
-  identity: {
-    name: "Task",
-    attribution: [
-      {
-        type: coda.AttributionNodeType.Text,
-        text: "Provided by Todoist",
-      },
-      {
-        type: coda.AttributionNodeType.Link,
-        anchorText: "todoist.com",
-        anchorUrl: "https://todoist.com",
-      },
-      {
-        type: coda.AttributionNodeType.Image,
-        imageUrl: "https://todoist.com/favicon.ico",
-        anchorUrl: "https://todoist.com",
-      },
-    ]
-  },
+  attribution: [
+    {
+      type: coda.AttributionNodeType.Text,
+      text: "Provided by Todoist",
+    },
+    {
+      type: coda.AttributionNodeType.Link,
+      anchorText: "todoist.com",
+      anchorUrl: "https://todoist.com",
+    },
+    {
+      type: coda.AttributionNodeType.Image,
+      imageUrl: "https://todoist.com/favicon.ico",
+      anchorUrl: "https://todoist.com",
+    },
+  ],
 });
 ```
 
@@ -330,7 +327,7 @@ The columns of a sync table are defined using an object schema. When used in a s
 
 Object schemas used in a sync table must specify which property value should be used as a unique identifier for that row. This ID is needed by the syncing logic to ensure that rows are added, updated, and removed correctly. The ID only needs to be unique within that sync table.
 
-Similar to the [display value](#display-value), this is done by setting the `id` field to the name of the property containing the unique identifier.
+Similar to the [display value](#display-value), this is done by setting the `idProperty` field to the name of the property containing the unique identifier.
 
 ```ts
 let MovieSchema = coda.makeObjectSchema({
@@ -338,7 +335,7 @@ let MovieSchema = coda.makeObjectSchema({
     movieId: { type: coda.ValueType.String },
     // ...
   },
-  id: "movieId",
+  idProperty: "movieId",
   // ...
 });
 ```
@@ -349,9 +346,12 @@ let MovieSchema = coda.makeObjectSchema({
 
 ### Schema identity
 
-When used in a sync table the object schema itself must have a unique identifier, know as its identity. This acts like a namespace for the schema, allowing the system to distinguish objects that have the same ID.
+Sync tables have an `identityName` field which defines the [unique identifier][sync_tables_identity] for that table, and a schema that defines the shape of the data in each row. In some cases you need to set the identity name of the sync table in the schema itself:
 
-Sync table definitions have an `identityName` field you can use to easily set this. However, in some cases you also need to set the identity in the schema itself by adding an `identity` to your schema and setting its `name` field.
+- Manually constructing a [reference schema](#references).
+- Returning an object schema in an action formula to [approximate two-way sync][sync_tables_actions].
+
+This can be done by adding an `identity` to your schema and setting its `name` field.
 
 ```ts
 let MovieSchema = coda.makeObjectSchema({
@@ -362,8 +362,6 @@ let MovieSchema = coda.makeObjectSchema({
 });
 ```
 
-You can select what name you like, but it must be unique within your Pack. You can read more about how identities are used by sync tables in the [sync tables guide][sync_tables_identity].
-
 !!! info
     The presence of a schema identity also controls how the object appears and behaves in the page. Named schemas are seen as more important to your Pack and given a more prominent UI treatment. Specifically, objects with identities will display the Pack's icon in the chip, and when used in a column format the **Add column** button will appear next to each property.
 
@@ -372,7 +370,7 @@ You can select what name you like, but it must be unique within your Pack. You c
 
 By default a sync table will only contain one column, containing a chip with the synced object. When viewing the hover card for the object, users can click the **Add column** button to create a new column from any property. Alternatively, they can manually create new columns and use the formula editor to reference a property of the synced object.
 
-You can specify additional default columns by setting the `featured` field of the schema. This field should contain the names of the properties that should be given their own columns when the sync table is created.
+You can specify additional default columns by setting the `featuredProperties` field of the schema. This field should contain the names of the properties that should be given their own columns when the sync table is created.
 
 ```ts
 let MovieSchema = coda.makeObjectSchema({
@@ -386,7 +384,7 @@ let MovieSchema = coda.makeObjectSchema({
     },
   },
   // When creating the sync table, automatically add columns for these fields.
-  featured: ["director", "actors"],
+  featuredProperties: ["director", "actors"],
   // ...
 });
 ```
@@ -399,14 +397,14 @@ let MovieSchema = coda.makeObjectSchema({
 
 Reference schemas are used by sync tables to create lookups between tables. See the [Sync tables guide][sync_tables_references] for more information on how row references work.
 
-The simplest way to create a reference schema is to use the helper function [`makeReferenceSchemaFromObjectSchema`][makeReferenceSchemaFromObjectSchema]. Simply pass in the full schema and it will be converted to a reference schema.
+The simplest way to create a reference schema is to use the helper function [`makeReferenceSchemaFromObjectSchema`][makeReferenceSchemaFromObjectSchema]. Simply pass in the full schema and sync table's `identityName` and it will be converted to a reference schema.
 
 ```ts
 let PersonReferenceSchema =
-    coda.makeReferenceSchemaFromObjectSchema(PersonSchema);
+    coda.makeReferenceSchemaFromObjectSchema(PersonSchema, "Person");
 ```
 
-In some instances you may have to create the reference schema manually however, like when you want a row to be able to reference other rows in the same table. A reference schema is an object schema with the `codaType` field set to `Reference`. It must specify both an `id` and `primary` property, and those properties must be marked as `required`. It must also have an `identity` set, with the name matching that of the schema used by the target sync table.
+In some instances you may have to create the reference schema manually however, like when you want a row to be able to reference other rows in the same table. A reference schema is an object schema with the `codaType` field set to `Reference`. It must specify both an `idProperty` and `displayProperty`, and those properties must be marked as `required`. It must also have an `identity` set, with the name matching the `identityName` of the target sync table.
 
 ```ts
 let PersonReferenceSchema = coda.makeObjectSchema({
@@ -416,8 +414,8 @@ let PersonReferenceSchema = coda.makeObjectSchema({
     personId: { type: coda.ValueType.String, required: true },
     // Other properties can be omitted.
   },
-  primary: "name",
-  id: "personId",
+  displayProperty: "name",
+  idProperty: "personId",
   identity: {
     name: "Person",
   },
@@ -441,7 +439,7 @@ let MovieSchema = coda.makeObjectSchema({
 });
 ```
 
-In your sync formula you only need to populate the fields of the reference object corresponding to the `id` and `primary` properties. If your API only returns the ID of the referenced item, you can set the display value to "Not found" or something equivalent, as this value will only be shown when the referenced row hasn't been synced yet.
+In your sync formula you only need to populate the fields of the reference object corresponding to the `idProperty` and `displayProperty` fields. If your API only returns the ID of the referenced item, you can set the display value to "Not found" or something equivalent, as this value will only be shown when the referenced row hasn't been synced yet.
 
 !!! warning
     Reference schemas are only resolved to rows when they are used in a sync table. If used in a formula or column format they will always appear in a broken state, even if the row they are referencing is present.
@@ -459,3 +457,4 @@ In your sync formula you only need to populate the fields of the reference objec
 [sync_tables_references]: ../blocks/sync-tables/index.md#references
 [data_types_objects]: ../basics/data-types.md#objects
 [mdn_spread_object]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#spread_in_object_literals
+[sync_tables_actions]: ../blocks/sync-tables/index.md#actions

@@ -74,4 +74,4 @@ Once approved, Coda attempts to load the URL int an `<iframe>` element with [san
 [mdn_iframe_sandbox]: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox
 [mdn_xfo]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
 [mdn_csp]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
-[support]: ../../support.md
+[support]: ../../support/index.md
