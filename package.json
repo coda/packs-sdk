@@ -101,7 +101,7 @@
     "ts-loader": "^9.2.8",
     "ts-node": "^10.7.0",
     "typedoc": "^0.22.15",
-    "typedoc-plugin-markdown": "^3.11.14"
+    "typedoc-plugin-markdown": "^3.12.1"
   },
   "resolutions": {
     "ansi-regex": "^5.0.1",
