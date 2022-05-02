@@ -44,7 +44,7 @@ describe('Execution', () => {
 
   it('executes a sync formula by name', async () => {
     const result = await executeSyncFormulaFromPackDef(fakePack, 'Students', ['Smith']);
-    assert.deepEqual(result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
+    assert.deepEqual(result, [{name: 'Alice'}, {name: 'Bob'}, {name: 'Chris'}, {name: 'Diana'}]);
   });
 
   it('executes a formula by name with VM', async () => {
@@ -62,7 +62,7 @@ describe('Execution', () => {
       params: ['Smith'],
       bundlePath,
     });
-    assert.deepEqual(result, {result: [{Name: 'Alice'}, {Name: 'Bob'}], continuation: {page: 2}});
+    assert.deepEqual(result, {result: [{name: 'Alice'}, {name: 'Bob'}], continuation: {page: 2}});
   });
 
   it('exercises timer shim in VM', async () => {
@@ -207,7 +207,7 @@ describe('Execution', () => {
               }),
             },
             execute: async ([valid]) => {
-              return valid ? {foo: 'blah'} : {foo: 123};
+              return valid ? {Foo: 'blah'} : {Foo: 123};
             },
           }),
         ],
@@ -299,14 +299,14 @@ describe('Execution', () => {
 
       it('empty id value', async () => {
         await testHelper.willBeRejectedWith(
-          executeFormulaFromPackDef(defaultPack, 'ObjectFormula', [JSON.stringify({stringVal: '', numberVal: 0})]),
+          executeFormulaFromPackDef(defaultPack, 'ObjectFormula', [JSON.stringify({StringVal: '', NumberVal: 0})]),
           /Schema declares "StringVal" as an id property but an empty value was found in result./,
         );
       });
 
       it('valid return value', async () => {
         await executeFormulaFromPackDef(defaultPack, 'ObjectFormula', [
-          JSON.stringify({stringVal: 'foo', numberVal: 1}),
+          JSON.stringify({StringVal: 'foo', NumberVal: 1}),
         ]);
       });
     });

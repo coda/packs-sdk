@@ -8,7 +8,6 @@ const schema_1 = require("./schema");
 const api_types_4 = require("./api_types");
 const api_types_5 = require("./api_types");
 const ensure_1 = require("./helpers/ensure");
-const ensure_2 = require("./helpers/ensure");
 const api_types_6 = require("./api_types");
 const handler_templates_1 = require("./handler_templates");
 const handler_templates_2 = require("./handler_templates");
@@ -20,7 +19,6 @@ const schema_3 = require("./schema");
 const api_types_9 = require("./api_types");
 const migration_1 = require("./helpers/migration");
 const api_types_10 = require("./api_types");
-const handler_templates_3 = require("./handler_templates");
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
  * If an error is encountered in a formula and you want to describe the error
@@ -398,14 +396,7 @@ function makeFormula(fullDefinition) {
             break;
         }
         default:
-            return (0, ensure_2.ensureUnreachable)(fullDefinition);
-    }
-    if ([schema_1.ValueType.Object, schema_1.ValueType.Array].includes(fullDefinition.resultType)) {
-        const wrappedExecute = formula.execute;
-        formula.execute = async function (params, context) {
-            const result = await wrappedExecute(params, context);
-            return (0, handler_templates_3.transformBody)(result, (0, ensure_1.ensureExists)(formula.schema, `Please define a schema for your "${formula.name}" formula.`));
-        };
+            return (0, ensure_1.ensureUnreachable)(fullDefinition);
     }
     const onError = fullDefinition.onError;
     if (onError) {

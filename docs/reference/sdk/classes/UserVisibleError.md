@@ -42,4 +42,4 @@ Error.constructor
 
 #### Defined in
 
-[api.ts:76](https://github.com/coda/packs-sdk/blob/main/api.ts#L76)
+[api.ts:74](https://github.com/coda/packs-sdk/blob/main/api.ts#L74)

@@ -318,7 +318,7 @@ function mapKeys(obj: {[key: string]: any}, schema?: Schema): object {
   return remappedObject;
 }
 
-export function transformBody(body: any, schema: Schema): any {
+export function transformBody(body: any, schema: Schema | undefined): any {
   if (isArray(schema) && isObject(schema.items)) {
     const objects = body as Array<Record<string, any>>;
     const mappedObjs = objects.map(obj => mapKeys(obj, schema.items));
@@ -335,8 +335,8 @@ export function transformBody(body: any, schema: Schema): any {
 export function generateObjectResponseHandler<T extends Schema>(
   response: ResponseHandlerTemplate<T>,
 ): (response: FetchResponse, runtimeSchema?: T) => SchemaType<T> {
-  const {projectKey, schema} = response;
-  return function objectResponseHandler(resp: FetchResponse, runtimeSchema?: T) {
+  const {projectKey} = response;
+  return function objectResponseHandler(resp: FetchResponse) {
     const {body} = resp;
     if (typeof body !== 'object') {
       // This is an error, we'll flag it during validation.
@@ -344,17 +344,6 @@ export function generateObjectResponseHandler<T extends Schema>(
     }
 
     const projectedBody = projectKey ? body[projectKey] : body;
-    if (!projectedBody) {
-      // Also an error, we'll flag it during validation.
-      return projectedBody;
-    }
-
-    // Give precedence to runtime provided schema
-    const finalSchema = runtimeSchema || schema;
-    if (!finalSchema) {
-      return projectedBody;
-    }
-
-    return transformBody(projectedBody, finalSchema);
+    return projectedBody;
   };
 }

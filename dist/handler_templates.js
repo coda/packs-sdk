@@ -165,24 +165,15 @@ function transformBody(body, schema) {
 }
 exports.transformBody = transformBody;
 function generateObjectResponseHandler(response) {
-    const { projectKey, schema } = response;
-    return function objectResponseHandler(resp, runtimeSchema) {
+    const { projectKey } = response;
+    return function objectResponseHandler(resp) {
         const { body } = resp;
         if (typeof body !== 'object') {
             // This is an error, we'll flag it during validation.
             return body;
         }
         const projectedBody = projectKey ? body[projectKey] : body;
-        if (!projectedBody) {
-            // Also an error, we'll flag it during validation.
-            return projectedBody;
-        }
-        // Give precedence to runtime provided schema
-        const finalSchema = runtimeSchema || schema;
-        if (!finalSchema) {
-            return projectedBody;
-        }
-        return transformBody(projectedBody, finalSchema);
+        return projectedBody;
     };
 }
 exports.generateObjectResponseHandler = generateObjectResponseHandler;

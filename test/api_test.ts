@@ -206,7 +206,7 @@ describe('API test', () => {
         },
       });
       const result = await formula.execute([] as any, {} as any);
-      assert.deepEqual(result, {Foo: 'blah'}); // Gets normalized
+      assert.deepEqual(result, {foo: 'blah'});
     });
 
     it('array formula', async () => {
@@ -225,7 +225,7 @@ describe('API test', () => {
         },
       });
       const result = await formula.execute([] as any, {} as any);
-      assert.deepEqual(result, [{Foo: 'blah'}]); // Gets normalized
+      assert.deepEqual(result, [{foo: 'blah'}]);
     });
   });
 
