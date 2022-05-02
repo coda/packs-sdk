@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.compilePackMetadata = void 0;
 const types_1 = require("../types");
 const api_1 = require("../api");
-const migration_1 = require("./migration");
 function compilePackMetadata(manifest) {
     const { formats, formulas, formulaNamespace, syncTables, defaultAuthentication, ...definition } = manifest;
     const compiledFormats = compileFormatsMetadata(formats || []);
@@ -83,6 +82,7 @@ function compilePostSetupStepMetadata(step) {
     const { getOptions, getOptionsFormula, ...rest } = step;
     return {
         ...rest,
-        getOptions: compileMetadataFormulaMetadata((0, migration_1.setEndpointHelper)(step).getOptions),
+        getOptions: step.getOptions ? compileMetadataFormulaMetadata(step.getOptions) : undefined,
+        getOptionsFormula: step.getOptionsFormula ? compileMetadataFormulaMetadata(step.getOptionsFormula) : undefined,
     };
 }

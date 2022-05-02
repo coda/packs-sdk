@@ -164,7 +164,7 @@ export interface SetEndpoint {
 export declare type SetEndpointDef = Omit<SetEndpoint, 'getOptions' | 'getOptionsFormula'> & {
     /** See {@link SetEndpoint.getOptions} */
     getOptions?: MetadataFormulaDef;
-    /** See {@link SetEndpoint.getOptionsFormula} */
+    /** @deprecated Use {@link getOptions} */
     getOptionsFormula?: MetadataFormulaDef;
 };
 /**
