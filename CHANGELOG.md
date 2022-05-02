@@ -2,6 +2,12 @@
 
 This changelog keeps track of all changes to the Packs SDK. We follow conventions from [keepachangelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Added
+
+- Added "useProofKeyForCodeExchange" option to OAuth2 authentication to support PKCE extention. While it's optionally supported by most OAuth2 providers, it might be required by some websites (e.g. Twitter).
+
 ## [0.11.0] - 2022-05-03
 
 ### Added

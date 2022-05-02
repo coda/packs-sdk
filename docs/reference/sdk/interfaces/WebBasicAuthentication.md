@@ -135,7 +135,7 @@ Identifies this as WebBasic authentication.
 
 #### Defined in
 
-[types.ts:432](https://github.com/coda/packs-sdk/blob/main/types.ts#L432)
+[types.ts:444](https://github.com/coda/packs-sdk/blob/main/types.ts#L444)
 
 ___
 
@@ -155,4 +155,4 @@ Configuration for labels to show in the UI when the user sets up a new acount.
 
 #### Defined in
 
-[types.ts:436](https://github.com/coda/packs-sdk/blob/main/types.ts#L436)
+[types.ts:448](https://github.com/coda/packs-sdk/blob/main/types.ts#L448)
