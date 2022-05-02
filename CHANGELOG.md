@@ -1,8 +1,8 @@
 # Changelog
 
-This changelog keeps track of all changes to the packs-sdk. We follow conventions from [keepachangelog](https://keepachangelog.com/en/1.0.0/).
+This changelog keeps track of all changes to the Packs SDK. We follow conventions from [keepachangelog](https://keepachangelog.com/en/1.0.0/).
 
-## [Unreleased]
+## [0.11.0] - 2022-05-03
 
 ### Added
 
