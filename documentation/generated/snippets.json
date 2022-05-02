@@ -141,8 +141,18 @@
       "addImageParameter",
       "ImageParameter"
     ],
-    "content": "Creates a image parameter.",
+    "content": "Creates an image parameter.",
     "code": "coda.makeParameter({\n  type: coda.ParameterType.Image,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
+  },
+  {
+    "triggerTokens": [
+      "makeParameter:file",
+      "makeFileParameter",
+      "addFileParameter",
+      "FileParameter"
+    ],
+    "content": "Creates a file parameter.",
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.File,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
   },
   {
     "triggerTokens": [

@@ -76,8 +76,13 @@ export const Snippets: AutocompleteSnippet[] = [
   },
   {
     triggerTokens: ['makeParameter:image', 'makeImageParameter', 'addImageParameter', 'ImageParameter'],
-    content: 'Creates a image parameter.',
+    content: 'Creates an image parameter.',
     codeFile: './snippets/parameter/image_parameter.ts',
+  },
+  {
+    triggerTokens: ['makeParameter:file', 'makeFileParameter', 'addFileParameter', 'FileParameter'],
+    content: 'Creates a file parameter.',
+    codeFile: './snippets/parameter/file_parameter.ts',
   },
   {
     triggerTokens: ['makeParameter:number', 'makeNumberParameter', 'addNumberParameter', 'NumberParameter'],
@@ -85,12 +90,22 @@ export const Snippets: AutocompleteSnippet[] = [
     codeFile: './snippets/parameter/number_parameter.ts',
   },
   {
-    triggerTokens: ['makeParameter:string[]', 'makeStringArrayParameter', 'addStringArrayParameter', 'StringArrayParameter'],
+    triggerTokens: [
+      'makeParameter:string[]',
+      'makeStringArrayParameter',
+      'addStringArrayParameter',
+      'StringArrayParameter',
+    ],
     content: 'Creates a string array parameter.',
     codeFile: './snippets/parameter/array/string_array_parameter.ts',
   },
   {
-    triggerTokens: ['makeParameter:boolean[]', 'makeBooleanArrayParameter', 'addBooleanArrayParameter', 'BooleanArrayParameter'],
+    triggerTokens: [
+      'makeParameter:boolean[]',
+      'makeBooleanArrayParameter',
+      'addBooleanArrayParameter',
+      'BooleanArrayParameter',
+    ],
     content: 'Creates a boolean array parameter.',
     codeFile: './snippets/parameter/array/boolean_array_parameter.ts',
   },
@@ -105,12 +120,22 @@ export const Snippets: AutocompleteSnippet[] = [
     codeFile: './snippets/parameter/array/html_array_parameter.ts',
   },
   {
-    triggerTokens: ['makeParameter:image[]', 'makeImageArrayParameter', 'addImageArrayParameter', 'ImageArrayParameter'],
+    triggerTokens: [
+      'makeParameter:image[]',
+      'makeImageArrayParameter',
+      'addImageArrayParameter',
+      'ImageArrayParameter',
+    ],
     content: 'Creates a image array parameter.',
     codeFile: './snippets/parameter/array/image_array_parameter.ts',
   },
   {
-    triggerTokens: ['makeParameter:number[]', 'makeNumberArrayParameter', 'addNumberArrayParameter', 'NumberArrayParameter'],
+    triggerTokens: [
+      'makeParameter:number[]',
+      'makeNumberArrayParameter',
+      'addNumberArrayParameter',
+      'NumberArrayParameter',
+    ],
     content: 'Creates a number array parameter.',
     codeFile: './snippets/parameter/array/number_array_parameter.ts',
   },
@@ -164,22 +189,26 @@ export const Examples: Example[] = [
       },
       {
         name: 'Text (Roman Numeral)',
-        content: 'A column format that formats a number as text. This sample displays the number in the cell as a Roman numeral.',
+        content:
+          'A column format that formats a number as text. This sample displays the number in the cell as a Roman numeral.',
         codeFile: './examples/column-format/roman_numeral.ts',
       },
       {
         name: 'Text (Progress Bar)',
-        content: 'A column format that formats a number as graphic. This sample displays the number in the cell as a progress bar.',
+        content:
+          'A column format that formats a number as graphic. This sample displays the number in the cell as a progress bar.',
         codeFile: './examples/column-format/progress_bar.ts',
       },
       {
         name: 'Image (Cats)',
-        content: 'A column format that formats text as an image. This sample displays the text in the cell as an overlay on a random image of a cat.',
+        content:
+          'A column format that formats text as an image. This sample displays the text in the cell as an overlay on a random image of a cat.',
         codeFile: './examples/cats/column_format.ts',
       },
       {
         name: 'Rich data (Todoist)',
-        content: 'A column format that formats a URL as rich data. This sample displays the URL of the Todoist task in the cell as a rich data chip.',
+        content:
+          'A column format that formats a URL as rich data. This sample displays the URL of the Todoist task in the cell as a rich data chip.',
         codeFile: './examples/todoist/column_format.ts',
       },
     ],
@@ -206,7 +235,8 @@ export const Examples: Example[] = [
       },
       {
         name: 'Authorization header',
-        content: 'Authentication that passes a long-lived token in the Authorization header using the "Bearer" scheme. This sample connects to the Todoist API.',
+        content:
+          'Authentication that passes a long-lived token in the Authorization header using the "Bearer" scheme. This sample connects to the Todoist API.',
         codeFile: './examples/todoist/auth_bearer.ts',
       },
       {
@@ -216,12 +246,14 @@ export const Examples: Example[] = [
       },
       {
         name: 'Query parameter',
-        content: 'Authentication that passes a long-lived token in a query parameter. This sample connects to the Giphy API.',
+        content:
+          'Authentication that passes a long-lived token in a query parameter. This sample connects to the Giphy API.',
         codeFile: './examples/authentication/giphy.ts',
       },
       {
         name: 'Username and password',
-        content: 'Authentication that passes a username and password in the Authorization header using the "Basic" scheme. This sample connects to the Twilio API.',
+        content:
+          'Authentication that passes a username and password in the Authorization header using the "Basic" scheme. This sample connects to the Twilio API.',
         codeFile: './examples/authentication/twilio.ts',
       },
       {
@@ -231,17 +263,20 @@ export const Examples: Example[] = [
       },
       {
         name: 'Manual endpoint',
-        content: 'Authentication that requires users to enter the endpoint URL for their account. This sample connects to the Okta API.',
+        content:
+          'Authentication that requires users to enter the endpoint URL for their account. This sample connects to the Okta API.',
         codeFile: './examples/authentication/okta.ts',
       },
       {
         name: 'Automatic endpoint',
-        content: 'Authentication that automatically determines the account-specific endpoint URL during the OAuth2 flow. This sample connects to the Salesforce API.',
+        content:
+          'Authentication that automatically determines the account-specific endpoint URL during the OAuth2 flow. This sample connects to the Salesforce API.',
         codeFile: './examples/authentication/salesforce.ts',
       },
       {
         name: 'User-selected endpoint',
-        content: 'Authentication that presents a list of endpoints to the user for them to select one. This sample connects to the Jira API.',
+        content:
+          'Authentication that presents a list of endpoints to the user for them to select one. This sample connects to the Jira API.',
         codeFile: './examples/authentication/jira.ts',
       },
     ],
@@ -263,7 +298,8 @@ export const Examples: Example[] = [
       },
       {
         name: 'With URL list',
-        content: 'A sync table that presents a list of URLs to select from. This sample shows responses to a Typeform form.',
+        content:
+          'A sync table that presents a list of URLs to select from. This sample shows responses to a Typeform form.',
         codeFile: './examples/dynamic-sync-table/typeform.ts',
       },
     ],
@@ -280,22 +316,26 @@ export const Examples: Example[] = [
     exampleSnippets: [
       {
         name: 'Template',
-        content: 'The basic structure of a formula. This sample takes in a single string parameter and returns a string result.',
+        content:
+          'The basic structure of a formula. This sample takes in a single string parameter and returns a string result.',
         codeFile: './snippets/formula/string_formula.ts',
       },
       {
         name: 'Image result',
-        content: 'A formula that returns an image. This sample gets a random cat image with an optional text overlay or filter applied.',
+        content:
+          'A formula that returns an image. This sample gets a random cat image with an optional text overlay or filter applied.',
         codeFile: './examples/cats/formula.ts',
       },
       {
         name: 'Rich data result',
-        content: 'A formula that returns rich data (a schema). This sample gets information about a task in the Todoist application.',
+        content:
+          'A formula that returns rich data (a schema). This sample gets information about a task in the Todoist application.',
         codeFile: './examples/todoist/formula.ts',
       },
       {
         name: 'With examples',
-        content: 'A formula that includes examples of how to use it. This sample formats text to look like screaming, with a optional parameters to override how many exclamation points to use and an alternate character to use.',
+        content:
+          'A formula that includes examples of how to use it. This sample formats text to look like screaming, with a optional parameters to override how many exclamation points to use and an alternate character to use.',
         codeFile: './examples/parameter/scream.ts',
       },
     ],
@@ -312,7 +352,8 @@ export const Examples: Example[] = [
     exampleSnippets: [
       {
         name: 'Template',
-        content: 'The basic structure of an action. This sample takes in a single string parameter and returns the string "OK" when the action is complete.',
+        content:
+          'The basic structure of an action. This sample takes in a single string parameter and returns the string "OK" when the action is complete.',
         codeFile: './snippets/formula/action_formula.ts',
       },
       {
@@ -349,12 +390,14 @@ export const Examples: Example[] = [
       },
       {
         name: 'Optional parameters',
-        content: 'A formula with some required and some optional parameters. This sample formats text to look like screaming, with a optional parameters to override how many exclamation points to use and an alternate character to use.',
+        content:
+          'A formula with some required and some optional parameters. This sample formats text to look like screaming, with a optional parameters to override how many exclamation points to use and an alternate character to use.',
         codeFile: './examples/parameter/scream.ts',
       },
       {
         name: 'Variable argument parameters',
-        content: 'A formula that accepts a variable number of arguments. This sample draws a simple diagram using text, with an unknown number of arrow labels and steps.',
+        content:
+          'A formula that accepts a variable number of arguments. This sample draws a simple diagram using text, with an unknown number of arrow labels and steps.',
         codeFile: './examples/parameter/steps.ts',
       },
       {
@@ -376,17 +419,20 @@ export const Examples: Example[] = [
     exampleSnippets: [
       {
         name: 'Simple autocomplete',
-        content: 'A formula with a parameter that provides autocomplete for acceptable values. This sample returns the noise that an animal makes, for a limited set of animals.',
+        content:
+          'A formula with a parameter that provides autocomplete for acceptable values. This sample returns the noise that an animal makes, for a limited set of animals.',
         codeFile: './examples/autocomplete/animal_noise.ts',
       },
       {
         name: 'Dynamic autocomplete',
-        content: 'A formula with a parameter that provides autocomplete for acceptable values, where the options are pulled dynamically from an API. This sample returns the price for a board game listed on the site Board Game Atlas.',
+        content:
+          'A formula with a parameter that provides autocomplete for acceptable values, where the options are pulled dynamically from an API. This sample returns the price for a board game listed on the site Board Game Atlas.',
         codeFile: './examples/autocomplete/board_game_atlas.ts',
       },
       {
         name: 'Autocomplete on previous parameter',
-        content: 'A formula with a parameter that provides autocomplete for acceptable values, where the options depend on the value of a previous parameter. This sample generates a greeting in either English or Spanish.',
+        content:
+          'A formula with a parameter that provides autocomplete for acceptable values, where the options depend on the value of a previous parameter. This sample generates a greeting in either English or Spanish.',
         codeFile: './examples/autocomplete/greeting.ts',
       },
     ],
@@ -413,17 +459,20 @@ export const Examples: Example[] = [
       },
       {
         name: 'With continuation',
-        content: 'A sync table that uses continuations to sync data using multiple executions. This sample syncs the spells available in Dungeons and Dragons.',
+        content:
+          'A sync table that uses continuations to sync data using multiple executions. This sample syncs the spells available in Dungeons and Dragons.',
         codeFile: './examples/dnd/sync_table.ts',
       },
       {
         name: 'With authentication',
-        content: 'A sync table that pulls from an API using authentication. This sample syncs the tasks from a user\'s Todoist account.',
+        content:
+          "A sync table that pulls from an API using authentication. This sample syncs the tasks from a user's Todoist account.",
         codeFile: './examples/todoist/sync_table.ts',
       },
       {
         name: 'With row references',
-        content: 'A sync table that contains a reference to a row in another sync table. This sample syncs the tasks from a user\'s Todoist account.',
+        content:
+          "A sync table that contains a reference to a row in another sync table. This sample syncs the tasks from a user's Todoist account.",
         codeFile: './examples/todoist/reference.ts',
       },
     ],
@@ -492,32 +541,38 @@ export const Examples: Example[] = [
       },
       {
         name: 'Percent',
-        content: 'A formula that returns a number formatted as a percent value. This sample converts a number of slices of pizza into a percentage eaten.',
+        content:
+          'A formula that returns a number formatted as a percent value. This sample converts a number of slices of pizza into a percentage eaten.',
         codeFile: './examples/data-type/pizza_eaten.ts',
       },
       {
         name: 'Currency',
-        content: 'A formula that returns a number formatted as a currency value. This sample converts from another currency to US dollars.',
+        content:
+          'A formula that returns a number formatted as a currency value. This sample converts from another currency to US dollars.',
         codeFile: './examples/data-type/to_usd.ts',
       },
       {
         name: 'Date and time',
-        content: 'A formula that returns a date and time, passed as a string. This sample adds five minutes onto the given date and time.',
+        content:
+          'A formula that returns a date and time, passed as a string. This sample adds five minutes onto the given date and time.',
         codeFile: './examples/dates/five_mins_late.ts',
       },
       {
         name: 'Markdown',
-        content: 'A formula that returns markdown content. This sample returns the contents of the README.md file from a GitHub repository.',
+        content:
+          'A formula that returns markdown content. This sample returns the contents of the README.md file from a GitHub repository.',
         codeFile: './examples/data-type/readme.ts',
       },
       {
         name: 'HTML',
-        content: 'A formula that returns HTML content. This sample returns HTML with every word of the input string bolded.',
+        content:
+          'A formula that returns HTML content. This sample returns HTML with every word of the input string bolded.',
         codeFile: './examples/data-type/alt_bold.ts',
       },
       {
         name: 'Embed',
-        content: 'A formula that a URL to embed. This sample returns an embed of the infamous YouTube video for "Never Gonna Give You Up" by Rick Astley.',
+        content:
+          'A formula that a URL to embed. This sample returns an embed of the infamous YouTube video for "Never Gonna Give You Up" by Rick Astley.',
         codeFile: './examples/data-type/rick_roll.ts',
       },
       {
@@ -544,17 +599,20 @@ export const Examples: Example[] = [
       },
       {
         name: 'For formula',
-        content: 'An object schema used by a formula. This sample defines the schema for information about the daylight at a given location.',
+        content:
+          'An object schema used by a formula. This sample defines the schema for information about the daylight at a given location.',
         codeFile: './examples/daylight/schema.ts',
       },
       {
         name: 'For sync table',
-        content: 'An object schema used by a sync table. This sample defines the schema for the information about a spell in Dungeons and Dragons.',
+        content:
+          'An object schema used by a sync table. This sample defines the schema for the information about a spell in Dungeons and Dragons.',
         codeFile: './examples/dnd/schema.ts',
       },
       {
         name: 'With self-reference',
-        content: 'An object schema used by a sync table, that includes a row reference to itself. This sample defines the schema for a task in Todoist, where tasks can have parent tasks.',
+        content:
+          'An object schema used by a sync table, that includes a row reference to itself. This sample defines the schema for a task in Todoist, where tasks can have parent tasks.',
         codeFile: './examples/todoist/schema.ts',
       },
     ],
@@ -571,22 +629,26 @@ export const Examples: Example[] = [
     exampleSnippets: [
       {
         name: 'Local date',
-        content: 'A formula that requires getting a date in the document\'s timezone. This sample determines if the year of a given date would make for good New Years Eve glasses (has two or more zeros).',
+        content:
+          "A formula that requires getting a date in the document's timezone. This sample determines if the year of a given date would make for good New Years Eve glasses (has two or more zeros).",
         codeFile: './examples/dates/nye_glasses.ts',
       },
       {
         name: 'Local time',
-        content: 'A formula that requires getting a time in the document\'s timezone. This sample shows a time using the military format (ex: "0900 hours").',
+        content:
+          'A formula that requires getting a time in the document\'s timezone. This sample shows a time using the military format (ex: "0900 hours").',
         codeFile: './examples/dates/military_time.ts',
       },
       {
         name: 'Local date and time',
-        content: 'A formula that requires getting a date and time in the document\'s timezone. This sample determines if all of the digits are the same (ex: 1/1/11 1:11).',
+        content:
+          "A formula that requires getting a date and time in the document's timezone. This sample determines if all of the digits are the same (ex: 1/1/11 1:11).",
         codeFile: './examples/dates/same_digit.ts',
       },
       {
         name: 'Send to API',
-        content: 'A formula that requires sending a date to an API. This sample use the Calendarific API to get the holidays on a given date.',
+        content:
+          'A formula that requires sending a date to an API. This sample use the Calendarific API to get the holidays on a given date.',
         codeFile: './examples/dates/holidays.ts',
       },
       {
@@ -618,22 +680,26 @@ export const Examples: Example[] = [
       },
       {
         name: 'Attach image data',
-        content: 'A sync table that includes images sourced from raw data. This sample syncs files from Dropbox, including their thumbnail images.',
+        content:
+          'A sync table that includes images sourced from raw data. This sample syncs files from Dropbox, including their thumbnail images.',
         codeFile: './examples/image/dropbox.ts',
       },
       {
         name: 'Attach private images',
-        content: 'A sync table that includes images sourced from private URLs. This sample syncs files from Google Drive, including their thumbnail images.',
+        content:
+          'A sync table that includes images sourced from private URLs. This sample syncs files from Google Drive, including their thumbnail images.',
         codeFile: './examples/image/google_drive.ts',
       },
       {
         name: 'Generated SVG',
-        content: 'A formula that generated an SVG, and returns it as a data URI. This sample generates an image from the text provided.',
+        content:
+          'A formula that generated an SVG, and returns it as a data URI. This sample generates an image from the text provided.',
         codeFile: './examples/image/text_to_image.ts',
       },
       {
         name: 'Dark mode SVG',
-        content: 'A formula that generates an SVG that adapts if dark mode is enabled. This sample generates an image with static text, which changes color when dark mode is enabled.',
+        content:
+          'A formula that generates an SVG that adapts if dark mode is enabled. This sample generates an image with static text, which changes color when dark mode is enabled.',
         codeFile: './examples/image/hello_dark_mode.ts',
       },
     ],

@@ -17,7 +17,6 @@ import type {PostSetup} from '../types';
 import type {PostSetupMetadata} from '../compiled_types';
 import type {TypedPackFormula} from '../api';
 import {isDynamicSyncTable} from '../api';
-import {setEndpointHelper} from './migration';
 
 // Legacy metadata compilation kept around until we migrate first-party packs.
 export function compilePackMetadata(manifest: PackDefinition): PackMetadata;
@@ -111,6 +110,7 @@ function compilePostSetupStepMetadata(step: PostSetup): PostSetupMetadata {
   const {getOptions, getOptionsFormula, ...rest} = step;
   return {
     ...rest,
-    getOptions: compileMetadataFormulaMetadata(setEndpointHelper(step).getOptions),
+    getOptions: step.getOptions ? compileMetadataFormulaMetadata(step.getOptions) : undefined,
+    getOptionsFormula: step.getOptionsFormula ? compileMetadataFormulaMetadata(step.getOptionsFormula) : undefined,
   };
 }
