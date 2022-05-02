@@ -52,7 +52,7 @@ The fetcher has only one method, [`fetch`][fetch], which accepts an object conta
 ```ts
 context.fetcher.fetch({
   method: "GET",
-  url: "http://www.example.com",
+  url: "https://www.example.com",
 });
 ```
 
@@ -64,12 +64,15 @@ pack.addFormula({
   execute: async ([], context) => {
     let response = await context.fetcher.fetch({
       method: "GET",
-      url: "http://www.example.com",
+      url: "https://www.example.com",
     });
     // Any following code won't run until the response is received.
   },
 });
 ```
+
+!!! info "Only HTTPS supported"
+    The fetcher only supports the HTTP protocol, and requires that the connection be secured with SSL. Specifically only the protocol `https://` is supported.
 
 
 ### In parallel
@@ -159,10 +162,10 @@ Sending attachments (`multipart/form-data`) is not supported.
 
 ### URL query parameters
 
-To send data in the URL query parameters, simply append those parameters to the URL passed to the fetcher. For example, `http://www.example.com?foo=bar&thing=true`. The SDK provides a helper function, [`coda.withQueryParams()`][withQueryParams] that simplifies the process of encoding and appending query parameters to a URL.
+To send data in the URL query parameters, simply append those parameters to the URL passed to the fetcher. For example, `https://www.example.com?foo=bar&thing=true`. The SDK provides a helper function, [`coda.withQueryParams()`][withQueryParams] that simplifies the process of encoding and appending query parameters to a URL.
 
 ```ts
-let url = coda.withQueryParams("http://www.example.com", {
+let url = coda.withQueryParams("https://www.example.com", {
   foo: "bar",
   thing: true,
 });
@@ -175,7 +178,22 @@ let response = await context.fetcher.fetch({
 
 ### Binary {: #binary-body}
 
-Sending binary data (files, images, etc) is currently not supported by the fetcher.
+You can send binary data in the body of a request by passing a [Node.js `Buffer`][buffer] in the `body` field of the request. These buffers can be constructed manually, but are most often are the result of [downloading binary content](#binary-response) from another endpoint.
+
+```ts
+let data = "SGVsbG8gV29ybGQh";
+let buffer = Buffer.from(data, "base64");
+let response = await context.fetcher.fetch({
+  method: "POST",
+  url: "https://www.example.com/upload",
+  headers: {
+    "Content-Type": "text/plain",
+  },
+  body: buffer,
+});
+```
+
+Sending binary data along with other types of content (`multipart/form-data`) is not supported.
 
 
 ## Working with responses

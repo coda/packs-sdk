@@ -617,6 +617,11 @@ export const Examples: Example[] = [
         codeFile: './examples/cats/formula.ts',
       },
       {
+        name: 'Upload images',
+        content: 'An action that downloads images from Coda and uploads them to another service. This sample uploads a list of files to Google Photos.',
+        codeFile: './examples/image/google_photos.ts',
+      },
+      {
         name: 'Attach image data',
         content: 'A sync table that includes images sourced from raw data. This sample syncs files from Dropbox, including their thumbnail images.',
         codeFile: './examples/image/dropbox.ts',
