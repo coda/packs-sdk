@@ -29,6 +29,7 @@ import {print} from './helpers';
 import {readCredentialsFile} from './auth';
 import {storeCredential} from './auth';
 import * as thunk from '../runtime/thunk/thunk';
+import {transformBody} from '../handler_templates';
 import {tryFindFormula} from '../runtime/common/helpers';
 import {tryFindSyncFormula} from '../runtime/common/helpers';
 import util from 'util';
@@ -40,6 +41,7 @@ const MaxSyncIterations = 100;
 export interface ExecuteOptions {
   validateParams?: boolean;
   validateResult?: boolean;
+  useDeprecatedResultNormalization?: boolean;
 }
 
 export interface ContextOptions {
@@ -67,7 +69,11 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
   formulaSpec: T,
   manifest: BasicPackDefinition,
   executionContext: ExecutionContext | SyncExecutionContext,
-  {validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true}: ExecuteOptions = {},
+  {
+    validateParams: shouldValidateParams = true, 
+    validateResult: shouldValidateResult = true, 
+    // TODO(alexd): Switch this to false or remove when we launch 1.0.0
+    useDeprecatedResultNormalization = true}: ExecuteOptions = {},
 ): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
   let formula: TypedPackFormula | undefined;
   switch (formulaSpec.type) {
@@ -82,11 +88,30 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
   if (shouldValidateParams && formula) {
     validateParams(formula, params);
   }
-  const result = await thunk.findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, false);
+  let result = await thunk.findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, false);
+
+  if (useDeprecatedResultNormalization && formula) {
+    const resultToNormalize = formulaSpec.type === FormulaType.Sync
+      ? (result as GenericSyncFormulaResult).result 
+      : result;
+
+    // Matches legacy behavior within handler_templates:generateObjectResponseHandler where we never 
+    // called transform body on non-object responses.
+    if (typeof resultToNormalize === 'object') {
+      const schema = executionContext?.sync?.schema ?? formula.schema;
+      const normalizedResult = transformBody(resultToNormalize, schema)
+      if (formulaSpec.type === FormulaType.Sync) {
+        (result as GenericSyncFormulaResult).result = normalizedResult;
+      } else {
+        result = normalizedResult;
+      }
+    }
+  }
 
   if (shouldValidateResult && formula) {
-    const resultToValidate =
-      formulaSpec.type === FormulaType.Sync ? (result as GenericSyncFormulaResult).result : result;
+    const resultToValidate = formulaSpec.type === FormulaType.Sync 
+      ? (result as GenericSyncFormulaResult).result 
+      : result;
     validateResult(formula, resultToValidate);
   }
 
@@ -322,7 +347,11 @@ export async function executeSyncFormulaFromPackDef<T extends object = any>(
   syncFormulaName: string,
   params: ParamValues<ParamDefs>,
   context?: SyncExecutionContext,
-  {validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true}: ExecuteOptions = {},
+  {
+    validateParams: shouldValidateParams = true, 
+    validateResult: shouldValidateResult = true, 
+    useDeprecatedResultNormalization = true,
+  }: ExecuteOptions = {},
   {useRealFetcher, manifestPath}: ContextOptions = {},
 ): Promise<T[]> {
   const formula = findSyncFormula(packDef, syncFormulaName);
@@ -357,7 +386,7 @@ export async function executeSyncFormulaFromPackDef<T extends object = any>(
       {formulaName: syncFormulaName, type: FormulaType.Sync},
       packDef,
       executionContext,
-      {validateParams: false, validateResult: false},
+      {validateParams: false, validateResult: false, useDeprecatedResultNormalization},
     );
 
     result.push(...response.result);

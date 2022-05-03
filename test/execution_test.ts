@@ -37,13 +37,33 @@ describe('Execution', () => {
     assert.equal(result, 25);
   });
 
-  it('executes a formula by name w/o namespace', async () => {
-    const result = await executeFormulaFromPackDef(fakePack, 'Square', [5]);
-    assert.equal(result, 25);
+  it('executes an object formula without normalization', async () => {
+    const result = await executeFormulaFromPackDef(fakePack, 'Person', ['Alice']);
+    assert.deepEqual(result, {Name: 'Alice'});
+  });
+
+  it('executes a formula without normalization', async () => {
+    const result = await executeFormulaFromPackDef(
+      fakePack, 
+      'Person', 
+      ['Alice'], 
+      undefined, 
+      {useDeprecatedResultNormalization: false});
+    assert.deepEqual(result, {name: 'Alice'});
   });
 
   it('executes a sync formula by name', async () => {
     const result = await executeSyncFormulaFromPackDef(fakePack, 'Students', ['Smith']);
+    assert.deepEqual(result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
+  });
+
+  it('executed a sync formulas without normalization', async () => {
+    const result = await executeSyncFormulaFromPackDef(
+      fakePack, 
+      'Students', 
+      ['Smith'], 
+      undefined, 
+      {validateParams: true, validateResult: true, useDeprecatedResultNormalization: false});
     assert.deepEqual(result, [{name: 'Alice'}, {name: 'Bob'}, {name: 'Chris'}, {name: 'Diana'}]);
   });
 
@@ -207,7 +227,7 @@ describe('Execution', () => {
               }),
             },
             execute: async ([valid]) => {
-              return valid ? {Foo: 'blah'} : {Foo: 123};
+              return valid ? {foo: 'blah'} : {foo: 123};
             },
           }),
         ],
@@ -299,14 +319,14 @@ describe('Execution', () => {
 
       it('empty id value', async () => {
         await testHelper.willBeRejectedWith(
-          executeFormulaFromPackDef(defaultPack, 'ObjectFormula', [JSON.stringify({StringVal: '', NumberVal: 0})]),
+          executeFormulaFromPackDef(defaultPack, 'ObjectFormula', [JSON.stringify({stringVal: '', numberVal: 0})]),
           /Schema declares "StringVal" as an id property but an empty value was found in result./,
         );
       });
 
       it('valid return value', async () => {
         await executeFormulaFromPackDef(defaultPack, 'ObjectFormula', [
-          JSON.stringify({StringVal: 'foo', NumberVal: 1}),
+          JSON.stringify({stringVal: 'foo', numberVal: 1}),
         ]);
       });
     });

@@ -26,6 +26,7 @@ This changelog keeps track of all changes to the packs-sdk. We follow convention
 - **Future Breaking Change** The `defaultValue` property of parameter definitions will be renamed to `suggestedValue` to reflect that these are values that do not act as a true default but rather prepopulates a value when used.
 - **Future Breaking Change** Added support for files as parameters with `ParameterType.File`. Previously, files could be used as parameters by using the `ParameterType.Image` parameter type, but an error would show in the formula builder. In the future, this error may be enforced such that only image files will be allowed to be used when a parameter is specified to be a `ParameterType.Image`.
 - **Future Breaking Change** Fetcher will automatically decompress responses with a gzip or deflate content encoding.
+- **Future Breaking Change** Test framework will no longer normalize object output using the schema. (This will continue to work when executing the pack within Coda)
 
 ### Removed
 
