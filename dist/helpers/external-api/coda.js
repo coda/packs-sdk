@@ -10,7 +10,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Client = exports.isResponseError = exports.ResponseError = void 0;
 require("es6-promise/auto");
-require("isomorphic-fetch");
+require("cross-fetch/polyfill");
 const url_1 = require("../url");
 class ResponseError extends Error {
     constructor(response) {

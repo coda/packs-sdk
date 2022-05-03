@@ -1,4 +1,4 @@
-import 'isomorphic-fetch';
+import 'cross-fetch/polyfill';
 import {HttpStatusCode} from './constants';
 import type {OAuth2Authentication} from '../types';
 import {exec} from 'child_process';

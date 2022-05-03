@@ -8,7 +8,7 @@
  */
 
 import 'es6-promise/auto';
-import 'isomorphic-fetch';
+import 'cross-fetch/polyfill';
 import {withQueryParams} from '../url';
 import * as types from './v1';
 
