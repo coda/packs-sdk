@@ -266,7 +266,7 @@ ___
 
 • `Optional` **useProofKeyForCodeExchange**: `boolean`
 
-Option to apply PKCE (Proof Key for Code Exchange) OAuth2 extension. With PKCE extention,
+Option to apply PKCE (Proof Key for Code Exchange) OAuth2 extension. With PKCE extension,
 a `code_challenge` parameter and a `code_challenge_method` parameter will be sent to the
 authorization page. A `code_verifier` parameter will be sent to the token exchange API as
 well.
