@@ -946,8 +946,8 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
  * });
  */
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
-    description: string;
     name: string;
+    description: string;
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
     examples?: {
@@ -987,8 +987,8 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
  * ```
  */
 export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: EmptyFormulaDef<ParamDefsT>): {
-    description: string;
     name: string;
+    description: string;
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
     examples?: {
