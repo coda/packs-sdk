@@ -1498,25 +1498,10 @@ available-typed-arrays@^1.0.2:
   resolved "https://registry.npmjs.org/available-typed-arrays/-/available-typed-arrays-1.0.4.tgz"
   integrity sha512-SA5mXJWrId1TaQjfxUYghbqQ/hYioKmLJvPJyDuYRtXXenFNMjj4hSSt1Cf1xsuXSXrtxrVC5Ot4eU6cOtBDdA==
 
-aws-sdk@*:
-  version "2.1083.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1083.0.tgz#afdc3d99d035b84b1dc75437f7670af0078ed2ab"
-  integrity sha512-o9pOC3LrkJRKLwSumdFrNWzGAVRNPGt4EFS48/917BaFafvnOAzOG/DM8cl5yguz3wT7eylj92I4pP2TE3qZIQ==
-  dependencies:
-    buffer "4.9.2"
-    events "1.1.1"
-    ieee754 "1.1.13"
-    jmespath "0.16.0"
-    querystring "0.2.0"
-    sax "1.2.1"
-    url "0.10.3"
-    uuid "3.3.2"
-    xml2js "0.4.19"
-
-aws-sdk@^2.1112.0:
-  version "2.1112.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1112.0.tgz#7e6f60df562ebd909a9435b01673ed7685e10ffd"
-  integrity sha512-8FKr3zwD2bHZQLmxJ7d1VwvDkW9kKx4YPdNXawV+CqNUzQC/9ZmSmHyx8mZCv6J722tqxIZh5c567499QawuZw==
+aws-sdk@*, aws-sdk@^2.1126.0:
+  version "2.1126.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1126.0.tgz#52e42358bdcba0043b6ff6b8e17d5aaacd9a93be"
+  integrity sha512-8yeeYFXOwbJIUHIJZlrcgWGvLPi+yayKc2h/+hnNLdnp/u+LUuJqMDH/19fogAai8PANSqI7N9fGkMIBZDrThQ==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
