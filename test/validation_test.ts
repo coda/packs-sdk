@@ -85,7 +85,7 @@ describe('Property validation in objects', () => {
     examples: [],
     parameters: [makeBooleanParameter('boolParam', 'Pass in a boolean (malformed is ok)')],
     execute: async ([boolParam]) => {
-      return {Bool: boolParam};
+      return {bool: boolParam};
     },
     response: {
       schema: fakeSchema,
@@ -98,7 +98,7 @@ describe('Property validation in objects', () => {
     examples: [],
     parameters: [makeStringParameter('dateParam', 'Pass in a date (malformed is ok)')],
     execute: async ([dateParam]) => {
-      return {Date: dateParam};
+      return {date: dateParam};
     },
     response: {
       schema: fakeSchema,
@@ -111,7 +111,7 @@ describe('Property validation in objects', () => {
     examples: [],
     parameters: [makeNumericParameter('number', 'Pass in a number (malformed is ok)')],
     execute: async ([numberParam]) => {
-      return {Slider: numberParam};
+      return {slider: numberParam};
     },
     response: {
       schema: fakeSchema,
@@ -124,7 +124,7 @@ describe('Property validation in objects', () => {
     examples: [],
     parameters: [makeNumericParameter('number', 'Pass in a number (malformed is ok)')],
     execute: async ([numberParam]) => {
-      return {Scale: numberParam};
+      return {scale: numberParam};
     },
     response: {
       schema: fakeSchema,
@@ -137,7 +137,7 @@ describe('Property validation in objects', () => {
     examples: [],
     parameters: [makeStringParameter('string', 'Pass in a string (malformed is ok)')],
     execute: async ([stringParam]) => {
-      return {Url: stringParam};
+      return {url: stringParam};
     },
     response: {
       schema: fakeSchema,
@@ -150,7 +150,7 @@ describe('Property validation in objects', () => {
     examples: [],
     parameters: [makeStringParameter('string', 'Pass in a string (malformed is ok)')],
     execute: async ([stringParam]) => {
-      return {Email: stringParam};
+      return {email: stringParam};
     },
     response: {
       schema: fakeSchema,
@@ -163,7 +163,7 @@ describe('Property validation in objects', () => {
     examples: [],
     parameters: [makeStringArrayParameter('string', 'Pass in an array of strings')],
     execute: async ([stringArray]) => {
-      return {Names: stringArray};
+      return {names: stringArray};
     },
     response: {
       schema: fakeSchema,
@@ -179,7 +179,7 @@ describe('Property validation in objects', () => {
       makeBooleanParameter('returnMalformed', 'whether or not to return a malformed response'),
     ],
     execute: async ([email, malformed]) => {
-      return malformed ? {Person: {EmailAddress: email}} : {Person: {Email: email}};
+      return malformed ? {person: {emailAddress: email}} : {person: {email}};
     },
     response: {
       schema: fakeSchema,
@@ -192,7 +192,7 @@ describe('Property validation in objects', () => {
     examples: [],
     parameters: [makeBooleanParameter('returnMalformed', 'whether or not to return a malformed response')],
     execute: async ([malformed]) => {
-      return malformed ? {Ref: {Name: 'Test'}} : {Ref: {Reference: 'foobar', Name: 'Test'}};
+      return malformed ? {ref: {name: 'Test'}} : {ref: {reference: 'foobar', name: 'Test'}};
     },
     response: {
       schema: fakeSchema,
@@ -205,7 +205,7 @@ describe('Property validation in objects', () => {
     examples: [],
     parameters: [makeBooleanParameter('returnMalformed', 'whether or not to return a malformed response')],
     execute: async ([malformed]) => {
-      return {Nested: {String: 'foo', Number: malformed ? '123' : 123, Bool: false}};
+      return {nested: {string: 'foo', number: malformed ? '123' : 123, bool: false}};
     },
     response: {
       schema: fakeSchema,
@@ -402,16 +402,16 @@ describe('validation in sync tables', () => {
               case undefined:
                 return {
                   result: [
-                    {Name: 'Alice', Info: {Age: malformed ? '100' : 100, Grade: 1}},
-                    {Name: 'Bob', Info: {Age: 100, Grade: 1}},
+                    {name: 'Alice', info: {age: malformed ? '100' : 100, grade: 1}},
+                    {name: 'Bob', info: {age: 100, grade: 1}},
                   ],
                   continuation: {page: 2},
                 } as any;
               case 2:
                 return {
                   result: [
-                    {Name: 'Chris', Info: {Age: 100, Grade: 1}},
-                    {Name: 'Diana', Info: {Age: 100, Grade: 1}},
+                    {name: 'Chris', info: {age: 100, grade: 1}},
+                    {name: 'Diana', info: {age: 100, grade: 1}},
                   ],
                 };
               default:
