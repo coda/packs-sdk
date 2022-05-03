@@ -20,7 +20,7 @@
       "request": "launch",
       "name": "Debug current file with mocha",
       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
-      "runtimeExecutable": "${env:NVM_BIN}/node",
+      "runtimeExecutable": "${workspaceRoot}/../packs/build/node/bin/node",
       "stopOnEntry": false,
       "runtimeArgs": ["--allow-natives-syntax"],
       "args": ["--no-timeouts", "--config", "${workspaceRoot}/.mocharc.json", "--inspect", "${relativeFile}"],

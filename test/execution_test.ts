@@ -37,14 +37,34 @@ describe('Execution', () => {
     assert.equal(result, 25);
   });
 
-  it('executes a formula by name w/o namespace', async () => {
-    const result = await executeFormulaFromPackDef(fakePack, 'Square', [5]);
-    assert.equal(result, 25);
+  it('executes an object formula without normalization', async () => {
+    const result = await executeFormulaFromPackDef(fakePack, 'Person', ['Alice']);
+    assert.deepEqual(result, {Name: 'Alice'});
+  });
+
+  it('executes a formula without normalization', async () => {
+    const result = await executeFormulaFromPackDef(
+      fakePack, 
+      'Person', 
+      ['Alice'], 
+      undefined, 
+      {useDeprecatedResultNormalization: false});
+    assert.deepEqual(result, {name: 'Alice'});
   });
 
   it('executes a sync formula by name', async () => {
     const result = await executeSyncFormulaFromPackDef(fakePack, 'Students', ['Smith']);
     assert.deepEqual(result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
+  });
+
+  it('executed a sync formulas without normalization', async () => {
+    const result = await executeSyncFormulaFromPackDef(
+      fakePack, 
+      'Students', 
+      ['Smith'], 
+      undefined, 
+      {validateParams: true, validateResult: true, useDeprecatedResultNormalization: false});
+    assert.deepEqual(result, [{name: 'Alice'}, {name: 'Bob'}, {name: 'Chris'}, {name: 'Diana'}]);
   });
 
   it('executes a formula by name with VM', async () => {
@@ -62,7 +82,7 @@ describe('Execution', () => {
       params: ['Smith'],
       bundlePath,
     });
-    assert.deepEqual(result, {result: [{Name: 'Alice'}, {Name: 'Bob'}], continuation: {page: 2}});
+    assert.deepEqual(result, {result: [{name: 'Alice'}, {name: 'Bob'}], continuation: {page: 2}});
   });
 
   it('exercises timer shim in VM', async () => {

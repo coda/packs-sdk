@@ -33,7 +33,6 @@ import type {UnionType} from './api_types';
 import {ValueType} from './schema';
 import {booleanArray} from './api_types';
 import {dateArray} from './api_types';
-import {ensureExists} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
 import {fileArray} from './api_types';
 import {generateObjectResponseHandler} from './handler_templates';
@@ -46,7 +45,6 @@ import {normalizeSchema} from './schema';
 import {numberArray} from './api_types';
 import {objectSchemaHelper} from './helpers/migration';
 import {stringArray} from './api_types';
-import {transformBody} from './handler_templates';
 
 export {ExecutionContext};
 export {FetchRequest} from './api_types';
@@ -842,17 +840,6 @@ export function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueT
     }
     default:
       return ensureUnreachable(fullDefinition);
-  }
-
-  if ([ValueType.Object, ValueType.Array].includes(fullDefinition.resultType)) {
-    const wrappedExecute = formula.execute;
-    formula.execute = async function (params: ParamValues<ParamDefsT>, context: ExecutionContext) {
-      const result = await wrappedExecute(params, context);
-      return transformBody(
-        result,
-        ensureExists(formula.schema, `Please define a schema for your "${formula.name}" formula.`),
-      );
-    };
   }
 
   const onError = fullDefinition.onError;
