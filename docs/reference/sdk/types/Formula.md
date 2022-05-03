@@ -21,4 +21,4 @@ pack, like an autocomplete metadata formula or a sync getter formula.
 
 #### Defined in
 
-[api.ts:584](https://github.com/coda/packs-sdk/blob/main/api.ts#L584)
+[api.ts:585](https://github.com/coda/packs-sdk/blob/main/api.ts#L585)

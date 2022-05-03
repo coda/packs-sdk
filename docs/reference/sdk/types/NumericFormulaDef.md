@@ -15,4 +15,4 @@ A definition accepted by [makeFormula](../functions/makeFormula.md) for a formul
 
 #### Defined in
 
-[api.ts:890](https://github.com/coda/packs-sdk/blob/main/api.ts#L890)
+[api.ts:891](https://github.com/coda/packs-sdk/blob/main/api.ts#L891)

@@ -2518,7 +2518,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
 	identity?: Identity;
-}>({ name, description, identityName, schema: schemaDef, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
+}>({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
 /**
  * Creates a dynamic sync table definition.
  *

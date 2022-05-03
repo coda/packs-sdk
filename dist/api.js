@@ -7,13 +7,14 @@ const api_types_3 = require("./api_types");
 const schema_1 = require("./schema");
 const api_types_4 = require("./api_types");
 const api_types_5 = require("./api_types");
+const object_utils_1 = require("./helpers/object_utils");
 const ensure_1 = require("./helpers/ensure");
 const api_types_6 = require("./api_types");
 const handler_templates_1 = require("./handler_templates");
 const handler_templates_2 = require("./handler_templates");
 const api_types_7 = require("./api_types");
 const api_types_8 = require("./api_types");
-const object_utils_1 = require("./helpers/object_utils");
+const object_utils_2 = require("./helpers/object_utils");
 const schema_2 = require("./schema");
 const schema_3 = require("./schema");
 const api_types_9 = require("./api_types");
@@ -115,7 +116,7 @@ function wrapGetSchema(getSchema) {
         ...getSchema,
         execute(params, context) {
             const schema = getSchema.execute(params, context);
-            if ((0, object_utils_1.isPromise)(schema)) {
+            if ((0, object_utils_2.isPromise)(schema)) {
                 return schema.then(value => transformToArraySchema(value));
             }
             else {
@@ -614,9 +615,11 @@ exports.makeObjectFormula = makeObjectFormula;
  *
  * See [Normalization](/index.html#normalization) for more information about schema normalization.
  */
-function makeSyncTable({ name, description, identityName, schema: schemaDef, formula, connectionRequirement, dynamicOptions = {}, }) {
+function makeSyncTable({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, }) {
     const { getSchema: getSchemaDef, entityName, defaultAddDynamicColumns } = dynamicOptions;
     const { execute: wrappedExecute, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
+    // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
+    const schemaDef = (0, object_utils_1.deepCopy)(inputSchema);
     // Hydrate the schema's identity.
     // We don't fail on a missing identityName because the legacy functions don't set it.
     if (identityName) {
