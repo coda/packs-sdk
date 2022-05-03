@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -40,6 +44,7 @@ const helpers_5 = require("./helpers");
 const auth_1 = require("./auth");
 const auth_2 = require("./auth");
 const thunk = __importStar(require("../runtime/thunk/thunk"));
+const handler_templates_1 = require("../handler_templates");
 const helpers_6 = require("../runtime/common/helpers");
 const helpers_7 = require("../runtime/common/helpers");
 const util_1 = __importDefault(require("util"));
@@ -56,7 +61,10 @@ function resolveFormulaNameWithNamespace(formulaNameWithNamespace) {
     }
     return name;
 }
-async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true } = {}) {
+async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, 
+// TODO(alexd): Switch this to false or remove when we launch 1.0.0
+useDeprecatedResultNormalization = true } = {}) {
+    var _a, _b;
     let formula;
     switch (formulaSpec.type) {
         case types_1.FormulaType.Standard:
@@ -69,9 +77,28 @@ async function findAndExecutePackFunction(params, formulaSpec, manifest, executi
     if (shouldValidateParams && formula) {
         (0, validation_1.validateParams)(formula, params);
     }
-    const result = await thunk.findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, false);
+    let result = await thunk.findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, false);
+    if (useDeprecatedResultNormalization && formula) {
+        const resultToNormalize = formulaSpec.type === types_1.FormulaType.Sync
+            ? result.result
+            : result;
+        // Matches legacy behavior within handler_templates:generateObjectResponseHandler where we never 
+        // called transform body on non-object responses.
+        if (typeof resultToNormalize === 'object') {
+            const schema = (_b = (_a = executionContext === null || executionContext === void 0 ? void 0 : executionContext.sync) === null || _a === void 0 ? void 0 : _a.schema) !== null && _b !== void 0 ? _b : formula.schema;
+            const normalizedResult = (0, handler_templates_1.transformBody)(resultToNormalize, schema);
+            if (formulaSpec.type === types_1.FormulaType.Sync) {
+                result.result = normalizedResult;
+            }
+            else {
+                result = normalizedResult;
+            }
+        }
+    }
     if (shouldValidateResult && formula) {
-        const resultToValidate = formulaSpec.type === types_1.FormulaType.Sync ? result.result : result;
+        const resultToValidate = formulaSpec.type === types_1.FormulaType.Sync
+            ? result.result
+            : result;
         (0, validation_2.validateResult)(formula, resultToValidate);
     }
     return result;
@@ -207,7 +234,7 @@ exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
  *
  * For now, use `coda execute --vm` to simulate that level of isolation.
  */
-async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true } = {}, { useRealFetcher, manifestPath } = {}) {
+async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, useDeprecatedResultNormalization = true, } = {}, { useRealFetcher, manifestPath } = {}) {
     const formula = (0, helpers_2.findSyncFormula)(packDef, syncFormulaName);
     if (shouldValidateParams && formula) {
         (0, validation_1.validateParams)(formula, params);
@@ -228,7 +255,7 @@ async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, c
         if (iterations > MaxSyncIterations) {
             throw new Error(`Sync is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`);
         }
-        const response = await findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.Sync }, packDef, executionContext, { validateParams: false, validateResult: false });
+        const response = await findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.Sync }, packDef, executionContext, { validateParams: false, validateResult: false, useDeprecatedResultNormalization });
         result.push(...response.result);
         executionContext.sync.continuation = response.continuation;
         iterations++;

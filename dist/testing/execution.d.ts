@@ -14,6 +14,7 @@ import util from 'util';
 export interface ExecuteOptions {
     validateParams?: boolean;
     validateResult?: boolean;
+    useDeprecatedResultNormalization?: boolean;
 }
 export interface ContextOptions {
     useRealFetcher?: boolean;
@@ -62,7 +63,7 @@ export declare function executeFormulaOrSyncWithRawParams<T extends StandardForm
  *
  * For now, use `coda execute --vm` to simulate that level of isolation.
  */
-export declare function executeSyncFormulaFromPackDef<T extends object = any>(packDef: BasicPackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult }?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<T[]>;
+export declare function executeSyncFormulaFromPackDef<T extends object = any>(packDef: BasicPackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult, useDeprecatedResultNormalization, }?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<T[]>;
 /**
  * Executes a single sync iteration, and returns the return value from the sync formula
  * including the continuation, for inspection.

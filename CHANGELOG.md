@@ -8,6 +8,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - Added "useProofKeyForCodeExchange" option to OAuth2 authentication to support PKCE extension. While it's optionally supported by most OAuth2 providers, it might be required by some websites (e.g. Twitter).
 
+### Changed
+
+- **Future Breaking Change** Test framework will no longer normalize object output using the schema. (This will continue to work when executing the pack within Coda)
+
 ## [0.11.0] - 2022-05-03
 
 ### Added
