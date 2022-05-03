@@ -103,7 +103,7 @@ ___
 
 ### method
 
-• **method**: ``"GET"`` \| ``"PATCH"`` \| ``"POST"`` \| ``"PUT"`` \| ``"DELETE"``
+• **method**: ``"GET"`` \| ``"PATCH"`` \| ``"POST"`` \| ``"PUT"`` \| ``"DELETE"`` \| ``"HEAD"``
 
 The HTTP method/verb (e.g. GET or POST).
 

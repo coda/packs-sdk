@@ -210,7 +210,7 @@ var NetworkConnection;
     NetworkConnection["Required"] = "required";
 })(NetworkConnection = exports.NetworkConnection || (exports.NetworkConnection = {}));
 /** The HTTP methods (verbs) supported by the fetcher. */
-exports.ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE'];
+exports.ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE', 'HEAD'];
 // A mapping exists in coda that allows these to show up in the UI.
 // If adding new values here, add them to that mapping and vice versa.
 /**
