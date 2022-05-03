@@ -15,4 +15,4 @@ Identifies this as Various authentication.
 
 #### Defined in
 
-[types.ts:567](https://github.com/coda/packs-sdk/blob/main/types.ts#L567)
+[types.ts:579](https://github.com/coda/packs-sdk/blob/main/types.ts#L579)

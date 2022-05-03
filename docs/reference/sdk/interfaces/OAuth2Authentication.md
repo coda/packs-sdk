@@ -259,3 +259,22 @@ Identifies this as OAuth2 authentication.
 #### Defined in
 
 [types.ts:365](https://github.com/coda/packs-sdk/blob/main/types.ts#L365)
+
+___
+
+### useProofKeyForCodeExchange
+
+• `Optional` **useProofKeyForCodeExchange**: `boolean`
+
+Option to apply PKCE (Proof Key for Code Exchange) OAuth2 extension. With PKCE extension,
+a `code_challenge` parameter and a `code_challenge_method` parameter will be sent to the
+authorization page. A `code_verifier` parameter will be sent to the token exchange API as
+well.
+
+`code_challenge_method` will be using SHA256.
+
+See https://datatracker.ietf.org/doc/html/rfc7636 for more details.
+
+#### Defined in
+
+[types.ts:433](https://github.com/coda/packs-sdk/blob/main/types.ts#L433)
