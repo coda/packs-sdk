@@ -39,7 +39,7 @@ _bootstrap-python-requirements:
 	# Ensure requirements.txt (used by Read the Docs) is in sync.
 	# Keep this separate from _bootstrap-python since the output changes based
 	# on the version of pipenv installed.
-	${PIPENV} lock -r > requirements.txt
+	${PIPENV} requirements > requirements.txt
 
 
 .PHONY: _bootstrap-githooks
