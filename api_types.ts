@@ -460,7 +460,7 @@ export interface Network {
 }
 
 /** The HTTP methods (verbs) supported by the fetcher. */
-export const ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE'] as const;
+export const ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE', 'HEAD'] as const;
 /** The type of the HTTP methods (verbs) supported by the fetcher. */
 export type FetchMethodType = typeof ValidFetchMethods[number];
 

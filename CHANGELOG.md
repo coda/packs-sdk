@@ -11,6 +11,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Changed
 
 - **Future Breaking Change** Test framework will no longer normalize object output using the schema. (This will continue to work when executing the pack within Coda)
+- Added support for making `HEAD` HTTP requests using the fetcher.
 
 ## [0.11.0] - 2022-05-03
 

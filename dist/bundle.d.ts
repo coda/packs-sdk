@@ -1312,7 +1312,8 @@ export declare const ValidFetchMethods: readonly [
 	"PATCH",
 	"POST",
 	"PUT",
-	"DELETE"
+	"DELETE",
+	"HEAD"
 ];
 /** The type of the HTTP methods (verbs) supported by the fetcher. */
 export declare type FetchMethodType = typeof ValidFetchMethods[number];

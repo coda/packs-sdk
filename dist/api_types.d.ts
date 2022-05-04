@@ -350,7 +350,7 @@ export interface Network {
     readonly connection?: NetworkConnection;
 }
 /** The HTTP methods (verbs) supported by the fetcher. */
-export declare const ValidFetchMethods: readonly ["GET", "PATCH", "POST", "PUT", "DELETE"];
+export declare const ValidFetchMethods: readonly ["GET", "PATCH", "POST", "PUT", "DELETE", "HEAD"];
 /** The type of the HTTP methods (verbs) supported by the fetcher. */
 export declare type FetchMethodType = typeof ValidFetchMethods[number];
 /**
