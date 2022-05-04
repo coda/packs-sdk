@@ -25,7 +25,7 @@ this sync table (including autocomplete formulas).
 
 #### Defined in
 
-[api.ts:1414](https://github.com/coda/packs-sdk/blob/main/api.ts#L1414)
+[api.ts:1415](https://github.com/coda/packs-sdk/blob/main/api.ts#L1415)
 
 ___
 
@@ -49,7 +49,7 @@ into the hands of the user.
 
 #### Defined in
 
-[api.ts:1430](https://github.com/coda/packs-sdk/blob/main/api.ts#L1430)
+[api.ts:1431](https://github.com/coda/packs-sdk/blob/main/api.ts#L1431)
 
 ___
 
@@ -63,7 +63,7 @@ This should describe what the dynamic sync table does in a more detailed languag
 
 #### Defined in
 
-[api.ts:1366](https://github.com/coda/packs-sdk/blob/main/api.ts#L1366)
+[api.ts:1367](https://github.com/coda/packs-sdk/blob/main/api.ts#L1367)
 
 ___
 
@@ -77,7 +77,7 @@ of `identity.name` from your schema will be used instead, so in most cases you d
 
 #### Defined in
 
-[api.ts:1409](https://github.com/coda/packs-sdk/blob/main/api.ts#L1409)
+[api.ts:1410](https://github.com/coda/packs-sdk/blob/main/api.ts#L1410)
 
 ___
 
@@ -92,7 +92,7 @@ These will eventually be consolidated.)
 
 #### Defined in
 
-[api.ts:1403](https://github.com/coda/packs-sdk/blob/main/api.ts#L1403)
+[api.ts:1404](https://github.com/coda/packs-sdk/blob/main/api.ts#L1404)
 
 ___
 
@@ -107,7 +107,7 @@ of the table data. This is typically a browser-friendly form of the
 
 #### Defined in
 
-[api.ts:1391](https://github.com/coda/packs-sdk/blob/main/api.ts#L1391)
+[api.ts:1392](https://github.com/coda/packs-sdk/blob/main/api.ts#L1392)
 
 ___
 
@@ -119,7 +119,7 @@ A formula that returns the name of this table.
 
 #### Defined in
 
-[api.ts:1370](https://github.com/coda/packs-sdk/blob/main/api.ts#L1370)
+[api.ts:1371](https://github.com/coda/packs-sdk/blob/main/api.ts#L1371)
 
 ___
 
@@ -131,7 +131,7 @@ A formula that returns the schema for this table.
 
 #### Defined in
 
-[api.ts:1384](https://github.com/coda/packs-sdk/blob/main/api.ts#L1384)
+[api.ts:1385](https://github.com/coda/packs-sdk/blob/main/api.ts#L1385)
 
 ___
 
@@ -149,7 +149,7 @@ FUTURE BREAKING CHANGE: This will become required for all new Pack version build
 
 #### Defined in
 
-[api.ts:1380](https://github.com/coda/packs-sdk/blob/main/api.ts#L1380)
+[api.ts:1381](https://github.com/coda/packs-sdk/blob/main/api.ts#L1381)
 
 ___
 
@@ -162,7 +162,7 @@ used to create an instance of this dynamic sync table.
 
 #### Defined in
 
-[api.ts:1396](https://github.com/coda/packs-sdk/blob/main/api.ts#L1396)
+[api.ts:1397](https://github.com/coda/packs-sdk/blob/main/api.ts#L1397)
 
 ___
 
@@ -178,7 +178,7 @@ is returned by the `getName` formula.
 
 #### Defined in
 
-[api.ts:1360](https://github.com/coda/packs-sdk/blob/main/api.ts#L1360)
+[api.ts:1361](https://github.com/coda/packs-sdk/blob/main/api.ts#L1361)
 
 ___
 
@@ -193,4 +193,4 @@ in placeholderSchema will be rendered by default after the sync.
 
 #### Defined in
 
-[api.ts:1437](https://github.com/coda/packs-sdk/blob/main/api.ts#L1437)
+[api.ts:1438](https://github.com/coda/packs-sdk/blob/main/api.ts#L1438)

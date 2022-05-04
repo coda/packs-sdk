@@ -16,4 +16,4 @@ The base class for pack formula descriptors. Subclasses vary based on the return
 
 #### Defined in
 
-[api.ts:543](https://github.com/coda/packs-sdk/blob/main/api.ts#L543)
+[api.ts:544](https://github.com/coda/packs-sdk/blob/main/api.ts#L544)
