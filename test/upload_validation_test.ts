@@ -771,6 +771,61 @@ describe('Pack metadata Validation', () => {
         ]);
       });
 
+      it('allows a schema object to be reused in 2 sync tables', async () => {
+        const MySchema = makeObjectSchema({
+          properties: {
+            name: {type: ValueType.String},
+            // Add more properties here.
+          },
+          idProperty: 'name',
+          displayProperty: 'name',
+        });
+
+        const table1 = makeSyncTable({
+          name: 'One',
+          description: 'The first sync table.',
+          identityName: 'IdOne',
+          schema: MySchema,
+          formula: {
+            name: 'SyncThings',
+            description: 'Sync some things.',
+            parameters: [],
+            async execute([]) {
+              return {
+                result: [],
+              };
+            },
+          },
+        });
+        const table2 = makeSyncTable({
+          name: 'Two',
+          description: 'The second sync table.',
+          identityName: 'IdTwo',
+          schema: MySchema,
+          formula: {
+            name: 'SyncThings',
+            description: 'Sync some things.',
+            parameters: [],
+            async execute([]) {
+              return {
+                result: [],
+              };
+            },
+          },
+        });
+        const metadata = createFakePack({
+          syncTables: [table1, table2],
+        });
+        const validatedMetadata = await validateJson(metadata);
+
+        const {schema: schema1} = validatedMetadata.syncTables[0];
+        const {schema: schema2} = validatedMetadata.syncTables[1];
+        assert.ok(schema1);
+        assert.ok(schema2);
+        assert.deepEqual(schema1.identity, {name: 'IdOne'});
+        assert.deepEqual(schema2.identity, {name: 'IdTwo'});
+      });
+
       it('legacy wrapper requires inline identity name', async () => {
         const syncTable = makeSyncTableLegacy(
           'SyncTable',

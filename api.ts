@@ -33,6 +33,7 @@ import type {UnionType} from './api_types';
 import {ValueType} from './schema';
 import {booleanArray} from './api_types';
 import {dateArray} from './api_types';
+import {deepCopy} from './helpers/object_utils';
 import {ensureExists} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
 import {fileArray} from './api_types';
@@ -1473,13 +1474,16 @@ export function makeSyncTable<
   name,
   description,
   identityName,
-  schema: schemaDef,
+  schema: inputSchema,
   formula,
   connectionRequirement,
   dynamicOptions = {},
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {getSchema: getSchemaDef, entityName, defaultAddDynamicColumns} = dynamicOptions;
   const {execute: wrappedExecute, ...definition} = maybeRewriteConnectionForFormula(formula, connectionRequirement);
+
+  // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
+  const schemaDef = deepCopy(inputSchema);
 
   // Hydrate the schema's identity.
   // We don't fail on a missing identityName because the legacy functions don't set it.
