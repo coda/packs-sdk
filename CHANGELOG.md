@@ -25,8 +25,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ### Changed
 
-- **Breaking Change** Added a validation rule that prevents the usage of varargsParameters for sync table getters
-  which are not currently supported in the UI.
+- **Breaking Change** Added a validation rule that prevents the usage of varargsParameters for sync table getters which are not currently supported in the UI.
 - **Breaking Change** Packs with multiple network domains and user authentication must select only one of those domains to receive the authentication headers/parameters.
 - **Breaking Change** The `identityName` field of a sync table formerly silently overrode the `identity.name` of the table's schema (if present). Now, if those 2 values are both present, they must be equal. We recommend only specifying `identity.name` on reference schemas.
 - **Breaking Change** Fetcher will automatically decompress responses with a gzip or deflate content encoding.
