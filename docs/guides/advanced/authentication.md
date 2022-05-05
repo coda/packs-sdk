@@ -39,7 +39,7 @@ In the formula editor the account is shown as the first parameter to the formula
 
 There are two supported forms of authentication: per-user and system-wide.
 
-### Per-user authentication
+### Per-user authentication {: #user}
 
 User authentication requires that users of the Pack provide their own credentials. This is the most common form of authentication, as it allows the Pack to access the private data of each user. To add per-user authentication use the `setUserAuthentication()` method:
 
@@ -53,7 +53,7 @@ pack.setUserAuthentication({
 
 The types of authentication supported, as well as the additional settings, are described in the sections below.
 
-### System-wide authentication
+### System-wide authentication {: #system}
 
 System authentication requires the Pack maker to provide a single set of credentials that all users will share. This form of authentication is often used for APIs that require an API key or token, but don't provide access to private data. To add system-wide authentication use the `setSystemAuthentication()` method:
 
