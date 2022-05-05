@@ -308,6 +308,13 @@ const setEndpointPostSetupValidator = zodCompleteObject<SetEndpoint>({
   'Either getOptions or getOptionsFormula must be specified.',
 );
 
+const singleAuthDomainSchema = z
+  .string()
+  .nonempty()
+  .refine(domain => domain.indexOf(' ') < 0, {
+    message: 'The `networkDomain` in setUserAuthentication() cannot contain spaces. Use an array for multiple domains.',
+  });
+
 const baseAuthenticationValidators = {
   // TODO(jonathan): Remove these after fixing/exporting types for Authentication metadata, as they're only present
   // in the full bundle, not the metadata.
@@ -318,7 +325,7 @@ const baseAuthenticationValidators = {
   endpointDomain: z.string().optional(),
   // The items are technically a discriminated union type but that union currently only has one member.
   postSetup: z.array(setEndpointPostSetupValidator).optional(),
-  networkDomain: z.union([z.string().nonempty(), z.string().nonempty().array().nonempty()]).optional(),
+  networkDomain: z.union([singleAuthDomainSchema, z.array(singleAuthDomainSchema).nonempty()]).optional(),
 };
 
 const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> = {

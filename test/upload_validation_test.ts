@@ -2219,6 +2219,24 @@ describe('Pack metadata Validation', () => {
       assert.deepEqual(result, metadata);
     });
 
+    it('networkDomain has spaces', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['foo bar'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          networkDomain: 'foo bar',
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata, '1.0.0');
+      assert.deepEqual(err.validationErrors, [
+        {
+          message:
+            'The `networkDomain` in setUserAuthentication() cannot contain spaces. Use an array for multiple domains.',
+          path: 'defaultAuthentication.networkDomain',
+        },
+      ]);
+    });
+
     it('good networkDomains when specifying authentication, multi-domain', async () => {
       const metadata = createFakePackVersionMetadata({
         networkDomains: ['foo.com', 'bar.com'],
