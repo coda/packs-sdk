@@ -76,10 +76,12 @@ ___
 
 ### networkDomain
 
-• `Optional` **networkDomain**: `string`
+• `Optional` **networkDomain**: `string` \| `string`[]
 
-Which domain should get auth credentials, when a pack is configured with multiple domains.
+Which domain(s) should get auth credentials, when a pack is configured with multiple domains.
 Packs configured with only one domain or with requiredsEndpointUrl set to true can omit this.
+
+Using multiple authenticated network domains is uncommon and requires Coda approval.
 
 #### Inherited from
 
@@ -87,7 +89,7 @@ Packs configured with only one domain or with requiredsEndpointUrl set to true c
 
 #### Defined in
 
-[types.ts:259](https://github.com/coda/packs-sdk/blob/main/types.ts#L259)
+[types.ts:261](https://github.com/coda/packs-sdk/blob/main/types.ts#L261)
 
 ___
 
@@ -100,7 +102,7 @@ e.g. "foo" if a token is passed as "foo=bar".
 
 #### Defined in
 
-[types.ts:329](https://github.com/coda/packs-sdk/blob/main/types.ts#L329)
+[types.ts:331](https://github.com/coda/packs-sdk/blob/main/types.ts#L331)
 
 ___
 
@@ -148,4 +150,4 @@ Identifies this as QueryParamToken authentication.
 
 #### Defined in
 
-[types.ts:324](https://github.com/coda/packs-sdk/blob/main/types.ts#L324)
+[types.ts:326](https://github.com/coda/packs-sdk/blob/main/types.ts#L326)

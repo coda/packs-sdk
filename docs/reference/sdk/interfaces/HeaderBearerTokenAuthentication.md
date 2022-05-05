@@ -73,10 +73,12 @@ ___
 
 ### networkDomain
 
-• `Optional` **networkDomain**: `string`
+• `Optional` **networkDomain**: `string` \| `string`[]
 
-Which domain should get auth credentials, when a pack is configured with multiple domains.
+Which domain(s) should get auth credentials, when a pack is configured with multiple domains.
 Packs configured with only one domain or with requiredsEndpointUrl set to true can omit this.
+
+Using multiple authenticated network domains is uncommon and requires Coda approval.
 
 #### Inherited from
 
@@ -84,7 +86,7 @@ Packs configured with only one domain or with requiredsEndpointUrl set to true c
 
 #### Defined in
 
-[types.ts:259](https://github.com/coda/packs-sdk/blob/main/types.ts#L259)
+[types.ts:261](https://github.com/coda/packs-sdk/blob/main/types.ts#L261)
 
 ___
 
@@ -132,4 +134,4 @@ Identifies this as HeaderBearerToken authentication.
 
 #### Defined in
 
-[types.ts:267](https://github.com/coda/packs-sdk/blob/main/types.ts#L267)
+[types.ts:269](https://github.com/coda/packs-sdk/blob/main/types.ts#L269)

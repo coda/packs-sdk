@@ -318,7 +318,7 @@ const baseAuthenticationValidators = {
   endpointDomain: z.string().optional(),
   // The items are technically a discriminated union type but that union currently only has one member.
   postSetup: z.array(setEndpointPostSetupValidator).optional(),
-  networkDomain: z.string().optional(),
+  networkDomain: z.union([z.string().nonempty(), z.string().nonempty().array().nonempty()]).optional(),
 };
 
 const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> = {
@@ -1254,7 +1254,14 @@ const packMetadataSchemaBySdkVersion: SchemaExtension[] = [
           return;
         }
 
-        if (!data.defaultAuthentication.networkDomain) {
+        let authNetworkDomains: string[] | undefined;
+        if (Array.isArray(data.defaultAuthentication.networkDomain)) {
+          authNetworkDomains = data.defaultAuthentication.networkDomain;
+        } else if (data.defaultAuthentication.networkDomain) {
+          authNetworkDomains = [data.defaultAuthentication.networkDomain];
+        }
+
+        if (!authNetworkDomains?.length) {
           if (data.networkDomains && data.networkDomains.length > 1) {
             context.addIssue({
               code: z.ZodIssueCode.custom,
@@ -1268,13 +1275,16 @@ const packMetadataSchemaBySdkVersion: SchemaExtension[] = [
 
         // Pack has multiple network domains and user auth. The code needs to clarify which domain gets the auth
         // headers.
-        if (!data.networkDomains?.includes(data.defaultAuthentication.networkDomain)) {
-          context.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ['defaultAuthentication.networkDomain'],
-            message: 'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
-          });
-          return;
+        for (const authNetworkDomain of authNetworkDomains) {
+          if (!data.networkDomains?.includes(authNetworkDomain)) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ['defaultAuthentication.networkDomain'],
+              message:
+                'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
+            });
+            return;
+          }
         }
       });
     },

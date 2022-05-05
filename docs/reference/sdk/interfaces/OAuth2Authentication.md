@@ -30,7 +30,7 @@ user to the [authorizationUrl](OAuth2Authentication.md#authorizationurl).
 
 #### Defined in
 
-[types.ts:404](https://github.com/coda/packs-sdk/blob/main/types.ts#L404)
+[types.ts:406](https://github.com/coda/packs-sdk/blob/main/types.ts#L406)
 
 ___
 
@@ -45,7 +45,7 @@ they may be specified using [additionalParams](OAuth2Authentication.md#additiona
 
 #### Defined in
 
-[types.ts:372](https://github.com/coda/packs-sdk/blob/main/types.ts#L372)
+[types.ts:374](https://github.com/coda/packs-sdk/blob/main/types.ts#L374)
 
 ___
 
@@ -82,7 +82,7 @@ as [ExecutionContext.endpoint](ExecutionContext.md#endpoint).
 
 #### Defined in
 
-[types.ts:414](https://github.com/coda/packs-sdk/blob/main/types.ts#L414)
+[types.ts:416](https://github.com/coda/packs-sdk/blob/main/types.ts#L416)
 
 ___
 
@@ -126,10 +126,12 @@ ___
 
 ### networkDomain
 
-• `Optional` **networkDomain**: `string`
+• `Optional` **networkDomain**: `string` \| `string`[]
 
-Which domain should get auth credentials, when a pack is configured with multiple domains.
+Which domain(s) should get auth credentials, when a pack is configured with multiple domains.
 Packs configured with only one domain or with requiredsEndpointUrl set to true can omit this.
+
+Using multiple authenticated network domains is uncommon and requires Coda approval.
 
 #### Inherited from
 
@@ -137,7 +139,7 @@ Packs configured with only one domain or with requiredsEndpointUrl set to true c
 
 #### Defined in
 
-[types.ts:259](https://github.com/coda/packs-sdk/blob/main/types.ts#L259)
+[types.ts:261](https://github.com/coda/packs-sdk/blob/main/types.ts#L261)
 
 ___
 
@@ -188,7 +190,7 @@ If the API you are using requires a different delimiter, say a comma, specify it
 
 #### Defined in
 
-[types.ts:391](https://github.com/coda/packs-sdk/blob/main/types.ts#L391)
+[types.ts:393](https://github.com/coda/packs-sdk/blob/main/types.ts#L393)
 
 ___
 
@@ -203,7 +205,7 @@ the documentation for the API you are connecting to.
 
 #### Defined in
 
-[types.ts:384](https://github.com/coda/packs-sdk/blob/main/types.ts#L384)
+[types.ts:386](https://github.com/coda/packs-sdk/blob/main/types.ts#L386)
 
 ___
 
@@ -219,7 +221,7 @@ When sending authenticated requests, a HTTP header of the form
 
 #### Defined in
 
-[types.ts:399](https://github.com/coda/packs-sdk/blob/main/types.ts#L399)
+[types.ts:401](https://github.com/coda/packs-sdk/blob/main/types.ts#L401)
 
 ___
 
@@ -233,7 +235,7 @@ that should contain the token.
 
 #### Defined in
 
-[types.ts:421](https://github.com/coda/packs-sdk/blob/main/types.ts#L421)
+[types.ts:423](https://github.com/coda/packs-sdk/blob/main/types.ts#L423)
 
 ___
 
@@ -246,7 +248,7 @@ at the end of the OAuth handshake flow.
 
 #### Defined in
 
-[types.ts:377](https://github.com/coda/packs-sdk/blob/main/types.ts#L377)
+[types.ts:379](https://github.com/coda/packs-sdk/blob/main/types.ts#L379)
 
 ___
 
@@ -258,7 +260,7 @@ Identifies this as OAuth2 authentication.
 
 #### Defined in
 
-[types.ts:365](https://github.com/coda/packs-sdk/blob/main/types.ts#L365)
+[types.ts:367](https://github.com/coda/packs-sdk/blob/main/types.ts#L367)
 
 ___
 
@@ -277,4 +279,4 @@ See https://datatracker.ietf.org/doc/html/rfc7636 for more details.
 
 #### Defined in
 
-[types.ts:433](https://github.com/coda/packs-sdk/blob/main/types.ts#L433)
+[types.ts:435](https://github.com/coda/packs-sdk/blob/main/types.ts#L435)
