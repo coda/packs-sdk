@@ -2,7 +2,7 @@
 
 This changelog keeps track of all changes to the Packs SDK. We follow conventions from [keepachangelog](https://keepachangelog.com/en/1.0.0/).
 
-## [Unreleased]
+## [0.12.0] - 2022-05-04
 
 ### Added
 
