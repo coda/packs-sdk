@@ -10,4 +10,4 @@ where the pack author provides credentials used in HTTP requests rather than the
 
 #### Defined in
 
-[types.ts:638](https://github.com/coda/packs-sdk/blob/main/types.ts#L638)
+[types.ts:650](https://github.com/coda/packs-sdk/blob/main/types.ts#L650)
