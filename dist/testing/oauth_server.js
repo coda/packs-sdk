@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.makeRedirectUrl = exports.launchOAuthServerFlow = void 0;
-require("isomorphic-fetch");
+require("cross-fetch/polyfill");
 const constants_1 = require("./constants");
 const child_process_1 = require("child_process");
 const express_1 = __importDefault(require("express"));

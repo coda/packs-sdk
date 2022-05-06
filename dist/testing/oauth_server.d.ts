@@ -1,4 +1,4 @@
-import 'isomorphic-fetch';
+import 'cross-fetch/polyfill';
 import type { OAuth2Authentication } from '../types';
 interface AfterTokenExchangeParams {
     accessToken: string;

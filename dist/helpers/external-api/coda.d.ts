@@ -6,7 +6,7 @@
  * Hash: 3cb65a92b168c432b6eb8cad28cd0cc16911c3536d86f2d256c7ddb6007de8ad
  */
 import 'es6-promise/auto';
-import 'isomorphic-fetch';
+import 'cross-fetch/polyfill';
 import * as types from './v1';
 export declare class ResponseError extends Error {
     response: Response;
