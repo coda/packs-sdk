@@ -164,7 +164,7 @@ Each of the parameter types described above has an array variant that allows you
 
 ### Table column
 
-Passing a table column into an array parameter can be error prone, because if that column is empty for some rows then the formula will fail to run. To accept a list of values that may include empty values there use the sparse variant of the array parameter (`SparseStringArray`, `SparseNumberArray`, etc). Blank cells will be representd as `null`, and you'll need to make sure your code can handle those values.
+Passing a table column into an array parameter can be error prone, because if the column contains blank cells the formula will fail to run. To accept a list that may include blank values use the sparse variant of the array parameter (`SparseStringArray`, `SparseNumberArray`, etc). Blank cells will be represented as `null`, and you'll need to make sure your code can handle those values.
 
 ??? example "Example: Total cost formula"
     ```ts
