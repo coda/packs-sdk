@@ -389,10 +389,45 @@ export const Examples: Example[] = [
         codeFile: './examples/parameter/weekday.ts',
       },
       {
+        name: 'String parameter',
+        content: 'A formula that takes plain text as a parameter. This sample returns a greeting to the name provided.',
+        codeFile: './examples/hello_world/minimal.ts',
+      },
+      {
+        name: 'Number parameter',
+        content: 'A formula that takes a number as a parameter. This sample converts a number of pizza slices eaten into a percentage.',
+        codeFile: './examples/data-type/pizza_eaten.ts',
+      },
+      {
+        name: 'Date parameter',
+        content: 'A formula that takes a date and time as a parameter. This sample adds five minutes onto an input date and time.',
+        codeFile: './examples/dates/nye_glasses.ts',
+      },
+      {
+        name: 'Image parameter',
+        content: 'A formula that takes an image as a parameter. This sample returns the file size of an image.',
+        codeFile: './examples/image/file_size.ts',
+      },
+      {
+        name: 'Array parameter',
+        content: 'A formula that takes a string array as a parameter. This sample returns the longest string in the list.',
+        codeFile: './examples/parameter/longest.ts',
+      },
+      {
+        name: 'Sparse array parameter',
+        content: 'A formula that takes sparse number arrays as a parameter, useful when passing table columns. This sample returns the total cost for an order of items.',
+        codeFile: './examples/parameter/total_cost.ts',
+      },
+      {
         name: 'Optional parameters',
         content:
           'A formula with some required and some optional parameters. This sample formats text to look like screaming, with a optional parameters to override how many exclamation points to use and an alternate character to use.',
         codeFile: './examples/parameter/scream.ts',
+      },
+      {
+        name: 'Parameter suggested value',
+        content: 'A formula with a parameter that defines a suggested value that gets pre-populated. This sample rolls dice with a configurable number of sides.',
+        codeFile: './examples/action/dice.ts',
       },
       {
         name: 'Variable argument parameters',
@@ -401,9 +436,9 @@ export const Examples: Example[] = [
         codeFile: './examples/parameter/steps.ts',
       },
       {
-        name: 'Image parameter',
-        content: 'A formula that takes an image as a parameter. This sample returns the file size of an image.',
-        codeFile: './examples/image/file_size.ts',
+        name: 'Reusing parameters',
+        content: 'A Pack that reuses a parameter across multiple formulas. This sample performs various math operations on a list of numbers.',
+        codeFile: './examples/math/math.ts',
       },
     ],
   },

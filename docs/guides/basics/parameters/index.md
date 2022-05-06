@@ -83,6 +83,11 @@ Use the `String` parameter to pass a plain text value to your formula. Coda will
 
 String parameters are compatible with almost every column type in Coda, as most have a text representation. At times a string parameter may be better than a more semantically accurate type, as it allows you to access the value as shown to the user.
 
+??? example "Example: Hello world formula"
+    ```ts
+    --8<-- "examples/hello_world/minimal.ts"
+    ```
+
 
 ### Rich text
 
@@ -104,6 +109,11 @@ The number equivalent for some column types may not be obvious. Specifically:
 - **Date** and **Date and time** values will be converted into the number of days since 1899-12-30[^1]. For example, "1955-11-12" will be passed as `20405`.
 - **Time** and **Duration** values will be converted into a number of days. For example, "12 hrs" will be passed as `0.5`.
 
+??? example "Example: Pizza eaten formula"
+    ```ts
+    --8<-- "examples/data-type/pizza_eaten.ts"
+    ```
+
 
 ### Booleans
 
@@ -122,6 +132,11 @@ JavaScript Date objects can only represent a specific moment in time. This means
 !!! warning "Timezone shifting"
     Because of how timezones work in Coda and JavaScript, the date passed into the parameter may appear different in your Pack code. See the [Timezones guide][timezones] for more information.
 
+??? example "Example: Good New Years Eve glasses formula"
+    ```ts
+    --8<-- "examples/dates/nye_glasses.ts"
+    ```
+
 
 ### Images and files {: #images}
 
@@ -131,10 +146,30 @@ Images and files that the user uploaded to the doc will be hosted on the `codaho
 
 If you need access to the binary content of the image or file you'll need to use the [fetcher][fetcher_binary_response] to retrieve it. The fetcher is automatically allowed access to the `codahosted.io` domain, so no need to declare it as a [network domain][network_domains]. It's not possible to access the binary content of images coming from an **Image URL** column, since they can come from any domain.
 
+??? example "Example: Image file size formula"
+    ```ts
+    --8<-- "examples/image/file_size.ts"
+    ```
+
 
 ### Lists
 
-Each of the parameter types described above has an array variant that allows you to pass a list of values of that type. For example, `StringArray` and `NumberArray`. All of the values in the list must be of the same type.
+Each of the parameter types described above has an array variant that allows you to pass a list of values of that type. For example, `StringArray` and `NumberArray`. All of the values in the list must be of the same type and not blank.
+
+??? example "Example: Longest string formula"
+    ```ts
+    --8<-- "examples/parameter/longest.ts"
+    ```
+
+
+### Table column
+
+Passing a table column into an array parameter can be error prone, because if that column is empty for some rows then the formula will fail to run. To accept a list of values that may include empty values there use the sparse variant of the array parameter (`SparseStringArray`, `SparseNumberArray`, etc). Blank cells will be representd as `null`, and you'll need to make sure your code can handle those values.
+
+??? example "Example: Total cost formula"
+    ```ts
+    --8<-- "examples/parameter/total_cost.ts"
+    ```
 
 
 ### Objects
@@ -151,22 +186,29 @@ By default all parameters you define are required. To make a parameter optional 
 
 ```ts
 pack.addFormula({
+  name: "TotalCost",
   // ...
   parameters: [
     coda.makeParameter({
-      type: coda.ParameterType.String,
-      name: "name",
-      description: "The person's name.",
+      type: coda.ParameterType.Number,
+      name: "cost",
+      description: "The cost of the item.",
     }),
     coda.makeParameter({
-      type: coda.ParameterType.String,
-      name: "suffix",
-      description: "A suffix, like 'MD' or 'Jr'.",
+      type: coda.ParameterType.Number,
+      name: "quantity",
+      description: "How many items.",
+      optional: true,
+    }),
+    coda.makeParameter({
+      type: coda.ParameterType.Number,
+      name: "taxRate",
+      description: "The tax rate for the item.",
       optional: true,
     }),
   ],
   // ...
-  execute: async function ([name, suffix], context) {
+  execute: async function ([cost, quantity, taxRate], context) {
     // ...
   },
 });
@@ -175,16 +217,26 @@ pack.addFormula({
 Optional parameters that have not been set by the user will default to the JavaScript value `undefined` in your `execute` function. When you initialize your parameter variables in the `execute` function you can assign a default value that will get used when the parameter has not been explicitly set by the user.
 
 ```ts
---8<-- "examples/parameter/scream.ts"
+pack.addFormula({
+  // ...
+  execute: async function ([cost, quantity = 1, taxRate = 0], context) {
+    // ...
+  },
+});
 ```
 
 When using a formula with optional parameters, the user may choose to set those parameters by name, instead of by position. This can be useful when they want to skip over some optional parameters that appear earlier in the list.
 
-```ts
-Scream("What is this", character: "?")
+```
+TotalCost(10, taxRate: 0.15)
 ```
 
-In this case the `text` and `character` parameters would be set, but the `volume` parameter would be undefined, and therefore use its default value of `3`.
+In this case the `cost` and `taxRate` parameters would be set, but the `quantity` parameter would be undefined, and therefore use its default value of `1`.
+
+??? example "Example: Scream text formula"
+    ```ts
+    --8<-- "examples/parameter/scream.ts"
+    ```
 
 
 ## Suggested values {: #suggested}
@@ -203,6 +255,11 @@ coda.makeParameter({
 ```
 
 Currently suggested values are only used for required parameters, and setting them for optional parameters has no effect.
+
+??? example "Example: Random dice roll action"
+    ```ts
+    --8<-- "examples/action/dice.ts"
+    ```
 
 
 ## Accepting multiple values {: #vararg}
@@ -250,9 +307,10 @@ There are some important differences between vararg parameters and standard para
 ??? bug "Not available in actions builder or sync table settings"
     At the moment, vararg parameters can only be set in the formula editor. In the action dialog users can switch from the default structured builder to the formula editor, but there is no way to set them for sync tables. <!-- go/bug/20828 -->
 
-```ts
---8<-- "examples/parameter/steps.ts"
-```
+??? example "Example: Step diagram formula"
+    ```ts
+    --8<-- "examples/parameter/steps.ts"
+    ```
 
 
 ## Autocomplete
@@ -295,6 +353,11 @@ pack.addFormula({
   // ...
 });
 ```
+
+??? example "Example: Math formulas"
+    ```ts
+    --8<-- "examples/math/math.ts"
+    ```
 
 
 ## Date range parameters
