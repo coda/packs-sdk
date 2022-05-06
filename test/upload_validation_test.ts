@@ -2122,7 +2122,7 @@ describe('Pack metadata Validation', () => {
       ]);
     });
 
-    it('missing networkDomains when specifying authentication', async () => {
+    it('missing auth networkDomains when specifying authentication', async () => {
       const metadata = createFakePackVersionMetadata({
         networkDomains: ['foo.com', 'bar.com'],
         defaultAuthentication: {
@@ -2131,6 +2131,28 @@ describe('Pack metadata Validation', () => {
       });
       const err = await validateJsonAndAssertFails(metadata, '1.0.0');
       assert.deepEqual(err.validationErrors, [
+        {
+          message:
+            'This pack uses multiple network domains and must set one as a `networkDomain` in setUserAuthentication()',
+          path: 'defaultAuthentication.networkDomain',
+        },
+      ]);
+    });
+
+    it('empty auth networkDomains when specifying authentication', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['foo.com', 'bar.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          networkDomain: [],
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata, '1.0.0');
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'Array must contain at least 1 element(s)',
+          path: 'defaultAuthentication.networkDomain',
+        },
         {
           message:
             'This pack uses multiple network domains and must set one as a `networkDomain` in setUserAuthentication()',
@@ -2168,12 +2190,59 @@ describe('Pack metadata Validation', () => {
       ]);
     });
 
+    it('bad networkDomains when specifying authentication, multi-domain', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['foo.com', 'bar.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          networkDomain: ['bar.com', 'baz.com'],
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata, '1.0.0');
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
+          path: 'defaultAuthentication.networkDomain',
+        },
+      ]);
+    });
+
     it('good networkDomains when specifying authentication', async () => {
       const metadata = createFakePackVersionMetadata({
         networkDomains: ['foo.com', 'bar.com'],
         defaultAuthentication: {
           type: AuthenticationType.HeaderBearerToken,
           networkDomain: 'bar.com',
+        },
+      });
+      const result = await validateJson(deepCopy(metadata));
+      assert.deepEqual(result, metadata);
+    });
+
+    it('networkDomain has spaces', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['foo bar'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          networkDomain: 'foo bar',
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata, '1.0.0');
+      assert.deepEqual(err.validationErrors, [
+        {
+          message:
+            'The `networkDomain` in setUserAuthentication() cannot contain spaces. Use an array for multiple domains.',
+          path: 'defaultAuthentication.networkDomain',
+        },
+      ]);
+    });
+
+    it('good networkDomains when specifying authentication, multi-domain', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['foo.com', 'bar.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          networkDomain: ['bar.com', 'foo.com'],
         },
       });
       const result = await validateJson(deepCopy(metadata));

@@ -76,10 +76,12 @@ ___
 
 ### networkDomain
 
-• `Optional` **networkDomain**: `string`
+• `Optional` **networkDomain**: `string` \| `string`[]
 
-Which domain should get auth credentials, when a pack is configured with multiple domains.
+Which domain(s) should get auth credentials, when a pack is configured with multiple domains.
 Packs configured with only one domain or with requiredsEndpointUrl set to true can omit this.
+
+Using multiple authenticated network domains is uncommon and requires Coda approval.
 
 #### Inherited from
 
@@ -87,7 +89,7 @@ Packs configured with only one domain or with requiredsEndpointUrl set to true c
 
 #### Defined in
 
-[types.ts:259](https://github.com/coda/packs-sdk/blob/main/types.ts#L259)
+[types.ts:261](https://github.com/coda/packs-sdk/blob/main/types.ts#L261)
 
 ___
 
@@ -135,7 +137,7 @@ The AWS service to authenticate with, like "s3", "iam", or "route53".
 
 #### Defined in
 
-[types.ts:571](https://github.com/coda/packs-sdk/blob/main/types.ts#L571)
+[types.ts:573](https://github.com/coda/packs-sdk/blob/main/types.ts#L573)
 
 ___
 
@@ -147,4 +149,4 @@ Identifies this as AWSAssumeRole authentication.
 
 #### Defined in
 
-[types.ts:569](https://github.com/coda/packs-sdk/blob/main/types.ts#L569)
+[types.ts:571](https://github.com/coda/packs-sdk/blob/main/types.ts#L571)
