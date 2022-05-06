@@ -12,7 +12,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ### Added
 
-- Added "useProofKeyForCodeExchang" option to OAuth2 authentication to support PKCE extension. While it's optionally supported by most OAuth2 providers, it might be required by some websites (e.g. Twitter).
+- Added "usePKCE" option to OAuth2 authentication to support PKCE extension. While it's optionally supported by most OAuth2 providers, it might be required by some websites (e.g. Twitter).
 
 ### Changed
 

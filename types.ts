@@ -432,7 +432,7 @@ export interface OAuth2Authentication extends BaseAuthentication {
    *
    * See https://datatracker.ietf.org/doc/html/rfc7636 for more details.
    */
-  useProofKeyForCodeExchang?: boolean;
+  usePKCE?: boolean;
 }
 
 /**
