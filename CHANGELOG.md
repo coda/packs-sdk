@@ -4,13 +4,13 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ### Added
 
-## [0.12.0] - 2022-05-06
+## [Unreleased]
 
 ### Added
 
 - Added support for multiple domains in the `networkDomain` parameter of `setUserAuthentication()`.
 
-## [0.12.0] - 2022-05-04
+## [0.12.0] - 2022-05-06
 
 ### Added
 
