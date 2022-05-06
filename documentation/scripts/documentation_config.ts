@@ -389,10 +389,45 @@ export const Examples: Example[] = [
         codeFile: './examples/parameter/weekday.ts',
       },
       {
+        name: 'String parameter',
+        content: 'A formula that takes plain text as a parameter. This sample returns a greeting to the name provided.',
+        codeFile: './examples/hello_world/minimal.ts',
+      },
+      {
+        name: 'Number parameter',
+        content: 'A formula that takes a number as a parameter. This sample converts a number of slices of pizza into a percentage eaten.',
+        codeFile: './examples/data-type/pizza_eaten.ts',
+      },
+      {
+        name: 'Date parameter',
+        content: 'A formula that takes a date as a parameter. This sample determines if the year of a given date would make for good New Years Eve glasses (has two or more zeros).',
+        codeFile: './examples/dates/nye_glasses.ts',
+      },
+      {
+        name: 'Image parameter',
+        content: 'A formula that takes an image as a parameter. This sample returns the file size of an image.',
+        codeFile: './examples/image/file_size.ts',
+      },
+      {
+        name: 'Array parameter',
+        content: 'A formula that takes a string array as a parameter. This sample returns the longest string in the list.',
+        codeFile: './examples/parameter/longest.ts',
+      },
+      {
+        name: 'Sparse array parameter',
+        content: 'A formula that takes sparse number arrays as a parameter, useful when passing table columns. This sample returns the total cost for an order of items.',
+        codeFile: './examples/parameter/total_cost.ts',
+      },
+      {
         name: 'Optional parameters',
         content:
           'A formula with some required and some optional parameters. This sample formats text to look like screaming, with a optional parameters to override how many exclamation points to use and an alternate character to use.',
         codeFile: './examples/parameter/scream.ts',
+      },
+      {
+        name: 'Parameter suggested value',
+        content: 'A formula with a parameter that defines a suggested value. This sample rolls virtual dice and returns the results.',
+        codeFile: './examples/action/dice.ts',
       },
       {
         name: 'Variable argument parameters',
@@ -401,9 +436,9 @@ export const Examples: Example[] = [
         codeFile: './examples/parameter/steps.ts',
       },
       {
-        name: 'Image parameter',
-        content: 'A formula that takes an image as a parameter. This sample returns the file size of an image.',
-        codeFile: './examples/image/file_size.ts',
+        name: 'Reusing parameters',
+        content: 'A Pack that reuses a parameter across multiple formulas. This sample includes mathematical formulas that operate on a list of numbers.',
+        codeFile: './examples/math/math.ts',
       },
     ],
   },

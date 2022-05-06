@@ -42,90 +42,83 @@ pack.addFormula({
   },
 });
 ```
-## Optional parameters
-A formula with some required and some optional parameters. This sample formats text to look like screaming, with a optional parameters to override how many exclamation points to use and an alternate character to use.
+## String parameter
+A formula that takes plain text as a parameter. This sample returns a greeting to the name provided.
 
 ```ts
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
-// Formats text to look like screaming. For example, "Hello" => "HELLO!!!".
+// Say Hello to the given name.
 pack.addFormula({
-  name: "Scream",
-  description: "Make text uppercase and add exclamation points.",
+  name: "Hello",
+  description: "A Hello World example.",
   parameters: [
     coda.makeParameter({
       type: coda.ParameterType.String,
-      name: "text",
-      description: "The text to scream.",
-    }),
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
-      name: "volume",
-      description: "The number of exclamation points to add.",
-      optional: true,
-    }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
-      name: "character",
-      description: "The character to repeat.",
-      optional: true,
+      name: "name",
+      description: "The person's name you would like to say hello to.",
     }),
   ],
   resultType: coda.ValueType.String,
-  examples: [
-    { params: ["Hello"], result: "HELLO!!!" },
-    { params: ["Hello", 5], result: "HELLO!!!!!" },
-    { params: ["Hello", undefined, "?"], result: "HELLO???" },
-    { params: ["Hello", 5, "?"], result: "HELLO?????" },
-  ],
-  execute: async function ([text, volume = 3, character = "!"], context) {
-    return text.toUpperCase() + character.repeat(volume);
+  execute: async function ([name]) {
+    return "Hello " + name + "!";
   },
 });
 ```
-## Variable argument parameters
-A formula that accepts a variable number of arguments. This sample draws a simple diagram using text, with an unknown number of arrow labels and steps.
+## Number parameter
+A formula that takes a number as a parameter. This sample converts a number of slices of pizza into a percentage eaten.
 
 ```ts
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
-// Takes an unknown number of steps and labels and outputs a simple diagram.
-// Example: Steps("Idea", "Experiment", "Prototype", "Refine", "Product")
-// Result: Idea --Experiment--> Prototype --Refine--> Product
+// Formula that converts slices of a pizza into a percentage eaten.
 pack.addFormula({
-  name: "Steps",
-  description: "Draws a simple step diagram using text.",
+  name: "PizzaEaten",
+  description: "Calculates what percentage of a pizza was eaten.",
   parameters: [
     coda.makeParameter({
-      type: coda.ParameterType.String,
-      name: "start",
-      description: "The starting step.",
+      type: coda.ParameterType.Number,
+      name: "slices",
+      description: "How many slices were eaten.",
     }),
   ],
-  varargParameters: [
+  resultType: coda.ValueType.Number,
+  codaType: coda.ValueHintType.Percent,
+  execute: async function ([slices], context) {
+    return slices / 8;
+  },
+});
+```
+## Date parameter
+A formula that takes a date as a parameter. This sample determines if the year of a given date would make for good New Years Eve glasses (has two or more zeros).
+
+```ts
+import * as coda from "@codahq/packs-sdk";
+export const pack = coda.newPack();
+
+pack.addFormula({
+  name: "GoodNYEGlasses",
+  description: "Determines if a date is good for New Years Eve glasses " +
+    "(the year contains two zeros).",
+  parameters: [
     coda.makeParameter({
-      type: coda.ParameterType.String,
-      name: "label",
-      description: "The label for the arrow.",
-    }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
-      name: "step",
-      description: "The next step.",
+      type: coda.ParameterType.Date,
+      name: "date",
+      description: "The input date.",
     }),
   ],
-  resultType: coda.ValueType.String,
-  execute: async function ([start, ...varargs], context) {
-    let result = start;
-    while (varargs.length > 0) {
-      let label; let step;
-      // Pull the first set of varargs off the list, and leave the rest.
-      [label, step, ...varargs] = varargs;
-      result += ` --${label}--> ${step}`;
-    }
-    return result;
+  resultType: coda.ValueType.Boolean,
+  execute: async function ([date], context) {
+    // Format the JavaScript Date into a four-digit year.
+    let formatted = date.toLocaleDateString("en", {
+      timeZone: context.timezone, // Use the timezone of the doc (important!).
+      year: "numeric",
+    });
+    // Extract all of the zeros from the year.
+    let zeros = formatted.match(/0/g);
+    return zeros?.length >= 2;
   },
 });
 ```
@@ -176,5 +169,302 @@ pack.addFormula({
 // Coda images are hosted on this domain, and it must be added as an allowed
 // network domain.
 pack.addNetworkDomain("codahosted.io");
+```
+## Array parameter
+A formula that takes a string array as a parameter. This sample returns the longest string in the list.
+
+```ts
+import * as coda from "@codahq/packs-sdk";
+export const pack = coda.newPack();
+
+pack.addFormula({
+  name: "Longest",
+  description: "Given a list of strings, returns the longest one.",
+  parameters: [
+    coda.makeParameter({
+      type: coda.ParameterType.StringArray,
+      name: "strings",
+      description: "The input strings.",
+    }),
+  ],
+  resultType: coda.ValueType.String,
+  execute: async function ([strings], context) {
+    if (strings.length === 0) {
+      throw new coda.UserVisibleError("No options provided.");
+    }
+    let result;
+    for (let str of strings) {
+      if (!result || str.length > result.length) {
+        result = str;
+      }
+    }
+    return result;
+  },
+});
+```
+## Sparse array parameter
+A formula that takes sparse number arrays as a parameter, useful when passing table columns. This sample returns the total cost for an order of items.
+
+```ts
+import * as coda from "@codahq/packs-sdk";
+export const pack = coda.newPack();
+
+pack.addFormula({
+  name: "TotalCost",
+  description: "Calculates the total cost for an order.",
+  parameters: [
+    coda.makeParameter({
+      type: coda.ParameterType.SparseNumberArray,
+      name: "prices",
+      description: "The prices for each item.",
+    }),
+    coda.makeParameter({
+      type: coda.ParameterType.SparseNumberArray,
+      name: "quantities",
+      description: "The quantities of each item. Default: 1.",
+      optional: true,
+    }),
+    coda.makeParameter({
+      type: coda.ParameterType.SparseNumberArray,
+      name: "taxRates",
+      description: "The tax rates for each item. Default: 0.",
+      optional: true,
+    }),
+  ],
+  resultType: coda.ValueType.Number,
+  codaType: coda.ValueHintType.Currency,
+  execute: async function ([prices, quantities, taxRates], context) {
+    if (prices.length !== quantities.length ||
+        prices.length !== taxRates.length) {
+      throw new coda.UserVisibleError("All lists must be the same length.");
+    }
+    let result = 0;
+    for (let i = 0; i < prices.length; i++) {
+      let price = prices[i];
+      let quantity = quantities[i];
+      let taxRate = taxRates[i];
+      if (price == null) {
+        // If the price is blank, continue on to the next row.
+        continue;
+      }
+      if (quantity != null) {
+        price *= quantity;
+      }
+      if (taxRate != null) {
+        price += price * taxRate;
+      }
+      result += price;
+    }
+    return result;
+  },
+});
+```
+## Optional parameters
+A formula with some required and some optional parameters. This sample formats text to look like screaming, with a optional parameters to override how many exclamation points to use and an alternate character to use.
+
+```ts
+import * as coda from "@codahq/packs-sdk";
+export const pack = coda.newPack();
+
+// Formats text to look like screaming. For example, "Hello" => "HELLO!!!".
+pack.addFormula({
+  name: "Scream",
+  description: "Make text uppercase and add exclamation points.",
+  parameters: [
+    coda.makeParameter({
+      type: coda.ParameterType.String,
+      name: "text",
+      description: "The text to scream.",
+    }),
+    coda.makeParameter({
+      type: coda.ParameterType.Number,
+      name: "volume",
+      description: "The number of exclamation points to add.",
+      optional: true,
+    }),
+    coda.makeParameter({
+      type: coda.ParameterType.String,
+      name: "character",
+      description: "The character to repeat.",
+      optional: true,
+    }),
+  ],
+  resultType: coda.ValueType.String,
+  examples: [
+    { params: ["Hello"], result: "HELLO!!!" },
+    { params: ["Hello", 5], result: "HELLO!!!!!" },
+    { params: ["Hello", undefined, "?"], result: "HELLO???" },
+    { params: ["Hello", 5, "?"], result: "HELLO?????" },
+  ],
+  execute: async function ([text, volume = 3, character = "!"], context) {
+    return text.toUpperCase() + character.repeat(volume);
+  },
+});
+```
+## Parameter suggested value
+A formula with a parameter that defines a suggested value. This sample rolls virtual dice and returns the results.
+
+```ts
+import * as coda from "@codahq/packs-sdk";
+export const pack = coda.newPack();
+
+// Rolls virtual dice and returns the resulting numbers. Use it with a button in
+// table and store the results in another column.
+pack.addFormula({
+  name: "RollDice",
+  description: "Roll some virtual dice.",
+  parameters: [
+    coda.makeParameter({
+      type: coda.ParameterType.Number,
+      name: "quantity",
+      description: "How many dice to roll.",
+      suggestedValue: 1,
+    }),
+    coda.makeParameter({
+      type: coda.ParameterType.Number,
+      name: "sides",
+      description: "How many sides the dice have.",
+      suggestedValue: 6,
+    }),
+  ],
+  resultType: coda.ValueType.Array,
+  items: coda.makeSchema({
+    type: coda.ValueType.Number,
+  }),
+  isAction: true,
+  execute: async function ([quantity, sides], context) {
+    let results = [];
+    for (let i = 0; i < quantity; i++) {
+      let roll = Math.ceil(Math.random() * sides);
+      results.push(roll);
+    }
+    return results;
+  },
+});
+```
+## Variable argument parameters
+A formula that accepts a variable number of arguments. This sample draws a simple diagram using text, with an unknown number of arrow labels and steps.
+
+```ts
+import * as coda from "@codahq/packs-sdk";
+export const pack = coda.newPack();
+
+// Takes an unknown number of steps and labels and outputs a simple diagram.
+// Example: Steps("Idea", "Experiment", "Prototype", "Refine", "Product")
+// Result: Idea --Experiment--> Prototype --Refine--> Product
+pack.addFormula({
+  name: "Steps",
+  description: "Draws a simple step diagram using text.",
+  parameters: [
+    coda.makeParameter({
+      type: coda.ParameterType.String,
+      name: "start",
+      description: "The starting step.",
+    }),
+  ],
+  varargParameters: [
+    coda.makeParameter({
+      type: coda.ParameterType.String,
+      name: "label",
+      description: "The label for the arrow.",
+    }),
+    coda.makeParameter({
+      type: coda.ParameterType.String,
+      name: "step",
+      description: "The next step.",
+    }),
+  ],
+  resultType: coda.ValueType.String,
+  execute: async function ([start, ...varargs], context) {
+    let result = start;
+    while (varargs.length > 0) {
+      let label; let step;
+      // Pull the first set of varargs off the list, and leave the rest.
+      [label, step, ...varargs] = varargs;
+      result += ` --${label}--> ${step}`;
+    }
+    return result;
+  },
+});
+```
+## Reusing parameters
+A Pack that reuses a parameter across multiple formulas. This sample includes mathematical formulas that operate on a list of numbers.
+
+```ts
+import * as coda from "@codahq/packs-sdk";
+export const pack = coda.newPack();
+
+// A "numbers" parameter shared by both formulas.
+const NumbersParameter = coda.makeParameter({
+  type: coda.ParameterType.NumberArray,
+  name: "numbers",
+  description: "The numbers to perform the calculation on.",
+});
+
+pack.addFormula({
+  name: "GCD",
+  description: "Returns the greatest common divisor for a list of numbers.",
+  parameters: [
+    // Use the shared parameter created above.
+    NumbersParameter,
+  ],
+  resultType: coda.ValueType.Number,
+  execute: async function ([numbers]) {
+    // Handle the error case where the list is empty.
+    if (numbers.length === 0) {
+      throw new coda.UserVisibleError("The list cannot be empty.");
+    }
+
+    // Handle the error case where all the numbers are zeros.
+    if (numbers.every(number => number === 0)) {
+      throw new coda.UserVisibleError(
+        "The list must contain a non-zero number.");
+    }
+
+    let result = numbers[0];
+    for (let i = 1; i < numbers.length; i++) {
+      let number = numbers[i];
+      result = gcd(number, result);
+    }
+    return result;
+  },
+});
+
+pack.addFormula({
+  name: "LCM",
+  description: "Returns the least common multiple for a list of numbers.",
+  parameters: [
+    // Use the shared parameter created above.
+    NumbersParameter,
+  ],
+  resultType: coda.ValueType.Number,
+  execute: async function ([numbers]) {
+    // Handle the error case where the list is empty.
+    if (numbers.length === 0) {
+      throw new coda.UserVisibleError("The list cannot be empty.");
+    }
+
+    // Handle the error case where the list contains a zero.
+    if (numbers.some(number => number === 0)) {
+      throw new coda.UserVisibleError("The list must not contain a zero.");
+    }
+
+    let result = numbers[0];
+    for (let i = 1; i < numbers.length; i++) {
+      let number = numbers[i];
+      result = Math.abs(number * result) / gcd(number, result);
+    }
+    return result;
+  },
+});
+
+// Helper function that calculates the greatest common divisor of two
+// numbers.
+function gcd(a, b) {
+  if (a === 0) {
+    return b;
+  }
+  return gcd(b % a, a);
+}
 ```
 
