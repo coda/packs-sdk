@@ -70,10 +70,11 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
   manifest: BasicPackDefinition,
   executionContext: ExecutionContext | SyncExecutionContext,
   {
-    validateParams: shouldValidateParams = true, 
-    validateResult: shouldValidateResult = true, 
+    validateParams: shouldValidateParams = true,
+    validateResult: shouldValidateResult = true,
     // TODO(alexd): Switch this to false or remove when we launch 1.0.0
-    useDeprecatedResultNormalization = true}: ExecuteOptions = {},
+    useDeprecatedResultNormalization = true,
+  }: ExecuteOptions = {},
 ): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
   let formula: TypedPackFormula | undefined;
   switch (formulaSpec.type) {
@@ -91,15 +92,14 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
   let result = await thunk.findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, false);
 
   if (useDeprecatedResultNormalization && formula) {
-    const resultToNormalize = formulaSpec.type === FormulaType.Sync
-      ? (result as GenericSyncFormulaResult).result 
-      : result;
+    const resultToNormalize =
+      formulaSpec.type === FormulaType.Sync ? (result as GenericSyncFormulaResult).result : result;
 
-    // Matches legacy behavior within handler_templates:generateObjectResponseHandler where we never 
+    // Matches legacy behavior within handler_templates:generateObjectResponseHandler where we never
     // called transform body on non-object responses.
     if (typeof resultToNormalize === 'object') {
       const schema = executionContext?.sync?.schema ?? formula.schema;
-      const normalizedResult = transformBody(resultToNormalize, schema)
+      const normalizedResult = transformBody(resultToNormalize, schema);
       if (formulaSpec.type === FormulaType.Sync) {
         (result as GenericSyncFormulaResult).result = normalizedResult;
       } else {
@@ -109,9 +109,8 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
   }
 
   if (shouldValidateResult && formula) {
-    const resultToValidate = formulaSpec.type === FormulaType.Sync 
-      ? (result as GenericSyncFormulaResult).result 
-      : result;
+    const resultToValidate =
+      formulaSpec.type === FormulaType.Sync ? (result as GenericSyncFormulaResult).result : result;
     validateResult(formula, resultToValidate);
   }
 
@@ -348,8 +347,8 @@ export async function executeSyncFormulaFromPackDef<T extends object = any>(
   params: ParamValues<ParamDefs>,
   context?: SyncExecutionContext,
   {
-    validateParams: shouldValidateParams = true, 
-    validateResult: shouldValidateResult = true, 
+    validateParams: shouldValidateParams = true,
+    validateResult: shouldValidateResult = true,
     useDeprecatedResultNormalization = true,
   }: ExecuteOptions = {},
   {useRealFetcher, manifestPath}: ContextOptions = {},
@@ -458,4 +457,21 @@ function buildUpdateCredentialsCallback(manifestPath: string | undefined): (newC
       storeCredential(path.dirname(manifestPath), newCredentials);
     }
   };
+}
+
+export function newRealFetcherExecutionContext(packDef: BasicPackDefinition, manifestPath: string): ExecutionContext {
+  return newFetcherExecutionContext(
+    buildUpdateCredentialsCallback(manifestPath),
+    getPackAuth(packDef),
+    packDef.networkDomains,
+    getCredentials(manifestPath),
+  );
+}
+
+export function newRealFetcherSyncExecutionContext(
+  packDef: BasicPackDefinition,
+  manifestPath: string,
+): SyncExecutionContext {
+  const context = newRealFetcherSyncExecutionContext(packDef, manifestPath);
+  return {...context, sync: {}};
 }

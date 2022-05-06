@@ -3,7 +3,7 @@
 //
 // These are kept separate from index.ts to avoid these utilities winding up in pack bundles.
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newMockSyncExecutionContext = exports.newMockExecutionContext = exports.newJsonFetchResponse = exports.executeFormulaOrSyncWithVM = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeMetadataFormula = exports.executeFormulaFromPackDef = void 0;
+exports.newMockSyncExecutionContext = exports.newMockExecutionContext = exports.newJsonFetchResponse = exports.executeFormulaOrSyncWithVM = exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeMetadataFormula = exports.executeFormulaFromPackDef = void 0;
 var execution_1 = require("./testing/execution");
 Object.defineProperty(exports, "executeFormulaFromPackDef", { enumerable: true, get: function () { return execution_1.executeFormulaFromPackDef; } });
 var execution_2 = require("./testing/execution");
@@ -13,7 +13,11 @@ Object.defineProperty(exports, "executeSyncFormulaFromPackDef", { enumerable: tr
 var execution_4 = require("./testing/execution");
 Object.defineProperty(exports, "executeSyncFormulaFromPackDefSingleIteration", { enumerable: true, get: function () { return execution_4.executeSyncFormulaFromPackDefSingleIteration; } });
 var execution_5 = require("./testing/execution");
-Object.defineProperty(exports, "executeFormulaOrSyncWithVM", { enumerable: true, get: function () { return execution_5.executeFormulaOrSyncWithVM; } });
+Object.defineProperty(exports, "newRealFetcherExecutionContext", { enumerable: true, get: function () { return execution_5.newRealFetcherExecutionContext; } });
+var execution_6 = require("./testing/execution");
+Object.defineProperty(exports, "newRealFetcherSyncExecutionContext", { enumerable: true, get: function () { return execution_6.newRealFetcherSyncExecutionContext; } });
+var execution_7 = require("./testing/execution");
+Object.defineProperty(exports, "executeFormulaOrSyncWithVM", { enumerable: true, get: function () { return execution_7.executeFormulaOrSyncWithVM; } });
 var mocks_1 = require("./testing/mocks");
 Object.defineProperty(exports, "newJsonFetchResponse", { enumerable: true, get: function () { return mocks_1.newJsonFetchResponse; } });
 var mocks_2 = require("./testing/mocks");
