@@ -67,7 +67,7 @@ pack.addFormula({
 });
 ```
 ## Number parameter
-A formula that takes a number as a parameter. This sample converts a number of pizza slices eaten into a percentage.
+A formula that takes a number as a parameter. This sample converts a number of slices of pizza into a percentage eaten.
 
 ```ts
 import * as coda from "@codahq/packs-sdk";
@@ -92,7 +92,7 @@ pack.addFormula({
 });
 ```
 ## Date parameter
-A formula that takes a date and time as a parameter. This sample adds five minutes onto an input date and time.
+A formula that takes a date as a parameter. This sample determines if the year of a given date would make for good New Years Eve glasses (has two or more zeros).
 
 ```ts
 import * as coda from "@codahq/packs-sdk";
@@ -302,7 +302,7 @@ pack.addFormula({
 });
 ```
 ## Parameter suggested value
-A formula with a parameter that defines a suggested value that gets pre-populated. This sample rolls dice with a configurable number of sides.
+A formula with a parameter that defines a suggested value. This sample rolls virtual dice and returns the results.
 
 ```ts
 import * as coda from "@codahq/packs-sdk";
@@ -388,7 +388,7 @@ pack.addFormula({
 });
 ```
 ## Reusing parameters
-A Pack that reuses a parameter across multiple formulas. This sample performs various math operations on a list of numbers.
+A Pack that reuses a parameter across multiple formulas. This sample includes mathematical formulas that operate on a list of numbers.
 
 ```ts
 import * as coda from "@codahq/packs-sdk";

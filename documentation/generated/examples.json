@@ -236,12 +236,12 @@
       },
       {
         "name": "Number parameter",
-        "content": "A formula that takes a number as a parameter. This sample converts a number of pizza slices eaten into a percentage.",
+        "content": "A formula that takes a number as a parameter. This sample converts a number of slices of pizza into a percentage eaten.",
         "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Formula that converts slices of a pizza into a percentage eaten.\npack.addFormula({\n  name: \"PizzaEaten\",\n  description: \"Calculates what percentage of a pizza was eaten.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.Number,\n      name: \"slices\",\n      description: \"How many slices were eaten.\",\n    }),\n  ],\n  resultType: coda.ValueType.Number,\n  codaType: coda.ValueHintType.Percent,\n  execute: async function ([slices], context) {\n    return slices / 8;\n  },\n});"
       },
       {
         "name": "Date parameter",
-        "content": "A formula that takes a date and time as a parameter. This sample adds five minutes onto an input date and time.",
+        "content": "A formula that takes a date as a parameter. This sample determines if the year of a given date would make for good New Years Eve glasses (has two or more zeros).",
         "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\npack.addFormula({\n  name: \"GoodNYEGlasses\",\n  description: \"Determines if a date is good for New Years Eve glasses \" +\n    \"(the year contains two zeros).\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.Date,\n      name: \"date\",\n      description: \"The input date.\",\n    }),\n  ],\n  resultType: coda.ValueType.Boolean,\n  execute: async function ([date], context) {\n    // Format the JavaScript Date into a four-digit year.\n    let formatted = date.toLocaleDateString(\"en\", {\n      timeZone: context.timezone, // Use the timezone of the doc (important!).\n      year: \"numeric\",\n    });\n    // Extract all of the zeros from the year.\n    let zeros = formatted.match(/0/g);\n    return zeros?.length >= 2;\n  },\n});"
       },
       {
@@ -266,7 +266,7 @@
       },
       {
         "name": "Parameter suggested value",
-        "content": "A formula with a parameter that defines a suggested value that gets pre-populated. This sample rolls dice with a configurable number of sides.",
+        "content": "A formula with a parameter that defines a suggested value. This sample rolls virtual dice and returns the results.",
         "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Rolls virtual dice and returns the resulting numbers. Use it with a button in\n// table and store the results in another column.\npack.addFormula({\n  name: \"RollDice\",\n  description: \"Roll some virtual dice.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.Number,\n      name: \"quantity\",\n      description: \"How many dice to roll.\",\n      suggestedValue: 1,\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.Number,\n      name: \"sides\",\n      description: \"How many sides the dice have.\",\n      suggestedValue: 6,\n    }),\n  ],\n  resultType: coda.ValueType.Array,\n  items: coda.makeSchema({\n    type: coda.ValueType.Number,\n  }),\n  isAction: true,\n  execute: async function ([quantity, sides], context) {\n    let results = [];\n    for (let i = 0; i < quantity; i++) {\n      let roll = Math.ceil(Math.random() * sides);\n      results.push(roll);\n    }\n    return results;\n  },\n});"
       },
       {
@@ -276,7 +276,7 @@
       },
       {
         "name": "Reusing parameters",
-        "content": "A Pack that reuses a parameter across multiple formulas. This sample performs various math operations on a list of numbers.",
+        "content": "A Pack that reuses a parameter across multiple formulas. This sample includes mathematical formulas that operate on a list of numbers.",
         "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// A \"numbers\" parameter shared by both formulas.\nconst NumbersParameter = coda.makeParameter({\n  type: coda.ParameterType.NumberArray,\n  name: \"numbers\",\n  description: \"The numbers to perform the calculation on.\",\n});\n\npack.addFormula({\n  name: \"GCD\",\n  description: \"Returns the greatest common divisor for a list of numbers.\",\n  parameters: [\n    // Use the shared parameter created above.\n    NumbersParameter,\n  ],\n  resultType: coda.ValueType.Number,\n  execute: async function ([numbers]) {\n    // Handle the error case where the list is empty.\n    if (numbers.length === 0) {\n      throw new coda.UserVisibleError(\"The list cannot be empty.\");\n    }\n\n    // Handle the error case where all the numbers are zeros.\n    if (numbers.every(number => number === 0)) {\n      throw new coda.UserVisibleError(\n        \"The list must contain a non-zero number.\");\n    }\n\n    let result = numbers[0];\n    for (let i = 1; i < numbers.length; i++) {\n      let number = numbers[i];\n      result = gcd(number, result);\n    }\n    return result;\n  },\n});\n\npack.addFormula({\n  name: \"LCM\",\n  description: \"Returns the least common multiple for a list of numbers.\",\n  parameters: [\n    // Use the shared parameter created above.\n    NumbersParameter,\n  ],\n  resultType: coda.ValueType.Number,\n  execute: async function ([numbers]) {\n    // Handle the error case where the list is empty.\n    if (numbers.length === 0) {\n      throw new coda.UserVisibleError(\"The list cannot be empty.\");\n    }\n\n    // Handle the error case where the list contains a zero.\n    if (numbers.some(number => number === 0)) {\n      throw new coda.UserVisibleError(\"The list must not contain a zero.\");\n    }\n\n    let result = numbers[0];\n    for (let i = 1; i < numbers.length; i++) {\n      let number = numbers[i];\n      result = Math.abs(number * result) / gcd(number, result);\n    }\n    return result;\n  },\n});\n\n// Helper function that calculates the greatest common divisor of two\n// numbers.\nfunction gcd(a, b) {\n  if (a === 0) {\n    return b;\n  }\n  return gcd(b % a, a);\n}"
       }
     ]

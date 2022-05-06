@@ -395,12 +395,12 @@ export const Examples: Example[] = [
       },
       {
         name: 'Number parameter',
-        content: 'A formula that takes a number as a parameter. This sample converts a number of pizza slices eaten into a percentage.',
+        content: 'A formula that takes a number as a parameter. This sample converts a number of slices of pizza into a percentage eaten.',
         codeFile: './examples/data-type/pizza_eaten.ts',
       },
       {
         name: 'Date parameter',
-        content: 'A formula that takes a date and time as a parameter. This sample adds five minutes onto an input date and time.',
+        content: 'A formula that takes a date as a parameter. This sample determines if the year of a given date would make for good New Years Eve glasses (has two or more zeros).',
         codeFile: './examples/dates/nye_glasses.ts',
       },
       {
@@ -426,7 +426,7 @@ export const Examples: Example[] = [
       },
       {
         name: 'Parameter suggested value',
-        content: 'A formula with a parameter that defines a suggested value that gets pre-populated. This sample rolls dice with a configurable number of sides.',
+        content: 'A formula with a parameter that defines a suggested value. This sample rolls virtual dice and returns the results.',
         codeFile: './examples/action/dice.ts',
       },
       {
@@ -437,7 +437,7 @@ export const Examples: Example[] = [
       },
       {
         name: 'Reusing parameters',
-        content: 'A Pack that reuses a parameter across multiple formulas. This sample performs various math operations on a list of numbers.',
+        content: 'A Pack that reuses a parameter across multiple formulas. This sample includes mathematical formulas that operate on a list of numbers.',
         codeFile: './examples/math/math.ts',
       },
     ],
