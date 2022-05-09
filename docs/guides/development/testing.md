@@ -11,7 +11,7 @@ Packs built using the web editor in the Pack Studio can only be run and tested i
 1. Open the doc you want to use for testing.
 1. Open the Pack in the sidebar.
 1. Open the **Settings** tab of the Pack.
-1. Click on the **Open Pack maker tools** button.
+1. Click on the **View logs** button.
 1. Click the gear icon (:octicons-gear-16:) to open the **Pack maker settings** dialog.
 1. In the **Installed in this doc** dropdown select **Latest Version**.
 
