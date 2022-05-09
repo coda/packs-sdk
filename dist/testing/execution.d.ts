@@ -73,3 +73,5 @@ export declare function executeMetadataFormula(formula: MetadataFormula, metadat
     search?: string;
     formulaContext?: MetadataContext;
 }, context?: ExecutionContext): Promise<any>;
+export declare function newRealFetcherExecutionContext(packDef: BasicPackDefinition, manifestPath: string): ExecutionContext;
+export declare function newRealFetcherSyncExecutionContext(packDef: BasicPackDefinition, manifestPath: string): SyncExecutionContext;

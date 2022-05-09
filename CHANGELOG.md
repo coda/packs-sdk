@@ -8,11 +8,20 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - Added support for multiple domains in the `networkDomain` parameter of `setUserAuthentication()`.
 
-## [0.12.0] - 2022-05-04
+## [0.12.0] - 2022-05-06
 
 ### Added
 
-- Added "useProofKeyForCodeExchange" option to OAuth2 authentication to support PKCE extension. While it's optionally supported by most OAuth2 providers, it might be required by some websites (e.g. Twitter).
+- Added `useProofKeyForCodeExchange` option to OAuth2 authentication to support PKCE extension. While it's optionally supported by most OAuth2 providers, it might be required by some websites (e.g. Twitter).
+- Added new wrappers `newRealFetcherExecutionContext` and `newRealFetcherSyncExecutionContext` to create "real" execution contexts that can be HTTP requests within integration tests. If you want to test a helper function that accepts an `ExecutionContext` or `SyncExecution` context, you canuse these. The recomendation is still to use `executeFormulaFromPackDef` or `executeSyncFormulaFromPackDef`, which assume that you are testing your actual full formula implementation and creates a real execution context on your behalf if you pass `useRealFetcher: true`. However, if you wish to directly test a helper function that takes an `ExecutionContext` as a parameter, these wrappers may be of use. Usage:
+
+```typescript
+import {newRealFetcherExecutionContext} from '@codahq/packs-sdk/dist/development';
+import {pack} from '../pack';
+
+const context = newRealFetcherExecutionContext(pack, require.resolve('../pack'));
+await myHelper(context);
+```
 
 ### Changed
 

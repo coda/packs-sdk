@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = void 0;
+exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = void 0;
 const types_1 = require("../runtime/types");
 const coercion_1 = require("./coercion");
 const bootstrap_1 = require("../runtime/bootstrap");
@@ -63,7 +63,7 @@ function resolveFormulaNameWithNamespace(formulaNameWithNamespace) {
 }
 async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, 
 // TODO(alexd): Switch this to false or remove when we launch 1.0.0
-useDeprecatedResultNormalization = true } = {}) {
+useDeprecatedResultNormalization = true, } = {}) {
     var _a, _b;
     let formula;
     switch (formulaSpec.type) {
@@ -79,10 +79,8 @@ useDeprecatedResultNormalization = true } = {}) {
     }
     let result = await thunk.findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, false);
     if (useDeprecatedResultNormalization && formula) {
-        const resultToNormalize = formulaSpec.type === types_1.FormulaType.Sync
-            ? result.result
-            : result;
-        // Matches legacy behavior within handler_templates:generateObjectResponseHandler where we never 
+        const resultToNormalize = formulaSpec.type === types_1.FormulaType.Sync ? result.result : result;
+        // Matches legacy behavior within handler_templates:generateObjectResponseHandler where we never
         // called transform body on non-object responses.
         if (typeof resultToNormalize === 'object') {
             const schema = (_b = (_a = executionContext === null || executionContext === void 0 ? void 0 : executionContext.sync) === null || _a === void 0 ? void 0 : _a.schema) !== null && _b !== void 0 ? _b : formula.schema;
@@ -96,9 +94,7 @@ useDeprecatedResultNormalization = true } = {}) {
         }
     }
     if (shouldValidateResult && formula) {
-        const resultToValidate = formulaSpec.type === types_1.FormulaType.Sync
-            ? result.result
-            : result;
+        const resultToValidate = formulaSpec.type === types_1.FormulaType.Sync ? result.result : result;
         (0, validation_2.validateResult)(formula, resultToValidate);
     }
     return result;
@@ -297,3 +293,12 @@ function buildUpdateCredentialsCallback(manifestPath) {
         }
     };
 }
+function newRealFetcherExecutionContext(packDef, manifestPath) {
+    return (0, fetcher_1.newFetcherExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_3.getPackAuth)(packDef), packDef.networkDomains, getCredentials(manifestPath));
+}
+exports.newRealFetcherExecutionContext = newRealFetcherExecutionContext;
+function newRealFetcherSyncExecutionContext(packDef, manifestPath) {
+    const context = newRealFetcherSyncExecutionContext(packDef, manifestPath);
+    return { ...context, sync: {} };
+}
+exports.newRealFetcherSyncExecutionContext = newRealFetcherSyncExecutionContext;
