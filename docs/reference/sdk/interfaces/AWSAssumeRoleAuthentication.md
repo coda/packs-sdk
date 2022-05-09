@@ -137,7 +137,7 @@ The AWS service to authenticate with, like "s3", "iam", or "route53".
 
 #### Defined in
 
-[types.ts:561](https://github.com/coda/packs-sdk/blob/main/types.ts#L561)
+[types.ts:573](https://github.com/coda/packs-sdk/blob/main/types.ts#L573)
 
 ___
 
@@ -149,4 +149,4 @@ Identifies this as AWSAssumeRole authentication.
 
 #### Defined in
 
-[types.ts:559](https://github.com/coda/packs-sdk/blob/main/types.ts#L559)
+[types.ts:571](https://github.com/coda/packs-sdk/blob/main/types.ts#L571)
