@@ -74,6 +74,8 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       },
       displayProperty: "name",
       idProperty: "projectId",
+      // For reference schemas, set identity.name the value of identityName on the
+      // sync table being referenced.
       identity: {
         name: "Project",
       },
@@ -115,9 +117,6 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       displayProperty: "name",
       idProperty: "projectId",
       featuredProperties: ["url"],
-      identity: {
-        name: "Project",
-      },
     });
 
     // A reference to a synced Task. Usually you can use
@@ -132,6 +131,8 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       },
       displayProperty: "name",
       idProperty: "taskId",
+      // For reference schemas, set identity.name the value of identityName on the
+      // sync table being referenced.
       identity: {
         name: "Task",
       },
@@ -184,9 +185,6 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       displayProperty: "name",
       idProperty: "taskId",
       featuredProperties: ["project", "url"],
-      identity: {
-        name: "Task",
-      },
     });
 
     /**

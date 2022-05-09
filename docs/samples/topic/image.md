@@ -300,8 +300,8 @@ const FileSchema = coda.makeObjectSchema({
     },
     fileId: { type: coda.ValueType.String, fromKey: "id" },
   },
-  idProperty: "fileId",
   displayProperty: "name",
+  idProperty: "fileId",
 });
 
 // Sync table for files.

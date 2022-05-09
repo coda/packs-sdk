@@ -19,11 +19,8 @@ const MySchema = coda.makeObjectSchema({
     property2: { type: coda.ValueType.String },
     // Add more properties here.
   },
-  idProperty: "property1", // Which property above is a unique ID.
   displayProperty: "property2", // Which property above to display by default.
-  identity: {
-    name: "<User-visible name for the column containing the schema>",
-  },
+  idProperty: "property1", // Which property above is a unique ID.
 });
 
 pack.addSyncTable({
@@ -84,9 +81,6 @@ const CatSchema = coda.makeObjectSchema({
   displayProperty: "image",
   idProperty: "id",
   featuredProperties: ["tags"],
-  identity: {
-    name: "Cat",
-  },
 });
 
 // Sync table that retrieves all cat images, optionally filtered by tags.
@@ -214,9 +208,6 @@ let SpellSchema = coda.makeObjectSchema({
   displayProperty: "name",
   idProperty: "index",
   featuredProperties: ["description", "level", "range"],
-  identity: {
-    name: "Spell",
-  },
 });
 
 // Reformat the API response for a spell to fit the schema.
@@ -339,9 +330,6 @@ const TaskSchema = coda.makeObjectSchema({
   displayProperty: "name",
   idProperty: "taskId",
   featuredProperties: ["description", "url"],
-  identity: {
-    name: "Task",
-  },
 });
 
 pack.addSyncTable({
@@ -438,15 +426,13 @@ const ProjectSchema = coda.makeObjectSchema({
   displayProperty: "name",
   idProperty: "projectId",
   featuredProperties: ["url"],
-  identity: {
-    name: "Project",
-  },
 });
 
 // A reference schema, allowing other sync tables to link to rows in the
-// Projects sync table.
+// Projects sync table. The second parameter must match the identityName field
+// of the sync table being referenced.
 const ProjectReferenceSchema = coda.makeReferenceSchemaFromObjectSchema(
-  ProjectSchema);
+  ProjectSchema, "Project");
 
 // A schema defining the data in the Tasks sync table.
 const TaskSchema = coda.makeObjectSchema({
@@ -476,9 +462,6 @@ const TaskSchema = coda.makeObjectSchema({
   displayProperty: "name",
   idProperty: "taskId",
   featuredProperties: ["description", "url", "project"],
-  identity: {
-    name: "Task",
-  },
 });
 
 // The definition and logic for the Projects sync table.

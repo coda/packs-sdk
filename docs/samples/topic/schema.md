@@ -17,15 +17,11 @@ The basic structure of an object schema.
 ```ts
 const MySchema = coda.makeObjectSchema({
   properties: {
-    property1: { type: coda.ValueType.Number },
-    property2: { type: coda.ValueType.String },
+    property1: { type: coda.ValueType.String },
+    property2: { type: coda.ValueType.Number },
     // Add more properties here.
   },
-  idProperty: "property1", // Which property above is a unique ID.
-  displayProperty: "property2", // Which property above to display by default.
-  identity: {
-    name: "<User-visible name of the schema>",
-  },
+  displayProperty: "property1", // Which property above to display by default.
 });
 ```
 ## For formula
@@ -121,9 +117,6 @@ let SpellSchema = coda.makeObjectSchema({
   displayProperty: "name",
   idProperty: "index",
   featuredProperties: ["description", "level", "range"],
-  identity: {
-    name: "Spell",
-  },
 });
 ```
 ## With self-reference
@@ -145,6 +138,8 @@ const TaskReferenceSchema = coda.makeObjectSchema({
   },
   displayProperty: "name",
   idProperty: "taskId",
+  // For reference schemas, set identity.name the value of identityName on the
+  // sync table being referenced.
   identity: {
     name: "Task",
   },
@@ -179,9 +174,6 @@ const TaskSchema = coda.makeObjectSchema({
   displayProperty: "name",
   idProperty: "taskId",
   featuredProperties: ["description", "url"],
-  identity: {
-    name: "Task",
-  },
 });
 ```
 
