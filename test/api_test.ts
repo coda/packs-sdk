@@ -184,7 +184,7 @@ describe('API test', () => {
               },
             },
           }),
-        "Sync table defines an identityName that conflicts with its schema's identity.name",
+        "Sync table SomeSync's schema's identity has a name (ConflictingIdentity) which must match the identityName of the table (MyIdentityName).",
       );
     });
   });
