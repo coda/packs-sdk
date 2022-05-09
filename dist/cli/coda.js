@@ -130,6 +130,10 @@ if (require.main === module) {
                 default: compile_1.TimerShimStrategy.None,
                 desc: 'Options: none, error, fake.',
             },
+            intermediateOutputDirectory: {
+                string: true,
+                default: undefined,
+            },
         },
         handler: build_1.handleBuild,
     })
