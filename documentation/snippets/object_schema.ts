@@ -4,13 +4,9 @@ import * as coda from "@codahq/packs-sdk";
 
 const MySchema = coda.makeObjectSchema({
   properties: {
-    property1: { type: coda.ValueType.Number },
-    property2: { type: coda.ValueType.String },
+    property1: { type: coda.ValueType.String },
+    property2: { type: coda.ValueType.Number },
     // Add more properties here.
   },
-  idProperty: "property1", // Which property above is a unique ID.
-  displayProperty: "property2", // Which property above to display by default.
-  identity: {
-    name: "<User-visible name of the schema>",
-  },
+  displayProperty: "property1", // Which property above to display by default.
 });

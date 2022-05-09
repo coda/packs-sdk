@@ -130,7 +130,7 @@ In some areas of the UI, such as the settings pane, the name will be rewritten t
 
 ## Identity {: #identity}
 
-Every sync table is required to specify an [`identityName`][identityName], which is a unique identifier for the type of item being synced in that table. By convention this is usually the singular form of the name of the item being synced. For instance, a "Tasks" table would use an identity name of "Task". This identity name is used to reference the table when [creating row references](#references) or [updating rows with actions](#actions).
+Every sync table is required to specify an [`identityName`][identityName], which is a unique identifier for the table. By convention this is usually the singular form of the name of the item being synced. For instance, a "Tasks" table would use an identity name of "Task". This identity name is used to reference the table when [creating row references](#references) or [updating rows with actions](#actions).
 
 By default the identity name is also used as the column name for the first column of the sync table, which contains the synced item as a chip. You can use a different name for the column by setting [`dynamicOptions.entityName`][dynamicOptions] on the sync table.
 

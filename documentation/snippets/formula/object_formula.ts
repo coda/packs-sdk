@@ -10,11 +10,7 @@ const MySchema = coda.makeObjectSchema({
     property2: { type: coda.ValueType.String },
     // Add more properties here.
   },
-  idProperty: "property1", // Which property above is a unique ID.
-  displayProperty: "property2", // Which property above to display by default.
-  identity: {
-    name: "<User-visible name>",
-  },
+  displayProperty: "property1", // Which property above to display by default.
 });
 
 pack.addFormula({

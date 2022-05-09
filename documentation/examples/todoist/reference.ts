@@ -23,15 +23,13 @@ const ProjectSchema = coda.makeObjectSchema({
   displayProperty: "name",
   idProperty: "projectId",
   featuredProperties: ["url"],
-  identity: {
-    name: "Project",
-  },
 });
 
 // A reference schema, allowing other sync tables to link to rows in the
-// Projects sync table.
+// Projects sync table. The second parameter must match the identityName field
+// of the sync table being referenced.
 const ProjectReferenceSchema = coda.makeReferenceSchemaFromObjectSchema(
-  ProjectSchema);
+  ProjectSchema, "Project");
 
 // A schema defining the data in the Tasks sync table.
 const TaskSchema = coda.makeObjectSchema({
@@ -61,9 +59,6 @@ const TaskSchema = coda.makeObjectSchema({
   displayProperty: "name",
   idProperty: "taskId",
   featuredProperties: ["description", "url", "project"],
-  identity: {
-    name: "Task",
-  },
 });
 
 // The definition and logic for the Projects sync table.

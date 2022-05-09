@@ -54,6 +54,8 @@ const ProjectReferenceSchema = coda.makeObjectSchema({
   },
   displayProperty: "name",
   idProperty: "projectId",
+  // For reference schemas, set identity.name the value of identityName on the
+  // sync table being referenced.
   identity: {
     name: "Project",
   },
@@ -95,9 +97,6 @@ const ProjectSchema = coda.makeObjectSchema({
   displayProperty: "name",
   idProperty: "projectId",
   featuredProperties: ["url"],
-  identity: {
-    name: "Project",
-  },
 });
 
 // A reference to a synced Task. Usually you can use
@@ -112,6 +111,8 @@ const TaskReferenceSchema = coda.makeObjectSchema({
   },
   displayProperty: "name",
   idProperty: "taskId",
+  // For reference schemas, set identity.name the value of identityName on the
+  // sync table being referenced.
   identity: {
     name: "Task",
   },
@@ -164,9 +165,6 @@ const TaskSchema = coda.makeObjectSchema({
   displayProperty: "name",
   idProperty: "taskId",
   featuredProperties: ["project", "url"],
-  identity: {
-    name: "Task",
-  },
 });
 
 /**
