@@ -5,7 +5,7 @@ module.exports = {
   excludeExternals: true,
   excludePrivate: true,
   excludeProtected: true,
-  plugin: 'typedoc-plugin-markdown',
+  plugin: ['typedoc-plugin-markdown'],
   // Don't include the repo's README in the generated docs.
   readme: 'none',
 

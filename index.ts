@@ -1,3 +1,9 @@
+/**
+ * The core components of the Pack SDK. These functions and types are used to
+ * define your Pack, it's building blocks, and their logic.
+ * @module core
+ */
+
 // Pack related interfaces
 export type {Authentication} from './types';
 export {AuthenticationType} from './types';
