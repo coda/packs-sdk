@@ -6,15 +6,12 @@ const pack = coda.newPack();
 
 const MySchema = coda.makeObjectSchema({
   properties: {
-    property1: { type: coda.ValueType.Number },
-    property2: { type: coda.ValueType.String },
+    property1: { type: coda.ValueType.String },
+    property2: { type: coda.ValueType.Number },
     // Add more properties here.
   },
-  idProperty: "property1", // Which property above is a unique ID.
-  displayProperty: "property2", // Which property above to display by default.
-  identity: {
-    name: "<User-visible name for the column containing the schema>",
-  },
+  displayProperty: "property1", // Which property above to display by default.
+  idProperty: "property2", // Which property above is a unique ID.
 });
 
 pack.addSyncTable({

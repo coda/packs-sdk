@@ -27,9 +27,6 @@ const TaskSchema = coda.makeObjectSchema({
   displayProperty: "name",
   idProperty: "taskId",
   featuredProperties: ["description", "url"],
-  identity: {
-    name: "Task",
-  },
 });
 
 pack.addSyncTable({

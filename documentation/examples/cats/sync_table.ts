@@ -21,9 +21,6 @@ const CatSchema = coda.makeObjectSchema({
   displayProperty: "image",
   idProperty: "id",
   featuredProperties: ["tags"],
-  identity: {
-    name: "Cat",
-  },
 });
 
 // Sync table that retrieves all cat images, optionally filtered by tags.

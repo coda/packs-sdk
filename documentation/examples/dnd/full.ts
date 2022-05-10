@@ -64,9 +64,6 @@ let SpellSchema = coda.makeObjectSchema({
   displayProperty: "name",
   idProperty: "index",
   featuredProperties: ["description", "level", "range"],
-  identity: {
-    name: "Spell",
-  },
 });
 
 // Reformat the API response for a spell to fit the schema.

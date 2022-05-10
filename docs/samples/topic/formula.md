@@ -111,9 +111,6 @@ const TaskSchema = coda.makeObjectSchema({
   },
   displayProperty: "name",
   idProperty: "taskId",
-  identity: {
-    name: "Task",
-  },
 });
 
 // Formula that looks up rich metadata about a task given it's URL.

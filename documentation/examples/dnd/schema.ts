@@ -59,7 +59,4 @@ let SpellSchema = coda.makeObjectSchema({
   displayProperty: "name",
   idProperty: "index",
   featuredProperties: ["description", "level", "range"],
-  identity: {
-    name: "Spell",
-  },
 });
