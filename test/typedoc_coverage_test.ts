@@ -38,7 +38,7 @@ interface ReflectionData {
 
 function getReflectionData() {
   const tempfile = path.join(os.tmpdir(), `typedoc.json`);
-  const command = `node_modules/.bin/typedoc index.ts --options typedoc.js --json ${tempfile} > /dev/null`;
+  const command = `node_modules/.bin/typedoc index.ts --options documentation/typedoc/sdk.js --json ${tempfile} > /dev/null`;
   const response = spawnSync(command, {
     shell: true,
   });
