@@ -1478,7 +1478,7 @@ export function makeSyncTable<
     if (schemaDef.identity) {
       if (schemaDef.identity.name && schemaDef.identity.name !== identityName) {
         throw new Error(
-          `Sync table ${name}'s schema's identity has a name (${schemaDef.identity.name}) which must match the identityName of the table (${identityName}).`,
+          `Identity name mismatch for sync table ${name}. Either remove the schema's identity.name (${schemaDef.identity.name}) or ensure it matches the table's identityName (${identityName}).`,
         );
       }
       schemaDef.identity = {...schemaDef.identity, name: identityName};
