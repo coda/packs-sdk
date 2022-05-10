@@ -8,18 +8,26 @@ interface BuildArgs {
   outputDir?: string;
   minify: boolean;
   timerStrategy: TimerShimStrategy;
+  intermediateOutputDirectory?: string;
 }
 
-export async function handleBuild({outputDir, manifestFile, minify, timerStrategy}: ArgumentsCamelCase<BuildArgs>) {
-  const {bundlePath, intermediateOutputDirectory} = await compilePackBundle({
+export async function handleBuild({
+  outputDir,
+  manifestFile,
+  minify,
+  timerStrategy,
+  intermediateOutputDirectory,
+}: ArgumentsCamelCase<BuildArgs>) {
+  const {bundlePath, intermediateOutputDirectory: actualIntermediateOutputDirectory} = await compilePackBundle({
     manifestPath: manifestFile,
     minify,
     outputDirectory: outputDir,
     timerStrategy,
+    intermediateOutputDirectory,
   });
   if (outputDir) {
     print(
-      `Pack built successfully. Compiled output is in ${bundlePath}. Intermediate files are in ${intermediateOutputDirectory}`,
+      `Pack built successfully. Compiled output is in ${bundlePath}. Intermediate files are in ${actualIntermediateOutputDirectory}`,
     );
   } else {
     print(`Pack built successfully. Compiled output is in ${bundlePath}.`);
