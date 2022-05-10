@@ -1,3 +1,12 @@
+/**
+ * Utilities that aid in writing unit tests and integration tests for Packs.
+ * They are only available when developing locally using the CLI, and are
+ * imported using the following code:
+ * ```ts
+ * import * as testing from "@codahq/packs-sdk/dist/development";
+ * ```
+ * @module testing
+ */
 export type { ContextOptions } from './testing/execution';
 export type { ExecuteOptions } from './testing/execution';
 export { executeFormulaFromPackDef } from './testing/execution';

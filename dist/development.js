@@ -1,4 +1,13 @@
 "use strict";
+/**
+ * Utilities that aid in writing unit tests and integration tests for Packs.
+ * They are only available when developing locally using the CLI, and are
+ * imported using the following code:
+ * ```ts
+ * import * as testing from "@codahq/packs-sdk/dist/development";
+ * ```
+ * @module testing
+ */
 // Exports for development-related code.
 //
 // These are kept separate from index.ts to avoid these utilities winding up in pack bundles.

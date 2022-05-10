@@ -400,15 +400,15 @@ pack.addSyncTable({
 
 [samples]: ../../../samples/topic/dynamic-sync-table.md
 [sync_tables_naming]: index.md#naming
-[MetadataFormulaObjectResultType]: ../../../reference/sdk/interfaces/MetadataFormulaObjectResultType.md
+[MetadataFormulaObjectResultType]: ../../../reference/sdk/interfaces/core.MetadataFormulaObjectResultType.md
 [schemas_identity]: ../../advanced/schemas.md#schema-identity
 [schemas_normalization]: ../../advanced/schemas.md#normalization
 [schemas_sync_table]: ../../advanced/schemas.md#schemas-in-sync-tables
-[fromKey]: ../../../reference/sdk/interfaces/ObjectSchemaProperty.md#fromkey
-[addDynamicSyncTable]: ../../../reference/sdk/classes/PackDefinitionBuilder.md#adddynamicsynctable
-[listDynamicUrls]: ../../../reference/sdk/interfaces/DynamicSyncTableOptions.md#listdynamicurls
-[getName]: ../../../reference/sdk/interfaces/DynamicSyncTableOptions.md#getname
-[getDisplayUrl]: ../../../reference/sdk/interfaces/DynamicSyncTableOptions.md#getdisplayurl
-[getSchema]: ../../../reference/sdk/interfaces/DynamicSyncTableOptions.md#getschema
-[dynamicUrl]: ../../../reference/sdk/interfaces/Sync.md#dynamicurl
+[fromKey]: ../../../reference/sdk/interfaces/core.ObjectSchemaProperty.md#fromkey
+[addDynamicSyncTable]: ../../../reference/sdk/classes/core.PackDefinitionBuilder.md#adddynamicsynctable
+[listDynamicUrls]: ../../../reference/sdk/interfaces/core.DynamicSyncTableOptions.md#listdynamicurls
+[getName]: ../../../reference/sdk/interfaces/core.DynamicSyncTableOptions.md#getname
+[getDisplayUrl]: ../../../reference/sdk/interfaces/core.DynamicSyncTableOptions.md#getdisplayurl
+[getSchema]: ../../../reference/sdk/interfaces/core.DynamicSyncTableOptions.md#getschema
+[dynamicUrl]: ../../../reference/sdk/interfaces/core.Sync.md#dynamicurl
 [sync_tables_identity]: index.md#identity
