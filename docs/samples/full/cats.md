@@ -143,9 +143,6 @@ This Pack allows you to fetch random cat photos using the [Cat-as-a-service API]
       displayProperty: "image",
       idProperty: "id",
       featuredProperties: ["tags"],
-      identity: {
-        name: "Cat",
-      },
     });
 
     // Sync table that retrieves all cat images, optionally filtered by tags.

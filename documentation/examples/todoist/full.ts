@@ -165,6 +165,12 @@ const TaskSchema = coda.makeObjectSchema({
   displayProperty: "name",
   idProperty: "taskId",
   featuredProperties: ["project", "url"],
+  // For schemas returned by actions to update rows in a sync table, set
+  // identity.name the value of identityName on the sync table being updated.
+  // This schema is used by the UpdateTask action.
+  identity: {
+    name: "Task",
+  },
 });
 
 /**

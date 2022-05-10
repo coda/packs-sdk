@@ -366,6 +366,11 @@ export const Examples: Example[] = [
         content: 'A formula that posts data to an external API. This sample creates a new task in the Todoist app.',
         codeFile: './examples/todoist/action.ts',
       },
+      {
+        name: 'Update row in sync table',
+        content: 'A formula that updates an item on the server, and the existing row in a sync table if it exists. This sample updates the name of a task in the Todoist app.',
+        codeFile: './examples/todoist/update.ts',
+      },
     ],
   },
   {
