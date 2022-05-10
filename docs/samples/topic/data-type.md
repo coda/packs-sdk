@@ -102,8 +102,8 @@ The basic structure of a formula that returns an object.
 ```ts
 const MySchema = coda.makeObjectSchema({
   properties: {
-    property1: { type: coda.ValueType.Number },
-    property2: { type: coda.ValueType.String },
+    property1: { type: coda.ValueType.String },
+    property2: { type: coda.ValueType.Number },
     // Add more properties here.
   },
   displayProperty: "property1", // Which property above to display by default.
@@ -124,8 +124,9 @@ pack.addFormula({
   schema: MySchema,
   execute: async function ([param], context) {
     return {
-      property1: 123,
-      property2: param,
+      property1: param,
+      property2: 123,
+
     };
   },
 });
