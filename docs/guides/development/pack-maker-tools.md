@@ -99,7 +99,7 @@ The Pack maker tools also lets you adjust a few developer-specific settings for 
 <img src="../../../images/pmt_settings.png" srcset="../../../images/pmt_settings_2x.png 2x" class="screenshot" alt="Pack settings for the doc">
 
 **Installed in this doc**
-:   Which version of the Pack to use in the doc. This allows you to test new versions of your Pack before releasing them, or roll back to previous versions to reproduce a bug. It's recommended to use **Latest Version** while developing your Pack.
+:   Which version of the Pack to use in the doc. This allows you to test new versions of your Pack before releasing them, or roll back to previous versions to reproduce a bug. It's recommended to use **Latest Version** while developing your Pack. However, in order to publish or convert the doc to a template, you must use **Latest Release**. Also note that you will be unable to change the version in a published doc or template.
 
 **Auto-refresh formulas & tables**
 :   If you enable this setting and have selected **Latest version** above, whenever you build a new version of your Pack all of the formulas and sync tables in the doc will be automatically refreshed. This only applies to the current session (browser tab), so you'll need to turn it back on if you refresh the page or open the doc again later.
