@@ -3,6 +3,9 @@ title: "Pack SDK Reference"
 ---
 # Pack SDK Reference
 
+The core components of the Pack SDK. These functions and types are used to
+define your Pack, it's building blocks, and their logic.
+
 ## Namespaces
 
 - [SvgConstants](modules/SvgConstants.md)

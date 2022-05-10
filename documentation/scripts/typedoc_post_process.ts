@@ -1,10 +1,9 @@
 import * as fs from 'fs';
 import glob from 'glob';
 import path from 'path';
-import {print} from '../testing/helpers';
+import {print} from '../../testing/helpers';
 
-const BaseDir = path.join(__dirname, '..');
-const TypeDocsRoot = path.join(BaseDir, 'docs/reference/sdk');
+const TypeDocsRoot = path.resolve(process.cwd(), process.argv[2]);
 const MarkdownPattern = path.join(TypeDocsRoot, '**/*.md');
 // Extracts the name from "# Name", "# Type: Name", and
 // "# Type: Name<Template Stuff>".
@@ -14,12 +13,12 @@ async function main(): Promise<void> {
   const files = glob.sync(MarkdownPattern, {});
   const promises = [];
   for (const file of files) {
-    promises.push(process(file));
+    promises.push(processFile(file));
   }
   await Promise.all(promises);
 }
 
-async function process(file: string) {
+async function processFile(file: string) {
   return addFrontmatter(file);
 }
 

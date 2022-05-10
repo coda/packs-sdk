@@ -152,8 +152,11 @@ typedoc:
 	fi
 	# Most options loaded from typedoc.js.
 	# If you changes this, also update the similar command in typedoc_coverage_test.ts.
-	${ROOTDIR}/node_modules/.bin/typedoc index.ts --options typedoc.js --gitRevision "${DOC_GIT_REVISION}" --out ${ROOTDIR}/docs/reference/sdk
-	node -r ts-node/register documentation/typedoc_post_process.ts
+	${ROOTDIR}/node_modules/.bin/typedoc index.ts --options documentation/typedoc/sdk.js --gitRevision "${DOC_GIT_REVISION}" --out ${ROOTDIR}/docs/reference/sdk
+	node -r ts-node/register documentation/scripts/typedoc_post_process.ts "docs/reference/sdk"
+
+	${ROOTDIR}/node_modules/.bin/typedoc development.ts --options documentation/typedoc/testing.js --gitRevision "${DOC_GIT_REVISION}" --out ${ROOTDIR}/docs/reference/testing
+	node -r ts-node/register documentation/scripts/typedoc_post_process.ts "docs/reference/testing"
 
 .PHONY: docs
 docs: typedoc generated-documentation build-mkdocs
@@ -247,7 +250,7 @@ release:
 	@echo "Checking for uncommitted/untracked changes..." && test -z "`git status --porcelain | grep -vE ''`" || \
 		(echo "Refusing to publish with these uncommitted/untracked changes:" && \
 		git status --porcelain | grep -vE '' && false)
-	# TODO(spencer): uncomment below when we move to auto release flow	
+	# TODO(spencer): uncomment below when we move to auto release flow
 	# @echo "Checking for main branch..." && test main = "`git rev-parse --abbrev-ref HEAD`" || \
 	# 	(echo "Refusing to publish from non-main branch `git rev-parse --abbrev-ref HEAD`" && false)
 	# @echo "Checking for unpushed commits..." && git fetch
