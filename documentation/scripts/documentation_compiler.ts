@@ -22,7 +22,7 @@ const ExamplePagesRoot = path.join(TypeDocsRoot, ExampleDirName);
 const ExamplePageTemplate = Handlebars.compile(
   fs.readFileSync(path.join(DocumentationRoot, 'example_page_template.md'), 'utf8'),
 );
-const SdkReferenceLink = 'https://coda.github.io/packs-sdk';
+const SdkReferenceLink = 'https://coda.io/packs/build/latest';
 const SamplePageLink = `${SdkReferenceLink}/${ExampleDirName}`;
 const PageFileExtension = 'md';
 const IndexPageFilename = 'index.md'
