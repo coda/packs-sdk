@@ -625,7 +625,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
     if (identityName) {
         if (schemaDef.identity) {
             if (schemaDef.identity.name && schemaDef.identity.name !== identityName) {
-                throw new Error("Sync table defines an identityName that conflicts with its schema's identity.name");
+                throw new Error(`Identity name mismatch for sync table ${name}. Either remove the schema's identity.name (${schemaDef.identity.name}) or ensure it matches the table's identityName (${identityName}).`);
             }
             schemaDef.identity = { ...schemaDef.identity, name: identityName };
         }
