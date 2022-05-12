@@ -33,7 +33,7 @@ Now that we have a destination in mind, let's get coding!
 
 We'll start by scaffolding out the structure of the formula. Once we have it looking the way we want we can go back and add the logic later.
 
-### Add pack boilerplate
+### Add the Pack boilerplate
 
 <section class="tutorial-row" markdown>
 <div markdown>
@@ -52,7 +52,7 @@ export const pack = coda.newPack();
 </section>
 
 
-### Add formula definition
+### Add the formula definition
 
 <section class="tutorial-row" markdown>
 <div markdown>
@@ -74,7 +74,7 @@ pack.addFormula({
 </div>
 </section>
 
-### Set name and description
+### Set the name and description
 
 <section class="tutorial-row" markdown>
 <div markdown>
@@ -98,7 +98,7 @@ pack.addFormula({
 </section>
 
 
-### Create parameters array
+### Create the parameters array
 
 <section class="tutorial-row" markdown>
 <div markdown>
@@ -125,7 +125,7 @@ pack.addFormula({
 </section>
 
 
-### Add parameter definition
+### Add the parameter definition
 
 <section class="tutorial-row" markdown>
 <div markdown>
@@ -154,7 +154,7 @@ pack.addFormula({
 </section>
 
 
-### Set parameter name and description
+### Set the parameter name and description
 
 <section class="tutorial-row" markdown>
 <div markdown>
@@ -184,7 +184,7 @@ pack.addFormula({
 </section>
 
 
-### Set parameter type
+### Set the parameter type
 
 <section class="tutorial-row" markdown>
 <div markdown>
@@ -217,7 +217,7 @@ pack.addFormula({
 </section>
 
 
-### Set result type
+### Set the result type
 
 <section class="tutorial-row" markdown>
 <div markdown>
@@ -251,7 +251,7 @@ pack.addFormula({
 </section>
 
 
-### Define execute function
+### Define the execute function
 
 <section class="tutorial-row" markdown>
 <div markdown>
@@ -288,7 +288,7 @@ pack.addFormula({
 </section>
 
 
-### Return placeholder value
+### Return a placeholder value
 
 <section class="tutorial-row" markdown>
 <div markdown>
@@ -348,7 +348,7 @@ You should see the name, description, and parameters in the help text, get back 
 All the code we've written so far has just been a bunch of settings that tell Coda the shape of the formula. Now it's time to get down to business and write the code that actually makes the formula do something useful.
 
 
-### Setup the parameters
+### Capture the formula inputs
 
 <section class="tutorial-row" markdown>
 <div markdown>
@@ -471,7 +471,7 @@ Reverse("Hello world", byWord: true) ==> "world Hello"
 Let's update our formula to make this possible.
 
 
-### Add new parameter
+### Add a new parameter
 
 <section class="tutorial-row" markdown>
 <div markdown>
@@ -503,7 +503,7 @@ parameters: [
 </section>
 
 
-### Unpack new argument
+### Unpack the new argument
 
 <section class="tutorial-row" markdown>
 <div markdown>
@@ -526,7 +526,7 @@ execute: async function (args, context) {
 </section>
 
 
-### Set default value
+### Set a default value
 
 <section class="tutorial-row" markdown>
 <div markdown>
