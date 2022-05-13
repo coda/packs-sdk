@@ -93,3 +93,19 @@ li.no {
 .landing-box-row .landing-item p:first-of-type {
   flex: 1;
 }
+
+.tutorial-row {
+  display: grid;
+}
+
+@media (min-width: 1000px) {
+  .tutorial-row {
+    gap: 2em;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+  }
+}
+
+.tutorial-row > * {
+  overflow: auto;
+}
