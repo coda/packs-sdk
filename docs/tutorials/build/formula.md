@@ -19,7 +19,7 @@ Before we start writing any code, let's first think through how we want the form
 Reverse("Hello") ==> "olleH"
 ```
 
-It's also a good time think through how it should handle edge cases, where the input is different than what we'd normally expect.
+It's also a good time think through how it should handle edge cases, where the input is different than what we'd normally expect. For example, empty inputs, large amounts of data, etc.
 
 ```
 Reverse("a") ==> "a"
@@ -57,7 +57,7 @@ export const pack = coda.newPack();
 <section class="tutorial-row" markdown>
 <div markdown>
 
-Next add a formula definition to your Pack using the `addFormula()` method. This method takes in a set of key-value pairs that configure the various settings of the formula.
+Next add a formula definition to your Pack using the `addFormula()` method. This method takes in a set of [key-value pairs][javascript_key_value] that configure the various settings of the formula.
 
 </div>
 <div markdown>
@@ -159,7 +159,7 @@ pack.addFormula({
 <section class="tutorial-row" markdown>
 <div markdown>
 
-Also like formulas, parameters have a name and description. These will be shown in the formula's auto-generated documentation.
+Also like formulas, parameters have a name and description. These will be shown in the formula editor to help the user understand what data to pass in the parameter.
 
 </div>
 <div markdown>
@@ -191,7 +191,7 @@ pack.addFormula({
 
 Each parameter must also specify what type of data it expects. Coda supports a variety of data types, like text, numbers, dates, etc.
 
-In this case we want to accept text, which corresponds to a "string" in JavaScript. The enumeration `coda.ParameterType` contains all of the supported parameter types.
+In this case we want to accept text, which is called a "string" in JavaScript. The enumeration `coda.ParameterType` contains all of the supported parameter types.
 
 </div>
 <div markdown>
@@ -256,7 +256,7 @@ pack.addFormula({
 <section class="tutorial-row" markdown>
 <div markdown>
 
-The last part of our scaffolding is the `execute` function, which contains the code that powers the formula. It's job is to transform the inputs into output, based on the desired functionality of your formula.
+The last part of our scaffolding is the `execute` function, which contains the code that powers the formula. Its job is to transform the inputs into output, based on the desired functionality of your formula.
 
 This function is run each time your formula is recalculated, for example when it is added to a page or the inputs change.
 
@@ -342,6 +342,11 @@ You should see the name, description, and parameters in the help text, get back 
 </div>
 </section>
 
+??? tip "Tip: Slash command"
+    When you write Packs using the Pack Studio web editor you can use the slash command `/addFormula` to generate the scaffolding for you!
+
+    [![How to use the formula slash command][slash_gif]{: .screenshot}][slash_gif]
+
 
 ## 📝 Write the logic
 
@@ -404,7 +409,7 @@ Now that we have the text, let's reverse it. JavaScript arrays have `reverse()` 
 
 We can do that using the `split()` method, splitting on an empty string to get one character per item. Note that this approach only works well for letters and numbers; emojis and some special characters will get jumbled, but that's OK for this tutorial.
 
-After reversing join the pieces back together using the `join()` method, using an empty string as a separator.
+After reversing join the pieces back together using the `join()` method, using an empty string as a separator. All of these steps can be chained together and the final result returned.
 
 </div>
 <div markdown>
@@ -510,7 +515,7 @@ parameters: [
 
 The value that users pass to `byWord` will end up in the execute function's `args` parameter, alongside the existing `text` value. Since it's the second parameter to the formula, its value will be the second entry in `args`.
 
-Unpack the `byWord` argument into it's own variable to make it easier to work with. This is done by adding a new variable to the left side of the destructuring assignment, in the second position.
+Unpack the `byWord` argument into its own variable to make it easier to work with. This is done by adding a new variable to the left side of the destructuring assignment (within the square brackets), in the second position.
 
 </div>
 <div markdown>
@@ -644,3 +649,5 @@ Now that you have an understanding of how to build formulas, here are some more 
 [samples_formulas]: ../../samples/topic/formula.md
 [parameters]: ../../guides/basics/parameters/index.md
 [data_types]: ../../guides/basics/data-types.md
+[javascript_key_value]: https://javascript.info/object
+[slash_gif]: ../../images/tutorial_formula_slash.gif
