@@ -153,6 +153,35 @@ The sync formula that populates a sync table will timeout after a minute, but fo
 
 If at the end of an execution there are more items left to sync, return a custom continuation object along with the synced items. Coda will then re-run your sync formula, passing in the previous continuation object. The synced items from each execution will be appended to the table. This process will continue until no continuation object is returned or the table reaches the row limit.
 
+```mermaid
+flowchart TD
+
+subgraph coda [ ]
+  run(Run sync formula)
+  table(Sync table)
+  exists{Exists?}
+  subgraph pack [Pack]
+    request(Fetcher request)
+    response(Response)
+    results(Results)
+    continuation(Continuation?)
+  end
+end
+
+start(Start sync)
+complete(Sync complete)
+
+start --> run
+run --> pack
+request --> response
+response --> results -- Append --> table
+response --> continuation --> exists
+exists -- No --> complete
+exists -- Yes\nSet as context.sync.continuation --> run
+```
+
+The contents of the continuation are flexible and will depend on the API to the external data source, but usually involve offsets or page tokens. The continuation must be an object of type [`Continuation`][Continuation], which allows for storing string and number values. Continuations are not designed for persisting large amounts of data between executions, so we recommend against using a task queue pattern.
+
 ```ts
 pack.addSyncTable({
   // ...
@@ -180,8 +209,6 @@ pack.addSyncTable({
   },
 });
 ```
-
-The contents of the continuation are flexible and will depend on the API to the external data source, but usually involve offsets or page tokens. The continuation must be an object of type [`Continuation`][Continuation], which allows for storing string and number values. Continuations are not designed for persisting large amounts of data between executions, so we recommend against using a task queue pattern.
 
 [View Sample Code][sample_continuation]{ .md-button }
 
