@@ -109,3 +109,8 @@ li.no {
 .tutorial-row > * {
   overflow: auto;
 }
+
+.tutorial-row img.screenshot {
+  box-shadow: none;
+  border: 1px solid var(--md-default-fg-color--lightest);
+}
