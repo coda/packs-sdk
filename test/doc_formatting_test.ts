@@ -18,7 +18,7 @@ interface MarkdownFile {
 
 async function getMarkdownFileContent(): Promise<MarkdownFile[]> {
   const files = glob.sync(MarkdownPattern, {});
-  const buffers = await Promise.all(files.map(file => fs.promises.readFile(file)));
+  const buffers = files.map(file => fs.readFileSync(file));
   const content = buffers.map(buffer => buffer.toString());
   return files.map((file, i) => {
     return {
