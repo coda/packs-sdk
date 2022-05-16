@@ -2122,45 +2122,6 @@ describe('Pack metadata Validation', () => {
       ]);
     });
 
-    it('missing auth networkDomains when specifying authentication', async () => {
-      const metadata = createFakePackVersionMetadata({
-        networkDomains: ['foo.com', 'bar.com'],
-        defaultAuthentication: {
-          type: AuthenticationType.HeaderBearerToken,
-        },
-      });
-      const err = await validateJsonAndAssertFails(metadata, '1.0.0');
-      assert.deepEqual(err.validationErrors, [
-        {
-          message:
-            'This pack uses multiple network domains and must set one as a `networkDomain` in setUserAuthentication()',
-          path: 'defaultAuthentication.networkDomain',
-        },
-      ]);
-    });
-
-    it('empty auth networkDomains when specifying authentication', async () => {
-      const metadata = createFakePackVersionMetadata({
-        networkDomains: ['foo.com', 'bar.com'],
-        defaultAuthentication: {
-          type: AuthenticationType.HeaderBearerToken,
-          networkDomain: [],
-        },
-      });
-      const err = await validateJsonAndAssertFails(metadata, '1.0.0');
-      assert.deepEqual(err.validationErrors, [
-        {
-          message: 'Array must contain at least 1 element(s)',
-          path: 'defaultAuthentication.networkDomain',
-        },
-        {
-          message:
-            'This pack uses multiple network domains and must set one as a `networkDomain` in setUserAuthentication()',
-          path: 'defaultAuthentication.networkDomain',
-        },
-      ]);
-    });
-
     it('missing networkDomains when specifying authentication allowed for old SDK versions', async () => {
       const metadata = createFakePackVersionMetadata({
         networkDomains: ['foo.com', 'bar.com'],

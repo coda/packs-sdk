@@ -1268,18 +1268,6 @@ const packMetadataSchemaBySdkVersion: SchemaExtension[] = [
           authNetworkDomains = [data.defaultAuthentication.networkDomain];
         }
 
-        if (!authNetworkDomains?.length) {
-          if (data.networkDomains && data.networkDomains.length > 1) {
-            context.addIssue({
-              code: z.ZodIssueCode.custom,
-              path: ['defaultAuthentication.networkDomain'],
-              message:
-                'This pack uses multiple network domains and must set one as a `networkDomain` in setUserAuthentication()',
-            });
-          }
-          return;
-        }
-
         // Pack has multiple network domains and user auth. The code needs to clarify which domain gets the auth
         // headers.
         for (const authNetworkDomain of authNetworkDomains) {
