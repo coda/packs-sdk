@@ -71,8 +71,10 @@ jobs:
           name: 'Test'
           command: make test
       - run:
-          name: 'Ensure clean dist diff'
-          command: make validate-no-changes
+          name: Compress artifacts
+          command: tar cfvz output.tgz --exclude coverage/tmp coverage
+      - store_artifacts:
+          path: output.tgz
 
   build-docs-head:
     executor: default_build_environment
@@ -187,73 +189,3 @@ workflows:
       - build:
           context:
             - dockerhub
-          filters:
-            branches:
-              ignore:
-                - main
-
-  commit-validation-and-deploy-docs:
-    jobs:
-      - build:
-          context:
-            - dockerhub
-          filters:
-            branches:
-              only:
-                - main
-      - utils/cancel-older-awaiting-approvals:
-          context:
-            - circleci
-          circle_token: ${CIRCLECI_TOKEN}
-          requires:
-            - build
-      - wait-for-docs-approval:
-          type: approval
-          requires:
-            - utils/cancel-older-awaiting-approvals
-      - build-docs-head:
-          context:
-            - dockerhub
-          requires:
-            - wait-for-docs-approval
-      - push-head-docs:
-          context:
-            - aws-head
-            - dockerhub
-          requires:
-            - build-docs-head
-      - build-docs-staging:
-          context:
-            - dockerhub
-          requires:
-            - push-head-docs
-      - push-staging-docs:
-          context:
-            - aws-staging
-            - dockerhub
-          requires:
-            - push-head-docs
-            - build-docs-staging
-      - build-docs-prod:
-          context:
-            - dockerhub
-          requires:
-            - push-staging-docs
-      - utils/slack-notify-waiting-for-approval:
-          context:
-            - slack
-          slack_bot_token: ${PUSH_REMINDER_BOT_TOKEN}
-          requires:
-            - push-staging-docs
-      - wait-for-approval:
-          type: approval
-          requires:
-            - push-staging-docs
-      - push-prod-docs:
-          context:
-            - aws-prod
-            - dockerhub
-          requires:
-            - wait-for-approval
-            - build-docs-prod
-      # TODO: add publish NPM package with approval?

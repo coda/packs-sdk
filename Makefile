@@ -209,7 +209,7 @@ publish-docs-gh-pages:
 
 .PHONY: test
 test:
-	TS_NODE_TRANSPILE_ONLY=1 ${ROOTDIR}/node_modules/.bin/mocha test/*_test.ts
+	TS_NODE_TRANSPILE_ONLY=1 ${ROOTDIR}/node_modules/.bin/c8 ${ROOTDIR}/node_modules/.bin/mocha test/*_test.ts
 
 .PHONY: test-file
 test-file:
