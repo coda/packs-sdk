@@ -1061,26 +1061,18 @@ const packMetadataSchemaBySdkVersion = [
                 else if (data.defaultAuthentication.networkDomain) {
                     authNetworkDomains = [data.defaultAuthentication.networkDomain];
                 }
-                if (!(authNetworkDomains === null || authNetworkDomains === void 0 ? void 0 : authNetworkDomains.length)) {
-                    if (data.networkDomains && data.networkDomains.length > 1) {
-                        context.addIssue({
-                            code: z.ZodIssueCode.custom,
-                            path: ['defaultAuthentication.networkDomain'],
-                            message: 'This pack uses multiple network domains and must set one as a `networkDomain` in setUserAuthentication()',
-                        });
-                    }
-                    return;
-                }
-                // Pack has multiple network domains and user auth. The code needs to clarify which domain gets the auth
-                // headers.
-                for (const authNetworkDomain of authNetworkDomains) {
-                    if (!((_a = data.networkDomains) === null || _a === void 0 ? void 0 : _a.includes(authNetworkDomain))) {
-                        context.addIssue({
-                            code: z.ZodIssueCode.custom,
-                            path: ['defaultAuthentication.networkDomain'],
-                            message: 'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
-                        });
-                        return;
+                if (authNetworkDomains === null || authNetworkDomains === void 0 ? void 0 : authNetworkDomains.length) {
+                    // Pack has multiple network domains and user auth. The code needs to clarify which domain gets the auth
+                    // headers.
+                    for (const authNetworkDomain of authNetworkDomains) {
+                        if (!((_a = data.networkDomains) === null || _a === void 0 ? void 0 : _a.includes(authNetworkDomain))) {
+                            context.addIssue({
+                                code: z.ZodIssueCode.custom,
+                                path: ['defaultAuthentication.networkDomain'],
+                                message: 'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
+                            });
+                            return;
+                        }
                     }
                 }
             });

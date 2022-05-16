@@ -1268,17 +1268,19 @@ const packMetadataSchemaBySdkVersion: SchemaExtension[] = [
           authNetworkDomains = [data.defaultAuthentication.networkDomain];
         }
 
-        // Pack has multiple network domains and user auth. The code needs to clarify which domain gets the auth
-        // headers.
-        for (const authNetworkDomain of authNetworkDomains) {
-          if (!data.networkDomains?.includes(authNetworkDomain)) {
-            context.addIssue({
-              code: z.ZodIssueCode.custom,
-              path: ['defaultAuthentication.networkDomain'],
-              message:
-                'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
-            });
-            return;
+        if (authNetworkDomains?.length) {
+          // Pack has multiple network domains and user auth. The code needs to clarify which domain gets the auth
+          // headers.
+          for (const authNetworkDomain of authNetworkDomains) {
+            if (!data.networkDomains?.includes(authNetworkDomain)) {
+              context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['defaultAuthentication.networkDomain'],
+                message:
+                  'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
+              });
+              return;
+            }
           }
         }
       });
