@@ -3688,7 +3688,7 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 		oauthScopes?: string[];
 		oauthAuthorizationUrl?: string;
 		oauthTokenUrl?: string;
-		networkDomain?: string;
+		networkDomain?: string | string[];
 	};
 	instructionsUrl?: string;
 	formulas?: ExternalPackFormulas;
