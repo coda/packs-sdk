@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@1.3.0
+  codecov: codecov/codecov@3.2.2
   coveralls: coveralls/coveralls@1.0.6
   jq: circleci/jq@1.9.1
   sonarcloud: sonarsource/sonarcloud@1.0.3
@@ -72,8 +73,9 @@ jobs:
       - run:
           name: 'Test'
           command: make test
-      - sonarcloud/scan
+      - codecov/upload
       - coveralls/upload
+      - sonarcloud/scan
 
   build-docs-head:
     executor: default_build_environment
