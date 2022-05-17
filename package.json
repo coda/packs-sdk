@@ -24,6 +24,7 @@
     "browserify": "^17.0.0",
     "c8": "^7.11.3",
     "clone": "^2.1.2",
+    "coveralls": "^3.1.1",
     "cross-fetch": "^3.1.5",
     "es6-promise": "^4.2.8",
     "esbuild": "^0.14.38",
