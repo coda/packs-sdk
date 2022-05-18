@@ -155,7 +155,7 @@ replacement inside the constructed network request.
 
 #### Defined in
 
-[types.ts:549](https://github.com/coda/packs-sdk/blob/main/types.ts#L549)
+[types.ts:563](https://github.com/coda/packs-sdk/blob/main/types.ts#L563)
 
 ___
 
@@ -203,4 +203,4 @@ Identifies this as Custom authentication.
 
 #### Defined in
 
-[types.ts:543](https://github.com/coda/packs-sdk/blob/main/types.ts#L543)
+[types.ts:557](https://github.com/coda/packs-sdk/blob/main/types.ts#L557)

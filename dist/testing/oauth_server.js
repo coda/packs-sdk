@@ -13,7 +13,7 @@ const helpers_2 = require("./helpers");
 const url_1 = require("../helpers/url");
 function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTokenExchange, scopes, }) {
     // TODO: Handle endpointKey.
-    const { authorizationUrl, tokenUrl, additionalParams, scopeDelimiter } = authDef;
+    const { authorizationUrl, tokenUrl, additionalParams, scopeDelimiter, nestedResponseKey, suppressScopeParam } = authDef;
     // Use the manifest's scopes as a default.
     const requestedScopes = scopes && scopes.length > 0 ? scopes : authDef.scopes;
     const scope = requestedScopes ? requestedScopes.join(scopeDelimiter || ' ') : requestedScopes;
@@ -58,12 +58,14 @@ function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTok
         if (!oauthResponse.ok) {
             new Error(`OAuth provider returns error ${oauthResponse.status} ${oauthResponse.text}`);
         }
-        const { access_token: accessToken, refresh_token: refreshToken, ...data } = await oauthResponse.json();
+        const responseBody = await oauthResponse.json();
+        const tokenContainer = nestedResponseKey ? responseBody[nestedResponseKey] : responseBody;
+        const { access_token: accessToken, refresh_token: refreshToken, ...data } = tokenContainer;
         return { accessToken, refreshToken, data };
     };
     const serverContainer = new OAuthServerContainer(callback, afterTokenExchange, port);
     const authorizationUri = (0, url_1.withQueryParams)(authorizationUrl, {
-        scope,
+        scope: suppressScopeParam ? undefined : scope,
         client_id: clientId,
         redirect_uri: redirectUri,
         response_type: 'code',

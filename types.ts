@@ -440,7 +440,7 @@ export interface OAuth2Authentication extends BaseAuthentication {
    * cases, some of those OAuth providers sometimes want you to also *not* send the normal scope
    * param (which this parameter enables).
    */
-  suppressScopeParameter?: boolean;
+  suppressScopeParam?: boolean;
 
   /**
    * In rare cases, OAuth providers send back access tokens nested inside another object in

@@ -382,6 +382,8 @@ const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> 
     endpointKey: z.string().optional(),
     tokenQueryParam: z.string().optional(),
     useProofKeyForCodeExchange: z.boolean().optional(),
+    suppressScopeParam: z.boolean().optional(),
+    nestedResponseKey: z.string().optional(),
     ...baseAuthenticationValidators,
   }),
   [AuthenticationType.WebBasic]: zodCompleteStrictObject<WebBasicAuthentication>({
