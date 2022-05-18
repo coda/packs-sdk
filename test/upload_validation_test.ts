@@ -2181,7 +2181,7 @@ describe('Pack metadata Validation', () => {
           networkDomain: 'baz.com',
         },
       });
-      const err = await validateJsonAndAssertFails(metadata, '1.0.0');
+      const err = await validateJsonAndAssertFails(metadata, '0.2.0');
       assert.deepEqual(err.validationErrors, [
         {
           message: 'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
@@ -2198,7 +2198,7 @@ describe('Pack metadata Validation', () => {
           networkDomain: ['bar.com', 'baz.com'],
         },
       });
-      const err = await validateJsonAndAssertFails(metadata, '1.0.0');
+      const err = await validateJsonAndAssertFails(metadata, '0.1.0');
       assert.deepEqual(err.validationErrors, [
         {
           message: 'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
