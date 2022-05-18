@@ -48,6 +48,8 @@ export async function findAndExecutePackFunction<T extends FormulaSpecification>
     return await doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext);
   } catch (err: any) {
     // all errors should be marshaled to avoid IVM dropping essential fields / name.
+    // eslint-disable-next-line no-console
+    console.log(JSON.stringify(err), 'ASDFASDFASDF');
     throw shouldWrapError ? wrapError(err) : err;
   }
 }

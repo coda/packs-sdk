@@ -60,6 +60,8 @@ class AuthenticatingFetcher {
             });
         }
         catch (requestFailure) {
+            // eslint-disable-next-line no-console
+            console.log(JSON.stringify(requestFailure), 'fetcher failed');
             // Only attempt 1 retry
             if (isRetry) {
                 throw requestFailure;

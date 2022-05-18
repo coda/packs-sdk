@@ -30,6 +30,8 @@ async function findAndExecutePackFunction(params, formulaSpec, manifest, executi
     }
     catch (err) {
         // all errors should be marshaled to avoid IVM dropping essential fields / name.
+        // eslint-disable-next-line no-console
+        console.log(JSON.stringify(err), 'ASDFASDFASDF');
         throw shouldWrapError ? (0, marshaling_2.wrapError)(err) : err;
     }
 }

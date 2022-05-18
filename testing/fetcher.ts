@@ -98,6 +98,8 @@ export class AuthenticatingFetcher implements Fetcher {
         form,
       });
     } catch (requestFailure: any) {
+      // eslint-disable-next-line no-console
+      console.log(JSON.stringify(requestFailure), 'fetcher failed');
       // Only attempt 1 retry
       if (isRetry) {
         throw requestFailure;

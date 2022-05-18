@@ -4610,6 +4610,7 @@ module.exports = (() => {
       }
       return await doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext);
     } catch (err) {
+      console.log(JSON.stringify(err), "ASDFASDFASDF");
       throw shouldWrapError ? wrapError(err) : err;
     }
   }
