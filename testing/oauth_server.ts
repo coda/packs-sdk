@@ -98,13 +98,16 @@ export function launchOAuthServerFlow({
   };
   const serverContainer = new OAuthServerContainer(callback, afterTokenExchange, port);
 
-  const authorizationUri = withQueryParams(authorizationUrl, {
-    [scopeParamName || 'scope']: scope,
+  const queryParams: {[key: string]: any} = {
     client_id: clientId,
     redirect_uri: redirectUri,
     response_type: 'code',
     ...(additionalParams || {}),
-  });
+  };
+  const scopeKey = scopeParamName || 'scope';
+  queryParams[scopeKey] = scope;
+
+  const authorizationUri = withQueryParams(authorizationUrl, queryParams);
 
   const launchCallback = () => {
     print(
