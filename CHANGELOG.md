@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Added rarely-needed OAuth options: `suppressScopeParam` and `nestedResponseKey`.
+
 ## [0.12.0] - 2022-05-17
 
 ### Added
