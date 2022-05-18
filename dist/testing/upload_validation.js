@@ -47,6 +47,7 @@ const schema_10 = require("../schema");
 const ensure_1 = require("../helpers/ensure");
 const schema_11 = require("../schema");
 const object_utils_1 = require("../helpers/object_utils");
+const object_utils_2 = require("../helpers/object_utils");
 const schema_12 = require("../schema");
 const schema_13 = require("../schema");
 const migration_1 = require("../helpers/migration");
@@ -691,13 +692,13 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
 })
     .refine(data => {
     const schemaHelper = (0, migration_1.objectSchemaHelper)(data);
-    return (0, object_utils_1.isNil)(schemaHelper.id) || schemaHelper.id in schemaHelper.properties;
+    return (0, object_utils_2.isNil)(schemaHelper.id) || schemaHelper.id in schemaHelper.properties;
 }, {
     message: 'The "id" property must appear as a key in the "properties" object.',
 })
     .refine(data => {
     const schemaHelper = (0, migration_1.objectSchemaHelper)(data);
-    return (0, object_utils_1.isNil)(schemaHelper.primary) || schemaHelper.primary in schemaHelper.properties;
+    return (0, object_utils_2.isNil)(schemaHelper.primary) || schemaHelper.primary in schemaHelper.properties;
 }, {
     message: 'The "displayProperty" property must appear as a key in the "properties" object.',
 })
@@ -1035,7 +1036,46 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
     message: 'This pack uses authentication but did not declare a network domain. ' +
         "Specify the domain that your pack makes http requests to using `networkDomains: ['example.com']`",
     path: ['networkDomains'],
+})
+    .superRefine((untypedData, context) => {
+    var _a;
+    const data = untypedData;
+    const authNetworkDomains = getAuthNetworkDomains(data);
+    if (!(0, object_utils_1.isDefined)(authNetworkDomains)) {
+        // This is a Various or None auth pack.
+        return;
+    }
+    // Auth network domains must match pack network domains.
+    for (const authNetworkDomain of authNetworkDomains) {
+        if (!((_a = data.networkDomains) === null || _a === void 0 ? void 0 : _a.includes(authNetworkDomain))) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['defaultAuthentication.networkDomain'],
+                message: 'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
+            });
+            return;
+        }
+    }
 });
+// Returns undefined for None or Various auth, otherwise returns a string array.
+function getAuthNetworkDomains(data) {
+    if (!data.defaultAuthentication ||
+        data.defaultAuthentication.type === types_1.AuthenticationType.Various ||
+        data.defaultAuthentication.type === types_1.AuthenticationType.None) {
+        return undefined;
+    }
+    if (data.defaultAuthentication.requiresEndpointUrl) {
+        // We're ok if there's a user-supplied endpoint domain.
+        return undefined;
+    }
+    if (Array.isArray(data.defaultAuthentication.networkDomain)) {
+        return data.defaultAuthentication.networkDomain;
+    }
+    else if (data.defaultAuthentication.networkDomain) {
+        return [data.defaultAuthentication.networkDomain];
+    }
+    return [];
+}
 const packMetadataSchemaBySdkVersion = [
     {
         // Check that packs with multiple network domains explicitly choose which domain gets auth.
@@ -1043,24 +1083,13 @@ const packMetadataSchemaBySdkVersion = [
         versionRange: '>=1.0.0',
         schemaExtend: schema => {
             return schema.superRefine((untypedData, context) => {
-                var _a;
                 const data = untypedData;
-                if (!data.defaultAuthentication ||
-                    data.defaultAuthentication.type === types_1.AuthenticationType.Various ||
-                    data.defaultAuthentication.type === types_1.AuthenticationType.None) {
+                const authNetworkDomains = getAuthNetworkDomains(data);
+                if (!(0, object_utils_1.isDefined)(authNetworkDomains)) {
+                    // This is a Various or None auth pack.
                     return;
                 }
-                if (data.defaultAuthentication.requiresEndpointUrl) {
-                    // We're ok if there's a user-supplied endpoint domain.
-                    return;
-                }
-                let authNetworkDomains;
-                if (Array.isArray(data.defaultAuthentication.networkDomain)) {
-                    authNetworkDomains = data.defaultAuthentication.networkDomain;
-                }
-                else if (data.defaultAuthentication.networkDomain) {
-                    authNetworkDomains = [data.defaultAuthentication.networkDomain];
-                }
+                // A pack with multiple networks and auth must choose which domain(s) get auth on them.
                 if (!(authNetworkDomains === null || authNetworkDomains === void 0 ? void 0 : authNetworkDomains.length)) {
                     if (data.networkDomains && data.networkDomains.length > 1) {
                         context.addIssue({
@@ -1070,18 +1099,6 @@ const packMetadataSchemaBySdkVersion = [
                         });
                     }
                     return;
-                }
-                // Pack has multiple network domains and user auth. The code needs to clarify which domain gets the auth
-                // headers.
-                for (const authNetworkDomain of authNetworkDomains) {
-                    if (!((_a = data.networkDomains) === null || _a === void 0 ? void 0 : _a.includes(authNetworkDomain))) {
-                        context.addIssue({
-                            code: z.ZodIssueCode.custom,
-                            path: ['defaultAuthentication.networkDomain'],
-                            message: 'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
-                        });
-                        return;
-                    }
                 }
             });
         },
