@@ -64,15 +64,13 @@ function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTok
         return { accessToken, refreshToken, data };
     };
     const serverContainer = new OAuthServerContainer(callback, afterTokenExchange, port);
-    const queryParams = {
+    const authorizationUri = (0, url_1.withQueryParams)(authorizationUrl, {
+        [scopeParamName || 'scope']: scope,
         client_id: clientId,
         redirect_uri: redirectUri,
         response_type: 'code',
         ...(additionalParams || {}),
-    };
-    const scopeKey = scopeParamName || 'scope';
-    queryParams[scopeKey] = scope;
-    const authorizationUri = (0, url_1.withQueryParams)(authorizationUrl, queryParams);
+    });
     const launchCallback = () => {
         (0, helpers_2.print)(`OAuth server running at http://localhost:${port}.\n` +
             `Complete the auth flow in your browser. If it does not open automatically, visit ${authorizationUri}`);
