@@ -124,6 +124,19 @@ A link to a help article or other page with more instructions about how to set u
 
 ___
 
+### nestedResponseKey
+
+• `Optional` **nestedResponseKey**: `string`
+
+In rare cases, OAuth providers send back access tokens nested inside another object in
+their authentication response.
+
+#### Defined in
+
+[types.ts:447](https://github.com/coda/packs-sdk/blob/main/types.ts#L447)
+
+___
+
 ### networkDomain
 
 • `Optional` **networkDomain**: `string` \| `string`[]
@@ -191,6 +204,19 @@ If the API you are using requires a different delimiter, say a comma, specify it
 #### Defined in
 
 [types.ts:393](https://github.com/coda/packs-sdk/blob/main/types.ts#L393)
+
+___
+
+### scopeParamName
+
+• `Optional` **scopeParamName**: `string`
+
+In rare cases, OAuth providers may want the permission scopes in a different query parameter
+than `scope`.
+
+#### Defined in
+
+[types.ts:441](https://github.com/coda/packs-sdk/blob/main/types.ts#L441)
 
 ___
 

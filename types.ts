@@ -433,6 +433,18 @@ export interface OAuth2Authentication extends BaseAuthentication {
    * See https://datatracker.ietf.org/doc/html/rfc7636 for more details.
    */
   useProofKeyForCodeExchange?: boolean;
+
+  /**
+   * In rare cases, OAuth providers may want the permission scopes in a different query parameter
+   * than `scope`.
+   */
+  scopeParamName?: string;
+
+  /**
+   * In rare cases, OAuth providers send back access tokens nested inside another object in
+   * their authentication response.
+   */
+  nestedResponseKey?: string;
 }
 
 /**

@@ -38,7 +38,7 @@ export function launchOAuthServerFlow({
   scopes?: string[];
 }) {
   // TODO: Handle endpointKey.
-  const {authorizationUrl, tokenUrl, additionalParams, scopeDelimiter} = authDef;
+  const {authorizationUrl, tokenUrl, additionalParams, scopeDelimiter, nestedResponseKey, scopeParamName} = authDef;
   // Use the manifest's scopes as a default.
   const requestedScopes = scopes && scopes.length > 0 ? scopes : authDef.scopes;
   const scope = requestedScopes ? requestedScopes.join(scopeDelimiter || ' ') : requestedScopes;
@@ -90,19 +90,24 @@ export function launchOAuthServerFlow({
       new Error(`OAuth provider returns error ${oauthResponse.status} ${oauthResponse.text}`);
     }
 
-    const {access_token: accessToken, refresh_token: refreshToken, ...data} = await oauthResponse.json();
+    const responseBody = await oauthResponse.json();
+    const tokenContainer = nestedResponseKey ? responseBody[nestedResponseKey] : responseBody;
+    const {access_token: accessToken, refresh_token: refreshToken, ...data} = tokenContainer;
 
     return {accessToken, refreshToken, data};
   };
   const serverContainer = new OAuthServerContainer(callback, afterTokenExchange, port);
 
-  const authorizationUri = withQueryParams(authorizationUrl, {
-    scope,
+  const queryParams: {[key: string]: any} = {
     client_id: clientId,
     redirect_uri: redirectUri,
     response_type: 'code',
     ...(additionalParams || {}),
-  });
+  };
+  const scopeKey = scopeParamName || 'scope';
+  queryParams[scopeKey] = scope;
+
+  const authorizationUri = withQueryParams(authorizationUrl, queryParams);
 
   const launchCallback = () => {
     print(

@@ -13,7 +13,7 @@ const helpers_2 = require("./helpers");
 const url_1 = require("../helpers/url");
 function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTokenExchange, scopes, }) {
     // TODO: Handle endpointKey.
-    const { authorizationUrl, tokenUrl, additionalParams, scopeDelimiter } = authDef;
+    const { authorizationUrl, tokenUrl, additionalParams, scopeDelimiter, nestedResponseKey, scopeParamName } = authDef;
     // Use the manifest's scopes as a default.
     const requestedScopes = scopes && scopes.length > 0 ? scopes : authDef.scopes;
     const scope = requestedScopes ? requestedScopes.join(scopeDelimiter || ' ') : requestedScopes;
@@ -58,17 +58,21 @@ function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTok
         if (!oauthResponse.ok) {
             new Error(`OAuth provider returns error ${oauthResponse.status} ${oauthResponse.text}`);
         }
-        const { access_token: accessToken, refresh_token: refreshToken, ...data } = await oauthResponse.json();
+        const responseBody = await oauthResponse.json();
+        const tokenContainer = nestedResponseKey ? responseBody[nestedResponseKey] : responseBody;
+        const { access_token: accessToken, refresh_token: refreshToken, ...data } = tokenContainer;
         return { accessToken, refreshToken, data };
     };
     const serverContainer = new OAuthServerContainer(callback, afterTokenExchange, port);
-    const authorizationUri = (0, url_1.withQueryParams)(authorizationUrl, {
-        scope,
+    const queryParams = {
         client_id: clientId,
         redirect_uri: redirectUri,
         response_type: 'code',
         ...(additionalParams || {}),
-    });
+    };
+    const scopeKey = scopeParamName || 'scope';
+    queryParams[scopeKey] = scope;
+    const authorizationUri = (0, url_1.withQueryParams)(authorizationUrl, queryParams);
     const launchCallback = () => {
         (0, helpers_2.print)(`OAuth server running at http://localhost:${port}.\n` +
             `Complete the auth flow in your browser. If it does not open automatically, visit ${authorizationUri}`);
