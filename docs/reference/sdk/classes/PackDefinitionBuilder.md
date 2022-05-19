@@ -182,7 +182,7 @@ pack.addColumnFormat({
 
 #### Defined in
 
-[builder.ts:232](https://github.com/coda/packs-sdk/blob/main/builder.ts#L232)
+[builder.ts:233](https://github.com/coda/packs-sdk/blob/main/builder.ts#L233)
 
 ___
 
@@ -231,7 +231,7 @@ pack.addDynamicSyncTable({
 
 #### Defined in
 
-[builder.ts:205](https://github.com/coda/packs-sdk/blob/main/builder.ts#L205)
+[builder.ts:206](https://github.com/coda/packs-sdk/blob/main/builder.ts#L206)
 
 ___
 
@@ -318,7 +318,7 @@ pack.addNetworkDomain('example.com');
 
 #### Defined in
 
-[builder.ts:340](https://github.com/coda/packs-sdk/blob/main/builder.ts#L340)
+[builder.ts:341](https://github.com/coda/packs-sdk/blob/main/builder.ts#L341)
 
 ___
 
@@ -401,7 +401,7 @@ pack.setSystemAuthentication({
 
 #### Defined in
 
-[builder.ts:301](https://github.com/coda/packs-sdk/blob/main/builder.ts#L301)
+[builder.ts:302](https://github.com/coda/packs-sdk/blob/main/builder.ts#L302)
 
 ___
 
@@ -441,7 +441,7 @@ pack.setUserAuthentication({
 
 #### Defined in
 
-[builder.ts:258](https://github.com/coda/packs-sdk/blob/main/builder.ts#L258)
+[builder.ts:259](https://github.com/coda/packs-sdk/blob/main/builder.ts#L259)
 
 ___
 
@@ -473,4 +473,4 @@ pack.setVersion('1.2.3');
 
 #### Defined in
 
-[builder.ts:358](https://github.com/coda/packs-sdk/blob/main/builder.ts#L358)
+[builder.ts:359](https://github.com/coda/packs-sdk/blob/main/builder.ts#L359)
