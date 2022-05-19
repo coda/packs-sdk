@@ -167,7 +167,8 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     connectionRequirement,
     dynamicOptions = {},
   }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this {
-    const connectionRequirementToUse = connectionRequirement || this._defaultConnectionRequirement;
+    const connectionRequirementToUse =
+      connectionRequirement || formula.connectionRequirement || this._defaultConnectionRequirement;
     const syncTable = makeSyncTable({
       name,
       description,

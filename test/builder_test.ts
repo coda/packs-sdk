@@ -192,6 +192,30 @@ describe('Builder', () => {
       assert.equal(pack.syncTables[0].getter.connectionRequirement, ConnectionRequirement.Required);
     });
 
+    it('works for sync table with formula conn requirement', () => {
+      pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
+      pack.addSyncTable({
+        name: 'Foos',
+        identityName: 'Foo',
+        schema: makeObjectSchema({
+          type: ValueType.Object,
+          id: 'foo',
+          primary: 'foo',
+          properties: {foo: {type: ValueType.String}},
+        }),
+        formula: {
+          name: 'Ignored',
+          description: '',
+          parameters: [],
+          connectionRequirement: ConnectionRequirement.Optional,
+          execute: async () => {
+            return {result: []};
+          },
+        },
+      });
+      assert.equal(pack.syncTables[0].getter.connectionRequirement, ConnectionRequirement.Optional);
+    });
+
     it('works for sync table after the fact', () => {
       addDummySyncTable(pack);
       pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
