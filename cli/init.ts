@@ -24,6 +24,11 @@ function addPatches() {
   spawnProcess(`npx patch-package --exclude 'nothing' mold-source-map`);
 }
 
+// By no means comprehensive, just an attempt to cover characters that can appear in a package.json declaration.
+function escapeShellCmd(cmd: string): string {
+  return cmd.replace('>', '\\>').replace('<', '\\<');
+}
+
 export async function handleInit() {
   // stdout looks like `8.1.2\n`.
   const npmVersion = parseInt(spawnProcess('npm -v', {stdio: 'pipe'}).stdout.toString().trim().split('.', 1)[0], 10);
@@ -50,7 +55,7 @@ export async function handleInit() {
   const devDependencyPackages = Object.keys(devDependencies)
     .map(dependency => `${dependency}@${devDependencies[dependency]}`)
     .join(' ');
-  spawnProcess(`npm install --save-dev ${devDependencyPackages}`);
+  spawnProcess(escapeShellCmd(`npm install --save-dev ${devDependencyPackages}`));
 
   // developers may run in NodeJs 16 where some packages need to be patched to avoid warnings.
   addPatches();
