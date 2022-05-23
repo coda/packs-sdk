@@ -1926,14 +1926,45 @@ describe('Pack metadata Validation', () => {
         networkDomains: ['coda.io', 'other.domain'],
       });
       const err = await validateJsonAndAssertFails(metadata);
-      // TODO(dweitzman): Get rid of this error when credential pinning is launched
-      // as long as the selected auth domain is coda.io
       assert.deepEqual(err.validationErrors, [
         {
-          message: 'CodaApiHeaderBearerToken can only be used for coda.io domains',
-          path: 'networkDomains',
+          message:
+            'CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict `defaultAuthentication.networkDomain` to coda.io or codahosted.io',
+          path: 'defaultAuthentication.networkDomain',
         },
       ]);
+    });
+
+    it('CodaApiHeaderBearerToken, invalid domain inferred', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.CodaApiHeaderBearerToken,
+          deferConnectionSetup: true,
+          shouldAutoAuthSetup: true,
+        },
+        networkDomains: ['coda.io', 'other.domain'],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message:
+            'CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict `defaultAuthentication.networkDomain` to coda.io or codahosted.io',
+          path: 'defaultAuthentication.networkDomain',
+        },
+      ]);
+    });
+
+    it('CodaApiHeaderBearerToken, valid domain with credential pinning', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.CodaApiHeaderBearerToken,
+          deferConnectionSetup: true,
+          shouldAutoAuthSetup: true,
+          networkDomain: 'coda.io',
+        },
+        networkDomains: ['coda.io', 'other.domain'],
+      });
+      await validateJson(metadata);
     });
 
     it('CustomHeaderToken', async () => {
