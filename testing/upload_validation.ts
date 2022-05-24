@@ -544,7 +544,7 @@ const booleanPackFormulaSchema = zodCompleteObject<Omit<BooleanPackFormula<any>,
   schema: zodCompleteObject<BooleanSchema>({
     type: zodDiscriminant(ValueType.Boolean),
     description: z.string().optional(),
-    displayType: z.nativeEnum(BooleanDisplayType),
+    displayType: z.nativeEnum(BooleanDisplayType).optional(),
   }).optional(),
 });
 
@@ -575,7 +575,7 @@ const basePropertyValidators = {
 
 const booleanPropertySchema = zodCompleteStrictObject<BooleanSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Boolean),
-  displayType: z.nativeEnum(BooleanDisplayType),
+  displayType: z.nativeEnum(BooleanDisplayType).optional(),
   ...basePropertyValidators,
 });
 

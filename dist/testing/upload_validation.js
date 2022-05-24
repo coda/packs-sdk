@@ -444,7 +444,7 @@ const booleanPackFormulaSchema = zodCompleteObject({
     schema: zodCompleteObject({
         type: zodDiscriminant(schema_11.ValueType.Boolean),
         description: z.string().optional(),
-        displayType: z.nativeEnum(schema_2.BooleanDisplayType),
+        displayType: z.nativeEnum(schema_2.BooleanDisplayType).optional(),
     }).optional(),
 });
 // TODO(jonathan): Use zodCompleteObject on these after exporting these types.
@@ -469,7 +469,7 @@ const basePropertyValidators = {
 };
 const booleanPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_11.ValueType.Boolean),
-    displayType: z.nativeEnum(schema_2.BooleanDisplayType),
+    displayType: z.nativeEnum(schema_2.BooleanDisplayType).optional(),
     ...basePropertyValidators,
 });
 const numericPropertySchema = zodCompleteStrictObject({
