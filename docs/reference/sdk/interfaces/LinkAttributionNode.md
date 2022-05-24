@@ -27,7 +27,7 @@ The text of the hyperlink.
 
 #### Defined in
 
-[schema.ts:919](https://github.com/coda/packs-sdk/blob/main/schema.ts#L919)
+[schema.ts:907](https://github.com/coda/packs-sdk/blob/main/schema.ts#L907)
 
 ___
 
@@ -39,7 +39,7 @@ The URL to link to.
 
 #### Defined in
 
-[schema.ts:917](https://github.com/coda/packs-sdk/blob/main/schema.ts#L917)
+[schema.ts:905](https://github.com/coda/packs-sdk/blob/main/schema.ts#L905)
 
 ___
 
@@ -51,4 +51,4 @@ Identifies this as a link attribution node.
 
 #### Defined in
 
-[schema.ts:915](https://github.com/coda/packs-sdk/blob/main/schema.ts#L915)
+[schema.ts:903](https://github.com/coda/packs-sdk/blob/main/schema.ts#L903)

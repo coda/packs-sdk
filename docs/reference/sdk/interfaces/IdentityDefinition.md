@@ -31,7 +31,7 @@ table definition, so you needn't explicitly create on unless desired.
 
 #### Defined in
 
-[schema.ts:763](https://github.com/coda/packs-sdk/blob/main/schema.ts#L763)
+[schema.ts:751](https://github.com/coda/packs-sdk/blob/main/schema.ts#L751)
 
 ___
 
@@ -49,7 +49,7 @@ you wish to reference, again to distinguish which table instance you are trying 
 
 #### Defined in
 
-[schema.ts:759](https://github.com/coda/packs-sdk/blob/main/schema.ts#L759)
+[schema.ts:747](https://github.com/coda/packs-sdk/blob/main/schema.ts#L747)
 
 ___
 
@@ -62,7 +62,7 @@ For example, if you are defining a schema that represents a user object, "User" 
 
 #### Defined in
 
-[schema.ts:747](https://github.com/coda/packs-sdk/blob/main/schema.ts#L747)
+[schema.ts:735](https://github.com/coda/packs-sdk/blob/main/schema.ts#L735)
 
 ___
 
@@ -74,4 +74,4 @@ The ID of another pack, if you are trying to reference a value from different pa
 
 #### Defined in
 
-[schema.ts:761](https://github.com/coda/packs-sdk/blob/main/schema.ts#L761)
+[schema.ts:749](https://github.com/coda/packs-sdk/blob/main/schema.ts#L749)

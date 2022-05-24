@@ -21,7 +21,7 @@ Indicates how to render values in a table. If not specified, renders a checkbox.
 
 #### Defined in
 
-[schema.ts:229](https://github.com/coda/packs-sdk/blob/main/schema.ts#L229)
+[schema.ts:217](https://github.com/coda/packs-sdk/blob/main/schema.ts#L217)
 
 ___
 
@@ -52,4 +52,4 @@ Identifies this schema as relating to a boolean value.
 
 #### Defined in
 
-[schema.ts:227](https://github.com/coda/packs-sdk/blob/main/schema.ts#L227)
+[schema.ts:215](https://github.com/coda/packs-sdk/blob/main/schema.ts#L215)

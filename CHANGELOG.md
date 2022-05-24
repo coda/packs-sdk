@@ -7,7 +7,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Added
 
 - Added rarely-needed OAuth options: `scopeParamName` and `nestedResponseKey`.
-- Added `displayType` to `BooleanSchema`, allowing boolean values to be rendered as toggles in tables.
+- Added `ValueHintType.Toggle` to be used in conjunction with `ValueType.Boolean` to render boolean values as toggles within tables.
 
 ## [0.12.0] - 2022-05-17
 

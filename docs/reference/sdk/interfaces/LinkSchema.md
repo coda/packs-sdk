@@ -27,7 +27,7 @@ BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:495](https://github.com/coda/packs-sdk/blob/main/schema.ts#L495)
+[schema.ts:483](https://github.com/coda/packs-sdk/blob/main/schema.ts#L483)
 
 ___
 
@@ -58,7 +58,7 @@ How the URL should be displayed in the UI.
 
 #### Defined in
 
-[schema.ts:497](https://github.com/coda/packs-sdk/blob/main/schema.ts#L497)
+[schema.ts:485](https://github.com/coda/packs-sdk/blob/main/schema.ts#L485)
 
 ___
 
@@ -70,7 +70,7 @@ Whether to force client embedding (only for LinkDisplayType.Embed) - for example
 
 #### Defined in
 
-[schema.ts:499](https://github.com/coda/packs-sdk/blob/main/schema.ts#L499)
+[schema.ts:487](https://github.com/coda/packs-sdk/blob/main/schema.ts#L487)
 
 ___
 
@@ -86,4 +86,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:622](https://github.com/coda/packs-sdk/blob/main/schema.ts#L622)
+[schema.ts:610](https://github.com/coda/packs-sdk/blob/main/schema.ts#L610)

@@ -208,18 +208,6 @@ interface BaseSchema {
 }
 
 /**
- * Enumeration of display types supported by schemas that use {@link ValueType.Boolean}.
- *
- * These affect how a boolean value is rendered in tables.
- */
-export enum BooleanDisplayType {
-  /** Indicates the value should be rendered as a checkbox. */
-  Check = 'check',
-  /** Indicates the value should be rendered as a toggle. */
-  Toggle = 'toggle',
-}
-
-/**
  * A schema representing a return value or object property that is a boolean.
  */
 export interface BooleanSchema extends BaseSchema {

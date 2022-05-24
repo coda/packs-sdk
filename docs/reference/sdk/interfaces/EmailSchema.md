@@ -25,7 +25,7 @@ Whether to auto-complete the email domain during user input.
 
 #### Defined in
 
-[schema.ts:455](https://github.com/coda/packs-sdk/blob/main/schema.ts#L455)
+[schema.ts:443](https://github.com/coda/packs-sdk/blob/main/schema.ts#L443)
 
 ___
 
@@ -41,7 +41,7 @@ BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:451](https://github.com/coda/packs-sdk/blob/main/schema.ts#L451)
+[schema.ts:439](https://github.com/coda/packs-sdk/blob/main/schema.ts#L439)
 
 ___
 
@@ -72,7 +72,7 @@ How the email should be displayed in the UI.
 
 #### Defined in
 
-[schema.ts:453](https://github.com/coda/packs-sdk/blob/main/schema.ts#L453)
+[schema.ts:441](https://github.com/coda/packs-sdk/blob/main/schema.ts#L441)
 
 ___
 
@@ -88,4 +88,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:622](https://github.com/coda/packs-sdk/blob/main/schema.ts#L622)
+[schema.ts:610](https://github.com/coda/packs-sdk/blob/main/schema.ts#L610)

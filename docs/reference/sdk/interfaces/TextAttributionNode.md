@@ -25,7 +25,7 @@ The text to render with the pack value.
 
 #### Defined in
 
-[schema.ts:895](https://github.com/coda/packs-sdk/blob/main/schema.ts#L895)
+[schema.ts:883](https://github.com/coda/packs-sdk/blob/main/schema.ts#L883)
 
 ___
 
@@ -37,4 +37,4 @@ Identifies this as a text attribution node.
 
 #### Defined in
 
-[schema.ts:893](https://github.com/coda/packs-sdk/blob/main/schema.ts#L893)
+[schema.ts:881](https://github.com/coda/packs-sdk/blob/main/schema.ts#L881)
