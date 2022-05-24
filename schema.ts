@@ -188,13 +188,13 @@ export const NumberHintValueTypes = [
 export const BooleanHintValueTypes = [ValueHintType.Toggle] as const;
 export const ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference] as const;
 
-/**  The subset of {@link ValueHintType} that can be used with a string value. */
+/** The subset of {@link ValueHintType} that can be used with a string value. */
 export type StringHintTypes = typeof StringHintValueTypes[number];
-/**  The subset of {@link ValueHintType} that can be used with a number value. */
+/** The subset of {@link ValueHintType} that can be used with a number value. */
 export type NumberHintTypes = typeof NumberHintValueTypes[number];
-/**  The subset of {@link ValueHintType} that can be used with a boolean value. */
+/** The subset of {@link ValueHintType} that can be used with a boolean value. */
 export type BooleanHintTypes = typeof BooleanHintValueTypes[number];
-/**  The subset of {@link ValueHintType} that can be used with an object value. */
+/** The subset of {@link ValueHintType} that can be used with an object value. */
 export type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 
 interface BaseSchema {

@@ -175,5 +175,6 @@ export type { BooleanHintTypes } from './schema';
 export type { InferrableTypes } from './schema';
 export type { NumberHintTypes } from './schema';
 export type { ObjectHintTypes } from './schema';
+export type { StringHintTypes } from './schema';
 export type { RequestHandlerTemplate } from './handler_templates';
 export type { ResponseHandlerTemplate } from './handler_templates';

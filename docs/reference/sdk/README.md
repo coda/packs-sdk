@@ -147,6 +147,7 @@ title: "Pack SDK Reference"
 - [SchemaType](types/SchemaType.md)
 - [SetEndpointDef](types/SetEndpointDef.md)
 - [StringFormulaDef](types/StringFormulaDef.md)
+- [StringHintTypes](types/StringHintTypes.md)
 - [StringPackFormula](types/StringPackFormula.md)
 - [StringSchema](types/StringSchema.md)
 - [SuggestedValueType](types/SuggestedValueType.md)

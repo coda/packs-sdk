@@ -155,13 +155,13 @@ export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, V
 export declare const NumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Percent, ValueHintType.Currency, ValueHintType.Slider, ValueHintType.Scale];
 export declare const BooleanHintValueTypes: readonly [ValueHintType.Toggle];
 export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference];
-/**  The subset of {@link ValueHintType} that can be used with a string value. */
+/** The subset of {@link ValueHintType} that can be used with a string value. */
 export declare type StringHintTypes = typeof StringHintValueTypes[number];
-/**  The subset of {@link ValueHintType} that can be used with a number value. */
+/** The subset of {@link ValueHintType} that can be used with a number value. */
 export declare type NumberHintTypes = typeof NumberHintValueTypes[number];
-/**  The subset of {@link ValueHintType} that can be used with a boolean value. */
+/** The subset of {@link ValueHintType} that can be used with a boolean value. */
 export declare type BooleanHintTypes = typeof BooleanHintValueTypes[number];
-/**  The subset of {@link ValueHintType} that can be used with an object value. */
+/** The subset of {@link ValueHintType} that can be used with an object value. */
 export declare type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 interface BaseSchema {
     /**
