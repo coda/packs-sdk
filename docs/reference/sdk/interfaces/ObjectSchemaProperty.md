@@ -44,7 +44,7 @@ whose value comes another field called "duration".
 
 #### Defined in
 
-[schema.ts:687](https://github.com/coda/packs-sdk/blob/main/schema.ts#L687)
+[schema.ts:696](https://github.com/coda/packs-sdk/blob/main/schema.ts#L696)
 
 ___
 
@@ -57,4 +57,4 @@ include a non-empty value for this property.
 
 #### Defined in
 
-[schema.ts:692](https://github.com/coda/packs-sdk/blob/main/schema.ts#L692)
+[schema.ts:701](https://github.com/coda/packs-sdk/blob/main/schema.ts#L701)

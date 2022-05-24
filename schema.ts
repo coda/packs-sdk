@@ -156,6 +156,10 @@ export enum ValueHintType {
    * Indicates to render a numeric value as a scale UI component (e.g. a star rating).
    */
   Scale = 'scale',
+  /**
+   * Indicates to render a boolean value as a toggle.
+   */
+  Toggle = 'toggle',
 }
 
 export const StringHintValueTypes = [
@@ -181,13 +185,16 @@ export const NumberHintValueTypes = [
   ValueHintType.Slider,
   ValueHintType.Scale,
 ] as const;
+export const BooleanHintValueTypes = [ValueHintType.Toggle] as const;
 export const ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference] as const;
 
-/**  The subset of {@link ValueHintType} that can be used with a string value. */
+/** The subset of {@link ValueHintType} that can be used with a string value. */
 export type StringHintTypes = typeof StringHintValueTypes[number];
-/**  The subset of {@link ValueHintType} that can be used with a number value. */
+/** The subset of {@link ValueHintType} that can be used with a number value. */
 export type NumberHintTypes = typeof NumberHintValueTypes[number];
-/**  The subset of {@link ValueHintType} that can be used with an object value. */
+/** The subset of {@link ValueHintType} that can be used with a boolean value. */
+export type BooleanHintTypes = typeof BooleanHintValueTypes[number];
+/** The subset of {@link ValueHintType} that can be used with an object value. */
 export type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 
 interface BaseSchema {
@@ -206,6 +213,8 @@ interface BaseSchema {
 export interface BooleanSchema extends BaseSchema {
   /** Identifies this schema as relating to a boolean value. */
   type: ValueType.Boolean;
+  /** Indicates how to render values in a table. If not specified, renders a checkbox. */
+  codaType?: BooleanHintTypes;
 }
 
 /**
@@ -811,9 +820,9 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
    * Specifies that object instances with this schema can contain additional properties not defined
    * in the schema, and that the packs infrastructure should retain these unknown properties
    * rather than stripping them.
-   * 
+   *
    * Properties not declared in the schema will not work properly in Coda: they cannot be
-   * used natively in the formula language and will not have correct types in Coda. But, in certain 
+   * used natively in the formula language and will not have correct types in Coda. But, in certain
    * scenarios they can be useful.
    */
   includeUnknownProperties?: boolean;

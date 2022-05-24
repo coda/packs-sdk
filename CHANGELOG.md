@@ -7,6 +7,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Added
 
 - Added rarely-needed OAuth options: `scopeParamName` and `nestedResponseKey`.
+- Added `ValueHintType.Toggle` to be used in conjunction with `ValueType.Boolean` to render boolean values as toggles within tables.
 
 ## [0.12.0] - 2022-05-17
 

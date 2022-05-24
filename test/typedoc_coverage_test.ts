@@ -46,7 +46,7 @@ function getReflectionData() {
   const stdErr = response.stderr.toString();
   if (stdErr) {
     throw new Error(
-      `Treating warnings as errors. Some references entities are likely not included in the documentation\n` + stdErr,
+      `Treating warnings as errors. Some referenced entities are likely not included in the documentation\n` + stdErr,
     );
   }
   return JSON.parse(fs.readFileSync(tempfile, 'utf-8'));

@@ -18,6 +18,7 @@ module.exports = {
     // Internal intermediate or helper types that we probably don't care to export or document.
     '$Values',
     'AsAuthDef',
+    'BooleanHintValueTypes',
     'GenericObjectSchema',
     'NumberHintValueTypes',
     'ObjectHintValueTypes',

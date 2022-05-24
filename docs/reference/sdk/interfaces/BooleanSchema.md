@@ -13,6 +13,18 @@ A schema representing a return value or object property that is a boolean.
 
 ## Properties
 
+### codaType
+
+• `Optional` **codaType**: [`Toggle`](../enums/ValueHintType.md#toggle)
+
+Indicates how to render values in a table. If not specified, renders a checkbox.
+
+#### Defined in
+
+[schema.ts:217](https://github.com/coda/packs-sdk/blob/main/schema.ts#L217)
+
+___
+
 ### description
 
 • `Optional` **description**: `string`
@@ -28,7 +40,7 @@ BaseSchema.description
 
 #### Defined in
 
-[schema.ts:200](https://github.com/coda/packs-sdk/blob/main/schema.ts#L200)
+[schema.ts:207](https://github.com/coda/packs-sdk/blob/main/schema.ts#L207)
 
 ___
 
@@ -40,4 +52,4 @@ Identifies this schema as relating to a boolean value.
 
 #### Defined in
 
-[schema.ts:208](https://github.com/coda/packs-sdk/blob/main/schema.ts#L208)
+[schema.ts:215](https://github.com/coda/packs-sdk/blob/main/schema.ts#L215)

@@ -148,7 +148,11 @@ export declare enum ValueHintType {
 	/**
 	 * Indicates to render a numeric value as a scale UI component (e.g. a star rating).
 	 */
-	Scale = "scale"
+	Scale = "scale",
+	/**
+	 * Indicates to render a boolean value as a toggle.
+	 */
+	Toggle = "toggle"
 }
 declare const StringHintValueTypes: readonly [
 	ValueHintType.Attachment,
@@ -173,15 +177,20 @@ declare const NumberHintValueTypes: readonly [
 	ValueHintType.Slider,
 	ValueHintType.Scale
 ];
+declare const BooleanHintValueTypes: readonly [
+	ValueHintType.Toggle
+];
 declare const ObjectHintValueTypes: readonly [
 	ValueHintType.Person,
 	ValueHintType.Reference
 ];
-/**  The subset of {@link ValueHintType} that can be used with a string value. */
+/** The subset of {@link ValueHintType} that can be used with a string value. */
 export declare type StringHintTypes = typeof StringHintValueTypes[number];
-/**  The subset of {@link ValueHintType} that can be used with a number value. */
+/** The subset of {@link ValueHintType} that can be used with a number value. */
 export declare type NumberHintTypes = typeof NumberHintValueTypes[number];
-/**  The subset of {@link ValueHintType} that can be used with an object value. */
+/** The subset of {@link ValueHintType} that can be used with a boolean value. */
+export declare type BooleanHintTypes = typeof BooleanHintValueTypes[number];
+/** The subset of {@link ValueHintType} that can be used with an object value. */
 export declare type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 export interface BaseSchema {
 	/**
@@ -198,6 +207,8 @@ export interface BaseSchema {
 export interface BooleanSchema extends BaseSchema {
 	/** Identifies this schema as relating to a boolean value. */
 	type: ValueType.Boolean;
+	/** Indicates how to render values in a table. If not specified, renders a checkbox. */
+	codaType?: BooleanHintTypes;
 }
 /**
  * The union of all schemas that can represent number values.
