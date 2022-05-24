@@ -201,11 +201,25 @@ interface BaseSchema {
 }
 
 /**
+ * Enumeration of display types supported by schemas that use {@link ValueType.Boolean}.
+ *
+ * These affect how a boolean value is rendered in tables.
+ */
+export enum BooleanDisplayType {
+  /** Indicates the value should be rendered as a checkbox. */
+  Check = 'check',
+  /** Indicates the value should be rendered as a toggle. */
+  Toggle = 'toggle',
+}
+
+/**
  * A schema representing a return value or object property that is a boolean.
  */
 export interface BooleanSchema extends BaseSchema {
   /** Identifies this schema as relating to a boolean value. */
   type: ValueType.Boolean;
+  /** Indicates how to render values in a table. If not specified, renders a checkbox. */
+  displayType?: BooleanDisplayType;
 }
 
 /**
@@ -811,9 +825,9 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
    * Specifies that object instances with this schema can contain additional properties not defined
    * in the schema, and that the packs infrastructure should retain these unknown properties
    * rather than stripping them.
-   * 
+   *
    * Properties not declared in the schema will not work properly in Coda: they cannot be
-   * used natively in the formula language and will not have correct types in Coda. But, in certain 
+   * used natively in the formula language and will not have correct types in Coda. But, in certain
    * scenarios they can be useful.
    */
   includeUnknownProperties?: boolean;

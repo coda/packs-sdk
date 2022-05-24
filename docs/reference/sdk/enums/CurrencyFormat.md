@@ -23,7 +23,7 @@ $      29.99
 
 #### Defined in
 
-[schema.ts:317](https://github.com/coda/packs-sdk/blob/main/schema.ts#L317)
+[schema.ts:331](https://github.com/coda/packs-sdk/blob/main/schema.ts#L331)
 
 ___
 
@@ -35,7 +35,7 @@ Indicates the value should be rendered as a number with a currency symbol as a p
 
 #### Defined in
 
-[schema.ts:307](https://github.com/coda/packs-sdk/blob/main/schema.ts#L307)
+[schema.ts:321](https://github.com/coda/packs-sdk/blob/main/schema.ts#L321)
 
 ___
 
@@ -47,4 +47,4 @@ Indicates the value should be rendered as a number without a currency symbol, e.
 
 #### Defined in
 
-[schema.ts:321](https://github.com/coda/packs-sdk/blob/main/schema.ts#L321)
+[schema.ts:335](https://github.com/coda/packs-sdk/blob/main/schema.ts#L335)

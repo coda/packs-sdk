@@ -26,7 +26,7 @@ BaseNumberSchema.codaType
 
 #### Defined in
 
-[schema.ts:236](https://github.com/coda/packs-sdk/blob/main/schema.ts#L236)
+[schema.ts:250](https://github.com/coda/packs-sdk/blob/main/schema.ts#L250)
 
 ___
 
@@ -57,7 +57,7 @@ The decimal precision. The number will be rounded to this precision when rendere
 
 #### Defined in
 
-[schema.ts:238](https://github.com/coda/packs-sdk/blob/main/schema.ts#L238)
+[schema.ts:252](https://github.com/coda/packs-sdk/blob/main/schema.ts#L252)
 
 ___
 
@@ -73,7 +73,7 @@ BaseNumberSchema.type
 
 #### Defined in
 
-[schema.ts:225](https://github.com/coda/packs-sdk/blob/main/schema.ts#L225)
+[schema.ts:239](https://github.com/coda/packs-sdk/blob/main/schema.ts#L239)
 
 ___
 
@@ -85,4 +85,4 @@ If specified, will render thousands separators for large numbers, e.g. `1,234,56
 
 #### Defined in
 
-[schema.ts:240](https://github.com/coda/packs-sdk/blob/main/schema.ts#L240)
+[schema.ts:254](https://github.com/coda/packs-sdk/blob/main/schema.ts#L254)

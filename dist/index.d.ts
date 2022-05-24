@@ -107,6 +107,7 @@ export { ensureUnreachable } from './helpers/ensure';
 export type { ArraySchema } from './schema';
 export type { AttributionNode } from './schema';
 export { AttributionNodeType } from './schema';
+export { BooleanDisplayType } from './schema';
 export type { BooleanSchema } from './schema';
 export { CurrencyFormat } from './schema';
 export type { CurrencySchema } from './schema';

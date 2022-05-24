@@ -7,6 +7,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Added
 
 - Added rarely-needed OAuth options: `scopeParamName` and `nestedResponseKey`.
+- Added `displayType` to `BooleanSchema`, allowing boolean values to be rendered as toggles in tables.
 
 ## [0.12.0] - 2022-05-17
 

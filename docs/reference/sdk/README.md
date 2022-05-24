@@ -11,6 +11,7 @@ title: "Pack SDK Reference"
 
 - [AttributionNodeType](enums/AttributionNodeType.md)
 - [AuthenticationType](enums/AuthenticationType.md)
+- [BooleanDisplayType](enums/BooleanDisplayType.md)
 - [ConnectionRequirement](enums/ConnectionRequirement.md)
 - [CurrencyFormat](enums/CurrencyFormat.md)
 - [DurationUnit](enums/DurationUnit.md)

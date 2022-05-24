@@ -32,6 +32,18 @@ BaseSchema.description
 
 ___
 
+### displayType
+
+• `Optional` **displayType**: [`BooleanDisplayType`](../enums/BooleanDisplayType.md)
+
+Indicates how to render values in a table. If not specified, renders a checkbox.
+
+#### Defined in
+
+[schema.ts:222](https://github.com/coda/packs-sdk/blob/main/schema.ts#L222)
+
+___
+
 ### type
 
 • **type**: [`Boolean`](../enums/ValueType.md#boolean)
@@ -40,4 +52,4 @@ Identifies this schema as relating to a boolean value.
 
 #### Defined in
 
-[schema.ts:208](https://github.com/coda/packs-sdk/blob/main/schema.ts#L208)
+[schema.ts:220](https://github.com/coda/packs-sdk/blob/main/schema.ts#L220)
