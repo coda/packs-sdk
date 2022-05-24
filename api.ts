@@ -1,5 +1,6 @@
 import type {ArraySchema} from './schema';
 import type {ArrayType} from './api_types';
+import type {BooleanHintTypes} from './schema';
 import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
 import {ConnectionRequirement} from './api_types';
@@ -807,10 +808,16 @@ export function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueT
       break;
     }
     case ValueType.Boolean: {
-      const {onError: _, resultType: unused, ...rest} = fullDefinition as BooleanFormulaDef<ParamDefsT>;
+      const def: BooleanFormulaDef<ParamDefsT> & {codaType?: BooleanHintTypes; formulaSchema?: BooleanSchema} = {
+        ...fullDefinition,
+        codaType: 'codaType' in fullDefinition ? fullDefinition.codaType : undefined,
+        formulaSchema: 'schema' in fullDefinition ? fullDefinition.schema : undefined,
+      };
+      const {onError: _, resultType: unused, codaType, formulaSchema, ...rest} = def;
       const booleanFormula: BooleanPackFormula<ParamDefsT> = {
         ...rest,
         resultType: Type.boolean,
+        schema: formulaSchema || (codaType ? {type: ValueType.Boolean, codaType} : undefined),
       };
       formula = booleanFormula;
       break;
@@ -899,7 +906,7 @@ export type NumericFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<Par
 export type BooleanFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<ParamDefsT, boolean> & {
   resultType: ValueType.Boolean;
   execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<boolean> | boolean;
-};
+} & ({schema?: BooleanSchema} | {codaType?: BooleanHintTypes});
 
 /**
  * A definition accepted by {@link makeFormula} for a formula that returns an array.

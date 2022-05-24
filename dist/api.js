@@ -366,10 +366,16 @@ function makeFormula(fullDefinition) {
             break;
         }
         case schema_1.ValueType.Boolean: {
-            const { onError: _, resultType: unused, ...rest } = fullDefinition;
+            const def = {
+                ...fullDefinition,
+                codaType: 'codaType' in fullDefinition ? fullDefinition.codaType : undefined,
+                formulaSchema: 'schema' in fullDefinition ? fullDefinition.schema : undefined,
+            };
+            const { onError: _, resultType: unused, codaType, formulaSchema, ...rest } = def;
             const booleanFormula = {
                 ...rest,
                 resultType: api_types_3.Type.boolean,
+                schema: formulaSchema || (codaType ? { type: schema_1.ValueType.Boolean, codaType } : undefined),
             };
             formula = booleanFormula;
             break;

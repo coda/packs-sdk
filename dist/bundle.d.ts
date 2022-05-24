@@ -2156,7 +2156,11 @@ export declare type NumericFormulaDef<ParamDefsT extends ParamDefs> = BaseFormul
 export declare type BooleanFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<ParamDefsT, boolean> & {
 	resultType: ValueType.Boolean;
 	execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<boolean> | boolean;
-};
+} & ({
+	schema?: BooleanSchema;
+} | {
+	codaType?: BooleanHintTypes;
+});
 /**
  * A definition accepted by {@link makeFormula} for a formula that returns an array.
  */
