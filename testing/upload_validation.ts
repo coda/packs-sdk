@@ -3,7 +3,7 @@ import type {AWSAssumeRoleAuthentication} from '../types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import {AuthenticationType} from '../types';
-import {BooleanDisplayType} from '../schema';
+import {BooleanHintValueTypes} from '../schema';
 import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
@@ -543,8 +543,8 @@ const booleanPackFormulaSchema = zodCompleteObject<Omit<BooleanPackFormula<any>,
   resultType: zodDiscriminant(Type.boolean),
   schema: zodCompleteObject<BooleanSchema>({
     type: zodDiscriminant(ValueType.Boolean),
+    codaType: z.enum([...BooleanHintValueTypes]).optional(),
     description: z.string().optional(),
-    displayType: z.nativeEnum(BooleanDisplayType).optional(),
   }).optional(),
 });
 
@@ -575,7 +575,7 @@ const basePropertyValidators = {
 
 const booleanPropertySchema = zodCompleteStrictObject<BooleanSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Boolean),
-  displayType: z.nativeEnum(BooleanDisplayType).optional(),
+  codaType: z.enum([...BooleanHintValueTypes]).optional(),
   ...basePropertyValidators,
 });
 

@@ -11,7 +11,6 @@ title: "Pack SDK Reference"
 
 - [AttributionNodeType](enums/AttributionNodeType.md)
 - [AuthenticationType](enums/AuthenticationType.md)
-- [BooleanDisplayType](enums/BooleanDisplayType.md)
 - [ConnectionRequirement](enums/ConnectionRequirement.md)
 - [CurrencyFormat](enums/CurrencyFormat.md)
 - [DurationUnit](enums/DurationUnit.md)
@@ -113,6 +112,7 @@ title: "Pack SDK Reference"
 - [BaseFormula](types/BaseFormula.md)
 - [BasicPackDefinition](types/BasicPackDefinition.md)
 - [BooleanFormulaDef](types/BooleanFormulaDef.md)
+- [BooleanHintTypes](types/BooleanHintTypes.md)
 - [BooleanPackFormula](types/BooleanPackFormula.md)
 - [FetchMethodType](types/FetchMethodType.md)
 - [Formula](types/Formula.md)
@@ -147,7 +147,6 @@ title: "Pack SDK Reference"
 - [SchemaType](types/SchemaType.md)
 - [SetEndpointDef](types/SetEndpointDef.md)
 - [StringFormulaDef](types/StringFormulaDef.md)
-- [StringHintTypes](types/StringHintTypes.md)
 - [StringPackFormula](types/StringPackFormula.md)
 - [StringSchema](types/StringSchema.md)
 - [SuggestedValueType](types/SuggestedValueType.md)

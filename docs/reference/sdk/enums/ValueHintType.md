@@ -256,6 +256,18 @@ Indicates to interpret the value as a time (e.g. 5:24pm).
 
 ___
 
+### Toggle
+
+• **Toggle** = `"toggle"`
+
+Indicates to render a boolean value as a toggle.
+
+#### Defined in
+
+[schema.ts:162](https://github.com/coda/packs-sdk/blob/main/schema.ts#L162)
+
+___
+
 ### Url
 
 • **Url** = `"url"`

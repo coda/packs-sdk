@@ -148,7 +148,11 @@ export declare enum ValueHintType {
 	/**
 	 * Indicates to render a numeric value as a scale UI component (e.g. a star rating).
 	 */
-	Scale = "scale"
+	Scale = "scale",
+	/**
+	 * Indicates to render a boolean value as a toggle.
+	 */
+	Toggle = "toggle"
 }
 declare const StringHintValueTypes: readonly [
 	ValueHintType.Attachment,
@@ -173,6 +177,9 @@ declare const NumberHintValueTypes: readonly [
 	ValueHintType.Slider,
 	ValueHintType.Scale
 ];
+declare const BooleanHintValueTypes: readonly [
+	ValueHintType.Toggle
+];
 declare const ObjectHintValueTypes: readonly [
 	ValueHintType.Person,
 	ValueHintType.Reference
@@ -181,6 +188,8 @@ declare const ObjectHintValueTypes: readonly [
 export declare type StringHintTypes = typeof StringHintValueTypes[number];
 /**  The subset of {@link ValueHintType} that can be used with a number value. */
 export declare type NumberHintTypes = typeof NumberHintValueTypes[number];
+/**  The subset of {@link ValueHintType} that can be used with a boolean value. */
+export declare type BooleanHintTypes = typeof BooleanHintValueTypes[number];
 /**  The subset of {@link ValueHintType} that can be used with an object value. */
 export declare type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 export interface BaseSchema {
@@ -193,24 +202,13 @@ export interface BaseSchema {
 	description?: string;
 }
 /**
- * Enumeration of display types supported by schemas that use {@link ValueType.Boolean}.
- *
- * These affect how a boolean value is rendered in tables.
- */
-export declare enum BooleanDisplayType {
-	/** Indicates the value should be rendered as a checkbox. */
-	Check = "check",
-	/** Indicates the value should be rendered as a toggle. */
-	Toggle = "toggle"
-}
-/**
  * A schema representing a return value or object property that is a boolean.
  */
 export interface BooleanSchema extends BaseSchema {
 	/** Identifies this schema as relating to a boolean value. */
 	type: ValueType.Boolean;
 	/** Indicates how to render values in a table. If not specified, renders a checkbox. */
-	displayType?: BooleanDisplayType;
+	codaType?: BooleanHintTypes;
 }
 /**
  * The union of all schemas that can represent number values.
