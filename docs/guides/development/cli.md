@@ -63,7 +63,7 @@ You can now access the CLI in any directory by typing the command `coda`.
 
 ### Create Pack definition
 
-Run `coda init` to initialize an empty project with the recommended settings and dependencies.
+Run `npx coda init` to initialize an empty project with the recommended settings and dependencies.
 
 
 ## Running code locally
