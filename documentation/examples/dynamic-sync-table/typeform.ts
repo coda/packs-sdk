@@ -77,18 +77,12 @@ pack.addDynamicSyncTable({
       featuredProperties.push(name);
     }
 
-    // Assemble the schema for each row.
-    let schema = coda.makeObjectSchema({
+    // Return the schema for each row.
+    return coda.makeObjectSchema({
       properties: properties,
       displayProperty: displayProperty,
       idProperty: idProperty,
       featuredProperties: featuredProperties,
-    });
-
-    // Return an array schema as the result.
-    return coda.makeSchema({
-      type: coda.ValueType.Array,
-      items: schema,
     });
   },
 

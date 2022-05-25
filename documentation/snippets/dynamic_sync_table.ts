@@ -27,14 +27,11 @@ pack.addDynamicSyncTable({
     let featuredProperties = [
       // TODO: Determine which fields to show in the table by default.
     ];
-    return coda.makeSchema({
-      type: coda.ValueType.Array,
-      items: coda.makeObjectSchema({
-        properties: properties,
-        idProperty: idProperty,
-        displayProperty: displayProperty,
-        featuredProperties: featuredProperties,
-      }),
+    return coda.makeObjectSchema({
+      properties: properties,
+      idProperty: idProperty,
+      displayProperty: displayProperty,
+      featuredProperties: featuredProperties,
     });
   },
   getDisplayUrl: async function (context) {

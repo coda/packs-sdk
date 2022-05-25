@@ -78,7 +78,7 @@ coda.makeParameter({
 ```
 
 
-## Accessing previous parameter values
+## Accessing previous parameter values {: #parameters}
 
 The `autocomplete` function also has access to the values entered for previous parameters. Unlike in the `execute` function where these are passed in as an array and accessed by position, in `autocomplete` functions they are passed as an object of key/value pairs and accessed by name.
 
