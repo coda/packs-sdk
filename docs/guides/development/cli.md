@@ -13,13 +13,11 @@ The web editor built into the Pack Studio is quick and convenient, but as you wo
 
 Local development is enabled through the `coda` command line tool (CLI). It comes bundled with the Pack SDK and makes it easy to build and manage Packs from the command line.
 
-
 ## Getting started
 
 The easiest way to get started it to follow the tutorial [Get started on your local machine][quickstart_cli], which will walk you through the setup and basic usage of the CLI.
 
 [View Tutorial][quickstart_cli]{ .md-button }
-
 
 ### Requirements {: #requirements}
 
@@ -27,11 +25,9 @@ The CLI requires that you have `node` and `npm` installed. We also recommend dev
 
 The CLI makes use of the NPM package `isolated-vm` to provide emulation of the Packs execution environment. This package has its [own requirements][isolated_vm_requirements] that you may also need to install.
 
-
 ### Installing {: #install}
 
 The `coda` CLI comes bundled with the Pack SDK. There are a few options for how to install it.
-
 
 #### Single-project install (recommended)
 
@@ -49,7 +45,6 @@ npm install --save @codahq/packs-sdk
 
 You can now access the CLI within this directory, using the command `npx coda`.
 
-
 #### Global install
 
 Alternatively you can install the SDK globally and access the CLI everywhere:
@@ -60,16 +55,13 @@ npm install --global @codahq/packs-sdk
 
 You can now access the CLI in any directory by typing the command `coda`.
 
-
 ### Create Pack definition
 
-Run `coda init` to initialize an empty project with the recommended settings and dependencies.
-
+Run `npx coda init` to initialize an empty project with the recommended settings and dependencies.
 
 ## Running code locally
 
 Once published, your Pack functionality will be executed on Coda servers after being invoked from a Coda doc. During the development process, you can call your formulas directly from the command line, to simulate this process for rapid development. When you’re nearing the end of authoring your Pack, you can upload your Pack to Coda and run it in a real doc to verify it works as intended.
-
 
 ### Running formulas
 
@@ -87,7 +79,6 @@ npx coda execute src/pack.ts Hello "World"
 
 This will execute the formula and print the output to the terminal.
 
-
 ### Passing parameters
 
 To pass parameters to a formula when using `coda execute`, include them as separate arguments after the formula name. Like with all Coda formulas, parameters are passed positionally.
@@ -97,7 +88,7 @@ npx coda execute src/pack.ts MyFormula "one" "two" "three"
 ```
 
 !!! note "Wrap arguments in quotes"
-    If your arguments have spaces or special characters in them, make sure to put them in quotation marks when specifying them on the command line.
+If your arguments have spaces or special characters in them, make sure to put them in quotation marks when specifying them on the command line.
 
 The CLI will look at your Pack definition to determine the types of your parameters and will interpret your arguments accordingly. For example, if your formula takes a string and you pass `123` as an argument on the command line, it will know to interpret that as a string. But if your formula takes a number, it will interpret `123` as a number before executing the formula.
 
@@ -130,8 +121,7 @@ npx coda execute src/pack.ts MyFormula "1985-10-26,1955-11-12"
 ```
 
 !!! warning "Can't escape commas"
-    It currently isn't possible to escape commas in `StringArray` parameter values. To test your formula with arrays of strings containing commas you'll need to either [write a test case][testing] or [upload](#upload) it to Coda's servers and try it in a real doc.
-
+It currently isn't possible to escape commas in `StringArray` parameter values. To test your formula with arrays of strings containing commas you'll need to either [write a test case][testing] or [upload](#upload) it to Coda's servers and try it in a real doc.
 
 ### Running Syncs
 
@@ -155,7 +145,6 @@ To run a sync for a dynamic sync table, use the `--dynamicUrl` parameter to spec
 npx coda execute path/to/pack.ts Items --dynamicUrl=https://example.com/api/table
 ```
 
-
 ## Authentication {: #authentication}
 
 The SDK will help you set up authentication in your development environment so that you can execute Pack formulas with authentication applied to them. This allows you to run your code end-to-end including making fetcher requests to external APIs.
@@ -169,15 +158,13 @@ npx coda auth path/to/pack.ts
 The utility will inspect your Pack definition to see what kind of authentication you have defined, and then it will prompt you to provide in the console the necessary token(s) or other parameters required by your authorization type. The resulting credentials you provide will be stored in a file `.coda-credentials.json` in the same directory as your Pack definition.
 
 !!! info "Local OAuth2 flow"
-    If you are using `OAuth2` authentication, after you provide the client ID and secret it will launch an OAuth flow in your browser. This flow runs a temporary, local server at `http://localhost:3000/oauth` to handle the redirect. You will need to ensure that your client ID is configured to allow this redirect URL.
+If you are using `OAuth2` authentication, after you provide the client ID and secret it will launch an OAuth flow in your browser. This flow runs a temporary, local server at `http://localhost:3000/oauth` to handle the redirect. You will need to ensure that your client ID is configured to allow this redirect URL.
 
 The credentials will be automatically applied to your fetch requests when you execute a Pack from the CLI or a test. For more information on using the fetcher in tests, see the [Integration tests][integration] section.
-
 
 ## Uploading Packs {: #upload}
 
 All of the commands shown so far have only affected your local machine. To get the Pack running on Coda's servers you'll need to use some of the commands below.
-
 
 ### Registering an API token {: #register}
 
@@ -186,7 +173,6 @@ All of the Pack upload commands work with the Coda API to upload your Pack, and 
 ```sh
 npx coda register
 ```
-
 
 ### Creating a new Pack
 
@@ -203,7 +189,6 @@ This command accepts optional flags for specifying a name and description for th
 ```sh
 npx coda create path/to/pack.ts --name "My Pack" --description "My pack description."
 ```
-
 
 ### Uploading a Pack version
 
@@ -224,8 +209,7 @@ npx coda upload path/to/pack.ts --notes "Added the formula MyNewFormula."
 -->
 
 !!! info
-    At this time, this command will not upload your source code, only your compiled Pack. You will not see your source code in the web editor as you would if you had used the web code editor to compose your Pack.
-
+At this time, this command will not upload your source code, only your compiled Pack. You will not see your source code in the web editor as you would if you had used the web code editor to compose your Pack.
 
 ### Creating a release
 
@@ -247,20 +231,18 @@ npx coda release path/to/pack.ts --notes "Added the formula MyNewFormula."
 ```
 -->
 
-
 ## Recommended file structure
 
 When using the CLI to build a Pack you can split your code into multiple files, which can be really useful for large or complex Packs. You can organize your code however you like, as long as there is a file that exports the Pack definition with the name `pack` (typically named `pack.ts`).
 
 Coda engineers have built dozens of Packs over the years, and have settled on a the recommended file structure below:
 
-* `helpers.ts` - A place to define helper functions used by your Pack.
-* `pack.ts` - The core Pack definition, where all of the formulas, sync tables, and other building blocks are added.
-* `schemas.ts` - A place to define the schemas (structured data types) used by your Pack.
-* `types.ts` - A place to define TypeScript types for the data used by your Pack.
+- `helpers.ts` - A place to define helper functions used by your Pack.
+- `pack.ts` - The core Pack definition, where all of the formulas, sync tables, and other building blocks are added.
+- `schemas.ts` - A place to define the schemas (structured data types) used by your Pack.
+- `types.ts` - A place to define TypeScript types for the data used by your Pack.
 
 To see this pattern in action check out the [CLI example Packs][github_examples] on GitHub.
-
 
 ## When to use Pack Studio
 
@@ -269,7 +251,6 @@ Although a lot of Pack management can be done through the CLI, there are still s
 - Setting the authorization credentials.
 - Setting rate limits.
 - Editing your Pack's listing page (name, icon, etc).
-
 
 ## Migrating from the web editor
 
@@ -284,15 +265,13 @@ npx coda clone "https://coda.io/p/123456"
 This will initialize the directory with the recommended settings and dependencies, download your existing Pack code into `pack.ts`, and create a `.coda-pack.json` file that links them together.
 
 !!! info "Link only"
-    If you've already setup your local project and just need to link it to the existing Pack use the `coda link` command instead. It will create the `.coda-pack.json` file and nothing else.
+If you've already setup your local project and just need to link it to the existing Pack use the `coda link` command instead. It will create the `.coda-pack.json` file and nothing else.
 
     ```sh
     npx coda link "https://coda.io/p/123456"
     ```
 
 The next time you run `coda upload` your Pack will be updated to use the local code. You can always get back to the previous code you wrote in the Pack Studio by visiting the [**History** tab][versions_history].
-
-
 
 [libraries]: libraries.md
 [quickstart_cli]: ../../tutorials/get-started/cli.md
