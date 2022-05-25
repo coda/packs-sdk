@@ -118,6 +118,11 @@ coda.makeParameter({
     },
     ```
 
+!!! bug "All parameters passed as string"
+    Unlike in the `execute` formula where arguments have types corresponding to their parameters (`number` for `Number` parameters, etc), all arguments accessed in the `autocomplete` function are strings.
+    <!-- https://golinks.io/bug/22638 -->
+
+
 
 ## Validation
 

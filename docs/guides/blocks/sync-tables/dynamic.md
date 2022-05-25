@@ -350,6 +350,10 @@ pack.addDynamicSyncTable({
 
 The `getSchema` function is first run when the table is initially dragged into the document, before any parameter values have been set. Make sure your function can handle the absence of parameter values, even required ones.
 
+!!! bug "All parameters passed as string"
+    Unlike in the `execute` formula where arguments have types corresponding to their parameters (`number` for `Number` parameters, etc), all arguments accessed in the `getSchema` function are strings.
+    <!-- https://golinks.io/bug/22638 -->
+
 
 ## Organize the URL list
 
