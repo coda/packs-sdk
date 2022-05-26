@@ -599,7 +599,11 @@ export interface TemporaryBlobStorage {
    * If the `downloadFilename` parameter is specified, the data will be interpreted as a file (`attachment` content
    * disposition) that will be downloaded when accessed as the file name provided.
    */
-  storeUrl(url: string, opts?: {expiryMs?: number; downloadFilename?: string}): Promise<string>;
+  storeUrl(
+    url: string,
+    opts?: {expiryMs?: number; downloadFilename?: string},
+    fetchOpts?: Pick<FetchRequest, 'disableAuthentication'>,
+  ): Promise<string>;
   /**
    * Stores the given data as a file with the given content type in Coda-hosted temporary storage.
    * Returns a URL for the temporary file that you should return in your formula response.

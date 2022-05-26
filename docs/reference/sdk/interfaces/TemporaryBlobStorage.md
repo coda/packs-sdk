@@ -59,13 +59,13 @@ disposition) that will be downloaded when accessed as the file name provided.
 
 #### Defined in
 
-[api_types.ts:613](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L613)
+[api_types.ts:617](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L617)
 
 ___
 
 ### storeUrl
 
-▸ **storeUrl**(`url`, `opts?`): `Promise`<`string`\>
+▸ **storeUrl**(`url`, `opts?`, `fetchOpts?`): `Promise`<`string`\>
 
 Fetches the data at the given URL, applying user authentication credentials as appropriate,
 and stores it in Coda-hosted temporary storage. Returns a URL for the temporary file
@@ -85,6 +85,7 @@ disposition) that will be downloaded when accessed as the file name provided.
 | `opts?` | `Object` |
 | `opts.downloadFilename?` | `string` |
 | `opts.expiryMs?` | `number` |
+| `fetchOpts?` | `Pick`<[`FetchRequest`](FetchRequest.md), ``"disableAuthentication"``\> |
 
 #### Returns
 
