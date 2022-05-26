@@ -51,9 +51,9 @@ The returned object is merged into the existing row, such that any top-level pro
 [View Sample Code][samples_action_todoist]{ .md-button }
 
 
-### Dynamic schemas {: #dynamic-schemas}
+### Handling dynamic schemas {: #dynamic-schemas}
 
-Action formulas must declare the schema of the object they return, which presents a challenge when trying to update rows in sync tables that use the `getSchema` method to [dynamically generate their schemas][getSchema]. It's possible to work around this incompatibility as long as there is a predictable `idProperty` for the dynamic schema.
+Action formulas must declare the schema of the object they return, which presents a challenge when trying to update rows in sync tables that use the `getSchema` method to [dynamically generate their schemas][getSchema]. It's possible to work around this incompatibility however, as long as there is a predictable `idProperty` for the dynamic schema.
 
 Create a "base schema" for your action formula to use, which at a minimum includes an `idProperty` (and the corresponding property definition). Additionally, set the schema field [`includeUnknownProperties`][includeUnknownProperties] to true. This tells Coda not to strip out extra data in the response that doesn't match a defined property, allowing it to flow through to the sync table.
 
@@ -96,9 +96,9 @@ pack.addFormula({
     When you enable the `includeUnknownProperties` feature, all of the data returned by the formula or sync table ends up in the object chip, even when it doesn't match any schema property in the sync table. Only the fields corresponding to properties will be available to "dot" into in the Coda formula language however. You should therefore remove any data from the API response that you don't intend the user to see.
 
 
-### Dynamic sync tables
+### Handling dynamic URLs
 
-Dynamic sync tables have dynamic schemas, and therefore need to use the technique [described above](#dynamic-schemas) to update their rows from an action. However they have the additional complication that they are not uniquely identified by an `identityName` alone, but in combination with their specific `dynamicUrl`. While it is possible to set the `identity.dynamicUrl` field of the schema, hardcoding it to a specific URL isn't likely to be useful.
+Dynamic sync tables have dynamic schemas, and therefore need to use the technique [described above](#dynamic-schemas) to update their rows from an action. However they have the additional complication that they are not uniquely identified by an `identityName` alone, but in combination with their specific dynamic URL. While it is possible to set the `identity.dynamicUrl` field of the schema, hardcoding it to a specific URL isn't likely to be useful.
 
 While there is no solution for the general case, there is for the common case where a button appears in a column of the same table. As long as the `identity.name` of the schema matches that of the dynamic sync table containing the button, the dynamic URL will be automatically populated and the row update will work. Using that same action elsewhere in the doc however will not update the existing row.
 
