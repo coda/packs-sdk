@@ -104,7 +104,7 @@ While there is no solution for the general case, there is for the common case wh
 
 
 [actions]: ../blocks/actions.md
-[data_type_object]: ../../basics/data-types.md#objects
+[data_type_object]: ../basics/data-types.md#objects
 [schemas]: schemas.md
 [getSchema]: ../blocks/sync-tables/dynamic.md#get-schema
 [includeUnknownProperties]: ../../reference/sdk/interfaces/ObjectSchemaDefinition.md#includeunknownproperties
