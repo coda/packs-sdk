@@ -131,7 +131,7 @@ pack.addDynamicSyncTable({
 ```
 
 
-### Generate the row schema
+### Generate the row schema {:. #get-schema}
 
 The [`getSchema`][getSchema] function is responsible for generating the schema that represents each row of the sync table. Unlike regular sync tables that can define their sync table at build time, the schema for a dynamic sync table must be generated at run-time based on the dataset selected.
 
