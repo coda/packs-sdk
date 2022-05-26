@@ -97,6 +97,14 @@ Actions can use authentication to access private resources, but unlike other for
 Unlike other formulas, actions are never cached or automatically recalculated. The action is only run when the button is pressed or automation triggered, and the code is run each time, even if the inputs haven't changed.
 
 
+## Update sync table rows
+
+It's common for a Pack to have a [sync table][sync_table] that brings in records from an external API, and an action that allows the user to update those records. The changes made by the action will be reflected in the table the next time it syncs, but you can update the row immediately by selecting the correct return value for your formula.
+
+Learn more about this approach in the [two-way sync guide][two_way_sync].
+
+
+
 [help_buttons]: https://help.coda.io/en/articles/2033889-overview-of-buttons
 [help_automations]: https://help.coda.io/en/articles/2423860-automations-in-coda
 [fetcher]: ../advanced/fetcher.md
@@ -104,3 +112,6 @@ Unlike other formulas, actions are never cached or automatically recalculated. T
 [formulas]: formulas.md
 [parameters]: ../basics/parameters/index.md
 [data-types]: ../basics/data-types.md
+[sync_table]: sync-tables/index.md
+[schemas]: ../advanced/schemas.md
+[two_way_sync]: ../advanced/two-way-sync.md

@@ -213,44 +213,11 @@ pack.addSyncTable({
 [View Sample Code][sample_continuation]{ .md-button }
 
 
-## Approximating two-way sync with actions {: #actions}
+## Approximating two-way sync {: #actions}
 
-The sync process used by sync tables is one-way only; data is pulled in from an external source and is displayed in a read-only column. It's not possible to directly edit the items in the sync table and sync the changes back out.
+The sync process used by sync tables is one-way only; data is pulled in from an external source and is displayed in a read-only column. It's not possible to directly edit the items in the sync table and sync the changes back out. However it is possible to approximate a two-way sync using a combinations of additional columns, buttons, and custom actions.
 
-You can approximate a two-way sync using buttons with [custom actions][actions]. For example, the [Todoist sample][sample_todoist] has an `UpdateTask` action that updates the name of a task. Sync tables can't include buttons directly, but Makers can add them on to a sync table and sample docs can demonstrate this pattern.
-
-If an action updates an item that has been synced, it’s natural to want to see the row for that synced item get updated immediately, rather than having to wait for the next sync. To address this, you can have an action formula return an [Object][data_type_object], representing the item after the changes have been applied. If this object uses the same schema as a sync table, when the formula completes, Coda will look for a row in that sync table and update the row’s value with the return value of the action. The schema must have the `identity.name` field populated and it must match the `identityName` field of the sync table.
-
-```ts
-const TaskSchema = coda.makeObjectSchema({
-  // ...
-  identity: {
-    name: "Task",
-  },
-});
-
-pack.addSyncTable({
-  name: "Tasks",
-  schema: TaskSchema,
-  identityName: "Task",
-  // ...
-});
-
-pack.addFormula({
-  name: "UpdateTask",
-  description: "Updates the name of a task.",
-  // ...
-  resultType: coda.ValueType.Object,
-  schema: TaskSchema,
-  isAction: true,
-  execute: async function ([taskId, name], context) {
-    // Call the API to update the task and get back the updated content.
-    let task = updateTask(taskId, name, context);
-    // The existing row will be updated with this value.
-    return task;
-  },
-});
-```
+Learn more about this approach in the [two-way sync guide][two_way_sync].
 
 
 ## Referencing rows from other sync tables {: #references}
@@ -291,7 +258,6 @@ It's recommended that you reduce or disable [HTTP caching][fetcher_caching] of t
 [schema_references]: ../../advanced/schemas.md#references
 [dynamicOptions]: ../../../reference/sdk/interfaces/SyncTableOptions/#dynamicoptions
 [actions]: ../actions.md
-[data_type_object]: ../../basics/data-types.md#objects
 [dynamic_sync_tables]: dynamic.md
 [dynamic_sync_tables_schema_only]: dynamic.md#schema-only
 [hc_lookups]: https://help.coda.io/en/articles/1385997-using-lookups#the-lookup-column-format
@@ -300,3 +266,4 @@ It's recommended that you reduce or disable [HTTP caching][fetcher_caching] of t
 [parmeters]: ../../basics/parameters/index.md
 [fetcher_caching]: ../../advanced/fetcher.md#caching
 [parameters]: ../../basics/parameters/index.md
+[two_way_sync]: ../../advanced/two-way-sync.md
