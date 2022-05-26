@@ -1469,7 +1469,7 @@ export interface TemporaryBlobStorage {
 	storeUrl(url: string, opts?: {
 		expiryMs?: number;
 		downloadFilename?: string;
-	}): Promise<string>;
+	}, fetchOpts?: Pick<FetchRequest, "disableAuthentication">): Promise<string>;
 	/**
 	 * Stores the given data as a file with the given content type in Coda-hosted temporary storage.
 	 * Returns a URL for the temporary file that you should return in your formula response.
@@ -2596,6 +2596,7 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
 	description: string;
 	name: string;
+	cacheTtlSecs?: number | undefined;
 	parameters: ParamDefsT;
 	varargParameters?: ParamDefs | undefined;
 	examples?: {
@@ -2605,7 +2606,6 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 	isAction?: boolean | undefined;
 	connectionRequirement?: ConnectionRequirement | undefined;
 	network?: Network | undefined;
-	cacheTtlSecs?: number | undefined;
 	isExperimental?: boolean | undefined;
 	isSystem?: boolean | undefined;
 	extraOAuthScopes?: string[] | undefined;
@@ -2637,6 +2637,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: EmptyFormulaDef<ParamDefsT>): {
 	description: string;
 	name: string;
+	cacheTtlSecs?: number | undefined;
 	parameters: ParamDefsT;
 	varargParameters?: ParamDefs | undefined;
 	examples?: {
@@ -2646,7 +2647,6 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
 	isAction?: boolean | undefined;
 	connectionRequirement?: ConnectionRequirement | undefined;
 	network?: Network | undefined;
-	cacheTtlSecs?: number | undefined;
 	isExperimental?: boolean | undefined;
 	isSystem?: boolean | undefined;
 	extraOAuthScopes?: string[] | undefined;
