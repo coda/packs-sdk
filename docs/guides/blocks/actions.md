@@ -114,3 +114,4 @@ Learn more about this approach in the [two-way sync guide][two_way_sync].
 [data-types]: ../basics/data-types.md
 [sync_table]: sync-tables/index.md
 [schemas]: ../advanced/schemas.md
+[two_way_sync]: ../../advanced/two-way-sync.md
