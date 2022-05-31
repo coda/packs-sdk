@@ -4,7 +4,7 @@ title: Images
 
 # Image samples
 
-Packs have native support for accepting images as parameters and returning them as results, always passed as URLs. Packs can either return a "live" URL to a hosted image (`ImageReference`) or a temporary URL that Coda should upload the doc (`ImageAttachment`). The utility provided at `content.temporaryBlobStorage` can be used to save private images to a temporary location for later upload. Packs also provide support for embedded SVGs, including support for dark mode.
+Packs have native support for accepting images as parameters and returning them as results, always passed as URLs. Packs can either return a "live" URL to a hosted image (`ImageReference`) or a temporary URL that Coda should upload the doc (`ImageAttachment`). The utility provided at `content.temporaryBlobStorage` can be used to save private images to a temporary location for later upload, which can be used in conjunction with the `ImageAttachment` hint type to permanently ingest an image resource using the temporary URL. Packs also provide support for embedded SVGs, including support for dark mode.
 
 
 [Learn More](../../../guides/advanced/images){ .md-button }
@@ -105,6 +105,41 @@ pack.addFormula({
 
 // Allow the pack to make requests to Cat-as-a-service API.
 pack.addNetworkDomain("cataas.com");
+```
+## Image result from temporary URL
+A formula that returns an image uploaded to &#x60;temporaryBlobStorage&#x60;. This sample returns a random avatar using an API that returns SVG code used to generate an avatar. You could also imagine locally creating an SVG or other image and uploading it to &#x60;temporaryBlobStorage&#x60;.
+
+```ts
+import * as coda from "@codahq/packs-sdk";
+export const pack = coda.newPack();
+
+pack.addNetworkDomain("source.boringavatars.com");
+
+pack.addFormula({
+  name: "BoringAvatar",
+  description: "Get a boring avatar image.",
+  parameters: [
+    coda.makeParameter({
+      type: coda.ParameterType.Number,
+      name: "Size",
+      description: "The size to generate the avatar in pixels.",
+    }),
+  ],
+  resultType: coda.ValueType.String,
+  codaType: coda.ValueHintType.ImageAttachment,
+  execute: async function ([size], context) {
+    let resp = await context.fetcher.fetch({ 
+      method: "GET", 
+      url: `https://source.boringavatars.com/beam/${size}`,
+    });
+    // This API returns direct SVG code used to generate the avatar.
+    let svg = resp.body;
+
+    let url = await context.temporaryBlobStorage
+                      .storeBlob(Buffer.from(svg), "image/svg+xml");
+    return url;
+  },
+});
 ```
 ## Upload images
 An action that downloads images from Coda and uploads them to another service. This sample uploads a list of files to Google Photos.
