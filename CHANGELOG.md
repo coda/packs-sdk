@@ -8,6 +8,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - Added rarely-needed OAuth options: `scopeParamName` and `nestedResponseKey`.
 - Added `ValueHintType.Toggle` to be used in conjunction with `ValueType.Boolean` to render boolean values as toggles within tables.
+- Added `fetchOpts` to `TemporaryBlobStorage` to allow setting `disableAuthentication` for the fetch.
 
 ### Changed
 
