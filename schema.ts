@@ -794,7 +794,9 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
    * A list of property names from within {@link properties} for the "featured" properties
    * of this object, used in sync tables. When a sync table is first added to a document,
    * columns are created for each of the featured properties. The user can easily add additional
-   * columns for any other properties, as desired.
+   * columns for any other properties, as desired. All featured properties need to be top-level.
+   * If you can't or don't want to change the received data format, consider changing the
+   * received object after fetching and before returning and assigning it to the schema.
    *
    * This distinction exists for cases where a sync table may include dozens of properties,
    * which would create a very wide table that is difficult to use. Featuring properties
