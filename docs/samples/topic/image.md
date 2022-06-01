@@ -107,13 +107,13 @@ pack.addFormula({
 pack.addNetworkDomain("cataas.com");
 ```
 ## Image result from temporary URL
-A formula that returns an image uploaded to &#x60;temporaryBlobStorage&#x60;. This sample returns a random avatar using an API that returns SVG code used to generate an avatar. You could also imagine locally creating an SVG or other image and uploading it to &#x60;temporaryBlobStorage&#x60;.
+A formula that returns an image uploaded to &#x60;temporaryBlobStorage&#x60;. This sample returns a random avatar using an API that returns SVG code used to generate an avatar. You could also imagine procedurally generating a SVG or image in your packs code and uploading it to &#x60;temporaryBlobStorage&#x60;.
 
 ```ts
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
-pack.addNetworkDomain("source.boringavatars.com");
+pack.addNetworkDomain("boringavatars.com");
 
 pack.addFormula({
   name: "BoringAvatar",
@@ -121,7 +121,7 @@ pack.addFormula({
   parameters: [
     coda.makeParameter({
       type: coda.ParameterType.Number,
-      name: "Size",
+      name: "size",
       description: "The size to generate the avatar in pixels.",
     }),
   ],
@@ -131,12 +131,14 @@ pack.addFormula({
     let resp = await context.fetcher.fetch({ 
       method: "GET", 
       url: `https://source.boringavatars.com/beam/${size}`,
+      // Formats response as binary to get a Buffer of the svg data
+      isBinaryResponse: true, 
     });
     // This API returns direct SVG code used to generate the avatar.
     let svg = resp.body;
 
     let url = await context.temporaryBlobStorage
-                      .storeBlob(Buffer.from(svg), "image/svg+xml");
+                      .storeBlob(svg, "image/svg+xml");
     return url;
   },
 });

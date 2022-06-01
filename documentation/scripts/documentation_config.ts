@@ -728,7 +728,7 @@ export const Examples: Example[] = [
       {
         name: 'Image result from temporary URL',
         content:
-          'A formula that returns an image uploaded to `temporaryBlobStorage`. This sample returns a random avatar using an API that returns SVG code used to generate an avatar. You could also imagine locally creating an SVG or other image and uploading it to `temporaryBlobStorage`.',
+          'A formula that returns an image uploaded to `temporaryBlobStorage`. This sample returns a random avatar using an API that returns SVG code used to generate an avatar. You could also imagine procedurally generating a SVG or image in your packs code and uploading it to `temporaryBlobStorage`.',
         codeFile: './examples/image/boring_avatar.ts',
       },
       {
