@@ -8,11 +8,11 @@ The type of content in this attribution node.
 Multiple attribution nodes can be rendered all together, for example to have
 attribution that contains both text and a logo image.
 
-## Enumeration members
+## Enumeration Members
 
 ### Image
 
-• **Image** = `3`
+• **Image**
 
 An image, often a logo of the data source.
 
@@ -24,7 +24,7 @@ ___
 
 ### Link
 
-• **Link** = `2`
+• **Link**
 
 A hyperlink pointing to the data source.
 
@@ -36,7 +36,7 @@ ___
 
 ### Text
 
-• **Text** = `1`
+• **Text**
 
 Text attribution content.
 

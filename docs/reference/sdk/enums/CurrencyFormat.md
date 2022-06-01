@@ -7,11 +7,11 @@ Enumeration of formats supported by schemas that use [ValueHintType.Currency](Va
 
 These affect how a numeric value is rendered in docs.
 
-## Enumeration members
+## Enumeration Members
 
 ### Accounting
 
-• **Accounting** = `"accounting"`
+• **Accounting**
 
 Indicates the value should be rendered as a number with a currency symbol as a prefix, but padded
 to allow the numeric values to line up vertically, e.g.
@@ -29,7 +29,7 @@ ___
 
 ### Currency
 
-• **Currency** = `"currency"`
+• **Currency**
 
 Indicates the value should be rendered as a number with a currency symbol as a prefix, e.g. `$2.50`.
 
@@ -41,7 +41,7 @@ ___
 
 ### Financial
 
-• **Financial** = `"financial"`
+• **Financial**
 
 Indicates the value should be rendered as a number without a currency symbol, e.g. `2.50`.
 

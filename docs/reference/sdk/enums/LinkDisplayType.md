@@ -5,11 +5,11 @@ title: "LinkDisplayType"
 
 Display types that can be used with a [LinkSchema](../interfaces/LinkSchema.md).
 
-## Enumeration members
+## Enumeration Members
 
 ### Card
 
-• **Card** = `"card"`
+• **Card**
 
 Display the referenced web page as a card.
 
@@ -21,7 +21,7 @@ ___
 
 ### Embed
 
-• **Embed** = `"embed"`
+• **Embed**
 
 Display the referenced web page as an embed.
 
@@ -33,7 +33,7 @@ ___
 
 ### IconOnly
 
-• **IconOnly** = `"iconOnly"`
+• **IconOnly**
 
 Display icon only.
 
@@ -45,7 +45,7 @@ ___
 
 ### Title
 
-• **Title** = `"title"`
+• **Title**
 
 Display web page title.
 
@@ -57,7 +57,7 @@ ___
 
 ### Url
 
-• **Url** = `"url"`
+• **Url**
 
 Display URL.
 
