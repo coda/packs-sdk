@@ -101,7 +101,7 @@
     "remark-cli": "^10.0.1",
     "remark-lint-no-undefined-references": "^4.1.1",
     "ts-loader": "^9.3.0",
-    "ts-node": "^10.7.0",
+    "ts-node": "^10.8.0",
     "typedoc": "^0.22.15",
     "typedoc-plugin-markdown": "^3.12.1"
   },
