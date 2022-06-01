@@ -5,11 +5,11 @@ title: "ValueHintType"
 
 Synthetic types that instruct Coda how to coerce values from primitives at ingestion time.
 
-## Enumeration members
+## Enumeration Members
 
 ### Attachment
 
-• **Attachment** = `"attachment"`
+• **Attachment**
 
 Indicates to interpret and render a value as a file attachment. The provided value should be a URL
 pointing to a file of a Coda-supported type. Coda will ingest the file and host it from Coda infrastructure.
@@ -22,7 +22,7 @@ ___
 
 ### Currency
 
-• **Currency** = `"currency"`
+• **Currency**
 
 Indicates to interpret and render the value as a currency value.
 
@@ -34,7 +34,7 @@ ___
 
 ### Date
 
-• **Date** = `"date"`
+• **Date**
 
 Indicates to interpret the value as a date (e.g. March 3, 2021).
 
@@ -46,7 +46,7 @@ ___
 
 ### DateTime
 
-• **DateTime** = `"datetime"`
+• **DateTime**
 
 Indicates to interpret the value as a datetime (e.g. March 3, 2021 at 5:24pm).
 
@@ -58,7 +58,7 @@ ___
 
 ### Duration
 
-• **Duration** = `"duration"`
+• **Duration**
 
 Indicates to interpret the value as a duration (e.g. 3 hours).
 
@@ -70,7 +70,7 @@ ___
 
 ### Email
 
-• **Email** = `"email"`
+• **Email**
 
 Indicates to interpret the value as an email address (e.g. joe@foo.com).
 
@@ -82,7 +82,7 @@ ___
 
 ### Embed
 
-• **Embed** = `"embed"`
+• **Embed**
 
 Indicates to interpret and render a value as an embed. The provided value should be a URL pointing
 to an embeddable web page.
@@ -95,7 +95,7 @@ ___
 
 ### Html
 
-• **Html** = `"html"`
+• **Html**
 
 Indicates to interpret a text value as HTML, which will be converted and rendered as Coda rich text.
 
@@ -107,7 +107,7 @@ ___
 
 ### ImageAttachment
 
-• **ImageAttachment** = `"imageAttachment"`
+• **ImageAttachment**
 
 Indicates to interpret and render the value as an image. The provided value should be a URL that
 points to an image. Coda will ingest the image and host it from Coda infrastructure.
@@ -120,7 +120,7 @@ ___
 
 ### ImageReference
 
-• **ImageReference** = `"image"`
+• **ImageReference**
 
 Indicates to interpret and render the value as an image. The provided value should be a URL that
 points to an image. Coda will hotlink to the image when rendering it a doc.
@@ -136,7 +136,7 @@ ___
 
 ### Markdown
 
-• **Markdown** = `"markdown"`
+• **Markdown**
 
 Indicates to interpret a text value as Markdown, which will be converted and rendered as Coda rich text.
 
@@ -148,7 +148,7 @@ ___
 
 ### Percent
 
-• **Percent** = `"percent"`
+• **Percent**
 
 Indicates to interpret and render the value as a percentage.
 
@@ -160,7 +160,7 @@ ___
 
 ### Person
 
-• **Person** = `"person"`
+• **Person**
 
 Indicates to interpret and render the value as a Coda person reference. The provided value should be
 an object whose `id` property is an email address, which Coda will try to resolve to a user
@@ -188,7 +188,7 @@ ___
 
 ### Reference
 
-• **Reference** = `"reference"`
+• **Reference**
 
 Indicates to interpret and render the value as a Coda @-reference to a table row. The provided value should
 be an object whose `id` value matches the id of some row in a sync table. The schema where this hint type is
@@ -222,7 +222,7 @@ ___
 
 ### Scale
 
-• **Scale** = `"scale"`
+• **Scale**
 
 Indicates to render a numeric value as a scale UI component (e.g. a star rating).
 
@@ -234,7 +234,7 @@ ___
 
 ### Slider
 
-• **Slider** = `"slider"`
+• **Slider**
 
 Indicates to render a numeric value as a slider UI component.
 
@@ -246,7 +246,7 @@ ___
 
 ### Time
 
-• **Time** = `"time"`
+• **Time**
 
 Indicates to interpret the value as a time (e.g. 5:24pm).
 
@@ -258,7 +258,7 @@ ___
 
 ### Toggle
 
-• **Toggle** = `"toggle"`
+• **Toggle**
 
 Indicates to render a boolean value as a toggle.
 
@@ -270,7 +270,7 @@ ___
 
 ### Url
 
-• **Url** = `"url"`
+• **Url**
 
 Indicates to interpret and render the value as a URL link.
 

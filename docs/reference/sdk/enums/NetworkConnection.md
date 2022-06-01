@@ -5,11 +5,11 @@ title: "NetworkConnection"
 
 **`deprecated`** use `ConnectionRequirement` instead
 
-## Enumeration members
+## Enumeration Members
 
 ### None
 
-• **None** = `"none"`
+• **None**
 
 #### Defined in
 
@@ -19,7 +19,7 @@ ___
 
 ### Optional
 
-• **Optional** = `"optional"`
+• **Optional**
 
 #### Defined in
 
@@ -29,7 +29,7 @@ ___
 
 ### Required
 
-• **Required** = `"required"`
+• **Required**
 
 #### Defined in
 
