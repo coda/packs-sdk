@@ -30,7 +30,7 @@ See [makeAttributionNode](../functions/makeAttributionNode.md).
 
 #### Defined in
 
-[schema.ts:818](https://github.com/coda/packs-sdk/blob/main/schema.ts#L818)
+[schema.ts:820](https://github.com/coda/packs-sdk/blob/main/schema.ts#L820)
 
 ___
 
@@ -103,7 +103,9 @@ ___
 A list of property names from within [properties](ObjectSchemaDefinition.md#properties) for the "featured" properties
 of this object, used in sync tables. When a sync table is first added to a document,
 columns are created for each of the featured properties. The user can easily add additional
-columns for any other properties, as desired.
+columns for any other properties, as desired. All featured properties need to be top-level.
+If you can't or don't want to change the received data format, consider changing the
+received object after fetching and before returning and assigning it to the schema.
 
 This distinction exists for cases where a sync table may include dozens of properties,
 which would create a very wide table that is difficult to use. Featuring properties
@@ -115,7 +117,7 @@ projections have been created for them.
 
 #### Defined in
 
-[schema.ts:807](https://github.com/coda/packs-sdk/blob/main/schema.ts#L807)
+[schema.ts:809](https://github.com/coda/packs-sdk/blob/main/schema.ts#L809)
 
 ___
 
@@ -153,7 +155,7 @@ See [IdentityDefinition](IdentityDefinition.md).
 
 #### Defined in
 
-[schema.ts:812](https://github.com/coda/packs-sdk/blob/main/schema.ts#L812)
+[schema.ts:814](https://github.com/coda/packs-sdk/blob/main/schema.ts#L814)
 
 ___
 
@@ -171,7 +173,7 @@ scenarios they can be useful.
 
 #### Defined in
 
-[schema.ts:828](https://github.com/coda/packs-sdk/blob/main/schema.ts#L828)
+[schema.ts:830](https://github.com/coda/packs-sdk/blob/main/schema.ts#L830)
 
 ___
 
