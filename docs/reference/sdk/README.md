@@ -112,6 +112,7 @@ title: "Pack SDK Reference"
 - [BaseFormula](types/BaseFormula.md)
 - [BasicPackDefinition](types/BasicPackDefinition.md)
 - [BooleanFormulaDef](types/BooleanFormulaDef.md)
+- [BooleanHintTypes](types/BooleanHintTypes.md)
 - [BooleanPackFormula](types/BooleanPackFormula.md)
 - [FetchMethodType](types/FetchMethodType.md)
 - [Formula](types/Formula.md)

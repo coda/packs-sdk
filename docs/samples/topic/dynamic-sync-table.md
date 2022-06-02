@@ -38,14 +38,11 @@ pack.addDynamicSyncTable({
     let featuredProperties = [
       // TODO: Determine which fields to show in the table by default.
     ];
-    return coda.makeSchema({
-      type: coda.ValueType.Array,
-      items: coda.makeObjectSchema({
-        properties: properties,
-        idProperty: idProperty,
-        displayProperty: displayProperty,
-        featuredProperties: featuredProperties,
-      }),
+    return coda.makeObjectSchema({
+      properties: properties,
+      idProperty: idProperty,
+      displayProperty: displayProperty,
+      featuredProperties: featuredProperties,
     });
   },
   getDisplayUrl: async function (context) {
@@ -161,18 +158,12 @@ pack.addDynamicSyncTable({
       featuredProperties.push(name);
     }
 
-    // Assemble the schema for each row.
-    let schema = coda.makeObjectSchema({
+    // Return the schema for each row.
+    return coda.makeObjectSchema({
       properties: properties,
       displayProperty: displayProperty,
       idProperty: idProperty,
       featuredProperties: featuredProperties,
-    });
-
-    // Return an array schema as the result.
-    return coda.makeSchema({
-      type: coda.ValueType.Array,
-      items: schema,
     });
   },
 

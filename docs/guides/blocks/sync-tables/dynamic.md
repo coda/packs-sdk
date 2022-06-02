@@ -131,13 +131,11 @@ pack.addDynamicSyncTable({
 ```
 
 
-### Generate the row schema
+### Generate the row schema {:. #get-schema}
 
-The [`getSchema`][getSchema] function is responsible for generating the schema that represents each row of the sync table. Unlike regular sync tables that can define their sync table at build time, the schema for a dynamic sync table must be generated at run-time based on the dataset selected.
+The [`getSchema`][getSchema] function is responsible for generating the schema that represents each row of the sync table. Unlike regular sync tables that can define their sync table at build time, the schema for a dynamic sync table must be generated at run-time based on the dataset selected. The function is first run when the user drags the sync table into the document, and then again before every sync.
 
 In order to generate the schema you must have a way of determining the shape of the data for the selected dataset. Some APIs provide endpoints that allow you to query metadata about a dataset, such as which fields are available and what type of data they contain. Alternatively you can query the first row of data and infer this information based on the results.
-
-The schema you generate must have all of the same fields as those used in a regular sync table, such as `properties`, `idProperty`, and `displayProperty`.
 
 ```ts
 pack.addDynamicSyncTable({
@@ -175,28 +173,19 @@ pack.addDynamicSyncTable({
       featuredProperties.push(name);
     }
 
-    // Assemble the schema for each row.
-    let schema = coda.makeObjectSchema({
+    // Return the schema for each row.
+    return coda.makeObjectSchema({
       properties: properties,
       displayProperty: displayProperty,
       idProperty: idProperty,
       featuredProperties: featuredProperties,
-    });
-
-    // Return an array schema as the result.
-    return coda.makeSchema({
-      type: coda.ValueType.Array,
-      items: schema,
     });
   },
   // ...
 });
 ```
 
-More information about generating the property names and schemas are covered below.
-
-!!! info
-    The generated object schema must be returned within an array schema. This doesn't imply anything about your data, but is merely a requirement of the method.
+The schema you generate must have all of the same fields as those used in a regular sync table, such as `properties`, `idProperty`, and `displayProperty`. More information about generating the property names and schemas are covered below.
 
 
 ### Write the sync formula
@@ -334,7 +323,32 @@ There currently isn't a good solution for dealing with datasets without stable, 
 
 ## Parameter access
 
-The `getSchema` function doesn't have access to the parameters defined in the sync formula. This means that it isn't possible to adjust the schema based on parameter values set by the users. The schema can only vary based on the dynamic URL selected and the connected account in use.
+The `getSchema` function can access the values of the parameters defined in the sync formula, making it possible to adjust the schema based on user input beyond the selection of the dynamic URL. This is done in a using the third parameter to the function, which is a key-value map of parameter names to values. This is similar to the pattern used by [autocomplete functions][autocomplete_parameter].
+
+```ts
+pack.addDynamicSyncTable({
+  // ...
+  getSchema: async function (context, _, {query}) {
+    // ...
+  },
+  formula: {
+    // ...
+    parameters: [
+      coda.makeParameter({
+        type: coda.ParameterType.String,
+        name: "query",
+        description: "A filter query.",
+      }),
+    ],
+    execute: async function ([query], context) {
+      // ...
+    },
+  }
+  // ...
+});
+```
+
+The `getSchema` function is first run when the table is initially dragged into the document, before any parameter values have been set. Make sure your function can handle the absence of parameter values, even required ones.
 
 
 ## Organize the URL list
@@ -412,3 +426,4 @@ pack.addSyncTable({
 [getSchema]: ../../../reference/sdk/interfaces/DynamicSyncTableOptions.md#getschema
 [dynamicUrl]: ../../../reference/sdk/interfaces/Sync.md#dynamicurl
 [sync_tables_identity]: index.md#identity
+[autocomplete_parameter]: ../../basics/parameters/autocomplete.md#parameters

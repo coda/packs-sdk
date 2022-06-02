@@ -145,16 +145,23 @@ export declare enum ValueHintType {
     /**
      * Indicates to render a numeric value as a scale UI component (e.g. a star rating).
      */
-    Scale = "scale"
+    Scale = "scale",
+    /**
+     * Indicates to render a boolean value as a toggle.
+     */
+    Toggle = "toggle"
 }
 export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Email, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url];
 export declare const NumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Percent, ValueHintType.Currency, ValueHintType.Slider, ValueHintType.Scale];
+export declare const BooleanHintValueTypes: readonly [ValueHintType.Toggle];
 export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference];
-/**  The subset of {@link ValueHintType} that can be used with a string value. */
+/** The subset of {@link ValueHintType} that can be used with a string value. */
 export declare type StringHintTypes = typeof StringHintValueTypes[number];
-/**  The subset of {@link ValueHintType} that can be used with a number value. */
+/** The subset of {@link ValueHintType} that can be used with a number value. */
 export declare type NumberHintTypes = typeof NumberHintValueTypes[number];
-/**  The subset of {@link ValueHintType} that can be used with an object value. */
+/** The subset of {@link ValueHintType} that can be used with a boolean value. */
+export declare type BooleanHintTypes = typeof BooleanHintValueTypes[number];
+/** The subset of {@link ValueHintType} that can be used with an object value. */
 export declare type ObjectHintTypes = typeof ObjectHintValueTypes[number];
 interface BaseSchema {
     /**
@@ -171,6 +178,8 @@ interface BaseSchema {
 export interface BooleanSchema extends BaseSchema {
     /** Identifies this schema as relating to a boolean value. */
     type: ValueType.Boolean;
+    /** Indicates how to render values in a table. If not specified, renders a checkbox. */
+    codaType?: BooleanHintTypes;
 }
 /**
  * The union of all schemas that can represent number values.

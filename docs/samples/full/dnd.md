@@ -147,10 +147,10 @@ This Pack allows you to fetch information about spells in th game Dungeons and D
       name: "Spells",
       identityName: "Spell",
       schema: SpellSchema,
+      connectionRequirement: coda.ConnectionRequirement.None,
       formula: {
         name: "SyncSpells",
         description: "Sync all the spells.",
-        connectionRequirement: coda.ConnectionRequirement.None,
         parameters: [],
         execute: async function ([], context) {
           // Get the list of all spells.

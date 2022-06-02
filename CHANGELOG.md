@@ -7,6 +7,11 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Added
 
 - Added rarely-needed OAuth options: `scopeParamName` and `nestedResponseKey`.
+- Added `ValueHintType.Toggle` to be used in conjunction with `ValueType.Boolean` to render boolean values as toggles within tables.
+
+### Changed
+
+- Updated the testing fetcher for `coda execute` to auto-ungzip and set the `Accept: */*` request header by default, similar to live behavior.
 
 ## [0.12.0] - 2022-05-17
 

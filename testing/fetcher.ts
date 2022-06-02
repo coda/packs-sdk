@@ -10,11 +10,12 @@ import type {ExecutionContext} from '../api';
 import type {FetchRequest} from '../api_types';
 import type {FetchResponse} from '../api_types';
 import type {Fetcher} from '../api_types';
+import type {FetcherFullResponse} from './node_fetcher';
+import type {FetcherOptionsWithFullResponse} from './node_fetcher';
 import {HttpStatusCode} from './constants';
 import type {MultiQueryParamCredentials} from './auth_types';
 import type {OAuth2Credentials} from './auth_types';
 import type {QueryParamCredentials} from './auth_types';
-import type {Response} from 'request';
 import {STSClient} from '@aws-sdk/client-sts';
 import {Sha256} from '@aws-crypto/sha256-js';
 import {SignatureV4} from '@aws-sdk/signature-v4';
@@ -28,8 +29,8 @@ import {ensureExists} from '../helpers/ensure';
 import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {getExpirationDate} from './helpers';
+import {nodeFetcher} from './node_fetcher';
 import {print} from './helpers';
-import requestPromise from 'request-promise-native';
 import urlParse from 'url-parse';
 import {v4} from 'uuid';
 import xml2js from 'xml2js';
@@ -83,18 +84,19 @@ export class AuthenticatingFetcher implements Fetcher {
     const {url, headers, body, form} = await this._applyAuthentication(request);
     this._validateHost(url);
 
-    let response: Response | undefined;
+    let response: FetcherFullResponse;
 
     try {
       response = await requestHelper.makeRequest({
-        url,
+        uri: url,
         method: request.method,
-        isBinaryResponse: request.isBinaryResponse,
+        encoding: request.isBinaryResponse ? null : undefined,
         headers: {
           ...headers,
           'User-Agent': FetcherUserAgent,
         },
         body,
+        resolveWithFullResponse: true,
         form,
       });
     } catch (requestFailure: any) {
@@ -571,10 +573,9 @@ export class AuthenticatingFetcher implements Fetcher {
 
 // Namespaced object that can be mocked for testing.
 export const requestHelper = {
-  makeRequest: async (request: FetchRequest): Promise<Response> => {
-    return requestPromise({
+  makeRequest: async (request: FetcherOptionsWithFullResponse): Promise<FetcherFullResponse> => {
+    return nodeFetcher({
       ...request,
-      encoding: request.isBinaryResponse ? null : undefined,
       resolveWithFullResponse: true,
       timeout: 60000, // msec
       forever: true, // keep alive connections as long as possible.

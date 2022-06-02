@@ -3,12 +3,13 @@ import type {AWSAssumeRoleAuthentication} from '../types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import {AuthenticationType} from '../types';
+import {BooleanHintValueTypes} from '../schema';
 import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
 import {ConnectionRequirement} from '../api_types';
 import {CurrencyFormat} from '../schema';
-import type {CurrencySchema} from '..';
+import type {CurrencySchema} from '../schema';
 import type {CustomAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import type {DurationSchema} from '../schema';
@@ -17,7 +18,7 @@ import type {DynamicSyncTableDef} from '../api';
 import {EmailDisplayType} from '../schema';
 import type {EmailSchema} from '../schema';
 import {FeatureSet} from '../types';
-import type {GenericObjectSchema} from '..';
+import type {GenericObjectSchema} from '../schema';
 import type {HeaderBearerTokenAuthentication} from '../types';
 import type {Identity} from '../schema';
 import {LinkDisplayType} from '../schema';
@@ -29,7 +30,7 @@ import type {NoAuthentication} from '../types';
 import type {NumericDateSchema} from '../schema';
 import type {NumericDateTimeSchema} from '../schema';
 import type {NumericPackFormula} from '../api';
-import type {NumericSchema} from '..';
+import type {NumericSchema} from '../schema';
 import type {NumericTimeSchema} from '../schema';
 import type {OAuth2Authentication} from '../types';
 import {ObjectHintValueTypes} from '../schema';
@@ -45,12 +46,12 @@ import type {ParamDefs} from '../api_types';
 import {PostSetupType} from '../types';
 import type {QueryParamTokenAuthentication} from '../types';
 import {ScaleIconSet} from '../schema';
-import type {ScaleSchema} from '..';
-import type {Schema} from '..';
+import type {ScaleSchema} from '../schema';
+import type {Schema} from '../schema';
 import type {SetEndpoint} from '../types';
 import {SimpleStringHintValueTypes} from '../schema';
 import type {SimpleStringSchema} from '../schema';
-import type {SliderSchema} from '..';
+import type {SliderSchema} from '../schema';
 import type {StringDateSchema} from '../schema';
 import type {StringDateTimeSchema} from '../schema';
 import type {StringEmbedSchema} from '../schema';
@@ -542,6 +543,7 @@ const booleanPackFormulaSchema = zodCompleteObject<Omit<BooleanPackFormula<any>,
   resultType: zodDiscriminant(Type.boolean),
   schema: zodCompleteObject<BooleanSchema>({
     type: zodDiscriminant(ValueType.Boolean),
+    codaType: z.enum([...BooleanHintValueTypes]).optional(),
     description: z.string().optional(),
   }).optional(),
 });
@@ -573,6 +575,7 @@ const basePropertyValidators = {
 
 const booleanPropertySchema = zodCompleteStrictObject<BooleanSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Boolean),
+  codaType: z.enum([...BooleanHintValueTypes]).optional(),
   ...basePropertyValidators,
 });
 

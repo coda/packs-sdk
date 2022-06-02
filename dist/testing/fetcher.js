@@ -16,8 +16,8 @@ const ensure_2 = require("../helpers/ensure");
 const ensure_3 = require("../helpers/ensure");
 const ensure_4 = require("../helpers/ensure");
 const helpers_1 = require("./helpers");
+const node_fetcher_1 = require("./node_fetcher");
 const helpers_2 = require("./helpers");
-const request_promise_native_1 = __importDefault(require("request-promise-native"));
 const url_parse_1 = __importDefault(require("url-parse"));
 const uuid_1 = require("uuid");
 const xml2js_1 = __importDefault(require("xml2js"));
@@ -48,14 +48,15 @@ class AuthenticatingFetcher {
         let response;
         try {
             response = await exports.requestHelper.makeRequest({
-                url,
+                uri: url,
                 method: request.method,
-                isBinaryResponse: request.isBinaryResponse,
+                encoding: request.isBinaryResponse ? null : undefined,
                 headers: {
                     ...headers,
                     'User-Agent': FetcherUserAgent,
                 },
                 body,
+                resolveWithFullResponse: true,
                 form,
             });
         }
@@ -441,9 +442,8 @@ exports.AuthenticatingFetcher = AuthenticatingFetcher;
 // Namespaced object that can be mocked for testing.
 exports.requestHelper = {
     makeRequest: async (request) => {
-        return (0, request_promise_native_1.default)({
+        return (0, node_fetcher_1.nodeFetcher)({
             ...request,
-            encoding: request.isBinaryResponse ? null : undefined,
             resolveWithFullResponse: true,
             timeout: 60000,
             forever: true, // keep alive connections as long as possible.

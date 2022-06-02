@@ -171,6 +171,7 @@ export { SetEndpoint } from './types';
 export { SetEndpointDef } from './types';
 export { Sync } from './api_types';
 export { SystemAuthenticationDef } from './types';
+export type { BooleanHintTypes } from './schema';
 export type { InferrableTypes } from './schema';
 export type { NumberHintTypes } from './schema';
 export type { ObjectHintTypes } from './schema';
