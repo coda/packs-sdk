@@ -368,7 +368,8 @@ export const Examples: Example[] = [
       },
       {
         name: 'Update row in sync table',
-        content: 'A formula that updates an item on the server, and the existing row in a sync table if it exists. This sample updates the name of a task in the Todoist app.',
+        content:
+          'A formula that updates an item on the server, and the existing row in a sync table if it exists. This sample updates the name of a task in the Todoist app.',
         codeFile: './examples/todoist/update.ts',
       },
     ],
@@ -400,12 +401,14 @@ export const Examples: Example[] = [
       },
       {
         name: 'Number parameter',
-        content: 'A formula that takes a number as a parameter. This sample converts a number of slices of pizza into a percentage eaten.',
+        content:
+          'A formula that takes a number as a parameter. This sample converts a number of slices of pizza into a percentage eaten.',
         codeFile: './examples/data-type/pizza_eaten.ts',
       },
       {
         name: 'Date parameter',
-        content: 'A formula that takes a date as a parameter. This sample determines if the year of a given date would make for good New Years Eve glasses (has two or more zeros).',
+        content:
+          'A formula that takes a date as a parameter. This sample determines if the year of a given date would make for good New Years Eve glasses (has two or more zeros).',
         codeFile: './examples/dates/nye_glasses.ts',
       },
       {
@@ -415,12 +418,14 @@ export const Examples: Example[] = [
       },
       {
         name: 'Array parameter',
-        content: 'A formula that takes a string array as a parameter. This sample returns the longest string in the list.',
+        content:
+          'A formula that takes a string array as a parameter. This sample returns the longest string in the list.',
         codeFile: './examples/parameter/longest.ts',
       },
       {
         name: 'Sparse array parameter',
-        content: 'A formula that takes sparse number arrays as a parameter, useful when passing table columns. This sample returns the total cost for an order of items.',
+        content:
+          'A formula that takes sparse number arrays as a parameter, useful when passing table columns. This sample returns the total cost for an order of items.',
         codeFile: './examples/parameter/total_cost.ts',
       },
       {
@@ -431,7 +436,8 @@ export const Examples: Example[] = [
       },
       {
         name: 'Parameter suggested value',
-        content: 'A formula with a parameter that defines a suggested value. This sample rolls virtual dice and returns the results.',
+        content:
+          'A formula with a parameter that defines a suggested value. This sample rolls virtual dice and returns the results.',
         codeFile: './examples/action/dice.ts',
       },
       {
@@ -442,7 +448,8 @@ export const Examples: Example[] = [
       },
       {
         name: 'Reusing parameters',
-        content: 'A Pack that reuses a parameter across multiple formulas. This sample includes mathematical formulas that operate on a list of numbers.',
+        content:
+          'A Pack that reuses a parameter across multiple formulas. This sample includes mathematical formulas that operate on a list of numbers.',
         codeFile: './examples/math/math.ts',
       },
     ],
@@ -719,8 +726,15 @@ export const Examples: Example[] = [
         codeFile: './examples/cats/formula.ts',
       },
       {
+        name: 'Image result from temporary URL',
+        content:
+          'A formula that returns an image uploaded to `temporaryBlobStorage`. This sample returns a random avatar using an API that returns SVG code used to generate an avatar. You could also imagine procedurally generating a SVG or image in your packs code and uploading it to `temporaryBlobStorage`.',
+        codeFile: './examples/image/boring_avatar.ts',
+      },
+      {
         name: 'Upload images',
-        content: 'An action that downloads images from Coda and uploads them to another service. This sample uploads a list of files to Google Photos.',
+        content:
+          'An action that downloads images from Coda and uploads them to another service. This sample uploads a list of files to Google Photos.',
         codeFile: './examples/image/google_photos.ts',
       },
       {
