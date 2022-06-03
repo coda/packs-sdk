@@ -1063,16 +1063,34 @@ function validateFormulas(schema: z.ZodObject<any>) {
       {message: 'A formula namespace must be provided whenever formulas are defined.', path: ['formulaNamespace']},
     )
     .refine(
-      metadata =>
-        !(
-          metadata.defaultAuthentication?.type === AuthenticationType.CodaApiHeaderBearerToken &&
-          metadata.networkDomains?.some(
-            (domain: string) => !['coda.io', 'codahosted.io', 'localhost', 'calc-grpc-proxy'].includes(domain),
-          )
-        ),
+      untypedMetadata => {
+        const metadata = untypedMetadata as PackVersionMetadata;
+        if (metadata.defaultAuthentication?.type !== AuthenticationType.CodaApiHeaderBearerToken) {
+          return true;
+        }
+
+        const codaDomains = ['coda.io', 'localhost'];
+
+        const hasNonCodaNetwork = metadata.networkDomains?.some((domain: string) => !codaDomains.includes(domain));
+        if (!hasNonCodaNetwork) {
+          return true;
+        }
+
+        const authDomains = getAuthNetworkDomains(metadata);
+        if (!authDomains?.length) {
+          // A non-Coda network domain without auth domain restriction isn't allowed.
+          return false;
+        }
+
+        const hasNonCodaAuthDomain = authDomains.some((domain: string) => !codaDomains.includes(domain));
+
+        // A non-coda auth domain is always an issue.
+        return !hasNonCodaAuthDomain;
+      },
       {
-        message: 'CodaApiHeaderBearerToken can only be used for coda.io domains',
-        path: ['networkDomains'],
+        message:
+          'CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict `defaultAuthentication.networkDomain` to coda.io',
+        path: ['defaultAuthentication.networkDomain'],
       },
     )
     .superRefine((data, context) => {

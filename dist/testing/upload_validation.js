@@ -882,13 +882,28 @@ function validateFormulas(schema) {
         }
         return true;
     }, { message: 'A formula namespace must be provided whenever formulas are defined.', path: ['formulaNamespace'] })
-        .refine(metadata => {
+        .refine(untypedMetadata => {
         var _a, _b;
-        return !(((_a = metadata.defaultAuthentication) === null || _a === void 0 ? void 0 : _a.type) === types_1.AuthenticationType.CodaApiHeaderBearerToken &&
-            ((_b = metadata.networkDomains) === null || _b === void 0 ? void 0 : _b.some((domain) => !['coda.io', 'codahosted.io', 'localhost', 'calc-grpc-proxy'].includes(domain))));
+        const metadata = untypedMetadata;
+        if (((_a = metadata.defaultAuthentication) === null || _a === void 0 ? void 0 : _a.type) !== types_1.AuthenticationType.CodaApiHeaderBearerToken) {
+            return true;
+        }
+        const codaDomains = ['coda.io', 'localhost'];
+        const hasNonCodaNetwork = (_b = metadata.networkDomains) === null || _b === void 0 ? void 0 : _b.some((domain) => !codaDomains.includes(domain));
+        if (!hasNonCodaNetwork) {
+            return true;
+        }
+        const authDomains = getAuthNetworkDomains(metadata);
+        if (!(authDomains === null || authDomains === void 0 ? void 0 : authDomains.length)) {
+            // A non-Coda network domain without auth domain restriction isn't allowed.
+            return false;
+        }
+        const hasNonCodaAuthDomain = authDomains.some((domain) => !codaDomains.includes(domain));
+        // A non-coda auth domain is always an issue.
+        return !hasNonCodaAuthDomain;
     }, {
-        message: 'CodaApiHeaderBearerToken can only be used for coda.io domains',
-        path: ['networkDomains'],
+        message: 'CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict `defaultAuthentication.networkDomain` to coda.io',
+        path: ['defaultAuthentication.networkDomain'],
     })
         .superRefine((data, context) => {
         if (data.defaultAuthentication && data.defaultAuthentication.type !== types_1.AuthenticationType.None) {
