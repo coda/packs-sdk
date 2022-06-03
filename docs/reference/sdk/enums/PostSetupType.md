@@ -5,11 +5,11 @@ title: "PostSetupType"
 
 Enumeration of post-account-setup step types. See [PostSetup](../types/PostSetup.md).
 
-## Enumeration members
+## Enumeration Members
 
 ### SetEndpoint
 
-• **SetEndpoint** = `"SetEndPoint"`
+• **SetEndpoint**
 
 See [SetEndpoint](PostSetupType.md#setendpoint).
 

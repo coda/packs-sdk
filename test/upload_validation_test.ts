@@ -1535,10 +1535,10 @@ describe('Pack metadata Validation', () => {
         await validateJson(metadata);
       });
 
-      it('formula with invalid property in array array schema', async () => {
+      it('formula with invalid property in array schema', async () => {
         const arraySchema = makeSchema({
           type: ValueType.Array,
-          codaType: ValueHintType.Html,
+          codaType: ValueHintType.Html as any,
           items: {type: ValueType.String},
         });
         const metadata = metadataForFormulaWithArraySchema(arraySchema);

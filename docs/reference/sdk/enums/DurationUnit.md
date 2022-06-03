@@ -5,11 +5,11 @@ title: "DurationUnit"
 
 Enumeration of units supported by duration schemas. See [maxUnit](../interfaces/DurationSchema.md#maxunit).
 
-## Enumeration members
+## Enumeration Members
 
 ### Days
 
-• **Days** = `"days"`
+• **Days**
 
 Indications a duration as a number of days.
 
@@ -21,7 +21,7 @@ ___
 
 ### Hours
 
-• **Hours** = `"hours"`
+• **Hours**
 
 Indications a duration as a number of hours.
 
@@ -33,7 +33,7 @@ ___
 
 ### Minutes
 
-• **Minutes** = `"minutes"`
+• **Minutes**
 
 Indications a duration as a number of minutes.
 
@@ -45,7 +45,7 @@ ___
 
 ### Seconds
 
-• **Seconds** = `"seconds"`
+• **Seconds**
 
 Indications a duration as a number of seconds.
 
