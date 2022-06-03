@@ -1069,7 +1069,7 @@ function validateFormulas(schema: z.ZodObject<any>) {
           return true;
         }
 
-        const codaDomains = ['coda.io', 'codahosted.io', 'localhost', 'calc-grpc-proxy'];
+        const codaDomains = ['coda.io', 'localhost'];
 
         const hasNonCodaNetwork = metadata.networkDomains?.some((domain: string) => !codaDomains.includes(domain));
         if (!hasNonCodaNetwork) {
