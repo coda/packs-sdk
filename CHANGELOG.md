@@ -13,6 +13,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Changed
 
 - Updated the testing fetcher for `coda execute` to auto-ungzip and set the `Accept: */*` request header by default, similar to live behavior.
+- Unrecognized properties in array schemas will now generate errors at upload time instead of the fields being silently stripped. While functionally the same, the explicit errors should help catch cases where a maker may expect a property to be recognized (like `codaType`) when it is actually not supported.
 
 ## [0.12.0] - 2022-05-17
 

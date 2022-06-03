@@ -1189,6 +1189,7 @@ export function normalizeSchemaKey(key: string): string {
 export function normalizeSchema<T extends Schema>(schema: T): T {
   if (isArray(schema)) {
     return {
+      ...schema,
       type: ValueType.Array,
       items: normalizeSchema(schema.items),
     } as T;

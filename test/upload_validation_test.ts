@@ -1535,6 +1535,22 @@ describe('Pack metadata Validation', () => {
         await validateJson(metadata);
       });
 
+      it('formula with invalid property in array schema', async () => {
+        const arraySchema = makeSchema({
+          type: ValueType.Array,
+          codaType: ValueHintType.Html as any,
+          items: {type: ValueType.String},
+        });
+        const metadata = metadataForFormulaWithArraySchema(arraySchema);
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: "Unrecognized key(s) in object: 'codaType'",
+            path: 'formulas[0].schema',
+          },
+        ]);
+      });
+
       it('invalid identity name', async () => {
         const metadata = metadataForFormulaWithObjectSchema({
           type: ValueType.Object,
