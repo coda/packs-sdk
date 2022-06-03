@@ -888,7 +888,7 @@ function validateFormulas(schema) {
         if (((_a = metadata.defaultAuthentication) === null || _a === void 0 ? void 0 : _a.type) !== types_1.AuthenticationType.CodaApiHeaderBearerToken) {
             return true;
         }
-        const codaDomains = ['coda.io', 'codahosted.io', 'localhost', 'calc-grpc-proxy'];
+        const codaDomains = ['coda.io', 'localhost'];
         const hasNonCodaNetwork = (_b = metadata.networkDomains) === null || _b === void 0 ? void 0 : _b.some((domain) => !codaDomains.includes(domain));
         if (!hasNonCodaNetwork) {
             return true;
