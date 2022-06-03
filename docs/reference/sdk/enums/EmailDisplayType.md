@@ -5,11 +5,11 @@ title: "EmailDisplayType"
 
 Display types that can be used with an [EmailSchema](../interfaces/EmailSchema.md).
 
-## Enumeration Members
+## Enumeration members
 
 ### EmailOnly
 
-• **EmailOnly**
+• **EmailOnly** = `"emailOnly"`
 
 Display email address only.
 
@@ -21,7 +21,7 @@ ___
 
 ### IconAndEmail
 
-• **IconAndEmail**
+• **IconAndEmail** = `"iconAndEmail"`
 
 Display both icon and email (default).
 
@@ -33,7 +33,7 @@ ___
 
 ### IconOnly
 
-• **IconOnly**
+• **IconOnly** = `"iconOnly"`
 
 Display icon only.
 

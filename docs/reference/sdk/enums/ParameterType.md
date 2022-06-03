@@ -5,11 +5,11 @@ title: "ParameterType"
 
 Enumeration of types of formula parameters. These describe Coda value types (as opposed to JavaScript value types).
 
-## Enumeration Members
+## Enumeration members
 
 ### Boolean
 
-• **Boolean**
+• **Boolean** = `"boolean"`
 
 Indicates a parameter that is a Coda boolean value.
 
@@ -21,7 +21,7 @@ ___
 
 ### BooleanArray
 
-• **BooleanArray**
+• **BooleanArray** = `"booleanArray"`
 
 Indicates a parameter that is a list of Coda boolean values.
 
@@ -33,7 +33,7 @@ ___
 
 ### Date
 
-• **Date**
+• **Date** = `"date"`
 
 Indicates a parameter that is a Coda date value (which includes time and datetime values).
 
@@ -45,7 +45,7 @@ ___
 
 ### DateArray
 
-• **DateArray**
+• **DateArray** = `"dateArray"`
 
 Indicates a parameter that is a list of Coda date values (which includes time and datetime values).
 
@@ -62,7 +62,7 @@ ___
 
 ### File
 
-• **File**
+• **File** = `"file"`
 
 Indicates a parameter that is a Coda file. The pack is passed a file URL.
 
@@ -74,7 +74,7 @@ ___
 
 ### FileArray
 
-• **FileArray**
+• **FileArray** = `"fileArray"`
 
 Indicates a parameter that is a list of Coda file values. The pack is passed a list of file URLs.
 
@@ -86,7 +86,7 @@ ___
 
 ### Html
 
-• **Html**
+• **Html** = `"html"`
 
 Indicates a parameter that is a Coda rich text value that should be passed to the pack as HTML.
 
@@ -98,7 +98,7 @@ ___
 
 ### HtmlArray
 
-• **HtmlArray**
+• **HtmlArray** = `"htmlArray`"`
 
 Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as HTML.
 
@@ -110,7 +110,7 @@ ___
 
 ### Image
 
-• **Image**
+• **Image** = `"image"`
 
 Indicates a parameter that is a Coda image. The pack is passed an image URL.
 
@@ -122,7 +122,7 @@ ___
 
 ### ImageArray
 
-• **ImageArray**
+• **ImageArray** = `"imageArray"`
 
 Indicates a parameter that is a list of Coda image values. The pack is passed a list of image URLs.
 
@@ -134,7 +134,7 @@ ___
 
 ### Number
 
-• **Number**
+• **Number** = `"number"`
 
 Indicates a parameter that is a Coda number value.
 
@@ -146,7 +146,7 @@ ___
 
 ### NumberArray
 
-• **NumberArray**
+• **NumberArray** = `"numberArray"`
 
 Indicates a parameter that is a list of Coda number values.
 
@@ -158,7 +158,7 @@ ___
 
 ### SparseBooleanArray
 
-• **SparseBooleanArray**
+• **SparseBooleanArray** = `"sparseBooleanArray"`
 
 [BooleanArray](ParameterType.md#booleanarray) that accepts unparsable values as `undefined`.
 
@@ -170,7 +170,7 @@ ___
 
 ### SparseDateArray
 
-• **SparseDateArray**
+• **SparseDateArray** = `"sparseDateArray"`
 
 [DateArray](ParameterType.md#datearray) that accepts unparsable values as `undefined`.
 
@@ -182,7 +182,7 @@ ___
 
 ### SparseFileArray
 
-• **SparseFileArray**
+• **SparseFileArray** = `"sparseFileArray"`
 
 [FileArray](ParameterType.md#filearray) that accepts unparsable values as `undefined`.
 
@@ -194,7 +194,7 @@ ___
 
 ### SparseHtmlArray
 
-• **SparseHtmlArray**
+• **SparseHtmlArray** = `"sparseHtmlArray"`
 
 [HtmlArray](ParameterType.md#htmlarray) that accepts unparsable values as `undefined`.
 
@@ -206,7 +206,7 @@ ___
 
 ### SparseImageArray
 
-• **SparseImageArray**
+• **SparseImageArray** = `"sparseImageArray"`
 
 [ImageArray](ParameterType.md#imagearray) that accepts unparsable values as `undefined`.
 
@@ -218,7 +218,7 @@ ___
 
 ### SparseNumberArray
 
-• **SparseNumberArray**
+• **SparseNumberArray** = `"sparseNumberArray"`
 
 [NumberArray](ParameterType.md#numberarray) that accepts unparsable values as `undefined`.
 
@@ -230,7 +230,7 @@ ___
 
 ### SparseStringArray
 
-• **SparseStringArray**
+• **SparseStringArray** = `"sparseStringArray"`
 
 [StringArray](ParameterType.md#stringarray) that accepts unparsable values as `undefined`.
 
@@ -242,7 +242,7 @@ ___
 
 ### String
 
-• **String**
+• **String** = `"string"`
 
 Indicates a parameter that is a Coda text value.
 
@@ -254,7 +254,7 @@ ___
 
 ### StringArray
 
-• **StringArray**
+• **StringArray** = `"stringArray"`
 
 Indicates a parameter that is a list of Coda text values.
 

@@ -502,6 +502,7 @@ exports.normalizeSchemaKey = normalizeSchemaKey;
 function normalizeSchema(schema) {
     if (isArray(schema)) {
         return {
+            ...schema,
             type: ValueType.Array,
             items: normalizeSchema(schema.items),
         };

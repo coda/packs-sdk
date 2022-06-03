@@ -104,7 +104,7 @@ title: "Pack SDK Reference"
 - [VariousAuthentication](interfaces/VariousAuthentication.md)
 - [WebBasicAuthentication](interfaces/WebBasicAuthentication.md)
 
-## Type Aliases
+## Type aliases
 
 - [ArrayFormulaDef](types/ArrayFormulaDef.md)
 - [AttributionNode](types/AttributionNode.md)

@@ -18,11 +18,11 @@ you might want to have a date range parameter that default to
 "last 7 days". Defaulting to a hardcoded date range would not be useful
 and requiring the user to always specify a date range may be inconvenient.
 
-## Enumeration Members
+## Enumeration members
 
 ### Everything
 
-• **Everything**
+• **Everything** = `"everything"`
 
 Indicates a date range beginning in the very distant past (e.g. 1/1/1, aka 1 A.D.)
 and ending in the distant future (e.g. 12/31/3999). Exact dates are subject to change.
@@ -35,7 +35,7 @@ ___
 
 ### Last30Days
 
-• **Last30Days**
+• **Last30Days** = `"last_30_days"`
 
 #### Defined in
 
@@ -45,7 +45,7 @@ ___
 
 ### Last3Months
 
-• **Last3Months**
+• **Last3Months** = `"last_3_months"`
 
 #### Defined in
 
@@ -55,7 +55,7 @@ ___
 
 ### Last6Months
 
-• **Last6Months**
+• **Last6Months** = `"last_6_months"`
 
 #### Defined in
 
@@ -65,7 +65,7 @@ ___
 
 ### Last7Days
 
-• **Last7Days**
+• **Last7Days** = `"last_7_days"`
 
 #### Defined in
 
@@ -75,7 +75,7 @@ ___
 
 ### LastMonth
 
-• **LastMonth**
+• **LastMonth** = `"last_month"`
 
 #### Defined in
 
@@ -85,7 +85,7 @@ ___
 
 ### LastWeek
 
-• **LastWeek**
+• **LastWeek** = `"last_week"`
 
 #### Defined in
 
@@ -95,7 +95,7 @@ ___
 
 ### LastYear
 
-• **LastYear**
+• **LastYear** = `"last_year"`
 
 #### Defined in
 
@@ -105,7 +105,7 @@ ___
 
 ### Next30Days
 
-• **Next30Days**
+• **Next30Days** = `"next_30_days"`
 
 #### Defined in
 
@@ -115,7 +115,7 @@ ___
 
 ### Next3Months
 
-• **Next3Months**
+• **Next3Months** = `"next_3_months"`
 
 #### Defined in
 
@@ -125,7 +125,7 @@ ___
 
 ### Next6Months
 
-• **Next6Months**
+• **Next6Months** = `"next_6_months"`
 
 #### Defined in
 
@@ -135,7 +135,7 @@ ___
 
 ### Next7Days
 
-• **Next7Days**
+• **Next7Days** = `"next_7_days"`
 
 #### Defined in
 
@@ -145,7 +145,7 @@ ___
 
 ### NextMonth
 
-• **NextMonth**
+• **NextMonth** = `"next_month"`
 
 #### Defined in
 
@@ -155,7 +155,7 @@ ___
 
 ### NextWeek
 
-• **NextWeek**
+• **NextWeek** = `"next_week"`
 
 #### Defined in
 
@@ -165,7 +165,7 @@ ___
 
 ### NextYear
 
-• **NextYear**
+• **NextYear** = `"next_year"`
 
 #### Defined in
 
@@ -175,7 +175,7 @@ ___
 
 ### ThisMonth
 
-• **ThisMonth**
+• **ThisMonth** = `"this_month"`
 
 #### Defined in
 
@@ -185,7 +185,7 @@ ___
 
 ### ThisMonthStart
 
-• **ThisMonthStart**
+• **ThisMonthStart** = `"this_month_start"`
 
 #### Defined in
 
@@ -195,7 +195,7 @@ ___
 
 ### ThisWeek
 
-• **ThisWeek**
+• **ThisWeek** = `"this_week"`
 
 #### Defined in
 
@@ -205,7 +205,7 @@ ___
 
 ### ThisWeekStart
 
-• **ThisWeekStart**
+• **ThisWeekStart** = `"this_week_start"`
 
 #### Defined in
 
@@ -215,7 +215,7 @@ ___
 
 ### ThisYear
 
-• **ThisYear**
+• **ThisYear** = `"this_year"`
 
 #### Defined in
 
@@ -225,7 +225,7 @@ ___
 
 ### ThisYearStart
 
-• **ThisYearStart**
+• **ThisYearStart** = `"this_year_start"`
 
 #### Defined in
 
@@ -235,7 +235,7 @@ ___
 
 ### Today
 
-• **Today**
+• **Today** = `"today"`
 
 #### Defined in
 
@@ -245,7 +245,7 @@ ___
 
 ### Tomorrow
 
-• **Tomorrow**
+• **Tomorrow** = `"tomorrow"`
 
 #### Defined in
 
@@ -255,7 +255,7 @@ ___
 
 ### YearToDate
 
-• **YearToDate**
+• **YearToDate** = `"year_to_date"`
 
 #### Defined in
 
@@ -265,7 +265,7 @@ ___
 
 ### Yesterday
 
-• **Yesterday**
+• **Yesterday** = `"yesterday"`
 
 #### Defined in
 

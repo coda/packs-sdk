@@ -6,11 +6,11 @@ title: "ValueType"
 The set of primitive value types that can be used as return values for formulas
 or in object schemas.
 
-## Enumeration Members
+## Enumeration members
 
 ### Array
 
-• **Array**
+• **Array** = `"array"`
 
 Indicates a JavaScript array should be returned. The schema of the array items must also be specified.
 
@@ -22,7 +22,7 @@ ___
 
 ### Boolean
 
-• **Boolean**
+• **Boolean** = `"boolean"`
 
 Indicates a JavaScript boolean (true/false) should be returned.
 
@@ -34,7 +34,7 @@ ___
 
 ### Number
 
-• **Number**
+• **Number** = `"number"`
 
 Indicates a JavaScript number should be returned.
 
@@ -46,7 +46,7 @@ ___
 
 ### Object
 
-• **Object**
+• **Object** = `"object"`
 
 Indicates a JavaScript object should be returned. The schema of each object property must also be specified.
 
@@ -58,7 +58,7 @@ ___
 
 ### String
 
-• **String**
+• **String** = `"string"`
 
 Indicates a JavaScript string should be returned.
 

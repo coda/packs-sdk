@@ -730,7 +730,7 @@ const stringPackFormulaSchema = zodCompleteObject<Omit<StringPackFormula<any>, '
 // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
 // recursive typing better.
 const arrayPropertySchema: z.ZodTypeAny = z.lazy(() =>
-  zodCompleteObject<ArraySchema & ObjectSchemaProperty>({
+  zodCompleteStrictObject<ArraySchema & ObjectSchemaProperty>({
     type: zodDiscriminant(ValueType.Array),
     items: objectPropertyUnionSchema,
     ...basePropertyValidators,

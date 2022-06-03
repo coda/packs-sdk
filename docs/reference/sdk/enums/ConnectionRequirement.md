@@ -6,11 +6,11 @@ title: "ConnectionRequirement"
 Enumeration of requirement states for whether a given formula or sync table requires
 a connection (account) to use.
 
-## Enumeration Members
+## Enumeration members
 
 ### None
 
-• **None**
+• **None** = `"none"`
 
 Indicates this building block does not make use of an account.
 
@@ -22,7 +22,7 @@ ___
 
 ### Optional
 
-• **Optional**
+• **Optional** = `"optional"`
 
 Indicates that this building block can be used with or without an account.
 
@@ -37,7 +37,7 @@ ___
 
 ### Required
 
-• **Required**
+• **Required** = `"required"`
 
 Indicates that this building block must be used with an account.
 
