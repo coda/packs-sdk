@@ -902,7 +902,7 @@ function validateFormulas(schema) {
         // A non-coda auth domain is always an issue.
         return !hasNonCodaAuthDomain;
     }, {
-        message: 'CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict `defaultAuthentication.networkDomain` to coda.io or codahosted.io',
+        message: 'CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict `defaultAuthentication.networkDomain` to coda.io',
         path: ['defaultAuthentication.networkDomain'],
     })
         .superRefine((data, context) => {

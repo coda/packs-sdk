@@ -1929,7 +1929,7 @@ describe('Pack metadata Validation', () => {
       assert.deepEqual(err.validationErrors, [
         {
           message:
-            'CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict `defaultAuthentication.networkDomain` to coda.io or codahosted.io',
+            'CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict `defaultAuthentication.networkDomain` to coda.io',
           path: 'defaultAuthentication.networkDomain',
         },
       ]);
@@ -1948,7 +1948,7 @@ describe('Pack metadata Validation', () => {
       assert.deepEqual(err.validationErrors, [
         {
           message:
-            'CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict `defaultAuthentication.networkDomain` to coda.io or codahosted.io',
+            'CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict `defaultAuthentication.networkDomain` to coda.io',
           path: 'defaultAuthentication.networkDomain',
         },
       ]);
@@ -1968,7 +1968,7 @@ describe('Pack metadata Validation', () => {
       assert.deepEqual(err.validationErrors, [
         {
           message:
-            'CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict `defaultAuthentication.networkDomain` to coda.io or codahosted.io',
+            'CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict `defaultAuthentication.networkDomain` to coda.io',
           path: 'defaultAuthentication.networkDomain',
         },
       ]);

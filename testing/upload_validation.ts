@@ -1089,7 +1089,7 @@ function validateFormulas(schema: z.ZodObject<any>) {
       },
       {
         message:
-          'CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict `defaultAuthentication.networkDomain` to coda.io or codahosted.io',
+          'CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict `defaultAuthentication.networkDomain` to coda.io',
         path: ['defaultAuthentication.networkDomain'],
       },
     )
