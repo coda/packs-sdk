@@ -1,15 +1,14 @@
-
-on: 
+on:
   workflow_dispatch:
     inputs:
       increment:
-        description: 'Release version increment'     
+        description: 'Release version increment'
         required: true
         type: choice
         options:
           - patch
           - minor
-          - major 
+          - major
 
 jobs:
   release:
@@ -22,6 +21,7 @@ jobs:
         run: |
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+      - run: make _bootstrap-node
       - run: make release $INCREMENT
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
