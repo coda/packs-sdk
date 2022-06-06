@@ -3,6 +3,7 @@ export const pack = coda.newPack();
 
 // Per-user authentication to the Twilio API, using an Account SID and token in
 // an "Authorization: Basic ..." header.
+// See https://www.twilio.com/docs/usage/requests-to-twilio
 pack.setUserAuthentication({
   type: coda.AuthenticationType.WebBasic,
   instructionsUrl: "https://www.twilio.com/docs/sms/api#sms-api-authentication",

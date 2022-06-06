@@ -3,6 +3,7 @@ export const pack = coda.newPack();
 
 // Per-user authentication to the Okta API, using a custom token prefix and
 // account-specific endpoints.
+// See https://developer.okta.com/docs/reference/core-okta-api/#authentication
 pack.setUserAuthentication({
   type: coda.AuthenticationType.CustomHeaderToken,
   headerName: "Authorization",

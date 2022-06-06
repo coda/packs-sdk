@@ -3,6 +3,7 @@ export const pack = coda.newPack();
 
 // Per-user authentication to the Jira API, using OAuth2 with a post-submit step
 // to select the instance to connect to.
+// See https://developer.atlassian.com/cloud/confluence/oauth-2-3lo-apps
 pack.setUserAuthentication({
   type: coda.AuthenticationType.OAuth2,
   authorizationUrl: "https://auth.atlassian.com/authorize",
@@ -11,7 +12,6 @@ pack.setUserAuthentication({
   additionalParams: {
     audience: "api.atlassian.com",
     prompt: "consent",
-    response_type: "code",
   },
 
   // After approving access, the user should select which instance they want to

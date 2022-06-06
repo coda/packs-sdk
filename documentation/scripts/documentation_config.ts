@@ -764,6 +764,97 @@ export const Examples: Example[] = [
     ],
   },
   {
+    name: 'API setup',
+    category: ExampleCategory.Topic,
+    triggerTokens: [],
+    contentFile: './examples/apis/README.md',
+    linkData: {
+      type: UrlType.SamplePage,
+    },
+    exampleSnippets: [
+      {
+        name: 'Asana',
+        content: 'The Asana API uses OAuth2 to authenticate users, and requires the use of PKCE.',
+        codeFile: './examples/apis/asana.ts',
+      },
+      {
+        name: 'Board Game Atlas',
+        content: 'The Board Game Atlas API requires the developer to provide their client ID as query parameter.',
+        codeFile: './examples/apis/board_game_atlas.ts',
+      },
+      {
+        name: 'ClickUp',
+        content: 'The ClickUp API uses OAuth2 to authenticate users.',
+        codeFile: './examples/apis/clickup.ts',
+      },
+      {
+        name: 'Dropbox',
+        content: 'The Dropbox API uses OAuth2 to authenticate users, prompting them to approve a specific set of scopes. Additional parameters are requires on the authorization URL to ensure that offline access is granted.',
+        codeFile: './examples/apis/dropbox.ts',
+      },
+      {
+        name: 'Giphy',
+        content: 'The Giphy API requires the developer to provide their API key as query parameter.',
+        codeFile: './examples/authentication/giphy.ts',
+      },
+      {
+        name: 'GitHub',
+        content: 'The GitHub API uses OAuth2 to authenticate users, prompting them to approve a specific set of scopes. The authorization header uses the non-standard prefix "token" instead of the default "Bearer".',
+        codeFile: './examples/github/auth.ts',
+      },
+      {
+        name: 'Google',
+        content: 'The Google APIs use OAuth2 to authenticate users, prompting them to approve a specific set of scopes. Additional parameters are requires on the authorization URL to ensure that offline access is granted. Note: It currently isn\'t possible to complete Google\'s OAuth verification process with a Pack. See the [FAQ](https://coda.io/packs/build/latest/guides/faq/#google) for more information.',
+        codeFile: './examples/apis/google.ts',
+      },
+      {
+        name: 'Jira',
+        content: 'The Jira API uses OAuth2 to authenticate users. After authenticating users must select which Jira instance to associate the account with, and all further API requests are sent to that instance\'s URL.',
+        codeFile: './examples/authentication/jira.ts',
+      },
+      {
+        name: 'Microsoft',
+        content: 'The Microsoft APIs use OAuth2 to authenticate users, prompting them to approve a specific set of scopes. Additional parameters are requires on the authorization URL to ensure that offline access is granted, and PKCE is recommended.',
+        codeFile: './examples/apis/microsoft.ts',
+      },
+      {
+        name: 'Okta',
+        content: 'The Okta API requires the user to provide an API key, passed as an Authorization header with a custom prefix. The user must also specify which Okta domain to connect to.',
+        codeFile: './examples/authentication/okta.ts',
+      },
+      {
+        name: 'Rapid API',
+        content: 'Rapid APIs require that the developer provide an API key, passed in a custom header.',
+        codeFile: './examples/authentication/rapidapi.ts',
+      },
+      {
+        name: 'Salesforce',
+        content: 'The Salesforce API uses OAuth2 to authenticate users, prompting them to approve a specific set of scopes. Additional parameters are requires on the authorization URL to ensure that offline access is granted. The URL to send API requests is returned in the OAuth2 response, and passed to other formulas.',
+        codeFile: './examples/authentication/salesforce.ts',
+      },
+      {
+        name: 'Todoist',
+        content: 'The Todoist API uses OAuth2 to authenticate users, prompting them to approve a specific set of scopes.',
+        codeFile: './examples/todoist/auth_oauth2.ts',
+      },
+      {
+        name: 'Typeform',
+        content: 'The Typeform API uses OAuth2 to authenticate users, prompting them to approve a specific set of scopes.',
+        codeFile: './examples/apis/typeform.ts',
+      },
+      {
+        name: 'Twilio',
+        content: 'The Twilio API requires the user to provide the SID and token for their account, passed using the Web Basic scheme.',
+        codeFile: './examples/authentication/twilio.ts',
+      },
+      {
+        name: 'Webflow',
+        content: 'The Typeform API uses OAuth2 to authenticate users, and requires the developer to specify the API version in a custom header.',
+        codeFile: './examples/apis/webflow.ts',
+      },
+    ],
+  },
+  {
     name: 'Hello World',
     category: ExampleCategory.Full,
     triggerTokens: [],
