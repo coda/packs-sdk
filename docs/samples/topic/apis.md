@@ -36,7 +36,7 @@ pack.setUserAuthentication({
   },
 });
 
-// Allow the pack to make requests to the Asana.
+// Allow the pack to make requests to Asana.
 pack.addNetworkDomain("asana.com");
 ```
 ## Board Game Atlas
