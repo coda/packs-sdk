@@ -99,6 +99,7 @@ export const pack = coda.newPack();
 
 // Per-user authentication to the Twilio API, using an Account SID and token in
 // an "Authorization: Basic ..." header.
+// See https://www.twilio.com/docs/usage/requests-to-twilio
 pack.setUserAuthentication({
   type: coda.AuthenticationType.WebBasic,
   instructionsUrl: "https://www.twilio.com/docs/sms/api#sms-api-authentication",
@@ -131,12 +132,9 @@ import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
 // Per-user authentication to the Todoist API, using an OAuth2 flow.
-// When registering for a client ID and secret, use the callback URL
-// https://coda.io/packsAuth/oauth2.
+// See https://developer.todoist.com/guides/#oauth
 pack.setUserAuthentication({
   type: coda.AuthenticationType.OAuth2,
-  // OAuth2 URLs and scopes are found in the the Todoist OAuth guide:
-  // https://developer.todoist.com/guides/#oauth
   authorizationUrl: "https://todoist.com/oauth/authorize",
   tokenUrl: "https://todoist.com/oauth/access_token",
   scopes: ["data:read_write"],
@@ -166,6 +164,7 @@ export const pack = coda.newPack();
 
 // Per-user authentication to the Okta API, using a custom token prefix and
 // account-specific endpoints.
+// See https://developer.okta.com/docs/reference/core-okta-api/#authentication
 pack.setUserAuthentication({
   type: coda.AuthenticationType.CustomHeaderToken,
   headerName: "Authorization",
@@ -200,6 +199,8 @@ export const pack = coda.newPack();
 
 // Per-user authentication to the Salesforce API, using OAuth2 and an
 // automatically determined account-specific endpoint.
+// eslint-disable-next-line max-len
+// See https://help.salesforce.com/s/articleView?id=sf.remoteaccess_authenticate.htm&type=5
 pack.setUserAuthentication({
   type: coda.AuthenticationType.OAuth2,
   authorizationUrl: "https://login.salesforce.com/services/oauth2/authorize",
@@ -239,6 +240,7 @@ export const pack = coda.newPack();
 
 // Per-user authentication to the Jira API, using OAuth2 with a post-submit step
 // to select the instance to connect to.
+// See https://developer.atlassian.com/cloud/confluence/oauth-2-3lo-apps
 pack.setUserAuthentication({
   type: coda.AuthenticationType.OAuth2,
   authorizationUrl: "https://auth.atlassian.com/authorize",
@@ -247,7 +249,6 @@ pack.setUserAuthentication({
   additionalParams: {
     audience: "api.atlassian.com",
     prompt: "consent",
-    response_type: "code",
   },
 
   // After approving access, the user should select which instance they want to

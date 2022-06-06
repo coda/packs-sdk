@@ -1,0 +1,1 @@
+When connecting to an external API the most difficult part can be translating their technical documentation to the configuration options available in Packs, specifically the authentication required. This set of examples shows how to setup a Pack to connect to various popular APIs.

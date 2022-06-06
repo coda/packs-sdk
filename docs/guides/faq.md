@@ -4,7 +4,7 @@ title: FAQ
 
 # Frequently asked questions
 
-## How do I verify ownership of the Packs redirect URI for Google OAuth verification?
+## How do I verify ownership of the Packs redirect URI for Google OAuth verification? {: #google}
 
 To connect to a Google API from a Pack you need to use OAuth2 authentication. Many APIs require scopes that Google deems "sensitive", meaning that Google must approve your integration before other users can sign in. This approval process is known as [OAuth verification][google_verification], and involves many steps and checks.
 
