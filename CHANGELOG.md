@@ -16,7 +16,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - Updated the testing fetcher for `coda execute` to auto-ungzip and set the `Accept: */*` request header by default, similar to live behavior.
 - Unrecognized properties in array schemas will now generate errors at upload time instead of the fields being silently stripped. While functionally the same, the explicit errors should help catch cases where a maker may expect a property to be recognized (like `codaType`) when it is actually not supported.
-- Packs using `CodaApiHeaderBearerToken` can have additional non-Coda network domains as long as the auth is restricted to coda.io, subject the the normal Coda approval for multiple domain.
+- Packs using `CodaApiHeaderBearerToken` can have additional non-Coda network domains as long as the auth is restricted to coda.io, subject the the normal Coda approval for multiple domains.
 
 ## [0.12.0] - 2022-05-17
 
