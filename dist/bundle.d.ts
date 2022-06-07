@@ -1843,7 +1843,7 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
 	 *
 	 * See {@link SyncTableOptions.identityName} for more details.
 	 */
-	identityName?: string;
+	identityName: string;
 	/** See {@link SyncTableOptions.formula} */
 	getter: SyncFormula<K, L, ParamDefsT, SchemaT>;
 	/** See {@link DynamicOptions.getSchema} */
@@ -2457,10 +2457,8 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	 * Every dynamic schema generated from this dynamic sync table definition should all use the same name
 	 * for their identity. Code that refers to objects in these tables will use the dynamicUrl to
 	 * differentiate which exact table to use.
-	 *
-	 * FUTURE BREAKING CHANGE: This will become required for all new Pack version builds & uploads.
 	 */
-	identityName?: string;
+	identityName: string;
 	/**
 	 * A formula that returns the schema for this table.
 	 */
@@ -2557,7 +2555,7 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
 	description?: string;
 	getName: MetadataFormulaDef;
 	getSchema: MetadataFormulaDef;
-	identityName?: string;
+	identityName: string;
 	formula: SyncFormulaDef<K, L, ParamDefsT, any>;
 	getDisplayUrl: MetadataFormulaDef;
 	listDynamicUrls?: MetadataFormulaDef;

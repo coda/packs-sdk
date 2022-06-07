@@ -626,6 +626,7 @@ describe('Pack metadata Validation', () => {
       it('valid dynamic sync table', async () => {
         const syncTable = makeDynamicSyncTable({
           name: 'DynamicSyncTable',
+          identityName: 'DynamicItem',
           getName: makeMetadataFormula(async () => {
             return '';
           }),
@@ -908,70 +909,66 @@ describe('Pack metadata Validation', () => {
         }, 'Legacy sync tables must specify identity.name');
       });
 
-      // TODO(patrick): Uncomment after migration period.
-      // it('identityName is required on sync tables', async () => {
-      //   // Not defined inline because I want to bypass Typescript errors, since many pack makers won't
-      //   // be using Typescript.
-      //   const syncTableArgs: any = {
-      //     name: 'SyncTable',
-      //     schema: makeObjectSchema({
-      //       type: ValueType.Object,
-      //       primary: 'foo',
-      //       id: 'foo',
-      //       properties: {
-      //         Foo: {type: ValueType.String},
-      //       },
-      //     }),
-      //     formula: {
-      //       name: 'SyncTable',
-      //       description: 'A simple sync table',
-      //       async execute() {
-      //         return {result: []};
-      //       },
-      //       parameters: [],
-      //       examples: [],
-      //     },
-      //   };
-      //   assert.throws(
-      //     () => makeSyncTable(syncTableArgs),
-      //     'Sync table schemas should have defined properties for identity, id and primary',
-      //   );
+      it('identityName is required on sync tables', async () => {
+        // Not defined inline because I want to bypass Typescript errors, since many pack makers won't
+        // be using Typescript.
+        const syncTableArgs: any = {
+          name: 'SyncTable',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            displayProperty: 'foo',
+            idProperty: 'foo',
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute() {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        };
+        assert.throws(() => makeSyncTable(syncTableArgs), 'Sync table schemas must set an identityName');
 
-      //   // If you bypass makeSyncTable, the metadata validation should still catch this
-      //   const syncTable: any = {
-      //     name: 'SyncTable',
-      //     schema: makeObjectSchema({
-      //       type: ValueType.Object,
-      //       primary: 'foo',
-      //       id: 'foo',
-      //       properties: {
-      //         foo: {type: ValueType.String},
-      //       },
-      //     }),
-      //     getter: {
-      //       name: 'SyncTable',
-      //       description: 'A simple sync table',
-      //       async execute() {
-      //         return {result: []};
-      //       },
-      //       parameters: [],
-      //       examples: [],
-      //       isSyncFormula: true,
-      //       resultType: Type.object,
-      //     },
-      //   };
+        // If you bypass makeSyncTable, the metadata validation should still catch this
+        const syncTable: any = {
+          name: 'SyncTable',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            displayProperty: 'foo',
+            idProperty: 'foo',
+            properties: {
+              foo: {type: ValueType.String},
+            },
+          }),
+          getter: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute() {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+            isSyncFormula: true,
+            resultType: Type.object,
+          },
+        };
 
-      //   const metadata = createFakePack({
-      //     syncTables: [syncTable],
-      //   });
-      //   const err = await validateJsonAndAssertFails(metadata);
-      //   assert.deepEqual(err.validationErrors, [
-      //     {
-      //       message: 'Required',
-      //       path: 'syncTables[0].identityName',
-      //     },
-      //   ]);
-      // });
+        const metadata = createFakePack({
+          syncTables: [syncTable],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Required',
+            path: 'syncTables[0].identityName',
+          },
+        ]);
+      });
 
       it('identity name matches property', async () => {
         const syncTable = makeSyncTable({
@@ -1072,6 +1069,7 @@ describe('Pack metadata Validation', () => {
       it('invalid dynamic sync table', async () => {
         const syncTable = makeDynamicSyncTable({
           name: 'DynamicSyncTable',
+          identityName: 'DynamicItem',
           getName: makeMetadataFormula(async () => {
             return '';
           }),
@@ -1105,6 +1103,7 @@ describe('Pack metadata Validation', () => {
 
         const invalidFormulaSyncTable = makeDynamicSyncTable({
           name: 'DynamicSyncTable',
+          identityName: 'DynamicItem',
           getName: makeMetadataFormula(async () => {
             return '';
           }),
@@ -1284,6 +1283,7 @@ describe('Pack metadata Validation', () => {
     it('duplicate sync table identity names not triggered for dynamic sync tables', async () => {
       const syncTable1 = makeDynamicSyncTable({
         name: 'DynamicSyncTable1',
+        identityName: 'DynamicItem1',
         getName: makeMetadataFormula(async () => {
           return '';
         }),
@@ -1305,6 +1305,7 @@ describe('Pack metadata Validation', () => {
       });
       const syncTable2 = makeDynamicSyncTable({
         name: 'DynamicSyncTable2',
+        identityName: 'DynamicItem2',
         getName: makeMetadataFormula(async () => {
           return '';
         }),

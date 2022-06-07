@@ -932,8 +932,7 @@ const baseSyncTableSchema = {
   getter: syncFormulaSchema,
   entityName: z.string().optional(),
   defaultAddDynamicColumns: z.boolean().optional(),
-  // TODO(patrick): After migration period, this will become required.
-  identityName: z.string().optional(),
+  identityName: z.string(),
 };
 
 type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;

@@ -6,6 +6,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - Fixed `temporaryBlobStorage.storeBlob` error from CLI built Packs.
 - The `coda init` command now installs `@codahq/packs-sdk` if it was not previously installed.
+- **Breaking Change** The `identityName` field is now required on every sync table, even ones with dynamic schemas.
 
 ## [0.12.1] - 2022-06-06
 

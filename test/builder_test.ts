@@ -77,12 +77,14 @@ describe('Builder', () => {
     {
       connectionRequirement,
       getName,
+      identityName,
       getSchema,
       getDisplayUrl,
       listDynamicUrls,
     }: {
       connectionRequirement?: ConnectionRequirement;
       getName: MetadataFormulaDef;
+      identityName: string;
       getSchema: MetadataFormulaDef;
       getDisplayUrl: MetadataFormulaDef;
       listDynamicUrls: MetadataFormulaDef;
@@ -90,6 +92,7 @@ describe('Builder', () => {
   ) {
     pack_.addDynamicSyncTable({
       name: 'Foos',
+      identityName,
       connectionRequirement,
       getName,
       getSchema,
@@ -237,6 +240,7 @@ describe('Builder', () => {
       });
       addDummyDynamicSyncTable(pack, {
         getName: makeMetadataFormula(async () => 'name'),
+        identityName: 'Foo',
         getDisplayUrl: makeMetadataFormula(async () => 'display-url'),
         getSchema: makeMetadataFormula(async () => makeSchema({type: ValueType.Array, items: dummyObjectSchema})),
         listDynamicUrls: makeMetadataFormula(async () => ['url']),
@@ -251,6 +255,7 @@ describe('Builder', () => {
     it('works for dynamic sync table metadata formulas after the fact', () => {
       addDummyDynamicSyncTable(pack, {
         getName: makeMetadataFormula(async () => 'name'),
+        identityName: 'Foo',
         getDisplayUrl: makeMetadataFormula(async () => 'display-url'),
         getSchema: makeMetadataFormula(async () => makeSchema({type: ValueType.Array, items: dummyObjectSchema})),
         listDynamicUrls: makeMetadataFormula(async () => ['url']),
@@ -274,6 +279,7 @@ describe('Builder', () => {
     it('unfortunate behavior that default connection requirement overrides explicit connection requirement on dynamic sync table formulas', () => {
       addDummyDynamicSyncTable(pack, {
         getName: makeMetadataFormula(async () => 'name', {connectionRequirement: ConnectionRequirement.None}),
+        identityName: 'Foo',
         getDisplayUrl: makeMetadataFormula(async () => 'display-url', {
           connectionRequirement: ConnectionRequirement.None,
         }),

@@ -85,7 +85,7 @@ ___
 
 ### identityName
 
-• `Optional` **identityName**: `string`
+• **identityName**: `string`
 
 The `identityName` is persisted for all sync tables so that a dynamic schema
 can be annotated with an identity automatically.
