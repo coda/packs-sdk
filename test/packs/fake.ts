@@ -9,6 +9,7 @@ import {makeObjectSchema} from '../../schema';
 import {makeStringFormula} from '../../api';
 import {makeStringParameter} from '../../api';
 import {makeSyncTable} from '../../api';
+import {marshalBuffer} from '../../runtime/common/marshaling/marshal_buffer';
 import {v4} from 'uuid';
 import {withQueryParams} from '../../helpers/url';
 
@@ -77,6 +78,17 @@ export const manifest: PackDefinition = createFakePack({
       parameters: [],
       execute: ([]) => {
         return v4();
+      },
+    }),
+    makeFormula({
+      resultType: ValueType.String,
+      name: 'marshalBuffer',
+      description: 'Returns a marshaled buffer.',
+      examples: [],
+      parameters: [],
+      execute: async ([], context) => {
+        await context.temporaryBlobStorage.storeBlob(Buffer.from('test'), 'text/html');
+        return 'okay';
       },
     }),
     makeObjectFormula({
