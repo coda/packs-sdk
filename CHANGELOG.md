@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+- Fixed `temporaryBlobStorage.storeBlob` error from CLI built Packs.
+
 ## [0.12.1] - 2022-06-06
 
 ### Added
