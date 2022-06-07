@@ -1,5 +1,6 @@
 import {compilePackBundle} from '../testing/compile';
 import {executeFormulaOrSyncWithVM} from '../testing/execution';
+import {newMockSyncExecutionContext} from '../testing/mocks';
 import path from 'path';
 import {translateErrorStackFromVM} from '../runtime/common/source_map';
 
@@ -61,5 +62,25 @@ describe('compile', () => {
 
       assert.include(stack, path.join(__dirname, 'packs/fake.ts'));
     }
+  });
+
+  it('works with buffer', async () => {
+    const {bundlePath} = await compilePackBundle({
+      manifestPath: `${__dirname}/packs/fake.ts`,
+      minify: false,
+    });
+    const executionContext = newMockSyncExecutionContext();
+    const response = await executeFormulaOrSyncWithVM({
+      formulaName: 'marshalBuffer',
+      params: [],
+      bundlePath,
+      executionContext,
+    });
+    assert.equal(response, 'okay');
+    assert.isTrue(
+      executionContext.temporaryBlobStorage.storeBlob.calledWithMatch((buffer: any) => {
+        return Buffer.isBuffer(buffer);
+      }, 'text/html'),
+    );
   });
 });

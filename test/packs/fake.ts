@@ -79,6 +79,17 @@ export const manifest: PackDefinition = createFakePack({
         return v4();
       },
     }),
+    makeFormula({
+      resultType: ValueType.String,
+      name: 'marshalBuffer',
+      description: 'Returns a marshaled buffer.',
+      examples: [],
+      parameters: [],
+      execute: async ([], context) => {
+        await context.temporaryBlobStorage.storeBlob(Buffer.from('test'), 'text/html');
+        return 'okay';
+      },
+    }),
     makeObjectFormula({
       name: 'Person',
       description: 'Returns a random UUID inside an object.',

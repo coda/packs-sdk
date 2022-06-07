@@ -164,3 +164,16 @@ pack.addFormula({
     return sum;
   },
 });
+
+pack.addFormula({
+  name: 'StoreBufferFromText',
+  description: '',
+  parameters: [],
+  resultType: coda.ValueType.String,
+  execute: async ([], context) => {
+    const buffer = Buffer.from('Hello World!');
+    const url = await context.temporaryBlobStorage.storeBlob(buffer, 'text/plain');
+    return url;
+  },
+  cacheTtlSecs: 0,
+});
