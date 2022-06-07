@@ -9,7 +9,6 @@ import {makeObjectSchema} from '../../schema';
 import {makeStringFormula} from '../../api';
 import {makeStringParameter} from '../../api';
 import {makeSyncTable} from '../../api';
-import {marshalBuffer} from '../../runtime/common/marshaling/marshal_buffer';
 import {v4} from 'uuid';
 import {withQueryParams} from '../../helpers/url';
 
