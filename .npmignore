@@ -1,2 +1,17 @@
+# Documentation includes image files not needed in the node module.
 docs/
 site/
+
+# From .gitignore
+.coda
+.coda.json
+.DS_Store
+.vscode
+node_modules
+artifacts
+dist/test
+yarn-error.log
+local-docs
+site
+.coda-pack.json
+.coda-credentials.json
