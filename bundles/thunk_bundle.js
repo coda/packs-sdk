@@ -4384,7 +4384,8 @@ module.exports = (() => {
 
   // runtime/common/marshaling/marshal_buffer.ts
   function marshalBuffer(val) {
-    if (val instanceof Buffer2) {
+    var _a;
+    if (val instanceof Buffer2 || ((_a = global.Buffer) == null ? void 0 : _a.isBuffer(val))) {
       return {
         data: [...Uint8Array.from(val)],
         ["__coda_marshaler__" /* CodaMarshaler */]: "Buffer" /* Buffer */
