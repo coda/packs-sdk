@@ -83,6 +83,15 @@ Failed invocations will include some additional detail in the **Overview** entry
 Specifically the **Error** field will include the error message, and the **Stack trace** field will include the line number where the error happened (`code.ts:18:23` means line 18, character 23).
 
 
+### HTTP requests
+
+Log entries for fetcher requests include an extra link at the bottom called **Show HTTP request details**. Clicking this link will open a dialog that shows the full details of the request, including the headers and bodies of the request and response.
+
+<img src="../../../images/pmt_http.png" srcset="../../../images/pmt_http_2x.png 2x" class="screenshot" alt="HTTP request details dialog">
+
+Just like in your Pack's code, [some headers are redacted][fetcher_headers] as well as any user credentials.
+
+
 ### Searching
 
 You can search for logs using the magnifying glass icon at the top of the panel.
@@ -113,3 +122,4 @@ A few additional options are available under the three dots menu at the top of t
 
 
 [troubleshooting_logging]: troubleshooting.md#logging
+[fetcher_headers]: ../advanced/fetcher.md#headers
