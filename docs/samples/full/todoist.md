@@ -1,5 +1,7 @@
 ---
 title: Todoist
+description: A Pack that integrates with the application Todoist.
+icon: octicons/tasklist-16
 ---
 
 # Todoist sample

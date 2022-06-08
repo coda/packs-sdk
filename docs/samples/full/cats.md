@@ -1,5 +1,7 @@
 ---
 title: Cats
+description: A Pack that generates images of cats.
+icon: fontawesome/solid/cat
 ---
 
 # Cats sample

@@ -1,6 +1,8 @@
 [
   {
     "name": "Column formats",
+    "description": "Samples that show how to create a column format.",
+    "icon": "material/table-column",
     "category": "Topic",
     "triggerTokens": [
       "addColumnFormat"
@@ -47,6 +49,8 @@
   },
   {
     "name": "Authentication",
+    "description": "Samples that show how to authenticate with an API.",
+    "icon": "material/account-key",
     "category": "Topic",
     "triggerTokens": [
       "setSystemAuthentication",
@@ -114,6 +118,8 @@
   },
   {
     "name": "Dynamic sync tables",
+    "description": "Samples that show how to create a dynamic sync table.",
+    "icon": "material/cloud-sync-outline",
     "category": "Topic",
     "triggerTokens": [
       "addDynamicSyncTable"
@@ -140,6 +146,8 @@
   },
   {
     "name": "Formulas",
+    "description": "Samples that show how to create a formula.",
+    "icon": "material/function",
     "category": "Topic",
     "triggerTokens": [
       "addFormula"
@@ -176,6 +184,8 @@
   },
   {
     "name": "Actions",
+    "description": "Samples that show how to create an action formula, for use in a button or automation.",
+    "icon": "material/cursor-default-click-outline",
     "category": "Topic",
     "triggerTokens": [
       "isAction"
@@ -212,6 +222,8 @@
   },
   {
     "name": "Parameters",
+    "description": "Samples that show how to accept parameters from the user.",
+    "icon": "material/format-textbox",
     "category": "Topic",
     "triggerTokens": [
       "makeParameter"
@@ -288,6 +300,8 @@
   },
   {
     "name": "Autocomplete",
+    "description": "Samples that show how to provide autocomplete options for a parameter.",
+    "icon": "material/form-dropdown",
     "category": "Topic",
     "triggerTokens": [
       "autocomplete"
@@ -319,6 +333,8 @@
   },
   {
     "name": "Sync tables",
+    "description": "Samples that show how to create a sync table.",
+    "icon": "material/table-sync",
     "category": "Topic",
     "triggerTokens": [
       "addSyncTable"
@@ -360,6 +376,8 @@
   },
   {
     "name": "Fetcher",
+    "description": "Samples that show how to fetch data from an external source.",
+    "icon": "fontawesome/solid/cloud-arrow-down",
     "category": "Topic",
     "triggerTokens": [
       "fetch"
@@ -391,6 +409,8 @@
   },
   {
     "name": "Data types",
+    "description": "Samples that show how to return values of various data types.",
+    "icon": "material/format-list-group",
     "category": "Topic",
     "triggerTokens": [
       "resultType",
@@ -468,6 +488,8 @@
   },
   {
     "name": "Schemas",
+    "description": "Samples that show how to define a schema, to represent rich objects.",
+    "icon": "material/receipt-outline",
     "category": "Topic",
     "triggerTokens": [
       "makeSchema",
@@ -505,6 +527,8 @@
   },
   {
     "name": "Dates and times",
+    "description": "Samples that show how to work with dates and times.",
+    "icon": "material/calendar-clock",
     "category": "Topic",
     "triggerTokens": [
       "Date",
@@ -548,6 +572,8 @@
   },
   {
     "name": "Images",
+    "description": "Samples that show how to work with images.",
+    "icon": "material/image",
     "category": "Topic",
     "triggerTokens": [
       "ImageReference",
@@ -607,6 +633,8 @@
   },
   {
     "name": "API setup",
+    "description": "Samples that show how to configure a Pack to connect to various popular APIs.",
+    "icon": "material/api",
     "category": "Topic",
     "triggerTokens": [],
     "linkData": {
@@ -704,6 +732,8 @@
   },
   {
     "name": "Hello World",
+    "description": "A simple \"Hello World\" Pack.",
+    "icon": "material/hand-wave-outline",
     "category": "Full",
     "triggerTokens": [],
     "linkData": {
@@ -721,6 +751,8 @@
   },
   {
     "name": "Daylight",
+    "description": "A Pack that fetches data about the expected hours of daylight at a location.",
+    "icon": "fontawesome/regular/sun",
     "category": "Full",
     "triggerTokens": [],
     "linkData": {
@@ -738,6 +770,8 @@
   },
   {
     "name": "Math",
+    "description": "A Pack that provides various math operations.",
+    "icon": "material/calculator-variant",
     "category": "Full",
     "triggerTokens": [],
     "linkData": {
@@ -755,6 +789,8 @@
   },
   {
     "name": "Todoist",
+    "description": "A Pack that integrates with the application Todoist.",
+    "icon": "octicons/tasklist-16",
     "category": "Full",
     "triggerTokens": [],
     "linkData": {
@@ -772,6 +808,8 @@
   },
   {
     "name": "Cats",
+    "description": "A Pack that generates images of cats.",
+    "icon": "fontawesome/solid/cat",
     "category": "Full",
     "triggerTokens": [],
     "linkData": {
@@ -788,7 +826,9 @@
     ]
   },
   {
-    "name": "Dungeons and Dragons",
+    "name": "Dungeons & Dragons",
+    "description": "A Pack that uses an API to retrieve information about the game Dungeons & Dragons.",
+    "icon": "fontawesome/solid/dragon",
     "category": "Full",
     "triggerTokens": [],
     "linkData": {
@@ -806,6 +846,8 @@
   },
   {
     "name": "GitHub",
+    "description": "A Pack that integrates with GitHub.",
+    "icon": "fontawesome/brands/github",
     "category": "Full",
     "triggerTokens": [],
     "linkData": {

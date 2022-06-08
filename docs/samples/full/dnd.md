@@ -1,8 +1,10 @@
 ---
-title: Dungeons and Dragons
+title: Dungeons &amp; Dragons
+description: A Pack that uses an API to retrieve information about the game Dungeons &amp; Dragons.
+icon: fontawesome/solid/dragon
 ---
 
-# Dungeons and Dragons sample
+# Dungeons &amp; Dragons sample
 
 This Pack allows you to fetch information about spells in th game Dungeons and Dragons using the [D&D 5e API][dnd]. The Pack provides:
 

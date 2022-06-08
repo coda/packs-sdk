@@ -1,5 +1,7 @@
 ---
 title: API setup
+description: Samples that show how to configure a Pack to connect to various popular APIs.
+icon: material/api
 ---
 
 # API setup samples

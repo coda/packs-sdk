@@ -169,6 +169,8 @@ export const Snippets: AutocompleteSnippet[] = [
 export const Examples: Example[] = [
   {
     name: 'Column formats',
+    description: 'Samples that show how to create a column format.',
+    icon: 'material/table-column',
     category: ExampleCategory.Topic,
     triggerTokens: ['addColumnFormat'],
     contentFile: './examples/column-format/README.md',
@@ -215,6 +217,8 @@ export const Examples: Example[] = [
   },
   {
     name: 'Authentication',
+    description: 'Samples that show how to authenticate with an API.',
+    icon: 'material/account-key',
     category: ExampleCategory.Topic,
     triggerTokens: ['setSystemAuthentication', 'setUserAuthentication'],
     contentFile: './examples/authentication/README.md',
@@ -283,6 +287,8 @@ export const Examples: Example[] = [
   },
   {
     name: 'Dynamic sync tables',
+    description: 'Samples that show how to create a dynamic sync table.',
+    icon: 'material/cloud-sync-outline',
     category: ExampleCategory.Topic,
     triggerTokens: ['addDynamicSyncTable'],
     contentFile: './examples/dynamic-sync-table/README.md',
@@ -306,6 +312,8 @@ export const Examples: Example[] = [
   },
   {
     name: 'Formulas',
+    description: 'Samples that show how to create a formula.',
+    icon: 'material/function',
     category: ExampleCategory.Topic,
     triggerTokens: ['addFormula'],
     contentFile: './examples/formula/README.md',
@@ -342,6 +350,8 @@ export const Examples: Example[] = [
   },
   {
     name: 'Actions',
+    description: 'Samples that show how to create an action formula, for use in a button or automation.',
+    icon: 'material/cursor-default-click-outline',
     category: ExampleCategory.Topic,
     triggerTokens: ['isAction'],
     contentFile: './examples/action/README.md',
@@ -376,6 +386,8 @@ export const Examples: Example[] = [
   },
   {
     name: 'Parameters',
+    description: 'Samples that show how to accept parameters from the user.',
+    icon: 'material/format-textbox',
     category: ExampleCategory.Topic,
     triggerTokens: ['makeParameter'],
     contentFile: './examples/parameter/README.md',
@@ -456,6 +468,8 @@ export const Examples: Example[] = [
   },
   {
     name: 'Autocomplete',
+    description: 'Samples that show how to provide autocomplete options for a parameter.',
+    icon: 'material/form-dropdown',
     category: ExampleCategory.Topic,
     triggerTokens: ['autocomplete'],
     contentFile: './examples/autocomplete/README.md',
@@ -486,6 +500,8 @@ export const Examples: Example[] = [
   },
   {
     name: 'Sync tables',
+    description: 'Samples that show how to create a sync table.',
+    icon: 'material/table-sync',
     category: ExampleCategory.Topic,
     triggerTokens: ['addSyncTable'],
     contentFile: './examples/sync-table/README.md',
@@ -526,6 +542,8 @@ export const Examples: Example[] = [
   },
   {
     name: 'Fetcher',
+    description: 'Samples that show how to fetch data from an external source.',
+    icon: 'fontawesome/solid/cloud-arrow-down',
     category: ExampleCategory.Topic,
     triggerTokens: ['fetch'],
     contentFile: './examples/fetcher/README.md',
@@ -553,6 +571,8 @@ export const Examples: Example[] = [
   },
   {
     name: 'Data types',
+    description: 'Samples that show how to return values of various data types.',
+    icon: 'material/format-list-group',
     category: ExampleCategory.Topic,
     triggerTokens: ['resultType', 'type'],
     contentFile: './examples/data-type/README.md',
@@ -631,6 +651,8 @@ export const Examples: Example[] = [
   },
   {
     name: 'Schemas',
+    description: 'Samples that show how to define a schema, to represent rich objects.',
+    icon: 'material/receipt-outline',
     category: ExampleCategory.Topic,
     triggerTokens: ['makeSchema', 'makeObjectSchema'],
     contentFile: './examples/schema/README.md',
@@ -666,6 +688,8 @@ export const Examples: Example[] = [
   },
   {
     name: 'Dates and times',
+    description: 'Samples that show how to work with dates and times.',
+    icon: 'material/calendar-clock',
     category: ExampleCategory.Topic,
     triggerTokens: ['Date', 'Time', 'DateTime'],
     contentFile: './examples/dates/README.md',
@@ -707,6 +731,8 @@ export const Examples: Example[] = [
   },
   {
     name: 'Images',
+    description: 'Samples that show how to work with images.',
+    icon: 'material/image',
     category: ExampleCategory.Topic,
     triggerTokens: ['ImageReference', 'ImageAttachment', 'Image', 'ImageArray'],
     contentFile: './examples/image/README.md',
@@ -765,6 +791,8 @@ export const Examples: Example[] = [
   },
   {
     name: 'API setup',
+    description: 'Samples that show how to configure a Pack to connect to various popular APIs.',
+    icon: 'material/api',
     category: ExampleCategory.Topic,
     triggerTokens: [],
     contentFile: './examples/apis/README.md',
@@ -861,6 +889,8 @@ export const Examples: Example[] = [
   },
   {
     name: 'Hello World',
+    description: 'A simple "Hello World" Pack.',
+    icon: 'material/hand-wave-outline',
     category: ExampleCategory.Full,
     triggerTokens: [],
     contentFile: './examples/hello_world/README.md',
@@ -877,6 +907,8 @@ export const Examples: Example[] = [
   },
   {
     name: 'Daylight',
+    description: 'A Pack that fetches data about the expected hours of daylight at a location.',
+    icon: 'fontawesome/regular/sun',
     category: ExampleCategory.Full,
     triggerTokens: [],
     contentFile: './examples/daylight/README.md',
@@ -893,6 +925,8 @@ export const Examples: Example[] = [
   },
   {
     name: 'Math',
+    description: 'A Pack that provides various math operations.',
+    icon: 'material/calculator-variant',
     category: ExampleCategory.Full,
     triggerTokens: [],
     contentFile: './examples/math/README.md',
@@ -909,6 +943,8 @@ export const Examples: Example[] = [
   },
   {
     name: 'Todoist',
+    description: 'A Pack that integrates with the application Todoist.',
+    icon: 'octicons/tasklist-16',
     category: ExampleCategory.Full,
     triggerTokens: [],
     contentFile: './examples/todoist/README.md',
@@ -925,6 +961,8 @@ export const Examples: Example[] = [
   },
   {
     name: 'Cats',
+    description: 'A Pack that generates images of cats.',
+    icon: 'fontawesome/solid/cat',
     category: ExampleCategory.Full,
     triggerTokens: [],
     contentFile: './examples/cats/README.md',
@@ -940,7 +978,9 @@ export const Examples: Example[] = [
     ],
   },
   {
-    name: 'Dungeons and Dragons',
+    name: 'Dungeons & Dragons',
+    description: 'A Pack that uses an API to retrieve information about the game Dungeons & Dragons.',
+    icon: 'fontawesome/solid/dragon',
     category: ExampleCategory.Full,
     triggerTokens: [],
     contentFile: './examples/dnd/README.md',
@@ -957,6 +997,8 @@ export const Examples: Example[] = [
   },
   {
     name: 'GitHub',
+    description: 'A Pack that integrates with GitHub.',
+    icon: 'fontawesome/brands/github',
     category: ExampleCategory.Full,
     triggerTokens: [],
     contentFile: './examples/github/README.md',

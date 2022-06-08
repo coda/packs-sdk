@@ -25,6 +25,8 @@ export interface CompiledExampleSnippet {
 
 export interface Example {
   name: string;
+  description: string;
+  icon?: string;
   category: ExampleCategory;
   triggerTokens: string[];
   linkData: LinkData;
@@ -34,6 +36,8 @@ export interface Example {
 
 export interface CompiledExample {
   name: string;
+  description: string;
+  icon?: string;
   category: ExampleCategory;
   triggerTokens: string[];
   exampleFooterLink: string;

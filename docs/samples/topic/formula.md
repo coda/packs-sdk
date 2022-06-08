@@ -1,5 +1,7 @@
 ---
 title: Formulas
+description: Samples that show how to create a formula.
+icon: material/function
 ---
 
 # Formula samples
