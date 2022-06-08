@@ -10,3 +10,4 @@ local-docs
 site
 .coda-pack.json
 .coda-credentials.json
+.npmrc

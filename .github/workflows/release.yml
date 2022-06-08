@@ -1,14 +1,10 @@
 on:
   workflow_dispatch:
     inputs:
-      increment:
-        description: 'Release version increment'
+      version:
+        description: 'Release version increment (choose from "patch", "minor", "major", or a valid semantic version e.g. "1.12.2")'
         required: true
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
+        type: string
 
 jobs:
   release:
@@ -22,7 +18,7 @@ jobs:
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
       - run: make _bootstrap-node
-      - run: make release $INCREMENT
+      - run: make release $VERSION
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          INCREMENT: ${{ github.event.inputs.increment }}
+          VERSION: ${{ github.event.inputs.version }}
