@@ -47,9 +47,9 @@ Our templates and examples make it easy to get started, and in minutes you'll ha
 
 <br>
 
-<section class="landing-row landing-box-row" markdown>
+<section class="box-row" markdown>
 
-<div class="landing-item" markdown>
+<div class="box-item" markdown>
 ### :octicons-terminal-16: Command line tool
 
 Use the CLI to develop Packs on your local machine, where you can use the IDE, tooling, and version control of your choice.
@@ -57,7 +57,7 @@ Use the CLI to develop Packs on your local machine, where you can use the IDE, t
 [Install CLI][cli]{ .md-button }
 </div>
 
-<div class="landing-item" markdown>
+<div class="box-item" markdown>
 ### :material-application-braces-outline: Sample code
 
 From Math to GitHub to Cat Photos, we've got dozens of examples written covering all major aspects of the SDK.
@@ -65,7 +65,7 @@ From Math to GitHub to Cat Photos, we've got dozens of examples written covering
 [Browse samples][samples]{ .md-button }
 </div>
 
-<div class="landing-item" markdown>
+<div class="box-item" markdown>
 ### :fontawesome-solid-people-group: Community
 
 Our passionate community of Pack makers and Coda experts can help answer your questions or share tips to get you started.
@@ -106,7 +106,7 @@ Coda makers have been busy building Packs of all types, and many have published 
 [get_started]: tutorials/get-started/web.md
 [cli]: guides/development/cli.md
 [beta]: https://coda.io/packsbeta
-[samples]: samples/full/hello-world.md
+[samples]: samples/index.md
 [changelog]: reference/changes.md
 [community]: https://community.coda.io/c/developers-central/making-packs/15
 [gallery]: https://coda.io/gallery?filter=packs

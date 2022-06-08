@@ -1,5 +1,7 @@
 ---
 title: Hello World
+description: A simple &quot;Hello World&quot; Pack.
+icon: material/hand-wave-outline
 ---
 
 # Hello World sample

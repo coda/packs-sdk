@@ -68,6 +68,8 @@ function compileExamples() {
     }
     const compiledExample = {
       name: example.name,
+      description: example.description,
+      icon: example.icon,
       category: example.category,
       triggerTokens: example.triggerTokens,
       linkData: example.linkData,

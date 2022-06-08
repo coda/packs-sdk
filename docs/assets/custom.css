@@ -75,23 +75,10 @@ li.no {
   }
 }
 
-.landing-box-row {
-  gap: 1em;
-}
-
 .landing-item {
   flex: 1;
   display: flex;
   flex-direction: column;
-}
-
-.landing-box-row .landing-item {
-  border: .05rem solid var(--md-default-fg-color--lightest);
-  padding: 0 2em;
-}
-
-.landing-box-row .landing-item p:first-of-type {
-  flex: 1;
 }
 
 .tutorial-row {
@@ -113,4 +100,26 @@ li.no {
 .tutorial-row img.screenshot {
   box-shadow: none;
   border: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.box-row {
+  display: grid;
+  gap: 1em;
+}
+
+@media (min-width: 800px) {
+  .box-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.box-item {
+  border: .05rem solid var(--md-default-fg-color--lightest);
+  padding: 0 2em;
+  display: flex;
+  flex-direction: column;
+}
+
+.box-item p:first-of-type {
+  flex: 1;
 }

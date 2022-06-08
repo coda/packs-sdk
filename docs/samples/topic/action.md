@@ -1,5 +1,7 @@
 ---
 title: Actions
+description: Samples that show how to create an action formula, for use in a button or automation.
+icon: material/cursor-default-click-outline
 ---
 
 # Action samples

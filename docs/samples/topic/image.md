@@ -1,5 +1,7 @@
 ---
 title: Images
+description: Samples that show how to work with images.
+icon: material/image
 ---
 
 # Image samples

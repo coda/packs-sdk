@@ -1,5 +1,7 @@
 ---
 title: {{name}}
+description: {{description}}
+{{#if icon}}icon: {{icon}}{{/if}}
 ---
 
 # {{pageTitle this}}

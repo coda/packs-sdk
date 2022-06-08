@@ -1,5 +1,7 @@
 ---
 title: Column formats
+description: Samples that show how to create a column format.
+icon: material/table-column
 ---
 
 # Column format samples

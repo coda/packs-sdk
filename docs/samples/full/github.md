@@ -1,5 +1,7 @@
 ---
 title: GitHub
+description: A Pack that integrates with GitHub.
+icon: fontawesome/brands/github
 ---
 
 # GitHub sample
