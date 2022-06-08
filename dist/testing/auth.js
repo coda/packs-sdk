@@ -218,20 +218,22 @@ class CredentialHandler {
     handleAWSAccessKey() {
         (0, ensure_1.assertCondition)(this._authDef.type === types_1.AuthenticationType.AWSAccessKey);
         const existingCredentials = this.checkForExistingCredential();
+        const endpointUrl = this.maybePromptForEndpointUrl();
         const newAccessKeyId = (0, helpers_4.promptForInput)(`Enter the AWS Access Key Id for this Pack:\n`);
         const newSecretAccessKey = (0, helpers_4.promptForInput)(`Enter the AWS Secret Access Key for this Pack:\n`, { mask: true });
         const accessKeyId = (0, ensure_3.ensureNonEmptyString)(newAccessKeyId || (existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.accessKeyId));
         const secretAccessKey = (0, ensure_3.ensureNonEmptyString)(newSecretAccessKey || (existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.secretAccessKey));
-        this.storeCredential({ accessKeyId, secretAccessKey });
+        this.storeCredential({ accessKeyId, secretAccessKey, endpointUrl });
         (0, helpers_2.print)('Credentials updated!');
     }
     handleAWSAssumeRole() {
         (0, ensure_1.assertCondition)(this._authDef.type === types_1.AuthenticationType.AWSAssumeRole);
         const existingCredentials = this.checkForExistingCredential();
+        const endpointUrl = this.maybePromptForEndpointUrl();
         const newRoleArn = (0, helpers_4.promptForInput)(`Enter the AWS Role ARN for this Pack:\n`);
         const externalId = (0, helpers_4.promptForInput)(`[Optional] Enter the External ID for this Pack:\n`, { mask: true });
         const roleArn = (0, ensure_3.ensureNonEmptyString)(newRoleArn || (existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.roleArn));
-        this.storeCredential({ roleArn, externalId });
+        this.storeCredential({ roleArn, externalId, endpointUrl });
         (0, helpers_2.print)('Credentials updated!');
     }
     maybePromptForEndpointUrl() {

@@ -264,13 +264,14 @@ class CredentialHandler {
     assertCondition(this._authDef.type === AuthenticationType.AWSAccessKey);
     const existingCredentials = this.checkForExistingCredential() as AWSAccessKeyCredentials | undefined;
 
+    const endpointUrl = this.maybePromptForEndpointUrl();
     const newAccessKeyId = promptForInput(`Enter the AWS Access Key Id for this Pack:\n`);
     const newSecretAccessKey = promptForInput(`Enter the AWS Secret Access Key for this Pack:\n`, {mask: true});
 
     const accessKeyId = ensureNonEmptyString(newAccessKeyId || existingCredentials?.accessKeyId);
     const secretAccessKey = ensureNonEmptyString(newSecretAccessKey || existingCredentials?.secretAccessKey);
 
-    this.storeCredential({accessKeyId, secretAccessKey});
+    this.storeCredential({accessKeyId, secretAccessKey, endpointUrl});
     print('Credentials updated!');
   }
 
@@ -278,12 +279,13 @@ class CredentialHandler {
     assertCondition(this._authDef.type === AuthenticationType.AWSAssumeRole);
     const existingCredentials = this.checkForExistingCredential() as AWSAssumeRoleCredentials | undefined;
 
+    const endpointUrl = this.maybePromptForEndpointUrl();
     const newRoleArn = promptForInput(`Enter the AWS Role ARN for this Pack:\n`);
     const externalId = promptForInput(`[Optional] Enter the External ID for this Pack:\n`, {mask: true});
 
     const roleArn = ensureNonEmptyString(newRoleArn || existingCredentials?.roleArn);
 
-    this.storeCredential({roleArn, externalId});
+    this.storeCredential({roleArn, externalId, endpointUrl});
     print('Credentials updated!');
   }
 
