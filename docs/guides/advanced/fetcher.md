@@ -342,7 +342,7 @@ try {
 ```
 
 
-### Headers {: .headers}
+### Headers {: #headers}
 
 The HTTP headers returned can be accessed using the `headers` field of the response. The header names are normalized (changed to lowercase) for convenience, so you can access them consistently regardless of how they are sent by the server.
 
