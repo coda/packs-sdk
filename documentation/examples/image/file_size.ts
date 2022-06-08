@@ -19,8 +19,8 @@ pack.addFormula({
   resultType: coda.ValueType.Number,
   execute: async function ([imageUrl], context) {
     // Throw an error if the image isn't Coda-hosted. Image URL columns can
-    // contain images on any domain, but we can only fetch the contents from
-    // domains added with addNetworkDomain().
+    // contain images on any domain, but by default Packs can only access image
+    // attachments hosted on codahosted.io.
     if (!imageUrl.match(HostedImageUrlRegex)) {
       throw new coda.UserVisibleError("Not compatible with Image URL columns.");
     }
@@ -37,7 +37,3 @@ pack.addFormula({
     return buffer.length;
   },
 });
-
-// Coda images are hosted on this domain, and it must be added as an allowed
-// network domain.
-pack.addNetworkDomain("codahosted.io");

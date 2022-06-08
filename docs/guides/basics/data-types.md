@@ -218,7 +218,7 @@ pack.addFormula({
 <!-- TODO: Fully document the allowed markup. -->
 
 
-### Dates and times {: .dates}
+### Dates and times {: #dates}
 
 The [`Date`][Date], [`Time`][Time], and [`DateTime`][DateTime] value hints can be applied to either `String` or `Number` values.
 
@@ -258,7 +258,7 @@ When used with a number value, the number should contain the number of seconds s
     The `Date` and `Time` value hints currently only work correctly within a sync table. When used outside of a sync table both the date and time parts of the returned date will be visible, as if `DateTime` was used.
 
 
-### Durations {: .durations}
+### Durations {: #durations}
 
 The [`Duration`][Duration] value hint represents an amount of time, rather than a specific time. It can only be applied to `String` values, and those strings must match one of a few formats:
 

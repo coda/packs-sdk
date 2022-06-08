@@ -793,6 +793,11 @@ export const Examples: Example[] = [
         codeFile: './examples/apis/dropbox.ts',
       },
       {
+        name: 'Facebook (Meta)',
+        content: 'The Facebook (Meta) APIs use OAuth2 to authenticate users, prompting them to approve a specific set of scopes.',
+        codeFile: './examples/apis/google.ts',
+      },
+      {
         name: 'Giphy',
         content: 'The Giphy API requires the developer to provide their API key as query parameter.',
         codeFile: './examples/authentication/giphy.ts',
