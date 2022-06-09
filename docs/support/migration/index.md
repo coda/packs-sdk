@@ -14,8 +14,10 @@ The Pack Studio web editor always uses the latest release of the SDK when buildi
 If you use the Pack CLI you'll need to manually update the SDK when a new version is released. To do so, run the command:
 
 ```shell
-npm update @codahq/packs-sdk
+npm install @codahq/packs-sdk@<version> --save
 ```
+
+Where `<version>` is the version you want to upgrade to.
 
 After updating the SDK locally you'll need to upload a new version of your Pack to Coda's servers:
 

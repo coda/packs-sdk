@@ -102,7 +102,7 @@ Coda makers have been busy building Packs of all types, and many have published 
 </style>
 
 
-[overview]: guides/overview.md
+[overview]: guides/index.md
 [get_started]: tutorials/get-started/web.md
 [cli]: guides/development/cli.md
 [beta]: https://coda.io/packsbeta

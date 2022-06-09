@@ -1,5 +1,5 @@
 nav:
-  - index.md
+  - Overview: index.md
   - By topic: topic
   - full
   - CLI examples on GitHub: https://github.com/coda/packs-examples
