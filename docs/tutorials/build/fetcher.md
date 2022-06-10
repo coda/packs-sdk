@@ -317,12 +317,28 @@ If everything is working correctly you should get back the currency value conver
 
 Coda logs every API request that your Pack makes, and examining those logs can be very useful when troubleshooting.
 
-=== ":material-numeric-1-circle: View the request log entry"
+=== ":material-numeric-1-circle: Open the logs"
 
     <section class="tutorial-row" markdown>
     <div markdown>
 
-    In the Pack's side panel click the **View logs** button to bring up the Pack Maker Tools. Find the most recent invocation of your formula (that isn't from the cache) and expand it to reveal the log entry for the fetch request.
+    In the Pack's side panel click the **View logs** button to bring up the Pack Maker Tools. If you have navigated away from the Pack's panel, click {{ coda.pack_panel_clicks }}.
+
+    </div>
+    <div markdown>
+
+    <img src="../../../images/tutorial_fetcher_panel.png" srcset="../../../images/tutorial_fetcher_panel_2x.png 2x" class="screenshot" alt="Where to fine the open logs button in the panel">
+
+    </div>
+    </section>
+
+
+=== ":material-numeric-2-circle: View the request log entry"
+
+    <section class="tutorial-row" markdown>
+    <div markdown>
+
+    Find the most recent invocation of your formula (that isn't from the cache) and expand it to reveal the log entry for the fetch request.
 
     Expanding that log entry reveals additional metadata about the request, including the response code and duration.
 
@@ -335,7 +351,7 @@ Coda logs every API request that your Pack makes, and examining those logs can b
     </section>
 
 
-=== ":material-numeric-2-circle: View the HTTP response"
+=== ":material-numeric-3-circle: View the HTTP response"
 
     <section class="tutorial-row" markdown>
     <div markdown>
