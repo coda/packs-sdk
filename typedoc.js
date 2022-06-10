@@ -13,6 +13,7 @@ module.exports = {
   hideBreadcrumbs: true,
   hideInPageTOC: true,
   allReflectionsHaveOwnDocument: true,
+  entryDocument: "index.md",
 
   intentionallyNotExported: [
     // Internal intermediate or helper types that we probably don't care to export or document.

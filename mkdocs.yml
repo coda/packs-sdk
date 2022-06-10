@@ -93,7 +93,6 @@ theme:
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.sections
-    - navigation.indexes
   palette:
     scheme: coda
   logo: assets/logo.png
