@@ -56,7 +56,7 @@ export async function handleInit() {
     .map(dependency => `${dependency}@${devDependencies[dependency]}`)
     .join(' ');
   spawnProcess(escapeShellCmd(`npm install --save-dev ${devDependencyPackages}`));
-  if (spawnProcess('npm list @codahq/packs-sdk').status !== 0) {
+  if (spawnProcess('npm list @codahq/packs-sdk --depth=0').status !== 0) {
     spawnProcess('npm install --save @codahq/packs-sdk');
   }
 
