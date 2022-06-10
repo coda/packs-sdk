@@ -52,6 +52,9 @@ async function handleInit() {
         .map(dependency => `${dependency}@${devDependencies[dependency]}`)
         .join(' ');
     (0, helpers_1.spawnProcess)(escapeShellCmd(`npm install --save-dev ${devDependencyPackages}`));
+    if ((0, helpers_1.spawnProcess)('npm list @codahq/packs-sdk').status !== 0) {
+        (0, helpers_1.spawnProcess)('npm install --save @codahq/packs-sdk');
+    }
     // developers may run in NodeJs 16 where some packages need to be patched to avoid warnings.
     addPatches();
     fs_extra_1.default.copySync(`${PacksExamplesDirectory}/examples/template`, process.cwd());
