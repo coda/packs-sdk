@@ -5,6 +5,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ## [Unreleased]
 
 - Fixed `temporaryBlobStorage.storeBlob` error from CLI built Packs.
+- The `coda init` command now installs `@codahq/packs-sdk` if it was not previously installed.
 
 ## [0.12.1] - 2022-06-06
 
