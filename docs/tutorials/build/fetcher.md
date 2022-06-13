@@ -28,7 +28,7 @@ Before starting this tutorial, make sure you have completed:
 
 ## :material-api: Select the API
 
-When building a Pack around data from an external API, it's usually best to first select the API and examine it's capabilities and requirements, as those may have a large influence on the design of your formula.
+When building a Pack around data from an external API, it's usually best to first select the API and examine its capabilities and requirements, as those may have a large influence on the design of your formula.
 
 For this Pack we'll be using the API provided by [exchangerate.host][exchangerate_home], which is free to use and doesn't require any keys or credentials. As shown in their documentation, you can get the latest exchange rates using the following URL:
 
@@ -36,7 +36,7 @@ For this Pack we'll be using the API provided by [exchangerate.host][exchangerat
 https://api.exchangerate.host/latest?base=USD
 ```
 
-By default this returns the exchange rate for a sing Euro, but we can change the starting currency and amount using URL query parameters:
+By default this returns the exchange rate for a single Euro, but we can change the starting currency and amount using URL query parameters:
 
 ```
 https://api.exchangerate.host/latest?base=CAD&amount=100
@@ -156,7 +156,7 @@ Now that we've got our API selected and formula designed we're ready to dive int
     <section class="tutorial-row" markdown>
     <div markdown>
 
-    To make the request to the API you need to use the `fetcher` object, which lives within the formula's `context`. It's `fetch` method takes a set of key-value pairs that configure the request.
+    To make the request to the API you need to use the `fetcher` object, which lives within the formula's `context`. Its `fetch` method takes a set of key-value pairs that configure the request.
 
     Set the HTTP method to `GET` and the URL to the one we previously constructed.
 
