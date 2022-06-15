@@ -1550,6 +1550,9 @@ export function makeSyncTableLegacy<
   if (!schema.identity?.name) {
     throw new Error('Legacy sync tables must specify identity.name');
   }
+  if (schema.__packId) {
+    throw new Error('Do not use the __packId field, it is only for internal Coda use.');
+  }
   return makeSyncTable({
     name,
     identityName: schema.identity.name,

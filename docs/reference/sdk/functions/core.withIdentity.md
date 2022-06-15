@@ -24,4 +24,4 @@ You could add the identity directly, but that would make the schema less re-usab
 
 #### Defined in
 
-[schema.ts:1273](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1273)
+[schema.ts:1275](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1275)

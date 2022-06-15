@@ -11,4 +11,4 @@ The union of all of the schema types supported for return values and object prop
 
 #### Defined in
 
-[schema.ts:966](https://github.com/coda/packs-sdk/blob/main/schema.ts#L966)
+[schema.ts:968](https://github.com/coda/packs-sdk/blob/main/schema.ts#L968)

@@ -11,4 +11,4 @@ Union of attribution node types for rendering attribution for a pack value. See 
 
 #### Defined in
 
-[schema.ts:947](https://github.com/coda/packs-sdk/blob/main/schema.ts#L947)
+[schema.ts:949](https://github.com/coda/packs-sdk/blob/main/schema.ts#L949)

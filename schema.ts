@@ -839,11 +839,13 @@ export type ObjectSchemaDefinitionType<
 > = ObjectSchemaType<T>;
 
 // This is basically the same as an ObjectSchemaDefinition but includes an Identity that may be injected
-// at upload time (for static schemas) or at runtime (for dynamic schemas). Pack makers should only need to
-// worry about identity when things outside of a sync table should interact with it, like references or
-// action return values.
+// at upload time (for static schemas) or at runtime (for dynamic schemas). This is the type that is
+// used on the `coda` side for implementations, but should not need to be used by pack makers.
 /** @hidden */
 export interface ObjectSchema<K extends string, L extends string> extends ObjectSchemaDefinition<K, L> {
+  /**
+   * This overrides the `identity` field of ObjectSchemaDefinition with a type that also includes packId.
+   */
   identity?: Identity;
 
   /**
