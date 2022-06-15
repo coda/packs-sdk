@@ -832,6 +832,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     attribution: attributionSchema,
     properties: z.record(objectPropertyUnionSchema),
     includeUnknownProperties: z.boolean().optional(),
+    __packId: z.number().optional(),
   })
     .superRefine((data, context) => {
       if (!isValidIdentityName(data.identity?.packId, data.identity?.name as string)) {

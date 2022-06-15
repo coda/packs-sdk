@@ -684,6 +684,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     attribution: attributionSchema,
     properties: z.record(objectPropertyUnionSchema),
     includeUnknownProperties: z.boolean().optional(),
+    __packId: z.number().optional(),
 })
     .superRefine((data, context) => {
     var _a, _b;

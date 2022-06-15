@@ -734,6 +734,10 @@ export declare type ObjectSchemaDefinitionType<K extends string, L extends strin
 /** @hidden */
 export interface ObjectSchema<K extends string, L extends string> extends ObjectSchemaDefinition<K, L> {
     identity?: Identity;
+    /**
+     * Pack makers should never need to interact with this, it's just present for Coda's internal plumbing.
+     */
+    __packId?: number;
 }
 /**
  * The type of content in this attribution node.
