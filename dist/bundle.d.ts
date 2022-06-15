@@ -720,7 +720,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 *
 	 * For example, an object can represent a person (user) in a Coda doc, with properties for the
 	 * email address of the person and their name. Using `ValueHintType.Person` tells Coda to
-	 * render such a value as an @-reference to that person, rather than a basic object schip.
+	 * render such a value as an @-reference to that person, rather than a basic object chip.
 	 */
 	codaType?: ObjectHintTypes;
 	/** @deprecated Use {@link featuredProperties} */
