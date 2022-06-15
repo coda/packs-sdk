@@ -1,4 +1,16 @@
 "use strict";
+/**
+ * The core components of the Pack SDK. These functions and types are used to
+ * define your Pack, it's building blocks, and their logic.
+ *
+ * This module is imported using the following code:
+ *
+ * ```ts
+ * import * as coda from "@codahq/packs-sdk";
+ * ```
+ *
+ * @module core
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ValidFetchMethods = exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = exports.makeObjectSchema = exports.makeAttributionNode = exports.generateSchema = exports.ValueType = exports.ValueHintType = exports.ScaleIconSet = exports.LinkDisplayType = exports.EmailDisplayType = exports.DurationUnit = exports.CurrencyFormat = exports.AttributionNodeType = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.SvgConstants = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeParameter = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makeMetadataFormula = exports.UserVisibleError = exports.Type = exports.StatusCodeError = exports.PrecannedDateRange = exports.ParameterType = exports.NetworkConnection = exports.ConnectionRequirement = exports.PackDefinitionBuilder = exports.newPack = exports.PostSetupType = exports.AuthenticationType = void 0;
 var types_1 = require("./types");

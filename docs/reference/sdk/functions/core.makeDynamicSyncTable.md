@@ -43,12 +43,12 @@ coda.makeDynamicSyncTable({
 | `__namedParameters.defaultAddDynamicColumns?` | `boolean` |
 | `__namedParameters.description?` | `string` |
 | `__namedParameters.entityName?` | `string` |
-| `__namedParameters.formula` | [`SyncFormulaDef`](../interfaces/SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `any`\> |
-| `__namedParameters.getDisplayUrl` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
-| `__namedParameters.getName` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
-| `__namedParameters.getSchema` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
+| `__namedParameters.formula` | [`SyncFormulaDef`](../interfaces/core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `any`\> |
+| `__namedParameters.getDisplayUrl` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
+| `__namedParameters.getName` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
+| `__namedParameters.getSchema` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
 | `__namedParameters.identityName` | `string` |
-| `__namedParameters.listDynamicUrls?` | [`MetadataFormulaDef`](../types/MetadataFormulaDef.md) |
+| `__namedParameters.listDynamicUrls?` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
 | `__namedParameters.name` | `string` |
 | `__namedParameters.placeholderSchema?` | `SchemaT` |
 

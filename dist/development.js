@@ -1,7 +1,16 @@
 "use strict";
-// Exports for development-related code.
-//
-// These are kept separate from index.ts to avoid these utilities winding up in pack bundles.
+/**
+ * Utilities that aid in writing unit tests and integration tests for Packs.
+ * They are only available when developing locally using the CLI.
+ *
+ * This module is imported using the following code:
+ *
+ * ```ts
+ * import * as testing from "@codahq/packs-sdk/dist/development";
+ * ```
+ *
+ * @module testing
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.newMockSyncExecutionContext = exports.newMockExecutionContext = exports.newJsonFetchResponse = exports.executeFormulaOrSyncWithVM = exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeMetadataFormula = exports.executeFormulaFromPackDef = void 0;
 var execution_1 = require("./testing/execution");
