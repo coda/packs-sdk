@@ -1,6 +1,8 @@
 import type {$Values} from './type_utils';
 import {assertCondition} from './helpers/ensure';
+import {deepCopy} from './helpers/object_utils';
 import {ensureExists} from './helpers/ensure';
+import {ensureNonEmptyString} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
 import {objectSchemaHelper} from './helpers/migration';
 import pascalcase from 'pascalcase';
@@ -1264,7 +1266,7 @@ export function makeReferenceSchemaFromObjectSchema(
  */
 export function withIdentity(schema: GenericObjectSchema, identityName: string): GenericObjectSchema {
   return makeObjectSchema({
-    ...schema,
-    identity: {name: ensureExists(identityName)},
+    ...deepCopy(schema),
+    identity: {name: ensureNonEmptyString(identityName)},
   });
 }
