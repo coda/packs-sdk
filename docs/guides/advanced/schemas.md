@@ -449,11 +449,11 @@ In your sync formula you only need to populate the fields of the reference objec
 [samples]: ../../samples/topic/schema.md
 [data_types]: ../basics/data-types.md
 [sync_tables]: ../blocks/sync-tables/index.md
-[makeSchema]: ../../reference/sdk/functions/makeSchema.md
-[makeObjectSchema]: ../../reference/sdk/functions/makeObjectSchema.md
+[makeSchema]: ../../reference/sdk/functions/core.makeSchema.md
+[makeObjectSchema]: ../../reference/sdk/functions/core.makeObjectSchema.md
 [sync_tables_identity]: ../blocks/sync-tables/index.md#identity
 [todoist]: ../../samples/full/todoist.md
-[makeReferenceSchemaFromObjectSchema]: ../../reference/sdk/functions/makeReferenceSchemaFromObjectSchema.md
+[makeReferenceSchemaFromObjectSchema]: ../../reference/sdk/functions/core.makeReferenceSchemaFromObjectSchema.md
 [sync_tables_references]: ../blocks/sync-tables/index.md#references
 [data_types_objects]: ../basics/data-types.md#objects
 [mdn_spread_object]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#spread_in_object_literals

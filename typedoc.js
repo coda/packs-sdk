@@ -1,13 +1,13 @@
 // Typedoc settings.
 // See: https://typedoc.org/guides/options/
 module.exports = {
-  name: "Pack SDK Reference",
+  name: "Modules",
   excludeExternals: true,
   excludePrivate: true,
   excludeProtected: true,
   plugin: 'typedoc-plugin-markdown',
   // Don't include the repo's README in the generated docs.
-  readme: 'none',
+  readme: 'documentation/reference/README.md',
 
   // Markdown-specific options.
   hideBreadcrumbs: true,

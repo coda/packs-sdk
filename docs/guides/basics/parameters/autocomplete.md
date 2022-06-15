@@ -149,5 +149,5 @@ pack.addFormula({
 
 [samples]: ../../../samples/topic/autocomplete.md
 [destructuring_assignment]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
-[SimpleAutocompleteOption]: ../../../reference/sdk/interfaces/SimpleAutocompleteOption.md
-[autocompleteSearchObjects]: ../../../reference/sdk/functions/autocompleteSearchObjects.md
+[SimpleAutocompleteOption]: ../../../reference/sdk/interfaces/core.SimpleAutocompleteOption.md
+[autocompleteSearchObjects]: ../../../reference/sdk/functions/core.autocompleteSearchObjects.md

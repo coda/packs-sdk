@@ -107,5 +107,5 @@ While there is no solution for the general case, there is for the common case wh
 [data_type_object]: ../basics/data-types.md#objects
 [schemas]: schemas.md
 [getSchema]: ../blocks/sync-tables/dynamic.md#get-schema
-[includeUnknownProperties]: ../../reference/sdk/interfaces/ObjectSchemaDefinition.md#includeunknownproperties
+[includeUnknownProperties]: ../../reference/sdk/interfaces/core.ObjectSchemaDefinition.md#includeunknownproperties
 [samples_action_todoist]: ../../samples/topic/action.md#update-row-in-sync-table

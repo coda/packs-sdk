@@ -167,11 +167,11 @@ examples: [
 [parameters]: ../basics/parameters/index.md
 [actions]: actions.md
 [data-types]: ../basics/data-types.md
-[cacheTtlSecs]: ../../reference/sdk/interfaces/PackFormulaDef.md#cachettlsecs
+[cacheTtlSecs]: ../../reference/sdk/interfaces/core.PackFormulaDef.md#cachettlsecs
 [fetcher_cache]: ../advanced/fetcher.md#caching
 [fetcher_rate_limits]: ../advanced/fetcher.md#ratelimits
 [authentication]: ../advanced/authentication.md
-[system_auth]: ../../reference/sdk/classes/PackDefinitionBuilder.md#setsystemauthentication
-[user_auth]: ../../reference/sdk/classes/PackDefinitionBuilder.md#setuserauthentication
-[connectionRequirement]: ../../reference/sdk/interfaces/PackFormulaDef.md#connectionrequirement
+[system_auth]: ../../reference/sdk/classes/core.PackDefinitionBuilder.md#setsystemauthentication
+[user_auth]: ../../reference/sdk/classes/core.PackDefinitionBuilder.md#setuserauthentication
+[connectionRequirement]: ../../reference/sdk/interfaces/core.PackFormulaDef.md#connectionrequirement
 [sync_formula]: sync-tables/index.md#formula
