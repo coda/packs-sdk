@@ -653,7 +653,10 @@ export interface IdentityDefinition {
     /** @deprecated See {@link ObjectSchemaDefinition.attribution} */
     attribution?: AttributionNode[];
 }
-/** The runtime version of IdentityDefinition with a pack ID injected. */
+/**
+ * The runtime version of IdentityDefinition with the current pack ID injected if a different
+ * one isn't set by the maker.
+ */
 export interface Identity extends IdentityDefinition {
     packId: number;
 }
@@ -929,7 +932,6 @@ export declare function generateSchema(obj: InferrableTypes): Schema;
  * ```
  */
 export declare function makeSchema<T extends Schema>(schema: T): T;
-export declare const PlaceholderIdentityPackId = -1;
 /**
  * A wrapper for creating a schema definition for an object value.
  *

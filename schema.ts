@@ -753,7 +753,10 @@ export interface IdentityDefinition {
   attribution?: AttributionNode[];
 }
 
-/** The runtime version of IdentityDefinition with a pack ID injected. */
+/**
+ * The runtime version of IdentityDefinition with the current pack ID injected if a different
+ * one isn't set by the maker.
+ */
 export interface Identity extends IdentityDefinition {
   packId: number;
 }
@@ -1108,8 +1111,6 @@ export function makeSchema<T extends Schema>(schema: T): T {
   return schema;
 }
 
-export const PlaceholderIdentityPackId = -1;
-
 /**
  * A wrapper for creating a schema definition for an object value.
  *
@@ -1142,10 +1143,6 @@ export function makeObjectSchema<
 } {
   const schema: ObjectSchemaDefinition<K, L> = {...schemaDef, type: ValueType.Object};
   validateObjectSchema(schema);
-  // TODO(jonathan): Enable after existing packs go through the v2 upload flow.
-  // if (schema.identity) {
-  //   schema.identity = {...schema.identity, packId: PlaceholderIdentityPackId};
-  // }
   return schema as any;
 }
 

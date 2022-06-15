@@ -5,7 +5,8 @@ title: "Identity"
 
 [core](../modules/core.md).Identity
 
-The runtime version of IdentityDefinition with a pack ID injected.
+The runtime version of IdentityDefinition with the current pack ID injected if a different
+one isn't set by the maker.
 
 ## Hierarchy
 
@@ -82,4 +83,4 @@ The ID of another pack, if you are trying to reference a value from different pa
 
 #### Defined in
 
-[schema.ts:758](https://github.com/coda/packs-sdk/blob/main/schema.ts#L758)
+[schema.ts:761](https://github.com/coda/packs-sdk/blob/main/schema.ts#L761)
