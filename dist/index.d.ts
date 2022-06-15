@@ -161,6 +161,7 @@ export { makeAttributionNode } from './schema';
 export { makeObjectSchema } from './schema';
 export { makeReferenceSchemaFromObjectSchema } from './schema';
 export { makeSchema } from './schema';
+export { withIdentity } from './schema';
 export { ValidFetchMethods } from './api_types';
 export type { ArrayFormulaDef } from './api';
 export type { BaseFormula } from './api';

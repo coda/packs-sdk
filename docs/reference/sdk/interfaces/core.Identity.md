@@ -27,7 +27,7 @@ The runtime version of IdentityDefinition with a pack ID injected.
 
 #### Defined in
 
-[schema.ts:751](https://github.com/coda/packs-sdk/blob/main/schema.ts#L751)
+[schema.ts:753](https://github.com/coda/packs-sdk/blob/main/schema.ts#L753)
 
 ___
 
@@ -49,7 +49,7 @@ you wish to reference, again to distinguish which table instance you are trying 
 
 #### Defined in
 
-[schema.ts:747](https://github.com/coda/packs-sdk/blob/main/schema.ts#L747)
+[schema.ts:749](https://github.com/coda/packs-sdk/blob/main/schema.ts#L749)
 
 ___
 
@@ -66,7 +66,7 @@ For example, if you are defining a schema that represents a user object, "User" 
 
 #### Defined in
 
-[schema.ts:735](https://github.com/coda/packs-sdk/blob/main/schema.ts#L735)
+[schema.ts:737](https://github.com/coda/packs-sdk/blob/main/schema.ts#L737)
 
 ___
 
@@ -82,4 +82,4 @@ The ID of another pack, if you are trying to reference a value from different pa
 
 #### Defined in
 
-[schema.ts:756](https://github.com/coda/packs-sdk/blob/main/schema.ts#L756)
+[schema.ts:758](https://github.com/coda/packs-sdk/blob/main/schema.ts#L758)

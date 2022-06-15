@@ -17,7 +17,7 @@ Display email address only.
 
 #### Defined in
 
-[schema.ts:427](https://github.com/coda/packs-sdk/blob/main/schema.ts#L427)
+[schema.ts:429](https://github.com/coda/packs-sdk/blob/main/schema.ts#L429)
 
 ___
 
@@ -29,7 +29,7 @@ Display both icon and email (default).
 
 #### Defined in
 
-[schema.ts:417](https://github.com/coda/packs-sdk/blob/main/schema.ts#L417)
+[schema.ts:419](https://github.com/coda/packs-sdk/blob/main/schema.ts#L419)
 
 ___
 
@@ -41,4 +41,4 @@ Display icon only.
 
 #### Defined in
 
-[schema.ts:422](https://github.com/coda/packs-sdk/blob/main/schema.ts#L422)
+[schema.ts:424](https://github.com/coda/packs-sdk/blob/main/schema.ts#L424)

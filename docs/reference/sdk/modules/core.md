@@ -194,4 +194,5 @@ import * as coda from "@codahq/packs-sdk";
 - [makeTranslateObjectFormula](../functions/core.makeTranslateObjectFormula.md)
 - [newPack](../functions/core.newPack.md)
 - [simpleAutocomplete](../functions/core.simpleAutocomplete.md)
+- [withIdentity](../functions/core.withIdentity.md)
 - [withQueryParams](../functions/core.withQueryParams.md)

@@ -183,6 +183,7 @@ export {makeAttributionNode} from './schema';
 export {makeObjectSchema} from './schema';
 export {makeReferenceSchemaFromObjectSchema} from './schema';
 export {makeSchema} from './schema';
+export {withIdentity} from './schema';
 
 // Exports for intermediate entities we want included in the TypeDoc documentation
 // but otherwise wouldn't care about including as top-level exports of the SDK

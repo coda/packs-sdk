@@ -3,10 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.PlaceholderIdentityPackId = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.PlaceholderIdentityPackId = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
+const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
 const ensure_3 = require("./helpers/ensure");
+const ensure_4 = require("./helpers/ensure");
 const migration_1 = require("./helpers/migration");
 const pascalcase_1 = __importDefault(require("pascalcase"));
 // Defines a subset of the JSON Object schema for use in annotating API results.
@@ -407,7 +409,7 @@ function generateSchema(obj) {
     else if (typeof obj === 'number') {
         return { type: ValueType.Number };
     }
-    return (0, ensure_3.ensureUnreachable)(obj);
+    return (0, ensure_4.ensureUnreachable)(obj);
 }
 exports.generateSchema = generateSchema;
 /**
@@ -541,8 +543,8 @@ function normalizeSchema(schema) {
 exports.normalizeSchema = normalizeSchema;
 /**
  * Convenience for creating a reference object schema from an existing schema for the
- * object. Copies over the identity, id, and primary from the schema, and the subset of
- * properties indicated by the id and primary.
+ * object. Copies over the identity, idProperty, and displayProperty from the schema,
+ *  and the subset of properties indicated by the idProperty and displayProperty.
  * A reference schema can always be defined directly, but if you already have an object
  * schema it provides better code reuse to derive a reference schema instead.
  */
@@ -564,3 +566,15 @@ function makeReferenceSchemaFromObjectSchema(schema, identityName) {
     });
 }
 exports.makeReferenceSchemaFromObjectSchema = makeReferenceSchemaFromObjectSchema;
+/**
+ * Convenience for defining the result schema for an action. The identity enables Coda to
+ * update the corresponding sync table row, if it exists.
+ * You could add the identity directly, but that would make the schema less re-usable.
+ */
+function withIdentity(schema, identityName) {
+    return makeObjectSchema({
+        ...(0, object_utils_1.deepCopy)(schema),
+        identity: { name: (0, ensure_3.ensureNonEmptyString)(identityName) },
+    });
+}
+exports.withIdentity = withIdentity;
