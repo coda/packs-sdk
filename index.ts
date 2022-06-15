@@ -1,3 +1,16 @@
+/**
+ * The core components of the Pack SDK. These functions and types are used to
+ * define your Pack, it's building blocks, and their logic.
+ *
+ * This module is imported using the following code:
+ *
+ * ```ts
+ * import * as coda from "@codahq/packs-sdk";
+ * ```
+ *
+ * @module core
+ */
+
 // Pack related interfaces
 export type {Authentication} from './types';
 export {AuthenticationType} from './types';

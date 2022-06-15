@@ -78,4 +78,4 @@ If you are building a Pack using the CLI you may want to consider utilizing more
 [parameters_date]: ../basics/parameters/index.md#dates
 [data_types_date]: ../basics/data_types.md#dates
 [data_types_duration]: ../basics/data_types.md#durations
-[ExecutionContext_timezone]: ../../reference/sdk/interfaces/ExecutionContext.md#timezone
+[ExecutionContext_timezone]: ../../reference/sdk/interfaces/core.ExecutionContext.md#timezone

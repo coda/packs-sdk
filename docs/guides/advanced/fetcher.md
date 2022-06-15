@@ -396,25 +396,25 @@ dig +short egress.coda.io
 ```
 
 
-[Fetcher]: ../../reference/sdk/interfaces/Fetcher.md
+[Fetcher]: ../../reference/sdk/interfaces/core.Fetcher.md
 [samples]: ../../samples/topic/fetcher.md
-[addNetworkDomain]: ../../reference/sdk/classes/PackDefinitionBuilder.md#addnetworkdomain
+[addNetworkDomain]: ../../reference/sdk/classes/core.PackDefinitionBuilder.md#addnetworkdomain
 [support]: ../../support/index.md
 [support_network_domains]: ../../support/index.md#network-domains
-[ExecutionContext]: ../../reference/sdk/interfaces/ExecutionContext/
-[fetch]: ../../reference/sdk/interfaces/Fetcher.md#fetch
-[FetchRequest]: ../../reference/sdk/interfaces/FetchRequest.md
+[ExecutionContext]: ../../reference/sdk/interfaces/core.ExecutionContext/
+[fetch]: ../../reference/sdk/interfaces/core.Fetcher.md#fetch
+[FetchRequest]: ../../reference/sdk/interfaces/core.FetchRequest.md
 [async_await]: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await
 [promises]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises
-[fetchresponse]: ../../reference/sdk/interfaces/FetchResponse.md
+[fetchresponse]: ../../reference/sdk/interfaces/core.FetchResponse.md
 [xml2js]: https://www.npmjs.com/package/xml2js
-[status_code_error]: ../../reference/sdk/classes/StatusCodeError.md
+[status_code_error]: ../../reference/sdk/classes/core.StatusCodeError.md
 [buffer]: https://nodejs.org/en/knowledge/advanced/buffers/how-to-use-buffers/
-[withQueryParams]: ../../reference/sdk/functions/withQueryParams
+[withQueryParams]: ../../reference/sdk/functions/core.withQueryParams.md
 [stringify]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
-[cacheTtlSecs]: ../../reference/sdk/interfaces/FetchRequest.md#cacheTtlSecs
+[cacheTtlSecs]: ../../reference/sdk/interfaces/core.FetchRequest.md#cacheTtlSecs
 [formula_cache]: ../blocks/formulas.md#caching
 [authentication]: ../advanced/authentication.md
 [spec_headers]: https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
-[baseauthentication_networkdomain]: ../../reference/sdk/interfaces/BaseAuthentication.md#networkdomain
+[baseauthentication_networkdomain]: ../../reference/sdk/interfaces/core.BaseAuthentication.md#networkdomain
 [auth_user]: ../advanced/authentication.md#user
