@@ -767,7 +767,14 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 export declare type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */
 export interface ObjectSchema<K extends string, L extends string> extends ObjectSchemaDefinition<K, L> {
+	/**
+	 * This overrides the `identity` field of ObjectSchemaDefinition with a type that also includes packId.
+	 */
 	identity?: Identity;
+	/**
+	 * Pack makers should never need to interact with this, it's just present for Coda's internal plumbing.
+	 */
+	__packId?: number;
 }
 /**
  * The type of content in this attribution node.

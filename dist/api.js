@@ -683,6 +683,9 @@ function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynam
     if (!((_a = schema.identity) === null || _a === void 0 ? void 0 : _a.name)) {
         throw new Error('Legacy sync tables must specify identity.name');
     }
+    if (schema.__packId) {
+        throw new Error('Do not use the __packId field, it is only for internal Coda use.');
+    }
     return makeSyncTable({
         name,
         identityName: schema.identity.name,

@@ -843,7 +843,15 @@ export type ObjectSchemaDefinitionType<
 // used on the `coda` side for implementations, but should not need to be used by pack makers.
 /** @hidden */
 export interface ObjectSchema<K extends string, L extends string> extends ObjectSchemaDefinition<K, L> {
+  /**
+   * This overrides the `identity` field of ObjectSchemaDefinition with a type that also includes packId.
+   */
   identity?: Identity;
+
+  /**
+   * Pack makers should never need to interact with this, it's just present for Coda's internal plumbing.
+   */
+  __packId?: number;
 }
 
 /**
