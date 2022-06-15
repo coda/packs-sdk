@@ -37,7 +37,7 @@ BaseSchema.description
 
 #### Defined in
 
-[schema.ts:207](https://github.com/coda/packs-sdk/blob/main/schema.ts#L207)
+[schema.ts:209](https://github.com/coda/packs-sdk/blob/main/schema.ts#L209)
 
 ___
 
@@ -49,7 +49,7 @@ A schema for the items of this array.
 
 #### Defined in
 
-[schema.ts:657](https://github.com/coda/packs-sdk/blob/main/schema.ts#L657)
+[schema.ts:659](https://github.com/coda/packs-sdk/blob/main/schema.ts#L659)
 
 ___
 
@@ -61,4 +61,4 @@ Identifies this schema as an array.
 
 #### Defined in
 
-[schema.ts:655](https://github.com/coda/packs-sdk/blob/main/schema.ts#L655)
+[schema.ts:657](https://github.com/coda/packs-sdk/blob/main/schema.ts#L657)

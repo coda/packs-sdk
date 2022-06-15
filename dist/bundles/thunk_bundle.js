@@ -4281,6 +4281,9 @@ module.exports = (() => {
     return message ? UserVisibleError : Error;
   }
 
+  // helpers/object_utils.ts
+  init_buffer_shim();
+
   // helpers/migration.ts
   init_buffer_shim();
   function setEndpointHelper(step) {
@@ -4298,9 +4301,6 @@ module.exports = (() => {
 
   // schema.ts
   var import_pascalcase = __toESM(require_pascalcase());
-
-  // helpers/object_utils.ts
-  init_buffer_shim();
 
   // handler_templates.ts
   init_buffer_shim();

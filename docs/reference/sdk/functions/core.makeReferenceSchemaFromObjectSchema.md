@@ -8,8 +8,8 @@ title: "makeReferenceSchemaFromObjectSchema"
 ▸ **makeReferenceSchemaFromObjectSchema**(`schema`, `identityName?`): `GenericObjectSchema`
 
 Convenience for creating a reference object schema from an existing schema for the
-object. Copies over the identity, id, and primary from the schema, and the subset of
-properties indicated by the id and primary.
+object. Copies over the identity, idProperty, and displayProperty from the schema,
+ and the subset of properties indicated by the idProperty and displayProperty.
 A reference schema can always be defined directly, but if you already have an object
 schema it provides better code reuse to derive a reference schema instead.
 
@@ -26,4 +26,4 @@ schema it provides better code reuse to derive a reference schema instead.
 
 #### Defined in
 
-[schema.ts:1236](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1236)
+[schema.ts:1238](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1238)

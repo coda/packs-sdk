@@ -982,12 +982,18 @@ export declare function makeObjectSchema<K extends string, L extends string, T e
 };
 /**
  * Convenience for creating a reference object schema from an existing schema for the
- * object. Copies over the identity, id, and primary from the schema, and the subset of
- * properties indicated by the id and primary.
+ * object. Copies over the identity, idProperty, and displayProperty from the schema,
+ *  and the subset of properties indicated by the idProperty and displayProperty.
  * A reference schema can always be defined directly, but if you already have an object
  * schema it provides better code reuse to derive a reference schema instead.
  */
 export declare function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema, identityName?: string): GenericObjectSchema;
+/**
+ * Convenience for defining the result schema for an action. The identity enables Coda to
+ * update the corresponding sync table row, if it exists.
+ * You could add the identity directly, but that would make the schema less re-usable.
+ */
+export declare function withIdentity(schema: GenericObjectSchema, identityName: string): GenericObjectSchema;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
