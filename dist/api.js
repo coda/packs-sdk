@@ -621,17 +621,17 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
     // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
     const schemaDef = (0, object_utils_1.deepCopy)(inputSchema);
     // Hydrate the schema's identity.
-    // We don't fail on a missing identityName because the legacy functions don't set it.
-    if (identityName) {
-        if (schemaDef.identity) {
-            if (schemaDef.identity.name && schemaDef.identity.name !== identityName) {
-                throw new Error(`Identity name mismatch for sync table ${name}. Either remove the schema's identity.name (${schemaDef.identity.name}) or ensure it matches the table's identityName (${identityName}).`);
-            }
-            schemaDef.identity = { ...schemaDef.identity, name: identityName };
+    if (!identityName) {
+        throw new Error(`Sync table schemas must set an identityName`);
+    }
+    if (schemaDef.identity) {
+        if (schemaDef.identity.name && schemaDef.identity.name !== identityName) {
+            throw new Error(`Identity name mismatch for sync table ${name}. Either remove the schema's identity.name (${schemaDef.identity.name}) or ensure it matches the table's identityName (${identityName}).`);
         }
-        else {
-            schemaDef.identity = { name: identityName };
-        }
+        schemaDef.identity = { ...schemaDef.identity, name: identityName };
+    }
+    else {
+        schemaDef.identity = { name: identityName };
     }
     const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
     const schema = (0, schema_2.makeObjectSchema)(schemaDef);
@@ -639,8 +639,11 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
         ? undefined
         : (0, schema_3.normalizeSchema)({ type: schema_1.ValueType.Array, items: schema });
     const { identity, id, primary } = (0, migration_1.objectSchemaHelper)(schema);
-    if (!(primary && id && identity)) {
-        throw new Error(`Sync table schemas should have defined properties for identity, idProperty and displayProperty`);
+    if (!(primary && id)) {
+        throw new Error(`Sync table schemas should have defined properties for idProperty and displayProperty`);
+    }
+    if (!identity) {
+        throw new Error(`Unknown error creating sync table identity`);
     }
     if (name.includes(' ')) {
         throw new Error('Sync table name should not include spaces');
@@ -710,15 +713,13 @@ exports.makeSyncTableLegacy = makeSyncTableLegacy;
  * ```
  */
 function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, }) {
-    // TODO: After our migration period, this will be replaced by a required `identityName` param
-    const finalIdentityName = identityName || name;
     const placeholderSchema = placeholderSchemaInput ||
         // default placeholder only shows a column of id, which will be replaced later by the dynamic schema.
         (0, schema_2.makeObjectSchema)({
             type: schema_1.ValueType.Object,
             idProperty: 'id',
             displayProperty: 'id',
-            identity: { name: finalIdentityName },
+            identity: { name: identityName },
             properties: {
                 id: { type: schema_1.ValueType.String },
             },
@@ -730,7 +731,7 @@ function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchem
     const table = makeSyncTable({
         name,
         description,
-        identityName: finalIdentityName,
+        identityName,
         schema: placeholderSchema,
         formula,
         connectionRequirement,

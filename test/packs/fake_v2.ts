@@ -120,6 +120,7 @@ pack.addSyncTable({
 
 pack.addDynamicSyncTable({
   name: 'FooDyns',
+  identityName: 'Foo',
   description: 'FooDynDesc',
   getName: async () => 'name',
   getDisplayUrl: async () => 'display url',
