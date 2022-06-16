@@ -58,6 +58,8 @@ class AuthenticatingFetcher {
                 body,
                 resolveWithFullResponse: true,
                 form,
+                // Omitting maxResponseSizeBytes since some packs are permitted larger values
+                // in production.
             });
         }
         catch (requestFailure) {
