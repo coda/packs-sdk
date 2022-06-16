@@ -92,7 +92,7 @@ async function nodeFetcher(options) {
         if (json && !headers['content-type']) {
             headers['content-type'] = 'application/json';
         }
-        if (typeof body !== 'string') {
+        if (typeof body !== 'string' && !Buffer.isBuffer(body)) {
             init.body = JSON.stringify(body);
         }
         else {

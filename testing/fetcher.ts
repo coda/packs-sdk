@@ -98,6 +98,8 @@ export class AuthenticatingFetcher implements Fetcher {
         body,
         resolveWithFullResponse: true,
         form,
+        // Omitting maxResponseSizeBytes since some packs are permitted larger values
+        // in production.
       });
     } catch (requestFailure: any) {
       // Only attempt 1 retry

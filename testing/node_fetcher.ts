@@ -40,6 +40,8 @@ export interface BaseFetcherOptions {
   encoding?: string | null;
 
   ca?: string;
+
+  maxResponseSizeBytes?: number;
 }
 
 export type FetcherOptionsWithFullResponse = BaseFetcherOptions & {
@@ -97,6 +99,7 @@ export async function nodeFetcher(options: BaseFetcherOptions): Promise<FetcherF
     simple = true,
     encoding,
     ca,
+    maxResponseSizeBytes,
     legacyBlankAcceptHeader,
   } = options;
 
@@ -104,6 +107,7 @@ export async function nodeFetcher(options: BaseFetcherOptions): Promise<FetcherF
     method,
     timeout,
     compress: gzip,
+    size: maxResponseSizeBytes || 0,
   };
 
   if (!followRedirect) {
@@ -147,7 +151,7 @@ export async function nodeFetcher(options: BaseFetcherOptions): Promise<FetcherF
     if (json && !headers['content-type']) {
       headers['content-type'] = 'application/json';
     }
-    if (typeof body !== 'string') {
+    if (typeof body !== 'string' && !Buffer.isBuffer(body)) {
       init.body = JSON.stringify(body);
     } else {
       init.body = body;
