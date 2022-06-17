@@ -24,13 +24,13 @@ For a deeper discussion about the specific challenges you are dealing with, we r
 
 ## Problems or bugs
 
-If you are experiencing a problem with your Pack or have identified a bug you can reach out to the Coda Partners team. Send an email to [partners@coda.io][partners_email], and include the following information:
+If you are experiencing a problem with your Pack or have identified a bug you can reach out to the Coda Support team. Send an email to [support+packstudio@coda.io][support_email], and include the following information:
 
 - The URL of your Pack in the Pack Studio.
 - The URL of a doc where the error occurred (make sure to [share it with support][hc_share]).
 - Any relevant error messages or snippets of code.
 
-[Send email][partners_email]{: .md-button .md-button--primary}
+[Send email][support_email]{: .md-button .md-button--primary}
 
 
 ## Request multiple network domains {: #network-domains}
@@ -43,7 +43,7 @@ By default all Packs are limited to only a single [network domain][fetcher_netwo
 [community_packs]: https://community.coda.io/c/15
 [community_search]: https://community.coda.io/search?q=%23making-packs
 [community_post]: https://community.coda.io/new-topic?category=making-packs
-[partners_email]: mailto:partners@coda.io
+[support_email]: mailto:support+packstudio@coda.io
 [hc_share]: https://help.coda.io/en/articles/1137949-sharing-your-doc#h_5061fdf96a
 [fetcher_network_domains]: ../guides/advanced/fetcher.md#network-domains
 [network_domains_form]: https://coda.io/form/Pack-Network-Domains-Request_ddvuAhFq3IZ
