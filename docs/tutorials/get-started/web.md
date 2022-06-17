@@ -20,6 +20,9 @@ The Pack Studio is built right in to the Coda application. To get there:
 1. Click on **Packs** in the navigation menu on the left. If you are a member of multiple workspaces you will need to select a workspace first.
 1. Click the **Create a Pack** button in the upper right.
 
+!!! tip
+    Type **[pack.new](https://pack.new)** into your browser to quickly create a new Pack.
+
 You are now in the Pack Studio, ready to start building!
 
 [![How to navigate to the Pack Studio][web_ide_navigate]{: .screenshot}][web_ide_navigate]
