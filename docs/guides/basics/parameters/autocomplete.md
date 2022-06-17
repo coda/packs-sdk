@@ -71,7 +71,7 @@ coda.makeParameter({
     let response = await context.fetcher.fetch({ method: "GET", url: url });
     let results = response.body.games;
     // Generate an array of autocomplete objects, using the game's name as the
-    // label and it's ID for the value.
+    // label and its ID for the value.
     return coda.autocompleteSearchObjects(search, results, "name", "id");
   },
 }),
