@@ -69,6 +69,7 @@ import {ValueType} from '../schema';
 import type {VariousAuthentication} from '../types';
 import type {VariousSupportedAuthenticationTypes} from '../types';
 import type {WebBasicAuthentication} from '../types';
+import {ZodParsedType} from 'zod';
 import {assertCondition} from '../helpers/ensure';
 import {isArray} from '../schema';
 import {isDefined} from '../helpers/object_utils';
@@ -933,7 +934,8 @@ const baseSyncTableSchema = {
   getter: syncFormulaSchema,
   entityName: z.string().optional(),
   defaultAddDynamicColumns: z.boolean().optional(),
-  identityName: z.string(),
+  // TODO(patrick): Make identityName non-optional after SDK v1.0.0 is required
+  identityName: z.string().min(1).optional(),
 };
 
 type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;
@@ -1367,6 +1369,24 @@ const packMetadataSchemaBySdkVersion: SchemaExtension[] = [
 
           const schemaPathPrefix = ['syncTables', i, 'schema'];
           validateSchemaDeprecatedFields(syncTable.schema, schemaPathPrefix, context);
+
+          // A blank string will fail the existing `min(1)` requirement in the zod schema, so
+          // we only need to additionally make sure there is a value present.
+          if (typeof syncTable.identityName !== 'string') {
+            let receivedType: ZodParsedType = ZodParsedType.unknown;
+            if (syncTable.identityName === undefined) {
+              receivedType = ZodParsedType.undefined;
+            } else if (syncTable.identityName === null) {
+              receivedType = ZodParsedType.null;
+            }
+            context.addIssue({
+              code: z.ZodIssueCode.invalid_type,
+              path: ['syncTables', i, 'identityName'],
+              message: 'An identityName is required on all sync tables',
+              expected: ZodParsedType.string,
+              received: receivedType,
+            });
+          }
         });
 
         const {defaultAuthentication: auth} = data;
