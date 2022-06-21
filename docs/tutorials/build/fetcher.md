@@ -70,7 +70,7 @@ ToUSD(100, "CAD") ==> $79.65
 ```
 
 
-## :fontawesome-solid-laptop-code: Write the code.
+## :fontawesome-solid-laptop-code: Write the code
 
 Now that we've got our API selected and formula designed we're ready to dive into coding.
 
