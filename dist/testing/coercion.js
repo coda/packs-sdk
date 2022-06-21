@@ -36,20 +36,30 @@ function coerceParamValue(paramDef, paramValue) {
     if ((0, api_types_2.isArrayType)(paramDef.type)) {
         const valuesString = paramValue;
         const value = valuesString.length ? valuesString.split(',') : [];
-        return value.map(item => coerceParam(paramDef.type.items, item.trim()));
+        return value.map(item => coerceParam(paramDef.type.items, paramDef.name, item.trim()));
     }
-    return coerceParam(paramDef.type, paramValue);
+    return coerceParam(paramDef.type, paramDef.name, paramValue);
 }
-function coerceParam(type, value) {
+function coerceParam(type, name, value) {
     switch (type) {
         case api_types_1.Type.boolean:
-            return (value || '').toLowerCase() === 'true';
+            const maybeBoolean = (value || '').toLowerCase();
+            if (maybeBoolean !== 'true' && maybeBoolean !== 'false') {
+                throw new Error(`Expected parameter ${name} to be a boolean, but found ${value} (should be one of "true" or "false")`);
+            }
+            return maybeBoolean === 'true';
         case api_types_1.Type.date:
-            return new Date(value);
+            const maybeDate = new Date(value);
+            // getTime returns NaN if the date is not valid or a number if it is valid
+            if (!(maybeDate instanceof Date) || isNaN(maybeDate.getTime())) {
+                throw new Error(`Expected parameter ${name} to be a date/time value, but found ${value}`);
+            }
+            return maybeDate;
         case api_types_1.Type.number:
+            if (isNaN(Number(value))) {
+                throw new Error(`Expected parameter ${name} to be a number value, but found ${value}`);
+            }
             return Number(value);
-        case api_types_1.Type.object:
-            return JSON.parse(value);
         case api_types_1.Type.html:
         case api_types_1.Type.file:
         case api_types_1.Type.image:
