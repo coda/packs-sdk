@@ -814,7 +814,9 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject({
     version => version.split('.').filter(part => Number(part) > 2147483647).length === 0, 'Pack version number too large'),
     defaultAuthentication: z.union(zodUnionInput(Object.values(defaultAuthenticationValidators))).optional(),
     networkDomains: z
-        .array(z.string().refine(domain => !(domain.startsWith('http:') || domain.startsWith('https:')), {
+        .array(z
+        .string()
+        .refine(domain => !(domain.startsWith('http:') || domain.startsWith('https:') || domain.indexOf('/') >= 0), {
         message: 'Invalid network domain. Instead of "https://www.example.com", just specify "example.com".',
     }))
         .optional(),

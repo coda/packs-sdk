@@ -987,9 +987,11 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata
   defaultAuthentication: z.union(zodUnionInput(Object.values(defaultAuthenticationValidators))).optional(),
   networkDomains: z
     .array(
-      z.string().refine(domain => !(domain.startsWith('http:') || domain.startsWith('https:')), {
-        message: 'Invalid network domain. Instead of "https://www.example.com", just specify "example.com".',
-      }),
+      z
+        .string()
+        .refine(domain => !(domain.startsWith('http:') || domain.startsWith('https:') || domain.indexOf('/') >= 0), {
+          message: 'Invalid network domain. Instead of "https://www.example.com", just specify "example.com".',
+        }),
     )
     .optional(),
   formulaNamespace: z.string().optional().refine(validateNamespace, {

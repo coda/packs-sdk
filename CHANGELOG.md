@@ -2,6 +2,10 @@
 
 This changelog keeps track of all changes to the Packs SDK. We follow conventions from [keepachangelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+- Add validation that `networkDomain` does not include slashes since it's a domain, not a path.
+
 ## [1.0.0] - 2022-06-16
 
 - Fixed `temporaryBlobStorage.storeBlob` error from CLI built Packs.
