@@ -3103,6 +3103,11 @@ export interface PublicApiGetNextPackVersionRequest {
    * The metadata for the next version of the Pack.
    */
   proposedMetadata: string;
+
+  /**
+   * The SDK version this metadata should validate against.
+   */
+  sdkVersion: string;
 }
 
 /**
