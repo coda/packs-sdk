@@ -493,8 +493,9 @@ function checkRequiredFieldInObjectSchema(field, fieldName, codaType) {
     (0, ensure_2.ensureExists)(field, `Objects with codaType "${codaType}" require a "${fieldName}" property in the schema definition.`);
 }
 function checkSchemaPropertyIsRequired(field, schema) {
+    var _a;
     const { properties, codaType } = schema;
-    (0, ensure_1.assertCondition)(properties[field].required, `Field "${field}" must be marked as required in schema with codaType "${codaType}".`);
+    (0, ensure_1.assertCondition)((_a = properties[field]) === null || _a === void 0 ? void 0 : _a.required, `Field "${field}" must be marked as required in schema with codaType "${codaType}".`);
 }
 function normalizeSchemaKey(key) {
     // Colons cause problems in our formula handling.

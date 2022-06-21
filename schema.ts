@@ -1186,7 +1186,7 @@ function checkSchemaPropertyIsRequired<K extends string, L extends string, T ext
 ) {
   const {properties, codaType} = schema;
   assertCondition(
-    properties[field].required,
+    properties[field]?.required,
     `Field "${field}" must be marked as required in schema with codaType "${codaType}".`,
   );
 }
