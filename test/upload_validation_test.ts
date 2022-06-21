@@ -2388,6 +2388,19 @@ describe('Pack metadata Validation', () => {
       ]);
     });
 
+    it('using example.com/path gives friendly error message ', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['example.com/path'],
+      });
+      const err = await validateJsonAndAssertFails(metadata, '1.0.0');
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'Invalid network domain. Instead of "https://www.example.com", just specify "example.com".',
+          path: 'networkDomains[0]',
+        },
+      ]);
+    });
+
     it('system authentication without network domains gives error', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: undefined,
