@@ -104,7 +104,7 @@ export async function handleUpload({
   let packVersion = manifest.version;
   try {
     // Do local validation even if we don't have a pack version. This is faster and saves resources
-    // over having the server validate, the there is a downside: errors from the server will be
+    // over having the server validate, but there is a downside: errors from the server will be
     // in a different format and the code will be exercised less often so we're less likely to
     // notice if there are issues with how it's returned.
     logger.info('Validating Pack metadata...');
