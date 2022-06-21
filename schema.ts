@@ -1157,13 +1157,13 @@ function validateObjectSchema<K extends string, L extends string, T extends Obje
     checkRequiredFieldInObjectSchema(identity, 'identity', schema.codaType);
     checkRequiredFieldInObjectSchema(primary, 'primary', schema.codaType);
 
-    checkSchemaPropertyIsRequired(ensureExists(id), schema);
-    checkSchemaPropertyIsRequired(ensureExists(primary), schema);
+    checkSchemaPropertyIsRequired(ensureExists(id), schema, 'idProperty');
+    checkSchemaPropertyIsRequired(ensureExists(primary), schema, 'displayProperty');
   }
   if (schema.codaType === ValueHintType.Person) {
     const {id} = objectSchemaHelper(schema);
     checkRequiredFieldInObjectSchema(id, 'id', schema.codaType);
-    checkSchemaPropertyIsRequired(ensureExists(id), schema);
+    checkSchemaPropertyIsRequired(ensureExists(id), schema, 'idProperty');
   }
 
   for (const [_propertyKey, propertySchema] of Object.entries(schema.properties)) {
@@ -1183,10 +1183,12 @@ function checkRequiredFieldInObjectSchema(field: any, fieldName: string, codaTyp
 function checkSchemaPropertyIsRequired<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>>(
   field: string,
   schema: T,
+  referencedByPropertyName: keyof T & string,
 ) {
   const {properties, codaType} = schema;
+  assertCondition(properties[field], `${referencedByPropertyName} set to undefined field "${field}"`);
   assertCondition(
-    properties[field]?.required,
+    properties[field].required,
     `Field "${field}" must be marked as required in schema with codaType "${codaType}".`,
   );
 }
