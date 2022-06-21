@@ -36,6 +36,7 @@ export interface BaseFetcherOptions {
     simple?: boolean;
     encoding?: string | null;
     ca?: string;
+    maxResponseSizeBytes?: number;
 }
 export declare type FetcherOptionsWithFullResponse = BaseFetcherOptions & {
     resolveWithFullResponse: true;

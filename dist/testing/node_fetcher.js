@@ -51,11 +51,12 @@ function isStatusCodeError(err) {
 }
 exports.isStatusCodeError = isStatusCodeError;
 async function nodeFetcher(options) {
-    const { method = 'GET', uri, qs, followRedirect = true, gzip = true, json, headers: rawHeaders = {}, form, body, timeout, forever, resolveWithFullResponse, resolveWithRawBody, simple = true, encoding, ca, legacyBlankAcceptHeader, } = options;
+    const { method = 'GET', uri, qs, followRedirect = true, gzip = true, json, headers: rawHeaders = {}, form, body, timeout, forever, resolveWithFullResponse, resolveWithRawBody, simple = true, encoding, ca, maxResponseSizeBytes, legacyBlankAcceptHeader, } = options;
     const init = {
         method,
         timeout,
         compress: gzip,
+        size: maxResponseSizeBytes || 0,
     };
     if (!followRedirect) {
         init.follow = 0;
@@ -92,7 +93,7 @@ async function nodeFetcher(options) {
         if (json && !headers['content-type']) {
             headers['content-type'] = 'application/json';
         }
-        if (typeof body !== 'string') {
+        if (typeof body !== 'string' && !Buffer.isBuffer(body)) {
             init.body = JSON.stringify(body);
         }
         else {
