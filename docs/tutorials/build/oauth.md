@@ -75,7 +75,7 @@ Todoist describes their OAuth2 support [in their developer docs][todoist_oauth].
     <section class="tutorial-row" markdown>
     <div markdown>
 
-    After the user approves the access request, the Pack is given a temporary code that can be exchanged for an access token. To perform that exhcange the Pack makes a request to the API's token URL.
+    After the user approves the access request, the Pack is given a temporary code that can be exchanged for an access token. To perform that exchange the Pack makes a request to the API's token URL.
 
     For Todoist this URL is
 
