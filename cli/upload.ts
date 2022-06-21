@@ -103,14 +103,29 @@ export async function handleUpload({
   const metadata = compilePackMetadata(manifest);
   let packVersion = manifest.version;
   try {
+    // Do local validation even if we don't have a pack version. This is faster and saves resources
+    // over having the server validate, the there is a downside: errors from the server will be
+    // in a different format and the code will be exercised less often so we're less likely to
+    // notice if there are issues with how it's returned.
+    logger.info('Validating Pack metadata...');
+    const metadataWithFakeVersion = !packVersion ? {...metadata, version: '0.0.1'} : metadata;
+    await validateMetadata(metadataWithFakeVersion, {checkDeprecationWarnings: false});
+
     if (!packVersion) {
-      const nextPackVersionInfo = await client.getNextPackVersion(
-        packId,
-        {},
-        {proposedMetadata: JSON.stringify(metadata)},
-      );
-      packVersion = nextPackVersionInfo.nextVersion;
-      print(`Pack version not provided. Generated one for you: version is ${packVersion}`);
+      try {
+        const nextPackVersionInfo = await client.getNextPackVersion(
+          packId,
+          {},
+          {proposedMetadata: JSON.stringify(metadata), sdkVersion: codaPacksSDKVersion},
+        );
+        packVersion = nextPackVersionInfo.nextVersion;
+        print(`Pack version not provided. Generated one for you: version is ${packVersion}`);
+      } catch (err: any) {
+        if (isResponseError(err)) {
+          printAndExit(`Error while finalizing pack version: ${await formatResponseError(err)}`);
+        }
+        throw err;
+      }
     }
 
     metadata.version = packVersion;
@@ -134,9 +149,6 @@ export async function handleUpload({
     const uploadPayload = JSON.stringify(upload);
 
     const bundleHash = computeSha256(uploadPayload);
-
-    logger.info('Validating Pack metadata...');
-    await validateMetadata(metadata, {checkDeprecationWarnings: false});
 
     logger.info('Registering new Pack version...');
     let registerResponse: PublicApiPackVersionUploadInfo;

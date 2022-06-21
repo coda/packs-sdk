@@ -96,10 +96,25 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
     const metadata = (0, metadata_1.compilePackMetadata)(manifest);
     let packVersion = manifest.version;
     try {
+        // Do local validation even if we don't have a pack version. This is faster and saves resources
+        // over having the server validate, the there is a downside: errors from the server will be
+        // in a different format and the code will be exercised less often so we're less likely to
+        // notice if there are issues with how it's returned.
+        logger.info('Validating Pack metadata...');
+        const metadataWithFakeVersion = !packVersion ? { ...metadata, version: '0.0.1' } : metadata;
+        await (0, validate_1.validateMetadata)(metadataWithFakeVersion, { checkDeprecationWarnings: false });
         if (!packVersion) {
-            const nextPackVersionInfo = await client.getNextPackVersion(packId, {}, { proposedMetadata: JSON.stringify(metadata) });
-            packVersion = nextPackVersionInfo.nextVersion;
-            (0, helpers_5.print)(`Pack version not provided. Generated one for you: version is ${packVersion}`);
+            try {
+                const nextPackVersionInfo = await client.getNextPackVersion(packId, {}, { proposedMetadata: JSON.stringify(metadata), sdkVersion: codaPacksSDKVersion });
+                packVersion = nextPackVersionInfo.nextVersion;
+                (0, helpers_5.print)(`Pack version not provided. Generated one for you: version is ${packVersion}`);
+            }
+            catch (err) {
+                if ((0, coda_1.isResponseError)(err)) {
+                    printAndExit(`Error while finalizing pack version: ${await (0, errors_2.formatResponseError)(err)}`);
+                }
+                throw err;
+            }
         }
         metadata.version = packVersion;
         const bundle = (0, helpers_7.readFile)(bundlePath);
@@ -118,8 +133,6 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
         };
         const uploadPayload = JSON.stringify(upload);
         const bundleHash = (0, crypto_1.computeSha256)(uploadPayload);
-        logger.info('Validating Pack metadata...');
-        await (0, validate_1.validateMetadata)(metadata, { checkDeprecationWarnings: false });
         logger.info('Registering new Pack version...');
         let registerResponse;
         try {
