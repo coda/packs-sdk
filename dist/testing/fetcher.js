@@ -7,6 +7,7 @@ exports.newFetcherSyncExecutionContext = exports.newFetcherExecutionContext = ex
 const client_sts_1 = require("@aws-sdk/client-sts");
 const types_1 = require("../types");
 const constants_1 = require("./constants");
+const constants_2 = require("./constants");
 const client_sts_2 = require("@aws-sdk/client-sts");
 const sha256_js_1 = require("@aws-crypto/sha256-js");
 const signature_v4_1 = require("@aws-sdk/signature-v4");
@@ -44,7 +45,7 @@ class AuthenticatingFetcher {
     async fetch(request, isRetry) {
         var _a;
         const { url, headers, body, form } = await this._applyAuthentication(request);
-        this._validateHost(url);
+        this._validateHost(url, request.method);
         let response;
         try {
             response = await exports.requestHelper.makeRequest({
@@ -137,7 +138,7 @@ class AuthenticatingFetcher {
         if (!this._authDef || !this._credentials || !this._updateCredentialsCallback) {
             return false;
         }
-        if (requestFailure.statusCode !== constants_1.HttpStatusCode.Unauthorized || this._authDef.type !== types_1.AuthenticationType.OAuth2) {
+        if (requestFailure.statusCode !== constants_2.HttpStatusCode.Unauthorized || this._authDef.type !== types_1.AuthenticationType.OAuth2) {
             return false;
         }
         const { accessToken, refreshToken } = this._credentials;
@@ -176,7 +177,7 @@ class AuthenticatingFetcher {
             body: formParamsWithSecret,
             headers,
         });
-        if (oauthResponse.status === constants_1.HttpStatusCode.Unauthorized) {
+        if (oauthResponse.status === constants_2.HttpStatusCode.Unauthorized) {
             // see testing/oauth_server.ts why we retry with header auth.
             headers.append('Authorization', `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString('base64')}`);
             oauthResponse = await fetch(tokenUrl, {
@@ -431,11 +432,12 @@ class AuthenticatingFetcher {
             return prefixUrl + path;
         }
     }
-    _validateHost(url) {
+    _validateHost(url, method) {
         const parsed = new url_1.URL(url);
         const host = parsed.host.toLowerCase();
         const allowedDomains = this._networkDomains || [];
-        if (!allowedDomains.map(domain => domain.toLowerCase()).some(domain => host === domain || host.endsWith(`.${domain}`))) {
+        if (!allowedDomains.map(domain => domain.toLowerCase()).some(domain => host === domain || host.endsWith(`.${domain}`)) &&
+            !(method === 'GET' ? constants_1.DEFAULT_ALLOWED_GET_DOMAINS_REGEXES : []).some(domain => domain.test(host.toLowerCase()))) {
             throw new Error(`Attempted to connect to undeclared host '${host}'`);
         }
     }
