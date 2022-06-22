@@ -156,6 +156,7 @@ async function buildWithES({
     globalName: format === 'iife' ? 'module.exports' : undefined,
 
     platform: 'node',
+    target: 'node14',
 
     inject: getInjections(buildOptions),
     minify: false, // don't minify here since browserify doesn't minify anyway.
