@@ -688,7 +688,7 @@ export interface IdentityDefinition {
 	attribution?: AttributionNode[];
 }
 /**
- * The runtime version of IdentityDefinition with the current pack ID injected if a different
+ * The runtime version of {@link IdentityDefinition} with the current Pack ID injected if a different
  * one isn't set by the maker.
  */
 export interface Identity extends IdentityDefinition {
@@ -993,7 +993,7 @@ export declare function makeObjectSchema<K extends string, L extends string, T e
 /**
  * Convenience for creating a reference object schema from an existing schema for the
  * object. Copies over the identity, idProperty, and displayProperty from the schema,
- *  and the subset of properties indicated by the idProperty and displayProperty.
+ * and the subset of properties indicated by the idProperty and displayProperty.
  * A reference schema can always be defined directly, but if you already have an object
  * schema it provides better code reuse to derive a reference schema instead.
  */

@@ -5,7 +5,7 @@ title: "Identity"
 
 [core](../modules/core.md).Identity
 
-The runtime version of IdentityDefinition with the current pack ID injected if a different
+The runtime version of [IdentityDefinition](core.IdentityDefinition.md) with the current Pack ID injected if a different
 one isn't set by the maker.
 
 ## Hierarchy
