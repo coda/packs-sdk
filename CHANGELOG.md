@@ -7,6 +7,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 - Added validation that `networkDomain` does not include slashes since it's a domain, not a path.
 - Changed Pack compilation to explicitly target Node version 14, to ensure compatibility with the Packs runtime.
 - Added parameter type validation for `execute` command.
+- Added several implicitly-allowed domains including codahosted.io to the `execute` command. 
 
 ## [1.0.0] - 2022-06-16
 
