@@ -744,6 +744,8 @@ function isValidObjectId(component: string): boolean {
   return Base64ObjectRegex.test(component);
 }
 
+const SystemColumnNames = ['id', 'value', 'synced', 'connection'];
+
 enum ExemptionType {
   IdentityName = 'IdentityName',
   SyncTableGetterName = 'SyncTableGetterName',
@@ -932,7 +934,11 @@ const baseSyncTableSchema = {
   entityName: z.string().optional(),
   defaultAddDynamicColumns: z.boolean().optional(),
   // TODO(patrick): Make identityName non-optional after SDK v1.0.0 is required
-  identityName: z.string().min(1).optional(),
+  identityName: z
+    .string()
+    .min(1)
+    .optional()
+    .refine(val => !val || !SystemColumnNames.includes(val), 'Invalid identityName'),
 };
 
 type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;

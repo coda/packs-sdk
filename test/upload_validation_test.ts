@@ -1130,19 +1130,35 @@ describe('Pack metadata Validation', () => {
       });
 
       it('invalid identity name', async () => {
-        const syncTable = makeSyncTable({
-          name: 'SyncTable',
+        const schema = makeObjectSchema({
+          type: ValueType.Object,
+          primary: 'foo',
+          id: 'foo',
+          properties: {
+            foo: {type: ValueType.String},
+          },
+        });
+        const syncTable0 = makeSyncTable({
+          name: 'SyncTable0',
           identityName: 'Name with spaces',
-          schema: makeObjectSchema({
-            type: ValueType.Object,
-            primary: 'foo',
-            id: 'foo',
-            properties: {
-              foo: {type: ValueType.String},
-            },
-          }),
+          schema,
           formula: {
-            name: 'SyncTable',
+            name: 'SyncTable0',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        });
+        // 'id' is reserved for Coda's internal use
+        const syncTable1 = makeSyncTable({
+          name: 'SyncTable1',
+          identityName: 'id',
+          schema,
+          formula: {
+            name: 'SyncTable1',
             description: 'A simple sync table',
             async execute([], _context) {
               return {result: []};
@@ -1153,7 +1169,7 @@ describe('Pack metadata Validation', () => {
         });
 
         const metadata = createFakePack({
-          syncTables: [syncTable],
+          syncTables: [syncTable0, syncTable1],
         });
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
@@ -1168,6 +1184,10 @@ describe('Pack metadata Validation', () => {
               'Invalid name. Identity names can only contain ' +
               'alphanumeric characters, underscores, and dashes, and no spaces.',
             path: 'syncTables[0].getter.schema.items.identity.name',
+          },
+          {
+            message: 'Invalid identityName',
+            path: 'syncTables[1].identityName',
           },
         ]);
 
