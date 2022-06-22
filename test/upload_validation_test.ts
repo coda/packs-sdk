@@ -961,10 +961,13 @@ describe('Pack metadata Validation', () => {
         const metadata = createFakePack({
           syncTables: [syncTable],
         });
-        const err = await validateJsonAndAssertFails(metadata);
+        // First make sure pre-1.0.0 passes
+        await validateJson(metadata, '0.12.0');
+        // Then 1.0.0 should fail
+        const err = await validateJsonAndAssertFails(metadata, '1.0.0');
         assert.deepEqual(err.validationErrors, [
           {
-            message: 'Required',
+            message: 'Missing required field syncTables[0].identityName.',
             path: 'syncTables[0].identityName',
           },
         ]);

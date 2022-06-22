@@ -45,6 +45,7 @@ const schema_9 = require("../schema");
 const api_types_3 = require("../api_types");
 const schema_10 = require("../schema");
 const schema_11 = require("../schema");
+const zod_1 = require("zod");
 const ensure_1 = require("../helpers/ensure");
 const schema_12 = require("../schema");
 const object_utils_1 = require("../helpers/object_utils");
@@ -772,7 +773,8 @@ const baseSyncTableSchema = {
     getter: syncFormulaSchema,
     entityName: z.string().optional(),
     defaultAddDynamicColumns: z.boolean().optional(),
-    identityName: z.string(),
+    // TODO(patrick): Make identityName non-optional after SDK v1.0.0 is required
+    identityName: z.string().min(1).optional(),
 };
 const genericSyncTableSchema = zodCompleteObject({
     ...baseSyncTableSchema,
@@ -1150,6 +1152,24 @@ const packMetadataSchemaBySdkVersion = [
                     });
                     const schemaPathPrefix = ['syncTables', i, 'schema'];
                     validateSchemaDeprecatedFields(syncTable.schema, schemaPathPrefix, context);
+                    // A blank string will fail the existing `min(1)` requirement in the zod schema, so
+                    // we only need to additionally make sure there is a value present.
+                    if (typeof syncTable.identityName !== 'string') {
+                        let receivedType = zod_1.ZodParsedType.unknown;
+                        if (syncTable.identityName === undefined) {
+                            receivedType = zod_1.ZodParsedType.undefined;
+                        }
+                        else if (syncTable.identityName === null) {
+                            receivedType = zod_1.ZodParsedType.null;
+                        }
+                        context.addIssue({
+                            code: z.ZodIssueCode.invalid_type,
+                            path: ['syncTables', i, 'identityName'],
+                            message: 'An identityName is required on all sync tables',
+                            expected: zod_1.ZodParsedType.string,
+                            received: receivedType,
+                        });
+                    }
                 });
                 const { defaultAuthentication: auth } = data;
                 if (auth && auth.type !== types_1.AuthenticationType.None && auth.postSetup) {
