@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.PlaceholderIdentityPackId = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -438,7 +438,6 @@ function makeSchema(schema) {
     return schema;
 }
 exports.makeSchema = makeSchema;
-exports.PlaceholderIdentityPackId = -1;
 /**
  * A wrapper for creating a schema definition for an object value.
  *
@@ -462,10 +461,6 @@ exports.PlaceholderIdentityPackId = -1;
 function makeObjectSchema(schemaDef) {
     const schema = { ...schemaDef, type: ValueType.Object };
     validateObjectSchema(schema);
-    // TODO(jonathan): Enable after existing packs go through the v2 upload flow.
-    // if (schema.identity) {
-    //   schema.identity = {...schema.identity, packId: PlaceholderIdentityPackId};
-    // }
     return schema;
 }
 exports.makeObjectSchema = makeObjectSchema;
@@ -545,7 +540,7 @@ exports.normalizeSchema = normalizeSchema;
 /**
  * Convenience for creating a reference object schema from an existing schema for the
  * object. Copies over the identity, idProperty, and displayProperty from the schema,
- *  and the subset of properties indicated by the idProperty and displayProperty.
+ * and the subset of properties indicated by the idProperty and displayProperty.
  * A reference schema can always be defined directly, but if you already have an object
  * schema it provides better code reuse to derive a reference schema instead.
  */
