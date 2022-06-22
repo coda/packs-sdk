@@ -122,6 +122,8 @@ async function buildWithES({ lastBundleFilename, outputBundleFilename, options: 
         // - if iife bundles add exports to global, require() doesn't work. only module.exports works. idk why.
         globalName: format === 'iife' ? 'module.exports' : undefined,
         platform: 'node',
+        // Ensure the generated bundle works in Node 14, for compatibility with Lambda.
+        target: 'node14',
         inject: getInjections(buildOptions),
         minify: false,
         sourcemap: 'both',

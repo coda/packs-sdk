@@ -156,6 +156,8 @@ async function buildWithES({
     globalName: format === 'iife' ? 'module.exports' : undefined,
 
     platform: 'node',
+    // Ensure the generated bundle works in Node 14, for compatibility with Lambda.
+    target: 'node14',
 
     inject: getInjections(buildOptions),
     minify: false, // don't minify here since browserify doesn't minify anyway.
