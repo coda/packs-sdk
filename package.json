@@ -107,6 +107,7 @@
   },
   "resolutions": {
     "ansi-regex": "^5.0.1",
+    "got": "^12.1.0",
     "jsprim": "^2.0.2",
     "marked": "^4.0.10",
     "minimist": "^1.2.6",
