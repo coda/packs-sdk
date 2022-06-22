@@ -437,7 +437,7 @@ class AuthenticatingFetcher {
         const host = parsed.host.toLowerCase();
         const allowedDomains = this._networkDomains || [];
         if (!allowedDomains.map(domain => domain.toLowerCase()).some(domain => host === domain || host.endsWith(`.${domain}`)) &&
-            !(method === 'GET' ? constants_1.DEFAULT_ALLOWED_GET_DOMAINS : []).map(domain => domain.toLowerCase()).some(domain => host === domain || host.endsWith(`.${domain}`))) {
+            !(method === 'GET' ? constants_1.DEFAULT_ALLOWED_GET_DOMAINS_REGEXES : []).some(domain => domain.test(host.toLowerCase()))) {
             throw new Error(`Attempted to connect to undeclared host '${host}'`);
         }
     }

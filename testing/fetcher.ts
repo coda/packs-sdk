@@ -6,7 +6,7 @@ import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
 import type {Credentials} from './auth_types';
 import type {CustomCredentials} from './auth_types';
-import {DEFAULT_ALLOWED_GET_DOMAINS} from './constants';
+import {DEFAULT_ALLOWED_GET_DOMAINS_REGEXES} from './constants';
 import type {ExecutionContext} from '../api';
 import type {FetchMethodType} from '../api_types';
 import type {FetchRequest} from '../api_types';
@@ -569,7 +569,7 @@ export class AuthenticatingFetcher implements Fetcher {
     const allowedDomains = this._networkDomains || [];
     if (
       !allowedDomains.map(domain => domain.toLowerCase()).some(domain => host === domain || host.endsWith(`.${domain}`)) &&
-      !(method === 'GET' ? DEFAULT_ALLOWED_GET_DOMAINS : []).map(domain => domain.toLowerCase()).some(domain => host === domain || host.endsWith(`.${domain}`))
+      !(method === 'GET' ? DEFAULT_ALLOWED_GET_DOMAINS_REGEXES : []).some(domain => domain.test(host.toLowerCase()))
     ) {
       throw new Error(`Attempted to connect to undeclared host '${host}'`);
     }
