@@ -17,9 +17,10 @@ The fetcher can to communicate with URLs on that domain and all sub-domains. It'
 
 By default a Pack is only allowed to register a single domain. This is done to limit abuse potential and provide transparency to users. If you want to combine data from multiple sources we recommend building multiple Packs and using the features of a Coda doc to bring them together. If however your use case requires making requests to multiple domains from a single Pack you may request an exemption by [contacting support][support_network_domains].
 
-The following domains don't need to be declared as a network domain in your Pack, since they are used to access images and files passed as parameters to your Pack:
+The following domains don't need to be declared as a network domain in your Pack:
 
-- `codahosted.io`
+- `codahosted.io` (used to host image and file attachments in Coda docs)
+- `coda-us-west-2-prod-blobs-upload.s3.us-west-2.amazonaws.com` (used by [temporary blob storage][temporaryblobstorage])
 
 !!! info "Multiple domains and authentication"
     If you make requests to multiple network domains and utilize [per-user authentication][auth_user], you'll need to set the [`networkDomain`][baseauthentication_networkdomain] field of the authentication configuration to specify which domain it should be appied to. Authentication credentials can only be applied to a single domain.
@@ -418,3 +419,4 @@ dig +short egress.coda.io
 [spec_headers]: https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
 [baseauthentication_networkdomain]: ../../reference/sdk/interfaces/core.BaseAuthentication.md#networkdomain
 [auth_user]: ../advanced/authentication.md#user
+[temporaryblobstorage]: ../../reference/sdk/interfaces/core.TemporaryBlobStorage.md
