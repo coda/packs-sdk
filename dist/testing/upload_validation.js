@@ -614,6 +614,7 @@ const Base64ObjectRegex = /^[A-Za-z0-9=_-]+$/;
 function isValidObjectId(component) {
     return Base64ObjectRegex.test(component);
 }
+const SystemColumnNames = ['id', 'value', 'synced', 'connection'];
 var ExemptionType;
 (function (ExemptionType) {
     ExemptionType["IdentityName"] = "IdentityName";
@@ -771,7 +772,11 @@ const baseSyncTableSchema = {
     entityName: z.string().optional(),
     defaultAddDynamicColumns: z.boolean().optional(),
     // TODO(patrick): Make identityName non-optional after SDK v1.0.0 is required
-    identityName: z.string().min(1).optional(),
+    identityName: z
+        .string()
+        .min(1)
+        .optional()
+        .refine(val => !val || !SystemColumnNames.includes(val), `This property name is reserved for internal use by Coda and can't be used as an identityName, sorry!`),
 };
 const genericSyncTableSchema = zodCompleteObject({
     ...baseSyncTableSchema,
