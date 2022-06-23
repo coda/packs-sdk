@@ -938,7 +938,10 @@ const baseSyncTableSchema = {
     .string()
     .min(1)
     .optional()
-    .refine(val => !val || !SystemColumnNames.includes(val), 'Invalid identityName'),
+    .refine(
+      val => !val || !SystemColumnNames.includes(val),
+      `This property name is reserved for internal use by Coda and can't be used as an identityName, sorry!`,
+    ),
 };
 
 type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;

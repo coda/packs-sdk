@@ -1186,7 +1186,7 @@ describe('Pack metadata Validation', () => {
             path: 'syncTables[0].getter.schema.items.identity.name',
           },
           {
-            message: 'Invalid identityName',
+            message: `This property name is reserved for internal use by Coda and can't be used as an identityName, sorry!`,
             path: 'syncTables[1].identityName',
           },
         ]);
