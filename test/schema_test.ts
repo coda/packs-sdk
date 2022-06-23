@@ -1,6 +1,7 @@
 import {ValueHintType} from '../index';
 import {ValueType} from '../index';
 import {makeObjectSchema} from '../index';
+import {makeSchema} from '../index';
 import * as schema from '../schema';
 
 describe('Schema', () => {
@@ -158,6 +159,18 @@ describe('Schema', () => {
           name: {type: ValueType.String, required: true},
         },
       });
+    });
+
+    it('allows sub-schema re-use', () => {
+      const stringSchema = makeSchema({type: ValueType.String});
+      const mySchema = makeObjectSchema({
+        properties: {
+          apple: stringSchema,
+          banana: stringSchema,
+        },
+        displayProperty: 'apple',
+      });
+      assert.notEqual(mySchema.properties.apple, mySchema.properties.banana);
     });
   });
 
