@@ -1142,6 +1142,15 @@ export function makeObjectSchema<
   type: ValueType.Object;
 } {
   const schema: ObjectSchemaDefinition<K, L> = {...schemaDef, type: ValueType.Object};
+  // In case a single schema object was used for multiple properties, make copies for each of them.
+  for (const key of Object.keys(schema.properties)) {
+    // 'type' was just created from scratch above
+    if (key !== 'type') {
+      // Typescript doesn't like the raw schema.properties[key] (on the left only though...)
+      const typedKey = key as keyof ObjectSchemaProperties<K | L>;
+      schema.properties[typedKey] = deepCopy(schema.properties[key]);
+    }
+  }
   validateObjectSchema(schema);
   return schema as any;
 }
