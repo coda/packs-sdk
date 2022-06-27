@@ -4334,6 +4334,12 @@ module.exports = (() => {
       this.response = { ...response, body: responseBody };
     }
   };
+  var MissingScopesError = class extends Error {
+    constructor(message) {
+      super(message || "Additional permissions are required");
+      this.name = "MissingScopesError";
+    }
+  };
   function isDynamicSyncTable(syncTable) {
     return "isDynamic" in syncTable;
   }
@@ -4428,7 +4434,8 @@ module.exports = (() => {
     URIError
   ];
   var recognizableCodaErrorClasses = [
-    StatusCodeError
+    StatusCodeError,
+    MissingScopesError
   ];
   function getErrorClassType(err) {
     if (recognizableSystemErrorClasses.some((cls) => cls === err.constructor)) {

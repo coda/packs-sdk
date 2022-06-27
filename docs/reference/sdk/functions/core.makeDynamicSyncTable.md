@@ -58,4 +58,4 @@ coda.makeDynamicSyncTable({
 
 #### Defined in
 
-[api.ts:1585](https://github.com/coda/packs-sdk/blob/main/api.ts#L1585)
+[api.ts:1609](https://github.com/coda/packs-sdk/blob/main/api.ts#L1609)

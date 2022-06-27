@@ -33,7 +33,7 @@ See [DynamicOptions.defaultAddDynamicColumns](core.DynamicOptions.md#defaultaddd
 
 #### Defined in
 
-[api.ts:179](https://github.com/coda/packs-sdk/blob/main/api.ts#L179)
+[api.ts:203](https://github.com/coda/packs-sdk/blob/main/api.ts#L203)
 
 ___
 
@@ -45,7 +45,7 @@ See [SyncTableOptions.description](core.SyncTableOptions.md#description)
 
 #### Defined in
 
-[api.ts:162](https://github.com/coda/packs-sdk/blob/main/api.ts#L162)
+[api.ts:186](https://github.com/coda/packs-sdk/blob/main/api.ts#L186)
 
 ___
 
@@ -57,7 +57,7 @@ See [DynamicOptions.entityName](core.DynamicOptions.md#entityname)
 
 #### Defined in
 
-[api.ts:177](https://github.com/coda/packs-sdk/blob/main/api.ts#L177)
+[api.ts:201](https://github.com/coda/packs-sdk/blob/main/api.ts#L201)
 
 ___
 
@@ -69,7 +69,7 @@ See [DynamicOptions.getSchema](core.DynamicOptions.md#getschema)
 
 #### Defined in
 
-[api.ts:175](https://github.com/coda/packs-sdk/blob/main/api.ts#L175)
+[api.ts:199](https://github.com/coda/packs-sdk/blob/main/api.ts#L199)
 
 ___
 
@@ -81,7 +81,7 @@ See [SyncTableOptions.formula](core.SyncTableOptions.md#formula)
 
 #### Defined in
 
-[api.ts:173](https://github.com/coda/packs-sdk/blob/main/api.ts#L173)
+[api.ts:197](https://github.com/coda/packs-sdk/blob/main/api.ts#L197)
 
 ___
 
@@ -96,7 +96,7 @@ See [SyncTableOptions.identityName](core.SyncTableOptions.md#identityname) for m
 
 #### Defined in
 
-[api.ts:171](https://github.com/coda/packs-sdk/blob/main/api.ts#L171)
+[api.ts:195](https://github.com/coda/packs-sdk/blob/main/api.ts#L195)
 
 ___
 
@@ -108,7 +108,7 @@ See [SyncTableOptions.name](core.SyncTableOptions.md#name)
 
 #### Defined in
 
-[api.ts:160](https://github.com/coda/packs-sdk/blob/main/api.ts#L160)
+[api.ts:184](https://github.com/coda/packs-sdk/blob/main/api.ts#L184)
 
 ___
 
@@ -120,4 +120,4 @@ See [SyncTableOptions.schema](core.SyncTableOptions.md#schema)
 
 #### Defined in
 
-[api.ts:164](https://github.com/coda/packs-sdk/blob/main/api.ts#L164)
+[api.ts:188](https://github.com/coda/packs-sdk/blob/main/api.ts#L188)

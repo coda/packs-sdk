@@ -30,7 +30,7 @@ until there is no continuation returned.
 
 #### Defined in
 
-[api.ts:647](https://github.com/coda/packs-sdk/blob/main/api.ts#L647)
+[api.ts:671](https://github.com/coda/packs-sdk/blob/main/api.ts#L671)
 
 ___
 
@@ -42,4 +42,4 @@ The list of results from this page.
 
 #### Defined in
 
-[api.ts:641](https://github.com/coda/packs-sdk/blob/main/api.ts#L641)
+[api.ts:665](https://github.com/coda/packs-sdk/blob/main/api.ts#L665)
