@@ -22,43 +22,6 @@ them to, after all).
 
   ↳ **`MissingScopesError`**
 
-## Constructors
-
-### constructor
-
-• **new MissingScopesError**(`message?`)
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `message?` | `string` |
-
-#### Inherited from
-
-Error.constructor
-
-#### Defined in
-
-node_modules/typescript/lib/lib.es5.d.ts:1034
-
-• **new MissingScopesError**(`message?`, `options?`)
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `message?` | `string` |
-| `options?` | `ErrorOptions` |
-
-#### Inherited from
-
-Error.constructor
-
-#### Defined in
-
-node_modules/typescript/lib/lib.es2022.error.d.ts:30
-
 ## Properties
 
 ### name

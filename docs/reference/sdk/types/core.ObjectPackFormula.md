@@ -18,4 +18,4 @@ A pack formula that returns a JavaScript object.
 
 #### Defined in
 
-[api.ts:586](https://github.com/coda/packs-sdk/blob/main/api.ts#L586)
+[api.ts:591](https://github.com/coda/packs-sdk/blob/main/api.ts#L591)

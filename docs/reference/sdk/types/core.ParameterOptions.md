@@ -17,4 +17,4 @@ Options you can specify when defining a parameter using [makeParameter](../funct
 
 #### Defined in
 
-[api.ts:333](https://github.com/coda/packs-sdk/blob/main/api.ts#L333)
+[api.ts:338](https://github.com/coda/packs-sdk/blob/main/api.ts#L338)

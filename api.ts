@@ -163,6 +163,11 @@ export class MissingScopesError extends Error {
    * The name of the error, for identiciation purposes.
    */
   override name: string = 'MissingScopesError';
+
+  /** @hidden */
+  constructor() {
+    super('Additional permissions are required');
+  }
 }
 
 /**

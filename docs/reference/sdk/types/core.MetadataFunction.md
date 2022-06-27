@@ -27,4 +27,4 @@ A JavaScript function that can implement a [MetadataFormulaDef](core.MetadataFor
 
 #### Defined in
 
-[api.ts:1053](https://github.com/coda/packs-sdk/blob/main/api.ts#L1053)
+[api.ts:1058](https://github.com/coda/packs-sdk/blob/main/api.ts#L1058)

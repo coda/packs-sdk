@@ -117,6 +117,8 @@ export declare class MissingScopesError extends Error {
      * The name of the error, for identiciation purposes.
      */
     name: string;
+    /** @hidden */
+    constructor();
 }
 /**
  * The result of defining a sync table. Should not be necessary to use directly,
