@@ -1860,7 +1860,7 @@ export declare class MissingScopesError extends Error {
 	 */
 	name: string;
 	/** @hidden */
-	constructor();
+	constructor(message?: string);
 }
 /**
  * The result of defining a sync table. Should not be necessary to use directly,

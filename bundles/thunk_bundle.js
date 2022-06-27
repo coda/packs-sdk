@@ -4335,8 +4335,8 @@ module.exports = (() => {
     }
   };
   var MissingScopesError = class extends Error {
-    constructor() {
-      super("Additional permissions are required");
+    constructor(message) {
+      super(message || "Additional permissions are required");
       this.name = "MissingScopesError";
     }
   };

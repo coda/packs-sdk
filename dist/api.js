@@ -94,8 +94,8 @@ exports.StatusCodeError = StatusCodeError;
  */
 class MissingScopesError extends Error {
     /** @hidden */
-    constructor() {
-        super('Additional permissions are required');
+    constructor(message) {
+        super(message || 'Additional permissions are required');
         /**
          * The name of the error, for identiciation purposes.
          */

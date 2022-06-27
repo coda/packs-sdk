@@ -165,8 +165,8 @@ export class MissingScopesError extends Error {
   override name: string = 'MissingScopesError';
 
   /** @hidden */
-  constructor() {
-    super('Additional permissions are required');
+  constructor(message?: string) {
+    super(message || 'Additional permissions are required');
   }
 }
 

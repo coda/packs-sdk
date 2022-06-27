@@ -87,7 +87,7 @@ describe('Marshaling', () => {
       assertErrorsEqual(transformedError, error);
       assert.isTrue(transformedError instanceof StatusCodeError);
 
-      const missingScopesError = new MissingScopesError();
+      const missingScopesError = new MissingScopesError('custom message');
       const transformedMissingScopesError = transform(missingScopesError);
       assertErrorsEqual(transformedMissingScopesError, missingScopesError);
       assert.isTrue(transformedMissingScopesError instanceof MissingScopesError);
