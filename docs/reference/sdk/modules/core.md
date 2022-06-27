@@ -36,6 +36,7 @@ import * as coda from "@codahq/packs-sdk";
 
 ## Classes
 
+- [MissingScopesError](../classes/core.MissingScopesError.md)
 - [PackDefinitionBuilder](../classes/core.PackDefinitionBuilder.md)
 - [StatusCodeError](../classes/core.StatusCodeError.md)
 - [UserVisibleError](../classes/core.UserVisibleError.md)

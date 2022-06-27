@@ -19,4 +19,4 @@ A formula definition accepted by [makeFormula](../functions/core.makeFormula.md)
 
 #### Defined in
 
-[api.ts:930](https://github.com/coda/packs-sdk/blob/main/api.ts#L930)
+[api.ts:949](https://github.com/coda/packs-sdk/blob/main/api.ts#L949)
