@@ -87,6 +87,7 @@ export { ParameterType } from './api_types';
 export type { ParamsList } from './api_types';
 export { PrecannedDateRange } from './api_types';
 export { StatusCodeError } from './api';
+export { MissingScopesError } from './api';
 export type { StatusCodeErrorResponse } from './api';
 export type { SyncExecutionContext } from './api_types';
 export type { SyncFormulaResult } from './api';
