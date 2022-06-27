@@ -4,7 +4,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## Not yet released
 
-- Added an explicit MissingScopesError a pack maker can throw to trigger Coda to suggest that the user re-authenticate to gain OAuth scopes that are specific to a given formula, or scopes that were added to the pack since the user first authenticated. Coda used to assume that any error required such re-authentication if a user's connection did not have all relevant scopes, but now if your OAuth service does not use the 403 status code correctly, you may need to use this new MissingScopesError.
+- Added `MissingScopesError`, for use with OAuth authentication. If a user's connection is missing a scope and the Pack throws a 403 StatusCodeError, Coda will automatically prompt the user to reauthenticate. For APIs that return different status codes, or to be more explicit, the Pack can instead throw this new type of error to trigger the same reauthentication flow.
 
 ## [1.0.1] - 2022-06-22
 
