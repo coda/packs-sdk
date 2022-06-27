@@ -1,3 +1,5 @@
+import {MissingScopesError} from '../api';
+import {MissingScopesError} from '../api';
 import {StatusCodeError} from '../api';
 import {inspect} from 'util';
 import {marshalValue} from '../runtime/common/marshaling';
@@ -85,6 +87,11 @@ describe('Marshaling', () => {
       const transformedError = transform(error);
       assertErrorsEqual(transformedError, error);
       assert.isTrue(transformedError instanceof StatusCodeError);
+
+      const missingScopesError = new MissingScopesError();
+      const transformedMissingScopesError = transform(missingScopesError);
+      assertErrorsEqual(transformedMissingScopesError, missingScopesError);
+      assert.isTrue(transformedMissingScopesError instanceof MissingScopesError);
     });
   });
 

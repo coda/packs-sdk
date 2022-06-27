@@ -1,5 +1,6 @@
 import {CodaMarshalerType} from './constants';
 import {MarshalingInjectedKeys} from './constants';
+import {MissingScopesError} from '../../../api';
 import {StatusCodeError} from '../../../api';
 
 enum ErrorClassType {
@@ -21,6 +22,7 @@ const recognizableSystemErrorClasses: ErrorConstructor[] = [
 const recognizableCodaErrorClasses: ErrorConstructor[] = [
   // StatusCodeError doesn't have the new StatusCodeError(message) constructor but it's okay.
   StatusCodeError as any,
+  MissingScopesError as any,
 ];
 
 function getErrorClassType(err: Error): ErrorClassType {

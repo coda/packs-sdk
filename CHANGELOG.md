@@ -2,6 +2,10 @@
 
 This changelog keeps track of all changes to the Packs SDK. We follow conventions from [keepachangelog](https://keepachangelog.com/en/1.0.0/).
 
+## Not yet released
+
+- Added an explicit MissingScopesError a pack maker can throw to trigger Coda to suggest that the user re-authenticate to gain OAuth scopes that are specific to a given formula, or scopes that were added to the pack since the user first authenticated. Coda used to assume that any error required such re-authentication if a user's connection did not have all relevant scopes, but now if your OAuth service does not use the 403 status code correctly, you may need to use this new MissingScopesError.
+
 ## [1.0.1] - 2022-06-22
 
 - Added validation that `networkDomain` does not include slashes since it's a domain, not a path.
