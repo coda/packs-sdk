@@ -1,5 +1,7 @@
 ---
 title: On your local machine
+description: Build your first Pack on your local machine using the CLI.
+icon: octicons/terminal-16
 ---
 
 # Get started on your local machine

@@ -1,4 +1,5 @@
 nav:
+  - Overview: index.md
   - get-started
   - Learn to build: build
   - ...

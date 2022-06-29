@@ -1,5 +1,7 @@
 ---
 title: Call an API
+description: Learn how to call an external API from within a Pack.
+icon: material/api
 hide:
 - toc
 ---
@@ -9,7 +11,7 @@ hide:
 <section class="tutorial-row" markdown>
 <div markdown>
 
-One of the primary use cases for a Pack is to integrate with an external API, allowing users to bring in data or functionality not native to Coda. In this tutorial we'll create a formula that converts an amount of money in another currency to US dollars.
+One of the primary use cases for a Pack is to integrate with an external API, allowing users to bring in data or functionality not native to Coda. In this tutorial you'll create a formula that converts an amount of money in another currency to US dollars.
 
 </div>
 <div markdown>

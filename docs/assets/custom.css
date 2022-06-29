@@ -123,3 +123,8 @@ li.no {
 .box-item p:first-of-type {
   flex: 1;
 }
+
+/* Hide the anchor link for headings in boxes. */
+.box-item .headerlink {
+  display: none;
+}
