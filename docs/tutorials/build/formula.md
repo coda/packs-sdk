@@ -1,5 +1,7 @@
 ---
 title: Basic formula
+description: Learn how to build a basic formula from scratch.
+icon: material/function
 hide:
 - toc
 ---
