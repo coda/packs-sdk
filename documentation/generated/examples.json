@@ -727,6 +727,11 @@
         "name": "Webflow",
         "content": "The Typeform API uses OAuth2 to authenticate users, and requires the developer to specify the API version in a custom header.",
         "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// The version of the Webflow API to use.\nconst WebflowApiVersion = \"1.0.0\";\n\n// Per-user authentication to the ClickUp API, using OAuth2.\n// See https://developers.webflow.com/oauth\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  authorizationUrl: \"https://webflow.com/oauth/authorize\",\n  tokenUrl: \"https://api.webflow.com/oauth/access_token\",\n\n  // Determines the display name of the connected account.\n  getConnectionName: async function (context) {\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: \"https://api.webflow.com/user\",\n      headers: {\n        \"Accept-Version\": WebflowApiVersion,\n      },\n    });\n    let user = response.body.user;\n    return `${user.firstName} ${user.lastName}`;\n  },\n});\n\n// Allow the pack to make requests to Webflow.\npack.addNetworkDomain(\"webflow.com\");"
+      },
+      {
+        "name": "Yahoo",
+        "content": "The Yahoo APIs uses OAuth2 to authenticate users.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Setup per-user authentication using Yahoo's OAuth2.\n// Remember to set your client ID and secret in the \"Settings\" tab.\n// See https://developer.yahoo.com/oauth2/guide/flows_authcode/\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  authorizationUrl: \"https://api.login.yahoo.com/oauth2/request_auth\",\n  tokenUrl: \"https://api.login.yahoo.com/oauth2/get_token\",\n  scopes: [\"openid\"],\n\n  // Determines the name of the Yahoo account that was connected.\n  getConnectionName: async function (context) {\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: \"https://api.login.yahoo.com/openid/v1/userinfo\",\n    });\n    let user = response.body;\n    return user.name;\n  },\n});\n\n// Allow the Pack to access the Yahoo domain.\npack.addNetworkDomain(\"yahoo.com\");"
       }
     ]
   },
