@@ -885,6 +885,11 @@ export const Examples: Example[] = [
         content: 'The Typeform API uses OAuth2 to authenticate users, and requires the developer to specify the API version in a custom header.',
         codeFile: './examples/apis/webflow.ts',
       },
+      {
+        name: 'Yahoo',
+        content: 'The Yahoo APIs uses OAuth2 to authenticate users.',
+        codeFile: './examples/apis/yahoo.ts',
+      },
     ],
   },
   {
