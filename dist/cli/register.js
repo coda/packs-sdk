@@ -16,8 +16,8 @@ async function handleRegister({ apiToken, codaApiEndpoint }) {
     const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
     if (!apiToken) {
         // TODO: deal with auto-open on devbox setups
-        const shouldOpenBrowser = (0, helpers_4.promptForInput)('No API token provided. Do you want to visit Coda to create one? ');
-        if (!shouldOpenBrowser.toLocaleLowerCase().startsWith('y')) {
+        const shouldOpenBrowser = (0, helpers_4.promptForInput)('No API token provided. Do you want to visit Coda to create one (yes/no)? ', { options: ['yes', 'no'] });
+        if (shouldOpenBrowser !== 'yes') {
             return process.exit(1);
         }
         await (0, open_1.default)(`${formattedEndpoint}/account?openDialog=CREATE_API_TOKEN&scopeType=pack#apiSettings`);

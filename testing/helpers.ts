@@ -26,8 +26,13 @@ export function printAndExit(msg: string, exitCode: number = 1): never {
   return process.exit(exitCode);
 }
 
-export function promptForInput(prompt: string, {mask}: {mask?: boolean} = {}): string {
-  return readlineSync.question(prompt, {mask: mask ? '*' : undefined, hideEchoBack: mask});
+export function promptForInput(prompt: string, {mask, options}: {mask?: boolean; options?: string[]} = {}): string {
+  while (true) {
+    const answer = readlineSync.question(prompt, {mask: mask ? '*' : undefined, hideEchoBack: mask});
+    if (!options || options.includes(answer)) {
+      return answer;
+    }
+  }
 }
 
 export function readFile(fileName: string): Buffer | undefined {
