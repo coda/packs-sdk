@@ -13,14 +13,11 @@ You can approximate a two-way sync however using a combinations of additional co
 
 An action can update a record in an external API, but it won't be reflected in the sync table until the next time it syncs. To update the corresponding row immediately, have your action return an [Object][data_type_object] representing the updated state of the row.
 
-If an action formula uses the same [schema][schemas] as a sync table, Coda will look up the corresponding row in the table and update it with the returned object. The schema must have an `identity.name` field set, matching the `identityName` field of the sync table.
+If an action formula returns a [schema][schemas] with an identity matching an existing sync table, Coda will look up the corresponding row in the table and update it with the returned object. Use the helper function `coda.withIdentity()` to add the identity information to the schema.
 
 ```ts
 const TaskSchema = coda.makeObjectSchema({
   // ...
-  identity: {
-    name: "Task",
-  },
 });
 
 pack.addSyncTable({
@@ -35,7 +32,7 @@ pack.addFormula({
   description: "Updates the name of a task.",
   // ...
   resultType: coda.ValueType.Object,
-  schema: TaskSchema,
+  schema: coda.withIdentity(TaskSchema, "Task"),
   isAction: true,
   execute: async function ([taskId, name], context) {
     // Call the API to update the task and get back the updated content.
@@ -69,6 +66,7 @@ const BaseTaskSchema = coda.makeObjectSchema({
 pack.addSyncTable({
   name: "Tasks",
   schema: BaseTaskSchema,
+  identityName: "Task",
   dynamicOptions: {
     getSchema: async function (context) {
       // Extend BaseTaskSchema with additional properties.
@@ -81,7 +79,7 @@ pack.addFormula({
   name: "UpdateTask",
   // ...
   resultType: coda.ValueType.Object,
-  schema: BaseTaskSchema,
+  schema: coda.withIdentity(BaseTaskSchema, "Task"),
   isAction: true,
   execute: async function ([taskId, name], context) {
     let task = updateTask(taskId, name, context);
