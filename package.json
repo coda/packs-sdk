@@ -82,7 +82,7 @@
     "@types/xml2js": "^0.4.11",
     "@types/yargs": "^17.0.10",
     "@typescript-eslint/eslint-plugin": "5.29.0",
-    "@typescript-eslint/experimental-utils": "5.29.0",
+    "@typescript-eslint/experimental-utils": "5.30.3",
     "@typescript-eslint/parser": "5.29.0",
     "aws-sdk": "^2.1166.0",
     "buffer": "^6.0.3",
