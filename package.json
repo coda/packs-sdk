@@ -97,7 +97,7 @@
     "mime": "^3.0.0",
     "mocha": "^10.0.0",
     "mock-fs": "^5.1.2",
-    "release-it": "^15.0.0",
+    "release-it": "^15.1.1",
     "remark-cli": "^11.0.0",
     "remark-lint-no-undefined-references": "^4.1.1",
     "ts-loader": "^9.3.1",
