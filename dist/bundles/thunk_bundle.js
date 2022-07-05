@@ -3443,7 +3443,7 @@ module.exports = (() => {
         return typeof v === "string" || typeof v === "number" || typeof v === "boolean" || typeof v === "symbol" || typeof v === "bigint";
       };
       var sentinel = {};
-      var stringify = function stringify2(object, prefix, generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter, sort, allowDots, serializeDate, format, formatter, encodeValuesOnly, charset, sideChannel) {
+      var stringify = function stringify2(object, prefix, generateArrayPrefix, commaRoundTrip, strictNullHandling, skipNulls, encoder, filter, sort, allowDots, serializeDate, format, formatter, encodeValuesOnly, charset, sideChannel) {
         var obj = object;
         var tmpSc = sideChannel;
         var step = 0;
@@ -3489,7 +3489,7 @@ module.exports = (() => {
               for (var i = 0; i < valuesArray.length; ++i) {
                 valuesJoined += (i === 0 ? "" : ",") + formatter(encoder(valuesArray[i], defaults.encoder, charset, "value", format));
               }
-              return [formatter(keyValue) + "=" + valuesJoined];
+              return [formatter(keyValue) + (commaRoundTrip && isArray2(obj) && valuesArray.length === 1 ? "[]" : "") + "=" + valuesJoined];
             }
             return [formatter(keyValue) + "=" + formatter(encoder(obj, defaults.encoder, charset, "value", format))];
           }
@@ -3508,17 +3508,18 @@ module.exports = (() => {
           var keys = Object.keys(obj);
           objKeys = sort ? keys.sort(sort) : keys;
         }
+        var adjustedPrefix = commaRoundTrip && isArray2(obj) && obj.length === 1 ? prefix + "[]" : prefix;
         for (var j = 0; j < objKeys.length; ++j) {
           var key = objKeys[j];
           var value = typeof key === "object" && typeof key.value !== "undefined" ? key.value : obj[key];
           if (skipNulls && value === null) {
             continue;
           }
-          var keyPrefix = isArray2(obj) ? typeof generateArrayPrefix === "function" ? generateArrayPrefix(prefix, key) : prefix : prefix + (allowDots ? "." + key : "[" + key + "]");
+          var keyPrefix = isArray2(obj) ? typeof generateArrayPrefix === "function" ? generateArrayPrefix(adjustedPrefix, key) : adjustedPrefix : adjustedPrefix + (allowDots ? "." + key : "[" + key + "]");
           sideChannel.set(object, step);
           var valueSideChannel = getSideChannel();
           valueSideChannel.set(sentinel, sideChannel);
-          pushToArray(values, stringify2(value, keyPrefix, generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter, sort, allowDots, serializeDate, format, formatter, encodeValuesOnly, charset, valueSideChannel));
+          pushToArray(values, stringify2(value, keyPrefix, generateArrayPrefix, commaRoundTrip, strictNullHandling, skipNulls, encoder, filter, sort, allowDots, serializeDate, format, formatter, encodeValuesOnly, charset, valueSideChannel));
         }
         return values;
       };
@@ -3588,6 +3589,10 @@ module.exports = (() => {
           arrayFormat = "indices";
         }
         var generateArrayPrefix = arrayPrefixGenerators[arrayFormat];
+        if (opts && "commaRoundTrip" in opts && typeof opts.commaRoundTrip !== "boolean") {
+          throw new TypeError("`commaRoundTrip` must be a boolean, or absent");
+        }
+        var commaRoundTrip = generateArrayPrefix === "comma" && opts && opts.commaRoundTrip;
         if (!objKeys) {
           objKeys = Object.keys(obj);
         }
@@ -3600,7 +3605,7 @@ module.exports = (() => {
           if (options.skipNulls && obj[key] === null) {
             continue;
           }
-          pushToArray(keys, stringify(obj[key], key, generateArrayPrefix, options.strictNullHandling, options.skipNulls, options.encode ? options.encoder : null, options.filter, options.sort, options.allowDots, options.serializeDate, options.format, options.formatter, options.encodeValuesOnly, options.charset, sideChannel));
+          pushToArray(keys, stringify(obj[key], key, generateArrayPrefix, commaRoundTrip, options.strictNullHandling, options.skipNulls, options.encode ? options.encoder : null, options.filter, options.sort, options.allowDots, options.serializeDate, options.format, options.formatter, options.encodeValuesOnly, options.charset, sideChannel));
         }
         var joined = keys.join(options.delimiter);
         var prefix = options.addQueryPrefix === true ? "?" : "";

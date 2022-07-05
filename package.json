@@ -35,7 +35,7 @@
     "node-fetch": "^2.6.7",
     "open": "^8.4.0",
     "pascalcase": "^1.0.0",
-    "qs": "^6.10.3",
+    "qs": "^6.11.0",
     "readline-sync": "1.4.10",
     "request": "2.88.2",
     "request-promise-native": "^1.0.9",
