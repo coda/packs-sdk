@@ -20,7 +20,9 @@ one isn't set by the maker.
 
 • `Optional` **attribution**: [`AttributionNode`](../types/core.AttributionNode.md)[]
 
-**`deprecated`** See [ObjectSchemaDefinition.attribution](core.ObjectSchemaDefinition.md#attribution)
+**`Deprecated`**
+
+ See [attribution](core.ObjectSchemaDefinition.md#attribution)
 
 #### Inherited from
 
@@ -37,7 +39,7 @@ ___
 • `Optional` **dynamicUrl**: `string`
 
 The dynamic URL, if this is a schema for a dynamic sync table. When returning a schema from the
-[DynamicSyncTableOptions.getSchema](core.DynamicSyncTableOptions.md#getschema) formula of a dynamic sync table, you must include
+[getSchema](core.DynamicSyncTableOptions.md#getschema) formula of a dynamic sync table, you must include
 the dynamic URL of that table, so that rows
 in this table may be distinguished from rows in another dynamic instance of the same table.
 

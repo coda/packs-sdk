@@ -39,21 +39,21 @@ var AuthenticationType;
     AuthenticationType["HeaderBearerToken"] = "HeaderBearerToken";
     /**
      * Authenticate using an HTTP header with a custom name and token prefix that you specify.
-     * The header name is defined in the {@link headerName} property.
+     * The header name is defined in the {@link CustomHeaderTokenAuthentication.headerName} property.
      */
     AuthenticationType["CustomHeaderToken"] = "CustomHeaderToken";
     /**
      * Authenticate using a token that is passed as a URL parameter with each request, e.g.
      * https://example.com/api?paramName=token
      *
-     * The parameter name is defined in the {@link paramName} property.
+     * The parameter name is defined in the {@link QueryParamTokenAuthentication.paramName} property.
      */
     AuthenticationType["QueryParamToken"] = "QueryParamToken";
     /**
      * Authenticate using multiple tokens, each passed as a different URL parameter, e.g.
      * https://example.com/api?param1=token1&param2=token2
      *
-     * The parameter names are defined in the {@link params} array property.
+     * The parameter names are defined in the {@link MultiQueryParamTokenAuthentication.params} array property.
      */
     AuthenticationType["MultiQueryParamToken"] = "MultiQueryParamToken";
     /**
@@ -91,7 +91,7 @@ var AuthenticationType;
     /**
      * Authenticate using a Coda REST API token, sent as an HTTP header.
      *
-     * This is identical to {@link HeaderBearerToken} except the user wil be presented
+     * This is identical to {@link AuthenticationType.HeaderBearerToken} except the user wil be presented
      * with a UI to generate an API token rather than needing to paste an arbitrary API
      * token into a text input.
      *

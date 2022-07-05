@@ -11,7 +11,7 @@ Display types that can be used with a [LinkSchema](../interfaces/core.LinkSchema
 
 ### Card
 
-• **Card**
+• **Card** = ``"card"``
 
 Display the referenced web page as a card.
 
@@ -23,7 +23,7 @@ ___
 
 ### Embed
 
-• **Embed**
+• **Embed** = ``"embed"``
 
 Display the referenced web page as an embed.
 
@@ -35,7 +35,7 @@ ___
 
 ### IconOnly
 
-• **IconOnly**
+• **IconOnly** = ``"iconOnly"``
 
 Display icon only.
 
@@ -47,7 +47,7 @@ ___
 
 ### Title
 
-• **Title**
+• **Title** = ``"title"``
 
 Display web page title.
 
@@ -59,7 +59,7 @@ ___
 
 ### Url
 
-• **Url**
+• **Url** = ``"url"``
 
 Display URL.
 

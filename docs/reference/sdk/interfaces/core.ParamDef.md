@@ -38,7 +38,9 @@ ___
 
 • `Optional` **defaultValue**: [`SuggestedValueType`](../types/core.SuggestedValueType.md)<`T`\>
 
-**`deprecated`** This will be removed in a future version of the SDK. Use [suggestedValue](core.ParamDef.md#suggestedvalue) instead.
+**`Deprecated`**
+
+ This will be removed in a future version of the SDK. Use [suggestedValue](core.ParamDef.md#suggestedvalue) instead.
 
 #### Defined in
 

@@ -14,8 +14,9 @@ objects rather than specifying object literals. Wrappers validate your schemas
 at creation time, provide better TypeScript type inference, and can reduce
 boilerplate.
 
-**`example`**
-```
+**`Example`**
+
+ ```
 coda.makeObjectSchema({
   id: "email",
   primary: "name",
@@ -43,7 +44,3 @@ coda.makeObjectSchema({
 #### Returns
 
 `T` & { `identity?`: [`Identity`](../interfaces/core.Identity.md) ; `type`: [`Object`](../enums/core.ValueType.md#object)  }
-
-#### Defined in
-
-[schema.ts:1134](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1134)

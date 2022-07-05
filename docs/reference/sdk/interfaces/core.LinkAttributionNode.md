@@ -10,8 +10,9 @@ An attribution node that renders a hyperlink.
 This might be used to attribute the data source and link back to the home page
 of the data source or directly to the source data.
 
-**`example`**
-```
+**`Example`**
+
+ ```
 coda.makeAttributionNode({
   type: coda.AttributionNodeType.Link,
   anchorUrl: "https://example.com",
@@ -29,7 +30,7 @@ The text of the hyperlink.
 
 #### Defined in
 
-[schema.ts:922](https://github.com/coda/packs-sdk/blob/main/schema.ts#L922)
+[schema.ts:923](https://github.com/coda/packs-sdk/blob/main/schema.ts#L923)
 
 ___
 
@@ -41,7 +42,7 @@ The URL to link to.
 
 #### Defined in
 
-[schema.ts:920](https://github.com/coda/packs-sdk/blob/main/schema.ts#L920)
+[schema.ts:921](https://github.com/coda/packs-sdk/blob/main/schema.ts#L921)
 
 ___
 
@@ -53,4 +54,4 @@ Identifies this as a link attribution node.
 
 #### Defined in
 
-[schema.ts:918](https://github.com/coda/packs-sdk/blob/main/schema.ts#L918)
+[schema.ts:919](https://github.com/coda/packs-sdk/blob/main/schema.ts#L919)

@@ -596,7 +596,7 @@ export declare type MetadataFormulaResultType = string | number | MetadataFormul
 /**
  * A formula that returns metadata relating to a core pack building block, like a sync table,
  * a formula parameter, or a user account. Examples include {@link DynamicOptions.getSchema},
- * {@link BaseAuthentication.getConnectionName}, and {@link autocomplete}.
+ * {@link BaseAuthentication.getConnectionName}, and {@link ParamDef.autocomplete}.
  *
  * Many pack building blocks make use of supporting features that often require JavaScript
  * or an API request to implement. For example, fetching the list of available autocomplete
@@ -733,7 +733,7 @@ export interface DynamicOptions {
      * For a dynamic sync table, the value of {@link DynamicSyncTableOptions.getSchema}
      * is passed through here. For a non-dynamic sync table, you may still implement
      * this if you table has a schema that varies based on the user account, but
-     * does not require a {@link dynamicUrl}.
+     * does not require a {@link Sync.dynamicUrl}.
      */
     getSchema?: MetadataFormulaDef;
     /** See {@link DynamicSyncTableOptions.entityName} */

@@ -9,8 +9,9 @@ title: "newPack"
 
 Creates a new skeleton pack definition that can be added to.
 
-**`example`**
-```
+**`Example`**
+
+ ```
 export const pack = newPack();
 pack.addFormula({resultType: ValueType.String, name: 'MyFormula', ...});
 pack.addSyncTable('MyTable', ...);
@@ -26,7 +27,3 @@ pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
 #### Returns
 
 [`PackDefinitionBuilder`](../classes/core.PackDefinitionBuilder.md)
-
-#### Defined in
-
-[builder.ts:39](https://github.com/coda/packs-sdk/blob/main/builder.ts#L39)

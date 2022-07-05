@@ -17,8 +17,9 @@ them directly as a list, you need not actually implement an autocomplete functio
 The primary use case here is fetching a list of all possible results from an API
 and then refining them using the user's current search string.
 
-**`example`**
-```
+**`Example`**
+
+ ```
 autocomplete: async function(context, search) {
   const response = await context.fetcher.fetch({method: "GET", url: "/api/entities"});
   const allOptions = response.body.entities.map(entity => entity.name);
@@ -42,7 +43,3 @@ autocomplete: async function(context, search) {
 #### Returns
 
 `Promise`<[`MetadataFormulaObjectResultType`](../interfaces/core.MetadataFormulaObjectResultType.md)[]\>
-
-#### Defined in
-
-[api.ts:1141](https://github.com/coda/packs-sdk/blob/main/api.ts#L1141)

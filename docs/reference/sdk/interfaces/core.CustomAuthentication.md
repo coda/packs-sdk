@@ -15,14 +15,15 @@ user or system authentication). When constructing a network request, you may ind
 be inserted by our fetcher service using the syntax described below (similar to templating engines).
 
 {% raw %}
-To insert the credentials, simply put `{{<paramName>-<invocationToken>}}` as a string anywhere in your request,
+To insert the credentials, simply put `\{\{<paramName>-<invocationToken>\}\}` as a string anywhere in your request,
 where `<paramName>` is the name of the parameter defined in the params mapping and `<invocationToken>` is the
 secret invocation-specific token provided within the [ExecutionContext](core.ExecutionContext.md). The invocation
 token is required for security reasons.
 {% endraw %}
 
-**`example`**
-```
+**`Example`**
+
+ ```
 {% raw %}
 // Suppose you're using an API that requires a secret id in the request URL,
 // and a different secret value in the request body. You can define a Custom
@@ -78,7 +79,7 @@ When requiresEndpointUrl is set to true this should be the root domain that all 
 For example, this value would be "example.com" if specific endpoints looked like {custom-subdomain}.example.com.
 
 For packs that make requests to multiple domains (uncommon), this should be the domain within
-[networkDomains](core.PackDefinition.md#networkdomains) that this configuration applies to.
+[networkDomain](core.CustomAuthentication.md#networkdomain) that this configuration applies to.
 
 #### Inherited from
 
@@ -152,7 +153,7 @@ ___
 • **params**: [`CustomAuthParameter`](core.CustomAuthParameter.md)[]
 
 An array of parameters that must be provided for new connection accounts to authenticate this pack.
-These parameters can then be referenced via the [CustomAuthParameter.name](core.CustomAuthParameter.md#name) property for template
+These parameters can then be referenced via the [name](core.CustomAuthParameter.md#name) property for template
 replacement inside the constructed network request.
 
 #### Defined in

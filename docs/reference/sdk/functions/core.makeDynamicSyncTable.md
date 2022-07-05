@@ -9,8 +9,9 @@ title: "makeDynamicSyncTable"
 
 Creates a dynamic sync table definition.
 
-**`example`**
-```
+**`Example`**
+
+ ```
 coda.makeDynamicSyncTable({
   name: "MySyncTable",
   getName: async function(context) => {
@@ -55,7 +56,3 @@ coda.makeDynamicSyncTable({
 #### Returns
 
 [`DynamicSyncTableDef`](../interfaces/core.DynamicSyncTableDef.md)<`K`, `L`, `ParamDefsT`, `any`\>
-
-#### Defined in
-
-[api.ts:1609](https://github.com/coda/packs-sdk/blob/main/api.ts#L1609)

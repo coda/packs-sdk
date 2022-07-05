@@ -24,70 +24,20 @@ and requiring the user to always specify a date range may be inconvenient.
 
 ### Everything
 
-• **Everything**
+• **Everything** = ``"everything"``
 
 Indicates a date range beginning in the very distant past (e.g. 1/1/1, aka 1 A.D.)
 and ending in the distant future (e.g. 12/31/3999). Exact dates are subject to change.
 
 #### Defined in
 
-[api_types.ts:778](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L778)
+[api_types.ts:779](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L779)
 
 ___
 
 ### Last30Days
 
-• **Last30Days**
-
-#### Defined in
-
-[api_types.ts:747](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L747)
-
-___
-
-### Last3Months
-
-• **Last3Months**
-
-#### Defined in
-
-[api_types.ts:750](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L750)
-
-___
-
-### Last6Months
-
-• **Last6Months**
-
-#### Defined in
-
-[api_types.ts:751](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L751)
-
-___
-
-### Last7Days
-
-• **Last7Days**
-
-#### Defined in
-
-[api_types.ts:746](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L746)
-
-___
-
-### LastMonth
-
-• **LastMonth**
-
-#### Defined in
-
-[api_types.ts:749](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L749)
-
-___
-
-### LastWeek
-
-• **LastWeek**
+• **Last30Days** = ``"last_30_days"``
 
 #### Defined in
 
@@ -95,9 +45,19 @@ ___
 
 ___
 
-### LastYear
+### Last3Months
 
-• **LastYear**
+• **Last3Months** = ``"last_3_months"``
+
+#### Defined in
+
+[api_types.ts:751](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L751)
+
+___
+
+### Last6Months
+
+• **Last6Months** = ``"last_6_months"``
 
 #### Defined in
 
@@ -105,59 +65,49 @@ ___
 
 ___
 
+### Last7Days
+
+• **Last7Days** = ``"last_7_days"``
+
+#### Defined in
+
+[api_types.ts:747](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L747)
+
+___
+
+### LastMonth
+
+• **LastMonth** = ``"last_month"``
+
+#### Defined in
+
+[api_types.ts:750](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L750)
+
+___
+
+### LastWeek
+
+• **LastWeek** = ``"last_week"``
+
+#### Defined in
+
+[api_types.ts:749](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L749)
+
+___
+
+### LastYear
+
+• **LastYear** = ``"last_year"``
+
+#### Defined in
+
+[api_types.ts:753](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L753)
+
+___
+
 ### Next30Days
 
-• **Next30Days**
-
-#### Defined in
-
-[api_types.ts:767](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L767)
-
-___
-
-### Next3Months
-
-• **Next3Months**
-
-#### Defined in
-
-[api_types.ts:770](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L770)
-
-___
-
-### Next6Months
-
-• **Next6Months**
-
-#### Defined in
-
-[api_types.ts:771](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L771)
-
-___
-
-### Next7Days
-
-• **Next7Days**
-
-#### Defined in
-
-[api_types.ts:766](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L766)
-
-___
-
-### NextMonth
-
-• **NextMonth**
-
-#### Defined in
-
-[api_types.ts:769](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L769)
-
-___
-
-### NextWeek
-
-• **NextWeek**
+• **Next30Days** = ``"next_30_days"``
 
 #### Defined in
 
@@ -165,9 +115,19 @@ ___
 
 ___
 
-### NextYear
+### Next3Months
 
-• **NextYear**
+• **Next3Months** = ``"next_3_months"``
+
+#### Defined in
+
+[api_types.ts:771](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L771)
+
+___
+
+### Next6Months
+
+• **Next6Months** = ``"next_6_months"``
 
 #### Defined in
 
@@ -175,19 +135,49 @@ ___
 
 ___
 
-### ThisMonth
+### Next7Days
 
-• **ThisMonth**
+• **Next7Days** = ``"next_7_days"``
 
 #### Defined in
 
-[api_types.ts:758](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L758)
+[api_types.ts:767](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L767)
 
 ___
 
-### ThisMonthStart
+### NextMonth
 
-• **ThisMonthStart**
+• **NextMonth** = ``"next_month"``
+
+#### Defined in
+
+[api_types.ts:770](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L770)
+
+___
+
+### NextWeek
+
+• **NextWeek** = ``"next_week"``
+
+#### Defined in
+
+[api_types.ts:769](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L769)
+
+___
+
+### NextYear
+
+• **NextYear** = ``"next_year"``
+
+#### Defined in
+
+[api_types.ts:773](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L773)
+
+___
+
+### ThisMonth
+
+• **ThisMonth** = ``"this_month"``
 
 #### Defined in
 
@@ -195,39 +185,9 @@ ___
 
 ___
 
-### ThisWeek
+### ThisMonthStart
 
-• **ThisWeek**
-
-#### Defined in
-
-[api_types.ts:756](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L756)
-
-___
-
-### ThisWeekStart
-
-• **ThisWeekStart**
-
-#### Defined in
-
-[api_types.ts:757](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L757)
-
-___
-
-### ThisYear
-
-• **ThisYear**
-
-#### Defined in
-
-[api_types.ts:762](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L762)
-
-___
-
-### ThisYearStart
-
-• **ThisYearStart**
+• **ThisMonthStart** = ``"this_month_start"``
 
 #### Defined in
 
@@ -235,29 +195,39 @@ ___
 
 ___
 
-### Today
+### ThisWeek
 
-• **Today**
-
-#### Defined in
-
-[api_types.ts:755](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L755)
-
-___
-
-### Tomorrow
-
-• **Tomorrow**
+• **ThisWeek** = ``"this_week"``
 
 #### Defined in
 
-[api_types.ts:765](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L765)
+[api_types.ts:757](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L757)
 
 ___
 
-### YearToDate
+### ThisWeekStart
 
-• **YearToDate**
+• **ThisWeekStart** = ``"this_week_start"``
+
+#### Defined in
+
+[api_types.ts:758](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L758)
+
+___
+
+### ThisYear
+
+• **ThisYear** = ``"this_year"``
+
+#### Defined in
+
+[api_types.ts:763](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L763)
+
+___
+
+### ThisYearStart
+
+• **ThisYearStart** = ``"this_year_start"``
 
 #### Defined in
 
@@ -265,10 +235,40 @@ ___
 
 ___
 
-### Yesterday
+### Today
 
-• **Yesterday**
+• **Today** = ``"today"``
 
 #### Defined in
 
-[api_types.ts:745](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L745)
+[api_types.ts:756](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L756)
+
+___
+
+### Tomorrow
+
+• **Tomorrow** = ``"tomorrow"``
+
+#### Defined in
+
+[api_types.ts:766](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L766)
+
+___
+
+### YearToDate
+
+• **YearToDate** = ``"year_to_date"``
+
+#### Defined in
+
+[api_types.ts:762](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L762)
+
+___
+
+### Yesterday
+
+• **Yesterday** = ``"yesterday"``
+
+#### Defined in
+
+[api_types.ts:746](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L746)

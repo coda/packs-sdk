@@ -40,7 +40,7 @@ export interface RequestHandlerTemplate {
      * The URL to fetch.
      *
      * The path of the URL can include strong formatting directives that can be replaced with
-     * formula parameters, e.g. "https://example.com/api/{name}".
+     * formula parameters, e.g. "https://example.com/api/\{name\}".
      */
     url: string;
     /**
