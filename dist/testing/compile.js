@@ -112,7 +112,6 @@ function getInjections({ timerStrategy = TimerShimStrategy.None, manifestPath })
 }
 async function buildWithES({ lastBundleFilename, outputBundleFilename, options: buildOptions, format, }) {
     const options = {
-        banner: { js: "'use strict';" },
         bundle: true,
         entryPoints: [lastBundleFilename],
         outfile: outputBundleFilename,
