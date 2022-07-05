@@ -182,7 +182,7 @@ ___
 
 **`Deprecated`**
 
- use `isAction` and `connectionRequirement` instead
+use `isAction` and `connectionRequirement` instead
 
 #### Inherited from
 

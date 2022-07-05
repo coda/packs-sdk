@@ -21,6 +21,7 @@ At this time, this wrapper provides only better TypeScript type inference,
 but it may do validation in a future SDK version.
 
 **`Example`**
+
 ```
 coda.makeSchema({
   type: coda.ValueType.Array,

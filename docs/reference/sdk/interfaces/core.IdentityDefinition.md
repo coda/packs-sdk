@@ -31,7 +31,7 @@ table definition, so you needn't explicitly create on unless desired.
 
 **`Deprecated`**
 
- See [attribution](core.ObjectSchemaDefinition.md#attribution)
+See [attribution](core.ObjectSchemaDefinition.md#attribution)
 
 #### Defined in
 

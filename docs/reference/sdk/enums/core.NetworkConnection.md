@@ -7,7 +7,7 @@ title: "NetworkConnection"
 
 **`Deprecated`**
 
- use `ConnectionRequirement` instead
+use `ConnectionRequirement` instead
 
 ## Enumeration Members
 

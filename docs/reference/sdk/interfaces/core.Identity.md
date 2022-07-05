@@ -22,7 +22,7 @@ one isn't set by the maker.
 
 **`Deprecated`**
 
- See [attribution](core.ObjectSchemaDefinition.md#attribution)
+See [attribution](core.ObjectSchemaDefinition.md#attribution)
 
 #### Inherited from
 

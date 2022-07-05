@@ -66,8 +66,6 @@ ___
 
 **`Deprecated`**
 
- 
-
 #### Implementation of
 
 BasicPackDefinition.formulaNamespace
@@ -163,6 +161,7 @@ Adds a column format definition to this pack.
 In the web editor, the `/ColumnFormat` shortcut will insert a snippet of a skeleton format.
 
 **`Example`**
+
 ```
 pack.addColumnFormat({
   name: 'MyColumn',
@@ -191,6 +190,7 @@ Adds a dynamic sync table definition to this pack.
 In the web editor, the `/DynamicSyncTable` shortcut will insert a snippet of a skeleton sync table.
 
 **`Example`**
+
 ```
 pack.addDynamicSyncTable({
   name: "MySyncTable",
@@ -236,6 +236,7 @@ Adds a formula definition to this pack.
 In the web editor, the `/Formula` shortcut will insert a snippet of a skeleton formula.
 
 **`Example`**
+
 ```
 pack.addFormula({
   resultType: ValueType.String,
@@ -290,6 +291,7 @@ You are allowed one network domain per pack by default. If your pack needs
 to connect to multiple domains, contact Coda Support for approval.
 
 **`Example`**
+
 ```
 pack.addNetworkDomain('example.com');
 ```
@@ -315,6 +317,7 @@ Adds a sync table definition to this pack.
 In the web editor, the `/SyncTable` shortcut will insert a snippet of a skeleton sync table.
 
 **`Example`**
+
 ```
 pack.addSyncTable({
   name: 'MySyncTable',
@@ -363,6 +366,7 @@ In the web editor, the `/SystemAuthentication` shortcut will insert a snippet of
 authentication definition.
 
 **`Example`**
+
 ```
 pack.setSystemAuthentication({
   type: AuthenticationType.HeaderBearerToken,
@@ -399,6 +403,7 @@ formula. To change the default, you can pass a `defaultConnectionRequirement` op
 this method.
 
 **`Example`**
+
 ```
 pack.setUserAuthentication({
   type: AuthenticationType.HeaderBearerToken,
@@ -429,6 +434,7 @@ and the web editor will automatically provide an appropriate semantic version
 each time you build a version.
 
 **`Example`**
+
 ```
 pack.setVersion('1.2.3');
 ```

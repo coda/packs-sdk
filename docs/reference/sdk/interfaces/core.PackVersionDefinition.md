@@ -46,8 +46,6 @@ ___
 
 **`Deprecated`**
 
- 
-
 #### Defined in
 
 [types.ts:877](https://github.com/coda/packs-sdk/blob/main/types.ts#L877)

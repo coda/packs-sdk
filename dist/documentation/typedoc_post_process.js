@@ -48,7 +48,6 @@ async function process(file) {
     const buf = await fs.promises.readFile(file);
     let content = buf.toString();
     content = addFrontmatter(file, content);
-    content = fixCodeBlocks(file, content);
     return fs.promises.writeFile(file, content);
 }
 /**
@@ -68,11 +67,5 @@ function addFrontmatter(file, content) {
     const title = match[1];
     const frontmatter = `---\ntitle: "${title}"\n---\n`;
     return frontmatter + content;
-}
-/**
- * Fix code blocks. See https://github.com/tgreyuk/typedoc-plugin-markdown/issues/324#issuecomment-1175320510
- */
-function fixCodeBlocks(file, content) {
-    return content.replace(/^\s+```/gm, '```');
 }
 main().catch(helpers_1.print);

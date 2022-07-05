@@ -12,6 +12,7 @@ to define an implementation for the formula rather than implementing an actual `
 in JavaScript.
 
 **`Example`**
+
 ```
 coda.makeEmptyFormula({
    name: "GetWidget",
