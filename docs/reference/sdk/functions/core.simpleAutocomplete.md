@@ -18,6 +18,7 @@ The primary use case here is fetching a list of all possible results from an API
 and then refining them using the user's current search string.
 
 **`Example`**
+
 ```
 autocomplete: async function(context, search) {
   const response = await context.fetcher.fetch({method: "GET", url: "/api/entities"});

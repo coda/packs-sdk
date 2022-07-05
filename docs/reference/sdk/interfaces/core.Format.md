@@ -52,7 +52,7 @@ ___
 
 **`Deprecated`**
 
- Namespaces are being removed from the product.
+Namespaces are being removed from the product.
 
 #### Defined in
 
@@ -66,7 +66,7 @@ ___
 
 **`Deprecated`**
 
- No longer needed, will be inferred from the referenced formula.
+No longer needed, will be inferred from the referenced formula.
 
 #### Defined in
 
@@ -118,7 +118,7 @@ ___
 
 **`Deprecated`**
 
- Currently unused.
+Currently unused.
 
 #### Defined in
 

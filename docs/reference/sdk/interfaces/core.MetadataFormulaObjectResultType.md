@@ -41,6 +41,7 @@ to create a table. Selecting a result with `hasChildren: true` will invoke
 `listDynamicUrls` again with `value` as the second argument.
 
 That is, your dynamic sync table definition might include:
+
 ```
 listDynamicUrls: async function(context, parentValue) {
   ...

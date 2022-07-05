@@ -7,7 +7,7 @@ title: "Network"
 
 **`Deprecated`**
 
- use `isAction` and `connectionRequirement` on the formula definition instead.
+use `isAction` and `connectionRequirement` on the formula definition instead.
 
 ## Properties
 

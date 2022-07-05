@@ -15,7 +15,7 @@ Information about the Coda environment and doc this formula was invoked from, fo
 
 **`Deprecated`**
 
- This will be removed in a future version of the SDK.
+This will be removed in a future version of the SDK.
 
 #### Defined in
 

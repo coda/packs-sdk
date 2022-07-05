@@ -93,7 +93,7 @@ ___
 
 **`Deprecated`**
 
- Use [featuredProperties](core.ObjectSchemaDefinition.md#featuredproperties)
+Use [featuredProperties](core.ObjectSchemaDefinition.md#featuredproperties)
 
 #### Defined in
 
@@ -132,7 +132,7 @@ ___
 
 **`Deprecated`**
 
- Use [idProperty](core.ObjectSchemaDefinition.md#idproperty)
+Use [idProperty](core.ObjectSchemaDefinition.md#idproperty)
 
 #### Defined in
 
@@ -190,7 +190,7 @@ ___
 
 **`Deprecated`**
 
- Use [displayProperty](core.ObjectSchemaDefinition.md#displayproperty)
+Use [displayProperty](core.ObjectSchemaDefinition.md#displayproperty)
 
 #### Defined in
 

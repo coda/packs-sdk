@@ -9,7 +9,7 @@ title: "PackId"
 
 **`Deprecated`**
 
- Use `number` in new code.
+Use `number` in new code.
 
 #### Defined in
 

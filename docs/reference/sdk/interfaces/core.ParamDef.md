@@ -40,7 +40,7 @@ ___
 
 **`Deprecated`**
 
- This will be removed in a future version of the SDK. Use [suggestedValue](core.ParamDef.md#suggestedvalue) instead.
+This will be removed in a future version of the SDK. Use [suggestedValue](core.ParamDef.md#suggestedvalue) instead.
 
 #### Defined in
 

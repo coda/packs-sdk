@@ -18,9 +18,11 @@ as an input to the subsequent invocation of the sync formula.
 The contents of this object are entirely up to the pack author.
 
 Examples:
+
 ```
 {nextPage: 3}
 ```
+
 ```
 {nextPageUrl: 'https://someapi.com/api/items?pageToken=asdf123'}
 ```

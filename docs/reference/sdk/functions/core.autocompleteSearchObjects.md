@@ -19,6 +19,7 @@ and then to take the user's partial input and search over those entities
 for matches. The helper generalizes this use case.
 
 **`Example`**
+
 ```
 coda.makeParameter({
   type: ParameterType.Number,

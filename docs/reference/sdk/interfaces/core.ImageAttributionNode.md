@@ -11,6 +11,7 @@ This is often the logo of the data source along with a link back to the home pag
 of the data source or directly to the source data.
 
 **`Example`**
+
 ```
 coda.makeAttributionNode({
   type: coda.AttributionNodeType.Image,

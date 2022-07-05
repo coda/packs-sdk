@@ -59,7 +59,7 @@ ___
 
 **`Deprecated`**
 
- Use [getOptions](core.SetEndpoint.md#getoptions)
+Use [getOptions](core.SetEndpoint.md#getoptions)
 
 #### Defined in
 
