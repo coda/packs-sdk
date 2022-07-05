@@ -144,7 +144,6 @@ async function buildWithES({
   format: esbuild.Format;
 }) {
   const options: esbuild.BuildOptions = {
-    banner: {js: "'use strict';"},
     bundle: true,
     entryPoints: [lastBundleFilename],
     outfile: outputBundleFilename,
