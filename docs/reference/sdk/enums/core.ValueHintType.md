@@ -169,8 +169,7 @@ an object whose `id` property is an email address, which Coda will try to resolv
 and render an @-reference to the user.
 
 **`Example`**
-
- ```
+```
 makeObjectSchema({
   type: ValueType.Object,
   codaType: ValueHintType.Person,
@@ -201,8 +200,7 @@ Normally a reference schema is constructed from the schema object being referenc
 [makeReferenceSchemaFromObjectSchema](../functions/core.makeReferenceSchemaFromObjectSchema.md).
 
 **`Example`**
-
- ```
+```
 makeObjectSchema({
   type: ValueType.Object,
   codaType: ValueHintType.Reference,

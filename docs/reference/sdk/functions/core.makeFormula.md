@@ -26,26 +26,22 @@ indicating that the array elements are all just strings, or it could be an objec
 created using [makeObjectSchema](core.makeObjectSchema.md) if the elements are objects.
 
 **`Example`**
-
- ```
+```
 makeFormula({resultType: ValueType.String, name: 'Hello', ...});
 ```
 
 **`Example`**
-
- ```
+```
 makeFormula({resultType: ValueType.String, codaType: ValueType.Html, name: 'HelloHtml', ...});
 ```
 
 **`Example`**
-
- ```
+```
 makeFormula({resultType: ValueType.Array, items: {type: ValueType.String}, name: 'HelloStringArray', ...});
 ```
 
 **`Example`**
-
- ```
+```
 makeFormula({
   resultType: ValueType.Object,
   schema: makeObjectSchema({type: ValueType.Object, properties: {...}}),
@@ -55,8 +51,7 @@ makeFormula({
 ```
 
 **`Example`**
-
- ```
+```
 makeFormula({
   resultType: ValueType.Array,
   items: makeObjectSchema({type: ValueType.Object, properties: {...}}),

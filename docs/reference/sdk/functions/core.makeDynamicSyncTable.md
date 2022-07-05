@@ -10,8 +10,7 @@ title: "makeDynamicSyncTable"
 Creates a dynamic sync table definition.
 
 **`Example`**
-
- ```
+```
 coda.makeDynamicSyncTable({
   name: "MySyncTable",
   getName: async function(context) => {

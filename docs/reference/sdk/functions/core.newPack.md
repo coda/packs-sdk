@@ -10,8 +10,7 @@ title: "newPack"
 Creates a new skeleton pack definition that can be added to.
 
 **`Example`**
-
- ```
+```
 export const pack = newPack();
 pack.addFormula({resultType: ValueType.String, name: 'MyFormula', ...});
 pack.addSyncTable('MyTable', ...);

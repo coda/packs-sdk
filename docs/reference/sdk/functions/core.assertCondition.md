@@ -14,8 +14,7 @@ to all code that follows call to this function.
 See https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#assertion-functions
 
 **`Example`**
-
- ```
+```
 function foo(value: string | number) {
   assertCondtion(typeof value === 'string');
   // TypeScript would otherwise compalin, because `value` could have been number,

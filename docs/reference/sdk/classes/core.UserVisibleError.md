@@ -25,8 +25,7 @@ and the Coda UI will display the message.
 Use to construct a user-visible error.
 
 **`Example`**
-
- ```
+```
 if (!url.startsWith("http")) {
   throw new coda.UserVisibleError("Please provide a valid url.");
 }

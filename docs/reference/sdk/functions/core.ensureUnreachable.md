@@ -11,8 +11,7 @@ Helper for TypeScript to make sure that handling of code forks is exhaustive,
 most commonly with a `switch` statement.
 
 **`Example`**
-
- ```
+```
 enum MyEnum {
   Foo = 'Foo',
   Bar = 'Bar',

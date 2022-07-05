@@ -16,8 +16,7 @@ exactly that, but alternatively you could use `makeTranslateObjectFormula` and a
 `execute` implementation will be generated for you.
 
 **`Example`**
-
- ```
+```
 makeTranslateObjectFormula({
   name: "Users",
   description: "Returns a list of users."

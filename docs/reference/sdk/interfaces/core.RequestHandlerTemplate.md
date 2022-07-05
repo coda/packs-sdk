@@ -9,8 +9,7 @@ Configuration for how to construct an HTTP request for a code-free formula defin
 created using [makeTranslateObjectFormula](../functions/core.makeTranslateObjectFormula.md).
 
 **`Example`**
-
- ```
+```
 coda.makeTranslateObjectFormula({
   name: "FetchWidget",
   description: "Fetches a widget.",

@@ -15,8 +15,7 @@ at creation time, provide better TypeScript type inference, and can reduce
 boilerplate.
 
 **`Example`**
-
- ```
+```
 coda.makeObjectSchema({
   id: "email",
   primary: "name",

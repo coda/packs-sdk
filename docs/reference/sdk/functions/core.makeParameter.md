@@ -10,14 +10,12 @@ title: "makeParameter"
 Create a definition for a parameter for a formula or sync.
 
 **`Example`**
-
- ```
+```
 makeParameter({type: ParameterType.String, name: 'myParam', description: 'My description'});
 ```
 
 **`Example`**
-
- ```
+```
 makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', description: 'My description'});
 ```
 

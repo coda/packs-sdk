@@ -17,7 +17,6 @@ These affect how a numeric value is rendered in docs.
 
 Indicates the value should be rendered as a number with a currency symbol as a prefix, but padded
 to allow the numeric values to line up vertically, e.g.
-
 ```
 $       2.50
 $      29.99
