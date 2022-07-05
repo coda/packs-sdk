@@ -7,7 +7,6 @@ Utilities that aid in writing unit tests and integration tests for Packs.
 They are only available when developing locally using the CLI.
 
 This module is imported using the following code:
-
 ```ts
 import * as testing from "@codahq/packs-sdk/dist/development";
 ```

@@ -27,7 +27,3 @@ title: "executeFormulaFromPackDef"
 #### Returns
 
 `Promise`<`T`\>
-
-#### Defined in
-
-[testing/execution.ts:120](https://github.com/coda/packs-sdk/blob/main/testing/execution.ts#L120)

@@ -26,7 +26,3 @@ title: "executeFormulaOrSyncWithVM"
 #### Returns
 
 `Promise`<`T`\>
-
-#### Defined in
-
-[testing/execution.ts:238](https://github.com/coda/packs-sdk/blob/main/testing/execution.ts#L238)

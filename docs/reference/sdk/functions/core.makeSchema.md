@@ -20,7 +20,7 @@ boilerplate.
 At this time, this wrapper provides only better TypeScript type inference,
 but it may do validation in a future SDK version.
 
-**`example`**
+**`Example`**
 ```
 coda.makeSchema({
   type: coda.ValueType.Array,
@@ -43,7 +43,3 @@ coda.makeSchema({
 #### Returns
 
 `T`
-
-#### Defined in
-
-[schema.ts:1110](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1110)

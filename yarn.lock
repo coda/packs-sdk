@@ -6596,19 +6596,18 @@ typedarray@^0.0.6:
   resolved "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typedoc-plugin-markdown@^3.12.1:
-  version "3.12.1"
-  resolved "https://registry.yarnpkg.com/typedoc-plugin-markdown/-/typedoc-plugin-markdown-3.12.1.tgz#2a33ca0018bdd7ed512e29960d3eb344ecb65f4a"
-  integrity sha512-gMntJq7+JlGJZ5sVjrkzO/rG2dsmNBbWk5ZkcKvYu6QOeBwGcK5tzEyS0aqnFTJj9GCHCB+brAnTuKtAyotNwA==
+typedoc-plugin-markdown@^3.13.2:
+  version "3.13.2"
+  resolved "https://registry.yarnpkg.com/typedoc-plugin-markdown/-/typedoc-plugin-markdown-3.13.2.tgz#988846ab68365ef215fbae35a75745fa7641a8af"
+  integrity sha512-WpP+XW4TZ7yVIM9jSjTWUznZitXWY8OwSVRZAu65+lOI6tiIeUYEsgiFzIdGjNcWbwD6THNcJqATDoMVIp9RKw==
   dependencies:
     handlebars "^4.7.7"
 
-typedoc@^0.22.17:
-  version "0.22.17"
-  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.22.17.tgz#bc51cc95f569040112504300831cdac4f8089b7b"
-  integrity sha512-h6+uXHVVCPDaANzjwzdsj9aePBjZiBTpiMpBBeyh1zcN2odVsDCNajz8zyKnixF93HJeGpl34j/70yoEE5BfNg==
+typedoc@^0.23.2:
+  version "0.23.2"
+  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.23.2.tgz#c5f82752530749c8b541ff9b17883f6fb9e72f14"
+  integrity sha512-THpC4vtb3wu1yck6YHzEc4ck6W4lScf8TD0Rg7XAetDih8BzP+ErYO0/6DtdzYcZyKkDwEoujkMeWW7CffCbrQ==
   dependencies:
-    glob "^8.0.3"
     lunr "^2.3.9"
     marked "^4.0.16"
     minimatch "^5.1.0"

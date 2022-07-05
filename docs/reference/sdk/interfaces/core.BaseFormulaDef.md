@@ -178,7 +178,9 @@ ___
 
 • `Optional` `Readonly` **network**: [`Network`](core.Network.md)
 
-**`deprecated`** use `isAction` and `connectionRequirement` instead
+**`Deprecated`**
+
+ use `isAction` and `connectionRequirement` instead
 
 #### Inherited from
 
@@ -244,10 +246,6 @@ The JavaScript function that implements this formula
 
 [PackFormulaDef](core.PackFormulaDef.md).[execute](core.PackFormulaDef.md#execute)
 
-#### Defined in
-
-[api.ts:521](https://github.com/coda/packs-sdk/blob/main/api.ts#L521)
-
 ___
 
 ### onError
@@ -269,7 +267,3 @@ that can then be applied to many different formulas in a pack.
 #### Returns
 
 `any`
-
-#### Defined in
-
-[api.ts:901](https://github.com/coda/packs-sdk/blob/main/api.ts#L901)

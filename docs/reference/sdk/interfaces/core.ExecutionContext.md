@@ -23,7 +23,8 @@ this contains the [Fetcher](core.Fetcher.md), which is used for making HTTP requ
 
 • `Optional` `Readonly` **endpoint**: `string`
 
-The base endpoint URL for the user's account, only if applicable. See [requiresEndpointUrl](core.AWSAccessKeyAuthentication.md#requiresendpointurl).
+The base endpoint URL for the user's account, only if applicable. See
+[requiresEndpointUrl](core.BaseAuthentication.md#requiresendpointurl).
 
 If the API URLs are variable based on the user account, you will need this endpoint
 to construct URLs to use with the fetcher. Alternatively, you can use relative URLs
@@ -31,7 +32,7 @@ to construct URLs to use with the fetcher. Alternatively, you can use relative U
 
 #### Defined in
 
-[api_types.ts:691](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L691)
+[api_types.ts:692](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L692)
 
 ___
 
@@ -56,7 +57,7 @@ This is mostly for Coda internal use and we do not recommend relying on it.
 
 #### Defined in
 
-[api_types.ts:696](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L696)
+[api_types.ts:697](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L697)
 
 ___
 
@@ -66,12 +67,12 @@ ___
 
 A random token scoped to only this request invocation.
 This is a unique identifier for the invocation, and in particular used with
-[AuthenticationType.Custom](../enums/core.AuthenticationType.md#custom) for naming template parameters that will be
+[Custom](../enums/core.AuthenticationType.md#custom) for naming template parameters that will be
 replaced by the fetcher in secure way.
 
 #### Defined in
 
-[api_types.ts:707](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L707)
+[api_types.ts:708](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L708)
 
 ___
 
@@ -83,7 +84,7 @@ Information about state of the current sync. Only populated if this is a sync ta
 
 #### Defined in
 
-[api_types.ts:711](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L711)
+[api_types.ts:712](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L712)
 
 ___
 
@@ -108,4 +109,4 @@ The timezone of the doc from which this formula was invoked.
 
 #### Defined in
 
-[api_types.ts:700](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L700)
+[api_types.ts:701](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L701)

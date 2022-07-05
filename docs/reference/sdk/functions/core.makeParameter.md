@@ -9,12 +9,12 @@ title: "makeParameter"
 
 Create a definition for a parameter for a formula or sync.
 
-**`example`**
+**`Example`**
 ```
 makeParameter({type: ParameterType.String, name: 'myParam', description: 'My description'});
 ```
 
-**`example`**
+**`Example`**
 ```
 makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', description: 'My description'});
 ```
@@ -34,7 +34,3 @@ makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', descriptio
 #### Returns
 
 [`ParamDef`](../interfaces/core.ParamDef.md)<`ParameterTypeMap`[`T`]\>
-
-#### Defined in
-
-[api.ts:358](https://github.com/coda/packs-sdk/blob/main/api.ts#L358)

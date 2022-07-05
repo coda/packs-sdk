@@ -25,22 +25,22 @@ what the elements of the array are. This could be a simple schema like `{type: V
 indicating that the array elements are all just strings, or it could be an object schema
 created using [makeObjectSchema](core.makeObjectSchema.md) if the elements are objects.
 
-**`example`**
+**`Example`**
 ```
 makeFormula({resultType: ValueType.String, name: 'Hello', ...});
 ```
 
-**`example`**
+**`Example`**
 ```
 makeFormula({resultType: ValueType.String, codaType: ValueType.Html, name: 'HelloHtml', ...});
 ```
 
-**`example`**
+**`Example`**
 ```
 makeFormula({resultType: ValueType.Array, items: {type: ValueType.String}, name: 'HelloStringArray', ...});
 ```
 
-**`example`**
+**`Example`**
 ```
 makeFormula({
   resultType: ValueType.Object,
@@ -50,7 +50,7 @@ makeFormula({
 });
 ```
 
-**`example`**
+**`Example`**
 ```
 makeFormula({
   resultType: ValueType.Array,
@@ -77,7 +77,3 @@ makeFormula({
 #### Returns
 
 [`Formula`](../types/core.Formula.md)<`ParamDefsT`, `ResultT`, `SchemaT`\>
-
-#### Defined in
-
-[api.ts:796](https://github.com/coda/packs-sdk/blob/main/api.ts#L796)

@@ -20,28 +20,39 @@ async function main(): Promise<void> {
 }
 
 async function process(file: string) {
-  return addFrontmatter(file);
+  const buf = await fs.promises.readFile(file);
+  let content = buf.toString();
+
+  content = addFrontmatter(file, content);
+  content = fixCodeBlocks(file, content);
+
+  return fs.promises.writeFile(file, content);
 }
 
 /**
  * Adds frontmatter to generated markdown files, setting a simplified title. The
  * frontmatter title is used in the nav.
  */
-async function addFrontmatter(file: string): Promise<void> {
-  const buf = await fs.promises.readFile(file);
-  const content = buf.toString();
+function addFrontmatter(file: string, content: string): string {
   if (content.startsWith('---\n')) {
     print(`Already has frontmatter: ${file}`);
-    return;
+    return content;
   }
   const match = content.match(TitleRegex);
   if (!match) {
     print(`Title not found: ${file}`);
-    return;
+    return content;
   }
   const title = match![1];
   const frontmatter = `---\ntitle: "${title}"\n---\n`;
-  return fs.promises.writeFile(file, frontmatter + content);
+  return frontmatter + content;
+}
+
+/**
+ * Fix code blocks. See https://github.com/tgreyuk/typedoc-plugin-markdown/issues/324#issuecomment-1175320510
+ */
+ function fixCodeBlocks(file: string, content: string): string {
+  return content.replace(/^\s+```/gm, '```');
 }
 
 main().catch(print);

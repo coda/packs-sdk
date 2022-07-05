@@ -12,7 +12,7 @@ import {spawnSync} from 'child_process';
 interface Comment {
   shortText: string;
   text?: string;
-  tags?: Array<{
+  blockTags?: Array<{
     tag: string;
     text?: string;
   }>;
@@ -20,6 +20,7 @@ interface Comment {
 
 interface ReflectionData {
   name: string;
+  kind: number;
   kindString: string;
   comment?: Comment;
   sources?: Array<{
@@ -36,9 +37,11 @@ interface ReflectionData {
   };
 }
 
+const ModulesKind = 1;
+
 function getReflectionData() {
   const tempfile = path.join(os.tmpdir(), `typedoc.json`);
-  const command = `node_modules/.bin/typedoc index.ts --options typedoc.js --json ${tempfile} > /dev/null`;
+  const command = `node_modules/.bin/typedoc index.ts development.ts --options typedoc.js --json ${tempfile} > /dev/null`;
   const response = spawnSync(command, {
     shell: true,
   });
@@ -54,10 +57,14 @@ function getReflectionData() {
 
 function traverse(data: ReflectionData): ReflectionData[] {
   const entitiesWithMissingTypedoc: ReflectionData[] = [];
-  if (!hasComment(data) && data.kindString !== 'Project') {
+  // TODO: Add comments for all types in development.ts and remove this condition.
+  if (data.sources?.some(source => source.fileName.startsWith('testing/'))) {
+    return entitiesWithMissingTypedoc;
+  }
+  if (!hasComment(data) && data.kindString !== 'Project' && data.kind !== ModulesKind) {
     entitiesWithMissingTypedoc.push(data);
   }
-  if (data.comment?.tags?.find(t => t.tag === 'deprecated')) {
+  if (data.comment?.blockTags?.find(t => t.tag === '@deprecated')) {
     return entitiesWithMissingTypedoc;
   }
   // We don't care about traversing children for these nodes.
@@ -76,7 +83,7 @@ function hasComment(data: ReflectionData): boolean {
   return Boolean(
     data.comment ||
       data.signatures?.some(sig => sig.comment) ||
-      (data.type?.declaration.name === '__type' && data.type.declaration.signatures?.some(sig => sig.comment)),
+      (data.type?.declaration?.name === '__type' && data.type.declaration?.signatures?.some(sig => sig.comment)),
   );
 }
 

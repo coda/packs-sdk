@@ -291,7 +291,7 @@ var LinkDisplayType;
     LinkDisplayType["Embed"] = "embed";
 })(LinkDisplayType = exports.LinkDisplayType || (exports.LinkDisplayType = {}));
 /**
- * Enumeration of units supported by duration schemas. See {@link maxUnit}.
+ * Enumeration of units supported by duration schemas. See {@link DurationSchema.maxUnit}.
  */
 var DurationUnit;
 (function (DurationUnit) {
@@ -377,7 +377,8 @@ exports.isArray = isArray;
  * inputs, it may be useful to us this helper to sniff the return value and generate a basic
  * inferred schema from it.
  *
- * This utility does NOT attempt to determine {@link idProperty} or {@link displayProperty} attributes for
+ * This utility does NOT attempt to determine {@link ObjectSchemaDefinition.idProperty} or
+ * {@link ObjectSchemaDefinition.displayProperty} attributes for
  * an object schema, those are left undefined.
  */
 function generateSchema(obj) {

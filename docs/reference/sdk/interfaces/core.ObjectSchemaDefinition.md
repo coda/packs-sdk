@@ -32,7 +32,7 @@ See [makeAttributionNode](../functions/core.makeAttributionNode.md).
 
 #### Defined in
 
-[schema.ts:825](https://github.com/coda/packs-sdk/blob/main/schema.ts#L825)
+[schema.ts:826](https://github.com/coda/packs-sdk/blob/main/schema.ts#L826)
 
 ___
 
@@ -48,7 +48,7 @@ render such a value as an @-reference to that person, rather than a basic object
 
 #### Defined in
 
-[schema.ts:795](https://github.com/coda/packs-sdk/blob/main/schema.ts#L795)
+[schema.ts:796](https://github.com/coda/packs-sdk/blob/main/schema.ts#L796)
 
 ___
 
@@ -75,14 +75,15 @@ ___
 
 • `Optional` **displayProperty**: `K`
 
-The name of a property within [properties](core.ObjectSchemaDefinition.md#properties) that be used to label this object in the UI.
+The name of a property within [properties](core.ObjectSchemaDefinition.md#properties) that be used to label this object in the
+UI.
 Object values can contain many properties and the Coda UI will display them as a "chip"
 with only the value of the "displayProperty" property used as the chip's display label.
 The other properties can be seen when hovering over the chip.
 
 #### Defined in
 
-[schema.ts:787](https://github.com/coda/packs-sdk/blob/main/schema.ts#L787)
+[schema.ts:788](https://github.com/coda/packs-sdk/blob/main/schema.ts#L788)
 
 ___
 
@@ -90,11 +91,13 @@ ___
 
 • `Optional` **featured**: `L`[]
 
-**`deprecated`** Use [featuredProperties](core.ObjectSchemaDefinition.md#featuredproperties)
+**`Deprecated`**
+
+ Use [featuredProperties](core.ObjectSchemaDefinition.md#featuredproperties)
 
 #### Defined in
 
-[schema.ts:797](https://github.com/coda/packs-sdk/blob/main/schema.ts#L797)
+[schema.ts:798](https://github.com/coda/packs-sdk/blob/main/schema.ts#L798)
 
 ___
 
@@ -119,7 +122,7 @@ projections have been created for them.
 
 #### Defined in
 
-[schema.ts:814](https://github.com/coda/packs-sdk/blob/main/schema.ts#L814)
+[schema.ts:815](https://github.com/coda/packs-sdk/blob/main/schema.ts#L815)
 
 ___
 
@@ -127,7 +130,9 @@ ___
 
 • `Optional` **id**: `K`
 
-**`deprecated`** Use [idProperty](core.ObjectSchemaDefinition.md#idproperty)
+**`Deprecated`**
+
+ Use [idProperty](core.ObjectSchemaDefinition.md#idproperty)
 
 #### Defined in
 
@@ -139,8 +144,8 @@ ___
 
 • `Optional` **idProperty**: `K`
 
-The name of a property within [properties](core.ObjectSchemaDefinition.md#properties) that represents a unique id for this object.
-Sync table schemas must specify an id property, which uniquely identify each synced row.
+The name of a property within [properties](core.ObjectSchemaDefinition.md#properties) that represents a unique id for this
+object. Sync table schemas must specify an id property, which uniquely identify each synced row.
 
 #### Defined in
 
@@ -157,7 +162,7 @@ See [IdentityDefinition](core.IdentityDefinition.md).
 
 #### Defined in
 
-[schema.ts:819](https://github.com/coda/packs-sdk/blob/main/schema.ts#L819)
+[schema.ts:820](https://github.com/coda/packs-sdk/blob/main/schema.ts#L820)
 
 ___
 
@@ -175,7 +180,7 @@ scenarios they can be useful.
 
 #### Defined in
 
-[schema.ts:835](https://github.com/coda/packs-sdk/blob/main/schema.ts#L835)
+[schema.ts:836](https://github.com/coda/packs-sdk/blob/main/schema.ts#L836)
 
 ___
 
@@ -183,7 +188,9 @@ ___
 
 • `Optional` **primary**: `K`
 
-**`deprecated`** Use [displayProperty](core.ObjectSchemaDefinition.md#displayproperty)
+**`Deprecated`**
+
+ Use [displayProperty](core.ObjectSchemaDefinition.md#displayproperty)
 
 #### Defined in
 

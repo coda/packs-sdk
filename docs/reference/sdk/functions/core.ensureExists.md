@@ -29,7 +29,3 @@ Calling this function refines a type that can otherwise be null or undefined.
 #### Returns
 
 `T`
-
-#### Defined in
-
-[helpers/ensure.ts:51](https://github.com/coda/packs-sdk/blob/main/helpers/ensure.ts#L51)

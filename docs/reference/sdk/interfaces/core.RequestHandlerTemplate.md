@@ -8,7 +8,7 @@ title: "RequestHandlerTemplate"
 Configuration for how to construct an HTTP request for a code-free formula definition
 created using [makeTranslateObjectFormula](../functions/core.makeTranslateObjectFormula.md).
 
-**`example`**
+**`Example`**
 ```
 coda.makeTranslateObjectFormula({
   name: "FetchWidget",

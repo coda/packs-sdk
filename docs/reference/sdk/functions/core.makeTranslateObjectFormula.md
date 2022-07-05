@@ -15,7 +15,7 @@ or with slight transformations. The can be accomplished with an `execute` functi
 exactly that, but alternatively you could use `makeTranslateObjectFormula` and an
 `execute` implementation will be generated for you.
 
-**`example`**
+**`Example`**
 ```
 makeTranslateObjectFormula({
   name: "Users",
@@ -51,7 +51,3 @@ makeTranslateObjectFormula({
 #### Returns
 
 { `cacheTtlSecs?`: `number` ; `connectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md) ; `description`: `string` ; `examples?`: { `params`: (`undefined` \| [`PackFormulaValue`](../types/core.PackFormulaValue.md))[] ; `result`: [`PackFormulaResult`](../types/core.PackFormulaResult.md)  }[] ; `extraOAuthScopes?`: `string`[] ; `isAction?`: `boolean` ; `isExperimental?`: `boolean` ; `isSystem?`: `boolean` ; `name`: `string` ; `network?`: [`Network`](../interfaces/core.Network.md) ; `parameters`: `ParamDefsT` ; `varargParameters?`: [`ParamDefs`](../types/core.ParamDefs.md)  } & { `execute`: (`params`: [`ParamValues`](../types/core.ParamValues.md)<`ParamDefsT`\>, `context`: [`ExecutionContext`](../interfaces/core.ExecutionContext.md)) => `Promise`<[`SchemaType`](../types/core.SchemaType.md)<`ResultT`\>\> ; `resultType`: [`object`](../enums/core.Type.md#object) ; `schema`: `undefined` \| `ResultT` = response.schema }
-
-#### Defined in
-
-[api.ts:1704](https://github.com/coda/packs-sdk/blob/main/api.ts#L1704)
