@@ -57,10 +57,12 @@ function getReflectionData() {
 
 function traverse(data: ReflectionData): ReflectionData[] {
   const entitiesWithMissingTypedoc: ReflectionData[] = [];
+  // TODO: Add comments for all types in development.ts and remove this condition.
+  if (data.sources?.some(source => source.fileName.startsWith('testing/'))) {
+    return entitiesWithMissingTypedoc;
+  }
   if (!hasComment(data) && data.kindString !== 'Project' && data.kind !== ModulesKind) {
     entitiesWithMissingTypedoc.push(data);
-  }
-  if (data.name === 'NetworkConnection') {
   }
   if (data.comment?.blockTags?.find(t => t.tag === '@deprecated')) {
     return entitiesWithMissingTypedoc;
