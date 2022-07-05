@@ -24,7 +24,7 @@ When requiresEndpointUrl is set to true this should be the root domain that all 
 For example, this value would be "example.com" if specific endpoints looked like {custom-subdomain}.example.com.
 
 For packs that make requests to multiple domains (uncommon), this should be the domain within
-[networkDomain](core.CustomHeaderTokenAuthentication.md#networkdomain) that this configuration applies to.
+[networkDomains](core.PackVersionDefinition.md#networkdomains) that this configuration applies to.
 
 #### Inherited from
 

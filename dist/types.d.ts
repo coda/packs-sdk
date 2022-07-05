@@ -229,7 +229,7 @@ export interface BaseAuthentication {
      * For example, this value would be "example.com" if specific endpoints looked like \{custom-subdomain\}.example.com.
      *
      * For packs that make requests to multiple domains (uncommon), this should be the domain within
-     * {@link networkDomain} that this configuration applies to.
+     * {@link PackVersionDefinition.networkDomains} that this configuration applies to.
      */
     endpointDomain?: string;
     /**
@@ -474,7 +474,7 @@ export interface CustomAuthParameter {
  * be inserted by our fetcher service using the syntax described below (similar to templating engines).
  *
  * \{% raw %\}
- * To insert the credentials, simply put `\{\{<paramName>-<invocationToken>\}\}` as a string anywhere in your request,
+ * To insert the credentials, simply put `{{<paramName>-<invocationToken>}}` as a string anywhere in your request,
  * where `<paramName>` is the name of the parameter defined in the params mapping and `<invocationToken>` is the
  * secret invocation-specific token provided within the {@link ExecutionContext}. The invocation
  * token is required for security reasons.

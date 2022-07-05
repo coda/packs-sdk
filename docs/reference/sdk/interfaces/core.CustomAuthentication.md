@@ -15,7 +15,7 @@ user or system authentication). When constructing a network request, you may ind
 be inserted by our fetcher service using the syntax described below (similar to templating engines).
 
 {% raw %}
-To insert the credentials, simply put `\{\{<paramName>-<invocationToken>\}\}` as a string anywhere in your request,
+To insert the credentials, simply put `{{<paramName>-<invocationToken>}}` as a string anywhere in your request,
 where `<paramName>` is the name of the parameter defined in the params mapping and `<invocationToken>` is the
 secret invocation-specific token provided within the [ExecutionContext](core.ExecutionContext.md). The invocation
 token is required for security reasons.
@@ -78,7 +78,7 @@ When requiresEndpointUrl is set to true this should be the root domain that all 
 For example, this value would be "example.com" if specific endpoints looked like {custom-subdomain}.example.com.
 
 For packs that make requests to multiple domains (uncommon), this should be the domain within
-[networkDomain](core.CustomAuthentication.md#networkdomain) that this configuration applies to.
+[networkDomains](core.PackVersionDefinition.md#networkdomains) that this configuration applies to.
 
 #### Inherited from
 
