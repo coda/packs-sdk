@@ -7,7 +7,7 @@ title: "SuggestedValueType"
 
 Ƭ **SuggestedValueType**<`T`\>: `T` extends [`ArrayType`](../interfaces/core.ArrayType.md)<[`date`](../enums/core.Type.md#date)\> ? `TypeOfMap`<`T`\> \| [`PrecannedDateRange`](../enums/core.PrecannedDateRange.md) : `TypeOfMap`<`T`\>
 
-The type of values that are allowable to be used as a [suggestedValue](../interfaces/core.ParamDef.md#suggestedvalue) for a parameter.
+The type of values that are allowable to be used as a [ParamDef.suggestedValue](../interfaces/core.ParamDef.md#suggestedvalue) for a parameter.
 
 #### Type parameters
 

@@ -14,7 +14,7 @@ in order to fulfill the schema.
 For example, `SchemaType<NumberSchema>` produces the type `number`.
 
 For an object schema, this will for the most part return an object matching the schema
-but if the schema uses [fromKey](../interfaces/core.ObjectSchemaProperty.md#fromkey) then this utility will be unable to infer
+but if the schema uses [ObjectSchemaProperty.fromKey](../interfaces/core.ObjectSchemaProperty.md#fromkey) then this utility will be unable to infer
 that the return value type should use the property names given in the `fromKey`
 attribute, and will simply relax any property name type-checking in such a case.
 
@@ -30,4 +30,4 @@ to ensure that it matches the schema you have declared for that formula.
 
 #### Defined in
 
-[schema.ts:1031](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1031)
+[schema.ts:1062](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1062)

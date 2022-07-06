@@ -13,8 +13,7 @@ to all code that follows call to this function.
 
 See https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#assertion-functions
 
-**`Example`**
-
+**`example`**
 ```
 function foo(value: string | number) {
   assertCondtion(typeof value === 'string');
@@ -34,3 +33,7 @@ function foo(value: string | number) {
 #### Returns
 
 asserts condition
+
+#### Defined in
+
+[helpers/ensure.ts:79](https://github.com/coda/packs-sdk/blob/main/helpers/ensure.ts#L79)

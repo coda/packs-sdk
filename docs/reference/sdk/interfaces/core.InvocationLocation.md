@@ -13,9 +13,7 @@ Information about the Coda environment and doc this formula was invoked from, fo
 
 • `Optional` **docId**: `string`
 
-**`Deprecated`**
-
-This will be removed in a future version of the SDK.
+**`deprecated`** This will be removed in a future version of the SDK.
 
 #### Defined in
 

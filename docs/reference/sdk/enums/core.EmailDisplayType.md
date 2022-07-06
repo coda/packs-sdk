@@ -11,7 +11,7 @@ Display types that can be used with an [EmailSchema](../interfaces/core.EmailSch
 
 ### EmailOnly
 
-• **EmailOnly** = ``"emailOnly"``
+• **EmailOnly**
 
 Display email address only.
 
@@ -23,7 +23,7 @@ ___
 
 ### IconAndEmail
 
-• **IconAndEmail** = ``"iconAndEmail"``
+• **IconAndEmail**
 
 Display both icon and email (default).
 
@@ -35,7 +35,7 @@ ___
 
 ### IconOnly
 
-• **IconOnly** = ``"iconOnly"``
+• **IconOnly**
 
 Display icon only.
 

@@ -89,7 +89,7 @@ ___
 
 The definition of the formula that implements this sync. This is a Coda packs formula
 that returns an array of objects fitting the given schema and optionally a [Continuation](core.Continuation.md).
-(The [name](core.SyncFormulaDef.md#name) is redundant and should be the same as the `name` parameter here.
+(The [SyncFormulaDef.name](core.SyncFormulaDef.md#name) is redundant and should be the same as the `name` parameter here.
 These will eventually be consolidated.)
 
 #### Defined in
@@ -141,7 +141,7 @@ ___
 
 • **identityName**: `string`
 
-See [identityName](core.SyncTableOptions.md#identityname) for an introduction.
+See [SyncTableOptions.identityName](core.SyncTableOptions.md#identityname) for an introduction.
 
 Every dynamic schema generated from this dynamic sync table definition should all use the same name
 for their identity. Code that refers to objects in these tables will use the dynamicUrl to

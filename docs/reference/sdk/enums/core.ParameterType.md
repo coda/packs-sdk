@@ -11,7 +11,7 @@ Enumeration of types of formula parameters. These describe Coda value types (as 
 
 ### Boolean
 
-• **Boolean** = ``"boolean"``
+• **Boolean**
 
 Indicates a parameter that is a Coda boolean value.
 
@@ -23,7 +23,7 @@ ___
 
 ### BooleanArray
 
-• **BooleanArray** = ``"booleanArray"``
+• **BooleanArray**
 
 Indicates a parameter that is a list of Coda boolean values.
 
@@ -35,7 +35,7 @@ ___
 
 ### Date
 
-• **Date** = ``"date"``
+• **Date**
 
 Indicates a parameter that is a Coda date value (which includes time and datetime values).
 
@@ -47,12 +47,12 @@ ___
 
 ### DateArray
 
-• **DateArray** = ``"dateArray"``
+• **DateArray**
 
 Indicates a parameter that is a list of Coda date values (which includes time and datetime values).
 
 Currently, when such a parameter is used with a sync table formula or an action formula
-([isAction](../interfaces/core.BaseFormulaDef.md#isaction)), which will generate a builder UI for selecting parameters, a date array
+([BaseFormulaDef.isAction](../interfaces/core.BaseFormulaDef.md#isaction)), which will generate a builder UI for selecting parameters, a date array
 parameter will always render as a date range selector. A date range will always be passed to a pack formula
 as a list of two elements, the beginning of the range and the end of the range.
 
@@ -64,7 +64,7 @@ ___
 
 ### File
 
-• **File** = ``"file"``
+• **File**
 
 Indicates a parameter that is a Coda file. The pack is passed a file URL.
 
@@ -76,7 +76,7 @@ ___
 
 ### FileArray
 
-• **FileArray** = ``"fileArray"``
+• **FileArray**
 
 Indicates a parameter that is a list of Coda file values. The pack is passed a list of file URLs.
 
@@ -88,7 +88,7 @@ ___
 
 ### Html
 
-• **Html** = ``"html"``
+• **Html**
 
 Indicates a parameter that is a Coda rich text value that should be passed to the pack as HTML.
 
@@ -100,7 +100,7 @@ ___
 
 ### HtmlArray
 
-• **HtmlArray** = ``"htmlArray`"``
+• **HtmlArray**
 
 Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as HTML.
 
@@ -112,7 +112,7 @@ ___
 
 ### Image
 
-• **Image** = ``"image"``
+• **Image**
 
 Indicates a parameter that is a Coda image. The pack is passed an image URL.
 
@@ -124,7 +124,7 @@ ___
 
 ### ImageArray
 
-• **ImageArray** = ``"imageArray"``
+• **ImageArray**
 
 Indicates a parameter that is a list of Coda image values. The pack is passed a list of image URLs.
 
@@ -136,7 +136,7 @@ ___
 
 ### Number
 
-• **Number** = ``"number"``
+• **Number**
 
 Indicates a parameter that is a Coda number value.
 
@@ -148,7 +148,7 @@ ___
 
 ### NumberArray
 
-• **NumberArray** = ``"numberArray"``
+• **NumberArray**
 
 Indicates a parameter that is a list of Coda number values.
 
@@ -160,7 +160,7 @@ ___
 
 ### SparseBooleanArray
 
-• **SparseBooleanArray** = ``"sparseBooleanArray"``
+• **SparseBooleanArray**
 
 [BooleanArray](core.ParameterType.md#booleanarray) that accepts unparsable values as `undefined`.
 
@@ -172,7 +172,7 @@ ___
 
 ### SparseDateArray
 
-• **SparseDateArray** = ``"sparseDateArray"``
+• **SparseDateArray**
 
 [DateArray](core.ParameterType.md#datearray) that accepts unparsable values as `undefined`.
 
@@ -184,7 +184,7 @@ ___
 
 ### SparseFileArray
 
-• **SparseFileArray** = ``"sparseFileArray"``
+• **SparseFileArray**
 
 [FileArray](core.ParameterType.md#filearray) that accepts unparsable values as `undefined`.
 
@@ -196,7 +196,7 @@ ___
 
 ### SparseHtmlArray
 
-• **SparseHtmlArray** = ``"sparseHtmlArray"``
+• **SparseHtmlArray**
 
 [HtmlArray](core.ParameterType.md#htmlarray) that accepts unparsable values as `undefined`.
 
@@ -208,7 +208,7 @@ ___
 
 ### SparseImageArray
 
-• **SparseImageArray** = ``"sparseImageArray"``
+• **SparseImageArray**
 
 [ImageArray](core.ParameterType.md#imagearray) that accepts unparsable values as `undefined`.
 
@@ -220,7 +220,7 @@ ___
 
 ### SparseNumberArray
 
-• **SparseNumberArray** = ``"sparseNumberArray"``
+• **SparseNumberArray**
 
 [NumberArray](core.ParameterType.md#numberarray) that accepts unparsable values as `undefined`.
 
@@ -232,7 +232,7 @@ ___
 
 ### SparseStringArray
 
-• **SparseStringArray** = ``"sparseStringArray"``
+• **SparseStringArray**
 
 [StringArray](core.ParameterType.md#stringarray) that accepts unparsable values as `undefined`.
 
@@ -244,7 +244,7 @@ ___
 
 ### String
 
-• **String** = ``"string"``
+• **String**
 
 Indicates a parameter that is a Coda text value.
 
@@ -256,7 +256,7 @@ ___
 
 ### StringArray
 
-• **StringArray** = ``"stringArray"``
+• **StringArray**
 
 Indicates a parameter that is a list of Coda text values.
 

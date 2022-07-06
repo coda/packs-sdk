@@ -57,9 +57,7 @@ ___
 
 • `Optional` **getOptionsFormula**: [`MetadataFormula`](../types/core.MetadataFormula.md)
 
-**`Deprecated`**
-
-Use [getOptions](core.SetEndpoint.md#getoptions)
+**`deprecated`** Use [getOptions](core.SetEndpoint.md#getoptions)
 
 #### Defined in
 

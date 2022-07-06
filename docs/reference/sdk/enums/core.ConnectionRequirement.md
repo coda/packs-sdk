@@ -12,7 +12,7 @@ a connection (account) to use.
 
 ### None
 
-• **None** = ``"none"``
+• **None**
 
 Indicates this building block does not make use of an account.
 
@@ -24,7 +24,7 @@ ___
 
 ### Optional
 
-• **Optional** = ``"optional"``
+• **Optional**
 
 Indicates that this building block can be used with or without an account.
 
@@ -39,7 +39,7 @@ ___
 
 ### Required
 
-• **Required** = ``"required"``
+• **Required**
 
 Indicates that this building block must be used with an account.
 

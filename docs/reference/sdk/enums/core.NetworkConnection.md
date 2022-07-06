@@ -5,15 +5,13 @@ title: "NetworkConnection"
 
 [core](../modules/core.md).NetworkConnection
 
-**`Deprecated`**
-
-use `ConnectionRequirement` instead
+**`deprecated`** use `ConnectionRequirement` instead
 
 ## Enumeration Members
 
 ### None
 
-• **None** = ``"none"``
+• **None**
 
 #### Defined in
 
@@ -23,7 +21,7 @@ ___
 
 ### Optional
 
-• **Optional** = ``"optional"``
+• **Optional**
 
 #### Defined in
 
@@ -33,7 +31,7 @@ ___
 
 ### Required
 
-• **Required** = ``"required"``
+• **Required**
 
 #### Defined in
 

@@ -11,9 +11,9 @@ Enumeration of post-account-setup step types. See [PostSetup](../types/core.Post
 
 ### SetEndpoint
 
-• **SetEndpoint** = ``"SetEndPoint"``
+• **SetEndpoint**
 
-See [SetEndpoint](../interfaces/core.SetEndpoint.md).
+See [SetEndpoint](core.PostSetupType.md#setendpoint).
 
 #### Defined in
 

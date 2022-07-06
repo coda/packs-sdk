@@ -5,9 +5,7 @@ title: "PackDefinition"
 
 [core](../modules/core.md).PackDefinition
 
-**`Deprecated`**
-
-use `#PackVersionDefinition`
+**`deprecated`** use `#PackVersionDefinition`
 
 The legacy complete definition of a Pack including un-versioned metadata.
 This should only be used by legacy Coda pack implementations.
@@ -96,7 +94,7 @@ ___
 
 • `Optional` **formulaNamespace**: `string`
 
-**`Deprecated`**
+**`deprecated`**
 
 #### Inherited from
 

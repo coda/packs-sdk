@@ -68,7 +68,7 @@ ___
 
 • `Optional` **precision**: `number`
 
-A refinement of [maxUnit](core.DurationSchema.md#maxunit) to use for rounding the duration when rendering.
+A refinement of [DurationSchema.maxUnit](core.DurationSchema.md#maxunit) to use for rounding the duration when rendering.
 Currently only `1` is supported, which is the same as omitting a value.
 
 #### Defined in

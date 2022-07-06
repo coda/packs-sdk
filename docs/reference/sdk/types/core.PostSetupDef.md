@@ -8,7 +8,7 @@ title: "PostSetupDef"
 Ƭ **PostSetupDef**: [`SetEndpointDef`](core.SetEndpointDef.md)
 
 Simplified configuration for [PostSetup](core.PostSetup.md) that a pack developer can specify when calling
-[setUserAuthentication](../classes/core.PackDefinitionBuilder.md#setuserauthentication) or [setSystemAuthentication](../classes/core.PackDefinitionBuilder.md#setsystemauthentication).
+[PackDefinitionBuilder.setUserAuthentication](../classes/core.PackDefinitionBuilder.md#setuserauthentication) or [PackDefinitionBuilder.setSystemAuthentication](../classes/core.PackDefinitionBuilder.md#setsystemauthentication).
 
 #### Defined in
 

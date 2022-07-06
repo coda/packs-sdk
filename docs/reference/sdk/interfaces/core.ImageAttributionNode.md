@@ -10,8 +10,7 @@ An attribution node that renders as a hyperlinked image.
 This is often the logo of the data source along with a link back to the home page
 of the data source or directly to the source data.
 
-**`Example`**
-
+**`example`**
 ```
 coda.makeAttributionNode({
   type: coda.AttributionNodeType.Image,
@@ -30,7 +29,7 @@ The URL to link to.
 
 #### Defined in
 
-[schema.ts:945](https://github.com/coda/packs-sdk/blob/main/schema.ts#L945)
+[schema.ts:976](https://github.com/coda/packs-sdk/blob/main/schema.ts#L976)
 
 ___
 
@@ -42,7 +41,7 @@ The URL of the image to render.
 
 #### Defined in
 
-[schema.ts:947](https://github.com/coda/packs-sdk/blob/main/schema.ts#L947)
+[schema.ts:978](https://github.com/coda/packs-sdk/blob/main/schema.ts#L978)
 
 ___
 
@@ -54,4 +53,4 @@ Identifies this as an image attribution node.
 
 #### Defined in
 
-[schema.ts:943](https://github.com/coda/packs-sdk/blob/main/schema.ts#L943)
+[schema.ts:974](https://github.com/coda/packs-sdk/blob/main/schema.ts#L974)

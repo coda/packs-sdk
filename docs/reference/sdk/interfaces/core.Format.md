@@ -13,7 +13,7 @@ if you type a city or address into a cell in that column, that location will be 
 to a formula that fetches the current weather at that location, and the resulting object with
 weather info will be shown in the cell.
 
-A column format is just a wrapper around a formula defined in the [formulas](core.PackVersionDefinition.md#formulas) section
+A column format is just a wrapper around a formula defined in the [PackVersionDefinition.formulas](core.PackVersionDefinition.md#formulas) section
 of your pack definition. It tells Coda to execute that particular formula using the value
 of the cell as input.
 
@@ -50,9 +50,7 @@ ___
 
 • `Optional` **formulaNamespace**: `string`
 
-**`Deprecated`**
-
-Namespaces are being removed from the product.
+**`deprecated`** Namespaces are being removed from the product.
 
 #### Defined in
 
@@ -64,9 +62,7 @@ ___
 
 • `Optional` **hasNoConnection**: `boolean`
 
-**`Deprecated`**
-
-No longer needed, will be inferred from the referenced formula.
+**`deprecated`** No longer needed, will be inferred from the referenced formula.
 
 #### Defined in
 
@@ -116,9 +112,7 @@ ___
 
 • `Optional` **placeholder**: `string`
 
-**`Deprecated`**
-
-Currently unused.
+**`deprecated`** Currently unused.
 
 #### Defined in
 

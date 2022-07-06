@@ -75,7 +75,7 @@ ___
 
 • `Optional` **displayProperty**: `K`
 
-The name of a property within [properties](core.ObjectSchemaDefinition.md#properties) that be used to label this object in the
+The name of a property within [ObjectSchemaDefinition.properties](core.ObjectSchemaDefinition.md#properties) that be used to label this object in the
 UI.
 Object values can contain many properties and the Coda UI will display them as a "chip"
 with only the value of the "displayProperty" property used as the chip's display label.
@@ -91,9 +91,7 @@ ___
 
 • `Optional` **featured**: `L`[]
 
-**`Deprecated`**
-
-Use [featuredProperties](core.ObjectSchemaDefinition.md#featuredproperties)
+**`deprecated`** Use [ObjectSchemaDefinition.featuredProperties](core.ObjectSchemaDefinition.md#featuredproperties)
 
 #### Defined in
 
@@ -105,7 +103,7 @@ ___
 
 • `Optional` **featuredProperties**: `L`[]
 
-A list of property names from within [properties](core.ObjectSchemaDefinition.md#properties) for the "featured" properties
+A list of property names from within [ObjectSchemaDefinition.properties](core.ObjectSchemaDefinition.md#properties) for the "featured" properties
 of this object, used in sync tables. When a sync table is first added to a document,
 columns are created for each of the featured properties. The user can easily add additional
 columns for any other properties, as desired. All featured properties need to be top-level.
@@ -130,9 +128,7 @@ ___
 
 • `Optional` **id**: `K`
 
-**`Deprecated`**
-
-Use [idProperty](core.ObjectSchemaDefinition.md#idproperty)
+**`deprecated`** Use [ObjectSchemaDefinition.idProperty](core.ObjectSchemaDefinition.md#idproperty)
 
 #### Defined in
 
@@ -144,7 +140,7 @@ ___
 
 • `Optional` **idProperty**: `K`
 
-The name of a property within [properties](core.ObjectSchemaDefinition.md#properties) that represents a unique id for this
+The name of a property within [ObjectSchemaDefinition.properties](core.ObjectSchemaDefinition.md#properties) that represents a unique id for this
 object. Sync table schemas must specify an id property, which uniquely identify each synced row.
 
 #### Defined in
@@ -188,9 +184,7 @@ ___
 
 • `Optional` **primary**: `K`
 
-**`Deprecated`**
-
-Use [displayProperty](core.ObjectSchemaDefinition.md#displayproperty)
+**`deprecated`** Use [ObjectSchemaDefinition.displayProperty](core.ObjectSchemaDefinition.md#displayproperty)
 
 #### Defined in
 

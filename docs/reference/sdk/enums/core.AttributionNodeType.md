@@ -14,34 +14,34 @@ attribution that contains both text and a logo image.
 
 ### Image
 
-• **Image** = ``3``
+• **Image**
 
 An image, often a logo of the data source.
 
 #### Defined in
 
-[schema.ts:879](https://github.com/coda/packs-sdk/blob/main/schema.ts#L879)
+[schema.ts:910](https://github.com/coda/packs-sdk/blob/main/schema.ts#L910)
 
 ___
 
 ### Link
 
-• **Link** = ``2``
+• **Link**
 
 A hyperlink pointing to the data source.
 
 #### Defined in
 
-[schema.ts:875](https://github.com/coda/packs-sdk/blob/main/schema.ts#L875)
+[schema.ts:906](https://github.com/coda/packs-sdk/blob/main/schema.ts#L906)
 
 ___
 
 ### Text
 
-• **Text** = ``1``
+• **Text**
 
 Text attribution content.
 
 #### Defined in
 
-[schema.ts:871](https://github.com/coda/packs-sdk/blob/main/schema.ts#L871)
+[schema.ts:902](https://github.com/coda/packs-sdk/blob/main/schema.ts#L902)

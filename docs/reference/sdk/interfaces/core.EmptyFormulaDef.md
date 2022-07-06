@@ -182,9 +182,7 @@ ___
 
 • `Optional` `Readonly` **network**: [`Network`](core.Network.md)
 
-**`Deprecated`**
-
-use `isAction` and `connectionRequirement` instead
+**`deprecated`** use `isAction` and `connectionRequirement` instead
 
 #### Inherited from
 

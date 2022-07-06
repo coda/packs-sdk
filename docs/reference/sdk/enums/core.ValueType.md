@@ -12,7 +12,7 @@ or in object schemas.
 
 ### Array
 
-• **Array** = ``"array"``
+• **Array**
 
 Indicates a JavaScript array should be returned. The schema of the array items must also be specified.
 
@@ -24,7 +24,7 @@ ___
 
 ### Boolean
 
-• **Boolean** = ``"boolean"``
+• **Boolean**
 
 Indicates a JavaScript boolean (true/false) should be returned.
 
@@ -36,7 +36,7 @@ ___
 
 ### Number
 
-• **Number** = ``"number"``
+• **Number**
 
 Indicates a JavaScript number should be returned.
 
@@ -48,7 +48,7 @@ ___
 
 ### Object
 
-• **Object** = ``"object"``
+• **Object**
 
 Indicates a JavaScript object should be returned. The schema of each object property must also be specified.
 
@@ -60,7 +60,7 @@ ___
 
 ### String
 
-• **String** = ``"string"``
+• **String**
 
 Indicates a JavaScript string should be returned.
 

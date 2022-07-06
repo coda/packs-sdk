@@ -7,9 +7,7 @@ title: "PackId"
 
 Ƭ **PackId**: `number`
 
-**`Deprecated`**
-
-Use `number` in new code.
+**`deprecated`** Use `number` in new code.
 
 #### Defined in
 

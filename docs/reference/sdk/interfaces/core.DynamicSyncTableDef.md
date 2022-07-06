@@ -29,7 +29,7 @@ instead, define dynamic sync tables using [makeDynamicSyncTable](../functions/co
 
 • `Optional` **defaultAddDynamicColumns**: `boolean`
 
-See [defaultAddDynamicColumns](core.DynamicOptions.md#defaultadddynamiccolumns)
+See [DynamicOptions.defaultAddDynamicColumns](core.DynamicOptions.md#defaultadddynamiccolumns)
 
 #### Inherited from
 
@@ -45,7 +45,7 @@ ___
 
 • `Optional` **description**: `string`
 
-See [description](core.SyncTableOptions.md#description)
+See [SyncTableOptions.description](core.SyncTableOptions.md#description)
 
 #### Inherited from
 
@@ -61,7 +61,7 @@ ___
 
 • `Optional` **entityName**: `string`
 
-See [entityName](core.DynamicOptions.md#entityname)
+See [DynamicOptions.entityName](core.DynamicOptions.md#entityname)
 
 #### Inherited from
 
@@ -77,7 +77,7 @@ ___
 
 • **getDisplayUrl**: [`MetadataFormula`](../types/core.MetadataFormula.md)
 
-See [getDisplayUrl](core.DynamicSyncTableOptions.md#getdisplayurl)
+See [DynamicSyncTableOptions.getDisplayUrl](core.DynamicSyncTableOptions.md#getdisplayurl)
 
 #### Defined in
 
@@ -89,7 +89,7 @@ ___
 
 • **getName**: [`MetadataFormula`](../types/core.MetadataFormula.md)
 
-See [getName](core.DynamicSyncTableOptions.md#getname)
+See [DynamicSyncTableOptions.getName](core.DynamicSyncTableOptions.md#getname)
 
 #### Defined in
 
@@ -101,7 +101,7 @@ ___
 
 • **getSchema**: [`MetadataFormula`](../types/core.MetadataFormula.md)
 
-See [getSchema](core.DynamicSyncTableOptions.md#getschema)
+See [DynamicSyncTableOptions.getSchema](core.DynamicSyncTableOptions.md#getschema)
 
 #### Overrides
 
@@ -117,7 +117,7 @@ ___
 
 • **getter**: [`SyncFormula`](../types/core.SyncFormula.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\>
 
-See [formula](core.SyncTableOptions.md#formula)
+See [SyncTableOptions.formula](core.SyncTableOptions.md#formula)
 
 #### Inherited from
 
@@ -136,7 +136,7 @@ ___
 The `identityName` is persisted for all sync tables so that a dynamic schema
 can be annotated with an identity automatically.
 
-See [identityName](core.SyncTableOptions.md#identityname) for more details.
+See [SyncTableOptions.identityName](core.SyncTableOptions.md#identityname) for more details.
 
 #### Inherited from
 
@@ -164,7 +164,7 @@ ___
 
 • `Optional` **listDynamicUrls**: [`MetadataFormula`](../types/core.MetadataFormula.md)
 
-See [listDynamicUrls](core.DynamicSyncTableOptions.md#listdynamicurls)
+See [DynamicSyncTableOptions.listDynamicUrls](core.DynamicSyncTableOptions.md#listdynamicurls)
 
 #### Defined in
 
@@ -176,7 +176,7 @@ ___
 
 • **name**: `string`
 
-See [name](core.SyncTableOptions.md#name)
+See [SyncTableOptions.name](core.SyncTableOptions.md#name)
 
 #### Inherited from
 
@@ -192,7 +192,7 @@ ___
 
 • **schema**: `SchemaT`
 
-See [schema](core.SyncTableOptions.md#schema)
+See [SyncTableOptions.schema](core.SyncTableOptions.md#schema)
 
 #### Inherited from
 

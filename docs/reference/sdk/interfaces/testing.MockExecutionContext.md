@@ -5,10 +5,6 @@ title: "MockExecutionContext"
 
 [testing](../modules/testing.md).MockExecutionContext
 
-An object passed to the `execute` function of every formula invocation
-with information and utilities for handling the invocation. In particular,
-this contains the [Fetcher](core.Fetcher.md), which is used for making HTTP requests.
-
 ## Hierarchy
 
 - [`ExecutionContext`](core.ExecutionContext.md)
@@ -24,7 +20,7 @@ this contains the [Fetcher](core.Fetcher.md), which is used for making HTTP requ
 • `Optional` `Readonly` **endpoint**: `string`
 
 The base endpoint URL for the user's account, only if applicable. See
-[requiresEndpointUrl](core.BaseAuthentication.md#requiresendpointurl).
+[core.BaseAuthentication.requiresEndpointUrl](core.BaseAuthentication.md#requiresendpointurl).
 
 If the API URLs are variable based on the user account, you will need this endpoint
 to construct URLs to use with the fetcher. Alternatively, you can use relative URLs
@@ -44,7 +40,7 @@ ___
 
 • **fetcher**: `Object`
 
-The [Fetcher](core.Fetcher.md) used for making HTTP requests.
+The [core.Fetcher](core.Fetcher.md) used for making HTTP requests.
 
 #### Type declaration
 
@@ -85,7 +81,7 @@ ___
 
 A random token scoped to only this request invocation.
 This is a unique identifier for the invocation, and in particular used with
-[Custom](../enums/core.AuthenticationType.md#custom) for naming template parameters that will be
+[core.AuthenticationType.Custom](../enums/core.AuthenticationType.md#custom) for naming template parameters that will be
 replaced by the fetcher in secure way.
 
 #### Inherited from
@@ -119,7 +115,7 @@ ___
 • **temporaryBlobStorage**: `Object`
 
 A utility to fetch and store files and images that either require the pack user's authentication
-or are too large to return inline. See [TemporaryBlobStorage](core.TemporaryBlobStorage.md).
+or are too large to return inline. See [core.TemporaryBlobStorage](core.TemporaryBlobStorage.md).
 
 #### Type declaration
 

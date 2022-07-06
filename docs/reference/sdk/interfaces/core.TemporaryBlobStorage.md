@@ -59,6 +59,10 @@ disposition) that will be downloaded when accessed as the file name provided.
 
 `Promise`<`string`\>
 
+#### Defined in
+
+[api_types.ts:617](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L617)
+
 ___
 
 ### storeUrl
@@ -88,3 +92,7 @@ disposition) that will be downloaded when accessed as the file name provided.
 #### Returns
 
 `Promise`<`string`\>
+
+#### Defined in
+
+[api_types.ts:602](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L602)

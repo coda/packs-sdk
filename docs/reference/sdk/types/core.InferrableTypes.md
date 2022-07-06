@@ -11,4 +11,4 @@ Primitive types for which [generateSchema](../functions/core.generateSchema.md) 
 
 #### Defined in
 
-[schema.ts:1044](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1044)
+[schema.ts:1075](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1075)

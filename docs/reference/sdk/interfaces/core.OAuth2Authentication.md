@@ -56,10 +56,10 @@ ___
 • `Optional` **endpointDomain**: `string`
 
 When requiresEndpointUrl is set to true this should be the root domain that all endpoints share.
-For example, this value would be "example.com" if specific endpoints looked like {custom-subdomain}.example.com.
+For example, this value would be "example.com" if specific endpoints looked like \{custom-subdomain\}.example.com.
 
 For packs that make requests to multiple domains (uncommon), this should be the domain within
-[networkDomains](core.PackVersionDefinition.md#networkdomains) that this configuration applies to.
+[PackVersionDefinition.networkDomains](core.PackVersionDefinition.md#networkdomains) that this configuration applies to.
 
 #### Inherited from
 
@@ -80,7 +80,7 @@ part of the OAuth token exchange response. If so, this is the property in the OA
 token exchange response JSON body that points to the endpoint.
 
 The endpoint will be saved along with the account and will be available during execution
-as [endpoint](core.ExecutionContext.md#endpoint).
+as [ExecutionContext.endpoint](core.ExecutionContext.md#endpoint).
 
 #### Defined in
 

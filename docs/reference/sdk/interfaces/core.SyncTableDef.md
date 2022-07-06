@@ -29,7 +29,7 @@ instead, define sync tables using [makeSyncTable](../functions/core.makeSyncTabl
 
 • `Optional` **defaultAddDynamicColumns**: `boolean`
 
-See [defaultAddDynamicColumns](core.DynamicOptions.md#defaultadddynamiccolumns)
+See [DynamicOptions.defaultAddDynamicColumns](core.DynamicOptions.md#defaultadddynamiccolumns)
 
 #### Defined in
 
@@ -41,7 +41,7 @@ ___
 
 • `Optional` **description**: `string`
 
-See [description](core.SyncTableOptions.md#description)
+See [SyncTableOptions.description](core.SyncTableOptions.md#description)
 
 #### Defined in
 
@@ -53,7 +53,7 @@ ___
 
 • `Optional` **entityName**: `string`
 
-See [entityName](core.DynamicOptions.md#entityname)
+See [DynamicOptions.entityName](core.DynamicOptions.md#entityname)
 
 #### Defined in
 
@@ -65,7 +65,7 @@ ___
 
 • `Optional` **getSchema**: [`MetadataFormula`](../types/core.MetadataFormula.md)
 
-See [getSchema](core.DynamicOptions.md#getschema)
+See [DynamicOptions.getSchema](core.DynamicOptions.md#getschema)
 
 #### Defined in
 
@@ -77,7 +77,7 @@ ___
 
 • **getter**: [`SyncFormula`](../types/core.SyncFormula.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\>
 
-See [formula](core.SyncTableOptions.md#formula)
+See [SyncTableOptions.formula](core.SyncTableOptions.md#formula)
 
 #### Defined in
 
@@ -92,7 +92,7 @@ ___
 The `identityName` is persisted for all sync tables so that a dynamic schema
 can be annotated with an identity automatically.
 
-See [identityName](core.SyncTableOptions.md#identityname) for more details.
+See [SyncTableOptions.identityName](core.SyncTableOptions.md#identityname) for more details.
 
 #### Defined in
 
@@ -104,7 +104,7 @@ ___
 
 • **name**: `string`
 
-See [name](core.SyncTableOptions.md#name)
+See [SyncTableOptions.name](core.SyncTableOptions.md#name)
 
 #### Defined in
 
@@ -116,7 +116,7 @@ ___
 
 • **schema**: `SchemaT`
 
-See [schema](core.SyncTableOptions.md#schema)
+See [SyncTableOptions.schema](core.SyncTableOptions.md#schema)
 
 #### Defined in
 

@@ -13,7 +13,7 @@ For example, to render a star rating, use a [ScaleSchema](../interfaces/core.Sca
 
 ### Battery
 
-• **Battery** = ``"battery"``
+• **Battery**
 
 #### Defined in
 
@@ -23,7 +23,7 @@ ___
 
 ### Bell
 
-• **Bell** = ``"bell"``
+• **Bell**
 
 #### Defined in
 
@@ -33,7 +33,7 @@ ___
 
 ### Bug
 
-• **Bug** = ``"bug"``
+• **Bug**
 
 #### Defined in
 
@@ -43,7 +43,7 @@ ___
 
 ### Checkmark
 
-• **Checkmark** = ``"checkmark"``
+• **Checkmark**
 
 #### Defined in
 
@@ -53,7 +53,7 @@ ___
 
 ### Chili
 
-• **Chili** = ``"chili"``
+• **Chili**
 
 #### Defined in
 
@@ -63,7 +63,7 @@ ___
 
 ### Circle
 
-• **Circle** = ``"circle"``
+• **Circle**
 
 #### Defined in
 
@@ -73,7 +73,7 @@ ___
 
 ### Cloud
 
-• **Cloud** = ``"cloud"``
+• **Cloud**
 
 #### Defined in
 
@@ -83,7 +83,7 @@ ___
 
 ### Cocktail
 
-• **Cocktail** = ``"cocktail"``
+• **Cocktail**
 
 #### Defined in
 
@@ -93,7 +93,7 @@ ___
 
 ### Coffee
 
-• **Coffee** = ``"coffee"``
+• **Coffee**
 
 #### Defined in
 
@@ -103,7 +103,7 @@ ___
 
 ### Currency
 
-• **Currency** = ``"currency"``
+• **Currency**
 
 #### Defined in
 
@@ -113,7 +113,7 @@ ___
 
 ### Diamond
 
-• **Diamond** = ``"diamond"``
+• **Diamond**
 
 #### Defined in
 
@@ -123,7 +123,7 @@ ___
 
 ### Fire
 
-• **Fire** = ``"fire"``
+• **Fire**
 
 #### Defined in
 
@@ -133,7 +133,7 @@ ___
 
 ### Heart
 
-• **Heart** = ``"heart"``
+• **Heart**
 
 #### Defined in
 
@@ -143,7 +143,7 @@ ___
 
 ### LightBulb
 
-• **LightBulb** = ``"lightbulb"``
+• **LightBulb**
 
 #### Defined in
 
@@ -153,7 +153,7 @@ ___
 
 ### Lightning
 
-• **Lightning** = ``"lightning"``
+• **Lightning**
 
 #### Defined in
 
@@ -163,7 +163,7 @@ ___
 
 ### Person
 
-• **Person** = ``"person"``
+• **Person**
 
 #### Defined in
 
@@ -173,7 +173,7 @@ ___
 
 ### Smiley
 
-• **Smiley** = ``"smiley"``
+• **Smiley**
 
 #### Defined in
 
@@ -183,7 +183,7 @@ ___
 
 ### Star
 
-• **Star** = ``"star"``
+• **Star**
 
 #### Defined in
 
@@ -193,7 +193,7 @@ ___
 
 ### Sun
 
-• **Sun** = ``"sun"``
+• **Sun**
 
 #### Defined in
 
@@ -203,7 +203,7 @@ ___
 
 ### ThumbsUp
 
-• **ThumbsUp** = ``"thumbsup"``
+• **ThumbsUp**
 
 #### Defined in
 

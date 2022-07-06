@@ -9,8 +9,7 @@ An attribution node that simply renders some text.
 
 This might be used to attribute the data source.
 
-**`Example`**
-
+**`example`**
 ```
 coda.makeAttributionNode({
   type: coda.AttributionNodeType.Text,
@@ -28,7 +27,7 @@ The text to render with the pack value.
 
 #### Defined in
 
-[schema.ts:899](https://github.com/coda/packs-sdk/blob/main/schema.ts#L899)
+[schema.ts:930](https://github.com/coda/packs-sdk/blob/main/schema.ts#L930)
 
 ___
 
@@ -40,4 +39,4 @@ Identifies this as a text attribution node.
 
 #### Defined in
 
-[schema.ts:897](https://github.com/coda/packs-sdk/blob/main/schema.ts#L897)
+[schema.ts:928](https://github.com/coda/packs-sdk/blob/main/schema.ts#L928)
