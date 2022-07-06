@@ -307,6 +307,7 @@ const defaultAuthenticationValidators = {
         endpointKey: z.string().optional(),
         tokenQueryParam: z.string().optional(),
         useProofKeyForCodeExchange: z.boolean().optional(),
+        pkceChallengeMethod: z.enum(['plain', 'S256']).optional(),
         scopeParamName: z.string().optional(),
         nestedResponseKey: z.string().optional(),
         ...baseAuthenticationValidators,
