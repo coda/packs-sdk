@@ -5,6 +5,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ## Not yet released
 
 - Added `MissingScopesError`, for use with OAuth authentication. If a user's connection is missing a scope and the Pack throws a 403 StatusCodeError, Coda will automatically prompt the user to reauthenticate. For APIs that return different status codes, or to be more explicit, the Pack can instead throw this new type of error to trigger the same reauthentication flow.
+- Added `pkceChallengeMethod` option to OAuth2 authentication to allow choosing the `code_challenge_method` of PKCE extension. The default value is `S256` but some OAuth providers may only support `plain`.
 
 ## [1.0.1] - 2022-06-22
 

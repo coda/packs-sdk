@@ -406,11 +406,15 @@ export interface OAuth2Authentication extends BaseAuthentication {
      * authorization page. A `code_verifier` parameter will be sent to the token exchange API as
      * well.
      *
-     * `code_challenge_method` will be using SHA256.
+     * `code_challenge_method` defaults to SHA256 and can be configured with {@link pkceChallengeMethod}.
      *
      * See https://datatracker.ietf.org/doc/html/rfc7636 for more details.
      */
     useProofKeyForCodeExchange?: boolean;
+    /**
+     * See {@link useProofKeyForCodeExchange}
+     */
+    pkceChallengeMethod?: 'plain' | 'S256';
     /**
      * In rare cases, OAuth providers may want the permission scopes in a different query parameter
      * than `scope`.

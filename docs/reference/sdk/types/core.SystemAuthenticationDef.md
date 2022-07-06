@@ -14,4 +14,4 @@ an [SystemAuthentication](core.SystemAuthentication.md) value, which is the valu
 
 #### Defined in
 
-[types.ts:678](https://github.com/coda/packs-sdk/blob/main/types.ts#L678)
+[types.ts:683](https://github.com/coda/packs-sdk/blob/main/types.ts#L683)
