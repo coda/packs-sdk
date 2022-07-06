@@ -685,6 +685,10 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     properties: z.record(objectPropertyUnionSchema),
     includeUnknownProperties: z.boolean().optional(),
     __packId: z.number().optional(),
+    linkProperty: z.string().optional(),
+    subtitleProperties: z.array(z.string()).optional(),
+    descriptionProperty: z.string().optional(),
+    imageProperty: z.string().optional(),
 })
     .superRefine((data, context) => {
     var _a, _b;
@@ -700,7 +704,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     const schemaHelper = (0, migration_1.objectSchemaHelper)(data);
     return (0, object_utils_2.isNil)(schemaHelper.id) || schemaHelper.id in schemaHelper.properties;
 }, {
-    message: 'The "id" property must appear as a key in the "properties" object.',
+    message: 'The "idProperty" property must appear as a key in the "properties" object.',
 })
     .refine(data => {
     const schemaHelper = (0, migration_1.objectSchemaHelper)(data);
@@ -714,8 +718,51 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
             context.addIssue({
                 code: z.ZodIssueCode.custom,
                 path: ['featured', i],
-                message: `The featured field name "${f}" does not exist in the "properties" object.`,
+                message: `The "featured" field name "${f}" does not exist in the "properties" object.`,
             });
+        }
+    });
+})
+    .superRefine((data, context) => {
+    const schemaHelper = (0, migration_1.objectSchemaHelper)(data);
+    if (schemaHelper.imageProperty) {
+        if (!(schemaHelper.imageProperty in data.properties)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['imageProperty'],
+                message: `The "imageProperty" field name "${schemaHelper.imageProperty}" does not exist in the "properties" object.`,
+            });
+        }
+        // TODO: do the schema typing validation
+    }
+    if (schemaHelper.descriptionProperty) {
+        if (!(schemaHelper.descriptionProperty in data.properties)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['descriptionProperty'],
+                message: `The "descriptionProperty" field name "${schemaHelper.descriptionProperty}" does not exist in the "properties" object.`,
+            });
+        }
+        // TODO: do the schema typing validation
+    }
+    if (schemaHelper.linkProperty) {
+        if (!(schemaHelper.linkProperty in data.properties)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['linkProperty'],
+                message: `The "linkProperty" field name "${schemaHelper.linkProperty}" does not exist in the "properties" object.`,
+            });
+        }
+        // TODO: do the schema typing validation
+    }
+    (schemaHelper.subtitleProperties || []).forEach((f, i) => {
+        if (!(f in data.properties)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['subtitleProperties', i],
+                message: `The "subtitleProperties" field name "${f}" does not exist in the "properties" object.`,
+            });
+            // TODO: do the schema typing validation
         }
     });
 }));

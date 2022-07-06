@@ -733,6 +733,37 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      * scenarios they can be useful.
      */
     includeUnknownProperties?: boolean;
+    /**
+     * The name of a property within {@link properties} that can be used to attribute the source
+     * of this object in the UI.
+     *
+     * Must be a string property with a URL hint.
+     */
+    /** @hidden */
+    linkProperty?: L;
+    /**
+     * A list of property names from within {@link properties} for the properties of the object
+     * to be shown in the subtitle of a rich card preview for formulas that return this object.
+     * Defaults to the value of {@link featuredProperties} if not specified.
+     */
+    /** @hidden */
+    subtitleProperties?: L[];
+    /**
+     * The name of a property within {@link properties} that be used as a long body description
+     * of the object.
+     *
+     * Must be a string property or array of strings.
+     */
+    /** @hidden */
+    descriptionProperty?: L;
+    /**
+     * The name of a property within {@link properties} that can be used as a rich image preview of
+     * the object.
+     *
+     * Must be a string property with the `ImageAttachment` or `ImageReference` hints
+     */
+    /** @hidden */
+    imageProperty?: L;
 }
 export declare type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */
