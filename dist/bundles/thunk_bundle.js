@@ -1,6 +1,7 @@
+"use strict";
 'use strict';
-var module = module || {};
-module.exports = (() => {
+var module;
+(module ||= {}).exports = (() => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -1853,6 +1854,7 @@ module.exports = (() => {
   var Buffer2;
   var init_buffer_shim = __esm({
     "testing/injections/buffer_shim.js"() {
+      "use strict";
       Buffer2 = require_buffer().Buffer;
     }
   });

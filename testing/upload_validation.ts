@@ -1289,8 +1289,30 @@ const legacyPackMetadataSchema = validateFormulas(
         return;
       }
     }
-  });
+  })
+  .superRefine((untypedData, context) => {
+    const data = untypedData as PackVersionMetadata;
 
+    const authNetworkDomains = getAuthNetworkDomains(data);
+
+    if (!isDefined(authNetworkDomains)) {
+      // This is a Various or None auth pack.
+      return;
+    }
+
+    // A pack with multiple networks and auth must choose which domain(s) get auth on them.
+    if (!authNetworkDomains?.length) {
+      if (data.networkDomains && data.networkDomains.length > 1) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['defaultAuthentication.networkDomain'],
+          message:
+            'This pack uses multiple network domains and must set one as a `networkDomain` in setUserAuthentication()',
+        });
+      }
+      return;
+    }
+  });
 interface SchemaExtension {
   versionRange: string;
   schemaExtend: (schema: z.ZodType<Partial<PackVersionMetadata>>) => z.ZodType<Partial<PackVersionMetadata>>;
@@ -1320,36 +1342,6 @@ function getAuthNetworkDomains(data: PackVersionMetadata): string[] | undefined 
 }
 
 const packMetadataSchemaBySdkVersion: SchemaExtension[] = [
-  {
-    // Check that packs with multiple network domains explicitly choose which domain gets auth.
-    // This is a backward-incompatible validation that takes effect in any pack release after 1.0.0.
-    versionRange: '>=1.0.0',
-    schemaExtend: schema => {
-      return schema.superRefine((untypedData, context) => {
-        const data = untypedData as PackVersionMetadata;
-
-        const authNetworkDomains = getAuthNetworkDomains(data);
-
-        if (!isDefined(authNetworkDomains)) {
-          // This is a Various or None auth pack.
-          return;
-        }
-
-        // A pack with multiple networks and auth must choose which domain(s) get auth on them.
-        if (!authNetworkDomains?.length) {
-          if (data.networkDomains && data.networkDomains.length > 1) {
-            context.addIssue({
-              code: z.ZodIssueCode.custom,
-              path: ['defaultAuthentication.networkDomain'],
-              message:
-                'This pack uses multiple network domains and must set one as a `networkDomain` in setUserAuthentication()',
-            });
-          }
-          return;
-        }
-      });
-    },
-  },
   {
     versionRange: '>=1.0.0',
     schemaExtend: schema => {
