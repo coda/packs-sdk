@@ -1771,6 +1771,39 @@ describe('Pack metadata Validation', () => {
         await validateJson(metadata);
       });
 
+      it('subtitleProperties is invalid', async () => {
+        let metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.Number},
+            secondary: {type: ValueType.String},
+            third: {type: ValueType.Number, codaType: ValueHintType.Scale},
+          },
+          subtitleProperties: ['primary', 'secondary', 'blah'],
+        });
+        await validateJsonAndAssertFails(metadata);
+        metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.Number},
+            secondary: {type: ValueType.String},
+            third: {type: ValueType.Number, codaType: ValueHintType.Scale},
+          },
+          subtitleProperties: ['primary', 'secondary', 'third'],
+        });
+        await validateJsonAndAssertFails(metadata);
+        metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.Number},
+            secondary: {type: ValueType.String},
+            third: {type: ValueType.Number, codaType: ValueHintType.Date},
+          },
+          subtitleProperties: ['primary', 'secondary', 'third'],
+        });
+        await validateJson(metadata);
+      });
+
       it('unknown key in properties', async () => {
         const metadata = metadataForFormulaWithObjectSchema({
           type: ValueType.Object,

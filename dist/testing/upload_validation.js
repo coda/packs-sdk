@@ -668,10 +668,10 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     ...basePropertyValidators,
     type: zodDiscriminant(schema_11.ValueType.Object),
     description: z.string().optional(),
-    id: z.string().optional(),
-    idProperty: z.string().optional(),
-    primary: z.string().optional(),
-    displayProperty: z.string().optional(),
+    id: z.string().min(1).optional(),
+    idProperty: z.string().min(1).optional(),
+    primary: z.string().min(1).optional(),
+    displayProperty: z.string().min(1).optional(),
     codaType: z.enum([...schema_7.ObjectHintValueTypes]).optional(),
     featured: z.array(z.string()).optional(),
     featuredProperties: z.array(z.string()).optional(),
@@ -685,11 +685,11 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     properties: z.record(objectPropertyUnionSchema),
     includeUnknownProperties: z.boolean().optional(),
     __packId: z.number().optional(),
-    titleProperty: z.string().optional(),
-    linkProperty: z.string().optional(),
-    subtitleProperties: z.array(z.string()).optional(),
-    descriptionProperty: z.string().optional(),
-    imageProperty: z.string().optional(),
+    titleProperty: z.string().min(1).optional(),
+    linkProperty: z.string().min(1).optional(),
+    subtitleProperties: z.array(z.string().min(1)).optional(),
+    descriptionProperty: z.string().min(1).optional(),
+    imageProperty: z.string().min(1).optional(),
 })
     .superRefine((data, context) => {
     var _a, _b;
@@ -827,7 +827,24 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
             });
             return;
         }
-        // TODO: do the schema typing validation
+        const subtitlePropertySchema = schemaHelper.properties[f];
+        if ('codaType' in subtitlePropertySchema &&
+            subtitlePropertySchema.codaType &&
+            [
+                schema_10.ValueHintType.ImageAttachment,
+                schema_10.ValueHintType.Attachment,
+                schema_10.ValueHintType.ImageReference,
+                schema_10.ValueHintType.Embed,
+                schema_10.ValueHintType.Scale,
+                schema_10.ValueHintType.Scale,
+            ].includes(subtitlePropertySchema.codaType)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['subtitleProperties', i],
+                message: `The "subtitleProperties" field name "${f}" must refer to a value that does not have a codaType corresponding to one of ImageAttachment, Attachment, ImageReference, Embed, Scale, or Scale.`,
+            });
+            return;
+        }
     });
 }));
 const objectPropertyUnionSchema = z.union([
