@@ -34,8 +34,10 @@ export async function handleClone({packIdOrUrl, codaApiEndpoint}: ArgumentsCamel
 
   const codeAlreadyExists = fs.existsSync(path.join(manifestDir, 'pack.ts'));
   if (codeAlreadyExists) {
-    const shouldOverwrite = promptForInput('A pack.ts file already exists. Do you want to overwrite it? (y/N)?');
-    if (!shouldOverwrite.toLocaleLowerCase().startsWith('y')) {
+    const shouldOverwrite = promptForInput('A pack.ts file already exists. Do you want to overwrite it? (y/N)?', {
+      options: ['yes', 'no'],
+    });
+    if (shouldOverwrite.toLocaleLowerCase() !== 'yes') {
       return printAndExit('Aborting');
     }
   }
@@ -66,8 +68,9 @@ export async function handleClone({packIdOrUrl, codaApiEndpoint}: ArgumentsCamel
 
     const shouldInitializeWithoutDownload = promptForInput(
       'Do you want to continue initializing with template starter code instead (y/N)?',
+      {options: ['y', 'n', 'N', '']},
     );
-    if (!shouldInitializeWithoutDownload.toLocaleLowerCase().startsWith('y')) {
+    if (shouldInitializeWithoutDownload !== 'y') {
       return process.exit(1);
     }
 

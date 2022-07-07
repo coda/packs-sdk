@@ -29,8 +29,10 @@ async function handleClone({ packIdOrUrl, codaApiEndpoint }) {
     }
     const codeAlreadyExists = fs_extra_1.default.existsSync(path_1.default.join(manifestDir, 'pack.ts'));
     if (codeAlreadyExists) {
-        const shouldOverwrite = (0, helpers_5.promptForInput)('A pack.ts file already exists. Do you want to overwrite it? (y/N)?');
-        if (!shouldOverwrite.toLocaleLowerCase().startsWith('y')) {
+        const shouldOverwrite = (0, helpers_5.promptForInput)('A pack.ts file already exists. Do you want to overwrite it? (y/N)?', {
+            options: ['yes', 'no'],
+        });
+        if (shouldOverwrite.toLocaleLowerCase() !== 'yes') {
             return (0, helpers_4.printAndExit)('Aborting');
         }
     }
@@ -56,8 +58,8 @@ async function handleClone({ packIdOrUrl, codaApiEndpoint }) {
     }
     if (!sourceCode) {
         (0, helpers_3.print)(`Unable to download source for Pack version ${packVersion}. Packs built using the CLI can't be cloned.`);
-        const shouldInitializeWithoutDownload = (0, helpers_5.promptForInput)('Do you want to continue initializing with template starter code instead (y/N)?');
-        if (!shouldInitializeWithoutDownload.toLocaleLowerCase().startsWith('y')) {
+        const shouldInitializeWithoutDownload = (0, helpers_5.promptForInput)('Do you want to continue initializing with template starter code instead (y/N)?', { options: ['y', 'n', 'N', ''] });
+        if (shouldInitializeWithoutDownload !== 'y') {
             return process.exit(1);
         }
         await (0, init_1.handleInit)();

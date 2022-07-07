@@ -52,8 +52,13 @@ function printAndExit(msg, exitCode = 1) {
     return process.exit(exitCode);
 }
 exports.printAndExit = printAndExit;
-function promptForInput(prompt, { mask } = {}) {
-    return readlineSync.question(prompt, { mask: mask ? '*' : undefined, hideEchoBack: mask });
+function promptForInput(prompt, { mask, options } = {}) {
+    while (true) {
+        const answer = readlineSync.question(prompt, { mask: mask ? '*' : undefined, hideEchoBack: mask });
+        if (!options || options.includes(answer)) {
+            return answer;
+        }
+    }
 }
 exports.promptForInput = promptForInput;
 function readFile(fileName) {
