@@ -1991,6 +1991,11 @@ describe('Pack metadata Validation', () => {
             'CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict `defaultAuthentication.networkDomain` to coda.io',
           path: 'defaultAuthentication.networkDomain',
         },
+        {
+          message:
+            'This pack uses multiple network domains and must set one as a `networkDomain` in setUserAuthentication()',
+          path: 'defaultAuthentication.networkDomain',
+        },
       ]);
     });
 
@@ -2238,7 +2243,7 @@ describe('Pack metadata Validation', () => {
           networkDomain: [],
         },
       });
-      const err = await validateJsonAndAssertFails(metadata, '1.0.0');
+      const err = await validateJsonAndAssertFails(metadata, '0.0.1');
       assert.deepEqual(err.validationErrors, [
         {
           message: 'Array must contain at least 1 element(s)',
@@ -2250,18 +2255,6 @@ describe('Pack metadata Validation', () => {
           path: 'defaultAuthentication.networkDomain',
         },
       ]);
-    });
-
-    it('missing networkDomains when specifying authentication allowed for old SDK versions', async () => {
-      const metadata = createFakePackVersionMetadata({
-        networkDomains: ['foo.com', 'bar.com'],
-        defaultAuthentication: {
-          type: AuthenticationType.HeaderBearerToken,
-          // A newer sdkVersion would need to set the networkDomain here.
-        },
-      });
-      const validated = await validateJson(metadata, '0.9.0');
-      assert.deepEqual(validated, metadata);
     });
 
     it('bad networkDomains when specifying authentication', async () => {
