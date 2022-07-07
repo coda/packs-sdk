@@ -47,6 +47,9 @@ class ObjectSchemaHelper {
     get linkProperty() {
         return this._schema.linkProperty;
     }
+    get titleProperty() {
+        return this._schema.titleProperty;
+    }
 }
 function paramDefHelper(def) {
     return new ParamDefHelper(def);

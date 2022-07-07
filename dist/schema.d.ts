@@ -734,33 +734,44 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      */
     includeUnknownProperties?: boolean;
     /**
-     * The name of a property within {@link properties} that can be used to attribute the source
-     * of this object in the UI.
+     * The name of a property within {@link properties} that will be used as a title of a rich card preview
+     * for formulas that return this object.
+     * Defaults to the value of {@link ObjectSchemaDefinition.displayProperty} if not specified
      *
-     * Must be a string property with a URL hint.
+     * Must be a {@link ValueType.String} property
+     */
+    /** @hidden */
+    titleProperty?: L;
+    /**
+     * The name of a property within {@link ObjectSchemaDefinition.properties} that will
+     * navigate users to more details about this object
+     *
+     * Must be a {@link ValueType.String} property with a {@link ValueHintType.Url}
+     * {@link ObjectSchemaDefinition.codaType}.
      */
     /** @hidden */
     linkProperty?: L;
     /**
-     * A list of property names from within {@link properties} for the properties of the object
+     * A list of property names from within {@link ObjectSchemaDefinition.properties} for the properties of the object
      * to be shown in the subtitle of a rich card preview for formulas that return this object.
-     * Defaults to the value of {@link featuredProperties} if not specified.
+     * Defaults to the value of {@link ObjectSchemaDefinition.featuredProperties} if not specified.
      */
     /** @hidden */
     subtitleProperties?: L[];
     /**
-     * The name of a property within {@link properties} that be used as a long body description
+     * The name of a property within {@link ObjectSchemaDefinition.properties} that be used as a long body description
      * of the object.
      *
-     * Must be a string property or array of strings.
+     * Must be a {@link ValueType.String} property or {@link ValueType.Array} of {@link ValueType.String}s.
      */
     /** @hidden */
     descriptionProperty?: L;
     /**
-     * The name of a property within {@link properties} that can be used as a rich image preview of
+     * The name of a property within {@link ObjectSchemaDefinition.properties} that can be used as a rich image preview of
      * the object.
      *
-     * Must be a string property with the `ImageAttachment` or `ImageReference` hints
+     * Must be a {@link ValueType.String} property with the
+     * {@link ValueHintType.ImageAttachment} or {@link ValueHintType.ImageReference} hints
      */
     /** @hidden */
     imageProperty?: L;

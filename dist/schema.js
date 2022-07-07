@@ -517,7 +517,7 @@ function normalizeSchema(schema) {
     }
     else if (isObject(schema)) {
         const normalized = {};
-        const { id, primary, featured, idProperty, displayProperty, featuredProperties } = schema;
+        const { id, primary, featured, idProperty, displayProperty, featuredProperties, titleProperty, subtitleProperties, imageProperty, descriptionProperty, linkProperty, } = schema;
         for (const key of Object.keys(schema.properties)) {
             const normalizedKey = normalizeSchemaKey(key);
             const props = schema.properties[key];
@@ -541,6 +541,11 @@ function normalizeSchema(schema) {
             description: schema.description,
             attribution: schema.attribution,
             includeUnknownProperties: schema.includeUnknownProperties,
+            titleProperty: titleProperty ? normalizeSchemaKey(titleProperty) : undefined,
+            subtitleProperties: subtitleProperties ? subtitleProperties.map(normalizeSchemaKey) : undefined,
+            imageProperty: imageProperty ? normalizeSchemaKey(imageProperty) : undefined,
+            descriptionProperty: descriptionProperty ? normalizeSchemaKey(descriptionProperty) : undefined,
+            linkProperty: linkProperty ? normalizeSchemaKey(linkProperty) : undefined,
         };
         return normalizedSchema;
     }
