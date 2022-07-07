@@ -61,6 +61,10 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
   get linkProperty() {
     return this._schema.linkProperty;
   }
+
+  get titleProperty() {
+    return this._schema.titleProperty;
+  }
 }
 
 export function paramDefHelper<S extends UnionType, T extends ParamDef<S>>(def: T): ParamDefHelper<S, T> {
