@@ -1,41 +1,12 @@
+"use strict";
 var module = module || {};
 module.exports = (() => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
-  var __defProps = Object.defineProperties;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-  var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
   var __getOwnPropNames = Object.getOwnPropertyNames;
-  var __getOwnPropSymbols = Object.getOwnPropertySymbols;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
-  var __propIsEnum = Object.prototype.propertyIsEnumerable;
-  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-  var __spreadValues = (a, b) => {
-    for (var prop in b || (b = {}))
-      if (__hasOwnProp.call(b, prop))
-        __defNormalProp(a, prop, b[prop]);
-    if (__getOwnPropSymbols)
-      for (var prop of __getOwnPropSymbols(b)) {
-        if (__propIsEnum.call(b, prop))
-          __defNormalProp(a, prop, b[prop]);
-      }
-    return a;
-  };
-  var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
-  var __restKey = (key) => typeof key === "symbol" ? key : key + "";
-  var __objRest = (source, exclude) => {
-    var target = {};
-    for (var prop in source)
-      if (__hasOwnProp.call(source, prop) && exclude.indexOf(prop) < 0)
-        target[prop] = source[prop];
-    if (source != null && __getOwnPropSymbols)
-      for (var prop of __getOwnPropSymbols(source)) {
-        if (exclude.indexOf(prop) < 0 && __propIsEnum.call(source, prop))
-          target[prop] = source[prop];
-      }
-    return target;
-  };
   var __esm = (fn, res) => function __init() {
     return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
   };
@@ -1882,6 +1853,7 @@ module.exports = (() => {
   var Buffer2;
   var init_buffer_shim = __esm({
     "testing/injections/buffer_shim.js"() {
+      "use strict";
       Buffer2 = require_buffer().Buffer;
     }
   });
@@ -4775,7 +4747,7 @@ module.exports = (() => {
       if (typeof responseBody === "object") {
         responseBody = JSON.stringify(responseBody);
       }
-      this.response = __spreadProps(__spreadValues({}, response), { body: responseBody });
+      this.response = { ...response, body: responseBody };
     }
   };
   var MissingScopesError = class extends Error {
@@ -4894,15 +4866,16 @@ module.exports = (() => {
     if (!(err instanceof Error)) {
       return;
     }
-    const _a = err, { name, stack, message } = _a, args = __objRest(_a, ["name", "stack", "message"]);
-    return __spreadValues({
+    const { name, stack, message, ...args } = err;
+    return {
       name,
       stack,
       message,
       ["__coda_marshaler__" /* CodaMarshaler */]: "Error" /* Error */,
       ["__error_class_name__" /* ErrorClassName */]: err.constructor.name,
-      ["__error_class_type__" /* ErrorClassType */]: getErrorClassType(err)
-    }, args);
+      ["__error_class_type__" /* ErrorClassType */]: getErrorClassType(err),
+      ...args
+    };
   }
   function getErrorClass(errorClassType, name) {
     let errorClasses;
@@ -4919,25 +4892,18 @@ module.exports = (() => {
     return errorClasses.find((cls) => cls.name === name) || Error;
   }
   function unmarshalError(val) {
-    var _a, _b, _c;
     if (typeof val !== "object" || val["__coda_marshaler__" /* CodaMarshaler */] !== "Error" /* Error */) {
       return;
     }
-    const _d = val, {
+    const {
       name,
       stack,
       message,
-      [_a = "__error_class_name__" /* ErrorClassName */]: errorClassName,
-      [_b = "__coda_marshaler__" /* CodaMarshaler */]: _,
-      [_c = "__error_class_type__" /* ErrorClassType */]: errorClassType
-    } = _d, otherProperties = __objRest(_d, [
-      "name",
-      "stack",
-      "message",
-      __restKey(_a),
-      __restKey(_b),
-      __restKey(_c)
-    ]);
+      ["__error_class_name__" /* ErrorClassName */]: errorClassName,
+      ["__coda_marshaler__" /* CodaMarshaler */]: _,
+      ["__error_class_type__" /* ErrorClassType */]: errorClassType,
+      ...otherProperties
+    } = val;
     const ErrorClass = getErrorClass(errorClassType, errorClassName);
     const error = new ErrorClass();
     error.message = message;
