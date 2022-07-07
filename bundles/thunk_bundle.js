@@ -1,7 +1,6 @@
 "use strict";
-'use strict';
-var module;
-(module ||= {}).exports = (() => {
+var module = module || {};
+module.exports = (() => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -4712,8 +4711,7 @@ var module;
       this._step = step;
     }
     get getOptions() {
-      var _a;
-      return ensureExists((_a = this._step.getOptions) != null ? _a : this._step.getOptionsFormula);
+      return ensureExists(this._step.getOptions ?? this._step.getOptionsFormula);
     }
   };
 
@@ -4775,14 +4773,14 @@ var module;
     }
     const formulas = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
     if (!formulas || !formulas.length) {
-      throw new Error(`Pack definition has no formulas${namespace != null ? namespace : ` for namespace "${namespace}"`}.`);
+      throw new Error(`Pack definition has no formulas${namespace ?? ` for namespace "${namespace}"`}.`);
     }
     for (const formula of formulas) {
       if (formula.name === name) {
         return formula;
       }
     }
-    throw new Error(`Pack definition has no formula "${name}"${namespace != null ? namespace : ` in namespace "${namespace}"`}.`);
+    throw new Error(`Pack definition has no formula "${name}"${namespace ?? ` in namespace "${namespace}"`}.`);
   }
   function findSyncFormula(packDef, syncFormulaName) {
     if (!packDef.syncTables) {
