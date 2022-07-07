@@ -569,7 +569,7 @@ export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.Dat
 }
 
 /**
- * Enumeration of units supported by duration schemas. See {@link maxUnit}.
+ * Enumeration of units supported by duration schemas. See {@link DurationSchema.maxUnit}.
  */
 export enum DurationUnit {
   /**
@@ -596,7 +596,7 @@ export enum DurationUnit {
  */
 export interface DurationSchema extends BaseStringSchema<ValueHintType.Duration> {
   /**
-   * A refinement of {@link maxUnit} to use for rounding the duration when rendering.
+   * A refinement of {@link DurationSchema.maxUnit} to use for rounding the duration when rendering.
    * Currently only `1` is supported, which is the same as omitting a value.
    */
   precision?: number;
@@ -660,7 +660,7 @@ export interface ArraySchema<T extends Schema = Schema> extends BaseSchema {
 }
 
 /**
- * Fields that may be set on a schema property in the {@link properties} definition
+ * Fields that may be set on a schema property in the {@link ObjectSchemaDefinition.properties} definition
  * of an object schema.
  */
 export interface ObjectSchemaProperty {
@@ -704,7 +704,7 @@ export interface ObjectSchemaProperty {
 }
 
 /**
- * The type of the {@link properties} in the definition of an object schema.
+ * The type of the {@link ObjectSchemaDefinition.properties} in the definition of an object schema.
  * This is essentially a dictionary mapping the name of a property to a schema
  * definition for that property.
  */
@@ -769,17 +769,18 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
   type: ValueType.Object;
   /** Definintion of the key-value pairs in this object. */
   properties: ObjectSchemaProperties<K | L>;
-  /** @deprecated Use {@link idProperty} */
+  /** @deprecated Use {@link ObjectSchemaDefinition.idProperty} */
   id?: K;
   /**
-   * The name of a property within {@link properties} that represents a unique id for this object.
-   * Sync table schemas must specify an id property, which uniquely identify each synced row.
+   * The name of a property within {@link ObjectSchemaDefinition.properties} that represents a unique id for this
+   * object. Sync table schemas must specify an id property, which uniquely identify each synced row.
    */
   idProperty?: K;
-  /** @deprecated Use {@link displayProperty} */
+  /** @deprecated Use {@link ObjectSchemaDefinition.displayProperty} */
   primary?: K;
   /**
-   * The name of a property within {@link properties} that be used to label this object in the UI.
+   * The name of a property within {@link ObjectSchemaDefinition.properties} that be used to label this object in the
+   * UI.
    * Object values can contain many properties and the Coda UI will display them as a "chip"
    * with only the value of the "displayProperty" property used as the chip's display label.
    * The other properties can be seen when hovering over the chip.
@@ -793,10 +794,10 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
    * render such a value as an @-reference to that person, rather than a basic object chip.
    */
   codaType?: ObjectHintTypes;
-  /** @deprecated Use {@link featuredProperties} */
+  /** @deprecated Use {@link ObjectSchemaDefinition.featuredProperties} */
   featured?: L[];
   /**
-   * A list of property names from within {@link properties} for the "featured" properties
+   * A list of property names from within {@link ObjectSchemaDefinition.properties} for the "featured" properties
    * of this object, used in sync tables. When a sync table is first added to a document,
    * columns are created for each of the featured properties. The user can easily add additional
    * columns for any other properties, as desired. All featured properties need to be top-level.
@@ -833,6 +834,48 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
    * scenarios they can be useful.
    */
   includeUnknownProperties?: boolean;
+  /**
+   * The name of a property within {@link properties} that will be used as a title of a rich card preview
+   * for formulas that return this object.
+   * Defaults to the value of {@link ObjectSchemaDefinition.displayProperty} if not specified
+   *
+   * Must be a {@link ValueType.String} property
+   */
+  /** @hidden */
+  titleProperty?: L;
+  /**
+   * The name of a property within {@link ObjectSchemaDefinition.properties} that will
+   * navigate users to more details about this object
+   *
+   * Must be a {@link ValueType.String} property with a {@link ValueHintType.Url}
+   * {@link ObjectSchemaDefinition.codaType}.
+   */
+  /** @hidden */
+  linkProperty?: L;
+  /**
+   * A list of property names from within {@link ObjectSchemaDefinition.properties} for the properties of the object
+   * to be shown in the subtitle of a rich card preview for formulas that return this object.
+   * Defaults to the value of {@link ObjectSchemaDefinition.featuredProperties} if not specified.
+   */
+  /** @hidden */
+  subtitleProperties?: L[];
+  /**
+   * The name of a property within {@link ObjectSchemaDefinition.properties} that be used as a long body description
+   * of the object.
+   *
+   * Must be a {@link ValueType.String} property or {@link ValueType.Array} of {@link ValueType.String}s.
+   */
+  /** @hidden */
+  descriptionProperty?: L;
+  /**
+   * The name of a property within {@link ObjectSchemaDefinition.properties} that can be used as a rich image preview of
+   * the object.
+   *
+   * Must be a {@link ValueType.String} property with the
+   * {@link ValueHintType.ImageAttachment} or {@link ValueHintType.ImageReference} hints
+   */
+  /** @hidden */
+  imageProperty?: L;
 }
 
 export type ObjectSchemaDefinitionType<
@@ -1019,7 +1062,7 @@ type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = ObjectSchema
  * For example, `SchemaType<NumberSchema>` produces the type `number`.
  *
  * For an object schema, this will for the most part return an object matching the schema
- * but if the schema uses {@link fromKey} then this utility will be unable to infer
+ * but if the schema uses {@link ObjectSchemaProperty.fromKey} then this utility will be unable to infer
  * that the return value type should use the property names given in the `fromKey`
  * attribute, and will simply relax any property name type-checking in such a case.
  *
@@ -1052,7 +1095,8 @@ export type InferrableTypes = boolean | number | string | object | boolean[] | n
  * inputs, it may be useful to us this helper to sniff the return value and generate a basic
  * inferred schema from it.
  *
- * This utility does NOT attempt to determine {@link idProperty} or {@link displayProperty} attributes for
+ * This utility does NOT attempt to determine {@link ObjectSchemaDefinition.idProperty} or
+ * {@link ObjectSchemaDefinition.displayProperty} attributes for
  * an object schema, those are left undefined.
  */
 export function generateSchema(obj: InferrableTypes): Schema {
@@ -1213,7 +1257,19 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     } as T;
   } else if (isObject(schema)) {
     const normalized: ObjectSchemaProperties = {};
-    const {id, primary, featured, idProperty, displayProperty, featuredProperties} = schema;
+    const {
+      id,
+      primary,
+      featured,
+      idProperty,
+      displayProperty,
+      featuredProperties,
+      titleProperty,
+      subtitleProperties,
+      imageProperty,
+      descriptionProperty,
+      linkProperty,
+    } = schema;
     for (const key of Object.keys(schema.properties)) {
       const normalizedKey = normalizeSchemaKey(key);
       const props = schema.properties[key];
@@ -1237,6 +1293,11 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
       description: schema.description,
       attribution: schema.attribution,
       includeUnknownProperties: schema.includeUnknownProperties,
+      titleProperty: titleProperty ? normalizeSchemaKey(titleProperty) : undefined,
+      subtitleProperties: subtitleProperties ? subtitleProperties.map(normalizeSchemaKey) : undefined,
+      imageProperty: imageProperty ? normalizeSchemaKey(imageProperty) : undefined,
+      descriptionProperty: descriptionProperty ? normalizeSchemaKey(descriptionProperty) : undefined,
+      linkProperty: linkProperty ? normalizeSchemaKey(linkProperty) : undefined,
     } as T;
 
     return normalizedSchema;

@@ -24,7 +24,3 @@ title: "newJsonFetchResponse"
 #### Returns
 
 [`FetchResponse`](../interfaces/core.FetchResponse.md)<`T`\>
-
-#### Defined in
-
-[testing/mocks.ts:43](https://github.com/coda/packs-sdk/blob/main/testing/mocks.ts#L43)

@@ -1622,7 +1622,7 @@ describe('Pack metadata Validation', () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: 'The "id" property must appear as a key in the "properties" object.',
+            message: 'The "idProperty" property must appear as a key in the "properties" object.',
             path: 'formulas[0].schema',
           },
         ]);
@@ -1643,6 +1643,165 @@ describe('Pack metadata Validation', () => {
             path: 'formulas[0].schema',
           },
         ]);
+      });
+
+      it('imageProperty is invalid', async () => {
+        let metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.Number},
+          },
+          imageProperty: 'garbage',
+        });
+        await validateJsonAndAssertFails(metadata);
+        metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.Number},
+          },
+          imageProperty: 'primary',
+        });
+        await validateJsonAndAssertFails(metadata);
+        metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.String},
+          },
+          imageProperty: 'primary',
+        });
+        await validateJsonAndAssertFails(metadata);
+
+        metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.String, codaType: ValueHintType.ImageAttachment},
+          },
+          imageProperty: 'primary',
+        });
+        await validateJson(metadata);
+      });
+
+      it('titleProperty is invalid', async () => {
+        let metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.Number},
+          },
+          titleProperty: 'garbage',
+        });
+        await validateJsonAndAssertFails(metadata);
+        metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.Number},
+          },
+          titleProperty: 'primary',
+        });
+        await validateJsonAndAssertFails(metadata);
+        metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.String},
+          },
+          titleProperty: 'primary',
+        });
+        await validateJson(metadata);
+      });
+
+      it('linkProperty is invalid', async () => {
+        let metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.Number},
+          },
+          linkProperty: 'garbage',
+        });
+        await validateJsonAndAssertFails(metadata);
+        metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.Number},
+          },
+          linkProperty: 'primary',
+        });
+        await validateJsonAndAssertFails(metadata);
+        metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.String},
+          },
+          linkProperty: 'primary',
+        });
+        await validateJsonAndAssertFails(metadata);
+
+        metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.String, codaType: ValueHintType.Url},
+          },
+          linkProperty: 'primary',
+        });
+        await validateJson(metadata);
+      });
+
+      it('descriptionProperty is invalid', async () => {
+        let metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.Number},
+          },
+          descriptionProperty: 'garbage',
+        });
+        await validateJsonAndAssertFails(metadata);
+        metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.Number},
+          },
+          descriptionProperty: 'primary',
+        });
+        await validateJsonAndAssertFails(metadata);
+        metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.String},
+          },
+          descriptionProperty: 'primary',
+        });
+        await validateJson(metadata);
+      });
+
+      it('subtitleProperties is invalid', async () => {
+        let metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.Number},
+            secondary: {type: ValueType.String},
+            third: {type: ValueType.Number, codaType: ValueHintType.Scale},
+          },
+          subtitleProperties: ['primary', 'secondary', 'blah'],
+        });
+        await validateJsonAndAssertFails(metadata);
+        metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.Number},
+            secondary: {type: ValueType.String},
+            third: {type: ValueType.Number, codaType: ValueHintType.Scale},
+          },
+          subtitleProperties: ['primary', 'secondary', 'third'],
+        });
+        await validateJsonAndAssertFails(metadata);
+        metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.Number},
+            secondary: {type: ValueType.String},
+            third: {type: ValueType.Number, codaType: ValueHintType.Date},
+          },
+          subtitleProperties: ['primary', 'secondary', 'third'],
+        });
+        await validateJson(metadata);
       });
 
       it('unknown key in properties', async () => {
@@ -1673,7 +1832,7 @@ describe('Pack metadata Validation', () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: 'The featured field name "Foo" does not exist in the "properties" object.',
+            message: 'The "featuredProperties" field name "Foo" does not exist in the "properties" object.',
             path: 'formulas[0].schema.featured[1]',
           },
         ]);
@@ -1991,6 +2150,11 @@ describe('Pack metadata Validation', () => {
             'CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict `defaultAuthentication.networkDomain` to coda.io',
           path: 'defaultAuthentication.networkDomain',
         },
+        {
+          message:
+            'This pack uses multiple network domains and must set one as a `networkDomain` in setUserAuthentication()',
+          path: 'defaultAuthentication.networkDomain',
+        },
       ]);
     });
 
@@ -2238,7 +2402,7 @@ describe('Pack metadata Validation', () => {
           networkDomain: [],
         },
       });
-      const err = await validateJsonAndAssertFails(metadata, '1.0.0');
+      const err = await validateJsonAndAssertFails(metadata, '0.0.1');
       assert.deepEqual(err.validationErrors, [
         {
           message: 'Array must contain at least 1 element(s)',
@@ -2250,18 +2414,6 @@ describe('Pack metadata Validation', () => {
           path: 'defaultAuthentication.networkDomain',
         },
       ]);
-    });
-
-    it('missing networkDomains when specifying authentication allowed for old SDK versions', async () => {
-      const metadata = createFakePackVersionMetadata({
-        networkDomains: ['foo.com', 'bar.com'],
-        defaultAuthentication: {
-          type: AuthenticationType.HeaderBearerToken,
-          // A newer sdkVersion would need to set the networkDomain here.
-        },
-      });
-      const validated = await validateJson(metadata, '0.9.0');
-      assert.deepEqual(validated, metadata);
     });
 
     it('bad networkDomains when specifying authentication', async () => {

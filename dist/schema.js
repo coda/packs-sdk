@@ -291,7 +291,7 @@ var LinkDisplayType;
     LinkDisplayType["Embed"] = "embed";
 })(LinkDisplayType = exports.LinkDisplayType || (exports.LinkDisplayType = {}));
 /**
- * Enumeration of units supported by duration schemas. See {@link maxUnit}.
+ * Enumeration of units supported by duration schemas. See {@link DurationSchema.maxUnit}.
  */
 var DurationUnit;
 (function (DurationUnit) {
@@ -377,7 +377,8 @@ exports.isArray = isArray;
  * inputs, it may be useful to us this helper to sniff the return value and generate a basic
  * inferred schema from it.
  *
- * This utility does NOT attempt to determine {@link idProperty} or {@link displayProperty} attributes for
+ * This utility does NOT attempt to determine {@link ObjectSchemaDefinition.idProperty} or
+ * {@link ObjectSchemaDefinition.displayProperty} attributes for
  * an object schema, those are left undefined.
  */
 function generateSchema(obj) {
@@ -516,7 +517,7 @@ function normalizeSchema(schema) {
     }
     else if (isObject(schema)) {
         const normalized = {};
-        const { id, primary, featured, idProperty, displayProperty, featuredProperties } = schema;
+        const { id, primary, featured, idProperty, displayProperty, featuredProperties, titleProperty, subtitleProperties, imageProperty, descriptionProperty, linkProperty, } = schema;
         for (const key of Object.keys(schema.properties)) {
             const normalizedKey = normalizeSchemaKey(key);
             const props = schema.properties[key];
@@ -540,6 +541,11 @@ function normalizeSchema(schema) {
             description: schema.description,
             attribution: schema.attribution,
             includeUnknownProperties: schema.includeUnknownProperties,
+            titleProperty: titleProperty ? normalizeSchemaKey(titleProperty) : undefined,
+            subtitleProperties: subtitleProperties ? subtitleProperties.map(normalizeSchemaKey) : undefined,
+            imageProperty: imageProperty ? normalizeSchemaKey(imageProperty) : undefined,
+            descriptionProperty: descriptionProperty ? normalizeSchemaKey(descriptionProperty) : undefined,
+            linkProperty: linkProperty ? normalizeSchemaKey(linkProperty) : undefined,
         };
         return normalizedSchema;
     }

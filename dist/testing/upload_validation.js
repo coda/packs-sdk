@@ -307,6 +307,7 @@ const defaultAuthenticationValidators = {
         endpointKey: z.string().optional(),
         tokenQueryParam: z.string().optional(),
         useProofKeyForCodeExchange: z.boolean().optional(),
+        pkceChallengeMethod: z.enum(['plain', 'S256']).optional(),
         scopeParamName: z.string().optional(),
         nestedResponseKey: z.string().optional(),
         ...baseAuthenticationValidators,
@@ -667,10 +668,10 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     ...basePropertyValidators,
     type: zodDiscriminant(schema_11.ValueType.Object),
     description: z.string().optional(),
-    id: z.string().optional(),
-    idProperty: z.string().optional(),
-    primary: z.string().optional(),
-    displayProperty: z.string().optional(),
+    id: z.string().min(1).optional(),
+    idProperty: z.string().min(1).optional(),
+    primary: z.string().min(1).optional(),
+    displayProperty: z.string().min(1).optional(),
     codaType: z.enum([...schema_7.ObjectHintValueTypes]).optional(),
     featured: z.array(z.string()).optional(),
     featuredProperties: z.array(z.string()).optional(),
@@ -684,6 +685,11 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     properties: z.record(objectPropertyUnionSchema),
     includeUnknownProperties: z.boolean().optional(),
     __packId: z.number().optional(),
+    titleProperty: z.string().min(1).optional(),
+    linkProperty: z.string().min(1).optional(),
+    subtitleProperties: z.array(z.string().min(1)).optional(),
+    descriptionProperty: z.string().min(1).optional(),
+    imageProperty: z.string().min(1).optional(),
 })
     .superRefine((data, context) => {
     var _a, _b;
@@ -699,7 +705,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     const schemaHelper = (0, migration_1.objectSchemaHelper)(data);
     return (0, object_utils_2.isNil)(schemaHelper.id) || schemaHelper.id in schemaHelper.properties;
 }, {
-    message: 'The "id" property must appear as a key in the "properties" object.',
+    message: 'The "idProperty" property must appear as a key in the "properties" object.',
 })
     .refine(data => {
     const schemaHelper = (0, migration_1.objectSchemaHelper)(data);
@@ -708,13 +714,136 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     message: 'The "displayProperty" property must appear as a key in the "properties" object.',
 })
     .superRefine((data, context) => {
-    ((0, migration_1.objectSchemaHelper)(data).featured || []).forEach((f, i) => {
-        if (!(f in data.properties)) {
+    const schemaHelper = (0, migration_1.objectSchemaHelper)(data);
+    (schemaHelper.featured || []).forEach((f, i) => {
+        if (!(f in schemaHelper.properties)) {
             context.addIssue({
                 code: z.ZodIssueCode.custom,
                 path: ['featured', i],
-                message: `The featured field name "${f}" does not exist in the "properties" object.`,
+                message: `The "featuredProperties" field name "${f}" does not exist in the "properties" object.`,
             });
+        }
+    });
+})
+    .superRefine((data, context) => {
+    const schemaHelper = (0, migration_1.objectSchemaHelper)(data);
+    const validateTitleProperty = () => {
+        if (schemaHelper.titleProperty) {
+            if (!(schemaHelper.titleProperty in schemaHelper.properties)) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['titleProperty'],
+                    message: `The "titleProperty" field name "${schemaHelper.titleProperty}" does not exist in the "properties" object.`,
+                });
+                return;
+            }
+            const titlePropertySchema = schemaHelper.properties[schemaHelper.titleProperty];
+            if (titlePropertySchema.type !== schema_11.ValueType.String) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['titleProperty'],
+                    message: `The "titleProperty" field name "${schemaHelper.titleProperty}" must refer to a "ValueType.String" property.`,
+                });
+                return;
+            }
+        }
+    };
+    const validateImageProperty = () => {
+        if (schemaHelper.imageProperty) {
+            if (!(schemaHelper.imageProperty in schemaHelper.properties)) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['imageProperty'],
+                    message: `The "imageProperty" field name "${schemaHelper.imageProperty}" does not exist in the "properties" object.`,
+                });
+                return;
+            }
+            const imagePropertySchema = schemaHelper.properties[schemaHelper.imageProperty];
+            if (imagePropertySchema.type !== schema_11.ValueType.String ||
+                ![schema_10.ValueHintType.ImageAttachment, schema_10.ValueHintType.ImageReference].includes(imagePropertySchema.codaType)) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['imageProperty'],
+                    message: `The "imageProperty" field name "${schemaHelper.imageProperty}" must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "codaType".`,
+                });
+                return;
+            }
+        }
+    };
+    const validateDescriptionProperty = () => {
+        if (schemaHelper.descriptionProperty) {
+            if (!(schemaHelper.descriptionProperty in schemaHelper.properties)) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['descriptionProperty'],
+                    message: `The "descriptionProperty" field name "${schemaHelper.descriptionProperty}" does not exist in the "properties" object.`,
+                });
+                return;
+            }
+            const descriptionPropertySchema = schemaHelper.properties[schemaHelper.descriptionProperty];
+            if (descriptionPropertySchema.type !== schema_11.ValueType.String &&
+                (descriptionPropertySchema.type !== schema_11.ValueType.Array ||
+                    descriptionPropertySchema.items.type !== schema_11.ValueType.String)) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['descriptionProperty'],
+                    message: `The "descriptionProperty" field name "${schemaHelper.descriptionProperty}" must refer to a "ValueType.String" property or array of strings.`,
+                });
+                return;
+            }
+        }
+    };
+    const validateLinkProperty = () => {
+        if (schemaHelper.linkProperty) {
+            if (!(schemaHelper.linkProperty in schemaHelper.properties)) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['linkProperty'],
+                    message: `The "linkProperty" field name "${schemaHelper.linkProperty}" does not exist in the "properties" object.`,
+                });
+                return;
+            }
+            const linkPropertySchema = schemaHelper.properties[schemaHelper.linkProperty];
+            if (linkPropertySchema.type !== schema_11.ValueType.String || linkPropertySchema.codaType !== schema_10.ValueHintType.Url) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['linkProperty'],
+                    message: `The "linkProperty" field name "${schemaHelper.linkProperty}" must refer to a "ValueType.String" property with a "ValueHintType.Url" "codaType".`,
+                });
+                return;
+            }
+        }
+    };
+    validateTitleProperty();
+    validateLinkProperty();
+    validateImageProperty();
+    validateDescriptionProperty();
+    (schemaHelper.subtitleProperties || []).forEach((f, i) => {
+        if (!(f in schemaHelper.properties)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['subtitleProperties', i],
+                message: `The "subtitleProperties" field name "${f}" does not exist in the "properties" object.`,
+            });
+            return;
+        }
+        const subtitlePropertySchema = schemaHelper.properties[f];
+        if ('codaType' in subtitlePropertySchema &&
+            subtitlePropertySchema.codaType &&
+            [
+                schema_10.ValueHintType.ImageAttachment,
+                schema_10.ValueHintType.Attachment,
+                schema_10.ValueHintType.ImageReference,
+                schema_10.ValueHintType.Embed,
+                schema_10.ValueHintType.Scale,
+                schema_10.ValueHintType.Scale,
+            ].includes(subtitlePropertySchema.codaType)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['subtitleProperties', i],
+                message: `The "subtitleProperties" field name "${f}" must refer to a value that does not have a codaType corresponding to one of ImageAttachment, Attachment, ImageReference, Embed, Scale, or Scale.`,
+            });
+            return;
         }
     });
 }));
@@ -1082,6 +1211,25 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
             return;
         }
     }
+})
+    .superRefine((untypedData, context) => {
+    const data = untypedData;
+    const authNetworkDomains = getAuthNetworkDomains(data);
+    if (!(0, object_utils_1.isDefined)(authNetworkDomains)) {
+        // This is a Various or None auth pack.
+        return;
+    }
+    // A pack with multiple networks and auth must choose which domain(s) get auth on them.
+    if (!(authNetworkDomains === null || authNetworkDomains === void 0 ? void 0 : authNetworkDomains.length)) {
+        if (data.networkDomains && data.networkDomains.length > 1) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['defaultAuthentication.networkDomain'],
+                message: 'This pack uses multiple network domains and must set one as a `networkDomain` in setUserAuthentication()',
+            });
+        }
+        return;
+    }
 });
 // Returns undefined for None or Various auth, otherwise returns a string array.
 function getAuthNetworkDomains(data) {
@@ -1103,32 +1251,6 @@ function getAuthNetworkDomains(data) {
     return [];
 }
 const packMetadataSchemaBySdkVersion = [
-    {
-        // Check that packs with multiple network domains explicitly choose which domain gets auth.
-        // This is a backward-incompatible validation that takes effect in any pack release after 1.0.0.
-        versionRange: '>=1.0.0',
-        schemaExtend: schema => {
-            return schema.superRefine((untypedData, context) => {
-                const data = untypedData;
-                const authNetworkDomains = getAuthNetworkDomains(data);
-                if (!(0, object_utils_1.isDefined)(authNetworkDomains)) {
-                    // This is a Various or None auth pack.
-                    return;
-                }
-                // A pack with multiple networks and auth must choose which domain(s) get auth on them.
-                if (!(authNetworkDomains === null || authNetworkDomains === void 0 ? void 0 : authNetworkDomains.length)) {
-                    if (data.networkDomains && data.networkDomains.length > 1) {
-                        context.addIssue({
-                            code: z.ZodIssueCode.custom,
-                            path: ['defaultAuthentication.networkDomain'],
-                            message: 'This pack uses multiple network domains and must set one as a `networkDomain` in setUserAuthentication()',
-                        });
-                    }
-                    return;
-                }
-            });
-        },
-    },
     {
         versionRange: '>=1.0.0',
         schemaExtend: schema => {

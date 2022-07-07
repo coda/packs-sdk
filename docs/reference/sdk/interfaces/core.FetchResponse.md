@@ -5,7 +5,7 @@ title: "FetchResponse"
 
 [core](../modules/core.md).FetchResponse
 
-The response of a call to [Fetcher.fetch](core.Fetcher.md#fetch).
+The response of a call to [fetch](core.Fetcher.md#fetch).
 
 The structure largely follows https://developer.mozilla.org/en-US/docs/Web/API/Response
 

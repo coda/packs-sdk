@@ -24,7 +24,7 @@ When requiresEndpointUrl is set to true this should be the root domain that all 
 For example, this value would be "example.com" if specific endpoints looked like {custom-subdomain}.example.com.
 
 For packs that make requests to multiple domains (uncommon), this should be the domain within
-[networkDomains](core.PackDefinition.md#networkdomains) that this configuration applies to.
+[networkDomains](core.PackVersionDefinition.md#networkdomains) that this configuration applies to.
 
 #### Inherited from
 
@@ -137,7 +137,7 @@ The AWS service to authenticate with, like "s3", "iam", or "route53".
 
 #### Defined in
 
-[types.ts:572](https://github.com/coda/packs-sdk/blob/main/types.ts#L572)
+[types.ts:577](https://github.com/coda/packs-sdk/blob/main/types.ts#L577)
 
 ___
 
@@ -149,4 +149,4 @@ Identifies this as AWSAccessKey authentication.
 
 #### Defined in
 
-[types.ts:570](https://github.com/coda/packs-sdk/blob/main/types.ts#L570)
+[types.ts:575](https://github.com/coda/packs-sdk/blob/main/types.ts#L575)

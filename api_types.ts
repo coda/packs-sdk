@@ -181,10 +181,10 @@ export enum ParameterType {
   /**
    * Indicates a parameter that is a list of Coda date values (which includes time and datetime values).
    *
-   * Currently, when such a parameter is used with a sync table formula or an action formula ({@link isAction}),
-   * which will generate a builder UI for selecting parameters, a date array parameter will always render
-   * as a date range selector. A date range will always be passed to a pack formula as a list of two
-   * elements, the beginning of the range and the end of the range.
+   * Currently, when such a parameter is used with a sync table formula or an action formula
+   * ({@link BaseFormulaDef.isAction}), which will generate a builder UI for selecting parameters, a date array
+   * parameter will always render as a date range selector. A date range will always be passed to a pack formula
+   * as a list of two elements, the beginning of the range and the end of the range.
    */
   DateArray = 'dateArray',
   /**
@@ -304,7 +304,7 @@ export interface ParamDef<T extends UnionType> {
   // and we'll wrap this into an autocomplete formula on their behalf.
   autocomplete?: MetadataFormula;
   /**
-   * @deprecated This will be removed in a future version of the SDK. Use {@link suggestedValue} instead.
+   * @deprecated This will be removed in a future version of the SDK. Use {@link ParamDef.suggestedValue} instead.
    */
   defaultValue?: SuggestedValueType<T>;
   /**
@@ -343,7 +343,7 @@ export type ParamValues<ParamDefsT extends ParamDefs> = {
 } & any[]; // NOTE(oleg): we need this to avoid "must have a '[Symbol.iterator]()' method that returns an iterator."
 
 /**
- * The type of values that are allowable to be used as a {@link suggestedValue} for a parameter.
+ * The type of values that are allowable to be used as a {@link ParamDef.suggestedValue} for a parameter.
  */
 export type SuggestedValueType<T extends UnionType> = T extends ArrayType<Type.date>
   ? TypeOfMap<T> | PrecannedDateRange
@@ -474,7 +474,7 @@ export interface FetchRequest {
   method: FetchMethodType;
   /**
    * The URL to connect to. This is typically an absolute URL, but if your
-   * pack uses authentication and {@link requiresEndpointUrl} and so has a unique
+   * pack uses authentication and {@link BaseAuthentication.requiresEndpointUrl} and so has a unique
    * endpoint per user account, you may also use a relative URL and Coda will
    * apply the user's endpoint automatically.
    */
@@ -533,7 +533,7 @@ export interface FetchResponse<T extends any = any> {
    * Similarly, if the response headers are text/xml or application/xml, this will be a parsed
    * JavaScript object using the `xml2js` library.
    *
-   * If implicit parsing is undesirable, you may consider using {@link isBinaryResponse} on the request
+   * If implicit parsing is undesirable, you may consider using {@link FetchRequest.isBinaryResponse} on the request
    * to disable any parsing. Note however that this will result in the body being a NodeJS Buffer.
    */
   body?: T;
@@ -669,20 +669,21 @@ export interface InvocationLocation {
 /**
  * An object passed to the `execute` function of every formula invocation
  * with information and utilities for handling the invocation. In particular,
- * this contains the {@link Fetcher}, which is used for making HTTP requests.
+ * this contains the {@link core.Fetcher}, which is used for making HTTP requests.
  */
 export interface ExecutionContext {
   /**
-   * The {@link Fetcher} used for making HTTP requests.
+   * The {@link core.Fetcher} used for making HTTP requests.
    */
   readonly fetcher: Fetcher;
   /**
    * A utility to fetch and store files and images that either require the pack user's authentication
-   * or are too large to return inline. See {@link TemporaryBlobStorage}.
+   * or are too large to return inline. See {@link core.TemporaryBlobStorage}.
    */
   readonly temporaryBlobStorage: TemporaryBlobStorage;
   /**
-   * The base endpoint URL for the user's account, only if applicable. See {@link requiresEndpointUrl}.
+   * The base endpoint URL for the user's account, only if applicable. See
+   * {@link core.BaseAuthentication.requiresEndpointUrl}.
    *
    * If the API URLs are variable based on the user account, you will need this endpoint
    * to construct URLs to use with the fetcher. Alternatively, you can use relative URLs
@@ -701,7 +702,7 @@ export interface ExecutionContext {
   /**
    * A random token scoped to only this request invocation.
    * This is a unique identifier for the invocation, and in particular used with
-   * {@link AuthenticationType.Custom} for naming template parameters that will be
+   * {@link core.AuthenticationType.Custom} for naming template parameters that will be
    * replaced by the fetcher in secure way.
    */
   readonly invocationToken: string;
@@ -725,7 +726,7 @@ export interface SyncExecutionContext extends ExecutionContext {
 // A mapping exists in coda that allows these to show up in the UI.
 // If adding new values here, add them to that mapping and vice versa.
 /**
- * Special "live" date range values that can be used as the {@link suggestedValue}
+ * Special "live" date range values that can be used as the {@link ParamDef.suggestedValue}
  * for a date array parameter.
  *
  * Date array parameters are meant to represent date ranges. A date range can

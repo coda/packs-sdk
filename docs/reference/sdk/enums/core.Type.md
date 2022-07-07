@@ -16,7 +16,7 @@ use [ValueType](core.ValueType.md).
 
 ### boolean
 
-• **boolean**
+• **boolean** = ``3``
 
 #### Defined in
 
@@ -26,7 +26,7 @@ ___
 
 ### date
 
-• **date**
+• **date** = ``4``
 
 #### Defined in
 
@@ -36,7 +36,7 @@ ___
 
 ### file
 
-• **file**
+• **file** = ``7``
 
 #### Defined in
 
@@ -46,7 +46,7 @@ ___
 
 ### html
 
-• **html**
+• **html** = ``5``
 
 #### Defined in
 
@@ -56,7 +56,7 @@ ___
 
 ### image
 
-• **image**
+• **image** = ``6``
 
 #### Defined in
 
@@ -66,7 +66,7 @@ ___
 
 ### number
 
-• **number**
+• **number** = ``1``
 
 #### Defined in
 
@@ -76,7 +76,7 @@ ___
 
 ### object
 
-• **object**
+• **object** = ``2``
 
 #### Defined in
 
@@ -86,7 +86,7 @@ ___
 
 ### string
 
-• **string**
+• **string** = ``0``
 
 #### Defined in
 

@@ -11,4 +11,4 @@ The union of supported authentication methods.
 
 #### Defined in
 
-[types.ts:599](https://github.com/coda/packs-sdk/blob/main/types.ts#L599)
+[types.ts:604](https://github.com/coda/packs-sdk/blob/main/types.ts#L604)

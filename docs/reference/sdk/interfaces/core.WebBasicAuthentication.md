@@ -26,7 +26,7 @@ When requiresEndpointUrl is set to true this should be the root domain that all 
 For example, this value would be "example.com" if specific endpoints looked like {custom-subdomain}.example.com.
 
 For packs that make requests to multiple domains (uncommon), this should be the domain within
-[networkDomains](core.PackDefinition.md#networkdomains) that this configuration applies to.
+[networkDomains](core.PackVersionDefinition.md#networkdomains) that this configuration applies to.
 
 #### Inherited from
 
@@ -139,7 +139,7 @@ Identifies this as WebBasic authentication.
 
 #### Defined in
 
-[types.ts:458](https://github.com/coda/packs-sdk/blob/main/types.ts#L458)
+[types.ts:463](https://github.com/coda/packs-sdk/blob/main/types.ts#L463)
 
 ___
 
@@ -159,4 +159,4 @@ Configuration for labels to show in the UI when the user sets up a new acount.
 
 #### Defined in
 
-[types.ts:462](https://github.com/coda/packs-sdk/blob/main/types.ts#L462)
+[types.ts:467](https://github.com/coda/packs-sdk/blob/main/types.ts#L467)

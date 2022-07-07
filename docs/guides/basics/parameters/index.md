@@ -89,7 +89,7 @@ String parameters are compatible with almost every column type in Coda, as most 
     ```
 
 
-### Rich text
+### Rich text {: #rich}
 
 Use the `Html` parameter type to pass text values with formatting included. Coda will convert the formatting to an equivalent block of HTML markup, and pass it to the `execute` function as a [JavaScript String][mdn_string].
 
@@ -170,6 +170,14 @@ Passing a table column into an array parameter can be error prone, because if th
     ```ts
     --8<-- "examples/parameter/total_cost.ts"
     ```
+
+
+### Pages
+
+Coda documents can contain many pages, and it's possible to pass the contents of a page to a Coda formula using the `Html` parameter type. Users will be presented with the pages they can select from in the autocomplete options, and once selected the formula will receive an HTML version of that page's content. Some features of the page may not be included in the HTML markup, and it should not be considered a complete or stable API surface.
+
+!!! warning "Formulas not recalculated when page content changes"
+    Unlike with other data sources, when passing a page as a parameter the formula will not be automatically recalculated when the content of the page changes. For this reason we recommend only passing pages for action formulas, which are calculated on each button press or automation run.
 
 
 ### Objects

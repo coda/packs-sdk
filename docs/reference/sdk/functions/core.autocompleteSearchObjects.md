@@ -18,7 +18,8 @@ make a request to an API endpoint that returns a list of all entities,
 and then to take the user's partial input and search over those entities
 for matches. The helper generalizes this use case.
 
-**`example`**
+**`Example`**
+
 ```
 coda.makeParameter({
   type: ParameterType.Number,
@@ -55,7 +56,3 @@ coda.makeParameter({
 #### Returns
 
 `Promise`<[`MetadataFormulaObjectResultType`](../interfaces/core.MetadataFormulaObjectResultType.md)[]\>
-
-#### Defined in
-
-[api.ts:1201](https://github.com/coda/packs-sdk/blob/main/api.ts#L1201)

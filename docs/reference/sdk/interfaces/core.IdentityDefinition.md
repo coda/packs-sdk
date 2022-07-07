@@ -7,14 +7,14 @@ title: "IdentityDefinition"
 
 An identifier for a schema, allowing other schemas to reference it.
 
-You may optionally specify an [ObjectSchemaDefinition.identity](core.ObjectSchemaDefinition.md#identity) when defining an object schema.
+You may optionally specify an [identity](core.ObjectSchemaDefinition.md#identity) when defining an object schema.
 This signals that this schema represents an important named entity in the context of your pack.
 Schemas with identities may be referenced by other schemas, in which case Coda
 will render such values as @-references in the doc, allowing you to create relationships
 between entities.
 
 Every sync table's top-level schema is required to have an identity. However, an identity
-will be created on your behalf using the [SyncTableOptions.identityName](core.SyncTableOptions.md#identityname) that you provide in the sync
+will be created on your behalf using the [identityName](core.SyncTableOptions.md#identityname) that you provide in the sync
 table definition, so you needn't explicitly create on unless desired.
 
 ## Hierarchy
@@ -29,7 +29,9 @@ table definition, so you needn't explicitly create on unless desired.
 
 • `Optional` **attribution**: [`AttributionNode`](../types/core.AttributionNode.md)[]
 
-**`deprecated`** See [ObjectSchemaDefinition.attribution](core.ObjectSchemaDefinition.md#attribution)
+**`Deprecated`**
+
+See [attribution](core.ObjectSchemaDefinition.md#attribution)
 
 #### Defined in
 
@@ -42,7 +44,7 @@ ___
 • `Optional` **dynamicUrl**: `string`
 
 The dynamic URL, if this is a schema for a dynamic sync table. When returning a schema from the
-[DynamicSyncTableOptions.getSchema](core.DynamicSyncTableOptions.md#getschema) formula of a dynamic sync table, you must include
+[getSchema](core.DynamicSyncTableOptions.md#getschema) formula of a dynamic sync table, you must include
 the dynamic URL of that table, so that rows
 in this table may be distinguished from rows in another dynamic instance of the same table.
 

@@ -1,10 +1,10 @@
 import type {ObjectSchemaDefinition} from '../schema';
-import type { ParamDef } from '../api_types';
+import type {ParamDef} from '../api_types';
 import type {PostSetupMetadata} from '../compiled_types';
 import type {SetEndpoint} from '../types';
 import type {SetEndpointDef} from '../types';
-import type { SuggestedValueType } from '../api_types';
-import type { UnionType } from '../api_types';
+import type {SuggestedValueType} from '../api_types';
+import type {UnionType} from '../api_types';
 import {ensureExists} from '../helpers/ensure';
 
 export function objectSchemaHelper<T extends ObjectSchemaDefinition<string, string>>(schema: T): ObjectSchemaHelper<T> {
@@ -45,6 +45,26 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
   get attribution() {
     return this._schema.attribution ?? this._schema.identity?.attribution;
   }
+
+  get imageProperty() {
+    return this._schema.imageProperty;
+  }
+
+  get descriptionProperty() {
+    return this._schema.descriptionProperty;
+  }
+
+  get subtitleProperties() {
+    return this._schema.subtitleProperties;
+  }
+
+  get linkProperty() {
+    return this._schema.linkProperty;
+  }
+
+  get titleProperty() {
+    return this._schema.titleProperty;
+  }
 }
 
 export function paramDefHelper<S extends UnionType, T extends ParamDef<S>>(def: T): ParamDefHelper<S, T> {
@@ -62,7 +82,6 @@ class ParamDefHelper<S extends UnionType, T extends ParamDef<S>> {
     return this._def.suggestedValue ?? this._def.defaultValue;
   }
 }
-
 
 export function setEndpointHelper(step: SetEndpoint) {
   return new SetEndpointHelper(step);

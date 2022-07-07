@@ -5,7 +5,9 @@ title: "Network"
 
 [core](../modules/core.md).Network
 
-**`deprecated`** use `isAction` and `connectionRequirement` on the formula definition instead.
+**`Deprecated`**
+
+use `isAction` and `connectionRequirement` on the formula definition instead.
 
 ## Properties
 

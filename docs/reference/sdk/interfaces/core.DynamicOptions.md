@@ -14,7 +14,7 @@ sync tables that have a dynamic schema.
 
 • `Optional` **defaultAddDynamicColumns**: `boolean`
 
-See [DynamicSyncTableOptions.defaultAddDynamicColumns](core.DynamicSyncTableOptions.md#defaultadddynamiccolumns)
+See [defaultAddDynamicColumns](core.DynamicSyncTableOptions.md#defaultadddynamiccolumns)
 
 #### Defined in
 
@@ -26,7 +26,7 @@ ___
 
 • `Optional` **entityName**: `string`
 
-See [DynamicSyncTableOptions.entityName](core.DynamicSyncTableOptions.md#entityname)
+See [entityName](core.DynamicSyncTableOptions.md#entityname)
 
 #### Defined in
 
@@ -40,10 +40,10 @@ ___
 
 A formula that returns the schema for this table.
 
-For a dynamic sync table, the value of [DynamicSyncTableOptions.getSchema](core.DynamicSyncTableOptions.md#getschema)
+For a dynamic sync table, the value of [getSchema](core.DynamicSyncTableOptions.md#getschema)
 is passed through here. For a non-dynamic sync table, you may still implement
 this if you table has a schema that varies based on the user account, but
-does not require a [dynamicUrl](core.Identity.md#dynamicurl).
+does not require a [dynamicUrl](core.Sync.md#dynamicurl).
 
 #### Defined in
 

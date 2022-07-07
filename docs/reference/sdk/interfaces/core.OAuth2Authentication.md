@@ -59,7 +59,7 @@ When requiresEndpointUrl is set to true this should be the root domain that all 
 For example, this value would be "example.com" if specific endpoints looked like {custom-subdomain}.example.com.
 
 For packs that make requests to multiple domains (uncommon), this should be the domain within
-[networkDomains](core.PackDefinition.md#networkdomains) that this configuration applies to.
+[networkDomains](core.PackVersionDefinition.md#networkdomains) that this configuration applies to.
 
 #### Inherited from
 
@@ -80,7 +80,7 @@ part of the OAuth token exchange response. If so, this is the property in the OA
 token exchange response JSON body that points to the endpoint.
 
 The endpoint will be saved along with the account and will be available during execution
-as [ExecutionContext.endpoint](core.ExecutionContext.md#endpoint).
+as [endpoint](core.ExecutionContext.md#endpoint).
 
 #### Defined in
 
@@ -135,7 +135,7 @@ their authentication response.
 
 #### Defined in
 
-[types.ts:447](https://github.com/coda/packs-sdk/blob/main/types.ts#L447)
+[types.ts:452](https://github.com/coda/packs-sdk/blob/main/types.ts#L452)
 
 ___
 
@@ -155,6 +155,18 @@ Using multiple authenticated network domains is uncommon and requires Coda appro
 #### Defined in
 
 [types.ts:261](https://github.com/coda/packs-sdk/blob/main/types.ts#L261)
+
+___
+
+### pkceChallengeMethod
+
+• `Optional` **pkceChallengeMethod**: ``"plain"`` \| ``"S256"``
+
+See [useProofKeyForCodeExchange](core.OAuth2Authentication.md#useproofkeyforcodeexchange)
+
+#### Defined in
+
+[types.ts:440](https://github.com/coda/packs-sdk/blob/main/types.ts#L440)
 
 ___
 
@@ -218,7 +230,7 @@ than `scope`.
 
 #### Defined in
 
-[types.ts:441](https://github.com/coda/packs-sdk/blob/main/types.ts#L441)
+[types.ts:446](https://github.com/coda/packs-sdk/blob/main/types.ts#L446)
 
 ___
 
@@ -301,7 +313,7 @@ a `code_challenge` parameter and a `code_challenge_method` parameter will be sen
 authorization page. A `code_verifier` parameter will be sent to the token exchange API as
 well.
 
-`code_challenge_method` will be using SHA256.
+`code_challenge_method` defaults to SHA256 and can be configured with [pkceChallengeMethod](core.OAuth2Authentication.md#pkcechallengemethod).
 
 See https://datatracker.ietf.org/doc/html/rfc7636 for more details.
 

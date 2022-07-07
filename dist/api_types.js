@@ -119,10 +119,10 @@ var ParameterType;
     /**
      * Indicates a parameter that is a list of Coda date values (which includes time and datetime values).
      *
-     * Currently, when such a parameter is used with a sync table formula or an action formula ({@link isAction}),
-     * which will generate a builder UI for selecting parameters, a date array parameter will always render
-     * as a date range selector. A date range will always be passed to a pack formula as a list of two
-     * elements, the beginning of the range and the end of the range.
+     * Currently, when such a parameter is used with a sync table formula or an action formula
+     * ({@link BaseFormulaDef.isAction}), which will generate a builder UI for selecting parameters, a date array
+     * parameter will always render as a date range selector. A date range will always be passed to a pack formula
+     * as a list of two elements, the beginning of the range and the end of the range.
      */
     ParameterType["DateArray"] = "dateArray";
     /**
@@ -214,7 +214,7 @@ exports.ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE', 'HEAD'];
 // A mapping exists in coda that allows these to show up in the UI.
 // If adding new values here, add them to that mapping and vice versa.
 /**
- * Special "live" date range values that can be used as the {@link suggestedValue}
+ * Special "live" date range values that can be used as the {@link ParamDef.suggestedValue}
  * for a date array parameter.
  *
  * Date array parameters are meant to represent date ranges. A date range can

@@ -11,7 +11,8 @@ Helper to create a new URL by appending parameters to a base URL.
 
 The input URL may or may not having existing parameters.
 
-**`example`**
+**`Example`**
+
 ```
 // Returns `"/someApi/someEndpoint?token=asdf&limit=5"`
 let url = withQueryParams("/someApi/someEndpoint", {token: "asdf", limit: 5});
@@ -27,7 +28,3 @@ let url = withQueryParams("/someApi/someEndpoint", {token: "asdf", limit: 5});
 #### Returns
 
 `string`
-
-#### Defined in
-
-[helpers/url.ts:16](https://github.com/coda/packs-sdk/blob/main/helpers/url.ts#L16)

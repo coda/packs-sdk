@@ -362,8 +362,21 @@ let MovieSchema = coda.makeObjectSchema({
 });
 ```
 
-!!! info
-    The presence of a schema identity also controls how the object appears and behaves in the page. Named schemas are seen as more important to your Pack and given a more prominent UI treatment. Specifically, objects with identities will display the Pack's icon in the chip, and when used in a column format the **Add column** button will appear next to each property.
+Alternatively, you can use the helper function `coda.withIdentity()` to make a copy of the schema with the identity set. This can allow for better reuse of schemas across your Pack.
+
+```ts
+let MovieSchema = coda.makeObjectSchema({
+  // ...
+});
+
+pack.addFormula({
+  name: "UpdateMovie",
+  description: "Update the movie details.",
+  resultType: coda.ValueType.Object,
+  schema: coda.withIdentity(MovieSchema, "Movie"),
+  //...
+});
+```
 
 
 ### Featured columns

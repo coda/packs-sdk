@@ -528,7 +528,7 @@ export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.Dat
 	timeFormat?: string;
 }
 /**
- * Enumeration of units supported by duration schemas. See {@link maxUnit}.
+ * Enumeration of units supported by duration schemas. See {@link DurationSchema.maxUnit}.
  */
 export declare enum DurationUnit {
 	/**
@@ -554,7 +554,7 @@ export declare enum DurationUnit {
  */
 export interface DurationSchema extends BaseStringSchema<ValueHintType.Duration> {
 	/**
-	 * A refinement of {@link maxUnit} to use for rounding the duration when rendering.
+	 * A refinement of {@link DurationSchema.maxUnit} to use for rounding the duration when rendering.
 	 * Currently only `1` is supported, which is the same as omitting a value.
 	 */
 	precision?: number;
@@ -601,7 +601,7 @@ export interface ArraySchema<T extends Schema = Schema> extends BaseSchema {
 	items: T;
 }
 /**
- * Fields that may be set on a schema property in the {@link properties} definition
+ * Fields that may be set on a schema property in the {@link ObjectSchemaDefinition.properties} definition
  * of an object schema.
  */
 export interface ObjectSchemaProperty {
@@ -644,7 +644,7 @@ export interface ObjectSchemaProperty {
 	required?: boolean;
 }
 /**
- * The type of the {@link properties} in the definition of an object schema.
+ * The type of the {@link ObjectSchemaDefinition.properties} in the definition of an object schema.
  * This is essentially a dictionary mapping the name of a property to a schema
  * definition for that property.
  */
@@ -702,17 +702,18 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	type: ValueType.Object;
 	/** Definintion of the key-value pairs in this object. */
 	properties: ObjectSchemaProperties<K | L>;
-	/** @deprecated Use {@link idProperty} */
+	/** @deprecated Use {@link ObjectSchemaDefinition.idProperty} */
 	id?: K;
 	/**
-	 * The name of a property within {@link properties} that represents a unique id for this object.
-	 * Sync table schemas must specify an id property, which uniquely identify each synced row.
+	 * The name of a property within {@link ObjectSchemaDefinition.properties} that represents a unique id for this
+	 * object. Sync table schemas must specify an id property, which uniquely identify each synced row.
 	 */
 	idProperty?: K;
-	/** @deprecated Use {@link displayProperty} */
+	/** @deprecated Use {@link ObjectSchemaDefinition.displayProperty} */
 	primary?: K;
 	/**
-	 * The name of a property within {@link properties} that be used to label this object in the UI.
+	 * The name of a property within {@link ObjectSchemaDefinition.properties} that be used to label this object in the
+	 * UI.
 	 * Object values can contain many properties and the Coda UI will display them as a "chip"
 	 * with only the value of the "displayProperty" property used as the chip's display label.
 	 * The other properties can be seen when hovering over the chip.
@@ -726,10 +727,10 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * render such a value as an @-reference to that person, rather than a basic object chip.
 	 */
 	codaType?: ObjectHintTypes;
-	/** @deprecated Use {@link featuredProperties} */
+	/** @deprecated Use {@link ObjectSchemaDefinition.featuredProperties} */
 	featured?: L[];
 	/**
-	 * A list of property names from within {@link properties} for the "featured" properties
+	 * A list of property names from within {@link ObjectSchemaDefinition.properties} for the "featured" properties
 	 * of this object, used in sync tables. When a sync table is first added to a document,
 	 * columns are created for each of the featured properties. The user can easily add additional
 	 * columns for any other properties, as desired. All featured properties need to be top-level.
@@ -766,6 +767,48 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * scenarios they can be useful.
 	 */
 	includeUnknownProperties?: boolean;
+	/**
+	 * The name of a property within {@link properties} that will be used as a title of a rich card preview
+	 * for formulas that return this object.
+	 * Defaults to the value of {@link ObjectSchemaDefinition.displayProperty} if not specified
+	 *
+	 * Must be a {@link ValueType.String} property
+	 */
+	/** @hidden */
+	titleProperty?: L;
+	/**
+	 * The name of a property within {@link ObjectSchemaDefinition.properties} that will
+	 * navigate users to more details about this object
+	 *
+	 * Must be a {@link ValueType.String} property with a {@link ValueHintType.Url}
+	 * {@link ObjectSchemaDefinition.codaType}.
+	 */
+	/** @hidden */
+	linkProperty?: L;
+	/**
+	 * A list of property names from within {@link ObjectSchemaDefinition.properties} for the properties of the object
+	 * to be shown in the subtitle of a rich card preview for formulas that return this object.
+	 * Defaults to the value of {@link ObjectSchemaDefinition.featuredProperties} if not specified.
+	 */
+	/** @hidden */
+	subtitleProperties?: L[];
+	/**
+	 * The name of a property within {@link ObjectSchemaDefinition.properties} that be used as a long body description
+	 * of the object.
+	 *
+	 * Must be a {@link ValueType.String} property or {@link ValueType.Array} of {@link ValueType.String}s.
+	 */
+	/** @hidden */
+	descriptionProperty?: L;
+	/**
+	 * The name of a property within {@link ObjectSchemaDefinition.properties} that can be used as a rich image preview of
+	 * the object.
+	 *
+	 * Must be a {@link ValueType.String} property with the
+	 * {@link ValueHintType.ImageAttachment} or {@link ValueHintType.ImageReference} hints
+	 */
+	/** @hidden */
+	imageProperty?: L;
 }
 export declare type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */
@@ -916,7 +959,7 @@ export declare type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>>
  * For example, `SchemaType<NumberSchema>` produces the type `number`.
  *
  * For an object schema, this will for the most part return an object matching the schema
- * but if the schema uses {@link fromKey} then this utility will be unable to infer
+ * but if the schema uses {@link ObjectSchemaProperty.fromKey} then this utility will be unable to infer
  * that the return value type should use the property names given in the `fromKey`
  * attribute, and will simply relax any property name type-checking in such a case.
  *
@@ -937,7 +980,8 @@ export declare type InferrableTypes = boolean | number | string | object | boole
  * inputs, it may be useful to us this helper to sniff the return value and generate a basic
  * inferred schema from it.
  *
- * This utility does NOT attempt to determine {@link idProperty} or {@link displayProperty} attributes for
+ * This utility does NOT attempt to determine {@link ObjectSchemaDefinition.idProperty} or
+ * {@link ObjectSchemaDefinition.displayProperty} attributes for
  * an object schema, those are left undefined.
  */
 export declare function generateSchema(obj: InferrableTypes): Schema;
@@ -1115,10 +1159,10 @@ export declare enum ParameterType {
 	/**
 	 * Indicates a parameter that is a list of Coda date values (which includes time and datetime values).
 	 *
-	 * Currently, when such a parameter is used with a sync table formula or an action formula ({@link isAction}),
-	 * which will generate a builder UI for selecting parameters, a date array parameter will always render
-	 * as a date range selector. A date range will always be passed to a pack formula as a list of two
-	 * elements, the beginning of the range and the end of the range.
+	 * Currently, when such a parameter is used with a sync table formula or an action formula
+	 * ({@link BaseFormulaDef.isAction}), which will generate a builder UI for selecting parameters, a date array
+	 * parameter will always render as a date range selector. A date range will always be passed to a pack formula
+	 * as a list of two elements, the beginning of the range and the end of the range.
 	 */
 	DateArray = "dateArray",
 	/**
@@ -1206,7 +1250,7 @@ export interface ParamDef<T extends UnionType> {
 	 */
 	autocomplete?: MetadataFormula;
 	/**
-	 * @deprecated This will be removed in a future version of the SDK. Use {@link suggestedValue} instead.
+	 * @deprecated This will be removed in a future version of the SDK. Use {@link ParamDef.suggestedValue} instead.
 	 */
 	defaultValue?: SuggestedValueType<T>;
 	/**
@@ -1233,7 +1277,7 @@ export declare type ParamValues<ParamDefsT extends ParamDefs> = {
 	[K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
 } & any[];
 /**
- * The type of values that are allowable to be used as a {@link suggestedValue} for a parameter.
+ * The type of values that are allowable to be used as a {@link ParamDef.suggestedValue} for a parameter.
  */
 export declare type SuggestedValueType<T extends UnionType> = T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
 /**
@@ -1356,7 +1400,7 @@ export interface FetchRequest {
 	method: FetchMethodType;
 	/**
 	 * The URL to connect to. This is typically an absolute URL, but if your
-	 * pack uses authentication and {@link requiresEndpointUrl} and so has a unique
+	 * pack uses authentication and {@link BaseAuthentication.requiresEndpointUrl} and so has a unique
 	 * endpoint per user account, you may also use a relative URL and Coda will
 	 * apply the user's endpoint automatically.
 	 */
@@ -1418,7 +1462,7 @@ export interface FetchResponse<T extends any = any> {
 	 * Similarly, if the response headers are text/xml or application/xml, this will be a parsed
 	 * JavaScript object using the `xml2js` library.
 	 *
-	 * If implicit parsing is undesirable, you may consider using {@link isBinaryResponse} on the request
+	 * If implicit parsing is undesirable, you may consider using {@link FetchRequest.isBinaryResponse} on the request
 	 * to disable any parsing. Note however that this will result in the body being a NodeJS Buffer.
 	 */
 	body?: T;
@@ -1539,20 +1583,21 @@ export interface InvocationLocation {
 /**
  * An object passed to the `execute` function of every formula invocation
  * with information and utilities for handling the invocation. In particular,
- * this contains the {@link Fetcher}, which is used for making HTTP requests.
+ * this contains the {@link core.Fetcher}, which is used for making HTTP requests.
  */
 export interface ExecutionContext {
 	/**
-	 * The {@link Fetcher} used for making HTTP requests.
+	 * The {@link core.Fetcher} used for making HTTP requests.
 	 */
 	readonly fetcher: Fetcher;
 	/**
 	 * A utility to fetch and store files and images that either require the pack user's authentication
-	 * or are too large to return inline. See {@link TemporaryBlobStorage}.
+	 * or are too large to return inline. See {@link core.TemporaryBlobStorage}.
 	 */
 	readonly temporaryBlobStorage: TemporaryBlobStorage;
 	/**
-	 * The base endpoint URL for the user's account, only if applicable. See {@link requiresEndpointUrl}.
+	 * The base endpoint URL for the user's account, only if applicable. See
+	 * {@link core.BaseAuthentication.requiresEndpointUrl}.
 	 *
 	 * If the API URLs are variable based on the user account, you will need this endpoint
 	 * to construct URLs to use with the fetcher. Alternatively, you can use relative URLs
@@ -1571,7 +1616,7 @@ export interface ExecutionContext {
 	/**
 	 * A random token scoped to only this request invocation.
 	 * This is a unique identifier for the invocation, and in particular used with
-	 * {@link AuthenticationType.Custom} for naming template parameters that will be
+	 * {@link core.AuthenticationType.Custom} for naming template parameters that will be
 	 * replaced by the fetcher in secure way.
 	 */
 	readonly invocationToken: string;
@@ -1591,7 +1636,7 @@ export interface SyncExecutionContext extends ExecutionContext {
 	readonly sync: Sync;
 }
 /**
- * Special "live" date range values that can be used as the {@link suggestedValue}
+ * Special "live" date range values that can be used as the {@link ParamDef.suggestedValue}
  * for a date array parameter.
  *
  * Date array parameters are meant to represent date ranges. A date range can
@@ -1672,7 +1717,7 @@ export interface RequestHandlerTemplate {
 	 * The URL to fetch.
 	 *
 	 * The path of the URL can include strong formatting directives that can be replaced with
-	 * formula parameters, e.g. "https://example.com/api/{name}".
+	 * formula parameters, e.g. "https://example.com/api/\{name\}".
 	 */
 	url: string;
 	/**
@@ -2266,7 +2311,7 @@ export declare type MetadataFormulaResultType = string | number | MetadataFormul
 /**
  * A formula that returns metadata relating to a core pack building block, like a sync table,
  * a formula parameter, or a user account. Examples include {@link DynamicOptions.getSchema},
- * {@link BaseAuthentication.getConnectionName}, and {@link autocomplete}.
+ * {@link BaseAuthentication.getConnectionName}, and {@link ParamDef.autocomplete}.
  *
  * Many pack building blocks make use of supporting features that often require JavaScript
  * or an API request to implement. For example, fetching the list of available autocomplete
@@ -2404,7 +2449,7 @@ export interface DynamicOptions {
 	 * For a dynamic sync table, the value of {@link DynamicSyncTableOptions.getSchema}
 	 * is passed through here. For a non-dynamic sync table, you may still implement
 	 * this if you table has a schema that varies based on the user account, but
-	 * does not require a {@link dynamicUrl}.
+	 * does not require a {@link Sync.dynamicUrl}.
 	 */
 	getSchema?: MetadataFormulaDef;
 	/** See {@link DynamicSyncTableOptions.entityName} */
@@ -2727,21 +2772,21 @@ export declare enum AuthenticationType {
 	HeaderBearerToken = "HeaderBearerToken",
 	/**
 	 * Authenticate using an HTTP header with a custom name and token prefix that you specify.
-	 * The header name is defined in the {@link headerName} property.
+	 * The header name is defined in the {@link CustomHeaderTokenAuthentication.headerName} property.
 	 */
 	CustomHeaderToken = "CustomHeaderToken",
 	/**
 	 * Authenticate using a token that is passed as a URL parameter with each request, e.g.
 	 * https://example.com/api?paramName=token
 	 *
-	 * The parameter name is defined in the {@link paramName} property.
+	 * The parameter name is defined in the {@link QueryParamTokenAuthentication.paramName} property.
 	 */
 	QueryParamToken = "QueryParamToken",
 	/**
 	 * Authenticate using multiple tokens, each passed as a different URL parameter, e.g.
 	 * https://example.com/api?param1=token1&param2=token2
 	 *
-	 * The parameter names are defined in the {@link params} array property.
+	 * The parameter names are defined in the {@link MultiQueryParamTokenAuthentication.params} array property.
 	 */
 	MultiQueryParamToken = "MultiQueryParamToken",
 	/**
@@ -2779,7 +2824,7 @@ export declare enum AuthenticationType {
 	/**
 	 * Authenticate using a Coda REST API token, sent as an HTTP header.
 	 *
-	 * This is identical to {@link HeaderBearerToken} except the user wil be presented
+	 * This is identical to {@link AuthenticationType.HeaderBearerToken} except the user wil be presented
 	 * with a UI to generate an API token rather than needing to paste an arbitrary API
 	 * token into a text input.
 	 *
@@ -2843,7 +2888,7 @@ export interface SetEndpoint {
 }
 /**
  * Simplified configuration for {@link SetEndpoint} that a pack developer can specify when calling
- * {@link setUserAuthentication} or {@link setSystemAuthentication}.
+ * {@link PackDefinitionBuilder.setUserAuthentication} or {@link PackDefinitionBuilder.setSystemAuthentication}.
  */
 export declare type SetEndpointDef = Omit<SetEndpoint, "getOptions" | "getOptionsFormula"> & {
 	/** See {@link SetEndpoint.getOptions} */
@@ -2870,7 +2915,7 @@ export declare enum PostSetupType {
 export declare type PostSetup = SetEndpoint;
 /**
  * Simplified configuration for {@link PostSetup} that a pack developer can specify when calling
- * {@link setUserAuthentication} or {@link setSystemAuthentication}.
+ * {@link PackDefinitionBuilder.setUserAuthentication} or {@link PackDefinitionBuilder.setSystemAuthentication}.
  */
 export declare type PostSetupDef = SetEndpointDef;
 /**
@@ -2910,10 +2955,10 @@ export interface BaseAuthentication {
 	requiresEndpointUrl?: boolean;
 	/**
 	 * When requiresEndpointUrl is set to true this should be the root domain that all endpoints share.
-	 * For example, this value would be "example.com" if specific endpoints looked like {custom-subdomain}.example.com.
+	 * For example, this value would be "example.com" if specific endpoints looked like \{custom-subdomain\}.example.com.
 	 *
 	 * For packs that make requests to multiple domains (uncommon), this should be the domain within
-	 * {@link networkDomains} that this configuration applies to.
+	 * {@link PackVersionDefinition.networkDomains} that this configuration applies to.
 	 */
 	endpointDomain?: string;
 	/**
@@ -2939,7 +2984,7 @@ export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
 /**
  * Authenticate using a Coda REST API token, sent as an HTTP header.
  *
- * This is identical to {@link HeaderBearerToken} except the user wil be presented
+ * This is identical to {@link AuthenticationType.HeaderBearerToken} except the user wil be presented
  * with a UI to generate an API token rather than needing to paste an arbitrary API
  * token into a text input.
  *
@@ -3090,11 +3135,15 @@ export interface OAuth2Authentication extends BaseAuthentication {
 	 * authorization page. A `code_verifier` parameter will be sent to the token exchange API as
 	 * well.
 	 *
-	 * `code_challenge_method` will be using SHA256.
+	 * `code_challenge_method` defaults to SHA256 and can be configured with {@link pkceChallengeMethod}.
 	 *
 	 * See https://datatracker.ietf.org/doc/html/rfc7636 for more details.
 	 */
 	useProofKeyForCodeExchange?: boolean;
+	/**
+	 * See {@link useProofKeyForCodeExchange}
+	 */
+	pkceChallengeMethod?: "plain" | "S256";
 	/**
 	 * In rare cases, OAuth providers may want the permission scopes in a different query parameter
 	 * than `scope`.
@@ -3157,12 +3206,12 @@ export interface CustomAuthParameter {
  * user or system authentication). When constructing a network request, you may indicate where these values should
  * be inserted by our fetcher service using the syntax described below (similar to templating engines).
  *
- * {% raw %}
+ * \{% raw %\}
  * To insert the credentials, simply put `{{<paramName>-<invocationToken>}}` as a string anywhere in your request,
  * where `<paramName>` is the name of the parameter defined in the params mapping and `<invocationToken>` is the
  * secret invocation-specific token provided within the {@link ExecutionContext}. The invocation
  * token is required for security reasons.
- * {% endraw %}
+ * \{% endraw %\}
  *
  * @example
  * ```
@@ -3251,14 +3300,14 @@ export declare type Authentication = NoAuthentication | VariousAuthentication | 
 export declare type AsAuthDef<T extends BaseAuthentication> = Omit<T, "getConnectionName" | "getConnectionUserId" | "postSetup"> & {
 	/** See {@link BaseAuthentication.getConnectionName} */
 	getConnectionName?: MetadataFormulaDef;
-	/** See {@link BaseAuthentication.getConnectionUserId} */
+	/** See {@link BaseAuthentication.getConnectionUserId} @ignore */
 	getConnectionUserId?: MetadataFormulaDef;
 	/** {@link BaseAuthentication.postSetup} */
 	postSetup?: PostSetupDef[];
 };
 /**
  * The union of supported authentication definitions. These represent simplified configurations
- * a pack developer can specify when calling {@link setUserAuthentication} when using
+ * a pack developer can specify when calling {@link PackDefinitionBuilder.setUserAuthentication} when using
  * a pack definition builder. The builder massages these definitions into the form of
  * an {@link Authentication} value, which is the value Coda ultimately cares about.
  */
@@ -3270,7 +3319,7 @@ export declare type AuthenticationDef = NoAuthentication | VariousAuthentication
 export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication;
 /**
  * The union of supported system authentication definitions. These represent simplified
- * onfigurations a pack developer can specify when calling {@link setSystemAuthentication}
+ * configurations a pack developer can specify when calling {@link PackDefinitionBuilder.setSystemAuthentication}
  * when using a pack definition builder. The builder massages these definitions into the form of
  * an {@link SystemAuthentication} value, which is the value Coda ultimately cares about.
  */
@@ -3288,7 +3337,7 @@ export declare type VariousSupportedAuthentication = NoAuthentication | HeaderBe
  * to a formula that fetches the current weather at that location, and the resulting object with
  * weather info will be shown in the cell.
  *
- * A column format is just a wrapper around a formula defined in the {@link formulas} section
+ * A column format is just a wrapper around a formula defined in the {@link PackVersionDefinition.formulas} section
  * of your pack definition. It tells Coda to execute that particular formula using the value
  * of the cell as input.
  *

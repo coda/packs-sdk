@@ -155,12 +155,6 @@ const TaskSchema = coda.makeObjectSchema({
   displayProperty: "name",
   idProperty: "taskId",
   featuredProperties: ["description", "url"],
-  // For schemas returned by actions to update rows in a sync table, set
-  // identity.name the value of identityName on the sync table being updated.
-  // This schema is used by the UpdateTask action.
-  identity: {
-    name: "Task",
-  },
 });
 
 // Action formula (for buttons and automations) that updates an existing task,
@@ -181,7 +175,10 @@ pack.addFormula({
     }),
   ],
   resultType: coda.ValueType.Object,
-  schema: TaskSchema,
+  // For schemas returned by actions to update rows in a sync table, set the
+  // identity on the schema to match the identityName on the sync table being
+  // updated, using the helper function coda.withIdentity().
+  schema: coda.withIdentity(TaskSchema, "Task"),
   isAction: true,
   extraOAuthScopes: ["data:read_write"],
 

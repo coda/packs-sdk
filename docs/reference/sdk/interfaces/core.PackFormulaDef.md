@@ -180,7 +180,9 @@ ___
 
 • `Optional` `Readonly` **network**: [`Network`](core.Network.md)
 
-**`deprecated`** use `isAction` and `connectionRequirement` instead
+**`Deprecated`**
+
+use `isAction` and `connectionRequirement` instead
 
 #### Inherited from
 
@@ -241,7 +243,3 @@ The JavaScript function that implements this formula
 #### Returns
 
 `ResultT` \| `Promise`<`ResultT`\>
-
-#### Defined in
-
-[api.ts:521](https://github.com/coda/packs-sdk/blob/main/api.ts#L521)

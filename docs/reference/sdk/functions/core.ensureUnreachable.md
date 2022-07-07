@@ -10,7 +10,8 @@ title: "ensureUnreachable"
 Helper for TypeScript to make sure that handling of code forks is exhaustive,
 most commonly with a `switch` statement.
 
-**`example`**
+**`Example`**
+
 ```
 enum MyEnum {
   Foo = 'Foo',
@@ -42,7 +43,3 @@ function handleEnum(value: MyEnum) {
 #### Returns
 
 `never`
-
-#### Defined in
-
-[helpers/ensure.ts:29](https://github.com/coda/packs-sdk/blob/main/helpers/ensure.ts#L29)

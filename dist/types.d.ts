@@ -43,21 +43,21 @@ export declare enum AuthenticationType {
     HeaderBearerToken = "HeaderBearerToken",
     /**
      * Authenticate using an HTTP header with a custom name and token prefix that you specify.
-     * The header name is defined in the {@link headerName} property.
+     * The header name is defined in the {@link CustomHeaderTokenAuthentication.headerName} property.
      */
     CustomHeaderToken = "CustomHeaderToken",
     /**
      * Authenticate using a token that is passed as a URL parameter with each request, e.g.
      * https://example.com/api?paramName=token
      *
-     * The parameter name is defined in the {@link paramName} property.
+     * The parameter name is defined in the {@link QueryParamTokenAuthentication.paramName} property.
      */
     QueryParamToken = "QueryParamToken",
     /**
      * Authenticate using multiple tokens, each passed as a different URL parameter, e.g.
      * https://example.com/api?param1=token1&param2=token2
      *
-     * The parameter names are defined in the {@link params} array property.
+     * The parameter names are defined in the {@link MultiQueryParamTokenAuthentication.params} array property.
      */
     MultiQueryParamToken = "MultiQueryParamToken",
     /**
@@ -95,7 +95,7 @@ export declare enum AuthenticationType {
     /**
      * Authenticate using a Coda REST API token, sent as an HTTP header.
      *
-     * This is identical to {@link HeaderBearerToken} except the user wil be presented
+     * This is identical to {@link AuthenticationType.HeaderBearerToken} except the user wil be presented
      * with a UI to generate an API token rather than needing to paste an arbitrary API
      * token into a text input.
      *
@@ -159,7 +159,7 @@ export interface SetEndpoint {
 }
 /**
  * Simplified configuration for {@link SetEndpoint} that a pack developer can specify when calling
- * {@link setUserAuthentication} or {@link setSystemAuthentication}.
+ * {@link PackDefinitionBuilder.setUserAuthentication} or {@link PackDefinitionBuilder.setSystemAuthentication}.
  */
 export declare type SetEndpointDef = Omit<SetEndpoint, 'getOptions' | 'getOptionsFormula'> & {
     /** See {@link SetEndpoint.getOptions} */
@@ -186,7 +186,7 @@ export declare enum PostSetupType {
 export declare type PostSetup = SetEndpoint;
 /**
  * Simplified configuration for {@link PostSetup} that a pack developer can specify when calling
- * {@link setUserAuthentication} or {@link setSystemAuthentication}.
+ * {@link PackDefinitionBuilder.setUserAuthentication} or {@link PackDefinitionBuilder.setSystemAuthentication}.
  */
 export declare type PostSetupDef = SetEndpointDef;
 /**
@@ -226,10 +226,10 @@ export interface BaseAuthentication {
     requiresEndpointUrl?: boolean;
     /**
      * When requiresEndpointUrl is set to true this should be the root domain that all endpoints share.
-     * For example, this value would be "example.com" if specific endpoints looked like {custom-subdomain}.example.com.
+     * For example, this value would be "example.com" if specific endpoints looked like \{custom-subdomain\}.example.com.
      *
      * For packs that make requests to multiple domains (uncommon), this should be the domain within
-     * {@link networkDomains} that this configuration applies to.
+     * {@link PackVersionDefinition.networkDomains} that this configuration applies to.
      */
     endpointDomain?: string;
     /**
@@ -255,7 +255,7 @@ export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
 /**
  * Authenticate using a Coda REST API token, sent as an HTTP header.
  *
- * This is identical to {@link HeaderBearerToken} except the user wil be presented
+ * This is identical to {@link AuthenticationType.HeaderBearerToken} except the user wil be presented
  * with a UI to generate an API token rather than needing to paste an arbitrary API
  * token into a text input.
  *
@@ -406,11 +406,15 @@ export interface OAuth2Authentication extends BaseAuthentication {
      * authorization page. A `code_verifier` parameter will be sent to the token exchange API as
      * well.
      *
-     * `code_challenge_method` will be using SHA256.
+     * `code_challenge_method` defaults to SHA256 and can be configured with {@link pkceChallengeMethod}.
      *
      * See https://datatracker.ietf.org/doc/html/rfc7636 for more details.
      */
     useProofKeyForCodeExchange?: boolean;
+    /**
+     * See {@link useProofKeyForCodeExchange}
+     */
+    pkceChallengeMethod?: 'plain' | 'S256';
     /**
      * In rare cases, OAuth providers may want the permission scopes in a different query parameter
      * than `scope`.
@@ -473,12 +477,12 @@ export interface CustomAuthParameter {
  * user or system authentication). When constructing a network request, you may indicate where these values should
  * be inserted by our fetcher service using the syntax described below (similar to templating engines).
  *
- * {% raw %}
+ * \{% raw %\}
  * To insert the credentials, simply put `{{<paramName>-<invocationToken>}}` as a string anywhere in your request,
  * where `<paramName>` is the name of the parameter defined in the params mapping and `<invocationToken>` is the
  * secret invocation-specific token provided within the {@link ExecutionContext}. The invocation
  * token is required for security reasons.
- * {% endraw %}
+ * \{% endraw %\}
  *
  * @example
  * ```
@@ -582,14 +586,14 @@ export interface AuthenticationTypeMap {
 declare type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId' | 'postSetup'> & {
     /** See {@link BaseAuthentication.getConnectionName} */
     getConnectionName?: MetadataFormulaDef;
-    /** See {@link BaseAuthentication.getConnectionUserId} */
+    /** See {@link BaseAuthentication.getConnectionUserId} @ignore */
     getConnectionUserId?: MetadataFormulaDef;
     /** {@link BaseAuthentication.postSetup} */
     postSetup?: PostSetupDef[];
 };
 /**
  * The union of supported authentication definitions. These represent simplified configurations
- * a pack developer can specify when calling {@link setUserAuthentication} when using
+ * a pack developer can specify when calling {@link PackDefinitionBuilder.setUserAuthentication} when using
  * a pack definition builder. The builder massages these definitions into the form of
  * an {@link Authentication} value, which is the value Coda ultimately cares about.
  */
@@ -601,7 +605,7 @@ export declare type AuthenticationDef = NoAuthentication | VariousAuthentication
 export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication;
 /**
  * The union of supported system authentication definitions. These represent simplified
- * onfigurations a pack developer can specify when calling {@link setSystemAuthentication}
+ * configurations a pack developer can specify when calling {@link PackDefinitionBuilder.setSystemAuthentication}
  * when using a pack definition builder. The builder massages these definitions into the form of
  * an {@link SystemAuthentication} value, which is the value Coda ultimately cares about.
  */
@@ -628,7 +632,7 @@ export declare type VariousSupportedAuthenticationTypes = $Values<Pick<VariousSu
  * to a formula that fetches the current weather at that location, and the resulting object with
  * weather info will be shown in the cell.
  *
- * A column format is just a wrapper around a formula defined in the {@link formulas} section
+ * A column format is just a wrapper around a formula defined in the {@link PackVersionDefinition.formulas} section
  * of your pack definition. It tells Coda to execute that particular formula using the value
  * of the cell as input.
  *
