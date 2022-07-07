@@ -75,7 +75,3 @@ instead of letting them throw and the formula failing.
 #### Returns
 
 `any`
-
-#### Defined in
-
-[handler_templates.ts:146](https://github.com/coda/packs-sdk/blob/main/handler_templates.ts#L146)

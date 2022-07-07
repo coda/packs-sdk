@@ -10,7 +10,8 @@ An attribution node that renders as a hyperlinked image.
 This is often the logo of the data source along with a link back to the home page
 of the data source or directly to the source data.
 
-**`example`**
+**`Example`**
+
 ```
 coda.makeAttributionNode({
   type: coda.AttributionNodeType.Image,

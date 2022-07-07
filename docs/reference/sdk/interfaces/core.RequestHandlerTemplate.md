@@ -8,7 +8,8 @@ title: "RequestHandlerTemplate"
 Configuration for how to construct an HTTP request for a code-free formula definition
 created using [makeTranslateObjectFormula](../functions/core.makeTranslateObjectFormula.md).
 
-**`example`**
+**`Example`**
+
 ```
 coda.makeTranslateObjectFormula({
   name: "FetchWidget",
@@ -168,7 +169,7 @@ ___
 The URL to fetch.
 
 The path of the URL can include strong formatting directives that can be replaced with
-formula parameters, e.g. "https://example.com/api/\{name\}".
+formula parameters, e.g. "https://example.com/api/{name}".
 
 #### Defined in
 

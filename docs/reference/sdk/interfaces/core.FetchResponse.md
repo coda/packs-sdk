@@ -5,7 +5,7 @@ title: "FetchResponse"
 
 [core](../modules/core.md).FetchResponse
 
-The response of a call to [Fetcher.fetch](core.Fetcher.md#fetch).
+The response of a call to [fetch](core.Fetcher.md#fetch).
 
 The structure largely follows https://developer.mozilla.org/en-US/docs/Web/API/Response
 
@@ -28,7 +28,7 @@ or if the data is JSON-parseable, this will be a parsed JavaScript object.
 Similarly, if the response headers are text/xml or application/xml, this will be a parsed
 JavaScript object using the `xml2js` library.
 
-If implicit parsing is undesirable, you may consider using [FetchRequest.isBinaryResponse](core.FetchRequest.md#isbinaryresponse) on the request
+If implicit parsing is undesirable, you may consider using [isBinaryResponse](core.FetchRequest.md#isbinaryresponse) on the request
 to disable any parsing. Note however that this will result in the body being a NodeJS Buffer.
 
 #### Defined in

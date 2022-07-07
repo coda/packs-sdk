@@ -23,10 +23,10 @@ This is not yet supported.
 • `Optional` **endpointDomain**: `string`
 
 When requiresEndpointUrl is set to true this should be the root domain that all endpoints share.
-For example, this value would be "example.com" if specific endpoints looked like \{custom-subdomain\}.example.com.
+For example, this value would be "example.com" if specific endpoints looked like {custom-subdomain}.example.com.
 
 For packs that make requests to multiple domains (uncommon), this should be the domain within
-[PackVersionDefinition.networkDomains](core.PackVersionDefinition.md#networkdomains) that this configuration applies to.
+[networkDomains](core.PackVersionDefinition.md#networkdomains) that this configuration applies to.
 
 #### Inherited from
 

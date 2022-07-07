@@ -5,7 +5,7 @@ title: "StatusCodeError"
 
 [core](../modules/core.md).StatusCodeError
 
-An error that will be thrown by [Fetcher.fetch](../interfaces/core.Fetcher.md#fetch) when the fetcher response has an
+An error that will be thrown by [fetch](../interfaces/core.Fetcher.md#fetch) when the fetcher response has an
 HTTP status code of 400 or greater.
 
 This class largely models the `StatusCodeError` from the (now deprecated) `request-promise` library,

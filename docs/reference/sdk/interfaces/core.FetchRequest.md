@@ -94,7 +94,7 @@ ___
 
 Indicates that you expect the response to be binary data, instructing Coda
 not to attempt to parse the response in any way. Otherwise, Coda may attempt
-to parse the response as a JSON object. If true, [FetchResponse.body](core.FetchResponse.md#body)
+to parse the response as a JSON object. If true, [body](core.FetchResponse.md#body)
 will be a NodeJS Buffer.
 
 #### Defined in
@@ -120,7 +120,7 @@ ___
 • **url**: `string`
 
 The URL to connect to. This is typically an absolute URL, but if your
-pack uses authentication and [BaseAuthentication.requiresEndpointUrl](core.BaseAuthentication.md#requiresendpointurl) and so has a unique
+pack uses authentication and [requiresEndpointUrl](core.BaseAuthentication.md#requiresendpointurl) and so has a unique
 endpoint per user account, you may also use a relative URL and Coda will
 apply the user's endpoint automatically.
 

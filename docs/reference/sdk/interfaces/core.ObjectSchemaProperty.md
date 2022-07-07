@@ -5,7 +5,7 @@ title: "ObjectSchemaProperty"
 
 [core](../modules/core.md).ObjectSchemaProperty
 
-Fields that may be set on a schema property in the [ObjectSchemaDefinition.properties](core.ObjectSchemaDefinition.md#properties) definition
+Fields that may be set on a schema property in the [properties](core.ObjectSchemaDefinition.md#properties) definition
 of an object schema.
 
 ## Properties

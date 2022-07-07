@@ -16,8 +16,8 @@ be known in advance nor can a function be written to generate a dynamic schema f
 inputs, it may be useful to us this helper to sniff the return value and generate a basic
 inferred schema from it.
 
-This utility does NOT attempt to determine [ObjectSchemaDefinition.idProperty](../interfaces/core.ObjectSchemaDefinition.md#idproperty) or
-[ObjectSchemaDefinition.displayProperty](../interfaces/core.ObjectSchemaDefinition.md#displayproperty) attributes for
+This utility does NOT attempt to determine [idProperty](../interfaces/core.ObjectSchemaDefinition.md#idproperty) or
+[displayProperty](../interfaces/core.ObjectSchemaDefinition.md#displayproperty) attributes for
 an object schema, those are left undefined.
 
 #### Parameters
@@ -29,7 +29,3 @@ an object schema, those are left undefined.
 #### Returns
 
 [`Schema`](../types/core.Schema.md)
-
-#### Defined in
-
-[schema.ts:1102](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1102)

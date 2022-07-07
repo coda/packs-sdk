@@ -26,17 +26,13 @@ rather than constructing a builder directly.
 | :------ | :------ |
 | `definition?` | `Partial`<[`PackVersionDefinition`](../interfaces/core.PackVersionDefinition.md)\> |
 
-#### Defined in
-
-[builder.ts:86](https://github.com/coda/packs-sdk/blob/main/builder.ts#L86)
-
 ## Properties
 
 ### defaultAuthentication
 
 • `Optional` **defaultAuthentication**: [`Authentication`](../types/core.Authentication.md)
 
-See [PackVersionDefinition.defaultAuthentication](../interfaces/core.PackVersionDefinition.md#defaultauthentication).
+See [defaultAuthentication](../interfaces/core.PackVersionDefinition.md#defaultauthentication).
 
 #### Implementation of
 
@@ -52,7 +48,7 @@ ___
 
 • **formats**: [`Format`](../interfaces/core.Format.md)[]
 
-See [PackVersionDefinition.formats](../interfaces/core.PackVersionDefinition.md#formats).
+See [formats](../interfaces/core.PackVersionDefinition.md#formats).
 
 #### Implementation of
 
@@ -68,7 +64,7 @@ ___
 
 • `Optional` **formulaNamespace**: `string`
 
-**`deprecated`**
+**`Deprecated`**
 
 #### Implementation of
 
@@ -84,7 +80,7 @@ ___
 
 • **formulas**: ([`BooleanPackFormula`](../types/core.BooleanPackFormula.md)<[`ParamDefs`](../types/core.ParamDefs.md)\> \| [`NumericPackFormula`](../types/core.NumericPackFormula.md)<[`ParamDefs`](../types/core.ParamDefs.md)\> \| [`StringPackFormula`](../types/core.StringPackFormula.md)<[`ParamDefs`](../types/core.ParamDefs.md)\> \| [`ObjectPackFormula`](../types/core.ObjectPackFormula.md)<[`ParamDefs`](../types/core.ParamDefs.md), [`ArraySchema`](../interfaces/core.ArraySchema.md)<[`Schema`](../types/core.Schema.md)\>\> \| [`ObjectPackFormula`](../types/core.ObjectPackFormula.md)<[`ParamDefs`](../types/core.ParamDefs.md), [`Schema`](../types/core.Schema.md)\>)[]
 
-See [PackVersionDefinition.formulas](../interfaces/core.PackVersionDefinition.md#formulas).
+See [formulas](../interfaces/core.PackVersionDefinition.md#formulas).
 
 #### Implementation of
 
@@ -100,7 +96,7 @@ ___
 
 • **networkDomains**: `string`[]
 
-See [PackVersionDefinition.networkDomains](../interfaces/core.PackVersionDefinition.md#networkdomains).
+See [networkDomains](../interfaces/core.PackVersionDefinition.md#networkdomains).
 
 #### Implementation of
 
@@ -116,7 +112,7 @@ ___
 
 • **syncTables**: [`SyncTable`](../types/core.SyncTable.md)[]
 
-See [PackVersionDefinition.syncTables](../interfaces/core.PackVersionDefinition.md#synctables).
+See [syncTables](../interfaces/core.PackVersionDefinition.md#synctables).
 
 #### Implementation of
 
@@ -132,7 +128,7 @@ ___
 
 • `Optional` **systemConnectionAuthentication**: [`SystemAuthentication`](../types/core.SystemAuthentication.md)
 
-See [PackVersionDefinition.systemConnectionAuthentication](../interfaces/core.PackVersionDefinition.md#systemconnectionauthentication).
+See [systemConnectionAuthentication](../interfaces/core.PackVersionDefinition.md#systemconnectionauthentication).
 
 #### Implementation of
 
@@ -148,7 +144,7 @@ ___
 
 • `Optional` **version**: `string`
 
-See [PackVersionDefinition.version](../interfaces/core.PackVersionDefinition.md#version).
+See [version](../interfaces/core.PackVersionDefinition.md#version).
 
 #### Defined in
 
@@ -164,7 +160,8 @@ Adds a column format definition to this pack.
 
 In the web editor, the `/ColumnFormat` shortcut will insert a snippet of a skeleton format.
 
-**`example`**
+**`Example`**
+
 ```
 pack.addColumnFormat({
   name: 'MyColumn',
@@ -182,10 +179,6 @@ pack.addColumnFormat({
 
 [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
 
-#### Defined in
-
-[builder.ts:232](https://github.com/coda/packs-sdk/blob/main/builder.ts#L232)
-
 ___
 
 ### addDynamicSyncTable
@@ -196,7 +189,8 @@ Adds a dynamic sync table definition to this pack.
 
 In the web editor, the `/DynamicSyncTable` shortcut will insert a snippet of a skeleton sync table.
 
-**`example`**
+**`Example`**
+
 ```
 pack.addDynamicSyncTable({
   name: "MySyncTable",
@@ -231,10 +225,6 @@ pack.addDynamicSyncTable({
 
 [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
 
-#### Defined in
-
-[builder.ts:205](https://github.com/coda/packs-sdk/blob/main/builder.ts#L205)
-
 ___
 
 ### addFormula
@@ -245,7 +235,8 @@ Adds a formula definition to this pack.
 
 In the web editor, the `/Formula` shortcut will insert a snippet of a skeleton formula.
 
-**`example`**
+**`Example`**
+
 ```
 pack.addFormula({
   resultType: ValueType.String,
@@ -282,10 +273,6 @@ pack.addFormula({
 
 [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
 
-#### Defined in
-
-[builder.ts:131](https://github.com/coda/packs-sdk/blob/main/builder.ts#L131)
-
 ___
 
 ### addNetworkDomain
@@ -303,7 +290,8 @@ any undeclared domains.
 You are allowed one network domain per pack by default. If your pack needs
 to connect to multiple domains, contact Coda Support for approval.
 
-**`example`**
+**`Example`**
+
 ```
 pack.addNetworkDomain('example.com');
 ```
@@ -318,10 +306,6 @@ pack.addNetworkDomain('example.com');
 
 [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
 
-#### Defined in
-
-[builder.ts:340](https://github.com/coda/packs-sdk/blob/main/builder.ts#L340)
-
 ___
 
 ### addSyncTable
@@ -332,7 +316,8 @@ Adds a sync table definition to this pack.
 
 In the web editor, the `/SyncTable` shortcut will insert a snippet of a skeleton sync table.
 
-**`example`**
+**`Example`**
+
 ```
 pack.addSyncTable({
   name: 'MySyncTable',
@@ -365,10 +350,6 @@ pack.addSyncTable({
 
 [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
 
-#### Defined in
-
-[builder.ts:161](https://github.com/coda/packs-sdk/blob/main/builder.ts#L161)
-
 ___
 
 ### setSystemAuthentication
@@ -384,7 +365,8 @@ not register their own account.
 In the web editor, the `/SystemAuthentication` shortcut will insert a snippet of a skeleton
 authentication definition.
 
-**`example`**
+**`Example`**
+
 ```
 pack.setSystemAuthentication({
   type: AuthenticationType.HeaderBearerToken,
@@ -400,10 +382,6 @@ pack.setSystemAuthentication({
 #### Returns
 
 [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
-
-#### Defined in
-
-[builder.ts:301](https://github.com/coda/packs-sdk/blob/main/builder.ts#L301)
 
 ___
 
@@ -424,7 +402,8 @@ required to invoke all formulas in this pack unless you specify differently on a
 formula. To change the default, you can pass a `defaultConnectionRequirement` option into
 this method.
 
-**`example`**
+**`Example`**
+
 ```
 pack.setUserAuthentication({
   type: AuthenticationType.HeaderBearerToken,
@@ -435,15 +414,11 @@ pack.setUserAuthentication({
 
 | Name | Type |
 | :------ | :------ |
-| `authDef` | [`NoAuthentication`](../interfaces/core.NoAuthentication.md) & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & [`VariousAuthentication`](../interfaces/core.VariousAuthentication.md) & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & `Omit`<[`HeaderBearerTokenAuthentication`](../interfaces/core.HeaderBearerTokenAuthentication.md), ``"getConnectionName"`` \| ``"getConnectionUserId"`` \| ``"postSetup"``\> & { `getConnectionName?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `getConnectionUserId?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `postSetup?`: [`SetEndpointDef`](../types/core.SetEndpointDef.md)[]  } & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & `Omit`<[`CodaApiBearerTokenAuthentication`](../interfaces/core.CodaApiBearerTokenAuthentication.md), ``"getConnectionName"`` \| ``"getConnectionUserId"`` \| ``"postSetup"``\> & { `getConnectionName?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `getConnectionUserId?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `postSetup?`: [`SetEndpointDef`](../types/core.SetEndpointDef.md)[]  } & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & `Omit`<[`CustomHeaderTokenAuthentication`](../interfaces/core.CustomHeaderTokenAuthentication.md), ``"getConnectionName"`` \| ``"getConnectionUserId"`` \| ``"postSetup"``\> & { `getConnectionName?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `getConnectionUserId?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `postSetup?`: [`SetEndpointDef`](../types/core.SetEndpointDef.md)[]  } & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & `Omit`<[`QueryParamTokenAuthentication`](../interfaces/core.QueryParamTokenAuthentication.md), ``"getConnectionName"`` \| ``"getConnectionUserId"`` \| ``"postSetup"``\> & { `getConnectionName?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `getConnectionUserId?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `postSetup?`: [`SetEndpointDef`](../types/core.SetEndpointDef.md)[]  } & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & `Omit`<[`MultiQueryParamTokenAuthentication`](../interfaces/core.MultiQueryParamTokenAuthentication.md), ``"getConnectionName"`` \| ``"getConnectionUserId"`` \| ``"postSetup"``\> & { `getConnectionName?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `getConnectionUserId?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `postSetup?`: [`SetEndpointDef`](../types/core.SetEndpointDef.md)[]  } & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & `Omit`<[`OAuth2Authentication`](../interfaces/core.OAuth2Authentication.md), ``"getConnectionName"`` \| ``"getConnectionUserId"`` \| ``"postSetup"``\> & { `getConnectionName?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `getConnectionUserId?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `postSetup?`: [`SetEndpointDef`](../types/core.SetEndpointDef.md)[]  } & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & `Omit`<[`WebBasicAuthentication`](../interfaces/core.WebBasicAuthentication.md), ``"getConnectionName"`` \| ``"getConnectionUserId"`` \| ``"postSetup"``\> & { `getConnectionName?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `getConnectionUserId?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `postSetup?`: [`SetEndpointDef`](../types/core.SetEndpointDef.md)[]  } & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & `Omit`<[`AWSAccessKeyAuthentication`](../interfaces/core.AWSAccessKeyAuthentication.md), ``"getConnectionName"`` \| ``"getConnectionUserId"`` \| ``"postSetup"``\> & { `getConnectionName?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `getConnectionUserId?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `postSetup?`: [`SetEndpointDef`](../types/core.SetEndpointDef.md)[]  } & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & `Omit`<[`AWSAssumeRoleAuthentication`](../interfaces/core.AWSAssumeRoleAuthentication.md), ``"getConnectionName"`` \| ``"getConnectionUserId"`` \| ``"postSetup"``\> & { `getConnectionName?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `getConnectionUserId?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `postSetup?`: [`SetEndpointDef`](../types/core.SetEndpointDef.md)[]  } & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & `Omit`<[`CustomAuthentication`](../interfaces/core.CustomAuthentication.md), ``"getConnectionName"`` \| ``"getConnectionUserId"`` \| ``"postSetup"``\> & { `getConnectionName?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `getConnectionUserId?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `postSetup?`: [`SetEndpointDef`](../types/core.SetEndpointDef.md)[]  } & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } |
+| `authDef` | [`NoAuthentication`](../interfaces/core.NoAuthentication.md) & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & [`VariousAuthentication`](../interfaces/core.VariousAuthentication.md) & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & `Omit`<[`HeaderBearerTokenAuthentication`](../interfaces/core.HeaderBearerTokenAuthentication.md), ``"getConnectionName"`` \| ``"getConnectionUserId"`` \| ``"postSetup"``\> & { `getConnectionName?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `postSetup?`: [`SetEndpointDef`](../types/core.SetEndpointDef.md)[]  } & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & `Omit`<[`CodaApiBearerTokenAuthentication`](../interfaces/core.CodaApiBearerTokenAuthentication.md), ``"getConnectionName"`` \| ``"getConnectionUserId"`` \| ``"postSetup"``\> & { `getConnectionName?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `postSetup?`: [`SetEndpointDef`](../types/core.SetEndpointDef.md)[]  } & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & `Omit`<[`CustomHeaderTokenAuthentication`](../interfaces/core.CustomHeaderTokenAuthentication.md), ``"getConnectionName"`` \| ``"getConnectionUserId"`` \| ``"postSetup"``\> & { `getConnectionName?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `postSetup?`: [`SetEndpointDef`](../types/core.SetEndpointDef.md)[]  } & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & `Omit`<[`QueryParamTokenAuthentication`](../interfaces/core.QueryParamTokenAuthentication.md), ``"getConnectionName"`` \| ``"getConnectionUserId"`` \| ``"postSetup"``\> & { `getConnectionName?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `postSetup?`: [`SetEndpointDef`](../types/core.SetEndpointDef.md)[]  } & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & `Omit`<[`MultiQueryParamTokenAuthentication`](../interfaces/core.MultiQueryParamTokenAuthentication.md), ``"getConnectionName"`` \| ``"getConnectionUserId"`` \| ``"postSetup"``\> & { `getConnectionName?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `postSetup?`: [`SetEndpointDef`](../types/core.SetEndpointDef.md)[]  } & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & `Omit`<[`OAuth2Authentication`](../interfaces/core.OAuth2Authentication.md), ``"getConnectionName"`` \| ``"getConnectionUserId"`` \| ``"postSetup"``\> & { `getConnectionName?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `postSetup?`: [`SetEndpointDef`](../types/core.SetEndpointDef.md)[]  } & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & `Omit`<[`WebBasicAuthentication`](../interfaces/core.WebBasicAuthentication.md), ``"getConnectionName"`` \| ``"getConnectionUserId"`` \| ``"postSetup"``\> & { `getConnectionName?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `postSetup?`: [`SetEndpointDef`](../types/core.SetEndpointDef.md)[]  } & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & `Omit`<[`AWSAccessKeyAuthentication`](../interfaces/core.AWSAccessKeyAuthentication.md), ``"getConnectionName"`` \| ``"getConnectionUserId"`` \| ``"postSetup"``\> & { `getConnectionName?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `postSetup?`: [`SetEndpointDef`](../types/core.SetEndpointDef.md)[]  } & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & `Omit`<[`AWSAssumeRoleAuthentication`](../interfaces/core.AWSAssumeRoleAuthentication.md), ``"getConnectionName"`` \| ``"getConnectionUserId"`` \| ``"postSetup"``\> & { `getConnectionName?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `postSetup?`: [`SetEndpointDef`](../types/core.SetEndpointDef.md)[]  } & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } & `Omit`<[`CustomAuthentication`](../interfaces/core.CustomAuthentication.md), ``"getConnectionName"`` \| ``"getConnectionUserId"`` \| ``"postSetup"``\> & { `getConnectionName?`: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) ; `postSetup?`: [`SetEndpointDef`](../types/core.SetEndpointDef.md)[]  } & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  } |
 
 #### Returns
 
 [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
-
-#### Defined in
-
-[builder.ts:258](https://github.com/coda/packs-sdk/blob/main/builder.ts#L258)
 
 ___
 
@@ -458,7 +433,8 @@ semantic versioning, or using the CLI. If using the web editor, you can omit thi
 and the web editor will automatically provide an appropriate semantic version
 each time you build a version.
 
-**`example`**
+**`Example`**
+
 ```
 pack.setVersion('1.2.3');
 ```
@@ -472,7 +448,3 @@ pack.setVersion('1.2.3');
 #### Returns
 
 [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
-
-#### Defined in
-
-[builder.ts:358](https://github.com/coda/packs-sdk/blob/main/builder.ts#L358)

@@ -180,7 +180,9 @@ ___
 
 • `Optional` `Readonly` **network**: [`Network`](core.Network.md)
 
-**`deprecated`** use `isAction` and `connectionRequirement` instead
+**`Deprecated`**
+
+use `isAction` and `connectionRequirement` instead
 
 #### Inherited from
 
@@ -245,7 +247,3 @@ as another continuation if there are more result to fetch.
 #### Returns
 
 `Promise`<[`SyncFormulaResult`](core.SyncFormulaResult.md)<`K`, `L`, `SchemaT`\>\>
-
-#### Defined in
-
-[api.ts:690](https://github.com/coda/packs-sdk/blob/main/api.ts#L690)

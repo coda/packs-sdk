@@ -14,7 +14,7 @@ attribution that contains both text and a logo image.
 
 ### Image
 
-• **Image**
+• **Image** = ``3``
 
 An image, often a logo of the data source.
 
@@ -26,7 +26,7 @@ ___
 
 ### Link
 
-• **Link**
+• **Link** = ``2``
 
 A hyperlink pointing to the data source.
 
@@ -38,7 +38,7 @@ ___
 
 ### Text
 
-• **Text**
+• **Text** = ``1``
 
 Text attribution content.
 

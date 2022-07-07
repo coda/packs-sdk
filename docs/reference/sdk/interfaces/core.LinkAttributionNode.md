@@ -10,7 +10,8 @@ An attribution node that renders a hyperlink.
 This might be used to attribute the data source and link back to the home page
 of the data source or directly to the source data.
 
-**`example`**
+**`Example`**
+
 ```
 coda.makeAttributionNode({
   type: coda.AttributionNodeType.Link,

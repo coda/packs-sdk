@@ -44,7 +44,7 @@ ___
 
 • `Optional` **formulaNamespace**: `string`
 
-**`deprecated`**
+**`Deprecated`**
 
 #### Defined in
 

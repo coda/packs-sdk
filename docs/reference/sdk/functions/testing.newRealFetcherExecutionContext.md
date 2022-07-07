@@ -17,7 +17,3 @@ title: "newRealFetcherExecutionContext"
 #### Returns
 
 [`ExecutionContext`](../interfaces/core.ExecutionContext.md)
-
-#### Defined in
-
-[testing/execution.ts:462](https://github.com/coda/packs-sdk/blob/main/testing/execution.ts#L462)

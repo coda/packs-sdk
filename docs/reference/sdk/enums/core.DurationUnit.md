@@ -5,13 +5,13 @@ title: "DurationUnit"
 
 [core](../modules/core.md).DurationUnit
 
-Enumeration of units supported by duration schemas. See [DurationSchema.maxUnit](../interfaces/core.DurationSchema.md#maxunit).
+Enumeration of units supported by duration schemas. See [maxUnit](../interfaces/core.DurationSchema.md#maxunit).
 
 ## Enumeration Members
 
 ### Days
 
-• **Days**
+• **Days** = ``"days"``
 
 Indications a duration as a number of days.
 
@@ -23,7 +23,7 @@ ___
 
 ### Hours
 
-• **Hours**
+• **Hours** = ``"hours"``
 
 Indications a duration as a number of hours.
 
@@ -35,7 +35,7 @@ ___
 
 ### Minutes
 
-• **Minutes**
+• **Minutes** = ``"minutes"``
 
 Indications a duration as a number of minutes.
 
@@ -47,7 +47,7 @@ ___
 
 ### Seconds
 
-• **Seconds**
+• **Seconds** = ``"seconds"``
 
 Indications a duration as a number of seconds.
 

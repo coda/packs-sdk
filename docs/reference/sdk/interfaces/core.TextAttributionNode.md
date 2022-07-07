@@ -9,7 +9,8 @@ An attribution node that simply renders some text.
 
 This might be used to attribute the data source.
 
-**`example`**
+**`Example`**
+
 ```
 coda.makeAttributionNode({
   type: coda.AttributionNodeType.Text,
