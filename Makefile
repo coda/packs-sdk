@@ -100,7 +100,7 @@ compile-thunk:
 		--inject:${ROOTDIR}/testing/injections/buffer_shim.js \
 		--format=iife \
 		--global-name=module.exports \
-		--banner:js="'use strict';"
+		--target=node14;
 
 .PHONY: compile
 compile:
@@ -121,7 +121,7 @@ compile:
 		--outfile=${ROOTDIR}/dist/bundle.js \
 		--format=cjs \
 		--minify \
-		--banner:js="'use strict';"
+		--target=node14;
 	# Generate a typescript file for use in /experimental so the web editor
 	# can resolve packs-sdk imports
 	${ROOTDIR}/node_modules/.bin/dts-bundle-generator ${ROOTDIR}/index.ts \
