@@ -62,8 +62,16 @@ This error will appear at the bottom of the screen after pressing a button, and 
 This error indicates that a fetcher request got back a response that is larger than the Packs runtime allows. If you are querying an external API for records, see if you can use a limit or paging parameter to get back a smaller response. If you need to work with large files you'll need to build an application outside of Packs that processes them. If you only need a small increase in the size limit you can [contact support][support] to request an adjustment.
 
 
+### Can't upload from the CLI
+
+- `dyld: Symbol not found: _SecTrustEvaluateWithError`
+
+The Pack CLI uses the `esbuild` library to compile your local code, and [this error][esbuild_error] is coming from that library. If you are getting this error on a Mac try updating to macOS 10.13 or later.
+
+
 [mdn_console]: https://developer.mozilla.org/en-US/docs/Web/API/console
 [support]: ../../support/index.md
 [isolated_vm_requirements]: https://github.com/laverdet/isolated-vm#requirements
 [actions_create]: ../blocks/actions.md#creating-actions
 [pmt]: pack-maker-tools.md
+[esbuild_error]: https://github.com/evanw/esbuild/issues/2183
