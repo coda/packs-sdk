@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleFetcherStatusError = exports.handleError = exports.handleErrorAsync = exports.ensureSwitchUnreachable = exports.findAndExecutePackFunction = exports.unmarshalValue = exports.marshalValue = void 0;
+exports.setUpBufferForTest = exports.handleFetcherStatusError = exports.handleError = exports.handleErrorAsync = exports.ensureSwitchUnreachable = exports.findAndExecutePackFunction = exports.unmarshalValue = exports.marshalValue = void 0;
 const types_1 = require("../../types");
 const buffer_1 = require("buffer");
 const types_2 = require("../types");
@@ -187,3 +187,9 @@ function handleFetcherStatusError(fetchResult, fetchRequest) {
     }
 }
 exports.handleFetcherStatusError = handleFetcherStatusError;
+function setUpBufferForTest() {
+    if (!global.Buffer) {
+        global.Buffer = buffer_1.Buffer;
+    }
+}
+exports.setUpBufferForTest = setUpBufferForTest;

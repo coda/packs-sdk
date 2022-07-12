@@ -226,3 +226,9 @@ export function handleFetcherStatusError(fetchResult: FetchResponse, fetchReques
     } as any);
   }
 }
+
+export function setUpBufferForTest() {
+  if (!global.Buffer) {
+    global.Buffer = Buffer;
+  }
+}

@@ -4664,6 +4664,7 @@ module.exports = (() => {
     handleErrorAsync: () => handleErrorAsync,
     handleFetcherStatusError: () => handleFetcherStatusError,
     marshalValue: () => marshalValue,
+    setUpBufferForTest: () => setUpBufferForTest,
     unmarshalValue: () => unmarshalValue
   });
   init_buffer_shim();
@@ -5165,6 +5166,11 @@ module.exports = (() => {
         body: fetchResult.body,
         headers: fetchResult.headers
       });
+    }
+  }
+  function setUpBufferForTest() {
+    if (!global.Buffer) {
+      global.Buffer = import_buffer.Buffer;
     }
   }
   return __toCommonJS(thunk_exports);

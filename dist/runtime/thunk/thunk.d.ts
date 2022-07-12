@@ -19,3 +19,4 @@ export declare function ensureSwitchUnreachable(value: never): never;
 export declare function handleErrorAsync(func: () => Promise<any>): Promise<any>;
 export declare function handleError(func: () => any): any;
 export declare function handleFetcherStatusError(fetchResult: FetchResponse, fetchRequest: FetchRequest): void;
+export declare function setUpBufferForTest(): void;
