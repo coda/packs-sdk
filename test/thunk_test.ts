@@ -48,7 +48,7 @@ describe('Thunk', () => {
     assert.isTrue(result !== 'Object');
   });
 
-  it('marshaliing buffers uses too much memory', async () => {
+  it('marshaling buffers uses too much memory', async () => {
     const isolate = new ivm.Isolate({memoryLimit: 128});
 
     // context is like a container in ivm concept.
