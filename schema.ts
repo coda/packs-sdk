@@ -569,6 +569,25 @@ export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.Dat
 }
 
 /**
+ * A schema representing a return value or object property that is provided as a string,
+ * which Coda should interpret as an image.
+ */
+ export interface StringImageSchema extends BaseStringSchema<ValueHintType.ImageReference> {
+  /** Instructs Coda to render this value as a Image with proper beautifulImage properties. */
+  codaType: ValueHintType.ImageReference;
+  /**
+   * 
+   * Boolean specifying whether or not to add outline to rendered images. Defaults to true.
+   */
+  outline?: boolean;
+  /**
+   *
+   * Boolean specifying whether or not to add rounded corners to rendered images. Defaults to true.
+   */
+  round?: boolean;
+}
+
+/**
  * Enumeration of units supported by duration schemas. See {@link DurationSchema.maxUnit}.
  */
 export enum DurationUnit {
@@ -646,6 +665,7 @@ export type StringSchema =
   | EmailSchema
   | LinkSchema
   | StringEmbedSchema
+  | StringImageSchema
   | SimpleStringSchema;
 
 /**
