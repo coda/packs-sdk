@@ -37,6 +37,7 @@ const isolated_vm_1 = __importDefault(require("isolated-vm"));
 const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
 const helpers_1 = require("./helpers");
+const semver_1 = __importDefault(require("semver"));
 const uglify_js_1 = __importDefault(require("uglify-js"));
 const uuid_1 = require("uuid");
 var TimerShimStrategy;
@@ -128,6 +129,17 @@ async function buildWithES({ lastBundleFilename, outputBundleFilename, options: 
         minify: false,
         sourcemap: 'both',
     };
+    // https://zchee.github.io/golang-wiki/MinimumRequirements/ says macOS High Sierra 10.13 or newer
+    // https://en.wikipedia.org/wiki/MacOS says OS X 10.13 corresponds to Darwin kernel version 17
+    const minDarwinVersionSupportedByGo = '17.0.0';
+    if (os_1.default.platform() === 'darwin' && semver_1.default.lt(os_1.default.release(), minDarwinVersionSupportedByGo)) {
+        // The error message if you try to run esbuild (or any Go binary) on an old OS X version
+        // is not particularly helpful (https://github.com/golang/go/issues/52757):
+        // "dyld: Symbol not found: _SecTrustEvaluateWithError"
+        //
+        // Here we preemptively throw an error with a clearer, more actionable message.
+        throw new Error('Packs SDK requires OS X version 10.13 or later');
+    }
     await esbuild.build(options);
 }
 async function compilePackBundle({ bundleFilename = 'bundle.js', // the output bundle filename
