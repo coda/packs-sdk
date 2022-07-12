@@ -48,6 +48,7 @@ describe('Thunk', () => {
     assert.isTrue(result !== 'Object');
   });
 
+  // TODO(dweitzman): Fix this bug. See o/bug/23967
   it('marshaling buffers uses too much memory', async () => {
     const isolate = new ivm.Isolate({memoryLimit: 128});
 
