@@ -10,7 +10,7 @@ which Coda should interpret as an image.
 
 ## Hierarchy
 
-- `BaseStringSchema`<[`ImageReference`](../enums/core.ValueHintType.md#imagereference)\>
+- `BaseStringSchema`<[`ImageReference`](../enums/core.ValueHintType.md#imagereference) \| [`ImageAttachment`](../enums/core.ValueHintType.md#imageattachment)\>
 
   ↳ **`StringImageSchema`**
 
@@ -18,7 +18,7 @@ which Coda should interpret as an image.
 
 ### codaType
 
-• **codaType**: [`ImageReference`](../enums/core.ValueHintType.md#imagereference)
+• **codaType**: [`ImageReference`](../enums/core.ValueHintType.md#imagereference) \| [`ImageAttachment`](../enums/core.ValueHintType.md#imageattachment)
 
 Instructs Coda to render this value as a Image with proper beautifulImage properties.
 
@@ -28,7 +28,7 @@ BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:577](https://github.com/coda/packs-sdk/blob/main/schema.ts#L577)
+[schema.ts:578](https://github.com/coda/packs-sdk/blob/main/schema.ts#L578)
 
 ___
 
@@ -59,7 +59,7 @@ Boolean specifying whether or not to add outline to rendered images. Defaults to
 
 #### Defined in
 
-[schema.ts:582](https://github.com/coda/packs-sdk/blob/main/schema.ts#L582)
+[schema.ts:583](https://github.com/coda/packs-sdk/blob/main/schema.ts#L583)
 
 ___
 
@@ -71,7 +71,7 @@ Boolean specifying whether or not to add rounded corners to rendered images. Def
 
 #### Defined in
 
-[schema.ts:587](https://github.com/coda/packs-sdk/blob/main/schema.ts#L587)
+[schema.ts:588](https://github.com/coda/packs-sdk/blob/main/schema.ts#L588)
 
 ___
 
@@ -87,4 +87,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:631](https://github.com/coda/packs-sdk/blob/main/schema.ts#L631)
+[schema.ts:632](https://github.com/coda/packs-sdk/blob/main/schema.ts#L632)
