@@ -531,9 +531,9 @@ export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.Dat
  * A schema representing a return value or object property that is provided as a string,
  * which Coda should interpret as an image.
  */
-export interface StringImageSchema extends BaseStringSchema<ValueHintType.ImageReference> {
+export interface StringImageSchema extends BaseStringSchema<ValueHintType.ImageReference | ValueHintType.ImageAttachment> {
 	/** Instructs Coda to render this value as a Image with proper beautifulImage properties. */
-	codaType: ValueHintType.ImageReference;
+	codaType: ValueHintType.ImageReference | ValueHintType.ImageAttachment;
 	/**
 	 *
 	 * Boolean specifying whether or not to add outline to rendered images. Defaults to true.
